@@ -1,555 +1,336 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349EC3321B3;
-	Thu, 20 Nov 2025 12:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F352D0600;
+	Thu, 20 Nov 2025 12:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763640545; cv=none; b=aeme+HK+14bxJ4S5R9yjlseeU6G0OmDDX2AzPK5kMi4T3EvP3yTwKx5w1Msiz9xsQIPSLXQTz250qACKv7cSdpAlfbeBduTgf6RjkXM6N4KAGYvuE6N5TISztcLzKMy12g8lKwfE2Q6W6iC3jrmA0H6LG2ZMz0PoQ8NosevU9+Q=
+	t=1763640928; cv=none; b=MLrSzvIeM1dhKAM/IaLr/iOR77sj9zqqBtgX/lvR1sanBoflPaVji2hh0pTt66v/yYg/lThfc2t6cx+1fJc2TZZSaD4en/h56uIfdxtGjig1RrQV/AxHx5FrPHPz936N4cc839kIlHLjvuvyn2EaxYUOgfmIzbZUZRsd1wRXi9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763640545; c=relaxed/simple;
-	bh=er+N64HiCFnnKCQWTgMhP3huAK297jwVKx9StqhKXCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oYR5g1gEzRBv6acphmUrAsLbnOm1U20z4JX1xixlM3coYR1LYL1ZGlHyJ4SY12t2bHp+WZeA1AaCmYFUN1mTDuVPN4iKmYG6ssPK4zLMnJY3Y6e5TqwxWCMZ4xvCqd2PsoFNXJ/7IpuvoCmGwgoS5nGuMS6fktFXk0Ik/hRK/u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPYUEP0+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763640928; c=relaxed/simple;
+	bh=iiTBllRFNBfDrnqnao3rStmALYx6sVXy4eCt7cTwtCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAj25WiSaFfrdDhLmYiR0EbCuU9dHINx8xA1uPdOtZpgdtxb3meMZX2gCMUTP2cKSbk8CE9gztdmi0IaaGHS1LnhftP9q5v6N+2KB4CW3Irtjh+aM0jPqf/+k20heGR7vdOO1T5G2FmDPzY/4PVmd/D3PQ0aH/FjL+oMpR90eTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EUeocMSX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPYUEP0+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E55C4CEF1;
-	Thu, 20 Nov 2025 12:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763640545;
-	bh=er+N64HiCFnnKCQWTgMhP3huAK297jwVKx9StqhKXCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lPYUEP0+N1vJ65Gz/SOTmmJOKUa1NwAiMqX6NoT8Wwnb+v4YPqSPkFBZPqtPuolUd
-	 A3g6bdsW+F4emkgqv6jsxupE/6C+gdr+FXGICZh7jQ8rFKC1VrDHLn+BEzA+oq7Hhx
-	 HKEHpdTS1BLDi7jpgZbbYzQxEtm7kRVo4kRGy8WWohYM+HKrVlROgvaSUmFyVpma0t
-	 4vEECdpg845ICgjF1kvKWGPks3npe4FCVlbDrEQ//uhzIwnKOv8TYpUCOf3Yq7CaCd
-	 0ceAHKDX/8wHG9WkfwLAdZIq9vKjcD4oL0NMTY4UrCE+EhDweylTlBz2qcgiGq/MUa
-	 8IJGAhONWsB6w==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Song Liu <song@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-6.1] ftrace: bpf: Fix IPMODIFY + DIRECT in modify_ftrace_direct()
-Date: Thu, 20 Nov 2025 07:08:23 -0500
-Message-ID: <20251120120838.1754634-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251120120838.1754634-1-sashal@kernel.org>
-References: <20251120120838.1754634-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EUeocMSX"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AKC7E9G029043;
+	Thu, 20 Nov 2025 12:14:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=BmQGXOrLqR42QAIqI1W4D/JNPzmWBe
+	bAgsCF39Fhysc=; b=EUeocMSXk9QosseBzTaFAceXVFzNSCY34ZR9Z7p6CSVJEA
+	fFYuMwmQ9ACPyZit85kaC0W1QF4PjRXPXTP1yVPSTYJn1ph7I3PaQ+2QoWuL0CeT
+	OSfWxL3OoTu7oZy+p4HM1o4ZhQsy8SArHOEy4axzV/M7kqnNra1PyGbuixaFmdrO
+	48vnCo9uPXGBonTVXX3Czbhm3WUz7f6sPvjnWmHyoF4nBp2pqXyObeqR+uQel2js
+	0H+VbwkDwGlK0NUTUpPK6UTzx8vLkY9XHJU3moosVGaIaFnKs9TNT7n/usurZbla
+	98iseQcdu7jsKekfmBX6SEe/qBgvgstGjpAv5wew==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1paf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 12:14:59 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AKCEwuB017022;
+	Thu, 20 Nov 2025 12:14:58 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejk1paew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 12:14:58 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AKB0AJK017404;
+	Thu, 20 Nov 2025 12:14:57 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j1x065-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 12:14:57 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AKCEuCY39780754
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Nov 2025 12:14:56 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E1F6720040;
+	Thu, 20 Nov 2025 12:14:55 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E21C720043;
+	Thu, 20 Nov 2025 12:14:51 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.158])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 20 Nov 2025 12:14:51 +0000 (GMT)
+Date: Thu, 20 Nov 2025 17:44:49 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
+        john.g.garry@oracle.com, tytso@mit.edu, willy@infradead.org,
+        dchinner@redhat.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, jack@suse.cz,
+        nilay@linux.ibm.com, martin.petersen@oracle.com, rostedt@goodmis.org,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
+Message-ID: <aR8GObWa1mtbbtts@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+ <aRUCqA_UpRftbgce@dread.disaster.area>
+ <20251113052337.GA28533@lst.de>
+ <87frai8p46.ritesh.list@gmail.com>
+ <aRWzq_LpoJHwfYli@dread.disaster.area>
+ <aRb0WQJi4rQQ-Zmo@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <aRmHRk7FGD4nCT0s@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-From: Song Liu <song@kernel.org>
-
-[ Upstream commit 3e9a18e1c3e931abecf501cbb23d28d69f85bb56 ]
-
-ftrace_hash_ipmodify_enable() checks IPMODIFY and DIRECT ftrace_ops on
-the same kernel function. When needed, ftrace_hash_ipmodify_enable()
-calls ops->ops_func() to prepare the direct ftrace (BPF trampoline) to
-share the same function as the IPMODIFY ftrace (livepatch).
-
-ftrace_hash_ipmodify_enable() is called in register_ftrace_direct() path,
-but not called in modify_ftrace_direct() path. As a result, the following
-operations will break livepatch:
-
-1. Load livepatch to a kernel function;
-2. Attach fentry program to the kernel function;
-3. Attach fexit program to the kernel function.
-
-After 3, the kernel function being used will not be the livepatched
-version, but the original version.
-
-Fix this by adding __ftrace_hash_update_ipmodify() to
-__modify_ftrace_direct() and adjust some logic around the call.
-
-Signed-off-by: Song Liu <song@kernel.org>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Link: https://lore.kernel.org/r/20251027175023.1521602-3-song@kernel.org
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-## COMPREHENSIVE ANALYSIS: ftrace: bpf: Fix IPMODIFY + DIRECT in
-modify_ftrace_direct()
-
-### 1. COMMIT MESSAGE ANALYSIS
-
-This commit fixes a critical bug in the interaction between ftrace
-IPMODIFY (livepatching) and DIRECT (BPF trampolines) operations. The
-commit message clearly describes:
-
-**Problem**: `ftrace_hash_ipmodify_enable()` is called in the
-`register_ftrace_direct()` path but **NOT** in the
-`modify_ftrace_direct()` path. This asymmetry causes livepatch to break
-when BPF programs are attached in a specific sequence.
-
-**Bug scenario**:
-1. Load livepatch to a kernel function (IPMODIFY set)
-2. Attach fentry program (works - register path has the check)
-3. Attach fexit program (breaks - modify path missing the check)
-4. Result: Function executes original code, **bypassing the livepatch**
-
-**Fix**: Add `__ftrace_hash_update_ipmodify()` to
-`__modify_ftrace_direct()` with appropriate logic adjustments.
-
-**Key observations**:
-- NO "Fixes:" tag (but bug origin is clear: commit 53cd885bc5c3e from
-  v6.0)
-- NO "Cc: stable@vger.kernel.org" tag (unusual for a bug fix)
-- Part of a 2-patch series (companion commit 56b3c85e153b8 **does have**
-  "Cc: stable@vger.kernel.org # v6.6+")
-- Multiple maintainer acknowledgments: Reviewed-by Jiri Olsa, Acked-by
-  Steven Rostedt, Signed-off-by Alexei Starovoitov
-
-### 2. DEEP CODE RESEARCH
-
-#### Bug Introduction History
-
-I traced the bug to **commit 53cd885bc5c3e** (July 2022, merged in
-v6.0-rc1):
-- "ftrace: Allow IPMODIFY and DIRECT ops on the same function"
-- This commit introduced the mechanism for livepatch and BPF trampolines
-  to coexist on the same function
-- It added `ops_func()` callbacks that get invoked to coordinate between
-  IPMODIFY and DIRECT operations
-- The register path correctly calls `ftrace_hash_ipmodify_enable()`
-  which invokes this callback
-- **The modify path was missing this check from day one**
-
-#### Technical Mechanism of the Bug
-
-**IPMODIFY** (used by livepatching): Modifies function entry points to
-redirect to patched code
-**DIRECT** (used by BPF): Directly calls custom trampolines (BPF
-programs)
-
-When both are on the same function, they must cooperate:
-- The ftrace core calls `ops->ops_func(ops,
-  FTRACE_OPS_CMD_ENABLE_SHARE_IPMODIFY_SELF)`
-- This tells the BPF trampoline to set `BPF_TRAMP_F_SHARE_IPMODIFY` flag
-- With this flag, BPF generates trampolines with
-  `BPF_TRAMP_F_ORIG_STACK` to preserve livepatch behavior
-- Without this coordination, the BPF trampoline jumps to the original
-  function, **bypassing the livepatch**
-
-**The bug**: In `__modify_ftrace_direct()` (lines 6107-6154 in current
-code):
-```c
-static int __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long
-addr)
-{
-    // ... registers tmp_ops ...
-    err = register_ftrace_function_nolock(&tmp_ops);
-    // BUG: No call to __ftrace_hash_update_ipmodify() here!
-    // ... updates direct call addresses ...
-    unregister_ftrace_function(&tmp_ops);
-}
-```
-
-The function modifies where direct calls jump to, but never checks if
-there's an IPMODIFY conflict requiring coordination.
-
-#### The Fix in Detail
-
-The patch makes these changes:
-
-1. **Adds new parameter to `__ftrace_hash_update_ipmodify()`**: `bool
-   update_target`
-   - When `false`: Only checks differences between old_hash and new_hash
-     (existing behavior)
-   - When `true`: Processes all entries even if old_hash == new_hash
-     (needed for modify case)
-
-2. **Updates the check logic** (lines 2007-2011):
-```c
-// OLD: Skip if no difference
-if (in_old == in_new)
-    continue;
-
-// NEW: Skip only if not updating target AND no difference
-if (!update_target && (in_old == in_new))
-    continue;
-```
-
-3. **Fixes FTRACE_WARN_ON condition** (lines 2024-2034): Makes it aware
-   that `update_target` scenario is valid
-
-4. **Adds the missing call in `__modify_ftrace_direct()`** (lines
-   6147-6157):
-```c
-err = register_ftrace_function_nolock(&tmp_ops);
-if (err)
-    return err;
-
-// NEW: Call the check that was missing!
-err = __ftrace_hash_update_ipmodify(ops, hash, hash, true);
-if (err)
-    goto out;
-```
-
-5. **Updates all existing callers** to pass `false` for backward
-   compatibility
-
-#### Why This Works
-
-When `modify_ftrace_direct()` is called:
-- It passes `old_hash == new_hash` because it's not changing which
-  functions to trace, just where to jump
-- With `update_target=true`, the code processes all entries anyway
-- This triggers `ops->ops_func(ops,
-  FTRACE_OPS_CMD_ENABLE_SHARE_IPMODIFY_SELF)` if needed
-- The BPF trampoline updates its flags and regenerates with proper
-  livepatch support
-- The livepatch is no longer bypassed
-
-### 3. SECURITY ASSESSMENT
-
-**Severity: HIGH**
-
-This is a **security-relevant correctness bug**:
-- Livepatching is commonly used to apply **security fixes** without
-  rebooting
-- Silently bypassing a livepatch means security vulnerabilities remain
-  exploitable
-- Users have no indication that their security patch isn't working
-- Affects production systems running observability tools (BPF) alongside
-  security patching
-
-**Attack scenario**:
-1. Admin applies critical security livepatch
-2. Observability team runs BPF tracing (fentry/fexit)
-3. Livepatch silently stops working
-4. System remains vulnerable to the security issue the livepatch was
-   meant to fix
-
-**No CVE mentioned**, but this is the type of issue that could warrant
-one.
-
-### 4. FEATURE VS BUG FIX CLASSIFICATION
-
-**Unambiguously a BUG FIX**:
-- Fixes broken functionality (livepatch bypass)
-- No new features added
-- Restores expected behavior (livepatch should work with BPF)
-- Keywords: "Fix", "broken", specific bug scenario described
-
-### 5. CODE CHANGE SCOPE ASSESSMENT
-
-**Small and surgical**:
-- Single file: `kernel/trace/ftrace.c`
-- ~40 lines changed (net +18 lines)
-- Changes:
-  - Add one parameter to existing function
-  - Update 4 call sites to pass `false` (maintains existing behavior)
-  - Add one new call in `__modify_ftrace_direct()`
-  - Update comments and conditional logic
-  - Add error handling path
-- **No new APIs, no exported symbol changes, no ABI impact**
-
-### 6. BUG TYPE AND SEVERITY
-
-**Type**: Logic error / Missing check
-**Severity**: **HIGH**
-- **Impact**: Security patches silently bypassed
-- **Triggering**: Specific but realistic sequence (livepatch + BPF
-  fentry/fexit)
-- **Detection**: Silent failure (no error, no warning to user)
-- **Consequences**: System remains vulnerable after applying security
-  patches
-
-### 7. USER IMPACT EVALUATION
-
-**Affected users**:
-- **High-security environments** using livepatching for security updates
-- **Cloud providers** running observability (BPF) on production systems
-- **Enterprise Linux users** (RHEL, SLES, Ubuntu LTS) who rely on
-  livepatching
-- **Any system** combining livepatch with BPF tracing tools (bpftrace,
-  bcc, etc.)
-
-**Impact scope**:
-- Moderate likelihood: Both livepatch and BPF are common, but the
-  specific sequence (attach fentry then fexit) is less common
-- High consequence: When it happens, security is compromised
-- Silent failure: No indication to user that livepatch stopped working
-
-**Affected kernel versions**: v6.0 onwards (when IPMODIFY+DIRECT sharing
-was introduced)
-
-### 8. REGRESSION RISK ANALYSIS
-
-**Risk: LOW**
-
-**Why low risk**:
-1. **Small, focused change**: Adds a missing check, doesn't refactor
-   existing code
-2. **Parallel to existing code**: The register path already has this
-   check working fine
-3. **Well-tested**: Part of a patch series with selftests
-   (0e0e608f72422)
-4. **Multiple expert reviews**: Reviewed/Acked by ftrace and BPF
-   maintainers
-5. **Conservative approach**: Only affects the modify path when
-   IPMODIFY+DIRECT interact
-6. **Proper error handling**: Returns error if check fails, doesn't
-   crash
-
-**Potential issues**:
-- Could theoretically reject modify operations that were previously
-  (incorrectly) succeeding
-- But those operations were broken anyway (bypassing livepatch)
-- Failure mode is explicit error return, not silent corruption or crash
-
-### 9. MAINLINE STABILITY
-
-**Very recent commit**: October 27, 2025 (only in v6.18-rc6)
-
-**Concerning**: Limited time in mainline for testing
-
-**Mitigating factors**:
-- Part of a tested patch series
-- Multiple maintainer reviews
-- Addresses a known issue with clear reproducer
-- Similar to existing working code in register path
-- Companion commit (56b3c85e153b8) explicitly tagged for stable v6.6+
-
-### 10. COMMIT SERIES CONTEXT
-
-This is part of a **2-commit fix series**:
-
-**Commit 1** (56b3c85e153b8): "ftrace: Fix BPF fexit with livepatch"
-- Fixes register path issues
-- **Has "Fixes: d05cb470663a"**
-- **Has "Cc: stable@vger.kernel.org # v6.6+"**
-- Reported by production user at CrowdStrike
-- Acked-and-tested-by production user
-
-**Commit 2** (3e9a18e1c3e93): "ftrace: bpf: Fix IPMODIFY + DIRECT in
-modify_ftrace_direct()" (THIS COMMIT)
-- Fixes modify path issues
-- **NO Fixes tag, NO stable tag**
-- Part of same series (Link:
-  .../20251027175023.1521602-3-song@kernel.org)
-
-**Analysis**: The companion commit was explicitly tagged for stable,
-making it unusual that this one wasn't. They're addressing the same
-problem space (livepatch + BPF interaction), and both should go together
-for complete fix.
-
-### 11. STABLE KERNEL APPLICABILITY
-
-**Applies to**: All stable trees from v6.0 onwards
-
-**Reasoning**:
-- Bug introduced in v6.0 (commit 53cd885bc5c3e)
-- Code exists in all v6.0+ kernels
-- Should apply cleanly (no major refactoring in this area)
-
-**Relevant stable trees**:
-- v6.0.y through v6.17.y (if still maintained)
-- LTS: v6.1.y, v6.6.y, v6.12.y (most important)
-
-### 12. MEETS STABLE KERNEL RULES?
-
-Checking against Documentation/process/stable-kernel-rules.rst:
-
-✅ **Obviously correct**: Yes - adds missing check parallel to existing
-code
-✅ **Tested**: Yes - part of series with selftests, multiple reviews
-✅ **Fixes real bug**: Yes - livepatch bypass is real, has reproducer
-✅ **Important issue**: Yes - security implications (patch bypass)
-✅ **Small and contained**: Yes - ~40 lines, single file, surgical
-❌ **No new features**: Correct - pure bug fix
-✅ **Should apply cleanly**: Yes - no dependencies beyond v6.0 feature
-
-**Verdict**: Meets all stable kernel criteria
-
----
-
-## FINAL DECISION
-
-This commit fixes a serious correctness bug where livepatches can be
-silently bypassed when BPF fentry/fexit programs are attached. The bug
-has been present since v6.0 (July 2022) when IPMODIFY+DIRECT sharing was
-introduced.
-
-**Security Impact**: Livepatches are often used to deploy security fixes
-without rebooting. Bypassing them means systems remain vulnerable
-despite appearing to be patched. This is a silent failure - users have
-no indication their security patches aren't working.
-
-**Technical Quality**: The fix is small (~40 lines), surgical, and
-parallels existing code in the register path. It adds the missing
-`__ftrace_hash_update_ipmodify()` call to the modify path, ensuring
-proper coordination between livepatch (IPMODIFY) and BPF trampolines
-(DIRECT).
-
-**Review and Testing**: Multiple expert maintainers reviewed and acked
-this (Jiri Olsa, Steven Rostedt, Alexei Starovoitov). It's part of a
-tested patch series that includes selftests. The companion commit
-(56b3c85e153b8) explicitly has "Cc: stable@vger.kernel.org # v6.6+".
-
-**Regression Risk**: LOW. The change is well-contained, adds a check
-that should have existed from the start, and has proper error handling.
-The failure mode (if any) is an explicit error return, not silent
-corruption.
-
-**Stable Applicability**: Should backport to all v6.0+ stable trees. The
-code is present and should apply cleanly. Most critical for LTS trees
-(v6.1.y, v6.6.y, v6.12.y) where users depend on both livepatching and
-BPF.
-
-**Why No Stable Tag?**: Unclear why the maintainer didn't add "Cc:
-stable@vger.kernel.org" when the companion commit has one. This appears
-to be an oversight, as both commits address the same problem space and
-were submitted together.
-
-**Conclusion**: This is exactly the type of fix stable trees need - it
-addresses a real, security-relevant bug affecting production systems
-with a small, well-reviewed patch. The lack of an explicit stable tag
-appears to be an oversight given that the companion commit has one. Both
-commits should be backported together for a complete fix.
-
-**YES**
-
- kernel/trace/ftrace.c | 40 +++++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 42bd2ba68a821..5ad1138a1894c 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1971,7 +1971,8 @@ static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops)
-  */
- static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 					 struct ftrace_hash *old_hash,
--					 struct ftrace_hash *new_hash)
-+					 struct ftrace_hash *new_hash,
-+					 bool update_target)
- {
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *rec, *end = NULL;
-@@ -2006,10 +2007,13 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 		if (rec->flags & FTRACE_FL_DISABLED)
- 			continue;
- 
--		/* We need to update only differences of filter_hash */
-+		/*
-+		 * Unless we are updating the target of a direct function,
-+		 * we only need to update differences of filter_hash
-+		 */
- 		in_old = !!ftrace_lookup_ip(old_hash, rec->ip);
- 		in_new = !!ftrace_lookup_ip(new_hash, rec->ip);
--		if (in_old == in_new)
-+		if (!update_target && (in_old == in_new))
- 			continue;
- 
- 		if (in_new) {
-@@ -2020,7 +2024,16 @@ static int __ftrace_hash_update_ipmodify(struct ftrace_ops *ops,
- 				if (is_ipmodify)
- 					goto rollback;
- 
--				FTRACE_WARN_ON(rec->flags & FTRACE_FL_DIRECT);
-+				/*
-+				 * If this is called by __modify_ftrace_direct()
-+				 * then it is only changing where the direct
-+				 * pointer is jumping to, and the record already
-+				 * points to a direct trampoline. If it isn't,
-+				 * then it is a bug to update ipmodify on a direct
-+				 * caller.
-+				 */
-+				FTRACE_WARN_ON(!update_target &&
-+					       (rec->flags & FTRACE_FL_DIRECT));
- 
- 				/*
- 				 * Another ops with IPMODIFY is already
-@@ -2076,7 +2089,7 @@ static int ftrace_hash_ipmodify_enable(struct ftrace_ops *ops)
- 	if (ftrace_hash_empty(hash))
- 		hash = NULL;
- 
--	return __ftrace_hash_update_ipmodify(ops, EMPTY_HASH, hash);
-+	return __ftrace_hash_update_ipmodify(ops, EMPTY_HASH, hash, false);
- }
- 
- /* Disabling always succeeds */
-@@ -2087,7 +2100,7 @@ static void ftrace_hash_ipmodify_disable(struct ftrace_ops *ops)
- 	if (ftrace_hash_empty(hash))
- 		hash = NULL;
- 
--	__ftrace_hash_update_ipmodify(ops, hash, EMPTY_HASH);
-+	__ftrace_hash_update_ipmodify(ops, hash, EMPTY_HASH, false);
- }
- 
- static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
-@@ -2101,7 +2114,7 @@ static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
- 	if (ftrace_hash_empty(new_hash))
- 		new_hash = NULL;
- 
--	return __ftrace_hash_update_ipmodify(ops, old_hash, new_hash);
-+	return __ftrace_hash_update_ipmodify(ops, old_hash, new_hash, false);
- }
- 
- static void print_ip_ins(const char *fmt, const unsigned char *p)
-@@ -6106,7 +6119,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_direct);
- static int
- __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- {
--	struct ftrace_hash *hash;
-+	struct ftrace_hash *hash = ops->func_hash->filter_hash;
- 	struct ftrace_func_entry *entry, *iter;
- 	static struct ftrace_ops tmp_ops = {
- 		.func		= ftrace_stub,
-@@ -6126,13 +6139,21 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 	if (err)
- 		return err;
- 
-+	/*
-+	 * Call __ftrace_hash_update_ipmodify() here, so that we can call
-+	 * ops->ops_func for the ops. This is needed because the above
-+	 * register_ftrace_function_nolock() worked on tmp_ops.
-+	 */
-+	err = __ftrace_hash_update_ipmodify(ops, hash, hash, true);
-+	if (err)
-+		goto out;
-+
- 	/*
- 	 * Now the ftrace_ops_list_func() is called to do the direct callers.
- 	 * We can safely change the direct functions attached to each entry.
- 	 */
- 	mutex_lock(&ftrace_lock);
- 
--	hash = ops->func_hash->filter_hash;
- 	size = 1 << hash->size_bits;
- 	for (i = 0; i < size; i++) {
- 		hlist_for_each_entry(iter, &hash->buckets[i], hlist) {
-@@ -6147,6 +6168,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 
- 	mutex_unlock(&ftrace_lock);
- 
-+out:
- 	/* Removing the tmp_ops will add the updated direct callers to the functions */
- 	unregister_ftrace_function(&tmp_ops);
- 
--- 
-2.51.0
-
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRmHRk7FGD4nCT0s@dread.disaster.area>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=C/nkCAP+ c=1 sm=1 tr=0 ts=691f0643 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=07d9gI8wAAAA:8 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8
+ a=QkCu-KvVQgBkKXyteS4A:9 a=CjuIK1q_8ugA:10 a=e2CUPOnPG4QKp8I52DXD:22
+ a=biEYGPWJfzWAr4FL6Ov7:22
+X-Proofpoint-GUID: QY8vQPMMKHQZuhxLUU8MzOElMmP_zUb_
+X-Proofpoint-ORIG-GUID: yvqGZeDceYeUfnkxgEv76IrM8wfF74Db
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX+pck3x06oJSH
+ wFNr41pE/Z4Kt9RRpJCPvqy1URHIf78uqbpEyJ0Tom3RdhiP0N9cwtgbT27ML0Dn5/vfUb+m2RJ
+ P2Cxhu21a6rEg92xcpGUcJnSFIzNbty3OzibQ6z4LaQ8CFBxsJ6tZ+9BCgAAYfbG6zix77U8P+f
+ 42CuBl9g4YbnmUZAckagpVnw6MfGU7fDdVswcmxGcxMTxG7lp5jaWBtKo902F198kd+m1Qp/ss/
+ 6mSyMrCXvAlsB97taBiHtKZS8senXTURcdTNqY6OoqhUpJbEoV2elq+Ghbeu3WnIn/42JSk0++E
+ QdEArDShq4bKSdbXazxKNyx1XGHAfZjhqD+kFyM0DPPr9ViiQrLaxcGMaST6/XnrQiWX1LeKgXE
+ bufZvnwC93o5Kl2iMH1Jmng7J/L1/w==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-20_04,2025-11-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
+
+On Sun, Nov 16, 2025 at 07:11:50PM +1100, Dave Chinner wrote:
+> On Fri, Nov 14, 2025 at 02:50:25PM +0530, Ojaswin Mujoo wrote:
+> > On Thu, Nov 13, 2025 at 09:32:11PM +1100, Dave Chinner wrote:
+> > > On Thu, Nov 13, 2025 at 11:12:49AM +0530, Ritesh Harjani wrote:
+> > > > Christoph Hellwig <hch@lst.de> writes:
+> > > > 
+> > > > > On Thu, Nov 13, 2025 at 08:56:56AM +1100, Dave Chinner wrote:
+> > > > >> On Wed, Nov 12, 2025 at 04:36:03PM +0530, Ojaswin Mujoo wrote:
+> > > > >> > This patch adds support to perform single block RWF_ATOMIC writes for
+> > > > >> > iomap xfs buffered IO. This builds upon the inital RFC shared by John
+> > > > >> > Garry last year [1]. Most of the details are present in the respective 
+> > > > >> > commit messages but I'd mention some of the design points below:
+> > > > >> 
+> > > > >> What is the use case for this functionality? i.e. what is the
+> > > > >> reason for adding all this complexity?
+> > > > >
+> > > > > Seconded.  The atomic code has a lot of complexity, and further mixing
+> > > > > it with buffered I/O makes this even worse.  We'd need a really important
+> > > > > use case to even consider it.
+> > > > 
+> > > > I agree this should have been in the cover letter itself. 
+> > > > 
+> > > > I believe the reason for adding this functionality was also discussed at
+> > > > LSFMM too...  
+> > > > 
+> > > > For e.g. https://lwn.net/Articles/974578/ goes in depth and talks about
+> > > > Postgres folks looking for this, since PostgreSQL databases uses
+> > > > buffered I/O for their database writes.
+> > > 
+> > > Pointing at a discussion about how "this application has some ideas
+> > > on how it can maybe use it someday in the future" isn't a
+> > > particularly good justification. This still sounds more like a
+> > > research project than something a production system needs right now.
+> > 
+> > Hi Dave, Christoph,
+> > 
+> > There were some discussions around use cases for buffered atomic writes
+> > in the previous LSFMM covered by LWN here [1]. AFAIK, there are 
+> > databases that recommend/prefer buffered IO over direct IO. As mentioned
+> > in the article, MongoDB being one that supports both but recommends
+> > buffered IO. Further, many DBs support both direct IO and buffered IO
+> > well and it may not be fair to force them to stick to direct IO to get
+> > the benefits of atomic writes.
+> > 
+> > [1] https://lwn.net/Articles/1016015/
+> 
+> You are quoting a discussion about atomic writes that was
+> held without any XFS developers present. Given how XFS has driven
+> atomic write functionality so far, XFS developers might have some
+> ..... opinions about how buffered atomic writes in XFS...
+> 
+> Indeed, go back to the 2024 buffered atomic IO LSFMM discussion,
+> where there were XFS developers present. That's the discussion that
+> Ritesh referenced, so you should be aware of it.
+> 
+> https://lwn.net/Articles/974578/
+> 
+> Back then I talked about how atomic writes made no sense as
+> -writeback IO- given the massive window for anything else to modify
+> the data in the page cache. There is no guarantee that what the
+> application wrote in the syscall is what gets written to disk with
+> writeback IO. i.e. anything that can access the page cache can
+> "tear" application data that is staged as "atomic data" for later
+> writeback.
+> 
+> IOWs, the concept of atomic writes for writeback IO makes almost no
+> sense at all - dirty data at rest in the page cache is not protected
+> against 3rd party access or modification. The "atomic data IO"
+> semantics can only exist in the submitting IO context where
+> exclusive access to the user data can be guaranteed.
+> 
+> IMO, the only way semantics that makes sense for buffered atomic
+> writes through the page cache is write-through IO. The "atomic"
+> context is related directly to user data provided at IO submission,
+> and so IO submitted must guarantee exactly that data is being
+> written to disk in that IO.
+> 
+> IOWs, we have to guarantee exclusive access between the data copy-in
+> and the pages being marked for writeback. The mapping needs to be
+> marked as using stable pages to prevent anyone else changing the
+> cached data whilst it has an atomic IO pending on it.
+> 
+> That means folios covering atomic IO ranges do not sit in the page
+> cache in a dirty state - they *must* immediately transition to the
+> writeback state before the folio is unlocked so that *nothing else
+> can modify them* before the physical REQ_ATOMIC IO is submitted and
+> completed.
+> 
+> If we've got the folios marked as writeback, we can pack them
+> immediately into a bio and submit the IO (e.g. via the iomap DIO
+> code). There is no need to involve the buffered IO writeback path
+> here; we've already got the folios at hand and in the right state
+> for IO. Once the IO is done, we end writeback on them and they
+> remain clean in the page caceh for anyone else to access and
+> modify...
+
+Hi Dave,
+
+I believe the essenece of your comment is that the data in the page
+cache can be modified between the write and the writeback time and hence
+it makes sense to have a write-through only semantic for RWF_ATOMIC
+buffered IO.
+
+However, as per various discussions around this on the mailing list, it
+is my understanding that protecting tearing against an application
+changing a data range that was previously written atomically is
+something that falls out of scope of RWF_ATOMIC.
+
+As John pointed out in [1], even with dio, RWF_ATOMIC writes can be torn
+if the application does parallel overlaps. The only thing we guarantee
+is the data doesn't tear when the actualy IO happens, and from there its
+the userspace's responsibility to not change the data till IO [2]. I
+believe userspace changing data between write and writeback time falls
+in the same category.
+
+
+[1] https://lore.kernel.org/fstests/0af205d9-6093-4931-abe9-f236acae8d44@oracle.com/
+[2] https://lore.kernel.org/fstests/20250729144526.GB2672049@frogsfrogsfrogs/
+
+> 
+> This gives us the same physical IO semantics for buffered and direct
+> atomic IO, and it allows the same software fallbacks for larger IO
+> to be used as well.
+> 
+> > > Why didn't you use the existing COW buffered write IO path to
+> > > implement atomic semantics for buffered writes? The XFS
+> > > functionality is already all there, and it doesn't require any
+> > > changes to the page cache or iomap to support...
+> > 
+> > This patch set focuses on HW accelerated single block atomic writes with
+> > buffered IO, to get some early reviews on the core design.
+> 
+> What hardware acceleration? Hardware atomic writes are do not make
+> IO faster; they only change IO failure semantics in certain corner
+> cases. Making buffered writeback IO use REQ_ATOMIC does not change
+> the failure semantics of buffered writeback from the point of view
+> of an application; the applicaiton still has no idea just how much
+> data or what files lost data whent eh system crashes.
+> 
+> Further, writeback does not retain application write ordering, so
+> the application also has no control over the order that structured
+> data is updated on physical media.  Hence if the application needs
+> specific IO ordering for crash recovery (e.g. to avoid using a WAL)
+> it cannot use background buffered writeback for atomic writes
+> because that does not guarantee ordering.
+> 
+> What happens when you do two atomic buffered writes to the same file
+> range? The second on hits the page cache, so now the crash recovery
+> semantic is no longer "old or new", it's "some random older version
+> or new". If the application rewrites a range frequently enough,
+> on-disk updates could skip dozens of versions between "old" and
+> "new", whilst other ranges of the file move one version at a time.
+> The application has -zero control- of this behaviour because it is
+> background writeback that determines when something gets written to
+> disk, not the application.
+> 
+> IOWs, the only way to guarantee single version "old or new" atomic
+> buffered overwrites for any given write would be to force flushing
+> of the data post-write() completion.  That means either O_DSYNC,
+> fdatasync() or sync_file_range(). And this turns the atomic writes
+> into -write-through- IO, not write back IO...
+
+I agree that there is no ordeirng guarantee without calls to sync and
+friends, but as with all other IO paths, it has always been the
+applicatoin that needs to enforce the ordering. Applications like DBs
+are well aware of this however there are still areas where they can
+benefit with unordered atomic IO, eg bg write of a bunch of dirty
+buffers, which only need to be sync'd once during checkpoint.
+
+> 
+> > Just like we did for direct IO atomic writes, the software fallback with
+> > COW and multi block support can be added eventually.
+> 
+> If the reason for this functionality is "maybe someone
+> can use it in future", then you're not implementing this
+> functionality to optimise an existing workload. It's a research
+> project looking for a user.
+> 
+> Work with the database engineers to build a buffered atomic write
+> based engine that implements atomic writes with RWF_DSYNC.
+> Make it work, and optimise it to be competitive with existing
+> database engines, than then show how much faster it is using
+> RWF_ATOMIC buffered writes.
+> 
+> Alternatively - write an algorithm that assumes the filesystem is
+> using COW for overwrites, and optimise the data integrity algorithm
+> based on this knowledge. e.g. use always-cow mode on XFS, or just
+> optimise for normal bcachefs or btrfs buffered writes. Use O_DSYNC
+> when completion to submission ordering is required. Now you have
+> an application algorithm that is optimised for old-or-new behaviour,
+> and that can then be acclerated on overwrite-in-place capable
+> filesystems by using a direct-to-hw REQ_ATOMIC overwrite to provide
+> old-or-new semantics instead of using COW.
+> 
+> Yes, there are corner cases - partial writeback, fragmented files,
+> etc - where data will a mix of old and new when using COW without
+> RWF_DSYNC.  Those are the the cases that RWF_ATOMIC needs to
+> mitigate, but we don't need whacky page cache and writeback stuff to
+> implement RWF_ATOMIC semantics in COW capable filesystems.
+> 
+> i.e. enhance the applicaitons to take advantage of native COW
+> old-or-new data semantics for buffered writes, then we can look at
+> direct-to-hw fast paths to optimise those algorithms.
+> 
+> Trying to go direct-to-hw first without having any clue of how
+> applications are going to use such functionality is backwards.
+> Design the applicaiton level code that needs highly performant
+> old-or-new buffered write guarantees, then we can optimise the data
+> paths for it...
+
+Got it, thanks for the pointers Dave, we will look into this.
+
+Regards,
+ojaswin
+
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
