@@ -1,87 +1,78 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5592E2EF9;
-	Thu, 20 Nov 2025 10:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103A02D2497
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 11:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763635071; cv=none; b=tz1sTdXBoV7jCsZy8PJT3a1jfziy1xc+CkiWaE48OYCkQFaU45ZwAqrnDbC3cMpCdHthOJeV4Z5au+0YTSb5AV7HWqxb7niDWCFpIoqHF6F2OTOu8TaZ0WsQvSl4Wqt1AjCi81dVbCvIAnW80bTYcmGXan4P6CPaN4fjxYtKOUI=
+	t=1763638583; cv=none; b=aBgdXCdvHxxQpagqnXLupuQlaI6Ll4ap+Lxe5GBsvc1zaRk28szDb71Rx/HRCNiunMcE2G2VO2yc7mGb7okxdapv6HluX0Oz2qmCI/IgnkEYnasQpNH05eEcdI4RvKxDZV8tAyneC1fTj81ynrei9Tw6QLE3t9MhhVvr2j+64PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763635071; c=relaxed/simple;
-	bh=zTgEYE395/v14G3bbz3aFs4mxZjYly78pp3eWo2OSTU=;
+	s=arc-20240116; t=1763638583; c=relaxed/simple;
+	bh=F+0N4wMzGmWADzwl/vFuA6k8UEcvJMDKp1Ep/I+CU2Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsm+0WmKG9crUY7o4E6gzynso1t8IBHHOFI0pI9KxMxXZlWqdGYPmuSlnxgmIdcRVIoc8hbeldyX9Md0+9sJ8RfKT9ktWGyB7PncvXIOE5+nxBwJRuseS6DTt4UqmaIWryMmHmgzt2O7LL8RyajMwa7zSuuTJMs2AudxVNFYdFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CIpzmcRj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GwowaKah6WQN0NoJ7VGWR2r0EglqtpP3NcwSjJ0G69TccERwoX1qdxbZVYWHg6FwyywkGzYa4LxJ9rO866rsxNRrZ22GmxDwYpXRQKGm5DeaU8mUyMMD+viHnqQSlDYhJI9wKd8CgwRjt3YXy4QhPlkYSHvpvY7xiEUC79IwT80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j/xlzzHw; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CIpzmcRj"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJLl0ke028025;
-	Thu, 20 Nov 2025 10:37:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=DiFm2pPK77NqjGSzdBjYiWga4vIf+H
-	SFMe/r5qjGP94=; b=CIpzmcRjLwZN7KojVF0gGFWMPqnUYOnxsJlEBVmRyswY7r
-	YLbnKYn2mj8h3fGVDY1+Ze9DCcUn0uLC4/0Ez7KL893cbgy1Z63qhrTiuW/19KAy
-	s3lHv4VkUDvNP6cwOJcKSQ5JLwtQKms86t6tYXUshjCifCHFdq/Ml+jvvi7OCpxl
-	l8A9QI+ZGKBUEx2C4H0SQPzB1IieZ7iBL1Ll+wyrAx/7yJdo+dCmETgksq3dT90+
-	H00peX9MOBM50IQ7ipqb9rpVmkpZ3V6buQTPpgtInSrULUEy7H7Ti8UvJRXAz+K1
-	UktDO6+edSl1xyijy/3TGWqcRjLhfa2G9bjH8l1w==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejka5rfa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Nov 2025 10:37:14 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AKAYZxS005668;
-	Thu, 20 Nov 2025 10:37:13 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejka5rf4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Nov 2025 10:37:13 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AK9Gl4t010411;
-	Thu, 20 Nov 2025 10:37:12 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af3use22j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Nov 2025 10:37:12 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AKAbA4g29557356
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Nov 2025 10:37:10 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C66A320043;
-	Thu, 20 Nov 2025 10:37:10 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 639E120040;
-	Thu, 20 Nov 2025 10:37:06 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.158])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 20 Nov 2025 10:37:06 +0000 (GMT)
-Date: Thu, 20 Nov 2025 16:07:03 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: John Garry <john.g.garry@oracle.com>,
-        Ritesh Harjani <ritesh.list@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-        tytso@mit.edu, willy@infradead.org, dchinner@redhat.com,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com,
-        martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] xfs: single block atomic writes for buffered IO
-Message-ID: <aR7vTybVzFTnqL9G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
- <aRUCqA_UpRftbgce@dread.disaster.area>
- <20251113052337.GA28533@lst.de>
- <87frai8p46.ritesh.list@gmail.com>
- <aRWzq_LpoJHwfYli@dread.disaster.area>
- <aRb0WQJi4rQQ-Zmo@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <aRmHRk7FGD4nCT0s@dread.disaster.area>
- <8d645cb5-7589-4544-a547-19729610d44d@oracle.com>
- <aRuKz4F3xATf8IUp@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j/xlzzHw"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-477b5e0323bso9757645e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 03:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763638580; x=1764243380; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TPlzmXt4DNVBdqLVvxiBIWu8Rl4FZ4bDuiyypGx7MuQ=;
+        b=j/xlzzHwOB9rBb9sb/z155Frmjy58E48WgNJlGSxtBSCUN5E616mxCcGmhwnb/0hkp
+         VZzSS1giFVpXwV0ObmekZjU4wrzbiqplWTVn6yD6tIsy6qWPKsvGcl7tXxbkl69HykAm
+         DEmB+cV9h4CWNIambnMzS8bPKLKG3JURMRt8oaSZcFXMYu32wfUWXhgcoqk6okfOwTKY
+         k7r2bQSHENsKretZkk19WddvE3zc+riDB+W/b1oTIGdpUYCQ6CiAjnCTRThfgkeoCSR/
+         jEjhZxJ22hcma1vTrXsoSOvyDVemaNOJ+BpGvMDAdO2tTWrt34ep/cO7oPMRw3GUTevI
+         eObA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763638580; x=1764243380;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TPlzmXt4DNVBdqLVvxiBIWu8Rl4FZ4bDuiyypGx7MuQ=;
+        b=Uuga7BLLWrRm1KUYIfRLMmDkzD8GS1qzJsW+985I2JrwyKwcT9wq0+r6KFaEN8zofP
+         GpzL3h0mYlMU/q6x/hCoYpz/Ha2/lpogLuQ7b/6nmCAjdGaeeJjc9fyuStkoNOECN6y3
+         RDkHG4TTgTU6ZLKH8qVRUTuHKKhJuv0qIg9ZsmjqnkvmCt7YHOtcwNYrHU18DAyOSfRh
+         e8vfjv5ON/SsFFX5VwVd3PyQ9cl/xQql+dP8KpUue8xnDkL+TV/9aa8OLpfrpU0tGSEh
+         GZOqMHKU82uIYOHyQrHFKyBP0baL9BUfcURC1a/Tq0k+CRUBiCWs27qoynT2IID+2XwK
+         RoRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiScz0yqAGvw/45ukx2n3rlAaneYZom/zJ7mJc+VllKhgvavC+Fpo3AproQabDHNZapew8tMnxG3J2ehmliNuzOQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxva3acpfmIvlk8kDLUxugisPgp/mkW7eEPrap92QxDESg6/+jE
+	wTrwDSBRPJf9C4e9enAKu+6wh3afPt04Qy5kC/6gqL8EDeiSy197WLgzSBcmptH4Kg==
+X-Gm-Gg: ASbGnct+zUwjkcDLsjH/XqwUsdCw4OqApSkHvRbMT/+kwq7DMW4k5zi29H39pE9Cwaa
+	U1lVBTktk+1HraNNhUd4NcNOx9vCV5KnE3b1I7QJZcxugKAI8p/X595u9SfRRFzJ9Bu5WM2WZBR
+	BevUKanjj0nNIfjV+U4ORTgl01AImI8JpCsj6S9Ud28qbyMMm2K8rfjUCR3wyOv+HSPTQ7GLab/
+	e3BXOZwmypPEx/zl/mdA473iR/1KSExBIiHQfn4t1DG1UoTnJcqdzKmLnciDSohA/fBXwtCkTC3
+	cfE1aUgJLVH6AOmzoif2C2h8vkeG5NzpuGII6Pj3jOOygNOpaYl+4vEac9XOlx21drVMe3Vi+Dk
+	5n7zAoQVw92SPVLDisR5ExVfPCLafonaRhJxXyJeYy880ghYWpsyBn6DprgLLDwS5klgNOJ4led
+	bCtZnJ5eA10ISqfDs66x0S4Pz3CWnDkAx6kQ/pX6kqT09GS2oSCQ==
+X-Google-Smtp-Source: AGHT+IGcOCRDUWPkVUZ7ncQTNFf+q64GbtuEHTlJs5oKc83ztKfhHnrQKRpzLVqerrPSrM7dBJtv3A==
+X-Received: by 2002:a05:600c:2e4c:b0:477:9890:4528 with SMTP id 5b1f17b1804b1-477b9ea31e9mr14670485e9.2.1763638580134;
+        Thu, 20 Nov 2025 03:36:20 -0800 (PST)
+Received: from google.com (120.54.38.34.bc.googleusercontent.com. [34.38.54.120])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9e1b657sm60238005e9.17.2025.11.20.03.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Nov 2025 03:36:19 -0800 (PST)
+Date: Thu, 20 Nov 2025 11:36:16 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Marc Zyngier <maz@kernel.org>, g@google.com
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 20/28] KVM: arm64: Add clock support for the pKVM hyp
+Message-ID: <aR79MCNlAKP1H-PQ@google.com>
+References: <20251107093840.3779150-1-vdonnefort@google.com>
+ <20251107093840.3779150-21-vdonnefort@google.com>
+ <86cy5erprc.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -90,168 +81,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aRuKz4F3xATf8IUp@dread.disaster.area>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: iDamewJHv0QnhGk1wWJdIgKgHtcmARzf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX+pxIFpdIplp6
- RR2l0xrSadCKFa0vLJi9A7gDrVIAkyOtzmPehTZVRmLenVYmfRq3bq/USt+qDyJnFsMTOVZnI2H
- Z6RXB2oomcd42MbJolqmKOR/Qza90jAzBaX5pOhPYVVD9pXEHbhtp5tlX/iOixFLo8xByk5seEx
- NmDC/PcXrsqH270b2ZKJ1zcwzigTEMzw/4M7eAm0oaflXbYf7BvZ7szl2gvmJD7172hSgaSVKTm
- g7c1vT6t5NwKb69BVNe0KLDSQNQsJwCYwBzkVQCFrHZTqQ9s9TQFfmsR7C2cnHr5YsEJqcyydqs
- n/NJmIMV/93Ovc8Sw3oxwSCbuSpWumfYSbTs+96DpouPrKLCZJV63obthf0gQtpB353LJUWNk+X
- kOM+X5Bi0kaw3SFUeH2IxhbL341vrA==
-X-Proofpoint-ORIG-GUID: _mx-pRALduQpTGKgkkarqN-KolQEQbAr
-X-Authority-Analysis: v=2.4 cv=XtL3+FF9 c=1 sm=1 tr=0 ts=691eef5a cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=70sU5qKYBexbB1LL4xUA:9 a=CjuIK1q_8ugA:10
- a=biEYGPWJfzWAr4FL6Ov7:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-20_03,2025-11-20_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
+In-Reply-To: <86cy5erprc.wl-maz@kernel.org>
 
-On Tue, Nov 18, 2025 at 07:51:27AM +1100, Dave Chinner wrote:
-> On Mon, Nov 17, 2025 at 10:59:55AM +0000, John Garry wrote:
-> > On 16/11/2025 08:11, Dave Chinner wrote:
-> > > > This patch set focuses on HW accelerated single block atomic writes with
-> > > > buffered IO, to get some early reviews on the core design.
-> > > What hardware acceleration? Hardware atomic writes are do not make
-> > > IO faster; they only change IO failure semantics in certain corner
-> > > cases.
-> > 
-> > I think that he references using REQ_ATOMIC-based bio vs xfs software-based
-> > atomic writes (which reuse the CoW infrastructure). And the former is
-> > considerably faster from my testing (for DIO, obvs). But the latter has not
-> > been optimized.
+[...]
+
+> > +/* Using host provided data. Do not use for anything else than debugging. */
+> > +u64 trace_clock(void)
+> > +{
+> > +	struct clock_data *clock = &trace_clock_data;
+> > +	u64 bank = smp_load_acquire(&clock->cur);
+> > +	u64 cyc, ns;
+> > +
+> > +	cyc = __arch_counter_get_cntpct() - clock->data[bank].epoch_cyc;
 > 
+> I can only imagine that you don't care about the broken systems that
+> do not have a monotonic counter, and that will happily have their
+> counter swing back and forth?
 
-Hi Dave,
-Thanks for the review and insights.
-
-Going through the discussions in previous emails and this email, I
-understand that there are 2 main points/approaches that you've
-mentioned:
-
-1. Using COW extents to track atomic ranges
-  - Discussed inline below.
-
-2. Using write-through for RWF_ATOMIC buffered-IO (Suggested in [1])
-	- [1] https://lore.kernel.org/linux-ext4/aRmHRk7FGD4nCT0s@dread.disaster.area/
-  - I will respond inline in the above thread.
-
-> For DIO, REQ_ATOMIC IO will generally be faster than the software
-> fallback because no page cache interactions or data copy is required
-> by the DIO REQ_ATOMIC fast path.
-> 
-> But we are considering buffered writes, which *must* do a data copy,
-> and so the behaviour and performance differential of doing a COW vs
-> trying to force writeback to do REQ_ATOMIC IO is going to be much
-> different.
-> 
-> Consider that the way atomic buffered writes have been implemented
-> in writeback - turning off all folio and IO merging.  This means
-> writeback efficiency of atomic writes is going to be horrendous
-> compared to COW writes that don't use REQ_ATOMIC.
-
-Yes, I agree that it is a bit of an overkill.
+I haven't used the _stable() variant for the affected devices... Hum this will
+not be trivial from the hypervisor. I'll see what I can do.
 
 > 
-> Further, REQ_ATOMIC buffered writes need to turn off delayed
-> allocation because if you can't allocate aligned extents then the
-> atomic write can *never* be performed. Hence we have to allocate up
-> front where we can return errors to userspace immediately, rather
-> than just reserve space and punt allocation to writeback. i.e. we
-> have to avoid the situation where we have dirty "atomic" data in the
-> page cache that cannot be written because physical allocation fails.
-> 
-> The likely outcome of turning off delalloc is that it further
-> degrades buffered atomic write writeback efficiency because it
-> removes the ability for the filesystem to optimise physical locality
-> of writeback IO. e.g. adjacent allocation across multiple small
-> files or packing of random writes in a single file to allow them to
-> merge at the block layer into one big IO...
-> 
-> REQ_ATOMIC is a natural fit for DIO because DIO is largely a "one
-> write syscall, one physical IO" style interface. Buffered writes,
-> OTOH, completely decouples application IO from physical IO, and so
-> there is no real "atomic" connection between the data being written
-> into the page caceh and the physical IO that is performed at some
-> time later.
-> 
-> This decoupling of physical IO is what brings all the problems and
-> inefficiencies. The filesystem being able to mark the RWF_ATOMIC
-> write range as a COW range at submission time creates a natural
-> "atomic IO" behaviour without requiring the page cache or writeback
-> to even care that the data needs to be written atomically.
-> 
-> From there, we optimise the COW IO path to record that
-> the new COW extent was created for the purpose of an atomic write.
-> Then when we go to write back data over that extent, the filesystem
-> can chose to do a REQ_ATOMIC write to do an atomic overwrite instead
-> of allocating a new extent and swapping the BMBT extent pointers at
-> IO completion time.
-> 
-> We really don't care if 4x16kB adjacent RWF_ATOMIC writes are
-> submitted as 1x64kB REQ_ATOMIC IO or 4 individual 16kB REQ_ATOMIC
-> IOs. The former is much more efficient from an IO perspective, and
-> the COW path can actually optimise for this because it can track the
-> atomic write ranges in cache exactly. If the range is larger (or
-> unaligned) than what REQ_ATOMIC can handle, we use COW writeback to
-> optimise for maximum writeback bandwidth, otherwise we use
-> REQ_ATOMIC to optimise for minimum writeback submission and
-> completion overhead...
+> Also, you may want to document why you are using the physical counter
+> instead of the virtual one. I guess that you don't want CNTVOFF_EL2 to
+> apply when HCR_EL2.E2H==0, but given that you never allow anything
+> else for pKVM, this is slightly odd.
 
-Okay IIUC, you are suggesting that, instead of tracking the atomic
-ranges in page cache and ifs, lets move that to the filesystem, for
-example in XFS we can:
-
-1. In write iomap_begin path, for RWF_ATOMIC, create a COW extent and
-mark it as atomic. 
-
-2. Carry on with the memcpy to folio and finish the write path.
-
-3. During writeback, at XFS can detect that there is a COW atomic
-extent. It can then:
-  3.1 See that it is an overlap that can be done with REQ_ATOMIC
-	directly 
-	3.2 Else, finish the atomic IO in software emulated way just like we
-	do for direct IO currently.
-
-I believe the above example with XFS can also be extended to a FS like
-ext4 without needing COW range, as long as we can ensure that we always
-meet the conditions for REQ_ATOMIC during writeback (example by using
-bigalloc for aligned extents and being careful not to cross the atomic
-write limits)
+You mean I might as well use __arch_counter_get_cntvct() as CNTVOFF_EL2 will
+always be ignored in the pKVM case?
 
 > 
-> IOWs, I think that for XFS (and other COW-capable filesystems) we
-> should be looking at optimising the COW IO path to use REQ_ATOMIC
-> where appropriate to create a direct overwrite fast path for
-> RWF_ATOMIC buffered writes. This seems a more natural and a lot less
-> intrusive than trying to blast through the page caceh abstractions
-> to directly couple userspace IO boundaries to physical writeback IO
-> boundaries...
-
-I agree that this approach avoids bloating the page cache and ifs layers
-with RWF_ATOMIC implementation details. That being said, the task of
-managing the atomic ranges is now pushed down to the FS and is no longer
-generic which might introduce friction in onboarding of new FSes in the
-future. Regardless, from the discussion, I believe at this point we are
-okay to make that trade-off.
-
-Let me take some time to look into the XFS COW paths and try to implement
-this approach. Thanks for the suggestion!
-
-Regards,
-ojaswin
-
+> Thanks,
 > 
-> -Dave.
+> 	M.
+> 
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> Without deviation from the norm, progress is not possible.
