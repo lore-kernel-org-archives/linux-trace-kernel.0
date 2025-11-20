@@ -1,73 +1,147 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010055.outbound.protection.outlook.com [52.101.46.55])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451631E0083;
-	Thu, 20 Nov 2025 08:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC21628689B;
+	Thu, 20 Nov 2025 09:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763626688; cv=fail; b=UOLEJQtK2p7GA3swDB5Wtyx/2ZFYSJSNGCKhKYk7xfiSaGMoYnFUJ6lYbqNbsXWw24HNyz2/ljB95BprGeaV8rkI4lTw57KHqRf1Y7ahvvzXFzyUkMhTaNEi8yRfcIBV3fgikSn6fVxx5t2O91Wl15rQnOmk1st5tz7P+2rGfh0=
+	t=1763631617; cv=fail; b=hcOgKoCS5+mC5dkiWTA4jfp9p0yO+bn7hDGzpk2aFQ7atuY++kuAk9uJz7MdTMh+eRrYKtjE3vR+RGNKYz6k1bu4pSJAwjiAug2NUnli6ouqD6+nLMScUdisXAHpQVD4tHdhFIF5Nl9IaHxuID95th7jU9yrpkTn97MGZ0UhAQE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763626688; c=relaxed/simple;
-	bh=trjmuF8N6uO9Bx3e+4YHjSycLZUAfE+kcPw3cSE+bFo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CQugcTktZcG7ocEFEDsaY9Qt5uqejmAJqyvJUYbVGgeYlplhsULJPLDSYUyM5rJcTfceRtblGLTVhCSoig0InPuW4Ujtdi0vLUsGg+cpR/KSFUTpPkU16xTs9p0Pt10LRyhu2r6MWhB5ELBO1ytHVgFO3ugSGh6PrwrIoh7uIQg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=asCsqtgw; arc=fail smtp.client-ip=52.101.46.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1763631617; c=relaxed/simple;
+	bh=uF8hIycoC2zBUGLrsEuUQ0KoNk+VhW6ErwvhZaco9H4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hmMnqikVEJHm5MhvHCsuDllPBAFBrBFleZO89jAFUsbHwhLR4i6umd6EHs5u3Jg1Q8u4/2ycFd8F5JIf1z1dv3v0UCz/fCWqJGmJKQX2CM2usJjv+aJActPNVZhPRc57CMX0aTjq5TurDJYqhaNdw0PIlMHijcIR/kBnhRJ+0BQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AB4Hlr77; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RLXnG1Za; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="asCsqtgw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AB4Hlr77";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RLXnG1Za"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AK8psgo025083;
+	Thu, 20 Nov 2025 09:39:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=x4fUEt2dY48v08qsyq
+	D9z9bao7UeIcMWh+YtvJ7Wa8M=; b=AB4Hlr77en1zgu1iHk+B7Apaq3MqGGIEQ/
+	LJPRtUuMhWhDPaxaVa8d9RCv2WkwtmQyQGbvbfSX/X3ZI5PCxribrfPwZ7SkYOUs
+	Mm3w/pFzWHW5Q/uQeRg5PE4+PF61p0O+oehQ1HEg8yivz/khZDYd6Pni+35DcrzY
+	v5/+F/xcFdHF8S7clbtEMJsAIwLTEdoCJItKirj5IPyiml/LWuK9XkY/qqsjxzjX
+	lGZgmMQI9AXnc7WunZ1BATwjHe70ovuNtMP5ScOj0oE4I/4pelk/0zdCwg1fJ0bV
+	IBATtE6JZk1Q6LKxrGOYdIsrKky4J+jqAXLaJ5JO7GginDhFr6XA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4aej968raq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Nov 2025 09:39:13 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AK7gVgs003837;
+	Thu, 20 Nov 2025 09:39:13 GMT
+Received: from mw6pr02cu001.outbound.protection.outlook.com (mail-westus2azon11012012.outbound.protection.outlook.com [52.101.48.12])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4aefybt6cu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Nov 2025 09:39:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HtgkM68YPuOEZ6McVpQC0kS8gI3d3m90gxqOm8gcQ5VEZbRaAsrexi5t0rI8amt5SwHTklrwJCQp6smDRSISVSC3Zu+k+IwcciNXeiQIX6E9ktp1w9ul++jNhXdS5k8bWfBRLwezhNZsySzztvMkTpNEPS5ou+Trb3IuMbTomN5V5BMnVEF9yhs7ik3AunLgF3/Hl9Kf3FMCdHVi9ymXTnybe+ihBF0//FsEnlUk/6/nDyUpOsZ7esgsatTVSYYm7c3KRF0rkZeuVAkHjvXOXTpxhZyFeG+4gVOC8GygDcWj5CX+wRP0zY8Lnq2MmeuL0Abq87H19lQyyH8c1Uru5Q==
+ b=qumUVLD8P0uKYvJ7uVWudq9i4wKFIjLo5no4cipmWp7FgGDeMROJ9SLikEwdIXLQx3hYL8JWxIRO0+H6BY7R35oh1oyhUMYADamCGTilmDupeWH8oe9SOtk/JIrZiO+nEiMzsI+PC/7Z0RgL85ulIRioCi0/dN1Q1aEihQJg81pMT6SzPAfPZuvLzqgk/6BjBOQt1WnsEQSoD/Prlf9I0AjsAwUqDu//d3vRN2fNOouqkUnNmVzuJmHobEsSCl7DN8Dd4l36Utsq12doFC6kt6xo1FN1wFrn9SGVQB5iBKtECSmH2tzwUKqkvbtABelETM2nhoB5tfnbV/v8rayefQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1xCNONfFZHZpBZDqEZCiaQajDnbALFKwagXC5pW44o8=;
- b=xvTTxToJp21LghYjBBIFm2+Jz2k7jbvCRLqtt4iCJF8k1pQ4FGbYJGD5MxLkclDAwdkh8x0I0c2HxLCw1Y4PMTUvWP7XKRT/ldE6maC0VSpnx00LEvov/A4Uw/ag3sxpI/9ZnMAwb+crJqDiK8B7s7qNOIPKfQoWNyRTXRJ4SbaxvNdK3IFcGxQWlxSQLxLq6FhlQ49GuLu+TbhyfEak91QiAvHNlhIdBiQF4i/xy+peLIEDcj/OMgo2nR3nQj6x1Kr3d1uU9VxlQLqoA+Vq56i8A4YiNW88gaBqm1mABePnNew4YHnmKzvUhlq18kLtyToRcRXFmLFkWl6+3I7w7w==
+ bh=x4fUEt2dY48v08qsyqD9z9bao7UeIcMWh+YtvJ7Wa8M=;
+ b=EPadCiow1JLm5mXLBKnooPPkY+Dv/TOCMNeKn9m7TdoA5SBor3HvaFzmsge5AZKNn919vjgcqiN2ZqtQgrSMRVGjFOdwGVxqQAZ/52ja1wYxk1Tsd6zXWsFjqma8ePfjVczzT8u3XFzAhYLvwP6egaLb5k5Y90IYroTqesKaUkXN5w+0TEeTtXL82RpGu4HCx6wIkGKLqnprLIC64NTbAum8ztFFuKy92nE0VzBb1LJhH+EHBO7RMcn3ZTQrFTVI1kDV84YPkaEYYsWjIrAkX3tDfK0TX0TY/i7beypYd4SqTNAV6EPpj7Qmf3Xe6J4yUgX1t8z6WELoUtfGK6mhGw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xCNONfFZHZpBZDqEZCiaQajDnbALFKwagXC5pW44o8=;
- b=asCsqtgw2RdRjku/y2S/U+9uHq88H4OjLghOzraZ4t7/pZdLHENF2LdzIUCyd3pTAbNaf3cVkXq3ZC6djPDjozoeC3Hr2ramO62tWnuo82w7wIA1LW17WWEXzE8XDxYyIw60OyPUhb1g+52vBpTm0Hoc2rZgOc3cB+sDNx4Yx44=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
- by DS7PR12MB9041.namprd12.prod.outlook.com (2603:10b6:8:ea::19) with
+ bh=x4fUEt2dY48v08qsyqD9z9bao7UeIcMWh+YtvJ7Wa8M=;
+ b=RLXnG1Za6wMrmX2TAQBIw5BpkcE78ld/LLbOQrT5M5d/6AZjS6jh9rVYbibmI0/2G5qcqodlDWuEYuZpYc7vSqNUwligEryQt4aRN9akeKpIOGqe+X4GLYfDyWtFdyGQBXRLV8B8Bb8UIQVEzQLF9sQiA1sai0ycIgKt/k2fib8=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DS4PPFA043F25E4.namprd10.prod.outlook.com (2603:10b6:f:fc00::d39) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Thu, 20 Nov
- 2025 08:17:59 +0000
-Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
- ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
- 08:17:59 +0000
-Message-ID: <33476cb4-318b-49db-9cc1-a354eca9e883@amd.com>
-Date: Thu, 20 Nov 2025 13:47:51 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] mm/khugepaged: map dirty/writeback pages failures
- to EAGAIN
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20251120065043.41738-6-shivankg@amd.com>
- <20251120065043.41738-10-shivankg@amd.com>
- <6c1d6b80-d290-4110-9a49-53e7404136bc@arm.com>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <6c1d6b80-d290-4110-9a49-53e7404136bc@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0048.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::19) To SJ0PR12MB7458.namprd12.prod.outlook.com
- (2603:10b6:a03:48d::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Thu, 20 Nov
+ 2025 09:38:59 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
+ 09:38:59 +0000
+Date: Thu, 20 Nov 2025 09:38:57 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: david.laight.linux@gmail.com
+Cc: linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@lst.de>, Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Zhou <dennis@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Jens Axboe <axboe@kernel.dk>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, John Allen <john.allen@amd.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Juergen Gross <jgross@suse.com>, Kees Cook <kees@kernel.org>,
+        KP Singh <kpsingh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Mika Westerberg <westeri@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>, Namhyung Kim <namhyung@kernel.org>,
+        Neal Cardwell <ncardwell@google.com>, nic_swsd@realtek.com,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Olivia Mackall <olivia@selenic.com>, Paolo Abeni <pabeni@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, Peter Huewe <peterhuewe@gmx.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>, x86@kernel.org,
+        Yury Norov <yury.norov@gmail.com>, amd-gfx@lists.freedesktop.org,
+        bpf@vger.kernel.org, cgroups@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org,
+        kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mptcp@lists.linux.dev,
+        netdev@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH 00/44] Change a lot of min_t() that might mask high bits
+Message-ID: <6ef2fb97-56a5-4cf1-9dc4-b46fa04cbdae@lucifer.local>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
+X-ClientProxiedBy: LO0P123CA0010.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:354::19) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,129 +149,290 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|DS7PR12MB9041:EE_
-X-MS-Office365-Filtering-Correlation-Id: 746c2c86-161a-4984-08d6-08de280d50cf
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS4PPFA043F25E4:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63b535ed-f831-4444-84b2-08de2818a215
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|13003099007|7053199007;
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?akRVUW1mRlN0a3FVUHE3VGtyeE53MGlDY1hYSGVuc2JMekltSHNGblhYMFVW?=
- =?utf-8?B?RVZpSU1Ya1hTeDBXdEV6eStYTnpDUXQyVDBhemNIbnNURWN2OVFuRzVOWDBS?=
- =?utf-8?B?VFJ4MUozU0dHM3l3a0Fad0crTG5wSklTZGhPQXZYN244SEp6US85UCtJa3lr?=
- =?utf-8?B?cTlTK3BKMVd5cmM4Mkhlc1ZwemN0T3dSbHVkektzM2NMUFhQa0k3Umxra2lF?=
- =?utf-8?B?RmFtaTR3VFBtTDlLNGV5SEFVaTMwNG8wbVN6ZnBQZjEwdDVJemZ0US8yRyth?=
- =?utf-8?B?TDVnaXJ2RzZObG9ZcERnODhGWHFSaW5aak5NZit3QlQwdWc4QU9zWDNGSmlL?=
- =?utf-8?B?Y3JZZEJEbFUyR1ZWNkp4djlUT0ZodEhpd2lMM1diU1hWRisxMVQwQzZSN3ZZ?=
- =?utf-8?B?TzBrUTQ2Vk1TRmhLWnpYak40VVRKc09KWmFQcUJGV0hJZUxaR2t0L0FWZmxK?=
- =?utf-8?B?bDdFbk1vVXJsb0hlWW9WbmNrSU54SmRkdnUrZDlOMUg4amJjR3VNS0cydUx2?=
- =?utf-8?B?Y0xkVWJRSTFyWG5sTkl3N1VRWjFweGg3bXpQcldHTkkxWmh1NkI1a1hoM05P?=
- =?utf-8?B?SDYzV0FIZ2FmS2FoYmY2S1hLNXFrbm8xcEJYakowSFh4QnhhazJMY3crR3F0?=
- =?utf-8?B?SjdwQ3BQbkoxQzdtZWNoWFc5VzlOa3E5SDJTTHc2SGl5dEhCUjhneDZhL1Nh?=
- =?utf-8?B?VC9wRjdaQU0xTk1VenVVTm1XSldPN2czTmc1WHdFVXFMcWlPaXNiYzR1eklX?=
- =?utf-8?B?UjZRVk1laFhzMzMwMDhkK2pkWkh5SUNaSmtod3Q0djErbzcwVUVjUUk1UmNQ?=
- =?utf-8?B?bU5MSFl5T3NUbk5zeitIZlRIaVg1NUk1Ty9iUVJSOVFhTmp3NWhybHZoY0k5?=
- =?utf-8?B?bk5rcFdLeFRjSkFFMnBSV2tKVG0vV0Y1LzZ0bUJGbEs5azJBejhlcG9icHZm?=
- =?utf-8?B?VmZ5Ly9kVnI4WFNOK01qK1JqV3NBekRFNHd6MTFPTC9FRkFIQjN6dS8yVEp5?=
- =?utf-8?B?dG4vSFI5R0prOFhyeDVya016MnhMQVJobzNTRFIxQVpONUVSOWJySWgxeGJM?=
- =?utf-8?B?Y1VJM3BsMW5QbDEzWmxuNzVvMjFMTXphVDFQSHA4cmQvUzBML2NmclNhQlNZ?=
- =?utf-8?B?dUU1dlR0OWdZMG8rQm0yaS90UGxDOFRsYkhyNnBFQ3hzUlh6VXhPalpRY3Zo?=
- =?utf-8?B?K1ZzVWdTN3FJRkkxb3VhdncrZWRiM0UwRTRQdkJKV2ZZV2xBQm9oaGhaeS9r?=
- =?utf-8?B?d3l5OTZ1cDhUbUVyd1BNbnI2N2IvY0RFekttSFppdmNXNWw4VlVud2JKVzht?=
- =?utf-8?B?YXdMMHhiOVlFZTNtRzRvWE9wQy9EalpUZVRYVEZUR0c2S2hZeUJja2thYm5y?=
- =?utf-8?B?Z0pGZk1oY1N1UzU1dFgwbFAzOVRaS0ZDeDd0T0ZsNjJqU2VRaW54aG41TEZZ?=
- =?utf-8?B?VzZwZzNHdlRZd0h4SVNqbi9neG9VMXl6ZlRBekgyVWNRUnZuNjlDZE41SWpX?=
- =?utf-8?B?Q1lncy90VnVIUmRBaDdQVzJqR0VUSWFvNmpRN1c3VFlLZHZ4YXJ4Q0x4NlBp?=
- =?utf-8?B?My9DTzRZbS9zSGZseVNlRndtSG1zWUU2Wm95Ni9RZFExNzdxSkk3VUZOTTZS?=
- =?utf-8?B?bEQwS0RmblNobERlUHpxZnFQQlpRR3NUN1drZDBuV0loMnc4R2ZRSmRWbDBE?=
- =?utf-8?B?NWJUV25DbmhnMTRhYzRMRzcwcFBkMHNISGw3ejE4VFlkVU1JaSsyNVRudkQ0?=
- =?utf-8?B?bmQ4WFZIUFJYQ0FQcmtnQW5GbDVTcFM1d0h5MndTajJDbmpINHRlVDV1ZG42?=
- =?utf-8?B?NUt3dXlFL0ZYV25wNERBNjhpUkJWTWI1aEJ6bTBxMEM0WE91dm0rL0ZKVDVX?=
- =?utf-8?B?RmJNR1dXTnhtWGJ6cHFCY0k4VSt2bFVnQ1c5K0tKQTRrdE5jRlpNZ2ZlK1FG?=
- =?utf-8?B?MHArTUh0ZkpvSUIrdXVWYzRPSit3QzBVNUZYQktLYXQwMlFTc3I5RnJYMTRY?=
- =?utf-8?B?U3l6MElVRlR3PT0=?=
+	=?us-ascii?Q?c9/CcJ7O60eQP7KLrCZxQFr3Q8U8cBg+5mO4hB6PRYN1T3QIDxN2grHVLHw6?=
+ =?us-ascii?Q?TKs4x3ONPpB5+jtTKf7Nw86mws2Z/yGNS9epYtS0h/Sa4zMJrOeE+8gG+gTk?=
+ =?us-ascii?Q?X7MMFaMcSxnD2yQ91Jb/7e+lvUD3OHTA78ZuEb154amMdJrxxuHN5MfUSw3k?=
+ =?us-ascii?Q?cRThLzGheaOk/8OyRerEdXw5YyaHgxTelJ/1IxAhFTzU3DpoSBBBh8iIr1im?=
+ =?us-ascii?Q?0kq0p1wl+W6yxHWQy3ORLkrRdG4FPwIBbDdzCM/JPLopr8eP0ynpZ+zupbbk?=
+ =?us-ascii?Q?KcX+Q/Koof/iVc1kgykBW3pN0ERkdCGalezZMG2ZtcUhpOv0TIv+BY9ifdJA?=
+ =?us-ascii?Q?UQSVBHehFiHC+JKj5o+An4G6xWm1kvvsJChPE97KjDHFDol0S4pJnBSzSN9y?=
+ =?us-ascii?Q?BBLDy2iiI757oepk8e0MVuTMeQXuz0aJuQyQIC89dRAemyhInQ+xDet5+mQu?=
+ =?us-ascii?Q?hM8qv+A7A8HuZHwyApUTTU7uBN3WJJejKDnmD6CqJseHOpzgINLV1lpZHd3r?=
+ =?us-ascii?Q?3BwzwMKSc1UnIEilqDMenIyZ1dYa9GIPY68bapQnnZXkiX4fdfic5cPrRLds?=
+ =?us-ascii?Q?KOLIrV3KavsouaTCQtaELQjLSQTChUCFtxBPVitIcnWSuoWRmTDtMcHYth+g?=
+ =?us-ascii?Q?Qu6fJ8ebIpAoqO4HhOkatNNmHcE4mV1ltApCBQ6qSvFsOvA1rY0JZM2ERsPw?=
+ =?us-ascii?Q?gErnb9+gYt3p3YGP1tuAZ2J1oNJjmtyMW9KnbzavtI65FZS3UALs+FlkAHdg?=
+ =?us-ascii?Q?OEXmD5Wxn6BBdQXx/lqVKFKoK0gxldZTNkMds24+zAqhEfDmk06ooRdvNraw?=
+ =?us-ascii?Q?zSHDA/rGqiP6h+e37GZ4P7qnEZ14pty6bBqY7MOLVXqX6CW3Q/O+x4un5Xe1?=
+ =?us-ascii?Q?cC7UYL8WkSba//fEBQAfsrAc1szn7ypZvjpjp07JOEjY9WTUyJYWeJsJbGLB?=
+ =?us-ascii?Q?mBomKueBFkZf+hhHnsnRTlvMDwcL2aNh2MCIGKoWMYr7ev7bTZaa/3/jhOEu?=
+ =?us-ascii?Q?gUEn8aDdNa0PiFu1oYAN/l3Zv8dj9JSHB+HA1TjKMyNBW48Wc2rcW0y0ZZb7?=
+ =?us-ascii?Q?advIteVDFgdwYgsN3+2LZe0XyDoVEaOR+RmlZPY4xmRdkeCM1Wp8ey18lg/A?=
+ =?us-ascii?Q?+A1qKGRsNOSvM8+sUsDHLwMNxoKL/cELW3ykuJ7rVr5mib3C65HCOqSU672P?=
+ =?us-ascii?Q?Nv+V+WQj0EVMOmr1F3S2cVbLlGyntc/gyJJSSsr7Trm6Xtta6G1Y2sd3AVtb?=
+ =?us-ascii?Q?2tkKMThSd4GkywWpuFdXkVYQfBAJGUXNzE7GiXxgSnfE1bUG5FNqjk+Oydy7?=
+ =?us-ascii?Q?mcD/FNGceMjf0JSLVv2p9Poj0aG2KCk9pjcpmiX9Hwb3pJf4H99Rzl3l7eNG?=
+ =?us-ascii?Q?0wntEwY8uGnW501P1N15JLtk19LGOTCCbRjrvX1KaijWSlGxCcJZFXjEGF/R?=
+ =?us-ascii?Q?/kYy7l7qwImf/snQObrGrY181BRdOAYG?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0c2TVRjNzVrc3F6SlNTMEQyRHd2K0EyWk1nSGI4bmJVdFEvUDBMZzVFNHpn?=
- =?utf-8?B?cUJJZmQwcitUdkZ4UnJVb0NhZHkwVFZHTXFnY29ObkdkUncrbFpYNVdra3VR?=
- =?utf-8?B?ZEVSNjNNU0tWV29Bb2swaE1Qa2hXQ1dVUDdRbitSbklMMmJtSTgxUzF1ZnBR?=
- =?utf-8?B?Q1NBQVhkWHNFcEJIWWZ1QVpqeE9jUnJucmhGUzVENTEraFpiQ3p5emgwQ3Rl?=
- =?utf-8?B?R25sNExhQXBkdmVqMXVycU9RUmpxMXdTTHdFUHVBZUVKNTZxUzlqOXFjQUUz?=
- =?utf-8?B?aGdudFd6b2pRZEUrc0xCN0ZzOFpNSWduaHJLVXlnN21DUGFqblFZZGhEOFN0?=
- =?utf-8?B?Rm8zOXN3MTkrOVZsR0FDUzhFTnFBMHdJUk0rV1FidEhZSFVEL0krazdDcmEw?=
- =?utf-8?B?VnlSdExPL3FPUXZWMlN4YlRVeHhDckZwcjRFWmg1U0lhWUJTdW9ScTJ4cDVh?=
- =?utf-8?B?bm1yOE9mc2hiaFJCLzd5YUNDN3B5WmwweXNWN2hXcUc4RWh6empWZStXcGx5?=
- =?utf-8?B?a0pkUkpjWE1TWFltU1pma01maVB4YzdMRDhpRlBmN2ROMm5UUzB3VmIzTGhG?=
- =?utf-8?B?U1JBUUt4a2FxS0NLdVFzQkVERDd6QkRvMldDVDdTNk5hZnJtK3J5TFpMRW5q?=
- =?utf-8?B?WmE1N29BYmFubFI1NWNHaE85bTR1Q2dUVmVKcExyVk04ditTVE9iN0lxNkRz?=
- =?utf-8?B?YkljWFZCM2RFc2VZM0VGOEY0VXpoSHpmU1hXdTZmeDlQb1dXamhXTnRpRlIw?=
- =?utf-8?B?aFU4b29DYzdqZkFCY2dMSURXNjJSV2FMVDgxWUVlQWo3SmJ6S3hSazQyQkZm?=
- =?utf-8?B?MU5kbk9yVUdYRlI2NC9XdnFqK2dsY1ptUTlMQjZFM093V1JpTUwrQWtZcGhC?=
- =?utf-8?B?YTlsY0JjTEVYYzlNbWh4eDQvWW1obGI1UFNqTFg2Q2ZQbkpRWDYzQ3krZHBz?=
- =?utf-8?B?bzQrdGpIaGFJQVZCQjBZekJXMXdESnlIUEpLWGJyVnV3U0pKYzg4eW5mOTJt?=
- =?utf-8?B?dXMwWFhySWVRWkJZOFRJNTVOa3VoQmFuVHBLQTVZM3RXNnRRc3pYZ0xKWlh3?=
- =?utf-8?B?bnc0eVJsSHlhOXJGNkJITkZCQ0lZU2JzTFVrRjhPSjlORjdLZGlBNVVhYnpT?=
- =?utf-8?B?QzFkL0F0Z3JNTWZqY2tOdzc1THJrUmZaWndnOE5GcksraTFBVDNYMkUrZUtM?=
- =?utf-8?B?MWU1eEVSK2FlVDErbmRNY3pHbG1FalV4QWVsUTlWZ0hoSzF2YnZRcGcycENC?=
- =?utf-8?B?Q2hVREI1WGhVakRVdHNGMlk5aW9DSUt1VFQycjRuQzkvSzloQ0QyK2lMeTNj?=
- =?utf-8?B?ZjFreW5abHdLTnJpNUI4ek9SNXJlSlJiNGt0M1l6WEx3RWRVYTZWMmFrMW9T?=
- =?utf-8?B?aE5XclZMSEVlaWgwTS8ySDRNVjBrUUhrUklPbU42bExmSjBiS2QwQk1NRkRi?=
- =?utf-8?B?cnpOdDVDRUZSbmtSU2p5UzQ2Q1c1RUUvbXMwWWt5UHBqb0o3Q0ZjU2xOK0Zr?=
- =?utf-8?B?MWdGRTJ3NjZCTXNjKzFHVWJ4WnhPSWtzekVBOElEUExOL3dNWU5LN295azVC?=
- =?utf-8?B?RnJwVmFpOUJMSFR5a2luL0ZHQTFGYTBPc25kb2U1b1liSVVmUSthaVBLNUhv?=
- =?utf-8?B?b21IQkdFU1lGZXBkRUhaRXBXdUJISHBrWjJFRDNLYTFqTHhZQ0RSbGgvMlEr?=
- =?utf-8?B?LzJDZU96bC9sUjBSQVhhV2FHWFNFalovSHI5eUowUXJmK3ZxUjRsWVkyMUlT?=
- =?utf-8?B?YjZ3VDI4MElnTTNkZ0dCemsvenRscmMzUk1lMVc2Q3ZpdmtEY29MWG5Gd29s?=
- =?utf-8?B?N2Q3MlQyeWtMNzFxZWtUc3dpdmJTN2dTY0FHaXdKeTQyTDVKUVVBbEpMZk1u?=
- =?utf-8?B?Qnh3OWNLZFRaMUQrSHZVRzkxNFRPVldicFp2bnp5bnY4d25NTzF4WWc5VFFH?=
- =?utf-8?B?c0hkMmNoeklaS3Y4MXArMmJVT0JRZEhmYWxZOEZ1QTJIcWVvdm5PWDdDcitN?=
- =?utf-8?B?aVhOdWVteUlMUXBleVc3cUdaS0ZYbU1SaC9Zck45R1ZjSStNVWwrWW10WCtk?=
- =?utf-8?B?c1hUNWhoNkw3bFBIS25kdk1HS013bzI2Zi9EckQ5ZitPSlVTUXFIb04ydmRZ?=
- =?utf-8?Q?NYv8WA+qRsPLobfYZ7TJNBhzR?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 746c2c86-161a-4984-08d6-08de280d50cf
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
+	=?us-ascii?Q?kPRWY1LIwS5S+D/L+x8VTm9PTXQwjo2HENrTSiBL4yuumMrLXTWwdbpU5r9W?=
+ =?us-ascii?Q?mAkDtwRm/3YlQxL/4xhbbKlRCQbZ3YN5O1+hNdX0w+GbFqpmkztV2OK/rb8N?=
+ =?us-ascii?Q?Y2aSRqdtiuBzTC4YnI3KMSvWJIM6146cw3wRVbStas3EG2rGlycuYpOnBlzD?=
+ =?us-ascii?Q?agcHk/JxFwpyFQBnRQnDM0F27l6qaCghYvfZZwR4Jm7/26UQPbVAG4z8uz8Y?=
+ =?us-ascii?Q?aCpsqMjbqE0jkplok//0MOC8WuvWijf+3o8G2b+SvKi5hja1ehhsoLjFrj+5?=
+ =?us-ascii?Q?Wjdm51ZYTEKpUe+Ntir9dvafBLYsftdiZj4ytDlG9aOD2E7op2yOnMaEjZ0V?=
+ =?us-ascii?Q?SjRSMp54wNvi2SRmla5MHdwc3reVek6AZBUETf6D0AHSIBIvrsP0DVrjekMY?=
+ =?us-ascii?Q?s0z0ddbwPNYnvY1+2P9Fl9xO2GPyHsCRMEs/I7N9vCwxQb2TP/mlLlapd7I4?=
+ =?us-ascii?Q?VRVEADyXrgDGTefu9DB5YSEKRAKpYjIT/ciWQydQkYHcs+KFhct4NKkvfViJ?=
+ =?us-ascii?Q?4Qvfb9d1Z5VBPDMkn+I2tpE0FHgyiJmLSQBiRuCQrn4Yku7s8z0SwqVOhXkt?=
+ =?us-ascii?Q?sjs48IOWIwwNoJs+c/PTJ2IJJp5wn8kOn7nmfbIcAHZ7dwTlQy6zCFtdOIdt?=
+ =?us-ascii?Q?t3qYuTZpPvWpMZKt2oMDFtIakSQmy/dia0RPuBPFjiRFiv1MmYtz/uLyCVUV?=
+ =?us-ascii?Q?qJ1P933vB6vRc2q9I7j3e6n5pEm5G7i3TOE7Cpd4fXGM2Js3r0XcrdqHJIjS?=
+ =?us-ascii?Q?DtHDiiw/Gn655DDunBC7Cgtfnp11N5Ft8TPB8akL5UY9eABrzFrX6yLR10OC?=
+ =?us-ascii?Q?Wx8Vhn1OZ8aHYi/swZEAIRCOPyUtWOwvRZn+jwn+cXnFF8/0z0FQ+6wq0MO6?=
+ =?us-ascii?Q?dkCY197auRmY0l7h9/OMaVLOTeIIbIH8yRirwWdzayjaE24UeTDjbPxJjDO1?=
+ =?us-ascii?Q?qlIHhI2qwHu4jH4cuQPxMsYl4VpX3OHEt2JfDTzPpZJ01FXrahsaDYtGSfud?=
+ =?us-ascii?Q?a19fWW2NAL7kQUA6SMzwRNFdlM3uNDJkOyTtCmdPzOLy1vPBjtpop3rMUWfE?=
+ =?us-ascii?Q?Q6N1XSY67waBy8146iAJFW6dND3eyb9guJY8b8Bzwp+sWNySrZERyF9t9DzV?=
+ =?us-ascii?Q?K8MVFssjKHGbrx+vogdqTcTVFMGJ7XqMc36sO8H5FWY3bf0HZq2dDfafyhyf?=
+ =?us-ascii?Q?tyTTG4Fe1bSaXBg70qUqN4TU1Od2A0R+chbpxQS3rBJ/q56J0LZbARFaCwc1?=
+ =?us-ascii?Q?NoEUwObIcb/xt/Y3o4mQhMfVOeq8byLQ3hT8SAiF07n58Kx2B5yB7t5aUwFt?=
+ =?us-ascii?Q?lyEpocmUmWK+OA7cX+KxrnLCNHjfIAEqqbnp4+rLPBdCRBoKf3c4gUG0iRun?=
+ =?us-ascii?Q?nFNKH9Zu7hXkExmVF5VULFttq7mXoKrMWNSJMIQk6lTuujq4FKW43EA5Mbo3?=
+ =?us-ascii?Q?Zfdm3MGQYarA55IjxUjCNDkOK+V6KL2sM3fwKAv01J8TuU0SwW0SV1+VlEtl?=
+ =?us-ascii?Q?Q2ql1qNK49iz0m6jrBo4Q3zIyTbBma98snvo31b5AXg1BXWg1uCV1qR/1PzL?=
+ =?us-ascii?Q?TN8K0SdxFBxk8ffmj0mqmzGEc46NFvfzWecQt8Fv3vrjkAh2qD7joo7UmEbr?=
+ =?us-ascii?Q?Hw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	4mxMIwaVn/X497q5Wi5JUtAxmEf3wjrEIy4nzUFPT/jD42SftGbN4p5Rz70m+EYpEQEGs0Ube3/twWm/2YxPm0y9Rj+w/tHx5SCLNOrWrSAgu5PxK3EhAz68hADb9iyr15uLM04z+boMFb10tzH8KTL0m8PVx8/6ysNDCOLbVsk6+M0jL21n64SujDsSIrDnhnAD5BnY3rCg6OI/nKGLhuyTk3QXTrlCyokW1yvAkBU76PxRpPFxwIywnu5KRUgklBfmb/0Y3cAD2B5ejR9BHj6u0wERyx2PgoRnpi4WOBIXGEqxB8O3b0YEVk3UFk7JHWncl4qAvXIgLMDDXNGIGUvcpvFEcLh9iAz+VL72rSy0X5EfOwGNFYFaIndAmOnqsjD1dyOAgJJ6KOW12S1vwmwXDibM9GtHEA74ckN4Q7ZGxt3yzeHZiN6l7/wtYz25Sw1kDtwHyzH+Ya32rqGa/AtzrwzZW0CxLByYmt6AkzmfDnXXB8ljC1ef8z65/t55/k8eGurdtnDh86qOLtXr4CBZZAW02zh84yi+GU1OF+Dj2BkSEFkWCtYTgfKIqtnk8OljlnwBz0T1weEgkk883Tnb2atFRHMMuIpavc4dBD8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63b535ed-f831-4444-84b2-08de2818a215
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 08:17:59.1987
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 09:38:59.8734
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yBNo71idlhwpSEYfb20ksiSzdtxRzrjmtNa4GeUd5mxBC+zkcBCxLIg97/UHH/vS2kOr3oyKTQ9e7ha9W0ZPyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9041
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5ItduNliVtAqDKxYryyBeUrZMlHyQ5n8PkmB+iBXaQXZfE2lMdgCPgtX3mDnbFNa6n1HScfGbp2FCwJ2jr6nIo1m2TAzUmSBipCwRwAfUTQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPFA043F25E4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-20_03,2025-11-18_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=968
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2511200058
+X-Authority-Analysis: v=2.4 cv=DYoaa/tW c=1 sm=1 tr=0 ts=691ee1c1 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=pGLkceISAAAA:8 a=Wzxjd0fUqIwO4rn60qQA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: vHyM1L6ZHbOR8-4PRZUdcGdHQ1UfesM4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMSBTYWx0ZWRfX9uw9B2QCWmyu
+ YM7K3vh3wz+R/ZYJ4uUoPPImvw9SUAIzKiQ7diBcQnKJh8dyimqs6Tf+RIZdZdq4NqykmuMiQ6/
+ C9MCakf8ppETzIeiclvCorDztPdQDnqDA6qkIjRD3LxTTjLC89MwDnwfUeBXY6I1mWH4ew4dVDa
+ f5mmOh6Ad+P07cCPaWf7NUXqrRganjVL+jmeUCiSE4Uj3ta2Oj4ztxh0PMhDyXVTVMNdi20thva
+ xOfsYAUhK1jH4uJ2npIlStUAg3RjSKomM4JeA3JkUYfVLJSZdSVUHP6mFcvlcol86IX5zzClIRM
+ u6MEgWxTuCQYBy0bSYu46I1T9c/iKNg8ZcDWf+4dgtvzViAGm7uNNg+5JOfHx22izInBQpJS0Bx
+ A3CIo0+iB/qTd4yJ4nvbpbbO0HFAaA==
+X-Proofpoint-ORIG-GUID: vHyM1L6ZHbOR8-4PRZUdcGdHQ1UfesM4
 
+On Wed, Nov 19, 2025 at 10:40:56PM +0000, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+>
+> It in not uncommon for code to use min_t(uint, a, b) when one of a or b
+> is 64bit and can have a value that is larger than 2^32;
+> This is particularly prevelant with:
+> 	uint_var = min_t(uint, uint_var, uint64_expression);
+>
+> Casts to u8 and u16 are very likely to discard significant bits.
+>
+> These can be detected at compile time by changing min_t(), for example:
+> #define CHECK_SIZE(fn, type, val) \
+> 	BUILD_BUG_ON_MSG(sizeof (val) > sizeof (type) && \
+> 		!statically_true(((val) >> 8 * (sizeof (type) - 1)) < 256), \
+> 		fn "() significant bits of '" #val "' may be discarded")
+>
+> #define min_t(type, x, y) ({ \
+> 	CHECK_SIZE("min_t", type, x); \
+> 	CHECK_SIZE("min_t", type, y); \
+> 	__cmp_once(min, type, x, y); })
+>
+> (and similar changes to max_t() and clamp_t().)
 
+Have we made sure that the introduction of these don't cause a combinatorial
+explosion like previous min()/max() changes did?
 
-On 11/20/2025 1:33 PM, Dev Jain wrote:
-> 
-> On 20/11/25 12:20 pm, Shivank Garg wrote:
+>
+> This shows up some real bugs, some unlikely bugs and some false positives.
+> In most cases both arguments are unsigned type (just different ones)
+> and min_t() can just be replaced by min().
+>
+> The patches are all independant and are most of the ones needed to
+> get the x86-64 kernel I build to compile.
+> I've not tried building an allyesconfig or allmodconfig kernel.
 
-> SCAN_PAGE_NOT_CLEAN is confusing - NOT_CLEAN literally means dirty, so why not SCAN_PAGE_DIRTY?
-> Or SCAN_PAGE_DIRTY_OR_UNDER_WRITEBACK? Since folio_test_writeback() is true as a result of
-> the folio being dirty, maybe just SCAN_PAGE_DIRTY can do.
-> 
-> Reviewed-by: Dev Jain <dev.jain@arm.com>
-> 
-Thanks for the review.
+Well I have a beefy box at my disposal so tried thiese for you :)
 
-I chose not to use SCAN_PAGE_DIRTY because dirty and writeback have different meanings[1]:
+Both allyesconfig & allmodconfig works fine for x86-64 (I tried both for good
+measure)
 
-    Dirty: Memory that is waiting to be written back to disk
-Writeback: Memory that is actively being written back to disk
+> I've also not included the patch to minmax.h itself.
+>
+> I've tried to put the patches that actually fix things first.
+> The last one is 0009.
+>
+> I gave up on fixing sched/fair.c - it is too broken for a single patch!
+> The patch for net/ipv4/tcp.c is also absent because do_tcp_getsockopt()
+> needs multiple/larger changes to make it 'sane'.
 
-[1] https://www.kernel.org/doc/Documentation/filesystems/proc.txt
+I guess this isn't broken per se there just retain min_t()/max_t() right?
 
-IIUC, a page under writeback is no longer dirty, so using SCAN_PAGE_DIRTY would be misleading
-for pages in the writeback state.
-
-I considered SCAN_PAGE_DIRTY_OR_WRITEBACK initially but felt it was too long.
-
-SCAN_PAGE_NOT_CLEAN covers both states that indicate the page is not in a clean/stable
-state suitable for collapse.
-
-[1] https://www.kernel.org/doc/Documentation/filesystems/proc.txt
-
-Thanks,
-Shivank
+>
+> I've had to trim the 124 maintainers/lists that get_maintainer.pl finds
+> from 124 to under 100 to be able to send the cover letter.
+> The individual patches only go to the addresses found for the associated files.
+> That reduces the number of emails to a less unsane number.
+>
+> David Laight (44):
+>   x86/asm/bitops: Change the return type of variable__ffs() to unsigned
+>     int
+>   ext4: Fix saturation of 64bit inode times for old filesystems
+>   perf: Fix branch stack callchain limit
+>   io_uring/net: Change some dubious min_t()
+>   ipc/msg: Fix saturation of percpu counts in msgctl_info()
+>   bpf: Verifier, remove some unusual uses of min_t() and max_t()
+>   net/core/flow_dissector: Fix cap of __skb_flow_dissect() return value.
+>   net: ethtool: Use min3() instead of nested min_t(u16,...)
+>   ipv6: __ip6_append_data() don't abuse max_t() casts
+>   x86/crypto: ctr_crypt() use min() instead of min_t()
+>   arch/x96/kvm: use min() instead of min_t()
+>   block: use min() instead of min_t()
+>   drivers/acpi: use min() instead of min_t()
+>   drivers/char/hw_random: use min3() instead of nested min_t()
+>   drivers/char/tpm: use min() instead of min_t()
+>   drivers/crypto/ccp: use min() instead of min_t()
+>   drivers/cxl: use min() instead of min_t()
+>   drivers/gpio: use min() instead of min_t()
+>   drivers/gpu/drm/amd: use min() instead of min_t()
+>   drivers/i2c/busses: use min() instead of min_t()
+>   drivers/net/ethernet/realtek: use min() instead of min_t()
+>   drivers/nvme: use min() instead of min_t()
+>   arch/x86/mm: use min() instead of min_t()
+>   drivers/nvmem: use min() instead of min_t()
+>   drivers/pci: use min() instead of min_t()
+>   drivers/scsi: use min() instead of min_t()
+>   drivers/tty/vt: use umin() instead of min_t(u16, ...) for row/col
+>     limits
+>   drivers/usb/storage: use min() instead of min_t()
+>   drivers/xen: use min() instead of min_t()
+>   fs: use min() or umin() instead of min_t()
+>   block: bvec.h: use min() instead of min_t()
+>   nodemask: use min() instead of min_t()
+>   ipc: use min() instead of min_t()
+>   bpf: use min() instead of min_t()
+>   bpf_trace: use min() instead of min_t()
+>   lib/bucket_locks: use min() instead of min_t()
+>   lib/crypto/mpi: use min() instead of min_t()
+>   lib/dynamic_queue_limits: use max() instead of max_t()
+>   mm: use min() instead of min_t()
+>   net: Don't pass bitfields to max_t()
+>   net/core: Change loop conditions so min() can be used
+>   net: use min() instead of min_t()
+>   net/netlink: Use umin() to avoid min_t(int, ...) discarding high bits
+>   net/mptcp: Change some dubious min_t(int, ...) to min()
+>
+>  arch/x86/crypto/aesni-intel_glue.c            |  3 +-
+>  arch/x86/include/asm/bitops.h                 | 18 +++++-------
+>  arch/x86/kvm/emulate.c                        |  3 +-
+>  arch/x86/kvm/lapic.c                          |  2 +-
+>  arch/x86/kvm/mmu/mmu.c                        |  2 +-
+>  arch/x86/mm/pat/set_memory.c                  | 12 ++++----
+>  block/blk-iocost.c                            |  6 ++--
+>  block/blk-settings.c                          |  2 +-
+>  block/partitions/efi.c                        |  3 +-
+>  drivers/acpi/property.c                       |  2 +-
+>  drivers/char/hw_random/core.c                 |  2 +-
+>  drivers/char/tpm/tpm1-cmd.c                   |  2 +-
+>  drivers/char/tpm/tpm_tis_core.c               |  4 +--
+>  drivers/crypto/ccp/ccp-dev.c                  |  2 +-
+>  drivers/cxl/core/mbox.c                       |  2 +-
+>  drivers/gpio/gpiolib-acpi-core.c              |  2 +-
+>  .../gpu/drm/amd/amdgpu/amdgpu_doorbell_mgr.c  |  4 +--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |  2 +-
+>  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  2 +-
+>  drivers/i2c/busses/i2c-designware-master.c    |  2 +-
+>  drivers/net/ethernet/realtek/r8169_main.c     |  3 +-
+>  drivers/nvme/host/pci.c                       |  3 +-
+>  drivers/nvme/host/zns.c                       |  3 +-
+>  drivers/nvmem/core.c                          |  2 +-
+>  drivers/pci/probe.c                           |  3 +-
+>  drivers/scsi/hosts.c                          |  2 +-
+>  drivers/tty/vt/selection.c                    |  9 +++---
+>  drivers/usb/storage/protocol.c                |  3 +-
+>  drivers/xen/grant-table.c                     |  2 +-
+>  fs/buffer.c                                   |  2 +-
+>  fs/exec.c                                     |  2 +-
+>  fs/ext4/ext4.h                                |  2 +-
+>  fs/ext4/mballoc.c                             |  3 +-
+>  fs/ext4/resize.c                              |  2 +-
+>  fs/ext4/super.c                               |  2 +-
+>  fs/fat/dir.c                                  |  4 +--
+>  fs/fat/file.c                                 |  3 +-
+>  fs/fuse/dev.c                                 |  2 +-
+>  fs/fuse/file.c                                |  8 ++---
+>  fs/splice.c                                   |  2 +-
+>  include/linux/bvec.h                          |  3 +-
+>  include/linux/nodemask.h                      |  9 +++---
+>  include/linux/perf_event.h                    |  2 +-
+>  include/net/tcp_ecn.h                         |  5 ++--
+>  io_uring/net.c                                |  6 ++--
+>  ipc/mqueue.c                                  |  4 +--
+>  ipc/msg.c                                     |  6 ++--
+>  kernel/bpf/core.c                             |  4 +--
+>  kernel/bpf/log.c                              |  2 +-
+>  kernel/bpf/verifier.c                         | 29 +++++++------------
+>  kernel/trace/bpf_trace.c                      |  2 +-
+>  lib/bucket_locks.c                            |  2 +-
+>  lib/crypto/mpi/mpicoder.c                     |  2 +-
+>  lib/dynamic_queue_limits.c                    |  2 +-
+>  mm/gup.c                                      |  4 +--
+>  mm/memblock.c                                 |  2 +-
+>  mm/memory.c                                   |  2 +-
+>  mm/percpu.c                                   |  2 +-
+>  mm/truncate.c                                 |  3 +-
+>  mm/vmscan.c                                   |  2 +-
+>  net/core/datagram.c                           |  6 ++--
+>  net/core/flow_dissector.c                     |  7 ++---
+>  net/core/net-sysfs.c                          |  3 +-
+>  net/core/skmsg.c                              |  4 +--
+>  net/ethtool/cmis_cdb.c                        |  7 ++---
+>  net/ipv4/fib_trie.c                           |  2 +-
+>  net/ipv4/tcp_input.c                          |  4 +--
+>  net/ipv4/tcp_output.c                         |  5 ++--
+>  net/ipv4/tcp_timer.c                          |  4 +--
+>  net/ipv6/addrconf.c                           |  8 ++---
+>  net/ipv6/ip6_output.c                         |  7 +++--
+>  net/ipv6/ndisc.c                              |  5 ++--
+>  net/mptcp/protocol.c                          |  8 ++---
+>  net/netlink/genetlink.c                       |  9 +++---
+>  net/packet/af_packet.c                        |  2 +-
+>  net/unix/af_unix.c                            |  4 +--
+>  76 files changed, 141 insertions(+), 176 deletions(-)
+>
+> --
+> 2.39.5
+>
