@@ -1,145 +1,158 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C89D333733
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 12:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34B83074B1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 13:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763641672; cv=none; b=trI0vHbC4Sstlz/FvhGPaB2kWUkmagH2X/3A+5PJYLCePrg+7UUdCY34BwzppQln6ZlxIYV0EP9g07/JQzKyt8YXbCO042wtdm+6GSym2znliZ1sw/p/rQeDPR+4jTTkn3dAWkFy2Pfakc0Y2L6gSckhQLLfZSverKq4RIVcdP8=
+	t=1763643690; cv=none; b=TuwlU3Eci7skY4SDrRzEJZ3WfA4GU9Igsu/9HFPIyfh16FIK3hoe38qizhlRVt0ePy7MQelAjRxri+XsK/B2TBoy1lnkhQGHyzQGeSaLynEOaeF16JMwES+wBEjv5kU5m78xMY9BxWP3UNxA2e/HGjHqHCdae6P6qAGMcIAEWrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763641672; c=relaxed/simple;
-	bh=L10GaSAQJIrnyis8mGo7hQR+sdFEFFQeWaeqDypnHgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1YkSTROU92WeFqGbGcuqeeTLLjMy3vz6SeoOk2uXBdcCy7rWPYFWS+6mHPklN3Bkpq0BEiWzL+UyGCo6wdEyfuCiq7m4UjngrdBRL2YDPe/bMaGYCZx8WTT0G3ZYMqFFluqcvo/kyWXg3H1ds6skZdry4+R+/f6TvPuGyJ7LIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZXGUVx9M; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763643690; c=relaxed/simple;
+	bh=Ftl+qpQGrT5RpptKkItPeER581J88Xp+vWYHK5zRZgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ghuF6M8OU6xXUKKZdwWjGcxCYsfeSUgdrwedzbV3TXyP2WxXdRbA17QQ9BjIlqy97GOYWAPYU6iFLQb6FGXAu4WRoOfL6phZoJB7RFCXqzYA8QIwk04nn1Qe5kj9xG0DcKiTaHV9crM7maKGik+d0ymbH912VBP0iEww3NC+bms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=usJJd61n; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZXGUVx9M"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-477770019e4so8169315e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Nov 2025 04:27:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763641667; x=1764246467; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4HhtSTqCGLLrH7sfkvwPKz4oo0QSbD9ECCA73kZYpvQ=;
-        b=ZXGUVx9MT7XM68n29bFrSaVrIae2YlM2SVMuyTWl1YpdC9oF8+4x5JeJzw1LVJv2Ov
-         x9DsXQuA98j10wj75dsKM8KAX++KlsnRybXKxKt8AabvfmlvyGjEt7s/RtVRRdf1c7sA
-         j5ZdbzWSqflKfP77x1W9AN4RU2LBBKbtLLEr+kaZTU1F4oabU4tRtBfg3GgM7ZAeJ+JM
-         20W1n8y40AvLzmEr89tvL8fnp+DrqtO7X6uFn/KL9qYvWy0dQF1VFoMptU+MsZJbePp1
-         zJSShftEUwlt0PgZ60Lcq1+8QvO7BU1phJmBJcPPkFky7Vl1ZFmaHlvS93MoGEut92Ec
-         f/QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763641667; x=1764246467;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4HhtSTqCGLLrH7sfkvwPKz4oo0QSbD9ECCA73kZYpvQ=;
-        b=CkN3tSjhbs+1bimEsuHkO2mJHDxrKljm0YwphwxlO+pPf9a7aU3TvelQcqbYdYLSur
-         1k7IUr2v4L++DaILmNLKGjpHletXE0nT+hHlwp0npNjm6AVH/XrQ3ATjdF2GbyancUnv
-         Ij6wYC+G6eKisZjAFLuY0bcgsBBo12QIGqIfEg3o8Iy/L0G8PP6E3aRmUsUFYXo7liQp
-         hAg1uhM2G7PyvQuEhiZ/uNVF1jAhFA7uQCfXkNm0J8JQCw2z7t162+gl4tpL5VLzDMLo
-         iIO8pIZLHHz1rjTaFhoIalreMke2SXAMOT9Bmy92T40LSzrZtXwbZEpTt0oDsOu6VQuA
-         ZqTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSrp2KWisWpIWryjxoZI/ocFVP4mG2dsKXqel3R4x3iRBLVF1mVA4IBPw0EITe5pkuP/P9IV/4emOw/g9DpcevNM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBjlx2fPujchTA7tAGt/pRCbzU5n42QZvcEuy7PHE1teXMPDVl
-	0jDHMyFIqvqprq1RIr4B224WA+WGlJUpBOqg5m2afIoMA/BMZp3+2hdb3+boUuJFeg==
-X-Gm-Gg: ASbGncuZgP6RqwE12qjvS6a7BzhHYTigqZ2kHrDIZT1hkxtEtJBTrhpu9wlh9QVx8pB
-	oljRpTp63in8UG6RU/hXTNmCqhNWmfruIURvyBhRJTFuB6bpecb2gRkqI3CAts1pvvPNKIp2WuD
-	hBCen8rsGYQn0ZR4xarfeFpviPSHww5s+XHYGfebi+k5PqSXVsyuq93pLJN9C2YWOd2bfuM1mAG
-	0NyFrMYu27Jios41O0nm9oPM0CCMJx90DUNl+Hul6ToE5qTFSSvZpOEUMAnPlX5Pn61JAVdR6KR
-	uadatta9rvOs8Zik8XkZ/YPddO7ecUCngMOgeVmB9i8+/rNXDXPRQhmK7fxOO4/QiRMIjksSXwX
-	VUKEtBB8P93R6h0805mxigLUMh3GCQwaCzdECIIAJnt0UHhlnLNVbK4HRGvXcdAgwpvo1JGc6rP
-	JeDwxCKmNbotVpn3imke50CZ+7g5mvVevZNMXK6inQxGft4jJbgg==
-X-Google-Smtp-Source: AGHT+IHpeFeIGGZiJTmXFsR+6beF5U9qh+UXPfFDdc/PMj/YV98aLC84HYj/PIpbhK9tkAcu44ljjQ==
-X-Received: by 2002:a05:600c:4e8f:b0:477:9eb8:97d2 with SMTP id 5b1f17b1804b1-477b8a511d8mr26758955e9.8.1763641667024;
-        Thu, 20 Nov 2025 04:27:47 -0800 (PST)
-Received: from google.com (120.54.38.34.bc.googleusercontent.com. [34.38.54.120])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9dbec2bsm64229035e9.5.2025.11.20.04.27.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 04:27:46 -0800 (PST)
-Date: Thu, 20 Nov 2025 12:27:43 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
-	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
-	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 22/28] KVM: arm64: Add trace remote for the pKVM hyp
-Message-ID: <aR8JPxRHg7vEOME4@google.com>
-References: <20251107093840.3779150-1-vdonnefort@google.com>
- <20251107093840.3779150-23-vdonnefort@google.com>
- <86a50irkst.wl-maz@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="usJJd61n"
+Message-ID: <f4652d26-a0f0-4ffe-ad53-74a3418c75e1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763643685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Appw5O9xn9vKWf0A+16v30yLtvA63IpanK+xECauBoM=;
+	b=usJJd61nfgOrgJv9VkEZ3PMKtrtJaJEjNlVH8RWyyQmyKQb+9SiV7pZ0w1OZPZ1n9HBCc9
+	xoFEYp8owtU2QvVmNzWY2cX9h/gQJ517YAyli+xGAvQDmkG+LAEU3kpCek5pkniDCNt3vG
+	saFS6TwzqYvcFwtasFMFWmyOzqAjkI0=
+Date: Thu, 20 Nov 2025 21:01:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86a50irkst.wl-maz@kernel.org>
+Subject: Re: [PATCH V2 1/2] mm/khugepaged: do synchronous writeback for
+ MADV_COLLAPSE
+Content-Language: en-US
+To: Shivank Garg <shivankg@amd.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, David Hildenbrand <david@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Branden Moore <Branden.Moore@amd.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+References: <20251120065043.41738-6-shivankg@amd.com>
+ <20251120065043.41738-8-shivankg@amd.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20251120065043.41738-8-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Nov 19, 2025 at 05:31:30PM +0000, Marc Zyngier wrote:
-> On Fri, 07 Nov 2025 09:38:34 +0000,
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> > 
-> > When running with KVM protected mode, the hypervisor is able to generate
-> > events into tracefs compatible ring-buffers. Create a trace remote so
-> > the kernel can read those buffers.
-> > 
-> > This currently doesn't provide any event support which will come later.
-> > 
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> > index 580426cdbe77..64db254f0448 100644
-> > --- a/arch/arm64/kvm/Kconfig
-> > +++ b/arch/arm64/kvm/Kconfig
-> > @@ -87,6 +87,7 @@ config PKVM_TRACING
-> >  	bool
-> >  	depends on KVM
-> >  	depends on TRACING
-> > +	select TRACE_REMOTE
-> >  	select SIMPLE_RING_BUFFER
-> >  	default y
-> >
 
-[...]
 
-> > +static void hyp_trace_buffer_free_bpages_backing(struct hyp_trace_buffer *trace_buffer)
-> > +{
-> > +	free_pages_exact((void *)trace_buffer->desc->bpages_backing_start,
-> > +			 trace_buffer->desc->bpages_backing_size);
-> > +}
-> > +
-> > +static int __load_page(unsigned long va)
-> > +{
-> > +	return kvm_call_hyp_nvhe(__pkvm_host_share_hyp, virt_to_pfn((void *)va), 1);
-> > +}
+On 2025/11/20 14:50, Shivank Garg wrote:
+> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+> text sections), the pages may still be dirty from recent writes and
+> cause collapse to fail with -EINVAL. This is particularly problematic
+> for freshly copied executables on filesystems, where page cache folios
+> remain dirty until background writeback completes.
 > 
-> I struggle a bit with the nomenclature here. Why is that called
-> "load"? Surely this is a "map" operation, right? Is that because this
-> is called at "vcpu load" time? Something else?
+> The current code in collapse_file() triggers async writeback via
+> filemap_flush() and expects khugepaged to revisit the page later.
+> However, MADV_COLLAPSE is a synchronous operation where userspace
+> expects immediate results.
+> 
+> Perform synchronous writeback in madvise_collapse() before attempting
+> collapse to avoid failing on first attempt.
 
-I called "load" the operation of getting the tracing buffer ready. But for this
-implementation specific part, I can use map/unmap here. (same for
-hyp_trace_buffer_map_pages/hyp_trace_buffer_map_pages)
+Thanks!
 
 > 
-> Also, how is this working without pKVM, in a normal nVHE environment?
-> Being able to trace in nVHE is a basic requirement, and I don't see
-> how this works here.
+> Reported-by: Branden Moore <Branden.Moore@amd.com>
+> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
+>   mm/khugepaged.c | 26 ++++++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 97d1b2824386..066a332c76ad 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/dax.h>
+>   #include <linux/ksm.h>
+>   #include <linux/pgalloc.h>
+> +#include <linux/backing-dev.h>
+>   
+>   #include <asm/tlb.h>
+>   #include "internal.h"
+> @@ -2784,6 +2785,31 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>   	hstart = (start + ~HPAGE_PMD_MASK) & HPAGE_PMD_MASK;
+>   	hend = end & HPAGE_PMD_MASK;
+>   
+> +	/*
+> +	 * For file-backed VMAs, perform synchronous writeback to ensure
+> +	 * dirty folios are flushed before attempting collapse. This avoids
+> +	 * failing on the first attempt when freshly-written executable text
+> +	 * is still dirty in the page cache.
+> +	 */
+> +	if (!vma_is_anonymous(vma) && vma->vm_file) {
+> +		struct address_space *mapping = vma->vm_file->f_mapping;
+> +
+> +		if (mapping_can_writeback(mapping)) {
+> +			pgoff_t pgoff_start = linear_page_index(vma, hstart);
+> +			pgoff_t pgoff_end = linear_page_index(vma, hend);
+> +			loff_t lstart = (loff_t)pgoff_start << PAGE_SHIFT;
+> +			loff_t lend = ((loff_t)pgoff_end << PAGE_SHIFT) - 1;
 
-I can probably make it work with nVHE as well.
+It looks like we need to hold a reference to the file here before
+dropping the mmap lock :)
 
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+			file = get_file(vma->vm_file);
+
+Without it, the vma could be destroyed by a concurrent munmap() while
+we are waiting in filemap_write_and_wait_range(), leading to a UAF
+on mapping, IIUC ...
+
+> +
+> +			mmap_read_unlock(mm);
+> +			mmap_locked = false;
+> +
+> +			if (filemap_write_and_wait_range(mapping, lstart, lend)) {
+
+And drop the reference :)
+
+				fput(file);
+
+
+> +				last_fail = SCAN_FAIL;
+> +				goto out_maybelock;
+> +			}
+
+Same here :)
+
+			fput(file);
+
+
+> +		}
+> +	}
+> +
+>   	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>   		int result = SCAN_FAIL;
+>   
+
+Cheers,
+Lance
