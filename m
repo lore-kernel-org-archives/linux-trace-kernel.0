@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253C130B51B;
-	Thu, 20 Nov 2025 13:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA442307AFA;
+	Thu, 20 Nov 2025 14:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763645739; cv=none; b=UMeBjg67jpcs2cqIj6HL89N5Cw+eW/C3mHAxdy0zxpqV29TKdtC7FArwoNwBnAbFHN7Ej1BUsJdb09P+SxO1AAWFfgaop8jizqJt/BAAV0ZIpuiez7CLT5LVOObB0UMAZKEKJwnGq6SG6LtGGCokkoatb5u0PM1bY8zXVKAc9pk=
+	t=1763647203; cv=none; b=M+rutiqZPLvr7qApSWp/qVDgy98B7mABMjuqLFnjyI/nypl0uH6lKD5HE9aMHqt4rr+XxSWguYv76lH7LRA52ema7Sus43AnISmo3EurgkULVUgXnlbHyQedy02AgMrqGH2lb0lxQoxdSKYdDZT1q7UebvkACSgnF1lV6PxlJNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763645739; c=relaxed/simple;
-	bh=7fOQWOlDa/yWJfdxMP4b/quIC4jTVVkZpbyue8xkZUo=;
+	s=arc-20240116; t=1763647203; c=relaxed/simple;
+	bh=3c1rDlMwrBbzOuvwQjvriGZ09BNm0ZrVc/uEpCI/im8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jhgUpMzX6lH7rBlO96OWcVcEa5M4u2TzLtzBg9zqWAUoI6nP5xVTBAbK6Rhtdd+QbN3eQ9MDm7tuVd8NZixc05FvRYzg6QEje1cQ+N+tplJpovvXsC83xV/IJQI9mJ1lGG4APDjpKERFET4k7qRT76OGkQk/Flw1/lGc2teCKFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knQ3E4Fj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mJTNr9Z7W0KvYqCsS4r58+v8gNj51AJ5U1XhPoT4/WEZVAxjmxyXZHBeUKepGgt222uuC47rLiumxfhmRZo0A9X0gg3DN2yFtqzVxlD8Fg82hgPS0jm7dFvHi2t2cpM5cGxcCTqrFB5yDsiXe9dbridgXbVhOwYHL4E201X0dkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIxgw57d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knQ3E4Fj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A494EC4CEF1;
-	Thu, 20 Nov 2025 13:35:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIxgw57d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD14C4CEF1;
+	Thu, 20 Nov 2025 13:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763645738;
-	bh=7fOQWOlDa/yWJfdxMP4b/quIC4jTVVkZpbyue8xkZUo=;
+	s=k20201202; t=1763647202;
+	bh=3c1rDlMwrBbzOuvwQjvriGZ09BNm0ZrVc/uEpCI/im8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=knQ3E4FjFLvlIBk5Vj1nqlfGxz6LM/OkrjtqrPhjawaq7swVpXiOv9gqhzHsVnJtx
-	 0r5rujNQ2NvwVHZtqa6cb6ArDqIpyu9xNFcTjiAMSz6JgiXjs8hCzI/NhtGgcgvey0
-	 4Ge6vzXaavWScRr7gtsJaU62ZrwGvN92xjuLy1zu/4vkZ9P2fGj0KDl8P879JL0yR7
-	 vBBXjPeN0N1hUdp47kYlDr5kul04dWk2cIwmWqC3ujfwrRkdkygdxlDuBO829RYEsN
-	 xe85Pf3Qpykdreik1mg2SvxHeGVikch5HSlNNWMSUGPpwQW5hNYDpERSaWsMP5b9Pm
-	 SBXqTwTvzRVUw==
-Message-ID: <be698a14-c292-42d1-9a85-109a9072a0b2@kernel.org>
-Date: Thu, 20 Nov 2025 14:35:32 +0100
+	b=OIxgw57dsl4CdroEfiPwEnKA/qK2YigIeTiVi5AlW3YxcgIYi9GBZusrzlVEOroyD
+	 JsTGBTLY5JlXkZp875v6PsQ8NUULK+kIUd47qeV/x2bZyy1SKSN1TMy23JS7zXl7cz
+	 ir1C/bH2smy+cQqvWVIjHghli4KIJM+Z25MgeNfmw2srRa1X6ayWcylZCI5HXl6MJf
+	 wqmNuBZK0qm/IDFTW2ugm0gnifZ5qCTWlOBKpgNr2vX8j9pZ1eFqsDWeG9zTHXxmRb
+	 OSqUnsJqqzXBV6442s/EW0bbVFA7cZsjTc5b4CQYdQzKVrmay3bBzhuC32QjqetYyO
+	 sirtoHruo0W/A==
+Message-ID: <fc7bae22-0705-475a-be89-8bb3ca12384d@kernel.org>
+Date: Thu, 20 Nov 2025 14:59:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,96 +35,74 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] mm/khugepaged: do synchronous writeback for
- MADV_COLLAPSE
-To: Shivank Garg <shivankg@amd.com>, Andrew Morton
- <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Branden Moore <Branden.Moore@amd.com>
-References: <20251120065043.41738-6-shivankg@amd.com>
- <20251120065043.41738-8-shivankg@amd.com>
+Subject: Re: [PATCH v3] mm/memory-failure: remove the selection of RAS
+To: Xie Yuanbin <xieyuanbin1@huawei.com>, tony.luck@intel.com, bp@alien8.de,
+ linmiaohe@huawei.com, nao.horiguchi@gmail.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com
+Cc: linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, will@kernel.org,
+ liaohua4@huawei.com, lilinjie8@huawei.com
+References: <20251119095943.67125-1-xieyuanbin1@huawei.com>
 From: "David Hildenbrand (Red Hat)" <david@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20251120065043.41738-8-shivankg@amd.com>
+In-Reply-To: <20251119095943.67125-1-xieyuanbin1@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/20/25 07:50, Shivank Garg wrote:
-> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
-> text sections), the pages may still be dirty from recent writes and
-> cause collapse to fail with -EINVAL. This is particularly problematic
-> for freshly copied executables on filesystems, where page cache folios
-> remain dirty until background writeback completes.
+On 11/19/25 10:59, Xie Yuanbin wrote:
+> The commit 97f0b13452198290799f ("tracing: add trace event for
+> memory-failure") introduces the selection of RAS in memory-failure.
+> This commit is just a tracing feature; in reality, there is no dependency
+> between memory-failure and RAS. RAS increases the size of the bzImage
+> image by 8k, which is very valuable for embedded devices.
 > 
-> The current code in collapse_file() triggers async writeback via
-> filemap_flush() and expects khugepaged to revisit the page later.
-> However, MADV_COLLAPSE is a synchronous operation where userspace
-> expects immediate results.
+> Move the memory-failure traceing code from ras_event.h to
+> memory-failure.h and remove the selection of RAS.
 > 
-> Perform synchronous writeback in madvise_collapse() before attempting
-> collapse to avoid failing on first attempt.
+> v2->v3: https://lore.kernel.org/20251104072306.100738-3-xieyuanbin1@huawei.com
+>    - Change define TRACE_SYSTEM from ras to memory_failure
+>    - Add include/trace/events/memory-failure.h to
+>      "HWPOISON MEMORY FAILURE HANDLING" section in MAINTAINERS
+>    - Rebase to latest linux-next source
 > 
-> Reported-by: Branden Moore <Branden.Moore@amd.com>
-> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
-> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> v1->v2: https://lore.kernel.org/20251103033536.52234-2-xieyuanbin1@huawei.com
+>    - Move the memory-failure traceing code from ras_event.h to
+>      memory-failure.h
+> 
+> Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
+> Cc: David Hildenbrand (Red Hat) <david@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Miaohe Lin <linmiaohe@huawei.com>
 > ---
->   mm/khugepaged.c | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
+>   MAINTAINERS                           |  1 +
+>   include/ras/ras_event.h               | 87 ------------------------
+>   include/trace/events/memory-failure.h | 98 +++++++++++++++++++++++++++
+>   mm/Kconfig                            |  1 -
+>   mm/memory-failure.c                   |  5 +-
+>   5 files changed, 103 insertions(+), 89 deletions(-)
+>   create mode 100644 include/trace/events/memory-failure.h
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 97d1b2824386..066a332c76ad 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -22,6 +22,7 @@
->   #include <linux/dax.h>
->   #include <linux/ksm.h>
->   #include <linux/pgalloc.h>
-> +#include <linux/backing-dev.h>
->   
->   #include <asm/tlb.h>
->   #include "internal.h"
-> @@ -2784,6 +2785,31 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   	hstart = (start + ~HPAGE_PMD_MASK) & HPAGE_PMD_MASK;
->   	hend = end & HPAGE_PMD_MASK;
->   
-> +	/*
-> +	 * For file-backed VMAs, perform synchronous writeback to ensure
-> +	 * dirty folios are flushed before attempting collapse. This avoids
-> +	 * failing on the first attempt when freshly-written executable text
-> +	 * is still dirty in the page cache.
-> +	 */
-> +	if (!vma_is_anonymous(vma) && vma->vm_file) {
-> +		struct address_space *mapping = vma->vm_file->f_mapping;
-> +
-> +		if (mapping_can_writeback(mapping)) {
-> +			pgoff_t pgoff_start = linear_page_index(vma, hstart);
-> +			pgoff_t pgoff_end = linear_page_index(vma, hend);
-> +			loff_t lstart = (loff_t)pgoff_start << PAGE_SHIFT;
-> +			loff_t lend = ((loff_t)pgoff_end << PAGE_SHIFT) - 1;
-> +
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7310d9ca0370..43d6eb95fb05 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11631,10 +11631,11 @@ R:	Naoya Horiguchi <nao.horiguchi@gmail.com>
+>   L:	linux-mm@kvack.org
+>   S:	Maintained
+>   F:	include/linux/memory-failure.h
+>   F:	mm/hwpoison-inject.c
+>   F:	mm/memory-failure.c
+> +F:	include/trace/events/memory-failure.
 
-Hm, so we always do that, without any indication that there actually is 
-something dirty there.
+These are ordered alphabetically, so it should be further up next to the 
+other include.
 
-Internally filemap_write_and_wait_range() uses something called 
-mapping_needs_writeback(), but it also applies to the complete file, not 
-a range.
+With that
 
-Wouldn't it be better do do that only if we detect that there is 
-actually a dirty folio in the range?
-
-That is, if we find any dirty folio in hpage_collapse_scan_file() and we 
-are in madvise, do that dance here and retry?
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 
 -- 
 Cheers
