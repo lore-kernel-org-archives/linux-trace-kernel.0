@@ -1,64 +1,61 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A61230C357;
-	Fri, 21 Nov 2025 22:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18FF30C37A;
+	Fri, 21 Nov 2025 22:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763548; cv=none; b=Kl0zFZNilRh0JrDDvRhhv4tUT4p0mMo18lMLsn7BBDevkTeMFfkmZU3ucImonz3IjBOy8zdVesMqb6E7BoBmsIi+GbMukIgzpR3JmzBjvjpZLPkX813Y6uA+hwlCrNZjPg3MyKgb876NpgqPnlVJLEL0kd+n1wJ/qewRWy+RGWA=
+	t=1763763549; cv=none; b=eCEsbX5VsMwevqwkKRlFkKqlRMRpMOP4+PmvhD816543z+HSNMq121jmmtmEBN8Rl2qB0fVUEYBkqzxBJVnBc1cE6pECFXNbwAYiojFBO3p4NEOH4xugFQ2CKPRQx/1i9NIVakcd00uLFu7ttlFhomODRi90a66XixdMGwYC76g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763548; c=relaxed/simple;
-	bh=PwGhjD+jAErSMotYXM4CXF+ImjbsyFVWLH84I6xPZbY=;
+	s=arc-20240116; t=1763763549; c=relaxed/simple;
+	bh=VCJAuBwEz7gTNUQe92zcUFIKkRCa1kI+wt06kkT0c7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jj+tGgIPNMr9FzrWvgBo3ZwkFJ0XB46EkmWuMkThhjwyOGYrlgMO+bHxKmK1D4dJ/RkyIImeMQbRN2PYLVvGmPsFa7+zJKFx7dZlgm5q4/zJ2CjiVV3iF0CSC5N1tvlzNl8JeOXrWEuCq/hpp4ArDrO0wnlA0Y9syHQI0mdWGOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=LWGQbmCE; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=LWGQbmCE; arc=none smtp.client-ip=80.241.56.151
+	 MIME-Version; b=uoyL2IwY2bWeiTCeinEvF8RiZ1u2solZ/RA3LUrEeU1Iv6v4bJb9y8x+MrwKV5hEmUCp2FVgU5jZmr8iO7+0mZ5dghCieRo5g/hDqEkixdBaBM/OlgIM4EBesix7CI4BZRQXpUPh72jkQST/V5W+1h2HFAuM8+tOzGsrqpOTmqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=WsT5/C5c; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=WsT5/C5c; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="LWGQbmCE";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="LWGQbmCE"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="WsT5/C5c";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="WsT5/C5c"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dCqPg4KMwz9tws;
-	Fri, 21 Nov 2025 23:19:03 +0100 (CET)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4dCqPh6Pl9z9tm5;
+	Fri, 21 Nov 2025 23:19:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763543;
+	t=1763763544;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OrO+ixwAjzSJj0cD1LibWkTSwLbGzI8j+tZPJSV5pcs=;
-	b=LWGQbmCEUC36NAODl+UEImuyKZeGEdAaIRHp7HBQxndYeuZ7nsHpK3je2T9ESr8DVRLS92
-	sxP+NxI5+rSdSmi14kApys8Y1pxrhbZyDLcm7N9ECeHn2/3JpzV8DeV2O5BNBgj5FAF0qS
-	RvwjvwneiffNmpmRywajFh6Wx5MZkHHYt8Evy1tT9v/WJcrEvlqdgD+1cG9TPK7abN0EeV
-	zJZqlvu+tghPKpIY22PS94ZIaLHWJrstyxSw7mIL+QEAEfvkLdw8BtjnQqT1kmyI7cOl3a
-	/vIVkZfGm3PdR4gKiL10iJBfxStPTB/iSWHWP4r78wtZQDZte4mI1gVbapG0zw==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=LWGQbmCE;
-	spf=pass (outgoing_mbo_mout: domain of mhi@mailbox.org designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=mhi@mailbox.org
+	bh=dRWBcF7rla5qMSzAG+4qAsZI2bSHYVZEn5ZYKzuLm1k=;
+	b=WsT5/C5cuZA+sMtI3EYz5yGe76TZwcIcndWm1EMARYDS08MQjAY+9h/Wq3ePnKg3rZliUO
+	Sc7L5b4WptG5m+5/dMrzboIzhkvEEO57hi3FnyJUF02x994tqGU9JZmpXO74Mr0RecG5TS
+	XcvNZFWFxTjM0xiaLOWuIybhxJPDo6Nyj4lWU8AsAJc47d3+sy1ysHo0UmZ01V4k3AwMHw
+	DlApnU4qPIisi/rlQp1hpICfI9wcFRcNyPJWLeENLYRz6FoLe6Xa7P/mAELrPM6ymR4XIa
+	DCxZXR7VM06aMPgZ5d1f0k4cquWvrcyMbCsop7giDKS2RE9bu89xtSPzZmnA+A==
 From: Maurice Hieronymus <mhi@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763543;
+	t=1763763544;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OrO+ixwAjzSJj0cD1LibWkTSwLbGzI8j+tZPJSV5pcs=;
-	b=LWGQbmCEUC36NAODl+UEImuyKZeGEdAaIRHp7HBQxndYeuZ7nsHpK3je2T9ESr8DVRLS92
-	sxP+NxI5+rSdSmi14kApys8Y1pxrhbZyDLcm7N9ECeHn2/3JpzV8DeV2O5BNBgj5FAF0qS
-	RvwjvwneiffNmpmRywajFh6Wx5MZkHHYt8Evy1tT9v/WJcrEvlqdgD+1cG9TPK7abN0EeV
-	zJZqlvu+tghPKpIY22PS94ZIaLHWJrstyxSw7mIL+QEAEfvkLdw8BtjnQqT1kmyI7cOl3a
-	/vIVkZfGm3PdR4gKiL10iJBfxStPTB/iSWHWP4r78wtZQDZte4mI1gVbapG0zw==
+	bh=dRWBcF7rla5qMSzAG+4qAsZI2bSHYVZEn5ZYKzuLm1k=;
+	b=WsT5/C5cuZA+sMtI3EYz5yGe76TZwcIcndWm1EMARYDS08MQjAY+9h/Wq3ePnKg3rZliUO
+	Sc7L5b4WptG5m+5/dMrzboIzhkvEEO57hi3FnyJUF02x994tqGU9JZmpXO74Mr0RecG5TS
+	XcvNZFWFxTjM0xiaLOWuIybhxJPDo6Nyj4lWU8AsAJc47d3+sy1ysHo0UmZ01V4k3AwMHw
+	DlApnU4qPIisi/rlQp1hpICfI9wcFRcNyPJWLeENLYRz6FoLe6Xa7P/mAELrPM6ymR4XIa
+	DCxZXR7VM06aMPgZ5d1f0k4cquWvrcyMbCsop7giDKS2RE9bu89xtSPzZmnA+A==
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	mhi@mailbox.org
-Subject: [PATCH v2 03/13] tracing: Fix multiple typos in ring_buffer.c
-Date: Fri, 21 Nov 2025 23:18:25 +0100
-Message-ID: <20251121221835.28032-5-mhi@mailbox.org>
+Subject: [PATCH v2 04/13] tracing: Fix typo in ring_buffer_benchmark.c
+Date: Fri, 21 Nov 2025 23:18:26 +0100
+Message-ID: <20251121221835.28032-6-mhi@mailbox.org>
 In-Reply-To: <20251121221835.28032-1-mhi@mailbox.org>
 References: <20251121221835.28032-1-mhi@mailbox.org>
 Precedence: bulk
@@ -68,51 +65,29 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: dc9e780f46ed757ff7a
-X-MBO-RS-META: yx684nikdjscenq4ahqnqq5xi7guaiby
-X-Rspamd-Queue-Id: 4dCqPg4KMwz9tws
+X-MBO-RS-ID: 6cf2b62d2bbff699263
+X-MBO-RS-META: q8fkdh53ny5sdz6pfeisgy71ag3ti5yy
 
-Fix multiple typos in comments:
-"ording" -> "ordering"
-"scatch" -> "scratch"
-"wont" -> "won't"
+Fix typo "overwite" to "overwrite".
 
 Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
 ---
- kernel/trace/ring_buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/trace/ring_buffer_benchmark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index afcd3747264d..9139a020ece4 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1735,7 +1735,7 @@ static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
- 	bmeta->total_size = total_size;
- 	bmeta->buffers_offset = (void *)ptr - (void *)bmeta;
+diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
+index cdc3aea12c93..593e3b59e42e 100644
+--- a/kernel/trace/ring_buffer_benchmark.c
++++ b/kernel/trace/ring_buffer_benchmark.c
+@@ -433,7 +433,7 @@ static int __init ring_buffer_benchmark_init(void)
+ {
+ 	int ret;
  
--	/* Zero out the scatch pad */
-+	/* Zero out the scratch pad */
- 	memset((void *)bmeta + sizeof(*bmeta), 0, bmeta->buffers_offset - sizeof(*bmeta));
- 
- 	return false;
-@@ -6073,7 +6073,7 @@ static void rb_clear_buffer_page(struct buffer_page *page)
-  * id field, and updated via this function.
-  *
-  * But for a fixed memory mapped buffer, the id is already assigned for
-- * fixed memory ording in the memory layout and can not be used. Instead
-+ * fixed memory ordering in the memory layout and can not be used. Instead
-  * the index of where the page lies in the memory layout is used.
-  *
-  * For the normal pages, set the buffer page id with the passed in @id
-@@ -7660,7 +7660,7 @@ static __init int test_ringbuffer(void)
- 	/*
- 	 * Show buffer is enabled before setting rb_test_started.
- 	 * Yes there's a small race window where events could be
--	 * dropped and the thread wont catch it. But when a ring
-+	 * dropped and the thread won't catch it. But when a ring
- 	 * buffer gets enabled, there will always be some kind of
- 	 * delay before other CPUs see it. Thus, we don't care about
- 	 * those dropped events. We care about events dropped after
+-	/* make a one meg buffer in overwite mode */
++	/* make a one meg buffer in overwrite mode */
+ 	buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+ 	if (!buffer)
+ 		return -ENOMEM;
 -- 
 2.50.1
 
