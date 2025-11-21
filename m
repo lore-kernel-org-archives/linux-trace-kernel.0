@@ -1,108 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D8F2D8399;
-	Fri, 21 Nov 2025 15:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02F3357A48;
+	Fri, 21 Nov 2025 16:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763738543; cv=none; b=e28EuEbJ+FRTYiNOp/6/jGSrHr2/5CRjVuggittEJiUq1KiX85PZDagCpkPxNPmc9YwBomsMkIJlDQ8d8VgRRQbRlG0cu0LLwPwMGCeeGy7l6buyCse9843eCmBAfmJ5+MyDcy3BuSIQ4UKUR01S6s6+SoeZ8vx+unTQWL0RXng=
+	t=1763741358; cv=none; b=i5XBImyvIJSd8YT/iri0KY3T/ASedk1Lb0EI3/mGoY3Cxo9mELghb1TZTPMo3eOuJTYnYZyqrwD80wKsBLolO4UgR26jFGAnVLbArGaphRpZ4yVCBTqeq1HZpcS/NOWgkR+9DN9fkZgtn3zEXgSv+lfmX0woizSyirAAgJB3eEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763738543; c=relaxed/simple;
-	bh=RIw6pp5WCPosptLJopqrrgG1TjpAvG0UJNi7hJYtDbs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ooXKBv7F+R8IAxNtt8XvmqekV83CUOu7QNH+A5iCiIVrUUD7qvTaL5f6aSDLyOfQSfeN0G7t7xjzlaK+52fEJkCpeCzBr7qJZ8d3WfEP1w7CUxD6F8JqyLsSYbjhU3YXZQoNY1EB3or9+S3hPa7t0zodH1KTW/9CIAc4Wm851pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEFCQl5v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763741358; c=relaxed/simple;
+	bh=//OuOvMXeDV9xgqjwXYfwljPeKEYUBLLHfpTkq6K8+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hIITaIEiE5AX5lm6Zt16hyeClz/VfexmbwXQE3j+I01P8lZjugh71upyQtXIMtiA0KmpHJoCHtCS0/2w3RvmTFpHvwKf3XPLiBoyES3LdF18WtPgl/n5oR4WqgzTYvyz9prpYDC84EdjLarX/VEp6RnDWEv4KVJMoR8TLK3Pu2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXrPBIfz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEFCQl5v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF04C4CEF1;
-	Fri, 21 Nov 2025 15:22:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXrPBIfz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E86C4CEF1;
+	Fri, 21 Nov 2025 16:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763738543;
-	bh=RIw6pp5WCPosptLJopqrrgG1TjpAvG0UJNi7hJYtDbs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BEFCQl5vjeg8wS6LXGSVFJVaOO2mkuOI6u6qgGlMJqxz3JVK46dqqMLDXKAxpZcIv
-	 eImfFQD38TmDSwLjV/1TA7NRjhGz++LFkNC+JHLwFBzN2H0Ck9ondKicvdyrNqKqUd
-	 nm6FZJaZR+zaOVKYu8PlQANAxdgwEM1NRPbFdnb3am1hagP+jgkGGDY6TNxvbkQfkp
-	 Oxt8gSc7Qe9IMfg3u2PDkCG2BQHor0gGZ2JK3mMEWsT0jRg7G66CrRKWId3kv/f5fp
-	 JmBIxF84QMburgf4POs5Mdf8HntuwpyKU9zJOyFXPa17RvKJV+aYgYmggdf5Ylrr93
-	 9OIEcFkS4YKCQ==
-Date: Sat, 22 Nov 2025 00:22:18 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 3/3] tracing: Use strim() in trigger_process_regex()
- instead of skip_spaces()
-Message-Id: <20251122002218.538827c78b948a132ba11ee0@kernel.org>
-In-Reply-To: <20251120205710.314839538@kernel.org>
-References: <20251120205600.570673392@kernel.org>
-	<20251120205710.314839538@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1763741357;
+	bh=//OuOvMXeDV9xgqjwXYfwljPeKEYUBLLHfpTkq6K8+8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DXrPBIfzI0rxVmeV3dm4FH1BWca0aQOsApup4El5ebC7/Wnbgl4eKyhSn1TIGGat+
+	 vzz/NrU+jaItZ8HFmGhr86j1xgwmOSYZSNYke4wL/syHqsVWZQukAqEhNqa+YNeBPk
+	 31QsKCYCoAkM38ieBYVKK5PUc7SbGf1eklyzn4hbLVOVv03psyu/FsTvwpQUJc32fZ
+	 7tY90oZuYPnRk61KoNosla/msm9JvWELMKFOGQibL0zU59vuJTMgJueCkMx3/vpyuS
+	 7FE3P69FI738zFjFu+4J6UR3L8bSD7oVpcGOKZ1Fj9BmljA4Dxgutytafxy0PEhDdT
+	 FX70hzkqbeyzw==
+Message-ID: <f8669e93-24a8-47e1-9ba9-66df9627e998@kernel.org>
+Date: Fri, 21 Nov 2025 17:09:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/9] mm: implement sticky VMA flags
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Andrei Vagin <avagin@gmail.com>
+References: <cover.1763460113.git.lorenzo.stoakes@oracle.com>
+ <22ad5269f7669d62afb42ce0c79bad70b994c58d.1763460113.git.lorenzo.stoakes@oracle.com>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+In-Reply-To: <22ad5269f7669d62afb42ce0c79bad70b994c58d.1763460113.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Nov 2025 15:56:03 -0500
-Steven Rostedt <rostedt@kernel.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On 11/18/25 11:17, Lorenzo Stoakes wrote:
+> It is useful to be able to designate that certain flags are 'sticky', that
+> is, if two VMAs are merged one with a flag of this nature and one without,
+> the merged VMA sets this flag.
 > 
-> The function trigger_process_regex() is called by a few functions, where
-> only one calls strim() on the buffer passed to it. That leaves the other
-> functions not trimming the end of the buffer passed in and making it a
-> little inconsistent.
+> As a result we ignore these flags for the purposes of determining VMA flag
+> differences between VMAs being considered for merge.
 > 
-> Remove the strim() from event_trigger_regex_write() and have
-> trigger_process_regex() use strim() instead of skip_spaces(). The buff
-> variable is not passed in as const, so it can be modified.
+> This patch therefore updates the VMA merge logic to perform this action,
+> with flags possessing this property being described in the VM_STICKY
+> bitmap.
 > 
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Those flags which ought to be ignored for the purposes of VMA merge are
+> described in the VM_IGNORE_MERGE bitmap, which the VMA merge logic is also
+> updated to use.
+> 
+> As part of this change we place VM_SOFTDIRTY in VM_IGNORE_MERGE as it
+> already had this behaviour, alongside VM_STICKY as sticky flags by
+> implication must not disallow merge.
+> 
+> Ultimately it seems that we should make VM_SOFTDIRTY a sticky flag in its
+> own right, but this change is out of scope for this series.
+> 
+> The only sticky flag designated as such is VM_MAYBE_GUARD, so as a result
+> of this change, once the VMA flag is set upon guard region installation,
+> VMAs with guard ranges will now not have their merge behaviour impacted as
+> a result and can be freely merged with other VMAs without VM_MAYBE_GUARD
+> set.
+> 
+> Also update the comments for vma_modify_flags() to directly reference
+> sticky flags now we have established the concept.
+> 
+> We also update the VMA userland tests to account for the changes.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  kernel/trace/trace_events_trigger.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-> index 16e3449f3cfe..1dfe69146a81 100644
-> --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -309,7 +309,8 @@ int trigger_process_regex(struct trace_event_file *file, char *buff)
->  	char *command, *next;
->  	struct event_command *p;
->  
-> -	next = buff = skip_spaces(buff);
-> +	next = buff = strim(buff);
-> +
->  	command = strsep(&next, ": \t");
->  	if (next) {
->  		next = skip_spaces(next);
-> @@ -346,8 +347,6 @@ static ssize_t event_trigger_regex_write(struct file *file,
->  	if (IS_ERR(buf))
->  		return PTR_ERR(buf);
->  
-> -	strim(buf);
-> -
->  	guard(mutex)(&event_mutex);
->  
->  	event_file = event_file_file(file);
-> -- 
-> 2.51.0
-> 
-> 
 
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cheers
+
+David
