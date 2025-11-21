@@ -1,334 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B353E30AAC8;
-	Fri, 21 Nov 2025 18:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D962C21CC;
+	Fri, 21 Nov 2025 18:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763748190; cv=none; b=LHWir3z39RvEcxRgfrWG1JkWVG/zI58oKf1Xk7YgIVUukNmi3Z4vEQq0Y0GWUynli2qzGiJNFk1Sv8HINuJWFPrZy8GOXjcu3SMP/1JlXUObYLuvwSW12TAUaoTPRcW8NHn/Grg3ODJxJQhv0HHICG2CyEUcYdPQKOExZdEsHAk=
+	t=1763750440; cv=none; b=H1UbxFqGBuq3z+qPrZPN+QI/tmDb4VYrrMq5QLM06TR0TDSmCmvca5dpkFPVYV6k2xYwdfKQsREwBBbsR6GHFXwVVnqBke5a+hKS6zZMPCgloi8Aw4bjzX5P8X5VBYD2V6n1KqXxdQnIQ4eHdX8IMsGM4ALXR6BB+AFL2yLJSiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763748190; c=relaxed/simple;
-	bh=mQlZ91jyc7X/wux2C7zhATU5EBZrjXavNWdp7ODBV5Y=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HS1AJ8G7RdAzjoPRi/Gn1qHlBZ6pl3sjSzVFmevqi54/WXB2ER5W647jstfEo7ThwOZBSqF/kXcgFUTLilze5S+qkArfaTuwTwVyjW6FDXYFLTnUnJsFCdQ2TfHElzHWGoexe3D/4Iz9m3bCyXcgHckmqQkGNd37LlErPBvjD+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UVCk28fZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763750440; c=relaxed/simple;
+	bh=jWslEPu1h+kwOX+YdsgP+InMHvzad4h5A0TecdWZjCI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jZxvRMXawmcnM8wJnamGiA9n9MpeeJNVb3Vx0EV4iGUGXC5spV2e2o1PuE/gub6pImOy8mWgpqvA/gWhqixHM5KNRZ8UtGOr9rlECHgF+1+qJqD7S27w72npAsszOeY41ttMv+27x+dV3ROLSh1/57ifplAxplRp6opLFVIvs/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=tJF/sIc/; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UVCk28fZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B58C4CEF1;
-	Fri, 21 Nov 2025 18:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1763748189;
-	bh=mQlZ91jyc7X/wux2C7zhATU5EBZrjXavNWdp7ODBV5Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UVCk28fZGnSCPDypK4tq7cV4Hb5MHAuaX8VMyfe2aT25S3UoWIspYmgdE405EDyQQ
-	 mW9yDISISAIiaF1QxKvU8KmhzxTIGGFsIlypP0Vvx6Lkeko0DJkOBPGIpPRNm48awV
-	 qoovOHu5YjTiGK4ZfdCMb3e0aS4bR+81lSyP5Q6c=
-Date: Fri, 21 Nov 2025 10:03:08 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
- <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu
- <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>, SeongJae
- Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett"
- <liam.howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Christian Brauner <brauner@kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, Miaohe
- Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, Yu Zhao
- <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, Mateusz
- Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>, Baolin
- Wang <baolin.wang@linux.alibaba.com>, Aboorva Devarajan
- <aboorvad@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="tJF/sIc/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1763749851;
+	bh=jWslEPu1h+kwOX+YdsgP+InMHvzad4h5A0TecdWZjCI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=tJF/sIc/EnfMzSu+amtP0YEIwtKbY9i/YPE5RHldGP3WzOuUGkOgNn3ZrQxRVC1kn
+	 Hop2ettJhJjzv0M8nw5QrrHRo6jY587iX78MZxEcWLr2ARUawoQvtk5ChjQ4al40UE
+	 pSnQbJevEBvXKCuEiU/2n8lRuRMrjBZppPH3aB84=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 1D331402BA; Fri, 21 Nov 2025 10:30:51 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 19BFE402B9;
+	Fri, 21 Nov 2025 10:30:51 -0800 (PST)
+Date: Fri, 21 Nov 2025 10:30:51 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+    linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
+    Tejun Heo <tj@kernel.org>, Martin Liu <liumartin@google.com>, 
+    David Rientjes <rientjes@google.com>, christian.koenig@amd.com, 
+    Shakeel Butt <shakeel.butt@linux.dev>, SeongJae Park <sj@kernel.org>, 
+    Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+    Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, 
+    Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+    "Liam R . Howlett" <liam.howlett@oracle.com>, 
+    Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+    Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+    Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+    Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+    linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+    Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+    Mateusz Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
+    Baolin Wang <baolin.wang@linux.alibaba.com>, 
+    Aboorva Devarajan <aboorvad@linux.ibm.com>
 Subject: Re: [PATCH v9 1/2] lib: Introduce hierarchical per-cpu counters
-Message-Id: <20251121100308.65b36af9e090a78a66144c6c@linux-foundation.org>
-In-Reply-To: <20251120210354.1233994-2-mathieu.desnoyers@efficios.com>
-References: <20251120210354.1233994-1-mathieu.desnoyers@efficios.com>
-	<20251120210354.1233994-2-mathieu.desnoyers@efficios.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+In-Reply-To: <20251121100308.65b36af9e090a78a66144c6c@linux-foundation.org>
+Message-ID: <97a15b05-d61c-0035-82b7-37ac073c4055@gentwo.org>
+References: <20251120210354.1233994-1-mathieu.desnoyers@efficios.com> <20251120210354.1233994-2-mathieu.desnoyers@efficios.com> <20251121100308.65b36af9e090a78a66144c6c@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 20 Nov 2025 16:03:53 -0500 Mathieu Desnoyers <mathieu.desnoyers@eff=
-icios.com> wrote:
+On Fri, 21 Nov 2025, Andrew Morton wrote:
 
-> * Motivation
->=20
-> The purpose of this hierarchical split-counter scheme is to:
->=20
-> - Minimize contention when incrementing and decrementing counters,
-> - Provide fast access to a sum approximation,
-> - Provide a sum approximation with an acceptable accuracy level when
->   scaling to many-core systems.
-> - Provide approximate and precise comparison of two counters, and
->   between a counter and a value.
->=20
-> It aims at fixing the per-mm RSS tracking which has become too
-> inaccurate for OOM killer purposes on large many-core systems [1].
+> Have you identified other parts of the kernel which could use this?
 
-Presentation nit: the info at [1] is rather well hidden until one reads
-the [2/2] changelog.  You might want to move that material into the
-[0/N] - after all, it's the entire point of the patchset.
+We need to compare this with the ZVC counters used for the vm statistics.
+Maybe this is better and we can scale counters easier in the VM.
 
-> * Design
->=20
-> The hierarchical per-CPU counters propagate a sum approximation through
-> a N-way tree. When reaching the batch size, the carry is propagated
-> through a binary tree which consists of logN(nr_cpu_ids) levels. The
-> batch size for each level is twice the batch size of the prior level.
->=20
-> Example propagation diagram with 8 cpus through a binary tree:
->=20
-> Level 0:  0    1    2    3    4    5    6    7
->           |   /     |   /     |   /     |   /
->           |  /      |  /      |  /      |  /
->           | /       | /       | /       | /
-> Level 1:  0         1         2         3
->           |       /           |       /
->           |    /              |    /
->           | /                 | /
-> Level 2:  0                   1
->           |               /
->           |         /
->           |   /
-> Level 3:  0
->=20
-> For a binary tree, the maximum inaccuracy is bound by:
->    batch_size * log2(nr_cpus) * nr_cpus
-> which evolves with O(n*log(n)) as the number of CPUs increases.
->=20
-> For a N-way tree, the maximum inaccuracy can be pre-calculated
-> based on the the N-arity of each level and the batch size.
+ZVCs were designed for systems with a large number of NUMA nodes and a
+handful of processors in each of those. What we have today is large number
+of processors in one socket (my employer is shooting high on that level).
 
-Looks very neat.
+Hierachical counters may be better in that scenario. Maybe we can call
+them HVC (Hierachical VM Counters). ;-) )
 
-Have you identified other parts of the kernel which could use this?
-
->  include/linux/percpu_counter_tree.h | 239 +++++++++++++++
->  init/main.c                         |   2 +
->  lib/Makefile                        |   1 +
->  lib/percpu_counter_tree.c           | 443 ++++++++++++++++++++++++++++
->  4 files changed, 685 insertions(+)
->  create mode 100644 include/linux/percpu_counter_tree.h
->  create mode 100644 lib/percpu_counter_tree.c
-
-An in-kernel test suite would be great.  Like lib/*test*.c or
-tools/testing/.
-
-> diff --git a/include/linux/percpu_counter_tree.h b/include/linux/percpu_c=
-ounter_tree.h
-> new file mode 100644
-> index 000000000000..1f4938b67730
-> --- /dev/null
-> +++ b/include/linux/percpu_counter_tree.h
-> @@ -0,0 +1,239 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
-> +/* SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@eff=
-icios.com> */
-> +
-> +#ifndef _PERCPU_COUNTER_TREE_H
-> +#define _PERCPU_COUNTER_TREE_H
-> +
-> +#include <linux/preempt.h>
-> +#include <linux/atomic.h>
-> +#include <linux/percpu.h>
-> +
-> +#ifdef CONFIG_SMP
-> +
-> +struct percpu_counter_tree_level_item {
-> +	atomic_t count;
-> +} ____cacheline_aligned_in_smp;
-> +
-> +struct percpu_counter_tree {
-> +	/* Fast-path fields. */
-> +	unsigned int __percpu *level0;
-> +	unsigned int level0_bit_mask;
-> +	union {
-> +		unsigned int *i;
-> +		atomic_t *a;
-> +	} approx_sum;
-> +	int bias;			/* bias for counter_set */
-> +
-> +	/* Slow-path fields. */
-> +	struct percpu_counter_tree_level_item *items;
-> +	unsigned int batch_size;
-> +	unsigned int inaccuracy;	/* approximation imprecise within =B1 inaccura=
-cy */
-> +};
-
-I find that understanding the data structure leads to understanding the
-code, so additional documentation for the various fields would be
-helpful.
-
-> +
-> +static inline
-> +int percpu_counter_tree_carry(int orig, int res, int inc, unsigned int b=
-it_mask)
-> +{
-> ...
-> +}
-> +
-> +static inline
-> +void percpu_counter_tree_add(struct percpu_counter_tree *counter, int in=
-c)
-> +{
-> ...
-> +}
-> +
-> +static inline
-> +int percpu_counter_tree_approximate_sum(struct percpu_counter_tree *coun=
-ter)
-> +{
-> ...
-> +}
-
-These are pretty large after all the nested inlining is expanded.  Are
-you sure that inlining them is the correct call?
-
-
-> +#else	/* !CONFIG_SMP */
-> +
->
-> ...
->
-> +#include <linux/percpu_counter_tree.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/percpu.h>
-> +#include <linux/atomic.h>
-> +#include <linux/errno.h>
-> +#include <linux/slab.h>
-> +#include <linux/math.h>
-> +
-> +#define MAX_NR_LEVELS 5
-> +
-> +struct counter_config {
-> +	unsigned int nr_items;
-> +	unsigned char nr_levels;
-> +	unsigned char n_arity_order[MAX_NR_LEVELS];
-> +};
-> +
-> +/*
-> + * nr_items is the number of items in the tree for levels 1 to and
-> + * including the final level (approximate sum). It excludes the level 0
-> + * per-cpu counters.
-> + */
-
-That's referring to counter_config.nr_items?  Comment appears to be
-misplaced.
-
->
-> ...
->
-> +static
-> +int __percpu_counter_tree_init(struct percpu_counter_tree *counter,
-> +			       unsigned int batch_size, gfp_t gfp_flags,
-> +			       unsigned int __percpu *level0,
-> +			       struct percpu_counter_tree_level_item *items)
-> +{
-> +	/* Batch size must be power of 2 */
-> +	if (!batch_size || (batch_size & (batch_size - 1)))
-> +		return -EINVAL;
-
-It's a bug, yes?  Worth a WARN?
-
-> +	counter->batch_size =3D batch_size;
-> +	counter->bias =3D 0;
-> +	counter->level0 =3D level0;
-> +	counter->items =3D items;
-> +	if (!nr_cpus_order) {
-> +		counter->approx_sum.i =3D per_cpu_ptr(counter->level0, 0);
-> +		counter->level0_bit_mask =3D 0;
-> +	} else {
-> +		counter->approx_sum.a =3D &counter->items[counter_config->nr_items - 1=
-].count;
-> +		counter->level0_bit_mask =3D 1UL << get_count_order(batch_size);
-> +	}
-> +	counter->inaccuracy =3D batch_size * inaccuracy_multiplier;
-> +	return 0;
-> +}
-> +
->
-> ...
->
-> +int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter)
-> +{
-> +	return percpu_counter_tree_precise_sum_unbiased(counter) + READ_ONCE(co=
-unter->bias);
-> +}
-> +
-> +/*
-> + * Do an approximate comparison of two counters.
-> + * Return 0 if counters do not differ by more than the sum of their
-> + * respective inaccuracy ranges,
-> + * Return -1 if counter @a less than counter @b,
-> + * Return 1 if counter @a is greater than counter @b.
-> + */
-
-It would be nice to kerneldocify the exported API.
-
-Some fairly detailed words explaining the pros and cons of precise vs
-approximate would be helpful to people who are using this API.
-
-> +int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *=
-a, struct percpu_counter_tree *b)
-> +{
-> +	int count_a =3D percpu_counter_tree_approximate_sum(a),
-> +	    count_b =3D percpu_counter_tree_approximate_sum(b);
-> +
-> +	if (abs(count_a - count_b) <=3D (a->inaccuracy + b->inaccuracy))
-> +		return 0;
-> +	if (count_a < count_b)
-> +		return -1;
-> +	return 1;
-> +}
-> +
->
-> ...
->
-> +static unsigned int __init calculate_inaccuracy_multiplier(void)
-> +{
-> +	unsigned int nr_levels =3D counter_config->nr_levels, level;
-> +	unsigned int level_items =3D 1U << nr_cpus_order;
-> +	unsigned int inaccuracy =3D 0, batch_size =3D 1;
-> +
-> +	for (level =3D 0; level < nr_levels; level++) {
-> +		unsigned int n_arity_order =3D counter_config->n_arity_order[level];
-> +
-> +		inaccuracy +=3D batch_size * level_items;
-> +		batch_size <<=3D n_arity_order;
-> +		level_items >>=3D n_arity_order;
-> +	}
-> +	return inaccuracy;
-> +}
-> +
-> +int __init percpu_counter_tree_subsystem_init(void)
-
-I'm not sure that the "subsystem_" adds any value.
-
-> +{
-> +
-> +	nr_cpus_order =3D get_count_order(nr_cpu_ids);
-
-Stray newline.
-
-> +	if (WARN_ON_ONCE(nr_cpus_order >=3D ARRAY_SIZE(per_nr_cpu_order_config)=
-)) {
-> +		printk(KERN_ERR "Unsupported number of CPUs (%u)\n", nr_cpu_ids);
-> +		return -1;
-> +	}
-> +	counter_config =3D &per_nr_cpu_order_config[nr_cpus_order];
-> +	inaccuracy_multiplier =3D calculate_inaccuracy_multiplier();
-> +	return 0;
-> +}
 
