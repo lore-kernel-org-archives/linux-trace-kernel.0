@@ -1,279 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFF4350A1D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 17:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC282D5C86;
+	Fri, 21 Nov 2025 17:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763747157; cv=none; b=RWtwuSvvhCwEqkCdezSd4NcmBI6jbxCFtXwzyOQPOk5dHCFhp2ecs6TRCsoApxepVzoCtMurvW5rEbZdvKXpmKTvcSYU0PWWeMSo9Ggn9W5WxcRwNlMGKhwA46RnsWu0DR802b4+kLUGATuOwvB5xrkNDOw0DeqRHyHYzcC6GXY=
+	t=1763747418; cv=none; b=TvbqGd76mDLtC04BEfTe9kI/lrVG46puMfj2WD54KzzUVZ/KArIwHeeCk2h47vZxeO16YXxhwgjm9tfhGLIZZbHWeIAba0h6nv0z+G4JCRFHDJJHc5V3SxKsNIq/f6fvjf1xqRa74yhxAnvHUNz54zbE5EKGGOkl2x1hCKqULtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763747157; c=relaxed/simple;
-	bh=D1AdlKWho2by+4CzgvcoFl74FcN82SAXeg9cfxfzFB8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Zc119M/SxORb7OFIyTp67EUVLe1K2soWeov+uqp0zH0WCt7jQu5UJKMHChOYqzquSn5h8rpskhBLG8k+LGGpBpxisuH2ZFOSZYTT7NTb3psB3YNzrBXbTgaUphFi9nE8maVsz2hd2Q3OFw06aEaKMN9D/AXxrRziVc8ThgF8NIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X2l9KnWd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763747418; c=relaxed/simple;
+	bh=YckklQG/5FwUbczH+x3i0icUWdCO2DJMQNFuo3RKWck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FuSOX3LKVmrcbMm3UtYd+7tWM+4FiqfDmhsQjMkyWPcWAKmu29PG6kTVC4BJJIeM8I45XdBWjs2xNEOV2SqGCLMlxEwmzyw/e41gLgWh6AS0yuRK/1Tk3wlw3buPST+zsc8JIK+onIdmZ5T+gq3ZtWQzhX6/K4TDv/ES84Bcuxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CxEoigRI; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X2l9KnWd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763747154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4isV2YzTCHizoKjzYDGn0aeaubcmK1LCw5702FwMQNE=;
-	b=X2l9KnWdydPVr8W8H2cJU22zQfWIZU2GQRp/avdWEUHX8WIXH43dw+k1wcbeFznjWuzgJB
-	F7scuKlGrOdDav3WcLpLiuILVQV/M6KH1di2Lt8kGS999mfdmD4fVuxFquBLxcdl5OGkck
-	1nSLFfaXXoFWgo4IbpXR3/cZHmCeGcQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-cHv7cK4JPOyNSE-dfDIfIw-1; Fri, 21 Nov 2025 12:45:53 -0500
-X-MC-Unique: cHv7cK4JPOyNSE-dfDIfIw-1
-X-Mimecast-MFC-AGG-ID: cHv7cK4JPOyNSE-dfDIfIw_1763747152
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-429c5da68e5so1401680f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 09:45:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763747152; x=1764351952;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4isV2YzTCHizoKjzYDGn0aeaubcmK1LCw5702FwMQNE=;
-        b=fln7plaiBTEoZNaoObkfJuG1i/x05iUwCjKJdUvEttep2s70fkV+meu6TEwBFLhesN
-         zc/6IquiLHdo6IIkwmPCPUNMThvQ0Ea2D6EVeJk4AjOGF5o38bzgdp6PaBfrlZILSbrL
-         i0QirRxAuDYnaZsTQxx+GPjJ0gC6dHQTtpBWYOQD2/0FRpiPtQU2zBS1EgY1y17ECjiY
-         MULglVGgTG2aGDZj3D+KkyOA9GQuhayEvwaajjq/bx+0b8KTB3iQtN+D8rfqHzRzAzNy
-         yEMx/ByHfOMddlhSPaHwKQLpHhRb0e9DXZI8X44/s6Zh0JRIIvAA9ItOGtrCj0MHiO3q
-         HZmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+3P4q8sVhnNj1wS4wtAedN7B5Gv/3WQblyyXPgZ7pFgBCkEn7KMKl9EatCR/JE2n23nebLOY43f99ESUrYLEcJhw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf0p9Z3GuJizG09qW4X9CuZJ0tGItLdVud/f8ciTz69kycUxXG
-	8fETEmLH6c55uzVk59vYq4A3E+JECv+avsbnMav1scYP97atTwMrDiT+GU/YtCjx3NWFcyB07Bo
-	nAUW3FxjxjAXOonHTl6JgfxvT0t7bhRw1xy64UO+1ZWR/fQw4BX7N9zMZQW+YsAwdraw1l49LcA
-	==
-X-Gm-Gg: ASbGncvXGHhKpz9hr61ZYaSK/5Kg/ECvxw4MTMRZgXboPE90nRAZnhdxa0c9kUkXhus
-	Gtrc5aZyWb35B7KNNS7nagoJPNwJpTFzMjBawEbH25Tw70shkLEG82evFXQKg25qgCsWzAqT07m
-	ubY7LVHNw1gb23+hFLLdljIGkRGB340LNiGU989y/G0E3qK8WDaQUYZoERdPvLQFHhv8ARnO9A8
-	R3WNSGmi7GD80lyGQXv1fVnkVrNKGWHL88UJypm/+Q9Px+S4QGv1Vp+B0w1y9KNDPmDVDLLcf4K
-	ZRB3Txi3Wf+zzlG8cDus8Rv03GqFAsydLrDyIuDEGsIojdPY5Cjv+qMmHM1VQXQNgeF5RLoatUd
-	jR8/0T+gU5ddwB4R/xnAuXvfN
-X-Received: by 2002:a5d:5f54:0:b0:42b:3108:5671 with SMTP id ffacd0b85a97d-42cba7c4d96mr8095365f8f.29.1763747151991;
-        Fri, 21 Nov 2025 09:45:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEM8NKpwRcn40VnEReWwYMQNvRZKJQwoTcUDLfVIQM9E7znbRvegTyP8bUUSuZwUOgLpRPQYw==
-X-Received: by 2002:a5d:5f54:0:b0:42b:3108:5671 with SMTP id ffacd0b85a97d-42cba7c4d96mr8095340f8f.29.1763747151498;
-        Fri, 21 Nov 2025 09:45:51 -0800 (PST)
-Received: from costa-tp.bos2.lab ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7ec454csm11529567f8f.0.2025.11.21.09.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 09:45:51 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 8/8] tools/rtla: Consolidate -H/--house-keeping option parsing
-Date: Fri, 21 Nov 2025 19:45:04 +0200
-Message-ID: <20251121174504.519230-9-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251121174504.519230-1-costa.shul@redhat.com>
-References: <20251121174504.519230-1-costa.shul@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CxEoigRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763747418; x=1795283418;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YckklQG/5FwUbczH+x3i0icUWdCO2DJMQNFuo3RKWck=;
+  b=CxEoigRIfvFQT+OgznmOEVgay7cSukJC0IKVY3RhsRCP2zcatrFqO22Z
+   DuJIr9BBVa2id4rlsgT1UBqzV1dhSd0rg5Okh3X25tGx0V+Bv8dkuT7vz
+   o+1Ua044vVSEHZP8++J+pJqOZVh0aEOnirvgS3xdf8dx5AIuM9LhixJjt
+   uh37Dr2GDKufK7IIO40tpK32d6zYjCLOmsCDss3bFAkccSPuURLuN8VFy
+   QR5et+flPuQZuRseQUWd+jUV9zorirhI588OjDEzWWYJk3ZxDGsP2GYuN
+   VHeEU9Ju+aWu10Cfc8jZ0Ke7nLMTTFNdowgfxDlQW/eEfL6ghQlox0ti6
+   w==;
+X-CSE-ConnectionGUID: VfMU84oKQ5SbK5faldnbLQ==
+X-CSE-MsgGUID: K71gMso3TIWvNJuQQCEOhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="69465904"
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="69465904"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:50:17 -0800
+X-CSE-ConnectionGUID: TALVmW4IQoSpoxqsJrQTWg==
+X-CSE-MsgGUID: pw0Ufr6DT1ewmiN2aWhOIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="222378181"
+Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.110.60]) ([10.125.110.60])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:50:15 -0800
+Message-ID: <2837ea3e-c0b8-46b0-b8da-bf06906d124d@intel.com>
+Date: Fri, 21 Nov 2025 09:50:14 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7Djo10YvL6UPmYvZ4GH9N5nMZmdQQTBHOJ2slZ_6F0o_1763747152
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v7 30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush
+ IPIs under CONFIG_COALESCE_TLBI=y
+To: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Josh Triplett
+ <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mel Gorman <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Han Shen <shenhan@google.com>,
+ Rik van Riel <riel@surriel.com>, Jann Horn <jannh@google.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>,
+ Yair Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>
+References: <20251114150133.1056710-1-vschneid@redhat.com>
+ <20251114151428.1064524-10-vschneid@redhat.com>
+ <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
+ <xhsmh5xb3thh6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <xhsmh5xb3thh6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Each rtla tool duplicates parsing of -H/--house-keeping.
+On 11/21/25 09:37, Valentin Schneider wrote:
+> On 19/11/25 10:31, Dave Hansen wrote:
+>> On 11/14/25 07:14, Valentin Schneider wrote:
+>>> +static bool flush_tlb_kernel_cond(int cpu, void *info)
+>>> +{
+>>> +	return housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) ||
+>>> +	       per_cpu(kernel_cr3_loaded, cpu);
+>>> +}
+>>
+>> Is it OK that 'kernel_cr3_loaded' can be be stale? Since it's not part
+>> of the instruction that actually sets CR3, there's a window between when
+>> 'kernel_cr3_loaded' is set (or cleared) and CR3 is actually written.
+>>
+>> Is that OK?
+>>
+>> It seems like it could lead to both unnecessary IPIs being sent and for
+>> IPIs to be missed.
+>>
+> 
+> So the pattern is
+> 
+>   SWITCH_TO_KERNEL_CR3
+>   FLUSH
+>   KERNEL_CR3_LOADED := 1
+> 
+>   KERNEL_CR3_LOADED := 0
+>   SWITCH_TO_USER_CR3
+> 
+> 
+> The 0 -> 1 transition has a window between the unconditional flush and the
+> write to 1 where a remote flush IPI may be omitted. Given that the write is
+> immediately following the unconditional flush, that would really be just
+> two flushes racing with each other,
 
-Migrate the option parsing from individual tools to the
-common_parse_options().
+Let me fix that for you. When you wrote "a remote flush IPI may be
+omitted" you meant to write: "there's a bug." ;)
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/common.c        | 8 +++++++-
- tools/tracing/rtla/src/osnoise_hist.c  | 9 +--------
- tools/tracing/rtla/src/osnoise_top.c   | 9 +--------
- tools/tracing/rtla/src/timerlat_hist.c | 9 +--------
- tools/tracing/rtla/src/timerlat_top.c  | 9 +--------
- 5 files changed, 11 insertions(+), 33 deletions(-)
+In the end, KERNEL_CR3_LOADED==0 means, "you don't need to send this CPU
+flushing IPIs because it will flush the TLB itself before touching
+memory that needs a flush".
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index dd67c6b47eaa..9d047a64146b 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -62,12 +62,13 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
- 		{"debug",               no_argument,            0, 'D'},
- 		{"duration",            required_argument,      0, 'd'},
- 		{"event",               required_argument,      0, 'e'},
-+		{"house-keeping",       required_argument,      0, 'H'},
- 		{"priority",            required_argument,      0, 'P'},
- 		{0, 0, 0, 0}
- 	};
- 
- 	opterr = 0;
--	c = getopt_long(argc, argv, "c:C::Dd:e:P:", long_options, NULL);
-+	c = getopt_long(argc, argv, "c:C::Dd:e:H:P:", long_options, NULL);
- 
- 	switch (c) {
- 	case 'c':
-@@ -96,6 +97,11 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
- 			tevent->next = common->events;
- 		common->events = tevent;
- 		break;
-+	case 'H':
-+		common->hk_cpus = 1;
-+		if (parse_cpu_set(optarg, &common->hk_cpu_set))
-+			fatal("Error parsing house keeping CPUs");
-+		break;
- 	case 'P':
- 		if (parse_prio(optarg, &common->sched_param) == -1)
- 			fatal("Invalid -P priority");
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 6ed5f5594960..1ebd3b48b2d3 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -490,7 +490,6 @@ static struct common_params
- 			{"auto",		required_argument,	0, 'a'},
- 			{"bucket-size",		required_argument,	0, 'b'},
- 			{"entries",		required_argument,	0, 'E'},
--			{"house-keeping",	required_argument,		0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"period",		required_argument,	0, 'p'},
- 			{"runtime",		required_argument,	0, 'r'},
-@@ -514,7 +513,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hH:p:r:s:S:t::T:01234:5:6:7:",
-+		c = getopt_long(argc, argv, "a:b:E:hp:r:s:S:t::T:01234:5:6:7:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -550,12 +549,6 @@ static struct common_params
- 		case '?':
- 			osnoise_hist_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'p':
- 			params->period = get_llong_from_str(optarg);
- 			if (params->period > 10000000)
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index d2dfad960440..02e5e6e18e8d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -345,7 +345,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"period",		required_argument,	0, 'p'},
- 			{"quiet",		no_argument,		0, 'q'},
-@@ -366,7 +365,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hH:p:qr:s:S:t::T:0:1:2:3:",
-+		c = getopt_long(argc, argv, "a:hp:qr:s:S:t::T:0:1:2:3:",
- 				 long_options, NULL);
- 
- 		/* Detect the end of the options. */
-@@ -390,12 +389,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		case '?':
- 			osnoise_top_usage(params);
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'p':
- 			params->period = get_llong_from_str(optarg);
- 			if (params->period > 10000000)
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index e7ba083b5eb4..d1a6cf0c2e0d 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -797,7 +797,6 @@ static struct common_params
- 			{"auto",		required_argument,	0, 'a'},
- 			{"bucket-size",		required_argument,	0, 'b'},
- 			{"entries",		required_argument,	0, 'E'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"irq",			required_argument,	0, 'i'},
- 			{"nano",		no_argument,		0, 'n'},
-@@ -830,7 +829,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hH:i:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
-+		c = getopt_long(argc, argv, "a:b:E:hi:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -869,12 +868,6 @@ static struct common_params
- 		case '?':
- 			timerlat_hist_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'i':
- 			params->common.stop_us = get_llong_from_str(optarg);
- 			break;
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 8250bea4b2fd..12e3d8c6f850 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -566,7 +566,6 @@ static struct common_params
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
- 			{"help",		no_argument,		0, 'h'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"irq",			required_argument,	0, 'i'},
- 			{"nano",		no_argument,		0, 'n'},
- 			{"period",		required_argument,	0, 'p'},
-@@ -594,7 +593,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hH:i:knp:qs:t::T:uU0:1:2:345:6:7:",
-+		c = getopt_long(argc, argv, "a:hi:knp:qs:t::T:uU0:1:2:345:6:7:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -635,12 +634,6 @@ static struct common_params
- 		case '?':
- 			timerlat_top_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'i':
- 			params->common.stop_us = get_llong_from_str(optarg);
- 			break;
--- 
-2.51.1
+   SWITCH_TO_KERNEL_CR3
+   FLUSH
+   // On kernel CR3, *AND* not getting IPIs
+   KERNEL_CR3_LOADED := 1
 
+> but I could punt the kernel_cr3_loaded
+> write above the unconditional flush.
+
+Yes, that would eliminate the window, as long as the memory ordering is
+right. You not only need to have the KERNEL_CR3_LOADED:=1 CPU set that
+variable, you need to ensure that it has seen the page table update.
+
+> The 1 -> 0 transition is less problematic, worst case a remote flush races
+> with the CPU returning to userspace and it'll get interrupted back to
+> kernelspace.
+
+It's also not just "returning to userspace". It could well be *in*
+userspace by the point the IPI shows up. It's not the end of the world,
+and the window isn't infinitely long. But there certainly is still a
+possibility of getting spurious interrupts for the precious NOHZ_FULL
+task while it's in userspace.
