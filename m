@@ -1,61 +1,64 @@
 Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF5F309F0A;
-	Fri, 21 Nov 2025 22:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A59330C34A;
+	Fri, 21 Nov 2025 22:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763544; cv=none; b=YlkqktCmQdXkDm6B7Vt15LBD7OxziS+iExofDsS1AnqMZszvVIBllvyS+Qk92WeZPG0bhaODHZsGN4F/i8mgJFGxOMJRmGkyqrxT6QIMr3gj2djHGvm1TrQZEhcRx6wh7XK4BRVCkhIIfn+o32FePFENUtJo/puvj6+aEUEyzio=
+	t=1763763548; cv=none; b=f30p9FVvgiGCeKrVi7JC8gyq4JQEkkqTh7QwcFcFHJ3Q0GcHy7UcRq+2EQ1MR0a20qdLZ/EAZGNXS3GX+lhNMRhxTJA4j0qCR7odvITLipHx/naO4aOGdsemtFWidVUny66jAaR4x0GDfsi73B+e6QurBOx5mFk1hPkLjWa7dcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763544; c=relaxed/simple;
-	bh=3lPrxsYvi8hDlT8Rvf+vKBUOexahSXA/FCYalfMYfXM=;
+	s=arc-20240116; t=1763763548; c=relaxed/simple;
+	bh=3MvgU+TMha+P0B+w6d+vPMdEdESgh7wjU9tzb2qZDgE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qSNi2+j8k4bMkg0go4a8gwJlvCKgYhcO2q+E2pnDIeiNbKcJEVAcEpaByMSUArzxj8Cr66TK6M4yHHtaIVYFDOFOIKphU7bmW+jgOtgdCz49EXpUoHiZa1uLa72CCrBqSuc56xF07EHis6ylXmS27EZ1rbQqsXjPiHDcvfhMoig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KhYLL1gt; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KhYLL1gt; arc=none smtp.client-ip=80.241.56.151
+	 MIME-Version; b=LIL7PJRZIQV5EKdFW/pqL8YbmVjUp/qjQFUski0IliZlDT12NuJzWMChYhGa36AbeAtCSb2Pkory9Q9g9be8oUzMlZaH+uAt4tWvc8NzTE6t/XgZRF/lulD1xWGDM3JBWHCMTXDMjjMsB/1KGofEdvP7fISqvBP5VgrRRNqA1gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wXftT/+C; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wXftT/+C; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="KhYLL1gt";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="KhYLL1gt"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wXftT/+C";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wXftT/+C"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dCqPd1L1vz9spH;
-	Fri, 21 Nov 2025 23:19:01 +0100 (CET)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dCqPf3jCvz9tKb;
+	Fri, 21 Nov 2025 23:19:02 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763541;
+	t=1763763542;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3zGAYRRmUYNmgH1Xm0Ujcn6n5DD8G2qfVCpUGXhBd5w=;
-	b=KhYLL1gtgJQDLZk5fa+ORR9fLCxZNoVBlwInOBFA9VVJzPEuK1CKy2q0AZsZMgHqP7MKVc
-	3YJqriwj0BYsaYZChGn/NxlcJYLC7QliioAt9lff6K0Uv2/9XUoADEKAci3oZ8/SUj8CIR
-	40OxSJkkhcbN3g2Cg5486mUiFzYBKRysVn1pO8OpW/xWrMurqJyNOcXdU13u8QxkFdMI1R
-	0p+MQPddsON+yrMuzrSpAcnoTWb9HJBVpu3dD/aJf9uNubF+SuyAzhfgI7mEn8bhBDwXR2
-	qhV8quWaMpc4zATo7hfgWjZ3l3m6IeRwneh4jO1Kxvlmj4rG2h/kesmV3Udeyw==
+	bh=EUt7o6zNb9WnDNJz4yNux/YsId1UC+KZ030H+FORpkQ=;
+	b=wXftT/+CZVnX32R34+2S1CLXV4O6uxbJ2bkYvlMT9NjsFxbGhn5VwP/5rbLGeBC3ETcORz
+	Z7X5kmIs+TQHuRrCxxv7TgoI9Cx0bO2CmCydDroz2rvQOty0FKn2DkSLv8XAW8Ct5xlyw8
+	EyIoAPxK/QLC29yPjiCWNNgtEnVrxwjZXX3Df5eyU861+kLEQBLikV+7usmL/9djwhLFKy
+	q8wAAQldFa64AELBFMq+1rSqTD3w8E1m45ktms++95oAHVZDDWLzOmNgbIf0rbIOwpIpGU
+	IrBgY8o6vOz4PEMzOLaUckH+m+OZDvU7pbGnnoKRQ3nv2Z1pKLvHMqEmBQbU1w==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b="wXftT/+C";
+	spf=pass (outgoing_mbo_mout: domain of mhi@mailbox.org designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=mhi@mailbox.org
 From: Maurice Hieronymus <mhi@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763541;
+	t=1763763542;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3zGAYRRmUYNmgH1Xm0Ujcn6n5DD8G2qfVCpUGXhBd5w=;
-	b=KhYLL1gtgJQDLZk5fa+ORR9fLCxZNoVBlwInOBFA9VVJzPEuK1CKy2q0AZsZMgHqP7MKVc
-	3YJqriwj0BYsaYZChGn/NxlcJYLC7QliioAt9lff6K0Uv2/9XUoADEKAci3oZ8/SUj8CIR
-	40OxSJkkhcbN3g2Cg5486mUiFzYBKRysVn1pO8OpW/xWrMurqJyNOcXdU13u8QxkFdMI1R
-	0p+MQPddsON+yrMuzrSpAcnoTWb9HJBVpu3dD/aJf9uNubF+SuyAzhfgI7mEn8bhBDwXR2
-	qhV8quWaMpc4zATo7hfgWjZ3l3m6IeRwneh4jO1Kxvlmj4rG2h/kesmV3Udeyw==
+	bh=EUt7o6zNb9WnDNJz4yNux/YsId1UC+KZ030H+FORpkQ=;
+	b=wXftT/+CZVnX32R34+2S1CLXV4O6uxbJ2bkYvlMT9NjsFxbGhn5VwP/5rbLGeBC3ETcORz
+	Z7X5kmIs+TQHuRrCxxv7TgoI9Cx0bO2CmCydDroz2rvQOty0FKn2DkSLv8XAW8Ct5xlyw8
+	EyIoAPxK/QLC29yPjiCWNNgtEnVrxwjZXX3Df5eyU861+kLEQBLikV+7usmL/9djwhLFKy
+	q8wAAQldFa64AELBFMq+1rSqTD3w8E1m45ktms++95oAHVZDDWLzOmNgbIf0rbIOwpIpGU
+	IrBgY8o6vOz4PEMzOLaUckH+m+OZDvU7pbGnnoKRQ3nv2Z1pKLvHMqEmBQbU1w==
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	mhi@mailbox.org
-Subject: [PATCH v2 01/13] tracing: Fix typo in fpgraph.c
-Date: Fri, 21 Nov 2025 23:18:23 +0100
-Message-ID: <20251121221835.28032-3-mhi@mailbox.org>
+Subject: [PATCH v2 02/13] tracing: Fix typo in fprobe.c
+Date: Fri, 21 Nov 2025 23:18:24 +0100
+Message-ID: <20251121221835.28032-4-mhi@mailbox.org>
 In-Reply-To: <20251121221835.28032-1-mhi@mailbox.org>
 References: <20251121221835.28032-1-mhi@mailbox.org>
 Precedence: bulk
@@ -65,29 +68,30 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: ae32dd121c6a0dc6b99
-X-MBO-RS-META: kduzs9tmm63fmrndkdwoprfn8m5d7o4u
+X-MBO-RS-ID: 05c5ab855a3abc9ca0c
+X-MBO-RS-META: rwr8dnj9dxjms4ekosif46x5dmfintj1
+X-Rspamd-Queue-Id: 4dCqPf3jCvz9tKb
 
-Fix typo "reservered" to "reserved".
+Fix typo "funciton" to "function".
 
 Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
 ---
- kernel/trace/fgraph.c | 2 +-
+ kernel/trace/fprobe.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 7fb9b169d6d4..8ba62fe986f1 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -163,7 +163,7 @@ enum {
- #define RET_STACK(t, offset) ((struct ftrace_ret_stack *)(&(t)->ret_stack[offset]))
- 
- /*
-- * Each fgraph_ops has a reservered unsigned long at the end (top) of the
-+ * Each fgraph_ops has a reserved unsigned long at the end (top) of the
-  * ret_stack to store task specific state.
-  */
- #define SHADOW_STACK_TASK_VARS(ret_stack) \
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 0b1ee8e585f2..1188eefef07c 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -30,7 +30,7 @@
+  * fprobe_table: hold 'fprobe_hlist::hlist' for checking the fprobe still
+  *   exists. The key is the address of fprobe instance.
+  * fprobe_ip_table: hold 'fprobe_hlist::array[*]' for searching the fprobe
+- *   instance related to the funciton address. The key is the ftrace IP
++ *   instance related to the function address. The key is the ftrace IP
+  *   address.
+  *
+  * When unregistering the fprobe, fprobe_hlist::fp and fprobe_hlist::array[*].fp
 -- 
 2.50.1
 
