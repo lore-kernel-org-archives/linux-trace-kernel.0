@@ -1,100 +1,104 @@
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87309283683;
-	Fri, 21 Nov 2025 07:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4663233711;
+	Fri, 21 Nov 2025 08:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763710753; cv=none; b=UERmcOLUSCKyisYyLrQuBciYPAaMkdYjjMmCbnPoMkdjIRCmDUymNubCB74dtWU2KJpXcaDW3sbVkUq37nkMHUG75GcZP3v09/zIEDjjNiQ1RRwpPXGo8WGsroRs00Eg3dvbTi4QSr6wRGZJM5zeuhis2QqjPPjv4eJgDYWBo5U=
+	t=1763714843; cv=none; b=ncZjiM0jsEkidPk10VtgmcESCB+0gVMIUes4pk/7BcIdzauTlP2NAf0ufrR9m1JdVq53ByQVwoZ8xli3T27WLA3ykapwIJsrlYXkUSZpK9x1MrDJihWhKIqVR94UTdYsexXFzwtkbRxXl5dtulRVXanUQijnkuY5PlV06YEj4xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763710753; c=relaxed/simple;
-	bh=AugTGMRA4pvKKAUuDdtPRrbisScHKer09i0AVJeGlPo=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VFSiML5nZ22USIcHozRxh+hMkMPOoi6FzmBAN0E1SovhcF8cjQyETvb+QhD/YebPf9gDdo+y3qSvwwUQ4O8hnaSDxTDK8q7AtMrgQUAdpVqGzlmjjj8JgOnVt4RrI9Z2omNgX8fjqCCfmYtjnkroXp3PCPYAS2P9G30a4xBrVek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=N5/8B55n; arc=none smtp.client-ip=113.46.200.224
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1763714843; c=relaxed/simple;
+	bh=sqGXtgGmLCX5OAuI4+23gfhEPyobSpNl8KpPJoX4IjU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=f+OcTbQZG4WfA+OhDynGCwnxmzLf2ko7n5+E8EvobGItrlHzy891Wy1VYSEsqS97VbdHbjexD/4V7Wa6WaFqsHd6Uu60hH0qj/v+K2R7EXOlSeSfbp7c0NdjkQfn6mKs3VOMcIM0t8G+0rp5rl6XV8jAJ0LWGy270X8xao/Ef+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odavzBDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="N5/8B55n"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=Jw7Ud8zh45h7Hnmg98SmQKRWVlaGwdOC5WqXH1EQ55o=;
-	b=N5/8B55nKmRouJYEJQ31wAPlVWAbWvnSJEvXC4E4Y/iT7YlDm1xWdztV8ZlPBdi7UML01lUc1
-	Fv8XbMPOj7kpwPW+tlnhHlLdprZnTT5vLaEvUbYWZSyYGWOxnOO7oHGFWOv5YELHAHIr5n25AxD
-	y1ox9Sv5tlLGPqrKu9b8QeU=
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dCRrL55nqz1cyP6;
-	Fri, 21 Nov 2025 15:37:22 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id F1326180043;
-	Fri, 21 Nov 2025 15:39:07 +0800 (CST)
-Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Nov 2025 15:39:07 +0800
-Received: from [10.173.125.37] (10.173.125.37) by
- kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Nov 2025 15:39:06 +0800
-Subject: Re: [PATCH v3] mm/memory-failure: remove the selection of RAS
-To: Xie Yuanbin <xieyuanbin1@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<will@kernel.org>, <liaohua4@huawei.com>, <lilinjie8@huawei.com>,
-	<david@redhat.com>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<nao.horiguchi@gmail.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <akpm@linux-foundation.org>,
-	<david@kernel.org>, <lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>,
-	<vbabka@suse.cz>, <rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>
-References: <20251119095943.67125-1-xieyuanbin1@huawei.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <8567d8c5-e864-8f84-7805-c004698e72d7@huawei.com>
-Date: Fri, 21 Nov 2025 15:39:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odavzBDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41FE4C4CEF1;
+	Fri, 21 Nov 2025 08:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763714842;
+	bh=sqGXtgGmLCX5OAuI4+23gfhEPyobSpNl8KpPJoX4IjU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=odavzBDqbJ1UMDYOaOKENoL2yZXbzdECDWyHUq+SkYYt9aN/00/9Ox8ItaxPRv9on
+	 9ENruziEf2Spqf5xSGWhIDLb/kpwpH1YcFfYqfMMUVd9yy7rlHTnzGxLRRKnpLnEzD
+	 hGR+McJnhnAIV8b/3qU7g/n4Nca7jsDJ20lQ5bHd/9MzGbGt7kwqbBgL6Zmf5IrpwC
+	 uuZOq831wsjEMfMcihRl4cNZYJkVXDIl0rad2EgkH4CIJPeySLbDKBAWQpLhU9+WsT
+	 rOsQaIPe5RmWCWQ2dgYhkqPC4XFcMymqXecV0a4XlS/HciqC191YSj7EJMs5C3amBK
+	 4bWUG3OCZsEbw==
+Date: Fri, 21 Nov 2025 17:47:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 1/3] tracing: Remove unneeded event_mutex lock in
+ event_trigger_regex_release()
+Message-Id: <20251121174718.fc27769642daee97dc020c6f@kernel.org>
+In-Reply-To: <20251120205709.984522508@kernel.org>
+References: <20251120205600.570673392@kernel.org>
+	<20251120205709.984522508@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20251119095943.67125-1-xieyuanbin1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq500010.china.huawei.com (7.202.194.235)
 
-On 2025/11/19 17:59, Xie Yuanbin wrote:
-> The commit 97f0b13452198290799f ("tracing: add trace event for
-> memory-failure") introduces the selection of RAS in memory-failure.
-> This commit is just a tracing feature; in reality, there is no dependency
-> between memory-failure and RAS. RAS increases the size of the bzImage
-> image by 8k, which is very valuable for embedded devices.
+On Thu, 20 Nov 2025 15:56:01 -0500
+Steven Rostedt <rostedt@kernel.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Move the memory-failure traceing code from ras_event.h to
-> memory-failure.h and remove the selection of RAS.
+> In event_trigger_regex_release(), the only code is:
 > 
-> v2->v3: https://lore.kernel.org/20251104072306.100738-3-xieyuanbin1@huawei.com
->   - Change define TRACE_SYSTEM from ras to memory_failure
->   - Add include/trace/events/memory-failure.h to
->     "HWPOISON MEMORY FAILURE HANDLING" section in MAINTAINERS
->   - Rebase to latest linux-next source
+> 	mutex_lock(&event_mutex);
+> 	if (file->f_mode & FMODE_READ)
+> 		seq_release(inode, file);
+> 	mutex_unlock(&event_mutex);
 > 
-> v1->v2: https://lore.kernel.org/20251103033536.52234-2-xieyuanbin1@huawei.com
->   - Move the memory-failure traceing code from ras_event.h to
->     memory-failure.h
+> 	return 0;
 > 
-> Signed-off-by: Xie Yuanbin <xieyuanbin1@huawei.com>
-> Cc: David Hildenbrand (Red Hat) <david@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Miaohe Lin <linmiaohe@huawei.com>
+> There's nothing special about the file->f_mode or the seq_release() that
+> requires any locking. Remove the unnecessary locks.
+> 
 
-LGTM. With David's comment addressed,
+Looks good to me.
 
-Acked-by: Miaohe Lin <linmiaohe@huawei.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thanks.
-.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events_trigger.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index 7795af600466..e5dcfcbb2cd5 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -314,13 +314,9 @@ static ssize_t event_trigger_regex_write(struct file *file,
+>  
+>  static int event_trigger_regex_release(struct inode *inode, struct file *file)
+>  {
+> -	mutex_lock(&event_mutex);
+> -
+>  	if (file->f_mode & FMODE_READ)
+>  		seq_release(inode, file);
+>  
+> -	mutex_unlock(&event_mutex);
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.51.0
+> 
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
