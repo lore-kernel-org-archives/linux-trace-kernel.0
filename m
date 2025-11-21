@@ -1,184 +1,253 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAEC27CCF0;
-	Fri, 21 Nov 2025 23:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A6F304964;
+	Fri, 21 Nov 2025 23:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763769242; cv=none; b=jyUdM0J7pbfZHGZj+Pu6JU/L5JlQmW8033DscLrKAkIzdgHQaMSBLv8i631FQgZ96dPPuMqZmKW56ClXbKiquo72RWB/o+8q+vvu7hzmsLCxk/e+DKfCSsPMwKIg6wBupTZ2sZt71dm4l8Hu8h33DEOGJ5ebEKts1wvJpVc/Xc0=
+	t=1763769370; cv=none; b=XphHvtO2Vh0wOcVTpnH43Xdm9XvFMq7PI/JPilOWygYYuDDc2ypXfe5uWrA0cfqJ1AjN9wUAQIXs4uaFsUlJkYT6/lPIRb1xx9nZyhZYncinhzYQaaA172sFvweaRj0v2S1DN134wvJ91EMTIL6qGVZ9MuNma+i/yK2bLLMPrnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763769242; c=relaxed/simple;
-	bh=+Hg4/uQp+OeE7UO4Lhn7lv201SeLX6uGguDNgBxO6Ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hf2HmL9oSdssAJqU9GtsZjlZho/bhLnGqCeLlcmaTdoZbWWfGWkctHOrZdEnpsQWAJCBEHJHjApAu//bPlHCkiEqUcu0qmyABBB+HpD9qEI2ejuo1eKEE/3LTo57bh5IsgSBNBcNg0+rdUL0m4h0JPzMI0bDsst7nEM9cQCKbpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JakpdGb7; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763769370; c=relaxed/simple;
+	bh=hFS1H7s+n6wxx4sNWsBn9U9gqltc8N9oalZyrh3BJB8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=stgrLor4KIUrejtCDznkLtYwCQsJ+PgVNRb5N3xvlvGJ+PRED0dM0BZeF+wfQ0I87Yp8biD75f8GeL5JsdeVJgBCv3i8ZmGjk1yWL3zI7YY23DLO1KCeGbR8615AatzaOdeJFOOsHlRt5qdnw/XsFe8vpIpmP0VUZJoswUoA6tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBvDZ4yX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JakpdGb7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763769241; x=1795305241;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+Hg4/uQp+OeE7UO4Lhn7lv201SeLX6uGguDNgBxO6Ug=;
-  b=JakpdGb74ZjCwPy8yFIqGgoCEKWSc1yGXBxcrnVEDqVZj128ORE8d+sG
-   I+rd/xsqpaH9Kcr8uHVH9Yl8cJR8QJARgFlHbofqphHLVWCLATvyGo3eO
-   u56+bFVn/aa+QLA3sKEzdXUqxvF5YyCYfroTzFEnUP+/5kMgv2P6bY4fW
-   EJBCo4yLFpMTNuVGGvHs9lLhKeGNrbSv52I74czi2wqjwOUbbbNyuHfmy
-   Ga09DBvZ4NjRPgvdBBthX/tT96tf54CLIwMbuk9gFf/BBPYHQN2P9hn0I
-   +Aq24p2wH5H+kAsmFs5CY6P0b0sVtxd7zRJF6YZHjnFtqaJ6BIA5TLQ7M
-   g==;
-X-CSE-ConnectionGUID: /Olxr+U1Q9iUFYDaD08ZNg==
-X-CSE-MsgGUID: eUEbuMcaS3+tItNHEhwI3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="65899376"
-X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
-   d="scan'208";a="65899376"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 15:54:01 -0800
-X-CSE-ConnectionGUID: q8dn3dlbReeo+c7icmGweQ==
-X-CSE-MsgGUID: 0l7lTL8JSfqvktlDz7OQTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
-   d="scan'208";a="192076161"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 21 Nov 2025 15:53:58 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vMawu-0006z5-0A;
-	Fri, 21 Nov 2025 23:53:56 +0000
-Date: Sat, 22 Nov 2025 07:53:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Add system trigger file to enable triggers for
- all the system's events
-Message-ID: <202511220730.PQFWRcck-lkp@intel.com>
-References: <20251120160003.2fa33d80@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBvDZ4yX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA709C4CEF1;
+	Fri, 21 Nov 2025 23:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763769368;
+	bh=hFS1H7s+n6wxx4sNWsBn9U9gqltc8N9oalZyrh3BJB8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hBvDZ4yX4oYyVeitxkfBjXvTuap7ljWLZD5PReKxHiroaJQT5xI4sRt39Kf61dQ0t
+	 p6Xl/ak6Fe1DMi5aGwPCAdrUnimj4LvKAm6PREcwWA08cNxjidaucyc4IAd9jWCxma
+	 CTUTRnX7wqCeLwK200cYstpgTMlZQYdl3T6ndVk9I6Is8yXbTDhlg4sSDxfGPiJB1d
+	 rqpCO5Ti+dfQ74YZAM6v0vUIcnsYlcJMaFZRmivvqLIoO4NEjrHajfKHqfOhbA1Xdp
+	 2vrXbe8NiCBe54y516sH2wi0+aX38xENbcPE37wS6kc+ksNwhaZXPuJrFBGXMoOoJr
+	 vfnchvqcU9Z2Q==
+Date: Sat, 22 Nov 2025 08:56:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Add boot-time backup of persistent ring buffer
+Message-Id: <20251122085604.5ed2625d37666601a4d93cc6@kernel.org>
+In-Reply-To: <20251121134840.0a92f49a@gandalf.local.home>
+References: <176370846529.314463.7508792463190591259.stgit@mhiramat.tok.corp.google.com>
+	<20251121134840.0a92f49a@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120160003.2fa33d80@gandalf.local.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Steven,
+On Fri, 21 Nov 2025 13:48:40 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-kernel test robot noticed the following build warnings:
+> On Fri, 21 Nov 2025 16:01:05 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/trace.c |   58 +++++++++++++++++++++++++++++++++++++++++++++++---
+> >  kernel/trace/trace.h |    1 +
+> >  2 files changed, 55 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 33fcde91924c..616d24580371 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -10523,6 +10523,8 @@ static int __remove_instance(struct trace_array *tr)
+> >  		reserve_mem_release_by_name(tr->range_name);
+> >  		kfree(tr->range_name);
+> >  	}
+> > +	if (tr->flags & TRACE_ARRAY_FL_VMALLOC)
+> > +		vfree((void *)tr->range_addr_start);
+> 
+> The ring buffer user space mapping expects the ring buffer to be real
+> memory. Thus, virtual mapping is not supported. Either we need to allocate
+> normal memory, or the mmap function of his array must return an error.
 
-[auto build test WARNING on trace/for-next]
-[also build test WARNING on linus/master v6.18-rc6 next-20251121]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hmm, I think allocating contiguous memory at boot is not realistic,
+and mmap support is a lower priority than a single copy at boot time.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Add-system-trigger-file-to-enable-triggers-for-all-the-system-s-events/20251121-050454
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20251120160003.2fa33d80%40gandalf.local.home
-patch subject: [PATCH] tracing: Add system trigger file to enable triggers for all the system's events
-config: sparc64-defconfig (https://download.01.org/0day-ci/archive/20251122/202511220730.PQFWRcck-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251122/202511220730.PQFWRcck-lkp@intel.com/reproduce)
+> >  
+> >  	for (i = 0; i < tr->nr_topts; i++) {
+> >  		kfree(tr->topts[i].topts);
+> > @@ -11328,6 +11330,41 @@ __init static void do_allocate_snapshot(const char *name)
+> >  static inline void do_allocate_snapshot(const char *name) { }
+> >  #endif
+> >  
+> > +__init static int backup_instance_area(const char *backup,
+> > +				       unsigned long *addr, phys_addr_t *size)
+> > +{
+> > +	struct trace_array *backup_tr;
+> > +	void *allocated_vaddr = NULL;
+> > +
+> > +	backup_tr = trace_array_get_by_name(backup, NULL);
+> > +	if (!backup_tr) {
+> > +		pr_warn("Tracing: Instance %s is not found.\n", backup);
+> > +		return -ENOENT;
+> > +	}
+> 
+> Add space.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511220730.PQFWRcck-lkp@intel.com/
+OK
 
-All warnings (new ones prefixed by >>):
+> 
+> > +	if (!(backup_tr->flags & TRACE_ARRAY_FL_BOOT)) {
+> > +		pr_warn("Tracing: Instance %s is not boot mapped.\n", backup);
+> > +		trace_array_put(backup_tr);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	*size = backup_tr->range_addr_size;
+> > +
+> > +	allocated_vaddr = vzalloc(*size);
+> > +	if (!allocated_vaddr) {
+> > +		pr_warn("Tracing: Failed to allocate memory for copying instance %s (size 0x%lx)\n",
+> > +			backup, (unsigned long)*size);
+> > +		trace_array_put(backup_tr);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	memcpy(allocated_vaddr,
+> > +		(void *)backup_tr->range_addr_start, (size_t)*size);
+> > +	*addr = (unsigned long)allocated_vaddr;
+> > +
+> > +	trace_array_put(backup_tr);
+> > +	return 0;
+> > +}
+> > +
+> >  __init static void enable_instances(void)
+> >  {
+> >  	struct trace_array *tr;
+> > @@ -11350,11 +11387,15 @@ __init static void enable_instances(void)
+> >  		char *flag_delim;
+> >  		char *addr_delim;
+> >  		char *rname __free(kfree) = NULL;
+> > +		char *backup;
+> >  
+> >  		tok = strsep(&curr_str, ",");
+> >  
+> > -		flag_delim = strchr(tok, '^');
+> > -		addr_delim = strchr(tok, '@');
+> > +		name = strsep(&tok, "=");
+> > +		backup = tok;
+> > +
+> > +		flag_delim = strchr(name, '^');
+> > +		addr_delim = strchr(name, '@');
+> >  
+> >  		if (addr_delim)
+> >  			*addr_delim++ = '\0';
+> > @@ -11362,7 +11403,10 @@ __init static void enable_instances(void)
+> >  		if (flag_delim)
+> >  			*flag_delim++ = '\0';
+> >  
+> > -		name = tok;
+> > +		if (backup) {
+> > +			if (backup_instance_area(backup, &addr, &size) < 0)
+> > +				continue;
+> > +		}
+> >  
+> >  		if (flag_delim) {
+> >  			char *flag;
+> > @@ -11458,7 +11502,13 @@ __init static void enable_instances(void)
+> >  			tr->ref++;
+> >  		}
+> >  
+> > -		if (start) {
+> > +		/*
+> > +		 * Backup buffers can be freed but need vfree().
+> > +		 */
+> > +		if (backup)
+> > +			tr->flags |= TRACE_ARRAY_FL_VMALLOC;
+> > +
+> > +		if (start || backup) {
+> >  			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+> >  			tr->range_name = no_free_ptr(rname);
+> >  		}
+> 
+> This would then need:
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index d1e527cf2aae..104e385e718e 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -8791,8 +8791,8 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+>  	struct trace_iterator *iter = &info->iter;
+>  	int ret = 0;
+>  
+> -	/* A memmap'ed buffer is not supported for user space mmap */
+> -	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
+> +	/* A memmap'ed and backup buffers are not supported for user space mmap */
+> +	if (iter->tr->flags & (TRACE_ARRAY_FL_MEMMAP | TRACE_ARRAY_FL_VMALLOC))
+>  		return -ENODEV;
+>  
+>  	ret = get_snapshot_map(iter->tr);
+> 
 
->> kernel/trace/trace_events_trigger.c:432:6: warning: variable 'len' set but not used [-Wunused-but-set-variable]
-     432 |         int len;
-         |             ^
-   1 warning generated.
+Ah, thanks for the code :)
 
+> 
+> As without it, when I tried mmapping the backup buffer I got this;
+> 
+> [  251.615441] BUG: unable to handle page fault for address: ffffd1c31e0000c8
+> [  251.615447] #PF: supervisor read access in kernel mode
+> [  251.615449] #PF: error_code(0x0000) - not-present page
+> [  251.615451] PGD 0 P4D 0 
+> [  251.615456] Oops: Oops: 0000 [#1] SMP PTI
+> [  251.615463] CPU: 6 UID: 0 PID: 1450 Comm: mmap-rb-lib Not tainted 6.18.0-rc3-ftest-00018-g02548113c2f6 #287 PREEMPT_{RT,LAZY} 
+> [  251.615469] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+> [  251.615471] RIP: 0010:validate_page_before_insert+0x5/0x90
+> [  251.615479] Code: 48 c1 e8 0e 89 c2 83 e2 01 89 d0 c3 cc cc cc cc 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <48> 8b 46 08 a8 01 75 5d 66 90 48 89 f0 8b 50 34 85 d2 74 68 48 89
+> [  251.615481] RSP: 0018:ffffa52b443d7988 EFLAGS: 00010246
+> [  251.615484] RAX: ffff8a84dcac4000 RBX: 00007f07e0c10000 RCX: 0000000108d2f067
+> [  251.615486] RDX: 0000000108d2f067 RSI: ffffd1c31e0000c0 RDI: ffff8a84dd865700
+> [  251.615487] RBP: 0000000000000000 R08: 000000005ab70715 R09: 0000000000000009
+> [  251.615489] R10: 0000000000000009 R11: ffff8a84c9320fb8 R12: ffff8a84dd865700
+> [  251.615490] R13: 0000000000000000 R14: ffffd1c31e0000c0 R15: ffff8a84c8d2f080
+> [  251.615492] FS:  00007f07e0e8e740(0000) GS:ffff8a86afbb7000(0000) knlGS:0000000000000000
+> [  251.615494] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  251.615496] CR2: ffffd1c31e0000c8 CR3: 000000011c390006 CR4: 0000000000170ef0
+> [  251.615501] Call Trace:
+> [  251.615502]  <TASK>
+> [  251.615504]  vm_insert_pages+0x157/0x360
+> [  251.615513]  __rb_map_vma+0x1ef/0x390
+> [  251.615521]  ring_buffer_map+0x261/0x370
+> [  251.615527]  tracing_buffers_mmap+0x7e/0x100
+> [  251.615532]  __mmap_region+0x831/0xe00
+> [  251.615554]  do_mmap+0x4bf/0x6b0
+> [  251.615560]  vm_mmap_pgoff+0x126/0x230
+> [  251.615569]  ksys_mmap_pgoff+0x162/0x220
+> [  251.615573]  do_syscall_64+0x76/0x9a0
+> [  251.615581]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  251.615584] RIP: 0033:0x7f07e0f9dde2
+> [  251.615589] Code: 00 00 00 0f 1f 44 00 00 
+> 
+> -- Steve
+> 
+> 
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index 58be6d741d72..9e5186c96e9c 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -453,6 +453,7 @@ enum {
+> >  	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
+> >  	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
+> >  	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
+> > +	TRACE_ARRAY_FL_VMALLOC		= BIT(5),
+> >  };
+> >  
+> >  #ifdef CONFIG_MODULES
+> 
+> 
 
-vim +/len +432 kernel/trace/trace_events_trigger.c
-
-   420	
-   421	static ssize_t
-   422	event_system_trigger_write(struct file *filp, const char __user *ubuf,
-   423			    size_t cnt, loff_t *ppos)
-   424	{
-   425		struct trace_subsystem_dir *dir = filp->private_data;
-   426		struct event_command *p;
-   427		char *command, *next;
-   428		char *buf __free(kfree) = get_user_buf(ubuf, cnt);
-   429		bool remove = false;
-   430		bool found = false;
-   431		ssize_t ret;
- > 432		int len;
-   433	
-   434		if (!buf)
-   435			return 0;
-   436	
-   437		if (IS_ERR(buf))
-   438			return PTR_ERR(buf);
-   439	
-   440		/* system triggers are not allowed to have counters */
-   441		if (strchr(buf, ':'))
-   442			return -EINVAL;
-   443	
-   444		/* If opened for read too, dir is in the seq_file descriptor */
-   445		if (filp->f_mode & FMODE_READ) {
-   446			struct seq_file *m = filp->private_data;
-   447			dir = m->private;
-   448		}
-   449	
-   450		/* Skip added space at beginning of buf */
-   451		next = buf;
-   452		strim(next);
-   453	
-   454		command = strsep(&next, " \t");
-   455		if (next) {
-   456			next = skip_spaces(next);
-   457			if (!*next)
-   458				next = NULL;
-   459		}
-   460		if (command[0] == '!') {
-   461			remove = true;
-   462			command++;
-   463		}
-   464	
-   465		len = strlen(command);
-   466		if (next)
-   467			len += strlen(next) + 1;
-   468	
-   469		guard(mutex)(&event_mutex);
-   470		guard(mutex)(&trigger_cmd_mutex);
-   471	
-   472		list_for_each_entry(p, &trigger_commands, list) {
-   473			/* Allow to remove any trigger */
-   474			if (!remove && !(p->flags & EVENT_CMD_FL_SYSTEM))
-   475				continue;
-   476			if (strcmp(p->name, command) == 0) {
-   477				found = true;
-   478				ret = process_system_events(dir, p, buf, command, next);
-   479				break;
-   480			}
-   481		}
-   482	
-   483		if (!found)
-   484			ret = -ENODEV;
-   485	
-   486		if (!ret)
-   487			*ppos += cnt;
-   488	
-   489		if (remove || ret < 0)
-   490			return ret ? : cnt;
-   491	
-   492		return cnt;
-   493	}
-   494	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
