@@ -1,106 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16F72D8DD0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 17:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607462C158E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 17:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763746637; cv=none; b=sLd8SIHwCvgaZaDsnm7Qaw+AgeU3Z/eui9m6o3kNNdiiRd6JSFwDbzspI67sQZoYVRz6C60vTqokatRTDVGmbzskzl4TVhZcsaDCC+4ai3uFv+UJfNxtTabTGcTBGEz6/A4IM3BokWGMCzly31DbrfnlUMY6JWgRiH/Uwg4utfc=
+	t=1763747124; cv=none; b=BYgoX6wtbw8v6+ReFL08Bfk0XUR0GWYRIgfayyzZwue5g4gDfobC40748bXronak9NrrZSasRbkTm5SHEu4pKjxh69j7jb4sz2+QXi6ChzhW+FreHdLJ8BIWJT00YCfM6pw8SzC3b7FNqxIedMVGplHwwE4/DMpue+XQlvaTHgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763746637; c=relaxed/simple;
-	bh=R6+it4z+8J3tQq6khArTa00xBA3LI+Aiux4czwnNIBo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cYqOwf6E8fZ5ikoZCcb8zES4ikdhmx9nQAZtaOvjy3suOr7Fkoap0V66yiBT1o8yXl7vIxFgc0HhaEkPKmC/2WICjA3FL2nXItBtS6KdLwuJ9T6OZOzPzF42GhtVvTiUFMlJ2WmxI6Y+3P2A4fepvGBdimzIK9fn/6Ds0sX31lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OJRkF1yN; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1763747124; c=relaxed/simple;
+	bh=1wRpDQF+PYc0CZ0e9+rmq3caZaUgiXV5uRUf2X8d4Ew=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=pMuLMtRho0r3Njlk2Ce8pySbL9ZR6XegG4mgWWbR2oA+QqvXtyB8RLR+oV+a6/x2+BuoeEqJ1EZ/32LtryHQt2xd3jCi7nJT4aYaFhJWrrMXIyklmNULBlGWSWJLK+PiYEnS76WaGSd4c7KAATM2qeE3ckyyy4bHo17lLyLiS/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GB5uvylf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJRkF1yN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GB5uvylf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763746634;
+	s=mimecast20190719; t=1763747121;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3OE0zpMaGFe7FLO1SjE8KbYNBSyHZmUa+LcldBnwuQ=;
-	b=OJRkF1yNZxr96JULB17P9/EUvhx1Ox0XH45RgxSDoXu12qcbb2Fsx2+fxxBe6klYybU212
-	b+CpIW1WpaAYjcedmq2yVuzD9sRdjiy+lOZskX/WCBt0hAdREv4ja0gbYzdaO7ZAFZMslh
-	wmXNjDsfgRVSWVwv2Koi4mQtjF9zlTE=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iPUxsCB68OtlQ4ZU2Anvk/LjkstuSN+yLG3TCw1aX4g=;
+	b=GB5uvylfJDLOI3GZoiLY2NX6GeQQYX08BKy8GBdH+xFN9SnND7OjvCzaoepNAcYmvh3uS7
+	R7tKhgVC9Ut/ixDfx23Wh+R1y25q7QoGmYWNhjkqXe2PvTpT7p4cZgynMta00j1/6+UOrQ
+	wZBgQJbfW8GwtQuKgsssI4cWJKMAftM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-Q8wT3Ft1MaiHdl8AyeoHJA-1; Fri, 21 Nov 2025 12:37:13 -0500
-X-MC-Unique: Q8wT3Ft1MaiHdl8AyeoHJA-1
-X-Mimecast-MFC-AGG-ID: Q8wT3Ft1MaiHdl8AyeoHJA_1763746632
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42b3086a055so1993218f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 09:37:13 -0800 (PST)
+ us-mta-595-vIIRAIUtPWOmQCNsaQ1Sxg-1; Fri, 21 Nov 2025 12:45:20 -0500
+X-MC-Unique: vIIRAIUtPWOmQCNsaQ1Sxg-1
+X-Mimecast-MFC-AGG-ID: vIIRAIUtPWOmQCNsaQ1Sxg_1763747119
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4779edba8f3so16068545e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 09:45:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763746632; x=1764351432;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+        d=1e100.net; s=20230601; t=1763747119; x=1764351919;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V3OE0zpMaGFe7FLO1SjE8KbYNBSyHZmUa+LcldBnwuQ=;
-        b=VEGqPEAeqiDRTMz/cIQMPu6MgFrgXOZyIQx7J12ahYsM7BWSLqSeRLOVyDuVb198Bd
-         JYoyLgW5sipZj9PknBfFempE0UY6Ut0cJl5z38oVEWKeOMEv9QjfZLExKfAvoLJhDz6d
-         jmOdKDlE7amTyWgJ5QAloVF4E64WkehzKwlk7RxvFBRk+e6wvCDbYFLVYd30psXWC2Pn
-         K+RVDeJERVkXY5pLrEMgnD2FY2xweF1+ibHrgBOjrk20qPTu4SiiAkjtumE2q5wicUvh
-         umjhAe/IbJoNiDtZiOSGuwyrKprbka79l+vpf/Rnat25rC23u3WlGu2hm7CaUIsTxdDd
-         Nh3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUcUEb+8a5onYAkBb6BhfoUnw7XMQDYPlOQC/V5ohtKmo1fVYsmdms8Th+esi0tBLZDgHbqmLjdhE1Y9K8qeC8Lwm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcrFK8T05jWIsABjmV+4AmJ6sRwwLa1fPvmvoK4YdiJ2tvJevD
-	27Bh+Vm+pM8+SZKAVbf4OVH0HdsKl0GKKqZkoukgP7pQbutDgleazQTBvr5xn7P2uqxAobrxJJR
-	nggwLaQGyciaoSBbMmkJ54AhZpgsVa5sSBgDrRSwcwkVAt4kuSyycYgYniNnMQkjCrUdfODA2Xg
+        bh=iPUxsCB68OtlQ4ZU2Anvk/LjkstuSN+yLG3TCw1aX4g=;
+        b=O9HkWcPBV0knw3DWP9k2M7U/cfByLlCAnmzoIgYv82S0GPOTD9kqS7XmO3U7NKN1pF
+         oGhdoZ4KFOZlUrdVt454mimKFI3Un21yXsD/G1lPgyUBV51IVNGID1/aTQl15bH2lp98
+         GCLhl1PvmB2Qhij2/H5uhzr8dMOUYTvof2hGeN+AOI3UAI3WBSgOh2jStbkb6lcD1JHc
+         uopVejn0uyRuY2LeP8DberaazLSh/DxtulCKFHe13GlRCwi8YeB6+7e2Y2r2YtgfsUi0
+         aVeVOUhvBurG+tGXxJPD2erWVFGEEIFYa6tA0MuT7bFw63wcLRNeYXW+IjMig8FiW46B
+         Izbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPBzyMLtCga4TpALHQx/SZZGb32aW5SUt0yZ21cv2C+knBkMshunvUg95QEeOWu1xb/WFMmkwvpr+IHzPziOOHYcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU1nCMfe0lfLpVPch+TAsJ4heRsi4FEU6nt4uYV2Dhyq01+tOA
+	PsV0+5b2fjo10GRDRjqs0Q4WyHyJaAmwTEwXLZQjpYBz1sAxjF1Yzu8AbeLK91CJXm5vuPhMX2L
+	fHbVbjqhaNelHObeLinAFhlRz74PSmQic5cV4zjGPcW5pXANCCodo0w8ZgAafVPbKSAwZw+C3Hg
 	==
-X-Gm-Gg: ASbGncucox2RtlCWSsN+VPTWCmijx8qK0QQILAIF388+wPosjZzZcxMQT4Iw2ZHqxpR
-	tzwxgC4NvO+vEud2AjmFo2LjiHeU79nDyFJxuw+2aYOGOclJt8Q21npGOKbCi9mB0XwO1jXpflB
-	fQ6FqwZgJoh5OgSc/rwNFhhZDMfouM1oF8wKfv6n9xXkrx2J97H2dK9Q9W7A2YKIPVVzN0bsCF8
-	LoRbBzXp9vadqAeKD6/tMVLajFbxrv3YXQplkGNdh8RLbXGvXvq5AF95lWUAZmMRwQ0TMpvLKdg
-	f6qDYysPjSzywfQJxyQ/2jTwPaazna3GQYqPpnXw7zWcbUeBSi//HFZyiH0T3hBMrEAWhhxASAD
-	0KjkPhIEDaBSvA/WIZ5XWK2RnKvybexnGwjb6x9BxBu/IgH1pAihyQL01Ak2LhYKJtrrJGYs=
-X-Received: by 2002:a05:6000:2282:b0:42b:3ab7:b8b9 with SMTP id ffacd0b85a97d-42cc1cbd0dcmr3334293f8f.20.1763746632014;
-        Fri, 21 Nov 2025 09:37:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFwrptJrvQrMlATO+zOU3GD53XUKYoEIwVBRtwZMVM9uxcxDwDk+rU+CpbkpyNs1Ksl4qe7Bg==
-X-Received: by 2002:a05:6000:2282:b0:42b:3ab7:b8b9 with SMTP id ffacd0b85a97d-42cc1cbd0dcmr3334227f8f.20.1763746631366;
-        Fri, 21 Nov 2025 09:37:11 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cc231dc6esm4094867f8f.7.2025.11.21.09.37.09
+X-Gm-Gg: ASbGncsxn/zgd9/CUVO85i2LZkvjyqJigFAjSgzcR7Uw4lHAi2nZ/sj1FG5lqIT6eAl
+	6Ksr2zaLHAwRKFxUMndDeuiFd5/R6VYXsXLmkTW0FR9nvJvGsHs/PsJRfhLmiYDy6Vx4uR4huKh
+	HawD3+uboUohNOjabWMLXNVehYeuIAkcWq8zlZN/38tNPr3yIHEqbKM9Ohwb82SLrewSnsnk9cn
+	0VcAMycwJlEVIJHabX0KjRZAKHFVd+/yUjKtEhjK0pbJYvL/AYtVF+9nvRYCn4klNpXiQYLMzes
+	rtlI4+xF4VE7DzPCSX0j/21d94eRr7g8fLD6nZ8OCngnMajiZCDQ+mCOBXv1H7BoY3Mb1NkjmBJ
+	C6czN0S27DZ8E2uqIC0LkZmYL
+X-Received: by 2002:a05:600c:4e87:b0:46d:a04:50c6 with SMTP id 5b1f17b1804b1-477c01ebc76mr34703235e9.30.1763747118949;
+        Fri, 21 Nov 2025 09:45:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFzqsK/8czIQV9eJ6zCC2tqD4f0JD1dgzV6/tliXXqCBq0SC0Gw7XP+mw8HTIxPxE72VIDirA==
+X-Received: by 2002:a05:600c:4e87:b0:46d:a04:50c6 with SMTP id 5b1f17b1804b1-477c01ebc76mr34702975e9.30.1763747118517;
+        Fri, 21 Nov 2025 09:45:18 -0800 (PST)
+Received: from costa-tp.bos2.lab ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7ec454csm11529567f8f.0.2025.11.21.09.45.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 09:37:10 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
- Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
- Morton <akpm@linux-foundation.org>, Masahiro Yamada
- <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
- <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [RFC PATCH v7 30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush
- IPIs under CONFIG_COALESCE_TLBI=y
-In-Reply-To: <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <20251114151428.1064524-10-vschneid@redhat.com>
- <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
-Date: Fri, 21 Nov 2025 18:37:09 +0100
-Message-ID: <xhsmh5xb3thh6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Fri, 21 Nov 2025 09:45:18 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/8] tools/rtla: Consolidate common command line options
+Date: Fri, 21 Nov 2025 19:44:56 +0200
+Message-ID: <20251121174504.519230-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -108,45 +84,45 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rIRV0uyuBKu60vIucDTtiqVwALBmuwjQiqvycI_D2tc_1763746632
+X-Mimecast-MFC-PROC-ID: WvbYvnET6ZvB3Y6eqlbscNW56Vz-AHSB2-cTvL8LuiM_1763747119
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 19/11/25 10:31, Dave Hansen wrote:
-> On 11/14/25 07:14, Valentin Schneider wrote:
->> +static bool flush_tlb_kernel_cond(int cpu, void *info)
->> +{
->> +	return housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) ||
->> +	       per_cpu(kernel_cr3_loaded, cpu);
->> +}
->
-> Is it OK that 'kernel_cr3_loaded' can be be stale? Since it's not part
-> of the instruction that actually sets CR3, there's a window between when
-> 'kernel_cr3_loaded' is set (or cleared) and CR3 is actually written.
->
-> Is that OK?
->
-> It seems like it could lead to both unnecessary IPIs being sent and for
-> IPIs to be missed.
->
+Argument parsing functions are the longest functions of the project:
 
-So the pattern is
+lizard --warnings_only --sort nloc -L100 | head -n 4
+./src/timerlat_hist.c:766: warning: timerlat_hist_parse_args has 247 NLOC, 76 CCN, 1579 token, 1 PARAM, 287 length, 0 ND
+./src/timerlat_top.c:538: warning: timerlat_top_parse_args has 217 NLOC, 64 CCN, 1338 token, 2 PARAM, 262 length, 0 ND
+./src/osnoise_hist.c:469: warning: osnoise_hist_parse_args has 195 NLOC, 56 CCN, 1225 token, 1 PARAM, 216 length, 0 ND
+./src/osnoise_top.c:322: warning: osnoise_top_parse_args has 169 NLOC, 46 CCN, 1019 token, 2 PARAM, 191 length, 0 ND
 
-  SWITCH_TO_KERNEL_CR3
-  FLUSH
-  KERNEL_CR3_LOADED := 1
+Moreover, they contain a lot of duplicate code and growing.
 
-  KERNEL_CR3_LOADED := 0
-  SWITCH_TO_USER_CR3
+Refactor these functions to reduce code duplication.
 
+Benefits:
+- Single implementation for common options
+- Easier maintenance and consistent behavior
 
-The 0 -> 1 transition has a window between the unconditional flush and the
-write to 1 where a remote flush IPI may be omitted. Given that the write is
-immediately following the unconditional flush, that would really be just
-two flushes racing with each other, but I could punt the kernel_cr3_loaded
-write above the unconditional flush.
+Costa Shulyupin (8):
+  tools/rtla: Add common_parse_options()
+  tools/rtla: Consolidate -c/--cpus option parsing
+  tools/rtla: Consolidate -C/--cgroup option parsing
+  tools/rtla: Consolidate -D/--debug option parsing
+  tools/rtla: Consolidate -d/--duration option parsing
+  tools/rtla: Consolidate -e/--event option parsing
+  tools/rtla: Consolidate -P/--priority option parsing
+  tools/rtla: Consolidate -H/--house-keeping option parsing
 
-The 1 -> 0 transition is less problematic, worst case a remote flush races
-with the CPU returning to userspace and it'll get interrupted back to
-kernelspace.
+ tools/tracing/rtla/src/common.c        | 78 ++++++++++++++++++++++++++
+ tools/tracing/rtla/src/common.h        |  1 +
+ tools/tracing/rtla/src/osnoise_hist.c  | 53 ++---------------
+ tools/tracing/rtla/src/osnoise_top.c   | 53 ++---------------
+ tools/tracing/rtla/src/timerlat_hist.c | 53 ++---------------
+ tools/tracing/rtla/src/timerlat_top.c  | 52 ++---------------
+ 6 files changed, 95 insertions(+), 195 deletions(-)
+
+-- 
+2.51.1
 
