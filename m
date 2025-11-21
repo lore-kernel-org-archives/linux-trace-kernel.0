@@ -1,64 +1,61 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783AC30DEDF;
-	Fri, 21 Nov 2025 22:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E8030AAC8;
+	Fri, 21 Nov 2025 22:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763552; cv=none; b=RRNoSY0W00DCLJF4MLydEn79zBeoZ+GB1NghQubGWGwLjJPTypzTRRGfPiXWVQrzWn1mYwRLDmBRPrpuPbJRGfgg0TxztGum/EMK7LxyAk45xzX4jHbTtj0I+kG+cqEmG383uKs+QcC5N5UWXl5zUnN3wUCExhHzvucJrE5JePQ=
+	t=1763763556; cv=none; b=hvDVMyTMClVEwhowOYdUsViASiFk3DoiDRYOSDH8IJXj5DdNGMw5nZmLsNP7BdtCRRQO0DnV5M4QqelXYoVBb2qCr8d/fcZNOgglbSmYUYXbk4t5e8Hf4CPnl4/TfMEYGpvMB9wyVmNIfoHJvYwgWln8Sbysc1Z2MG1fhatFFO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763552; c=relaxed/simple;
-	bh=FzjHx/bXu4lX/H9i0gOf918NwMP3Po7A4ypq+6sl6j8=;
+	s=arc-20240116; t=1763763556; c=relaxed/simple;
+	bh=vysL4A2wq6r6gVrU9avlkmBtdz64TCRhvXXMAE1N8vM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AsJY0S/5dig6Mw8sJGakP5QMvOv/3tiKfFSaAgKddWN/zsh/QK9cLn0jCAkMViYI8yfLZeusVxuGse+45DL4w+PPNPfbXbwojG7xQ4TA/3vF9kevlH0nE+eigz6NzbCtbhns+B3I0r4oepIbGGd4d/viy19WtArQqzzlZix3bQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=le4fSbaj; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=le4fSbaj; arc=none smtp.client-ip=80.241.56.161
+	 MIME-Version; b=g9t1yYQ3czxqfnwdVOTok8NDK2vPyGzcCp5Kb7/v/TTdtMkSco5ZlTD9UlNh1vZjEcjiE5ITGf9rZmUmzlJ8rxhbejWNRMA6YUrvX0PAY7Hpo8qjfJaToDJlOFxsoUvudc9QvO63d1sKi45cK/NPtQieM7QgUR0ayeU3ySgARg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=YbCbtqe7; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=R5xQaRpF; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="le4fSbaj";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="le4fSbaj"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="YbCbtqe7";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="R5xQaRpF"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4dCqPl3Fpvz9tjW;
-	Fri, 21 Nov 2025 23:19:07 +0100 (CET)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4dCqPr0Tc8z9tjt;
+	Fri, 21 Nov 2025 23:19:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763547;
+	t=1763763552;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SE//RnLm+RWLlQtT55RUpb8XvaYIbZtYCYKxfObWWMU=;
-	b=le4fSbajlfDI+iPPw9AevIkzsI+n0J9PyooawLv9NCLHiMMsMVtCBae7w2doBenWF96s3I
-	XP7SeKBnwM18qaE+CM/s48V493wyeVi24q7/hF/nns6M6m9sy+UOCmC2OV1v1mBl24Wro5
-	XCC8FBTBgzGBz6rxRUdTiKPO6CcpkWlZIjvpzX00fj+noskG5vODixZcECy1lLwz25uqFl
-	CgsRDLhyrrhgW7SEdRDmHzKmxdMx7Gp90Ibhd3BxCxbTl0z7aiNn9u9/Rr/1WJAKnjb/kW
-	Xdb/OmqY/pDRBkw8p/n/n2zlP0fF/2g2cXq/sgMJH4Vck7quDmN/v2+4h9268A==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=le4fSbaj;
-	spf=pass (outgoing_mbo_mout: domain of mhi@mailbox.org designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=mhi@mailbox.org
+	bh=Ipaajx5Ok4/jMQtIcRVvEE0OnDZrqJN9kw4rvFB6jh0=;
+	b=YbCbtqe72/2WmgtFLbDwpZotLecrpMCOEuZZdSpodH9JMYF83shpHiHC4xOilrY1EzdCZD
+	y+u44apTRXPhSYvG+qrlPpwvC8/naUigziYnqH9YlvAlXmqp8qEOK5KyWCfhHqEXXug6Sy
+	PjdLE9xveEW1S/PpQuM9RhSgoPifuderlNAvo3YcHuzoH13QR4GQKpzevcoNkV2YQ4eSqP
+	kraAMR+hONoPzAmBu/QVmllV/ZxqOQItLNM5gfA8TKxWrWnxDGpDdEXa+1ubzoBt0+2l+4
+	qwHMlMQPkjj5EdlS3BdR2IbfcltN3AyAbwd1sivRRPNXzfNWlKnro3C3A58QHQ==
 From: Maurice Hieronymus <mhi@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763547;
+	t=1763763551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SE//RnLm+RWLlQtT55RUpb8XvaYIbZtYCYKxfObWWMU=;
-	b=le4fSbajlfDI+iPPw9AevIkzsI+n0J9PyooawLv9NCLHiMMsMVtCBae7w2doBenWF96s3I
-	XP7SeKBnwM18qaE+CM/s48V493wyeVi24q7/hF/nns6M6m9sy+UOCmC2OV1v1mBl24Wro5
-	XCC8FBTBgzGBz6rxRUdTiKPO6CcpkWlZIjvpzX00fj+noskG5vODixZcECy1lLwz25uqFl
-	CgsRDLhyrrhgW7SEdRDmHzKmxdMx7Gp90Ibhd3BxCxbTl0z7aiNn9u9/Rr/1WJAKnjb/kW
-	Xdb/OmqY/pDRBkw8p/n/n2zlP0fF/2g2cXq/sgMJH4Vck7quDmN/v2+4h9268A==
+	bh=Ipaajx5Ok4/jMQtIcRVvEE0OnDZrqJN9kw4rvFB6jh0=;
+	b=R5xQaRpFdzCq1SrlqycntIoJlLaeY8vOgOK4oVvZWi/TXkZQqLV92rw91KxuX3YrOq6r4+
+	q6RfERdpLj5IiiWUvPTMzvwxW8koTyBSapA2IHWnkU2LBqvO8gVk5UaJouFotltwBlHcgv
+	H5WErGFdUGRCQUM9yOlO79l6qunutAo9xn14GBU9gjp7TepTRvaZPh2FCV0H/FHuAKZ08N
+	Ezc1woRIy060u+0Xu1T4OeJocs7DYKLEuhl+XCsG2l+9xuBncY6I6ejv5RwZHlr3x05vv1
+	HOsJhTPxRW7tHdTlNa1KWpy/KHoIq5YTxShWFtlXdgbH1lhtlB7iqRcBEAEPOw==
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	mhi@mailbox.org
-Subject: [PATCH v2 06/13] tracing: Fix multiple typos in trace_events.c
-Date: Fri, 21 Nov 2025 23:18:28 +0100
-Message-ID: <20251121221835.28032-8-mhi@mailbox.org>
+Subject: [PATCH v2 10/13] tracing: Fix multiple typos in trace_events_user.c
+Date: Fri, 21 Nov 2025 23:18:32 +0100
+Message-ID: <20251121221835.28032-12-mhi@mailbox.org>
 In-Reply-To: <20251121221835.28032-1-mhi@mailbox.org>
 References: <20251121221835.28032-1-mhi@mailbox.org>
 Precedence: bulk
@@ -68,61 +65,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 06523b29f25e7a13a3b
-X-MBO-RS-META: ocf4wpohskkgzwxdiyuobb6f41g5t9oi
-X-Rspamd-Queue-Id: 4dCqPl3Fpvz9tjW
+X-MBO-RS-META: ossjrgfwcioonbme6nkwduwagxkk8k11
+X-MBO-RS-ID: 9e254cdc71d18b9fb48
 
 Fix multiple typos in comments:
-"appened" -> "appended"
-"paranthesis" -> "parenthesis"
-"parethesis" -> "parenthesis"
-"wont" -> "won't"
+"ambigious" -> "ambiguous"
+"explictly" -> "explicitly"
+"Uknown" -> "Unknown"
 
 Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
 ---
- kernel/trace/trace_events.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/trace/trace_events_user.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9b07ad9eb284..b16a5a158040 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -360,7 +360,7 @@ static bool process_string(const char *fmt, int len, struct trace_event_call *ca
- 			/* Anything else, this isn't a function */
- 			break;
- 		}
--		/* A function could be wrapped in parethesis, try the next one */
-+		/* A function could be wrapped in parenthesis, try the next one */
- 		s = r + 1;
- 	} while (s < e);
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index c428dafe7496..778f13ef94cf 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1041,7 +1041,7 @@ static int user_field_array_size(const char *type)
  
-@@ -567,7 +567,7 @@ static void test_event_printk(struct trace_event_call *call)
- 			 * If start_arg is zero, then this is the start of the
- 			 * first argument. The processing of the argument happens
- 			 * when the end of the argument is found, as it needs to
--			 * handle paranthesis and such.
-+			 * handle parenthesis and such.
- 			 */
- 			if (!start_arg) {
- 				start_arg = i;
-@@ -785,7 +785,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		 *
- 		 * When soft_disable is not set but the soft_mode is,
- 		 * we do nothing. Do not disable the tracepoint, otherwise
--		 * "soft enable"s (clearing the SOFT_DISABLED bit) wont work.
-+		 * "soft enable"s (clearing the SOFT_DISABLED bit) won't work.
- 		 */
- 		if (soft_disable) {
- 			if (atomic_dec_return(&file->sm_ref) > 0)
-@@ -1394,7 +1394,7 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
- 	if (!tr)
- 		return -ENOENT;
+ static int user_field_size(const char *type)
+ {
+-	/* long is not allowed from a user, since it's ambigious in size */
++	/* long is not allowed from a user, since it's ambiguous in size */
+ 	if (strcmp(type, "s64") == 0)
+ 		return sizeof(s64);
+ 	if (strcmp(type, "u64") == 0)
+@@ -1079,7 +1079,7 @@ static int user_field_size(const char *type)
+ 	if (str_has_prefix(type, "__rel_loc "))
+ 		return sizeof(u32);
  
--	/* Modules events can be appened with :mod:<module> */
-+	/* Modules events can be appended with :mod:<module> */
- 	mod = strstr(buf, ":mod:");
- 	if (mod) {
- 		*mod = '\0';
+-	/* Uknown basic type, error */
++	/* Unknown basic type, error */
+ 	return -EINVAL;
+ }
+ 
+@@ -2475,7 +2475,7 @@ static long user_events_ioctl_reg(struct user_event_file_info *info,
+ 	/*
+ 	 * Prevent users from using the same address and bit multiple times
+ 	 * within the same mm address space. This can cause unexpected behavior
+-	 * for user processes that is far easier to debug if this is explictly
++	 * for user processes that is far easier to debug if this is explicitly
+ 	 * an error upon registering.
+ 	 */
+ 	if (current_user_event_enabler_exists((unsigned long)reg.enable_addr,
 -- 
 2.50.1
 
