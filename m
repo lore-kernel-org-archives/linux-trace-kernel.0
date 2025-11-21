@@ -1,91 +1,241 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8D63090E1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 12:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6831B4244
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 12:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763728480; cv=none; b=lCw7mBc10rlRZQ1Hlw9Q7ZJ2oRlHj/YoxALxuprtibYr7glYXeE0+5bm8PKjl748IPZ+NZRW7IW5hxKeSd+6IgAktjo1ed0YyHR8dQ14BGy1bhbCjvzK6X3UdMWp9bfk8fEB5EQDomWM4IMzeJFm39CDxpBxY8f99zW0j16LwxM=
+	t=1763729307; cv=none; b=FNTMtrcUaRjLg/zuaU4HFBiLqsJ33fG5gsCp6109qP3KHR1hTANQhOsD5OikJw50/5hNtnehcfR2lH/K4oKVnSDZk7EgzFc0PNMPSLTevMxY2QebrCCEL3jSj2qqsHW6Gjp0dbsZ0z4OhQg9sMtOPiu2GAg1oDWlbhx58EPMnBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763728480; c=relaxed/simple;
-	bh=luwEOd2cuqEHNGUEhejYGjZIuuD5793J65QXSOAQHMU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fw67RwFwUvk1sABRkwRRJVFu6IpjfKFYFT+jbTPT4h8mQjs4M153DCPTEyttg7xiAIJxjmmmVHeFYgb9eBZYeWNqELju3GIyjxlJKlFThe8eG312uaR2BTnt4Ln8ObWwvHdT8cpl2lqirymE5siq5lA1KVU3W88TbfdrZueJJhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-9490314b781so134456739f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 04:34:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763728478; x=1764333278;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7W2HBh1TleicrZfEbgL2NEiodFl9Mpdqhxr0rQkM6mM=;
-        b=iElc6cPuIkkJb5Pba3mAQAq20wg3WlAVV/eqSeQflIeaG6JN1cazFpDZA9YH38DPEx
-         0b51XOLyJj+pIG3GkmI/GeOGKgOPtRHQn8DdP70fj8LYCJu7ejgdrWalj4ONFRXhTull
-         bK9mqoVp/zYl0ov6+JNvG5SB6RjpJBJCO0oPzf+neKfagkZBI0mccpHMkLuB/bQZwreJ
-         R8EyyxQXa+xZliEmSZARNVhI0vvEQtuU79Kzoptm668eUCB20reWhVsGo97qbVMNsT1O
-         6Oaf0qdWPPP9l1EBHb+CaUK/JIpFYIkX7AUq+yRQRI0fcshgFozhyxphgagyFd9hBsS1
-         kL7g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2d1GCvFRed4GtNhPxKzFOMF6kd8+G/DFVaw6RgDEEhPA08tQH/g5YIPnEJ1AtxOGUd5VUcnxZxTZi3GedSxCjs5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLmtiJYXE2Bvn+tWnwfOYwgwCk1VTI2Cri00hgIW/YC4FiES6e
-	BgfBMuOfuPQw1L2FJdYNe1+MoFoMs65vXlNJVNqPlnjfUESA9Qov0b9GTjiiWbYsWQ0DUQRjbGr
-	Xd7bIvEgEsQxb0+MD1/7KKuD6OBZrkG+1ge0joVxLukLZM2q05J8UZvGgsrw=
-X-Google-Smtp-Source: AGHT+IHSi57Q5v5in5sqbX+2IERxl2ilHut6iXvtwJBx/F7H85l+cZ0s76nfQQZq0AUqMDyr8TLxoaOEEuX7EVCCFQzcfNPLac0Q
+	s=arc-20240116; t=1763729307; c=relaxed/simple;
+	bh=SYg1U0gepKD/STllSUUgkatp2leye81DnWI/E1ZqVMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qxGataJl7lOLaMXci7dJubCc12sYyd/FaFxmBxo83ccMdk2n4jVQVYZxR1K/PlnLlSaXSnU5NlH2NhqfQbYTul4D6B4ZnQBSKqslBtgGLjf1XLxpAe9dAgCs6MxBYgqXBXTpp3LEHn1LeQho0zLhRuaYRzW4zgaI+5EcYSpEr8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UHce58ob; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UHce58ob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763729304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xRNLKj8WCx5oLpHzPm//DdF0TFlhD2LTKRIZBTl0/ww=;
+	b=UHce58obzPBTXMH6+V0V8yhOy0N5LUiSoLJ6LCrITxIbW5FaplNpMVVJLDNIwV+QMsA5TM
+	F85Uwqm0VxHlrLfTfHH+YifxkEKqR/yfKRjXDWXxkPP9S1KQtuADVntkRtOTPTeD3KhNEq
+	eborS4MzOFbZm43MqRjiBBGKeogP+5g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-2fhD_1fsOXa2uS0tYXjxbA-1; Fri,
+ 21 Nov 2025 07:48:20 -0500
+X-MC-Unique: 2fhD_1fsOXa2uS0tYXjxbA-1
+X-Mimecast-MFC-AGG-ID: 2fhD_1fsOXa2uS0tYXjxbA_1763729299
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7583A1954B17;
+	Fri, 21 Nov 2025 12:48:19 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.33.0])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50D6F30044DB;
+	Fri, 21 Nov 2025 12:48:15 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	John Kacur <jkacur@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [GIT PULL v2] RTLA updates for v6.19
+Date: Fri, 21 Nov 2025 13:46:46 +0100
+Message-ID: <20251121124646.199804-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:351e:b0:433:7e2f:839d with SMTP id
- e9e14a558f8ab-435b8e79e33mr17115295ab.21.1763728478333; Fri, 21 Nov 2025
- 04:34:38 -0800 (PST)
-Date: Fri, 21 Nov 2025 04:34:38 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69205c5e.a70a0220.2ea503.0051.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Nov 2025)
-From: syzbot <syzbot+list6c3ec839fea04710d817@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hello trace maintainers/developers,
+Hi Steven,
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+Please use this amended tag for the merge window in place of the old one. The
+diff between rtla-v6.19-v2 and rtla-v6.19 is empty, it is just the tweak of the
+commit messages and a note about a merge conflict.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 15 issues are still open and 59 have already been fixed.
+Thanks,
+Tomas
 
-Some of the still happening issues:
+The following changes since commit 0d5077c73aceb51ef10d096160dd62a11db2f3e4:
 
-Ref Crashes Repro Title
-<1> 773     Yes   INFO: task hung in exit_mm (5)
-                  https://syzkaller.appspot.com/bug?extid=1c6607097b258f18065c
-<2> 87      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<3> 82      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<4> 60      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<5> 58      Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-<6> 30      No    INFO: task hung in blk_trace_startstop
-                  https://syzkaller.appspot.com/bug?extid=774863666ef5b025c9d0
-<7> 19      Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+  MAINTAINERS: Add Tomas Glozar as a maintainer to RTLA tool (2025-11-14 12:24:41 -0500)
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+are available in the Git repository at:
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/ tags/rtla-v6.19-v2
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+for you to fetch changes up to 3138df6f0cd04a75f8efa5b5270ba56d00a84ae6:
 
-You may send multiple commands in a single email message.
+  rtla/timerlat: Exit top main loop on any non-zero wait_retval (2025-11-21 10:30:27 +0100)
+
+----------------------------------------------------------------
+RTLA patches for v6.19
+
+Fixes and minor cleanups for RTLA, targetting v6.19 via
+linux-trace tools/for-next:
+
+- Add for_each_monitored_cpu() helper
+
+  In multiple places, RTLA tools iterate over the list of CPUs running
+  tracer threads.
+
+  Use single helper instead of repeating the for/if combination.
+
+- Remove unused variable option_index in argument parsing
+
+  RTLA tools use getopt_long() for argument parsing. For its last
+  argument, an unused variable "option_index" is passed.
+
+  Remove the variable and pass NULL to getopt_long() to shorten
+  the naturally long parsing functions, and make them more readable.
+
+- Fix unassigned nr_cpus after code consolidation
+
+  In recent code consolidation, timerlat tool cleanup, previously
+  implemented separately for each tool, was moved to a common function
+  timerlat_free().
+
+  The cleanup relies on nr_cpus being set. This was not done in the new
+  function, leaving the variable uninitialized.
+
+  Initialize the variable properly, and remove silencing of compiler
+  warning for uninitialized variables.
+
+- Stop tracing on user latency in BPF mode
+
+  Despite the name, rtla-timerlat's -T/--thread option sets timerlat's
+  stop_tracing_total_us option, which also stops tracing on
+  return-from-user latency, not only on thread latency.
+
+  Implement the same behavior also in BPF sample collection stop tracing
+  handler to avoid a discrepancy and restore correspondence of behavior
+  with the equivalent option of cyclictest.
+
+- Fix threshold actions always triggering
+
+  A bug in threshold action logic caused the action to execute even
+  if tracing did not stop because of threshold.
+
+  Fix the logic to stop correctly.
+
+- Fix few minor issues in tests
+
+  Extend tests that were shown to need it to 5s, fix osnoise test
+  calling timerlat by mistake, and use new, more reliable output
+  checking in timerlat's "top stop at failed action" test.
+
+- Do not print usage on argument parsing error
+
+  RTLA prints the entire usage message on encountering errors in
+  argument parsing, like a malformed CPU list.
+
+  The usage message has gotten too long. Instead of printing it,
+  use newly added fatal() helper function to simply exit with
+  the error message, excluding the usage.
+
+- Fix unintuitive -C/--cgroup interface
+
+  "-C cgroup" and "--cgroup cgroup" are invalid syntax, despite that
+  being a common way to specify an option with argument. Moreover,
+  using them fails silently and no cgroup is set.
+
+  Create new helper function to unify the handling of all such options
+  and allow all of:
+
+  -Xsomething
+  -X=something
+  -X something
+
+  as well as the equivalent for the long option.
+
+- Fix -a overriding -t argument filename
+
+  Fix a bug where -a following -t custom_file.txt overrides the custom
+  filename with the default timerlat_trace.txt.
+
+- Stop tracing correctly on multiple events at once
+
+  In some race scenarios, RTLA BPF sample collection might send multiple
+  stop tracing events via the BPF ringbuffer at once.
+
+  Compare the number of events for != 0 instead of == 1 to cover for
+  this scenario and stop tracing properly.
+
+The tag was tested on both a non-RT-tuned and an RT-tuned machine, and
+no issues were found besides known cases of the flakiness of tests for
+stack dump and auto-analysis, which rely on correct order of events.
+
+The patchset mostly consists of fixes originally targetting one of
+the v6.18-rcs rather than linux-next and the v6.19 merge window; one
+of them is even Cc: stable. The delay was caused by maintainership
+handover of RTLA.
+
+CONFLICTS: The patch "rtla: Fix -C/--cgroup interface" has a minor
+rename and context conflict with patches 96b546c241b1
+("Documentation/rtla: rename common_xxx.rst files to common_xxx.txt")
+and 198fcc7cb832 ("Documentation/rtla: Mention default priority"),
+which were picked earlier by Jonathan Corbet's linux-docs tree.
+
+v2:
+- Fix Fixes: tags containing 11 characters instead of 12 for commit
+"rtla/tests: Fix osnoise test calling timerlat" and commit
+"rtla/tests: Extend action tests to 5s".
+
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+
+----------------------------------------------------------------
+Costa Shulyupin (8):
+      tools/rtla: Add for_each_monitored_cpu() helper
+      tools/rtla: Remove unused optional option_index
+      tools/rtla: Fix unassigned nr_cpus
+      tools/rtla: Add fatal() and replace error handling pattern
+      tools/rtla: Replace timerlat_top_usage("...") with fatal("...")
+      tools/rtla: Replace timerlat_hist_usage("...") with fatal("...")
+      tools/rtla: Replace osnoise_top_usage("...") with fatal("...")
+      tools/rtla: Replace osnoise_hist_usage("...") with fatal("...")
+
+Crystal Wood (2):
+      rtla/tests: Don't rely on matching ^1ALL
+      rtla/timerlat: Exit top main loop on any non-zero wait_retval
+
+Ivan Pravdin (2):
+      rtla: Fix -C/--cgroup interface
+      rtla: Fix -a overriding -t argument
+
+Tomas Glozar (4):
+      rtla/timerlat_bpf: Stop tracing on user latency
+      tools/rtla: Fix --on-threshold always triggering
+      rtla/tests: Extend action tests to 5s
+      rtla/tests: Fix osnoise test calling timerlat
+
+ Documentation/tools/rtla/common_options.rst |   2 +-
+ tools/tracing/rtla/Makefile.rtla            |   2 +-
+ tools/tracing/rtla/src/common.c             |  24 +++--
+ tools/tracing/rtla/src/common.h             |   4 +
+ tools/tracing/rtla/src/osnoise_hist.c       | 136 +++++++++----------------
+ tools/tracing/rtla/src/osnoise_top.c        | 106 +++++++-------------
+ tools/tracing/rtla/src/timerlat.bpf.c       |   3 +
+ tools/tracing/rtla/src/timerlat.c           |  12 +--
+ tools/tracing/rtla/src/timerlat_hist.c      | 148 +++++++++-------------------
+ tools/tracing/rtla/src/timerlat_top.c       | 116 ++++++++--------------
+ tools/tracing/rtla/src/timerlat_u.c         |  12 +--
+ tools/tracing/rtla/src/utils.c              |  41 ++++++++
+ tools/tracing/rtla/src/utils.h              |   2 +
+ tools/tracing/rtla/tests/osnoise.t          |   6 +-
+ tools/tracing/rtla/tests/timerlat.t         |   6 +-
+ 15 files changed, 247 insertions(+), 373 deletions(-)
+
