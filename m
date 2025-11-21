@@ -1,144 +1,184 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B011314B78;
-	Fri, 21 Nov 2025 22:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAEC27CCF0;
+	Fri, 21 Nov 2025 23:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763763562; cv=none; b=nNUdyJUs+1f9DGVJ+V8IRHkLrtTDjJ/bTZPkuJudkEvk7AHnxkNWdhsRX23421OVUhXcEyC9weMkFAZDlHSPaOGmbmXerKwLyEcN+XDp40cIRkJ5Z8ey2X7PKxfHtyKbMhjVkCN/f8OokbmKkc2j8RdbZqGhLXno6gGsIpreovs=
+	t=1763769242; cv=none; b=jyUdM0J7pbfZHGZj+Pu6JU/L5JlQmW8033DscLrKAkIzdgHQaMSBLv8i631FQgZ96dPPuMqZmKW56ClXbKiquo72RWB/o+8q+vvu7hzmsLCxk/e+DKfCSsPMwKIg6wBupTZ2sZt71dm4l8Hu8h33DEOGJ5ebEKts1wvJpVc/Xc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763763562; c=relaxed/simple;
-	bh=rZEtque9UIMH8th7RLQy/zZkM950qeCxkmtki02nVsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D4HQm3zddZK5+M3/C9WY8gCyU0aCQ8omkmfVRfkNXbSjB4QXJDoD9LTphW+8/NHwPo6YqkK243MKA8KWfWrQ8HQGTp7l94TpUUclLRNRqzgzFN085AP3hYSVwKSnWeSdUGdIBtgr2bvgPVMg5MZnO3MhtelEWzLI67mgzsjHo6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=dElp2DzH; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=dElp2DzH; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1763769242; c=relaxed/simple;
+	bh=+Hg4/uQp+OeE7UO4Lhn7lv201SeLX6uGguDNgBxO6Ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hf2HmL9oSdssAJqU9GtsZjlZho/bhLnGqCeLlcmaTdoZbWWfGWkctHOrZdEnpsQWAJCBEHJHjApAu//bPlHCkiEqUcu0qmyABBB+HpD9qEI2ejuo1eKEE/3LTo57bh5IsgSBNBcNg0+rdUL0m4h0JPzMI0bDsst7nEM9cQCKbpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JakpdGb7; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="dElp2DzH";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="dElp2DzH"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4dCqPs2r41z9v5t;
-	Fri, 21 Nov 2025 23:19:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cdrVcJ577EgHMLhgbI9hkJZcje6pYSBdFSAjo3BW/gk=;
-	b=dElp2DzHb/k1y/uG45536J/pCxQAtYC2eCFnfla3Xx6jd2M3MoT81TC6gSkwnR0jBcPu66
-	0Kulizvu7xj7PkXp0zuOpMU6idLlhKWob0sGnePNHZFbqAyxMXRy7fDDfA38futhylu09x
-	gVTcJURlT/HiB/JRmuXzQHY4qs5IEdEmDl5+cI3LlBhUdQ+B+NRfLuGTPBUycDj+GgtKhz
-	OiL8WE0pTNKeYOFpi9Rt2aruHkWN3g4I0+tA0eIZdQ+RjWSbDVmp8X8OQ+7eLvrG8UVxzc
-	EpvQjyhO2I4byj5/jg3VPPzJVdNrLy28jvIFAqhbebEknQFe31kRjpU+8p6ZUg==
-From: Maurice Hieronymus <mhi@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1763763553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cdrVcJ577EgHMLhgbI9hkJZcje6pYSBdFSAjo3BW/gk=;
-	b=dElp2DzHb/k1y/uG45536J/pCxQAtYC2eCFnfla3Xx6jd2M3MoT81TC6gSkwnR0jBcPu66
-	0Kulizvu7xj7PkXp0zuOpMU6idLlhKWob0sGnePNHZFbqAyxMXRy7fDDfA38futhylu09x
-	gVTcJURlT/HiB/JRmuXzQHY4qs5IEdEmDl5+cI3LlBhUdQ+B+NRfLuGTPBUycDj+GgtKhz
-	OiL8WE0pTNKeYOFpi9Rt2aruHkWN3g4I0+tA0eIZdQ+RjWSbDVmp8X8OQ+7eLvrG8UVxzc
-	EpvQjyhO2I4byj5/jg3VPPzJVdNrLy28jvIFAqhbebEknQFe31kRjpU+8p6ZUg==
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhi@mailbox.org
-Subject: [PATCH v2 11/13] tracing: Fix multiple typos in trace_osnoise.c
-Date: Fri, 21 Nov 2025 23:18:33 +0100
-Message-ID: <20251121221835.28032-13-mhi@mailbox.org>
-In-Reply-To: <20251121221835.28032-1-mhi@mailbox.org>
-References: <20251121221835.28032-1-mhi@mailbox.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JakpdGb7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763769241; x=1795305241;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+Hg4/uQp+OeE7UO4Lhn7lv201SeLX6uGguDNgBxO6Ug=;
+  b=JakpdGb74ZjCwPy8yFIqGgoCEKWSc1yGXBxcrnVEDqVZj128ORE8d+sG
+   I+rd/xsqpaH9Kcr8uHVH9Yl8cJR8QJARgFlHbofqphHLVWCLATvyGo3eO
+   u56+bFVn/aa+QLA3sKEzdXUqxvF5YyCYfroTzFEnUP+/5kMgv2P6bY4fW
+   EJBCo4yLFpMTNuVGGvHs9lLhKeGNrbSv52I74czi2wqjwOUbbbNyuHfmy
+   Ga09DBvZ4NjRPgvdBBthX/tT96tf54CLIwMbuk9gFf/BBPYHQN2P9hn0I
+   +Aq24p2wH5H+kAsmFs5CY6P0b0sVtxd7zRJF6YZHjnFtqaJ6BIA5TLQ7M
+   g==;
+X-CSE-ConnectionGUID: /Olxr+U1Q9iUFYDaD08ZNg==
+X-CSE-MsgGUID: eUEbuMcaS3+tItNHEhwI3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="65899376"
+X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
+   d="scan'208";a="65899376"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 15:54:01 -0800
+X-CSE-ConnectionGUID: q8dn3dlbReeo+c7icmGweQ==
+X-CSE-MsgGUID: 0l7lTL8JSfqvktlDz7OQTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,217,1758610800"; 
+   d="scan'208";a="192076161"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 21 Nov 2025 15:53:58 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vMawu-0006z5-0A;
+	Fri, 21 Nov 2025 23:53:56 +0000
+Date: Sat, 22 Nov 2025 07:53:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Add system trigger file to enable triggers for
+ all the system's events
+Message-ID: <202511220730.PQFWRcck-lkp@intel.com>
+References: <20251120160003.2fa33d80@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: jyt7wkg41shazs8rhm74jgewcs6krhih
-X-MBO-RS-ID: 4f10a709e408858c686
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251120160003.2fa33d80@gandalf.local.home>
 
-Fix multiple typos in comments:
-"Anotate" -> "Annotate"
-"infor" -> "info"
-"timestemp" -> "timestamp"
-"tread" -> "thread"
-"varaibles" -> "variables"
-"wast" -> "waste"
+Hi Steven,
 
-Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
----
- kernel/trace/trace_osnoise.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index a9962d4497e8..827104d00bc0 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -329,7 +329,7 @@ static struct osnoise_data {
- 	u64	print_stack;		/* print IRQ stack if total > */
- 	int	timerlat_tracer;	/* timerlat tracer */
- #endif
--	bool	tainted;		/* infor users and developers about a problem */
-+	bool	tainted;		/* info users and developers about a problem */
- } osnoise_data = {
- 	.sample_period			= DEFAULT_SAMPLE_PERIOD,
- 	.sample_runtime			= DEFAULT_SAMPLE_RUNTIME,
-@@ -738,7 +738,7 @@ cond_move_thread_delta_start(struct osnoise_variables *osn_var, u64 duration)
- /*
-  * get_int_safe_duration - Get the duration of a window
-  *
-- * The irq, softirq and thread varaibles need to have its duration without
-+ * The irq, softirq and thread variables need to have its duration without
-  * the interference from higher priority interrupts. Instead of keeping a
-  * variable to discount the interrupt interference from these variables, the
-  * starting time of these variables are pushed forward with the interrupt's
-@@ -1460,7 +1460,7 @@ static int run_osnoise(void)
- 	stop_in = osnoise_data.stop_tracing * NSEC_PER_USEC;
- 
- 	/*
--	 * Start timestemp
-+	 * Start timestamp
- 	 */
- 	start = time_get();
- 
-@@ -1881,7 +1881,7 @@ static int timerlat_main(void *data)
- 	tlat->kthread = current;
- 	osn_var->pid = current->pid;
- 	/*
--	 * Anotate the arrival time.
-+	 * Annotate the arrival time.
- 	 */
- 	tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
- 
-@@ -1978,7 +1978,7 @@ static void stop_per_cpu_kthreads(void)
- }
- 
- /*
-- * start_kthread - Start a workload tread
-+ * start_kthread - Start a workload thread
-  */
- static int start_kthread(unsigned int cpu)
- {
-@@ -2705,7 +2705,7 @@ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
- 	 * Why not using tracing instance per_cpu/ dir?
- 	 *
- 	 * Because osnoise/timerlat have a single workload, having
--	 * multiple files like these are wast of memory.
-+	 * multiple files like these are waste of memory.
- 	 */
- 	per_cpu = tracefs_create_dir("per_cpu", top_dir);
- 	if (!per_cpu)
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.18-rc6 next-20251121]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Add-system-trigger-file-to-enable-triggers-for-all-the-system-s-events/20251121-050454
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20251120160003.2fa33d80%40gandalf.local.home
+patch subject: [PATCH] tracing: Add system trigger file to enable triggers for all the system's events
+config: sparc64-defconfig (https://download.01.org/0day-ci/archive/20251122/202511220730.PQFWRcck-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251122/202511220730.PQFWRcck-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511220730.PQFWRcck-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/trace_events_trigger.c:432:6: warning: variable 'len' set but not used [-Wunused-but-set-variable]
+     432 |         int len;
+         |             ^
+   1 warning generated.
+
+
+vim +/len +432 kernel/trace/trace_events_trigger.c
+
+   420	
+   421	static ssize_t
+   422	event_system_trigger_write(struct file *filp, const char __user *ubuf,
+   423			    size_t cnt, loff_t *ppos)
+   424	{
+   425		struct trace_subsystem_dir *dir = filp->private_data;
+   426		struct event_command *p;
+   427		char *command, *next;
+   428		char *buf __free(kfree) = get_user_buf(ubuf, cnt);
+   429		bool remove = false;
+   430		bool found = false;
+   431		ssize_t ret;
+ > 432		int len;
+   433	
+   434		if (!buf)
+   435			return 0;
+   436	
+   437		if (IS_ERR(buf))
+   438			return PTR_ERR(buf);
+   439	
+   440		/* system triggers are not allowed to have counters */
+   441		if (strchr(buf, ':'))
+   442			return -EINVAL;
+   443	
+   444		/* If opened for read too, dir is in the seq_file descriptor */
+   445		if (filp->f_mode & FMODE_READ) {
+   446			struct seq_file *m = filp->private_data;
+   447			dir = m->private;
+   448		}
+   449	
+   450		/* Skip added space at beginning of buf */
+   451		next = buf;
+   452		strim(next);
+   453	
+   454		command = strsep(&next, " \t");
+   455		if (next) {
+   456			next = skip_spaces(next);
+   457			if (!*next)
+   458				next = NULL;
+   459		}
+   460		if (command[0] == '!') {
+   461			remove = true;
+   462			command++;
+   463		}
+   464	
+   465		len = strlen(command);
+   466		if (next)
+   467			len += strlen(next) + 1;
+   468	
+   469		guard(mutex)(&event_mutex);
+   470		guard(mutex)(&trigger_cmd_mutex);
+   471	
+   472		list_for_each_entry(p, &trigger_commands, list) {
+   473			/* Allow to remove any trigger */
+   474			if (!remove && !(p->flags & EVENT_CMD_FL_SYSTEM))
+   475				continue;
+   476			if (strcmp(p->name, command) == 0) {
+   477				found = true;
+   478				ret = process_system_events(dir, p, buf, command, next);
+   479				break;
+   480			}
+   481		}
+   482	
+   483		if (!found)
+   484			ret = -ENODEV;
+   485	
+   486		if (!ret)
+   487			*ppos += cnt;
+   488	
+   489		if (remove || ret < 0)
+   490			return ret ? : cnt;
+   491	
+   492		return cnt;
+   493	}
+   494	
+
 -- 
-2.50.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
