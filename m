@@ -1,243 +1,202 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010067.outbound.protection.outlook.com [52.101.56.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B213164BF;
-	Fri, 21 Nov 2025 06:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763706490; cv=fail; b=rAflIQ0MJbl/Wvrm3nQTSDmunC3slP/RitfrcK3tPS2Pn8qQ5PtzYR08MzoRcIRF4qvv0rH5wZ6MTgRuiq1Cjm8CAvqF99uFuTrklXQ5ClIjJHNSGB05JCv2yYOSdXjU0GMVw+dzOtf+TdznLfJDAppGTDk3HpHb2ZUfoumFi40=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763706490; c=relaxed/simple;
-	bh=iR+CcOKyVwOW6bpCq2l483D4HJtMuth6nt80Vko3MZc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PFlYI3C3RTZgKI8YhtD2lPu9B5cA7umjuHud8PKsb2H4oaYZEO4L2KXE2fflfEvQCttXoQFS0jL0C1uaBMwaDiLp4EY/PVeUMXdZGMhpoXHBcDfdwy7CGJ2r35TibVNWVbf/fF+xPcZNQsVpAzA6z4V4lUm57XJz8S90zC6RxGY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=n/zrClAc; arc=fail smtp.client-ip=52.101.56.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E4A36D515;
+	Fri, 21 Nov 2025 07:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763708472; cv=none; b=Nv4W95Cp3joHWK+xPNnwjtS6qDIz6NHXj30kzpBYf2SIIN1VxJEuXEN5Ngqk0LCOMifznvYnhig0QMU335ucKLD0WGFbHmx/jyW0uFWKDeH5SoQ7KhF0qwCi/N64TDEgtat/j+ZEUMSb9W1qcqRWHA77Wo4hj/0zaoQVhG57jNc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763708472; c=relaxed/simple;
+	bh=azMswd206Zarnuud75dMwenZXaEFRXu+fZNEEPZIEjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iV4+iW4rz7AG7qbhcOifhs/F9qxHR/Rj+tiwHvJ7Wn6iL1/MoBtSMlXeYbViSAZS749lYnFNDkIridLWn9ZijgWfwy32BSz3DEpATelVlabS5FdpBgPVJG4EDo12dIZCSSSKj+qqWfY2fZmV/GV+/26WgODXZGqr7BwWw6yBq9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrJVPUzf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="n/zrClAc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D6+BrS4MjY5NHeuhp7NoEDZeRgJYutQad0dU0nKRJwMYpqtrlHsnEH9f2nMTL9+Pjkbtt5mmALleI04L7QZxje/tSCNgQ2MNMETlEim+NgMWuapvDlbxykvFh6uJKfInJ75zzjsM5L9yPjQmRRjbxGeYl932srfvKNDrq2IrvjW4AcEDYq1RuFTJRn5ftTwJQRzf4Q1AWIWgr8o/x+o2+uLfjt6RwuPhNV1ZI3DeV0ApWB/Z3ESiPXk3ddG9LBFsdV7hS82dO2qylrgaqHW4ZH6ofN7A7OIFDPgsfjlfDpuOb5PvdBt/6JwNvwrQUTjWE3NrwgNiPNs4/GsS9uWQbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UblVZmjCNH55MlHej4grXdmVlGsu2AV1lzC9/zQETY0=;
- b=W7JBpG5EqJyjay8870b7sSkKsWIDGjCBMqc6GZVZONKeGNc1E5+UAYHpYzvmJ71JRqiAFzLNG6pSf20HwwKl5kMJzPHpuduqFjb9BVRjszR0aO3rHFqIOLNpDSRJfGOY6euYaD451Rfg9lMJnEz9o4XwDmnFGJ+GEnuxCuFmaLe7lTdWl2oY0emsR8eXv1RLgX2letP/xHdVSz41fNYXlV2wrIHX4kbnGTIh41WAZnslaopLIyv3JDiCal7VfREsvx6xuRBHhbcEdbNUBMb6P+qsKJVP85FdzK6/7ZmA1Qzbf4f1Bpl3ncTqDEhgaSeVdDc60/tnE5F7cnw1azVSDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UblVZmjCNH55MlHej4grXdmVlGsu2AV1lzC9/zQETY0=;
- b=n/zrClAc9FEzjg+Rxgny1ECBPWy6RoMDJlMN8hsXlanFpoOJtDGWdpWTogggZkN2Lyi8WHAy/OHcNuykrlEVWql6Sb6E/Ec0W5URXA1aBqoTiNZgfKpn089XFoXYa1rfVEj+m9sLH9QHHMpDHP1yXsiVVxFCObKXFUQI5G0AKao=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW4PR12MB7465.namprd12.prod.outlook.com (2603:10b6:303:212::18)
- by CH3PR12MB9100.namprd12.prod.outlook.com (2603:10b6:610:1a8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Fri, 21 Nov
- 2025 06:28:04 +0000
-Received: from MW4PR12MB7465.namprd12.prod.outlook.com
- ([fe80::6b00:b9eb:486a:f10b]) by MW4PR12MB7465.namprd12.prod.outlook.com
- ([fe80::6b00:b9eb:486a:f10b%4]) with mapi id 15.20.9343.011; Fri, 21 Nov 2025
- 06:28:04 +0000
-Message-ID: <faa024e5-c67f-4235-b8ac-b37725b58eba@amd.com>
-Date: Fri, 21 Nov 2025 11:57:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/2] mm/khugepaged: do synchronous writeback for
- MADV_COLLAPSE
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Branden Moore <Branden.Moore@amd.com>
-References: <20251120065043.41738-6-shivankg@amd.com>
- <20251120065043.41738-8-shivankg@amd.com>
- <be698a14-c292-42d1-9a85-109a9072a0b2@kernel.org>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <be698a14-c292-42d1-9a85-109a9072a0b2@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN4P287CA0119.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:2b0::9) To MW4PR12MB7465.namprd12.prod.outlook.com
- (2603:10b6:303:212::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrJVPUzf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5490C4CEF1;
+	Fri, 21 Nov 2025 07:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763708471;
+	bh=azMswd206Zarnuud75dMwenZXaEFRXu+fZNEEPZIEjg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rrJVPUzfoa4wW92AylcNkdo5DlfaGM/lzyYlqoFxuNnVu2TDZBMfcYwv9opyv1G0P
+	 ik7Jz93R+7VUMibiOa3IlW9uwXOBAjSqRnHXYpEoS7gsQWnKrbGBHwvQC3rQgp52K5
+	 +jXs6DzXvLuTB9YlxWE5x4keXM4qLyBsq1Mnv8+8+kismiiTRUv033Zr0dHRWJLsNe
+	 QVhBzIVI+wmFyeWhuL5Zy9Q+b8UwlwnBxIijQfljE3ioyuiX8AGjtwpJmrT6eIB7ny
+	 pZs84CukK2e+tH6lIMTZiomi007gGeE7SRdPFG4z8eaLAT64aOETARzLyjFDdY+ZkR
+	 QCjmlsVsg6TwQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Add boot-time backup of persistent ring buffer
+Date: Fri, 21 Nov 2025 16:01:05 +0900
+Message-ID:  <176370846529.314463.7508792463190591259.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.52.0.rc2.455.g230fcf2819-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB7465:EE_|CH3PR12MB9100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ccab953-a2bb-466c-32b5-08de28c7206f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eDRWc054anA1dFNJZUQvYytqRVBmYlJJWFlUdFl5THl2aWRMMU41dE9Lbmx5?=
- =?utf-8?B?UGZIQUxyUGtsSFdnZTZ5NjVqc0ZMSi83Rm1CNGZLdzBlVVlhOFhZM1l5SnZP?=
- =?utf-8?B?SnI5Tmo4QWxOS29OVStoNXI5U1Y0RmFFOGwvMGpuMUU5cXhCTTBGbGhXL29K?=
- =?utf-8?B?QzNrME9hK1pJb2tPc0JJQUxRRVNDOHBZdCt0eU9kUjQ3QThrdW1wOEw4SXNz?=
- =?utf-8?B?U0s4cTIwYUxMZ1ZTZWQ0S3JRQXU5MCtGTUV6KzZiSTM5bUZsSFQxbjIxRGRM?=
- =?utf-8?B?YTNiajh3T3hVTE5jWWkrN1BQdWRJUTcwVmxqYjNxd3o1M0tKL0MzdGxpd1gw?=
- =?utf-8?B?YjFsb2xNRTJRa2ZzMmJpUTRzeHhJZUlvQWNRellibG1rSHhxbldQRXBHZG40?=
- =?utf-8?B?dVp6MHFmUEVaekNvWURwUkpaaWh1WitZOUw3YTZ6ZThGd2xLU1BlZWNHUWhz?=
- =?utf-8?B?bHhsRUJYQkE1cnZnc2FkY2NScmxia3hqUHRxdHRaMTI4K0VCWnI4VmNMOXBs?=
- =?utf-8?B?VEhBVzVvKy85L21GNkNZbTFsWDhXVlNXenFPODlueVg2UzNyNW5wVUVWbDcz?=
- =?utf-8?B?VkdrTnpPNVJEb3BtTURpQWptVWltLzhDUjdOTG9wZHIxTWJmM1RqKzBOK24z?=
- =?utf-8?B?VUIxYWY5MWtGQW9keE5LZGphSGo2SzRINlZtMit6UUJKbmZRRWxjQVRCYmli?=
- =?utf-8?B?OEgrN2FHR3dyNmZZZDFGSFpYVThWM2pUYnMzU1JMQjBrcVRmaWUxYVltdm9H?=
- =?utf-8?B?d09NVnYraVRUZ0Ftbzc1d0FudGxWR2txUWNuRG4xcmlMcjRhYm82M01qS2Fl?=
- =?utf-8?B?cjFNNHdyQWx5TnA2SDlCQTA0ZHNSclNRVlh4aW1XVzFQdHFTK3VZN0VYbmhC?=
- =?utf-8?B?YW4wMnJyakU3KzdmUzcyV2d2dTVrRjlVSmQ4WnNLVklHS2JrLzRpWmVrYTlS?=
- =?utf-8?B?MnJQc1Z1UlRSTDhyWm9hV3JQbmtweURHMmNtalBMbUVlNUh1MGljbWtRY3FY?=
- =?utf-8?B?MEEzTTNHVVRDZGVyU3ZGNy93b0ZHU2x3TDNvbEN6SjA3aWlLbU9JRWhzWkJm?=
- =?utf-8?B?RU4xbVVXUmZUNmc0Umx0eXo0b0cyTFNpQ2RkeWJuUGUwcnRzRmErM1FKdksr?=
- =?utf-8?B?ZEk4eExjSFJWMnUxZWsyRHdIeitvSWlFYjRwWmd3cGNIb0IyRjBQSmdRbE1a?=
- =?utf-8?B?RHZLNHFGdnA5T1RXVjdaNE9MS0JxREQ1c3E5dkZnbjNZd3VYOXpOSWhIT1Rv?=
- =?utf-8?B?ZlBxYVdSck9mTWxQWUZyZUpFNzFnTDdVNDRvVTR6ZXNDcU14RWt5dkpWSjJW?=
- =?utf-8?B?dC9qWVJIYXhJRU16a2lBb3RyUGRHYVp4T0h6YzJGakFvUkUvRytxdkh4cldS?=
- =?utf-8?B?cHhuRVRndEpML2hCL3JGaFZSMG9oZUE1WEVBelpjOVZTRjJtNm56aUhiMFFH?=
- =?utf-8?B?TmxIQnBPYWJIYUZ1Qlg1VTV0NE81TnRBZW5icjY3TmcxQWcrMFY0NEp3Qll6?=
- =?utf-8?B?TnZ6MnJ6c1FhZ3Jlcm1LNEVkSnlDV1kxdkNPdnNvUTZCY2Z1TUJpRE9sNHRZ?=
- =?utf-8?B?dVg1SG5MaGJ3bmYzNGlxTDh2SXhUVCtaQ1lDMkZKSTQwRDRWT2tSbGdUS280?=
- =?utf-8?B?aWZ6WjRGQXFGNE5va1lsdHp1N1M5dEE0Wm83V3Yza05BV2FkVVNERWZKOXBW?=
- =?utf-8?B?cnJqUzNvWjVKNVRWcTRta2Rsa0pvLzBUU1hyNmFHOFkySS9JSXV2dlQyWktr?=
- =?utf-8?B?bXlwYXFpQnNxcDVCZFY5ZXJDZFhocjhFcnFDRTZJZXRUd2R4Rlg1cGZzZFo2?=
- =?utf-8?B?NkhkNmNLL0pnODZISXlZRTV5ZmlOeTVscTBsUXBXM1hoVUIvR015c2kxSm95?=
- =?utf-8?B?LzZodWpqZTZRK3grNTMxNzdSdDh6bGFkTFZKeUVQME1DRGUxNXBpU0lLYktO?=
- =?utf-8?B?SWdTeFg5SWhoeUFaQzlqQ2dNczk0YXVtcm9jN1hPQVhEUzBFbkRhNnJHOG81?=
- =?utf-8?B?cElDcDlBbkx3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7465.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UWFIQzNxWnBSdjBLNlZOMnl4WFNBR3hycUVoK2ZLTHAwRmc2V3p5dGJYOEJX?=
- =?utf-8?B?aGJNQWJQUFBXRjNvQjRhYldBNWNBL1dmNHF3RG5JdHkzSStHcVg4cXlMYXJE?=
- =?utf-8?B?c1hvUzZ0OGRTMEd1anJRY0FkdjFQbitJMTZRUmc3Q1QzejIvTFVxUnUzVUFa?=
- =?utf-8?B?MWsyV3Q1d1BPdTZsVWRZSWZzaER4Qks3WCtJdmx3TkJFYTBjcDgyU3dva0xX?=
- =?utf-8?B?bE9NdVN0K1FIZ1ljeWwzcWUwOUJvcEZBYWVyNzZ4M2FySEZMZGNXeTFLSWVv?=
- =?utf-8?B?dVZqYVR4MVRwOWd3akVFd2R4dk1sSUVTV3RqTnkvUHpnTUxkenhOTzFHMnE5?=
- =?utf-8?B?VzZVUG1SRXNlbldUdVVpdllNdFQ0M0FzdmJkWnhEUkVtN2JqYnpPZ2szR2Zw?=
- =?utf-8?B?dWcwaTBxM3NQRnU4VFhQQVVPNTZISEFvMVNoY09oQ09ibWMvWTVWTDVuSjd5?=
- =?utf-8?B?N04yL0lVd09xVUduNDZJR3dpSERocG1ERFpSaVEzTEJaczY4Q2Nub2QzWnd0?=
- =?utf-8?B?YThoWm9ZUHhQcnpwUFJzWVJnS3M4aklma1dOMGdCUndJSThBUzZiMXp4K1F0?=
- =?utf-8?B?Y1ZaWkwzREZUVFA0RE5sNFUzYjRwYXlyUGhsOXBaR0JRaG03N3pNSkZmTGta?=
- =?utf-8?B?N1VLTkNha1hwV0k0dHFRV0p3OFFBUnoyWHhpN3pHU203NFlJdTI0V1YxWGov?=
- =?utf-8?B?d1ZEdmxjbmlZSDBOT21WV3hlSnpxcW1LcHJCUTd4cExBb3RBVTQxMFlQbE0r?=
- =?utf-8?B?eks2cWUvNitzcUV0alJJYjZxN3Bwa2lUTjV1eWVVZ0NWQ3JtaTA1LzJQdmcr?=
- =?utf-8?B?dWhpVk55bjdjUHRvdFlhTWRIaHRtR3VscEhNZDh6WUd1QWNUSVJXOTZDUEJn?=
- =?utf-8?B?TUJYQlh5bUFYOGpnMGFPUWtZWGt0OXhMYklwK0FhekF1TVV4a2c5YUU5VTlN?=
- =?utf-8?B?SWNGcmdRL3o0OVdIeFhleEYxYXNXOXVkWFBuL3laSlZXbzhZQmpLTzIxN2VE?=
- =?utf-8?B?U3N1cnFGZXU4TGtZMVJFTEQ4bFdmbzB6cWNqeHgvbmhTWWJucmM2VHVuYk9T?=
- =?utf-8?B?VVVvNjNMTFU2d1VWZW50Sk5SRS9KUHJ3Q3I4REtmMi8xY3dGb1pLazduT2pu?=
- =?utf-8?B?SGVxR1U1QUZlMXZLYk1FSXNpQm1iYklUQ01aelVIb1NCeHU2Sk1Lck4rSW5E?=
- =?utf-8?B?NGJvVDNzL21oMkdNT0ZXUnR0Mno1QTA4U0JELzVNSDBkVUh4REFlRU1Yekdp?=
- =?utf-8?B?dGRKcnYvbTUzS0t0K1VHTVlCYUlWL1BDSlRSWDhQdkZFZGd5TnZ4OHNqaTlQ?=
- =?utf-8?B?MUdHQVZNKzhYdkYwYWxKQnNTdTZYNU9vVldVbjBTNFppS1Y3ejNDNjlYdTF3?=
- =?utf-8?B?SnQxclRHc1d3M0t6bmhYWThLdDRWY3A5SjZvYjdaZUh2NE9ibk1oRjFwRkNZ?=
- =?utf-8?B?bmlwbXBFWlo1TUc5QjdNNWJhZ0JROG1GZTQ3ZWh0eExkK08vZ2wzWi9COWx0?=
- =?utf-8?B?dHJIQndIbWZVdEJHK1FuYmNGTDgrUDNBK1pHSlpkOVNnbUY4TnV3dFJKaWdQ?=
- =?utf-8?B?UzFiMjVNQjJFelozK1hmdG9rZ1NGbTVOQ0dZUlgyRVdzd0Z3UWY4alBEL0RD?=
- =?utf-8?B?V0NzaG1MUHg1SndzYzNXQzE1Z0RBYWtwZTJEVlhNQTQ3NXVPZjlEMm81L2lJ?=
- =?utf-8?B?dGFzLys4OWQ3Z3k0MHNOblM4bWNHTklhRGEweTJ5VTVtQVRwTHA3YXdqZG5s?=
- =?utf-8?B?UmV6eEhaeHJtU2h2Y0M0cmEyTXN1QlZWdDY3cklzRmdBZHBJMVNFWWVyUnFP?=
- =?utf-8?B?TnQydlBpS3VMZGtGNFQvcVM4K1pqU1pvMGxzNzV4OW1BbDJNWm4xOFdzeW1R?=
- =?utf-8?B?d3lNaUk0TUVaSXJjVDlaNnNENHhoeXc2K0VTNkg5MG91RjJ0RURCNGNlbm4y?=
- =?utf-8?B?MVF6d2lBZGo5Z0MvMEZWbTRzOE9MUUpFaWlkSVcrSWdpYUNJLzVFUWtaUFNj?=
- =?utf-8?B?SUFmckhxaGh0and3Yi9KZ0tRVzlBOGExQWV3Sk1Ca2JSVGdtOHdKZFM1OEhi?=
- =?utf-8?B?RWpCNVdkaTh0cE56cmNuN0dHNi9MWXl6U0xvWjdiNENhYWFMMWdPKzFjTXRD?=
- =?utf-8?Q?WmF1vPBosB0pt25P81VCdswC5?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ccab953-a2bb-466c-32b5-08de28c7206f
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7465.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2025 06:28:04.1809
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eHihfWft5RMu9xFj6OgG/KNWHu+WEA9UJGgs77kJoHmz5AQ7w0tUzCnbeVg7arv692tUxV/whvPq3mXCOc8jIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9100
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Currently, the persistent ring buffer instance needs to be read before
+using it. This means we have to wait for boot up user space and dump
+the persistent ring buffer. However, in that case we can not start
+tracing on it from the kernel cmdline.
 
-On 11/20/2025 7:05 PM, David Hildenbrand (Red Hat) wrote:
-> On 11/20/25 07:50, Shivank Garg wrote:
->> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
->> text sections), the pages may still be dirty from recent writes and
->> cause collapse to fail with -EINVAL. This is particularly problematic
->> for freshly copied executables on filesystems, where page cache folios
->> remain dirty until background writeback completes.
->>
->> The current code in collapse_file() triggers async writeback via
->> filemap_flush() and expects khugepaged to revisit the page later.
->> However, MADV_COLLAPSE is a synchronous operation where userspace
->> expects immediate results.
->>
->> Perform synchronous writeback in madvise_collapse() before attempting
->> collapse to avoid failing on first attempt.
->>
->> Reported-by: Branden Moore <Branden.Moore@amd.com>
->> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
->> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
->> Suggested-by: David Hildenbrand <david@kernel.org>
->> Signed-off-by: Shivank Garg <shivankg@amd.com>
->> ---
->>   mm/khugepaged.c | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 97d1b2824386..066a332c76ad 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/dax.h>
->>   #include <linux/ksm.h>
->>   #include <linux/pgalloc.h>
->> +#include <linux/backing-dev.h>
->>     #include <asm/tlb.h>
->>   #include "internal.h"
->> @@ -2784,6 +2785,31 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->>       hstart = (start + ~HPAGE_PMD_MASK) & HPAGE_PMD_MASK;
->>       hend = end & HPAGE_PMD_MASK;
->>   +    /*
->> +     * For file-backed VMAs, perform synchronous writeback to ensure
->> +     * dirty folios are flushed before attempting collapse. This avoids
->> +     * failing on the first attempt when freshly-written executable text
->> +     * is still dirty in the page cache.
->> +     */
->> +    if (!vma_is_anonymous(vma) && vma->vm_file) {
->> +        struct address_space *mapping = vma->vm_file->f_mapping;
->> +
->> +        if (mapping_can_writeback(mapping)) {
->> +            pgoff_t pgoff_start = linear_page_index(vma, hstart);
->> +            pgoff_t pgoff_end = linear_page_index(vma, hend);
->> +            loff_t lstart = (loff_t)pgoff_start << PAGE_SHIFT;
->> +            loff_t lend = ((loff_t)pgoff_end << PAGE_SHIFT) - 1;
->> +
-> 
-> Hm, so we always do that, without any indication that there actually is something dirty there.
-> 
-> Internally filemap_write_and_wait_range() uses something called mapping_needs_writeback(), but it also applies to the complete file, not a range.
-> 
-> Wouldn't it be better do do that only if we detect that there is actually a dirty folio in the range?
-> 
-> That is, if we find any dirty folio in hpage_collapse_scan_file() and we are in madvise, do that dance here and retry?
-> 
+To solve this limitation, this adds an option which allows to create
+a trace instance as a backup of the persistent ring buffer at boot.
+If user specifies trace_instance=<BACKUP>=<PERSIST_RB> then the
+<BACKUP> instance is made as a copy of the <PERSIST_RB> instance.
 
-Good point! This makes sense to me.
-I'll send V3 with this approach.
+For example, the below kernel cmdline records all syscalls, scheduler
+and interrupt events on the persistent ring buffer `boot_map` but
+before starting the tracing, it makes a `backup` instance from the
+`boot_map`. Thus, the `backup` instance has the previous boot events.
 
-Thanks,
-Shivank
+'reserve_mem=12M:4M:trace trace_instance=boot_map@trace,syscalls:*,sched:*,irq:* trace_instance=backup=boot_map'
+
+As you can see, this just make a copy of entire reserved area and
+make a backup instance on it. So you can release (or shrink) the
+backup instance after use it to save the memory usage.
+
+  /sys/kernel/tracing/instances # free
+                total        used        free      shared  buff/cache   available
+  Mem:        1999284       55704     1930520       10132       13060     1914628
+  Swap:             0           0           0
+  /sys/kernel/tracing/instances # rmdir backup/
+  /sys/kernel/tracing/instances # free
+                total        used        free      shared  buff/cache   available
+  Mem:        1999284       40640     1945584       10132       13060     1929692
+  Swap:             0           0           0
+
+Note: since there is no reason to make a copy of empty buffer, this
+backup only accepts a persistent ring buffer as the original instance.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace.c |   58 +++++++++++++++++++++++++++++++++++++++++++++++---
+ kernel/trace/trace.h |    1 +
+ 2 files changed, 55 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 33fcde91924c..616d24580371 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10523,6 +10523,8 @@ static int __remove_instance(struct trace_array *tr)
+ 		reserve_mem_release_by_name(tr->range_name);
+ 		kfree(tr->range_name);
+ 	}
++	if (tr->flags & TRACE_ARRAY_FL_VMALLOC)
++		vfree((void *)tr->range_addr_start);
+ 
+ 	for (i = 0; i < tr->nr_topts; i++) {
+ 		kfree(tr->topts[i].topts);
+@@ -11328,6 +11330,41 @@ __init static void do_allocate_snapshot(const char *name)
+ static inline void do_allocate_snapshot(const char *name) { }
+ #endif
+ 
++__init static int backup_instance_area(const char *backup,
++				       unsigned long *addr, phys_addr_t *size)
++{
++	struct trace_array *backup_tr;
++	void *allocated_vaddr = NULL;
++
++	backup_tr = trace_array_get_by_name(backup, NULL);
++	if (!backup_tr) {
++		pr_warn("Tracing: Instance %s is not found.\n", backup);
++		return -ENOENT;
++	}
++	if (!(backup_tr->flags & TRACE_ARRAY_FL_BOOT)) {
++		pr_warn("Tracing: Instance %s is not boot mapped.\n", backup);
++		trace_array_put(backup_tr);
++		return -EINVAL;
++	}
++
++	*size = backup_tr->range_addr_size;
++
++	allocated_vaddr = vzalloc(*size);
++	if (!allocated_vaddr) {
++		pr_warn("Tracing: Failed to allocate memory for copying instance %s (size 0x%lx)\n",
++			backup, (unsigned long)*size);
++		trace_array_put(backup_tr);
++		return -ENOMEM;
++	}
++
++	memcpy(allocated_vaddr,
++		(void *)backup_tr->range_addr_start, (size_t)*size);
++	*addr = (unsigned long)allocated_vaddr;
++
++	trace_array_put(backup_tr);
++	return 0;
++}
++
+ __init static void enable_instances(void)
+ {
+ 	struct trace_array *tr;
+@@ -11350,11 +11387,15 @@ __init static void enable_instances(void)
+ 		char *flag_delim;
+ 		char *addr_delim;
+ 		char *rname __free(kfree) = NULL;
++		char *backup;
+ 
+ 		tok = strsep(&curr_str, ",");
+ 
+-		flag_delim = strchr(tok, '^');
+-		addr_delim = strchr(tok, '@');
++		name = strsep(&tok, "=");
++		backup = tok;
++
++		flag_delim = strchr(name, '^');
++		addr_delim = strchr(name, '@');
+ 
+ 		if (addr_delim)
+ 			*addr_delim++ = '\0';
+@@ -11362,7 +11403,10 @@ __init static void enable_instances(void)
+ 		if (flag_delim)
+ 			*flag_delim++ = '\0';
+ 
+-		name = tok;
++		if (backup) {
++			if (backup_instance_area(backup, &addr, &size) < 0)
++				continue;
++		}
+ 
+ 		if (flag_delim) {
+ 			char *flag;
+@@ -11458,7 +11502,13 @@ __init static void enable_instances(void)
+ 			tr->ref++;
+ 		}
+ 
+-		if (start) {
++		/*
++		 * Backup buffers can be freed but need vfree().
++		 */
++		if (backup)
++			tr->flags |= TRACE_ARRAY_FL_VMALLOC;
++
++		if (start || backup) {
+ 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+ 			tr->range_name = no_free_ptr(rname);
+ 		}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 58be6d741d72..9e5186c96e9c 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -453,6 +453,7 @@ enum {
+ 	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
+ 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
+ 	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
++	TRACE_ARRAY_FL_VMALLOC		= BIT(5),
+ };
+ 
+ #ifdef CONFIG_MODULES
+
