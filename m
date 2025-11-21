@@ -1,71 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7501F3446CA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 17:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BC134FF53
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 17:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763747136; cv=none; b=uIuzkJZ08Fzraeu/ve85RSv2e+U2B3rTepCYy0oN9CLns4UEXw4AmCR80ujPgPChkv0N7HWju7trdS/x5cjpaMkMVUraWC+eClnVBNJ2nrJqH6+id63JhyjW/DyJRXdX9SMEMjE0W9qeYIgl9QBr3Ra7wsBzwjcqO82DDsliZXM=
+	t=1763747141; cv=none; b=LCEe7D079UXTnAC6h4Mu/8xvL2M659MGUBch9Gq/cnub5J6slG0iPetypmZsr+Lwuozrp61tvm/uSY7onle8Ny/T0ghqJHeA0Hc7w0FxeyyYOWV9FJbDyq9tJ/OM6+y7mQ17dduGbi4+vu2qc1aHl7nxFQ+P4iV7zNXV4nJCNPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763747136; c=relaxed/simple;
-	bh=hEnSqrU6gyHDpfaTTvuhCk0gZVj3SdwGrgEDkeASOzo=;
+	s=arc-20240116; t=1763747141; c=relaxed/simple;
+	bh=pT/n7TwuIIVbjLsRSlAm3v1I6gvrDAWaKDW6YsvrdCs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=RqlgN5L+6cbXnqunOK2nAHsVOvSzL8Cw0ErQWTRktJoDRE+Z8PtnXHYEFJ3NKL2R5jm2s9o8P8NvD01PWaFAU+y41O6NErIwEbYyG/JHqtkP9WO+kVLT2gNBNdR3MNEgB1ZZ/KqPUdyxGitcZbCANTxRQ8Ig3jK1WfkqhywS43E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK/aViu2; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=WmQf1eHbjcq8Uz0XVqQz7CeWubANgSjG0e2W55Kt8Xd33NWyH8hKyiRLkS8eJJsbysn3vvrp6Co1COEaVzT2iTeVAmUDVeCohvU1Bnn054LWggNi0nBDPtHliFYeqPWXPrMb/QiiZ1Jbe4jvt5Mp00TYf/HD0NV8ACPxoahlYRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X4tgWjmt; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK/aViu2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4tgWjmt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763747133;
+	s=mimecast20190719; t=1763747138;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a8U8k61ooI8uwApq9Nne2HkmVcuivM1F21YTKzt65jc=;
-	b=dK/aViu27ZAn+LwOsF1gRUkohvUL8J1xi2b0oEQoYE5W9UrCgt7ttLHqoQW+aP4uEkuhkM
-	WF8MUp5xunWzUdOkLNtWu/QfrAa4T0OgDI+9WUPO5mTV9b7PBB7MsU/B3KZslgzGOR0aaN
-	4gEkyHF1J+8+M/RVH+mIUc4Yk55DwVA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=YpyZDwI31rENzFfB5C1Wg2Rz+FfMtSQE+luFnR7RLDs=;
+	b=X4tgWjmtERQYZMPMB1ubIXuf0Nh/Fa8Dxpvyh0hkY23ExSGmL+68R4HbFjBHd0q7sYkwu7
+	ZMZ57ECpfgqLzWkG1A1YyuwsLFQyElChXFCBhq+B7YZaoeLWk4qQ6l1uRtUoi8O2QrMAaf
+	rqx+b7BCdTyJcl/phr7SJczFWFP0++4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-442-MeFG-FzQOUK5fL2QW6YiMw-1; Fri, 21 Nov 2025 12:45:30 -0500
-X-MC-Unique: MeFG-FzQOUK5fL2QW6YiMw-1
-X-Mimecast-MFC-AGG-ID: MeFG-FzQOUK5fL2QW6YiMw_1763747129
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-477a0ddd1d4so28206335e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 09:45:29 -0800 (PST)
+ us-mta-44-dbvBzNqAPBWrHAMEMP5v4g-1; Fri, 21 Nov 2025 12:45:35 -0500
+X-MC-Unique: dbvBzNqAPBWrHAMEMP5v4g-1
+X-Mimecast-MFC-AGG-ID: dbvBzNqAPBWrHAMEMP5v4g_1763747134
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-42b2b9c7ab6so1102117f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 09:45:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763747129; x=1764351929;
+        d=1e100.net; s=20230601; t=1763747134; x=1764351934;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=a8U8k61ooI8uwApq9Nne2HkmVcuivM1F21YTKzt65jc=;
-        b=B3uVZYvgIXR5ti0HH4Wu1ncDDx+J8DLKdKIAtcBviS2Gl2WTifrGomBynmvsrGvLTK
-         iQXoWen5dwYIq1h/yHHB8NCYiF3hiDdbZ+YcR4jg3FmCXDKk/1l+JXnpkGF3ZbL7g88F
-         NiMnjGQK5bN9ux5cR3QJYcwywnj97wC5Ww9t+4afZGxH3CgRKSsrBs7CQUpCdQWyCgfD
-         19CTYbn7Km6rmhGz+O7RJq1NICtvTj75TUUQZ37aiPJTMp2SNql/6daPd0rfZQ5Ve3lr
-         bI1to+Kt1eo1PpaF4nfN5sa4K150H2m/VWICuXPjTQwZaCM2XicjB+eE2Waue/EBly0T
-         JobA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9DUxHTS3Jsk/ElfSd/HbMKNhP7YJ2PzP/4e9IMwobsVk6ZqtUsms30CHfQxORaoRuJp3qcZhrYmMn+U6ABUPRwLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNgB4Ruis9zYRaTk37ouOfI3o3vgCn+kwFpYTifm5qMohW04RN
-	NnmQdo+DUA4Y3zEyWqKmPuXcjLojnGKqnWeKizCpyYeOqS9dc+PPtm62gwJxf/xOjOYcouduOGx
-	63UGp6jWx8lBeyQtQM3+zj5saLO1I4E0BsoxmTwsfFLzq245brYZI4U53Q9J9FMENIBH3dxfSQQ
+        bh=YpyZDwI31rENzFfB5C1Wg2Rz+FfMtSQE+luFnR7RLDs=;
+        b=UNiPm3XSNVnOVn++oOvLiaW52Wo2hAwt6OLNYOAipbSx5EPenvk4DmmLPwdvbsoEVL
+         pTW859uXAfxWwHQGlUcqI3zsj0dDQ18fbO531UdH/vhJ62ikF+H3Hyb2b394USomAsN/
+         di8n/c4+hKlMIZVMn3m7LI5HELHKqWjLFV+lr1raf1if+2g7xg1qju8wmNRebaKuPnY4
+         HpQPAwYOYwqv/dwY8FtM66xE+GEYaRJxB2ejq3sAreuntN7Rw7lvuXU0g4655iWPH1E7
+         fd41gk//D8cmlmzGduvK/f4IqvgJjzYBKXQQsW4oxDqnvwmx4lgninP9+S4OyuyV3LXz
+         DJ/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUo3gikuQbjMKO4Gko7/SAD53WM7TGEw9U+tckQiLryGUvyJPGJ75yylffqsUGmJPJ1fliQKsTkBg+MTAnqEpSuruM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4A65IhD2JiUr4EiigViBO7tKOBzEPURjEs8zXG0P1nzA3hBY9
+	Lbk1mY5GDs6k/27qzmwRdCIwFIHosKkNpElsPN5Ys5l3LbueaKXleUdmH5ofZuQufxg7powrTOj
+	GjvVVCrU8jffLZG844XuWANTdwCQZwQay6jm4rS1opxBVkWFEUYdpxkm2oThJGXxnKMbLTCjk0Q
 	==
-X-Gm-Gg: ASbGncsbp37D9masBDZ8RbJNYUMXfBAj7f74dJdqqJj/VZ029isII1dYKn1sKFHNlnx
-	p7ij+3n2k406JAmiB+3uMHc50hnqm+Ws8l+VsMEqUQBYa1IXaWTeacADqICWxl4fKmvN+NH/6L5
-	krW66gclnj2/T2JMb9BFXdFe4DuzzsUcfD3JhDQlsZrgGcKuMtngtUH7FFotmK39qoiHEacm/7d
-	FhnNMWJ4ctmMvK4Aj65Q/u7huuDGhJxk9P67QBN2Wq/5yl1At64S4/mhGBoqRFNoN55b9lIsrHU
-	7y+G+ytYz3MfwJEUGvVYoJZOZfy+Pg8qyv7McNqQnda5KfCpSq48RKVwlDXUU+/4Kzj80QvtxWa
-	DiV1ftBF5vdmkm1KgrYk8lAUe
-X-Received: by 2002:a05:600c:1f85:b0:477:7b30:a6fe with SMTP id 5b1f17b1804b1-477c1116013mr27453385e9.18.1763747128618;
-        Fri, 21 Nov 2025 09:45:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF+H0undz5MZzoSg1LxF9NOXlTyyk9c7w50TvXj8Zav3XyrYG5bpmJO1uYPj5tlwMHTJM4AzA==
-X-Received: by 2002:a05:600c:1f85:b0:477:7b30:a6fe with SMTP id 5b1f17b1804b1-477c1116013mr27453165e9.18.1763747128228;
-        Fri, 21 Nov 2025 09:45:28 -0800 (PST)
+X-Gm-Gg: ASbGncsWYKQomjQ6dMqGfA6GDGaM1NbQkvZ5QXEIdS+pFuztRFfrtyhiYgopWWkEsxH
+	ULURNLngleyxgnU+VC/T/lomNbBPFL0nz5y2soSL5/aerflgCnU6mkdEpzUEzDkLLXcKTFmSOgG
+	CCX/pwMKRCbBfrNkvW9wGMBAs1vVPfOtxJuE4ODzKHB3d/eTM+ORyULHQwgRSE9ffwyH61+44G0
+	sHRVPQOl/Rz9EDO7L8NGyfU9e1/opB7Z2w1tkMkMnVUn/78NjV5sQyggCg4iXSA/Q97H+dMgbvK
+	WexNuYfbpP6ldlGQEcu1giATvnYPrTdqjXyajeeB2Mw0HM8tkws5lAnbf3nBUbgQ0amuwkeru2j
+	Yq3QCOpiLptA845j9vKOTlC2O
+X-Received: by 2002:a05:6000:240b:b0:429:c4bb:fbc4 with SMTP id ffacd0b85a97d-42cc1cc293dmr3253803f8f.25.1763747133662;
+        Fri, 21 Nov 2025 09:45:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHIpzBXzy0HPFysMAQjEIJp3Hx8LAxcp7Ta/3C1XrC0QGlsWwYqzq+LzSYTGLDxPDmbXken+A==
+X-Received: by 2002:a05:6000:240b:b0:429:c4bb:fbc4 with SMTP id ffacd0b85a97d-42cc1cc293dmr3253778f8f.25.1763747133191;
+        Fri, 21 Nov 2025 09:45:33 -0800 (PST)
 Received: from costa-tp.bos2.lab ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7ec454csm11529567f8f.0.2025.11.21.09.45.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7ec454csm11529567f8f.0.2025.11.21.09.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 09:45:27 -0800 (PST)
+        Fri, 21 Nov 2025 09:45:32 -0800 (PST)
 From: Costa Shulyupin <costa.shul@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
@@ -75,9 +75,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Ivan Pravdin <ipravdin.official@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/8] tools/rtla: Add common_parse_options()
-Date: Fri, 21 Nov 2025 19:44:57 +0200
-Message-ID: <20251121174504.519230-2-costa.shul@redhat.com>
+Subject: [PATCH v1 2/8] tools/rtla: Consolidate -c/--cpus option parsing
+Date: Fri, 21 Nov 2025 19:44:58 +0200
+Message-ID: <20251121174504.519230-3-costa.shul@redhat.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251121174504.519230-1-costa.shul@redhat.com>
 References: <20251121174504.519230-1-costa.shul@redhat.com>
@@ -88,150 +88,186 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oN1AceXJ8pogo3OkHigBaVIVChDLUM_HOTfeDuqeYYA_1763747129
+X-Mimecast-MFC-PROC-ID: Z0O7oPecuT-qZsNEoCfOMPs0cLY_Qcj9TuT71Sb_0wI_1763747134
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Each rtla tool duplicates parsing of many common options. This creates
-maintenance overhead and risks inconsistencies when updating these
-options.
+Each rtla tool duplicates parsing of -c/--cpus.
 
-Add common_parse_options() to centralize parsing of options used across
-all tools.
-
-Common options to be migrated in future patches.
+Migrate the option parsing from individual tools to the
+common_parse_options().
 
 Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- tools/tracing/rtla/src/common.c        | 34 ++++++++++++++++++++++++++
- tools/tracing/rtla/src/common.h        |  1 +
- tools/tracing/rtla/src/osnoise_hist.c  |  3 +++
- tools/tracing/rtla/src/osnoise_top.c   |  3 +++
- tools/tracing/rtla/src/timerlat_hist.c |  3 +++
- tools/tracing/rtla/src/timerlat_top.c  |  3 +++
- 6 files changed, 47 insertions(+)
+ tools/tracing/rtla/src/common.c        | 8 +++++++-
+ tools/tracing/rtla/src/osnoise_hist.c  | 9 +--------
+ tools/tracing/rtla/src/osnoise_top.c   | 9 +--------
+ tools/tracing/rtla/src/timerlat_hist.c | 9 +--------
+ tools/tracing/rtla/src/timerlat_top.c  | 9 +--------
+ 5 files changed, 11 insertions(+), 33 deletions(-)
 
 diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index b197037fc58b..5eaf6d9e11bf 100644
+index 5eaf6d9e11bf..e12192fcb3ab 100644
 --- a/tools/tracing/rtla/src/common.c
 +++ b/tools/tracing/rtla/src/common.c
-@@ -5,6 +5,7 @@
- #include <signal.h>
- #include <stdlib.h>
- #include <unistd.h>
-+#include <getopt.h>
- #include "common.h"
+@@ -56,13 +56,19 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
+ 	int c;
  
- struct trace_instance *trace_inst;
-@@ -37,6 +38,39 @@ static void set_signals(struct common_params *params)
- 	}
- }
+ 	static struct option long_options[] = {
++		{"cpus",                required_argument,      0, 'c'},
+ 		{0, 0, 0, 0}
+ 	};
  
-+/*
-+ * common_parse_options - parse common command line options
-+ *
-+ * @argc: argument count
-+ * @argv: argument vector
-+ * @common: common parameters structure
-+ *
-+ * Parse command line options that are common to all rtla tools.
-+ *
-+ * Returns: non zero if a common option was parsed, or 0
-+ * if the option should be handled by tool-specific parsing.
-+ */
-+int common_parse_options(int argc, char **argv, struct common_params *common)
-+{
-+	int saved_state = optind;
-+	int c;
-+
-+	static struct option long_options[] = {
-+		{0, 0, 0, 0}
-+	};
-+
-+	opterr = 0;
-+	c = getopt_long(argc, argv, "", long_options, NULL);
-+
-+	switch (c) {
-+	default:
-+		optind = saved_state;
-+		return 0;
-+	}
-+
-+	return c;
-+}
-+
- /*
-  * common_apply_config - apply common configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 9ec2b7632c37..1066d777a823 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -153,6 +153,7 @@ struct osnoise_tool *osnoise_init_tool(char *tool_name);
- struct osnoise_tool *osnoise_init_trace_tool(const char *tracer);
- bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
+ 	opterr = 0;
+-	c = getopt_long(argc, argv, "", long_options, NULL);
++	c = getopt_long(argc, argv, "c:", long_options, NULL);
  
-+int common_parse_options(int argc, char **argv, struct common_params *common);
- int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
- int top_main_loop(struct osnoise_tool *tool);
- int hist_main_loop(struct osnoise_tool *tool);
+ 	switch (c) {
++	case 'c':
++		if (parse_cpu_set(optarg, &common->monitored_cpus))
++			fatal("Invalid -c cpu list");
++		common->cpus = optarg;
++		break;
+ 	default:
+ 		optind = saved_state;
+ 		return 0;
 diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index ff8c231e47c4..35f4a068af95 100644
+index 35f4a068af95..9e721362989a 100644
 --- a/tools/tracing/rtla/src/osnoise_hist.c
 +++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -518,6 +518,9 @@ static struct common_params
- 			{0, 0, 0, 0}
- 		};
+@@ -491,7 +491,6 @@ static struct common_params
+ 			{"auto",		required_argument,	0, 'a'},
+ 			{"bucket-size",		required_argument,	0, 'b'},
+ 			{"entries",		required_argument,	0, 'E'},
+-			{"cpus",		required_argument,	0, 'c'},
+ 			{"cgroup",		optional_argument,	0, 'C'},
+ 			{"debug",		no_argument,		0, 'D'},
+ 			{"duration",		required_argument,	0, 'd'},
+@@ -521,7 +520,7 @@ static struct common_params
+ 		if (common_parse_options(argc, argv, &params->common))
+ 			continue;
  
-+		if (common_parse_options(argc, argv, &params->common))
-+			continue;
-+
- 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
+-		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
++		c = getopt_long(argc, argv, "a:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
  				 long_options, NULL);
  
+ 		/* detect the end of the options. */
+@@ -547,12 +546,6 @@ static struct common_params
+ 			    params->common.hist.bucket_size >= 1000000)
+ 				fatal("Bucket size needs to be > 0 and <= 1000000");
+ 			break;
+-		case 'c':
+-			retval = parse_cpu_set(optarg, &params->common.monitored_cpus);
+-			if (retval)
+-				fatal("Invalid -c cpu list");
+-			params->common.cpus = optarg;
+-			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+ 			params->common.cgroup_name = parse_optional_arg(argc, argv);
 diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 04c699bdd736..550731c7addd 100644
+index 550731c7addd..73736cefd992 100644
 --- a/tools/tracing/rtla/src/osnoise_top.c
 +++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -370,6 +370,9 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 			{0, 0, 0, 0}
- 		};
+@@ -346,7 +346,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 	while (1) {
+ 		static struct option long_options[] = {
+ 			{"auto",		required_argument,	0, 'a'},
+-			{"cpus",		required_argument,	0, 'c'},
+ 			{"cgroup",		optional_argument,	0, 'C'},
+ 			{"debug",		no_argument,		0, 'D'},
+ 			{"duration",		required_argument,	0, 'd'},
+@@ -373,7 +372,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 		if (common_parse_options(argc, argv, &params->common))
+ 			continue;
  
-+		if (common_parse_options(argc, argv, &params->common))
-+			continue;
-+
- 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
+-		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
++		c = getopt_long(argc, argv, "a:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
  				 long_options, NULL);
  
+ 		/* Detect the end of the options. */
+@@ -392,12 +391,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 			if (!trace_output)
+ 				trace_output = "osnoise_trace.txt";
+ 
+-			break;
+-		case 'c':
+-			retval = parse_cpu_set(optarg, &params->common.monitored_cpus);
+-			if (retval)
+-				fatal("Invalid -c cpu list");
+-			params->common.cpus = optarg;
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
 diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 1fb471a787b7..ffcfcabb9964 100644
+index ffcfcabb9964..4ae77145adea 100644
 --- a/tools/tracing/rtla/src/timerlat_hist.c
 +++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -834,6 +834,9 @@ static struct common_params
- 			{0, 0, 0, 0}
- 		};
+@@ -796,7 +796,6 @@ static struct common_params
+ 	while (1) {
+ 		static struct option long_options[] = {
+ 			{"auto",		required_argument,	0, 'a'},
+-			{"cpus",		required_argument,	0, 'c'},
+ 			{"cgroup",		optional_argument,	0, 'C'},
+ 			{"bucket-size",		required_argument,	0, 'b'},
+ 			{"debug",		no_argument,		0, 'D'},
+@@ -837,7 +836,7 @@ static struct common_params
+ 		if (common_parse_options(argc, argv, &params->common))
+ 			continue;
  
-+		if (common_parse_options(argc, argv, &params->common))
-+			continue;
-+
- 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
+-		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
++		c = getopt_long(argc, argv, "a:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
  				 long_options, NULL);
  
+ 		/* detect the end of the options. */
+@@ -859,12 +858,6 @@ static struct common_params
+ 			if (!trace_output)
+ 				trace_output = "timerlat_trace.txt";
+ 
+-			break;
+-		case 'c':
+-			retval = parse_cpu_set(optarg, &params->common.monitored_cpus);
+-			if (retval)
+-				fatal("Invalid -c cpu list");
+-			params->common.cpus = optarg;
+ 			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
 diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 29c2c1f717ed..d18d48671ccd 100644
+index d18d48671ccd..9774c26b27ff 100644
 --- a/tools/tracing/rtla/src/timerlat_top.c
 +++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -598,6 +598,9 @@ static struct common_params
- 			{0, 0, 0, 0}
- 		};
+@@ -566,7 +566,6 @@ static struct common_params
+ 	while (1) {
+ 		static struct option long_options[] = {
+ 			{"auto",		required_argument,	0, 'a'},
+-			{"cpus",		required_argument,	0, 'c'},
+ 			{"cgroup",		optional_argument,	0, 'C'},
+ 			{"debug",		no_argument,		0, 'D'},
+ 			{"duration",		required_argument,	0, 'd'},
+@@ -601,7 +600,7 @@ static struct common_params
+ 		if (common_parse_options(argc, argv, &params->common))
+ 			continue;
  
-+		if (common_parse_options(argc, argv, &params->common))
-+			continue;
-+
- 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
+-		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
++		c = getopt_long(argc, argv, "a:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
  				 long_options, NULL);
  
+ 		/* detect the end of the options. */
+@@ -638,12 +637,6 @@ static struct common_params
+ 			/* set aa_only to avoid parsing the trace */
+ 			params->common.aa_only = 1;
+ 			break;
+-		case 'c':
+-			retval = parse_cpu_set(optarg, &params->common.monitored_cpus);
+-			if (retval)
+-				fatal("Invalid -c cpu list");
+-			params->common.cpus = optarg;
+-			break;
+ 		case 'C':
+ 			params->common.cgroup = 1;
+ 			params->common.cgroup_name = optarg;
 -- 
 2.51.1
 
