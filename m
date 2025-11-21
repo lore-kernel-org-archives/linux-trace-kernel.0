@@ -1,241 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6831B4244
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 12:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85FD33C503
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 13:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763729307; cv=none; b=FNTMtrcUaRjLg/zuaU4HFBiLqsJ33fG5gsCp6109qP3KHR1hTANQhOsD5OikJw50/5hNtnehcfR2lH/K4oKVnSDZk7EgzFc0PNMPSLTevMxY2QebrCCEL3jSj2qqsHW6Gjp0dbsZ0z4OhQg9sMtOPiu2GAg1oDWlbhx58EPMnBE=
+	t=1763733179; cv=none; b=dtNe9K1q2UpREKi77hfFWKrR89fHaI6jDkz93OvSbTaVRLv1iH0OIEJFvB97gBkiZqQt/WpAMsEQzyrgH/g/kI0x8xndQiMDh8OU98mYO6Pl+3VpLvcQqAOR0FvxKkAHhhALSWRXZlJKjVb2tbMrOuZykMe2P+ME6+BhiN2atc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763729307; c=relaxed/simple;
-	bh=SYg1U0gepKD/STllSUUgkatp2leye81DnWI/E1ZqVMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qxGataJl7lOLaMXci7dJubCc12sYyd/FaFxmBxo83ccMdk2n4jVQVYZxR1K/PlnLlSaXSnU5NlH2NhqfQbYTul4D6B4ZnQBSKqslBtgGLjf1XLxpAe9dAgCs6MxBYgqXBXTpp3LEHn1LeQho0zLhRuaYRzW4zgaI+5EcYSpEr8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UHce58ob; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763733179; c=relaxed/simple;
+	bh=7GEwhLRQ1W3Q/9N49gCA8cSzhLGa0qH1tLD6r0XU+zg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FcTaImbRehcb+Ld4CkiL0PGoAvifvHARzgJ8VOpYtyqo0Fc+qJwtH+5HKBo3DSuoXxx8ApxDUx51tj34t31C45rPrQK1mUq9Op4RlZB3vNGTlwVHkhS+FGjsQ0gFBnpkWLd0VeDpdbGwUvA6K+eY6eZfeQl4gQHMkGWQ5ynjGak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWFxWUUC; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UHce58ob"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763729304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xRNLKj8WCx5oLpHzPm//DdF0TFlhD2LTKRIZBTl0/ww=;
-	b=UHce58obzPBTXMH6+V0V8yhOy0N5LUiSoLJ6LCrITxIbW5FaplNpMVVJLDNIwV+QMsA5TM
-	F85Uwqm0VxHlrLfTfHH+YifxkEKqR/yfKRjXDWXxkPP9S1KQtuADVntkRtOTPTeD3KhNEq
-	eborS4MzOFbZm43MqRjiBBGKeogP+5g=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-2fhD_1fsOXa2uS0tYXjxbA-1; Fri,
- 21 Nov 2025 07:48:20 -0500
-X-MC-Unique: 2fhD_1fsOXa2uS0tYXjxbA-1
-X-Mimecast-MFC-AGG-ID: 2fhD_1fsOXa2uS0tYXjxbA_1763729299
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7583A1954B17;
-	Fri, 21 Nov 2025 12:48:19 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.33.0])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50D6F30044DB;
-	Fri, 21 Nov 2025 12:48:15 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	John Kacur <jkacur@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [GIT PULL v2] RTLA updates for v6.19
-Date: Fri, 21 Nov 2025 13:46:46 +0100
-Message-ID: <20251121124646.199804-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWFxWUUC"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42b3377aaf2so1182883f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 05:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763733176; x=1764337976; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dHb504fa+R3MQSYXb7rM8ukJxMXoBFNQYhj0anYj8Ok=;
+        b=RWFxWUUC6GakTEceebcC8u9ik2zHZKjuo+f5jDtu0P1MW7tjDrQTDizZiK8ijXmgnH
+         F6IPdRPeUnUXa3C4SigmmGGVPTR2amgzrf3MPyDxI8jHDZJqRLIUzUmGZDaPFIHq11af
+         Jb80mO96eYo5UX5oAXebtWMxZ0KEckf2hcXkIKYnYRuzyDKZu6bAuCTjGjGA268cEMb+
+         E7eAvT9WaASsVwTrfRMzs5doPSWczyfBKACJxAlJAva1nIttFqN/AI/87b8UTpZo4vJC
+         h6TgP9Usl1wJL6P29q+Wsk8CmotM8SDRj8TlRH8Vys9CzpolZxasa+eUbp0ikAys8RDz
+         s0Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763733176; x=1764337976;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dHb504fa+R3MQSYXb7rM8ukJxMXoBFNQYhj0anYj8Ok=;
+        b=JYkGhOrSeLamSrK/F7CWIPTTeA4zVOND8cpheo+NNXdvD/gqwSbY+Dz/belZDpNE3A
+         dH+fko5JpjOui3dsZs2BsdfMidlWqoW9Q4h9rYBHv6hAO1s+R/cTr4SlDQPfAqjbfTFK
+         LyYaTfqR7xkB6cY3LYwenHbFw/YlE0m3fKIyXEd6ydNzfHX1zDhj9OmTvXx6zpodx/Ig
+         FhQHpYmhIl0K5EqoNH7v5rMr5yGn/6rVqMFND2mA9mZ8VVfPhR+5Luzcr0hyg959oeal
+         oqxbjVFVyd/2rSCw+EcivUuiHvXTcIHt6cE1FT9xW5+pH5UBJOB3C6gHAncKTMd8kIDI
+         +ihQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnR6BrYlZadOiswFCFhLFf4trLsTzs78hdPN8H/97uo6EovglYzrVJTKMZedwDTzvjnQ58JfLFGI61hxuEMXSuDgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUlh3LETZ1qhU3QLUBq2NIJCZMjbxJTzsfjTm/qmhTsowc8KwP
+	vkma1IqAqulVejmNV/qCE5CxQAOdovcNxDUKF7Su5f15IwM0FthF96kX
+X-Gm-Gg: ASbGncsMld+lbcRrPV53yol7p2szwpSlxMAa0/SZhjFcWQccl5ZrPLwtZ4cvyMyvQEG
+	A0vdsyz9ZILrWKmNnXG+TQYMJ/f1XTSCpGKc1Q0PHuB33A2hehvcrxGqE0onWvtzJRMUClM7KH6
+	JlLkXZsrYTml1MO/cFk5Qpzw03quvuyaNhtNkEEPFiy1By76R5aks5UMKUGqRok7aXGp53v6sw+
+	JMgP8EqQX834wsvt1ucYni/v4+Bx6k5iudM25e8Xf5KBF4Gjn/L0Eh01Je8CgCzeOo069F2Zjqq
+	aae3h8R2OUiPO2VdPWjtdF2Q/Lgiiq2mKmUw1XmIwaY/LM17cfwgD+xW8JvutBlkGxTb19G9dEQ
+	6rLFudQyuPSvylycfTx1ZBmnyRwtJ/8w07K8/Aa4czyC/VxFE7g0LbU5+N2TE
+X-Google-Smtp-Source: AGHT+IFQ2PJAV2V/f/yufGQdBh2mTA4a80qGAW4aT6F0XegW/TNsy0SedHzzQNPnq9UvVkxWMsAwzg==
+X-Received: by 2002:a05:6000:4202:b0:42b:2a41:f1a with SMTP id ffacd0b85a97d-42cc1cc2a7amr2525379f8f.26.1763733175918;
+        Fri, 21 Nov 2025 05:52:55 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f34fe8sm11228058f8f.15.2025.11.21.05.52.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 05:52:55 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 21 Nov 2025 14:52:53 +0100
+To: bot+bpf-ci@kernel.org
+Cc: rostedt@kernel.org, revest@google.com, mark.rutland@arm.com,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, menglong8.dong@gmail.com,
+	song@kernel.org, martin.lau@kernel.org, eddyz87@gmail.com,
+	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCHv3 bpf-next 4/8] ftrace: Add update_ftrace_direct_del
+ function
+Message-ID: <aSButfibgD140NXI@krava>
+References: <20251120212402.466524-5-jolsa@kernel.org>
+ <35e436ca1a638c9e30456c2a3645c23a20b2483160e3bb34b7c73fe42776f4df@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35e436ca1a638c9e30456c2a3645c23a20b2483160e3bb34b7c73fe42776f4df@mail.kernel.org>
 
-Hi Steven,
+On Thu, Nov 20, 2025 at 10:23:46PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index 9cf4cd56d..c571deeff 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -551,6 +551,7 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
+> >  int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
+> >
+> >  int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash);
+> > +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash);
+> >
+> >  void ftrace_stub_direct_tramp(void);
+> >
+> > @@ -583,6 +584,11 @@ static inline int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace
+> >  	return -ENODEV;
+> >  }
+> >
+> > +static inline int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +
+> 
+> [ ... ]
+> 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 850ff55ff..cc730a8fd 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> 
+> [ ... ]
+> 
+> > +/**
+> > + * hash_sub - substracts @b from @a and returns the result
+> > + * @a: struct ftrace_hash object
+> > + * @b: struct ftrace_hash object
+> > + *
+> > + * Returns struct ftrace_hash object on success, NULL on error.
+> > + */
+> > +static struct ftrace_hash *hash_sub(struct ftrace_hash *a, struct ftrace_hash *b)
+> > +{
+> > +	struct ftrace_func_entry *entry, *del;
+> > +	struct ftrace_hash *sub;
+> > +	int size, i;
+> > +
+> > +	sub = alloc_and_copy_ftrace_hash(a->size_bits, a);
+>                                            ^^^^^^^^^^^^
+> 
+> Can hash_sub() handle a NULL hash pointer in parameter a?  I notice the
+> parallel function hash_add() safely handles NULL via hash_count() and
+> alloc_and_copy_ftrace_hash() which checks ftrace_hash_empty().
+> 
+> However, hash_sub() directly dereferences a->size_bits before passing a
+> to alloc_and_copy_ftrace_hash().  This will crash if a is NULL.
+> 
+> This matters because update_ftrace_direct_del() calls hash_sub() with
+> old_filter_hash which can be NULL:
+> 
+>     old_filter_hash = ops->func_hash ? ops->func_hash->filter_hash : NULL;
+>     ...
+>     new_filter_hash = hash_sub(old_filter_hash, hash);
+> 
+> The existing update_ftrace_direct_add() has the same defensive check and
+> passes the potentially-NULL old_filter_hash to hash_add(), which handles
+> it correctly.
 
-Please use this amended tag for the merge window in place of the old one. The
-diff between rtla-v6.19-v2 and rtla-v6.19 is empty, it is just the tweak of the
-commit messages and a note about a merge conflict.
+so we never call update_ftrace_direct_del without having
+update_ftrace_direct_add called, which ensures the existence of filter_hash,
+but it's probably good idea to do explicit check for future
 
-Thanks,
-Tomas
+thanks,
+jirka
 
-The following changes since commit 0d5077c73aceb51ef10d096160dd62a11db2f3e4:
 
-  MAINTAINERS: Add Tomas Glozar as a maintainer to RTLA tool (2025-11-14 12:24:41 -0500)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/ tags/rtla-v6.19-v2
-
-for you to fetch changes up to 3138df6f0cd04a75f8efa5b5270ba56d00a84ae6:
-
-  rtla/timerlat: Exit top main loop on any non-zero wait_retval (2025-11-21 10:30:27 +0100)
-
-----------------------------------------------------------------
-RTLA patches for v6.19
-
-Fixes and minor cleanups for RTLA, targetting v6.19 via
-linux-trace tools/for-next:
-
-- Add for_each_monitored_cpu() helper
-
-  In multiple places, RTLA tools iterate over the list of CPUs running
-  tracer threads.
-
-  Use single helper instead of repeating the for/if combination.
-
-- Remove unused variable option_index in argument parsing
-
-  RTLA tools use getopt_long() for argument parsing. For its last
-  argument, an unused variable "option_index" is passed.
-
-  Remove the variable and pass NULL to getopt_long() to shorten
-  the naturally long parsing functions, and make them more readable.
-
-- Fix unassigned nr_cpus after code consolidation
-
-  In recent code consolidation, timerlat tool cleanup, previously
-  implemented separately for each tool, was moved to a common function
-  timerlat_free().
-
-  The cleanup relies on nr_cpus being set. This was not done in the new
-  function, leaving the variable uninitialized.
-
-  Initialize the variable properly, and remove silencing of compiler
-  warning for uninitialized variables.
-
-- Stop tracing on user latency in BPF mode
-
-  Despite the name, rtla-timerlat's -T/--thread option sets timerlat's
-  stop_tracing_total_us option, which also stops tracing on
-  return-from-user latency, not only on thread latency.
-
-  Implement the same behavior also in BPF sample collection stop tracing
-  handler to avoid a discrepancy and restore correspondence of behavior
-  with the equivalent option of cyclictest.
-
-- Fix threshold actions always triggering
-
-  A bug in threshold action logic caused the action to execute even
-  if tracing did not stop because of threshold.
-
-  Fix the logic to stop correctly.
-
-- Fix few minor issues in tests
-
-  Extend tests that were shown to need it to 5s, fix osnoise test
-  calling timerlat by mistake, and use new, more reliable output
-  checking in timerlat's "top stop at failed action" test.
-
-- Do not print usage on argument parsing error
-
-  RTLA prints the entire usage message on encountering errors in
-  argument parsing, like a malformed CPU list.
-
-  The usage message has gotten too long. Instead of printing it,
-  use newly added fatal() helper function to simply exit with
-  the error message, excluding the usage.
-
-- Fix unintuitive -C/--cgroup interface
-
-  "-C cgroup" and "--cgroup cgroup" are invalid syntax, despite that
-  being a common way to specify an option with argument. Moreover,
-  using them fails silently and no cgroup is set.
-
-  Create new helper function to unify the handling of all such options
-  and allow all of:
-
-  -Xsomething
-  -X=something
-  -X something
-
-  as well as the equivalent for the long option.
-
-- Fix -a overriding -t argument filename
-
-  Fix a bug where -a following -t custom_file.txt overrides the custom
-  filename with the default timerlat_trace.txt.
-
-- Stop tracing correctly on multiple events at once
-
-  In some race scenarios, RTLA BPF sample collection might send multiple
-  stop tracing events via the BPF ringbuffer at once.
-
-  Compare the number of events for != 0 instead of == 1 to cover for
-  this scenario and stop tracing properly.
-
-The tag was tested on both a non-RT-tuned and an RT-tuned machine, and
-no issues were found besides known cases of the flakiness of tests for
-stack dump and auto-analysis, which rely on correct order of events.
-
-The patchset mostly consists of fixes originally targetting one of
-the v6.18-rcs rather than linux-next and the v6.19 merge window; one
-of them is even Cc: stable. The delay was caused by maintainership
-handover of RTLA.
-
-CONFLICTS: The patch "rtla: Fix -C/--cgroup interface" has a minor
-rename and context conflict with patches 96b546c241b1
-("Documentation/rtla: rename common_xxx.rst files to common_xxx.txt")
-and 198fcc7cb832 ("Documentation/rtla: Mention default priority"),
-which were picked earlier by Jonathan Corbet's linux-docs tree.
-
-v2:
-- Fix Fixes: tags containing 11 characters instead of 12 for commit
-"rtla/tests: Fix osnoise test calling timerlat" and commit
-"rtla/tests: Extend action tests to 5s".
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-
-----------------------------------------------------------------
-Costa Shulyupin (8):
-      tools/rtla: Add for_each_monitored_cpu() helper
-      tools/rtla: Remove unused optional option_index
-      tools/rtla: Fix unassigned nr_cpus
-      tools/rtla: Add fatal() and replace error handling pattern
-      tools/rtla: Replace timerlat_top_usage("...") with fatal("...")
-      tools/rtla: Replace timerlat_hist_usage("...") with fatal("...")
-      tools/rtla: Replace osnoise_top_usage("...") with fatal("...")
-      tools/rtla: Replace osnoise_hist_usage("...") with fatal("...")
-
-Crystal Wood (2):
-      rtla/tests: Don't rely on matching ^1ALL
-      rtla/timerlat: Exit top main loop on any non-zero wait_retval
-
-Ivan Pravdin (2):
-      rtla: Fix -C/--cgroup interface
-      rtla: Fix -a overriding -t argument
-
-Tomas Glozar (4):
-      rtla/timerlat_bpf: Stop tracing on user latency
-      tools/rtla: Fix --on-threshold always triggering
-      rtla/tests: Extend action tests to 5s
-      rtla/tests: Fix osnoise test calling timerlat
-
- Documentation/tools/rtla/common_options.rst |   2 +-
- tools/tracing/rtla/Makefile.rtla            |   2 +-
- tools/tracing/rtla/src/common.c             |  24 +++--
- tools/tracing/rtla/src/common.h             |   4 +
- tools/tracing/rtla/src/osnoise_hist.c       | 136 +++++++++----------------
- tools/tracing/rtla/src/osnoise_top.c        | 106 +++++++-------------
- tools/tracing/rtla/src/timerlat.bpf.c       |   3 +
- tools/tracing/rtla/src/timerlat.c           |  12 +--
- tools/tracing/rtla/src/timerlat_hist.c      | 148 +++++++++-------------------
- tools/tracing/rtla/src/timerlat_top.c       | 116 ++++++++--------------
- tools/tracing/rtla/src/timerlat_u.c         |  12 +--
- tools/tracing/rtla/src/utils.c              |  41 ++++++++
- tools/tracing/rtla/src/utils.h              |   2 +
- tools/tracing/rtla/tests/osnoise.t          |   6 +-
- tools/tracing/rtla/tests/timerlat.t         |   6 +-
- 15 files changed, 247 insertions(+), 373 deletions(-)
+> 
+> > +	if (!sub)
+> > +		goto error;
+> > +
+> > +	size = 1 << b->size_bits;
+> > +	for (i = 0; i < size; i++) {
+> > +		hlist_for_each_entry(entry, &b->buckets[i], hlist) {
+> > +			del = __ftrace_lookup_ip(sub, entry->ip);
+> > +			if (WARN_ON_ONCE(!del))
+> > +				goto error;
+> > +			remove_hash_entry(sub, del);
+> > +			kfree(del);
+> > +		}
+> > +	}
+> > +	return sub;
+> > +
+> > + error:
+> > +	free_ftrace_hash(sub);
+> > +	return NULL;
+> > +}
+> > +
+> > +int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+> > +{
+> 
+> [ ... ]
+> 
+> 
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19552032346
 
