@@ -1,98 +1,492 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020111.outbound.protection.outlook.com [52.101.191.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA59275B18
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Nov 2025 02:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763779037; cv=none; b=d0qp8WVhUbh9rorhVObHOBgLG5uVxYEB3DEofdUhXIPnt8UPEf2X31VVPrMvgS8SXw5Ia4rQyk2DwT3Qtg+vdIpg1xvGS9gQsF5PSrMwrmHLHdIz0pmSAYSjT6fKDj3YGPrPOKau3ky2NvTzmi+SFoWF2duODJWNI7G3m9MNilM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763779037; c=relaxed/simple;
-	bh=gXDFNB+nvhMJPJ7JFkOig3C4y6ENG3TW27PZQhNVdLg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X1D2tgdGmAbgJABRiNa3BWx75sLh8ucaDh5opgDFiHYXJUYcwv57uNq1vnb5yVx6+RQa6HP/4hkDzPADRkG/PD6NiH7gmaI4aqEZQUNUlBFl5e9wtIbGD3cJZFO/ky+8v6jEFXx1vrcCvf/ESvONmAgwXPwc52rCCX+4b5Y07DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0Pq4NQr; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9692AD25;
+	Sat, 22 Nov 2025 17:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763831714; cv=fail; b=He/qkg8/5dNQu48kKVEx3SvozWeb/CxvbMPqHsjpBAKzEq28z6cAb5c4lpPpyY96jx7Budj8bKWWvPtlmVdjXzf3flXjt74gSI0cCPXR9Zs/YfOs4mw3I4Ry3yRYLBGWe43M+V9pF0VrluCAU9y7pmlI+q0qD6yZuiCFtFsTARo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763831714; c=relaxed/simple;
+	bh=m9a+A28XgWeU1MEzWbKT5qqDmoo+wxWKmLbZJweKN+Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kWVmaAEAooQM+yOoutxrgmcg3QFfqOdntQbVebfKg5jjx11S8WPmPSC8UqY/ze7zt+dkDGFJ43/N6grhfwvMF+fvd3um4nIGsi558TdYEUwbKy6TidH51y+1OLSQPzoqExQPaeLNCwR1pF1z3Nl2fNVAqx5pFvcm2hQualZU1rY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=KVaB5FkM; arc=fail smtp.client-ip=52.101.191.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0Pq4NQr"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso16334935e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Nov 2025 18:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763779034; x=1764383834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gXDFNB+nvhMJPJ7JFkOig3C4y6ENG3TW27PZQhNVdLg=;
-        b=d0Pq4NQrfC4QsnAsR3HWJ/NOiky86J3ywJROHLunncbUOtJbqrUNhyTx6tFdBW8cEI
-         TshyXnlcZOEx8IEPEIHHGyS8QALsgHjE1C96gioDk3kIUmIsRd4bbJcbAYOM6UrORVNz
-         Z3gIyi/QvHOKvKrVR96ebd1RKzBYK+CLT8gvSNpNjF0nfSwltQWaAlzqxMaCRckQcllM
-         n9qdXGzsVATLVM/JGB3a26puJ253xFa2pjhpRrogKeo3Rg/C+WirbewCjwnMla9+Be8k
-         vAmFVQ22GrDrFgR+cyggDTQ4UfKLGlFgzZFTgHfdX10Lr+U4WbOekD1BqfRrJU9WtPO3
-         qlaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763779034; x=1764383834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gXDFNB+nvhMJPJ7JFkOig3C4y6ENG3TW27PZQhNVdLg=;
-        b=K8RtGspl/Xo4WMhqCBF41BZzluaTnZsGHQAmAKM1BQWUizFAtmgdfhzTN8NMFNEHvt
-         Qh/yygKn5qFXY1w4FITmLy8zhsq7Zq9GwU2WiiLOv8VwfRL2pdormzkgAvU+CmrBSDIg
-         M3NVjr8APsRAd8r6rgCmF/s5dMsPBXIXuDg54LPmQpuDxMWWUNqIXxNOc4G8e6/rnCii
-         DKlAw4Q37rbbMQ7Bm1aFWSuxdQg0CU3pd0c8s39XRRMWpKTxFyrRcJw9e4sYDRgpCEW8
-         gyhNwAVNgQmhWrs1FEaCRjskjFVbemti9fboClY1FVsYjO9SzffewaCx2H1nh/UIzDUO
-         VscQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFQbRKWGIGAXov0Q00Enl4r0VfIrCzaOzxoQW0Zvh57/p0BjGn2Ao9xU1W4w1qq6sGHSPryse82zbWIVso39xhzT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH1bScGvv/K4/IdbjolZMvsKl5Et9C6R8DJVRoN6UrdWNV2oki
-	utOufPpaHTHs0+lH7YlBQlE8yYLS06St4i5nbGttIEmGs9yYOqBmx5FUZUm915upZJgBMh6SmMN
-	h44qQmfi7NKc9lX5cA/i7Y52uCcJ216A=
-X-Gm-Gg: ASbGnct1UZxJkvqVRBRKStw4bfrKH7mHfm7cUGrPk6bujmOGZnrmcrqU364UWmWMI3Q
-	1G/oZcbPdVO5DLugI5sS8f4SGnW2K0dtQXy/r3RcDlG4NhcO2YOMqaSfoQZ2v+Ly5BlmRjRi+os
-	LxIsAEKu6q9RxoXEXN/+1ju9mfbRw6+J+SG8E43SSJ48M/xE0+/oze0D7Qsr91hCG7ZmU0RCFFc
-	8BOCc97BVhup0ueI3GqY0OP8l5ibOp0M0/UQQ61x29OgGEsF48CNYUOcwKVaKaDmUusw9E+QWtn
-	QA3y1kf6oxNbVa26SCQ2u7h4YGAd
-X-Google-Smtp-Source: AGHT+IHq8TQLttx02HzTcghCCmnEoW2jl5V2xikX6J5I/xeRJaTuYAWoFRPo7RLtazD/sqSeAZIHBDfxSir7BUeY6Q8=
-X-Received: by 2002:a05:600c:3511:b0:476:d494:41d2 with SMTP id
- 5b1f17b1804b1-477c112f7b1mr39494665e9.29.1763779033832; Fri, 21 Nov 2025
- 18:37:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="KVaB5FkM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XnRlHBZUPrbazirVzRrKpXB2dGOxj31zBXtZfWL2V3AJTaHJCE4X5nWUNT8pLP9WAv1Zl2ulxVsWIsQOKwJF/LYdytsks2/szLvcbFliFz9UyIF7SqjdcKC2VHpN1QKoRz5LHv8tZ3hPvfEzaKHPk3m5ozYmfAupJVOP3p/lxH7N/2OVRmjRC8tY8Avz32Fc3Ag5ajfne8lkpUev/38t+mHHy4PCqA6Uwsgte9sz5Zpd9ZZFYpwXEQHUNFWMBVfC0ZNZR/DLiHVHXxuVdoXXKDnSG65UAJmfBCsOHdWKBKeBeOm8UhFwFekqfGOUFnfq0SjKNZzAm745rsqHT3tycg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BWH3CcWBkeYbAxvYMywLu3eXiI3g/1qNhmOgwKQcVVQ=;
+ b=JiKbnL0pdgXlbHFicdiy2r0viCvo/pLtR3BC3nn4SNN8UAmh75x+luS8idTonIXoW6NvKn5YrfjXlYfj5tEqyfaSMIU/E/rji8zWrB3OaM26p+rmisiyjON0m0WfdGCopRhXhC+1rKcf8rVC+3GNcsdQdmnc7JuVovjA5xt65KX7kx6a/URrt9eG7DABi7dttppAyuHBJXBcX2TO6kdQmmWz38jcR+EaLYGYWJm6IT+eNGkOdYdRdsqdiRQ4EGY1JwL1LagR2U86tLQfuSlcvSWa/qzWrkR90S14k1YEMr+Vyb8U+GyYK9jrTMdmRyCGY/NNIzMhQx4N21ARZ9uPYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BWH3CcWBkeYbAxvYMywLu3eXiI3g/1qNhmOgwKQcVVQ=;
+ b=KVaB5FkMrKEpIPWU/kzxvHczmAxQrHZHnv6fV4oARziN2KrIUMZFHL2q5DiYghrrnbWDoGqVgqUeUI+l4HIhXM5r+HCzBdI8QoYXeszfYr4uxSsFQpIzEBVoegzpo5F3B2CiYlDuythd+uPpKfvw0OuiMTDl8H95F05KzmpRn/eobxSWbr5uowyY6bNOR1+ZJPb6DkGZp7I0M3PdFXG3dmcWX4UGsh5knFepeDHQx9taC4PTiqIFvAjXx2NdZcEmI+2NdMrv66zvAtSkyf0eGhQhC4SmWuA7vdesrb4tyd21xDntKZheKVC33S1rmSdQAXIPe/01tePI4yiKHpRE5A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT3PR01MB5908.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:5e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.15; Sat, 22 Nov
+ 2025 17:15:08 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%2]) with mapi id 15.20.9343.011; Sat, 22 Nov 2025
+ 17:15:08 +0000
+Message-ID: <a3652f6b-cd3b-45ad-a3ad-e92369cf4068@efficios.com>
+Date: Sat, 22 Nov 2025 12:15:02 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 1/2] lib: Introduce hierarchical per-cpu counters
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
+ christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>,
+ SeongJae Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <liam.howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>,
+ Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>,
+ Mateusz Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <20251120210354.1233994-1-mathieu.desnoyers@efficios.com>
+ <20251120210354.1233994-2-mathieu.desnoyers@efficios.com>
+ <20251121100308.65b36af9e090a78a66144c6c@linux-foundation.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20251121100308.65b36af9e090a78a66144c6c@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0105.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:83::22) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
- <20251118123639.688444-7-dongml2@chinatelecom.cn> <CAADnVQ+mHb0AZe=J+yswjMiXLToG3-_3cfMxnNJJM-KAukbxBw@mail.gmail.com>
- <20251118200304.29f2bd7a@gandalf.local.home>
-In-Reply-To: <20251118200304.29f2bd7a@gandalf.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 21 Nov 2025 18:37:02 -0800
-X-Gm-Features: AWmQ_bk-1n4MtV7kB_iJKRoAsqrOjg4sGeLazyNB_E3dmOLPDW9GuTNA0HSP2oI
-Message-ID: <CAADnVQLs-kBMi7VCizH5be8q8Nyzx=KYNPcnF-EDNx7OPs4Aiw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 6/6] bpf: implement "jmp" mode for trampoline
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Menglong Dong <menglong8.dong@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB5908:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b40c22b-6a1d-4a79-9d84-08de29eaae6e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|10070799003|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WnlvZ1dQVFlCWFZCczZyYXFXVkVNc1lyVXJ3bk53OWE4VXpFVU5ycU1Qbmd3?=
+ =?utf-8?B?V09kZVltaVVsZlUwQXV1VmpubFdEdkRXV09hWmVwL1BTY3pjakpud0dqbFYv?=
+ =?utf-8?B?RURGZm9vVXFRVXErdWZMMm1naVpxRE9qY0dsOFFuTE1MUXpEZnlzTGczdnpL?=
+ =?utf-8?B?VHhGQktFcDBLMm5xWjQ0bHBUOUdnWHZWeCt2Rm1PWEFFYktVM2tuU3hNT1Fo?=
+ =?utf-8?B?SFVsUFlHSUVKQStHTnRSMWQrMndoT25uNk9XNDdGdnFqU1RiRURZd1p0cmJs?=
+ =?utf-8?B?M3dzNDRxZWdRRHhYeElUdyswQk5yTk12TVNyZHBJY3VjOEg4bjF1R2pMeG1o?=
+ =?utf-8?B?emErazc3VmZnRG81eW5tc3QyNXpFdmUvT0J6dHJqeVlMU0czY1Uvdk9nVWRO?=
+ =?utf-8?B?Q1ZBNDM2Nk9jZVBmNm9GNHdSWkRiclpZZVNPd0xtZW9JZGJYUmVJd1N1U0Vn?=
+ =?utf-8?B?MXhITHFRdGUvenFRd2MwRElpTklON09sVjBZRXVOKzZ0SFpMWUVGbW92V3BH?=
+ =?utf-8?B?Q1p3Q1laOS9YWnI5U21YVzFHdDFJUGV1MDFXNUJaTE1rc2RpeE9yc2tQRjd4?=
+ =?utf-8?B?SzEzTkxMQjE2bUQ5c1BWU29vTVQ1VW96S1lpVmxkZHd3WFZmWWZRbkRIcGdr?=
+ =?utf-8?B?M0RPUGM5UEVYQzRKOWFGU1lSYmY3NXZHWG1QTmYrY2NFZjdyanRFeFM4Sjlm?=
+ =?utf-8?B?MTFKMTZUOENQdnRDdlVPZnhZVVEyaUMyNkQxVEt2TWJYdXpTRGkzNzlxK1M0?=
+ =?utf-8?B?RitkUmZURE0wVERvbS95SVZRcE9EamxSNlhjRFdWYWNxZXExcjVoN1NOMkpl?=
+ =?utf-8?B?VGZhckhoSnJJZmlsM25pckJjQVBreUIrVUhmM1FuNVlyKzZUbG1aSnp6WVYv?=
+ =?utf-8?B?NW14elRsaVA1aWExSTRaNTNtK2FrQWtWckpFdEQ4N1JaU1NadDZ5Q0VUMFMw?=
+ =?utf-8?B?bzdSeVRWU0FTcGNTUmtoV1k2Q0FQOVhIdDhDMGpyL2w2WCtvaHBKTC9QSDRv?=
+ =?utf-8?B?VW1Ualg5SFZjUmpsVFFWZDRXc0dMU0xjdmZtZ1NXUitBYUdSZXZPeFJtOUtw?=
+ =?utf-8?B?YTJEMythOHJOSnJ2Y25DdnFHQmllM29PRUdmWGZQUllPMnRpR2ZWTlFwR2Yv?=
+ =?utf-8?B?ZnI2N0VsaGtQbEZWckRuY0g4Z1k1emVNTjN1K3A2RTRXNk03Rmx0VjZ4N0FG?=
+ =?utf-8?B?Ukxja0VzVmRKQjBjeEdaNWt5VEpzcFFxQUtrT05ld2tlMzVQSHYwbUVVMm9T?=
+ =?utf-8?B?dklLQ2t0UkFPZVJSVkZsUnl1RWFQTFV6aDlJRTc1a2ZRR2hTbmFOT3dlTldI?=
+ =?utf-8?B?c2lsUm1hYzFpblVlbitOVDZjOXVSY2lLbVBSeFRJOGtpWUg0eXlkVzI0c0tF?=
+ =?utf-8?B?UUc4UVRqeGNGT1d3WU1aMU1oT3dqd3huU0Ryby9nRkNIMStoUENqSUhyeTQ1?=
+ =?utf-8?B?R3lzSmFONDlvRzlNOWkxQ0p6cU44Uk9DUlRxazhFMU5DeWxPTmJQY05PY3Jj?=
+ =?utf-8?B?cDlDMnRGalQwZCsycnFOV283eWVqckNyVHV1M3BmdE9SVUJXdGNHenkzWlFh?=
+ =?utf-8?B?Nm5YZ1ZhSCtFWGhtSU9qYVJBNUVxSERaMkRJOStDTGxnNWo5WjdCNUVFOUVn?=
+ =?utf-8?B?bTJ2aHFkWjlMdnQ0T3k5ZkU0SG1KRVVtUVROOHlVczFiQ1gzMGFYOHlmVkNo?=
+ =?utf-8?B?Ti9VRDA4cFB0bElRYVZNZTRPTGM4QWQ2UGhiSXZPUk5ZeERSV1hnTmo5OGcw?=
+ =?utf-8?B?WkswMkZRdHl2NWZRZXFEVytGL2ZOaTZnZXY4bFZHTUJSazZyUEc1NnpPa1dn?=
+ =?utf-8?B?N3BWTTI1aytvYlB4KzdzMEVPZkw2cG1tN28zL3Z6QmFqUHB6N0N1S3dMQTJv?=
+ =?utf-8?B?Y1A5MVR2T25HZVlxWTFnMCs1NU9zYlBlQ2RhSkcrUWJndkE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zll3ejRrYkxRL3ZXWTBJRmZDK2NURzVOTW9Lc1U0TzcxVUNzQjVTNTNucEg5?=
+ =?utf-8?B?VTlReTVSMzVybisyK05lMjVqRUJrNWtxRVFMVGhlYU5QQ3F6QXYxK0EycHlz?=
+ =?utf-8?B?TFV6M0laaFg3ZUFEVnlweUQzYURBZ0xKUkZ3VEhaNlE0QlZPK0RjS0JqVnBn?=
+ =?utf-8?B?NUtta05SNjRObDBrMGsxMWJWbXRLb3RMYmpQUUpMVU1hUzcyK2dKTEtTZWRh?=
+ =?utf-8?B?ZysrT2U4VmlyZzFjZFE2U2I1b0xqZEUyVXc3aCt0OXErQ3lmbHJnd0JHUUwy?=
+ =?utf-8?B?K0lvaHZjVit3c1hYMElVWDN4VGNhdkNxdTdRaHdvNS9RMHFYVjRZM1M4T1lD?=
+ =?utf-8?B?M1htRmdXcnpoZnlrbXkvSWxsZUp6ZVMrbUZnZWVSU0NnWlVmVmZlRGNlc0pr?=
+ =?utf-8?B?UlNLMXBER0MvdzVnd3ZzenZqL1pFU2gzNDg4ZUcxSkYrRzlXZmpaUjNMVjRv?=
+ =?utf-8?B?d256NFB6Ymozam1GVVAyOHUxVk1ETWdNWkZLOEVyVUxhaXNna2RPeFZQZHFj?=
+ =?utf-8?B?QkhXMXlEcDdBVE1yS25KTndTTXorM2RUSlcvMGtNeFN1ZmlLd29RRlRvbklo?=
+ =?utf-8?B?NUtyS3g2S1JPQVdhUFZhY2VyNXYzT2FNZ3FqczB4Z2NjRExDTmt1V1YyUTh6?=
+ =?utf-8?B?eGxsOUN1YlhNdExSRGpWd2xaRkNZZ091Y3g5eUxVNVN3YTNwTFh3SHNacVJw?=
+ =?utf-8?B?M0hjQk9lK1liNlltWkIyM1JKa1R0MENDa0cxbkFVYjBBYUJSdFJSZlo3eE5D?=
+ =?utf-8?B?SlhmMktXN0RQV2ZsV2Ruc3l5NmFsWk9EQ1k2aFkwVEYvbmhRY0tkWENGUVlB?=
+ =?utf-8?B?MC9DVDNhYng3eDE0b3RXZ0o3akM3OGdyVlFzS1ZMRk43MndxQW9jS2U3Qnp5?=
+ =?utf-8?B?SkMzV2x4TC9sT3hQcmV1KzRJc0RjVXBpNGZYdDZMTEprVHBQaXBobjJONVhX?=
+ =?utf-8?B?YmlNUGlGc1ZJVnRiaHh6ZE5FaVBwc081cFc2Y1dUaTh3Q1FuaWJZS2xnSzJy?=
+ =?utf-8?B?RU5GOUdNTUhGYk5MOU00N1A4OE52czNoU01WN0MyYjBwU0ZwbGlRWXR1VFpY?=
+ =?utf-8?B?YXBPOG1NREZLRkVFTGNhendGaGwrbG5NeXlPZVpSUGdtZlQwYzNMWkQwNEpm?=
+ =?utf-8?B?SUN2TEpPRmM0RHZBNVlPL1E0OVV0WG5VOERVZmE3eDRlZlNtdkY0M3p5N3JH?=
+ =?utf-8?B?SjNrZUM1MzdzRkVUMURHVUVnbW1PQTR1bkM4N2JRcFc1bGhEMVZBVGZHZ1cz?=
+ =?utf-8?B?Z1VDaEFmODkyWjIrQWJid1lOT014MkZRd29Pd0V1V3cxM3R6TW9KYitLbkZP?=
+ =?utf-8?B?ZEI1YnVtQ1RjSjU3clZIZWNveDlCT2poQUhpR0pzbjZvQTdLaG0ybXNSZ3g1?=
+ =?utf-8?B?cnpFUWMzZHZQVDB3M1lPL09adDRuUXA3NlFZdExtS3c1ZFdCeUVzVkdlZ3Ro?=
+ =?utf-8?B?MDVwZDNPZkh5NHhYQUd6K05qV0t5UXdicy80NFljTGphNjhPMkFVcitEM1ZY?=
+ =?utf-8?B?RFFwRUdRclVIaFJnK1pVdmFBT1QyUHBqWnYwM3g3bHcvUFIyMHRwbzQyQ080?=
+ =?utf-8?B?UzlhVEphR3N0MXF5YkdEb0d6bFhMc1dXTUZsaXdoZXRpLzBWeVJQRGtONVow?=
+ =?utf-8?B?ZXN2MTZQVXNSOUd4Tzc1cUxWVFdBZmpPK0hWa1pjSVdNZXVZQUg2eERodlpN?=
+ =?utf-8?B?OS9JWTlRTUFySERFNGR2OVI1MEJBSEtlZFlFYWUvNUVkZXU3TU1Qdng3a21Q?=
+ =?utf-8?B?c0VCWWFBUDdWMFNvODQzc2pSYnhyWXVEaFBkemM5ZXhjTWxpKzE3NEIvek9s?=
+ =?utf-8?B?SEpMaTgyOVlrRi9qL0lNRi9ucDRYS09VY1dvcU1DZjR6aS82L01NdFZ1RUZH?=
+ =?utf-8?B?WDlvc0xlOFVSZHRKdXFYazlXVEdtbUhrTnhGaTF0QTZjb1hFTVpKTHZTZ01Y?=
+ =?utf-8?B?aEVLWlJ1WVlmOXowQ2tXajVYNzYwcDk5MEdXanBSVHVkOXdIcExiRUx0TlpG?=
+ =?utf-8?B?QWtOY1hUTy9EMnFIcjNjU1BuOUtWLzdMOTBpdEJuTWRrdldBbEpVN291YTFh?=
+ =?utf-8?B?ZkFkbmExK3BTUlI0aTBzRWFBVlVuby9zdmN0cTVGOGNlSzlnV0xMaU10bWxo?=
+ =?utf-8?B?RGFXVStRd016SFVOYklzZ3g1eGU1K005YkdTNWVIRUlmV2xTVGwwajB0cGR4?=
+ =?utf-8?B?RDFDcE9RZ3dnallWM2pwUTBxT0ZNOVBlcmw2YU5sTzNQODZ6N1FJUGZxMWpV?=
+ =?utf-8?Q?PcMNRWN0x+lyCfkhMfnboS136NQ/OEr8b6Jmq85YsE=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b40c22b-6a1d-4a79-9d84-08de29eaae6e
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2025 17:15:06.0363
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pmrMLkn1d/NQFXx23rDsjwgc6xz6dvyBiZQeIyhBSBgVHVCpK4JDacBmF1vnkUOyMz6HKbq2Q8rdRzMgCoKXIHEMENiUqOqSXb3BqfrtQqg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB5908
 
-On Tue, Nov 18, 2025 at 5:02=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Tue, 18 Nov 2025 16:59:59 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > Steven,
-> > are you happy with patch 1?
-> > Can you pls Ack?
->
-> Let me run patch 1 and 2 through my tests.
+On 2025-11-21 13:03, Andrew Morton wrote:
+> On Thu, 20 Nov 2025 16:03:53 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>> ...
+>> It aims at fixing the per-mm RSS tracking which has become too
+>> inaccurate for OOM killer purposes on large many-core systems [1].
+> 
+> Presentation nit: the info at [1] is rather well hidden until one reads
+> the [2/2] changelog.  You might want to move that material into the
+> [0/N] - after all, it's the entire point of the patchset.
 
-gentle ping.
+Will do.
+
+>> The hierarchical per-CPU counters propagate a sum approximation through
+>> a N-way tree. When reaching the batch size, the carry is propagated
+>> through a binary tree which consists of logN(nr_cpu_ids) levels. The
+>> batch size for each level is twice the batch size of the prior level.
+>> ...
+
+> Looks very neat.
+
+I'm glad you like the approach :) When looking at this problem, a
+hierarchical tree approach seemed like a good candidate to solve the
+general problem.
+
+> 
+> Have you identified other parts of the kernel which could use this?
+
+I have not surveyed other possible users yet. At first glance, users
+of the linux/percpu_counter.h percpu_counter_read_positive() may
+be good candidates for the hierarchical tree. Here is a list:
+
+lib/flex_proportions.c
+157:		num = percpu_counter_read_positive(&pl->events);
+158:		den = percpu_counter_read_positive(&p->events);
+
+fs/file_table.c
+88:	return percpu_counter_read_positive(&nr_files);
+
+fs/ext4/balloc.c
+627:	free_clusters  = percpu_counter_read_positive(fcc);
+628:	dirty_clusters = percpu_counter_read_positive(dcc);
+
+fs/ext4/ialloc.c
+448:	freei = percpu_counter_read_positive(&sbi->s_freeinodes_counter);
+450:	freec = percpu_counter_read_positive(&sbi->s_freeclusters_counter);
+453:	ndirs = percpu_counter_read_positive(&sbi->s_dirs_counter);
+
+fs/ext4/extents_status.c
+1682:	nr = percpu_counter_read_positive(&sbi->s_es_stats.es_stats_shk_cnt);
+1694:	ret = percpu_counter_read_positive(&sbi->s_es_stats.es_stats_shk_cnt);
+1699:	ret = percpu_counter_read_positive(&sbi->s_es_stats.es_stats_shk_cnt);
+
+fs/ext4/inode.c
+3091:		percpu_counter_read_positive(&sbi->s_freeclusters_counter);
+3093:		percpu_counter_read_positive(&sbi->s_dirtyclusters_counter);
+
+fs/btrfs/space-info.c
+1028:	ordered = percpu_counter_read_positive(&fs_info->ordered_bytes) >> 1;
+1029:	delalloc = percpu_counter_read_positive(&fs_info->delalloc_bytes);
+
+fs/quota/dquot.c
+808:	percpu_counter_read_positive(&dqstats.counter[DQST_FREE_DQUOTS]));
+
+fs/ext2/balloc.c
+1162:	free_blocks = percpu_counter_read_positive(&sbi->s_freeblocks_counter);
+
+fs/ext2/ialloc.c
+268:	freei = percpu_counter_read_positive(&sbi->s_freeinodes_counter);
+270:	free_blocks = percpu_counter_read_positive(&sbi->s_freeblocks_counter);
+272:	ndirs = percpu_counter_read_positive(&sbi->s_dirs_counter);
+
+fs/jbd2/journal.c
+1263:	count = percpu_counter_read_positive(&journal->j_checkpoint_jh_count);
+1268:	count = percpu_counter_read_positive(&journal->j_checkpoint_jh_count);
+1287:	count = percpu_counter_read_positive(&journal->j_checkpoint_jh_count);
+
+fs/xfs/xfs_ioctl.c
+1149:		.allocino = percpu_counter_read_positive(&mp->m_icount),
+1150:		.freeino  = percpu_counter_read_positive(&mp->m_ifree),
+
+fs/xfs/xfs_mount.h
+736:	return percpu_counter_read_positive(&mp->m_free[ctr].count);
+
+fs/xfs/libxfs/xfs_ialloc.c
+732:	    percpu_counter_read_positive(&args.mp->m_icount) + newlen >
+1913:	 * Read rough value of mp->m_icount by percpu_counter_read_positive,
+1917:	    percpu_counter_read_positive(&mp->m_icount) + igeo->ialloc_inos
+
+mm/util.c
+965:	if (percpu_counter_read_positive(&vm_committed_as) < allowed)
+
+drivers/md/dm-crypt.c
+1734:			if (unlikely(percpu_counter_read_positive(&cc->n_allocated_pages) +
+2750:	 * Note, percpu_counter_read_positive() may over (and under) estimate
+2754:	if (unlikely(percpu_counter_read_positive(&cc->n_allocated_pages) >= dm_crypt_pages_per_client) &&
+
+io_uring/io_uring.c
+2502:	return percpu_counter_read_positive(&tctx->inflight);
+
+include/linux/backing-dev.h
+71:	return percpu_counter_read_positive(&wb->stat[item]);
+
+include/net/sock.h
+1435:	return percpu_counter_read_positive(sk->sk_prot->sockets_allocated);
+
+include/net/dst_ops.h
+48:	return percpu_counter_read_positive(&dst->pcpuc_entries);
+
+There are probably other use-cases lurking out there. Anything
+that requires sorting resources taken by objects used from many
+CPUs concurrently in order to make decisions are good candidates.
+
+The fact that the max inaccuracy is bounded means that we can perform
+approximate comparisons in a fast path (which is enough if the values
+to compare greatly vary), and only have to do the more expensive
+"precise" comparison when values are close to each other and we
+actually care about their relative order.
+
+I'm thinking memory usage tracking, runtime usage (scheduler ?), cgroups
+ressource accounting.
+
+> 
+>>   include/linux/percpu_counter_tree.h | 239 +++++++++++++++
+>>   init/main.c                         |   2 +
+>>   lib/Makefile                        |   1 +
+>>   lib/percpu_counter_tree.c           | 443 ++++++++++++++++++++++++++++
+>>   4 files changed, 685 insertions(+)
+>>   create mode 100644 include/linux/percpu_counter_tree.h
+>>   create mode 100644 lib/percpu_counter_tree.c
+> 
+> An in-kernel test suite would be great.  Like lib/*test*.c or
+> tools/testing/.
+
+I'll keep a note to port the tests from my userspace librseq
+percpu counters feature branch to the kernel. I did not do it
+initially because I wanted to see if the overall approach was
+deemed interesting for the kernel.
+
+>> +struct percpu_counter_tree {
+>>...
+>> +};
+> 
+> I find that understanding the data structure leads to understanding the
+> code, so additional documentation for the various fields would be
+> helpful.
+Will do.
+
+> 
+>> +
+>> +static inline
+>> +int percpu_counter_tree_carry(int orig, int res, int inc, unsigned int bit_mask)
+>> +{
+>> ...
+>> +}
+>> +
+>> +static inline
+>> +void percpu_counter_tree_add(struct percpu_counter_tree *counter, int inc)
+>> +{
+>> ...
+>> +}
+
+(x86-64 asm below when expanding the inline functions into a real function)
+
+00000000000006a0 <disasm_percpu_counter_tree_add>:
+[...]
+  6a4:   8b 4f 08                mov    0x8(%rdi),%ecx
+  6a7:   48 8b 17                mov    (%rdi),%rdx
+  6aa:   89 f0                   mov    %esi,%eax
+  6ac:   65 0f c1 02             xadd   %eax,%gs:(%rdx)
+  6b0:   41 89 c8                mov    %ecx,%r8d
+  6b3:   8d 14 06                lea    (%rsi,%rax,1),%edx
+  6b6:   41 f7 d8                neg    %r8d
+  6b9:   85 f6                   test   %esi,%esi
+  6bb:   78 18                   js     6d5 <disasm_percpu_counter_tree_add+0x35>
+  6bd:   44 21 c6                and    %r8d,%esi
+  6c0:   31 f0                   xor    %esi,%eax
+  6c2:   31 d0                   xor    %edx,%eax
+  6c4:   8d 14 31                lea    (%rcx,%rsi,1),%edx
+  6c7:   85 c8                   test   %ecx,%eax
+  6c9:   0f 45 f2                cmovne %edx,%esi
+  6cc:   85 f6                   test   %esi,%esi
+  6ce:   75 1d                   jne    6ed <disasm_percpu_counter_tree_add+0x4d>
+  6d0:   e9 00 00 00 00          jmp    6d5 <disasm_percpu_counter_tree_add+0x35>
+  6d5:   f7 de                   neg    %esi
+  6d7:   44 21 c6                and    %r8d,%esi
+  6da:   f7 de                   neg    %esi
+  6dc:   31 f0                   xor    %esi,%eax
+  6de:   31 d0                   xor    %edx,%eax
+  6e0:   89 f2                   mov    %esi,%edx
+  6e2:   29 ca                   sub    %ecx,%edx
+  6e4:   85 c8                   test   %ecx,%eax
+  6e6:   0f 45 f2                cmovne %edx,%esi
+  6e9:   85 f6                   test   %esi,%esi
+  6eb:   74 e3                   je     6d0 <disasm_percpu_counter_tree_add+0x30>
+  6ed:   e9 ae fb ff ff          jmp    2a0 <percpu_counter_tree_add_slowpath>
+
+>> +
+>> +static inline
+>> +int percpu_counter_tree_approximate_sum(struct percpu_counter_tree *counter)
+>> +{
+>> ...
+>> +}
+
+0000000000000710 <disasm_percpu_counter_tree_approximate_sum>:
+[...]
+  714:   48 8b 47 10             mov    0x10(%rdi),%rax
+  718:   8b 10                   mov    (%rax),%edx
+  71a:   8b 47 18                mov    0x18(%rdi),%eax
+  71d:   01 d0                   add    %edx,%eax
+  71f:   e9 00 00 00 00          jmp    724 <disasm_percpu_counter_tree_approximate_sum+0x14>
+
+> 
+> These are pretty large after all the nested inlining is expanded.  Are
+> you sure that inlining them is the correct call?
+
+percpu_counter_tree_add: 30 insn, 79 bytes
+percpu_counter_tree_approximate_sum: 5 insn, 16 bytes
+
+So I agree that inlining "add" may not be the right call there due
+to the relatively large footprint of bitwise operations used to pick
+the carry, and the fact that it contains a xadd which is ~9 cycles
+on recent CPUs, so adding the overhead of a function call should not
+be so significant.
+
+Inlining "approximate_sum" seems to be the right call, because the
+function is really small (16 bytes), and it only contains loads and
+a "add", which are faster than a function call.
+
+> 
+> 
+>> +#else	/* !CONFIG_SMP */
+>> +
+>>
+>> ...
+>>
+>> +#include <linux/percpu_counter_tree.h>
+>> +#include <linux/cpumask.h>
+>> +#include <linux/percpu.h>
+>> +#include <linux/atomic.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/math.h>
+>> +
+>> +#define MAX_NR_LEVELS 5
+>> +
+>> +struct counter_config {
+>> +	unsigned int nr_items;
+>> +	unsigned char nr_levels;
+>> +	unsigned char n_arity_order[MAX_NR_LEVELS];
+>> +};
+>> +
+>> +/*
+>> + * nr_items is the number of items in the tree for levels 1 to and
+>> + * including the final level (approximate sum). It excludes the level 0
+>> + * per-cpu counters.
+>> + */
+> 
+> That's referring to counter_config.nr_items?  Comment appears to be
+> misplaced.
+
+Good point, I'll move it besides the "nr_items" field in counter_config.
+I'll also document the other fields.
+
+>>...
+>> +	/* Batch size must be power of 2 */
+>> +	if (!batch_size || (batch_size & (batch_size - 1)))
+>> +		return -EINVAL;
+> 
+> It's a bug, yes?  Worth a WARN?
+
+I'll add a WARN_ON().
+
+>>...
+> It would be nice to kerneldocify the exported API.
+
+OK
+
+> 
+> Some fairly detailed words explaining the pros and cons of precise vs
+> approximate would be helpful to people who are using this API.
+
+Good point.
+
+>> +int __init percpu_counter_tree_subsystem_init(void)
+> 
+> I'm not sure that the "subsystem_" adds any value.
+
+The symbol "percpu_counter_tree_init()" is already taken
+for initialization of individual counter trees, so I added
+"subsystem" here do distinguish between the two symbols.
+Looking at kernel bootup functions "subsystem_init" seems
+to be used at least once:
+
+1108:	acpi_subsystem_init();
+
+> 
+>> +{
+>> +
+>> +	nr_cpus_order = get_count_order(nr_cpu_ids);
+> 
+> Stray newline.
+
+OK
+
+Thanks for the review!
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
