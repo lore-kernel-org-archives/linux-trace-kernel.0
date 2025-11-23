@@ -1,48 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F78E2DCC1B;
-	Sun, 23 Nov 2025 18:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B9D35962;
+	Sun, 23 Nov 2025 19:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763923428; cv=none; b=Zz6OOOnhGRBn3uCN2HQTpgkG1UPXEhgQH+7SBtSnzl2Sa/h4F4CippCEaMPKOJirTV/26Jstx0VipQupTMKvK5xfi4krpPIrJZHhG/HiQvVQT1BgBRGoXZBKhFM2AAF4uQDrx1Z/4MlN0Z3GdajLNgfyEpKjUnH1PdndX7PwzdU=
+	t=1763927713; cv=none; b=R8JQgEc0YbhcCVaE99QelMBMQu6Ub5wK0NVzAGFb9Yjrm3HXrdGI9LOHJLufXhKHaQ+DPMzXdG3WnIiluj3YH3XRc4dFks2VTSKCvFTZcj+MZYQ9pYQOE33P0p4uaiOTfVN/2RyW0JBhqLr4KJ8SKLRrM6VbqVHvAhdVpgs02ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763923428; c=relaxed/simple;
-	bh=mH5BWCQEqqk49CCwYmvCMx+4mPSEeoKbb/+aR5lpkFw=;
+	s=arc-20240116; t=1763927713; c=relaxed/simple;
+	bh=ONzvLa3ZaViSZ5gG52gKU5AhTjht5Jg3NT5f81KKlSw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QXSyeGUpl6uWvLGDBuTZeeNXqeoG3F+He9eNzkFd9O3IoGxLwGkzyCh431lPlD4G7Idys2wldRuxmXfRRZ+OntATKjc7/vTs3QBZ9SPO+n2FTkFmYiIaLGiv99E3D2Mf/xPGYZHD97rf1XErkcthgHMWnBeCfMAHUXcubjzdaGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCsc9Fbe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DFAAqiDCZEJJCnFUfK6MFB6y1uHmV3lpoFATNlRMZVaceNRvJXxqgqdoaFihAlMAUXaXZ/g4hOpvGU1zH6TsbXYsLgIRKkA2gZYtdCl3qC1Fg12YGg4N591EjeGYCtJupNT71uCeblHdhMscTVBHJ87SUUEC7z0a6MW2xpwN9hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skTlV8tc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCsc9Fbe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 121B1C16AAE;
-	Sun, 23 Nov 2025 18:43:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skTlV8tc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75FCC113D0;
+	Sun, 23 Nov 2025 19:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763923428;
-	bh=mH5BWCQEqqk49CCwYmvCMx+4mPSEeoKbb/+aR5lpkFw=;
+	s=k20201202; t=1763927712;
+	bh=ONzvLa3ZaViSZ5gG52gKU5AhTjht5Jg3NT5f81KKlSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RCsc9Fbe1dxQvC+VyC2YgBZqZFVqvkyNxSvEcCyUenkZyYkccaPZ7WjU6SagGMC+1
-	 XAQajqhn2371cO9Ln+ersUfxExuUbX0dRhyVAOIGdLG/C6SLaA7bslob0Zagkl2Pwu
-	 +UcF7rMZ5atHuuvBPT3AUTwNw17iHfbMiPboUJ/R6Jg8o+LrOUJhzzZzc20IxzvVFB
-	 0ptr86AsnPZ+Yhkuo4SiKXfev1eBSlyVTXquh6KPu8g6+wZbycgr/UgCdHlJT5RWFN
-	 t6kFESo9IRwFeJL/ZhxyNZ8fO3xIdjn/gQuQlz2eU3FTZBpUo0VNs5Hku4Qxx3uJk7
-	 U2t8nm2EO9OQw==
+	b=skTlV8tcUzDnx2NS3oZTafwFn37YIjjnSUVdOBv824NMHQ+dj9G0HAp8SEFSOrXTa
+	 Vm6RwVSDxdU5umROdYBSsirLxayteUVafAXZo3AbG60PFDpUDeajJitU5UVbG+3IfZ
+	 g8WG5HQIiQbHNZMhqCBJcFzTEHG0oL1zdIloVCRxiKWjWLZW0yTUrbXFRsbqmYv37M
+	 WTD7XlpSEIi5yc+d/whvBmMDK6vGXzlC0vRmzxl96b8QjYTOjfl+ZhGT7Hx2zdklFM
+	 izzBK/4PQb53PSkWoUsuMoOAcfpOPln+yrqaS8MfKbN8s0TcIQE403itH1Sw6ViSWq
+	 Nm1xpdMvXtnRg==
 From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: SeongJae Park <sj@kernel.org>,
+To: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
 	damon@lists.linux.dev,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 12/12] mm/damon/core: add trace point for damos stat per apply interval
-Date: Sun, 23 Nov 2025 10:43:26 -0800
-Message-ID: <20251123184329.85287-13-sj@kernel.org>
+Subject: Re: [RFC PATCH 00/12] mm/damos/stat: introduce nr_snapshots, max_nr_snapshots and tracepoint
+Date: Sun, 23 Nov 2025 11:54:55 -0800
+Message-ID: <20251123195456.24755-1-sj@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251123184329.85287-1-sj@kernel.org>
-References: <20251123184329.85287-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,106 +59,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMON users can read DAMOS stats via DAMON sysfs interface.  It enables
-efficient, simple and flexible usages of the stats.  Especially for
-systems not having advanced tools like perf or bpftrace, that can be
-useful.  But if the advanced tools are available, exposing the stats via
-tracepoint can reduce unnecessary reimplementation of the wheels.  Add a
-new tracepoint for DAMOS stats, namely damos_stat_after_apply_interval.
-The tracepoint is triggered for each scheme's apply interval and exposes
-the whole stat values.  If the user needs sub-apply interval information
-for any chance, damos_before_apply tracepoint could be used.
+On Sun, 23 Nov 2025 10:43:14 -0800 SeongJae Park <sj@kernel.org> wrote:
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/trace/events/damon.h | 41 ++++++++++++++++++++++++++++++++++++
- mm/damon/core.c              | 15 +++++++++++++
- 2 files changed, 56 insertions(+)
+> Introduce three changes for improving DAMOS stat's provided information,
+> deterministic control, and reading usability.
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 852d725afea2..24fc402ab3c8 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -9,6 +9,47 @@
- #include <linux/types.h>
- #include <linux/tracepoint.h>
- 
-+TRACE_EVENT(damos_stat_after_apply_interval,
-+
-+	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-+		struct damos_stat *stat),
-+
-+	TP_ARGS(context_idx, scheme_idx, stat),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, context_idx)
-+		__field(unsigned int, scheme_idx)
-+		__field(unsigned long, nr_tried)
-+		__field(unsigned long, sz_tried)
-+		__field(unsigned long, nr_applied)
-+		__field(unsigned long, sz_applied)
-+		__field(unsigned long, sz_ops_filter_passed)
-+		__field(unsigned long, qt_exceeds)
-+		__field(unsigned long, nr_snapshots)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->context_idx = context_idx;
-+		__entry->scheme_idx = scheme_idx;
-+		__entry->nr_tried = stat->nr_tried;
-+		__entry->sz_tried = stat->sz_tried;
-+		__entry->nr_applied = stat->nr_applied;
-+		__entry->sz_applied = stat->sz_applied;
-+		__entry->sz_ops_filter_passed = stat->sz_ops_filter_passed;
-+		__entry->qt_exceeds = stat->qt_exceeds;
-+		__entry->nr_snapshots = stat->nr_snapshots;
-+	),
-+
-+	TP_printk("ctx_idx=%u scheme_idx=%u nr_tried=%lu sz_tried=%lu "
-+			"nr_applied=%lu sz_tried=%lu sz_ops_filter_passed=%lu "
-+			"qt_exceeds=%lu nr_snapshots=%lu",
-+			__entry->context_idx, __entry->scheme_idx,
-+			__entry->nr_tried, __entry->sz_tried,
-+			__entry->nr_applied, __entry->sz_applied,
-+			__entry->sz_ops_filter_passed, __entry->qt_exceeds,
-+			__entry->nr_snapshots)
-+);
-+
- TRACE_EVENT(damos_esz,
- 
- 	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 36313cd1ff1c..2f212a18e4a0 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2256,6 +2256,19 @@ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
- 	quota->min_score = score;
- }
- 
-+static void damos_trace_stat(struct damon_ctx *c, struct damos *s)
-+{
-+	unsigned int cidx = 0, sidx = 0;
-+	struct damos *siter;
-+
-+	damon_for_each_scheme(siter, c) {
-+		if (siter == s)
-+			break;
-+		sidx++;
-+	}
-+	trace_damos_stat_after_apply_interval(cidx, sidx, &s->stat);
-+}
-+
- static void kdamond_apply_schemes(struct damon_ctx *c)
- {
- 	struct damon_target *t;
-@@ -2294,6 +2307,8 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
- 			(s->apply_interval_us ? s->apply_interval_us :
- 			 c->attrs.aggr_interval) / sample_interval;
- 		s->last_applied = NULL;
-+		if (trace_damos_stat_after_apply_interval_enabled())
-+			damos_trace_stat(c, s);
- 	}
- 	mutex_unlock(&c->walk_control_lock);
- }
--- 
-2.47.3
+FYI, I'm not aiming to make this be merged in 6.19-rc1.
+
+
+Thanks,
+SJ
+
+[...]
