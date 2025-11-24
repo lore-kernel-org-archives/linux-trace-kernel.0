@@ -1,373 +1,293 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0164A2D9EE3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Nov 2025 06:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C901424B28;
+	Mon, 24 Nov 2025 09:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763965966; cv=none; b=LMJpVnJGA5d56sFlT3ObttREhm+pLen3D+FTetBB2j/zBj2wiPwnf4q9wUfegJcBW9Y8uyP/rMW9xD+4fXyVEGCsDLQev0hsqJAEk2mOGKTSi120El/n2xcWuRSGmmEjSAn1C0ZnVEUyn4u25aD7Ng97AHObbfvOSSoGIO6PJQ4=
+	t=1763978079; cv=none; b=OrhBTwl6BMqS8pYcfarqR9HGAhSeI26vREWeXj7sBtD3362M7aMbqTWKdvA+MacwqTfvv60xSfYJrLX5R7ZY13HB4AG4msj+1X0S9R+Z/MP740gcweSDj6N1kvAhRDqqwqzdmvUcPjbfzOSF6WcoccepgvIZ1DE8k4B1kYcckKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763965966; c=relaxed/simple;
-	bh=jvhIYdmBV7WMh9lpR7C7Sy/+S3cErNUU1G3Spu735eI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=HeWDXXwTgPR1QfDQygW5TakUlmiBs+KiW1WjXKob27U+IWBKSzWdPxs+jeeqms9AjDr4lwkaZVhFPqsGIEE2hUQYkfvo4Q1FRQ3iPmUYDkY/BKXmVRnS7aO8utdkwiaVv2hS/NPhfuDKgNhApRcskn6vSY1q9PatFdaqqLhRrQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nk4C8Y6v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1763978079; c=relaxed/simple;
+	bh=zgUegguLz9fnh3Kc5FyiFvVdDbDa4+bOp5Www3PDcuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ctY5ec1pVMPgAQziivIuyNMUNBBzBLjHqXG57D/iuzXjRNcJdrcJjU9kdacC12pvOLum/X7GMW/2XgVUnWfvsJJolpF2qFqE3iXEuv3DrL1T+h/W/fWPLtntbF/kEBoAZhmjDER1oIdcu/C7H+zIkeFDv76zc8PF6r9/vuR0yyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=P87gnIuA; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nk4C8Y6v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763965962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v5yar6OuDB0ADcv8NH2WOeZJwh0vqiudRWLgOAL+k3Y=;
-	b=Nk4C8Y6veJpSgoerrC6nl4dR2JdbdaDYdviCwAejfk2iBgQoow+Cjwxko3SKlu5e/Asmde
-	dAA6+/Hur0fOTQ+QlJFIUqkLYsFQAvwBElVvbcMT1VAVr1KuK7/6DhZbDK7Zt+YocAkkuH
-	J4IOn7DGEZ1baxxWGQinlvL6K3txPTw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-336-DRgn9Ys5NqyjWXUizxRZ-g-1; Mon, 24 Nov 2025 01:32:24 -0500
-X-MC-Unique: DRgn9Ys5NqyjWXUizxRZ-g-1
-X-Mimecast-MFC-AGG-ID: DRgn9Ys5NqyjWXUizxRZ-g_1763965944
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-477a11d9f89so19499375e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Nov 2025 22:32:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763965944; x=1764570744;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v5yar6OuDB0ADcv8NH2WOeZJwh0vqiudRWLgOAL+k3Y=;
-        b=XX6FdF2SAigrhObNsFpiD9FwJE1G5rHQfLEXj9mcYCvDG2f2Ajc/DFjQJSgnoULY1i
-         EKieQCGK3pb+Ri3HKeyTQ1O3zxItH4/8XChwpHhzs9+4hPSant9O/itl6/NO9psktEph
-         eQSqAXZCxEyHiGhU+I9K11QsYexTV9t6kbbyEUQgaiNXWa5YCBjp28vIlifMov0tZg5H
-         EOyVzuKm3kzlR+YudnmL4nhOhVuthB+/Lun9U7P3cOiiJgXlF/NajF2FYoqE61yOQIQe
-         BQ5xxBQn6rD1Fl8xzvN1TFn7u5Vho7hf0Wr0VQlQEIRdOj7DbTbFm+xqLnxYcUXN1wOD
-         Yhaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvquptIPA8nCN8aE45Vximkq65q5Atk7DcDVEeS6lxgeA+EkBIwDRityXE4HSxVm74c7BQCyAvmNQKPEKUU+mbpKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz4kG439u1/lu9zLnvmsBHc3iGzxKJgRpoux7fkfl4gYsBTPVq
-	xguRHfqyt3upL8Zt6ks3+saADtAkozDeb2eR47PjzaSQHUU+ATypLNNkmee8T9bxWVqm/GJLcQw
-	a390hCjYniC2lPOZ7oSQzexUwyphylDS6tvuoYIt7SnX4HGoN0Gtb+fl61yDin6nH5DoOsJaAOA
-	==
-X-Gm-Gg: ASbGncvpBfCCQDw7mmC0cOjp/YBzVcxqRXzZVxIMe8MZmDpuTq3lMoTpcJuUuiUtnux
-	QyyufGkrcyo+4f0wEQo/9Lz80zsGR2EDpvySJSL95MIG0xBBiGJCKk5SBrtXdNjTsPz560k/81x
-	rrMFv2dXMcCHoEuqyqylbO37EeXhzVMQGFqUUDa00+YJ59PefLU/hY58xlnr4CPzvJV3F7HPT0T
-	YOiaShi7U8EoqFCKvE6Lf+xrN5EyRUI8ezUGDVhL8jKoVyd15lHwF3qYhhwJNPY73FdXMea95fe
-	AFA8LgLo3UXwXu1gaEHLPQY3ybytkpLfUSzgmKxIzRb+Nmh4i0ydqs+kdocXyODzmqvcqN3TZ/+
-	tIGsgJlng6Led0cvmeMCWriilvFc=
-X-Received: by 2002:a05:600c:3b09:b0:477:a3f9:fda5 with SMTP id 5b1f17b1804b1-477c016e425mr78181435e9.9.1763965943515;
-        Sun, 23 Nov 2025 22:32:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFPJb4dKcAq+naHixjVdeC3U+dNG95F4YpemwqmrEUxnYdSW/kUpDzgh7GZ3Iu9BIDXr2931Q==
-X-Received: by 2002:a05:600c:3b09:b0:477:a3f9:fda5 with SMTP id 5b1f17b1804b1-477c016e425mr78181255e9.9.1763965943093;
-        Sun, 23 Nov 2025 22:32:23 -0800 (PST)
-Received: from costa-tp.redhat.com ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477aa387473sm143912575e9.4.2025.11.23.22.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 22:32:22 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] tools/rtla: Add common_usage()
-Date: Mon, 24 Nov 2025 08:31:46 +0200
-Message-ID: <20251124063204.845425-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.51.1
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="P87gnIuA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=B05uJapQfRMGohKkgF1xNVyERBHmagh8Bd3xg1q2NeI=; 
+	b=P87gnIuANW/TJp73uiT1mmsGlTWnBuH0H7vh23lNqSWq4OBDSGmsQEtkmAFMHotC7U4wL6z8BsM
+	xZhrA2DnJ6Byz1eNq9hCgsl0YlQqjChTspvActJHQABJusXSSyN3NViM7BAWMow9uYLi6/azgr/1S
+	bPNPkqeI4K++8lXngyxVPKygWdoefLDaHUV8R9vP4h+Voyby/LgDfyG/U2ZiZD9XFH7HpGmBTtoYh
+	gxxkqEEHWY1my7y2fTHFr9TydDJrVMgiVb3KBgJmEGPf57jfBn092eZeVh0rkWj5FfVDm/r5gwJdx
+	bl004005PGTqWH4a9OI+Nq6nG2BqQ4oMU7WA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1vNTCh-005XNj-0w;
+	Mon, 24 Nov 2025 17:49:52 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 24 Nov 2025 17:49:51 +0800
+Date: Mon, 24 Nov 2025 17:49:51 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: david.laight.linux@gmail.com
+Cc: linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dennis Zhou <dennis@kernel.org>, Eric Dumazet <edumazet@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jens Axboe <axboe@kernel.dk>, Jiri Slaby <jirislaby@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	John Allen <john.allen@amd.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Juergen Gross <jgross@suse.com>, Kees Cook <kees@kernel.org>,
+	KP Singh <kpsingh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>, nic_swsd@realtek.com,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Olivia Mackall <olivia@selenic.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>, Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, x86@kernel.org,
+	Yury Norov <yury.norov@gmail.com>, amd-gfx@lists.freedesktop.org,
+	bpf@vger.kernel.org, cgroups@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org,
+	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-integrity@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, mptcp@lists.linux.dev,
+	netdev@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH 00/44] Change a lot of min_t() that might mask high bits
+Message-ID: <aSQqP6nlqGYOGqcJ@gondor.apana.org.au>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jdpRoDHvDbWnux1BLpxA2RhQ7kxZN3b3Pk_NNlYdhX8_1763965944
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
 
-The rtla tools have significant code quadruplication in their usage
-functions. Each tool implements its own version of the same help text
-formatting and option descriptions, leading to maintenance overhead and
-inconsistencies.  Documentation/tools/rtla/common_options.rst lists 14
-common options.
+On Wed, Nov 19, 2025 at 10:40:56PM +0000, david.laight.linux@gmail.com wrote:
+> From: David Laight <david.laight.linux@gmail.com>
+> 
+> It in not uncommon for code to use min_t(uint, a, b) when one of a or b
+> is 64bit and can have a value that is larger than 2^32;
+> This is particularly prevelant with:
+> 	uint_var = min_t(uint, uint_var, uint64_expression);
+> 
+> Casts to u8 and u16 are very likely to discard significant bits.
+> 
+> These can be detected at compile time by changing min_t(), for example:
+> #define CHECK_SIZE(fn, type, val) \
+> 	BUILD_BUG_ON_MSG(sizeof (val) > sizeof (type) && \
+> 		!statically_true(((val) >> 8 * (sizeof (type) - 1)) < 256), \
+> 		fn "() significant bits of '" #val "' may be discarded")
+> 
+> #define min_t(type, x, y) ({ \
+> 	CHECK_SIZE("min_t", type, x); \
+> 	CHECK_SIZE("min_t", type, y); \
+> 	__cmp_once(min, type, x, y); })
+> 
+> (and similar changes to max_t() and clamp_t().)
+> 
+> This shows up some real bugs, some unlikely bugs and some false positives.
+> In most cases both arguments are unsigned type (just different ones)
+> and min_t() can just be replaced by min().
+> 
+> The patches are all independant and are most of the ones needed to
+> get the x86-64 kernel I build to compile.
+> I've not tried building an allyesconfig or allmodconfig kernel.
+> I've also not included the patch to minmax.h itself.
+> 
+> I've tried to put the patches that actually fix things first.
+> The last one is 0009.
+> 
+> I gave up on fixing sched/fair.c - it is too broken for a single patch!
+> The patch for net/ipv4/tcp.c is also absent because do_tcp_getsockopt()
+> needs multiple/larger changes to make it 'sane'.
+> 
+> I've had to trim the 124 maintainers/lists that get_maintainer.pl finds
+> from 124 to under 100 to be able to send the cover letter.
+> The individual patches only go to the addresses found for the associated files.
+> That reduces the number of emails to a less unsane number.
+> 
+> David Laight (44):
+>   x86/asm/bitops: Change the return type of variable__ffs() to unsigned
+>     int
+>   ext4: Fix saturation of 64bit inode times for old filesystems
+>   perf: Fix branch stack callchain limit
+>   io_uring/net: Change some dubious min_t()
+>   ipc/msg: Fix saturation of percpu counts in msgctl_info()
+>   bpf: Verifier, remove some unusual uses of min_t() and max_t()
+>   net/core/flow_dissector: Fix cap of __skb_flow_dissect() return value.
+>   net: ethtool: Use min3() instead of nested min_t(u16,...)
+>   ipv6: __ip6_append_data() don't abuse max_t() casts
+>   x86/crypto: ctr_crypt() use min() instead of min_t()
+>   arch/x96/kvm: use min() instead of min_t()
+>   block: use min() instead of min_t()
+>   drivers/acpi: use min() instead of min_t()
+>   drivers/char/hw_random: use min3() instead of nested min_t()
+>   drivers/char/tpm: use min() instead of min_t()
+>   drivers/crypto/ccp: use min() instead of min_t()
+>   drivers/cxl: use min() instead of min_t()
+>   drivers/gpio: use min() instead of min_t()
+>   drivers/gpu/drm/amd: use min() instead of min_t()
+>   drivers/i2c/busses: use min() instead of min_t()
+>   drivers/net/ethernet/realtek: use min() instead of min_t()
+>   drivers/nvme: use min() instead of min_t()
+>   arch/x86/mm: use min() instead of min_t()
+>   drivers/nvmem: use min() instead of min_t()
+>   drivers/pci: use min() instead of min_t()
+>   drivers/scsi: use min() instead of min_t()
+>   drivers/tty/vt: use umin() instead of min_t(u16, ...) for row/col
+>     limits
+>   drivers/usb/storage: use min() instead of min_t()
+>   drivers/xen: use min() instead of min_t()
+>   fs: use min() or umin() instead of min_t()
+>   block: bvec.h: use min() instead of min_t()
+>   nodemask: use min() instead of min_t()
+>   ipc: use min() instead of min_t()
+>   bpf: use min() instead of min_t()
+>   bpf_trace: use min() instead of min_t()
+>   lib/bucket_locks: use min() instead of min_t()
+>   lib/crypto/mpi: use min() instead of min_t()
+>   lib/dynamic_queue_limits: use max() instead of max_t()
+>   mm: use min() instead of min_t()
+>   net: Don't pass bitfields to max_t()
+>   net/core: Change loop conditions so min() can be used
+>   net: use min() instead of min_t()
+>   net/netlink: Use umin() to avoid min_t(int, ...) discarding high bits
+>   net/mptcp: Change some dubious min_t(int, ...) to min()
+> 
+>  arch/x86/crypto/aesni-intel_glue.c            |  3 +-
+>  arch/x86/include/asm/bitops.h                 | 18 +++++-------
+>  arch/x86/kvm/emulate.c                        |  3 +-
+>  arch/x86/kvm/lapic.c                          |  2 +-
+>  arch/x86/kvm/mmu/mmu.c                        |  2 +-
+>  arch/x86/mm/pat/set_memory.c                  | 12 ++++----
+>  block/blk-iocost.c                            |  6 ++--
+>  block/blk-settings.c                          |  2 +-
+>  block/partitions/efi.c                        |  3 +-
+>  drivers/acpi/property.c                       |  2 +-
+>  drivers/char/hw_random/core.c                 |  2 +-
+>  drivers/char/tpm/tpm1-cmd.c                   |  2 +-
+>  drivers/char/tpm/tpm_tis_core.c               |  4 +--
+>  drivers/crypto/ccp/ccp-dev.c                  |  2 +-
+>  drivers/cxl/core/mbox.c                       |  2 +-
+>  drivers/gpio/gpiolib-acpi-core.c              |  2 +-
+>  .../gpu/drm/amd/amdgpu/amdgpu_doorbell_mgr.c  |  4 +--
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |  2 +-
+>  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  2 +-
+>  drivers/i2c/busses/i2c-designware-master.c    |  2 +-
+>  drivers/net/ethernet/realtek/r8169_main.c     |  3 +-
+>  drivers/nvme/host/pci.c                       |  3 +-
+>  drivers/nvme/host/zns.c                       |  3 +-
+>  drivers/nvmem/core.c                          |  2 +-
+>  drivers/pci/probe.c                           |  3 +-
+>  drivers/scsi/hosts.c                          |  2 +-
+>  drivers/tty/vt/selection.c                    |  9 +++---
+>  drivers/usb/storage/protocol.c                |  3 +-
+>  drivers/xen/grant-table.c                     |  2 +-
+>  fs/buffer.c                                   |  2 +-
+>  fs/exec.c                                     |  2 +-
+>  fs/ext4/ext4.h                                |  2 +-
+>  fs/ext4/mballoc.c                             |  3 +-
+>  fs/ext4/resize.c                              |  2 +-
+>  fs/ext4/super.c                               |  2 +-
+>  fs/fat/dir.c                                  |  4 +--
+>  fs/fat/file.c                                 |  3 +-
+>  fs/fuse/dev.c                                 |  2 +-
+>  fs/fuse/file.c                                |  8 ++---
+>  fs/splice.c                                   |  2 +-
+>  include/linux/bvec.h                          |  3 +-
+>  include/linux/nodemask.h                      |  9 +++---
+>  include/linux/perf_event.h                    |  2 +-
+>  include/net/tcp_ecn.h                         |  5 ++--
+>  io_uring/net.c                                |  6 ++--
+>  ipc/mqueue.c                                  |  4 +--
+>  ipc/msg.c                                     |  6 ++--
+>  kernel/bpf/core.c                             |  4 +--
+>  kernel/bpf/log.c                              |  2 +-
+>  kernel/bpf/verifier.c                         | 29 +++++++------------
+>  kernel/trace/bpf_trace.c                      |  2 +-
+>  lib/bucket_locks.c                            |  2 +-
+>  lib/crypto/mpi/mpicoder.c                     |  2 +-
+>  lib/dynamic_queue_limits.c                    |  2 +-
+>  mm/gup.c                                      |  4 +--
+>  mm/memblock.c                                 |  2 +-
+>  mm/memory.c                                   |  2 +-
+>  mm/percpu.c                                   |  2 +-
+>  mm/truncate.c                                 |  3 +-
+>  mm/vmscan.c                                   |  2 +-
+>  net/core/datagram.c                           |  6 ++--
+>  net/core/flow_dissector.c                     |  7 ++---
+>  net/core/net-sysfs.c                          |  3 +-
+>  net/core/skmsg.c                              |  4 +--
+>  net/ethtool/cmis_cdb.c                        |  7 ++---
+>  net/ipv4/fib_trie.c                           |  2 +-
+>  net/ipv4/tcp_input.c                          |  4 +--
+>  net/ipv4/tcp_output.c                         |  5 ++--
+>  net/ipv4/tcp_timer.c                          |  4 +--
+>  net/ipv6/addrconf.c                           |  8 ++---
+>  net/ipv6/ip6_output.c                         |  7 +++--
+>  net/ipv6/ndisc.c                              |  5 ++--
+>  net/mptcp/protocol.c                          |  8 ++---
+>  net/netlink/genetlink.c                       |  9 +++---
+>  net/packet/af_packet.c                        |  2 +-
+>  net/unix/af_unix.c                            |  4 +--
+>  76 files changed, 141 insertions(+), 176 deletions(-)
 
-Add common_usage() infrastructure to consolidate help formatting.
-Subsequent patches will extend this to handle other common options.
-
-The refactored output is almost identical to the original, with the
-following changes:
-- add square brackets to specify optionality: `usage: [rtla] ...`
-- remove `-q` from timerlat hist because hist tools don't support it
-- minor spacing
-
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/common.c        | 39 ++++++++++++++++++++++++++
- tools/tracing/rtla/src/common.h        |  3 ++
- tools/tracing/rtla/src/osnoise_hist.c  | 22 ++++++---------
- tools/tracing/rtla/src/osnoise_top.c   | 37 ++++++++++--------------
- tools/tracing/rtla/src/timerlat_hist.c | 22 ++++++---------
- tools/tracing/rtla/src/timerlat_top.c  | 22 ++++++---------
- 6 files changed, 81 insertions(+), 64 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index b197037fc58b..18b92c5e4b1a 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -4,6 +4,7 @@
- #include <pthread.h>
- #include <signal.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <unistd.h>
- #include "common.h"
- 
-@@ -348,3 +349,41 @@ int hist_main_loop(struct osnoise_tool *tool)
- 
- 	return retval;
- }
-+
-+static void print_msg_array(const char * const *msgs)
-+{
-+	if (!msgs)
-+		return;
-+
-+	for (int i = 0; msgs[i]; i++)
-+		fprintf(stderr, "%s\n", msgs[i]);
-+}
-+
-+/*
-+ * common_usage - print complete usage information
-+ */
-+void common_usage(const char *tool, const char *mode,
-+		  const char *desc, const char * const *start_msgs, const char * const *opt_msgs)
-+{
-+	static const char * const common_options[] = {
-+		"	  -h/--help: print this menu",
-+		NULL
-+	};
-+	fprintf(stderr, "rtla %s", tool);
-+	if (strcmp(mode, ""))
-+		fprintf(stderr, " %s", mode);
-+	fprintf(stderr, ": %s (version %s)\n\n", desc, VERSION);
-+	fprintf(stderr, "  usage: [rtla] %s ", tool);
-+
-+	if (strcmp(mode, "top") == 0)
-+		fprintf(stderr, "[top] [-h] ");
-+	else
-+		fprintf(stderr, "%s [-h] ", mode);
-+
-+	print_msg_array(start_msgs);
-+	fprintf(stderr, "\n");
-+	print_msg_array(common_options);
-+	print_msg_array(opt_msgs);
-+
-+	exit(EXIT_SUCCESS);
-+}
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 9ec2b7632c37..b44e910ba72c 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -156,3 +156,6 @@ bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record
- int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
- int top_main_loop(struct osnoise_tool *tool);
- int hist_main_loop(struct osnoise_tool *tool);
-+
-+void common_usage(const char *tool, const char *mode,
-+		  const char *desc, const char * const *start_msgs, const char * const *opt_msgs);
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index ff8c231e47c4..372128db9e4a 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -409,16 +409,15 @@ osnoise_print_stats(struct osnoise_tool *tool)
-  */
- static void osnoise_hist_usage(void)
- {
--	int i;
--
--	static const char * const msg[] = {
--		"",
--		"  usage: rtla osnoise hist [-h] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
-+	static const char * const msg_start[] = {
-+		"[-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
- 		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
- 		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] \\",
- 		"	  [--no-index] [--with-zeros] [-C [cgroup_name]] [--warm-up]",
--		"",
--		"	  -h/--help: print this menu",
-+		NULL,
-+	};
-+
-+	static const char * const msg_opts[] = {
- 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
- 		"	  -p/--period us: osnoise period in us",
- 		"	  -r/--runtime us: osnoise runtime in us",
-@@ -453,13 +452,8 @@ static void osnoise_hist_usage(void)
- 		NULL,
- 	};
- 
--	fprintf(stderr, "rtla osnoise hist: a per-cpu histogram of the OS noise (version %s)\n",
--			VERSION);
--
--	for (i = 0; msg[i]; i++)
--		fprintf(stderr, "%s\n", msg[i]);
--
--	exit(EXIT_SUCCESS);
-+	common_usage("osnoise", "hist", "a per-cpu histogram of the OS noise",
-+		     msg_start, msg_opts);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 04c699bdd736..1db1d946b600 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -257,14 +257,16 @@ osnoise_print_stats(struct osnoise_tool *top)
-  */
- static void osnoise_top_usage(struct osnoise_params *params)
- {
--	int i;
-+	const char *tool, *mode, *desc;
- 
--	static const char * const msg[] = {
--		" [-h] [-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
-+	static const char * const msg_start[] = {
-+		"[-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
- 		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
- 		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C [cgroup_name]] [--warm-up s]",
--		"",
--		"	  -h/--help: print this menu",
-+		NULL,
-+	};
-+
-+	static const char * const msg_opts[] = {
- 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
- 		"	  -p/--period us: osnoise period in us",
- 		"	  -r/--runtime us: osnoise runtime in us",
-@@ -295,25 +297,16 @@ static void osnoise_top_usage(struct osnoise_params *params)
- 	};
- 
- 	if (params->mode == MODE_OSNOISE) {
--		fprintf(stderr,
--			"rtla osnoise top: a per-cpu summary of the OS noise (version %s)\n",
--			VERSION);
--
--		fprintf(stderr, "  usage: rtla osnoise [top]");
-+		tool = "osnoise";
-+		mode = "top";
-+		desc = "a per-cpu summary of the OS noise";
-+	} else {
-+		tool = "hwnoise";
-+		mode = "";
-+		desc = "a summary of hardware-related noise";
- 	}
- 
--	if (params->mode == MODE_HWNOISE) {
--		fprintf(stderr,
--			"rtla hwnoise: a summary of hardware-related noise (version %s)\n",
--			VERSION);
--
--		fprintf(stderr, "  usage: rtla hwnoise");
--	}
--
--	for (i = 0; msg[i]; i++)
--		fprintf(stderr, "%s\n", msg[i]);
--
--	exit(EXIT_SUCCESS);
-+	common_usage(tool, mode, desc, msg_start, msg_opts);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 1fb471a787b7..2a5c543217ba 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -696,17 +696,16 @@ timerlat_print_stats(struct osnoise_tool *tool)
-  */
- static void timerlat_hist_usage(void)
- {
--	int i;
--
--	char *msg[] = {
--		"",
--		"  usage: [rtla] timerlat hist [-h] [-q] [-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
-+	static const char * const msg_start[] = {
-+		"[-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
- 		"         [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
- 		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
- 		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-task] [-u|-k]",
- 		"	  [--warm-up s] [--deepest-idle-state n]",
--		"",
--		"	  -h/--help: print this menu",
-+		NULL,
-+	};
-+
-+	static const char * const msg_opts[] = {
- 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
- 		"	  -p/--period us: timerlat period in us",
- 		"	  -i/--irq us: stop trace if the irq latency is higher than the argument in us",
-@@ -750,13 +749,8 @@ static void timerlat_hist_usage(void)
- 		NULL,
- 	};
- 
--	fprintf(stderr, "rtla timerlat hist: a per-cpu histogram of the timer latency (version %s)\n",
--			VERSION);
--
--	for (i = 0; msg[i]; i++)
--		fprintf(stderr, "%s\n", msg[i]);
--
--	exit(EXIT_SUCCESS);
-+	common_usage("timerlat", "hist", "a per-cpu histogram of the timer latency",
-+		     msg_start, msg_opts);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 29c2c1f717ed..9ed8b931552f 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -476,15 +476,14 @@ timerlat_print_stats(struct osnoise_tool *top)
-  */
- static void timerlat_top_usage(void)
- {
--	int i;
--
--	static const char *const msg[] = {
--		"",
--		"  usage: rtla timerlat [top] [-h] [-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
-+	static const char *const msg_start[] = {
-+		"[-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
- 		"	  [[-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
- 		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
--		"",
--		"	  -h/--help: print this menu",
-+		NULL,
-+	};
-+
-+	static const char *const msg_opts[] = {
- 		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
- 		"	     --aa-only us: stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)",
- 		"	  -p/--period us: timerlat period in us",
-@@ -522,13 +521,8 @@ static void timerlat_top_usage(void)
- 		NULL,
- 	};
- 
--	fprintf(stderr, "rtla timerlat top: a per-cpu summary of the timer latency (version %s)\n",
--			VERSION);
--
--	for (i = 0; msg[i]; i++)
--		fprintf(stderr, "%s\n", msg[i]);
--
--	exit(EXIT_SUCCESS);
-+	common_usage("timerlat", "top", "a per-cpu summary of the timer latency",
-+		     msg_start, msg_opts);
- }
- 
- /*
+Patches 10,14,16,37 applied.  Thanks.
 -- 
-2.51.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
