@@ -1,47 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEF52737FC;
-	Mon, 24 Nov 2025 14:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FBD3128D9;
+	Mon, 24 Nov 2025 15:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763995786; cv=none; b=p2XKyrbPnem3PVNpcrScM+5fm2lvi1RPFtJ4EzphjIFyi+hKH2N98FIRGi4r4KQnUspB7gBVpGr+gA1HfoGxRRV5dcgkbOKwRWhkt8C3sLhGz9CzfaIeYEtSszfVqeToRkuznTYZ2VvjkKKFSUGzZ4A2Ny1peuQelPgqlAaMkXU=
+	t=1763997316; cv=none; b=ZTQBOGcScVlaVDrsrYWYLysO2cI3USUiU8WT5BM2c2F4AlF5/Iq+LsixWLZEt4jEaS0sJeE4HnZnAvkCqbeMFaCDgPaoFV0gXNFsN3VZ4E+eRozQSXre8B60REq+7t/2C5BnEADuALRLV4nRuXZ2vngNcj8nze+c8uCwJnk7pbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763995786; c=relaxed/simple;
-	bh=2U6hn9si5EBJTgmQ8x5RMt+GdbBkV+WBaJFuv4rHB7U=;
+	s=arc-20240116; t=1763997316; c=relaxed/simple;
+	bh=wbsUIStRu/I8l+W7EEAADPQP6bZYzpJBz5TxnbpLenw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nWKVG0R6JburwCDZVcBPTQ1+b6HjpGnCt7+1S8DTdCXaVqNw0sWwo7m/kMv3NcEpYiVD4zfN1xwo2SPmOINs8ugWeP1Y5G2CE1WPTrZ73Pin7SvKeoP+HriTa2B4wGFvsI0lfX0Yna77vjkHyUx0Ng1eHFyaH8juwfvLh5Tk+0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=LxH28SUnNSHIdBUZw1MbOjBvAzYXSn2EmYvU8XU3DlF9OlwDB8BG+Z0NKd0tQAj0KVxOlWc/5Ga/3YQI353Y8FWslEW2ZZyj67loF6fPvR4O/G2TOC5e/0RjM+F+J44/n1+FMWLVvKkCtXpAh0IAzOsMtTE5k4tKaHu6JUESnYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 3DE6013058A;
-	Mon, 24 Nov 2025 14:49:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id F3A6C20015;
-	Mon, 24 Nov 2025 14:49:29 +0000 (UTC)
-Date: Mon, 24 Nov 2025 09:50:10 -0500
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 9D7021305FE;
+	Mon, 24 Nov 2025 15:15:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 916DB2001C;
+	Mon, 24 Nov 2025 15:15:04 +0000 (UTC)
+Date: Mon, 24 Nov 2025 10:15:45 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Menglong Dong <menglong8.dong@gmail.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
- <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, jiang.biao@linux.dev, bpf
- <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v3 6/6] bpf: implement "jmp" mode for
- trampoline
-Message-ID: <20251124095010.1eaae2b5@gandalf.local.home>
-In-Reply-To: <CAADnVQLs-kBMi7VCizH5be8q8Nyzx=KYNPcnF-EDNx7OPs4Aiw@mail.gmail.com>
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
-	<20251118123639.688444-7-dongml2@chinatelecom.cn>
-	<CAADnVQ+mHb0AZe=J+yswjMiXLToG3-_3cfMxnNJJM-KAukbxBw@mail.gmail.com>
-	<20251118200304.29f2bd7a@gandalf.local.home>
-	<CAADnVQLs-kBMi7VCizH5be8q8Nyzx=KYNPcnF-EDNx7OPs4Aiw@mail.gmail.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ damon@lists.linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 12/12] mm/damon/core: add trace point for damos stat
+ per apply interval
+Message-ID: <20251124101545.0250445c@gandalf.local.home>
+In-Reply-To: <20251123184329.85287-13-sj@kernel.org>
+References: <20251123184329.85287-1-sj@kernel.org>
+	<20251123184329.85287-13-sj@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,35 +39,86 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: F3A6C20015
-X-Stat-Signature: tr9cikrqfaqqxo6dtssdwyhke5wzmy8c
-X-Rspamd-Server: rspamout06
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 916DB2001C
+X-Stat-Signature: amgdopewak89z9b311nn95u1tetxutom
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Q0WAcvkeYHyjjC8OZIWkuduGdQ4dIWFQ=
-X-HE-Tag: 1763995769-565992
-X-HE-Meta: U2FsdGVkX1+/mSZdhlqKJoA5ypmhCHpi/1gfA8sJRta9vF1al0L5bw3DcNB5h19wNGcFotHDRCXNy0BMbCL0ojJKc8DynPW71jlRhjwq1mwaYw4BKDfwhcUpAJaKyyKr8UqSB9RJYsqvuLpu0q7bGYtuR3fHTu+/kFojwWhUGAIh3czA7tpMNAUwApboFVwC3v+awGSLSK/WUEQjXS5UO5alTkKAhj79t+RxZNv2vuP/HNU16O2sfRhKS4GYnBPsZ8y3nMRa4GQk4mbo1DoKnryc58tWCvTCzOUWcRVNSm/RjJKJtnXL+Oa6R4AaJXRD9iEFvKuOUtf5SDv7XdsbU0gQKtca0fVYwucQ8ZxnXT0rMw7EYqIKFbKzljhWsiNkPAeapQrgWch9YO6zX+NSNg==
+X-Session-ID: U2FsdGVkX18mhiH+8yhU3rLNz0uC4XgLk5UTtfo2JA0=
+X-HE-Tag: 1763997304-799272
+X-HE-Meta: U2FsdGVkX1+nRZEW3e6XwJCJw6tJDlTKHwyHh7MykKmgcEJOcruyi41RFB+KBqDeklnJ8td/Dao+47YI27tMFW18xY7bwX7sLkzK1IIT689x9RsrYeGaP3UUFuTL04sSMlYXa+Ce41PehX79Q2WGOMbgNtPvvxOoMp44prXMClJZ/utaM5/rtQ+wkE6fnJrcCI9aEnee8FIgEtEENWxsH5teOKLh3CVKGD/PL3jKQqaWrRw7umcNDuXejN0GQqre+e1tsMIxI05twQiF+lCh0mdon2sr4k8AasnaZvGoSJwdgQPnGF5WkCU20LW7Ab7EQAjo9K9647YCoQYb7jX9ckSn+MjKVbGw
 
-On Fri, 21 Nov 2025 18:37:02 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Sun, 23 Nov 2025 10:43:26 -0800
+SeongJae Park <sj@kernel.org> wrote:
 
-> On Tue, Nov 18, 2025 at 5:02=E2=80=AFPM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Tue, 18 Nov 2025 16:59:59 -0800
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > =20
-> > > Steven,
-> > > are you happy with patch 1?
-> > > Can you pls Ack? =20
-> >
-> > Let me run patch 1 and 2 through my tests. =20
->=20
-> gentle ping.
+> --- a/mm/damon/core.c
+> +++ b/mm/damon/core.c
+> @@ -2256,6 +2256,19 @@ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
+>  	quota->min_score = score;
+>  }
+>  
+> +static void damos_trace_stat(struct damon_ctx *c, struct damos *s)
+> +{
+> +	unsigned int cidx = 0, sidx = 0;
+> +	struct damos *siter;
+> +
+> +	damon_for_each_scheme(siter, c) {
+> +		if (siter == s)
+> +			break;
+> +		sidx++;
+> +	}
+> +	trace_damos_stat_after_apply_interval(cidx, sidx, &s->stat);
+> +}
+> +
+>  static void kdamond_apply_schemes(struct damon_ctx *c)
+>  {
+>  	struct damon_target *t;
+> @@ -2294,6 +2307,8 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
+>  			(s->apply_interval_us ? s->apply_interval_us :
+>  			 c->attrs.aggr_interval) / sample_interval;
+>  		s->last_applied = NULL;
+> +		if (trace_damos_stat_after_apply_interval_enabled())
+> +			damos_trace_stat(c, s);
+>  	}
+>  	mutex_unlock(&c->walk_control_lock);
+>  }
 
-Yeah, sorry forgot to reply. They did pass.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+I wonder if the above would look better (and still produce good assembly)
+if it was:
+
+static inline void damos_trace_stat(struct damon_ctx *c, struct damos *s)
+{
+	unsigned int cidx = 0, sidx = 0;
+	struct damos *siter;
+
+	if (!trace_damos_stat_after_apply_interval_enabled())
+		return;
+
+	damon_for_each_scheme(siter, c) {
+		if (siter == s)
+			break;
+		sidx++;
+	}
+	trace_damos_stat_after_apply_interval(cidx, sidx, &s->stat);
+}
+
+static void kdamond_apply_schemes(struct damon_ctx *c)
+{
+	struct damon_target *t;
+> @@ -2294,6 +2307,8 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
+			(s->apply_interval_us ? s->apply_interval_us :
+			 c->attrs.aggr_interval) / sample_interval;
+ 		s->last_applied = NULL;
+		damos_trace_stat(c, s);
+	}
+	mutex_unlock(&c->walk_control_lock);
+}
+
+
+I have no real preference. I just think keeping the "if ()" statement out
+of the main code as a more aesthetic look. But the above should be
+equivalent in actual functionality.
 
 -- Steve
