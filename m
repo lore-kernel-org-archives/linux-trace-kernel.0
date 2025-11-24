@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7E52F659C;
-	Mon, 24 Nov 2025 21:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8E432F774;
+	Mon, 24 Nov 2025 21:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764020910; cv=none; b=Ki5AEjsTcyj/yHJOCoRZdECeIeEQbFtud6u1/66HYRw4qoefJg4AWoxniR0Cv1n2y0r1Dq0mLPVlZuCwTPh+FjOzTLusUFlCmOCG9T+YZOk8jM8op4jtedB8Fz8kcNfQz94QNC7/bPBqFHMB5irK+JfvBfjtsI+/I6TMpEfkUzQ=
+	t=1764021245; cv=none; b=hWlXngThwofaFVghsiblSw5w4gPRsGxo6bA1GP0JYrpNPLZ438wm7YVqqOdrKxVX8C+PUJPXRORMVT8bhCkjxOjSTJU8dluYjhyJSXVmBOn1hhAeN3OoTaXicWLwQIF2nWUGp9x1qPNmimzFSQdY9OTu2mIaGCV/wX9ml29ERWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764020910; c=relaxed/simple;
-	bh=Z/sD2dNaWC4UKQT+U55zKbzRudVZCZXaR7o3Os92w/0=;
+	s=arc-20240116; t=1764021245; c=relaxed/simple;
+	bh=i+y/zYMbOS3VVJbIz/zAeprIxtSZJyasGN16FPNdrI4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UaHgKC4jVogcBZUcrF9jBJkf3VfVh0+n/MnIPFdcXpUwLymRi8SBQQbqnLKEgLmOluOU4PK6Y6evNJjfK1K2JLeFrCSAFRCTCoBDmLMEbFv4Sv7rtPMdP+xjRpcbKmlPHohqFwiSPaIxpgb0QSV6BlGnnTIizucsGyoo5EJgVHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=NnC0JtFJoccKMYaffhzUSx9uCk2YRetUGeVERQHNWr+YZ6cGxO6YYL49onZXBAIWmEvLxxlqbnrmXbw9IHhGIJBM5JTtJXKa4IO90loovYDpigUj7zC/Ggt24XHmsVJpciSjW1d3S/IvrdV/uZyRoSq/oANvIehvFbqZL03v1aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 826D4594FE;
-	Mon, 24 Nov 2025 21:48:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id A5BCA60009;
-	Mon, 24 Nov 2025 21:48:23 +0000 (UTC)
-Date: Mon, 24 Nov 2025 16:49:05 -0500
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2C2D65949D;
+	Mon, 24 Nov 2025 21:54:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 4C15217;
+	Mon, 24 Nov 2025 21:53:58 +0000 (UTC)
+Date: Mon, 24 Nov 2025 16:54:40 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Donglin Peng <dolinux.peng@gmail.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -27,7 +27,7 @@ Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
  Masami Hiramatsu <mhiramat@kernel.org>
 Subject: Re: [PATCH v7] function_graph: Enable funcgraph-args and
  funcgraph-retaddr to work simultaneously
-Message-ID: <20251124164905.55cd25bb@gandalf.local.home>
+Message-ID: <20251124165440.1418ed85@gandalf.local.home>
 In-Reply-To: <20251124164701.1216a073@gandalf.local.home>
 References: <20251114025522.2115359-1-dolinux.peng@gmail.com>
 	<20251124164701.1216a073@gandalf.local.home>
@@ -40,20 +40,17 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 958tpufmrypbg8mrrs331t6qngec75sk
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: A5BCA60009
+X-Stat-Signature: 31xmwz6sksy5wc6fy6atfqc4c3xjcrpo
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 4C15217
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19HGYXEFB7t0QNJ5BZrS0GQP1zkXpf8roQ=
-X-HE-Tag: 1764020903-516963
-X-HE-Meta: U2FsdGVkX1/w++v4GJ1/9SqyxPLdNy9tJboniJG8rlkuFMQpc+voOoQVtRQ/2GyGSOZSWHYsE4O/fM3o/mCS85GJK7yXg+CMzKPGugzXr6UZIfTjoMPrTwZtBZJJCRbuUJ0f6lPHNAQYwp7QuF+fZPUVWutBIR4cUbSmw3/N7BlLqj5BuJvSNRfd62zkg+y0yMor2sh6/w5sgMm8x6bAvKK1jf0/D+dAjgrZ+Jjr7EzMBD765rQMQQqudxA70bGRZS4OUWoZn3+OGuT3Ggr2JEnmAhA1OnTBUIQMCTS0VVZ4B/JD672J2hWtkvm8lvvoE/Z8FQnTaZn8LdToxtxes4h6ly/DuGkOcmDZP+BiI0YimjCENasjHjYIgDmv5RBMC9moBJGzz7kvpGYExorcoKR2dgbZ3Tj+WBkWAOqLrF8=
+X-Session-ID: U2FsdGVkX1/QwB7FWvqjb6TRYNkA3mv0ofbNQj2hMDU=
+X-HE-Tag: 1764021238-347696
+X-HE-Meta: U2FsdGVkX18x7fS7sDaX5vbtao4JNKctv8oVctO1inzo1yBPBOiFxzPjhgKXMWctf8LHvw4t/EzlwcucHNhAGF/ABIGNIj3XJk3tnKZgjXwQfApbtRxyBpaXDLiJiWSM+GaAv7+TsvehpGAkaTB7zdWi8H8wAeaiT9NqQMKh2fdTcd3iiEU5U/i9xt6h5I/QAgP87J9zsNpstJPfOgcqriX330q+VlzbFCt1W9ndUd92weLtdkf7CpRgt1SolJt7qFrhjuoqa3hFssnwHxvIGDcpqi40dT/iNEho0PHiHpXSRNIGsjN6ZF+alD4Sf9nhfz7zcMw9YdHDYifrHBl2kggoT2qUTiPxI4fDHfRbNoC+7vKAKQCSQTGGw4LzoRkv
 
 On Mon, 24 Nov 2025 16:47:01 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, 14 Nov 2025 10:55:22 +0800
-> Donglin Peng <dolinux.peng@gmail.com> wrote:
-> 
 > > --- a/kernel/trace/trace_entries.h
 > > +++ b/kernel/trace/trace_entries.h
 > > @@ -95,14 +95,14 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
@@ -69,13 +66,19 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > You can't delete the retaddr without breaking user space.
 > 
 > Please keep that here.
-> 
 
-Also, please rebase on top of:
+I added this, and user space works again:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git  trace/for-next
-
-
-Thanks!
-
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 593a74663c65..4666b6179056 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -98,6 +98,7 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+ 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+ 		__field_packed(	unsigned long,	graph_ent,	func		)
+ 		__field_packed(	unsigned int,	graph_ent,	depth		)
++		__field_packed(	unsigned long,	graph_ent,	retaddr		)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
 -- Steve
