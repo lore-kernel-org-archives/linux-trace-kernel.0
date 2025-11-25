@@ -1,138 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B238F31A81F;
-	Tue, 25 Nov 2025 13:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A59F21CFE0
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 13:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764075705; cv=none; b=jZn7y7Vixc/+UE55pm+IMnZh/lrHAHH1iIg2rNIa+ybikwS9Qn+8Bne2FfDgkICP9I/uyP7qt2ywm+Ys1ldKJF2hlbKV/sVLTIg3uMRhp0WWdRfKP71Ez/bAsGNjZ7RghB3ICU9PiRcfN93FZFI4Ya8L43pEYOq42iNAVbMwoYg=
+	t=1764077687; cv=none; b=iVs3Op2e44OZrryoORMxES+7WgDeMMxCm4+UxbU3tkRQMQ2DppovTLPa61g+uBWFkQhV3FRa6fau6+vZsv+Xc8maRZcV5oADK3lj9UXjGLiP8qJvjDexUnkA5f+rSmaSDUzHeWXobN0Zrava0ceGqewQbCKwJzwZkmZPWdD6MTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764075705; c=relaxed/simple;
-	bh=vhDkXZtACLobzfgQIVIf22ePHtG54z/L1w308icBQUg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nT95Cj8VSYlGCaeyJ1BLKqzg0/CqBnTMs3e8uUDTH68nkPLdu70NCq466Pql8K5wdgkLN8kyqXqnv2SWj6BmWfO32r9v8ZMJg0MZFOhPlacAjpydhewFpm1wHs/ZPgBbHoWGKNPG+1qfcYDYWuVSOyL2KBGHGmOzIl9ql/7syyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKmAz4Sz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764077687; c=relaxed/simple;
+	bh=etD/zC7KgIaLoz8/uK0eNdolW/aHkPh00njUq2K4OIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nxbe6Jkb2fiDXnxEKwmm17YC7Qib1+qfycWKy2FyIXSKLjIP5OtPz1gkaH/m7lv8USwfgzEUOP9KmSftnuKiO8kWQceZ5cQq9Tc2bUlRVkAj9hSO8wlMz6Cr43N8ESBEsqt6e1lc6+mZ+l3cBSmegDkbKv5+FL/HOelc30wH3iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dfLo2ZiD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKmAz4Sz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8FDDC4CEF1;
-	Tue, 25 Nov 2025 13:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764075705;
-	bh=vhDkXZtACLobzfgQIVIf22ePHtG54z/L1w308icBQUg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WKmAz4Szb3q1tkX81G/hb5Wn9WGMUIU2gtrP25ahAhuPkLyDmOogbUwCYO3AMgCP/
-	 qGORkZ5WIjS3ob+3J2iMtseyjmhkwVKjN0vSqh4m8QdJ/fMn8j6nJr5RIWCzEM+SEz
-	 nWrHauTGQwMKZxv9Y9VeMANYtMeiQAC12hlhtPhcoJ+0pMSlRbiIcgp2/GDCaiKtiG
-	 X5cVUVvWsT2D680UNJtFKJO9d4ysDv+82oj/k1G0mu6nmr4Qia1NmBi8sVwZtKYkWg
-	 x0xRr5gjCyZuvvmgHM/UmGblCaU78QRoFb8yt12i0dgyvb3K3QmmgsvFAgI9ObSMnu
-	 AwcDONJR/59cA==
-Message-ID: <cfa03e4c70ff706b5373bf5314f453930019e1a1.camel@kernel.org>
-Subject: Re: [PATCH 2/2] tracing: Merge struct event_trigger_ops into struct
- event_command
-From: Tom Zanussi <zanussi@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Date: Tue, 25 Nov 2025 07:01:43 -0600
-In-Reply-To: <20251119031603.658997916@kernel.org>
-References: <20251119031042.328864818@kernel.org>
-	 <20251119031603.658997916@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfLo2ZiD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764077684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yzvCE0HXjjHNitafAJjfZm5OBX9yo3X4qA4rV1S0mjI=;
+	b=dfLo2ZiDwf2bgsaRkzIz701gG/ORY+YeAsFTScvBtQ+P/4I6Zdnc8ZQpeNtHE3P8He34Kl
+	Hsw4Lmonm1ytl9Er83Q6Rxurl88dF2IKdLSXo9BthH+km8b5VtYiaqfjMjdhRxynVlASOT
+	PjuL2f+4Zw4SahW8ZC2fFAapDxGmnoQ=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-zBqNj4vqPvWKSMm-uAaI6Q-1; Tue, 25 Nov 2025 08:34:42 -0500
+X-MC-Unique: zBqNj4vqPvWKSMm-uAaI6Q-1
+X-Mimecast-MFC-AGG-ID: zBqNj4vqPvWKSMm-uAaI6Q_1764077679
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-37cc3fc4f2cso21091881fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 05:34:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764077679; x=1764682479;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yzvCE0HXjjHNitafAJjfZm5OBX9yo3X4qA4rV1S0mjI=;
+        b=uTgzx4EDUUSj4RPZ2RpVDSUh/Vw1FmVvSmKdfIkO9VrVoLII/cvT53WTDQpm0gsBvR
+         ObKIaebnCtunCELhIkqiDQ/nfHbqqjWtX+qU1cIHbvMC+gEGhlQ++cRjf7Su6OAZ1d0r
+         M3gCoh2uawZT8QFk80kZbnalWtF6Za5FvcZ/vSu7rVdJGxvE6X7APUdRRybaYXKALZJ8
+         M+ALkirIdY0wy75BfDlO2+ijnGN9LMreyyAZhRzPAASjuWvN54wrIV1nSCaFhjp2TGRv
+         4NYvGqDlSuYC0YfcBGR3K/as+Fm+RBvKfoGUA8QWx5cydJngTst4/aOqCEGGVL2JwfZy
+         aFkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVd6e57vHzlmulzKgHidrE7W2BQZ0mM0H8stdxGLgNfDBPuAIhIeyWH/lYtNltO1C7PRsX/UYAb+j40Ci+cAIs7vJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1R9DLVh9A+Akg3lRam91Ev8p2l0mkSnvEPSDms8mc0vhsKJDQ
+	JqYK0QlZPXr88r+sXucAVFIFDt0tlsuic/ijNtj+aEAe9lRey+h0LeMyAIzwwXXTtDn/iIV5hN8
+	1AU9CV/fiSN6eKpma2l1TKpSKHl+NmaSnomkKRuuDAcrSHp3WS+SCka3rtA4rnj67SzSK4It0bN
+	ux6zglmxMRNoOB+ONIiF1I63GXroZI8TXU/j0/3EQLUD4KJg96
+X-Gm-Gg: ASbGncuCvbfHmSnG57mnx34kK8EGj6vLV9KKebwaD2OfMgBzBRMJQpJ9rdAhM4F+12M
+	etFRRrLo/Kwb9FmrQgxS6kcrwxzgpBKtG2xDB9IL0sIwZ02O9ZksabGKlUuX2QEWVJL0N4l0BiE
+	/78Uu5wiUjJCVnGeGS5zYhxMVeIQxogPPOfATm0exr6CWMSEHPHoSia8Ix0cASEjKcRw==
+X-Received: by 2002:a05:6512:12c4:b0:595:7d95:eacd with SMTP id 2adb3069b0e04-596b4e4b76dmr984718e87.8.1764077678663;
+        Tue, 25 Nov 2025 05:34:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFfGw3W8ScMQe1ku6YWllmhNAIovzKH3FJqo8QXbxYKH/hwDLT0p8hMBiFjD56rgk/v8JStgTQmMj9ANJkgq4M=
+X-Received: by 2002:a05:6512:12c4:b0:595:7d95:eacd with SMTP id
+ 2adb3069b0e04-596b4e4b76dmr984702e87.8.1764077678103; Tue, 25 Nov 2025
+ 05:34:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251117184409.42831-1-wander@redhat.com> <20251117184409.42831-5-wander@redhat.com>
+ <9770045bcf400920152f0698c07090a641cc4aa1.camel@redhat.com>
+In-Reply-To: <9770045bcf400920152f0698c07090a641cc4aa1.camel@redhat.com>
+From: Wander Lairson Costa <wander@redhat.com>
+Date: Tue, 25 Nov 2025 10:34:26 -0300
+X-Gm-Features: AWmQ_blgXR85mYgUfaQ8idupZ16Ae7dRI2-VhSy-jeUInMobXiAc48bASO5gx-Y
+Message-ID: <CAAq0SU=MPghhj9FxB9M0M2Lk0H23ZgyBs6qnucXit7YE+tr0NA@mail.gmail.com>
+Subject: Re: [rtla 04/13] rtla: Replace atoi() with a robust strtoi()
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, John Kacur <jkacur@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:\\b|_)bpf(?:\\b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: DxYuf7PTdOlAPLE7IVe2PvQlhl2xFyhgDCTz98_bVSo_1764077679
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steve,
+On Mon, Nov 24, 2025 at 9:46=E2=80=AFPM Crystal Wood <crwood@redhat.com> wr=
+ote:
+>
+> On Mon, 2025-11-17 at 15:41 -0300, Wander Lairson Costa wrote:
+>
+> >
+> > diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/=
+actions.c
+> > index efa17290926da..e23d4f1c5a592 100644
+> > --- a/tools/tracing/rtla/src/actions.c
+> > +++ b/tools/tracing/rtla/src/actions.c
+> > @@ -199,12 +199,14 @@ actions_parse(struct actions *self, const char *t=
+rigger, const char *tracefn)
+> >               /* Takes two arguments, num (signal) and pid */
+> >               while (token !=3D NULL) {
+> >                       if (strlen(token) > 4 && strncmp(token, "num=3D",=
+ 4) =3D=3D 0) {
+> > -                             signal =3D atoi(token + 4);
+> > +                             if(!strtoi(token + 4, &signal))
+> > +                                     return -1;
+>
+> if (
+>
+> >                       } else if (strlen(token) > 4 && strncmp(token, "p=
+id=3D", 4) =3D=3D 0) {
+> >                               if (strncmp(token + 4, "parent", 7) =3D=
+=3D 0)
+> >                                       pid =3D -1;
+> >                               else
+> > -                                     pid =3D atoi(token + 4);
+> > +                                     if (!strtoi(token + 4, &pid))
+> > +                                             return -1;
+>
+> else if (
+>
+> Please run the patches through checkpatch.pl
+>
 
-On Tue, 2025-11-18 at 22:10 -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> Now that there's pretty much a one to one mapping between the struct
-> event_trigger_ops and struct event_command, there's no reason to have two
-> different structures. Merge the function pointers of event_trigger_ops
-> into event_command.
->=20
-> There's one exception in trace_events_hist.c for the
-> event_hist_trigger_named_ops. This has special logic for the init and fre=
-e
-> function pointers for "named histograms". In this case, allocate the
-> cmd_ops of the event_trigger_data and set it to the proper init and free
-> functions, which are used to initialize and free the event_trigger_data
-> respectively. Have the free function and the init function (on failure)
-> free the cmd_ops of the data element.
->=20
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Good catch, thanks.
 
-Very nice as well, just one tiny note below..
+> > @@ -959,3 +967,25 @@ int auto_house_keeping(cpu_set_t *monitored_cpus)
+> >
+> >       return 1;
+> >  }
+> > +
+> > +/*
+> > + * strtoi - convert string to integer with error checking
+> > + *
+> > + * Returns true on success, false if conversion fails or result is out=
+ of int range.
+> > + */
+> > +bool strtoi(const char *s, int *res)
+>
+> Could use __attribute__((__warn_unused_result__)) like kstrtoint().
+>
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Sure, I will do it in v2.
 
+> BTW, it's pretty annoying that we need to reinvent the wheel on all this
+> stuff just because it's userspace.  From some of the other tools it
+> looks like we can at least include basic kernel headers like compiler.h;
+> maybe we should have a tools/-wide common util area as well?  Even
+> better if some of the code can be shared with the kernel itself.
+>
+> Not saying that should in any way be a blocker for these patches, just
+> something to think about.
+>
 
-> ---
-> =C2=A0kernel/trace/trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 126 +++++++++++------------=
------
-> =C2=A0kernel/trace/trace_eprobe.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 13 +--
-> =C2=A0kernel/trace/trace_events_hist.c=C2=A0=C2=A0=C2=A0 |=C2=A0 93 +++++=
-+++++----------
-> =C2=A0kernel/trace/trace_events_trigger.c | 121 +++++++++++--------------=
--
-> =C2=A04 files changed, 152 insertions(+), 201 deletions(-)
->=20
+I thought the same thing some time ago.
 
-[...]
-
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index f9cc8d6a215b..1e03398b9e91 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -5694,7 +5694,7 @@ static void hist_trigger_show(struct seq_file *m,
-> =C2=A0		seq_puts(m, "\n\n");
-> =C2=A0
-> =C2=A0	seq_puts(m, "# event histogram\n#\n# trigger info: ");
-> -	data->ops->print(m, data);
-> +	data->cmd_ops->print(m, data);
-> =C2=A0	seq_puts(m, "#\n\n");
-> =C2=A0
-> =C2=A0	hist_data =3D data->private_data;
-> @@ -6016,7 +6016,7 @@ static void hist_trigger_debug_show(struct seq_file=
- *m,
-> =C2=A0		seq_puts(m, "\n\n");
-> =C2=A0
-> =C2=A0	seq_puts(m, "# event histogram\n#\n# trigger info: ");
-> -	data->ops->print(m, data);
-> +	data->cmd_ops->print(m, data);
-> =C2=A0	seq_puts(m, "#\n\n");
-> =C2=A0
-> =C2=A0	hist_data =3D data->private_data;
-> @@ -6326,20 +6326,23 @@ static void event_hist_trigger_free(struct event_=
-trigger_data *data)
-> =C2=A0	free_hist_pad();
-> =C2=A0}
-> =C2=A0
-> -static const struct event_trigger_ops event_hist_trigger_ops =3D {
-> -	.trigger		=3D event_hist_trigger,
-> -	.print			=3D event_hist_trigger_print,
-> -	.init			=3D event_hist_trigger_init,
-> -	.free			=3D event_hist_trigger_free,
-> -};
-> +static struct event_command trigger_hist_cmd;
-> =C2=A0
-
-I don't think this is needed, since the same declaration already
-appears just above the event_hist_trigger_parse() declaration.
-
-Thanks,
-
-Tom
-
+>
+> -Crystal
+>
 
