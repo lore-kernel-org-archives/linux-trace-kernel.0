@@ -1,82 +1,77 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83B82D7DF2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 16:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D561E98EF;
+	Tue, 25 Nov 2025 16:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764088200; cv=none; b=fA2VncR0ZS3Q65vb8nBT5rtlrFh2LOKf/6B+FejFWTbeXTajjF2WY66G9pljfTRdd7nkGkwD++n3RO3btfF6mFh6r21p148vHR0VaqNJnvl6gPEUSqPUDEH9jriNC6V569sCH2IBJLxstPmrUOppQQ7p38q7wOSO7pkubig/kaY=
+	t=1764089070; cv=none; b=OQQJkLTpSDKfEaYdFgZ+i3TFwoyNfI25newTPy2l1T4Vr2H+pl9pzq9WdpdreIadOB3Ynk2l5f9ly5Hw+WdoU2ne+l8Cj3HBesDm6aPglqzj6OQxiX/U/w4k5D8DS9i94zvG1eChMXgEPkJo6+sW6b2kujive7f5HBKQgE6K4jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764088200; c=relaxed/simple;
-	bh=h0FFXIPxc6H2ca8EG1d2z8774anbR+o8zDpj4vRXyB4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hPDwAxMtsrFLAnjsYZuUvTUyRbZKC+jetTIq9EMB97PDP9JfMb0xXCV00uQV4mL8+7eqbe9i3oDnOHVd2b2Rm8oWj6+hUA61fPQiXYrE1itFdk8qVjDbC8L6BDp9GmCvO7IPYGncsxi78iKpMB75UTeuSySpl/EOVQ4KgJN1bfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/W55ULr; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764089070; c=relaxed/simple;
+	bh=R+98Nv6YH0BT1ZrSou0D7Pr6OskBNUtuqhn9NtWJ+SE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UN2wYdomi5rQFXJIF2FX/zwVKkgT5WiwuZINh+xEsLWasbGW7xsspTcd9sD2kbaBPpFcTKfRAa9pV+aUYQVhpmj4/mxfVkPOLF4WaiOirrDFSHbbaRRBp9PBwfn+Oh8wqvSTT/poHNROQwjuFpwYnzdi8qnjvwORBz5EQ+U4VDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C8Ht9Vxg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/W55ULr"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7bc248dc16aso4318751b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 08:29:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764088198; x=1764692998; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WwtB7x9jbnj3BkBVwjT6kHA5QLKT/sBvVzDGMwM9kMs=;
-        b=c/W55ULrSe9vemrZa/RNBwxYNJE/5LIWihsNQgR8nsy/zkR5bICyAU0TYVaasLsYBq
-         7RGkOHMK+XiqaKvDyW8QyZSyag+IK7PriBrGcsSlCU8ICRcQ/l5gLHUJxxa57yVN2ucS
-         oV2VS6KFBEkzZ8FkbqATVkWW5cCf7kR4wPxk7m1rSjN9Tg4kz292d8q3PQOE2vs9EImx
-         +cJpCWuSNFUvHMoeVJzUgZDOdhyog3jvL9CiF+RCSsaFYCXh+bsZF0hYgPfRf2+5PKqj
-         FPA6jrsdC1uxuWVUE6ZKJ9VIqHnU7hkxEy1RQmoC09v1Wr+C325rEup0GymJ3unE7g7i
-         jhcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764088198; x=1764692998;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwtB7x9jbnj3BkBVwjT6kHA5QLKT/sBvVzDGMwM9kMs=;
-        b=O9eHUrDhgp0hT8ZOht9AswpbY+c1Sr9H2agcEpKWEmBx/btjSKlQIbqquVDyVDutsn
-         NFUXzyQZmfAd3siUafE1k/KgChuZWMpd/v2OBYSZHz2DOz4sKOKqPDPTnWGyZ39LJZdf
-         dM14tRYgP+YWjuWjSWjDPjknvx92Y+kIODsSLYNt/ZGTxgsHrVpzNVbxPZMcDuWjr1gs
-         GzrPiVBEjQrmhGv4OVM/9dxRXNofe/+HB0/+3DPFgSfDzPhBI1suvj4Wm1osJoUsaIVG
-         +QxngKJa6v8+oRza3r/vByTq/OFKtG5bHQnea+d8DYQOB7Ew7B9NddvUskJQTJFPq3mw
-         6dGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhr7qAQMCAwLqZHjPTonwSgoGJhEomIZdiLrxF6PyVSa+jsjYPNaXnrjNqB0A2j7eU+Fcd+7ybY0XbVVasbF1OC+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw76ZAAfUiw1Oz44gEulpNnKA9RzpzSkdSQ6AO6c22UMOof8wmb
-	WmbeooQSYCcqIucA4W+md+OKKZtVwukxt9kw8F+txPupbk+JP+6TGWRZ
-X-Gm-Gg: ASbGncs0iewOTzPgP2zen+jBVDYuTwF+Honbtd6U/Vgw9mSdnto8fRm/LRKLmVkg4hR
-	X+u9QWmGIAxlsGCt2cYGhsrOBbWho5XO7n6qN8vOD+VDvkgGHXTmjWAXuPM5IcexK83QCsZwNPQ
-	nwya4xonyAEFrpYqiXyrIOm2RGZetnE46I/0a1zYbncF4QIsCWfwegrGL8KgzNDE0yrJL8gdg2s
-	v7sv45/EQ8e5lSCtsoy0NMYpMECnju/djGw+VySO4cTCUuoBvYeHyR9thRUM7JBfVPPrTVMUYsE
-	7BsL1iJ0BJJs7lHSCfXK2Dd87dDlGkhX10J9O4CpTYfTe1M6SczMo7eEcAZ/NGFzhf0U1JFnNct
-	ELk59J6tStQ7OwpPjKfVwfMW2lE4McDzBhOs1JlSzKb2N8Db6vO4f+i81S24xCMYrpdy2xpdFla
-	Sl7LibzA==
-X-Google-Smtp-Source: AGHT+IH5VsEgKVWLFjZB0z7fH5JXEPDjqE0RvxYdxUOT95d5pZGo+nIy5F29wx/dgZIyyG1Bi/NSdA==
-X-Received: by 2002:a05:6a20:2583:b0:35d:53dc:cb57 with SMTP id adf61e73a8af0-3637e0a58c8mr3790560637.49.1764088197837;
-        Tue, 25 Nov 2025 08:29:57 -0800 (PST)
-Received: from xiao.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7c3f174d2c0sm18544900b3a.66.2025.11.25.08.29.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Nov 2025 08:29:56 -0800 (PST)
-From: Xiang Gao <gxxa03070307@gmail.com>
-To: sumit.semwal@linaro.org,
-	christian.koenig@amd.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	dhowells@redhat.com,
-	kuba@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	linux-trace-kernel@vger.kernel.org,
-	gaoxiang17 <gaoxiang17@xiaomi.com>
-Subject: [PATCH v2] dma-buf: add some tracepoints to debug.
-Date: Wed, 26 Nov 2025 00:29:49 +0800
-Message-Id: <20251125162949.220488-1-gxxa03070307@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C8Ht9Vxg"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5APEVeSi002195;
+	Tue, 25 Nov 2025 16:44:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=CuGvhipiqVabDot0c
+	Hsec6MRFiOsrQtODCKUg39f95Q=; b=C8Ht9Vxgc89zyguSbpj7MZKsd5UiDcW2a
+	KB48FwpEs1irAsvlfm1exr46YN8pK4fnHF3ImHMwTUBPEdmmOmYRoW8tjyM7Telv
+	oRw7tcP1uYAomzXZT1tv6clBWs2LbEzSwj+QrpLJ6k6uLaBYkuc7YCx+IhkQDLju
+	5BQ+6o4fh4R7yg1Fj1P/hOOrwWB6O9/0n9D/mXj9C5aSBqnPdatCwFRmsd7iXe3n
+	wHY2lK69hnCbEDsAAoYS4qFngQYtEGauWLzL/226LOgPmoQ94BEhKU+ppw1psqzT
+	26dyP9OXfS5JyYObAH+ovHlB32O9qhgwgxgg72cDqoBZlpn5VOQww==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak2kpxc5y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Nov 2025 16:44:00 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5APGKWRf025097;
+	Tue, 25 Nov 2025 16:43:59 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4akt71csbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Nov 2025 16:43:59 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5APGhuiP42729874
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Nov 2025 16:43:56 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 140AE20040;
+	Tue, 25 Nov 2025 16:43:56 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C297320043;
+	Tue, 25 Nov 2025 16:43:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 25 Nov 2025 16:43:55 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH 2/3] unwind_user/fp: Use dummies instead of ifdef
+Date: Tue, 25 Nov 2025 17:43:48 +0100
+Message-ID: <20251125164349.2592874-3-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251125164349.2592874-1-jremus@linux.ibm.com>
+References: <20251125164349.2592874-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -84,401 +79,94 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAwMCBTYWx0ZWRfXzy2L3j4qIq3y
+ OmhpjPD9pnsmO56v7NAc4RCuz64IvzZCAFuJwF18BhIN7MBlIXSlgjggxmHO0nFCY5Il723wbqN
+ boMo8pWKMl0lmmOO3ryDaFKCXU+U/OTp98E6C3jngvj+M/ES/Rx2ciDvUftcVviVDa0Z3a1OQDf
+ aXUIqHI/rx8Pw5YkOGlpwY8R3TggvZIMior+KeEJbBCGDF/gVQA178ifU+UFRrDWNuFr786CGWJ
+ zkKKwgAjDuDBpiNpYVXF3QBAIOsBwBBgifeY+1AiQIxF7lmaYY/1OIZ015SATxVDrIHLmXAFoDW
+ FV+moNSpFFqxNchhxQXCQ49m5CJM/uHJdTi9o1PIHUr4Uyk5+2ikIHzZ4uXZHxxzZTOTFJKW3oE
+ YhBQBx0Hx/T5N9lSdKmfU2lDvRpxZQ==
+X-Authority-Analysis: v=2.4 cv=fJM0HJae c=1 sm=1 tr=0 ts=6925dcd0 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=rKYaUyGAOQbTNo1-z7kA:9
+X-Proofpoint-GUID: quMiFihkcSSnyd0lqETBrY6UjcT5Tikg
+X-Proofpoint-ORIG-GUID: quMiFihkcSSnyd0lqETBrY6UjcT5Tikg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511220000
 
-From: gaoxiang17 <gaoxiang17@xiaomi.com>
+This simplifies the code.   unwind_user_next_fp() does not need to
+return -EINVAL if config option HAVE_UNWIND_USER_FP is disabled, as
+unwind_user_start() will then not select this unwind method and
+unwind_user_next() will therefore not call it.
 
-I want to track the status of dmabuf in real time in the production environment. 
-But now we can only check it by traversing the fd in the process or dmabuf_list.
+Note that enabling the config option HAVE_UNWIND_USER_FP without
+defining ARCH_INIT_USER_FP_FRAME, ARCH_INIT_USER_FP_ENTRY_FRAME, and
+unwind_user_at_function_start() will result in a compile error, which
+is helpful when implementing support for unwind user fp in an
+architecture.
 
-For example:
-    <...>-8342    [006] .....   199.626433: dma_buf_export: exp_name=system name=(null) size=32768 ino=2337 f_refcnt=2
-    <...>-8342    [006] .....   199.626436: dma_buf_fd: exp_name=system name=(null) size=32768 ino=2337 fd=853 f_refcnt=2
-    <...>-8342    [006] .....   199.626472: dma_buf_mmap_internal: exp_name=system name=system size=32768 ino=2337 f_refcnt=6
-    <...>-3199    [006] .....   200.719182: dma_buf_get: exp_name=qcom,system name=acb size=184320 ino=2331 fd=111 f_refcnt=6
-    <...>-894     [006] .....   199.632342: dma_buf_put: exp_name=system name=system size=32768 ino=2337 f_refcnt=2
-    <...>-3199    [003] .....   213.402200: dma_buf_attach: dev_name=soc:qcom,xxx exp_name=qcom,system name=acb size=184320 ino=2331 f_refcnt=7
-    <...>-1229    [004] .....   213.850270: dma_buf_detach: exp_name=qcom,system name=acb size=184320 ino=2331 f_refcnt=6
-
-Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 ---
- drivers/dma-buf/dma-buf.c      |  19 +++
- include/trace/events/dma_buf.h | 281 +++++++++++++++++++++++++++++++++
- 2 files changed, 300 insertions(+)
- create mode 100644 include/trace/events/dma_buf.h
+ include/linux/unwind_user.h | 14 +++++++++++---
+ kernel/unwind/user.c        |  4 ----
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 2bcf9ceca997..8b5af73f0218 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -35,6 +35,9 @@
+diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
+index 7f7282516bf5..c3ff690a43e2 100644
+--- a/include/linux/unwind_user.h
++++ b/include/linux/unwind_user.h
+@@ -5,9 +5,17 @@
+ #include <linux/unwind_user_types.h>
+ #include <asm/unwind_user.h>
  
- #include "dma-buf-sysfs-stats.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/dma_buf.h>
+-#ifndef ARCH_INIT_USER_FP_FRAME
+- #define ARCH_INIT_USER_FP_FRAME
+-#endif
++#ifndef CONFIG_HAVE_UNWIND_USER_FP
 +
- static inline int is_dma_buf_file(struct file *);
- 
- static DEFINE_MUTEX(dmabuf_list_mutex);
-@@ -220,6 +223,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- 	    dmabuf->size >> PAGE_SHIFT)
- 		return -EINVAL;
- 
-+	trace_dma_buf_mmap_internal(dmabuf);
++#define ARCH_INIT_USER_FP_FRAME
++#define ARCH_INIT_USER_FP_ENTRY_FRAME
 +
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
- 
-@@ -745,6 +750,8 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
- 
- 	__dma_buf_list_add(dmabuf);
- 
-+	trace_dma_buf_export(dmabuf);
++static inline bool unwind_user_at_function_start(struct pt_regs *regs)
++{
++	return false;
++}
 +
- 	return dmabuf;
++#endif /* !CONFIG_HAVE_UNWIND_USER_FP */
  
- err_dmabuf:
-@@ -779,6 +786,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
+ int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
  
- 	fd_install(fd, dmabuf->file);
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index 0ca434f86e73..90ab3c1a205e 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -67,7 +67,6 @@ static int unwind_user_next_common(struct unwind_user_state *state,
  
-+	trace_dma_buf_fd(dmabuf, fd);
-+
- 	return fd;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
-@@ -805,6 +814,8 @@ struct dma_buf *dma_buf_get(int fd)
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	trace_dma_buf_get(fd, file);
-+
- 	return file->private_data;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
-@@ -825,6 +836,8 @@ void dma_buf_put(struct dma_buf *dmabuf)
- 		return;
- 
- 	fput(dmabuf->file);
-+
-+	trace_dma_buf_put(dmabuf);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
- 
-@@ -998,6 +1011,8 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_dynamic_attach, "DMA_BUF");
- struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
- 					  struct device *dev)
+ static int unwind_user_next_fp(struct unwind_user_state *state)
  {
-+	trace_dma_buf_attach(dmabuf, dev);
-+
- 	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_attach, "DMA_BUF");
-@@ -1024,6 +1039,8 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
- 		dmabuf->ops->detach(dmabuf, attach);
+-#ifdef CONFIG_HAVE_UNWIND_USER_FP
+ 	struct pt_regs *regs = task_pt_regs(current);
  
- 	kfree(attach);
-+
-+	trace_dma_buf_detach(dmabuf);
+ 	if (state->topmost && unwind_user_at_function_start(regs)) {
+@@ -81,9 +80,6 @@ static int unwind_user_next_fp(struct unwind_user_state *state)
+ 		ARCH_INIT_USER_FP_FRAME(state->ws)
+ 	};
+ 	return unwind_user_next_common(state, &fp_frame);
+-#else
+-	return -EINVAL;
+-#endif
  }
- EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
  
-@@ -1488,6 +1505,8 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
- 	vma_set_file(vma, dmabuf->file);
- 	vma->vm_pgoff = pgoff;
- 
-+	trace_dma_buf_mmap(dmabuf);
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
-diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
-new file mode 100644
-index 000000000000..ab593dea4617
---- /dev/null
-+++ b/include/trace/events/dma_buf.h
-@@ -0,0 +1,281 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM dma_buf
-+
-+#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DMA_BUF_H
-+
-+#include <linux/dma-buf.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(dma_buf_export,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_fd,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(int, fd)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->fd = fd;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->fd,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_mmap_internal,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_mmap,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_attach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
-+
-+	TP_ARGS(dmabuf, dev),
-+
-+	TP_STRUCT__entry(
-+		__string(dname, dev_name(dev))
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dname);
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("dev_name=%s exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(dname),
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_detach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_get,
-+
-+	TP_PROTO(int fd, struct file *file),
-+
-+	TP_ARGS(fd, file),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, ((struct dma_buf *)file->private_data)->exp_name)
-+		__string(name, ((struct dma_buf *)file->private_data)->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(int, fd)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		struct dma_buf *dmabuf = (struct dma_buf *)file->private_data;
-+
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->fd = fd;
-+		__entry->f_refcnt = file_count(file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->fd,
-+		  __entry->f_refcnt)
-+);
-+
-+TRACE_EVENT(dma_buf_put,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		spin_lock(&dmabuf->name_lock);
-+		__assign_str(name);
-+		spin_unlock(&dmabuf->name_lock);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+#endif /* _TRACE_DMA_BUF_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
+ static int unwind_user_next(struct unwind_user_state *state)
 -- 
-2.34.1
+2.51.0
 
