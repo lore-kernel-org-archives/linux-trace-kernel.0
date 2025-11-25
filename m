@@ -1,31 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD3E1C01;
-	Tue, 25 Nov 2025 15:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C1E238176;
+	Tue, 25 Nov 2025 16:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764085633; cv=none; b=efBt12Xc/Zg8yRz3Dt3bnL+EbHqXV0uPfGh9zpDbsuQTba1XMJTVVt8/EEw/SfuflsQxx704jWXgI/pfO4ITJaBM7FiABIIUnXGzXOhypnqdw4Sa7jc0vHq3ZYWc4wXU/6/ZfgD2+BpRd/ko3d/FP5KAvXvsZpKF0gQ3hAY7c70=
+	t=1764087754; cv=none; b=UMR4jVopEH/iKTLc+V/2gbLi3lSQ65DgMlYWAvsCV3BkOiaSbEaexAd0MEQydv0gfAeoMg0m3tFolKwHIC1mHYZFydXI6b/4hpNC0MwbiEUOgkcOaRZzKpfByxqIFeSq8bqujh+a5dVIVHucJPF2QuY+I3hLJZqpbSd2s0eNB8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764085633; c=relaxed/simple;
-	bh=8FUpFcXTnpb2QB70I+SVKADc80o2bBOV7W7OAhb6BcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sbOWAye5vm+To/Zvs9BQ7bHvHzkMUU4EF1DNyTcuLrl2b50djcCB8lgIHyfOjbcztlrR8H6gq5qrYqjVAoWUpVdzozqrAlAd+ENKefheBn/P1ApSIQRlaBKXWFapc4eR4D7IsGd/DGzkoWJg713ojSeEwYi9wboBvzopqjJ0/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	s=arc-20240116; t=1764087754; c=relaxed/simple;
+	bh=qB0xmOJ8kffWlzkOUo7IgIFlqKInbkNyJftYVwb7L5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sou1UOXUuJ3WzPZ7fuAfMXp+4H75Wdq3EnxBV+S18TL/YQSo4pGEeX3zhgFP6dt0zVkXqsQ+Ic2rZfHCJdg0xBLBTTN7RaSaadPLddWOyKc9gR1MMwmxul7ltmvTqh7c7UpUxfp6/iUDBjbmV3Xq17gzNasi/LJVLC6/tsjzEpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id E74E686E0C;
-	Tue, 25 Nov 2025 15:47:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 3169018;
-	Tue, 25 Nov 2025 15:47:08 +0000 (UTC)
-Date: Tue, 25 Nov 2025 10:47:51 -0500
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id DD81C1A0281;
+	Tue, 25 Nov 2025 16:22:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 76A773D;
+	Tue, 25 Nov 2025 16:22:20 +0000 (UTC)
+Date: Tue, 25 Nov 2025 11:23:04 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH] fgraph: Make fgraph_no_sleep_time signed
-Message-ID: <20251125104751.4c9c7f28@gandalf.local.home>
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: netdev@vger.kernel.org, hawk@kernel.org, ilias.apalodimas@linaro.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Leon
+ Huang Fu <leon.huangfu@shopee.com>
+Subject: Re: [RFC PATCH net-next] page_pool: Add page_pool_release_stalled
+ tracepoint
+Message-ID: <20251125112304.493ea1ee@gandalf.local.home>
+In-Reply-To: <20251125082207.356075-1-leon.hwang@linux.dev>
+References: <20251125082207.356075-1-leon.hwang@linux.dev>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,58 +43,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 3169018
-X-Stat-Signature: bnxieb5mjuafk9zmm4zk8tb5wex4okxw
+X-Rspamd-Queue-Id: 76A773D
+X-Stat-Signature: 8kiqc41gsj186tu5zn7dq8ht5stme3of
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/vwP08/QDFgFjAQR/RtAyYPHTb1uoGI1Y=
-X-HE-Tag: 1764085628-910527
-X-HE-Meta: U2FsdGVkX1/fQ3WWVHyzVL0w9saK/VQZcMjSmnQ/mlWbh7p6WScVOVJn1PGmhmgNA4yw8RjTFOH6cbBeVZvVQZwCOhqvn6sK6nk5ozfN/L27Rkh6IUSRleo1QaQejxxNB/somi0v65nmJL6knxwerxac6fGBQILC9Ao2JMv5Yb6AKAeOQ4iscz079LBGGrWSDcmymJ4eisRqFdbwm/PzPTLoFx92IcxLtXpPCkqTFUbSM12oJIzuPxgYWBG4EAexj//cC4YMR45vp/ax5aWG6ORagOk9ZY1YMtyGgm4ipx7G0jbhUpDsIwH9g55seI/QfdM+Mp9re5TGjKbqGOLl/jri0bQUU0pSmpHCFytHnf7EgrBC+k5/7X28SfeWeP9ae8ZcBdJcaLkYERExHzCsik5yuj5b4tmy7uWLRM5gogYJnwb4oo2G7D1k9ZAQfv0wABoxx5KBAUS3x4ASoe9MlA==
+X-Session-ID: U2FsdGVkX18DVnSu8qsB8YHNQi4IYFrBCWT3192d/DQ=
+X-HE-Tag: 1764087740-249652
+X-HE-Meta: U2FsdGVkX1/k/4FUUqfj/UNxaXdovF4iGJPv6Ni36yi0sbIdryDdf4W87NeY4Oi5QtfF18FvQQlEt/EwjABcDKPiz+PAhB9nUXG2FAjFPV8CpSWdDopJ4TSAU5eVKEBRRbXn/PpqNWH3LEAfzivrtixoS7gDU4coVaNncHOcEBYUFbrFKBsx2DMrilw/Gdox6i8TQG5xPsF7VuqyFDm2dIcOVkzl4jF+5GgQ7+y5GU8tT0BWUbtBW5g5ICOwzKwRKz4AX8Od4+oyNYqCfE/Ghftu63vIYIcWu3hh24V+AZe2ZPb1AWQS0AiqWDDej0xz
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 25 Nov 2025 16:22:07 +0800
+Leon Hwang <leon.hwang@linux.dev> wrote:
 
-The variable fgraph_no_sleep_time changed from being a boolean to being a
-counter. A check is made to make sure that it never goes below zero. But
-the variable being unsigned makes the check always fail even if it does go
-below zero.
+> +TRACE_EVENT(page_pool_release_stalled,
+> +
+> +	TP_PROTO(const struct page_pool *pool, int inflight, int sec),
+> +
+> +	TP_ARGS(pool, inflight, sec),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(const struct page_pool *, pool)
+> +		__field(int,			  inflight)
+> +		__field(int,			  sec)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->pool		= pool;
+> +		__entry->inflight	= inflight;
+> +		__entry->sec		= sec;
+> +	),
+> +
+> +	TP_printk("page_pool=%p id=%d inflight=%d sec=%d",
+> +		  __entry->pool, __entry->pool->user.id, __entry->inflight, __entry->sec)
 
-Make the variable a signed int so that checking it going below zero still
-works.
+You can't do: __entry->pool->user.id
 
-Fixes: 5abb6ccb58f0 ("tracing: Have function graph tracer option sleep-time be per instance")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/aR1yRQxDmlfLZzoo@stanley.mountain/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.h                 | 2 +-
- kernel/trace/trace_functions_graph.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The TP_fast_assign() is executed when the tracepoint is triggered. The
+TP_printk() is executed when the trace is read. That can happen seconds,
+minutes, hours, days, even months after the pool was assigned.
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 58be6d741d72..da5d9527ebd6 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1113,7 +1113,7 @@ static inline void ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftra
- #endif /* CONFIG_DYNAMIC_FTRACE */
- 
- extern unsigned int fgraph_max_depth;
--extern unsigned int fgraph_no_sleep_time;
-+extern int fgraph_no_sleep_time;
- extern bool fprofile_no_sleep_time;
- 
- static inline bool
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 44d5dc5031e2..d0513cfcd936 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -20,7 +20,7 @@
- static int ftrace_graph_skip_irqs;
- 
- /* Do not record function time when task is sleeping */
--unsigned int fgraph_no_sleep_time;
-+int fgraph_no_sleep_time;
- 
- struct fgraph_cpu_data {
- 	pid_t		last_pid;
--- 
-2.51.0
+That __entry->pool can very well be freed a long time ago.
 
+If you need the id, you need to record it in the TP_fast_assign():
+
+	__entry->id		= pool->user.id
+
+and print that.
+
+-- Steve
+
+
+> +);
+> +
