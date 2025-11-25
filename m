@@ -1,72 +1,94 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E423623ED6A;
-	Tue, 25 Nov 2025 20:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB7D289E13;
+	Tue, 25 Nov 2025 20:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764101066; cv=none; b=MjVMXxWnCSpsstcphxjzOd8JotK1KPFwQVju+zt1MuBHqZuTTirxcuBgAydT9bmD16nyy6h0+E0wAUJlR4JDMWNkBOw9PTSqZA5VH0nq0dGdGdsvsYUkuisK4ESdQaA73YP3Jen9N5CSxjnyagPmdhrAV8MGK2tn30ZP8XuDWZo=
+	t=1764101328; cv=none; b=IRG8KhYEkSMWlimTnIVF3EMboOqiqJ7Y5G5fK5M/1A3C+2Ui5M4qLH2dWe8aoCfXKv1EZ1fDF5CMdXBtRYErsGWP1AWJxKC0sXwCT+hguyU4LuoABy4gAGCiNBSFFPsC2ymm8wnKGlQJ9+iJ41S9JoiBlNnTiiwnH/UcSE3xPSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764101066; c=relaxed/simple;
-	bh=BJzops8WfEhbkyZ9TkZA475LPq0hTkLiNwXZkrfv66c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cj8oxiM6Xiig9s1G2Gxq9Z6We69oaqxzHyUQ3UsIC95uIhF/fasDG1xSGIEfrfKPDfwJgSAv5wYBkuXy+XPZWmI4C0fjfPovkiHMdj2bDJQhx53l1JFe5nso+y3ke507ERbULyuZ4MlrU/LywZk+LwdK9LMND9d7rE5bjit86Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 61D304FC15;
-	Tue, 25 Nov 2025 20:04:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 1B8126000A;
-	Tue, 25 Nov 2025 20:04:20 +0000 (UTC)
-Date: Tue, 25 Nov 2025 15:05:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tom Zanussi <zanussi@kernel.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/2] tracing: Merge struct event_trigger_ops into struct
- event_command
-Message-ID: <20251125150504.407ebbc2@gandalf.local.home>
-In-Reply-To: <cfa03e4c70ff706b5373bf5314f453930019e1a1.camel@kernel.org>
-References: <20251119031042.328864818@kernel.org>
-	<20251119031603.658997916@kernel.org>
-	<cfa03e4c70ff706b5373bf5314f453930019e1a1.camel@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764101328; c=relaxed/simple;
+	bh=BqIMLE+Cx8gncbHlRvjyhiy/IiSe1U04BY5C9o+2Mnc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=HqXft3KqKPLSjn5AhkQD2IQzOMSl25WhZmN0FeHUi4ZvwcjlQ0A1zJPJ0bNEyzjklVZLrx+KyDTlh2jRw5CijrsqfahSeWLDbTqEf6ucRApvImcnYGykKppREFLRF+A8l6kgibfaxl97O+a7mzSwbk17K7OymKXmSc1dReIOjxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnrGJlCl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnrGJlCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D772C4CEF1;
+	Tue, 25 Nov 2025 20:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764101328;
+	bh=BqIMLE+Cx8gncbHlRvjyhiy/IiSe1U04BY5C9o+2Mnc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NnrGJlClpXOXW7aKNoRSEF73qxJIhBYXkrhXFzYg5rgnoWD94szUM58nuMFyJ+UWs
+	 YLlFoK7MGUpUo7T/a0dWE/AClg3dEVPvYE8/F+4pUjMM/0r6yvRYOXh2bELMwTFMiY
+	 O/B5jVxJO5P12C8P0wG41Eow5UwbCxQB5RT1fg8Zir17aUQeeURUseZK1jMTD9L/4u
+	 hgCPu5iRYtWqjoQw9jS59pmxhNhWvjlJxtr25gHQUdU3xfAtGATGs9HuUj2VPTjnIG
+	 ECCLnLD35dZvM1D14JptAh3W6zIg08GChYix8cKsmmSMHXxwROTAURgf5t18flJqGX
+	 vNMgEDJtorEKw==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vNzLw-00000005p0v-13If;
+	Tue, 25 Nov 2025 15:09:32 -0500
+Message-ID: <20251125200857.975524485@kernel.org>
+User-Agent: quilt/0.68
+Date: Tue, 25 Nov 2025 15:08:57 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH v2 0/2] tracing: Clean up trigger code my merging structures
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: 5ooq41n1bzyxrcmw3wykmzprzk4h3cog
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 1B8126000A
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX183oBoMH612NXBNWwrCqP9zWZfq5AAAO+c=
-X-HE-Tag: 1764101060-311374
-X-HE-Meta: U2FsdGVkX1/6i8Q5S6sGzMikyfZC8GnL/mk6yBupBlhJ5lPRUKmPFqR4oqaz3zepn0k9EPZOHwF7jOHOIPwjKIiuCBJZT9oZLpVSvnNFH7H+k9HSpHnoeg6Wpqewgv8DfUnFWvd996kgzPTAQf0PxWEVTaagYzeW3BoGoZncH+YEMGev1dLlolB69lQODU/w1VNnELT1bhflEyE2+BYJHpePObmxr6gnqP+ttmXlChlHkMYMW+uZifpOSs2n2ImUWF/TMPrCS0+yeV4DMjJQ2GAiG0J3aaOULsAMkkS5ghKaRDkfV/PRr/NkG05gyNzxpQFUipFlgZ2a9Z4CZ+pMMDi19/9hEcXR
 
-On Tue, 25 Nov 2025 07:01:43 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+The struct event_command has a callback function called get_trigger_ops().
+This callback returns the "trigger_ops" to use for the trigger. These ops
+define the trigger function, how to init the trigger, how to print the
+trigger and how to free it.
 
-> > -static const struct event_trigger_ops event_hist_trigger_ops =3D {
-> > -	.trigger		=3D event_hist_trigger,
-> > -	.print			=3D event_hist_trigger_print,
-> > -	.init			=3D event_hist_trigger_init,
-> > -	.free			=3D event_hist_trigger_free,
-> > -};
-> > +static struct event_command trigger_hist_cmd;
-> > =C2=A0 =20
->=20
-> I don't think this is needed, since the same declaration already
-> appears just above the event_hist_trigger_parse() declaration.
+The only reason there's a callback function to get these ops is because
+some triggers have two types of operations. One is an "always on"
+operation, and the other is a "count down" operation. If a user passes in
+a parameter to say how many times the trigger should execute. For example:
 
-No it doesn't. Nice catch. I'll send a v2.
+  echo stacktrace:5 > events/kmem/kmem_cache_alloc/trigger
 
-Thanks for the review.
+It will trigger the stacktrace for the first 5 times the kmem_cache_alloc
+event is hit.
 
--- Steve
+Instead of having two different trigger_ops since the only difference
+between them is the tigger itself (the print, init and free functions are
+all the same), just use a single ops that the event_command points to and
+add a function field to the trigger_ops to have a count_func.
+
+When a trigger is added to an event, if there's a count attached to it and
+the trigger ops has the count_func field, the data allocated to represent
+this trigger will have a new flag set called COUNT.
+
+Then when the trigger executes, it will check if the COUNT data flag is
+set, and if so, it will call the ops count_func(). If that returns false,
+it returns without executing the trigger.
+
+After making the struct event_trigger_ops be mapped one to one with the
+struct event_command, merge the former into the latter.
+
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20251119031042.328864818@kernel.org
+
+- Removed duplicate declaration of trigger_hist_cmd (Tom Zanussi)
+
+Steven Rostedt (2):
+      tracing: Remove get_trigger_ops() and add count_func() from trigger ops
+      tracing: Merge struct event_trigger_ops into struct event_command
+
+----
+ kernel/trace/trace.h                | 124 ++++++-------
+ kernel/trace/trace_eprobe.c         |  19 +-
+ kernel/trace/trace_events_hist.c    | 143 +++++----------
+ kernel/trace/trace_events_trigger.c | 344 +++++++++++++-----------------------
+ 4 files changed, 230 insertions(+), 400 deletions(-)
