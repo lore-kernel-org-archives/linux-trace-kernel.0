@@ -1,129 +1,127 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472992459C5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 13:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F331023817D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 13:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764078316; cv=none; b=OjzH6NuQL/YTZE+c4W+OynQnXxTqJadhEzZ/K0Aix6ia2+cDw49vxZZz1xRKJuuMkUwdERId9//m9qCiaQrPB5FByg7Tb0b++jMwcJSQUWuiHafuKgRk4/KgL3Ou3CVdPbbsu41s3m35XbMrjKg/lFUxDQSyNXA0UEcXzVJwmLI=
+	t=1764078538; cv=none; b=TOcQFpcLEgXq1rit8Gr9lnqaRuZ5jjVap5qTN4UMYcjZup6mLqkT7qB8ivEOyF0rIvcYav5lm16B9GDoBzBywCBQb0bw1LoCHer73FL8KgLIPr7CPR/O3v74KzDV+XMw+abDnsqedgO6sM/bsrmUpFs7CsZW0wNhG/iT/ijRpYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764078316; c=relaxed/simple;
-	bh=UYHR5Ac4tZNNbRS8zBCdwL6LoHdLKzpH1P31hhx2JNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IuQCp5QJEhYL1sh9156bRtoDv6MxOXAYH8eiNJXA1n0TFhdjSXbe6srqY+jJtbFVkaWpx+fjZQLqmW2AmW1OoOvwvDacgWsQsTWmRQTgwQGA+rtks0rdaHfo8CyIk1OlWN0iXItRQyvb71RfCVofPfV5khxOgXKuEI16GFYPHKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eyPpYoPo; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1764078538; c=relaxed/simple;
+	bh=KUlkbAmvU6Tr9qioFlf7FQnezoFY7TBm5fTvKgCmJCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R3Zg3rFvwmS8G9ToALlDVHTWw9bH/+IPX/OShqvrRJmhbCeITN5CoEXi4bhFq9Svozgm1oxgpElq2CvQJ0D4UK99kS+GMk7IE1cEmjg6UcAk5H/PfbrBZJVuhErXAOPscZIUT4aGsY5trGIakAlTuOLF3Oles6qIUnfPcSjgAzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RqPr5fe7; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyPpYoPo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RqPr5fe7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764078313;
+	s=mimecast20190719; t=1764078535;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GVMX2ox8QdzhMFnPrP8f7oVFxmESShAdruJb0tDYGYw=;
-	b=eyPpYoPonrp3HR0OhWnMxWP1wOIucbGH2JreVCijb0MclI0rXB+7wgCHrP0JueKjK+K912
-	df5xcnq2L1/qBdlL70FF/4205/5i7Q/PaJzlZ4JXq6aYbW9fqnCcTUDk9/RnBN7JE4deHd
-	pYGVcHglgV3Tv/1TeUULgotAgv74TWY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-aR2Ij-vzPTCxRbfzxECeAw-1; Tue,
- 25 Nov 2025 08:45:09 -0500
-X-MC-Unique: aR2Ij-vzPTCxRbfzxECeAw-1
-X-Mimecast-MFC-AGG-ID: aR2Ij-vzPTCxRbfzxECeAw_1764078308
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E5171800250;
-	Tue, 25 Nov 2025 13:45:08 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.102])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 844603003761;
-	Tue, 25 Nov 2025 13:45:03 +0000 (UTC)
-Date: Tue, 25 Nov 2025 10:45:01 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Crystal Wood <crwood@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	John Kacur <jkacur@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:\\b|_)bpf(?:\\b|_)" <bpf@vger.kernel.org>
-Subject: Re: [rtla 05/13] rtla: Simplify argument parsing
-Message-ID: <oamfaffwyj6y3mtmhjxlk5u552xvdc4xd6is4dg2mxyh55ebe5@y6fsy73ig5ez>
-References: <20251117184409.42831-1-wander@redhat.com>
- <20251117184409.42831-6-wander@redhat.com>
- <e96f06667d07fe7f207fc8769218967d22cf7634.camel@redhat.com>
+	bh=T9hy4SCVLvP/hTQZDIVrEdSy2/Jcy5XlGO+eLboO4Ww=;
+	b=RqPr5fe7O2HU/bpnfhEAKW2yI4H7+5X31ZwJvtnrZ9iSUundZ/uOEKyXMGMQQUvgLvRFdn
+	+2xfo98EnwRlE5spn6Mv/q56C6WsWe5ABdkhl5L9Q7JI2fsE8zll8mTQXO40C5EVWyH89K
+	PD9YfeSQI+EvmulLwr0I/JbEq98vNZc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-m9YRSVzTNjCrnIT6Rz3srA-1; Tue, 25 Nov 2025 08:48:54 -0500
+X-MC-Unique: m9YRSVzTNjCrnIT6Rz3srA-1
+X-Mimecast-MFC-AGG-ID: m9YRSVzTNjCrnIT6Rz3srA_1764078533
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b767784598dso365705666b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 05:48:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764078533; x=1764683333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=T9hy4SCVLvP/hTQZDIVrEdSy2/Jcy5XlGO+eLboO4Ww=;
+        b=NqUyKq3KJbL7hYRTV1fF4BcFcsBNtnkaTdKtHMHoetw2v97ersHhRCP9EbKLK8UDdy
+         V8WnEMUoY/EnHlFnbG1SwFfOuLrgErATmnQGU7UDDZTx0wc59XKDZbfMSy83F0B/TPAN
+         lAwWp6TGdIOboosvYPZ9/zCmgV6shNckRqwiEnqIjbfmwA7BM8zT7Qss/2iYI+i4Aby7
+         FxLEHINoGhiUJo5ZE6F+LzTmlZ/8P2Bk9caZRYIyfskhweowxjwyjopF+p41os0JB56s
+         KSN+gvBhm+qBmXhDQFEpTxvqfr9xxtzBvAnscW2/01x/YjNk++nZRBJ3cf1G17ohOZCV
+         BoYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAjBJnXhWyWyK9xNt/iPWOk+Lcg/MYMg8MgW/m/WvzlsP1+klZh63wh7FeS12TNQrCSFbvpUDdaGD3I6IedmXtt48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUrS/m0MigvPCdySPVW+781M8PbbzufTACG9ghToOKJq9ymejZ
+	pIEnxVDyRyZgSrUePU25cUVJcJ+Rne9bq2f0ZQuJsahaRastz5o52QcF+zKlY6U4oP61uoQorC1
+	2MJl5yd4GqAfkWqkTvd5O83uvDd5w3dO2hdcxRoMahvEiPpwYwbiuOPZn617TP5YSeKvws4QQfy
+	ExgI5g2b8lDjqD7kAveOauDQITGDxpj4S/wkkidWfJtL1Y//0s
+X-Gm-Gg: ASbGncvw+JBWmrr1938iMmCKm8alhoLbj3e1l33V9umvNyilyozoLVGCbo0EbOQnEZJ
+	+CZ716pcW2SF53+XE7b5reZKb3PNHBlPlWafaUluMTlH34bu/pLPJIhpfhqVeI9pBzToiu66ftJ
+	evwccwYPi6uw8UD0ZiJfsxkwqmiegJNrY8g4vUjfu0/tiBp2UhT8cHD/5ODKYdg/R4gQ==
+X-Received: by 2002:a17:907:3d8e:b0:b73:7184:b7d3 with SMTP id a640c23a62f3a-b7671a448f1mr1950273066b.58.1764078532970;
+        Tue, 25 Nov 2025 05:48:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGqXkuS6eNc9UH0H1SzFazMyi3xmAIiysbsk3mVN1m8RGNDVn4H3AhY8kGu/8VChbm3fDuQ1S4Gn1wwYy4mP30=
+X-Received: by 2002:a17:907:3d8e:b0:b73:7184:b7d3 with SMTP id
+ a640c23a62f3a-b7671a448f1mr1950269266b.58.1764078532592; Tue, 25 Nov 2025
+ 05:48:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e96f06667d07fe7f207fc8769218967d22cf7634.camel@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20251027153401.1039217-1-tglozar@redhat.com> <20251027153401.1039217-3-tglozar@redhat.com>
+ <liouklnl72kulibowk33roalgtjor24u3h6hfbuzudlodasdvz@fhy2zeif43nk>
+In-Reply-To: <liouklnl72kulibowk33roalgtjor24u3h6hfbuzudlodasdvz@fhy2zeif43nk>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 25 Nov 2025 14:48:41 +0100
+X-Gm-Features: AWmQ_bk_Rzt0Qbfc4WzIDgOMiJn7k8fEViDqy4mHfJMd9wBBUgmFHBMSlGkiJ5k
+Message-ID: <CAP4=nvS6zDkb-yo+uu0LHk=OBKP+UO-p46tLygGOUG0zkrkbiw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] rtla/timerlat: Add --bpf-action option
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ZBQBleBZh82582zedKDF6Yzq1cUiKfw90BZjl-8oLTU_1764078533
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2025 at 06:46:33PM -0600, Crystal Wood wrote:
-> On Mon, 2025-11-17 at 15:41 -0300, Wander Lairson Costa wrote:
-> 
-> >  
-> > +/*
-> > + * extract_arg - extract argument value from option token
-> > + * @token: option token (e.g., "file=trace.txt")
-> > + * @opt: option name to match (e.g., "file")
-> > + *
-> > + * Returns pointer to argument value after "=" if token matches "opt=",
-> > + * otherwise returns NULL.
-> > + */
-> > +#define extract_arg(token, opt) (				\
-> > +	strlen(token) > STRING_LENGTH(opt "=") &&		\
-> > +	!strncmp_static(token, opt "=")				\
-> > +		? (token) + STRING_LENGTH(opt "=") : NULL )
-> 
-> This could be implemented as a function (albeit without the
-> concatenation trick)... but if it must be a macro, at least encase it
-> with ({ }) so it behaves more like a function.
-> 
-> > +
-> >  /*
-> >   * actions_parse - add an action based on text specification
-> >   */
-> >  int
-> >  actions_parse(struct actions *self, const char *trigger, const char *tracefn)
-> >  {
-> > +
-> >  	enum action_type type = ACTION_NONE;
-> 
-> Why this blank line?
-> 
+po 3. 11. 2025 v 15:45 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+> >
+> > Executing additional BPF code on latency threshold overflow allows doin=
+g
+> > doing low-latency and in-kernel troubleshooting of the cause of the
+>
+> typo: double "doing"
+>
 
-Must be a typo during the rebase process. I will remove it.
+Thanks, I'll fix that :)
 
-> 
-> > diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-> > index 160491f5de91c..f7ff548f7fba7 100644
-> > --- a/tools/tracing/rtla/src/utils.h
-> > +++ b/tools/tracing/rtla/src/utils.h
-> > @@ -13,8 +13,18 @@
-> >  #define MAX_NICE		20
-> >  #define MIN_NICE		-19
-> >  
-> > -#define container_of(ptr, type, member)({			\
-> > -	const typeof(((type *)0)->member) *__mptr = (ptr);	\
-> [snip]
-> > +#define container_of(ptr, type, member)({				\
-> > +	const typeof(((type *)0)->member) *__mptr = (ptr);		\
-> >  	(type *)((char *)__mptr - offsetof(type, member)) ; })
-> 
-> It's easier to review patches when they don't make unrelated aesthetic
-> changes...
-> 
+> > --- a/tools/tracing/rtla/src/timerlat.c
+> > +++ b/tools/tracing/rtla/src/timerlat.c
+> > @@ -48,6 +48,17 @@ timerlat_apply_config(struct osnoise_tool *tool, str=
+uct timerlat_params *params)
+> >               }
+> >       }
+> >
+> > +     /* Check if BPF action program is requested but BPF is not availa=
+ble */
+> > +     if (params->bpf_action_program) {
+> > +             if (params->mode =3D=3D TRACING_MODE_TRACEFS) {
+> > +                     err_msg("BPF actions are not supported in tracefs=
+-only mode\n");
+>
+> I would just emit a warning to the user and proceed ignoring the bpf acti=
+on argument.
+>
 
-It is just git messing up the diff. No actual change.
+I believe if the user explicitly requests BPF actions to be used,
+measurement should not proceed without the action. Imagine someone
+setting --bpf-action in an automated test, expecting it to report
+something. But the action never fires, because they do not notice they
+are running an old kernel that does not support this.
 
-> -Crystal
-> 
+The user can always restart/reconfigure RTLA to skip the option.
+
+Tomas
 
