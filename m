@@ -1,171 +1,128 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0770F1E98EF;
-	Tue, 25 Nov 2025 16:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457E432860B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 16:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764089081; cv=none; b=q01VFr2+st4ZGQa4e2ojglE02PnyxB6ss+zvUeuOSDodNaeCQhYQFl0Nxmab9xYDgilY+wA4RXFSujWIaDKS2/GK+gMmaFsxbQPru7gaENmckDwvJbGtG1hia8H/QwGa3ja5WnhfKo7J82pL0TUb18bdfEUk/XJfmDKS7+lIV40=
+	t=1764089607; cv=none; b=FkhwI4G5XpYd3sDM71fzkHkO6MlEaNQmRwxFWbrMEGGxJ3WeXKPaBUQfXuMqCpSLhBiVXSDBIlYvXIJTbV2ikojU4xR7WIU0d9vHdmHc+I9z7KO/TD2idBYgPAmIlAYSEIj6RxMsoNpOpGWisp6seCKJuQNC5A5HmS1BUPLBMk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764089081; c=relaxed/simple;
-	bh=0mRriTaFoP70OQc8yqQ+ND2TAs25kKeuFOBJJ7uoEiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=haY59IGCDaqi83PxKSW7q4GuABowh2hg6rY27PsB4n9oY71Do0qLstrUINq4tHZar2pJ6nMDHH2uqX0eBl2P673DYO/WfjryzScF3+OhYFoa7seWGQNBRkvGfanUafrwl0BKkDX9kccpVHilQ0IcV+uSMb77aouEzteQRpKZ2WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jROLtr5l; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1764089607; c=relaxed/simple;
+	bh=6e5KuEEpAl7/FnmosDxY2LU/5yEoEEeNxSYrHTEquBc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m2npd8QK1e59SxWbQkyfvfrHQV4sL8hERcFshH4mnB6QoY2txCB044XTmAa93UbPzQBqr3b8PYLxVe1yU3dg+WHI5NJuCqmxKw5QM/y1BlVe9uH+qWn+k1N/xEtzCfey9njLPQtTU4uQIxs9Dc6mcBuKMI6jQh/6+Um4rcqAP1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QvGLSMCO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jROLtr5l"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5APDQMUa014484;
-	Tue, 25 Nov 2025 16:44:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=QxqDNurIdSF3zjDDc
-	lZ+vL6ghkNAs5JJUL00xCyjypU=; b=jROLtr5lkW3G5z2xtYM/OyuVK4b8vx832
-	SXKytld6WKwqux+MoRjR3bHB5yM+UQOAu4IW/BRW3OepFcnrboeD65yXImcTImzi
-	/bKkC40Wn3kha7RXtV9B0aQKYTRYCME1GrdVMCenIqONo5eaB28xkH7fekWWY8bC
-	F4Dlbyxbwq2Zv9p/5uAu+a4nHuiA5vMkuPxg4dr5Gh2xTCholnN0A0XG+7EhPrG7
-	rtutkc+ooJLl4ZoRcfleZjENtTUBo5/nuD6Kk6pAfMSYqwewuerNXs12ARO2jjM8
-	3MU4I4nMyXujDQImEIjIri0LgNG++r9zu1zyxV5wggwJsWPTz0XNA==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak4phxvvk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Nov 2025 16:44:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5APFB3E0013916;
-	Tue, 25 Nov 2025 16:44:00 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4akrgn53qj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Nov 2025 16:44:00 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5APGhuIB42729876
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Nov 2025 16:43:56 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D49E20040;
-	Tue, 25 Nov 2025 16:43:56 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1A28A2004B;
-	Tue, 25 Nov 2025 16:43:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 25 Nov 2025 16:43:56 +0000 (GMT)
-From: Jens Remus <jremus@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH 3/3] x86/unwind_user: Guard unwind_user_word_size() by UNWIND_USER
-Date: Tue, 25 Nov 2025 17:43:49 +0100
-Message-ID: <20251125164349.2592874-4-jremus@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251125164349.2592874-1-jremus@linux.ibm.com>
-References: <20251125164349.2592874-1-jremus@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QvGLSMCO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764089605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9n5eHfbpL/gFGGuU9QmtP/kf1A5Fu1IN/W5ZKliVISU=;
+	b=QvGLSMCOK69fZpPK3r1TK8pF5g5o1fywLlMGDltXd0DahdpMHSq+/DktEh/RnKUuM8EfyZ
+	fxkkQPiWqF4t1q1d+G38z6BF/acAzCv/Is6ERNFuK00YCfZHFQEypArEPIVjE+e6ntPNiW
+	W3LmdI/+8kC6KluD+m23oAApEc8uhI8=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-eTeNc3GtP4qyH7yzORLUBg-1; Tue, 25 Nov 2025 11:53:22 -0500
+X-MC-Unique: eTeNc3GtP4qyH7yzORLUBg-1
+X-Mimecast-MFC-AGG-ID: eTeNc3GtP4qyH7yzORLUBg_1764089602
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-948610ae935so443211739f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 08:53:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764089602; x=1764694402;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iNMLZqRfPhJPXYEU6Gk044z1ivuGtojcivk4hF8JaXg=;
+        b=BvQ/bx/YLt+4nMBi9WJuRoIvwDYoG4qTjsSUJ9FGCIBCBOLM87A5d7823BUOcbyhGi
+         sx0Ve86VrZ2LH7920TQiZhvFjm9siN2VsgKG3rO8Uv7qThHBfX5HjE/dmW51UW/cexkn
+         qZJYISIhwAXHt+mDMY3+DuhGqYh5cGyeJmJD40P/a7TFAEJsqUW+D/2/fp4HgqoRww8D
+         6TCxYUZvXk6V5JpQ5/Z3Cn4L2S5BcR6WSBzCubHp/d/6kiZ7A87VLfUy0EGVT9mv63w/
+         5jw1ClSe5Cci1misunEQpLMDs2a6DqcMsgYSJP/QLl/ymP1+7Q5ZHXMsTz0g7F8b+//G
+         1tjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Gc0tYfESXESrCJpzPFwpvZfmIGJFiRk7tXBzdbLJaRB5FZWT6lM6y0K1mfrKPQmNzZXBguS7c6Erl5ArHcRxrqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmsm6duvTpYHZMyofGvz8C2PIXgu4kuy5/aiqOUNHMCBnYcy5v
+	vFCmALxU/aYwT3Fd8qy6V4Q8nlFh5vGP5knu8pR5LU+SZ3/+Ul1w0Y2PZwnvtoao1bcx6hzNr96
+	Q6TeQGCtvZ6Xrf9jBAzVlBmquJ2EdbCNB/cZbcFUASjM+SMmswmkWfei6+AUABSiPjzm0OMc1LA
+	==
+X-Gm-Gg: ASbGncsXfhubALPTKfIE2yo8Y3qc0akmCItq6LuRhSCUbE1xfj8qJEF6m3foGgqA1LR
+	a8cZKdK/iXlESpqzDgLK6bQjLSGciAWyg3+lV+8lz68VCY8qPp7NJToZ6UQVQPAFInvkQx/yAgi
+	S89pbeEqnTrM1UBi2uTZuDZ+j4g7EGypuhN4t50BiMOxMPvNrdAtCazzmlV7bIuyEsOjshInjPg
+	RRpdKo6QbxkYiwn08zxTKePEbzxpPyswMxUmIgMmWJJ4elIZS/k+tJuFSZcITFXuZPk7KaZpjwj
+	Imhn/OUuHumC06R+f/4v+eeW3Kx8p1VEfBgLzFQgWOpeJpC1IquhszPsG1X4xwmKXGGvzujs+qX
+	4D+4s7EUelWKG3ccH9xg18iRY9lA=
+X-Received: by 2002:a05:6638:2111:b0:5b7:b997:ffce with SMTP id 8926c6da1cb9f-5b967a1abd1mr9586220173.10.1764089602174;
+        Tue, 25 Nov 2025 08:53:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGMP6cNmI2UgkIUu3TMBPDamSsDlTl2vwDYR9qa5lzTw9UsBLGDjISEJiS9NZjDSVu2t04ckw==
+X-Received: by 2002:a05:6638:2111:b0:5b7:b997:ffce with SMTP id 8926c6da1cb9f-5b967a1abd1mr9586204173.10.1764089601761;
+        Tue, 25 Nov 2025 08:53:21 -0800 (PST)
+Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5b954b212basm7001250173.36.2025.11.25.08.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Nov 2025 08:53:21 -0800 (PST)
+Message-ID: <301c25518ff81dc967187497a0577f8ee2fb2e29.camel@redhat.com>
+Subject: Re: [rtla 05/13] rtla: Simplify argument parsing
+From: Crystal Wood <crwood@redhat.com>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
+  Ivan Pravdin <ipravdin.official@gmail.com>, John Kacur
+ <jkacur@redhat.com>, Costa Shulyupin	 <costa.shul@redhat.com>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, "open list:Real-time Linux Analysis (RTLA) tools"
+	 <linux-trace-kernel@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>,  "open list:BPF
+ [MISC]:Keyword:(?:\\b|_)bpf(?:\\b|_)"	 <bpf@vger.kernel.org>
+Date: Tue, 25 Nov 2025 10:53:18 -0600
+In-Reply-To: <oamfaffwyj6y3mtmhjxlk5u552xvdc4xd6is4dg2mxyh55ebe5@y6fsy73ig5ez>
+References: <20251117184409.42831-1-wander@redhat.com>
+	 <20251117184409.42831-6-wander@redhat.com>
+	 <e96f06667d07fe7f207fc8769218967d22cf7634.camel@redhat.com>
+	 <oamfaffwyj6y3mtmhjxlk5u552xvdc4xd6is4dg2mxyh55ebe5@y6fsy73ig5ez>
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAxNiBTYWx0ZWRfX0rPNKNTPbC7g
- buq3OMbvF+IOL0sr/pFQhb9mXcU2AXgVvJmdA9qgv4pJAK4zhHi0SUYj5HdO4fkathO0FaRkHzf
- YHlZIL19Lch7UGi0+tkPRS1dkhD5+RnNqDRcWnlUW2XaSjDBTkuioKhaIVn6FV85PRbaUzriEtM
- LhPq0JrFmI62O2xaU2/nAHwsyEp8u2RmLSK3XPxXPGEK9DfmEUbUgaQwlUzb7uEvtNqczvlqRjV
- 3n6Cc6iYNEq6MMm78n/zfaClq1MURsG9DEsvGHDV0fRyhNpB0cE/abY4v4NaDm49n2wWnHgFV7L
- HMVkX3vqDKW9y9BzfxDoCeZC3YqdTZAOEqcr15vseOO1K+Hbp6PQLcKr49SycRyeOez+Th95OIE
- m0+fnxjJgkVj632b8pNPQbNdCMidBQ==
-X-Proofpoint-ORIG-GUID: mzODBbdxDN-9AkXQRubUgownfjMy10xa
-X-Authority-Analysis: v=2.4 cv=CcYFJbrl c=1 sm=1 tr=0 ts=6925dcd1 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=LIcl9UMsB3m1Xa-0CCYA:9
-X-Proofpoint-GUID: mzODBbdxDN-9AkXQRubUgownfjMy10xa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 clxscore=1015 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511220016
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: bckR7gPpgTeP7z_wGaEJILfe_lq-DBqVEmZ_ESGfzYk_1764089602
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The unwind user framework in general requires an architecture-specific
-implementation of unwind_user_word_size() to be present for any unwind
-method, whether that is fp or a future other method, such as potentially
-sframe.
+On Tue, 2025-11-25 at 10:45 -0300, Wander Lairson Costa wrote:
+> On Mon, Nov 24, 2025 at 06:46:33PM -0600, Crystal Wood wrote:
+> > On Mon, 2025-11-17 at 15:41 -0300, Wander Lairson Costa wrote:
+> > > diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/=
+utils.h
+> > > index 160491f5de91c..f7ff548f7fba7 100644
+> > > --- a/tools/tracing/rtla/src/utils.h
+> > > +++ b/tools/tracing/rtla/src/utils.h
+> > > @@ -13,8 +13,18 @@
+> > >  #define MAX_NICE=09=0920
+> > >  #define MIN_NICE=09=09-19
+> > > =20
+> > > -#define container_of(ptr, type, member)({=09=09=09\
+> > > -=09const typeof(((type *)0)->member) *__mptr =3D (ptr);=09\
+> > [snip]
+> > > +#define container_of(ptr, type, member)({=09=09=09=09\
+> > > +=09const typeof(((type *)0)->member) *__mptr =3D (ptr);=09=09\
+> > >  =09(type *)((char *)__mptr - offsetof(type, member)) ; })
+> >=20
+> > It's easier to review patches when they don't make unrelated aesthetic
+> > changes...
+> >=20
+>=20
+> It is just git messing up the diff. No actual change.
 
-Guard unwind_user_word_size() by the availability of the UNWIND_USER
-framework instead of the specific HAVE_UNWIND_USER_FP method.
+The change was to the position of the backslashes.  Not a big deal, just
+something that's helpful to avoid to get a cleaner diff.
 
-This facilitates to selectively disable HAVE_UNWIND_USER_FP on x86
-(e.g. for test purposes) once a new unwind method is added to unwind
-user.
-
-Signed-off-by: Jens Remus <jremus@linux.ibm.com>
----
- arch/x86/include/asm/unwind_user.h | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
-index 12064284bc4e..77d776c7fca9 100644
---- a/arch/x86/include/asm/unwind_user.h
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -2,6 +2,22 @@
- #ifndef _ASM_X86_UNWIND_USER_H
- #define _ASM_X86_UNWIND_USER_H
- 
-+#ifdef CONFIG_UNWIND_USER
-+
-+static inline int unwind_user_word_size(struct pt_regs *regs)
-+{
-+	/* We can't unwind VM86 stacks */
-+	if (regs->flags & X86_VM_MASK)
-+		return 0;
-+#ifdef CONFIG_X86_64
-+	if (!user_64bit_mode(regs))
-+		return sizeof(int);
-+#endif
-+	return sizeof(long);
-+}
-+
-+#endif /* CONFIG_UNWIND_USER */
-+
- #ifdef CONFIG_HAVE_UNWIND_USER_FP
- 
- #include <asm/ptrace.h>
-@@ -19,18 +35,6 @@
- 	.fp_off		= 0,				\
- 	.use_fp		= false,
- 
--static inline int unwind_user_word_size(struct pt_regs *regs)
--{
--	/* We can't unwind VM86 stacks */
--	if (regs->flags & X86_VM_MASK)
--		return 0;
--#ifdef CONFIG_X86_64
--	if (!user_64bit_mode(regs))
--		return sizeof(int);
--#endif
--	return sizeof(long);
--}
--
- static inline bool unwind_user_at_function_start(struct pt_regs *regs)
- {
- 	return is_uprobe_at_func_entry(regs);
--- 
-2.51.0
+-Crystal
 
