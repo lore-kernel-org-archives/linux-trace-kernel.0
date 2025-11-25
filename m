@@ -1,183 +1,132 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B7279918;
-	Tue, 25 Nov 2025 18:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5091E32938F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 18:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764093873; cv=none; b=m9rHtu/yO6kcZdvGvis+/C7KXePLXDKAJtq5Cr9I3OCl5OFQM+gofUhpVlFFDhc5D7e/zC7Nw0HDVvKeC/EFtmtj0Q7YIP+7BV66c/CYJxX3/fDVpKAILfx5gF/ZrOWd5FTkrpRr86KPvcwTgLwvZ9K1TC4QERO2YFv+YeAN+tw=
+	t=1764094175; cv=none; b=LTKjwWNWzSt12W3dyG9W9I4uDhu+URztFTbXy1i7gwa+0/9aW8SgDh0EC78pSXMzdjj0q9yG85UviSlT+Olz2Mw9mtKHBB2ornGMjlJTcaxppg/rvTeGWssYs/JxKmVPQRho0q/9G1b4MTdcXpgRJvZzNgsHFJN6jBYtVcfS/6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764093873; c=relaxed/simple;
-	bh=UHU9GcUWmtJxeODXxWsd8u+6gA9u18gLizKa8jUq56M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CX0vaQmqdesnhRD6ASpdSkbmayOMmi3EMii+IB1X9gsDDGgsCzptpgdhJD7UaQDU/2wkBMiplYiZ/f04VeC8OLYElf9dci1D+Q3EF5FBOrQoHhjBLt5/qH7fNVz/gmnievKnxN3lC4curqeOK2YxzT26aKeh8IAEwCRJIG478iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id CCA2F130D24;
-	Tue, 25 Nov 2025 18:04:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id ABE8420028;
-	Tue, 25 Nov 2025 18:04:20 +0000 (UTC)
-Date: Tue, 25 Nov 2025 13:05:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: <wang.yaxin@zte.com.cn>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <hu.shengming@zte.com.cn>,
- <hang.run@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: Re: [PATCH linux-next] fgraph: Fix and tighten PID filtering
- support
-Message-ID: <20251125130504.6f1b442f@gandalf.local.home>
-In-Reply-To: <20251113135627439rGwzvG7JzdmnN8VMHAfMs@zte.com.cn>
-References: <20251113135627439rGwzvG7JzdmnN8VMHAfMs@zte.com.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764094175; c=relaxed/simple;
+	bh=ZaCWiMgstn7nTBo+iZMAGV8wK/vR1o5i3IH5dDzLN/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NrMKUDVXGsBOI1gKx4gOjkAE7fGp9i7ZdnClqmbPM55bc0qsPyxKG7oQlDr7ce/Hci2febQchwDhv2lxGpTeke3HXQmOPp05xUAMUTTMhqHGTNO6frBaesEOiuaKNi0pSFUdJCp8WSMXz9J/8ffFkpQrIkceAXeUK8nnf7sow/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XE9KCIPw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XE9KCIPw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764094172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VaP5r2WF0NQOUygG1QUNsqxGUL+netXL3q2fn1MfCgE=;
+	b=XE9KCIPw3HMlUuaklVsMfglNGi6ZDU0oqb+QYDrFMSJE0AW13gXKCSmG4vo0UXg4nzfaHR
+	oNNUOj4XhOZjGmyJ9LTqwOhMLjk3ZLnHYZVTnhoAOho/L/bYs9ShCHjaqGHxCqWQAvQ7NR
+	0tH5Tx4MJ5vmbT5MUQJSuvOmMW5GOng=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-uSPbv1I6NM2nCUVJhjCCEA-1; Tue, 25 Nov 2025 13:09:30 -0500
+X-MC-Unique: uSPbv1I6NM2nCUVJhjCCEA-1
+X-Mimecast-MFC-AGG-ID: uSPbv1I6NM2nCUVJhjCCEA_1764094169
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5957ecd65c8so4669070e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 10:09:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764094168; x=1764698968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VaP5r2WF0NQOUygG1QUNsqxGUL+netXL3q2fn1MfCgE=;
+        b=kDfE3JLkeXW3Ph49NZzsu97o+lWcxd2ab7GzL9xxunaI0xeMpm4JFdrFO0SC6kLHln
+         sAW19NYHwO//pnk/ygxJpTHbpZSHe0cAn030+2EgZMJ7hIzyHq7FT3soMl4G+IRO3TaX
+         bZZDokS2CwMv8fT+NTbgyYNlSn0kxV6L869r9zcOh6DqjiEsLezWA01bHuTQdrGvXGeo
+         JoMvAd7toXj0op3KzQVcRk+M2SfejXEvbbPVDpxzhoF9s55udLJix0h13Hu3aq/REd4M
+         bgUXvgt1JCDEyoKDBUZaihBVECRmnbkVt28mKziHsuBliwjDaa9iEKbiRC2Ni2a1uT59
+         bfjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBo25xgnIVoOPPJeaI3O7Jya4Q7xNEsiRTCiu4AWNNaxiGVdyjuMStFOPdE62MI/JrQjaFTGX4Bcm2gXN/IxxIjOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGBar+zmD5Bfiv/57s5gMjTOxiSziOFCZvcF0QDXVkpsgyaNx5
+	9fq7gGETd89/LeQLS9Dn9VJAwmfuDqmZ3sJa9L+wSZV2nWAnAdcgD+GJB3iXkuxM2A+jex9FKVi
+	vDF+VqgEQMmSQ58uuLIt36nyJuGVvKAya22dg5m4SVMpE3OIfHACzjGDd9BdBlJXMQtVdYZYzKl
+	iO1xNTZbx4FRSDp+9XjTn7+R/DBfrTC61aYcUcxNuTp+bBToac
+X-Gm-Gg: ASbGnctnwtyxQ4OxT+tBiCfF/UOzPXCf5Wd8kFREXLd66d72T7ymqWfxgZFQ8ZtJO4r
+	DDvm7Cb564ZvvZXhTwA47ImQcxMmTRITHdO8bRJqTuxeOMfIP2j27rbmpKUjROQFe9q72sukpmW
+	KV91BoJnIc5RaXrWWdwu9s4T9GvBsLvIqDRvhsjAm6one5e4upEXRU1Z8X3Ep5/0OC3Q==
+X-Received: by 2002:a05:6512:39c6:b0:595:7bc3:133d with SMTP id 2adb3069b0e04-596b5046c83mr1598722e87.11.1764094168454;
+        Tue, 25 Nov 2025 10:09:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFj9U31QBJxo0s+PPFfLtHCeUvLeFgn6GBmL9Wl9fbFjEaVZ/6i/71QdkrtIFvmLStQP4lVXhQRcK330bgO9PU=
+X-Received: by 2002:a05:6512:39c6:b0:595:7bc3:133d with SMTP id
+ 2adb3069b0e04-596b5046c83mr1598694e87.11.1764094167593; Tue, 25 Nov 2025
+ 10:09:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20251117184409.42831-1-wander@redhat.com> <20251117184409.42831-8-wander@redhat.com>
+ <fb5b468b38ac9570a5f3fb948452d1b5b03c9f9c.camel@redhat.com>
+ <CAAq0SUn=eK+9YZZhdL_bs0S2cfVMhuuV-v8DSRMkTOqoL=SEWA@mail.gmail.com> <99c2109dd8c4b65be34f5ee00575a267da10b002.camel@redhat.com>
+In-Reply-To: <99c2109dd8c4b65be34f5ee00575a267da10b002.camel@redhat.com>
+From: Wander Lairson Costa <wander@redhat.com>
+Date: Tue, 25 Nov 2025 15:09:15 -0300
+X-Gm-Features: AWmQ_bnRq1iq0xoYJwCmnH92Jl-x8xVbQmo2RiV7AnrVIx2PzbBwiU9tMK5MTnk
+Message-ID: <CAAq0SUkchNE50vJEsZDBDQBp88KgzJNJdxaMz=p30h49mxFSHA@mail.gmail.com>
+Subject: Re: [rtla 07/13] rtla: Introduce timerlat_restart() helper
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, John Kacur <jkacur@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:\\b|_)bpf(?:\\b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: XwxnrH-ysvGV0aYaBDryOOze4M9YTka5XEox6jLEHkU_1764094169
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: 5uc5xjzrxegsjywyab5nswipkx9g44g1
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: ABE8420028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX184/6ae8PDAXH53yVU30+NPWVqUpZ33Gw4=
-X-HE-Tag: 1764093860-540626
-X-HE-Meta: U2FsdGVkX189rM0hgDEU2WaHZS8JzjreQcL/utwdrtrOz843NBoKBGKOe61xILA0lWyBd2TGwH9+QVHN7j94yR7QrbrMqqy4mLg3luo3cLTAVf0EK5KtWnTRfYx235dL+9Pc0ktKgmKEif4MZtiY6f+6cDbcTjA8UyrkkMNWfTcK1OqpE8X/BGFqQNodk8LWgR6WwqP1judfWdZcV2SBFjZbIrfIadCPyHCnfPdiBdAk8z/7XeJg8AkGIsX7oDuiRQN6yKvvmeY8uPvkOWuRQluwV9Ttjm3D3Pk0+bD2GOlIrdR1vYBdMaU/pORSpKLvRjIWhvJa/LV4We/M+w9s2jCUI1eV7hkCzE+uf0qtXkqVjHnVPYOW9hn4u/MiFgmR
 
-On Thu, 13 Nov 2025 13:56:27 +0800 (CST)
-<wang.yaxin@zte.com.cn> wrote:
+On Tue, Nov 25, 2025 at 2:36=E2=80=AFPM Crystal Wood <crwood@redhat.com> wr=
+ote:
+>
+> On Tue, 2025-11-25 at 11:20 -0300, Wander Lairson Costa wrote:
+> > On Mon, Nov 24, 2025 at 9:46=E2=80=AFPM Crystal Wood <crwood@redhat.com=
+> wrote:
+> > >
+> > > On Mon, 2025-11-17 at 15:41 -0300, Wander Lairson Costa wrote:
+> >
+> > > > +
+> > > > +                     if (timerlat_bpf_restart_tracing()) {
+> > > > +                             err_msg("Error restarting BPF trace\n=
+");
+> > > > +                             return -1;
+> > > > +                     }
+> > >
+> > > [insert rant about not being able to use exceptions in userspace code=
+ in
+> > > the year 2025]
+> > >
+> >
+> > I actually find exceptions an anti-pattern. Modern languages like Zig,
+> > Go and Rust came back to error returning.
+>
+> Maybe I'm behind the times, but I see exceptions and error returns as
+> complementary... not everything should be an exception and I can
+> certainly see how they could be overused in an anti-pattern way, but
+> they're nice for getting useful information out rather than "something
+> failed" without having to add a bunch of debug prints.
+>
 
-> From: Shengming Hu <hu.shengming@zte.com.cn>
->=20
-> Function graph tracing did not honor set_ftrace_pid() rules properly.
->=20
-> The root cause is that for fgraph_ops, the underlying ftrace_ops->private
-> was left uninitialized. As a result, ftrace_pids_enabled(op) always
-> returned false, effectively disabling PID filtering in the function graph
-> tracer.
->=20
-> PID filtering seemed to "work" only because graph_entry() performed an
-> extra coarse-grained check via ftrace_trace_task(). Specifically,
-> ftrace_ignore_pid is updated by ftrace_filter_pid_sched_switch_probe
-> during sched_switch events. Under the original logic, when the intent
-> is to trace only PID A, a context switch from task B to A sets=20
-> ftrace_ignore_pid to A=E2=80=99s PID. However, there remains a window
-> where B=E2=80=99s functions are still captured by the function-graph trac=
-er.=20
-> The following trace demonstrates this leakage
-> (B =3D haveged-213, A =3D test.sh-385):
+IIRC, you do get stack trace from the error returns. I think Golang
+didn't/don't by
+default. Exception as an alias for "panic()" is fine, IMO. What I've
+seen in production
+is services down due to unhandled exceptions. One of the reasons is
+that there is nothing
+in the function signature that says if or what of exceptions it raises.
 
-Thanks for the patch.
-
-
-> Fix this by:
-
-The below should really be three different patches.
-
->   1. Properly initializing gops->ops->private so that
->      ftrace_pids_enabled() works as expected.
->   2. Removing the imprecise fallback check in graph_entry().
->   3. Updating register_ftrace_graph() to set gops->entryfunc =3D
->      fgraph_pid_func whenever PID filtering is active, so the correct
->      per-task filtering is enforced at entry time.
->=20
-> With this change, function graph tracing will respect the configured
-> PID filter list consistently, and the redundant coarse check is no
-> longer needed.
->=20
-> Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
-> ---
->  kernel/trace/fgraph.c                | 9 +++++++--
->  kernel/trace/trace.h                 | 9 ---------
->  kernel/trace/trace_functions_graph.c | 3 ---
->  3 files changed, 7 insertions(+), 14 deletions(-)
->=20
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 484ad7a18..00df3d4ac 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -1019,6 +1019,7 @@ void fgraph_init_ops(struct ftrace_ops *dst_ops,
->  		mutex_init(&dst_ops->local_hash.regex_lock);
->  		INIT_LIST_HEAD(&dst_ops->subop_list);
->  		dst_ops->flags |=3D FTRACE_OPS_FL_INITIALIZED;
-> +		dst_ops->private =3D src_ops->private;
->  	}
->  #endif
->  }
-> @@ -1375,6 +1376,12 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->  	gops->idx =3D i;
->=20
->  	ftrace_graph_active++;
-
-Please keep a space here.
-
-> +	/* Always save the function, and reset at unregistering */
-> +	gops->saved_func =3D gops->entryfunc;
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +	if (ftrace_pids_enabled(&gops->ops))
-> +		gops->entryfunc =3D fgraph_pid_func;
-> +#endif
-
-Thanks,
-
--- Steve
-
->=20
->  	if (ftrace_graph_active =3D=3D 2)
->  		ftrace_graph_disable_direct(true);
-> @@ -1395,8 +1402,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->  	} else {
->  		init_task_vars(gops->idx);
->  	}
-> -	/* Always save the function, and reset at unregistering */
-> -	gops->saved_func =3D gops->entryfunc;
->=20
->  	gops->ops.flags |=3D FTRACE_OPS_FL_GRAPH;
->=20
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index a3a15cfab..048a53282 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1162,11 +1162,6 @@ struct ftrace_func_command {
->  					char *params, int enable);
->  };
->  extern bool ftrace_filter_param __initdata;
-> -static inline int ftrace_trace_task(struct trace_array *tr)
-> -{
-> -	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=3D
-> -		FTRACE_PID_IGNORE;
-> -}
->  extern int ftrace_is_dead(void);
->  int ftrace_create_function_files(struct trace_array *tr,
->  				 struct dentry *parent);
-> @@ -1184,10 +1179,6 @@ void ftrace_clear_pids(struct trace_array *tr);
->  int init_function_trace(void);
->  void ftrace_pid_follow_fork(struct trace_array *tr, bool enable);
->  #else
-> -static inline int ftrace_trace_task(struct trace_array *tr)
-> -{
-> -	return 1;
-> -}
->  static inline int ftrace_is_dead(void) { return 0; }
->  static inline int
->  ftrace_create_function_files(struct trace_array *tr,
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_fu=
-nctions_graph.c
-> index fe9607edc..0efe831e4 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -232,9 +232,6 @@ static int graph_entry(struct ftrace_graph_ent *trace,
->  		return 1;
->  	}
->=20
-> -	if (!ftrace_trace_task(tr))
-> -		return 0;
-> -
->  	if (ftrace_graph_ignore_func(gops, trace))
->  		return 0;
->=20
+> -Crystal
+>
 
