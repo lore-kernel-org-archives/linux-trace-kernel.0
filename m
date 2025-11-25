@@ -1,86 +1,82 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9B31E2834
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 00:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4F6191484
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 01:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764031604; cv=none; b=BTxLGpPTnamUxIEa/UNx9PlddvQKJdP1sycvbj+IQGoACRTEIwXl2BAQZJn6HwqUdRCB521S1OG/osZYH6bASWaKl3kFnSLlZMB7Rsise3bLM7GF7dm8dX4J3ci/zxBBPfBZQcLaj+tpb+jz67OgRfTNzSQEFVSH7OIVFncoH+Y=
+	t=1764032512; cv=none; b=WbPtBfEQPYu1n2YMg7sGA3oHHF/16hy5Ql+EToAWFm8I5Gq8k5AlRUBi7wPrh06O87vchgusE0kG2jTs/j6vAQMRsjdCrEcN2FUT+0EN2xLVzWy6En7Ee6vLcMvQOxfdKtVF12Z6Sq/NtDY6nDTyzZbgUNZQtqEJffKnNg10Sfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764031604; c=relaxed/simple;
-	bh=y+wafNRdOeJoV2adholJuL8OeSs6bKVGXusWa7rTBys=;
+	s=arc-20240116; t=1764032512; c=relaxed/simple;
+	bh=aS+1cJa75nrWpjPePFv55yi2LEwUdzX1MEm1hb7W8f4=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U3TFRpzJdIUaZNf1TgT72EvfPp8DhYubc17oqP8QyfsC9j72XKI02wHVuZgzhcSlxDY7A8AGfTaS2yqe08LOIkv152ukMgry2WlP5iOWgyDmH1/dkrj7RXQWSdoYYGv3Q9RRq/nacw2o8d6rk3Eq9/7aTD1hfa1PHetLoquj32A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cUA9DJj7; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=ZnVLDvZRhPB2Htkbc+vmBP+jPFoYE7/x3FBeH8dyFQ74c+16wGY6T5aYqcq6sWWUtrjlb1aKccdCV7gNcRWAX+dzirEOTUyV0qDZVdIcIQ9ArLQLUyH0fpz8BRG8q0eSBrrsa3aML021K3OcLkyossKQGgvnHJibWpgp9zKUPak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DR5GJ8US; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cUA9DJj7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DR5GJ8US"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764031601;
+	s=mimecast20190719; t=1764032506;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RSpp+DANB+wjWaaNT9fDc8gzwADBY/l70nNl6IxbdP0=;
-	b=cUA9DJj7CKVwIZM4yJTeqSlaiinPtryXNyYJeQLRW6KEQ4o6jinbFBJaXfiF0H4XOLT1sm
-	16TcxDCN0C0uSzMkIU/fBMuPlONTOWrGecXGnlMthmgQmgLKM6JibogqGrYXdaSmDfAFlM
-	Ne1GpMHA2raZvvDyO2m5wjg3V6ozxSA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Krdw59DF8mDry2N50mIsRLclxBge7cgrOeMU5xjuesc=;
+	b=DR5GJ8US/ACb9nurPcRmPfjveg6+HN8PBdaJfEHbhpznznfsYIXTLLcTa6Pa0di7jw6qov
+	6vYBh7nWwX7q4LLqlF9789R283fI2uRcWLpG+C4yxr2vFxq7LQInarTNLwiCX4nviinU/A
+	gvtGFyuHLrRZ6f0KFnRyl/FgZ2Qm0Tg=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-2yW4DnDnN2OC5X4EjSXAXw-1; Mon, 24 Nov 2025 19:46:38 -0500
-X-MC-Unique: 2yW4DnDnN2OC5X4EjSXAXw-1
-X-Mimecast-MFC-AGG-ID: 2yW4DnDnN2OC5X4EjSXAXw_1764031598
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-88236279bd9so157009026d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Nov 2025 16:46:38 -0800 (PST)
+ us-mta-663-RZKS6P7uON--NzxBRjLZNQ-1; Mon, 24 Nov 2025 20:01:44 -0500
+X-MC-Unique: RZKS6P7uON--NzxBRjLZNQ-1
+X-Mimecast-MFC-AGG-ID: RZKS6P7uON--NzxBRjLZNQ_1764032504
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4ee09693109so107156021cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Nov 2025 17:01:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764031598; x=1764636398;
+        d=1e100.net; s=20230601; t=1764032504; x=1764637304;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uQNtnWOsotCA1HNvoVlP0i2b01R7aawce9e6oJOL594=;
-        b=iCynX423MUDt5IZmi6QxuysUKrch8oXdrBn2bnj5dNedeXDWNZ52SavEN0CI0BB8rf
-         aCrzvo0zO33lTfKK94/aq3tnD9TQPxHQwBhZpkGlADpDzItzX48yw9CAqN+OHfL6WZUz
-         P7tjw/matGeb8w9yjPHTTNVbOTOyXj3axFi5PJwkGwtnuUipGA9yKT+iJV/ElRXcinrj
-         PQRsCs2o8qw7OvE9sgcR9i1sgoiSZbntXLi4vMM3UbBPU04JoTzwo92kqPi+AArXcDxJ
-         x4M4AIOxpPrT5d0hEn6MzAeYxmgGoJeCacWZ4yCDCQks9fXaj/NZIPLi1kUhGlZ5VCwp
-         /EIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOSf/opUXrGRBVm3oG2Lc7Ig24uc39qv37GcSH+jo3WyJOh/wZiLEQ1Zja+44wK8GCR3S9wjpefNkw6MKFzO1DoOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlZpiDiP6tSH5dSXiZoTuG3QN5+NBtmXuVpZWAykx9xlsmL9TJ
-	lr24RTyjwtKlX7qUbjhZUK9f2LRttkfC0xRn0jzjuU8hbKKRHc0eFsTd2SrP+8jqpdgrvGAmXI2
-	+W20BRfzL1kmOUqi7KWhOmg6Zafcb8LgDDAKxHffrdN0CwhOF6AQk/eHUsNdGJVZnU/gZPAqfgg
+        bh=Krdw59DF8mDry2N50mIsRLclxBge7cgrOeMU5xjuesc=;
+        b=mLEVg2awMpNXJ2FrN5nT4ETGqtuMp7Cf83bqq6bqWiBQY8Jas7ntXo88UvqF3f2gHv
+         4quqdufWUjlKYuEh6NO+C0a8kZKQIOgWn96kWiC7J7CjMP0ujI3G7roWsgeYOnekNdU2
+         2Oc8wK+9sImGtVAj76o+LKfBVjVBGrtryJquMIiy70eKQ7IUez7bgZUKBIGmCguq+up7
+         q5ejuZm+mdJijC5p6qf18R3xY0dVHPJfMBkLMNlY6qWJUx1kmcXOEYarEQO8TsTnMrzC
+         t13XxZlybpTC5St3o4wcGDBsYP5xiviGVJmz3e082F3uCN+dSxmHT08AN8wSDuGnEEKX
+         r9SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQgUVZuC5Ec3z3z1igNffOc19qeXUzJdm9wm7eEywiz3Fw6HRPKV1GTMj3CeEkfeWeIw5NMHj67jl3lSI6dA2jWc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxtVBDkMqYZCGMZDidA9YbYIrLpXvdGJc/oJibv0HBfTyqwvqu
+	JFa0DHZXnvyL+3bzCgrZpM3hUFH7X0Y7FGb4FpLuPPf35sU95JDUnS9e8ZySQVAzM+nLSTFWTAQ
+	zaazCVZTbb9xhMyV06r1N+Ba+jjoGgzjNW2IsWVJGusIn+pI14jXVB6wHLhCr39SmIjYDapdnaA
 	==
-X-Gm-Gg: ASbGncuY4gmymLbp3pLgTgttyWJmUf+GlZgJ7YgEGF9xNpU/626X9pr0wQvA3YH2cI6
-	nfpUM6vL/Rm2+ZtpTY/TjcbZzf+ME4yAbwVSHhkAxub9FlubQZiwOEc7MjzBSBchdy/sFJlR358
-	XIkH/fcOLd9ulIr4O/9k8+v5MkCjG8vmz44AAliuIpWTn6KFiB6rwNMax4QTMREf/Iu9koaA1B3
-	Ok5OC0W43Iyn+rtkGM9nrIzRuBpsBD4LrcUEePCROVICETxhHKdiGvxcUhrKyvP8MX3sNK7z/uG
-	JmYxCLjVHR5lVW51a6MiGhDEcMU2rxiuL4D3d8QIU9DQDdcE3YpTqJHhur/hTBGRhhLEXmgoy3z
-	Gw4EcIJMi+8Oh13FX4tU0hWFRnNBk0Y3qYGXLbLfdXw==
-X-Received: by 2002:a05:6214:4a09:b0:882:4901:e960 with SMTP id 6a1803df08f44-8847c4c8123mr198048816d6.29.1764031597825;
-        Mon, 24 Nov 2025 16:46:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHB5+f1yDnZK7hRMic4Sah4dDpUUJqEdE7scW0eh7drx/bT1c7yAK2y5dCpUKma/dEfKV08tw==
-X-Received: by 2002:a05:6214:4a09:b0:882:4901:e960 with SMTP id 6a1803df08f44-8847c4c8123mr198048636d6.29.1764031597486;
-        Mon, 24 Nov 2025 16:46:37 -0800 (PST)
+X-Gm-Gg: ASbGnctVdG2ADRcJKvWrwzKM1Na+itX++Z1TQY6rqPdqMoMPHFM+cEfgqYEzsjC0oCz
+	R9eDhrLyFGuXXSq9gPtUxTTtGO1hXehPkKLYcV48pS40aBTVGrWpi4bWzYWYUh9/FA/WgTy8gA9
+	QHCcMMCVToqY9w4zXKyyV1eZs9uCHOqbT2HDaALsCybsNaWqHC4i+NStkgDhgiUD5URa4ZmSNXH
+	fvLCj+DGelHzwfoWRi9JOHVo12+r+1T8IZ9YGuQHUPt757UKnNzlgIJQiHol6cJOYmzmmghwibS
+	yoApbd2Nlft9H2x6LwSpPgr8jnIJfbVfNuNXrVGUXImWyPg4NywQlF4/1IhFQJjIy1WX3hpQ+Lb
+	lmpeSEkJbKzidbT4ndYO89hOLmmoC2xkmgZwWaqRxfQ==
+X-Received: by 2002:ac8:5f84:0:b0:4ee:2c3c:6e with SMTP id d75a77b69052e-4efbda49e09mr15667291cf.30.1764032503820;
+        Mon, 24 Nov 2025 17:01:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHF3NXobiMfICuyWEqcwkYMU0xyrtWHnGIXntf9dW3FH87Z1BqC8via9eZBQaJyMrtfaj5VyQ==
+X-Received: by 2002:ac8:5f84:0:b0:4ee:2c3c:6e with SMTP id d75a77b69052e-4efbda49e09mr15666251cf.30.1764032502882;
+        Mon, 24 Nov 2025 17:01:42 -0800 (PST)
 Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8846e54e94csm110992156d6.34.2025.11.24.16.46.36
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ee48e8cdebsm97590441cf.31.2025.11.24.17.01.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 16:46:37 -0800 (PST)
-Message-ID: <fb5b468b38ac9570a5f3fb948452d1b5b03c9f9c.camel@redhat.com>
-Subject: Re: [rtla 07/13] rtla: Introduce timerlat_restart() helper
+        Mon, 24 Nov 2025 17:01:42 -0800 (PST)
+Message-ID: <e58d366c0eec0efb602293f502f64be2df39ea89.camel@redhat.com>
+Subject: Re: [PATCH v1 0/8] tools/rtla: Consolidate common command line
+ options
 From: Crystal Wood <crwood@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>, Steven Rostedt	
- <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, Ivan Pravdin	
- <ipravdin.official@gmail.com>, John Kacur <jkacur@redhat.com>, Costa
- Shulyupin	 <costa.shul@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- "open list:Real-time Linux Analysis (RTLA) tools"	
- <linux-trace-kernel@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>,  "open list:BPF
- [MISC]:Keyword:(?:\\b|_)bpf(?:\\b|_)"	 <bpf@vger.kernel.org>
-Date: Mon, 24 Nov 2025 18:46:36 -0600
-In-Reply-To: <20251117184409.42831-8-wander@redhat.com>
-References: <20251117184409.42831-1-wander@redhat.com>
-	 <20251117184409.42831-8-wander@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt	
+ <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, Wander Lairson
+ Costa	 <wander@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 24 Nov 2025 19:01:41 -0600
+In-Reply-To: <20251121174504.519230-1-costa.shul@redhat.com>
+References: <20251121174504.519230-1-costa.shul@redhat.com>
 User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -89,79 +85,51 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LtDoVgdRHoCZtJP8lwUeQqxv40_BDGgJIRkFbbVrEGM_1764031598
+X-Mimecast-MFC-PROC-ID: n5jnV6qS6Esf-oomihFHtltURklvH6zXwy1j43VZ-Ig_1764032504
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-11-17 at 15:41 -0300, Wander Lairson Costa wrote:
+On Fri, 2025-11-21 at 19:44 +0200, Costa Shulyupin wrote:
+> Argument parsing functions are the longest functions of the project:
+>=20
+> lizard --warnings_only --sort nloc -L100 | head -n 4
+> ./src/timerlat_hist.c:766: warning: timerlat_hist_parse_args has 247 NLOC=
+, 76 CCN, 1579 token, 1 PARAM, 287 length, 0 ND
+> ./src/timerlat_top.c:538: warning: timerlat_top_parse_args has 217 NLOC, =
+64 CCN, 1338 token, 2 PARAM, 262 length, 0 ND
+> ./src/osnoise_hist.c:469: warning: osnoise_hist_parse_args has 195 NLOC, =
+56 CCN, 1225 token, 1 PARAM, 216 length, 0 ND
+> ./src/osnoise_top.c:322: warning: osnoise_top_parse_args has 169 NLOC, 46=
+ CCN, 1019 token, 2 PARAM, 191 length, 0 ND
+>=20
+> Moreover, they contain a lot of duplicate code and growing.
+>=20
+> Refactor these functions to reduce code duplication.
+>=20
+> Benefits:
+> - Single implementation for common options
+> - Easier maintenance and consistent behavior
+>=20
+> Costa Shulyupin (8):
+>   tools/rtla: Add common_parse_options()
+>   tools/rtla: Consolidate -c/--cpus option parsing
+>   tools/rtla: Consolidate -C/--cgroup option parsing
+>   tools/rtla: Consolidate -D/--debug option parsing
+>   tools/rtla: Consolidate -d/--duration option parsing
+>   tools/rtla: Consolidate -e/--event option parsing
+>   tools/rtla: Consolidate -P/--priority option parsing
+>   tools/rtla: Consolidate -H/--house-keeping option parsing
+>=20
+>  tools/tracing/rtla/src/common.c        | 78 ++++++++++++++++++++++++++
+>  tools/tracing/rtla/src/common.h        |  1 +
+>  tools/tracing/rtla/src/osnoise_hist.c  | 53 ++---------------
+>  tools/tracing/rtla/src/osnoise_top.c   | 53 ++---------------
+>  tools/tracing/rtla/src/timerlat_hist.c | 53 ++---------------
+>  tools/tracing/rtla/src/timerlat_top.c  | 52 ++---------------
+>  6 files changed, 95 insertions(+), 195 deletions(-)
 
-> +enum restart_result
-> +timerlat_restart(const struct osnoise_tool *tool, struct timerlat_params=
- *params)
-> +{
-> +=09actions_perform(&params->common.threshold_actions);
-> +
-> +=09if (!params->common.threshold_actions.continue_flag)
-> +=09=09/* continue flag not set, break */
-> +=09=09return RESTART_STOP;
-> +
-> +=09/* continue action reached, re-enable tracing */
-> +=09if (tool->record && trace_instance_start(&tool->record->trace))
-> +=09=09goto err;
-> +=09if (tool->aa && trace_instance_start(&tool->aa->trace))
-> +=09=09goto err;
-> +=09return RESTART_OK;
-> +
-> +err:
-> +=09err_msg("Error restarting trace\n");
-> +=09return RESTART_ERROR;
-> +}
-
-The non-BPF functions in common.c have the same logic and should also
-call this.  This isn't timerlat-specific.
-
-
-> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/=
-src/timerlat_hist.c
-> index 09a3da3f58630..f14fc56c5b4a5 100644
-> --- a/tools/tracing/rtla/src/timerlat_hist.c
-> +++ b/tools/tracing/rtla/src/timerlat_hist.c
-> @@ -1165,18 +1165,19 @@ static int timerlat_hist_bpf_main_loop(struct osn=
-oise_tool *tool)
-> =20
->  =09=09if (!stop_tracing) {
->  =09=09=09/* Threshold overflow, perform actions on threshold */
-> -=09=09=09actions_perform(&params->common.threshold_actions);
-> +=09=09=09enum restart_result result;
-> =20
-> -=09=09=09if (!params->common.threshold_actions.continue_flag)
-> -=09=09=09=09/* continue flag not set, break */
-> +=09=09=09result =3D timerlat_restart(tool, params);
-> +=09=09=09if (result =3D=3D RESTART_STOP)
->  =09=09=09=09break;
-> =20
-> -=09=09=09/* continue action reached, re-enable tracing */
-> -=09=09=09if (tool->record)
-> -=09=09=09=09trace_instance_start(&tool->record->trace);
-> -=09=09=09if (tool->aa)
-> -=09=09=09=09trace_instance_start(&tool->aa->trace);
-> -=09=09=09timerlat_bpf_restart_tracing();
-> +=09=09=09if (result =3D=3D RESTART_ERROR)
-> +=09=09=09=09return -1;
-
-Does it matter that we're not detaching on an error here?  Is this
-something that gets cleaned up automatically (and if so, why do we ever
-need to do it explicitly)?
-
-> +
-> +=09=09=09if (timerlat_bpf_restart_tracing()) {
-> +=09=09=09=09err_msg("Error restarting BPF trace\n");
-> +=09=09=09=09return -1;
-> +=09=09=09}
-
-[insert rant about not being able to use exceptions in userspace code in
-the year 2025]
+Reviewed-by: Crystal Wood <crwood@redhat.com>
 
 -Crystal
 
