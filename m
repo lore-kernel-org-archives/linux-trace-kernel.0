@@ -1,52 +1,60 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6962D8390
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 08:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFA22D0C72;
+	Tue, 25 Nov 2025 08:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764059077; cv=none; b=V9NiHj3ydqM7g2HR71w9TAVa3Jw772u57MaXP0QyFx47xTd/lgeZGq+lnWPsYMGUIIiMyzYEfvyYMu2lmTO/QN4EjsPHE9iMS7ofX9snoA6mEWNRSF9CQMJv9YOprKtd2WvCV8vrRxbYeUXNw+5CYSHlgNWw61hAucry+3UCqbw=
+	t=1764059105; cv=none; b=eBt9lQkOYt0yBmArCi1WJUyXoXmBBTiEnza/w0PQt3Ct1kdv7YTrjSmZB2I/ealZKukYTh5xH8U7oPdJLE2qDKPS6rOTfGGThWTPd+y7TWmrVbtJ7aYRUBFqDrYUM2z7mDM18W/8B1HNi2lAIUklX1ELrgvTSPUIctJeYVdBhcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764059077; c=relaxed/simple;
-	bh=LLzpqkneb1EniVPD7ARGUrLwj9wBOs51JHhwuqLjXLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JSSapfes6FMR7OI5RsSkaErDVMw6PiEO9ITJWX4ihU+PglGRsT3r+5x1oEAGI++EI9aiihUqxasWnA2LsDTZw8Cr5Y054aRsmXDsROCrknF+bgeoTo2VOsBLh3NgTMIoQc1jM6XAysurv37IrxVgKzed11S85/oi+6i1o1/qQCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J2Pf5qPm; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J2Pf5qPm"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764059061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UVMKZpiAgjdj1OrjiOCmq9JWsKoWT5hUh7417oGOV5Q=;
-	b=J2Pf5qPmhe3Z/feXILv7t76bYUY6p6BkPx+cxzinGjbsFGniRnQWVJURQr1ovbDSOrQc/y
-	X0DaQxxX/mEdQpQsFxx6WJzFHc1P8aBujWch0LkGVMm0fS2f6CAT4KEs61aszhY8DzjNbm
-	V5xcO2XTERw9MSRe5ZiDkSPpnjEK1J0=
-From: Leon Hwang <leon.hwang@linux.dev>
-To: netdev@vger.kernel.org
-Cc: hawk@kernel.org,
-	ilias.apalodimas@linaro.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	kerneljasonxing@gmail.com,
-	lance.yang@linux.dev,
-	jiayuan.chen@linux.dev,
+	s=arc-20240116; t=1764059105; c=relaxed/simple;
+	bh=WjWUop7wo31rq07vxZFU+4o/C827wYh9UG5FmOtvBBA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PbbGkjXPdwDn/JjEWiPqWZBu5+NH4dDPSgucnJG+p4n5odWq20wXZQariGEw0+SS91WIvRhq2cMyP3MRuVsarGw8pQP7IAqWj7XYqE5zNPpHxpIk1z+aJrZIc0SkA3Z8saNQ94WB3ol6ZwGIuTC6HY29lF9Kfxriu+bYYwa8l8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3860cf3ac9d811f0a38c85956e01ac42-20251125
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:c03fc337-4191-4a23-a419-374f96124bb4,IP:15,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:-30,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:10
+X-CID-INFO: VERSION:1.3.6,REQID:c03fc337-4191-4a23-a419-374f96124bb4,IP:15,URL
+	:0,TC:0,Content:0,EDM:25,RT:0,SF:-30,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:10
+X-CID-META: VersionHash:a9d874c,CLOUDID:df33ac9e34ad3034b42937c3710d1dcc,BulkI
+	D:251125162454FMCX036Y,BulkQuantity:0,Recheck:0,SF:10|66|78|102|127|850|89
+	8,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 3860cf3ac9d811f0a38c85956e01ac42-20251125
+X-User: hehuiwen@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <hehuiwen@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1774961297; Tue, 25 Nov 2025 16:24:54 +0800
+From: Huiwen He <hehuiwen@kylinos.cn>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Leon Hwang <leon.hwang@linux.dev>,
-	Leon Huang Fu <leon.huangfu@shopee.com>
-Subject: [RFC PATCH net-next] page_pool: Add page_pool_release_stalled tracepoint
-Date: Tue, 25 Nov 2025 16:22:07 +0800
-Message-ID: <20251125082207.356075-1-leon.hwang@linux.dev>
+	Huiwen He <hehuiwen@kylinos.cn>
+Subject: [PATCH] blk-trace: Fix potential buffer overflow in blk_trace_setup()
+Date: Tue, 25 Nov 2025 16:24:20 +0800
+Message-Id: <20251125082420.856030-1-hehuiwen@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,98 +62,39 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Introduce a new tracepoint to track stalled page pool releases,
-providing better observability for page pool lifecycle issues.
+The legacy struct blk_user_trace_setup has a 32-byte name field,
+while buts2->name is a 64-byte buffer (BLKTRACE_BDEV_SIZE2).
 
-Problem:
-Currently, when a page pool shutdown is stalled due to inflight pages,
-the kernel only logs a warning message via pr_warn(). This has several
-limitations:
+Since commit 113cbd62824a ("blktrace: pass blk_user_trace2 to setup
+functions"), blk_trace_setup() copied buts2->name into buts->name
+using strcpy(). strcpy() performs no bounds checking on the destination
+buffer, which can overflow if the source string exceeds 31 characters.
 
-1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
-   making it difficult to track the progression of stalled releases
-2. There's no structured way to monitor or analyze these events
-3. Debugging tools cannot easily capture and correlate stalled pool
-   events with other network activity
+Replace deprecated [1] strcpy() with strscpy() to ensure proper bounds
+checking and prevent potential buffer overflow.
 
-Solution:
-Add a new tracepoint, page_pool_release_stalled, that fires when a page
-pool shutdown is stalled. The tracepoint captures:
-- pool: pointer to the stalled page_pool
-- inflight: number of pages still in flight
-- sec: seconds since the release was deferred
+Link: https://github.com/KSPP/linux/issues/88 [1]
 
-The implementation also modifies the logging behavior:
-- pr_warn() is only emitted during the first warning interval
-  (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
-- The tracepoint is fired always, reducing log noise while still
-  allowing monitoring tools to track the issue
-
-This allows developers and system administrators to:
-- Use tools like perf, ftrace, or eBPF to monitor stalled releases
-- Correlate page pool issues with network driver behavior
-- Analyze patterns without parsing kernel logs
-- Track the progression of inflight page counts over time
-
-Signed-off-by: Leon Huang Fu <leon.huangfu@shopee.com>
-Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+Fixes: 113cbd62824a ("blktrace: pass blk_user_trace2 to setup functions")
+Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
 ---
- include/trace/events/page_pool.h | 22 ++++++++++++++++++++++
- net/core/page_pool.c             |  6 ++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ kernel/trace/blktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/trace/events/page_pool.h b/include/trace/events/page_pool.h
-index 31825ed30032..c4205af9bf93 100644
---- a/include/trace/events/page_pool.h
-+++ b/include/trace/events/page_pool.h
-@@ -113,6 +113,28 @@ TRACE_EVENT(page_pool_update_nid,
- 		  __entry->pool, __entry->pool_nid, __entry->new_nid)
- );
- 
-+TRACE_EVENT(page_pool_release_stalled,
-+
-+	TP_PROTO(const struct page_pool *pool, int inflight, int sec),
-+
-+	TP_ARGS(pool, inflight, sec),
-+
-+	TP_STRUCT__entry(
-+		__field(const struct page_pool *, pool)
-+		__field(int,			  inflight)
-+		__field(int,			  sec)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pool		= pool;
-+		__entry->inflight	= inflight;
-+		__entry->sec		= sec;
-+	),
-+
-+	TP_printk("page_pool=%p id=%d inflight=%d sec=%d",
-+		  __entry->pool, __entry->pool->user.id, __entry->inflight, __entry->sec)
-+);
-+
- #endif /* _TRACE_PAGE_POOL_H */
- 
- /* This part must be outside protection */
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 1a5edec485f1..9fd86749c705 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -1218,8 +1218,10 @@ static void page_pool_release_retry(struct work_struct *wq)
- 	    (!netdev || netdev == NET_PTR_POISON)) {
- 		int sec = (s32)((u32)jiffies - (u32)pool->defer_start) / HZ;
- 
--		pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
--			__func__, pool->user.id, inflight, sec);
-+		if (sec >= DEFER_WARN_INTERVAL / HZ && sec < DEFER_WARN_INTERVAL * 2 / HZ)
-+			pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
-+				__func__, pool->user.id, inflight, sec);
-+		trace_page_pool_release_stalled(pool, inflight, sec);
- 		pool->defer_warn = jiffies + DEFER_WARN_INTERVAL;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d031c8d80be4..50460e2e7212 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -793,7 +793,7 @@ int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 		return PTR_ERR(bt);
  	}
+ 	blk_trace_setup_finalize(q, name, 1, bt, &buts2);
+-	strcpy(buts.name, buts2.name);
++	strscpy(buts.name, buts2.name);
+ 	mutex_unlock(&q->debugfs_mutex);
  
+ 	if (copy_to_user(arg, &buts, sizeof(buts))) {
 -- 
-2.52.0
+2.25.1
 
