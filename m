@@ -1,135 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4F6191484
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 01:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884FE36D4E8;
+	Tue, 25 Nov 2025 01:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764032512; cv=none; b=WbPtBfEQPYu1n2YMg7sGA3oHHF/16hy5Ql+EToAWFm8I5Gq8k5AlRUBi7wPrh06O87vchgusE0kG2jTs/j6vAQMRsjdCrEcN2FUT+0EN2xLVzWy6En7Ee6vLcMvQOxfdKtVF12Z6Sq/NtDY6nDTyzZbgUNZQtqEJffKnNg10Sfg=
+	t=1764033143; cv=none; b=b+UDGjikBQ38mHPAJpftr4Bqxe6Tt3biBRE9iPSc2tg87exAmQ9ZQuO5kXIsvXNGmgfarlegeemY0kDyIsRP9WyiFG6az2QoFsaTNNeDWeZvC/kVqd0ZUc5LYB1aCd33zWmBvpIionEddtTUsKhJonF9xWsp60edJjxp3sNBDt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764032512; c=relaxed/simple;
-	bh=aS+1cJa75nrWpjPePFv55yi2LEwUdzX1MEm1hb7W8f4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZnVLDvZRhPB2Htkbc+vmBP+jPFoYE7/x3FBeH8dyFQ74c+16wGY6T5aYqcq6sWWUtrjlb1aKccdCV7gNcRWAX+dzirEOTUyV0qDZVdIcIQ9ArLQLUyH0fpz8BRG8q0eSBrrsa3aML021K3OcLkyossKQGgvnHJibWpgp9zKUPak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DR5GJ8US; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DR5GJ8US"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764032506;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Krdw59DF8mDry2N50mIsRLclxBge7cgrOeMU5xjuesc=;
-	b=DR5GJ8US/ACb9nurPcRmPfjveg6+HN8PBdaJfEHbhpznznfsYIXTLLcTa6Pa0di7jw6qov
-	6vYBh7nWwX7q4LLqlF9789R283fI2uRcWLpG+C4yxr2vFxq7LQInarTNLwiCX4nviinU/A
-	gvtGFyuHLrRZ6f0KFnRyl/FgZ2Qm0Tg=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-663-RZKS6P7uON--NzxBRjLZNQ-1; Mon, 24 Nov 2025 20:01:44 -0500
-X-MC-Unique: RZKS6P7uON--NzxBRjLZNQ-1
-X-Mimecast-MFC-AGG-ID: RZKS6P7uON--NzxBRjLZNQ_1764032504
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4ee09693109so107156021cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Nov 2025 17:01:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764032504; x=1764637304;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Krdw59DF8mDry2N50mIsRLclxBge7cgrOeMU5xjuesc=;
-        b=mLEVg2awMpNXJ2FrN5nT4ETGqtuMp7Cf83bqq6bqWiBQY8Jas7ntXo88UvqF3f2gHv
-         4quqdufWUjlKYuEh6NO+C0a8kZKQIOgWn96kWiC7J7CjMP0ujI3G7roWsgeYOnekNdU2
-         2Oc8wK+9sImGtVAj76o+LKfBVjVBGrtryJquMIiy70eKQ7IUez7bgZUKBIGmCguq+up7
-         q5ejuZm+mdJijC5p6qf18R3xY0dVHPJfMBkLMNlY6qWJUx1kmcXOEYarEQO8TsTnMrzC
-         t13XxZlybpTC5St3o4wcGDBsYP5xiviGVJmz3e082F3uCN+dSxmHT08AN8wSDuGnEEKX
-         r9SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQgUVZuC5Ec3z3z1igNffOc19qeXUzJdm9wm7eEywiz3Fw6HRPKV1GTMj3CeEkfeWeIw5NMHj67jl3lSI6dA2jWc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxtVBDkMqYZCGMZDidA9YbYIrLpXvdGJc/oJibv0HBfTyqwvqu
-	JFa0DHZXnvyL+3bzCgrZpM3hUFH7X0Y7FGb4FpLuPPf35sU95JDUnS9e8ZySQVAzM+nLSTFWTAQ
-	zaazCVZTbb9xhMyV06r1N+Ba+jjoGgzjNW2IsWVJGusIn+pI14jXVB6wHLhCr39SmIjYDapdnaA
-	==
-X-Gm-Gg: ASbGnctVdG2ADRcJKvWrwzKM1Na+itX++Z1TQY6rqPdqMoMPHFM+cEfgqYEzsjC0oCz
-	R9eDhrLyFGuXXSq9gPtUxTTtGO1hXehPkKLYcV48pS40aBTVGrWpi4bWzYWYUh9/FA/WgTy8gA9
-	QHCcMMCVToqY9w4zXKyyV1eZs9uCHOqbT2HDaALsCybsNaWqHC4i+NStkgDhgiUD5URa4ZmSNXH
-	fvLCj+DGelHzwfoWRi9JOHVo12+r+1T8IZ9YGuQHUPt757UKnNzlgIJQiHol6cJOYmzmmghwibS
-	yoApbd2Nlft9H2x6LwSpPgr8jnIJfbVfNuNXrVGUXImWyPg4NywQlF4/1IhFQJjIy1WX3hpQ+Lb
-	lmpeSEkJbKzidbT4ndYO89hOLmmoC2xkmgZwWaqRxfQ==
-X-Received: by 2002:ac8:5f84:0:b0:4ee:2c3c:6e with SMTP id d75a77b69052e-4efbda49e09mr15667291cf.30.1764032503820;
-        Mon, 24 Nov 2025 17:01:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHF3NXobiMfICuyWEqcwkYMU0xyrtWHnGIXntf9dW3FH87Z1BqC8via9eZBQaJyMrtfaj5VyQ==
-X-Received: by 2002:ac8:5f84:0:b0:4ee:2c3c:6e with SMTP id d75a77b69052e-4efbda49e09mr15666251cf.30.1764032502882;
-        Mon, 24 Nov 2025 17:01:42 -0800 (PST)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ee48e8cdebsm97590441cf.31.2025.11.24.17.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 17:01:42 -0800 (PST)
-Message-ID: <e58d366c0eec0efb602293f502f64be2df39ea89.camel@redhat.com>
-Subject: Re: [PATCH v1 0/8] tools/rtla: Consolidate common command line
- options
-From: Crystal Wood <crwood@redhat.com>
-To: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt	
- <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, Wander Lairson
- Costa	 <wander@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 24 Nov 2025 19:01:41 -0600
-In-Reply-To: <20251121174504.519230-1-costa.shul@redhat.com>
-References: <20251121174504.519230-1-costa.shul@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	s=arc-20240116; t=1764033143; c=relaxed/simple;
+	bh=JBKWAzFiFLxQa5ajCQQKeXXtCIduhQUWxAdAX3+RLKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TgX9/oqkCZpgpG70KmXYBDNkq8gggfxvfNKGjK+9N4anbLmg7T/aNmZuNHxyfVlveiorGR+myqeo/tiaAiWZC9aDdyI/eH9nh0IiHK9zGghIgLBWvHHizErxv3imUTaXwzH0eOzbjKs4FQObfrzhBX+0GZosvxnd7P5acK0evug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 1B58C1A046A;
+	Tue, 25 Nov 2025 01:12:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 4CB5E20010;
+	Tue, 25 Nov 2025 01:12:17 +0000 (UTC)
+Date: Mon, 24 Nov 2025 20:12:58 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Donglin Peng <dolinux.peng@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Donglin Peng <pengdonglin@xiaomi.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v7] function_graph: Enable funcgraph-args and
+ funcgraph-retaddr to work simultaneously
+Message-ID: <20251124201258.0e34ac3b@gandalf.local.home>
+In-Reply-To: <20251124165440.1418ed85@gandalf.local.home>
+References: <20251114025522.2115359-1-dolinux.peng@gmail.com>
+	<20251124164701.1216a073@gandalf.local.home>
+	<20251124165440.1418ed85@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: n5jnV6qS6Esf-oomihFHtltURklvH6zXwy1j43VZ-Ig_1764032504
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4CB5E20010
+X-Stat-Signature: zzbuyjurh1et783jbxmiewyyyxw8t4mk
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18wXEzwbKBX+aX+8Jb9PHrUuBgkEq590Nw=
+X-HE-Tag: 1764033137-823908
+X-HE-Meta: U2FsdGVkX19gXTAWcTewWLXUIuJHGk2JwtdGWtHMzSPvl7cyelsjwkpAvvgII51Fz9lrsDSyn6nYPuOKKUw9MVbINj7bLFx3xWTrdq7AypodFfPXY+g5I/w8vKFsoNxvU3mdYiEXqK8yCmEO/xThSQeDyHC2KK7YNPIgBF+IrW6SylfJgsrwL+5TPYEx4YXRy/T03/BjENyWO/ehjuih1AKE9ApP6JWOLGhcpfB42klmW1h56V5ywPwINwdpgEVIVV/cFxHWuF4utJbbB+C7dZfXSOC3e5TmlpJd0wkCWRWLNHCXXaOLHadAtJA2kr1d0uDFmfL1O7etBE+9ystk+tAfi6PGqfDhHZ6He4A0MxYBVSkDh/t2OkwdcnAwEvKG
 
-On Fri, 2025-11-21 at 19:44 +0200, Costa Shulyupin wrote:
-> Argument parsing functions are the longest functions of the project:
->=20
-> lizard --warnings_only --sort nloc -L100 | head -n 4
-> ./src/timerlat_hist.c:766: warning: timerlat_hist_parse_args has 247 NLOC=
-, 76 CCN, 1579 token, 1 PARAM, 287 length, 0 ND
-> ./src/timerlat_top.c:538: warning: timerlat_top_parse_args has 217 NLOC, =
-64 CCN, 1338 token, 2 PARAM, 262 length, 0 ND
-> ./src/osnoise_hist.c:469: warning: osnoise_hist_parse_args has 195 NLOC, =
-56 CCN, 1225 token, 1 PARAM, 216 length, 0 ND
-> ./src/osnoise_top.c:322: warning: osnoise_top_parse_args has 169 NLOC, 46=
- CCN, 1019 token, 2 PARAM, 191 length, 0 ND
->=20
-> Moreover, they contain a lot of duplicate code and growing.
->=20
-> Refactor these functions to reduce code duplication.
->=20
-> Benefits:
-> - Single implementation for common options
-> - Easier maintenance and consistent behavior
->=20
-> Costa Shulyupin (8):
->   tools/rtla: Add common_parse_options()
->   tools/rtla: Consolidate -c/--cpus option parsing
->   tools/rtla: Consolidate -C/--cgroup option parsing
->   tools/rtla: Consolidate -D/--debug option parsing
->   tools/rtla: Consolidate -d/--duration option parsing
->   tools/rtla: Consolidate -e/--event option parsing
->   tools/rtla: Consolidate -P/--priority option parsing
->   tools/rtla: Consolidate -H/--house-keeping option parsing
->=20
->  tools/tracing/rtla/src/common.c        | 78 ++++++++++++++++++++++++++
->  tools/tracing/rtla/src/common.h        |  1 +
->  tools/tracing/rtla/src/osnoise_hist.c  | 53 ++---------------
->  tools/tracing/rtla/src/osnoise_top.c   | 53 ++---------------
->  tools/tracing/rtla/src/timerlat_hist.c | 53 ++---------------
->  tools/tracing/rtla/src/timerlat_top.c  | 52 ++---------------
->  6 files changed, 95 insertions(+), 195 deletions(-)
+On Mon, 24 Nov 2025 16:54:40 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Reviewed-by: Crystal Wood <crwood@redhat.com>
+> On Mon, 24 Nov 2025 16:47:01 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > > --- a/kernel/trace/trace_entries.h
+> > > +++ b/kernel/trace/trace_entries.h
+> > > @@ -95,14 +95,14 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+> > >  	TRACE_GRAPH_RETADDR_ENT,
+> > >  
+> > >  	F_STRUCT(
+> > > -		__field_struct(	struct fgraph_retaddr_ent,	graph_ent	)
+> > > +		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+> > >  		__field_packed(	unsigned long,	graph_ent,	func		)
+> > >  		__field_packed(	unsigned int,	graph_ent,	depth		)
+> > > -		__field_packed(	unsigned long,	graph_ent,	retaddr		)    
+> > 
+> > You can't delete the retaddr without breaking user space.
+> > 
+> > Please keep that here.  
+> 
+> I added this, and user space works again:
+> 
+> diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+> index 593a74663c65..4666b6179056 100644
+> --- a/kernel/trace/trace_entries.h
+> +++ b/kernel/trace/trace_entries.h
+> @@ -98,6 +98,7 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+>  		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+>  		__field_packed(	unsigned long,	graph_ent,	func		)
+>  		__field_packed(	unsigned int,	graph_ent,	depth		)
+> +		__field_packed(	unsigned long,	graph_ent,	retaddr		)
+>  		__dynamic_array(unsigned long,	args				)
+>  	),
+>  
 
--Crystal
+Nope, this wasn't enough. I got garbage from this. The following patch
+appears to make it all work though (this is against your patch that was
+forward ported to my for-next branch):
 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 88cb54d73bdb..ba180d19423e 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1121,12 +1121,10 @@ static inline void ftrace_init(void) { }
+ 
+ /*
+  * Structure that defines an entry function trace.
+- * It's already packed but the attribute "packed" is needed
+- * to remove extra padding at the end.
+  */
+ struct ftrace_graph_ent {
+ 	unsigned long func; /* Current function */
+-	int depth;
++	unsigned long depth;
+ } __packed;
+ 
+ /*
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 05fb6c9279e3..d509a5041d38 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -60,6 +60,13 @@ enum trace_type {
+ 	__TRACE_LAST_TYPE,
+ };
+ 
++/*
++ * Structure that defines an entry function trace with retaddr.
++ */
++struct fgraph_retaddr_ent {
++	struct ftrace_graph_ent		ent;
++	unsigned long retaddr;  /* Return address */
++} __packed;
+ 
+ #undef __field
+ #define __field(type, item)		type	item;
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 593a74663c65..87f4228374cd 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -80,11 +80,11 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+ 		__field_packed(	unsigned long,	graph_ent,	func		)
+-		__field_packed(	unsigned int,	graph_ent,	depth		)
++		__field_packed(	unsigned long,	graph_ent,	depth		)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
+-	F_printk("--> %ps (%u)", (void *)__entry->func, __entry->depth)
++	F_printk("--> %ps (%lu)", (void *)__entry->func, __entry->depth)
+ );
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_RETADDR
+@@ -95,13 +95,14 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+ 	TRACE_GRAPH_RETADDR_ENT,
+ 
+ 	F_STRUCT(
+-		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+-		__field_packed(	unsigned long,	graph_ent,	func		)
+-		__field_packed(	unsigned int,	graph_ent,	depth		)
++		__field_struct(	struct fgraph_retaddr_ent,	graph_ent	)
++		__field_packed(	unsigned long,	graph_ent.ent,	func		)
++		__field_packed(	unsigned long,	graph_ent.ent,	depth		)
++		__field_packed(	unsigned long,	graph_ent,	retaddr		)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
+-	F_printk("--> %ps (%u) <- %ps", (void *)__entry->func, __entry->depth,
++	F_printk("--> %ps (%lu) <- %ps", (void *)__entry->func, __entry->depth,
+ 		(void *)__entry->args[0])
+ );
+ 
+-- Steve
