@@ -1,91 +1,145 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E120318149;
-	Wed, 26 Nov 2025 08:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EFF31A7F6
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 08:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764146192; cv=none; b=kKfejVq/EUS9keHnDvOf5sDVlDUK28vIgd7uzWYqRNxEamoHgZVtY7i5FvQhUfKACxIiCK3k8vHumYakanVn0krnafAwIQ1SHOrAzNJkIaiLPQYsnUSgeXCGlGaGr2uJE19KtZtO0XOLiu6FnGXwihGiHu72838C8CrB2r+guns=
+	t=1764147178; cv=none; b=SzVEeS+I9Qk8bEq9q4yLvEMSgOs1kVuR3D7/vAWwkx7dZHLFgw4WUhurT37yhGzNV9Vn+L2bzaVzzBXyhHK5F0YwM+XKcyBX8lzg1KtwJLMd2Ii/rXY6UhVlmFxOZM+qq0UN3jNwuHEEnbRs8oEWZr8l6jt3RosVXA+OfGcU7Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764146192; c=relaxed/simple;
-	bh=6HCJiyfqp72xxdL7D9qi5O7xP31QXL0BnsOXwAK23VQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UxpA5o5eyIvbRXcQaJWJl2wHE9CvS3RMnelOsRDm+jCsl7QHNAhlkkyJZZW5hg97PygN7+mHpHfSDRBlYN0xmDqWicZmlFoZOztt52NiS3rkAg1D46/ipV6kyOzHxIRDLTPW+Y3Ayu+ToDcAtr2QeWqdNRUdH7y+TEyVSVCYNfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3AOrs1vl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=52rlU9XM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1764147178; c=relaxed/simple;
+	bh=J4BoZTcMCIwSrHMIm1Wg115n46MGz6eizwWMi1v8YGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rgz3SIRujqoO6oO/1I62pz0vbtyVUhK95Vj52ETw0y6Ir4iw1vOWvFzzNdYlRlUBefnbAY7D/jauenz1DKgzezDZBHfCmRuT4FW6NeKtH3DjzLy2VzSLoYtFhnPSALc/6fSRIw343Ha8YiArPU4m14+BJ39pDhZrFS5jBIfBR10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O5/NUMYY; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3AOrs1vl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="52rlU9XM"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1764146184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FUu7oIM6gSr5XdaIxGqV6VzF3jQHUjuE+Tb9jD8980Q=;
-	b=3AOrs1vlDAcEQyhHWwyKba756JZ6RGt257K6TKHSQbGFmWBZZQEB6JQSMC3XzQP4VKs5sF
-	iv7BLzJVJl3doQJtkY2tSpBpA/Svf8JGro4ZOc0eF7qSVtD1ffDmfAngw7ALjLqJfXf9L9
-	Qo8fFTkJpsTYt5i5mXqFvPJYpmsILbGBLUG6YG0S/15fk1GMIQOK++lzkQxS2HeA4w0S6r
-	jFzqtpYyAAgpk6axpkbc/GCiAOsDbzosjwmDOtVQbwGEjIILW7s/hw5wOTZ5o+4KI4rIOz
-	1yb1sCgkd2nIN1xwDqivEXBJJ5AauxW1FPxQmzTOPuhZLb4QvOhONROGRTQ7tA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1764146184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FUu7oIM6gSr5XdaIxGqV6VzF3jQHUjuE+Tb9jD8980Q=;
-	b=52rlU9XMoLFNzA2GJKkVlzOv4v0gIYUDQoQ6WA86Yhl3ErvFkomqQJxvKW3Bq48c7sfwv3
-	1Ka3tdQLVIEBhZDg==
-To: Gabriele Monaco <gmonaco@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] rv: Convert to use lock guard
-In-Reply-To: <e4838dd91f14024222eef8e705f2b1ae7945bb80.camel@redhat.com>
-References: <cover.1763370183.git.namcao@linutronix.de>
- <dbefeb868093c40d4b29fd6b57294a6aa011b719.1763370183.git.namcao@linutronix.de>
- <20251125145736.48c3ed9d@gandalf.local.home>
- <e4838dd91f14024222eef8e705f2b1ae7945bb80.camel@redhat.com>
-Date: Wed, 26 Nov 2025 09:36:23 +0100
-Message-ID: <878qft5gxk.fsf@yellow.woof>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5/NUMYY"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-29812589890so75893035ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 00:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764147176; x=1764751976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jgf6QzPNkLnaNG6eo7VvZMmMgNGAzeOfWslTIH6cEEA=;
+        b=O5/NUMYYTPeuduAqlaPClPrzDrbfkLKttv/VLV6vTviO5yr7ianENsD/ikOOvxJAj/
+         iLlisLfZa5FFqOD0GTgKj2SIIClcdIGJGuBAig/WAqm2139NdTX+mvotQ+Psb6cGQco4
+         JzOOlmYI5Z+ZMw+aksufSjk+BCrDUY80c0pi7ryCWYxHNi9eqp63Nu0SWgEESR0vo9yw
+         1LO8t/x6bofMI/eokskywivT1ySYSY/9tH4au3xfjCGfOpjiQRnad88MjYFTJrQzTmQm
+         d22GkJCYbEzdOs1/hKneuzpx/bZhzRouvTtd2BQSVy2DFebLbgQm1FkEBgKuLqhK9X6P
+         KGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764147176; x=1764751976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jgf6QzPNkLnaNG6eo7VvZMmMgNGAzeOfWslTIH6cEEA=;
+        b=jWD7mG8ZeeHGs1Qpi/VtKY2Q8V0PMxxOL1Cb2DHn8aGX2WTGfFC10tP142sbIJRF7y
+         PZ4sNfAme3ejf3SrAy1cjlsNWZZ9DsOvys3o7RZhC7L2IYc12D+9Erq5VoZW/gQUBnFu
+         w0Xyz+n65z495yCxgcJy7mZJZrdNbzZjHwZTXUqojEgOfpJrdxMgQJLNxnGST8Qq0pXK
+         /Y8UZi4qSeggogRIA1WEDP3sORVrlqzc2S1+aj64ZTmGYFl+clwgdtMz4Y5a0uqfwGmF
+         d4iJsChdeAaPVQxQqTkWGvUafW/Ku99fQBh3QHEAfJM4m2ILmTqCtgSEbpm/mGJZK20A
+         dIcw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpDCxH6My19883qzuRcNLDwLzLsGITXWGJL46WlJpT+6qLt5Nva6rwq3GabtHH2aowaqEWLUubiGxlcNYO75ipV8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI3CyqHym8HXPWi1nd6jvsCWOSWHPf9eH3yescPRb8JeYujtoi
+	zo3WTRf9q9Jw9ptvhNlaou1i5h0t/KCxyezrll2pssIRAYwnTmeJKyGW
+X-Gm-Gg: ASbGncvXhXm0avAQrmQJMAmfgXzGQ3ZkGpEXF/qE1Q9IWBfY/2+WCOMxWPYDX9r6nJh
+	UKUXmlY0wSmGo98Kezprv19ZltCjuUDOD7DjROYdwJvUfvGde0aeN/F+DG5Jw7Hd3cCNvuHK+3j
+	hIzggj7aha0C0VSGL7vqVvCYLUcmDWFfc8i0+XtH/1QVKDpE3v6hhjljJkfHrSEKoxNJZUfBXRE
+	vnpCT892QJ8EnAPYtrbY0IKun0PhwLDpztX2j36AJG6jdxwMc13vY953ShnGga+7TPs84ACowz9
+	ZbcChAflywgDDYKZc2Y8MrtXi7Wwo2vtzigbJzjP/4TS+mv8n6iTkVY94dY+qgpfnKOGnDzEnm5
+	hxtqkvCcmy/g1vFlIBIq601oqjT03oBzPlqPOt3Zx7THKZ4uPHfTNe4nDCSXFuKlrxFYuanHkrA
+	0rPNmZINI=
+X-Google-Smtp-Source: AGHT+IFOTPUQKLezoW1PtOgUH7V/2VHPRcXFHERr2qyquuXGdL9D0nyn1gqUNf+kzQfWgYx9ll5PSw==
+X-Received: by 2002:a17:903:110c:b0:298:ea9:5732 with SMTP id d9443c01a7336-29b6bf64a07mr88019525ad.41.1764147175929;
+        Wed, 26 Nov 2025 00:52:55 -0800 (PST)
+Received: from 7950hx ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b274d39sm190678305ad.77.2025.11.26.00.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 00:52:55 -0800 (PST)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: ast@kernel.or,
+	jolsa@kernel.org
+Cc: kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	song@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	jiang.biao@linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: make kprobe_multi_link_prog_run always_inline
+Date: Wed, 26 Nov 2025 16:52:46 +0800
+Message-ID: <20251126085246.309942-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-11-25 at 14:57 -0500, Steven Rostedt wrote:
-> On Mon, 17 Nov 2025 09:06:02 +0000
-> Nam Cao <namcao@linutronix.de> wrote:
->=20
-> > @@ -644,13 +640,11 @@ static ssize_t enabled_monitors_write(struct file
-> > *filp, const char __user *user
-> > =C2=A0		else
-> > =C2=A0			retval =3D rv_disable_monitor(mon);
-> > =C2=A0
-> > -		if (!retval)
-> > -			retval =3D count;
-> > -
-> > -		break;
-> > +		if (retval)
-> > +			return retval;
-> > +		return count;
->=20
-> No biggy, but I wonder if this would look better as:
->=20
-> 		return retval ? : count;
+Make kprobe_multi_link_prog_run() always inline to obtain better
+performance. Before this patch, the bench performance is:
 
-Unless you really prefer it this way, I would rather not. The first time
-I saw this syntax, it confused the hell out of me. Took me some time
-scratching my head until I figured out that it is a GNU extension.
+./bench trig-kprobe-multi
+Setting up benchmark 'trig-kprobe-multi'...
+Benchmark 'trig-kprobe-multi' started.
+Iter   0 ( 95.485us): hits   62.462M/s ( 62.462M/prod), [...]
+Iter   1 (-80.054us): hits   62.486M/s ( 62.486M/prod), [...]
+Iter   2 ( 13.572us): hits   62.287M/s ( 62.287M/prod), [...]
+Iter   3 ( 76.961us): hits   62.293M/s ( 62.293M/prod), [...]
+Iter   4 (-77.698us): hits   62.394M/s ( 62.394M/prod), [...]
+Iter   5 (-13.399us): hits   62.319M/s ( 62.319M/prod), [...]
+Iter   6 ( 77.573us): hits   62.250M/s ( 62.250M/prod), [...]
+Summary: hits   62.338 ± 0.083M/s ( 62.338M/prod)
 
-I prefer to stay with the C standard unless there is major benefit not
-to.
+And after this patch, the performance is:
 
-Nam
+Iter   0 (454.148us): hits   66.900M/s ( 66.900M/prod), [...]
+Iter   1 (-435.540us): hits   68.925M/s ( 68.925M/prod), [...]
+Iter   2 (  8.223us): hits   68.795M/s ( 68.795M/prod), [...]
+Iter   3 (-12.347us): hits   68.880M/s ( 68.880M/prod), [...]
+Iter   4 (  2.291us): hits   68.767M/s ( 68.767M/prod), [...]
+Iter   5 ( -1.446us): hits   68.756M/s ( 68.756M/prod), [...]
+Iter   6 ( 13.882us): hits   68.657M/s ( 68.657M/prod), [...]
+Summary: hits   68.792 ± 0.087M/s ( 68.792M/prod)
+
+As we can see, the performance of kprobe-multi increase from 62M/s to
+68M/s.
+
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+---
+ kernel/trace/bpf_trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index a795f7afbf3d..d57727abaade 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2529,7 +2529,7 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
+ 	return run_ctx->entry_ip;
+ }
+ 
+-static int
++static __always_inline int
+ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 			   unsigned long entry_ip, struct ftrace_regs *fregs,
+ 			   bool is_return, void *data)
+-- 
+2.52.0
+
