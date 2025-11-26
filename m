@@ -1,53 +1,38 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7236129BDA0;
-	Wed, 26 Nov 2025 09:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7962331A577;
+	Wed, 26 Nov 2025 09:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764149148; cv=none; b=blMIk/nJeeMAkdAzkw8FmUcqvAmmgk58EXRL7ELTGN7NNgfnQURW1CKbcxcwfuEq8eYrSc92HoLgP0FIRqWN1tUDIqkFjF6yB2tvWFZZVlJIc++ZxozJCgh092Hv1yip3oysLTKMwMtEEYnTySdhjpBK0r7HJJj70+dxCO3BwtA=
+	t=1764149383; cv=none; b=ETcgNPkV0xg4RiUbTpMlQaCG8Sud22m0r4Ms+vQ9DoE4wTVZCAuY/9HQyjWCwBUKFAIUeMKGCINZX8BwcrWqEFYbfB8qKpNF91ZoekqhMJ7BWuKtmiUJSk2tw+Pj7Q93zB8Np9bmf2qMU6fKZQHD3Okxo5ggyNexwMAZZj16Oq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764149148; c=relaxed/simple;
-	bh=rOxNvMbUnbVoeYeh6OfZJyrUiDpKtwvVtvCCeL/m2/8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=Q99/+iKpAn8uZpS5Wn3Ndp4Lok3MlWS019m05V3RkFWu6ErXKJozRrdGzUYoqwKyvGDulxKkBS1B3JXA5kRIhFDbfJxbe7ou9m+145XTDUN1LGKEpCqb8Tba3iiNw80sevVne4wu1p/Pt9tdXFqPm4WvwLyCLt7u59CEwHfv20I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+	s=arc-20240116; t=1764149383; c=relaxed/simple;
+	bh=0xoq5tjYfMPR4AF4PzDf0qfT+wVcOjr0Qat7Og+gRIY=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=eXBf0KmCLWWhy3K6LYXxkArAr5lkIv+u62tqfBhNlwowepUvRCH21HYhQLfXJRn06AwG5xWS3mm2cBH5ObGP2i4NRyS7WPNGq/jE22jVSioZ1hGulMI740nDJlEzf/I12PNVE+9VPt5ZhWZL0VPwikOXAJUuL8QLJwIXpYY7QEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4dGZ0y6Jj5zHT4;
-	Wed, 26 Nov 2025 17:25:38 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4dGZ0r3VQxzBQkK2;
-	Wed, 26 Nov 2025 17:25:32 +0800 (CST)
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4dGZ0g494xz6Fy6K;
-	Wed, 26 Nov 2025 17:25:23 +0800 (CST)
 Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4dGZ0R2NJ8z4xq1J;
-	Wed, 26 Nov 2025 17:25:11 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl1.zte.com.cn with SMTP id 5AQ9OgiA088425;
-	Wed, 26 Nov 2025 17:24:42 +0800 (+08)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4dGZ5b2lFmz8Xs7F;
+	Wed, 26 Nov 2025 17:29:39 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl1.zte.com.cn with SMTP id 5AQ9TN88099351;
+	Wed, 26 Nov 2025 17:29:23 +0800 (+08)
 	(envelope-from wang.yaxin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
+Received: from mapi (xaxapp04[null])
 	by mapi (Zmail) with MAPI id mid32;
-	Wed, 26 Nov 2025 17:24:45 +0800 (CST)
-Date: Wed, 26 Nov 2025 17:24:45 +0800 (CST)
-X-Zmail-TransId: 2af96926c75d100-04615
+	Wed, 26 Nov 2025 17:29:26 +0800 (CST)
+Date: Wed, 26 Nov 2025 17:29:26 +0800 (CST)
+X-Zmail-TransId: 2afb6926c87655e-e1a95
 X-Mailer: Zmail v1.0
-Message-ID: <20251126172445319I7DWJm-KEEuCmqtLupteE@zte.com.cn>
+Message-ID: <20251126172926004y3hC8QyU4WFOjBkU_UxLC@zte.com.cn>
+In-Reply-To: <20251126172445319I7DWJm-KEEuCmqtLupteE@zte.com.cn>
+References: 20251126172445319I7DWJm-KEEuCmqtLupteE@zte.com.cn
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,102 +40,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 From: <wang.yaxin@zte.com.cn>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.desnoyers@efficios.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <hu.shengming@zte.com.cn>, <zhang.run@zte.com.cn>,
-        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYyIDAvM10gZmdyYXBoOiBGaXggYW5kIHRpZ2h0ZW4gUElEIGZpbHRlcmluZyBzdXBwb3J0?=
+To: <wang.yaxin@zte.com.cn>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <hu.shengming@zte.com.cn>,
+        <zhang.run@zte.com.cn>, <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYyIDEvM10gZmdyYXBoOiBJbml0aWFsaXplIGZ0cmFjZV9vcHMtPnByaXZhdGUgZm9yIGZ1bmN0aW9uIGdyYXBoIG9wcw==?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 5AQ9OgiA088425
+X-MAIL:mse-fl1.zte.com.cn 5AQ9TN88099351
 X-TLS: YES
 X-SPF-DOMAIN: zte.com.cn
 X-ENVELOPE-SENDER: wang.yaxin@zte.com.cn
 X-SPF: None
-X-SOURCE-IP: 10.35.20.121 unknown Wed, 26 Nov 2025 17:25:39 +0800
+X-SOURCE-IP: 10.5.228.132 unknown Wed, 26 Nov 2025 17:29:39 +0800
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6926C791.000/4dGZ0y6Jj5zHT4
+X-Fangmail-MID-QID: 6926C883.000/4dGZ5b2lFmz8Xs7F
 
 From: Shengming Hu <hu.shengming@zte.com.cn>
-Function graph tracing did not honor set_ftrace_pid() rules properly.
 
-The root cause is that for fgraph_ops, the underlying ftrace_ops->private
-was left uninitialized. As a result, ftrace_pids_enabled(op) always
-returned false, effectively disabling PID filtering in the function graph
-tracer.
+The ftrace_pids_enabled(op) check relies on op->private being properly
+initialized, but fgraph_ops's underlying ftrace_ops->private was left
+uninitialized. This caused ftrace_pids_enabled() to always return false,
+effectively disabling PID filtering for function graph tracing.
 
-PID filtering seemed to "work" only because graph_entry() performed an
-extra coarse-grained check via ftrace_trace_task(). Specifically,
-ftrace_ignore_pid is updated by ftrace_filter_pid_sched_switch_probe
-during sched_switch events. Under the original logic, when the intent
-is to trace only PID A, a context switch from task B to A sets 
-ftrace_ignore_pid to A’s PID. However, there remains a window
-where B’s functions are still captured by the function-graph tracer. 
-The following trace demonstrates this leakage
-(B = haveged-213, A = test.sh-385):
+Fix this by copying src_ops->private to dst_ops->private in
+fgraph_init_ops(), ensuring PID filter state is correctly propagated.
 
- 4)  test.sh-385   |               |    set_next_entity() {
- 4)  test.sh-385   |   2.108 us    |      __dequeue_entity();
- 4)  test.sh-385   |   1.526 us    |      __update_load_avg_se();
- 4)  test.sh-385   |   1.363 us    |      __update_load_avg_cfs_rq();
- 4)  test.sh-385   | + 14.144 us   |    }
- 4)  test.sh-385   |   1.417 us    |    __set_next_task_fair.part.0();
- 4)  test.sh-385   | + 77.877 us   |  }
- 4)  test.sh-385   |               |  __traceiter_sched_switch() {
- 4)  test.sh-385   |   2.097 us    |    _raw_spin_lock_irqsave();
- 4)  test.sh-385   |   1.483 us    |    _raw_spin_unlock_irqrestore();
- 4)  test.sh-385   | + 14.014 us   |  }
- ------------------------------------------
- 4)  test.sh-385   =>  haveged-213  
- ------------------------------------------
+Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
+---
+ kernel/trace/fgraph.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- 4)  haveged-213   |               |  switch_mm_irqs_off() {
- 4)  haveged-213   |   2.387 us    |    choose_new_asid();
- 4)  haveged-213   | + 12.462 us   |    switch_ldt();
- 4)  haveged-213   | + 45.288 us   |  }
- 4)  haveged-213   |   1.639 us    |  x86_task_fpu();
- 4)  haveged-213   |               |  save_fpregs_to_fpstate() {
- 4)  haveged-213   |   1.888 us    |    xfd_validate_state();
- 4)  haveged-213   |   6.995 us    |  }
- ------------------------------------------
- 4)  haveged-213   =>  test.sh-385  
- ------------------------------------------
-
- 4)  test.sh-385   |               |    finish_task_switch.isra.0() {
- 4)  test.sh-385   |   1.857 us    |      _raw_spin_unlock();
- 4)  test.sh-385   |   5.618 us    |    }
- 4)  test.sh-385   | ! 446.226 us  |  }
- 4)  test.sh-385   |               |  __pte_offset_map_lock() {
- 4)  test.sh-385   |               |    ___pte_offset_map() {
- 4)  test.sh-385   |   1.933 us    |      __rcu_read_lock();
- 4)  test.sh-385   |   6.271 us    |    }
- 4)  test.sh-385   |   2.056 us    |    _raw_spin_lock();
- 4)  test.sh-385   | + 14.281 us   |  }
-
-The following three logically independent patches fix this defect while
-preserving the effectiveness of PID filtering in fgraph：
-
-Patch 1 properly initializes ops->private for fgraph_ops.
-Patch 2 switches gops->entryfunc to fgraph_pid_func when PID filtering
-is active.
-Patch 3 removes the coarse fallback logic, making PID filtering reliable
-and consistent with function tracing.
-
-Changes from v1:
-https://lore.kernel.org/linux-trace-kernel/20251113135627439rGwzvG7JzdmnN8VMHAfMs@zte.com.cn/
-- Split the patch into three independent commits as suggested by Steven
-- Add a space after "ftrace_graph_active++" as suggested by Steven
-
-Shengming Hu (3):
-  fgraph: Initialize ftrace_ops->private for function graph ops
-  fgraph: Check ftrace_pids_enabled on registration for early filtering
-  fgraph: fgraph: Remove redundant PID filtering from graph_entry()
-
- kernel/trace/fgraph.c                | 10 ++++++++--
- kernel/trace/trace.h                 |  9 ---------
- kernel/trace/trace_functions_graph.c |  3 ---
- 3 files changed, 8 insertions(+), 14 deletions(-)
-
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 7fb9b169d..f6f25d81a 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1016,6 +1016,7 @@ void fgraph_init_ops(struct ftrace_ops *dst_ops,
+ 		mutex_init(&dst_ops->local_hash.regex_lock);
+ 		INIT_LIST_HEAD(&dst_ops->subop_list);
+ 		dst_ops->flags |= FTRACE_OPS_FL_INITIALIZED;
++		dst_ops->private = src_ops->private;
+ 	}
+ #endif
+ }
 -- 
 2.25.1
