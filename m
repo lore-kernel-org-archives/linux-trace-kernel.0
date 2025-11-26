@@ -1,271 +1,140 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A83303A08;
-	Wed, 26 Nov 2025 14:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75D7302170
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 14:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764167928; cv=none; b=N8WWiQ7l8HYFf2nPBU35sa/cneFHiJG5lvITG/v7hpg3l+8ak2agFBzyz2rxo6dA3WCKM4JASEm7Dyxt2K3PKVP+0CvIb/O+6iJyNTFrx4i88GRnx8CTET4GjTZiloTLLaiHskqCj3SHbghcqhlR/wtG+Jkpl1TkOy/RdIyOF2Q=
+	t=1764168147; cv=none; b=kr5E3RkOKa7M6hCCa4Ki7hP30NRt7etgosIZaDEgWCFESmpC20cXdvcb8xlN81o8bWZClO+1YVpqPPFkGRn9qQQDaH+wEnA85q+4yvInW7aX4ByR4r3xyEpLcOVGYOV7lnXA8Wo9GGxvscVW+718FHwY8T1r+VsXMQnRZmddXSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764167928; c=relaxed/simple;
-	bh=zqDDxGTQytb5d+2QtpEhNrwnvj53cCDE00mQv7oBMwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XiCFtr2VYsL34D4iD32R9xvOktxoFvnDPogo5qt/JKGRZcQYBqzjr2luUngDTVGiwY5ifQczVLCLKYZfbwx5XfHSVmmLNJp61SzBwS3s1pOG4ANlkaRQT5eyCfs76vQtdfCLub8LIXz/Z+Wf0XvIecphHz7y1PmBFlSEQH/Dwwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id AC58959A70;
-	Wed, 26 Nov 2025 14:38:41 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id DA1DF20029;
-	Wed, 26 Nov 2025 14:38:39 +0000 (UTC)
-Date: Wed, 26 Nov 2025 09:39:20 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2] tracing: Add system trigger file to enable triggers
- for all the system's events
-Message-ID: <20251126093920.30763e89@gandalf.local.home>
-In-Reply-To: <20251126150251.f3556dfc322a2563a75485e3@kernel.org>
-References: <20251125200837.31aae207@gandalf.local.home>
-	<20251126150251.f3556dfc322a2563a75485e3@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764168147; c=relaxed/simple;
+	bh=2u+hYAbYC/DD5N/RGhaUVT+7rhxfGLqZ4tASQ85IUOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rRQKjnlc8t/gqAjnD7OpKiDRYMWkbYPdzWhKA2sHNCvoXpMOw7+MHrI7KcS4/QFwo4G2XUg6AZ8d1xQXbqsiCBIXGAKPsifOqrFkxwvo/BzZxT/AJVIbWeTVO8t6wtNT2xV1LqmEA78gWOTuKWTQS2/58SJKMl94M5iDRdDfdgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KLr/vcKa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLr/vcKa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764168144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Q1fsBKQjQIprBlqksMIF9OAXMfQvbi0YT/uhjmW/QoY=;
+	b=KLr/vcKaXEK42Q0cxnGbBxoBRHfNWdfUR2r4o4RdHyNojHwnWe0t/AqYatxJm/bnwCcEKz
+	kdPEOZ15mP2r1DR1+dtdI2osMSfh3gzWSEndgfKoE/tnFFiU/pcFZ6fuaPDLV+lFp8waB/
+	qcB3g4xtm1pXgRoEdJSOd811CUTu8ZM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-197-nJ9s2dUwPbOOjCm2ErwNeg-1; Wed,
+ 26 Nov 2025 09:42:21 -0500
+X-MC-Unique: nJ9s2dUwPbOOjCm2ErwNeg-1
+X-Mimecast-MFC-AGG-ID: nJ9s2dUwPbOOjCm2ErwNeg_1764168140
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 379481956048;
+	Wed, 26 Nov 2025 14:42:20 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.33.141])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5CD6030044DD;
+	Wed, 26 Nov 2025 14:42:16 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH v4 0/7] rtla/timerlat: Add low-latency BPF-based actions
+Date: Wed, 26 Nov 2025 15:41:58 +0100
+Message-ID: <20251126144205.331954-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DA1DF20029
-X-Stat-Signature: 1i3etw4i6pbi9woewomuqrf9z9uh7dkz
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+o7FAoJoQmWLfI+Z4j+5iBg6FA41b5n94=
-X-HE-Tag: 1764167919-145949
-X-HE-Meta: U2FsdGVkX1/bzZhX95qoxKe63fi5YhOkwJFtuVwZX1R5MLq6Pv4jv8551qjwTbUtROsFs8LDzvzl6AQMwKS2BvK5hvBlwVmGuiTytwPJvbJp/6Vs5MAQZsWVrTQllV+9GooDg1n7UhUyBDXWVUTIVmHzwx871cHXx+mAs7csnsBMvun8wOML/t1h/xvmUC4pp1mg9jrVmYpErYwJKx6X053pk6u0HVaD+9yW8z1/KfCcNpcaC93CS3OQnnc/JB0ECTtGpyKenX/V5JbDv2lVbBs+ua+m/V10NUTA/o6ZLL3c73ilMvcY/6PhlTW0/6ZVEbMz03UfJHPqySP8meXVV8J2RnlqGR8M
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, 26 Nov 2025 15:02:51 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+This patchset extends rtla-timerlat's BPF support with the option of
+executing a user-supplied BPF program on latency threshold overflow.
 
-> > This also allows to remove a trigger from all events in a subsystem (even
-> > if it's not a subsystem trigger!).
-> >   
-> 
-> I have some comments below.
+See the supplied example and documentation for how to create a program.
+bpf_tail_call() is used to chain the program with the built-in BPF
+sample collection program, if the threshold is hit.
 
-BTW, it's more appropriate to simply trim the email ;-)
+The feature can be used for both in-kernel data collection and sending
+signals to userspace directly from the kernel, if the kernel version
+allows it.
 
+Note: The patchset will have to be rebased on top of [1], or vice versa,
+since they both touch stop_tracing() ([1] adds one call of it, and this
+patchset adds an extra argument to it).
 
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -2168,51 +2168,52 @@ event_filter_write(struct file *filp, const char __user *ubuf, size_t cnt,
-> >  
-> >  static LIST_HEAD(event_subsystems);
-> >  
-> > -static int subsystem_open(struct inode *inode, struct file *filp)
-> > +struct trace_subsystem_dir *trace_get_system_dir(struct inode *inode)
-> >  {
-> > -	struct trace_subsystem_dir *dir = NULL, *iter_dir;
-> > -	struct trace_array *tr = NULL, *iter_tr;
-> > -	struct event_subsystem *system = NULL;
-> > -	int ret;
-> > +	struct trace_subsystem_dir *dir;
-> > +	struct trace_array *tr = NULL;  
-> 
-> nit: This also no need to be initialized.
+I have contemplated adding this as --on-threshold bpf,... but it does
+not fit the existing actions infrastructure very well, since the action
+happens in the BPF program, not in RTLA, and only one BPF action is
+supported.
 
-Hmm, I guess this was needed in one of the versions I had before posting.
+[1] https://lore.kernel.org/linux-trace-kernel/20251006143100.137255-1-tglozar@redhat.com/
 
-I'll fix in v3.
+v4:
+- Rename cover letter to avoid confusing the Gmail web client.
+- Rebase over latest linux-next.
+- Fix typo "doing doing" -> "doing".
+- Add reviews by Wander from v3.
+- Clarify documentation entry about BPF program name.
 
-> 
-> >  
-> > -	if (tracing_is_disabled())
-> > -		return -ENODEV;
-> > +	guard(mutex)(&event_mutex);
-> > +	guard(mutex)(&trace_types_lock);
-> >  
-> >  	/* Make sure the system still exists */
-> > -	mutex_lock(&event_mutex);
-> > -	mutex_lock(&trace_types_lock);
-> > -	list_for_each_entry(iter_tr, &ftrace_trace_arrays, list) {
-> > -		list_for_each_entry(iter_dir, &iter_tr->systems, list) {
-> > -			if (iter_dir == inode->i_private) {
-> > +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> > +		list_for_each_entry(dir, &tr->systems, list) {
-> > +			if (dir == inode->i_private) {
-> >  				/* Don't open systems with no events */
-> > -				tr = iter_tr;
-> > -				dir = iter_dir;
-> > -				if (dir->nr_events) {
-> > -					__get_system_dir(dir);
-> > -					system = dir->subsystem;
-> > -				}
-> > -				goto exit_loop;
-> > +				if (!dir->nr_events)
-> > +					return NULL;
-> > +				if (__trace_array_get(tr) < 0)
-> > +					return NULL;
-> > +				__get_system_dir(dir);
-> > +				return dir;
-> >  			}
-> >  		}
-> >  	}
+v3 changes:
+- Add tests/bpf/bpf_action_map.c to test commit (forgot to run
+git add before).
 
+v2 changes:
+- Properly bpf__object_close() also when bpf__object_load() fails.
+- Use goto for error paths in timerlat_load_bpf_action_program().
+- Remove unneeded NULLing of obj and prog in timerlat_bpf_init().
+- Add entry to Makefile to build example.
+- Add test for BPF actions.
+- Rename sample/ directory to example/, also in docs.
+- Run Test::Harness in verbose mode during "make check".
 
-> >  static ssize_t event_trigger_regex_write(struct file *file,
-> >  					 const char __user *ubuf,
-> >  					 size_t cnt, loff_t *ppos)
-> >  {
-> >  	struct trace_event_file *event_file;
-> >  	ssize_t ret;
-> > -	char *buf __free(kfree) = NULL;
-> > +	char *buf __free(kfree) = get_user_buf(ubuf, cnt);
-> >  
-> > -	if (!cnt)
-> > +	if (!buf)
-> >  		return 0;
-> >  
-> > -	if (cnt >= PAGE_SIZE)
-> > -		return -EINVAL;
-> > -
-> > -	buf = memdup_user_nul(ubuf, cnt);
-> >  	if (IS_ERR(buf))
-> >  		return PTR_ERR(buf);  
-> 
-> You can simply write:
-> 
-> 	if (IS_ERR_OR_NULL(buf))
-> 		return PTR_ERR_OR_ZERO(buf);
+Thanks to Crystal and Wander for their input.
 
-Yes I can. But honestly, the above is much harder to understand what is
-happening than the code I had written.
+Tomas Glozar (7):
+  rtla/timerlat: Support tail call from BPF program
+  rtla/timerlat: Add --bpf-action option
+  rtla/timerlat: Add example for BPF action program
+  rtla/tests: Test BPF action program
+  rtla/tests: Run Test::Harness in verbose mode
+  Documentation/rtla: Rename sample/ to example/
+  Documentation/rtla: Document --bpf-action option
 
-I mean:
+ .../tools/rtla/common_timerlat_options.txt    | 20 +++++-
+ tools/tracing/rtla/Makefile                   | 19 +++++-
+ .../rtla/example/timerlat_bpf_action.c        | 16 +++++
+ .../rtla/{sample => example}/timerlat_load.py |  0
+ tools/tracing/rtla/src/timerlat.bpf.c         | 25 +++++--
+ tools/tracing/rtla/src/timerlat.c             | 11 ++++
+ tools/tracing/rtla/src/timerlat.h             |  2 +-
+ tools/tracing/rtla/src/timerlat_bpf.c         | 66 +++++++++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.h         |  7 +-
+ tools/tracing/rtla/src/timerlat_hist.c        |  5 ++
+ tools/tracing/rtla/src/timerlat_top.c         |  5 ++
+ tools/tracing/rtla/tests/bpf/bpf_action_map.c | 25 +++++++
+ tools/tracing/rtla/tests/engine.sh            |  1 -
+ tools/tracing/rtla/tests/timerlat.t           | 15 +++++
+ 14 files changed, 206 insertions(+), 11 deletions(-)
+ create mode 100644 tools/tracing/rtla/example/timerlat_bpf_action.c
+ rename tools/tracing/rtla/{sample => example}/timerlat_load.py (100%)
+ create mode 100644 tools/tracing/rtla/tests/bpf/bpf_action_map.c
 
-	if (!buf)
-		return 0;
+-- 
+2.51.1
 
-	if (IS_ERR(buf))
-		return PTR_ERR(buf);
-
-is pretty obvious of what is happening.
-
-	if (IS_ERR_OR_NULL(buf))
-		return PTR_ERR_OR_ZERO(buf);
-
-Is quite a bit more obfuscated. I mean, I needed to look up what
-PTR_ERR_OR_ZERO() did to be sure I knew what was returned.
-
-> > +	list_for_each_entry(file, &tr->events, list) {
-> > +
-> > +		if (strcmp(system->name, file->event_call->class->system) != 0)
-> > +			continue;
-> > +
-> > +		ret = p->parse(p, file, buff, command, next);
-> > +
-> > +		/* Removals and existing events do not error */
-> > +		if (ret < 0 && ret != -EEXIST && !remove) {
-> > +			pr_warn("Failed adding trigger %s on %s\n",
-> > +				command, trace_event_name(file->event_call));
-> > +		}  
-> 
-> 
-> Can I expect that this can recover the previous settings
-> via event trigger?
-> e.g. 
-> 
-> # echo "stacktrace" > events/sched/sched_wakeup/trigger
-> # echo "stacktrace" > events/sched/trigger
-> # echo "!stacktrace" > events/sched/trigger
-> # cat events/sched/sched_wakeup/trigger
-> stacktrace:unlimited
-> 
-> ?
-
-No. In fact, this is one of the features of the system trigger. Writing
-into the system/trigger file is the same as writing into each of the
-system's event's trigger files one at a time. In fact, I updated the
-documentation in this patch to show that this file can be used to clear
-tiggers too!
-
-+       echo snapshot > events/sched/sched_waking/trigger
-+       cat events/sched/sched_waking/trigger
-+       snapshot:unlimited
-+       echo '!snapshot' > events/sched/trigger
-+       cat events/sched/sched_waking/trigger
-+       # Available triggers:
-+       # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
-
-
-> 
-> 
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +static ssize_t
-> > +event_system_trigger_write(struct file *filp, const char __user *ubuf,
-> > +		    size_t cnt, loff_t *ppos)
-> > +{
-> > +	struct trace_subsystem_dir *dir = filp->private_data;
-> > +	struct event_command *p;
-> > +	char *command, *next;
-> > +	char *buf __free(kfree) = get_user_buf(ubuf, cnt);
-> > +	bool remove = false;
-> > +	bool found = false;
-> > +	ssize_t ret;
-> > +
-> > +	if (!buf)
-> > +		return 0;
-> > +
-> > +	if (IS_ERR(buf))
-> > +		return PTR_ERR(buf);  
-> 
-> Ditto.
-
-And ditto again with my reply ;-)
-
-> 
-> > +
-> > +	/* system triggers are not allowed to have counters */
-> > +	if (strchr(buf, ':'))
-> > +		return -EINVAL;  
-> 
-> ':' is not always used for counters (e.g. hist) and it seems odd
-> to check anything about parse here. Can we do this counter check
-> after parse a command?
-> 
-> > +
-> > +	/* If opened for read too, dir is in the seq_file descriptor */
-> > +	if (filp->f_mode & FMODE_READ) {
-> > +		struct seq_file *m = filp->private_data;
-> > +		dir = m->private;
-> > +	}
-> > +
-> > +	/* Skip added space at beginning of buf */
-> > +	next = strim(buf);
-> > +
-> > +	command = strsep(&next, " \t");
-> > +	if (next) {
-> > +		next = skip_spaces(next);
-> > +		if (!*next)
-> > +			next = NULL;
-> > +	}  
-> 
-> strim() removes both leading and trailing whitespace. So this check is
-> not required.
-
-But next here is not the one that had strim() attached to it.
-
-	command = strsep(&next, " \t");
-
-Updates the content of next.
-
-Thanks for the review,
-
--- Steve
