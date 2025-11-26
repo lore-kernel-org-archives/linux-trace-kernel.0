@@ -1,47 +1,53 @@
 Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E2E2E22BF;
-	Wed, 26 Nov 2025 09:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7236129BDA0;
+	Wed, 26 Nov 2025 09:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764148552; cv=none; b=ARqA9G35X/7IrZlY2YnJj9ctPvFftTlTI7omY2I2qfMIFJru2BJfvPuWyy6Pes62AeeKZRK1tvxd1nxbdhVKpidQyz9ga50ttpEFNDUYiBpRhHRkILtO8PGWggz5dF5Q1aQ/fhly/czf+Y+pS8UX6/SQuaLIl6U5bbK4LQ80HQs=
+	t=1764149148; cv=none; b=blMIk/nJeeMAkdAzkw8FmUcqvAmmgk58EXRL7ELTGN7NNgfnQURW1CKbcxcwfuEq8eYrSc92HoLgP0FIRqWN1tUDIqkFjF6yB2tvWFZZVlJIc++ZxozJCgh092Hv1yip3oysLTKMwMtEEYnTySdhjpBK0r7HJJj70+dxCO3BwtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764148552; c=relaxed/simple;
-	bh=IsIc2pSWMHVY+KC3Uw4pPzqTZExp4W6SHPUXaRMlIns=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=cxdBgid1Pzc8eo1GazkIymjDsEY+GiRdFvinAmmN6B+N8ocPvKSX3B9UL3QKYhv4A2jLL3wY0TA79c4g1W+WInf0mEmIbcZ+PWR5YmTBqZoU4u9RGkI2b80MOfoYi2JxileKu/EOQ3zX+d45JXRJZRX90llpaWP+ogm2aqXfgrg=
+	s=arc-20240116; t=1764149148; c=relaxed/simple;
+	bh=rOxNvMbUnbVoeYeh6OfZJyrUiDpKtwvVtvCCeL/m2/8=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=Q99/+iKpAn8uZpS5Wn3Ndp4Lok3MlWS019m05V3RkFWu6ErXKJozRrdGzUYoqwKyvGDulxKkBS1B3JXA5kRIhFDbfJxbe7ou9m+145XTDUN1LGKEpCqb8Tba3iiNw80sevVne4wu1p/Pt9tdXFqPm4WvwLyCLt7u59CEwHfv20I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
+Received: from mxde.zte.com.cn (unknown [10.35.20.121])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4dGYdr5pnkz57dq;
-	Wed, 26 Nov 2025 17:09:04 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4dGZ0y6Jj5zHT4;
+	Wed, 26 Nov 2025 17:25:38 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4dGYdk49tGz5TCG0;
-	Wed, 26 Nov 2025 17:08:58 +0800 (CST)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4dGZ0r3VQxzBQkK2;
+	Wed, 26 Nov 2025 17:25:32 +0800 (CST)
+Received: from mxct.zte.com.cn (unknown [192.168.251.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4dGZ0g494xz6Fy6K;
+	Wed, 26 Nov 2025 17:25:23 +0800 (CST)
 Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4dGYdW6Xskz8Xs7T;
-	Wed, 26 Nov 2025 17:08:47 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl1.zte.com.cn with SMTP id 5AQ98LU5054204;
-	Wed, 26 Nov 2025 17:08:21 +0800 (+08)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4dGZ0R2NJ8z4xq1J;
+	Wed, 26 Nov 2025 17:25:11 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl1.zte.com.cn with SMTP id 5AQ9OgiA088425;
+	Wed, 26 Nov 2025 17:24:42 +0800 (+08)
 	(envelope-from wang.yaxin@zte.com.cn)
 Received: from mapi (xaxapp01[null])
 	by mapi (Zmail) with MAPI id mid32;
-	Wed, 26 Nov 2025 17:08:24 +0800 (CST)
-Date: Wed, 26 Nov 2025 17:08:24 +0800 (CST)
-X-Zmail-TransId: 2af96926c388486-e69b8
+	Wed, 26 Nov 2025 17:24:45 +0800 (CST)
+Date: Wed, 26 Nov 2025 17:24:45 +0800 (CST)
+X-Zmail-TransId: 2af96926c75d100-04615
 X-Mailer: Zmail v1.0
-Message-ID: <202511261708240123PvauPcd7Xbqx_EDrKkNn@zte.com.cn>
+Message-ID: <20251126172445319I7DWJm-KEEuCmqtLupteE@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,17 +63,16 @@ Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 Subject: =?UTF-8?B?W1BBVENIIHYyIDAvM10gZmdyYXBoOiBGaXggYW5kIHRpZ2h0ZW4gUElEIGZpbHRlcmluZyBzdXBwb3J0?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 5AQ98LU5054204
+X-MAIL:mse-fl1.zte.com.cn 5AQ9OgiA088425
 X-TLS: YES
 X-SPF-DOMAIN: zte.com.cn
 X-ENVELOPE-SENDER: wang.yaxin@zte.com.cn
 X-SPF: None
-X-SOURCE-IP: 10.35.20.165 unknown Wed, 26 Nov 2025 17:09:05 +0800
+X-SOURCE-IP: 10.35.20.121 unknown Wed, 26 Nov 2025 17:25:39 +0800
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6926C3AF.000/4dGYdr5pnkz57dq
+X-Fangmail-MID-QID: 6926C791.000/4dGZ0y6Jj5zHT4
 
 From: Shengming Hu <hu.shengming@zte.com.cn>
-
 Function graph tracing did not honor set_ftrace_pid() rules properly.
 
 The root cause is that for fgraph_ops, the underlying ftrace_ops->private
