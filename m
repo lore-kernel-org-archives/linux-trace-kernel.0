@@ -1,149 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0370828D83F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 07:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50A329BDAD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 07:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764142070; cv=none; b=ktsa0sSTssiOwkWW3+8l4DZ49aya5LN9iV2G1vbv2diV0aRbQbHx4BfaZ36VfJaE/t7w6zvjY+oO6PlsWPwGpoJjtrBWZKZqy8neENMaVlhEmD2Gncir0b/ap6sFYmQaPQIL841lTDXWVBzGq/r4t5+kGlhP97laPHBS2Uc1WnA=
+	t=1764143664; cv=none; b=LOqHDzrO0jBKFzhcau2dqyleiQ68imLvjqgw95yHp0Cq5Z4MmHMWwh5EYVYpviirpy70grQO5gFnpqdsIB4Q9abshBbdqcemOn17pwlcJzm9YWqhkDwCtD+PWychhAEi8urkRXKrNtAxCdbKC9Q+y1/w3uVD/OZY5dIQrl/Jy1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764142070; c=relaxed/simple;
-	bh=0APT5HLkJcaN0fc0vbHueBaJVzGMvnMVhoOd2dCH1Qk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aUCWd2l+O8A4R36JIbYPkF2mudDcBnLN/rp0OpTa82/Z5Ed6j3I6tiwjHi7DxrS/vmGsl+Sq0zo2gACxW8ujTeS/qO+0cIjnTEm4nrCucjpaYYrItj2mk7m1sp76oiKRSlbfZDb7tNIFpxet5M/OCe6M8YHSHn0IytF1wr1ZrAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BSkRNqJO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764143664; c=relaxed/simple;
+	bh=BLggUwFSSOnSougouiNtDF9tADe2dx8YXPmsLpbiPmM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iynnebu0fAp9GKOwpf8DU+2Ru1mijmTOlzdTqtE3tH9tWeLZRIJGVDftzj+wrc5zkDgfR+pneoc39N0m4Mvm38Ewwfw/tctN/UXOkc0Z3qT4OFCFoDJHrWTOnkwM54J3MdfzUuhgCeHgKYqxjltyr+RZWuLA6kHkPwtD/vevhXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHOmxRGR; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSkRNqJO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764142067;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0APT5HLkJcaN0fc0vbHueBaJVzGMvnMVhoOd2dCH1Qk=;
-	b=BSkRNqJOKXQLUgR0ucYKhcRystKnvYR1YEXIncEwQVpq87fwxI7tD/rXCB/Ug0ida+9n0U
-	BnFzYNoPijB1ePkewn1QRnLJKcNvhDuf/zWTQySiBNnZoDLvnK6SxQbsUVkG9tTM8ogdw3
-	ZNskq6ynlBMm9K+0SOi9D6x2JUWZWso=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-537-uSyjCQ7kPNqrRmFmu-H8dQ-1; Wed, 26 Nov 2025 02:27:45 -0500
-X-MC-Unique: uSyjCQ7kPNqrRmFmu-H8dQ-1
-X-Mimecast-MFC-AGG-ID: uSyjCQ7kPNqrRmFmu-H8dQ_1764142064
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42b2b9c7ab6so3206243f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 23:27:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHOmxRGR"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42b32900c8bso3708668f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Nov 2025 23:54:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764143661; x=1764748461; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NyPTYZiKX4AJg8UqMQQ2+zsdage/O8q7ru0ykIzuE8k=;
+        b=bHOmxRGRXw/zioH6ypV3JRCaUBchEwD0qqwetUkjp2mI6cyxV6M/dUZupqu3MaLPds
+         HSWalDb7T81UzaDlsUvJTXvHj8T3BMvlDk5x91/yzToNbsRzdOBGu5g9F1lT6TueMjbR
+         AjOXk8yCyp6e2j9BGUJhN+6lpsUca6uReXYrhZ87I9qynMSgODh2K4AC8n6eRA94pTpx
+         hkZUM8kL9tFSW7YjhxQGsZft2X85ZNd4BhiiYpiW4c8H1Q2pLK+mGxIJ+k/Xx7yZnYeF
+         xSR4MGnP4jJcVenQ3q1FOfTFgTUrFiEz8MI9/CgDpGF6hE6hpzWemLdRcA41H9B7PMmD
+         aJkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764142064; x=1764746864;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nco9kMQ0naw+QFTHGhGkEUiJ6x4Fn+gAQnbkM+gldhA=;
-        b=kcNek9gi3PtmR07VuwMa6TZRKbrebbXRjVWnzFowhCbM3lZZi/leyFODktH0Cv6PIn
-         YyXMIDsX1ZnhyfejIQYntPE3psov1Hfy4zZpCrHygyzeaGmN2mP4Y39TCWd1MRIjR2LV
-         p3pJNQHlofbcbJZKPCWyhT2ICpBKO8Uy0VXeiksb16VKSE+L+8eW5SRYEqJvwYJJNTrp
-         2TveykSmAyXaLmmQc5C5OCXPWs8m+lmQEU234BLOj5HMqK5/HgG/yXK17d8fdY+pX/nj
-         4XGC/GLjvpKw6O6uY+MM0aghKfp3DSFPIeAJpGM6WJBqh5cJTErhKqPf3u0VZfj/CdK8
-         8IhA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4mjkkYBCmtvZzyGq0F5mWyDM6sAINpRTOgA9WQ8rDm0QdBnl7qmO2AEelbZDhfv85+0FFaoYgYilSbeeosr7yIuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhJ4biVp5UVgBApFLxhNc60zsvAPonwu5+UaSjr4nqB/9EJ8kr
-	NFsqwnm+3xkxSah9PLDajnt+FcC0Zuzw3jkMYyWGRqJNrp67Mvhp4eMzOg+IDWdoTZixpjwbFR1
-	LQsGDNs7AJUJEHAWSCWgVGkSKnwnD+o0vO8JazWy+wFcIJ6XqKPA6zCKRNto/L7eUO1/odexwLA
-	==
-X-Gm-Gg: ASbGncuCo0ztVOQhO1IobOZy5IOx3wLVbZEtDvHqY7O6Y+zz9c6YiS6w4DUFDszfIrN
-	4kizQgmieCA41aaVFv5Qh2U5YA47r0iKGf8yDHfRd5ydoOERecIDaC/pBvQf5lJbU2UkfTc6P8z
-	LJM+mquqP2J3CjWlbxXQQw/uhHLk+0o4XwLqa0kqRUe95Vcf4oGUkAi9QnAQl0nvDYmbP8oSifx
-	/uVxcgz88DeJkS3Iio60/PHY34P6giY0sZauyKFEnQRAvkw3ihvusMcQjkC4at2pDZulCz9CpPA
-	1OzbXJgFx0sDOw5yK9QPyuANasDslDhohuVoQC+GFFQhwDnKmVfODLfnW6nD+gNeTrK5kSfIC2Q
-	pSZbUGJlOsNjlqpcEjnUBjfFMCZJBQE2lClg=
-X-Received: by 2002:a05:6000:2003:b0:427:6a3:e72f with SMTP id ffacd0b85a97d-42cc1d0cfadmr18247874f8f.34.1764142064251;
-        Tue, 25 Nov 2025 23:27:44 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEOqX3PELwvIZ+Vb1AbVC110j9OqoH953u64KiUDbJZ8vWSBYF7n3Xf4475WzmzUwsPtoAG5A==
-X-Received: by 2002:a05:6000:2003:b0:427:6a3:e72f with SMTP id ffacd0b85a97d-42cc1d0cfadmr18247854f8f.34.1764142063906;
-        Tue, 25 Nov 2025 23:27:43 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fd8d97sm38236674f8f.42.2025.11.25.23.27.42
+        d=1e100.net; s=20230601; t=1764143661; x=1764748461;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NyPTYZiKX4AJg8UqMQQ2+zsdage/O8q7ru0ykIzuE8k=;
+        b=dOzRKbaYyqz6hI8ca5wFOMczcl5lZMt/XrBCopPG2Pf85PXHC0X5tLS0fTI0Fd2IO+
+         8umqudstXFzYlLRq4J5H66v5DPbIe1+iqKlbroi5S//l/iMwTZU5mLV4ZXqfb673sA76
+         unQkkBmFGbE/o0YiTymwLhGxb4Hn9sJWlX6VzIG++VIVDoTG9aEYhUr8RRmsrt51Foiv
+         rGJ0E8+wzdEfyAzuSFaNGDMRTCXJ6i0CvsevhDymPQXvi7CGlPd08GSCDIfPSTEtc+V2
+         MKztIqqMFu/WOFGgXLwqhlKsHpg5+5YQUxjSOxUgFKcAJJ/iheMPVI+Tk23Ad7vzT0Rk
+         Q8ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHDtj5ocBOU4wjY0pUpLbZqOH060B5Y5UMmpsqowCZKZIA1QeOiu2qD0QXQ13RJgNkgTZ752rVIgOW1M9AFxgnqPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKuKed/tR9XMmu99KpDycYgZxmF67UoLhR3wco3jSDzJrWTtPs
+	CYfkOZzFzGXJ4CUE3+n4xUrcUjqVAMdzBw65cFdd9baYtT0ucVE6Yqn5
+X-Gm-Gg: ASbGncv2A23n3wOpn9S0lrcN64ZhprQoiSYeUn3F1Em6xFqGsciRiHrD2hQ0cgLjRMU
+	gp2+YYjLOszlccDkXCjL2PLh0LoPYGpPabMxA8aAfc1ySXLeWp5dRf5bEV6jlPiZBdiko9jS2s/
+	5nMgt8EdJnxN/cAWndYmNLXgiP8NPzQ8ogom2M02YNRWJz+yPuS7MfGUSBsDJrV73c48wu7BaEk
+	6/9KeV4ip9Mn/wsSAcScCuG7fpIOrZU2K6tP4LYVdVm6F+a22h63OtNYmayqflUYYoITyQru460
+	lmMJhjujhH4ZFI9ToaYUy/gAzy9t3KV9GB02P6hLt6UWG4hPWfg0u0dYBh5I70DgZWFq+7f4a8K
+	aV/LSeXvcnrbg2N+hE+VishqzJKYsvc44VIR8Sk85uVu9Aj4XcRdlQmmjLoQc
+X-Google-Smtp-Source: AGHT+IF3OhJrdZ1YcyFXgQFCx3O4fzXMh5cnWnx31Q+zBL04SChpqKRjEOULsSc/MyGGIyzGtkLnAg==
+X-Received: by 2002:a05:6000:2509:b0:42b:53ad:bbfa with SMTP id ffacd0b85a97d-42cc1d61ae6mr19946482f8f.53.1764143660807;
+        Tue, 25 Nov 2025 23:54:20 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fb9022sm38826054f8f.36.2025.11.25.23.54.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Nov 2025 23:27:43 -0800 (PST)
-Message-ID: <e4838dd91f14024222eef8e705f2b1ae7945bb80.camel@redhat.com>
-Subject: Re: [PATCH v2 1/2] rv: Convert to use lock guard
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	 <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 26 Nov 2025 08:27:42 +0100
-In-Reply-To: <20251125145736.48c3ed9d@gandalf.local.home>
-References: <cover.1763370183.git.namcao@linutronix.de>
-		<dbefeb868093c40d4b29fd6b57294a6aa011b719.1763370183.git.namcao@linutronix.de>
-	 <20251125145736.48c3ed9d@gandalf.local.home>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43)
+        Tue, 25 Nov 2025 23:54:20 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 26 Nov 2025 08:54:18 +0100
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	David Laight <David.Laight@aculab.com>
+Subject: Re: [RFC PATCH 5/8] uprobe/x86: Add support to optimize on top of
+ emulated instructions
+Message-ID: <aSayKtsTNkuyu0TP@krava>
+References: <20251117124057.687384-1-jolsa@kernel.org>
+ <20251117124057.687384-6-jolsa@kernel.org>
+ <aSSdavSy_unRaEgF@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: AKpGU6OuTPIv4BWEqMcpJjptrNCSsKq1dlEF6KcHhqs_1764142064
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aSSdavSy_unRaEgF@redhat.com>
 
-On Tue, 2025-11-25 at 14:57 -0500, Steven Rostedt wrote:
-> On Mon, 17 Nov 2025 09:06:02 +0000
-> Nam Cao <namcao@linutronix.de> wrote:
->=20
-> > @@ -644,13 +640,11 @@ static ssize_t enabled_monitors_write(struct file
-> > *filp, const char __user *user
-> > =C2=A0=09=09else
-> > =C2=A0=09=09=09retval =3D rv_disable_monitor(mon);
-> > =C2=A0
-> > -=09=09if (!retval)
-> > -=09=09=09retval =3D count;
-> > -
-> > -=09=09break;
-> > +=09=09if (retval)
-> > +=09=09=09return retval;
-> > +=09=09return count;
->=20
-> No biggy, but I wonder if this would look better as:
->=20
-> =09=09return retval ? : count;
->=20
+On Mon, Nov 24, 2025 at 07:01:14PM +0100, Oleg Nesterov wrote:
+> Hi Jiri,
+> 
+> I am trying to understand this series, will try to read it more carefully
+> later...
+> 
+> (damn why do you always send the patches when I am on PTO? ;)
 
-Tried both patches and they look fine to me.
+it's more fun that way ;-) thanks for checking on it
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> 
+> On 11/17, Jiri Olsa wrote:
+> >
+> >  struct arch_uprobe {
+> >  	union {
+> > -		u8			insn[MAX_UINSN_BYTES];
+> > +		u8			insn[5*MAX_UINSN_BYTES];
+> 
+> Hmm. OK, this matches the "for (i = 0; i < 5; i++)" loop in
+> opt_setup_xol_ops(), but do we really need this change? Please see
+> the question at the end.
+> 
+> > +static int opt_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> > +{
+> > +	unsigned long offset = insn->length;
+> > +	struct insn insnX;
+> > +	int i, ret;
+> > +
+> > +	if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags))
+> > +		return -ENOSYS;
+> 
+> I think this logic needs some cleanups... If ARCH_UPROBE_FLAG_CAN_OPTIMIZE
+> is set by the caller, the it doesn't make sense to call xxx_setup_xol_ops(),
+> right? But lets forget it for now.
+> 
+> > +	ret = opt_setup_xol_insns(auprobe, &auprobe->opt.xol[0], insn);
+> 
+> I think this should go into the main loop, see below
+> 
+> > +	for (i = 1; i < 5; i++) {
+> > +		ret = uprobe_init_insn_offset(auprobe, offset, &insnX, true);
+> > +		if (ret)
+> > +			break;
+> > +		ret = opt_setup_xol_insns(auprobe, &auprobe->opt.xol[i], &insnX);
+> > +		if (ret)
+> > +			break;
+> > +		offset += insnX.length;
+> > +		auprobe->opt.cnt++;
+> > +		if (offset >= 5)
+> > +			goto optimize;
+> > +	}
+> > +
+> > +	return -ENOSYS;
+> 
+> I don't think -ENOSYS makes sense if opt_setup_xol_insns() succeeds at least once.
+> IOW, how about
+> 
+> 	static int opt_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> 	{
+> 		unsigned long offset = 0;
+> 		struct insn insnX;
+> 		int i, ret;
+> 
+> 		if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags))
+> 			return -ENOSYS;
+> 
+> 		for (i = 0; i < 5; i++) {
+> 			ret = opt_setup_xol_insns(auprobe, &auprobe->opt.xol[i], insn);
+> 			if (ret)
+> 				break;
+> 			offset += insn->length;
+> 			if (offset >= 5)
+> 				break;
+> 
+> 			insn = &insnX;
+> 			ret = uprobe_init_insn_offset(auprobe, offset, insn, true);
+> 			if (ret)
+> 				break;
+> 		}
+> 
+> 		if (!offset)
+> 			return -ENOSYS;
+> 
+> 		if (offset >= 5) {
+> 			auprobe->opt.cnt = i + 1;
+> 			auprobe->xol.ops = &opt_xol_ops;
+> 			set_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags);
+> 			set_bit(ARCH_UPROBE_FLAG_OPTIMIZE_EMULATE, &auprobe->flags);
+> 		}
+> 
+> 		return 0;
+> 	}
+> 
+> ?
+> 
+> This way the caller, arch_uprobe_analyze_insn(), doesn't need to call
+> push/mov/sub/_setup_xol_ops(), and the code looks a bit simpler to me.
 
-Nam, feel free to send an updated version if you want to apply Steve's
-suggestion or keep the patch like this.
+ah nice, will try that
 
-Steve, this is the only remaining change before the merge window, unless yo=
-u
-prefer to keep it for the next round, I'm going to send a small pull reques=
-ts
-with those two patches alone.
+> 
+> No?
+> 
+> > +      * TODO perhaps we could 'emulate' nop, so there would be no need for
+> > +      * ARCH_UPROBE_FLAG_OPTIMIZE_EMULATE flag, because we would emulate
+> > +      * allways.
+> 
+> Agreed... and this connects to "this logic needs some cleanups" above.
+> I guess we need nop_setup_xol_ops() extracted from branch_setup_xol_ops()
+> but again, lets forget it for now.
 
-Thanks,
-Gabriele
+ok, it will hopefully make the code simpler, will check on that
 
-> -- Steve
->=20
-> > =C2=A0=09}
-> > =C2=A0
-> > -=09mutex_unlock(&rv_interface_lock);
-> > =C2=A0=09return retval;
-> > =C2=A0}
-> > =C2=A0
+> 
+> -------------------------------------------------------------------------------
+> Now the main question. What if we avoid this change
+> 
+> 	-             u8                      insn[MAX_UINSN_BYTES];
+> 	+             u8                      insn[5*MAX_UINSN_BYTES];
+> 
+> mentioned above, and change opt_setup_xol_ops() to just do
+> 
+> 	-	for (i = 0; i < 5; i++)
+> 	+	for (i = 0;; i++)
+> 
+> ?
+> 
+> The main loop stops when offset >= 5 anyway.
 
+> 
+> And. if auprobe->insn[offset:MAX_UINSN_BYTES] doesn't contain a full/valid
+> insn at the start, then uprobe_init_insn_offset()->insn_decode() should fail?
+> 
+> Most probably I missed something, but I can't understand this part.
+
+no, I think you're right, I did not realize we fit under MAX_UINSN_BYTES
+anyway, call instruction needs only 5 bytes
+
+thanks,
+jirka
