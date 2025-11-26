@@ -1,393 +1,116 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A6F137C52;
-	Wed, 26 Nov 2025 01:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45ED18C2C;
+	Wed, 26 Nov 2025 02:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764121134; cv=none; b=SYswGbWSIwZMqV7qdBZxwk0GaRA+Sa5Ykl2AOkyS2Bnr7NCFZmCFbOhjXTeJjPnu7/+FXa33J8oi4BuEukfTZpLp0qHSz0a/RE0uKBlfqHKxIcWuDHW4ovTvJ3M740Lt8wCoq7XXeKz8dQL/C4AMOQi9U8rlWfjo9fE26emm+vY=
+	t=1764123414; cv=none; b=mn53gs58dSsQFkVbjhCwGuEC5kj9u3W5jCSZmP7tCSeBN1036RfIGZ1Jeawwc8nTrYDev9b6j0wfFBl8wPWwH7uJrNWBZadJoh9T1zgffCA0uVE9u2ZbWvq8aoFcSoF0C6328urOLLbNG1lIJb0UG2TwhCoqHXIZ2o9KtTf94FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764121134; c=relaxed/simple;
-	bh=PfU3VkKRTSqLPxBwBV43PTKcy2NNHx6lsdFzXnq8Adc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gcnvQvgdWHZW2h42yG/BFa5uoSSRutHvRCKEqjyCxuT9pZVRiBe74SeXx2eO4lnUMSLCIZEGYsjI0lYVMUPq9HRSch3rSyU9OAkwK1PzxoPKjFVPkZ0VyC29h2W8eKlMsqDcvkmpOo8NOCoP3b24Idk0TZJBCYbqXfDR4dSwtnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D871F13ADCA;
-	Wed, 26 Nov 2025 01:38:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id D182320025;
-	Wed, 26 Nov 2025 01:38:40 +0000 (UTC)
-Date: Tue, 25 Nov 2025 20:39:24 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Xiang Gao <gxxa03070307@gmail.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, mhiramat@kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, dhowells@redhat.com, kuba@kernel.org,
- brauner@kernel.org, akpm@linux-foundation.org,
- linux-trace-kernel@vger.kernel.org, gaoxiang17 <gaoxiang17@xiaomi.com>
-Subject: Re: [PATCH v2] dma-buf: add some tracepoints to debug.
-Message-ID: <20251125203924.3bd59b2c@gandalf.local.home>
-In-Reply-To: <20251125162949.220488-1-gxxa03070307@gmail.com>
-References: <20251125162949.220488-1-gxxa03070307@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764123414; c=relaxed/simple;
+	bh=/tWrx/MnY6AKJaE4q79i4KUVbwYHDBE7SXmRCrj0fEc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pi2tdueMSEFT/n6SxtSnloOuO8nEJi2Su8NZApv/1OQQ9VVmZaybPQi3tRILe55NwhmtEImdoLSXCfRdT4inz+JrcDQ3Ooe2C1oxJqxxmnVAr6n6M75xIIIJufJL9CmeSgzeNXLutuusgihZLXummXTsDNlkgNzLNQyyN4WGqEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Dw7qPRLn; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Dw7qPRLn"
+Message-ID: <4f9b3183-1aa1-4506-b4dc-3297a8f19928@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764123410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T6HUMNDryA4piZEYrC2X4LuouZsF+ougkDJiYFbCSE4=;
+	b=Dw7qPRLnoxTYwoymMqE+eRf1F2npYEEQUu73jGaYqyeUsdMq+gAbTKtCx742eULS6wXhcs
+	Dh/PGQGMjoUZTpDYsjZYn98XeME9Jagx8vlRxr25xPeBkql3uKIftRfHnfl5f1JHPZ0QkL
+	XIQ5CtqattPI9OgLb/2llxIXfAYyX54=
+Date: Wed, 26 Nov 2025 10:16:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [RFC PATCH net-next] page_pool: Add page_pool_release_stalled
+ tracepoint
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: netdev@vger.kernel.org, hawk@kernel.org, ilias.apalodimas@linaro.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Leon Huang Fu <leon.huangfu@shopee.com>
+References: <20251125082207.356075-1-leon.hwang@linux.dev>
+ <20251125112304.493ea1ee@gandalf.local.home>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <20251125112304.493ea1ee@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D182320025
-X-Stat-Signature: wayw5miybq35f7m8uxpd3ngttpjrb3gw
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19vpd68vxmtNTdWxmMcQSSct/9/ajf8E4I=
-X-HE-Tag: 1764121120-98615
-X-HE-Meta: U2FsdGVkX18h4EAVllEURvlPrEQAWiGdg5Rzdx39bGekUaY1J1t/YJRFzEaYdhawLg/KlSqRN5mRr4NBH6Ky27JMAVmrJ9ItCPoks+A9WoK1Ep6ONWgg9MV8UVdQHiWryeSUUDsov6fk87uAoXEbr5sqfieXmx7hyUMoDBYZB1RLbqtuqvGwvcIuyG72l1GmYAQPIxgHY4mJZmOv/OvKlGxA49CXEM5WzRAsZIAJn7uvspoPJz6MyGgsf21JsuBjn1NjBHKMDNQTNUufAgIaZGsjYd87M03DaNE9J9bwOcuWB25V/nxYrhAPmRqQR6GH18jbQaFXuk4vLqCvSNI7u57mjRJKpbqP
-
-On Wed, 26 Nov 2025 00:29:49 +0800
-Xiang Gao <gxxa03070307@gmail.com> wrote:
-
-> +++ b/include/trace/events/dma_buf.h
-> @@ -0,0 +1,281 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM dma_buf
-> +
-> +#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_DMA_BUF_H
-> +
-> +#include <linux/dma-buf.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(dma_buf_export,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf),
-> +
-> +	TP_ARGS(dmabuf),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-
-The above isn't doing what you think it's doing. The name is assigned
-before this by the above __string(name, dmabuf->name).
-
-You really shouldn't be taking any locks in a tracepoint. A tracepoint is a
-callback, that isn't called most of the time. You could be hiding very
-hard to find deadlocks by taking a lock in a tracepoint callback.
-
-You need to take the lock around the tracepoint call itself where it is
-called in the code. Not in the TRACE_EVENT.
-
-You may need to have something like:
-
-@@ -220,6 +223,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- 	    dmabuf->size >> PAGE_SHIFT)
- 		return -EINVAL;
-
-+	if (trace_dma_buf_mmap_internal_enabled()) {
-+		guard(spinlock)(&dmabuf->namelock);
-+		trace_dma_buf_mmap_internal(dmabuf);
-+	}
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
-
-
-The "trace_dma_buf_mmap_internal_enabled()" is a static branch, where it is
-either a nop or a jump to the tracing code. It's not a normal conditional
-branch. It acts the same as tracepoints themselves do.
-
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-
-Below seems to be a lot of very similar TRACE_EVENT()s. A TRACE_EVENT() is
-literally defined as:
-
-#define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
-	DECLARE_EVENT_CLASS(name,			       \
-			     PARAMS(proto),		       \
-			     PARAMS(args),		       \
-			     PARAMS(tstruct),		       \
-			     PARAMS(assign),		       \
-			     PARAMS(print));		       \
-	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
-
-That is, it is both a DECLARE_EVENT_CLASS() and a DEFINE_EVENT(). You can
-make one DECLARE_EVENT_CLASS() and use many DEFINE_EVENT()s with it.
-
-Each DECLARE_EVENT_CLASS() takes up around 4 to 5 kilobytes of memory. Each
-DEFINE_EVENT() takes around 300 bytes to 1K of memory. The more
-DEFINE_EVENT()s you use with a single DECLARE_EVENT_CLASS(), the more
-memory you save. Please try to do that.
-
--- Steve
+X-Migadu-Flow: FLOW_OUT
 
 
 
-> +
-> +TRACE_EVENT(dma_buf_fd,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf, int fd),
-> +
-> +	TP_ARGS(dmabuf, fd),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(int, fd)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->fd = fd;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->fd,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_mmap_internal,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf),
-> +
-> +	TP_ARGS(dmabuf),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_mmap,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf),
-> +
-> +	TP_ARGS(dmabuf),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_attach,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
-> +
-> +	TP_ARGS(dmabuf, dev),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dname, dev_name(dev))
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dname);
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("dev_name=%s exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(dname),
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_detach,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf),
-> +
-> +	TP_ARGS(dmabuf),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_get,
-> +
-> +	TP_PROTO(int fd, struct file *file),
-> +
-> +	TP_ARGS(fd, file),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, ((struct dma_buf *)file->private_data)->exp_name)
-> +		__string(name, ((struct dma_buf *)file->private_data)->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(int, fd)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		struct dma_buf *dmabuf = (struct dma_buf *)file->private_data;
-> +
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->fd = fd;
-> +		__entry->f_refcnt = file_count(file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->fd,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +TRACE_EVENT(dma_buf_put,
-> +
-> +	TP_PROTO(struct dma_buf *dmabuf),
-> +
-> +	TP_ARGS(dmabuf),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(exp_name, dmabuf->exp_name)
-> +		__string(name, dmabuf->name)
-> +		__field(size_t, size)
-> +		__field(ino_t, ino)
-> +		__field(long, f_refcnt)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(exp_name);
-> +		spin_lock(&dmabuf->name_lock);
-> +		__assign_str(name);
-> +		spin_unlock(&dmabuf->name_lock);
-> +		__entry->size = dmabuf->size;
-> +		__entry->ino = dmabuf->file->f_inode->i_ino;
-> +		__entry->f_refcnt = file_count(dmabuf->file);
-> +	),
-> +
-> +	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-> +		  __get_str(exp_name),
-> +		  __get_str(name),
-> +		  __entry->size,
-> +		  __entry->ino,
-> +		  __entry->f_refcnt)
-> +);
-> +
-> +#endif /* _TRACE_DMA_BUF_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
+On 26/11/25 00:23, Steven Rostedt wrote:
+> On Tue, 25 Nov 2025 16:22:07 +0800
+> Leon Hwang <leon.hwang@linux.dev> wrote:
+> 
+>> +TRACE_EVENT(page_pool_release_stalled,
+>> +
+>> +	TP_PROTO(const struct page_pool *pool, int inflight, int sec),
+>> +
+>> +	TP_ARGS(pool, inflight, sec),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(const struct page_pool *, pool)
+>> +		__field(int,			  inflight)
+>> +		__field(int,			  sec)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__entry->pool		= pool;
+>> +		__entry->inflight	= inflight;
+>> +		__entry->sec		= sec;
+>> +	),
+>> +
+>> +	TP_printk("page_pool=%p id=%d inflight=%d sec=%d",
+>> +		  __entry->pool, __entry->pool->user.id, __entry->inflight, __entry->sec)
+> 
+> You can't do: __entry->pool->user.id
+> 
+> The TP_fast_assign() is executed when the tracepoint is triggered. The
+> TP_printk() is executed when the trace is read. That can happen seconds,
+> minutes, hours, days, even months after the pool was assigned.
+> 
+> That __entry->pool can very well be freed a long time ago.
+> 
+> If you need the id, you need to record it in the TP_fast_assign():
+> 
+> 	__entry->id		= pool->user.id
+> 
+> and print that.
+> 
+> -- Steve
+> 
 
+Hi Steve,
+
+Thanks for the review.
+
+Yes, the id is needed here (similar to what we emit in pr_warn()), so
+I'll follow your suggestion and record it explicitly in TP_fast_assign():
+
+	__entry->id		= pool->user.id;
+
+And then update the print format to:
+
+	TP_printk("page_pool=%p id=%d inflight=%d sec=%d",
+		  __entry->pool, __entry->id,
+		  __entry->inflight, __entry->sec)
+
+Thanks,
+Leon
