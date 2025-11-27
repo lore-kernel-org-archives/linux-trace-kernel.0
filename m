@@ -1,413 +1,91 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF222459FD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Nov 2025 00:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D032F1E1A17;
+	Thu, 27 Nov 2025 02:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764204244; cv=none; b=F23MroStO57AJuRrQLf66Idtd1M9ONezHJkrvruKEqw1ctb540z3Y2vN48o0d8YmcNBNfHsAwOm5Oqm//nd5oGiD1a3Gs2DlwTOWYFKxbwhH+QNauCtTncncJFXtv4TZJDi1eTObz0CmQGRC1hoY2dPAgKCKRzDvR/YX7B5zF9I=
+	t=1764209645; cv=none; b=cQ4lU8aAfJ91uKFAkpc3PKGq/SF62D8wWQ0uPhKSWFToze5xu6iNkGUtzmoi1ufBlg7WGtmbXP4oeXb3xYBtdQuW5VGej8ifHVmfxK/qR1iig82QD6HsMpN8+K7JQsITQDunakPur1L+ZanTcjHu4OMtniW3hCOeQ8NC8u/gZjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764204244; c=relaxed/simple;
-	bh=eMiyhn3JMaYAOqCZKUspFQk4lh9+l6IBgnbP0xzSt+4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AwwB9hxeZ+6PXCRtvba7fMganDyV0T+JQwd0WkofFGXv7sVwwg2RDjDFgHdHece1V31WU66bSB4hAWMhxux+PgjgrENa/etZXvjoeI3cXkpCRu6kO+xcmP3qXTzKXaTTdHhGos3q8QFUhGoO4us3lzYnLMMYfK9f9bSfzvzf4SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWu+Qk9U; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764209645; c=relaxed/simple;
+	bh=IFqYUZzq/jzvNAotoBLmtazNmaL0/3Amx3MFWLru9+I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ExRQ8uFnkOr9GGOLVf8l/DYT2TRh/76RmXNdvvUzc0DzyXTbcEZjIrF87tlEfRUBmupaISgQdsuX1P8RoGTet+sl3KJEHhOigNnWKMYOlUagM1d+HXJnY9Ftj3Zh/tUW6k03AZfcS8VBoSi5iYaKJ27bLGpMYuj2NyashE3rH7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDNkD0l5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWu+Qk9U"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7a9cdf62d31so331093b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 16:44:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764204241; x=1764809041; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X7D/SOi2ecN39BhKBlvFMFvS97PTD1c0CHuxKvuCC8A=;
-        b=KWu+Qk9UQfxBH4T40/AoaTNeuUBlBLbhwduuyp2X2G0tFzB7P7ELadd6ug1afyK7yE
-         Xr6YkPWDRrj6j47hj+XTR5mWvr52B+qlEf56l/IxSIA/eNRY8YtVrcOAQhFXs+LMuOFW
-         P3zJgRSFckH4612HR1St1xW82tyMDcBL+qVlyQnyRs3A90UE8ok1AbyR7cY1F5Zrkf3r
-         MFM8BNEBOTVeZpZtfFjxXssmkYIHcImLwnOe1zjQ8p1ug/n4V1Th8GDnySIeaAFRI8qq
-         eJr2r0/XTKPvQSd/PjCSjpT0NMODNgP04Tju5Vo17a0ecGkyxmu/Qrgi9wAWp94JPLYF
-         0HXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764204241; x=1764809041;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X7D/SOi2ecN39BhKBlvFMFvS97PTD1c0CHuxKvuCC8A=;
-        b=NpvJxnBIQ4na965dJaDbxAcfF7KeO/sd3Av3Bp7pYh4SayN+RgWztxINLvNLwVTDmn
-         f3L2b9WieqZOpirE/W5P7QDkuTtNFi/E7ciG0/4EZW9kWrjzRUo3Fk3aABH17FkKL+35
-         22DJWFpwVLe+JHFyaPUDuXvu7WNdhGU3HknjeZ9mNcK5ucYjtrFzUyXRcMdB9QM34mjE
-         JO0FbYFQ6ROjPkk9ad5byNZOj350Zp+2jcYQesZaJOtNGv/dsXHERzqFzgaN2POd1SUF
-         VxMxY8lfaVjdfkBm8bCWEiPdCU+76gKLY7Z+bwuyDuXOIjNTiOaRXL7BcLnORZO+aATm
-         6STg==
-X-Forwarded-Encrypted: i=1; AJvYcCWv2KS9fB8rGgLLiwvUi7zgdAG7FWonRLC66mpZbYvMFaSoGEXWIhLvgNTpuhYm5VhmnzwAssWD4eDlwnM0cRbTngQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypFfpPh1mcmZgyN0P2nHKumqoRkvFKkiQH+Bi2ejXntpqHsVl2
-	QgbhnEufWN018Lj8gwsuNvMUyNO3VX8NJgSlULjE3u1KvLEIpYeiA4wv
-X-Gm-Gg: ASbGnctXF5Z4rohz0n/05OfHZFqmgvWTK3npL908R7PtDDLfHCP8CLYkpmpPUUt2hFz
-	VsjoXQGe46j/ev7WG1nacDq4sI2TQdQeZDmh7H7rNCMk8Cglb0X86VI3PmWx1PBgQBXwITKRAB3
-	Gdg4yPk9CmbFMr8NcyinThZKd0pkLzgfadyb7/Zp+1JSRJP14Z/NvfsVGibwPkKworV5pgNc9Uq
-	ETqabemIpDJMtKJi45FS2bkSUFppeFt6ux38CX4yW5B0gkKwQZSDS5i1T1TV0cchvJhqsjJ+Mf6
-	7QEbe6ykqnw+iee3ID8KohAMg7XYYKcWer33qtGZdtYwU2vAliZVa9Z/0VDMXZio3hT3XV4MhDk
-	gch39FmbcBtl8zWHAqHRVcLIAQzLuBxyQpfrdBJzTbwqN8lTKaqELX7q5BmP7YRitJ4+Ju4/7RR
-	nB9bsVfrN8ncfihDkhNJncLJVC4zOua7o=
-X-Google-Smtp-Source: AGHT+IF5sxqeF7/QZTdBnTq4C94IH3X+/gRFD/p3Uasr8vrMeNSwp8x1kirv9w3cIWg+fZmvWcZx3g==
-X-Received: by 2002:a05:6a21:3392:b0:35d:8881:e6ba with SMTP id adf61e73a8af0-3614ee3889dmr25218508637.49.1764204240986;
-        Wed, 26 Nov 2025 16:44:00 -0800 (PST)
-Received: from xiao.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-be508bfd8ffsm23902a12.17.2025.11.26.16.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 16:44:00 -0800 (PST)
-From: Xiang Gao <gxxa03070307@gmail.com>
-To: sumit.semwal@linaro.org,
-	christian.koenig@amd.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	dhowells@redhat.com,
-	kuba@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	linux-trace-kernel@vger.kernel.org,
-	gaoxiang17 <gaoxiang17@xiaomi.com>
-Subject: [PATCH v3] dma-buf: add some tracepoints to debug.
-Date: Thu, 27 Nov 2025 08:43:52 +0800
-Message-Id: <20251127004352.376307-1-gxxa03070307@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDNkD0l5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C99C4CEF7;
+	Thu, 27 Nov 2025 02:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764209645;
+	bh=IFqYUZzq/jzvNAotoBLmtazNmaL0/3Amx3MFWLru9+I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oDNkD0l5tVbI5YCQPKX2hVO9qKYsdHnZ4iecrTrg9O57eLiKDr+pZEkvZ9CUZnxMc
+	 bjr5VdRlmTaE5odqa68YzIGuTPPjkQyBW1ZDDZ9aS6QrbEArFkN7yt5HUqiiG4Q3c2
+	 uMe1MoRiMwrLjRPBS9CFJSQ+3VRQLkC+ZjUAnv76GL3n+zjPJpc56S/jSAjuOe+12v
+	 CYQYxQo9kFkFz2/NYCUSLprwLk6ktAL7eX0ei5mJ0pZF/HSH95f0cWEg/VcWVewg7C
+	 +W/PFqTTJjBfThMo3SaYKkK4xCDD7MxI4KMcEyHmV7Kps6uSRLriogHI9BykXTHt4k
+	 7V0YJaRuGADaw==
+Date: Thu, 27 Nov 2025 11:14:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Osama Abdelkader <osama.abdelkader@gmail.com>
+Cc: oleg@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+ will@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: simplify arch_uprobe_xol_was_trapped return
+Message-Id: <20251127111402.c228292177bbd2b8e88c8629@kernel.org>
+In-Reply-To: <20251126223130.216302-1-osama.abdelkader@gmail.com>
+References: <20251126223130.216302-1-osama.abdelkader@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: gaoxiang17 <gaoxiang17@xiaomi.com>
+On Thu, 27 Nov 2025 00:31:30 +0200
+Osama Abdelkader <osama.abdelkader@gmail.com> wrote:
 
-I want to track the status of dmabuf in real time in the production environment.
-But now we can only check it by traversing the fd in the process or dmabuf_list.
+> convert arch_uprobe_xol_was_trapped() from explicit if/return true
+> return false pattern to direct boolean expression return in
+> arch/arm64/kernel/probes/uprobes.c
+> 
+> Signed-off-by: Osama Abdelkader <osama.abdelkader@gmail.com>
 
-For example:
-   binder:2962_2-2962    [005] ...1.   208.453940: dma_buf_export: exp_name=qcom,system name=(null) size=28672 ino=2580 f_refcnt=2
-   binder:2962_2-2962    [005] ...1.   208.453943: dma_buf_fd: exp_name=qcom,system name=(null) size=28672 ino=2580 fd=9 f_refcnt=2
-   binder:2962_2-2962    [005] ...1.   208.453977: dma_buf_mmap_internal: exp_name=qcom,system name=qcom,system size=28672 ino=2580 f_refcnt=4
-     kworker/5:2-194     [005] ...1.   208.460580: dma_buf_put: exp_name=qcom,system name=ab pid [8176] size=28672 ino=2580 f_refcnt=3
-    RenderThread-11305   [007] ...1.   208.599094: dma_buf_get: exp_name=qcom,system name=ab pid [8176] size=217088 ino=2579 fd=1114 f_refcnt=7
-    RenderThread-11305   [007] ...1.   208.599098: dma_buf_attach: dev_name=kgsl-3d0 exp_name=qcom,system name=ab pid [8176] size=217088 ino=2579 f_refcnt=7
-           <...>-14      [001] ...1.   208.726359: dma_buf_detach: dev_name=kgsl-3d0 exp_name=qcom,system name=ab pid [3317] size=217088 ino=2581 f_refcnt=3
 
-Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
----
- drivers/dma-buf/dma-buf.c      |  57 ++++++++++-
- include/trace/events/dma_buf.h | 166 +++++++++++++++++++++++++++++++++
- 2 files changed, 222 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/dma_buf.h
+Looks good to me.
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 2bcf9ceca997..7cef816ddcac 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -35,6 +35,18 @@
- 
- #include "dma-buf-sysfs-stats.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/dma_buf.h>
-+
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_export);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_mmap_internal);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_mmap);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_put);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_attach);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_detach);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_fd);
-+EXPORT_TRACEPOINT_SYMBOL(dma_buf_get);
-+
- static inline int is_dma_buf_file(struct file *);
- 
- static DEFINE_MUTEX(dmabuf_list_mutex);
-@@ -220,6 +232,11 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- 	    dmabuf->size >> PAGE_SHIFT)
- 		return -EINVAL;
- 
-+	if (trace_dma_buf_mmap_internal_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_mmap_internal(dmabuf);
-+	}
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
- 
-@@ -745,6 +762,11 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
- 
- 	__dma_buf_list_add(dmabuf);
- 
-+	if (trace_dma_buf_export_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_export(dmabuf);
-+	}
-+
- 	return dmabuf;
- 
- err_dmabuf:
-@@ -779,6 +801,11 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
- 
- 	fd_install(fd, dmabuf->file);
- 
-+	if (trace_dma_buf_fd_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_fd(dmabuf, fd);
-+	}
-+
- 	return fd;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
-@@ -794,6 +821,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
- struct dma_buf *dma_buf_get(int fd)
- {
- 	struct file *file;
-+	struct dma_buf *dmabuf;
- 
- 	file = fget(fd);
- 
-@@ -805,7 +833,14 @@ struct dma_buf *dma_buf_get(int fd)
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	return file->private_data;
-+	dmabuf = file->private_data;
-+
-+	if (trace_dma_buf_get_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_get(dmabuf, fd);
-+	}
-+
-+	return dmabuf;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
- 
-@@ -825,6 +860,11 @@ void dma_buf_put(struct dma_buf *dmabuf)
- 		return;
- 
- 	fput(dmabuf->file);
-+
-+	if (trace_dma_buf_put_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_put(dmabuf);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
- 
-@@ -998,6 +1038,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_dynamic_attach, "DMA_BUF");
- struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
- 					  struct device *dev)
- {
-+	if (trace_dma_buf_attach_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_attach(dmabuf, dev);
-+	}
-+
- 	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_attach, "DMA_BUF");
-@@ -1023,6 +1068,11 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
- 	if (dmabuf->ops->detach)
- 		dmabuf->ops->detach(dmabuf, attach);
- 
-+	if (trace_dma_buf_detach_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_detach(dmabuf, attach->dev);
-+	}
-+
- 	kfree(attach);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
-@@ -1488,6 +1538,11 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
- 	vma_set_file(vma, dmabuf->file);
- 	vma->vm_pgoff = pgoff;
- 
-+	if (trace_dma_buf_mmap_enabled()) {
-+		guard(spinlock)(&dmabuf->name_lock);
-+		trace_dma_buf_mmap(dmabuf);
-+	}
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
-diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
-new file mode 100644
-index 000000000000..fe9da89bacd0
---- /dev/null
-+++ b/include/trace/events/dma_buf.h
-@@ -0,0 +1,166 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM dma_buf
-+
-+#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DMA_BUF_H
-+
-+#include <linux/dma-buf.h>
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(dma_buf,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		__assign_str(name);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+DECLARE_EVENT_CLASS(dma_buf_attach_dev,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
-+
-+	TP_ARGS(dmabuf, dev),
-+
-+	TP_STRUCT__entry(
-+		__string(dname, dev_name(dev))
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dname);
-+		__assign_str(exp_name);
-+		__assign_str(name);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("dev_name=%s exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
-+		  __get_str(dname),
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->f_refcnt)
-+);
-+
-+DECLARE_EVENT_CLASS(dma_buf_fd,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd),
-+
-+	TP_STRUCT__entry(
-+		__string(exp_name, dmabuf->exp_name)
-+		__string(name, dmabuf->name)
-+		__field(size_t, size)
-+		__field(ino_t, ino)
-+		__field(int, fd)
-+		__field(long, f_refcnt)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		__assign_str(name);
-+		__entry->size = dmabuf->size;
-+		__entry->ino = dmabuf->file->f_inode->i_ino;
-+		__entry->fd = fd;
-+		__entry->f_refcnt = file_count(dmabuf->file);
-+	),
-+
-+	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
-+		  __get_str(exp_name),
-+		  __get_str(name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->fd,
-+		  __entry->f_refcnt)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_export,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_mmap,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_put,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf_attach_dev, dma_buf_attach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
-+
-+	TP_ARGS(dmabuf, dev)
-+);
-+
-+DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
-+
-+	TP_ARGS(dmabuf, dev)
-+);
-+
-+DEFINE_EVENT(dma_buf_fd, dma_buf_fd,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd)
-+);
-+
-+DEFINE_EVENT(dma_buf_fd, dma_buf_get,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd)
-+);
-+
-+#endif /* _TRACE_DMA_BUF_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> ---
+>  arch/arm64/kernel/probes/uprobes.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
+> index 2799bdb2fb82..b38c1dab7eb4 100644
+> --- a/arch/arm64/kernel/probes/uprobes.c
+> +++ b/arch/arm64/kernel/probes/uprobes.c
+> @@ -103,10 +103,7 @@ bool arch_uprobe_xol_was_trapped(struct task_struct *t)
+>  	 * insn itself is trapped, then detect the case with the help of
+>  	 * invalid fault code which is being set in arch_uprobe_pre_xol
+>  	 */
+> -	if (t->thread.fault_code != UPROBE_INV_FAULT_CODE)
+> -		return true;
+> -
+> -	return false;
+> +	return t->thread.fault_code != UPROBE_INV_FAULT_CODE;
+>  }
+>  
+>  bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> -- 
+> 2.43.0
+> 
+
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
