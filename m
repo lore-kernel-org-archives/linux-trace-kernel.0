@@ -1,214 +1,413 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256F030DEB5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 23:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF222459FD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Nov 2025 00:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764199805; cv=none; b=fI6cAd6OvOYLRhcMjiZUp0YluQMXMFD2T2y9mv+Hy7Xf+L3usmqinXa6e/qIeQ5m+SdoMtc3vc/C/PQ/Oj5p0qhNOUDBf1lc3Ai6VOpBspnRjJckRxb+2Cx/phrA/4d2m0wEKR3dKEFZlclVrXNdGcJHTExOEpfDqzpr9gPtFC8=
+	t=1764204244; cv=none; b=F23MroStO57AJuRrQLf66Idtd1M9ONezHJkrvruKEqw1ctb540z3Y2vN48o0d8YmcNBNfHsAwOm5Oqm//nd5oGiD1a3Gs2DlwTOWYFKxbwhH+QNauCtTncncJFXtv4TZJDi1eTObz0CmQGRC1hoY2dPAgKCKRzDvR/YX7B5zF9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764199805; c=relaxed/simple;
-	bh=P5gc2t+MgdEjghBHlnXnRBNuOMb4GXnkVbz+H2DnAO0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHEYlVQtRVIKd3nZ+L3rjHWGTw2WRM/QKqA6sx39AB5AvY/4YapxYnZTDvLDHM/ibsqYcSDOm5wnv5R+9OZf4aWntkUp4TF7FbwvA2h1zluheqluCOTmAtA7VLPC9pCAmwo1b7s89GKc74c7IT9hXdNnXYdcRCIpyTV8yHj/GaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E51+Mp1M; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764204244; c=relaxed/simple;
+	bh=eMiyhn3JMaYAOqCZKUspFQk4lh9+l6IBgnbP0xzSt+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AwwB9hxeZ+6PXCRtvba7fMganDyV0T+JQwd0WkofFGXv7sVwwg2RDjDFgHdHece1V31WU66bSB4hAWMhxux+PgjgrENa/etZXvjoeI3cXkpCRu6kO+xcmP3qXTzKXaTTdHhGos3q8QFUhGoO4us3lzYnLMMYfK9f9bSfzvzf4SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWu+Qk9U; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E51+Mp1M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764199801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WaAYG5VDFXsv/Iixri0H6uBMNMIoUe5mbi2ivxpfSFc=;
-	b=E51+Mp1MvNc1A4a9Hij+SOhMBvkJQ/RBkGCqH+CUhDV9u+J06dGyzedtqpTRgjwTr2TZqk
-	d9AhU94UbLukoPrPWK8UQMA58mv2qVO663XE6CvQrs594rKkynYuQ0DkncgiaWBwSaRSWF
-	IFHl+lgZuJhNdPgqC9mizsBWnWzKi6s=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-bS2PWpFhNraW7pUhCJd-8A-1; Wed, 26 Nov 2025 18:29:59 -0500
-X-MC-Unique: bS2PWpFhNraW7pUhCJd-8A-1
-X-Mimecast-MFC-AGG-ID: bS2PWpFhNraW7pUhCJd-8A_1764199799
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-785fe1db378so4666747b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 15:29:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWu+Qk9U"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7a9cdf62d31so331093b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Nov 2025 16:44:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764204241; x=1764809041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X7D/SOi2ecN39BhKBlvFMFvS97PTD1c0CHuxKvuCC8A=;
+        b=KWu+Qk9UQfxBH4T40/AoaTNeuUBlBLbhwduuyp2X2G0tFzB7P7ELadd6ug1afyK7yE
+         Xr6YkPWDRrj6j47hj+XTR5mWvr52B+qlEf56l/IxSIA/eNRY8YtVrcOAQhFXs+LMuOFW
+         P3zJgRSFckH4612HR1St1xW82tyMDcBL+qVlyQnyRs3A90UE8ok1AbyR7cY1F5Zrkf3r
+         MFM8BNEBOTVeZpZtfFjxXssmkYIHcImLwnOe1zjQ8p1ug/n4V1Th8GDnySIeaAFRI8qq
+         eJr2r0/XTKPvQSd/PjCSjpT0NMODNgP04Tju5Vo17a0ecGkyxmu/Qrgi9wAWp94JPLYF
+         0HXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764199799; x=1764804599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WaAYG5VDFXsv/Iixri0H6uBMNMIoUe5mbi2ivxpfSFc=;
-        b=lS9y+u/SpxXSf6hMPgsNUPzb6D+HRCthcbG9wn2SE9MAwhWA9FdDQanKnILg8d00dP
-         Xh3taOytGmwo9MExLNgglMHoOBm0Km40OV2bGKDEOsr/sZwffNva1FEIKmIi/tPx1shz
-         c6MlTaOUg9kTXrTpZMpgp464pdJuIbbO8HxktLEyJd1RrUjwM5I+2w+LnlcKh2UgaJV/
-         OsI9AWbdkZhTrRFbzz6VCAl+0sHeU2usVucWvBIQbc9JqPJSYU9ByE2zYGKYhyA0kRCS
-         g+NZoxf+2GEMjPF7sCFcl0fP1sy3x2oW+0/CkgD/n4Y+a2KNsUReiZWrJSYoQ7WHAesK
-         0d+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVEwYQgkih2AszPEPY6XlQzka4uMp/nZlPkS0MGQAklACfpqdnK35sIGHgxoaswyPgLjyl2rg9JAaF/8bZqIvLMXzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznAeHZ0QyJ3UKfnkm6ft+BT25x/TbPFRQyDguJtfwHFhrL0hZC
-	Dv32W6u2vlHzJwtA+xOA9Tpnhqb2pJvzB3ZpnW/tMsp6xl5WTgugYpWGse2HbWBMkGikcZWKGoJ
-	7EHNXiURD71l97XvTd1MysO7ZDWy14B51oUkmCE1u7Iufd5nhir2kAGaDEeU4u/WPDpS+OWLdTH
-	QiuKhMa19KdHg3/OHvMO3G2Np8kPHdi4I/+ZqORv5lTgrmLnew
-X-Gm-Gg: ASbGncswBJ3/cjS5zIK3RVI76Un36aV7tdfK6PLuWAYJzpONPXptG+2HV9F86oBlU1c
-	alVoFZXNJ2RBH+8vKvhSv3P9m+cfMl5bqvLJnc8Wf40PvZ53V0RJdQdE+Kz07o/su+jf4F3v0vc
-	M0zXM5OJICUzJ6aNMfT/z/EHw5VBJs7d0spTu15qkFuZwTibYd+xxwruie7d4+IeyvLY+FQtkms
-	HxGDJ+8
-X-Received: by 2002:a05:690c:6d11:b0:786:7017:9506 with SMTP id 00721157ae682-78a8b50d225mr179507887b3.43.1764199799262;
-        Wed, 26 Nov 2025 15:29:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEM04nXlhLyHhOF4P67Ng8vhtTcvmR+j3q1fjlImcKmWBZ7ursgcIGrQVIExNz7VgFRd9eGD2XP0bTyZR5NgLY=
-X-Received: by 2002:a05:690c:6d11:b0:786:7017:9506 with SMTP id
- 00721157ae682-78a8b50d225mr179507437b3.43.1764199798871; Wed, 26 Nov 2025
- 15:29:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764204241; x=1764809041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X7D/SOi2ecN39BhKBlvFMFvS97PTD1c0CHuxKvuCC8A=;
+        b=NpvJxnBIQ4na965dJaDbxAcfF7KeO/sd3Av3Bp7pYh4SayN+RgWztxINLvNLwVTDmn
+         f3L2b9WieqZOpirE/W5P7QDkuTtNFi/E7ciG0/4EZW9kWrjzRUo3Fk3aABH17FkKL+35
+         22DJWFpwVLe+JHFyaPUDuXvu7WNdhGU3HknjeZ9mNcK5ucYjtrFzUyXRcMdB9QM34mjE
+         JO0FbYFQ6ROjPkk9ad5byNZOj350Zp+2jcYQesZaJOtNGv/dsXHERzqFzgaN2POd1SUF
+         VxMxY8lfaVjdfkBm8bCWEiPdCU+76gKLY7Z+bwuyDuXOIjNTiOaRXL7BcLnORZO+aATm
+         6STg==
+X-Forwarded-Encrypted: i=1; AJvYcCWv2KS9fB8rGgLLiwvUi7zgdAG7FWonRLC66mpZbYvMFaSoGEXWIhLvgNTpuhYm5VhmnzwAssWD4eDlwnM0cRbTngQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypFfpPh1mcmZgyN0P2nHKumqoRkvFKkiQH+Bi2ejXntpqHsVl2
+	QgbhnEufWN018Lj8gwsuNvMUyNO3VX8NJgSlULjE3u1KvLEIpYeiA4wv
+X-Gm-Gg: ASbGnctXF5Z4rohz0n/05OfHZFqmgvWTK3npL908R7PtDDLfHCP8CLYkpmpPUUt2hFz
+	VsjoXQGe46j/ev7WG1nacDq4sI2TQdQeZDmh7H7rNCMk8Cglb0X86VI3PmWx1PBgQBXwITKRAB3
+	Gdg4yPk9CmbFMr8NcyinThZKd0pkLzgfadyb7/Zp+1JSRJP14Z/NvfsVGibwPkKworV5pgNc9Uq
+	ETqabemIpDJMtKJi45FS2bkSUFppeFt6ux38CX4yW5B0gkKwQZSDS5i1T1TV0cchvJhqsjJ+Mf6
+	7QEbe6ykqnw+iee3ID8KohAMg7XYYKcWer33qtGZdtYwU2vAliZVa9Z/0VDMXZio3hT3XV4MhDk
+	gch39FmbcBtl8zWHAqHRVcLIAQzLuBxyQpfrdBJzTbwqN8lTKaqELX7q5BmP7YRitJ4+Ju4/7RR
+	nB9bsVfrN8ncfihDkhNJncLJVC4zOua7o=
+X-Google-Smtp-Source: AGHT+IF5sxqeF7/QZTdBnTq4C94IH3X+/gRFD/p3Uasr8vrMeNSwp8x1kirv9w3cIWg+fZmvWcZx3g==
+X-Received: by 2002:a05:6a21:3392:b0:35d:8881:e6ba with SMTP id adf61e73a8af0-3614ee3889dmr25218508637.49.1764204240986;
+        Wed, 26 Nov 2025 16:44:00 -0800 (PST)
+Received: from xiao.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-be508bfd8ffsm23902a12.17.2025.11.26.16.43.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 16:44:00 -0800 (PST)
+From: Xiang Gao <gxxa03070307@gmail.com>
+To: sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	dhowells@redhat.com,
+	kuba@kernel.org,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	linux-trace-kernel@vger.kernel.org,
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: [PATCH v3] dma-buf: add some tracepoints to debug.
+Date: Thu, 27 Nov 2025 08:43:52 +0800
+Message-Id: <20251127004352.376307-1-gxxa03070307@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022183717.70829-1-npache@redhat.com> <20251022183717.70829-14-npache@redhat.com>
- <541a75fe-3635-49ab-b61f-d86afc96df98@lucifer.local>
-In-Reply-To: <541a75fe-3635-49ab-b61f-d86afc96df98@lucifer.local>
-From: Nico Pache <npache@redhat.com>
-Date: Wed, 26 Nov 2025 16:29:32 -0700
-X-Gm-Features: AWmQ_bmAlUVjee7DwzVRQDWabQ2jDP4iBXrMJ-Yz-HT4KcafaonxgE42edAAM08
-Message-ID: <CAA1CXcBMWc04Z+7mdDAZHkSj5WGDAMc+-4p7JiTme3xCqtNXFg@mail.gmail.com>
-Subject: Re: [PATCH v12 mm-new 13/15] khugepaged: avoid unnecessary mTHP
- collapse attempts
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com, 
-	ziy@nvidia.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org, 
-	peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com, 
-	sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, kas@kernel.org, 
-	aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com, 
-	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
-	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, jglisse@google.com, 
-	surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, hughd@google.com, 
-	richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz, 
-	rppt@kernel.org, jannh@google.com, pfalcato@suse.de
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YoTe4zMjvvPvyuhDZXZOtMZjym1wIMk98Y4oJ_7brhg_1764199799
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 19, 2025 at 5:06=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Oct 22, 2025 at 12:37:15PM -0600, Nico Pache wrote:
-> > There are cases where, if an attempted collapse fails, all subsequent
-> > orders are guaranteed to also fail. Avoid these collapse attempts by
-> > bailing out early.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  mm/khugepaged.c | 31 ++++++++++++++++++++++++++++++-
-> >  1 file changed, 30 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index e2319bfd0065..54f5c7888e46 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -1431,10 +1431,39 @@ static int collapse_scan_bitmap(struct mm_struc=
-t *mm, unsigned long address,
-> >                       ret =3D collapse_huge_page(mm, address, reference=
-d,
-> >                                                unmapped, cc, mmap_locke=
-d,
-> >                                                order, offset);
-> > -                     if (ret =3D=3D SCAN_SUCCEED) {
-> > +
-> > +                     /*
-> > +                      * Analyze failure reason to determine next actio=
-n:
-> > +                      * - goto next_order: try smaller orders in same =
-region
-> > +                      * - continue: try other regions at same order
->
-> The stack is a DFS, so this isn't correct, you may have pushed a bunch of=
- higher
-> order candidate mTHPs (I don't like plain 'region') which you will also t=
-rue.
->
-> > +                      * - break: stop all attempts (system-wide failur=
-e)
-> > +                      */
->
-> This comment isn't hugely helpful, just put the relevant comments next to=
- each
-> of the goto, continue, break (soon to be return re: review below) stateme=
-nts
-> please.
->
-> > +                     switch (ret) {
-> > +                     /* Cases were we should continue to the next regi=
-on */
-> > +                     case SCAN_SUCCEED:
-> >                               collapsed +=3D 1UL << order;
-> > +                             fallthrough;
-> > +                     case SCAN_PTE_MAPPED_HUGEPAGE:
-> >                               continue;
->
-> Would we not run into trouble potentially in the previous patch's impleme=
-ntation
-> of this examing candidate mTHPs that are part of an already existing huge=
- page,
-> or would a folio check in the collapse just make this wasted work?
+From: gaoxiang17 <gaoxiang17@xiaomi.com>
 
-whoops almost missed this comment.
+I want to track the status of dmabuf in real time in the production environment.
+But now we can only check it by traversing the fd in the process or dmabuf_list.
 
-There is a folio check in the __collapse_huge_page_isolate function
-that handles this. I think Dev has some plans to try and add
-partially-mapped support as the todo comment suggests (I think he
-already has some patches from earlier mTHP work).
+For example:
+   binder:2962_2-2962    [005] ...1.   208.453940: dma_buf_export: exp_name=qcom,system name=(null) size=28672 ino=2580 f_refcnt=2
+   binder:2962_2-2962    [005] ...1.   208.453943: dma_buf_fd: exp_name=qcom,system name=(null) size=28672 ino=2580 fd=9 f_refcnt=2
+   binder:2962_2-2962    [005] ...1.   208.453977: dma_buf_mmap_internal: exp_name=qcom,system name=qcom,system size=28672 ino=2580 f_refcnt=4
+     kworker/5:2-194     [005] ...1.   208.460580: dma_buf_put: exp_name=qcom,system name=ab pid [8176] size=28672 ino=2580 f_refcnt=3
+    RenderThread-11305   [007] ...1.   208.599094: dma_buf_get: exp_name=qcom,system name=ab pid [8176] size=217088 ino=2579 fd=1114 f_refcnt=7
+    RenderThread-11305   [007] ...1.   208.599098: dma_buf_attach: dev_name=kgsl-3d0 exp_name=qcom,system name=ab pid [8176] size=217088 ino=2579 f_refcnt=7
+           <...>-14      [001] ...1.   208.726359: dma_buf_detach: dev_name=kgsl-3d0 exp_name=qcom,system name=ab pid [3317] size=217088 ino=2581 f_refcnt=3
 
-/*
-* TODO: In some cases of partially-mapped folios, we'd actually
-* want to collapse.
-*/
+Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+---
+ drivers/dma-buf/dma-buf.c      |  57 ++++++++++-
+ include/trace/events/dma_buf.h | 166 +++++++++++++++++++++++++++++++++
+ 2 files changed, 222 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/dma_buf.h
 
->
-> > +                     /* Cases were lower orders might still succeed */
-> > +                     case SCAN_LACK_REFERENCED_PAGE:
-> > +                     case SCAN_EXCEED_NONE_PTE:
->
-> How can we, having checked the max_pte_none, still fail due to this?
->
-> > +                     case SCAN_EXCEED_SWAP_PTE:
-> > +                     case SCAN_EXCEED_SHARED_PTE:
-> > +                     case SCAN_PAGE_LOCK:
-> > +                     case SCAN_PAGE_COUNT:
-> > +                     case SCAN_PAGE_LRU:
-> > +                     case SCAN_PAGE_NULL:
-> > +                     case SCAN_DEL_PAGE_LRU:
-> > +                     case SCAN_PTE_NON_PRESENT:
-> > +                     case SCAN_PTE_UFFD_WP:
-> > +                     case SCAN_ALLOC_HUGE_PAGE_FAIL:
-> > +                             goto next_order;
-> > +                     /* All other cases should stop collapse attempts =
-*/
->
-> I don't love us having a catch-all, plase spell out all cases.
->
-> > +                     default:
-> > +                             break;
-> >                       }
-> > +                     break;
->
-> _Hate_ this double break. Just return collapsed please.
->
-> >               }
-> >
-> >  next_order:
-> > --
-> > 2.51.0
-> >
->
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 2bcf9ceca997..7cef816ddcac 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -35,6 +35,18 @@
+ 
+ #include "dma-buf-sysfs-stats.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/dma_buf.h>
++
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_export);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_mmap_internal);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_mmap);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_put);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_attach);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_detach);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_fd);
++EXPORT_TRACEPOINT_SYMBOL(dma_buf_get);
++
+ static inline int is_dma_buf_file(struct file *);
+ 
+ static DEFINE_MUTEX(dmabuf_list_mutex);
+@@ -220,6 +232,11 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ 	    dmabuf->size >> PAGE_SHIFT)
+ 		return -EINVAL;
+ 
++	if (trace_dma_buf_mmap_internal_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_mmap_internal(dmabuf);
++	}
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ 
+@@ -745,6 +762,11 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 
+ 	__dma_buf_list_add(dmabuf);
+ 
++	if (trace_dma_buf_export_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_export(dmabuf);
++	}
++
+ 	return dmabuf;
+ 
+ err_dmabuf:
+@@ -779,6 +801,11 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
+ 
+ 	fd_install(fd, dmabuf->file);
+ 
++	if (trace_dma_buf_fd_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_fd(dmabuf, fd);
++	}
++
+ 	return fd;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+@@ -794,6 +821,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+ struct dma_buf *dma_buf_get(int fd)
+ {
+ 	struct file *file;
++	struct dma_buf *dmabuf;
+ 
+ 	file = fget(fd);
+ 
+@@ -805,7 +833,14 @@ struct dma_buf *dma_buf_get(int fd)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return file->private_data;
++	dmabuf = file->private_data;
++
++	if (trace_dma_buf_get_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_get(dmabuf, fd);
++	}
++
++	return dmabuf;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
+ 
+@@ -825,6 +860,11 @@ void dma_buf_put(struct dma_buf *dmabuf)
+ 		return;
+ 
+ 	fput(dmabuf->file);
++
++	if (trace_dma_buf_put_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_put(dmabuf);
++	}
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
+ 
+@@ -998,6 +1038,11 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_dynamic_attach, "DMA_BUF");
+ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+ 					  struct device *dev)
+ {
++	if (trace_dma_buf_attach_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_attach(dmabuf, dev);
++	}
++
+ 	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_attach, "DMA_BUF");
+@@ -1023,6 +1068,11 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+ 	if (dmabuf->ops->detach)
+ 		dmabuf->ops->detach(dmabuf, attach);
+ 
++	if (trace_dma_buf_detach_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_detach(dmabuf, attach->dev);
++	}
++
+ 	kfree(attach);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
+@@ -1488,6 +1538,11 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+ 	vma_set_file(vma, dmabuf->file);
+ 	vma->vm_pgoff = pgoff;
+ 
++	if (trace_dma_buf_mmap_enabled()) {
++		guard(spinlock)(&dmabuf->name_lock);
++		trace_dma_buf_mmap(dmabuf);
++	}
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
+diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
+new file mode 100644
+index 000000000000..fe9da89bacd0
+--- /dev/null
++++ b/include/trace/events/dma_buf.h
+@@ -0,0 +1,166 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM dma_buf
++
++#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DMA_BUF_H
++
++#include <linux/dma-buf.h>
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(dma_buf,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf),
++
++	TP_STRUCT__entry(
++		__string(exp_name, dmabuf->exp_name)
++		__string(name, dmabuf->name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++		__field(long, f_refcnt)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__assign_str(name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++		__entry->f_refcnt = file_count(dmabuf->file);
++	),
++
++	TP_printk("exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
++		  __get_str(exp_name),
++		  __get_str(name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->f_refcnt)
++);
++
++DECLARE_EVENT_CLASS(dma_buf_attach_dev,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
++
++	TP_ARGS(dmabuf, dev),
++
++	TP_STRUCT__entry(
++		__string(dname, dev_name(dev))
++		__string(exp_name, dmabuf->exp_name)
++		__string(name, dmabuf->name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++		__field(long, f_refcnt)
++	),
++
++	TP_fast_assign(
++		__assign_str(dname);
++		__assign_str(exp_name);
++		__assign_str(name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++		__entry->f_refcnt = file_count(dmabuf->file);
++	),
++
++	TP_printk("dev_name=%s exp_name=%s name=%s size=%zu ino=%lu f_refcnt=%ld",
++		  __get_str(dname),
++		  __get_str(exp_name),
++		  __get_str(name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->f_refcnt)
++);
++
++DECLARE_EVENT_CLASS(dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_STRUCT__entry(
++		__string(exp_name, dmabuf->exp_name)
++		__string(name, dmabuf->name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++		__field(int, fd)
++		__field(long, f_refcnt)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__assign_str(name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++		__entry->fd = fd;
++		__entry->f_refcnt = file_count(dmabuf->file);
++	),
++
++	TP_printk("exp_name=%s name=%s size=%zu ino=%lu fd=%d f_refcnt=%ld",
++		  __get_str(exp_name),
++		  __get_str(name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->fd,
++		  __entry->f_refcnt)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_export,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_put,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_attach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
++
++	TP_ARGS(dmabuf, dev)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct device *dev),
++
++	TP_ARGS(dmabuf, dev)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_get,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++#endif /* _TRACE_DMA_BUF_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.34.1
 
