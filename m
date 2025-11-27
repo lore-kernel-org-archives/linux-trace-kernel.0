@@ -1,115 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C062C2D6E61;
-	Thu, 27 Nov 2025 06:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D248C30F815;
+	Thu, 27 Nov 2025 07:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764223941; cv=none; b=uS0WJlO7ma4MT3p1ETAGVrvzrktK5fK58rQ8npv96Mbx/kGzhX2yIl903CHNYjEljJ2W0wgp5OWmYeQHohX8uhrLla9wrn7vxtwsM/WgnmyGOMYWjz4eNpJGYCY9Z8TiZnZRJEKraegIIp4OH17hRQAPALkc0Ampf+VCFBdHXNk=
+	t=1764230283; cv=none; b=ghBGtlKksyM7+0HVqVbXs0P4KeF6vKlswsv3sas3fQR613sj6no4DluucXa5MIgnnuh14JD184/N3lijz9qoFr6beEI/I+CluoyI5nkdhVHMXtd5sbfMKTR9UYU+ZX6c4fdNKPDMgMSH3qY6D9xiQdWdItj9FZTL+ArLTcPZuGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764223941; c=relaxed/simple;
-	bh=SHykcjcXOicpMg1lNGih+WJT2lVGik1tv3mTORvyUFI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UqIglBkH/uz2vCYAnLJusir2Aih5HTYneZL1VZ1CaHTg77xxbYjvrrAufcZJOc5tND0l0Ghj/kOeCY+0PeqyueFfj6V/Z8qvT5+eTOmMKl0Vta+rIuTUCa2yXAAHlKUpW31KJ3LuxnDnmKmqX8gUj0pikpSJMCLwHD40owJnvSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZes9LtM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764230283; c=relaxed/simple;
+	bh=mC2wFX6pB0jB2YWzYvpTlw3fGCrGBW5weP0O2M2WypA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3Tcbfpq+qt7TfYtNWg9BDcNIP2eUT13Th4A694Lx0j0yA9UjXuIDebHf5b0fZpdf2gxhEHEl53lmLpmy+Rnn0dkz8ND6p+VPyXSkxF1F9PMlIv9ek7I/8Tt0zfBbpbiDlhk01+uS6Zsq7emIgh1gAHBK/oKoEJgFDfJJPvEyNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epp9GFfk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZes9LtM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15CAC4CEF8;
-	Thu, 27 Nov 2025 06:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epp9GFfk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D77DC4CEF8;
+	Thu, 27 Nov 2025 07:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764223941;
-	bh=SHykcjcXOicpMg1lNGih+WJT2lVGik1tv3mTORvyUFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CZes9LtMRpUZLC/HdCtNbX1O45EyHJ5NqT5DSAkS1zFTOU7JJFu1xtVb2JB5BDP2/
-	 4zTCEXCVf/zOPhK+ter+3ufGbdB8OmEF0lgcCEJvlrPaUsZ6HPqY7pXWDrAlCZWenY
-	 Y3hGEey1aYjwDAvT2I56cGtfxKMWkvh0cIHMfq3K0K3ZsGJbgWktysaOxOPrTwsHkK
-	 io/HCbfq0JWAB/5O4KuUPoZXMpO/YEETkZc3zbJrafmZXMK0F41bY+zuqm6rD8M9QK
-	 pYeWbFXStM/G5F8+ZJTxPW2m+vED9c1A1dBAnkHDVYwfaunxQ4Bwl6JgkCtNI4EaiQ
-	 LnH4t7QHDpwiA==
-Date: Thu, 27 Nov 2025 15:12:18 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-Cc: rostedt@goodmis.org, corbet@lwn.net, shuah@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] Support comma-separated symbols and :entry/:exit
-Message-Id: <20251127151218.4763b25c751bb2aac4b1ee36@kernel.org>
-In-Reply-To: <20251126184110.72241-1-seokwoo.chung130@gmail.com>
-References: <20251126184110.72241-1-seokwoo.chung130@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1764230282;
+	bh=mC2wFX6pB0jB2YWzYvpTlw3fGCrGBW5weP0O2M2WypA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=epp9GFfkNMS7o71m8LQZzPi1+DkxEcSUHuvtXAD2X63KDtfhvcFJ6yMolv+NweeOK
+	 OWQnRBJ55ILilTf7eP08/xrPoKMKUGORuZl5mJNBdFnCscP2cCVFK18NOdDteY3uNM
+	 HwTHdQdgEGH/+1Y93k9SS93IMsK2pXCNJC2c6vHBjgObUnJ0XtNxbKM3p38l/5iQ/X
+	 uUW1j93jqnmIzIeo+xgktVy1TrlU3vE2zpEq7ozOour8K3ijyhGSLzzR/MJwv9p3yX
+	 za+gmxChHHMKRjJCb0vAkWKgzj5dZDRmb4IierozrwosvNzklYZ8Zm/WRfayI0MWR3
+	 4dHGxAjOCkzWA==
+Date: Wed, 26 Nov 2025 23:58:01 -0800
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
+ member
+Message-ID: <202511262356.6FE5084CB0@keescook>
+References: <20251126145249.05b1770a@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126145249.05b1770a@gandalf.local.home>
 
-On Wed, 26 Nov 2025 13:41:07 -0500
-"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com> wrote:
-
-> Extend fprobe to support list-style filters and explicit entry/exit suffixes.
-> Currentyl, fprobe only supports a single symbol (or wildcard) per event.
-> This patch allows users to specify a comma-separated list of symbols.
+On Wed, Nov 26, 2025 at 02:52:49PM -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> New Syntax:
-> - f:[GRP/][EVENT] func1,func2,func3:entry
-> - f:[GRP/][EVENT] func1,func2,func3:exit
-
-Thanks for updating!
-
+> The trace_marker_raw file in tracefs takes a buffer from user space that
+> contains an id as well as a raw data string which is usually a binary
+> structure. The structure used has the following:
 > 
-> Logic changes:
-> - Refactor parsing logic into 'parse_fprobe_spec'
-> - Support '!' prefix for exclusion
-> - Disable BTF lookup ('ctx->funcname = NULL') when a list or wildcard is used,
->   as a single function signature cannot apply to multiple functions.
-> - Reject legacy '%return' suffix when used with lists or wildcards
-> - Update tracefs/README
+> 	struct raw_data_entry {
+> 		struct trace_entry	ent;
+> 		unsigned int		id;
+> 		char			buf[];
+> 	};
 > 
-> Testing:
-> Verified on x86_64 via QEMU. Checked registration of lists, exclusions, and
-> explicit suffixes. Verified rejection of invalid syntax including trailing
-> commas and mixed legacy/new syntax.
+> Since the passed in "cnt" variable is both the size of buf as well as the
+> size of id, the code to allocate the location on the ring buffer had:
 > 
-> Seokwoo Chung (Ryan) (3):
->   docs: tracing/fprobe: Document list filters and :entry/:exit
->   tracing/fprobe: Support comma-separated symbols and :entry/:exit
-
-For the next time, please add docs patch after code change because of bisect.
-(Or, include the document update into code update.)
-
->   selftests/ftrace: Add accept cases for fprobe list syntax
-
-Testing after code is good. :)
-
-Thank you,
-
+>    size = struct_size(entry, buf, cnt - sizeof(entry->id));
 > 
-> Changes in v4:
-> - Added validation to reject trailing commas (empty tokens) in symbol lists
-> - Added vaildation to reject mixed of list syntax with %return suffix
-> - Refactored parse_fprobe_spec to user __free(kfree) for automatic memory
->   cleanup
-> - Removed the now-unused parse_symbol_and_return function to avoid compiler
->   warnings.
-> - Tigtened %return detection to ensure it only matches as a strict suffix, not a
->   substring
-> - Link to v3: https://lore.kernel.org/lkml/20250904103219.f4937968362bfff1ecd3f004@kernel.org/
+> Which is quite ugly and hard to understand. Instead, add a helper macro
+> called struct_offset() which then changes the above to a simple and easy
+> to understand:
 > 
->  Documentation/trace/fprobetrace.rst           |  17 +-
->  kernel/trace/trace.c                          |   3 +-
->  kernel/trace/trace_fprobe.c                   | 209 ++++++++++++++----
->  .../ftrace/test.d/dynevent/fprobe_list.tc     |  92 ++++++++
->  4 files changed, 269 insertions(+), 52 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
+>    size = struct_offset(entry, id) + cnt;
 > 
-> -- 
-> 2.43.0
+> This will likely come in handy for other use cases too.
 > 
+> Link: https://lore.kernel.org/all/CAHk-=whYZVoEdfO1PmtbirPdBMTV9Nxt9f09CK0k6S+HJD3Zmg@mail.gmail.com/
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+Works for me!
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+> ---
+>  include/linux/overflow.h | 12 ++++++++++++
+>  kernel/trace/trace.c     |  2 +-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 725f95f7e416..736f633b2d5f 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -458,6 +458,18 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+>  #define struct_size_t(type, member, count)					\
+>  	struct_size((type *)NULL, member, count)
+>  
+> +/**
+> + * struct_offset() - Calculate the offset of a member within a struct
+> + * @p: Pointer to the struct
+> + * @member: Name of the member to get the offset of
+> + *
+> + * Calculates the offset of a particular @member of the structure pointed
+> + * to by @p.
+> + *
+> + * Return: number of bytes to the location of @member.
+> + */
+> +#define struct_offset(p, member) (offsetof(typeof(*(p)), member))
+
+I wonder if the kerndoc for this and offsetof() should reference each
+other? "For a type instead of a pointer, use offsetof()" etc...
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Kees Cook
