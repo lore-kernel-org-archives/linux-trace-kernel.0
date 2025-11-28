@@ -1,139 +1,84 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAEE23C4F4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 15:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025F22FF22;
+	Fri, 28 Nov 2025 17:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764343131; cv=none; b=Hxy5kr1i+sRMQtOck0k1fbwSGTTPkiNZ1vVt1MLyA8rWVlwPDpW4uIxq4eqWQXqov7xiUvT95CZCqXJfIWCx9bwW164g28w7BxWylf0Hi24CTL256S0uKWvnAYAi0SkaTeAhwo9Adpr30VgFoMnppIacXGbLiAgQwiJ07pMYo9Y=
+	t=1764350367; cv=none; b=F3uR1oRYhvtWaWpK6ZhVGzqm2gVMDBzA+dfD2nWQyy6l+50TID0+AonWSZAQrcq5npVhuzbINKTI0yLLZt0pFNxnsyhea+J6pgtR1ZT0DgOQN46Eyl7EvfmbVkPfTifmPOpNCjeyIF8UWpG+eG1NyEXnTjS0jtEiFb8OLz0ep7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764343131; c=relaxed/simple;
-	bh=77vkR0+1JCLSlChPUV7mfgMnrTVHDOFl297gadUE40c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJHM8exX3BuF4PegbnZwtkbtECMDfTB4OoqpUQJlnl4MeQOGVQup/8RL306MwkJPc6O/RQMkQm/EgcJRqHwBybbRd7dga6ViK0BG5MjZwrOzMYqVyTSjyAWrBAZpIrmWtAESb6k5eAzgo29jcTW6g7FnnvYshHemdY/EkyL9Dn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vld9HZWN; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vld9HZWN"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-29806bd47b5so11758285ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 07:18:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764343128; x=1764947928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qB15gwXBroqkrK/PKr7oQFDmRDy1z34ETO6NhfgHsEw=;
-        b=Vld9HZWN/LIZDhgmPy0nKU4VeEWN8ZwtgJdDuy8HY1Vrq4GVkz0mxBMkewz0OYgg4U
-         p7BhFhq+/a+EubimiWPsMx6osbX5V0iRJ9dHFLy+4ibOVTlH2HVd1ksLSHoY8QJsnrSn
-         Qwoiu8j7jtUP3SmSjnVqvB20+Q1t5xW+7qRBSpEwOLRoOQhQaMDeLdHNipVKqQenqE0G
-         yW8rWAUCu4KaO25oiCaEDxYm35+QC8SelfzRLyuJHbu+r57yBA9XnTjOHX9g5JKwSwvT
-         67hOEQQgVnkCBeP/Q0BHFJaFlQlBmOQ2gKhZsiXAVpsz+npuerkwuIKUN3jMbTNZw3np
-         /zjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764343128; x=1764947928;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qB15gwXBroqkrK/PKr7oQFDmRDy1z34ETO6NhfgHsEw=;
-        b=kaJHhfUoZOg1DgqfxgAjIbT2ITpOXTaudizU3+tQYEolG4spDMhHXPaECy7kHSc4FM
-         EVmYZgs4TZs1mvgyOKC5HJnPrc6pa/ELzdyseC/y8ts6AD5qfBGLPT22GcLgN3E3B8i4
-         K5StHlO3RFgKH5q29sp4W9d01PTfSkDehnoMop96RptEjtPx5suogh67QFArF7d85oOU
-         YGTQ/AMOeMvxHxhuxI5pJcFcCPYcD0FsHie/qOm9pLlAfpFHYWXAxlGaZIT/J4V+gIIp
-         7LE4xKa99Nz99GUczSJDs+e7rt/72aelBy7+fZbCSFGCKq9VehbhSYBnoIXln2uLc2m4
-         VFVw==
-X-Gm-Message-State: AOJu0YxOQ9zjuYovw/qXHCgHx0DM5X3EzmXnxJuSnx28oFrZKJkCPtbg
-	kxzmn2Tlhpl0KWwa5nrYT0QL54PondvrYMG6HE65uXDjLyhxLAI/6/4=
-X-Gm-Gg: ASbGnct+rzCx28qb5glKRLp8uTDaGdcECi8CqlkL0Mn6PbMsNFCh6fg4TctP7aOXih6
-	f3/OD7p02xg+u4ufby0uxxlq5j/8NQRF7kq/Kss0wQE4MfSLpGfBWFQWidB3XLPq6u5ngvknwWu
-	jzaWOuVnLfPZ/HX0ed73tf5ayCwVaSBIcYI0U2eYHZKjLJCCvjNE+tIBW2pxip6Dw1YtcVud+Gh
-	93k49irmFEND2gg6kk2glWMqTeU0AD51+6/ed8yEUKn+Fin9Vm+kW6Lsu0z3UYj6jjp6xE/0CVb
-	8gZ6SzLmLwPluL1GjakVbQ4fAJUXjE9U6eMCQMUoHeq4Uy4Xts4DLrmwKrBXkY/Wutf7Uhue7s4
-	MJcSBY+HM7gvUN61F2kx0j5ns3U7H2Veh5fbuN0ek+h9v0qjFzpSp/i8OBY4QfzbfNhiEHlc1uh
-	gTLrHgL7oF4WfQN/YNQJBMWr/6QMuF9mYzWrZ8sRYri4nmtw==
-X-Google-Smtp-Source: AGHT+IFMZPGeYzAXlC4s7H1GRQcgTEvVdLdV7GOhi3U/+54OuO5WVgJO+4Ca80HXmsdLRnU/cszaIQ==
-X-Received: by 2002:a17:902:ebc1:b0:26a:ac66:ef3f with SMTP id d9443c01a7336-29b6c3c2857mr249858005ad.8.1764343127369;
-        Fri, 28 Nov 2025 07:18:47 -0800 (PST)
-Received: from samee-VMware-Virtual-Platform.. ([2409:40c0:1f:b21d:eb16:b830:6608:73b4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-be4fb2490bcsm5064944a12.2.2025.11.28.07.18.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Nov 2025 07:18:46 -0800 (PST)
-From: Sameeksha Sankpal <sameekshasankpal@gmail.com>
-To: rostedt@goodmis.org,
-	corbet@lwn.net
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sameeksha Sankpal <sameekshasankpal@gmail.com>
-Subject: [PATCH] Documentation: tools/rtla: remove undefined substitutions in common_options.rst
-Date: Fri, 28 Nov 2025 20:48:38 +0530
-Message-ID: <20251128151838.7985-1-sameekshasankpal@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1764350367; c=relaxed/simple;
+	bh=K2E1U3epY0iQxOIKwuNQPGRgZrhTX5b8hjszIeNOJxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ujFcAv5oHI88ZPFM86gPBofJTY9Gz7G8l2A5Q4yWa8LUxIlXiaZ/8pvgsTSJfEyuH/xH28XYIeC5njLpBEMdBlDAltRApzQht1fBMsMyBcvA3s4ycifcPVh2AuZUjlNdlfhudlu2cwLUZYSLr7SyEY7bivUazte8zV5hg63B2I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 533055A20D;
+	Fri, 28 Nov 2025 17:19:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3F48D20026;
+	Fri, 28 Nov 2025 17:19:21 +0000 (UTC)
+Date: Fri, 28 Nov 2025 12:19:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
+ member
+Message-ID: <20251128121919.521ec9bf@robin>
+In-Reply-To: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
+References: <20251126145249.05b1770a@gandalf.local.home>
+	<202511262356.6FE5084CB0@keescook>
+	<20251127204342.05fc985e@robin>
+	<6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
+	<20251127222710.324357cf@robin>
+	<CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zr11k9aw3mznh5purmm9fcfxsooxro5g
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 3F48D20026
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18tjifUlLmG56VnQe7OD5sNSWWDhKiQIQc=
+X-HE-Tag: 1764350361-388986
+X-HE-Meta: U2FsdGVkX19/MRDt2aaRwVbFj3c/tHqEG/UidBr5SeT/sX726m9pde2gZ1c+57IxFnDKYbsqfDsFM9NO0tvwevygsqtRRVgsoffB1dcYvs0r2qAtGjMIB8xyhIUEvvGtCyN7aY44oQO10r6GyS6cuPxjxCpX9Ov/2+mi0IL1eFzQIxQKoNlMRmn2UJRBwVMfCpZ8JiVFb+cQ/81RFcHq6MCLwLf/mvzcP28ydKfETU29Gcn/GCUjlpZadEaWozqOC/LiV2DfhRDzxyeZsA8eWQxgd3QjMQQttaZAKGKP5d1olsGpfJfNklK2jNVuIK7YzZH2shyCEeNmzcXI1WwbhH5HZxEdZ51CUkeCR1quOr97FOu4D2YQ0d7iJ0GYlj8G
 
-The RTLA common options documentation uses several Sphinx substitution
-placeholders (|threshold|, |tool|, |thresharg|, |tracer|, |actionsperf|)
-that are not defined anywhere in the tree. This causes the htmldocs
-build to fail with multiple "Undefined substitution" errors.
+On Thu, 27 Nov 2025 21:35:35 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Replace these undefined substitutions with plain text or generic
-placeholders (<tool>, <threshold-option>, <tracer>) to ensure the
-documentation builds cleanly while preserving the intended meaning of
-the examples.
+> So that 'xyz_t()' version then gets used for things where you
+> explicitly state the type, and it all looks fairly obvious, eg:
+> 
+>         len = struct_size_t(struct pid, numbers, level + 1);
+> 
+> doesn't get that "WHAA?!??!" kind of reaction.
+> 
+> [ And so I actually think it's good that it only takes an explicit
+> type - if you really have an instance, I think it's better to use just
+> "struct_size(&instance, ...)" even if we _could_ easily make syntax
+> like "struct_size_t(instance, ...)" work. ]
 
-Signed-off-by: Sameeksha Sankpal <sameekshasankpal@gmail.com>
----
- Documentation/tools/rtla/common_options.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+I was thinking about adding a struct_offset_t() but then I noticed that
+struct_size_t() requires adding the type as it is for just getting the
+size of the struct without using a variable. Whereas, I would have
+preferred the struct_offset_t() to use a variable that's not a pointer
+where typeof() is used.
 
-diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
-index 77ef35d3f831..bd5a6f32f5bf 100644
---- a/Documentation/tools/rtla/common_options.rst
-+++ b/Documentation/tools/rtla/common_options.rst
-@@ -56,7 +56,7 @@
- **--on-threshold** *action*
- 
-         Defines an action to be executed when tracing is stopped on a latency threshold
--        specified by |threshold|.
-+        specified by the threshold value.
- 
-         Multiple --on-threshold actions may be specified, and they will be executed in
-         the order they are provided. If any action fails, subsequent actions in the list
-@@ -85,17 +85,17 @@
- 
-         Example:
- 
--        $ rtla |tool| |thresharg| 20 --on-threshold trace
--        --on-threshold shell,command="grep ipi_send |tracer|\_trace.txt"
-+        $ rtla <tool> <threshold-option> 20 --on-threshold trace
-+        --on-threshold shell,command="grep ipi_send <tracer>\_trace.txt"
-         --on-threshold signal,num=2,pid=parent
- 
--        This will save a trace with the default filename "|tracer|\_trace.txt", print its
-+        This will save a trace with the default filename "<tracer>\_trace.txt", print its
-         lines that contain the text "ipi_send" on standard output, and send signal 2
-         (SIGINT) to the parent process.
- 
-         Performance Considerations:
- 
--        |actionsperf|
-+        Note: Executing actions during tracing may introduce additional performance overhead depending on system load, system configuration, and the number of actions triggered.
- 
- **--on-end** *action*
- 
-@@ -110,7 +110,7 @@
- 
-         Example:
- 
--        $ rtla |tool| -d 5s --on-end trace
-+        $ rtla <tool> -d 5s --on-end trace
- 
-         This runs rtla with the default options, and saves trace output at the end.
- 
--- 
-2.43.0
+But for my use cases, I can just add a '&' to struct_offset(), as if
+struct_offset_t() were to take a type, it is no different than
+offsetof().
+
+-- Steve
+
 
