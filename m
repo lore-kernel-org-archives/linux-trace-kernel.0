@@ -1,108 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191C723EA98
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 13:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D6623D297
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 13:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764337988; cv=none; b=ZNodIQPX/uwlq+je4LSSav4F5BWSTO9vsxvReai/DAT3YpGbsV8Ppl3TdtxufPCiHEu5cP2kcyF6PyaGyM3hbGS0W+dWlREYxLXqo+LHQ48uA/bckeg8XvbS9DBA2XE3Nhf7KN2bSTZjGS6Kk3vKbZ6OroKduZmKTKUg/6qb4BI=
+	t=1764338378; cv=none; b=SBKil+Ch4X8E/oTkxHX8ajwGAqgUtPLaawWkkec4io8Q8+EgXWqenaRVyLoae936FqgvRssOSBumo0vwfvgwvf5tGyR2UYmutwxkHa0dn1pJrRDQQ35jVS8bRWwaFVboOg/44ePSkKPFZWM8AgicfjQL6pR4NUi+AEqcS06qzPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764337988; c=relaxed/simple;
-	bh=pbBawiQmtNJdVZxeYvEt9G/XaBTVKaR9xIboieApa7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TJvrq+ugQmoAOy9GHMwLFxSnkjryWvT5FILL4B1CGKfCDSKhGJnDp5yFDhJlVWsG375/m5n4eKoAc83UrQ0suRqLTuLcAlH5hrPD27Wv3yT2FFb4ZgoSXJAZT0dN32kT0pcwVnqPYIqHjdPkW8Bp1s/5/zBiCvrTRVK0fQso/IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OKXHGwIz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764338378; c=relaxed/simple;
+	bh=y7MGR3TiuYXzQGOBsWXv2gEUuADCNMhyD/vJITxbwpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PzYZjRDFAs781o2ZKV6EMZBndEE3Ubik8ZGrerJJPo2JRECMY+u65gsgIP5475XW3URtTIH39oltYwd53ScjdG6lwmhyOtWJXtJKVcSHUQ5zuJ4XM0x9WF/HsmRLUPEpGJOH44a2DC4yWSnHwPOt4I0OO7kgaQUOqe1wIRU1tRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=J71V3TZo; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=J71V3TZo; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKXHGwIz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764337985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbBawiQmtNJdVZxeYvEt9G/XaBTVKaR9xIboieApa7U=;
-	b=OKXHGwIzTUmH5GB4g7tgQWH/LQ6tLcMS8zF6PR3Lx/iFuzWnViORSmnJ5R13mK+qpdLlFP
-	oQG41RQ/PvlzpSP/bNRGPUt/qzHl4HL4/Dnek86rAy5zx4dLRHjaWKGAZCrdaLRJUM4Mpa
-	0MzMj3nV+dOasZy1Y/B+gau7BreYjm0=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642--4gXoDTDNUmdaCJ6850BKQ-1; Fri, 28 Nov 2025 08:53:02 -0500
-X-MC-Unique: -4gXoDTDNUmdaCJ6850BKQ-1
-X-Mimecast-MFC-AGG-ID: -4gXoDTDNUmdaCJ6850BKQ_1764337981
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-59580c95819so1394540e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 05:53:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764337981; x=1764942781;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pbBawiQmtNJdVZxeYvEt9G/XaBTVKaR9xIboieApa7U=;
-        b=LlZ03IOBCF7VYUufu1qaGpNf+rueRrUOOsh9ph7Q6awkl9irmlMfaDs0Ahk8s1N7Ti
-         aZvOkXfPmm8HwjPIBMOW/r2CDitKCNf3SGpj2Q1NxCZiw073gfwNIoWtUK8TPJQ+NEdW
-         1VWaMKt9e23zqcR7fAEJF/ow9Tsw/gztWRDq12piyCQsSYbDOQGX7beLrqZc9doVpDmR
-         s3QDPo7/M3nK96RMM4MGZrnoFdEyATqZgoPCo5XEPFh+wRzJHejLIocbTaqzk83w39B9
-         tvabJuyEdyb5EB5iCwqRuZ0leJpL0e5i08VmLPHeMEDM+yCwYaTn0WcLRIPwpFUCnFJZ
-         dSFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvEo8BSfPO02pgfBXg3jcA5aV+DNgjtIATmwBINgOqbVoUa6PyYIb2XDjd722pnxdXZDxWQBedeLd6xcrezgAGAVc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLKVoV+ChYgZ2vHj+R/b+ummuqHWEiB9IfZswUm0eZO2BBzIaR
-	PYtypviaOoWhuTrAkPmzjfGALCklVYBlD9Qtvm6eIEZPLkJJmyoFsh71ZVVsm9Kfr7N34X7PXUO
-	k8S4lmtOvixXUF21WrP0nDmVqLHfB/iWbkpMMe4Ljx/4IkTdEVJEjpvlu2G8NMWImhylSWb++ZH
-	+PTgQRrMoNFdUx48UupAWNiTp3jwSJjNXGTDDGXXDXzQeBmkeg
-X-Gm-Gg: ASbGncsp+ASV31+szG/6BqTskKEfhwcvuE0GVHkk+U+wYWqBG6G1BeAySFSmY17VXBN
-	uG4GxwPU2IpvVVcGCB97aDXseSvuPuXZaotjuqe3jvclqv+l6eG0my8w+XV3/d1fZd1z46XbyVB
-	9j8EpDnKF2Wz55Tt0WULuUbIMXU/Ocsup6EwwmpkhntXLsoGxr8Bk5FQQfEG/qHx/Q3Q==
-X-Received: by 2002:a05:6512:110a:b0:594:2df2:84c8 with SMTP id 2adb3069b0e04-596a3ecf652mr8065926e87.33.1764337981166;
-        Fri, 28 Nov 2025 05:53:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGxr/p6KFwbxmBeYyfFkOgez8vD9eAT2uUP849jN8015e5rnJowKoYbVC9lcjOKCZyBvhu+4pGX0/eZBkRGR8U=
-X-Received: by 2002:a05:6512:110a:b0:594:2df2:84c8 with SMTP id
- 2adb3069b0e04-596a3ecf652mr8065918e87.33.1764337980757; Fri, 28 Nov 2025
- 05:53:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="J71V3TZo";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="J71V3TZo"
+Received: from pathway.suse.cz (unknown [IPv6:2a07:de40:b2bf:1b::12bd])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 1C22B5BDC1;
+	Fri, 28 Nov 2025 13:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1764338367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=HOcG+jrPa6OGfVHEEKDIojvHtUAzk3DbcK43E7DAYo8=;
+	b=J71V3TZoTu1Zisce46aIKy0DFNQhNFxLK+SsbhJDT3wgAVQ6HLA7J5UVhzS5dLBNDYKd5Q
+	+SKtwRpUYX1QuuQZtM/aOamHwbKkn1yjtaZ5TJBDoIvHEfZiQApr13WJnYyhwGHGtAHTw1
+	P+ibyDAKNK0SujnrYeRO1LqU0MQatjs=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=J71V3TZo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1764338367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=HOcG+jrPa6OGfVHEEKDIojvHtUAzk3DbcK43E7DAYo8=;
+	b=J71V3TZoTu1Zisce46aIKy0DFNQhNFxLK+SsbhJDT3wgAVQ6HLA7J5UVhzS5dLBNDYKd5Q
+	+SKtwRpUYX1QuuQZtM/aOamHwbKkn1yjtaZ5TJBDoIvHEfZiQApr13WJnYyhwGHGtAHTw1
+	P+ibyDAKNK0SujnrYeRO1LqU0MQatjs=
+From: Petr Mladek <pmladek@suse.com>
+To: Petr Pavlu <petr.pavlu@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>
+Cc: Aaron Tomlin <atomlin@atomlin.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v3 0/7] kallsyms: Prevent invalid access when showing module buildid
+Date: Fri, 28 Nov 2025 14:59:13 +0100
+Message-ID: <20251128135920.217303-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251117184409.42831-1-wander@redhat.com> <20251117184409.42831-2-wander@redhat.com>
- <CADDUTFwK=TuhMcfr9C4NXOEQc89wBvdZtv+DtYFuHfc9wh5R=A@mail.gmail.com>
-In-Reply-To: <CADDUTFwK=TuhMcfr9C4NXOEQc89wBvdZtv+DtYFuHfc9wh5R=A@mail.gmail.com>
-From: Wander Lairson Costa <wander@redhat.com>
-Date: Fri, 28 Nov 2025 10:52:49 -0300
-X-Gm-Features: AWmQ_bkeS6Y54WrCji-DPm62oeGH0r4pGKqlqBcxo7rjyOZqWF3Uwi0VtVBxrd0
-Message-ID: <CAAq0SUnYnopSwd2ir_J1roFU31SzK5SQkv1L+WhP=T=Xbq479A@mail.gmail.com>
-Subject: Re: [rtla 01/13] rtla: Check for memory allocation failures
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Crystal Wood <crwood@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: guSXvSMuY9mnrFgwfyYTfJPnvyOqVOBrOh-rKsGpJFE_1764337981
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [15.13 / 50.00];
+	SPAM_FLAG(5.00)[];
+	NEURAL_SPAM_LONG(3.50)[1.000];
+	BAYES_HAM(-3.00)[99.99%];
+	HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	RDNS_NONE(2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ONCE_RECEIVED(1.20)[];
+	MID_CONTAINS_FROM(1.00)[];
+	HFILTER_HELO_IP_A(1.00)[pathway.suse.cz];
+	R_MISSING_CHARSET(0.50)[];
+	HFILTER_HELO_NORES_A_OR_MX(0.30)[pathway.suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	NEURAL_HAM_SHORT(-0.06)[-0.285];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	DIRECT_TO_MX(0.00)[git-send-email 2.52.0];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	TAGGED_RCPT(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[atomlin.com,iogearbox.net,gmail.com,kernel.org,arm.com,google.com,vger.kernel.org,suse.com];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
+	RCVD_COUNT_ZERO(0.00)[0];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b2bf:1b::12bd:from];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spamd-Bar: +++++++++++++++
+X-Rspamd-Queue-Id: 1C22B5BDC1
+X-Spam-Flag: YES
+X-Spam-Score: 15.13
+X-Spam-Level: ***************
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: add header
+X-Spam: Yes
 
-On Fri, Nov 28, 2025 at 10:30=E2=80=AFAM Costa Shulyupin <costa.shul@redhat=
-.com> wrote:
->
-> On Mon, 17 Nov 2025 at 20:54, Wander Lairson Costa <wander@redhat.com> wr=
-ote:
-> > Add checks for the return value of memory allocation functions
-> > and return an error in case of failure. Update the callers to
-> > handle the error properly.
->
-> Would you like to consider using fatal("Out of memory") instead of
-> returning an error code?
-> Anyway there is no work around for out of memory.
->
+This patchset is cleaning up kallsyms code related to module buildid.
+It is fixing an invalid access when printing backtraces, see [v1] for
+more details:
 
-Good idea. I am going to update the patches.
+  + 1st..4th patches are preparatory.
 
-> Costa
->
+  + 5th and 6th patches are fixing bpf and ftrace related APIs.
+
+  + 7th patch prevents a potential race.
+
+
+Changes against [v2]:
+
+  + Fixed typos in commit message [Alexei]
+
+  + Added Acks [Alexei]
+
+
+Changes against [v1]:
+
+  + Added existing Reviewed-by tags.
+
+  + Shuffled patches to update the kallsyms_lookup_buildid() initialization
+    code 1st.
+
+  + Initialized also *modname and *modbuildid in kallsyms_lookup_buildid().
+
+  + Renamed __bpf_address_lookup() to bpf_address_lookup() and used it
+    in kallsyms_lookup_buildid(). Did this instead of passing @modbuildid
+    parameter just to clear it.
+
+
+[v1] https://lore.kernel.org/r/20251105142319.1139183-1-pmladek@suse.com
+[v2] https://lore.kernel.org/r/20251112142003.182062-1-pmladek@suse.com
+
+
+Petr Mladek (7):
+  kallsyms: Clean up @namebuf initialization in
+    kallsyms_lookup_buildid()
+  kallsyms: Clean up modname and modbuildid initialization in
+    kallsyms_lookup_buildid()
+  module: Add helper function for reading module_buildid()
+  kallsyms: Cleanup code for appending the module buildid
+  kallsyms/bpf: Rename __bpf_address_lookup() to bpf_address_lookup()
+  kallsyms/ftrace: Set module buildid in ftrace_mod_address_lookup()
+  kallsyms: Prevent module removal when printing module name and buildid
+
+ arch/arm64/net/bpf_jit_comp.c   |  2 +-
+ arch/powerpc/net/bpf_jit_comp.c |  2 +-
+ include/linux/filter.h          | 26 ++----------
+ include/linux/ftrace.h          |  6 ++-
+ include/linux/module.h          |  9 ++++
+ kernel/bpf/core.c               |  4 +-
+ kernel/kallsyms.c               | 73 ++++++++++++++++++++++++---------
+ kernel/module/kallsyms.c        |  9 +---
+ kernel/trace/ftrace.c           |  5 ++-
+ 9 files changed, 81 insertions(+), 55 deletions(-)
+
+-- 
+2.52.0
 
