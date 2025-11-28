@@ -1,45 +1,45 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CE632D434
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 14:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5220A3112D5
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 14:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764338427; cv=none; b=CFvSzXQfuLfLZweLWoLgB6QwyUSPafuwmXMUU61GCMCITBHpEcGdZyJmjDeulL5YQ1Z1e3TdKcjI9QbMkwYFQPXc/zy7yLlXLTjwy4CetEigasbGx98Ynott1wgX9k8RuWNvzaMhcpeGIPSLAV3dWjvrdJDg12+qo3ktPMxKET0=
+	t=1764338440; cv=none; b=tsL8AVCOfX1bp9kiaGK2++wQY8ByO/YkQbutOuqlWfum8tCmY4XejgcczCfet0ZH+QVhAkSAsajAiexK0+LoTQ+QJhHDvCy2lPrssSYiXr7wHAR9QdlAuz12zD9YKxvuMISTaswgFWQaZQ00Ogu8N1NOfyHy2hVdCxlp4PAXcOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764338427; c=relaxed/simple;
-	bh=TQ44JRCm9Z7EU5hhvTiV5kNg21I4fO8mMdgiQbpQehI=;
+	s=arc-20240116; t=1764338440; c=relaxed/simple;
+	bh=8+22zrEZbmRi2hZ0IxfCnN+FjDUhaZxI/uAGmgwFPqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OnaffGj9QyqUJieqParMtxYlmKF1bwn4nQ5ZTPIxXUYBc6UtlQLEOkrpUWvUYmpg6yYT5+2+eG7a0YubfMXnBG/MCgoldwSDB6/q5Z3NKIbaz96r2q3Y5oC+goViwLuxtZH5J8t5h9z+sSNR2KVz8ZnXxmkrrLiM29av7ADlBdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CFx9ZZnj; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CFx9ZZnj; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=jAOjPfffXZdNkagJzWcHBgXhQmrvGrtRdRpaMZNE1E8zUksS7dLjJG2J1SQHjw31nsz9i88nhOejMzWp9dftHVb/F/DFSZZiTlT2UoP4VbF67eTs25+YrAno4cR/qOgxw+qPSSCfRLQEunniXDL8z3cUW4A5OUXZhSlgqqJUYjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Dpzdk+/O; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=OQG9WMMK; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CFx9ZZnj";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CFx9ZZnj"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Dpzdk+/O";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="OQG9WMMK"
 Received: from pathway.suse.cz (unknown [IPv6:2a07:de40:b2bf:1b::12bd])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 2571E5BE39;
-	Fri, 28 Nov 2025 14:00:24 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTP id 970C25BE7B;
+	Fri, 28 Nov 2025 14:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764338424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764338435; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=33dceX869Yxv+fMp/noNAMlIUoMuEUQYg/YIhCE5Vhs=;
-	b=CFx9ZZnjDUv+TRREegkr3iCHrRHPxBpja+l2HlevKMore3/oOCwMMInxlArFI2vxVKteh+
-	EfyP5BJzZb/JTAt2dFkCgw2jeR6rReurovP2y+qomhIjIdWS51Pw0b1jYuA+d2lMHNQjBT
-	6P5ekh98BgoLohs0fpzKPRyPvTTmjAY=
+	bh=KpZ66NsDo6oRbcdThq5SnZKXC4wNbdElMjhexsMICjA=;
+	b=Dpzdk+/O54oSQ9dMN/KDzMEbXsseH88A2fBkQCeDvzS7x2Ofrsin3lCLMLNlThw/c9Rkw4
+	XZ3PEMfgz1seJBPGhlzp4Ul09eR1V7JR2onETDwf+E6ITQPOfPnp6FBLkVbLXVebVaKpBv
+	Srd4VzNTVmKkx1N4Kj6A0ubDYo75J+w=
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=CFx9ZZnj
+	dkim=pass header.d=suse.com header.s=susede1 header.b=OQG9WMMK
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1764338424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1764338434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=33dceX869Yxv+fMp/noNAMlIUoMuEUQYg/YIhCE5Vhs=;
-	b=CFx9ZZnjDUv+TRREegkr3iCHrRHPxBpja+l2HlevKMore3/oOCwMMInxlArFI2vxVKteh+
-	EfyP5BJzZb/JTAt2dFkCgw2jeR6rReurovP2y+qomhIjIdWS51Pw0b1jYuA+d2lMHNQjBT
-	6P5ekh98BgoLohs0fpzKPRyPvTTmjAY=
+	bh=KpZ66NsDo6oRbcdThq5SnZKXC4wNbdElMjhexsMICjA=;
+	b=OQG9WMMKXUPh2j0SoCAWkFp3kPyM+ck+Mba6KP5sMyclKfhKTrmFQ1C2A4YhwGSGeMW94Z
+	AsBDc1pz1kXdoXmmPd99BK63IpU1obyUDMFCG+CwlllfUdt21FC/jAs/oKAMaLRv2nGNmP
+	JvGtnGQiPSpEEj3xRiK4TYuiycSu7pI=
 From: Petr Mladek <pmladek@suse.com>
 To: Petr Pavlu <petr.pavlu@suse.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -59,9 +59,9 @@ Cc: Aaron Tomlin <atomlin@atomlin.com>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Petr Mladek <pmladek@suse.com>
-Subject: [PATCH v3 5/7] kallsyms/bpf: Rename __bpf_address_lookup() to bpf_address_lookup()
-Date: Fri, 28 Nov 2025 14:59:18 +0100
-Message-ID: <20251128135920.217303-6-pmladek@suse.com>
+Subject: [PATCH v3 6/7] kallsyms/ftrace: Set module buildid in ftrace_mod_address_lookup()
+Date: Fri, 28 Nov 2025 14:59:19 +0100
+Message-ID: <20251128135920.217303-7-pmladek@suse.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251128135920.217303-1-pmladek@suse.com>
 References: <20251128135920.217303-1-pmladek@suse.com>
@@ -86,7 +86,7 @@ X-Spamd-Result: default: False [15.11 / 50.00];
 	HFILTER_HELO_NORES_A_OR_MX(0.30)[pathway.suse.cz];
 	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
 	MIME_GOOD(-0.10)[text/plain];
-	NEURAL_HAM_SHORT(-0.08)[-0.394];
+	NEURAL_HAM_SHORT(-0.08)[-0.381];
 	MX_GOOD(-0.01)[];
 	ARC_NA(0.00)[];
 	DIRECT_TO_MX(0.00)[git-send-email 2.52.0];
@@ -101,14 +101,14 @@ X-Spamd-Result: default: False [15.11 / 50.00];
 	FREEMAIL_CC(0.00)[atomlin.com,iogearbox.net,gmail.com,kernel.org,arm.com,google.com,vger.kernel.org,suse.com];
 	DKIM_TRACE(0.00)[suse.com:+];
 	R_RATELIMIT(0.00)[to_ip_from(RL6jpahug3dm5x93mmnjuwit91)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,suse.com:email,pathway.suse.cz:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[goodmis.org:email,suse.com:mid,suse.com:dkim,suse.com:email,pathway.suse.cz:helo,atomlin.com:email];
 	TO_DN_SOME(0.00)[];
 	DNSWL_BLOCKED(0.00)[2a07:de40:b2bf:1b::12bd:from];
 	SPAMHAUS_XBL(0.00)[2a07:de40:b2bf:1b::12bd:from];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com]
 X-Spamd-Bar: +++++++++++++++
-X-Rspamd-Queue-Id: 2571E5BE39
+X-Rspamd-Queue-Id: 970C25BE7B
 X-Spam-Flag: YES
 X-Spam-Score: 15.11
 X-Spam-Level: ***************
@@ -116,151 +116,81 @@ X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 X-Rspamd-Action: add header
 X-Spam: Yes
 
-bpf_address_lookup() has been used only in kallsyms_lookup_buildid().
-It was supposed to set @modname and @modbuildid when the symbol was
-in a module.
+__sprint_symbol() might access an invalid pointer when
+kallsyms_lookup_buildid() returns a symbol found by
+ftrace_mod_address_lookup().
 
-But it always just cleared @modname because BPF symbols were never in
-a module. And it did not clear @modbuildid because the pointer was
-not passed.
-
-The wrapper is no longer needed. Both @modname and @modbuildid
-are now always initialized to NULL in kallsyms_lookup_buildid().
-
-Remove the wrapper and rename __bpf_address_lookup() to
-bpf_address_lookup() because this variant is used everywhere.
+The ftrace lookup function must set both @modname and @modbuildid
+the same way as module_address_lookup().
 
 Fixes: 9294523e3768 ("module: add printk formats to add module build ID to stacktraces")
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- arch/arm64/net/bpf_jit_comp.c   |  2 +-
- arch/powerpc/net/bpf_jit_comp.c |  2 +-
- include/linux/filter.h          | 26 ++++----------------------
- kernel/bpf/core.c               |  4 ++--
- kernel/kallsyms.c               |  5 ++---
- 5 files changed, 10 insertions(+), 29 deletions(-)
+ include/linux/ftrace.h | 6 ++++--
+ kernel/kallsyms.c      | 4 ++--
+ kernel/trace/ftrace.c  | 5 ++++-
+ 3 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 0c9a50a1e73e..17e6a041ea4d 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -2939,7 +2939,7 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 	u64 plt_target = 0ULL;
- 	bool poking_bpf_entry;
- 
--	if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
-+	if (!bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
- 		/* Only poking bpf text is supported. Since kernel function
- 		 * entry is set up by ftrace, we reply on ftrace to poke kernel
- 		 * functions.
-diff --git a/arch/powerpc/net/bpf_jit_comp.c b/arch/powerpc/net/bpf_jit_comp.c
-index 88ad5ba7b87f..21f7f26a5e2f 100644
---- a/arch/powerpc/net/bpf_jit_comp.c
-+++ b/arch/powerpc/net/bpf_jit_comp.c
-@@ -1122,7 +1122,7 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 	branch_flags = poke_type == BPF_MOD_CALL ? BRANCH_SET_LINK : 0;
- 
- 	/* We currently only support poking bpf programs */
--	if (!__bpf_address_lookup(bpf_func, &size, &offset, name)) {
-+	if (!bpf_address_lookup(bpf_func, &size, &offset, name)) {
- 		pr_err("%s (0x%lx): kernel/modules are not supported\n", __func__, bpf_func);
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 973233b82dc1..0189f7488044 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -1373,24 +1373,13 @@ static inline bool bpf_jit_kallsyms_enabled(void)
- 	return false;
- }
- 
--int __bpf_address_lookup(unsigned long addr, unsigned long *size,
--				 unsigned long *off, char *sym);
-+int bpf_address_lookup(unsigned long addr, unsigned long *size,
-+		       unsigned long *off, char *sym);
- bool is_bpf_text_address(unsigned long addr);
- int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
- 		    char *sym);
- struct bpf_prog *bpf_prog_ksym_find(unsigned long addr);
- 
--static inline int
--bpf_address_lookup(unsigned long addr, unsigned long *size,
--		   unsigned long *off, char **modname, char *sym)
--{
--	int ret = __bpf_address_lookup(addr, size, off, sym);
--
--	if (ret && modname)
--		*modname = NULL;
--	return ret;
--}
--
- void bpf_prog_kallsyms_add(struct bpf_prog *fp);
- void bpf_prog_kallsyms_del(struct bpf_prog *fp);
- 
-@@ -1429,8 +1418,8 @@ static inline bool bpf_jit_kallsyms_enabled(void)
- }
- 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 07f8c309e432..9cc60e2506af 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -87,11 +87,13 @@ struct ftrace_hash;
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+ int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+-		   unsigned long *off, char **modname, char *sym);
++			  unsigned long *off, char **modname,
++			  const unsigned char **modbuildid, char *sym);
+ #else
  static inline int
--__bpf_address_lookup(unsigned long addr, unsigned long *size,
--		     unsigned long *off, char *sym)
-+bpf_address_lookup(unsigned long addr, unsigned long *size,
-+		   unsigned long *off, char *sym)
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+-		   unsigned long *off, char **modname, char *sym)
++			  unsigned long *off, char **modname,
++			  const unsigned char **modbuildid, char *sym)
  {
  	return 0;
  }
-@@ -1451,13 +1440,6 @@ static inline struct bpf_prog *bpf_prog_ksym_find(unsigned long addr)
- 	return NULL;
- }
- 
--static inline int
--bpf_address_lookup(unsigned long addr, unsigned long *size,
--		   unsigned long *off, char **modname, char *sym)
--{
--	return 0;
--}
--
- static inline void bpf_prog_kallsyms_add(struct bpf_prog *fp)
- {
- }
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index d595fe512498..c2278f392e93 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -713,8 +713,8 @@ static struct bpf_ksym *bpf_ksym_find(unsigned long addr)
- 	return n ? container_of(n, struct bpf_ksym, tnode) : NULL;
- }
- 
--int __bpf_address_lookup(unsigned long addr, unsigned long *size,
--				 unsigned long *off, char *sym)
-+int bpf_address_lookup(unsigned long addr, unsigned long *size,
-+		       unsigned long *off, char *sym)
- {
- 	struct bpf_ksym *ksym;
- 	int ret = 0;
 diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index f25b122397ce..97b92fc8871d 100644
+index 97b92fc8871d..5bc1646f8639 100644
 --- a/kernel/kallsyms.c
 +++ b/kernel/kallsyms.c
-@@ -342,7 +342,7 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
- 		return 1;
- 	}
- 	return !!module_address_lookup(addr, symbolsize, offset, NULL, NULL, namebuf) ||
--	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
-+	       !!bpf_address_lookup(addr, symbolsize, offset, namebuf);
+@@ -386,8 +386,8 @@ static int kallsyms_lookup_buildid(unsigned long addr,
+ 		ret = bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ 
+ 	if (!ret)
+-		ret = ftrace_mod_address_lookup(addr, symbolsize,
+-						offset, modname, namebuf);
++		ret = ftrace_mod_address_lookup(addr, symbolsize, offset,
++						modname, modbuildid, namebuf);
+ 
+ 	return ret;
  }
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 59cfacb8a5bb..d0001dffd98a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7708,7 +7708,8 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
  
- static int kallsyms_lookup_buildid(unsigned long addr,
-@@ -383,8 +383,7 @@ static int kallsyms_lookup_buildid(unsigned long addr,
- 	ret = module_address_lookup(addr, symbolsize, offset,
- 				    modname, modbuildid, namebuf);
- 	if (!ret)
--		ret = bpf_address_lookup(addr, symbolsize,
--					 offset, modname, namebuf);
-+		ret = bpf_address_lookup(addr, symbolsize, offset, namebuf);
- 
- 	if (!ret)
- 		ret = ftrace_mod_address_lookup(addr, symbolsize,
+ int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+-		   unsigned long *off, char **modname, char *sym)
++			  unsigned long *off, char **modname,
++			  const unsigned char **modbuildid, char *sym)
+ {
+ 	struct ftrace_mod_map *mod_map;
+ 	int ret = 0;
+@@ -7720,6 +7721,8 @@ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		if (ret) {
+ 			if (modname)
+ 				*modname = mod_map->mod->name;
++			if (modbuildid)
++				*modbuildid = module_buildid(mod_map->mod);
+ 			break;
+ 		}
+ 	}
 -- 
 2.52.0
 
