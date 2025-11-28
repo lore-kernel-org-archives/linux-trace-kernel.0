@@ -1,185 +1,151 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E5061FFE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 05:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D4C2571A0;
+	Fri, 28 Nov 2025 08:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764308158; cv=none; b=BpPSAoxDhOQ3lErhWiJe4Wm011AMvVBu1WrpOO1Z4f9wtY5XNqevvSqPyn1XvSl1pLnIUpoZoPAIZwd6A79Zsy5/qjhwcKoeleVHHzTXGZQliiBznNF6De7oHjNtX03kGN8g3sPn8R7jTeaJARkP/M+9z14Y7O8Xh1t4D+bVtn8=
+	t=1764318616; cv=none; b=pdHOc7zkQ4RkV3zvHJucGFiayVW4LdRV9EFCcESq2hxlkCSUadxSdAU7eMgKePjwVtTM2Mhavb3+qHDpiRRAxWpBlPck5kt/VBRGHmNiU8L4/vtmgann9S1CCL5g09QRsjcE9WdVblB6i5Uv1i9BQuagCEMuzh3jT7x2/Iag6Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764308158; c=relaxed/simple;
-	bh=vs1yg4f34u5WJ1yPdJSEYZL0CSP4S2CFc9DmmbkR8AU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=evhk29QUx6Dxesz7Z0t3CzxNE0HpDwSxNxdgnrc0GHuTmfML7hUKuSd3qoZiKd6ws/hR2PHjYdDE94Td5hDvzRY+ErYJ23L+J2urgMYxZlzpOb6D/8PNKsNrtHGiS+1DF6YnGhi8xugbL7nQ7S29vXG5kJ+iApoh2z8RqLAF7cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FQu9vsjH; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1764318616; c=relaxed/simple;
+	bh=MpMcHD2tp5uuKwb5c+sfdkPhGUuflywsKRBHkJYCeP4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RvodLSW+b/umgFLONrL2/9GZfWtSilT3NtxEUI+N+4NqXlCBdbcfHAWxauGVLYndhLdFbVfH/HDePws3AsABMaH+OEAQf6LWRuzeiq97Kb38dTvScV3INpY8xaWz7X29ufVJI/czPhr5ujQ8C5ENXnoBIFDEQ6QA2qpRwL60AyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JViFz/5V; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FQu9vsjH"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-644fcafdce9so2320172a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Nov 2025 21:35:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1764308155; x=1764912955; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k+Eyw2ecIRLyY8mi8vSAM8Rof7rADC+bcj+32Ia5uSU=;
-        b=FQu9vsjHamqCPE2kU21OwuzKXh+xTcsI/zJlfcpiTOkW+l0tTNXWYcsXXNEZs1HHYE
-         8OO4BFUi/al0dYDTMtaPshUpK6juq79scMnD6wHrPaEDdP5WNuPaS2LCZbQmTH3EmOzG
-         hl87PD+p/5MD0YEMfOEhvq61TDy7B1yYBxag8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764308155; x=1764912955;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+Eyw2ecIRLyY8mi8vSAM8Rof7rADC+bcj+32Ia5uSU=;
-        b=dulmmEU+MrxT5N6UzLnmnQ6hiqc/AXiWmLKWLqZ2ttVkLYKdYWoI35DHFapOR+PWnj
-         KCsq348fERodMJedAM6/NQw9HM0SuE4bCRTRC8ORLQURjWR5fLo28zlCYd73QW+4VonW
-         V78NeiRD7DKvnNiEu6NafPMjMLMrZdphMrP/hnLg9bdz//S10HVe2ENLXXb81OBft9KK
-         JblDB60OP+9zixaPtNEybyZEBtyOLxdqqRVFkBaJbKPyF9vx26IrkQiz0Jh3VOfHFjYz
-         2L3ZwZm82WhVD4CD6dh3492ass45KGbZh087wMq6vBeoB7AHz0E6MJ3FWF8jAY/N85Q3
-         uIwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrd9AZ8lzh7bpar7W79qlAqlpjpl9mm4GEQPxkZLW/agq4zUYUB1wkye/MAD+ftTvQt0lPWAXunyoqZDZ4wtJ70ZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ98FpTsId5X24jvbPxDLqQCjvHdNNZCTv41JxOuZODrFubd+z
-	AEM7JftJShyt8YkPV8k501pmEDqt8EA5pRgXTmhKxhHqRXEGHAqYG+EHoDqQ06HtAn375ZAfIHX
-	vYYlO3Co=
-X-Gm-Gg: ASbGnctG57vw2+c09aO59AbnKOLwwI5pXvutXuwBmwauYaLJaH0IwGgunIyh5i3nY3y
-	l2N1J0zcN7eqzMDlKQpteJiEVIZ0D1OKGBgt9VW3avBvLLqTDuSmPWtj45bB8ztNisd4fvz2L2R
-	NA/T5R+EXdhsENhzT4x0qnPBtVcUcz/p2Lxp1r613iskYL7y8TBXVjanjrgWNPO5npVKey8kz43
-	wS1lWenOEiC00LLhnNcADMHhk5rxhJYQt6cwhupYZYFLRgzneDoQ96m81UKFoUy62a/j5jeoy4E
-	x70iEQX+Eb/ENDgRxL6XXRyErCaM0UesOvoJcL1mnYEKLQmqA6/ouu7I5qoQV5BN+e2OIP42LYb
-	BLm5zhNJsYEe43IbQlC4NIoGitU5ehCcQAMAuyJUCaHlXlF1vHeRIFunkRhPlpvnUkjKACXUqJq
-	MdPrCEIeNwGGcEFcWKXAIURFSaPHkfGtqZ/UgnShju78oBWFiWR1JaQ9oKjfe9
-X-Google-Smtp-Source: AGHT+IHJLY6xmFxpB+K7kbXDUZOTzCpD9eYIqds0sLQjrcuxIRC8InG/rLCGw9bqGa5oL+1W6xQfBQ==
-X-Received: by 2002:a05:6402:1d50:b0:640:ebe3:dd55 with SMTP id 4fb4d7f45d1cf-645eb23f84emr11439770a12.6.1764308154666;
-        Thu, 27 Nov 2025 21:35:54 -0800 (PST)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64751035c24sm3415639a12.22.2025.11.27.21.35.52
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Nov 2025 21:35:53 -0800 (PST)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640a3317b89so2209793a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Nov 2025 21:35:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX1yog+fN/cOZOAGJ+u2fpaRp55MHvs8L98+sTGNaHvKUPw5bd61MwJagrqw+n0nDbjyVzSJusbCeU284UVfh+TQYI=@vger.kernel.org
-X-Received: by 2002:a05:6402:d0d:b0:641:9aac:e4a9 with SMTP id
- 4fb4d7f45d1cf-645eb26ba61mr12717665a12.15.1764308151943; Thu, 27 Nov 2025
- 21:35:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JViFz/5V"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 77E761A1DA0;
+	Fri, 28 Nov 2025 08:30:11 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 45F5560706;
+	Fri, 28 Nov 2025 08:30:11 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A38F4103C8EF1;
+	Fri, 28 Nov 2025 09:30:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1764318610; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=Cq+xlD9USMJsrxvq8O+HZTXWZMa79CT1USg//Gkx7R8=;
+	b=JViFz/5VcrUwXMeNG7zxowcDJm5b1tIc2Rm/98Cy3UutNOC+KiWlPOBkjQ1br//GAnq1+T
+	QibxW4GYxCW5HdOwVks5zYGWaxhfN+owYfuVgeNX2dbFxbvBH0nRrO5mXGqyCiSU5S/xnA
+	cxUjS/bazmcaZl6nqX9dAX4FVl3KtvALk1twhS/ZJtYND+nVKwdpq0oSt1FXQ8yZnyLatK
+	c9jTCBYRGq64D6vQUbDqc0PQxRHODTDkHmm26w0NQbCpt43o0p6ozjYTGt/A5Tnc10l/cq
+	oR+iV9pdZPBGz2pUKQSC98ZkdDm0YgNMjraopMua2KBzZl/0ZECj0kExvWPsfg==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date: Fri, 28 Nov 2025 09:30:06 +0100
+Subject: [PATCH] MIPS: ftrace: Fix memory corruption when kernel is located
+ beyond 32 bits
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126145249.05b1770a@gandalf.local.home> <202511262356.6FE5084CB0@keescook>
- <20251127204342.05fc985e@robin> <6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
- <20251127222710.324357cf@robin>
-In-Reply-To: <20251127222710.324357cf@robin>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Nov 2025 21:35:35 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-X-Gm-Features: AWmQ_blNfUK3d20i2UnAsBf0zzgIcxgwgDs5L_j02ELWuaSJF7VpIWmt1gr56Yk
-Message-ID: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of member
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-hardening@vger.kernel.org, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251128-fix_mips_ftrace-v1-1-e6169f8777f2@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAI1dKWkC/x2MQQqAIBAAvyJ7TkgrrL4SEVuttYdMNCII/550H
+ JiZFyIFpgi9eCHQzZFPl0EVApYd3UaS18ygS90oVdbS8jMd7ONkr4ALSYOIc9tRZY2BXPlAWfm
+ Pw5jSB7nYEBFhAAAA
+X-Change-ID: 20251104-fix_mips_ftrace-7aaab89e3f77
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>
+X-Mailer: b4 0.14.3
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 27 Nov 2025 at 19:27, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 27 Nov 2025 18:00:01 -0800
-> Kees Cook <kees@kernel.org> wrote:
->
-> > If you have an instance and not a pointer, just slap on a & :)
->
-> :-p
->
-> I guess that would work. Although it will kinda look a bit strange.
-> At least to me.
+Since commit e424054000878 ("MIPS: Tracing: Reduce the overhead of
+dynamic Function Tracer"), the macro UASM_i_LA_mostly has been used,
+and this macro can generate more than 2 instructions. At the same
+time, the code in ftrace assumes that no more than 2 instructions can
+be generated, which is why it stores them in an int[2] array. However,
+as previously noted, the macro UASM_i_LA_mostly (and now UASM_i_LA)
+causes a buffer overflow when _mcount is beyond 32 bits. This leads to
+corruption of the variables located in the __read_mostly section.
 
-It does look a tiny bit odd, and it's not always wonderful, but there
-are advantages to conceptually passing in the pointer rather than the
-actual instance.
+This corruption was observed because the variable
+__cpu_primary_thread_mask was corrupted, causing a hang very early
+during boot.
 
-The two main advantages are that
+This fix prevents the corruption by avoiding the generation of
+instructions if they could exceed 2 instructions in
+length. Fortunately, insn_la_mcount is only used if the instrumented
+code is located outside the kernel code section, so dynamic ftrace can
+still be used, albeit in a more limited scope. This is still
+preferable to corrupting memory and/or crashing the kernel.
 
- (a) a pointer is *usually* what you have. Not always, no, but it's
-the common thing in the kernel. We have a lot fewer cases of 'struct
-on stack' than we have 'pointer to struct somewhere'.
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+To go further and remove the limitations of dynamic trace support, the
+ftrace implementation for MIPS should be completely rewritten and
+inspired by what was done for arm64. This approach was chosen by
+Loongson: instead of trying to manage multiple instructions added on
+the fly, the support relies on a breakpoint, which is more robust.
 
-but even more so:
+However, this effort is significant, so I’ll leave it to those who are
+motivated to work on it. If needed, I can provide some guidance on the
+topic.
+---
+ arch/mips/kernel/ftrace.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
- (b) unless the macro makes it very *very* obvious in the name that it
-only looks at the *type* of the argument, dereferencing the pointer
-can easily look absolutely horrendous.
+diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+index f39e85fd58fa9..b15615b285690 100644
+--- a/arch/mips/kernel/ftrace.c
++++ b/arch/mips/kernel/ftrace.c
+@@ -54,10 +54,20 @@ static inline void ftrace_dyn_arch_init_insns(void)
+ 	u32 *buf;
+ 	unsigned int v1;
+ 
+-	/* la v1, _mcount */
+-	v1 = 3;
+-	buf = (u32 *)&insn_la_mcount[0];
+-	UASM_i_LA(&buf, v1, MCOUNT_ADDR);
++	/* If we are not in compat space, the number of generated
++	 * instructions will exceed the maximum expected limit of 2.
++	 * To prevent buffer overflow, we avoid generating them.
++	 * insn_la_mcount will not be used later in ftrace_make_call.
++	 */
++	if (uasm_in_compat_space_p(MCOUNT_ADDR)) {
++		/* la v1, _mcount */
++		v1 = 3;
++		buf = (u32 *)&insn_la_mcount[0];
++		UASM_i_LA(&buf, v1, MCOUNT_ADDR);
++	} else {
++		pr_warn("ftrace: mcount address beyond 32 bits is not supported (%lX)\n",
++			MCOUNT_ADDR);
++	}
+ 
+ 	/* jal (ftrace_caller + 8), jump over the first two instruction */
+ 	buf = (u32 *)&insn_jal_ftrace_caller;
+@@ -189,6 +199,13 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 	unsigned int new;
+ 	unsigned long ip = rec->ip;
+ 
++	/* When the code to patch does not belong to the kernel code
++	 * space, we must use insn_la_mcount. However, if MCOUNT_ADDR
++	 * is not in compat space, insn_la_mcount is not usable.
++	 */
++	if (!core_kernel_text(ip) && !uasm_in_compat_space_p(MCOUNT_ADDR))
++		return -EFAULT;
++
+ 	new = core_kernel_text(ip) ? insn_jal_ftrace_caller : insn_la_mcount[0];
+ 
+ #ifdef CONFIG_64BIT
 
-We had an example of that (b) case recently [*] where the code looked like this:
+---
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+change-id: 20251104-fix_mips_ftrace-7aaab89e3f77
 
-        typeof(VAR) *__obj_ptr = NULL;
-        ....__can_set_flex_counter(__obj_ptr->FAM, __count) ...
+Best regards,
+-- 
+Grégory CLEMENT, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-and note that combination of "NULL pointer" and "dereference that pointer".
-
-The code was *correct*, because that '__can_set_flex_counter()' macro
-in that case only looked at the *type* of the first argument, so the
-dereference didn't "really" happen as an actual access to any memory
-behind the pointer, but it doesn't make it really look any better. We
-really don't want to have those kinds of visual patterns, it just
-makes people go "WHAA?!??".
-
-Now, with proper naming, you can make that obvious. You can make it
-really clear that "this is looking just at the type of that argument,
-not the value of the expression it is given".
-
-But honestly, I think that "really clear" comes close to just having
-to have that "__typeof__()" pattern.
-
-Can people learn that a name like "struct_offset()" always just takes
-the type of the first argument, and get used to patterns like that?
-Sure. Absolutely. But I'm not sure we really want people to learn that
-pattern if there are alternatives.
-
-So I do think that the "struct_size()" syntax - which takes the
-*pointer* to the object and then does "sizeof(*(p))" internally - is
-the better syntax. Not just because we *do* typically have the pointer
-as the variable we are trying to get the size of, but exactly because
-we do not want it to visually look like a dereference of a pointer
-that may not have a valid value yet.
-
-Put another way: yes, it's slightly conceptually odd to pass in the
-pointer in order to actually get the size (or offset of a member, in
-your case) of the actual *instance*, but I think "slightly
-conceptually odd" is a small price to pay to not it look more regular.
-
-And yes, I obviously do realize that 'sizeof()' and 'offsetof' and
-'__alignof__' all take the actual type, not the pointer to the type.
-But they are very special operations in C, and we should not make
-other operations act like them unless they have some very clear and
-obvious clue.
-
-For example, we do have 'struct_size_t()' that takes the actual type,
-not the pointer to the type. It _only_ takes an explicit type, and
-cannot even take an instance of an object (although we could *make* it
-take an instance by adding a '__typeof__()' into that macro). But at
-least the '_t' part hopefully makes that obvious, and even if we did
-make it take an instance, you'd never use it on the above kind of
-pointer without a valid value, because then you'd use the non-_t()
-version.
-
-So that 'xyz_t()' version then gets used for things where you
-explicitly state the type, and it all looks fairly obvious, eg:
-
-        len = struct_size_t(struct pid, numbers, level + 1);
-
-doesn't get that "WHAA?!??!" kind of reaction.
-
-[ And so I actually think it's good that it only takes an explicit
-type - if you really have an instance, I think it's better to use just
-"struct_size(&instance, ...)" even if we _could_ easily make syntax
-like "struct_size_t(instance, ...)" work. ]
-
-          Linus
-
-[*] https://lore.kernel.org/all/CAHk-=wiNnECns4B3qxRsCykkHwzovT+3wG738fUhq5E+3Lxxbg@mail.gmail.com/
