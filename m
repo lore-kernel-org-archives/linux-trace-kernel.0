@@ -1,123 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99A2239086
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 14:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAEE23C4F4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 15:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764338680; cv=none; b=p0gwP9xdAdeIGAf+yQ8DPxVlFzNIMCXACQaCk0pEB9bnBZ6L/yn6jM4wUWoNbCg2KC0+n8zPe7yx0bc5NKM4xfUZgsx3Apnj2Xl1TBC/BCkDdoxHgULkbK6X3ktF37zozCxA8Z0vRubal3QWNGVI011BNZLPmJRJTB69GX5U/NE=
+	t=1764343131; cv=none; b=Hxy5kr1i+sRMQtOck0k1fbwSGTTPkiNZ1vVt1MLyA8rWVlwPDpW4uIxq4eqWQXqov7xiUvT95CZCqXJfIWCx9bwW164g28w7BxWylf0Hi24CTL256S0uKWvnAYAi0SkaTeAhwo9Adpr30VgFoMnppIacXGbLiAgQwiJ07pMYo9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764338680; c=relaxed/simple;
-	bh=8BUy/DlnXFwDpANRZOOtzUxjbSJftZsc9GiewZUjuuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BmLzGtoACdFr3PVMR89XZxjjmDY6ubbPq0+JF4Y+nQgIgKy0mLIsfV83WwnhNpYXhyzBB8zhO1dVjerwlFCVsWE3dQjmMHGUq2qcgChZ40qSZRaYYtaKYJWeg1/3l7lI97N+QRy/wLys9TxaHqr9DiAud28LPFja67QutrTh3yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MQTEQOnb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764343131; c=relaxed/simple;
+	bh=77vkR0+1JCLSlChPUV7mfgMnrTVHDOFl297gadUE40c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJHM8exX3BuF4PegbnZwtkbtECMDfTB4OoqpUQJlnl4MeQOGVQup/8RL306MwkJPc6O/RQMkQm/EgcJRqHwBybbRd7dga6ViK0BG5MjZwrOzMYqVyTSjyAWrBAZpIrmWtAESb6k5eAzgo29jcTW6g7FnnvYshHemdY/EkyL9Dn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vld9HZWN; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQTEQOnb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764338677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2aYbQOviV9G6U7vQC1wZCjsv5aDiytW/O4hn4aGzwt0=;
-	b=MQTEQOnbjxB8XkXK5f5y8HXxi6ZVNGziEt9opY6Zayzza9347rAzA8Uh6XFGVAYsEKaMzr
-	urLETukck3W2A93l1WMisHnj1JDSekBwFZxgtZ6Rs8fjloWZoYZXXnKLb655yFiPgnq2/I
-	DE8qPhATyuBKS7db+3qIP/zHb3zgetQ=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-412-eNfVLwBbPAuZ6ifNiwyhxQ-1; Fri, 28 Nov 2025 09:04:36 -0500
-X-MC-Unique: eNfVLwBbPAuZ6ifNiwyhxQ-1
-X-Mimecast-MFC-AGG-ID: eNfVLwBbPAuZ6ifNiwyhxQ_1764338675
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-59584152ed3so1294012e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 06:04:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vld9HZWN"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-29806bd47b5so11758285ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 07:18:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764343128; x=1764947928; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qB15gwXBroqkrK/PKr7oQFDmRDy1z34ETO6NhfgHsEw=;
+        b=Vld9HZWN/LIZDhgmPy0nKU4VeEWN8ZwtgJdDuy8HY1Vrq4GVkz0mxBMkewz0OYgg4U
+         p7BhFhq+/a+EubimiWPsMx6osbX5V0iRJ9dHFLy+4ibOVTlH2HVd1ksLSHoY8QJsnrSn
+         Qwoiu8j7jtUP3SmSjnVqvB20+Q1t5xW+7qRBSpEwOLRoOQhQaMDeLdHNipVKqQenqE0G
+         yW8rWAUCu4KaO25oiCaEDxYm35+QC8SelfzRLyuJHbu+r57yBA9XnTjOHX9g5JKwSwvT
+         67hOEQQgVnkCBeP/Q0BHFJaFlQlBmOQ2gKhZsiXAVpsz+npuerkwuIKUN3jMbTNZw3np
+         /zjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764338675; x=1764943475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2aYbQOviV9G6U7vQC1wZCjsv5aDiytW/O4hn4aGzwt0=;
-        b=HY6T+sODNjSwcdH2LRdB955SR49lOUFEYJ6IPmmbISlI2IoXe0LUKyRjyOkqGCxiEv
-         GZrG7JeP90P1fF+tsNhF9WbOPRH9ZCedSOQ0l65syFv+Y8toLtLflFEdfrhw+un9ncWb
-         5ZO914cgRaT8pw+msl2syNP0jc4Fgk7zJbakXIqRAbvX3BdWbDQy2JKbNywhY3ZbKKxn
-         6vac5NYpNSKYL8Il1xX/RY5WYll3ReYmHFvMTukE1MguaaTDP5A4s+1fa+Wir0kG4rac
-         GGkzPYi+LNByI1IEI4PNsQdKKrs5DXiISNUbCVLi/rErqMPJk2+0BKBGJVeCcAEmb8xc
-         9GAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWabxaLCdyCdmwups6CNJXVRL3bk7zdsqOf/AsVz91lPS4IvRiAeue4L0KWyOos2QEfyNSa4NLXwg3EQO86BMYVE2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRL8JkTsaa2txEAOfP9kcuOdmm1PAPAofXy8p6sk0tW8WVA0/c
-	Dpz1XYDWfMDBSu5DmSmWGFoatr+5PRIvkd8sXLSkS81P05Unonwj+jcLkx4td/6ADuplCTiiZGq
-	SXaDyrEIZGFDtnlzXhZSh487qNArsuprnN95TQD1Or/rlpRlL7B6Iy4r0B7qTM6vKQLCmjyqiGt
-	VWkWpRe5mBQCB727yXm2l2FhRPH9Vd+1HKI7Ko/qm7tvDqEMVB
-X-Gm-Gg: ASbGncvsgSngoH1dGbVC38qqffBMEPMb8pZHmhDrvwi3n0yFfmtyFmfhO1oTw2lXxG7
-	Myh47iUSolPiTE5nX2ypfPY9S/RFjX4h8v9YthdlpWnWmKCQCneXoEMq3rdGVCVRB47o6pj9guY
-	9J6f56FRE0Bi/YdmeCoAAKARVstctLOSs1f1by7nMat6kWrFGczPDqcr455xfKUW5wIA==
-X-Received: by 2002:a05:6512:3c98:b0:595:7c47:cd47 with SMTP id 2adb3069b0e04-596a3e983camr10042589e87.2.1764338674903;
-        Fri, 28 Nov 2025 06:04:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGz66R88yyrnFnHjZ3XK8T/KldcTjOaeEpw5lXyP8wGGA8SNJySTlDwLR+bs2xmbBIFPh69rhXpxTJeYQlaS0s=
-X-Received: by 2002:a05:6512:3c98:b0:595:7c47:cd47 with SMTP id
- 2adb3069b0e04-596a3e983camr10042564e87.2.1764338674340; Fri, 28 Nov 2025
- 06:04:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764343128; x=1764947928;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qB15gwXBroqkrK/PKr7oQFDmRDy1z34ETO6NhfgHsEw=;
+        b=kaJHhfUoZOg1DgqfxgAjIbT2ITpOXTaudizU3+tQYEolG4spDMhHXPaECy7kHSc4FM
+         EVmYZgs4TZs1mvgyOKC5HJnPrc6pa/ELzdyseC/y8ts6AD5qfBGLPT22GcLgN3E3B8i4
+         K5StHlO3RFgKH5q29sp4W9d01PTfSkDehnoMop96RptEjtPx5suogh67QFArF7d85oOU
+         YGTQ/AMOeMvxHxhuxI5pJcFcCPYcD0FsHie/qOm9pLlAfpFHYWXAxlGaZIT/J4V+gIIp
+         7LE4xKa99Nz99GUczSJDs+e7rt/72aelBy7+fZbCSFGCKq9VehbhSYBnoIXln2uLc2m4
+         VFVw==
+X-Gm-Message-State: AOJu0YxOQ9zjuYovw/qXHCgHx0DM5X3EzmXnxJuSnx28oFrZKJkCPtbg
+	kxzmn2Tlhpl0KWwa5nrYT0QL54PondvrYMG6HE65uXDjLyhxLAI/6/4=
+X-Gm-Gg: ASbGnct+rzCx28qb5glKRLp8uTDaGdcECi8CqlkL0Mn6PbMsNFCh6fg4TctP7aOXih6
+	f3/OD7p02xg+u4ufby0uxxlq5j/8NQRF7kq/Kss0wQE4MfSLpGfBWFQWidB3XLPq6u5ngvknwWu
+	jzaWOuVnLfPZ/HX0ed73tf5ayCwVaSBIcYI0U2eYHZKjLJCCvjNE+tIBW2pxip6Dw1YtcVud+Gh
+	93k49irmFEND2gg6kk2glWMqTeU0AD51+6/ed8yEUKn+Fin9Vm+kW6Lsu0z3UYj6jjp6xE/0CVb
+	8gZ6SzLmLwPluL1GjakVbQ4fAJUXjE9U6eMCQMUoHeq4Uy4Xts4DLrmwKrBXkY/Wutf7Uhue7s4
+	MJcSBY+HM7gvUN61F2kx0j5ns3U7H2Veh5fbuN0ek+h9v0qjFzpSp/i8OBY4QfzbfNhiEHlc1uh
+	gTLrHgL7oF4WfQN/YNQJBMWr/6QMuF9mYzWrZ8sRYri4nmtw==
+X-Google-Smtp-Source: AGHT+IFMZPGeYzAXlC4s7H1GRQcgTEvVdLdV7GOhi3U/+54OuO5WVgJO+4Ca80HXmsdLRnU/cszaIQ==
+X-Received: by 2002:a17:902:ebc1:b0:26a:ac66:ef3f with SMTP id d9443c01a7336-29b6c3c2857mr249858005ad.8.1764343127369;
+        Fri, 28 Nov 2025 07:18:47 -0800 (PST)
+Received: from samee-VMware-Virtual-Platform.. ([2409:40c0:1f:b21d:eb16:b830:6608:73b4])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-be4fb2490bcsm5064944a12.2.2025.11.28.07.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 07:18:46 -0800 (PST)
+From: Sameeksha Sankpal <sameekshasankpal@gmail.com>
+To: rostedt@goodmis.org,
+	corbet@lwn.net
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sameeksha Sankpal <sameekshasankpal@gmail.com>
+Subject: [PATCH] Documentation: tools/rtla: remove undefined substitutions in common_options.rst
+Date: Fri, 28 Nov 2025 20:48:38 +0530
+Message-ID: <20251128151838.7985-1-sameekshasankpal@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251117184409.42831-1-wander@redhat.com> <20251117184409.42831-9-wander@redhat.com>
- <CADDUTFz_gU0C8uqwDS3ewFRUxk7nbkGv1UU09Omjy0Ew2wB5VQ@mail.gmail.com>
-In-Reply-To: <CADDUTFz_gU0C8uqwDS3ewFRUxk7nbkGv1UU09Omjy0Ew2wB5VQ@mail.gmail.com>
-From: Wander Lairson Costa <wander@redhat.com>
-Date: Fri, 28 Nov 2025 11:04:23 -0300
-X-Gm-Features: AWmQ_blHLGrvmJS-VExLZPhZncF8FW2knptR9rNbECwrzHFDz6oKpDascdVpK0c
-Message-ID: <CAAq0SUmsdk=uQ7NcjWHZDetm__q5CPxe+H-U01GefJXASN=6HQ@mail.gmail.com>
-Subject: Re: [rtla 08/13] rtla: Use standard exit codes for result enum
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Crystal Wood <crwood@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: le7OWMQcGFONd_KejZ3G9sway8MARBzeROyPv4TkqgQ_1764338675
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 28, 2025 at 10:18=E2=80=AFAM Costa Shulyupin <costa.shul@redhat=
-.com> wrote:
->
-> On Mon, 17 Nov 2025 at 20:56, Wander Lairson Costa <wander@redhat.com> wr=
-ote:
-> >
-> >
-> > -       PASSED =3D 0, /* same as EXIT_SUCCESS */
-> > -       ERROR =3D 1,  /* same as EXIT_FAILURE, an error in arguments */
-> > -       FAILED =3D 2, /* test hit the stop tracing condition */
-> > +       PASSED  =3D EXIT_SUCCESS,
-> > +       ERROR   =3D EXIT_FAILURE,
-> > +       FAILED, /* test hit the stop tracing condition */
->
-> The exit codes are defined as numbers internationally because it provides=
- direct translation from numbers to codes and vice versa. Additional indire=
-ction doesn't add to readability.
->
+The RTLA common options documentation uses several Sphinx substitution
+placeholders (|threshold|, |tool|, |thresharg|, |tracer|, |actionsperf|)
+that are not defined anywhere in the tree. This causes the htmldocs
+build to fail with multiple "Undefined substitution" errors.
 
-I believe that where it is written "internationally" reads
-"intentionally" (happens to me all the time). The main motivation is
-to use the standard C library exit codes when calling exit().
+Replace these undefined substitutions with plain text or generic
+placeholders (<tool>, <threshold-option>, <tracer>) to ensure the
+documentation builds cleanly while preserving the intended meaning of
+the examples.
 
-> Costa
->
->
-> ________________________________
-> Hi Wander,
->
-> Additional indirection does not add to readability.
->
-> Thanks,
-> Costa
+Signed-off-by: Sameeksha Sankpal <sameekshasankpal@gmail.com>
+---
+ Documentation/tools/rtla/common_options.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
+index 77ef35d3f831..bd5a6f32f5bf 100644
+--- a/Documentation/tools/rtla/common_options.rst
++++ b/Documentation/tools/rtla/common_options.rst
+@@ -56,7 +56,7 @@
+ **--on-threshold** *action*
+ 
+         Defines an action to be executed when tracing is stopped on a latency threshold
+-        specified by |threshold|.
++        specified by the threshold value.
+ 
+         Multiple --on-threshold actions may be specified, and they will be executed in
+         the order they are provided. If any action fails, subsequent actions in the list
+@@ -85,17 +85,17 @@
+ 
+         Example:
+ 
+-        $ rtla |tool| |thresharg| 20 --on-threshold trace
+-        --on-threshold shell,command="grep ipi_send |tracer|\_trace.txt"
++        $ rtla <tool> <threshold-option> 20 --on-threshold trace
++        --on-threshold shell,command="grep ipi_send <tracer>\_trace.txt"
+         --on-threshold signal,num=2,pid=parent
+ 
+-        This will save a trace with the default filename "|tracer|\_trace.txt", print its
++        This will save a trace with the default filename "<tracer>\_trace.txt", print its
+         lines that contain the text "ipi_send" on standard output, and send signal 2
+         (SIGINT) to the parent process.
+ 
+         Performance Considerations:
+ 
+-        |actionsperf|
++        Note: Executing actions during tracing may introduce additional performance overhead depending on system load, system configuration, and the number of actions triggered.
+ 
+ **--on-end** *action*
+ 
+@@ -110,7 +110,7 @@
+ 
+         Example:
+ 
+-        $ rtla |tool| -d 5s --on-end trace
++        $ rtla <tool> -d 5s --on-end trace
+ 
+         This runs rtla with the default options, and saves trace output at the end.
+ 
+-- 
+2.43.0
 
