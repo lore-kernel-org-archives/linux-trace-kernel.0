@@ -1,199 +1,119 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AA52D94BD;
-	Thu, 27 Nov 2025 16:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD8224677F;
+	Fri, 28 Nov 2025 01:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764262346; cv=none; b=ntcROnBq5/PDb56YcxvnB9iC3n0QhHi+2eh1N7cUXn/ZXMyjbxuugrzIUyW1uCtF9af8Qg4WnJl2oo/w24JFh55VC/2vTsjVALlP7j3oavGsp0MFV6rBiP2y/TOvgjTcDalKGds2TYr7G13eKTQuoJxwQR42FrnAVJDUyJgQmw8=
+	t=1764294235; cv=none; b=i5o1wn8EhqyHZL3qYpZtFQi1TPQJggIewZ5U4WhSbbRRr/6lfyOJHHNV2AdRXsSXIFOcQweS8r0POoUbDE7QmloCLC/WyMD9FGoEEPFNC1+0oTff6BAPFHpIlCykwnZ6yePiwWW01oZnPJN5YtmWtQGgTq5xNgWIocRGHvbQSzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764262346; c=relaxed/simple;
-	bh=NOBr0IPZLiHTXKcsJsMcOPpuhcn58DxbhtDWgQGxT40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sz4d2lo3Ehea+4paw3iy8BVzzab9Sb360ehnu6NTpMhJUZqI7f6jicyGP4QHMVUPq530zqw1aRzp3De+RF7Xe+DqdrYU1+bk6/UM496xQFqzh47v6KzmP+zovdyXHzbYAPMBTOW6mvBI6Hss12zD8Wg09ZJItbBh6aCoo/SZWgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eX6sU9zW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eX6sU9zW"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ARFaBA1005188;
-	Thu, 27 Nov 2025 16:51:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=HlhKJZ
-	MgpGME+PYO9GqXE+tCX4ZwqLGrTvuP+EsRrmA=; b=eX6sU9zWf8FfeezAPMHiXD
-	fwrNsC/uqPtPgpadPGzERDUGxUL4mvbsqcf+cD1oVoDaJie21BYlMQxJ0NxAAOCU
-	z5hOd8Dr2Bofk9J4abDaCf/p5njX6sQlhTX6TNMlW1bdkAVJqBifus3kXsk/z0xA
-	esyD6prAxmBi31jvTRm9rx8VcqAy+SCD9dFnEyVXTsYzm/NQJiEZSj7qU4W8osNP
-	Pa+5FN18oVpjTSVyG85mqxDpCf5rSn9+BBucIUHAacGx2IcOIcXZzyeRj+zYe8YE
-	Vie4F68E8zqxQL68LwVIzjclugfs72dwm5n1ZTjiqKhRc9ktQRL7Sg71PLU1NLKA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak4u2984u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Nov 2025 16:51:54 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ARE0TO1000851;
-	Thu, 27 Nov 2025 16:51:52 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4akqvy94nj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Nov 2025 16:51:52 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ARGpmup59900170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Nov 2025 16:51:48 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6489520043;
-	Thu, 27 Nov 2025 16:51:48 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BF3C820040;
-	Thu, 27 Nov 2025 16:51:47 +0000 (GMT)
-Received: from [9.155.200.37] (unknown [9.155.200.37])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Nov 2025 16:51:47 +0000 (GMT)
-Message-ID: <20dda91c-46e4-466d-9ebb-7e12fc6f5d28@linux.ibm.com>
-Date: Thu, 27 Nov 2025 17:51:47 +0100
+	s=arc-20240116; t=1764294235; c=relaxed/simple;
+	bh=hI2AlAGRUfEQIRTCU/M1S+9wunj43CfaYMiVZOlZkUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nqK8GmSTIklUUHCoSC5F/7z/A0RP5FhKqBFHlI/5R98Mz88JQAcEM+JzwsdFuRF0+RRdKJrlNySIC75fW78WhtTCmnz0itrz+mm0Dvmd5pKih+hCstdsD9T+my1HMN86JJsRPXYxrb7pGgqFyXN7eUZULuZ907oknvkwbySjRsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 55DB2C01E5;
+	Fri, 28 Nov 2025 01:43:45 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 4E06D32;
+	Fri, 28 Nov 2025 01:43:43 +0000 (UTC)
+Date: Thu, 27 Nov 2025 20:43:42 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
+ member
+Message-ID: <20251127204342.05fc985e@robin>
+In-Reply-To: <202511262356.6FE5084CB0@keescook>
+References: <20251126145249.05b1770a@gandalf.local.home>
+	<202511262356.6FE5084CB0@keescook>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] unwind_user/fp: Use dummies instead of ifdef
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-References: <20251125164349.2592874-1-jremus@linux.ibm.com>
- <20251125164349.2592874-3-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20251125164349.2592874-3-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAyMSBTYWx0ZWRfX54N/8/jq7KN5
- RQ5aX8Pc5fn8uZq67gBxp8l0Xb4YUVz6fbf0MYEx4PM3XKZCP2fjNBx2vr2hKsi/BXcsAxkiRdg
- AbUWYgkUKSjiDwi87WFPgenKhuDVwx+ZCPNw8aM25CbnhAvdB5Bv1ybnFtJaPdmTrePuhaP/h0D
- Fspybnoc/j6r1BadAbg4o28nHWyYEYXU/R+w9GAhk/6vOGV2SaOtUKnvdO9H6tp8KXNPUzDiePl
- v3j8DTSzBXxLAzTWAzBT7ueNDU/IyQdRGfjiupAaOckEY8nDwOKvOOT4bsL7j8FwzW/ux4iyfkv
- 64oBD6p27irJxUdJ9lyuz5bz8kWuzdvwpUOj+2vLeklwpDubpBFzPItUJq27YdILvPnvQv++Orc
- 9ViV1hVJf4pI1sZLzfaVU+5zH20Vgg==
-X-Authority-Analysis: v=2.4 cv=SuidKfO0 c=1 sm=1 tr=0 ts=692881aa cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=zQfrUCwJMigNTRNSlqwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: BT3IUAD3N9rfMyWkIunLI6JebDVfTY83
-X-Proofpoint-GUID: BT3IUAD3N9rfMyWkIunLI6JebDVfTY83
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-27_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 adultscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511220021
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 4E06D32
+X-Stat-Signature: d5fyncnia538jeygpg1h165u1uim4gja
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19bIv8FFQxKxBe++i0U6EbDErefzNShTIA=
+X-HE-Tag: 1764294223-76900
+X-HE-Meta: U2FsdGVkX1/5Z3uo5XrRmomqDCOjWs9b2Z2TJexDDWQYqFqkR00OyxP0i0PMHtH5GSuNK4NAxBlIkmqNNs/xFLg4YJ0fyBYiqL2w54L0V+CUnpKWP+SZwApTg7MdfyT+ax8/ISdMoauKkHx+zsn3COZc5YNzt860t2gNLSQJUZiBC+BBop4LExD7Y5uOEZiMZmgQhhZQayBmp1fZ45oP432wGXSG+grbhouwzs5R9novn6wKLSXP/MVjfitUGsLVmqGEi49+SmU/8UKkR0msVh2H2O2w8x+DEMrgUxGFa38g9XBYVu2F+DVKrBzJszEwyfEtaDvnO+6mcKki2ILgTXMBad6N5Aju
 
-On 11/25/2025 5:43 PM, Jens Remus wrote:
-> This simplifies the code.   unwind_user_next_fp() does not need to
-> return -EINVAL if config option HAVE_UNWIND_USER_FP is disabled, as
-> unwind_user_start() will then not select this unwind method and
-> unwind_user_next() will therefore not call it.
+On Wed, 26 Nov 2025 23:58:01 -0800
+Kees Cook <kees@kernel.org> wrote:
+
+> > +/**
+> > + * struct_offset() - Calculate the offset of a member within a struct
+> > + * @p: Pointer to the struct
+> > + * @member: Name of the member to get the offset of
+> > + *
+> > + * Calculates the offset of a particular @member of the structure pointed
+> > + * to by @p.
+> > + *
+> > + * Return: number of bytes to the location of @member.
+> > + */
+> > +#define struct_offset(p, member) (offsetof(typeof(*(p)), member))  
 > 
-> Note that enabling the config option HAVE_UNWIND_USER_FP without
-> defining ARCH_INIT_USER_FP_FRAME, ARCH_INIT_USER_FP_ENTRY_FRAME, and
-> unwind_user_at_function_start() will result in a compile error, which
-> is helpful when implementing support for unwind user fp in an
-> architecture.
-> 
-> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+> I wonder if the kerndoc for this and offsetof() should reference each
+> other? "For a type instead of a pointer, use offsetof()" etc...
 
-> diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
+I know I pushed this to my for-next branch already, but it's the top
+patch. Looking at my code, I actually have a lot of places that use the
+offsetof() for a structure variable and not a pointer to a structure.
 
-> @@ -5,9 +5,17 @@
->  #include <linux/unwind_user_types.h>
->  #include <asm/unwind_user.h>
->  
-> -#ifndef ARCH_INIT_USER_FP_FRAME
-> - #define ARCH_INIT_USER_FP_FRAME
-> -#endif
-> +#ifndef CONFIG_HAVE_UNWIND_USER_FP
-> +
-> +#define ARCH_INIT_USER_FP_FRAME
-> +#define ARCH_INIT_USER_FP_ENTRY_FRAME
+Thus, I wonder if it is better to have this as:
 
-Will fix this as follows in the next version:
+#define struct_offset(s, member) (offsetof(typeof(s), member))
 
-#define ARCH_INIT_USER_FP_FRAME(ws)
-#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)
+And then for pointers we have:
 
-> +
-> +static inline bool unwind_user_at_function_start(struct pt_regs *regs)
-> +{
-> +	return false;
-> +}
+	size = struct_offset(*entry, id) + cnt;
 
-Would it be better to provide a generic dummy implementation (see below)
-or should each arch implement that if it cannot tell whether the topmost
-frame is at function start? If so, would it move from linux/unwind_user.h
-to asm-generic/unwind_user.h?  Either way it would need to be outside of
-the !CONFIG_HAVE_UNWIND_USER_FP guard.
+If you forget the '*' it will error with a complaint that entry is not
+a structure type. Then I could make changes like this:
 
-#ifndef unwind_user_at_function_start
-static inline bool unwind_user_at_function_start(struct pt_regs *regs)
-{
-	return false;
-}
-#define unwind_user_at_function_start unwind_user_at_function_start
-#endif
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1244d2c5c384..55f1bdab4ffa 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -587,19 +587,19 @@ int ring_buffer_print_page_header(struct trace_buffer *buffer, struct trace_seq
+ 
+ 	trace_seq_printf(s, "\tfield: local_t commit;\t"
+ 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), commit),
++			 (unsigned int)struct_offset(field, commit),
+ 			 (unsigned int)sizeof(field.commit),
+ 			 (unsigned int)is_signed_type(long));
+ 
+ 	trace_seq_printf(s, "\tfield: int overwrite;\t"
+ 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), commit),
++			 (unsigned int)struct_offset(field, commit),
+ 			 1,
+ 			 (unsigned int)is_signed_type(long));
+ 
+ 	trace_seq_printf(s, "\tfield: char data;\t"
+ 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), data),
++			 (unsigned int)struct_offset(field, data),
+ 			 (unsigned int)buffer->subbuf_size,
+ 			 (unsigned int)is_signed_type(char));
+ 
+I would have a lot more places I can make this update then if
+struct_offset() took a pointer instead of the struct itself. As adding
+a '*' isn't ugly I think I like this way better.
 
-If doing so ARCH_INIT_USER_FP_ENTRY_FRAME should be handled similar, so
-that archs do not need to provide their own dummy either:
+What are your thoughts?
 
-#ifndef ARCH_INIT_USER_FP_ENTRY_FRAME
-#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)
-#endif
-
-In that case only ARCH_INIT_USER_FP_FRAME would remain guarded by
-!CONFIG_HAVE_UNWIND_USER_FP, so that compile would fail, if enabling
-CONFIG_HAVE_UNWIND_USER_FP without providing ARCH_INIT_USER_FP_FRAME:
-
-#ifndef CONFIG_HAVE_UNWIND_USER_FP
-
-#define ARCH_INIT_USER_FP_FRAME(ws)
-
-#endif /* !CONFIG_HAVE_UNWIND_USER_FP */
-
-> +
-> +#endif /* !CONFIG_HAVE_UNWIND_USER_FP */
->  
->  int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
->  
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+-- Steve
