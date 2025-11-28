@@ -1,178 +1,152 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fra-out-015.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-015.esa.eu-central-1.outbound.mail-perimeter.amazon.com [18.158.153.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8535D22333D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 09:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC22FD7C8;
+	Fri, 28 Nov 2025 09:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.158.153.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764322322; cv=none; b=kWfwOAbQ9Gi3N+oSkiSS6/E0llSe1PfdBTGtuxyOgA3SPfNqdQRSt2u4cMp3SpefuSB5vn862ZDyyzNqIYMKpZXOWh2SyLV7IMfyF5Bj9TITtBym2PxBmoiJNZzV1L8C6B5yHINCJJ0dN3CEMJheV6BqXxZi73sRnL3bjWKQUCE=
+	t=1764322395; cv=none; b=ocyx/EjyXp1JUQmNh3zs+MAwHHFFm0QmDBW0DLb8jgLw7AB7E7bYJEjCwI1wr+K47FTvCb+dfnovszjYcpd3CYTJmrQ3lEATEFWHR0ilkXVceihHhPKjiUjr6ETboFu0oyNgiVNlTPQr/UqCaA5EG91+Ku50UvghMWv0ZjeDZss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764322322; c=relaxed/simple;
-	bh=g6gZ69KHMbTGsZcNJI8VXZWGdc5rG+2mHogCEUq+Rso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bu3QUVR9A8ZcG72JR0BUD93ogI4YhbnBSsSvomQEsJQ9B3jN63EA1lY/oCoPhpKqNhf4pghnchnx0hMdvMxY2OtntSQprC/232DGQHuZspJAgikZOMUbjNOVqUXx8TiIdd2wLxFYfENjhCjtzUJ89RXBvMIQ9FVwY33/NGsnjBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJZUNhrs; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764322395; c=relaxed/simple;
+	bh=9bn07rJY4ksh7dTeShVB58dZTJD4ujCLkqrXvaoWZYs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XkPGbncaXskciEqY8g04qEzAdJKsEt5VgssMLJZkpsNruOInx3ll+iKjt4Skest4nQR/j6U0Zvu67bhVgSSaSJOHUkF7pE9CtmEg84BcEcR73e6ZNK+3nT3tQkJZUD54wt3GWKYRs9fBfRVN37o/2n1xcJ2H1w6EAxud9BXoL3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=ixDTd2fe; arc=none smtp.client-ip=18.158.153.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJZUNhrs"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8b1b8264c86so147891585a.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Nov 2025 01:31:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="ixDTd2fe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764322318; x=1764927118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OI0OcmHjeFyb484sjgiydBSlKc/rrUkdQjscOLrNcP0=;
-        b=QJZUNhrsGu0NbjLozUtwtVP+0Mz/46NZSq3uARD6wJ6r5zulYfu4RCuy/FpdCnGDkk
-         5CizUQK7MZBbw7mII9J71e1tL7OVJAJj/2HABFA4JdGDd/xPChMoEIeQqApngY3JV/z8
-         6wownLlG8LRLJPE3ie2P4v+YiqfBBJuh9zxlQhk41GEe9zTBXLYoPL6TL4SLwImAcvhN
-         6b7/TNL9WRv95tzTqU7Sq9VsRTKkDVVeTyEaSlX7BnRYELKgzLzYMVsJR2J3MB/Zap2b
-         pC1Vn3IQ5/j75n+hE0KyFRvD6HYs5w4CDfFCWqhgKEcH3T+VrCz+YnuMHrUOZoP29x69
-         c0yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764322318; x=1764927118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OI0OcmHjeFyb484sjgiydBSlKc/rrUkdQjscOLrNcP0=;
-        b=VJDwMVa/JlLM8z00eII0jv0CRHsOgQGGvGgzTo561phxPMe3BpP0I2qMKz+AFBW9uI
-         q/qU5+VjQ9vzr0tC9EeStBf+V+eKMph4tghWPvHzpg2d5wjMDqSJhj41ImaCpfCUjPts
-         3lqrupTHOx19x3SSK1n2xDRhdp2QaqDDriJ5Saziyor6zdlZg8GmKO8NaN4OebHY74oA
-         2Vbdd/TWbkNQTj448N+qJ7dWcT9CsuHvBiDCqHDwnXmpOp6df6gP6wgSAo2L2FT4AkhZ
-         /ssv0eqmhZzltxKQalkSnj1o/Zya7XyntEq9+BXjhjKwfBQcWwTR/vPvEnHCWoIRpXNw
-         ScXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGSkWRsemXWFHOsJkVXudxCo2qT3Mw4e72xc3+DXbWh+hhqyBaPRDuCruTgpERZE+vamyzOXmmIy/p/WdLPRhIjaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKumgtGfd0FP+BE/UXnVlW6LlPu3O8ngbb7oVRDm6dpRgHHr9V
-	T1+7ODLx7M0rmdnkt+hSjMQa8Xna2qAqSQ9ByyF8nlnKdPTsJTozRNxvpKbz4avtpbZE/ylTH7G
-	chHfO9emRw0LKLqIFTNiiZCPet8UhJWU=
-X-Gm-Gg: ASbGncv9YJXzPw53y11rh2Wl5+PsChOtm/YMyrh7ivkbdsvJR49RQ5eCUAfBLIjwVh9
-	rMYrZ03LKX1tT0sNi3UJ12YmgIMvRfHfoRoN6Ag+lrXO95yfWKc0rjUwB09l+AlwqgHDFHzhW2R
-	EDLPs0dtXj5Ojint1nU9jq6H+vK62/P6abFe7o8ETvWo3/P9InKNY37ZB7iO1nEshqRVw9GiFi9
-	DTCsO5WyLRVWq/iYrbPUu8g7Pi5yAQlbgpSS1IckfXanuoEowaIBiCHIhfzfa4k4Bqxj2+fY8xZ
-	+Jz8
-X-Google-Smtp-Source: AGHT+IE4dLyJsJbrTAn1B7Yr4GO+0YuLUAXeUBEruxFfx8P+JadOGQI4/wwbpqcWoRl4WtDLsxhuJc9tFjSM6xJVzGA=
-X-Received: by 2002:a05:620a:2988:b0:8b2:74e5:b36 with SMTP id
- af79cd13be357-8b33d469d5emr3375756385a.68.1764322318278; Fri, 28 Nov 2025
- 01:31:58 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1764322393; x=1795858393;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0PaeDR9xr+EMrlMtz7KnHpgRGhMWJOgrVvz7hwCEMr0=;
+  b=ixDTd2fexYdNiwxhDGmP+mV7Yay/giajLDTfMrcii36IMGJqmmgOHuzH
+   TSuo9reu5BdKPLxURQhsrMnsoXRyG+eOWDqioQNGEc3Vuy3g02M5xGpzI
+   1/4iqY5lLeqELfUYqiE6xCOGKVTFQ4/zCg2KhK3CI+G1h7A9p+zudjc5y
+   3Tex6KaSrz5KuJ94NH7yEpyDjVEdfkhbWHtDkCq2IlAqicY/2jU31eZJF
+   5IvlHUhL3VblaB+fwDiOrzwNaPbK/8sC5zZf7aNdBj0nGWHAfz1fh/2ug
+   cLkBFoROnMR3xDE261qmHt21g0gRRLWLmSbrN6XvhZzNfAu2BuuXIQbW6
+   A==;
+X-CSE-ConnectionGUID: ksgq6324SZysRyh+BRf0PQ==
+X-CSE-MsgGUID: 6R6I0quPTTSNo9IooxSCkw==
+X-IronPort-AV: E=Sophos;i="6.20,232,1758585600"; 
+   d="scan'208";a="5815041"
+Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
+  by internal-fra-out-015.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 09:32:53 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [54.240.197.233:26972]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.46.211:2525] with esmtp (Farcaster)
+ id 33974e25-456b-475a-97f6-8e43f2005cf1; Fri, 28 Nov 2025 09:32:53 +0000 (UTC)
+X-Farcaster-Flow-ID: 33974e25-456b-475a-97f6-8e43f2005cf1
+Received: from EX19D003EUB001.ant.amazon.com (10.252.51.97) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Fri, 28 Nov 2025 09:32:52 +0000
+Received: from u5934974a1cdd59.ant.amazon.com (10.146.13.109) by
+ EX19D003EUB001.ant.amazon.com (10.252.51.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Fri, 28 Nov 2025 09:32:47 +0000
+From: Fernand Sieber <sieberf@amazon.com>
+To: <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <vincent.guittot@linaro.org>
+CC: <linux-trace-kernel@vger.kernel.org>, <jschoenh@amazon.de>,
+	<dwmw@amazon.co.uk>, <kprateek.nayak@amd.com>, <vineethr@linux.ibm.com>
+Subject: [PATCH RESEND] sched: Add core cookie update tracepoint
+Date: Fri, 28 Nov 2025 11:32:22 +0200
+Message-ID: <20251128093222.119435-1-sieberf@amazon.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251128085215.550100-1-gxxa03070307@gmail.com>
-In-Reply-To: <20251128085215.550100-1-gxxa03070307@gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 28 Nov 2025 17:31:46 +0800
-X-Gm-Features: AWmQ_bnxT-AMRvL6QfqA8HugYaI3Ly525_HuvsNqNPfROHBjXW-vjwdRajjQ0jk
-Message-ID: <CAGsJ_4y0zc_nh2q=w4uR04vtveCf6L7+hgafznHuL8ByWbyNOQ@mail.gmail.com>
-Subject: Re: [PATCH v4] dma-buf: add some tracepoints to debug.
-To: Xiang Gao <gxxa03070307@gmail.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, dhowells@redhat.com, kuba@kernel.org, 
-	brauner@kernel.org, akpm@linux-foundation.org, 
-	linux-trace-kernel@vger.kernel.org, gaoxiang17 <gaoxiang17@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: EX19D038UWC001.ant.amazon.com (10.13.139.213) To
+ EX19D003EUB001.ant.amazon.com (10.252.51.97)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 28, 2025 at 4:53=E2=80=AFPM Xiang Gao <gxxa03070307@gmail.com> =
-wrote:
->
-> From: gaoxiang17 <gaoxiang17@xiaomi.com>
->
-> I want to track the status of dmabuf in real time in the production envir=
-onment.
-> But now we can only check it by traversing the fd in the process or dmabu=
-f_list.
+ftrace based analysis can be used to qualify correct behavior of cookie
+based applications. Security posture can be verified by tracing the
+amount of time that tasks with different cookies collocate on hyperthread
+siblings and asserting that it is kept to a minimum. Performance posture
+can be measured by minimizing force idle (when an hyperthread is kept
+idle because it doesn't have a runnable task matching the cookie of its
+sibling). It is necessary for the application doing such an analysis to
+know the cookie associated with each task at any point in time.
 
-might be:
+While the task to cookie mapping is driven by userspace and thus can
+alternatively be supplied through a custom side channel to an application
+analysing a trace, it is more convenient and accurate if the mapping is
+already part of the trace. Given that these events are infrequent the
+induced overhead is negligible.
 
-Since we can only inspect dmabuf by iterating over process FDs or the
-dmabuf_list, we need to add our own tracepoints to track its status in
-real time in production.
+Signed-off-by: Fernand Sieber <sieberf@amazon.com>
+Link: https://lore.kernel.org/r/20250128113410.263994-1-sieberf@amazon.com
+---
+ include/trace/events/sched.h | 30 ++++++++++++++++++++++++++++++
+ kernel/sched/core_sched.c    |  1 +
+ 2 files changed, 31 insertions(+)
 
->
-> For example:
->    binder:3031_4-18348   [005] ...1.   545.568275: dma_buf_export: exp_na=
-me=3Dqcom,system name=3D(null) size=3D217088 ino=3D2750
->    binder:3031_4-18348   [005] ...1.   545.568284: dma_buf_fd: exp_name=
-=3Dqcom,system name=3D(null) size=3D217088 ino=3D2750 fd=3D8
->    binder:3031_4-18348   [005] ...1.   545.568399: dma_buf_mmap_internal:=
- exp_name=3Dqcom,system name=3Dqcom,system size=3D28672 ino=3D2751
->      kworker/5:1-130     [005] ...1.   545.570193: dma_buf_put: exp_name=
-=3Dqcom,system name=3Dab size=3D28672 ino=3D2751
->     RenderThread-18891   [005] ...1.   545.602994: dma_buf_get: exp_name=
-=3Dqcom,system name=3Dab size=3D217088 ino=3D2750 fd=3D1087
->     RenderThread-9409    [000] .n.1.   545.745004: dma_buf_dynamic_attach=
-: exp_name=3Dqcom,system name=3Dab size=3D217088 ino=3D2750 is_dynamic=3D0 =
-dev_name=3Dkgsl-3d0
->     RenderThread-9409    [005] ...1.   545.747802: dma_buf_detach: exp_na=
-me=3Dqcom,system name=3Dbq size=3D12771328 ino=3D2764 is_dynamic=3D0 dev_na=
-me=3Dkgsl-3d0
->
-> Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
-> ---
->  drivers/dma-buf/dma-buf.c      |  48 +++++++++-
->  include/trace/events/dma_buf.h | 160 +++++++++++++++++++++++++++++++++
->  2 files changed, 207 insertions(+), 1 deletion(-)
->  create mode 100644 include/trace/events/dma_buf.h
->
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index 2bcf9ceca997..6e04e12f149e 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -35,6 +35,9 @@
->
->  #include "dma-buf-sysfs-stats.h"
->
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/dma_buf.h>
-> +
->  static inline int is_dma_buf_file(struct file *);
->
->  static DEFINE_MUTEX(dmabuf_list_mutex);
-> @@ -220,6 +223,11 @@ static int dma_buf_mmap_internal(struct file *file, =
-struct vm_area_struct *vma)
->             dmabuf->size >> PAGE_SHIFT)
->                 return -EINVAL;
->
-> +       if (trace_dma_buf_mmap_internal_enabled()) {
-> +               guard(spinlock)(&dmabuf->name_lock);
-> +               trace_dma_buf_mmap_internal(dmabuf);
-> +       }
-> +
->         return dmabuf->ops->mmap(dmabuf, vma);
->  }
->
-> @@ -745,6 +753,11 @@ struct dma_buf *dma_buf_export(const struct dma_buf_=
-export_info *exp_info)
->
->         __dma_buf_list_add(dmabuf);
->
-> +       if (trace_dma_buf_export_enabled()) {
-> +               guard(spinlock)(&dmabuf->name_lock);
-> +               trace_dma_buf_export(dmabuf);
-> +       }
-> +
-
-perhaps a macro similar to the one below
-
-#define DMA_BUF_TRACE(FUNC, ...)                  \
-    do {                                          \
-        if (FUNC##_enabled()) {                   \
-            guard(spinlock)(&dmabuf->name_lock); \
-            FUNC(__VA_ARGS__);                    \
-        }                                         \
-    } while (0)
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 7b2645b50e78..e3298eb0702c 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -826,6 +826,36 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+ 	TP_printk("cpu=%d", __entry->cpu)
+ );
+ 
++#ifdef CONFIG_SCHED_CORE
++/*
++ * Tracepoint for assigning cookies.
++ */
++TRACE_EVENT(sched_setcookie,
++
++	TP_PROTO(struct task_struct *tsk, unsigned long cookie),
++
++	TP_ARGS(tsk, cookie),
++
++	TP_STRUCT__entry(
++		__array(char, comm, TASK_COMM_LEN)
++		__field(pid_t, pid)
++		__field(unsigned long, oldcookie)
++		__field(unsigned long, newcookie)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__entry->pid		= tsk->pid;
++		__entry->oldcookie      = tsk->core_cookie;
++		__entry->newcookie      = cookie;
++	),
++
++	TP_printk("comm=%s pid=%d oldcookie=%lx newcookie=%lx",
++			__entry->comm, __entry->pid,
++			__entry->oldcookie, __entry->newcookie)
++);
++#endif
++
+ /*
+  * Following tracepoints are not exported in tracefs and provide hooking
+  * mechanisms only for testing and debugging purposes.
+diff --git a/kernel/sched/core_sched.c b/kernel/sched/core_sched.c
+index 9ede71ecba7f..26eb23331fea 100644
+--- a/kernel/sched/core_sched.c
++++ b/kernel/sched/core_sched.c
+@@ -73,6 +73,7 @@ static unsigned long sched_core_update_cookie(struct task_struct *p,
+ 		sched_core_dequeue(rq, p, DEQUEUE_SAVE);
+ 
+ 	old_cookie = p->core_cookie;
++	trace_sched_setcookie(p, cookie);
+ 	p->core_cookie = cookie;
+ 
+ 	/*
+-- 
+2.43.0
 
 
-This would help us avoid duplicating a lot of code.
 
-could be:
-DMA_BUF_TRACE(trace_dma_buf_put, dmabuf);
-DMA_BUF_TRACE(trace_dma_buf_attach, dmabuf, dev);
+Amazon Development Centre (South Africa) (Proprietary) Limited
+29 Gogosoa Street, Observatory, Cape Town, Western Cape, 7925, South Africa
+Registration Number: 2004 / 034463 / 07
 
-?
