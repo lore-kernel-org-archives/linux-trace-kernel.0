@@ -1,84 +1,92 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025F22FF22;
-	Fri, 28 Nov 2025 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A3329E11B;
+	Fri, 28 Nov 2025 21:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764350367; cv=none; b=F3uR1oRYhvtWaWpK6ZhVGzqm2gVMDBzA+dfD2nWQyy6l+50TID0+AonWSZAQrcq5npVhuzbINKTI0yLLZt0pFNxnsyhea+J6pgtR1ZT0DgOQN46Eyl7EvfmbVkPfTifmPOpNCjeyIF8UWpG+eG1NyEXnTjS0jtEiFb8OLz0ep7E=
+	t=1764366227; cv=none; b=lJjxaGGd3rl0+k3NkPwQ9EJDQhnQHRs6XOFoBaW5297H9iTDMDviQwa0l9mu09xbCNtRT+wrzSgjRtj8I9tPCWtt1bYS7Ktw5j6r8sNcGntP6DpF7u5ZCobhVFvD7xVC9FNsfHT3mqvl2GYpp2CFtd53Y0eqZctQbP7dA5Rg0X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764350367; c=relaxed/simple;
-	bh=K2E1U3epY0iQxOIKwuNQPGRgZrhTX5b8hjszIeNOJxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ujFcAv5oHI88ZPFM86gPBofJTY9Gz7G8l2A5Q4yWa8LUxIlXiaZ/8pvgsTSJfEyuH/xH28XYIeC5njLpBEMdBlDAltRApzQht1fBMsMyBcvA3s4ycifcPVh2AuZUjlNdlfhudlu2cwLUZYSLr7SyEY7bivUazte8zV5hg63B2I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 533055A20D;
-	Fri, 28 Nov 2025 17:19:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3F48D20026;
-	Fri, 28 Nov 2025 17:19:21 +0000 (UTC)
-Date: Fri, 28 Nov 2025 12:19:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] overflow: Introduce struct_offset() to get offset of
- member
-Message-ID: <20251128121919.521ec9bf@robin>
-In-Reply-To: <CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-References: <20251126145249.05b1770a@gandalf.local.home>
-	<202511262356.6FE5084CB0@keescook>
-	<20251127204342.05fc985e@robin>
-	<6219BF5A-0EC3-4111-A329-D35244C9714A@kernel.org>
-	<20251127222710.324357cf@robin>
-	<CAHk-=wiF9-vf3zW8vXoFGk+bo0=dSoJMm_nmVzsTDCerZzhGaw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1764366227; c=relaxed/simple;
+	bh=vgzvdWY2s7thIWmMsPgHy/ia72rjlLdT6JPpZtj7IFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kJpGzjzzwkcWKood/pYwpCsyulNXacS5XWMQzaABHFiAZK44Xnibca/9QL0ACebhWyE75xFh8IJ9Psn1tQ9KhFkJRsIVlJmQLunBiuPhfS3+ZC2bzQqCMXaJ35ysa5FkvyOx1R6F6kbuBAcunW07MC3qdbU6WvW1Uf8b4aacG/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DNZ06xUx; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DNZ06xUx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=qBrHXWwtUB7b8fk+im24xdBt7pvQvBtNmMwKjLkVxhU=; b=DNZ06xUxWf6BSN/EXGMTg1Pa3Y
+	CZHipD2rqSGD4O785scwDXaYmjO23pPNqKfYI5WYjRj5elql6G60n/JrgNn7BpPuYVKa8BocLP/Co
+	DWNdYilx+NfYUrs2XmmNA2hqo79HgHx5QWDVA3iW3RC9h+L2fB4vI3b9UcAXIH+nC5Q8G7+hyx/Tx
+	TbinWbZLUjJZN3+vCDAksNYzyBuoErZLSBIa3SezK6DAX6XmsQwZzC9xZ3TodQBCb/c5VieGzUoY7
+	qCDTvaYfo1KdbwHtcWerq+v9yWDPoPh290ebCRrE6MpX0x9LFNEcBh8OaAtP2OIcYRX7608udl8um
+	9uQgk30g==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vP6Fh-00000000z8t-2S6G;
+	Fri, 28 Nov 2025 21:43:41 +0000
+Message-ID: <68a739f3-5484-4846-b87f-94a7ce306e43@infradead.org>
+Date: Fri, 28 Nov 2025 13:43:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: tools/rtla: remove undefined substitutions
+ in common_options.rst
+To: Sameeksha Sankpal <sameekshasankpal@gmail.com>, rostedt@goodmis.org,
+ corbet@lwn.net
+Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251128151838.7985-1-sameekshasankpal@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251128151838.7985-1-sameekshasankpal@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zr11k9aw3mznh5purmm9fcfxsooxro5g
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 3F48D20026
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18tjifUlLmG56VnQe7OD5sNSWWDhKiQIQc=
-X-HE-Tag: 1764350361-388986
-X-HE-Meta: U2FsdGVkX19/MRDt2aaRwVbFj3c/tHqEG/UidBr5SeT/sX726m9pde2gZ1c+57IxFnDKYbsqfDsFM9NO0tvwevygsqtRRVgsoffB1dcYvs0r2qAtGjMIB8xyhIUEvvGtCyN7aY44oQO10r6GyS6cuPxjxCpX9Ov/2+mi0IL1eFzQIxQKoNlMRmn2UJRBwVMfCpZ8JiVFb+cQ/81RFcHq6MCLwLf/mvzcP28ydKfETU29Gcn/GCUjlpZadEaWozqOC/LiV2DfhRDzxyeZsA8eWQxgd3QjMQQttaZAKGKP5d1olsGpfJfNklK2jNVuIK7YzZH2shyCEeNmzcXI1WwbhH5HZxEdZ51CUkeCR1quOr97FOu4D2YQ0d7iJ0GYlj8G
 
-On Thu, 27 Nov 2025 21:35:35 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi,
 
-> So that 'xyz_t()' version then gets used for things where you
-> explicitly state the type, and it all looks fairly obvious, eg:
+On 11/28/25 7:18 AM, Sameeksha Sankpal wrote:
+> The RTLA common options documentation uses several Sphinx substitution
+> placeholders (|threshold|, |tool|, |thresharg|, |tracer|, |actionsperf|)
+> that are not defined anywhere in the tree. This causes the htmldocs
+> build to fail with multiple "Undefined substitution" errors.
 > 
->         len = struct_size_t(struct pid, numbers, level + 1);
+> Replace these undefined substitutions with plain text or generic
+> placeholders (<tool>, <threshold-option>, <tracer>) to ensure the
+> documentation builds cleanly while preserving the intended meaning of
+> the examples.
 > 
-> doesn't get that "WHAA?!??!" kind of reaction.
+> Signed-off-by: Sameeksha Sankpal <sameekshasankpal@gmail.com>
+> ---
+>  Documentation/tools/rtla/common_options.rst | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> [ And so I actually think it's good that it only takes an explicit
-> type - if you really have an instance, I think it's better to use just
-> "struct_size(&instance, ...)" even if we _could_ easily make syntax
-> like "struct_size_t(instance, ...)" work. ]
+> diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
+> index 77ef35d3f831..bd5a6f32f5bf 100644
+> --- a/Documentation/tools/rtla/common_options.rst
+> +++ b/Documentation/tools/rtla/common_options.rst
 
-I was thinking about adding a struct_offset_t() but then I noticed that
-struct_size_t() requires adding the type as it is for just getting the
-size of the struct without using a variable. Whereas, I would have
-preferred the struct_offset_t() to use a variable that's not a pointer
-where typeof() is used.
+Does this patch apply to the mainline (Linus) kernel?
+This is already fixed in linux-next or docs-next.
+You should usually check -next trees for fixes like this.
 
-But for my use cases, I can just add a '&' to struct_offset(), as if
-struct_offset_t() were to take a type, it is no different than
-offsetof().
+See:
 
--- Steve
+commit 96b546c241b1
+Author: Gopi Krishna Menon <krishnagopi487@gmail.com>
+Date:   Mon Oct 13 16:27:20 2025 +0700
+    Documentation/rtla: rename common_xxx.rst files to common_xxx.txt
 
+Thanks.
+-- 
+~Randy
 
