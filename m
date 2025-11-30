@@ -1,116 +1,107 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C1A221DAC
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 30 Nov 2025 18:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F3D13A3ED;
+	Sun, 30 Nov 2025 18:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764527268; cv=none; b=NOC3e9h4Bo6yBsQi/jPztRxQdtqUNqjD2cgwXvHTdygwTxif1WFslUEc707CdvRJHm/r/1nm1x6cSC+Rnhq1WyX2smaYwOPto52NQjNtHcaP+PF5mOVBx08oeMtnheAOX5mYMNDTPrUmsPoSb7pFGmF/JZxsvA5WBzKTEwo3CgA=
+	t=1764527641; cv=none; b=p4ulmYuRJ120a2pdaBbuNC+HexUNZAfr1imf1iNKXe3VO82ER7ZjMi+mXzlHqy4Hn1x7yCENSpT9CyRroYwOeZbCSL+gq6tNcwv7aaW/gCKis2l5GCJnmCXy1zpKth1SciDvS37HsGKbsMPiTWVeWnpPEPXo+PiiBnjX40xu+vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764527268; c=relaxed/simple;
-	bh=jKo9YN5Ow3alHkdznaL+oI7OWz6x1PeXbTSgFh2nelk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvK64YcGb8nTlODRmZa2Zv1I3g+L9ihb3o2x2zwcn9++kEzrmJ7Tzp7h1fWZg5tlqiJDekQd1dy5pC9Gx6dzMg9E9RRnaVxxpuBojYC+LQ5GnyOIJXg9G3pd2bgNTYB3aqLMP5VPd41pF23pn9C5hsQXS6Z6RUs9ysz+YjuXcFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Im7wLo2F; arc=none smtp.client-ip=74.125.224.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764527641; c=relaxed/simple;
+	bh=BYIrTTSVxXc1HabQ88UTUwwWE2cNqChrEagcfgIifHM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V9bttCDUEwkpN0RwKNG4VcIb7LEQMmjMI6nc4P0Kzx38MxlqEpneOv3kRO+53p/GThFwtnC9Y87x47DHxrxfHLkMagkJX7riz/V5ckUfKgsMpY/eq02c5JpQ6S9cl5CZAvixUniVOuvPG534K9di8kS4bwuqfwhFSJcJAc6ySHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBFXLUn9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Im7wLo2F"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-64308342458so2894096d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 30 Nov 2025 10:27:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764527266; x=1765132066; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gQ0UOimIv+Gqhv0/1FQc2e2rNrHodQEz9DgOtiLMoSM=;
-        b=Im7wLo2FZbDWvS57VeZXCNKGBWg86nCdPDi/2/GeVpjeefW4iNjd9zObOS5o6ecsE4
-         g3VQYRGCDfYBkc3SMM2dsQgdeHDGljmIW0e0PlAJTs3fss+h6+DJFdSdEeRArMGvmspr
-         9ag76j3uB+r6vAmH0Nf3iOc4dw1rNw8SEQO1B//vrtRIshYnX51aYTmY/qHY2cXFsVTC
-         EHFhp0RtjNU3TOZpR7KeVepVUOhhdl8atkjav0RmQKYytJMABfsY91HP6pRwR6FUsNjj
-         O1TGmyyfVkeUUA+nZgMntSHG9PXqJ3k0KN60JBxm7cXkYZzwxwMUiv/HfQ+zYqK6X4C/
-         uTEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764527266; x=1765132066;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gQ0UOimIv+Gqhv0/1FQc2e2rNrHodQEz9DgOtiLMoSM=;
-        b=Zn5L2Jog1N+CYEwGMCCTBI2+f50ktGiZx8NOrFzKwcao6wX8VFuVeiL5TUw2Rshy4l
-         Xtou3Lxzvz7mHZ4weaI+WeGbMx7+Ml9NC4wy1uKTqIvyEPA7E9xniWX9B03lJPJVR/ZL
-         I2YgFZFiB87NZMrdzycxjW0/SscPMZgKcGxbltNCXrys7iYpshI6knpQlLEUn0Hq8JkD
-         gmrYBPkjFEbrnMQH/pG7fz/SUxBcKtJ3q74DdGsY8PBz/632jT0+RFmXTlon6OlATHll
-         K5DCF27LuNMNyQXspc4UGBpYLPuD9ZugGm7jXG1PcIEQ7hof46MT2K7Ju2ZCqk+RH9cP
-         wEDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSRhZfImefrNGZNw1aAr1wRatw51tGEiY933VWBOEqlf/X3tLUpaGs5hNO4zH1u5BIsyrvdlRUUijjJ9lmxVBy4WA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvLpsMkVHGd1nnOHnW85oBBSsVlluX5yfsd2hIrlGxTFsFGA5u
-	MJrA/Qe+qKGTJkhqv3x2rbXkPd3UzeO7KkxXXzl51pu1SmePnTifRcD6
-X-Gm-Gg: ASbGncsLNu1muQjc7Q+OA8m0hudA+ChkHzGnCPHJaLz4WllJWbmHzV20RrM7ntZBn9f
-	xvblwDOqcwRLbVa1OqwRyx9LW3O0bsWZL/akb4NqQpUD+aW02D6JPEVj/imQDf2AmGBJdN8nwU1
-	pYU3ncYAbQe84rgAciJ2Ol4un8ZQGy/bC6xNKcIpEFMApmvFeOLZJMzsAREKfmWfo8OGqwEzs8b
-	ud7TTUu/NjsiIEG0Ia093zfiIRp1MPe1lbfeSz8UnmySSr0oRJxLglQ72cEladjeTqSU2kM7EHQ
-	Wej3739a3yuIsRhDwMWv+32cVckdSBz6i1A5kWJ30U6buWOuqSzGK6ZdzJGdRd6JgWxk0ipL6V9
-	fWbszdf3nFyWkDCrwwhTtIKmcrpWvYDw3sm0jjlwJys0K8pSND8zkM4h/BOyf8YmT3/p9YTCnH4
-	r8hGE8M/Y=
-X-Google-Smtp-Source: AGHT+IFDyYOeUhT8Bbb9GCbxFDItrQuSs7u5k0phj03PaXnRWntIOvKeCN52kZaBXAUM/+2zDMUHvw==
-X-Received: by 2002:a53:b2f5:0:b0:63e:1ca0:be73 with SMTP id 956f58d0204a3-64302ac3594mr20527544d50.37.1764527265793;
-        Sun, 30 Nov 2025 10:27:45 -0800 (PST)
-Received: from localhost ([2601:346:0:79bd:b42b:4ad9:10af:cabc])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad1011c00sm39418837b3.33.2025.11.30.10.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Nov 2025 10:27:45 -0800 (PST)
-Date: Sun, 30 Nov 2025 13:27:45 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to sysfs.h
-Message-ID: <aSyMobJnY4qKmsdk@yury>
-References: <20251129195304.204082-1-yury.norov@gmail.com>
- <20251129195304.204082-3-yury.norov@gmail.com>
- <aStWkK6exUj9YEC1@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBFXLUn9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94BAC4CEF8;
+	Sun, 30 Nov 2025 18:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764527641;
+	bh=BYIrTTSVxXc1HabQ88UTUwwWE2cNqChrEagcfgIifHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kBFXLUn9eUUFE4hB9wG21BIV2zOMN07LikUdlSj0RvlJDXhVqa215EW/n6VTfVHcv
+	 F845ySyClHanxEDEJDysjtCqNufWrG0UWe1rZ9akTgwmjHRPylnJXjt6s6ZU4298Ar
+	 EPA5ZJaIVvTYHsE96tgy1HlAERMGGDM5VYcBrkWMy9zZdWAAVB+d0dgO2A3ovaumzG
+	 2XtYroo6lgEXWW8/gpv/XtaJmPNjlhzexoAR0MWVmUGCI2rsdwlA/X3EGkCWY7cMw/
+	 It30Yk8Tw8ecoSZLXWsq44aSzte+1xPwYrAWTuP5SI+CNM5u2K+266oecI+orhbqnl
+	 EVvQsbTDV9uQw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vPmFC-00000009RQq-3VZl;
+	Sun, 30 Nov 2025 18:33:58 +0000
+Date: Sun, 30 Nov 2025 18:33:58 +0000
+Message-ID: <875xarfjzd.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 24/28] KVM: arm64: Add trace reset to the pKVM hyp
+In-Reply-To: <20251107093840.3779150-25-vdonnefort@google.com>
+References: <20251107093840.3779150-1-vdonnefort@google.com>
+	<20251107093840.3779150-25-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aStWkK6exUj9YEC1@smile.fi.intel.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Nov 29, 2025 at 10:24:48PM +0200, Andy Shevchenko wrote:
-> On Sat, Nov 29, 2025 at 02:53:01PM -0500, Yury Norov (NVIDIA) wrote:
-> > The macro is related to sysfs, but is defined in kernel.h. Move it to
-> > the proper header, and unload the generic kernel.h.
+On Fri, 07 Nov 2025 09:38:36 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Tough guy :-)
-> I hope it builds well in your case.
-> 
-> FWIW,
-> https://lore.kernel.org/lkml/20220603172101.49950-1-andriy.shevchenko@linux.intel.com/
-> https://lore.kernel.org/lkml/20240212115500.2078463-1-max.kellermann@ionos.com/
-> https://lore.kernel.org/lkml/20240215093646.3265823-1-max.kellermann@ionos.com/
 
-Oh, OK. Surely I didn't want to undercut your or Max's work. Do you
-know why it wasn't merged in 2022 and 2024?
- 
-> Assuming it builds in allmodconfig, allyesconfig on x86_32/64 and arm/64
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[...]
 
-It seemingly builds well. Thanks for review.
+> +int __pkvm_reset_tracing(unsigned int cpu)
+> +{
+> +	int ret = 0;
+> +
+> +	if (cpu >= hyp_nr_cpus)
+> +		return -EINVAL;
+> +
+> +	hyp_spin_lock(&trace_buffer.lock);
+> +
+> +	if (hyp_trace_buffer_loaded(&trace_buffer))
+> +		ret = simple_ring_buffer_reset(per_cpu_ptr(trace_buffer.simple_rbs, cpu));
+> +	else
+> +		ret = -ENODEV;
+> +
+> +	hyp_spin_unlock(&trace_buffer.lock);
+> +
+> +	return ret;
+
+nit; there is no case where the 'ret' default value can be used.
+Either drop the init or make it so that the default value is
+meaningful (-ENODEV).
+
+Thanks,
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
