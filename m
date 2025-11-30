@@ -1,138 +1,192 @@
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB5028C2BF
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 30 Nov 2025 18:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DA91FBC8E;
+	Sun, 30 Nov 2025 18:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764526583; cv=none; b=uy7h20hr4xKBsy7gf7iEKat7DSS8Co79oW0q5vIwa8KQMyydGCDdF9YP6UiPKATR+xGpcUGGCjfBgvcjr5XK1CuiH9g8h6pO1iAVirDCFNMemgHvfDgsUZEGX75CegDL31CYPpewx8bgoSu1H6Vdoj6E0D5YR49reOiNCz/92EE=
+	t=1764527026; cv=none; b=V7YxndzbA0hvMoCS8iPXneHvbnT9czp2jarVJdm9B9FvA4DNvLAi6GLQP3bypW+8BeucH6898U3L57Icc4I/gfcQhRPI15MF5QJc+Z3Ud+NlNe/Ss3AThh5qKcG+I/wzL1nq7OMv8JJJtCU3j9tcKHdtfS2j4KhJLjz94p8rYt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764526583; c=relaxed/simple;
-	bh=xMe2StGzK5NX+kq6kKhx0Deffi5L07sCSW856vZYwzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5Q5MeeAGGjwmkp/aluTU190Tno5o11wiluDTf2Vsa5yFhj7GWQcdjEH8VJluHbS7dxe1kSbwezVRei19ckYXqL4uabfUNRfdoUjlNdb8urX9WMqExwfUEjA+pziBnKV7OovMWHVMR/xU9VQFxgZAt+SMJYREQdE5FqydlcNaWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAt4cI59; arc=none smtp.client-ip=74.125.224.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764527026; c=relaxed/simple;
+	bh=wxGi5KhMHefnyPeE18YbxxI9ChdRvOLT/D+zSDi6lC4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GUU/iUcV64jbAMVU0CyFsZKSyqNoVXmAUEMiwJuk9yvP8BREOMEDs7do8iFLdHmNkT8Ze4XNIby79J8XqqDqP/y30v4iHhdPgLTb1cRBKsuPTR4o5mhUuyoZqdLfMInSHCX4QgWen6JU1hItqXrixQB5vSUN9X/kBExqA/bFdcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMc5gsdz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAt4cI59"
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-642f3bab0c8so2664341d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 30 Nov 2025 10:16:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764526580; x=1765131380; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPTHL8VwtfKfk45TFU08paMyal7EO1gfKoy+e7omzHs=;
-        b=eAt4cI59JxPsGjtJ11O+7GH/oETePW6BnD31pPwEe+xo4Ko+0S079pSUzzoJBtfdzl
-         bkRcWar8e1ngKub1JmKn8XVrwPU9L2AyUljdDOFnVYuDuqvsJwlRGdLLGUhs6FMf1TU1
-         X520Iww3vfK0Q5CpmAsbwR1G5SDoHlpK3TWUksPKx3dVKsU5SEW+yEKrhE87yvd8uorA
-         fYT8Xyv1NYoyDYGzFApp8UX+OaLsn8GwiFIf4C0xQfMhQOUP9OhToVffECMlLUj62TNO
-         HMfWONadLlZC8QfZ5/Uf9Ayra6tU+ufYTCQgQVK+s8JUnjDLok2J42BwnebyXmDMip+O
-         GETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764526580; x=1765131380;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bPTHL8VwtfKfk45TFU08paMyal7EO1gfKoy+e7omzHs=;
-        b=ehXBXXL0jgG3mZCMf59teiar/l36Wx+by0zbyZzUZ6BElN0OGTd4JqJHUlCAz4gPPL
-         aS6SwhOi0dOZ2CYJaiCCsKmT7uPcOiCRIwhSownf6w7sWAIeCln/DhgRCb7tnVJl124R
-         +ktxLKHemcWGLxuytZSEiUAEBU/DziQzLZ6yciC2WVf4mw3SOhOWoEA5Tn+3ufpIeYZP
-         A21AMPjjsZKEUmRGRTbfLgnJiNy4wV4XARpjvvMXm1YCzQcfj4NsoyFf7GvAXvnUp7+d
-         ZkVkgGp8mrX7ErwzN2ZtBBVJpQ+Y0HxomMzgzGBF2tEDg6ldENtBNMzbN2a4pBurD+hr
-         GdQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJd6vCrP0giOiNCPvaTST286eSLYVxVKiQTWc3Ataunyq+T+YduD3kh/KOh9etkNsE3hQBKUZ1ratKjKZ3eQmnn5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNZoBvYdguUQesZkxppitCHnl3za0qq7dgM4oBTbmujDvu9TVU
-	t4JUYwHRd3OBL44LLFwSvkKw/61dbb8LvljEjg3m5VUCma57lDdeNFvT
-X-Gm-Gg: ASbGnctcBvY3w7Pqnu9iEpHDZbvZitXDBYrI/GtzTgAC5D377dMsS+LwXvx8w78zgIe
-	qSM2zUwNyjdnd0csheBK/gQj2QdZPoeSGIXAB4TmI2f8zOF5rWeMHKi1+jQQ0JGRVYVjkHI3A5m
-	nMj4qZ1uvgPDTyYDnrBXgrsAfG+SPog8aVHHBADQRIpC8xk4o5PjT5yuRyJRxTAMEh7DBkFJDFA
-	uGIWHUtz82qRHw4Vvn/QUEjSY8RNCw1ti+kWIeX+t963veYVt0bR+MRrrbIQcAiqRNwes+Jp5B1
-	++l4fc9PexublQ5cDUvlaBPC2QO30P8azIwmr6jhqzcxboWxt0MRLRdnZyBXYJZUqLvSQrHmwLh
-	qWmFZ+n7zQYICBZZhnvSc7HrbdMB9LLxjw2DI5ydNtFYinuWDhY7KB7kCUM0mIXXrPPgVL9/v3z
-	mk1HQBVvElTI28YxQVuA==
-X-Google-Smtp-Source: AGHT+IEQcHwA7T6ktmCXafon70hVlddeX9BaPXERtnLHGkMmTox+ufRP6CsVlNJn8W2ToaNF/lgtHw==
-X-Received: by 2002:a53:acc9:0:10b0:63f:beb2:9519 with SMTP id 956f58d0204a3-64302a2fb59mr21422815d50.5.1764526580498;
-        Sun, 30 Nov 2025 10:16:20 -0800 (PST)
-Received: from localhost ([2601:346:0:79bd:b42b:4ad9:10af:cabc])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad0d603f5sm39289087b3.19.2025.11.30.10.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Nov 2025 10:16:20 -0800 (PST)
-Date: Sun, 30 Nov 2025 13:16:19 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tracing: move tracing declarations from kernel.h to
- a dedicated header
-Message-ID: <aSyJ83v7EEAPHXeU@yury>
-References: <20251129195304.204082-1-yury.norov@gmail.com>
- <20251129195304.204082-4-yury.norov@gmail.com>
- <aStX3242e3mo5H05@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMc5gsdz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE18C4CEF8;
+	Sun, 30 Nov 2025 18:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764527026;
+	bh=wxGi5KhMHefnyPeE18YbxxI9ChdRvOLT/D+zSDi6lC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rMc5gsdz1DTW91gCfDgroykjDSBJlgb+ro4HJxAcAYJ77WzPYIS33ItzCPhZrGtyM
+	 tosPEK7WvHhn8b2KjVTVyinBH+YLyHLHqCb3fWNmwMRt8uqGe6fcXhDHNXvG5QKsGq
+	 17PwlClIVy615YgjlvX9R573ePTQK0xNDsMZURfdTK/TvH94VezUtECWCws4EuDTJC
+	 Gk2xPuiK+pgt1c0UlgGkP2WrwhXmnEqNGdU8ApHaT+PG7Mv+BANpJV6KSjD/uxnMlb
+	 RpYs7t4HNYF17PhaMh1sMuhRJsKCJSe98QiQs1YE3Y35VRST/kkzyJIeNQdvYBcfHx
+	 Ig/UnP6bxcRgw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vPm5H-00000009RLI-38t4;
+	Sun, 30 Nov 2025 18:23:43 +0000
+Date: Sun, 30 Nov 2025 18:23:43 +0000
+Message-ID: <877bv7fkgg.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 21/28] KVM: arm64: Add tracing capability for the pKVM hyp
+In-Reply-To: <aR8DM6Xf8cmTGVR0@google.com>
+References: <20251107093840.3779150-1-vdonnefort@google.com>
+	<20251107093840.3779150-22-vdonnefort@google.com>
+	<86bjkyrly9.wl-maz@kernel.org>
+	<aR8DM6Xf8cmTGVR0@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aStX3242e3mo5H05@smile.fi.intel.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Nov 29, 2025 at 10:30:23PM +0200, Andy Shevchenko wrote:
-> On Sat, Nov 29, 2025 at 02:53:02PM -0500, Yury Norov (NVIDIA) wrote:
-> > Tracing is a half of the kernel.h in terms of LOCs, although it's a
-> > self-consistent part. Move it to a separate header.
+On Thu, 20 Nov 2025 12:01:55 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> On Wed, Nov 19, 2025 at 05:06:38PM +0000, Marc Zyngier wrote:
+> > On Fri, 07 Nov 2025 09:38:33 +0000,
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > 
+> > > When running with protected mode, the host has very little knowledge
+> > > about what is happening in the hypervisor. Of course this is an
+> > > essential feature for security but nonetheless, that piece of code
+> > > growing with more responsibilities, we need now a way to debug and
+> > > profile it. Tracefs by its reliability, versatility and support for
+> > > user-space is the perfect tool.
+> > > 
+> > > There's no way the hypervisor could log events directly into the host
+> > > tracefs ring-buffers. So instead let's use our own, where the hypervisor
+> > > is the writer and the host the reader.
+> > > 
+> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > > 
+> > > diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> > > index 9da54d4ee49e..ad02dee140d3 100644
+> > > --- a/arch/arm64/include/asm/kvm_asm.h
+> > > +++ b/arch/arm64/include/asm/kvm_asm.h
+> > > @@ -89,6 +89,10 @@ enum __kvm_host_smccc_func {
+> > >  	__KVM_HOST_SMCCC_FUNC___pkvm_vcpu_load,
+> > >  	__KVM_HOST_SMCCC_FUNC___pkvm_vcpu_put,
+> > >  	__KVM_HOST_SMCCC_FUNC___pkvm_tlb_flush_vmid,
+> > > +	__KVM_HOST_SMCCC_FUNC___pkvm_load_tracing,
+> > > +	__KVM_HOST_SMCCC_FUNC___pkvm_unload_tracing,
+> > > +	__KVM_HOST_SMCCC_FUNC___pkvm_enable_tracing,
+> > > +	__KVM_HOST_SMCCC_FUNC___pkvm_swap_reader_tracing,
+> > >  };
+> > >  
+> > >  #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
+> > > diff --git a/arch/arm64/include/asm/kvm_hyptrace.h b/arch/arm64/include/asm/kvm_hyptrace.h
+> > > new file mode 100644
+> > > index 000000000000..9c30a479bc36
+> > > --- /dev/null
+> > > +++ b/arch/arm64/include/asm/kvm_hyptrace.h
+> > > @@ -0,0 +1,13 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +#ifndef __ARM64_KVM_HYPTRACE_H_
+> > > +#define __ARM64_KVM_HYPTRACE_H_
+> > > +
+> > > +#include <linux/ring_buffer.h>
+> > > +
+> > > +struct hyp_trace_desc {
+> > > +	unsigned long			bpages_backing_start;
 > > 
-> > This is a pure move, except for removing a few 'extern's.
+> > Why is this an integer type? You keep casting it all over the place,
+> > which tells me that's not the ideal type.
 > 
-> Yeah, I also have something similar (but half-baked) locally, the Q I wanted to
-> ask is why a separate header? We have already some of tracing headers. Doesn't
-> suit well?
-
-Just as said in the commit message - this part is more or less
-self-consistent and debugging-oriented. If someone needs to just
-throw trace_printk() in their driver, they will not have to pull
-all the heavy tracing machinery.
-
-> ...
+> That's because it is a kern VA the hyp needs to convert. However it would indeed
+> make my life easier to declare it as a struct simple_buffer_page * in the
+> struct hyp_trace_buffer below.
 > 
-> > --- a/include/linux/kernel.h
-> > +++ b/include/linux/kernel.h
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/math.h>
-> >  #include <linux/minmax.h>
-> >  #include <linux/typecheck.h>
+> > 
+> > > +	size_t				bpages_backing_size;
+> > > +	struct trace_buffer_desc	trace_buffer_desc;
+> > > +
+> > > +};
+> > > +#endif
+> > > diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> > > index 4f803fd1c99a..580426cdbe77 100644
+> > > --- a/arch/arm64/kvm/Kconfig
+> > > +++ b/arch/arm64/kvm/Kconfig
+> > > @@ -83,4 +83,11 @@ config PTDUMP_STAGE2_DEBUGFS
+> > >  
+> > >  	  If in doubt, say N.
+> > >  
+> > > +config PKVM_TRACING
+> > > +	bool
+> > > +	depends on KVM
+> > > +	depends on TRACING
+> > > +	select SIMPLE_RING_BUFFER
+> > > +	default y
+> > 
+> > I'd rather this is made to depend on NVHE_EL2_DEBUG, just like the
+> > other debug options.
 > 
-> > +#include <linux/tracing.h>
+> NVHE_EL2_DEBUG is unsafe for production because of the stage-2 relax on panic.
+> While this one is. So ideally this should be usable even without NVHE_EL2_DEBUG.
+
+I don't see what makes tracing safer, as it potentially exposes
+information (timing, control flow) that the host use to infer what is
+happening at EL2. Which is, after all, the whole point of tracing.
+
+I really think this should be guarded by NVHE_EL2_DEBUG, and the
+stage-2 relaxation tied to the stacktrace infrastructure, so that you
+can select both independently.
+
+> I can remove this hidden PKVM_TRACING option and use everywhere
+> CONFIG_TRACING. But then I need something to select
+> SIMPLE_RING_BUFFER.
 > 
-> There is better place for t*.h, i.e. after static_call_types.h.
+> Perhaps with the following?
+> 
+> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> index 2ae6bf499236..c561bf9d4754 100644
+> --- a/arch/arm64/kvm/Kconfig
+> +++ b/arch/arm64/kvm/Kconfig
+> @@ -38,6 +38,7 @@ menuconfig KVM
+>         select SCHED_INFO
+>         select GUEST_PERF_EVENTS if PERF_EVENTS
+>         select KVM_GUEST_MEMFD
+> +       select SIMPLE_RING_BUFFER if CONFIG_TRACING
 
-They are poorly sorted for seemingly no good reason. I found the first
-t*.h and just put this header next to it. Don't think that placing it
-next to static_call_types.h is any better or worse.
- 
-> Btw, have you tried to sort alphabetically the bulk in the kernel.h after
-> your series. Does it still build? (Just wondering about state of affairs
-> with the possible cyclic dependencies.)
-
-I didn't try. Sorting #include's is not the purpose of the series.
+That's better, but my ask about making this depending on DEBUG still
+stand.
 
 Thanks,
-Yury
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
