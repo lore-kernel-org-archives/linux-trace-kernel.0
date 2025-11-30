@@ -1,144 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA44A36D510;
-	Sun, 30 Nov 2025 19:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0F33C17;
+	Sun, 30 Nov 2025 19:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764529255; cv=none; b=K6u0eAgxxWvsRddGMlHfa68lN4FB+wAglHwEtWgGzhclCmI27ab/iNULtK25yIx8jVGXn7vmGPo1iZyfx3KdpKs4qjiZtXgzvwsqSTtTsV/H3Zg8o1Kj2Btv6qXFk6Bc5DxlQ6ePNKQ00uMdsYoRpF6mpFBdNI3k59LSaIfBnUk=
+	t=1764531352; cv=none; b=ifMxPhizFkshgaOLuculilokm485FStHv1adDrEIjXR1DzWGbL+UeCeJgRPMshCLnrXqw+Kzd5JSXM5m4vvcvrIsc3TquZUhXJF0mUgRufr9jpZtd8tYqsHiM4RQYZsB2qT3MOxOBz4MZG60QP5pOZeALCci4hv4PXuFmLb8tGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764529255; c=relaxed/simple;
-	bh=mPEVeRr6keddK7qH3YNSYex+8//0NX6k5IUxeUArYy0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cAamAtZb8RJAc2yKA+Mp5SCgsFhRbn9z9EQaOZfMQHVIlHoZJqO6I1ICy53n1UjHRIVT5McP2J2/h/kELO4y+OXup+oV6FSGUndp+DZXlgF8hSkJ+zHjsoxgDkRFCh+BEVW8i0WCCQXoDhCAXLKGvg48idl+kBX7TNFcfB6UP0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trw2mUaX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764531352; c=relaxed/simple;
+	bh=v/MI6kLlmGwE12FmWCb72yhLGZ2pXfiaLSMVHtPu4Qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ss4wkswHcNdsvW6/oNexr13PUffs2a8NG6Uyl6CebMIdXYdEqDC01aDtBdTIOdv7vL5hvkCCvvmFqLzDlIr7vS4mLrd5dFnDPJLkiLF3dk9U9XrZGhQctQi6u68Arug8I3tSQCtQ5Bf1iWZUDE24GkDg+SPfAXngRqAFaft3EAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3NNJMy2; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trw2mUaX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4C8C4CEF8;
-	Sun, 30 Nov 2025 19:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764529255;
-	bh=mPEVeRr6keddK7qH3YNSYex+8//0NX6k5IUxeUArYy0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=trw2mUaXCjIGhq11DQgJd9k61el1RXH95SwTuS8VxyY7pF4qNs0EtArM5fz7SEbBa
-	 r83YIYYMYSanHaUNG8toB0gRJSyyoqaIAA+xs8R6PFM7TkkV3Q0B44qcFYJhqDINhx
-	 bGa1j8h+zwAm1+htzkWa+yGItNUhnMfQIRIN2uFxtS0iRfl1X3bH93SpV7Aw5kDWOK
-	 pmN3Q7zZ6JcUYdMlmWStZomiYNapzifwyaI6lK+lG1bxiB47ON4WameeYTr1m0Hgu8
-	 P8WHSG0rwJfG++BvcaqMG+/6axeqVjE5TZok8Iq0AupQNxb8Mcw4KFGi00diTQT9iw
-	 sjMjQvVZ+KjPw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vPmfF-00000009Ray-0Ymp;
-	Sun, 30 Nov 2025 19:00:53 +0000
-Date: Sun, 30 Nov 2025 19:00:52 +0000
-Message-ID: <87345vfiqj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 26/28] KVM: arm64: Add hyp_enter/hyp_exit events to pKVM hyp
-In-Reply-To: <20251107093840.3779150-27-vdonnefort@google.com>
-References: <20251107093840.3779150-1-vdonnefort@google.com>
-	<20251107093840.3779150-27-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3NNJMy2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764531350; x=1796067350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v/MI6kLlmGwE12FmWCb72yhLGZ2pXfiaLSMVHtPu4Qs=;
+  b=I3NNJMy2LF9FNyn/FlRnflFEw74fP7nUkS3L8s779mtHNMmJn2sbZ/aD
+   evt+ntWJmC2JN/Z6UzrHgA6PQuPNKLfy8f4rBR2MrnjIXGb+DD4YER3l4
+   8B6QJH1G+/aM0MNrU82Ds1piWIHS7sRYnsePsFPNiojopdS5B8DonllCj
+   b6MDgvuVQjrTqH8JI7pt/rY8uy3j7qvJMecRxAQN3g2ajbKMGSXlZfhTO
+   uOHq41gXJBm0ytCxXEQlhSCVvkysIjaxo78jEMqdxdQFPh+1eZhh6A0gD
+   ugVInzgiaDis8jPetbUKMx++RlWf6Ssy9hwzLfhQB1p/9WFarrPIvIE3/
+   g==;
+X-CSE-ConnectionGUID: JPe5/aDrTC6A+4y4Nc+VGg==
+X-CSE-MsgGUID: 8S6wHMWlSXCgut/nUVdLfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="66364219"
+X-IronPort-AV: E=Sophos;i="6.20,239,1758610800"; 
+   d="scan'208";a="66364219"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2025 11:35:48 -0800
+X-CSE-ConnectionGUID: ZbEoJsGDT2KT5QF14rLIGQ==
+X-CSE-MsgGUID: NF4JUzJjR/mDO5fMXIcBZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,239,1758610800"; 
+   d="scan'208";a="193778551"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.125])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2025 11:35:43 -0800
+Date: Sun, 30 Nov 2025 21:35:41 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to sysfs.h
+Message-ID: <aSycjR2Iq4iCOa7k@smile.fi.intel.com>
+References: <20251129195304.204082-1-yury.norov@gmail.com>
+ <20251129195304.204082-3-yury.norov@gmail.com>
+ <aStWkK6exUj9YEC1@smile.fi.intel.com>
+ <aStYs-LDKbJe6zvW@smile.fi.intel.com>
+ <aStZKktOEWliXWT1@smile.fi.intel.com>
+ <aSyFNSqWv_A7JNpI@yury>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aSyFNSqWv_A7JNpI@yury>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, 07 Nov 2025 09:38:38 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Sun, Nov 30, 2025 at 12:56:05PM -0500, Yury Norov wrote:
+> On Sat, Nov 29, 2025 at 10:35:54PM +0200, Andy Shevchenko wrote:
+> > On Sat, Nov 29, 2025 at 10:34:02PM +0200, Andy Shevchenko wrote:
+> > > On Sat, Nov 29, 2025 at 10:24:55PM +0200, Andy Shevchenko wrote:
+> > > > On Sat, Nov 29, 2025 at 02:53:01PM -0500, Yury Norov (NVIDIA) wrote:
+> > > > > The macro is related to sysfs, but is defined in kernel.h. Move it to
+> > > > > the proper header, and unload the generic kernel.h.
+> > > > 
+> > > > Tough guy :-)
+> > > > I hope it builds well in your case.
+> > > > 
+> > > > FWIW,
+> > > > https://lore.kernel.org/lkml/20220603172101.49950-1-andriy.shevchenko@linux.intel.com/
+> > > > https://lore.kernel.org/lkml/20240212115500.2078463-1-max.kellermann@ionos.com/
+> > > > https://lore.kernel.org/lkml/20240215093646.3265823-1-max.kellermann@ionos.com/
+> > > > 
+> > > > Assuming it builds in allmodconfig, allyesconfig on x86_32/64 and arm/64
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > 
+> > > Actually, one thing should be fixed, i.e.
+> > > Documentation/filesystems/sysfs.rst:123:Note as stated in include/linux/kernel.h "OTHER_WRITABLE? ...
+> > 
+> > And just in case, look into
+> > https://lore.kernel.org/r/20251126214709.2322314-1-andriy.shevchenko@linux.intel.com
 > 
-> The hyp_enter and hyp_exit events are logged by the hypervisor any time
-> it is entered and exited.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
-> index d6e033c96c52..ce3953bc884a 100644
-> --- a/arch/arm64/include/asm/kvm_hypevents.h
-> +++ b/arch/arm64/include/asm/kvm_hypevents.h
-> @@ -7,4 +7,21 @@
->  #include <nvhe/trace.h>
->  #endif
->  
-> +HYP_EVENT(hyp_enter,
-> +	HE_PROTO(void),
-> +	HE_STRUCT(
-> +	),
-> +	HE_ASSIGN(
-> +	),
-> +	HE_PRINTK()
-> +);
-> +
-> +HYP_EVENT(hyp_exit,
-> +	HE_PROTO(void),
-> +	HE_STRUCT(
-> +	),
-> +	HE_ASSIGN(
-> +	),
-> +	HE_PRINTK()
-> +);
->  #endif
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
-> new file mode 100644
-> index 000000000000..4b69d33e4f2d
-> --- /dev/null
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#include <asm/kvm_hypevents.h>
-> +
-> +#include <linux/arm-smccc.h>
-> +
-> +#undef arm_smccc_1_1_smc
-> +#define arm_smccc_1_1_smc(...)					\
-> +	do {							\
-> +		trace_hyp_exit();				\
-> +		__arm_smccc_1_1(SMCCC_SMC_INST, __VA_ARGS__);	\
-> +		trace_hyp_enter();				\
-> +	} while (0)
+> Sure. Please find attached.
 
-Huh. No, please. Don't override existing kernel constructs behind
-everybody's back. I know that tracing folks love to play that sort of
-game, but I really don't want any of that here.
+Just fold this into your patch.
 
-Just define a wrapper that is KVM-specific, and use that.
-
-Then from a semantic perspective, an SMC call, an ERET back to EL1
-host, and an ERET back to EL1 guest are all very different events that
-you lump under the "exit" category. That's not right. Same thing for
-"enter".
-
-Thanks,
-
-	M.
+Thanks!
 
 -- 
-Jazz isn't dead. It just smells funny.
+With Best Regards,
+Andy Shevchenko
+
+
