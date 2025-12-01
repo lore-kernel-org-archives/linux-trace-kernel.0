@@ -1,80 +1,74 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2C82459DD
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 19:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA291FAC42;
+	Mon,  1 Dec 2025 19:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764616624; cv=none; b=stPAPk/I+2LYJ2fmHh6+nWG6XG3KQ43EfpH2GiPQQBBKpKJQrWPzCR5uUWokwT77QEpCFvjY3DxM039auA0VuIVOhnvQABenqC0goE4tBQTXRkXm8fKF89HyT5zdE2NpRnTEtiZCIF6OyBrKTpbfNnI1qWc57b0N3MzjQ9d2TBM=
+	t=1764616833; cv=none; b=fJwsXRB8Z90CqYf0FApOUe2YOLR9AyklDwVQbP8VXahH7JPQ6gIQwruRVaP0+bjq5szNWexFmOPbykJ1lVbaeBx88fvoY/JmUbDJeJ+8/hFZddCq/4kxiuGWbbUkk79o04bsKc0vdA2AVxnN2lqCT6uSol4pZmRoTR3yNhg2f/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764616624; c=relaxed/simple;
-	bh=lNk43apg7AFNGLzXw14VhSY2OU5GiJ0VzJmGRc3lljY=;
+	s=arc-20240116; t=1764616833; c=relaxed/simple;
+	bh=aonye0tlAvNGnQxCutJyOBdaip/hewIAkc66JsRr1fE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSeYP19AXTxx/HZJaW28p/asKXIrGF0kc0q5A4ZoeUUBLngt/07UVnctgLFyBLhJL/MwM6UL04zjvflm1tRcvyiFM4BwXBkKRAQLCzoGC3DzmzL1qDD3DHP8UqC/ni6P9fIIFKXXEPQ5m6VxsKShIcGE3iEanmaeSYGUeWbTky4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y+yNRVJj; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rr2ZW0bfm9Tyw471JW+TT5CJ+fOtcJzvYl71bOCub2O0GHzcph6WPtm7+YN+VIaXLnOSR1dMXKp6xClnT6TZ7McH1hwbCPE4TyiAP47Ds1KVi+RJeyvopb991fetLXl4ugx4glFEubAFdyk+I3Z4duiyMFbjciPzV2tDW4tfsoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BeJBkL54; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y+yNRVJj"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b762de65c07so113553266b.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 11:17:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764616621; x=1765221421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nL1ek/sF4svl8idObYnvvFBp1pJ9SdL29UX5xP7uR4w=;
-        b=y+yNRVJjeIUf/+IEpUMHT3s0GQdTzqJStrkfqe7fzmLPLz0dS3L+DMKELoZVnRIppW
-         CZQtYeAyOPWFagurv6+RlOR+SBaU4LIxpTSXP05qUJVE3efKsIquPIeDCqTQlH0bsE6C
-         69tLO3685eYKJ1qkUJ71MF6o5qvPckX9bCYA+lNsOIl/Il0ezzXJdyCyRAjO0IhG8o+v
-         cKtgRIroEOFCrx4JvMVBej8FrHB3Fu46sayjA8GMFCkhZQcQI8rh/kFuZH5mS4du9GBN
-         JBtcZyzSWOcx6D5Mp8wkPFj2Ic6Hua4OurYJk87Lr9Ovpt9iX3lu+RwZS3BZNjUp9/VW
-         4gVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764616621; x=1765221421;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nL1ek/sF4svl8idObYnvvFBp1pJ9SdL29UX5xP7uR4w=;
-        b=c6ChWW/qwuo8D8tH4Npz7eO1r0PQy51h5/JhoYOYq6BsXHXzmOLk29Y+Y4T14CFe2v
-         96cBcSuj4eAX3ehnCYWEo2pPwSs25QxQYd/B3o3zFUi3KaHX6fmkj36gqT7FTVEa3s85
-         UtJ8ubTQUaomMAeW5SVEDSs68EA1Nl310q0MoChfTtsIBg0GeY2Iq5laPXwF7QZrzjbZ
-         BGCpbc6GhZ8LH89EVR2j/+Cja+/fVhxsHiFRv8lr+aTgysRkgRhSaQdhwGFjBjZkJDjy
-         JyfGO8lrQLOo6c0GA9HLoETSdPgXRCAkQ8/gzi47qSnizZ8Sibq9JintziwqEd3Q5GuV
-         Fn/w==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ogPDim5sq+cJSwlIEZ2mtXcRXJIYuSD0+R/NNDdfTjMI9eG4ZbC/eOQbA4Ok6m7Kf1bsVaiRBnllCy0nhuAd4xQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZcBEgsKniz2SGm+tlIQ3Krw1svqbPWJTVXkL78T3dXU5RYhre
-	50iDNfE0gOPnHlJrR2npjyOqTW43pJc/7kIV5DW44PUh2+NnNHZgmsDeFhCkRfT9sg==
-X-Gm-Gg: ASbGncvM9GPndoIGUamYVitPb/KAAtyhwuACSCEInwcng+EKKLxpl5lnrzGAoq2vGqC
-	QNf11MbGhYrdO7gwhNZ0cFy14s/6UHsT3isQerLg8agMmqoAZhT4S1NAa5p4VrsyG12Z8Vxfwop
-	+XTNITyepGEGcQqkFANE0CsuqT19FGw8Af7QySfmCpz/5qSQIgQVNIipnzdZqDWKzj8epefUItW
-	3RjLxGHts55N7KTHQmni0fsVHf/LAp8vQV0dnyykjlRm7vKK5cpGmITH8SaPfo9Taihwr9rvPTa
-	/Yn66bZTo7DhbVyp+YBgqI+2OW9Kx7xbmjlxVh5uPey48OFdUxgxOc1bVMtfpoetENekwxRpZ0w
-	gS4nclv95hUD/Za4qvPXR+LnnTTthE3vgFDv4Xd0YPhX0Ecmx/+FmalvKUBCIdR+25liF0rSnUI
-	Xy4rCSJwVbKcLdcct904uXGVUT3StwCiN1CMLxufsxDB6uJwNRpb0pCbx8P4I=
-X-Google-Smtp-Source: AGHT+IHEnW+KAQVBRRWo/sP1tuQq4+YuSexSYvAgD3ZQW+Uk1hhu0eSXu61P0LbdLU0EfCdTk/o99w==
-X-Received: by 2002:a17:906:7311:b0:b72:af1f:af7d with SMTP id a640c23a62f3a-b76c55f402cmr3192681366b.29.1764616620584;
-        Mon, 01 Dec 2025 11:17:00 -0800 (PST)
-Received: from google.com (155.217.141.34.bc.googleusercontent.com. [34.141.217.155])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f516a6c1sm1285135766b.13.2025.12.01.11.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Dec 2025 11:17:00 -0800 (PST)
-Date: Mon, 1 Dec 2025 19:16:56 +0000
-From: Matt Bobrowski <mattbobrowski@google.com>
-To: Shuran Liu <electronlsr@gmail.com>
-Cc: song@kernel.org, bpf@vger.kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Zesen Liu <ftyg@live.com>, Peili Gao <gplhust955@gmail.com>,
-	Haoran Ni <haoran.ni.cs@gmail.com>
-Subject: Re: [PATCH bpf 2/2] selftests/bpf: add regression test for
- bpf_d_path()
-Message-ID: <aS3pqFCze_gmYq0y@google.com>
-References: <20251201143813.5212-1-electronlsr@gmail.com>
- <20251201143813.5212-3-electronlsr@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BeJBkL54"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764616831; x=1796152831;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aonye0tlAvNGnQxCutJyOBdaip/hewIAkc66JsRr1fE=;
+  b=BeJBkL541uy5Jri442uSnWW577ZFN48vgl86nlNZDxpKUCTZwsR0zx6x
+   sHYezJclLyHicht3bppuWRdT8LmwFjllQ+xtLyXD0hu1/ZW6nUB0Oaqeq
+   82TM5r464GFj/k1yGQUNT6nAMpjY0vsMEPuMTBdlXniH8iU5QMbQf7gsi
+   At06g6aTRrRJ5yarnFQ7qb4Tia1qWOTkpPLJBrcYkK7aOrCjXxMTu4avX
+   KT0TuU94yuaLvAYD2+KoIZ4wLw217zpybcO3OHPbwaKcqf/VfohHwOQlf
+   sj9U71DEi3tazaHA0N8OwRxUBb0uM5S1ORLEJgNtlooVSo9II09Mgu6Gu
+   g==;
+X-CSE-ConnectionGUID: ljprIbEfRaygbouCn2UCOA==
+X-CSE-MsgGUID: SjcaNsB8RnukHeFx5DzR8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="77257110"
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="77257110"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 11:20:30 -0800
+X-CSE-ConnectionGUID: 4ymANUSGTIiz5hqaTHvpnA==
+X-CSE-MsgGUID: 3Rwt4ccUTAa71Ggv8DCsjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="193835168"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.4])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 11:20:25 -0800
+Date: Mon, 1 Dec 2025 21:20:23 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to sysfs.h
+Message-ID: <aS3qd9FC-9nBGYEP@smile.fi.intel.com>
+References: <20251129195304.204082-1-yury.norov@gmail.com>
+ <20251129195304.204082-3-yury.norov@gmail.com>
+ <c45058d5-d690-4731-85d1-434971c16f92@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -83,132 +77,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251201143813.5212-3-electronlsr@gmail.com>
+In-Reply-To: <c45058d5-d690-4731-85d1-434971c16f92@suse.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Dec 01, 2025 at 10:38:13PM +0800, Shuran Liu wrote:
-> Add a simple LSM BPF program and a corresponding test_progs test case
-> to exercise bpf_d_path() and ensure that prefix comparisons on the
-> returned path keep working.
-> 
-n> The LSM program hooks bprm_check_security, calls bpf_d_path() on the
-> binary being executed, and compares the returned path against the
-> "/tmp/" prefix. The result is recorded in an array map.
-> 
-> The user space test runs /tmp/bpf_d_path_test (copied from /bin/true)
-> and checks that the BPF program records a successful prefix match.
-> 
-> Without the preceding fix to bpf_d_path()'s helper prototype, the
-> test can fail due to the verifier incorrectly assuming that the
-> buffer contents are unchanged across the helper call and misoptimizing
-> the program. With the fix applied, the test passes.
-> 
-> Co-developed-by: Zesen Liu <ftyg@live.com>
-> Signed-off-by: Zesen Liu <ftyg@live.com>
-> Co-developed-by: Peili Gao <gplhust955@gmail.com>
-> Signed-off-by: Peili Gao <gplhust955@gmail.com>
-> Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-> Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-> Signed-off-by: Shuran Liu <electronlsr@gmail.com>
-> ---
->  .../selftests/bpf/prog_tests/d_path_lsm.c     | 27 ++++++++++++
->  .../selftests/bpf/progs/d_path_lsm.bpf.c      | 43 +++++++++++++++++++
->  2 files changed, 70 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
->  create mode 100644 tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c b/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
-> new file mode 100644
-> index 000000000000..92aad744ed12
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
+On Mon, Dec 01, 2025 at 08:01:23PM +0100, Petr Pavlu wrote:
+> On 11/29/25 8:53 PM, Yury Norov (NVIDIA) wrote:
 
-I don't see why adding yet another new bpf_d_path() related test to
-prog_tests is warranted here. Why not simply incorporate this
-additional test case into the preexisting bpf_d_path() related
-prog_tests source file i.e. tools/testing/selftests/bpf/d_path.c?
+...
 
-> @@ -0,0 +1,27 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <test_progs.h>
-> +#include "d_path_lsm.skel.h"
-> +
-> +void test_d_path_lsm(void)
-> +{
-> +	struct d_path_lsm *skel = NULL;
-> +	int err, map_fd, key = 0, val = 0;
-> +
-> +	skel = d_path_lsm__open_and_load();
-> +	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-> +		return;
-> +
-> +	err = d_path_lsm__attach(skel);
-> +	if (!ASSERT_OK(err, "attach"))
-> +		goto out;
-> +
-> +	system("cp /bin/true /tmp/bpf_d_path_test 2>/dev/null || :");
-> +	system("/tmp/bpf_d_path_test >/dev/null 2>&1");
-> +
-> +	map_fd = bpf_map__fd(skel->maps.result);
-> +	err = bpf_map_lookup_elem(map_fd, &key, &val);
-> +	ASSERT_OK(err, "lookup_result");
-> +	ASSERT_EQ(val, 1, "prefix_match");
-> +out:
-> +	d_path_lsm__destroy(skel);
-> +}
->
-> diff --git a/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c b/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
-> new file mode 100644
-> index 000000000000..36f9ff37e817
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include "vmlinux.h"
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char LICENSE[] SEC("license") = "GPL";
-> +
-> +#define FILENAME_MAX_SIZE 256
-> +#define TARGET_DIR "/tmp/"
-> +#define TARGET_DIR_LEN 5
-> +
-> +struct {
-> +	__uint(type, BPF_MAP_TYPE_ARRAY);
-> +	__uint(max_entries, 1);
-> +	__type(key, int);
-> +	__type(value, int);
-> +} result SEC(".maps");
-> +
-> +SEC("lsm/bprm_check_security")
-> +int BPF_PROG(d_path_lsm_prog, struct linux_binprm *bprm)
-> +{
-> +	char path[FILENAME_MAX_SIZE] = {};
-> +	long len;
-> +	int key = 0;
-> +	int val = 0;
-> +
-> +	len = bpf_d_path(&bprm->file->f_path, path, sizeof(path));
-> +	if (len < 0)
-> +		return 0;
-> +
-> +#pragma unroll
-> +	for (int i = 0; i < TARGET_DIR_LEN; i++) {
-> +		if ((u8)path[i] != (u8)TARGET_DIR[i]) {
-> +			val = -1; /* mismatch */
-> +			bpf_map_update_elem(&result, &key, &val, BPF_ANY);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	val = 1; /* prefix match */
-> +	bpf_map_update_elem(&result, &key, &val, BPF_ANY);
-> +	return 0;
+> > -#include <linux/kernel.h>
+> > +#include <linux/sysfs.h>
+> 
+> If you are removing the kernel.h include from
+> include/linux/moduleparam.h, I think it would be good to update the file
+> to ensure that all necessary includes are now listed directly.
+> 
+> The following items are present in moduleparam.h:
+> 
+> * __UNIQUE_ID(), __used(), __section(), __aligned(), __always_unused()
+>   -> linux/compiler.h,
+> * THIS_MODULE -> linux/init.h,
+> * __stringify() -> linux/stringify.h,
+> * u8, s8, u16, ... -> linux/types.h,
+> * static_assert() -> linux/build_bug.h,
+> * VERIFY_OCTAL_PERMISSIONS() -> linux/sysfs.h,
+> * ARRAY_SIZE() -> linux/array_size.h.
+> 
+> I suggest then updating the includes in include/linux/moduleparam.h to:
+> 
+> #include <linux/array_size.h>
+> #include <linux/build_bug.h>
+> #include <linux/compiler.h>
+> #include <linux/init.h>
+> #include <linux/stringify.h>
+> #include <linux/sysfs.h>
+> #include <linux/types.h>
 
-Will this not flake, like, maybe a lot? Mismatches are being reported
-for every non-matched prefix. Meaning, other threads that are racing
-alongside your system(3) invocations and going through
-security_bprm_check() could very well reset your BPF_MAP_TYPE_ARRAY
-element value back to -1 before your userspace code even has a chance
-to assert it? Perhaps you can make this test a little more
-deterministic by filtering by the expected PID?
+Good point. And since we are not adding some top-level ones, this shouldn't
+be worse (in terms of potential cyclic dependencies).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
