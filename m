@@ -1,77 +1,87 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB5430C372;
-	Mon,  1 Dec 2025 12:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6508631B138
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 14:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764593699; cv=none; b=OcZYi/XKI2Kru3YbatYZwK49USLh5sv2v2IDtqpDYk269oYmggyd8vTUiwoQuOSvxbysEenhRjpuk2b4ZRFsaclR4V9T4b48fMu95MUUiv1O3rmzQ0/4g/OWH/iMmBqtjMdq9m12pT/Ls7nSX+IE8fKTGeyYHccKLI4fr9T+MI8=
+	t=1764599910; cv=none; b=HkEuBF9HyfjeJ0EGSUaivDdAPNOgl5ZfWKKUOUGku/ATM6MFJuo0HFotZJl9SdixlM50m/0uH9KFi554Coy+RQiFPD6dbSd0HDGRjZ4+xnNkgGcQgNltjkGU99QwDJcm/e0fpeSvUnhmsdk6kgPjdQZVd+fPZ+1VdBYNCEuL7FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764593699; c=relaxed/simple;
-	bh=+IjpNszmC6izWxL7EJv2qbrRxvopvddxR3SE6ucnsJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XlujFE2gBzQnRhv+DPWDjoznOIgx6VMsMhOoGVsyJPK4v9lVkI4ax3Yy4i0P2YftG1/Q8MJZPy4N1JPeoESoUF7FTzK4UutSRpBT9Ie/5g2moId50E0wTdBIv57hTF6AkmEkxHvTVX5Btan2PV8R5mM6O/rqBYvQj1XJhwiQukE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XJKMes2+; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1764599910; c=relaxed/simple;
+	bh=rjNK3UwqIhTAnumjotkMQ2qII4wyclxKpa+AuGebp7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JcaThjtoKoKuSmO/gngoS+bUsQYRVBQYTvYXMPyfuKhfJ+KdS/p9tnSNWffk5QLTfDTenu3v+EDloEpzJ3aP7fen2IjLlrU/9uxWRZS1Ne3QS5/w7gfAxFeqP6RlDfQ7qVpmxxeIXd/uTSqTsWe6MoO811LEXLKvO1FEg7aLCe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAYg8oVo; arc=none smtp.client-ip=74.125.224.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XJKMes2+"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B18GHnX008018;
-	Mon, 1 Dec 2025 12:54:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=up2QFoBk2TXh38F/D
-	siKDh1hJYwb60yrb1wGwxwf9Eg=; b=XJKMes2+A54q6fSAfcgcJm0R4Z30bLL9C
-	7WdUm9k8djTsb7HftI0hFuuguSC94ki8AeZgThMBIIUkGdvNOhpbEOLZcoV1rQ7O
-	PkBAGdVkaf55jsZiO6NKtn3vZh+28MxfPFx88vMv6OiHxJm3B6z1vAq01/0KMDet
-	0PdeK9ESnLbWvFHSvi7/1Hyb2eWQgpnq/DusGJfD2m0hAiCiWYdw4PPd9K95ibkh
-	kZsu0twHiXhPpnzdG/BlWFpi37N45z/KS6vfRTGGCy/aW3VpKl+5ixeZSs6mAP5p
-	bprsi24DwvALIWy/aBYONEKYocKlzUlQqCKiwYSp4ZJ3xsn250uYQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrj9f4yu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Dec 2025 12:54:28 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B1CoCl0008558;
-	Mon, 1 Dec 2025 12:54:23 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arc5mpdha-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Dec 2025 12:54:23 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B1CsJgH41288026
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Dec 2025 12:54:19 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 91CF320043;
-	Mon,  1 Dec 2025 12:54:19 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4DE752004D;
-	Mon,  1 Dec 2025 12:54:19 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  1 Dec 2025 12:54:19 +0000 (GMT)
-From: Jens Remus <jremus@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2 3/3] x86/unwind_user: Guard unwind_user_word_size() by UNWIND_USER
-Date: Mon,  1 Dec 2025 13:54:16 +0100
-Message-ID: <20251201125416.1239568-4-jremus@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251201125416.1239568-1-jremus@linux.ibm.com>
-References: <20251201125416.1239568-1-jremus@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAYg8oVo"
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-64306a32ed2so3480581d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 06:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764599907; x=1765204707; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qoyj2tNThNgZzU++VN5wulg14DP/XWN247AZ19CJZVQ=;
+        b=AAYg8oVoyaNdDgQ1TJlE3tJIkkz9ZSOh5r1NzORgnUwpxNw8tWFvKTPbAVOjVXnQqW
+         CL6AA8tzRInzrrxAzRL0F8lpwZCjb5LzTrqt7NkyrpLYy5N0AOdTAtPWFzZe7LsFm4JU
+         3pmAWZstmh7lrvIT2nSocw86CzOdC+9jdx+Qd0zAQLnzYpIJkbvxs7NF96KFCHIFGKwT
+         qXvfFgUqPnYYyEVrbbOl5xx7pon1M581t16WNJ0R39yATeOShxbBUTLZRtkdzcmKA7tA
+         TYUTLh0Ocf5oFQE97ShvCY2Bv3LVk5+mH2HAB7IZAIPF6l3KIVU5T5yIZU0q1ImhtY5W
+         doQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764599907; x=1765204707;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qoyj2tNThNgZzU++VN5wulg14DP/XWN247AZ19CJZVQ=;
+        b=wUz+yr2nkq1YJCxKqtnZfLgPBxQz276dwG+yzehUtSnanAVMhuKEN+m0yM0KI7d+2Y
+         I6G8BT9SQStlQjmLRJZC9VzFUAkRHYs6BWv0pXKR3v1UX6cI5Wu+DHTGzMz9q1jmGIx8
+         grUi412cGQTM+Cw+9z4Gz27dIWJwqHhZrGwqi7YOW3yG8GKMFTTaOkSsJ9EHd16iYrdW
+         ut4RW1R3GZaI7h88A5ldm7WO1fFwMZTXIwq1VvRnbudNAPUWc96HxkC1pyc+woJqV876
+         qsDY+sBrVBFRw/8LflMZ+VRuiy7YJbviNIn4dE8qgFEaHKYRbDiUYX28HJuIhya3/5Kz
+         jNMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIc5Tr1AflavivvFRhAHzg3bay/alAgLu5bp2vlxalEvN8EPNHY4IJQW2Tu9s0eung3PbseGPtjA98+OLWDXZrNbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJDLgpQBQlMIb3uTG+Kke9jfEe2wIXUtDyF7SCBmsQKaSLyYlS
+	EtzNtx6AfxJuMj0v2rPpclNLQqL3v2ArGmFEW7onnZerU0I7dpIKo2R3
+X-Gm-Gg: ASbGncv3/dUwf2AUn8iOm3B1Px/b47HTJX2JlxUpwG19fkNXMAtJ7nVKY9P1RX6HFtz
+	4ig0k08CXkbZ2WjPEn+aVcZNCTEM+0gmlI8LwyMw9JIR8HGc+BTfp8qLAWDRg7pdv7li/L+19Vq
+	c14BTrUTVAZ2o4+F1BCk8lkmaQeGR5LqbNxdcw9N+38DiNHV7IrXlOGNXkHfU4qxfxTV7IPjZIM
+	Lam5a1gx2NyrvSM9+wyjzrCKRgtCSjJmsgzo5BaSlAab774UVqEZb/TWb9+ayyxLq/vjs6vIKYi
+	axyHsZ/24ySqmEhhFPVOJGJLJ0y7mHtgN9XJaxhnprHsSIynQ3wnbop/mhfEsfXLYt455G1ahUf
+	g+fGlmuXoS9cMjBHbBmxOT94l6eGFRABsGn5UtGnbHP5Jz2/vmAS5kNfC7tbYSW1m/lILugtePX
+	VY0oavng++bcCZs45J3GO6g8FuzbZqg/G1rjB4sW7d9pWMdHqPa7g=
+X-Google-Smtp-Source: AGHT+IGArkphxhez0KD4SZWDD8fCP5Ui5365d/v8ljTpLTjBeitEXtnR33EfWWTgVFCJ+HypEj1g2g==
+X-Received: by 2002:a05:690e:1544:20b0:63f:2b69:9a17 with SMTP id 956f58d0204a3-64302ac69f0mr22683616d50.59.1764599907294;
+        Mon, 01 Dec 2025 06:38:27 -0800 (PST)
+Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6433c078297sm4889911d50.9.2025.12.01.06.38.22
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 01 Dec 2025 06:38:27 -0800 (PST)
+From: Shuran Liu <electronlsr@gmail.com>
+To: song@kernel.org,
+	mattbobrowski@google.com,
+	bpf@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	electronlsr@gmail.com
+Subject: [PATCH bpf 0/2] bpf: fix bpf_d_path() helper prototype
+Date: Mon,  1 Dec 2025 22:38:11 +0800
+Message-ID: <20251201143813.5212-1-electronlsr@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,93 +89,54 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ux6Jur0DqRBvn2KZr78y_3DE9OB7S3gr
-X-Proofpoint-ORIG-GUID: ux6Jur0DqRBvn2KZr78y_3DE9OB7S3gr
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX1iCwIiFM29T7
- vFvCQ31ZdZhzioQZBI9DW+MFuganRxfbrzoEiLKfCFtIw72RBsrRsc/lYgetnhFdexhs8ZXHnh5
- RdnkfUWoSX+0cwJloNwFJ0P8jglDgs4nYWAp+AvSkEjRQme5KkFdx/gHc4rVUIkY3K7Y9jVy/CI
- PITMAgCk8aNjD5hzFaL2UFalwdTeEizAz7dyVOIvPycMQW8S0JezglqjUOBCbqMtb0dfkXLNArG
- q/8biuGUDzr7iAXTfqFh2aELbRaydWwtNeKCx9ngyL4SVuuJHb139u/2DwJ3cdTlyjW9Xe50ut4
- boyOh+LL9IjsNCiE7X356VW1lVllbNu/peeyS009kqqgKgQmPQhnYL0DBaTIKTCdj+j0+bOumQf
- sY/+MAFpWNRRqyv0iOOTASXfCD9uKA==
-X-Authority-Analysis: v=2.4 cv=dYGNHHXe c=1 sm=1 tr=0 ts=692d9004 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=LIcl9UMsB3m1Xa-0CCYA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 suspectscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511290020
 
-The unwind user framework in general requires an architecture-specific
-implementation of unwind_user_word_size() to be present for any unwind
-method, whether that is fp or a future other method, such as potentially
-sframe.
+Hi,
 
-Guard unwind_user_word_size() by the availability of the UNWIND_USER
-framework instead of the specific HAVE_UNWIND_USER_FP method.
+this series fixes a verifier regression for bpf_d_path() introduced by
+commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type
+tracking") and adds a small selftest to exercise the helper from an
+LSM program.
 
-This facilitates to selectively disable HAVE_UNWIND_USER_FP on x86
-(e.g. for test purposes) once a new unwind method is added to unwind
-user.
+Commit 37cce22dbd51 started distinguishing read vs write accesses
+performed by helpers. bpf_d_path()'s buffer argument was left as
+ARG_PTR_TO_MEM without MEM_WRITE, so the verifier could incorrectly
+assume that the buffer contents are unchanged across the helper call
+and base its optimizations on this wrong assumption.
 
-Signed-off-by: Jens Remus <jremus@linux.ibm.com>
----
- arch/x86/include/asm/unwind_user.h | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+In practice this showed up as a misbehaving LSM BPF program that calls
+bpf_d_path() and then does a simple prefix comparison on the returned
+path: the program would sometimes take the "mismatch" branch even
+though both bytes being compared were actually equal.
 
-diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
-index 971ffe937d50..e1137eb67ab2 100644
---- a/arch/x86/include/asm/unwind_user.h
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -2,6 +2,22 @@
- #ifndef _ASM_X86_UNWIND_USER_H
- #define _ASM_X86_UNWIND_USER_H
- 
-+#ifdef CONFIG_UNWIND_USER
-+
-+static inline int unwind_user_word_size(struct pt_regs *regs)
-+{
-+	/* We can't unwind VM86 stacks */
-+	if (regs->flags & X86_VM_MASK)
-+		return 0;
-+#ifdef CONFIG_X86_64
-+	if (!user_64bit_mode(regs))
-+		return sizeof(int);
-+#endif
-+	return sizeof(long);
-+}
-+
-+#endif /* CONFIG_UNWIND_USER */
-+
- #ifdef CONFIG_HAVE_UNWIND_USER_FP
- 
- #include <asm/ptrace.h>
-@@ -19,18 +35,6 @@
- 	.fp_off		= 0,				\
- 	.use_fp		= false,
- 
--static inline int unwind_user_word_size(struct pt_regs *regs)
--{
--	/* We can't unwind VM86 stacks */
--	if (regs->flags & X86_VM_MASK)
--		return 0;
--#ifdef CONFIG_X86_64
--	if (!user_64bit_mode(regs))
--		return sizeof(int);
--#endif
--	return sizeof(long);
--}
--
- static inline bool unwind_user_at_function_start(struct pt_regs *regs)
- {
- 	return is_uprobe_at_func_entry(regs);
+Patch 1 fixes bpf_d_path()'s helper prototype by marking the buffer
+argument as ARG_PTR_TO_MEM | MEM_WRITE, so that the verifier correctly
+models the write to the caller-provided buffer.
+
+Patch 2 adds a minimal selftest under tools/testing/selftests/bpf that
+hooks bprm_check_security, calls bpf_d_path() on a binary under /tmp/,
+and verifies that the prefix comparison on the returned path keeps
+working.
+
+On my local setup, tools/testing/selftests/bpf does not build fully
+due to unrelated tests using newer helpers. I validated this series by
+manually reproducing the issue with a small LSM program and by
+building and running only the new d_path_lsm test on kernels with and
+without patch 1 applied.
+
+Thanks,
+Shuran Liu
+
+Shuran Liu (2):
+  bpf: mark bpf_d_path() buffer as writeable
+  selftests/bpf: add regression test for bpf_d_path()
+
+ kernel/trace/bpf_trace.c                      |  2 +-
+ .../selftests/bpf/prog_tests/d_path_lsm.c     | 27 ++++++++++++
+ .../selftests/bpf/progs/d_path_lsm.bpf.c      | 43 +++++++++++++++++++
+ 3 files changed, 71 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
+ create mode 100644 tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
+
 -- 
-2.51.0
+2.52.0
 
