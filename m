@@ -1,176 +1,81 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489902773F7
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 20:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED2123A58B;
+	Mon,  1 Dec 2025 20:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764620694; cv=none; b=KsnNKCYyKrF6MA535khO4f8weDo+bChavNgUw5oZnxD++icgT+GTZfMG9WKB6l4MFz6+T4nAJfwQrnr6deoQdMn/RuTp/Iv7QctEDcmKKeCrHbJI9hFILVFHmBo09L3mtiFjfMOUWhLCD04GnegVVPGOMDR23vBkLvxnymbImqY=
+	t=1764621033; cv=none; b=Az75FlastZvZBYwU7kQ/yioXWeANjIGBRhbYDiNMqriMbkJLFnClnqJkkHPHoA2gW+uEMWPlFzaLHuhDQ0CE9gy2SMiW+VXCbXv1U5/cd+ZOp8bA0gvi/9zOccVLQCRGQvjpK8HklAz5Gu+00lgnSxNQZzYIlh2OavECRf9nLlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764620694; c=relaxed/simple;
-	bh=9VtX2NvFz0RoQVJ8SSqGMuTYPnLO3r9LWpqks/kmpMQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pqZ2Qkyx2AK5GqU+Xa/JutOhxuCLujT3xwpzSAWfJ0UYj/O9fUtcmv2V9t6d0qisR3bSPJ22jvGifbC+Ir9zYFC3WzlWJABlnycyJdd46mtFiHW2NwZm9Wz5Oicp7h1IJEmeTCPn0WbD3n0rf4S/iSN+u8Gf7geNZwCzk39rw5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jkNbt3ou; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wusamuel.bounces.google.com
+	s=arc-20240116; t=1764621033; c=relaxed/simple;
+	bh=3dCnTNuicHLtfAnv7VfSWZ6UoU7x8E8Phwpo2c4stq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKv1RtAOnZjrwPAqBlkQtEEDuZKoEF03NKO430fR+tPYcMwCHOA5iSR0+TSePEXuJxmw72S/LxyGDzI/FW6azpoz/76HSO/S2yGu2WioP4JcbFNcSqe4PtBiKpPrvxbuwuqRc8OIKLtnxveF/xypov/HWilsjfwJPqHzQqoOaw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuPDKOC+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jkNbt3ou"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29557f43d56so50424955ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 12:24:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764620691; x=1765225491; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iuYJ8a9yf5YfCIOX0vDCxkx5Zc9d0WA0EbWHTfFbCpI=;
-        b=jkNbt3ouuc6NmxFq5apXPbnMYpm1+zjWpeLCHENUhZshBHu5HtyWtBRrtrgDl7yalQ
-         OtXQasM1U+p8W2X/IYCa2cUExCHo0oVWoB8FJsSl1BeopyHbTrYz+9YzTGuqlAKYUaQI
-         IJapEgCG+EizpaCFsG6l5ATwt5rzAJ4+tDTdFaxXAEItPwJu0MKHQ7YGAErlkZb1XXhU
-         MWgjhSmcDoofFGwbkjtHo5nMbpLoUUNjN5loYr7jv9kC3Q+I/88Ak23hMapuj4HFYfBO
-         son19Lz+dHz87y71srH8WwtEHospUet67m9ZKRWT2Iyh2vFf+e/JVNXH8Z5jFwFJqBQ3
-         1TiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764620691; x=1765225491;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iuYJ8a9yf5YfCIOX0vDCxkx5Zc9d0WA0EbWHTfFbCpI=;
-        b=s1agHZogWXbYQIcMvI2zt5iYV2J9NSgFKaQJvHxGXxo8GsEG91c6aicv7s1RkVxHAv
-         +NaqKdE4cRppLFJPYQ8lZ/sNrPRY6YBSEBoCUqaowOHisWLjNu5ySz/Nqzg72FHfEDmI
-         Dkzv4lSpY2AR//5paKiYpLtm2fU2z8wBvB7AKtdbi0ItRM8DPMFxAUlrzfpkuEQWFyS/
-         YyKkXtK8852+ER7AvQ+lmc0WjKsZ900xhMuczLgvqKZDEErHosYTJQDkNk02ZUFDbZ0a
-         Jnv0ghS1Ao4e45/Z4pwy7GnMmDPDgL+mzrbFcqgcjRkoKe997F5XODrDOIaZqH6HplZE
-         zZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVafR59l4UGOx8AuXPm3TdpNlSVfGaX5a007D/y9HzJZefJVCnqOG30dGwgA0JMwi40jtoMTsjKYJx6idqTA+YIsSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMQ4C3tVwR9P5bEIQwuTbBNc0G9Wm9BmMJvuR4LwHVP1bH3+lf
-	CcIHXaqehEDCPSYconERdxoxEkKLEp36ftphZNaSmqCl8PuKqi3R7NP9mWDVUPJcHEn6QvtMcFT
-	OeFMNRRn+X1Tr7g==
-X-Google-Smtp-Source: AGHT+IGsvk85QlzW667SyDst19B1vMCsdIZFkhsIWO+5Oz5JLmlMK/v87N6vvqpae9OjXI/Z5iDlf2o2nXomaQ==
-X-Received: from dlbdd25.prod.google.com ([2002:a05:7022:a99:b0:11c:58e4:e325])
- (user=wusamuel job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7022:6726:b0:119:e56b:98ab with SMTP id a92af1059eb24-11cb3ede9dcmr19616669c88.18.1764620691371;
- Mon, 01 Dec 2025 12:24:51 -0800 (PST)
-Date: Mon,  1 Dec 2025 12:24:35 -0800
-In-Reply-To: <20251201202437.3750901-1-wusamuel@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuPDKOC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4770AC4CEF1;
+	Mon,  1 Dec 2025 20:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764621032;
+	bh=3dCnTNuicHLtfAnv7VfSWZ6UoU7x8E8Phwpo2c4stq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EuPDKOC+4xQe6r8BtyGlBGashWohtdTYInIa57pVrtfo06XYC3LNkhqzaJbIukCyf
+	 FseyNwX7noLdmGXs9YKBvT+ARMRnH7OwQU02OxSdZmJ0NWwAXUSMXb7EoSrFETYYpY
+	 UhXh/4UxxsFkAb9AIKGfjyuSszOcxRRmzNh+79P28i7rdn23jeK2OFMtbcD5V7Wqml
+	 Y79kFsi43ErWw/ojwO9mI1j1oIX6FmO/CfaGrXZ5ON3ZGxn+rqcKtioblu02Fc5vrM
+	 Pp4FaWdywIrWiqhg74Fb5DnM/S4uY9or2sMzEf5vdlULuwTIZ7H0jKU75/6/7HY4Oh
+	 CS/Jc0uQ+E8bw==
+Date: Mon, 1 Dec 2025 21:30:25 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: Re: [PATCH v2 2/3] unwind_user/fp: Use dummies instead of ifdef
+Message-ID: <aS364Z_XJA2LHA9y@gmail.com>
+References: <20251201125416.1239568-1-jremus@linux.ibm.com>
+ <20251201125416.1239568-3-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251201202437.3750901-1-wusamuel@google.com>
-X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
-Message-ID: <20251201202437.3750901-3-wusamuel@google.com>
-Subject: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
-From: Samuel Wu <wusamuel@google.com>
-To: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Cc: christian.loehle@arm.com, Samuel Wu <wusamuel@google.com>, kernel-team@android.com, 
-	linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251201125416.1239568-3-jremus@linux.ibm.com>
 
-Documentation update corresponding to replace the cpu_frequency trace
-event with the policy_frequency trace event.
 
-Signed-off-by: Samuel Wu <wusamuel@google.com>
----
- Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
- Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
- Documentation/trace/events-power.rst          |  2 +-
- 3 files changed, 13 insertions(+), 13 deletions(-)
+* Jens Remus <jremus@linux.ibm.com> wrote:
 
-diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-index e1771f2225d5..e110854ece88 100644
---- a/Documentation/admin-guide/pm/amd-pstate.rst
-+++ b/Documentation/admin-guide/pm/amd-pstate.rst
-@@ -503,8 +503,8 @@ Trace Events
- --------------
- 
- There are two static trace events that can be used for ``amd-pstate``
--diagnostics. One of them is the ``cpu_frequency`` trace event generally used
--by ``CPUFreq``, and the other one is the ``amd_pstate_perf`` trace event
-+diagnostics. One of them is the ``policy_frequency`` trace event generally
-+used by ``CPUFreq``, and the other one is the ``amd_pstate_perf`` trace event
- specific to ``amd-pstate``.  The following sequence of shell commands can
- be used to enable them and see their output (if the kernel is
- configured to support event tracing). ::
-@@ -531,9 +531,9 @@ configured to support event tracing). ::
-           <idle>-0       [003] d.s..  4995.980971: amd_pstate_perf: amd_min_perf=85 amd_des_perf=85 amd_max_perf=166 cpu_id=3 changed=false fast_switch=true
-           <idle>-0       [011] d.s..  4995.980996: amd_pstate_perf: amd_min_perf=85 amd_des_perf=85 amd_max_perf=166 cpu_id=11 changed=false fast_switch=true
- 
--The ``cpu_frequency`` trace event will be triggered either by the ``schedutil`` scaling
--governor (for the policies it is attached to), or by the ``CPUFreq`` core (for the
--policies with other scaling governors).
-+The ``policy_frequency`` trace event will be triggered either by the
-+``schedutil`` scaling governor (for the policies it is attached to), or by the
-+``CPUFreq`` core (for the policies with other scaling governors).
- 
- 
- Tracer Tool
-diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-index fde967b0c2e0..274c9208f342 100644
---- a/Documentation/admin-guide/pm/intel_pstate.rst
-+++ b/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -822,23 +822,23 @@ Trace Events
- ------------
- 
- There are two static trace events that can be used for ``intel_pstate``
--diagnostics.  One of them is the ``cpu_frequency`` trace event generally used
--by ``CPUFreq``, and the other one is the ``pstate_sample`` trace event specific
--to ``intel_pstate``.  Both of them are triggered by ``intel_pstate`` only if
--it works in the :ref:`active mode <active_mode>`.
-+diagnostics.  One of them is the ``policy_frequency`` trace event generally
-+used by ``CPUFreq``, and the other one is the ``pstate_sample`` trace event
-+specific to ``intel_pstate``.  Both of them are triggered by ``intel_pstate``
-+only if it works in the :ref:`active mode <active_mode>`.
- 
- The following sequence of shell commands can be used to enable them and see
- their output (if the kernel is generally configured to support event tracing)::
- 
-  # cd /sys/kernel/tracing/
-  # echo 1 > events/power/pstate_sample/enable
-- # echo 1 > events/power/cpu_frequency/enable
-+ # echo 1 > events/power/policy_frequency/enable
-  # cat trace
-  gnome-terminal--4510  [001] ..s.  1177.680733: pstate_sample: core_busy=107 scaled=94 from=26 to=26 mperf=1143818 aperf=1230607 tsc=29838618 freq=2474476
-- cat-5235  [002] ..s.  1177.681723: cpu_frequency: state=2900000 cpu_id=2
-+ cat-5235  [002] ..s.  1177.681723: policy_frequency: state=2900000 cpu_id=2 policy_cpus=04
- 
- If ``intel_pstate`` works in the :ref:`passive mode <passive_mode>`, the
--``cpu_frequency`` trace event will be triggered either by the ``schedutil``
-+``policy_frequency`` trace event will be triggered either by the ``schedutil``
- scaling governor (for the policies it is attached to), or by the ``CPUFreq``
- core (for the policies with other scaling governors).
- 
-diff --git a/Documentation/trace/events-power.rst b/Documentation/trace/events-power.rst
-index f45bf11fa88d..f013c74b932f 100644
---- a/Documentation/trace/events-power.rst
-+++ b/Documentation/trace/events-power.rst
-@@ -26,8 +26,8 @@ cpufreq.
- ::
- 
-   cpu_idle		"state=%lu cpu_id=%lu"
--  cpu_frequency		"state=%lu cpu_id=%lu"
-   cpu_frequency_limits	"min=%lu max=%lu cpu_id=%lu"
-+  policy_frequency	"state=%lu cpu_id=%lu policy_cpus=%*pb"
- 
- A suspend event is used to indicate the system going in and out of the
- suspend mode:
--- 
-2.52.0.107.ga0afd4fd5b-goog
+> -#ifndef ARCH_INIT_USER_FP_FRAME
+> - #define ARCH_INIT_USER_FP_FRAME
+> +#ifndef CONFIG_HAVE_UNWIND_USER_FP
+> +
+> +#define ARCH_INIT_USER_FP_FRAME(ws)
+> +
+> +#endif /* !CONFIG_HAVE_UNWIND_USER_FP */
 
+Just a nit, there's no need for the closing /* !.. */ 
+comment for such a short CPP block - just like it's 
+done in the next couple of lines:
+
+> +#ifndef ARCH_INIT_USER_FP_ENTRY_FRAME
+> +#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)
+> +#endif
+
+Thanks,
+
+	Ingo
