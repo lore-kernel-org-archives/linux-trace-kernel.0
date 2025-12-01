@@ -1,168 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D721FBEA6;
-	Mon,  1 Dec 2025 16:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A790533343D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 17:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764606812; cv=none; b=sJzl/ThkJBUWeV0k1Iq8WgcFsGT/tKRhKwLRsGjn/yojjNtglYWo+z6SDZLXCoafGp8cWoILOb3GCX88r/i5xODrvzO45YPullEWdTMPIu5oxK5pptx2cqh+rI8zuIDqlsltpvw6w/2miIMI0HE4DOxnl9/Ty39cdrzWNtubnrU=
+	t=1764611252; cv=none; b=Y/p3LDtAsF9hlJkpizh4jN5PGd8As6RJrWKYy2r+VkMOfPw1gp/pV7FjcAnYbaeq5S6RNSbyAUdE0ahubY20UkkhxxEUMqMqchjMEFm3pZmBZiXkYPyMNRbuGG9fO7XXup8PvdEozRKpzmdGb7M4qx1mOFelYo5jujC9J/rMB2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764606812; c=relaxed/simple;
-	bh=mKAh6zoTfeyMrA3fhkg8tP6+y8PTWo7YVbnFxPAXZD8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n7mZ7LtX6+Cx5j6JMVHduEIgUOlU+QjQaJpGhZX/bS8SsAbHt02SfYRI01t9KETuiVGliXUbwRIUxvghFI+dpoYiNQnwObrZaOq/HaU5IcI5YzM/Ii2HNnzx8WwyOifLiibbNnAMol6R9zmpdAyO/FzjFEUUupnzayo7lKEYYCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FaaesL99; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764611252; c=relaxed/simple;
+	bh=cF8aV9/F7xvXHXHmmNNjnabv/qjgE+z/kVzYK4dVDBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MGsxDsLxuZuE5BgQhqxyi3L8NZ3aGlAQnBnr5ro1Q4KrNPwFRkDv/dEvvXajx50tyDgaBe7mxX1MlW7deuc5PyX7JjZVvLXXXY4h8IHgvz1s/s4uji3oFliy45KX968QJtO+Jg48ajvalEZ8Nbq1hTJr5pjpSyKIuM2mII+FTaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+nack9i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FaaesL99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15E5C4CEF1;
-	Mon,  1 Dec 2025 16:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764606811;
-	bh=mKAh6zoTfeyMrA3fhkg8tP6+y8PTWo7YVbnFxPAXZD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FaaesL99f3aylyjGWhobo5yy8gWh0sTHYUcDMseN5AN38SYx5q/uRK7ezEDTA2ZFk
-	 9SHs2TIVg5xk1N6nyIjKdsxBJbVx9ZO7KUubuzjy2y+T9sPJQt9eYIJDNXwM0C1sTU
-	 P8rTQhJPVN8xE1f8dRS878TyldV2uz509ZYKJ598qQJ5aWZSuhMc8JllWfktFlN1GW
-	 hITjUZO4RNzPqocvqcx3jAUJqJE12ylkA5plINUmvEem2ZRKadlK8RYSwniC4bitIg
-	 Q69xwNJfklZR6yL3D2mXiJmE22dQlFRe2+CHQM7DxssgQIP73xkUW15fBXT7QOTNhr
-	 nbyljAXgWizvg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vQ6q9-00000009f9x-203m;
-	Mon, 01 Dec 2025 16:33:29 +0000
-Date: Mon, 01 Dec 2025 16:33:28 +0000
-Message-ID: <86o6oip3fr.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+nack9i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764611249;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K7EblCrPHmPeGpU4jKxy0TCLMZyCEXvxixVXeFlcSRE=;
+	b=D+nack9i5yk4SEE1lOkGdtX3cp2STMvDLxkG7Ko2LqCuMtUYXjGDxsKF/t+CHhjPMZ28DX
+	YddSNeWShTxFFm5QMNbyRuT8ejm1AxzNBO8M1/x5lXQdBW1Stp4LgiA7zL8hBN4WxQLs6w
+	DH9Tt69ZsjLdYk/BGMFEoI420WbxyQs=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-p7dA_RP7MS2HhAqYrjA5-w-1; Mon,
+ 01 Dec 2025 12:47:28 -0500
+X-MC-Unique: p7dA_RP7MS2HhAqYrjA5-w-1
+X-Mimecast-MFC-AGG-ID: p7dA_RP7MS2HhAqYrjA5-w_1764611243
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E843018007F2;
+	Mon,  1 Dec 2025 17:47:21 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.66.60])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D9A251800361;
+	Mon,  1 Dec 2025 17:47:09 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
 	mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kas@kernel.org,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
 	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 26/28] KVM: arm64: Add hyp_enter/hyp_exit events to pKVM hyp
-In-Reply-To: <aS28dyrKgZaOmMNr@google.com>
-References: <20251107093840.3779150-1-vdonnefort@google.com>
-	<20251107093840.3779150-27-vdonnefort@google.com>
-	<87345vfiqj.wl-maz@kernel.org>
-	<aS28dyrKgZaOmMNr@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org,
+	hughd@google.com,
+	richard.weiyang@gmail.com,
+	lance.yang@linux.dev,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	jannh@google.com,
+	pfalcato@suse.de
+Subject: [PATCH v13 mm-new 00/16] khugepaged: mTHP support
+Date: Mon,  1 Dec 2025 10:46:11 -0700
+Message-ID: <20251201174627.23295-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Mon, 01 Dec 2025 16:04:07 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> On Sun, Nov 30, 2025 at 07:00:52PM +0000, Marc Zyngier wrote:
-> > On Fri, 07 Nov 2025 09:38:38 +0000,
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> > > 
-> > > The hyp_enter and hyp_exit events are logged by the hypervisor any time
-> > > it is entered and exited.
-> > > 
-> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > > 
-> > > diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
-> > > index d6e033c96c52..ce3953bc884a 100644
-> > > --- a/arch/arm64/include/asm/kvm_hypevents.h
-> > > +++ b/arch/arm64/include/asm/kvm_hypevents.h
-> > > @@ -7,4 +7,21 @@
-> > >  #include <nvhe/trace.h>
-> > >  #endif
-> > >  
-> > > +HYP_EVENT(hyp_enter,
-> > > +	HE_PROTO(void),
-> > > +	HE_STRUCT(
-> > > +	),
-> > > +	HE_ASSIGN(
-> > > +	),
-> > > +	HE_PRINTK()
-> > > +);
-> > > +
-> > > +HYP_EVENT(hyp_exit,
-> > > +	HE_PROTO(void),
-> > > +	HE_STRUCT(
-> > > +	),
-> > > +	HE_ASSIGN(
-> > > +	),
-> > > +	HE_PRINTK()
-> > > +);
-> > >  #endif
-> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
-> > > new file mode 100644
-> > > index 000000000000..4b69d33e4f2d
-> > > --- /dev/null
-> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
-> > > @@ -0,0 +1,13 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > +
-> > > +#include <asm/kvm_hypevents.h>
-> > > +
-> > > +#include <linux/arm-smccc.h>
-> > > +
-> > > +#undef arm_smccc_1_1_smc
-> > > +#define arm_smccc_1_1_smc(...)					\
-> > > +	do {							\
-> > > +		trace_hyp_exit();				\
-> > > +		__arm_smccc_1_1(SMCCC_SMC_INST, __VA_ARGS__);	\
-> > > +		trace_hyp_enter();				\
-> > > +	} while (0)
-> > 
-> > Huh. No, please. Don't override existing kernel constructs behind
-> > everybody's back. I know that tracing folks love to play that sort of
-> > game, but I really don't want any of that here.
-> 
-> And you haven't seen what I had for arm_smccc_1_2_smc()
+The following series provides khugepaged with the capability to collapse
+anonymous memory regions to mTHPs.
 
-I have the feeling that I don't want to see it at all!
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we use a bitmap to track individual
+pages that are occupied (!none/zero). After the PMD scan is done, we use
+the bitmap to find the optimal mTHP sizes for the PMD range. The
+restriction on max_ptes_none is removed during the scan, to make sure we
+account for the whole PMD range in the bitmap. When no mTHP size is
+enabled, the legacy behavior of khugepaged is maintained.
 
-> > Just define a wrapper that is KVM-specific, and use that.
-> > 
-> > Then from a semantic perspective, an SMC call, an ERET back to EL1
-> > host, and an ERET back to EL1 guest are all very different events that
-> > you lump under the "exit" category. That's not right. Same thing for
-> > "enter".
-> 
-> The idea of those events is just to know when we enter and exit the hypervisor,
-> purely from a timing point of view. In ACK, we already have other separated
-> events that can give the "cause" for entering or exiting the hypervisor. I
-> haven't added them to that series because I thought it was big enough.
-> 
-> So happy to add now or do a follow-up, once we're done with that one?
+We currently only support max_ptes_none values of 0 or HPAGE_PMD_NR - 1
+(ie 511). If any other value is specified, the kernel will emit a warning
+and no mTHP collapse will be attempted. If a mTHP collapse is attempted,
+but contains swapped out, or shared pages, we don't perform the collapse.
+It is now also possible to collapse to mTHPs without requiring the PMD THP
+size to be enabled. These limitiations are to prevent collapse "creep"
+behavior. This prevents constantly promoting mTHPs to the next available
+size, which would occur because a collapse introduces more non-zero pages
+that would satisfy the promotion condition on subsequent scans.
 
-Fixed trace points are ABI AFAIC, so I'd rather we make them useful
-from the very start. What you have here is not very interesting,
-because it makes all entry and exit points equal -- they very much
-aren't.
+Patch 1:     Refactor/rename hpage_collapse
+Patch 2:     Refactoring to combine madvise_collapse and khugepaged
+Patch 3-8:   Generalize khugepaged functions for arbitrary orders and
+	     introduce some helper functions
+Patch 9:     skip collapsing mTHP to smaller orders
+Patch 10-11: Add per-order mTHP statistics and tracepoints
+Patch 12:    Introduce collapse_allowable_orders
+Patch 13-15: Introduce bitmap and mTHP collapse support, fully enabled
+Patch 16:    Documentation
 
-So get rid of these and implement the real thing.
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits
+   while monitoring a number of stats and tracepoints. The code is
+   available here[1] (Run in legacy mode for these changes and set mthp
+   sizes to inherit)
+   The summary from my testings was that there was no significant
+   regression noticed through this test. In some cases my changes had
+   better collapse latencies, and was able to scan more pages in the same
+   amount of time/work, but for the most part the results were consistent.
+- redis testing. I tested these changes along with my defer changes
+  (see followup [2] post for more details). We've decided to get the mTHP
+  changes merged first before attempting the defer series.
+- some basic testing on 64k page size.
+- lots of general use.
 
-Thanks,
+V13 Changes:
+- Lots of minor nits, cleanups, comments, and renames
+- Bitmap function simplification and more helpers (Wei, Lorenzo)
+- Max_ptes_none (0 or 511) restriction
+- commit description expansion
+- list all reachable enum values in mthp_collapse()
+- Fix ppc64 compile error due to using HPAGE_PMD_ORDER (replace with
+  ilog2(MAX_PTRS_PER_PTE))
 
-	M.
+V12: https://lore.kernel.org/lkml/20251022183717.70829-1-npache@redhat.com/
+V11: https://lore.kernel.org/lkml/20250912032810.197475-1-npache@redhat.com/
+V10: https://lore.kernel.org/lkml/20250819134205.622806-1-npache@redhat.com/
+V9 : https://lore.kernel.org/lkml/20250714003207.113275-1-npache@redhat.com/
+V8 : https://lore.kernel.org/lkml/20250702055742.102808-1-npache@redhat.com/
+V7 : https://lore.kernel.org/lkml/20250515032226.128900-1-npache@redhat.com/
+V6 : https://lore.kernel.org/lkml/20250515030312.125567-1-npache@redhat.com/
+V5 : https://lore.kernel.org/lkml/20250428181218.85925-1-npache@redhat.com/
+V4 : https://lore.kernel.org/lkml/20250417000238.74567-1-npache@redhat.com/
+V3 : https://lore.kernel.org/lkml/20250414220557.35388-1-npache@redhat.com/
+V2 : https://lore.kernel.org/lkml/20250211003028.213461-1-npache@redhat.com/
+V1 : https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+
+A big thanks to everyone that has reviewed, tested, and participated in
+the development process. Its been a great experience working with all of
+you on this endeavour.
+
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/lkml/20250515033857.132535-1-npache@redhat.com/
+
+Baolin Wang (1):
+  khugepaged: run khugepaged for all orders
+
+Dev Jain (1):
+  khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (14):
+  khugepaged: rename hpage_collapse_* to collapse_*
+  introduce collapse_single_pmd to unify khugepaged and madvise_collapse
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: introduce is_mthp_order helper
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: introduce collapse_max_ptes_none helper function
+  khugepaged: generalize collapse_huge_page for mTHP collapse
+  khugepaged: skip collapsing mTHP to smaller orders
+  khugepaged: add per-order mTHP collapse failure statistics
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: introduce collapse_allowable_orders helper function
+  khugepaged: Introduce mTHP collapse support
+  khugepaged: avoid unnecessary mTHP collapse attempts
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |  80 ++-
+ include/linux/huge_mm.h                    |   5 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 696 +++++++++++++++------
+ mm/mremap.c                                |   2 +-
+ 6 files changed, 618 insertions(+), 210 deletions(-)
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.51.1
+
