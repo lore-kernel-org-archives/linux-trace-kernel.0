@@ -1,227 +1,214 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010052.outbound.protection.outlook.com [52.101.201.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4774D227B94;
-	Mon,  1 Dec 2025 19:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764615813; cv=fail; b=r+NRbgfLic9i7WY6b9sgfpEAM6EjaZYGyLCzDKVyWSP+f+98uwWxkmnjqlSje52NDN7Eu9IMCG+DrOLQpkbhwkHAtOCnv2SB1PZpAwU/RDFzr0Vqd4VJHCuGl1Ao6DzPBJYPHXDrLZKT6C6HBJSezGJ3iIqJW/098v2DvzDLq0A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764615813; c=relaxed/simple;
-	bh=6opJGglt4WoPLMIwCcKfvdF+0BlpZhS49RKHysQ62es=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pAUoivO8jlw6mq5ujy1lYpuRiwCzqaY4Mk+j4ddfSQNL6PHSJQixUzBDqYD3TKdrRT4cQ4xTm3XW6wMqcOh8v4+evSvq3trjfJwFI2HopMfHvw41LzzgsDdQ3S2R0YNyRsX1UbMPR+8IWbJ/V7c1TJlfRjGfBmvyeNgLnTtX6OY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tjoMuj4E; arc=fail smtp.client-ip=52.101.201.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2C82459DD
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 19:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764616624; cv=none; b=stPAPk/I+2LYJ2fmHh6+nWG6XG3KQ43EfpH2GiPQQBBKpKJQrWPzCR5uUWokwT77QEpCFvjY3DxM039auA0VuIVOhnvQABenqC0goE4tBQTXRkXm8fKF89HyT5zdE2NpRnTEtiZCIF6OyBrKTpbfNnI1qWc57b0N3MzjQ9d2TBM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764616624; c=relaxed/simple;
+	bh=lNk43apg7AFNGLzXw14VhSY2OU5GiJ0VzJmGRc3lljY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSeYP19AXTxx/HZJaW28p/asKXIrGF0kc0q5A4ZoeUUBLngt/07UVnctgLFyBLhJL/MwM6UL04zjvflm1tRcvyiFM4BwXBkKRAQLCzoGC3DzmzL1qDD3DHP8UqC/ni6P9fIIFKXXEPQ5m6VxsKShIcGE3iEanmaeSYGUeWbTky4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y+yNRVJj; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tjoMuj4E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=erc8TbcD2PHsUN4iVDHMSEWojIBlf/h6GLb6Abe1NTm9pa4yMdsQQOBPKYx4fi95kCNoLbTTotBH0ISlugaXOLLTy+4f+pAJOxry4UX7zW2P8rEj7MMryNLSh+2OTg6UUG9jzDAXTvbNMG6WM7JVSMgxQ5J2JFNSr6kfP+Sc/09ZqbF3H/juv8LH9OldfgxN/r12YVmS5628vXEgSHleTy4mhwYAElwLzqRVThGdt/XqbkE4Jp0oIKOPQP0tf7AU8yrjwnAp3EkmtEf0eFIaNtvW6f6CdC8IzxGUzKxX1GFosPdazDVJxY88Xa/H9eFDH0ff1W4zzSR7NEPoCoYFbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dHrUmI6Hu3JrofipYLXEZhVviunHimjhthv1xf1htvk=;
- b=bs3M4kb8hokTzsO7fn33TIQRWKkep8RuTM5Cuq3r7J9sBXgI2ewYZP+fFmDvsrm8XzjYYB6wRJT2coViwVAt0Im9PKIyfhxEH50P5p1aWGGkfYhOmBSW9cx60zEg4jJdeTBYpNUkgVsYEvhgjHDs2Ifry0dKCgyXVHtjL9HwMlHkU9lN75mus2iDDYB8RuOauMwfpjhIAqx4u3BcZuSEB2KB7yR0Jt+m2Nw4X71No6Oy95ONG3JKG0ad25nBL4k+aVQg4OdplJiRC9eMmpitAH0nkRFLQNWBtizeSXfrkfl21Z+enn651Uq4mcVbskI+dvuBGJu1eyEFVP52MF7y5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dHrUmI6Hu3JrofipYLXEZhVviunHimjhthv1xf1htvk=;
- b=tjoMuj4E4htwG3bM8pXDzgmfCc9VMEel1A26apkClHYk4ELGkSdxXxj9Hsar6fvJXdoniNOJxtYtyiJ5FCtCaYG95SbQx/UlBdsDMTfkzVL8y9XiJ+7zvvEPp3wF8N/sZEq93ymHfn+h6pad+Q+kp8TEO5Oa7enw1WXBpXgAm18=
-Received: from DS7PR05CA0096.namprd05.prod.outlook.com (2603:10b6:8:56::28) by
- BN7PPFD3499E3E3.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e3) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 19:03:27 +0000
-Received: from DS2PEPF0000343F.namprd02.prod.outlook.com
- (2603:10b6:8:56:cafe::c) by DS7PR05CA0096.outlook.office365.com
- (2603:10b6:8:56::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.9 via Frontend Transport; Mon, 1
- Dec 2025 19:03:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS2PEPF0000343F.mail.protection.outlook.com (10.167.18.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9388.8 via Frontend Transport; Mon, 1 Dec 2025 19:03:26 +0000
-Received: from kaveri.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 1 Dec
- 2025 13:03:18 -0600
-From: Shivank Garg <shivankg@amd.com>
-To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-CC: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
-	<baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
- Desnoyers" <mathieu.desnoyers@efficios.com>, Zach O'Keefe
-	<zokeefe@google.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <shivankg@amd.com>, Branden Moore
-	<Branden.Moore@amd.com>
-Subject: [PATCH V3 2/2] mm/khugepaged: retry with sync writeback for MADV_COLLAPSE
-Date: Mon, 1 Dec 2025 18:56:11 +0000
-Message-ID: <20251201185604.210634-10-shivankg@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251201185604.210634-6-shivankg@amd.com>
-References: <20251201185604.210634-6-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y+yNRVJj"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b762de65c07so113553266b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 11:17:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764616621; x=1765221421; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nL1ek/sF4svl8idObYnvvFBp1pJ9SdL29UX5xP7uR4w=;
+        b=y+yNRVJjeIUf/+IEpUMHT3s0GQdTzqJStrkfqe7fzmLPLz0dS3L+DMKELoZVnRIppW
+         CZQtYeAyOPWFagurv6+RlOR+SBaU4LIxpTSXP05qUJVE3efKsIquPIeDCqTQlH0bsE6C
+         69tLO3685eYKJ1qkUJ71MF6o5qvPckX9bCYA+lNsOIl/Il0ezzXJdyCyRAjO0IhG8o+v
+         cKtgRIroEOFCrx4JvMVBej8FrHB3Fu46sayjA8GMFCkhZQcQI8rh/kFuZH5mS4du9GBN
+         JBtcZyzSWOcx6D5Mp8wkPFj2Ic6Hua4OurYJk87Lr9Ovpt9iX3lu+RwZS3BZNjUp9/VW
+         4gVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764616621; x=1765221421;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nL1ek/sF4svl8idObYnvvFBp1pJ9SdL29UX5xP7uR4w=;
+        b=c6ChWW/qwuo8D8tH4Npz7eO1r0PQy51h5/JhoYOYq6BsXHXzmOLk29Y+Y4T14CFe2v
+         96cBcSuj4eAX3ehnCYWEo2pPwSs25QxQYd/B3o3zFUi3KaHX6fmkj36gqT7FTVEa3s85
+         UtJ8ubTQUaomMAeW5SVEDSs68EA1Nl310q0MoChfTtsIBg0GeY2Iq5laPXwF7QZrzjbZ
+         BGCpbc6GhZ8LH89EVR2j/+Cja+/fVhxsHiFRv8lr+aTgysRkgRhSaQdhwGFjBjZkJDjy
+         JyfGO8lrQLOo6c0GA9HLoETSdPgXRCAkQ8/gzi47qSnizZ8Sibq9JintziwqEd3Q5GuV
+         Fn/w==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ogPDim5sq+cJSwlIEZ2mtXcRXJIYuSD0+R/NNDdfTjMI9eG4ZbC/eOQbA4Ok6m7Kf1bsVaiRBnllCy0nhuAd4xQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZcBEgsKniz2SGm+tlIQ3Krw1svqbPWJTVXkL78T3dXU5RYhre
+	50iDNfE0gOPnHlJrR2npjyOqTW43pJc/7kIV5DW44PUh2+NnNHZgmsDeFhCkRfT9sg==
+X-Gm-Gg: ASbGncvM9GPndoIGUamYVitPb/KAAtyhwuACSCEInwcng+EKKLxpl5lnrzGAoq2vGqC
+	QNf11MbGhYrdO7gwhNZ0cFy14s/6UHsT3isQerLg8agMmqoAZhT4S1NAa5p4VrsyG12Z8Vxfwop
+	+XTNITyepGEGcQqkFANE0CsuqT19FGw8Af7QySfmCpz/5qSQIgQVNIipnzdZqDWKzj8epefUItW
+	3RjLxGHts55N7KTHQmni0fsVHf/LAp8vQV0dnyykjlRm7vKK5cpGmITH8SaPfo9Taihwr9rvPTa
+	/Yn66bZTo7DhbVyp+YBgqI+2OW9Kx7xbmjlxVh5uPey48OFdUxgxOc1bVMtfpoetENekwxRpZ0w
+	gS4nclv95hUD/Za4qvPXR+LnnTTthE3vgFDv4Xd0YPhX0Ecmx/+FmalvKUBCIdR+25liF0rSnUI
+	Xy4rCSJwVbKcLdcct904uXGVUT3StwCiN1CMLxufsxDB6uJwNRpb0pCbx8P4I=
+X-Google-Smtp-Source: AGHT+IHEnW+KAQVBRRWo/sP1tuQq4+YuSexSYvAgD3ZQW+Uk1hhu0eSXu61P0LbdLU0EfCdTk/o99w==
+X-Received: by 2002:a17:906:7311:b0:b72:af1f:af7d with SMTP id a640c23a62f3a-b76c55f402cmr3192681366b.29.1764616620584;
+        Mon, 01 Dec 2025 11:17:00 -0800 (PST)
+Received: from google.com (155.217.141.34.bc.googleusercontent.com. [34.141.217.155])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f516a6c1sm1285135766b.13.2025.12.01.11.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 11:17:00 -0800 (PST)
+Date: Mon, 1 Dec 2025 19:16:56 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Shuran Liu <electronlsr@gmail.com>
+Cc: song@kernel.org, bpf@vger.kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Zesen Liu <ftyg@live.com>, Peili Gao <gplhust955@gmail.com>,
+	Haoran Ni <haoran.ni.cs@gmail.com>
+Subject: Re: [PATCH bpf 2/2] selftests/bpf: add regression test for
+ bpf_d_path()
+Message-ID: <aS3pqFCze_gmYq0y@google.com>
+References: <20251201143813.5212-1-electronlsr@gmail.com>
+ <20251201143813.5212-3-electronlsr@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343F:EE_|BN7PPFD3499E3E3:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0b8dfb9-0545-4ebc-8463-08de310c4f10
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nNYnCBrvYsYY9nPUA8wieq0EwAFQCjGpUQKMaWVlxDUl3yilNhLMI2d1XVEA?=
- =?us-ascii?Q?Yj/TG43x2PgZ0iYwHrdy7G4+oACCDWe0cCVFsA8r00lnF9HZkqJJ7zs6VbIl?=
- =?us-ascii?Q?Q9NOHiIlHDSz8zTUckZlcenskMx0taICGmnYmzTalN3HZFiT8aWNpuIDDocR?=
- =?us-ascii?Q?vU+cuJvaXzUbyz3ZTQqaPh7ChSMnnG3DDLeq3JVztL34tP0uSj/Y6Ig8OyO7?=
- =?us-ascii?Q?kCMVnCTZIqudnUJMwWxNY2ttnXGhUjb/LAcoPHJOqOoKPaDi9fXLd53M2xKv?=
- =?us-ascii?Q?A0EJ8gPt43iY2oxFrKPhaJVBOC7pMZNNhJflqcM8gyIXMIRH7gDdrB2ZFrvg?=
- =?us-ascii?Q?F5F30QRnsw8xJv3YOyx0D2hIEjie+c3hP8mPjs73sHFb7HC7AqZjMdLg/ajl?=
- =?us-ascii?Q?FYiUGE1qNo07GztSWbP7juG3X8fjoh0tjvJ17aTxVqKDIJ7lkFsFjip4q9zp?=
- =?us-ascii?Q?e4qOXIYnbsVPPR86ETqQ/nk7APCKZF0qw/XjDL0Uf6H+kXQFf6jWLUvSDZt9?=
- =?us-ascii?Q?/NRtHunYESo8O+4403YroMBIjV8FSb+y5hOBxVuRkiuDLjsW/6DzeyymdDqS?=
- =?us-ascii?Q?URdjl7LCielm7pMCNEQrLj3SBmzj+OogbuFTJjfaiNe6ZRCsq1ldbam5rsfj?=
- =?us-ascii?Q?PC94xnUTMYgmteLSn5899VNl3pV24Cq8jubXjU7MrNOpoH5XM41LYujsAyxm?=
- =?us-ascii?Q?Z0238o1tUUjCRXlXO2RA7m6sjhFKsZuSzI562lqArZtlSk9GyZVYwbjEDC4j?=
- =?us-ascii?Q?3lVJ3r8H8rbJDFGjSGqVixL1JGAGBqFsHpHfkAUm5SywlvKDQVcwjExxFPII?=
- =?us-ascii?Q?J2xOUx3gQZUrT6MJ/po/Al3fbjoQwsuiLIPFHfOSkNMO/mPz7BKI1t7qCsyQ?=
- =?us-ascii?Q?bz6x0XYBPoZ6RABAdmzTUsrUB/7E72R7TUWzoUtQKmadfQ/r+GEuP2NcSh/3?=
- =?us-ascii?Q?f6Ln2kwbWTw5XJNYTWJKJthx2IbspA+j2yezgaev+U8qqiC/mBZVUCUYfRgD?=
- =?us-ascii?Q?DYc/beukW5MhG7xqVFmYfJeL8j4gEG4tT5Xok7vjqYrlsnwUtircZbWgBV4d?=
- =?us-ascii?Q?/8Zn89pQpWIGmZiEyff1BLEpD8hipBx+lxN/GqSxu+oAmyK0IoIQ5WZrUKoh?=
- =?us-ascii?Q?i3a/gxbB6N1ms/PQOHI0TNO/Vdw9aT7qXmU3hrXNvkusZXcdM2E3KDGJ3J6W?=
- =?us-ascii?Q?bVPew1LBvrXz0+nm+APQDp929a9Ot8/KuuFuGcNai/IHDMJiMw39aHvlN16g?=
- =?us-ascii?Q?qhUvYEn+yZUWxSoPdUJvDpv+L3d56KK1/k2RjJFQMkD2huJAmGxbNaR24Z0+?=
- =?us-ascii?Q?NBuLZ+HiwZeee9iZ1pa7ycgqOtJKXhCCSSvpMLrncGzmu6WQEShSEK+PK424?=
- =?us-ascii?Q?sOOJEsoG4ZHDt4MtoSkxbyVlTnODqMFAU1ahQcxY9n7zo6hkqflXKW8vVLIQ?=
- =?us-ascii?Q?ENwjsP2Cpofu64A6FVANhHku0zBpAYZ3Ft9719rahnJqAbX7fW1KYKh7E8qY?=
- =?us-ascii?Q?bVlxkpN+0Lb3DwfWiPzaUjNfqOQ9P/4MFqqM?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 19:03:26.8180
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0b8dfb9-0545-4ebc-8463-08de310c4f10
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343F.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFD3499E3E3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251201143813.5212-3-electronlsr@gmail.com>
 
-When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
-text sections), the pages may still be dirty from recent writes.
-collapse_file() will trigger async writeback and fail with
-SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+On Mon, Dec 01, 2025 at 10:38:13PM +0800, Shuran Liu wrote:
+> Add a simple LSM BPF program and a corresponding test_progs test case
+> to exercise bpf_d_path() and ensure that prefix comparisons on the
+> returned path keep working.
+> 
+n> The LSM program hooks bprm_check_security, calls bpf_d_path() on the
+> binary being executed, and compares the returned path against the
+> "/tmp/" prefix. The result is recorded in an array map.
+> 
+> The user space test runs /tmp/bpf_d_path_test (copied from /bin/true)
+> and checks that the BPF program records a successful prefix match.
+> 
+> Without the preceding fix to bpf_d_path()'s helper prototype, the
+> test can fail due to the verifier incorrectly assuming that the
+> buffer contents are unchanged across the helper call and misoptimizing
+> the program. With the fix applied, the test passes.
+> 
+> Co-developed-by: Zesen Liu <ftyg@live.com>
+> Signed-off-by: Zesen Liu <ftyg@live.com>
+> Co-developed-by: Peili Gao <gplhust955@gmail.com>
+> Signed-off-by: Peili Gao <gplhust955@gmail.com>
+> Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
+> Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
+> Signed-off-by: Shuran Liu <electronlsr@gmail.com>
+> ---
+>  .../selftests/bpf/prog_tests/d_path_lsm.c     | 27 ++++++++++++
+>  .../selftests/bpf/progs/d_path_lsm.bpf.c      | 43 +++++++++++++++++++
+>  2 files changed, 70 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c b/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
+> new file mode 100644
+> index 000000000000..92aad744ed12
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/prog_tests/d_path_lsm.c
 
-MADV_COLLAPSE is a synchronous operation where userspace expects
-immediate results. If the collapse fails due to dirty pages, perform
-synchronous writeback on the specific range and retry once.
+I don't see why adding yet another new bpf_d_path() related test to
+prog_tests is warranted here. Why not simply incorporate this
+additional test case into the preexisting bpf_d_path() related
+prog_tests source file i.e. tools/testing/selftests/bpf/d_path.c?
 
-This avoids spurious failures for freshly written executables while
-avoiding unnecessary synchronous I/O for mappings that are already clean.
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <test_progs.h>
+> +#include "d_path_lsm.skel.h"
+> +
+> +void test_d_path_lsm(void)
+> +{
+> +	struct d_path_lsm *skel = NULL;
+> +	int err, map_fd, key = 0, val = 0;
+> +
+> +	skel = d_path_lsm__open_and_load();
+> +	if (!ASSERT_OK_PTR(skel, "open_and_load"))
+> +		return;
+> +
+> +	err = d_path_lsm__attach(skel);
+> +	if (!ASSERT_OK(err, "attach"))
+> +		goto out;
+> +
+> +	system("cp /bin/true /tmp/bpf_d_path_test 2>/dev/null || :");
+> +	system("/tmp/bpf_d_path_test >/dev/null 2>&1");
+> +
+> +	map_fd = bpf_map__fd(skel->maps.result);
+> +	err = bpf_map_lookup_elem(map_fd, &key, &val);
+> +	ASSERT_OK(err, "lookup_result");
+> +	ASSERT_EQ(val, 1, "prefix_match");
+> +out:
+> +	d_path_lsm__destroy(skel);
+> +}
+>
+> diff --git a/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c b/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
+> new file mode 100644
+> index 000000000000..36f9ff37e817
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/d_path_lsm.bpf.c
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include "vmlinux.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +
+> +char LICENSE[] SEC("license") = "GPL";
+> +
+> +#define FILENAME_MAX_SIZE 256
+> +#define TARGET_DIR "/tmp/"
+> +#define TARGET_DIR_LEN 5
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_ARRAY);
+> +	__uint(max_entries, 1);
+> +	__type(key, int);
+> +	__type(value, int);
+> +} result SEC(".maps");
+> +
+> +SEC("lsm/bprm_check_security")
+> +int BPF_PROG(d_path_lsm_prog, struct linux_binprm *bprm)
+> +{
+> +	char path[FILENAME_MAX_SIZE] = {};
+> +	long len;
+> +	int key = 0;
+> +	int val = 0;
+> +
+> +	len = bpf_d_path(&bprm->file->f_path, path, sizeof(path));
+> +	if (len < 0)
+> +		return 0;
+> +
+> +#pragma unroll
+> +	for (int i = 0; i < TARGET_DIR_LEN; i++) {
+> +		if ((u8)path[i] != (u8)TARGET_DIR[i]) {
+> +			val = -1; /* mismatch */
+> +			bpf_map_update_elem(&result, &key, &val, BPF_ANY);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	val = 1; /* prefix match */
+> +	bpf_map_update_elem(&result, &key, &val, BPF_ANY);
+> +	return 0;
 
-Reported-by: Branden Moore <Branden.Moore@amd.com>
-Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
-Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
-Suggested-by: David Hildenbrand <david@kernel.org>
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- mm/khugepaged.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 219dfa2e523c..7a12e9ef30b4 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -22,6 +22,7 @@
- #include <linux/dax.h>
- #include <linux/ksm.h>
- #include <linux/pgalloc.h>
-+#include <linux/backing-dev.h>
- 
- #include <asm/tlb.h>
- #include "internal.h"
-@@ -2787,9 +2788,11 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
- 	hend = end & HPAGE_PMD_MASK;
- 
- 	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
-+		bool retried = false;
- 		int result = SCAN_FAIL;
- 
- 		if (!mmap_locked) {
-+retry:
- 			cond_resched();
- 			mmap_read_lock(mm);
- 			mmap_locked = true;
-@@ -2819,6 +2822,44 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
- 		if (!mmap_locked)
- 			*lock_dropped = true;
- 
-+		/*
-+		 * If the file-backed VMA has dirty pages, the scan triggers
-+		 * async writeback and returns SCAN_PAGE_DIRTY_OR_WRITEBACK.
-+		 * Since MADV_COLLAPSE is sync, we force sync writeback and
-+		 * retry once.
-+		 */
-+		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !retried) {
-+			/*
-+			 * File scan drops the lock. We must re-acquire it to
-+			 * safely inspect the VMA and hold the file reference.
-+			 */
-+			if (!mmap_locked) {
-+				cond_resched();
-+				mmap_read_lock(mm);
-+				mmap_locked = true;
-+				result = hugepage_vma_revalidate(mm, addr, false, &vma, cc);
-+				if (result != SCAN_SUCCEED)
-+					goto handle_result;
-+			}
-+
-+			if (!vma_is_anonymous(vma) && vma->vm_file &&
-+			    mapping_can_writeback(vma->vm_file->f_mapping)) {
-+				struct file *file = get_file(vma->vm_file);
-+				pgoff_t pgoff = linear_page_index(vma, addr);
-+				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
-+				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
-+
-+				mmap_read_unlock(mm);
-+				mmap_locked = false;
-+				*lock_dropped = true;
-+				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
-+				fput(file);
-+				retried = true;
-+				goto retry;
-+			}
-+		}
-+
-+
- handle_result:
- 		switch (result) {
- 		case SCAN_SUCCEED:
--- 
-2.43.0
-
+Will this not flake, like, maybe a lot? Mismatches are being reported
+for every non-matched prefix. Meaning, other threads that are racing
+alongside your system(3) invocations and going through
+security_bprm_check() could very well reset your BPF_MAP_TYPE_ARRAY
+element value back to -1 before your userspace code even has a chance
+to assert it? Perhaps you can make this test a little more
+deterministic by filtering by the expected PID?
