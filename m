@@ -1,37 +1,67 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9EE228CBC;
-	Mon,  1 Dec 2025 18:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B00921883E
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 19:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764615128; cv=none; b=g1n7ELAHhzXSYZYiXuEeENlqUgwJwMqBsQ4GzhhvKSZJYvPpPE4Pn9crRqTlPiG44wJKUxNdPmqPc5AW0s6czhgVMUobxuVKZ5bHFi/ZaTEkCvtHl46w//YNSPkLYXn0Pzw0srqIhTBtDGkn5zakAxnDWDtvT4XEL34IjXFixjM=
+	t=1764615694; cv=none; b=CsEs9Mk426LjtXo2slaL2zgIS1Vjoe2Hhza4f99cKkIfQo+HvT1t+dwkov6BiIvcUNrZ1BtbGs0Y9Xi8PbkGoSn2yngKkr2KvJbjjv6s+btHdPGFa5Bcs4gHwEGC3CVklBqLf/C0RExleqxqNm0QU8XSQJ2QO9vpfQJld6q+niY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764615128; c=relaxed/simple;
-	bh=DIF8oHTepnEKrgtFlwXDpYKU3YY0nciGdB6ip0eoMyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JwYtBtEndT0us9cLA2OVgr0sIAsVa6FBMkPNYTw5iHA3pN8YzthtyZ+RLDBZEjvNLKRB5kluoEE7rw3/bHqa/pCoDqrOndcXbBb016ILzsr9kOGzfMNXxT5vyhhjW/NpEtmfw0c0rne7K3/s7KaaETNV5iVii0eTcRp+QJajZHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=spyrard9; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1764615694; c=relaxed/simple;
+	bh=dWJOrNJ8c11W6SAEUphyoYaYBQYmWlpJIwa3abF1KJo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=mcwGNk14ZYqLRpBeZMvTppAxtJMxKh5ymqOL6UEN/cHMiOrK5nKGpbV1YJCNb9n/XNiYMpUyUfHDNivab7c8XMASgmedeJDurbd325ZDuVcTscun5YJub68encihZYuwzgFTr0AtVqLRkTJ/iElt998XWeH98/cm1XAjuIvb1Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QpS10j4C; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="spyrard9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=xQq4Rf5YSiH+AQ90gnOGfpSOtl9SH4z0g6Tkfjuou4Y=; b=spyrard9ft38aVkUTVLqOnaXoy
-	L82PpgzGDfcKbkfXHJM6M4CzE35OypceQzerURz2c6et4IIKzwYTSuVmwCFe+xWk9Y4PGz60rKkp/
-	Xna952z0RlkEgKcWvgVXfXNiqJRr+T8hAaMqdBeC9uylxwUZpFrMutDf7hoQavBZ1BgCBqr/W9Uc4
-	yNZXeanoXMIN67wcFvxcus5BgKelqc+TftabDLzPz97uGIG2lsKbSA3Bp7MfJ3zJUdEH9l8GHR3+M
-	wvYwq3pmOjE/RT/0WxmBTO+NT19K0d6bMu7LuVguxhORnIAktTZBRo2CzCaZOOfiq/81kNaVKPndK
-	DFJ8NIKg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQ90E-00000004RVo-0I4R;
-	Mon, 01 Dec 2025 18:52:02 +0000
-Message-ID: <37934c20-4cf9-480f-847d-212e7efb350a@infradead.org>
-Date: Mon, 1 Dec 2025 10:52:00 -0800
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QpS10j4C"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42e2d5e119fso1049178f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 11:01:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1764615690; x=1765220490; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BzJeas8LPFGypXbCtT1+U1OrcCvq4t/9azfoNFwruuE=;
+        b=QpS10j4CU3kIqGJIHWBflKwNjBx1tp3VbsqmaBaK6MaaIt7mEMEhH2OFHbAyC22mm4
+         Wub2nokX7k7IeoDIFCiR+puTPcFUPu+TwMTpG+448YzuE8qShaCWuQp6fxO2zJ9683oI
+         1YdRLwImzO8BKHEJxuDantihbImx+v8ts9VBLZyVWK6Q+sfehSuAFgG9HVzaWL977pmO
+         RPK8bpYY+zGAB6lXgPZJgEzvusx73PEoB/8B3+ROY8SZJ3o9INhDVlRp4JuD/k7IGPfP
+         ajPT7HNd41M99rHPv90e8yg7ff8xzyIIKin1P+qJrG+53TPSvrlHG3RuM90GBNV8R4Mf
+         IPnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764615690; x=1765220490;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BzJeas8LPFGypXbCtT1+U1OrcCvq4t/9azfoNFwruuE=;
+        b=RZZMGKvnRCzhveU8PVVvjsUIpvQBcF1Tpp+qYXZ6/CNfGMj+ILsZYGjQO1isNSra5H
+         ER3ZI5UIzSECKNYVOG7F/DWCYa+W2ogpqkzVCpZLiN4yPx7GCp0m6GJCLPLzjEzyDAtA
+         b810gzCmRTRU5LXcrz+60czqdcYJah/0hYTiTo5Ab4k7qT8MWlr4fgZZWDZW5agTfrcy
+         +X1oheppoO5dAeZ/PllqZX848olU3x4iY14NK1Ar1c89Uk1GWLHRoNB/xUY0JqPMkuqM
+         Pr6qRe5mrY5+Ee1TLkXRb7eNwZgvr9w/WLQKzzAkWjRw2lYjXcKtvbWkld514Ep+lwUT
+         EdGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVl5z0j8ezSDFR1OEwzewAzQsOsyX2znprZExkIjsMw8KOKSuC3/ZUAML01nQ9Tg813rTtl93KlJvkZCiusuq5Xkv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyGm7sCLxTBieLaHAmnYXm/nduw+rJsWHomCgSx8dp0C2asmN7
+	ONCTpT6KSFkECRjjfKlBW2PlZLQTYM19XFZYiDC8tgziuCMxr2v9eUk0gqv2wi/HnhM=
+X-Gm-Gg: ASbGnctkygUgbWFm1v990eClrjziBF1xBZF3KykX1FhaJ2DEffvfr57C1GVyBxIEgqk
+	XWB3OomHhP/Has8W6GnomtPED1bRshuv+e8CQWQ3jtdmghdaTFnb9UywwQbd+k+PWtjI+Fw8A5M
+	5vTPsRtLvlQVljmsglt+LMOxsZLcJ0acG0MjSsTR6vGqa9sw0ooHo0geS5wNvkuYuvq+qBrxc66
+	S32H1n3VFqOx+Lt5EIbrqzrHn7EF1BYeEgdf/vmAfu9evGxzjhSvA4OGG/P0qCrpQH493jIzuU/
+	VM2ouga5hTycXgVmC4VuUUDtXGkJVp34TGibQQPWJjV3J6z8cgFVZj05JhJsv8zg6/87O31/NMJ
+	X/JZFaY+OxD6iUXPT5g54R4byf9mIHaBgVWbkTKXMY459APbMynwBKTfyK4vvG8kB1lPWJ//rI9
+	28v3m+JLJrM6QTu8ysytbPleOMDDaBwQ==
+X-Google-Smtp-Source: AGHT+IH5FuCKsYMYPN+g8M+3ojhMVERFE+79odP4YJ9nnFhLMkIpgzWhG8yjjilqJh37A6fSs2EzPw==
+X-Received: by 2002:a05:6000:2085:b0:429:ed90:91dd with SMTP id ffacd0b85a97d-42cc1ab6bf9mr43260446f8f.6.1764615688217;
+        Mon, 01 Dec 2025 11:01:28 -0800 (PST)
+Received: from [10.0.1.22] (109-81-1-107.rct.o2.cz. [109.81.1.107])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42e1c5c304csm27574737f8f.8.2025.12.01.11.01.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Dec 2025 11:01:27 -0800 (PST)
+Message-ID: <c45058d5-d690-4731-85d1-434971c16f92@suse.com>
+Date: Mon, 1 Dec 2025 20:01:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,83 +69,78 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 mm-new 16/16] Documentation: mm: update the admin
- guide for mTHP collapse
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
- dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kas@kernel.org, aarcange@redhat.com,
- raquini@redhat.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, hughd@google.com,
- richard.weiyang@gmail.com, lance.yang@linux.dev, vbabka@suse.cz,
- rppt@kernel.org, jannh@google.com, pfalcato@suse.de,
- Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20251201174627.23295-1-npache@redhat.com>
- <20251201174627.23295-17-npache@redhat.com>
+Subject: Re: [PATCH 2/3] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to sysfs.h
+To: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+References: <20251129195304.204082-1-yury.norov@gmail.com>
+ <20251129195304.204082-3-yury.norov@gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251201174627.23295-17-npache@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20251129195304.204082-3-yury.norov@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 12/1/25 9:46 AM, Nico Pache wrote:
-> Now that we can collapse to mTHPs lets update the admin guide to
-> reflect these changes and provide proper guidance on how to utilize it.
+On 11/29/25 8:53 PM, Yury Norov (NVIDIA) wrote:
+> The macro is related to sysfs, but is defined in kernel.h. Move it to
+> the proper header, and unload the generic kernel.h.
 > 
-> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 > ---
->  Documentation/admin-guide/mm/transhuge.rst | 48 +++++++++++++---------
->  1 file changed, 28 insertions(+), 20 deletions(-)
+>  include/linux/kernel.h      | 12 ------------
+>  include/linux/moduleparam.h |  2 +-
+>  include/linux/sysfs.h       | 13 +++++++++++++
+>  3 files changed, 14 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index d396d1bfb274..87bcfa80886a 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -63,7 +63,8 @@ often.
->  THP can be enabled system wide or restricted to certain tasks or even
->  memory ranges inside task's address space. Unless THP is completely
->  disabled, there is ``khugepaged`` daemon that scans memory and
-> -collapses sequences of basic pages into PMD-sized huge pages.
-> +collapses sequences of basic pages into huge pages of either PMD size
-> +or mTHP sizes, if the system is configured to do so
+> [...]
+> diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+> index 6907aedc4f74..4e390a84a8bc 100644
+> --- a/include/linux/moduleparam.h
+> +++ b/include/linux/moduleparam.h
+> @@ -4,7 +4,7 @@
+>  /* (C) Copyright 2001, 2002 Rusty Russell IBM Corporation */
+>  #include <linux/init.h>
+>  #include <linux/stringify.h>
+> -#include <linux/kernel.h>
+> +#include <linux/sysfs.h>
 
-                                                    so.
+If you are removing the kernel.h include from
+include/linux/moduleparam.h, I think it would be good to update the file
+to ensure that all necessary includes are now listed directly.
 
->  
->  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
->  interface and using madvise(2) and prctl(2) system calls.
-> @@ -219,10 +220,10 @@ this behaviour by writing 0 to shrink_underused, and enable it by writing
->  	echo 0 > /sys/kernel/mm/transparent_hugepage/shrink_underused
->  	echo 1 > /sys/kernel/mm/transparent_hugepage/shrink_underused
->  
-> -khugepaged will be automatically started when PMD-sized THP is enabled
-> +khugepaged will be automatically started when any THP size is enabled
->  (either of the per-size anon control or the top-level control are set
->  to "always" or "madvise"), and it'll be automatically shutdown when
-> -PMD-sized THP is disabled (when both the per-size anon control and the
-> +all THP sizes are disabled (when both the per-size anon control and the
->  top-level control are "never")
+The following items are present in moduleparam.h:
 
-                         "never").
+* __UNIQUE_ID(), __used(), __section(), __aligned(), __always_unused()
+  -> linux/compiler.h,
+* THIS_MODULE -> linux/init.h,
+* __stringify() -> linux/stringify.h,
+* u8, s8, u16, ... -> linux/types.h,
+* static_assert() -> linux/build_bug.h,
+* VERIFY_OCTAL_PERMISSIONS() -> linux/sysfs.h,
+* ARRAY_SIZE() -> linux/array_size.h.
 
->  
->  process THP controls
+I suggest then updating the includes in include/linux/moduleparam.h to:
 
-[snip]
-
+#include <linux/array_size.h>
+#include <linux/build_bug.h>
+#include <linux/compiler.h>
+#include <linux/init.h>
+#include <linux/stringify.h>
+#include <linux/sysfs.h>
+#include <linux/types.h>
 
 -- 
-~Randy
-
+Thanks,
+Petr
