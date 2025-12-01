@@ -1,80 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A468D3321AB;
-	Mon,  1 Dec 2025 15:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1437030B53B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 16:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764603460; cv=none; b=kg1hzpHkr71SLGjVP2P5nKZ0ThBuGZYbFT7EcHSAA9fy03ytuKTTjkLXXJA7uQ5MQhIU7CM9iTxjeRsGK3EDpDMv3O3lP2tC1OFnFf/EKTrr+dlOhuF5VUzO1ntf1cB4XmZ61byhBMfX2O65OyPyHiiS0V7qCQlsiJyTzgz/p2Q=
+	t=1764605055; cv=none; b=fBHx/9+o36S7jaJ6V6/9VQfmCYChQiYda4jDe3ROyVLzBjdeeCCCVxFG1fAgob68iGA5hJTe9lcuXIrt/0xs5UTKb50nMc4n5mvNKdtb2gRkSPE2py9Cs1+uUEG9JrSs6GvR6f9yuoUmCvfR1sJXqBYQvwp3WFyDKhNK0txSVxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764603460; c=relaxed/simple;
-	bh=MeU4jNo4ernEmKrA7RaGnmNcq5s8KiPFvWMXT/71V+g=;
+	s=arc-20240116; t=1764605055; c=relaxed/simple;
+	bh=Z2YOr5kYk9GxOy65Jpo9uyk4Ob8LGIIPugQHeveeqto=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+sbYPhjOvE2NbW7ioBG0KuH3Ur3peghlIRxEFZGiK3inJXbBfHrvNZib03g3+wRMmcQhDM3ZINfH04FnzVOUoiza8uKE7j4F2HtcdOCYVuhlrj0dlv/wDzN7cevL/DXBzXvnbh+zLjLBa3iib1iOruq5K9718wxotqSftkiqO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nONQSmY5; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BP6WgwsQ2uFVCoNWD6W5pTxubzW1NFR2XM/sO9XJFDj7nVVRYCmvf6JvbKO1RNwTrcCb60bPtOarBWo60aOWzXVKKtBEPVcplWjW8Rwy7s0KfCcWhZaEbqYTJapR4EMElN4naE8K6br/3Z7r/P18N9/6VFsv5U1aHXOqlO92YPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CYDdi4Wb; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nONQSmY5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764603459; x=1796139459;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MeU4jNo4ernEmKrA7RaGnmNcq5s8KiPFvWMXT/71V+g=;
-  b=nONQSmY5ZPZA93vDo11oGgIkT4hjPcZ3imkHh7+AZWr91OSJuKz7aDMe
-   i92BdW11gD4tQwtpMxQTAWjkANWaJwRSwLYrBB9y07X25ZjtbvA+vN+40
-   Gd/yU/4J9a51KjjhCztyDzEgnnLe/MIU3TWbJdWGcJHnZQb3WKwuSOGB6
-   JkdYVYgS0vfRkBis5SbU1P8bw1Pxpc4f6CKYn45vlUnFhQfVnGcDK51i8
-   cq5TigbypCOC2683tQjfetBTJMC3GCZlTyq2mIAmrrhx6RMQgWSnen4xH
-   FXSMJFZTRHokDDGZRUXGEZpn28781jmxql0G9o3+/LKXXsCsQCP6RY9QE
-   Q==;
-X-CSE-ConnectionGUID: viKa686eRDqktfalRPgL2Q==
-X-CSE-MsgGUID: d1ctbVyoTQKQiFTg9wNd4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="76865942"
-X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="76865942"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 07:37:38 -0800
-X-CSE-ConnectionGUID: bwEh+8eUQO2uePvE/vXKxw==
-X-CSE-MsgGUID: I7ELKOFwQYmhEDN2bjD6bA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="193225939"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.4])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 07:37:33 -0800
-Date: Mon, 1 Dec 2025 17:37:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: david laight <david.laight@runbox.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tracing: move tracing declarations from kernel.h to
- a dedicated header
-Message-ID: <aS22Oyx5XgAmouqZ@smile.fi.intel.com>
-References: <20251129195304.204082-1-yury.norov@gmail.com>
- <20251129195304.204082-4-yury.norov@gmail.com>
- <aStX3242e3mo5H05@smile.fi.intel.com>
- <aSyJ83v7EEAPHXeU@yury>
- <aSyertuRRX9Czvyz@smile.fi.intel.com>
- <20251130230925.376b5377@pumpkin>
- <aS0CgnvRfQtam0uU@smile.fi.intel.com>
- <20251201101658.0b5ab68e@pumpkin>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CYDdi4Wb"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-597c83bb5c2so1140969e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 08:04:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764605052; x=1765209852; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9hMtV3PXrMhCjLem0M5KT+SZ8RXBResg7Pv80Fl+Ng=;
+        b=CYDdi4Wb3ba5hX34N01p83gKLJQEA72a23rdSC/iXQwFIiMSzhT9cx7gnR7MTOnm+b
+         xjvzw/qSn7IDnfVSlGiN9EFVXGE1B+9NXAu5N95CnDA45t/5jnsRLzrhQS/a+SawgjsD
+         mIn12wFQ9TyXw8nMNyfsRLxTRRvWXnD2BhPYtANfm821onh0Lx9btcHFxnaAP+PeEs+9
+         txxZhwnvVqFRvH3YlSFxQ4leNQqpbpSzo1nHBXJTkhcdqPfrpgwo2LTKabVhA0ICOLf+
+         RrNQkjAUkSDApBUi+QvnamO8J0sQXROaRzGTrw4Z/qACkxeBsVBXjWi7v68QbzzLrSPG
+         dCeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764605052; x=1765209852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b9hMtV3PXrMhCjLem0M5KT+SZ8RXBResg7Pv80Fl+Ng=;
+        b=MSnOD8kpcZjwzsy7BXY0m+tXJ6fPQMk6cEDEPlm+NT11FuwEBRA0wzr5J2U5GD9kFv
+         pOMRZegebX5M1qK5oEpw4V+dDtfIwKui+E76htF/0t1vk42zRV6mUeQCJQYdBbsxE3q9
+         M9Sj1V3YoW35xfqqkWbHYopydOKvlvN0yK8KCDkCrxCl0tmcLaBziWKtooXiZ6LH/0AP
+         x1jOb8pi831FZD6S1lBupe3rpZRClGAhwSru4YTBljeIY4z25QHahcGReeHnxVtrDgkV
+         4s705hxqMmVbnziO3VnSGYpMeOiTgypoh7f5IpyV9BwjjIymn+sjurk6LQYpoOqWdeCr
+         mZeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOXa7yWeESdXXSzL67VwswYSWD/6d39a1HoAj7DiKdNjc9iVlKfFAQHw1t5iFas4LMt6Uws+BSGlAgj4m5dUCJ+5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPetYYB6pwXoBHPXjmHcbRnK+DalcRz3/fnaXQLPgRX39wNF/c
+	OnO/o6K2gfaBOkpscBM1LPoKBBiyMOoOt76iw69Nymj+sGO7fPFXmZszRaztjCHJlw==
+X-Gm-Gg: ASbGncv2Dhb1/jRpHWi8k3TPa92NHsrEY9ivJwOWuwxe9stFCFnkMLvrKrpM4DhJdDJ
+	7G8KK0QnAf8KHvI+iXfHjwbx5YUXskrGOKp/w8O3B4hwZB1e3A6NFRvk9K+ppAXGsGKY++AloDd
+	fER0gY5HIDq3/oymvPy1E7s6+xAJ5Egp8tBQG+kjukYsz5eJ/uMVkxotjT/ljhmJxBuKHVbcD7O
+	KWp48D9iFcarpWIPBrkcFTOL/Xxk2CHp6YEH6HD8RHUl0s8IjAoPV2IMtQZp/00ZAcz/SUgGWbf
+	hAj0plm37enBJG3Bc7K8kenlUk6JRVnLx1sre4GQmUpKQJoRhy4JczIM7UvKgCvodsZ9Z+L8hng
+	oBQQeMc6hdx5uG3AlvwyM2oCj2guraf2adgsRph1PfEA71L5d445mEeuP/sP7pcIRFsuy1dOLdL
+	XxhXlowGJ2FS7lcOtcLB4TNZPMBMWY+KhU7u7w5w2GgCY+T6oVrA==
+X-Google-Smtp-Source: AGHT+IGwL72Aeg7rfy2TscsPc6xQDUxQw9XmpdcK/OUqxD4opRrcqN2Rq5mq6/N45bshnzXhV6B/iw==
+X-Received: by 2002:a05:6512:1595:b0:595:831d:22eb with SMTP id 2adb3069b0e04-596a3e9fda1mr14183062e87.1.1764605051684;
+        Mon, 01 Dec 2025 08:04:11 -0800 (PST)
+Received: from google.com (120.54.38.34.bc.googleusercontent.com. [34.38.54.120])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-596bfa48c90sm3661068e87.80.2025.12.01.08.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 08:04:11 -0800 (PST)
+Date: Mon, 1 Dec 2025 16:04:07 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 26/28] KVM: arm64: Add hyp_enter/hyp_exit events to
+ pKVM hyp
+Message-ID: <aS28dyrKgZaOmMNr@google.com>
+References: <20251107093840.3779150-1-vdonnefort@google.com>
+ <20251107093840.3779150-27-vdonnefort@google.com>
+ <87345vfiqj.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -83,58 +82,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251201101658.0b5ab68e@pumpkin>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <87345vfiqj.wl-maz@kernel.org>
 
-On Mon, Dec 01, 2025 at 10:16:58AM +0000, david laight wrote:
-> On Mon, 1 Dec 2025 04:50:42 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sun, Nov 30, 2025 at 11:09:25PM +0000, david laight wrote:
-> > > On Sun, 30 Nov 2025 21:44:46 +0200
-> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-
-...
-
-> > kernel.h elimination (in the form it exists right now) is very fruitful.
-> > However, you may help with the (say) ioctl.h or whatever you consider
-> > really fruitful, we all will thank you (no jokes).
+On Sun, Nov 30, 2025 at 07:00:52PM +0000, Marc Zyngier wrote:
+> On Fri, 07 Nov 2025 09:38:38 +0000,
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > > 
+> > The hyp_enter and hyp_exit events are logged by the hypervisor any time
+> > it is entered and exited.
+> > 
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > 
+> > diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
+> > index d6e033c96c52..ce3953bc884a 100644
+> > --- a/arch/arm64/include/asm/kvm_hypevents.h
+> > +++ b/arch/arm64/include/asm/kvm_hypevents.h
+> > @@ -7,4 +7,21 @@
+> >  #include <nvhe/trace.h>
+> >  #endif
+> >  
+> > +HYP_EVENT(hyp_enter,
+> > +	HE_PROTO(void),
+> > +	HE_STRUCT(
+> > +	),
+> > +	HE_ASSIGN(
+> > +	),
+> > +	HE_PRINTK()
+> > +);
+> > +
+> > +HYP_EVENT(hyp_exit,
+> > +	HE_PROTO(void),
+> > +	HE_STRUCT(
+> > +	),
+> > +	HE_ASSIGN(
+> > +	),
+> > +	HE_PRINTK()
+> > +);
+> >  #endif
+> > diff --git a/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
+> > new file mode 100644
+> > index 000000000000..4b69d33e4f2d
+> > --- /dev/null
+> > +++ b/arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
+> > @@ -0,0 +1,13 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +
+> > +#include <asm/kvm_hypevents.h>
+> > +
+> > +#include <linux/arm-smccc.h>
+> > +
+> > +#undef arm_smccc_1_1_smc
+> > +#define arm_smccc_1_1_smc(...)					\
+> > +	do {							\
+> > +		trace_hyp_exit();				\
+> > +		__arm_smccc_1_1(SMCCC_SMC_INST, __VA_ARGS__);	\
+> > +		trace_hyp_enter();				\
+> > +	} while (0)
 > 
-> This is the first #include path for ioctl.h
+> Huh. No, please. Don't override existing kernel constructs behind
+> everybody's back. I know that tracing folks love to play that sort of
+> game, but I really don't want any of that here.
+
+And you haven't seen what I had for arm_smccc_1_2_smc()
+
 > 
-> In file included from ../include/asm-generic/ioctl.h:5,
->                  from ./arch/x86/include/generated/uapi/asm/ioctl.h:1,
->                  from ../include/uapi/linux/ioctl.h:5,
->                  from ../include/uapi/linux/random.h:12,
->                  from ../include/linux/random.h:10,
->                  from ../include/linux/nodemask.h:94,
->                  from ../include/linux/numa.h:6,
->                  from ../include/linux/cpumask.h:17,
->                  from ../arch/x86/include/asm/paravirt.h:21,
->                  from ../arch/x86/include/asm/irqflags.h:102,
->                  from ../include/linux/irqflags.h:18,
->                  from ../include/linux/spinlock.h:59,
->                  from ../include/linux/swait.h:7,
->                  from ../include/linux/completion.h:12,
->                  from ../include/linux/crypto.h:15,
->                  from ../arch/x86/kernel/asm-offsets.c:9:
+> Just define a wrapper that is KVM-specific, and use that.
 > 
-> Get past that and sched.h => processor.h => cpuid/api.h also
-> gets you to paravirt.h.
-> I suspect a lot of headers get pulled in like that.
+> Then from a semantic perspective, an SMC call, an ERET back to EL1
+> host, and an ERET back to EL1 guest are all very different events that
+> you lump under the "exit" category. That's not right. Same thing for
+> "enter".
 
-And several headers like ioctl.h that is "pull half of everything".
-device.h, for example.
+The idea of those events is just to know when we enter and exit the hypervisor,
+purely from a timing point of view. In ACK, we already have other separated
+events that can give the "cause" for entering or exiting the hypervisor. I
+haven't added them to that series because I thought it was big enough.
 
-So, you can start untangling them piece by piece.
-Not sure how [1] is actual right now, but I believe plenty of those
-can still be used.
+So happy to add now or do a follow-up, once we're done with that one?
 
-[1]: https://lwn.net/ml/linux-kernel/YdIfz+LMewetSaEB@gmail.com/
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Jazz isn't dead. It just smells funny.
