@@ -1,139 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4A02C1598;
-	Mon,  1 Dec 2025 22:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2AC28CF49
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 23:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764629807; cv=none; b=hE59+ErbzPOE2HplrjpeqDxvDezmFhH08R2mLyuJzY7UMLEZhGKTkROb5fh3ZDsiSFhDcvEJUdA3eKiCHpKq13TuhUPKWZjzCeRNLO4LOyX2HYqV4Nk7c3wEQTq25fQjPqDd62f0B+DHkCh2vdqpdefMQ7jVNluglTCm8ZU1HlI=
+	t=1764630723; cv=none; b=tr9poNrLcb2CdMeIPCnqedZmzoe3sTvu1zb95KtYRJVbOdhLfiwz0ze30CfTfZzqh5oqNkcfwKR3KGwnVBbm3Le3eeZnp8ZknL93qBo16JIbeovRyhUdH1gpX6MawNt2m6ZoOmx3PExj7WI/HPDeE/w0XghqrJnwyCJJeVH7dcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764629807; c=relaxed/simple;
-	bh=uMbvBe3vpQoG5Kb1HyyE9kZDzURsLnDIs/K5O3N+i/s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tl6C+mV4sLeIfopLO+p4BRJqdTAwdolMs3KU0S78A+4+VlnVC0YMq2hxkfXQlLawBXOyvz+MCvdMXEt8wqF6Vih8o+rAHvqJzor8ZJ8bx6LfSpPJLQWj9Hp4IKgHoKap3jGiQ+0FgL6VNwqogMhAC4SztcHmxdJ7iRq6ZZQZEtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW+fW0pz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764630723; c=relaxed/simple;
+	bh=J+kLpkIMy3513Bm09of6YHNMGo8AAMwx8rUXVBwzd2Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Xk5MXHxQQKdTKmHKEUp7VhxQaQk8CgxaIRUDMQYBzQtYi4eaG2YovpOm1t2Vkx60WB7J6wXvbwJ5xBnWJv6A8/a5FssWVU8w/MCDiL/DxeSwL4aMzSzLvGxj3+HUiXHjhQj0vfRd2MO783oTLYKYmoCQg4IzpgmMF7N+Aez0Qvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1fX+fXb; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW+fW0pz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB593C116D0;
-	Mon,  1 Dec 2025 22:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764629807;
-	bh=uMbvBe3vpQoG5Kb1HyyE9kZDzURsLnDIs/K5O3N+i/s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UW+fW0pzc1T43m2KbXc0k6F2hJPaPUOHeNUJY2uer8nWCmDfQ4iXWNt66aJwi/ksd
-	 Y+3jhLvVhTQIIw0Y2evEryyj8+IR99WzIUhYmpPvX2r2iLO1iMFW5XYU7hfHik1W97
-	 euoJKF3t8+OMQe5WbloH5yk/4SFr3J12vIczMe/AOWrYiAj3V0RlHX7fqFbSpnB6QT
-	 AZ8svB+egVca7pXM1x2Jo+MkJNHmJqLNtfLh6mQEa080qFxEmf92O/EGWOwJQvzDce
-	 RIKtjG54pwYZIQ4mg1Q6/guWcCM/8p8yHL08/mGus2RTikoutitzC/FissIdhcur7Z
-	 3aaLYF3dJbHtg==
-Message-ID: <64672c94fe19f0e87fbe9832eb26507ecaad50e9.camel@kernel.org>
-Subject: Re: [PATCH] tracing: Add system trigger file to enable triggers for
- all the system's events
-From: Tom Zanussi <zanussi@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	 <mathieu.desnoyers@efficios.com>
-Date: Mon, 01 Dec 2025 16:56:45 -0600
-In-Reply-To: <20251126152404.21a8e3c9@gandalf.local.home>
-References: <20251126152404.21a8e3c9@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1fX+fXb"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b6ce1b57b9cso4882939a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 15:12:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764630721; x=1765235521; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:user-agent:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
+        b=r1fX+fXbEJlouqcyHm3JSiPgfdPmHqObRKzGGfTP+vyJ3nKoJtwz5YKpRg3V9YNauf
+         LJC3PB/m6vlOtnd6FBQ4n0zTD9gxg9kknLe96Dm76uoed9/G8Kph4/zHm1y6bGlTra8J
+         8VPPFd3SAwqJ40jYZeBJqtBxf/FlDLTzHB86+H5lmYzCJVbyujwfcpY9HB5Qz7wNzr+D
+         81EJU6/vw5rzcH5msgJrtW3unzt/USSSFVzY85OBA5XNxoBwnTqSiSnOEJgRnlsKf2K2
+         gcFXi0CAc65NbjnpYgVXpR0vsVmLLNpqZ8jF1Ajf2VfWvRi9UlC8z8fXVCtpRYMqWsrB
+         8UDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764630721; x=1765235521;
+        h=cc:to:from:subject:message-id:user-agent:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
+        b=uuIhaBuMdpUd2cvrpLX2WT/ErrfEwvxbKFP1KuadXNYgujNz4b1W6SxxtxDXYKoKLT
+         UIX7COY1om4sGd0Ui7cRy6zoAoDD2I0AYTYzJi3yiWy7mTLNTWkGU5gcxuCGctAS/1u9
+         GZhFuEcbQsrWVT1xG8oSssr6NtI7ng+ArFwVHasyLXlPjqNrrpYvyvnJ9F+gi1HAYvHp
+         ZaRLq2HTzDLvo5qWJWc3vazBFSI0sv7XxQwOlqUxxxi4BXGh5qKE/R2/A7ipnD3sJVc5
+         kDYDv6/OONKPto5XRJgtEQV5sMUimhe1EqdyqoL7TDFt5Oun+tzs1ml7nmXhnGvAEkbz
+         HJrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPbFa2+hSFvA34Dwny/rgnMiL7wbZR1Qr3r/Fbe/dUIpGGCPyOGkvLWjRSUPUNWwGOLVmmuJhz2UY3Ym6NbwnBlUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtGUTBjOS47GLMtKP1s5MPcQrzBzlDyA9NA15He2WeSnVnYWro
+	jls9RJmA1PBOq0IRgXcu979XTagpJH39dYj+9YdgV9BWxZYYtgs8715SlCKSzHebssI26hBjmiO
+	DnfZm+Wg8Ig==
+X-Google-Smtp-Source: AGHT+IE1+zlv+/Ra8/4fDxzAvPN8JlMMEIwYI0833qsjS+sqfkYoQe/VtqWugCSuUH/u1MaLnSztSAazoE5b
+X-Received: from dlbcy37.prod.google.com ([2002:a05:7022:ba5:b0:11b:9bdf:e45c])
+ (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6898:b0:11b:ceee:a469
+ with SMTP id a92af1059eb24-11c9d85feeemr24650965c88.22.1764630720912; Mon, 01
+ Dec 2025 15:12:00 -0800 (PST)
+Date: Mon, 01 Dec 2025 15:11:45 -0800
+In-Reply-To: <20251201202437.3750901-3-wusamuel@google.com> (via kernel-team's
+ message of "Mon, 1 Dec 2025 12:24:35 -0800")
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-3-wusamuel@google.com>
+User-Agent: mu4e 1.12.12; emacs 30.1
+Message-ID: <dbx88qflajbi.fsf@ynaffit-andsys.c.googlers.com>
+Subject: Re: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
+From: Tiffany Yang <ynaffit@google.com>
+To: "'Samuel Wu' via kernel-team" <kernel-team@android.com>
+Cc: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Samuel Wu <wusamuel@google.com>, christian.loehle@arm.com, linux-pm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Hi Steve,
+Hi Sam,
 
-On Wed, 2025-11-26 at 15:24 -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> Currently a trigger can only be added to individual events. Some triggers
-> (like stacktrace) can be useful to add as a bulk trigger for a set of
-> system events (like interrupt or scheduling).
->=20
-> Add a trigger file to the system directories:
->=20
-> =C2=A0=C2=A0 /sys/kernel/tracing/events/*/trigger
->=20
-> And allow stacktrace trigger to be enabled for all those events.
->=20
-> Writing into the system/trigger file acts the same as writing into each o=
-f
-> the system event's trigger files individually.
->=20
-> This also allows to remove a trigger from all events in a subsystem (even
-> if it's not a subsystem trigger!).
->=20
+IMO this type of documentation should be in the same patch as the
+related change because having a single commit makes it easier to track
+(especially if/when these changes are cherry-picked to other
+trees). There may be reasons to keep them separate that I'm not thinking
+of, so if others disagree, defer to them!
 
-This looks very useful! Just a couple comments below..
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+"'Samuel Wu' via kernel-team" <kernel-team@android.com> writes:
+
+> Documentation update corresponding to replace the cpu_frequency trace
+> event with the policy_frequency trace event.
+
+> Signed-off-by: Samuel Wu <wusamuel@google.com>
 > ---
-> Changes since v2: https://patch.msgid.link/20251125200837.31aae207@gandal=
-f.local.home
->=20
-> - Removed unneeded NULL initialization of tr (Masami Hiramatsu)
->=20
->=20
->=20
+>   Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
+>   Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
+>   Documentation/trace/events-power.rst          |  2 +-
+>   3 files changed, 13 insertions(+), 13 deletions(-)
+<snip>
 
-[ ... ]
+>   A suspend event is used to indicate the system going in and out of the
+>   suspend mode:
 
-> +static ssize_t
-> +event_system_trigger_write(struct file *filp, const char __user *ubuf,
-> +		=C2=A0=C2=A0=C2=A0 size_t cnt, loff_t *ppos)
-> +{
-> +	struct trace_subsystem_dir *dir =3D filp->private_data;
-> +	struct event_command *p;
-> +	char *command, *next;
-> +	char *buf __free(kfree) =3D get_user_buf(ubuf, cnt);
+Otherwise, this change lgtm.
 
-nit: I think you could move this up a couple lines and keep the reverse
-Christmas tree.
-
-> +	bool remove =3D false;
-> +	bool found =3D false;
-> +	ssize_t ret;
-> +
-> +	if (!buf)
-> +		return 0;
-> +
-> +	if (IS_ERR(buf))
-> +		return PTR_ERR(buf);
-> +
-> +	/* system triggers are not allowed to have counters */
-> +	if (strchr(buf, ':'))
-> +		return -EINVAL;
-> +
-
-As mentioned by Masami, I think this would preclude the hist triggers
-from having this enabled.
-
-I'm guessing you didn't see the hist commands as one of the triggers
-that would be useful as system triggers, but there might be a couple
-cases where they could be if using the common fields e.g.
-
-echo hist:keys=3Dcommon_pid.execname:vals=3Dhitcount > events/syscalls/trig=
-ger=20
-
-or anywhere just
-
-echo hist:keys=3Dcommon_stacktrace > trigger
-
-Just about everything else would error out, but these might be worth having=
-.
-
-Maybe you could just change this check to look for :<number> at the end of
-the command?
-
-Thanks,
-
-Tom
-
-
+-- 
+Tiffany Y. Yang
