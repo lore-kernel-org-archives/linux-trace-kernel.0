@@ -1,205 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE5118BC3D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 02:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199DE18A6DB
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 02:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764642771; cv=none; b=hBS7siQJWyLjTRhR4eXaiczFDKlZgFLnBU9iy8t5rh+6XkzCSTOYjA8WqPiZAqVw14bUdKnswm9DPftrl2r9AO2EWLkg7wQmeJ6b1hUTlhFL14TvBp9/wKKtL1bmgpeT2vPTTuuR/WCkIWNlMjaA5uZvN8fM9p7d+R9GqKJSXmU=
+	t=1764643835; cv=none; b=gkBaUIEYkuiGCtc4bFsnOnp2b2zuzDe+Mt4t7KWCiAn0oghDlpByVt31XHg5zexG9fC7B+SEYmsEKISow3tIYnE3KYHl5RPWfRh1AeP4mmZifdwzoOdvph1mAMLAEY5aZcPDV7DYbUJ0Zhbp/qNRQxidLd+smyG9M7Sz/eOyr4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764642771; c=relaxed/simple;
-	bh=2ikJxkTnjYR6tXBODOpWoRPsVP+PnjwMlEMqn4QWguw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VXhKXwoQymE2Z7gubDgIIyrNMTUOhP8uxPl7U6YROLN5a2OHpiZnTJG0QW6L8jWy6t07TAnsOYiEiweJ3JbP/Zr4CgzjPcb7nGZ4YkMxZBx/2kEKelRKiVybwcrhIDNcL3Auat2FjXtMtcqz+K7EwzjGPsiFkc9gbj/tnIpr+tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srq7P553; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764643835; c=relaxed/simple;
+	bh=d2nnb4UTXFIkbAdN29yEdBrzizD88vkgBJQyyjX28+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvlthWpd4chIRtfaDy5a5HT/lBrOyAOUd2dMa9EaWHNt9sV8gHWvHqOJJOxXg4hmkSoBMUFJnb44Y5hlU5xN1IEfoYTPflD+W4uDbyedyb9uW0stjDh49bLkd9054Nui7iQES4OJwQVpQYtD4TClyh5kV9xO57taEGRuT7WdNHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dFwCF64F; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srq7P553"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF1FC113D0;
-	Tue,  2 Dec 2025 02:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764642770;
-	bh=2ikJxkTnjYR6tXBODOpWoRPsVP+PnjwMlEMqn4QWguw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=srq7P553LuPjRla/Nc0V13vKbpCqXSCZdo7oqHtkUzYR+d/F3ByyzDcz7swg9BLqk
-	 408IsnPXpGOyHXjcQxqWO+Na6BeKUJ4BJV6SegmTFrAspRpprYX2XHL22CF7CU/pz+
-	 ENQ7CTDIQSuU1Db6z0a9ybmN3VBh1VUvYZAxuTCvbaHYUdDsw0qgzaGWTnQXdib5ux
-	 +Gzs2bE+vvkK4PLq9zd4lwO/7BCBUHI5MStffZw3p//LB94mPiWqaJTlWtgeFWkhof
-	 d6fr2jLR9bQb0GZlXgUej2Bd3XpiGJmpjh7EBXJK4TbEUCmqZTOpCFQq7BJDnEG+08
-	 D9hH3GoU6q6AA==
-Date: Tue, 2 Dec 2025 11:32:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: yebin <yebin@huaweicloud.com>
-Cc: naveen@kernel.org, davem@davemloft.net,
- linux-trace-kernel@vger.kernel.org, yebin10@huawei.com, Steven Rostedt
- <rostedt@goodmis.org>
-Subject: Re: [PATCH] kprobes: avoid crash when rmmod/insmod modules after
- ftrace_disabled
-Message-Id: <20251202113248.e9e2e7c665bd3ee07b83e399@kernel.org>
-In-Reply-To: <6929089E.10706@huaweicloud.com>
-References: <20251125020536.2484381-1-yebin@huaweicloud.com>
-	<20251127125248.a1367d15c0bbc7faad3b0e87@kernel.org>
-	<20251127131820.152fd7651ece26139778cc25@kernel.org>
-	<6929089E.10706@huaweicloud.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFwCF64F"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-640f88b8613so3609894d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 18:50:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764643833; x=1765248633; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=u4fZQuQJ65AJK2A7tpNQAB3pVThD3W5ngX9pcfsdMkk=;
+        b=dFwCF64F5ApKy/c7oic3DFCfhlxY79ZJFYL1RYNJly2kyEgfdezaX5AymvXHWNSkiD
+         n4IIC2Vl7ILl9zpc8RBfXPMtN1f0G873VSMEG51A7i35P+I24BWTtRoxzE08iLfxVXiA
+         WBVv6qTs8na5DhlUoR34hGDJCf6103kIjo+q0QuTnT2+KzXzOT1vpLPpyhL31wlOqMw9
+         BC6Q+wWzUMxd9wYxQbrJWYmYTCFGFKERT3Yc4Yo872wWZo7xLRQJXRWMd7uyhIQYLhpy
+         Yz0/fF+2jertz9DGPgc/4hEmujAzs07sWKk5ggzCcvSvPVzPwfH7L+VLm8zTVNrFmB0Q
+         nT/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764643833; x=1765248633;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4fZQuQJ65AJK2A7tpNQAB3pVThD3W5ngX9pcfsdMkk=;
+        b=BH/OQRs5hGyjIkzhAMKQ/gR7HygGq+HJskJlXZouNhj9qboarD45VWSI0ZYDQx4+bF
+         7FTdgB39y6JVP0WAJ4oweSv5n7FHpvZ9QVNgNbaIzN0oR4daWdwy6qb0h9U5GJ+8StkS
+         ORYcBcgsFJKVHVnubz2mwG/uP1qrQNEe1zyqncjo7tjJDtQBV9+RUdodQIWK9WWXd/kC
+         MQ9H22UaQNqnNkNMEmG5uSgJ/+ydzKdY+7eVMxBy2cEmP7ligaBZRmeGQL5RMsaw0BIE
+         sxGRWF9LNoGx3zxXl0hfHlT+Xts4IzjgPka2bW3Oi9934xakpIFTx2iY4c2nVMTPxPxb
+         Tpaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAlxBoMC8IvptWT5ZKUNf7BZMUoajAE2U8mrY9t9M6m5wEqC3/7TP6L6sgLaG1m3enSLDNNevH4aOsRTPQimBq4m4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+gMVK+/Z0NXM0ntkEO3P9WpgJqEt4FAYlirdGePlbzLVaMIQh
+	vgGVNCerrRG5PYgNyMbnlUND1taJLr18unUoyQzRo3u2Sz0Sis1nU5dc
+X-Gm-Gg: ASbGnct1xf3teNbrMazpFCsfm827fAnYfl0OgdSspULnOEmZko4MGAtisO31RW3TyT1
+	62oyFMn7zOq03QuZXRDoe5iPvu+WOEeRraFrIj7GyLy74qGG573S4nPJ+eje+RIKTuILs1k1usu
+	AfzAFghb61ICeKNVsoQY9xsXmh41HfUJYWwzSpsm/clm15V1oUDBEjC/Fj/cZ5VkWpK/QU9uGX5
+	w1RSf/4YAQQeHeQ3sUw0Q6PAzv4uRaz9TqsSCNxTxFzO6VzkZWvNmfs1SV4xyAw4407cM5cTJvg
+	D66Mb8FDuCV+SHnvWXNudCo7pT29QPVChlTYGfs+BdZlRYvdMdlWJdxmbLD43N4z0ejm11n1kTB
+	kGr6CNUhm/d0DAcDjpxoRh2z+74yWItSKPHQ+y+YQ760uXgT3I8bWDk8aeFOwuC6zZ3fbaXqb53
+	vaIlxrXO8=
+X-Google-Smtp-Source: AGHT+IFvjnC2S/Jp93rH0uVWc/73vRFOoYQepG4E9Ug5xxnCcXms6vpoqWinBuFed3GkRDU5HYh1CQ==
+X-Received: by 2002:a05:690c:2781:b0:787:e9bc:fa1f with SMTP id 00721157ae682-78a8b54d8cemr340242637b3.46.1764643833002;
+        Mon, 01 Dec 2025 18:50:33 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:8738:665d:bba8:afd0])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad1043a08sm58083027b3.52.2025.12.01.18.50.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 18:50:32 -0800 (PST)
+Date: Mon, 1 Dec 2025 21:50:31 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] kernel.h: drop STACK_MAGIC macro
+Message-ID: <aS5T9-1z7PK32q9R@yury>
+References: <20251129195304.204082-1-yury.norov@gmail.com>
+ <20251129195304.204082-2-yury.norov@gmail.com>
+ <3e7ddbea-978f-44f7-abdd-7319908fd83c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e7ddbea-978f-44f7-abdd-7319908fd83c@kernel.org>
 
-Cc: Steve,
-
-Since this is caused by ftrace_kill.
-
-On Fri, 28 Nov 2025 10:27:42 +0800
-yebin <yebin@huaweicloud.com> wrote:
-
+On Mon, Dec 01, 2025 at 10:38:01AM +0100, Christophe Leroy (CS GROUP) wrote:
 > 
 > 
-> On 2025/11/27 12:18, Masami Hiramatsu (Google) wrote:
-> > On Thu, 27 Nov 2025 12:52:48 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> >
-> >> Hi,
-> >>
-> >> Thanks for reporting!
-> >>
-> >>
-> >> On Tue, 25 Nov 2025 10:05:36 +0800
-> >> Ye Bin <yebin@huaweicloud.com> wrote:
-> >>
-> >>> From: Ye Bin <yebin10@huawei.com>
-> >>>
-> >>> There's a issue as follows when rmmod modules after ftrace disabled:
-> >>
-> >> You may see something like;
-> >>
-> >> Failed to unregister kprobe-ftrace (error -19)
-> >>
-> >> or
-> >>
-> >> Failed to disarm kprobe-ftrace at <function name> (error -19)
-> >>
-> >> right before this BUG, don't you?
-> >> If you reported with that line, it's more easier to understand.
-> >>
-> Yes, there is indeed a warning generated. I might not have expressed it 
-> clearly enough. The issue below is related to the problem that occurs 
-> when the second module is unloaded. When the first module was unloaded, 
-> some nodes were left in the hash list, causing a use-after-free (UAF) 
-> issue when traversing the hash list.
-> Therefore, this patch aims to resolve the UAF problem caused by residual 
-> nodes in the hash list after unloading a module while ftrace is disabled.
-
-Yes, but I think your patch is redundant. Can you test the code
-which I suggested at the last?
-
-BTW, can you explain why that ftrace_disabled was kicked?
-That usually means ftrace hits some bug.
-
-> >>
-> >>> BUG: unable to handle page fault for address: fffffbfff805000d
-> >>> PGD 817fcc067 P4D 817fcc067 PUD 817fc8067 PMD 101555067 PTE 0
-> >>> Oops: Oops: 0000 [#1] SMP KASAN PTI
-> >>> CPU: 4 UID: 0 PID: 2012 Comm: rmmod Tainted: G        W  OE
-> >>> Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-> >>> RIP: 0010:kprobes_module_callback+0x89/0x790
-> >>> RSP: 0018:ffff88812e157d30 EFLAGS: 00010a02
-> >>> RAX: 1ffffffff805000d RBX: dffffc0000000000 RCX: ffffffff86a8de90
-> >>> RDX: ffffed1025c2af9b RSI: 0000000000000008 RDI: ffffffffc0280068
-> >>> RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed1025c2af9a
-> >>> R10: ffff88812e157cd7 R11: 205d323130325420 R12: 0000000000000002
-> >>> R13: ffffffffc0290488 R14: 0000000000000002 R15: ffffffffc0280040
-> >>> FS:  00007fbc450dd740(0000) GS:ffff888420331000(0000) knlGS:0000000000000000
-> >>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> CR2: fffffbfff805000d CR3: 000000010f624000 CR4: 00000000000006f0
-> >>> Call Trace:
-> >>>   <TASK>
-> >>>   notifier_call_chain+0xc6/0x280
-> >>>   blocking_notifier_call_chain+0x60/0x90
-> >>>   __do_sys_delete_module.constprop.0+0x32a/0x4e0
-> >>>   do_syscall_64+0x5d/0xfa0
-> >>>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> >>>
-> >>> The above issue occurs because the kprobe was not removed from the hash
-> >>> list after ftrace_disable.
-> >>> To prevent the system from restarting unexpectedly after ftrace_disable,
-> >>> in such cases, unregister_kprobe() ensures that the probe is removed from
-> >>> the hash list, preventing subsequent access to already freed memory.
-> >>>
-> >>> Fixes: 6f0f1dd71953 ("kprobes: Cleanup disabling and unregistering path")
-> >>> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> >>> ---
-> >>>   kernel/kprobes.c | 26 ++++++++++++++++++++++++--
-> >>>   1 file changed, 24 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> >>> index ab8f9fc1f0d1..d735a608b810 100644
-> >>> --- a/kernel/kprobes.c
-> >>> +++ b/kernel/kprobes.c
-> >>> @@ -1731,8 +1731,30 @@ static int __unregister_kprobe_top(struct kprobe *p)
-> >>>
-> >>>   	/* Disable kprobe. This will disarm it if needed. */
-> >>>   	ap = __disable_kprobe(p);
-> >>> -	if (IS_ERR(ap))
-> >>> -		return PTR_ERR(ap);
-> >>> +	if (IS_ERR(ap)) {
-> >>> +		int ret = PTR_ERR(ap);
-> >>> +
-> >>> +		/*
-> >>> +		 * If ftrace disabled we need to delete kprobe node from
-> >>> +		 * hlist or aggregation list. If nodes are not removed when
-> >>> +		 * modules are removed, the already released nodes will
-> >>> +		 * remain in the linked list. Subsequent access to the
-> >>> +		 * linked list may then trigger exceptions.
-> >>> +		 */
-> >>> +		if (ret != -ENODEV)
-> >>> +			return ret;
-> >>> +
-> >>> +		ap = __get_valid_kprobe(p);
-> >>> +		if (!ap)
-> >>> +			return ret;
-> >>> +
-> >>> +		if (ap == p)
-> >>> +			hlist_del_rcu(&ap->hlist);
-> >>> +		else
-> >>> +			list_del_rcu(&p->list);
-> >>
-> >> Instead of repeating this process, we should ignore
-> >> -ENODEV error from ftrace directly. BTW, ftrace_disabled is set
-> >> when ftrace_kill() is called, that means ftrace is no more usable.
-> >> So I think we can just ignore ftrace operation in
-> >> __disarm_kprobe_ftrace().
-> >
-> > So, what we need is;
-> >
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index ab8f9fc1f0d1..17d451553389 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -1104,6 +1104,10 @@ static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
-> >   	int ret;
-> >
-> >   	lockdep_assert_held(&kprobe_mutex);
-> > +	if (unlikely(kprobe_ftrace_disabled)) {
-> > +		/* Now ftrace is disabled forever, disarm is already done. */
-> > +		return 0;
-> > +	}
-> >
-> >   	if (*cnt == 1) {
-> >   		ret = unregister_ftrace_function(ops);
-> >
-
-This one, it should fix simply.
-
-Thank you,
-
-> >
+> Le 29/11/2025 à 20:53, Yury Norov (NVIDIA) a écrit :
+> > The macro is only used by i915. Move it to a local header and drop from
+> > the kernel.h.
 > 
+> At the begining of the git history we have:
+> 
+> $ git grep STACK_MAGIC 1da177e4c3f41
+> 1da177e4c3f41:arch/h8300/kernel/traps.c:        if (STACK_MAGIC !=
+> *(unsigned long *)((unsigned long)current+PAGE_SIZE))
+> 1da177e4c3f41:arch/m68k/mac/macints.c:          if (STACK_MAGIC !=
+> *(unsigned long *)current->kernel_stack_page)
+> 1da177e4c3f41:include/linux/kernel.h:#define STACK_MAGIC        0xdeadbeef
+> 
+> Would be good to know the history of its usage over time.
+> 
+> I see:
+> - Removed from m68k by 3cd53b14e7c4 ("m68k/mac: Improve NMI handler")
+> - Removed from h8300 by 1c4b5ecb7ea1 ("remove the h8300 architecture")
+> - Started being used in i915 selftest by 250f8c8140ac ("drm/i915/gtt:
+> Read-only pages for insert_entries on bdw+")
 
+STACK_MAGIC was added in 1994 in 1.0.2.  It was indeed used in a couple
+of places in core subsystems back then to detect stack corruption. But
+since that people invented better ways to guard stacks.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+You can check commit 4914d770dec4 in this project:
+
+https://archive.org/details/git-history-of-linux
