@@ -1,161 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0582FD1A5
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 06:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AD4301701
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 06:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764657708; cv=none; b=n0k421fdp1Cjpyv4Hz3dY07VpsdLetQ/ZQEgXJQGnsx72OqAaSFDU5v0rUBEJWD5v+Eb6nDXhY0npXVlf985K1SAYmA8isoe/pXMtaPFusc1PR+EsF0W9vBQ5qHG8keiVh9BcIi6evWbF7LzIcTa61EQZi0h1BKWYxBrBVstGek=
+	t=1764657824; cv=none; b=WOWe6xHMe+xcAovxycUNZr5/7aS4vu4XNNiFMkF9T8rF5oGqO4qeEE3b7y6uVIrimZMRnRLwJEUHgySwT/9JcjFmVoUytabvNQLTE1tLTf/b2jlybWhEkUP4dxXDC1D7zXZ3uoLs9zQLEJHNfU5JnO5kOF+oiISALfRHe31PAJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764657708; c=relaxed/simple;
-	bh=Hai1TcPQOKf1uaa49H412cyjjDU49X5uOvuGPOGDSeQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kKOMLBVzk87lDFZ0U8AOOgKbeEyMHO24qqw82lgfPcwvBLDbN2ArIBz22V8xuO29my6/YAgN3IllJQ8iifVrundY3BvAsnchO6ACLjvOAPowAwTMyJYuFI0PlL11ps2Tm5OVyB0yu7uk1fdWJ5yJBbIFZXJEShJWukS0go+PPCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=akVB2A13; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764657824; c=relaxed/simple;
+	bh=Jf9gVgouUS6WA1WmAKl+iapmoVqz/JtN0fwXRs+b4qY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QWG03LQ+jT3A9+gQY9w181NT+pux021DfQmJH3hEj09zWYM2Ib0HRgtDlvRQ6/KYZUSNzqiUWNSToIaf7gj2Q93Ikcbxg7Izejf+5YAENobpZfJmv3lUO+mKLjSQp1tXC5LX+UfiBohmuRbynUHVCrs5KE4zBKDHYkcNP84nmRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cumvfgwy; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="akVB2A13"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764657705;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=49VrYK15cdFiRV0c8Ms3/BqF7Fte0UtvKvhmXKoE+jk=;
-	b=akVB2A13B82qE3OEjGhMo3DezwjNFtw4OwsXtXUmqSLsQ9pocpNx9LzzdkQiAGDwNDWFuW
-	bAHGibKD6PQwk6lSSftBzFCff5VCFbiZy5mxmsHHxNxl6+n5yz7R4m8ki8Ft2biLBcIZ5G
-	WEOsiw8hjm6znkfIFs7qTUF4WFwdHJU=
-Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
- [209.85.222.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-2BSK61unNCKk-d_C38jPjA-1; Tue, 02 Dec 2025 01:41:44 -0500
-X-MC-Unique: 2BSK61unNCKk-d_C38jPjA-1
-X-Mimecast-MFC-AGG-ID: 2BSK61unNCKk-d_C38jPjA_1764657703
-Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-9351ffc9218so1887953241.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 22:41:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cumvfgwy"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-29555415c5fso61189455ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 22:43:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1764657821; x=1765262621; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=htyZzDjpItfBeC/qRXvnJ6nxzkqeSejC8MJ5WVXPcQY=;
+        b=CumvfgwykknWCLlGYfxl+aWzXM+wsXYC464qBApiNydWyo/GCG1/7RTtXpXKc+dHrx
+         991hAxia7u5AdoccVPsITEX81DXNJZiWLee1gga39SLmNdYh4wvcwVEe6YcYHtDNtmk/
+         UhEl3Wa2dAa4we0KkOidLr8rkfrEcU/r/iLX3OS3+dXn4CjlZkw941vAi4dUsmagCMCC
+         V3DpQQ/B5cYX8ef5Niy23jwcZGhwC+6mMHvo1IYQVKF8Rl7CqQpTtt5KZ+Ao0Nov0Pj/
+         Z2Yd2aCcCtCkf3hZ7KuZbH8rzgvwo5tk8Q23Ip+T/rn6ftht8h1Qxp91cAuTVcu6RQJ8
+         N6pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764657703; x=1765262503;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=49VrYK15cdFiRV0c8Ms3/BqF7Fte0UtvKvhmXKoE+jk=;
-        b=umSeQvBX//cj6MucT/a5zZ5vWTTekwaIRK+nci6FD/Xx6QEeYmbvBe4zoB/xnb6bcp
-         X3l4P3lQnYVLvU7mUIOPXvns2t/qNKUlB4VSdSBbHety/OKmAAsAEB3rqeHTA7fMcKnG
-         FID3yS9XOxpM2PThxuohQleZd2FnKYHFaXusbPDfWg6k+tXwuwAlf53idcV6L+IfJtGO
-         uqoiS/2nYpw0VQ753ZUh1fEzBU8Q/SyEAm8vUv+DN1R+f/YyB7vcZ2kNmO+cMw2Tip/9
-         SBm6m/Yu4TRHOq184tJDCyrY7ZFXk8CM/hso/Sxggtqliy6bMYZi4fhK0nC7hyzRtVfu
-         b1pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlzGRJRH/odSMjKBCZ2UL5Y1ylTC8AR1FFSPU3ICvZND0JHfr8hWrI9V446S1LzHyo9pIpA5LCmL7vdR7wcpeZdfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy37S+qB8f9+hi2ewBcJPmj+9AeNc4l3yXl7CqBcWZ0rSlYHlV7
-	Eq/1NwK5Hzd8+k2jQWpZUE06zpZnC5eMGHKmp79mA595gwDF41nwqm4T/KhWRlJuXrQnjHCj+Pm
-	E3kX7w1yUSNhFFn5ln+8Ag49b3ADGF1eXx5+MmBSdc7G/9O2CqH1VghHEOjw7qM90F/mpfE+0Cg
-	==
-X-Gm-Gg: ASbGnctlRzM5lDC/wGak3XdT9owzq6GibfC+Z7ehHfzT/UgXNnncU8obtyXG7i39+xR
-	FhLoAJvN6eLJzOonRrJjV30fNIm+WbLPqIWJMeiIuIqia+zbslUrHso3Os4PnMlyKLskq8CuN+h
-	Pb2D9n+lKYpKYKPuc0dbfwKyEVCep9LZJ4CMDTK6rHfzKi8fbd0e8CIG1H/m5Agy7Shl+1m33R+
-	czlD908DtPrdVN+d+vkjHjm5gCicoObNdtEZRKDcbz1r6ZuW/43acrfTFy1xv/SlaUJ/dSX4AHG
-	HyhieMoOwXf970ZXa+j1GXr2+OCWCrb9NnTc7KeqjAfIidAKd3NK9lWA6OBwFDbkDASP9GKk1Zh
-	bgOzkTn58OqtGNWtcgS5luzSeAxMNe2dZhOo=
-X-Received: by 2002:a05:6102:5ccc:b0:5db:e1ad:770f with SMTP id ada2fe7eead31-5e1de13b836mr16102326137.2.1764657703484;
-        Mon, 01 Dec 2025 22:41:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFhamUfYQ9Q2zIzUmmCQfk/WwwgPP3XWOeyeSTxNgztBrtuHQyCDQwKgp60d8CwOLKBdPuc+Q==
-X-Received: by 2002:a05:6102:5ccc:b0:5db:e1ad:770f with SMTP id ada2fe7eead31-5e1de13b836mr16102322137.2.1764657702933;
-        Mon, 01 Dec 2025 22:41:42 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93cd6ce2180sm6626867241.5.2025.12.01.22.41.39
+        d=1e100.net; s=20230601; t=1764657821; x=1765262621;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=htyZzDjpItfBeC/qRXvnJ6nxzkqeSejC8MJ5WVXPcQY=;
+        b=oqjbOylmsps4/o66W2fngii1vIp2d2Kv9w3xr5MqJyrSYTkgjHJaXbihse+AagGCsX
+         Hy0NyND4IV7EH8h8Ko3b24h7TefhRQTvEtYYxbydKbdweZXq/cvWZ/aAH9EOAtI03s2H
+         pn0RN+qIno3RW5OyZi2LkBaQ5lmcfcWVBsmRcNz1uVHl7KaSSzxQIYhneaKl1DqDh4Vp
+         CoCWUBdADxxXUWk6aByUPyPV+8G5K1ib/iAG3EqnkOwJDRP4Q1fI5dSNv0W4z7Lrz3m5
+         GquPoIthRDlZc8M7c/IE/Yj+9MfVOO1c+KqEIrP/RKa2IoJIiGaHKvhDNuAIFs0xxBUa
+         APuw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3nZHG1K4W2bCD1QfP8wsklmax9Cb9vNJ1q3RgWQVuUzsYQoW3Ho3KFWRmNZtLVMxAx6aJiNMVEzb1KZhGPB+rkyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/fVFSbYW2cASR9O7XfkgXgVruGp+ab0egSLkdZ12trZ9UYE2h
+	IEafdEa5luvVq9BiYve9qvYpOmhr1Tj3qQWHuDwIL9Yrv1DuwwssfZpaUKHL08t+Lgg=
+X-Gm-Gg: ASbGnctNqp20Pr1NMJNC1+5TRBGZL6s9STWua5aXlADALY+IgtTGrWlhgDi8cF9oqen
+	M9z/6braa+VvEhwQEM2aW2iv8GjYUUXWSMh4ilTm+hHOi4d1/ixN8d03tXKdfCMqlVLscOAQjVo
+	DL99MaLaL9XJ9Mt8YLJkJOErpkqn9EplS2JGSg/MXJ3UQWs0kzS4lpCsNW8VaNyNtOQSav4nPG0
+	zv0PQgpsJZC6NTNrOSN2Fm4kiM/wf41Oyr+RSwj19TycLSMjiTMJQzppEC6SIcHfZZMbgv4XdKY
+	qMXX2HYJ8FK0o5P58mwO4ItOQc8k0KVEeLNYRwFHoImuLa/eqyRimicjl1AuYHb8eezqYbenLyn
+	VLMeiltiKPGsPUKoihLgRwRtpsD/RjDJ/nPA33qzZ27vhHisZ0eRth6jkiTMYk8wwaX+kPAty6X
+	OPdlm/u56dilRyzgsbATxq2w==
+X-Google-Smtp-Source: AGHT+IElB/55iOL3pFkt4jDnVftx8SMwzLAFev+IFE16AlTrASn4wJp/yshPqxy/pYWD5aWdbmoY1g==
+X-Received: by 2002:a17:903:2b0f:b0:297:e66a:2065 with SMTP id d9443c01a7336-29b6c6d0d46mr435400315ad.56.1764657821143;
+        Mon, 01 Dec 2025 22:43:41 -0800 (PST)
+Received: from localhost ([122.172.86.94])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bce4418c4sm139899275ad.24.2025.12.01.22.43.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Dec 2025 22:41:41 -0800 (PST)
-Message-ID: <534ed046d7417c60711063d86cf8b594fcf573ec.camel@redhat.com>
-Subject: Re: [PATCH v2 1/2] rv: Convert to use lock guard
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 02 Dec 2025 07:41:37 +0100
-In-Reply-To: <20251201205132.520eb490@gandalf.local.home>
-References: <cover.1763370183.git.namcao@linutronix.de>
-	 <dbefeb868093c40d4b29fd6b57294a6aa011b719.1763370183.git.namcao@linutronix.de>
-	 <20251125145736.48c3ed9d@gandalf.local.home>
-	 <e4838dd91f14024222eef8e705f2b1ae7945bb80.camel@redhat.com>
-	 <20251126095106.7eadaba6@gandalf.local.home>
-	 <2e46a7dc417119bb7e331ff14253b0ff678d697e.camel@redhat.com>
-	 <20251201102447.53f33be5@gandalf.local.home>
-	 <8f98932a8fa9c3e63c9a5cb7ba764e9db968bada.camel@redhat.com>
-	 <20251201203816.5e777f12@gandalf.local.home>
-	 <20251201205132.520eb490@gandalf.local.home>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+        Mon, 01 Dec 2025 22:43:40 -0800 (PST)
+Date: Tue, 2 Dec 2025 12:13:37 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Samuel Wu <wusamuel@google.com>
+Cc: Huang Rui <ray.huang@amd.com>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Perry Yuan <perry.yuan@amd.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, christian.loehle@arm.com, kernel-team@android.com, 
+	linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Replace trace_cpu_frequency with
+ trace_policy_frequency
+Message-ID: <inifvm4pxifvdazsfyi2ppzfwum6ukzujx5sfiux4s2iv55z4p@otoaj35vr47c>
+References: <20251201202437.3750901-1-wusamuel@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: iDuArvEk3tSNpqbt_7gWZel7-2UOAt5hJ2zWw1MnbFA_1764657703
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251201202437.3750901-1-wusamuel@google.com>
 
-> On Mon, 1 Dec 2025 20:38:16 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> It's best to always use your latest branch that you did your last pull on
-> during a release cycle.
->
-> I see you based these changes on v6.18-rc7, but your previous pull was
-> based on v6.18-rc5. If I were to pull this in, it gets a bit spaghetti li=
-ke
-> in the merges.
->
-> =C2=A0 v6.18-rc5 -> pull1
-> =C2=A0 merge <- v6.18-rc7 <- pull2
->
-> Where now we have changes between rc5 and rc7.=C2=A0 Was there a reason y=
-ou
-> based on top of rc7 and not use your last pull?
->
-> It's fine sending urgent patches this way, as these tags are in Linus's
-> tree and it's just new changes being added. But for a subsytem tree, it's
-> best not to pull in Linus's tree unless there's a good reason to do that.
+On 01-12-25, 12:24, Samuel Wu wrote:
+> This series replaces the cpu_frequency trace event with a new trace event,
+> policy_frequency. Since by definition all CPUs in a policy are of the same
+> frequency, we can emit a frequency change per policy instead of per CPU.
+> This saves some compute and memory from the kernel side, while simplifying
+> analysis from the post-processing of the trace log side.
+> 
+> Any process that relied on cpu_frequency trace event needs to switch to the
+> new policy_frequency trace event in order to maintain functionality. The
+> decision of replacing instead of adding the trace event is intentional. Since
+> emitting once per policy instead of once per CPU is anyways a semantics change
+> that would require a tooling update, the trace event was also appropriately
+> renamed. The presence of the policy_frequency event in a trace log is a clear
+> and obvious signal for tooling to determine kernel version and which trace
+> event to parse.
+> 
+> 1/2: Replaces trace_cpu_frequency with trace_policy_frequency
+> 2/2: Corresponding documentation patch that updates references to
+>      cpu_frequency with policy_frequency
+> 
+> Changes in v3:
+> - Resending v2 properly (accidentally ommited cover letter in v2)
+> 
+> Changes in v2:
+> - Replaced trace_cpu_frequency with trace_policy_frequency (per Christian
+>   and Viresh)
+> - Updated references to cpu_frequency in documentation with
+>   policy_frequency
+> - v1 link: https://lore.kernel.org/all/20251112235154.2974902-1-wusamuel@google.com
+> 
+> Samuel Wu (2):
+>   cpufreq: Replace trace_cpu_frequency with trace_policy_frequency
+>   cpufreq: Documentation update for trace_policy_frequency
+> 
+>  Documentation/admin-guide/pm/amd-pstate.rst   | 10 ++++----
+>  Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++------
+>  Documentation/trace/events-power.rst          |  2 +-
+>  drivers/cpufreq/cpufreq.c                     | 14 ++---------
+>  drivers/cpufreq/intel_pstate.c                |  6 +++--
+>  include/trace/events/power.h                  | 24 ++++++++++++++++---
+>  kernel/trace/power-traces.c                   |  2 +-
+>  samples/bpf/cpustat_kern.c                    |  8 +++----
+>  samples/bpf/cpustat_user.c                    |  6 ++---
+>  tools/perf/builtin-timechart.c                | 12 +++++-----
+>  10 files changed, 54 insertions(+), 44 deletions(-)
 
-Yeah got it, there was no valid reason for that rebase, I'm going to keep i=
-t
-stable next time or write it explicitly otherwise.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> What I can do is simply pull the patches on top of your last patch
-> directly, and keep the history clean for my pull request to Linus.
-
-I'm pushed the tag rebased on -rc5 (actually on the last PR) just in case i=
-t
-makes your life easier:
-
-
-The following changes since commit 69d8895cb9a9f6450374577af8584c2e21cb5a9f=
-:
-
-  rv: Add explicit lockdep context for reactors (2025-11-11 13:18:56 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv-6.19-n=
-ext-2-rc5
-
-for you to fetch changes up to b30f635bb6492f02f2f704b46d898679371015cb:
-
-  rv: Convert to use __free (2025-12-02 07:28:32 +0100)
-
-
-Thanks,
-Gabriele
-
+-- 
+viresh
