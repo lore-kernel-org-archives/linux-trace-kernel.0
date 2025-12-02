@@ -1,88 +1,255 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A518036D510;
-	Tue,  2 Dec 2025 08:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F13E2356BE
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 08:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764665135; cv=none; b=jx9AKpU4PJhy1ENwaBR18PJ4DAO0UUEyqyy7pzcLvla7Vj8sGKwWe6Rlyz3J8gnyAtVJK08HWX1Gx5Ni8IIxODh4cmoX4k/0zkOQkt+eebX1C4OUEOMKO7GkEzhQvCbP/PJrFsiF85Qf1JGY4gh7jDCy7pmbNGt/RUeHFDBpOSM=
+	t=1764665988; cv=none; b=XHYJ41Uwv/5DSrv5swIhmxiWVpkvhtTF7GCRkopCSwEUxgmlBQE6RYxV2MJawSS7bmQZXmrgYYTgYtW92ZLoF9y/mipE3HmnOyD0t2k44ldS3jNbey+iY96L+9JgfEeLidTC8Q2V+unAcl1QfVlFJhKJtlybcLdEccVXW5nw9rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764665135; c=relaxed/simple;
-	bh=yEgvTmTI12iPrg38zpQ3FshLyTdJQlYEe0147FLQOc4=;
+	s=arc-20240116; t=1764665988; c=relaxed/simple;
+	bh=Z7r6OzoH7omO/51pifJA6c+WWkYEvn8kuP2pMjeab24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Blk7etg1/B4qCLxoNxsopPnP/P5PR3vVGQl5ELiN4uB4oHH7fE7WXF6gz+0TS2pBmgU9SsnxsfrW+FVP94AdI7VaR9f9uHrM50wuGhzZtfJV88eFsBWdGEBkkM80I8VIjtB/o1yhm90pJm6QUk77PngsfXo6Z2VV+d/d5Dc19d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1vQM0k-0007ei-00; Tue, 02 Dec 2025 09:45:26 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id E2BF0C0256; Tue,  2 Dec 2025 09:37:18 +0100 (CET)
-Date: Tue, 2 Dec 2025 09:37:18 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	=?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=FERayJ2qfO/HXHoLMiSh/XCVsO89gI2AHuEu8jJ652qAPGPDvFGQoSflMcgvZyGxG21q2HfhrZGZ72i3p9zfxEDefbCom2/8yMSjkPelsnTm2HyPrmQZzNIrOm2KNn394r18S4tq47n63VZ46Vg/i2apy1zzuXtRLoYf0znzVa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IU4vYZqC; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IU4vYZqC"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6419aaced59so7878352a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Dec 2025 00:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764665985; x=1765270785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ThzGarJezG2ZHy2Bqj3o69sOGnDn4SAuoVez0Iottc=;
+        b=IU4vYZqC4samWZ6Jsbvz/9VhI2uweLqrsXJG5bOB2AQ/MgmFuf7DHya1ZmGP7q3peW
+         tpsLBbpPtPpCigF41gTpmqFuuS1OeLXl4Cy9bvnDqzZawr27afXrFQXQ/BkdQFgZJkrt
+         lez3MshCAvpAVGSqdI14dKfQcnQYOV4wCiImneUA+RQCevzzOBYSYRhH/4uDUvyAcWtw
+         15TDC3zvNvMYe1BZkpZaEbsu6H4Fa8DiD999DZkyKhsazi4Zo8SeQKS2RE70X/UyRWJt
+         qmtafI6HYQGh89UUp8THDCLUMCBvsgC5HQTQ7Qwkzo56zAmx8mFioKJk8OdJLq+Jb2Vw
+         u2cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764665985; x=1765270785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ThzGarJezG2ZHy2Bqj3o69sOGnDn4SAuoVez0Iottc=;
+        b=kuTZdEfaN1EfF5LHNmu9zwPFcJIniJElu5f9NZUdXUPD2zs7FMwErBHW9s7bKE0sXH
+         0/7GFJYbW6fJhU7h+6Mu5oeXQYjhvFakL6BMah/PeGB2jDPTVwuAJLlDud0XOq54uhXO
+         9YeG0bkme4pJbDqPr8f6R/zTOellUC25Rv9WM+57IVG3FLDvj4f9Jycz3M5oGTlDUftR
+         0bH6QetagXcWlY5oR2Bf0wHWDaAKX6ly3LkM0uUsXub9w+3Y5DfRHky2GmXdPCq/Xm8m
+         6IT8WiNARXVIKAq3XLnWSomL7xW5n4Lz52k0kOIEoFQRImhtkyO7nM47ZLSrgLL2kBOD
+         QJNw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0DbbB3/nrxviI3kldaafW366MmsaQNV8jC/pCb6dg7X0umBZQokAVN8q04/gq70m2HLShzcdJdrWddS5GqcaxJkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2t30637nFHJjv4E7+dtPPW20VFD749Ve+q0cjtbNk54wGRu6Q
+	SQcfVfqzDcvbxtaJkj1Ai1OVxjSsbjFTHzGMkTM39KJiGUlF//tkmGMp7jO4MNqPNw==
+X-Gm-Gg: ASbGncuQl7ExE8l3x2BDhpkh4hfBnjU6/Eo/HT5ankCagz9LYb2D7BkYDyKZE+hhiUx
+	w77Mf9rLWKuYtS6fMsoQLN/6s+dFirp1JlS5Pr2m6GHJt4zShur3ceAlLgK74gDubwr+RH0UqyG
+	WZpj+XxSkjyJ6A5PSEGt5nWXp7dtfg05P2sUcbYC5DTh+9DONcDyauOgwgL2ul1LZhIkB7/jjhR
+	qKgHUVN/zgXAI0thN3lkntTYlfDyVQBLcvz3jrFS+juJDVUg2p4PI8FH5cVm/BK+N7BPHoLHmG+
+	ulNz77lVGLd/beTq1H/nvvVVyBDRtvqArz1gp4gZPvaXjS4XfAimMyzOUaFZTiFtD7HaN/1kFnD
+	R6reELUcwocKjecK3KJmonW8wFn1dmr2xHVuhnPCKKXv5cmylyeH458v81J8cbabiZr5KIevsUh
+	LRSK5kKf/YaE8dbL36J5oPR+9vkCzaHKE8xWqLNGEpOJNNodkBfjkSuFfmsxKrNBQXiQNgyg==
+X-Google-Smtp-Source: AGHT+IEd13Gfa95fFiAB+HhgH8HllVe7yQTF/83ZcxpIt+j1YIh7ZhERRPExwQScgq2v+RZ3H+DtXA==
+X-Received: by 2002:a17:907:9484:b0:b72:3765:eda9 with SMTP id a640c23a62f3a-b76719ec8f8mr4125012666b.60.1764665984325;
+        Tue, 02 Dec 2025 00:59:44 -0800 (PST)
+Received: from google.com (155.217.141.34.bc.googleusercontent.com. [34.141.217.155])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f59aecd4sm1489172766b.44.2025.12.02.00.59.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Dec 2025 00:59:43 -0800 (PST)
+Date: Tue, 2 Dec 2025 08:59:40 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Shuran Liu <electronlsr@gmail.com>
+Cc: song@kernel.org, bpf@vger.kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	eddyz87@gmail.com, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: ftrace: Fix memory corruption when kernel is
- located beyond 32 bits
-Message-ID: <aS6lPlVHv2i0hhDQ@alpha.franken.de>
-References: <20251128-fix_mips_ftrace-v1-1-e6169f8777f2@bootlin.com>
+	Zesen Liu <ftyg@live.com>, Peili Gao <gplhust955@gmail.com>,
+	Haoran Ni <haoran.ni.cs@gmail.com>
+Subject: Re: [PATCH bpf v2 2/2] selftests/bpf: fix and consolidate d_path LSM
+ regression test
+Message-ID: <aS6qfN4cXoEO82bE@google.com>
+References: <20251202075441.1409-1-electronlsr@gmail.com>
+ <20251202075441.1409-3-electronlsr@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251128-fix_mips_ftrace-v1-1-e6169f8777f2@bootlin.com>
+In-Reply-To: <20251202075441.1409-3-electronlsr@gmail.com>
 
-On Fri, Nov 28, 2025 at 09:30:06AM +0100, Gregory CLEMENT wrote:
-> Since commit e424054000878 ("MIPS: Tracing: Reduce the overhead of
-> dynamic Function Tracer"), the macro UASM_i_LA_mostly has been used,
-> and this macro can generate more than 2 instructions. At the same
-> time, the code in ftrace assumes that no more than 2 instructions can
-> be generated, which is why it stores them in an int[2] array. However,
-> as previously noted, the macro UASM_i_LA_mostly (and now UASM_i_LA)
-> causes a buffer overflow when _mcount is beyond 32 bits. This leads to
-> corruption of the variables located in the __read_mostly section.
+On Tue, Dec 02, 2025 at 03:54:41PM +0800, Shuran Liu wrote:
+> Add a regression test for bpf_d_path() when invoked from an LSM program.
+> The test attaches to the bprm_check_security hook, calls bpf_d_path() on
+> the binary being executed, and verifies that a simple prefix comparison on
+> the returned pathname behaves correctly after the fix in patch 1.
 > 
-> This corruption was observed because the variable
-> __cpu_primary_thread_mask was corrupted, causing a hang very early
-> during boot.
+> To avoid nondeterminism, the LSM program now filters based on the
+> expected PID, which is populated from userspace before the test binary is
+> executed. This prevents unrelated processes that also trigger the
+> bprm_check_security LSM hook from overwriting test results. Parent and
+> child processes are synchronized through a pipe to ensure the PID is set
+> before the child execs the test binary.
 > 
-> This fix prevents the corruption by avoiding the generation of
-> instructions if they could exceed 2 instructions in
-> length. Fortunately, insn_la_mcount is only used if the instrumented
-> code is located outside the kernel code section, so dynamic ftrace can
-> still be used, albeit in a more limited scope. This is still
-> preferable to corrupting memory and/or crashing the kernel.
+> Per review feedback, the new test is merged into the existing d_path
+> selftest rather than adding new prog_tests/ or progs/ files.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Co-developed-by: Zesen Liu <ftyg@live.com>
+> Signed-off-by: Zesen Liu <ftyg@live.com>
+> Co-developed-by: Peili Gao <gplhust955@gmail.com>
+> Signed-off-by: Peili Gao <gplhust955@gmail.com>
+> Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
+> Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
+> Signed-off-by: Shuran Liu <electronlsr@gmail.com>
+
+Feel free to add:
+
+Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
+
 > ---
-> To go further and remove the limitations of dynamic trace support, the
-> ftrace implementation for MIPS should be completely rewritten and
-> inspired by what was done for arm64. This approach was chosen by
-> Loongson: instead of trying to manage multiple instructions added on
-> the fly, the support relies on a breakpoint, which is more robust.
+>  .../testing/selftests/bpf/prog_tests/d_path.c | 64 +++++++++++++++++++
+>  .../testing/selftests/bpf/progs/test_d_path.c | 33 ++++++++++
+>  2 files changed, 97 insertions(+)
 > 
-> However, this effort is significant, so I’ll leave it to those who are
-> motivated to work on it. If needed, I can provide some guidance on the
-> topic.
-> ---
->  arch/mips/kernel/ftrace.c | 25 +++++++++++++++++++++----
->  1 file changed, 21 insertions(+), 4 deletions(-)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/d_path.c b/tools/testing/selftests/bpf/prog_tests/d_path.c
+> index ccc768592e66..2909ca3bae0f 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/d_path.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/d_path.c
+> @@ -195,6 +195,67 @@ static void test_d_path_check_types(void)
+>  	test_d_path_check_types__destroy(skel);
+>  }
+>  
+> +static void test_d_path_lsm(void)
+> +{
+> +	struct test_d_path *skel;
+> +	int err;
+> +	int pipefd[2];
+> +	pid_t pid;
+> +
+> +	skel = test_d_path__open_and_load();
+> +	if (!ASSERT_OK_PTR(skel, "d_path skeleton failed"))
+> +		return;
+> +
+> +	err = test_d_path__attach(skel);
+> +	if (!ASSERT_OK(err, "attach failed"))
+> +		goto cleanup;
+> +
+> +	/* Prepare the test binary */
+> +	system("cp /bin/true /tmp/bpf_d_path_test 2>/dev/null || :");
 
-applied to mips-next.
+I'd much prefer if we also cleaned up after ourselves, but it's not
+that much of an issue I guess.
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> +	if (!ASSERT_OK(pipe(pipefd), "pipe failed"))
+> +		goto cleanup;
+> +
+> +	pid = fork();
+> +	if (!ASSERT_GE(pid, 0, "fork failed")) {
+> +		close(pipefd[0]);
+> +		close(pipefd[1]);
+> +		goto cleanup;
+> +	}
+> +
+> +	if (pid == 0) {
+> +		/* Child */
+> +		char buf;
+> +
+> +		close(pipefd[1]);
+> +		/* Wait for parent to set PID in BPF map */
+> +		if (read(pipefd[0], &buf, 1) != 1)
+> +			exit(1);
+> +		close(pipefd[0]);
+> +		execl("/tmp/bpf_d_path_test", "/tmp/bpf_d_path_test", NULL);
+> +		exit(1);
+> +	}
+> +
+> +	/* Parent */
+> +	close(pipefd[0]);
+> +
+> +	/* Update BPF map with child PID */
+> +	skel->bss->my_pid = pid;
+> +
+> +	/* Signal child to proceed */
+> +	write(pipefd[1], "G", 1);
+> +	close(pipefd[1]);
+> +
+> +	/* Wait for child */
+> +	waitpid(pid, NULL, 0);
+> +
+> +	ASSERT_EQ(skel->bss->called_lsm, 1, "lsm hook called");
+> +	ASSERT_EQ(skel->bss->lsm_match, 1, "lsm match");
+> +
+> +cleanup:
+> +	test_d_path__destroy(skel);
+> +}
+> +
+>  void test_d_path(void)
+>  {
+>  	if (test__start_subtest("basic"))
+> @@ -205,4 +266,7 @@ void test_d_path(void)
+>  
+>  	if (test__start_subtest("check_alloc_mem"))
+>  		test_d_path_check_types();
+> +
+> +	if (test__start_subtest("lsm"))
+> +		test_d_path_lsm();
+>  }
+> diff --git a/tools/testing/selftests/bpf/progs/test_d_path.c b/tools/testing/selftests/bpf/progs/test_d_path.c
+> index 84e1f883f97b..7f65c282069a 100644
+> --- a/tools/testing/selftests/bpf/progs/test_d_path.c
+> +++ b/tools/testing/selftests/bpf/progs/test_d_path.c
+> @@ -17,6 +17,8 @@ int rets_close[MAX_FILES] = {};
+>  
+>  int called_stat = 0;
+>  int called_close = 0;
+> +int called_lsm = 0;
+> +int lsm_match = 0;
+>  
+>  SEC("fentry/security_inode_getattr")
+>  int BPF_PROG(prog_stat, struct path *path, struct kstat *stat,
+> @@ -62,4 +64,35 @@ int BPF_PROG(prog_close, struct file *file, void *id)
+>  	return 0;
+>  }
+>  
+> +SEC("lsm/bprm_check_security")
+> +int BPF_PROG(prog_lsm, struct linux_binprm *bprm)
+> +{
+> +	pid_t pid = bpf_get_current_pid_tgid() >> 32;
+> +	char path[MAX_PATH_LEN] = {};
+> +	int ret;
+> +
+> +	if (pid != my_pid)
+> +		return 0;
+> +
+> +	called_lsm = 1;
+> +	ret = bpf_d_path(&bprm->file->f_path, path, MAX_PATH_LEN);
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	{
+> +		static const char target_dir[] = "/tmp/";
+> +
+> +#pragma unroll
+> +		for (int i = 0; i < sizeof(target_dir) - 1; i++) {
+> +			if (path[i] != target_dir[i]) {
+> +				lsm_match = -1; /* mismatch */
+> +				return 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	lsm_match = 1; /* prefix match */
+> +	return 0;
+> +}
+> +
+>  char _license[] SEC("license") = "GPL";
+> -- 
+> 2.52.0
+> 
