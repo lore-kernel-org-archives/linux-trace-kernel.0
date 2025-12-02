@@ -1,118 +1,76 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2AC28CF49
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Dec 2025 23:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134E51BD9D0;
+	Tue,  2 Dec 2025 01:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764630723; cv=none; b=tr9poNrLcb2CdMeIPCnqedZmzoe3sTvu1zb95KtYRJVbOdhLfiwz0ze30CfTfZzqh5oqNkcfwKR3KGwnVBbm3Le3eeZnp8ZknL93qBo16JIbeovRyhUdH1gpX6MawNt2m6ZoOmx3PExj7WI/HPDeE/w0XghqrJnwyCJJeVH7dcc=
+	t=1764639445; cv=none; b=bgzpFsRaDeeFgcTxL0GoOnBQkv/JcMenS8NU90pSDbQCxSbE+E5A/OQSAEvusC9/HKUuUdEcnj2/OcvTR7+QdZ3UBLxMwgkycQ4AwYkRTu+mXdngI0g3X1WF1kA35v4KJ/jpheHbOnJ12AAMc1vGrG0tR8ncXjGKmweBfNdTF+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764630723; c=relaxed/simple;
-	bh=J+kLpkIMy3513Bm09of6YHNMGo8AAMwx8rUXVBwzd2Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xk5MXHxQQKdTKmHKEUp7VhxQaQk8CgxaIRUDMQYBzQtYi4eaG2YovpOm1t2Vkx60WB7J6wXvbwJ5xBnWJv6A8/a5FssWVU8w/MCDiL/DxeSwL4aMzSzLvGxj3+HUiXHjhQj0vfRd2MO783oTLYKYmoCQg4IzpgmMF7N+Aez0Qvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1fX+fXb; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1fX+fXb"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b6ce1b57b9cso4882939a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Dec 2025 15:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764630721; x=1765235521; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:user-agent:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
-        b=r1fX+fXbEJlouqcyHm3JSiPgfdPmHqObRKzGGfTP+vyJ3nKoJtwz5YKpRg3V9YNauf
-         LJC3PB/m6vlOtnd6FBQ4n0zTD9gxg9kknLe96Dm76uoed9/G8Kph4/zHm1y6bGlTra8J
-         8VPPFd3SAwqJ40jYZeBJqtBxf/FlDLTzHB86+H5lmYzCJVbyujwfcpY9HB5Qz7wNzr+D
-         81EJU6/vw5rzcH5msgJrtW3unzt/USSSFVzY85OBA5XNxoBwnTqSiSnOEJgRnlsKf2K2
-         gcFXi0CAc65NbjnpYgVXpR0vsVmLLNpqZ8jF1Ajf2VfWvRi9UlC8z8fXVCtpRYMqWsrB
-         8UDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764630721; x=1765235521;
-        h=cc:to:from:subject:message-id:user-agent:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zLM1EPntpvB3fDVLGw42FElIkaQKNx9U9DS+XMsl0fM=;
-        b=uuIhaBuMdpUd2cvrpLX2WT/ErrfEwvxbKFP1KuadXNYgujNz4b1W6SxxtxDXYKoKLT
-         UIX7COY1om4sGd0Ui7cRy6zoAoDD2I0AYTYzJi3yiWy7mTLNTWkGU5gcxuCGctAS/1u9
-         GZhFuEcbQsrWVT1xG8oSssr6NtI7ng+ArFwVHasyLXlPjqNrrpYvyvnJ9F+gi1HAYvHp
-         ZaRLq2HTzDLvo5qWJWc3vazBFSI0sv7XxQwOlqUxxxi4BXGh5qKE/R2/A7ipnD3sJVc5
-         kDYDv6/OONKPto5XRJgtEQV5sMUimhe1EqdyqoL7TDFt5Oun+tzs1ml7nmXhnGvAEkbz
-         HJrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPbFa2+hSFvA34Dwny/rgnMiL7wbZR1Qr3r/Fbe/dUIpGGCPyOGkvLWjRSUPUNWwGOLVmmuJhz2UY3Ym6NbwnBlUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtGUTBjOS47GLMtKP1s5MPcQrzBzlDyA9NA15He2WeSnVnYWro
-	jls9RJmA1PBOq0IRgXcu979XTagpJH39dYj+9YdgV9BWxZYYtgs8715SlCKSzHebssI26hBjmiO
-	DnfZm+Wg8Ig==
-X-Google-Smtp-Source: AGHT+IE1+zlv+/Ra8/4fDxzAvPN8JlMMEIwYI0833qsjS+sqfkYoQe/VtqWugCSuUH/u1MaLnSztSAazoE5b
-X-Received: from dlbcy37.prod.google.com ([2002:a05:7022:ba5:b0:11b:9bdf:e45c])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6898:b0:11b:ceee:a469
- with SMTP id a92af1059eb24-11c9d85feeemr24650965c88.22.1764630720912; Mon, 01
- Dec 2025 15:12:00 -0800 (PST)
-Date: Mon, 01 Dec 2025 15:11:45 -0800
-In-Reply-To: <20251201202437.3750901-3-wusamuel@google.com> (via kernel-team's
- message of "Mon, 1 Dec 2025 12:24:35 -0800")
+	s=arc-20240116; t=1764639445; c=relaxed/simple;
+	bh=c0t4i72+iTM0oAeEbLlHMkRWMHjkcnigGRguy1X/CI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kJFIjNgPCGi1SjEd0viZq62anVGY0ZM+HxSkeePcEZz+uqqfITpurvOTtTdfbbTknWjkiArAnaEoOhLLdEKewnPaOk8hkJY5a3VwS5n4owywczL8zKdt8EvETiaeu1YLQsGIU4Pg7G2QX8ioY44ClpTkCdB9KmEPg6pyPZmIQNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 79DB189AAA;
+	Tue,  2 Dec 2025 01:37:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 9F2C120030;
+	Tue,  2 Dec 2025 01:37:18 +0000 (UTC)
+Date: Mon, 1 Dec 2025 20:38:16 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] rv: Convert to use lock guard
+Message-ID: <20251201203816.5e777f12@gandalf.local.home>
+In-Reply-To: <8f98932a8fa9c3e63c9a5cb7ba764e9db968bada.camel@redhat.com>
+References: <cover.1763370183.git.namcao@linutronix.de>
+	<dbefeb868093c40d4b29fd6b57294a6aa011b719.1763370183.git.namcao@linutronix.de>
+	<20251125145736.48c3ed9d@gandalf.local.home>
+	<e4838dd91f14024222eef8e705f2b1ae7945bb80.camel@redhat.com>
+	<20251126095106.7eadaba6@gandalf.local.home>
+	<2e46a7dc417119bb7e331ff14253b0ff678d697e.camel@redhat.com>
+	<20251201102447.53f33be5@gandalf.local.home>
+	<8f98932a8fa9c3e63c9a5cb7ba764e9db968bada.camel@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251201202437.3750901-1-wusamuel@google.com> <20251201202437.3750901-3-wusamuel@google.com>
-User-Agent: mu4e 1.12.12; emacs 30.1
-Message-ID: <dbx88qflajbi.fsf@ynaffit-andsys.c.googlers.com>
-Subject: Re: [PATCH v3 2/2] cpufreq: Documentation update for trace_policy_frequency
-From: Tiffany Yang <ynaffit@google.com>
-To: "'Samuel Wu' via kernel-team" <kernel-team@android.com>
-Cc: Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Samuel Wu <wusamuel@google.com>, christian.loehle@arm.com, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 9F2C120030
+X-Stat-Signature: gk81ggzrup1psb5g819abnwhoapj9j89
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+Inf5V9KMOVQmmRtkeLDDwokeqDBdMWkQ=
+X-HE-Tag: 1764639438-331325
+X-HE-Meta: U2FsdGVkX19SzTweaxqa6fwM+w2QGshZNlMPOblgtaLUeIvFDEFnsdGMsx2ddX5o99SUj41y6Gi6+mV79Dt6QkLYX/eGdYwyilrAB7COYr6jLLBRr80JgIXib9/KL7WCDt8h5R28zYkImzMLoSg2ss0oQe5/nXcqII5dFuKy4q8u8pb8Qcr57XHIu0bmt6b6y3LM+bZLrO8hov57nYpVHnvhm0AbCNCqDu+44qK1Zx4bCPDEcWdhJIfPOu31xeEsRWlK6qEaBgB9Ybn4hl1N9aMZLfGJkQZNjw/o8e64o86XDd44YTUCHau4xfw5UECZI7+7j/p/ur50pFH67K0uF1PhIkItbykuonVlLQBER/gjOtwz8QLCrw==
 
-Hi Sam,
+On Mon, 01 Dec 2025 16:28:21 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-IMO this type of documentation should be in the same patch as the
-related change because having a single commit makes it easier to track
-(especially if/when these changes are cherry-picked to other
-trees). There may be reasons to keep them separate that I'm not thinking
-of, so if others disagree, defer to them!
+> I'm stupid, I sent it [1] but the script somehow didn't add you in the To: field
+> and I didn't notice..
+> 
+> I'd say since the merge window is open, this change can wait.
+> 
+> Sorry for that.
+> 
+> Gabriele
+> 
+> [1] - https://lore.kernel.org/lkml/20251126152253.464350-1-gmonaco@redhat.com
 
+I can still pull it and run it through my tests tonight and push it later this week.
 
-"'Samuel Wu' via kernel-team" <kernel-team@android.com> writes:
+It's just clean up code. Linus doesn't get too upset if simple cleanup code
+gets added just before the merge window. It's new features that he doesn't
+like added late in the game.
 
-> Documentation update corresponding to replace the cpu_frequency trace
-> event with the policy_frequency trace event.
-
-> Signed-off-by: Samuel Wu <wusamuel@google.com>
-> ---
->   Documentation/admin-guide/pm/amd-pstate.rst   | 10 +++++-----
->   Documentation/admin-guide/pm/intel_pstate.rst | 14 +++++++-------
->   Documentation/trace/events-power.rst          |  2 +-
->   3 files changed, 13 insertions(+), 13 deletions(-)
-<snip>
-
->   A suspend event is used to indicate the system going in and out of the
->   suspend mode:
-
-Otherwise, this change lgtm.
-
--- 
-Tiffany Y. Yang
+-- Steve
