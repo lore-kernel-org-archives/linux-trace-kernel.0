@@ -1,79 +1,79 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382AD2848AA
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 16:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB612D0631;
+	Tue,  2 Dec 2025 18:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764693790; cv=none; b=qc1uZQlAaurxT6VLqypJtYVUca9KzbFwJJQKg6j8m/J1TYF295WchRa9X8Ij/FFab9RNri1uLMzlRYQNxolbzWRuyoh2diTpjtI+zb8HCgx8jtYgrygIoUzrP4FoKXOtyDrQzsTQjQVhOBaanism2t3qO/jrp4hwElsI+5p375s=
+	t=1764699188; cv=none; b=TF/yeXlVwoiUxYwTY4ny3wjSw+iujF8fNXYPzs3Li6CxW5XWKwDYqdSY3QoJX/H7E3UNAwB48+nZxhA8OoBU79XljIcxpsHjgUQ47H5g9ZkdJ0I3AK3O2ZxC4KvZdTYVpOGcS7HGlfXzsV3bR7sLITBsvPk/6al9QioNQqbRi44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764693790; c=relaxed/simple;
-	bh=DNmjmKVvRCO5/wyt+jeFNrrcnuqu+bO21JyTaNxM/aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MJrWR0gQSjX4ZXVXBFV52tXqX95kIPeU1L9sQTHy+6CHssHT4/C7ohw6pGOJ83kYMFEuf6WnJi6e8v4J3xpMW2nPbRQIifmghCqTTo61K39pu99WBqlGLT5lPoNyTVcveCdHTDjOb2Z0twHI3kPCANhBlEy2WC1TU08r+nFlLzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 536DEC0257;
-	Tue,  2 Dec 2025 16:43:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 6D4A817;
-	Tue,  2 Dec 2025 16:42:58 +0000 (UTC)
-Date: Tue, 2 Dec 2025 11:43:58 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: yebin <yebin@huaweicloud.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, naveen@kernel.org,
- davem@davemloft.net, linux-trace-kernel@vger.kernel.org, yebin10@huawei.com
-Subject: Re: [PATCH] kprobes: avoid crash when rmmod/insmod modules after
- ftrace_disabled
-Message-ID: <20251202114358.5e46cbae@gandalf.local.home>
-In-Reply-To: <6929089E.10706@huaweicloud.com>
-References: <20251125020536.2484381-1-yebin@huaweicloud.com>
-	<20251127125248.a1367d15c0bbc7faad3b0e87@kernel.org>
-	<20251127131820.152fd7651ece26139778cc25@kernel.org>
-	<6929089E.10706@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1764699188; c=relaxed/simple;
+	bh=BPuDO6euQjcqeEaBFpHRW5ISfxtqe0QuSO1cQRiMupM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Fa10mF4NyC+ByHVwo+RUc2+dHdm4ICVbFPl6J/xhZRM01VVJg277aGfIXxJunrIJ9NiWua3dg++PEjU+bg7zQ7uRP0bFaE3QvDSp9qwz0NhbRNUxH9p/xxKTpThmrNfmohFXr9iFwycdVO++5z0YoDrPIL5HKLjj1dlc9WlFzqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j38f2CD+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j38f2CD+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B417C116B1;
+	Tue,  2 Dec 2025 18:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764699188;
+	bh=BPuDO6euQjcqeEaBFpHRW5ISfxtqe0QuSO1cQRiMupM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=j38f2CD+G1vyN9Y+pm8geZuxvTuzVHLKtlzzNULmeUkplZdW8nS8IBHhg2YQvRDuE
+	 b2jsbpv3T30CwRLX3U0Q39oVfk2/QnhPtZJgT/hwO8VY6ZqXsigiTc+fnEvCVQl1o1
+	 w/GlzY7IzbEqxMcOmdlKZlE/IXolCsRcEoqHLrSo47vfMM1LnoxNnZz+8f80EB20ix
+	 gFQ8/wQ63NHv3aWyDfVVNSbDUeyCNN19rHUe3JLVurMK6CYa2fnBxhkjFN3K4JMS86
+	 sSKmGihq9O+QjFQuHVrdp82TvhaiHNPRg2+RaG9SdsazyFxrbwFLy+97DKaicjwbow
+	 s23qo5wUuvHGg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B5ACF3A54A3A;
+	Tue,  2 Dec 2025 18:10:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6D4A817
-X-Stat-Signature: huy79783w74mpbwkcxkp8aqyf6a9mi9w
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18X1cwx+twllCTq2SqJTzp8qcsNOROJmdQ=
-X-HE-Tag: 1764693778-994246
-X-HE-Meta: U2FsdGVkX1/GEeHHxSraG2FbYxJ4nFFzGiOoAbjoBvYhF6y67rx9MhGSehqCsOACbWqdGYNh8Wa5u9iQg9aE9avqVhJuXs/C5AfAQH9xLBUBnKzSVgo1p45GN/Qf0jElirj797Efd/TVmPwVcH+r8Bct9sCC+0mKwo+uYYZ6WuPdlqmgvYSV54k9bzDssQBKAntLFX8gdJg6OrwrCtrcMMH4UmHa3TnOc7USfHgsII311QdJf/doTi2b1oNr4qey+JVglX2gTJ8vhdGVP5nR3/l/LHJXVGQSIeGkyP0YFeuRyXs1p7KqqVexSNSDFCTddQ69t8qOJChHBg1+2n5Sb6OWEyemwY66
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: optimize trace_f2fs_write_checkpoint
+ with enums
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <176469900752.3331097.11163063452209234424.git-patchwork-notify@kernel.org>
+Date: Tue, 02 Dec 2025 18:10:07 +0000
+References: <20251128032509.825003-1-yhli@google.com>
+In-Reply-To: <20251128032509.825003-1-yhli@google.com>
+To: YH Lin <yhli@google.com>
+Cc: yes@google.com, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+ linux-f2fs-devel@lists.sourceforge.net, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, jaegeuk@kernel.org, linux-trace-kernel@vger.kernel.org
 
-On Fri, 28 Nov 2025 10:27:42 +0800
-yebin <yebin@huaweicloud.com> wrote:
+Hello:
 
-> >> right before this BUG, don't you?
-> >> If you reported with that line, it's more easier to understand.
-> >>  
-> Yes, there is indeed a warning generated. I might not have expressed it 
-> clearly enough. The issue below is related to the problem that occurs 
-> when the second module is unloaded. When the first module was unloaded, 
-> some nodes were left in the hash list, causing a use-after-free (UAF) 
-> issue when traversing the hash list.
-> Therefore, this patch aims to resolve the UAF problem caused by residual 
-> nodes in the hash list after unloading a module while ftrace is disabled.
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-ftrace_disabled is equivalent to BUG(). But it doesn't crash the system
-immediately, but requires a reboot ASAP.
+On Fri, 28 Nov 2025 11:23:57 +0800 you wrote:
+> This patch optimizes the tracepoint by replacing these hardcoded strings
+> with a new enumeration f2fs_cp_phase.
+> 
+> 1.Defines enum f2fs_cp_phase with values for each checkpoint phase.
+> 2.Updates trace_f2fs_write_checkpoint to accept a u16 phase argument
+> instead of a string pointer.
+> 3.Uses __print_symbolic in TP_printk to convert the enum values
+> back to their corresponding strings for human-readable trace output.
+> 
+> [...]
 
-I'm not interested in fixing residual bugs that happen because of a
-ftrace_disabled was triggered. The ftrace_disabled triggering is the cause
-of this. It should *never* happen. If it does, it needs to be fixed.
+Here is the summary with links:
+  - [f2fs-dev,v2] f2fs: optimize trace_f2fs_write_checkpoint with enums
+    https://git.kernel.org/jaegeuk/f2fs/c/a7982944b487
 
-Let's focus our attention on fixing the cause of ftrace_disabled. Anything
-else is just waste of effort.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Do you have the output of the first warning when ftrace_disabled was
-triggered?
 
--- Steve
