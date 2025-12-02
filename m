@@ -1,97 +1,77 @@
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3639821CA02
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 14:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242FB1FA272;
+	Tue,  2 Dec 2025 15:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764685245; cv=none; b=NXHE3LAc6fJNbzMOcU0UsEBvn5QssBMWFMqa5BRb01sIFbCnOlO1Bp98/bo9litQGheujLCOlDsLJcl0ABPGKQ5dZL3kSCjZnOFbFZ229xOrx6YkThOlfvhLK9D185qW0SEiwc3k8ZZmIJqem4b4v0dY5Pd+Wuua/S2RkYM/GZc=
+	t=1764688128; cv=none; b=Lxo7X/wX9+MlBVk/ArkX37n5pZqMILCenoo924mPFyK0ny2uAIMrrafvtVz1yz1c/uKqLskQHBFuyGBKKWQXMacnnOzvkkSz9rQFmUkZRj5YXuzHODg7Ynhm52NzKkaGTX8AkjIt5vq6VDPeVrGwKCbREpCMCO5qqdV6/lSt0P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764685245; c=relaxed/simple;
-	bh=7rNRVsnWPfFx3+IF5zUAQsCTaovZHytc40juokjkxX8=;
+	s=arc-20240116; t=1764688128; c=relaxed/simple;
+	bh=jkg8tRwFsBh4lQCKIUPxTfTkJTsnZ3FRJaagjPpOxBs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fxm/NRBkKCzRcRu2a+Avxfr/TwfSw1yu33ktf5QWuUQjW2Xe8s1g/cLjRzXzplQUwvWS9/rTEmuDUvJsEEJyh74DIQP96+0P+TPBDobrAwtr1/7VNa3LUjQ6WIBkMoIkMKH4hQUn4r59mIF9/xjT3EqUtojE50VEyYKoh9lCuTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lnhlbduH; arc=none smtp.client-ip=74.125.224.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=jH1y2ybN16qZskx4AICvIWHCkfIjZTU4LYogW6psnDr2e2DmqwP3PUIQPxZPh7A94X/udcSKR/OxJEFAKkWlZ4iM6zHMH9ukHHDKhjABAnx2/LBo8g7kH8Dv6hkFH/PW290ra181Beuq39bwZHs+Fl0Bq+MA82xI4usu1qQztqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VA9i/mAf; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnhlbduH"
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-6430834244aso4479686d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Dec 2025 06:20:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764685242; x=1765290042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OVNmyf0pWuOFm8GFUHmjQWORKGxH+2nm5rY1pk1lD/A=;
-        b=lnhlbduH/A/gc+80XkbCZnmkBtilJ/XmqhxxW3buysRmJn0OhWi530sHlBek7ap/iX
-         pfkdPzCBmhr3rG9We0u2dQRC5I8TOg9IJeVG5yDaxxUeaIuzp9x4BzQ603k6ZV+Kk2ix
-         mrW8ytd91D//lYWAF+uM9Yzb+po1olqShKaAEvYiWdj2OQE3gDJOuSa1VxagrOcsWPTk
-         EUdReZUNHlac96HrmIXDmoYtwkzL7YF1YF0CAN7inAiTyxeyTRwc8mCkgC60aCBW0Fcj
-         Ru+ESTTEIW9e9CCzk13Uo2vK6/kClWe+LW3C1nHddZewmyKuj6yZ8oZO+HMtApLcjFKi
-         Crsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764685242; x=1765290042;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OVNmyf0pWuOFm8GFUHmjQWORKGxH+2nm5rY1pk1lD/A=;
-        b=ZfEPqmytaruQFqNca5bI9e3bXkuifLyYCo0fPDIf8XoHKcNxLTqImEol+BOkdmryfB
-         9Y+EX7mhXEG34//oq3JGnjQNqKN0L8et2LRwj8yy9jCO4GIQ6imzJtsFkclj4McOp9Pu
-         zUX/XTtmkmt4f73a5xhZExaQG2qlt/yXxZS4q6LkiwqzO+JspEBdK7la70iVn+ObIAGJ
-         4qMxVgmJGU6LQk7GoFmt+ur/vAmDLCm6gKCmGXu0crJjGmGM6Cc1HQXm3D6ppA06DRdP
-         V0NOzEq8dSnCyZhhQ7Ew7hJTlwN/aGkWrA28JHEacOBeahwq5Zm70rDiRC7VlCaoPoWP
-         xoTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxiR4LXBAzSfHUI7G+lHU2XdNd2qFFaig5WIrgM0J35sbLWvzv7+F3aeBthXJzXdJASv1q8djLZURoGgDXhiIJe1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMHjwt4c0iMMHm/M2IVLrQnQ+LyNv9NUGNn/jx2oXZTRh9Xjue
-	HpP0SNzwdFQ/09V22duRlwePxG0LYl3pUdwh0btgkiYc0WsNDpuncvc4
-X-Gm-Gg: ASbGncsbHUwbMgoo8nENzuk0Qg6OX/7ot4Z49fZrzanKj8PW4waTmJ1Vpb+sh1tsq4E
-	qk4PwsM4ZP1NnmMMVPJJ2JL4ICQ5mexmYDqo2HoYBQBTdCTi3gegcidE6+Kp3WbNoTPGClpK9yP
-	t0EAzB4wZtYFyVngl7kMyn5eIlF4E4Urs6KFg2GOgAg7P55UbKszzkwx3vxAMVHEH5pbTnOp80Q
-	k+MtmbKl9eR9oUwcjAkDMqj+EB0FinIsKM24Ep+eYq4fgTB0Nt51qbdCH/2F5WTdTHpoW0FAX/+
-	2LR35FyMe/B8MfmFLp3InI7rpKVpNNu75U8MrXOfi47Uo000HeXkwpARvNEa+29ILtOrryD735B
-	lSKEQBON+lvmUCtfnmIpvUsLf68eswC2R0qU/GMwOXDZfcJ8hDp/gW7RzxcePTWXeoCVEK1Tg0r
-	eGVx0D2QzfTr3WqT9Q0DBH/gPWF+dfDoyvU+s7u0SmrSMxTeaFB5o=
-X-Google-Smtp-Source: AGHT+IGXgMLsdqo31zDPO/L8sdWBlgV3+pT1zAXzGDGQV1LdsmvYxvbZjvz0x8ZTJqwbsZUGxS6wuA==
-X-Received: by 2002:a05:690e:2445:b0:63e:1e08:daa8 with SMTP id 956f58d0204a3-643293b93ccmr17101392d50.62.1764685241823;
-        Tue, 02 Dec 2025 06:20:41 -0800 (PST)
-Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6433c497768sm6257715d50.25.2025.12.02.06.20.36
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 02 Dec 2025 06:20:41 -0800 (PST)
-From: Shuran Liu <electronlsr@gmail.com>
-To: song@kernel.org,
-	mattbobrowski@google.com,
-	bpf@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	dxu@dxuuu.xyz,
-	linux-kselftest@vger.kernel.org,
-	shuah@kernel.org,
-	electronlsr@gmail.com,
-	Zesen Liu <ftyg@live.com>,
-	Peili Gao <gplhust955@gmail.com>,
-	Haoran Ni <haoran.ni.cs@gmail.com>
-Subject: [PATCH bpf v3 2/2] selftests/bpf: fix and consolidate d_path LSM regression test
-Date: Tue,  2 Dec 2025 22:19:44 +0800
-Message-ID: <20251202141944.2209-3-electronlsr@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251202141944.2209-1-electronlsr@gmail.com>
-References: <20251202141944.2209-1-electronlsr@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VA9i/mAf"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B2AFZYD007787;
+	Tue, 2 Dec 2025 15:08:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=cQBdhMIcp6DAZi9Zx
+	Vexr6Oh5CmqajUNW2WLiVkcNP8=; b=VA9i/mAfBk24XoqWqmzk8p8SUdlxP5M+B
+	Dn/Lj0Iva3ndZfMJ6WDjYkzN8lYuZt4U+tGMu/FHnID/xb2mwC21YabG/RG7q59X
+	IkfE8w/QgLlEGs3XADqqM7YzDLG5fDh8Kcwe8YyZO44kZAb3xkCP95gp7l0Xzz6L
+	dRmb83AyFOzX6ih/nhSLYKlE6uvo32OmW3nbJecITd7Sg49nvg3Oa7Tk+BWWuF/T
+	P15Hhf3MZ1rYwnybqb1+I5Ij5YFHvoS+5eTlOSBn3wUMuQMbnPa0P8L4ScaI23IG
+	6btzC8GGSxvhQm/lg8wkFnUgKgJm18LNssDT9qfudMEIU1Ch8osSQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqp8pwn17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 15:08:21 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B2E2o0r019133;
+	Tue, 2 Dec 2025 15:08:20 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arbhxw35x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 15:08:20 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B2F8GVl44302716
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Dec 2025 15:08:16 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C25520040;
+	Tue,  2 Dec 2025 15:08:16 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0D1712004B;
+	Tue,  2 Dec 2025 15:08:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  2 Dec 2025 15:08:16 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v3 3/3] x86/unwind_user: Guard unwind_user_word_size() by UNWIND_USER
+Date: Tue,  2 Dec 2025 16:08:13 +0100
+Message-ID: <20251202150814.3505869-4-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251202150814.3505869-1-jremus@linux.ibm.com>
+References: <20251202150814.3505869-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -99,169 +79,105 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAwMCBTYWx0ZWRfXzkYD9Vwg8P08
+ Qg8YhZ8iLfU1akzU1yfWnUzT5Yj0A+Ko4cn5Yul8RDzrfPmQSRk+wfRkWvDDFzgQ0JDfCTdMVXR
+ w0FDAspSQrHbL/PFeLqylHNMKx43FaAmggXEvUpXzfkyh8l98tytDRLpsqSSbsPB5XHM8MrmfsH
+ pQj2URBqC7TeATBR4LgZI7zMXfYkJIPEN4IfEvD0nLGyoCfoauTM/T3n/jwKp4khNiVL9IPGC1X
+ NFP1p1DAYFR6ohTu37ztTzlxkMTfqx0iw/hGKzPbvTtCRoRe4svLATpQRJk9dFxxCqzkT71k3ge
+ tOeh86tfyJ8n7hPqOFLQ8mVICaR6C0Ut54Ass8dtxuJOm7ii7JLfxMeHijGRpSGxHxbzqJL79/H
+ vVHS5RAmnVPC0HPmqedHKx6M4LnARw==
+X-Authority-Analysis: v=2.4 cv=dIerWeZb c=1 sm=1 tr=0 ts=692f00e5 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=EUPQYQbpjl04SHwYsagA:9
+X-Proofpoint-ORIG-GUID: jTCte1t2R41GFG_ziEfzwZaB4OTMIOjr
+X-Proofpoint-GUID: jTCte1t2R41GFG_ziEfzwZaB4OTMIOjr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511290000
 
-Add a regression test for bpf_d_path() when invoked from an LSM program.
-The test attaches to the bprm_check_security hook, calls bpf_d_path() on
-the binary being executed, and verifies that a simple prefix comparison on
-the returned pathname behaves correctly after the fix in patch 1.
+The unwind user framework in general requires an architecture-specific
+implementation of unwind_user_word_size() to be present for any unwind
+method, whether that is fp or a future other method, such as potentially
+sframe.
 
-To avoid nondeterminism, the LSM program now filters based on the
-expected PID, which is populated from userspace before the test binary is
-executed. This prevents unrelated processes that also trigger the
-bprm_check_security LSM hook from overwriting test results. Parent and
-child processes are synchronized through a pipe to ensure the PID is set
-before the child execs the test binary.
+Guard unwind_user_word_size() by the availability of the UNWIND_USER
+framework instead of the specific HAVE_UNWIND_USER_FP method.
 
-Per review feedback, the new LSM coverage is merged into the existing
-d_path selftest rather than adding new prog_tests/ or progs/ files. The
-loop that checks the pathname prefix now uses bpf_for(), which is a
-verifier-friendly way to express a small, fixed-iteration loop, and the
-temporary /tmp/bpf_d_path_test binary is removed in the test cleanup
-path.
+This facilitates to selectively disable HAVE_UNWIND_USER_FP on x86
+(e.g. for test purposes) once a new unwind method is added to unwind
+user.
 
-Co-developed-by: Zesen Liu <ftyg@live.com>
-Signed-off-by: Zesen Liu <ftyg@live.com>
-Co-developed-by: Peili Gao <gplhust955@gmail.com>
-Signed-off-by: Peili Gao <gplhust955@gmail.com>
-Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Shuran Liu <electronlsr@gmail.com>
-Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 ---
- .../testing/selftests/bpf/prog_tests/d_path.c | 65 +++++++++++++++++++
- .../testing/selftests/bpf/progs/test_d_path.c | 33 ++++++++++
- 2 files changed, 98 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/d_path.c b/tools/testing/selftests/bpf/prog_tests/d_path.c
-index ccc768592e66..202b44e6f482 100644
---- a/tools/testing/selftests/bpf/prog_tests/d_path.c
-+++ b/tools/testing/selftests/bpf/prog_tests/d_path.c
-@@ -195,6 +195,68 @@ static void test_d_path_check_types(void)
- 	test_d_path_check_types__destroy(skel);
- }
+Notes (jremus):
+    Changes in v3:
+    - Move includes into more common UNWIND_USER guard at the top of the
+      source.  asm/ptrace.h is required for struct pt_regs.
+
+ arch/x86/include/asm/unwind_user.h | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index 971ffe937d50..7f1229b33d06 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -2,23 +2,11 @@
+ #ifndef _ASM_X86_UNWIND_USER_H
+ #define _ASM_X86_UNWIND_USER_H
  
-+static void test_d_path_lsm(void)
-+{
-+	struct test_d_path *skel;
-+	int err;
-+	int pipefd[2];
-+	pid_t pid;
-+
-+	skel = test_d_path__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "d_path skeleton failed"))
-+		return;
-+
-+	err = test_d_path__attach(skel);
-+	if (!ASSERT_OK(err, "attach failed"))
-+		goto cleanup;
-+
-+	/* Prepare the test binary */
-+	system("cp /bin/true /tmp/bpf_d_path_test 2>/dev/null || :");
-+
-+	if (!ASSERT_OK(pipe(pipefd), "pipe failed"))
-+		goto cleanup;
-+
-+	pid = fork();
-+	if (!ASSERT_GE(pid, 0, "fork failed")) {
-+		close(pipefd[0]);
-+		close(pipefd[1]);
-+		goto cleanup;
-+	}
-+
-+	if (pid == 0) {
-+		/* Child */
-+		char buf;
-+
-+		close(pipefd[1]);
-+		/* Wait for parent to set PID in BPF map */
-+		if (read(pipefd[0], &buf, 1) != 1)
-+			exit(1);
-+		close(pipefd[0]);
-+		execl("/tmp/bpf_d_path_test", "/tmp/bpf_d_path_test", NULL);
-+		exit(1);
-+	}
-+
-+	/* Parent */
-+	close(pipefd[0]);
-+
-+	/* Update BPF map with child PID */
-+	skel->bss->my_pid = pid;
-+
-+	/* Signal child to proceed */
-+	write(pipefd[1], "G", 1);
-+	close(pipefd[1]);
-+
-+	/* Wait for child */
-+	waitpid(pid, NULL, 0);
-+
-+	ASSERT_EQ(skel->bss->called_lsm, 1, "lsm hook called");
-+	ASSERT_EQ(skel->bss->lsm_match, 1, "lsm match");
-+
-+cleanup:
-+	unlink("/tmp/bpf_d_path_test");
-+	test_d_path__destroy(skel);
-+}
-+
- void test_d_path(void)
+-#ifdef CONFIG_HAVE_UNWIND_USER_FP
++#ifdef CONFIG_UNWIND_USER
+ 
+ #include <asm/ptrace.h>
+ #include <asm/uprobes.h>
+ 
+-#define ARCH_INIT_USER_FP_FRAME(ws)			\
+-	.cfa_off	=  2*(ws),			\
+-	.ra_off		= -1*(ws),			\
+-	.fp_off		= -2*(ws),			\
+-	.use_fp		= true,
+-
+-#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
+-	.cfa_off	=  1*(ws),			\
+-	.ra_off		= -1*(ws),			\
+-	.fp_off		= 0,				\
+-	.use_fp		= false,
+-
+ static inline int unwind_user_word_size(struct pt_regs *regs)
  {
- 	if (test__start_subtest("basic"))
-@@ -205,4 +267,7 @@ void test_d_path(void)
- 
- 	if (test__start_subtest("check_alloc_mem"))
- 		test_d_path_check_types();
-+
-+	if (test__start_subtest("lsm"))
-+		test_d_path_lsm();
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_d_path.c b/tools/testing/selftests/bpf/progs/test_d_path.c
-index 84e1f883f97b..9ae36eabcd07 100644
---- a/tools/testing/selftests/bpf/progs/test_d_path.c
-+++ b/tools/testing/selftests/bpf/progs/test_d_path.c
-@@ -17,6 +17,8 @@ int rets_close[MAX_FILES] = {};
- 
- int called_stat = 0;
- int called_close = 0;
-+int called_lsm = 0;
-+int lsm_match = 0;
- 
- SEC("fentry/security_inode_getattr")
- int BPF_PROG(prog_stat, struct path *path, struct kstat *stat,
-@@ -62,4 +64,35 @@ int BPF_PROG(prog_close, struct file *file, void *id)
- 	return 0;
+ 	/* We can't unwind VM86 stacks */
+@@ -31,6 +19,22 @@ static inline int unwind_user_word_size(struct pt_regs *regs)
+ 	return sizeof(long);
  }
  
-+SEC("lsm/bprm_check_security")
-+int BPF_PROG(prog_lsm, struct linux_binprm *bprm)
-+{
-+	pid_t pid = bpf_get_current_pid_tgid() >> 32;
-+	char path[MAX_PATH_LEN] = {};
-+	int ret;
++#endif /* CONFIG_UNWIND_USER */
 +
-+	if (pid != my_pid)
-+		return 0;
++#ifdef CONFIG_HAVE_UNWIND_USER_FP
 +
-+	called_lsm = 1;
-+	ret = bpf_d_path(&bprm->file->f_path, path, MAX_PATH_LEN);
-+	if (ret < 0)
-+		return 0;
++#define ARCH_INIT_USER_FP_FRAME(ws)			\
++	.cfa_off	=  2*(ws),			\
++	.ra_off		= -1*(ws),			\
++	.fp_off		= -2*(ws),			\
++	.use_fp		= true,
 +
-+	{
-+		static const char target_dir[] = "/tmp/";
-+		int i;
++#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
++	.cfa_off	=  1*(ws),			\
++	.ra_off		= -1*(ws),			\
++	.fp_off		= 0,				\
++	.use_fp		= false,
 +
-+		bpf_for(i, 0, sizeof(target_dir) - 1) {
-+			if (path[i] != target_dir[i]) {
-+				lsm_match = -1; /* mismatch */
-+				return 0;
-+			}
-+		}
-+	}
-+
-+	lsm_match = 1; /* prefix match */
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
+ static inline bool unwind_user_at_function_start(struct pt_regs *regs)
+ {
+ 	return is_uprobe_at_func_entry(regs);
 -- 
-2.52.0
+2.51.0
 
