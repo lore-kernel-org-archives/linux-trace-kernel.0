@@ -1,55 +1,55 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8703313524
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA21313284
 	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 09:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764668212; cv=none; b=C+j+TpHzXu2CLsgDlsiH295kvUUBQQ4yVq7Ago5umw7890f/Zb2eRqDGiJHG4F2t1f5EwM68fJXXAfRiPYJVG5P1U0XYpOi24AJEpUGL2dDn4Z7T1pf3TBrAZqRa4sFd/d1ZZsIoTc3zIzcctSpVUmkrfcwTXYTMJgVmeSUg0z0=
+	t=1764668212; cv=none; b=d4TCwh48GaQSKvoWkpAnKx45vm65uz8l09nQymoiRxXf9jMVUfuOY6iHv0VK5mMeCqxlS/GtBAJusTMQO5FFbZSyM2y3jYyBG6FKU7invdWn4TKZAeNzYrypR1vdYsnwPlcNPYvflSp3jhYbscSwJLONe6jBemFogl5BhYzCAeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764668212; c=relaxed/simple;
-	bh=vqenUKncmqDQ5BeP2Ee5fRBF3oA2ZfS3ti91T2t9bHI=;
+	bh=6F+v6J+CWN//r6wGF64D0I/BsKCCCENIMewP2BSYDLg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Em7b3iSuPeU7D+5XZTLQC0OkMiG81fKCSMADgfKV0Fr+wkwG7TUiK/KTEO9FYJ368IQ8mIpu67sxAByW1wrgZyKia802Y/Q6OfuFuCgZMObrtxLA8ocpv+fRm2SC4UWdG6279YAys4CI2/uXcmJjK3Q1tOPxeU8vIk7szq3sWKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Hry/z+8; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=ix4+EqCXsPBWtd6gs3k/PfUKdiqZQNTI7QdMN0nfxR+7Ha+FD/pGHnf8Jny9IZnkf5hPWY75ja8ziZQPGdLOiWKGtZocbXoqPFWJGjX00MInVipF1QVngD5kD4c1I66smjKos9m4cVLaPuNXqnyoXG8Ad5I77C+2jvEJ/2/xtQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FdWqjEbb; arc=none smtp.client-ip=209.85.218.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Hry/z+8"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-42b3155274eso2493179f8f.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FdWqjEbb"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b771bfe9802so173320166b.1
         for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Dec 2025 01:36:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764668208; x=1765273008; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1764668207; x=1765273007; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7RUUJZsquxOXeuP2Pg9tN94A9Yt3ERqnIi7HwVBkSP8=;
-        b=0Hry/z+8UBOqSuFTyg0Jx/m/IIuv9QDO1pUepJ06yF/+xieSmgJzrI2uPnT+b1T4Kv
-         +zXnrmCJjhrIrkWBEW7aWLikjvC2pS783Mk9viSCgFP6mCrpRlLOV96e43gri2La0XD/
-         Tuwhx1P3OzFo7Vh46QFCwCSHEdVgs2yANUJkY6K4RjoHcYoPidUgbUgI2K9Isclzk7Di
-         x2HrdnsZBbzatHenQTsaToqxzo2cX1BP59n/GicfqCcw71tSphqK6OllYset6JIBfClA
-         zTB1KBS0rVWk/EuMjZyGAdItX0MuBCINyKsMlMbKvprsRt6dcxjwtJRfmG9pb77r3L9F
-         IY2A==
+        bh=1k9lnCa35g0aTUreNVQa2rVX+IRvV+YbWj70G3JIso4=;
+        b=FdWqjEbbttq9XDRoWaZEkGWCgUdk2+7AQ8G1jVz9OxDrlHaYxU1S6XiUUu9J1ioDl+
+         AGusPGhpE+9xm292+qvcuTYUKwyw7kvY7TS4PbZL9ZhdoNMgUr8AsqP1RRvOg0xhHf5y
+         /l0goyhdNwSC2JSeJvHRBiwRAvp+ZNab3CB+ygz5L8VlHvDBK8wGpD6HVoZDlhUEYoAy
+         BWUDK/H3Pzr3YBI19jgMQ49qhdaS4DcToXfpS+2S8V9jgkEoO3FJV1rKbGsdifEFH+W2
+         iMD+GUL6qekFWKIbEHO5J0MOP+IuhmcQuOB77162SFP5dfMnPq97kwlTF000TswSA1JD
+         Kwfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764668208; x=1765273008;
+        d=1e100.net; s=20230601; t=1764668207; x=1765273007;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7RUUJZsquxOXeuP2Pg9tN94A9Yt3ERqnIi7HwVBkSP8=;
-        b=ppb/JXdSzzaQFb58XlgyIQR7chfjmE/aYHRexjY7wXrzUupscIdXoNqntB9qcux+A3
-         jLQCrShW1S6XOruvtW+JuMBSzVSGLSLaeCcUkxTGuE1CnFAqXaTwWsXt/hZxxjVBtJ+j
-         PznzGtNhG7f6GvcThEMl5fwGbGpR9hhG5d/3PITxY90/uY9tTetvWkPZyXXOVYS87t9s
-         3WTfWBrfSrzcQuEJFDqKGYAjnBlU5XuiinHbsbQ8gpG1AtiOTXsD1Ujv+XqzV59h8xN8
-         EL5Ptm946TLM5s6/Fq3YvMGx93x9XVTEAstvoqSaSooXAF63+HBekrDmavJk8w7/mntP
-         8Mgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHzAmj8kw7UQunmSEGEMPkPgbH6RSoDmrfxCjFWMZcchFuYczPjaqjHb/yrIlZcFJlcIdJdkpbI6KB2Fwhk9Ref2k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpYSTDsKMSIYD9aSg1Oa96Yo/GYTGJC2lOzEw8uK5P4l4gDu+5
-	5yTMytELn7upci8M5dXdFYRuJXtkgIfOPpWWRcuC36UIItl+W8xQs18Gs1YEIQOwCucYquEYKJa
-	zlT3zzHPYlyIMFH4FxeD/WA==
-X-Google-Smtp-Source: AGHT+IHrDFtedTZyVUtzkJIFrMPO8omRoplTv7/BRs17/UOxsotOGE3hdr1vCHsHZRUxhF+2MMzcvl4M8NrwuY1C
-X-Received: from wmjq21.prod.google.com ([2002:a7b:ce95:0:b0:477:63d9:f561])
+        bh=1k9lnCa35g0aTUreNVQa2rVX+IRvV+YbWj70G3JIso4=;
+        b=WVKKo/GBi9hk/KcxNuNHhJcNmgQeShF8L1Nbui/JrpsoBXiDRGI7DerTXBcoJgSeUJ
+         rHv3LIpQ4NTkUCr4D1snf76xNf/yzOyH0DECe0cHF5T0ouB+fpe/g2p90KiuEQPFTeDd
+         kbH5n71Hv4h9XgZ9xu9LmBoxDJ+rNmCEb5yXccsDxRXgBYjnGbGCT7hqzk1TbdL7Sidr
+         3Ri+JXnPVYPRhN4qe7ooGa2w0yfER7UJyLERhyFXu92JKbRW8vQx/9lJBgp/qfyEAtPq
+         aNHxBbdc3MOo6ca303+ont9XGBdalZEyS+ARxSc31sEt64pCDL0qeyFkkN8DFBulUs0M
+         eyOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUT3HzLhB0GFcmhx6PUH8IV9qvmPIZajDUOtad2FlKo32RzKL1cqcdO/uEMMtlVEGaWwxdLenl9AV2PEi1AXZodosg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFKFQyUIOeA63HxMbWqaKEHxDv8cgFbTtSPk2WjySRiKkvFEIt
+	HAGJAmgeLH20R15Z0xvfLm94npeMxiDv6+kOV27A22PGt93MJhbBX3FvlhYFNt13Skqi4Hxj+Eu
+	cX5hgHBBd4nmEE9GeCaXLYA==
+X-Google-Smtp-Source: AGHT+IH6ccFpR0WrW+/F3kealA6pNGmuZbYCFARi/n7zyIqU+hpmNdIgKjNmor9NcQZqnGFg0KMHEyXXFtwtLCUK
+X-Received: from ejcse13.prod.google.com ([2002:a17:907:a38d:b0:b73:580c:b277])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1c25:b0:46e:4586:57e4 with SMTP id 5b1f17b1804b1-477c114ed70mr572321915e9.24.1764668208094;
- Tue, 02 Dec 2025 01:36:48 -0800 (PST)
-Date: Tue,  2 Dec 2025 09:36:10 +0000
+ 2002:a17:906:eec2:b0:b76:69d6:f9fe with SMTP id a640c23a62f3a-b76c566bfaemr3010632366b.60.1764668207371;
+ Tue, 02 Dec 2025 01:36:47 -0800 (PST)
+Date: Tue,  2 Dec 2025 09:36:09 +0000
 In-Reply-To: <20251202093623.2337860-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251202093623.2337860-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.52.0.107.ga0afd4fd5b-goog
-Message-ID: <20251202093623.2337860-18-vdonnefort@google.com>
-Subject: [PATCH v9 17/30] tracing: load/unload page callbacks for simple_ring_buffer
+Message-ID: <20251202093623.2337860-17-vdonnefort@google.com>
+Subject: [PATCH v9 16/30] Documentation: tracing: Add tracing remotes
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -71,165 +71,97 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add load/unload callback used for each admitted page in the ring-buffer.
-This will be later useful for the pKVM hypervisor which uses a different
-VA space and need to dynamically map/unmap the ring-buffer pages.
+Add documentation about the newly introduced tracing remotes framework.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/simple_ring_buffer.h b/include/linux/simple_ring_buffer.h
-index f324df2f875b..ecd0e988c699 100644
---- a/include/linux/simple_ring_buffer.h
-+++ b/include/linux/simple_ring_buffer.h
-@@ -110,4 +110,11 @@ int simple_ring_buffer_reset(struct simple_rb_per_cpu *cpu_buffer);
-  */
- int simple_ring_buffer_swap_reader_page(struct simple_rb_per_cpu *cpu_buffer);
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index b4a429dc4f7a..d77ffb7e2d08 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -90,6 +90,17 @@ interactions.
+    user_events
+    uprobetracer
  
-+int __simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer,
-+			      struct simple_buffer_page *bpages,
-+			      const struct ring_buffer_desc *desc,
-+			      void *(*load_page)(unsigned long va),
-+			      void (*unload_page)(void *va));
-+void __simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer,
-+				 void (*unload_page)(void *));
- #endif
-diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-index 1d1f40c8c6d8..f01386975266 100644
---- a/kernel/trace/simple_ring_buffer.c
-+++ b/kernel/trace/simple_ring_buffer.c
-@@ -71,7 +71,7 @@ static void simple_bpage_reset(struct simple_buffer_page *bpage)
- 	local_set(&bpage->page->commit, 0);
- }
- 
--static void simple_bpage_init(struct simple_buffer_page *bpage, unsigned long page)
-+static void simple_bpage_init(struct simple_buffer_page *bpage, void *page)
- {
- 	INIT_LIST_HEAD(&bpage->link);
- 	bpage->page = (struct buffer_data_page *)page;
-@@ -342,10 +342,15 @@ int simple_ring_buffer_reset(struct simple_rb_per_cpu *cpu_buffer)
- }
- EXPORT_SYMBOL_GPL(simple_ring_buffer_reset);
- 
--int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_buffer_page *bpages,
--			    const struct ring_buffer_desc *desc)
-+int __simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer,
-+			      struct simple_buffer_page *bpages,
-+			      const struct ring_buffer_desc *desc,
-+			      void *(*load_page)(unsigned long va),
-+			      void (*unload_page)(void *va))
- {
- 	struct simple_buffer_page *bpage = bpages;
-+	int ret = 0;
-+	void *page;
- 	int i;
- 
- 	/* At least 1 reader page and two pages in the ring-buffer */
-@@ -354,15 +359,22 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 
- 	memset(cpu_buffer, 0, sizeof(*cpu_buffer));
- 
--	cpu_buffer->bpages = bpages;
-+	cpu_buffer->meta = load_page(desc->meta_va);
-+	if (!cpu_buffer->meta)
-+		return -EINVAL;
- 
--	cpu_buffer->meta = (void *)desc->meta_va;
- 	memset(cpu_buffer->meta, 0, sizeof(*cpu_buffer->meta));
- 	cpu_buffer->meta->meta_page_size = PAGE_SIZE;
- 	cpu_buffer->meta->nr_subbufs = cpu_buffer->nr_pages;
- 
- 	/* The reader page is not part of the ring initially */
--	simple_bpage_init(bpage, desc->page_va[0]);
-+	page = load_page(desc->page_va[0]);
-+	if (!page) {
-+		unload_page(cpu_buffer->meta);
-+		return -EINVAL;
-+	}
++Remote Tracing
++--------------
 +
-+	simple_bpage_init(bpage, page);
- 	bpage->id = 0;
++This section covers the framework to read compatible ring-buffers, written by
++entities outside of the kernel (most likely firmware or hypervisor)
++
++.. toctree::
++   :maxdepth: 1
++
++   remotes
++
+ Additional Resources
+ --------------------
  
- 	cpu_buffer->nr_pages = 1;
-@@ -372,7 +384,13 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 	cpu_buffer->head_page = bpage + 1;
- 
- 	for (i = 1; i < desc->nr_page_va; i++) {
--		simple_bpage_init(++bpage, desc->page_va[i]);
-+		page = load_page(desc->page_va[i]);
-+		if (!page) {
-+			ret = -EINVAL;
-+			break;
-+		}
+diff --git a/Documentation/trace/remotes.rst b/Documentation/trace/remotes.rst
+new file mode 100644
+index 000000000000..e7fb3ee96c30
+--- /dev/null
++++ b/Documentation/trace/remotes.rst
+@@ -0,0 +1,59 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+		simple_bpage_init(++bpage, page);
- 
- 		bpage->link.next = &(bpage + 1)->link;
- 		bpage->link.prev = &(bpage - 1)->link;
-@@ -381,6 +399,14 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 		cpu_buffer->nr_pages = i + 1;
- 	}
- 
-+	if (ret) {
-+		for (i--; i >= 0; i--)
-+			unload_page((void *)desc->page_va[i]);
-+		unload_page(cpu_buffer->meta);
++===============
++Tracing Remotes
++===============
 +
-+		return ret;
-+	}
++:Author: Vincent Donnefort <vdonnefort@google.com>
 +
- 	/* Close the ring */
- 	bpage->link.next = &cpu_buffer->tail_page->link;
- 	cpu_buffer->tail_page->link.prev = &bpage->link;
-@@ -388,21 +414,48 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 	/* The last init'ed page points to the head page */
- 	simple_bpage_set_head_link(bpage);
- 
-+	cpu_buffer->bpages = bpages;
++Overview
++========
++A trace remote relies on ring-buffer remotes to read and control compatible
++tracing buffers, written by entity such as firmware or hypervisor.
 +
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(simple_ring_buffer_init);
- 
--void simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer)
-+static void *__load_page(unsigned long page)
- {
-+	return (void *)page;
-+}
++Once registered, a tracefs instance will appear for this remote in the Tracefs
++directory **remotes/**. This remote can be read and controlled using the same
++files as regular Tracefs instances such as **trace_pipe**, **tracing_on** or
++**trace**.
 +
-+static void __unload_page(void *page) { }
++Register a remote
++=================
++A remote must provide a set of callbacks `struct trace_remote_callbacks` whom
++description can be found below. Those callbacks allows Tracefs to enable and
++disable tracing and events, to load and unload a tracing buffer (a set of
++ring-buffers) and to swap a reader page with the head page, which enables
++consuming reading.
 +
-+int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_buffer_page *bpages,
-+			    const struct ring_buffer_desc *desc)
-+{
-+	return __simple_ring_buffer_init(cpu_buffer, bpages, desc, __load_page, __unload_page);
-+}
++.. kernel-doc:: include/linux/trace_remote.h
 +
-+void __simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer,
-+				 void (*unload_page)(void *))
-+{
-+	int p;
++Declare a remote event
++======================
++Macros are provided to ease the declaration of remote events, in a similar
++fashion to in-kernel events. A declaration must provide an ID, a description of
++the event arguments and how to print the event:
 +
- 	if (!simple_rb_loaded(cpu_buffer))
- 		return;
- 
- 	simple_rb_enable_tracing(cpu_buffer, false);
- 
-+	unload_page(cpu_buffer->meta);
-+	for (p = 0; p < cpu_buffer->nr_pages; p++)
-+		unload_page(cpu_buffer->bpages[p].page);
++.. code-block:: c
 +
- 	cpu_buffer->bpages = NULL;
- }
- EXPORT_SYMBOL_GPL(simple_ring_buffer_unload);
- 
-+void simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer)
-+{
-+	return __simple_ring_buffer_unload(cpu_buffer, __unload_page);
-+}
++	REMOTE_EVENT(foo, EVENT_FOO_ID,
++		RE_STRUCT(
++			re_field(u64, bar)
++		),
++		RE_PRINTK("bar=%lld", __entry->bar)
++	);
 +
- int simple_ring_buffer_enable_tracing(struct simple_rb_per_cpu *cpu_buffer, bool enable)
- {
- 	if (!simple_rb_loaded(cpu_buffer))
++Then those events must be declared in a C file with the following:
++
++.. code-block:: c
++
++	#define REMOTE_EVENT_INCLUDE_FILE foo_events.h
++	#include <trace/define_remote_events.h>
++
++This will provide a `struct remote_event remote_event_foo` that can be given to
++`trace_remote_register`.
++
++Simple ring-buffer
++==================
++A simple implementation for a ring-buffer writer can be found in
++kernel/trace/simple_ring_buffer.c.
++
++.. kernel-doc:: include/linux/simple_ring_buffer.h
 -- 
 2.52.0.107.ga0afd4fd5b-goog
 
