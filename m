@@ -1,285 +1,366 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E83B285CB3
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Dec 2025 10:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F0D2288F7;
+	Tue,  2 Dec 2025 12:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764672687; cv=none; b=Imf6DaNcObnDPmvRnyedHTu8R2+rBkKWrSmyMO4shxO7u6BTyXx5VWfHrWHmlbV9ccqBuxu6p27ji7DIFcAdblwnikneMWKWKzZVDU+zcgwdWBLQQA4tJyuLLZ/WAazF3xuXJG+YvWYNMCbUZvKAd2Qj88RmNhLb61ha6Ujz53E=
+	t=1764677014; cv=none; b=iIXMNDZ4SPDP68AZ47ZyJeDI6SbXt5ztqVG1qUGspKwhSPbReat4hqYoo7fGzX8I2Bam8h+0JkBt4/v66DzxmKS5itIqI11VHwKXf6J9zDCquhj2a253Juv7rHxOn3OoOXo/uFPK+x23fTHiDUKWgNomacNUmMT99za07UhA10Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764672687; c=relaxed/simple;
-	bh=N93bf/KZw0h+VJH4mzQ3LTBQpyL19LRzVwWCH9yZjAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZ5dScjYPlSaY5TPIba+AV3yAgPNB8MrHeP0rcHnamrT1NamVX6QpNfYVAVRJJvBGL/tNfL/k9+FiDLKX+WPeXuZJBrgIratsf7CESJM3B+L9u0FRUuvbPbplW+kcHiEKUhg7YbwqoUIoNMOOHswUesnoUK+OaRh74Qix7KYga8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D6v+npYt; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D6v+npYt"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47796a837c7so37749555e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Dec 2025 02:51:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764672684; x=1765277484; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=on3Kan0NbvHupUMJLZOKeYAcH+YqhDINUzUWKZMJC6Y=;
-        b=D6v+npYtu8tgUo8IF0GU/JqlN7N4i5DXXhmNZTzGAKsHSxzETIR3B30LMAfq3G1UXe
-         kA4OmL0Kx7ueMjNBolGgpUn3yNgOFMnYN4vNERJ7uD1ecOHO288oL0neIFWFJI+Rut/d
-         8qkDMHMx8pltxgl+L0kRvSqCQPMsfQGKcu7x+Gd6YXUvu6OeMlsd0HsfUwQZ4FvJDmbE
-         oothnQEJ26tA0R4d6kxJmdCV6K+/gV1eRyDxSfcrNUSI2GSYnmTkHkhAUZ4GDSZuwwhm
-         Pqul/opVAcNR2n9iPyLCB214zXy3Am34BgftrBuZWrSShCplOApn9iLOUKalXrcBDfZL
-         b8Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764672684; x=1765277484;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=on3Kan0NbvHupUMJLZOKeYAcH+YqhDINUzUWKZMJC6Y=;
-        b=LgkqMaKHhJK/ReBLgerQ1PzQLQeRx79qA/U0UKgpEv+ZK1BDCHn1G3CL6lSxQSz5uW
-         C9zJA+gwjs4MiwkbuVQas0VF3117amlRulTCPhvRNXUdQzON8x1SeGF82ljDFF3ZVTxY
-         6aq6jVGxqHcqQq9UBtmyX2hqnJWJW11JSAt5NR2clJk4LEB6ex+yoTzcRpA499SiZ/ig
-         FjT8x33WU+ROTTLPYqLbd06WiXOEa0WD9sop0mjqYzgbcpf6hPRd/+JhSiBBK2/gy9wp
-         q1ZYRsMHKyfWH94Qcx2VBg/cqqqkIfbRMFyRayiawGx4gKhJjIAHiLNgmWWtMJWIM5Pp
-         0c0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWr5JwLcrrOnBjl2JZTkJae9abvUdG6ZVKmPgNPtH16JOjhflCZk0KG2Rz8q6FC/pm73yMBzxUcUvqGXkQY6FPkr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN/9qiESeMkQFUgU4WMTOomPRBk5SZuq753o9qYkL/L5VvGlnL
-	aI8vcP0YK2tVn8/fCScWIAbLzLCSTptzwW1Xgbagc8txhQVP5SncOqTQMLuVY195JA==
-X-Gm-Gg: ASbGnctNwoom0p71eEUeOQynF7eZdVpB7Rt3Qt4PWN80DJH7xj7lTWdR/5W72kYCGQG
-	I9Q8DBNGsdWvNIKNemCzUVhcPYdkVCmaD0cmFItIDm/vV3yZa051r746ZAjiYxh6L+AB4hSvhKG
-	6GNZDtAQFGuVcID6eJo/97vxKC4DqKkoUULBmd3n/ZGLmbami7OOUrsxQq6rTvAo/HOJRFLMpGB
-	TIpO57oIKMSuMvX8XV8CI6PwvtuutBrg4iuHaXpU2qE/Y4pWNlwXsyVq5W4RiGeKkVoDg/kd0dH
-	Ab/PJkM5EGG1RpBEaeUiki7acVDzUxIKn72+P4CXRzQDY9Rsqc5em6GwNmsg6Ptgp+KZyKB3hxy
-	UpdFSsYPM28Oi80FrxhgixKBdGxtnfw4eNUlbhGavmohBZIdeOehWXeY126GZiM9OUSch8Skp9k
-	BNCfW7NfEpC+uwHyBzEHwTckUAMtZ6sKuWrAeBPaRje5OzPp9j3zX9WUmvSykw65LS8nE=
-X-Google-Smtp-Source: AGHT+IFfI32AxldlfwCLkGNskF/o6XCATWWX6oiTRLGmi8WmK+KLfPtB4E3WKWIeymgEdapC8W5o3Q==
-X-Received: by 2002:a05:600c:1f8f:b0:477:a0dd:b2af with SMTP id 5b1f17b1804b1-477c01ea502mr377572095e9.33.1764672683650;
-        Tue, 02 Dec 2025 02:51:23 -0800 (PST)
-Received: from google.com (49.185.141.34.bc.googleusercontent.com. [34.141.185.49])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790adc6f7bsm375078255e9.2.2025.12.02.02.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Dec 2025 02:51:23 -0800 (PST)
-Date: Tue, 2 Dec 2025 10:51:19 +0000
-From: Matt Bobrowski <mattbobrowski@google.com>
-To: Shuran Liu <electronlsr@gmail.com>, g@google.com
-Cc: song@kernel.org, bpf@vger.kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	eddyz87@gmail.com, yonghong.song@linux.dev,
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
-	haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Zesen Liu <ftyg@live.com>, Peili Gao <gplhust955@gmail.com>,
-	Haoran Ni <haoran.ni.cs@gmail.com>
-Subject: Re: [PATCH bpf v2 2/2] selftests/bpf: fix and consolidate d_path LSM
- regression test
-Message-ID: <aS7Ep6980hOjICSF@google.com>
-References: <20251202075441.1409-1-electronlsr@gmail.com>
- <20251202075441.1409-3-electronlsr@gmail.com>
- <aS6qfN4cXoEO82bE@google.com>
- <F1F96C9B-EAD1-4FD7-A053-EE072A5F4E53@gmail.com>
+	s=arc-20240116; t=1764677014; c=relaxed/simple;
+	bh=W0DSPkYRUbCwHCoprwCL/Fyya55vjwBNtQRR5Xse8vc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DgLVf//Ojvplt8YIh8wTlWxGeFuWMYyTAsBy6XZILDgZ/KAOEBPCkSm+AJtiuq0GL4UpOLKnGrd0teT5OeY+JY9fKezfMnywt27OSAWmz9HUKeBXKYLouQwZtO5+K4jmNkZ6D/MBFGWPeujQdGL9LkDkIAIFEDVP2UF8pNcFeR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1B94153B;
+	Tue,  2 Dec 2025 04:03:23 -0800 (PST)
+Received: from [192.168.1.127] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AEA73F73B;
+	Tue,  2 Dec 2025 04:03:22 -0800 (PST)
+Message-ID: <51711ea1-2e5c-457d-902d-68797eb496cb@arm.com>
+Date: Tue, 2 Dec 2025 12:03:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <F1F96C9B-EAD1-4FD7-A053-EE072A5F4E53@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with
+ trace_policy_frequency
+To: Samuel Wu <wusamuel@google.com>, Huang Rui <ray.huang@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, Jonathan Corbet <corbet@lwn.net>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Len Brown <lenb@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>
+Cc: christian.loehle@arm.com, kernel-team@android.com,
+ linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20251201202437.3750901-1-wusamuel@google.com>
+ <20251201202437.3750901-2-wusamuel@google.com>
+Content-Language: en-US
+From: Douglas Raillard <douglas.raillard@arm.com>
+In-Reply-To: <20251201202437.3750901-2-wusamuel@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 02, 2025 at 05:30:15PM +0800, Shuran Liu wrote:
-> Hi Matt,
-> 
-> Thanks a lot for the review and for re-sending your Reviewed-by tag.
-> 
-> In the next version of the series I’ll add your
-> 
-> Reviewed-by: Matt Bobrowski <mattbobrowski@google.com>
-> 
-> to the patch that introduces the new selftest, and I’ll also make sure to
-> remove /tmp/bpf_d_path_test in the test cleanup path as you suggested.
+Hi Samuel,
 
-SGTM.
-
-> I also noticed that the CI is currently failing due to the `#pragma unroll`
-> around the loop in prog_lsm(). Would you prefer that I simply drop the pragma
-> in the next version, given that the loop bound is small and constant anyway,
-> or is there a better way you’d recommend to handle this?
-
-Yeah, I don't think the use of this directive is required here given
-the iteration count is tiny. Alternatively, perhaps you could switch
-over to using a more BPF verifier preferred alternative
-(i.e. bpf_for() or better yet and simpler bpf_repeat())?
-
-> > On Tue, Dec 02, 2025 at 00:59:45AM -0800, Matt Bobrowski wrote：
-> > 
-> > On Tue, Dec 02, 2025 at 03:54:41PM +0800, Shuran Liu wrote:
-> >> Add a regression test for bpf_d_path() when invoked from an LSM program.
-> >> The test attaches to the bprm_check_security hook, calls bpf_d_path() on
-> >> the binary being executed, and verifies that a simple prefix comparison on
-> >> the returned pathname behaves correctly after the fix in patch 1.
-> >> 
-> >> To avoid nondeterminism, the LSM program now filters based on the
-> >> expected PID, which is populated from userspace before the test binary is
-> >> executed. This prevents unrelated processes that also trigger the
-> >> bprm_check_security LSM hook from overwriting test results. Parent and
-> >> child processes are synchronized through a pipe to ensure the PID is set
-> >> before the child execs the test binary.
-> >> 
-> >> Per review feedback, the new test is merged into the existing d_path
-> >> selftest rather than adding new prog_tests/ or progs/ files.
-> >> 
-> >> Co-developed-by: Zesen Liu <ftyg@live.com>
-> >> Signed-off-by: Zesen Liu <ftyg@live.com>
-> >> Co-developed-by: Peili Gao <gplhust955@gmail.com>
-> >> Signed-off-by: Peili Gao <gplhust955@gmail.com>
-> >> Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-> >> Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-> >> Signed-off-by: Shuran Liu <electronlsr@gmail.com>
-> > 
-> > Feel free to add:
-> > 
-> > Reviewed-by: Matt Bobrowski <mattbobrowski@google.com <mailto:mattbobrowski@google.com>>
-> > 
-> >> ---
-> >> .../testing/selftests/bpf/prog_tests/d_path.c | 64 +++++++++++++++++++
-> >> .../testing/selftests/bpf/progs/test_d_path.c | 33 ++++++++++
-> >> 2 files changed, 97 insertions(+)
-> >> 
-> >> diff --git a/tools/testing/selftests/bpf/prog_tests/d_path.c b/tools/testing/selftests/bpf/prog_tests/d_path.c
-> >> index ccc768592e66..2909ca3bae0f 100644
-> >> --- a/tools/testing/selftests/bpf/prog_tests/d_path.c
-> >> +++ b/tools/testing/selftests/bpf/prog_tests/d_path.c
-> >> @@ -195,6 +195,67 @@ static void test_d_path_check_types(void)
-> >> 	test_d_path_check_types__destroy(skel);
-> >> }
-> >> 
-> >> +static void test_d_path_lsm(void)
-> >> +{
-> >> +	struct test_d_path *skel;
-> >> +	int err;
-> >> +	int pipefd[2];
-> >> +	pid_t pid;
-> >> +
-> >> +	skel = test_d_path__open_and_load();
-> >> +	if (!ASSERT_OK_PTR(skel, "d_path skeleton failed"))
-> >> +		return;
-> >> +
-> >> +	err = test_d_path__attach(skel);
-> >> +	if (!ASSERT_OK(err, "attach failed"))
-> >> +		goto cleanup;
-> >> +
-> >> +	/* Prepare the test binary */
-> >> +	system("cp /bin/true /tmp/bpf_d_path_test 2>/dev/null || :");
-> > 
-> > I'd much prefer if we also cleaned up after ourselves, but it's not
-> > that much of an issue I guess.
-> > 
-> >> +	if (!ASSERT_OK(pipe(pipefd), "pipe failed"))
-> >> +		goto cleanup;
-> >> +
-> >> +	pid = fork();
-> >> +	if (!ASSERT_GE(pid, 0, "fork failed")) {
-> >> +		close(pipefd[0]);
-> >> +		close(pipefd[1]);
-> >> +		goto cleanup;
-> >> +	}
-> >> +
-> >> +	if (pid == 0) {
-> >> +		/* Child */
-> >> +		char buf;
-> >> +
-> >> +		close(pipefd[1]);
-> >> +		/* Wait for parent to set PID in BPF map */
-> >> +		if (read(pipefd[0], &buf, 1) != 1)
-> >> +			exit(1);
-> >> +		close(pipefd[0]);
-> >> +		execl("/tmp/bpf_d_path_test", "/tmp/bpf_d_path_test", NULL);
-> >> +		exit(1);
-> >> +	}
-> >> +
-> >> +	/* Parent */
-> >> +	close(pipefd[0]);
-> >> +
-> >> +	/* Update BPF map with child PID */
-> >> +	skel->bss->my_pid = pid;
-> >> +
-> >> +	/* Signal child to proceed */
-> >> +	write(pipefd[1], "G", 1);
-> >> +	close(pipefd[1]);
-> >> +
-> >> +	/* Wait for child */
-> >> +	waitpid(pid, NULL, 0);
-> >> +
-> >> +	ASSERT_EQ(skel->bss->called_lsm, 1, "lsm hook called");
-> >> +	ASSERT_EQ(skel->bss->lsm_match, 1, "lsm match");
-> >> +
-> >> +cleanup:
-> >> +	test_d_path__destroy(skel);
-> >> +}
-> >> +
-> >> void test_d_path(void)
-> >> {
-> >> 	if (test__start_subtest("basic"))
-> >> @@ -205,4 +266,7 @@ void test_d_path(void)
-> >> 
-> >> 	if (test__start_subtest("check_alloc_mem"))
-> >> 		test_d_path_check_types();
-> >> +
-> >> +	if (test__start_subtest("lsm"))
-> >> +		test_d_path_lsm();
-> >> }
-> >> diff --git a/tools/testing/selftests/bpf/progs/test_d_path.c b/tools/testing/selftests/bpf/progs/test_d_path.c
-> >> index 84e1f883f97b..7f65c282069a 100644
-> >> --- a/tools/testing/selftests/bpf/progs/test_d_path.c
-> >> +++ b/tools/testing/selftests/bpf/progs/test_d_path.c
-> >> @@ -17,6 +17,8 @@ int rets_close[MAX_FILES] = {};
-> >> 
-> >> int called_stat = 0;
-> >> int called_close = 0;
-> >> +int called_lsm = 0;
-> >> +int lsm_match = 0;
-> >> 
-> >> SEC("fentry/security_inode_getattr")
-> >> int BPF_PROG(prog_stat, struct path *path, struct kstat *stat,
-> >> @@ -62,4 +64,35 @@ int BPF_PROG(prog_close, struct file *file, void *id)
-> >> 	return 0;
-> >> }
-> >> 
-> >> +SEC("lsm/bprm_check_security")
-> >> +int BPF_PROG(prog_lsm, struct linux_binprm *bprm)
-> >> +{
-> >> +	pid_t pid = bpf_get_current_pid_tgid() >> 32;
-> >> +	char path[MAX_PATH_LEN] = {};
-> >> +	int ret;
-> >> +
-> >> +	if (pid != my_pid)
-> >> +		return 0;
-> >> +
-> >> +	called_lsm = 1;
-> >> +	ret = bpf_d_path(&bprm->file->f_path, path, MAX_PATH_LEN);
-> >> +	if (ret < 0)
-> >> +		return 0;
-> >> +
-> >> +	{
-> >> +		static const char target_dir[] = "/tmp/";
-> >> +
-> >> +#pragma unroll
-> >> +		for (int i = 0; i < sizeof(target_dir) - 1; i++) {
-> >> +			if (path[i] != target_dir[i]) {
-> >> +				lsm_match = -1; /* mismatch */
-> >> +				return 0;
-> >> +			}
-> >> +		}
-> >> +	}
-> >> +
-> >> +	lsm_match = 1; /* prefix match */
-> >> +	return 0;
-> >> +}
-> >> +
-> >> char _license[] SEC("license") = "GPL";
-> >> -- 
-> >> 2.52.0
+On 01-12-2025 20:24, Samuel Wu wrote:
+> The existing cpu_frequency trace_event can be verbose, emitting a nearly
+> identical trace event for every CPU in the policy even when their
+> frequencies are identical.
 > 
+> This patch replaces the cpu_frequency trace event with policy_frequency
+> trace event, a more efficient alternative. From the kernel's
+> perspective, emitting a trace event once per policy instead of once per
+> cpu saves some memory and is less overhead.
+
+I'd be fully behind that as a general guideline.
+
+> From the post-processing
+> perspective, analysis of the trace log is simplified without any loss of
+> information.
+
+Unfortunately I'm not so sure about the "simplified" part (as of today),
+more on that below.
+
+> 
+> Signed-off-by: Samuel Wu <wusamuel@google.com>
+> ---
+>   drivers/cpufreq/cpufreq.c      | 14 ++------------
+>   drivers/cpufreq/intel_pstate.c |  6 ++++--
+>   include/trace/events/power.h   | 24 +++++++++++++++++++++---
+>   kernel/trace/power-traces.c    |  2 +-
+>   samples/bpf/cpustat_kern.c     |  8 ++++----
+>   samples/bpf/cpustat_user.c     |  6 +++---
+>   tools/perf/builtin-timechart.c | 12 ++++++------
+>   7 files changed, 41 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 4472bb1ec83c..dd3f08f3b958 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -309,8 +309,6 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>   				      struct cpufreq_freqs *freqs,
+>   				      unsigned int state)
+>   {
+> -	int cpu;
+> -
+>   	BUG_ON(irqs_disabled());
+>   
+>   	if (cpufreq_disabled())
+> @@ -344,10 +342,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>   		adjust_jiffies(CPUFREQ_POSTCHANGE, freqs);
+>   		pr_debug("FREQ: %u - CPUs: %*pbl\n", freqs->new,
+>   			 cpumask_pr_args(policy->cpus));
+> -
+> -		for_each_cpu(cpu, policy->cpus)
+> -			trace_cpu_frequency(freqs->new, cpu);
+> -
+> +		trace_policy_frequency(freqs->new, policy->cpu, policy->cpus);
+>   		srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
+>   					 CPUFREQ_POSTCHANGE, freqs);
+>   
+> @@ -2201,7 +2196,6 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+>   					unsigned int target_freq)
+>   {
+>   	unsigned int freq;
+> -	int cpu;
+>   
+>   	target_freq = clamp_val(target_freq, policy->min, policy->max);
+>   	freq = cpufreq_driver->fast_switch(policy, target_freq);
+> @@ -2213,11 +2207,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+>   	arch_set_freq_scale(policy->related_cpus, freq,
+>   			    arch_scale_freq_ref(policy->cpu));
+>   	cpufreq_stats_record_transition(policy, freq);
+> -
+> -	if (trace_cpu_frequency_enabled()) {
+> -		for_each_cpu(cpu, policy->cpus)
+> -			trace_cpu_frequency(freq, cpu);
+> -	}
+> +	trace_policy_frequency(freq, policy->cpu, policy->cpus);
+>   
+>   	return freq;
+>   }
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index ec4abe374573..9724b5d19d83 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2297,7 +2297,8 @@ static int hwp_get_cpu_scaling(int cpu)
+>   
+>   static void intel_pstate_set_pstate(struct cpudata *cpu, int pstate)
+>   {
+> -	trace_cpu_frequency(pstate * cpu->pstate.scaling, cpu->cpu);
+> +	trace_policy_frequency(pstate * cpu->pstate.scaling, cpu->cpu,
+> +			       cpumask_of(cpu->cpu));
+>   	cpu->pstate.current_pstate = pstate;
+>   	/*
+>   	 * Generally, there is no guarantee that this code will always run on
+> @@ -2587,7 +2588,8 @@ static void intel_pstate_adjust_pstate(struct cpudata *cpu)
+>   
+>   	target_pstate = get_target_pstate(cpu);
+>   	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+> -	trace_cpu_frequency(target_pstate * cpu->pstate.scaling, cpu->cpu);
+> +	trace_policy_frequency(target_pstate * cpu->pstate.scaling, cpu->cpu,
+> +			       cpumask_of(cpu->cpu));
+>   	intel_pstate_update_pstate(cpu, target_pstate);
+>   
+>   	sample = &cpu->sample;
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index 370f8df2fdb4..317098ffdd5f 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -182,11 +182,29 @@ TRACE_EVENT(pstate_sample,
+>   		{ PM_EVENT_RECOVER, "recover" }, \
+>   		{ PM_EVENT_POWEROFF, "poweroff" })
+>   
+> -DEFINE_EVENT(cpu, cpu_frequency,
+> +TRACE_EVENT(policy_frequency,
+>   
+> -	TP_PROTO(unsigned int frequency, unsigned int cpu_id),
+> +	TP_PROTO(unsigned int frequency, unsigned int cpu_id,
+> +		 const struct cpumask *policy_cpus),
+>   
+> -	TP_ARGS(frequency, cpu_id)
+> +	TP_ARGS(frequency, cpu_id, policy_cpus),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u32, state)
+> +		__field(u32, cpu_id)
+> +		__cpumask(cpumask)
+
+Using a cpumask is the most technically correct option here, but it also carries a big issue.
+Userspace tooling will have a very hard time doing anything with it. A lot of that is down
+to having no appropriate counterpart in "table libraries" in general (e.g. what would you
+map that to in pandas, polars or SQL ?). Some of the lack of support is probably also down to how
+infrequently used it is. For example I don't think Perfetto would be able to handle that
+in the ftrace_event and args table, as the documented supported value types are:
+
+args table:
+value_type 	STRING 	The type of the value of the arg. Will be one of 'int', 'uint', 'string', 'real', 'pointer', 'bool' or 'json'.
+https://perfetto.dev/docs/analysis/stdlib-docs
+
+So while I definitely support improving the situation around cpumasks (I lobbied a bit for that),
+I don't think the ecosystem is ready for it yet and having such a core event switched to using it
+is going to cause a lot of pain.
+
+Some alternatives for tooling could be:
+1. Record the policy cpumasks in a tool-friendly format in the trace header, but no current format I know
+    of provides that, and ftrace does not provide a "JSON blob to be passed through" we could easily append to.
+    Any such addition will therefore require libraries update which will take time.
+
+3. Doing without the data in the trace. That means collecting and bundling another sidecar file, which
+    is really not convenient and still requires 3rd party tool modifications for end users.
+
+2. Add policy_frequency event, but not remove cpu_frequency yet. Possibly with a deprecation warning
+    when enabling the event.
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->state = frequency;
+> +		__entry->cpu_id = cpu_id;
+> +		__assign_cpumask(cpumask, policy_cpus);
+
+ipi_send_cpumask uses cpumask_bits():
+
+		__assign_cpumask(cpumask, cpumask_bits(cpumask));
+
+It's not clear what is best practice, as struct cpumask contains a single member anyway and
+__assign_cpumask() expands to a memcpy() so they are functionally identical.
+
+> +	),
+> +
+> +	TP_printk("state=%lu cpu_id=%lu policy_cpus=%*pb",
+> +		  (unsigned long)__entry->state,
+> +		  (unsigned long)__entry->cpu_id,
+> +		  cpumask_pr_args((struct cpumask *)__get_dynamic_array(cpumask)))
+
+Looking at ipi_send_cpumask, this should be:
+
+   __get_cpumask(cpumask)
+
+The cast and cpumask_pr_args() may look like it's working, but there is only a very slim
+chance any downstream tool will know what to do with this. Looking at libtraceevent
+(which trace-cmd is based on):
+
+./utest/traceevent-utest.c:116: "print fmt: \"cpumask=%s\", __get_cpumask(cpumask)\n";
+./src/event-parse.c:3674:       if (strcmp(token, "__get_cpumask") == 0 ||
+./src/event-parse.c:7568:               printf("__get_cpumask(%s)", args->bitmask.bitmask);
+
+But there is no match for "cpumask_pr_args".
+
+Considering the gap between what works when using the in-kernel text rendering and what can be
+reasonably expected to work in any other userspace tool, it's a good idea to try
+as many as possible unfortunately.
+
+>   );
+>   
+>   TRACE_EVENT(cpu_frequency_limits,
+> diff --git a/kernel/trace/power-traces.c b/kernel/trace/power-traces.c
+> index f2fe33573e54..a537e68a6878 100644
+> --- a/kernel/trace/power-traces.c
+> +++ b/kernel/trace/power-traces.c
+> @@ -16,5 +16,5 @@
+>   
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(suspend_resume);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_idle);
+> -EXPORT_TRACEPOINT_SYMBOL_GPL(cpu_frequency);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(policy_frequency);
+>   
+> diff --git a/samples/bpf/cpustat_kern.c b/samples/bpf/cpustat_kern.c
+> index 7ec7143e2757..f485de0f89b2 100644
+> --- a/samples/bpf/cpustat_kern.c
+> +++ b/samples/bpf/cpustat_kern.c
+> @@ -75,9 +75,9 @@ struct {
+>   } pstate_duration SEC(".maps");
+>   
+>   /*
+> - * The trace events for cpu_idle and cpu_frequency are taken from:
+> + * The trace events for cpu_idle and policy_frequency are taken from:
+>    * /sys/kernel/tracing/events/power/cpu_idle/format
+> - * /sys/kernel/tracing/events/power/cpu_frequency/format
+> + * /sys/kernel/tracing/events/power/policy_frequency/format
+>    *
+>    * These two events have same format, so define one common structure.
+>    */
+> @@ -162,7 +162,7 @@ int bpf_prog1(struct cpu_args *ctx)
+>   	 */
+>   	if (ctx->state != (u32)-1) {
+>   
+> -		/* record pstate after have first cpu_frequency event */
+> +		/* record pstate after have first policy_frequency event */
+>   		if (!*pts)
+>   			return 0;
+>   
+> @@ -208,7 +208,7 @@ int bpf_prog1(struct cpu_args *ctx)
+>   	return 0;
+>   }
+>   
+> -SEC("tracepoint/power/cpu_frequency")
+> +SEC("tracepoint/power/policy_frequency")
+>   int bpf_prog2(struct cpu_args *ctx)
+>   {
+>   	u64 *pts, *cstate, *pstate, cur_ts, delta;
+> diff --git a/samples/bpf/cpustat_user.c b/samples/bpf/cpustat_user.c
+> index 356f756cba0d..f7e81f702358 100644
+> --- a/samples/bpf/cpustat_user.c
+> +++ b/samples/bpf/cpustat_user.c
+> @@ -143,12 +143,12 @@ static int cpu_stat_inject_cpu_idle_event(void)
+>   
+>   /*
+>    * It's possible to have no any frequency change for long time and cannot
+> - * get ftrace event 'trace_cpu_frequency' for long period, this introduces
+> + * get ftrace event 'trace_policy_frequency' for long period, this introduces
+>    * big deviation for pstate statistics.
+>    *
+>    * To solve this issue, below code forces to set 'scaling_max_freq' to 208MHz
+> - * for triggering ftrace event 'trace_cpu_frequency' and then recovery back to
+> - * the maximum frequency value 1.2GHz.
+> + * for triggering ftrace event 'trace_policy_frequency' and then recovery back
+> + * to the maximum frequency value 1.2GHz.
+>    */
+>   static int cpu_stat_inject_cpu_frequency_event(void)
+>   {
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+> index 22050c640dfa..3ef1a2fd0493 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+> @@ -612,10 +612,10 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+>   }
+>   
+>   static int
+> -process_sample_cpu_frequency(struct timechart *tchart,
+> -			     struct evsel *evsel,
+> -			     struct perf_sample *sample,
+> -			     const char *backtrace __maybe_unused)
+> +process_sample_policy_frequency(struct timechart *tchart,
+> +				struct evsel *evsel,
+> +				struct perf_sample *sample,
+> +				const char *backtrace __maybe_unused)
+>   {
+>   	u32 state  = evsel__intval(evsel, sample, "state");
+>   	u32 cpu_id = evsel__intval(evsel, sample, "cpu_id");
+> @@ -1541,7 +1541,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+>   {
+>   	const struct evsel_str_handler power_tracepoints[] = {
+>   		{ "power:cpu_idle",		process_sample_cpu_idle },
+> -		{ "power:cpu_frequency",	process_sample_cpu_frequency },
+> +		{ "power:policy_frequency",	process_sample_policy_frequency },
+>   		{ "sched:sched_wakeup",		process_sample_sched_wakeup },
+>   		{ "sched:sched_switch",		process_sample_sched_switch },
+>   #ifdef SUPPORT_OLD_POWER_EVENTS
+> @@ -1804,7 +1804,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
+>   	unsigned int backtrace_args_no = ARRAY_SIZE(backtrace_args);
+>   
+>   	const char * const power_args[] = {
+> -		"-e", "power:cpu_frequency",
+> +		"-e", "power:policy_frequency",
+>   		"-e", "power:cpu_idle",
+>   	};
+>   	unsigned int power_args_nr = ARRAY_SIZE(power_args);
+
+--
+
+Douglas
+
