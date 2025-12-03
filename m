@@ -1,112 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE44338598;
-	Wed,  3 Dec 2025 17:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF63433A6FA
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 17:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764781980; cv=none; b=X084CvoXBJiYkBnbg1/qe2MOvQQFs7NrsL6KwEr38CD/ulufGDLBy/glWLAPACmns7a8xzv0ns5Wc97wMDxubswT9JFEGHdaUOmNNktyNnfpLqEEchd0ua1z7w/7faHtgzfhIEMytfw5PyYLW4gOxmGWrG+chUTImfG8c6T+ax4=
+	t=1764783751; cv=none; b=MXJW62BnR94sI50iQNrC/uwsMK7PaJ6Qb/5q1wJsA0Kq+K1i6MH4CNKnilBF2BZEL9NnTGon0X2Y2PiuzlGV+dTZ/f5+BdBcq4+kydnJQcFzuaI/EJcf+cAVsMj0vSoy/OReEDrFyb1uW2t6Bdns/nIby0i/9sjp+MbCfqUX+hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764781980; c=relaxed/simple;
-	bh=+Np+rdth2n0BXySDCBD2ekap4SNTZcCx3ChiDEozi8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXmpvLaroWJDNs2606FMFwbC20A8duJEKCRp8KKuKMe6rYtjlMKnDrX+5jHMz0p4RbangPQc0bVHIpgRVEo2OMIzMjnzvzgRZIi7xnlgNPgyMgIpFIIsFsuhlW7rCw/lBklZ09CP9WRCN9ZTGgHtvUuqcCvRncIMPR0UmdJCFpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e32CVAxJ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1764783751; c=relaxed/simple;
+	bh=zf27bKXVRn0YFfmYbxhnrXsspQ2CJPFQ3uw7zvsKqUw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W4iEU/9OjV94XQXYpki/o+lTYb6wMdxlZrN8ztxaSUaIWgDpHPtc9W46h2uyQPDb87b0D2EyZYaQzNWudNrEtQmW1KB4TfF3yua8GOgeAM86zXdobKs7ZIzFPj7vnrI/pMEJ/gpaBpSYCKZKeKWg3AugW59vTFwxvGSAx1hTm3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KZ0vTWhq; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e32CVAxJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764781979; x=1796317979;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+Np+rdth2n0BXySDCBD2ekap4SNTZcCx3ChiDEozi8w=;
-  b=e32CVAxJyveEI3Lc//vkt9JWS0HQMG6vgiR7JDun1nX6Ngn6FdPDJ8jq
-   r4P4ftkQ+eqYlwCp8LKmutPfYefi+AyzYtxTT9aHzCOoAG4Tn65Tbh8aO
-   p5wjrojVtSFNKmAg9qAUOC6pXo6q32HrcwCvQfUKLr2kPiyHKh+3vZa7W
-   /B4CJKBtMkS9kOUjcp73/4fEqQehcUMNEQQSFfyzYvAcK+nIfb8quLiAM
-   LJJ77pC5BNi0dd/BDMrM3l+z/qqnexjAAZO6kg1OF3iJHmhYS3Se74/Dr
-   r4+VIKftJwL36s/K6Wr9JdmYEkYKd03DCMzybvyRrO+uZwqafyY9bFGzq
-   w==;
-X-CSE-ConnectionGUID: FfgjYMyXQTmFZG1WBJ4Fsg==
-X-CSE-MsgGUID: fpBBJr2YQ9yQCrYJWK1vHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="69380506"
-X-IronPort-AV: E=Sophos;i="6.20,246,1758610800"; 
-   d="scan'208";a="69380506"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 09:12:58 -0800
-X-CSE-ConnectionGUID: P+yCIrBnRmGNhQVtXETb+w==
-X-CSE-MsgGUID: gazCu8PbQGC1Ktbu8bL9hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,246,1758610800"; 
-   d="scan'208";a="199208118"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.81])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 09:12:49 -0800
-Date: Wed, 3 Dec 2025 19:12:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	David Laight <david.laight@runbox.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] tracing: move tracing declarations from kernel.h
- to a dedicated header
-Message-ID: <aTBvj8zcVKj8hBJK@smile.fi.intel.com>
-References: <20251203162329.280182-1-yury.norov@gmail.com>
- <20251203162329.280182-5-yury.norov@gmail.com>
- <aTBvE_Arj16yB83I@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZ0vTWhq"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-29555b384acso352845ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 09:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764783749; x=1765388549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XeAhmehvdhvlBdc02jry8jySSCOQI2N6rqZ8L6A7FUg=;
+        b=KZ0vTWhqS2yY8jLI8dBTjhrp3RGPf4SSsQwgvCNo6xFXnNGbA910ksAc7R94+bhfZj
+         eYnblUY1+7sC4yHNcs01XWov/R05lnUQgtG8F7xsS8TwXwVYhZN778l5Fd/tMLijfRBl
+         wmniBggyTV2g2d3ouiYhQW9c5hMdyTUxG0P40Mv/+QwBrNlehgbm5X3gMaxuDatn9Dmn
+         +V/gCZFpDfUReTaCZE8I8GYCb1ZpmPMQSQVVsCicWUOulyqdqaYQwthwDtL1hTaCnCUo
+         PIfTaXV7QiUJTHd17HKvRLBkdEipahugFAfSVuwjEABwVU3/zHffht64sbO2cyioFSU7
+         z4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764783749; x=1765388549;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XeAhmehvdhvlBdc02jry8jySSCOQI2N6rqZ8L6A7FUg=;
+        b=JJG1qs2CYckTCUdhKbTkVNdG6JmNMMVRkvPBuXHTgNGRaRsvmZua6TrHxF2DKRjdr0
+         U7xg2F7pX2tumeIS0FQOicP33VSX4zt9utWtmvXuhQgoeNOnUWESFTVXUmV5MHbo8B+H
+         MbzIs/KJ/XFfYPHDYRoT5ui58/CCozr6m4nDvrjLewylSQVG/RIdeB4ivyphUBYdscKI
+         UyxL0SArq+Ns6LgqdySKyYuNoMAYv/r35zKlVTrpy86+b/y6SJZfBnJXWIYZRc6Kv1ha
+         LGofJP8yf5rsANoYcosMSe96GR+OY/+vt9AvXBRV/3oFIJqSSznpKUfvK2gnqCz1Aej7
+         59TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgqbxteHJFJ+s7bbsf/3CaGXVV36QL/TJzrouDMU525zFgcUFvsskJ/GDthRGaN06ImbLnQ1CjQbvWcQ6RTEBEZPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIGaAVZhGImGrvTWGBDlum+JcG7V/6kqLScE/U4lb1HIuA+IBM
+	ywTOVCyf5pbuUZTXZDzsjDKgXEPNcd70GOk8l2fh+e9aEhJAxVppiIQ1
+X-Gm-Gg: ASbGncttotTHCmw2tzVD7tpxBQpOmkp3eK2EjuL/tdJIlDD9VkrMWXJ93delKMxSB0X
+	7Y7m7mOqboyYDeXpWxDIbq6pp99GgaW8KZ6lcLNgFuKD1BIiDE7UdozqFY/kauWmaKk5LNJEgEv
+	nJX+DS684TNV/i99oUG2knQZfjQIuFRFKclkgNH0oqR03IxyloTgJUWwdzupghzLi3O0fmSoh5+
+	OL2iPbcaKjJBi7pu/Kmr/ylZz2fts+/t7lWCFXRBNIujDCu68d9OP466p435UVl8La2kn/08hsK
+	1b7iyeOkbeajBTI4lAMX6H+9lUg9CbiaVFL+V3EedCDit57VjM4Wt6An6tHndBVAA5qfl4Gse5y
+	Ox/h7GITcfMgMBGTjRzht0GX3nc3MnD49GDM+yIBxPG0SNF0Umleqh6mQoxN2rhONNiPZlDhFgL
+	pbwcc/S5HF8PjJ6rD1dQM=
+X-Google-Smtp-Source: AGHT+IFCJ/6FMxi6z/HzwPq4FUAbIfVntMHygrl0Bj9u5XG7QZet9gEnE0ujTtKKnt9ZqcGVnY0AAw==
+X-Received: by 2002:a17:902:cccd:b0:295:96bc:868c with SMTP id d9443c01a7336-29d682bf2d6mr41038255ad.5.1764783749129;
+        Wed, 03 Dec 2025 09:42:29 -0800 (PST)
+Received: from soham-laptop.. ([103.182.158.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bceb275a3sm192469735ad.66.2025.12.03.09.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Dec 2025 09:42:28 -0800 (PST)
+From: Soham Metha <sohammetha01@gmail.com>
+To: linux-kernel-mentees@lists.linuxfoundation.org
+Cc: shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	Soham Metha <sohammetha01@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] Documentation: rv: fix deadlink
+Date: Wed,  3 Dec 2025 23:11:54 +0530
+Message-Id: <20251203174155.48751-1-sohammetha01@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aTBvE_Arj16yB83I@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 03, 2025 at 07:10:53PM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 03, 2025 at 11:23:25AM -0500, Yury Norov (NVIDIA) wrote:
+The file 'da_monitor_synthesis.rst' has been renamed to 'monitor_synthesis.rst'.
 
-...
+This change was made in https://lore.kernel.org/all/20250725203425.275466334@kernel.org/
+and merged in commit 'f40a7c060207090f41998025fcd1cfad06ea2780'
 
-> > +#ifndef _LINUX_TRACING_H
-> > +#define _LINUX_TRACING_H
-> > +
-> > +#include <linux/compiler_attributes.h>
-> > +#include <linux/instruction_pointer.h>
-> 
-> + stddef.h // you use NULL
-> 
-> + string.h // use of strlen()
+Signed-off-by: Soham Metha <sohammetha01@gmail.com>
+---
+ Documentation/trace/rv/da_monitor_instrumentation.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why it should not conflict, it might be worth to research more and perhaps even
-use intrinsic instead of strlen(). Just a thought spoken loudly.
-
-> > +#include <linux/stringify.h>
-
+diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst b/Documentation/trace/rv/da_monitor_instrumentation.rst
+index 6c67c7b57811..b847c58a96b6 100644
+--- a/Documentation/trace/rv/da_monitor_instrumentation.rst
++++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
+@@ -168,4 +168,4 @@ The probes then need to be detached at the disable phase.
+ 
+ The wip monitor is presented in::
+ 
+-  Documentation/trace/rv/da_monitor_synthesis.rst
++  Documentation/trace/rv/monitor_synthesis.rst
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
