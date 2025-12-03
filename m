@@ -1,101 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7732E764B;
-	Wed,  3 Dec 2025 22:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2834C2E8DFE;
+	Wed,  3 Dec 2025 22:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764801606; cv=none; b=YJWdqTsRSbfWojKLkCoGo2v3Rsh6/Mud4ZD+17dfkZCk9cPhNSmxhYrG8isHunKbfDm5+FGHEcLMZaJvqRL5LAqiGON3TyDU1p5G6Svi/HRyF13ohIDFNLRBhQ9wpe7Bt+/+4voBOVs3k7XuhgVKD8FwLkFk9G6GwE5+ChD7xdw=
+	t=1764801911; cv=none; b=Qb+HdvPRXz0R5oZmQEVxFllptnHBJnrJl5ldr6DZybiuq7ZByRrkSg9eEAUXHJoXr4RpH/uZ2V+EHABd7aOcNWYtU2Tbi47N9mBPe1PsJa6XmEBDA5fr8i8iEVwGYP0+vhkVJbZ9SasyLB43GLO12L7UK6uaRVSGMwHlk1SLrNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764801606; c=relaxed/simple;
-	bh=8g1OSYjyONOKiqLxJIs7rESRRIjffUNJ8it/vEABZ6w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A9fGF8AkEZp/2zIA4KJic02BX5npCbkgArtIh+8A4VfwoQpOJ72eqcjvvm3DgFA9g1rCtJ0E0kcws7Yr7k51Rr5U8AqpQyZFU0ioysdkaEG+39kbaLCEknOJkm+k/V9EdJkpdE3NZ3WrXftcPwWVPFO5ViwmOuJ8m34OWJNrcWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1bOt1Az; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1bOt1Az"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20EC8C4CEF5;
-	Wed,  3 Dec 2025 22:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764801605;
-	bh=8g1OSYjyONOKiqLxJIs7rESRRIjffUNJ8it/vEABZ6w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=T1bOt1AzHnhYL48iiURWFwsKaaoKekaj1jDwVonF4uhMUXYLHnk0aI56/0z1VmD7/
-	 Ix3QjZKXPiex6zcITuE5j7+vGBAAg/Rt4PkHsOjwBAehkMrnk9uA5NpTtiuafmF/hX
-	 UXm+eb2pzRxXr5UNRy471/IGK2s2s1UlABkTAzlAG9XeFBfwYIyHspw09NuGeaXzL5
-	 i7XI8/FvUptEDd2dApHhLZezlM6+ZSYsvn8rma6MhKg5G0yBq1o0IkgRcJ0KGehiAD
-	 nHTvbxSabKoBID8W1rHNy3bRoSA5A8e4ZpC1xfRxZA0S1bHgM63iMaV8QTDZW0PkBC
-	 K4keekv/iQRjQ==
-Message-ID: <9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
+	s=arc-20240116; t=1764801911; c=relaxed/simple;
+	bh=eXCSv0usm+tDtU6Ofa6pcuUK3MO31ClbMcy0+tHlTBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pn+JHhzJcE549fpkgAY9Dqv8Q2EeeUOdlSd8GUr5d9osLyXgz4/+U7Xo1PUlx3Y2aXVM+DZBkrLkfntLB8dYanKXaYbmaNrAJyYTugKDqbO4BYGVI9wWpaz308DAnIgX926/mKwK+Scs5wjXDAddSYHZagotTf5tl8jhAfFdJT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 37F3913BAEF;
+	Wed,  3 Dec 2025 22:45:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 004E18000F;
+	Wed,  3 Dec 2025 22:45:01 +0000 (UTC)
+Date: Wed, 3 Dec 2025 17:46:04 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tom Zanussi <zanussi@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH v2 3/3] tracing: Use strim() in trigger_process_regex()
  instead of skip_spaces()
-From: Tom Zanussi <zanussi@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Date: Wed, 03 Dec 2025 16:40:04 -0600
-In-Reply-To: <20251125214032.323747707@kernel.org>
+Message-ID: <20251203174604.0405a90d@gandalf.local.home>
+In-Reply-To: <9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
 References: <20251125214004.396482401@kernel.org>
-	 <20251125214032.323747707@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	<20251125214032.323747707@kernel.org>
+	<9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 004E18000F
+X-Stat-Signature: gkpa6557tqneks1qfj4th17hgc8ao4xz
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Vc6pAhPafw9mJOzg4zIWwZmg6udiFaNI=
+X-HE-Tag: 1764801901-16849
+X-HE-Meta: U2FsdGVkX1/hGTrXpDCHDrkcphMxwlVVyYyG7clUbNk1dDOZL+ZrzvWa3/aYYqDQ0ibgbIX+lvVoCDSCs45zeropLoA7flH7OnEMbsBbg0ebgMNswfIQ/HcSf9iv6GAEsz1ozJNcr5QOczgAs7E9Upvpa93kVumDAcf0wzmff/q/TcQ2SgSc39cFmLk5RaAPGBzeNxazN9kkEsL4LFAogSIQuNv51aswHB5/C8vEj8fA4dPX3DVFEgNIl+CBwN3TVIPhGyK7lBCjP63Y7F3xKgu6NJweQtifZSGtn1ARVPLHyLMhu/bUjUJVkwMCBVB+THS3KQ8VC/pjQe9YWXGZfTlkroZnOkJokiCcl/98r981iImZjr136vP4bwd8S8rMUAFOhN8C1fZRXmadF6LI0A==
 
-On Tue, 2025-11-25 at 16:40 -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> The function trigger_process_regex() is called by a few functions, where
-> only one calls strim() on the buffer passed to it. That leaves the other
-> functions not trimming the end of the buffer passed in and making it a
-> little inconsistent.
->=20
-> Remove the strim() from event_trigger_regex_write() and have
-> trigger_process_regex() use strim() instead of skip_spaces(). The buff
-> variable is not passed in as const, so it can be modified.
->=20
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Wed, 03 Dec 2025 16:40:04 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Looks good to me.
+> > Remove the strim() from event_trigger_regex_write() and have
+> > trigger_process_regex() use strim() instead of skip_spaces(). The buff
+> > variable is not passed in as const, so it can be modified.
+> > 
+> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Thanks for all the reviews, but I already did the pull request ;-)
 
-> ---
-> =C2=A0kernel/trace/trace_events_trigger.c | 5 ++---
-> =C2=A01 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_eve=
-nts_trigger.c
-> index 3b97c242b795..96aad82b1628 100644
-> --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -308,7 +308,8 @@ int trigger_process_regex(struct trace_event_file *fi=
-le, char *buff)
-> =C2=A0	char *command, *next;
-> =C2=A0	struct event_command *p;
-> =C2=A0
-> -	next =3D buff =3D skip_spaces(buff);
-> +	next =3D buff =3D strim(buff);
-> +
-> =C2=A0	command =3D strsep(&next, ": \t");
-> =C2=A0	if (next) {
-> =C2=A0		next =3D skip_spaces(next);
-> @@ -345,8 +346,6 @@ static ssize_t event_trigger_regex_write(struct file =
-*file,
-> =C2=A0	if (IS_ERR(buf))
-> =C2=A0		return PTR_ERR(buf);
-> =C2=A0
-> -	strim(buf);
-> -
-> =C2=A0	guard(mutex)(&event_mutex);
-> =C2=A0
-> =C2=A0	event_file =3D event_file_file(file);
+Although it hasn't been accepted yet and there's always a chance Linus may
+have an issue with one of the commits (I had a lot of commits this time,
+affecting various aspects of the code, but couldn't use topic branches due
+to too many conflicts). If it is rejected, I'll add your reviewed-by tags.
 
+-- Steve
