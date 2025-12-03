@@ -1,108 +1,261 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772BD17993;
-	Wed,  3 Dec 2025 05:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DE828488D;
+	Wed,  3 Dec 2025 05:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764739482; cv=none; b=Qt9WMIZ/uzf78t6K9V6Rl4veXq/5x0Q/i7oerTV+V8J2Cyn0rpFJzIJgRN8FRyUS2h08YR4a3ntduCzzgKjxx/gZEouDI2aJ7ivPufJNdjmmI6J0T3nCKR3pY/XoHkWpxOI83InhAZDkPUyLEJTYd6BvSvufOikLZsFUfHzpiBc=
+	t=1764740964; cv=none; b=vDlGUyXrs9PSZgOep+3LCferEccxj7n5c/Fl7wJvBvnnA29EbFk5qRiFMG2CyTxiwjLxsNckUYkKXYbWqEXaRBVZXhwswXEPaTwAboi2q4nR2FCW2Ntc/J//q5L0xTgbtdNO0YumKrnK0pvwSvi4LCNFstg/1F72c0AB9bMR72U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764739482; c=relaxed/simple;
-	bh=nJiZ3Qqf40KuEWclLSX+VL52AtJ1jcdwMzXuwvKwKvI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EshkUzXF/HpB1t8E4j+kmf7XGXpx5Lgr33sXUi0P2gJq4f94kMOzL7FB70m/T+sSdK31rkacasJ0+bTr+PvsTO/uuOZbzPgJd9pCr5wMXPvUEpWE1fD+xKN51EX8dFq5oova/nBjV+1z19iAuJ3rmCsZmgSG/k5dd2grVfcIXEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JraMUPoP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764740964; c=relaxed/simple;
+	bh=6PZhvW7+spW+0Cm7xrdhtzD8zcq9m/0TSLOGxIHAfr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VwL+Yvj2QbaRnaK0aOx+ljxT094M/++naThjUcw/ywHpy+j6bhRYiQ5VdhxH0xyUCPO4yK/Sl4S9ISvWLryIUDXh6kBZnARiZAv1haU6pIq8/Ah0qsTcKYWxStx/NcwVFRl1aDu9hHjWncbBy92f3hHZm1/Vb8dqYZ/sVzkf8RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Op1w70R0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JraMUPoP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F86CC4CEFB;
-	Wed,  3 Dec 2025 05:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Op1w70R0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AABC4CEFB;
+	Wed,  3 Dec 2025 05:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764739482;
-	bh=nJiZ3Qqf40KuEWclLSX+VL52AtJ1jcdwMzXuwvKwKvI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JraMUPoPD209tfhdFDnqz3rFDnMTVB0xV1iBPh0O04QMazopBdE8av58hOHBnH2R5
-	 MaB50Vm1dLBOsxRiEvEF2EvDCGQQ5Ksx4Y7TSTGFK11pNn+tyGLzLwsdQEjuPLxSWv
-	 sMsXezy+/WNBPvVTHPF8I10iqxndnFu0DgxlNhg6AJY6U2a0GAu+tfrBoOXUst3c4n
-	 0mqr2mkSpg5Zk376/IV3XM4y/p9XTYy7CUO3Q2+lJGJEA7TimblynvbnKXzGN47DFd
-	 qn+S01nq0ZNxaQB0Or29SkDs2eS47n00sY3G0gYiuLCHlCfizbbEhG1/m/gFMn3DPp
-	 Ezuq4ec2R031Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Ye Bin <yebin@huaweicloud.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	yebin10@huawei.com
-Subject: [PATCH] kprobes: avoid crash when rmmod/insmod after ftrace killed
-Date: Wed,  3 Dec 2025 14:24:35 +0900
-Message-ID:  <176473947565.1727781.13110060700668331950.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
-User-Agent: StGit/0.19
+	s=k20201202; t=1764740963;
+	bh=6PZhvW7+spW+0Cm7xrdhtzD8zcq9m/0TSLOGxIHAfr8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Op1w70R0gPqnQLH2l/k059lhdwRZVqlt64Mvz84CFJpJmv3Mg6O6H4CJniaraaSJy
+	 iTl1MzLyATI0K9nHWDL8tpIZXuesmNRi4bzJT3bvVt0XA4J6WIlLa7ZXyqHnKgwFAu
+	 PNAADCAAAgYdiuzW6+Xe3ak1BJzrFroEnFZtNkkGNR4V22eQQa4/ZfTahosuGqbbDZ
+	 Wwk1c1MZx5eqFqgDwvAwvii5cARZIiTLmn4kim6d7bv1ftuHGkMm7vgh4hJlgqw0fI
+	 i0dkYhOJlZ4iKdquo2BUCrFuBPcZzXvoXs+X1GMnG97LmMThpWn8cDmVIDHgMnaRoV
+	 bvR5GgTzMUiiw==
+Date: Tue, 2 Dec 2025 21:49:20 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v6 3/6] perf record: Add --call-graph fp,defer option for
+ deferred callchains
+Message-ID: <aS_PYGilTIpuVZt8@google.com>
+References: <20251120234804.156340-1-namhyung@kernel.org>
+ <20251120234804.156340-4-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251120234804.156340-4-namhyung@kernel.org>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Nov 20, 2025 at 03:48:01PM -0800, Namhyung Kim wrote:
+> Add a new callchain record mode option for deferred callchains.  For now
+> it only works with FP (frame-pointer) mode.
+> 
+> And add the missing feature detection logic to clear the flag on old
+> kernels.
+> 
+>   $ perf record --call-graph fp,defer -vv true
+>   ...
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             0 (PERF_TYPE_HARDWARE)
+>     size                             136
+>     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|CALLCHAIN|PERIOD
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     mmap                             1
+>     comm                             1
+>     freq                             1
+>     enable_on_exec                   1
+>     task                             1
+>     sample_id_all                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>     defer_callchain                  1
+>     defer_output                     1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid 162755  cpu 0  group_fd -1  flags 0x8
+>   sys_perf_event_open failed, error -22
+>   switching off deferred callchain support
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-config.txt |  3 +++
+>  tools/perf/Documentation/perf-record.txt |  4 ++++
+>  tools/perf/util/callchain.c              | 16 +++++++++++++---
+>  tools/perf/util/callchain.h              |  1 +
+>  tools/perf/util/evsel.c                  | 19 +++++++++++++++++++
+>  tools/perf/util/evsel.h                  |  1 +
+>  6 files changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> index c6f33565966735fe..642d1c490d9e3bcd 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -452,6 +452,9 @@ Variables
+>  		kernel space is controlled not by this option but by the
+>  		kernel config (CONFIG_UNWINDER_*).
+>  
+> +		The 'defer' mode can be used with 'fp' mode to enable deferred
+> +		user callchains (like 'fp,defer').
+> +
+>  	call-graph.dump-size::
+>  		The size of stack to dump in order to do post-unwinding. Default is 8192 (byte).
+>  		When using dwarf into record-mode, the default size will be used if omitted.
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 067891bd7da6edc8..e8b9aadbbfa50574 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -325,6 +325,10 @@ OPTIONS
+>  	by default.  User can change the number by passing it after comma
+>  	like "--call-graph fp,32".
+>  
+> +	Also "defer" can be used with "fp" (like "--call-graph fp,defer") to
+> +	enable deferred user callchain which will collect user-space callchains
+> +	when the thread returns to the user space.
+> +
+>  -q::
+>  --quiet::
+>  	Don't print any warnings or messages, useful for scripting.
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index d7b7eef740b9d6ed..2884187ccbbecfdc 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -275,9 +275,13 @@ int parse_callchain_record(const char *arg, struct callchain_param *param)
+>  			if (tok) {
+>  				unsigned long size;
+>  
+> -				size = strtoul(tok, &name, 0);
+> -				if (size < (unsigned) sysctl__max_stack())
+> -					param->max_stack = size;
+> +				if (!strncmp(tok, "defer", sizeof("defer"))) {
+> +					param->defer = true;
+> +				} else {
+> +					size = strtoul(tok, &name, 0);
+> +					if (size < (unsigned) sysctl__max_stack())
+> +						param->max_stack = size;
+> +				}
+>  			}
+>  			break;
+>  
+> @@ -314,6 +318,12 @@ int parse_callchain_record(const char *arg, struct callchain_param *param)
+>  	} while (0);
+>  
+>  	free(buf);
+> +
+> +	if (param->defer && param->record_mode != CALLCHAIN_FP) {
+> +		pr_err("callchain: deferred callchain only works with FP\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> index 86ed9e4d04f9ee7b..d5ae4fbb7ce5fa44 100644
+> --- a/tools/perf/util/callchain.h
+> +++ b/tools/perf/util/callchain.h
+> @@ -98,6 +98,7 @@ extern bool dwarf_callchain_users;
+>  
+>  struct callchain_param {
+>  	bool			enabled;
+> +	bool			defer;
+>  	enum perf_call_graph_mode record_mode;
+>  	u32			dump_size;
+>  	enum chain_mode 	mode;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index f1a311637694ac0a..887c6ac6c49cc415 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1065,6 +1065,9 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+>  		pr_info("Disabling user space callchains for function trace event.\n");
+>  		attr->exclude_callchain_user = 1;
+>  	}
+> +
+> +	if (param->defer && !attr->exclude_callchain_user)
+> +		attr->defer_callchain = 1;
+>  }
+>  
+>  void evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+> @@ -1511,6 +1514,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	attr->mmap2    = track && !perf_missing_features.mmap2;
+>  	attr->comm     = track;
+>  	attr->build_id = track && opts->build_id;
+> +	attr->defer_output = track && callchain->defer;
 
-After we hit ftrace is killed by some errors, the kernel crash if
-we remove modules in which kprobe probes.
+I need to update this part like below:
 
-BUG: unable to handle page fault for address: fffffbfff805000d
-PGD 817fcc067 P4D 817fcc067 PUD 817fc8067 PMD 101555067 PTE 0
-Oops: Oops: 0000 [#1] SMP KASAN PTI
-CPU: 4 UID: 0 PID: 2012 Comm: rmmod Tainted: G        W  OE
-Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-RIP: 0010:kprobes_module_callback+0x89/0x790
-RSP: 0018:ffff88812e157d30 EFLAGS: 00010a02
-RAX: 1ffffffff805000d RBX: dffffc0000000000 RCX: ffffffff86a8de90
-RDX: ffffed1025c2af9b RSI: 0000000000000008 RDI: ffffffffc0280068
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed1025c2af9a
-R10: ffff88812e157cd7 R11: 205d323130325420 R12: 0000000000000002
-R13: ffffffffc0290488 R14: 0000000000000002 R15: ffffffffc0280040
-FS:  00007fbc450dd740(0000) GS:ffff888420331000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffbfff805000d CR3: 000000010f624000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- notifier_call_chain+0xc6/0x280
- blocking_notifier_call_chain+0x60/0x90
- __do_sys_delete_module.constprop.0+0x32a/0x4e0
- do_syscall_64+0x5d/0xfa0
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+	attr->defer_output = track && callchain && callchain->defer;
 
-This is because the kprobe on ftrace does not correctly handles
-the kprobe_ftrace_disabled flag set by ftrace_kill().
+Thanks,
+Namhyung
 
-To prevent this error, check kprobe_ftrace_disabled in
-__disarm_kprobe_ftrace() and skip all ftrace related operations.
-
-Reported-by: Ye Bin <yebin10@huawei.com>
-Closes: https://lore.kernel.org/all/20251125020536.2484381-1-yebin@huaweicloud.com/
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/kprobes.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index ab8f9fc1f0d1..17d451553389 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1104,6 +1104,10 @@ static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
- 	int ret;
- 
- 	lockdep_assert_held(&kprobe_mutex);
-+	if (unlikely(kprobe_ftrace_disabled)) {
-+		/* Now ftrace is disabled forever, disarm is already done. */
-+		return 0;
-+	}
- 
- 	if (*cnt == 1) {
- 		ret = unregister_ftrace_function(ops);
-
+>  
+>  	/*
+>  	 * ksymbol is tracked separately with text poke because it needs to be
+> @@ -2199,6 +2203,10 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  static void evsel__disable_missing_features(struct evsel *evsel)
+>  {
+> +	if (perf_missing_features.defer_callchain && evsel->core.attr.defer_callchain)
+> +		evsel->core.attr.defer_callchain = 0;
+> +	if (perf_missing_features.defer_callchain && evsel->core.attr.defer_output)
+> +		evsel->core.attr.defer_output = 0;
+>  	if (perf_missing_features.inherit_sample_read && evsel->core.attr.inherit &&
+>  	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
+>  		evsel->core.attr.inherit = 0;
+> @@ -2473,6 +2481,13 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+>  
+>  	/* Please add new feature detection here. */
+>  
+> +	attr.defer_callchain = true;
+> +	if (has_attr_feature(&attr, /*flags=*/0))
+> +		goto found;
+> +	perf_missing_features.defer_callchain = true;
+> +	pr_debug2("switching off deferred callchain support\n");
+> +	attr.defer_callchain = false;
+> +
+>  	attr.inherit = true;
+>  	attr.sample_type = PERF_SAMPLE_READ | PERF_SAMPLE_TID;
+>  	if (has_attr_feature(&attr, /*flags=*/0))
+> @@ -2584,6 +2599,10 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+>  	errno = old_errno;
+>  
+>  check:
+> +	if ((evsel->core.attr.defer_callchain || evsel->core.attr.defer_output) &&
+> +	    perf_missing_features.defer_callchain)
+> +		return true;
+> +
+>  	if (evsel->core.attr.inherit &&
+>  	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ) &&
+>  	    perf_missing_features.inherit_sample_read)
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 3ae4ac8f9a37e009..a08130ff2e47a887 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -221,6 +221,7 @@ struct perf_missing_features {
+>  	bool branch_counters;
+>  	bool aux_action;
+>  	bool inherit_sample_read;
+> +	bool defer_callchain;
+>  };
+>  
+>  extern struct perf_missing_features perf_missing_features;
+> -- 
+> 2.52.0.rc2.455.g230fcf2819-goog
+> 
