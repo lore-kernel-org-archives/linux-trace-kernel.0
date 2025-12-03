@@ -1,64 +1,64 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A913B35BDCA
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 16:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3200835BDB4
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 16:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764779016; cv=none; b=ibSEcbUI/iLoZqfwK5UvAVuys1iwLvUz4pSpMzbN4Ebs1JUYvuKwtVk8jgNJt3Yq7reYQlSn9MYlwIp6sKfc8qb1n9Ok+uWB9VLCiHHMULxILvSF2JSk+TtcmCWhZoinr5oX7EwDynTa0Qt0WloSZD8gq9fbx1WZ/TU7eYiMfZM=
+	t=1764779017; cv=none; b=KM4ds8aU++0XXTddk1gywqarMrj/eDf7j+fpNJHZnJxaqUcufQVdvPdfE2it2pcR47ewZzmSd+RQgYHcJtrXHBefQhFmCNCk3bzUkQdKPwJhurZddNoyqNn3ZLHBoBTj56RBIubn9Y7zGBgXyZgG8WN+CSdQ0MzFjGz+UfF/O9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764779016; c=relaxed/simple;
-	bh=XIwl+QOA198wftZNvu9IO4FLzrxnhpjs1uVff2B+sOY=;
+	s=arc-20240116; t=1764779017; c=relaxed/simple;
+	bh=dgbvFR+wx/KjNNenMZxNoDBs++lYjE6vJP+Uu1pxyP0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o8lGqUC6nPZnMdGWD5lPm7SxuvCgJv0z/6mcJ4qdgg+opyZksYkwQe6nSCUIFHFQHQvmjQdNKwW6cG73HVuePSa9H77FD8VDdjbvSzWqG/R44/TvnqdyG95k4SThlNOMl6ZlRzhgSGbH3dVSf1vz7ymVUwPUZRPRm9kobasnBCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfOAE2NJ; arc=none smtp.client-ip=209.85.128.182
+	 MIME-Version; b=A4s8GVDSRAZCcY9ZOS9A7Gpy3VK5R0ZmceuKDlKsGOjVrCXP81Nw6+1N79DJQikTVFJyDPCmN2d/ffZERYVWm3qzSGnPmabZqO+N/hVdODKgjVQXktNpuDvWBs7joEnTKMtBasbyzZOYeX/pr56TNHSzG5HNwMmPuCiiNnF3oSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AxtqqDcc; arc=none smtp.client-ip=74.125.224.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfOAE2NJ"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78a6c7ac38fso75378527b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 08:23:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxtqqDcc"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-640c857ce02so6431036d50.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 08:23:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764779012; x=1765383812; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764779013; x=1765383813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UuNgNlcfjsZ+Qe/j+fC/RN/pSpI7MUBa9s9mWM6ZH0E=;
-        b=HfOAE2NJepvcF3KQas+gk2xFSOkwKNFBrwETBnYtUiGrCsYEJsETi35VT2KAP1OFHk
-         xxgEOn8Vk2oLwtI3LjvxaywokyuxnzLC7WwHqcxJoU6niSdQQ2gunR1kw4mR5k5QQ959
-         O+Wt3vvSKs9eDHBUwZt0lW3wBAS56rM5XZsK6k1aQSvKLBjMsLAC9a4xCVDl8bc+Bpa0
-         xYcKwcQqSEXto+j7V2H1oiyM+SZjlO4TU/YFYSzOjPjS7EnudARg1rnzYArjRI3AVMTF
-         f7zErhCqiyALiyVe7RHdZq59JTqCDLpLLHBjG69J+pu/qsMBbt/IDWaUXiVE7rLnBlx5
-         F1zA==
+        bh=XTRUgw7WGLaikLRGDiMOA9ZeBlhI6lBDtpiU6az4ZI4=;
+        b=AxtqqDccChC3gI+725Z7hgLZ/dTfwtKfWInrVu+NdzWjrA2AcPXsdC9YqSQUYj81vS
+         iaHyegwPG6hpYXfG2ZCh6KvlFRH1HGFGT7sHlWySLEaH6m3DxsY3/n7fyIsdYIbKkQ22
+         lGNs3uUiWcMLKOrzTwiurOwnHavrNtoUnEKAhyn61NFPZOkrw+DGbrLX2UzfavKJU83I
+         PIjOIAFqL62x8zJhYmpPNVkYhvAjsKese1nWLRkNtE54IKBVcx5w3UER/0XD3rB8A+Dr
+         XEwZt33/5hTe3CKGzDXwffrJKnNNU0hK+tYy6TxrpxMj77DCH/G9IP9EEG37Du8gzQQ3
+         tzQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764779012; x=1765383812;
+        d=1e100.net; s=20230601; t=1764779013; x=1765383813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=UuNgNlcfjsZ+Qe/j+fC/RN/pSpI7MUBa9s9mWM6ZH0E=;
-        b=nzTA0Sq/QtGzN/e45bOzgoxu6ymAz253qpfxA1PK48T/Gjr+JOwGjOvpKhesB+MT+/
-         YJyadalfbJ1coluI98IH+xabrCAoFfm5jn2opZIXSFeZPxNqBXb4LshhiJ7wJI45U7YO
-         rl70Vn6zh7lNKkW1YjqcrHGt8S0LUerWdSKTE4W7Fjxz2yLyp9TxAh1z7ICmCmd9Mcq8
-         lyk+E6dtOOwx8aZ8moRFvL7+zAwWEYy8z09LmcL1E1lraWGeflK1WrBzcFVss9EnsnfO
-         i5GIOwSpDU41OZICJHpe+FnT3CaHMEgDgta2KaRRZeohG2N7jOhGFVTM4kMFlLCZ6QgT
-         NqiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQIGT9hUA13LSOLwk7qiOjGIdGL6e4UzRIQxJL/OA86Ep1t3gGk0gxPAs9gaunJpTiCMKFED4VCIBuowiX5uzG8MA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCVp4WSDFafsyZGjeHBIOgghCs/KbMNIIjoEr8UpwDpJ1+Vj1k
-	+2U486I3/5vu0vHjnt5oggOuC+SaWHh8ZOc6HB4QAFMk0BrFK3tMJ630
-X-Gm-Gg: ASbGncsjrEm1vWOeowr7mQsvHJm6G0NLC18t64hi/eEVlND5smLQYkVEPWMbwlQShsN
-	0V5rkew52OljrbT66rF/knv4DmiWJcaWsXZCLrsdz+spn/0YdLd79vEzJ4w93PwkZSbQop3P/6V
-	oAHkSu+4yqPUtQRpJvSqfJdiBhqiJMwrxUi/iXEyIBp9rkfL3fFHSqWxA2u3AXHSZf9WlG6i0Km
-	HntEmOyE18ej4dnPjg2CnHAa3UVZu+fL0JEmh1K9zKOsja63ZN3EXxL8bOfz2SjlNiVAQNBXOuL
-	lfQuRxfDpNqjCiBhsodg6HPLrcZLHW0cRDZIg9md7No9QKfjXdyNAFPHnFAKaEW+3F83ngkLMpE
-	gM5jAn0okEkktMUX4BC0oL6VWPciiOFbCnvy9OxjLrg+8gJNbbXomaoOsBYtmhBFwp6t9EbLNcl
-	wSsX3Cav8=
-X-Google-Smtp-Source: AGHT+IGgPWDFUFvsoh4Eu3h95/Sh/XNQIQM+FfTSI/plOCqZ3lQCrUg2djPKk5L/jEKtossHKw/vRg==
-X-Received: by 2002:a05:690c:23c4:b0:77f:9dae:34f0 with SMTP id 00721157ae682-78c0c2627a5mr21697617b3.46.1764779011881;
-        Wed, 03 Dec 2025 08:23:31 -0800 (PST)
+        bh=XTRUgw7WGLaikLRGDiMOA9ZeBlhI6lBDtpiU6az4ZI4=;
+        b=dH4dGlHqn5GPiGsjWReraye43Jx04PBeqyu6POhqP+kiHw6+gtjyE143UnHcOjdJpG
+         CiPR9PPu1gwk3lr0P5+xFc3hC7hrR6flPo9GKOWaFjvfBARCGoPFKGh6wtcZKthv6XgE
+         dNdJRV836pAnxL2EmxMfFaVpt9ivFtgeeFjsZga1NJKKuHYCEBwGINqVywl7+qTYYSi6
+         qT0sBQUiCc3P2lzXNuwk5gX2VsO6YA1k/CdVjxdIw13NXATHeHUkUh9L4ThvQOP6iD4X
+         uar1KOszGaZbmkAf5vOyDhhT+beanokRfqLUClZGTZSlefDWE+EHqGMmqD4fwEEP+WYp
+         lD0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW/NDiIITbWTzelbw91He1Wtt1ST2mPpP4Ikb8x/0ZX2Faevz1KsYK6iGrBp60xaH/A4I3g3zmBfvnbyM3BIOxlxFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyBlDnwvHubNUe8s0vqqb7UHUENjQlaFjxdpZcP/16rlge9Ja+
+	GyaZI1wd9XFWXbWPXYmsu9rENZ6SAnfMK2CkJTzM6TeGjuqEuyXCGu3c
+X-Gm-Gg: ASbGnctEMUVCyAKhcjVZ4HXybGi4WtJd2PgWfC0iE3CuJUPsykon0xQWGIIeokWL+OU
+	wqKwwPXbRkoUXQg8ieij/iKM72Q/O0CtYtC2Ii978YOMKStsYPIc1I8li8UC7FSV+Yh8IjzbcsY
+	erGfhsqhHdSY+UlRyClVIkJfdSdHw1dMe5wicnqrqYMPFhfS+YhPmtGAN3xdVpiMXeP4xTWHb+p
+	dDlkzWqH0IKKsp2zC0fhe3meORZAzKkPROu21yyoaUZqpp9saz5bv1v596hgc0L3Mh4rSCJWh1L
+	ameKS4Zbv8Eb+e925ZyARADV34CTY6KOPMO6mb+P89x6+XdS/fvJF1p60EytxcW9oB1u9dYpjY9
+	wEEUy6MbxIoGcXkwYeCeLVkN6IghUDXkdIr6x5p26WWavAWCRdi++FxfMSgYAZEuGINm8YdSbQc
+	JfShLgh8M=
+X-Google-Smtp-Source: AGHT+IGET334KxCtmx0dp1CAMPdeakUWlqKi8VbPsg55HeK6Rek4Uh9+JNYOdEve9S4FB5Tx8L5MGw==
+X-Received: by 2002:a05:690e:1442:b0:63e:3994:4ae3 with SMTP id 956f58d0204a3-6443703f028mr1928863d50.41.1764779012882;
+        Wed, 03 Dec 2025 08:23:32 -0800 (PST)
 Received: from localhost ([2601:346:0:79bd:3422:8bf9:97bc:b085])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad0d5fe1bsm74921787b3.15.2025.12.03.08.23.31
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad0c25ae5sm76024637b3.0.2025.12.03.08.23.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 08:23:31 -0800 (PST)
+        Wed, 03 Dec 2025 08:23:32 -0800 (PST)
 From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -84,11 +84,10 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	dri-devel@lists.freedesktop.org,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH v2 1/4] kernel.h: drop STACK_MAGIC macro
-Date: Wed,  3 Dec 2025 11:23:22 -0500
-Message-ID: <20251203162329.280182-2-yury.norov@gmail.com>
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Subject: [PATCH v2 2/4] moduleparam: include required headers explicitly
+Date: Wed,  3 Dec 2025 11:23:23 -0500
+Message-ID: <20251203162329.280182-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251203162329.280182-1-yury.norov@gmail.com>
 References: <20251203162329.280182-1-yury.norov@gmail.com>
@@ -98,62 +97,37 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The macro was introduced in 1994, v1.0.4, for stacks protection. Since
-that, people found better ways to protect stacks, and now the macro is
-only used by i915 selftests. Move it to a local header and drop from
-the kernel.h.
+The following patch drops moduleparam.h dependency on kernel.h. In
+preparation to it, list all the required headers explicitly.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
+CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 ---
- drivers/gpu/drm/i915/gt/selftest_ring_submission.c | 1 +
- drivers/gpu/drm/i915/i915_selftest.h               | 2 ++
- include/linux/kernel.h                             | 2 --
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ include/linux/moduleparam.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/gt/selftest_ring_submission.c b/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
-index 87ceb0f374b6..600333ae6c8c 100644
---- a/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
-+++ b/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
-@@ -3,6 +3,7 @@
-  * Copyright © 2020 Intel Corporation
-  */
- 
-+#include "i915_selftest.h"
- #include "intel_engine_pm.h"
- #include "selftests/igt_flush_test.h"
- 
-diff --git a/drivers/gpu/drm/i915/i915_selftest.h b/drivers/gpu/drm/i915/i915_selftest.h
-index bdf3e22c0a34..72922028f4ba 100644
---- a/drivers/gpu/drm/i915/i915_selftest.h
-+++ b/drivers/gpu/drm/i915/i915_selftest.h
-@@ -26,6 +26,8 @@
- 
- #include <linux/types.h>
- 
-+#define STACK_MAGIC	0xdeadbeef
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index 6907aedc4f74..ca7c8107c7c8 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -2,9 +2,14 @@
+ #ifndef _LINUX_MODULE_PARAMS_H
+ #define _LINUX_MODULE_PARAMS_H
+ /* (C) Copyright 2001, 2002 Rusty Russell IBM Corporation */
 +
- struct pci_dev;
- struct drm_i915_private;
++#include <linux/array_size.h>
++#include <linux/build_bug.h>
++#include <linux/compiler.h>
+ #include <linux/init.h>
+ #include <linux/stringify.h>
+ #include <linux/kernel.h>
++#include <linux/types.h>
  
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5b46924fdff5..61d63c57bc2d 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -40,8 +40,6 @@
- 
- #include <uapi/linux/kernel.h>
- 
--#define STACK_MAGIC	0xdeadbeef
--
- struct completion;
- struct user;
- 
+ /*
+  * The maximum module name length, including the NUL byte.
 -- 
 2.43.0
 
