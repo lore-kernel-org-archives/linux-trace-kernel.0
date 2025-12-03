@@ -1,177 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f65.google.com (mail-yx1-f65.google.com [74.125.224.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA04158535;
-	Wed,  3 Dec 2025 08:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F322BEC2C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 09:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764751667; cv=none; b=opf7uMg/Q0XEYcu2Q0K8GkKGYdAyzDjRWuqR9qKKvV4LoZP44aE0rlSUne2yB4PR7L68GhFi8DiH6JTnMzuSUiTlGdwpEHp7Rzf67dbDDLXqerd/YhGOfKG5F2W56a6qA/GUss06un4/gtBJdod5lIhxa32Loxy+G601CsSyPac=
+	t=1764753369; cv=none; b=AhyNOMwS6+VkVdQZh2HrX7nDsCvLAryCUgYiXKsweZkexjkAu9qt+imtNJOdfv0VaDPcmg44cwa0BElwOLV9zjFNkokuNL1S+Sl3BCgFVWkooey8K9FWB2V46uUVICYz8h4qBzNN9328vWVPgBLtCd36WSOEgXUn+5XEyUf+UB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764751667; c=relaxed/simple;
-	bh=zZggOqyqpCFVEMcM9cHwsXefF4PRk8oAmhf5XqTg3nE=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=oKLluY3tNtlPeSEX0j0ISIv61Vdul/Y3m26PVqv3nDAgu6xza/YCV1ggveGDCy6CKShvIf22FzvA3kOHnEcDgQs/Kq+yMPGBu1IdqaJZiLRerWxgFwDcBNfpKdkK0E/pkJu+23SkUBE6HASLpSwJ5bsxHCIEeg4Qtv9OshTATVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hl5QYGaY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764753369; c=relaxed/simple;
+	bh=PJbfPpXQ1Wl4+h8UE/xMewyCcGHvABOB4dS4pDUJ9yI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WQZOZRLXGx5wXbA38LPrO1DW0mE5UCSb/dGmw35km9i0eS/zHMKOFIkckV3fdQrvX6x1jIEeJbn42IcghqtJ2rcXlzYbXpOkqDdDsDTBA+/7JliFA2a2DqsG2cb1+O4n3mJaqDGkyJOIncfxXfThzLPOTit+ZanZrSVr2DtY5/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ltbo4otk; arc=none smtp.client-ip=74.125.224.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hl5QYGaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF6BC19422;
-	Wed,  3 Dec 2025 08:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764751667;
-	bh=zZggOqyqpCFVEMcM9cHwsXefF4PRk8oAmhf5XqTg3nE=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=Hl5QYGaYXkUGRQCpvqRKGGxwk72j/uZIW+2KInS5UiITtjd7fhh0KOWuqZkkqC0ch
-	 RPOI7nYQr7R9cfdzxPZhjEoRat5tGEzxjZwv/RzOG9NLmbm2dtmtU6XNak89b59mqv
-	 5TP7FnB8Z7P5GdMIMNghZcum0ZXDHrcnAUpMNboZR7sejeYjK+X8wWh9IncPmV7Mg9
-	 nvbUgWWNnuleBsyBvknXHohHCAtLX0+IFgeQhnf0oJ9k+XZDmlIDhJfVvdxcG2PTfq
-	 Pz96eqw+7b+h5fgUsAZyut+31r9AmaG2/I6KYhfJmLZLQLY5x4rpA8QnmBwqSkqmvL
-	 xhdX17i0JyZQA==
-Content-Type: multipart/mixed; boundary="===============9160476271581551712=="
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ltbo4otk"
+Received: by mail-yx1-f65.google.com with SMTP id 956f58d0204a3-63f96d5038dso5648925d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 01:16:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764753363; x=1765358163; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zvn9HrRJdFSvUw/pGaMaIOGegy9462R/6im+1ui/l3U=;
+        b=Ltbo4otkpZ6vrWK80nWypID3gJBW1UaBq7N/d3axa+G5fAIzWwGsROXgf+T6BsGmE9
+         YpAHb8IIdJwsUtSk4uJCMLL5WhFKZinwV2xNBLIRDDfBbeOBPWxODB586r32gPC9wYJD
+         gL+qRzidaAm4Zz4wpVfjnMmC0jHyz4LKOd5VM3wFIq6ljki5jGZP88T1mdonIvU+j9GM
+         pNgvfFGUsm8EJ0RzZVEsAuxD8iy/amNeyb3B+YfydkTS8qaHRgN9iYAfrWiXSQ8ckOe6
+         TclgjUaSbBrI+HayVX80bcwO210hGJKSNvz3+/br3IvkyuOA5XB5eH+hEZi/bAOQ+Bq9
+         g+7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764753363; x=1765358163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Zvn9HrRJdFSvUw/pGaMaIOGegy9462R/6im+1ui/l3U=;
+        b=aBs58gMuzAMO/VWgcmkE+X9WkVqWN5pl3TwNn43fuNDT43Q0guV5xVwTPW11obq3uQ
+         9h/K1hSmki/7d4rEVB6sDWpaxlRt0gMgl00OLe8HYkSUCNkiszhiOf122DgTf3N7YBa6
+         vS2haV7RH8NkxUhTEar55qxfxxp8Cx4PcGP7AyJtNDWM/70pKH9Dyq56FJzhA9OuAtyj
+         sAB6SfWAgLdbe+/FgBM+tqqOHEidYPR7fF2RcebhEewhthe8PCO527axYU4kCM6W6sGr
+         KwkTWJLi/DJC9XQpwACSzWl1CVEqZoqX3g+Wg9V/8/hrJjJVIEsSTesj5R+PXXVxRFKf
+         P41w==
+X-Forwarded-Encrypted: i=1; AJvYcCVQkTCmbe5yBlNERcUNtbcVtoFzDSIspOQXQUTSwNOOqwWYXqjUkvlrFmwGIO7vOX7AMHSrrBhjsanmUMdgDzAJe1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoXBEYVp+GdMoja/IVwdAIgdXwYDib4s2aSSBBCnKqUidKMsWq
+	2GYeWfDuMS+tk/E3/mKDJG39rw2jocNHtqoWGZdRzBGlr6DAJ+rjddNNIhMGTgHkI93nIT+nVyh
+	gfacioZ5Ih8u0JqSbvdSkyNo0y/KyLYw=
+X-Gm-Gg: ASbGnctLdGcdL0bguRTi8YheMqGqglVreDQELB09km+DiBxMy7r3ELDcszrLuNEdoV7
+	05j2Xj9Fb6JSSTlGjIlKicpUcJ/S4LicjtqwErBSnSlFTlX3RZzah6UjaEogu219oklaPD4j0ez
+	XsglFLAs3S0jGmlAmCFrWhHD3i+EwH6v2dwoblZgnX3Fle0uj0Ask/9jJAvfw+IT25dOboWZj/Q
+	fnl8hRXvnPfaxtHyaCsK2Aa4VMZjA87XKO2kgTyZDFPHB2IjLPrJQJ573pVRKFdr6iqLrI=
+X-Google-Smtp-Source: AGHT+IGzwDFZDWme46YAnVAYHhM1JFHKL7Q/q8FoGtyn85xl72liVPRXP4MJCYeiDce1hUNnHIbvdVJiL9cFbDX/sAY=
+X-Received: by 2002:a05:690e:120e:b0:63f:b545:9960 with SMTP id
+ 956f58d0204a3-64436f6da37mr1340803d50.11.1764753363482; Wed, 03 Dec 2025
+ 01:16:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d0d8e0d78f614eb8b443772b50fb36093d48c7f43374316246ad3ad836b5c9ce@mail.kernel.org>
-In-Reply-To: <20251203082402.78816-5-jolsa@kernel.org>
-References: <20251203082402.78816-5-jolsa@kernel.org>
-Subject: Re: [PATCHv4 bpf-next 4/9] ftrace: Add update_ftrace_direct_add function
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,rostedt@kernel.org,revest@google.com,mark.rutland@arm.com
-Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-arm-kernel@lists.infradead.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,menglong8.dong@gmail.com,song@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed,  3 Dec 2025 08:47:45 +0000 (UTC)
+References: <20251203082402.78816-1-jolsa@kernel.org> <20251203082402.78816-2-jolsa@kernel.org>
+In-Reply-To: <20251203082402.78816-2-jolsa@kernel.org>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Wed, 3 Dec 2025 17:15:52 +0800
+X-Gm-Features: AWmQ_bmG0tIamKx5RfhXBBYAUrUfUZzFDuU-aYWqrSdiQGfV8mSCyiAygQcVpgo
+Message-ID: <CADxym3awpEbMiSKE5aDcyd2Cg1Cdo7++SLAMSuZmaggt3BSbUA@mail.gmail.com>
+Subject: Re: [PATCHv4 bpf-next 1/9] ftrace,bpf: Remove FTRACE_OPS_FL_JMP
+ ftrace_ops flag
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>, 
+	Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---===============9160476271581551712==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-
+On Wed, Dec 3, 2025 at 4:24=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> At the moment the we allow the jmp attach only for ftrace_ops that
+> has FTRACE_OPS_FL_JMP set. This conflicts with following changes
+> where we use single ftrace_ops object for all direct call sites,
+> so all could be be attached via just call or jmp.
+>
+> We already limit the jmp attach support with config option and bit
+> (LSB) set on the trampoline address. It turns out that's actually
+> enough to limit the jmp attach for architecture and only for chosen
+> addresses (with LSB bit set).
+>
+> Each user of register_ftrace_direct or modify_ftrace_direct can set
+> the trampoline bit (LSB) to indicate it has to be attached by jmp.
+>
+> The bpf trampoline generation code uses trampoline flags to generate
+> jmp-attach specific code and ftrace inner code uses the trampoline
+> bit (LSB) to handle return from jmp attachment, so there's no harm
+> to remove the FTRACE_OPS_FL_JMP bit.
+>
+> The fexit/fmodret performance stays the same (did not drop),
+> current code:
+>
+>   fentry         :   77.904 =C2=B1 0.546M/s
+>   fexit          :   62.430 =C2=B1 0.554M/s
+>   fmodret        :   66.503 =C2=B1 0.902M/s
+>
+> with this change:
+>
+>   fentry         :   80.472 =C2=B1 0.061M/s
+>   fexit          :   63.995 =C2=B1 0.127M/s
+>   fmodret        :   67.362 =C2=B1 0.175M/s
+>
+> Fixes: 25e4e3565d45 ("ftrace: Introduce FTRACE_OPS_FL_JMP")
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/ftrace.h  |  1 -
+>  kernel/bpf/trampoline.c | 32 ++++++++++++++------------------
+>  kernel/trace/ftrace.c   | 14 --------------
+>  3 files changed, 14 insertions(+), 33 deletions(-)
+>
 > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 8c034b028..eb60d971e 100644
+> index 015dd1049bea..505b7d3f5641 100644
 > --- a/include/linux/ftrace.h
 > +++ b/include/linux/ftrace.h
+> @@ -359,7 +359,6 @@ enum {
+>         FTRACE_OPS_FL_DIRECT                    =3D BIT(17),
+>         FTRACE_OPS_FL_SUBOP                     =3D BIT(18),
+>         FTRACE_OPS_FL_GRAPH                     =3D BIT(19),
+> -       FTRACE_OPS_FL_JMP                       =3D BIT(20),
 
-[ ... ]
+Yeah, the FTRACE_OPS_FL_JMP is not necessary. I added
+it in case that we maybe want to implement such "jmp" for
+ftrace trampoline in the feature. But it's OK to remove it now.
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 84aee9096..1660a8754 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-
-[ ... ]
-
-> +int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash)
-> +{
-> +	struct ftrace_hash *old_direct_functions = NULL, *new_direct_functions = NULL;
-> +	struct ftrace_hash *old_filter_hash = NULL, *new_filter_hash = NULL;
-> +	struct ftrace_func_entry *entry;
-> +	int i, size, err = -EINVAL;
-> +	bool reg;
+>  };
+>
+>  #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 976d89011b15..b9a358d7a78f 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -214,10 +214,15 @@ static int modify_fentry(struct bpf_trampoline *tr,=
+ u32 orig_flags,
+>         int ret;
+>
+>         if (tr->func.ftrace_managed) {
+> +               unsigned long addr =3D (unsigned long) new_addr;
 > +
-> +	if (!hash_count(hash))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&direct_mutex);
-> +
-> +	/* Make sure requested entries are not already registered. */
-> +	size = 1 << hash->size_bits;
-> +	for (i = 0; i < size; i++) {
-> +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> +			if (__ftrace_lookup_ip(direct_functions, entry->ip))
-> +				goto out_unlock;
-> +		}
-> +	}
-> +
-> +	old_filter_hash = ops->func_hash ? ops->func_hash->filter_hash : NULL;
-> +	old_direct_functions = direct_functions;
-> +
-> +	/* If there's nothing in filter_hash we need to register the ops. */
-> +	reg = hash_count(old_filter_hash) == 0;
-> +	if (reg) {
-> +		if (ops->func || ops->trampoline)
-> +			goto out_unlock;
-> +		if (ops->flags & FTRACE_OPS_FL_ENABLED)
-> +			goto out_unlock;
-> +	}
-> +
-> +	err = -ENOMEM;
-> +	new_filter_hash = hash_add(old_filter_hash, hash);
-> +	if (!new_filter_hash)
-> +		goto out_unlock;
-> +
-> +	new_direct_functions = hash_add(old_direct_functions, hash);
-> +	if (!new_direct_functions)
-> +		goto out_unlock;
+> +               if (bpf_trampoline_use_jmp(tr->flags))
+> +                       addr =3D ftrace_jmp_set(addr);
 
-Can new_filter_hash leak here?  If the second hash_add() fails but the
-first one succeeds, update_ftrace_direct_add() will goto out_unlock
-with new_filter_hash pointing to allocated memory.  At out_unlock, only
-old_filter_hash gets freed, not new_filter_hash.
-
-register_ftrace_direct() handles this by freeing new_hash on error:
-
-    out_unlock:
-        mutex_unlock(&direct_mutex);
-
-        if (free_hash && free_hash != EMPTY_HASH)
-            call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-
-        if (new_hash)
-            free_ftrace_hash(new_hash);
-
-        return err;
+nit: It seems that we can remove the variable "addr" can use
+the "new_addr" directly?
 
 > +
-> +	rcu_assign_pointer(direct_functions, new_direct_functions);
+>                 if (lock_direct_mutex)
+> -                       ret =3D modify_ftrace_direct(tr->fops, (long)new_=
+addr);
+> +                       ret =3D modify_ftrace_direct(tr->fops, addr);
+>                 else
+> -                       ret =3D modify_ftrace_direct_nolock(tr->fops, (lo=
+ng)new_addr);
+> +                       ret =3D modify_ftrace_direct_nolock(tr->fops, add=
+r);
+>         } else {
+>                 ret =3D bpf_trampoline_update_fentry(tr, orig_flags, old_=
+addr,
+>                                                    new_addr);
+> @@ -240,10 +245,15 @@ static int register_fentry(struct bpf_trampoline *t=
+r, void *new_addr)
+>         }
+>
+>         if (tr->func.ftrace_managed) {
+> +               unsigned long addr =3D (unsigned long) new_addr;
 > +
-> +	if (reg) {
-> +		ops->func = call_direct_funcs;
-> +		ops->flags |= MULTI_FLAGS;
-> +		ops->trampoline = FTRACE_REGS_ADDR;
-> +		ops->local_hash.filter_hash = new_filter_hash;
-> +
-> +		err = register_ftrace_function_nolock(ops);
-> +		if (err) {
-> +			/* restore old filter on error */
-> +			ops->local_hash.filter_hash = old_filter_hash;
-> +			old_filter_hash = new_filter_hash;
-> +
-> +			/* cleanup for possible another register call */
-> +			ops->func = NULL;
-> +			ops->trampoline = 0;
-> +		}
-> +	} else {
-> +		err = ftrace_update_ops(ops, new_filter_hash, EMPTY_HASH);
-> +		/*
-> +		 * new_filter_hash is dup-ed, so we need to release it anyway,
-> +		 * old_filter_hash either stays on error or is released already
-> +		 */
-> +		old_filter_hash = new_filter_hash;
-> +	}
-> +
-> +	if (err) {
-> +		/* reset direct_functions and free the new one */
-> +		rcu_assign_pointer(direct_functions, old_direct_functions);
-> +		old_direct_functions = new_direct_functions;
-> +	}
-> +
-> + out_unlock:
-> +	mutex_unlock(&direct_mutex);
-> +
-> +	if (old_direct_functions && old_direct_functions != EMPTY_HASH)
-> +		call_rcu_tasks(&old_direct_functions->rcu, register_ftrace_direct_cb);
-> +	if (old_filter_hash)
-> +		free_ftrace_hash(old_filter_hash);
-> +
-> +	return err;
-> +}
+> +               if (bpf_trampoline_use_jmp(tr->flags))
+> +                       addr =3D ftrace_jmp_set(addr);
 
+And here.
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+Thanks!
+Menglong Dong
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19887401362
-
---===============9160476271581551712==--
+> +
+[...]
+>
