@@ -1,74 +1,85 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2834C2E8DFE;
-	Wed,  3 Dec 2025 22:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884832D6E53;
+	Wed,  3 Dec 2025 22:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764801911; cv=none; b=Qb+HdvPRXz0R5oZmQEVxFllptnHBJnrJl5ldr6DZybiuq7ZByRrkSg9eEAUXHJoXr4RpH/uZ2V+EHABd7aOcNWYtU2Tbi47N9mBPe1PsJa6XmEBDA5fr8i8iEVwGYP0+vhkVJbZ9SasyLB43GLO12L7UK6uaRVSGMwHlk1SLrNY=
+	t=1764802709; cv=none; b=XBakRRR3w5BboB6XkK0xt6jt5tjTpsH/lncmo4YkUwAMbYFV1gHrDssmmuaofCyjeAvosx4ADhH2HEXsKpNyc0vEK0L4gqLr0zN6YF9E8MUMYsfCKg3TBUALl71BHyIQMy4jvbxKpnRJUQ3t7B93rbv3vFrRdHStEkcMH7bXnU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764801911; c=relaxed/simple;
-	bh=eXCSv0usm+tDtU6Ofa6pcuUK3MO31ClbMcy0+tHlTBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pn+JHhzJcE549fpkgAY9Dqv8Q2EeeUOdlSd8GUr5d9osLyXgz4/+U7Xo1PUlx3Y2aXVM+DZBkrLkfntLB8dYanKXaYbmaNrAJyYTugKDqbO4BYGVI9wWpaz308DAnIgX926/mKwK+Scs5wjXDAddSYHZagotTf5tl8jhAfFdJT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 37F3913BAEF;
-	Wed,  3 Dec 2025 22:45:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 004E18000F;
-	Wed,  3 Dec 2025 22:45:01 +0000 (UTC)
-Date: Wed, 3 Dec 2025 17:46:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tom Zanussi <zanussi@kernel.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+	s=arc-20240116; t=1764802709; c=relaxed/simple;
+	bh=8ryuxdH6/u58lXULrYF2Iok6qNH5lReSAFGP6YOtwrg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ByMgfq3q8s5FId8+/Tpdn43daZcZz4kHyTlOhyFa1U7BM1U+xKe7J7g7u58ced1GDmTdapiQ6XhcViZ0DRH5sg/1iM64HMW4lKx9wE4e5Duvzvy5ntF5vmhCpLG3fjYEa8JmH9eQEOkdwYOpNhT6XgY6dxNM2pue/raD86Rlens=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qW7fJX7f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qW7fJX7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A514C4CEF5;
+	Wed,  3 Dec 2025 22:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764802709;
+	bh=8ryuxdH6/u58lXULrYF2Iok6qNH5lReSAFGP6YOtwrg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=qW7fJX7fJFNo5/g/EYiXNtRQCMSR+Hkgg9ItuAZjmjobqikYplnTvfeTHH5G8Kdes
+	 Ayn/XklbTZ6E9SlRSweECh3+zlCHIrmBdlCBr92C//98kQjoBzElHHcxkHuCw1J2Ah
+	 9Pene3pn8eCEKnxPgcjags8zOH3H6uzon3sggKUx4sYZuRXOpDt0TvnTTgR0N2Tcnz
+	 X29wak4G8ApQozVr9augLvuDtyzv30A3oGGETipHGB+Q1jrxDmQ2Jg5/L0BoJt3+0s
+	 ExZfDmR9H2lIvQ+JTAghXyV4ykh7JeFQyeYNum0AVMOFKPeYho/5uzTKzEreo4iH0K
+	 cEM/PzKECy0bw==
+Message-ID: <a23f604e791cee60e24efb0f415cab60d1de6176.camel@kernel.org>
 Subject: Re: [PATCH v2 3/3] tracing: Use strim() in trigger_process_regex()
  instead of skip_spaces()
-Message-ID: <20251203174604.0405a90d@gandalf.local.home>
-In-Reply-To: <9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
+From: Tom Zanussi <zanussi@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+  Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Date: Wed, 03 Dec 2025 16:58:27 -0600
+In-Reply-To: <20251203174604.0405a90d@gandalf.local.home>
 References: <20251125214004.396482401@kernel.org>
-	<20251125214032.323747707@kernel.org>
-	<9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 <20251125214032.323747707@kernel.org>
+	 <9393741d90fff46709a2c9b0b04f406d5245d000.camel@kernel.org>
+	 <20251203174604.0405a90d@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 004E18000F
-X-Stat-Signature: gkpa6557tqneks1qfj4th17hgc8ao4xz
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Vc6pAhPafw9mJOzg4zIWwZmg6udiFaNI=
-X-HE-Tag: 1764801901-16849
-X-HE-Meta: U2FsdGVkX1/hGTrXpDCHDrkcphMxwlVVyYyG7clUbNk1dDOZL+ZrzvWa3/aYYqDQ0ibgbIX+lvVoCDSCs45zeropLoA7flH7OnEMbsBbg0ebgMNswfIQ/HcSf9iv6GAEsz1ozJNcr5QOczgAs7E9Upvpa93kVumDAcf0wzmff/q/TcQ2SgSc39cFmLk5RaAPGBzeNxazN9kkEsL4LFAogSIQuNv51aswHB5/C8vEj8fA4dPX3DVFEgNIl+CBwN3TVIPhGyK7lBCjP63Y7F3xKgu6NJweQtifZSGtn1ARVPLHyLMhu/bUjUJVkwMCBVB+THS3KQ8VC/pjQe9YWXGZfTlkroZnOkJokiCcl/98r981iImZjr136vP4bwd8S8rMUAFOhN8C1fZRXmadF6LI0A==
 
-On Wed, 03 Dec 2025 16:40:04 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+On Wed, 2025-12-03 at 17:46 -0500, Steven Rostedt wrote:
+> On Wed, 03 Dec 2025 16:40:04 -0600
+> Tom Zanussi <zanussi@kernel.org> wrote:
+>=20
+> > > Remove the strim() from event_trigger_regex_write() and have
+> > > trigger_process_regex() use strim() instead of skip_spaces(). The buf=
+f
+> > > variable is not passed in as const, so it can be modified.
+> > >=20
+> > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>=C2=A0=
+=20
+> >=20
+> > Looks good to me.
+> >=20
+> > Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+>=20
+> Thanks for all the reviews, but I already did the pull request ;-)
+>=20
+> Although it hasn't been accepted yet and there's always a chance Linus ma=
+y
+> have an issue with one of the commits (I had a lot of commits this time,
+> affecting various aspects of the code, but couldn't use topic branches du=
+e
+> to too many conflicts). If it is rejected, I'll add your reviewed-by tags=
+.
+>=20
+> -- Steve
 
-> > Remove the strim() from event_trigger_regex_write() and have
-> > trigger_process_regex() use strim() instead of skip_spaces(). The buff
-> > variable is not passed in as const, so it can be modified.
-> > 
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+No problem, my fault for being so slow to get to these. :-/
 
-Thanks for all the reviews, but I already did the pull request ;-)
-
-Although it hasn't been accepted yet and there's always a chance Linus may
-have an issue with one of the commits (I had a lot of commits this time,
-affecting various aspects of the code, but couldn't use topic branches due
-to too many conflicts). If it is rejected, I'll add your reviewed-by tags.
-
--- Steve
+Tom
