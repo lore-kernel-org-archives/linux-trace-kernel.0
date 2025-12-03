@@ -1,103 +1,95 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03DD305062
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 14:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AD730276F;
+	Wed,  3 Dec 2025 14:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764773596; cv=none; b=shWYDKXBF7UNWSVU13BN7hXMNMBwbzL1JefMLiGrr//I+XJfLRjBTzKKaBlgLVYCOsGaTN53tXcDFTD9jkNtLVu/ENK9yOaHOmZmaYIC2ux1BauHg57RvmZ4sJ7jXdZJ4pi7aoz4WabcKwWt10RFug67PyLgQLHmOYeoPf5Yj6c=
+	t=1764773750; cv=none; b=FkEBwM9GYmurPsJi6YIhMHVM4PA7S1X2x+YILxr8QOWRpJ/aYLkwKQeLf5y7pSMXjmRf2FM2T20ZWwDcJZb66gAJpdybsdsDdzmSkblRAUfW8G2W16lO56REMEZu8mT3oLeABCTOYowJzM+uuP7diiVD+NIwLf4p6eg7J2VuXyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764773596; c=relaxed/simple;
-	bh=yjrx4L3sajJjImVzdxgmjxLJPe1GoPkykXthqiJtIZQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZGIm4/Mj1FY2+xH4bU32GFDRlUeuXrgdHeGjRxC+pkxsI1cieiNDSax5QKqNpHJr/+yYDb8szoOtjrEENXY4EvLE5NlgSohy/V8/VmVazQw0nEUGvNmJe+jPnPNbvbG6KS5xyakYE8zYt1sqLj/ZAdsYZoANo9ttciumh3CwSzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gco5qMX8; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gco5qMX8"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7c750b10e14so2436043a34.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 06:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764773594; x=1765378394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AhFDBzldCBSrNy/0lQvoy7nCwrmDD18XBqrD7SpXNaY=;
-        b=gco5qMX8NymPg3B4+FjFsPChtLnwG9r36nFQkkZSnx1A5ZRkwjROourvvOGVluwEMk
-         d78HYLUhZujq+ikkVhyK6TQUKnrLX2h5dznix/fEpEg2bbHLLHZnqcIqERH5Eol/D01Z
-         XGbq7PWqlb3GBf4X9ODFQwhxDWpnmCZPFYhODsOyUkcFCsEBHfbWx9riKZ8VRWPZq3cp
-         n/28yyzX7NAJwdssZbg89ganx1s0nZovWlsIn2H5nSwYitb1VhRDbbsKtfxAj+fzU4iD
-         st1n+lipsRksKu986cA2WQYBaSjJNJD8F2JmnSNam8UIDpHqMs9MzXmZv3DlX9pJsOBb
-         Fx/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764773594; x=1765378394;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=AhFDBzldCBSrNy/0lQvoy7nCwrmDD18XBqrD7SpXNaY=;
-        b=ikJnaxFNO5w7bGr4kbRTS4yYtKUllqhNkucuEhPIjSfqWiNIeJ+RX/S+Ldq3aRsQ7T
-         ngPOgNcNGECMlrJCOWBaS8gdq7ESAKnE6ogiIwVU18mDCdyPYszWml9pZHP+mgKVFOOk
-         94XScnO3gfQt1F2ve7lw7fnFAYROTACcT7HrXDGKCvYRgL0qMwj31Dife6RXDFqnqq79
-         2aJa6EhA3mJfOsiJTfF/u9udUgN9N2EqIlVC5otZJVF/vveY0vHSn0n6oQaQ4ktCcapl
-         Q4VPR5w/pXIOZGL004xD5P22HZy+Tk8uS3Gr5/lJv+LyyBayBgOPpFJENVA8G8DZbyMa
-         ol8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHdjFeQlvLqsU3R7dKL53OW6MlH6k0r5A99akg80avgnHsGdS8u9b+KHkORwKg9xuagRT+pDWsswu/CTxGJmIF/Zs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9VsrVgvCx8y8le1Vq8zEYS/nkxdC0+kcJGGc6M7HUV/iaaEPj
-	+aSbX2sdk4C+9l/KJNU1MO/J1WxCl0wubAo+GoI1+VpFF9+7CKUUqhppSXeUFX3Kj0I=
-X-Gm-Gg: ASbGncvKCAe91oMI9xfJ07eDg4jtfyOX+lapNUPDd56JN1oUFyKFEQ/PxVHwJJZwDui
-	u81Bbvg7h4WfISDO0wkFy5jvn0V+A49LoHWNk/OflXEc5GmjhbN+kdZV3ttiIURRTHbYz2DxzEG
-	FGvshv9L2QhXoYcNasBN0M9YJvM9yG7ltSDBDDqR0OacQ8yTsA75wrO2I0RzqQ5zkOEtgAyMKLq
-	b4vJoOj6TsXjrgAU6VtSXyfw2O8QOGLaQmhJtZ6jaLgiLGcdjSqlpsQ07VpjnaMLH2kc6KnvW3R
-	AFWoYIkw1mS9wrMaK1nITI6J3wcb2F9mvHTBhx4RazqkmawJ3BRV30uHl+97CMRjCZYPD9DKlly
-	LduUG7vxxHZYhS4Dw3kBcbH3tGF+O+P6ztEiyvdcDyoIUiemfH6sgG6d94T17cPH6dOhLIs4vcK
-	kh5g==
-X-Google-Smtp-Source: AGHT+IHyFhnXZ6FXNeMNq1Eg87AclDDvm19pylcYCAjLrlhFQgzujOLB2bzSm/z8cgcDPmQKgMAzAw==
-X-Received: by 2002:a05:6830:4103:b0:7c7:63b6:89d3 with SMTP id 46e09a7af769-7c94db2e9e3mr1502956a34.19.1764773593819;
-        Wed, 03 Dec 2025 06:53:13 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-65933cc55bfsm5953139eaf.9.2025.12.03.06.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 06:53:13 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20251202182132.3651026-1-csander@purestorage.com>
-References: <20251202182132.3651026-1-csander@purestorage.com>
-Subject: Re: [PATCH] io_uring/trace: rename io_uring_queue_async_work event
- "rw" field
-Message-Id: <176477359283.834078.538771620775282374.b4-ty@kernel.dk>
-Date: Wed, 03 Dec 2025 07:53:12 -0700
+	s=arc-20240116; t=1764773750; c=relaxed/simple;
+	bh=8WjwNgZcsCaBu7llkaMXOeTnLTeJqD7ZSfXq/jnsmBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=itn9Bb6HJXYkt4nZXdd0f3PGtDvr9aOxlk20XKauRM/YK1j6L7xUL4nZHUF3voIlzahDaTzopvGnv5Fj70e+sq8NoWFm/cxL3Tqi4HIPl0XWzdjqyd688O6HAfhViyCEMz4zae076/hLXTI2qam9YWXG/uwb+Xi0aWyQbiMfDBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id D9490C041F;
+	Wed,  3 Dec 2025 14:55:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id EFE6120016;
+	Wed,  3 Dec 2025 14:55:37 +0000 (UTC)
+Date: Wed, 3 Dec 2025 09:56:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Ye Bin <yebin@huaweicloud.com>,
+ Naveen N Rao <naveen@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ yebin10@huawei.com
+Subject: Re: [PATCH] kprobes: avoid crash when rmmod/insmod after ftrace
+ killed
+Message-ID: <20251203095640.7a4fda6b@gandalf.local.home>
+In-Reply-To: <176473947565.1727781.13110060700668331950.stgit@mhiramat.tok.corp.google.com>
+References: <176473947565.1727781.13110060700668331950.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+X-Stat-Signature: xw5ri1z8siz99zsindwo3azqkmyj81ro
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: EFE6120016
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18PQQuCkPZsrDD45EcZfaCkfLjqThTV++c=
+X-HE-Tag: 1764773737-919111
+X-HE-Meta: U2FsdGVkX1+i/QapEdPNROyaQNxYW1Q58g6sKTit57s+Lzv+6OBdgqajZvA9aTdmaTQauI7s4hrQLs2341D4xxAtA/oREghlvE3JPw7JrX8iV18wuOA1I1vE68d8qFvqGg6hDcI3lnZFhOztpjFMjCl5kYt5jmqPJn9mDEY6BxXmWkr/UVDtLU+mLRGcOBw5jWIA5epKEpNLEhuIao2VDm0jNXqloTS3Z5oEk/vbEgL4CFOisxBW1cwR0Nu8OcTortdovakiapt1wbi89t+XBKt3V1fuV/l/T1t1tvU1YBYsbknEjRWWDFCJfqQxI3XiVU5IzdBbTIivJmAIuutlu6mvCDpo+ld7BnjqrK+jr+Q5v/sLwIU9Efe8gixbDtK/4D8IeklkOubhocqO2Zdt6OhZa5RSAGsijrD5W9tPVlxHBR3wOuZJu9zQ1kOlo9Ii4/yj4JPLNQw=
 
+On Wed,  3 Dec 2025 14:24:35 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-On Tue, 02 Dec 2025 11:21:31 -0700, Caleb Sander Mateos wrote:
-> The io_uring_queue_async_work tracepoint event stores an int rw field
-> that represents whether the work item is hashed. Rename it to "hashed"
-> and change its type to bool to more accurately reflect its value.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
+> After we hit ftrace is killed by some errors, the kernel crash if
+> we remove modules in which kprobe probes.
 > 
+> BUG: unable to handle page fault for address: fffffbfff805000d
+> PGD 817fcc067 P4D 817fcc067 PUD 817fc8067 PMD 101555067 PTE 0
+> Oops: Oops: 0000 [#1] SMP KASAN PTI
+> CPU: 4 UID: 0 PID: 2012 Comm: rmmod Tainted: G        W  OE
+> Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+> RIP: 0010:kprobes_module_callback+0x89/0x790
+> RSP: 0018:ffff88812e157d30 EFLAGS: 00010a02
+> RAX: 1ffffffff805000d RBX: dffffc0000000000 RCX: ffffffff86a8de90
+> RDX: ffffed1025c2af9b RSI: 0000000000000008 RDI: ffffffffc0280068
+> RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed1025c2af9a
+> R10: ffff88812e157cd7 R11: 205d323130325420 R12: 0000000000000002
+> R13: ffffffffc0290488 R14: 0000000000000002 R15: ffffffffc0280040
+> FS:  00007fbc450dd740(0000) GS:ffff888420331000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffffbfff805000d CR3: 000000010f624000 CR4: 00000000000006f0
+> Call Trace:
+>  <TASK>
+>  notifier_call_chain+0xc6/0x280
+>  blocking_notifier_call_chain+0x60/0x90
+>  __do_sys_delete_module.constprop.0+0x32a/0x4e0
+>  do_syscall_64+0x5d/0xfa0
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> This is because the kprobe on ftrace does not correctly handles
+> the kprobe_ftrace_disabled flag set by ftrace_kill().
+> 
+> To prevent this error, check kprobe_ftrace_disabled in
+> __disarm_kprobe_ftrace() and skip all ftrace related operations.
+> 
+> Reported-by: Ye Bin <yebin10@huawei.com>
+> Closes: https://lore.kernel.org/all/20251125020536.2484381-1-yebin@huaweicloud.com/
+> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Applied, thanks!
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-[1/1] io_uring/trace: rename io_uring_queue_async_work event "rw" field
-      commit: 4bab5940c31b5d8686c56fb3caafad83a5545a0d
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+-- Steve
