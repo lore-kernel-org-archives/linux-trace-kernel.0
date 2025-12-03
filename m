@@ -1,54 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E711F398F8B;
-	Wed,  3 Dec 2025 17:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B98398FA9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Dec 2025 17:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764781898; cv=none; b=UR3KE176hczFOBV4PIyYrh/Q8a6zz15Xv7ccRqM5BARPUh8u4yId5t8EMIHX/c+kLGngskweisFNzLapGyVKAJbrGpP7m29k3+l16V4VNY4SgdQsKzNWAqH6oy5m7gtpoK2FX0SpfJgmv7nq0f6IkEwkzua/BCK3sYkP0kiAd7U=
+	t=1764781948; cv=none; b=Sb7ymxorZpZiIXDSvwayyMMilZbnPVUVPQaxu75YMK/lMA0050yy0kuX1BGv5ze4B75o8BHZ2PGcks0+JcOMvugfh77hugeQFehEwyDiXfU21mJjAsv0o/THU7USFUUMiVrdzTSTrEKpo8wD2pKYafndrjnPqdfp1pizm9M8/Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764781898; c=relaxed/simple;
-	bh=l8vp+F65X+Mdjb6vdkPOU7mylQvhK4z+zYyRql8ouAQ=;
+	s=arc-20240116; t=1764781948; c=relaxed/simple;
+	bh=MCXpOHHpeG6Bm1ZLgAakALfHlHZc/OxDqj57EFCGIR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tRmutybK6eG2Y6tsAY8N+Kx13oQZXcr6c7imORB3iSuyxseeG4CV7YaVJ01QNL3wugJZAqkfXyyGdOzZenoej6SuU1XMdRvzBzVfUj6mVH5Q7hwlZFjkdlZw6VqMd8hsyr8rMv68Zr0Svbzs5FndmnoENNH1saJpsM/XINaqYs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzMnciM/; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KU2MQjY13rvOb+O9ilxEXZsjMgfmUugMkCCKoEjufRi/rvFMf4ojVi8m/PPBkhh7VAqEiN8wZUbn0cMtpNc32WfF2SppzRxssSQyatfNSZE/RaZ1LXkdAxOnytw7g49X/6N/Xnb1gF+HBwMOUowGVhIWVVHdSYPSwQo71faHoAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ai58hPyg; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzMnciM/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764781897; x=1796317897;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l8vp+F65X+Mdjb6vdkPOU7mylQvhK4z+zYyRql8ouAQ=;
-  b=UzMnciM/VzRNOG2nqMyvPu4NQtHLlrbM6l7WGenUZE/28BASy4tcO5LU
-   ONQ3kpFm+QJ/DTT8Qk2tupcTWr0Vw9sjXd0n9sJ7ljEjKyanagzuoeEHu
-   MMDATmnegjB+ypPYef2TgiqE/N7DLDoQt5qr19dpNxB0xoChpvDICnbkA
-   NnsrSBNpzmctr8KUzF8DG0KQ0xVZL+I5sZWUfpzwyKwxhsDHuaZ4w6aTx
-   d+i/+VA/7EMFtUvdnCicst4G4ZCltsbqc/V5gqkh7piiGCwRECET6CgiS
-   p2JjuE69nrn1keosAZeVRPO6nFhl9xEg7ch66TfshSVunYXdPbwep1jdk
-   w==;
-X-CSE-ConnectionGUID: 3+jO69TQRCKO1LAcT/3XzA==
-X-CSE-MsgGUID: RE1RpsCySguHVimEBFAMKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="66506452"
-X-IronPort-AV: E=Sophos;i="6.20,246,1758610800"; 
-   d="scan'208";a="66506452"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 09:11:36 -0800
-X-CSE-ConnectionGUID: MfZoCywgSo25HDgY4urn+Q==
-X-CSE-MsgGUID: qgiGUGzeSpmiG9xX4gxRhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,246,1758610800"; 
-   d="scan'208";a="198920476"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.81])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 09:11:31 -0800
-Date: Wed, 3 Dec 2025 19:11:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ai58hPyg"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-78a76afeff6so145197b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 09:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764781946; x=1765386746; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+dMlhUa22KWJ2ilQ42UhqcCRS5uDTPNIwpYqFYW9E1I=;
+        b=Ai58hPygDxhbfWKDeh5VKKyscX/dOVaSFbwol9eEEH/wRu3CqB87sdI7QhcMTMS/ak
+         64F04bk6we8TqMEh6GbsU9aApXIuzosvs9M0FPtEcrmDF3iNvaEo8t3/j/G91Sy2g2A8
+         jpEr7/b2LPqQ9+1V1wufYbpVaeCo965foLgGxZTWbc91dVylt24unI1jlwvX/8Z2QKjh
+         YEP8Mt+6GA7wC3dz9+f2kwUcNRrmvxmb2M2POBfrHnk66edkGzjHW4J20HdICquFr5UC
+         pfYowchQVfT5BLmb/v/bXy1usbVAkjJiXP/2dugI+KA2a+KO68DSlbJpsob+G3pEDb7S
+         qHOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764781946; x=1765386746;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+dMlhUa22KWJ2ilQ42UhqcCRS5uDTPNIwpYqFYW9E1I=;
+        b=KDatqn58xQiIfQkhHC9Gdq/OcAaBInzGOGnAjblQIbC6AMesOdvtY6RCLjCY/x7urI
+         +dCR+/nwSVmD/Gru+MSNNpsh/2U+UDaASddy09DiRTSg3mwyutPHbznm/0fORXRqYGmD
+         rLdKl1qM8SyOwkNkQzXcEM80MGEcFmmi6RwHukxwAdVL4WKTDWzPyfZ6d0ip3+ENCbK0
+         RZEBUUWncebSq/8n0kqb7tIE5NhOrAZCgLLcVC8xWsEahIDakkS/dZJHuXIM0c8gVFns
+         wys3JQYgpQALMu4PAOqzZNaj+mh0mr/wzTeDgZdT4dmDA5nkj/HM1gRPfSQvokmtvP+V
+         RTFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIlQNh3hJegAp7LlLxOau82DU7tmI1Y8rEyz9Ki0p82MbezxEQDCLPVc+HfMMADvDvKaNY/wRJd6m/Ia87XTUvKXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDCEhHyA0nrYLi+g389i4oEzNryRh9gRCgvlo2qgHCbtFxESJR
+	aUiFgRfSxqNtscy/GInt+2Wcu9tvx9JsH8DBzeJ1DL9l0AKMf6s53Y+t
+X-Gm-Gg: ASbGnctq0JEpb3tdxDg8HevdmjVI7PIWqwtqrMZDevGMLj1/XZi5UsHUCYbJ3yyUSrf
+	o8vCEhYsP7XsXq4p4ryvXqL2/WUhow9W3eG3c0JAr4Y7AzxfLQAvodfVOKhg/pQ0HHnIExUUn9m
+	1WvMGYO6vC3/XVns2048UV3uINEiP5Nvw8c+4DNrpnBWWD7eJMy0pWvtXheoGk0x+PS7VzhL4ix
+	OPdjwTvlnruybTnS3k8MX8TYM14H27Pdj3gbvhk0ZGp3L21Dm2cJjM5IDxUZISMq/xooVSNFpTE
+	+9L3jmsJsmvxaA1GnY4VnpjbuWcf50f6WRhpbQXI/blQpNHwF7F4CKblVVbLg8peA2aYJa0crJJ
+	TtiQIL7eTd4xGqGaLGhOByGHQ5+Dal04+5WZlZCiYcILFsmYaUL6g4MPq591kDKyNvlDOc4WPam
+	D8zAOk5X4=
+X-Google-Smtp-Source: AGHT+IEFfaor5TGluCdJ9VR8/Ps+0lVeXujezt2zJVQtO7vKz7xrftaiA2O5j0+xom7Jt8H9sL17Gw==
+X-Received: by 2002:a05:690e:11c4:b0:63f:adfa:e5ff with SMTP id 956f58d0204a3-64437038548mr2177966d50.57.1764781944118;
+        Wed, 03 Dec 2025 09:12:24 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:3422:8bf9:97bc:b085])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6433c050348sm7461970d50.1.2025.12.03.09.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Dec 2025 09:12:23 -0800 (PST)
+Date: Wed, 3 Dec 2025 12:12:23 -0500
+From: Yury Norov <yury.norov@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Christophe Leroy <chleroy@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
@@ -69,7 +84,7 @@ Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
 	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 4/4] tracing: move tracing declarations from kernel.h
  to a dedicated header
-Message-ID: <aTBvQDT0feiQT77z@smile.fi.intel.com>
+Message-ID: <aTBvd6I5D3VAT841@yury>
 References: <20251203162329.280182-1-yury.norov@gmail.com>
  <20251203162329.280182-5-yury.norov@gmail.com>
  <20251203121007.407eaf3d@gandalf.local.home>
@@ -82,8 +97,6 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20251203121007.407eaf3d@gandalf.local.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
 On Wed, Dec 03, 2025 at 12:10:07PM -0500, Steven Rostedt wrote:
 > On Wed,  3 Dec 2025 11:23:25 -0500
@@ -100,10 +113,10 @@ On Wed, Dec 03, 2025 at 12:10:07PM -0500, Steven Rostedt wrote:
 > other similar debugging aspects. Calling it "tracing.h" makes it sound like
 > it is part of the generic tracing infrastructure.
 
-I am fine with the proposed name, and it makes sense to me.
+I agree. I didn't change the name because it seemingly was a consensus
+about it during v1 discussion. Let's wait for more comments. If no
+other issues, I can send a quick v3, or you can fix it inplace,
+assuming you're moving it yourself.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Yury
