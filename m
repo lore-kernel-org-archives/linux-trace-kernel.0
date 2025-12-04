@@ -1,122 +1,130 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5548E186E40
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 03:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7992D5950
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 04:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764818748; cv=none; b=CwUVy7GzAOroNy/T0yo/wuftKOjQDaFw0hVcsOvPrMUTo+IcG2hLPJ9vQgNynlqMQQaBWnSfW5CMN9LC/vvK+6Yg0SjMXl9kJo2pIY1OtNKhiQwpv8ik3iNERYEDbmgssLORaV7HLA8XI3ySjJNrNuK9wfnytrQgEXgnmhK/3TQ=
+	t=1764822889; cv=none; b=nZYPRSb+cj1qs7Y/NqCvSAwJZGpcBGAnKiqPwbW8Cb8Uhd30Mr730jTt7krfdxsySxHRV3iNqxfd11RCOUN1McHnh1vFqhWUOeGsH9ivsXauYSFeqnNBBQ32TtQuOl4MNW9bqD7ko3RJdvnLrylAqm+yzf84UJOwiF+FsfayYTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764818748; c=relaxed/simple;
-	bh=I/7cxZP7PHzdLxWaX/VoNXA1nB8DuuZ3s1oSZkRF2JY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MPsMeZpqLacd2tYUakyk6DeHCQ1oZ80Y3CDYob1omptOl0eyhmKwOCXmU1Kfmmh2iVpMEWafPjSi+FZRa8vbYZMMr7tG1z3GYED2YD8Uq7CS6ru/JqkQVRMgqzEFYKLyCaphOQWudzUeiyQ+BKbZ2ui8S7/19vUX8DLKYQl6Lkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R8/M317R; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1764822889; c=relaxed/simple;
+	bh=GgCOziep81e/EKJzhQH5y0QjEZ56iWmp92jKRaM/sWM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mZ/RxTihHa70rXHvq2GdcWXy1VrovGUgjKPD1cYKmqW/LiRxTFfbdJGPaKEOzA45WXKMc4SLQH478f03YxR45BOT/T9ryk9+FZnjmCdslsgx+b9gCwEN+Cg9ev4uGs/XywI1fWDIYKDEEhUalVmT4xsYC27udefJnn8aM8s27BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OgarnY1E; arc=none smtp.client-ip=74.125.224.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8/M317R"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-295548467c7so5280385ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 19:25:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgarnY1E"
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-63f97c4eccaso388431d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 20:34:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764818746; x=1765423546; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=spK07RH9SB/e09bcGxV6H18ne9sRU+EARhuUPw4HRqA=;
-        b=R8/M317Rax09ifb0kFyItit42fJyw66WKA/ouxy5FWUnkqISEuJ2dANFtAj8dT9uon
-         8LgmYQWnIx1pBH6jjkjaBpYgMsDICiPQ/EINAQc9sjnUlp+1p55ftYrcUuhiGt+ntb0N
-         EGTUvgu09tOvF5YT8JVHxsyUZjf+tzpBXMenm6/wNg5IUi9mSvfSwnhQaGKboDmLPCU5
-         ekBQKuGkcd57FVB5zeJz2pJ7H+nuygOIqueRM6ksa/DMCRuY4ry9C9hmmRLwq5pbkWCJ
-         zRx5VBkjlR3bVZ6u/m7XybYz47wodvWihQ1iMwQX74KgFfseCeH+1LST+4xTzJqzEPXX
-         6eeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764818746; x=1765423546;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1764822886; x=1765427686; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=spK07RH9SB/e09bcGxV6H18ne9sRU+EARhuUPw4HRqA=;
-        b=wfcUix7xIidamq+V6KJoTn05tOoJvhmMwiZosHC+s/AkiJ7NY44EE+M73cjyQelnDZ
-         7aiJmOkm+u6aIaMSPCmV09Kic8m6Qz5JOU/vQfMk2xVudFjMqk3fkHOLuRRCtKb4TUro
-         4Cp5N5c9Mc4Y/kQV798W23M9K+JRM8QI8DzKpoPCPaVo+HmYJPyTRAPW/bCGgy+ipUPl
-         /9UMdSFkPKusMeJb/AywIskMVrzrlvC2syVM8zCnaXiQ/KuxvUCJHvAr3/EqPhgTAbyV
-         kYd3tzy9WSFqgUEU5LPRqJfp4+l3FMU/OjqpBHWCt2zm7kXwN7KMN6Eswm253CjvZaf+
-         TJBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOlC+ClkNTFS6cyujHEa6vf02eIsxbghhF9O072to/cCQUl91bOXK32Lo+NJZfQ6jtOTM/LJ+iLPw4FK1zr2eRUyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd6ugbMOFRVMndFGsCK8FEcfiK3ElTQhBu7reaeeOB2OOWPktR
-	e8HEiuhmeEJCHedFHVxYdCLB+yVi1dHdtNn6OMTk8HyARLW8ZZC06T7U
-X-Gm-Gg: ASbGnct3GsW4FrIVPf8T5IbRK+1btXEB86ow6EOwDzIN2cfypAgQggYqsZIONk+C2pZ
-	Y09zlrKOJc/TCdtKZHfXiqsvGzzsmgo9MjgCZ7bYhB+98wscKaQ8DZuZrB6N3uXSeVnD24sMEjw
-	wuR8o6osLAeqreLHG1TF3J/0bz/LENw8MWgWujErEZOhVMdem8HfkvumlrURjVTVOYnRYUWWBth
-	c9TZ0b5VrWWgfHKIfC6WaaQhxDC7STSl3z1PaDiUP+ysVPRn/8a8Rn60a7TJxaa7xXX4Wjb9jHi
-	TbJFbJ3N7/g2XQNXscNdDLqk9P1P1sCpFlJ7ZOatPqm02S6Hoafjyg72u8Q6lAP1rlwc8gEG+CG
-	YuWNF5hu3kfYS6I3xRSkKNAC67xAr7eXFObgjfKrDemdANswhThGb8I/Ik0xTo6xorMwqVtiLHm
-	tFhQXs5QMOsQMbWXbXVDo=
-X-Google-Smtp-Source: AGHT+IExoyiKStk6FlBW0on3Vp6H6eKbj5VCku2/JVbKZj2lvzdBE784/x0jxPXK1wTtwNEmlSM77Q==
-X-Received: by 2002:a17:903:13c7:b0:298:4ee2:19f3 with SMTP id d9443c01a7336-29d68482cdamr60414585ad.49.1764818746475;
-        Wed, 03 Dec 2025 19:25:46 -0800 (PST)
-Received: from soham-laptop.. ([103.182.158.109])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae99f01csm3112725ad.48.2025.12.03.19.25.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 19:25:45 -0800 (PST)
-From: Soham Metha <sohammetha01@gmail.com>
-To: linux-kernel-mentees@lists.linuxfoundation.org
-Cc: shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	rostedt@goodmis.org,
-	namcao@linutronix.de,
-	gmonaco@redhat.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	bagasdotme@gmail.com,
+        bh=nOhogF/bEKUSSSKE3BIN5Xdxnrm5TbeswyD2/DYOGps=;
+        b=OgarnY1E7Gkjw/DevGDJBFY0b8v2+sb6MpJxurlwKQgaJGm7hQqQSZzeFiQT+/ysq/
+         8m2dbJcKT4kXSHtXSXXSwmuitQuoIP957gD6fQT66xxlxaJ0/lwcnKaT/VU85TiaVNqs
+         kffs+HgDrTGjeAEsRb83HDRkMtoXeZbfSlbhNXY+hpGNwAJTGXbQIFgJZPMOQWqTGG9E
+         jjhiAY3KiDVr3YyDXKwKMMlA4SVbRNvC/MQjliUnstYCtSy2dAV9bMEUa6MR+AqGW4XJ
+         NeTSNcXqijTCn1AZ1ak8FiT+dhg4dZ1M5oitgNZGdt0X6/EliVPeEPLoQLv8kTkLzXyM
+         XIww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764822886; x=1765427686;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nOhogF/bEKUSSSKE3BIN5Xdxnrm5TbeswyD2/DYOGps=;
+        b=Udu/75ijEqL2bzMj2kbN2Xpioql2IobPy3mK6vWx3cI0x7Dc9pINWxAQc+c8uSlFn7
+         iraOEbWoKmsqypz7LHRPVfMmzZdmmedhOpB2bzNn565pkiyvIuMZUO0eH/FwPGojSAi/
+         K1XNpKqdk55t1JcOdc6/18pIeBbF28zflGJGa6LvoB7yOZteN8qdZyuN18rSwVIiFXVw
+         jzUaj4rs2J4Pevgr8JsJ23a9utwbvoqjCNfb/AqLjmAecYVXpzy14QVvwbKEQ3CRbiyU
+         1+FYto6VtFOKj7qlvkt9kM599ILcPVNJKzYtHk4agazSE3RPdDCLhWM2exJdQhTB98vy
+         SNMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU23eCbb4mlzsjlW+rzm1wdyoesNvSVwuVRrwH3XvSSZjmh+uuh/cGfSucE3tgfsBmruPAAJsiffnnmpA8eNZ/QXlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNbatytYGWeUmQRkEI81mzM+NaJcLpgXq109cvImknCffdwMQu
+	rgLGAppPEPAubdwIj/35b4J0Z+yctvHS/lVN3gBTJkxNrMI+KTu9+Fn6
+X-Gm-Gg: ASbGnctWT8bfYZJ8SXgICAgsZoHpcYqmZFwNtAh3j99z6qXoC6JyfLrsy8nGlFJF4wq
+	jaOo/SJ+RQKQ7KttV2qIk2VnCaHv3dbIYBjq1/QjdB5Ri5YV10ExQupA3OzXjOeSpUj66pTSyBI
+	4ydu8fm7b0EIo601Q/QD7kYlvZMnpcqteZVDVjNcy0pm47X8mht/ioe2bXOZPqI67aVkUGWeOfO
+	PgiE3421EielRa1aVdDy3EWix7OpvBIx4iWmkI/O+HRJgD6dh+/oHwG36/ZONAfDnV5a+O228EC
+	hrd9xjJ6q3uoscwi5BjwjeCtFOCnCPP6X+tcQ1lYz0KLqnx6Ilrq1zX1kzhej+XowsTicN980cn
+	m86gyAElRckf0DCubXkBqaGdAKUyGMUkABaME0gobnoW1EOV6s3oP3sRFEa871FzYnWPwV/BXmV
+	ntfOp+7scOBNW3m8UfJlsL34bgMWe6zMmM7thloqZNu5POHhxYn1s=
+X-Google-Smtp-Source: AGHT+IEHsk9cvyWivHQ/qdx/M0oPC+5Tq8/rSqUEJ8fSJ/n8FLJKr7HCddCe5NH32qGcbWy5RlaPRA==
+X-Received: by 2002:a05:690e:134a:b0:643:ab7e:8dd0 with SMTP id 956f58d0204a3-644370659camr4211118d50.61.1764822886420;
+        Wed, 03 Dec 2025 20:34:46 -0800 (PST)
+Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6443f2abde8sm264191d50.3.2025.12.03.20.34.40
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 03 Dec 2025 20:34:46 -0800 (PST)
+From: Shuran Liu <electronlsr@gmail.com>
+To: song@kernel.org
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	dxu@dxuuu.xyz,
+	eddyz87@gmail.com,
+	electronlsr@gmail.com,
+	ftyg@live.com,
+	gplhust955@gmail.com,
+	haoluo@google.com,
+	haoran.ni.cs@gmail.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Soham Metha <sohammetha01@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
+	linux-kselftest@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v3] Documentation/rv: Fix dead link to monitor_synthesis.rst
-Date: Thu,  4 Dec 2025 08:54:52 +0530
-Message-Id: <20251204032452.9523-1-sohammetha01@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	mattbobrowski@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	shuah@kernel.org,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH bpf v3 2/2] selftests/bpf: fix and consolidate d_path LSM regression test
+Date: Thu,  4 Dec 2025 12:34:22 +0800
+Message-ID: <20251204043424.7512-1-electronlsr@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <CAPhsuW6hmKjJF5gYvp=9Jue2N6oW8-Mj-LdFbGnQVwW1bTB=qg@mail.gmail.com>
+References: <CAPhsuW6hmKjJF5gYvp=9Jue2N6oW8-Mj-LdFbGnQVwW1bTB=qg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The file 'da_monitor_synthesis.rst' was renamed to 'monitor_synthesis.rst' in
-commit f40a7c06020709
-("Documentation/rv: Prepare monitor synthesis document for LTL inclusion").
+Hi Song,
 
-Signed-off-by: Soham Metha <sohammetha01@gmail.com>
----
-Changelog:
-v3:
-- use a 14 character commit hash
-- unwrap Code Blocks so that the references can be linked
-v2:
-- Use proper commit SHA reference syntax
+Thanks for the review.
 
- Documentation/trace/rv/da_monitor_instrumentation.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> I don't get why we add this selftest here. It doesn't appear to be related to
+> patch 1/2.
 
-diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst b/Documentation/trace/rv/da_monitor_instrumentation.rst
-index 6c67c7b57811..9eff38a4ad1f 100644
---- a/Documentation/trace/rv/da_monitor_instrumentation.rst
-+++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
-@@ -162,10 +162,10 @@ For example, from the wip sample model::
- 
- The probes then need to be detached at the disable phase.
- 
--[1] The wip model is presented in::
-+[1] The wip model is presented in:
- 
-   Documentation/trace/rv/deterministic_automata.rst
- 
--The wip monitor is presented in::
-+The wip monitor is presented in:
- 
--  Documentation/trace/rv/da_monitor_synthesis.rst
-+  Documentation/trace/rv/monitor_synthesis.rst
--- 
-2.34.1
+The regression that patch 1/2 fixes was originally hit by an LSM program
+calling bpf_d_path() from the bprm_check_security hook. The new subtest is a
+minimal reproducer for that scenario: without patch 1/2 the string comparison
+never matches due to verifier's faulty optimization, and with patch 1/2 it 
+behaves correctly.
+
+> The paragraph above is not really necessary. Just curious, did some AI
+> write it?
+
+The paragraph was indeed generated with the help of an AI assistant, and I didn’t 
+trim it down enough. I’ll drop it and keep the changelog focused and brief in v4.
+
+> This {} block is not necessary.
+
+I’ll remove that extra block in v4.
+
+Thanks again for the feedback.
+
+Best regards,
+Shuran Liu
