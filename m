@@ -1,169 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05951F5846
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 06:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5885FBA3F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 06:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764830225; cv=none; b=nPrpDyxo0U/vRT7GX1Y8PVQk1PFqJ1yGQCNSx9E8ltGB4ZxMZlONRwI486ppkLt1tOAt5LnqdwKluzNs9wugxCYuQqTjkxG15SLRwZvDk9dyKUNSj9rlKMm3YxAChfmMGYi/1RU2gEipMijCYllQk5LLZpuuUw/hwJxmfSajyoI=
+	t=1764831256; cv=none; b=GL7sEzaRkvkogTUkMU1X7epjIlxaWzWOa+ztXDMkvwp8ymp/0scShQ8Ssdp1jaPN5NcYW++mgdxgPdScrKQvxje3IXV55NZ4yq1mO2M0s5EkGvhdJPgKGpUrqNmOvpmjt4aVIN66edtbJjHn7HoHMqa94I31Ol5Wn8YKxSF0Y4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764830225; c=relaxed/simple;
-	bh=rlvpXp4vXIUjCAdr/hHyOvzOZjcIFPmn9CfhMS22lG4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JymzorjKD+sJ4TV6i9CLIYg0obORJZLzuW51z5rHQJ1JJBWo4/9PYs9bKugl94xssIBGtBR02GCPm4a5exidyXsOcrYdpHWKF428LKtcOuFY0hwV+fAmtPiKQ8KWE441apg15zSJZ5RJazIRWVzK+18qMsI0BQFkF7OQMytxV7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gk0W4+H0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764831256; c=relaxed/simple;
+	bh=tRBVklhxxOTXOTIgNwsBOMaGwNDHSLCZ5nl/Qhdc7Bc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GecxUZ00kiJQaKjoPB5HiTaJ4COBmuJB5S7+Y9bfvJH9BFzXoG+trrNI53Y8b3QZVWGtlBKFinIRYmdlT/V4tSivacBFReiTfB4kQ/Drd6Qep+RRH+oKrxOaeLCXj5VKpHYo55ghoL/m5Vp/NjgjJBqYM+Em/XwFHoUQU1CPNYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SADPPVIe; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gk0W4+H0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764830222;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SADPPVIe"
+Message-ID: <c20c2b82-cb43-4ecb-b48a-c19b8dbf5c3b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764831250;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rlvpXp4vXIUjCAdr/hHyOvzOZjcIFPmn9CfhMS22lG4=;
-	b=Gk0W4+H0PkMFbZh0jDhEO2kef+qmkCZqXu35IAGynyMMlXtdP6udT5pd4kmhVNiVEAFM52
-	DclIycr7jYIKYvRweaf2rTQLAsmQL4QuqPRg3V+gmBtBNZUDGdEs1Bje2t72mwoDeVT8w5
-	LzLFROb2oTKpt7oWEV2QHl76l+py9Jo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-302-XwgN5sgcOgG2FRHSMzCg6Q-1; Thu, 04 Dec 2025 01:37:01 -0500
-X-MC-Unique: XwgN5sgcOgG2FRHSMzCg6Q-1
-X-Mimecast-MFC-AGG-ID: XwgN5sgcOgG2FRHSMzCg6Q_1764830220
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42e2e50cfaeso387992f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 22:37:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764830220; x=1765435020;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rlvpXp4vXIUjCAdr/hHyOvzOZjcIFPmn9CfhMS22lG4=;
-        b=IqmEA5ieyhpCDODOkw9dzBuKIfA9c8o+zLOaqA7WEl1Nlg79L+cp8p5HD3qoE82RC/
-         B01fmqwuSpkAIXX2EmyhXzzAjg61r8b3TynOTtwYkoe2a1Lsy6efUnWuf1uR4vJQ6Mrn
-         MBIBtbjnylb7C7mh7z5z2EghBw7uaREwn8RYAyhC5/f2Ll3XDHEKIFUATvC6AssVK5Ce
-         jvwbMuBYmrpBnaGI/zXvsoDQ+qJ7LWav0YpOsYuoaG+VJN78fw7Gaml/FhG6jLFSPxgH
-         23owrafeofDLlBbBPIBz0z6aDCj2NDYxTvlEt7s4SgvZWulpILfdrOZ3j6gdm5W0bTUA
-         OcNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFFu+9eqpksJWBUe0Gu1g8pj2K5EHWqvVmIQkXtbgttORMNSs+zfsW7HiBUuyAa0XTsrVRa1ZqnUKauWLGfGpDfms=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsk91DMIVLE52tV9G0EF9BgcqyA84EyweifbnJ1vk5QgLy2t5Y
-	vYxICaXj5GqbPsPqqpr7lbrKIg6lzJadEonw1u1DUbpfYKqyms6X1H8kFKbowCsIYFXCUO/26EY
-	4JO9eNfJsqihpZ4s+r1sEuMgi665MDyS5RMypgVfsKQIzjinTesdLAde3J5omw460Q3TqD1DtLA
-	==
-X-Gm-Gg: ASbGncuCBbgd6LNTJcL5K+XArbHv9ILZ8jZT3YErGjFvG68LRNZ1zK1pMsaPL7pkCGf
-	cn9IDQhnCvqWrg+ZFQAv8aDKudYwJglULCqnnE1xX1Ye8DZIUJSKY8hSIoVYtCaKwIUYYlyTxmR
-	9D2WHfhu5DsTxtUa1qImBFGnqykav2YYBRhua51zhynh503+tvhNTNNdwFl/PhDGrZOwn19r5z9
-	2zIM4yLEr36LJ0Dc3Zd/SwlYuALNecUEO9qGo6z6HPstcLSPxvyZh5Elt970LfMjTNVjBeO78zR
-	Xctxsv/fmfCOO1IIi/HRJgFVu9cKkQaO/rPc9ZhgER3kfgSkda8UV5FRZ/zE+o72MbEeSYVQK9p
-	2IXWaifg0bvebuFXSQOR2KVxlsx59aWghZIE=
-X-Received: by 2002:a5d:5846:0:b0:429:8daa:c6b4 with SMTP id ffacd0b85a97d-42f797fdfccmr1428232f8f.21.1764830220212;
-        Wed, 03 Dec 2025 22:37:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGVv89Dh0h6k8CSTD9tgFWXKJrlyWPOh6eQ1WXkpbNGabqnJgqBAuEpWofqbE43M3jSFyUU6A==
-X-Received: by 2002:a5d:5846:0:b0:429:8daa:c6b4 with SMTP id ffacd0b85a97d-42f797fdfccmr1428210f8f.21.1764830219788;
-        Wed, 03 Dec 2025 22:36:59 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfeae9sm1381076f8f.13.2025.12.03.22.36.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 22:36:59 -0800 (PST)
-Message-ID: <a34546391cc59f9f880ec271292ac201292bac61.camel@redhat.com>
-Subject: Re: [PATCH v3] Documentation/rv: Fix dead link to
- monitor_synthesis.rst
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Soham Metha <sohammetha01@gmail.com>, 
-	linux-kernel-mentees@lists.linuxfoundation.org
-Cc: shuah@kernel.org, skhan@linuxfoundation.org, rostedt@goodmis.org, 
-	namcao@linutronix.de, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	bagasdotme@gmail.com, linux-kernel@vger.kernel.org, Jonathan Corbet	
- <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Date: Thu, 04 Dec 2025 07:36:57 +0100
-In-Reply-To: <20251204032452.9523-1-sohammetha01@gmail.com>
-References: <20251204032452.9523-1-sohammetha01@gmail.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	 in-reply-to:in-reply-to:references:references;
+	bh=dFoVMIVhgIIxPNZ4zkeUCbud6dwogH4VwdPLXp1GrzU=;
+	b=SADPPVIePzv0Ee5PfeaBSq3VtAbpWjbIpKl8jabC5a3qqjXFLo12bef844hS+SeIomC5Mt
+	9IzRLVCwAE+q0zXGn3Uv6sK8R01F/InIzR8xext9zmIoFgzKSlpZSGDRcgMs3V/Nqzdz20
+	bvQHk81ffhC57S91A82jS+sudPokp2Y=
+Date: Thu, 4 Dec 2025 14:53:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9LwyDktDt9ITUlvMJXvnLmqec-261FMhQNK0aaoOHdY_1764830220
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH V3 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: "Garg, Shivank" <shivankg@amd.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Barry Song
+ <baohua@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, David Hildenbrand <david@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Branden Moore <Branden.Moore@amd.com>
+References: <20251201185604.210634-6-shivankg@amd.com>
+ <20251201185604.210634-10-shivankg@amd.com>
+ <a8cf9fd2-4521-4068-b436-9a251a6eb15b@linux.dev>
+ <26e51398-02e1-4ca7-80f0-0cd76a966188@amd.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <26e51398-02e1-4ca7-80f0-0cd76a966188@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 2025-12-04 at 08:54 +0530, Soham Metha wrote:
-> The file 'da_monitor_synthesis.rst' was renamed to 'monitor_synthesis.rst=
-' in
-> commit f40a7c06020709
-> ("Documentation/rv: Prepare monitor synthesis document for LTL inclusion"=
-).
->=20
-> Signed-off-by: Soham Metha <sohammetha01@gmail.com>
 
-Thanks for catching this!
 
-> ---
-> Changelog:
-> v3:
-> - use a 14 character commit hash
-> - unwrap Code Blocks so that the references can be linked
+On 2025/12/4 02:25, Garg, Shivank wrote:
+> 
+> 
+> On 12/2/2025 10:20 AM, Lance Yang wrote:
+>>
+>>
+>> On 2025/12/2 02:56, Shivank Garg wrote:
+>>> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+>>> text sections), the pages may still be dirty from recent writes.
+>>> collapse_file() will trigger async writeback and fail with
+>>> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+>>>
+>>> MADV_COLLAPSE is a synchronous operation where userspace expects
+>>> immediate results. If the collapse fails due to dirty pages, perform
+>>> synchronous writeback on the specific range and retry once.
+>>>
+>>> This avoids spurious failures for freshly written executables while
+>>> avoiding unnecessary synchronous I/O for mappings that are already clean.
+>>>
+>>> Reported-by: Branden Moore <Branden.Moore@amd.com>
+>>> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+>>> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+>>> Suggested-by: David Hildenbrand <david@kernel.org>
+>>> Signed-off-by: Shivank Garg <shivankg@amd.com>
+>>> ---
+>>>    mm/khugepaged.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 41 insertions(+)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index 219dfa2e523c..7a12e9ef30b4 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -22,6 +22,7 @@
+>>>    #include <linux/dax.h>
+>>>    #include <linux/ksm.h>
+>>>    #include <linux/pgalloc.h>
+>>> +#include <linux/backing-dev.h>
+>>>      #include <asm/tlb.h>
+>>>    #include "internal.h"
+>>> @@ -2787,9 +2788,11 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>        hend = end & HPAGE_PMD_MASK;
+>>>          for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>>> +        bool retried = false;
+>>>            int result = SCAN_FAIL;
+>>>              if (!mmap_locked) {
+>>> +retry:
+>>>                cond_resched();
+>>>                mmap_read_lock(mm);
+>>>                mmap_locked = true;
+>>> @@ -2819,6 +2822,44 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>            if (!mmap_locked)
+>>>                *lock_dropped = true;
+>>>    +        /*
+>>> +         * If the file-backed VMA has dirty pages, the scan triggers
+>>> +         * async writeback and returns SCAN_PAGE_DIRTY_OR_WRITEBACK.
+>>> +         * Since MADV_COLLAPSE is sync, we force sync writeback and
+>>> +         * retry once.
+>>> +         */
+>>> +        if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !retried) {
+>>> +            /*
+>>> +             * File scan drops the lock. We must re-acquire it to
+>>> +             * safely inspect the VMA and hold the file reference.
+>>> +             */
+>>> +            if (!mmap_locked) {
+>>> +                cond_resched();
+>>> +                mmap_read_lock(mm);
+>>> +                mmap_locked = true;
+>>> +                result = hugepage_vma_revalidate(mm, addr, false, &vma, cc);
+>>> +                if (result != SCAN_SUCCEED)
+>>> +                    goto handle_result;
+>>> +            }
+>>> +
+>>> +            if (!vma_is_anonymous(vma) && vma->vm_file &&
+>>> +                mapping_can_writeback(vma->vm_file->f_mapping)) {
+>>> +                struct file *file = get_file(vma->vm_file);
+>>> +                pgoff_t pgoff = linear_page_index(vma, addr);
+>>> +                loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+>>> +                loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+>>> +
+>>> +                mmap_read_unlock(mm);
+>>> +                mmap_locked = false;
+>>> +                *lock_dropped = true;
+>>> +                filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+>>> +                fput(file);
+>>> +                retried = true;
+>>> +                goto retry;
+>>> +            }
+>>> +        }
+>>> +
+>>> +
+>>
+>> Nit: spurious blank line.
+> 
+> Ah, I completely missed this. I’ll fix it in the next version.
+> Hope the rest of the patch looks reasonable. Thanks for the review.
 
-You may want to add this to the commit message next time, you are in fact n=
-ot
-only fixing the broken link.
-Since the change is small I wouldn't bother this time, though.
+Apart from that nit, nothing else jumped out at me :)
 
-> v2:
-> - Use proper commit SHA reference syntax
+Confirmed that the spurious EINVAL is gone, and it works as expected ;p
 
-I suggest you run your patches through script/checkpatch.pl (in the kernel
-tree), it's usually finding this kind of formatting issues and even more be=
-fore
-you even send it.
-On a side note, apparently it wouldn't have worked this time since you quot=
-ed
-the hash.
+Tested-by: Lance Yang <lance.yang@linux.dev>
 
-Anyway looks good to me.
+[...]
 
-Acked-by: Gabriele Monaco <gmonaco@redhat.com>
-
-Thanks,
-
-Gabriele
-
->=20
-> =C2=A0Documentation/trace/rv/da_monitor_instrumentation.rst | 6 +++---
-> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst
-> b/Documentation/trace/rv/da_monitor_instrumentation.rst
-> index 6c67c7b57811..9eff38a4ad1f 100644
-> --- a/Documentation/trace/rv/da_monitor_instrumentation.rst
-> +++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
-> @@ -162,10 +162,10 @@ For example, from the wip sample model::
-> =C2=A0
-> =C2=A0The probes then need to be detached at the disable phase.
-> =C2=A0
-> -[1] The wip model is presented in::
-> +[1] The wip model is presented in:
-> =C2=A0
-> =C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
-> =C2=A0
-> -The wip monitor is presented in::
-> +The wip monitor is presented in:
-> =C2=A0
-> -=C2=A0 Documentation/trace/rv/da_monitor_synthesis.rst
-> +=C2=A0 Documentation/trace/rv/monitor_synthesis.rst
-
+Cheers,
+Lance
