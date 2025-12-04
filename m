@@ -1,134 +1,107 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0792F25FE
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 08:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A5933E35D
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 12:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764837598; cv=none; b=P9pijcTKKV2uvktPqfoff1+7EQdn9Xckrgm+rs8pwFKu3NuOrmRu3/JQEnd5zOfGXvbjGZCMuIixDhHxwYueFwQpDkY0mN5w/SSXNJNBoXjYEPVbLb2U6vC/qTAFoYghcrh6tBip2kkiFGyWlRJPSH7iJf7CeeTPN4ypNZW6FGQ=
+	t=1764851948; cv=none; b=U5zDUhlqtKvxsh5Y+anB362rAOsdP0YuaHLs4U7glGf3ecjcJ0R9TNqd2kMiLLmUbUujX1C+ZBBGnFea07VRZzl5EqNdam16Mb4HXLYRcJR0CLX+ELF/oljSSqk15ybrQJfZtbcNf87gj+sAtEcCkbfqNKx+y6xEZ3jWofbSbT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764837598; c=relaxed/simple;
-	bh=OxJcYZ/t0IbTZeUHzN5FgPnszKPCjA/MF1pi2URYe70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7Xl0TRT1P3oSkvpukoucRYe0Mq159wg0BEUcwlWdNNHHGOgdytW0EzAN2Bp+Erwbh2EqYdjbNZ3eoyFLKDOiXEqP1nb7e4L5Knp6VN3qV4JFxjoK8wTL5B3N1Nf36QJnHXVSzODkhQ7fixbVENq/CbhjKqOK9X2zR7c+bIJ4wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcCcaUCC; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1764851948; c=relaxed/simple;
+	bh=ij8EL0R6UwB8ZDBVRFMV/z/L2JKiW7wDSAk4ODpKtjs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t3a5sFf+xelrHuKF6m5Tn4BWTgRN4omBawst/G62DPbE6oPyBoOz5lnfYm9w1NvOxcgWqh2KizyTiJH2FYlMlhUqwGJAfkApEgAcfqBjiI1zt5/l3CLh7+IUMm9Le+z/PF3z/bIcnb9pAZB1Bjl+sUu7vZHmhU6eiNvc5l5vzwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsrNw45S; arc=none smtp.client-ip=74.125.224.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcCcaUCC"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2984dfae043so7068075ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Dec 2025 00:39:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsrNw45S"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-641e4744e59so793791d50.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Dec 2025 04:39:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764837597; x=1765442397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1JNxOjk33nzB6A4jXH2tWSnqUE8y1O3Ojrn7T5hKfk=;
-        b=HcCcaUCCbqAA33sVDeBCMW0GkkrUhshu1xxcut1k2Gex9hiO27fl9QeaPqoOwn7wHb
-         aQzrqlPnepzwvlj6O7W91UEy82eM6lKPnI6bUT4QFU+/0Jwkc5T4HI7KNDJZIyeyuGTY
-         Idj2rOD2n5yR8jPnocufiwTuupak/1DT1X6vxHYCB23j/OXSNtjEudTBqsFqtUiSVny8
-         Z/5SkJEc6lIhRajNunOHdpknFTcvgD9i8BWkH9POckDxIBiS6i7SpN6y4DDHSy12omM+
-         ++zhRruPdmQOKfPPYhd45/ntoSym5UVqvb2cNyWYU9C2CVhHFEHHAd4ULs1KXVMeWA6A
-         M/UA==
+        d=gmail.com; s=20230601; t=1764851946; x=1765456746; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ij8EL0R6UwB8ZDBVRFMV/z/L2JKiW7wDSAk4ODpKtjs=;
+        b=HsrNw45Sw0qZhJpdlG/WgjH3nlhIEkm4EdpLNBUykie9ug5/9q1aG+EeLU1bc02nPm
+         UUnXoFh601CHrbCpbStdpXOf05pyoBCWDH6ZTSXL8c2GpO7HhfpSfARkqY4JIp9biDRT
+         vXJIOWL+UiwXR1H30L26SUeflgcBWUIrq7O7yyp4aATGa4XRwgnrgPDkqHs0ZpreNd5V
+         lrjyjh5Etk6qNfx6sKk35SWiaTe3rMa12Is0CUBafm+EVb67M/LRBMFg+z17zwK1ucUk
+         WXuTyC03Lvidk+CMPHud+2ANe7LjLj8rYyagl3TFQ+4wi5oQaMF/tDPKSm5EbweUzY9w
+         BRQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764837597; x=1765442397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d1JNxOjk33nzB6A4jXH2tWSnqUE8y1O3Ojrn7T5hKfk=;
-        b=p0MPbqzclW7/itV7ti/QTwnafYDskq7+c5meGGil9JfJUG0VJiEdbfIZpF0PBPFbkE
-         GwerKlDSr8sdjY/VrKSFAoquu3EPa9Kw4SrdNQJmMYk9Xn1PqHn68UYkwaTrQVTz+KFx
-         C3jt3hti7xfnVjc7tqp+URmWDApED8eH7sUuguOs1CZqfKoxYdRAjPs4nBJG8ZDEduES
-         rsA9nrtkLUanoMQs0fpJMGQrjH0+GoUqooSAU56OKeZ3S4rhZtqv15xrJTttdQrBCupR
-         HPoa1tQfNHiKxLf6iaTlLkqw0rUFLF3DRmAfFqZoQmHWvNF/GHtRputbvTYW8vfJLkdh
-         /fQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVjHnt3X2W8t2KVtNeEW3ILz+92B0S5xN5Kx7pM/sCeJVsgszrk1wH7LIiqALluFMh3bNCx4N5aAwS/o1LH/VNpIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgbZ21J/oPeLCwRqwJln1uAbEiN5Gx/vzraq7UQSW1ttFNB3GW
-	Z1wuf748eqlCdWElMMW9jCvnp0LXaMxQiaKycRLniAciCLuZjUfRigFO
-X-Gm-Gg: ASbGncsaXHmssXD5oe8HnF179+hEcUqcVlwM6Ja33e0Uc/T0DMkeM6W4p0AhP1vsBEl
-	GRQpSb0l04N1ZX3ea4POIe5wJM1aGhFlfbkIyIG0Z4HyX2edhSqIjDrNCMSUz4Ys6lqJQj4uJR5
-	n7YSLx7pewsKQ0VtRh6Ip9Xa27X3XrqHlz3qUNoK1dRYexLSScWk8g3nxfjC2oepQjI7GTeNdtL
-	oXemSNUzaJWHvC4rCfsyC9SjCuBfByZi5MiHZ9JpvROSq2Rxz9AcJvLBhkTKY/GQBKwQMdnQB5T
-	3F+7JMWy+aPGJGF/z+M7BSYKpQkgrk1S71bfF4wYAepr1+wJMDBO81vc5S8wehx/bECgcZy3vBC
-	1y1WwWQOcl4PJ8JrEUvgo9gd5l+6LS4x2U0ih4jEMRUHpaEhgjPNoYKU+kIujm2mu+ISW68k+QZ
-	y9L0sfQm+7D3Q=
-X-Google-Smtp-Source: AGHT+IGPazSTtY6VVQpikAdMDTf95Vk0b10d8Tb5c077iSAqlm03M0R68qba9fqHpOhAjsCCk1ni5A==
-X-Received: by 2002:a17:903:246:b0:295:7453:b580 with SMTP id d9443c01a7336-29d683f077dmr69081945ad.58.1764837596595;
-        Thu, 04 Dec 2025 00:39:56 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf6a14f40f5sm1096665a12.21.2025.12.04.00.39.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Dec 2025 00:39:55 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id C893441E4822; Thu, 04 Dec 2025 15:39:52 +0700 (WIB)
-Date: Thu, 4 Dec 2025 15:39:52 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Soham Metha <sohammetha01@gmail.com>,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Cc: shuah@kernel.org, skhan@linuxfoundation.org, rostedt@goodmis.org,
-	namcao@linutronix.de, gmonaco@redhat.com,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3] Documentation/rv: Fix dead link to
- monitor_synthesis.rst
-Message-ID: <aTFI2LDNLmC1osiG@archie.me>
-References: <20251204032452.9523-1-sohammetha01@gmail.com>
+        d=1e100.net; s=20230601; t=1764851946; x=1765456746;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ij8EL0R6UwB8ZDBVRFMV/z/L2JKiW7wDSAk4ODpKtjs=;
+        b=cxuFv2QTgmHLCMuHdfHDrMsDHF/Fx8PHC1beDwQ25dqdQ4K/BUm6oKdH1M8LiXc0HG
+         Z6vECtmmllGlQq+0nV08lLDDF1ZJ0FPcziscfyehkmymFTEr96QPAmhTFev5I8wiXuIU
+         RiHyHdHyj4M6ommC8xz0dWeWSOjTgcaw4GZVpwg2XvkO+8AmmAAmqUsFIZ1gcyb9czvl
+         mVLxmZUlng1Kz89BMsbgjksiHM6fyxA5XvbGGglCv1XMp1h2NVFeU6fUCbdKDe0PhuvA
+         Rypp/DzQ/fBkKYmcmAoTlwgXL+cytl7B++DbBK25/bw4xv/j1taXncPngVT4WDnaO69y
+         6T7A==
+X-Forwarded-Encrypted: i=1; AJvYcCW2WqyChr4i9ge0AoacdaGZNWbA0WvCRHrFeZQBbL3aIsOTbZVt6x7qMnA6a3ukgllQKmmFo+zJu4KCOpGZ70sUXik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhXESPR4MeIsLbq4aiS1CaXkVXNYrjy0ijdR3UzwGqweQ4i07f
+	BKv7GUPb/owYnpcG4bShroYrrvAatkmw/PT4XDgUDaO9N+42DBVyUbmX
+X-Gm-Gg: ASbGncvTZL4gHJu0gJbb+GmB9RP8d1Ve3o6GgV4X/9VtZeP5/AcfqB+e8D1E2RwkbAM
+	nxe31NjIjTNZJUsOIVPIKp/e8dnJUocgEjO3O5h7ac1ho0QHcc8glYzkxQ3bKMro0K0WdapaygA
+	pWivOycT432qX2gbMLaiKNQkyBTRBRSPf7oyac7NexrhP0jqiLJ7eFB7joQ0DkcntVOyAw+Yzu6
+	V6ONiLkRuz3F9nokim9FHfdA13ju6Ct2qPPNeSMd7DWyUgSh6atNPJPpg4L4Chu4KVfvP8Yi6aX
+	2p7hCyrdFaaG2wb2FaCUxtkQxwsFxag+6h6nFeLlel9hT8IF0GECx2VHfCeXpfYAj046sEY+cps
+	IOwN634jDnnRAQmF3eBANGUu8mm1k8D9Q2D+Mx3OxWnBOw2CTafqMBFvz4PV+dikFFaeVscXJ5g
+	o5e4Xt2ByPCUnRIGlXBNIXCPIREvusPkpld3XxMQa1xhUat7Y1sqY=
+X-Google-Smtp-Source: AGHT+IGxKuUtlyaX8PN+PqMbMQ7N09I5gYeGDl8pe/k/jby/JuQK+UYr3WKkNen2o5yTwoJekvFxYg==
+X-Received: by 2002:a05:690e:1908:b0:63f:b0ca:dc9e with SMTP id 956f58d0204a3-64436f6bea5mr4880835d50.10.1764851946376;
+        Thu, 04 Dec 2025 04:39:06 -0800 (PST)
+Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c1b78e892sm4766667b3.44.2025.12.04.04.39.01
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 04 Dec 2025 04:39:06 -0800 (PST)
+From: Shuran Liu <electronlsr@gmail.com>
+To: song@kernel.org,
+	mattbobrowski@google.com,
+	bpf@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	dxu@dxuuu.xyz,
+	linux-kselftest@vger.kernel.org,
+	shuah@kernel.org,
+	electronlsr@gmail.com
+Subject: Re: [PATCH bpf v4 2/2] selftests/bpf: add regression test for bpf_d_path()
+Date: Thu,  4 Dec 2025 20:38:52 +0800
+Message-ID: <20251204123853.1235-1-electronlsr@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20251204074632.8562-3-electronlsr@gmail.com>
+References: <20251204074632.8562-3-electronlsr@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Aa2dCrHsQWzPoz9c"
-Content-Disposition: inline
-In-Reply-To: <20251204032452.9523-1-sohammetha01@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
---Aa2dCrHsQWzPoz9c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 04, 2025 at 08:54:52AM +0530, Soham Metha wrote:
-> diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst b/Docu=
-mentation/trace/rv/da_monitor_instrumentation.rst
-> index 6c67c7b57811..9eff38a4ad1f 100644
-> --- a/Documentation/trace/rv/da_monitor_instrumentation.rst
-> +++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
-> @@ -162,10 +162,10 @@ For example, from the wip sample model::
-> =20
->  The probes then need to be detached at the disable phase.
-> =20
-> -[1] The wip model is presented in::
-> +[1] The wip model is presented in:
-> =20
->    Documentation/trace/rv/deterministic_automata.rst
-> =20
-> -The wip monitor is presented in::
-> +The wip monitor is presented in:
-> =20
-> -  Documentation/trace/rv/da_monitor_synthesis.rst
-> +  Documentation/trace/rv/monitor_synthesis.rst
-
-Looks good, thanks!
-
-Fixes: f40a7c06020709 ("Documentation/rv: Prepare monitor synthesis documen=
-t for LTL inclusion")
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---Aa2dCrHsQWzPoz9c
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaTFI1AAKCRD2uYlJVVFO
-owDWAPsFTN02CmAMNm5Y8waldi4Tx2eTHjk62BbuOuMDQZvphwD/eRHkMXjpOZM0
-s9c3nDzj2FIK8I2TpfDNUaAhIJ6fpwo=
-=/qR7
------END PGP SIGNATURE-----
-
---Aa2dCrHsQWzPoz9c--
+I looked into the CI failure and it’s caused by the test assuming
+/tmp is on tmpfs, which is not true in the CI environment, so
+fallocate() fails there. Since /dev/shm is mounted as tmpfs on that
+setup, would it be acceptable to change the test to use a file under
+/dev/shm instead of /tmp?
