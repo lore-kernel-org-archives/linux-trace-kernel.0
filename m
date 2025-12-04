@@ -1,161 +1,121 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9B51A9F85
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 01:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A9D1A5BB4
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 01:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764811417; cv=none; b=UGcsyK5XHAsBEAmxIsweeOOB1p38iO12Z8nkOjvKgQ8iBy9ZKsyBa8zu7u3/UTG+95KD5rpRngprKLKUafil35JvLt8Xxn7hdIuZ4PvrnCYayLjp287ywAbK6ekq5oibZHPGTN82kaj0wC4zebK8V+GlQYJgqFjuZfVFZ67UxVg=
+	t=1764813308; cv=none; b=hmsUktbROn/k1iUO3BhuvFFZCJOLalpE34BkANFI0Hm/5A+lILnbS7iibW7LqW24BhZ4G65x6lt+1PCouDgWinhN0SwMaI7nY5ixYmuqPTHomyYPjw35yag7gImRvNfLFxMU8uwIxUYxbcZLeTr/QejvtcfbQcUKZ8kumoAMCzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764811417; c=relaxed/simple;
-	bh=Uvh0yZY15GEtzECgHRv5Oh5uDOtYGTU0PpHMlDzRVdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EfZWmBPnI5lmA0BaIERRW27ZPfsmX3S4cANtQeKhydRF3SEITd0n+1HY9637tkjPct+L/ZqI7S/Lusf9XEH1UdRhOh4TT7ZhJC7L0cfyM87KqvZzTxiH+DO1y8dFhg6u4kaVDXPPOKFzL9r18eOAwclW59KTOdlja2VAqfSaP9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PvQ3suMl; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1764813308; c=relaxed/simple;
+	bh=jULh/VyQfzn0FPjuWCV2CI+QAn3sKJsueassL5jkw74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JvB9szv0Fqv7k2mTguEm/Zrz9xcrFaL57dLRekM01+CZRrIpNvFNNuwd92r25podT3oU2WPZxeRPCSPcsBANZwkRvphs83mRlgedQ+5Hvs4n6HN5knLJ0sZXNY5MnpAZgPBtsett6xbBacRZtYeKy26Xru6Zcz6DQTpcgDHYD1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maD+V87+; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvQ3suMl"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-298144fb9bcso4422005ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 17:23:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maD+V87+"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29806bd47b5so2453455ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 17:55:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764811415; x=1765416215; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J7S+3a6m2SRWGZPl86oDbuprI5NM42FY1cIZzP35vOQ=;
-        b=PvQ3suMlPaJXqmdBRMHXxiJp6t9XM25yQH2NNqv15ttJH5mDrZkWPajNBHTCKOMcEg
-         sCP6Mgs+3Z6QwGFUQ0g/8mr8FbvXtJVUNDyLKHpptUEgyaJ47kFwsrg2R38fDM81KeAM
-         VFonyjEx3NAwYlvsHq+GJxiJZcV2/r3836Olv9uT94M9N5ALvExa/h7rOZzMKlJzftBT
-         X5IQGB2pF5EyABCxw7M1v4wSSHyLNG3cqUZdvVvpyGpsBCeAo2wI+5hKQ6LcWHpYBJSD
-         SSofsUWuHvRV08D4+jyIIXACpWTrzn+DwpMe7BqSZiiEeGlbKbDweybRH4ltTtdZ0Q7p
-         CMyg==
+        d=gmail.com; s=20230601; t=1764813307; x=1765418107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b9ZKBsX1w6UPefrLQ6j6TJQtLjEj4G2aPJhHSG5VU5E=;
+        b=maD+V87+PjGaTA345e1TV/6NHJwE/4VJFzPuvWzlxdDUCAsflCQpGhmwGr+fIqkyAH
+         8OiJ6YArmYqxmLDN/xfzxgzslNb4zaKWCS7J/Ip9FtGIWzv/GYyu/9B1E8uCfzg0ypT5
+         8/vYHaz8zhzLzUhhVkVDnluYxGOFttQ+7/H29dlLSXjlthW+IOdoFouHV2owtHsfWyGg
+         gUK6G/JC4H3FttgrjrkKEMQrA3VpGGSvzoN+jQSYk6Rj+NuSxI7Yu2ONzV1OdYZTy2uf
+         0E39YxHB6yDu+4hK/7l4n19nKtsQylz5OPF1puD/RD+hurKju4zZqEE52YqNpq6nH0v3
+         O1yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764811415; x=1765416215;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J7S+3a6m2SRWGZPl86oDbuprI5NM42FY1cIZzP35vOQ=;
-        b=ZuhEGTuo2pKDTc3RPrumdy7/61DlGrBW0nlOZXsunBQvD37DU+EKWhRYW9sGnM3+K2
-         38wUX17IZl1iCI2/BhMjUrugrPHCihcD7EIvgvlvQLR4K0G7LIx4PiRSwQKlBZCJ+tCc
-         tfHqzl6TVp8auSqSe1EhvMps2lrKz0PTo0+K1/rzB8VF1AcLMx/xUKZNMJXV73QpTePZ
-         lG2PDU9vR1TNjjg7IfdTpQl/gHaTvQuY8pxKPqKsWnigE3KzHJKgGXKmHFyh1J7Cw2GK
-         efs0isM70yvfrnBJDvtx2GgXJB/FNOf1wdIOuayzmSDyDlqO2v2EgpFHhkoxlZeoiI0Y
-         hKsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+jODU/0z1o4RNRHk3toUhwHBBty94k9oG+qMjS0cMNZG3XSKPM8tE4TYOFbGOfFEA3h1teVme9NV0z0+DOS0uh6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiUqHUf/YToq1RKwtDyflzBbTbjXdAgJ05SyrZH4VMoxxovkCr
-	QvWyvUieQUEHkyxGUtl6fevNEB4FpMrrDxItcRdLpP5kvnF5wMl07TJJ
-X-Gm-Gg: ASbGncvRZyxmhq5JnFTBlmvw7KlDbHkbpZ2qCU+2dajNE69naQ36s5I12jQmYrUUlF2
-	w7+hVD9r4q/8YAPCT23vYmzCnP3X6G9G7LfYpkD+UW7Ki1KebU1uqOduwMFZXqMkpY1nJQrQQHo
-	vNLxyUae6d39xlYJgMwVwBe2yeUvU9X7RhaLu8UMnkdrbwRkseZEEWVotsXl7oXuh+lMfG2DTTQ
-	9QLuNms8kzDz/al4KVbtucDn+r7k6v91czs+1vrKX64bD4jt5QyLwhtGXdYoJqZabyGItE3N0+G
-	oNzehfg4qbEIPpferxZ7te7t3DWhjvNhst1nDI6tp/H2VKYF1jGI0ap3A+z7JfO9IJndNXYWZS+
-	B2hl5Ukhw25AFERcQGHOd95LMJNCLrhSm9rwDW6aVSubPY80hJPj52CEFSQcomPQdeLsXakXeu1
-	ZB4AhC/UtdNrs=
-X-Google-Smtp-Source: AGHT+IFO7v+xzv9ChUChipH5utZ+kiuQ/BxDExY4ttC5HF2DSTum5pVPJ5bvBYUxIBOnKh910HxSJg==
-X-Received: by 2002:a17:903:1105:b0:297:dfae:1524 with SMTP id d9443c01a7336-29d9fb658bcmr15363485ad.16.1764811415111;
-        Wed, 03 Dec 2025 17:23:35 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae4cf9d0sm1674715ad.29.2025.12.03.17.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 17:23:33 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id B8348422D89E; Thu, 04 Dec 2025 08:23:31 +0700 (WIB)
-Date: Thu, 4 Dec 2025 08:23:31 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Soham Metha <sohammetha01@gmail.com>,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Cc: shuah@kernel.org, skhan@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Nam Cao <namcao@linutronix.de>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] Documentation/rv: Fix dead link to
- monitor_synthesis.rst
-Message-ID: <aTDik5tn_5TR_-9B@archie.me>
-References: <20251203182121.52759-1-sohammetha01@gmail.com>
+        d=1e100.net; s=20230601; t=1764813307; x=1765418107;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=b9ZKBsX1w6UPefrLQ6j6TJQtLjEj4G2aPJhHSG5VU5E=;
+        b=fVJt5bi7hQphQOO6NxYA57ScWvCRQS6gRVMB31weIm236Pe1XGGVc3+IvBnJM+FJu6
+         AX7YcFIgMOybzGYVjLuWyXAGV/B+rtxQZaSn32B9cRNDLhWYAZ4iLXkHxFrZla/sKpBa
+         8VaX8ONiWqMyJ0WmZmFzYX1zm10djOctaMXg6bTUsgFatg4pnRsQa1s0xAdi10FcEw5M
+         Dg4HAdwtrQKeYqQ8aY4mLKJOYxRNK3WEf1rwXQDYwrJVC6OBR+M0DSrdoMwAJae4Djaq
+         2o0X5c+RuWA5V2MYcEMyIZxxVOP+I1GCjNbDk18bRAYhUK50U5xBd+AUQzk0FLZhYnDT
+         ZXVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWy1+B0eUXlmmYu7CBadcTkTFR+WPiT5cVA1ldS//5qtIiY4yAAMduZo33isWj8PJB5muvwEqzNJBnT/w7+T4u4J4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1jX2DgIEpprlFJctQkzU5gLytafAU8QebnGNH1pxZ2B15u110
+	34BBuqndqkbKiD1PnR4uRlqS6R4Rm9LjwUEJfNNjvrjK20bfiB+CQrY9
+X-Gm-Gg: ASbGnctuHxiehk5bVcbpsIE+gc1yprQp3SZNSPCAditrLdezzKIiYmczalNb7+hPmGh
+	x0aoH3IBO6YXkhjdVun7n03XpRA3BNqxTacEAF4TA9/A+c3CzGYwG07JMUNMFQpczEv67mblAlK
+	5GfW2s4bwsEPIP39laszUaPAqZVJqMj8bUe2q2/oD55l/r08zymxlVMJGCYDoZ0WGXKn4PKUBf5
+	FB7AER56ZgtJ1NH9EyNTnPS+IkD6qyvisjwrHh90LBN5byoFU3NfPGqRBfVZ5YczaVPJz3ssNjp
+	xc492ivcIPGLA4Qe3fg7UTQzf222jTEA2BDipEoVNd29/m3X8HHnJS1clEg4BELd0f4Wx3cs6NQ
+	tXh3pYCNQ5LW7ME0bZKV8RSRTUXQ1+gsaQaVoIxkGqa209k8JIJOHPdsf/dcyHSFr4hvHFGcDLo
+	vmASE0C7Vm2v7HHAKlsNM7BRiFNS/jKQ+0y9ukDmN0tFD16Eb0YA==
+X-Google-Smtp-Source: AGHT+IGq8c9oD3u5GYh05SjANvXBHmmeyohU8q+LRCLY9miurA1rAfYoEUrgRkiIG9sgighxtVHcGQ==
+X-Received: by 2002:a17:903:b07:b0:295:9b39:4533 with SMTP id d9443c01a7336-29d6839870dmr54019345ad.30.1764813306619;
+        Wed, 03 Dec 2025 17:55:06 -0800 (PST)
+Received: from localhost.localdomain ([2409:8900:1be3:8f38:b904:5201:d897:3883])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34930b5a195sm915502a91.3.2025.12.03.17.54.55
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 03 Dec 2025 17:55:06 -0800 (PST)
+From: wang lian <lianux.mm@gmail.com>
+To: shivankg@amd.com
+Cc: Branden.Moore@amd.com,
+	Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	david@kernel.org,
+	dev.jain@arm.com,
+	lance.yang@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	npache@redhat.com,
+	rostedt@goodmis.org,
+	ryan.roberts@arm.com,
+	ziy@nvidia.com,
+	zokeefe@google.com,
+	wang lian <lianux.mm@gmail.com>
+Subject: Re: [PATCH V3 1/2] mm/khugepaged: map dirty/writeback pages failures to EAGAIN
+Date: Thu,  4 Dec 2025 09:54:25 +0800
+Message-ID: <20251204015425.66988-1-lianux.mm@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20251201185604.210634-8-shivankg@amd.com>
+References: <20251201185604.210634-8-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ExQ7Ve6pZdT2zuD7"
-Content-Disposition: inline
-In-Reply-To: <20251203182121.52759-1-sohammetha01@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+> When collapse_file encounters dirty or writeback pages in file-backed
+> mappings, it currently returns SCAN_FAIL which maps to -EINVAL. This is
+> misleading as EINVAL suggests invalid arguments, whereas dirty/writeback
+> pages represent transient conditions that may resolve on retry.
+> 
+> Introduce SCAN_PAGE_DIRTY_OR_WRITEBACK to cover both dirty and writeback
+> states, mapping it to -EAGAIN. For MADV_COLLAPSE, this provides userspace
+> with a clear signal that retry may succeed after writeback completes.
+> For khugepaged, this is harmless as it will naturally revisit the range
+> during periodic scans after async writeback completes.
+> 
+> Reported-by: Branden Moore <Branden.Moore@amd.com>
+> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+> Reviewed-by: Dev Jain <dev.jain@arm.com>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
 
---ExQ7Ve6pZdT2zuD7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 03, 2025 at 11:51:21PM +0530, Soham Metha wrote:
-> The file 'da_monitor_synthesis.rst' was renamed to 'monitor_synthesis.rst=
-' in
-> commit f40a7c060207090f41998025fcd1cfad06ea2780
-> ("Documentation/rv: Prepare monitor synthesis document for LTL inclusion"=
-).
-
-[also Cc: people in the commit's SoB chain]
-
-Nit: For commit references, please use abbreviated commit hash (at least 12
-characters; I personally prefer 14).
-
->=20
-> Update the reference to point to the new filename.
->=20
-> Signed-off-by: Soham Metha <sohammetha01@gmail.com>
-
-Fixes: f40a7c06020709 ("Documentation/rv: Prepare monitor synthesis documen=
-t for LTL inclusion")
-
->  The wip monitor is presented in::
-> =20
-> -  Documentation/trace/rv/da_monitor_synthesis.rst
-> +  Documentation/trace/rv/monitor_synthesis.rst
-
-Thanks for the catch! Can you also unwrap the references (which are in
-literal code blocks) so that these can be linked? Like:
-
----- >8 ----
-diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst b/Docume=
-ntation/trace/rv/da_monitor_instrumentation.rst
-index 6c67c7b5781118..9eff38a4ad1ff4 100644
---- a/Documentation/trace/rv/da_monitor_instrumentation.rst
-+++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
-@@ -162,10 +162,10 @@ For example, from the wip sample model::
-=20
- The probes then need to be detached at the disable phase.
-=20
--[1] The wip model is presented in::
-+[1] The wip model is presented in:
-=20
-   Documentation/trace/rv/deterministic_automata.rst
-=20
--The wip monitor is presented in::
-+The wip monitor is presented in:
-=20
--  Documentation/trace/rv/da_monitor_synthesis.rst
-+  Documentation/trace/rv/monitor_synthesis.rst
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---ExQ7Ve6pZdT2zuD7
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaTDijwAKCRD2uYlJVVFO
-o/hyAQCZTtG+Npjdwceg3B2fWEbRK/dfQs5AlrpJpTI4YvX0SAEA3EOr9AbpAW68
-ivyGkRfmr5ezDnFob0+1riZRH8AzDgQ=
-=SD/G
------END PGP SIGNATURE-----
-
---ExQ7Ve6pZdT2zuD7--
+LGTM.
+Reviewed-by: wang lian <lianux.mm@gmail.com>
+--
+Best Regards,
+wang lian
