@@ -1,58 +1,32 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD491D63F0;
-	Thu,  4 Dec 2025 18:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4832F25EF;
+	Thu,  4 Dec 2025 20:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764874032; cv=none; b=ZQBk92v+UYZQRpnv/gHq949a44g7gRJCRxUciWKesMO4QwbOycpMGpynYlnpPDAb8mQhbHvdRjgW/9iLJDPEn0FkzVjT/GMoxWMeK5CXsi0Tr6o/i1jmstPgCdr31RvXPZ5h83wTu5+GXcI9Ut3nE1LkygjQilZeI+KQnFJccHo=
+	t=1764879516; cv=none; b=eiJ9u7IT6M77DUrEQR43C6Ow7d5VvcGLyjeNgE4AGX0KVEb1GSBwLXuRhsyNTSZS/cecKt05AkS7gBuHmhte8cy84/I74faI3m68tX4sCO5WFXOKpnDE1VRfyPVB19x7WVWxuhYoNEqm6teW6cRO8Eu2WqM25wmFJEX326M4a8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764874032; c=relaxed/simple;
-	bh=ykAnz4AG1UtwAaAeIQnzglv/0vXJse22g2gS1Y1Ec/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oc9VvJ+N3fl5ScodB3erza1d0BQrGaE/JOAmiCIUN7aBUsa/MkcR8OFqtp65rN2YQHRV1kiFTObDst5GX2hrWbv+hoBDJ3oU/jHsMMYFXXAO1sZs2+4QmyjIuxLfQy/gRLZciomlVVAkemMLhoovr7CxKAWv4iE3N2Omlt5kJzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	s=arc-20240116; t=1764879516; c=relaxed/simple;
+	bh=m01a3N7sCKdndNZkP4mWbWF3+s8UneY6qSCLk4jYhSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Z8ORtDfIcLG0YWX2Ge/D8l4JE7Bz1Hx0uowA41hiyBFOJWf0NmDLrAZJ3C/W1AcXq7D/2QDTY/dASxTxMy7zroB7Fbn5xKjnLWs9HW03ecvfznN8Ru1Gg/QN+DB0GDPuNO4jINAyQFEtZQvAFgTprzNZSoBZA7QzMOtt/CD67ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id D9F201401C3;
-	Thu,  4 Dec 2025 18:47:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id A83A220029;
-	Thu,  4 Dec 2025 18:46:53 +0000 (UTC)
-Date: Thu, 4 Dec 2025 13:47:58 -0500
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 048FE58860;
+	Thu,  4 Dec 2025 20:18:31 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 5961420028;
+	Thu,  4 Dec 2025 20:18:30 +0000 (UTC)
+Date: Thu, 4 Dec 2025 15:19:35 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Christian Loehle 
- <christian.loehle@arm.com>, Samuel Wu <wusamuel@google.com>, Huang Rui
- <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mario
- Limonciello <mario.limonciello@amd.com>, Perry Yuan	 <perry.yuan@amd.com>,
- Jonathan Corbet <corbet@lwn.net>, Viresh Kumar	 <viresh.kumar@linaro.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Len Brown	 <lenb@kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann	 <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau	
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu 
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
-  <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev	 <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin	 <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, kernel-team@android.com,
- linux-pm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] cpufreq: Replace trace_cpu_frequency with
- trace_policy_frequency
-Message-ID: <20251204134758.72b1064b@gandalf.local.home>
-In-Reply-To: <2b31224a6cf361a5d2859c84aa1bcdf52916423e.camel@linux.intel.com>
-References: <20251201202437.3750901-1-wusamuel@google.com>
-	<20251201202437.3750901-2-wusamuel@google.com>
-	<f28577c1-ca95-43ca-b179-32e2cd46d054@arm.com>
-	<CAJZ5v0hAmgjozeX0egBs_ii_zzKXGPsPBUWwmGD+23KD++Rzqw@mail.gmail.com>
-	<2b31224a6cf361a5d2859c84aa1bcdf52916423e.camel@linux.intel.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Douglas Raillard
+ <douglas.raillard@arm.com>
+Subject: [PATCH] tracing: Fix fixed array of synthetic event
+Message-ID: <20251204151935.5fa30355@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,25 +36,62 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A83A220029
-X-Stat-Signature: myhtfzdmfrbaajbkk8gsgyzd4kf9koa7
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 5961420028
+X-Stat-Signature: fynj8u4sn3a8e9gmzpn3mgfdkdnqp1rg
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX184+sGIWPK/W02Yj6Xph3ZRsqNhbZ6UjYc=
-X-HE-Tag: 1764874013-940494
-X-HE-Meta: U2FsdGVkX19ZrTWPbQSJrM9iYSkTJC1g1TAiLlnyJ1nXC4Aa89Y3rTHKxUm/pRuQDVzkFE4gd4NwqOA0DC/sTJrSsSL2L+CMX3dWOIlx7CAyYhofCGhck5SfJ82QPSNlTng3Ns2ytrhfBrupHClBcspB/2f0wRUi/12arfFwjxhrZ8l8JNKzuEQMxDM5oCgtj2sKAaFqygk8mh7cNGk9XYQY92B6w6eX3ICVB9rHec2ZGaYDzRbsu23Y1uB9iLzpw4ACE23YxL8FmyiaGuHWPjupRoyejhvfFXmafF3n6SUnI5svEzoCoI6+2fOMObZO3ShaiFb90mEdFd7GlGA1QRyoS2awh9sdXX8YgulkqjOXxur6FXoDQw==
+X-Session-ID: U2FsdGVkX19l2wDywQgfXTsUPJgqk5H1DmE6eC/bUo0=
+X-HE-Tag: 1764879510-62474
+X-HE-Meta: U2FsdGVkX19wD1rlBb5cbQGvgNlTYFBWwiB0UjXW14BxmOE8bMabY5nureb4a8+wC92jMLqYrp7VzK3i7CWTAnkC7K5z2ipVrQrzr5XfY8C3Inm+nwgc1vBJYCZYMCPxh9F0ce0NX0ZuxavWRQM0YbaNIkSH4VqH6LX0gtxPO9hWwIONjy0Ec+2L36BGYzuC2MpFYG5UIODIPO91JOqCj1U0hz6yqeo9V8Miu9c5iWh5Yoitt9rEcrnPWkyrHJWSupEBRRJLUomIOMoYHp6YCveBgZBNcuWVXbRo32zxbuPahRph5zk67z0abi81kiqYF7yqqBE83C/7Sc9BOWn/QLvHAMbEfmWGQq8HGjn/iMOv0PQKO1KPE40QgEY6/0RtS/aT9TTYm1UIH/881bqVFQ==
 
-On Thu, 04 Dec 2025 09:21:13 -0800
-srinivas pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> We have tools using tracing. We may need to check those tools.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py?h=next-20251204
+The commit 4d38328eb442d ("tracing: Fix synth event printk format for str
+fields") replaced "%.*s" with "%s" but missed removing the number size of
+the dynamic and static strings. The commit e1a453a57bc7 ("tracing: Do not
+add length to print format in synthetic events") fixed the dynamic part
+but did not fix the static part. That is, with the commands:
 
-I only see this using pstate_sample event.
+  # echo 's:wake_lat char[] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
+  # echo 'hist:keys=pid:ts=common_timestamp.usecs if !(common_flags & 0x18)' > /sys/kernel/tracing/events/sched/sched_waking/trigger
+  # echo 'hist:keys=next_pid:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,next_comm,$delta)' > /sys/kernel/tracing/events/sched/sched_switch/trigger
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py?h=next-20251204
+That caused the output of:
 
-I only see this using amd_cpu event.
+          <idle>-0       [001] d..5.   193.428167: wake_lat: wakee=(efault)sshd-sessiondelta=155
+    sshd-session-879     [001] d..5.   193.811080: wake_lat: wakee=(efault)kworker/u34:5delta=58
+          <idle>-0       [002] d..5.   193.811198: wake_lat: wakee=(efault)bashdelta=91
 
--- Steve
+The commit e1a453a57bc7 fixed the part where the synthetic event had
+"char[] wakee". But if one were to replace that with a static size string:
+
+  # echo 's:wake_lat char[16] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
+
+Where "wakee" is defined as "char[16]" and not "char[]" making it a static
+size, the code triggered the "(efaul)" again.
+
+Remove the added STR_VAR_LEN_MAX size as the string is still going to be
+nul terminated.
+
+Cc: stable@vger.kernel.org
+Fixes: e1a453a57bc7 ("tracing: Do not add length to print format in synthetic events")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_synth.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 2f19bbe73d27..4554c458b78c 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -375,7 +375,6 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 				n_u64++;
+ 			} else {
+ 				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+-						 STR_VAR_LEN_MAX,
+ 						 (char *)&entry->fields[n_u64].as_u64,
+ 						 i == se->n_fields - 1 ? "" : " ");
+ 				n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+-- 
+2.51.0
+
