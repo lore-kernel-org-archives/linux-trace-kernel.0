@@ -1,295 +1,134 @@
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C1C30103F
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 07:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0792F25FE
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Dec 2025 08:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764834438; cv=none; b=KFOJKNGHh2I66/SW0Do03dIk+Liv2u7lw/OtmBVUdPAaSW+0CxYYCveuCFj7YDiEo+M7jaIUl5HAdpOTjH3MC2JOSI793FxZ7iKrHnX0R+onjxvfgf7kh/IAcixHB+8n2Kaed1RWWgErnjyeN3jyd2zsBmaxmyHyz57F+xf+cXE=
+	t=1764837598; cv=none; b=P9pijcTKKV2uvktPqfoff1+7EQdn9Xckrgm+rs8pwFKu3NuOrmRu3/JQEnd5zOfGXvbjGZCMuIixDhHxwYueFwQpDkY0mN5w/SSXNJNBoXjYEPVbLb2U6vC/qTAFoYghcrh6tBip2kkiFGyWlRJPSH7iJf7CeeTPN4ypNZW6FGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764834438; c=relaxed/simple;
-	bh=qdhWcqd9hT93rtUBAlBAvb3lgGVFKACqYB4PFwedTe4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GwlaAfGTBYnLi3AMkL3qJB47RGvfUs/DmICeN28pt2MjpI6bDTLJZA/Q5FzaHFvwNaA6eR0tQxNbnGla0r8ibrQyHXaQqgVAKLkmRWgRbUvYg5pbASNbrgJIsCQtKAITFL8aZp/c6ccx2KnQ8GB8Umkq9NmNeRrz76YV1nh+V78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7dSRs1t; arc=none smtp.client-ip=74.125.224.48
+	s=arc-20240116; t=1764837598; c=relaxed/simple;
+	bh=OxJcYZ/t0IbTZeUHzN5FgPnszKPCjA/MF1pi2URYe70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7Xl0TRT1P3oSkvpukoucRYe0Mq159wg0BEUcwlWdNNHHGOgdytW0EzAN2Bp+Erwbh2EqYdjbNZ3eoyFLKDOiXEqP1nb7e4L5Knp6VN3qV4JFxjoK8wTL5B3N1Nf36QJnHXVSzODkhQ7fixbVENq/CbhjKqOK9X2zR7c+bIJ4wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcCcaUCC; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7dSRs1t"
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-640c9c85255so1010693d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Dec 2025 23:47:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcCcaUCC"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2984dfae043so7068075ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Dec 2025 00:39:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764834435; x=1765439235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIKIbTcJdT1eJhgdOyO7DT2bXa3Lo/jwod4ftd3kt6E=;
-        b=W7dSRs1teUFKL6dJVz8GhSZuMsoI1xlV46siXhpcARXWRoubEmIEXdyhg5ggSbje+b
-         lzSdTrYNkFOcxDJlEGNWjyZrRaQtsM4KmdyRpOW2pheoJcCKG/A2E59biy46CULBL/tW
-         tN+0+h9KuFATru5N2suLpJQsyAYeGuzRjUPoFLrvCVry0E3kMRUk4cT6AS7DpyL5CvMA
-         9RtTAUXFNHJ/8/WKZeicwAVd9+I9D2PCxmqTKj1+/s2HZt8p+r+qvCySkdrH39MiCCZN
-         5T0i5ybKV73D32dA0Scb3W+49EaEOW6WM43675FJR/spdtz4drDsXJPVOKK7+dFIckIK
-         ktsw==
+        d=gmail.com; s=20230601; t=1764837597; x=1765442397; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1JNxOjk33nzB6A4jXH2tWSnqUE8y1O3Ojrn7T5hKfk=;
+        b=HcCcaUCCbqAA33sVDeBCMW0GkkrUhshu1xxcut1k2Gex9hiO27fl9QeaPqoOwn7wHb
+         aQzrqlPnepzwvlj6O7W91UEy82eM6lKPnI6bUT4QFU+/0Jwkc5T4HI7KNDJZIyeyuGTY
+         Idj2rOD2n5yR8jPnocufiwTuupak/1DT1X6vxHYCB23j/OXSNtjEudTBqsFqtUiSVny8
+         Z/5SkJEc6lIhRajNunOHdpknFTcvgD9i8BWkH9POckDxIBiS6i7SpN6y4DDHSy12omM+
+         ++zhRruPdmQOKfPPYhd45/ntoSym5UVqvb2cNyWYU9C2CVhHFEHHAd4ULs1KXVMeWA6A
+         M/UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764834435; x=1765439235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gIKIbTcJdT1eJhgdOyO7DT2bXa3Lo/jwod4ftd3kt6E=;
-        b=PMW068UWhd3qmt4G5H1DQpwaTOd+tQhqFg6BoNTu+1jl0KkPef7ysAJNNBzymVaZrZ
-         KNyyGWmFkV5wbCr7F7k0rOU5jCvc3HmxGtNgtgBB/Bo3IEK5662xblXI45cpfXNKXfoq
-         FhXSMocNT98uJRL5usnNRGyiaot0x5Ug+t8THQKLq5tku2KAZdpYXaQFPan6Ih37xvi4
-         SS1eyScXqsb+ue48OGyMKZi3poa/K0ySApjgKF+f2PQyRjs9nSeLUMUI4Pa5mRmruPmV
-         nH/LgMirQm9to6DII52tQdYjaoONjlXNwvJGsIi7HlDKEzhoGdqt7Y5pV8VUPbLYAAl7
-         e8bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoiGryj7yEdRCnboBBTBWXxceM9IKVkTQFyikei8pa30jkXIE4D1oBh9cKeOOEKuY2WZ0xRCYsq4qqAWB3sHhMIbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ95m36VOx1NaRISRhYSuP0iBQXZxCJ5j17VJ/XkghzL3iWQCr
-	xM6A3QH+ExMcRGPqefUoHnRoY0TxNtXl03S5vErq9l2P9+3EN8HkIH1z
-X-Gm-Gg: ASbGncuNzA0Rl3920wM9Kq1ss3DwbMugud1zvIcVIU75eYo8DkcixhjyPdreD/G3kly
-	EYeBbatJN/MOtGvtd2oE84a+HNWpf+rvBSPCCOubQHOhSmFrwO5eJ2zRxijc/4ucbJ7IvrvlHqm
-	hu3KqF73zDM5Do7FlpXvMuKc9vVL2X3PMDX5P0MfDUh4lPj0J1olQHmlhwIbwQQ2zu7JibkqAu/
-	JvNsFyKbgAfKMXQvGGkvMRc4NYNmZVIIk/M4ZOG4qwTMrgr2x90cx9rVtHLBBDFS8t2B+sTJ2RJ
-	5UfY39JxEQsB0E4xNaXiqVLlPQ/CA5HBnl+Y9J4TS+Rq+XnCAxl3pKKxJ2Br2dLuoD+44KwGDSw
-	kuYF2H7zLinHi9VwWOO3IJjSpRC4eexEFH9hGYQkvLD00rWdjJHBNkO4xEXL3OVce1Q5E/sVocT
-	WhBzljLmAHXuV67n28jvLtsG9sPUDBvQD/WKWzhYIU0tep8vKmEEg=
-X-Google-Smtp-Source: AGHT+IFirMTbIE/Mz7SxmZusKuVHpn4JgrMCYE3NcUS/x+ulC6+n3iKo4YojdR5CaekHTbK8K19xlQ==
-X-Received: by 2002:a05:690e:16a0:b0:641:f5bc:68d5 with SMTP id 956f58d0204a3-6443d961614mr1540601d50.82.1764834435301;
-        Wed, 03 Dec 2025 23:47:15 -0800 (PST)
-Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6443f5bcbbesm364495d50.23.2025.12.03.23.47.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 03 Dec 2025 23:47:15 -0800 (PST)
-From: Shuran Liu <electronlsr@gmail.com>
-To: song@kernel.org,
-	mattbobrowski@google.com,
-	bpf@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	dxu@dxuuu.xyz,
-	linux-kselftest@vger.kernel.org,
-	shuah@kernel.org,
-	electronlsr@gmail.com,
-	Zesen Liu <ftyg@live.com>,
-	Peili Gao <gplhust955@gmail.com>,
-	Haoran Ni <haoran.ni.cs@gmail.com>
-Subject: [PATCH bpf v4 2/2] selftests/bpf: add regression test for bpf_d_path()
-Date: Thu,  4 Dec 2025 15:46:32 +0800
-Message-ID: <20251204074632.8562-3-electronlsr@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251204074632.8562-1-electronlsr@gmail.com>
-References: <20251204074632.8562-1-electronlsr@gmail.com>
+        d=1e100.net; s=20230601; t=1764837597; x=1765442397;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d1JNxOjk33nzB6A4jXH2tWSnqUE8y1O3Ojrn7T5hKfk=;
+        b=p0MPbqzclW7/itV7ti/QTwnafYDskq7+c5meGGil9JfJUG0VJiEdbfIZpF0PBPFbkE
+         GwerKlDSr8sdjY/VrKSFAoquu3EPa9Kw4SrdNQJmMYk9Xn1PqHn68UYkwaTrQVTz+KFx
+         C3jt3hti7xfnVjc7tqp+URmWDApED8eH7sUuguOs1CZqfKoxYdRAjPs4nBJG8ZDEduES
+         rsA9nrtkLUanoMQs0fpJMGQrjH0+GoUqooSAU56OKeZ3S4rhZtqv15xrJTttdQrBCupR
+         HPoa1tQfNHiKxLf6iaTlLkqw0rUFLF3DRmAfFqZoQmHWvNF/GHtRputbvTYW8vfJLkdh
+         /fQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVjHnt3X2W8t2KVtNeEW3ILz+92B0S5xN5Kx7pM/sCeJVsgszrk1wH7LIiqALluFMh3bNCx4N5aAwS/o1LH/VNpIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgbZ21J/oPeLCwRqwJln1uAbEiN5Gx/vzraq7UQSW1ttFNB3GW
+	Z1wuf748eqlCdWElMMW9jCvnp0LXaMxQiaKycRLniAciCLuZjUfRigFO
+X-Gm-Gg: ASbGncsaXHmssXD5oe8HnF179+hEcUqcVlwM6Ja33e0Uc/T0DMkeM6W4p0AhP1vsBEl
+	GRQpSb0l04N1ZX3ea4POIe5wJM1aGhFlfbkIyIG0Z4HyX2edhSqIjDrNCMSUz4Ys6lqJQj4uJR5
+	n7YSLx7pewsKQ0VtRh6Ip9Xa27X3XrqHlz3qUNoK1dRYexLSScWk8g3nxfjC2oepQjI7GTeNdtL
+	oXemSNUzaJWHvC4rCfsyC9SjCuBfByZi5MiHZ9JpvROSq2Rxz9AcJvLBhkTKY/GQBKwQMdnQB5T
+	3F+7JMWy+aPGJGF/z+M7BSYKpQkgrk1S71bfF4wYAepr1+wJMDBO81vc5S8wehx/bECgcZy3vBC
+	1y1WwWQOcl4PJ8JrEUvgo9gd5l+6LS4x2U0ih4jEMRUHpaEhgjPNoYKU+kIujm2mu+ISW68k+QZ
+	y9L0sfQm+7D3Q=
+X-Google-Smtp-Source: AGHT+IGPazSTtY6VVQpikAdMDTf95Vk0b10d8Tb5c077iSAqlm03M0R68qba9fqHpOhAjsCCk1ni5A==
+X-Received: by 2002:a17:903:246:b0:295:7453:b580 with SMTP id d9443c01a7336-29d683f077dmr69081945ad.58.1764837596595;
+        Thu, 04 Dec 2025 00:39:56 -0800 (PST)
+Received: from archie.me ([210.87.74.117])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf6a14f40f5sm1096665a12.21.2025.12.04.00.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Dec 2025 00:39:55 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id C893441E4822; Thu, 04 Dec 2025 15:39:52 +0700 (WIB)
+Date: Thu, 4 Dec 2025 15:39:52 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Soham Metha <sohammetha01@gmail.com>,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Cc: shuah@kernel.org, skhan@linuxfoundation.org, rostedt@goodmis.org,
+	namcao@linutronix.de, gmonaco@redhat.com,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3] Documentation/rv: Fix dead link to
+ monitor_synthesis.rst
+Message-ID: <aTFI2LDNLmC1osiG@archie.me>
+References: <20251204032452.9523-1-sohammetha01@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Aa2dCrHsQWzPoz9c"
+Content-Disposition: inline
+In-Reply-To: <20251204032452.9523-1-sohammetha01@gmail.com>
 
-Add a regression test for bpf_d_path() to cover incorrect verifier
-assumptions caused by an incorrect function prototype. The test
-attaches to the fallocate hook, calls bpf_d_path() and verifies that
-a simple prefix comparison on the returned pathname behaves correctly
-after the fix in patch 1. It ensures the verifier does not assume
-the buffer remains unwritten.
 
-Co-developed-by: Zesen Liu <ftyg@live.com>
-Signed-off-by: Zesen Liu <ftyg@live.com>
-Co-developed-by: Peili Gao <gplhust955@gmail.com>
-Signed-off-by: Peili Gao <gplhust955@gmail.com>
-Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Shuran Liu <electronlsr@gmail.com>
----
- .../testing/selftests/bpf/prog_tests/d_path.c | 90 +++++++++++++++----
- .../testing/selftests/bpf/progs/test_d_path.c | 23 +++++
- 2 files changed, 95 insertions(+), 18 deletions(-)
+--Aa2dCrHsQWzPoz9c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/d_path.c b/tools/testing/selftests/bpf/prog_tests/d_path.c
-index ccc768592e66..c725d5258e65 100644
---- a/tools/testing/selftests/bpf/prog_tests/d_path.c
-+++ b/tools/testing/selftests/bpf/prog_tests/d_path.c
-@@ -38,6 +38,14 @@ static int set_pathname(int fd, pid_t pid)
- 	return readlink(buf, src.paths[src.cnt++], MAX_PATH_LEN);
- }
- 
-+static inline long syscall_close(int fd)
-+{
-+	return syscall(__NR_close_range,
-+			(unsigned int)fd,
-+			(unsigned int)fd,
-+			0u);
-+}
-+
- static int trigger_fstat_events(pid_t pid)
- {
- 	int sockfd = -1, procfd = -1, devfd = -1;
-@@ -104,36 +112,47 @@ static int trigger_fstat_events(pid_t pid)
- 	/* sys_close no longer triggers filp_close, but we can
- 	 * call sys_close_range instead which still does
- 	 */
--#define close(fd) syscall(__NR_close_range, fd, fd, 0)
--
--	close(pipefd[0]);
--	close(pipefd[1]);
--	close(sockfd);
--	close(procfd);
--	close(devfd);
--	close(localfd);
--	close(indicatorfd);
--
--#undef close
-+	syscall_close(pipefd[0]);
-+	syscall_close(pipefd[1]);
-+	syscall_close(sockfd);
-+	syscall_close(procfd);
-+	syscall_close(devfd);
-+	syscall_close(localfd);
-+	syscall_close(indicatorfd);
- 	return ret;
- }
- 
-+static void attach_and_load(struct test_d_path **skel)
-+{
-+	int err;
-+
-+	*skel = test_d_path__open_and_load();
-+	if (CHECK(!*skel, "setup", "d_path skeleton failed\n"))
-+		goto cleanup;
-+
-+	err = test_d_path__attach(*skel);
-+	if (CHECK(err, "setup", "attach failed: %d\n", err))
-+		goto cleanup;
-+
-+	(*skel)->bss->my_pid = getpid();
-+	return;
-+
-+cleanup:
-+	test_d_path__destroy(*skel);
-+	*skel = NULL;
-+}
-+
- static void test_d_path_basic(void)
- {
- 	struct test_d_path__bss *bss;
- 	struct test_d_path *skel;
- 	int err;
- 
--	skel = test_d_path__open_and_load();
--	if (CHECK(!skel, "setup", "d_path skeleton failed\n"))
--		goto cleanup;
--
--	err = test_d_path__attach(skel);
--	if (CHECK(err, "setup", "attach failed: %d\n", err))
-+	attach_and_load(&skel);
-+	if (!skel)
- 		goto cleanup;
- 
- 	bss = skel->bss;
--	bss->my_pid = getpid();
- 
- 	err = trigger_fstat_events(bss->my_pid);
- 	if (err < 0)
-@@ -195,6 +214,38 @@ static void test_d_path_check_types(void)
- 	test_d_path_check_types__destroy(skel);
- }
- 
-+/* Check if the verifier correctly generates code for
-+ * accessing the memory modified by d_path helper.
-+ */
-+static void test_d_path_mem_access(void)
-+{
-+	int localfd = -1;
-+	struct test_d_path__bss *bss;
-+	struct test_d_path *skel;
-+
-+	attach_and_load(&skel);
-+	if (!skel)
-+		goto cleanup;
-+
-+	bss = skel->bss;
-+
-+	localfd = open("/tmp/d_path_loadgen.txt", O_CREAT | O_RDWR, 0644);
-+	if (CHECK(localfd < 0, "trigger", "open /tmp/d_path_loadgen.txt failed\n"))
-+		goto cleanup;
-+
-+	if (CHECK(fallocate(localfd, 0, 0, 1024) < 0, "trigger", "fallocate failed\n"))
-+		goto cleanup;
-+	remove("/tmp/d_path_loadgen.txt");
-+
-+	if (CHECK(!bss->path_match_fallocate, "check",
-+		  "failed to match actual opened path"))
-+		goto cleanup;
-+
-+cleanup:
-+	syscall_close(localfd);
-+	test_d_path__destroy(skel);
-+}
-+
- void test_d_path(void)
- {
- 	if (test__start_subtest("basic"))
-@@ -205,4 +256,7 @@ void test_d_path(void)
- 
- 	if (test__start_subtest("check_alloc_mem"))
- 		test_d_path_check_types();
-+
-+	if (test__start_subtest("check_mem_access"))
-+		test_d_path_mem_access();
- }
-diff --git a/tools/testing/selftests/bpf/progs/test_d_path.c b/tools/testing/selftests/bpf/progs/test_d_path.c
-index 84e1f883f97b..2f9b4cb67931 100644
---- a/tools/testing/selftests/bpf/progs/test_d_path.c
-+++ b/tools/testing/selftests/bpf/progs/test_d_path.c
-@@ -17,6 +17,7 @@ int rets_close[MAX_FILES] = {};
- 
- int called_stat = 0;
- int called_close = 0;
-+int path_match_fallocate = 0;
- 
- SEC("fentry/security_inode_getattr")
- int BPF_PROG(prog_stat, struct path *path, struct kstat *stat,
-@@ -62,4 +63,26 @@ int BPF_PROG(prog_close, struct file *file, void *id)
- 	return 0;
- }
- 
-+SEC("fentry/vfs_fallocate")
-+int BPF_PROG(prog_fallocate, struct file *file, int mode, loff_t offset, loff_t len)
-+{
-+	pid_t pid = bpf_get_current_pid_tgid() >> 32;
-+	int ret = 0;
-+	char path_fallocate[MAX_PATH_LEN] = {};
-+
-+	if (pid != my_pid)
-+		return 0;
-+
-+	ret = bpf_d_path(&file->f_path,
-+			 path_fallocate, MAX_PATH_LEN);
-+	if (ret < 0)
-+		return 0;
-+
-+	if (path_fallocate[0] != '/')
-+		return 0;
-+
-+	path_match_fallocate = 1;
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.52.0
+On Thu, Dec 04, 2025 at 08:54:52AM +0530, Soham Metha wrote:
+> diff --git a/Documentation/trace/rv/da_monitor_instrumentation.rst b/Docu=
+mentation/trace/rv/da_monitor_instrumentation.rst
+> index 6c67c7b57811..9eff38a4ad1f 100644
+> --- a/Documentation/trace/rv/da_monitor_instrumentation.rst
+> +++ b/Documentation/trace/rv/da_monitor_instrumentation.rst
+> @@ -162,10 +162,10 @@ For example, from the wip sample model::
+> =20
+>  The probes then need to be detached at the disable phase.
+> =20
+> -[1] The wip model is presented in::
+> +[1] The wip model is presented in:
+> =20
+>    Documentation/trace/rv/deterministic_automata.rst
+> =20
+> -The wip monitor is presented in::
+> +The wip monitor is presented in:
+> =20
+> -  Documentation/trace/rv/da_monitor_synthesis.rst
+> +  Documentation/trace/rv/monitor_synthesis.rst
 
+Looks good, thanks!
+
+Fixes: f40a7c06020709 ("Documentation/rv: Prepare monitor synthesis documen=
+t for LTL inclusion")
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--Aa2dCrHsQWzPoz9c
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaTFI1AAKCRD2uYlJVVFO
+owDWAPsFTN02CmAMNm5Y8waldi4Tx2eTHjk62BbuOuMDQZvphwD/eRHkMXjpOZM0
+s9c3nDzj2FIK8I2TpfDNUaAhIJ6fpwo=
+=/qR7
+-----END PGP SIGNATURE-----
+
+--Aa2dCrHsQWzPoz9c--
