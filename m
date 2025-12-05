@@ -1,64 +1,64 @@
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA272DF156
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 17:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDF6345730
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 17:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764957165; cv=none; b=Wr3axQhtVsJFLNAtk/xe0MCX7mCvclrm+ABOVcRM5dvnawXqXh29kif/DIvMOSs1sPHSEq2+vSUgNAIFxQPXPWOM7GHwkFUrldtgnfsukg4jS8JdFwlHTgfyUzf1y/BUlpBlNe4hUfxWl0VWUqQ2gMpGQsyyxRs/MmxAWRqCFYk=
+	t=1764957166; cv=none; b=gQw2aYDleE3B3r+4Un3uPt2S5V8qJ3mhaC1SXTB8Ozpya/LN0va9GGt6yQW2rfBQhZb/vYEAzlJkjDqSrmn6KeAE7SenzFbMU9uxr73R22NwEeM+Ip/jfkBBf4rWdqPMScbA3Dxp4J4K90JgnFeOEiqi83jImwSn1n6Xs6R4kNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764957165; c=relaxed/simple;
-	bh=WSOyLaVAbG8nPsi8Fh9vJNEZaG1V5dArA0Vg97NjEvA=;
+	s=arc-20240116; t=1764957166; c=relaxed/simple;
+	bh=6og34fQEZBW+taDejCAi+47vabOoRDY50X8etN5NVU8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jnt92+/AdXdpqgke+6yNND8jcidK/KE34O4BF9iyg589QlluL8RNQlqTEBC9Fggopeds2Vi0nDo+j11nQVy1hO+ldONRonyQ0ElQjuFglwJR+n2s15udk6WBzlExiTJb5MOVcdgkcNqNhFx9fJXdIIH785fiTelO0MzwePM22zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJnkwzYQ; arc=none smtp.client-ip=74.125.224.43
+	 MIME-Version; b=Muj64jz4OdCX5ow7IIzh8eJ8J40fuk1DQz5Orrgkt2yGWl7WdUs3rsmKyXEqrzKFjMgB1CXA6xCCUU3TT1hWwWpGxjzdDcl72DcJa9A1b9iyXkszKJ+aDjJRoCtwr3zOg7/V9jdSb+l5+9U/zYpHHqmQwInHRXIayHdMBrfDJ8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eK7KtmiN; arc=none smtp.client-ip=209.85.128.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJnkwzYQ"
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6433f99eb15so2204915d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 09:52:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK7KtmiN"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-786d1658793so22032657b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 09:52:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764957161; x=1765561961; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764957162; x=1765561962; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wgVl4UPQOdVuiUQDADihFeO6bzjnbrTXUsfv7qld2JA=;
-        b=dJnkwzYQfklN6TTaAJuQ16YzRJmHq+jURTpxoQvIIW1FMEKONaWFcFiYjt0swVjt+A
-         zr0hYyYIWXpWT3MLcL7kPDXDEmw1dzGUlpDgpdNVyPhJsKLh7ickV28HCqTZR5sn+y/9
-         b2NcGaQEK4/5yDhH+SulYSio94HPbfMhHSjKVdMMVu1Cqk5Z5QQsWMQl+T7v0zVU4k24
-         wI0jGFaMtRGhFzQw1DFo1Vy1Z5cegY/xUeHb346U+sA4mCpvhjkuRbFqz3hxWCRZXixo
-         PA/HxOc77rlsIoXoQxbmwi1IhcZ4OOEarFU+si7/29hdfWCPTzFBpbmgjYdHMtdJ2Eza
-         /osA==
+        bh=qMcm6nWRLFBVfXJXBUXf6pE+rQOQZFvzs8Y8xJm6ysU=;
+        b=eK7KtmiNIUz+wA4gwYUjx6iD3q9CGZyEdHp/VrKUxOvvX4jDjS6rUrZaTG0u2vMZPf
+         jd+EM1KPrp+vIM+S+7xbgb4ZcVoY/syDiPKoqjJ4wLgSgkTXFSQqNfrMgKzndJKiHvp0
+         yw+li5ikEj8CMO/l+T0KKrndsm8lS9GikQS+18np0UAyw/rSg41WvL3h7VmfMVwexd7h
+         1SThsPXsesND6a7LZERi2Pro9BID7ha9Rt67YhZl7DRPyfGqJbPFLbYbh4iizQc06soC
+         sZpAF76JUZYkt6HtGEwOFr+4Gi23uMW4Zc8I5g8WBiSI4JtBsBDd4iRVaLJwaaVO6U8z
+         dUbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764957161; x=1765561961;
+        d=1e100.net; s=20230601; t=1764957162; x=1765561962;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wgVl4UPQOdVuiUQDADihFeO6bzjnbrTXUsfv7qld2JA=;
-        b=MPPf8jC41IKJ9+uprLnwcC4Hk3Ui6xHXhtyb/LQpx8J7cg4Cuha5qHFPJrWLTP39bj
-         x4QTo8IFbd9Hbbxvfg8Tq4WFvz3EL5+du2ABMrKeKAqZQtya5KItcdVJxBw+j0mEngp7
-         7lMghUJAABfOM8D/gLzGLfngTfpaWPxjL0sZrqXxqUZL6/Kd+PigTHVB5GtPWi51yuPg
-         wO3Z1Ia0ii7+rdXcjR5Y+Fx0WHpUjEa6gU7I4lVCcWdU913eh1TRPTUh60gx1L6kXIMn
-         01HsplGvU0JWrTnUmdw/ugT9ZhSZ9m+6pUzx79sR/mLGyX0RnITEE3awMkQB25mLNbuC
-         L19g==
-X-Forwarded-Encrypted: i=1; AJvYcCVT/euS+GRozWuWte1ywr3+sCnLb27K7QDQxXGon5gTjINvBGT+BaoLbEu4Z6ztEWloDOk9/ZufznOpiuIeYPqjpJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfuVaOUtRFKYtRCu5K3hYrWOo42cAzRZBLnYW4y8W7QnTUHxv3
-	Vh9ol2uSwozsRXRlKkwZ+OgbkWd1iU7UZOgNbRRk6aYqOmAuFGjlW3rq
-X-Gm-Gg: ASbGnctctz5N8HJhV+VjFtAyJ59sVKplo1jVC5eqgyMvuFBK37H4tpdSAZsndQA5ekC
-	A96J6rmiFfy5R9GN/jqQJ5jey4wWPXCF0vW5g393mZlXjmS9PZ6jzofBWGaoaBB3J+NrV9eFl4u
-	JumNSmgHhrXnK7m3UPXMSXDi9CM8zSAQp5VG5XgIpraS53HpWajYVa8N61J/StEXE0BWDruIDZo
-	nikG6pzog5tB3+qnL5GMQ9QcCgqs1AxdXO5jQWJgz+X+KlhhIjVyV+lNgUwNoklqkKoBvD77oA8
-	tsd/r+aZYZgDRMRFbwr3TXt+Mz9u8JaXtOWQCe6NWQXLH4BkOiNcR3zgAvynQrdjpeS4yI947gH
-	2u0Yzs/yvLtofNw82E9paVMZogoYg7wVULZZNCeeXuAxZ/qheDC/JXRbKUbaNOtX/NVlxXz8+Hr
-	S5Ig/ad/dP7OaKWm9G
-X-Google-Smtp-Source: AGHT+IEmHQrMAc5KhCOB44tPj+C3L7ufMqCejlU3WOz8uzACjmQ1s89nXnFrR9N4AEaBc1g4PgKHgQ==
-X-Received: by 2002:a05:690c:4f12:b0:78c:2803:c819 with SMTP id 00721157ae682-78c2803ceb0mr17790807b3.22.1764957160598;
-        Fri, 05 Dec 2025 09:52:40 -0800 (PST)
+        bh=qMcm6nWRLFBVfXJXBUXf6pE+rQOQZFvzs8Y8xJm6ysU=;
+        b=VP8DhfHc5IZ9qZ1SSOxfyiXrcATWfcHzB49oBBLlfgkGGNyUaEY5XhAFb6NbRiUQc3
+         oKcUYEHYiAzAnDsA1jhAN2nJZx/VujRO1xATFMjHV4fSCBA666Eukz+xCdAWQ2GQgNJo
+         vCgd9qtl4BauRM5yYDv36SEyJWewjoxaVHfZ86ZZcjMU6dn2Mc2bl+c4Tn2JB02Ew9C3
+         HA03+4hOeBO85YN50TR/Qy1M2ZzlhImuD5WXkkFXvADTWGe8LnhdqkscS37jLWbaaD/o
+         ObcsbbAZq4Ec2ozaWv2MSXOHCpxz9rZXLWNG6gxDzYZFO1qJ5z0vc6ovLAuHgd+BOOAC
+         aSFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWleb9F0cjCAjrL+ZLr+kogPApFlOAD9IOti29AIg9QeYYNQiSayohk4HX+iknOFGxOKus/SFGXYvWKK0MYN4UiIv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySZqmzJx/1BD7GpEj0d1vAK8oq3DicSMXfIfjAS27lzRep90YM
+	2jxu+XmJSZQXh4oIZ6doJYPf8YIpTD5F3FMN9TbWb6+jYGiNfRynKYQ3
+X-Gm-Gg: ASbGncsQXatpavrrlK/BRe8WwoGBotjJwNrsvFik/Z2/z3pTQ+TdUgzIPOz1fX4d7wZ
+	MIwyHPVaUztIsqPkb95sBiuxKG8ltzojGfBxRxddfhh5FwiQsjV9JkX/0CIPdplwuD0JzXLskTv
+	JmeSTLsGxcxkoAXe7Hl1iUrKTmekveOxaGjNrwtAEzpM3u1R1Kgp3q8TpRFcDMLncjuF1/1AxyO
+	KuC3Fe6b60AfnDHC7T0NVdp8YDIzT0h0UR2trBEYc5PIN/R3d5gA823zB+OfWrdmJ2YZvRM8B9q
+	iLIRhoFcgM3SFDeRKLBjuzFPCuwvt0rsgZVN1nWdfrlJNSwzR8IlFRRAvu6vPrGkCM4fWxXWHAD
+	ytgcJ9kd1CnCYcyhVfOPmijiBe7oOntPI+HKbLRi/Gqi/UXWy//Tz4qrLr3yD/xQrO4A1ZFUNsH
+	K5uMccEA==
+X-Google-Smtp-Source: AGHT+IFMa7PLE5Wadu9vbkWwOz5YfxbRiG9Bng/2nx/P0WjNdaVzVzG0hYz8xn0T4porbVJXTUfmtg==
+X-Received: by 2002:a05:690c:2506:b0:784:9076:a0f5 with SMTP id 00721157ae682-78c188bffcamr128846517b3.44.1764957161553;
+        Fri, 05 Dec 2025 09:52:41 -0800 (PST)
 Received: from localhost ([2601:346:0:79bd:be2a:7e4d:3bf:3fbc])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c1b779458sm18946927b3.35.2025.12.05.09.52.40
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c1b78e63bsm18841887b3.42.2025.12.05.09.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 09:52:40 -0800 (PST)
+        Fri, 05 Dec 2025 09:52:41 -0800 (PST)
 From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -85,9 +85,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Subject: [PATCH v3 2/4] moduleparam: include required headers explicitly
-Date: Fri,  5 Dec 2025 12:52:33 -0500
-Message-ID: <20251205175237.242022-3-yury.norov@gmail.com>
+Subject: [PATCH v3 3/4] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to sysfs.h
+Date: Fri,  5 Dec 2025 12:52:34 -0500
+Message-ID: <20251205175237.242022-4-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251205175237.242022-1-yury.norov@gmail.com>
 References: <20251205175237.242022-1-yury.norov@gmail.com>
@@ -99,36 +99,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following patch drops moduleparam.h dependency on kernel.h. In
-preparation to it, list all the required headers explicitly.
+The macro is related to sysfs, but is defined in kernel.h. Move it to
+the proper header, and unload the generic kernel.h.
 
-Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+Now that the macro is removed from kernel.h, linux/moduleparam.h is
+decoupled, and kernel.h inclusion can be removed.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
 ---
- include/linux/moduleparam.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/filesystems/sysfs.rst |  2 +-
+ include/linux/kernel.h              | 12 ------------
+ include/linux/moduleparam.h         |  2 +-
+ include/linux/sysfs.h               | 13 +++++++++++++
+ 4 files changed, 15 insertions(+), 14 deletions(-)
 
+diff --git a/Documentation/filesystems/sysfs.rst b/Documentation/filesystems/sysfs.rst
+index 2703c04af7d0..ffcef4d6bc8d 100644
+--- a/Documentation/filesystems/sysfs.rst
++++ b/Documentation/filesystems/sysfs.rst
+@@ -120,7 +120,7 @@ is equivalent to doing::
+ 	    .store = store_foo,
+     };
+ 
+-Note as stated in include/linux/kernel.h "OTHER_WRITABLE?  Generally
++Note as stated in include/linux/sysfs.h "OTHER_WRITABLE?  Generally
+ considered a bad idea." so trying to set a sysfs file writable for
+ everyone will fail reverting to RO mode for "Others".
+ 
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 61d63c57bc2d..5b879bfea948 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -389,16 +389,4 @@ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
+ # define REBUILD_DUE_TO_DYNAMIC_FTRACE
+ #endif
+ 
+-/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
+-#define VERIFY_OCTAL_PERMISSIONS(perms)						\
+-	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
+-	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
+-	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
+-	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
+-	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
+-	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
+-	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
+-	 (perms))
+ #endif
 diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index 6907aedc4f74..ca7c8107c7c8 100644
+index ca7c8107c7c8..dd2d990b2611 100644
 --- a/include/linux/moduleparam.h
 +++ b/include/linux/moduleparam.h
-@@ -2,9 +2,14 @@
- #ifndef _LINUX_MODULE_PARAMS_H
- #define _LINUX_MODULE_PARAMS_H
- /* (C) Copyright 2001, 2002 Rusty Russell IBM Corporation */
-+
-+#include <linux/array_size.h>
-+#include <linux/build_bug.h>
-+#include <linux/compiler.h>
+@@ -8,7 +8,7 @@
+ #include <linux/compiler.h>
  #include <linux/init.h>
  #include <linux/stringify.h>
- #include <linux/kernel.h>
-+#include <linux/types.h>
+-#include <linux/kernel.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
  
  /*
-  * The maximum module name length, including the NUL byte.
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 9a25a2911652..15ee3ef33991 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -798,4 +798,17 @@ static inline void sysfs_put(struct kernfs_node *kn)
+ 	kernfs_put(kn);
+ }
+ 
++/* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
++#define VERIFY_OCTAL_PERMISSIONS(perms)						\
++	(BUILD_BUG_ON_ZERO((perms) < 0) +					\
++	 BUILD_BUG_ON_ZERO((perms) > 0777) +					\
++	 /* USER_READABLE >= GROUP_READABLE >= OTHER_READABLE */		\
++	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 4) < (((perms) >> 3) & 4)) +	\
++	 BUILD_BUG_ON_ZERO((((perms) >> 3) & 4) < ((perms) & 4)) +		\
++	 /* USER_WRITABLE >= GROUP_WRITABLE */					\
++	 BUILD_BUG_ON_ZERO((((perms) >> 6) & 2) < (((perms) >> 3) & 2)) +	\
++	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
++	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
++	 (perms))
++
+ #endif /* _SYSFS_H_ */
 -- 
 2.43.0
 
