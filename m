@@ -1,126 +1,160 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B44235B121
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 17:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F196336EFE
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 17:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764955458; cv=none; b=krXc3bjZRa+W6jkFqFTFpWkp+R7RX3QIo5m9psn0XbO2EUnUFl1r26/vbfa+OgMWA9asoSvz1VIqBvcPTeFdEDpk+2kJmfkmCihMEIzCdPmiaD1YawLBbtsus7ZbXet+YHnZsZ7OfstoKhQVTrhafEmZJrej03d/hzNiE/TIo6U=
+	t=1764957164; cv=none; b=dbrMDB3M098ZZuWu/z9fiZQMNRYnJH9w2mO0A+lQ767O7PGkwd1bJAkYVBkLfGlpau4Mad9ItfdruhGqUHXHuXbZ/W49rEtZYDICunn+aVDKGKc8fBkChwDvT8F5osBSWfd00Q0KTmQd9ZmEVnL4VkzE8XDaIDHH4DYymm9ej2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764955458; c=relaxed/simple;
-	bh=s0iVd2RsjlWS/9TR2zy9YAOZbmjboSgGnXQyMW8/G3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I6JHOaFp9DX+DIHbTnMoxFOaiwlV/xTpHn93T33FQLPEidY0As014+wfrZDGawTcvI0L5YAl5N+LuDAnp0i1TJYqJl7ceTqnCiY6lcUhxKTBqyKat3j9NH+PhEEq1dFczmYedz/EpPPYDfOLfuX/7tTVbIOWXWETjBF/yrvtCJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YxkUMM1i; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1764957164; c=relaxed/simple;
+	bh=/OtVIm0Tic2jaMDmVwxI6p1VsRr2RMHqItaakWV63oc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BNXy4aWSlblKOfaLf/Gw7hfl2eYboOvTCnkXmL3m7bj5xg6JI39/i5gtLUZlM8vD9MXYdCKQTDhjAm/GadwDdv9JiXpnYSxdRf+kR4QjDlu+AgHBpPcIBjmmUcEDqR6JAsqToh1NnGkz1G1eDDAYgqx8xXyFXyJgQttIxKa2NMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYm9IiCh; arc=none smtp.client-ip=74.125.224.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YxkUMM1i"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6418b55f86dso4162463a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 09:24:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYm9IiCh"
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-642fcb9c16aso2107160d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 09:52:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1764955452; x=1765560252; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8lYM8vTuWuligOXJDgRA/sVu98AQZ0ojWGiXce05Ou0=;
-        b=YxkUMM1iAnIqvBCYCXW2GR8I0tkgi0oeIswtbpN5YciOo697DW+coFTWobGpRviWci
-         URbqSEhddBEz/e5fI3R8DIsdISpmrbSC0PoawLROoSIfP1n+A+xGJk9v57xOGsMS91w5
-         IwlrrBSFkQuCe2aew3KohiUmbC1wcpx0aSEpo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764955452; x=1765560252;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1764957160; x=1765561960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8lYM8vTuWuligOXJDgRA/sVu98AQZ0ojWGiXce05Ou0=;
-        b=wyc/Hcx0Jx03+tIwU58rIjaZ+3dEsFnOxHHA8QS0mgFdJtHEwcblQqZUwR8XpQSxhd
-         8dvZciKDXJ5wjBqAyp1gPrRmn3P4LigdiCUWHc6u9TewLpgRcUV4bJnBGDf1+0lP9Axx
-         LAslpI+D9Yxbr8xqNnzvwkpvXSIQPbTY+tJVPBCLELJRL/Yi4G5TxU28OqiX3DNYSjRv
-         bSZakJyHM8Ka9GlSx5dxmLNXF4Kv/AMTVlHrAvxM73mCzOInxQiaAMRnSpbaVenEgyEp
-         zevuIRq++gXWvPsD9eAoEloMiL6GJr1Ql0Qjj9zq3Cza0mpdwyQBteGti4k5b+3g5Ekt
-         mfAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9DQIfvRCITTOjC6lolemmYWDMZcuZLA6TWFR/KC4VSRLTtsgH1UQVr5WftGlLakX+etTRg4RzcioCKw2moPVT2hs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydM1f77csrm6g1hlXLRV8iuSpSCLoF7ReLmPcEuP4S81vdNHli
-	dC3svaD/MS6W0hmj6iqn4Sb+fxSB2eFnZdm5QT6CAMdefcHmvAQpfFoA45eBWThwizpkXcmjp1n
-	Az+jjyRI=
-X-Gm-Gg: ASbGncv2YtRNwVly6raCwc3ZOAhLk8tQu4+c93X6/AQB+6C8Htcom0lwF39d0WKMNqp
-	BJ2gNziFYMrBFRtxFiyhRqoplGlOrwvrLeXCCt1WSwYzuzgDNRMvzmEQnjy7yEl/N2b4QSv3fYp
-	a+eBQiBdu+kRChaVPc+HPteFwG7c2Z64+OTBb6E7N1VCGvlwjp7K52k+eWGa3YeRSVvli3EEzb3
-	ZxA3apJvphwp+x53pOvwqVxr4IOcuoH1lgJ7MzzMvSXM6Py5p806Vf6uVi5aQWx17oo2gLm9ufv
-	CRnfuZodqdRvL/iYgidryg7ixScCn/qswYyn6st1j7ZOSOooU2cbZoSONd0GAYNaJV2Trme0YmF
-	P2Kai5QXLNUs0X9SdmyWlT1My7ktBRGapx8Sm2dYfj0G65Hqe5WJt3F/l2erKr7irSavgwNvy9x
-	/hSpTnNGOblRuMAZnhxGXqLtpAoRCmZ34yW0jSsSe90Nd1dlbztxorTZt54w33
-X-Google-Smtp-Source: AGHT+IHDhFBWps5nXsX6iSFDEy4zOtxX6kXwaluTn2woc2nZ35shItBAhfFhvNm0rtf4rgLXzP8Zcw==
-X-Received: by 2002:a17:907:86a3:b0:b73:54b6:f892 with SMTP id a640c23a62f3a-b79dbe5afc3mr1142155166b.4.1764955452452;
-        Fri, 05 Dec 2025 09:24:12 -0800 (PST)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b79f449ba82sm418010866b.22.2025.12.05.09.24.10
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Dec 2025 09:24:10 -0800 (PST)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6418b55f86dso4162364a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 09:24:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX/M2+YvPXCs8hTge7By277UEGNVO6Elks3WBaPMBnBpE8CPfKrnE+k+pzm/3EHgv4MljmvcRGic9SB5FU1mobE0Cg=@vger.kernel.org
-X-Received: by 2002:a05:6402:5244:b0:640:e943:fbbf with SMTP id
- 4fb4d7f45d1cf-6479c496412mr9886451a12.11.1764955450397; Fri, 05 Dec 2025
- 09:24:10 -0800 (PST)
+        bh=AIMsjwiJg4RqJtb77Sd/3hjNTplhvG97vleKrEOTwfY=;
+        b=NYm9IiChSv/tk8xyCZC6OCWSX0mOSamUGFmH0vPGGG8++Zpa3B3zL7LNdB5HrLISNP
+         lTTFhr9MRVubJdymuqV1atpRDTQVAb8KmdkQJ+VvrP2x2hbqVcIw6uG3FWY2hX1rHR/L
+         eGqqSGeDn2+aHdhK0zQkfsTX42ZzZ5d/yYLoU2MDku96CVvgu/n1FHIVrvb/a2Ai2aPo
+         zuYzuwFpHwlJRmAyl7AqVrlqyoprUCveJCkS+p79IubOnqOytKONdD/F9LL4onX4O4D4
+         Ol9rYgKTDQeoSMv9Lgrwfvk0Yd8vw1KhOSgBgiBTVWf7WoaP0EaC+cp/YkXq5cXO5kU1
+         Bqug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764957160; x=1765561960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AIMsjwiJg4RqJtb77Sd/3hjNTplhvG97vleKrEOTwfY=;
+        b=AxuJuZ2vUJzMYEdHrHgB6d1ML/JZ5BP/Jwrvegu65GdFtB9SUCHQcntd9NCPdWuMWD
+         IiYqe03MeOswuEryjmXMvB83Mi6u+p0Rm95cqXPvOikUJvdg5QoLSmLZD4aLz94SqZCY
+         VnczEDPrsgaQQBa1TOaCHLHftLVWCUOwELJ+h0lI+TI6DHXfRYFz061JXjLajWgz5dh+
+         c5+0MIqvqwBPWHS/zFhoLrdIG0lTOpUgsTPlkI0UhTcygl2Zv5gj/KKHDQ5yNrW3Ir+3
+         Ug476r+/GQSBnPx831qrhOWFbnYYg9RvSNm8CAW2hwLSZQ1/oPSs+yiFAePjZC7dNuts
+         rkbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDM1GemAPuXWnAhOr8jTvsGJBM+a3H2LBAn7kiwXCuOk2SKuzawJxJZtxfDKeU0X4Pc+z+W35++1KMGLDjMDB13ws=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywand8nOyGlsIdVRAtPAIUnmlTFo9DBDLKvEm8ZB3GPmakrcHf9
+	Y0NE2MoXrYjWv+l5GE7+/6yV7gkdxZlutpwy1+Pe2KUo43F2m8HWqFwM
+X-Gm-Gg: ASbGncsG+wPYEnzPfJ8Z6o6ClnEh53rMclfLhPk3ispno20c2avpEBqiTre5PEsmWy9
+	YE2+4ialLcE2PQw2gXzs643FTYtf6FWCnzViSC48OmIWktgaaJS4SlXHa8TQI6Py+UAtsCx9IEm
+	tbiNUN1vl8XcKVS2YTKgG9tcaDNkXJBPB/hp8mD+As+qkBoBS0lJL1NOcmLH3gDnrXfXb3caapN
+	XITq2E566c6gEVpliN5LSY65xfTe4vzvcS3IOWANh9uiPexVVpIP7VJwhYNpjlG+WAbAP6dWrJk
+	+IVA88K5chheIW0JBNKYzjNGFcbaxc3UwcDUSLN3rgQg+S5Bt2Hqj9wCwlEazN7EXN1MtIeIK39
+	zIVoflJGyxMtvB0IblLSI7O8URm1Gy8hZGBCSVG4EXad8HhaND9rkzhLIN/hCw+XzWyBNfFWG5V
+	185U5SNg==
+X-Google-Smtp-Source: AGHT+IEj0tKsgnYq0A9mSlKiTaWZ9dj9I4yKU0s/KO7Y2wAesrkqKoyujesKH3ZFEOTbGXg0vUaC6A==
+X-Received: by 2002:a05:690c:6f83:b0:788:e74:b267 with SMTP id 00721157ae682-78c1893c4e9mr110130367b3.65.1764957159703;
+        Fri, 05 Dec 2025 09:52:39 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:be2a:7e4d:3bf:3fbc])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6443f5a3e81sm2042888d50.16.2025.12.05.09.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Dec 2025 09:52:39 -0800 (PST)
+From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH v3 1/4] kernel.h: drop STACK_MAGIC macro
+Date: Fri,  5 Dec 2025 12:52:32 -0500
+Message-ID: <20251205175237.242022-2-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251205175237.242022-1-yury.norov@gmail.com>
+References: <20251205175237.242022-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251205171446.2814872-1-jremus@linux.ibm.com> <20251205171446.2814872-4-jremus@linux.ibm.com>
-In-Reply-To: <20251205171446.2814872-4-jremus@linux.ibm.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 5 Dec 2025 09:23:54 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh4_BPvniQZqvEQ4cCC3WfvQqruWk0b1Yek+0d5S1LuxQ@mail.gmail.com>
-X-Gm-Features: AQt7F2qyEU-sRiqYQ9Tvu5NNk8tmioQu9za2N5evR27IqNXhvz_m-7r0eTXQy38
-Message-ID: <CAHk-=wh4_BPvniQZqvEQ4cCC3WfvQqruWk0b1Yek+0d5S1LuxQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 03/15] x86/unwind_user: Guard unwind_user_word_size()
- by UNWIND_USER
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
-	Steven Rostedt <rostedt@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>, 
-	"Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>, 
-	Dylan Hatch <dylanbhatch@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
- Random nit...
+The macro was introduced in 1994, v1.0.4, for stacks protection. Since
+that, people found better ways to protect stacks, and now the macro is
+only used by i915 selftests. Move it to a local header and drop from
+the kernel.h.
 
-On Fri, 5 Dec 2025 at 09:15, Jens Remus <jremus@linux.ibm.com> wrote:
->
-> +static inline int unwind_user_word_size(struct pt_regs *regs)
-> +{
-> +       /* We can't unwind VM86 stacks */
-> +       if (regs->flags & X86_VM_MASK)
-> +               return 0;
-> +#ifdef CONFIG_X86_64
-> +       if (!user_64bit_mode(regs))
-> +               return sizeof(int);
-> +#endif
-> +       return sizeof(long);
-> +}
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+Reviewed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+---
+ drivers/gpu/drm/i915/gt/selftest_ring_submission.c | 1 +
+ drivers/gpu/drm/i915/i915_selftest.h               | 2 ++
+ include/linux/kernel.h                             | 2 --
+ 3 files changed, 3 insertions(+), 2 deletions(-)
 
-I realize you just moved this around, but since I see it in the patch,
-the #ifdef annoys me.
+diff --git a/drivers/gpu/drm/i915/gt/selftest_ring_submission.c b/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
+index 87ceb0f374b6..600333ae6c8c 100644
+--- a/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
++++ b/drivers/gpu/drm/i915/gt/selftest_ring_submission.c
+@@ -3,6 +3,7 @@
+  * Copyright © 2020 Intel Corporation
+  */
+ 
++#include "i915_selftest.h"
+ #include "intel_engine_pm.h"
+ #include "selftests/igt_flush_test.h"
+ 
+diff --git a/drivers/gpu/drm/i915/i915_selftest.h b/drivers/gpu/drm/i915/i915_selftest.h
+index bdf3e22c0a34..72922028f4ba 100644
+--- a/drivers/gpu/drm/i915/i915_selftest.h
++++ b/drivers/gpu/drm/i915/i915_selftest.h
+@@ -26,6 +26,8 @@
+ 
+ #include <linux/types.h>
+ 
++#define STACK_MAGIC	0xdeadbeef
++
+ struct pci_dev;
+ struct drm_i915_private;
+ 
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 5b46924fdff5..61d63c57bc2d 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -40,8 +40,6 @@
+ 
+ #include <uapi/linux/kernel.h>
+ 
+-#define STACK_MAGIC	0xdeadbeef
+-
+ struct completion;
+ struct user;
+ 
+-- 
+2.43.0
 
-That user_64bit_mode() should work equally well on 32-bit, and this
-can be written as
-
-        return user_64bit_mode(regs) ? 8 : 4;
-
-which avoids the #ifdef, and makes a lot more sense ("sizeof(long)"
-together with "user_64bit_mode()"? It's literally testing 32 vs 64
-bitness, not "int vs long").
-
-              Linus
