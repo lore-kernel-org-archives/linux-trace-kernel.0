@@ -1,63 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B99632F741
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 13:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793CA2FD7AC
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 13:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764940668; cv=none; b=h8+Al4rIshPpy3vd2wLXcPyJXQqB1ffk+XMNMlP185F691pd2byb7UBRlTsc5BOf/M3d0KOEf7BCxpqbkJvnbujW0YgjZnYUeeT0NsaNSMFta3FpMICjinO7iO4U4dxfyR6hHO3U/3j7rJQZwGpbtUsx57FLwSA9IGkKhywnDLA=
+	t=1764940673; cv=none; b=kG9PTnh/JfKDWP5Bq67/L1aiedy8c1XoZrVBczX5F8S6qBMiOemyUiBN2Am/VtrQRaFNxeDqa97FOtijl85qfjav2m1M5pGwjqJgLfvxnXm3ZDNJqaUodvGVcXU2eYUgrGkIrywab8+qxqKJsXpwLlu/3zZifJ7luEtRh/rTHnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764940668; c=relaxed/simple;
-	bh=qyVVzKDuMAKpPvfsvjIAbJrM0jyXjXukEt2k97VSu34=;
+	s=arc-20240116; t=1764940673; c=relaxed/simple;
+	bh=DADXSEOcaK7LeVs5YtbbUtU17rf997ocYUYQI1LFs2Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CCPnO/tYH5jhDXO/CasSQG8K1k11D+pFXPvxI7SfCeNma5hmy+AyKmR+LyEZSejtQipOeKOx1TGcWUMebAvBb8sZRbjZ4o2YQFGoIQHF0tQ6b+vw2gRQqmK+P9qb/8PEyJPHThi5HV+sEWO3A0ihLXGWy8uiELPaJaJ8guO3Yuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JirGj1Uv; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=qfPWVrlBt2vJmiYJklDHiBmg9NNug6ifkoMtMgoXQ5kvcy64PjL1FY+eL/4m4Cf/beAwjfZz5dfkpHYvHe1fhtCWbP4M9TyeVXxmn44XCFWIGhCohRVbLWFB8D1pbBEvjk/GTMqQdCrF0rKTdNWKR7TyCbCOpXDS9bZZgbWBEoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c+hvLT2a; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JirGj1Uv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+hvLT2a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764940658;
+	s=mimecast20190719; t=1764940662;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HlhulN7DQPy6mdgynlshgNmSXZVBLh8VXkAgCCcFeJA=;
-	b=JirGj1Uvzc/SHLKBi9YmnnM4yXTvb2MdbnT2CqV2arJ/uBend0dPiHhwULP6t9zQTt5cmn
-	8QE2t8sLFNckAh5RMuJ8WUaE45j5ySkl7n5ncprF/4ACvBzx7f9QxsIoHaauRlviD6Ly8w
-	4nUkrrL6V9roFGHRfheUfzKly6Qu/lA=
+	bh=SMVmuzJXyUPBkyY/SPkNB8rnO659ATiXpINNXl4cPfo=;
+	b=c+hvLT2aQKkr6MnKP0t24rTig+4XN8gsxbfLOXG6Jrb03f7Pg7iAAVRkNv+zWKh90ZpBl7
+	OY2ezM3+qxcA8zfSWuHtqJal4im9MZbI1U5nGdtwZlgekbGFgL+TNDRNmYegeC6bU+zXdW
+	L9Z9VmnAAw0n+duUpkGo+zwtzH2CAF8=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-p-Dk8quHO3uqm0PNPWExmg-1; Fri,
- 05 Dec 2025 08:17:34 -0500
-X-MC-Unique: p-Dk8quHO3uqm0PNPWExmg-1
-X-Mimecast-MFC-AGG-ID: p-Dk8quHO3uqm0PNPWExmg_1764940652
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-455-DXANc_2bM7WE6rjpCj6_CA-1; Fri,
+ 05 Dec 2025 08:17:38 -0500
+X-MC-Unique: DXANc_2bM7WE6rjpCj6_CA-1
+X-Mimecast-MFC-AGG-ID: DXANc_2bM7WE6rjpCj6_CA_1764940658
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E8D5195608D;
-	Fri,  5 Dec 2025 13:17:32 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E52AD19560B4;
+	Fri,  5 Dec 2025 13:17:37 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.226.23])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE966180044F;
-	Fri,  5 Dec 2025 13:17:26 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9B0F4180044F;
+	Fri,  5 Dec 2025 13:17:33 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
+Cc: Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v3 09/13] sched: Add deadline tracepoints
-Date: Fri,  5 Dec 2025 14:16:17 +0100
-Message-ID: <20251205131621.135513-10-gmonaco@redhat.com>
+Subject: [PATCH v3 10/13] rv: Add support for per-object monitors in DA/HA
+Date: Fri,  5 Dec 2025 14:16:18 +0100
+Message-ID: <20251205131621.135513-11-gmonaco@redhat.com>
 In-Reply-To: <20251205131621.135513-1-gmonaco@redhat.com>
 References: <20251205131621.135513-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -69,127 +66,419 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add the following tracepoints:
+RV deterministic and hybrid automata currently only support global,
+per-cpu and per-task monitors. It isn't possible to write a model that
+would follow some different type of object, like a deadline entity or a
+lock.
 
-* sched_dl_throttle(dl_se, cpu):
-    Called when a deadline entity is throttled
-* sched_dl_replenish(dl_se, cpu):
-    Called when a deadline entity's runtime is replenished
-* sched_dl_server_start(dl_se, cpu):
-    Called when a deadline server is started
-* sched_dl_server_stop(dl_se, cpu):
-    Called when a deadline server is stopped
+Define the generic per-object monitor implementation which shares part
+of the implementation with the per-task monitors.
+The user needs to provide an id for the object (e.g. pid for tasks) and
+define the data type for the monitor_target (e.g. struct task_struct *
+for tasks). Both are supplied to the event handlers, as the id may not
+be easily available in the target.
 
-Those tracepoints can be useful to validate the deadline scheduler with
-RV and are not exported to tracefs.
+The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
+is stored in a hash table indexed by id. Monitor storage objects are
+automatically allocated unless specified otherwise (e.g. if the creation
+context is unsafe for allocation).
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
 
 Notes:
     V3:
-    * Rename dl argument to dl_se in tracepoints
+    * Use kmalloc_nolock for per-obj storage allocation
+    * Improve function name consistency
 
- include/trace/events/sched.h | 16 ++++++++++++++++
- kernel/sched/core.c          |  4 ++++
- kernel/sched/deadline.c      |  7 +++++++
- 3 files changed, 27 insertions(+)
+ include/linux/rv.h      |   1 +
+ include/rv/da_monitor.h | 300 +++++++++++++++++++++++++++++++++++++++-
+ include/rv/ha_monitor.h |   5 +-
+ 3 files changed, 300 insertions(+), 6 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 7b2645b50e78..366b2e8ec40c 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -896,6 +896,22 @@ DECLARE_TRACE(sched_set_need_resched,
- 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
- 	TP_ARGS(tsk, cpu, tif));
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 0aef9e3c785c..541ba404926a 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -13,6 +13,7 @@
+ #define RV_MON_GLOBAL   0
+ #define RV_MON_PER_CPU  1
+ #define RV_MON_PER_TASK 2
++#define RV_MON_PER_OBJ  3
  
-+DECLARE_TRACE(sched_dl_throttle,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
-+DECLARE_TRACE(sched_dl_replenish,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
-+DECLARE_TRACE(sched_dl_server_start,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
-+DECLARE_TRACE(sched_dl_server_stop,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
- #endif /* _TRACE_SCHED_H */
+ #ifdef CONFIG_RV
+ #include <linux/array_size.h>
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index 4d0f9fb60e3c..6830b5d6f34a 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -19,6 +19,8 @@
+ #include <linux/stringify.h>
+ #include <linux/bug.h>
+ #include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/hashtable.h>
  
- /* This part must be outside protection */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 5516778c19eb..3aed0ed6f2e9 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -122,6 +122,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_start_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_stop_tp);
+ static struct rv_monitor rv_this;
  
- DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
- DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 319439fe1870..2192e9f42e02 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -733,6 +733,7 @@ static inline void replenish_dl_new_period(struct sched_dl_entity *dl_se,
- 		dl_se->dl_throttled = 1;
- 		dl_se->dl_defer_armed = 1;
- 	}
-+	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq));
+@@ -51,6 +53,9 @@ static struct rv_monitor rv_this;
+ 
+ /*
+  * Type for the target id, default to int but can be overridden.
++ * A long type can work as hash table key (PER_OBJ) but will be downgraded to
++ * int in the event tracepoint.
++ * Unused for implicit monitors.
+  */
+ #ifndef da_id_type
+ #define da_id_type int
+@@ -239,9 +244,9 @@ static inline struct da_monitor *da_get_monitor(struct task_struct *tsk)
  }
  
  /*
-@@ -850,6 +851,8 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
- 	if (dl_se->dl_throttled)
- 		dl_se->dl_throttled = 0;
+- * da_get_task - return the task associated to the monitor
++ * da_get_target - return the task associated to the monitor
+  */
+-static inline struct task_struct *da_get_task(struct da_monitor *da_mon)
++static inline struct task_struct *da_get_target(struct da_monitor *da_mon)
+ {
+ 	return container_of(da_mon, struct task_struct, rv[task_mon_slot].da_mon);
+ }
+@@ -253,7 +258,7 @@ static inline struct task_struct *da_get_task(struct da_monitor *da_mon)
+  */
+ static inline da_id_type da_get_id(struct da_monitor *da_mon)
+ {
+-	return da_get_task(da_mon)->pid;
++	return da_get_target(da_mon)->pid;
+ }
  
-+	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq));
+ static void da_monitor_reset_all(void)
+@@ -303,6 +308,221 @@ static inline void da_monitor_destroy(void)
+ 
+ 	da_monitor_reset_all();
+ }
 +
- 	/*
- 	 * If this is the replenishment of a deferred reservation,
- 	 * clear the flag and return.
-@@ -1341,6 +1344,7 @@ static inline void dl_check_constrained_dl(struct sched_dl_entity *dl_se)
- 	    dl_time_before(rq_clock(rq), dl_next_period(dl_se))) {
- 		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(dl_se)))
- 			return;
-+		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq));
- 		dl_se->dl_throttled = 1;
- 		if (dl_se->runtime > 0)
- 			dl_se->runtime = 0;
-@@ -1504,6 +1508,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
++#elif RV_MON_TYPE == RV_MON_PER_OBJ
++/*
++ * Functions to define, init and get a per-object monitor.
++ */
++
++struct da_monitor_storage {
++	da_id_type id;
++	monitor_target target;
++	union rv_task_monitor rv;
++	struct hlist_node node;
++	struct rcu_head rcu;
++};
++
++#ifndef DA_MONITOR_HT_BITS
++#define DA_MONITOR_HT_BITS 10
++#endif
++static DEFINE_HASHTABLE(da_monitor_ht, DA_MONITOR_HT_BITS);
++
++/*
++ * da_create_empty_storage - pre-allocate an empty storage
++ */
++static inline struct da_monitor_storage *da_create_empty_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	mon_storage = kmalloc_nolock(sizeof(struct da_monitor_storage),
++				     __GFP_ZERO, NUMA_NO_NODE);
++	if (!mon_storage)
++		return NULL;
++
++	hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
++	mon_storage->id = id;
++	return mon_storage;
++}
++
++/*
++ * da_create_storage - create the per-object storage
++ *
++ * The caller is responsible to synchronise writers, either with locks or
++ * implicitly. For instance, if da_create_storage is only called from a single
++ * event for target (e.g. sched_switch), it's safe to call this without locks.
++ */
++static inline struct da_monitor *da_create_storage(da_id_type id,
++						   monitor_target target,
++						   struct da_monitor *da_mon)
++{
++	struct da_monitor_storage *mon_storage;
++
++	if (da_mon)
++		return da_mon;
++
++	mon_storage = da_create_empty_storage(id);
++	if (!mon_storage)
++		return NULL;
++
++	mon_storage->target = target;
++	return &mon_storage->rv.da_mon;
++}
++
++/*
++ * __da_get_mon_storage - get the monitor storage from the hash table
++ */
++static inline struct da_monitor_storage *__da_get_mon_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	lockdep_assert_in_rcu_read_lock();
++	hash_for_each_possible_rcu(da_monitor_ht, mon_storage, node, id) {
++		if (mon_storage->id == id)
++			return mon_storage;
++	}
++
++	return NULL;
++}
++
++/*
++ * da_get_monitor - return the monitor for target
++ */
++static struct da_monitor *da_get_monitor(da_id_type id, monitor_target target)
++{
++	struct da_monitor_storage *mon_storage;
++
++	mon_storage = __da_get_mon_storage(id);
++	return mon_storage ? &mon_storage->rv.da_mon : NULL;
++}
++
++/*
++ * da_get_target - return the object associated to the monitor
++ */
++static inline monitor_target da_get_target(struct da_monitor *da_mon)
++{
++	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target;
++}
++
++/*
++ * da_get_id - return the id associated to the monitor
++ */
++static inline da_id_type da_get_id(struct da_monitor *da_mon)
++{
++	return container_of(da_mon, struct da_monitor_storage, rv.da_mon)->id;
++}
++
++/*
++ * da_create_or_get - create the per-object storage if not already there
++ *
++ * This needs a lookup so should be guarded by RCU, the condition is checked
++ * directly in da_create_storage()
++ */
++static inline void da_create_or_get(da_id_type id, monitor_target target)
++{
++	guard(rcu)();
++	da_create_storage(id, target, da_get_monitor(id, target));
++}
++
++/*
++ * da_fill_empty_storage - store the target in a pre-allocated storage
++ *
++ * Can be used as a substitute of da_create_storage when starting a monitor in
++ * an environment where allocation is unsafe.
++ */
++static inline struct da_monitor *da_fill_empty_storage(da_id_type id,
++						       monitor_target target,
++						       struct da_monitor *da_mon)
++{
++	if (unlikely(da_mon && !da_get_target(da_mon)))
++		container_of(da_mon, struct da_monitor_storage, rv.da_mon)->target = target;
++	return da_mon;
++}
++
++/*
++ * da_get_target_by_id - return the object associated to the id
++ */
++static inline monitor_target da_get_target_by_id(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	guard(rcu)();
++	mon_storage = __da_get_mon_storage(id);
++
++	if (unlikely(!mon_storage))
++		return NULL;
++	return mon_storage->target;
++}
++
++/*
++ * da_destroy_storage - destroy the per-object storage
++ *
++ * The caller is responsible to synchronise writers, either with locks or
++ * implicitly. For instance, if da_destroy_storage is called at sched_exit and
++ * da_create_storage can never occur after that, it's safe to call this without
++ * locks.
++ * This function includes an RCU read-side critical section to synchronise
++ * against da_monitor_destroy().
++ */
++static inline void da_destroy_storage(da_id_type id)
++{
++	struct da_monitor_storage *mon_storage;
++
++	guard(rcu)();
++	mon_storage = __da_get_mon_storage(id);
++
++	if (!mon_storage)
++		return;
++	da_monitor_reset_hook(&mon_storage->rv.da_mon);
++	hash_del_rcu(&mon_storage->node);
++	kfree_rcu(mon_storage, rcu);
++}
++
++static void da_monitor_reset_all(void)
++{
++	struct da_monitor_storage *mon_storage;
++	int bkt;
++
++	rcu_read_lock();
++	hash_for_each_rcu(da_monitor_ht, bkt, mon_storage, node)
++		da_monitor_reset(&mon_storage->rv.da_mon);
++	rcu_read_unlock();
++}
++
++static inline int da_monitor_init(void)
++{
++	hash_init(da_monitor_ht);
++	return 0;
++}
++
++static inline void da_monitor_destroy(void)
++{
++	struct da_monitor_storage *mon_storage;
++	struct hlist_node *tmp;
++	int bkt;
++
++	/*
++	 * This function is called after all probes are disabled, we need only
++	 * worry about concurrency against old events.
++	 */
++	synchronize_rcu();
++	hash_for_each_safe(da_monitor_ht, bkt, tmp, mon_storage, node) {
++		da_monitor_reset_hook(&mon_storage->rv.da_mon);
++		hash_del_rcu(&mon_storage->node);
++		kfree(mon_storage);
++	}
++}
++
++/*
++ * Allow the per-object monitors to run allocation manually, necessary if the
++ * start condition is in a context problematic for allocation (e.g. scheduling).
++ * In such case, if the storage was pre-allocated without a target, set it now.
++ */
++#ifdef DA_SKIP_AUTO_ALLOC
++#define da_prepare_storage da_fill_empty_storage
++#else
++#define da_prepare_storage da_create_storage
++#endif /* DA_SKIP_AUTO_ALLOC */
++
+ #endif /* RV_MON_TYPE */
  
- throttle:
- 	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) {
-+		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq));
- 		dl_se->dl_throttled = 1;
+ #if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
+@@ -336,9 +556,9 @@ static inline da_id_type da_get_id(struct da_monitor *da_mon)
+ 	return 0;
+ }
  
- 		/* If requested, inform the user about runtime overruns. */
-@@ -1795,6 +1800,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
- 	if (WARN_ON_ONCE(!cpu_online(cpu_of(rq))))
- 		return;
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
++#elif RV_MON_TYPE == RV_MON_PER_TASK || RV_MON_TYPE == RV_MON_PER_OBJ
+ /*
+- * Trace events for per_task monitors, report the PID of the task.
++ * Trace events for per_task/per_object monitors, report the target id.
+  */
  
-+	trace_sched_dl_server_start_tp(dl_se, cpu_of(rq));
- 	dl_se->dl_server_active = 1;
- 	enqueue_dl_entity(dl_se, ENQUEUE_WAKEUP);
- 	if (!dl_task(dl_se->rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
-@@ -1806,6 +1812,7 @@ void dl_server_stop(struct sched_dl_entity *dl_se)
- 	if (!dl_server(dl_se) || !dl_server_active(dl_se))
- 		return;
+ static inline void da_trace_event(struct da_monitor *da_mon,
+@@ -519,6 +739,76 @@ static inline bool da_handle_start_run_event(struct task_struct *tsk,
+ {
+ 	return __da_handle_start_run_event(da_get_monitor(tsk), event, tsk->pid);
+ }
++
++#elif RV_MON_TYPE == RV_MON_PER_OBJ
++/*
++ * Handle event for per object.
++ */
++
++/*
++ * da_handle_event - handle an event
++ */
++static inline void da_handle_event(da_id_type id, monitor_target target, enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	if (likely(da_mon))
++		__da_handle_event(da_mon, event, id);
++}
++
++/*
++ * da_handle_start_event - start monitoring or handle event
++ *
++ * This function is used to notify the monitor that the system is returning
++ * to the initial state, so the monitor can start monitoring in the next event.
++ * Thus:
++ *
++ * If the monitor already started, handle the event.
++ * If the monitor did not start yet, start the monitor but skip the event.
++ */
++static inline bool da_handle_start_event(da_id_type id, monitor_target target,
++					 enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	da_mon = da_prepare_storage(id, target, da_mon);
++	if (unlikely(!da_mon))
++		return 0;
++	return __da_handle_start_event(da_mon, event, id);
++}
++
++/*
++ * da_handle_start_run_event - start monitoring and handle event
++ *
++ * This function is used to notify the monitor that the system is in the
++ * initial state, so the monitor can start monitoring and handling event.
++ */
++static inline bool da_handle_start_run_event(da_id_type id, monitor_target target,
++					     enum events event)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	da_mon = da_prepare_storage(id, target, da_mon);
++	if (unlikely(!da_mon))
++		return 0;
++	return __da_handle_start_run_event(da_mon, event, id);
++}
++
++static inline void da_reset(da_id_type id, monitor_target target)
++{
++	struct da_monitor *da_mon;
++
++	guard(rcu)();
++	da_mon = da_get_monitor(id, target);
++	if (likely(da_mon))
++		da_monitor_reset(da_mon);
++}
+ #endif /* RV_MON_TYPE */
  
-+	trace_sched_dl_server_stop_tp(dl_se, cpu_of(dl_se->rq));
- 	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
- 	hrtimer_try_to_cancel(&dl_se->dl_timer);
- 	dl_se->dl_defer_armed = 0;
+ #endif
+diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+index c8a434cb46ac..047059e54ae8 100644
+--- a/include/rv/ha_monitor.h
++++ b/include/rv/ha_monitor.h
+@@ -191,7 +191,10 @@ static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
+ {
+ 	CONCATENATE(trace_error_env_, MONITOR_NAME)(curr_state, event, env);
+ }
+-#elif RV_MON_TYPE == RV_MON_PER_TASK
++#elif RV_MON_TYPE == RV_MON_PER_TASK || RV_MON_TYPE == RV_MON_PER_OBJ
++
++#define ha_get_target(ha_mon) da_get_target(&ha_mon->da_mon)
++
+ static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
+ 				      char *curr_state, char *event, char *env,
+ 				      da_id_type id)
 -- 
 2.52.0
 
