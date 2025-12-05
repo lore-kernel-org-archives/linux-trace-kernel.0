@@ -1,114 +1,255 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AD32E2DDD
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 12:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB48932E737
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 13:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764939535; cv=none; b=pU3nmlLNut3182vabC/aqNpMcw8rCy7sp0baRBonYSnn6gptEc5asdvO9RNTpid3Ycz/SKVmXw+5U3f1acW2LgDaqg/8NNRf0x+QIOgWssOAYqiK6YgMJ79e2br57HdEEMGCRuvcb2ZPbk7mRYs8u74zcfJpVSxEeDOaYhsYHcY=
+	t=1764940606; cv=none; b=ZwtYC7wZ+PLZJk7xCvjVxFhL+cN2MP4TyiXCgWi0k0JY7SD6BxPswHfuh0d/0DbMhU5MuhGDE9xag5xUha5VEHcNV91RV/Nw0B8v+WaD131MY01/skxMghK4fnF7BdOrZeyj++aIQAfpBpjJveSXYiHov2qhGhlH5w0l55rto5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764939535; c=relaxed/simple;
-	bh=OSxQSgaO74Ist6Qy2I2ydiBk+D6zbq2c9HBhxCAzHag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=U1X6LjSHJ7QUmtyOe9pHbdYZnxvWoCGjd9acP4muz5UhG9bURokNPuG9fr4C4ne0qxfMLTuoTy3H81PEBlQMKLo2FaLEFuPOpWRTpomQTdg6JruHB57IQIbpBSZzDMCL/aJf8CVt893sG9ZnIrCXpsUhHt5rq//qjU28I131d6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=fail smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AoOXZ1fu; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.com
+	s=arc-20240116; t=1764940606; c=relaxed/simple;
+	bh=IjIgR+Yn6pDsWMpfQQqWm8q2wE6UdeT20EMjOVUaKEI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kixfVt//AFWHfn4Qq+g3KaAHp+zAkLmJd+PL85OL2raOQINK2BJbiJV8pl+rMQsEc3n+V5mFu90PCFP9dVV6yc5+sftiw/fJyD6ybKF5x1TXhjjNe2LK4gY+srG/zr1hXfBj/qoZb+SLR3oY5eyKzenjvoafHlUpfS6HUk1X1mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=auzGERTu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AoOXZ1fu"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4779adb38d3so19432125e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 04:58:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764939529; x=1765544329; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vvDpFJFk+V6cvoTCKOK8q907ac/jTowZtFGXPpMCI6k=;
-        b=AoOXZ1fuUEV0Z8Kn3kJ2upGgoEOBNCuykATYYJ7zIqAyA5R9LKCvn0eQPMxCj5qM+g
-         6dLy/1Our9oMgg/FNgAD5Ewl1RjjzUaZNxnRqERM2C2SBH4mcBNjigkkVHq2b0l57J5t
-         jcrlTJhW8+RGdIAFRM/AyndnI8fISiz7+FQbIFfXd81zk1qC77raEzE1mkxVonBSpyPb
-         MbD+hQy+4KVAk+3WRVvcZyeKCVqcn4SlN2FdmtM8csbROH/EGozPXHT5f3JNKg49idLN
-         J2hihH4viwXfr0y6dJ5KnOC5wpF1lTkVcG5m4FxUO/xXpgrnlF07ISPp6kzqOnAOkzgA
-         tITg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764939529; x=1765544329;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vvDpFJFk+V6cvoTCKOK8q907ac/jTowZtFGXPpMCI6k=;
-        b=Oguk5ptuPBzvl5DJImeEASgoMIVOTOGMpiVzPKqPOsgTQ6NSHISiNFSlIJ2id66xzb
-         S/gd1sRqEp7R6mhiazhtHSVv9fAH+RTUcwXa3hM0xEKeLelYWP35ipVsbLwzkQtWyEf3
-         q9djlZl2fVl3TzeTk7gaMJXbl/BrMc3JQgkETDbSMkFSeB5J27ujuoo7CNojUIEe87Jj
-         u3O77v5O/SQbtymOUdjn0dW1jvkBVMEe2/waAik+ez2GbrUXZjCAYi25Bq0VSklvkGCr
-         2r/JR59feMMtKqrLugUr1Bde5FZsJnbGDKvYR2tV6rlOdk5K54rCYO5CHeG9N9Dw4W7Q
-         mchw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Gp9Uhs/ZktCx8dxOYC3PM3Sxf0p7e5kQ4/qW2GTeZwlJ1wIdTIV+JUNAvmUNUEC4TgixV6Bvcqad24jrG35oMC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRwSGmPNiLxK1MQrkbD/kWRFZlkDkima5RLWEKJhyz3pQsGRvU
-	1qatQ92AAF+vDgQHiSyu1XmtPT7OfzbyLNeOTKezmqocW5PScM2kZwZ37cba1hKNae8=
-X-Gm-Gg: ASbGncuaJJwxe8BwAtvS+F4vLxBKrkAa1AGZPrzANNquDfugWVQ9wT9ZRrvAtXj3Hbq
-	SHZljSQSfL99xD8NLS8a+qG6xt697SXcy+vrgtFCn6q8Ta+6gmCurCPk2HrQstdCDyUNLzIEZtL
-	aiuC85N5MMZikpRc1PhGPTopBBuoUktnz4MRJWXLyMRvhcRuBnWK+nPqNyhzOMwtVSOI91xXnw6
-	Pdzy7xnC/wPdqkf64nQI5EsK2WVBrYszeIIUDGeAmkmran3/eBhbyO4YeBNEVNQoLTNZcCCJHHP
-	jpwJ4a9nT56DHLwo3IDd5ZxZFCUupqjmufqkR+2jkX53PNYV5R5uvK60I27pjxvXhE7Wtb3+ZsJ
-	lU8pWS4HvlphPUgrAe3zOad/hplfb040lMumINCiXaTB0Gq3fWo4uOqhDcxUWwhHqfA+9hxLsvp
-	HkB0FaU9SCB3DgUfOvG79QLMvMOyaMuw==
-X-Google-Smtp-Source: AGHT+IGleborKQCrbq8DmtASF59YZO0WpvBhiHKdLlUD/UBGnoL4NMp+YZWh4r36RAtoCvyopgKovg==
-X-Received: by 2002:a05:600c:45d5:b0:45d:e28c:875a with SMTP id 5b1f17b1804b1-4792f39cc82mr78538125e9.31.1764939529325;
-        Fri, 05 Dec 2025 04:58:49 -0800 (PST)
-Received: from [10.0.1.22] (109-81-1-107.rct.o2.cz. [109.81.1.107])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4792b02e806sm59378815e9.3.2025.12.05.04.58.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Dec 2025 04:58:49 -0800 (PST)
-Message-ID: <31cdf723-a776-498b-8664-4735cd76669a@suse.com>
-Date: Fri, 5 Dec 2025 13:58:46 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="auzGERTu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764940598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lKwoz3p2qEuT8tafczo1oeqFktjIAWfUWAPDfvugL9Q=;
+	b=auzGERTui2taXRB+X8OUpWQNyH9q/CvbRKfetSDVP4iDpDSOOLSINGp7xtrxsZHlburuvd
+	sDOavh7h6ooz9SVdYzrvYumY6N1yBEGw+fJx+RYO+mMinEIYPYBWiFPJsmVxn2Ib6jsOTe
+	1Smk04hDR88Eq+Uny0eMbqUIyretVVw=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-103-LgR91bwnNU-fUIcqdInRAA-1; Fri,
+ 05 Dec 2025 08:16:35 -0500
+X-MC-Unique: LgR91bwnNU-fUIcqdInRAA-1
+X-Mimecast-MFC-AGG-ID: LgR91bwnNU-fUIcqdInRAA_1764940593
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B1CA81956068;
+	Fri,  5 Dec 2025 13:16:32 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.226.23])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F28AF1800577;
+	Fri,  5 Dec 2025 13:16:27 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3 00/13] rv: Add Hybrid Automata monitor type, per-object and deadline monitors
+Date: Fri,  5 Dec 2025 14:16:08 +0100
+Message-ID: <20251205131621.135513-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] kernel.h: move VERIFY_OCTAL_PERMISSIONS() to
- sysfs.h
-To: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-References: <20251203162329.280182-1-yury.norov@gmail.com>
- <20251203162329.280182-4-yury.norov@gmail.com>
-Content-Language: en-US
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Christophe Leroy <chleroy@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- David Laight <david.laight@runbox.com>, Andi Shyti <andi.shyti@kernel.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20251203162329.280182-4-yury.norov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 12/3/25 5:23 PM, Yury Norov (NVIDIA) wrote:
-> The macro is related to sysfs, but is defined in kernel.h. Move it to
-> the proper header, and unload the generic kernel.h.
-> 
-> Now that the macro is removed from kernel.h, linux/moduleparam.h is
-> decoupled, and kernel.h inclusion can be removed.
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+This series contains several related changes, the main areas are:
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+* hybrid automata
 
+    Hybrid automata are an extension of deterministic automata where each
+    state transition is validating a constraint on a finite number of
+    environment variables.
+
+    Hybrid automata can be used to implement timed automata, where the
+    environment variables are clocks.
+
+* per-object monitors
+
+    Define the generic per-object monitor allow RV monitors on any kind
+    of object where the user can specify how to get an id (e.g. pid for
+    tasks) and the data type for the monitor_target (e.g. struct
+    task_struct * for tasks).
+
+    The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
+    is stored in a hash table indexed by id.
+
+* deadline monitors collection
+
+    Add the throttle and nomiss monitors to validate timing aspects of
+    the deadline scheduler, as they work for tasks and servers, their
+    inclusion requires also per-object monitors (for dl entities).
+    Also add the boost and laxity monitors specific to servers.
+
+This series is based on the previously sent [1] that includes
+preliminary patches present in V2 [2] and already reviewed. As such this
+series is simplified and includes only relevant new changes.
+
+The entire series can also be found on:
+
+  git.kernel.org/pub/scm/linux/kernel/git/gmonaco/linux.git rv_hybrid_automata
+
+Changes since V2 [2]:
+* Adapt models to new dl server behaviour
+* Rearrange start/handle helpers to share more code
+* Improve documentation clarity after review
+* Extend stall model to handle preemption
+* Improve functions naming for HA helpers
+* Use kmalloc_nolock for per-obj storage allocation
+* Add boost and laxity monitors for deadline servers
+* Add _is_id_monitor() in dot2k to handle per-obj together with per-task
+* Rename dl argument to dl_se in tracepoints
+* Use __COUNTER__ in dl monitor syscall helpers
+* Fix conflicts after rebase (cond_react -> rv_react)
+* General cleanup
+
+Changes since V1 [3]:
+* Cleanup unused trace events definitions
+* Improve hybrid automata description about use of timers
+* Unify event handler internals across DA monitor types
+* Implement timer wheel alternative for invariants
+* Extend models to consider timing of task switches (in before deadline,
+  out after throttle)
+* Refactor tracepoints and per-object monitors to allow server events
+  from remote CPUs
+* Changed clock representation in case of invariants (time to expire vs
+  time since reset) and allow conversion without reset
+* Extend dot2k to understand the graph relations and suggest where
+  invariant conversions are needed
+* General cleanup of rvgen scripts
+
+[1] - https://lore.kernel.org/lkml/20251126104241.291258-1-gmonaco@redhat.com
+[2] - https://lore.kernel.org/lkml/20250919140954.104920-1-gmonaco@redhat.com
+[3] - https://lore.kernel.org/lkml/20250814150809.140739-1-gmonaco@redhat.com
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Cc: Juri Lelli <jlelli@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Gabriele Monaco (13):
+  rv: Unify DA event handling functions across monitor types
+  rv: Add Hybrid Automata monitor type
+  verification/rvgen: Allow spaces in and events strings
+  verification/rvgen: Add support for Hybrid Automata
+  Documentation/rv: Add documentation about hybrid automata
+  rv: Add sample hybrid monitors stall
+  rv: Convert the opid monitor to a hybrid automaton
+  sched: Export hidden tracepoints to modules
+  sched: Add deadline tracepoints
+  rv: Add support for per-object monitors in DA/HA
+  verification/rvgen: Add support for per-obj monitors
+  rv: Add deadline monitors
+  rv: Add dl_server specific monitors
+
+ Documentation/tools/rv/index.rst              |   1 +
+ Documentation/tools/rv/rv-mon-stall.rst       |  44 ++
+ .../trace/rv/deterministic_automata.rst       |   2 +-
+ Documentation/trace/rv/hybrid_automata.rst    | 341 +++++++++
+ Documentation/trace/rv/index.rst              |   3 +
+ Documentation/trace/rv/monitor_deadline.rst   | 266 +++++++
+ Documentation/trace/rv/monitor_sched.rst      |  62 +-
+ Documentation/trace/rv/monitor_stall.rst      |  43 ++
+ Documentation/trace/rv/monitor_synthesis.rst  | 117 +++-
+ include/linux/rv.h                            |  39 ++
+ include/rv/da_monitor.h                       | 654 +++++++++++++-----
+ include/rv/ha_monitor.h                       | 479 +++++++++++++
+ include/trace/events/sched.h                  |  16 +
+ kernel/sched/core.c                           |   7 +
+ kernel/sched/deadline.c                       |   7 +
+ kernel/trace/rv/Kconfig                       |  21 +
+ kernel/trace/rv/Makefile                      |   6 +
+ kernel/trace/rv/monitors/boost/Kconfig        |  15 +
+ kernel/trace/rv/monitors/boost/boost.c        | 279 ++++++++
+ kernel/trace/rv/monitors/boost/boost.h        | 159 +++++
+ kernel/trace/rv/monitors/boost/boost_trace.h  |  19 +
+ kernel/trace/rv/monitors/deadline/Kconfig     |  10 +
+ kernel/trace/rv/monitors/deadline/deadline.c  |  35 +
+ kernel/trace/rv/monitors/deadline/deadline.h  | 203 ++++++
+ kernel/trace/rv/monitors/laxity/Kconfig       |  14 +
+ kernel/trace/rv/monitors/laxity/laxity.c      | 226 ++++++
+ kernel/trace/rv/monitors/laxity/laxity.h      | 126 ++++
+ .../trace/rv/monitors/laxity/laxity_trace.h   |  19 +
+ kernel/trace/rv/monitors/nomiss/Kconfig       |  15 +
+ kernel/trace/rv/monitors/nomiss/nomiss.c      | 289 ++++++++
+ kernel/trace/rv/monitors/nomiss/nomiss.h      | 137 ++++
+ .../trace/rv/monitors/nomiss/nomiss_trace.h   |  19 +
+ kernel/trace/rv/monitors/opid/Kconfig         |  11 +-
+ kernel/trace/rv/monitors/opid/opid.c          | 111 +--
+ kernel/trace/rv/monitors/opid/opid.h          |  86 +--
+ kernel/trace/rv/monitors/opid/opid_trace.h    |   4 +
+ kernel/trace/rv/monitors/stall/Kconfig        |  13 +
+ kernel/trace/rv/monitors/stall/stall.c        | 150 ++++
+ kernel/trace/rv/monitors/stall/stall.h        |  81 +++
+ kernel/trace/rv/monitors/stall/stall_trace.h  |  19 +
+ kernel/trace/rv/monitors/throttle/Kconfig     |  15 +
+ kernel/trace/rv/monitors/throttle/throttle.c  | 248 +++++++
+ kernel/trace/rv/monitors/throttle/throttle.h  | 116 ++++
+ .../rv/monitors/throttle/throttle_trace.h     |  19 +
+ kernel/trace/rv/rv_trace.h                    |  70 +-
+ tools/verification/models/deadline/boost.dot  |  51 ++
+ tools/verification/models/deadline/laxity.dot |  34 +
+ tools/verification/models/deadline/nomiss.dot |  43 ++
+ .../verification/models/deadline/throttle.dot |  44 ++
+ tools/verification/models/sched/opid.dot      |  36 +-
+ tools/verification/models/stall.dot           |  22 +
+ tools/verification/rvgen/__main__.py          |   8 +-
+ tools/verification/rvgen/rvgen/automata.py    | 150 +++-
+ tools/verification/rvgen/rvgen/dot2c.py       |  49 ++
+ tools/verification/rvgen/rvgen/dot2k.py       | 488 ++++++++++++-
+ tools/verification/rvgen/rvgen/generator.py   |   4 +-
+ .../rvgen/rvgen/templates/dot2k/main.c        |   2 +-
+ .../rvgen/templates/dot2k/trace_hybrid.h      |  16 +
+ 58 files changed, 5138 insertions(+), 425 deletions(-)
+ create mode 100644 Documentation/tools/rv/rv-mon-stall.rst
+ create mode 100644 Documentation/trace/rv/hybrid_automata.rst
+ create mode 100644 Documentation/trace/rv/monitor_deadline.rst
+ create mode 100644 Documentation/trace/rv/monitor_stall.rst
+ create mode 100644 include/rv/ha_monitor.h
+ create mode 100644 kernel/trace/rv/monitors/boost/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/boost/boost.c
+ create mode 100644 kernel/trace/rv/monitors/boost/boost.h
+ create mode 100644 kernel/trace/rv/monitors/boost/boost_trace.h
+ create mode 100644 kernel/trace/rv/monitors/deadline/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/deadline/deadline.c
+ create mode 100644 kernel/trace/rv/monitors/deadline/deadline.h
+ create mode 100644 kernel/trace/rv/monitors/laxity/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/laxity/laxity.c
+ create mode 100644 kernel/trace/rv/monitors/laxity/laxity.h
+ create mode 100644 kernel/trace/rv/monitors/laxity/laxity_trace.h
+ create mode 100644 kernel/trace/rv/monitors/nomiss/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.c
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss.h
+ create mode 100644 kernel/trace/rv/monitors/nomiss/nomiss_trace.h
+ create mode 100644 kernel/trace/rv/monitors/stall/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.c
+ create mode 100644 kernel/trace/rv/monitors/stall/stall.h
+ create mode 100644 kernel/trace/rv/monitors/stall/stall_trace.h
+ create mode 100644 kernel/trace/rv/monitors/throttle/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle.c
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle.h
+ create mode 100644 kernel/trace/rv/monitors/throttle/throttle_trace.h
+ create mode 100644 tools/verification/models/deadline/boost.dot
+ create mode 100644 tools/verification/models/deadline/laxity.dot
+ create mode 100644 tools/verification/models/deadline/nomiss.dot
+ create mode 100644 tools/verification/models/deadline/throttle.dot
+ create mode 100644 tools/verification/models/stall.dot
+ create mode 100644 tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
+
+
+base-commit: ce91eea7c90fe4ec76c071f6d3cc14e1ce049b30
 -- 
-Thanks,
-Petr
+2.52.0
+
