@@ -1,89 +1,94 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A15225413
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Dec 2025 23:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393413B8D59
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  6 Dec 2025 14:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764977542; cv=none; b=nOx8weq9uQKgWyK57+psbYD+/zpk4+y2i8picjnKkA8lwgvQRWJWBSPm83xwBLKIpFhxyKyXEx7cvLrQQSKxigBxmVpOg3CHtJPm1H3L7d3em0IVvQp+fK9Be6WKozlI+Td7gBiwpijVpzggykd1UWt2zliGRIFWqg/6gJbBY08=
+	t=1765030019; cv=none; b=hFfHO6Op4GVHnoBZf1r5Xnu6EnLNEPF/Lb6eRpL5HPO0/9Wpf64jgVLAeKWs1jUwA+0oV/pRWI3UtFcX4yhQ5I5K05Ia3e1Sq9vdIvdz1Ba8Ik9RtVa7D3Vz1D8XL2I4wLRpaQSKcjPWeLCFFPvi3Tzhx1Jx9Qn4f8hc7uDHkGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764977542; c=relaxed/simple;
-	bh=KsyL1tAa0IIhbMiJgBbcZLIMfFacJIN5WXZgweQxvgU=;
+	s=arc-20240116; t=1765030019; c=relaxed/simple;
+	bh=vrfLk2ayZuf6l8AqfvNQb2nC/M/gETf+X2/3kIvvnp0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kFK3uQAuPSARjFEHecOmvxivk2n5jrXmkavrpHXyvk7S3ndvURIsXcd4YiRAAekCvFSy3TfTsv6W6AoN4nBYaGGtt5Z4seCnlYf1oI5hoF1ztYFjNcnCIfHP30oj4molpMn0WDaoJvkD5kMTJPi16C4xV8PVA5oKTb+Mp00cC4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITLlYHSJ; arc=none smtp.client-ip=74.125.224.46
+	 MIME-Version; b=NRXCDtSjVxwOF19n4tFUl3WOsBWJIcreOf9xTU5muntS9+Nw8h31KcBmBf1MGfJ8m1V280yb2xpQP1wi106FKIvsrJVVP06EvED7xVj5G5iOF88pAt5/JRh8RTB/17UShZKsZV8UARQUSqHdqjkLLZApoCQ1RtZHl8xSZwHEiH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhH1t8a+; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITLlYHSJ"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-6420c08f886so3073665d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Dec 2025 15:32:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhH1t8a+"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-78a6a7654a4so30407007b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 06 Dec 2025 06:06:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764977540; x=1765582340; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1765030017; x=1765634817; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xVNIZshLyuSr21iBy7gYlmgdiF5+BHlPixcUrdxDgUM=;
-        b=ITLlYHSJt+0E+fQQ/kPGOzRfb+mRQgKNM4KY4FYaKEqyOuCfZwnQ3HZFVUIevZU2kC
-         5JpwTbzMeq9ith2RMcdYF83MpBjeJtyVzFdvLV36fcqzS4P0A+zHkbmHndcLo96/shfx
-         cjD7Rhtclp+DQcU4QGaFy4Ul3kH8l3ot06ojBUmwmW+raaiItchtatyIMJZuUhB+sQti
-         yJA/cA4nJ7bVcjJN4I8r9PMsSqiMIad8i1KpshZKAj1ai+QUdJ/f+d4a04jDiNqFoX6d
-         NSB3zJMMI6ObaaDBtVn8bHzECOgTobefAGRm0dBX1HyIghGdCrD4pa8iQuKSa+BPYQ8z
-         HFAA==
+        bh=vrfLk2ayZuf6l8AqfvNQb2nC/M/gETf+X2/3kIvvnp0=;
+        b=ZhH1t8a+DxqcJZzRWPdwIrEFa4OissoLMMeovRnYJ58RyrLlC9Lbve4Rt/ZS7Rn9LI
+         9u1N6AUmAjrczf9UfFvDAbMsNIzkE4OxzNI8J18/7pI+Ujik85VPk+3tWZvUkDjC9Ike
+         q2p3Y7hYGuJ79WFR5ZZ1oUx/d1i+mf68aVyWqehpNcJe5Q7SdlH5emkYYLfJNZTxiTOA
+         RfKCP6xbHZAivaP3KB14PM2xZ+dgYqiK26FoinCFsLt0ej/LYS/hjLCviWkI6R2ovyIN
+         LIL1+hoqNucoYTKg84CPWtu/CXeF4byErQKNUpq8ixvbE+7+/E/J/0yDHwx/UnfBjHfu
+         i43g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764977540; x=1765582340;
+        d=1e100.net; s=20230601; t=1765030017; x=1765634817;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=xVNIZshLyuSr21iBy7gYlmgdiF5+BHlPixcUrdxDgUM=;
-        b=e/1iQ3DFsubcfe8kz5a/fTXT7ImD1ahPKutn9eeo0c2bpoHI8AnjjNw6a0wJ68yzBA
-         uNU5MW4clSJPjkTdZv6Au7C+D9lwv4xbOVrNCV6RqKpCgGXu9VD4hnIgXnVKS+MjSBZl
-         AK0P3ONTngGvtGiyb0P4P71bfWPKBP09P4Q+ngpwc8QA9dy8YC1XrmqdHVDaAKuZu7SA
-         /KWhxtHXr47iyzZKiG1k1YsTIFPknxdMfLIxRYymPeR7/0DQab1ARUr/PV5TDdMX78Jl
-         fPJUWRTTmCMee4K3b+nOBPhU8zy8uaN78sb1LL4WhkkBO/yl/dJSRPt9oAC7U+vjgfUD
-         TFoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBfxzPJYFOr5/Xqg6wM8vnVvN1qVnUt9kpVgzyI79Tv3ySRRmE3mTdjCFrQlragMHGVAZMdsw3XIzI9bi0UZe6zxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8aGTOCEdoYoFgLnes/tnsH0CsapkkrcPuQNZS3yaYZ8Rqa0Zm
-	4QB1+GZHrILm7pqyz7ucLQZoZUYMxMwlZ5yWYTi8qt3TWKBq+PtEKmUv
-X-Gm-Gg: ASbGncv/FazhoiczZxJY1XDPiaAAyMq5gYjbASUNVzrCux9gusxKnHTS8imc7S8WbNl
-	TYHaGYu8oQN8pVtyV7GqDa0M4PHmSjSA80CIXi2QqJlzy+8Sqzb3gc3jpup1xZg9j3a7apfhjqt
-	uRQuagt0x3muhPW2iOZOrd0eSueEbMSa+WbFBr2HzrEpMKD9k4cESqKpf3W1/3RNGy6j6nQLmAd
-	ZnVjVxYXIv5Z7DzD2i2FlFZaS3ontN3YDPUFj4F0HihMiN9ZjQX33LG2KDPmFvHvbU9zT3Hp8Bh
-	uX2SRU+EsIa7aOXcKbKVsp5ocLaAv32sALu3zURhDgNeMV/9aXK+WaLmyZJV15uo+687LpFfWjN
-	wQBBhVAeUYonwRfkUW+7mUn/Ue4mQO4YSCSYx0O44nVoQ43nmXk5gP6zXDULs6A67lTryErDkYy
-	cahYpEb7TrhMRdc+h6noweEw==
-X-Google-Smtp-Source: AGHT+IGQ5c7kUmmwqDGLvrjuZJ0aZLEBVHhDBqk12LjM5CR3AT6ty5CjA/zMORi2krLA1PmCDUq99w==
-X-Received: by 2002:a05:690e:1401:b0:644:41e5:dea1 with SMTP id 956f58d0204a3-6444e756d86mr556035d50.4.1764977539865;
-        Fri, 05 Dec 2025 15:32:19 -0800 (PST)
-Received: from localhost ([2a03:2880:25ff:72::])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6443f2b80casm2356630d50.9.2025.12.05.15.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 15:32:19 -0800 (PST)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: 
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Barry Song <baohua@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Dev Jain <dev.jain@arm.com>,
-	Lance Yang <lance.yang@linux.dev>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Zi Yan <ziy@nvidia.com>,
+        bh=vrfLk2ayZuf6l8AqfvNQb2nC/M/gETf+X2/3kIvvnp0=;
+        b=Q6j7sO8KTXdXD/3u/i/OjQ87DC20C3kQ8Sv1Qx0GbVkU4KF4MuUfh86eSjG4Puyd34
+         CREnOk2cOxxEtUwjjrrWihqC0jQWzLzoSMFNOE0HGVK8lsuOzD3PEutZ82x84Qp3/hQo
+         8WQBQYhqHfYWFFmMSrvueqS2jfD+pe0GygdgQADB4w0W48ySsLrUX89AZNlsfZoxB924
+         5NChF8ZlJMSgU1DnH5scE5UBNeXDX7vXDHt3mDDZqTMS+QkNg2kYxqSa/7ZqGVHYH2cx
+         EL2CREOuZzOBxPwXyGXPHysKuy9+omtejOQ0V1ptEFedQLWcZD5b7X0f+4QJrUP4PkaQ
+         bq8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGtLfrG1ef9ktwN0BzquKW/OZ1pFBVLPmh4DIFXCdOrTZbrVILLULFZwfENefDu/0/o6LtDok3z8DS+wEUKmU765s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuyPU9o6khbQD7H3C9ullwLc9UVtGn0ynqRC6Fo7HXzNnQHGzf
+	/6WtFdM/SNC6Lmu7Ti1jLLwnMWNEUz6L4R1omggWHuNi0xonCL6RlOkt
+X-Gm-Gg: ASbGncv6ARC50IO4t2la6aQJK4gHJOt2Wn2EYovihs8mE1U6Lyy8LbGtTfesV7qXFmn
+	1e67pARDnsw/Zlm5IWUqKjepxbwl+VOOyp+SRtFT2E+tbgwPfAq1M8DIuwWGUKEOv5q9urw8A/M
+	zgS6T0u5WtH/vmvZbkXY/gRQ8XXzX8xOHEdkZv4kJ6XlAhGCsyn9+TJB2AhsGeRPUbEPgl+S7OV
+	khbc9ji7gPyyX72Ap1u5tgp7k6bTUCce9h9wXC5Oie8iNuFloQfBA/uRB/dPPHSWp5uOFNlg7Ez
+	mFDF+3JaYVQ66uD8WFzJndt+ejf5HOp8K/L6sEEnZKe0IYOUPkFpzSPnegAaVGQyRxjMRhhJ2i/
+	17zhz9pna4lVQC3fpFYT9/7Obn84YQzXUcvOzfGxAtTdYJ7d6J9Gt2E47tiiYHzziZ6+0t/8IAi
+	UDM60zJzljHwo2Dr2og3sccgnuSYbMcEmfUkOI/8SZQCRGnSAkEOM=
+X-Google-Smtp-Source: AGHT+IFxy8fT1dRrg4d0q8df8JdyXkj7/oD1PKfr96MRoX5/mmgZfjfDMVE7BSdSSFxAui9wnKIK0w==
+X-Received: by 2002:a05:690c:7403:b0:788:1cde:cac9 with SMTP id 00721157ae682-78c33b5f13amr19558807b3.23.1765030016967;
+        Sat, 06 Dec 2025 06:06:56 -0800 (PST)
+Received: from localhost.localdomain (45.62.117.175.16clouds.com. [45.62.117.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c1b79942dsm27541147b3.49.2025.12.06.06.06.51
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 06 Dec 2025 06:06:56 -0800 (PST)
+From: Shuran Liu <electronlsr@gmail.com>
+To: song@kernel.org
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	dxu@dxuuu.xyz,
+	eddyz87@gmail.com,
+	electronlsr@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC LPC2025 PATCH 1/4] mm/khugepaged: Remove hpage_collapse_scan_abort
-Date: Fri,  5 Dec 2025 15:32:12 -0800
-Message-ID: <20251205233217.3344186-2-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
-References: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	mattbobrowski@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	shuah@kernel.org,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH bpf v4 2/2] selftests/bpf: add regression test for bpf_d_path()
+Date: Sat,  6 Dec 2025 22:06:40 +0800
+Message-ID: <20251206140640.3013-1-electronlsr@gmail.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <CAPhsuW7NTGkbVD97DQddwPEQR6PZgYQJ6c-JcEsNUg6ddnh3rA@mail.gmail.com>
+References: <CAPhsuW7NTGkbVD97DQddwPEQR6PZgYQJ6c-JcEsNUg6ddnh3rA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -92,100 +97,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 14a4e2141e24 ("mm, thp: only collapse hugepages to nodes with
-affinity for zone_reclaim_mode") introduced khugepaged_scan_abort,
-which was later renamed to hpage_collapse_scan_abort. It prevents
-collapsing hugepages to remote nodes when zone_reclaim_mode is enabled
-as to prefer reclaiming & allocating locally instead of allocating on a
-far away remote node (distance > RECLAIM_DISTANCE).
+Hi Song,
 
-With the zone_reclaim_mode sysctl being deprecated later in the series,
-remove hpage_collapse_scan_abort, its callers, and its associated values
-in the scan_result enum.
+I have done further testing and found that the initial version of
+selftest (LSM version) could not reliably reproduce the issue on a
+buggy kernel. I have now verified that the new fallocate test
+correctly reproduces the bug.
 
-Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
----
- include/trace/events/huge_memory.h |  1 -
- mm/khugepaged.c                    | 34 ------------------------------
- 2 files changed, 35 deletions(-)
+I will be sending the v5 patch shortly. (This is our first patch
+submission to the kernel, thank you for your patience :D )
 
-diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-index 4cde53b45a85..1c0b146d1286 100644
---- a/include/trace/events/huge_memory.h
-+++ b/include/trace/events/huge_memory.h
-@@ -20,7 +20,6 @@
- 	EM( SCAN_PTE_MAPPED_HUGEPAGE,	"pte_mapped_hugepage")		\
- 	EM( SCAN_LACK_REFERENCED_PAGE,	"lack_referenced_page")		\
- 	EM( SCAN_PAGE_NULL,		"page_null")			\
--	EM( SCAN_SCAN_ABORT,		"scan_aborted")			\
- 	EM( SCAN_PAGE_COUNT,		"not_suitable_page_count")	\
- 	EM( SCAN_PAGE_LRU,		"page_not_in_lru")		\
- 	EM( SCAN_PAGE_LOCK,		"page_locked")			\
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 97d1b2824386..a93228a53ee4 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -40,7 +40,6 @@ enum scan_result {
- 	SCAN_PTE_MAPPED_HUGEPAGE,
- 	SCAN_LACK_REFERENCED_PAGE,
- 	SCAN_PAGE_NULL,
--	SCAN_SCAN_ABORT,
- 	SCAN_PAGE_COUNT,
- 	SCAN_PAGE_LRU,
- 	SCAN_PAGE_LOCK,
-@@ -830,30 +829,6 @@ struct collapse_control khugepaged_collapse_control = {
- 	.is_khugepaged = true,
- };
- 
--static bool hpage_collapse_scan_abort(int nid, struct collapse_control *cc)
--{
--	int i;
--
--	/*
--	 * If node_reclaim_mode is disabled, then no extra effort is made to
--	 * allocate memory locally.
--	 */
--	if (!node_reclaim_enabled())
--		return false;
--
--	/* If there is a count for this node already, it must be acceptable */
--	if (cc->node_load[nid])
--		return false;
--
--	for (i = 0; i < MAX_NUMNODES; i++) {
--		if (!cc->node_load[i])
--			continue;
--		if (node_distance(nid, i) > node_reclaim_distance)
--			return true;
--	}
--	return false;
--}
--
- #define khugepaged_defrag()					\
- 	(transparent_hugepage_flags &				\
- 	 (1<<TRANSPARENT_HUGEPAGE_DEFRAG_KHUGEPAGED_FLAG))
-@@ -1355,10 +1330,6 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
- 		 * hit record.
- 		 */
- 		node = folio_nid(folio);
--		if (hpage_collapse_scan_abort(node, cc)) {
--			result = SCAN_SCAN_ABORT;
--			goto out_unmap;
--		}
- 		cc->node_load[node]++;
- 		if (!folio_test_lru(folio)) {
- 			result = SCAN_PAGE_LRU;
-@@ -2342,11 +2313,6 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 		}
- 
- 		node = folio_nid(folio);
--		if (hpage_collapse_scan_abort(node, cc)) {
--			result = SCAN_SCAN_ABORT;
--			folio_put(folio);
--			break;
--		}
- 		cc->node_load[node]++;
- 
- 		if (!folio_test_lru(folio)) {
--- 
-2.47.3
+Best regards,
+Shuran Liu
