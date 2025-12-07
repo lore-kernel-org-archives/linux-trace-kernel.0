@@ -1,70 +1,76 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1402220F3A
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Dec 2025 14:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B302EE5F5
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Dec 2025 14:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765117672; cv=none; b=t2d0AauVsazYYJZBpD38PD7t+dKNLfLBTggmenB7aPc/N0PR5d+Y6/125z9I78aHkLU05mWAyQg18LW2XuuNnfP6dT+HNMXcqByIm7KhSgtT9HIWHTi+KbtyK4KG9KXTtUDf+ynWRlp9VRQewzV+vG8gLTswMIf4UW4IkiS9N60=
+	t=1765117675; cv=none; b=BzZf2UnBARFO3j72M96Y4s6/O9Jh05R4C3hKvAU83AfWl1DOt013FZvFyZIiPggqrWToPDWTI4GIU1p3FfIr4EnaOmPutYt6wbM7zlu6PtSsZea7kA9UxdxhqbDomT3YUty8kzQ5g5pVALazaNFfrrc3GoD8ZT9ZGfTLJhOFnD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765117672; c=relaxed/simple;
-	bh=5sL1cro8KEGG9RlTROb5DMFcJB0PYj+A495Hx6VrFIo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n9GZqmrb6BVTY+h9mAKSriHelZ2T8k0mcXxbzzdUOq8FB//XS6VgyIos9T5QO+UVT7xwMDAhOkTjNw9p8rgHwyFBBsS2evbYjanaUEngTOwmSuYLBsivQ+vnugy2f46BgVnruAOkFjVvxUbVs0qLmibcad2NxpBjc8bmRlVPUJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hi9BLnhS; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1765117675; c=relaxed/simple;
+	bh=30o7EXsT+3UE9XemGnLUmRBLG1W6L02/uoH/F43nEZc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LriYzPvcYsNCqos94Hq55dGSM+oMJUbMxZB6bTrtpa7UNiF18aqQzx0tfzrMjVt4p8/yDEMLxbS9I7yF9zwEONGiVhZJ+iWZ/0lFa8k8rqrlkieNTRqgyI8LvrGgddIGizYFiqRBCrdN5fUzexaI0DgI6Y9cgouL4VCuYx7m6Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/f+c+Xu; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hi9BLnhS"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7aae5f2633dso4089588b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Dec 2025 06:27:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/f+c+Xu"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-34381ec9197so3080990a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Dec 2025 06:27:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765117668; x=1765722468; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mZoqFzyLg2kbG3TtAml5Ndu6SDECfKXfTe0mjyBhZ8s=;
-        b=hi9BLnhSQ6DdCue6jzOK0B9V/IzgJ0LoVVWJPPe1D6dcn0i6l/bHna+hCq4X4u1D4Q
-         8y09pBKzeNlM8O7jEEwxoxgEqYE/uLBJDJ3cQ6kW2SKpUqKQNnDm2+Rf2ZGarAXfYYm/
-         6pL5JzbIrYU4TN/KI1E9pRkyIbJZ21q4dEzZTdyz5acErTKbNaMqy5q3xdY3ld5t9OwJ
-         QEV666QsgczrFBJxtgOD1VOZH8fsL4lQua92jvt/C0PenWXyCqv58oyIgJ2av07gwPuB
-         rq2dQATIGLbELBq3om6sEd5y9Vwnnz5jCHjXYBTA9LzF6ynKT8jADxh+ROc+gv1S3WzS
-         a+3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765117668; x=1765722468;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1765117671; x=1765722471; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mZoqFzyLg2kbG3TtAml5Ndu6SDECfKXfTe0mjyBhZ8s=;
-        b=igIIJ1yevjF3/WfgEtm6tWcWkLXWRKBzI2CZYJvNrlXK72pCfwett96Jtc1OGQWKvx
-         XEKet9ewS3D2xX7HLxaVl77LVPr34+SHxP1dhM/rNUvh9Fu2AiOyTJ4hMMZ7rBNIL4En
-         gBB8UdR77Klhq829y4O7HMyFFyUJ13MP+/I44wHqXXzSeVTEkOEvQCnlt9ImlckvymUK
-         HU558b9aEl852viSSAjaMLyD/CsKCSQkyr6CA1vEq3rkyfJ7beJUEWM4ziuGVbSDP1we
-         XJYGiSu2RUjjlu2Rbkm0weS/gYZaOmNcoexyA6K4TVqqm8S7eVQjPGHbirIZ227kcjK3
-         i5iA==
-X-Gm-Message-State: AOJu0YxLVb/n/Z4FPd8FnMYnY5uNF84DhVCD0eFL0RR4v7G1kEi4Q2ST
-	3/IjUS9DFZp9EXbpewRLtVWOxKlN8NIsWeFYsaDKfJOe/b1r0VQ/t4JP
-X-Gm-Gg: ASbGncvUdhXjx1nzbFa+ksLr2uSCr5a9pPgpSJTWUyV64ad+wbwQPVGI2RUGIo/aXHV
-	+vbc/21HUbVGZf6p70NTxiPXnbzcBV472bVMT8u42hEcNaIcPYAN3/5CAc/2v1mCU5eMveHfblK
-	qrY5XeBNP3WOMdyd7yJgWhFp18gNan7J3s3MmczaBPKadB2k3tFId5AEygF6MKY/LGziVD0066d
-	h7/AJ10iJscPr0IAcJkLR8yvwPxekOyPmU/76Y58LaEtWFrlZGMBnCQ2Oc92MBNrSB8/NUW3awN
-	pqsYDfauFU0zk5Ytd6FmsvV8u9+VLCUKHPCsMWrVkGVbCSoOjH2INc2okQPs6DrcVpls7iSGHr7
-	Cap/92BpngqoMqr28t+fj/UOLDDARJvk6OLIVDt7mE18PE5n8pltm45qGB5YtbVxZRqYOsqJZfc
-	x4tPT7ZxNoAWfVm//OewnJ18WFSaU=
-X-Google-Smtp-Source: AGHT+IGfnG4jYvcEi3Gdc5YK0KIALBXdc824v1o9JQSosCvDEGj2/jglIRKQQx23RvIL/yrIWKCF0w==
-X-Received: by 2002:a05:6a20:2444:b0:366:14ac:e20a with SMTP id adf61e73a8af0-3661814b3b5mr4964878637.72.1765117668034;
-        Sun, 07 Dec 2025 06:27:48 -0800 (PST)
+        bh=lZnyUry+1w8xao5+MHyxhYILKDa1nn4nE9blPajp6gw=;
+        b=f/f+c+XuZqgkMEXPAy1kmWFMbvXsQ4xErsuAjK5f43O/Eh6s72iB3qhtqE+p2i1lgK
+         TY5Bd681ke2tB2GYFFQmKTHlxjumkGsS5qxj5irM98b128seCDdKKy4fvbIx4au6NGtU
+         YozjzPykK209V1yW5H7WQKT6UJVZjGF1T08RuoGnavrTU1zGptT6GKGcWgt5ciOv6ehK
+         +OjKssIuE9HUH6YgVIPfUyE4T/uUKgxXd44pO65EwvsgHZz4yPnuQy+GNF8ikctztMGE
+         nxd5BvHwka0JzUijOQQUIEq050A4d9ZBoM7lN6aZoBzh7FDvcGigIJAFEoHIiXLKVzEC
+         IB8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765117671; x=1765722471;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lZnyUry+1w8xao5+MHyxhYILKDa1nn4nE9blPajp6gw=;
+        b=oOw/ETrBmA2BYivF9lF4PjuEz+/4cmT6MQCyVuhsXH7J32VwuZKHYz0PzCa0IMmXDf
+         CaQZqouw/jTs4ic6PBZWP6jtiwH6tIED02o3MAZJZZeMBgZ48co7b6twKABJjmbMO/qs
+         H199yh4NS/OHEanG5gW6UZNhkYZeYzylw29Z4VGKLOjt5Vtrh02/XtrOV8lOXgRMIktM
+         aRQtQofw8kbPqXhrzd2XgpnP5j0gV/4cniTf7pOIY9q+yr14+M7CJdNIYSkI1MxeDgEJ
+         gGfwDu6jMyecVy/F3BDnrWG9n4dHO+TegIovpDXlOx6nP2eNNM44HVhzTih2ilduFFoA
+         WefQ==
+X-Gm-Message-State: AOJu0Yze5O0Z/sQOehMaO+g/6j5FrFjReQe4c27ASWqeNkfmLX7yIaS1
+	QUTZB0m3Yx51ckDLRFMWWQvnvVAA96qXb9Li3l+sw30x+7lWzdWk7oLR
+X-Gm-Gg: ASbGnctV7k8V5o9DtstWK5LsDkm9tOuUjwRHzbRkCmWuPFvk+NxtDnWqV6/U0Cj9lar
+	2dOTgg2xHNG2q3N9VoGnD76aLM2F++SwrQD959azfTJFj+btoyFG1D/ljyugIe2YNLPyHcT7vG2
+	NtynrMBPMGQ61sS331rnk+7ErmCbxikInqvmOP9C+HptQSqt7MdC0quUqbQQSW773YECjbiIxva
+	RzkFVb3m79m9Myh6CXPCw05v4SsE+UhaLvOuItxOFAGRL1Ig+ZzrdJ25wD4YbBEhG4MXq/L/UXH
+	WJAzbamzzOrgGsRwYoahMgBGr0OgYEn/ORikgkkZmbj6H5j3AiNcB+uPDIWlq612G6zFs/qR5bh
+	ksK5cDhQ2GGo8/4slxTaQbHddYL0C+Rh0c336BfUsQ7HiLJk1/pb1z19wP6cubjdSq8/VjHwcRW
+	2GoTBoQBg7umWJfoWFVTQfZJYzoj8=
+X-Google-Smtp-Source: AGHT+IH9mYL+8pQfNgZ4r8ZFqW+QSWz3AKdRwbEmCblz9taenxcf6eaYppGqEuojMUEJzBiNafSuyw==
+X-Received: by 2002:a17:90b:5546:b0:343:eb40:8e01 with SMTP id 98e67ed59e1d1-349a26223e5mr3565025a91.27.1765117670867;
+        Sun, 07 Dec 2025 06:27:50 -0800 (PST)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf686c32deesm9514792a12.13.2025.12.07.06.27.45
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf686c32deesm9514792a12.13.2025.12.07.06.27.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Dec 2025 06:27:46 -0800 (PST)
+        Sun, 07 Dec 2025 06:27:49 -0800 (PST)
 From: Donglin Peng <dolinux.peng@gmail.com>
 To: rostedt@goodmis.org
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	pengdonglin <pengdonglin@xiaomi.com>
-Subject: [PATCH v1 0/2] Use BTF to trim return values
-Date: Sun,  7 Dec 2025 22:27:40 +0800
-Message-Id: <20251207142742.229924-1-dolinux.peng@gmail.com>
+	pengdonglin <pengdonglin@xiaomi.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+Subject: [PATCH v1 1/2] fgraph: use BTF to trim and filter return values
+Date: Sun,  7 Dec 2025 22:27:41 +0800
+Message-Id: <20251207142742.229924-2-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251207142742.229924-1-dolinux.peng@gmail.com>
+References: <20251207142742.229924-1-dolinux.peng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -92,14 +98,104 @@ of each traced function:
 These changes make the funcgraph-retval output more accurate and remove
 noise from void functions.
 
-pengdonglin (2):
-  fgraph: use BTF to trim and filter return values
-  tracing: Update funcgraph-retval documentation
+Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+---
+ kernel/trace/trace_functions_graph.c | 64 +++++++++++++++++++++++-----
+ 1 file changed, 54 insertions(+), 10 deletions(-)
 
- Documentation/trace/ftrace.rst       | 74 +++++++++++++++-------------
- kernel/trace/trace_functions_graph.c | 64 ++++++++++++++++++++----
- 2 files changed, 94 insertions(+), 44 deletions(-)
-
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 17c75cf2348e..9e63665c81e2 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -15,6 +15,7 @@
+ 
+ #include "trace.h"
+ #include "trace_output.h"
++#include "trace_btf.h"
+ 
+ /* When set, irq functions might be ignored */
+ static int ftrace_graph_skip_irqs;
+@@ -865,6 +866,46 @@ static void print_graph_retaddr(struct trace_seq *s, struct fgraph_retaddr_ent_e
+ 
+ #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_GRAPH_RETADDR)
+ 
++static void trim_retval(unsigned long func, unsigned long *retval, bool *print_retval)
++{
++	const struct btf_type *t;
++	char name[KSYM_NAME_LEN];
++	struct btf *btf;
++	u32 v, msb;
++
++	if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
++		return;
++
++	if (lookup_symbol_name(func, name))
++		return;
++
++	t = btf_find_func_proto(name, &btf);
++	if (IS_ERR_OR_NULL(t))
++		return;
++
++	t = btf_type_skip_modifiers(btf, t->type, NULL);
++	switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
++	case BTF_KIND_UNKN:
++		*print_retval = false;
++		break;
++	case BTF_KIND_ENUM:
++	case BTF_KIND_ENUM64:
++		msb = BITS_PER_BYTE * t->size - 1;
++		*retval &= GENMASK(msb, 0);
++		break;
++	case BTF_KIND_INT:
++		v = *(u32 *)(t + 1);
++		if (BTF_INT_ENCODING(v) == BTF_INT_BOOL)
++			msb = 0;
++		else
++			msb = BTF_INT_BITS(v) - 1;
++		*retval &= GENMASK(msb, 0);
++		break;
++	default:
++		break;
++	}
++}
++
+ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entry *entry,
+ 				struct ftrace_graph_ret *graph_ret, void *func,
+ 				u32 opt_flags, u32 trace_flags, int args_size)
+@@ -884,17 +925,20 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
+ 	print_retaddr = !!(opt_flags & TRACE_GRAPH_PRINT_RETADDR);
+ #endif
+ 
+-	if (print_retval && retval && !hex_format) {
+-		/* Check if the return value matches the negative format */
+-		if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
+-			(((u64)retval) >> 32) == 0) {
+-			err_code = sign_extend64(retval, 31);
+-		} else {
+-			err_code = retval;
++	if (print_retval) {
++		trim_retval((unsigned long)func, &retval, &print_retval);
++		if (print_retval && retval && !hex_format) {
++			/* Check if the return value matches the negative format */
++			if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
++				(((u64)retval) >> 32) == 0) {
++				err_code = sign_extend64(retval, 31);
++			} else {
++				err_code = retval;
++			}
++
++			if (!IS_ERR_VALUE(err_code))
++				err_code = 0;
+ 		}
+-
+-		if (!IS_ERR_VALUE(err_code))
+-			err_code = 0;
+ 	}
+ 
+ 	if (entry) {
 -- 
 2.34.1
 
