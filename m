@@ -1,63 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B302EE5F5
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Dec 2025 14:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC0D2EFDB4
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Dec 2025 14:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765117675; cv=none; b=BzZf2UnBARFO3j72M96Y4s6/O9Jh05R4C3hKvAU83AfWl1DOt013FZvFyZIiPggqrWToPDWTI4GIU1p3FfIr4EnaOmPutYt6wbM7zlu6PtSsZea7kA9UxdxhqbDomT3YUty8kzQ5g5pVALazaNFfrrc3GoD8ZT9ZGfTLJhOFnD4=
+	t=1765117677; cv=none; b=kcTmuPHO+yExT1A5T13hQ+6mGTGVNqiA+0fQz+JWKVQWaSZ9EbK6KECD/5OsZEC2bMwbXaY5/UrpVlGh41yWEoV73q/xNyllZc2+TwMH502rbnABdc4rnM59QWZQn4jmszBJViiHcfRnLXbZ+eQaeYmh0iG8CSe6jmrN0q48Oq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765117675; c=relaxed/simple;
-	bh=30o7EXsT+3UE9XemGnLUmRBLG1W6L02/uoH/F43nEZc=;
+	s=arc-20240116; t=1765117677; c=relaxed/simple;
+	bh=Kwz/i/ToDupsWxXvYUeC2N41dqM/je07XCbIeJOAi3k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LriYzPvcYsNCqos94Hq55dGSM+oMJUbMxZB6bTrtpa7UNiF18aqQzx0tfzrMjVt4p8/yDEMLxbS9I7yF9zwEONGiVhZJ+iWZ/0lFa8k8rqrlkieNTRqgyI8LvrGgddIGizYFiqRBCrdN5fUzexaI0DgI6Y9cgouL4VCuYx7m6Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/f+c+Xu; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=BU0oXf3f90GDZlehMba+wUfS+SsSBvwD0O2AcHD5f3oI9JW42/MUU3gM4gKmQwpOhaS+WVMgYwFMGhoLBsv0l8162S1ighgqgi9sUYxeab00E/Syw/YKsfl0FKGHr8MHiY8QSDBLwf2uRqCgLROEPx2MqiBxPVPIIHJ6Yc9HjrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SXaGq34C; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/f+c+Xu"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-34381ec9197so3080990a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Dec 2025 06:27:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXaGq34C"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7aab7623f42so4250443b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Dec 2025 06:27:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765117671; x=1765722471; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1765117674; x=1765722474; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lZnyUry+1w8xao5+MHyxhYILKDa1nn4nE9blPajp6gw=;
-        b=f/f+c+XuZqgkMEXPAy1kmWFMbvXsQ4xErsuAjK5f43O/Eh6s72iB3qhtqE+p2i1lgK
-         TY5Bd681ke2tB2GYFFQmKTHlxjumkGsS5qxj5irM98b128seCDdKKy4fvbIx4au6NGtU
-         YozjzPykK209V1yW5H7WQKT6UJVZjGF1T08RuoGnavrTU1zGptT6GKGcWgt5ciOv6ehK
-         +OjKssIuE9HUH6YgVIPfUyE4T/uUKgxXd44pO65EwvsgHZz4yPnuQy+GNF8ikctztMGE
-         nxd5BvHwka0JzUijOQQUIEq050A4d9ZBoM7lN6aZoBzh7FDvcGigIJAFEoHIiXLKVzEC
-         IB8w==
+        bh=Mim4L7D6RiJD0Xfk3ctgRLF/8EuUIkjvDV4bArvMP3Q=;
+        b=SXaGq34CXlpeoNBDzbUGPiHuL3CU04HqnpfziHqQ/QjOcq7/gvHhefaZl3ZDVI7Epj
+         tXDs2cqvmjv3wKSLum04JL0DJIIaVX9GGBtFrACstU0Xi3q/WsoYGGw8dCwfjhacePJt
+         IqvJGleKv+1e4l5BU+wpyx1xgE/KU41BvlSqWmTetvgmw8vtcty4qSWjejJ0cRtNA7np
+         W02iVs3p1ZNPKzMXOVw94rqrCyy/5DWWtHgO8Apwvw1CW/ztsPxWS+IItl0L7sM0NSJf
+         AIMWKlRMlirZrOD/S3+HSL2VztYH3S8KIoEYLq7aHgID9KEM+JYzY50R6fxNE2Tv+Lto
+         sjAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765117671; x=1765722471;
+        d=1e100.net; s=20230601; t=1765117674; x=1765722474;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lZnyUry+1w8xao5+MHyxhYILKDa1nn4nE9blPajp6gw=;
-        b=oOw/ETrBmA2BYivF9lF4PjuEz+/4cmT6MQCyVuhsXH7J32VwuZKHYz0PzCa0IMmXDf
-         CaQZqouw/jTs4ic6PBZWP6jtiwH6tIED02o3MAZJZZeMBgZ48co7b6twKABJjmbMO/qs
-         H199yh4NS/OHEanG5gW6UZNhkYZeYzylw29Z4VGKLOjt5Vtrh02/XtrOV8lOXgRMIktM
-         aRQtQofw8kbPqXhrzd2XgpnP5j0gV/4cniTf7pOIY9q+yr14+M7CJdNIYSkI1MxeDgEJ
-         gGfwDu6jMyecVy/F3BDnrWG9n4dHO+TegIovpDXlOx6nP2eNNM44HVhzTih2ilduFFoA
-         WefQ==
-X-Gm-Message-State: AOJu0Yze5O0Z/sQOehMaO+g/6j5FrFjReQe4c27ASWqeNkfmLX7yIaS1
-	QUTZB0m3Yx51ckDLRFMWWQvnvVAA96qXb9Li3l+sw30x+7lWzdWk7oLR
-X-Gm-Gg: ASbGnctV7k8V5o9DtstWK5LsDkm9tOuUjwRHzbRkCmWuPFvk+NxtDnWqV6/U0Cj9lar
-	2dOTgg2xHNG2q3N9VoGnD76aLM2F++SwrQD959azfTJFj+btoyFG1D/ljyugIe2YNLPyHcT7vG2
-	NtynrMBPMGQ61sS331rnk+7ErmCbxikInqvmOP9C+HptQSqt7MdC0quUqbQQSW773YECjbiIxva
-	RzkFVb3m79m9Myh6CXPCw05v4SsE+UhaLvOuItxOFAGRL1Ig+ZzrdJ25wD4YbBEhG4MXq/L/UXH
-	WJAzbamzzOrgGsRwYoahMgBGr0OgYEn/ORikgkkZmbj6H5j3AiNcB+uPDIWlq612G6zFs/qR5bh
-	ksK5cDhQ2GGo8/4slxTaQbHddYL0C+Rh0c336BfUsQ7HiLJk1/pb1z19wP6cubjdSq8/VjHwcRW
-	2GoTBoQBg7umWJfoWFVTQfZJYzoj8=
-X-Google-Smtp-Source: AGHT+IH9mYL+8pQfNgZ4r8ZFqW+QSWz3AKdRwbEmCblz9taenxcf6eaYppGqEuojMUEJzBiNafSuyw==
-X-Received: by 2002:a17:90b:5546:b0:343:eb40:8e01 with SMTP id 98e67ed59e1d1-349a26223e5mr3565025a91.27.1765117670867;
-        Sun, 07 Dec 2025 06:27:50 -0800 (PST)
+        bh=Mim4L7D6RiJD0Xfk3ctgRLF/8EuUIkjvDV4bArvMP3Q=;
+        b=YH8QF4v2r1WAOwltk/YJUyYHdjahaEOcJqI8MNcq8VYjUxQcyH7qrufVQfd/YcPtMl
+         WwlqMS/ZbVaFVMcQk5yNrOnND0CBOmD8uNg9GzJIYbejSRKNbSQB8xScsvYERFzZAbdP
+         eY1FnQyP9wpyjCE3vFzhM6ttPOPG5/2Qmo9mq4Ywbi0iXHvtK82lJf9TYs3E+sJHqYf5
+         QFffCDo9koefqChTswg5/irA+B62DFkarlQ3rk1cbl3hBMDohYA8gHi430Qkf/5VxVej
+         pN77qVxinePpiprVpyfsMiZYSCHkpbmvqb+xYOkxppPRraCW/RTpkSP21ATfAHBvfE3R
+         XSTQ==
+X-Gm-Message-State: AOJu0YwmbkAEMurSXK8E3CnhVaWTcz7/08BTRXQKUyZKhGQkvYxLJ0/2
+	nF+e4g7B1vQ6AnDrwHrwaTvajCDcMnFAwZt1cOFQc5ffz582Ue5KGOZg
+X-Gm-Gg: ASbGncvAka/ZCWydVpo+fSlINaN1NTDIaUv7l8jRgEMolaa0fbtvHIAmOceottW1GG3
+	oImmo2SeqTDXqPBR/hShrvxqfZxdvKxjP517nzNGrmh9eLF82zD8vjCj94HxzzwonLGdIkkq/I9
+	1qI0pl9YJGQ4vyfWGbmj6PcCIBigTuhQbdGaASk1buuPwoZk7iO2rV6Gh2YDgnjk8Q4BHHCYTTW
+	+zskgTcyl+uePP1tc2OOLfxqqRKirI158Wi1wU8TwY9fSvqrFSib465LCluVIoksGrpVpK+7Uil
+	chm/tMyFU2RwAC8dqbZAYOGVGUpe+/z2aAK7lwydvrQQrEwLjgeQYf1ScohhPiSPEwGJYSr0h/N
+	rnsFSyhp0Mqj3LzpHy7nYmxezxtQab05b/+pd5NdnZknh+dEA71asOQk4lR+YDd4mKeUzRj84gZ
+	u2ltQq1Q5YCZIYhjjNBuXbz+MEfJI=
+X-Google-Smtp-Source: AGHT+IEVUhB8KEX4xXFxWmTBAiOJNAYgHsDvlU9jrkKUE/cQ/kDX+/4BFflD9NpwiP62P5/AXuU/kQ==
+X-Received: by 2002:a05:6a20:3d87:b0:334:8d1f:fa8d with SMTP id adf61e73a8af0-36617e74cfemr4778913637.18.1765117673713;
+        Sun, 07 Dec 2025 06:27:53 -0800 (PST)
 Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf686c32deesm9514792a12.13.2025.12.07.06.27.48
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-bf686c32deesm9514792a12.13.2025.12.07.06.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Dec 2025 06:27:49 -0800 (PST)
+        Sun, 07 Dec 2025 06:27:52 -0800 (PST)
 From: Donglin Peng <dolinux.peng@gmail.com>
 To: rostedt@goodmis.org
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	pengdonglin <pengdonglin@xiaomi.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Subject: [PATCH v1 1/2] fgraph: use BTF to trim and filter return values
-Date: Sun,  7 Dec 2025 22:27:41 +0800
-Message-Id: <20251207142742.229924-2-dolinux.peng@gmail.com>
+Subject: [PATCH v1 2/2] tracing: Update funcgraph-retval documentation
+Date: Sun,  7 Dec 2025 22:27:42 +0800
+Message-Id: <20251207142742.229924-3-dolinux.peng@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251207142742.229924-1-dolinux.peng@gmail.com>
 References: <20251207142742.229924-1-dolinux.peng@gmail.com>
@@ -81,121 +81,137 @@ Content-Transfer-Encoding: 8bit
 
 From: pengdonglin <pengdonglin@xiaomi.com>
 
-The current funcgraph-retval implementation has two limitations:
+The existing documentation for funcgraph-retval is outdated and partially
+incorrect, as it describes limitations that have now been resolved.
 
-1. It prints a return value even when the traced function returns void.
-2. When the return type is narrower than a register, the printed value may
-   be incorrect because high bits can contain undefined data.
-
-Both issues are addressed by using BTF to obtain the precise return type
-of each traced function:
-
-- Return values are now printed only for functions whose return type is
-  not void.
-- The value is truncated to the actual width of the return type, ensuring
-  correct representation.
-
-These changes make the funcgraph-retval output more accurate and remove
-noise from void functions.
+Recent changes (e.g., using BTF to obtain function return types) have
+addressed key issues:
+1. Return values are now printed only for non-void functions.
+2. Values are trimmed to the correct width of the return type, avoiding
+   garbage data from high bits.
 
 Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
 Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
 ---
- kernel/trace/trace_functions_graph.c | 64 +++++++++++++++++++++++-----
- 1 file changed, 54 insertions(+), 10 deletions(-)
+ Documentation/trace/ftrace.rst | 74 ++++++++++++++++++----------------
+ 1 file changed, 40 insertions(+), 34 deletions(-)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 17c75cf2348e..9e63665c81e2 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -15,6 +15,7 @@
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index d1f313a5f4ad..de97b65433cc 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1454,6 +1454,10 @@ Options for function_graph tracer:
+ 	printed in hexadecimal format. By default, this option
+ 	is off.
  
- #include "trace.h"
- #include "trace_output.h"
-+#include "trace_btf.h"
++  funcgraph-retaddr
++	When set, the return address will always be printed.
++	By default, this option is off.
++
+   sleep-time
+ 	When running function graph tracer, to include
+ 	the time a task schedules out in its function.
+@@ -2800,7 +2804,7 @@ It is default disabled.
+     0)   2.861 us    |      } /* putname() */
  
- /* When set, irq functions might be ignored */
- static int ftrace_graph_skip_irqs;
-@@ -865,6 +866,46 @@ static void print_graph_retaddr(struct trace_seq *s, struct fgraph_retaddr_ent_e
+ The return value of each traced function can be displayed after
+-an equal sign "=". When encountering system call failures, it
++an equal sign "ret =". When encountering system call failures, it
+ can be very helpful to quickly locate the function that first
+ returns an error code.
  
- #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION_GRAPH_RETADDR)
+@@ -2810,16 +2814,16 @@ returns an error code.
+   Example with funcgraph-retval::
  
-+static void trim_retval(unsigned long func, unsigned long *retval, bool *print_retval)
-+{
-+	const struct btf_type *t;
-+	char name[KSYM_NAME_LEN];
-+	struct btf *btf;
-+	u32 v, msb;
-+
-+	if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-+		return;
-+
-+	if (lookup_symbol_name(func, name))
-+		return;
-+
-+	t = btf_find_func_proto(name, &btf);
-+	if (IS_ERR_OR_NULL(t))
-+		return;
-+
-+	t = btf_type_skip_modifiers(btf, t->type, NULL);
-+	switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
-+	case BTF_KIND_UNKN:
-+		*print_retval = false;
-+		break;
-+	case BTF_KIND_ENUM:
-+	case BTF_KIND_ENUM64:
-+		msb = BITS_PER_BYTE * t->size - 1;
-+		*retval &= GENMASK(msb, 0);
-+		break;
-+	case BTF_KIND_INT:
-+		v = *(u32 *)(t + 1);
-+		if (BTF_INT_ENCODING(v) == BTF_INT_BOOL)
-+			msb = 0;
-+		else
-+			msb = BTF_INT_BITS(v) - 1;
-+		*retval &= GENMASK(msb, 0);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entry *entry,
- 				struct ftrace_graph_ret *graph_ret, void *func,
- 				u32 opt_flags, u32 trace_flags, int args_size)
-@@ -884,17 +925,20 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 	print_retaddr = !!(opt_flags & TRACE_GRAPH_PRINT_RETADDR);
- #endif
+     1)               |    cgroup_migrate() {
+-    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)   0.651 us    |      cgroup_migrate_add_task(); /* ret=0xffff93fcfd346c00 */
+     1)               |      cgroup_migrate_execute() {
+     1)               |        cpu_cgroup_can_attach() {
+     1)               |          cgroup_taskset_first() {
+-    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+-    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+-    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
+-    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
+-    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
+-    1)   7.143 us    |    } /* cgroup_migrate = -22 */
++    1)   0.732 us    |            cgroup_taskset_next(); /* ret=0xffff93fc8fb20000 */
++    1)   1.232 us    |          } /* cgroup_taskset_first ret=0xffff93fc8fb20000 */
++    1)   0.380 us    |          sched_rt_can_attach(); /* ret=0x0 */
++    1)   2.335 us    |        } /* cpu_cgroup_can_attach ret=-22 */
++    1)   4.369 us    |      } /* cgroup_migrate_execute ret=-22 */
++    1)   7.143 us    |    } /* cgroup_migrate ret=-22 */
  
--	if (print_retval && retval && !hex_format) {
--		/* Check if the return value matches the negative format */
--		if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
--			(((u64)retval) >> 32) == 0) {
--			err_code = sign_extend64(retval, 31);
--		} else {
--			err_code = retval;
-+	if (print_retval) {
-+		trim_retval((unsigned long)func, &retval, &print_retval);
-+		if (print_retval && retval && !hex_format) {
-+			/* Check if the return value matches the negative format */
-+			if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
-+				(((u64)retval) >> 32) == 0) {
-+				err_code = sign_extend64(retval, 31);
-+			} else {
-+				err_code = retval;
-+			}
-+
-+			if (!IS_ERR_VALUE(err_code))
-+				err_code = 0;
- 		}
+ The above example shows that the function cpu_cgroup_can_attach
+ returned the error code -22 firstly, then we can read the code
+@@ -2836,37 +2840,39 @@ printed in hexadecimal format.
+   Example with funcgraph-retval-hex::
+ 
+     1)               |      cgroup_migrate() {
+-    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)   0.651 us    |        cgroup_migrate_add_task(); /* ret=0xffff93fcfd346c00 */
+     1)               |        cgroup_migrate_execute() {
+     1)               |          cpu_cgroup_can_attach() {
+     1)               |            cgroup_taskset_first() {
+-    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+-    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+-    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
+-    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
+-    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
++    1)   0.732 us    |              cgroup_taskset_next(); /* ret=0xffff93fc8fb20000 */
++    1)   1.232 us    |            } /* cgroup_taskset_first ret=0xffff93fc8fb20000 */
++    1)   0.380 us    |            sched_rt_can_attach(); /* ret=0x0 */
++    1)   2.335 us    |          } /* cpu_cgroup_can_attach ret=0xffffffea */
++    1)   4.369 us    |        } /* cgroup_migrate_execute ret=0xffffffea */
+     1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
+ 
+-At present, there are some limitations when using the funcgraph-retval
+-option, and these limitations will be eliminated in the future:
 -
--		if (!IS_ERR_VALUE(err_code))
--			err_code = 0;
- 	}
+-- Even if the function return type is void, a return value will still
+-  be printed, and you can just ignore it.
+-
+-- Even if return values are stored in multiple registers, only the
+-  value contained in the first register will be recorded and printed.
+-  To illustrate, in the x86 architecture, eax and edx are used to store
+-  a 64-bit return value, with the lower 32 bits saved in eax and the
+-  upper 32 bits saved in edx. However, only the value stored in eax
+-  will be recorded and printed.
+-
+-- In certain procedure call standards, such as arm64's AAPCS64, when a
+-  type is smaller than a GPR, it is the responsibility of the consumer
+-  to perform the narrowing, and the upper bits may contain UNKNOWN values.
+-  Therefore, it is advisable to check the code for such cases. For instance,
+-  when using a u8 in a 64-bit GPR, bits [63:8] may contain arbitrary values,
+-  especially when larger types are truncated, whether explicitly or implicitly.
+-  Here are some specific cases to illustrate this point:
++Note that there are some limitations when using the funcgraph-retval
++option:
++
++- If CONFIG_DEBUG_INFO_BTF is disabled (n), a return value is printed even for
++  functions with a void return type. When CONFIG_DEBUG_INFO_BTF is enabled (y),
++  the return value is printed only for non-void functions.
++
++- If a return value occupies multiple registers, only the value in the first
++  register is recorded and printed. For example, on the x86 architecture, a
++  64-bit return value is stored across eax (lower 32 bits) and edx (upper 32 bits),
++  but only the contents of eax are captured.
++
++- Under certain procedure-call standards (e.g., arm64's AAPCS64), when the return
++  type is smaller than a general-purpose register (GPR), the caller is responsible
++  for narrowing the value; the upper bits of the register may contain undefined data.
++  For instance, when a u8 is returned in 64-bit GPR, bits [63:8] can hold arbitrary
++  values, especially when larger types are truncated (explicitly or implicitly). It
++  is therefore advisable to inspect the code in such cases. If CONFIG_DEBUG_INFO_BTF
++  is enabled (y), the return value is automatically trimmed to the width of the return
++  type.
++
++  The following examples illustrate the behavior:
  
- 	if (entry) {
+   **Case One**:
+ 
 -- 
 2.34.1
 
