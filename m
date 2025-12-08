@@ -1,95 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D796B2E5B19
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Dec 2025 10:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56AF1F75A6
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Dec 2025 13:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765189770; cv=none; b=fvCCCyI/sSZnOrkZZfzw5wobyiixsVwo91PfW+vDa8MHqKx1qZoPcD6UZE6pG6QZx4ZNfPIJvC2HAxoU7RzahgdIcaXhzVFWhIrrM3Srcha8VN1Q2zlmHRiJhn0QPD25LspAQ05ZBrqDdmpac8JIVJnuxUbilnJQDiHvqO2hQks=
+	t=1765199965; cv=none; b=meWbhol911o07IFSZzdgrF//+jZimlKiIfcEYwLpkLYSf0U6j7ShGITtdH0Pw9We6XVJcjUhIpVSNggQC3tN4FYuMQ73RaYp/uErZfJKnY8Ijibrjqa8xzlKtRAnnpC1T7UKWjfXUxvKRIx/W3zgMdlWQvNeO6lq23emLTO0mrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765189770; c=relaxed/simple;
-	bh=Lai2720BhSwYhpwgkcvbksu2hyCojtOkg28bQeIJf4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mL5PlY4IgIDDpqmzHTBEmvQwsMuoPJGWyuA3HIFvLQSfVVVOKIFIAButvRLKVL1olOhSp2VOM8pFZmicQhiguewwAK+0v43725JHnYgOHkznG1yOa7KB99DjqhixCdM+tKyF5/1Kv1NHM+a82A3IHzffACmnFtuUs102Fnp/Bhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rl6NRuOC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1765199965; c=relaxed/simple;
+	bh=nV/mnejD1Urwuhxxd0Q6OO4wDo/8s6Y/DdnRVNaa6e4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JkMX+pIdPLGVdC1qcfkFCxEBs+VQttC79j1WPFSKwOf6el30n+/jlME/BfwPHL4lwnUwc6icrNZ9EOEJlwWl5MKOYKkNgsQfkUITMLUyZPpLtxmlNa+DpmUy3U/mq2/6hF1UbwhnhkKsii3ZPDjDorMmT4vbmMkaYvI1CddeUJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LGLiPFoz; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rl6NRuOC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765189767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lai2720BhSwYhpwgkcvbksu2hyCojtOkg28bQeIJf4Q=;
-	b=Rl6NRuOCx3epes229VYIwW9/dO/i+4C24SUDgkKDRQuyjWCTOLi5UEuQZBmBB996qTux2h
-	v2VNRQEtbsfMnBVfmJp9VUn00Qlsa497+/LJqY+ly5Idib9JB/aen/qU3VgzrxXmennE3F
-	uesgu7uTq0KCx1uh0/bzN9aqfqnsUZk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-Puq_hxsiMPi3trjBsX9Jew-1; Mon,
- 08 Dec 2025 05:29:19 -0500
-X-MC-Unique: Puq_hxsiMPi3trjBsX9Jew-1
-X-Mimecast-MFC-AGG-ID: Puq_hxsiMPi3trjBsX9Jew_1765189757
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 049101956054;
-	Mon,  8 Dec 2025 10:29:17 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.91])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E6D9F19560B0;
-	Mon,  8 Dec 2025 10:29:10 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  8 Dec 2025 11:29:16 +0100 (CET)
-Date: Mon, 8 Dec 2025 11:29:09 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	David Laight <David.Laight@aculab.com>
-Subject: Re: [RFC PATCH 0/8] uprobe/x86: Add support to optimize prologue
-Message-ID: <aTaodcF1ACgQneRT@redhat.com>
-References: <20251117124057.687384-1-jolsa@kernel.org>
- <aSSgGu8X04XoYN8D@redhat.com>
- <20251208153056.3a4e9cd3511ccf00dc12e265@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGLiPFoz"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-298456bb53aso59416925ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Dec 2025 05:19:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765199963; x=1765804763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hpqT/PJvioY+NKSh2DmC5qT0+A1ogKkqikHGgDn/B+c=;
+        b=LGLiPFoz+wEZQksFp1H27KSM+p4+F0rmM0yWcb9MrPeoHCzSjs7++vYPWhkesehuO/
+         0wU8nmIO2xJH5n7LajWshuIXB7lz4u5Iyp+Kq3BH83b9lFJ3C+Qxgu3A2/NLCs6tNXrn
+         LvDglP9F37d/uJM4sv1vfga7JjFKdriTKZL5au+7Knc4MAwnDI2L21kvqWXyAMPeXPej
+         HFVOUQQidtPbh60c5PM5GL982cVcAcg6jaRb5PQf9yp0AhpAdXMM4C7j/isejLikMmO+
+         keH/GoyH0HrVbBfe5FPxYUlTJsrFJSUiIEYL1fvcZ+eyCmNIDXdR4ui9/MEf5o2Yoaj4
+         CM3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765199963; x=1765804763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpqT/PJvioY+NKSh2DmC5qT0+A1ogKkqikHGgDn/B+c=;
+        b=vGNzYcHre8czUrTdkLIJsXFjX4QuyInmggPFO0GHC/tWmQnJIVXCw+FNLYFjvv9fu9
+         94jaKJdFLwb7wyWFKmfnCdcMKNwUJxJx4Mc23xn0EkGfrG5UA6jXp1SUNTTHx3yTbsaY
+         LfrY0fHfHFJH9IKWLQqARFZ0/yc/POfP5zEFJMHY6AjWsbnscR5Gamk1JYm/SVpfqdfL
+         F+h2w7rrRI50TDAJ9gXaroUv7U4Ll5uMB2Xzo3ZWaEVqAcPO78gma41OwRaAz7eNjwsh
+         Ey8Exkkuq+l1N/xuc+4IT2g15dwUNLbvHTdEXCuPnKl8e1qg2+eGZDlfLAmc6xZZCmS5
+         TqrA==
+X-Gm-Message-State: AOJu0YzwwyA/Js731u5D7uTTFnjiZpQRDEIZbeJvjQAf2VhyzsE8LMmR
+	y8KvKVdb2vGBmkvmDEZl2/fYhw/ucNSaUkgG3ZERkdeBf+JbNBTAjKRR
+X-Gm-Gg: ASbGncvPukfzAQ4aL+qA9G9DoqDhHqPYSSwQguauMZVYZtN/PfKddhOI7L/tu+zPjxI
+	SRtPXD5DX4UsogYPSeHkP6i1D3fncYBkiRFzQU6fwSrvSjnzBpJtBrz4YC/nHiItz5Hb0DOczEG
+	Ogb9aS8khgs/T5SZWOlnZ+VcXp+XF0Oc1jyNk0zoN8EsgKgsZD7pe6Df2sYUokkv/PGvO9Alz2S
+	N6EWIqTIDtCifm3PANFb4eSf49OKGhew+eij2QzCFgKiwU+SWpxC0RR38UIuLZo2tl7KHbN6Mba
+	UhIejrQkfvK+sF/uetEse+ZxTw/SgKY4Im05soy8odxQC/04A623YbxVZ8ZcgvnnBkN4w9iUYIU
+	dlpZPKobUkz9h0bLdy6Mtg55B3uRZql3H1tjkw+8pI4/Abt7vhbtRpwZC0/ZxSqxjZG1B1fUNG5
+	l7eOC+CHLI6CgnoBEq5GR35kXNYNA=
+X-Google-Smtp-Source: AGHT+IHif9jIoGV5a2xxUQIy9VL29LFtOsQnFyu/VMjR9x4ghHzim6wsCFRN1z6RFrIA6H9Ep+FGmA==
+X-Received: by 2002:a17:902:d4ce:b0:299:bdaa:a886 with SMTP id d9443c01a7336-29df54722eamr68793415ad.12.1765199962905;
+        Mon, 08 Dec 2025 05:19:22 -0800 (PST)
+Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29daeaaba21sm126848595ad.70.2025.12.08.05.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 05:19:21 -0800 (PST)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: [PATCH v2 0/2] Use BTF to trim return values
+Date: Mon,  8 Dec 2025 21:19:15 +0800
+Message-Id: <20251208131917.2444620-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251208153056.3a4e9cd3511ccf00dc12e265@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-On 12/08, Masami Hiramatsu wrote:
->
-> On Mon, 24 Nov 2025 19:12:42 +0100
-> Oleg Nesterov <oleg@redhat.com> wrote:
->
-> > On 11/17, Jiri Olsa wrote:
-> > >
-> > > There's an additional issue that single instruction replacement does
-> > > not have and it's the possibility of the user space code to jump in the
-> > > middle of those 5 bytes. I think it's unlikely to happen at the function
-> > > prologue, but uprobe could be placed anywhere. I'm not sure how to
-> > > mitigate this other than having some enable/disable switch or config
-> > > option, which is unfortunate.
-> >
-> > plus this breaks single-stepping... Although perhaps we don't really care.
->
-> Yeah, and I think we can stop optimization if post_handler is set.
+From: pengdonglin <pengdonglin@xiaomi.com>
 
-Hmm, why? This doesn't depend on whether ->ret_handler is set or not...
+This patch series addresses two limitations of the funcgraph-retval feature:
 
-Oleg.
+1. Previously, return values were printed even for void functions.
+2. For return types narrower than a register, high-bit corruption could
+   lead to incorrect values.
+
+By leveraging BTF to obtain precise return type information, we now:
+
+1. Suppress output for void functions (eliminating noise)
+2. Properly truncate values to match the actual return type width (ensuring
+  correctness)
+
+These improvements make funcgraph-retval more accurate and useful.
+
+Before:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 1)               |    _raw_spin_unlock() {
+ 1)   0.074 us    |      do_raw_spin_unlock(); /* ret=0x1 */
+ 1)   0.072 us    |      preempt_count_sub(); /* ret=0x0 */
+ 1)   0.373 us    |    } /* _raw_spin_unlock ret=0x80000000 */
+ 1)               |    down_read() {
+ 1)   0.070 us    |      __cond_resched(); /* ret=0x0 */
+ 1)   0.069 us    |      preempt_count_add(); /* ret=0x0 */
+ 1)   0.071 us    |      preempt_count_sub(); /* ret=0x0 */
+ 1)   0.612 us    |    } /* down_read ret=0x80000000 */
+ 1)               |    down_write() {
+ 1)   0.070 us    |      __cond_resched(); /* ret=0x0 */
+ 1)   0.071 us    |      preempt_count_add(); /* ret=0x0 */
+ 1)   0.070 us    |      preempt_count_sub(); /* ret=0x0 */
+ 1)   0.605 us    |    } /* down_write ret=0x80000000 */
+
+After:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 0)               |    _raw_spin_unlock() {
+ 0)   0.075 us    |      do_raw_spin_unlock();
+ 0)   0.075 us    |      preempt_count_sub();
+ 0)   0.380 us    |    } /* _raw_spin_unlock */
+ 0)               |    down_read() {
+ 0)   0.070 us    |      __cond_resched(); /* ret=0x0 */
+ 0)   0.073 us    |      preempt_count_add();
+ 0)   0.072 us    |      preempt_count_sub();
+ 0)   0.586 us    |    } /* down_read */
+ 0)               |    down_write() {
+ 0)   0.070 us    |      __cond_resched(); /* ret=0x0 */
+ 0)   0.072 us    |      preempt_count_add();
+ 0)   0.072 us    |      preempt_count_sub();
+ 0)   0.676 us    |    } /* down_write */
+
+Changelog:
+v2:
+- Update the funcgraph-retval documentation
+- Revise the cover letter
+
+v1:
+- Link: https://lore.kernel.org/all/20251207142742.229924-1-dolinux.peng@gmail.com/
+
+pengdonglin (2):
+  fgraph: Use BTF to trim and filter return values
+  tracing: Update funcgraph-retval documentation
+
+ Documentation/trace/ftrace.rst       | 76 ++++++++++++++++------------
+ kernel/trace/trace_functions_graph.c | 64 +++++++++++++++++++----
+ 2 files changed, 97 insertions(+), 43 deletions(-)
+
+-- 
+2.34.1
 
