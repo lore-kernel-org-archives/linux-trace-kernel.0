@@ -1,227 +1,175 @@
-Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020098.outbound.protection.outlook.com [52.101.191.98])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8256C1925BC;
-	Mon,  8 Dec 2025 14:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765203777; cv=fail; b=D5kAV5d02q7Qr+WclIRYboVkpL0cwx/v3QW36N2NgIAnaQ42T4Z09R/kGp615Tww5yrj/+QhSjSbGGoik1Cc+j+r+ub6k0PSuabq3lZG7AbP+CXw6Gpdf4H6V7XAoUdKG/mw7nHGzlmqzz62RMsIWwKiEcpypML/CAAbut9UVY0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765203777; c=relaxed/simple;
-	bh=QMPgf14eAEtVKL7XByas76fGvk1+9w8TjqSOL65S85Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sfVZ1z9YQC2i1V36texoDbS6UQI0ZZlTm3Br/LsrEEqEw5JdfaFC50Ep5JPP/VfS+re0WnjMGd9FfLUh2OpraVcyUC4w2JR7n6GuS8+J4mUjdMUIlmGnFF+1jUFMIj1txLfSNfjw6eQJbS30hmhb50fzBgWjRqOmE3SRBk3Z1Vg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=YgbeQilC; arc=fail smtp.client-ip=52.101.191.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E985C26FA57;
+	Mon,  8 Dec 2025 15:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765208335; cv=none; b=Lr2U2Vf5astyWV9ioNlzHqud2gEIfcWQh4AUAdwiAr/qshZSX1yOSDYQiSTCFG+4qeG7JHjlMcBU2S/iMXksimlb3SmHayn7IWZPbTrOVuFoM4bAdINXVTlAazDdnjnydri+r1VVRwRLAgcxHiCUVVhZ3D4BtDl4Zu0N6SzXNmI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765208335; c=relaxed/simple;
+	bh=pkL1PGlWK6kWiB9mGkCiNgzfBCMk+SB9F42d4ZU4ctU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZTENy8uKOMvu6gp7IqzaoMAAcuZ5w/mz9j1yGR8dEPFDJaTXa6Ghc6UAzdb0WWI/0TRBgfJpsw2A2zErpAbIxGUA3b7TYq2T339NU8gt6cN3AQW8/i7B29/jM3UokiGsvGW2AMPryGP/lE1LR4O3hPsuJvuUpVRo+My8fTTJLeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ab6JqRi4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="YgbeQilC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hxW2pH+7e9gbPcUUaKvDwa+6VpK8WdajsC7kaisvfqoCnHYEyAZDPWBUW6Ee8W8pDq+L3OlPamAYSmiTbCdPexWnyM/waO9q+YOiGPP3wBTc2XcB+yS0icdPTHAWYqeQVps3daQ8pO+ii+UcoC4WV8yrDnx1IYqt6GQNy0lz8YaQ5xFhd8v0OD2+Np25ms8GaMdxQY8i4VRa3FNx5jmSm4J+wsef2sh51/sl28dPYFMijgPJKEMsDYcbrDNTtKjIjU56fjFGj7xPri5KC+hDSlFhC0p5091Y4v3H62G5FQ3TMEYJWbnDXtdllHd+HsNcjiiHGZwoXc1A887l8wGspA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FZJdeNALgV9m4gxEtqIg7zvW6JIfqpLuSClvJSc0PYI=;
- b=dgfsgu5xEDYwm6bc7uCihZWCgeH0ozZk+x4C9bzhZoZhiGuhPGZ8zLgTqpQMdsReL58EJ5Hh/ytgkNg749xI91MUf9sWsO1KxjDxU36llOP/WGTdSHPyo9DTo/wiIY2W+FHcUMSvMiQjC+TnI3FRWd8k6t6zfWhtwhaFryQggMTVBXcC7VQmCT3n5CLlU1mAQQoHjbXMTwJQluU7omTiqKwQAeTc1UGhAOJW4mKamnl3w1MhaPu8vM3LDHhF7NcODoBhTJrPLO0XE2HOrJ1C5BGmZAIVpFbauqt/mFAM2f+g7pZCQPapFevVpBK+KsARN5SHQa4KECQdMt7/yOgnVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FZJdeNALgV9m4gxEtqIg7zvW6JIfqpLuSClvJSc0PYI=;
- b=YgbeQilCML66YsS0IJAEOYfgByeRw82QCzxhrn9MuGbs/Z2khLd7BQJ6WjB5Qm7TQTUycQbDU2DAAbU/825Pf06en+cVbqxz8m2sF13aaHLtP7ryAhGbn+jzQdTC8AN3OfslF3LkBYxZS0tTEkzstq97CN1lJULZVvMP/P2JCUTdm2Y7IKcs52TEx33jvz1on3fS5R8jZP3jUNIbvGJUVeSh52bkqsaljSOyvb0Gb6sQbmHnJInPyw/Z6B7SluCMP1SNRYfU0UnTR4TQC1XRXkJde8MCo2K1TX4lQvuBcmjU+/Ox3gdnL3EqA004JnveaR19NfXpX91Es1LOJGGAMA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT3PR01MB6502.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:71::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 14:22:50 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%2]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
- 14:22:50 +0000
-Message-ID: <3612840f-0c05-4797-8e75-872a306da45c@efficios.com>
-Date: Mon, 8 Dec 2025 09:22:48 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: PATCH] tracing: Fix unused tracepoints when module uses only
- exported ones
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>
-References: <20251208085336.6658743c@debian>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20251208085336.6658743c@debian>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0335.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10a::26) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ab6JqRi4"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B85Dlre024537;
+	Mon, 8 Dec 2025 15:38:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=8du7Uo
+	GnN7LbZDj2cDJ1DGYJrS5D2TMQb4FpDdleGeY=; b=Ab6JqRi4t6h+RrKMjCEfRd
+	jUx/dkMOZ5N90KIc1A5GMbOCAwAm8FHGzmMwnjE/5Lzk5iCmxyC5P0Gp6c1cWCwH
+	U7vOYjP13p3wA/1s9d/+afUQc27dMvWjtVtbkOawAo5mE+NYTgvwztEmBDaoMADQ
+	1Z43BJ4Dl0xalJ1E603ybSjodoVWifF7pZFRVcJ0uIbByUUqr/iEK9Cv2OvC9mM5
+	cA5lbyIeAIvB6xYWIP0SZ1KaYYSRvuQ1YIGRzwRgwjIetLSpUwy7WA5jSQf7RO3Y
+	x/VX7qBOJ6o5Xx9fpWowGRFMsyycij4UYkZKR0FPGwvD7GIQ4+lOdINnGsfgutcw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc618f62-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Dec 2025 15:38:24 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B8FCpTD011780;
+	Mon, 8 Dec 2025 15:38:23 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc618f5x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Dec 2025 15:38:23 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B8EWkBD028147;
+	Mon, 8 Dec 2025 15:38:21 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4avy6xpf3p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Dec 2025 15:38:21 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B8FcIP534603340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 8 Dec 2025 15:38:18 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E75D520040;
+	Mon,  8 Dec 2025 15:38:17 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7CC0C2004E;
+	Mon,  8 Dec 2025 15:38:16 +0000 (GMT)
+Received: from [9.111.221.3] (unknown [9.111.221.3])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  8 Dec 2025 15:38:16 +0000 (GMT)
+Message-ID: <11b2438c-ef1f-423f-96c9-3005a75ec008@linux.ibm.com>
+Date: Mon, 8 Dec 2025 16:38:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB6502:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51276d5d-bef5-4d39-d175-08de3665442c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZHJjSWRXMGc3WVE2WnNxZ3k4dWhtclRLMVN6OVdaYitvSHFKS25pRktodHdv?=
- =?utf-8?B?NE1RM2Exa1RrZ1RhTDZ4dS9pL01DYWJETHVwQlJlNExhaGFjWkhFYStZZ0xa?=
- =?utf-8?B?b2pqeXVZbjRubSs5ZmJYQmFJZXJTSXdzK08vUVVBR1p3dFdhMFUyYjdKd3dX?=
- =?utf-8?B?MjRaVUw0QXZnT1lFSjJtd015NWNUWGFMcUhkckFPblc3anh1TDRhMXJNUis5?=
- =?utf-8?B?cUxqYVhJcnlFVDZ4R2padzhMMkM4MG52TTl2Mlg5KzF0bnlVNnduTkJJRzVh?=
- =?utf-8?B?WHV5SW5qdHhZYWhndWtaN0h2ZDhGUjBnem9rKzAvUTBhSnpJc0VuWkNzVnpK?=
- =?utf-8?B?QUYxRXlnKzZ1cWtjSlNEa0hWK2Yrd1orZ0IvVzh5N2JVVkdITzNJTTVKN1I1?=
- =?utf-8?B?YklzR1VuYUFxMHdoYzF6TXBGUXd2TUJnbitzNnpOSWdPZXA4Z0JteVhiYlpx?=
- =?utf-8?B?cXZ2ZDdVMW9POXJIUnlZd0tCRHBnaHVRdlpuZ1llcXBOT3NPL04reVFHNERY?=
- =?utf-8?B?SWxoSTZTT2JTVDlNblFvK2pIYnJJNzhvV3dodW4yK1IwdmZjVGRxU1lGMSs5?=
- =?utf-8?B?NENORmR5VFp0aStIUEFPbVZwTWxDQzlBa3BnbFRyRVViSUszbS8vQ3NjbEJ1?=
- =?utf-8?B?WGtMR1N3Y0Z0MHZ2VHFmSzIzQTdtMHlMejUzYklzbkM5dnc0ZXVMTmZJQWtC?=
- =?utf-8?B?d0RoeStNSXEvSE1ENmczK0kxS0liZWdqem1LUkljUFVKT285MzJNYStaaUZQ?=
- =?utf-8?B?bWpjT05ET1V1bW93NlJNVUJBMWdUQTdBZ2E0eHJvV0tESExVZjBMMzFHMm04?=
- =?utf-8?B?c09JWmZ6M0didjFzUFZhS3U3c081SGNEWUlRSXp4dHdnWXdZeUN0Z29CbkdG?=
- =?utf-8?B?VnhWTjRUTWc4WG00OFdBbk52Mi9xTEdWWGJjbDlOck93aVFaM2VLL29jSlJ5?=
- =?utf-8?B?SVpFT3VhcXhCZnlHTTZGUDIvbzJ6TGViZWdqY0xDMzk1MWhnaGFjeTN3Znhz?=
- =?utf-8?B?UitjUkpIQzNqZXdMMjBUUmxPbVhyUlMybnlWM0NERXg2YWpVcHR4am42VmZh?=
- =?utf-8?B?VW5zcklpNll3VEo5b1dCVkJjNmFRb3Y5bXlnYy8rdldRbkdVMnpWYmtpcEFK?=
- =?utf-8?B?clp1UHp4RXVyTlVybG5Jd2ZUM1haWWkvQmNSYlJiS2cxbHg0eG94MkgwN1Vj?=
- =?utf-8?B?S1NkMEVYYWRsU0pxblJOcUd1dFZoR1A0UWFNNTZGYnVqcXRGczU0L0J6Q0k2?=
- =?utf-8?B?VUdLREIzc1pNN2VuR0R1cWYyV1p4dVVSc1VNaDJZUHQwcEdYdlBZcE84eGtO?=
- =?utf-8?B?VXdKMzZhSlE4Umx6bDZEMVh5ZU5jZ2NscTh5dHcrSHRJcFNia3Fub0s2MjB1?=
- =?utf-8?B?MTE1MTFzdGZURktWNFRVQ1I1azRZMXBJTUxmRDY1eTZ4c3l4WUh4NXE5d2hx?=
- =?utf-8?B?cmE4djc3K0dOR3ovZmg0bCtkalZOeWoyczlhUHFweFNuWThwQUNKYnFGOVVX?=
- =?utf-8?B?QXNNTzJoem9UQTA0QVRrS3FQL0hSUnNiS3lzR3R6ZGh0VUJtajg4SnhYOS9K?=
- =?utf-8?B?TWxOaUNYejE1V1FTZlNhYkJqWkxaR2ladkZOaWQ5c1BvTm1ZTmcrWXp6d2xv?=
- =?utf-8?B?WDU4amhWUFFGUkFnRHJOYUc2MnBKMnF3TXdDRHR2a1BrRmU1L25FQWg2R0Uv?=
- =?utf-8?B?Y3NsSTVVZDZkUzFYWTlxc0IrN0RXNlNRS0FQUS84TUJzU3dyMzRySkNMWmhN?=
- =?utf-8?B?VXpkZUlGZ3J1alEzcThrdm1jSE1vT21CdjlxWHRQRkVOemdVVStPcitrak03?=
- =?utf-8?B?dm5yUEwwbjVkYUE0L0M0aG1uVXpyU0o2WWNvajFZcnR2M0IzZmdOeHVoZGVG?=
- =?utf-8?B?d05XLzV6TFZmQjZ1NjJUZE8xZDQvbkxOVWtZR0R4U3pRc3c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UVNObWJqZUk3aU11OXoyS24wWGJiR25FY0NIQU1MVDFVaThzSG9wdEJyVTMw?=
- =?utf-8?B?Y0dkbHpkR0hFRit3LzhwSmdQNVNUcWNDYjJJVjJrWk54R3drd0R1ajVHSnU1?=
- =?utf-8?B?MWZNdFQwbGNqWGtaRzhXWUdQSDdWL0ErUEJQa09UMVNSRG5UdnVUSDV4TWZT?=
- =?utf-8?B?ZmlLR05kemRKUWUzYmVJdldMeDdCREZDbUpmSzVxRGpXZS9jNXNrM1NpQkVU?=
- =?utf-8?B?Q2Z4WWI1M2RBWTVsRThJNE5hQXFMd3dyaWNma3pGRDNQdU9wemROYUhNbys4?=
- =?utf-8?B?L0kyVDFld0ZzMXFrRUUvZkR3clY0akdBalA0dGZhandNVXU5a1BRMW83b1lm?=
- =?utf-8?B?RnEzRkliNEJBWVROUGtlelIrdFkxcUhqNTlwbUhXL0ZrUmVYd3VWWHhwWFY2?=
- =?utf-8?B?SzZIWm9TYjJqbG1kZUpFdGNjUThNaHdhNHYzTzVhLzlQYTc3MFpSdXdKSkh2?=
- =?utf-8?B?bnZqdXVwVk5EejJUWmNBUTl1TlZNOGFvSnZFTmJJSkVPb2tERDBuNTh6MnlJ?=
- =?utf-8?B?U2pxcXdCbkhTdzBlMUhiVzhYK09CbWd3QUwySXhFaE10dE1YZnJYZ2FqaGVi?=
- =?utf-8?B?VkxrUUlvZnNqZEd3cGQ4aUp2VzEvNVgzcFpieU5LL0xZTWw4TXdIQ0pBSVZa?=
- =?utf-8?B?cVBIYnE2VjNtcXRjcFk4TDRxblVDSmFkbEFUWklWL2xjeVhCV3IvMTAwOGVX?=
- =?utf-8?B?ZmgzdkkvL2ZGRlNWSWZic0drYjZhTTcxdjZwWFc2QTJzUFV5cHBKT2M1Zjlq?=
- =?utf-8?B?b21JK2dMMVF1dkV2dmYzNTg3VUh4ZE0zVVQ1WjVmTTd3YU5uNUs1dzhYaWt6?=
- =?utf-8?B?UitLbWVtRzV4dkp1ZjE3K01Mc21MWUNsTG1ubHVnOThQNjJRWDh3R1dSZUZx?=
- =?utf-8?B?T3doNEtyRGpNdS9xVUpybldKNG4wOStzRGUwMUFXMFEyTGFJRitUTnNYSlFp?=
- =?utf-8?B?NGJrL3NFcllneFFzc0RhcDdRZEpMdTliL1ZpenFaaWRvSlg5S0NsTWQrdlZS?=
- =?utf-8?B?Tk02anNLSnhWb25TM3FLL0ZBZGpXR2pyVUhSYUdPUTk1a1c5aWh6RWF6c2ht?=
- =?utf-8?B?WUlKbkkwcFMyVUY2cm5qMVVKSUZubmtGWk5BWjF5aHlaVmw5ZDVaclN4amtw?=
- =?utf-8?B?WEJtdXV0Q3QwRzBQc3Z4MVVvWWI3SHpoMGQzNmNIcHZtdHVsSWk2ODVzYThM?=
- =?utf-8?B?V1RKMzgzNkJ4b01nRjhFQ2xBSFRad2ZYcjYva1lleGFVa3VVUTNYS0pUeTBL?=
- =?utf-8?B?WGRWTnZENWRkeWcvcGxsazVYNVI4c2tCVVp5L25XSXZ3MWpncityRzlHUEpp?=
- =?utf-8?B?bjdZVVI5aVQvdHlIVyt3bnlKOVo1RUQ5ZUJueko3bmlGZWhld0dTQ3lqQlQv?=
- =?utf-8?B?MndyR3dtRGtVS0JnaEdSQ0ljVXowZ29VTVVQSmpRUm4xYWFqZzN2STdxVDJZ?=
- =?utf-8?B?R20vZ28yNGRVZGNKTzF1S0U3QUhSTndCRDlhVEpKeUs2WFovRjR2MVRJbFNK?=
- =?utf-8?B?bjNIVnphVEczQXBmNFJQUWt3QkZlSG02V0QvanltUGFBcWN1NzJybnhxT04w?=
- =?utf-8?B?aE5XamgrUXJXZDZYVE92amJldGM5b1cveEhPaHAveW5DK2J2eGo0ZGw3cnB5?=
- =?utf-8?B?QlZKVU8rSzFtK05wREQ3N1BRVW81TkI5dk9LZFhJR3NJZ2p0MVF0MTJkZWRa?=
- =?utf-8?B?emZPOFlER3ByZUNaK3Z3c0R4aFRBUzdOVFNuKytyOEZXOUIrZngxdDZJQnFN?=
- =?utf-8?B?dGZCNVhmS3U1RkVCRWowL3ZhalhUSG5zRWJvZUtSdW9tZWNrV0F2STVoU1p2?=
- =?utf-8?B?S1RrclZlazloWk83NWlpWmEybDhFVm54eFV5TUpmU0RIQUdQb1BuVWQ1RXVE?=
- =?utf-8?B?Skg1cG1TcERQR2M5cHNzV2M5N2RiSkY3eFBEaGRtQUFEYk1YWGJSQTcrYTVy?=
- =?utf-8?B?M2tuQnJzakpzVHcrK2xCR1hKL2xxeHcyUlA5ekdjc3ArdzFjRzFTSVgwWjU4?=
- =?utf-8?B?RU1yUUFZNzU3OUhlck5tdjA2b1laNmFMbUhSN0dTQ0E2L2s3VHNMMjMvb1ha?=
- =?utf-8?B?cVFyeGpHYnpzSmkrLzd4Sy84dnQvZGRxbmt4UmVydWlrcThiWlZHNUhlN2t6?=
- =?utf-8?B?eUo3eml2bmxIM2c3RFFkWS9QSjd0aGtKamppaERyRGdZYjV1dDV5cUEyOW1P?=
- =?utf-8?Q?ZZ/UPeC7EejqVngD6gUCbjw=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51276d5d-bef5-4d39-d175-08de3665442c
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 14:22:50.0164
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pWw3GHSkxgTiVpMX3cmPtsrRD9nyn/HwW8GsJmkryYXasn0Lq0HWmZlITY3xp93lRkLcICra7q+1lFB6hrwgM5b6nWZW15p3bQ9ag8Dl2ak=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB6502
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 14/15] unwind_user/backchain: Introduce back chain
+ user space unwinding
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>
+References: <20251205171446.2814872-1-jremus@linux.ibm.com>
+ <20251205171446.2814872-15-jremus@linux.ibm.com>
+ <iidpbjmxnjf3zu4fa3atiubgb365yonv4gymaj76l6jvuxy67s@2y5o4txs4vhr>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <iidpbjmxnjf3zu4fa3atiubgb365yonv4gymaj76l6jvuxy67s@2y5o4txs4vhr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAyMCBTYWx0ZWRfX1grYLRgFzTZ3
+ 6Bw2Y4KLfWHcTiIY8Y+q/40vMo5DISBPf6WqrACaJC3lTWr3YuNditWdGBvOE50K7FO18iHLYkL
+ N+q1ZC8XPnvBwcoqJfdSAfOGem02OMhjdPnKO9MI5Q4zgIbhTpkemspxKuBdCj4Rn+eiIOB8Yug
+ jzP2KFajjhB9mPqExO/heQEaiD1fkTNaF8pi8h7StawqzRXDb1VLiLurUW5jffw4zQ7RphSGH1I
+ RKL6ciLTTZexBxhJFh2Vzgqal3IQxN6ZvqlZg9zUV7SQs/00pUWBtai9/7H44N4lhMqA9k3B8S8
+ bJmFNkhIDZLiqxjQtuzK0ZoGuhwf72Ycxn8DUippxtkLbYsSlQaT2WQfb6j1OwwfDq9Fqo4uFQ9
+ H0mnb1/3gsQqmX0zZDtlGk2SX3uRDA==
+X-Proofpoint-GUID: DXuAST9Co_tE0Nz77KIRNVh0G2HS3M53
+X-Proofpoint-ORIG-GUID: J4Duk8KbAVtSEM7aBteiKz0qR3AIXoxE
+X-Authority-Analysis: v=2.4 cv=O/U0fR9W c=1 sm=1 tr=0 ts=6936f0f0 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-06_02,2025-12-04_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060020
 
-On 2025-12-08 08:53, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+Hello Josh,
 
-Missing bracket for [PATCH] in subject.
+thank you for your feedback!
 
+On 12/7/2025 4:10 PM, Josh Poimboeuf wrote:
+> On Fri, Dec 05, 2025 at 06:14:45PM +0100, Jens Remus wrote:
+>> @@ -159,6 +165,10 @@ static int unwind_user_next(struct unwind_user_state *state)
+>>  			if (!unwind_user_next_fp(state))
+>>  				return 0;
+>>  			continue;
+>> +		case UNWIND_USER_TYPE_BACKCHAIN:
+>> +			if (!unwind_user_next_backchain(state))
+>> +				return 0;
+>> +			continue;		/* Try next method. */
+>>  		default:
+>>  			WARN_ONCE(1, "Undefined unwind bit %d", bit);
+>>  			break;
+>> @@ -187,6 +197,8 @@ static int unwind_user_start(struct unwind_user_state *state)
+>>  		state->available_types |= UNWIND_USER_TYPE_SFRAME;
+>>  	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
+>>  		state->available_types |= UNWIND_USER_TYPE_FP;
+>> +	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_BACKCHAIN))
+>> +		state->available_types |= UNWIND_USER_TYPE_BACKCHAIN;
 > 
-> Building the KVM intel module failed to build with UT=1:
+> Any reason not to just use the existing CONFIG_HAVE_UNWIND_USER_FP hook
+> here rather than create the new BACKCHAIN one?
 
-failed -> fails (present ?)
+At first I thought this would not be a good idea, as my unwind user
+backchain implementation relies on being standalone without using
+unwind_user_next_common().  Mainly because s390 back chain unwinding
+does not have fixed CFA, FP, and RA offsets/locations.  But then I gave
+it a try and it does not look that bad actually.
 
-> 
-> no __tracepoint_strings in file: arch/x86/kvm/kvm-intel.o
-> make[3]: *** [/work/git/test-linux.git/scripts/Makefile.modfinal:62: arch/x86/kvm/kvm-intel.ko] Error 1
-> 
-> The reason is that the module only uses the tracepoints defined and
-> exported by the main kvm module. The tracepoint-udpate.c code fails the
+I'll send a RFC v3 soon.
 
-I guess you mean "tracepoint-update.c" ?
-
-> build if a tracepoint is used, but there's no tracepoints defined. But
-
-tracepoint
-
-> this is acceptable in modules if the tracepoints is defined in the vmlinux
-
-tracepoint
-
-> proper or another module and exported.
-> 
-> Do not fail to build if a tracepoint is used but no tracepoints are
-
-tracepoint .. is
-
-Thanks,
-
-Mathieu
-
-> defined if the code is a module. This should still never happen for the
-> vmlinux itself.
-> 
-> Fixes: e30f8e61e2518 ("tracing: Add a tracepoint verification check at build time")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->   scripts/tracepoint-update.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/scripts/tracepoint-update.c b/scripts/tracepoint-update.c
-> index 7f7d90df14ce..90046aedc97b 100644
-> --- a/scripts/tracepoint-update.c
-> +++ b/scripts/tracepoint-update.c
-> @@ -210,6 +210,9 @@ static int process_tracepoints(bool mod, void *addr, const char *fname)
->   	}
->   
->   	if (!tracepoint_data_sec) {
-> +		/* A module may reference only exported tracepoints */
-> +		if (mod)
-> +			return 0;
->   		fprintf(stderr,	"no __tracepoint_strings in file: %s\n", fname);
->   		return -1;
->   	}
-
-
+Regards,
+Jens
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
