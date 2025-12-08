@@ -1,149 +1,144 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D9A217705
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Dec 2025 22:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5BA154BF5;
+	Mon,  8 Dec 2025 05:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765146225; cv=none; b=JuGcr3QcjDlnkKhz61oyfWYpPO7szJK/uQNE6ofezY1vuIcnrlY7ORBi213UdMkPaif2kDBrE9ncQEqxHJ08WKce7Ab435QbfBeFkUUiuOrnTtJa36PLImR5D/w1vmlBGEEkIQic9TqteSmvLOXIAMSSw3Zs7/BlHmSxH7RjbUY=
+	t=1765173598; cv=none; b=KTgYmzfdghkyXtifBDTWUu9J3VoRnB84fIKlpbOk2Tiux3lxLO4FmI9EFENG+fdjsuq5f7nDGj7p0phTdPH+xWNDaZEjB/SWYcoKrGgLpK/bfN2j+lM783KEVjHSoQAzla3BwnMtnrVeybga9KWT2nI3gw0S9l7Wo19aKJp6Ojk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765146225; c=relaxed/simple;
-	bh=o/UYKSK/gkbLh8FWxRxvVU3OkU/Q+/03bFyedFJp1NA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RCyva0+fzgchBOHMfOgDIVMNg1yph2J4QUH9H8qlsm2endFKpTggyQL7xq/qotp2CaiUxF2YUSj+uySLF8nktOqcNSLgpdr8s9iwdZcgSqSsEgt4uptfjS//tyREp9PIG2rGAB0WLoPOh8jn5BIu12fUPEplTM3q8bppeg8ZbBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XCE66x0+; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765173598; c=relaxed/simple;
+	bh=aMT5FJgyUn78/c+kEvPqsEByXoUn4Byxfq8zgDe330o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=B0HqJ594K8elxDpk/XkhjM10UtUTibmcbC8bB9UwhvuFO/SCL5jLjbfhr/WbxChWP3/g18rPKnVqu0iRN+eSrv6B1QRokD9955wlhsJ7KrXbUVemsojE3Y29FsNOBTt2DWuutpjCJ3lEmcZR1Ns/3XIoTWIVIRogUzCDCdcMsVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI/cUEJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCE66x0+"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4775e891b5eso18923915e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Dec 2025 14:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765146222; x=1765751022; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+w862P9gwDeWHrowG1HizWcJbg4rpsvYLnk23PcrduI=;
-        b=XCE66x0+QMeUsDpmtND2oSsLY+7Y6KU0mm++Nk+/hSjhd6bho1cLaHQULBnsNpx2kQ
-         cU+Rd4nt5NavdpcTs7k2G5ihzk45DzkGFChYuPPTywwFrFWHdHWdINI+4fqM6Nac/5BV
-         NOx3wVKqPdnTPrYFGGuwtRCSD4FvG9kpt/C4o9vyW2m+zfxvl1PSSfZC/xa/8o/sl+MJ
-         zCPI4gl6PCJ2E0XV2ScZ+uFccl0+rn0aCfca976+4Upw0zSF0BZ2+c1UjJlF3VCLFJVA
-         wDIIf+eCKD2HxW7jAQ5idegVJLB+6et1wIURJo552U0JMzX0LJn0frkHaxLRsw4JXZqN
-         3BQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765146222; x=1765751022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+w862P9gwDeWHrowG1HizWcJbg4rpsvYLnk23PcrduI=;
-        b=OMbWXhLQb1VMN2a5xS7RcEtx+WLx3V/YTYLr1Wjg+Hv2JNpFyZPrVikwL2Qch6Sx1i
-         zHX4qFZTVS/eIifBwmNqxlQDuUFvaXcilQh/QeVt32TfnYTZy8P6bRqJeOZ0CAkb+471
-         VpuhBwMbMYZj7vcG9++6lh41/taOGkMfCSPX3bVvCqcFtnZfjeW5VBRMkiFIbuCVtlmZ
-         5LQqsw8RAw2xYE9zRIZEmGcsykNs5MFzuDhEel0WVpElHlqc0rcTWbg0dY71DT+FbETJ
-         r3L7dFHPcy23lIf/nNf4npc9NmPUK9nZd5qV3Xe5KG2UamJLHMBsRVS5EV6XyxiTEJNR
-         SKKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPZgU0+ECdhMEIO7wOLfEosMZKVQyI/fNnQVsoL00SI6oyr6KoWk2ItcMSHkBS7eVdeG4coTYfMYlRocf9EODzR4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYb68XgmaLinpfWPTiQPrNOekdS5h2Bptef5UQy0colDrOzNkj
-	TnNXKEbfwCM01gfKy3tUNHNS4SwbG3lQNGSlXMiwC6Y3qEPm0rRrmfOg
-X-Gm-Gg: ASbGncugTgH+Cw2fACHERrJGcJwxkIKtojR4FfqzDSsF6Xagqw3JtXPxNadJ8hzxckA
-	Ebfq/l0IA0VVnGLi+Tax8go8MAbkOrd3WEGu/fzgUnGbJw2WK5tVJLePVOmurq556dbuHYD+Qq3
-	VoMOEkfh750rFdZSfd+bNHJHP98hcJq2oYPQpxiTroSUL/40Sibt5fe1DxCY68eMXvnnwmFzu1P
-	PhUCmijaTG0jBtDZVmBcyudDX2Dhc7zEorWyNVlGU8oyZdhh3giENf5o4l2lwi88f4yZ6+D0BPK
-	Eb1bu0ug4W31WsUYt8YQ12ex/Op8odHwIgGyMXkzrtAV8Crpf7ztJhVQrnfCm2UhPOXM80JPcyo
-	UUmompAnvwKqUs+L37dfN9StTF4IhBnZpbokmDl7QMKv3ybPp/Dsaho5ebzWZAaIDw+kD4OwWaT
-	E=
-X-Google-Smtp-Source: AGHT+IEm2HK0eaJoyNa2SSzEora5+85e9+DGsx6tJi0vt33FJbGSHrWsG8eiRmYxrXpGu63DFLG+Fw==
-X-Received: by 2002:a05:600c:820b:b0:475:da1a:53f9 with SMTP id 5b1f17b1804b1-47939e043d3mr66573745e9.14.1765146222181;
-        Sun, 07 Dec 2025 14:23:42 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7d2226e7sm22659293f8f.27.2025.12.07.14.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Dec 2025 14:23:41 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 7 Dec 2025 23:23:40 +0100
-To: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	David Laight <david.laight.linux@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC PATCH 0/8] uprobe/x86: Add support to optimize prologue
-Message-ID: <aTX-bIYKXHOFXv21@krava>
-References: <20251117124057.687384-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI/cUEJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBABC4CEF1;
+	Mon,  8 Dec 2025 05:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765173598;
+	bh=aMT5FJgyUn78/c+kEvPqsEByXoUn4Byxfq8zgDe330o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qI/cUEJWgr3xtwKdqtNrS8WYDJxYzy9VyFI1Coz8W8JRNMJ/VoWspMex1m+4AVGiM
+	 lb20GO+R4pB5f3ra/duuEv+qbEu3W0HoPDdmwDcQYUvCaZppDTdi2J92UnCJNzULxE
+	 GP6YGOlqir7s3axB37J7rCHv0IcY+NwVNm0TPyvX7RhaefG7VONaBf3WQ3NxGxW2CC
+	 uuxtnDx1EjM1LQarWZjhmtKwSXH92L6DTN5F9xaCd5m0oG2G+jbEvPhY/kxo8X3E+R
+	 MvCs3vTz+0qrYMTgoUAfyjkXPEF0sR7+R30/txeVYu0VnxgO1gL48OFrduDjykuJ7J
+	 k9qLuGKw5HxrQ==
+Date: Mon, 8 Dec 2025 14:59:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "qingwei.hu" <qingwei.hu@bytedance.com>
+Cc: naveen@kernel.org, davem@davemloft.net, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Call check_ftrace_location() on
+ CONFIG_KPROBES_ON_FTRACE
+Message-Id: <20251208145955.b2fbb3a8bb0befbc769597bf@kernel.org>
+In-Reply-To: <20251205092933.3889547-1-qingwei.hu@bytedance.com>
+References: <20251205092933.3889547-1-qingwei.hu@bytedance.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117124057.687384-1-jolsa@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 17, 2025 at 01:40:49PM +0100, Jiri Olsa wrote:
-> hi,
-> the subject is bit too optimistic, in nutshell the idea is to allow
-> optimization on top of emulated instructions and then add support to
-> emulate more instructions with high presence in function prologues.
-> 
-> This patchset adds support to optimize uprobe on top of instruction
-> that could be emulated and also adds support to emulate particular
-> versions of mov and sub instructions to cover some of the user space
-> functions prologues, like:
-> 
->   pushq %rbp
->   movq  %rsp,%rbp
->   subq  $0xb0,%rsp
-> 
-> The idea is to store instructions on underlying 5 bytes and emulate
-> them during the int3 and uprobe syscall execution:
-> 
->   - install 'call trampoline' through standard int3 update
->   - if int3 is hit before we finish optimizing we emulate
->     all underlying instructions
->   - when call is installed the uprobe syscall will emulate
->     all underlying instructions
+On Fri,  5 Dec 2025 17:29:33 +0800
+"qingwei.hu" <qingwei.hu@bytedance.com> wrote:
 
-David, sorry I used wrong email.. I think the update here might
-be a problem, any chance you could check?
+> From: Qingwei Hu <qingwei.hu@bytedance.com>
+> 
+> There is a possible configuration dependency:
+> 
+>   KPROBES_ON_FTRACE [=n]
+>        ^----- KPROBES [=y]
+>          |--- HAVE_KPROBES_ON_FTRACE [=n]
+>          |--- DYNAMIC_FTRACE_WITH_REGS [=n]
+>                 ^----- FTRACE [=y]
+>                   |--- DYNAMIC_FTRACE [=y]
+>                   |--- HAVE_DYNAMIC_FTRACE_WITH_REGS [=n]
+> 
+> With DYNAMIC_FTRACE=y, ftrace_location() is meaningful and may
+> return the same address as the probe target.
+> 
+> However, when KPROBES_ON_FTRACE=n, the current implementation
+> returns -EINVAL after calling check_ftrace_location(), causing
+> the validation to fail.
+> 
+> Adjust the logic so that ftrace-based checks are performed only
+> when CONFIG_KPROBES_ON_FTRACE is enabled, ensuring correct
+> kprobe behavior even when KPROBES_ON_FTRACE=n.
 
-thanks,
-jirka
+It is a bit complicated but CONFIG_KPROBES_ON_FTRACE is a hidden
+static option set by architecture. If it is not enabled, that
+feature is not usable on the architecture. And as Steve mentioned
+we can not put a software breakpoint code on where the ftrace will
+modify. IOW, ftrace reserves the instruction address.
+Thus, we will check whether it is reserved by ftrace, and if so,
+it returns -EINVAL, or if architecture already implements the
+kprobes on ftrace feature (it requires to implement a ftrace handler
+which mimics kprobe), it uses that.
 
+So I can not accept this.
+
+Thank you,
 
 > 
-> There's an additional issue that single instruction replacement does
-> not have and it's the possibility of the user space code to jump in the
-> middle of those 5 bytes. I think it's unlikely to happen at the function
-> prologue, but uprobe could be placed anywhere. I'm not sure how to
-> mitigate this other than having some enable/disable switch or config
-> option, which is unfortunate.
-> 
-> The patchset is based on bpf-next/master with [1] changes merged in.
-> 
-> thanks,
-> jirka
-> 
-> 
-> [1] https://lore.kernel.org/lkml/20251117093137.572132-1-jolsa@kernel.org/T/#m95a3208943ec24c5eee17ad6113002fdc6776cf8
+> Signed-off-by: Qingwei Hu <qingwei.hu@bytedance.com>
 > ---
-> Jiri Olsa (8):
->       uprobe/x86: Introduce struct arch_uprobe_xol object
->       uprobe/x86: Use struct arch_uprobe_xol in emulate callback
->       uprobe/x86: Add support to emulate mov reg,reg instructions
->       uprobe/x86: Add support to emulate sub imm,reg instructions
->       uprobe/x86: Add support to optimize on top of emulated instructions
->       selftests/bpf: Add test for mov and sub emulation
->       selftests/bpf: Add test for uprobe prologue optimization
->       selftests/bpf: Add race test for uprobe proglog optimization
+>  kernel/kprobes.c | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 > 
->  arch/x86/include/asm/uprobes.h                          |  35 +++++++---
->  arch/x86/kernel/uprobes.c                               | 336 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------
->  include/linux/uprobes.h                                 |   1 +
->  kernel/events/uprobes.c                                 |   6 ++
->  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 129 ++++++++++++++++++++++++++++++++-----
->  5 files changed, 434 insertions(+), 73 deletions(-)
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index ab8f9fc1f0d1..f4aa4ba1ca9c 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1512,19 +1512,15 @@ static inline int warn_kprobe_rereg(struct kprobe *p)
+>  	return 0;
+>  }
+>  
+> -static int check_ftrace_location(struct kprobe *p)
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +static void check_ftrace_location(struct kprobe *p)
+>  {
+>  	unsigned long addr = (unsigned long)p->addr;
+>  
+> -	if (ftrace_location(addr) == addr) {
+> -#ifdef CONFIG_KPROBES_ON_FTRACE
+> +	if (ftrace_location(addr) == addr)
+>  		p->flags |= KPROBE_FLAG_FTRACE;
+> -#else
+> -		return -EINVAL;
+> -#endif
+> -	}
+> -	return 0;
+>  }
+> +#endif
+>  
+>  static bool is_cfi_preamble_symbol(unsigned long addr)
+>  {
+> @@ -1540,11 +1536,9 @@ static bool is_cfi_preamble_symbol(unsigned long addr)
+>  static int check_kprobe_address_safe(struct kprobe *p,
+>  				     struct module **probed_mod)
+>  {
+> -	int ret;
+> -
+> -	ret = check_ftrace_location(p);
+> -	if (ret)
+> -		return ret;
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +	check_ftrace_location(p);
+> +#endif
+>  
+>  	guard(jump_label_lock)();
+>  
+> -- 
+> 2.39.5
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
