@@ -1,209 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C879E1D86FF;
-	Mon,  8 Dec 2025 15:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1B427814C;
+	Mon,  8 Dec 2025 15:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765208872; cv=none; b=q7ehg/o3S3ObqGuDvv8e7V4PIewXDesQA42v8DI3ElGxZW1UuE1qUgLx8V+sxu0tQX5ufVRLeRgFnxsgcCwNIOeKJewOe+6jNn0j9JdRQvXLb1ip3007W5nsW7K387VBO3wr/kHAG6+HPUPI1yow80/mZmXemDpVI7UVy5fxN08=
+	t=1765209013; cv=none; b=Cb2D/GF/PCAr3lXbSRTT8dpGWgIUq1Ec4v/eOJkphAELJX6me+pnga8MCP+Q4znlUKwF8niLFY0cg09yw76qUldIWiHuKpwFKfqJjgUhQqrdTHcCH2NVViGaef8sDXjpDGPuAAioC9BdETAS5xukCaojT4+mKodeowWHX1X4phQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765208872; c=relaxed/simple;
-	bh=xF1zaGreaMniCM5CNPSiAEiGyhOLswX+I31/sLqARBw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QspgXTMtH37+A9thdx74VNFPGLIX2pFfWIMPMrgAU5FOSHRnpn2eRgYXev4W0w6hj04L3yqgmg+lWp+M0GFzR+X0vJYK15ohz6Mhs5alBmAlqH/RaE0wCFsZuLFyY8IPlCXRZsIwOzqp9qJVVNfaycAZjCUrXkpi+3HmZnjM590=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEb+kpnn; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1765209013; c=relaxed/simple;
+	bh=e+lbjpNNPHZ9AzdnDqKqzmkizClb/GMGtE/Uve9x97A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cb9Z++2nMISLYVy0emciRb7UGihSarDLP3AN4Wkfb7GLvyNAb4ax3rhp+7j+ZSU5duC3ypSWLpURbegB4jZqE1lnQZ/UoUbWJRN06JBwkqMXN8kFOfSM0+IN1h0LEbdVMK0qsvB8+qR7fCRK50kjg8u5KmCVoR9oMuT5DtEzen8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aMFFqxFM; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEb+kpnn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aMFFqxFM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765208871; x=1796744871;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xF1zaGreaMniCM5CNPSiAEiGyhOLswX+I31/sLqARBw=;
-  b=LEb+kpnnUA/vbfjsZpwOAD3PgyEgwlZLiDOPRDtl3ixruaPsdvrLHKYS
-   7Z4pFTyFE5CYknwgBzaVshMvTyECU+70tF0NkH9EvMwY1rN2Ii1br21+L
-   IsI+sxgtaD48SrDHJbYvrikEcY+2AOHjPQcmpsIZUhAwYCIrQk0Yr7wJA
-   Non5+DYwyG6HTHond54VE3kdDuA9NaaQM/K/hemFD5l0LN2faC5iPug2L
-   mHaPOJ6QGI2KLFLZvby/QmiTJGGvu+baMHBISjWPLATMLpC0FKHRFwFZR
-   YdEAl7F4RHYOuMpDEUofad1OOisnt+YSdycG1hCSL1SbC1hAZFHYCUr7e
-   w==;
-X-CSE-ConnectionGUID: DXvURgTgQVOU+1/Fqo+G/Q==
-X-CSE-MsgGUID: btmumwHvRGmm8v8p2hoX2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11636"; a="78510617"
+  t=1765209012; x=1796745012;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e+lbjpNNPHZ9AzdnDqKqzmkizClb/GMGtE/Uve9x97A=;
+  b=aMFFqxFMiKyfF5OjGUiM5sBEUFPiWny/+0T5f/9LERGhK4j5cmlj9ODp
+   KqJddH2yyDgCHjhndnlULT2+blr8vi90ab7/JIyY2qFrzN+mP72JlXl3l
+   h2v11nnVKByyJ/Ku+D4F6zvhei0yaTUCPQCUerVdM8+zNJmUyNvJcAsp4
+   7ZvyiikPAXYJafxuKwQ/mRZc5t91g2pEeqPO/Dp6z+siU4mM5DnCu/HDv
+   VgtAA4JBUUzlhJIZefXOcHKd2P9O6cHsVzKAmxqhccpR3Qn9nQUQbocmY
+   KhfSK+P9+LzyKd5l89f/hFB/n+35rWj35+cAY//gtFGCeHU39YZHWYWfm
+   A==;
+X-CSE-ConnectionGUID: j51U9IRwTUOzmU33z+r+aw==
+X-CSE-MsgGUID: O9QIYohJTXOo36BCN9nMWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11636"; a="92628493"
 X-IronPort-AV: E=Sophos;i="6.20,259,1758610800"; 
-   d="scan'208";a="78510617"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 07:47:50 -0800
-X-CSE-ConnectionGUID: RPr1hMxCTG6erqF5TKd4aw==
-X-CSE-MsgGUID: tbK4SwKkQjalcfP0P8R/iA==
+   d="scan'208";a="92628493"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 07:50:12 -0800
+X-CSE-ConnectionGUID: jHuPHL+PRzeBw6Q55hWxsw==
+X-CSE-MsgGUID: Rg/rmh8LS8+Ex0+Ih9BWmg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,259,1758610800"; 
-   d="scan'208";a="196732625"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 08 Dec 2025 07:47:46 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id E65A498; Mon, 08 Dec 2025 16:47:44 +0100 (CET)
+   d="scan'208";a="196422323"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 07:50:07 -0800
+Date: Mon, 8 Dec 2025 17:50:05 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
+To: Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc: Daniel Borkmann <daniel@iogearbox.net>,
 	Andrii Nakryiko <andrii@kernel.org>,
 	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
 	Yonghong Song <yonghong.song@linux.dev>,
 	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Matt Bobrowski <mattbobrowski@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Alan Maguire <alan.maguire@oracle.com>,
-	Mirsad Todorovac <mtodorovac69@yahoo.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] : Mark BPF printing functions with __printf() attribute
-Date: Mon,  8 Dec 2025 16:47:33 +0100
-Message-ID: <20251208154733.2901633-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
+	Mirsad Todorovac <mtodorovac69@yahoo.com>
+Subject: Re: [PATCH v1 1/1] : Mark BPF printing functions with __printf()
+ attribute
+Message-ID: <aTbzrSs9PhBe_6Tx@smile.fi.intel.com>
+References: <20251208154733.2901633-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251208154733.2901633-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The printing functions in BPF code are using printf() type of format,
-and compiler is not happy about them as is:
+On Mon, Dec 08, 2025 at 04:47:33PM +0100, Andy Shevchenko wrote:
+> The printing functions in BPF code are using printf() type of format,
+> and compiler is not happy about them as is:
 
-kernel/bpf/helpers.c:1069:9: error: function ‘____bpf_snprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
- 1069 |         err = bstr_printf(str, str_size, fmt, data.bin_args);
-      |         ^~~
+Sorry, this is noise that has to not be sent, it's WIP.
+I will send it later when I provide a proper commit message.
 
-kernel/trace/bpf_trace.c:377:9: error: function ‘____bpf_trace_printk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-  377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-      |         ^~~
-
-kernel/trace/bpf_trace.c:433:9: error: function ‘____bpf_trace_vprintk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-  433 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-      |         ^~~
-
-kernel/trace/bpf_trace.c:475:9: error: function ‘____bpf_seq_printf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-  475 |         seq_bprintf(m, fmt, data.bin_args);
-      |         ^~~~~~~~~~~
-
-Fix the compilation errors by adding __printf() attribute. For that
-we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_CALL_*()
-to make code neater.
-
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512061425.x0qTt9ww-lkp@intel.com/
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@intel.com/
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512081321.2h9ThWTg-lkp@intel.com/
-
-Fixes:
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/filter.h   | 24 +++++++++++++++---------
- kernel/bpf/helpers.c     |  2 +-
- kernel/trace/bpf_trace.c |  6 +++---
- 3 files changed, 19 insertions(+), 13 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index fd54fed8f95f..31034a74af22 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -607,9 +607,9 @@ static inline bool insn_is_cast_user(const struct bpf_insn *insn)
- 	__BPF_MAP(n, __BPF_DECL_ARGS, __BPF_N, u64, __ur_1, u64, __ur_2,       \
- 		  u64, __ur_3, u64, __ur_4, u64, __ur_5)
- 
--#define BPF_CALL_x(x, attr, name, ...)					       \
-+#define BPF_CALL_x(x, __attr, attr, name, ...)				       \
- 	static __always_inline						       \
--	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));   \
-+	__attr u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__));     \
- 	typedef u64 (*btf_##name)(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__)); \
- 	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__));    \
- 	attr u64 name(__BPF_REG(x, __BPF_DECL_REGS, __BPF_N, __VA_ARGS__))     \
-@@ -620,14 +620,20 @@ static inline bool insn_is_cast_user(const struct bpf_insn *insn)
- 	u64 ____##name(__BPF_MAP(x, __BPF_DECL_ARGS, __BPF_V, __VA_ARGS__))
- 
- #define __NOATTR
--#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, __NOATTR, name, __VA_ARGS__)
--#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, name, __VA_ARGS__)
--#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, __NOATTR, name, __VA_ARGS__)
--#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, __NOATTR, name, __VA_ARGS__)
--#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, __NOATTR, name, __VA_ARGS__)
--#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_0(name, ...)	BPF_CALL_x(0, __NOATTR, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_2(name, ...)	BPF_CALL_x(2, __NOATTR, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_3(name, ...)	BPF_CALL_x(3, __NOATTR, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_4(name, ...)	BPF_CALL_x(4, __NOATTR, __NOATTR, name, __VA_ARGS__)
-+#define BPF_CALL_5(name, ...)	BPF_CALL_x(5, __NOATTR, __NOATTR, name, __VA_ARGS__)
- 
--#define NOTRACE_BPF_CALL_1(name, ...)	BPF_CALL_x(1, notrace, name, __VA_ARGS__)
-+#define PRINTF_BPF_CALL_x(p, name, x, ...)				       \
-+	BPF_CALL_x(x, __printf(p, 0), __NOATTR, name, __VA_ARGS__)
-+
-+#define PRINTF_BPF_CALL_4(p, name, ...)		PRINTF_BPF_CALL_x(p, name, 4, __VA_ARGS__)
-+#define PRINTF_BPF_CALL_5(p, name, ...)		PRINTF_BPF_CALL_x(p, name, 5, __VA_ARGS__)
-+
-+#define NOTRACE_BPF_CALL_1(name, ...)	BPF_CALL_x(1, __NOATTR, notrace, name, __VA_ARGS__)
- 
- #define bpf_ctx_range(TYPE, MEMBER)						\
- 	offsetof(TYPE, MEMBER) ... offsetofend(TYPE, MEMBER) - 1
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index db72b96f9c8c..cbc66865e3dc 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -1046,7 +1046,7 @@ int bpf_bprintf_prepare(const char *fmt, u32 fmt_size, const u64 *raw_args,
- 	return err;
- }
- 
--BPF_CALL_5(bpf_snprintf, char *, str, u32, str_size, char *, fmt,
-+PRINTF_BPF_CALL_5(3, bpf_snprintf, char *, str, u32, str_size, char *, fmt,
- 	   const void *, args, u32, data_len)
- {
- 	struct bpf_bprintf_data data = {
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d57727abaade..5fd46b4bcf48 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -359,7 +359,7 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
- #define MAX_TRACE_PRINTK_VARARGS	3
- #define BPF_TRACE_PRINTK_SIZE		1024
- 
--BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
-+PRINTF_BPF_CALL_5(1, bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 	   u64, arg2, u64, arg3)
- {
- 	u64 args[MAX_TRACE_PRINTK_VARARGS] = { arg1, arg2, arg3 };
-@@ -412,7 +412,7 @@ const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
- 	return &bpf_trace_printk_proto;
- }
- 
--BPF_CALL_4(bpf_trace_vprintk, char *, fmt, u32, fmt_size, const void *, args,
-+PRINTF_BPF_CALL_4(1, bpf_trace_vprintk, char *, fmt, u32, fmt_size, const void *, args,
- 	   u32, data_len)
- {
- 	struct bpf_bprintf_data data = {
-@@ -455,7 +455,7 @@ const struct bpf_func_proto *bpf_get_trace_vprintk_proto(void)
- 	return &bpf_trace_vprintk_proto;
- }
- 
--BPF_CALL_5(bpf_seq_printf, struct seq_file *, m, char *, fmt, u32, fmt_size,
-+PRINTF_BPF_CALL_5(2, bpf_seq_printf, struct seq_file *, m, char *, fmt, u32, fmt_size,
- 	   const void *, args, u32, data_len)
- {
- 	struct bpf_bprintf_data data = {
 -- 
-2.50.1
+With Best Regards,
+Andy Shevchenko
+
 
