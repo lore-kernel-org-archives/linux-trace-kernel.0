@@ -1,144 +1,183 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8211CA9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Dec 2025 16:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A1B26CE2B;
+	Mon,  8 Dec 2025 16:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765209767; cv=none; b=tttMBNop44mXL4fS/fDkRQefqEEnzCmbVPshp8DXgyGpPyTdslOFZq7T06GhoHreatSkz2hCYE/o6H+qHZLEYm4JoF+EzfoKm+N3gNXP4Zr02aMmQwufVHDFRW7GlSdzIpQ/i6YCAyk/KAwzOSuXnJnruoVr2YjsJfmlZouu6dE=
+	t=1765209863; cv=none; b=E0TXpseemQsm0IH8RO5YcEwg0vFPLtFx0bsGWyWi+upxja9L4pZVcmxIIKqQl8UNnx34Dz9XMIdKKbZBAxgpKfKq+zPPCrpFGW7f69MJKYryY3kBnP+VGoejoPwVheCWdgKZo+WctliwRwp7ov0VW+x4n9NhlM5GiPgdeWetBzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765209767; c=relaxed/simple;
-	bh=DzPsR1mDwmEcWdwuZ/163CVRnrrwXa29xjlaasoG/K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t2D+I5Ue+xHp9YFgeZmKL3md+WoqQ7EiJXVsWO2b634D2/aSfuqEzdPFLXM7HJFusIgae1L3v4B+94VBz5hWXhlPvd8Bp1P5j/KteQCmma27pseF0F2LOwVijNig2wpN51rKTBzP3eFODyxzB3UABJQW4m9EulF8Q3xXU2ovdNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mc/JUntA; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1765209863; c=relaxed/simple;
+	bh=jkg8tRwFsBh4lQCKIUPxTfTkJTsnZ3FRJaagjPpOxBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vs/dMm6NbUqSB00SyJxNTzAwG6t507V6iNLMeQRbVuEglhLJ98UzGRvexJ7fnRiyOLUx7reo4BSYSkiSF3Jaz6UY2Reeeq/0sTAj32bdG+LSae1yuku8jWS4WIlKcmaq2kJP6zAZLyzN8vMtF3y+X/wlRq8NEtp6MtLrc7LLFzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OIacjhw+; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mc/JUntA"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B8CxQWL021443;
-	Mon, 8 Dec 2025 16:02:14 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OIacjhw+"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B883t14031236;
+	Mon, 8 Dec 2025 16:04:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gJvuvq
-	YZAgxlLUAE6Fwul06tJ0nrEzvgoC4NvPNaZPE=; b=Mc/JUntAtkolDIayUvofNT
-	/Z47uBofo7NCecwE/3XCmZ6az8Mx67etGfYzx+5yBt8loilmCf5/UImr8DKBlypE
-	u3TPgytO4XghhpAPZU2sKtMkq3n2wS1S67vEZb5nEF2j5ZqBAaC3BjSJvHswlZ+N
-	oqgo1edMJ30GA07RQwy/h90VQpgkmhJultLrETfqA40gnTH/3yg5u45tRkkke7az
-	DwVawEOgD55MsjSPq8oa/4e3Gia7huX1AJiGOz68d1qe8+u4CEv9BexVYp/qK2lb
-	kx91wvXNLP0JbmOvFO6qHr3XVeA/BJTSBBx338+3TEWoOxJJRgThlPvd5mD9vpNA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9wvgcff-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=cQBdhMIcp6DAZi9Zx
+	Vexr6Oh5CmqajUNW2WLiVkcNP8=; b=OIacjhw+ehZGV6jcZ+fW2qoMDzsqNzob/
+	UW+91SagcMe8qsSSZDEvu8OYFXxMvSOkIy5SK94NaiUDHYlpdhDVsSUH+XKcc2iV
+	lW1fanOZlwFOKqY6e0RVGYkRaJrI9nBF8VSV4ghkp0t2Qe3HDYQojBynCpDPnu3r
+	AObq8Jh8ECoIRtHWvnxGlqY/+HY+LjT6nP+TKLN1h0YxnRWYuVrRZ+/glZKdE33Y
+	Fp610jCSyDSIgesdC5MBF9hMPWUyILh2m1/0VNiJwSnljyAhlHtvwx/j4EUbRd3E
+	29+hnMn5+ArlJE+IX45LgrS0/NChMVfy/oG6T/z+G9qV2Q+VVaEAg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc618jy5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Dec 2025 16:02:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B8Cl6eh026782;
-	Mon, 8 Dec 2025 16:02:13 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw1h0x50u-1
+	Mon, 08 Dec 2025 16:04:01 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B8EFeCA030254;
+	Mon, 8 Dec 2025 16:04:00 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4avxtrxmhw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Dec 2025 16:02:13 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B8G29Wj42402068
+	Mon, 08 Dec 2025 16:03:59 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B8G3uCI25887356
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Dec 2025 16:02:09 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 88A5920043;
-	Mon,  8 Dec 2025 16:02:09 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 90BEF20040;
-	Mon,  8 Dec 2025 16:02:07 +0000 (GMT)
-Received: from [9.43.1.23] (unknown [9.43.1.23])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  8 Dec 2025 16:02:07 +0000 (GMT)
-Message-ID: <8141c6eb-f2b7-4a19-b637-af699bb8d5c4@linux.ibm.com>
-Date: Mon, 8 Dec 2025 21:32:06 +0530
+	Mon, 8 Dec 2025 16:03:56 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 471A120040;
+	Mon,  8 Dec 2025 16:03:56 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F1A632004B;
+	Mon,  8 Dec 2025 16:03:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  8 Dec 2025 16:03:55 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v4 3/4] x86/unwind_user: Guard unwind_user_word_size() by UNWIND_USER
+Date: Mon,  8 Dec 2025 17:03:51 +0100
+Message-ID: <20251208160352.1363040-4-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251208160352.1363040-1-jremus@linux.ibm.com>
+References: <20251208160352.1363040-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] powerpc64: make clang cross-build friendly
-To: Naveen N Rao <naveen@kernel.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, llvm@lists.linux.dev,
-        Maryam Moghadas <maryammo@ca.ibm.com>
-References: <20251108210405.2375472-1-hbathini@linux.ibm.com>
- <20251108210405.2375472-2-hbathini@linux.ibm.com>
- <rtnn6dd6y3refo7myc4crzmrunbuyabr2ewlyk7oe4yx3f2rl2@wzoyvsucfeyf>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <rtnn6dd6y3refo7myc4crzmrunbuyabr2ewlyk7oe4yx3f2rl2@wzoyvsucfeyf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3VoYZ8OBYWh4UKYG15cGMyvtUlt8UbYU
-X-Proofpoint-ORIG-GUID: 3VoYZ8OBYWh4UKYG15cGMyvtUlt8UbYU
-X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=6936f686 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=9ecn0eQcEfoHkOsjxl0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX20e1KMPfjCzU
- sl1Tls4Skrmeb8cKZrsTRMO82pcOBFOy2K7eaqqzNwgfJxiADrmBb8NqkNw+k8ZVHCDG694L4jJ
- CEkZUevYquiDMYLX1+KSvM0wd5WcEylRDOxRo2G+h5HvYQHv80eYsI14E9GA0Jf16LC3VUmjHuc
- rd/NF48SiutBsbtVVCOcFks53nIG7JMsN2YVnDiFyOp4Fx/+Rf+EGxg9u7DjCVLaN/hU4MsM+aa
- ZPwkO+N6ccEk8by9KSTMq1EVi6GuV6WGgLIqyIOe5hwTA7oy0DnvYKJ7ZikEfWFNC19mqQBYfYr
- Vv3fcotaJ6bZ+AqcbAL7xFQlZ7kFss01JFKy9zrmEtcI8jm/uXRvqp5+hrJ8UOdcGmyUKzDeUtX
- u1h+L3DDvtN1zMnOgRSYLvbSNUNrEA==
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAyMCBTYWx0ZWRfX2oN9OtxNAJNU
+ DaaQAYndx34Y1Yi8LhOI+BxJ8xyrwPIvmH+fnE5OPVFv+wq8HJ0qjVVNOhgXL5Wgka/9NUqRAiK
+ F+LvJgqUvcR8g8h5RyzQn4RQwxfaBCXH6bibnGeEY7QP7MpIOOnD4dPaR3KWlTMCMclbYHOhzP5
+ AsfqSwujk6/QpW81pEHjnULYx8DjjG48XPhOEoAFMDOTjuiOJhsTiyrLavz9vR1a+Se3BB89SnK
+ i0XtdrG7TNnC0QgrqUAscUjOO0XuBQOEpCEBCNhJUM1Yny2SWwZ1FBzO/qfxKcERD+t0+J2YkqG
+ hYaOPfhy+HoYVtndC+w5J+IhmvvAnWbFvnHtg+8RgXPILJCIFx1nj+5tzqYtrL7vFEfl1QIO9ym
+ z4S4s6gK/Xof8z0mDqaFAcp1EI8bCA==
+X-Proofpoint-GUID: M7IliblS3NP3oFtT1pQZe1W5kBbkMTSD
+X-Proofpoint-ORIG-GUID: M7IliblS3NP3oFtT1pQZe1W5kBbkMTSD
+X-Authority-Analysis: v=2.4 cv=O/U0fR9W c=1 sm=1 tr=0 ts=6936f6f1 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=EUPQYQbpjl04SHwYsagA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-06_02,2025-12-04_04,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 priorityscore=1501
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060020
 
-Thanks for the review, Naveen.
+The unwind user framework in general requires an architecture-specific
+implementation of unwind_user_word_size() to be present for any unwind
+method, whether that is fp or a future other method, such as potentially
+sframe.
 
-On 24/11/25 11:19 am, Naveen N Rao wrote:
-> On Sun, Nov 09, 2025 at 02:34:03AM +0530, Hari Bathini wrote:
->> ARCH_USING_PATCHABLE_FUNCTION_ENTRY depends on toolchain support for
->> -fpatchable-function-entry option. The current script that checks
->> for this support only handles GCC. Rename the script and extend it
->> to detect support for -fpatchable-function-entry with Clang as well,
->> allowing clean cross-compilation with Clang toolchains.
->>
->> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
->> ---
->>   arch/powerpc/Kconfig                                         | 5 +++--
->>   ...-function-entry.sh => check-fpatchable-function-entry.sh} | 0
->>   2 files changed, 3 insertions(+), 2 deletions(-)
->>   rename arch/powerpc/tools/{gcc-check-fpatchable-function-entry.sh => check-fpatchable-function-entry.sh} (100%)
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 325c1171894d..dfb62e211c92 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -568,8 +568,9 @@ config ARCH_USING_PATCHABLE_FUNCTION_ENTRY
->>   	depends on FUNCTION_TRACER && (PPC32 || PPC64_ELF_ABI_V2)
->>   	depends on $(cc-option,-fpatchable-function-entry=2)
->>   	def_bool y if PPC32
->> -	def_bool $(success,$(srctree)/arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh $(CC) -mlittle-endian) if PPC64 && CPU_LITTLE_ENDIAN
->> -	def_bool $(success,$(srctree)/arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh $(CC) -mbig-endian) if PPC64 && CPU_BIG_ENDIAN
->> +	def_bool $(success,$(srctree)/arch/powerpc/tools/check-fpatchable-function-entry.sh $(CC) -mlittle-endian) if PPC64 && CPU_LITTLE_ENDIAN && CC_IS_GCC
->> +	def_bool $(success,$(srctree)/arch/powerpc/tools/check-fpatchable-function-entry.sh $(CC) -target ppc64le -mlittle-endian) if PPC64 && CPU_LITTLE_ENDIAN && CC_IS_CLANG
-> 
-> Can you instead pass $(CLANG_FLAGS) to retain the same command across
-> gcc/clang?
+Guard unwind_user_word_size() by the availability of the UNWIND_USER
+framework instead of the specific HAVE_UNWIND_USER_FP method.
 
-Should work, I guess.
-But do I need to test for any additional clang flags that
-may interfere with what we are trying to check here?
+This facilitates to selectively disable HAVE_UNWIND_USER_FP on x86
+(e.g. for test purposes) once a new unwind method is added to unwind
+user.
 
-- Hari
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+
+Notes (jremus):
+    Changes in v3:
+    - Move includes into more common UNWIND_USER guard at the top of the
+      source.  asm/ptrace.h is required for struct pt_regs.
+
+ arch/x86/include/asm/unwind_user.h | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index 971ffe937d50..7f1229b33d06 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -2,23 +2,11 @@
+ #ifndef _ASM_X86_UNWIND_USER_H
+ #define _ASM_X86_UNWIND_USER_H
+ 
+-#ifdef CONFIG_HAVE_UNWIND_USER_FP
++#ifdef CONFIG_UNWIND_USER
+ 
+ #include <asm/ptrace.h>
+ #include <asm/uprobes.h>
+ 
+-#define ARCH_INIT_USER_FP_FRAME(ws)			\
+-	.cfa_off	=  2*(ws),			\
+-	.ra_off		= -1*(ws),			\
+-	.fp_off		= -2*(ws),			\
+-	.use_fp		= true,
+-
+-#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
+-	.cfa_off	=  1*(ws),			\
+-	.ra_off		= -1*(ws),			\
+-	.fp_off		= 0,				\
+-	.use_fp		= false,
+-
+ static inline int unwind_user_word_size(struct pt_regs *regs)
+ {
+ 	/* We can't unwind VM86 stacks */
+@@ -31,6 +19,22 @@ static inline int unwind_user_word_size(struct pt_regs *regs)
+ 	return sizeof(long);
+ }
+ 
++#endif /* CONFIG_UNWIND_USER */
++
++#ifdef CONFIG_HAVE_UNWIND_USER_FP
++
++#define ARCH_INIT_USER_FP_FRAME(ws)			\
++	.cfa_off	=  2*(ws),			\
++	.ra_off		= -1*(ws),			\
++	.fp_off		= -2*(ws),			\
++	.use_fp		= true,
++
++#define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
++	.cfa_off	=  1*(ws),			\
++	.ra_off		= -1*(ws),			\
++	.fp_off		= 0,				\
++	.use_fp		= false,
++
+ static inline bool unwind_user_at_function_start(struct pt_regs *regs)
+ {
+ 	return is_uprobe_at_func_entry(regs);
+-- 
+2.51.0
+
