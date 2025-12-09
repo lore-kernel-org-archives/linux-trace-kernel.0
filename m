@@ -1,240 +1,271 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51123218A6
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 12:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA52D837E;
+	Tue,  9 Dec 2025 12:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765282446; cv=none; b=bpXvx/qG08OHsxrpcjUCDDxZC0EWJrNv3qLP8JfNeJouKJ3VYoUe0DBIJRD7jBEGqbXmM+twDEFx9xsrx1oAaKhpf+8hK+oekjToaT/hbZZt83bQMWG1PM+F8kXKtj3tirlNFlmA4TLPvSU8M8t+uRj0yyCLJwyFmQMFUIUYfHw=
+	t=1765284204; cv=none; b=g/C1wRyDi8C8Z11OEjmgKS0RuLp1DVDGx6pzOug6pnkxdbdZa2QF9DCDf1BUxB2iKlhxepQCv+Fe/1HoXu7nkuv7eDMHjb6ZPfey7/ipH9nmGObGgZmJpoJdIJCE8/lLCXb+BEO7TRnoA4LHy3704/8ke9M6SVu80U1/DBxdtcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765282446; c=relaxed/simple;
-	bh=BWyN4D8XB3EHVKIANdR3jOmuIyDp9zYjYnorcbrtitk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bliIil8StJlS72N0vTlEg0Kw9rqAYUAhFcJC8BO8ZCdH+1I40RkjxT8lzY178/5NqHw34Np9D1+UtAqDvyvquoDqq8cHguVptDhVavuoib0Nzyw/Rpp5cgoModCseGyCEJQSzHAdvH/ouHgIF9Cz/WT0TIEGcgwgUwxTGhqt/y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hRyJQyJ1; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765284204; c=relaxed/simple;
+	bh=CXwQ6NPP8MiWWnh7ExqTOPJIbuO9zBpqsikoa28hSx8=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GdzATo3WkZSyNDNzgbsKACesUTSJezU6lK0tyEKKUaUioD8ZEfdJiB3zz0dUux94G2+QyFxBD3MNMAekGDvMQqOjbayVvBqYmUKasspIjQ2felo4WAXWH3Tjp/WxOH1ppPm9Rj3XTVANYxGqtia43/iv+dP64wwuiEw5OyC5yZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=clYTpwfZ; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=clYTpwfZ; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRyJQyJ1"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7e1651ae0d5so4176586b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 04:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765282444; x=1765887244; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T7QTKaMq3p7fYjtMRSt1RZ9qB0q4/IC5ZQr51AGxCMI=;
-        b=hRyJQyJ17mmkinprebALjEOLEmY/AJLILYAbB2HCw/bi5PhiUKP14HfFmaEBMLX+j3
-         6tZOMJm+0jF7+z9MNR/6st8slLCOhLsqqm7RFfodLF1CxGY23uQx76YnuBHt8DpI2aZR
-         h/8ISaNFhvNNBY1DnDi5rjZASeptiTzxiFV535QOF1BWznZWObqVGgLfdkOs7NtnEi7j
-         COMJvWSLy4/pCapEN8Ikgeo1OCZoOFWjU/QaAfx4uIFYNxOn/hw8Gj45yBfIVvl/aKM0
-         f7mlFrfXBu0awXVwwRsqQT2PDWA5/9x/zuL8K2x/TuN115pNDK1P+YxHTqyqW/55HwDF
-         UGuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765282444; x=1765887244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=T7QTKaMq3p7fYjtMRSt1RZ9qB0q4/IC5ZQr51AGxCMI=;
-        b=uZaTZ21Zbe/gASzcE5OFcARYIA9bWaXsPmZVNQqpJyCXyUsRfHLdgUSC6JdRNGu5oG
-         CV5/SnkHKK+iRFLk7b4iPy0l6FLSuOCGw4LN01s4Gwkb/9owneLIAoznyz+eSi9QDCsu
-         L4GdASUR+gu22jkE+74cWyEGfWsxWCGEEU1lOoGYUZkuwPUmVPSarwVSRwipzTd/9yyF
-         E1VnT5+3cwcjjCXGTIspQixVjtWRspKzQhPg72CYSe/0gdqc09aqjjN54Do/nbU/ExjB
-         tfeBTwPkk3xg/TnfAHKja9041waOtZXF1eHg+SiesZPiep5f4AMuLHS3hDShpkMrT4io
-         Eeew==
-X-Forwarded-Encrypted: i=1; AJvYcCX/SV9tWHqqIAyiICSGwQaN9mMQqpG2ZMTx1BxiU1qN89TcoPbrRD2f/avrFj9APTcqoXfEkOvuHURKRTfUn11h5go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQBaWLgbXZ3NfIKhAurAWblDxApJUC5aUhE5Vv+6J6Lxf7jPuB
-	7P09UUluAz5CAozd2lX1h2Yis6K730NrmOLJiHswII6+/sMbxCwpZz9W
-X-Gm-Gg: ASbGncvggqMTrCH4HVbGLMOIc+1WBWTbDBj56ETfSZeWY31XWvUEqVxpmz/js5ucOMO
-	3m/VtoYGkTf+ETNLa8Rcf/MlcbOh/d5LCE2ympGMU3neO8Mj07D+3u/MW2KDGPlIbARo4cGgbxQ
-	hBLYMyJS9HCkn9Rjq+GqSowwFX9F0j/YZ9f6fV3/DfKEYLOUwRWA3T1AH79WfG5NQBcFNIvFAnq
-	A2l85Lm/Olsx99tCzJgvF2WuNnjFnVWioUUI9QiPVksyE16T9f/wgxgr1p8kX5xFFKTHtT8Ydk4
-	lkCvzvtz2A7L+mR+pkhOHSBYgL/gnnXRfs4nyZZ32yyqwULAKWOXZUKyQUIfN/n8wVXT+KdpKId
-	wAuEX6motIG2GQVeEVX6hisLTXvnSuXiWnIm1iJrGvkPp8YwG8QCTcBoYAZCqWbIEMg76ydXBJ1
-	33ugh2WE3lI1lAKDYxCbpZrfvcDy8=
-X-Google-Smtp-Source: AGHT+IGX+H47LvTOZvJY2p32Lu/R40fOKg5MRKHIVtyz/ONyDGGZ7YAR8vn/V+zevzmjFEIZ6YxBfg==
-X-Received: by 2002:a05:6a20:4310:b0:35e:6c3:c8de with SMTP id adf61e73a8af0-36617e8d07bmr11175660637.34.1765282443851;
-        Tue, 09 Dec 2025 04:14:03 -0800 (PST)
-Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c0724e9888esm4776a12.14.2025.12.09.04.14.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Dec 2025 04:14:02 -0800 (PST)
-From: Donglin Peng <dolinux.peng@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pengdonglin <pengdonglin@xiaomi.com>,
-	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Subject: [PATCH v3 2/2] tracing: Update funcgraph-retval documentation
-Date: Tue,  9 Dec 2025 20:13:49 +0800
-Message-Id: <20251209121349.525641-3-dolinux.peng@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251209121349.525641-1-dolinux.peng@gmail.com>
-References: <20251209121349.525641-1-dolinux.peng@gmail.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="clYTpwfZ";
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="clYTpwfZ"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Xo7OeA33tWRYz8zbfLCc2jeO2ZGq0wF+pXykwItiK5M=;
+	b=clYTpwfZL7BLpYpG966W4Z3meJO2GuveIHY1V8afaFkQv6+c8D1xzKjNlDxLLDp6aZzDp8Rld
+	bTEB2btV77TGaLxBe5hSORFlJy9L5TE4c2MIMURTFsOZQxxpMzh8bWLXtNPO1npeuCKBdvXhmgU
+	lIWpGZjOroINa0EC1GIn78g=
+Received: from canpmsgout03.his.huawei.com (unknown [172.19.92.159])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4dQdml0Sybz1BGJl;
+	Tue,  9 Dec 2025 20:43:03 +0800 (CST)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Xo7OeA33tWRYz8zbfLCc2jeO2ZGq0wF+pXykwItiK5M=;
+	b=clYTpwfZL7BLpYpG966W4Z3meJO2GuveIHY1V8afaFkQv6+c8D1xzKjNlDxLLDp6aZzDp8Rld
+	bTEB2btV77TGaLxBe5hSORFlJy9L5TE4c2MIMURTFsOZQxxpMzh8bWLXtNPO1npeuCKBdvXhmgU
+	lIWpGZjOroINa0EC1GIn78g=
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dQdjr166lzpStQ;
+	Tue,  9 Dec 2025 20:40:32 +0800 (CST)
+Received: from kwepemj100016.china.huawei.com (unknown [7.202.194.10])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5EC90180BD5;
+	Tue,  9 Dec 2025 20:43:02 +0800 (CST)
+Received: from [10.174.178.114] (10.174.178.114) by
+ kwepemj100016.china.huawei.com (7.202.194.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 9 Dec 2025 20:43:01 +0800
+Message-ID: <fc00c53c-ab54-42a2-979b-0ecb49ff6b48@huawei.com>
+Date: Tue, 9 Dec 2025 20:43:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+CC: <mawupeng1@huawei.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kernel-team@meta.com>
+Subject: Re: [RFC LPC2025 PATCH 0/4] Deprecate zone_reclaim_mode
+To: <joshua.hahnjy@gmail.com>, <willy@infradead.org>, <david@kernel.org>
+References: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
+From: mawupeng <mawupeng1@huawei.com>
+In-Reply-To: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemj100016.china.huawei.com (7.202.194.10)
 
-From: pengdonglin <pengdonglin@xiaomi.com>
 
-The existing documentation for funcgraph-retval is outdated and partially
-incorrect, as it describes limitations that have now been resolved.
 
-Recent changes (e.g., using BTF to obtain function return types) have
-addressed key issues:
-1. Return values are now printed only for non-void functions.
-2. Values are trimmed to the correct width of the return type, avoiding
-   garbage data from high bits.
+On 2025/12/6 7:32, Joshua Hahn wrote:
+> Hello folks, 
+> This is a code RFC for my upcoming discussion at LPC 2025 in Tokyo [1].
+> 
+> <preface>
+> You might notice that the RFC that I'm sending out is different from the
+> proposed abstract. Initially when I submitted my proposal, I was interested
+> in addressing how fallback allocations work under pressure for
+> NUMA-restricted allocations. Soon after, Johannes proposed a patch [2] which
+> addressed the problem I was investigating, so I wanted to explore a different
+> direction in the same area of fallback allocations.
+> 
+> At the same time, I was also thinking about zone_reclaim_mode [3]. I thought
+> that LPC would be a good opportunity to discuss deprecating zone_reclaim_mode,
+> so I hope to discuss this topic at LPC during my presentation slot.
+> 
+> Sorry for the patch submission so close to the conference as well. I thought
+> it would still be better to send this RFC out late, instead of just presenting
+> the topic at the conference without giving folks some time to think about it.
+> </preface>
+> 
+> zone_reclaim_mode was introduced in 2005 to prevent the kernel from facing
+> the high remote access latency associated with NUMA systems. With it enabled,
+> when the kernel sees that the local node is full, it will stall allocations and
+> trigger direct reclaim locally, instead of making a remote allocation, even
+> when there may still be free memory. Thsi is the preferred way to consume memory
+> if remote memory access is more expensive than performing direct reclaim.
+> The choice is made on a system-wide basis, but can be toggled at runtime.
+> 
+> This series deprecates the zone_reclaim_mode sysctl in favor of other NUMA
+> aware mechanisms, such as NUMA balancing, memory.reclaim, membind, and
+> tiering / promotion / demotion. Let's break down what differences there are
+> in these mechanisms, based on workload characteristics.
+> 
+> Scenario 1) Workload fits in a single NUMA node
+> In this case, if the rest of the NUMA node is unused, the zone_reclaim_mode
+> does nothing. On the other hand, if there are several workloads competing
+> for memory in the same NUMA node, with sum(workload_mem) > mem_capacity(node),
+> then zone_reclaim_mode is actively harmful. Direct reclaim is aggressively
+> triggered whenever one workload makes an allocation that goes over the limit,
+> and there is no fairness mechanism to prevent one workload from completely
+> blocking the other workload from making progress.
+> 
+> Scenario 2) Workload does not fit in a single NUMA node
+> Again, in this case, zone_reclaim_mode is actively harmful. Direct reclaim
+> will constantly be triggered whenever memory goes above the limit, leading
+> to memory thrashing. Moreover, even if the user really wants avoid remote
+> allocations, membind is a better alternative in this case; zone_reclaim_mode
+> forces the user to make the decision for all workloads on the system, whereas
+> membind gives per-process granularity.
+> 
+> Scenario 3) Workload size is approximately the same as the NUMA capacity
+> This is probably the case for most workloads. When it is uncertain whether
+> memory consumption will exceed the capacity, it doesn't really make a lot
+> of sense to make a system-wide bet on whether direct reclaim is better or
+> worse than remote allocations. In other words, it might make more sense to
+> allow memory to spill over to remote nodes, and let the kernel handle the
+> NUMA balancing depending on how cold or hot the newly allocated memory is.
+> 
+> These examples might make it seem like zone_reclaim_mode is harmful for
+> all scenarios. But that is not the case:
+> 
+> Scenario 4) Newly allocated memory is going to be hot
+> This is probably the scenario that makes zone_reclaim_mode shine the most.
+> If the newly allocated memory is going to be hot, then it makes much more
+> sense to try and reclaim locally, which would kick out cold(er) memory and
+> prevent eating any remote memory access latency frequently.
+> 
+> Scenario 5) Tiered NUMA system makes remote access latency higher
+> In some tiered memory scenarios, remote access latency can be higher for
+> lower memory tiers. In these scenarios, the cost of direct reclaim may be
+> cheaper, relative to placing hot memory on a remote node with high access
+> latency.
+> 
+> Now, let me try and present a case for deprecating zone_reclaim_mode, despite
+> these two scenarios where it performs as intended.
+> In scenario 4, the catch is that the system is not an oracle that can predict
+> that newly allocated memory is going to be hot. In fact, a lot of the kernel
+> assumes that newly allocated memory is cold, and it has to "prove" that it
+> is hot through accesses. In a perfect world, the kernel would be able to
+> selectively trigger direct reclaim or allocate remotely, based on whehter the
+> current allocation will be cold or hot in the future.
+> 
+> But without these insights, it is difficult to make a system-wide bet and
+> always trigger direct reclaim locally, when we might be reclaiming or
+> evicting relatively hotter memory from the local node in order to make room.
+> 
+> In scenario 5, remote access latency is higher, which means the cost of
+> placing hot memory in remote nodes is higher. But today, we have many
+> strategies that can help us overcome the higher cost of placing hot memory in
+> remote nodes. If the system has tiered memory with different memory
+> access characteristics per-node, then the user is probably already enabling
+> promotion and demotion mechanisms that can quickly correct the placement of
+> hot pages in lower tiers. In these systems, it might make more sense to allow
+> the kernel to naturally consume all of the memory it can (whether it is local
+> or on a lower tier remote node), then allow the kernel to then take corrective
+> action based on what it finds as hot or cold memory.
+> 
+> Of course, demonstrating that there are alternatives is not enough to warrant
+> a deprecation. I think that the real benefit of this patch comes in reduced
+> sysctl maintenance and what I think is much easier code to read.
+> 
+> This series which has 466 deletions and 9 insertions:
+> - Deprecates the zone_reclaim_mode sysctl (patch 4)
+> - Deprecates the min_slab_ratio sysctl (patch 3)
+> - Deprecates the min_unmapped_ratio sysctl (patch 3)
+> - Removes the node_reclaim() function and simplifies the get_page_from_freelist
+>   watermark checks (which is already a very large function) (patch 2)
+> - Simplifies hpage_collapse_scan_{pmd, file} (patch 1).
+> - There are also more opportunities for future cleanup, like removing
+>   __node_reclaim and converting its last caller to use try_to_free_pages
+>   (suggested by Johannes Weiner)
+> 
+> Here are some discussion points that I hope to discuss at LPC:
+> - For workloads that are assumed to fit in a NUMA node, is membind really
+>   enough to achieve the same effect?
 
-Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
----
- Documentation/trace/ftrace.rst | 78 ++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 33 deletions(-)
+In real-world scenarios, we have observed on a dual-socket (2P) server with multiple
+NUMA nodes—each having relatively limited local memory capacity—that page cache
+negatively impacts overall performance. The zone_reclaim_node feature is used to
+alleviate performance issues.
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index d1f313a5f4ad..03c8c433c803 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1454,6 +1454,10 @@ Options for function_graph tracer:
- 	printed in hexadecimal format. By default, this option
- 	is off.
- 
-+  funcgraph-retaddr
-+	When set, the return address will always be printed.
-+	By default, this option is off.
-+
-   sleep-time
- 	When running function graph tracer, to include
- 	the time a task schedules out in its function.
-@@ -2800,7 +2804,7 @@ It is default disabled.
-     0)   2.861 us    |      } /* putname() */
- 
- The return value of each traced function can be displayed after
--an equal sign "=". When encountering system call failures, it
-+an equal sign "ret =". When encountering system call failures, it
- can be very helpful to quickly locate the function that first
- returns an error code.
- 
-@@ -2810,16 +2814,16 @@ returns an error code.
-   Example with funcgraph-retval::
- 
-     1)               |    cgroup_migrate() {
--    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)   0.651 us    |      cgroup_migrate_add_task(); /* ret=0xffff93fcfd346c00 */
-     1)               |      cgroup_migrate_execute() {
-     1)               |        cpu_cgroup_can_attach() {
-     1)               |          cgroup_taskset_first() {
--    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
--    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
--    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
--    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
--    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
--    1)   7.143 us    |    } /* cgroup_migrate = -22 */
-+    1)   0.732 us    |            cgroup_taskset_next(); /* ret=0xffff93fc8fb20000 */
-+    1)   1.232 us    |          } /* cgroup_taskset_first ret=0xffff93fc8fb20000 */
-+    1)   0.380 us    |          sched_rt_can_attach(); /* ret=0x0 */
-+    1)   2.335 us    |        } /* cpu_cgroup_can_attach ret=-22 */
-+    1)   4.369 us    |      } /* cgroup_migrate_execute ret=-22 */
-+    1)   7.143 us    |    } /* cgroup_migrate ret=-22 */
- 
- The above example shows that the function cpu_cgroup_can_attach
- returned the error code -22 firstly, then we can read the code
-@@ -2836,37 +2840,41 @@ printed in hexadecimal format.
-   Example with funcgraph-retval-hex::
- 
-     1)               |      cgroup_migrate() {
--    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)   0.651 us    |        cgroup_migrate_add_task(); /* ret=0xffff93fcfd346c00 */
-     1)               |        cgroup_migrate_execute() {
-     1)               |          cpu_cgroup_can_attach() {
-     1)               |            cgroup_taskset_first() {
--    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
--    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
--    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
--    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
--    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
-+    1)   0.732 us    |              cgroup_taskset_next(); /* ret=0xffff93fc8fb20000 */
-+    1)   1.232 us    |            } /* cgroup_taskset_first ret=0xffff93fc8fb20000 */
-+    1)   0.380 us    |            sched_rt_can_attach(); /* ret=0x0 */
-+    1)   2.335 us    |          } /* cpu_cgroup_can_attach ret=0xffffffea */
-+    1)   4.369 us    |        } /* cgroup_migrate_execute ret=0xffffffea */
-     1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
- 
--At present, there are some limitations when using the funcgraph-retval
--option, and these limitations will be eliminated in the future:
-+Note that there are some limitations when using the funcgraph-retval
-+option:
-+
-+- If CONFIG_DEBUG_INFO_BTF is disabled (n), a return value is printed even for
-+  functions with a void return type. When CONFIG_DEBUG_INFO_BTF is enabled (y),
-+  the return value is printed only for non-void functions.
- 
--- Even if the function return type is void, a return value will still
--  be printed, and you can just ignore it.
-+- If a return value occupies multiple registers, only the value in the first
-+  register is recorded and printed. For example, on the x86 architecture, a
-+  64-bit return value is stored across eax (lower 32 bits) and edx (upper 32 bits),
-+  but only the contents of eax are captured. If CONFIG_DEBUG_INFO_BTF is enabled,
-+  the suffix "(trunc)" is appended to the printed value to indicate that the
-+  output may be truncated because high-order register contents are omitted.
- 
--- Even if return values are stored in multiple registers, only the
--  value contained in the first register will be recorded and printed.
--  To illustrate, in the x86 architecture, eax and edx are used to store
--  a 64-bit return value, with the lower 32 bits saved in eax and the
--  upper 32 bits saved in edx. However, only the value stored in eax
--  will be recorded and printed.
-+- Under certain procedure-call standards (e.g., arm64's AAPCS64), when the return
-+  type is smaller than a general-purpose register (GPR), the caller is responsible
-+  for narrowing the value; the upper bits of the register may contain undefined data.
-+  For instance, when a u8 is returned in 64-bit GPR, bits [63:8] can hold arbitrary
-+  values, especially when larger types are truncated (explicitly or implicitly). It
-+  is therefore advisable to inspect the code in such cases. If CONFIG_DEBUG_INFO_BTF
-+  is enabled (y), the return value is automatically trimmed to the width of the return
-+  type.
- 
--- In certain procedure call standards, such as arm64's AAPCS64, when a
--  type is smaller than a GPR, it is the responsibility of the consumer
--  to perform the narrowing, and the upper bits may contain UNKNOWN values.
--  Therefore, it is advisable to check the code for such cases. For instance,
--  when using a u8 in a 64-bit GPR, bits [63:8] may contain arbitrary values,
--  especially when larger types are truncated, whether explicitly or implicitly.
--  Here are some specific cases to illustrate this point:
-+  The following examples illustrate the behavior:
- 
-   **Case One**:
- 
-@@ -2885,7 +2893,9 @@ option, and these limitations will be eliminated in the future:
- 		RET
- 
-   If you pass 0x123456789abcdef to this function and want to narrow it,
--  it may be recorded as 0x123456789abcdef instead of 0xef.
-+  it may be recorded as 0x123456789abcdef instead of 0xef. When
-+  CONFIG_DEBUG_INFO_BTF is enabled, the value will be correctly truncated
-+  to 0xef based on the size constraints of the u8 type.
- 
-   **Case Two**:
- 
-@@ -2910,7 +2920,9 @@ option, and these limitations will be eliminated in the future:
- 		RET
- 
-   When passing 0x2_0000_0000 to it, the return value may be recorded as
--  0x2_0000_0000 instead of 0.
-+  0x2_0000_0000 instead of 0. When CONFIG_DEBUG_INFO_BTF is enabled, the
-+  value will be correctly truncated to 0 based on the size constraints of
-+  the int type.
- 
- You can put some comments on specific functions by using
- trace_printk() For example, if you want to put a comment inside
--- 
-2.34.1
+The main reason is that page cache consumes free memory on the local node, causing
+processes without mbind restrictions to fall back to other nodes that still have free
+memory. Accessing remote memory comes with a significant latency penalty. In extreme
+testing, if a system is fully populated with page cache beforehand, Spark application
+performance can drop by 80%. However, with zone_reclaim enabled, the performance
+degradation is limited to only about 30%.
+
+Furthermore, for typical HPC applications, memory pressure tends to be balanced
+across NUMA nodes. Yet page cache is often generated by background tasks—such as
+logging modules—which breaks memory locality and adversely affects overall performance.
+
+At the same time, there are a large number of __GFP_THISNODE memory allocation requests in
+the system. Anonymous pages that fall back from other nodes cannot be migrated or easily
+reclaimed (especially when swap is disabled), leading to uneven distribution of available
+memory within a single node. By enabling zone_reclaim_mode, the kernel preferentially reclaims
+file pages within the local NUMA node to satisfy local anonymous-page allocations, which
+effectively avoids warn_alloc problems caused by uneven distribution of anonymous pages.
+
+In such scenarios, relying solely on mbind may offer limited flexibility.
+
+We have also experimented with proactively waking kswapd to improve synchronous reclaim
+efficiency. Our actual tests show that this can roughly double the memory allocation rate[1].
+
+We could also discuss whether there are better solutions for such HPC scenarios.
+
+[1]: https://lore.kernel.org/all/20251011062043.772549-1-mawupeng1@huawei.com/
+
+> - Is NUMA balancing good enough to correct action when memory spills over to
+>   remote nodes, and end up being accessed frequently?
+> - How widely is zone_reclaim_mode currently being used?
+> - Are there usecases for zone_reclaim_mode that cannot be replaced by any
+>   of the mentioned alternatives?
+> - Now that node_reclaim() is deprecated in patch 2, patch 3 deprecates
+>   min_slab_ratio and min_unmapped_ratio. Does this change make sense?
+>   IOW, should proactive reclaim via memory.reclaim still care about
+>   these thresholds before making a decision to reclaim?
+> - If we agree that there are better alternatives to zone_reclaim_mode, how
+>   should we make the transition to deprecate it, along with the other
+>   sysctls that are deprecated in this series (min_{slab, unmapped}_ratio)?
+> 
+> Please also note that I've excluded all individual email addresses for the
+> Cc list. It was ~30 addresses, as I just wanted to avoid spamming
+> maintainers and reviewers, so I've just left the mailing list targets.
+> The individuals are Cc-ed in the relevant patches, though.
+> 
+> Thank you everyone. I'm looking forward to discussing this idea with you all!
+> Joshua
+> 
+> [1] https://lpc.events/event/19/contributions/2142/
+> [2] https://lore.kernel.org/linux-mm/20250919162134.1098208-1-hannes@cmpxchg.org/
+> [3] https://lore.kernel.org/all/20250805205048.1518453-1-joshua.hahnjy@gmail.com/
+> 
+> Joshua Hahn (4):
+>   mm/khugepaged: Remove hpage_collapse_scan_abort
+>   mm/vmscan/page_alloc: Remove node_reclaim
+>   mm/vmscan/page_alloc: Deprecate min_{slab, unmapped}_ratio
+>   mm/vmscan: Deprecate zone_reclaim_mode
+> 
+>  Documentation/admin-guide/sysctl/vm.rst       |  78 ---------
+>  Documentation/mm/physical_memory.rst          |   9 -
+>  .../translations/zh_CN/mm/physical_memory.rst |   8 -
+>  arch/powerpc/include/asm/topology.h           |   4 -
+>  include/linux/mmzone.h                        |   8 -
+>  include/linux/swap.h                          |   5 -
+>  include/linux/topology.h                      |   6 -
+>  include/linux/vm_event_item.h                 |   4 -
+>  include/trace/events/huge_memory.h            |   1 -
+>  include/uapi/linux/mempolicy.h                |  14 --
+>  mm/internal.h                                 |  22 ---
+>  mm/khugepaged.c                               |  34 ----
+>  mm/page_alloc.c                               | 120 +------------
+>  mm/vmscan.c                                   | 158 +-----------------
+>  mm/vmstat.c                                   |   4 -
+>  15 files changed, 9 insertions(+), 466 deletions(-)
+> 
+> 
+> base-commit: e4c4d9892021888be6d874ec1be307e80382f431
 
