@@ -1,119 +1,131 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E7C1898F8;
-	Tue,  9 Dec 2025 13:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9CC322B79;
+	Tue,  9 Dec 2025 13:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765286682; cv=none; b=nL6oYNlZHWGi49q1QF97Uv5HlADsL7QGq7nHJydHQYzhYgbocenVOL9K/Udezd2VfQM9jg0AAwxDMH5gDLaZAcGnrkfawRHWg/ae1eXEA/3i3DbLoI7OospCOdd6J7CuHUWMm88YfxABi3o14TVTKUC8qs/NXSzQjUN2YNEyksM=
+	t=1765287474; cv=none; b=gfKcDkhqgx4yHyEmoxCtwwpLIs5BDdwopBjB9cUfike2VJN55LqRbapCwSIAFNrlCn7FRZk0fxyPNOPHpKn340wJM53THxkBV0dlfgWkgilrd9I8V+jbEE5zeXvuW91Cf2d+XDSbwwGIzotz/LzP0xrwGQU2v4ByCffyvowmbas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765286682; c=relaxed/simple;
-	bh=hJ/0sOpN+P0Q+WIGMfkW3OT9OkaXeoB90zN2c5rYRNY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eeeukTmZOcXozv4of68ORpjKX7QznAGto6Qsh5B1yRna8S8ZoR+McrKySvNzCAfwU8G2l3g/alrSvp6MKZUlGFQ3f78Ner0TXnp/bdg1n7Kd4bW4GLgUTtuvYH3DxyZdNJBxGdyZ+FlOiBTiWU8ug+2acf7jw4YRAxV/he/um6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q1QGnjRf; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1765287474; c=relaxed/simple;
+	bh=w4P9sfpFZ21bhYvn0gM09omdKTKjYJiWFjzvEXjpHa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVblpc5akjd8SMVs2GRU77RmFyRaFVaKShFHAHnsq5cLlNZ5s28aAoYrlP89Zs2yt5T0cMqJVwQ6QdVr1xP6w0iR//DQeMkKg8aeYGUIZ5bCIbxrrumo25hOTT/fsueGsoyUm3oD972Ol6WhM2rEAVMkadcNxuzgNdKg3BQlRGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+Kpbu8n; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q1QGnjRf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765286669; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=OakDZAcNjV0xxUESbvHAt5urGQN2h5Z6UwAQnSxdGKE=;
-	b=q1QGnjRfmJ5VtzF94BWW0lMQT5GlpoMJudIK7j/jJQQOPDKL3fpxZBTA9+UkSR3IB4CCx5lVYAvRqe0P5/8l+vOeWAR0E6RAPtYDyIv5Lix226IUDvXhTTX7QxOOw9BV/2VTP63OCOto9WYxrm0cZ5qgC+j5KVIoI07YAKvtd58=
-Received: from 30.246.178.18(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WuT351B_1765286340 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Dec 2025 21:19:02 +0800
-Message-ID: <bed37798-8c38-4669-b841-45924473696a@linux.alibaba.com>
-Date: Tue, 9 Dec 2025 21:19:00 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+Kpbu8n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765287473; x=1796823473;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=w4P9sfpFZ21bhYvn0gM09omdKTKjYJiWFjzvEXjpHa0=;
+  b=Y+Kpbu8n1NaPYzV/mFh+O9xExOW/ZoCukJyG4E+BDg2RK+uaVIODHoOL
+   gQhD32WfXssSe8k3u0ODy/rA6+tm/k+/xxB6JRZtykzVEsqybqpYRw2/d
+   UIr3MW1zzJsvaPRVv5950SlKNT5SHfey92bJawUNoas8OEnmJWO06QdUj
+   YbOb45Lq0+E/c7N2i904mZ5oPgs/Qq5IAXvGbLAitVwvxd2tFa7OAEQUU
+   SVZllh8B4V3UPUOcTCEGVDyok4R/W0ijiXkvnSSWN0eXNJWsoBPzjf3jH
+   x/32Wcx2X5hIV2b+0DmlnxaLInAViP2Zg+SACepZhiQwI1qfFPUt0oJM9
+   A==;
+X-CSE-ConnectionGUID: tavlh+i3Th+Ts6UTLz56Bw==
+X-CSE-MsgGUID: OyNS/3DzSwWfs1WhcsiaUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11637"; a="67135728"
+X-IronPort-AV: E=Sophos;i="6.20,261,1758610800"; 
+   d="scan'208";a="67135728"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 05:37:52 -0800
+X-CSE-ConnectionGUID: NawPaxlOTZCU/zZ0R8IbTg==
+X-CSE-MsgGUID: krT6qFBySm6u2l79zkrWLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,261,1758610800"; 
+   d="scan'208";a="196683954"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.237])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 05:37:47 -0800
+Date: Tue, 9 Dec 2025 15:37:45 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v1 1/1] bpf: Mark BPF printing functions with __printf()
+ attribute
+Message-ID: <aTgl_bjO1O9Ddpmv@smile.fi.intel.com>
+References: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
+ <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/3] PCI: trace: Add a RAS tracepoint to monitor link
- speed changes
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org, tianruidong@linux.alibaba.com, rostedt@goodmis.org,
- lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com
-References: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
- <1f9ee237-9d62-4c33-83c3-ce4d9ca9497f@linux.alibaba.com>
-In-Reply-To: <1f9ee237-9d62-4c33-83c3-ce4d9ca9497f@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Tue, Dec 09, 2025 at 06:12:46PM +0900, Alexei Starovoitov wrote:
+> On Tue, Dec 9, 2025 at 1:21 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > The printing functions in BPF code are using printf() type of format,
+> > and compiler is not happy about them as is:
+> >
+> > kernel/bpf/helpers.c:1069:9: error: function ‘____bpf_snprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> >  1069 |         err = bstr_printf(str, str_size, fmt, data.bin_args);
+> >       |         ^~~
+> >
+> > kernel/trace/bpf_trace.c:377:9: error: function ‘____bpf_trace_printk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> >   377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+> >       |         ^~~
+> >
+> > kernel/trace/bpf_trace.c:433:9: error: function ‘____bpf_trace_vprintk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> >   433 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+> >       |         ^~~
+> >
+> > kernel/trace/bpf_trace.c:475:9: error: function ‘____bpf_seq_printf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> >   475 |         seq_bprintf(m, fmt, data.bin_args);
+> >       |         ^~~~~~~~~~~
+> >
+> > Fix the compilation errors by adding __printf() attribute. For that
+> > we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_CALL_*()
+> > to make code neater.
 
+> This is pointless churn to shut up a warning.
 
-在 2025/11/4 17:34, Shuai Xue 写道:
-> 
-> 
-> 在 2025/10/25 19:41, Shuai Xue 写道:
->> changes since v12:
->> - add Reviewed-by tag for PATCH 1 from Steve
->> - add Reviewed-by tag for PATCH 1-3 from Ilpo
->> - add comments for why use string to define tracepoint per Steve
->> - minor doc improvements from Ilpo
->> - remove use pci_speed_string to fix PCI dependends which cause build error on sparc64
->>
->> changes since v11:
->> - rebase to Linux 6.18-rc1 (no functional changes)
->>
->> changes since v10:
->> - explicitly include header file per Ilpo
->> - add comma on any non-terminator entry  per Ilpo
->> - compile trace.o under CONFIG_TRACING per Ilpo
->>
->> changes since v9:
->> - add a documentation about PCI tracepoints per Bjorn
->> - create a dedicated drivers/pci/trace.c that always defines the PCI tracepoints per Steve
->> - move tracepoint callite into __pcie_update_link_speed() per Lukas and Bjorn
->>
->> changes since v8:
->> - rewrite commit log from Bjorn
->> - move pci_hp_event to a common place (include/trace/events/pci.h) per Ilpo
->> - rename hotplug event strings per Bjorn and Lukas
->> - add PCIe link tracepoint per Bjorn, Lukas, and Ilpo
->>
->> changes since v7:
->> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
->> - pick up Reviewed-by from Lukas Wunner
->>
->> Hotplug events are critical indicators for analyzing hardware health, and
->> surprise link downs can significantly impact system performance and reliability.
->> In addition, PCIe link speed degradation directly impacts system performance and
->> often indicates hardware issues such as faulty devices, physical layer problems,
->> or configuration errors.
->>
->> This patch set add PCI hotplug and PCIe link tracepoint to help analyze PCI
->> hotplug events and PCIe link speed degradation.
->>
->> Shuai Xue (3):
->>    PCI: trace: Add a generic RAS tracepoint for hotplug event
->>    PCI: trace: Add a RAS tracepoint to monitor link speed changes
->>    Documentation: tracing: Add documentation about PCI tracepoints
->>
-> 
-> Hi, Bjorn,
-> 
-> Gentle ping.
-> 
-> Do you have any further concerns about this patch set?
-> 
-> Shuai
+In some cases, like mine, it's an error.
 
-Hi, all,
+> Teach syzbot to stop this spam instead.
 
-Gentle ping.
+It prevents to perform `make W=1` builds with the default CONFIG_WERROR,
+which is 'y'.
 
-Thanks.
-Shuai
+> At the end this patch doesn't make any visible difference,
+> since user declarations of these helpers are auto generated
+> from uapi/bpf.h file and __printf attribute is not there.
+
+I see, thanks for the review.
+Any recommendations on how to fix this properly?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
