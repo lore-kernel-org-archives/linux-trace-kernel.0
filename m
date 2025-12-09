@@ -1,51 +1,31 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA52D837E;
-	Tue,  9 Dec 2025 12:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E7C1898F8;
+	Tue,  9 Dec 2025 13:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765284204; cv=none; b=g/C1wRyDi8C8Z11OEjmgKS0RuLp1DVDGx6pzOug6pnkxdbdZa2QF9DCDf1BUxB2iKlhxepQCv+Fe/1HoXu7nkuv7eDMHjb6ZPfey7/ipH9nmGObGgZmJpoJdIJCE8/lLCXb+BEO7TRnoA4LHy3704/8ke9M6SVu80U1/DBxdtcI=
+	t=1765286682; cv=none; b=nL6oYNlZHWGi49q1QF97Uv5HlADsL7QGq7nHJydHQYzhYgbocenVOL9K/Udezd2VfQM9jg0AAwxDMH5gDLaZAcGnrkfawRHWg/ae1eXEA/3i3DbLoI7OospCOdd6J7CuHUWMm88YfxABi3o14TVTKUC8qs/NXSzQjUN2YNEyksM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765284204; c=relaxed/simple;
-	bh=CXwQ6NPP8MiWWnh7ExqTOPJIbuO9zBpqsikoa28hSx8=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GdzATo3WkZSyNDNzgbsKACesUTSJezU6lK0tyEKKUaUioD8ZEfdJiB3zz0dUux94G2+QyFxBD3MNMAekGDvMQqOjbayVvBqYmUKasspIjQ2felo4WAXWH3Tjp/WxOH1ppPm9Rj3XTVANYxGqtia43/iv+dP64wwuiEw5OyC5yZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=clYTpwfZ; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=clYTpwfZ; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1765286682; c=relaxed/simple;
+	bh=hJ/0sOpN+P0Q+WIGMfkW3OT9OkaXeoB90zN2c5rYRNY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eeeukTmZOcXozv4of68ORpjKX7QznAGto6Qsh5B1yRna8S8ZoR+McrKySvNzCAfwU8G2l3g/alrSvp6MKZUlGFQ3f78Ner0TXnp/bdg1n7Kd4bW4GLgUTtuvYH3DxyZdNJBxGdyZ+FlOiBTiWU8ug+2acf7jw4YRAxV/he/um6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q1QGnjRf; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="clYTpwfZ";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="clYTpwfZ"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=Xo7OeA33tWRYz8zbfLCc2jeO2ZGq0wF+pXykwItiK5M=;
-	b=clYTpwfZL7BLpYpG966W4Z3meJO2GuveIHY1V8afaFkQv6+c8D1xzKjNlDxLLDp6aZzDp8Rld
-	bTEB2btV77TGaLxBe5hSORFlJy9L5TE4c2MIMURTFsOZQxxpMzh8bWLXtNPO1npeuCKBdvXhmgU
-	lIWpGZjOroINa0EC1GIn78g=
-Received: from canpmsgout03.his.huawei.com (unknown [172.19.92.159])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4dQdml0Sybz1BGJl;
-	Tue,  9 Dec 2025 20:43:03 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=Xo7OeA33tWRYz8zbfLCc2jeO2ZGq0wF+pXykwItiK5M=;
-	b=clYTpwfZL7BLpYpG966W4Z3meJO2GuveIHY1V8afaFkQv6+c8D1xzKjNlDxLLDp6aZzDp8Rld
-	bTEB2btV77TGaLxBe5hSORFlJy9L5TE4c2MIMURTFsOZQxxpMzh8bWLXtNPO1npeuCKBdvXhmgU
-	lIWpGZjOroINa0EC1GIn78g=
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dQdjr166lzpStQ;
-	Tue,  9 Dec 2025 20:40:32 +0800 (CST)
-Received: from kwepemj100016.china.huawei.com (unknown [7.202.194.10])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5EC90180BD5;
-	Tue,  9 Dec 2025 20:43:02 +0800 (CST)
-Received: from [10.174.178.114] (10.174.178.114) by
- kwepemj100016.china.huawei.com (7.202.194.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 9 Dec 2025 20:43:01 +0800
-Message-ID: <fc00c53c-ab54-42a2-979b-0ecb49ff6b48@huawei.com>
-Date: Tue, 9 Dec 2025 20:43:01 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q1QGnjRf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1765286669; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=OakDZAcNjV0xxUESbvHAt5urGQN2h5Z6UwAQnSxdGKE=;
+	b=q1QGnjRfmJ5VtzF94BWW0lMQT5GlpoMJudIK7j/jJQQOPDKL3fpxZBTA9+UkSR3IB4CCx5lVYAvRqe0P5/8l+vOeWAR0E6RAPtYDyIv5Lix226IUDvXhTTX7QxOOw9BV/2VTP63OCOto9WYxrm0cZ5qgC+j5KVIoI07YAKvtd58=
+Received: from 30.246.178.18(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WuT351B_1765286340 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 09 Dec 2025 21:19:02 +0800
+Message-ID: <bed37798-8c38-4669-b841-45924473696a@linux.alibaba.com>
+Date: Tue, 9 Dec 2025 21:19:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,219 +33,87 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-CC: <mawupeng1@huawei.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<kernel-team@meta.com>
-Subject: Re: [RFC LPC2025 PATCH 0/4] Deprecate zone_reclaim_mode
-To: <joshua.hahnjy@gmail.com>, <willy@infradead.org>, <david@kernel.org>
-References: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
-From: mawupeng <mawupeng1@huawei.com>
-In-Reply-To: <20251205233217.3344186-1-joshua.hahnjy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v13 0/3] PCI: trace: Add a RAS tracepoint to monitor link
+ speed changes
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com, rostedt@goodmis.org,
+ lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
+ Jonathan.Cameron@huawei.com
+References: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
+ <1f9ee237-9d62-4c33-83c3-ce4d9ca9497f@linux.alibaba.com>
+In-Reply-To: <1f9ee237-9d62-4c33-83c3-ce4d9ca9497f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemj100016.china.huawei.com (7.202.194.10)
 
 
 
-On 2025/12/6 7:32, Joshua Hahn wrote:
-> Hello folks, 
-> This is a code RFC for my upcoming discussion at LPC 2025 in Tokyo [1].
+在 2025/11/4 17:34, Shuai Xue 写道:
 > 
-> <preface>
-> You might notice that the RFC that I'm sending out is different from the
-> proposed abstract. Initially when I submitted my proposal, I was interested
-> in addressing how fallback allocations work under pressure for
-> NUMA-restricted allocations. Soon after, Johannes proposed a patch [2] which
-> addressed the problem I was investigating, so I wanted to explore a different
-> direction in the same area of fallback allocations.
 > 
-> At the same time, I was also thinking about zone_reclaim_mode [3]. I thought
-> that LPC would be a good opportunity to discuss deprecating zone_reclaim_mode,
-> so I hope to discuss this topic at LPC during my presentation slot.
+> 在 2025/10/25 19:41, Shuai Xue 写道:
+>> changes since v12:
+>> - add Reviewed-by tag for PATCH 1 from Steve
+>> - add Reviewed-by tag for PATCH 1-3 from Ilpo
+>> - add comments for why use string to define tracepoint per Steve
+>> - minor doc improvements from Ilpo
+>> - remove use pci_speed_string to fix PCI dependends which cause build error on sparc64
+>>
+>> changes since v11:
+>> - rebase to Linux 6.18-rc1 (no functional changes)
+>>
+>> changes since v10:
+>> - explicitly include header file per Ilpo
+>> - add comma on any non-terminator entry  per Ilpo
+>> - compile trace.o under CONFIG_TRACING per Ilpo
+>>
+>> changes since v9:
+>> - add a documentation about PCI tracepoints per Bjorn
+>> - create a dedicated drivers/pci/trace.c that always defines the PCI tracepoints per Steve
+>> - move tracepoint callite into __pcie_update_link_speed() per Lukas and Bjorn
+>>
+>> changes since v8:
+>> - rewrite commit log from Bjorn
+>> - move pci_hp_event to a common place (include/trace/events/pci.h) per Ilpo
+>> - rename hotplug event strings per Bjorn and Lukas
+>> - add PCIe link tracepoint per Bjorn, Lukas, and Ilpo
+>>
+>> changes since v7:
+>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+>> - pick up Reviewed-by from Lukas Wunner
+>>
+>> Hotplug events are critical indicators for analyzing hardware health, and
+>> surprise link downs can significantly impact system performance and reliability.
+>> In addition, PCIe link speed degradation directly impacts system performance and
+>> often indicates hardware issues such as faulty devices, physical layer problems,
+>> or configuration errors.
+>>
+>> This patch set add PCI hotplug and PCIe link tracepoint to help analyze PCI
+>> hotplug events and PCIe link speed degradation.
+>>
+>> Shuai Xue (3):
+>>    PCI: trace: Add a generic RAS tracepoint for hotplug event
+>>    PCI: trace: Add a RAS tracepoint to monitor link speed changes
+>>    Documentation: tracing: Add documentation about PCI tracepoints
+>>
 > 
-> Sorry for the patch submission so close to the conference as well. I thought
-> it would still be better to send this RFC out late, instead of just presenting
-> the topic at the conference without giving folks some time to think about it.
-> </preface>
+> Hi, Bjorn,
 > 
-> zone_reclaim_mode was introduced in 2005 to prevent the kernel from facing
-> the high remote access latency associated with NUMA systems. With it enabled,
-> when the kernel sees that the local node is full, it will stall allocations and
-> trigger direct reclaim locally, instead of making a remote allocation, even
-> when there may still be free memory. Thsi is the preferred way to consume memory
-> if remote memory access is more expensive than performing direct reclaim.
-> The choice is made on a system-wide basis, but can be toggled at runtime.
+> Gentle ping.
 > 
-> This series deprecates the zone_reclaim_mode sysctl in favor of other NUMA
-> aware mechanisms, such as NUMA balancing, memory.reclaim, membind, and
-> tiering / promotion / demotion. Let's break down what differences there are
-> in these mechanisms, based on workload characteristics.
+> Do you have any further concerns about this patch set?
 > 
-> Scenario 1) Workload fits in a single NUMA node
-> In this case, if the rest of the NUMA node is unused, the zone_reclaim_mode
-> does nothing. On the other hand, if there are several workloads competing
-> for memory in the same NUMA node, with sum(workload_mem) > mem_capacity(node),
-> then zone_reclaim_mode is actively harmful. Direct reclaim is aggressively
-> triggered whenever one workload makes an allocation that goes over the limit,
-> and there is no fairness mechanism to prevent one workload from completely
-> blocking the other workload from making progress.
-> 
-> Scenario 2) Workload does not fit in a single NUMA node
-> Again, in this case, zone_reclaim_mode is actively harmful. Direct reclaim
-> will constantly be triggered whenever memory goes above the limit, leading
-> to memory thrashing. Moreover, even if the user really wants avoid remote
-> allocations, membind is a better alternative in this case; zone_reclaim_mode
-> forces the user to make the decision for all workloads on the system, whereas
-> membind gives per-process granularity.
-> 
-> Scenario 3) Workload size is approximately the same as the NUMA capacity
-> This is probably the case for most workloads. When it is uncertain whether
-> memory consumption will exceed the capacity, it doesn't really make a lot
-> of sense to make a system-wide bet on whether direct reclaim is better or
-> worse than remote allocations. In other words, it might make more sense to
-> allow memory to spill over to remote nodes, and let the kernel handle the
-> NUMA balancing depending on how cold or hot the newly allocated memory is.
-> 
-> These examples might make it seem like zone_reclaim_mode is harmful for
-> all scenarios. But that is not the case:
-> 
-> Scenario 4) Newly allocated memory is going to be hot
-> This is probably the scenario that makes zone_reclaim_mode shine the most.
-> If the newly allocated memory is going to be hot, then it makes much more
-> sense to try and reclaim locally, which would kick out cold(er) memory and
-> prevent eating any remote memory access latency frequently.
-> 
-> Scenario 5) Tiered NUMA system makes remote access latency higher
-> In some tiered memory scenarios, remote access latency can be higher for
-> lower memory tiers. In these scenarios, the cost of direct reclaim may be
-> cheaper, relative to placing hot memory on a remote node with high access
-> latency.
-> 
-> Now, let me try and present a case for deprecating zone_reclaim_mode, despite
-> these two scenarios where it performs as intended.
-> In scenario 4, the catch is that the system is not an oracle that can predict
-> that newly allocated memory is going to be hot. In fact, a lot of the kernel
-> assumes that newly allocated memory is cold, and it has to "prove" that it
-> is hot through accesses. In a perfect world, the kernel would be able to
-> selectively trigger direct reclaim or allocate remotely, based on whehter the
-> current allocation will be cold or hot in the future.
-> 
-> But without these insights, it is difficult to make a system-wide bet and
-> always trigger direct reclaim locally, when we might be reclaiming or
-> evicting relatively hotter memory from the local node in order to make room.
-> 
-> In scenario 5, remote access latency is higher, which means the cost of
-> placing hot memory in remote nodes is higher. But today, we have many
-> strategies that can help us overcome the higher cost of placing hot memory in
-> remote nodes. If the system has tiered memory with different memory
-> access characteristics per-node, then the user is probably already enabling
-> promotion and demotion mechanisms that can quickly correct the placement of
-> hot pages in lower tiers. In these systems, it might make more sense to allow
-> the kernel to naturally consume all of the memory it can (whether it is local
-> or on a lower tier remote node), then allow the kernel to then take corrective
-> action based on what it finds as hot or cold memory.
-> 
-> Of course, demonstrating that there are alternatives is not enough to warrant
-> a deprecation. I think that the real benefit of this patch comes in reduced
-> sysctl maintenance and what I think is much easier code to read.
-> 
-> This series which has 466 deletions and 9 insertions:
-> - Deprecates the zone_reclaim_mode sysctl (patch 4)
-> - Deprecates the min_slab_ratio sysctl (patch 3)
-> - Deprecates the min_unmapped_ratio sysctl (patch 3)
-> - Removes the node_reclaim() function and simplifies the get_page_from_freelist
->   watermark checks (which is already a very large function) (patch 2)
-> - Simplifies hpage_collapse_scan_{pmd, file} (patch 1).
-> - There are also more opportunities for future cleanup, like removing
->   __node_reclaim and converting its last caller to use try_to_free_pages
->   (suggested by Johannes Weiner)
-> 
-> Here are some discussion points that I hope to discuss at LPC:
-> - For workloads that are assumed to fit in a NUMA node, is membind really
->   enough to achieve the same effect?
+> Shuai
 
-In real-world scenarios, we have observed on a dual-socket (2P) server with multiple
-NUMA nodes—each having relatively limited local memory capacity—that page cache
-negatively impacts overall performance. The zone_reclaim_node feature is used to
-alleviate performance issues.
+Hi, all,
 
-The main reason is that page cache consumes free memory on the local node, causing
-processes without mbind restrictions to fall back to other nodes that still have free
-memory. Accessing remote memory comes with a significant latency penalty. In extreme
-testing, if a system is fully populated with page cache beforehand, Spark application
-performance can drop by 80%. However, with zone_reclaim enabled, the performance
-degradation is limited to only about 30%.
+Gentle ping.
 
-Furthermore, for typical HPC applications, memory pressure tends to be balanced
-across NUMA nodes. Yet page cache is often generated by background tasks—such as
-logging modules—which breaks memory locality and adversely affects overall performance.
-
-At the same time, there are a large number of __GFP_THISNODE memory allocation requests in
-the system. Anonymous pages that fall back from other nodes cannot be migrated or easily
-reclaimed (especially when swap is disabled), leading to uneven distribution of available
-memory within a single node. By enabling zone_reclaim_mode, the kernel preferentially reclaims
-file pages within the local NUMA node to satisfy local anonymous-page allocations, which
-effectively avoids warn_alloc problems caused by uneven distribution of anonymous pages.
-
-In such scenarios, relying solely on mbind may offer limited flexibility.
-
-We have also experimented with proactively waking kswapd to improve synchronous reclaim
-efficiency. Our actual tests show that this can roughly double the memory allocation rate[1].
-
-We could also discuss whether there are better solutions for such HPC scenarios.
-
-[1]: https://lore.kernel.org/all/20251011062043.772549-1-mawupeng1@huawei.com/
-
-> - Is NUMA balancing good enough to correct action when memory spills over to
->   remote nodes, and end up being accessed frequently?
-> - How widely is zone_reclaim_mode currently being used?
-> - Are there usecases for zone_reclaim_mode that cannot be replaced by any
->   of the mentioned alternatives?
-> - Now that node_reclaim() is deprecated in patch 2, patch 3 deprecates
->   min_slab_ratio and min_unmapped_ratio. Does this change make sense?
->   IOW, should proactive reclaim via memory.reclaim still care about
->   these thresholds before making a decision to reclaim?
-> - If we agree that there are better alternatives to zone_reclaim_mode, how
->   should we make the transition to deprecate it, along with the other
->   sysctls that are deprecated in this series (min_{slab, unmapped}_ratio)?
-> 
-> Please also note that I've excluded all individual email addresses for the
-> Cc list. It was ~30 addresses, as I just wanted to avoid spamming
-> maintainers and reviewers, so I've just left the mailing list targets.
-> The individuals are Cc-ed in the relevant patches, though.
-> 
-> Thank you everyone. I'm looking forward to discussing this idea with you all!
-> Joshua
-> 
-> [1] https://lpc.events/event/19/contributions/2142/
-> [2] https://lore.kernel.org/linux-mm/20250919162134.1098208-1-hannes@cmpxchg.org/
-> [3] https://lore.kernel.org/all/20250805205048.1518453-1-joshua.hahnjy@gmail.com/
-> 
-> Joshua Hahn (4):
->   mm/khugepaged: Remove hpage_collapse_scan_abort
->   mm/vmscan/page_alloc: Remove node_reclaim
->   mm/vmscan/page_alloc: Deprecate min_{slab, unmapped}_ratio
->   mm/vmscan: Deprecate zone_reclaim_mode
-> 
->  Documentation/admin-guide/sysctl/vm.rst       |  78 ---------
->  Documentation/mm/physical_memory.rst          |   9 -
->  .../translations/zh_CN/mm/physical_memory.rst |   8 -
->  arch/powerpc/include/asm/topology.h           |   4 -
->  include/linux/mmzone.h                        |   8 -
->  include/linux/swap.h                          |   5 -
->  include/linux/topology.h                      |   6 -
->  include/linux/vm_event_item.h                 |   4 -
->  include/trace/events/huge_memory.h            |   1 -
->  include/uapi/linux/mempolicy.h                |  14 --
->  mm/internal.h                                 |  22 ---
->  mm/khugepaged.c                               |  34 ----
->  mm/page_alloc.c                               | 120 +------------
->  mm/vmscan.c                                   | 158 +-----------------
->  mm/vmstat.c                                   |   4 -
->  15 files changed, 9 insertions(+), 466 deletions(-)
-> 
-> 
-> base-commit: e4c4d9892021888be6d874ec1be307e80382f431
+Thanks.
+Shuai
 
