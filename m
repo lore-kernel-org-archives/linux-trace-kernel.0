@@ -1,267 +1,146 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4F13B8D67
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 03:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2B8239E9D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 03:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765250099; cv=none; b=KgFxqceNn83FgWxz70GeewzCBFL2NngUAKBJ9xL1y7egTyKquzVQkswRWjqTa5FnvY++9CS7cI94NgCTLw5zjACORpP83bCVNzBpAwX8Hl8Pdq60VOHEvSXVxuoJa3u+sOPaXJiSNBzxumAF5GtWCVxb0nDjlvCMHdn1dSkbBec=
+	t=1765251138; cv=none; b=RiNLflMaMY8av5Vh/eyw2YUcTkwVnLoSgAutCSVVGLiNPbiGlxYcKVo6Pt4dVUDWhpglB++9oefSLbMWDLQ9qvx0HHmL1ilXMjGRjmoFWml4je4ivjmtvyLg8rqUEyCWk2+P7YXgCPohDG2R+tccn9n/+lZgFDm+zEo1qMXzeHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765250099; c=relaxed/simple;
-	bh=BQPl5Psqr3Ekhyp3new/iMMcs7hFv3mDUtrCQJ2EJA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MnFCNyrJMurP/KqPnmUIWHH+OvrBkBMhveyt04HopJKpG+DEEeTqYZ/k2rLxk3DcI89loIBdy/8q8VpgzlcKwPB9APgjLdEqi1kyK1EMlp2Svs0erGyfQEsHWWXhqkTdQRC1O7yAcsuFpKy8dMMyr/HcfF9nQ3ujiyfFosBQSHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQ1otKoH; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765251138; c=relaxed/simple;
+	bh=iKbUOvozTUcDjWGdk0gFrhHRUlevzyfHRqWi1OObHPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BWY9TRuDIUF18sVtkKM4fKDZSOdiL7l0JZtbLS/VPRrKBbrLdBaHJ1q8AQdDkfqz8DSiQ6K4FtmjpNxzuvtnP0eseVdrm110LECMcIkAlRIRgQhTENiNwDIv358rqk5ISa/d5x4Te+n3sYOh6SVRwEqscDgQzHIarxY/4Xe8b/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VGLBtrSn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=awdG7ukz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VGLBtrSn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=awdG7ukz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ1otKoH"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-640a0812658so8806886a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Dec 2025 19:14:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765250096; x=1765854896; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ifyWoLihFbEjhSX2XnNDSy6MvDQZJMVFCA4NUjV6CHw=;
-        b=eQ1otKoHifAd3Psk+U9jjy7Cx1rPq86D5mninsRo3zjA+NleCCDPSkCpOueRPrwUis
-         HTV1wlP31It2CLNobXk5Us5hCOSxNvQ2G0D9IvXMx1bLGOQsETfkfELxx+16LRXrg8mW
-         +7ize6mRlEv4U464PgnV1oUqG3w/6vEBuONjvG4t/LEkHKATDfe72BDK/PecUKNnRGlH
-         l89XVz2yRyXjKDJ6QULwizlhI866Invm+iNU8pR4KsdUyU01Kdpb0KcFz8WZDXBJYt0H
-         v0ca0QDv8FympRVcquobridL4OGWEhK/pPxrjJ2eL9KgvvaceiiET8pt+vCxRTrbh9pW
-         1+kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765250096; x=1765854896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ifyWoLihFbEjhSX2XnNDSy6MvDQZJMVFCA4NUjV6CHw=;
-        b=qb2xO2zOwquB6N+MnJZkUN6cpTQ2irFAetqcDWcemhiq0GMFcztr+1i1ga6NpySJR5
-         s2hEtojrG+c8Ad1KTVqn9Jp8BJGWe2S4g3jgIROquRe1d6k9DqqML1woDUz/rooHdbXs
-         SuM2KCmkJDS1JeWV/fjbWd2vdu1IPFSsLbZNheyI2sbo67LNjxNjBsQdbvf5x103lUGJ
-         yd0tFJJWdWhphv/DRAO9p2Ww9o5nVYB3uQrgvBQHJj+EunnfyOXLH+e2dKnh25q9gn3K
-         BF5Xf82N6VUEq8+99q3dyu5tMD15A6QFGHupn/i1LCGVCMB20pWbSNnFElBWJAVvpd5H
-         sCbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ/aBR7E17wP+rC0t12qsQ4Jwe9rb9OCFSIrC1m8yaVfXaIjlE+Z9OsfitsqmT0JS6HHKDC6NJORcyeUP/YA3oFyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ9QCSj7tuPli/XMVjwtTpucvkDfj72r20831RISLU9u2Y+M15
-	WjyFHjrbsl0Y7YqzxRZbKgFXqLdyRRgrMaCzC7co1zOKNSZveb2kz5DzVoKGnhjDAGH/h6ztaxY
-	25fqT1yRJ+Nm/9kudVJxYbkEuNSys29o=
-X-Gm-Gg: ASbGncteNiKelO0cTH4qeGpRuOZP3pjHvLB1Skva1W8s3Fhq0GzUohIS1mXTiUSqZOK
-	XJto3QPl9hdkmHvBTx5UjmCU5Vl42FiVtRBF94w7NKDikefaemK/V9qYAEMa1HrGIud9QsziHTZ
-	Umj3UBz3Sek6inYvveg4HjQpdEg8ZsJrIHl63VFpLK9FYrcfxG7mTJNUvnORHGULc6w/uTqp8oe
-	YysaNLDhLVaYQW6hC1k9gGqiH0vV0zWdrhvLlT9quEKqt10zbISb53QKoJRVVIAvRHYWO3P
-X-Google-Smtp-Source: AGHT+IFrvyPgdnBfM2yVd76EzvFkj1X9M98ZCJFUYBGuvPmu0QbWaoUGOhlmPQcIBGt8QD+cqRlvDvihssFhSkC8yCU=
-X-Received: by 2002:a17:907:8e96:b0:b76:ece0:368e with SMTP id
- a640c23a62f3a-b7a247dc7d9mr986498766b.47.1765250095440; Mon, 08 Dec 2025
- 19:14:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VGLBtrSn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="awdG7ukz";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VGLBtrSn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="awdG7ukz"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 932255BD8E;
+	Tue,  9 Dec 2025 03:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1765251134;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK5KHqJHuxC0Vq5OqfttGAUtjiXF9FshssrZSe7Fcxg=;
+	b=VGLBtrSnPe8iGZ26utWGY6liH0g1BUcjJjgoQMAuFWtfLILPc37EbKfrR6tZwtw+4xfRTl
+	Ialui0y2c5pbz6+D73lH9Jltrb9zGiZ/8Nndk8Ka/C7Hz7wZk1zJQuApu/blVa5iJSeiZi
+	6j81H9n0f6nP6jNR/3I8QGoq4cNVWC4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1765251134;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK5KHqJHuxC0Vq5OqfttGAUtjiXF9FshssrZSe7Fcxg=;
+	b=awdG7ukzLJVArLakQLMyksZCPpJAg5z9C6iAP3Q6yywR9OfduKgSIrYDNIJ0PH7SmnyhaQ
+	pdNiTrOJE6iRycAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1765251134;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK5KHqJHuxC0Vq5OqfttGAUtjiXF9FshssrZSe7Fcxg=;
+	b=VGLBtrSnPe8iGZ26utWGY6liH0g1BUcjJjgoQMAuFWtfLILPc37EbKfrR6tZwtw+4xfRTl
+	Ialui0y2c5pbz6+D73lH9Jltrb9zGiZ/8Nndk8Ka/C7Hz7wZk1zJQuApu/blVa5iJSeiZi
+	6j81H9n0f6nP6jNR/3I8QGoq4cNVWC4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1765251134;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dK5KHqJHuxC0Vq5OqfttGAUtjiXF9FshssrZSe7Fcxg=;
+	b=awdG7ukzLJVArLakQLMyksZCPpJAg5z9C6iAP3Q6yywR9OfduKgSIrYDNIJ0PH7SmnyhaQ
+	pdNiTrOJE6iRycAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 737013EA63;
+	Tue,  9 Dec 2025 03:32:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id B5OtGz6YN2kqegAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 09 Dec 2025 03:32:14 +0000
+Date: Tue, 9 Dec 2025 04:32:13 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Miquel =?iso-8859-1?Q?Sabat=E9_Sol=E0?= <mssola@mssola.com>
+Cc: linux-btrfs@vger.kernel.org, clm@fb.com, dsterba@suse.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
+Subject: Re: [PATCH] btrfs: fix NULL dereference on root when tracing inode
+ eviction
+Message-ID: <20251209033213.GF4859@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20251021091125.259500-1-mssola@mssola.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251208131917.2444620-1-dolinux.peng@gmail.com>
- <20251208131917.2444620-2-dolinux.peng@gmail.com> <20251209094810.fb53ac6296656d361754d593@kernel.org>
- <CAErzpms+qYntOEqbRtvVah_khBTG_ObU6keJyz8zbD9rF8BRLQ@mail.gmail.com>
-In-Reply-To: <CAErzpms+qYntOEqbRtvVah_khBTG_ObU6keJyz8zbD9rF8BRLQ@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Tue, 9 Dec 2025 11:14:43 +0800
-X-Gm-Features: AQt7F2pErgThqvlLzUOI8RIaFiVQbetNakMVtJD6MW2iEFMAsuz22-JDlU7QNT4
-Message-ID: <CAErzpmupfPU9AW-76Jw7qNc1McPOuC2d1vcJEyQBOxHNEt76sg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] fgraph: Use BTF to trim and filter return values
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>, 
-	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251021091125.259500-1-mssola@mssola.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-2.50 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[d991fea1b4b23b1f6bf8];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.50
 
-On Tue, Dec 9, 2025 at 9:42=E2=80=AFAM Donglin Peng <dolinux.peng@gmail.com=
-> wrote:
->
-> On Tue, Dec 9, 2025 at 8:48=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.=
-org> wrote:
-> >
-> > On Mon,  8 Dec 2025 21:19:16 +0800
-> > Donglin Peng <dolinux.peng@gmail.com> wrote:
-> >
-> > > From: pengdonglin <pengdonglin@xiaomi.com>
-> > >
-> > > The current funcgraph-retval implementation has two limitations:
-> > >
-> > > 1. It prints a return value even when the traced function returns voi=
-d.
-> > > 2. When the return type is narrower than a register, the printed valu=
-e may
-> > >    be incorrect because high bits can contain undefined data.
-> > >
-> > > Both issues are addressed by using BTF to obtain the precise return t=
-ype
-> > > of each traced function:
-> > >
-> > > - Return values are now printed only for functions whose return type =
-is
-> > >   not void.
-> > > - The value is truncated to the actual width of the return type, ensu=
-ring
-> > >   correct representation.
-> > >
-> > > These changes make the funcgraph-retval output more accurate and remo=
-ve
-> > > noise from void functions.
-> > >
-> > > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-> > > Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
-> > > ---
-> > >  kernel/trace/trace_functions_graph.c | 64 +++++++++++++++++++++++---=
---
-> > >  1 file changed, 54 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trac=
-e_functions_graph.c
-> > > index 17c75cf2348e..9e63665c81e2 100644
-> > > --- a/kernel/trace/trace_functions_graph.c
-> > > +++ b/kernel/trace/trace_functions_graph.c
-> > > @@ -15,6 +15,7 @@
-> > >
-> > >  #include "trace.h"
-> > >  #include "trace_output.h"
-> > > +#include "trace_btf.h"
-> > >
-> > >  /* When set, irq functions might be ignored */
-> > >  static int ftrace_graph_skip_irqs;
-> > > @@ -865,6 +866,46 @@ static void print_graph_retaddr(struct trace_seq=
- *s, struct fgraph_retaddr_ent_e
-> > >
-> > >  #if defined(CONFIG_FUNCTION_GRAPH_RETVAL) || defined(CONFIG_FUNCTION=
-_GRAPH_RETADDR)
-> > >
-> > > +static void trim_retval(unsigned long func, unsigned long *retval, b=
-ool *print_retval)
-> > > +{
-> > > +     const struct btf_type *t;
-> > > +     char name[KSYM_NAME_LEN];
-> > > +     struct btf *btf;
-> > > +     u32 v, msb;
-> > > +
-> > > +     if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-> > > +             return;
-> > > +
-> > > +     if (lookup_symbol_name(func, name))
-> > > +             return;
-> > > +
-> > > +     t =3D btf_find_func_proto(name, &btf);
-> > > +     if (IS_ERR_OR_NULL(t))
-> > > +             return;
-> > > +
-> > > +     t =3D btf_type_skip_modifiers(btf, t->type, NULL);
-> > > +     switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
-> > > +     case BTF_KIND_UNKN:
-> > > +             *print_retval =3D false;
-> > > +             break;
-> > > +     case BTF_KIND_ENUM:
-> > > +     case BTF_KIND_ENUM64:
-> > > +             msb =3D BITS_PER_BYTE * t->size - 1;
-> > > +             *retval &=3D GENMASK(msb, 0);
-> > > +             break;
-> > > +     case BTF_KIND_INT:
-> > > +             v =3D *(u32 *)(t + 1);
-> > > +             if (BTF_INT_ENCODING(v) =3D=3D BTF_INT_BOOL)
-> > > +                     msb =3D 0;
-> > > +             else
-> > > +                     msb =3D BTF_INT_BITS(v) - 1;
-> > > +             *retval &=3D GENMASK(msb, 0);
-> > > +             break;
-> > > +     default:
-> > > +             break;
-> > > +     }
-> > > +}
-> >
-> > Hmm, I think we should have another flag which directly tells the print
-> > format of retval from BTF.
->
-> Thanks, I thought about it and the format flag could have the following v=
-alues:
->
-> 1. HEX - hexadecimal (%lx for pointers/unsigned)
-> 2. DEC - decimal (%ld for signed/error_code)
-> 3. BOOL - boolean strings ("true"/"false")
->
-> WDYT?
->
-> Thanks,
-> Donglin
-> >
-> > > +
-> > >  static void print_graph_retval(struct trace_seq *s, struct ftrace_gr=
-aph_ent_entry *entry,
-> > >                               struct ftrace_graph_ret *graph_ret, voi=
-d *func,
-> > >                               u32 opt_flags, u32 trace_flags, int arg=
-s_size)
-> > > @@ -884,17 +925,20 @@ static void print_graph_retval(struct trace_seq=
- *s, struct ftrace_graph_ent_entr
-> > >       print_retaddr =3D !!(opt_flags & TRACE_GRAPH_PRINT_RETADDR);
-> > >  #endif
-> > >
-> > > -     if (print_retval && retval && !hex_format) {
-> > > -             /* Check if the return value matches the negative forma=
-t */
-> > > -             if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
-> > > -                     (((u64)retval) >> 32) =3D=3D 0) {
-> > > -                     err_code =3D sign_extend64(retval, 31);
-> > > -             } else {
-> > > -                     err_code =3D retval;
-> >
-> > The original code just guesses the type (signed/unsigned) from
-> > the retval, but we don't need to do that with BTF.
+On Tue, Oct 21, 2025 at 11:11:25AM +0200, Miquel Sabaté Solà wrote:
+> When evicting an inode the first thing we do is to setup tracing for it,
+> which implies fetching the root's id. But in btrfs_evict_inode() the
+> root might be NULL, as implied in the next check that we do in
+> btrfs_evict_inode().
+> 
+> Hence, we either should set the ->root_objectid to 0 in case the root is
+> NULL, or we move tracing setup after checking that the root is not
+> NULL. Setting the rootid to 0 at least gives us the possibility to trace
+> this call even in the case when the root is NULL, so that's the solution
+> taken here.
+> 
+> Fixes: 1abe9b8a138c ("Btrfs: add initial tracepoint support for btrfs")
+> Reported-by: syzbot+d991fea1b4b23b1f6bf8@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=d991fea1b4b23b1f6bf8
+> Signed-off-by: Miquel Sabaté Solà <mssola@mssola.com>
 
-Sorry, I think the above guessing process is necessary to display an error
-code. In most cases, the return type is int, but retval is of size
-sizeof(unsigned long).
-We should perform sign extension to check whether it represents an error co=
-de.
-
-Thanks,
-Donglin
-
->
-> Thanks. I will fix it in the next version.
->
-> Thanks,
-> Donglin
-> >
-> > Thank you,
-> >
-> > > +     if (print_retval) {
-> > > +             trim_retval((unsigned long)func, &retval, &print_retval=
-);
-> > > +             if (print_retval && retval && !hex_format) {
-> > > +                     /* Check if the return value matches the negati=
-ve format */
-> > > +                     if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(3=
-1)) &&
-> > > +                             (((u64)retval) >> 32) =3D=3D 0) {
-> > > +                             err_code =3D sign_extend64(retval, 31);
-> > > +                     } else {
-> > > +                             err_code =3D retval;
-> > > +                     }
-> > > +
-> > > +                     if (!IS_ERR_VALUE(err_code))
-> > > +                             err_code =3D 0;
-> > >               }
-> > > -
-> > > -             if (!IS_ERR_VALUE(err_code))
-> > > -                     err_code =3D 0;
-> > >       }
-> > >
-> > >       if (entry) {
-> > > --
-> > > 2.34.1
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Added to for-next, thanks.
