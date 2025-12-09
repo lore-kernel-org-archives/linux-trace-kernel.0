@@ -1,280 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622B332039E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 10:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7802405E1
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 12:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765274501; cv=none; b=AkS8k+p+UotuIlapsb16+PqXbeD7rg9HtAFW/sOZSAIqWo8sQ+Q7im4XuMJaBL8PQpdc2KWFJi2BDyxPOCFulXp+lbBMmAJTpbA7oxChOFZohiIEs2Adno39J9uMqnWHJFE2LVZEHp0qcd0XgXx/sGJtd6qWhIxcSUUWRt5BcGc=
+	t=1765282440; cv=none; b=IntUNlkGKHJ6PDWRd0Gpz4YmYDtL2Pdq+VftjuY1yHyYXyVMJQfecFITgIMy58BeHUP0ohWkbhmCBCAIsyxCM4nseeJo3apGFwUeM3A+bvtq3jso2b809VsKNAlgJ8AfAS7aEW6tXU/IGFEQ4X6yKs5U2BJ8eJLSeZWdq+mpmPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765274501; c=relaxed/simple;
-	bh=ejWTHYAHpCN7TT9hEX+fDp0ncfVn5expsWBW4EZ5cLM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=W0AS2xdHx2ta3ypUzUchXYTz2rhPkpc82JSNb/p/h38bx9kDq0mISCCEe5BRKyqJBgzT4WaFQJN/5D6QAvyIH/Ug6W90UPYwBEY+Sbun0StrauC3tY9GRs0LWUuqwiFcuGsZNAKW88tvXxS2syKtYK8dX1UGWf8LUy5bQRBYFg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEpas5NN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1765282440; c=relaxed/simple;
+	bh=hqZJhBlk8E0uWqAszsGWdn6uwEpnAkl70yRVFX1r8vQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HISXXOqUV7nDeIjvdw9uBndMYr0G9sM0WXAw2AYA99P0EhCUUT58qD0/ECoBDsbShQWE4WuFQO/q5/94z7bhKhlJvwqyxCiYPFt8Pc6mjcyY5Cc1iQyWJMiY7QiFbw80i88PV7qaz/6FybPHd5E0AXoxXWpg3ys6edv2jGMmQcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0SDXiqS; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEpas5NN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765274498;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XopP5omlArBg1COrzW/8PFhgUrp7XUb/fU3Cn1CCkW4=;
-	b=hEpas5NNN2fhZW2DabSJ8qMr/1mLr6bzJnNfr3HSbhFy4Tj1yssmfFxCJ4AWGHkJFtv7V9
-	fS9QxPgSGWDqUfBUKv5BUT6/toJUMJE1CeVYDwQ15cDmHv8N1yajk+8mTEvUYNjXy7zpeT
-	sFQBane/i0LEcwThIZ3AuCcZjniPPhw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-96-GqbDfc1CMbKDTA3uL55NRA-1; Tue, 09 Dec 2025 05:01:31 -0500
-X-MC-Unique: GqbDfc1CMbKDTA3uL55NRA-1
-X-Mimecast-MFC-AGG-ID: GqbDfc1CMbKDTA3uL55NRA_1765274490
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4776b0ada3dso29295765e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 02:01:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0SDXiqS"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7bb3092e4d7so5862477b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 04:13:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765282438; x=1765887238; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U9P06umUEfXCiGuidNyWvy9LA75ynGEE6DkaxamGroo=;
+        b=T0SDXiqSwMJ6sxz/ksgjMVlehLw1p+VauuDE6+Dw7vPGhEsGN2Wmwn6/dhb22VSX6S
+         KuM+2b8QTsspPdoTJYXvVymfo5f1LMI97AjnGQ3dWuB+KsH7Ri5xiNjZBktM+TUuHJqq
+         LuHwNl/rw26tAYWazveTjLWufLNpf5bn5yNFMnbNXjbRj8uhtvgty2icYruuenItKTCO
+         pjRFqP1vMnbQmBjxAvFAotVqmYqH8BdBwRiD2fJEjXoooOiyAPNVEDzgQikk2g3CGCji
+         IYOoq4arBnrs3TOfYgnl6nlCkqh2qVt4OIetPZu5MBu5W56O+kixI5qv8lWOZZgk2zZi
+         yldw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765274490; x=1765879290;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XopP5omlArBg1COrzW/8PFhgUrp7XUb/fU3Cn1CCkW4=;
-        b=qfooCrwM3hXwGMuXM+IcFyQvGas+ME/J8cvW3X8+gQOy8y8GGGiuQgWuG6/X33XlBL
-         Idc9ehn7OqppNtG4st3isa79sKjAMy1CbxqXzmZ4i8ZX2BivvNj29NzqKRSERSV49/EW
-         hDOJlFWHE1UCsYPgj76ciPcG6vCpCUOig3bqoDl23Fk7pMu2+Gj0tqc9Cwp8I5KyxT91
-         LyEm3Vyp+QEmGYRON3CpvCfO9lOcS9I3U/c8RpQgoEt6G6qUfmXpBq2WonQA/wAt4ltm
-         elxGU8plIEnSMYdcudYQKOLYhxNHYO0ios7u56DSuaUvDrMkBr289Gw+rLZocsWQWxEl
-         Mz8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUK8XFZb4OfBXQBo0YIIcMFgo4m0wW0BFFl5BXNT+A0Ye6lkqIS4ipggYX0mGwOTsK9U3qMc/2SkCk+yt5wHf7NAdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwonpVl9q3XHappWQiKN+QSSuIZ+aRcf9BJQjcGfLJHuK/OUQFm
-	mtptAKoSvkTTcHozdjiuCC7brGvALnVfurvhfWMU4QTDcmVc/ZFOkKhb/elYUr29++KaUP0VAoB
-	XRngTMw4U9MQ50NgQNGQDOJLNJsRDwAXmUsM5QG88hVlVJWePAJNetXpswBTISnKFPPnVJ7pfLg
-	==
-X-Gm-Gg: ASbGncvyx5lbl2RoLXKD9ZoMO+atpo8vy5Ne4s5ZT6m0+e1yIY2UM73LEjMNrfHUQOz
-	w15uYFFU91XAMssBk4NycTNDBuCU5Hb54Dx6xHjD2NTqc8flAGgjhKjfJgApcPfGctAesui3Pbi
-	ikdLZu0PsIF+sraLNxYZV+0uNWnVb7FTarn+Q12sCJcXbEnB3TTgo+y5X9TIlgmxYgo1A83Z83U
-	9iv8N4yjKBJVCERsoH/sla7Z4fnMEM8LvE9+mZt6/ICGIjOycmNPqFWA8iwtTvRhrgBXluLGHLw
-	dXG2Nn94nGZy5kIcTa/jK5yMDKMotSjhFDPQLwgEf0qUlYN4OeDp7XEF1Ut5dmBeOw4zWc8w5mW
-	Y3JiNY4OW4WZ6KqBmMnGnJLkZ620=
-X-Received: by 2002:a05:600c:b93:b0:46e:2815:8568 with SMTP id 5b1f17b1804b1-47a7fa3461cmr9671735e9.10.1765274489957;
-        Tue, 09 Dec 2025 02:01:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEdL0aWJq9Na/i5QVM915r1BIfJqSUNYkKkn1qJXEWt/d8zebY4kBFqkVmi6b96uD3/6jdtDw==
-X-Received: by 2002:a05:600c:b93:b0:46e:2815:8568 with SMTP id 5b1f17b1804b1-47a7fa3461cmr9671325e9.10.1765274489430;
-        Tue, 09 Dec 2025 02:01:29 -0800 (PST)
-Received: from costa-tp.redhat.com ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a7d612e49sm33620855e9.3.2025.12.09.02.01.28
+        d=1e100.net; s=20230601; t=1765282438; x=1765887238;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U9P06umUEfXCiGuidNyWvy9LA75ynGEE6DkaxamGroo=;
+        b=YMnNdqrOt/wRNkFIslHBEhxj9OG8GcPihpAg0x8LrK2L8Ybsigq29spR7SbVyXy6UB
+         e6bUWKuun+8pNOszZ4peqyWD6IyyPJtqz01aNxmNkYi7ZKLj3eCMrthIEMmeIxbG5AB1
+         IKBCHHLS+njAK/dlXrkyh2U9BWUmOJ9PUDnI2tL35Wr6VVzok2yHX4wFk1xBiBOU2s/M
+         tjOP04MKwLKO0517O41jriCMnIGziODDQozs2yhEh7lceAhLsh7BVfAMXCoSpuW8BIQO
+         F6fg3r4wvapwV1BoLlJVC57uCDeME793jZ8lqHdhbQeFX5J4gj1kqfgALf3x+Fu6d026
+         GSHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPX3ikJGvC+8akGy6Pu9HKkKZYgvv84aLhKlmL8QWrHlgU+u7rIA+fklQdLmQwSaSP7/cQY+YjftPG53UKmMlA3OE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSkLK4XcfGopc2FwK9huJL5bJWItQ9PIYytNKT1LvCQkcn2MJg
+	A5bRps4v0AF5i1DfKZZ5vjMvE0/3HiaUtwDBL8+eaKnUbZFJWAqmozce
+X-Gm-Gg: ASbGncuUOwf1t+Nk6DngWWwlxgDmUNEcPj5NMsEoLP9QZuCXQv9cERE1aFBIf+5PShw
+	NQPSRXzrtmK2gMQ9xJUEni3R76DQOwEwvbMnNcvnBo3yj2+TQK+3lrjlIoRUt90U1oCgBQaGArX
+	rfB/ZdbSfL8ETVjnHSDURDfS33LEYiPRO5UdsQE7GR80E+63e/gs1yqrNm0l+eTn6Sh7l+q7lRV
+	ppGfrzhfUOSZsdpJkpMrO1fYSH1KkD4oJsBvCZcOZZl7lzPpwcMBmyaxtr2JZFZmpWPlVx9bXyu
+	lfD8KH1qV/AULITRAsg6DKxQSwe/uJEyHzqMdMWKqLTC0Us0TCKwyDqEPz+1PDLZ0X0+7ibjdbs
+	PW19F3R11y9YKdGrLzx7wMG1Na3gBHzP8tQsCc8lX+uNsK6cRjJPjCdUl3WIwBPO0l7RNaK/F0A
+	ETGhauPCdspOesg75n0tu/Er6PkrTaitevKbsG+w==
+X-Google-Smtp-Source: AGHT+IHNd0JoDbjVHcFvgyK84UO3DpBZXx0uJFjuxTNHxDk4OSzSd5kiG95BNaY3jJ6b67Xqz7lfmQ==
+X-Received: by 2002:a05:6a00:18a2:b0:7e8:450c:61ce with SMTP id d2e1a72fcca58-7e8c63bbfe6mr10676948b3a.62.1765282437877;
+        Tue, 09 Dec 2025 04:13:57 -0800 (PST)
+Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c0724e9888esm4776a12.14.2025.12.09.04.13.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Dec 2025 02:01:28 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
+        Tue, 09 Dec 2025 04:13:56 -0800 (PST)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] tools/rtla: Consolidate -H/--house-keeping option parsing
-Date: Tue,  9 Dec 2025 12:00:47 +0200
-Message-ID: <20251209100047.2692515-8-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251209100047.2692515-1-costa.shul@redhat.com>
-References: <20251209100047.2692515-1-costa.shul@redhat.com>
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: [PATCH v3 0/2] Use BTF to trim return values
+Date: Tue,  9 Dec 2025 20:13:47 +0800
+Message-Id: <20251209121349.525641-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mMR4zCKLaoTxp1wozAA6yuItBHJy8vQy33HiKqS84OE_1765274490
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Each rtla tool duplicates parsing of -H/--house-keeping.
+From: pengdonglin <pengdonglin@xiaomi.com>
 
-Migrate the option parsing from individual tools to the
-common_parse_options().
+This patch series addresses two limitations of the funcgraph-retval feature:
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/common.c        | 8 +++++++-
- tools/tracing/rtla/src/osnoise_hist.c  | 9 +--------
- tools/tracing/rtla/src/osnoise_top.c   | 9 +--------
- tools/tracing/rtla/src/timerlat_hist.c | 9 +--------
- tools/tracing/rtla/src/timerlat_top.c  | 9 +--------
- 5 files changed, 11 insertions(+), 33 deletions(-)
+1. Void-returning functions still print a return value, creating misleading
+   noise in the trace output.
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index e042b2d9dbf5..8e90bb4a76f9 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -62,12 +62,13 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
- 		{"debug",               no_argument,            0, 'D'},
- 		{"duration",            required_argument,      0, 'd'},
- 		{"event",               required_argument,      0, 'e'},
-+		{"house-keeping",       required_argument,      0, 'H'},
- 		{"priority",            required_argument,      0, 'P'},
- 		{0, 0, 0, 0}
- 	};
- 
- 	opterr = 0;
--	c = getopt_long(argc, argv, "c:C::Dd:e:P:", long_options, NULL);
-+	c = getopt_long(argc, argv, "c:C::Dd:e:H:P:", long_options, NULL);
- 	opterr = 1;
- 
- 	switch (c) {
-@@ -97,6 +98,11 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
- 			tevent->next = common->events;
- 		common->events = tevent;
- 		break;
-+	case 'H':
-+		common->hk_cpus = 1;
-+		if (parse_cpu_set(optarg, &common->hk_cpu_set))
-+			fatal("Error parsing house keeping CPUs");
-+		break;
- 	case 'P':
- 		if (parse_prio(optarg, &common->sched_param) == -1)
- 			fatal("Invalid -P priority");
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 6ed5f5594960..1ebd3b48b2d3 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -490,7 +490,6 @@ static struct common_params
- 			{"auto",		required_argument,	0, 'a'},
- 			{"bucket-size",		required_argument,	0, 'b'},
- 			{"entries",		required_argument,	0, 'E'},
--			{"house-keeping",	required_argument,		0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"period",		required_argument,	0, 'p'},
- 			{"runtime",		required_argument,	0, 'r'},
-@@ -514,7 +513,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hH:p:r:s:S:t::T:01234:5:6:7:",
-+		c = getopt_long(argc, argv, "a:b:E:hp:r:s:S:t::T:01234:5:6:7:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -550,12 +549,6 @@ static struct common_params
- 		case '?':
- 			osnoise_hist_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'p':
- 			params->period = get_llong_from_str(optarg);
- 			if (params->period > 10000000)
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index d2dfad960440..02e5e6e18e8d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -345,7 +345,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"period",		required_argument,	0, 'p'},
- 			{"quiet",		no_argument,		0, 'q'},
-@@ -366,7 +365,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hH:p:qr:s:S:t::T:0:1:2:3:",
-+		c = getopt_long(argc, argv, "a:hp:qr:s:S:t::T:0:1:2:3:",
- 				 long_options, NULL);
- 
- 		/* Detect the end of the options. */
-@@ -390,12 +389,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		case '?':
- 			osnoise_top_usage(params);
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'p':
- 			params->period = get_llong_from_str(optarg);
- 			if (params->period > 10000000)
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index e7ba083b5eb4..d1a6cf0c2e0d 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -797,7 +797,6 @@ static struct common_params
- 			{"auto",		required_argument,	0, 'a'},
- 			{"bucket-size",		required_argument,	0, 'b'},
- 			{"entries",		required_argument,	0, 'E'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"help",		no_argument,		0, 'h'},
- 			{"irq",			required_argument,	0, 'i'},
- 			{"nano",		no_argument,		0, 'n'},
-@@ -830,7 +829,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hH:i:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
-+		c = getopt_long(argc, argv, "a:b:E:hi:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -869,12 +868,6 @@ static struct common_params
- 		case '?':
- 			timerlat_hist_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'i':
- 			params->common.stop_us = get_llong_from_str(optarg);
- 			break;
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 8250bea4b2fd..12e3d8c6f850 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -566,7 +566,6 @@ static struct common_params
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
- 			{"help",		no_argument,		0, 'h'},
--			{"house-keeping",	required_argument,	0, 'H'},
- 			{"irq",			required_argument,	0, 'i'},
- 			{"nano",		no_argument,		0, 'n'},
- 			{"period",		required_argument,	0, 'p'},
-@@ -594,7 +593,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hH:i:knp:qs:t::T:uU0:1:2:345:6:7:",
-+		c = getopt_long(argc, argv, "a:hi:knp:qs:t::T:uU0:1:2:345:6:7:",
- 				 long_options, NULL);
- 
- 		/* detect the end of the options. */
-@@ -635,12 +634,6 @@ static struct common_params
- 		case '?':
- 			timerlat_top_usage();
- 			break;
--		case 'H':
--			params->common.hk_cpus = 1;
--			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
--			if (retval)
--				fatal("Error parsing house keeping CPUs");
--			break;
- 		case 'i':
- 			params->common.stop_us = get_llong_from_str(optarg);
- 			break;
+2. For functions returning narrower types (e.g., char, short), the displayed
+   value can be incorrect because high bits of the register may contain
+   undefined data.
+
+By leveraging BTF to obtain precise return type information, we now:
+
+1. Void function filtering: Functions with void return type no longer
+   display any return value in the trace output, eliminating unnecessary
+   clutter.
+
+2. Type-aware value formatting: The return value is now properly truncated to
+   match the actual width of the return type before being displayed.
+   Additionally, the value is formatted according to its type for better human
+   readability.
+
+Here is an output comparison:
+
+Before:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 1)               |   touch_atime() {
+ 1)               |     atime_needs_update() {
+ 1)   0.069 us    |       make_vfsuid(); /* ret=0x0 */
+ 1)   0.067 us    |       make_vfsgid(); /* ret=0x0 */
+ 1)               |       current_time() {
+ 1)   0.197 us    |         ktime_get_coarse_real_ts64_mg(); /* ret=0x187f886aec3ed6f5 */
+ 1)   0.352 us    |       } /* current_time ret=0x69380753 */
+ 1)   0.792 us    |     } /* atime_needs_update ret=0x0 */
+ 1)   0.937 us    |   } /* touch_atime ret=0x0 */
+
+After:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 2)               |   touch_atime() {
+ 2)               |     atime_needs_update() {
+ 2)   0.070 us    |       make_vfsuid(); /* ret=0x0 */
+ 2)   0.070 us    |       make_vfsgid(); /* ret=0x0 */
+ 2)               |       current_time() {
+ 2)   0.162 us    |         ktime_get_coarse_real_ts64_mg();
+ 2)   0.312 us    |       } /* current_time ret=0x69380649(trunc) */
+ 2)   0.753 us    |     } /* atime_needs_update ret=false */
+ 2)   0.899 us    |   } /* touch_atime */
+
+Note: enabling funcgraph-retval now adds overhead due to repeated btf_find_by_name_kind()
+calls during trace output. A separate series [1] optimizes this function with
+binary search (O(log n) vs current O(n)), which will greatly reduce the impact.
+
+Here is a performance comparison:
+
+1. Original funcgraph-retval:
+# time cat trace | wc -l
+101024
+
+real    0m0.682s
+user    0m0.000s
+sys     0m0.695s
+
+2. Enhanced funcgraph-retval:
+# time cat trace | wc -l
+99326
+
+real    0m12.886s
+user    0m0.010s
+sys     0m12.680s
+
+3. Enhanced funcgraph-retval + optimizined btf_find_by_name_kind:
+# time cat trace | wc -l
+102922
+
+real    0m0.794s
+user    0m0.000s
+sys     0m0.810s
+
+Changelog:
+v3:
+- Print the return value based on its type for human readability, thanks Masami
+- Update documentation and cover letter
+
+v2:
+- Link: https://lore.kernel.org/all/20251208131917.2444620-1-dolinux.peng@gmail.com/
+- Update the funcgraph-retval documentation
+- Revise the cover letter
+
+v1:
+- Link: https://lore.kernel.org/all/20251207142742.229924-1-dolinux.peng@gmail.com/
+
+[1] https://lore.kernel.org/all/20251208062353.1702672-1-dolinux.peng@gmail.com/
+
+pengdonglin (2):
+  fgraph: Enhance funcgraph-retval with BTF-based type-aware output
+  tracing: Update funcgraph-retval documentation
+
+ Documentation/trace/ftrace.rst       |  78 ++++++++++-------
+ kernel/trace/trace_functions_graph.c | 124 ++++++++++++++++++++++++---
+ 2 files changed, 156 insertions(+), 46 deletions(-)
+
 -- 
-2.52.0
+2.34.1
 
