@@ -1,147 +1,238 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE032C2AA2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 09:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C45B2FBDE2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 10:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765271580; cv=none; b=teL+Go3oFQg+ahLcYG8DhGDhlcNarbiDNB2VCQh748KxjSL67V70LSWgONwgRI9fvx/o0i/0aAGkg0t9TQLEs4YMaMRJKnX/RXRCnqntO+3I7wPI1Ya8a1bxUwP3FFQ+gS2oZEq/5OdX6AbVWfEo3TBiiMoctFJOjSLSjdu2mwU=
+	t=1765274470; cv=none; b=jSa9ylcqELcUFQ0Xwsn34q5mbHxunSL3StuPAZDPTgrcTbrRs0KWucOsa9LuM/1gq1OcxVLVxTOdEMVjdW8LcZfLP424Eh6/4n7h9AF9OVq11Cv5+oF078p0t7tm7YlbN13gxGKBjkbfCAzRHuKWEAkIM6NLENJVnEjA8XpKBvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765271580; c=relaxed/simple;
-	bh=WbjSnsSd33oZ10Vp+FiT/SiX4TqZ5YsvDPQWRG1Gi44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fDAcew8vAp7zG7wQnM6ElFgaYjqvegtryt8wk/2Nd5k7ff5bzj1Nqcz/35y0i4xtFMnaRYFrQV/Mjk85Sgc4GooycKGQK9CXtpgCvK+xk/Vp12E0lwE6miyongli12v16NbSZEwvPjimjyVEXvRL0uLlD41c/VkIJHXALZaZZAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFz9+BWn; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765274470; c=relaxed/simple;
+	bh=5HYWKp1InhB144zgvqpcWgNPV35GCPenTEuhbXijW6g=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=R8GdX9WRNNOc7ndQc+kUxb/QC9lQJU0KFc6lFiIy7atSHh3DOaTGSKYqT0Mb4u+iOSLlqHb4IECVjU4IjOzTdb8TlrE4kkj1Hcets6HfrpSMm9axp61ZaSTJ0S/6gB9WVdZZZSrtdu/vd6LujQK9373PUR+zplrzWlYo+cj/XMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RvFpNHGn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFz9+BWn"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42e33956e76so2398797f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 01:12:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765271577; x=1765876377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OQderxayc1i8kv0d6XpdXnYLfhnPqtEDACO4gC3cqIk=;
-        b=iFz9+BWnMnWy+ScRC92LKfXIc9+qSyNvuVCkmdwMlmK+WfM07NSlWbLSmuPUJc0Ur2
-         Oxu6jdxuLq1mmmJxUfPy+8Kf9K61ngeOvVqZNbFd4zwu95WhMYLDqH5VgnV6FSz12GU4
-         gFUzdJ4KbpCvAiO2RKwY85AoyD3qXX+dPyyKwjHr4TozVNuHdufAGDodillIg9WWH0TH
-         lyEPqpyd7Or0fJ/y3HIQBzfm4YUzEKJmQKEhtS7nnVIr8TCn7ZK5IrLXjN+AjCsZoUIV
-         iYWxsibEusQE1Il4nkh0/genjATFCUB3fS7Y8NCk844NwakXK9Lup6jYZ6hK9Tggpk1d
-         /g2Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvFpNHGn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1765274466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s+bcyW/x/HLr1cSMDPW8eIM00B0y7p70Qx8GdgLwv1A=;
+	b=RvFpNHGnfYOGEXms9UtvEVo3X0A28oeTOwWrzdt15AFAULouXpYeCLiN4K339z7Rzq0yvG
+	GYaGRtqFxRa7oY717afSEfpoqC6//SN8ci3cBfT4jMWJcNJc58aWZ4+rkVLRTV9W/GU/E4
+	Qh/mF7b/aSOnRsrtZ1GrrlFEn+o3BtM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-Rr1sFXfcM8C6RjnAW24XMA-1; Tue, 09 Dec 2025 05:01:03 -0500
+X-MC-Unique: Rr1sFXfcM8C6RjnAW24XMA-1
+X-Mimecast-MFC-AGG-ID: Rr1sFXfcM8C6RjnAW24XMA_1765274462
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4792bd2c290so39406775e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 02:01:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765271577; x=1765876377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OQderxayc1i8kv0d6XpdXnYLfhnPqtEDACO4gC3cqIk=;
-        b=g2erU5tu71A/sKLb94DTw4ES5sYCWfk863Al433M3prZQqDNFrH6Nmerd9ttcPsuTY
-         SY54PTuuFgVqml+5tGMVEJ3HSsLnuj6f49YP80ttOaLNwS99z2Cw/8Lccx8mgHpT+pl7
-         /PxogGpbcGRTNyGSM2sZsOuLTZc1i/H7ZMTUnPzJS7h054giQwHDnAwKNkeYTRhhsQhW
-         ZI1Wv8q0934rrJKMsmxUw+mC1veYQgrXP6HpxKcGiV/W5CgbFpQNTkQJjPaDX4XhD15i
-         vpv0anGS0GpYgITTa9yoprAXqHlHh2KamGXMAU/fSRuF77Mz058pmVX17YXcryxNRX4V
-         qeYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUwyHswbD9UuN2ApvYD+lOK2fe140uiT321UE2LlVMXszChb/cdw/Vao9ZymUQnkploF3285E2oHUmnQJWnl3E/iE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF0qgG4PB1w/pdF3P8OefW21aN03VoPJpzEF38uj/YO3QC83PO
-	XI5j15dgi7MyaDKmIkkJmYcGXjpXoqxMX7DWWx6EtDMZ8feniIjW+MxQvcZQBFjaHtWwW5h/vPh
-	5uo1ahpPywK/HAElb4w4Aj/k07SPJiRo=
-X-Gm-Gg: ASbGnctR3GAnL/KTra/GRQKWDT7mdvz/ce8NMIBQB54HP7yX42IO7OFncs8Mati3LvS
-	GS2ZN9WntBwiv9nELkU2yQYUw5eXJdDCCl4JKKkTd/C2YhYiXDjjyRs4YZ9LRUj3WrsCXH0TmGz
-	iiQdLERJrblphYV8nRUeL8cX2OPaVhYpzhPCg8g9VoczobOFQcrGmsEOF0K686ZnIfOnrMfHjrh
-	PIE1JLmU24bpJhSjfMrW28g3AT0R69Zau/wVfxd8sMF8cNyZDWWP+9N/N7XiYkZujOpyNmo
-X-Google-Smtp-Source: AGHT+IHMPiOvMS5xkT5acnPdKwIr4Tg5qejZsjCuXKHCYW4PO11QPd+DovXYlNPYVGWaJfVNhGm3RaCkEXpB0MKLqsg=
-X-Received: by 2002:a05:6000:2c0e:b0:42b:549d:cdfd with SMTP id
- ffacd0b85a97d-42f89f0ab9fmr8988199f8f.2.1765271576957; Tue, 09 Dec 2025
- 01:12:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1765274462; x=1765879262;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s+bcyW/x/HLr1cSMDPW8eIM00B0y7p70Qx8GdgLwv1A=;
+        b=fqwb0cNDfQhdskI96AoMMG1skjyNF2fLRFDmSEdt60RvoeCcY8egCsdd4inMsYrn7E
+         obIoMigxTFXLIiYLttuzsb8wmF2/A2XJoxwWcL7P8KCsqdXMPexmvMZiU0vFZyRq921/
+         RJ3NskLUWgPNbQukRfbX3O9/qBoDNDnfSd20vdnWVufvL0BprhXmohjZDX0YHjCCutUb
+         13yLxoBXS3fkvzXGqBAE5UUGbzSK0VSclRKYbC4O8Kvvqo6PIxVQC9ya7ABefvCpnbEm
+         6TTFwS853XSKGIb8dM20wT2xCbqhRoink30Q1SZn4ybetBnNMMJya49VKlmOi1srzVYK
+         WfgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLH5WFk2boOLrCUZRqq/R7bnRKk7Bp/iO14g74b96plJnLkgVNFMAwSVdEBG72abaJy3wlkN8SeofMnR48a/3wmjM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZLy6g+61h4Sajd40MuEu1xm6cd6qFU7ElV56VRGpYiv/aS86t
+	fOJzvzcrH6+Gt8M/lU1THwFiZhCiwKFzZdausTtRvS41QR2ANzlaD0NzBD+lY9gt3rLwglE5ktg
+	UEgNdjSV7KWZJjBBfjmxxymPQGgeapq+8ZTCLwuAccjKzvOCWE8Ez0a8kPlJbiAn1NpRyfmDbrA
+	==
+X-Gm-Gg: ASbGncuBGC1hM8QiYzCaWDmd5/EI6/7ICj5TibJsIBK0+oE/A3P5iY/b+AmkS4f/Pj9
+	Q1n0jlHhjBckCzojgGBcXl8cw66RPPEx6cT36nqRcdLy60M1gj1EwtYla+f04rpIq/jpDV9lrQy
+	/IE1n61SR4oUV8aeqSk+zXLoaH661n854WpLvkEZu2MePyntQE52wrwQ0NdNff2BIGgFBj/LuOf
+	Ff6mumxtYBn/thnuYtPj7CDwKp2rkmiqm/bGdBlJ6N8IvMJroit0z2c3AX71juilCa9cbS1qZml
+	mE5YIBCjZ4Zne7OBeegsOFUY2zxzLdDRFHQZyhTrFBkQObIGVPxcWOJSAOsl/gzZNaHcG1KQzW3
+	3wNhHfDD8p/kqr22s2rwcfLmNjkI=
+X-Received: by 2002:a05:600c:1d10:b0:477:c71:1fc1 with SMTP id 5b1f17b1804b1-47939e23a91mr98177035e9.19.1765274462050;
+        Tue, 09 Dec 2025 02:01:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF8KxQrMj7U6e1JstP0WFesnzNwmHbfF/lCNrfMTqI9auubM26riS6hcbS0rJ00WMWWR86q/A==
+X-Received: by 2002:a05:600c:1d10:b0:477:c71:1fc1 with SMTP id 5b1f17b1804b1-47939e23a91mr98176475e9.19.1765274461319;
+        Tue, 09 Dec 2025 02:01:01 -0800 (PST)
+Received: from costa-tp.redhat.com ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a7d612e49sm33620855e9.3.2025.12.09.02.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Dec 2025 02:01:00 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/8] tools/rtla: Add common_parse_options()
+Date: Tue,  9 Dec 2025 12:00:40 +0200
+Message-ID: <20251209100047.2692515-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 9 Dec 2025 18:12:46 +0900
-X-Gm-Features: AQt7F2oWRPxR4yuALpg3IMkY1pGJDDbqEWRCZ-GSXaWTFmq2Ke5N7YWyBUkov1s
-Message-ID: <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] bpf: Mark BPF printing functions with __printf() attribute
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Alan Maguire <alan.maguire@oracle.com>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OVactX2CWNvX96DL7ShxD1OY5pen8A8HaSdHxkAeYVQ_1765274462
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Tue, Dec 9, 2025 at 1:21=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The printing functions in BPF code are using printf() type of format,
-> and compiler is not happy about them as is:
->
-> kernel/bpf/helpers.c:1069:9: error: function =E2=80=98____bpf_snprintf=E2=
-=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribu=
-te [-Werror=3Dsuggest-attribute=3Dformat]
->  1069 |         err =3D bstr_printf(str, str_size, fmt, data.bin_args);
->       |         ^~~
->
-> kernel/trace/bpf_trace.c:377:9: error: function =E2=80=98____bpf_trace_pr=
-intk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format =
-attribute [-Werror=3Dsuggest-attribute=3Dformat]
->   377 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
-bin_args);
->       |         ^~~
->
-> kernel/trace/bpf_trace.c:433:9: error: function =E2=80=98____bpf_trace_vp=
-rintk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format=
- attribute [-Werror=3Dsuggest-attribute=3Dformat]
->   433 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
-bin_args);
->       |         ^~~
->
-> kernel/trace/bpf_trace.c:475:9: error: function =E2=80=98____bpf_seq_prin=
-tf=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format at=
-tribute [-Werror=3Dsuggest-attribute=3Dformat]
->   475 |         seq_bprintf(m, fmt, data.bin_args);
->       |         ^~~~~~~~~~~
->
-> Fix the compilation errors by adding __printf() attribute. For that
-> we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_CALL=
-_*()
-> to make code neater.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202512061425.x0qTt9ww-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202512081321.2h9ThWTg-lkp@i=
-ntel.com/
-> Fixes: 10aceb629e19 ("bpf: Add bpf_trace_vprintk helper")
-> Fixes: 7b15523a989b ("bpf: Add a bpf_snprintf helper")
-> Fixes: 492e639f0c22 ("bpf: Add bpf_seq_printf and bpf_seq_write helpers")
-> Fixes: f3694e001238 ("bpf: add BPF_CALL_x macros for declaring helpers")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->
-> This is combined change and I think there is no need to split it, but if =
-required
-> I can do it in a four changes. Note, the culprits are older than 4 years =
-and stable
-> kernels anyway don't go that deep nowadays.
+Each rtla tool duplicates parsing of many common options. This creates
+maintenance overhead and risks inconsistencies when updating these
+options.
 
-This is pointless churn to shut up a warning.
-Teach syzbot to stop this spam instead.
-At the end this patch doesn't make any visible difference,
-since user declarations of these helpers are auto generated
-from uapi/bpf.h file and __printf attribute is not there.
+Add common_parse_options() to centralize parsing of options used across
+all tools.
 
-pw-bot: cr
+Common options to be migrated in future patches.
+
+Changes since v1:
+- restore opterr
+
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ tools/tracing/rtla/src/common.c        | 35 ++++++++++++++++++++++++++
+ tools/tracing/rtla/src/common.h        |  1 +
+ tools/tracing/rtla/src/osnoise_hist.c  |  3 +++
+ tools/tracing/rtla/src/osnoise_top.c   |  3 +++
+ tools/tracing/rtla/src/timerlat_hist.c |  3 +++
+ tools/tracing/rtla/src/timerlat_top.c  |  3 +++
+ 6 files changed, 48 insertions(+)
+
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index b197037fc58b..a78f9883521e 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -5,6 +5,7 @@
+ #include <signal.h>
+ #include <stdlib.h>
+ #include <unistd.h>
++#include <getopt.h>
+ #include "common.h"
+ 
+ struct trace_instance *trace_inst;
+@@ -37,6 +38,40 @@ static void set_signals(struct common_params *params)
+ 	}
+ }
+ 
++/*
++ * common_parse_options - parse common command line options
++ *
++ * @argc: argument count
++ * @argv: argument vector
++ * @common: common parameters structure
++ *
++ * Parse command line options that are common to all rtla tools.
++ *
++ * Returns: non zero if a common option was parsed, or 0
++ * if the option should be handled by tool-specific parsing.
++ */
++int common_parse_options(int argc, char **argv, struct common_params *common)
++{
++	int saved_state = optind;
++	int c;
++
++	static struct option long_options[] = {
++		{0, 0, 0, 0}
++	};
++
++	opterr = 0;
++	c = getopt_long(argc, argv, "", long_options, NULL);
++	opterr = 1;
++
++	switch (c) {
++	default:
++		optind = saved_state;
++		return 0;
++	}
++
++	return c;
++}
++
+ /*
+  * common_apply_config - apply common configs to the initialized tool
+  */
+diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
+index 9ec2b7632c37..1066d777a823 100644
+--- a/tools/tracing/rtla/src/common.h
++++ b/tools/tracing/rtla/src/common.h
+@@ -153,6 +153,7 @@ struct osnoise_tool *osnoise_init_tool(char *tool_name);
+ struct osnoise_tool *osnoise_init_trace_tool(const char *tracer);
+ bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
+ 
++int common_parse_options(int argc, char **argv, struct common_params *common);
+ int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
+ int top_main_loop(struct osnoise_tool *tool);
+ int hist_main_loop(struct osnoise_tool *tool);
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index ff8c231e47c4..35f4a068af95 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -518,6 +518,9 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
+ 
++		if (common_parse_options(argc, argv, &params->common))
++			continue;
++
+ 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:6:7:",
+ 				 long_options, NULL);
+ 
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 04c699bdd736..550731c7addd 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -370,6 +370,9 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 			{0, 0, 0, 0}
+ 		};
+ 
++		if (common_parse_options(argc, argv, &params->common))
++			continue;
++
+ 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:2:3:",
+ 				 long_options, NULL);
+ 
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 1fb471a787b7..ffcfcabb9964 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -834,6 +834,9 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
+ 
++		if (common_parse_options(argc, argv, &params->common))
++			continue;
++
+ 		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
+ 				 long_options, NULL);
+ 
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 29c2c1f717ed..d18d48671ccd 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -598,6 +598,9 @@ static struct common_params
+ 			{0, 0, 0, 0}
+ 		};
+ 
++		if (common_parse_options(argc, argv, &params->common))
++			continue;
++
+ 		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:knp:P:qs:t::T:uU0:1:2:345:6:7:",
+ 				 long_options, NULL);
+ 
+-- 
+2.52.0
+
