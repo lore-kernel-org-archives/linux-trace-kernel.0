@@ -1,144 +1,147 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE131E86E;
-	Tue,  9 Dec 2025 09:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE032C2AA2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Dec 2025 09:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765271436; cv=none; b=N49+SNIBRO1jS76lstp8KUc2IRx5sRfyZ6K7Kwriv2oQCb9gB7RAJ/5JFBqKxeYTvWVViPlPXK2DP7f8vd1cbY6jF+0uxgxgNP/XPc/9hnZEVLN5I25YOKDicnEBlxa1raGMQ4lLUttm8d/QL3BRuzgPzwq+0v0tFXsmFktaOTc=
+	t=1765271580; cv=none; b=teL+Go3oFQg+ahLcYG8DhGDhlcNarbiDNB2VCQh748KxjSL67V70LSWgONwgRI9fvx/o0i/0aAGkg0t9TQLEs4YMaMRJKnX/RXRCnqntO+3I7wPI1Ya8a1bxUwP3FFQ+gS2oZEq/5OdX6AbVWfEo3TBiiMoctFJOjSLSjdu2mwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765271436; c=relaxed/simple;
-	bh=JeXiekyZWzWI15Y57pGWiSLifk4/kc68isUmJzMZDE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VoeGlLW/SvxDFueifw3P2au0glUcnRozB1pZE7yyW3t5suHj+IkiKpy4a5gTnxKNr0M+ykVrOeN5qRZo2mvijwG7vyeRWK4dFeOjOoKWWBwgt6dBRBzACpGWISAX5OKJcTE2edwEROO6UdyCxjXJbqyzMi/798b2bZZYceTvkNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ILc1Omh0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1765271580; c=relaxed/simple;
+	bh=WbjSnsSd33oZ10Vp+FiT/SiX4TqZ5YsvDPQWRG1Gi44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fDAcew8vAp7zG7wQnM6ElFgaYjqvegtryt8wk/2Nd5k7ff5bzj1Nqcz/35y0i4xtFMnaRYFrQV/Mjk85Sgc4GooycKGQK9CXtpgCvK+xk/Vp12E0lwE6miyongli12v16NbSZEwvPjimjyVEXvRL0uLlD41c/VkIJHXALZaZZAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFz9+BWn; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ILc1Omh0"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B93StBd019550;
-	Tue, 9 Dec 2025 09:10:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=nJSSn/
-	LwgyfkCiqTpIzrVduboe20THaPXqdH+i6uw1c=; b=ILc1Omh0xNtHRQBLxAXDCW
-	5+vfte1vcBHRmbnFrC8+ghiAkqueiYjRZxWLe+c8IbX83w4vC7YSYJ85HSVV2e+1
-	A7bw4cS8FwRVE3QWFJsO4s67TV+yETgE8hf35oD+nIrkSpFzyL4pY8GLgqsMlJTz
-	cnmUpm/KxjfHaH20tzNmzjruVuew1RdU6LTJaLWAwLCt3+TDgP/xh6678m9A1r9y
-	Rj61JZOgt3PHY28X+O7UknCdJNh7HnNPzd8C6goS8wu6UY5dZt+s0u2gPmY5mxDW
-	K87ACDvDb87zPEvRKF0dtdSDAHZRehKodB+dmgvbx4SN0uB5+EVDRpCfiHxerBQQ
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc0jv045-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Dec 2025 09:10:06 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B96UFAL028099;
-	Tue, 9 Dec 2025 09:10:05 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4avy6xt6gp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Dec 2025 09:10:05 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B99A1Zv23659190
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Dec 2025 09:10:01 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6400120040;
-	Tue,  9 Dec 2025 09:10:01 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D13320043;
-	Tue,  9 Dec 2025 09:10:00 +0000 (GMT)
-Received: from [9.111.148.198] (unknown [9.111.148.198])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Dec 2025 09:10:00 +0000 (GMT)
-Message-ID: <2da7ebd8-3e7a-4f62-a8ba-83d6363b8e0c@linux.ibm.com>
-Date: Tue, 9 Dec 2025 10:10:00 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFz9+BWn"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42e33956e76so2398797f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 01:12:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765271577; x=1765876377; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OQderxayc1i8kv0d6XpdXnYLfhnPqtEDACO4gC3cqIk=;
+        b=iFz9+BWnMnWy+ScRC92LKfXIc9+qSyNvuVCkmdwMlmK+WfM07NSlWbLSmuPUJc0Ur2
+         Oxu6jdxuLq1mmmJxUfPy+8Kf9K61ngeOvVqZNbFd4zwu95WhMYLDqH5VgnV6FSz12GU4
+         gFUzdJ4KbpCvAiO2RKwY85AoyD3qXX+dPyyKwjHr4TozVNuHdufAGDodillIg9WWH0TH
+         lyEPqpyd7Or0fJ/y3HIQBzfm4YUzEKJmQKEhtS7nnVIr8TCn7ZK5IrLXjN+AjCsZoUIV
+         iYWxsibEusQE1Il4nkh0/genjATFCUB3fS7Y8NCk844NwakXK9Lup6jYZ6hK9Tggpk1d
+         /g2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765271577; x=1765876377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=OQderxayc1i8kv0d6XpdXnYLfhnPqtEDACO4gC3cqIk=;
+        b=g2erU5tu71A/sKLb94DTw4ES5sYCWfk863Al433M3prZQqDNFrH6Nmerd9ttcPsuTY
+         SY54PTuuFgVqml+5tGMVEJ3HSsLnuj6f49YP80ttOaLNwS99z2Cw/8Lccx8mgHpT+pl7
+         /PxogGpbcGRTNyGSM2sZsOuLTZc1i/H7ZMTUnPzJS7h054giQwHDnAwKNkeYTRhhsQhW
+         ZI1Wv8q0934rrJKMsmxUw+mC1veYQgrXP6HpxKcGiV/W5CgbFpQNTkQJjPaDX4XhD15i
+         vpv0anGS0GpYgITTa9yoprAXqHlHh2KamGXMAU/fSRuF77Mz058pmVX17YXcryxNRX4V
+         qeYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUwyHswbD9UuN2ApvYD+lOK2fe140uiT321UE2LlVMXszChb/cdw/Vao9ZymUQnkploF3285E2oHUmnQJWnl3E/iE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF0qgG4PB1w/pdF3P8OefW21aN03VoPJpzEF38uj/YO3QC83PO
+	XI5j15dgi7MyaDKmIkkJmYcGXjpXoqxMX7DWWx6EtDMZ8feniIjW+MxQvcZQBFjaHtWwW5h/vPh
+	5uo1ahpPywK/HAElb4w4Aj/k07SPJiRo=
+X-Gm-Gg: ASbGnctR3GAnL/KTra/GRQKWDT7mdvz/ce8NMIBQB54HP7yX42IO7OFncs8Mati3LvS
+	GS2ZN9WntBwiv9nELkU2yQYUw5eXJdDCCl4JKKkTd/C2YhYiXDjjyRs4YZ9LRUj3WrsCXH0TmGz
+	iiQdLERJrblphYV8nRUeL8cX2OPaVhYpzhPCg8g9VoczobOFQcrGmsEOF0K686ZnIfOnrMfHjrh
+	PIE1JLmU24bpJhSjfMrW28g3AT0R69Zau/wVfxd8sMF8cNyZDWWP+9N/N7XiYkZujOpyNmo
+X-Google-Smtp-Source: AGHT+IHMPiOvMS5xkT5acnPdKwIr4Tg5qejZsjCuXKHCYW4PO11QPd+DovXYlNPYVGWaJfVNhGm3RaCkEXpB0MKLqsg=
+X-Received: by 2002:a05:6000:2c0e:b0:42b:549d:cdfd with SMTP id
+ ffacd0b85a97d-42f89f0ab9fmr8988199f8f.2.1765271576957; Tue, 09 Dec 2025
+ 01:12:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] unwind_user: Cleanups
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        x86@kernel.org, Steven Rostedt <rostedt@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20251208160352.1363040-1-jremus@linux.ibm.com>
- <20251208193605.GG3707891@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20251208193605.GG3707891@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Cf8FJbrl c=1 sm=1 tr=0 ts=6937e76f cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: kMzsA-GhXEDdA4ZMExQhrO4rR7EWjXjy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAxNiBTYWx0ZWRfX4NgQ+S1hiNOa
- K4p5LbsN0mWKtXjNkxjqShSSta7RHBzlcp5OVf/VBuP3d0n8oF5G3tZDIU++F+QmELEfcSIU6o4
- a1UL/0+AbLnnkv1JRE8xwTeIhKlPSri8ObLAaRcXRQUHH9CPzfMHXD6EX8zbdVNDtVYM+NMzbVD
- vj6jNqc0tC/bdu90GY8F+pZ2QQC9DbN4satSGDRD/fcH49Jcz4m1VJ6Z4UH2bJs/wKQcQzhtip5
- albBJTsUFuUzyYlJzxDqegaHQ01SZvbPS5kLaZDh9thwWIFy5yTcRzDUIUSEu2zV2ERqZ8wn2eF
- CqOMOaLkf6JbcRvjW/UK30Db1sjqJzi4qrl5af5+3ELMHMQzkfqhwJsz3VCqDpX6FAsxcx4MSvo
- 2NS0c46r7cZIXKNJuTbzP8Dehl6FOA==
-X-Proofpoint-GUID: kMzsA-GhXEDdA4ZMExQhrO4rR7EWjXjy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-09_02,2025-12-04_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 malwarescore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2512060016
+References: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 9 Dec 2025 18:12:46 +0900
+X-Gm-Features: AQt7F2oWRPxR4yuALpg3IMkY1pGJDDbqEWRCZ-GSXaWTFmq2Ke5N7YWyBUkov1s
+Message-ID: <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] bpf: Mark BPF printing functions with __printf() attribute
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Alan Maguire <alan.maguire@oracle.com>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Peter!
+On Tue, Dec 9, 2025 at 1:21=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The printing functions in BPF code are using printf() type of format,
+> and compiler is not happy about them as is:
+>
+> kernel/bpf/helpers.c:1069:9: error: function =E2=80=98____bpf_snprintf=E2=
+=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribu=
+te [-Werror=3Dsuggest-attribute=3Dformat]
+>  1069 |         err =3D bstr_printf(str, str_size, fmt, data.bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:377:9: error: function =E2=80=98____bpf_trace_pr=
+intk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format =
+attribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   377 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
+bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:433:9: error: function =E2=80=98____bpf_trace_vp=
+rintk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format=
+ attribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   433 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
+bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:475:9: error: function =E2=80=98____bpf_seq_prin=
+tf=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format at=
+tribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   475 |         seq_bprintf(m, fmt, data.bin_args);
+>       |         ^~~~~~~~~~~
+>
+> Fix the compilation errors by adding __printf() attribute. For that
+> we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_CALL=
+_*()
+> to make code neater.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061425.x0qTt9ww-lkp@i=
+ntel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@i=
+ntel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512081321.2h9ThWTg-lkp@i=
+ntel.com/
+> Fixes: 10aceb629e19 ("bpf: Add bpf_trace_vprintk helper")
+> Fixes: 7b15523a989b ("bpf: Add a bpf_snprintf helper")
+> Fixes: 492e639f0c22 ("bpf: Add bpf_seq_printf and bpf_seq_write helpers")
+> Fixes: f3694e001238 ("bpf: add BPF_CALL_x macros for declaring helpers")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>
+> This is combined change and I think there is no need to split it, but if =
+required
+> I can do it in a four changes. Note, the culprits are older than 4 years =
+and stable
+> kernels anyway don't go that deep nowadays.
 
-On 12/8/2025 8:36 PM, Peter Zijlstra wrote:
-> On Mon, Dec 08, 2025 at 05:03:48PM +0100, Jens Remus wrote:
+This is pointless churn to shut up a warning.
+Teach syzbot to stop this spam instead.
+At the end this patch doesn't make any visible difference,
+since user declarations of these helpers are auto generated
+from uapi/bpf.h file and __printf attribute is not there.
 
->> Jens Remus (4):
->>   unwind_user: Enhance comments on get CFA, FP, and RA
->>   unwind_user/fp: Use dummies instead of ifdef
->>   x86/unwind_user: Guard unwind_user_word_size() by UNWIND_USER
->>   x86/unwind_user: Simplify unwind_user_word_size()
->>
->>  arch/x86/include/asm/unwind_user.h | 27 ++++++++++++++-------------
->>  include/linux/unwind_user.h        | 18 ++++++++++++++++--
->>  kernel/unwind/user.c               | 12 ++++--------
->>  3 files changed, 34 insertions(+), 23 deletions(-)
-> 
-> I'll go stick these patches in tip/perf/core after rc1 or so, no real
-> hurry with these, right?
-Perfect, that is fine with me.
-
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+pw-bot: cr
