@@ -1,165 +1,147 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA991EBFF7;
-	Wed, 10 Dec 2025 03:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A672D3A94
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Dec 2025 07:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765338012; cv=none; b=COwtvlie6m34PFvBfn0OyMZPuxbYXzvnR8LEEl+XJSFmQIF5C/E2uf1CEi69ftvZvpwCM9XHs6gQkDtQSntENMyya63/Qu+3MmBH8ULhk3KLu/uLEvJx84aLMlZAiVUATB8cM6SWs6l+tAKtwEp/Re9+g0sGcxxCZcNGdJds+7w=
+	t=1765350575; cv=none; b=g8FulY9+FtZspmk6w8PHJZjhZGkgi2dXGfQhOAvo6OkIOVEnI1rP0lndyIQ8Q8/DYAW+bSO0ykDlRHKGVgwYqOA2RzOnAB2vWj0WaHpyW2kCiuVgVRqTS3ezws81pzLFxcsVH1U1bx5aMyQDBCzyFOdmI8FV7l6njC2GMT85G+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765338012; c=relaxed/simple;
-	bh=d3+Z9QI4Fat1zf9AVlcnS36Clj9EQi6kZjfUiOOp7yA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VRI4CdOXfT/xJYDpnUGrDW32f8SaqVVCPgDN6s/TodGTWCPELW0Y4UvR+n6nQ5Uap4Azh7oySlMXlLRtl23zyWiQQV3+zvioi2GJXyEzomPAWUdtjiN5lYbeq1cre4r5lkTq6YnSPIJEBGNYiLIaMf7KzRvxSqF/X2U5pulTsis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=CZdw3fbm; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1765350575; c=relaxed/simple;
+	bh=26nolpmNblwBmBuzKzPK0yRZPS0nM9skp+7aC9R4q08=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TzqkYsF7Ze5fBkf3NFUeWD6Qw1Hi013JwdRyPZoKu+jITVnsi1st3NhKS4n7Pv1aLCLiW3dGv7VKcX4Q2R/iSbxA6smHIy9SwtPXKlQe50G1NaX6QKTrRPGS9eghyvkIigED+GERjhEYwPyt95imjnY9RfD+i/tOMDJU/dL598I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/HfJ3cQ; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="CZdw3fbm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1765337974;
-	bh=Ih4qsXYXzbmqZmYwKjv+HkfkNVFRqg2vrf8OlGDQeU0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=CZdw3fbmkgqx9ePJtaBU7FH01M6D7tg05eSP+5Yq6HiazWy+I8mSF5LrMii1583R8
-	 wylRxnmLDxE/eODjEEp2QwBjEXlKsvlle9R5u/lKlXMUMht3+DSOEeHZ7QTmmuii88
-	 A9Mri+AqKze9kT3W37JB9/7FxGYpvBNPtLr6YDeA=
-X-QQ-mid: zesmtpip4t1765337958t0f4f8bf1
-X-QQ-Originating-IP: b8H0xMwdrFopSz3wihZ2Nb+4B1ePX3HiK4h2CdDoOko=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 10 Dec 2025 11:39:12 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5845895000841717394
-EX-QQ-RecipientCnt: 7
-From: hongao <hongao@uniontech.com>
-To: naveen@kernel.org,
-	anil.s.keshavamurthy@intel.com,
-	davem@davemloft.net,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	hongao <hongao@uniontech.com>
-Subject: [[PATCH v2] 1/1] kprobes: retry pending optprobe after freeing blocker
-Date: Wed, 10 Dec 2025 11:33:21 +0800
-Message-ID: <C5E6295166D4EDE9+20251210033321.2895692-1-hongao@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/HfJ3cQ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42e2e2eccd2so4169361f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Dec 2025 23:09:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765350571; x=1765955371; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+EU0VUVqRUtS7aPeBl9evWsKNjXkOCCMm8DbmHiqXpg=;
+        b=S/HfJ3cQFto1RAgo+rrACcfN9dwfuFwnAAu+mZhRx8FwpLZRQ/+3c56zpp1fjV+L2+
+         CJ2xqr7XMSPB2tFCQ8/sWENL4ildDVkfL1oovPP42uiSOgcH1FbWqbzXzSFjTzZZ2NDa
+         SJfoVHTjywYIiqFgfN8m2AwKVDi7cgBYtCjQxp3zHxeu0ECkbUY9bD+r6i/DZTdh63Q0
+         2Tf61ibMbg0bKGclUQqdHMO+xO5bLgIypvh90u1Rwd8NTxhVRzapKCFg2aJLNcCrTkLQ
+         21uHT/kSG5pNDKvqg4VbVYCOgPWlCYdketP2OntYLTtDuHTDtRBspwc3PMlKP2oCyV2T
+         s7eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765350571; x=1765955371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+EU0VUVqRUtS7aPeBl9evWsKNjXkOCCMm8DbmHiqXpg=;
+        b=ICHNU0doBiXiRTntBw5qknDaM7ciG5re4x9eik2s+qg5QnTjcI+npBhDORpnfCO9kz
+         WpAJbmPSYBgH656E6E/dzkLsRIELeomycYMFPig9yCHHFFB+fZSWC9lBUmggeFbsKXSs
+         gtS4tBHi98b+8Cu0J1qDU6ZH0nGBkBkAVEqfj+KJXe0sPYvIxHjM/ZVjsq7DU3eVqRqx
+         R2RZEbCYY/qROYZkiC18xHh+VSLoOJRLl1bxrNbUwfUs6uvP6PXCwAukOhgkvvbn9URD
+         R35I/X25xZNC1LZa1CCK9t99jJMhDBPsFdLR5o7XjRqveV9CwDR05kA03BobIVU+kk1r
+         lbhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN9b+NqfkyV/IoFsRVC1Ijslselg/s6Pv6SQ720PKvHe657PMdxsqOJv5F2NQbeCsknW09cFCI/PnyROlMAXGpVzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxkf17eLpTkk2JEcDo8OP6Tp+AMTXqyq2ihSMiXi1pfr5gS1Zw
+	XyNL9rp1I0tGJDX32FiSHS/UEToWsGHCmZS3C+N16ip/J7ih8zWzBMMwhMBrMGmz+0g7DYDPxO9
+	NUXrFgPkzTLNwMfsZ1zcKhc2+ESGBNlI=
+X-Gm-Gg: AY/fxX7ZkxEIM7NYmdtQOd+1oF44jMvujtDGrX3YWQWNkj5fMxKtAj99W1qWR6QLHxn
+	2ujC3mXdp1yhVwJxCrQeynohDlRuJoJTEtwDWHevCXg3swo7aM5gCSU1w69wZsx4y6qDsda+c5Z
+	LaTduk7BWuuuopfLqvtUI6ncS0EEKGuW6dxGDnfYRAqWXGFXVT7A/2OAiKb0BM4GD3QJGf2zHsV
+	U953PGsL1dqOGWfiTERdrQtzHrFwCE9AdOz5kO50L2aPscWfG5VuI8YBFGL+3KnfCMizORQ
+X-Google-Smtp-Source: AGHT+IEUWuCBd+VxvtSqBsdHlpGUtEOyUH5Vet9IDXTK4PfHO9H/osN5TOD7YP2bhiK0aFE0r7edKlgEeScX0rmLktg=
+X-Received: by 2002:a05:6000:3108:b0:42b:43b4:2870 with SMTP id
+ ffacd0b85a97d-42fa39d4d3bmr1377860f8f.26.1765350571083; Tue, 09 Dec 2025
+ 23:09:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6b-0
-X-QQ-XMAILINFO: MCHGquX4Y4hoT/f4ti2e6aRfCzt3nz+nuG6lzKW7g5ie22ZfCdBgjgZb
-	Ysp0mA2btLXA9nn49cnhDODzhiNLclpfeuud3Cx7AECkHPQD/B2xFtt0BM2jEAKXimOaIvx
-	vwUHS68tyNOMR0luzsNc2n9vNQQuUiWVyqLGeINtDOm3FjbWRjooWGp2q5i7SeF+9ohWy30
-	AdKrjUwhwtWKHbwdpMPYdLqpHKB4S3N+IWRHyHDKIVF/7ddbN39Amfj/quPtIQHNjX6dYNo
-	0dkJMHlivYxvEbzk6HgKknshcjkudEoPxbUnzpdEmzmzqSF5Csw6sBpF4d+g+r+pwh/QBqV
-	6oaBgKGktDg7O/cwbRNGo3FET6xftUFID44csEmQBloRyvnmTdQS9KTdnBSZK6xoXqRooQ3
-	sEg0TfKMOgdSPYs2AW9AdIgPiZqLdF0u9LzrKUf/WccpB5jRgBVDEVPwNmlDELDMcZVwjGW
-	yD3RlMIRRGaT8LdQxSgMzSoFXj3HUPN98Qu6+A4+/GA8UsiEj3odj8x/PPcTN0XnjCBSUhV
-	Zyoraj50D+MZ+P3zQ2KCl4vD/5VLm3ZVwreuw4+xzyR4ITwAAaIW+r7PXCOUpVAhFcIWUKV
-	IQ7O4DKpz80oBigyMM1iY+fuGsuvRxy15oXCauSEA0CeNqNYpn2iuRm/Nj7LM25goWyz48T
-	+xuAZF6w/iWLzeKydFMvapbkUYzYnwA4bpIggbuISYvrP59S1rhPtXniwhFuHfXMoYqIH5H
-	YGNa5zga/iU161DXxbFUYIxJIX4SQ9buhfzVlFTaBPgIfOqMGJXwXrbtojHVnabtKQKbQ/g
-	mYvLbF1JnK7oQSkNBT6yYwOPJTT1kvTOtu+xLxq98c/rrAD7ZJiNmpmHzwOMjgM72G4F3co
-	UObq/UeLUVG8agjNGK7t2qgHYsrQzhLZh64JzuGLiiVb3SIUVMvjzHtKzhCDMIt18r7P5xu
-	bk+gRo3oalDIB5e2TiRp3rTFezAglM12pMmSjhj5Bvw97Nna5ojJivSxJ3fhotUJ6M8aO46
-	zcFV0RyT6Tr7q9VUrBWvVs7F2leOqglMCMZRvHrZ9+UAEMwzcJc7lT383pGADHQZyDzKExk
-	cUGvkdCQQGEf8AeHYkp0tqU/rKKIs54KqSiBFrtSZQGOiUKhceY60pe3d7PH7OvsDttTsC3
-	idvI
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+References: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
+ <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com> <aTgl_bjO1O9Ddpmv@smile.fi.intel.com>
+In-Reply-To: <aTgl_bjO1O9Ddpmv@smile.fi.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 10 Dec 2025 16:09:19 +0900
+X-Gm-Features: AQt7F2ogOQ169Rf8brIHTTEO9I_yuqVyNgBKCB2apVGPY610GEpbdkn_RiqZMwM
+Message-ID: <CAADnVQLkSoOL8+kELdmX5nzNcXm-s4VbA5+Q-MPcNySsSiu+RQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] bpf: Mark BPF printing functions with __printf() attribute
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Alan Maguire <alan.maguire@oracle.com>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The freeing_list cleanup now retries optimizing any sibling probe that was
-deferred while this aggregator was being torn down.  Track the pending
-address in struct optimized_kprobe so __disarm_kprobe() can defer the
-retry until kprobe_optimizer() finishes disarming.
+On Tue, Dec 9, 2025 at 10:37=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Dec 09, 2025 at 06:12:46PM +0900, Alexei Starovoitov wrote:
+> > On Tue, Dec 9, 2025 at 1:21=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > The printing functions in BPF code are using printf() type of format,
+> > > and compiler is not happy about them as is:
+> > >
+> > > kernel/bpf/helpers.c:1069:9: error: function =E2=80=98____bpf_snprint=
+f=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format att=
+ribute [-Werror=3Dsuggest-attribute=3Dformat]
+> > >  1069 |         err =3D bstr_printf(str, str_size, fmt, data.bin_args=
+);
+> > >       |         ^~~
+> > >
+> > > kernel/trace/bpf_trace.c:377:9: error: function =E2=80=98____bpf_trac=
+e_printk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 for=
+mat attribute [-Werror=3Dsuggest-attribute=3Dformat]
+> > >   377 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, d=
+ata.bin_args);
+> > >       |         ^~~
+> > >
+> > > kernel/trace/bpf_trace.c:433:9: error: function =E2=80=98____bpf_trac=
+e_vprintk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 fo=
+rmat attribute [-Werror=3Dsuggest-attribute=3Dformat]
+> > >   433 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, d=
+ata.bin_args);
+> > >       |         ^~~
+> > >
+> > > kernel/trace/bpf_trace.c:475:9: error: function =E2=80=98____bpf_seq_=
+printf=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 forma=
+t attribute [-Werror=3Dsuggest-attribute=3Dformat]
+> > >   475 |         seq_bprintf(m, fmt, data.bin_args);
+> > >       |         ^~~~~~~~~~~
+> > >
+> > > Fix the compilation errors by adding __printf() attribute. For that
+> > > we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_=
+CALL_*()
+> > > to make code neater.
+>
+> > This is pointless churn to shut up a warning.
+>
+> In some cases, like mine, it's an error.
+>
+> > Teach syzbot to stop this spam instead.
+>
+> It prevents to perform `make W=3D1` builds with the default CONFIG_WERROR=
+,
+> which is 'y'.
+>
+> > At the end this patch doesn't make any visible difference,
+> > since user declarations of these helpers are auto generated
+> > from uapi/bpf.h file and __printf attribute is not there.
+>
+> I see, thanks for the review.
+> Any recommendations on how to fix this properly?
 
-Signed-off-by: hongao <hongao@uniontech.com>
----
-Changes since v1:
-- Replace `kprobe_opcode_t *pending_reopt_addr` with `bool reopt_unblocked_probes`
-  in `struct optimized_kprobe` to avoid storing an address and simplify logic.
-- Use `op->kp.addr` when looking up the sibling optimized probe instead of
-  keeping a separate stored address.
-- Defer re-optimization by setting/clearing `op->reopt_unblocked_probes` in
-  `__disarm_kprobe()` / consuming it in `do_free_cleaned_kprobes()` so the
-  retry runs after the worker finishes disarming.
-- Link to v1: https://lore.kernel.org/all/2B0BC73E9D190B7B+20251027130535.2296913-1-hongao@uniontech.com/
----
- include/linux/kprobes.h |  1 +
- kernel/kprobes.c        | 28 ++++++++++++++++++++++------
- 2 files changed, 23 insertions(+), 6 deletions(-)
+Add -Wno-suggest-attribute=3Dformat
+to corresponding files in Makefile.
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 8c4f3bb24..4f49925a4 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -338,6 +338,7 @@ DEFINE_INSN_CACHE_OPS(insn);
- struct optimized_kprobe {
- 	struct kprobe kp;
- 	struct list_head list;	/* list for optimizing queue */
-+	bool reopt_unblocked_probes;
- 	struct arch_optimized_insn optinsn;
- };
- 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index da59c68df..799542dff 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -514,6 +514,7 @@ static LIST_HEAD(freeing_list);
- 
- static void kprobe_optimizer(struct work_struct *work);
- static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-+static void optimize_kprobe(struct kprobe *p);
- #define OPTIMIZE_DELAY 5
- 
- /*
-@@ -591,6 +592,21 @@ static void do_free_cleaned_kprobes(void)
- 			 */
- 			continue;
- 		}
-+		if (op->reopt_unblocked_probes) {
-+			struct kprobe *unblocked;
-+
-+			/*
-+			 * The aggregator was holding back another probe while it sat on the
-+			 * unoptimizing/freeing lists.  Now that the aggregator has been fully
-+			 * reverted we can safely retry the optimization of that sibling.
-+			 */
-+
-+			unblocked = get_optimized_kprobe(op->kp.addr);
-+			if (unlikely(unblocked))
-+				optimize_kprobe(unblocked);
-+			op->reopt_unblocked_probes = false;
-+		}
-+
- 		free_aggr_kprobe(&op->kp);
- 	}
- }
-@@ -1009,13 +1025,13 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
- 		_p = get_optimized_kprobe(p->addr);
- 		if (unlikely(_p) && reopt)
- 			optimize_kprobe(_p);
-+	} else if (reopt && kprobe_aggrprobe(p)) {
-+		struct optimized_kprobe *op =
-+			container_of(p, struct optimized_kprobe, kp);
-+
-+		/* Defer the re-optimization until the worker finishes disarming. */
-+		op->reopt_unblocked_probes = true;
- 	}
--	/*
--	 * TODO: Since unoptimization and real disarming will be done by
--	 * the worker thread, we can not check whether another probe are
--	 * unoptimized because of this probe here. It should be re-optimized
--	 * by the worker thread.
--	 */
- }
- 
- #else /* !CONFIG_OPTPROBES */
--- 
-2.47.2
-
+I think it's cleaner than __diag_ignore() in the .c
