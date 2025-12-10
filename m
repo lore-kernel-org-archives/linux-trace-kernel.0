@@ -1,176 +1,96 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7611C69D;
-	Wed, 10 Dec 2025 01:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DB43B186;
+	Wed, 10 Dec 2025 02:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765331830; cv=none; b=Vnh7WCeMhP20rwSpgN47mdFtJEYUVZYsoc4Mz/n+AW3oU5V9HXtQs/2xFltsv5/k5IZK3lqY2Ysp24jIwI6556y6ma9NRl8xOT/F1Nsu1sTlzm99z3FXpjMfyUcy3IQ3WBbMmVtdiEdMHm8NO/MGqpPZxhUPhZhlQ//vdabEVJ4=
+	t=1765333913; cv=none; b=ubzqp+U7r/SDd6Ugc7TAgDSFsS7g/32+S44fCfGva3AmSd3MJl5Zwg4TM8/gkmcC+M+1axQQ9qjavwySgZVvXOxc1DI1F/Y2Y6H8zlkSz0kBDZ0GR1HKfUIC1EbRDQuoLR6bKDzNm2psAVQ1wSgaOh9Rlt0ItVtMbG9qOWM9aMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765331830; c=relaxed/simple;
-	bh=5rH7IgBTUWLfbXuzHWMxUNkJDXl/l9ZHm+5diuybFy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cfD2igK32yeJSXxnfWyUD6SIrKfmptoprsu79aSdp+vxfVWS9zWpYRsIiyWRx5XmIUANnxKaHB3oFrnVr8Efksjzodq7BKyJjwnKYNJjfC8zsWUpjRsGxpCX+OrwvYuiCQ+NN8DBjVjV/Q9fByb6coc+07Szq1xr4Ub8/uG8G50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jeaPulwT; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jeaPulwT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765331817; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=1GTs03VUh2pg2He6cShVbbcuXtMMiMKBM5N4IAPUVS8=;
-	b=jeaPulwTnhiROLz44XkKAlzloi3MZNsRe6AIoLUFR5ki7ejC5ejdrpluX+35nEXrIO1Uos/ENzEjoThIf/s/4hwbHqabbM3utlXAqfolA3P3uMtiAnwIm1YAjnpqtcOEbUQ+aVdPT9rhdG+XRiNFpCw2Pt5lxuky6oYJ6SQRG5M=
-Received: from 30.246.178.18(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WuUd9N2_1765331814 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Dec 2025 09:56:55 +0800
-Message-ID: <edf92e08-85d0-4553-9461-625c03b3a5d2@linux.alibaba.com>
-Date: Wed, 10 Dec 2025 09:56:53 +0800
+	s=arc-20240116; t=1765333913; c=relaxed/simple;
+	bh=DjJ0vRTFNfl83UOiQ37+26XH5fITraYWTX+raL+nxwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nX/kz4iOfhISprKy+edwnHhOsqghUL3UPf9X9PlWeA2ZlD+tLhClky1w57hIddTvS54NUJwYcyXWa5Mk1s48rd2jUSdEUNkryT2F2c/k5HDfylf3hCqhf3ILJfDg7AEpHy/LI9klviPfEdvIeVAlH/60PnGxcxoZjDknoXCrDr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 81AB113A9A2;
+	Wed, 10 Dec 2025 02:31:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id A9BF66000A;
+	Wed, 10 Dec 2025 02:31:39 +0000 (UTC)
+Date: Tue, 9 Dec 2025 21:31:35 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tracing: Avoid possible signed 64-bit truncation
+Message-ID: <20251209213135.13eb68f4@fedora>
+In-Reply-To: <20251209224024.2322124-1-irogers@google.com>
+References: <20251209224024.2322124-1-irogers@google.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH v13 3/3] Documentation: tracing: Add
- documentation about PCI tracepoints
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, rostedt@goodmis.org,
- lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, mattc@purestorage.com,
- Jonathan.Cameron@huawei.com
-Cc: bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20251025114158.71714-1-xueshuai@linux.alibaba.com>
- <20251025114158.71714-4-xueshuai@linux.alibaba.com>
- <1ad20492-f342-4a4b-8a2f-228db7c5673a@oracle.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <1ad20492-f342-4a4b-8a2f-228db7c5673a@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: A9BF66000A
+X-Stat-Signature: b1qagdz6zx68sypowzb9k9igd9675ncq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/lJb0kn+aJkFBa8AUOpvBTin1PwRFA8Bo=
+X-HE-Tag: 1765333899-389943
+X-HE-Meta: U2FsdGVkX19v8ImmsxZJLKhBzvON6LiB2rc+xZ16tuAo3D6avJ/pBMky2rxXJIvrMZnj+lCDvcbMooCU25r/I7iPLuIkXgvL0AiMlwMbXtqkoFCtPw0H+W33mQfDi2A/O8PbcyIvYxIrbA8aFAW7BOuqJbCwXZxJP2yhEWr4OTBfq5cErD56VuDwcr8J6e4ck4V3B8f1S7MRydtyaqSc/DBcS0QDG/Q0QnZaw1JWGjkp2viEypE4e0g8zsVC3FYJoXtIiNrovbqs3oAspmUb+Pjj0RFxcnElMt1UIJP1BL9Gbi5fEj5GTBPS/N8XGMITP1umCAg59wtbUbPm/0aPnPxZ6XMx/jmw
 
-Hi, Alok,
+On Tue,  9 Dec 2025 14:40:24 -0800
+Ian Rogers <irogers@google.com> wrote:
 
-在 2025/12/9 21:59, ALOK TIWARI 写道:
-> 
-> 
-> On 10/25/2025 5:11 PM, Shuai Xue wrote:
->> The PCI tracing system provides tracepoints to monitor critical hardware
->> events that can impact system performance and reliability. Add
->> documentation about it.
->>
->> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   Documentation/trace/events-pci.rst | 74 ++++++++++++++++++++++++++++++
->>   1 file changed, 74 insertions(+)
->>   create mode 100644 Documentation/trace/events-pci.rst
->>
->> diff --git a/Documentation/trace/events-pci.rst b/Documentation/trace/events-pci.rst
->> new file mode 100644
->> index 000000000000..88bd38fcc184
->> --- /dev/null
->> +++ b/Documentation/trace/events-pci.rst
->> @@ -0,0 +1,74 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +===========================
->> +Subsystem Trace Points: PCI
->> +===========================
->> +
->> +Overview
->> +========
->> +The PCI tracing system provides tracepoints to monitor critical hardware events
->> +that can impact system performance and reliability. These events normally show
->> +up here:
->> +
->> +    /sys/kernel/tracing/events/pci
->> +
->> +Cf. include/trace/events/pci.h for the events definitions.
->> +
->> +Available Tracepoints
->> +=====================
->> +
->> +pci_hp_event
->> +------------
->> +
->> +Monitors PCI hotplug events including card insertion/removal and link
->> +state changes.
->> +::
->> +
->> +    pci_hp_event  "%s slot:%s, event:%s\n"
->> +
->> +**Event Types**:
->> +
->> +* ``LINK_UP`` - PCIe link established
->> +* ``LINK_DOWN`` - PCIe link lost
->> +* ``CARD_PRESENT`` - Card detected in slot
->> +* ``CARD_NOT_PRESENT`` - Card removed from slot
->> +
->> +**Example Usage**:
->> +
->> +    # Enable the tracepoint
->> +    echo 1> /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> 
-> missing space echo 1 >"
+> 64-bit truncation to 32-bit can result in the sign of the truncated
+> value changing. The cmp_mod_entry is used in bsearch and so the
+> truncation could result in an invalid search order. This would only
+> happen were the addresses more than 2GB apart and so unlikely, but
+> let's fix the potentially broken compare anyway.
 
-Good catch.
+I'm fine with fixing this but I believe if the addresses are more than
+2GB apart there could be other issues elsewhere ;-)
 
 > 
->> +
->> +    # Monitor events (the following output is generated when a device is hotplugged)
->> +    cat /sys/kernel/debug/tracing/trace_pipe
->> +       irq/51-pciehp-88      [001] .....  1311.177459: pci_hp_event: 0000:00:02.0 slot:10, event:CARD_PRESENT
->> +
->> +       irq/51-pciehp-88      [001] .....  1311.177566: pci_hp_event: 0000:00:02.0 slot:10, event:LINK_UP
->> +
->> +pcie_link_event
->> +---------------
->> +
->> +Monitors PCIe link speed changes and provides detailed link status information.
->> +::
->> +
->> +    pcie_link_event  "%s type:%d, reason:%d, cur_bus_speed:%s, max_bus_speed:%s, width:%u, flit_mode:%u, status:%s\n"
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  kernel/trace/trace.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> %s -> %d mismatch for cur_bus_speed and max_bus_speed
-> 
-> TP_printk("%s type:%d, reason:%d, cur_bus_speed:%d, max_bus_speed:%d, width:%u, flit_mode:%u, status:%s\n",
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index d1e527cf2aae..e6a80cbe9326 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -6057,8 +6057,10 @@ static int cmp_mod_entry(const void *key, const void *pivot)
+>  
+>  	if (addr >= ent[0].mod_addr && addr < ent[1].mod_addr)
+>  		return 0;
+> +	else if (addr > ent->mod_addr)
+> +		return 1;
+>  	else
+> -		return addr - ent->mod_addr;
+> +		return -1;
 
-Sorry for missing the format.
+Could we still keep this down to a single if check?
 
-> 
->> +
->> +**Parameters**:
->> +
->> +* ``type`` - PCIe device type (4=Root Port, etc.)
->> +* ``reason`` - Reason for link change:
->> +
->> +  - ``0`` - Link retrain
->> +  - ``1`` - Bus enumeration
->> +  - ``2`` - Bandwidth notification enable
->> +  - ``3`` - Bandwidth notification IRQ
->> +  - ``4`` - Hotplug event
->> +
->> +
->> +**Example Usage**:
->> +
->> +    # Enable the tracepoint
->> +    echo1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
->> +
->> +    # Monitor events (the following output is generated when a device is hotplugged)
->> +    cat /sys/kernel/debug/tracing/trace_pipe
->> +       irq/51-pciehp-88      [001] .....   381.545386: pcie_link_event: 0000:00:02.0 type:4, reason:4, cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, status:DLLLA
-> 
-> 
-> Thanks,
-> Alok
+	if (addr < ent->mod_addr)
+		return -1;
 
-I will send a new version to fix above issues.
+	return addr >= ent[1].mod_addr;
 
-Thanks.
-Shuai
+-- Steve
 
+
+
+
+>  }
+>  
+>  /**
 
