@@ -1,144 +1,303 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E519F2ED148;
-	Wed, 10 Dec 2025 13:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062451A2C11;
+	Wed, 10 Dec 2025 13:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765372435; cv=none; b=f735iE5aossSx5mEKDCsPdAkC8iTAl3xTZGYsLU3j8jti5Encm5O8ZIY/2di9hzKVmAgVhyCRXJjF8ylY1heooGegNE5LiRjyt8wkXJano5bExKwhnFZKsQKZbTosMMnYbUxZUHDec9itzpAruR8AIYmrn+NqDt8SITHCle6cuI=
+	t=1765373362; cv=none; b=GNCMij42L/+0/v8/7Up3ShnlgPFvh12yepKeDGASRdxmduQo+vuPdgrNE3XKwkejm6qCNWEOrbBX7zxP4msUM7F+4i0bG5IB+U1UQ9vA2R8fRIRQlzCV+RavuzmhOdrcKfzNhslsXaWVihVyLkeXl0IKAKpWAKAxxUNRguzui0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765372435; c=relaxed/simple;
-	bh=m2Nn+1oU0J3uuTi9iR3r2j/uvfvWBDhGvnGbUmCnCmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLPknqdVDdo3DssmrRuGlU2iTVyhQ/7f6j9EfHsxIZzPjgR2ycxLxnMnWJNsRME44hpI35J0ZFjLxb/HUOWqzR+/Ks4vBQ5KePv5hoBTGsbCIHiXG3aT81pGSK7y7esuPqHwruSTK4nrn9wzczS08FZIZPMy6VcIh4M2/t2o2c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TF7iQKB9; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1765373362; c=relaxed/simple;
+	bh=MwiXQLIcWrbLj8E9P+0B8xrrHKBjCjA6bzzE3QNHmC8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nUuhVy638qd4vphu1xJCqt3LQWFEYrht3U52k3CP9b/fQh2G08Y37Ztp39j97zYlN0W2spTHSEgwKhuzJLH6yqXz5S+sx9jZgflzgUfWb6ibjfz5EZSSBHBmNtkfZCVmxrtP/qG23m1qlSJazG/OadzYir4nTsCekr7jbwImbUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cmy3VXSo; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TF7iQKB9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765372434; x=1796908434;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=m2Nn+1oU0J3uuTi9iR3r2j/uvfvWBDhGvnGbUmCnCmQ=;
-  b=TF7iQKB9AloUxrctG79kmgsKcc+FYHqJ9WF3Y3IzDG8747IvkhBYu2rs
-   d7dwZ2PQBsoETuTdwRc6HGYLILJ9p79JKAOzDC+vFX0uEqcBkvvZWRms+
-   Rf3+j2XvePyqUv2kYNjoJjQ0KAqDlFdGQ1uiPtBJUy3jJgeWky9cZoAAB
-   BXFZDd4LHFo3SWPdJMtTpEQWYP8+JoV4aMqxbVqXyWRCpmTi7wS2c9iJI
-   0/lnQBKFPLLuRsd5PuyZlkhMkrJxiS6Pke3rToNwN9DxNgTALRWcFAQDm
-   7vBncQ01SyzLDC+xw36YibaGOy+pYcMN+kdQZUfWXWawhKJKzjTFJt+tO
-   A==;
-X-CSE-ConnectionGUID: CX+QdgVOROy2rBJPfzd/jg==
-X-CSE-MsgGUID: lyOo4Vl5TvCKE5UuejRO9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="54886599"
-X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="54886599"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 05:13:53 -0800
-X-CSE-ConnectionGUID: LRtlJRVfTXmfd0pv7YW4rg==
-X-CSE-MsgGUID: KiIc2YH2QJeq08XMiV1iPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,264,1758610800"; 
-   d="scan'208";a="196109786"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.100])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 05:13:48 -0800
-Date: Wed, 10 Dec 2025 15:13:46 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] bpf: Mark BPF printing functions with __printf()
- attribute
-Message-ID: <aTlyCimsBUsU5QgZ@smile.fi.intel.com>
-References: <20251208161800.2902699-2-andriy.shevchenko@linux.intel.com>
- <CAADnVQ+SXe-CsPHnYkB4SOKct6iMN=PkexaKRd-MJFhC3i8M0A@mail.gmail.com>
- <aTgl_bjO1O9Ddpmv@smile.fi.intel.com>
- <CAADnVQLkSoOL8+kELdmX5nzNcXm-s4VbA5+Q-MPcNySsSiu+RQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cmy3VXSo"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1765373353; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=m39sO+6SREDpQpl8u3qHWf4Tg5cantWDkrs/RDJtjNk=;
+	b=cmy3VXSoGWGdC5Cus5j9pBg0KnefWnpm5WLHcrUt8o9ysEjnuGqYjvhSckjzI2uEcOzyrDBWPhMUJJ2PWbANcxtMqDP5FnYglz3EDGAuT4f4gN9v9UDcTVl2Is7KSDU6qW1/Vsnk/hRPKn0ZmgBeAxpTzqjGAUni8udCqIPx2UU=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WuWtM5I_1765373351 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 10 Dec 2025 21:29:12 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mattc@purestorage.com,
+	Jonathan.Cameron@huawei.com,
+	alok.a.tiwari@oracle.com
+Cc: bhelgaas@google.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	xueshuai@linux.alibaba.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	oleg@redhat.com,
+	naveen@kernel.org,
+	davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v14 2/3] PCI: trace: Add a RAS tracepoint to monitor link speed changes
+Date: Wed, 10 Dec 2025 21:29:06 +0800
+Message-Id: <20251210132907.58799-3-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20251210132907.58799-1-xueshuai@linux.alibaba.com>
+References: <20251210132907.58799-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQLkSoOL8+kELdmX5nzNcXm-s4VbA5+Q-MPcNySsSiu+RQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Dec 10, 2025 at 04:09:19PM +0900, Alexei Starovoitov wrote:
-> On Tue, Dec 9, 2025 at 10:37 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Dec 09, 2025 at 06:12:46PM +0900, Alexei Starovoitov wrote:
-> > > On Tue, Dec 9, 2025 at 1:21 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > The printing functions in BPF code are using printf() type of format,
-> > > > and compiler is not happy about them as is:
-> > > >
-> > > > kernel/bpf/helpers.c:1069:9: error: function ‘____bpf_snprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > > >  1069 |         err = bstr_printf(str, str_size, fmt, data.bin_args);
-> > > >       |         ^~~
-> > > >
-> > > > kernel/trace/bpf_trace.c:377:9: error: function ‘____bpf_trace_printk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > > >   377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-> > > >       |         ^~~
-> > > >
-> > > > kernel/trace/bpf_trace.c:433:9: error: function ‘____bpf_trace_vprintk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > > >   433 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
-> > > >       |         ^~~
-> > > >
-> > > > kernel/trace/bpf_trace.c:475:9: error: function ‘____bpf_seq_printf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > > >   475 |         seq_bprintf(m, fmt, data.bin_args);
-> > > >       |         ^~~~~~~~~~~
-> > > >
-> > > > Fix the compilation errors by adding __printf() attribute. For that
-> > > > we need to pass it down to the BPF_CALL_x() and wrap into PRINTF_BPF_CALL_*()
-> > > > to make code neater.
-> >
-> > > This is pointless churn to shut up a warning.
-> >
-> > In some cases, like mine, it's an error.
-> >
-> > > Teach syzbot to stop this spam instead.
-> >
-> > It prevents to perform `make W=1` builds with the default CONFIG_WERROR,
-> > which is 'y'.
-> >
-> > > At the end this patch doesn't make any visible difference,
-> > > since user declarations of these helpers are auto generated
-> > > from uapi/bpf.h file and __printf attribute is not there.
-> >
-> > I see, thanks for the review.
-> > Any recommendations on how to fix this properly?
-> 
-> Add -Wno-suggest-attribute=format
-> to corresponding files in Makefile.
+PCIe link speed degradation directly impacts system performance and
+often indicates hardware issues such as faulty devices, physical layer
+problems, or configuration errors.
 
-Thanks, I just sent a new patch.
+To this end, add a RAS tracepoint to monitor link speed changes,
+enabling proactive health checks and diagnostic analysis.
 
-> I think it's cleaner than __diag_ignore() in the .c
+The following output is generated when a device is hotplugged:
 
+$ echo 1 > /sys/kernel/debug/tracing/events/pci/pcie_link_event/enable
+$ cat /sys/kernel/debug/tracing/trace_pipe
+   irq/51-pciehp-88      [001] .....   381.545386: pcie_link_event: 0000:00:02.0 type:4, reason:4, cur_bus_speed:20, max_bus_speed:23, width:1, flit_mode:0, status:DLLLA
+
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Suggested-by: Matthew W Carlis <mattc@purestorage.com>
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/hotplug/pciehp_hpc.c |  3 +-
+ drivers/pci/pci.c                |  2 +-
+ drivers/pci/pci.h                | 21 ++++++++++--
+ drivers/pci/pcie/bwctrl.c        |  4 +--
+ drivers/pci/probe.c              |  9 +++--
+ include/trace/events/pci.h       | 57 ++++++++++++++++++++++++++++++++
+ 6 files changed, 87 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index bcc51b26d03d..ad5f28f6a8b1 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -320,7 +320,8 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 	}
+ 
+ 	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &linksta2);
+-	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status, linksta2);
++	__pcie_update_link_speed(ctrl->pcie->port->subordinate, PCIE_HOTPLUG,
++				 lnk_status, linksta2);
+ 
+ 	if (!found) {
+ 		ctrl_info(ctrl, "Slot(%s): No device found\n",
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 13dbb405dc31..f034e173819f 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4550,7 +4550,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+ 	 * Link Speed.
+ 	 */
+ 	if (pdev->subordinate)
+-		pcie_update_link_speed(pdev->subordinate);
++		pcie_update_link_speed(pdev->subordinate, PCIE_LINK_RETRAIN);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 0e67014aa001..c71cfbe78cc3 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -5,6 +5,7 @@
+ #include <linux/align.h>
+ #include <linux/bitfield.h>
+ #include <linux/pci.h>
++#include <trace/events/pci.h>
+ 
+ struct pcie_tlp_log;
+ 
+@@ -555,12 +556,28 @@ const char *pci_speed_string(enum pci_bus_speed speed);
+ void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
+ void pcie_report_downtraining(struct pci_dev *dev);
+ 
+-static inline void __pcie_update_link_speed(struct pci_bus *bus, u16 linksta, u16 linksta2)
++enum pcie_link_change_reason {
++	PCIE_LINK_RETRAIN,
++	PCIE_ADD_BUS,
++	PCIE_BWCTRL_ENABLE,
++	PCIE_BWCTRL_IRQ,
++	PCIE_HOTPLUG,
++};
++
++static inline void __pcie_update_link_speed(struct pci_bus *bus,
++					    enum pcie_link_change_reason reason,
++					    u16 linksta, u16 linksta2)
+ {
+ 	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
+ 	bus->flit_mode = (linksta2 & PCI_EXP_LNKSTA2_FLIT) ? 1 : 0;
++
++	trace_pcie_link_event(bus,
++			     reason,
++			     FIELD_GET(PCI_EXP_LNKSTA_NLW, linksta),
++			     linksta & PCI_EXP_LNKSTA_LINK_STATUS_MASK);
+ }
+-void pcie_update_link_speed(struct pci_bus *bus);
++
++void pcie_update_link_speed(struct pci_bus *bus, enum pcie_link_change_reason reason);
+ 
+ /* Single Root I/O Virtualization */
+ struct pci_sriov {
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index 36f939f23d34..32f1b30ecb84 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -199,7 +199,7 @@ static void pcie_bwnotif_enable(struct pcie_device *srv)
+ 	 * Update after enabling notifications & clearing status bits ensures
+ 	 * link speed is up to date.
+ 	 */
+-	pcie_update_link_speed(port->subordinate);
++	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_ENABLE);
+ }
+ 
+ static void pcie_bwnotif_disable(struct pci_dev *port)
+@@ -234,7 +234,7 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
+ 	 * speed (inside pcie_update_link_speed()) after LBMS has been
+ 	 * cleared to avoid missing link speed changes.
+ 	 */
+-	pcie_update_link_speed(port->subordinate);
++	pcie_update_link_speed(port->subordinate, PCIE_BWCTRL_IRQ);
+ 
+ 	return IRQ_HANDLED;
+ }
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 41183aed8f5d..392b7dc3d391 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -22,6 +22,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bitfield.h>
++#include <trace/events/pci.h>
+ #include "pci.h"
+ 
+ #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+@@ -824,14 +825,16 @@ const char *pci_speed_string(enum pci_bus_speed speed)
+ }
+ EXPORT_SYMBOL_GPL(pci_speed_string);
+ 
+-void pcie_update_link_speed(struct pci_bus *bus)
++void pcie_update_link_speed(struct pci_bus *bus,
++			    enum pcie_link_change_reason reason)
+ {
+ 	struct pci_dev *bridge = bus->self;
+ 	u16 linksta, linksta2;
+ 
+ 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+ 	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
+-	__pcie_update_link_speed(bus, linksta, linksta2);
++
++	__pcie_update_link_speed(bus, reason, linksta, linksta2);
+ }
+ EXPORT_SYMBOL_GPL(pcie_update_link_speed);
+ 
+@@ -918,7 +921,7 @@ static void pci_set_bus_speed(struct pci_bus *bus)
+ 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
+ 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
+ 
+-		pcie_update_link_speed(bus);
++		pcie_update_link_speed(bus, PCIE_ADD_BUS);
+ 	}
+ }
+ 
+diff --git a/include/trace/events/pci.h b/include/trace/events/pci.h
+index 39e512a167ee..9a9122f62fd3 100644
+--- a/include/trace/events/pci.h
++++ b/include/trace/events/pci.h
+@@ -5,6 +5,7 @@
+ #if !defined(_TRACE_HW_EVENT_PCI_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_HW_EVENT_PCI_H
+ 
++#include <uapi/linux/pci_regs.h>
+ #include <linux/tracepoint.h>
+ 
+ #define PCI_HOTPLUG_EVENT						\
+@@ -66,6 +67,62 @@ TRACE_EVENT(pci_hp_event,
+ 	)
+ );
+ 
++#define PCI_EXP_LNKSTA_LINK_STATUS_MASK (PCI_EXP_LNKSTA_LBMS | \
++					 PCI_EXP_LNKSTA_LABS | \
++					 PCI_EXP_LNKSTA_LT | \
++					 PCI_EXP_LNKSTA_DLLLA)
++
++#define LNKSTA_FLAGS					\
++	{ PCI_EXP_LNKSTA_LT,	"LT"},			\
++	{ PCI_EXP_LNKSTA_DLLLA,	"DLLLA"},		\
++	{ PCI_EXP_LNKSTA_LBMS,	"LBMS"},		\
++	{ PCI_EXP_LNKSTA_LABS,	"LABS"}
++
++TRACE_EVENT(pcie_link_event,
++
++	TP_PROTO(struct pci_bus *bus,
++		  unsigned int reason,
++		  unsigned int width,
++		  unsigned int status
++		),
++
++	TP_ARGS(bus, reason, width, status),
++
++	TP_STRUCT__entry(
++		__string(	port_name,	pci_name(bus->self))
++		__field(	unsigned int,	type		)
++		__field(	unsigned int,	reason		)
++		__field(	unsigned int,	cur_bus_speed	)
++		__field(	unsigned int,	max_bus_speed	)
++		__field(	unsigned int,	width		)
++		__field(	unsigned int,	flit_mode	)
++		__field(	unsigned int,	link_status	)
++	),
++
++	TP_fast_assign(
++		__assign_str(port_name);
++		__entry->type			= pci_pcie_type(bus->self);
++		__entry->reason			= reason;
++		__entry->cur_bus_speed		= bus->cur_bus_speed;
++		__entry->max_bus_speed		= bus->max_bus_speed;
++		__entry->width			= width;
++		__entry->flit_mode		= bus->flit_mode;
++		__entry->link_status		= status;
++	),
++
++	TP_printk("%s type:%d, reason:%d, cur_bus_speed:%d, max_bus_speed:%d, width:%u, flit_mode:%u, status:%s\n",
++		__get_str(port_name),
++		__entry->type,
++		__entry->reason,
++		__entry->cur_bus_speed,
++		__entry->max_bus_speed,
++		__entry->width,
++		__entry->flit_mode,
++		__print_flags((unsigned long)__entry->link_status, "|",
++				LNKSTA_FLAGS)
++	)
++);
++
+ #endif /* _TRACE_HW_EVENT_PCI_H */
+ 
+ /* This part must be outside protection */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.3
 
