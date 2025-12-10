@@ -1,34 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DB43B186;
-	Wed, 10 Dec 2025 02:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E451F4611
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Dec 2025 03:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765333913; cv=none; b=ubzqp+U7r/SDd6Ugc7TAgDSFsS7g/32+S44fCfGva3AmSd3MJl5Zwg4TM8/gkmcC+M+1axQQ9qjavwySgZVvXOxc1DI1F/Y2Y6H8zlkSz0kBDZ0GR1HKfUIC1EbRDQuoLR6bKDzNm2psAVQ1wSgaOh9Rlt0ItVtMbG9qOWM9aMc=
+	t=1765336196; cv=none; b=V3HkrwUE2oxqWHayJv37XTxTPXkWwinAXaB5QYR4xwh8kW843UKM5PSqjMBICBahjtqKgs6UTtAaSOtGetGS9HTYvyO5LOcGfRXfCdKt+nrrR3Gs9X3zrw5lBpbDJnDPN4jtOc+PSZiXuVw17mS6qvr11PuXtOkipOvakdNe+T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765333913; c=relaxed/simple;
-	bh=DjJ0vRTFNfl83UOiQ37+26XH5fITraYWTX+raL+nxwQ=;
+	s=arc-20240116; t=1765336196; c=relaxed/simple;
+	bh=EScQuIQpHOYMZ7vZy4ZDAM8ab5QBdJ1AS4CBWMup2wk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nX/kz4iOfhISprKy+edwnHhOsqghUL3UPf9X9PlWeA2ZlD+tLhClky1w57hIddTvS54NUJwYcyXWa5Mk1s48rd2jUSdEUNkryT2F2c/k5HDfylf3hCqhf3ILJfDg7AEpHy/LI9klviPfEdvIeVAlH/60PnGxcxoZjDknoXCrDr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=SUQCa0Y5kuSDCtIOCOijqQF0JO57IWZnVxiHji4pFzWGEz6jbggr8F0UP0yX/qAVsvLi4dalQj4kgKUBeficHDJQhnn3zs8mRPhZ9wWajWXKLZPddzGFXrJAGDndfr4ybf2gT0FtHM4pePxO7Hqw9Klw3q9RCHsiL6biIuvTFZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 81AB113A9A2;
-	Wed, 10 Dec 2025 02:31:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id A9BF66000A;
-	Wed, 10 Dec 2025 02:31:39 +0000 (UTC)
-Date: Tue, 9 Dec 2025 21:31:35 -0500
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 3743F896BA;
+	Wed, 10 Dec 2025 03:09:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 7564320011;
+	Wed, 10 Dec 2025 03:09:49 +0000 (UTC)
+Date: Tue, 9 Dec 2025 22:09:44 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+To: Thomas Ballasi <tballasi@linux.microsoft.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] tracing: Avoid possible signed 64-bit truncation
-Message-ID: <20251209213135.13eb68f4@fedora>
-In-Reply-To: <20251209224024.2322124-1-irogers@google.com>
-References: <20251209224024.2322124-1-irogers@google.com>
+Subject: Re: [PATCH 2/2] mm: vmscan: add PIDs to vmscan tracepoints
+Message-ID: <20251209220944.6ff1a578@fedora>
+In-Reply-To: <20251208181413.4722-3-tballasi@linux.microsoft.com>
+References: <20251208181413.4722-1-tballasi@linux.microsoft.com>
+	<20251208181413.4722-3-tballasi@linux.microsoft.com>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,59 +39,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: A9BF66000A
-X-Stat-Signature: b1qagdz6zx68sypowzb9k9igd9675ncq
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 7564320011
+X-Stat-Signature: bbbjgo8eggigo9kb441sdos94ybpm13y
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/lJb0kn+aJkFBa8AUOpvBTin1PwRFA8Bo=
-X-HE-Tag: 1765333899-389943
-X-HE-Meta: U2FsdGVkX19v8ImmsxZJLKhBzvON6LiB2rc+xZ16tuAo3D6avJ/pBMky2rxXJIvrMZnj+lCDvcbMooCU25r/I7iPLuIkXgvL0AiMlwMbXtqkoFCtPw0H+W33mQfDi2A/O8PbcyIvYxIrbA8aFAW7BOuqJbCwXZxJP2yhEWr4OTBfq5cErD56VuDwcr8J6e4ck4V3B8f1S7MRydtyaqSc/DBcS0QDG/Q0QnZaw1JWGjkp2viEypE4e0g8zsVC3FYJoXtIiNrovbqs3oAspmUb+Pjj0RFxcnElMt1UIJP1BL9Gbi5fEj5GTBPS/N8XGMITP1umCAg59wtbUbPm/0aPnPxZ6XMx/jmw
+X-Session-ID: U2FsdGVkX19Mw/tq0GrYj1b/7THa4iMpPMQW6mvMW/k=
+X-HE-Tag: 1765336189-187340
+X-HE-Meta: U2FsdGVkX1+3QV7/E+Czttoxvu68qqIVrv1Zgw+slAu7J2VSyochonNUMCPalBvZB1c88lbwSKf0TXkG7G0dK73wrvjCf+YpxJLc46MtnStZXip5aq1rduD/MHo+mFF3QYa9n0929iAP2sM0DlTTd3rvlDRqbyUlPx/QEN0+qMpfAU/JOMA9Rwa41uQpl/zVCBt9rwFjH8/OW9W+Jr2mRqz7I5cBeJwbxigw6oyJEYYanRTBKntIu6SxQJVhAxuiIozRq0PWUTmfl2WakYr4+Nnkmey2mYzvX46/nlBZCfvpPxl3G1CXVDtkLDhe7oDSty6WQlDLMOQ5E4rlkKoGf0J8dwHD2NMn
 
-On Tue,  9 Dec 2025 14:40:24 -0800
-Ian Rogers <irogers@google.com> wrote:
+On Mon,  8 Dec 2025 10:14:13 -0800
+Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
 
-> 64-bit truncation to 32-bit can result in the sign of the truncated
-> value changing. The cmp_mod_entry is used in bsearch and so the
-> truncation could result in an invalid search order. This would only
-> happen were the addresses more than 2GB apart and so unlikely, but
-> let's fix the potentially broken compare anyway.
-
-I'm fine with fixing this but I believe if the addresses are more than
-2GB apart there could be other issues elsewhere ;-)
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  kernel/trace/trace.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  include/trace/events/vmscan.h | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index d1e527cf2aae..e6a80cbe9326 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6057,8 +6057,10 @@ static int cmp_mod_entry(const void *key, const void *pivot)
->  
->  	if (addr >= ent[0].mod_addr && addr < ent[1].mod_addr)
->  		return 0;
-> +	else if (addr > ent->mod_addr)
-> +		return 1;
->  	else
-> -		return addr - ent->mod_addr;
-> +		return -1;
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index afc9f80d03f34..eddb4e75e2e23 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -121,18 +121,21 @@ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+>  	TP_STRUCT__entry(
+>  		__field(	int,	order		)
+>  		__field(	unsigned long,	gfp_flags	)
+> +		__field(	int,	pid		)
 
-Could we still keep this down to a single if check?
+This puts a hole in the ring buffer on 64 bit machines. Please keep pid
+next to order as they are both 'int' and not have an "unsigned long"
+between the two.
 
-	if (addr < ent->mod_addr)
-		return -1;
-
-	return addr >= ent[1].mod_addr;
+>  		__field(	unsigned short,	memcg_id	)
+>  	),
 
 -- Steve
-
-
-
-
->  }
->  
->  /**
-
