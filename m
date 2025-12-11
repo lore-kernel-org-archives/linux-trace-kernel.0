@@ -1,75 +1,53 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2164133E7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Dec 2025 10:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765447274; cv=none; b=IrO3Hg2ixko+P5GbbXGqDZL0bQCRogIBjlyV9hFQEAcHWppp0yO4AN/DwXbvASE45qaSOUfW98ftpu6zyrmi7rWfIw/wbwBINnAvyjBRRT0/3/WkZXh1GlQSVxS4LNRsQz41F5ImkjFiOLu+A86rsA/yeDXP8kGfb69Tu79lKwU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765447274; c=relaxed/simple;
-	bh=pVqkKjEXVMsrV1BoKv6j4NeN5cbUKVI6QzaVPeB0uR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=spevN5qx1Q91Fa1wXxW90csOiTFqVLkUDd3GhRys/V8F7/LKEL9dekcNW7qk+wm3C4xStiXrtWazjDenPKzStjTnmUy0kCbmJE/GhgT0OhzM9/hrCKeM7KI8OxCMfHt5inr2AfHlM211ZIlPHPF+p4B+9nw+9bjHHynwZ+r3NyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BRXx8sO9; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47B130B53B;
+	Thu, 11 Dec 2025 11:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765453933; cv=pass; b=jOKEGbUR/ZY370NKJLwmRixdF73DFfoXbOW3skyBRqIVtZhVfa7Cch21xhg8346dvzhnXbH5S7e6ek544RxQQEIbrdle6VTP341D5pZMp3QPWJ5nlaO17zA09nLiRhpGMer034YoyNSjDUEkBWbIkgnd9IojUPv2LXwZo4MH7Rg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765453933; c=relaxed/simple;
+	bh=2z2/KBe2FEYM46e2DTFJx1/PBFBvHTuqpVzdRl2D3Sg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=rHj7l2J7vRnK0cO4gEo8oiERV7dHX9sFV2rwRcEbdnqArqeb1kQ+qjcjnOgWnAbDSCBhfjQj663YV62sy80Q2ss79gRscKBSnO/FEMGWyK4qxsZWDNdC0F+Ysc8nxdLyIy36PSqV9D/kTw4w5+GLFwluQaecBvtC2ztzST73KH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=iPV2LAqP; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRXx8sO9"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7bc248dc16aso654652b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Dec 2025 02:01:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765447272; x=1766052072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxUAwgYNPZb3dBwYcv0C/4y2So0BODQraJ+2jRjaA7w=;
-        b=BRXx8sO9DbfIf3MxVh3J1zO/pxQ2xGwAaS7mtZGEWPlSB36gUgFApqqLyer8GQtTyg
-         I4hWJyDYQPFeC+KT0mouOjfGnkQqu8kYA6MfjtVY8RPISm4fJPrbaFpo7juSbe/tESwQ
-         /p+07p3yOmeW8oPstwsP5NWEPl1nNw9NQa4i4sNHwtQMFd+kvGzEE7d42ZSZOm8jq8LY
-         1N7A7IatW1yw5ztQA9QPcRN+HzUcIsyJRQfrxHtS0xOZPy3p1BHJl2c5kWydSsIQ6wkR
-         yyOVSRtPEz41dBsjoCe86v+xIrKi3sYWag2iN3J8ITWF+vw/SS3RL9pJepWgd9gp6GeF
-         haBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765447272; x=1766052072;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qxUAwgYNPZb3dBwYcv0C/4y2So0BODQraJ+2jRjaA7w=;
-        b=cSxeN1TZL9tZzSVaTKq0/FwChXvIzUHXV3ZZq8urq1KRebHDObnRQlfDMHmmNb2hjL
-         Fq3C/4Br3LRl43Rhf2vyKPa/5rnXarzTIgJvj2fTOZGwCKfjRclazIZtrTs0Jr5kCwuW
-         xy5qGYq77a+hHxD9p1DRR05+jLIOr4JeCxLkP10ZcFrO/sgdJ0fOWvV64XyeOl3yFuQB
-         03B5R85oU1x3aQGPAPd/cRECECv86eq0EiGoexnqw68n/VseiMyJKEE4R+yiApBN6lc5
-         7BDM4McTKmNzPu96VHfTtk9Hixg8uwy1ux6IccgnEsRpg90I8C2bYaOeMrPEPK6hqodQ
-         92Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUKMHTrLcb2PExir1UfOWVBo0gI9PFTG5pnsX0KziH6jA8brlYFqUlB4jJui2eeILMX62Gblsh7K2veUWYOyCVMBM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0MN02G3dtvQx1OivHxw+TI9j8S8HbPjT5mIpv3iQ4BkKp2AFC
-	S5z+K50rpOhVyHm6SQKeJaBYCsuMlTN1UpvaiWnM28EdEI+JHSAVU7l3
-X-Gm-Gg: AY/fxX434mLC0heYmOthhn3Z8ShwC+UvXbpB8A8AAw2hjYDBIM1HjDM0jT45NIHjLDw
-	V9crCVBIzQbsSki6/AUMOuV3Lv+2DfGCr+t1qzygXdIGBkebFVFl2OsY49e608Rv5+sWNRaramm
-	OFQLl4EAa+PtkzgT4UqQKJcxgOfflBzUZHhOt+1gkpQYmaF19cj6TKz0Z7l8XFJx5eddAeqolgi
-	Czr8td9EiaRnwBjWNWy7oHEeK4MnZZCD+iiqyI0dqsXyrfyEp2IfyztB94x4tVrSIZKhmcAa/Mz
-	tzxR+AiOnN/MyiiwTNQg1d88ymSmJd19/SmNCWBpRPvNEkTWJF7Is6lt6kaKW/xAC1gfnKe6Uf+
-	2Lq8sQOs8cGUbUzjoGlI3Kstxz8eeomHK5Qczkr5OxJ1TcrL9swtXafTdmYcy+5wIp/bD7snUG2
-	nn+6RbtR6aGRFj
-X-Google-Smtp-Source: AGHT+IE28P5MxEOst+lrzYcF5oWn2Bj1irMns/TapvB1X3yMs4xi6bm3rBPZTYcsNMKqPvxAsdI4cg==
-X-Received: by 2002:a05:6a20:6a1b:b0:350:66b2:9729 with SMTP id adf61e73a8af0-366e2fc161dmr5264654637.60.1765447272165;
-        Thu, 11 Dec 2025 02:01:12 -0800 (PST)
-Received: from c45b92c47440.. ([202.120.234.58])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-c0c2c48bf7asm1932653a12.32.2025.12.11.02.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Dec 2025 02:01:10 -0800 (PST)
-From: Miaoqian Lin <linmq006@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="iPV2LAqP"
+ARC-Seal: i=1; a=rsa-sha256; t=1765453917; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kgHCiR8u/2CnpoEY1Fz0PyfSIq+VwAhbY3HRGinyVQWBE52iCS6vUT2aZQje67EphtmJmP7C8GSXHUwecjmgWBoV2dNGt8mlJiyo6ruzYTmo2ALFYnoVhB6u04mqWHteR5DyMPgcILsIoxyEqrLZjOBKfHMQPwQRwbfgfzbtPIw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1765453917; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=7/id9n+MCW2Pd2a3ElegjPUV3sCfxbhj29uUVCs76pQ=; 
+	b=Kp7s6mqo0CMfWXV3BXfI3mc47UgYrIA/owuY4tQNQwTEnjpbDRJ392sQUdCKyDuMcpaJRCPk8z2nBvS+cTrjVRge9YH7IPn/v1fmZaRaY3QCFZnvnZ5axQRSEJd/dWg75aM77s0z8gns+Bu+vT0dYoc586ww3dh/g5VKA+z3thE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765453917;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=7/id9n+MCW2Pd2a3ElegjPUV3sCfxbhj29uUVCs76pQ=;
+	b=iPV2LAqPQf4j5ftNNFIRxie8ShaCga5UvwHdrMGQ7p9hYnrIG9nzgq60y3uwXLQ3
+	89/pWy/NPEz1aGiScl+knXAOuEiLOae0tePJSgEwPyQHl7zJHhov9knOmMHfSUIR2K6
+	KOCT20xQ1koKb9YpMYA/5IyhC/uXsj1GfjbsxRwg=
+Received: by mx.zohomail.com with SMTPS id 1765453915375487.01665194653924;
+	Thu, 11 Dec 2025 03:51:55 -0800 (PST)
+From: Li Chen <me@linux.beauty>
+To: "Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <zanussi@kernel.org>,
+	linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: linmq006@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH] tracing: Fix error handling in event_hist_trigger_parse
-Date: Thu, 11 Dec 2025 14:00:58 +0400
-Message-Id: <20251211100058.2381268-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Subject: [RFC 0/5] ext4: mark more ops fast-commit ineligible
+Date: Thu, 11 Dec 2025 19:51:37 +0800
+Message-ID: <20251211115146.897420-1-me@linux.beauty>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,34 +55,34 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Memory allocated with trigger_data_alloc() require trigger_data_free()
-for proper cleanup.
+ext4 fast commit only logs operations with replay support. This series
+marks a few more operations as fast-commit ineligible and accounts
+them via fc_info so behaviour under fast commit is easier to reason
+about.
 
-Replace kfree() with trigger_data_free() to fix this.
+Testing was done in a QEMU guest on loopback ext4 filesystems created
+with -O fast_commit[/,verity] by exercising each operation and checking
+/proc/fs/ext4/*/fc_info for the corresponding ineligible reason and
+ineligible commit counters. Detailed steps are in each commit's message.
 
-Found via static analysis and code review.
+Li Chen (5):
+  ext4: mark inode format migration fast-commit ineligible
+  ext4: mark fs-verity enable fast-commit ineligible
+  ext4: mark move extents fast-commit ineligible
+  ext4: mark group add fast-commit ineligible
+  ext4: mark group extend fast-commit ineligible
 
-Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
-Cc: stable@vger.kernel.org
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- kernel/trace/trace_events_hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/fast_commit.c       |  3 +++
+ fs/ext4/fast_commit.h       |  3 +++
+ fs/ext4/ioctl.c             |  3 +++
+ fs/ext4/migrate.c           | 12 ++++++++++++
+ fs/ext4/move_extent.c       |  1 +
+ fs/ext4/verity.c            |  2 ++
+ include/trace/events/ext4.h |  8 +++++++-
+ 7 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 5e6e70540eef..f9886fff7123 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -6902,7 +6902,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
- 
- 	remove_hist_vars(hist_data);
- 
--	kfree(trigger_data);
-+	trigger_data_free(trigger_data);
- 
- 	destroy_hist_data(hist_data);
- 	goto out;
 -- 
-2.25.1
+2.51.0
 
