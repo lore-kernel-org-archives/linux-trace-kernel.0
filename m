@@ -1,120 +1,137 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFAA3019C7;
-	Thu, 11 Dec 2025 11:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765453988; cv=pass; b=GcjzLAvyxAfVpqHD8rHUF/ACiQxLE3Fl2vrJOMgyp+D9CFpUsk9pI8KPFLUF4jlcPWCocM6saYteVl+R6SSvrgRyw0aBedivnJI8co9bPMPGZhLSke25mKVK69HYEIRBcCtHrIlv/3sFHx78e3ia3scAKLIM0dAHppJbm8cHiH4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765453988; c=relaxed/simple;
-	bh=+HUSdOr8NWWRkdYoDBZEOdwvEx8lxuLm9f5q4yRmgvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OMDPHzBMrOVrsPV8xoeGJwoEvpHQrlSRsRVEqzm4K9mqK15kJfNgozVuHKL6JHUsiNyfRk7mY/q+O8+rJs1H9lBPrR23k4wzRKBSQWgALPpiLhFwovydorJA3Sf+nVE17abNSE4p9niJ/UxHjXzcCpYgsqc7Fd63rziPIYFfT/k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=unknown smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=YVjCLbge; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=tempfail smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5189072602
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Dec 2025 22:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765492629; cv=none; b=QByw0Ji+sNk4/ZWXjseeJmEnlZ4QvqD4zO5MObEBJys8OLmPwFW9GMxzt0hgyE4KLrGGIdgFXzv4y4f2BAWQk7Co5l4IzQzg3b0cyYCutqBg+H0xKuXNCjKzoTwkDdYAzFLHC+zBdG0t3/Aik/9fQ93z33bhtwZz+7DLrgLFths=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765492629; c=relaxed/simple;
+	bh=jmciuINnwAIhiC76b6NblDmvAMobl2rpVPRmCRpG41M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqVFlXzpOnbD/QSZGJtsUtVkO6TN5XrX+epm5tESlhvZwjxSxPBDTjEAQ7Oy05E6xDPKY3ZVOeksdapOxjrdw6/B7dTAYHo/HsajCa4jsEWbhD8EtDazkgdq0qyQdkOZ6tt5ir4GtaN83V953OwhBS72boxq2JH9LdHy50wjAWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gcoaRxMF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="YVjCLbge"
-ARC-Seal: i=1; a=rsa-sha256; t=1765453935; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ORxm8/LZA6Ek4RFD0Yk/xyVxl8p4PMR+rQA1C8MrAH302PYnKfJwl4fxKXd1X39q6SJjA+FRRBwvf7wP+HjeUnpLiQGef0/WLdOvM356cHgI9DygEXGbLBmCTpLKOpOKCvWO4tD990NEut73vUGKXbv8Eluv3/31laJTXHXo2wE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1765453935; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UHHv0+HlKFGfny4sGBUCRmGh7ywqTRASV5X/HQmso7w=; 
-	b=e0aKXh2NtwYWsN4uCjBCWMlXmBOgHamIAX5+2ZousBsb/YhzqTMRDP8Al5f7zv9gyaaurHi1mSbMvWkRfg++raXNMhZSKXlZ7n0mMbb7TgpJDAf45jpZKE7Na4lAhtz8Cu+zwsN5iXjoJJGA+f0ydfQBh8Ay1eXpKgGQLCs+8ro=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1765453935;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=UHHv0+HlKFGfny4sGBUCRmGh7ywqTRASV5X/HQmso7w=;
-	b=YVjCLbgex6qnLs4AunHhPZOJAPmWiN+LAjG1yBY3ZfRfxSeVY40RH+ChOHc2Qvfi
-	JIReWJN2YWsKaSxOpbX2rPJG/r4kXMJXfgV/uXNzCO/Akjft32/MCEMhqWHPEGjuj/G
-	u56OkGZztE1kTNVBCX+gm/rc2//1HSjsN0B89pTQ=
-Received: by mx.zohomail.com with SMTPS id 176545393326719.79287948199783;
-	Thu, 11 Dec 2025 03:52:13 -0800 (PST)
-From: Li Chen <me@linux.beauty>
-To: "Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Li Chen <me@linux.beauty>
-Subject: [RFC 5/5] ext4: mark group extend fast-commit ineligible
-Date: Thu, 11 Dec 2025 19:51:42 +0800
-Message-ID: <20251211115146.897420-6-me@linux.beauty>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251211115146.897420-1-me@linux.beauty>
-References: <20251211115146.897420-1-me@linux.beauty>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gcoaRxMF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1765492625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bxp6KL19Gq6qRMUwve9v7rC8d7HK+M8mM1/+QFg153c=;
+	b=gcoaRxMFdxCLTmOk0z1x7wdiKrd96l69lqFyTwVGIBtp7gJxxcR3GRhFWkpyjC0gi8SSXP
+	pQQs5bCTW8tRknrq0aE+cT+Jvm5qZrmW/5WJLhjnb/S+fhujixvGAXw2cPOA5hs76rIghG
+	FW3wibO6/lOxSxmu4/d/zX/VlNEEnDY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-45-hzBXEZ8dPQS8L24yg3RRsg-1; Thu,
+ 11 Dec 2025 17:37:00 -0500
+X-MC-Unique: hzBXEZ8dPQS8L24yg3RRsg-1
+X-Mimecast-MFC-AGG-ID: hzBXEZ8dPQS8L24yg3RRsg_1765492615
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4DC241956061;
+	Thu, 11 Dec 2025 22:36:55 +0000 (UTC)
+Received: from pauld.westford.csb (unknown [10.64.240.7])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DAF5A1956056;
+	Thu, 11 Dec 2025 22:36:48 +0000 (UTC)
+Date: Fri, 12 Dec 2025 07:36:43 +0900
+From: Phil Auld <pauld@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/13] sched: Export hidden tracepoints to modules
+Message-ID: <20251211223643.GA557546@pauld.westford.csb>
+References: <20251205131621.135513-1-gmonaco@redhat.com>
+ <20251205131621.135513-9-gmonaco@redhat.com>
+ <20251205133552.GA400972@pauld.westford.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251205133552.GA400972@pauld.westford.csb>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Fast commits only log operations that have dedicated replay support.
-EXT4_IOC_GROUP_EXTEND grows the filesystem to the end of the last
-block group and updates the same on-disk metadata without going
-through the fast commit tracking paths.
-In practice these operations are rare and usually followed by further
-updates, but mixing them into a fast commit makes the overall
-semantics harder to reason about and risks replay gaps if new call
-sites appear.
 
-Teach ext4 to mark the filesystem fast-commit ineligible when
-EXT4_IOC_GROUP_EXTEND grows the filesystem.
-This forces those transactions to fall back to a full commit,
-ensuring that the group extension changes are captured by the normal
-journal rather than partially encoded in fast commit TLVs.
-This change should not affect common workloads but makes online
-resize via GROUP_EXTEND safer and easier to reason about under fast
-commit.
+Hi Peter,
 
-Testing:
-1. prepare:
-    dd if=/dev/zero of=/root/fc_resize.img bs=1M count=0 seek=256
-    mkfs.ext4 -O fast_commit -F /root/fc_resize.img
-    mkdir -p /mnt/fc_resize && mount -t ext4 -o loop /root/fc_resize.img /mnt/fc_resize
-2. Extended the filesystem to the end of the last block group using a
-   helper that calls EXT4_IOC_GROUP_EXTEND on the mounted filesystem
-   and checked fc_info:
-    ./group_extend_helper /mnt/fc_resize
-    cat /proc/fs/ext4/loop0/fc_info
-   shows the "Resize" ineligible reason increased.
-3. Fsynced a file on the resized filesystem and confirmed that the fast
-   commit ineligible counter incremented for the resize transaction:
-    touch /mnt/fc_resize/file
-    /root/fsync_file /mnt/fc_resize/file
-    sync
-    cat /proc/fs/ext4/loop0/fc_info
+On Fri, Dec 05, 2025 at 08:35:52AM -0500 Phil Auld wrote:
+> On Fri, Dec 05, 2025 at 02:16:16PM +0100 Gabriele Monaco wrote:
+> > The tracepoints sched_entry, sched_exit and sched_set_need_resched
+> > are not exported to tracefs as trace events, this allows only kernel
+> > code to access them. Helper modules like [1] can be used to still have
+> > the tracepoints available to ftrace for debugging purposes, but they do
+> > rely on the tracepoints being exported.
+> > 
+> > Export the 3 not exported tracepoints.
+> > Note that sched_set_state is already exported as the macro is called
+> > from modules.
+> > 
+> > [1] - https://github.com/qais-yousef/sched_tp.git
+> > 
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> 
+> This makes sense.
+> 
+> Reviewed-by: Phil Auld <pauld@redhat.com>
+> 
 
-Signed-off-by: Li Chen <me@linux.beauty>
----
- fs/ext4/ioctl.c | 2 ++
- 1 file changed, 2 insertions(+)
+Any chance we can get this one in even if the rest of the series
+needs more time?
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 57b47b9843f3..ce92652f8332 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -1608,6 +1608,8 @@ static long __ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 
- 		err = ext4_group_extend(sb, EXT4_SB(sb)->s_es, n_blocks_count);
- 		if (EXT4_SB(sb)->s_journal) {
-+			ext4_fc_mark_ineligible(sb, EXT4_FC_REASON_RESIZE,
-+						NULL);
- 			jbd2_journal_lock_updates(EXT4_SB(sb)->s_journal);
- 			err2 = jbd2_journal_flush(EXT4_SB(sb)->s_journal, 0);
- 			jbd2_journal_unlock_updates(EXT4_SB(sb)->s_journal);
+Without this, out of tree modules fail to link.
+
+I don't know if it's worth adding:
+
+Fixes: adcc3bfa8806 ("sched: Adapt sched tracepoints for RV task model")
+
+
+Cheers,
+Phil
+
+> 
+> Cheers,
+> Phil
+> 
+> > ---
+> >  kernel/sched/core.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 41ba0be16911..5516778c19eb 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -119,6 +119,9 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
+> >  
+> >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+> >  DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
+> > -- 
+> > 2.52.0
+> > 
+> > 
+> 
+> -- 
+> 
+
 -- 
-2.51.0
 
