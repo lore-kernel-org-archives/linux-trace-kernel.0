@@ -1,234 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ECE311973;
-	Fri, 12 Dec 2025 09:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139AD2DC354
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 09:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765531331; cv=none; b=fqE5wOxLb7r05zVooTVTaJg0b1wYmVh0KzMVbl8I/ybzkkZ2DyfA4OyxLGcGAUJu/LRuzF5CbsgBZudFXqRwS3BWa5a6W8vvTEJ/+g4ZNuoD7ESFOgV8JQUQ9w0AfgumGqnDQr9S8yv9NZNLB0+NzFCpLgZVxf/IC/has38DJ7I=
+	t=1765532237; cv=none; b=Zp46XaogrdQDgqOwMOvsgzWcVa4h7XswLv7lQblUcWjGB8A7slT9JyDdblr1MMlfK0jyoE+hF+ONXABEbnC9luvl/j/QibeuA6/TdNA5Dd3e7+vmg1Jodb/pr6FxyJc+po0p7mLuV3gVs+9Uup6Y2/t+Bx/aAPSZyp24X5yAmNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765531331; c=relaxed/simple;
-	bh=G4/Ro5h/dXWSgGT4bi8LaimRNYvzCb1QNsi4W/ft1OM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u0VD1miETHZV6YhLtBroEd6tSNzn3EV5Gwj0DJphHpFM9moGYzKceb+MARgF9+BskAmN3n7qfheUpv5arbt0uwlLB5QsRLebxrQjICfuEKd2EN4DNBbqEfiCWXRr7pHuqhYjYDFI1oKP0QXgk+7KKeDHiUjtHXw+aiEgJMf6ZKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GLV1uZB0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1765532237; c=relaxed/simple;
+	bh=RQs+Cr//EkA08UpbUBYAdwgnHf9vZ+MF64Ay7/KhotQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ts16UlVkqlTSwUJrVNpGst8MrkR3L0CKUyAw80l98+eQesKrmrL7dY+DJrHRX/g8jb1h3UlF1RMrDImwwIwsLJ9k6XxlB5Oyn71mf4pXuts4z+HIiQyJM8Q0UZRlrhob+ddOoSkzZhV3x3UQ4u/1uoz7JLZyfhnz9nKBt27m7WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=uKg/GSQK; arc=none smtp.client-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GLV1uZB0"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC92JKO022802;
-	Fri, 12 Dec 2025 09:21:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1SVc7R
-	vjSkKvbeeSy9JkHiRgrtVWX/MI2JfZ5mhQsHM=; b=GLV1uZB063h2nQkRdH909x
-	cTkKipDeehdUcjcKGosyWCnUtzFaLW1brhgVI/mMGZ2HBuLbry/Kka3d0B4CciGQ
-	66sDRrdItBK9Ek/+d0LIQyj9xi40iCji2aBulSfU+okbX3Z5bFn3LFv9QZbBcuNq
-	c4GPp/8F9RNG+9mhNplXfnhe6nRfSHmhLfL4xdm1PO9pNQspRmEBdDp/EMivnnyd
-	H9KF+k1YftPqWbvvQnwTHfJNpErZ1AloKL5cBbmq5s/qwNJGhl7r/j9GqZdcU6Nt
-	7J6kt9/FtLi+MrdK4+OzanOih/X4A8MdLjOrxBE9eGsToIwz5EG67dN2mezD55zw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww3v0k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 09:21:45 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BC9FG02018648;
-	Fri, 12 Dec 2025 09:21:45 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww3v0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 09:21:45 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC6bscd008391;
-	Fri, 12 Dec 2025 09:21:44 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4avytnb461-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 09:21:44 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BC9LecK42598670
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Dec 2025 09:21:40 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EEA702004D;
-	Fri, 12 Dec 2025 09:21:39 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 81E4020040;
-	Fri, 12 Dec 2025 09:21:38 +0000 (GMT)
-Received: from [9.111.169.84] (unknown [9.111.169.84])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Dec 2025 09:21:38 +0000 (GMT)
-Message-ID: <e38c0be1-52af-49a0-8bbc-1148ad3cc32e@linux.ibm.com>
-Date: Fri, 12 Dec 2025 10:21:38 +0100
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="uKg/GSQK"
+Received: from pps.filterd (m0167077.ppops.net [127.0.0.1])
+	by mx0b-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BC90lQD2433061
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 04:13:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pps01; bh=za3Z6nCogcC2rSrqJPImaYLaC5
+	FD9fqlNIQmXXHpQIY=; b=uKg/GSQKP65HHIXIU/0QSpgmKz0ZJ4mRqkKK0wXo5X
+	4p31jMkn0OhTgbSuRyvk+bMLxQmI/TdY8r9vZfeUc2AlUqm+gfU3otqXmISQCjOu
+	ydBvK32hqIcxPh139Zy+AXkgKY9qjEtyEaWFwmHClh4bWfpZDlZQ4YYtXF++MeHu
+	02LCDVqak3NcTydE2pt3knXB7DVFhmVf7oraRiG5vDoI44eQG2VLZREASUW46fXo
+	j9dZReDVYy2mdV13vlmgY+55fRCWQzDz0KmEpPCZY4v4BfbvLaXjtxH9sZ1/DhsZ
+	yUq+XbpvKtvgrWAWl7JMk8Pbl0wG5OmkUqJEcj2EukrQ==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4b023bwfud-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 04:13:50 -0500 (EST)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-297e1cf9aedso18860395ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 01:13:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765530830; x=1766135630;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=za3Z6nCogcC2rSrqJPImaYLaC5FD9fqlNIQmXXHpQIY=;
+        b=jS8gXen79kgnFpQqKmJ5Hcm2iYir+o52mg4aMq/ikGUCxpQ1k3b4tdlEZklqqERNGO
+         qreQjOjW5mZKYrZ/Gv92xDjSj39ae8qfG3zbe3S7Rpci+9JjSfWZPVEfusXUKqBNPfI3
+         98yZ3TXO5btHswN2gspVHvtYNM7I8Cecu3iPtDJ/Axvt//u2/rAY0rCFTqK6pGTpCSJl
+         6hxhVnTkbt7N1GOXgggLf6zvvnbayhHNCehyuzRAFxtekYdiG0H96p7PIDPhzra+o+A0
+         GGqGq33vzSMr7N1AExD7dw3otOQ5DvvifO4i/O6CXRsiSbeS75M67pxWry8ASE9Wkmsx
+         p9XA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkg79MucjdSE+QzdKwATJMowl4C/Im2AIiRc1kU/GIRBmB4k/NUiUqmPB+d40mP2TF4vg+CTmZMq2b+q9/iGTCOJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3E0kbB98qAk2CYe1YXM7pvMu8+gNr3s+usurc5irnRM+UaQ/i
+	RaXjFZHaaj9R+zKdw4MVt2yN1x3CLWwcApXwHbjKhn+ym2mNaPNaPD37WI3oV6pUN0RNEu6w1hb
+	HBuIpi92HLc8YymKQyD559pcylhZkuvSl5ACUGweE2ECzdlxTh6D4nxAHCBQliBOwG0t/VQ==
+X-Gm-Gg: AY/fxX5+v8xSjRUsetYaGSoQHgGxuhPsFMu+HE12srcjR1OkfglUBJ8avcbbmBWQNIZ
+	5+7v8PX3mppuF66y+codu5lQZ3fIj9rMq+6hKZXk8sdDn+6hX0JI8kq3jedgI/byWXcfPTLws4g
+	B0r421Afu9bxqrvr1TZOFhKhwdEfwx1vCtPa+QIy94zHt3vgABpC0C4xZbfkWIGSL00tcLFPKfF
+	z+5cjgQbsNpPCE0G9/d8A6u21WECvr+tZWIDG+Rcfnjo6NWX00i3Z5fmKzdXR2Wl4Kx3/WupLgu
+	GdMLhneYyvLDE3Y+QLKf9yr7LeUA1fUba9MakF0YpC/zNsTo+ZLly17YjLU9SjvYL7JxHAtSH+d
+	e/IPkWJkobJGhO9ECYcp2u+IDwJgDFGat1uw7qFqrBXT3FWpttmyR7+RB
+X-Received: by 2002:a17:902:da90:b0:298:68e:4057 with SMTP id d9443c01a7336-29f26f02492mr12993465ad.59.1765530830012;
+        Fri, 12 Dec 2025 01:13:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH6sKbsPSYsaMyhULdwVqz1JoQu+BSE8km39oGocnv1+kBEsKkLBQeMpkHcDjKtUuydOVQxbw==
+X-Received: by 2002:a17:902:da90:b0:298:68e:4057 with SMTP id d9443c01a7336-29f26f02492mr12993135ad.59.1765530829488;
+        Fri, 12 Dec 2025 01:13:49 -0800 (PST)
+Received: from [127.0.1.1] (p99250-ipoefx.ipoe.ocn.ne.jp. [153.246.134.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29eea016e57sm48497255ad.63.2025.12.12.01.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Dec 2025 01:13:49 -0800 (PST)
+From: Tal Zussman <tz2294@columbia.edu>
+Subject: [PATCH v2 0/2] x86, mm: minor tlb_flush tracepoint adjustments
+Date: Fri, 12 Dec 2025 04:08:06 -0500
+Message-Id: <20251212-tlb-trace-fix-v2-0-d322e0ad9b69@columbia.edu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 17/17] s390/unwind_user/fp: Enable back chain
- unwinding of user space
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
-        Steven Rostedt <rostedt@kernel.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHbbO2kC/3WMQQ6CMBAAv0L27JrSUARP/sNwoO1WNkEwbWk0p
+ H+3cvc4k8zsEMgzBbhWO3hKHHhdCshTBWYalwch28IghVRCyQ7jrDH60RA6fiPpXrfOXLSWLZT
+ m5ano43cfCk8c4uo/xz7VP/vvlGoUKKlvjOpco4S9mXXenprHM9kNhpzzFzEpeemtAAAA
+X-Change-ID: 20250528-tlb-trace-fix-eb9b6fc7bb26
+To: Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
-        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
-        Dylan Hatch <dylanbhatch@google.com>
-References: <20251208171559.2029709-1-jremus@linux.ibm.com>
- <20251208171559.2029709-18-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20251208171559.2029709-18-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rDt31-Fuxu1pHN2xDfNuEfS8dlGf87xF
-X-Proofpoint-ORIG-GUID: k-yP8sNeYnLD5LApFVd7kYBCz2H_w0ye
-X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=693bdea9 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=fMs-5SPQQjTgPQFwRbIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX4c9yzRJsDN42
- DlLvmi1NfoNTQqS3/EBrFWyYMHUOtEeZefS7FiMSrxjNBXUAiLC1i8wjUeV1Afeknakgy15aik6
- 5Ad6iK0+6hT92W7DdYOCWOPS/lhu+gPyKMsC0gdVjdS8N1lTPTvZB0QhWGXf7SKnEBGWseZAn5N
- xDTY2yvqL909dItjqM/Y2UyLuTl3ExBperl6clM9VcH6k5sdQOHe79bha8u4iatWulKPXdg6hg9
- +SRd/RZNXdfk3p/AeiagwCHisSiENN5XAlu/8W0mVMEUAj/gsUWwT2ho1yfNPJeja152dt0cst6
- uox36ag20AXgddYPV8aakcmuMJC3SzRRgMKPrRVW3moFXm5cioXa3gpCsyKJlE2uOGwtR7WvauD
- QepDFf9f26HRZhxQJ27LuNAV+kDnOA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-12_02,2025-12-11_01,2025-10-01_01
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        x86@kernel.org, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        David Hildenbrand <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Tal Zussman <tz2294@columbia.edu>,
+        David Hildenbrand <david@kernel.org>
+X-Mailer: b4 0.14.3-dev-d7477
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765530499; l=788;
+ i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
+ bh=RQs+Cr//EkA08UpbUBYAdwgnHf9vZ+MF64Ay7/KhotQ=;
+ b=HNx9jzUDiAP5JSX3noLQxFsehtAhFIOg4dMKrEKthREshjiRp5BImwVYJwMexc6sxNAWzyZPY
+ sa/Ub59Y1T7D4+rjSgEPJvT53cMT2cdm+oFqczWFoehSiGm+14I70uS
+X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
+ pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
+X-Proofpoint-GUID: GEcT6J3RvORnNr65mq_eCGvuYAkvQqSn
+X-Authority-Analysis: v=2.4 cv=ca3fb3DM c=1 sm=1 tr=0 ts=693bdcce cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=gC7H+NTNV8TiHuUi9Bl0tg==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=x7bEGLp0ZPQA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=D63WkmDjCBH-idvp9jYA:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-ORIG-GUID: GEcT6J3RvORnNr65mq_eCGvuYAkvQqSn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjEyMDA2OSBTYWx0ZWRfX9kf+9Jj5hhXy
+ JHyE4r+gywYsfkJgKxYJSOavoyAJD+DAGkivwLDh6O9Yn7vhu0kstCmTrj89T6QlYPlPIrDsM2Z
+ xSQ2rFQXOK+E+cIkpr6P9HFN4QxIGGb7nk3I/oZe5KQ4Mzhhr+YR0bPmAAN0BaNV7IWigGYcapm
+ GtyHC5+AvsFy+tfCCWPgkVntepKOlCzB3kDSVLJHmDnZQA+k77LJUJ021+Tw+rfN0iTUQe5hm27
+ +oq4ya7/pbbEvrAwOtcSx3EdRtwEsVrWiZYnSySqj39zLDVV+kMRucqV820X37i+Edf4P+kniQN
+ fwrDJ2vAc/DGckqA0bJUp+2AYbLGEZFpHdbyimyYxMedYIAx1/tWp1uBNCfOmLrWI4lNWNOsDj3
+ W0X9h6mD/IdGLXOZWHITWAICK4BUAw==
+X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11639
+ signatures=596818
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ impostorscore=10 phishscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=10 spamscore=0 clxscore=1011 bulkscore=10
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512120069
 
-On 12/8/2025 6:15 PM, Jens Remus wrote:
+One minor fix and one minor cleanup related to the tlb_flush tracepoint.
 
-...
+Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+---
+Changes in v2:
+- Propagated tags (thanks David, Rik, Steven!)
+- Added MMU Gather maintainers to recipients
+- Rebased on master
+- Link to v1: https://lore.kernel.org/r/20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu
 
-> Leverage the unwind user fp infrastructure to enable unwinding of user
-> space using back chain.  Enable HAVE_UNWIND_USER_FP and provide a s390-
-> specific implementation of unwind_user_fp_get_frame(), which uses the
-> back chain.
+---
+Tal Zussman (2):
+      x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+      mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
 
-> diff --git a/arch/s390/include/asm/unwind_user.h b/arch/s390/include/asm/unwind_user.h
+ include/linux/mm_types.h   | 1 -
+ include/trace/events/tlb.h | 3 ++-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+---
+base-commit: d358e5254674b70f34c847715ca509e46eb81e6f
+change-id: 20250528-tlb-trace-fix-eb9b6fc7bb26
 
-> +static inline int unwind_user_fp_get_frame(struct unwind_user_state *state,
-> +					   struct unwind_user_frame *frame)
-> +{
-> +	struct stack_frame_user __user *sf;
-> +	unsigned long __user *ra_addr;
-> +	unsigned long sp;
-> +
-> +	sf = (void __user *)state->sp;
-> +
-> +	/*
-> +	 * In topmost frame check whether IP in early prologue, RA and SP
-> +	 * registers saved, and no new stack frame allocated.
-> +	 */
-> +	if (state->topmost) {
-> +		unsigned long ra, ra_reg;
-> +
-> +		ra_addr = (unsigned long __user *)&sf->gprs[8];
-> +		if (__get_user(ra, ra_addr))
-> +			return -EINVAL;
-> +		if (__get_user(sp, (unsigned long __user *)&sf->gprs[9]))
-> +			return -EINVAL;
-> +		if (unwind_user_get_ra_reg(&ra_reg))
-> +			return -EINVAL;
-> +		if (ra == ra_reg && sp == state->sp)
-> +			goto done;
-> +	}
-
-I realized that this additional heuristic is flawed:
-
-The topmost function may be past prologue, have allocated a new stack
-frame, and called a function.  The callee may have saved its RA and SP
-registers in the current stack frame, so that after the return from
-function call, the heuristic would erroneously assume that the topmost
-function is in early prologue and use the callee's RA and SP.
-
-Instead of erroneously skipping the caller it might erroneously insert
-a callee as caller.  I'll remove it again in the next version.
-
-> +
-> +	if (__get_user(sp, (unsigned long __user *)&sf->back_chain))
-> +		return -EINVAL;
-> +	if (!sp && ip_within_vdso(state->ip)) {
-> +		/*
-> +		 * Assume non-standard vDSO user wrapper stack frame.
-> +		 * See vDSO user wrapper code for details.
-> +		 */
-> +		struct stack_frame_vdso_wrapper *sf_vdso = (void __user *)sf;
-> +
-> +		ra_addr = (unsigned long __user *)&sf_vdso->return_address;
-> +		sf = (void __user *)((unsigned long)sf + STACK_FRAME_VDSO_OVERHEAD);
-> +		if (__get_user(sp, (unsigned long __user *)&sf->back_chain))
-> +			return -EINVAL;
-> +	} else if (!sp) {
-> +		/*
-> +		 * Assume outermost frame reached. unwind_user_next_common()
-> +		 * disregards all other fields in outermost frame.
-> +		 */
-> +		frame->outermost = false;
-
-		frame->outermost = true;
-
-> +		return 0;
-> +	} else {
-> +		/*
-> +		 * Assume IP past prologue and new stack frame allocated.
-> +		 * Follow back chain, which then equals the SP at entry.
-> +		 * Skips caller if wrong in topmost frame.
-> +		 */
-> +		sf = (void __user *)sp;
-> +		ra_addr = (unsigned long __user *)&sf->gprs[8];
-> +	}
-> +
-> +done:
-> +	frame->cfa_off = sp - state->sp + 160;
-> +	frame->sp_off = -160;
-> +	frame->fp.loc = UNWIND_USER_LOC_UNKNOWN;	/* Cannot unwind FP. */
-> +	frame->use_fp = false;
-> +	frame->ra.loc = UNWIND_USER_LOC_STACK;
-> +	frame->ra.offset = (unsigned long)ra_addr - (state->sp + frame->cfa_off);
-> +	frame->outermost = false;
-> +
-> +	return 0;
-> +}
-> +#define unwind_user_fp_get_frame unwind_user_fp_get_frame
-Regards,
-Jens
+Best regards,
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Tal Zussman <tz2294@columbia.edu>
 
