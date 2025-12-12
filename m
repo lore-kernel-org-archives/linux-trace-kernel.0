@@ -1,280 +1,197 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBE6295DA6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 02:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9152BF3E2;
+	Fri, 12 Dec 2025 08:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765505705; cv=none; b=LOb91ZljU/tL7OEPEcyRw15O0IOYYn6h0zijGjfZVeJ7Ly2/EFHSQB+O5whpooEzVSuEdo0w6JVYaSQtKkMr+RVAYINhUobXryHyJ8yQKkhMzW1trIshehPHpWCn/+V2yx0jQQ9BiDa1LjFAMtl6RKuvMUQbQ0xZYii1v2KoAEU=
+	t=1765527330; cv=none; b=WusaNdsZz5oxSAWhIQXsW4DcHoOIoRnH2bLd3TE72gZTvKKgBgGbAV5qE/vhK/yQvk+DapD73ja0DZN+ipCBmLxJKTRLK48tsh03TNShDUlLq+8syR6GLyf8BeUJPjfOIO57Sp/CMXtEAxHaKamyCkIVjSc1CIRoimEgtkOoAo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765505705; c=relaxed/simple;
-	bh=NgUM7aUL53vWNz7WHajf0MM0Z41X1RaW7qHFuEbiPvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ChBD/aYrNabhonSWckVFGDFvymvbw/VqeFSioTsSrax4w/bJyv7h7wfW3Pr9eg09IP2RHfgokRFYvtXtb8a8RErVOOjBdxmqn2ryBJOAl7rfq3qMGK1HED1tnz9CXt3AuzNilW+qR2u7AlV7i/owTYS84k681qd6myQ7gABmSJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxQRWSMi; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765527330; c=relaxed/simple;
+	bh=oXzknb+soR7rjkQzIPzrrf05XHCYFSQmrZBkpLVRTkY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R7KBeCSegIDagr9WsZcH01Wqs8seRdUvCTdf2uAfIyjsD1v57dmVJaQWMBh/3lnX+KM29nBkztSH3/5gKpOBhSTL5zda9HeSDZWJRiz/31PpH2oGGJ2sJB/f7FdNuUqBqpitVNbrQ9+A6P1ui4BWW/5n2fo0UWKFwSCIFeNs7V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P23uyrmW; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxQRWSMi"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b7355f6ef12so134318266b.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Dec 2025 18:15:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765505701; x=1766110501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jILMO67J70f6QfvYn7/aUo6kYXXEvH0iYZzNH3i3Ki8=;
-        b=dxQRWSMiuEO7gQWM9uKjoDEDwaDq9tmScqZtS/xmB8YtN1Z4wGQiKHwsb3wJSN6nFG
-         vbAyRQyMFVq8fzCkb3w+3FiZhxKEDv6N0+lf/pK2V4esxME5ajFZUOTYgSZOn1XnV40U
-         rHWZyb8Hu5+2rJ+AUhQYzfFd8AOclCfSN3VWSr6QlrMi249Okqavoz2umJ6ESvOfXyXz
-         p5dap0yylcnvrgrysrGHn1tHIFVG0vhqcV2xtvxfDv2UD8SMTU0imyeSzyaOgrzLdRIi
-         9+oShR8QkRi2Ues9U4I6MJbbX2IztIQz067q4/nlmN8T8o5NKSfUxReuqbINBDmXWXiY
-         YjXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765505701; x=1766110501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jILMO67J70f6QfvYn7/aUo6kYXXEvH0iYZzNH3i3Ki8=;
-        b=ZvnJ83/2RcAUSuhfi0mh9bedP4iJ08bg+Mqm1er8jdmYcotwCMGi3FxCtDlwgd6S+M
-         wlmQ0e2b5vYHqp8VK+JQEj6CQUvh4A6CaX5vIRVSVeE5RYkWgxCYXLtRqdpEHEiK7lSt
-         xVEeJrTB2ENd/IXHnQl8V9U9Zg3OZhUimYTVEGJzPCQJI8fLQVOUnLuimPVH5wjQCufH
-         7aSQ6GIs7221zavxu5+6uJml/g4ehs6YoHyUWZcReB14sgpFZxds8IjaHY75prBBLvbe
-         faAPRyGug3VZBq3lLQfZKueJ35eN0VvpR8nbUoIWS6OfO8ksT2Id68YaYeIlMRRVA/0d
-         8bNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa7cQJklKAx6BwfF51imGhV3iXxNpk0LID9akqpMenSCbMRT+SXakRVRymlxz0K1YkN9TYThy5WVAENZh0JIsyfRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl1aNk7nB9JUWMyeCJAi6ttbIs6mHtcqyNcGfmwoMFbl4kGKR1
-	HXK3eXHbqsfqQbnW7VMlaSbkda+FqjHcXuUOTbKIgB35LrlksdbmV/ywbVGgdyPpV8qKXefELSk
-	IohW35KLYgQnK01atedgGSLwfhogfqHM=
-X-Gm-Gg: AY/fxX6Sl1ZYGHvV9aOxpHBsDPpY0pqV1r/c9gi6PhsGxBW/WOJIYHp+pC+8x3txwvD
-	m+nOEnMOr85EvnxRxq8EjuzjDKwbzVtFYPSh3P9QXEoFz7Noq+EB19c8pBZ5fVnCmofjwtNUgGY
-	Atwh4/w16sVoWaL0VGA79oWYcR8BE24qE5q3hJs9vMWK7+BAozDl1PKszpExsgd0F4h5Bc+/Pjm
-	XPva5Dj8EMlNTpRoK+rHOBF9Hwbdk89Q4komD3jFzmTKnf9yOss/Ai1yargi7lTdikzjwOi
-X-Google-Smtp-Source: AGHT+IF3KrwmJyi+HSGGfvgFeecEYMXvJ0CLnWlzZJQVAK20zGOIt0iGIK528x74ScjATJY85UNp7s0TG6wMvgPIERk=
-X-Received: by 2002:a17:906:4fc8:b0:b79:f8f7:38ea with SMTP id
- a640c23a62f3a-b7d23c5bccfmr22798866b.45.1765505700461; Thu, 11 Dec 2025
- 18:15:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P23uyrmW"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BBIqgk6010186;
+	Fri, 12 Dec 2025 08:14:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/m1kpF
+	nXyyLJYkHaebDolzH+98BuCZUPbfMxloz5vus=; b=P23uyrmWSVD5DkS2IMDktV
+	V+/SkFgDRRZxDdFSaU0qS7Cqi/voKylxa//vCelL6Md1H7bxwxD3YJ84hhFtCni8
+	kCnQFtZMIgh8Xcai4mVutxoByNbz+Axu2qXxeyP6Oc+YoV05QhJvWQZbibx03SVR
+	G/YCmbhxErJdCrz36pr74KusvWVYBLs58lbyILq66owFCqmX6xhFhoO2IkD1WGpt
+	hcabaz6VQdZEcloW1kHOa2fHlDcUrjKnfnpCp6GEugPWvEgniLUAOOt7q22O+gbf
+	ITF0i4FZoc3qo76VrU8i59ZAU16BtYumg7L77Eut3JV8d7icvDnw0PefM7Q+kTvA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aytm95av6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 08:14:43 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BC8Eg1T018009;
+	Fri, 12 Dec 2025 08:14:42 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aytm95av3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 08:14:42 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC6bfiL012425;
+	Fri, 12 Dec 2025 08:14:42 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aw0akatdf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 08:14:41 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BC8EcDX47186184
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Dec 2025 08:14:38 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1CBD120049;
+	Fri, 12 Dec 2025 08:14:38 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 993EF20040;
+	Fri, 12 Dec 2025 08:13:40 +0000 (GMT)
+Received: from [9.111.169.84] (unknown [9.111.169.84])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Dec 2025 08:13:40 +0000 (GMT)
+Message-ID: <81cf7e6a-702b-4021-a148-9d051d28e80c@linux.ibm.com>
+Date: Fri, 12 Dec 2025 09:13:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251209121349.525641-1-dolinux.peng@gmail.com> <20251209121349.525641-3-dolinux.peng@gmail.com>
-In-Reply-To: <20251209121349.525641-3-dolinux.peng@gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Fri, 12 Dec 2025 10:14:48 +0800
-X-Gm-Features: AQt7F2oN7ai-ywwCTeofI2LxJYFaNlo_0sZ-Pwu5pKaO68ietmaecOnWf3-fGCY
-Message-ID: <CAErzpmv4U5_VMq3nBeLduKaVMdDRL0d8MQoH9Rafpy4hmbmnsg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] tracing: Update funcgraph-retval documentation
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	pengdonglin <pengdonglin@xiaomi.com>, Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 14/17] s390/unwind_user/sframe: Enable
+ HAVE_UNWIND_USER_SFRAME
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>
+References: <20251208171559.2029709-1-jremus@linux.ibm.com>
+ <20251208171559.2029709-15-jremus@linux.ibm.com>
+ <20251210151012.40732B79-hca@linux.ibm.com>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20251210151012.40732B79-hca@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: OEvpXfclAQ9iQ829_WXTZ7y3JxA1yP13
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjExMDA2MSBTYWx0ZWRfX7cwJ/2FTxbOK
+ JGde00bzjEu9AlLbFNhQ6noZTmjVvTRBrYo4EsCH/SrF2Q00lVkRE35E9CyNnCnLKs4Pp/BHXeH
+ fX57/LxEdTxrYs0lXUaFefsSbnFoffcoS6ZKQ0knYvSabcR2fFsN9Gl5tmoni+k8P/wC+tlPlG+
+ kRu/0l1Tne1MoUmMaVSr+MvbRBBwC9nRzKrL1c6MlPQfQgE8V9XUsEPF0j0bGTG2Qt8O1LT363/
+ QjRKgoqiE2zmZeipWxF0/UPvxc1nHBQKxNh1vzamLOsxEW7oW5vecRuMtA/Zri0B6PIBXXswhGf
+ pliB88rrSlsqU7/VxV0Gv+epvbQUCCEIPqhrydZnZg4HfKgbFMpfHo5SLEHmCmEV6fKg1iCICNW
+ F8qZpFLon4TeEz4sXcHqeuk+VU2bRA==
+X-Proofpoint-GUID: KvxoyagGqrDnoujMKLzUDAEemsy768bn
+X-Authority-Analysis: v=2.4 cv=F5xat6hN c=1 sm=1 tr=0 ts=693bcef3 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=jPGRhfdHIWHQ-jYqdAYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-12_01,2025-12-11_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512110061
 
-On Tue, Dec 9, 2025 at 8:14=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.com=
-> wrote:
->
-> From: pengdonglin <pengdonglin@xiaomi.com>
->
-> The existing documentation for funcgraph-retval is outdated and partially
-> incorrect, as it describes limitations that have now been resolved.
->
-> Recent changes (e.g., using BTF to obtain function return types) have
-> addressed key issues:
-> 1. Return values are now printed only for non-void functions.
-> 2. Values are trimmed to the correct width of the return type, avoiding
->    garbage data from high bits.
->
-> Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
-> ---
->  Documentation/trace/ftrace.rst | 78 ++++++++++++++++++++--------------
->  1 file changed, 45 insertions(+), 33 deletions(-)
->
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.=
-rst
-> index d1f313a5f4ad..03c8c433c803 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -1454,6 +1454,10 @@ Options for function_graph tracer:
->         printed in hexadecimal format. By default, this option
->         is off.
->
-> +  funcgraph-retaddr
-> +       When set, the return address will always be printed.
-> +       By default, this option is off.
-> +
->    sleep-time
->         When running function graph tracer, to include
->         the time a task schedules out in its function.
-> @@ -2800,7 +2804,7 @@ It is default disabled.
->      0)   2.861 us    |      } /* putname() */
->
->  The return value of each traced function can be displayed after
-> -an equal sign "=3D". When encountering system call failures, it
-> +an equal sign "ret =3D". When encountering system call failures, it
->  can be very helpful to quickly locate the function that first
->  returns an error code.
->
-> @@ -2810,16 +2814,16 @@ returns an error code.
->    Example with funcgraph-retval::
->
->      1)               |    cgroup_migrate() {
-> -    1)   0.651 us    |      cgroup_migrate_add_task(); /* =3D 0xffff93fc=
-fd346c00 */
-> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* ret=3D0xffff93=
-fcfd346c00 */
->      1)               |      cgroup_migrate_execute() {
->      1)               |        cpu_cgroup_can_attach() {
->      1)               |          cgroup_taskset_first() {
-> -    1)   0.732 us    |            cgroup_taskset_next(); /* =3D 0xffff93=
-fc8fb20000 */
-> -    1)   1.232 us    |          } /* cgroup_taskset_first =3D 0xffff93fc=
-8fb20000 */
-> -    1)   0.380 us    |          sched_rt_can_attach(); /* =3D 0x0 */
-> -    1)   2.335 us    |        } /* cpu_cgroup_can_attach =3D -22 */
-> -    1)   4.369 us    |      } /* cgroup_migrate_execute =3D -22 */
-> -    1)   7.143 us    |    } /* cgroup_migrate =3D -22 */
-> +    1)   0.732 us    |            cgroup_taskset_next(); /* ret=3D0xffff=
-93fc8fb20000 */
-> +    1)   1.232 us    |          } /* cgroup_taskset_first ret=3D0xffff93=
-fc8fb20000 */
-> +    1)   0.380 us    |          sched_rt_can_attach(); /* ret=3D0x0 */
-> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach ret=3D-22 */
-> +    1)   4.369 us    |      } /* cgroup_migrate_execute ret=3D-22 */
-> +    1)   7.143 us    |    } /* cgroup_migrate ret=3D-22 */
->
->  The above example shows that the function cpu_cgroup_can_attach
->  returned the error code -22 firstly, then we can read the code
-> @@ -2836,37 +2840,41 @@ printed in hexadecimal format.
->    Example with funcgraph-retval-hex::
->
->      1)               |      cgroup_migrate() {
-> -    1)   0.651 us    |        cgroup_migrate_add_task(); /* =3D 0xffff93=
-fcfd346c00 */
-> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* ret=3D0xffff=
-93fcfd346c00 */
->      1)               |        cgroup_migrate_execute() {
->      1)               |          cpu_cgroup_can_attach() {
->      1)               |            cgroup_taskset_first() {
-> -    1)   0.732 us    |              cgroup_taskset_next(); /* =3D 0xffff=
-93fc8fb20000 */
-> -    1)   1.232 us    |            } /* cgroup_taskset_first =3D 0xffff93=
-fc8fb20000 */
-> -    1)   0.380 us    |            sched_rt_can_attach(); /* =3D 0x0 */
-> -    1)   2.335 us    |          } /* cpu_cgroup_can_attach =3D 0xffffffe=
-a */
-> -    1)   4.369 us    |        } /* cgroup_migrate_execute =3D 0xffffffea=
- */
-> +    1)   0.732 us    |              cgroup_taskset_next(); /* ret=3D0xff=
-ff93fc8fb20000 */
-> +    1)   1.232 us    |            } /* cgroup_taskset_first ret=3D0xffff=
-93fc8fb20000 */
-> +    1)   0.380 us    |            sched_rt_can_attach(); /* ret=3D0x0 */
-> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach ret=3D0xfffff=
-fea */
-> +    1)   4.369 us    |        } /* cgroup_migrate_execute ret=3D0xffffff=
-ea */
->      1)   7.143 us    |      } /* cgroup_migrate =3D 0xffffffea */
+Hello Heiko,
 
-My bad for forgetting to update the above line and will fix it in the
-next version.
+thank you for the feedback!
 
->
-> -At present, there are some limitations when using the funcgraph-retval
-> -option, and these limitations will be eliminated in the future:
-> +Note that there are some limitations when using the funcgraph-retval
-> +option:
-> +
-> +- If CONFIG_DEBUG_INFO_BTF is disabled (n), a return value is printed ev=
-en for
-> +  functions with a void return type. When CONFIG_DEBUG_INFO_BTF is enabl=
-ed (y),
-> +  the return value is printed only for non-void functions.
->
-> -- Even if the function return type is void, a return value will still
-> -  be printed, and you can just ignore it.
-> +- If a return value occupies multiple registers, only the value in the f=
-irst
-> +  register is recorded and printed. For example, on the x86 architecture=
-, a
-> +  64-bit return value is stored across eax (lower 32 bits) and edx (uppe=
-r 32 bits),
-> +  but only the contents of eax are captured. If CONFIG_DEBUG_INFO_BTF is=
- enabled,
-> +  the suffix "(trunc)" is appended to the printed value to indicate that=
- the
-> +  output may be truncated because high-order register contents are omitt=
-ed.
->
-> -- Even if return values are stored in multiple registers, only the
-> -  value contained in the first register will be recorded and printed.
-> -  To illustrate, in the x86 architecture, eax and edx are used to store
-> -  a 64-bit return value, with the lower 32 bits saved in eax and the
-> -  upper 32 bits saved in edx. However, only the value stored in eax
-> -  will be recorded and printed.
-> +- Under certain procedure-call standards (e.g., arm64's AAPCS64), when t=
-he return
-> +  type is smaller than a general-purpose register (GPR), the caller is r=
-esponsible
-> +  for narrowing the value; the upper bits of the register may contain un=
-defined data.
-> +  For instance, when a u8 is returned in 64-bit GPR, bits [63:8] can hol=
-d arbitrary
-> +  values, especially when larger types are truncated (explicitly or impl=
-icitly). It
-> +  is therefore advisable to inspect the code in such cases. If CONFIG_DE=
-BUG_INFO_BTF
-> +  is enabled (y), the return value is automatically trimmed to the width=
- of the return
-> +  type.
->
-> -- In certain procedure call standards, such as arm64's AAPCS64, when a
-> -  type is smaller than a GPR, it is the responsibility of the consumer
-> -  to perform the narrowing, and the upper bits may contain UNKNOWN value=
-s.
-> -  Therefore, it is advisable to check the code for such cases. For insta=
-nce,
-> -  when using a u8 in a 64-bit GPR, bits [63:8] may contain arbitrary val=
-ues,
-> -  especially when larger types are truncated, whether explicitly or impl=
-icitly.
-> -  Here are some specific cases to illustrate this point:
-> +  The following examples illustrate the behavior:
->
->    **Case One**:
->
-> @@ -2885,7 +2893,9 @@ option, and these limitations will be eliminated in=
- the future:
->                 RET
->
->    If you pass 0x123456789abcdef to this function and want to narrow it,
-> -  it may be recorded as 0x123456789abcdef instead of 0xef.
-> +  it may be recorded as 0x123456789abcdef instead of 0xef. When
-> +  CONFIG_DEBUG_INFO_BTF is enabled, the value will be correctly truncate=
-d
-> +  to 0xef based on the size constraints of the u8 type.
->
->    **Case Two**:
->
-> @@ -2910,7 +2920,9 @@ option, and these limitations will be eliminated in=
- the future:
->                 RET
->
->    When passing 0x2_0000_0000 to it, the return value may be recorded as
-> -  0x2_0000_0000 instead of 0.
-> +  0x2_0000_0000 instead of 0. When CONFIG_DEBUG_INFO_BTF is enabled, the
-> +  value will be correctly truncated to 0 based on the size constraints o=
-f
-> +  the int type.
->
->  You can put some comments on specific functions by using
->  trace_printk() For example, if you want to put a comment inside
-> --
-> 2.34.1
->
+On 12/10/2025 4:10 PM, Heiko Carstens wrote:
+> On Mon, Dec 08, 2025 at 06:15:56PM +0100, Jens Remus wrote:
+>> +static inline int __s390_get_dwarf_fpr(unsigned long *val, int regnum)
+>> +{
+>> +	switch (regnum) {
+>> +	case 16:
+>> +		fpu_std(0, (freg_t *)val);
+>> +		break;
+>> +	case 17:
+>> +		fpu_std(2, (freg_t *)val);
+>> +		break;
+>> +	case 18:
+>> +		fpu_std(4, (freg_t *)val);
+>> +		break;
+>> +	case 19:
+>> +		fpu_std(6, (freg_t *)val);
+>> +		break;
+>> +	case 20:
+>> +		fpu_std(1, (freg_t *)val);
+>> +		break;
+> 
+> IIRC, I mentioned this already last time. But it is not correct to access user
+> space floating point register contents like this. Due to in-kernel fpu/vector
+> register usage the user space register contents may have been saved away to
+> the per-thread vxrs save area, and registers may have been used for in-kernel
+> usage instead.
+> Read: the above code could access lazy register contents of in-kernel usage.
+> 
+> Change the above to something like:
+> 
+> 	struct fpu *fpu = &current->thread.ufpu;
+> 
+> 	save_user_fpu_regs();
+> 	switch (regnum) {
+> 	case 16: return fpu->vxrs[0].high;
+> 	case 17: return fpu->vxrs[2].high;
+> 	case 18: return fpu->vxrs[4].high;
+> 	case 19: return fpu->vxrs[6].high;
+> 	case 20: return fpu->vxrs[1].high;
+> 	...
+> 
+> save_user_fpu_regs() will write all user space fpu/vector register contents to
+> the per-thread save area (if not already saved), and then it is possible to
+> read contents from there.
+
+Thanks!  I have changed the code accordingly.  Works fine.
+
+> I'll see if I can provide something better for this use case, since this code
+> needs to access only the first 16 registers; so no need to write contents of
+> all registers to the save area.
+
+Ok.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
