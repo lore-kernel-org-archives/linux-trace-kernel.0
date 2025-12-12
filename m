@@ -1,165 +1,173 @@
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECCD313273
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 09:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D1423EA8E;
+	Fri, 12 Dec 2025 11:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765532358; cv=none; b=rYY5U0joyud1peaygU4n2p4aNU4fGmy0nK62m3RzkNKU33/MHBqhpnCn16urfQmQsRn6TgY3GENFb6ahIzKQmRQm69/ZY9PrhHsWOQwYzJGoxm112YvHaovQc1xggaUN8vCV+iZ1zJi9PYkcLatU2usdhGufCV6XSjRNBVdFAGg=
+	t=1765538190; cv=none; b=oXC981TW1E6MtPbMa2U6mKsMGopTACqj+fGhI+Wi9EPOQT4oPmGDzvEeb7rQncYC8KCZpl4ZK8XlsSHUyi6MtIlpA7oBKZ/cr6PPv2XHZxOzuBCOyqM60nakoAfQt5X13Tc6bpa2fUEWqqi+iXOxn6LyueUsNREWZwpiJ503O4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765532358; c=relaxed/simple;
-	bh=3RXsGKqukvEhsXy2ryEgjMGzkVB8QVOoAFGKjU+lkAo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NDKM5M+/TF5/Wh6niv5L6nwlRpY6QbevHfYUCYvbgMEmwiOfFvBTtikDwBVVlXKviMjwnjIV998wZYa9ADf/K+gEprghWpDtm+rUfCvPskdoVz5D49tuX5/azmPkoqaeQ3WbJ3sgDYsJdziHqc/pOUV+LI30Sbm/OvZ2jtJocJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=SUefY2h+; arc=none smtp.client-ip=148.163.139.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+	s=arc-20240116; t=1765538190; c=relaxed/simple;
+	bh=zHCoMwnvK3tt8QxZnIpROBuG06HytpusBqlcZMgAZFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzvvSQHsOusHTG3zV45Ai8UJy3cLJSgOSeXM9pZrW9VL3CgxU/BCWXMK7ejC0930N/xVH+DeiREUhfAPPKGhL5ncnBFTyuXG/G+a7DoqFVLB2PNrSS1T1PODWsMdqy7yMGAwRISQWOuD/20bba6OHd2t2T77hwiLQ5rebegYaNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b+2tjAAs; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="SUefY2h+"
-Received: from pps.filterd (m0167075.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BC90R522116906
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 04:13:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps01; bh=s1cT
-	Pmb/E3ED4jNPhT8P6htYkPi/ZEzeet04bZUSBAw=; b=SUefY2h+X+0yV5h9UDKf
-	0L/P4l74lqkcaH0AfwtOqJvXh9ZG/pfMqujyu20Ftb4CVkk6J+1RC5lzd9o/25I7
-	fafQTEqH0vIvoUHqBkOKBZOgxQSWiutsZbsGEEKnx3mWq2jPLYlqCkRceS1YyRQs
-	6g+X+xm/foRjPN1An4/Lpo+e+BGfMfvGzU/WvYaNR55GBetwqVHOkFHWJL6C+L/i
-	xIbtfsofl5qhY4V7kRx8weBnBodlUlQmyC1YbISzVWba6/k+IHT3+9DdGcUoVM84
-	jAXmn+5ZSw1Q3dt6e0NbHq7BY6R6NB0whQVK70XDP1g3sMkwKKK2VeUN40FVUItt
-	BQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4b0exhg76k-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 04:13:55 -0500 (EST)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-29be4d2ef78so18872795ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 01:13:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765530835; x=1766135635;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s1cTPmb/E3ED4jNPhT8P6htYkPi/ZEzeet04bZUSBAw=;
-        b=EFH5gXjUvwuLVRSlrDbZp5i/7s4ByIzus2E1ngnKsLZ6iGTGx5Lux4FLecVcB+jz+M
-         MPJhq/aeZ5AH7onp286ioEZqPvsSlk6YlKWMKZZjlA1oEvM1cX6NhtC7w655kWV2QMNH
-         6CHP2KcPmEAoh5kwNHc/tcY3o9FqPlVTkvokslgDrIJckRTXzFW6Fp2ugkoEtA2wYsVN
-         PRjubD9tqtXY9z5q+sANUEoVYMqhJM8B5ycRnqwR6FfWv6a6jvFmkYcnzSjeGt4Z9Swq
-         u7sGKGxfddIWWUS3VmAKYhQTGtEQpoN9R14kP9wBzPexxas2F0xnNn5d/7VR6ikrsT16
-         PcRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrCFA8/zirurOzjfcHK2rAFqtOclCel4sV1UQD7Mi4lpRt4vWqXSubuF6h3v3FgdjaDk2NVADKGSWoT6zQ6M7fvwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1yIz6k/2vAeybF/MdlqeYHY+ITW9UW/8Q+NeopsxGAr2QFBfg
-	8H7s2VKW4hAADr7yt6/5UFN2cupYB6ztHJ2heoqOeNQayiEUov4i6dS5UABDSgyr2mhMT/a4JEg
-	7/pGt1QEUut7UW5Ir/pLAZqs69PCFd1HY8zALHTwXIsuDEBgcEtr5WNW9mlHLWem0BU3jrA==
-X-Gm-Gg: AY/fxX5xBsTE/ge1KBbrqtvzW4F0NGgpOVVPzj7TlY3g2nbxMwKiOhpsQjuPZIdhTsT
-	XlO2X4LLbLoxQthZwvkef0HNXE2+g8EJGwa2ySamzsIUrwu6M9brHHK2hv8ZPggl+GlsLLGUbgn
-	N68DgGUcMvDIEdg6A92dbmJfZe2mcF7kzTS9a+OlVoPBwK2dxxMHispkwp3e0jRekfZUn1xV2ix
-	pxjgoLjBcGJG33rgM/cOozx3jd/L0Enqw6UJ0rcTRZT2IH39GRiTSLdOeJkCNIzzzZzz2JAO26Q
-	PfTAFpz6wDbqQzqbpRmSDkZ32U+o5hpl5Ocf/fZ8j3pzgEyJSTpO9WksFp5o/G+/MUxMYI1193o
-	bdCsKT4+34FF6GdGXBOIGbd1q7+LioRAsJZYmToCHx+vnbSJN28Qk3t6b
-X-Received: by 2002:a17:902:e80f:b0:297:e66a:2065 with SMTP id d9443c01a7336-29f244bcf85mr18583035ad.56.1765530834989;
-        Fri, 12 Dec 2025 01:13:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHwvOAURq/suPyQQI1KUWuzlf+xBV7BfHZ9tWHXTmC5W67Xs98SEZvrSF3mE+NsgMan4KBjtg==
-X-Received: by 2002:a17:902:e80f:b0:297:e66a:2065 with SMTP id d9443c01a7336-29f244bcf85mr18582605ad.56.1765530834512;
-        Fri, 12 Dec 2025 01:13:54 -0800 (PST)
-Received: from [127.0.1.1] (p99250-ipoefx.ipoe.ocn.ne.jp. [153.246.134.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29eea016e57sm48497255ad.63.2025.12.12.01.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Dec 2025 01:13:54 -0800 (PST)
-From: Tal Zussman <tz2294@columbia.edu>
-Date: Fri, 12 Dec 2025 04:08:07 -0500
-Subject: [PATCH v2 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b+2tjAAs"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC5mmts006746;
+	Fri, 12 Dec 2025 11:16:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=uXH1d4
+	CpHyiVheZQ1eD5lAhhBV2oVsDUjDyBrgEPXw4=; b=b+2tjAAsoKqK2Pr2YwKrSF
+	z7DgrFfVj+e2LHJLdL/MzOLJEgvV2ss+R24K7MAn21Rwy071Lu0+JBhIRAJgilC7
+	WZyNBrb3N+jgBdFilkJ2GNcMjFbb1YaQSOVxXQpywiTyxyo607IiBwfwa8iOSAmO
+	3KhJi/aHkSilvjp+eQhr+zgcU9U+VMdtNazb2BT53vn4jp+wDc2p9iJlTVlxnNL6
+	P2eeXadhqnpRAIeGuKrnOkj0TMQXn3XRHS55orFP3MRQlYJBsrXAUi+ognLPXp9J
+	mVtW5LETrQciFw3AOEkW6Mby4RwHyIeSCwHjwsmfkeNrkvHUC7pqQlIHEQ8IEESw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww4abn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:13 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BCBCgJL025341;
+	Fri, 12 Dec 2025 11:16:12 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9ww4abj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:12 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC7RPkx002031;
+	Fri, 12 Dec 2025 11:16:11 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw11jubkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Dec 2025 11:16:11 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BCBG9OZ53477654
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Dec 2025 11:16:09 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CD70220049;
+	Fri, 12 Dec 2025 11:16:09 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ECC3720040;
+	Fri, 12 Dec 2025 11:16:08 +0000 (GMT)
+Received: from [9.111.169.84] (unknown [9.111.169.84])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Dec 2025 11:16:08 +0000 (GMT)
+Message-ID: <86593213-8a48-412a-a601-7992cc1660c6@linux.ibm.com>
+Date: Fri, 12 Dec 2025 12:16:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251212-tlb-trace-fix-v2-1-d322e0ad9b69@columbia.edu>
-References: <20251212-tlb-trace-fix-v2-0-d322e0ad9b69@columbia.edu>
-In-Reply-To: <20251212-tlb-trace-fix-v2-0-d322e0ad9b69@columbia.edu>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/6] perf tools: Merge deferred user callchains
+To: Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        x86@kernel.org, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-        David Hildenbrand <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Tal Zussman <tz2294@columbia.edu>,
-        David Hildenbrand <david@kernel.org>
-X-Mailer: b4 0.14.3-dev-d7477
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765530499; l=1293;
- i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
- bh=3RXsGKqukvEhsXy2ryEgjMGzkVB8QVOoAFGKjU+lkAo=;
- b=u8Ap52Jd1shp/j5YC1M4uPMvXwfjjDYnAsVA6o3090sKSZmF8nxXTd4XMzAAufSFFftag/Sds
- I9zmJSMnLejCrmyrOBBN0KHmXvL13pBcYyuqAhhaNXDrChF9WQe589R
-X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
- pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
-X-Proofpoint-ORIG-GUID: MvvfZBMXv2XMLppotp4Gvui5aP63HHzq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjEyMDA2OSBTYWx0ZWRfX5irgXWNiKEuS
- tij0T0o1ohUYKomNpGpJ886PUKyZbTbxcQrG2JczImD7YL3wMn10PIZrCd32cNgGXOw0gT81eJD
- k6xnKD8YM3PejOduv/KVMtFprJj6uckvBmVmmjAAUIqL1wi1xVRTRZ4ZNXvssSf1DxFxQXAMk0J
- YlO3PO4f5E8vYEAJhrVDaZT1Cp33nS8fizzHXcpSa50wGYXoOMgig3awSyer+6VUZmWDRkEBB5h
- oNRXB2MXDpH/pZqQKM5tNvpfhW2aVbvAiW8FIPZzLNf8FTziKM/jj6xz0Nv+tNz3dRTfy4d8I8d
- f8TTgfoKnL3teYyMo71AHOMW8yC2Z2KN94QexkmtiDptLUz2y3rcemm9pwRbXTULBpEOROpImHn
- yFqMGfXb5Mfgnu8/462d3tqgvTT4RQ==
-X-Authority-Analysis: v=2.4 cv=V/hwEOni c=1 sm=1 tr=0 ts=693bdcd3 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=gC7H+NTNV8TiHuUi9Bl0tg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=x7bEGLp0ZPQA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=20KFwNOVAAAA:8
- a=fwyzoN0nAAAA:8 a=tN_j7I10ly-BD7A3SNgA:9 a=QEXdDO2ut3YA:10
- a=324X-CrmTo6CU4MGRt3R:22 a=2JgSa4NbpEOStq-L5dxp:22 a=Sc3RvPAMVtkGz6dGeUiH:22
-X-Proofpoint-GUID: MvvfZBMXv2XMLppotp4Gvui5aP63HHzq
-X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11639
- signatures=596818
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20251120234804.156340-1-namhyung@kernel.org>
+ <20251120234804.156340-6-namhyung@kernel.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20251120234804.156340-6-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1dprSS6siyKGLquuTwKMEAqCYktwVKx1
+X-Proofpoint-ORIG-GUID: j3Km0c-RSV57gNbhkm-U2mbVZmvviopo
+X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=693bf97d cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=LFt20mCCc4CE-LtB3JUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX+HjoiKyM9Wc5
+ dCCnLQFIANOvFLp4jtUHw9uVRFRypHrBxn3YzTHqbWLpwMf4MYk62/iAbsW2ZKqJmiN1umcyQBw
+ MSkD407yp7Muw0ZWc0kP99XV5tyqbWt7kf8tJZr+GYTV5BC+mQk6ico+kA34MP0Ecr7om+5T4y+
+ ZeerYmB8yNcQQ7nZ3sYddihjOI1GX7HbCMqXrPX/j1lgn8XYdRR75HVmkHr69WRP43eldXDjGIe
+ cGcdV/mtrn7R5ClghJlTJcrclew4cC5WNs1RukvA3iJDo0H5YS/jpsj2qLj63ubeZvAhUzYXp73
+ ShdT+EiFRv0OH+ZNeCC3i+w0Eeu2+44IdpGTg26SCf4Zz4pGbeoDAW4PwZpPpQGOXovim95fesu
+ svvIxhsEt+wAIg86dNlMZSnNB6gavQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-12_02,2025-12-11_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=10 adultscore=0 suspectscore=0 priorityscore=1501
- spamscore=0 clxscore=1011 bulkscore=10 phishscore=0 malwarescore=0
- impostorscore=10 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2512120069
+ suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 malwarescore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
 
-When the TLB_REMOTE_WRONG_CPU enum was introduced for the tlb_flush
-tracepoint, the enum was not exported to userspace. Add it to the
-appropriate macro definition to enable parsing by userspace tools, as
-per [0].
+Hello Namhyung!
 
-[0] Link: https://lore.kernel.org/all/20150403013802.220157513@goodmis.org
+On 11/21/2025 12:48 AM, Namhyung Kim wrote:
+> Save samples with deferred callchains in a separate list and deliver
+> them after merging the user callchains.  If users don't want to merge
+> they can set tool->merge_deferred_callchains to false to prevent the
+> behavior.
 
-Fixes: 2815a56e4b72 ("x86/mm/tlb: Add tracepoint for TLB flush IPI to stale CPU")
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Tal Zussman <tz2294@columbia.edu>
----
- include/trace/events/tlb.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
 
-diff --git a/include/trace/events/tlb.h b/include/trace/events/tlb.h
-index b4d8e7dc38f8..725a75720a23 100644
---- a/include/trace/events/tlb.h
-+++ b/include/trace/events/tlb.h
-@@ -13,7 +13,8 @@
- 	EM(  TLB_REMOTE_SHOOTDOWN,	"remote shootdown" )		\
- 	EM(  TLB_LOCAL_SHOOTDOWN,	"local shootdown" )		\
- 	EM(  TLB_LOCAL_MM_SHOOTDOWN,	"local mm shootdown" )		\
--	EMe( TLB_REMOTE_SEND_IPI,	"remote ipi send" )
-+	EM(  TLB_REMOTE_SEND_IPI,	"remote ipi send" )		\
-+	EMe( TLB_REMOTE_WRONG_CPU,	"remote wrong CPU" )
- 
- /*
-  * First define the enums in TLB_FLUSH_REASON to be exported to userspace
+> +int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
+> +				     struct perf_sample *sample_callchain)
+> +{
+> +	u64 nr_orig = sample_orig->callchain->nr - 1;
+> +	u64 nr_deferred = sample_callchain->callchain->nr;
+> +	struct ip_callchain *callchain;
+> +
+> +	if (sample_orig->callchain->nr < 2) {
+> +		sample_orig->deferred_callchain = false;
+> +		return -EINVAL;
+> +	}
+> +
+> +	callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
+> +	if (callchain == NULL) {
+> +		sample_orig->deferred_callchain = false;
+> +		return -ENOMEM;
+> +	}
+> +
+> +	callchain->nr = nr_orig + nr_deferred;
+> +	/* copy original including PERF_CONTEXT_USER_DEFERRED (but the cookie) */
+> +	memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * sizeof(u64));
+> +	/* copy deferred user callchains */
+> +	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
+> +	       nr_deferred * sizeof(u64));
+> +
+> +	sample_orig->callchain = callchain;
 
+Hope you don't mind my naive question, as I don't have a clue about perf:
+
+Doesn't the sample_orig->callchain storage need to be free'd prior to
+assigning the newly allocated one?  Or is that just part of a large
+block that got allocated in one piece?  How is then the one allocated
+here ever free'd?
+
+> +	return 0;
+> +}
+Thanks and regards,
+Jens
 -- 
-2.39.5
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
