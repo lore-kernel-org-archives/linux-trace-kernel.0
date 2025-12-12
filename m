@@ -1,237 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201F9296BC5;
-	Fri, 12 Dec 2025 02:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBE6295DA6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Dec 2025 02:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765505364; cv=none; b=SMKpjIM7mTDoOwmaK97qVfESkQJZB0yg0Jr1JrjaEYs6rQ6uRwsw0KTb5/tVds5FlnFdfsyQacLV8HEKxs4AhC27lCH9XFdS3ISbscPqdtDZ4O1NCwn6JV4G9Z/AkLdTcxDOvPBq3OefZHxfE5IAKj4Z5jx8fs+CXokX0vYT/Yw=
+	t=1765505705; cv=none; b=LOb91ZljU/tL7OEPEcyRw15O0IOYYn6h0zijGjfZVeJ7Ly2/EFHSQB+O5whpooEzVSuEdo0w6JVYaSQtKkMr+RVAYINhUobXryHyJ8yQKkhMzW1trIshehPHpWCn/+V2yx0jQQ9BiDa1LjFAMtl6RKuvMUQbQ0xZYii1v2KoAEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765505364; c=relaxed/simple;
-	bh=cBkruOZltISk9F/8zs8adLrbAEmRXV+aiUsIOUI+9Ao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cL7TPq7bME/Nr+0RWgmBH+xyzB3Tu7dFPnc5d4N3Nmi2itIx7bNsW9NBLUvRJPWjUtGbx+XAYLpu64yRlJzqKJB4iJkAYTBq+QKGWL696kFV7GvGL2Bh37KW8RpEYIe9VhMH6ICqqfmugEYWTqjasiLQE1h0lMzn1XxyZPQBdj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hls3buHI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765505705; c=relaxed/simple;
+	bh=NgUM7aUL53vWNz7WHajf0MM0Z41X1RaW7qHFuEbiPvg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ChBD/aYrNabhonSWckVFGDFvymvbw/VqeFSioTsSrax4w/bJyv7h7wfW3Pr9eg09IP2RHfgokRFYvtXtb8a8RErVOOjBdxmqn2ryBJOAl7rfq3qMGK1HED1tnz9CXt3AuzNilW+qR2u7AlV7i/owTYS84k681qd6myQ7gABmSJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxQRWSMi; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hls3buHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB472C19421;
-	Fri, 12 Dec 2025 02:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765505363;
-	bh=cBkruOZltISk9F/8zs8adLrbAEmRXV+aiUsIOUI+9Ao=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hls3buHI4Dr0Go6AVWFzlD/HNYKvcT5F4C4YbMlDFVpQNsyg3ON0oYYziefvcMfcc
-	 ObzV4guS0evoKStZHRPQkAxr6jQ0XQ304SQ+05xV/F6Ql/nQawYso9EPdDZJULT0RR
-	 UtkpzPyXLlDd4S391owRWx3MYVp1B9eClXwtGpy5sWEfmCRdWbOMUOC84NK4pQjeiw
-	 7CbBF/OKCLH6ltBq8Ca4T841r2V8eyaQDnOmxo7ncuQ0HbZZ565gks6mA07K3R+hsd
-	 ZwkxyWbBqs+RU9TGR027C0zftqa4W9OB22VrCiH5zFZL1Iub9QTC6Ave2kzjk6BVvI
-	 KNwTgKtgUf81w==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Sasha Levin <sashal@kernel.org>,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.6] MIPS: ftrace: Fix memory corruption when kernel is located beyond 32 bits
-Date: Thu, 11 Dec 2025 21:09:00 -0500
-Message-ID: <20251212020903.4153935-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251212020903.4153935-1-sashal@kernel.org>
-References: <20251212020903.4153935-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxQRWSMi"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b7355f6ef12so134318266b.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Dec 2025 18:15:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765505701; x=1766110501; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jILMO67J70f6QfvYn7/aUo6kYXXEvH0iYZzNH3i3Ki8=;
+        b=dxQRWSMiuEO7gQWM9uKjoDEDwaDq9tmScqZtS/xmB8YtN1Z4wGQiKHwsb3wJSN6nFG
+         vbAyRQyMFVq8fzCkb3w+3FiZhxKEDv6N0+lf/pK2V4esxME5ajFZUOTYgSZOn1XnV40U
+         rHWZyb8Hu5+2rJ+AUhQYzfFd8AOclCfSN3VWSr6QlrMi249Okqavoz2umJ6ESvOfXyXz
+         p5dap0yylcnvrgrysrGHn1tHIFVG0vhqcV2xtvxfDv2UD8SMTU0imyeSzyaOgrzLdRIi
+         9+oShR8QkRi2Ues9U4I6MJbbX2IztIQz067q4/nlmN8T8o5NKSfUxReuqbINBDmXWXiY
+         YjXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765505701; x=1766110501;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jILMO67J70f6QfvYn7/aUo6kYXXEvH0iYZzNH3i3Ki8=;
+        b=ZvnJ83/2RcAUSuhfi0mh9bedP4iJ08bg+Mqm1er8jdmYcotwCMGi3FxCtDlwgd6S+M
+         wlmQ0e2b5vYHqp8VK+JQEj6CQUvh4A6CaX5vIRVSVeE5RYkWgxCYXLtRqdpEHEiK7lSt
+         xVEeJrTB2ENd/IXHnQl8V9U9Zg3OZhUimYTVEGJzPCQJI8fLQVOUnLuimPVH5wjQCufH
+         7aSQ6GIs7221zavxu5+6uJml/g4ehs6YoHyUWZcReB14sgpFZxds8IjaHY75prBBLvbe
+         faAPRyGug3VZBq3lLQfZKueJ35eN0VvpR8nbUoIWS6OfO8ksT2Id68YaYeIlMRRVA/0d
+         8bNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWa7cQJklKAx6BwfF51imGhV3iXxNpk0LID9akqpMenSCbMRT+SXakRVRymlxz0K1YkN9TYThy5WVAENZh0JIsyfRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl1aNk7nB9JUWMyeCJAi6ttbIs6mHtcqyNcGfmwoMFbl4kGKR1
+	HXK3eXHbqsfqQbnW7VMlaSbkda+FqjHcXuUOTbKIgB35LrlksdbmV/ywbVGgdyPpV8qKXefELSk
+	IohW35KLYgQnK01atedgGSLwfhogfqHM=
+X-Gm-Gg: AY/fxX6Sl1ZYGHvV9aOxpHBsDPpY0pqV1r/c9gi6PhsGxBW/WOJIYHp+pC+8x3txwvD
+	m+nOEnMOr85EvnxRxq8EjuzjDKwbzVtFYPSh3P9QXEoFz7Noq+EB19c8pBZ5fVnCmofjwtNUgGY
+	Atwh4/w16sVoWaL0VGA79oWYcR8BE24qE5q3hJs9vMWK7+BAozDl1PKszpExsgd0F4h5Bc+/Pjm
+	XPva5Dj8EMlNTpRoK+rHOBF9Hwbdk89Q4komD3jFzmTKnf9yOss/Ai1yargi7lTdikzjwOi
+X-Google-Smtp-Source: AGHT+IF3KrwmJyi+HSGGfvgFeecEYMXvJ0CLnWlzZJQVAK20zGOIt0iGIK528x74ScjATJY85UNp7s0TG6wMvgPIERk=
+X-Received: by 2002:a17:906:4fc8:b0:b79:f8f7:38ea with SMTP id
+ a640c23a62f3a-b7d23c5bccfmr22798866b.45.1765505700461; Thu, 11 Dec 2025
+ 18:15:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20251209121349.525641-1-dolinux.peng@gmail.com> <20251209121349.525641-3-dolinux.peng@gmail.com>
+In-Reply-To: <20251209121349.525641-3-dolinux.peng@gmail.com>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Fri, 12 Dec 2025 10:14:48 +0800
+X-Gm-Features: AQt7F2oN7ai-ywwCTeofI2LxJYFaNlo_0sZ-Pwu5pKaO68ietmaecOnWf3-fGCY
+Message-ID: <CAErzpmv4U5_VMq3nBeLduKaVMdDRL0d8MQoH9Rafpy4hmbmnsg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] tracing: Update funcgraph-retval documentation
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pengdonglin <pengdonglin@xiaomi.com>, Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+On Tue, Dec 9, 2025 at 8:14=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.com=
+> wrote:
+>
+> From: pengdonglin <pengdonglin@xiaomi.com>
+>
+> The existing documentation for funcgraph-retval is outdated and partially
+> incorrect, as it describes limitations that have now been resolved.
+>
+> Recent changes (e.g., using BTF to obtain function return types) have
+> addressed key issues:
+> 1. Return values are now printed only for non-void functions.
+> 2. Values are trimmed to the correct width of the return type, avoiding
+>    garbage data from high bits.
+>
+> Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
+> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> ---
+>  Documentation/trace/ftrace.rst | 78 ++++++++++++++++++++--------------
+>  1 file changed, 45 insertions(+), 33 deletions(-)
+>
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.=
+rst
+> index d1f313a5f4ad..03c8c433c803 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -1454,6 +1454,10 @@ Options for function_graph tracer:
+>         printed in hexadecimal format. By default, this option
+>         is off.
+>
+> +  funcgraph-retaddr
+> +       When set, the return address will always be printed.
+> +       By default, this option is off.
+> +
+>    sleep-time
+>         When running function graph tracer, to include
+>         the time a task schedules out in its function.
+> @@ -2800,7 +2804,7 @@ It is default disabled.
+>      0)   2.861 us    |      } /* putname() */
+>
+>  The return value of each traced function can be displayed after
+> -an equal sign "=3D". When encountering system call failures, it
+> +an equal sign "ret =3D". When encountering system call failures, it
+>  can be very helpful to quickly locate the function that first
+>  returns an error code.
+>
+> @@ -2810,16 +2814,16 @@ returns an error code.
+>    Example with funcgraph-retval::
+>
+>      1)               |    cgroup_migrate() {
+> -    1)   0.651 us    |      cgroup_migrate_add_task(); /* =3D 0xffff93fc=
+fd346c00 */
+> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* ret=3D0xffff93=
+fcfd346c00 */
+>      1)               |      cgroup_migrate_execute() {
+>      1)               |        cpu_cgroup_can_attach() {
+>      1)               |          cgroup_taskset_first() {
+> -    1)   0.732 us    |            cgroup_taskset_next(); /* =3D 0xffff93=
+fc8fb20000 */
+> -    1)   1.232 us    |          } /* cgroup_taskset_first =3D 0xffff93fc=
+8fb20000 */
+> -    1)   0.380 us    |          sched_rt_can_attach(); /* =3D 0x0 */
+> -    1)   2.335 us    |        } /* cpu_cgroup_can_attach =3D -22 */
+> -    1)   4.369 us    |      } /* cgroup_migrate_execute =3D -22 */
+> -    1)   7.143 us    |    } /* cgroup_migrate =3D -22 */
+> +    1)   0.732 us    |            cgroup_taskset_next(); /* ret=3D0xffff=
+93fc8fb20000 */
+> +    1)   1.232 us    |          } /* cgroup_taskset_first ret=3D0xffff93=
+fc8fb20000 */
+> +    1)   0.380 us    |          sched_rt_can_attach(); /* ret=3D0x0 */
+> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach ret=3D-22 */
+> +    1)   4.369 us    |      } /* cgroup_migrate_execute ret=3D-22 */
+> +    1)   7.143 us    |    } /* cgroup_migrate ret=3D-22 */
+>
+>  The above example shows that the function cpu_cgroup_can_attach
+>  returned the error code -22 firstly, then we can read the code
+> @@ -2836,37 +2840,41 @@ printed in hexadecimal format.
+>    Example with funcgraph-retval-hex::
+>
+>      1)               |      cgroup_migrate() {
+> -    1)   0.651 us    |        cgroup_migrate_add_task(); /* =3D 0xffff93=
+fcfd346c00 */
+> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* ret=3D0xffff=
+93fcfd346c00 */
+>      1)               |        cgroup_migrate_execute() {
+>      1)               |          cpu_cgroup_can_attach() {
+>      1)               |            cgroup_taskset_first() {
+> -    1)   0.732 us    |              cgroup_taskset_next(); /* =3D 0xffff=
+93fc8fb20000 */
+> -    1)   1.232 us    |            } /* cgroup_taskset_first =3D 0xffff93=
+fc8fb20000 */
+> -    1)   0.380 us    |            sched_rt_can_attach(); /* =3D 0x0 */
+> -    1)   2.335 us    |          } /* cpu_cgroup_can_attach =3D 0xffffffe=
+a */
+> -    1)   4.369 us    |        } /* cgroup_migrate_execute =3D 0xffffffea=
+ */
+> +    1)   0.732 us    |              cgroup_taskset_next(); /* ret=3D0xff=
+ff93fc8fb20000 */
+> +    1)   1.232 us    |            } /* cgroup_taskset_first ret=3D0xffff=
+93fc8fb20000 */
+> +    1)   0.380 us    |            sched_rt_can_attach(); /* ret=3D0x0 */
+> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach ret=3D0xfffff=
+fea */
+> +    1)   4.369 us    |        } /* cgroup_migrate_execute ret=3D0xffffff=
+ea */
+>      1)   7.143 us    |      } /* cgroup_migrate =3D 0xffffffea */
 
-[ Upstream commit 36dac9a3dda1f2bae343191bc16b910c603cac25 ]
+My bad for forgetting to update the above line and will fix it in the
+next version.
 
-Since commit e424054000878 ("MIPS: Tracing: Reduce the overhead of
-dynamic Function Tracer"), the macro UASM_i_LA_mostly has been used,
-and this macro can generate more than 2 instructions. At the same
-time, the code in ftrace assumes that no more than 2 instructions can
-be generated, which is why it stores them in an int[2] array. However,
-as previously noted, the macro UASM_i_LA_mostly (and now UASM_i_LA)
-causes a buffer overflow when _mcount is beyond 32 bits. This leads to
-corruption of the variables located in the __read_mostly section.
-
-This corruption was observed because the variable
-__cpu_primary_thread_mask was corrupted, causing a hang very early
-during boot.
-
-This fix prevents the corruption by avoiding the generation of
-instructions if they could exceed 2 instructions in
-length. Fortunately, insn_la_mcount is only used if the instrumented
-code is located outside the kernel code section, so dynamic ftrace can
-still be used, albeit in a more limited scope. This is still
-preferable to corrupting memory and/or crashing the kernel.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-## COMPREHENSIVE ANALYSIS
-
-### 1. COMMIT MESSAGE ANALYSIS
-- **Subject**: Contains "Fix" and "memory corruption" - strong
-  indicators of a serious bug fix
-- **Body**: Clearly explains the buffer overflow mechanism and observed
-  real-world impact
-- **References**: Cites commit e424054000878 as the source of the bug
-  (introduced in 2010, kernel 2.6.35)
-- **No explicit Cc: stable tag**, but the nature of the fix makes it
-  appropriate for stable
-
-### 2. TECHNICAL ROOT CAUSE
-The bug is in `ftrace_dyn_arch_init_insns()`:
-
-1. **Buffer size**: `insn_la_mcount[2]` is declared as a 2-element array
-   (8 bytes)
-2. **UASM_i_LA behavior**: When address is NOT in 32-bit compat space,
-   it can generate up to 5-6 instructions:
-   - `lui` (always)
-   - `daddiu` (conditional)
-   - `dsll` (conditional)
-   - `daddiu` (conditional)
-   - `dsll` (conditional)
-   - final `daddiu`/`addiu`
-3. **Overflow**: Writing more than 2 instructions overwrites adjacent
-   `__read_mostly` variables
-4. **Observed impact**: Corruption of `__cpu_primary_thread_mask`
-   causing boot hang
-
-### 3. FIX MECHANISM
-The fix adds two defensive checks:
-1. **In `ftrace_dyn_arch_init_insns()`**: Only generate instructions if
-   `uasm_in_compat_space_p(MCOUNT_ADDR)` - otherwise warn and skip
-2. **In `ftrace_make_call()`**: Return `-EFAULT` if `insn_la_mcount`
-   would be needed but wasn't generated
-
-This gracefully degrades functionality rather than corrupting memory.
-
-### 4. STABLE KERNEL CRITERIA ASSESSMENT
-
-| Criterion | Assessment |
-|-----------|------------|
-| Obviously correct | ✅ Simple defensive check before buffer write |
-| Fixes real bug | ✅ Memory corruption causing boot hang |
-| Important issue | ✅ System crash/hang - very severe |
-| Small and contained | ✅ Single file, ~30 lines changed |
-| No new features | ✅ Actually reduces functionality in edge cases |
-| No new APIs | ✅ Purely internal change |
-
-### 5. DEPENDENCY CHECK
-- **`uasm_in_compat_space_p()`**: Exists since kernel 2.6.x (commit
-  e30ec4525d473)
-- **Bug source commit**: e424054000878 from 2010 (2.6.35)
-- **Dependencies**: None - fix is self-contained
-
-### 6. RISK vs BENEFIT
-
-**Risk**: Very LOW
-- Defensive check - prevents execution rather than changing behavior
-- Worst case: ftrace doesn't work for code outside kernel text on 64-bit
-  MIPS with addresses beyond 32 bits
-- Architecture-specific (MIPS only)
-
-**Benefit**: HIGH
-- Prevents memory corruption that causes boot hangs
-- Bug has existed since 2010 - affects all stable kernels
-- Observable real-world failure
-
-### 7. USER IMPACT
-
-- **Affected users**: MIPS 64-bit users with kernel loaded at addresses
-  beyond 32 bits
-- **Severity**: Critical - boot hang due to memory corruption
-- **Reproducibility**: Deterministic when conditions are met (not a
-  race)
-
-### 8. CONCERNS
-
-- **No explicit Cc: stable@vger.kernel.org tag**: However, the commit
-  clearly fixes a serious memory corruption bug
-- **Partial functionality loss**: Some ftrace capabilities reduced for
-  64-bit addresses, but this is far preferable to memory corruption
-
-### CONCLUSION
-
-This commit is an excellent stable backport candidate:
-1. **Fixes a serious bug**: Memory corruption causing system boot hangs
-2. **Minimal risk**: Defensive check that gracefully degrades
-   functionality
-3. **Self-contained**: Single file change with no dependencies on new
-   code
-4. **Long-standing bug**: Affects all kernels since 2.6.35
-5. **MIPS maintainer signed-off**: Thomas Bogendoerfer approved the fix
-
-The fix is small, surgical, and meets all stable kernel criteria. The
-trade-off (reduced ftrace functionality in edge cases vs memory
-corruption) strongly favors the fix.
-
-**YES**
-
- arch/mips/kernel/ftrace.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
-index f39e85fd58fa9..b15615b285690 100644
---- a/arch/mips/kernel/ftrace.c
-+++ b/arch/mips/kernel/ftrace.c
-@@ -54,10 +54,20 @@ static inline void ftrace_dyn_arch_init_insns(void)
- 	u32 *buf;
- 	unsigned int v1;
- 
--	/* la v1, _mcount */
--	v1 = 3;
--	buf = (u32 *)&insn_la_mcount[0];
--	UASM_i_LA(&buf, v1, MCOUNT_ADDR);
-+	/* If we are not in compat space, the number of generated
-+	 * instructions will exceed the maximum expected limit of 2.
-+	 * To prevent buffer overflow, we avoid generating them.
-+	 * insn_la_mcount will not be used later in ftrace_make_call.
-+	 */
-+	if (uasm_in_compat_space_p(MCOUNT_ADDR)) {
-+		/* la v1, _mcount */
-+		v1 = 3;
-+		buf = (u32 *)&insn_la_mcount[0];
-+		UASM_i_LA(&buf, v1, MCOUNT_ADDR);
-+	} else {
-+		pr_warn("ftrace: mcount address beyond 32 bits is not supported (%lX)\n",
-+			MCOUNT_ADDR);
-+	}
- 
- 	/* jal (ftrace_caller + 8), jump over the first two instruction */
- 	buf = (u32 *)&insn_jal_ftrace_caller;
-@@ -189,6 +199,13 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 	unsigned int new;
- 	unsigned long ip = rec->ip;
- 
-+	/* When the code to patch does not belong to the kernel code
-+	 * space, we must use insn_la_mcount. However, if MCOUNT_ADDR
-+	 * is not in compat space, insn_la_mcount is not usable.
-+	 */
-+	if (!core_kernel_text(ip) && !uasm_in_compat_space_p(MCOUNT_ADDR))
-+		return -EFAULT;
-+
- 	new = core_kernel_text(ip) ? insn_jal_ftrace_caller : insn_la_mcount[0];
- 
- #ifdef CONFIG_64BIT
--- 
-2.51.0
-
+>
+> -At present, there are some limitations when using the funcgraph-retval
+> -option, and these limitations will be eliminated in the future:
+> +Note that there are some limitations when using the funcgraph-retval
+> +option:
+> +
+> +- If CONFIG_DEBUG_INFO_BTF is disabled (n), a return value is printed ev=
+en for
+> +  functions with a void return type. When CONFIG_DEBUG_INFO_BTF is enabl=
+ed (y),
+> +  the return value is printed only for non-void functions.
+>
+> -- Even if the function return type is void, a return value will still
+> -  be printed, and you can just ignore it.
+> +- If a return value occupies multiple registers, only the value in the f=
+irst
+> +  register is recorded and printed. For example, on the x86 architecture=
+, a
+> +  64-bit return value is stored across eax (lower 32 bits) and edx (uppe=
+r 32 bits),
+> +  but only the contents of eax are captured. If CONFIG_DEBUG_INFO_BTF is=
+ enabled,
+> +  the suffix "(trunc)" is appended to the printed value to indicate that=
+ the
+> +  output may be truncated because high-order register contents are omitt=
+ed.
+>
+> -- Even if return values are stored in multiple registers, only the
+> -  value contained in the first register will be recorded and printed.
+> -  To illustrate, in the x86 architecture, eax and edx are used to store
+> -  a 64-bit return value, with the lower 32 bits saved in eax and the
+> -  upper 32 bits saved in edx. However, only the value stored in eax
+> -  will be recorded and printed.
+> +- Under certain procedure-call standards (e.g., arm64's AAPCS64), when t=
+he return
+> +  type is smaller than a general-purpose register (GPR), the caller is r=
+esponsible
+> +  for narrowing the value; the upper bits of the register may contain un=
+defined data.
+> +  For instance, when a u8 is returned in 64-bit GPR, bits [63:8] can hol=
+d arbitrary
+> +  values, especially when larger types are truncated (explicitly or impl=
+icitly). It
+> +  is therefore advisable to inspect the code in such cases. If CONFIG_DE=
+BUG_INFO_BTF
+> +  is enabled (y), the return value is automatically trimmed to the width=
+ of the return
+> +  type.
+>
+> -- In certain procedure call standards, such as arm64's AAPCS64, when a
+> -  type is smaller than a GPR, it is the responsibility of the consumer
+> -  to perform the narrowing, and the upper bits may contain UNKNOWN value=
+s.
+> -  Therefore, it is advisable to check the code for such cases. For insta=
+nce,
+> -  when using a u8 in a 64-bit GPR, bits [63:8] may contain arbitrary val=
+ues,
+> -  especially when larger types are truncated, whether explicitly or impl=
+icitly.
+> -  Here are some specific cases to illustrate this point:
+> +  The following examples illustrate the behavior:
+>
+>    **Case One**:
+>
+> @@ -2885,7 +2893,9 @@ option, and these limitations will be eliminated in=
+ the future:
+>                 RET
+>
+>    If you pass 0x123456789abcdef to this function and want to narrow it,
+> -  it may be recorded as 0x123456789abcdef instead of 0xef.
+> +  it may be recorded as 0x123456789abcdef instead of 0xef. When
+> +  CONFIG_DEBUG_INFO_BTF is enabled, the value will be correctly truncate=
+d
+> +  to 0xef based on the size constraints of the u8 type.
+>
+>    **Case Two**:
+>
+> @@ -2910,7 +2920,9 @@ option, and these limitations will be eliminated in=
+ the future:
+>                 RET
+>
+>    When passing 0x2_0000_0000 to it, the return value may be recorded as
+> -  0x2_0000_0000 instead of 0.
+> +  0x2_0000_0000 instead of 0. When CONFIG_DEBUG_INFO_BTF is enabled, the
+> +  value will be correctly truncated to 0 based on the size constraints o=
+f
+> +  the int type.
+>
+>  You can put some comments on specific functions by using
+>  trace_printk() For example, if you want to put a comment inside
+> --
+> 2.34.1
+>
