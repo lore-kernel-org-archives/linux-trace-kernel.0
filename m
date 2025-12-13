@@ -1,364 +1,427 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B7322A28;
-	Fri, 12 Dec 2025 12:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200BE1DE3DF;
+	Sat, 13 Dec 2025 19:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765541529; cv=none; b=D5AzolhES17N7hMSs7JL0SVUdywYbtsp1RgBEwn/ltX81hCpSwPorQF0lWDfbV5TT4GNpBG4VufFolJ5ANwu5N5L3K/iNwyxyYvik0DwrUhg5qmicBfabup8VLlDOJB/S+p4rF4n5bRLx3wx8netsANGCNCC4WUOdg6MWx//dOg=
+	t=1765652663; cv=none; b=nZChalnRC7w20/IdCmFaoZJPcKjO5TmwO9FsNWtYYsu/MMxjB/Ap1XcsT/zGcMFS53wvs0tSUB6Bo8MFA/4MPnMSPWiL3lhkbtm9+H0M+O0d46FF6+s0b6FtT06Zf5g5htEE8H//FhVTXRcuLsi9Pwfmpe/k/S5Ro6bnrglVafs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765541529; c=relaxed/simple;
-	bh=foAusVFap6OEAATVXE3eXSDGyCXMzKlEA8gOWBKtikA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BWdOzkn+TYD3Qi6jz/8rflMMZoORd/GXTzgWvsXyhdUIJh4O3pP13MDg3UF51IynM61hTd9r02Y7w0N6M/JsQnExDD4O5/ejvbvQ69ihuJyc3D11y9HS+xN6CuFSOA1kZ4XIFxL8oY5wWdAG6XVkYZJpuKpegd/rgw3TBvy1szg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fDAVup1R; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1765652663; c=relaxed/simple;
+	bh=hTFwnTzrVRbKnQ2rKf434jAoMNLaVHEqrd6n1rev7aA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aqr/wwkm850IO14pzpFWFj3gq6O2NupSGGGD8BshXpazu1pIoQiQaBH/bvyRP72jP7VzFkCplBS8aoylMw60wyty0JwQ3giUj8sjpyLRW9gKs9Zgj4qHPybAw9Mv6xuLN7BifyeSMuVzUwepo1n9Q9/besbOfKOp8UDWXb3dI4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=AgLXCxXz; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fDAVup1R"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BC3L2hT028098;
-	Fri, 12 Dec 2025 12:11:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FdW60g
-	79uoqxiKd/U0BYbbO7pl08+bXI8SvPQhe1PyU=; b=fDAVup1RF6Qc6jBwNShFjw
-	/2bUqGDtBINOKuOcTa09ikwNHxhNw0BS6zzSFzsQn9RDh+DHqbfuu90Wt0jYkAri
-	ifbqCUVRJ+hmn9AFVmwNZWKZBQa1myegHAYHjZRynQwtJa6mXrzoP7FIz0fclWB3
-	L9KZwlS+1BE2vO2HU3FD225qCrkJwV/BZQVn8bmB4DAMfBuftwjX1os7XoMsQZft
-	itot91S2V2h0Whs+UJqV5y5vSzoowdMNSCvBf3YHxfOgwwbSSn+hzaCPUcOqJJxx
-	/EhMGRfeZzSdguPK1MciUltRemXt0vSRVq3gamIWvTKwpflepNi+S2qerEVlRnBQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53vaun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 12:11:44 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BCC2ei0011254;
-	Fri, 12 Dec 2025 12:11:44 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53vauh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 12:11:44 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BCA4hPJ028147;
-	Fri, 12 Dec 2025 12:11:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4avy6ybv3p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Dec 2025 12:11:43 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BCCBdh451970336
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Dec 2025 12:11:39 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 85A6E20040;
-	Fri, 12 Dec 2025 12:11:39 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D36720049;
-	Fri, 12 Dec 2025 12:11:38 +0000 (GMT)
-Received: from [9.111.169.84] (unknown [9.111.169.84])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Dec 2025 12:11:38 +0000 (GMT)
-Message-ID: <9fe12698-2fd5-41fe-8505-735d73eae0a2@linux.ibm.com>
-Date: Fri, 12 Dec 2025 13:11:38 +0100
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="AgLXCxXz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1765652175;
+	bh=wJZ7CWNSc/U+A50EtWNkXCevtyNUA3g0fODzpH1Z4xk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AgLXCxXztwiQqIkZgdTn6FRHiPGk1X1JeAjBJuF0E0OEXMT/F5g1AHB9LVBzEdsl6
+	 GTonqVc2QV2JW8esXfasQKkxA1GTyK7zN1WI6zBA2WWWI2b/bXD10hfwinjweWtc7Y
+	 mbN6qJcifcG5fS1oPA1pPAGclpr+3LX5AhbdtCXdYEQnZ17itNDNj5MwaQNl0PbNKS
+	 4KNr5aCVsIvhM8GCEDqI45WPY4ZA8QwfzfZUPmhKzjVC0psMAmVBdHvrLWiAs/mZPF
+	 d+imsUw2pdDmuu9umXKjcuB66orWkRYAyw9KT/8x9H7eO5MvBVAh2kGEloUh1rYmQF
+	 LM+zSywO3CSIw==
+Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4dTFsW2G7qzZXf;
+	Sat, 13 Dec 2025 13:56:15 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [PATCH v10 2/3] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Sat, 13 Dec 2025 13:56:07 -0500
+Message-Id: <20251213185608.3418096-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251213185608.3418096-1-mathieu.desnoyers@efficios.com>
+References: <20251213185608.3418096-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] perf script: Display
- PERF_RECORD_CALLCHAIN_DEFERRED
-To: Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-5-namhyung@kernel.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20251120234804.156340-5-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAyMCBTYWx0ZWRfX0PXv8E3Ro1oC
- b+bQwnVcS0b4wLCm8zUWigeMHioG6fQRCmmdXF+T9S+Pkjddv2p3zXmu5wZNWY6li65qlS2iuId
- oqkSdpzWNKEpiV+Hu31mFo+0hB5rifKIxg2YVIPmq47uOs73KqGQmGggOYAxdAibCXhLIFaERno
- 6YcvTdLYjSg0UNBD5jh7R4RdqOj43bE51587elSubrSswmjF1nd+VaLv2iEHC5m3zjAWOBB+Gfr
- WA5uCLNndLN7a6n9Fpi7qMwxQGpwghmaWwXcZP+kqBafYJirFMeyxhaWsRLJbUDVnR9eJWOyKCB
- cz1l87OmHEfvQe1pJXRT6EdT00noKR7CnF+3Y9lVWftmT65xUShJywF/zd5uoUtv2Nih0TOATwj
- RFcsDMn9+IQrd6+4hs8cezjlrd1AoA==
-X-Authority-Analysis: v=2.4 cv=S/DUAYsP c=1 sm=1 tr=0 ts=693c0680 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=asER20gIid3tD00tBEMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: zFkCM8i_PSWywjV260R3mkzA9B-J5SZl
-X-Proofpoint-GUID: QkVAc1x0kDr-QE_caiPsHe33Ir4Z7586
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-12_03,2025-12-11_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060020
 
-Hello Namhyung,
+Use hierarchical per-cpu counters for rss tracking to fix the per-mm RSS
+tracking which has become too inaccurate for OOM killer purposes on
+large many-core systems.
 
-following is an observation from my attempt to enable unwind user fp on
-s390 using s390 back chain instead of frame pointer and relaxing the
-s390-specific IP validation check.
+The following rss tracking issues were noted by Sweet Tea Dorminy [1],
+which lead to picking wrong tasks as OOM kill target:
 
-When capturing call graphs of a Java application the list of "unwound"
-user space IPs may contain invalid entries, such as 0x0, 0xdeaddeaf,
-and 0xffffffffffffff.  IPs that exceed PERF_CONTEXT_MAX, such as the
-latter, cause perf not to display any deferred (or merged) call chain.
-Note that this is not caused by your patch series.
+  Recently, several internal services had an RSS usage regression as part of a
+  kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
+  read RSS statistics in a backup watchdog process to monitor and decide if
+  they'd overrun their memory budget. Now, however, a representative service
+  with five threads, expected to use about a hundred MB of memory, on a 250-cpu
+  machine had memory usage tens of megabytes different from the expected amount
+  -- this constituted a significant percentage of inaccuracy, causing the
+  watchdog to act.
 
-While re-adding the s390-specific IP checks would "hide" those, I found
-that the call graphs look good otherwise.  That is the back chain seems
-to be intact.  It is just the user space application (e.g. Java JRE) not
-correctly adhering to the ABI and saving the return address to the
-specified location on the stack, causing bogus IPs to be reported.
+  This was a result of commit f1a7941243c1 ("mm: convert mm's rss stats
+  into percpu_counter") [1].  Previously, the memory error was bounded by
+  64*nr_threads pages, a very livable megabyte. Now, however, as a result of
+  scheduler decisions moving the threads around the CPUs, the memory error could
+  be as large as a gigabyte.
 
-Could perf be improved to handle those user space IPs that exceed
-PERF_CONTEXT_MAX?
+  This is a really tremendous inaccuracy for any few-threaded program on a
+  large machine and impedes monitoring significantly. These stat counters are
+  also used to make OOM killing decisions, so this additional inaccuracy could
+  make a big difference in OOM situations -- either resulting in the wrong
+  process being killed, or in less memory being returned from an OOM-kill than
+  expected.
 
-Is there otherwise guidance how unwind user and/or the s390
-implementation should deal with such IPs?  Should it stop taking the
-deferred calltrace?  Should it substitute those with e.g 0, so that
-perf can display them?
+Here is a (possibly incomplete) list of the prior approaches that were
+used or proposed, along with their downside:
 
+1) Per-thread rss tracking: large error on many-thread processes.
 
-Sample for IP == deaddeaf (perf displays this correctly):
+2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
+   increased system time in make test workloads [1]. Moreover, the
+   inaccuracy increases with O(n^2) with the number of CPUs.
 
-java    1084    33.086790: DEFERRED CALLCHAIN [cookie: 2000001f9]
-             3ff983f071c java.lang.String CryptoBench.crypt(java.lang.String)+0x89c (/tmp/perf-1082.map)
-             3ff983ff894 void CryptoBench.execute()+0x94 (/tmp/perf-1082.map)
-       ! -->    deaddeaf [unknown] ([unknown])
-             3ff97e37900 StubRoutines (initial stubs)+0x80 (/tmp/perf-1082.map)
-             3ff97e41080 Interpreter+0x3300 (/tmp/perf-1082.map)
-             3ffae2d11de JavaCalls::call(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x3e (/usr/lib/jvm/.../libjvm.so)
-             3ffae38df92 jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, JavaThread*) [clone .constprop.1]+0x242 (/usr/lib/jvm/.../libjvm.so)
-             3ffae390e86 jni_CallStaticVoidMethod+0x116 (/usr/lib/jvm/.../libjvm.so)
-             3ffaf08b07e JavaMain+0x113e (/usr/lib/jvm/.../libjli.so)
-             3ffaf08e040 ThreadJavaMain+0x20 (/usr/lib/jvm/.../libjli.so)
-             3ffaedabbd8 start_thread+0x198 (/usr/lib64/libc.so.6)
-             3ffaee2b950 thread_start+0x10 (/usr/lib64/libc.so.6)
+3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
+   error is high with systems that have lots of NUMA nodes (32 times
+   the number of NUMA nodes).
 
+The approach proposed here is to replace this by the hierarchical
+per-cpu counters, which bounds the inaccuracy based on the system
+topology with O(N*logN).
 
-Sample for IP == 0 (perf displays this correctly):
+commit 82241a83cd15 ("mm: fix the inaccurate memory statistics issue for
+users") introduced get_mm_counter_sum() for precise /proc memory status
+queries.  Implement it with percpu_counter_tree_precise_sum() since it
+is not a fast path and precision is preferred over speed.
 
-java    1084    33.021987: DEFERRED CALLCHAIN [cookie: 20000017b]
-             3ff983f067c java.lang.String CryptoBench.crypt(java.lang.String)+0x7fc (/tmp/perf-1082.map)
-             3ff9098aa88 void CryptoBench.execute()+0x748 (/tmp/perf-1082.map)
-       ! -->           0 [unknown] ([unknown])
-             3ff97e37900 StubRoutines (initial stubs)+0x80 (/tmp/perf-1082.map)
-             3ff97e41080 Interpreter+0x3300 (/tmp/perf-1082.map)
-             3ffae2d11de JavaCalls::call(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x3e (/usr/lib/jvm/.../libjvm.so)
-             3ffae38df92 jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, JavaThread*) [clone .constprop.1]+0x242 (/usr/lib/jvm/.../libjvm.so)
-             3ffae390e86 jni_CallStaticVoidMethod+0x116 (/usr/lib/jvm/.../libjvm.so)
-             3ffaf08b07e JavaMain+0x113e (/usr/lib/jvm/.../libjli.so)
-             3ffaf08e040 ThreadJavaMain+0x20 (/usr/lib/jvm/.../libjli.so)
-             3ffaedabbd8 start_thread+0x198 (/usr/lib64/libc.so.6)
-             3ffaee2b950 thread_start+0x10 (/usr/lib64/libc.so.6)
+* Testing results:
 
-Note that for the IP==0 case I am thinking about adding a common unwind
-user check, to stop taking the deferred calltrace.
+Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical CPUs total)
 
+Methodology:
 
-Sample for IP == ffffffffffffff (perf does not display any call chain):
+Comparing the current upstream implementation with the hierarchical
+counters is done by keeping both implementations wired up in parallel,
+and running a single-process, single-threaded program which hops
+randomly across CPUs in the system, calling mmap(2) and munmap(2) on
+random CPUs, keeping track of an array of allocated mappings, randomly
+choosing entries to either map or unmap.
 
-# perf script
-...
-java    1084    44.004346:    1001001 task-clock:ppp:
+get_mm_counter() is instrumented to compare the upstream counter
+approximation to the precise value, and print the delta when going over
+a given threshold. The delta of the hierarchical counter approximation
+to the precise value is also printed for comparison.
 
-...
-[next entry]
+After a few minutes running this test, the upstream implementation
+counter approximation reaches a 1GB delta from the
+precise value, compared to 80MB delta with the hierarchical counter.
+The hierarchical counter provides a guaranteed maximum approximation
+inaccuracy of 192MB on that hardware topology.
 
-# perf script --no-merge-callchain
-...
-java    1084    44.004346:    1001001 task-clock:ppp:
-               400000079 (cookie) ([unknown])
+* Fast path implementation comparison
 
-java    1084    44.004348: DEFERRED CALLCHAIN [cookie: 400000079]
+The new inline percpu_counter_tree_add() uses a this_cpu_add_return()
+for the fast path (under a certain allocation size threshold).  Above
+that, it calls a slow path which "trickles up" the carry to upper level
+counters with atomic_add_return.
 
-...
-[next entry]
+In comparison, the upstream counters implementation calls
+percpu_counter_add_batch which uses this_cpu_try_cmpxchg() on the fast
+path, and does a raw_spin_lock_irqsave above a certain threshold.
 
-# perf report -D
-...
-44004346257 0x17718 [0x40]: PERF_RECORD_SAMPLE(IP, 0x2): 1082/1084: 0x3ffa3e413aa period: 1001001 addr: 0
-... FP chain: nr:2
-.....  0: fffffffffffffd80
-.....  1: 0000000400000079
-...... (deferred)
- ... thread: java:1084
- ...... dso: /tmp/perf-1082.map
+The hierarchical implementation is therefore expected to have less
+contention on mid-sized allocations than the upstream counters because
+the atomic counters tracking those bits are only shared across nearby
+CPUs. In comparison, the upstream counters immediately use a global
+spinlock when reaching the threshold.
 
-0x17758@perf.data [0xd0]: event: 22
-.
-. ... raw event: size 208 bytes
-.  0000:  00 00 00 16 00 02 00 d0 00 00 00 04 00 00 00 79  ...............y
-.  0010:  00 00 00 00 00 00 00 15 00 00 03 ff a3 e4 13 aa  ................
-.  0020:  00 00 03 ff 38 09 e2 d0 00 00 03 ff 38 09 e1 30  ....8.......8..0
-.  0030:  00 00 03 ff b9 5f df 68 00 00 00 00 00 00 00 00  ....._.h........
-.  0040:  00 00 03 ff b9 5f e1 28 00 00 03 ff b9 5f e1 d0  ....._.(....._..
-.  0050:  00 57 80 88 8e 76 47 a5 00 00 03 ff a3 e4 37 f2  .W...vG.......7.
-.  0060:  ff ff ff ff ff ff ff ff 00 00 03 ff a3 e4 a1 fc  ................
-.  0070:  00 00 00 00 00 00 00 00 00 00 03 ff a3 e3 79 00  ..............y.
-.  0080:  00 00 03 ff a3 e4 10 80 00 00 03 ff b9 dd 11 de  ................
-.  0090:  00 00 03 ff b9 e8 df 92 00 00 03 ff b9 e9 0e 86  ................
-.  00a0:  00 00 03 ff ba b8 b0 7e 00 00 03 ff ba b8 e0 40  .......~.......@
-.  00b0:  00 00 03 ff ba 8a bb d8 00 00 03 ff ba 92 b9 50  ...............P
-.  00c0:  00 00 04 3a 00 00 04 3c 00 00 00 0a 3e dd 13 c0  ...:...<....>...
+* Benchmarks
 
-44004348864 0x17758 [0xd0]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 1082/1084: 0x400000079
-... FP chain: nr:21
-.....  0: 000003ffa3e413aa
-.....  1: 000003ff3809e2d0
-.....  2: 000003ff3809e130
-.....  3: 000003ffb95fdf68
-.....  4: 0000000000000000
-.....  5: 000003ffb95fe128
-.....  6: 000003ffb95fe1d0
-.....  7: 005780888e7647a5
-.....  8: 000003ffa3e437f2
-.....  9: ffffffffffffffff <-- !
-..... 10: 000003ffa3e4a1fc
-..... 11: 0000000000000000
-..... 12: 000003ffa3e37900
-..... 13: 000003ffa3e41080
-..... 14: 000003ffb9dd11de
-..... 15: 000003ffb9e8df92
-..... 16: 000003ffb9e90e86
-..... 17: 000003ffbab8b07e
-..... 18: 000003ffbab8e040
-..... 19: 000003ffba8abbd8
-..... 20: 000003ffba92b950
-: unhandled!
+Using will-it-scale page_fault1 benchmarks to compare the upstream
+counters to the hierarchical counters. This is done with hyperthreading
+disabled. The speedup is within the standard deviation of the upstream
+runs, so the overhead is not significant.
 
-...
-[next entry]
+                                          upstream   hierarchical    speedup
+page_fault1_processes -s 100 -t 1           614783         615558      +0.1%
+page_fault1_threads -s 100 -t 1             612788         612447      -0.1%
+page_fault1_processes -s 100 -t 96        37994977       37932035      -0.2%
+page_fault1_threads -s 100 -t 96           2484130        2504860      +0.8%
+page_fault1_processes -s 100 -t 192       71262917       71118830      -0.2%
+page_fault1_threads -s 100 -t 192          2446437        2469296      +0.1%
 
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+Link: https://lore.kernel.org/lkml/20250704150226.47980-1-mathieu.desnoyers@efficios.com/
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
+---
+Changes since v8:
+- Use percpu_counter_tree_init_many and
+  percpu_counter_tree_destroy_many APIs.
+- Remove percpu tree items allocation. Extend mm_struct size to include
+  rss items. Those are handled through the new helpers
+  get_rss_stat_items() and get_rss_stat_items_size() and passed
+  as parameter to percpu_counter_tree_init_many().
 
-On 11/21/2025 12:48 AM, Namhyung Kim wrote:
-> Handle the deferred callchains in the script output.
-> 
->   $ perf script
->   ...
->   pwd    2312   121.163435:     249113 cpu/cycles/P:
->           ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
->           ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
->           ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
->           ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
->           ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
->           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
->           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
->                  b00000006 (cookie) ([unknown])
-> 
->   pwd    2312   121.163447: DEFERRED CALLCHAIN [cookie: b00000006]
->               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+Changes since v7:
+- Use precise sum positive API to handle a scenario where an unlucky
+  precise sum iteration would observe negative counter values due to
+  concurrent updates.
 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+Changes since v6:
+- Rebased on v6.18-rc3.
+- Implement get_mm_counter_sum as percpu_counter_tree_precise_sum for
+  /proc virtual files memory state queries.
 
-> +static int process_deferred_sample_event(const struct perf_tool *tool,
-> +					 union perf_event *event,
-> +					 struct perf_sample *sample,
-> +					 struct evsel *evsel,
-> +					 struct machine *machine)
-> +{
+Changes since v5:
+- Use percpu_counter_tree_approximate_sum_positive.
 
-> +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-> +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-> +	fprintf(fp, "DEFERRED CALLCHAIN [cookie: %llx]",
-> +		(unsigned long long)event->callchain_deferred.cookie);
-> +
-> +	if (PRINT_FIELD(IP)) {
-> +		struct callchain_cursor *cursor = NULL;
-> +
-> +		if (symbol_conf.use_callchain && sample->callchain) {
-> +			cursor = get_tls_callchain_cursor();
-> +			if (thread__resolve_callchain(al.thread, cursor, evsel,
-> +						      sample, NULL, NULL,
-> +						      scripting_max_stack)) {
+Change since v4:
+- get_mm_counter needs to return 0 or a positive value.
 
-thread__resolve_callchain()
-calls __thread__resolve_callchain()
-calls thread__resolve_callchain_sample():
+get_mm_counter_sum -> precise sum positive
+---
+ include/linux/mm.h          | 28 +++++++++++++++++++++++-----
+ include/linux/mm_types.h    |  4 ++--
+ include/trace/events/kmem.h |  2 +-
+ kernel/fork.c               | 24 ++++++++++++++----------
+ 4 files changed, 40 insertions(+), 18 deletions(-)
 
-        for (i = first_call, nr_entries = 0;
-             i < chain_nr && nr_entries < max_stack; i++) {
-...
-                ip = chain->ips[j];
-                if (ip < PERF_CONTEXT_MAX)   <-- IP=ff..ff is greater than PERF_CONTEXT_MAX
-                       ++nr_entries;
-...
-                err = add_callchain_ip(thread, cursor, parent,
-                                       root_al, &cpumode, ip,
-                                       false, NULL, NULL, 0, symbols);
-
-                if (err)
-                        return (err < 0) ? err : 0;
-
-calls add_callchain_ip:
-
-               if (ip >= PERF_CONTEXT_MAX) {
-                       switch (ip) {
-                       case PERF_CONTEXT_HV:
-                               *cpumode = PERF_RECORD_MISC_HYPERVISOR;
-                               break;
-                       case PERF_CONTEXT_KERNEL:
-                               *cpumode = PERF_RECORD_MISC_KERNEL;
-                               break;
-                       case PERF_CONTEXT_USER:
-                       case PERF_CONTEXT_USER_DEFERRED:
-                               *cpumode = PERF_RECORD_MISC_USER;
-                               break;
-                       default:
-                               pr_debug("invalid callchain context: "  <-- IP=ff..ff reaches default case
-                                        "%"PRId64"\n", (s64) ip);
-                               /*
-                                * It seems the callchain is corrupted.
-                                * Discard all.
-                                */
-                               callchain_cursor_reset(cursor);
-                               err = 1;
-                               goto out;
-                       }
-
-> +				pr_info("cannot resolve deferred callchains\n");
-> +				cursor = NULL;
-> +			}
-> +		}
-> +
-> +		fputc(cursor ? '\n' : ' ', fp);
-> +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
-> +				    cursor, symbol_conf.bt_stop_list, fp);
-> +	}
-Thanks and regards,
-Jens
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7c79b3369b82..cd81fa8924eb 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2681,38 +2681,56 @@ static inline bool get_user_page_fast_only(unsigned long addr,
+ {
+ 	return get_user_pages_fast_only(addr, 1, gup_flags, pagep) == 1;
+ }
++
++static inline size_t get_rss_stat_items_size(void)
++{
++	return percpu_counter_tree_items_size() * NR_MM_COUNTERS;
++}
++
++static inline struct percpu_counter_tree_level_item *get_rss_stat_items(struct mm_struct *mm)
++{
++	unsigned long ptr = (unsigned long)mm;
++
++	ptr += offsetof(struct mm_struct, cpu_bitmap);
++	/* Skip cpu_bitmap */
++	ptr += cpumask_size();
++	/* Skip mm_cidmask */
++	ptr += mm_cid_size();
++	return (struct percpu_counter_tree_level_item *)ptr;
++}
++
+ /*
+  * per-process(per-mm_struct) statistics.
+  */
+ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+ {
+-	return percpu_counter_read_positive(&mm->rss_stat[member]);
++	return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
+ }
+ 
+ static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
+ {
+-	return percpu_counter_sum_positive(&mm->rss_stat[member]);
++	return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
+ }
+ 
+ void mm_trace_rss_stat(struct mm_struct *mm, int member);
+ 
+ static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+ {
+-	percpu_counter_add(&mm->rss_stat[member], value);
++	percpu_counter_tree_add(&mm->rss_stat[member], value);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void inc_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_inc(&mm->rss_stat[member]);
++	percpu_counter_tree_add(&mm->rss_stat[member], 1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+ 
+ static inline void dec_mm_counter(struct mm_struct *mm, int member)
+ {
+-	percpu_counter_dec(&mm->rss_stat[member]);
++	percpu_counter_tree_add(&mm->rss_stat[member], -1);
+ 
+ 	mm_trace_rss_stat(mm, member);
+ }
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 90e5790c318f..adb2f227bac7 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -18,7 +18,7 @@
+ #include <linux/page-flags-layout.h>
+ #include <linux/workqueue.h>
+ #include <linux/seqlock.h>
+-#include <linux/percpu_counter.h>
++#include <linux/percpu_counter_tree.h>
+ #include <linux/types.h>
+ #include <linux/bitmap.h>
+ 
+@@ -1119,7 +1119,7 @@ struct mm_struct {
+ 		unsigned long saved_e_flags;
+ #endif
+ 
+-		struct percpu_counter rss_stat[NR_MM_COUNTERS];
++		struct percpu_counter_tree rss_stat[NR_MM_COUNTERS];
+ 
+ 		struct linux_binfmt *binfmt;
+ 
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index 7f93e754da5c..91c81c44f884 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -442,7 +442,7 @@ TRACE_EVENT(rss_stat,
+ 		__entry->mm_id = mm_ptr_to_hash(mm);
+ 		__entry->curr = !!(current->mm == mm);
+ 		__entry->member = member;
+-		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
++		__entry->size = (percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member])
+ 							    << PAGE_SHIFT);
+ 	),
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 3da0f08615a9..5430d63c9e2d 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -133,6 +133,11 @@
+  */
+ #define MAX_THREADS FUTEX_TID_MASK
+ 
++/*
++ * Batch size of rss stat approximation
++ */
++#define RSS_STAT_BATCH_SIZE	32
++
+ /*
+  * Protected counters by write_lock_irq(&tasklist_lock)
+  */
+@@ -583,14 +588,12 @@ static void check_mm(struct mm_struct *mm)
+ 			 "Please make sure 'struct resident_page_types[]' is updated as well");
+ 
+ 	for (i = 0; i < NR_MM_COUNTERS; i++) {
+-		long x = percpu_counter_sum(&mm->rss_stat[i]);
+-
+-		if (unlikely(x)) {
+-			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld Comm:%s Pid:%d\n",
+-				 mm, resident_page_types[i], x,
++		if (unlikely(percpu_counter_tree_precise_compare_value(&mm->rss_stat[i], 0) != 0))
++			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%d Comm:%s Pid:%d\n",
++				 mm, resident_page_types[i],
++				 percpu_counter_tree_precise_sum(&mm->rss_stat[i]),
+ 				 current->comm,
+ 				 task_pid_nr(current));
+-		}
+ 	}
+ 
+ 	if (mm_pgtables_bytes(mm))
+@@ -688,7 +691,7 @@ void __mmdrop(struct mm_struct *mm)
+ 	put_user_ns(mm->user_ns);
+ 	mm_pasid_drop(mm);
+ 	mm_destroy_cid(mm);
+-	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
++	percpu_counter_tree_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
+ 
+ 	free_mm(mm);
+ }
+@@ -1083,8 +1086,9 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	if (mm_alloc_cid(mm, p))
+ 		goto fail_cid;
+ 
+-	if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
+-				     NR_MM_COUNTERS))
++	if (percpu_counter_tree_init_many(mm->rss_stat, get_rss_stat_items(mm),
++					  NR_MM_COUNTERS, RSS_STAT_BATCH_SIZE,
++					  GFP_KERNEL_ACCOUNT))
+ 		goto fail_pcpu;
+ 
+ 	mm->user_ns = get_user_ns(user_ns);
+@@ -2964,7 +2968,7 @@ void __init mm_cache_init(void)
+ 	 * dynamically sized based on the maximum CPU number this system
+ 	 * can have, taking hotplug into account (nr_cpu_ids).
+ 	 */
+-	mm_size = sizeof(struct mm_struct) + cpumask_size() + mm_cid_size();
++	mm_size = sizeof(struct mm_struct) + cpumask_size() + mm_cid_size() + get_rss_stat_items_size();
+ 
+ 	mm_cachep = kmem_cache_create_usercopy("mm_struct",
+ 			mm_size, ARCH_MIN_MMSTRUCT_ALIGN,
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.39.5
 
