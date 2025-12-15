@@ -1,45 +1,46 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011050.outbound.protection.outlook.com [52.101.52.50])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012011.outbound.protection.outlook.com [40.107.209.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C9C331235;
-	Mon, 15 Dec 2025 08:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727FC331A6F;
+	Mon, 15 Dec 2025 08:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765788445; cv=fail; b=scAufjujZ9Vc7Ch2+rlwWJWwJpTSkvMKGLuRz9V+Gtre/YypABlGQBvnVYt852+uz8/taITv4d6RPYA1tVimdYnyL0kyGRlkzTbOcwxHIJ0UVWPmGtBeVyhuP5iV6YERt+bugXaac8XA5UB9ZSa65spJzBK5OO6g+ddwdv2mdE8=
+	t=1765788474; cv=fail; b=Ym4QgedE9mO+mEtsJph46ymymhH5OUhfhS7FZ46ZjvcDYkHx/sMf2bDgqKagkDpOlaFJj+/QyG5hFOsyZv+NLPVGhIM6r5tIk94q1mnl51Oji40C+i0k5vZKy18gefV53s4nG2tFWbmDawpJlpji9DM6j/IZ4bz8SGEP6tKA5FI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765788445; c=relaxed/simple;
-	bh=W6VxbWTNrZoxoQYjFEOtTYsum6WtwqEhC4Zz5C/nJ9A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C1ANvSA+4XVljb9ZZJH1B1HJiN6i8OqbO+lfrAg6PUNt81IfBbIWVS80RnTxeQKfBP3M/AMOirATeOYVrg8yT9K91k03+v97pY/gQcQESokjAkZE41v64T9DVnRXShYgVP+yHEZCVd9afi3C18G5Kqc3ga15mHHXFzGy9fYbigM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TariI9ek; arc=fail smtp.client-ip=52.101.52.50
+	s=arc-20240116; t=1765788474; c=relaxed/simple;
+	bh=7KFMlcAzvDbIvMCXzfrr/ecGWTFc07Jdm4O3OY0gXTU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sbKRbyUPs3qJH3bwgLNgncez1BhDAtgwfUETJ/Ym2+MlUVVLyIKqwWlhsaMmIPz2EqMLB707VORcl7352IjPULSx6L4pNh2P/06kVY9kb9NT2/3RGI0QhU2k9u2ZUv0Al9ujlzdO4PWyZ51F6oLe+MPcpFI3fl2q7Ig5OSyk8qM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DEUhDXXn; arc=fail smtp.client-ip=40.107.209.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TariI9ek"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DEUhDXXn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JXNneNRz6RVZiNTEMYF+NnljNQuWLVFq8qVGWWpy2HKGF6sBy0Gl3d+zZbSao3WKPeOflz3oQQ9FsRulVHbPyUeGKUp6C96Ktt1jLGzeWNfT1f3AWEqL42bKc91OEcxApUPWjVW+5IrAtzv+8FMzatXoXZrh0sdh7tQZjQX+VcBfTYPeCTzOxWMer5V/XjowrALE4YfzP5/DPV84Ma8uLmlmUyqXzZl0WAW0EZ83gQlha2Jnm9thNR7cY2hpU03seE45pd3avCUdK+xa3UGbag5h9TBnCa1uuO9Ych2/QEwm2SDOeHL/xnM62g2eBp1r/yahEg/Gokb5bO7chM+OBA==
+ b=TgSrCVWOnsuCEGTqPpFXSfZN/hv38w0oDV9Apf6axWB2UmbK5JOrCQntVIm3IPFAUDhOIptlk84wxcqHQl3JP33u2gTTQtHTQwGGd4xMNqNfoC4eDfRpnori5z/YpkUpxmk+heCEV8+cndf/PZOfA5mSSINJCrevu+NAKerHe78XSVxsNomMfFlCq9XOppWkbhjLSq2r3c3qf+fgxRg+/gjgBOCFHds/uzrDqCx9VWNSAMLAP571BEieMzD9ocTxXC7dF106hKdfAWcnTEefQrBxEoo4LaBePGxWJJwl1qPGpp6VneUeviXf+5mozoI1o55L7+9OfkHGAOHQq/2A/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yvJvyZpKzWgSapZy/mDwanRSyVEqfh2pWtEoiEGZwq0=;
- b=Rp0WSLaGJ9D8zlMQOVUeoorVDcXxkotx75L6udK2m3SP/zfwYa4FL0/2bndxwaDKeCaQXJEa6dCvISu5WhJzj/UbQZ5xO5SP3l4WLoAthBCI1FGXnB78HMslXC8O78Rhk4TcXGBH4reLleqvaapgPp9NGupuq7F8KPlhUfjTDrivht096VvSlE8CtCd6TZR1Di5CT5FB65wqiBGW4HGrwsUlDjKaCwd5hJCLjqSOeYXR//Hq+K7L3kyAuAvyJEzdeY/V/Fu3yJT8rDZxBnzUujdqO8fJxZuw0gatG5mx01p486YVerMr33GqxYPG7q6tGDKZav5GYiGaeOotvv7fDQ==
+ bh=PWwrLB9amy9Jf/FSPwAn12dKpNXOoV6wl75rDRmX8hE=;
+ b=ps5xLFthE+TWRba5xoXlnMcLQ+98fCIDZIrPNTXM74jmVMukuRa2X3OONG+M2l3lqltURLEWInhMCzf9dMhklJUmzewPZy+KNx/xv87D3ZuHyKJ0JLOW17SJgHlpYsbyr6JtRUtytM9AKRRyKseTwAM83qy82K1+4xOlej1ayvgpzTbfvGyy6CmYl269bVq0twN+ulXgTkBUN+0t9Z9s4EznVYxyjPsciBmQ1IcQaJYqn4yqhyVWn80ympqgqdwCAjwTxyFcflo6Rb5jWv+40rgEw3peZB6syN/gDtQlGydChdWYSf+MfJPLkKkladtBzRTZMJCiyUscG1b4DjmZsg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yvJvyZpKzWgSapZy/mDwanRSyVEqfh2pWtEoiEGZwq0=;
- b=TariI9ek7TY7QmcUAyRB8nX2shavZRoWwrIgq7AfMUuoyzH5nnnxE1ooyen7f2dLRr4LjT6DxYpj0mNelOSrT7vQ6kBTWViEzInhWjcDE4bb9bc/W2yH0u8ItLHCzXt4j+ykItTUa3KXJqcq1FFM6BdYgqR03hTjqaptR79TxpA=
-Received: from BY5PR04CA0018.namprd04.prod.outlook.com (2603:10b6:a03:1d0::28)
- by SN7PR12MB7955.namprd12.prod.outlook.com (2603:10b6:806:34d::17) with
+ bh=PWwrLB9amy9Jf/FSPwAn12dKpNXOoV6wl75rDRmX8hE=;
+ b=DEUhDXXnm0iDIZz5uUwKxI9Oat7iwhHnNzmciuB4cap53gViWeZuec1QJQbodGqc0/PsE2RQYXzvGUo9qj/jNc2suS0op7ESIGGCy9M4DliP8Y5e017kyWWr/Cer890Ncjz9+4WMao05lHv5gh8sPPX0+5nhDMtqFHiXlyaE+Ec=
+Received: from SJ0PR03CA0024.namprd03.prod.outlook.com (2603:10b6:a03:33a::29)
+ by IA1PR12MB9738.namprd12.prod.outlook.com (2603:10b6:208:465::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Mon, 15 Dec
- 2025 08:47:19 +0000
-Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::8) by BY5PR04CA0018.outlook.office365.com
- (2603:10b6:a03:1d0::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.13 via Frontend Transport; Mon,
- 15 Dec 2025 08:47:06 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.7; Mon, 15 Dec
+ 2025 08:47:47 +0000
+Received: from SJ5PEPF000001D2.namprd05.prod.outlook.com
+ (2603:10b6:a03:33a:cafe::ca) by SJ0PR03CA0024.outlook.office365.com
+ (2603:10b6:a03:33a::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.15 via Frontend Transport; Mon,
+ 15 Dec 2025 08:47:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
+ SJ5PEPF000001D2.mail.protection.outlook.com (10.167.242.54) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9434.6 via Frontend Transport; Mon, 15 Dec 2025 08:47:18 +0000
+ 15.20.9434.6 via Frontend Transport; Mon, 15 Dec 2025 08:47:46 +0000
 Received: from kaveri.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 15 Dec
- 2025 02:47:13 -0600
+ 2025 02:47:41 -0600
 From: Shivank Garg <shivankg@amd.com>
 To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
 	<david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
@@ -64,11 +65,14 @@ CC: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
 	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Mathieu
  Desnoyers" <mathieu.desnoyers@efficios.com>, Zach O'Keefe
 	<zokeefe@google.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <shivankg@amd.com>
-Subject: [PATCH V4 0/2] mm/khugepaged: fix dirty page handling for MADV_COLLAPSE
-Date: Mon, 15 Dec 2025 08:46:15 +0000
-Message-ID: <20251215084615.5283-3-shivankg@amd.com>
+	<linux-trace-kernel@vger.kernel.org>, <shivankg@amd.com>, Branden Moore
+	<Branden.Moore@amd.com>, wang lian <lianux.mm@gmail.com>
+Subject: [PATCH V4 1/2] mm/khugepaged: map dirty/writeback pages failures to EAGAIN
+Date: Mon, 15 Dec 2025 08:46:17 +0000
+Message-ID: <20251215084615.5283-5-shivankg@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251215084615.5283-3-shivankg@amd.com>
+References: <20251215084615.5283-3-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,111 +85,135 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|SN7PR12MB7955:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5043660f-133f-4d13-1e20-08de3bb68e32
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D2:EE_|IA1PR12MB9738:EE_
+X-MS-Office365-Filtering-Correlation-Id: 109f7568-8e65-4bfe-9ec0-08de3bb69ef0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024|13003099007;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zAK31v2/bD77uuaMHyHqTlBVOy6+fq0vTelV1Jl0x7JNNdJdIGi0AlIkIkAF?=
- =?us-ascii?Q?EcWC/zsTtjaaeoFizDaUpo0Jfwy86R9fN0DpazPB5vgWz33gLavDNO9HYqGP?=
- =?us-ascii?Q?85XyuIufaVbOIj1LlzxZy/zwIjq9kZQg+SO+u0C9qw5e+7lyAEkf4txwDIrw?=
- =?us-ascii?Q?A9IG6fNtbK74m/Y59IzMP+gUrrNLSmkDsfaztaIPfreb4YueQNtssJWqRLdS?=
- =?us-ascii?Q?EjQk8r6gUbDBwzCMBGW+dJ66bouSKtc6P5WvJ4cy+8cRxvZ2dwZ+lhs/90rL?=
- =?us-ascii?Q?BTMfVEWcFx461inaVFcJxr/DbHATgGdmH8xOYiNE5zvAjjypyzFka0nRg9Ks?=
- =?us-ascii?Q?Nbm9Hsx9Nrc9LGPBEf1SDKL4XnAs/Oh+hJMEBdshcxf+GDtFQ+e/bEh9Mj/v?=
- =?us-ascii?Q?IZgSPfTuQp5rgo1jQ6+DQFrhFHUh5/ZOcpzMbfwcMOFXVnk7ybP4ZsL6rufl?=
- =?us-ascii?Q?ZCsCYOO+OeLWgLV/lAGo7V3HE7l4I1SdtPDh5muYSBKJH5WnAvDTCh/9lhm5?=
- =?us-ascii?Q?UAcwjcXh4a3SHEJxYHGGooDJ7uZ11W2+IXfUUYvc/dt6Mei9ztpup5iixyDH?=
- =?us-ascii?Q?dhrxJ8JsokkIxl4DEVmdz+TTYWoVJxVWJIAb0DFFufIGT35OGNAY5RmKX3/Y?=
- =?us-ascii?Q?DbKe9SFHkHVyKA1q8rlXe4W2H0xqwgmoDPibXXxkjan69vvq7xJkE9q1+XMH?=
- =?us-ascii?Q?dhLlD28Fvv8HpJLfBSqDjDCjDJD3dAOxyJNDOvDj4R7F6HOPw87HkZB7VSrz?=
- =?us-ascii?Q?Hl4hquxKGiKE+xq1ELQmYljM1Dec0rUuaWlBXDVqF+hhtYadGQGhg0ob563n?=
- =?us-ascii?Q?YwJWJttGx2+njBe4gubwPfk5nAEIKvktmvCBJA1W6te29KZgaHOj7EELGphu?=
- =?us-ascii?Q?xAw6ah1kVGf42nXLhT/2/oSh7v76ok4m/U3UqaRWxivmi9eS6M+bNJNFK7NO?=
- =?us-ascii?Q?LzDmBsYQiYIP5ewzHC/Emma6NO5asswlUy3r1ye+H0+VNXVmhCDWo7SgWQ2M?=
- =?us-ascii?Q?v/2XEs5rfMNsbluvxtiH6IaROtiRb9bCq7iof63eFsJDIJlRleZlhzGkBSo9?=
- =?us-ascii?Q?zOfzV94quv5UtDv6Pm+6TSuI5z9EmuZDEq3Y/XmVyn+DbHtqczjgX0naT23R?=
- =?us-ascii?Q?MMmjesKOEb6TKZqkNcinF8hF0Kda+9fPU/1mk3f4ZFz9VupiGKeklsamXvrD?=
- =?us-ascii?Q?I0P5ifVqgjWJKZ3g7aAZVYq02p/ft6+z7QPKLetBSDjnbl0NXby9WgOgq0N2?=
- =?us-ascii?Q?bs66L0TOdQg4Z8gWux5k3fTNY7xeWsazu9pO20vFn7W1eNZKsVGdq1JXgLfU?=
- =?us-ascii?Q?2iKvorWQ9Nxk17LJR3wM9aSsX29jJq6qAssUptaoapBDeRlQJ2LBUq1kN5qS?=
- =?us-ascii?Q?SCOy6K8mKDPqw1z9QJrsvIr/VS4uh3oIGMVljdYs1hvmdAxqd+c8t7MJHqe/?=
- =?us-ascii?Q?aPmov7XeLPX3DRK3vB6k/lg+nEAgRgE30X1x2Ed4nl4ve4Z1IYrsekaoioV1?=
- =?us-ascii?Q?PCr4ZM3YGywmiTiFAmLbgzwDqs08LOw0cbvfEqEe68Un4ym0Vbunf6nQy7uH?=
- =?us-ascii?Q?cXjhvOM3MpRLLmDg0pM9JcRs9PkvgHJ4vCtgrWGw?=
+	=?us-ascii?Q?E4AUwYqcoxYe1ACX3jKzw+0inOcjalNdf8R6aVSA8SMiAcdTeQI8bfhEdDzo?=
+ =?us-ascii?Q?4c0P9MS+1qy6rfKRgSdzeVNVmgvZpEDbY4PoMgijJyK92O9YDTDIcsZDkNPm?=
+ =?us-ascii?Q?R4Xar1/iapDyOw8G4uF93ZH/RnriVL5vSCPZWXKMvQv2kOIs0V+8+r7pXPBc?=
+ =?us-ascii?Q?6PE1fw647HfP/STKQlOKn/rjxDiPDSriPk7QrrOCQlncTIzzQQDBmqWbWwwW?=
+ =?us-ascii?Q?M9wnCTmYAEVxGC8TYn8ui8Volc7t1MIHfMqB+SrGhhAa75ZxGCbVYKVuRE2+?=
+ =?us-ascii?Q?YZeFLwdRIHs11xHk3UqSiR1PLOqumR+euz2JAnlSXwqcMsaFsnzeGgFI3ef/?=
+ =?us-ascii?Q?bL67nWjRmNI+ymRbEkvRYyBIkQU52ZQE6rEBl+N5Z+r7uRf/i52G5XYdRpy3?=
+ =?us-ascii?Q?+rSgJ7Q8uiqitr9mRvrHNwfWCL8r82YEQgak7KPXLXqVV9cy1+Dvw0VvPdDp?=
+ =?us-ascii?Q?h/SYZOQImmOh/7I76rUa08QXZLnwdsr94EpI5mSGKNiBA6yThHba717Y5MST?=
+ =?us-ascii?Q?+cunxsSk+277nuYdSZBlKRlltHLIT//uzytMbhfMBBLHzzafngEvlaVcOlR6?=
+ =?us-ascii?Q?DMa24sEdMzcrfj7JcaYi7jZVZfiD/owBTeKofefj7ilqVZYCHmL6tPe2a7xT?=
+ =?us-ascii?Q?X9kuHBBqjYfylJye6ZhxSWZMazGwuUNFqb15jyrMYjvNT4Wha1nHk6FWyHxW?=
+ =?us-ascii?Q?occablTvBq4LUHx3JsfcH9SWSoIUF7uc6sj58m09aIK97HHGsKVvq7QzjGsQ?=
+ =?us-ascii?Q?EQ6aB+MGjWQfwj4h4X3CHMxnG80+qCRUNleff/BZf2cRLjbHAlIYj2TVk4Va?=
+ =?us-ascii?Q?SUF/CwzYZSdmOULe89U3577STDvMEensMAJBJhldUoERxAbejcHceWt4QfBQ?=
+ =?us-ascii?Q?I6u6ecbhYlHXIZb/c67Q353uzomP+wreFz+JYEC9ZzmwK5ZNNivKz4V5j72K?=
+ =?us-ascii?Q?G5dcbLVEplGzcb16o/TaKb3dQHfQ63SBuUCOlM5HXMolnwxtb8SfUpn2Zwdu?=
+ =?us-ascii?Q?ZZAWPJy67RoEsMkTa4xxJ7ED/BVbwHncA3IJRiEHqTlLh217MvtkW1y6OVOj?=
+ =?us-ascii?Q?HJsZycewlfcNafFGfMyQsKgV8YQqBGli0QPZhVFCISKgJJeRV0cXOG/bvLei?=
+ =?us-ascii?Q?N5XsV2O3a8Qe6WBKhCeZjm3o9WB0tFdeC9N7o2x/wbA+4q4qCFiLFQf3nrjE?=
+ =?us-ascii?Q?qsCOgqX+EvAN8o6OLw79zIyKO0igx8NQ8L3v8a5eVHUqlnAzgJ92VHUQGz9D?=
+ =?us-ascii?Q?F2A2IIDeXnMNf4AmmB4Ue1OEcwUsC0TrnuFMml6o6PBwgkb5hRBGEKPUgiY9?=
+ =?us-ascii?Q?yG9HMJxtL999nK7e0CLL5JZKFifHNIanJUwtgpusfXoKcoum+bW1PnY9PDZt?=
+ =?us-ascii?Q?D47JbHBfgWJwAkh2hwJBHhuNIWf38djb6+6S5QnGm4cwDyj1d1QnvxH5pffT?=
+ =?us-ascii?Q?6lPyvOYUpJ4Cqtp3yYzsbPaLuXZ7Xa/IM3JxpyY3kQRvxXBpc9VdMIPvfCue?=
+ =?us-ascii?Q?Cq11oC5b9g/QlyQGnpuVb2Rc8D+DHwQP3UjPYNQvVar3X4nLtqKJA2l/KKSq?=
+ =?us-ascii?Q?9aWzv22hQOSRLqb5S3M=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2025 08:47:18.7586
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2025 08:47:46.8510
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5043660f-133f-4d13-1e20-08de3bb68e32
+X-MS-Exchange-CrossTenant-Network-Message-Id: 109f7568-8e65-4bfe-9ec0-08de3bb69ef0
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D5.namprd05.prod.outlook.com
+	SJ5PEPF000001D2.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7955
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9738
 
-MADV_COLLAPSE on file-backed mappings fails with -EINVAL when TEXT pages
-are dirty. This affects scenarios like package/container updates or
-executing binaries immediately after writing them, etc.
+When collapse_file encounters dirty or writeback pages in file-backed
+mappings, it currently returns SCAN_FAIL which maps to -EINVAL. This is
+misleading as EINVAL suggests invalid arguments, whereas dirty/writeback
+pages represent transient conditions that may resolve on retry.
 
-The issue is that collapse_file() triggers async writeback and returns
-SCAN_FAIL (maps to -EINVAL), expecting khugepaged to revisit later. But
-MADV_COLLAPSE is synchronous and userspace expects immediate success or
-a clear retry signal.
+Introduce SCAN_PAGE_DIRTY_OR_WRITEBACK to cover both dirty and writeback
+states, mapping it to -EAGAIN. For MADV_COLLAPSE, this provides userspace
+with a clear signal that retry may succeed after writeback completes.
+For khugepaged, this is harmless as it will naturally revisit the range
+during periodic scans after async writeback completes.
 
-Reproduction:
- - Compile or copy 2MB-aligned executable to XFS/ext4 FS
- - Call MADV_COLLAPSE on .text section
- - First call fails with -EINVAL (text pages dirty from copy)
- - Second call succeeds (async writeback completed)
+Reported-by: Branden Moore <Branden.Moore@amd.com>
+Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+Reviewed-by: Dev Jain <dev.jain@arm.com>
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: wang lian <lianux.mm@gmail.com>
+Signed-off-by: Shivank Garg <shivankg@amd.com>
+---
+ include/trace/events/huge_memory.h | 3 ++-
+ mm/khugepaged.c                    | 8 +++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-Issue Report:
-https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
-
-Patch applies cleanly on mm-new (https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-new)
-
-Changelog:
-V4:
-- Rebase on mm-new
-- Fix spurious blank line (Lance)
-
-V3:
-- https://lore.kernel.org/all/20251201185604.210634-6-shivankg@amd.com
-- Reordered patches: Enum definition comes first as the retry logic depends on it
-- Renamed SCAN_PAGE_NOT_CLEAN to SCAN_PAGE_DIRTY_OR_WRITEBACK (Dev, Lance, David)
-- Changed writeback logic: Only trigger synchronous writeback and retry if the
-  initial collapse attempt failed specifically due to dirty/writeback pages,
-  rather than blindly flushing all file-backed VMAs (David)
-- Added proper file reference counting (get_file/fput) around the unlock window
-  to prevent UAF (Lance)
-
-V2:
-- https://lore.kernel.org/all/20251120065043.41738-6-shivankg@amd.com
-- Move writeback to madvise_collapse() (better abstraction, proper
-  mmap_lock handling and does VMA revalidation after I/O) (Lorenzo)
-- Rename to SCAN_PAGE_DIRTY to SCAN_PAGE_NOT_CLEAN and extend its use
-  for all dirty/writeback folio cases that previously returned incorrect
-  results (Dev) 
-
-V1: https://lore.kernel.org/all/20251110113254.77822-1-shivankg@amd.com
-
-Thanks,
-
-Shivank Garg (2):
-  mm/khugepaged: map dirty/writeback pages failures to EAGAIN
-  mm/khugepaged: retry with sync writeback for MADV_COLLAPSE
-
- include/trace/events/huge_memory.h |  3 +-
- mm/khugepaged.c                    | 48 ++++++++++++++++++++++++++++--
- 2 files changed, 47 insertions(+), 4 deletions(-)
-
-
-base-commit: d0a24447990a9d8212bfb3a692d59efa74ce9f86
+diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+index 4cde53b45a85..4e41bff31888 100644
+--- a/include/trace/events/huge_memory.h
++++ b/include/trace/events/huge_memory.h
+@@ -37,7 +37,8 @@
+ 	EM( SCAN_PAGE_HAS_PRIVATE,	"page_has_private")		\
+ 	EM( SCAN_STORE_FAILED,		"store_failed")			\
+ 	EM( SCAN_COPY_MC,		"copy_poisoned_page")		\
+-	EMe(SCAN_PAGE_FILLED,		"page_filled")
++	EM( SCAN_PAGE_FILLED,		"page_filled")			\
++	EMe(SCAN_PAGE_DIRTY_OR_WRITEBACK, "page_dirty_or_writeback")
+ 
+ #undef EM
+ #undef EMe
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 97d1b2824386..219dfa2e523c 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -58,6 +58,7 @@ enum scan_result {
+ 	SCAN_STORE_FAILED,
+ 	SCAN_COPY_MC,
+ 	SCAN_PAGE_FILLED,
++	SCAN_PAGE_DIRTY_OR_WRITEBACK,
+ };
+ 
+ #define CREATE_TRACE_POINTS
+@@ -1967,11 +1968,11 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+ 				 */
+ 				xas_unlock_irq(&xas);
+ 				filemap_flush(mapping);
+-				result = SCAN_FAIL;
++				result = SCAN_PAGE_DIRTY_OR_WRITEBACK;
+ 				goto xa_unlocked;
+ 			} else if (folio_test_writeback(folio)) {
+ 				xas_unlock_irq(&xas);
+-				result = SCAN_FAIL;
++				result = SCAN_PAGE_DIRTY_OR_WRITEBACK;
+ 				goto xa_unlocked;
+ 			} else if (folio_trylock(folio)) {
+ 				folio_get(folio);
+@@ -2018,7 +2019,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+ 			 * folio is dirty because it hasn't been flushed
+ 			 * since first write.
+ 			 */
+-			result = SCAN_FAIL;
++			result = SCAN_PAGE_DIRTY_OR_WRITEBACK;
+ 			goto out_unlock;
+ 		}
+ 
+@@ -2747,6 +2748,7 @@ static int madvise_collapse_errno(enum scan_result r)
+ 	case SCAN_PAGE_LRU:
+ 	case SCAN_DEL_PAGE_LRU:
+ 	case SCAN_PAGE_FILLED:
++	case SCAN_PAGE_DIRTY_OR_WRITEBACK:
+ 		return -EAGAIN;
+ 	/*
+ 	 * Other: Trying again likely not to succeed / error intrinsic to
 -- 
 2.43.0
 
