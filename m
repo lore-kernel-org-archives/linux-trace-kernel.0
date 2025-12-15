@@ -1,200 +1,223 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021098.outbound.protection.outlook.com [40.107.192.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFF82E0401;
-	Mon, 15 Dec 2025 13:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765805765; cv=fail; b=cFUtvFovdyLq8dNaTmfoBG2i+49A2sA9g8pePGX2xQnL9ALVy/2rNR9DSiUk4H+nlXTvg/SqKX6P8a5l7SG+SErjOmaM7y90j9BRC0SyYB9q2B+NBRQtnTsfenkxf5UoH7g6YIZ6KR4dG8AY/APAzYMD6KmrP8EndomSWpSNquk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765805765; c=relaxed/simple;
-	bh=96gnnKjPgiEKojOHv5b48EPxkPM4qE/YSrfNaA2VmFc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sGJEl5W9MVmUPahhi1qGGsWwQ922XcmI5RIvaG/QL3uvHmBUuurtNdY2jUBRjz8CY0n1pBHa38dlvC0KtKP6ufCytk8/NVTJSr575u/4dBiAUs16xXVFxcVgPNgncCy7JqvS8qFKqp80ZPQ9e0qr5N5RBo8eeqNvtVe+kQpeQvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=mwetCPOK; arc=fail smtp.client-ip=40.107.192.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B802D0600
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Dec 2025 17:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765820183; cv=none; b=uhWxoh4UnB1sZfHzfpyyvH9L/SZR7+WO4IkRuYR/6VU+yai61b1hsIOo93Cpf7Wlqtd44nqJcuNjatWZk6l80j3phq24TUciBmXQ/9Ch5t2qEIFZ0CdiNgSK984pJ+1S2nneA1k6Bcxn8suQvXlln2fqVVxonWvDn8wBIj7h5eQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765820183; c=relaxed/simple;
+	bh=vsdYktsjNgFAp1JUs1oA8+72Al59PRALq5W22WynjIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QikMTcY9/GITNw/mSxIys1nRTenzdgSb04osN7toQ/ltr1pk+jh3jpAMttT1PZZEkFok3axJQ4v90EFuuX6+hzXacS4IXilbFZjDj1/hXCrsSLUToRBmtNbiNqua98A5Tzef+ogAdahzqVJXi8xWvMt3uaEoKRfe+oVKoT1Zs8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJqcFHTy; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mwetCPOK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rmip6x5UwbFIa3xxAcT6XG7OJob7OcH/unP82JmRG0Gk1d9gX9yoBb1wl5PfSCprvoILDI46wuEnCm5/4z5L1vtAjg40SH+ev5cBGR4LFcB8csa/isEf/NDFrcr+WKPPdUsq8ajSeSUa+7AYmaU6/qkQLz7HERkPZuzL4aIOizXEv6NVDzF8NFG8ONtkbUrj/0XMeP4ceT9sMCJZyV6j0bj5m4zdDg+zH4gho+NX0GnS2oiVtdFOOwbDtTfU+XNgPvc/5CEzoUZ1HJ6C8X8dpDNms6D9Me1LqMDXmoNHSe8QZB63D3JotQs9/OzztG73+yUwYDXX1bbCxe7ut9Nybg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CqGhfk4DPMzaCuvzlk0vbe36KfgrNbnCbKjhu5dWuWo=;
- b=HPrROhuolg3zLKFUT7OawgbGGMLzlAuj4xzA7rYD8dIByXCznS1tChV0vUfBJwUmwBsOCSlvKf0jPSsctMaxIgzeGjuQJBNegI+2iGCAS8/Sg8htlPTw/QchF7ocEjOiGXqQO6nUT7xJgWBG9gI82c+FqueHyw2gUg+zr7srwKW8D8wFZ/pPgjwrLFCICHgZLsP9+15lmv/ht0IfILKAoQhYT+ZqYRN88mnNAFyzs2uZEpIZWBes4R8stQMbnnflHWhhpRHkkTcKo8ZbsYyFhCsfym2XMDxis75S91X0txCOit1fslbENszAa6cJRGtGuRwkZbRLJEXFQLTx6Ynxjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CqGhfk4DPMzaCuvzlk0vbe36KfgrNbnCbKjhu5dWuWo=;
- b=mwetCPOKQFTcj2NOKm/HlDGGNvRjTWfBg8orRx5NcgxQ/bIs3FNmGRActpeD5fHO4rHs9Ymnclbou4Xn/hAPprIzZrMhri/bPyoRwJ8Iu7tWKp8b2J+JGSgWX11tlWnisH8WE6WhI4rY/MC1zLOrz/TQtI19a+TRNp6WUq/0uSXwmx29oTlbjjOQQddtVe5BmO4jtWrMsnPdiPKm4Fwa522vbu9u/IrO0v0gr8Yk6zokNTJ5GvDilCreWS0OtTMWpkYRVXF0KAlmqTiYFaDxTGW6fjyuyBTwejyoYDBBLQ+AogurhZOuAXMLLlhcfePPC76mdUEQdWuJLosXTbKNqQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT4PR01MB9526.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:e0::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Mon, 15 Dec
- 2025 13:36:00 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%2]) with mapi id 15.20.9412.011; Mon, 15 Dec 2025
- 13:36:00 +0000
-Message-ID: <c754c406-2816-4b70-a4a8-7a11b9ec45d3@efficios.com>
-Date: Mon, 15 Dec 2025 08:35:58 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Rik van Riel <riel@surriel.com>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- x86@kernel.org, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- David Hildenbrand <david@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arch@vger.kernel.org
-References: <20251212-tlb-trace-fix-v2-0-d322e0ad9b69@columbia.edu>
- <20251212-tlb-trace-fix-v2-2-d322e0ad9b69@columbia.edu>
- <a5f3885f-aa32-420b-8d2f-e8ed6bfc6ee3@lucifer.local>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <a5f3885f-aa32-420b-8d2f-e8ed6bfc6ee3@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0067.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:88::14) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJqcFHTy"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a081c163b0so24729095ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Dec 2025 09:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765820181; x=1766424981; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LLRG6s4CiMaRDvwPZVRW9ocDiBkHQzba4/tGEALm8Xg=;
+        b=PJqcFHTySOwidcmfKhM2Z4F8IhYRufSxlArg+pkz2fB/4s9sUx2en51GWVDnrH4nYh
+         a9dZA7zrx14tRgDndDEWFkk8dHRygGWBvzsN1TH1tG1xZ747+dqzIvpfOoVTYLSb16TP
+         /K5ckOukYLDUepWcFyCKedU3IdTHMYhyg2rqH6Zd4dTX3mUePeUkw/dExW8fV1k6A/Hr
+         ql0FL4DScHJSWBR+uX1DX1H9dssdEHV6NENqmx/5txS4WROVI3tZldpa47qjAxAYIXCR
+         qlk4g1or5GmGVAEixbzAmp+zWEHkV1W0P1YTtcu5ZGU+K6R7osZHLAMlqnaUPld1q1I6
+         P4Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765820181; x=1766424981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LLRG6s4CiMaRDvwPZVRW9ocDiBkHQzba4/tGEALm8Xg=;
+        b=k1YBOlGm0InXiMCxsKw09d4pv9xWk24vk4O5j48e55L1glhw2/w+RtBhpbfkxG6KLp
+         JIibbnyvATLt9AoT85lQHYNSeQ/f5DwDBIxRig/X+B0+08/s54mRCIxD6ITvBtQPFMmN
+         gZCMNwaGJefjFy+0zTry3YH8RhWcsQW8uJ5i/sh+yz6By7m22cZF8AOw+mfAhXisDbkt
+         7O8gfwa57FZgREAfDczv23Dbt+DOVGCDybOYg7iX99tNf+ZUhjCUATQTuymBkbb0y7r8
+         ZMx5zYGQPOGYnV54OBwez6zmY/cktcIt80tj3g47aNHyo/R0e+aGrDOt3RVnKHy37SdD
+         NXyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX22ZgQACSgW/0YXwuxCCijDMwtUZy8jicuQAimJPXQ6nmxcTcRcZdleoLgQJez2A/6wBXQmPBD6iatZbnKETzbc3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOLHr4V7quf1bfnd2JjPeYJnSR7qKsYia9T9gOpgNM+BWoScDw
+	eB/tFXDBvyMHbzu89C3vrk8F58bch5Wey6EP4/9L6RLD8xBlTaoPhr/IrL+plFeLod1MvZWdZjZ
+	B5cYEKrI21gLzHknSvVi6mc9PzGTqEFA=
+X-Gm-Gg: AY/fxX4ObTXStJMbQ5sZy6P99c+LeIF4c6Nm3rSZswxmlTkMOcySQIRNcMcH1P2GN/Z
+	xJ9o9nBYnW5KEw6WQ6cFF2ouKdSlyp9ZcRH97Ne89EXr436fslqyeXbjfK+ehnvQGX6rkdfuIMH
+	pO2+u2fL8eJnCTMi8AmbJKc9hEVGUT2FBwottfJwqeZHa/4jaUrWMLQWDHpfxcnlthcjeagtW6s
+	i3I3HToqzM5F324vRv3reAJb/oQYrlaO/vwUnyk8XEhTdov8QLjiWIPXMEMK9Q09bEqQVg/81OB
+	hY30KduLJZU=
+X-Google-Smtp-Source: AGHT+IG6dSNYEI0zQ+r/ppKfXYQBvSg8Qy+OUpAXxK2fA6ZpfV7MOGorDu6bMFVVoNv38cdGwTtkSi/jwVxKy8o80HY=
+X-Received: by 2002:a17:902:f544:b0:2a0:e532:242e with SMTP id
+ d9443c01a7336-2a0e5322636mr42045075ad.11.1765820180665; Mon, 15 Dec 2025
+ 09:36:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT4PR01MB9526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 34d50caa-bd40-4ca8-97d9-08de3bdee261
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WnU5T0lQY3FBYUtZUlV5OXhBblhESHlzRnRUVFNxajIxVUszRjhYZlg4NE1C?=
- =?utf-8?B?OE54OHJ0V2doV0JiWVl0RklsWklGcHp2dmZQc2loTTRyQWhEcFFlV2hBK2N4?=
- =?utf-8?B?aFBkTmFvL09SNG1lRG9wemx1VCs2ZjQ1aTJOTzZYM0RUbnhjMkk2TFRsWk43?=
- =?utf-8?B?NldLeGlCckxTeHRFRjd4QUp0cllpSVhZaGRaZmlEM3RneUF1NVF6MHN2QitP?=
- =?utf-8?B?eTVGcDZ0MUZiUVBNdUFSSnJBMGJYYWs5VFU0MjJ0TVprV3lqRFZWOGQ1d2Qw?=
- =?utf-8?B?NFE0dEEzSHZtend5Z2NuV1o3UC9tVmlJdVljdEkreHJqV0xISUV5bWJNSytL?=
- =?utf-8?B?Nk16ZlNIcDVZUFRqdk11THFvOEdlUDZVcjF6UXkwSitpMTNDV29nYVcxTW8w?=
- =?utf-8?B?cisxVUhXU1VaQ0RJZ3lRZTUxQkZBQlU1L2N0dFVaWTlNeHR6TlhjRkswVlJD?=
- =?utf-8?B?OWJzVkhxSGIvT2JqSmdBOUppNGY3dHRxUVNTUTB5bGk1a0VJVjBiNkNjQjNl?=
- =?utf-8?B?bkg4SWpDRkUvMzAzTkozNnoyeVRVeUUwSjRScTJCeVdOT0k5OGFvN1FEQVlR?=
- =?utf-8?B?R1ZQVnNFanZFK1dncUMybStqNmxVV3NZTkszWFhMQVNTZzFWbjRwK0xtMUZ6?=
- =?utf-8?B?c2NtUXBxQitHUi9QTmlHVHVObFRtQU91dDRIaFhZZGpscW5yY1lyeGZDZUM3?=
- =?utf-8?B?WHlwa1hTZmFTMGE3YXFGUGxNMVpjSUcrUXdKVTlhb2ZGSWhpeVJ6REdvQWVG?=
- =?utf-8?B?dnV5SFJPMlEwKzlYQmRZN3NHZngzOEJFVE9NcmQzS0E3Z0x1My9GcE5lc21w?=
- =?utf-8?B?MGdIczNtZ1J1cEh3cjIzMklqRVdBU3NSaDdFMElYR2UvSUozcy80UHd3cDhp?=
- =?utf-8?B?eVF5Um5kckNRSlpKRmZLdE94VzV1YkxDUmdFRk4ycWhFRlR6LzRScHZ3dHVk?=
- =?utf-8?B?UkdpVFRWTjFtbHRpdEtTNVhyVFByc2dXc2svVEIxZWE2ZjdOY2d3a01hK2lv?=
- =?utf-8?B?cFlxZUpXY3RCak51RzIzclF0VHM1S1JTQzhlbzBJaTBuNFFRdHRqNy9OQy9V?=
- =?utf-8?B?MG9YeFFRelBVcjREQjlGa3Vpdy9kNFdVQlBkb3hmL25MRVh4MUtZaG5hSmxO?=
- =?utf-8?B?OG1WeEdaK3VFWXA3aWU5ajZITGwvVU9vTmMvTG9YRXhVZVVrNFVuaWo2ZDBT?=
- =?utf-8?B?WTNwOFRBc0pwYVRqOGczeXVGUmJzUnNqZCtBYmtFL0pOY1dlblM3WW9RNHlt?=
- =?utf-8?B?OVJNa0NzbkdWQVFNMEc1SDEwdDRPUlMzR0g2UHE0b0hvTXZyMUp6WEhCVXZj?=
- =?utf-8?B?dGM2RTlDWEE5K3orc0NLVUpDYzk2MllHaGV3Mjk3LzFkVnNPazJtZC9MRFY0?=
- =?utf-8?B?ZXkzbTJGVnhJWHpGMzhzSTM5WjQ2bzY3QmNXV0hud29VV1BvRm9GYjh6NEsv?=
- =?utf-8?B?eXFDa1kxRElhQXZmNW84YUdNbXVRbWx6RzF5SFpXVXZ2NXRWTmMzUGFNNFRP?=
- =?utf-8?B?QnpaL2gybDhZUEN3cDFvRjZMVlY1OWtjcEdFeWJhNXROZzU1Rkk4dWk3dWwx?=
- =?utf-8?B?YkxqT0lObXRNR2YvZUFLSVovdmluN05Eb3IrTFdPajREMGNxdkZVUjdyWmpZ?=
- =?utf-8?B?OVlCRGtLQlJ3ZUNFSW9JdG1MR1ZqcjFYcWlBUlhiRVJJeEsxMEE2d2ZMczBW?=
- =?utf-8?B?OTdjTHhLRE5SWDhtcDdKcDVkUW5SYXRxOE1SRU1PN1NMYkZCbjlNblNobGhT?=
- =?utf-8?B?RHZZZWJRU3JLYUQ2T3VndVRENDJMNDhIdHczV2IyZ3lGVFlOdHVQR3hqTGlX?=
- =?utf-8?B?K0Vtdzhoalg3OFcxUlJsZFJzOVVHZDZNczQxRnkrbVpkZW1HL1lUUldiVEZE?=
- =?utf-8?B?anBXcVp5K2ppNXF2K3JEUkpaM1IwdTFiT1k5QkdXNTBjYkE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZFNwYWhhS1dZc1VMdGttOUNwZm9sV2VkaTJYTGRrb1hrQ0hZMnFnbTlkSTcr?=
- =?utf-8?B?QmpEdExuWHhEbUNmK0tHL3Vvd1Jsd2ZFanNBdWRHemZiV2g3d2dSbnVTM0J3?=
- =?utf-8?B?cVYvZUxEUGJmVy9RNlZzR291QWxRb3hiUkRQczgwMFV3TjhsdXZkWXFVZmNx?=
- =?utf-8?B?S3NxWnZpcm8vUFRseklvY3NSaVdidHlhZHpPdG4zc21XZ0JqR2hITDk1dHBP?=
- =?utf-8?B?RE9RSFZJQjZvSmU1c3h5bTVpR1RWdkU5WEZybVNNVDVGTFVqWk51OERwSzdm?=
- =?utf-8?B?c3lVYnU4dU5HYnRldnZpOHdzSjR4NTNQZ3NRNHJPSVNjcURJOWszWkdDb3R6?=
- =?utf-8?B?cmJma2x3ekRkMXVxYlpKdVhNbUV2VmpBYUo3ZFZoRjBIRExaUklDcElCamh1?=
- =?utf-8?B?MnUrd1kvdDlHM21uNGpaMUNSUFRoRDhxN2YvMEZtSldqT1N3V20vVW5MRlkv?=
- =?utf-8?B?MWhCZXp4c1VzY0VvYXNqVVhNWE5ITDVVRkYvNW1XcUx0T0N5V1JLSXg2cjVo?=
- =?utf-8?B?dE10MFE3cEYxNE5NN1ZiSGx6cjdKbXE0aUNPSFd2M1RraXFsV0gyS1g5bisr?=
- =?utf-8?B?ZnExemxZWG90Tks1RHhMOWx2RElVc0xWS1FsWDNJaTBlaWZLNmxkRjVaQ0lZ?=
- =?utf-8?B?VnYybktmWXo3QUNFTDJZemlCbGV5U0czTTh5Wmt2Znp6bUM3bmNxZUkvUXhT?=
- =?utf-8?B?Y3ZneDlOR2ZNVkp4NkxMbGc4SmlmNHpMQUI3aCtnYnpLOXVCa0FwZlZXRmV5?=
- =?utf-8?B?UlRWVGdHSURvYjZTLzJuMW45M1RoK2NyL0dySS9LQTBTWm9uWisySEFybWNq?=
- =?utf-8?B?SDZGNXBsN2ZXUE5tWTJXZllQWEF6cW9vMVZUb0x1NEZHVFgyeS9DS3NvZGlZ?=
- =?utf-8?B?eHhsWnZaRy9aMjF2ZWd0R1VueDNHTjBucGI3K2Y1Ky9hZFVhb1N0QlFWMWhi?=
- =?utf-8?B?T1lhWUMvalA4QlBSeE1lTFpLbXRFVXd3TXJuNGhxdldDWE1lKzBkS29lVFFu?=
- =?utf-8?B?OTVEQUJJNlgrd3Vqd1NMK0RjUkpLS2E0R2NxVDQrSFh5Z3dsV0dzWXpKT2I1?=
- =?utf-8?B?M1hkdDVPeDhRZzdmRElBdHJkS1pTWlVTdy9XRkx0azR6TjhEU2J4UjBoajNS?=
- =?utf-8?B?dTFHengrbU4yTkxWOEpaeWJuMVVyQXRJbm55MC8zZHliMFo0eFdZZFh3blZ0?=
- =?utf-8?B?aXZPN2xPajh2RzNjWWN2Y0dUQ2xkRDhFY3ZWR1ZRMXhxc2xvdmcvL0VRNEZr?=
- =?utf-8?B?QXNKbHRyNDBXUHJQUGZ1aTYzTXl0QS9YWm9UV1N6R0RNUlhZeVQxOWM1K2VI?=
- =?utf-8?B?NFUrUlFvU2Njaldxamh3UTBZVFp4Q2EybjcwelFkc2E4VDE2RkNuK2F2ejZE?=
- =?utf-8?B?empJZ1p4UlNQQ2p4b2pwQit0c2UyUU8xOVl1ODlVbW00Z2xFUHlqQk5GbE51?=
- =?utf-8?B?enQrUG84UitYL0o4bm9CTlFmWDJBWmlKN1hJNWpWYjIzdW5jc2RVQkpxSDRE?=
- =?utf-8?B?elJiQytvOW5pc1BOSFd1SGlFdEIwdEI3N1RhanB0aHBtWFZaYytreHk3VjlO?=
- =?utf-8?B?NFM4UWNIRHE0d0o3ZUFlT0ZmZHNJcjB2a0dLTk90NDNyQ1dxdmhiVmdLRTNn?=
- =?utf-8?B?TloySEZTL1d0aU50bXF0bkoxaGtpWXlrdnQ5NTBmTnRGL2dEc3V2YVAzcXE1?=
- =?utf-8?B?L3QxTmllUHhNRks1cTg1SDFMRnJwOFpyU0p4MForUm5qeHNYbDZhSnRGU1R5?=
- =?utf-8?B?TFc0NE1LTHRVMU1qM1RFY3lUcEQvbU5QY2o5K0xmUmhaak5MY2lVeUlOaU1s?=
- =?utf-8?B?VUVOb2N4TTVkMGZ4c0VCOGRYcml6MWNDQVhkZC9IUnpxalN4M3Nyc09uVkVB?=
- =?utf-8?B?Mml1cEcxZlVVQmJreERDMWFuQWRpR01BM205di9NM2ZyVG05RlZ3RVFJSVZI?=
- =?utf-8?B?OEpBT3Rwbm9idVV1ZlErNC9mbTBYbmhDZElha0d6ckQxU1JxZ1d4RldGVE9S?=
- =?utf-8?B?NkcxamwwRzI1N1NOMVJHeis3RHhzSE9ZalpnZFNZTm95MUFLZWtEdUtTSlJW?=
- =?utf-8?B?ekNERG9pQmc3eWFKZ2tvR21lb2xYQ2QzOUNFTHFISnM2K3hINVdHZkpTOWY0?=
- =?utf-8?B?eFBpOXg2UEpEVnR3YmkvVGVNOUgvaTJtbTR4MDFTUlpTeFpXYmhIeWtvSWhu?=
- =?utf-8?Q?blfpWOl+uNPGGw6hnQE962A=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34d50caa-bd40-4ca8-97d9-08de3bdee261
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2025 13:36:00.1124
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: usIeG3PGTnMxg+PClA29T52GrHXV0zQcmZmGpIqQUvT4aCNoFfr9EyCEFpjashK4CikuW/2rQRlsDuf5QZzfZtATaD2LFogK1iTjxPQKDnE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT4PR01MB9526
+References: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 15 Dec 2025 09:36:07 -0800
+X-Gm-Features: AQt7F2oXtgalz-dRMrrReVDH1fOb1ThoWdC3rtPt-jNvEFUXrQAvBuoLtdlRWvA
+Message-ID: <CAEf4BzZQ_OJehh=5jJgVBUjJBNAkWh2o8Yd9UTa9nFrRO4oAFg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] bpf: Disable -Wsuggest-attribute=format
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-12-15 07:40, Lorenzo Stoakes wrote:
-> On Fri, Dec 12, 2025 at 04:08:08AM -0500, Tal Zussman wrote:
->> This has been unused since it was added 11 years ago in commit
->> d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
->>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Reviewed-by: Rik van Riel <riel@surriel.com>
->> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-> 
-> Hmm, guess just a way of counting the number of reasons, but if nobody's using
-> it that's silly. So:
+On Wed, Dec 10, 2025 at 5:12=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The printing functions in BPF code are using printf() type of format,
+> and compiler is not happy about them as is:
+>
+> kernel/bpf/helpers.c:1069:9: error: function =E2=80=98____bpf_snprintf=E2=
+=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribu=
+te [-Werror=3Dsuggest-attribute=3Dformat]
+>  1069 |         err =3D bstr_printf(str, str_size, fmt, data.bin_args);
+>       |         ^~~
+>
+> kernel/bpf/stream.c:241:9: error: function =E2=80=98bpf_stream_vprintk_im=
+pl=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format at=
+tribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   241 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt__str, =
+data.bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:377:9: error: function =E2=80=98____bpf_trace_pr=
+intk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format =
+attribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   377 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
+bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:433:9: error: function =E2=80=98____bpf_trace_vp=
+rintk=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format=
+ attribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   433 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.=
+bin_args);
+>       |         ^~~
+>
+> kernel/trace/bpf_trace.c:475:9: error: function =E2=80=98____bpf_seq_prin=
+tf=E2=80=99 might be a candidate for =E2=80=98gnu_printf=E2=80=99 format at=
+tribute [-Werror=3Dsuggest-attribute=3Dformat]
+>   475 |         seq_bprintf(m, fmt, data.bin_args);
+>       |         ^~~~~~~~~~~
+>
 
-If TRACE_DEFINE_ENUM was implemented differently [1,2], then we could use
-NR_TLB_FLUSH_REASONS in a static assert to validate that the number of
-exported enum labels matches the enum tlb_flush_reason.
+I just want to point out that the compiler suggestion is wrong here
+and these functions do not follow printf semantics. Yes, they have
+printf format string argument, but arguments themselves are passed
+using a special convention that the compiler won't know how to verify
+properly. So now, these are not candidates for gnu_printf, and it
+would be nice to have some way to shut up GCC for individual function
+instead of blanket -Wno-suggest-attribute for the entire file.
 
-This would catch this kind of discrepancy at compile-time.
+Similarly, I see you marked bstr_printf() with __printf() earlier.
+That also seems wrong, so you might want to fix that mistake as well,
+while at it.
 
-Thanks,
+Maybe the pragma push/pop approach would be a bit better and more
+explicit in the code?
 
-Mathieu
-
-[1] https://github.com/lttng/lttng-modules/blob/master/include/instrumentation/events/sched.h#L132
-[2] https://github.com/lttng/lttng-modules/blob/master/include/lttng/tracepoint-event-impl.h#L176
-
-> 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+> Fix the compilation errors by disabling that warning since the code is
+> generated and warning is not so useful in this case =E2=80=94 it can't ch=
+eck
+> the parameters for now.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061425.x0qTt9ww-lkp@i=
+ntel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@i=
+ntel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512081321.2h9ThWTg-lkp@i=
+ntel.com/
+> Fixes: 5ab154f1463a ("bpf: Introduce BPF standard streams")
+> Fixes: 10aceb629e19 ("bpf: Add bpf_trace_vprintk helper")
+> Fixes: 7b15523a989b ("bpf: Add a bpf_snprintf helper")
+> Fixes: 492e639f0c22 ("bpf: Add bpf_seq_printf and bpf_seq_write helpers")
+> Fixes: f3694e001238 ("bpf: add BPF_CALL_x macros for declaring helpers")
+> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  kernel/bpf/Makefile   | 11 +++++++++--
+>  kernel/trace/Makefile |  6 ++++++
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+> index 232cbc97434d..cf7e8a972f98 100644
+> --- a/kernel/bpf/Makefile
+> +++ b/kernel/bpf/Makefile
+> @@ -6,7 +6,14 @@ cflags-nogcse-$(CONFIG_X86)$(CONFIG_CC_IS_GCC) :=3D -fno=
+-gcse
+>  endif
+>  CFLAGS_core.o +=3D -Wno-override-init $(cflags-nogcse-yy)
+>
+> -obj-$(CONFIG_BPF_SYSCALL) +=3D syscall.o verifier.o inode.o helpers.o tn=
+um.o log.o token.o liveness.o
+> +obj-$(CONFIG_BPF_SYSCALL) +=3D syscall.o verifier.o inode.o tnum.o log.o=
+ token.o liveness.o
+> +
+> +obj-$(CONFIG_BPF_SYSCALL) +=3D helpers.o stream.o
+> +# The ____bpf_snprintf() uses the format string that triggers a compiler=
+ warning.
+> +CFLAGS_helpers.o +=3D -Wno-suggest-attribute=3Dformat
+> +# The bpf_stream_vprintk_impl() uses the format string that triggers a c=
+ompiler warning.
+> +CFLAGS_stream.o +=3D -Wno-suggest-attribute=3Dformat
+> +
+>  obj-$(CONFIG_BPF_SYSCALL) +=3D bpf_iter.o map_iter.o task_iter.o prog_it=
+er.o link_iter.o
+>  obj-$(CONFIG_BPF_SYSCALL) +=3D hashtab.o arraymap.o percpu_freelist.o bp=
+f_lru_list.o lpm_trie.o map_in_map.o bloom_filter.o
+>  obj-$(CONFIG_BPF_SYSCALL) +=3D local_storage.o queue_stack_maps.o ringbu=
+f.o bpf_insn_array.o
+> @@ -14,7 +21,7 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D bpf_local_storage.o bpf_=
+task_storage.o
+>  obj-${CONFIG_BPF_LSM}    +=3D bpf_inode_storage.o
+>  obj-$(CONFIG_BPF_SYSCALL) +=3D disasm.o mprog.o
+>  obj-$(CONFIG_BPF_JIT) +=3D trampoline.o
+> -obj-$(CONFIG_BPF_SYSCALL) +=3D btf.o memalloc.o rqspinlock.o stream.o
+> +obj-$(CONFIG_BPF_SYSCALL) +=3D btf.o memalloc.o rqspinlock.o
+>  ifeq ($(CONFIG_MMU)$(CONFIG_64BIT),yy)
+>  obj-$(CONFIG_BPF_SYSCALL) +=3D arena.o range_tree.o
+>  endif
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index fc5dcc888e13..1673b395c14c 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -104,7 +104,13 @@ obj-$(CONFIG_TRACE_EVENT_INJECT) +=3D trace_events_i=
+nject.o
+>  obj-$(CONFIG_SYNTH_EVENTS) +=3D trace_events_synth.o
+>  obj-$(CONFIG_HIST_TRIGGERS) +=3D trace_events_hist.o
+>  obj-$(CONFIG_USER_EVENTS) +=3D trace_events_user.o
+> +
+>  obj-$(CONFIG_BPF_EVENTS) +=3D bpf_trace.o
+> +# The BPF printing functions use the format string that triggers a compi=
+ler warning.
+> +# Since the code is generated and warning is not so useful in this case =
+(it can't
+> +# check the parameters for now) disable the warning.
+> +CFLAGS_bpf_trace.o +=3D -Wno-suggest-attribute=3Dformat
+> +
+>  obj-$(CONFIG_KPROBE_EVENTS) +=3D trace_kprobe.o
+>  obj-$(CONFIG_TRACEPOINTS) +=3D error_report-traces.o
+>  obj-$(CONFIG_TRACEPOINTS) +=3D power-traces.o
+> --
+> 2.50.1
+>
