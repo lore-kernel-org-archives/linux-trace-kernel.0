@@ -1,173 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293CDA95E;
-	Sun, 14 Dec 2025 01:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE66E299AAC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Dec 2025 03:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765674939; cv=none; b=M1Q5dIlXvxqsIemOqopGC88QOvvGt6tKqBQgHbP7X1xE0SabQqHLKdSn4VsgYFigJzij23C1yKYJehc7ySNs3uKX3ezVxWmK8/MQGnf5uARmOimE1J8BhlB8VNEQ7hc6eMDAXWsV71B9DwkLJrSRJD5dMW8TuKJWu8C9+l/kzmM=
+	t=1765770163; cv=none; b=kh/h6zK8b5Ze+7DBNkI5Y/3W1/M+4xpwZWHzeT0WVKQEYnHtyuJYcHzWYNuNGVkgnqRELBw6yBova1YkukgzjJXy8FY9ImacQSo+yw3ubJF43zqj2DTtttNYGWwZzsdkWv9evF9oEOHxX0Ki8KMZvsYGcjT1SVG7p5hK8BaCP2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765674939; c=relaxed/simple;
-	bh=yaSLe5QESpiy6HbErVQIl+luTlywDCH2A/xhylUbG0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pv1BMzdQci3emBP+4TuRPd57gNFRW36eCxSJutVnJH9JqGtetu+/3/n91yve69BTHO36CyleVJN7TY4rqLSVle5SEUA3tUi4JUbmF4eXvBgLvg5jkhs4+DgOieDHXdzg+teGg7BN8gXRYe4iQM4ZiAL92HHFDiX7JWof+Mid+IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jedr6R2R; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1765770163; c=relaxed/simple;
+	bh=ibIM4TX7cp7j5rzkpQcOwF+7GvfSSEk1s4Wm2vweWHo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ktUZd4s++jZftKW67XM7sGta1PESrMn2EsbwMW+9ocUElNOXc6eut6RWzqEs6VUW/BW3hCB1oauaepjQeszbq8+76ObLZvQRTBLo6azcH0PL3cG+WlkucZeSfSS/WHfilNqF0SUrj5rGtusQSI/hXiuAqjF5Gg7YK7aqlo3kENc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWHuTGnh; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jedr6R2R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765674939; x=1797210939;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yaSLe5QESpiy6HbErVQIl+luTlywDCH2A/xhylUbG0U=;
-  b=Jedr6R2Ro0BGwEZrARkDfIILa0NXrIa97z4r/bl6BkdCJJ+F3bJjDSBD
-   sUOzW+LKy8HMY1XnhdVID5b+yZ3dYP2lHBFGwf6/i8ehOk+ez7zhCMjSa
-   cI3fTsCtJvsJzHWw5eDxG0YuXG4jzCZavqU+OjTAJN9WLgMlhF+lG8l1A
-   KQs/Gkz7RIsFqrXCXHoVh5aIG+T3BPqUWyEYjJArGLbrb43J6DEvlAD45
-   ZtR/jSsa4BIdHDP8cAvYy57gnLo2KgLZuxfPhYNh2FgddAHSFWsPvDysR
-   VS32KNYA59uyguTaplqaK0BQxf5xp/379uDe1YOXa7fnOJ0ypKbc+dhPS
-   Q==;
-X-CSE-ConnectionGUID: YLB1c2oqSqazd5gNY9TJyg==
-X-CSE-MsgGUID: 2Tdstgu7Tx+Zok85fK45oQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11641"; a="67665817"
-X-IronPort-AV: E=Sophos;i="6.21,147,1763452800"; 
-   d="scan'208";a="67665817"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2025 17:15:38 -0800
-X-CSE-ConnectionGUID: kp07iKH7T26LEFSVgrygrA==
-X-CSE-MsgGUID: f5n45W/uQeq/W0Xgs7vS8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,147,1763452800"; 
-   d="scan'208";a="197311867"
-Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 13 Dec 2025 17:15:35 -0800
-Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vUahx-000000008PV-0iSe;
-	Sun, 14 Dec 2025 01:15:33 +0000
-Date: Sun, 14 Dec 2025 09:14:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Donglin Peng <dolinux.peng@gmail.com>, rostedt@goodmis.org
-Cc: oe-kbuild-all@lists.linux.dev, mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>,
-	Xiaoqin Zhang <zhangxiaoqin@xiaomi.com>
-Subject: Re: [PATCH v3 1/2] fgraph: Enhance funcgraph-retval with BTF-based
- type-aware output
-Message-ID: <202512140850.JdD1lPmn-lkp@intel.com>
-References: <20251209121349.525641-2-dolinux.peng@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWHuTGnh"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34c2f335681so1187704a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Dec 2025 19:42:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765770161; x=1766374961; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mtRB0zkJ3HG5Hdm3UQaSp1wc+rUL/O1jX3OIcn3vp+Q=;
+        b=VWHuTGnhFa53AvFdwRgUXq0x+yCxRJdoj4y76EJMYnRCNt6DC5VmVsPZz2knZHNFcn
+         57Ej8CUHZ6e7S/+rRZGgPcjd4wvy++WqaMvgNIrPlTc2YWjdtHKBlOnDp26OtPLJGaxb
+         YVL29oD9FHw4Q+a7gD7NsPnmu7d/OSCgmRJk6ngRiqLO+f8O12ar8GfThXIWQY26AUri
+         lXdh0KGM2fTRP1Wmeh7f8r6P0T85r6jGr1dhsdfxIEyLQ/8gYq2k1Z25pDkibwIuGvYg
+         dcyFYE0ahXHUL+/kFo+qjkm0S7M8Jjt+doInTjqxO4lCCiV98Ovr8zO6snYSapaviJQ4
+         zeDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765770161; x=1766374961;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mtRB0zkJ3HG5Hdm3UQaSp1wc+rUL/O1jX3OIcn3vp+Q=;
+        b=Tk3a3CEdAIpFu+OsIJykkFx9/C+4cHerkhXdpq/uvQ4NuG16c6YunXdOf+dk8/5MIY
+         u4KlI3u003DqBreACMSv0qKTX7HpwXZfG8Z1nhI4b94o92ohKtXowjsA1kJAl8l23P1K
+         kOJQDdK2vjlgDwel98XJcke93Ut7EUAd7GLd1ChS92MLa3oIfC/84J535wCqrF2Hr90P
+         mltyj9HJmvj/EAnDz+CLPSLBvGIQb5rpOI+OxFxhs263gXE8pqFJhbKXC7JggVB5lua4
+         Z2JK3a48YOJADGUtRUXe7uetEtCN/aDOneQ4s7sgXhsGvXeq25cUFQR865ERPoqE1v/o
+         ROXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsNg8HxgnDhGgxzc79gp/ml6mnQXlZNY1957qWMGtKuQRvEOe6ZHojGTgjgXA+RXvytULC1PS14hCgFUfAEU2Fm/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydX58DU7pA+pmJ73hwR/FG/0xDQQwrtSqEfwgW8ZNHBHBDcpYS
+	/qBv64oGLFQ9ofuws28Ipb3eiGgfm1jQhe8nzZrPMakrM/IFY092Wv0k
+X-Gm-Gg: AY/fxX5IrDT6SdksZ34cdqX9ImQ3ARdF/dh9YGyQXL4nzcG3OJpccEq2Qu8NTyKux5P
+	M/kcj9G+7WWNq/21HX4WvlPge0qYyqliEL0gncLwlmCAt7vE8myij+8O9l/H0m3GvGBjhY2IDmQ
+	PIYLTtXDA5vnTJrt2RrX/hO2zTqkKBGT76L2qvsnroHZ6FmI8UQMMap6HtbBoL8SFUqh8qQjhTE
+	bI9Mn4pc+RHHLr6RCGvA52stOw5dmFwx5sr2Ar4lmsv/f8hmNto1+2KIe+MpN91gVyKxqyoFQkK
+	gtaKUgCNHNxBAopA3TqBYEnw5V/0j+l6f2PdfGPNfrYMUbCmQkfNDx3ciXZnudOAs8NM8pSHf33
+	UAYnUICEF/wW0h/3J28YLwSqGOW9/ZI4EK4xmvSxhIuoZL5w+MuqCrcLhQMI4gTNyX9ihsA2kNu
+	t0Ef0u/XgmNivdzVQQlhPHpkRYc9Q=
+X-Google-Smtp-Source: AGHT+IGeau3ao+6xHm9AkOhfO7rXtTXbYEf+yKU6grsiOmblRejz+ckM0tTLxMTWZMcDFLNC0BM6yg==
+X-Received: by 2002:a17:90b:1d04:b0:336:b60f:3936 with SMTP id 98e67ed59e1d1-34abd7be51cmr9537815a91.12.1765770160988;
+        Sun, 14 Dec 2025 19:42:40 -0800 (PST)
+Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34abe23a207sm3420562a91.1.2025.12.14.19.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Dec 2025 19:42:39 -0800 (PST)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengdonglin <pengdonglin@xiaomi.com>
+Subject: [PATCH v4 0/3] Use BTF to trim return values
+Date: Mon, 15 Dec 2025 11:41:50 +0800
+Message-Id: <20251215034153.2367756-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209121349.525641-2-dolinux.peng@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Donglin,
+From: pengdonglin <pengdonglin@xiaomi.com>
 
-kernel test robot noticed the following build errors:
+This patch series addresses two limitations of the funcgraph-retval feature:
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.18 next-20251212]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+1. Void-returning functions still print a return value, creating misleading
+   noise in the trace output.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Donglin-Peng/fgraph-Enhance-funcgraph-retval-with-BTF-based-type-aware-output/20251209-201633
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20251209121349.525641-2-dolinux.peng%40gmail.com
-patch subject: [PATCH v3 1/2] fgraph: Enhance funcgraph-retval with BTF-based type-aware output
-config: arm-randconfig-002-20251214 (https://download.01.org/0day-ci/archive/20251214/202512140850.JdD1lPmn-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251214/202512140850.JdD1lPmn-lkp@intel.com/reproduce)
+2. For functions returning narrower types (e.g., char, short), the displayed
+   value can be incorrect because high bits of the register may contain
+   undefined data.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512140850.JdD1lPmn-lkp@intel.com/
+By leveraging BTF to obtain precise return type information, we now:
 
-All errors (new ones prefixed by >>):
+1. Void function filtering: Functions with void return type no longer
+   display any return value in the trace output, eliminating unnecessary
+   clutter.
 
-   arm-linux-gnueabi-ld: kernel/trace/trace_functions_graph.o: in function `trim_retval':
->> kernel/trace/trace_functions_graph.c:888: undefined reference to `btf_find_func_proto'
+2. Type-aware value formatting: The return value is now properly truncated to
+   match the actual width of the return type before being displayed.
+   Additionally, the value is formatted according to its type for better human
+   readability.
 
+Here is an output comparison:
 
-vim +888 kernel/trace/trace_functions_graph.c
+Before:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 1)               |   touch_atime() {
+ 1)               |     atime_needs_update() {
+ 1)   0.069 us    |       make_vfsuid(); /* ret=0x0 */
+ 1)   0.067 us    |       make_vfsgid(); /* ret=0x0 */
+ 1)               |       current_time() {
+ 1)   0.197 us    |         ktime_get_coarse_real_ts64_mg(); /* ret=0x187f886aec3ed6f5 */
+ 1)   0.352 us    |       } /* current_time ret=0x69380753 */
+ 1)   0.792 us    |     } /* atime_needs_update ret=0x0 */
+ 1)   0.937 us    |   } /* touch_atime ret=0x0 */
 
-   872	
-   873	static void trim_retval(unsigned long func, unsigned long *retval, bool *print_retval,
-   874				int *fmt)
-   875	{
-   876		const struct btf_type *t;
-   877		char name[KSYM_NAME_LEN];
-   878		struct btf *btf;
-   879		u32 v, msb;
-   880		int kind;
-   881	
-   882		if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-   883			return;
-   884	
-   885		if (lookup_symbol_name(func, name))
-   886			return;
-   887	
- > 888		t = btf_find_func_proto(name, &btf);
-   889		if (IS_ERR_OR_NULL(t))
-   890			return;
-   891	
-   892		t = btf_type_skip_modifiers(btf, t->type, NULL);
-   893		kind = t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN;
-   894		switch (kind) {
-   895		case BTF_KIND_UNKN:
-   896			*print_retval = false;
-   897			break;
-   898		case BTF_KIND_STRUCT:
-   899		case BTF_KIND_UNION:
-   900		case BTF_KIND_ENUM:
-   901		case BTF_KIND_ENUM64:
-   902			if (kind == BTF_KIND_STRUCT || kind == BTF_KIND_UNION)
-   903				*fmt = RETVAL_FMT_HEX;
-   904			else
-   905				*fmt = RETVAL_FMT_DEC;
-   906	
-   907			if (t->size > sizeof(unsigned long)) {
-   908				*fmt |= RETVAL_FMT_TRUNC;
-   909			} else {
-   910				msb = BITS_PER_BYTE * t->size - 1;
-   911				*retval &= GENMASK(msb, 0);
-   912			}
-   913			break;
-   914		case BTF_KIND_INT:
-   915			v = *(u32 *)(t + 1);
-   916			if (BTF_INT_ENCODING(v) == BTF_INT_BOOL) {
-   917				*fmt = RETVAL_FMT_BOOL;
-   918				msb = 0;
-   919			} else {
-   920				if (BTF_INT_ENCODING(v) == BTF_INT_SIGNED)
-   921					*fmt = RETVAL_FMT_DEC;
-   922				else
-   923					*fmt = RETVAL_FMT_HEX;
-   924	
-   925				if (t->size > sizeof(unsigned long)) {
-   926					*fmt |= RETVAL_FMT_TRUNC;
-   927					msb = BITS_PER_LONG - 1;
-   928				} else {
-   929					msb = BTF_INT_BITS(v) - 1;
-   930				}
-   931			}
-   932			*retval &= GENMASK(msb, 0);
-   933			break;
-   934		default:
-   935			*fmt = RETVAL_FMT_HEX;
-   936			break;
-   937		}
-   938	}
-   939	
+After:
+ # perf ftrace -G vfs_read --graph-opts retval
+ ...
+ 2)               |   touch_atime() {
+ 2)               |     atime_needs_update() {
+ 2)   0.070 us    |       make_vfsuid(); /* ret=0x0 */
+ 2)   0.070 us    |       make_vfsgid(); /* ret=0x0 */
+ 2)               |       current_time() {
+ 2)   0.162 us    |         ktime_get_coarse_real_ts64_mg();
+ 2)   0.312 us    |       } /* current_time ret=0x69380649(trunc) */
+ 2)   0.753 us    |     } /* atime_needs_update ret=false */
+ 2)   0.899 us    |   } /* touch_atime */
+
+Note: enabling funcgraph-retval now adds overhead due to repeated btf_find_by_name_kind()
+calls during trace output. A separate series [1] optimizes this function with
+binary search (O(log n) vs current O(n)), which will greatly reduce the impact.
+
+Here is a performance comparison:
+
+1. Original funcgraph-retval:
+# time cat trace | wc -l
+101024
+
+real    0m0.682s
+user    0m0.000s
+sys     0m0.695s
+
+2. Enhanced funcgraph-retval:
+# time cat trace | wc -l
+99326
+
+real    0m12.886s
+user    0m0.010s
+sys     0m12.680s
+
+3. Enhanced funcgraph-retval + optimizined btf_find_by_name_kind:
+# time cat trace | wc -l
+102922
+
+real    0m0.794s
+user    0m0.000s
+sys     0m0.810s
+
+We can see that after optimizing btf_find_by_name_kind, the overhead
+becomes negligible.
+
+Changelog:
+v4:
+- Build trace_btf.c only when CONFIG_DEBUG_INFO_BTF is enabled
+- Remove the redundant dependency of CONFIG_PROBE_EVENTS_BTF_ARGS
+- Update related documentation and the cover letter
+
+v3:
+- Link: https://lore.kernel.org/all/20251209121349.525641-1-dolinux.peng@gmail.com/
+- Print the return value based on its type for human readability, thanks Masami
+- Update documentation and cover letter
+
+v2:
+- Link: https://lore.kernel.org/all/20251208131917.2444620-1-dolinux.peng@gmail.com/
+- Update the funcgraph-retval documentation
+- Revise the cover letter
+
+v1:
+- Link: https://lore.kernel.org/all/20251207142742.229924-1-dolinux.peng@gmail.com/
+
+[1] https://lore.kernel.org/all/20251208062353.1702672-1-dolinux.peng@gmail.com/
+
+pengdonglin (3):
+  ftrace: Build trace_btf.c when CONFIG_DEBUG_INFO_BTF is enabled
+  fgraph: Enhance funcgraph-retval with BTF-based type-aware output
+  tracing: Update funcgraph-retval documentation
+
+ Documentation/trace/ftrace.rst       |  88 +++++++++++--------
+ kernel/trace/Kconfig                 |   2 +-
+ kernel/trace/Makefile                |   2 +-
+ kernel/trace/trace_functions_graph.c | 124 ++++++++++++++++++++++++---
+ 4 files changed, 163 insertions(+), 53 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
