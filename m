@@ -1,165 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E54242D8E;
-	Mon, 15 Dec 2025 21:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0605A41A8F;
+	Mon, 15 Dec 2025 22:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765834312; cv=none; b=Y71IbH5CKiceaZYhgiMbJLIPM//TrEtTj0zDoFmIgY6z8aYn4/gFyn5DGqf7NJFLaHknXxmyAg5D2hNtf2oNL4KzZ3cHDUx+93gwHvlv4crMc/gHwiZsLiDfuu4dhvmk+dlgDyp3/o7XVBGQJPJyN9gw+YnhfTd9+WOb4JikGl0=
+	t=1765837037; cv=none; b=QCiBzDZU466YLfhe/PP7lh3nuv+tRQPuoAsKtLh1VOH3Ujbf3uOKiVFvqRe02CWOHYOBKheLbR47rVVurrlvX9WnSxLEyHcpKSvrrh8OWczer4uNSTAt3t/CUf/iFhxquyluiFPNnceP+7rmjXgpSIF5dI7RkFJVVmxa4sOci1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765834312; c=relaxed/simple;
-	bh=94yh35skFQRhjv5U7XWUf6dBriC1tan73BbLvp3rfis=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=IhRzAhtTqk4qpc1h/zyVYyse/eQ6JsFOd1QAFl+l7FWd2mLDclLmZcbc4ZhG0ViHHvJnho0mTIuyyr4pmxodpnGW670r19AC3co5VIXJ/m5g+ZVVNO7oN1JKsW2icKxwrAESsQDwEC1zDOxnhE+U5FiC3QrgBchmB2vmF74hW4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOwpuTQj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOwpuTQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ECE9C4CEF5;
-	Mon, 15 Dec 2025 21:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765834311;
-	bh=94yh35skFQRhjv5U7XWUf6dBriC1tan73BbLvp3rfis=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=tOwpuTQj02P4K7WTE9UmP4XWblTmcWF+wyJkkjCwTLgOkXCE9CzLXcpJ8bUWeth/n
-	 nCEp5vlIR8qsS0w/vBhKII6NkYhjlTZnVNcdAfNFZDO6UkQ87cl+X9z0FFDcBj1rLR
-	 ofZxrIWJQjk34mx8Ozh2mBD54m9iB7jBuCgxAOSQphMWbsWJ2Y5wPe/Td5K0ZuSp2A
-	 SMg1w3zuV6bRMe0++QbtMIQfFgE1OZ37xjIzUcC3W8HGNQxgU6kCDPRbMeI5C3ldar
-	 uDxC9Fxl96fg+DhWpElevoFPAnujIZIw+x+/j7CVZ2EZrbf9Ib9UhRQ/3jyON2/mpp
-	 oQMY3lqAQG+aQ==
-Content-Type: multipart/mixed; boundary="===============1830485644968437842=="
+	s=arc-20240116; t=1765837037; c=relaxed/simple;
+	bh=ZsgtmUVSaPSY1fm6aJUzc0sKLMlEF7FL1Gvx7heN1Hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nez7zbi476j05As6oZNmCV8ctsJEKRpA79ZtSXQnuu4yi7K3vuE+nlmf6AZH5vFGlvnAqxc0MNdFM0HV+2Xx8z286WXVaITrILfc8RkkAuHLKpTdZdELUaBTbM5KUVNIwrKmYbTr1f4/5B13KOIh9J/lhMdi3+yHgAsxE8YXzXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 35538588F5;
+	Mon, 15 Dec 2025 22:17:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id B2A762001C;
+	Mon, 15 Dec 2025 22:17:00 +0000 (UTC)
+Date: Mon, 15 Dec 2025 17:18:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, kernel test robot
+ <lkp@intel.com>
+Subject: Re: [PATCH v1 1/1] bpf: Disable -Wsuggest-attribute=format
+Message-ID: <20251215171832.2b0b24d5@gandalf.local.home>
+In-Reply-To: <CAADnVQLZPYc0HWqQw7ma=G-t9UMXXo+aXomVkYAzoQt=0ZrQ=Q@mail.gmail.com>
+References: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
+	<CAEf4BzZQ_OJehh=5jJgVBUjJBNAkWh2o8Yd9UTa9nFrRO4oAFg@mail.gmail.com>
+	<CAADnVQKtvRhbAVunHrwj_pCsmazddADRvRo5zp5O+k5kc-Eoog@mail.gmail.com>
+	<CAEf4BzbZwmOCgqhKeyAhEUT0MXyz09cy2dcpB9WCKWP1ikBWdA@mail.gmail.com>
+	<CAADnVQLZPYc0HWqQw7ma=G-t9UMXXo+aXomVkYAzoQt=0ZrQ=Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <95c13c0b793604796037ca67c191e1bfce22770dd020107c7179a698c5d49b91@mail.kernel.org>
-In-Reply-To: <20251215211402.353056-2-jolsa@kernel.org>
-References: <20251215211402.353056-2-jolsa@kernel.org>
-Subject: Re: [PATCHv5 bpf-next 1/9] ftrace,bpf: Remove FTRACE_OPS_FL_JMP ftrace_ops flag
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,rostedt@kernel.org,revest@google.com,mark.rutland@arm.com
-Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-arm-kernel@lists.infradead.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,menglong8.dong@gmail.com,song@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 15 Dec 2025 21:31:51 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: B2A762001C
+X-Stat-Signature: szfszikdjojfaco4rjbnseont6zpuqdj
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18S3CH/ypAfrWjjZJ8OfjeHLL3OuJMV68w=
+X-HE-Tag: 1765837020-609219
+X-HE-Meta: U2FsdGVkX19zDrs9bRxTdoiy4Vu+dcLHlAf4M/Cp9tLbyJ6cGDLUujRddV0RFwOk8DXAA2vVvqQUaSLkJ9fqIlyyNs5pwBoKB2b1Fxr7mEnFpxrHsDE8R9DXp0KdniM5Wf923+2/QMLYcD/y+8iMc3EsCnyTN02ap6nR9tySNdRJNFqq6tUKqUA3yOeH0dTw3trwW2yXlspqSd99z+1X6O7/x2hcxG39JbVylYI9HAaRTPTMhC7KSTj7kkNdG2CyEvprS/l1ABdPuhVxS5Ti+eu4aI7jo5p5C07ODocwewUCEIhnW1g/16gq26an1PY24rDZFo/5JkJeMT911khZaN0KJN2Y9sO7
 
---===============1830485644968437842==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Mon, 15 Dec 2025 10:40:16 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 015dd1049bea..505b7d3f5641 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
+> > But I think instead of Makefile changes we should fix the root cause
+> > here. And that seems to be just wrong __printf annotations for
+> > seq_bprintf and bstr_printf. They are not printf-like, they should not
+> > be marked as such, and then the compiler won't be wrongly suggesting
+> > bpf_stream_vprintk_impl (and others that make use of either
+> > bstr_printf or seq_bprintf) to be marked with __printf. =20
+>=20
+> yeah. commit 7bf819aa992f ("vsnprintf: Mark binary printing functions
+> with __printf() attribute")
+> should be reverted,
+> but that somebody else problem and the revert would need to silence
+> that incorrect warning in lib/vsprintf.c too.
 
-[ ... ]
+=46rom what I understand, the __printf(X, 0) simply quiets the warning, which
+is why those two are:
 
-> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> index 976d89011b15..b9a358d7a78f 100644
-> --- a/kernel/bpf/trampoline.c
-> +++ b/kernel/bpf/trampoline.c
-> @@ -214,10 +214,15 @@ static int modify_fentry(struct bpf_trampoline *tr, u32 orig_flags,
->  	int ret;
->
->  	if (tr->func.ftrace_managed) {
-> +		unsigned long addr = (unsigned long) new_addr;
-> +
-> +		if (bpf_trampoline_use_jmp(tr->flags))
-> +			addr = ftrace_jmp_set(addr);
-> +
->  		if (lock_direct_mutex)
-> -			ret = modify_ftrace_direct(tr->fops, (long)new_addr);
-> +			ret = modify_ftrace_direct(tr->fops, addr);
->  		else
-> -			ret = modify_ftrace_direct_nolock(tr->fops, (long)new_addr);
-> +			ret = modify_ftrace_direct_nolock(tr->fops, addr);
->  	} else {
->  		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr,
->  						   new_addr);
-> @@ -240,10 +245,15 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
->  	}
->
->  	if (tr->func.ftrace_managed) {
-> +		unsigned long addr = (unsigned long) new_addr;
-> +
-> +		if (bpf_trampoline_use_jmp(tr->flags))
-> +			addr = ftrace_jmp_set(addr);
-> +
->  		ret = ftrace_set_filter_ip(tr->fops, (unsigned long)ip, 0, 1);
->  		if (ret)
->  			return ret;
-> -		ret = register_ftrace_direct(tr->fops, (long)new_addr);
-> +		ret = register_ftrace_direct(tr->fops, addr);
->  	} else {
->  		ret = bpf_trampoline_update_fentry(tr, 0, NULL, new_addr);
->  	}
+__printf(3, 0) int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, =
+va_list args);
+__printf(3, 0) int bstr_printf(char *buf, size_t size, const char *fmt, con=
+st u32 *bin_buf);
 
-After this change, register_ftrace_direct() receives an address with
-the LSB bit already set (via ftrace_jmp_set) and stores it as-is in
-entry->direct. This address then flows through to ftrace_find_rec_direct()
-which returns entry->direct unchanged.
+Hence, it's not a big deal to have that. Actually, it does document that
+the printf format is different than a normal printf, and that the arguments
+are not the same as a normal printf.
 
-In available_filter_functions_show():
+I complained about this at first too (and never gave an acked-by), but
+because it does quiet a warning, I also didn't nack it.
 
-    direct = ftrace_find_rec_direct(rec->ip);
-    if (direct)
-        seq_printf(m, "\n\tdirect-->%pS", (void *)direct);
-
-Can the debug output show misleading symbol offsets? When the LSB is
-set, %pS will resolve addresses like "function+0x1" instead of just
-"function". This makes ftrace debug output harder to read for users
-trying to understand direct call attachments.
-
-The fix would be to strip the LSB bit before printing:
-    seq_printf(m, "\n\tdirect-->%pS", (void *)ftrace_jmp_get(direct));
-
-[ ... ]
-
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index bbb37c0f8c6c..b0dc911411f1 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6017,15 +6017,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	if (ftrace_hash_empty(hash))
->  		return -EINVAL;
->
-> -	/* This is a "raw" address, and this should never happen. */
-> -	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-> -		return -EINVAL;
-> -
->  	mutex_lock(&direct_mutex);
->
-> -	if (ops->flags & FTRACE_OPS_FL_JMP)
-> -		addr = ftrace_jmp_set(addr);
-> -
->  	/* Make sure requested entries are not already registered.. */
->  	size = 1 << hash->size_bits;
->  	for (i = 0; i < size; i++) {
-
-[ ... ]
-
-> @@ -6146,13 +6139,6 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->
->  	lockdep_assert_held_once(&direct_mutex);
->
-> -	/* This is a "raw" address, and this should never happen. */
-> -	if (WARN_ON_ONCE(ftrace_is_jmp(addr)))
-> -		return -EINVAL;
-> -
-> -	if (ops->flags & FTRACE_OPS_FL_JMP)
-> -		addr = ftrace_jmp_set(addr);
-> -
->  	/* Enable the tmp_ops to have the same functions as the direct ops */
->  	ftrace_ops_init(&tmp_ops);
->  	tmp_ops.func_hash = ops->func_hash;
-
-[ ... ]
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/20247816064
-
---===============1830485644968437842==--
+-- Steve
