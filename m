@@ -1,81 +1,157 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA66B32E125;
-	Mon, 15 Dec 2025 20:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EF4312828;
+	Mon, 15 Dec 2025 21:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765831048; cv=none; b=DVhqISaieVxQtU8afH6A9qO1ozjpRXZgC88QoO4VHWJhJSNeqQAPqBTVc1D38VDnuRzcbJow7eTsj50alj0RDKFbsb9df3GF8PVy5XsYbaen40cRycqGEzLiX/sBSRDe+c3kYPx+jXdiTz1Q3vXOMN8WNXo6mq+QxkeNy4yloI0=
+	t=1765833255; cv=none; b=Aw0N3e+sLVbY8B4urfnZwe3HGjMjTohyTpZkSJ40CRiZNlNPFDdW1wjqVzzaJbXJiG4iKPZuoBLb73Lrjhnjnvyl7tTW0CYIRLiDO00VGlzkT12G4kkRPOZw26WM4foSPcoxrWomKV1AcyC5kjpBk+IuVLLPbgQXIiDGIu9sIDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765831048; c=relaxed/simple;
-	bh=3WGxC4deThiUTswi7b/9gEfz6MOp1u4KpDRE3hN8Gro=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lkqpga3iYlV/pBluj2f4T8rXlUSAA3H1sJ+qPESqrvvGtHX7WedZ9f+XFVCMRIAEUW9edjZM95gBpl9wgZV5BxTOzXYjmVokW5Y3HiBd1wTz1kgKUH6sK9EFxQLWGeurpgiGhPenf2rGm8nCpY5maekml6baPgt/D7Md6z/j/yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6EF1D587CD;
-	Mon, 15 Dec 2025 20:29:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 88B9320027;
-	Mon, 15 Dec 2025 20:28:59 +0000 (UTC)
-Date: Mon, 15 Dec 2025 15:30:31 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Xiang Gao <gxxa03070307@gmail.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, mhiramat@kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- dhowells@redhat.com, kuba@kernel.org, brauner@kernel.org,
- akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, gaoxiang17
- <gaoxiang17@xiaomi.com>
-Subject: Re: [PATCH v5] dma-buf: add some tracepoints to debug.
-Message-ID: <20251215153031.1a5e6d9f@gandalf.local.home>
-In-Reply-To: <20251201112148.843572-1-gxxa03070307@gmail.com>
-References: <20251201112148.843572-1-gxxa03070307@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1765833255; c=relaxed/simple;
+	bh=fgCax+1QA4JX7mjeSem02vMC6sFoOmpIV5v+inJBvVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iMT+nG+YP5gdYUWxKBaqfszFs/v/867tTI/7uKZBzNfVJblyPOGsMNUsEaqvgGxYOP7b3tECdE5z1kEdCbnelQ7jLJD9Ok4px+cnx92p2/RGoVKOYfryR2aOd2knkpgEGo9SebqXBRzuolVpc9sd89/1AlHEeFy5hn8Rs6Wlcqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VigJ21rh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VigJ21rh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE87C4CEF5;
+	Mon, 15 Dec 2025 21:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765833255;
+	bh=fgCax+1QA4JX7mjeSem02vMC6sFoOmpIV5v+inJBvVw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VigJ21rhzP/FEbMdr93dxQRxWkMroGdNKUClwePiv0lrZodOORaIuyezOniZ1cLqr
+	 KfEllhAE6+k7E1F7DyK6ZUhm+ifuDl650Zju501qFqmqsKon8UgwPGyHVfv0dyt0Ym
+	 dvihCSMt+yQJl0YOQAAVrmxG69T1YV1yMLjl+OdXZUf54Yg+21psAgYrigmbf9uVj7
+	 unhngcKQzUJRxEzYJG4ggphqalKNXqhMdveMMCpBCO7c3cqt9eYCbY87cnvH8fA85G
+	 ZhQ0X5fi9SUmCQcRnSoF/FCVlXxRG3mpimfnpcp0gX9J8Bu91wYEFqL+R4YGch5U3/
+	 oSgc6cue7KhOw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>,
+	Florent Revest <revest@google.com>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Song Liu <song@kernel.org>
+Subject: [PATCHv5 bpf-next 0/9] ftrace,bpf: Use single direct ops for bpf trampolines
+Date: Mon, 15 Dec 2025 22:13:53 +0100
+Message-ID: <20251215211402.353056-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: toii5izcyyq1aks869a8pijmyda7aegn
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 88B9320027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+qMeEoee5LPAQ6YVQJX12qT1DsmumRLoY=
-X-HE-Tag: 1765830539-300393
-X-HE-Meta: U2FsdGVkX18aFf4OwvXYzVDWTA/eSboFoNzkl1eo9bEGSeiVOyuMh4NpyTVeyESiGAibqkNif2VoWI1CMmcKZ0RHh8MXurG9qjh5/YgxB9NJV9iATMpearTPpkhj1TxUgALmhp0LLxUkLjVVsN7A7kVw3jtNLbiy8bCRJdVyOIi/Xwrz48AHXp6dvA2hJgfrX6QURmHouwxi1r6h9STfqAr0E1q56kMRqast6rhijxUdGqH3EniVOBXqf35WhRhRG9e+I7K30JMQElVYGLHBLOl0YhoFEf11W8qM4uq4/N3C3OZI4WjuJO60oHpDgb4a/YYQ0kN8HTWpThl02+HA9Bd5rOlZCrDH
+Content-Transfer-Encoding: 8bit
 
-On Mon,  1 Dec 2025 19:21:48 +0800
-Xiang Gao <gxxa03070307@gmail.com> wrote:
+hi,
+while poking the multi-tracing interface I ended up with just one ftrace_ops
+object to attach all trampolines.
 
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -35,6 +35,17 @@
-> =20
->  #include "dma-buf-sysfs-stats.h"
-> =20
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/dma_buf.h>
-> +
+This change allows to use less direct API calls during the attachment changes
+in the future code, so in effect speeding up the attachment.
 
-=46rom a tracing point of view I'm OK with this patch, but this macro really
-needs a comment.
+In current code we get a speed up from using just a single ftrace_ops object.
 
--- Steve
+- with current code:
+
+  Performance counter stats for 'bpftrace -e fentry:vmlinux:ksys_* {} -c true':
+
+     6,364,157,902      cycles:k
+       828,728,902      cycles:u
+     1,064,803,824      instructions:u                   #    1.28  insn per cycle
+    23,797,500,067      instructions:k                   #    3.74  insn per cycle
+
+       4.416004987 seconds time elapsed
+
+       0.164121000 seconds user
+       1.289550000 seconds sys
 
 
-> +#define DMA_BUF_TRACE(FUNC, ...)                  \
-> +    do {                                          \
-> +        if (FUNC##_enabled()) {                   \
-> +            guard(spinlock)(&dmabuf->name_lock); \
-> +            FUNC(__VA_ARGS__);                    \
-> +        }                                         \
-> +    } while (0)
-> +
->  static inline int is_dma_buf_file(struct file *);
-> =20
->  static DEFINE_MUTEX(dmabuf_list_mutex);
+- with the fix:
+
+   Performance counter stats for 'bpftrace -e fentry:vmlinux:ksys_* {} -c true':
+
+     6,535,857,905      cycles:k
+       810,809,429      cycles:u
+     1,064,594,027      instructions:u                   #    1.31  insn per cycle
+    23,962,552,894      instructions:k                   #    3.67  insn per cycle
+
+       1.666961239 seconds time elapsed
+
+       0.157412000 seconds user
+       1.283396000 seconds sys
+
+
+
+The speedup seems to be related to the fact that with single ftrace_ops object
+we don't call ftrace_shutdown anymore (we use ftrace_update_ops instead) and
+we skip the synchronize rcu calls (each ~100ms) at the end of that function.
+
+rfc: https://lore.kernel.org/bpf/20250729102813.1531457-1-jolsa@kernel.org/
+v1:  https://lore.kernel.org/bpf/20250923215147.1571952-1-jolsa@kernel.org/
+v2:  https://lore.kernel.org/bpf/20251113123750.2507435-1-jolsa@kernel.org/
+v3:  https://lore.kernel.org/bpf/20251120212402.466524-1-jolsa@kernel.org/
+v4:  https://lore.kernel.org/bpf/20251203082402.78816-1-jolsa@kernel.org/
+
+v5 changes:
+- do not export ftrace_hash object [Steven]
+- fix update_ftrace_direct_add new_filter_hash leak [ci]
+
+v4 changes:
+- rebased on top of bpf-next/master (with jmp attach changes)
+  added patch 1 to deal with that
+- added extra checks for update_ftrace_direct_del/mod to address
+  the ci bot review
+
+v3 changes:
+- rebased on top of bpf-next/master
+- fixed update_ftrace_direct_del cleanup path
+- added missing inline to update_ftrace_direct_* stubs
+
+v2 changes:
+- rebased on top fo bpf-next/master plus Song's livepatch fixes [1] 
+- renamed the API functions [2] [Steven]
+- do not export the new api [Steven]
+- kept the original direct interface:
+
+  I'm not sure if we want to melt both *_ftrace_direct and the new interface
+  into single one. It's bit different in semantic (hence the name change as
+  Steven suggested [2]) and I don't think the changes are not that big so
+  we could easily keep both APIs.
+
+v1 changes:
+- make the change x86 specific, after discussing with Mark options for
+  arm64 [Mark]
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/20251027175023.1521602-1-song@kernel.org/
+[2] https://lore.kernel.org/bpf/20250924050415.4aefcb91@batman.local.home/
+---
+Jiri Olsa (9):
+      ftrace,bpf: Remove FTRACE_OPS_FL_JMP ftrace_ops flag
+      ftrace: Make alloc_and_copy_ftrace_hash direct friendly
+      ftrace: Export some of hash related functions
+      ftrace: Add update_ftrace_direct_add function
+      ftrace: Add update_ftrace_direct_del function
+      ftrace: Add update_ftrace_direct_mod function
+      bpf: Add trampoline ip hash table
+      ftrace: Factor ftrace_ops ops_func interface
+      bpf,x86: Use single ftrace_ops for direct calls
+
+ arch/x86/Kconfig        |   1 +
+ include/linux/bpf.h     |   7 ++-
+ include/linux/ftrace.h  |  31 ++++++++++-
+ kernel/bpf/trampoline.c | 234 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------
+ kernel/trace/Kconfig    |   3 ++
+ kernel/trace/ftrace.c   | 357 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+ 6 files changed, 560 insertions(+), 73 deletions(-)
