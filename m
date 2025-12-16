@@ -1,156 +1,165 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010022.outbound.protection.outlook.com [52.101.61.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1611F257AEC;
-	Tue, 16 Dec 2025 11:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765883643; cv=fail; b=pl3AWWRVluZTWAWUkCmyQnZ3WxWQoQtysUXZpelFnszGgqT1Y6fiGng1gx3a0v1XSoU1bpg4jSK/i2FQdwgqbZhkbXx/0gzQIi4yHcZdqEKayCPA6/B/8hx3REJiX0pFNI1jQhp/xepCh+g1yESbyrZITPuwyDX1Ws3cGh9rnNU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765883643; c=relaxed/simple;
-	bh=PrT65p5ANXPdQXfpWnt9Aprce7YHfoHo7U4/fEzvm6k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SfWbxXexyx+wS1y5VhNFK0GirZD7pFFz5RGJh09SC0SrJTLdPN0r/7sWTxpxcFvjkMLXGfjzPgUQLLPWR9QbdOJhG+A1HaiYFOm9i2qrfmNMoyIMIZ32EcEk/PSOmie+J6VHC+gw8CECleucaRVRJIgtnFrcBkZPYaHR7+e0Fc8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DpLWYHXW; arc=fail smtp.client-ip=52.101.61.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12210364E9A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 14:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765893630; cv=none; b=nXsVRbeA0OxfvOhka23seC7k6WhIi5/EXOwew1is7Q1nvJaD4qMBQpEXpKxObdcM0z2uTDNH/e2/MlminEucMINhFJpzowQPz33Hxp+rzdpL5ivw+bE2n/JVzl6avWV6JGmUpOCkS8BJRmD2Wy6fulHfXGo9uEXd5onfb+lWvzM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765893630; c=relaxed/simple;
+	bh=oo331MyVoc+k3UZL6I7kuvuEyuD++kbF4dU3KtoNNTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPSic9T2RyTZwZ87kmIPNRLIqoV8jGRgo9pq6U02AznEkLfuBBP3x0ehxFyRlYTgf7ZqovTsNXh3ombCvxEg7CGHb/6AhjoVMttzsVMuVk+ZUdCpCK4LbmgwAp3hziicwQBJxuLiJeABQXFDoOP24P93vZCdzSrGuW9v6vbTAZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b8Y6ScLo; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DpLWYHXW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ub7zHSewrP3SjIKPIlWY8dIt9sjCDEz+Juq7WvYl/8I/EeMJ9TR/IWKEXyESR5I7zYvS5dPipzeZAVesyFsqUrksDUQ1Lrk+zUv69wjCTP4QfmI8c2aMBKLPcpbqCubfWAntRLYjrc18ME/N6FFzZ0X86Nm9SltSkcOjjK0G50Ayvt5i2UA5n7O6hswQL6Wg79aWTG28b+CosFOSduLIuzCwtxay2EFIc7v0oWpaIDgBRNoAXeFmKIPcwfbrKJjyxp3B510z37zK0cBcESXJ+b/Fml2sFsd6YM6ZUgunUJT/t1VDro5ssp+qEMYGaMm6z6W/h5LYJ2s574tmbUmdtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4dHan+tf4DxlEM0zQA9TfunRb8Efi/ACTCURVXGAzNA=;
- b=cVRO82+c2E7ByINMRjYsxVn7lo3i4AxdrIGp5S9sdeXiPu6/0nLsSsLknSgF3lTTOa2vHaQJddOUKdL8lYuVstSUCx5POHMDi1Wq3TeUAqtNtX50mvoWnW2pLjzA7WwT1qc5NSat0prfgLaiafmMxVBfwiqXQsiGm31nliEi1/yQQpD/8jDJSZkoCCcr+JLyZqiM+VAon3Qq+iEJZnqtAr4j9nRc4CyfXvVGKglSXbkSjsCLp/TXuc51juQCE1Xnpgv922mBkbTdfaSBqP/oAn1c38PceOhr5jmfHBtXRGtd/FujFeGp9IV9Ffkk02IWM2mIwaDksc7meX0/avq1Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dHan+tf4DxlEM0zQA9TfunRb8Efi/ACTCURVXGAzNA=;
- b=DpLWYHXWylOEei4nDfR9/QK+E+Sj4wHTxtXpra1n8XZNWEF6X5GC9d+8QEhkk3P7dFSXcQ/XTycxIZFXdQvjj6WrVRA+KyfB5tOn9Yvq8o4+k1ynXro3vorBDevEdht8mNwkX/gjQN2joC2d56zao9WY/INdWjtK2EiyVgYCXtI=
-Received: from MW3PR05CA0022.namprd05.prod.outlook.com (2603:10b6:303:2b::27)
- by IA4PR12MB9761.namprd12.prod.outlook.com (2603:10b6:208:550::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Tue, 16 Dec
- 2025 11:13:59 +0000
-Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
- (2603:10b6:303:2b:cafe::47) by MW3PR05CA0022.outlook.office365.com
- (2603:10b6:303:2b::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.6 via Frontend Transport; Tue,
- 16 Dec 2025 11:13:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9434.6 via Frontend Transport; Tue, 16 Dec 2025 11:13:58 +0000
-Received: from kaveri.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 16 Dec
- 2025 05:13:54 -0600
-From: Shivank Garg <shivankg@amd.com>
-To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-CC: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
-	<baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<shivankg@amd.com>
-Subject: [PATCH 3/3] mm/khugepaged: make khugepaged_collapse_control static
-Date: Tue, 16 Dec 2025 11:11:42 +0000
-Message-ID: <20251216111139.95438-8-shivankg@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251216111139.95438-2-shivankg@amd.com>
-References: <20251216111139.95438-2-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b8Y6ScLo"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fb5810d39so2163020f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 06:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1765893625; x=1766498425; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KL96hyDg6qSdwafAtR/5W1zXZLQQAbfSahId8IWk8M0=;
+        b=b8Y6ScLoX5CWuU5ef57/9McoGZWMx0ykOvsSKm4b7UvYiKdmD3CwN0uKerpIY9XF9/
+         JQZH8ImxB4fww4Ho1kNeL0EVA4UBf9ACX6lvLBBtG8soFak/seqA5KwDYYbKmVEWRuZG
+         o0fCJoS2x38q4b6miFoIJ7feIPURndgsaLkASOt1t0F4eb8KNs1chPWrZufgxv0hqinY
+         bvlX2fJH6t764FCoHe7bD97P6O9okEz5MKjzBmnf4wwH0L0EqLKjShA+9yIGOkfqan8i
+         ys57tB7dh1aSRWjOGzSeBl55LSE1Os4fwnexqjrcY7rPE8nYYV5ZUPwFlwYLfMgmC6oB
+         SaxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765893625; x=1766498425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KL96hyDg6qSdwafAtR/5W1zXZLQQAbfSahId8IWk8M0=;
+        b=xFxRXe6VB3IrQzcJ5uCQL2AIPgTnA/MosyQiUbJuz+FjA4ozzA8HWugtfFnXm6WXVJ
+         LjJL3tR/rISNOH0fd0LN8wTqx7DJ2ZdTwxYsBD+6yG2fwSpdY1YGIN6Sy9ow/E0lIjk9
+         TGSwbWEod3STcZu0r0tNwlMzvaHtSDjaBvYUZe1rB2vhASUar96kSCUkix7WvJWyNLsk
+         bvqcunG26vXjkHGfVh9zbJ9YK7Fr7mvuYoLYjAauaVQrtllrRjcYaxryWkktQb27VkUp
+         h2Z8rcjjoeORMIG2l0wnvBgNPAyROYYV46onySHzgRdsx7pMc+/iBAo3/AwXJzsRMbFh
+         YNDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV1z2LLhgnS/HrenrKGB+SfaWkCyNSw4YSs0OUfqoHlLUqklJOjB++Wtc18KVc4vJXb82AM9/DrQML8jgQzNsVV60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWvg5YcE9kUm5h6cuyt/+pK2YoGafQtbfE2MU4QTbZ+iJ/HcJm
+	yl2hagg6+dnXNWCsOe1Z3bF+E53lquXhefSaeDcXcZnyBq5IP3ZnPBFhIShXtIZPzOE=
+X-Gm-Gg: AY/fxX5mXvOWGzYwF37v6GWhcYDrFMs76xlxL1wquM1WZkPRTq3L8fu6923ZOxehfD2
+	05FHyLKJn0nSwZ2ggH3Kcccn3BQyjcoybAxGbgyLf4WX+NMqBmyFJMZR8cccgrIwxzXmKJhEhhp
+	uFA7+mkEaGZ2LjwYCXGgKONkqMta3kg3xgbwruaPAkqSeBefGVg9PpomdqxuSH/iay3qiO7xmBE
+	U4pd2Vk5PxRw6v+P73UbqQTSscvwrWrtp/DNuItHriQHFx97CKdx1kV0UhoFKNCllvXuhAoP8us
+	mcZzmhWvXCMenTKvTPJchVFVoSzAmAcj2O8X24BrCF3UJ0NaWLP2YqQ9rshnDSyYTJJGP/zPurq
+	labkArUKJDl6hMPf3YR+Ehmd15p066jNiTLVqLsr66iaPfpX8FvaXQvM36ih+hci+1whQfCS0M2
+	ECWsmTVsFbsz4xtg==
+X-Google-Smtp-Source: AGHT+IEvNNp/GFZ2IQ7L7fWWzVzKQJ39p1H+1gouoPgfCo05L1mXn72S5xo0BtukHnsmhWUV5hIWfw==
+X-Received: by 2002:a05:6000:2585:b0:431:8bf:f07c with SMTP id ffacd0b85a97d-43108bff231mr1464493f8f.9.1765893625280;
+        Tue, 16 Dec 2025 06:00:25 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43009dfe5b3sm24065754f8f.39.2025.12.16.06.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 06:00:24 -0800 (PST)
+Date: Tue, 16 Dec 2025 15:00:22 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>
+Cc: Aaron Tomlin <atomlin@atomlin.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] kallsyms: Prevent invalid access when showing
+ module buildid
+Message-ID: <aUFl9n3b8DWnYGyJ@pathway.suse.cz>
+References: <20251128135920.217303-1-pmladek@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|IA4PR12MB9761:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a63c901-f0b9-4a91-455b-08de3c9435da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sLPll4SIUGsatpwDwNk2YtpAfj7q2ndn8+dm8VjjrYTMY5WMcvly4xx1qM/t?=
- =?us-ascii?Q?HCL8BXL8BEDToZa9joIr/2UJ2psI7qLFxHEz1vD3vH4/5QeyEVEo4uknoTiy?=
- =?us-ascii?Q?Zc7f6v7tkgfff4iiTXyPrEUqLezoi4jQnpt6M0+e7ovEadD9gDdFlXzZVF4r?=
- =?us-ascii?Q?dm3LdGhcTdT8fPIOvw2gwvUWlJoZoPU6shinvgXulgdGkz/TqZVwprRpWVMD?=
- =?us-ascii?Q?AgBbnzbuJuLQHOo6+Z+N7VRgjwsSF1iEbvqGzlI1Zyy8TSU4rhYn4XlrRI6D?=
- =?us-ascii?Q?Dk7AkikNBJ701kv3E1BGnM1UGDiCWgoE0r5BRARJHqJpbsPR/Hlbp5c7OxhF?=
- =?us-ascii?Q?Grbw9BmqwpZCaGR6elhPi4EVLAS8Si1oYrYo9gqsnFu9vOZQc94qZS50J+j2?=
- =?us-ascii?Q?k6TdqZie3Hh9or8lQg0VCX2YuR8kFZzlbO79gSeM/HdjMIchWKeYNTyF7uzP?=
- =?us-ascii?Q?16QfzRQsVwkZr3qk8EAiOGQGdCsIEJLFBIYDx0m8zoDCJTJx05XIBv7Sc5X/?=
- =?us-ascii?Q?tG7oKu1fDqtRXmlEKr2gEGkBDG1gcTU60YO9G/i205t3ItMz2ihtWKXDh+hY?=
- =?us-ascii?Q?ADHxc1+kryYZCVP21+MGDU223JhM0E/0P97gUty+3bDx8ezQsaf9DBqeSziu?=
- =?us-ascii?Q?FoehTv0UPko+Ic9uhnDvt+3MIs6w5+qks5FceeiHBK2qQRip1sBfFHYuiJmh?=
- =?us-ascii?Q?7Iq/W1bvT83dDCI8VlM2b2DD2dywuYh59EuQrKEi956sVRj5prT8CjoIwUXb?=
- =?us-ascii?Q?AAyN6zC1O3lVpw2eSD+bOyCJnjCarvIFJ9Bq9Z10WDOgcW7w8bt2YOAOztnA?=
- =?us-ascii?Q?UHRrcWkQDVV/VDDGX4ab4XoR5IrHqRsC/pDjsYp14uBo+/yNnK/TeqpRS4b9?=
- =?us-ascii?Q?AwsTJHa/eQZB/Alhz+4Vcql6oMvdy1hN0inTZ1sAw6l4/bSRjdNSRJeYaTWK?=
- =?us-ascii?Q?xucKUp6aYzq2dW7OcDBjhmLqgfkVN/h34bTTTUJTvrBTJ80iLNK9EjSzxZIM?=
- =?us-ascii?Q?CPiUoDXW0TEUkstkzqWE7phx0BBSwAUaPLYcuzicVSiltnTZypP8yimXq0Xl?=
- =?us-ascii?Q?wrqjX7sV+r6DT9pcEyQM3Mdmx46ZABbEjhborbo03Yl1xCcuybn78TS3Kp1r?=
- =?us-ascii?Q?0vCR+9X8VmsvvMKMyeEtUJHis6f7T53vg62PIO8kMfW4UPLrJlTNgacuDy0x?=
- =?us-ascii?Q?wydKvkVcXaWOzSpd6T/lHzWifq43iUTlMM7lqHzDMWCyVcTM1zPLP/YbZW0i?=
- =?us-ascii?Q?nzeR+SisMzLN/00Wt+QvSCpRGj26lNyoRDUAo4Eil+6y9PUwkjOdDiEMepbW?=
- =?us-ascii?Q?ENJxrEhdkLtNn2k6zWZATxP3lZm/icWk82dCatO2CMOmOQkYKVCiPUgkK1k6?=
- =?us-ascii?Q?JAaAcJtwWbiNp0/xjseL4XcGC6LsWAaoOoW1aSa4EmrVN1X5tKhWkNHN3Q4k?=
- =?us-ascii?Q?X2VpyiogYE4uinZNSRUTbf267DoFTjmhqxh3nD9HrYV8Url9nqSLBuPrnGfM?=
- =?us-ascii?Q?bCFLWfeBSpxEcFK9/ejd8LD8H+ezvAoe41Ha4Ie18vcf1qfjs0AQJ66loqqi?=
- =?us-ascii?Q?lTQBKeSEUDUpukCrKIw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 11:13:58.8176
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a63c901-f0b9-4a91-455b-08de3c9435da
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002317.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR12MB9761
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251128135920.217303-1-pmladek@suse.com>
 
-The global variable 'khugepaged_collapse_control' is not used outside of
-mm/khugepaged.c. Make it static to limit its scope.
+Hi,
 
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- mm/khugepaged.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I wonder who could take this patchset.
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 65b1b778378a..d130357a2d88 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -829,7 +829,7 @@ static void khugepaged_alloc_sleep(void)
- 	remove_wait_queue(&khugepaged_wait, &wait);
- }
- 
--struct collapse_control khugepaged_collapse_control = {
-+static struct collapse_control khugepaged_collapse_control = {
- 	.is_khugepaged = true,
- };
- 
--- 
-2.43.0
+IMHO, the failed test report is bogus. The system went out of memory.
+Anyway, the info provided by the mail is not enough for debugging.
 
+IMHO. this patchset is ready for linux-next. Unfortunately, kallsyms
+do not have any dedicated maintainer. I though about Kees (hardening)
+or Andrew (core stuff). Or I could take it via printk tree.
+
+Best Regards,
+Petr
+
+On Fri 2025-11-28 14:59:13, Petr Mladek wrote:
+> This patchset is cleaning up kallsyms code related to module buildid.
+> It is fixing an invalid access when printing backtraces, see [v1] for
+> more details:
+> 
+>   + 1st..4th patches are preparatory.
+> 
+>   + 5th and 6th patches are fixing bpf and ftrace related APIs.
+> 
+>   + 7th patch prevents a potential race.
+> 
+> 
+> Changes against [v2]:
+> 
+>   + Fixed typos in commit message [Alexei]
+> 
+>   + Added Acks [Alexei]
+> 
+> 
+> Changes against [v1]:
+> 
+>   + Added existing Reviewed-by tags.
+> 
+>   + Shuffled patches to update the kallsyms_lookup_buildid() initialization
+>     code 1st.
+> 
+>   + Initialized also *modname and *modbuildid in kallsyms_lookup_buildid().
+> 
+>   + Renamed __bpf_address_lookup() to bpf_address_lookup() and used it
+>     in kallsyms_lookup_buildid(). Did this instead of passing @modbuildid
+>     parameter just to clear it.
+> 
+> 
+> [v1] https://lore.kernel.org/r/20251105142319.1139183-1-pmladek@suse.com
+> [v2] https://lore.kernel.org/r/20251112142003.182062-1-pmladek@suse.com
+> 
+> 
+> Petr Mladek (7):
+>   kallsyms: Clean up @namebuf initialization in
+>     kallsyms_lookup_buildid()
+>   kallsyms: Clean up modname and modbuildid initialization in
+>     kallsyms_lookup_buildid()
+>   module: Add helper function for reading module_buildid()
+>   kallsyms: Cleanup code for appending the module buildid
+>   kallsyms/bpf: Rename __bpf_address_lookup() to bpf_address_lookup()
+>   kallsyms/ftrace: Set module buildid in ftrace_mod_address_lookup()
+>   kallsyms: Prevent module removal when printing module name and buildid
+> 
+>  arch/arm64/net/bpf_jit_comp.c   |  2 +-
+>  arch/powerpc/net/bpf_jit_comp.c |  2 +-
+>  include/linux/filter.h          | 26 ++----------
+>  include/linux/ftrace.h          |  6 ++-
+>  include/linux/module.h          |  9 ++++
+>  kernel/bpf/core.c               |  4 +-
+>  kernel/kallsyms.c               | 73 ++++++++++++++++++++++++---------
+>  kernel/module/kallsyms.c        |  9 +---
+>  kernel/trace/ftrace.c           |  5 ++-
+>  9 files changed, 81 insertions(+), 55 deletions(-)
+> 
+> -- 
+> 2.52.0
