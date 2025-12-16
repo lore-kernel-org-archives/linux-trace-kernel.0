@@ -1,93 +1,179 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0605A41A8F;
-	Mon, 15 Dec 2025 22:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D178F59
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 00:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765837037; cv=none; b=QCiBzDZU466YLfhe/PP7lh3nuv+tRQPuoAsKtLh1VOH3Ujbf3uOKiVFvqRe02CWOHYOBKheLbR47rVVurrlvX9WnSxLEyHcpKSvrrh8OWczer4uNSTAt3t/CUf/iFhxquyluiFPNnceP+7rmjXgpSIF5dI7RkFJVVmxa4sOci1w=
+	t=1765843914; cv=none; b=avoVjPQmwjLCm4MowtepCoDWlWbaKil13GIQ6b20BciVLoj8DU3nfizAms1om6KBEDme6I4l9VbMxuQ6USA70IhXOCS8igLeE9eHXmO3PPrdYz2Uihd9qjdKfvRczOr9Q2t96rN1AL42+61bWTqvt/tVlyE1q09ZEHagbO9bXdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765837037; c=relaxed/simple;
-	bh=ZsgtmUVSaPSY1fm6aJUzc0sKLMlEF7FL1Gvx7heN1Hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nez7zbi476j05As6oZNmCV8ctsJEKRpA79ZtSXQnuu4yi7K3vuE+nlmf6AZH5vFGlvnAqxc0MNdFM0HV+2Xx8z286WXVaITrILfc8RkkAuHLKpTdZdELUaBTbM5KUVNIwrKmYbTr1f4/5B13KOIh9J/lhMdi3+yHgAsxE8YXzXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 35538588F5;
-	Mon, 15 Dec 2025 22:17:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id B2A762001C;
-	Mon, 15 Dec 2025 22:17:00 +0000 (UTC)
-Date: Mon, 15 Dec 2025 17:18:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, kernel test robot
- <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] bpf: Disable -Wsuggest-attribute=format
-Message-ID: <20251215171832.2b0b24d5@gandalf.local.home>
-In-Reply-To: <CAADnVQLZPYc0HWqQw7ma=G-t9UMXXo+aXomVkYAzoQt=0ZrQ=Q@mail.gmail.com>
-References: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
-	<CAEf4BzZQ_OJehh=5jJgVBUjJBNAkWh2o8Yd9UTa9nFrRO4oAFg@mail.gmail.com>
-	<CAADnVQKtvRhbAVunHrwj_pCsmazddADRvRo5zp5O+k5kc-Eoog@mail.gmail.com>
-	<CAEf4BzbZwmOCgqhKeyAhEUT0MXyz09cy2dcpB9WCKWP1ikBWdA@mail.gmail.com>
-	<CAADnVQLZPYc0HWqQw7ma=G-t9UMXXo+aXomVkYAzoQt=0ZrQ=Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1765843914; c=relaxed/simple;
+	bh=Uczbsul62V4/mcjhOSnWUAh8iklR2tmgUDe49wKdxFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oru+H5wDZ5Den5KZ4ShrVcSuPnVsCxD4Rs1w0uCHtjr1xPEmEzv5avSXIkQHA5mgJxr847vAu950WkVPFrVpEbA8GnKtSMAOgtcSVoTPQzEGxnAnSerpDdJO72Uk+ehjP9wZ4QJKQqB/ZF/BQz8DORyEaSs731mBwgheZLHRt+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S4M4hPtj; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S4M4hPtj"
+Message-ID: <982ded3a-a973-4c2e-ae7e-af01d346d582@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1765843895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G26H2d3zHXzqLLWFCwlCI8cQctVjbXkFNPiSB0mZ1hw=;
+	b=S4M4hPtjuzyDunncoAFOQGruuFR6mJ2D6s+v6Yw6brV4DkLzobRlhmpb0Ac5kYNv4cdx/h
+	f/VEMV2gRYNumWXtz6mwiCSSUW1Ft0Nva8vlxVYEGQylSYGgG+kFAUjzUfuFnLFvBHqAY1
+	iiZryYyp+3QY8XZtvxt84foVbGSkWhA=
+Date: Mon, 15 Dec 2025 16:11:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: B2A762001C
-X-Stat-Signature: szfszikdjojfaco4rjbnseont6zpuqdj
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18S3CH/ypAfrWjjZJ8OfjeHLL3OuJMV68w=
-X-HE-Tag: 1765837020-609219
-X-HE-Meta: U2FsdGVkX19zDrs9bRxTdoiy4Vu+dcLHlAf4M/Cp9tLbyJ6cGDLUujRddV0RFwOk8DXAA2vVvqQUaSLkJ9fqIlyyNs5pwBoKB2b1Fxr7mEnFpxrHsDE8R9DXp0KdniM5Wf923+2/QMLYcD/y+8iMc3EsCnyTN02ap6nR9tySNdRJNFqq6tUKqUA3yOeH0dTw3trwW2yXlspqSd99z+1X6O7/x2hcxG39JbVylYI9HAaRTPTMhC7KSTj7kkNdG2CyEvprS/l1ABdPuhVxS5Ti+eu4aI7jo5p5C07ODocwewUCEIhnW1g/16gq26an1PY24rDZFo/5JkJeMT911khZaN0KJN2Y9sO7
+Subject: Re: [PATCH v1 1/1] bpf: Disable -Wsuggest-attribute=format
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ kernel test robot <lkp@intel.com>
+References: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20251210131234.3185985-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 15 Dec 2025 10:40:16 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On 12/10/25 5:12 AM, Andy Shevchenko wrote:
+> The printing functions in BPF code are using printf() type of format,
+> and compiler is not happy about them as is:
+> 
+> kernel/bpf/helpers.c:1069:9: error: function ‘____bpf_snprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+>  1069 |         err = bstr_printf(str, str_size, fmt, data.bin_args);
+>       |         ^~~
+> 
+> kernel/bpf/stream.c:241:9: error: function ‘bpf_stream_vprintk_impl’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+>   241 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt__str, data.bin_args);
+>       |         ^~~
+> 
+> kernel/trace/bpf_trace.c:377:9: error: function ‘____bpf_trace_printk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+>   377 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+>       |         ^~~
+> 
+> kernel/trace/bpf_trace.c:433:9: error: function ‘____bpf_trace_vprintk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+>   433 |         ret = bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, data.bin_args);
+>       |         ^~~
+> 
+> kernel/trace/bpf_trace.c:475:9: error: function ‘____bpf_seq_printf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+>   475 |         seq_bprintf(m, fmt, data.bin_args);
+>       |         ^~~~~~~~~~~
+> 
+> Fix the compilation errors by disabling that warning since the code is
+> generated and warning is not so useful in this case — it can't check
+> the parameters for now.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061425.x0qTt9ww-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512061640.9hKTnB8p-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202512081321.2h9ThWTg-lkp@intel.com/
+> Fixes: 5ab154f1463a ("bpf: Introduce BPF standard streams")
+> Fixes: 10aceb629e19 ("bpf: Add bpf_trace_vprintk helper")
+> Fixes: 7b15523a989b ("bpf: Add a bpf_snprintf helper")
+> Fixes: 492e639f0c22 ("bpf: Add bpf_seq_printf and bpf_seq_write helpers")
+> Fixes: f3694e001238 ("bpf: add BPF_CALL_x macros for declaring helpers")
+> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  kernel/bpf/Makefile   | 11 +++++++++--
+>  kernel/trace/Makefile |  6 ++++++
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+> index 232cbc97434d..cf7e8a972f98 100644
+> --- a/kernel/bpf/Makefile
+> +++ b/kernel/bpf/Makefile
+> @@ -6,7 +6,14 @@ cflags-nogcse-$(CONFIG_X86)$(CONFIG_CC_IS_GCC) := -fno-gcse
+>  endif
+>  CFLAGS_core.o += -Wno-override-init $(cflags-nogcse-yy)
+>  
+> -obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o tnum.o log.o token.o liveness.o
+> +obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o tnum.o log.o token.o liveness.o
+> +
+> +obj-$(CONFIG_BPF_SYSCALL) += helpers.o stream.o
+> +# The ____bpf_snprintf() uses the format string that triggers a compiler warning.
+> +CFLAGS_helpers.o += -Wno-suggest-attribute=format
+> +# The bpf_stream_vprintk_impl() uses the format string that triggers a compiler warning.
+> +CFLAGS_stream.o += -Wno-suggest-attribute=format
 
-> > But I think instead of Makefile changes we should fix the root cause
-> > here. And that seems to be just wrong __printf annotations for
-> > seq_bprintf and bstr_printf. They are not printf-like, they should not
-> > be marked as such, and then the compiler won't be wrongly suggesting
-> > bpf_stream_vprintk_impl (and others that make use of either
-> > bstr_printf or seq_bprintf) to be marked with __printf. =20
->=20
-> yeah. commit 7bf819aa992f ("vsnprintf: Mark binary printing functions
-> with __printf() attribute")
-> should be reverted,
-> but that somebody else problem and the revert would need to silence
-> that incorrect warning in lib/vsprintf.c too.
+Hi Andy,
 
-=46rom what I understand, the __printf(X, 0) simply quiets the warning, which
-is why those two are:
+This flag does not exist in clang:
 
-__printf(3, 0) int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, =
-va_list args);
-__printf(3, 0) int bstr_printf(char *buf, size_t size, const char *fmt, con=
-st u32 *bin_buf);
+$ LLVM=1 make -j$(nproc) 
+  [...]
+$ LLVM=1 make
+  CALL    scripts/checksyscalls.sh
+  DESCEND objtool
+  INSTALL libsubcmd_headers
+  DESCEND bpf/resolve_btfids
+  INSTALL libsubcmd_headers
+  CC      kernel/trace/bpf_trace.o
+error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option]
+make[4]: *** [scripts/Makefile.build:287: kernel/trace/bpf_trace.o] Error 1
+make[3]: *** [scripts/Makefile.build:556: kernel/trace] Error 2
+make[2]: *** [scripts/Makefile.build:556: kernel] Error 2
+make[1]: *** [/home/isolodrai/kernels/bpf-next/Makefile:2030: .] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
 
-Hence, it's not a big deal to have that. Actually, it does document that
-the printf format is different than a normal printf, and that the arguments
-are not the same as a normal printf.
+We should probably conditionalize the flag addition in the makefile.
 
-I complained about this at first too (and never gave an acked-by), but
-because it does quiet a warning, I also didn't nack it.
+Or better yet, address the root cause as suggested in the thread.
 
--- Steve
+BPF CI is red on bpf branch at the moment:
+https://github.com/kernel-patches/bpf/actions/runs/20243520506/job/58144348281
+
+> +
+>  obj-$(CONFIG_BPF_SYSCALL) += bpf_iter.o map_iter.o task_iter.o prog_iter.o link_iter.o
+>  obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o bpf_lru_list.o lpm_trie.o map_in_map.o bloom_filter.o
+>  obj-$(CONFIG_BPF_SYSCALL) += local_storage.o queue_stack_maps.o ringbuf.o bpf_insn_array.o
+> @@ -14,7 +21,7 @@ obj-$(CONFIG_BPF_SYSCALL) += bpf_local_storage.o bpf_task_storage.o
+>  obj-${CONFIG_BPF_LSM}	  += bpf_inode_storage.o
+>  obj-$(CONFIG_BPF_SYSCALL) += disasm.o mprog.o
+>  obj-$(CONFIG_BPF_JIT) += trampoline.o
+> -obj-$(CONFIG_BPF_SYSCALL) += btf.o memalloc.o rqspinlock.o stream.o
+> +obj-$(CONFIG_BPF_SYSCALL) += btf.o memalloc.o rqspinlock.o
+>  ifeq ($(CONFIG_MMU)$(CONFIG_64BIT),yy)
+>  obj-$(CONFIG_BPF_SYSCALL) += arena.o range_tree.o
+>  endif
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index fc5dcc888e13..1673b395c14c 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -104,7 +104,13 @@ obj-$(CONFIG_TRACE_EVENT_INJECT) += trace_events_inject.o
+>  obj-$(CONFIG_SYNTH_EVENTS) += trace_events_synth.o
+>  obj-$(CONFIG_HIST_TRIGGERS) += trace_events_hist.o
+>  obj-$(CONFIG_USER_EVENTS) += trace_events_user.o
+> +
+>  obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
+> +# The BPF printing functions use the format string that triggers a compiler warning.
+> +# Since the code is generated and warning is not so useful in this case (it can't
+> +# check the parameters for now) disable the warning.
+> +CFLAGS_bpf_trace.o += -Wno-suggest-attribute=format
+> +
+>  obj-$(CONFIG_KPROBE_EVENTS) += trace_kprobe.o
+>  obj-$(CONFIG_TRACEPOINTS) += error_report-traces.o
+>  obj-$(CONFIG_TRACEPOINTS) += power-traces.o
+
