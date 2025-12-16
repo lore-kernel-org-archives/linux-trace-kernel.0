@@ -1,38 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA94533D6D9;
-	Tue, 16 Dec 2025 18:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A66345CAE;
+	Tue, 16 Dec 2025 18:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765908193; cv=none; b=JU+Gsh9QSwMtgRoICoi09z+R5H9SWtTy9w0wx7xDDi5BqS7CSGx6wGztZgkQ2cn5ZE7/quwnYwVbA57NTDOzBRcOB9mwIf6ejIQ6B66ic9kQ+KxgctV4ytMzlaB1rVC/cF4tluV3qI/e/M4UCR3jtRhfR/ZGdofD+7muaQ57bPA=
+	t=1765908328; cv=none; b=mQQ0UwbCWr8ovAzqg0X4NJqvS4LQlWudl++KpqPdruJCwWFLM88h133SxT0BASgU/Zp6C64ITzEkm7BpIbriZGbymD4rFzyDLPK1AmGkGLWecoPKPdv5GEcDVve17S71vWaQ4wBVaLsg6DIyBHrIcNykxdBlJcdXvHQ6fZIwO40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765908193; c=relaxed/simple;
-	bh=ZwfuxM7U6ZwzjULA9qu6yDWssHfVK+v30Muvr43/itg=;
+	s=arc-20240116; t=1765908328; c=relaxed/simple;
+	bh=njOfu2PidBDyap2da0caS8gKEBLi288gNp03OgsXYgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EW1uP27Q1vr+TpPbZXfP0aQfQqd4doyr/6rDKLCEbfvh0YdiMIhSq/x3IaK6Z+eAzfJt0StVgbhM4ua4QJWOprlxm6vL91OZSCwTYgHNsVkZCwPK6a1l62HtgbrJE1+AZYddipiwfZtNVf7ERbS9MMdfgJtf+JPR2PflnVEUUps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=OgDI81Vnnw0+MLSdjYZ6WylWQlLwACHXkmI0eeBnM6ksHcm6hlYU4CYjaIiTWuuH4yVrTVZpfCmPUYQpasedJdciOAFlL6X/hAXBbmC0W9ln2Su/QYkRk56cdd8N3RSR6miveV4mUQ5ztNtXGvT0FezhK+mWkCys/9RKIJUowWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6B9F2131FB;
-	Tue, 16 Dec 2025 18:03:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 636BC20026;
-	Tue, 16 Dec 2025 18:03:06 +0000 (UTC)
-Date: Tue, 16 Dec 2025 13:04:40 -0500
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id BAC7C12E30;
+	Tue, 16 Dec 2025 18:05:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id C7A622000E;
+	Tue, 16 Dec 2025 18:05:22 +0000 (UTC)
+Date: Tue, 16 Dec 2025 13:06:56 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Tomas Glozar
- <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur
- <jkacur@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] tools/rtla: Consolidate -C/--cgroup option
- parsing
-Message-ID: <20251216130440.19d86b69@gandalf.local.home>
-In-Reply-To: <tazkdgebtw7sgrw7cjrntde6hpcqqlbg7spllkquqxsqowj2uo@xegmfpfkgps7>
-References: <20251209100047.2692515-1-costa.shul@redhat.com>
-	<20251209100047.2692515-3-costa.shul@redhat.com>
-	<tazkdgebtw7sgrw7cjrntde6hpcqqlbg7spllkquqxsqowj2uo@xegmfpfkgps7>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org
+Subject: Re: [PATCH] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+Message-ID: <20251216130656.13322c0d@gandalf.local.home>
+In-Reply-To: <20251216120819.3499e00e@gandalf.local.home>
+References: <20251216120819.3499e00e@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,25 +40,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 636BC20026
-X-Stat-Signature: mituo8w3adz7hks64j8o5ah9atpk3zqb
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: C7A622000E
+X-Stat-Signature: kzqoo3sr7afo697hmkc1kyaoijodridd
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19smr1906Z1S1ohk8RytfBQCwgKVpSWzyg=
-X-HE-Tag: 1765908186-198999
-X-HE-Meta: U2FsdGVkX1/7urrP4cakOlOgQHeNxEaS0ErxtAC3taQc/KFyZFGe7JicSZaX1qm0UBX6wAIa2kxgOhPkSlILSxkcct/wNzTGHM/K0YtzK5QH2CI/5vBHVf66Ylq3EFPU++Vl12BZrscuBONMURw1OldRj7f8Ey8hR+aTYq4R3fwrjGbj1vH2ZiUO9XGQ2CfaS0srHxbTxJGOy6LxLRdQm7TENWfqBKqdg8U2vKlS1CMUEvtZ261Y0dYAk2RUnOd4LTRryX4TZVVR3GrFoLzeAEUOGAe53O6df9Yaw4zeQWxGGiAbtIJYz+ho4JsjOkJtX/ez6qNc5HrtxMdvwFBi6fyNnk6qjB1MaOU1lbojmvBkgzxDsItFMw==
+X-Session-ID: U2FsdGVkX1+YrXJPSKn6J3eWgQy2JE9VFItmaMB801I=
+X-HE-Tag: 1765908322-339602
+X-HE-Meta: U2FsdGVkX1+WTbHUt48timsVepSYWGd0zbl1hQlJvLgleKa5IihU8h7apmcrud316jQYSDxLZjiJI47gYYdEMSJ67h0v9Rm6ibg+b3tUElAION4e60D/Kxh+xydVbnLJ10a7frJPyfSEDwk+TS0raj0O6GyHc7q9AUhK6v7RC9OMYsTnHEwEi+LD6KNjQTB2Dc7WnS53JSB3cZOPyu4NMO5viAFyhq8eiN2nSMB8PoViX8Z4oIbdU00bz3/1QOFQlLDr8dSheOxtrn1V5Iu4+S+qBOuDKXIuMggyWaWBCZZShiVhBIBafLWmd11KL8tW
 
-On Tue, 16 Dec 2025 13:17:00 -0300
-Wander Lairson Costa <wander@redhat.com> wrote:
 
-> >  			break;
-> > -- 
-> > 2.52.0
-> >   
-> 
-> Reviewed-by: Wander Lairson Costa <wander@redhat.com>
-
-Please trim your replies. It's very annoying to scroll down several pages
-just to find a reviewed-by tag.
+Ignore this one, I sent it out before updating the subject to say "v4" :-p
 
 -- Steve
