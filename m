@@ -1,86 +1,120 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACFE33D6DF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 18:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA36B33AD8B;
+	Tue, 16 Dec 2025 23:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765911023; cv=none; b=pf4GDN6+sh52UiWcA5slUXtc+4nehSUpHRCh4NpD5IzteCgkQs+36raB3GkvdwLJydPHHgsqFWMR/cwkokfdeLHIXxAtUv3cUvK+eVuiI2JDA7O+Ri7z2Qf/fKD6V4lOe9yNwx4X5i7eSmjdWdXWZ6/D/mYaTbb4LcpvC4/pSN8=
+	t=1765927397; cv=none; b=mYkCzb+v/ozgwkfGT3Q/2LHxCurdXPXzFmhXOe9pOzQBdZMikxgqeKBcX8vJ78y7/9ntr5Nn6YBm16YrjPQu9ItOspphQW2v3naFsztS0kFMobmX1vAcBNZy6dCGtnxMxeEz3tMdvcMOFLLSJsf96y5VOFrfBCr3GUdvrd21txE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765911023; c=relaxed/simple;
-	bh=n8lCrqrB+R7yxlMUpXeA8qdR1ZIZiA8UzQ+HvvDttq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dB9YmzajgTbVUIzs6bNr3xyQfsJocMTBxr/ldHspuBGc5//1ypvuOfO3reTx05ol7uvKIUyyALabydIZik8NPjLJXq4dIpKCVDepe1mi1TKTmN0Y8fJyH3b4z4fPJQQOwlmsUCNrZPaOVB8fh54+NT7MqQ/7u4cE9VOyka0AkZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=o5EDx6I+; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="o5EDx6I+"
-Date: Tue, 16 Dec 2025 10:50:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765911015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZoRglrMxu+eacAPa08o6kdXKC07L0bqVNlSWnxZl7SA=;
-	b=o5EDx6I+vAidYIyuKW4KOdyNctXcWwX5Au2gYnCqREfUxuVpua0PrSrtTTEu6PfH+n8okX
-	IsHY7qYBvws10cXUE2ZgH1gEhlsLW/PpFJJydiKDgcA9JKxXwbo2DoD8BdCIluJYmfxLN4
-	iXvza8+ptelhHI74JQt9PkrUR97w2OQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Thomas Ballasi <tballasi@linux.microsoft.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
-Message-ID: <stm4ixcvtc6bwr75fos6w6anfaqfgjpe2mtt76zfrb2y63bat2@grvm7kzfz47n>
-References: <20251208181413.4722-1-tballasi@linux.microsoft.com>
- <20251216140252.11864-1-tballasi@linux.microsoft.com>
- <20251216140252.11864-2-tballasi@linux.microsoft.com>
+	s=arc-20240116; t=1765927397; c=relaxed/simple;
+	bh=pvQQhgZhYKxO9O4tU1ezi7R2tbfU60xbOK3YL54nBds=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GOoExjh0h5AkQbpWgcbuG7nzwrT3Lb2S14+ZpmUgtVbcLEfXv/I9vAN61P1+fo3k37+scsCF8IYrvEHOh+An67xFcduu261Rajc28ajrIs2wS/9vmn8S3XFC6A2TROa4rDXaidc5kmmrHi+12ANUMZuw2i3Rdbqwrek2R/nJiyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 0BC8C60833;
+	Tue, 16 Dec 2025 23:23:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 055152001F;
+	Tue, 16 Dec 2025 23:23:05 +0000 (UTC)
+Date: Tue, 16 Dec 2025 18:24:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ian Rogers <irogers@google.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>
+Subject: [PATCH] tracing: Do not register unsupported perf events
+Message-ID: <20251216182440.147e4453@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251216140252.11864-2-tballasi@linux.microsoft.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 055152001F
+X-Stat-Signature: dg4hffjb51epnkepp4amewcf34k1rtgj
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Ap32m7i8u8MbwgEPyRZ7oscMtpQNpyw4=
+X-HE-Tag: 1765927385-372291
+X-HE-Meta: U2FsdGVkX1/dr7fBTe7jP+jtqR+fNhizLXMadqw5x7cNcBBxsRXBavLxuwCPgb1EdNbFGmguP7N3v+tqrFBDyHKRIh6ViZughzkxTnfrgNFSjNoAnkdqhColRVg2WuLldNT7aYo31zrZg8Z38oBluTJpo5HFkB7pNEcCVPHWLpvyg9Ajr9DO/ZqIspU+OCs/RvtVoqR/qWV7dhvvsWvedzZzQj40Z3Z/5kVQoe+VrLLbFbDd4dOMDtP911naU/LUkMqEYXM7ODqAbAqH8vjcTNCm2FDGYLf1dYMMWwX3rYMj4jYsmhPT7tkPe6mmdQMbZHAA+c6MXNTvx/5T69eXn0I8EWvXH4q9/ms8Nfum32rX+AXHvOfqeEjgxTMBnDR/tf4kQQQr/YzyzKJId0yvLQ3RRhNbn16cAhBFuIb+oRM=
 
-On Tue, Dec 16, 2025 at 06:02:51AM -0800, Thomas Ballasi wrote:
-> Memory reclaim events are currently difficult to attribute to
-> specific cgroups, making debugging memory pressure issues
-> challenging.  This patch adds memory cgroup ID (memcg_id) to key
-> vmscan tracepoints to enable better correlation and analysis.
-> 
-> For operations not associated with a specific cgroup, the field
-> is defaulted to 0.
-> 
-> Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
-> ---
-...
-> +		__entry->memcg_id = sc->memcg ? mem_cgroup_id(sc->memcg) : 0;
-...
-> +		__entry->memcg_id = sc->memcg ? mem_cgroup_id(sc->memcg) : 0;
-...
->  
-...
->  	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
-> -						      sc.gfp_mask);
-> +						      sc.gfp_mask,
-> +						      mem_cgroup_id(memcg));
->  
+From: Steven Rostedt <rostedt@goodmis.org>
 
-...
+Synthetic events currently do not have a function to register perf events.
+This leads to calling the tracepoint register functions with a NULL
+function pointer which triggers:
 
-> +	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed, mem_cgroup_id(memcg));
-...
-> +	trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask, mem_cgroup_id(memcg));
-...
-> +	trace_mm_vmscan_memcg_reclaim_end(nr_reclaimed, mem_cgroup_id(memcg));
+ ------------[ cut here ]------------
+ WARNING: kernel/tracepoint.c:175 at tracepoint_add_func+0x357/0x370, CPU#2: perf/2272
+ Modules linked in: kvm_intel kvm irqbypass
+ CPU: 2 UID: 0 PID: 2272 Comm: perf Not tainted 6.18.0-ftest-11964-ge022764176fc-dirty #323 PREEMPTLAZY
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
+ RIP: 0010:tracepoint_add_func+0x357/0x370
+ Code: 28 9c e8 4c 0b f5 ff eb 0f 4c 89 f7 48 c7 c6 80 4d 28 9c e8 ab 89 f4 ff 31 c0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc <0f> 0b 49 c7 c6 ea ff ff ff e9 ee fe ff ff 0f 0b e9 f9 fe ff ff 0f
+ RSP: 0018:ffffabc0c44d3c40 EFLAGS: 00010246
+ RAX: 0000000000000001 RBX: ffff9380aa9e4060 RCX: 0000000000000000
+ RDX: 000000000000000a RSI: ffffffff9e1d4a98 RDI: ffff937fcf5fd6c8
+ RBP: 0000000000000001 R08: 0000000000000007 R09: ffff937fcf5fc780
+ R10: 0000000000000003 R11: ffffffff9c193910 R12: 000000000000000a
+ R13: ffffffff9e1e5888 R14: 0000000000000000 R15: ffffabc0c44d3c78
+ FS:  00007f6202f5f340(0000) GS:ffff93819f00f000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000055d3162281a8 CR3: 0000000106a56003 CR4: 0000000000172ef0
+ Call Trace:
+  <TASK>
+  tracepoint_probe_register+0x5d/0x90
+  synth_event_reg+0x3c/0x60
+  perf_trace_event_init+0x204/0x340
+  perf_trace_init+0x85/0xd0
+  perf_tp_event_init+0x2e/0x50
+  perf_try_init_event+0x6f/0x230
+  ? perf_event_alloc+0x4bb/0xdc0
+  perf_event_alloc+0x65a/0xdc0
+  __se_sys_perf_event_open+0x290/0x9f0
+  do_syscall_64+0x93/0x7b0
+  ? entry_SYSCALL_64_after_hwframe+0x76/0x7e
+  ? trace_hardirqs_off+0x53/0xc0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Please don't use mem_cgroup_id() here as it is an ID internal to memcg.
-Use cgroup_id(memcg->css.cgroup) instead which is inode number and is
-exposed to the userspace.
+Instead, have the code return -ENODEV, which doesn't warn and has perf
+error out with:
+
+ # perf record -e synthetic:futex_wait
+Error:
+The sys_perf_event_open() syscall returned with 19 (No such device) for event (synthetic:futex_wait).
+"dmesg | grep -i perf" may provide additional information.
+
+Ideally perf should support synthetic events, but for now just fix the
+warning. The support can come later.
+
+Cc: stable@vger.kernel.org
+Fixes: 4b147936fa509 ("tracing: Add support for 'synthetic' events")
+Reported-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index a5a93d243047..754b14ca87a7 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -710,6 +710,8 @@ int trace_event_reg(struct trace_event_call *call,
+ 
+ #ifdef CONFIG_PERF_EVENTS
+ 	case TRACE_REG_PERF_REGISTER:
++		if (!call->class->perf_probe)
++			return -ENODEV;
+ 		return tracepoint_probe_register(call->tp,
+ 						 call->class->perf_probe,
+ 						 call);
+-- 
+2.51.0
 
