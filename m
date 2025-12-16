@@ -1,253 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011060.outbound.protection.outlook.com [52.101.52.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE381309EFA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 16:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765901942; cv=none; b=EX/76dyIhU5Afa23C0DZOoHNNxPCKbApX7z+I6fS7eCYFuufqvpQ1wANO6gP6KsAFo5j72ungtosH6pybChKTzK0cXAloHoVBHBmi1hvtZu86s1acrZDiJWcBaIbj+9mEWpDxZ77so98D3jd3SyScAbHC3atjJjWa/Io9boBtRc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765901942; c=relaxed/simple;
-	bh=fJ7PtaYEhaUidkOzaubc/AQfEMNI2qubTR0CYXwqjBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNvq4axT8AuYjHcNmADIeRX+IY8ODWdGMj4J9g86epGzlVwsaXRPyLCX/jGr8qmTvBRDz2pk7UznVbENCsmIueZrpaJLFh/aQNGWHei8jxEVcMzZECeZMcUZ6GYjrx2dpznpmQ3D859l6C49gYohI9FXkxKd5JLWnlqRtMbtjzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=arDglIyL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FE23161BC;
+	Tue, 16 Dec 2025 16:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765902041; cv=fail; b=iWRGkwxmoZknM2oQ1iyi1vjDGXHNSjKiDl1cMbX+2moYPhVyZA1eXgAybX9KlZSe7ZYPCRmoxbfmagnLHfxj7ompFxF9CVhOaZ/vo93ybxKGB8tFnj5aZAnOef/ceMjcKPfLLSdFhKyS/igvtcB392IzAC0OllNrFHdRz4fMv40=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765902041; c=relaxed/simple;
+	bh=akAFsb3txc0wMvEL07gXJ4aSsJoFfPJGBYHH/3tBh0Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=foy9XsvwBXGCEh+vJ+NgsOEDZ4tAto2/dBk0T3n7wOGZVI4+hp89ENKZvoNlGcHv1itVgvllJAOcTpQG8r3iPbWHOmanbooGvN5ShFE6FTAR2SMPvm7uJHm5B6AaQqJhGUo5TzvnlTHbbmsLPtgbThcbaRYH5g3V+WONTB6kqxs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jZYRYHrs; arc=fail smtp.client-ip=52.101.52.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arDglIyL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765901939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q18ZiUlHdoNmDs9ooqiNVU/hQ5vD+uNsbCKDOPdI6fA=;
-	b=arDglIyLuP2K4geKsNJiWQXinpDRr8ReO94kTcUWWsvFmhit+tKkoRDTb8kpBE2IrItiWC
-	np+zPM5v3tj4XT4kC2t7HQy5SIpHvm/9PfXTk0ZgZmlspR1VH/ac5CVsjiT/WOtuCrdKS0
-	lhz71qmeud4abGO6E7mLnas0sasmjVA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-335-M8gN1dqJMxWmjIKbYXafuA-1; Tue,
- 16 Dec 2025 11:18:56 -0500
-X-MC-Unique: M8gN1dqJMxWmjIKbYXafuA-1
-X-Mimecast-MFC-AGG-ID: M8gN1dqJMxWmjIKbYXafuA_1765901935
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 610F21955F4A;
-	Tue, 16 Dec 2025 16:18:55 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.62])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1475430001A2;
-	Tue, 16 Dec 2025 16:18:51 +0000 (UTC)
-Date: Tue, 16 Dec 2025 13:18:50 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] tools/rtla: Consolidate -H/--house-keeping option
- parsing
-Message-ID: <nj75ar644yise2m6yphaydx62pxsqbom74uri2kofkgjnutc7e@knx6ryo3yb3d>
-References: <20251209100047.2692515-1-costa.shul@redhat.com>
- <20251209100047.2692515-8-costa.shul@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jZYRYHrs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ng5XkQY63LywPUgVw6QYtX5OsFKEJlTsfCzi01CTdj9InewZSXeN+libJtWBuNlETrxlxu7138X6u9F1GTrYcmmuZYR9MHuWoEj5SySvnDx61dgYVMYgOqg9JVf07FZAKY+68Rb1hhOAgzwkmMlvWlKaJMM70imOvZ63fMubdDEWH5E7D4uRg2hNbyIhXUE3jkwvbGow9h/AJr9ggpRpvS7GALJiroyrzhu6SaQj7dR60c5g9Qbt8jUwjGJpolX5vzkR6s3+koaUYV+erNFGU0QJ7vXlFCSGmHunP2LKwlVjRcaRFa8fVmU5jKEVebYIQ5GhDGYipcKI8esG+ZwykQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=59p77+vmmS/kKVdLYdnOZWQuBG9LD+Q6VdbgyXz3O0Y=;
+ b=xoxtbt4cEn3guiUFBDhwiMDj8kMs5+I3K2lbu3OgwTRlkyr7RW65NAJBAMQOkmnrvbZ5n9wYAZlhKn4G9+xdwu625m/FwlajhddShin0tb4I/xuubKEyd23SIv1Ppr5JZ2HdYcj34coZC9nxebyZUh2xrGZ/tXOjOE6wMMS0ZUaM+Nvi5NjVcodE8z7e9UBgLIJ7PzusuNftfG1kLtOesmqfBGoy5VoSBuAvgrCedy/RhiKk47J8MPu3hk8R+tyj3XvcCdu4sLn1BkD1qEu94IloWSx9Qi9kNBf99MlqjbwE52m+ZlgwKqtv5oKFv85dbQZcZlNfyR3UrUrR27s3mQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=59p77+vmmS/kKVdLYdnOZWQuBG9LD+Q6VdbgyXz3O0Y=;
+ b=jZYRYHrsg4I/+ZSmVMPXoyqKPR3tAi382nFgG+M4KC1ZUsuPLbnrpfIBlcPiSpMacJJwxEX3yk8ja+l7La1UYjhsN2b2lNXG/m+wksmH96fjKL/JfZWvDVR6Q56/2ngYrKRnhTDivXP+6yBK6TLpWod04tdeLcb+P2KHnBq0dxY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
+ by LV8PR12MB9715.namprd12.prod.outlook.com (2603:10b6:408:2a0::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Tue, 16 Dec
+ 2025 16:20:35 +0000
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9412.011; Tue, 16 Dec 2025
+ 16:20:35 +0000
+Message-ID: <6b6a1b82-1ee4-46fe-a928-865d440d1457@amd.com>
+Date: Tue, 16 Dec 2025 21:50:19 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mm/khugepaged: use enum scan_result for result
+ variables
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20251216111139.95438-2-shivankg@amd.com>
+ <20251216111139.95438-6-shivankg@amd.com>
+ <D9E6B402-528B-46F2-B4B0-9CD9549A449F@nvidia.com>
+Content-Language: en-US
+From: "Garg, Shivank" <shivankg@amd.com>
+In-Reply-To: <D9E6B402-528B-46F2-B4B0-9CD9549A449F@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0076.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::7) To SJ0PR12MB7458.namprd12.prod.outlook.com
+ (2603:10b6:a03:48d::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209100047.2692515-8-costa.shul@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|LV8PR12MB9715:EE_
+X-MS-Office365-Filtering-Correlation-Id: f226c797-d7f5-4db4-b699-08de3cbf0a9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S0syb00rUmtkNjVTbThNZnRHYUVKbkh6K2pEZ0hEY3ZyTjNJb0hqSEYzZEpk?=
+ =?utf-8?B?OEcwdDdYQkpBd2tXRUtieUFJZ0tJUDFrdlRyeXlBU1JlcTRwQzNMSHhZcWtH?=
+ =?utf-8?B?MkNCMHRRdzg1ZWJVcndpSCs3R0I3VmU5cUhPL1RVb0dMUHRxOHJENTlEWUZO?=
+ =?utf-8?B?YzJvbXRQUm42WENRSjkxbENZSFgrUHl3SmpKbXZFdjBYNFl3K2x4OVFpT3J3?=
+ =?utf-8?B?d2QrTlNqbmhrNkJUOE5RdXMrd3duWHMyazJuWXdTaW94VnVVR1VZVmZiY2FC?=
+ =?utf-8?B?L1NLaFJQMy9UVXZZY0xxQktJM3UxbUM1bnRDejF3bDE4QndxaEFneHNSeE1N?=
+ =?utf-8?B?bnNMM0VwV1ZPV1l3ZVEwWXVXK2o2aFZRZG5aVHlHQURhTmxIWm1TcVpQL29x?=
+ =?utf-8?B?ZGptVCtyWW93VDBZbGlIckdNNlkyRzNpOXVTWHg3WlBLZ2VWWExvZmVqRHFx?=
+ =?utf-8?B?amVrc1JPcGQzc1E1aHE4bGFxMHc0c25NRmRxc3kwVi9xd2VaL1VmZm1oc3li?=
+ =?utf-8?B?aC9GVUFzR1VxS0h4bkVJblVKUmVoQXNqbC8xS0Rhek5oRkZRSjJ5MytaRUVH?=
+ =?utf-8?B?UlBFRVVZK2N6QW5qNmNrKzdLampPWnlDYllFeEtMQnRleHoxZWd0R3ZWLy9o?=
+ =?utf-8?B?RnVTdHhTRWJrcGtWZ0VVQ0dQRzJsTzk2U0JZQ2dRUXhzaFgrdlNDVDU0SFRk?=
+ =?utf-8?B?Ymg2V3Z2d056WVBUaGpweDNvRXJhTkY3K1EwNlVBUVdaalZLUDdiU3BGWmNB?=
+ =?utf-8?B?Q2EvVlhFZ1Zma3NFSGlTZ05EUnZTZUNBZWlXbUlVTm8xSDFkUmRIdzNIeDIx?=
+ =?utf-8?B?aWVCejhpSEVrQnk4RXNyUG9qdHNKcER0TFQxR1pYZ3YxMFZoNVBuaGRkR0xq?=
+ =?utf-8?B?L1ZmUzJsSWtCRWdYcjNHSGFwUFd6OHZ4ZDA4Rkl3WjNJT2d6SGc4SUc4QmxN?=
+ =?utf-8?B?WkJGb3E2NFZFelpUNjFEOGlNRFBBQTFxRzRMd3NUZnZUaVd5Q0RNRGVLWVJT?=
+ =?utf-8?B?QkhUWmxlclVVbFhNTi9JeUdEc2JJMFlOb1ZleGM2VDR1amN2UEgydUFRYi9F?=
+ =?utf-8?B?a0ZOY1RwMWJIdy9UVUlObm82WGpmV0dWSG9za0daWVhlZDVFdHk5UVgwd2l4?=
+ =?utf-8?B?QzhPN3FPMzJpWUh0ODkzMXRvSUJxZnUvWm5ZekcrQVdFRVNkME9UZmI1eE5q?=
+ =?utf-8?B?MEYwUVZ3VDhiOFh3bkZubWlaSTU3K0pFN0E2Sy9iQnptSVZRcnpkMkt0cHdh?=
+ =?utf-8?B?UWYyWlJpbTlFc2hrK2NNSU9aTkJ1Z1gwelY5M1FDa0Jlc3pralo1K24veks2?=
+ =?utf-8?B?T1BPayt4cmFqK1krdThzYlFReURaLzB3TTFTeEt1ajAwMmZuZ2pNY2JtMm9Q?=
+ =?utf-8?B?T2hrOFR4c3oyUjd0NytMT2Yvc0xPeDIzYTlFRklqR2pWMFdrbG1sMWJqN1Ry?=
+ =?utf-8?B?OTd2a094bS9RUTBOdkxHY1hFVzI3UGladGNHRWoxOVAxbjZNbThMclFlZUxT?=
+ =?utf-8?B?cGJSdU56SjM2eTlUN2tKTjF6SXEwSW5tRTEyWmlTbWlBaHViZ1dSS0RocWh3?=
+ =?utf-8?B?elFTYTUwSmd4VzhZWTVsalBYcEJUaVdSV0Y2MEJUcDYyU1l4U091L0hPQndL?=
+ =?utf-8?B?dGZLNFkxMS82OWthRk8rTEttYWZtcGZaYWxXVGlPNjI3WVV6anNqbmE2c2tP?=
+ =?utf-8?B?dWFUaUNDWEYwMFBCZEpPVW1UZXR1ZG5OSU93cVovckdNc2V3SWVlSjMrRXoz?=
+ =?utf-8?B?bi93TXRUN2M4S1ZsREtNL2dPTUVMYTcxOWxPbjJ4TXQwMm1rNVNxNFlVZ09m?=
+ =?utf-8?B?YkNLd0pYdWlIQjkwd2ljd0o3d2RHNS9qajBxNG9ScFBPWFgxOG1BYitEMWlr?=
+ =?utf-8?B?Z0JTeUR1U2t5T0ZhdHIzejJTT2QwL1d3NEtxUE0vZUVKVDFzVFBuMUgrSDJL?=
+ =?utf-8?Q?9Doxj3bJ6h96YI8nTigCDPD9em2XcsKd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eXRYeEhOSHpBa3lZWVVRNk5PRm1hd01lejMrMUlVU0VSNFJZUGU1Z3NhK0ZU?=
+ =?utf-8?B?cmxuODVnQXI2N3F3cG94NXZ3bStLZlF4SXhZbVZMalhZc0ZsaUpFUzFJRUYz?=
+ =?utf-8?B?MmpxSUFTYzNldWdPNFBRQ2F1ZjVoZlFnU0sySDR6QVFBSTVid1R3Q2liNGxX?=
+ =?utf-8?B?bkk4bExkWFczSmwrZW4zTytiU1dXaFp2N3NEb2ZKVGNmQWhyVmduaDZsdW5B?=
+ =?utf-8?B?YVc5TFc3dk1EUmFVNS9yOFJDZUMrekp6cHZNZUFLYmhGSHVoT1BLY3NFMnV3?=
+ =?utf-8?B?NkljYytzZGMydUpHUEUrNHZxUWRibDBLK2YwZXZYeVJwanRib2NHSDN5NjM4?=
+ =?utf-8?B?MWpJYlVsWUVGcU5WYStYT0Vnc2FnRElGa1I1R1dyekpPYnl2ZWlaYUlaU0Rj?=
+ =?utf-8?B?VGFWamlVYWVBNGNqeTA4T3JoeXBENm13YlFuMzh2bEo1OFlYY0Q0UHpOcjVz?=
+ =?utf-8?B?WDhhWWFucmpTNk1oZElpNjBIVXJsK1BkaG04V0xPeXA0b29kbCtvaWdJQ0Zy?=
+ =?utf-8?B?a0oydEdMNkppL2R5TXhiVmhrQzNRbDJhV2tYd0gxTkNmejRtMjlOaXB1VXps?=
+ =?utf-8?B?Z1BsZEQrV0YzUmRCUkF6bWRnMVIxT1pBYWw4UzV3SExoNmc5KzQzeEhDcks1?=
+ =?utf-8?B?QWZreVBMR3lwRXpJTm1Sd042N0M5TlFwQmpkazFraE9XakdERWF0ZWNLL1M4?=
+ =?utf-8?B?UGVjUjhrYkVZRXlUa3JnU0JWZ2hYMVRHOHQ3R0UyYVNWSXRZWXFicGp4L0NJ?=
+ =?utf-8?B?aWtMeG41TndKa0FqSEt3TklnT203YUhET3hoZ3BJN2JMM1ducUpnYVI4NUY3?=
+ =?utf-8?B?eFBiQk91RkJjREEvM0NRaCtkcFVCMTBieVZCSS9tUktIaG5VVEVLdWM1SUl3?=
+ =?utf-8?B?OS9CZmIzd1ZUNCtxd3BGV0ZRdDZhanFaa1N4eHJ6aFBpa0U3Qk5iejEzWkpH?=
+ =?utf-8?B?YkVhN1hOa29uVnJ4S0VlTzVRN3EwUkpRS1pHY1A0WWp4RWNLODY2bXQwbDdo?=
+ =?utf-8?B?UjRnQ0Y3anpPVVgrR1M0QkFTM1ptNm9kYkJOdWFwZi9BMGxsWVByb3g1NHVE?=
+ =?utf-8?B?ZStmWFJ2bE9hMEcxQjRGaXg1Y2tjOE4zVjdlbUg4MjI0TjZJNXVaWUJyenI0?=
+ =?utf-8?B?VVJXa1d3TnNJTTloRjROa3lvTWtOeE5XUSswKy9hL1daQ01pRGlGd3R2U3dv?=
+ =?utf-8?B?TW5xYS94ZGdtZWY2M0d3Z2F4aEc0ZmM4Qm85TExQd2EvQVNabHJ6aU1oY095?=
+ =?utf-8?B?TGxGL1B5WkRhYkcvS3I4bkVRdFI4VndCV0dvbmlPTGpFNVZmOFIyT3MvRXJl?=
+ =?utf-8?B?RlYxdXZ2QW5KTFNIYXF1V0l0Unk5azF5bm1SL2VVd2ZLdDFCdXRYbkJoNlB2?=
+ =?utf-8?B?YVVTMFVqK2NyYU1zWkxnNXhHYVFYOWVwYVNxS0R0cDF0UURwZ1NLTlBFMmZQ?=
+ =?utf-8?B?TjYySjlrbGpwRnVQOGQ5TVVha3hSbHUyeUdzc0JpUyt6VTgwZjlkMzhERFJJ?=
+ =?utf-8?B?c3B1cDFxck90aEdGTEJzdEVhbDV5TFpmQk1HSC9jRnMzck1jQk91dVdwc2Rp?=
+ =?utf-8?B?enJZOEZZL0JPQ0U3QkcrWjhyQU9nZlJhQzhPU2sxdUF4WTQ4ZWFJWkVRT2dJ?=
+ =?utf-8?B?alhVa3FnaWUyK0VDM3VnbUE5ZGt0YVo0dFlFM0dibElFUkkvWWxIUWk2Vk9R?=
+ =?utf-8?B?WnlPMWdpcWdHRDIzcXpnTTdST2l5ZFZTd1BybTdxRE5JY2xPKzVsVnRqb0JF?=
+ =?utf-8?B?NFYxb2R1azUxVDRmWGRWNFpJMDg3YzZRb1h4ZlFsaXpCbzdVNkJJWjlHbnpH?=
+ =?utf-8?B?N0JJZWFHT3ZRZGlseVNLcE04RTBZaTlSQ0tUcnp5ZzRySk5jR21Bd1pkOUlP?=
+ =?utf-8?B?R3NIWlY2ZVdtdUEvZFhtM0diWElvdzZBaVZmQzBHd1E0dk5helpCRHlBOXdR?=
+ =?utf-8?B?NHpPd1VkK09rbEx0dGgxTno2M20rSHliTFNLcnh1WlNIUEh1b241N1hHT29S?=
+ =?utf-8?B?azQwTk91WkJ4aVYza1lsN1VVRE82a1QwdDdkZklobE94STRiL21pWE9UUTQ0?=
+ =?utf-8?B?VXhiSVloSlpucGsrNWhXVldCV210R0FqK0ZYQkRPelJNRVhDL280MzU1MW1G?=
+ =?utf-8?Q?buonXYM3B9H21rfBALSCuCxP6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f226c797-d7f5-4db4-b699-08de3cbf0a9b
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 16:20:34.9527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DVo6D9OwJQpqrU7rYHdOxfLQsAJVy7C/IIY7k8t8XuwiabzoPb8f/Ik0pT1bdHQDT+1VVtnlJQGOhxt+z30vSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9715
 
-On Tue, Dec 09, 2025 at 12:00:47PM +0200, Costa Shulyupin wrote:
-> Each rtla tool duplicates parsing of -H/--house-keeping.
-> 
-> Migrate the option parsing from individual tools to the
-> common_parse_options().
-> 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/src/common.c        | 8 +++++++-
->  tools/tracing/rtla/src/osnoise_hist.c  | 9 +--------
->  tools/tracing/rtla/src/osnoise_top.c   | 9 +--------
->  tools/tracing/rtla/src/timerlat_hist.c | 9 +--------
->  tools/tracing/rtla/src/timerlat_top.c  | 9 +--------
->  5 files changed, 11 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-> index e042b2d9dbf5..8e90bb4a76f9 100644
-> --- a/tools/tracing/rtla/src/common.c
-> +++ b/tools/tracing/rtla/src/common.c
-> @@ -62,12 +62,13 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
->  		{"debug",               no_argument,            0, 'D'},
->  		{"duration",            required_argument,      0, 'd'},
->  		{"event",               required_argument,      0, 'e'},
-> +		{"house-keeping",       required_argument,      0, 'H'},
->  		{"priority",            required_argument,      0, 'P'},
->  		{0, 0, 0, 0}
->  	};
->  
->  	opterr = 0;
-> -	c = getopt_long(argc, argv, "c:C::Dd:e:P:", long_options, NULL);
-> +	c = getopt_long(argc, argv, "c:C::Dd:e:H:P:", long_options, NULL);
->  	opterr = 1;
->  
->  	switch (c) {
-> @@ -97,6 +98,11 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
->  			tevent->next = common->events;
->  		common->events = tevent;
->  		break;
-> +	case 'H':
-> +		common->hk_cpus = 1;
-> +		if (parse_cpu_set(optarg, &common->hk_cpu_set))
-> +			fatal("Error parsing house keeping CPUs");
-> +		break;
->  	case 'P':
->  		if (parse_prio(optarg, &common->sched_param) == -1)
->  			fatal("Invalid -P priority");
-> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-> index 6ed5f5594960..1ebd3b48b2d3 100644
-> --- a/tools/tracing/rtla/src/osnoise_hist.c
-> +++ b/tools/tracing/rtla/src/osnoise_hist.c
-> @@ -490,7 +490,6 @@ static struct common_params
->  			{"auto",		required_argument,	0, 'a'},
->  			{"bucket-size",		required_argument,	0, 'b'},
->  			{"entries",		required_argument,	0, 'E'},
-> -			{"house-keeping",	required_argument,		0, 'H'},
->  			{"help",		no_argument,		0, 'h'},
->  			{"period",		required_argument,	0, 'p'},
->  			{"runtime",		required_argument,	0, 'r'},
-> @@ -514,7 +513,7 @@ static struct common_params
->  		if (common_parse_options(argc, argv, &params->common))
->  			continue;
->  
-> -		c = getopt_long(argc, argv, "a:b:E:hH:p:r:s:S:t::T:01234:5:6:7:",
-> +		c = getopt_long(argc, argv, "a:b:E:hp:r:s:S:t::T:01234:5:6:7:",
->  				 long_options, NULL);
->  
->  		/* detect the end of the options. */
-> @@ -550,12 +549,6 @@ static struct common_params
->  		case '?':
->  			osnoise_hist_usage();
->  			break;
-> -		case 'H':
-> -			params->common.hk_cpus = 1;
-> -			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
-> -			if (retval)
-> -				fatal("Error parsing house keeping CPUs");
-> -			break;
->  		case 'p':
->  			params->period = get_llong_from_str(optarg);
->  			if (params->period > 10000000)
-> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-> index d2dfad960440..02e5e6e18e8d 100644
-> --- a/tools/tracing/rtla/src/osnoise_top.c
-> +++ b/tools/tracing/rtla/src/osnoise_top.c
-> @@ -345,7 +345,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
->  	while (1) {
->  		static struct option long_options[] = {
->  			{"auto",		required_argument,	0, 'a'},
-> -			{"house-keeping",	required_argument,	0, 'H'},
->  			{"help",		no_argument,		0, 'h'},
->  			{"period",		required_argument,	0, 'p'},
->  			{"quiet",		no_argument,		0, 'q'},
-> @@ -366,7 +365,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
->  		if (common_parse_options(argc, argv, &params->common))
->  			continue;
->  
-> -		c = getopt_long(argc, argv, "a:hH:p:qr:s:S:t::T:0:1:2:3:",
-> +		c = getopt_long(argc, argv, "a:hp:qr:s:S:t::T:0:1:2:3:",
->  				 long_options, NULL);
->  
->  		/* Detect the end of the options. */
-> @@ -390,12 +389,6 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
->  		case '?':
->  			osnoise_top_usage(params);
->  			break;
-> -		case 'H':
-> -			params->common.hk_cpus = 1;
-> -			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
-> -			if (retval)
-> -				fatal("Error parsing house keeping CPUs");
-> -			break;
->  		case 'p':
->  			params->period = get_llong_from_str(optarg);
->  			if (params->period > 10000000)
-> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-> index e7ba083b5eb4..d1a6cf0c2e0d 100644
-> --- a/tools/tracing/rtla/src/timerlat_hist.c
-> +++ b/tools/tracing/rtla/src/timerlat_hist.c
-> @@ -797,7 +797,6 @@ static struct common_params
->  			{"auto",		required_argument,	0, 'a'},
->  			{"bucket-size",		required_argument,	0, 'b'},
->  			{"entries",		required_argument,	0, 'E'},
-> -			{"house-keeping",	required_argument,	0, 'H'},
->  			{"help",		no_argument,		0, 'h'},
->  			{"irq",			required_argument,	0, 'i'},
->  			{"nano",		no_argument,		0, 'n'},
-> @@ -830,7 +829,7 @@ static struct common_params
->  		if (common_parse_options(argc, argv, &params->common))
->  			continue;
->  
-> -		c = getopt_long(argc, argv, "a:b:E:hH:i:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
-> +		c = getopt_long(argc, argv, "a:b:E:hi:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
->  				 long_options, NULL);
->  
->  		/* detect the end of the options. */
-> @@ -869,12 +868,6 @@ static struct common_params
->  		case '?':
->  			timerlat_hist_usage();
->  			break;
-> -		case 'H':
-> -			params->common.hk_cpus = 1;
-> -			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
-> -			if (retval)
-> -				fatal("Error parsing house keeping CPUs");
-> -			break;
->  		case 'i':
->  			params->common.stop_us = get_llong_from_str(optarg);
->  			break;
-> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-> index 8250bea4b2fd..12e3d8c6f850 100644
-> --- a/tools/tracing/rtla/src/timerlat_top.c
-> +++ b/tools/tracing/rtla/src/timerlat_top.c
-> @@ -566,7 +566,6 @@ static struct common_params
->  		static struct option long_options[] = {
->  			{"auto",		required_argument,	0, 'a'},
->  			{"help",		no_argument,		0, 'h'},
-> -			{"house-keeping",	required_argument,	0, 'H'},
->  			{"irq",			required_argument,	0, 'i'},
->  			{"nano",		no_argument,		0, 'n'},
->  			{"period",		required_argument,	0, 'p'},
-> @@ -594,7 +593,7 @@ static struct common_params
->  		if (common_parse_options(argc, argv, &params->common))
->  			continue;
->  
-> -		c = getopt_long(argc, argv, "a:hH:i:knp:qs:t::T:uU0:1:2:345:6:7:",
-> +		c = getopt_long(argc, argv, "a:hi:knp:qs:t::T:uU0:1:2:345:6:7:",
->  				 long_options, NULL);
->  
->  		/* detect the end of the options. */
-> @@ -635,12 +634,6 @@ static struct common_params
->  		case '?':
->  			timerlat_top_usage();
->  			break;
-> -		case 'H':
-> -			params->common.hk_cpus = 1;
-> -			retval = parse_cpu_set(optarg, &params->common.hk_cpu_set);
-> -			if (retval)
-> -				fatal("Error parsing house keeping CPUs");
-> -			break;
->  		case 'i':
->  			params->common.stop_us = get_llong_from_str(optarg);
->  			break;
-> -- 
-> 2.52.0
+
+
+On 12/16/2025 9:08 PM, Zi Yan wrote:
+> On 16 Dec 2025, at 6:11, Shivank Garg wrote:
 > 
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+>> @@ -547,7 +547,8 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> 
+> The return type could be changed too.
+> 
+>>  	struct folio *folio = NULL;
+>>  	unsigned long addr = start_addr;
+>>  	pte_t *_pte;
+>> -	int none_or_zero = 0, shared = 0, result = SCAN_FAIL, referenced = 0;
+>> +	int none_or_zero = 0, shared = 0, referenced = 0;
+>> +	enum scan_result result = SCAN_FAIL;
+>>
+>>  	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
+>>  	     _pte++, addr += PAGE_SIZE) {
+>> @@ -786,7 +787,7 @@ static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
+> 
+> Ditto.
+> 
+>>  		struct list_head *compound_pagelist)
+>>  {
 
+>> -- 
+> 
+> In addition, the return types of find_pmd_or_thp_or_none(),
+> hugepage_vma_revalidate(), alloc_charge_folio(), and check_pmd_state() need to be changed to enum scan_result too.
+> 
+Hi Zi,
+
+Thanks for the review and suggestions.
+I'll update the return types and send V2.
+
+Thanks,
+Shivank
