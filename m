@@ -1,148 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010030.outbound.protection.outlook.com [52.101.193.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630DA3612D3
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 15:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765898545; cv=none; b=aywUdpAB2UHGSfcgAz+ZPh2IeX0UIf6b6azd7hsQEK1R4JoXrQBS4yGPRY02kDuoujsuLAno4YvYUIIKablgmcQDLOZ2cmz+9GxYSyLbioWdS7R+WOysllWaGbg3QXElMWXrNwv7uJ1WdL1BgZ0VPrxRMhaCmKDADCYh5lQ3Wf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765898545; c=relaxed/simple;
-	bh=bWUMr9rg61BGF8dhwL/biP3a4PN1qhxZMScflleD8lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=On5v30ulbRx524mRolDMNsfjSrYNGAL8Xu+ij+WVYYrgZbzZRpAA2ywjpy5H1ICZPxbLgfuAfyH4VdOuNP6hXjKl/SJk6BJITtwiPMdfFtDVrSgnmjx7xb3aXUk+gQ06RAaGAB2UurLysX2xxSiiKa/kJwufBlp2qfptLrn1fms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B26ekF1e; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C305535CBA4;
+	Tue, 16 Dec 2025 15:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765898849; cv=fail; b=n7vL6GOyphQchS51hYnLfGccsCQiYD9vN9K8x1FRAtJLm/TmFuxYSQgrUrq5y0hIubfdY7U3iRYVBoolkvH5+VGocZynOWeZOyAOpbqNDLsKbKUIJ2nQPhoIWg0+OtOF1LhYJoIWgrzubPL01j3UYTBsxkCkTvNUk0pM1zrxlUU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765898849; c=relaxed/simple;
+	bh=O7Bmpqe2NGSY8apMI1q+8JWV4M/gC5Kgx6dW1FSkJYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Aoa4GF71jAA/zrovHHTW844V8KvcQFXP1pik/4ZgsIJKJGmBl6H3WRXVnzDqklm+4l9N3CylcYwUHLjsaUeZBkQbKbwj19NVT7Xq7jn9e9lmVk9YiH2tYNGh8av4cdMpihlcbZ6qN43bDv4y/7NI9Oo3JfdGi6IDKKv/h1Wc/Vo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CA8gGYyJ; arc=fail smtp.client-ip=52.101.193.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B26ekF1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765898542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1iNwGC+xE5EXbVyOZqsQpJGHuL1qKY4rLA9Y+qtnfZY=;
-	b=B26ekF1e8+b5LHE58fPa9VvZKC0MDH1TGME3JZkZZmsOrUkcsFLVWorjJQBQlbY/dtxGjL
-	ZZpMxYkRXHflvfL3y7sxeSCTEUDpdmFtjaut/905l4y9ohRRSuwRvph6De4JUnWOUXx+h8
-	yB4C/ZJ/5ZGLAXWBvaaGI59p7esvk8o=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-4uNnrO-yPlC7gkwTnP7gHg-1; Tue,
- 16 Dec 2025 10:22:18 -0500
-X-MC-Unique: 4uNnrO-yPlC7gkwTnP7gHg-1
-X-Mimecast-MFC-AGG-ID: 4uNnrO-yPlC7gkwTnP7gHg_1765898537
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ADA301956096;
-	Tue, 16 Dec 2025 15:22:16 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.80.62])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A77A730001A7;
-	Tue, 16 Dec 2025 15:22:12 +0000 (UTC)
-Date: Tue, 16 Dec 2025 12:22:10 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
-	Costa Shulyupin <costa.shul@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v4 3/7] rtla/timerlat: Add example for BPF action program
-Message-ID: <yha47my7tmcu5yvbwelst32ipectzkhekxdorgpxws463kxsno@fcw5vv674yo6>
-References: <20251126144205.331954-1-tglozar@redhat.com>
- <20251126144205.331954-4-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CA8gGYyJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q7bzyMGFcTIK3DHRqFxpk6Guax8Vrfl/BYP9AaGfvwFbMVs3rZ5l2K46aqK9uJO4dDOAPh/kRHKbKS0zVa4nWK00tCpOG/rY/uMwXJri7j3c1AmCwsK1UVCbx2zRoyveWgffzUXIsh626OeN2ejW4yf/oyaGMjHXBdQkH6gfMcpvs0wQ+Aacn/6rkjXp7nx0pJ4LyOfO57VMkaRh1FCGOcMt9dDTSSxZ//En9VLq15M3EYA99BbmKHbSPsudHBppxlarnz4nzDrnznopDm66IdP6i35WkXM0gtxAp9M0z+lKNpE0C1JvfLu+9uMnXhGkyKfznFMnggKqlipkjKixmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AjGErN/TLwM0jQ+eDoBPL+0eX1xVCGP7N5Ry+xA25lw=;
+ b=vL8Uv8eGENVr0fcYDL1YyGqMYQ8vd3NcFFQ9Ta9K9A2i3vi+u/4b3LvLuYNz8678+FFAenKYExHoJKYnnVeqqQWzwVFHQjiPvGxOdRs7rPfyaxyPCd558tNpsmY9Q95nE04P42kEsHiInKIivkj4BKXHhRJ9gOp9jxNkfQaDcdKXgdTN6jVV9qWbpo8cpET1Xfy7ZreyY8/qHyWJt7RnWoX8isS/csUKvbR8T+pSWbYJhQ5Jg05GGRjO6o2xXh8BhkHkApY5amxzCzheTvqn/um+gv4ecxcNMBjr4UXPOgQSblCCW1MqGxHuYj1DbSc+yQJwJQ2p2FABwJ765/sL2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AjGErN/TLwM0jQ+eDoBPL+0eX1xVCGP7N5Ry+xA25lw=;
+ b=CA8gGYyJWSj6RWXs6fFLkEWZvUalTPIwSaGvzTVuyl53CE8K+qD91CraYgZFXySXvcQYGlDc9dba9+m8yX/ZjHfnY6we5g/EinInYm6FFpFhNBYfUDpxG5IYTyyFgn7tk5CHOMnphd9xAHRd1/m4QGFfebOkfQJL79gYWaHKMfekoQMc317eRLxZa7m4sFaMbCCtXBeGoq4MiYGp3QAqpDnwJb0Uze16guaFB41cbgZjgpPfHHKYcGy1Eg/DtGn059WXzWaUtNUjzi7/iTp0V6hL2HW50ZR+YAnStA45HPa/jePPBQpMZdsOmMTZgR1ViZr1SgfwqsH2dLUCqhGIJA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ IA0PR12MB8895.namprd12.prod.outlook.com (2603:10b6:208:491::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9412.13; Tue, 16 Dec 2025 15:27:23 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9412.011; Tue, 16 Dec 2025
+ 15:27:22 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Shivank Garg <shivankg@amd.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm/khugepaged: remove unnecessary goto 'skip' label
+Date: Tue, 16 Dec 2025 10:27:19 -0500
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <848E8F85-CD24-491C-8A3B-474E4FCBF995@nvidia.com>
+In-Reply-To: <20251216111139.95438-4-shivankg@amd.com>
+References: <20251216111139.95438-2-shivankg@amd.com>
+ <20251216111139.95438-4-shivankg@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BL1P223CA0043.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:5b6::9) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126144205.331954-4-tglozar@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PR12MB8895:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6605049d-a331-47b7-8ce8-08de3cb79b89
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?eMohGjz7jxFU+9wIMhUtgGKk7zqw57vVtO0IBwngj1BskOOEZtvXiCDEJ7lr?=
+ =?us-ascii?Q?1x1s4pW9/Ti7xFg4dDse2JYVmfDaDUnhmUXfEG4QSYI3ngQBBE6xn+NjI0oB?=
+ =?us-ascii?Q?P5zVffvBfQdv+ZeK6WOnlLokGOsezY4mepvh6mXSzc1uR4orrYOytW1PuEc7?=
+ =?us-ascii?Q?ALwiak3rSaVAf5exeU5yUVv+m2gahdlSgbSGNvbakzeuShvzjdKumtlUAjS4?=
+ =?us-ascii?Q?QLPAIgZFd2FWDZJZtQimIBw9BtBmDsYtBXBHqIzjBTDYZyFt8l9A0iQf18SG?=
+ =?us-ascii?Q?Wdzibr7MOuMOb7XfY/mzRDbUJhdoVDe/IcUJMgsEpfZ4ja4aU6lYMThz9A0P?=
+ =?us-ascii?Q?UFc8ATwlmdtARjyFWR5o9POe3Yup1AeZS3vqbjFY5J3EmtNYUw/9O1rsMHxZ?=
+ =?us-ascii?Q?X2tGvCHr0z8sFkzTqvemOwbgvHiEEt5r2+OcdbOxXHbMksW1/ABYPHFrqfyp?=
+ =?us-ascii?Q?H8LwHOafslGVNqR1dFKjccRbz9jIDVk+Ww0uVllP5Njk+F1XkLlYXm/V8jAW?=
+ =?us-ascii?Q?UZoz6PHHNZPTzkXUdfjdWDd3/V3WRPIS5ON/1Y1nmlMdWJGEFfnU4k/mFo/K?=
+ =?us-ascii?Q?/wz6yFtL/aPNfXfdqaP5UkqiutbNTLsCN8Dc5lcZhtOuuCB2NNSTwFfR/633?=
+ =?us-ascii?Q?zzQTCmVTF0+fZj0rI5+BjPwmnpj/8H5uykm5NGhbHzNfIUVU5+ZG0cec7M00?=
+ =?us-ascii?Q?Du77jYQNLoVGnTxS7+/Bnvx6WIEx0RYf+FB7U4hOUwK3/btQb3mUPIljTvKY?=
+ =?us-ascii?Q?N8d0f/C+2Xspyhit/XSjdducM3jQsL1PnFKfx+lNDwphoPZ14aKQF+5HvONb?=
+ =?us-ascii?Q?TfFvBoPoM7/2EDmPp1mLFAT17s2YxuIRcqtU2b6SdqgsU6tDJn3PwIPL6kfv?=
+ =?us-ascii?Q?pRVoAlMQif0zR4zFdbUJtyKRRkaqcjhzh/RI3etvXl6xUVHADwMUBEyh826R?=
+ =?us-ascii?Q?hpxcyiVPChELCjanIR9354w0PTpPtbVaK0zIDQt4Sr1RRGcpfK90Uf912/dx?=
+ =?us-ascii?Q?xYQs+lRUx4eoLrDuvchlkTV5vTjXr8cQGXT71X5NiJHhMjO3nCYdSEi1mUZb?=
+ =?us-ascii?Q?toz2qpG1Otn1C0cV/TRF1uQdUD0dp/lqDwUn+s2vv9vAaj9SJDO/KIJhnhkf?=
+ =?us-ascii?Q?BpDgi9S73t+AKgZsni41SrkyiZPnAAsG3Ro3XKP/LQEYy1Gll33xSsguvBmC?=
+ =?us-ascii?Q?TgMLRQ09ZZfA6qWwCWO8+Lw03htTCud2gFXOQo5g5uXTMWvsgsSJIF2Xf6QU?=
+ =?us-ascii?Q?VHThY6nYwIAnSMHdYghmBIMdkgIa9w1qFEoGQaOx+d1IF/vv2bFMQLvdY1Sx?=
+ =?us-ascii?Q?C2QMVf7PZQvBtS9nlB7zMs3OPn2sXZV08cc3ffTut8fSlVpb9x46C6iPkmVi?=
+ =?us-ascii?Q?QzpM+TWFNfpxGFdPtFR0OCJMcHTkVX0jZIVDyMfwB00wF99qONCw3xcR95vc?=
+ =?us-ascii?Q?6zwSh09LhKuGgaXPRZUfJIlQe1O+nmyN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VRl55yFuqDqI12gk67GWmLtdwD46JfT4PrzHCaIzscpCigj4ZcIIqicXKwKu?=
+ =?us-ascii?Q?4DOV6389uSEdS4g5N7pJREWkuYraVdMkTi0TTLHqtfvtCQNqo4CDVN0dzb1k?=
+ =?us-ascii?Q?un5lG48tz8rjJTT69bSsy78fkX5GQuFNdwMlkXJ3ZuGjeQRfDjq74y6UCejK?=
+ =?us-ascii?Q?BP52+1KZUrTDXcAPFEYRPJfuDrnAB11pIJQSkCRYGB9aWydZXq/f7MAEuTNB?=
+ =?us-ascii?Q?TcW1vN3+rvBDNrcrX24YjwB2o1suInYJmzzStZ2ECPsKljLvEpN2Fx3IhWw8?=
+ =?us-ascii?Q?q//POs1VuI1aP9eJjXQZBjcse4voDo90o9N6GhTbCmReWRd+03RCfpyKPMwm?=
+ =?us-ascii?Q?UmAE8Y+dYPA8rC4ox4/zFYPGPwQs0K99lyUhowH6swAsTug2ydjXNNwsrk/v?=
+ =?us-ascii?Q?NR9BDbbM/f5WgvpehffYyzwcNaiUoOaPPiji6zgFy1eB51Xi8c2A2mmFweWE?=
+ =?us-ascii?Q?FvBp70pLaid+MGU6isXUhpM0UFEiOtYXdBlF+mgXTNRezbTq3sEcD704x7YC?=
+ =?us-ascii?Q?xDFEkctBiGH8T/KhOSEK8DG6NW2mSyN7XPGgr8kC+Y+6jMY05+Gh/jhKE+hR?=
+ =?us-ascii?Q?CDf/IQABXB94drhPVMfGT3pvg5J7/UuDnmiiwRnj5gyS/wOLrOSlgQog/rLU?=
+ =?us-ascii?Q?rMMeKRtSNWvm+HWpNXYeSTJt8CxMeDpaECQvIcz8yGj2f+MDQbpugf1sWxej?=
+ =?us-ascii?Q?lKXxW7k8qPSe6o88ij2lanH9YQtQc5AGDVi/mY0Kh+jT4Yk49BUpyfwH6s/c?=
+ =?us-ascii?Q?lF0Kfjllx5EnCJM3DWFdTsW43XqjiapbajbBXArEEuoEcekmdqZKqs9e83+X?=
+ =?us-ascii?Q?a1izbjnvrR/yqgcZD4aQUwi1ftPGFCcgSBtL8cMcJRDhD0whEVsIQmtG0MDN?=
+ =?us-ascii?Q?qSq2PNN6cfrDqS4An3k1pYBKRugz8AuM9Vy+khUG9XD130vQuD97kuNX5qhp?=
+ =?us-ascii?Q?Alx2cU1VGw0cGuiplBDboHgppiUGjbQoAU+lzF3KMoaMlZrWTkKdOKFtwvfu?=
+ =?us-ascii?Q?zTUojRHiLd/3GSO5EWgsjbmoR+7kUQINNFKTeaKLnKELDS6xGp4w6AwUnp7Y?=
+ =?us-ascii?Q?1g6+LiN8pbOdpxykfuGwPPvaW8dV05aF7H+eljzQVDmVUrik/JHflnTOtl76?=
+ =?us-ascii?Q?deCWTZSygRbN6LlZdS2BqZNj2BNfyfLVmQ7FxJmncuB76fzmYA827Osppb5W?=
+ =?us-ascii?Q?hVjxUsgrUy/MU5v7b9Ug2AgtXxzFIwuG2aI8J0bGCy8O4oa30Pq+299IObIu?=
+ =?us-ascii?Q?mjh5EkMvghCJiC1VryZ5Ix8kLPZeJbHQ4RVL2iBAVNugYWdh28kuWIgcEXk6?=
+ =?us-ascii?Q?NnuQhHJ1cy4Mp8HoyY0SBQyF4e7/NLODYDeIu0eM8dYnOq0lwox0Lrhavg4L?=
+ =?us-ascii?Q?/yT+j4H0oBDk5Z4pGK79QNKlH49sx9VMQr8rwMEGUtds/WZ//3nVHwFS2Nq/?=
+ =?us-ascii?Q?D9Dpp6Dhm5q+7PfXo9RgEOa2MMm6h55qmGY7qJVNganHzdzt0UCGyJJUNmRp?=
+ =?us-ascii?Q?BDtKNjBXrLekPB+BSgvsfw5L3YAH6wTCgOMsO9xZ1eMamRaKwk0dwh79BmyP?=
+ =?us-ascii?Q?0NVH9OyU/ukIixgkx//1jiPguHBvurtiqhD7IEVj?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6605049d-a331-47b7-8ce8-08de3cb79b89
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2025 15:27:22.0512
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M5wjLwjH1WuRsXb49fOnfHuBAGVe5ijg5Ol62R/97qYB7Sr6pu1Qg2xRCfMe2wdt
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8895
 
-On Wed, Nov 26, 2025 at 03:42:01PM +0100, Tomas Glozar wrote:
-> Add an example BPF action program that prints the measured latency to
-> the tracefs buffer via bpf_printk().
-> 
-> A new Makefile target, "examples", is added to build the example. In
-> addition, "sample/" subfolder is renamed to "example".
-> 
-> If BPF skeleton support is unavailable or disabled, a warning will be
-> displayed when building the BPF action program example.
-> 
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+On 16 Dec 2025, at 6:11, Shivank Garg wrote:
+
+> Replace 'goto skip' with actual logic for better code readability.
+>
+> No functional change.
+>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
 > ---
->  tools/tracing/rtla/Makefile                      |  9 ++++++++-
->  tools/tracing/rtla/example/timerlat_bpf_action.c | 16 ++++++++++++++++
->  .../rtla/{sample => example}/timerlat_load.py    |  0
->  3 files changed, 24 insertions(+), 1 deletion(-)
->  create mode 100644 tools/tracing/rtla/example/timerlat_bpf_action.c
->  rename tools/tracing/rtla/{sample => example}/timerlat_load.py (100%)
-> 
-> diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-> index 746ccf2f5808..5f1529ce3693 100644
-> --- a/tools/tracing/rtla/Makefile
-> +++ b/tools/tracing/rtla/Makefile
-> @@ -73,9 +73,15 @@ src/timerlat.bpf.o: src/timerlat.bpf.c
->  
->  src/timerlat.skel.h: src/timerlat.bpf.o
->  	$(QUIET_GENSKEL)$(SYSTEM_BPFTOOL) gen skeleton $< > $@
-> +
-> +example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
-> +	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -c $(filter %.c,$^) -o $@
+>  mm/khugepaged.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+LGTM. Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-I couldn't understand the need for the `filter` function.
-
->  else
->  src/timerlat.skel.h:
->  	$(Q)echo '/* BPF skeleton is disabled */' > src/timerlat.skel.h
-> +
-> +example/timerlat_bpf_action.o: example/timerlat_bpf_action.c
-> +	$(Q)echo "BPF skeleton support is disabled, skipping example/timerlat_bpf_action.o"
->  endif
->  
->  $(RTLA): $(RTLA_IN)
-> @@ -96,7 +102,8 @@ clean: doc_clean fixdep-clean
->  	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
->  	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
->  	$(Q)rm -rf feature
-> -	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h
-> +	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h example/timerlat_bpf_action.o
->  check: $(RTLA)
->  	RTLA=$(RTLA) prove -o -f tests/
-> +examples: example/timerlat_bpf_action.o
->  .PHONY: FORCE clean check
-> diff --git a/tools/tracing/rtla/example/timerlat_bpf_action.c b/tools/tracing/rtla/example/timerlat_bpf_action.c
-> new file mode 100644
-> index 000000000000..ac1be049a848
-> --- /dev/null
-> +++ b/tools/tracing/rtla/example/timerlat_bpf_action.c
-> @@ -0,0 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/bpf.h>
-> +#include <bpf/bpf_tracing.h>
-> +
-> +char LICENSE[] SEC("license") = "GPL";
-> +
-> +struct trace_event_raw_timerlat_sample {
-> +	unsigned long long timer_latency;
-> +} __attribute__((preserve_access_index));
-> +
-> +SEC("tp/timerlat_action")
-> +int action_handler(struct trace_event_raw_timerlat_sample *tp_args)
-> +{
-> +	bpf_printk("Latency: %lld\n", tp_args->timer_latency);
-> +	return 0;
-> +}
-> diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtla/example/timerlat_load.py
-> similarity index 100%
-> rename from tools/tracing/rtla/sample/timerlat_load.py
-> rename to tools/tracing/rtla/example/timerlat_load.py
-> -- 
-> 2.51.1
-> 
-
+Best Regards,
+Yan, Zi
