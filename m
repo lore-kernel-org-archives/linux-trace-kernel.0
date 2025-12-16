@@ -1,331 +1,387 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B442F069E;
-	Tue, 16 Dec 2025 04:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E883358DF
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 06:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765860521; cv=none; b=TQwMrbxvG9Bg3F7gM8U7e7p2F7B/Z27xjatF8/gsEXxLkQ7EVG8ojze9+eESqOUtY7mU4tfwcvegwVGnQ1Wi1hYBsptm/5u4ZiEMG9INsiE/6Ab/fklLs1jhLr4Xt3/pxMJJ6919VUvPyZgp2ZICSycCulCxnZaWeAx21I6lq9Q=
+	t=1765867220; cv=none; b=ir21WcE6gFhLEWyP3ZeWUrHlYfFm2l7n4PheiFWJjoj9s7LoEgaInA+bUhuJQj+HNc++q9/z0EcaIZs2tMuNfKdBKoWJVOlP1HMIOx005m4XRidfXScNw0lFAZ1FO4lwAzWSRdtbLW/29wHkYJoxiOpBsVy+88vtWqzciEP+gEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765860521; c=relaxed/simple;
-	bh=xWNvc8RPl1Ak2PHPbQKxrNmpSnH1Covkxff3eC0WwLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OEKVxKoVo+/eFLsVO5taTs245ULCuGrWtEA3nnzZaaFLfj4M9IrxFEdaQJJz9JJwjM8jsBk+J/Voky47/gPKEq0dWfljZLsDI4P6ttvwT3kuTGZYchixWrvNB9UN79zgTz1rGtgW3jbFbhc7bR0NWWJ9Hvg8RgAWhY5W9+lP/kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGCeaWPZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765867220; c=relaxed/simple;
+	bh=5cCqxAsIb+pe2OfGUOMv+i65IXRjCVwzrlJiPOfhvFc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e1wcdZNSyJ1cwpC7l6K996BV85Twj0I3fo+osjH22AvirFfKBregtRAK8Kh18j5NVS1N3qGZ+xV16kPye09WrfAWVkCeOG9EenO2NyycUX/iczoSIlWGV4OIObAwjlVkjnfCwT569ycVu/vm1v6sgYCpn4UKAVULyeEY+Gx6rGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tns92DqV; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGCeaWPZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C09C4CEF1;
-	Tue, 16 Dec 2025 04:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765860520;
-	bh=xWNvc8RPl1Ak2PHPbQKxrNmpSnH1Covkxff3eC0WwLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGCeaWPZqvc0MBNdKWObwkkTigS04jKKFbTfLIinyUNS1aLYPlKUpf9SvHa9e8BAr
-	 65q2p6Slxt710kL8YOnh1n4AEbLlaxh/hw5Jzh/NraW8P6xdvGqcx0kqZ2FeqxJ7/s
-	 6MADafIIYvIpEwh2Y5Vle8f7j/fX2CRG89sPQziktRF4JKBHKfIqNRgEhUQaiYqthJ
-	 CEvgKREBrBco64VPC3zz6VHIuWZbxGge2k96fL7p/v7c5UD97Q8l01sfr7cgTK334C
-	 nbGlzV3CKW1AuE2zAdcwuK+cqQsWUnjyzV/DGD+DRlcSZOpQD3B6CnkcasY/6QpL7E
-	 f5k3E+xOnDutA==
-Date: Mon, 15 Dec 2025 20:48:38 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v6 4/6] perf script: Display
- PERF_RECORD_CALLCHAIN_DEFERRED
-Message-ID: <aUDkpsW-WH3IPIhh@google.com>
-References: <20251120234804.156340-1-namhyung@kernel.org>
- <20251120234804.156340-5-namhyung@kernel.org>
- <9fe12698-2fd5-41fe-8505-735d73eae0a2@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tns92DqV"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7b8eff36e3bso6399361b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Dec 2025 22:40:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765867205; x=1766472005; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vg+4fJFzdGn98FzAnl0v5lB7PczGqqfyNaIVae6fwYU=;
+        b=Tns92DqV0v1L7O4KNzOcrEz7ifqcnyF+nL95tlETlrL5NC8TpH1RbM3KZX5E/zEfvL
+         fq5OgrBUl/lQv1RBk2pqizshodvNgt3FrF8bObLlDnRpr67c18rVU61WcJHe2aoViwwa
+         j530WSmEV1oFPsP6pJ0NfHIIuLUxBdMBXY9bRUQo4TMWjCKq+VA3/ry502NTlKmXEwUj
+         1lA8keJPTROF/wOxe7K6CUDgge893sfCneENIHZLAWuz2hO/Ma/wbO2GHWSB9Ogn3ARQ
+         6UnjwNAQHqXCrk9/GPcP7m+aTrM+lZUkBAooRG+aIX+6XgveZ2UCHJ8jbSVbeBXBzc1R
+         CbCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765867205; x=1766472005;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vg+4fJFzdGn98FzAnl0v5lB7PczGqqfyNaIVae6fwYU=;
+        b=SG8rHiwYU1XbMulqlqki2IvXzb3BHEQVhN+wSNIQf8sDrUQ3eEzFQrCB1a45nMiMT3
+         UFOMp5RZtYzTOzeQt/OyVyasjIjrOtbsCREEI/kBYwQMQczyrkIdYjei4aRkeB1Bx2B7
+         rjGcXccx+DX77YrHUMgOeZRNdpohyf2pKIjJ1u60vpA3TTl3CoI8NMI5f+RiKZCtvFQ/
+         Gciet6CQ/upV8ycTX5f/0V+3zUPgnjyFpaJ3Tvx/2OUNNkz81q6k8ywqTYriwiB3Kw3D
+         +TuMkClIyI0ucMr/MFM7IhP23rIaVYPRgnaotS5fjbuRxPVGynSapBG8MRU9KYNF8dAf
+         GxIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT4M+6sPodrrarbI1TAkdaSGfW68VOh3/RlSuXSSaWSUT7FyFU5VT5uyaqtVAT+I4aSR6yfSSDeb4rgPR0oYLgtAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc6ezC/FFajiCnPEKcoqtOncVCBhinN9BhuBgQWmioBQS/cfF5
+	D4BfWdPP2gNPCQQKHQ451bsfV4NoXNH2N9W8r38tvoP6tFz3CIf71HikgmdgJw==
+X-Gm-Gg: AY/fxX7ymUwmFC+/NLmFOmhbo2/AMoJ0QryNbl687lm9BWyI5yGmadVVTVu8zWevivF
+	ZATgoNZ5KstDo52Kw9xZMqm5b6CwYZLkiy911TG3xTxPx2uSrGQlnMq26ZuIRoTJxacaY9hQPNa
+	rQh8+Z9lMz2m+9eht7nBQMnjUuj/juNW8iuIQ+mWzGPGbWfyIuIu71w8gVNRkLYS0kGmk4Q6o6R
+	0Tfi7/YhFzwjczdVcm74YccLsE/TgB1yOJ0tDM7yIXeeRbujDWywfpQZ+H+NCvX314htkjg6cmd
+	bfIWBx1x29ZXT1uQejhygyjA9uIjWPqaZj2jP2DdZCnAru+2p+s3/vFJTDB8jecBisv/TSpDzyb
+	ZDbK3AyMHxetnUs+lY/GlkFdOLe7UKOsmtfTp377MM+TWH/NqE6ET4YEORfd/Sk6y20sc8yex4m
+	dVxUEjwpvQDxgC3g329prG
+X-Google-Smtp-Source: AGHT+IFUe+Cj7o/VwampK5l2braADbi/l+h05PjVtnGg9s2uaqhmXbwcPzsvzvSt/zsFVsg1Oslm+A==
+X-Received: by 2002:a05:6a00:138e:b0:7f7:612e:461e with SMTP id d2e1a72fcca58-7f7612e46e6mr11323604b3a.57.1765867205166;
+        Mon, 15 Dec 2025 22:40:05 -0800 (PST)
+Received: from xiao.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7f634c229b9sm11325856b3a.43.2025.12.15.22.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Dec 2025 22:40:04 -0800 (PST)
+From: Xiang Gao <gxxa03070307@gmail.com>
+To: sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	dhowells@redhat.com,
+	kuba@kernel.org,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	linux-trace-kernel@vger.kernel.org,
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: [PATCH v6] dma-buf: add some tracepoints to debug.
+Date: Tue, 16 Dec 2025 14:39:52 +0800
+Message-Id: <20251216063952.516364-1-gxxa03070307@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9fe12698-2fd5-41fe-8505-735d73eae0a2@linux.ibm.com>
 
-Hello!
+From: gaoxiang17 <gaoxiang17@xiaomi.com>
 
-On Fri, Dec 12, 2025 at 01:11:38PM +0100, Jens Remus wrote:
-> Hello Namhyung,
-> 
-> following is an observation from my attempt to enable unwind user fp on
-> s390 using s390 back chain instead of frame pointer and relaxing the
-> s390-specific IP validation check.
-> 
-> When capturing call graphs of a Java application the list of "unwound"
-> user space IPs may contain invalid entries, such as 0x0, 0xdeaddeaf,
-> and 0xffffffffffffff.  IPs that exceed PERF_CONTEXT_MAX, such as the
-> latter, cause perf not to display any deferred (or merged) call chain.
-> Note that this is not caused by your patch series.
+Since we can only inspect dmabuf by iterating over process FDs or the
+dmabuf_list, we need to add our own tracepoints to track its status in
+real time in production.
 
-Right, it's not a real IP so perf ABI treats them as a magic context.
+For example:
+   binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_name=qcom,system size=12685312 ino=2738
+   binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=qcom,system size=12685312 ino=2738 fd=8
+   binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal: exp_name=qcom,system size=28672 ino=2739
+     kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=qcom,system size=12685312 ino=2738
+    RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=qcom,system size=12771328 ino=2762 fd=176
+    RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
+    RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
 
-> 
-> While re-adding the s390-specific IP checks would "hide" those, I found
-> that the call graphs look good otherwise.  That is the back chain seems
-> to be intact.  It is just the user space application (e.g. Java JRE) not
-> correctly adhering to the ABI and saving the return address to the
-> specified location on the stack, causing bogus IPs to be reported.
-> 
-> Could perf be improved to handle those user space IPs that exceed
-> PERF_CONTEXT_MAX?
+Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+---
+ drivers/dma-buf/dma-buf.c      |  42 ++++++++-
+ include/trace/events/dma_buf.h | 154 +++++++++++++++++++++++++++++++++
+ 2 files changed, 195 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/dma_buf.h
 
-Ideally we should not have them in the first place.  Is it a JRE issue
-or your s390 unwinder issue?  Is it possible to ignore them in the
-unwinder?
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 2bcf9ceca997..831973de76c4 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -35,6 +35,25 @@
+ 
+ #include "dma-buf-sysfs-stats.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/dma_buf.h>
++
++/*
++ * dmabuf->name must be accessed with holding dmabuf->name_lock.
++ * we need to take the lock around the tracepoint call itself where
++ * it is called in the code.
++ *
++ * Note: FUNC##_enabled() is a static branch that will only
++ *       be set when the trace event is enabled.
++ */
++#define DMA_BUF_TRACE(FUNC, ...)                  \
++    do {                                          \
++        if (FUNC##_enabled()) {                   \
++            guard(spinlock)(&dmabuf->name_lock); \
++            FUNC(__VA_ARGS__);                    \
++        }                                         \
++    } while (0)
++
+ static inline int is_dma_buf_file(struct file *);
+ 
+ static DEFINE_MUTEX(dmabuf_list_mutex);
+@@ -220,6 +239,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ 	    dmabuf->size >> PAGE_SHIFT)
+ 		return -EINVAL;
+ 
++	DMA_BUF_TRACE(trace_dma_buf_mmap_internal, dmabuf);
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ 
+@@ -745,6 +766,8 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 
+ 	__dma_buf_list_add(dmabuf);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_export, dmabuf);
++
+ 	return dmabuf;
+ 
+ err_dmabuf:
+@@ -779,6 +802,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
+ 
+ 	fd_install(fd, dmabuf->file);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_fd, dmabuf, fd);
++
+ 	return fd;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+@@ -794,6 +819,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+ struct dma_buf *dma_buf_get(int fd)
+ {
+ 	struct file *file;
++	struct dma_buf *dmabuf;
+ 
+ 	file = fget(fd);
+ 
+@@ -805,7 +831,11 @@ struct dma_buf *dma_buf_get(int fd)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return file->private_data;
++	dmabuf = file->private_data;
++
++	DMA_BUF_TRACE(trace_dma_buf_get, dmabuf, fd);
++
++	return dmabuf;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
+ 
+@@ -825,6 +855,8 @@ void dma_buf_put(struct dma_buf *dmabuf)
+ 		return;
+ 
+ 	fput(dmabuf->file);
++
++	DMA_BUF_TRACE(trace_dma_buf_put, dmabuf);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
+ 
+@@ -979,6 +1011,9 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 	list_add(&attach->node, &dmabuf->attachments);
+ 	dma_resv_unlock(dmabuf->resv);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_dynamic_attach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), dev);
++
+ 	return attach;
+ 
+ err_attach:
+@@ -1023,6 +1058,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+ 	if (dmabuf->ops->detach)
+ 		dmabuf->ops->detach(dmabuf, attach);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_detach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), attach->dev);
++
+ 	kfree(attach);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
+@@ -1488,6 +1526,8 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+ 	vma_set_file(vma, dmabuf->file);
+ 	vma->vm_pgoff = pgoff;
+ 
++	DMA_BUF_TRACE(trace_dma_buf_mmap, dmabuf);
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
+diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
+new file mode 100644
+index 000000000000..81ee4d05979c
+--- /dev/null
++++ b/include/trace/events/dma_buf.h
+@@ -0,0 +1,154 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM dma_buf
++
++#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DMA_BUF_H
++
++#include <linux/dma-buf.h>
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(dma_buf,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf),
++
++	TP_STRUCT__entry(
++		__string(exp_name, dmabuf->exp_name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino)
++);
++
++DECLARE_EVENT_CLASS(dma_buf_attach_dev,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach, bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev),
++
++	TP_STRUCT__entry(
++		__string(dev_name, dev_name(dev))
++		__string(exp_name, dmabuf->exp_name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++		__field(struct dma_buf_attachment *, attach)
++		__field(bool, is_dynamic)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name);
++		__assign_str(exp_name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++		__entry->is_dynamic = is_dynamic;
++		__entry->attach = attach;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu attachment:%p is_dynamic=%d dev_name=%s",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->attach,
++		  __entry->is_dynamic,
++		  __get_str(dev_name))
++);
++
++DECLARE_EVENT_CLASS(dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_STRUCT__entry(
++		__string(exp_name, dmabuf->exp_name)
++		__field(size_t, size)
++		__field(ino_t, ino)
++		__field(int, fd)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size = dmabuf->size;
++		__entry->ino = dmabuf->file->f_inode->i_ino;
++		__entry->fd = fd;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu fd=%d",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->fd)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_export,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_put,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_dynamic_attach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach, bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach, bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_get,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++#endif /* _TRACE_DMA_BUF_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.34.1
 
-> 
-> Is there otherwise guidance how unwind user and/or the s390
-> implementation should deal with such IPs?  Should it stop taking the
-> deferred calltrace?  Should it substitute those with e.g 0, so that
-> perf can display them?
-> 
-> 
-> Sample for IP == deaddeaf (perf displays this correctly):
-> 
-> java    1084    33.086790: DEFERRED CALLCHAIN [cookie: 2000001f9]
->              3ff983f071c java.lang.String CryptoBench.crypt(java.lang.String)+0x89c (/tmp/perf-1082.map)
->              3ff983ff894 void CryptoBench.execute()+0x94 (/tmp/perf-1082.map)
->        ! -->    deaddeaf [unknown] ([unknown])
->              3ff97e37900 StubRoutines (initial stubs)+0x80 (/tmp/perf-1082.map)
->              3ff97e41080 Interpreter+0x3300 (/tmp/perf-1082.map)
->              3ffae2d11de JavaCalls::call(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x3e (/usr/lib/jvm/.../libjvm.so)
->              3ffae38df92 jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, JavaThread*) [clone .constprop.1]+0x242 (/usr/lib/jvm/.../libjvm.so)
->              3ffae390e86 jni_CallStaticVoidMethod+0x116 (/usr/lib/jvm/.../libjvm.so)
->              3ffaf08b07e JavaMain+0x113e (/usr/lib/jvm/.../libjli.so)
->              3ffaf08e040 ThreadJavaMain+0x20 (/usr/lib/jvm/.../libjli.so)
->              3ffaedabbd8 start_thread+0x198 (/usr/lib64/libc.so.6)
->              3ffaee2b950 thread_start+0x10 (/usr/lib64/libc.so.6)
-> 
-> 
-> Sample for IP == 0 (perf displays this correctly):
-> 
-> java    1084    33.021987: DEFERRED CALLCHAIN [cookie: 20000017b]
->              3ff983f067c java.lang.String CryptoBench.crypt(java.lang.String)+0x7fc (/tmp/perf-1082.map)
->              3ff9098aa88 void CryptoBench.execute()+0x748 (/tmp/perf-1082.map)
->        ! -->           0 [unknown] ([unknown])
->              3ff97e37900 StubRoutines (initial stubs)+0x80 (/tmp/perf-1082.map)
->              3ff97e41080 Interpreter+0x3300 (/tmp/perf-1082.map)
->              3ffae2d11de JavaCalls::call(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x3e (/usr/lib/jvm/.../libjvm.so)
->              3ffae38df92 jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, JavaThread*) [clone .constprop.1]+0x242 (/usr/lib/jvm/.../libjvm.so)
->              3ffae390e86 jni_CallStaticVoidMethod+0x116 (/usr/lib/jvm/.../libjvm.so)
->              3ffaf08b07e JavaMain+0x113e (/usr/lib/jvm/.../libjli.so)
->              3ffaf08e040 ThreadJavaMain+0x20 (/usr/lib/jvm/.../libjli.so)
->              3ffaedabbd8 start_thread+0x198 (/usr/lib64/libc.so.6)
->              3ffaee2b950 thread_start+0x10 (/usr/lib64/libc.so.6)
-> 
-> Note that for the IP==0 case I am thinking about adding a common unwind
-> user check, to stop taking the deferred calltrace.
-> 
-> 
-> Sample for IP == ffffffffffffff (perf does not display any call chain):
-> 
-> # perf script
-> ...
-> java    1084    44.004346:    1001001 task-clock:ppp:
-> 
-> ...
-> [next entry]
-> 
-> # perf script --no-merge-callchain
-> ...
-> java    1084    44.004346:    1001001 task-clock:ppp:
->                400000079 (cookie) ([unknown])
-> 
-> java    1084    44.004348: DEFERRED CALLCHAIN [cookie: 400000079]
-> 
-> ...
-> [next entry]
-> 
-> # perf report -D
-> ...
-> 44004346257 0x17718 [0x40]: PERF_RECORD_SAMPLE(IP, 0x2): 1082/1084: 0x3ffa3e413aa period: 1001001 addr: 0
-> ... FP chain: nr:2
-> .....  0: fffffffffffffd80
-> .....  1: 0000000400000079
-> ...... (deferred)
->  ... thread: java:1084
->  ...... dso: /tmp/perf-1082.map
-> 
-> 0x17758@perf.data [0xd0]: event: 22
-> .
-> . ... raw event: size 208 bytes
-> .  0000:  00 00 00 16 00 02 00 d0 00 00 00 04 00 00 00 79  ...............y
-> .  0010:  00 00 00 00 00 00 00 15 00 00 03 ff a3 e4 13 aa  ................
-> .  0020:  00 00 03 ff 38 09 e2 d0 00 00 03 ff 38 09 e1 30  ....8.......8..0
-> .  0030:  00 00 03 ff b9 5f df 68 00 00 00 00 00 00 00 00  ....._.h........
-> .  0040:  00 00 03 ff b9 5f e1 28 00 00 03 ff b9 5f e1 d0  ....._.(....._..
-> .  0050:  00 57 80 88 8e 76 47 a5 00 00 03 ff a3 e4 37 f2  .W...vG.......7.
-> .  0060:  ff ff ff ff ff ff ff ff 00 00 03 ff a3 e4 a1 fc  ................
-> .  0070:  00 00 00 00 00 00 00 00 00 00 03 ff a3 e3 79 00  ..............y.
-> .  0080:  00 00 03 ff a3 e4 10 80 00 00 03 ff b9 dd 11 de  ................
-> .  0090:  00 00 03 ff b9 e8 df 92 00 00 03 ff b9 e9 0e 86  ................
-> .  00a0:  00 00 03 ff ba b8 b0 7e 00 00 03 ff ba b8 e0 40  .......~.......@
-> .  00b0:  00 00 03 ff ba 8a bb d8 00 00 03 ff ba 92 b9 50  ...............P
-> .  00c0:  00 00 04 3a 00 00 04 3c 00 00 00 0a 3e dd 13 c0  ...:...<....>...
-> 
-> 44004348864 0x17758 [0xd0]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 1082/1084: 0x400000079
-> ... FP chain: nr:21
-> .....  0: 000003ffa3e413aa
-> .....  1: 000003ff3809e2d0
-> .....  2: 000003ff3809e130
-> .....  3: 000003ffb95fdf68
-> .....  4: 0000000000000000
-> .....  5: 000003ffb95fe128
-> .....  6: 000003ffb95fe1d0
-> .....  7: 005780888e7647a5
-> .....  8: 000003ffa3e437f2
-> .....  9: ffffffffffffffff <-- !
-> ..... 10: 000003ffa3e4a1fc
-> ..... 11: 0000000000000000
-> ..... 12: 000003ffa3e37900
-> ..... 13: 000003ffa3e41080
-> ..... 14: 000003ffb9dd11de
-> ..... 15: 000003ffb9e8df92
-> ..... 16: 000003ffb9e90e86
-> ..... 17: 000003ffbab8b07e
-> ..... 18: 000003ffbab8e040
-> ..... 19: 000003ffba8abbd8
-> ..... 20: 000003ffba92b950
-> : unhandled!
-> 
-> ...
-> [next entry]
-> 
-> 
-> On 11/21/2025 12:48 AM, Namhyung Kim wrote:
-> > Handle the deferred callchains in the script output.
-> > 
-> >   $ perf script
-> >   ...
-> >   pwd    2312   121.163435:     249113 cpu/cycles/P:
-> >           ffffffff845b78d8 __build_id_parse.isra.0+0x218 ([kernel.kallsyms])
-> >           ffffffff83bb5bf6 perf_event_mmap+0x2e6 ([kernel.kallsyms])
-> >           ffffffff83c31959 mprotect_fixup+0x1e9 ([kernel.kallsyms])
-> >           ffffffff83c31dc5 do_mprotect_pkey+0x2b5 ([kernel.kallsyms])
-> >           ffffffff83c3206f __x64_sys_mprotect+0x1f ([kernel.kallsyms])
-> >           ffffffff845e6692 do_syscall_64+0x62 ([kernel.kallsyms])
-> >           ffffffff8360012f entry_SYSCALL_64_after_hwframe+0x76 ([kernel.kallsyms])
-> >                  b00000006 (cookie) ([unknown])
-> > 
-> >   pwd    2312   121.163447: DEFERRED CALLCHAIN [cookie: b00000006]
-> >               7f18fe337fa7 mprotect+0x7 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >               7f18fe330e0f _dl_sysdep_start+0x7f (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >               7f18fe331448 _dl_start_user+0x0 (/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> 
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> 
-> > +static int process_deferred_sample_event(const struct perf_tool *tool,
-> > +					 union perf_event *event,
-> > +					 struct perf_sample *sample,
-> > +					 struct evsel *evsel,
-> > +					 struct machine *machine)
-> > +{
-> 
-> > +	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-> > +				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-> > +	fprintf(fp, "DEFERRED CALLCHAIN [cookie: %llx]",
-> > +		(unsigned long long)event->callchain_deferred.cookie);
-> > +
-> > +	if (PRINT_FIELD(IP)) {
-> > +		struct callchain_cursor *cursor = NULL;
-> > +
-> > +		if (symbol_conf.use_callchain && sample->callchain) {
-> > +			cursor = get_tls_callchain_cursor();
-> > +			if (thread__resolve_callchain(al.thread, cursor, evsel,
-> > +						      sample, NULL, NULL,
-> > +						      scripting_max_stack)) {
-> 
-> thread__resolve_callchain()
-> calls __thread__resolve_callchain()
-> calls thread__resolve_callchain_sample():
-> 
->         for (i = first_call, nr_entries = 0;
->              i < chain_nr && nr_entries < max_stack; i++) {
-> ...
->                 ip = chain->ips[j];
->                 if (ip < PERF_CONTEXT_MAX)   <-- IP=ff..ff is greater than PERF_CONTEXT_MAX
->                        ++nr_entries;
-
-Right.
-
-> ...
->                 err = add_callchain_ip(thread, cursor, parent,
->                                        root_al, &cpumode, ip,
->                                        false, NULL, NULL, 0, symbols);
-> 
->                 if (err)
->                         return (err < 0) ? err : 0;
-> 
-> calls add_callchain_ip:
-> 
->                if (ip >= PERF_CONTEXT_MAX) {
->                        switch (ip) {
->                        case PERF_CONTEXT_HV:
->                                *cpumode = PERF_RECORD_MISC_HYPERVISOR;
->                                break;
->                        case PERF_CONTEXT_KERNEL:
->                                *cpumode = PERF_RECORD_MISC_KERNEL;
->                                break;
->                        case PERF_CONTEXT_USER:
->                        case PERF_CONTEXT_USER_DEFERRED:
->                                *cpumode = PERF_RECORD_MISC_USER;
->                                break;
->                        default:
->                                pr_debug("invalid callchain context: "  <-- IP=ff..ff reaches default case
->                                         "%"PRId64"\n", (s64) ip);
-
-We may skip -1 if it's Java and *cpumode is already USER and it's s390.
-But I'd like to understand the situation first.
-
-Thanks,
-Namhyung
-
->                                /*
->                                 * It seems the callchain is corrupted.
->                                 * Discard all.
->                                 */
->                                callchain_cursor_reset(cursor);
->                                err = 1;
->                                goto out;
->                        }
-> 
-> > +				pr_info("cannot resolve deferred callchains\n");
-> > +				cursor = NULL;
-> > +			}
-> > +		}
-> > +
-> > +		fputc(cursor ? '\n' : ' ', fp);
-> > +		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
-> > +				    cursor, symbol_conf.bt_stop_list, fp);
-> > +	}
-> Thanks and regards,
-> Jens
-> -- 
-> Jens Remus
-> Linux on Z Development (D3303)
-> +49-7031-16-1128 Office
-> jremus@de.ibm.com
-> 
-> IBM
-> 
-> IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-> IBM Data Privacy Statement: https://www.ibm.com/privacy/
-> 
