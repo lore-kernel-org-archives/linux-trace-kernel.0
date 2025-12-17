@@ -1,83 +1,178 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F349C28DB76;
-	Wed, 17 Dec 2025 20:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBE42D59FA;
+	Wed, 17 Dec 2025 21:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766002235; cv=none; b=Da4H3f27dO75mFYKe3VStzQhgTCmDWcD0j9UAzRj7q8Ei5Rd8ifVYWs5suQN4h/7zOjlI416ZlQrsWIQ3vDOJx3ie563bSs4fBW2lB5fwo36qsz3qfd9KPUFVquzUCBY/Z0QTvaJrFw96EAyUwvEtQSmR6LkklzLYlT8pE00HpE=
+	t=1766005746; cv=none; b=IZhb6LubTGfi948LrmmQSU4WzeYOrCA/uc4u0PwmSugO5Od2HlkPn8JNCtd8YMNs/R4eORUjk9KFHVqc0moPzs9Mto+BrbkH3OhzATP5EBXtFPRbil7PA0pS0Ll++A2czo537wF+GTBqSIYTP21Ei/n0I1v3vEa9wHFJ3/de2DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766002235; c=relaxed/simple;
-	bh=T43YOePmzGlUgolZa46Aj1G7SoDZAJFoGiNwqCowyqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UPcgzX/FLUYGLT75emOI+f8wcOu2VKDDCpAtlDQ/fGxsV+tZUXr+18U4ZYlsr2VPopeVU8p+cWOZTTL+v5bFkUxSt9BxS8HlyX+XTbxQfAQtNdHHK4NEf++U8Ft7VAogn5skzw9arCZbh49yQgDfXHEz+yb+iwaPBUfKAqZmzr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 5C592160C4D;
-	Wed, 17 Dec 2025 20:10:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 4C04B2000F;
-	Wed, 17 Dec 2025 20:10:23 +0000 (UTC)
-Date: Wed, 17 Dec 2025 15:11:59 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Thorsten Blum
- <thorsten.blum@linux.dev>, Josh Poimboeuf <jpoimboe@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, David Laight <david.laight.linux@gmail.com>
-Subject: Re: [PATCH] unwind: Show that entries of struct unwind_cache is not
- bound by nr_entries
-Message-ID: <20251217151159.2eee1081@gandalf.local.home>
-In-Reply-To: <202511171303.1623D77@keescook>
-References: <20251114121352.35108fb8@gandalf.local.home>
-	<202511171303.1623D77@keescook>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1766005746; c=relaxed/simple;
+	bh=65Edc/sl8R/Lb3Alu4fznYKY0MERFWCt7PMOOQYnL3w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=NDcFS0NCkT8Pi2A9idG/MsY0WyKjiH0POz8PlEhNlzyDVVJ4myeKAqNCUodxceAMAnvGXalcT1g8neHsmed1LmcVOwDSnW78tmSIY9iBQv1lCXSuwZ3b482esUpU4A6k/tkcUPXlaWbt14VrqWKFumcQ/de3AM3rrVrdhv2A7rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Lauv7OOo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Lauv7OOo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC81CC4CEF5;
+	Wed, 17 Dec 2025 21:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1766005745;
+	bh=65Edc/sl8R/Lb3Alu4fznYKY0MERFWCt7PMOOQYnL3w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Lauv7OOoYevEd1rSt8yWk4PF8KdSzAIVORjTyixleLDjd1LnWua5S+CugVbWdvnZL
+	 xnTFjT3eK7q2mCZp3ETdjO+TvNkzOoASnVsgP6Ln8vouCY9QPftgIGURn+MznGj8Lc
+	 PXH43Olo/9yaiEmnVrREb9TGrED4PXDo9R8+0vrA=
+Date: Wed, 17 Dec 2025 13:09:04 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Alexei Starovoitov <ast@kernel.org>, Kees Cook <kees@kernel.org>, Aaron
+ Tomlin <atomlin@atomlin.com>, Daniel Borkmann <daniel@iogearbox.net>, John
+ Fastabend <john.fastabend@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Luis
+ Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami
+ Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] kallsyms: Prevent invalid access when showing
+ module buildid
+Message-Id: <20251217130904.33163c243172324a5308efe9@linux-foundation.org>
+In-Reply-To: <20251128135920.217303-1-pmladek@suse.com>
+References: <20251128135920.217303-1-pmladek@suse.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4C04B2000F
-X-Stat-Signature: rp43mu73r6d8kj19asw4dd9k87r173oo
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19kIi/bmuV7uGc/fxrZqezrLXCDeKA7ETI=
-X-HE-Tag: 1766002223-739935
-X-HE-Meta: U2FsdGVkX1/bqxB1D8kxs4NABd1/HyRaCBTB6j2r0143dxLdiZm0Bmiw1rj7TbqjsxiJdNpWnoy630ynuOSYjUsdzSd8O1FeTpLTexNNkFuprsy4WoqUMJLxbpvStoga5+08ANyQT26LiTaNcywmT9B6Ht6jwBqDRU5gOlPkEz/aZlth5pPTkEML3ymt7I1YfkdfboEMmzC7pOQ3qx4iGFLf5eK5yY5tkfA1juBuEaP3MTOaEELZDTAtzK1pZu21uGnrmT+iG8RnOc9Y7vk3TsyrUEUVMv4FZjKH4EuMzvqmttMr1zeU7/2+N6G8CPoHe4i+amAx4Zy16bO42Qk/36YdN403dkXg
 
-On Mon, 17 Nov 2025 13:28:59 -0800
-Kees Cook <kees@kernel.org> wrote:
+On Fri, 28 Nov 2025 14:59:13 +0100 Petr Mladek <pmladek@suse.com> wrote:
 
-> struct unwind_cache {
-> 	struct_group_tagged(unwind_cache_hdr, hdr,
-> 		unsigned long unwind_completed;
-> 		unsigned int  nr_entries;
-> 	);
-> 	unsigned long         entries[(SZ_4K - sizeof(struct unwind_cache_hdr)) / sizeof(long)];
-> };
-
-This may help automated tooling, but it is horrendous to read. I value
-readability much higher than static analyzers.
-
-Hence, I'm leaving the code as is, and just keep NAKing patches that try to
-add __counted_by() to entries.
-
--- Steve
-
-
+> This patchset is cleaning up kallsyms code related to module buildid.
+> It is fixing an invalid access when printing backtraces, see [v1] for
+> more details:
 > 
-> #define UNWIND_MAX_ENTRIES ARRAY_SIZE(((struct unwind_cache*)NULL)->entries)
+> ...
+>
+> [v1] https://lore.kernel.org/r/20251105142319.1139183-1-pmladek@suse.com
+> [v2] https://lore.kernel.org/r/20251112142003.182062-1-pmladek@suse.com
 > 
-> And this checks out for me:
-> 
-> UNWIND_MAX_ENTRIES:510
-> sizeof(struct unwind_cache):4096
-> 
-> No hiding things from the compiler, and you can treat "entries" like a
-> real array (since it is one now).
+
+It's best to avoid sending people off to the WWW to understand a
+patchset - better that the git history be self-contained.  So when
+staging this for mm.git I scooped the relevant material from [1] and
+added it to your cover letter, as below.  Looks OK?
+
+
+From: Petr Mladek <pmladek@suse.com>
+Subject: kallsyms: clean up @namebuf initialization in kallsyms_lookup_buildid()
+Date: Fri, 28 Nov 2025 14:59:14 +0100
+
+Patch series "kallsyms: Prevent invalid access when showing module
+buildid", v3.
+
+We have seen nested crashes in __sprint_symbol(), see below.  They seem to
+be caused by an invalid pointer to "buildid".  This patchset cleans up
+kallsyms code related to module buildid and fixes this invalid access when
+printing backtraces.
+
+I made an audit of __sprint_symbol() and found several situations
+when the buildid might be wrong:
+
+  + bpf_address_lookup() does not set @modbuildid
+
+  + ftrace_mod_address_lookup() does not set @modbuildid
+
+  + __sprint_symbol() does not take rcu_read_lock and
+    the related struct module might get removed before
+    mod->build_id is printed.
+
+This patchset solves these problems:
+
+  + 1st, 2nd patches are preparatory
+  + 3rd, 4th, 6th patches fix the above problems
+  + 5th patch cleans up a suspicious initialization code.
+
+This is the backtrace, we have seen. But it is not really important.
+The problems fixed by the patchset are obvious:
+
+  crash64> bt [62/2029]
+  PID: 136151 TASK: ffff9f6c981d4000 CPU: 367 COMMAND: "btrfs"
+  #0 [ffffbdb687635c28] machine_kexec at ffffffffb4c845b3
+  #1 [ffffbdb687635c80] __crash_kexec at ffffffffb4d86a6a
+  #2 [ffffbdb687635d08] hex_string at ffffffffb51b3b61
+  #3 [ffffbdb687635d40] crash_kexec at ffffffffb4d87964
+  #4 [ffffbdb687635d50] oops_end at ffffffffb4c41fc8
+  #5 [ffffbdb687635d70] do_trap at ffffffffb4c3e49a
+  #6 [ffffbdb687635db8] do_error_trap at ffffffffb4c3e6a4
+  #7 [ffffbdb687635df8] exc_stack_segment at ffffffffb5666b33
+  #8 [ffffbdb687635e20] asm_exc_stack_segment at ffffffffb5800cf9
+  ...
+
+
+This patch (of 7)
+
+The function kallsyms_lookup_buildid() initializes the given @namebuf by
+clearing the first and the last byte.  It is not clear why.
+
+The 1st byte makes sense because some callers ignore the return code and
+expect that the buffer contains a valid string, for example:
+
+  - function_stat_show()
+    - kallsyms_lookup()
+      - kallsyms_lookup_buildid()
+
+The initialization of the last byte does not make much sense because it
+can later be overwritten.  Fortunately, it seems that all called functions
+behave correctly:
+
+  -  kallsyms_expand_symbol() explicitly adds the trailing '\0'
+     at the end of the function.
+
+  - All *__address_lookup() functions either use the safe strscpy()
+    or they do not touch the buffer at all.
+
+Document the reason for clearing the first byte.  And remove the useless
+initialization of the last byte.
+
+Link: https://lkml.kernel.org/r/20251128135920.217303-2-pmladek@suse.com
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkman <daniel@iogearbox.net>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Luis Chamberalin <mcgrof@kernel.org>
+Cc: Marc Rutland <mark.rutland@arm.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ kernel/kallsyms.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+--- a/kernel/kallsyms.c~kallsyms-clean-up-namebuf-initialization-in-kallsyms_lookup_buildid
++++ a/kernel/kallsyms.c
+@@ -355,7 +355,12 @@ static int kallsyms_lookup_buildid(unsig
+ {
+ 	int ret;
+ 
+-	namebuf[KSYM_NAME_LEN - 1] = 0;
++	/*
++	 * kallsyms_lookus() returns pointer to namebuf on success and
++	 * NULL on error. But some callers ignore the return value.
++	 * Instead they expect @namebuf filled either with valid
++	 * or empty string.
++	 */
+ 	namebuf[0] = 0;
+ 
+ 	if (is_ksym_addr(addr)) {
+_
 
