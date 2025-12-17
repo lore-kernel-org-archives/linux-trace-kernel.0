@@ -1,230 +1,164 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17385478D;
-	Wed, 17 Dec 2025 01:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11442185955
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Dec 2025 02:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765935247; cv=none; b=VwMFs5lPBelB8u5HYTLKYyOQn7+ekf3lAQ3k3MrXkdaZ+DSvCcsL3eiRRG0Ow4zBU5ucIS51Sov/6dgWx4BoyfFc6T+6RnturNYY8ZpsgEbbiLcA7d5uAIlSfRCN4j0zigi9h6Fpt/wQcNkroVb6YROYy6JQIbKi8nHNBBU02Bw=
+	t=1765939702; cv=none; b=QQxE00IvrFVwv3BqD9XF+Y+NJD06marekNFxLMsrNhNM9Zmp/jPYHfFoyXdQ6FqQhJC1KP07urck2G+uZ9N29WhZVUJVhLbghs+8AMPcKEe88IE6mIQt7qOdpLrSQ34hQfyvHpG1NNgIB3Ji5bq2qGDdBLH9KUBVfSB5CPBKJnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765935247; c=relaxed/simple;
-	bh=bWv38s9EaDla/rAJNzBejZoonZB4ZsznmSFCB7PTrCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hm+Y2GO2C9ukIn5CcH9RD1hjnrWe7thInLUIVU++tw/VmjDCRSk/zLiVVen168plKvZZqLH9bgMU6MNGkfA6Fs91N/ST+ZDc6GKhlRPT6jg+QKJ8Uc8cek2vUljx9OoE9umvDKbLnqRI+5HdAH3y6o6gO54sKD/tQyRSM8GrIuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=muu5nR/W; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1765939702; c=relaxed/simple;
+	bh=uSmA6DQVTv/+hcPh4rPx7fbtGhYhOk5OPWoNkXLA70g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KiQLQt8yucup2Mbd79pwYoPJgmDdI1QlDnVx3byDi6nWOuVugLndbJpZQv7iVCInNbsICsmUcUDCtsRXulB1NULpnCqGzkyoUGDOHvNS1DuKkryB1MR8OtoDFBX5JjMNdv2bRet2Jbesx3czt3bG1QNccn/9+/dftpnHf5PhjsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRY2BwH6; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="muu5nR/W"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765935239; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=LOBi0mCLSN1pX4/fJ7qcbzGYmH1wlSSOqnzZMNKNsIA=;
-	b=muu5nR/WUMVrFwX8qeW3SR6z+o4m8Pa+vdcQmNyqtJ34hvqnSl1YGJ7hOFnkNtKTwfazxN9nugwCdc8TDayzQhiGVu1pLPOd6FP2vSi1JByyj6iwhAQYuZlh+RwHjJMy1WvWo9Xes1NpVk966M51qKYMY9OOpc/Cf0CbScjTpyw=
-Received: from 30.74.144.118(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wv1EBZW_1765935235 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 17 Dec 2025 09:33:56 +0800
-Message-ID: <45d61f3c-b721-4e42-8aa6-5f252193d2b7@linux.alibaba.com>
-Date: Wed, 17 Dec 2025 09:33:55 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRY2BwH6"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6498a6f8ab4so8305947a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 Dec 2025 18:48:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765939699; x=1766544499; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QTMYwp/g74fxgb/i/Lv8htybblW+OirvMdDQqwF3ziU=;
+        b=LRY2BwH6Rc0xd5QVQlvecp4HcoKfGSdGmPAKWAIfR1jIwLS5W4mL9tjxTOFXeZycnx
+         XcprsvGs0s3kn5TmTYsrtZuOgjKNgu1/wpmNTXIMhiE9OgzFzXg4tkEnFRsDcyomjaCL
+         hStcjG+HDy5oItrpZudxMBtkSZV6RJGnSHy/qRgGuNyxXEjxXi349nKdTwhz20PeCOYL
+         /x7x7qZ+CZBU4Bocv/jKQBS8xcqhVxCet3NnNTY5ZPE4WQAMifbfxjowt7g5NzZfg4Gu
+         cFtZt9mnikiE8fh/4/pwKlhvGaXOE2PU23aifdFXTN8NallmqYmAzmS8adsUxYUhdJON
+         Q1UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765939699; x=1766544499;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTMYwp/g74fxgb/i/Lv8htybblW+OirvMdDQqwF3ziU=;
+        b=DepMex/XKvxzppRDkLTy+Tm5fEjN+Y7f5fzu9oyq8JB7Cd9JNQQhJ1mS360ojzQLiB
+         Hj/KWMjTZ9hJAOPVprrf4LBqvZhoWcobquYOIkXt4OCz67sauxmgrwnCrocacyMA7kVw
+         NLfcDeZCt2a4AW9Xc3rPChGNf+WtOp79V9sIQni+xw2GBltlKCMFqZKdI18Hslk3tJeW
+         idgiul2nklHcKw3h6OyK3+rY27rJaXQdfoA16OSdGQRTdNfIjTGRneeC/eyRwGW8SEo0
+         73t4joFeG8ExPVt6RcO2DzEVQ8WqFD/AxFHLegAAvd0ZVrfqksS6SY3kyKrJ1l1WYXos
+         QZig==
+X-Forwarded-Encrypted: i=1; AJvYcCVDQNkinrvNbZhzXKXZKx0Ehw2VELdpyzg9QOsQbXtEBxp1vA0UBHA6EZmgT3kz3Lus64McohjQii0yl9D8QNJFnvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoDaPHSszNi6GwmRD8gmyKVzirw2oEvMPvJkwdoRZ/5UzdrF3T
+	kxWk9+v5m9wRl8+g/RDYVfPCdcmPL3JPUMj6C0BgcN6b0Dj6cr0Ga9SW
+X-Gm-Gg: AY/fxX71Mc7WmxOL50TZ1yJxANaf0fuMpO/sEw7YGyWINCcGJoNYL6H2o70rKxc95SI
+	0jZqLtT0QwiC/8yhxt6WXzYyc4RjHh6eG3CgqxLPeG56Gi0UYJ+ataqPiXIOX1TTClG7yM3K7Jc
+	WiI6MmfJA3RCltnCpMwN2o4osc08d3ISHJlYegbiVym6e1PmmHThhvejg3AqA/7Xnn59U+y6YDN
+	/VeP6CsivdTzwr3uTLdTtkFEfUeEaVy3tuTbXMzZif/B+iIKxEZS1+DGi8NNSPTnQlS1I6BHlqz
+	GCbooWFmcHdQ7slXad1wkGy8y9aPacmsx7eAGQWaJxxlahQmn96yJoNYKzRu/qLwECUZa1WG8JG
+	BFldd1KdLZwmOuF66KHPUmlA1wlAu54wFt7OLvjeQidDtK23cwIlNacJi+BqUDCPMh7TEfdA7dc
+	tB879DQq5+VA==
+X-Google-Smtp-Source: AGHT+IFhKEFOVaiZGW0iX8z6HR1iAF8pgy5NX5EasuQ15D3ejV9v3HpNxYAjBAX045Mp0eeJPN6AQA==
+X-Received: by 2002:a17:906:7951:b0:b7d:11ae:4006 with SMTP id a640c23a62f3a-b7d23a68805mr1809328966b.52.1765939699191;
+        Tue, 16 Dec 2025 18:48:19 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7cfa2ebafcsm1837731166b.28.2025.12.16.18.48.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Dec 2025 18:48:18 -0800 (PST)
+Date: Wed, 17 Dec 2025 02:48:18 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Shivank Garg <shivankg@amd.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm/khugepaged: remove unnecessary goto 'skip' label
+Message-ID: <20251217024818.ngoime34bxeatqij@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20251216111139.95438-2-shivankg@amd.com>
+ <20251216111139.95438-4-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 mm-new 07/16] khugepaged: introduce
- collapse_max_ptes_none helper function
-To: Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-doc@vger.kernel.org, david@redhat.com,
- ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
- lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, jannh@google.com,
- pfalcato@suse.de
-References: <20251201174627.23295-1-npache@redhat.com>
- <20251201174627.23295-8-npache@redhat.com>
- <95b1403f-3ddb-43ff-b481-2ecc6ab8352f@linux.alibaba.com>
- <CAA1CXcCtp2OwTmm-1EYUpOhsey1sv7CRFu8454m16C=k9iaN6g@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAA1CXcCtp2OwTmm-1EYUpOhsey1sv7CRFu8454m16C=k9iaN6g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251216111139.95438-4-shivankg@amd.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
+On Tue, Dec 16, 2025 at 11:11:38AM +0000, Shivank Garg wrote:
+>Replace 'goto skip' with actual logic for better code readability.
+>
+>No functional change.
+>
+>Signed-off-by: Shivank Garg <shivankg@amd.com>
+>---
+> mm/khugepaged.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
+>
+>diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>index 6c8c35d3e0c9..107146f012b1 100644
+>--- a/mm/khugepaged.c
+>+++ b/mm/khugepaged.c
+>@@ -2442,14 +2442,15 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+> 			break;
+> 		}
+> 		if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_KHUGEPAGED, PMD_ORDER)) {
+>-skip:
+> 			progress++;
+> 			continue;
+> 		}
+> 		hstart = round_up(vma->vm_start, HPAGE_PMD_SIZE);
+> 		hend = round_down(vma->vm_end, HPAGE_PMD_SIZE);
+>-		if (khugepaged_scan.address > hend)
+>-			goto skip;
+>+		if (khugepaged_scan.address > hend) {
+>+			progress++;
+>+			continue;
+>+		}
 
+Hi, Shivank
 
-On 2025/12/17 07:26, Nico Pache wrote:
-> On Tue, Dec 16, 2025 at 1:12 AM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->> Hi Nico,
-> 
-> Hi Baolin! Thanks for testing :)
-> 
-> Did you happen to test with the changes I asked Andrew to append to
-> this commit?
-> 
-> Either way, I think your fixup makes more sense than mine.
+The change here looks good, while I come up with an question.
 
-Ah, I did not notice your fixup commit earlier, which seems to address 
-this problem. And as I said, we don't need to call release_pte_pages() 
-in this case.
+The @progress here seems record two things:
 
->> On 2025/12/2 01:46, Nico Pache wrote:
->>> The current mechanism for determining mTHP collapse scales the
->>> khugepaged_max_ptes_none value based on the target order. This
->>> introduces an undesirable feedback loop, or "creep", when max_ptes_none
->>> is set to a value greater than HPAGE_PMD_NR / 2.
->>>
->>> With this configuration, a successful collapse to order N will populate
->>> enough pages to satisfy the collapse condition on order N+1 on the next
->>> scan. This leads to unnecessary work and memory churn.
->>>
->>> To fix this issue introduce a helper function that will limit mTHP
->>> collapse support to two max_ptes_none values, 0 and HPAGE_PMD_NR - 1.
->>> This effectively supports two modes:
->>>
->>> - max_ptes_none=0: never introduce new none-pages for mTHP collapse.
->>> - max_ptes_none=511 (on 4k pagesz): Always collapse to the highest
->>>     available mTHP order.
->>>
->>> This removes the possiblilty of "creep", while not modifying any uAPI
->>> expectations. A warning will be emitted if any non-supported
->>> max_ptes_none value is configured with mTHP enabled.
->>>
->>> The limits can be ignored by passing full_scan=true, this is useful for
->>> madvise_collapse (which ignores limits), or in the case of
->>> collapse_scan_pmd(), allows the full PMD to be scanned when mTHP
->>> collapse is available.
->>>
->>> Signed-off-by: Nico Pache <npache@redhat.com>
->>> ---
->>>    mm/khugepaged.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
->>>    1 file changed, 42 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>> index 8dab49c53128..f425238d5d4f 100644
->>> --- a/mm/khugepaged.c
->>> +++ b/mm/khugepaged.c
->>> @@ -463,6 +463,44 @@ void __khugepaged_enter(struct mm_struct *mm)
->>>                wake_up_interruptible(&khugepaged_wait);
->>>    }
->>>
->>> +/**
->>> + * collapse_max_ptes_none - Calculate maximum allowed empty PTEs for collapse
->>> + * @order: The folio order being collapsed to
->>> + * @full_scan: Whether this is a full scan (ignore limits)
->>> + *
->>> + * For madvise-triggered collapses (full_scan=true), all limits are bypassed
->>> + * and allow up to HPAGE_PMD_NR - 1 empty PTEs.
->>> + *
->>> + * For PMD-sized collapses (order == HPAGE_PMD_ORDER), use the configured
->>> + * khugepaged_max_ptes_none value.
->>> + *
->>> + * For mTHP collapses, we currently only support khugepaged_max_pte_none values
->>> + * of 0 or (HPAGE_PMD_NR - 1). Any other value will emit a warning and no mTHP
->>> + * collapse will be attempted
->>> + *
->>> + * Return: Maximum number of empty PTEs allowed for the collapse operation
->>> + */
->>> +static unsigned int collapse_max_ptes_none(unsigned int order, bool full_scan)
->>> +{
->>> +     /* ignore max_ptes_none limits */
->>> +     if (full_scan)
->>> +             return HPAGE_PMD_NR - 1;
->>> +
->>> +     if (!is_mthp_order(order))
->>> +             return khugepaged_max_ptes_none;
->>> +
->>> +     /* Zero/non-present collapse disabled. */
->>> +     if (!khugepaged_max_ptes_none)
->>> +             return 0;
->>> +
->>> +     if (khugepaged_max_ptes_none == HPAGE_PMD_NR - 1)
->>> +             return (1 << order) - 1;
->>> +
->>> +     pr_warn_once("mTHP collapse only supports max_ptes_none values of 0 or %d\n",
->>> +                   HPAGE_PMD_NR - 1);
->>> +     return -EINVAL;
->>> +}
->>> +
->>>    void khugepaged_enter_vma(struct vm_area_struct *vma,
->>>                          vm_flags_t vm_flags)
->>>    {
->>> @@ -550,7 +588,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->>>        pte_t *_pte;
->>>        int none_or_zero = 0, shared = 0, result = SCAN_FAIL, referenced = 0;
->>>        const unsigned long nr_pages = 1UL << order;
->>> -     int max_ptes_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
->>> +     int max_ptes_none = collapse_max_ptes_none(order, !cc->is_khugepaged);
->>> +
->>> +     if (max_ptes_none == -EINVAL)
->>> +             goto out;
->>
->> After testing your patchset, I hit the following crash. The reason is
->> that when 'max_ptes_none' is -EINVAL here, it shouldn't goto out to call
->> release_pte_pages(), because the '_pte' hasn't been initialized at this
->> point, and there's no need to release folios either.
->>
->> After applying the fix below, the crash issue is resolved. I'm not sure
->> whether Andrew will help fix this or if you will send a new version to
->> address this issue.
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 8cffaf59ced8..2e8171a6d7df 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -646,7 +646,7 @@ static int __collapse_huge_page_isolate(struct
->> vm_area_struct *vma,
->>           int max_ptes_none = collapse_max_ptes_none(order,
->> !cc->is_khugepaged);
->>
->>           if (max_ptes_none == -EINVAL)
->> -               goto out;
->> +               return result;
->>
->>           for (_pte = pte; _pte < pte + nr_pages;
->>                _pte++, addr += PAGE_SIZE) {
->>
->> "
->> [  565.319345] Unable to handle kernel paging request at virtual address
->> fffffffffffffffa
->> .......
->> [  565.319409] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000001f8549a000
->> [  565.319416] [fffffffffffffffa] pgd=0000001f85f2a403,
->> p4d=0000001f85f2a403, pud=0000001f85f2b403, pmd=0000000000000000
->> [  565.319427] Internal error: Oops: 0000000096000006 [#1]  SMP
->> .......
->> [  565.326733] pc : release_pte_pages+0x68/0x178
->> [  565.326960] lr : __collapse_huge_page_isolate+0xc0/0x748
->> [  565.327232] sp : ffff800083593910
->> .......
->> [  565.331476] Call trace:
->> [  565.331664]  release_pte_pages+0x68/0x178 (P)
->> [  565.331940]  __collapse_huge_page_isolate+0xc0/0x748
->> [  565.332249]  collapse_huge_page+0x4cc/0xa70
->> [  565.332510]  mthp_collapse+0x254/0x2a8
->> [  565.332754]  collapse_scan_pmd+0x5a0/0x6d8
->> [  565.333010]  collapse_single_pmd+0x214/0x288
->> [  565.333275]  collapse_scan_mm_slot.constprop.0+0x2ac/0x460
->> [  565.333617]  khugepaged+0x204/0x2c8
->> [  565.333992]  kthread+0xf8/0x110
->> [  565.334368]  ret_from_fork+0x10/0x20
->> "
->>
->>>
->>>        for (_pte = pte; _pte < pte + nr_pages;
->>>             _pte++, addr += PAGE_SIZE) {
->>
+  * number of pages scaned
+  * number of vma skipped
 
+While in very rare case, we may miss to count the second case.
+
+For example, we have following vmas in a process:
+
+     vma1             vma2
+    +----------------+------------+
+    |2M              |1M          |
+    +----------------+------------+
+
+Let's assume vma1 is exactly HPAGE_PMD_SIZE and also HPAGE_PMD_SIZE aligned.
+But vma2 is only half of HPAGE_PMD_SIZE.
+
+When scan finish vma1 and start on vma2, we would have hstart = hend =
+address. So we continue here but would not do real scan, since address == hend.
+
+I am thinking whether this could handle it:
+
+		if (khugepaged_scan.address > hend || hend <= hstart) {
+			progress++;
+			continue;
+		}
+
+Do you thinks I am correct on this?
+
+> 		if (khugepaged_scan.address < hstart)
+> 			khugepaged_scan.address = hstart;
+> 		VM_BUG_ON(khugepaged_scan.address & ~HPAGE_PMD_MASK);
+>-- 
+>2.43.0
+>
+
+-- 
+Wei Yang
+Help you, Help me
