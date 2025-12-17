@@ -1,227 +1,79 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C283358DE;
-	Wed, 17 Dec 2025 16:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08CC296BDB;
+	Wed, 17 Dec 2025 16:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765989471; cv=none; b=oezZmPoqUu8IQLzcYRip+IRQWT/Jb1fe65cODk4CIZbr3BKOl3GngNxuXNXEmrHJ9xNWfOhkvdzmhkZFOYeZlKRWgeq9bEAhjLPUb/7w0jgbyF9TEfawkXh5kaIA5CSOuGsPjz8ashiDpXkVm/G501Xep2rZszPyjPmHSbLMPls=
+	t=1765989969; cv=none; b=M0ZdGKSJLisMdwlScyt8lK2EcK0l/MCM56XoDkaSHWOqRH6igYepv9Pi5UK0QTk/gABGIHw0BmH3zWPaoNlodn+FRinU09NPgc6FQ1RqV2eZk+7hG/GJw+A0L3wxD6Rk468lVIjVQkV46TgiE3AbniNm0c/7w0U2PlnGt7k8vcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765989471; c=relaxed/simple;
-	bh=NMZnqyZy1/Ec9VSOSCSL75tdHab4fNQnxN2xBOU2KAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eWHnKerXQ5t8N5iFOJEc0OcEI6Q9VQ4tmfIFSX28lCMyvA9F9gxSZWH9/q3YG3bCvIiHUYewGFf2bJqjSR+c2iBz2k4AjsTF6LTnp4xRflWZNKaaecb3BiB6R0AXOvrMDGlnw0dcTr3aClv48vu9VNkt7x5PPtJfO1CAnNaADZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 4B7DD1370BA;
-	Wed, 17 Dec 2025 16:37:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 4BF6A20027;
-	Wed, 17 Dec 2025 16:37:44 +0000 (UTC)
-Date: Wed, 17 Dec 2025 11:39:20 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ian Rogers <irogers@google.com>, Arnaldo
-  Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung
-  Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] tracing: Allow perf to read synthetic events
-Message-ID: <20251217113920.50b56246@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1765989969; c=relaxed/simple;
+	bh=TfiL+YyeKmFoynl0bRC4SawBPG7DFwpDo0DPvqK6eMQ=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=Jo0nHH1oMdADvsBYSB70z4EMOhJLiGsuU38vRihxpDS1BdjzlAh9u4++ew+YLKCiZUfWW0mKv4B3JZLyhcTw89TzRRvGveBgv/7Z6ox3tZBOdUQ68PDr9CVoYxBVrBjrLmLPdRG08PsjJ6/HpodlOWd0K5e0mdyyboSKzUR81CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D09KqzWr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D09KqzWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4465C4CEF5;
+	Wed, 17 Dec 2025 16:46:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765989969;
+	bh=TfiL+YyeKmFoynl0bRC4SawBPG7DFwpDo0DPvqK6eMQ=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=D09KqzWrvKJWbZtyJZfpdNvwSV8Wxqn0ENfqMvdu+thh7btC0yKSXk6YcelOxyLWQ
+	 yynziDADrIn+1VdibU0RIp0gwAhqdGgjH3pIFMGZC+axZNZhWJ4T5ixywVAuK1uPOq
+	 UvXnagFbW4B8AcR1rPw65039+kzy4ObQDLiTmUaLlnuyC7AXjcPnto1EP/6TeYm+d7
+	 sB5SKINRe1jAvG2wbqh4kLjuslC8E8OpvR2Prvobq+ApZp8sJsaBNlVFChkybKpwts
+	 iXM2zZLDi/ihWeKzxgNtGoLgMU70hSBTe7UGVVLWvPxeJ/iteDxmZ2DbBltqD5E6R1
+	 uRuvWrQCSkx2A==
+Content-Type: multipart/mixed; boundary="===============5419417971734705650=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-Id: <dde17339701c8159c58f57d58e5e815b39d7bb22b8ea96ba1f63cfd1a25b94ce@mail.kernel.org>
+In-Reply-To: <20251217162744.352391-3-mkoutny@suse.com>
+References: <20251217162744.352391-3-mkoutny@suse.com>
+Subject: Re: [PATCH 2/4] cgroup: Introduce cgroup_level() helper
+From: bot+bpf-ci@kernel.org
+To: mkoutny@suse.com,linux-block@vger.kernel.org,linux-kernel@vger.kernel.org,cgroups@vger.kernel.org,linux-trace-kernel@vger.kernel.org,bpf@vger.kernel.org,netfilter-devel@vger.kernel.org,coreteam@netfilter.org,netdev@vger.kernel.org
+Cc: mkoutny@suse.com,yukuai@fnnas.com,axboe@kernel.dk,tj@kernel.org,josef@toxicpanda.com,hannes@cmpxchg.org,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,john.fastabend@gmail.com,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,pablo@netfilter.org,kadlec@netfilter.org,fw@strlen.de,phil@nwl.cc,davem@davemloft.net,edumazet@google.com,kuba@kernel.org,pabeni@redhat.com,horms@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Wed, 17 Dec 2025 16:46:08 +0000 (UTC)
+
+--===============5419417971734705650==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4BF6A20027
-X-Stat-Signature: 8aetqh8zmqgmr67t39qiejgqn383c76g
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Xc5N5Ma+hwUdjht/mv7MucOyTa2R+LTc=
-X-HE-Tag: 1765989464-234981
-X-HE-Meta: U2FsdGVkX18BuGgTfFCpecoK8itU75LuieMvXk2C0KeeZ9dlQDZFEp7OskXe5CXAnd8oDG5gwrr95EjF3n5xqeFRXoEmsD4JKjD/vecGlhiTrx/hkJ1l1ugOXi9ENuv5Ibq4F5KOeh/EzVX+PGBtAsm1IGghflo07CP8rKdM9ECuQioKUnOwX3JcXp4YsCcscCm+UVil59iIXpjdvVqWgeBJheMMg6l52eqqvMOHvqa3dQM1Fy4XYVcO7uTxr6R8+1SdrF8XJODjpCK4aZUt8LUnYHv1cyjj0flPKInTKrwBktmLl3XwXO0faLuKryfiVxiSOt/V/Pmq5HFkihONctaBcKS33jmzfdLxz5EmdoMqSG7mvfLSIy1JZJh6d/cI7pFMoDH7ClvFmMlnTT1WkA==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+> index a0416927d33d..b4eebe61dca7 100644
+> --- a/block/blk-iocost.c
+> +++ b/block/blk-iocost.c
 
-Currently, perf can not enable synthetic events. When it does, it either
-causes a warning in the kernel or errors with "no such device".
+[ ... ]
 
-Add the necessary code to allow perf to also attach to synthetic events.
+> @@ -3003,7 +3003,7 @@ static void ioc_pd_init(struct blkg_policy_data *pd)
+>  	init_waitqueue_head(&iocg->waitq);
+>  	hrtimer_setup(&iocg->waitq_timer, iocg_waitq_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+>
+> -	iocg->level = blkg->blkcg->css.cgroup->level;
+> +	iocg->level = cgroup_level(blkg->blkcg->css.cgroup)
+                                                              ^
+Is this missing a semicolon? The line should end with a semicolon to
+make this valid C syntax. This will prevent the kernel from building
+in the ioc_pd_init() function.
 
-Reported-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>
+>  	for (tblkg = blkg; tblkg; tblkg = tblkg->parent) {
+>  		struct ioc_gq *tiocg = blkg_to_iocg(tblkg);
+
+
 ---
- kernel/trace/trace_events_synth.c | 121 +++++++++++++++++++++++-------
- 1 file changed, 94 insertions(+), 27 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 4554c458b78c..026e06f28958 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -493,28 +493,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
- 	return len;
- }
- 
--static notrace void trace_event_raw_event_synth(void *__data,
--						u64 *var_ref_vals,
--						unsigned int *var_ref_idx)
-+static __always_inline int get_field_size(struct synth_event *event,
-+					  u64 *var_ref_vals,
-+					  unsigned int *var_ref_idx)
- {
--	unsigned int i, n_u64, val_idx, len, data_size = 0;
--	struct trace_event_file *trace_file = __data;
--	struct synth_trace_event *entry;
--	struct trace_event_buffer fbuffer;
--	struct trace_buffer *buffer;
--	struct synth_event *event;
--	int fields_size = 0;
--
--	event = trace_file->event_call->data;
--
--	if (trace_trigger_soft_disabled(trace_file))
--		return;
-+	int fields_size;
- 
- 	fields_size = event->n_u64 * sizeof(u64);
- 
--	for (i = 0; i < event->n_dynamic_fields; i++) {
-+	for (int i = 0; i < event->n_dynamic_fields; i++) {
- 		unsigned int field_pos = event->dynamic_fields[i]->field_pos;
- 		char *str_val;
-+		int val_idx;
-+		int len;
- 
- 		val_idx = var_ref_idx[field_pos];
- 		str_val = (char *)(long)var_ref_vals[val_idx];
-@@ -529,18 +520,18 @@ static notrace void trace_event_raw_event_synth(void *__data,
- 
- 		fields_size += len;
- 	}
-+	return fields_size;
-+}
- 
--	/*
--	 * Avoid ring buffer recursion detection, as this event
--	 * is being performed within another event.
--	 */
--	buffer = trace_file->tr->array_buffer.buffer;
--	guard(ring_buffer_nest)(buffer);
--
--	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
--					   sizeof(*entry) + fields_size);
--	if (!entry)
--		return;
-+static __always_inline void write_synth_entry(struct synth_event *event,
-+					      struct synth_trace_event *entry,
-+					      u64 *var_ref_vals,
-+					      unsigned int *var_ref_idx)
-+{
-+	int data_size = 0;
-+	int i, n_u64;
-+	int val_idx;
-+	int len;
- 
- 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
- 		val_idx = var_ref_idx[i];
-@@ -581,10 +572,83 @@ static notrace void trace_event_raw_event_synth(void *__data,
- 			n_u64++;
- 		}
- 	}
-+}
-+
-+static notrace void trace_event_raw_event_synth(void *__data,
-+						u64 *var_ref_vals,
-+						unsigned int *var_ref_idx)
-+{
-+	struct trace_event_file *trace_file = __data;
-+	struct synth_trace_event *entry;
-+	struct trace_event_buffer fbuffer;
-+	struct trace_buffer *buffer;
-+	struct synth_event *event;
-+	int fields_size;
-+
-+	event = trace_file->event_call->data;
-+
-+	if (trace_trigger_soft_disabled(trace_file))
-+		return;
-+
-+	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	buffer = trace_file->tr->array_buffer.buffer;
-+	guard(ring_buffer_nest)(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry)
-+		return;
-+
-+	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
- 
- 	trace_event_buffer_commit(&fbuffer);
- }
- 
-+#ifdef CONFIG_PERF_EVENTS
-+static notrace void perf_event_raw_event_synth(void *__data,
-+					       u64 *var_ref_vals,
-+					       unsigned int *var_ref_idx)
-+{
-+	struct trace_event_call *call = __data;
-+	struct synth_trace_event *entry;
-+	struct hlist_head *perf_head;
-+	struct synth_event *event;
-+	struct pt_regs *regs;
-+	int fields_size;
-+	size_t size;
-+	int context;
-+
-+	event = call->data;
-+
-+	perf_head = this_cpu_ptr(call->perf_events);
-+
-+	if (!perf_head || hlist_empty(perf_head))
-+		return;
-+
-+	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-+
-+	size = ALIGN(sizeof(*entry) + fields_size, 8);
-+
-+	entry = perf_trace_buf_alloc(size, &regs, &context);
-+
-+	if (unlikely(!entry))
-+		return;
-+
-+	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
-+
-+	perf_fetch_caller_regs(regs);
-+
-+	perf_trace_buf_submit(entry, size, context,
-+			      call->event.type, 1, regs,
-+			      perf_head, NULL);
-+}
-+#endif
-+
- static void free_synth_event_print_fmt(struct trace_event_call *call)
- {
- 	if (call) {
-@@ -911,6 +975,9 @@ static int register_synth_event(struct synth_event *event)
- 	call->flags = TRACE_EVENT_FL_TRACEPOINT;
- 	call->class->reg = synth_event_reg;
- 	call->class->probe = trace_event_raw_event_synth;
-+#ifdef CONFIG_PERF_EVENTS
-+	call->class->perf_probe = perf_event_raw_event_synth;
-+#endif
- 	call->data = event;
- 	call->tp = event->tp;
- 
--- 
-2.51.0
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/20310204023
 
+--===============5419417971734705650==--
