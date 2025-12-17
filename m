@@ -1,67 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0C830E0F4;
-	Wed, 17 Dec 2025 21:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FD118AE3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Dec 2025 22:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766005837; cv=none; b=Gv6CjCXS4SnaeJeBzrOtKjBovFKXlj9sWrbbBBONmWw11xTtvVkQhBtUShFflxZOJHYsYvvZxcXiEBhFF31hJm/tu4LPPJBvktiJauTj413bN8/ImPlArQnZsiHHihK17jpC7Tuc264SbEZMYpn23E7IZqyWnkOtjrXnQiiQPfo=
+	t=1766009998; cv=none; b=YLyZ5+QRxr2tRIOhhqA2Ufj8a1c0ppqOSI5Eq//wcdh1Ztr3/88KN5d4a2jvnuI8iogUbloDWUhIqkaJJYPROTp4dxFQQpAkESyBXDae6S1TgzaRGI6APhykAlpYtK8DZ+LtQRJ9LwHxV/ZaKZCL6vj5d9DEytZp88fCFHTAgqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766005837; c=relaxed/simple;
-	bh=H/UivWUmzn/uHjBsx2v4acnIi0mp8px46mtcwuYIaFc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Nb2MEOA2oeOJ2dwTWQw5WwKPbIbC40QlEJfABjyPC/onNxIQkb/irTBdpmCuypULsjbts0zKxbVBViEMTS+aH3/76MjAAT7aVRJjCXfLQKW7g3B9WbRkHKsiL538fBsg0ofGQDf9SgahDTzGLYeEmA7t1OL89P5w29c71HGxc1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VQ25ZOjv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VQ25ZOjv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81D3FC4CEF5;
-	Wed, 17 Dec 2025 21:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1766005837;
-	bh=H/UivWUmzn/uHjBsx2v4acnIi0mp8px46mtcwuYIaFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VQ25ZOjvMUgNQqMYp2I730O85nYGybn/sRyqBytwhOcM/Cj8zqiDrxCjeh/IQSeSg
-	 QAHmy6JFr/tuRF8kcrO2KjHnvz9yWVUTl+7lw0yWltE6zyYehSISElrjcXtTXtawLx
-	 AsBFwR26Bp6B8EBc6uUUdDB7gywumnJb8tCphag4=
-Date: Wed, 17 Dec 2025 13:10:36 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- Alexei Starovoitov <ast@kernel.org>, Kees Cook <kees@kernel.org>, Aaron
- Tomlin <atomlin@atomlin.com>, Daniel Borkmann <daniel@iogearbox.net>, John
- Fastabend <john.fastabend@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Luis
- Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami
- Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-modules@vger.kernel.org,
+	s=arc-20240116; t=1766009998; c=relaxed/simple;
+	bh=mbeGagChTCQYXRbDk/SxRslk+XWPZ0ynYPSlBN8f2/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tKjQWY/Vsk/e0Ihv9ML2jDLDqsXrs2VrLJJrj0GJLAFtzkQlLmCcIF9BFsjnmNIsZ1FRV5YEOXDmtOM+CsWPZ5bckiWcjLzNfKLjv2DWexKkV3VSw08YJk9MWOIC+mNsTx/6sqz/s3iGf6RJBEt8DcpdO19zgxNHp1qog6uqFgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 69709160A3D;
+	Wed, 17 Dec 2025 22:19:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id ACAB82E;
+	Wed, 17 Dec 2025 22:19:52 +0000 (UTC)
+Date: Wed, 17 Dec 2025 17:21:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Thomas Ballasi <tballasi@linux.microsoft.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] kallsyms: Prevent invalid access when showing
- module buildid
-Message-Id: <20251217131036.589576e8c89b89c01ea53cf9@linux-foundation.org>
-In-Reply-To: <aUFl9n3b8DWnYGyJ@pathway.suse.cz>
-References: <20251128135920.217303-1-pmladek@suse.com>
-	<aUFl9n3b8DWnYGyJ@pathway.suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH v2 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
+Message-ID: <20251217172129.724c41a7@gandalf.local.home>
+In-Reply-To: <20251216140252.11864-2-tballasi@linux.microsoft.com>
+References: <20251208181413.4722-1-tballasi@linux.microsoft.com>
+	<20251216140252.11864-1-tballasi@linux.microsoft.com>
+	<20251216140252.11864-2-tballasi@linux.microsoft.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: f5b7zdn6p8foedi1anmbumzzdw8ppz13
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: ACAB82E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+i23Pi9VijgAv0wiuOMPrlDUDyfeGFM5M=
+X-HE-Tag: 1766009992-305526
+X-HE-Meta: U2FsdGVkX19aTPnMOX0Iq3Wqm7D4si7ujpb5G+dn07pB95DyASlVuNnm0Ynhp4ZTCIrz5M2ZgZmkTHqRiqUsup5SG738YSc2yD1VBskZTt7t0kEEg+OMy6+c174/d4+WluPA+gTLRYxPojsl3c2q6YH02CpX80kS3RMEbMg927mL74lMLBqsA5B65RjXNwDLQgDtsWCHAY3TAewslMxM179vso0b6mNQpIBT8ABZTKTWVxNzh8Sx0UGIR0+fqYgwHPz2Ne/eCbRibcuU2guTeZCmOMbu1feiVIWIW5Hg2q+IKrHEBhetGBoCQ21rGiDQ8a2SC0e3IsqOZ5fJUQ2hdlUhlZ5hQmjE
 
-On Tue, 16 Dec 2025 15:00:22 +0100 Petr Mladek <pmladek@suse.com> wrote:
+On Tue, 16 Dec 2025 06:02:51 -0800
+Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
 
-> I wonder who could take this patchset.
+> ---
+>  include/trace/events/vmscan.h | 65 +++++++++++++++++++++--------------
+>  mm/vmscan.c                   | 17 ++++-----
+>  2 files changed, 48 insertions(+), 34 deletions(-)
 > 
-> IMHO, the failed test report is bogus. The system went out of memory.
-> Anyway, the info provided by the mail is not enough for debugging.
-> 
-> IMHO. this patchset is ready for linux-next. Unfortunately, kallsyms
-> do not have any dedicated maintainer. I though about Kees (hardening)
-> or Andrew (core stuff). Or I could take it via printk tree.
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index d2123dd960d59..afc9f80d03f34 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -114,85 +114,92 @@ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
+>  
+>  DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+>  
+> -	TP_PROTO(int order, gfp_t gfp_flags),
+> +	TP_PROTO(int order, gfp_t gfp_flags, unsigned short memcg_id),
+>  
+> -	TP_ARGS(order, gfp_flags),
+> +	TP_ARGS(order, gfp_flags, memcg_id),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(	int,	order		)
+>  		__field(	unsigned long,	gfp_flags	)
+> +		__field(	unsigned short,	memcg_id	)
+>  	),
 
-I seem to be a usual kallsyms patch monkey so I scooped it up, thanks. 
-If you or Kees prefer to take it then I'll drop the mm.git copy when I
-get notified of the duplication by the linux-next maintainer.
+Hmm, the above adds some holes. Note, events are at a minimum, 4 bytes
+aligend. On 64bit, they can be 8 byte aligned. Still, above is the same as:
+
+	struct {
+		int		order;
+		unsigned long	gfp_flags;
+		unsigned short	memcg_id;
+	};
+
+See the issue? Perhaps it may be better to add the memcg_id in between the
+order and gfp_flags?
+
+-- Steve
