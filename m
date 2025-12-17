@@ -1,137 +1,165 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9EF4A35;
-	Wed, 17 Dec 2025 05:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633FF2DAFA9;
+	Wed, 17 Dec 2025 06:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765949109; cv=none; b=Pop9c2vZ7650VG8thmAI7EKqnFX81W2tJola9SRnUX3kcye/yuFAe87VeSHB32j6Fxm/njI3iqk6INTSNuL+XCktrw+dsGaedu5E6Hhl1GMZFz2vdtj+CEaieKJr9NKdBVUP/LPe5HwdkTe1obNvW+LUmXljtdvAC76ycfm6Wck=
+	t=1765952096; cv=none; b=n0SK2kGlFzQm0yBzQuD6SqMFm1SAP8xvdLcrMSlAJOLmgocoSQKiWmwUsaxE+monpQBoxQQCsEwU6qSrjjbJrXd03zjdDNCfEx624j4o7lpl/VFntPpjpYSwiAqFAGqKNC46jGINc3dJ/sPEYqzQl6vK+tQDxPPe1fn59kmFPng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765949109; c=relaxed/simple;
-	bh=t2xR+1VHX4S+bgWMYiu36H5wGJroh5R14o3OsiJt+zk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DEi0Z6khewTzxkdOWuul40xTj1HI5nwb1VRi+iYM27LdN7tDC/DMv7xVOYY2qzsA321weGrFVPbR8Nbrldm3j11+WGM0OUd4OVGeo295uIP3cF/XYtk1vx2NmJT4SMcA5UBk4CHcXS4kkMnIqxPwN7DHJEkIpjMJ97inHQg6WOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QmZ7QfO4; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QmZ7QfO4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=RlN4+pCVkpZicAJ7V2vtxjQ8DDds5Gz5UApihqlRVOo=; b=QmZ7QfO4x1XF3jA0PQ8Kl8aWft
-	W55SorcqyLyQP4uUHtX7We3cer1tnrevG5KPY0UWy0+1gwcbL5ufKXuCS2o9rOa1V+dxUN++bLx93
-	yCZpAL2DF4ROP9mDvG1ka+sDFNLOzjB73/94ALQ7VUijq0KYpkwbQMfiq63ZxpLjDRuk2GG8Jx80S
-	Kx8SdEbHG5z+6HHTlfrXWQQNV/xYBd/zK2QNzq9PVaNHh+S9Mmq7R+9zCKpl5UsqNxH2Da+duD3+a
-	SZ/nwSztONvUYI0xo7y7XE/xix/iW1CkzycnuYMH9RccTNkijNwTpap0AawVyVxfk348pHL0vXHPk
-	FhBkMk4w==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVk1y-00000006Bnr-1kDA;
-	Wed, 17 Dec 2025 05:24:58 +0000
-Message-ID: <55ceb7bf-0fe9-4edc-81c2-d51366847eec@infradead.org>
-Date: Tue, 16 Dec 2025 21:24:55 -0800
+	s=arc-20240116; t=1765952096; c=relaxed/simple;
+	bh=y51wTs7jYAWrEVI7X6kbS+bRonOycdY4GKG3tQF+rH8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M/pJbFMpjsHD1F7OQawNryy5K0Vwfy92sAjmNovkY9GvuWkXniyJHG3gSBI1POqivOKdIlk/rPhHfRtw4x4mO+v9igGEAv42KGCgeaRV//7ses/ZXXfC3yLij3ORnkNex+aXK+octVci9nagfK408cYG8tHsRxSN700fTAwsY3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: aff566e4db0f11f0a38c85956e01ac42-20251217
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR, DN_TRUSTED
+	SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:201bb43f-4d2d-4df5-bda8-e3071088b4e8,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:201bb43f-4d2d-4df5-bda8-e3071088b4e8,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:8113c73be708f2d7f3cd128b7603ee1f,BulkI
+	D:251217141448DGS19CJA,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:
+	nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,B
+	RE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: aff566e4db0f11f0a38c85956e01ac42-20251217
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(183.242.174.20)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1493946342; Wed, 17 Dec 2025 14:14:47 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: yangtiezhu@loongson.cn,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	zhangtianyang@loongson.cn,
+	masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] Fix the failure issue of the module_attach test case
+Date: Wed, 17 Dec 2025 14:14:28 +0800
+Message-Id: <20251217061435.802204-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 4/4] tracing: move tracing declarations from kernel.h
- to a dedicated header
-To: Andrew Morton <akpm@linux-foundation.org>,
- "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Christophe Leroy <chleroy@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- David Laight <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-References: <20251205175237.242022-1-yury.norov@gmail.com>
- <20251205175237.242022-5-yury.norov@gmail.com>
- <20251216161316.45b3f19ff0ad482018137189@linux-foundation.org>
-Content-Language: en-US
-In-Reply-To: <20251216161316.45b3f19ff0ad482018137189@linux-foundation.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-[adding Kees]
+v4:
+My sincere apologies for the misunderstanding in my interpretation of
+Tiezhu's reply in the v2 email thread. After the release of v3, Tiezhu
+reminded me again of the importance of splitting the patches, and I am
+very grateful for this. Below are the changes made for v4.
 
-On 12/16/25 4:13 PM, Andrew Morton wrote:
-> On Fri,  5 Dec 2025 12:52:35 -0500 "Yury Norov (NVIDIA)" <yury.norov@gmail.com> wrote:
-> 
->> Tracing is a half of the kernel.h in terms of LOCs, although it's
->> a self-consistent part. It is intended for quick debugging purposes
->> and isn't used by the normal tracing utilities.
->>
->> Move it to a separate header. If someone needs to just throw a
->> trace_printk() in their driver, they will not have to pull all
->> the heavy tracing machinery.
->>
->> This is a pure move, except for removing a few 'extern's.
->>
+Split the patch titled "LoongArch: BPF: Enhance trampoline support for
+kernel and module tracing" into the following smaller patches by
+functionality to facilitate code reading and review, while ensuring the
+code logic and modification locations remain unchanged:
+"LoongArch: BPF: Enable and fix trampoline-based tracing for module functions"
+"LoongArch: BPF: Save return address register ra to t0 before trampoline"
+"LoongArch: BPF: Adjust the jump offset of tail calls"
+"LoongArch: BPF: Enhance the bpf_arch_text_poke() function"
 
-Hm, for a pure move, this shouldn't be necessary. Anyway, not using
-FORTIFY in purgatory.o fixes this build error.
-Or maybe there's a better answer.
+--------------------------Changelog------------------------------------
+v3:
+links: https://lore.kernel.org/all/20251216094753.1317231-1-duanchenghao@kylinos.cn/
+1. Adjust the position of fixup_exception() in the patch "LoongArch:
+Enable exception fixup for specific ADE": move its invocation to within
+the code block wrapped by irqentry_enter()/irqentry_exit().
 
----
- arch/x86/purgatory/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+2. Add the relevant test items to the patch commit log.
 
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -62,7 +62,7 @@ PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_C
- endif
- 
- CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
--CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
-+CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS) -D__NO_FORTIFY
- 
- CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
+3. Adjust the sequence of patches
 
-> 
-> This one blows up my x86_64 allmodconfig, gcc-15.2.0:
-> 
-> In file included from ./include/linux/string.h:386,
->                  from ./include/linux/trace_printk.h:9,
->                  from ./include/linux/kernel.h:34,
->                  from arch/x86/purgatory/purgatory.c:12:
-> ./include/linux/fortify-string.h:626:63: error: expected identifier or '(' before '{' token
->   626 |                              p_size_field, q_size_field, op) ({         \
->       |                                                               ^
-> ./include/linux/fortify-string.h:694:27: note: in expansion of macro '__fortify_memcpy_chk'
->   694 | #define memmove(p, q, s)  __fortify_memcpy_chk(p, q, s,                 \
->       |                           ^~~~~~~~~~~~~~~~~~~~
-> arch/x86/purgatory/../boot/string.h:11:7: note: in expansion of macro 'memmove'
->    11 | void *memmove(void *dst, const void *src, size_t len);
->       |       ^~~~~~~
-> ./include/linux/fortify-string.h:258:9: error: expected identifier or '(' before '__builtin_choose_expr'
->   258 |         __builtin_choose_expr(__is_constexpr(__builtin_strlen(p)),      \
->       |         ^~~~~~~~~~~~~~~~~~~~~
-> arch/x86/purgatory/../boot/string.h:23:15: note: in expansion of macro 'strlen'
->    23 | extern size_t strlen(const char *s);
->       |               ^~~~~~
-> make[4]: *** [scripts/Makefile.build:287: arch/x86/purgatory/purgatory.o] Error 1
-> make[3]: *** [scripts/Makefile.build:556: arch/x86/purgatory] Error 2
-> make[2]: *** [scripts/Makefile.build:556: arch/x86] Error 2
-> make[1]: *** [/usr/src/25/Makefile:2054: .] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
-> 
+With the exception of the patch "LoongArch: Enable exception fixup for
+specific ADE", no source code changes have been made in the other
+patches.
+
+v2:
+links: https://lore.kernel.org/all/20251212091103.1247753-1-duanchenghao@kylinos.cn/
+Referring to Tiezhu's suggestion, split the v1 patch titled
+"LoongArch: Modify the jump logic of the trampoline" into three parts:
+ (1) ftrace code
+ (2) sample test
+ (3) bpf code
+The code logic and implementation remain unchanged.
+
+v1:
+links: https://lore.kernel.org/all/20251209093405.1309253-1-duanchenghao@kylinos.cn/
+The following test cases under the tools/testing/selftests/bpf/
+directory have passed the test：
+
+./test_progs -t module_attach
+./test_progs -t module_fentry_shadow
+./test_progs -t subprogs
+./test_progs -t subprogs_extable
+./test_progs -t tailcalls
+./test_progs -t struct_ops -d struct_ops_multi_pages
+./test_progs -t fexit_bpf2bpf
+./test_progs -t fexit_stress
+./test_progs -t module_fentry_shadow
+./test_progs -t fentry_test/fentry
+./test_progs -t fexit_test/fexit
+./test_progs -t fentry_fexit
+./test_progs -t modify_return
+./test_progs -t fexit_sleep
+./test_progs -t test_overhead
+./test_progs -t trampoline_count
+
+Chenghao Duan (7):
+  LoongArch: ftrace: Refactor register restoration in
+    ftrace_common_return
+  LoongArch: Enable exception fixup for specific ADE subcode
+  LoongArch: BPF: Enable and fix trampoline-based tracing for module
+    functions
+  LoongArch: BPF: Save return address register ra to t0 before
+    trampoline
+  LoongArch: BPF: Adjust the jump offset of tail calls
+  LoongArch: BPF: Enhance the bpf_arch_text_poke() function
+  LoongArch: ftrace: Adjust register stack restore order in direct call
+    trampolines
+
+ arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+ arch/loongarch/kernel/traps.c               |  9 ++++-
+ arch/loongarch/net/bpf_jit.c                | 38 +++++++++++++++------
+ samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+ samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+ samples/ftrace/ftrace-direct-multi.c        |  4 +--
+ samples/ftrace/ftrace-direct-too.c          |  4 +--
+ samples/ftrace/ftrace-direct.c              |  4 +--
+ 8 files changed, 59 insertions(+), 30 deletions(-)
 
 -- 
-~Randy
+2.25.1
 
