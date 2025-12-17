@@ -1,299 +1,227 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42C83557F4
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Dec 2025 16:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C283358DE;
+	Wed, 17 Dec 2025 16:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765988888; cv=none; b=LpfhyFrCY6kIxkhKV7F61+0nra7pRolKzG5+6C0uFTdfZsOM+lZn5Vuoxc97wbHSuHcA/Su+q/MFBYJGpPfhADKLt5TmixTAFtvnNqxqXTvCukRBJxo+1Y1lm91uNwzTzVBqz9Z6WQkfoMlhZNBIJBLBPMf9Zcvio2LDm/iCJ4I=
+	t=1765989471; cv=none; b=oezZmPoqUu8IQLzcYRip+IRQWT/Jb1fe65cODk4CIZbr3BKOl3GngNxuXNXEmrHJ9xNWfOhkvdzmhkZFOYeZlKRWgeq9bEAhjLPUb/7w0jgbyF9TEfawkXh5kaIA5CSOuGsPjz8ashiDpXkVm/G501Xep2rZszPyjPmHSbLMPls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765988888; c=relaxed/simple;
-	bh=jqBZIn02NWMcecKP606Y1uEX4V9j1/cIbAV2uLmFwFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FTaw8Vlb1uzKyEIu0AVjxXN0cLM0akCPreh4qSTnNwRnm7u7cH525MxoSTIzfCPqwULn/NUlMRbpudYFNQ055j/Od8+CXpYYR5/OTwhGavECnlynfw+4HdVmFeidcG0IWCFOxedCUS1kRSQU+YxjDl4Lj5mGv7+vHU0Z2qiNOTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g0nSmNmP; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g0nSmNmP"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42fb5810d39so2855500f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Dec 2025 08:28:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1765988884; x=1766593684; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D5p3p8kAejxs1YQJhv0WnbRr/UVt3w2bGs3E+oMVl6E=;
-        b=g0nSmNmPe0I1hSFsbHvi4tSbETWwrYGb7BvgFGNOZA6f9X+Eq/sAZkF7l8espN3o9L
-         TjHpmufh5VcGptfW1SM5uHG5sa60ZQdS3yiJOmn4Xygh5wvlq6s0oyQZRcVr8tPEXHWe
-         klSU8aGYAEe9BWAP180QufjkwUmjvyZJd65JZ4yx0EoJvlMWHhwEFHhMSESVX70hR8SR
-         j71mbpBqvQNiMcvMaEvtvlixYYrYdnq3gY/o8gyjVBErEAyl8zemnGymBzo/v7SDMy42
-         KY75AkOJgM5pzvBARcfyRRswG6D0wwyrgNMTun2Yp4qdS8mgCHwchnJjdsAyx1fN5ALe
-         eElA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765988884; x=1766593684;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D5p3p8kAejxs1YQJhv0WnbRr/UVt3w2bGs3E+oMVl6E=;
-        b=fV41hunowN8izrxlKidlpH9h57WZXbSznPfVtSHfk/zRM0jdl2tBfRdnX4Zo7Y5n+c
-         OXvr3KFT7BVRtJ7OpntJ1kuqfs/d60/tMuorqo3ev/AT8GU5lezkskeT3no9u5ZTzhe1
-         4WaAdKuL8TIr6foq7Vy62leK/d2pmQdI67jmSV5GzZGEHfDYtwdvNwuT9gesxJr/un3z
-         nODQvOma2Sp7RV+OpveNLUJ6gjzXxM+ZWZclpUjVPji4XPskWvSK46LkswiwvjMODEu2
-         /T794UNhG3hhpoNFCHcPN8NAe9fKFjX3kcHw+v6n2xai27cF5qNmroKHu92PcIA17/5P
-         qWAw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/RloJn0JD+bHMwcGPomzWQWCUQQ0FVdvFf0N5wdmqftwXJRzlkZTER3sSvCdoHAqSgM9veHT4lGSbX8rC8YN1rUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvjSJt7KKCJhtAy2igrNeXzLmG1tx5w15PQ5XaN0tgjASLnG6G
-	GbkVp63QUnIMZZwgc5x3b+wjQUiL/Wv1P5yWC6S5Ns4c3weZ4JVSfgsDjq4S7jGTAqs=
-X-Gm-Gg: AY/fxX4eGLYul5R8dgTn4JiXbN5fohA3fuL8sVW7c4OtLXQ52PhvIJvVtVuWrsLcevm
-	m9rLu3DxIFTG6djDKZRTEGVJk+fBTTpJ8QBlJNydkxIr24aW6T2n+L1KwY+Crk8rkcpufQAJuLu
-	97z1WrrPoCZXjsGDeGzGDccr4BCxOkVMqEHUF8bNeSUmm85n6QNsTpbRnbTTKRKejs9DGOFFAsG
-	R1iKJwK+PYWm/ZiEvVJcODPorp7wzReBhCny4alBBf6WEW7BHdxpwhEyygf6Zn06w4EKbB+TmSY
-	HQUib9f+4Eq1sRMtApmSofMF1nlmeBZaMdkIK1H6FPwRMH1YFSS+elDYVUCWDXYXQgaqAd7IEoF
-	rAUXXTxtO9GwRRaM/AAJtckc+i9HTY+Z8LiZQp0FExpNGpMB9mmptsQCuagZMFedXH8ktpCd/16
-	MyXUf/Z+x9jpc5MQoGfMcRf0tNtI9at48=
-X-Google-Smtp-Source: AGHT+IGpydpE/x5zxrviDhKfJqjEaKSG+Hi2wTDqQX9lTrcKDco/8aBmmWcByjoue9ZRozmJ4alpSw==
-X-Received: by 2002:a05:6000:186d:b0:431:5ca:c1b7 with SMTP id ffacd0b85a97d-43105cac2d6mr7328202f8f.23.1765988883910;
-        Wed, 17 Dec 2025 08:28:03 -0800 (PST)
-Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adeee0esm5728364f8f.29.2025.12.17.08.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Dec 2025 08:28:03 -0800 (PST)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Yu Kuai <yukuai@fnnas.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Tejun Heo <tj@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	Phil Sutter <phil@nwl.cc>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH 2/4] cgroup: Introduce cgroup_level() helper
-Date: Wed, 17 Dec 2025 17:27:34 +0100
-Message-ID: <20251217162744.352391-3-mkoutny@suse.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251217162744.352391-1-mkoutny@suse.com>
-References: <20251217162744.352391-1-mkoutny@suse.com>
+	s=arc-20240116; t=1765989471; c=relaxed/simple;
+	bh=NMZnqyZy1/Ec9VSOSCSL75tdHab4fNQnxN2xBOU2KAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eWHnKerXQ5t8N5iFOJEc0OcEI6Q9VQ4tmfIFSX28lCMyvA9F9gxSZWH9/q3YG3bCvIiHUYewGFf2bJqjSR+c2iBz2k4AjsTF6LTnp4xRflWZNKaaecb3BiB6R0AXOvrMDGlnw0dcTr3aClv48vu9VNkt7x5PPtJfO1CAnNaADZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 4B7DD1370BA;
+	Wed, 17 Dec 2025 16:37:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 4BF6A20027;
+	Wed, 17 Dec 2025 16:37:44 +0000 (UTC)
+Date: Wed, 17 Dec 2025 11:39:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ian Rogers <irogers@google.com>, Arnaldo
+  Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+  Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] tracing: Allow perf to read synthetic events
+Message-ID: <20251217113920.50b56246@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4BF6A20027
+X-Stat-Signature: 8aetqh8zmqgmr67t39qiejgqn383c76g
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Xc5N5Ma+hwUdjht/mv7MucOyTa2R+LTc=
+X-HE-Tag: 1765989464-234981
+X-HE-Meta: U2FsdGVkX18BuGgTfFCpecoK8itU75LuieMvXk2C0KeeZ9dlQDZFEp7OskXe5CXAnd8oDG5gwrr95EjF3n5xqeFRXoEmsD4JKjD/vecGlhiTrx/hkJ1l1ugOXi9ENuv5Ibq4F5KOeh/EzVX+PGBtAsm1IGghflo07CP8rKdM9ECuQioKUnOwX3JcXp4YsCcscCm+UVil59iIXpjdvVqWgeBJheMMg6l52eqqvMOHvqa3dQM1Fy4XYVcO7uTxr6R8+1SdrF8XJODjpCK4aZUt8LUnYHv1cyjj0flPKInTKrwBktmLl3XwXO0faLuKryfiVxiSOt/V/Pmq5HFkihONctaBcKS33jmzfdLxz5EmdoMqSG7mvfLSIy1JZJh6d/cI7pFMoDH7ClvFmMlnTT1WkA==
 
-This is a no functional change to hide physical storage of cgroup's
-level and it allows subesequent conversion of the storage.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Currently, perf can not enable synthetic events. When it does, it either
+causes a warning in the kernel or errors with "no such device".
+
+Add the necessary code to allow perf to also attach to synthetic events.
+
+Reported-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- block/bfq-iosched.c           |  2 +-
- block/blk-iocost.c            |  4 ++--
- include/linux/cgroup.h        | 18 +++++++++++++++---
- include/trace/events/cgroup.h |  8 ++++----
- kernel/bpf/helpers.c          |  2 +-
- kernel/cgroup/cgroup.c        |  4 ++--
- net/netfilter/nft_socket.c    |  2 +-
- 7 files changed, 26 insertions(+), 14 deletions(-)
+ kernel/trace/trace_events_synth.c | 121 +++++++++++++++++++++++-------
+ 1 file changed, 94 insertions(+), 27 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 4a8d3d96bfe49..f293bab068274 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -601,7 +601,7 @@ static bool bfqq_request_over_limit(struct bfq_data *bfqd,
- 		goto out;
- 
- 	/* +1 for bfqq entity, root cgroup not included */
--	depth = bfqg_to_blkg(bfqq_group(bfqq))->blkcg->css.cgroup->level + 1;
-+	depth = cgroup_level(bfqg_to_blkg(bfqq_group(bfqq))->blkcg->css.cgroup) + 1;
- 	if (depth > alloc_depth) {
- 		spin_unlock_irq(&bfqd->lock);
- 		if (entities != inline_entities)
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index a0416927d33dc..b4eebe61dca7f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2962,7 +2962,7 @@ static void ioc_cpd_free(struct blkcg_policy_data *cpd)
- static struct blkg_policy_data *ioc_pd_alloc(struct gendisk *disk,
- 		struct blkcg *blkcg, gfp_t gfp)
- {
--	int levels = blkcg->css.cgroup->level + 1;
-+	int levels = cgroup_level(blkcg->css.cgroup) + 1;
- 	struct ioc_gq *iocg;
- 
- 	iocg = kzalloc_node(struct_size(iocg, ancestors, levels), gfp,
-@@ -3003,7 +3003,7 @@ static void ioc_pd_init(struct blkg_policy_data *pd)
- 	init_waitqueue_head(&iocg->waitq);
- 	hrtimer_setup(&iocg->waitq_timer, iocg_waitq_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
- 
--	iocg->level = blkg->blkcg->css.cgroup->level;
-+	iocg->level = cgroup_level(blkg->blkcg->css.cgroup)
- 
- 	for (tblkg = blkg; tblkg; tblkg = tblkg->parent) {
- 		struct ioc_gq *tiocg = blkg_to_iocg(tblkg);
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index bc892e3b37eea..0290878ebad26 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -525,6 +525,18 @@ static inline struct cgroup *cgroup_parent(struct cgroup *cgrp)
- 	return NULL;
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 4554c458b78c..026e06f28958 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -493,28 +493,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
+ 	return len;
  }
  
-+/**
-+ * cgroup_level - cgroup depth
-+ * @cgrp: cgroup
-+ *
-+ * The depth this cgroup is at.  The root is at depth zero and each step down
-+ * the hierarchy increments the level.
-+ */
-+static inline int cgroup_level(struct cgroup *cgrp)
+-static notrace void trace_event_raw_event_synth(void *__data,
+-						u64 *var_ref_vals,
+-						unsigned int *var_ref_idx)
++static __always_inline int get_field_size(struct synth_event *event,
++					  u64 *var_ref_vals,
++					  unsigned int *var_ref_idx)
+ {
+-	unsigned int i, n_u64, val_idx, len, data_size = 0;
+-	struct trace_event_file *trace_file = __data;
+-	struct synth_trace_event *entry;
+-	struct trace_event_buffer fbuffer;
+-	struct trace_buffer *buffer;
+-	struct synth_event *event;
+-	int fields_size = 0;
+-
+-	event = trace_file->event_call->data;
+-
+-	if (trace_trigger_soft_disabled(trace_file))
+-		return;
++	int fields_size;
+ 
+ 	fields_size = event->n_u64 * sizeof(u64);
+ 
+-	for (i = 0; i < event->n_dynamic_fields; i++) {
++	for (int i = 0; i < event->n_dynamic_fields; i++) {
+ 		unsigned int field_pos = event->dynamic_fields[i]->field_pos;
+ 		char *str_val;
++		int val_idx;
++		int len;
+ 
+ 		val_idx = var_ref_idx[field_pos];
+ 		str_val = (char *)(long)var_ref_vals[val_idx];
+@@ -529,18 +520,18 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 
+ 		fields_size += len;
+ 	}
++	return fields_size;
++}
+ 
+-	/*
+-	 * Avoid ring buffer recursion detection, as this event
+-	 * is being performed within another event.
+-	 */
+-	buffer = trace_file->tr->array_buffer.buffer;
+-	guard(ring_buffer_nest)(buffer);
+-
+-	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
+-					   sizeof(*entry) + fields_size);
+-	if (!entry)
+-		return;
++static __always_inline void write_synth_entry(struct synth_event *event,
++					      struct synth_trace_event *entry,
++					      u64 *var_ref_vals,
++					      unsigned int *var_ref_idx)
 +{
-+	return cgrp->level;
++	int data_size = 0;
++	int i, n_u64;
++	int val_idx;
++	int len;
+ 
+ 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
+ 		val_idx = var_ref_idx[i];
+@@ -581,10 +572,83 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 			n_u64++;
+ 		}
+ 	}
 +}
 +
- /**
-  * cgroup_is_descendant - test ancestry
-  * @cgrp: the cgroup to be tested
-@@ -537,9 +549,9 @@ static inline struct cgroup *cgroup_parent(struct cgroup *cgrp)
- static inline bool cgroup_is_descendant(struct cgroup *cgrp,
- 					struct cgroup *ancestor)
- {
--	if (cgrp->root != ancestor->root || cgrp->level < ancestor->level)
-+	if (cgrp->root != ancestor->root || cgroup_level(cgrp) < cgroup_level(ancestor))
- 		return false;
--	return cgrp->ancestors[ancestor->level] == ancestor;
-+	return cgrp->ancestors[cgroup_level(ancestor)] == ancestor;
++static notrace void trace_event_raw_event_synth(void *__data,
++						u64 *var_ref_vals,
++						unsigned int *var_ref_idx)
++{
++	struct trace_event_file *trace_file = __data;
++	struct synth_trace_event *entry;
++	struct trace_event_buffer fbuffer;
++	struct trace_buffer *buffer;
++	struct synth_event *event;
++	int fields_size;
++
++	event = trace_file->event_call->data;
++
++	if (trace_trigger_soft_disabled(trace_file))
++		return;
++
++	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
++
++	/*
++	 * Avoid ring buffer recursion detection, as this event
++	 * is being performed within another event.
++	 */
++	buffer = trace_file->tr->array_buffer.buffer;
++	guard(ring_buffer_nest)(buffer);
++
++	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
++					   sizeof(*entry) + fields_size);
++	if (!entry)
++		return;
++
++	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
+ 
+ 	trace_event_buffer_commit(&fbuffer);
  }
  
- /**
-@@ -556,7 +568,7 @@ static inline bool cgroup_is_descendant(struct cgroup *cgrp,
- static inline struct cgroup *cgroup_ancestor(struct cgroup *cgrp,
- 					     int ancestor_level)
++#ifdef CONFIG_PERF_EVENTS
++static notrace void perf_event_raw_event_synth(void *__data,
++					       u64 *var_ref_vals,
++					       unsigned int *var_ref_idx)
++{
++	struct trace_event_call *call = __data;
++	struct synth_trace_event *entry;
++	struct hlist_head *perf_head;
++	struct synth_event *event;
++	struct pt_regs *regs;
++	int fields_size;
++	size_t size;
++	int context;
++
++	event = call->data;
++
++	perf_head = this_cpu_ptr(call->perf_events);
++
++	if (!perf_head || hlist_empty(perf_head))
++		return;
++
++	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
++
++	size = ALIGN(sizeof(*entry) + fields_size, 8);
++
++	entry = perf_trace_buf_alloc(size, &regs, &context);
++
++	if (unlikely(!entry))
++		return;
++
++	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
++
++	perf_fetch_caller_regs(regs);
++
++	perf_trace_buf_submit(entry, size, context,
++			      call->event.type, 1, regs,
++			      perf_head, NULL);
++}
++#endif
++
+ static void free_synth_event_print_fmt(struct trace_event_call *call)
  {
--	if (ancestor_level < 0 || ancestor_level > cgrp->level)
-+	if (ancestor_level < 0 || ancestor_level > cgroup_level(cgrp))
- 		return NULL;
- 	return cgrp->ancestors[ancestor_level];
- }
-diff --git a/include/trace/events/cgroup.h b/include/trace/events/cgroup.h
-index ba9229af9a343..0a1bc91754b5e 100644
---- a/include/trace/events/cgroup.h
-+++ b/include/trace/events/cgroup.h
-@@ -67,7 +67,7 @@ DECLARE_EVENT_CLASS(cgroup,
- 	TP_fast_assign(
- 		__entry->root = cgrp->root->hierarchy_id;
- 		__entry->id = cgroup_id(cgrp);
--		__entry->level = cgrp->level;
-+		__entry->level = cgroup_level(cgrp);
- 		__assign_str(path);
- 	),
- 
-@@ -136,7 +136,7 @@ DECLARE_EVENT_CLASS(cgroup_migrate,
- 	TP_fast_assign(
- 		__entry->dst_root = dst_cgrp->root->hierarchy_id;
- 		__entry->dst_id = cgroup_id(dst_cgrp);
--		__entry->dst_level = dst_cgrp->level;
-+		__entry->dst_level = cgroup_level(dst_cgrp);
- 		__assign_str(dst_path);
- 		__entry->pid = task->pid;
- 		__assign_str(comm);
-@@ -180,7 +180,7 @@ DECLARE_EVENT_CLASS(cgroup_event,
- 	TP_fast_assign(
- 		__entry->root = cgrp->root->hierarchy_id;
- 		__entry->id = cgroup_id(cgrp);
--		__entry->level = cgrp->level;
-+		__entry->level = cgroup_level(cgrp);
- 		__assign_str(path);
- 		__entry->val = val;
- 	),
-@@ -221,7 +221,7 @@ DECLARE_EVENT_CLASS(cgroup_rstat,
- 	TP_fast_assign(
- 		__entry->root = cgrp->root->hierarchy_id;
- 		__entry->id = cgroup_id(cgrp);
--		__entry->level = cgrp->level;
-+		__entry->level = cgroup_level(cgrp);
- 		__entry->cpu = cpu;
- 		__entry->contended = contended;
- 	),
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index db72b96f9c8c8..b825f6e0a1c29 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -2577,7 +2577,7 @@ __bpf_kfunc struct cgroup *bpf_cgroup_ancestor(struct cgroup *cgrp, int level)
- {
- 	struct cgroup *ancestor;
- 
--	if (level > cgrp->level || level < 0)
-+	if (level > cgroup_level(cgrp) || level < 0)
- 		return NULL;
- 
- 	/* cgrp's refcnt could be 0 here, but ancestors can still be accessed */
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 554a02ee298ba..e011f1dd6d87f 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -5843,7 +5843,7 @@ static struct cgroup *cgroup_create(struct cgroup *parent, const char *name,
- 	struct cgroup_root *root = parent->root;
- 	struct cgroup *cgrp, *tcgrp;
- 	struct kernfs_node *kn;
--	int i, level = parent->level + 1;
-+	int i, level = cgroup_level(parent) + 1;
- 	int ret;
- 
- 	/* allocate the cgroup and its ID, 0 is reserved for the root */
-@@ -5884,7 +5884,7 @@ static struct cgroup *cgroup_create(struct cgroup *parent, const char *name,
- 		goto out_stat_exit;
- 
- 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp))
--		cgrp->ancestors[tcgrp->level] = tcgrp;
-+		cgrp->ancestors[cgroup_level(tcgrp)] = tcgrp;
- 
- 	/*
- 	 * New cgroup inherits effective freeze counter, and
-diff --git a/net/netfilter/nft_socket.c b/net/netfilter/nft_socket.c
-index 36affbb697c2f..a5b0340924efb 100644
---- a/net/netfilter/nft_socket.c
-+++ b/net/netfilter/nft_socket.c
-@@ -64,7 +64,7 @@ static noinline int nft_socket_cgroup_subtree_level(void)
- 	if (IS_ERR(cgrp))
- 		return PTR_ERR(cgrp);
- 
--	level = cgrp->level;
-+	level = cgroup_level(cgrp);
- 
- 	cgroup_put(cgrp);
+ 	if (call) {
+@@ -911,6 +975,9 @@ static int register_synth_event(struct synth_event *event)
+ 	call->flags = TRACE_EVENT_FL_TRACEPOINT;
+ 	call->class->reg = synth_event_reg;
+ 	call->class->probe = trace_event_raw_event_synth;
++#ifdef CONFIG_PERF_EVENTS
++	call->class->perf_probe = perf_event_raw_event_synth;
++#endif
+ 	call->data = event;
+ 	call->tp = event->tp;
  
 -- 
-2.52.0
+2.51.0
 
