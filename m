@@ -1,129 +1,140 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798ED2EB872;
-	Wed, 17 Dec 2025 06:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E160334C28;
+	Wed, 17 Dec 2025 06:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765952103; cv=none; b=ovlSWCZtCZ5uspIlxzpVYveygMKEHstN6RACrE6RIabmv2Tz3AkvIDkYuU5++tMZyyATXODeyJY03+jc8L0ONvVnxZRQvczFe+F0rlmJHOUbw5h6SE23jp9Jd75rwXOWkP9dm0z68MVwF0McwggXONRAVn13PFY8BL+s3VUoNIM=
+	t=1765954501; cv=none; b=ei8wAQZ2efbjTZUVWd7WxpYFU7NjdjnM7IayLoOdSCg3kRK862Sd3m27ky+n/4szTpVKUMN8XxMNgUfSqIU7CtIYQQC9rwTmXdbi9lg8gxx5dkmY/Q3sk8koGp/gkynd4FMowx+sVbRlZ6dE5j1wG9Md11b8uIY+MIeMiopBV88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765952103; c=relaxed/simple;
-	bh=WLDcyUQpfa0qKW1T1Zd8X2+eNMhk9ImYjFtpapGBMWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=trHSZX/4pbIt6mC0JaA605iOVveY5avEWYg4Fp69RDglcPP81MsENo6vcnVL9F42O07Qvqy/R0DBVcpIANb5/20kapiEf5vnWeK9JK4Pl6ymCGoZYxeLCaqcOWdYUOG3Lb7GSbHXw4KdC85FBU4Nc0gpEWNB82930m8LbA2MWEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR, DN_TRUSTED
-	SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:9ed4d91d2c7b25ac4dd7b7b3ed3762e8,BulkI
-	D:251217141457MPWBEX6H,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
-	0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(183.242.174.20)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 612073974; Wed, 17 Dec 2025 14:14:54 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: yangtiezhu@loongson.cn,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	zhangtianyang@loongson.cn,
-	masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn,
-	vincent.mc.li@gmail.com,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
-Date: Wed, 17 Dec 2025 14:14:34 +0800
-Message-Id: <20251217061435.802204-7-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251217061435.802204-1-duanchenghao@kylinos.cn>
-References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1765954501; c=relaxed/simple;
+	bh=6PJWOtpDQ9cOYWOwCsHXA2TRbpy+sm5mjMROo8KKx34=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=P2Y2kOIKeHwTlYwA03RsIsxOCfRKRFmKN2pInF3p5qbRjq+K96PKFXmRy4sTKH0KNhRsGcf9qxMvn5zMip/hkYbrJzFGrNdZ6vMPvVW6Xp+WbDtjP9LwqOAxD1fNLWZJ2pt0ZfM+a4K3JvASM2OyXl2bz1StaOeC1EYtzUak+K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mP/rph8l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mP/rph8l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F37C4CEF5;
+	Wed, 17 Dec 2025 06:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765954500;
+	bh=6PJWOtpDQ9cOYWOwCsHXA2TRbpy+sm5mjMROo8KKx34=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=mP/rph8lOarV44aMA3FHfqZYEW7xW5YBS+TzAi1/qXDU1s8I0VdJfBfhFQ+3BpkBh
+	 5nLpYE/dG8v1sxrIDKNY0qPUY/2NEmfNbO19ACq/ME9D+BC2+VhHhcqV6etD1rDpy9
+	 NPZtw2YPx9SkVUTtj1J4EdI1/cbsEmBHW1xswNbHXJTTTASzDEMA0xceB8c0OGz3aO
+	 8W5WU4vKmZ98rs97qRfc2FcmCo4wAj96U1+Sd5k6vd2CeSwfxHg4E3+AeezwGcNYvl
+	 OHW1MHKGbStKNgNncacAxZLvm7ebWNSi/apCQXWbh9I9p3zwqaDBsUNUuFOiewbMQv
+	 I3JqaRXf6r0vA==
+Content-Type: multipart/mixed; boundary="===============1386342668638731083=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <5c7c7239a6f89e685f69093ff84fe686c75cf6b9b051dcbf812841f00ab3bc31@mail.kernel.org>
+In-Reply-To: <20251217061435.802204-2-duanchenghao@kylinos.cn>
+References: <20251217061435.802204-2-duanchenghao@kylinos.cn>
+Subject: Re: [PATCH v4 1/7] LoongArch: ftrace: Refactor register restoration in ftrace_common_return
+From: bot+bpf-ci@kernel.org
+To: duanchenghao@kylinos.cn,yangtiezhu@loongson.cn,rostedt@goodmis.org,mhiramat@kernel.org,mark.rutland@arm.com,hengqi.chen@gmail.com,chenhuacai@kernel.org
+Cc: kernel@xen0n.name,zhangtianyang@loongson.cn,masahiroy@kernel.org,linux-kernel@vger.kernel.org,loongarch@lists.linux.dev,bpf@vger.kernel.org,duanchenghao@kylinos.cn,youling.tang@linux.dev,jianghaoran@kylinos.cn,vincent.mc.li@gmail.com,linux-trace-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Wed, 17 Dec 2025 06:55:00 +0000 (UTC)
 
-Enhance the bpf_arch_text_poke() function to enable accurate location
-of BPF program entry points.
+--===============1386342668638731083==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-When modifying the entry point of a BPF program, skip the move t0, ra
-instruction to ensure the correct logic and copy of the jump address.
+> diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
+> index d6b474ad1d5e..5729c20e5b8b 100644
+> --- a/arch/loongarch/kernel/mcount_dyn.S
+> +++ b/arch/loongarch/kernel/mcount_dyn.S
+> @@ -94,7 +94,6 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+>   * at the callsite, so there is no need to restore the T series regs.
+>   */
+>  ftrace_common_return:
+> -	PTR_L		ra, sp, PT_R1
+>  	PTR_L		a0, sp, PT_R4
+>  	PTR_L		a1, sp, PT_R5
+>  	PTR_L		a2, sp, PT_R6
+> @@ -104,12 +103,17 @@ ftrace_common_return:
+>  	PTR_L		a6, sp, PT_R10
+>  	PTR_L		a7, sp, PT_R11
+>  	PTR_L		fp, sp, PT_R22
+> -	PTR_L		t0, sp, PT_ERA
+>  	PTR_L		t1, sp, PT_R13
+> -	PTR_ADDI	sp, sp, PT_SIZE
+>  	bnez		t1, .Ldirect
+> +
+> +	PTR_L		ra, sp, PT_R1
+> +	PTR_L		t0, sp, PT_ERA
+> +	PTR_ADDI	sp, sp, PT_SIZE
+>  	jr		t0
+>  .Ldirect:
+> +	PTR_L		t0, sp, PT_R1
+> +	PTR_L		ra, sp, PT_ERA
+                     ^^^^^^^^^^^^^^^^^^^
+Does this break existing ftrace direct trampolines?
 
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+Before this change, direct trampolines received:
+  ra = parent return address (from PT_R1)
+  t0 = traced function address (from PT_ERA)
+
+After this change, direct trampolines receive:
+  t0 = parent return address (from PT_R1)
+  ra = traced function address (from PT_ERA)
+
+The sample trampolines in samples/ftrace/ were written for the old
+convention. For example, samples/ftrace/ftrace-direct.c does:
+
+  my_tramp:
+    st.d  $t0, $sp, 8    # Save what it thinks is traced func addr
+    st.d  $ra, $sp, 16   # Save what it thinks is parent addr
+    bl    my_direct_func
+    ld.d  $t0, $sp, 8    # Restore
+    ld.d  $ra, $sp, 16   # Restore
+    jr    $t0            # Jump to what it thinks is traced function
+
+With the new convention, the sample would save parent address in the
+t0 slot, restore it to t0, and then jump to the parent instead of the
+traced function, skipping the traced function entirely.
+
+This was fixed later in commit 055e392f3be7 "LoongArch: ftrace: Adjust
+register stack restore order in direct call trampolines" which updated
+all the samples to match the new convention. However, any out-of-tree
+direct trampolines written before this commit would be broken by this
+change.
+
+Was this ABI break intentional? The commit message mentions matching
+"the state when ftrace was entered" but doesn't explain why breaking
+compatibility was necessary. RISC-V uses the opposite convention
+(t0 = traced func, ra = parent), which the original LoongArch code
+matched.
+
+> +	PTR_ADDI	sp, sp, PT_SIZE
+>  	jr		t1
+>  SYM_CODE_END(ftrace_common)
+
+[ ... ]
+
+> @@ -161,6 +165,8 @@ SYM_CODE_END(return_to_handler)
+>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>  SYM_CODE_START(ftrace_stub_direct_tramp)
+>  	UNWIND_HINT_UNDEFINED
+> -	jr		t0
+> +	move		t1, ra
+> +	move		ra, t0
+> +	jr		t1
+>  SYM_CODE_END(ftrace_stub_direct_tramp)
+>  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+
+
 ---
- arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 3dbabacc8856..0c16a1b18e8f 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
- 		       void *new_addr)
- {
- 	int ret;
-+	unsigned long size = 0;
-+	unsigned long offset = 0;
-+	char namebuf[KSYM_NAME_LEN];
-+	void *image = NULL;
- 	bool is_call;
- 	u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
- 	u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
-@@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
- 	/* Only poking bpf text is supported. Since kernel function entry
- 	 * is set up by ftrace, we rely on ftrace to poke kernel functions.
- 	 */
--	if (!is_bpf_text_address((unsigned long)ip))
-+	if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
- 		return -ENOTSUPP;
- 
-+	image = ip - offset;
-+	/* zero offset means we're poking bpf prog entry */
-+	if (offset == 0)
-+		/* skip to the nop instruction in bpf prog entry:
-+		 * move t0, ra
-+		 * nop
-+		 */
-+		ip = image + LOONGARCH_INSN_SIZE;
-+
- 	is_call = old_t == BPF_MOD_CALL;
- 	ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
- 	if (ret)
--- 
-2.25.1
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/20293821855
 
+--===============1386342668638731083==--
