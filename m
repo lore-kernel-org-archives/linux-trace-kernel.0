@@ -1,153 +1,125 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CFD32ABC4;
-	Thu, 18 Dec 2025 17:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02BC2D061D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 17:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766079720; cv=none; b=WHA5+fGP7BFPFqEfDU1WRF+ECUfMbsEM6tuBqugDCF5GD7coGTNYVxYQytLDqOOObmaTDZolYAGnyzhz5iHwfaHV1TX71rMpluTGAVp6vMBLxuGJeEwiTc3QluKZsA+EqfiZ7dxYxVqWGF2hk5zQtybm0G1tQ2+bP3cFyT7ghxY=
+	t=1766080411; cv=none; b=jdgGJLYKirrFadEupRLkNnYzSke2rn/wI5py0Dt+prorhXj3eRT2sKdV//r1r8Z5JthNdcOBVRPjE47S8p+PiBlks3WBcTa0Wq5++Z0B2TKLi6WWp0Y9CgO/4ChJTV+WSC0TCe+1Wlfbp3rO87AA/rF2WGu+ZZ6iybz2IMYRBHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766079720; c=relaxed/simple;
-	bh=M7FfbS4fbcJ9HukZGl75BtzjhCl68vPu11NakYgBWF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d60E5cqXTxrf/yz0A+DLq8Ft/iU201Fqf/phiCR89bY4mUVY4GswXvSUz/1ao/EgmZ14v3f7mXs/g+NKbQ1t+NvaTvx7XLERqrboYDC36PW/NXom43pK41t6mqVbA6GIvmYpqjemgM3ifegloF+G/9DU/Ll6gBJpcz86zJhLpnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 034CC1358D7;
-	Thu, 18 Dec 2025 17:41:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 023D820027;
-	Thu, 18 Dec 2025 17:41:47 +0000 (UTC)
-Date: Thu, 18 Dec 2025 12:43:26 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Andrew Morton
- <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Christophe Leroy <chleroy@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
- <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
- <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
- Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v3 4/4] tracing: move tracing declarations from kernel.h
- to a dedicated header
-Message-ID: <20251218124326.22334325@gandalf.local.home>
-In-Reply-To: <20251218123349.35339242@gandalf.local.home>
-References: <20251205175237.242022-1-yury.norov@gmail.com>
-	<20251205175237.242022-5-yury.norov@gmail.com>
-	<20251216161316.45b3f19ff0ad482018137189@linux-foundation.org>
-	<55ceb7bf-0fe9-4edc-81c2-d51366847eec@infradead.org>
-	<aUN8Hm377C5A0ILX@yury>
-	<20251218123349.35339242@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1766080411; c=relaxed/simple;
+	bh=IdJ+EQH2wqH7h1SfY1RLMDhuiM7Gs5C4pRm4gddZMP4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HfX0f3HFu9XaG/SR9rOtQG0ALRLGrGr6OkxBM3jWyTD/KL8x4y6qE+EPXpMIZ7r+eoX++olVkfTKVHzIQsfkdSvJZ1wS5wtj50isNhX19ocRmnqV41fpqcwC8cYkmWLhBEW6b5NyEBMHygsE+qh/EKMowuUEggCgochvxXLEsWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTEqC2Bj; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTEqC2Bj"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42fbc544b09so640473f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 09:53:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766080408; x=1766685208; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1WNlJ92LZq2r69K8djqkrzdHIPvFecU1NXYCmz8bcMg=;
+        b=VTEqC2BjCexs2qrnaLc/pg8jDPJQlgEAi80KFWiuKK8ADyC02TOQPP2yUDVyBePBK7
+         gh5BH+RWM7GrOo5NRhD36svroyoVQ7mrDdTjh7UAonwk+kGw/gMz9OHVX9yZ98m/pzS9
+         I6Ka+8+r5O+MYF6Ie0xxIMUgyEtSVNRGPMjCPnJrfV9ccFv/PUrdElKoVIj2p/eXEi54
+         MVcvBKB/90Nw626qjUAvZ/Q1KzBsOueQY97V30qXEGwPnsue5dRuZJF1CKsoS5OrYmfm
+         Zup7oxyyBo5xgJuNSJiHwbFVy3twi+reNYEBRuViTfYLj/GOlSxDNhohn/noBPS5lQUs
+         SFMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766080408; x=1766685208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1WNlJ92LZq2r69K8djqkrzdHIPvFecU1NXYCmz8bcMg=;
+        b=Bp0Nstx6rxLD56lriMBs3dLc1JLNGv+N4BmsQeTLUTrQfxNgbYFzh7gL89Ayi1UxrY
+         yoRHZyo948X6EMZBMhFF4d2++2ZM0tfcHlmN4DVf/LxGA6gt98Z9pMSwaSt7wmb1c6fe
+         es/UyIS001EieWrjcmsQqSDNygAyDYmB22F5XuXcXqCdUZOVVFupCMu3YBQc+J8ThGit
+         w/GZpO4vt6x4X0RgUMcCQTO4Kjrw1RtyDUuX70Q2wR5wQ40+95/yQrBINyOeYdM5aY0v
+         rmX3r7FnZV3pMI8D07nt56nJW7Kw/XXydCRgey00BlgiXQewmZx1E62Zr08nR87FwPNm
+         Cwaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdRV0kmdliUBFAJLSDlPAIfqRONoopXnnkOZSaqEsK7uB9iMb/Qj/j79vCTc5O38XkZNmvaKJeHUr+tZ0nGy8wTXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOFPTepvE5N2pczS0I0nQ/0SKEtdwBhVXOITTOliXJFYN6dv5m
+	J09GBqPeimO5fKOShnWkh/dh5FFNDCnyBex0+9z0h637ZVfhkRjZ7rZk8DcYK2Yc+ucut19y/63
+	VXpqdLAsHgfiuXi+HijtZSKXPbSf+LO8=
+X-Gm-Gg: AY/fxX577Bqz47b5wiys0z75Q+x810JaVV/DwN9fjib9efu61Cy9SFh5vEkogDAkteS
+	cqC1rY/mG/YDB1cIqAnSwU2ARY0Jma6EGN0xzVeUYxmZogc6qj/KzRWSJeJKmGrWPAs38Lm/n2M
+	DUyCFEdcQ/ba7o7NKacDSWsDeqErAqXliP22J+rMvBPJZt9cQ6d1T3k6ANg6wCXgMiyVNOEQDUh
+	VP7tUbdEANFu7y22EpDKZ0lX+0eC4Y0gLwwD06fS1ZiGsD9nrY9eHCcE3EpHlf4KYMdD51thwzS
+	7PznBmHLSp80RTnfoVWaBsgP9yox
+X-Google-Smtp-Source: AGHT+IHIQG3KPrL89BQj4BmPCTpBgWQXIV5FxERANZjtm6o3ZifVUbfQgAxyb/wpz7YSEq3h2aIfbGrBx9nICgoZpuw=
+X-Received: by 2002:a05:6000:22c8:b0:42f:f627:3a90 with SMTP id
+ ffacd0b85a97d-4324e4fd938mr344929f8f.32.1766080407798; Thu, 18 Dec 2025
+ 09:53:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 023D820027
-X-Stat-Signature: o45fb7y4yczxrp6ryyc4bjh177djf3bh
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+gcUhXo6im9KxxnMPkzbEPK1jjIb73cJg=
-X-HE-Tag: 1766079707-102559
-X-HE-Meta: U2FsdGVkX1+FLaJcIEU86Yt8MEehfwVAisIxolYkzum3jsTsXtF/7d/COMCPvGimbkdCJDem8K4HreWeMJLYHvtpjFnvf3EsAgzop9i+1Qo75r6aRfau/Ye5CoT9oXH1h3WmzTn3Si1MuoMi+JVjVnvoaGdxDzYO/QwzORGyITGf+Xm/6rLqeb+FioS46ubI74HEXEowehIuZFosZJp+80qxOPGSXFaTarSa/MK47R0qIkOXeTnw9MGLdhS+zu6yQE80iPETG2eTIFNXnVWQWLq0jX/LndYRrn5J1xlOesaiULBiDx8MMtxGYXJWQ38xh4H0k3U+2AO+kFVcbDtrC1aErQ30++hwTAGk9FPoZMNtKSgcmEERjL1asAgBob4jxvppT+cS8Ff6SW8amtswUw==
+References: <20251218130629.365398-1-liujing40@xiaomi.com> <20251218130629.365398-3-liujing40@xiaomi.com>
+In-Reply-To: <20251218130629.365398-3-liujing40@xiaomi.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 18 Dec 2025 09:53:16 -0800
+X-Gm-Features: AQt7F2oSqG7x_vqvuybNtyAKy7w5rBZ7eTtVpgQJA4bUa29xSg3uRmIhaZ5DSXM
+Message-ID: <CAADnVQKC312JbOhjQZmMN-Me2V0GQ9qxoHeQkF+=PbYk0zc9KA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi link
+To: liujing40 <liujing.root@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, liujing40@xiaomi.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 18 Dec 2025 12:33:49 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 17 Dec 2025 22:59:33 -0500
-> Yury Norov <yury.norov@gmail.com> wrote:
-> 
-> > I deem to drop trace_printk.h from kernel.h - it is more aligned with
-> > the idea of unloading the header. The original motivation to keep
-> > trace_printk.h in kernel.h was just because a similar printk.h is living
-> > there. But after all, this is a purely debugging header, so no need for
-> > almost every C file to bear debugging stuff.  
-> 
-> It is a big deal for debugging stuff. A lot of developers debug their code
-> with trace_printk(), and do the "shotgun approach", where they cut and
-> paste trace_printk()s all over their code in several files. Having to now add:
-> 
->   #include <linux/trace_printk.h>
-> 
-> whenever a trace_printk() is added is going to be a big PITA and slow down
-> all debugging efforts.
+On Thu, Dec 18, 2025 at 5:07=E2=80=AFAM liujing40 <liujing.root@gmail.com> =
+wrote:
 >
+> When fprobe is not available, provide a fallback implementation of
+> kprobe_multi using the traditional kretprobe API.
+>
+> Uses kretprobe's entry_handler and handler callbacks to simulate fprobe's
+> entry/exit functionality.
+>
+> Signed-off-by: Jing Liu <liujing40@xiaomi.com>
+> ---
+>  kernel/trace/bpf_trace.c | 307 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 295 insertions(+), 12 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 1fd07c10378f..426a1c627508 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2274,12 +2274,44 @@ struct bpf_session_run_ctx {
+>         void *data;
+>  };
+>
+> -#ifdef CONFIG_FPROBE
+> +#if defined(CONFIG_FPROBE) || defined(CONFIG_KRETPROBES)
+> +#ifndef CONFIG_FPROBE
+> +struct bpf_kprobe {
+> +       struct bpf_kprobe_multi_link *link;
+> +       u64 cookie;
+> +       struct kretprobe rp;
+> +};
+> +
+> +static void bpf_kprobe_unregister(struct bpf_kprobe *kps, u32 cnt)
+> +{
+> +       for (int i =3D 0; i < cnt; i++)
+> +               unregister_kretprobe(&kps[i].rp);
+> +}
 
-I don't actually remember why I had __trace_puts() pass in the size. I
-could change it to:
+Nack.
+This is not a good idea.
+unregister_kretprobe() calls synchronize_rcu().
+So the above loop will cause soft lockups for sure.
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5b46924fdff5..d5a939b8c391 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -331,10 +331,10 @@ int __trace_printk(unsigned long ip, const char *fmt, ...);
- 	if (__builtin_constant_p(str))					\
- 		__trace_bputs(_THIS_IP_, trace_printk_fmt);		\
- 	else								\
--		__trace_puts(_THIS_IP_, str, strlen(str));		\
-+		__trace_puts(_THIS_IP_, str);				\
- })
- extern int __trace_bputs(unsigned long ip, const char *str);
--extern int __trace_puts(unsigned long ip, const char *str, int size);
-+extern int __trace_puts(unsigned long ip, const char *str);
- 
- extern void trace_dump_stack(int skip);
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e575956ef9b5..686741edb803 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1178,11 +1178,10 @@ EXPORT_SYMBOL_GPL(__trace_array_puts);
-  * __trace_puts - write a constant string into the trace buffer.
-  * @ip:	   The address of the caller
-  * @str:   The constant string to write
-- * @size:  The size of the string.
-  */
--int __trace_puts(unsigned long ip, const char *str, int size)
-+int __trace_puts(unsigned long ip, const char *str)
- {
--	return __trace_array_puts(printk_trace, ip, str, size);
-+	return __trace_array_puts(printk_trace, ip, str, strlen(str));
- }
- EXPORT_SYMBOL_GPL(__trace_puts);
- 
-@@ -1201,7 +1200,7 @@ int __trace_bputs(unsigned long ip, const char *str)
- 	int size = sizeof(struct bputs_entry);
- 
- 	if (!printk_binsafe(tr))
--		return __trace_puts(ip, str, strlen(str));
-+		return __trace_puts(ip, str);
- 
- 	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
- 		return 0;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b6d42fe06115..de4e6713b84e 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2116,7 +2116,7 @@ extern void tracing_log_err(struct trace_array *tr,
-  * about performance). The internal_trace_puts() is for such
-  * a purpose.
-  */
--#define internal_trace_puts(str) __trace_puts(_THIS_IP_, str, strlen(str))
-+#define internal_trace_puts(str) __trace_puts(_THIS_IP_, str)
- 
- #undef FTRACE_ENTRY
- #define FTRACE_ENTRY(call, struct_name, id, tstruct, print)	\
-
-
-
-Which removes the strlen() altogether.
-
--- Steve
+pw-bot: cr
