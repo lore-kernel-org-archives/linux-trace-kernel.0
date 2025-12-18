@@ -1,81 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8E02D323D;
-	Thu, 18 Dec 2025 23:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19C7314B9A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 23:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766100658; cv=none; b=KL/nNSpkcNgiroc5ehO725KsbAXGBmqzM+VfNgnqwI/jDZVHenzvLQUvx0Z1V+SMZjLDk7MIyEdoAUMn+BOqau7ATVBTjsqkOv8uMmxQ4PKAL3mFg80NMf87Jc7BU6vhgye4Wh0XAbM6nZBwU+80PgkrW+JRh5LJr5FRVUrvQk8=
+	t=1766100729; cv=none; b=FXwoUlb0galvYyN4RQ6vFXXHCGbbJbtPxEpDWl3TB4QveJIhrzTprcxpANBZI856Y8+zVjNz2MEL5fdMP+eeEV0URGg5MkZoyNIlre0PAuRMgwmGqlJ2a93yQnWkxXSz69f1TdZBfyJgK9EVVJ2weBJ3bnD+b1SgEuAvPQ3rXbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766100658; c=relaxed/simple;
-	bh=eGFZaTtclsxsQS4o39LSV8PZT3QVh0tn85GzPvl6eV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HcBGCkmRz4FH5NAO45P6xqwdnxcj2wD4rCcCZaoh3yKXNZbTaBV//W8jUt4ry9UDfG1EPw1kjBYWe+D++CeSsTVg8QKuAU5g31mmdqpr8HJH5CsI819TLKC4XQzfhgxi96jzXwUdcB0I27TbrQFtkpF8FzWhZ95a21zeQ1PDhGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id D9051C0173;
-	Thu, 18 Dec 2025 23:30:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 0D54D20024;
-	Thu, 18 Dec 2025 23:30:46 +0000 (UTC)
-Date: Thu, 18 Dec 2025 18:32:26 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Thibault Ferrante <thibault.ferrante@canonical.com>, Masami Hiramatsu
- <mhiramat@kernel.org>
-Cc: shuah@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Add test dependency
-Message-ID: <20251218183226.6ada2ec0@gandalf.local.home>
-In-Reply-To: <20230614105031.13543-1-thibault.ferrante@canonical.com>
-References: <20230614105031.13543-1-thibault.ferrante@canonical.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1766100729; c=relaxed/simple;
+	bh=VtuFtOxmYb/PpORgLs2pYY7m0pfwysUEfZQjWZDbffU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FStB7DWl1IjnMbhCQjgrM6kg1sSf2l65zbp+wjTf+jzDChc/mZnHc01bt0LbmD+IOh2eWKy9T7rXMi2Z9B6QfBLEqRqcarhm65pu0rF7nNeCVlqM/g0Rt0fihB8WM8wTUvSM28edN7i3kQNx2dAFX3OaisTMolV1vYxodGyfU5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6vbOYUO; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6vbOYUO"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4f1899960f0so12360501cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 15:32:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766100724; x=1766705524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IloyOMMd5ylI5AueuaVNDNa1yiVVaCMzgGfBgxrjjCE=;
+        b=i6vbOYUOAsbpR9ElGKMXPYe5JQ3KfAA45oedS3qEeM34CDwsqt1WDizfqj/Uw2jbHI
+         +7SY8ncju3P1mJJXqzsuiLv920OIwv2aN/nD3OoORVW9PdamMeP6yaZuW+12KpepxxMH
+         ZtUXmte6hMG20b/jPTwQ//UJDWBSgkESg4r7gkR7xKDEZslv1LWpBeSwx5bFqoO/TqH4
+         iH1iuIfG+4mf/qovX67mTgOlCe1/5tgaHyq5HZ26pKiw4wcAjEmAtfGJc9U7WHBfSls/
+         gBTGJ1TNjH/9x5zZpJY2tQxWKpJ/RkYV1iHuIcMCpNnaWkA5yori+mdILXrcsKghQSdu
+         J4fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766100724; x=1766705524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IloyOMMd5ylI5AueuaVNDNa1yiVVaCMzgGfBgxrjjCE=;
+        b=aKTEBLeHIR5rqeVUx0HPfPOdaDGLxfljv82HvlMhY3GcdOUwrxcb/iT0LHYnpAIDuc
+         1APdYiunDc3IbErtkYTEtAF/Y1rfAC9IhQ28jBgVpjdYUAFyaxe8sZopMf6eStjDazTo
+         5TohYoTVSoMqjGk4osbZIMi47mFUw9qWRT0goCvVH8xFxAmddbZzCdJdXkhNrCSlbRmJ
+         ArCH53dgxhMf8eCW0dnQtXGvjzePhqusZkyhouUWdF2TxQd4rExCNwv2UaZQ9ziITtyQ
+         fjKwS0T0aQNcd6l+/h+qfjrC72RAZyuRng9kJ2iaBabDHu/oRj6t0BS4xjWA5FEwi10q
+         sSEw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9ScEbe3s88gBw4pTcber4ytdPgjNxabLMAKdhVONdSiyn4QgHt97Nj42wKglHUb3X9PVc2n1d9AINxONxOyXghPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDyFEmZpCXWaI6jjZjX9BrwU/j6vjnXyH+8vVda/lHKS5nRcSf
+	0GLQaJyD8D4k824SUnLJbikCdH7uabqkadBumRjOuAmJ2lgap/pUvBgJ7rqs4A==
+X-Gm-Gg: AY/fxX7VYXg91FBA5PhwyCjX8OxSy0vGzJqspJLCzzQLzdFSG/7PqHfH884VQZEoHov
+	i4MYuVhMYN4pYEkSoylG60dmlFAjS5POGz6H4EupkklIlaHd7tbRLzpmrxeYuTikt9PAIJ60Svw
+	Jh1P54/D6a2ra0FHF1cxrcfx+r6a+KaMSO5g7ZLDn2Yn0kcYU+cn2AJLCgcH0mOSD1kMpRik7kt
+	rEGafX3Kx7iV6o2Vnh9oYahkVpoAgyEXaIKv15NLStlHhfLb7QuDQxAEIWJlUU6qFwyjtas/bI2
+	r1S8gb9RlRzVE2t++NNL/3sh+2t2vBVd1pNmZkkOo2vMyLCX3LfFzaHxgWZ6o/7PCvnS55LHn6y
+	+BLcSZ+ZJSZqU2AC/nWx5se/Kur4uLw63Ll0SqwP7tgt2SXz68BRzMKKB00cUZZUv6XdK3Dg7Fd
+	oJvtTBUnNNRz9tE09B
+X-Google-Smtp-Source: AGHT+IEuCqAiz7tKoEs7EuK/X/tMhWVEAkhspAQbq2aT86kftRRnc2o+VQJryW1KpVrUd0c8qF7fgw==
+X-Received: by 2002:a53:bdcb:0:b0:645:5b1f:4ca6 with SMTP id 956f58d0204a3-6466a8a56e5mr521141d50.8.1766095012737;
+        Thu, 18 Dec 2025 13:56:52 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:c44b:debe:992d:e6a])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78fb43b298asm2433287b3.19.2025.12.18.13.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Dec 2025 13:56:52 -0800 (PST)
+Date: Thu, 18 Dec 2025 16:56:52 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] tracing: Remove size parameter in __trace_puts()
+Message-ID: <aUR4pJLYdNs4Zo-Z@yury>
+References: <20251218163739.5605f9ea@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: u3a1qxs51s6n76mbxhid8ckf3kx7a77q
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 0D54D20024
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+QK2SHtCU+nytH6RlcfFlst+ekXBmNHpM=
-X-HE-Tag: 1766100646-589045
-X-HE-Meta: U2FsdGVkX1+V9LIcXeDKa1usnBm7NRdURbJdU/PQ2IX6Gz0RLOTsaTQheOcSEHmQtbW9+e5voj+qo4dktvLZzqVLB7RMGSPW8GSc5dOKebx4uP0nNexaPtX5B9zZfXrDNGEaMRVZ3+OoGJ/iDBBTC1nxb9IXgAp6fiENcue1/OPDxmxjQuBbtQqC1gtWL/cgnhgJjh3k00ryckzsl4Lef50ipzTjTOTklzUsWZ4MgaFFcWQ+NKnerOtp8x87KVvmt+o7xWG7PbplJryJ0CKNGDuK7ffahGN6xe9DVkWhgGWW/UOmyU0h2BcptRxUspS6kqHVhkQTzJhh5NQ73ODsqpKd5RVwCVLh2D0GJWgXfT/HTK06dAzwc0uA7S1aMmoRkhUEdRDZw4J19+7PWnaaM8p3V1qbm5iC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251218163739.5605f9ea@gandalf.local.home>
 
-On Wed, 14 Jun 2023 12:50:31 +0200
-Thibault Ferrante <thibault.ferrante@canonical.com> wrote:
-
-> test_duplicates miss a running dependency and leads to test failures
-> on kernel with specific configuration.
+On Thu, Dec 18, 2025 at 04:37:39PM -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-
-Found another old patch. But this one still needs review.
-
-Masami, does this look good to you?
-
--- Steve
-
-
-> Signed-off-by: Thibault Ferrante <thibault.ferrante@canonical.com>
-> ---
->  .../testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The __trace_puts() function takes a string pointer and the size of the
+> string itself. All users currently simply pass in the strlen() of the
+> string it is also passing in. There's no reason to pass in the size.
+> Instead have the __trace_puts() function do the strlen() within the
+> function itself.
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> index d3a79da215c8..0b5e4543e70b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> @@ -1,7 +1,7 @@
->  #!/bin/sh
->  # SPDX-License-Identifier: GPL-2.0
->  # description: Generic dynamic event - check if duplicate events are caught
-> -# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
-> +# requires: dynamic_events events/syscalls/sys_enter_openat "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
->  
->  echo 0 > events/enable
->  
+> This fixes a header recursion issue where using strlen() in the macro
+> calling __trace_puts() requires adding #include <linux/string.h> in order
+> to use strlen(). Removing the use of strlen() from the header fixes the
+> recursion issue.
+> 
+> Link: https://lore.kernel.org/all/aUN8Hm377C5A0ILX@yury/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+Thanks, Steven. I'll take it with v4 of the above.
+
+Thanks,
+Yury
