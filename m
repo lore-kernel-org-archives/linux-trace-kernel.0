@@ -1,62 +1,64 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECAE22652D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 13:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A08F334C22
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 13:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766063238; cv=none; b=FWSYNswefqbyYqHyxnBJEnBQv/5NE7DI3s6Y/nBc/04HHvOFFhe4WWICuh/7WKPB7TK3mmqtCuG80dSSMiMXIiawagmPnyI1byrnNLiBfbBymksRWYhynDt1Zj+s2Tvma+6VmQ4Vlb85Rx7E5kcySgWNOkQPJbV7Z0JX7p7Wbyo=
+	t=1766063243; cv=none; b=C0b0FJ6Q67pkcU33smaCl2x9DhbK29y+xOeYS4rM+HaPIpx9Fh3hlODpf9Z+px7daZ2LCKrfxCTGcxvPxpldbkD4fM1+BP57gu8AC3aHcenME40ZCQHssysW/hjzaQLwJMFQtezPVCMAFEiS+4HAhx0HYlMbIpxSti2wzpG6BLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766063238; c=relaxed/simple;
-	bh=TZ+mg3/PgNq4Be8wX9hZpd+y0t9hHYR5vNxg2s6h5wg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RxpyKQMA/kyVDx9dEuqpgVuVd2f7fDYTbbq7f9dM381FJz1KK6PEgjD86qodvlgucQfIUfTs565WfZMTtT0yDq2r2hZXOgN+nlAYpdN1YZKrfpCQ/KoH+6t74zDzmKAxKgxVsiRq4rCtf5Ay9nAGPtjSu7zSH1Uleui3qfIP0P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdoW809W; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1766063243; c=relaxed/simple;
+	bh=zbKUAm5oIbrYUr4Pq0Qw8fCPvshez5LuSrD/UJz2biw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YjXLl11th0p80CpN5G2PJCc9ipi4Y1oZvHiiYw0BwEtB0TmH4Rq4pg8eSiiHWjquyQTpB/w4HNelItEOFa2sbIHnNVL7w/+WVilIscnkwd11wxlhk9rQetbif0pTLI23xrtHafI5zwoaf7mC1XXHdT9nUTQZM35S0rGAGRGQ/C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=joh7WqP5; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdoW809W"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0ac29fca1so5520195ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 05:07:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joh7WqP5"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a09d981507so4434275ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 05:07:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766063236; x=1766668036; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6MDSoNjVj8xGwzF3ZHeVHcF1K0gBl7qfRmDmp9Suac=;
-        b=OdoW809WGjlI1Pf+KbvxZQo7VctMVdoyKGbUWZ4TqGSsUywHw7Yk4joH/DLbQlzDCT
-         95NkSq5ASpr5Fyydj+9U3CqNEhlWFQZGpJRHAMoi7eh1p0KH+MGHABVNIwcHibFPgqNU
-         cXF8khAiQSze0Fx54Vp3/2/yZxQDyqzyvOGTUn6BbheWIlX6FMTIJ0UfjyXyr05BzHuF
-         QoiTQKIp8qIbiuHIVj7KoTWnCKSPjxYPU8oR1W9EEjnpqvYkserwLZU4dlYIvXyVkbNv
-         GshfijHgdBUwrCkHATYH8wqs6bcGhHzTlUUvFdcRfwxWKhVQ56HESJH3ByNQiy6DH10v
-         /bsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766063236; x=1766668036;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1766063241; x=1766668041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o6MDSoNjVj8xGwzF3ZHeVHcF1K0gBl7qfRmDmp9Suac=;
-        b=bOqNRMm6/MJoontcU4YVoXrcFFBONFLSdBd80IKIUZp8dZ3MEv2Oki16if22DCQkxH
-         SamJFjJJyqQT5TrThyHifuhenf1+UCCGQsmoN0kN/8zkHSyzIGgGE4u49e+sICyH5kO4
-         0LtSUj/eEqqPqKlbS1K+cOkxoMfY9S0MeEW/lTB9GTi9jm/kSKZcFJgt9BXcxF3BI3xv
-         +2050ICO7catYpq6/RQbztJkcMaR3OVbmBSY4tsUoIqeiZlfoRGwm3lKGpoArGABi2/6
-         djBYE4NTZuvaRkBGSSuI2q66bj6+RdHCbFuVDcP4tNIhZUy8F7trwrqmjXtEuzuCCCNO
-         QHvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvBqhsBQB2Jjl7fBbA4fE0xe8rqAKl9UT+vQmYAdgLtJAoZYiSZXhj6uX8C+4svsfhgHBnqF99O/2oD9ZxeW2QPHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKHuSn4Msr5Bc/xm/ZanQUAposFs8i0PisCRX3agE5OjVSV2+L
-	t4PQRbRgndX2kTK5TU78kaKZ8eI8oMKyTMgnGy5pnFecQk93vK028xHN
-X-Gm-Gg: AY/fxX5miaEi4McivRBOtgHYAWd7nhKP8QDDXTfS1eaLyZCi88Lak53Q2WiQ0earYLJ
-	FTWYnLP+AsKoQEB56RMSQtlptDAX/iyHWz6pVep+NnUsod1oJrXomjoJovY0uUHWjkxRG6GGOg8
-	O5tTmdhGSfgmgYFwqFqt9RXip14Q3B8skTPinVaxXdmVyy+Y0qc0W+oxx21oziA/qbsdUT6Kjxp
-	TbGO4BEsnpw4BIvwHKmcBwn/OeRpaXPi2VItRKPQb/tz0qu34C0vade+eR19xv7RA24xrLPpsaD
-	FdiCQRwmcZmsZkr08k5ame19htAwULL1zw7cEeODP26j3VD8hz2JrzsbXSPFEIssHsLYHIuiyib
-	/LXNoAd+jLJsYw5zmjJjIA7O1I5pC/7bc92WrwTN3ModNXm/JVS9QWux5MkTU3J+NUAs6ggfq03
-	tFIU2M6KNHNYE0h3qfnf0Ek9ViL33dEJa+FjM=
-X-Google-Smtp-Source: AGHT+IHvO+1PD8RrEUebpSGTyKqxjCqg0KVzQG9kyzDrg3ZQ6OBh/WipWLO57nrDhnRsudiWhSkS4g==
-X-Received: by 2002:a17:903:1986:b0:295:738f:73fe with SMTP id d9443c01a7336-29f23c7d087mr202108065ad.30.1766063236135;
-        Thu, 18 Dec 2025 05:07:16 -0800 (PST)
+        bh=xfWGrzFwQxVXKLSf8bK35Njw60Z0UXLSaG1EWbBTvoM=;
+        b=joh7WqP5+e0bTINEg1VVmEsk5qcgnr/knqedVyFaR1w8zUYQkGUOcSWEiToU0S+F9Q
+         Cn0UXcvFiZYfBR4q0PX5kqURxbWjLTxZtRX+eupKzm+BnP5no0+o1lFhhF/lQ8at2BQ3
+         Ap98lWv0QSYAKSvLi8VXIKN3obLOlQrIOUg629vBgt54Sq8B8uusGtfGeuUrmYqkfMcM
+         2BM7Jt4mQcx8S0A7UQVIFhn/vbnLcTR16ff5/EaoTdOViNjNW1zC/vdmPktiwaMJXbFw
+         nARbCmklIBasTWFaxXVTK5o/0Qckp8NGkbsRyZGn/mhcbrqEynh81AabOMq0vU47QEn9
+         L0Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766063241; x=1766668041;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xfWGrzFwQxVXKLSf8bK35Njw60Z0UXLSaG1EWbBTvoM=;
+        b=lHQVwIfW6HoAd//xVukJ2Az4NFGoAtFGLMwrxQG8ggKi0mMLMVagUNhY/V5Y72hJd2
+         M2QjTasnr0SE1oOzt4R9xFvJFBlLU+Z5dIQAER66hlUcAqCkKDgGSkZbQoMVfdLYm4S3
+         iiTMWWBWUiA+fKU8j59wd6KrLEWvbn+wQT2RbW51JHUDiGXqdHMxOhtTZC2Dr0DKc403
+         SvJ+wvQ+YtzYaWRLyOTO9A115SfW9fS8u/QROjdSFyZnlcYvpa5iHIEIWwH+aVIOs7Rv
+         Qdhzd9sl5MkERslDrbITx3Y7BoyUoj4vEH1p3b/h/e5cUTft29eAh8eLA+JS7kt68sRs
+         ADAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvqJclLsnAD5aQb+4bBDuQFO6MnKVAYKao9Q5OjQzs8MT1fZO2ibbpJiof+pF4U8+ZKosQ0wB/dWXsoNlTIUimDIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcJ2qvyF0z34xlflyepX79klRHW+12Q8i7OpxZd+q1+ZbMMx5+
+	JAR8ku+vIi9Wnmcq+wWuQbRWY0mGUeGu4XvFa824KsOxHz3bcAFyxYa4
+X-Gm-Gg: AY/fxX50g+nk7z1NNcr+ThtO6v8nGx06w0cZwRUUaWzPegjqlvcFYTLF0c/r5ULNqhJ
+	4gZ9H0vurv623zrJsjw3FUVFa1+lHcTjsD32oeheY/dsp1f+57TAmChd8TupVU1uPR1tFSOsIQM
+	DN/sN6moimUpPHO9BzbfFqcHaYgEu0/qdGkLOgU5kzsxIv2Eh1GZwouFsHu8dys+3fa6DuZDjY2
+	7fOYQ0E3/BayXhrX/9vvdP3trhphwjBzyK4bF02SCiCmximCKSuEmPPb61STiQ6vEWFEjVejWnT
+	1Vi7+WFRJkt6XpZGXoXQjmbanzUuuXbsCh8nS1Z4uZXJ00kbtcQdkFjpqYnENJR/dybUVkoqg9X
+	nDSlVMK0vXxRdx8jPYfchFsQKrPJbyFXTva+u2kRkZkW2kXs7VH0+cWw8cMgunLcptUh2UcRzii
+	/DsMxEunp1wlfVT+sVhS+IXTE/shCyPTgbAas=
+X-Google-Smtp-Source: AGHT+IE2dPr6IKueNkbs60vHXI/kEmriix+hjdpYj9PL6qm8QcZvc/lPn2FJdvkRkQDLRAi3HNJglg==
+X-Received: by 2002:a17:903:2452:b0:2a0:acb8:9e80 with SMTP id d9443c01a7336-2a2cac7e29cmr28263405ad.29.1766063241197;
+        Thu, 18 Dec 2025 05:07:21 -0800 (PST)
 Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d1926cd2sm25539905ad.77.2025.12.18.05.07.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d1926cd2sm25539905ad.77.2025.12.18.05.07.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 05:07:15 -0800 (PST)
+        Thu, 18 Dec 2025 05:07:20 -0800 (PST)
 From: liujing40 <liujing.root@gmail.com>
 X-Google-Original-From: liujing40 <liujing40@xiaomi.com>
 To: ast@kernel.org,
@@ -76,10 +78,12 @@ Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	liujing40@xiaomi.com
-Subject: [PATCH 0/2] bpf: Add kretprobe fallback for kprobe multi link
-Date: Thu, 18 Dec 2025 21:06:27 +0800
-Message-Id: <20251218130629.365398-1-liujing40@xiaomi.com>
+Subject: [PATCH 1/2] bpf: Prepare for kprobe multi link fallback patch
+Date: Thu, 18 Dec 2025 21:06:28 +0800
+Message-Id: <20251218130629.365398-2-liujing40@xiaomi.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20251218130629.365398-1-liujing40@xiaomi.com>
+References: <20251218130629.365398-1-liujing40@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -88,24 +92,364 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch provides a fallback implementation of kprobe multi link
-using the traditional kretprobe API When fprobe is not available.
-This ensures compatibility with older kernels or platforms where
-fprobe support is not compiled in.
+This moves some functions and structs around to make the following patch
+easier to read.
 
-Uses kretprobe's entry_handler and handler callbacks to simulate
-fprobe's entry/exit functionality.The API remains identical to
-fprobe-based implementation, allowing userspace tools to work
-transparently with either backend. Cookie support, both entry
-and return probes, and session handling are fully supported.
+Signed-off-by: Jing Liu <liujing40@xiaomi.com>
+---
+ kernel/trace/bpf_trace.c | 304 +++++++++++++++++++--------------------
+ 1 file changed, 152 insertions(+), 152 deletions(-)
 
-Jing Liu (2):
-  bpf: Prepare for kprobe multi link fallback patch
-  bpf: Implement kretprobe fallback for kprobe multi link
-
- kernel/trace/bpf_trace.c | 603 ++++++++++++++++++++++++++++-----------
- 1 file changed, 443 insertions(+), 160 deletions(-)
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index fe28d86f7c35..1fd07c10378f 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2291,67 +2291,6 @@ struct bpf_kprobe_multi_run_ctx {
+ 	unsigned long entry_ip;
+ };
+ 
+-struct user_syms {
+-	const char **syms;
+-	char *buf;
+-};
+-
+-#ifndef CONFIG_HAVE_FTRACE_REGS_HAVING_PT_REGS
+-static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
+-#define bpf_kprobe_multi_pt_regs_ptr()	this_cpu_ptr(&bpf_kprobe_multi_pt_regs)
+-#else
+-#define bpf_kprobe_multi_pt_regs_ptr()	(NULL)
+-#endif
+-
+-static unsigned long ftrace_get_entry_ip(unsigned long fentry_ip)
+-{
+-	unsigned long ip = ftrace_get_symaddr(fentry_ip);
+-
+-	return ip ? : fentry_ip;
+-}
+-
+-static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
+-{
+-	unsigned long __user usymbol;
+-	const char **syms = NULL;
+-	char *buf = NULL, *p;
+-	int err = -ENOMEM;
+-	unsigned int i;
+-
+-	syms = kvmalloc_array(cnt, sizeof(*syms), GFP_KERNEL);
+-	if (!syms)
+-		goto error;
+-
+-	buf = kvmalloc_array(cnt, KSYM_NAME_LEN, GFP_KERNEL);
+-	if (!buf)
+-		goto error;
+-
+-	for (p = buf, i = 0; i < cnt; i++) {
+-		if (__get_user(usymbol, usyms + i)) {
+-			err = -EFAULT;
+-			goto error;
+-		}
+-		err = strncpy_from_user(p, (const char __user *) usymbol, KSYM_NAME_LEN);
+-		if (err == KSYM_NAME_LEN)
+-			err = -E2BIG;
+-		if (err < 0)
+-			goto error;
+-		syms[i] = p;
+-		p += err + 1;
+-	}
+-
+-	us->syms = syms;
+-	us->buf = buf;
+-	return 0;
+-
+-error:
+-	if (err) {
+-		kvfree(syms);
+-		kvfree(buf);
+-	}
+-	return err;
+-}
+-
+ static void kprobe_multi_put_modules(struct module **mods, u32 cnt)
+ {
+ 	u32 i;
+@@ -2360,12 +2299,6 @@ static void kprobe_multi_put_modules(struct module **mods, u32 cnt)
+ 		module_put(mods[i]);
+ }
+ 
+-static void free_user_syms(struct user_syms *us)
+-{
+-	kvfree(us->syms);
+-	kvfree(us->buf);
+-}
+-
+ static void bpf_kprobe_multi_link_release(struct bpf_link *link)
+ {
+ 	struct bpf_kprobe_multi_link *kmulti_link;
+@@ -2469,6 +2402,152 @@ static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
+ #endif
+ };
+ 
++static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
++{
++	struct bpf_kprobe_multi_run_ctx *run_ctx;
++
++	run_ctx = container_of(current->bpf_ctx, struct bpf_kprobe_multi_run_ctx,
++			       session_ctx.run_ctx);
++	return run_ctx->entry_ip;
++}
++
++struct modules_array {
++	struct module **mods;
++	int mods_cnt;
++	int mods_cap;
++};
++
++static int add_module(struct modules_array *arr, struct module *mod)
++{
++	struct module **mods;
++
++	if (arr->mods_cnt == arr->mods_cap) {
++		arr->mods_cap = max(16, arr->mods_cap * 3 / 2);
++		mods = krealloc_array(arr->mods, arr->mods_cap, sizeof(*mods), GFP_KERNEL);
++		if (!mods)
++			return -ENOMEM;
++		arr->mods = mods;
++	}
++
++	arr->mods[arr->mods_cnt] = mod;
++	arr->mods_cnt++;
++	return 0;
++}
++
++static bool has_module(struct modules_array *arr, struct module *mod)
++{
++	int i;
++
++	for (i = arr->mods_cnt - 1; i >= 0; i--) {
++		if (arr->mods[i] == mod)
++			return true;
++	}
++	return false;
++}
++
++static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u32 addrs_cnt)
++{
++	struct modules_array arr = {};
++	u32 i, err = 0;
++
++	for (i = 0; i < addrs_cnt; i++) {
++		bool skip_add = false;
++		struct module *mod;
++
++		scoped_guard(rcu) {
++			mod = __module_address(addrs[i]);
++			/* Either no module or it's already stored  */
++			if (!mod || has_module(&arr, mod)) {
++				skip_add = true;
++				break; /* scoped_guard */
++			}
++			if (!try_module_get(mod))
++				err = -EINVAL;
++		}
++		if (skip_add)
++			continue;
++		if (err)
++			break;
++		err = add_module(&arr, mod);
++		if (err) {
++			module_put(mod);
++			break;
++		}
++	}
++
++	/* We return either err < 0 in case of error, ... */
++	if (err) {
++		kprobe_multi_put_modules(arr.mods, arr.mods_cnt);
++		kfree(arr.mods);
++		return err;
++	}
++
++	/* or number of modules found if everything is ok. */
++	*mods = arr.mods;
++	return arr.mods_cnt;
++}
++
++struct user_syms {
++	const char **syms;
++	char *buf;
++};
++
++#ifndef CONFIG_HAVE_FTRACE_REGS_HAVING_PT_REGS
++static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
++#define bpf_kprobe_multi_pt_regs_ptr()	this_cpu_ptr(&bpf_kprobe_multi_pt_regs)
++#else
++#define bpf_kprobe_multi_pt_regs_ptr()	(NULL)
++#endif
++
++static unsigned long ftrace_get_entry_ip(unsigned long fentry_ip)
++{
++	unsigned long ip = ftrace_get_symaddr(fentry_ip);
++
++	return ip ? : fentry_ip;
++}
++
++static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
++{
++	unsigned long __user usymbol;
++	const char **syms = NULL;
++	char *buf = NULL, *p;
++	int err = -ENOMEM;
++	unsigned int i;
++
++	syms = kvmalloc_array(cnt, sizeof(*syms), GFP_KERNEL);
++	if (!syms)
++		goto error;
++
++	buf = kvmalloc_array(cnt, KSYM_NAME_LEN, GFP_KERNEL);
++	if (!buf)
++		goto error;
++
++	for (p = buf, i = 0; i < cnt; i++) {
++		if (__get_user(usymbol, usyms + i)) {
++			err = -EFAULT;
++			goto error;
++		}
++		err = strncpy_from_user(p, (const char __user *) usymbol, KSYM_NAME_LEN);
++		if (err == KSYM_NAME_LEN)
++			err = -E2BIG;
++		if (err < 0)
++			goto error;
++		syms[i] = p;
++		p += err + 1;
++	}
++
++	us->syms = syms;
++	us->buf = buf;
++	return 0;
++
++error:
++	if (err) {
++		kvfree(syms);
++		kvfree(buf);
++	}
++	return err;
++}
++
+ static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
+ {
+ 	const struct bpf_kprobe_multi_link *link = priv;
+@@ -2520,15 +2599,6 @@ static u64 bpf_kprobe_multi_cookie(struct bpf_run_ctx *ctx)
+ 	return *cookie;
+ }
+ 
+-static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
+-{
+-	struct bpf_kprobe_multi_run_ctx *run_ctx;
+-
+-	run_ctx = container_of(current->bpf_ctx, struct bpf_kprobe_multi_run_ctx,
+-			       session_ctx.run_ctx);
+-	return run_ctx->entry_ip;
+-}
+-
+ static __always_inline int
+ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 			   unsigned long entry_ip, struct ftrace_regs *fregs,
+@@ -2597,6 +2667,12 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
+ 				   fregs, true, data);
+ }
+ 
++static void free_user_syms(struct user_syms *us)
++{
++	kvfree(us->syms);
++	kvfree(us->buf);
++}
++
+ static int symbols_cmp_r(const void *a, const void *b, const void *priv)
+ {
+ 	const char **str_a = (const char **) a;
+@@ -2627,82 +2703,6 @@ static void symbols_swap_r(void *a, void *b, int size, const void *priv)
+ 	}
+ }
+ 
+-struct modules_array {
+-	struct module **mods;
+-	int mods_cnt;
+-	int mods_cap;
+-};
+-
+-static int add_module(struct modules_array *arr, struct module *mod)
+-{
+-	struct module **mods;
+-
+-	if (arr->mods_cnt == arr->mods_cap) {
+-		arr->mods_cap = max(16, arr->mods_cap * 3 / 2);
+-		mods = krealloc_array(arr->mods, arr->mods_cap, sizeof(*mods), GFP_KERNEL);
+-		if (!mods)
+-			return -ENOMEM;
+-		arr->mods = mods;
+-	}
+-
+-	arr->mods[arr->mods_cnt] = mod;
+-	arr->mods_cnt++;
+-	return 0;
+-}
+-
+-static bool has_module(struct modules_array *arr, struct module *mod)
+-{
+-	int i;
+-
+-	for (i = arr->mods_cnt - 1; i >= 0; i--) {
+-		if (arr->mods[i] == mod)
+-			return true;
+-	}
+-	return false;
+-}
+-
+-static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u32 addrs_cnt)
+-{
+-	struct modules_array arr = {};
+-	u32 i, err = 0;
+-
+-	for (i = 0; i < addrs_cnt; i++) {
+-		bool skip_add = false;
+-		struct module *mod;
+-
+-		scoped_guard(rcu) {
+-			mod = __module_address(addrs[i]);
+-			/* Either no module or it's already stored  */
+-			if (!mod || has_module(&arr, mod)) {
+-				skip_add = true;
+-				break; /* scoped_guard */
+-			}
+-			if (!try_module_get(mod))
+-				err = -EINVAL;
+-		}
+-		if (skip_add)
+-			continue;
+-		if (err)
+-			break;
+-		err = add_module(&arr, mod);
+-		if (err) {
+-			module_put(mod);
+-			break;
+-		}
+-	}
+-
+-	/* We return either err < 0 in case of error, ... */
+-	if (err) {
+-		kprobe_multi_put_modules(arr.mods, arr.mods_cnt);
+-		kfree(arr.mods);
+-		return err;
+-	}
+-
+-	/* or number of modules found if everything is ok. */
+-	*mods = arr.mods;
+-	return arr.mods_cnt;
+-}
+-
+ static int addrs_check_error_injection_list(unsigned long *addrs, u32 cnt)
+ {
+ 	u32 i;
 -- 
 2.25.1
 
