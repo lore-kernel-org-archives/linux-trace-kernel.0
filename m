@@ -1,56 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592D2330D30;
-	Thu, 18 Dec 2025 06:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B000C2BD022;
+	Thu, 18 Dec 2025 07:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766040612; cv=none; b=ZRf5uo2iAZCsEbHdgS/XO3eyHn56C64dYrcG4R9IpiuO7CNNcr3rnxDHcfiyV4Yu2pPPjH1f/TvUsmZOrMhZ/Z5t8+7t6vXsTndra/4DUqPHESt7bMWHXDOJGKQsR8qpP7u7qukQ00X1XVVoc6/wq7DVTXYLxkyZ2opy2aoLi4Y=
+	t=1766042830; cv=none; b=e3ztI1SJr6f+MzJNlmVLC0t8vxZA3/Oqz82P6/chq9/OTPatu5S2ZMbuV8jx47Eov11m8gshZP/j+sRR50iNJ2TiHC5up+cjflpxYO9aSUxPj0rSkqmSeZUzTus4wjEd7G5EFNRKXPU/aRIZGD6ucXyscuUAkDl5edemeVDuTdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766040612; c=relaxed/simple;
-	bh=sLR5ycW13Ee+BW0II1CaUwlFCxgLKorpCzmXU5oGFKE=;
+	s=arc-20240116; t=1766042830; c=relaxed/simple;
+	bh=clT0gPjopYwAtuLFyuWHjiWCNEFAAA9F2UKMovCyEGM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Gf3AIlPLhgJM7O1vDPsw70kMD0pXKYKTB3aUIfcWlFv8s8RI0Ub/C4oJAcL+8+e9xdPmvy86JIfu59qmjf3V08pflsXw1rtfC6ntAgjv9LNTdPaXjrJPw7hMc2f5hRklm7pW0mdvmdQSRpSgranuq94A+nRemTMnNyalNSQfxL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BJBePF4w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cyqy2sk1; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=CbaUnjcNGhqiF/sgONDzgg+pFAeDHDOiTnyzOE8WsSeXk5MPOXrwZfb+t+QxexXw1ldU3dzYMOqci341lC35PqA6X1OUCFEC9s1C/AL3aSKXPwvr17VQIzi76FJyNplZYZCsAvIr4QruoL/EiUceXQYX53kHg7c/ijD9d3Zwyw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o/I/+iuK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nu+8E0k2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BJBePF4w";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cyqy2sk1"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o/I/+iuK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nu+8E0k2"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1766040609;
+	s=2020; t=1766042825;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sLR5ycW13Ee+BW0II1CaUwlFCxgLKorpCzmXU5oGFKE=;
-	b=BJBePF4wUPbXGmABKn9c9RyBLWJvRALhaPEawgpGNG953KcNBtqZusdWP+MPzwZy9BN85Q
-	1fSJ9DMVoDG2Oo6xrt5x/tJtTyxn3/F8v8flysJ1tgoB6pPXqeUTgU5/IkWw4UV8y2hFBR
-	oRZowEAKj6SDHE8X75z6IDs99nVfKD7EdzwwJCLQ8cmUw6403H+4vYingXypWEFQXgR8xJ
-	9drwpg5iZpU/lkP357cSNCjCyLwFeio43kWZ8VVJamkFxQvp//MQm2BD8syAXhwuJoxQ4I
-	HdF/E0bmlUpd1BGEy2Did+A9yVDXGJE+4U9Pj1Cd6O+9nq8IVwv58rIZgB07lw==
+	bh=clT0gPjopYwAtuLFyuWHjiWCNEFAAA9F2UKMovCyEGM=;
+	b=o/I/+iuK0TPWWOvaVafIcusA+Wb06kuqop1YhiRAz1TDglbswVpg7aAjLnXPec4YjjtD+K
+	P4oXx83Si7UhgAXcq9+tmbACm8DUJRMePfqBDMRMO+OSDM0V6a4v8hoPF/3AYka7t1/EF6
+	OPFmQtjiqHeUtSlj1Q1oTgwijF8UcUMVrwDV2ak9F3cEkJE2fM5q4jJ0YyYYUjw5Qy5kGG
+	nv/SdW74aU80itDGBMsEJshWm3ZKmNyNJTIuR/rDqOZVH3NUeVjxQfM28a+jnd5J2vZ9u/
+	6gIxkQVPglbUJHKbQwdQoDaTyaBTS4KIKZlHapaHHOG2hMO3GS0EAX7h6sjZXg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1766040609;
+	s=2020e; t=1766042825;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sLR5ycW13Ee+BW0II1CaUwlFCxgLKorpCzmXU5oGFKE=;
-	b=cyqy2sk1uox55aquzCmbA0DuUYV05Eu6El+gIeeIOB8HDHFurHCYRz4i0aZ9uvqCzSBEPW
-	r7WgFHKqaMs3oRCw==
+	bh=clT0gPjopYwAtuLFyuWHjiWCNEFAAA9F2UKMovCyEGM=;
+	b=nu+8E0k2yi2+m0ny4sx+AxDCPTtzLbh6ADMA6JnJOPwN9BQYzUbq7ihBpJGgyosOpV+rC3
+	RXvx1HJPJD4o5LBg==
 To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
  Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco
- <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
+ <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
  Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v3 07/13] rv: Convert the opid monitor to a hybrid
- automaton
-In-Reply-To: <20251205131621.135513-8-gmonaco@redhat.com>
+Subject: Re: [PATCH v3 10/13] rv: Add support for per-object monitors in DA/HA
+In-Reply-To: <20251205131621.135513-11-gmonaco@redhat.com>
 References: <20251205131621.135513-1-gmonaco@redhat.com>
- <20251205131621.135513-8-gmonaco@redhat.com>
-Date: Thu, 18 Dec 2025 13:50:01 +0700
-Message-ID: <87qzssi8rq.fsf@yellow.woof>
+ <20251205131621.135513-11-gmonaco@redhat.com>
+Date: Thu, 18 Dec 2025 14:26:57 +0700
+Message-ID: <87o6nwi726.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,21 +57,22 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
-> The opid monitor validates that wakeup and need_resched events only
-> occur with interrupts and preemption disabled by following the
-> preemptirq tracepoints.
-> As reported in [1], those tracepoints might be inaccurate in some
-> situations (e.g. NMIs).
+> RV deterministic and hybrid automata currently only support global,
+> per-cpu and per-task monitors. It isn't possible to write a model that
+> would follow some different type of object, like a deadline entity or a
+> lock.
 >
-> Since the monitor doesn't validate other ordering properties, remove the
-> dependency on preemptirq tracepoints and convert the monitor to a hybrid
-> automaton to validate the constraint during event handling.
-> This makes the monitor more robust by also removing the workaround for
-> interrupts missing the preemption tracepoints, which was working on
-> PREEMPT_RT only and allows the monitor to be built on kernels without
-> the preemptirqs tracepoints.
+> Define the generic per-object monitor implementation which shares part
+> of the implementation with the per-task monitors.
+> The user needs to provide an id for the object (e.g. pid for tasks) and
+> define the data type for the monitor_target (e.g. struct task_struct *
+> for tasks). Both are supplied to the event handlers, as the id may not
+> be easily available in the target.
 >
-> [1] - https://lore.kernel.org/lkml/20250625120823.60600-1-gmonaco@redhat.com
+> The monitor storage (e.g. the rv monitor, pointer to the target, etc.)
+> is stored in a hash table indexed by id. Monitor storage objects are
+> automatically allocated unless specified otherwise (e.g. if the creation
+> context is unsafe for allocation).
 >
 > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
