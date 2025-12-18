@@ -1,160 +1,155 @@
-Received: from mail-oa1-f65.google.com (mail-oa1-f65.google.com [209.85.160.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4CA2D5C8E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 15:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF51234CFDB;
+	Thu, 18 Dec 2025 15:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766070341; cv=none; b=UH/JpLZnh9GTCvHf7E0VEDRh93EfzWEkelGRexaScVVg9dWTDBjyprPiFkVynLSo3moXLbNAApYexdkKw9YDzVRlaH3q+2GKKJkyG5sOeKmKWpLrX3R4zPC8g+TcQ7Hyk2eoWW2+/K+PbHQXuMuJqWyQuV8t9UTL1A2/5OE+Bbg=
+	t=1766071094; cv=none; b=s/c4SKNgu+ryeY4dokrEosj9ldt0ltUEy9hqFrwymY1nviE6CyvFF2NY23rUK+rU0vO9pCuhxe00O4i5+fv6cWz6Md1M/hJvDCQuQ1gk9R4U0n6wFr1LLabZxcm0wizt2+jsq9ZIpcjWsV8//L9wECCtPhcE/pRKwBCLc/gVnfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766070341; c=relaxed/simple;
-	bh=2fXW/yTQnSzTFycxk33wkAysOyNdy+IqqPw6vt65LzQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EHcJhMAc3EAt5b0hFwxkUKwdiybkGdNdgfUahPnGZq6TdC+dVuCoI/7theFdGnQW1JgJb0+6OdY+DF54pIGYn8YKnZDpvlvWbxb5Pca4pChg8ONBtyU9QrXTa67dzWUBsMax7UZmuQIuSEARjofE0WIx2Mtn0xHB9Tp4c9gbtZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OT7P/G9X; arc=none smtp.client-ip=209.85.160.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT7P/G9X"
-Received: by mail-oa1-f65.google.com with SMTP id 586e51a60fabf-3e37ad3d95aso534056fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 07:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766070338; x=1766675138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7x1LVvCf3VLvAjtIqXQBbk4xwbIbAqccEsSWEs0YiDA=;
-        b=OT7P/G9X9OJSjqla3Y/0bv4C+Q3L5xtHMNGGeeBswTGDmQk/JL17a9QWOoyf6sL8Qc
-         OlVjpXiiQv8+7kd6fRbdhtnhEJ8y88RRfRXDgAWQBQzBXFo1jnCbKZCtNArtiOtCCksl
-         RmJHDAYZD7Bt+9gNTYpW43gger22LrCoPS0rNbeAfDVJBdKo7Kxgc8U+QY731m1o2jtf
-         nYa04cw3+nLxh5w968OoOonAvJexhkgjmWgY/2hSc/WKjcgqHaWECvETqo2AFOlOhRme
-         qXfR9UuYZTItdtZUBS125fOpsBR2gZ0yjfqb5WTWqWxICYVPH0NhdsEKHsw9SuWMgraY
-         MKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766070338; x=1766675138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7x1LVvCf3VLvAjtIqXQBbk4xwbIbAqccEsSWEs0YiDA=;
-        b=t7h4wpfUdblLuKXzZaiBb5jYU+fenHcOXoGEcJN5qrY7Xs27oVqdwrqHpX9ZUKDr92
-         Keu0WyqvNkEtTdySAyjnlPEFkpQS9U0smtJl3p9GceTCD68Qia5NoytNZDgeQnDNaJZY
-         X/2KSokRi5vuq1stCJC0maxFyOMZXrrMExihaS3AGBS5N8XrcLaAbbX9wrE6CmlAzVyJ
-         BPQRNecsxr7R0u62yqBquEQMm7I8aVx1uyR/E/f4vvfOQ8Rl0ovFDYikRTGh1ERHwov+
-         9Kp0+tG1eVdXswjVJDtDH0NZtmKPcezF72MXTdB0cSoyqdZeC369ivSTJqrf0qpFVu+K
-         bErw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOhPE+M9UgKXDLH+TlK83mSYARlUC4B7E9qLtasaWbIhzRnIvxkw7mWlaQqjBdg/lgggMN7YbfpPLYkJOX5g/vD2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkvkSh2EnXqCaTVKnJ2IXvyDvmkTB4qALbFCuSxqtSVmM3J6g5
-	CH75odseRSJn+isIFn4F6RlGCgioyOSRBLLDe29dLhc1Km7uUBeXJwJc/SZbzgTIWQd3RoOUEuB
-	fU71SLWqBFC+H/e+X+B/xT/qWsPQtgTw=
-X-Gm-Gg: AY/fxX4TMi5b8gCbGs8JrOIephdSGFPz9j9nOdf5xRLKcCynuqnueXb90RDDjMTO6s0
-	XGBMriyDOJ63mm1FRIrVqupqV50lE3b1LOjukFFBn6ZGmYkVNAF0tqgYGh8USgLZnR1OVah2Fl9
-	mjmnc9KaTZr+pEd9oZoPkOvoLAT8XbhqL2TNJ8S6/cLfo30F9QejYtBd7GyZFg9RjxJzTZHWjwN
-	6oxA45H/O4H1I527xagZh92xqwdIUiGRjW8IZj65z5i7KMyWTma/DDiHP5lb/RmEiMjhV0=
-X-Google-Smtp-Source: AGHT+IF/fTgkutYeIcFjjXnYQpZJcb84xx01Knr1X9n+e2+wE5pUKMKQXwP4SNGCv9mNmL7FhzoGgDf01xZJLuAW9uk=
-X-Received: by 2002:a05:6808:1919:b0:450:4628:e3ce with SMTP id
- 5614622812f47-455ac843d39mr8893507b6e.15.1766070334496; Thu, 18 Dec 2025
- 07:05:34 -0800 (PST)
+	s=arc-20240116; t=1766071094; c=relaxed/simple;
+	bh=5mRUAGVgIej87qg9kGbMLQqMWji+/g68YRxTl/i7zuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KdcXvygOzVAGNnBN1oWqeS0VPIvadlG19AzCLj41LODWtpKpWqhr5q5bzUZSUeLkmxDbp26rfeSoeB8iFDEz3zkig3GejOMBYqpQ26syQtpYJoWJO159q5prgMs+PrQAcfsGnJW4VBbSvCLhTaUIL6Xysc8MLyJDxCUYIXL7qwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 698F512E4C;
+	Thu, 18 Dec 2025 15:18:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id ABF8A6000C;
+	Thu, 18 Dec 2025 15:18:04 +0000 (UTC)
+Date: Thu, 18 Dec 2025 10:19:42 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Menglong Dong <menglong8.dong@gmail.com>, Song Liu
+ <song@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/9] ftrace: Add update_ftrace_direct_mod
+ function
+Message-ID: <20251218101942.0716efd6@gandalf.local.home>
+In-Reply-To: <20251215211402.353056-7-jolsa@kernel.org>
+References: <20251215211402.353056-1-jolsa@kernel.org>
+	<20251215211402.353056-7-jolsa@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
- <20251118123639.688444-4-dongml2@chinatelecom.cn> <874ipnkfvt.fsf@igel.home>
-In-Reply-To: <874ipnkfvt.fsf@igel.home>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Thu, 18 Dec 2025 23:05:23 +0800
-X-Gm-Features: AQt7F2rBCJ5wWtnPg0y__c3D4AxuhAyRjyuKDUvUD5czSDgloXW-454tfs3x8_U
-Message-ID: <CADxym3byFuS7c9C17pUc7EE+ipAoQMdJgsBM0wr5+VV5esNw-Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 3/6] bpf: fix the usage of BPF_TRAMP_F_SKIP_FRAME
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: ast@kernel.org, rostedt@goodmis.org, daniel@iogearbox.net, 
-	john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev, 
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
-	jiang.biao@linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: ABF8A6000C
+X-Stat-Signature: 7stoz3y9s7gbc4gkicouzdj7p4f5jkai
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18Tawb5aeJtZNDj3eiQyPJECxVNSgJGjLo=
+X-HE-Tag: 1766071084-610297
+X-HE-Meta: U2FsdGVkX1+XAMvJSK/Fo4/cUd56YAbeR4EMtxvTGxe6O5eiPBzwZZQW8AjtW8GvcqRXaAi4Xg0Dfvb0qmXfsZLi2ZL09yQG6rNuFLlECwO2WvT+949txinB85A5fYnB02qTqj7gtGAxxhgGPNrqLC9pyVnRe33f2Rk/S9T02jpAO7kSFrZ8DDy98lJe1FxTGRbWK8qJAV7KjclFuPIKC3I/4QM2Re8ZpHqBQRF7CT9qYdlEEZFjrYgjNEZdGEQrSeP36Bm9+ENQRURwkY1X6RLmM5CeZwCBC3eFkBqHvp8NBDWiEu8ngW5hNYYU4tHuxg2zp3RSXNQ7DBGBfQihaUSvhWpda+YW
 
-On Thu, Dec 18, 2025 at 10:45=E2=80=AFPM Andreas Schwab <schwab@linux-m68k.=
-org> wrote:
->
-> On Nov 18 2025, Menglong Dong wrote:
->
-> > Some places calculate the origin_call by checking if
-> > BPF_TRAMP_F_SKIP_FRAME is set. However, it should use
-> > BPF_TRAMP_F_ORIG_STACK for this propose. Just fix them.
-> >
-> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > Acked-by: Alexei Starovoitov <ast@kernel.org>
->
-> This breaks RISC-V:
+On Mon, 15 Dec 2025 22:13:59 +0100
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-It's weird, as the 2 flags should be set together all the time
-in RISC-V. Sorry that I'm already in bed, I'll check it tomorrow
-morning.
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 48dc0de5f2ce..95a38fb18ed7 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6489,6 +6489,78 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+>  	return err;
+>  }
+>  
 
-Thanks!
-Menglong Dong
+Kerneldoc needed.
 
->
-> [    8.584381][    T1] systemd[1]: bpf-restrict-fs: LSM BPF program attac=
-hed
-> [    8.588359][    T1] Insufficient stack space to handle exception!
-> [    8.588823][    T1] Task stack:     [0xff20000000010000..0xff200000000=
-14000]
-> [    8.589219][    T1] Overflow stack: [0xff600000ffdad070..0xff600000ffd=
-ae070]
-> [    8.590133][    T1] CPU: 1 UID: 0 PID: 1 Comm: systemd Not tainted 6.1=
-8.0-rc5+ #15 PREEMPT(voluntary)  c900881ed1c1988ec5cf3e914d0edeb1b4d83ca3
-> [    8.590898][    T1] Hardware name: riscv-virtio qemu/qemu, BIOS 2025.1=
-0 10/01/2025
-> [    8.591494][    T1] epc : copy_from_kernel_nofault+0xa/0x198
-> [    8.592292][    T1]  ra : bpf_probe_read_kernel+0x20/0x60
-> [    8.592658][    T1] epc : ffffffff802b732a ra : ffffffff801e6070 sp : =
-ff2000000000ffe0
-> [    8.593121][    T1]  gp : ffffffff82262ed0 tp : 0000000000000000 t0 : =
-ffffffff80022320
-> [    8.593566][    T1]  t1 : ffffffff801e6056 t2 : 0000000000000000 s0 : =
-ff20000000010040
-> [    8.593997][    T1]  s1 : 0000000000000008 a0 : ff20000000010050 a1 : =
-ff60000083b3d320
-> [    8.594446][    T1]  a2 : 0000000000000008 a3 : 0000000000000097 a4 : =
-0000000000000000
-> [    8.594940][    T1]  a5 : 0000000000000000 a6 : 0000000000000021 a7 : =
-0000000000000003
-> [    8.595396][    T1]  s2 : ff20000000010050 s3 : ff6000008459fc18 s4 : =
-ff60000083b3d340
-> [    8.595831][    T1]  s5 : ff20000000010060 s6 : 0000000000000000 s7 : =
-ff20000000013aa8
-> [    8.596215][    T1]  s8 : 0000000000000000 s9 : 0000000000008000 s10: =
-000000000058dcb0
-> [    8.596641][    T1]  s11: 000000000058dca7 t3 : 000000006925116d t4 : =
-ff6000008090f026
-> [    8.597065][    T1]  t5 : 00007fff9b0cbaa8 t6 : 0000000000000016
-> [    8.597363][    T1] status: 0000000200000120 badaddr: 0000000000000000=
- cause: 8000000000000005
-> [    8.598033][    T1] Kernel panic - not syncing: Kernel stack overflow
-> [    8.598597][    T1] CPU: 1 UID: 0 PID: 1 Comm: systemd Not tainted 6.1=
-8.0-rc5+ #15 PREEMPT(voluntary)  c900881ed1c1988ec5cf3e914d0edeb1b4d83ca3
-> [    8.599244][    T1] Hardware name: riscv-virtio qemu/qemu, BIOS 2025.1=
-0 10/01/2025
-> [    8.599659][    T1] Call Trace:
-> [    8.600117][    T1] [<ffffffff8001a1f8>] dump_backtrace+0x28/0x38
-> [    8.600517][    T1] [<ffffffff80002502>] show_stack+0x3a/0x50
-> [    8.600844][    T1] [<ffffffff800122be>] dump_stack_lvl+0x56/0x80
-> [    8.601176][    T1] [<ffffffff80012300>] dump_stack+0x18/0x22
-> [    8.601518][    T1] [<ffffffff80002abe>] vpanic+0xf6/0x328
-> [    8.601819][    T1] [<ffffffff80002d2e>] panic+0x3e/0x40
-> [    8.602088][    T1] [<ffffffff80019ef0>] handle_bad_stack+0x98/0xa0
-> [    8.602395][    T1] [<ffffffff801e6070>] bpf_probe_read_kernel+0x20/0x=
-60
->
-> --
-> Andreas Schwab, schwab@linux-m68k.org
-> GPG Key fingerprint =3D 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC=
-1
-> "And now for something completely different."
+> +int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, bool do_direct_lock)
+> +{
+> +	struct ftrace_func_entry *entry, *tmp;
+> +	static struct ftrace_ops tmp_ops = {
+> +		.func		= ftrace_stub,
+> +		.flags		= FTRACE_OPS_FL_STUB,
+> +	};
+> +	struct ftrace_hash *orig_hash;
+> +	unsigned long size, i;
+> +	int err = -EINVAL;
+> +
+> +	if (!hash_count(hash))
+> +		return -EINVAL;
+> +	if (check_direct_multi(ops))
+> +		return -EINVAL;
+> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+> +		return -EINVAL;
+> +	if (direct_functions == EMPTY_HASH)
+> +		return -EINVAL;
+> +
+> +	if (do_direct_lock)
+> +		mutex_lock(&direct_mutex);
+
+This optional taking of the direct_mutex lock needs some serious rationale
+and documentation.
+
+> +
+> +	orig_hash = ops->func_hash ? ops->func_hash->filter_hash : NULL;
+> +	if (!orig_hash)
+> +		goto unlock;
+> +
+> +	/* Enable the tmp_ops to have the same functions as the direct ops */
+> +	ftrace_ops_init(&tmp_ops);
+> +	tmp_ops.func_hash = ops->func_hash;
+> +
+> +	err = register_ftrace_function_nolock(&tmp_ops);
+> +	if (err)
+> +		goto unlock;
+> +
+> +	/*
+> +	 * Call __ftrace_hash_update_ipmodify() here, so that we can call
+> +	 * ops->ops_func for the ops. This is needed because the above
+> +	 * register_ftrace_function_nolock() worked on tmp_ops.
+> +	 */
+> +	err = __ftrace_hash_update_ipmodify(ops, orig_hash, orig_hash, true);
+> +	if (err)
+> +		goto out;
+> +
+> +	/*
+> +	 * Now the ftrace_ops_list_func() is called to do the direct callers.
+> +	 * We can safely change the direct functions attached to each entry.
+> +	 */
+> +	mutex_lock(&ftrace_lock);
+
+I'm going to need some time staring at this code. It looks like it may be
+relying on some internals here.
+
+-- Steve
+
+
+> +
+> +	size = 1 << hash->size_bits;
+> +	for (i = 0; i < size; i++) {
+> +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+> +			tmp = __ftrace_lookup_ip(direct_functions, entry->ip);
+> +			if (!tmp)
+> +				continue;
+> +			tmp->direct = entry->direct;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&ftrace_lock);
+> +
+> +out:
+> +	/* Removing the tmp_ops will add the updated direct callers to the functions */
+> +	unregister_ftrace_function(&tmp_ops);
+> +
+> +unlock:
+> +	if (do_direct_lock)
+> +		mutex_unlock(&direct_mutex);
+> +	return err;
+> +}
+> +
+>  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+>  
+>  /**
+
