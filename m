@@ -1,44 +1,53 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E6F27462;
-	Thu, 18 Dec 2025 21:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E723A1E66;
+	Thu, 18 Dec 2025 21:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766092083; cv=none; b=ovcP28x66cdjRIDqycNtLCPB4IqWQg2rgInRVmOHRzO7mvUAXnqTw0v5eikVURQvrODAdyexzBHEF6CvuxnR8JZ/C4FVaVfTbNFZkDKRXtv0AjMjvZCfJkL+a+NMXD0gGT/3VSNv4cLdzS2jCyGD78xYhUmLgmHlVg0JfuHVEE0=
+	t=1766093059; cv=none; b=fxt/u4UPObAjt08jS1gAX0kBCTt5FBEzzdCQVpv60fAzxE6s7eNNgSTCUT5uEr1G9HLuhZCQdilT8LB6Ed5Lv7VjGxDR9+Z1fiw/0e6Y6uV7dXnjNBRH2xd8LlcCXpTE4+IPoFYo8QhWehJHPMtkHsIDKSVOSKRGhHvel7VZb7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766092083; c=relaxed/simple;
-	bh=E2FwBckpiiOIAS5tdKEfyRMGf9MZsikrpZBOyJS988Q=;
+	s=arc-20240116; t=1766093059; c=relaxed/simple;
+	bh=iFfYbgmtRjgpgrAzFYyyp2p9g0mErMix04hrGKLaXIY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fEIMLi1jaqEZZcM3ewfB/HLPLRrxlp0dNixy4VYh9eWbgAZiqtFMHNKScwjLcDwIOhN6BtVL+GAuspK4IlBaL1kmuVymG8f5dLjrFa2pMymg1GWx1UgYL0HvSHQwGgIBp8BuPJpaTQT3dHjoAoSBFqvtOF24F8xgFXyBjom1+1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=aCXvPwL/ExqOxe3tVfYkheXQKPtNv+xVHyulViQXsyEQlohHHElwe3gVPzXctvJbWHz/W3ZVGmi0HuGceeyAEUmJu5ZpbQ+YmDmB6yD43t9FLfyR1/yjUOHJtjww523wGeQGwG2ZmQXIHU+Kh3oubUlmTl7zphIF+iji6D28dSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id A53141602F9;
-	Thu, 18 Dec 2025 21:07:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 9EF2D20011;
-	Thu, 18 Dec 2025 21:07:46 +0000 (UTC)
-Date: Thu, 18 Dec 2025 16:09:25 -0500
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 6F808B82A6;
+	Thu, 18 Dec 2025 21:24:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 744942F;
+	Thu, 18 Dec 2025 21:24:03 +0000 (UTC)
+Date: Thu, 18 Dec 2025 16:25:42 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: liujing40 <liujing.root@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, liujing40@xiaomi.com
-Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi
- link
-Message-ID: <20251218160925.3c02a721@gandalf.local.home>
-In-Reply-To: <CAADnVQKC312JbOhjQZmMN-Me2V0GQ9qxoHeQkF+=PbYk0zc9KA@mail.gmail.com>
-References: <20251218130629.365398-1-liujing40@xiaomi.com>
-	<20251218130629.365398-3-liujing40@xiaomi.com>
-	<CAADnVQKC312JbOhjQZmMN-Me2V0GQ9qxoHeQkF+=PbYk0zc9KA@mail.gmail.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Christophe Leroy <chleroy@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
+ <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
+ Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v3 4/4] tracing: move tracing declarations from kernel.h
+ to a dedicated header
+Message-ID: <20251218162542.476009db@gandalf.local.home>
+In-Reply-To: <aURlK1gpCrfLEKN9@yury>
+References: <20251205175237.242022-1-yury.norov@gmail.com>
+	<20251205175237.242022-5-yury.norov@gmail.com>
+	<20251216161316.45b3f19ff0ad482018137189@linux-foundation.org>
+	<55ceb7bf-0fe9-4edc-81c2-d51366847eec@infradead.org>
+	<aUN8Hm377C5A0ILX@yury>
+	<20251218123349.35339242@gandalf.local.home>
+	<20251218124326.22334325@gandalf.local.home>
+	<aURlK1gpCrfLEKN9@yury>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,33 +57,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 9EF2D20011
-X-Stat-Signature: iwysajycygtdyospk7a1mj6kztxu814o
+X-Stat-Signature: 5wwf9gob3j94aeuxi6eiyod9cjcjs5gu
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 744942F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+tSico+CaEonIRKrRoJhNE6Hc+gfEkW78=
-X-HE-Tag: 1766092066-835782
-X-HE-Meta: U2FsdGVkX1+zLF/oswfTpTV+r5DPZ4w3WD/QZSlnX8tw5EhN8+rNukK3FS74mWRfhIcC1rUUFp/sFKN9RH+rKCTzFif5T1ymqmfkBX+W7EPrueDDXSl/HDhVxzNZjDebjWURYnpNQhn6hy2C0V1XB4exlyqRS0uJ6x+pn1/pZMTG8dr2CBvHwMsLU5x1LFtfXdE/sNYPtl0yRpSik1ccS7xzatF/z1upPknQ5TbTmoiQ49aL5dpC0ePnsomnIEXvb4/NCgstDLofhF/8O7oqiJ83PmEbxvIBoZRws+V9HTAk7Tt/9M5cRQR91NcnJb/OQg3AG39gx42E0P0xj+e2EDtwkgOKH9H6
+X-Session-ID: U2FsdGVkX1+qadkGPvrEw+WnOGTOA3qaSmf6dajjukE=
+X-HE-Tag: 1766093043-108761
+X-HE-Meta: U2FsdGVkX1+Xw1uaVtgMkJj+Zet6YRpVC3/38BOj1xfE3N4PX1Nmv+XXFMI+J9u5wvpIClJspVH2v7b5HlXNj6KKyu7uhp3y/HAasEZW4kqrOU9FGz+pAWr8HgF5KcgmC3MBhGDdKWsc3fyDLxMGmOfriowcq+34XtUOEv8llhRHmwVbhdbrQjpO/+46rFPCqQFi8t0J4es7oXaHOUbOGwh6YD32UqbgzlYruriqS8H9Ws7zxaqY4jtWs7W4IPS7HZ3cCZejPOnZenb2jdtZw8F60/CUvXfDPCS10GVN+aRrjUIGfaCDvm+k/kqhwZesKGkj5Av9d/XRlSO/ab8whwEI9JxBZWFe
 
-On Thu, 18 Dec 2025 09:53:16 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Thu, 18 Dec 2025 15:33:47 -0500
+Yury Norov <yury.norov@gmail.com> wrote:
 
-> > +static void bpf_kprobe_unregister(struct bpf_kprobe *kps, u32 cnt)
-> > +{
-> > +       for (int i = 0; i < cnt; i++)
-> > +               unregister_kretprobe(&kps[i].rp);
-> > +}  
+> > I don't actually remember why I had __trace_puts() pass in the size. I
+> > could change it to:  
 > 
-> Nack.
-> This is not a good idea.
-> unregister_kretprobe() calls synchronize_rcu().
-> So the above loop will cause soft lockups for sure.
+> This is the best approach. I'll schedule it for v4. Would you like me to
+> take it as-is, or you'd send a patch?
+>  
 
-Looks like it could be replaced with:
-
-	unregister_kretprobes(kps, cnt);
-
-Which unregisters an array of kreptrobes and does a single
-synchronize_rcu().
+Let me send an official patch.
 
 -- Steve
