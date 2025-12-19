@@ -1,144 +1,85 @@
-Received: from mail-yx1-f67.google.com (mail-yx1-f67.google.com [74.125.224.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731C9320CBB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Dec 2025 14:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ACD32B981;
+	Fri, 19 Dec 2025 14:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766153086; cv=none; b=BTsCLC6Y4Q3LBNafREmMchBTsEIyVPhJCpC4IRXbn+HWe/zu/4wqM9mK5j0q8IaVV5sJefH4YxNkiWJqBBZxZpJWT2QbJYmNJgUEu5+LyQoq1i8bATLRfr6KqkymZwnij1anFB7IARVmdyo4kPAdxVqjRj95VVFYlzIwc0w7Ufw=
+	t=1766155837; cv=none; b=ihXmjQQAZ6miDB5ShKFkB6zY4e70/cAkzqr3owkXOolOfrnucyQQQA8U6P5FukllR7hjnM0puAWn6dH6/bioERORQjOPgSY7IAlSuVzZhzVeqv6bv04Y1mGCidRdoikhL2lE6EqqAoIDEBxKZOrG5ZiWu5bqX4YtN3Zf/mmVQFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766153086; c=relaxed/simple;
-	bh=xrwer0i51j+vK7w8PnSsMSuWOOnWfVvIOvT/dSmKgHs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HMZxNi3YgQXP0z6S6o6PYXvJuQMqWwSRrwWZwMdckCQy8P5AIcR9KDe2LHHdfJ+LzFB4RXdtpyeaN9E1Obd0qwq1NsRhWLbjk0cdCxMSh3SQQu+JlTlgBrZLen0MESz9ps8ndKAIcOozZRuhP8+cT8z6xuhS/c6PTGCvEPEAtjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKyIuDnj; arc=none smtp.client-ip=74.125.224.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKyIuDnj"
-Received: by mail-yx1-f67.google.com with SMTP id 956f58d0204a3-644715aad1aso2120523d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Dec 2025 06:04:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766153084; x=1766757884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EGxqoB7Y4Q+aOAQo4uC0e9A1qBgkvdCsyCbyewI9lPY=;
-        b=UKyIuDnjHvcT9KPr4vzCfz5FXEu9NIYs8k+ax4Tbo/2MYPxnEPuWwxQDq47op7tvOt
-         t/l/hvcaksGlB/5tN1EpdF2+b47noPbj+ljlf0QSFagjslEaVLMVlGBfGMG5Ng0iis3z
-         rHfyF/nC7MK9gU1E7sJn6OawwB5dY891zk7T3PLrFCylbhhWFlahNJiQJNEX+I4J8loC
-         EaxUfuByQ0XfzYoXUU/Hh7oKlkT31q3lbrA07sbttUlARITvhtTS7RRzED7xjmhfR7D5
-         ZUT2/PL3dPi/kgQ30k/MrmYbq6cPiZNV4P5KZx50aT45kDFyrha1If9Sg/5fPezRtPdn
-         yYdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766153084; x=1766757884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EGxqoB7Y4Q+aOAQo4uC0e9A1qBgkvdCsyCbyewI9lPY=;
-        b=qwYRAXHcmaD/+Mg2UdXfquyBoSS+DKNrwpdo7PVFSpBUwLF994rO3+0jQwiwKmQNQW
-         I3m4OSYIx7NWdMx4Yw2rnlr4o8H9qLJj9KREXJkznyOoMF7qDLj1ekv7nODGo66AJiSg
-         mot7Zz/uJwBSEUM+9gMwBdDQzG6o6E7m8r+zr3v6/N0LGAe8U+7MTwENvfjuG7lBAFDW
-         vF+4JReKFBxVznYFkDFfhJ+NeiXWt7hUt4Gv/flQP27EYQokIXXjB+swWOpm1+gauPQN
-         XEC04Ib7kYgqPO+vpgsQLbRY2anqZrgIyy0cYsLLdmCl50/lsvtwyJWIr1QZpf/0Ff++
-         US0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUsKQvr45Lza843WBz++OTbY+/926VLDWPcJsvv0MUoFCp0UDQ+reKoVgZvC6mpw2wFKhwIi5lOuyxfpJ4BQP3pBe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwATkThMWgpWJ78I7UTFl9jKJ0dKa+3n++g2vFeqr1hONx4J6NI
-	V7+psO00nv63HhKHPBn684lzrOYIQVQ9RoqJSaM1ghALae0vmq5lKKMOU1/VAP5/hXfNLucynis
-	IWGauniAhAeeXZ7b0ANCv/IyTaqZXcHk=
-X-Gm-Gg: AY/fxX56of9U+lRRi6oe91o5PVGTMVqPFsXWiHXXJEK2AXoRPpaNBP19+ragAc96yAK
-	ils7N0QAQ20dK80WUIAGipU7cc0i1TB29vOQi2KUHZDFFYzQu5ys8rur+dXo1yXatqzgOcZOmLm
-	0EfUDjornsbTbVwfj++JuGVEk/qKGSufcaG2bIUPRjvHqUMNjtvBSOFDpq/SQGq3O/ylXGrpc8c
-	Tn5VZn+mbeC0YhpEWm43v0OsE+np/KvaPZgTXA07+BSQgk/MA20EcXRN1d6+3rxItJSjIUwehs=
-X-Google-Smtp-Source: AGHT+IFe5VQEy4+st1yZpJ90yvWkO9sdYhLBqjXP1Svo3qIeSORvrFBH7F5HtDjDOBbEu4XaMNwh4a68BzkqLovyvi0=
-X-Received: by 2002:a05:690e:1242:b0:63f:c019:23b2 with SMTP id
- 956f58d0204a3-6466329e6b7mr4564629d50.28.1766153084263; Fri, 19 Dec 2025
- 06:04:44 -0800 (PST)
+	s=arc-20240116; t=1766155837; c=relaxed/simple;
+	bh=ARr6JZc6yR0+Pd1cZ6MVWWgY7/3jMwr+N36cwZTonUU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fD3PtkD3DrwdyRsmyKSma7AuRhy93FgbtEiXu4Ya/LoG07tVTlYrNjI6VFuGbN+XavEk6jVHamPo1vGbw6eRttqQUexpgH+XSI6i7RhFwBLCqz6x9jhJAmsSy9fdqFu8JLf96ATukp/HimqPs9YcKvqK/30/arjGkzgq7i1O8jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=nefkom.net; arc=none smtp.client-ip=212.18.0.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nefkom.net
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4dXr7C0z6Gz1r2sG;
+	Fri, 19 Dec 2025 15:50:31 +0100 (CET)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4dXr772X0Bz1r2s2;
+	Fri, 19 Dec 2025 15:50:27 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 4dXr770FwPz1qqlW;
+	Fri, 19 Dec 2025 15:50:27 +0100 (CET)
+X-Virus-Scanned: amavis at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+ by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
+ with ESMTP id 92L-rQcDmWKo; Fri, 19 Dec 2025 15:50:15 +0100 (CET)
+X-Auth-Info: 1X/yyBFQ/IZ2joL65/JDyiFRPFc9SosyZ5/1WT994dlm69mRhPapn5zjiUW2unij
+Received: from igel.home (aftr-82-135-83-185.dynamic.mnet-online.de [82.135.83.185])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Fri, 19 Dec 2025 15:50:15 +0100 (CET)
+Received: by igel.home (Postfix, from userid 1000)
+	id 761962C18F3; Fri, 19 Dec 2025 15:50:15 +0100 (CET)
+From: Andreas Schwab <schwab@linux-m68k.org>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Menglong Dong <menglong.dong@linux.dev>,  ast@kernel.org,
+  rostedt@goodmis.org,  daniel@iogearbox.net,  john.fastabend@gmail.com,
+  andrii@kernel.org,  martin.lau@linux.dev,  eddyz87@gmail.com,
+  song@kernel.org,  yonghong.song@linux.dev,  kpsingh@kernel.org,
+  sdf@fomichev.me,  haoluo@google.com,  jolsa@kernel.org,
+  mhiramat@kernel.org,  mark.rutland@arm.com,
+  mathieu.desnoyers@efficios.com,  jiang.biao@linux.dev,
+  bpf@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org,  linux-riscv@lists.infradead.org
+Subject: Re: [PATCH bpf-next v3 3/6] bpf: fix the usage of
+ BPF_TRAMP_F_SKIP_FRAME
+In-Reply-To: <CADxym3Y098836fHHRSjeryxCp=CPB8sDU19TBBVs07VZOERJXw@mail.gmail.com>
+	(Menglong Dong's message of "Fri, 19 Dec 2025 22:04:32 +0800")
+References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
+	<875xa2g0m0.fsf@igel.home> <5070743.31r3eYUQgx@7950hx>
+	<1948844.tdWV9SEqCh@7950hx> <87cy4aeg56.fsf@igel.home>
+	<CADxym3Y098836fHHRSjeryxCp=CPB8sDU19TBBVs07VZOERJXw@mail.gmail.com>
+Date: Fri, 19 Dec 2025 15:50:15 +0100
+Message-ID: <878qeyedaw.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251118123639.688444-1-dongml2@chinatelecom.cn>
- <875xa2g0m0.fsf@igel.home> <5070743.31r3eYUQgx@7950hx> <1948844.tdWV9SEqCh@7950hx>
- <87cy4aeg56.fsf@igel.home>
-In-Reply-To: <87cy4aeg56.fsf@igel.home>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Fri, 19 Dec 2025 22:04:32 +0800
-X-Gm-Features: AQt7F2ruKyHMhyl2Amo3LqNoWlaqpaF_0zgXhcG3nHKrhX2LjLD44Yver_XU5ik
-Message-ID: <CADxym3Y098836fHHRSjeryxCp=CPB8sDU19TBBVs07VZOERJXw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 3/6] bpf: fix the usage of BPF_TRAMP_F_SKIP_FRAME
-To: Andreas Schwab <schwab@linux-m68k.org>
-Cc: Menglong Dong <menglong.dong@linux.dev>, ast@kernel.org, rostedt@goodmis.org, 
-	daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org, 
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com, jiang.biao@linux.dev, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, Dec 19, 2025 at 9:49=E2=80=AFPM Andreas Schwab <schwab@linux-m68k.o=
-rg> wrote:
+On Dez 19 2025, Menglong Dong wrote:
+
+> @@ -1171,6 +1167,8 @@ static int __arch_prepare_bpf_trampoline(struct
+> bpf_tramp_image *im,
+>         }
 >
-> On Dez 19 2025, Menglong Dong wrote:
->
-> > diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_c=
-omp64.c
-> > index 5f9457e910e8..09b70bf362d3 100644
-> > --- a/arch/riscv/net/bpf_jit_comp64.c
-> > +++ b/arch/riscv/net/bpf_jit_comp64.c
-> > @@ -1134,7 +1134,7 @@ static int __arch_prepare_bpf_trampoline(struct b=
-pf_tramp_image *im,
-> >       store_args(nr_arg_slots, args_off, ctx);
-> >
-> >       /* skip to actual body of traced function */
-> > -     if (flags & BPF_TRAMP_F_ORIG_STACK)
-> > +     if (flags & BPF_TRAMP_F_CALL_ORIG)
-> >               orig_call +=3D RV_FENTRY_NINSNS * 4;
->
-> There are now three occurrences of that condition, and only the third
-> one uses orig_call.  How about merging them?
+>         if (flags & BPF_TRAMP_F_CALL_ORIG) {
+> +               /* skip to actual body of traced function */
+> +               orig_call += RV_FENTRY_NINSNS * 4;
 
-Yeah, I think we can merge it to the third one, like this:
+Before this line, orig_call still contains the same value as func_addr,
+with the latter being dead, so there is not much point in using a copy.
 
-diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp6=
-4.c
-index 5f9457e910e8..37888abee70c 100644
---- a/arch/riscv/net/bpf_jit_comp64.c
-+++ b/arch/riscv/net/bpf_jit_comp64.c
-@@ -1133,10 +1133,6 @@ static int __arch_prepare_bpf_trampoline(struct
-bpf_tramp_image *im,
-
-        store_args(nr_arg_slots, args_off, ctx);
-
--       /* skip to actual body of traced function */
--       if (flags & BPF_TRAMP_F_ORIG_STACK)
--               orig_call +=3D RV_FENTRY_NINSNS * 4;
--
-        if (flags & BPF_TRAMP_F_CALL_ORIG) {
-                emit_imm(RV_REG_A0, ctx->insns ? (const s64)im :
-RV_MAX_COUNT_IMM, ctx);
-                ret =3D emit_call((const u64)__bpf_tramp_enter, true, ctx);
-@@ -1171,6 +1167,8 @@ static int __arch_prepare_bpf_trampoline(struct
-bpf_tramp_image *im,
-        }
-
-        if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+               /* skip to actual body of traced function */
-+               orig_call +=3D RV_FENTRY_NINSNS * 4;
-                restore_args(min_t(int, nr_arg_slots,
-RV_MAX_REG_ARGS), args_off, ctx);
-                restore_stack_args(nr_arg_slots - RV_MAX_REG_ARGS,
-args_off, stk_arg_off, ctx);
-                ret =3D emit_call((const u64)orig_call, true, ctx);
-
->
-> --
-> Andreas Schwab, schwab@linux-m68k.org
-> GPG Key fingerprint =3D 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC=
-1
-> "And now for something completely different."
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
