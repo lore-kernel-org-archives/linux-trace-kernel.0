@@ -1,129 +1,530 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E401E991B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 23:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FAC5CDF1;
+	Fri, 19 Dec 2025 01:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766102291; cv=none; b=iqhUmMVAknci3qmG6p37a0vLFPWU+DUejWmhzY37J322n+eNUr5gGwK3l66LzFXq9z9i2woGqLAl0IO39rOfOUK5WyPUMgOv2s1PpsT67+6376aoTBIo9kax4FuPrDss4EKT8tisgCTPTqWYpMSjWayy0OBpgbSckNZCT21PgYs=
+	t=1766109473; cv=none; b=JlaLp17BgwshK0wrIjeskLqfIJV0lxhsofMYZ1b9x7kzHktMyxhJlitNscuvNAwPJmZQBosOguCjypwy5fumqE477DtnnOSpulINgw2GDLG2CYHDJirr2Xs5n3UmcI1SDKVRlXrzpdVoHRkqw/4TmeUZbZS8GS07Vh6p9c6t5Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766102291; c=relaxed/simple;
-	bh=3xlG6FYPR48UFVUeYAAdpz6olWhBuChTlR4EX2RSTmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aazD0DkihML/yUbOAVPK0hb0j7oji43a+wIHdrQW6NCCt3VA1SxltcH1smI+rWsZC6xsUGSvO/xjG1+pkCNiSKano3S68rW1jS2cGuT2ASlhZREurZ6Pd03l4LnrXdKPo5jkX88vt6QVpPsFVTbVXWCA7M4cbm3PhAudH0Eh+/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1/G7Rmc; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766109473; c=relaxed/simple;
+	bh=lpaMlxIEhJyEwIqqwTuJLYxojKd02q4oQzpXRDvwzC0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=THSHKaQCRwoedJw4vYy+059pC5v/8DS63bEugU/xIh8S/qWhbjocSXLnV4k/XW2SVB6c/NOUqrEp7V+F5FmQLV2ICXYjKMHAJtW0Y3tD6pK23yocaLl7mCZMTaro8golMr7CZWrLK9A+FNa/HnNmY1JNpKGq9O6CGVp54iagxqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UJxedJom; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1/G7Rmc"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2a0b4320665so17852045ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Dec 2025 15:58:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766102289; x=1766707089; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QZalkBGMZvwmDVV1ya5Lu+/scueeEmPRx1djh9JCuvk=;
-        b=A1/G7RmcE7cGjd1dxvzoC95Z8nI51CDGlxCnREHw9mmwY2xu5/CjXHMPUGJRKRk+vB
-         0CoiFwlBS/q65WgLOiP6gXisaDm/zp91p761jF8J1l0wBqJOTx2pzdnNxyUdKgD7WVgZ
-         VgrErL6lZGv0dc8kiNHeKFfc6t34RCgX1vZpWG4KNK23hoRqTZc6IxHMyEd+/Fn4Eh1J
-         BnnSWzPj0+VCGAEA+ZMOIV32J2HZvPJg9lXrQLac5b/FgPX0dD8oSMEdrY6csNL0HqEu
-         kqmIvW4qHSQrzkLHTA8PDSQURIyc2WVpsoBSBPxkumBPqFlkMFJ1phDKmB2pnNy2abRB
-         CzPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766102289; x=1766707089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QZalkBGMZvwmDVV1ya5Lu+/scueeEmPRx1djh9JCuvk=;
-        b=WcCBbAbeHLE5/lE1b901tR0vGuVpCCKFpH6ecT4ObYveLkYEowbQBKEQiI1bY6lC4d
-         3E2qVtBeXjW5YNMzl+aafsm5EfCm6MjTIzAu9706ZZLRLH5lDItwiTvFUhMzTaz8j6ON
-         vqouWRLGe/ZJZCxVdmtzqFJu0VMtBlgxJXJ/p0t5N/NwO/p4MWCw0Z9ij0LeR/dgVUm6
-         RNBRCNx2W3FbWQ+wmbQfbuV7tCvmOluXWuJrg7NWl/QkWY8gBMUVU040HhZKYk5BbTZo
-         O+6v/6Y5MOmvSh+sKPBr8J8Bz5/+e7byB1ojXi+Lp8TQZVW0Ukpw9VF2icO8gVg+2uKX
-         D0Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUy6BcfZlWUKBvU5BjCzgJOBd3Lm0MyLPHJcu9HWIzqdFrL3RbxhBbQ/dnW5j0dacw1aqYhknFqjxiIzEz/Q9i+fpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW3PSMwyKyXpuEYh24Sg9yHooW3Fpyxoah9CAodGuXIVLiRMj4
-	iQuRqLSltICFYXw4jlWVhx3k2LyGSwNiv2LKRka5o2ZeccZc0HvfUyD27UStSw==
-X-Gm-Gg: AY/fxX7b5xB1GEJtZOXKoJK6N0NOP4pwDuiql42zaeq4W7B4IiuYwfBETszPfkuQCiJ
-	Vg8EpZ3XQj0KHCUSoV/cGa/3H8IFFsppdJvWUiaKG22gEHA4PFagZ2biS57avgNZCZRnffj4DNl
-	+GjNqbwcUP31fs0PjlUGI8lJoF1SgYxu/ga7jybLCxD/4Wu9Zu/2WyxKlK4hg7yJ+5axTjuIml6
-	T9tcjwLrLWhYNChhoqTG/Rx6ov0LPLSOhZGqTKMZFmiSyJxors/zLqH/xNjf9hieDUvZp4SWNHx
-	cYr8J9hSZhYWPyUJ+xRkgsW+EEv9/N0Wd/I+HO+mf7H3ok1/4x6LL8wH5oi6Fi5oBXyAQ5BAKdh
-	nItpRrE49/i70YMyjswiCe6cxVhUqxwhPgN7ljnut0lE6iYq/d2B+EGFkJntSvOytg3NY7KOqNT
-	37EdZ4sXfpyUY5clXR
-X-Google-Smtp-Source: AGHT+IF21Ecc6Jc0533/8GWL1yiDmEnXNfeJkD3kNuw+xcQOMYUm7A56eghLjVuqVAs0d9Em+kHEaQ==
-X-Received: by 2002:a05:690c:7012:b0:78d:6d62:f93f with SMTP id 00721157ae682-78fb3ed3062mr7661257b3.8.1766094799618;
-        Thu, 18 Dec 2025 13:53:19 -0800 (PST)
-Received: from localhost ([2601:346:0:79bd:c44b:debe:992d:e6a])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78fb44f01e5sm2294447b3.35.2025.12.18.13.53.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 13:53:19 -0800 (PST)
-Date: Thu, 18 Dec 2025 16:53:18 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	David Laight <david.laight@runbox.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v3 4/4] tracing: move tracing declarations from kernel.h
- to a dedicated header
-Message-ID: <aUR3zqq4-qMV_bFh@yury>
-References: <20251205175237.242022-1-yury.norov@gmail.com>
- <20251205175237.242022-5-yury.norov@gmail.com>
- <20251216161316.45b3f19ff0ad482018137189@linux-foundation.org>
- <55ceb7bf-0fe9-4edc-81c2-d51366847eec@infradead.org>
- <aUN8Hm377C5A0ILX@yury>
- <20251218123349.35339242@gandalf.local.home>
- <20251218124326.22334325@gandalf.local.home>
- <aURlK1gpCrfLEKN9@yury>
- <20251218162542.476009db@gandalf.local.home>
- <20251218164103.3c535de3@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UJxedJom"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1766109468;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0U6luMjLnrIscrnqepE5K+dRE9Z44TEkLP++iEyfwA0=;
+	b=UJxedJomCyWAMEgs1NejrEqLXTo5Jqm2WZUTVer7ty00Uny3pw+ZayADVWGuyRuIN/0Bdu
+	siYU4F+TCETjQn/GqUHQBHfFrT0qgIIwbiCEnWm/DQ+4YgkrMmfmqpRYkMFsw9Ej5TDm3Z
+	dpuHkBgKmEAE3CeIkw/4CLf1xCIPwWk=
+From: Menglong Dong <menglong.dong@linux.dev>
+To: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ mhiramat@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+ song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ liujing40 <liujing.root@gmail.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, liujing40@xiaomi.com
+Subject:
+ Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi link
+Date: Fri, 19 Dec 2025 09:57:37 +0800
+Message-ID: <24197762.6Emhk5qWAg@7940hx>
+In-Reply-To: <20251218130629.365398-3-liujing40@xiaomi.com>
+References:
+ <20251218130629.365398-1-liujing40@xiaomi.com>
+ <20251218130629.365398-3-liujing40@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251218164103.3c535de3@gandalf.local.home>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Dec 18, 2025 at 04:41:03PM -0500, Steven Rostedt wrote:
-> On Thu, 18 Dec 2025 16:25:42 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2025/12/18 21:06 liujing40 <liujing.root@gmail.com> write:
+> When fprobe is not available, provide a fallback implementation of
+> kprobe_multi using the traditional kretprobe API.
 > 
-> > On Thu, 18 Dec 2025 15:33:47 -0500
-> > Yury Norov <yury.norov@gmail.com> wrote:
-> > 
-> > > > I don't actually remember why I had __trace_puts() pass in the size. I
-> > > > could change it to:    
-> > > 
-> > > This is the best approach. I'll schedule it for v4. Would you like me to
-> > > take it as-is, or you'd send a patch?
-> > >    
-> > 
-> > Let me send an official patch.
-> > 
+> Uses kretprobe's entry_handler and handler callbacks to simulate fprobe's
+> entry/exit functionality.
 > 
-> You can find it here (I Cc'd you too). Feel free to add it to your patch set.
+> Signed-off-by: Jing Liu <liujing40@xiaomi.com>
+> ---
+>  kernel/trace/bpf_trace.c | 307 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 295 insertions(+), 12 deletions(-)
 > 
->   https://lore.kernel.org/all/20251218163739.5605f9ea@gandalf.local.home/
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 1fd07c10378f..426a1c627508 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2274,12 +2274,44 @@ struct bpf_session_run_ctx {
+>  	void *data;
+>  };
+>  
+> -#ifdef CONFIG_FPROBE
+> +#if defined(CONFIG_FPROBE) || defined(CONFIG_KRETPROBES)
+> +#ifndef CONFIG_FPROBE
+> +struct bpf_kprobe {
+> +	struct bpf_kprobe_multi_link *link;
+> +	u64 cookie;
+> +	struct kretprobe rp;
+> +};
+> +
+> +static void bpf_kprobe_unregister(struct bpf_kprobe *kps, u32 cnt)
+> +{
+> +	for (int i = 0; i < cnt; i++)
+> +		unregister_kretprobe(&kps[i].rp);
+> +}
+> +
+> +static int bpf_kprobe_register(struct bpf_kprobe *kps, u32 cnt)
+> +{
+> +	int ret = 0, i;
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		ret = register_kretprobe(&kps[i].rp);
+> +		if (ret < 0) {
+> +			bpf_kprobe_unregister(kps, i);
+> +			break;
+> +		}
+> +	}
+> +	return ret;
+> +}
 
-Thanks, will do.
+Hi, Jing. I don't see the point of the fallback logic. If we want to
+use the kprobe-multi, we enable CONFIG_FPROBE. Is there any reason
+that we can't enable CONFIG_FPROBE? As you said, for a "old kernel",
+I think we don't introduce new feature for an old kernel.
+
+Besides, did you measure the performance of attaching bench?
+You will register a kretprobe for each of the target. AFAIK, the
+kprobe will use ftrace for optimization if we hook the entry of the
+target function. So I suspect it will be quite slow here.
+
+Thanks!
+Menglong Dong
+
+> +#endif
+> +
+>  struct bpf_kprobe_multi_link {
+>  	struct bpf_link link;
+> +#ifdef CONFIG_FPROBE
+>  	struct fprobe fp;
+>  	unsigned long *addrs;
+>  	u64 *cookies;
+> +#else
+> +	struct bpf_kprobe *kprobes;
+> +#endif
+>  	u32 cnt;
+>  	u32 mods_cnt;
+>  	struct module **mods;
+> @@ -2287,7 +2319,11 @@ struct bpf_kprobe_multi_link {
+>  
+>  struct bpf_kprobe_multi_run_ctx {
+>  	struct bpf_session_run_ctx session_ctx;
+> +#ifdef CONFIG_FPROBE
+>  	struct bpf_kprobe_multi_link *link;
+> +#else
+> +	struct bpf_kprobe *kprobe;
+> +#endif
+>  	unsigned long entry_ip;
+>  };
+>  
+> @@ -2304,7 +2340,11 @@ static void bpf_kprobe_multi_link_release(struct bpf_link *link)
+>  	struct bpf_kprobe_multi_link *kmulti_link;
+>  
+>  	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+> +#ifdef CONFIG_FPROBE
+>  	unregister_fprobe(&kmulti_link->fp);
+> +#else
+> +	bpf_kprobe_unregister(kmulti_link->kprobes, kmulti_link->cnt);
+> +#endif
+>  	kprobe_multi_put_modules(kmulti_link->mods, kmulti_link->mods_cnt);
+>  }
+>  
+> @@ -2313,8 +2353,12 @@ static void bpf_kprobe_multi_link_dealloc(struct bpf_link *link)
+>  	struct bpf_kprobe_multi_link *kmulti_link;
+>  
+>  	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+> +#ifdef CONFIG_FPROBE
+>  	kvfree(kmulti_link->addrs);
+>  	kvfree(kmulti_link->cookies);
+> +#else
+> +	kvfree(kmulti_link->kprobes);
+> +#endif
+>  	kfree(kmulti_link->mods);
+>  	kfree(kmulti_link);
+>  }
+> @@ -2326,6 +2370,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  	u64 __user *uaddrs = u64_to_user_ptr(info->kprobe_multi.addrs);
+>  	struct bpf_kprobe_multi_link *kmulti_link;
+>  	u32 ucount = info->kprobe_multi.count;
+> +	bool kallsyms_show = kallsyms_show_value(current_cred());
+>  	int err = 0, i;
+>  
+>  	if (!uaddrs ^ !ucount)
+> @@ -2336,7 +2381,12 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+>  	info->kprobe_multi.count = kmulti_link->cnt;
+>  	info->kprobe_multi.flags = kmulti_link->link.flags;
+> +#ifdef CONFIG_FPROBE
+>  	info->kprobe_multi.missed = kmulti_link->fp.nmissed;
+> +#else
+> +	for (i = 0; i < kmulti_link->cnt; i++)
+> +		info->kprobe_multi.missed += kmulti_link->kprobes[i].rp.nmissed;
+> +#endif
+>  
+>  	if (!uaddrs)
+>  		return 0;
+> @@ -2345,6 +2395,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  	else
+>  		ucount = kmulti_link->cnt;
+>  
+> +#ifdef CONFIG_FPROBE
+>  	if (ucookies) {
+>  		if (kmulti_link->cookies) {
+>  			if (copy_to_user(ucookies, kmulti_link->cookies, ucount * sizeof(u64)))
+> @@ -2357,7 +2408,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  		}
+>  	}
+>  
+> -	if (kallsyms_show_value(current_cred())) {
+> +	if (kallsyms_show) {
+>  		if (copy_to_user(uaddrs, kmulti_link->addrs, ucount * sizeof(u64)))
+>  			return -EFAULT;
+>  	} else {
+> @@ -2366,6 +2417,16 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  				return -EFAULT;
+>  		}
+>  	}
+> +#else
+> +	for (i = 0; i < ucount; i++) {
+> +		if (ucookies && put_user(kmulti_link->kprobes[i].cookie, ucookies + i))
+> +			return -EFAULT;
+> +
+> +		if (put_user(kallsyms_show ? (uintptr_t)kmulti_link->kprobes[i].rp.kp.addr : 0,
+> +					uaddrs + i))
+> +			return -EFAULT;
+> +	}
+> +#endif
+>  	return err;
+>  }
+>  
+> @@ -2374,21 +2435,32 @@ static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
+>  					 struct seq_file *seq)
+>  {
+>  	struct bpf_kprobe_multi_link *kmulti_link;
+> +	unsigned long kprobe_multi_missed = 0;
+>  
+>  	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+> +#ifdef CONFIG_FPROBE
+> +	kprobe_multi_missed =  kmulti_link->fp.nmissed;
+> +#else
+> +	for (int i = 0; i < kmulti_link->cnt; i++)
+> +		kprobe_multi_missed += kmulti_link->kprobes[i].rp.nmissed;
+> +#endif
+>  
+>  	seq_printf(seq,
+>  		   "kprobe_cnt:\t%u\n"
+>  		   "missed:\t%lu\n",
+>  		   kmulti_link->cnt,
+> -		   kmulti_link->fp.nmissed);
+> +		   kprobe_multi_missed);
+>  
+>  	seq_printf(seq, "%s\t %s\n", "cookie", "func");
+>  	for (int i = 0; i < kmulti_link->cnt; i++) {
+> -		seq_printf(seq,
+> -			   "%llu\t %pS\n",
+> -			   kmulti_link->cookies[i],
+> -			   (void *)kmulti_link->addrs[i]);
+> +#ifdef CONFIG_FPROBE
+> +		u64 cookie = kmulti_link->cookies[i];
+> +		void *addr = (void *)kmulti_link->addrs[i];
+> +#else
+> +		u64 cookie = kmulti_link->kprobes[i].cookie;
+> +		void *addr = (void *)kmulti_link->kprobes[i].rp.kp.addr;
+> +#endif
+> +		seq_printf(seq, "%llu\t %pS\n", cookie, addr);
+>  	}
+>  }
+>  #endif
+> @@ -2445,17 +2517,22 @@ static bool has_module(struct modules_array *arr, struct module *mod)
+>  	return false;
+>  }
+>  
+> -static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u32 addrs_cnt)
+> +static int get_modules_for_addrs(struct bpf_kprobe_multi_link *link)
+>  {
+>  	struct modules_array arr = {};
+>  	u32 i, err = 0;
+>  
+> -	for (i = 0; i < addrs_cnt; i++) {
+> +	for (i = 0; i < link->cnt; i++) {
+>  		bool skip_add = false;
+>  		struct module *mod;
+> +#ifdef CONFIG_FPROBE
+> +		unsigned long addr = link->addrs[i];
+> +#else
+> +		unsigned long addr = (unsigned long)link->kprobes[i].rp.kp.addr;
+> +#endif
+>  
+>  		scoped_guard(rcu) {
+> -			mod = __module_address(addrs[i]);
+> +			mod = __module_address(addr);
+>  			/* Either no module or it's already stored  */
+>  			if (!mod || has_module(&arr, mod)) {
+>  				skip_add = true;
+> @@ -2483,10 +2560,11 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+>  	}
+>  
+>  	/* or number of modules found if everything is ok. */
+> -	*mods = arr.mods;
+> +	link->mods = arr.mods;
+>  	return arr.mods_cnt;
+>  }
+>  
+> +#ifdef CONFIG_FPROBE
+>  struct user_syms {
+>  	const char **syms;
+>  	char *buf;
+> @@ -2843,7 +2921,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>  		       link);
+>  	}
+>  
+> -	err = get_modules_for_addrs(&link->mods, addrs, cnt);
+> +	err = get_modules_for_addrs(link);
+>  	if (err < 0) {
+>  		bpf_link_cleanup(&link_primer);
+>  		return err;
+> @@ -2866,6 +2944,211 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>  	return err;
+>  }
+>  #else /* !CONFIG_FPROBE */
+> +static u64 bpf_kprobe_multi_cookie(struct bpf_run_ctx *ctx)
+> +{
+> +	struct bpf_kprobe_multi_run_ctx *run_ctx;
+> +
+> +	run_ctx = container_of(current->bpf_ctx, struct bpf_kprobe_multi_run_ctx,
+> +				   session_ctx.run_ctx);
+> +	return run_ctx->kprobe->cookie;
+> +}
+> +
+> +static __always_inline int
+> +kprobe_multi_link_prog_run(struct bpf_kprobe *kprobe, unsigned long entry_ip,
+> +			struct pt_regs *regs, bool is_return, void *data)
+> +{
+> +	struct bpf_kprobe_multi_link *link = kprobe->link;
+> +	struct bpf_kprobe_multi_run_ctx run_ctx = {
+> +		.session_ctx = {
+> +			.is_return = is_return,
+> +			.data = data,
+> +		},
+> +		.kprobe = kprobe,
+> +		.entry_ip = entry_ip,
+> +	};
+> +	struct bpf_run_ctx *old_run_ctx;
+> +	int err;
+> +
+> +	cant_sleep();
+> +
+> +	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+> +		bpf_prog_inc_misses_counter(link->link.prog);
+> +		err = 1;
+> +		goto out;
+> +	}
+> +
+> +	rcu_read_lock();
+> +	migrate_disable();
+> +	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+> +	err = bpf_prog_run(link->link.prog, regs);
+> +	bpf_reset_run_ctx(old_run_ctx);
+> +	migrate_enable();
+> +	rcu_read_unlock();
+> +
+> + out:
+> +	__this_cpu_dec(bpf_prog_active);
+> +	return err;
+> +}
+> +
+> +static int
+> +kprobe_multi_link_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
+> +{
+> +	struct kretprobe *rp = get_kretprobe(ri);
+> +	struct bpf_kprobe *kprobe;
+> +	int err;
+> +
+> +	if (unlikely(!rp))
+> +		return 1;
+> +
+> +	kprobe = container_of(rp, struct bpf_kprobe, rp);
+> +	err = kprobe_multi_link_prog_run(kprobe, get_entry_ip((uintptr_t)rp->kp.addr),
+> +							  		 regs, false, ri->data);
+> +	return is_kprobe_session(kprobe->link->link.prog) ? err : 0;
+> +}
+> +
+> +static int
+> +kprobe_multi_link_exit_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
+> +{
+> +	struct kretprobe *rp = get_kretprobe(ri);
+> +	struct bpf_kprobe *kprobe;
+> +
+> +	if (unlikely(!rp))
+> +		return 0;
+> +
+> +	kprobe = container_of(rp, struct bpf_kprobe, rp);
+> +	kprobe_multi_link_prog_run(kprobe, get_entry_ip((uintptr_t)rp->kp.addr),
+> +							   regs, true, ri->data);
+> +	return 0;
+> +}
+> +
+> +int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> +{
+> +	struct bpf_kprobe_multi_link *link = NULL;
+> +	struct bpf_link_primer link_primer;
+> +	struct bpf_kprobe *kprobes = NULL;
+> +	u32 flags, cnt;
+> +	u64 __user *ucookies;
+> +	unsigned long __user *uaddrs;
+> +	unsigned long __user *usyms;
+> +	int err, i;
+> +
+> +	/* no support for 32bit archs yet */
+> +	if (sizeof(u64) != sizeof(void *))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (attr->link_create.flags)
+> +		return -EINVAL;
+> +
+> +	if (!is_kprobe_multi(prog))
+> +		return -EINVAL;
+> +
+> +	/* Writing to context is not allowed for kprobes. */
+> +	if (prog->aux->kprobe_write_ctx)
+> +		return -EINVAL;
+> +
+> +	flags = attr->link_create.kprobe_multi.flags;
+> +	if (flags & ~BPF_F_KPROBE_MULTI_RETURN)
+> +		return -EINVAL;
+> +
+> +	uaddrs = u64_to_user_ptr(attr->link_create.kprobe_multi.addrs);
+> +	usyms = u64_to_user_ptr(attr->link_create.kprobe_multi.syms);
+> +	if (!!uaddrs == !!usyms)
+> +		return -EINVAL;
+> +
+> +	cnt = attr->link_create.kprobe_multi.cnt;
+> +	if (!cnt)
+> +		return -EINVAL;
+> +	if (cnt > MAX_KPROBE_MULTI_CNT)
+> +		return -E2BIG;
+> +
+> +	ucookies = u64_to_user_ptr(attr->link_create.kprobe_multi.cookies);
+> +	kprobes = kvcalloc(cnt, sizeof(*kprobes), GFP_KERNEL);
+> +	link = kzalloc(sizeof(*link), GFP_KERNEL);
+> +	if (!link || !kprobes) {
+> +		err = -ENOMEM;
+> +		goto error;
+> +	}
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		unsigned long addr;
+> +
+> +		if (uaddrs) {
+> +			if (__get_user(addr, uaddrs + i)) {
+> +				err = -EFAULT;
+> +				goto error;
+> +			}
+> +		} else {
+> +			unsigned long __user usymbol;
+> +			char buf[KSYM_NAME_LEN];
+> +
+> +			if (__get_user(usymbol, usyms + i)) {
+> +				err = -EFAULT;
+> +				goto error;
+> +			}
+> +			err = strncpy_from_user(buf, (const char __user *) usymbol, KSYM_NAME_LEN);
+> +			if (err == KSYM_NAME_LEN)
+> +				err = -E2BIG;
+> +			if (err < 0)
+> +				goto error;
+> +
+> +			addr = kallsyms_lookup_name(buf);
+> +			if (!addr)
+> +				goto error;
+> +		}
+> +		if (prog->kprobe_override && !within_error_injection_list(addr)) {
+> +			err = -EINVAL;
+> +			goto error;
+> +		}
+> +		if (ucookies && __get_user(kprobes[i].cookie, ucookies + i)) {
+> +			err = -EFAULT;
+> +			goto error;
+> +		}
+> +
+> +		kprobes[i].link = link;
+> +		kprobes[i].rp.kp.addr = (kprobe_opcode_t *)addr;
+> +
+> +		if (!(flags & BPF_F_KPROBE_MULTI_RETURN))
+> +			kprobes[i].rp.entry_handler = kprobe_multi_link_handler;
+> +		if ((flags & BPF_F_KPROBE_MULTI_RETURN) || is_kprobe_session(prog))
+> +			kprobes[i].rp.handler = kprobe_multi_link_exit_handler;
+> +		if (is_kprobe_session(prog))
+> +			kprobes[i].rp.data_size = sizeof(u64);
+> +	}
+> +
+> +	bpf_link_init(&link->link, BPF_LINK_TYPE_KPROBE_MULTI,
+> +		      &bpf_kprobe_multi_link_lops, prog, attr->link_create.attach_type);
+> +
+> +	err = bpf_link_prime(&link->link, &link_primer);
+> +	if (err)
+> +		goto error;
+> +
+> +	link->kprobes = kprobes;
+> +	link->cnt = cnt;
+> +	link->link.flags = flags;
+> +
+> +	err = get_modules_for_addrs(link);
+> +	if (err < 0) {
+> +		bpf_link_cleanup(&link_primer);
+> +		return err;
+> +	}
+> +	link->mods_cnt = err;
+> +
+> +	err = bpf_kprobe_register(kprobes, cnt);
+> +	if (err) {
+> +		kprobe_multi_put_modules(link->mods, link->mods_cnt);
+> +		bpf_link_cleanup(&link_primer);
+> +		return err;
+> +	}
+> +
+> +	return bpf_link_settle(&link_primer);
+> +
+> +error:
+> +	kvfree(kprobes);
+> +	kfree(link);
+> +	return err;
+> +}
+> +#endif
+> +#else  /* !CONFIG_FPROBE && !CONFIG_KRETPROBES*/
+>  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>  {
+>  	return -EOPNOTSUPP;
+> -- 
+> 2.25.1
+> 
+> 
+> 
+
+
+
+
