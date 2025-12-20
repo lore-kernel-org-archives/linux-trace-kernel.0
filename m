@@ -1,158 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6556D2D94A9;
-	Sat, 20 Dec 2025 15:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81CF18DF80;
+	Sat, 20 Dec 2025 18:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766242821; cv=none; b=rPQyw+ADIFGiBYRgKKtboSWnKDZRlk1xENHtUzaMh8zlbwLPq9O3ZdzVIUgtmgV9oC+S/DMYH/GRs1i5zd+uSHwqJS/xq2M6Pgy8M/pxhYAczMxdKZPolDtDIH3TLAxWJK36Vx9LSHXXiTE3cwXBmussnQveCnKU1MxOXmALvO4=
+	t=1766254749; cv=none; b=VS36FZiyBLo/8ZTAe7GAJRudQtLf5XgtbgvI52BbEyAFBlHAW7mwpoYWbNsygT0oTnFJBodAjIvfDoPeyqyprUMfvHvA5zuFzJX39FlsHwx3f0UMMt2yDcJRTy4TsCQfJ5VYAMn9cZ1ozMNKJqn70KsQsvJBrsIbmvXraGERmwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766242821; c=relaxed/simple;
-	bh=nAnK3wG0RXziPz7E4YON0DH/0jR4RzGtYIeGV6e9eM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9toDTl2u+4CTdrJXyIdhCQVTi+Mu010kQlXa7yy2qMWwzYEJFNFBbWQWvSjweq7K4iEVCswkozTPj8iMV8k0eYgXrBLCaco+I9WZRrHykSgHd+M2afzpFig8OYaNiluC1Qs8aV6VoH54LhnziE4CIlO8bFdVtaZCXZXTL18M3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SA8zPB/F; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766254749; c=relaxed/simple;
+	bh=z98fgVAElpIWEn5pzTR7JAHTTJIUEhEvWNh6CI5TNo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tVjPbFehT+VGlQya3e7se//4Il4yiJsX7LVizEg99dsq5GZJSjWBPldyVw61QREQ7XEFToIbMC91UF+vdo5iwv6ZL3430yGpRZOh167d1NFNpEBqJcavbisK7xyvoBQ5wl0C6NP1fpLVnl81vX0grPYdHtHvcJLENZz7USXz/F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Agy39tfG; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=INt2TyLQ; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SA8zPB/F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766242820; x=1797778820;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nAnK3wG0RXziPz7E4YON0DH/0jR4RzGtYIeGV6e9eM4=;
-  b=SA8zPB/F25dXNfUQWSddSWwq9NYRdSspS6vv0u/f4B4V6GwQxFVZaSO4
-   AxQ8brZ6lU8Okj2p//7NBoKr5TT2sOU8g2eQoX0Xecxub9n2d/PoV/vMd
-   vYbPTHJTDDuqwT8IhE2ela1zehRlftJUmyJsGXtFUZTAQc2lW0jrzSJQk
-   uW+GiPIWgAhJuNjY2winYYFdw0El1XnP4ELFFmJUvq1mkmoZCsbkaIAHN
-   xrRjZ46sHG70D6UdgWeaqVhmiQUSjX3u+CNc0oGYD6NTf1+sGviE5CeqC
-   p4OD4WnTQciVt8mlfb/kGI9lXebn80hLl1bgZfQwLA6xOlrRod5kbWN9+
-   w==;
-X-CSE-ConnectionGUID: FIIq50q7Tv6dWGyn1brQCg==
-X-CSE-MsgGUID: iYoF0BeXQKiuxSB0xilDrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11648"; a="72034868"
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="72034868"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2025 07:00:19 -0800
-X-CSE-ConnectionGUID: eWNAbC0nRfCspnSKssnnHQ==
-X-CSE-MsgGUID: YNbLtCx4Tp+NnLAk2qHUvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="198359996"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 20 Dec 2025 07:00:12 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vWyRF-000000004hZ-0SYh;
-	Sat, 20 Dec 2025 15:00:09 +0000
-Date: Sat, 20 Dec 2025 22:59:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Yu Kuai <yukuai@fnnas.com>, Jens Axboe <axboe@kernel.dk>,
-	Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: Re: [PATCH 2/4] cgroup: Introduce cgroup_level() helper
-Message-ID: <202512202230.1uoB5chV-lkp@intel.com>
-References: <20251217162744.352391-3-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Agy39tfG";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="INt2TyLQ"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dYXjG719Wz9sxL;
+	Sat, 20 Dec 2025 19:18:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1766254739;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0QXxrOEVITJGj5z3HA/YPZ+p2C9DX/MyyDl+5dahe3U=;
+	b=Agy39tfGcBbJyaA8oGEwFSV01cVCyynBWCwMTTOKgCDSfkMN28agaf84ODbtohRBv9gHBd
+	aQDXLyyAkS3mqfA6opdLBtX4SWlHekFH/GNmUDmXdi4rPSf9GPh701sjpFS7p+j7AJhcLe
+	92Fp7OdTHLjP+Z23QZ44Fl990vmHmqsZd8k79bQMEzOG+D0oxeO02q4fhyWNlWduIk5GFS
+	B7stCnsORmfqNzsO1Y7ozHDrhthESBz4tBPJ3ttfqzOchnPgnrSiDAp6gHkKjC8hm/Pxit
+	L8rQAOXpII437RbvIHlk5JnapBoQ01buV2IWYD8eJep0JiR96OKqSdQud6ewZQ==
+From: Maurice Hieronymus <mhi@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1766254736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0QXxrOEVITJGj5z3HA/YPZ+p2C9DX/MyyDl+5dahe3U=;
+	b=INt2TyLQ/KjjqTrBEwatwjlqRjzKPJFjWkTA/ifs2dFZypJsVJEcF4ftQYDTOPXL2Z/yi1
+	Ux48b79gKPvBQCO0JT+TTq3FdpWogBNGElFKtAq4YAPkajqFGRnxDvS7cWi/Z3NZUhQMPt
+	8bsXqJwK99Ug58C0MDHrQmOykPN9q7aumG7u6wqQeec+nTF/t5bYiVFfqobiNg5MNnHHeV
+	WF+La0uw1bpUFRzVsg8ngMqZbiZHQ1ycHE3FXzwAzOmxuVCydVcJatq69RopL00xsrblv/
+	7M7eGjUmOWUPbZJL01ax5xs3kTo077C7bSZ61SYvExGLyUIZO/aIrM5LwZLA/g==
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: georges.aureau@hpe.com,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhi@mailbox.org
+Subject: [PATCH v4 0/2] kallsyms: Always initialize modbuildid
+Date: Sat, 20 Dec 2025 19:18:36 +0100
+Message-ID: <20251220181838.63242-1-mhi@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251217162744.352391-3-mkoutny@suse.com>
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: 961443fca8f85b8c18a
+X-MBO-RS-META: 4sydgrc6zfdghwcu1opmywd5yn14ff5w
 
-Hi Michal,
+modbuildid is never set when kallsyms_lookup_buildid is returning via
+successful bpf_address_lookup or ftrace_mod_address_lookup.
 
-kernel test robot noticed the following build errors:
+This leads to an uninitialized pointer dereference on x86 when
+CONFIG_STACKTRACE_BUILD_ID=y inside __sprint_symbol.
 
-[auto build test ERROR on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
+Prevent this by always initializing modbuildid.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Michal-Koutn/cgroup-Eliminate-cgrp_ancestor_storage-in-cgroup_root/20251218-004346
-base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
-patch link:    https://lore.kernel.org/r/20251217162744.352391-3-mkoutny%40suse.com
-patch subject: [PATCH 2/4] cgroup: Introduce cgroup_level() helper
-config: sparc64-randconfig-r134-20251218 (https://download.01.org/0day-ci/archive/20251220/202512202230.1uoB5chV-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251220/202512202230.1uoB5chV-lkp@intel.com/reproduce)
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220717
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512202230.1uoB5chV-lkp@intel.com/
+Changes to v3:
+- Split the changes into separate ftrace and bpf patches
+- Replace IS_ENABLED() with plain #ifdef
 
-All errors (new ones prefixed by >>):
+Maurice Hieronymus (2):
+  kallsyms: Always initialize modbuildid on ftrace address
+  kallsyms: Always initialize modbuildid on bpf address
 
->> block/blk-iocost.c:3006:53: error: expected ';' after expression
-    3006 |         iocg->level = cgroup_level(blkg->blkcg->css.cgroup)
-         |                                                            ^
-         |                                                            ;
-   1 error generated.
+ include/linux/filter.h | 6 ++++--
+ include/linux/ftrace.h | 4 ++--
+ kernel/kallsyms.c      | 4 ++--
+ kernel/trace/ftrace.c  | 8 +++++++-
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
 
-vim +3006 block/blk-iocost.c
-
-  2981	
-  2982	static void ioc_pd_init(struct blkg_policy_data *pd)
-  2983	{
-  2984		struct ioc_gq *iocg = pd_to_iocg(pd);
-  2985		struct blkcg_gq *blkg = pd_to_blkg(&iocg->pd);
-  2986		struct ioc *ioc = q_to_ioc(blkg->q);
-  2987		struct ioc_now now;
-  2988		struct blkcg_gq *tblkg;
-  2989		unsigned long flags;
-  2990	
-  2991		ioc_now(ioc, &now);
-  2992	
-  2993		iocg->ioc = ioc;
-  2994		atomic64_set(&iocg->vtime, now.vnow);
-  2995		atomic64_set(&iocg->done_vtime, now.vnow);
-  2996		atomic64_set(&iocg->active_period, atomic64_read(&ioc->cur_period));
-  2997		INIT_LIST_HEAD(&iocg->active_list);
-  2998		INIT_LIST_HEAD(&iocg->walk_list);
-  2999		INIT_LIST_HEAD(&iocg->surplus_list);
-  3000		iocg->hweight_active = WEIGHT_ONE;
-  3001		iocg->hweight_inuse = WEIGHT_ONE;
-  3002	
-  3003		init_waitqueue_head(&iocg->waitq);
-  3004		hrtimer_setup(&iocg->waitq_timer, iocg_waitq_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-  3005	
-> 3006		iocg->level = cgroup_level(blkg->blkcg->css.cgroup)
-  3007	
-  3008		for (tblkg = blkg; tblkg; tblkg = tblkg->parent) {
-  3009			struct ioc_gq *tiocg = blkg_to_iocg(tblkg);
-  3010			iocg->ancestors[tiocg->level] = tiocg;
-  3011		}
-  3012	
-  3013		spin_lock_irqsave(&ioc->lock, flags);
-  3014		weight_updated(iocg, &now);
-  3015		spin_unlock_irqrestore(&ioc->lock, flags);
-  3016	}
-  3017	
-
+base-commit: dd9b004b7ff3289fb7bae35130c0a5c0537266af
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.50.1
+
