@@ -1,196 +1,197 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20BE212FB9
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 00:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0151428850D
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 11:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766191135; cv=none; b=iB5OTDdZtSP5JejNKd967xB11/PjUbVhOjqSloE1KIr5rAXHt53eJDRLnf0ZTk2ZDNW+q9zHJcJQhv+4XCcEorFp32eLL4Awxi5OY98ceGPnbMi+JK/SAMMVnsUaRm/2WICyQfcCmELwlpKwqtNzg6hTOu7NJVtdAmTkTIwnpls=
+	t=1766230544; cv=none; b=ObjLS3W5klaiv7Qrhg/Ay08eeL3K0CzTzbxmZNGyCj27Km0fkLZ1ops7NLC7m6u4epzc0Y5Oap7BJkm9LVzZFLwesvYf44mvxvIBbfnoaa55mqRlu5IPrF8lfu9CR4ET4w8H34TazwRMREn29jSlUG4eI9dAaUbAMyaGBNvX8k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766191135; c=relaxed/simple;
-	bh=eswaSaP3CWqx2hoek8DiKwQajXdjPn1g3D3AAWCCS6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9VUlDaXLuGAt7nd/63kvO8YRoyFgFCYIjhyhdzruO2S4TrY3a/T5cgwt5wAjEy0cShWS4ZidfsjX65JVn1gvxljxYXC0385tvbihqKACoD+UXXYQeIUEtKnjPQmlFG/Zpf+jWdVYjnWYJDZCU+kX03O15wJWP9yNzNYsqfFI2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfmVhwWl; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1766230544; c=relaxed/simple;
+	bh=vXafQvDXbxhmRy9/A/k3bNzYbmfkT2tbUIk9/L+02a4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T/IKI2jQGbFNbf6OF4yg6yfUcfHnCH74MLtfNjg3fWGfnFUNm0aHK25GGGJogPPKEI9pNBAgp6hc8hmcfiqAgDDcH4kW8c3fumjb8albywibIiKS6IdkpVr/3rhFsaApSBSLQ8m8G0p8oDa3Cnc3vruUG69+QbHMaeuszyr15lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QH0aiJ6r; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfmVhwWl"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b7a02592efaso337640766b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Dec 2025 16:38:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH0aiJ6r"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-34cf1e31f85so2092687a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 03:35:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766191132; x=1766795932; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Y3Y0Yx+NCyZ6/DOSVsayIB2ojE39RciO6fXS+6DEgk=;
-        b=mfmVhwWlQIDivFE7hcNjxBmO4eXeMsg2XsncLXjtduc8rPLFFGaAu5z9E8ymW8/Hu2
-         KshHzIMAR2Yiz6zIKxmHJAnK2T6fps9ZeBECe98fb7QMUke8FYGPEAuTiumJZINrLM6J
-         vc809OpheDPQ/0o9P1AJDXvAYLJCr/SkcPVEUiTCql0K/2OeikMkNyXlp9pH5qpMyegg
-         eOGfZa3Q0udffT4DTgAepJU2ljDPtDKAFvuk+4RtAQ6O86BJdC42koTOZ24NNBF2hM7U
-         Iwubfe7AICwrzsCWvuTIAuB0FvcAS/j8qu3lyNLf55j/75UY6GtclIc44uwvXnEs0YpU
-         hRYw==
+        d=gmail.com; s=20230601; t=1766230542; x=1766835342; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=93uwlo3kvewJRRDvy0FK7OcjMcJRt550CMeXmSvT00w=;
+        b=QH0aiJ6rsw4tZaqLi611WNvFwdPTnpjNztQcg7rEoSTvu6EsxoLesAfGFrNvil0RMz
+         EmO5ffmErxTnZyQQ6bktByK0m07HhypRYfvDrOR6gVnYg7vHkHKvQyh0eLgxhMgmCUGK
+         I9g1Ut6cIJN++C3YmtL9i2FepjfPCdmie+80lG8hGYMFxbeL9CUxSGiZOfauxPC3DYnJ
+         0rUIAT7FeGuRqcdod6vV3nrZ88PZmbcqIqdMi+/NcJigqEVm+yaez+5UGoOYJy0aRpBf
+         EFb1xhCQZG2H5DU5miBHlWvtl3h8+W5qDDbd+dM53qecTcAu5AkYRDGvoCWB8wvQpRwS
+         OOLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766191132; x=1766795932;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Y3Y0Yx+NCyZ6/DOSVsayIB2ojE39RciO6fXS+6DEgk=;
-        b=fuHENXj6QkNJwEBdb1sevn25HYb0pdqXzUuHmx3dmwEnU8+R9TzqSc8dWlmz8wHHH0
-         4X7QPA56Y4vCNnUKjz2aOZuSmZoi6JsUjr+ZY36jPBHiipq3GZV/YJlbcjfXEkHHj1Te
-         cQB2btSNkTfgBdc0FA+wHkxPSh8XZmfN9djl9n2cjB/sphDkJ8+nnq6V+VCXSrOigfrB
-         Q6cr0pDseOW5adIyl18H8rF8fFVg5KuRwvkzcKF+WcOPQAtyCYn9+H6ZSH+BISjm3VBb
-         xvAv+kMtuu0no6mu4gbnNLzUoA3bO3Ms2n+G40JGcQWrxNepXiIUCTA8T5Lb7OyCbzq7
-         Y8Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUymHnhr/XrlH/2ly3TJF2gclFSE29T+5XVZipBllXuNCYvcFazS+1AJ34nnbcFxA5kDKbO396OzIN9+ENXT0QG/TU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb6SoFfu8UkKwtvK1YomrccyOY9qNiuheTAYrtGOKoh2Q7ZKDM
-	c7a5fLxZ4LodTQ2gMpUEzH/PLs4HACulSy+b9YoVcEl1FBRjSwZeBAQJ
-X-Gm-Gg: AY/fxX7sV8mJL6SveQOysqwXahyP8xsl2J6IQTUxTcFyxdrxDCVrvDEFqIP+bAzL+10
-	Z4X/CQJ1DJN5KdKPAYhuLGg2ubGhgND+L7bvf95e0m1ICX5cAILx4kZW8e+lp9JIULJ/bxeD/Vl
-	CF/p2KPuBwPOdXy5/GhgB5k+3/CeVqJvLPFYDZh0TuImAOT1Ln2o9TejLFNrodN2mBnMsGzQFsV
-	6MvKfUVmulnyMJdZvwl1ulNotzA3n590LoX4Ei/7TyL3R9E1QyQFFro+RyoYgVLF1/fWsLvTKUK
-	ft5oiIYrrS+1Ztjffe+nsS2FdjNcoxskWqRNayU1vbkOGhmf5VANIBCCwezavB61ToXwkA2zPgV
-	sw6PQ9V2LV7un4GAvRXWkOXSoTpjcimv2YEg0JX/9RURnpMugdz3P/cp9NllF+PLAPfvWCAVTyo
-	NEp+RLKTH+dA==
-X-Google-Smtp-Source: AGHT+IGMkT3dRU7E8CU6/p5XRm3FX+P7Y1WZkYUD/SbScH7FS0t89FNoNETeJQo4FkXBW5inymANjQ==
-X-Received: by 2002:a17:907:8e95:b0:b76:7e0e:4246 with SMTP id a640c23a62f3a-b8036ecbbb2mr420395466b.12.1766191131803;
-        Fri, 19 Dec 2025 16:38:51 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037de11dasm349498466b.35.2025.12.19.16.38.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Dec 2025 16:38:51 -0800 (PST)
-Date: Sat, 20 Dec 2025 00:38:51 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: "Garg, Shivank" <shivankg@amd.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Lance Yang <lance.yang@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] mm/khugepaged: remove unnecessary goto 'skip' label
-Message-ID: <20251220003851.dzsafcxtlbgzwsm6@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20251216111139.95438-2-shivankg@amd.com>
- <20251216111139.95438-4-shivankg@amd.com>
- <20251217024818.ngoime34bxeatqij@master>
- <c7c1d62c-7d27-4b73-8173-0493adc66cfc@amd.com>
+        d=1e100.net; s=20230601; t=1766230542; x=1766835342;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=93uwlo3kvewJRRDvy0FK7OcjMcJRt550CMeXmSvT00w=;
+        b=BT1RJ57XtsRT4T919y1Jd7hzkeQbK8xOfl4ihsTf7r4kBjlwy2BKaW8Z2oneqYX+wC
+         B4pi6nX8Q+ih1M7+StgTWMNEIgjmrquJrYUkU1NJkIW43QouvJLkVIQFoUSFjwiv2pI/
+         3iQe0dXOZRaPcmBFaPuSOZVKNvhQs3XURR/m4rm/w2/sOmy6mbQHg1ZHfgWM/xZ2YWq5
+         j+VO44tPDQ/U1j5xgsexn1JJ2aY6PK3JBtHclLaCk0us7tKFKyk8QQVmtcLyAq1PtG0L
+         kEthAnOCpI4v5VLGJqDtPbBYqyEVwzv+VD0hTEU5kDSwPOrMLlKS81CqR5BAsf2t4tmQ
+         m+gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtjEf/GF0pFzFHsYDQsci0XBrU2Cp+/lk509czpNKB/jV/fH31ImX1BbMATS+v9owuC/6VnpJRXPWn27imlcKHnqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvnKlWheQCtXmpS4rhj92RzC2+ShxY9APRHscStsDdU1ql1Po8
+	A0J+fSBjF5TAOTapf+uJAXsmWEyOueilxlDSA74oWuj7P/Jr2QViC667
+X-Gm-Gg: AY/fxX4KiqIkBE7IXv+dq0/oM6bAvQ8oqQ98sjIwm2whfjP3yorGomQrNpomvHpCjNJ
+	o6/+Xtn4HHPTPvE2YCewEDc/rJ8A3UkdfoO6fccxAizPMx6EM9LhEVy0N4mdkFUv3j5Cn07BT1a
+	yXWaEyQhFFnS4yBQyHckAulWovmdSDfwPRXfXp/qBuSZsq4luxEZ+KH1/J/53W73UUBO0b7SwU4
+	IcOEjrBEcFnUmRyb+lh2PZ0+nz6OOf6G2PJoSMsgicG3NwJo5QdFmig2RJ0qC0ac4+/quJAnOWW
+	t/Gw/npYwkVWK7hG5vVLdVTGVgrLfbCTR2dM+eQBHASbJqIKMe8OTBdsS67NsmcKIOXHQJvcjZe
+	DoLUD9FIvbTdABEn+ZkeBA5tMrQ7QfUEJQ/VAabn2SEVhziWP5YVN+gTk6z4gd2tiovbLvBi6Df
+	QMoRz6pIu9AyYhI2EnaerISg==
+X-Google-Smtp-Source: AGHT+IHZeSJ8DIPXHLFiAU6EtpaggaD6/tEfpVwHzU5oxuvR3r0N7paTuMWLmHBPXJh6SE6mjTO3lQ==
+X-Received: by 2002:a17:90b:1e4b:b0:343:684c:f8a0 with SMTP id 98e67ed59e1d1-34e921ad83fmr4533520a91.23.1766230541794;
+        Sat, 20 Dec 2025 03:35:41 -0800 (PST)
+Received: from [127.0.0.1] ([188.253.121.153])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e70d65653sm7799389a91.5.2025.12.20.03.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Dec 2025 03:35:41 -0800 (PST)
+From: Zesen Liu <ftyghome@gmail.com>
+Subject: [RFC bpf PATCH 0/2] bpf: Fix memory access tags in helper
+ prototypes
+Date: Sat, 20 Dec 2025 19:35:03 +0800
+Message-Id: <20251220-helper_proto-v1-0-2206e0d9422d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7c1d62c-7d27-4b73-8173-0493adc66cfc@amd.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOeJRmkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDIyMD3YzUnILUoviCovySfN20JLNUMxNDCyMTM3MloJaCotS0zAqwcdG
+ xtbUANTIgfV4AAAA=
+X-Change-ID: 20251220-helper_proto-fb6e64182467
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Zesen Liu <ftyghome@gmail.com>, 
+ Shuran Liu <electronlsr@gmail.com>, Peili Gao <gplhust955@gmail.com>, 
+ Haoran Ni <haoran.ni.cs@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4329; i=ftyghome@gmail.com;
+ h=from:subject:message-id; bh=vXafQvDXbxhmRy9/A/k3bNzYbmfkT2tbUIk9/L+02a4=;
+ b=owGbwMvMwCXWI1/u+8bXqJ3xtFoSQ6ZbF8vKqrWzJlu5nDi75d8B27tP6917sp8J9E9ntX6/1
+ DdYx35uRykLgxgXg6yYIkvvD8O7KzPNjbfZLDgIM4eVCWQIAxenAEzkkRwjw6O7ro4bL03gj6sw
+ i5i4SutYvzh38qXLsYEX3l7/8nXLBidGhs3zuFdpnAzhuNCcMOfUBsmnv8941xqVL53xl8Xw2eV
+ wQQ4A
+X-Developer-Key: i=ftyghome@gmail.com; a=openpgp;
+ fpr=8DF831DDA9693733B63CA0C18C1F774DEC4D3287
 
-On Fri, Dec 19, 2025 at 02:54:40PM +0530, Garg, Shivank wrote:
->
->
->On 12/17/2025 8:18 AM, Wei Yang wrote:
->> On Tue, Dec 16, 2025 at 11:11:38AM +0000, Shivank Garg wrote:
->>> Replace 'goto skip' with actual logic for better code readability.
->>>
->>> No functional change.
->>>
->>> Signed-off-by: Shivank Garg <shivankg@amd.com>
->>> ---
->>> mm/khugepaged.c | 7 ++++---
->>> 1 file changed, 4 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>> index 6c8c35d3e0c9..107146f012b1 100644
->>> --- a/mm/khugepaged.c
->>> +++ b/mm/khugepaged.c
->>> @@ -2442,14 +2442,15 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
->>> 			break;
->>> 		}
->>> 		if (!thp_vma_allowable_order(vma, vma->vm_flags, TVA_KHUGEPAGED, PMD_ORDER)) {
->>> -skip:
->>> 			progress++;
->>> 			continue;
->>> 		}
->>> 		hstart = round_up(vma->vm_start, HPAGE_PMD_SIZE);
->>> 		hend = round_down(vma->vm_end, HPAGE_PMD_SIZE);
->>> -		if (khugepaged_scan.address > hend)
->>> -			goto skip;
->>> +		if (khugepaged_scan.address > hend) {
->>> +			progress++;
->>> +			continue;
->>> +		}
->> 
->> Hi, Shivank
->> 
->> The change here looks good, while I come up with an question.
->> 
->> The @progress here seems record two things:
->> 
->>   * number of pages scaned
->>   * number of vma skipped
->> 
->Three things: number of mm. It's incremented 1 for whole khugepaged_scan_mm_slot().
->
+Hi,
 
-Agree.
+This series adds missing memory access tags (MEM_RDONLY or MEM_WRITE) to
+several bpf helper function prototypes that use ARG_PTR_TO_MEM but lack the
+correct type annotation.
 
->
->> While in very rare case, we may miss to count the second case.
->> 
->> For example, we have following vmas in a process:
->> 
->>      vma1             vma2
->>     +----------------+------------+
->>     |2M              |1M          |
->>     +----------------+------------+
->> 
->> Let's assume vma1 is exactly HPAGE_PMD_SIZE and also HPAGE_PMD_SIZE aligned.
->> But vma2 is only half of HPAGE_PMD_SIZE.
->> 
->> When scan finish vma1 and start on vma2, we would have hstart = hend =
->> address. So we continue here but would not do real scan, since address == hend.
->> 
->> I am thinking whether this could handle it:
->> 
->> 		if (khugepaged_scan.address > hend || hend <= hstart) {
->> 			progress++;
->> 			continue;
->> 		}
->> 
->> Do you thinks I am correct on this?
->
->I think you're correct.
->IIUC, @progress acts as rate limiter here.
->
->It is increasing +1 for whole, and then increases by +1 per VMA (if skipped),
->or by +HPAGE_PMD_NR (if actually scanned).
->
->So, progress ensuring the hugepaged_do_scan run only until (progress >= pages)
->at which point it yields and sleeps (wait_event_freezable).
->
->Without your suggested fix, if a process contains a large number of small VMAs (where
->round_up hstart >= round_down(hend), it will unfairly consume more CPU cycles before
->yielding compared to a process with fewer or aligned VMAs.
+Missing memory access tags in helper prototypes can lead to critical
+correctness issues when the verifier tries to perform code optimization.
+After commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type
+tracking"), the verifier relies on the memory access tags, rather than
+treating all arguments in helper functions as potentially modifying the
+pointed-to memory.
 
-You are right. While I am not sure it exists in reality, but in theory it
-could be.
+We have already seen several reports regarding this:
 
->
->I think your suggestion is ensuring fairness by charging 'progress' count correctly.
->
+- commit ac44dcc788b9 ("bpf: Fix verifier assumptions of bpf_d_path's
+   output buffer") adds MEM_WRITE to bpf_d_path;
+- commit 2eb7648558a7 ("bpf: Specify access type of bpf_sysctl_get_name
+   args") adds MEM_WRITE to bpf_sysctl_get_name.
 
-Thanks for your confirmation. Would you mind add a cleanup in next version, or
-you prefer me to send it :-)
+This series looks through all prototypes in the kernel and completes the
+tags. In addition, this series also adds selftests for some of these
+functions.
 
->Thanks,
->Shivank
+I marked the series as RFC since the introduced selftests are fragile and
+ad hoc (similar to the previously added selftests). The original goal of
+these tests is to reproduce the case where the verifier wrongly optimizes
+reads after the helper function is called. However, triggering the error
+often requires carefully designed code patterns. For example, I had to
+explicitly use "if (xx != 0)" in my attached tests, because using memcmp
+will not reproduce the issue. This makes the reproduction heavily dependent
+on the verifier's internal optimization logic and clutters the selftests
+with specific, unnatural patterns.
 
+Some cases are also hard to trigger by selftests. For example, I couldn't
+find a triggering pattern for bpf_read_branch_records, since the
+execution of program seems to be messed up by wrong tags. For
+bpf_skb_fib_lookup, I also failed to reproduce it because the argument
+needs content on entry, but the verifier seems to only enable this
+optimization for fully empty buffers.
+
+Since adding selftests does not help with existing issues or prevent future
+occurrences of similar problems, I believe one way to resolve it is to
+statically restrict ARG_PTR_TO_MEM from appearing without memory access
+tags. Using ARG_PTR_TO_MEM alone without tags is nonsensical because:
+
+- If the helper does not change the argument, missing MEM_RDONLY causes
+   the verifier to incorrectly reject a read-only buffer.
+- If the helper does change the argument, missing MEM_WRITE causes the
+   verifier to incorrectly assume the memory is unchanged, leading to
+   potential errors.
+
+I am still wondering, if we agree on the above, how should we enforce this
+restriction? Should we let ARG_PTR_TO_MEM imply MEM_WRITE semantics by
+default, and change ARG_PTR_TO_MEM | MEM_RDONLY to ARG_CONST_PTR_TO_MEM? Or
+should we add a check in the verifier to ensure ARG_PTR_TO_MEM always comes
+with an access tag (though this seems to only catch errors at
+runtime/testing)?
+
+Any insights and comments are welcome. If the individual fix patches for
+the prototypes look correct, I would also really appreciate it if they
+could be merged ahead of the discussion.
+
+Thanks,
+
+Zesen Liu
+
+Signed-off-by: Zesen Liu <ftyghome@gmail.com>
+---
+Zesen Liu (2):
+      bpf: Fix memory access tags in helper prototypes
+      selftests/bpf: add regression tests for snprintf and get_stack helpers
+
+ kernel/bpf/helpers.c                                      |  2 +-
+ kernel/trace/bpf_trace.c                                  |  6 +++---
+ net/core/filter.c                                         |  8 ++++----
+ tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c | 15 +++++++++++++--
+ tools/testing/selftests/bpf/prog_tests/snprintf.c         |  6 ++++++
+ tools/testing/selftests/bpf/prog_tests/snprintf_btf.c     |  3 +++
+ tools/testing/selftests/bpf/progs/netif_receive_skb.c     | 13 ++++++++++++-
+ tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c  | 11 ++++++++++-
+ tools/testing/selftests/bpf/progs/test_snprintf.c         | 12 ++++++++++++
+ 9 files changed, 64 insertions(+), 12 deletions(-)
+---
+base-commit: 22cc16c04b7893d8fc22810599f49a305d600b9e
+change-id: 20251220-helper_proto-fb6e64182467
+
+Best regards,
 -- 
-Wei Yang
-Help you, Help me
+Zesen Liu <ftyghome@gmail.com>
+
