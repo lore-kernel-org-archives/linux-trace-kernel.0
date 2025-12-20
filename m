@@ -1,333 +1,144 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E91723A984
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 11:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DDA1C6B4
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 14:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766230562; cv=none; b=ESSIoJq/xsWJYgLprslWzFez0Pbz5o6bTXv+b0Er25k1Kty2+vgg5/eijYt3ULVSRebn7clQcjrFDVTNBiuNub1+06WoPRB0BMTt0FwlqTYogYyDpouE+xtLCzwIukUj8rgmHHTE5dsEMKnKzcWQ1KuZTNvK3ASiclH3zK75zvs=
+	t=1766239660; cv=none; b=QOANgPolw0uPIust1/hpbpw+21Om40447IGstKD+Jem6kytl9/E9lTEtubz8FFpr3K8JT7OjWTXSrRyvLoF9QUPr036P3BZLQXjx6Zw7Q2CNE3Rbi11V6sso5PtjUAH8QL0skPoiGzVNoDcypfoczVtp9MUMRLQ5i60tMs4rqOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766230562; c=relaxed/simple;
-	bh=jIDhSYVp9j8QWzc+Ung+SecNY2NPdp5wG0Cu5OE+NrM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L2FfmPufXk5Y69oJUcFdz8kDTq03eVX/oO3PQ2VtxXQa2CsSxE9RkDpI1WWYiCt0VfT7pBDnF3PYkfduFY4AaiVfIY2+XptxR2Xr75ZSVTdiuYBDU2Q/GQNWvprKROCWPFLCDONfgw9MtBFESwZ4qEO6/cvrgkzoFvuRKjTO/yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQnNlTob; arc=none smtp.client-ip=209.85.216.41
+	s=arc-20240116; t=1766239660; c=relaxed/simple;
+	bh=ppuzKfXdvO9jvlXXAJ3Z8CDIdqR8C/0djsmJ/G/zQqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QPx9mhouxnh2jgFGAuAO0B1xpWxG7VThG4McWOdWBOICAUJRIPbCNuiH7NBJv5Ss7lwusvQR/6L4750Do4b/wY15OIOIFR0x8YIa8GAPoOpavMKL0Q+rzgk32r2NsNAOmNmnynRFa5wmKIkQCZACq4VEydXMnAexqG3EvlwDPBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XptUCPOM; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQnNlTob"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-34c708702dfso2859953a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 03:35:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XptUCPOM"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7cc50eb0882so900216a34.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Dec 2025 06:07:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766230559; x=1766835359; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FIP/p9vK+z99OUz21qCwPYKTeE+7MGP1Av2Ob1HiCgE=;
-        b=CQnNlToboKp35sjY9vHd+4cIG9QXrSvWvDrr/vYrDmK5xYISc8BeFOXgExrzfiMhLb
-         J7g/bmOmmgKAjItZQZrpuRytJy+aQ7eNzhCJ65b8VuVkuNtCcBlXdcaBAlu1HBRdqWmw
-         F2dBz5ZmLtjfdxSh0fzmtTqe10UhTc/OeWtpH+pIAWMigmGQkAZNbOny5W5ixTTpwf/7
-         Hp3yBRYvWi29Uyrj0E5giKBU9W1+lKbFO/M4I3SEztCPLIh2tl2RzhKP94xhLYlHg9pT
-         BxcimyA8JbJVDBrJ5EZkiLF71T/cq97BCeFFedoKAbngeEmA5xywLhvm1Xl9NKfu8zvK
-         S44w==
+        d=gmail.com; s=20230601; t=1766239657; x=1766844457; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tc1iEedM1caQ6hqBuO/lN1WSU9IfL3Q4FFgEU8l0tOA=;
+        b=XptUCPOMIb1bEcHpbY3RoSLIaWHsW9zGToRquY/2NNLJR/KBw9qiM9q5iPIha8dhim
+         x6CXG/xynfVDHsT5mbcFjaGzxIUmITxenn2NwvsToA1CfM5RmkT6bXMxm3QIDZkN3P2Q
+         Qw/CkiKk5LGIqeGksVSy5/9BIY2YUA4RTxX3MDCCAaJ+f6+YvyGCBH1MbjTMHSzB972R
+         ZtrJF/FufwODlD0ntGJkFtnXGWfB/tP6Iw2u+QEYayOfbz/YIOBWj2wcBMS2bHxFdU9G
+         gZqHjy7q+50znKcJfSQz7Uqu4C/yJh9HrRqNN/KZSwuUySEqMEC0FJSdfeqOijTA6qxS
+         FuYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766230559; x=1766835359;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FIP/p9vK+z99OUz21qCwPYKTeE+7MGP1Av2Ob1HiCgE=;
-        b=gSj0GR7W4+g21gcuqRw8btpfY0tn82ZkmymncO1yK0G/HDxizqpakDuvXTn10aoYD0
-         9w8TbcWgbhD3ZLMGi9Z6fSOsRWWGSZDDWN3EdFIdLWFmJTMESTBduCcfhJNe4DntVJPg
-         /tXoUFgUERZrsKvhUIfHGtHbT5/QOcyWDisRN30aSNwNDykE0f1qvDLg88qpYGwVO5gs
-         O8Ym+2/yIwn+c78SEJVDR/TqfnTj49ptv9u/ZyrxuEAtQGj45F3sgd1dIQoeQ+9oSa9J
-         LsIYrdhbUN6wceZFc9k4nGkYO05Kk1tuReKmW60F60JogoohUE00e/D5SUJH0i6sTFAa
-         RiJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkkgEIJTn7LfDFou8vHCBSS49ihQsP8/n3t825iK1hY2Upx9e+7wMnvWBweuX7pFevndd335KFLJcFq7arrt/zn4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5nNE2BsWNZF35XwdthlhZnxTovrm//R2iHG/JWXm94mur5BQ8
-	FnXaynbK5+0jtDVqNV/p7JNBqC9RgZD333OhC/2gSUjaDBnNdHbVtpau
-X-Gm-Gg: AY/fxX5LqQQY0Rtmw+lUKQiIDg6sNOuRDjGMx0r+xx77JkhpDBQWG04LiQ8nzkWad8N
-	wTIOm1hXi5ZGGqjQAdwm1TBy1mdCQFwCtkOWCrIkeREO6Civ4rqASxVwzJ03WjuIrgByDWAlBPz
-	OaoKeA9/9T3qSWyhFQF2usL4jTz9mkoan/8qu3LO5zYqgCcnjywxtnMU6ioRIQ+b5Wfi7+IHIwW
-	niQpny0/2cYvcCbVWOhDiKcZ7vUhy8T0m+t+AvfGzw2kuATga7vDr4ARp1g/GblM5oqQSXokdMC
-	hQNVZZLkznF/Fgm5lzUg7RK4v8LAlCQ03feDbWVMPtYEdpS3oPlOH3OhuMzBTJIDZlIZ/avikYI
-	fAlHNQJjVVMROus7WnvwDH2pYYNlerMNfazR7r5mEuhGytFz/acLr+4oE0AQniX11JyvyoCH+uI
-	a0OA6yF/n6mvo=
-X-Google-Smtp-Source: AGHT+IFdI/LDc0piR9RWMjmgLQ3q3D7MDPC24mANcTglaDLcS2snWjW0R/06TaK3G00xl98gaRtVzA==
-X-Received: by 2002:a17:90a:dfc6:b0:340:d1a1:af8e with SMTP id 98e67ed59e1d1-34e921e60d9mr4930318a91.37.1766230558471;
-        Sat, 20 Dec 2025 03:35:58 -0800 (PST)
-Received: from [127.0.0.1] ([188.253.121.153])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e70d65653sm7799389a91.5.2025.12.20.03.35.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Dec 2025 03:35:58 -0800 (PST)
-From: Zesen Liu <ftyghome@gmail.com>
-Date: Sat, 20 Dec 2025 19:35:05 +0800
-Subject: [RFC PATCH bpf 2/2] selftests/bpf: add regression tests for
- snprintf and get_stack helpers
+        d=1e100.net; s=20230601; t=1766239657; x=1766844457;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Tc1iEedM1caQ6hqBuO/lN1WSU9IfL3Q4FFgEU8l0tOA=;
+        b=roaEFDVxzN7Ed2HTtBxEeYuiTHhFx8Pkb9xNPRPyBGfen3wHgnr9xNm7UWoki85NXI
+         ymLTq8rrk9qONAPzpf0xRqnd649G7ooQhVjyZm4e6dK9nl3UCXUPknn3ql+bIzOE6aTx
+         32oO00wZajRZ0v0Xw7jPm7inCAhguAeyIQhAETQxUVUWArCqvk2YXjpt7wTcTja9413K
+         4llOU+OJ3iyzUBiOgOKDR3QB9jtX/dROUBL8KYP5wfG1EivoBbd+s44zkhJhG2Mmhx2d
+         4MzE7ilmIYN2Vg6vTp14hdTCipk2Cyk8F/PEJFiHbNsIN/L3NS3GXX2+3+AD7Xy6aIHV
+         Jm/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWM+tWoZ7fAJV5LAzdrjhn9z5PChRqVmfb3KcDjb1eCbkVs/ssfoLZGRLHNp2wbrl3KXGqxfG9mUtwquBHSIr0IPdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNPa7mr6OyfezfKAMTzQF5LCczt/mSCgYREIgQrWRiRoWa9gjm
+	eHEplxgW0v5nd3QwmP1XV/lTiuf7Wl+D/rz2xt9k0KTxQOPjPZil1x28Kdjx2IpX7ZbQ5+UZMw8
+	b2sgqITvpVh9Id6X3qUWd7Ib3NYbijsjV/R1obfQ=
+X-Gm-Gg: AY/fxX5KRiDSF7T2s1o770jWcELzML7c1KM4kq6XiFau+gZ7dcG0XLbeSoraKUTaw/e
+	6qhYBaRHQuFR9F9UQTBFvPqNYbaIqKFAXGyv1uLRt6bwaJwLRrDlpfkcFRy69cYY+BiihzanVWv
+	0dcwVHYv1QtwZSpQC12frpGE9eokYZffCEpcKV5ApPS9XVBTvwlWL9nL85BDzEUHYMGgKaFo3mu
+	g6cTBWCHV5rOLEviVli17crj2TdKN1CO3qT58N9zD0fEpZoSLFgcWq+S/MicGTzW32ZdcU=
+X-Google-Smtp-Source: AGHT+IFKJvWy/VbyNKsiekvuWECXFOl3II4PdAI1c5BeYHGXBeL5yRX9cLnJ1GnL00cdoCslt6FVO9gv5pYDRsHn0iU=
+X-Received: by 2002:a05:6808:c1ae:b0:442:e596:1189 with SMTP id
+ 5614622812f47-457b223fceemr2941683b6e.45.1766239656930; Sat, 20 Dec 2025
+ 06:07:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251220-helper_proto-v1-2-2206e0d9422d@gmail.com>
-References: <20251220-helper_proto-v1-0-2206e0d9422d@gmail.com>
-In-Reply-To: <20251220-helper_proto-v1-0-2206e0d9422d@gmail.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Zesen Liu <ftyghome@gmail.com>, 
- Shuran Liu <electronlsr@gmail.com>, Peili Gao <gplhust955@gmail.com>, 
- Haoran Ni <haoran.ni.cs@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8326; i=ftyghome@gmail.com;
- h=from:subject:message-id; bh=jIDhSYVp9j8QWzc+Ung+SecNY2NPdp5wG0Cu5OE+NrM=;
- b=owGbwMvMwCXWI1/u+8bXqJ3xtFoSQ6ZbF2tb9avMwFYrbdsTx/xaRSZ9NZ6QKZRypff5IfeWL
- SzSTkwdpSwMYlwMsmKKLL0/DO+uzDQ33maz4CDMHFYmkCEMXJwCMJGUkwz/lOepX93K7nbaUf3v
- nQ2qTvM2KHNuyzmd1TxZPLltx519eQx/eBeYs5xiusURpPFXICUhf012/du5V3pazPQ7P8xObKr
- mBgA=
-X-Developer-Key: i=ftyghome@gmail.com; a=openpgp;
- fpr=8DF831DDA9693733B63CA0C18C1F774DEC4D3287
+References: <20251217061435.802204-1-duanchenghao@kylinos.cn> <20251217061435.802204-7-duanchenghao@kylinos.cn>
+In-Reply-To: <20251217061435.802204-7-duanchenghao@kylinos.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sat, 20 Dec 2025 22:07:25 +0800
+X-Gm-Features: AQt7F2qcrrU65Yn384r_DbQIv295t02mQ5NXmH0yR08XLRQSjXo2M45Sl0nHU1M
+Message-ID: <CAEyhmHRbacxpfTkPJq4MerBupH0bJkFfx8xGUvHMvGOzDDJUow@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	zhangtianyang@loongson.cn, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, youling.tang@linux.dev, 
+	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add regression tests for bpf_snprintf(), bpf_snprintf_btf(), and
-bpf_get_stack() to cover incorrect verifier assumptions caused by
-incorrect function prototypes.
+On Wed, Dec 17, 2025 at 2:15=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos=
+.cn> wrote:
+>
+> Enhance the bpf_arch_text_poke() function to enable accurate location
+> of BPF program entry points.
+>
+> When modifying the entry point of a BPF program, skip the move t0, ra
+> instruction to ensure the correct logic and copy of the jump address.
+>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> ---
+>  arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 3dbabacc8856..0c16a1b18e8f 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_pok=
+e_type old_t,
+>                        void *new_addr)
 
-These tests reproduce the scenario where the verifier previously
-incorrectly assumed that the destination buffer remained unwritten
-across the helper call. The tests call these helpers and verify that
-subsequent reads see the updated data, ensuring that the verifier
-correctly marks the memory as clobbered and does not optimize away
-the reads based on stale assumptions.
+The signature of bpf_arch_text_poke() was changed in v6.19 ([1]), please re=
+base.
 
-Co-developed-by: Shuran Liu <electronlsr@gmail.com>
-Signed-off-by: Shuran Liu <electronlsr@gmail.com>
-Co-developed-by: Peili Gao <gplhust955@gmail.com>
-Signed-off-by: Peili Gao <gplhust955@gmail.com>
-Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Zesen Liu <ftyghome@gmail.com>
----
- tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c | 15 +++++++++++++--
- tools/testing/selftests/bpf/prog_tests/snprintf.c         |  6 ++++++
- tools/testing/selftests/bpf/prog_tests/snprintf_btf.c     |  3 +++
- tools/testing/selftests/bpf/progs/netif_receive_skb.c     | 13 ++++++++++++-
- tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c  | 11 ++++++++++-
- tools/testing/selftests/bpf/progs/test_snprintf.c         | 12 ++++++++++++
- 6 files changed, 56 insertions(+), 4 deletions(-)
+  [1]: https://github.com/torvalds/linux/commit/ae4a3160d19cd16b874737ebc17=
+98c7bc2fe3c9e
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c b/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
-index 858e0575f502..7c2774b49138 100644
---- a/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
-@@ -87,13 +87,13 @@ void test_get_stack_raw_tp(void)
- 	const char *file = "./test_get_stack_rawtp.bpf.o";
- 	const char *file_err = "./test_get_stack_rawtp_err.bpf.o";
- 	const char *prog_name = "bpf_prog1";
--	int i, err, prog_fd, exp_cnt = MAX_CNT_RAWTP;
-+	int i, err, prog_fd, exp_cnt = MAX_CNT_RAWTP, key = 0, valid_top_stack = 0;
- 	struct perf_buffer *pb = NULL;
- 	struct bpf_link *link = NULL;
- 	struct timespec tv = {0, 10};
- 	struct bpf_program *prog;
- 	struct bpf_object *obj;
--	struct bpf_map *map;
-+	struct bpf_map *map, *bss_map;
- 	cpu_set_t cpu_set;
- 
- 	err = bpf_prog_test_load(file_err, BPF_PROG_TYPE_RAW_TRACEPOINT, &obj, &prog_fd);
-@@ -135,6 +135,17 @@ void test_get_stack_raw_tp(void)
- 	for (i = 0; i < MAX_CNT_RAWTP; i++)
- 		nanosleep(&tv, NULL);
- 
-+	bss_map = bpf_object__find_map_by_name(obj, ".bss");
-+	if (CHECK(!bss_map, "find .bss map", "not found\n"))
-+		goto close_prog;
-+
-+	err = bpf_map_lookup_elem(bpf_map__fd(bss_map), &key, &valid_top_stack);
-+	if (CHECK(err, "lookup .bss", "err %d errno %d\n", err, errno))
-+		goto close_prog;
-+
-+	if (!ASSERT_EQ(valid_top_stack, 1, "valid_top_stack"))
-+		goto close_prog;
-+
- 	while (exp_cnt > 0) {
- 		err = perf_buffer__poll(pb, 100);
- 		if (err < 0 && CHECK(err < 0, "pb__poll", "err %d\n", err))
-diff --git a/tools/testing/selftests/bpf/prog_tests/snprintf.c b/tools/testing/selftests/bpf/prog_tests/snprintf.c
-index 594441acb707..80d6f2655b5f 100644
---- a/tools/testing/selftests/bpf/prog_tests/snprintf.c
-+++ b/tools/testing/selftests/bpf/prog_tests/snprintf.c
-@@ -33,6 +33,9 @@
- 
- #define EXP_NO_BUF_RET 29
- 
-+#define EXP_STACK_OUT  "stack_out"
-+#define EXP_STACK_RET  sizeof(EXP_STACK_OUT)
-+
- static void test_snprintf_positive(void)
- {
- 	char exp_addr_out[] = EXP_ADDR_OUT;
-@@ -79,6 +82,9 @@ static void test_snprintf_positive(void)
- 
- 	ASSERT_EQ(skel->bss->nobuf_ret, EXP_NO_BUF_RET, "no_buf_ret");
- 
-+	ASSERT_EQ(skel->bss->stack_ret, EXP_STACK_RET, "stack_ret");
-+	ASSERT_STREQ(skel->bss->stack_out, EXP_STACK_OUT, "stack_out");
-+
- cleanup:
- 	test_snprintf__destroy(skel);
- }
-diff --git a/tools/testing/selftests/bpf/prog_tests/snprintf_btf.c b/tools/testing/selftests/bpf/prog_tests/snprintf_btf.c
-index dd41b826be30..a2e400a4880d 100644
---- a/tools/testing/selftests/bpf/prog_tests/snprintf_btf.c
-+++ b/tools/testing/selftests/bpf/prog_tests/snprintf_btf.c
-@@ -55,6 +55,9 @@ void serial_test_snprintf_btf(void)
- 		  bss->ran_subtests))
- 		goto cleanup;
- 
-+	if (!ASSERT_EQ(bss->stack_out_test_passed, 1, "stack output test failed"))
-+		goto cleanup;
-+
- cleanup:
- 	netif_receive_skb__destroy(skel);
- }
-diff --git a/tools/testing/selftests/bpf/progs/netif_receive_skb.c b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-index 9e067dcbf607..f78d5f56f6c9 100644
---- a/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-+++ b/tools/testing/selftests/bpf/progs/netif_receive_skb.c
-@@ -12,9 +12,11 @@
- long ret = 0;
- int num_subtests = 0;
- int ran_subtests = 0;
-+int stack_out_test_passed = 0;
- bool skip = false;
- 
--#define STRSIZE			2048
-+#define STRSIZE 2048
-+#define STACK_STRSIZE 64
- #define EXPECTED_STRSIZE	256
- 
- #if defined(bpf_target_s390)
-@@ -98,6 +100,7 @@ int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
- 	__u32 key = 0;
- 	int i, __ret;
- 	char *str;
-+	char stack_out[STACK_STRSIZE] = { };
- 
- #if __has_builtin(__builtin_btf_type_id)
- 	str = bpf_map_lookup_elem(&strdata, &key);
-@@ -124,6 +127,13 @@ int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
- 		ret = -ERANGE;
- 	}
- 
-+	/* Check when writing to a buffer on the stack */
-+	p.type_id = bpf_core_type_id_kernel(struct sk_buff);
-+	p.ptr = skb;
-+	ret = bpf_snprintf_btf(stack_out, STACK_STRSIZE, &p, sizeof(p), 0);
-+	if (ret >= 0 && stack_out[0] != '\0')
-+		stack_out_test_passed = 1;
-+
- 	/* Verify type display for various types. */
- 
- 	/* simple int */
-@@ -242,6 +252,7 @@ int BPF_PROG(trace_netif_receive_skb, struct sk_buff *skb)
- 	TEST_BTF(str, struct bpf_insn, BTF_F_NONAME, "{1,0x2,0x3,4,5,}",
- 		 {.code = 1, .dst_reg = 0x2, .src_reg = 0x3, .off = 4,
- 		  .imm = 5,});
-+
- #else
- 	skip = true;
- #endif
-diff --git a/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c b/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
-index b6a6eb279e54..57723dc823a0 100644
---- a/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
-+++ b/tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c
-@@ -54,14 +54,17 @@ struct {
- 	__type(value, __u64[2 * MAX_STACK_RAWTP]);
- } rawdata_map SEC(".maps");
- 
-+int valid_top_stack = 0;
-+
- SEC("raw_tracepoint/sys_enter")
- int bpf_prog1(void *ctx)
- {
- 	int max_len, max_buildid_len, total_size;
- 	struct stack_trace_t *data;
--	long usize, ksize;
-+	long usize, ksize, top_usize;
- 	void *raw_data;
- 	__u32 key = 0;
-+	__u64 top_user_stack = 0;
- 
- 	data = bpf_map_lookup_elem(&stackdata_map, &key);
- 	if (!data)
-@@ -88,6 +91,12 @@ int bpf_prog1(void *ctx)
- 	if (usize < 0)
- 		return 0;
- 
-+	/* checks if the verifier correctly marks the stack variable as written. */
-+	top_usize = bpf_get_stack(ctx, &top_user_stack, sizeof(__u64),
-+				   BPF_F_USER_STACK);
-+	if (top_usize > 0 && top_user_stack != 0)
-+		valid_top_stack = 1;
-+
- 	ksize = bpf_get_stack(ctx, raw_data + usize, max_len - usize, 0);
- 	if (ksize < 0)
- 		return 0;
-diff --git a/tools/testing/selftests/bpf/progs/test_snprintf.c b/tools/testing/selftests/bpf/progs/test_snprintf.c
-index 8fda07544023..ce78fd7add03 100644
---- a/tools/testing/selftests/bpf/progs/test_snprintf.c
-+++ b/tools/testing/selftests/bpf/progs/test_snprintf.c
-@@ -32,6 +32,9 @@ long noarg_ret = 0;
- 
- long nobuf_ret = 0;
- 
-+char stack_out[64] = {};
-+long stack_ret = 0;
-+
- extern const void schedule __ksym;
- 
- SEC("raw_tp/sys_enter")
-@@ -42,6 +45,7 @@ int handler(const void *ctx)
- 	const __u8 ex_ipv6[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
- 	static const char str1[] = "str1";
- 	static const char longstr[] = "longstr";
-+	char buf[64] = {};
- 
- 	if ((int)bpf_get_current_pid_tgid() != pid)
- 		return 0;
-@@ -71,6 +75,14 @@ int handler(const void *ctx)
- 	/* No buffer */
- 	nobuf_ret = BPF_SNPRINTF(NULL, 0, "only interested in length %d", 60);
- 
-+	/* Write to a buffer on the stack */
-+	stack_ret = BPF_SNPRINTF(buf, sizeof(buf), "stack_out");
-+    /* The condition is necessary to check if the verifier
-+     * correctly marks the stack memory as written.
-+     */
-+	if (buf[0] != '\0')
-+		__builtin_memcpy(stack_out, buf, 64);
-+
- 	return 0;
- }
- 
-
--- 
-2.43.0
-
+>  {
+>         int ret;
+> +       unsigned long size =3D 0;
+> +       unsigned long offset =3D 0;
+> +       char namebuf[KSYM_NAME_LEN];
+> +       void *image =3D NULL;
+>         bool is_call;
+>         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
+_NOP};
+>         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =3D INSN=
+_NOP};
+> @@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_pok=
+e_type old_t,
+>         /* Only poking bpf text is supported. Since kernel function entry
+>          * is set up by ftrace, we rely on ftrace to poke kernel function=
+s.
+>          */
+> -       if (!is_bpf_text_address((unsigned long)ip))
+> +       if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, name=
+buf))
+>                 return -ENOTSUPP;
+>
+> +       image =3D ip - offset;
+> +       /* zero offset means we're poking bpf prog entry */
+> +       if (offset =3D=3D 0)
+> +               /* skip to the nop instruction in bpf prog entry:
+> +                * move t0, ra
+> +                * nop
+> +                */
+> +               ip =3D image + LOONGARCH_INSN_SIZE;
+> +
+>         is_call =3D old_t =3D=3D BPF_MOD_CALL;
+>         ret =3D emit_jump_or_nops(old_addr, ip, old_insns, is_call);
+>         if (ret)
+> --
+> 2.25.1
+>
