@@ -1,139 +1,92 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959FC188713
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Dec 2025 18:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3E429BD89;
+	Sun, 21 Dec 2025 18:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766341047; cv=none; b=fFTVs6iOcgepapLpgSvf7p3N+reZGaZqhSqNhmEpN+a2l9dc2jYhUazBDguMX+CMUq2bNqDp5AqHdwtNIdFhi8x2wLY5ugP4weVS4cfRujy+j5I9EFoVnJteFK6XbuemfNfcjPL74znzm294TKT4n7qUiE+0wZPjBu+fi6MnwPc=
+	t=1766342714; cv=none; b=tQOvYsjItslQAeSVp+Qq5bH5/SorpsILQi/A2WKWvENOlqKjDSVAwf4oXLRJ9JKMFd1AyKJgnCRQ5JYRagfjJx8erqCTa2s2R5nX0QW/WH7z+nXwQFTt0dl4fBR1tz1Sgr/VDNhFekS1BLtHxcgfmNrBGwARsT+EKC1vj+9i9lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766341047; c=relaxed/simple;
-	bh=uHRfbitN7sQkFHaxmgdiNxAyrck3DPOn6qnRCpV3KOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gjId94s22s927i9AoIIHqejtUVflo6qtFctJFK4utmReO3t5dOPF5CLPqnuL1qQ+NxvEDf1aDo8xUuaHm0qe7AagytOk7z9ek9ykDHqCqRjWYsiXN7ti9FZQ/u9qgN7FoUhguoUH4909wGtSt1E6MKW9TpUKy6z/isybgiLjxjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3oFNKHp; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766342714; c=relaxed/simple;
+	bh=uqzf0F9FOuyRCoi0rmOpP9qD37K2Wd+JeGbGEFQldoU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tyogzwLFDz6IqF2vtR2VgzNZ/E7n6ERhldl5Pi7vgNfYOFYt0baSwfqX44xJlw7ra9Ir3+1xVh+1cjsVkxyBBa3YGrYyZHOJHTmD3w83A5NjTcvMMB5gR9PetuGDy9W0avu1T2P8t3FeJ1S/59Ok8Ps4HtbAwS1t2jsxj5iP5/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=K1lOQKsm; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3oFNKHp"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4775895d69cso13635585e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Dec 2025 10:17:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766341044; x=1766945844; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wybj2InSTMZw+DWETHA9CYe6yiXqA72n4l3D7u5Rn4U=;
-        b=j3oFNKHpUkbGyV7oKm9fCOK9MLEioYunW/DQgIVhfEbiNdYFQeAcxgt61khw0GX4pT
-         5VO+z3Ro1hyaDRGemXqOKHyndZ2+UFaDREEoAI+bcg0ZGxZHETqBCKd2hWEvyaPpO4DC
-         ShE/9FKGDUzDa8hpEJRtxWVXp8gwlrkg6hKRH/l4QgWA7uuqXvsbZzrZoRpgOqvfq7HX
-         QHBGdQQix0rOCS+gYBDyuIyFVH6kX2J0teDH9h8CyBalO738zT/hFNq7Q3XLYKvZh02g
-         LVmlgmHt6e8klH1alj0aV26/qy7xLyT3LTkBJVsnMuR/hQ8YciH6gG6p1HH2T1jugHqU
-         XTLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766341044; x=1766945844;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Wybj2InSTMZw+DWETHA9CYe6yiXqA72n4l3D7u5Rn4U=;
-        b=vNHq0x4s+8P8NgqadBu8P9WmRkh3+k8ZQkObf0Gq93IWpLg7omuevVl4Zj7AI+2gJn
-         2iaqxyesadzUtF+RUkxY8llWmnMPxV/NF4FSt1FROt9zdf5ONHl4HtzIGCbEAeTiYjhH
-         2D5dcVJaE0xRYp9tv4GjaHzyc8xxN0aw5KakQLjqxptFZHj43TBEoEcE7ZbVCGThY3FZ
-         zSoKtA2GCvHJUZEBwZLee4F/+7mzWywXDjHK7ZeUzjTeAxi7q3NJ3YZFFa1bwvfj4iDh
-         nFDeRlmLgtdYoRfQxOjUT75UlTSke/v/rBeXQ4iJvpt0rUVZNAcz8mg+ViVS8XogiM1s
-         dMsw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2I9zkRB2ctLBeYJ3wMYgNZwPMsFVQ+GFNAkIks4xPUELR5LnxyFlFoblL3KVreFB0AALEyrkVKpl178Dq7hQexRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwNLcgBRM9tYad+lh943G3/KRZpFBMiqfMPM4QzEESpn5NVo71
-	ygE4vjfWxBOQZJrC0qhBS4txWYlA+33iPSplkvvAT2Bb0R61T93HN6DGmJg6B3YOX4Q2Gm7tFpn
-	nXWY4XKGn+H2Eb/BjcSKjvZnEKiM0qu4=
-X-Gm-Gg: AY/fxX67p+OLIs3MeqniFnbJl9k/KRMvwvzN4+0x+G4fq3/keoZHGQaGA8SSZpzljmc
-	QXSzQ/z3GUgysyWFaz9p7uQxHRT5BFe8wq688Rsxn0maJ1ZkxA8ouaQSR0p9KuKCkYP+vRZumnz
-	nRhs5PLkJUfpYSDmnNof0YHXzt9apXpw0ofzyXxUbxe57qcImcKuGQHaitiwnocQ939rV3bMRdC
-	f+N67ekNNg8/ehCA6Gb6rR9Q4gdg78HG67vX9xl/OYIryqCCHv7U3MmV8DOL+8kezOoJC+8sffb
-	eW00Y0Y=
-X-Google-Smtp-Source: AGHT+IEWxYtN8bhMen+3R1R+PcYh/0HpDpBpZsXdNVj0Qpz5ExzAeNU0BU+cwPXz7lZEg0lgbogSfei2Gp8m9xD1JRM=
-X-Received: by 2002:a05:6000:24c9:b0:430:fc63:8d3 with SMTP id
- ffacd0b85a97d-4324e4fe005mr8657076f8f.30.1766341043663; Sun, 21 Dec 2025
- 10:17:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="K1lOQKsm"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4dZ9Dt6h8Mz9v3b;
+	Sun, 21 Dec 2025 19:45:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1766342703;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uqzf0F9FOuyRCoi0rmOpP9qD37K2Wd+JeGbGEFQldoU=;
+	b=K1lOQKsmpc99LY1z4ASEtcypSgfFu6viCOzZ7w12P81Sp8FbTkf3jPa91QDIKONhRTR/Bs
+	01DgKIPvJ8t0ZkmqhdzYu4H5egtf9rJWLx1CdGJ6F80NuAh3M4jOkL2L6tuB0A8uwVmZ8M
+	q3XcTubvZVJoiopdVEdmDidhWEgFeKv2Ndjnl5m1GoEQmR1PbRDdcvK6noPw3rmsUBpioN
+	45HAcinGFtinQNp/f1KyNyNU9Xt1Hfj4pJiQlS/2mbGkQX3f0+GUG5K9fm8QLxeU6n6yIi
+	uo7TggrX6H1foj/3bxR2wKUjJBJ47JdzJChSTvsLrC64WHlPrdENz3FWXrNCMw==
+Message-ID: <e9ab026c91a2e7da84702d9fd2455ae64f25b32a.camel@mailbox.org>
+Subject: Re: [PATCH v4 0/2] kallsyms: Always initialize modbuildid
+From: Maurice Hieronymus <mhi@mailbox.org>
+To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+ song@kernel.org,  yonghong.song@linux.dev, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com,  jolsa@kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com,  mathieu.desnoyers@efficios.com
+Cc: georges.aureau@hpe.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org
+Date: Sun, 21 Dec 2025 19:44:55 +0100
+In-Reply-To: <20251220181838.63242-1-mhi@mailbox.org>
+References: <20251220181838.63242-1-mhi@mailbox.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251220181838.63242-1-mhi@mailbox.org> <20251220181838.63242-3-mhi@mailbox.org>
-In-Reply-To: <20251220181838.63242-3-mhi@mailbox.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 21 Dec 2025 10:17:12 -0800
-X-Gm-Features: AQt7F2p21hbACZO-a8vTUQw8teBVXAYtcRJmUxymX_zCYAqeTsyxwEAd5nA6uwA
-Message-ID: <CAADnVQK6D94P9Gz6SMYTijGea2dLdBQ1AinU6N5-VWoEGEDUvA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] kallsyms: Always initialize modbuildid on bpf address
-To: Maurice Hieronymus <mhi@mailbox.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	georges.aureau@hpe.com, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MBO-RS-ID: 45a22b6f940ff08cc72
+X-MBO-RS-META: hnshh8eifp969k9zopsmzix9ssowzytt
 
-On Sat, Dec 20, 2025 at 8:19=E2=80=AFAM Maurice Hieronymus <mhi@mailbox.org=
-> wrote:
->
+On Sat, 2025-12-20 at 19:18 +0100, Maurice Hieronymus wrote:
 > modbuildid is never set when kallsyms_lookup_buildid is returning via
-> successful bpf_address_lookup.
->
+> successful bpf_address_lookup or ftrace_mod_address_lookup.
+>=20
 > This leads to an uninitialized pointer dereference on x86 when
 > CONFIG_STACKTRACE_BUILD_ID=3Dy inside __sprint_symbol.
->
+>=20
 > Prevent this by always initializing modbuildid.
->
+>=20
 > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220717
-> Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
-> ---
->  include/linux/filter.h | 6 ++++--
->  kernel/kallsyms.c      | 2 +-
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/filter.h b/include/linux/filter.h
-> index fd54fed8f95f..eb1d1c876503 100644
-> --- a/include/linux/filter.h
-> +++ b/include/linux/filter.h
-> @@ -1384,12 +1384,14 @@ struct bpf_prog *bpf_prog_ksym_find(unsigned long=
- addr);
->
->  static inline int
->  bpf_address_lookup(unsigned long addr, unsigned long *size,
-> -                  unsigned long *off, char **modname, char *sym)
-> +                  unsigned long *off, char **modname, const unsigned cha=
-r **modbuildid, char *sym)
->  {
->         int ret =3D __bpf_address_lookup(addr, size, off, sym);
->
->         if (ret && modname)
->                 *modname =3D NULL;
-> +       if (ret && modbuildid)
-> +               *modbuildid =3D NULL;
->         return ret;
->  }
->
-> @@ -1455,7 +1457,7 @@ static inline struct bpf_prog *bpf_prog_ksym_find(u=
-nsigned long addr)
->
->  static inline int
->  bpf_address_lookup(unsigned long addr, unsigned long *size,
-> -                  unsigned long *off, char **modname, char *sym)
-> +                  unsigned long *off, char **modname, const unsigned cha=
-r **modbuildid, char *sym)
+>=20
+> Changes to v3:
+> - Split the changes into separate ftrace and bpf patches
+> - Replace IS_ENABLED() with plain #ifdef
+>=20
+> Maurice Hieronymus (2):
+> =C2=A0 kallsyms: Always initialize modbuildid on ftrace address
+> =C2=A0 kallsyms: Always initialize modbuildid on bpf address
+>=20
+> =C2=A0include/linux/filter.h | 6 ++++--
+> =C2=A0include/linux/ftrace.h | 4 ++--
+> =C2=A0kernel/kallsyms.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 ++--
+> =C2=A0kernel/trace/ftrace.c=C2=A0 | 8 +++++++-
+> =C2=A04 files changed, 15 insertions(+), 7 deletions(-)
+>=20
+>=20
+> base-commit: dd9b004b7ff3289fb7bae35130c0a5c0537266af
 
-No.
-Please search the earlier threads where this was discussed.
-The patches to fix this were posted and I think they landed
-in some tree already.
+This patch is obsolete and already fixed by [1]
 
-pw-bot: cr
+[1]
+https://lore.kernel.org/bpf/20251128135920.217303-1-pmladek@suse.com/#t
