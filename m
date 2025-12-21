@@ -1,172 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9AE21FF4C;
-	Sun, 21 Dec 2025 11:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959FC188713
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Dec 2025 18:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766315415; cv=none; b=jBnqcPKB3eELxnGrzZ0oUxVFFouJvsl6W91QHlf94M9BVbIETdzE6UxBVLwGZ30a9YDWmg/e+hg1wBDwu8HM6iZQWLxkqSOxK0FTumkonYlVs+1T+3ZDVz2hoWYiiT45+syEP28OYHQdC1+MERGKnJ6LdMFygsPEO9qSVqgp9sc=
+	t=1766341047; cv=none; b=fFTVs6iOcgepapLpgSvf7p3N+reZGaZqhSqNhmEpN+a2l9dc2jYhUazBDguMX+CMUq2bNqDp5AqHdwtNIdFhi8x2wLY5ugP4weVS4cfRujy+j5I9EFoVnJteFK6XbuemfNfcjPL74znzm294TKT4n7qUiE+0wZPjBu+fi6MnwPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766315415; c=relaxed/simple;
-	bh=+NPJn+Uf5wC2z6UBaOnYqECBNjAFZPmQkyUZemGCPe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6iUuijhDMfCSTNPPTCy9iGr/UUw/EbaePW79GJqlxUdGVUFvoji9pSxD6VKCAgPDUanO1FppuuTNCaqRUjfGJxCT+S+RVjOeWsx4E6q+SSQcKvEYYszhTzrx4QnvdRFJFuF3jXFD7hb85YGXdcQEjTPjqBvV9nYsLufn3P0uTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrdv534r; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1766341047; c=relaxed/simple;
+	bh=uHRfbitN7sQkFHaxmgdiNxAyrck3DPOn6qnRCpV3KOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gjId94s22s927i9AoIIHqejtUVflo6qtFctJFK4utmReO3t5dOPF5CLPqnuL1qQ+NxvEDf1aDo8xUuaHm0qe7AagytOk7z9ek9ykDHqCqRjWYsiXN7ti9FZQ/u9qgN7FoUhguoUH4909wGtSt1E6MKW9TpUKy6z/isybgiLjxjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3oFNKHp; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrdv534r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766315414; x=1797851414;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+NPJn+Uf5wC2z6UBaOnYqECBNjAFZPmQkyUZemGCPe0=;
-  b=mrdv534rlmiKcwgCjZ7OJJiY6bF+Pr2bmegtRZlChWyoa8SzroIy+Ajs
-   dShugVOhgWB1AuhDYuGBGE8HbMlbm/3Ql6N8yePJ6FGHk3dmk084bHLxy
-   gbupgoAidm3DqanYx64Cqxp6xcqA8RPn3JWjrQJa3zWvwO6hgH3c7AiUT
-   UV+w3cVc79OjfwHQqXbD44spkgpXUMSxrhR0CfHbg5fpFttqrcGkaLPGD
-   5c067Lx9q7z0xiyHyY37qxdNZbCANKByNy/HRTQzjI4MBwoCTAa8LqdFb
-   X08HUzB7TF6axnGU5+OofaDLDwvA/0Qe/bjoCJVXQ6yLggeMw/hRYsJNh
-   Q==;
-X-CSE-ConnectionGUID: NX/U0mXWRNG5U13fS6d92Q==
-X-CSE-MsgGUID: qSAh3P6+QoWeD3BQ+0L8qQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11648"; a="70775855"
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="70775855"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2025 03:10:13 -0800
-X-CSE-ConnectionGUID: ybjirWJBTPmBN9WhcoaNmQ==
-X-CSE-MsgGUID: ucpH1pf2T8KJGgjLFu6D+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="198916761"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 21 Dec 2025 03:10:09 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vXHKB-000000005aj-1NhU;
-	Sun, 21 Dec 2025 11:10:07 +0000
-Date: Sun, 21 Dec 2025 19:09:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@google.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Song Liu <song@kernel.org>
-Subject: Re: [PATCHv5 bpf-next 9/9] bpf,x86: Use single ftrace_ops for direct
- calls
-Message-ID: <202512211826.gtdm52TX-lkp@intel.com>
-References: <20251215211402.353056-10-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3oFNKHp"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4775895d69cso13635585e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 21 Dec 2025 10:17:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766341044; x=1766945844; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wybj2InSTMZw+DWETHA9CYe6yiXqA72n4l3D7u5Rn4U=;
+        b=j3oFNKHpUkbGyV7oKm9fCOK9MLEioYunW/DQgIVhfEbiNdYFQeAcxgt61khw0GX4pT
+         5VO+z3Ro1hyaDRGemXqOKHyndZ2+UFaDREEoAI+bcg0ZGxZHETqBCKd2hWEvyaPpO4DC
+         ShE/9FKGDUzDa8hpEJRtxWVXp8gwlrkg6hKRH/l4QgWA7uuqXvsbZzrZoRpgOqvfq7HX
+         QHBGdQQix0rOCS+gYBDyuIyFVH6kX2J0teDH9h8CyBalO738zT/hFNq7Q3XLYKvZh02g
+         LVmlgmHt6e8klH1alj0aV26/qy7xLyT3LTkBJVsnMuR/hQ8YciH6gG6p1HH2T1jugHqU
+         XTLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766341044; x=1766945844;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Wybj2InSTMZw+DWETHA9CYe6yiXqA72n4l3D7u5Rn4U=;
+        b=vNHq0x4s+8P8NgqadBu8P9WmRkh3+k8ZQkObf0Gq93IWpLg7omuevVl4Zj7AI+2gJn
+         2iaqxyesadzUtF+RUkxY8llWmnMPxV/NF4FSt1FROt9zdf5ONHl4HtzIGCbEAeTiYjhH
+         2D5dcVJaE0xRYp9tv4GjaHzyc8xxN0aw5KakQLjqxptFZHj43TBEoEcE7ZbVCGThY3FZ
+         zSoKtA2GCvHJUZEBwZLee4F/+7mzWywXDjHK7ZeUzjTeAxi7q3NJ3YZFFa1bwvfj4iDh
+         nFDeRlmLgtdYoRfQxOjUT75UlTSke/v/rBeXQ4iJvpt0rUVZNAcz8mg+ViVS8XogiM1s
+         dMsw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2I9zkRB2ctLBeYJ3wMYgNZwPMsFVQ+GFNAkIks4xPUELR5LnxyFlFoblL3KVreFB0AALEyrkVKpl178Dq7hQexRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwNLcgBRM9tYad+lh943G3/KRZpFBMiqfMPM4QzEESpn5NVo71
+	ygE4vjfWxBOQZJrC0qhBS4txWYlA+33iPSplkvvAT2Bb0R61T93HN6DGmJg6B3YOX4Q2Gm7tFpn
+	nXWY4XKGn+H2Eb/BjcSKjvZnEKiM0qu4=
+X-Gm-Gg: AY/fxX67p+OLIs3MeqniFnbJl9k/KRMvwvzN4+0x+G4fq3/keoZHGQaGA8SSZpzljmc
+	QXSzQ/z3GUgysyWFaz9p7uQxHRT5BFe8wq688Rsxn0maJ1ZkxA8ouaQSR0p9KuKCkYP+vRZumnz
+	nRhs5PLkJUfpYSDmnNof0YHXzt9apXpw0ofzyXxUbxe57qcImcKuGQHaitiwnocQ939rV3bMRdC
+	f+N67ekNNg8/ehCA6Gb6rR9Q4gdg78HG67vX9xl/OYIryqCCHv7U3MmV8DOL+8kezOoJC+8sffb
+	eW00Y0Y=
+X-Google-Smtp-Source: AGHT+IEWxYtN8bhMen+3R1R+PcYh/0HpDpBpZsXdNVj0Qpz5ExzAeNU0BU+cwPXz7lZEg0lgbogSfei2Gp8m9xD1JRM=
+X-Received: by 2002:a05:6000:24c9:b0:430:fc63:8d3 with SMTP id
+ ffacd0b85a97d-4324e4fe005mr8657076f8f.30.1766341043663; Sun, 21 Dec 2025
+ 10:17:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251215211402.353056-10-jolsa@kernel.org>
+References: <20251220181838.63242-1-mhi@mailbox.org> <20251220181838.63242-3-mhi@mailbox.org>
+In-Reply-To: <20251220181838.63242-3-mhi@mailbox.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 21 Dec 2025 10:17:12 -0800
+X-Gm-Features: AQt7F2p21hbACZO-a8vTUQw8teBVXAYtcRJmUxymX_zCYAqeTsyxwEAd5nA6uwA
+Message-ID: <CAADnVQK6D94P9Gz6SMYTijGea2dLdBQ1AinU6N5-VWoEGEDUvA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] kallsyms: Always initialize modbuildid on bpf address
+To: Maurice Hieronymus <mhi@mailbox.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	georges.aureau@hpe.com, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jiri,
+On Sat, Dec 20, 2025 at 8:19=E2=80=AFAM Maurice Hieronymus <mhi@mailbox.org=
+> wrote:
+>
+> modbuildid is never set when kallsyms_lookup_buildid is returning via
+> successful bpf_address_lookup.
+>
+> This leads to an uninitialized pointer dereference on x86 when
+> CONFIG_STACKTRACE_BUILD_ID=3Dy inside __sprint_symbol.
+>
+> Prevent this by always initializing modbuildid.
+>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220717
+> Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
+> ---
+>  include/linux/filter.h | 6 ++++--
+>  kernel/kallsyms.c      | 2 +-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index fd54fed8f95f..eb1d1c876503 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -1384,12 +1384,14 @@ struct bpf_prog *bpf_prog_ksym_find(unsigned long=
+ addr);
+>
+>  static inline int
+>  bpf_address_lookup(unsigned long addr, unsigned long *size,
+> -                  unsigned long *off, char **modname, char *sym)
+> +                  unsigned long *off, char **modname, const unsigned cha=
+r **modbuildid, char *sym)
+>  {
+>         int ret =3D __bpf_address_lookup(addr, size, off, sym);
+>
+>         if (ret && modname)
+>                 *modname =3D NULL;
+> +       if (ret && modbuildid)
+> +               *modbuildid =3D NULL;
+>         return ret;
+>  }
+>
+> @@ -1455,7 +1457,7 @@ static inline struct bpf_prog *bpf_prog_ksym_find(u=
+nsigned long addr)
+>
+>  static inline int
+>  bpf_address_lookup(unsigned long addr, unsigned long *size,
+> -                  unsigned long *off, char **modname, char *sym)
+> +                  unsigned long *off, char **modname, const unsigned cha=
+r **modbuildid, char *sym)
 
-kernel test robot noticed the following build errors:
+No.
+Please search the earlier threads where this was discussed.
+The patches to fix this were posted and I think they landed
+in some tree already.
 
-[auto build test ERROR on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jiri-Olsa/ftrace-bpf-Remove-FTRACE_OPS_FL_JMP-ftrace_ops-flag/20251216-052916
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20251215211402.353056-10-jolsa%40kernel.org
-patch subject: [PATCHv5 bpf-next 9/9] bpf,x86: Use single ftrace_ops for direct calls
-config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20251221/202512211826.gtdm52TX-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251221/202512211826.gtdm52TX-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512211826.gtdm52TX-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   kernel/bpf/trampoline.c: In function 'unregister_fentry':
->> kernel/bpf/trampoline.c:367:23: error: implicit declaration of function 'direct_ops_del'; did you mean 'direct_ops_free'? [-Wimplicit-function-declaration]
-     367 |                 ret = direct_ops_del(tr, old_addr);
-         |                       ^~~~~~~~~~~~~~
-         |                       direct_ops_free
-   kernel/bpf/trampoline.c: In function 'modify_fentry':
->> kernel/bpf/trampoline.c:381:23: error: implicit declaration of function 'direct_ops_mod'; did you mean 'direct_ops_free'? [-Wimplicit-function-declaration]
-     381 |                 ret = direct_ops_mod(tr, new_addr, lock_direct_mutex);
-         |                       ^~~~~~~~~~~~~~
-         |                       direct_ops_free
-   kernel/bpf/trampoline.c: In function 'register_fentry':
->> kernel/bpf/trampoline.c:404:23: error: implicit declaration of function 'direct_ops_add'; did you mean 'direct_ops_free'? [-Wimplicit-function-declaration]
-     404 |                 ret = direct_ops_add(tr, new_addr);
-         |                       ^~~~~~~~~~~~~~
-         |                       direct_ops_free
-
-
-vim +367 kernel/bpf/trampoline.c
-
-   360	
-   361	static int unregister_fentry(struct bpf_trampoline *tr, u32 orig_flags,
-   362				     void *old_addr)
-   363	{
-   364		int ret;
-   365	
-   366		if (tr->func.ftrace_managed)
- > 367			ret = direct_ops_del(tr, old_addr);
-   368		else
-   369			ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, NULL);
-   370	
-   371		return ret;
-   372	}
-   373	
-   374	static int modify_fentry(struct bpf_trampoline *tr, u32 orig_flags,
-   375				 void *old_addr, void *new_addr,
-   376				 bool lock_direct_mutex)
-   377	{
-   378		int ret;
-   379	
-   380		if (tr->func.ftrace_managed) {
- > 381			ret = direct_ops_mod(tr, new_addr, lock_direct_mutex);
-   382		} else {
-   383			ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr,
-   384							   new_addr);
-   385		}
-   386		return ret;
-   387	}
-   388	
-   389	/* first time registering */
-   390	static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
-   391	{
-   392		void *ip = tr->func.addr;
-   393		unsigned long faddr;
-   394		int ret;
-   395	
-   396		faddr = ftrace_location((unsigned long)ip);
-   397		if (faddr) {
-   398			if (!tr->fops)
-   399				return -ENOTSUPP;
-   400			tr->func.ftrace_managed = true;
-   401		}
-   402	
-   403		if (tr->func.ftrace_managed) {
- > 404			ret = direct_ops_add(tr, new_addr);
-   405		} else {
-   406			ret = bpf_trampoline_update_fentry(tr, 0, NULL, new_addr);
-   407		}
-   408	
-   409		return ret;
-   410	}
-   411	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+pw-bot: cr
