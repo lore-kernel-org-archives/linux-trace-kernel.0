@@ -1,84 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C7328253
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 14:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2068129B793
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 15:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766414747; cv=none; b=boJ/0qRIG8Xcn9eq123tY2kQ6IZHzII0ZKSDEZ8vVEA3ckzX/zHFWAnxY3vx/WTbWQ8QTQiz+3e/6weIP+QL3rDGgFUW+ZYeqGTx1CNCedgPgmDD2bVidvArlIdBeO1ZA/fosiS68oqSCXZgNaXZEVlu2aax7W9upVUbyrobb5Q=
+	t=1766417199; cv=none; b=o4DR+JqrYU18wZV2wf3hXPHVt12QW4uMQgr+4hWaZozNLpu7le1ZO4HguPe2h4zIOBBWa69PqG+kmpvL9rJIc361dl3zTRq42n+omNc1Kse/N0tg/YQaPyNVSUGmx6O4hIJ4tVjzYgDOiC8+IzVhE+ePcCJQOFEoZRzK1yjTM88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766414747; c=relaxed/simple;
-	bh=mq3Lq8sxs3JAWF9439sUZ282BxN/eqYUPbbBpwwlj3E=;
+	s=arc-20240116; t=1766417199; c=relaxed/simple;
+	bh=av2khwzhx/fd3uBcoxJxEX2OI6BShbA6HolwNz3gHpY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rswBl4geMjqFqPn0QXsKvdlIXjOuYFUjI+uZe5HBq/7CWoZlxwyVKXaHL2ZYkG6VvY5hdYu4RdLnuqGqKmpQ/Hiz/0Kxs99lrOl3hswLWvl47ewPbofiU1hA0+g7zCeK7qvqSkzjzmQm+/ZjL72V2qYlfelFJaHj3h6TaH+kywc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cep3Ug8J; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=Ag01KFOK2oOaNvPans5qI6ahtw5ZSgal1q8SvfZg7b/tNvfbsWCQuTIpw2cLKbPMPHwR/80Mcp00mf17v5Bx0UWIrK4qR3DWIsQR1NoLHBaBJn4DcZaA8j38xfZAjQgvGgR9+aZIvwxo2OBxJZpFlovEv3a3RAdX3XzP99mBF84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ld/rD8md; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cep3Ug8J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ld/rD8md"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1766414744;
+	s=mimecast20190719; t=1766417197;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mq3Lq8sxs3JAWF9439sUZ282BxN/eqYUPbbBpwwlj3E=;
-	b=Cep3Ug8JsbV58T2YUWL5dMHhV5GICzIWEb5bWQmAhu/hhxDl2O8zmC9VGrWJNTPelAoLvc
-	GsKySmujA5DqtH3/yW8f52PHT+7xn+XHPpaRsD6/l9MIwsxssQJJ09n1rKLYdbUmQBkykg
-	SJ/Tkwe263M40EwM9DWe4xJKUgjW6sw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=av2khwzhx/fd3uBcoxJxEX2OI6BShbA6HolwNz3gHpY=;
+	b=Ld/rD8mdMMWGeyerYK3OmYKwKQpqo2lOh53nnrb9Zh9ikmMaYqngMYhI09I+TLXBcFhzz4
+	1/HfAI47mJDb+ZE9WOMngPLcknerzDv9Ny3zSI88e5TuQzsd0FNQUjWSJuNdfBFXyv/wgu
+	1f/rwPUP5bAgMyqU4CycqffUqtBg5x8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-65-hUQJdTmgPI6cXGzrg28M_g-1; Mon, 22 Dec 2025 09:45:39 -0500
-X-MC-Unique: hUQJdTmgPI6cXGzrg28M_g-1
-X-Mimecast-MFC-AGG-ID: hUQJdTmgPI6cXGzrg28M_g_1766414739
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42fd46385c0so2151963f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 06:45:39 -0800 (PST)
+ us-mta-684-lIxVd720PSCHHMnE2Y47MQ-1; Mon, 22 Dec 2025 10:26:36 -0500
+X-MC-Unique: lIxVd720PSCHHMnE2Y47MQ-1
+X-Mimecast-MFC-AGG-ID: lIxVd720PSCHHMnE2Y47MQ_1766417195
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-430ffc4dc83so4290699f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 07:26:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766414739; x=1767019539;
+        d=1e100.net; s=20230601; t=1766417195; x=1767021995;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mq3Lq8sxs3JAWF9439sUZ282BxN/eqYUPbbBpwwlj3E=;
-        b=RZrJ8xbBfNppO4VdFJD2fNODfsZ2T8ebgImZlQPRHqPdDxtBXP0TIGcCbjp1hXZQ/3
-         OZNBC3iL7cltr23mEUmNmuLbHlI3M1avKRD7336bbHIagrn2fCPDTAZD0Tv8YkEkdAzq
-         +KEvHm6/Ll46Cs1q9Rp9dw+uGaAyg1sQ/3I0AQJBc+cm0sorY3SNQkSWT58YemaqiaSH
-         OK4zMJKGJewQ7c/f126i4l494boNVV5PrZdEMgzyv3uPPMYCP9RdfNbwswjVhcp0fIHB
-         o8O3fcTA2Cb4hJmz8AqtdSBzaI+PI78v2mF9QA3oX17y+cULM0/cTyZIQCBb8Kc5kqNY
-         YWVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfRMJoJ/wSP0Oh9O13rSDeVp0h2N+XxQMiqxdfV4FxhwbzteGh+H42OJ/UZyhUveQYceys7x8HLC7Z5FjO4JvatwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGSObHm4g/jnX0LF5rqAqcNLN+7su4t/lLH3E1+he+WB3wNAn9
-	bM5UyWb2NHW6zsm5bXX7s2CH3oKKc0eNpADU72BmME01nlbsg4TlIHrzP5RtawDK2oXoCTJhkIW
-	jXR5J7KjEnN0OETdDmznx0cg2xj0XGdHK3e8EeNZp3+kqNg1kViWXL98coVFX+6zDGssgH43Uqg
+        bh=rhK/BZ52bTZ5S9PsrmmSG9r64dXYBxuciN4xfBSZQtE=;
+        b=QTdMLr+6VzOAfGshKwBshA+ZHBTeKCFjXetNP61mrm60jt0IBges2WJzslYPgcQ2Q/
+         EiFC7rRANofsUSe+XNJ8xqKSObaOZEtqBulhoy/kiFraWgRkc5R+C9QyqK5rjbGTJPuD
+         HIsx5p5+wVEXUulk071Rf8STXYVdpk97FrcABqeMsIuncUon3fY6qzXgCWsOG68lhpud
+         XYptwpOAiSMBcB7W8HJL0GLnkrApwLUsABkNPbr0mwN1acBNRQyaOzaVF59qyE4DvsE6
+         Hx0Ek4pYWj7NJs8/ieFbN2v/EBi+JK6mKwcS122HtyO811pA+TQHpQWI0Eii4P/6OCMZ
+         DrJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTPKDUo2k6YwKOcDxZulhNtOUqv2RgWTNnuZj2MvBSfHC6BMHHBFyhMCk/+7nWuQc6ZlGFDYKEQpG3ujGHtHfkgmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYPA0tiQGSq3pWglPibeZQD34O0eseagelpKjLihDtPFfePxwO
+	HeIaoCFH2g24vWXgBMyL756DN8qITsyerxVBdJ4QeQazYHS8ik3igkmeJ39N1V1ysqv4/oipbjv
+	3XfsTzKjwR3MPUI4xi2bXcoDfQ1iEnYHjhkCj+B4OrBUIvj5czGGo529pzhMWLdZ7n6zoqdxsQw
 	==
-X-Gm-Gg: AY/fxX6oBFMFmkFx9Z9MVYGQZi+4nWGjqhhi5oETSQ2s/dxtAfBLz0G+0VvxTCYl0uj
-	uQT+Et/nZBre8v1m5YADp93x65Q8fVcdJpd3J2LpC7HiqG1Yq6uzidxMMDsQjM8L8mBprdhg3o1
-	OMqjoshz4OVGA+UlFjpkVC0RdmaW6k5ov2YlLjkSC93jTAZ4yT3e52CL60+TfFtIIFgBMkFuz6g
-	PlN+UfAvLvnQtmQLMaln2YdE1czw0sYpKr5K6nMv4JHBkPlSJSapG/kRIxZzimRWWERI28AeK8E
-	nqp5L+PxWoMzu5UeJ/vZHfkpxZeV66bagFlwKcq0LeXMYuwMu7qVB4CYEKw75QcmlQrHYv3NMfe
-	t3j89EBW/odGa9loxPRxxY0JREGVQzdis8TYhA10p1a1c9WgPfz14OYpDFwvBtQRYM1SZXU03o7
-	OVv+SnpQaA
-X-Received: by 2002:a05:6000:1970:b0:432:5b81:48b with SMTP id ffacd0b85a97d-4325b8109e2mr5619128f8f.61.1766414738607;
-        Mon, 22 Dec 2025 06:45:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFbLHw0fD46qNSTX57uR+znJQOS0DV63sf9w/x+8+0Lv2iDhD5E7JuxXcEwrDZcNmKVaq16ig==
-X-Received: by 2002:a05:6000:1970:b0:432:5b81:48b with SMTP id ffacd0b85a97d-4325b8109e2mr5619112f8f.61.1766414738236;
-        Mon, 22 Dec 2025 06:45:38 -0800 (PST)
+X-Gm-Gg: AY/fxX6C3b3/MJx7zA2/irc68LTn0Ow/hVOtZN0tb5AgEjvadMkJy5gEzOovPutdWBY
+	FA2DOWrqGBI+iuri6gWUr/71AhOoY7XcU/1vpc5eW1ljsM60YHccY6RYa72iBYtXD3IPrZX89tr
+	pguglGDwz1n9b9iDMmDGFRnlccFmrKxkHPvCvBSzogL1Tsa26ii01dbLS6AmfPW0DozgVN1Tf/l
+	asXkLvqZg3eex/USA4BKSIwqwdgC6QI7KyaXLXf5JMsBOn3Nu+2/9XpkdliezRkchLqYQxaibbH
+	FULJ/Jc6MlufqnMa6rfU+H4IpuT5oy4cLwIzNBybAIVqGr/ByJ/VBJFB1g0veHPYXnfNMqR5evk
+	ZD7j6bEExt3jjGSIAETZQRxPxqUfoKNj+BwlavMd63lSGXNMhno4gpNjlGnt5fZGOE7g9kvq06v
+	jxJ/XTKfAD
+X-Received: by 2002:a05:6000:402a:b0:430:f41f:bd5d with SMTP id ffacd0b85a97d-4324e708e9amr10261558f8f.55.1766417194762;
+        Mon, 22 Dec 2025 07:26:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFZ+D6GZElhtNNudeGmAYKy3oDoOMLYDdQ1cS5nvDLNddsAUKI1ehqKgzPYCClwlnDLNqZr0g==
+X-Received: by 2002:a05:6000:402a:b0:430:f41f:bd5d with SMTP id ffacd0b85a97d-4324e708e9amr10261537f8f.55.1766417194349;
+        Mon, 22 Dec 2025 07:26:34 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea830fesm22620468f8f.20.2025.12.22.06.45.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea2278dsm22897649f8f.18.2025.12.22.07.26.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Dec 2025 06:45:37 -0800 (PST)
-Message-ID: <1c86695dc26202d2cfafdb636d32c47a8c3d6b15.camel@redhat.com>
-Subject: Re: [PATCH v3 01/13] rv: Unify DA event handling functions across
- monitor types
+        Mon, 22 Dec 2025 07:26:34 -0800 (PST)
+Message-ID: <0c3d6c2c2273eebcc207ce5010ed90ee80460bed.camel@redhat.com>
+Subject: Re: [PATCH v3 02/13] rv: Add Hybrid Automata monitor type
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
  Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 22 Dec 2025 15:45:36 +0100
-In-Reply-To: <871pksk3cg.fsf@yellow.woof>
+Date: Mon, 22 Dec 2025 16:26:32 +0100
+In-Reply-To: <87y0n0ib6k.fsf@yellow.woof>
 References: <20251205131621.135513-1-gmonaco@redhat.com>
-	 <20251205131621.135513-2-gmonaco@redhat.com> <871pksk3cg.fsf@yellow.woof>
+	 <20251205131621.135513-3-gmonaco@redhat.com> <87y0n0ib6k.fsf@yellow.woof>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -96,39 +96,42 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: s1pofUsyrXsV8vl_ZwLlfNZPFzlqNGinZbS5MWu5v2M_1766414739
+X-Mimecast-MFC-PROC-ID: jMUpeUJ-vdTBnUZOLp4Vwm7mTcvCuGU6Bw83Rlv93X0_1766417195
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-12-18 at 08:04 +0700, Nam Cao wrote:
-> I think this overexplains. I would just explain the "WHY", then the
-> general idea how the patch solves the problem. Let the diff speaks for
-> the rest.
->=20
-> Perhaps something like:
->=20
-> =C2=A0=C2=A0=C2=A0 The DA event handling functions are mostly duplicated =
-for
-> =C2=A0=C2=A0=C2=A0 differerent monitor types, because per-task monitors' =
-functions
-> =C2=A0=C2=A0=C2=A0 require a task_struct parameter while the others do no=
-t.
->=20
-> =C2=A0=C2=A0=C2=A0 Unify the functions, handle the difference by always p=
-assing a
-> =C2=A0=C2=A0=C2=A0 da_id_type which is the task's pid for per-task monito=
-r but is
-> =C2=A0=C2=A0=C2=A0 ignored for the other types.
->=20
 
-Good point, I'll squeeze it.
+
+On Thu, 2025-12-18 at 12:57 +0700, Nam Cao wrote:
+> Gabriele Monaco <gmonaco@redhat.com> writes:
+> > +static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum e=
+nvs
+> > env,
+> > +=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 u64 expire, u64 time_ns)
+> > +{
+> > +=09u64 passed =3D ha_invariant_passed_ns(ha_mon, env, expire, time_ns)=
+;
+> > +
+> > +=09ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
+> > +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(expire - passed) + =
+1,
+> > time_ns);
+>=20
+> What is the +1 for? I guess to prevent it being rounded down to zero? If
+> so, maybe we should do
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(expire - passed + TICK_NSEC - 1=
+)
+>=20
+> instead.
+
+Yeah that was the reason and your suggestion is actually cleaner.
+
 Thanks,
 Gabriele
 
-> Regardless:
 >=20
+> Anyway, no big deal:
 > Reviewed-by: Nam Cao <namcao@linutronix.de>
->=20
-> Nam
 
