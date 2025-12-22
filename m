@@ -1,69 +1,68 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE8F302750
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 08:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F04130B513
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 08:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766390497; cv=none; b=RxDYYySdAAlnY9b/+PcEPEi7zGzzYVwnA19MDfZi2N5MkwQx/VpPws1nF+UgU1khQIC2m3eCkc7EULGZpjfqnaPHjgGH/y6GJ1knRh50t10L4DgrBzN7nvUo4hM5DpEWGDx/UQwdPu+JhEBYFxNFKeFcoc5IVSPnoIrMza4Sb+Q=
+	t=1766390594; cv=none; b=AapCJU4gDlcF1ufAt/KwvOFW7UCqjM11xb0rKD7PhzR8LoZeM3S4rFnYtH+rKBmyXXCBCG8FKAaNOd48cun8ePMpL8Tk+w7gOne4EJc9zNwrx965d4RQBh+tSXPPisAOJlhAr46YHBWb7R4NduKjpQhqmd651xXNKIpEqvce3go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766390497; c=relaxed/simple;
-	bh=U0b6/RRZoU9PJ37clj0ubioxb/HZFHSbQmsQdaqPnwU=;
+	s=arc-20240116; t=1766390594; c=relaxed/simple;
+	bh=u2adXUBp2SeqqhB2kVGsCuKLjCBT5Qy7mm7YBd0yUcI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sfVWh6W7j3SwitBmZkTACozH8anYj2CKVejXvcPx7P10M37ouBLy1QhIcoLtl/6/v3hC0kKtukhQjRal2zIG+sFClJ6MMn9T/SH7d4NB3PbA5XKLKmCxHtXLBT8nmhfT9Eu6Q4/V4JVoyDlflrbU2ILgCpB2VOaODEMVeaRQihA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZ2yaeAi; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=LWBeEr+Hc+pTUR/U06/dZyixFmDRuC8CmbQwKZ7WwBQF+y/QKV05g4faQV9vHYhMmu7+Wkjzeao6NKUm1O9001V+8zbqjEFAB7jBG/YtT5MKpzZVUBTpchbwy+UlqH8eTfuQiRL5JUsU3GBk67vh9GBEpqq66iDcGpsFlJJ1qPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKoc3m1q; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ2yaeAi"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a0bae9aca3so52515925ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 00:01:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKoc3m1q"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7aa9be9f03aso3028790b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 00:03:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766390496; x=1766995296; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766390591; x=1766995391; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v8zLCGtUEy59h/vvTVaYiE4AnuVfZ6wIueUdzudE/X8=;
-        b=kZ2yaeAi7bum9MaKKD6+88hp9OejiTKJvt2flckbDXlMDwgbAkhTPRcRPoaQQffp5A
-         t+lZfZTzlXk4XcdBXOCIOGb72h8YZ7uPkEt1FxEJ2GkyPijU9EQtxp849bgsoqUngANc
-         yE7khI9UkQgavPH+iy0ZfZR0F9ArXi0SSXNODjZ6yA3Vo+CJrPRsCJbjcN03fyidiziq
-         LUnpEfepppGUtnJenhtmjIyKHr7tJ/kNIm+AMtcPStYtFXEq2OgUQ2VGGRhS32j90GQS
-         Nt+RlEvWU5vqW9gflHA8fE/lo7076PSWaDS12T7e00lQlPyh+uyaEdrc0ems+Rd4o7Qr
-         bHxA==
+        bh=S17DRa2h+/R73ieVf7xBn3BELlMa+wdtLCYGLGZ2+5w=;
+        b=SKoc3m1qSkuZEhrVHBVp6zEJey76VJ5cNVjDB6OEJVZZJD0Edgerzrmz1OkNExsZQr
+         CxC+kToJA7e96B6W2/XOdWvWsFh69ceD9AtVtvzyItZG4nR42pHbS/xodFNFn9IKem+Y
+         GrkwFGjZBf9HkCgQIrEU89XR4xoTJXkMfc4XhsVGbOV54hZit6wC2Eif1J91ZPRmmcKp
+         z5cjsdBNOH7k4tXV29Wol3YabkZ3EKhEPyLXMXxYqkQCsK6ypbnRRW0shUlAGTxcJ8fO
+         KOdF07N7IVAcN9uMoUMaj4ZQk+K+aw6ITG03vojdsKu3q7Ft8ANBAe3ilrk1qllvR0Zk
+         gUoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766390496; x=1766995296;
+        d=1e100.net; s=20230601; t=1766390591; x=1766995391;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=v8zLCGtUEy59h/vvTVaYiE4AnuVfZ6wIueUdzudE/X8=;
-        b=Q5DeOMWBabp4k4ZnoCRGjsgnivQIMNBfswc2uKmuPBgDv7uKlpzV5Q23uf+g2/KeYM
-         z0BCnokM1Fo8OryDLPnNmjS6iLpUKGxwevWie+8BhqWyvJeSjTdBVG00LKXVyFoyqrEF
-         KwWqqsjIyo5n2Qgko7BWzDD706enRMqfL2+EfTKr8mz8j64kPW3Lvzk1HPliOjMJH/tx
-         rzldcdzPTQ3VDRd9WKoYx84mUeagHLknT6EghmiUvH/6Ny1ZGOHUiokpgiHL8m//ZNtb
-         MC79YRC3M+piGmw/WQmfrKmP38pSQJNWhFCFe1VGTMvvsRfqom/FenBRFHcCQrAQQdtN
-         qiZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVYspjlqrfRvh9upLxhzge8Rhe2XuTITpj0SP2iEqGXo1MNyfzXa7AXUebFO/4dcIT8r8JB0EH7PBsm5Bmzi0+c/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCbhk7DhLueB6cqLf2a2yVvoMTUsgGe/ZvvPmFCWO+wk/UhlVb
-	pcJNFy9VTddP8Ssv35HwyyjDYiEC4Muk1ZMPZOLdd/Kk9vSFuWmOkn7J
-X-Gm-Gg: AY/fxX7qTDJsYNPnZ22GIf7uyFsg8cS1pS3rhw62Vwa5dxNCW6D8u62T23akeev0PFX
-	v9YoT9U2guNE8LfRj1kQlaSuRfweUFNuZR9zvmudMTstNpXCLUZZIdHyQ/h+sO7h/h4sexLIhek
-	tcHfmeg9bsf9xc1gopT2oi+wrpRxXhYnT4nz+wyL9zuwWFEQUKcIgyA8RefxtK2UBwG0SNjRGj8
-	3O9CWDNFa65+IDfoMc2uBwT5mjlcpsGCOS3tOR9k2LV5kpGAGGvuewSELKkTMUa2B1Duz1+gNu3
-	kK9DQCej1KY0hzNemoYZrDvuDIEDdeIGfz+N9L4jtoEHSCmdB3YQtSR9Ub8uHyVnqzdv0VTqwbQ
-	hfXHbbyxtDn9jI5w3U429Q9XfW7NZlB0Z+Wuv01Y8NbW+rqeoItY+RfNiFzKWvVrLezBrY4BdGg
-	cJKupH7CtZqSP1lhe2lYh+TQL1nSPdbn8VrqI=
-X-Google-Smtp-Source: AGHT+IGRVyFERy7XokCmRRlYiNa0pF4cWj/sV618kkaysFWs1qFh/tkntU/7uvjqRuWTOwS1Q9Ei1g==
-X-Received: by 2002:a17:903:fad:b0:271:479d:3dcb with SMTP id d9443c01a7336-2a2f2212bc9mr111129865ad.6.1766390495794;
-        Mon, 22 Dec 2025 00:01:35 -0800 (PST)
+        bh=S17DRa2h+/R73ieVf7xBn3BELlMa+wdtLCYGLGZ2+5w=;
+        b=koOHiLl4j2RvOMwGgxZueErEWA/BctS+ErNYmgYVtSWuPYOBY5qSvtkdgjqllNXqnO
+         QdHFELCQLzq23WeXE4L5cFPO/V9sBb6TdcCRoYnYkp7MEkJMi8Gz+ok6FMdhZ2/XuyHk
+         YwRkiyMyYjSxCfVF0tHxK18dqBAkUCCQgpPkwovIXmNDs5Axem2FYmxEMFygAuwKiL65
+         yixdVpmLwWJMdDjgNW1j4IUSCDl7Vd7xp01pHzphhQmXr9R78POOBYuTq1Hs2shnqIQK
+         yNB6tUTnMGNFo82sEt6BGQgqvJgz8zsamEh872JHnvGI2Uuqqjnr4FQu5hp/ygDD+j4F
+         rN8g==
+X-Forwarded-Encrypted: i=1; AJvYcCX0Tgc1sB3I50cDxHr6xDLE8TnCdwXytz/4P8iFVHenGD25iRk87LO7scWVjcDHtzLf2Wbb2NvPL5PWWEz8AL26zu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA4czNmn2cGaZw2kXVh+9U67i5FfRrejn7NTNjwdfDTzVZrjqQ
+	csJXl32iuGOYOZBWuGruelAeIbsXXcxR1d6AyV7RAmNOQM494w3B1YVs
+X-Gm-Gg: AY/fxX6bN5qDoTBvwIKVcu4Xy4S/TSGxnVtTQss6yQp6hnXtoCx+xpw2eRSHfTgvuON
+	aopp/KhtqJFjbR+iYOyUzawPbTcDgaGedeAazvecTZ294rY+2AIiz5vmEUVetXmbI1Iu4muWUAk
+	xz+f0TmtXLvlIF7Mx1RRZV4+MRnhRiplvjtuofFVcTsuvkNR+8krsN+IZn9LOodK92hfdNKdIta
+	fVOBxEERNN+BGONZugT3D2Td6i7o/JfDyuf1LnLKwIYgPHnGjXU4gGOGf0Z4fBZxwOrB/mIPtOS
+	VTzRHAX6MkOCY8zZBGexEjjKPY+LJ6yrvI8ywAtN75grP5x7Ea6+9AVeKiOfWtTnadYuf6rZVQY
+	URuv6n3/lclmtiUiuyXzJzMyY+w8XusyJ2hgabsHaehq24ZHo60LQTJYRu85PHaFUM8iINWZHlT
+	7b1O2A7AizMLg+J4138D5MHuObITLDRRNyZFU=
+X-Google-Smtp-Source: AGHT+IEtrG0VqTiNJPqK10jmschrRXZ/4HelRXlYEPIKhnktqJ/0oCYzH9sApYMw5ja3HXigyYybeQ==
+X-Received: by 2002:a05:6a20:4311:b0:350:f9c5:f90c with SMTP id adf61e73a8af0-376a81dcc1fmr9044567637.27.1766390591415;
+        Mon, 22 Dec 2025 00:03:11 -0800 (PST)
 Received: from mi-ThinkStation-K.mioffice.cn ([43.224.245.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c82ab4sm89961165ad.32.2025.12.22.00.01.30
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c1e7961b4d0sm8408044a12.5.2025.12.22.00.03.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Dec 2025 00:01:35 -0800 (PST)
+        Mon, 22 Dec 2025 00:03:11 -0800 (PST)
 From: liujing40 <liujing.root@gmail.com>
 X-Google-Original-From: liujing40 <liujing40@xiaomi.com>
-To: rostedt@goodmis.org
-Cc: alexei.starovoitov@gmail.com,
-	andrii@kernel.org,
+To: menglong.dong@linux.dev
+Cc: andrii@kernel.org,
 	ast@kernel.org,
 	bpf@vger.kernel.org,
 	daniel@iogearbox.net,
@@ -82,11 +81,11 @@ Cc: alexei.starovoitov@gmail.com,
 	song@kernel.org,
 	yonghong.song@linux.dev
 Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi link
-Date: Mon, 22 Dec 2025 16:00:46 +0800
-Message-Id: <20251222080046.2312024-1-liujing40@xiaomi.com>
+Date: Mon, 22 Dec 2025 16:02:53 +0800
+Message-Id: <20251222080253.2314895-1-liujing40@xiaomi.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251218160925.3c02a721@gandalf.local.home>
-References: <20251218160925.3c02a721@gandalf.local.home>
+In-Reply-To: <24197762.6Emhk5qWAg@7940hx>
+References: <24197762.6Emhk5qWAg@7940hx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -95,30 +94,72 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Dec 2025 16:09:25 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Thu, 18 Dec 2025 09:53:16 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Fri, 19 Dec 2025 09:57:37 +0800
+Menglong Dong <menglong.dong@linux.dev> wrote:
+> On 2025/12/18 21:06 liujing40 <liujing.root@gmail.com> write:
+> > When fprobe is not available, provide a fallback implementation of
+> > kprobe_multi using the traditional kretprobe API.
+> >
+> > Uses kretprobe's entry_handler and handler callbacks to simulate fprobe's
+> > entry/exit functionality.
+> >
+> > Signed-off-by: Jing Liu <liujing40@xiaomi.com>
+> > ---
+> >  kernel/trace/bpf_trace.c | 307 +++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 295 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 1fd07c10378f..426a1c627508 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -2274,12 +2274,44 @@ struct bpf_session_run_ctx {
+> >       void *data;
+> >  };
+> >
+> > -#ifdef CONFIG_FPROBE
+> > +#if defined(CONFIG_FPROBE) || defined(CONFIG_KRETPROBES)
+> > +#ifndef CONFIG_FPROBE
+> > +struct bpf_kprobe {
+> > +     struct bpf_kprobe_multi_link *link;
+> > +     u64 cookie;
+> > +     struct kretprobe rp;
+> > +};
+> > +
+> > +static void bpf_kprobe_unregister(struct bpf_kprobe *kps, u32 cnt)
+> > +{
+> > +     for (int i = 0; i < cnt; i++)
+> > +             unregister_kretprobe(&kps[i].rp);
+> > +}
+> > +
+> > +static int bpf_kprobe_register(struct bpf_kprobe *kps, u32 cnt)
+> > +{
+> > +     int ret = 0, i;
+> > +
+> > +     for (i = 0; i < cnt; i++) {
+> > +             ret = register_kretprobe(&kps[i].rp);
+> > +             if (ret < 0) {
+> > +                     bpf_kprobe_unregister(kps, i);
+> > +                     break;
+> > +             }
+> > +     }
+> > +     return ret;
+> > +}
 > 
-> > > +static void bpf_kprobe_unregister(struct bpf_kprobe *kps, u32 cnt)
-> > > +{
-> > > +       for (int i = 0; i < cnt; i++)
-> > > +               unregister_kretprobe(&kps[i].rp);
-> > > +}  
-> > 
-> > Nack.
-> > This is not a good idea.
-> > unregister_kretprobe() calls synchronize_rcu().
-> > So the above loop will cause soft lockups for sure.
+> Hi, Jing. I don't see the point of the fallback logic. If we want to
+> use the kprobe-multi, we enable CONFIG_FPROBE. Is there any reason
+> that we can't enable CONFIG_FPROBE? As you said, for a "old kernel",
+> I think we don't introduce new feature for an old kernel.
 > 
-> Looks like it could be replaced with:
+> Besides, did you measure the performance of attaching bench?
+> You will register a kretprobe for each of the target. AFAIK, the
+> kprobe will use ftrace for optimization if we hook the entry of the
+> target function. So I suspect it will be quite slow here.
 > 
-> 	unregister_kretprobes(kps, cnt);
-> 
-> Which unregisters an array of kreptrobes and does a single
-> synchronize_rcu().
-> 
-> -- Steve
+> Thanks!
+> Menglong Dong
 
-Thanks for the suggestion. I will refactor the loop to use
-unregister_kretprobes() for a single RCU sync.
+The Dynamic ftrace feature is not enabled in Android for security reasons,
+forcing us to fall back on kretprobe.
+https://source.android.com/docs/core/tests/debug/ftrace#dftrace
+
+I will provide the benchmark test results as soon as possible.
