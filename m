@@ -1,79 +1,207 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDDD2D8DD4;
-	Mon, 22 Dec 2025 17:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF332F9DBB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 19:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766423648; cv=none; b=LVgGhVQdjAyloLZcOtEetl3ysG+V1foIEKJ6V8sk8AsWC1IE/gfX1gvg3BslqdyrqvbDC7dw3a+wEvfH9Dtmm3Jn2cowrfbfH9BcQEReEOSOdahL1znFP1AKdsjZTXzX6VQfEcZZqHCPo+TOPDfuLB6Pip+gNQTYRDVMipilGmk=
+	t=1766431772; cv=none; b=ld1/UY0buu3xozkW+xGCFNixzxOu/LP9/uxH38dgwJ5d56wVScLdg55m9OibMbDUS10E7a0qRjazxkaFGXFJcJ525K69+GxrHe4hzCwc56B0+MhW9+yJ6jFfdRfWbsZlBB3AZ0Jy2jecq2mmWw3cTVIUuCLLgYVbUF2vNbIjuUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766423648; c=relaxed/simple;
-	bh=iUcvJFzEIxQE0YuXD16Jb0QM5rBcC5p0hD16V8QIR6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aJUoxMJwgmxzCDT3siVhrqBgdh3bLECFkK/ydBjN+WdgaFw1e6RKMeUd8rxEwM1rmI3LW8sqIfxwwpHvjYghOj1OSpmh0eMQv2xp+ZUroDivTy1ltNHSU97JugAnY9VhX0MC4HorumrwBHLl4ts+UeoVDS5yAVdXSy9Ml+rsm/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id A500C1402CB;
-	Mon, 22 Dec 2025 17:14:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id C69B46000E;
-	Mon, 22 Dec 2025 17:13:59 +0000 (UTC)
-Date: Mon, 22 Dec 2025 12:15:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: liujing40 <liujing.root@gmail.com>
-Cc: menglong.dong@linux.dev, andrii@kernel.org, ast@kernel.org,
- bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com,
- haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
- kpsingh@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, liujing40@xiaomi.com,
- martin.lau@linux.dev, mhiramat@kernel.org, sdf@fomichev.me,
- song@kernel.org, yonghong.song@linux.dev
-Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi
- link
-Message-ID: <20251222121547.39b35b0d@gandalf.local.home>
-In-Reply-To: <20251222080253.2314895-1-liujing40@xiaomi.com>
-References: <24197762.6Emhk5qWAg@7940hx>
-	<20251222080253.2314895-1-liujing40@xiaomi.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1766431772; c=relaxed/simple;
+	bh=CyShxEjbMhDuuoeaYBTednz/l/07QYESM4eZ3C+wF0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TYHSzpmaqUjWeUjdUP+jFQ20SyqNFWFbKxoezGyiBbzhomvrccHZ+VbTnYmc/k0XGNobJ3IWsCIg2JCyIDtc5NEclu+2rHwfCNo60zkvRRwVBUjm3jYWvOgGw1IisCxP5aEE8rFhQhoRqZDEmGjbj5i7tgobMmoOxoGCEsDRENE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Je6SUgB+; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Je6SUgB+"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-78fc0f33998so22271757b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Dec 2025 11:29:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766431770; x=1767036570; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y0HZvemBGrTiy88qS3/KTaFBN6UnJEpXmvRl4aHyOPA=;
+        b=Je6SUgB+JDe6nJ1mq+9ijAa8jFXKa6vizIJpnUYBsRPQRHwc+fEP1KdA5eBxchItn6
+         YZwvyZnidf6mecrWOI/fyGPvLDqXvBuW/uamsshoEsvp4DIobzXYn4lLfe2nmuLGwhgs
+         RczgVcWwNgXIcNXARRup9BcQ9NejEaN4J15p4wPMs0NtIQbckHW4WMpR1t/lMpJm0AJ8
+         dUR+Lp4fLbjdv+wlX/53mJ6UZkjd75J7FVQ9+GIywPkne8U8Leqq8UdXXVboOgO/1IKP
+         U08Cv9uIlGnX8z1/XDZXsMnVw74bypyeQw1fLTDSY95M9BEn+UINFxsgXt/r6KE15Ljt
+         30Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766431770; x=1767036570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=y0HZvemBGrTiy88qS3/KTaFBN6UnJEpXmvRl4aHyOPA=;
+        b=i1EnEKN65vz2nJaLHWDpjL54AjHgEV2L1G457w+gCPs8RmvHWYgEXgp3oOM3H0h7Kb
+         7PHR/Uuu31JOLAxbtPnXqyNe8ldiWRcv01G8URikhwf+F/cWMb2dEM91hN4u18BFuiTo
+         9MR3rXrjtyh/yVJJ4t0qFhIhsSeoqCZvBpG1Gl5G3LUuNUyP7E5bYHSbbdDRld8rQtxZ
+         5GaH4L8zNu6btPYJ3ZqlB29u6CznzMidDweEJXBrL+ra8AlOiaCqx+bo7T3TDlYzkH0V
+         P5x3T4PEkexxpAbMwh7eBfwTkamE3KNSe9zE4lYoSIVR8fuO35WCoNDwoo5G4X8wN50Q
+         7qBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtkCUHfWGJomzIrTq6an0/KeszWBiT+znzDxRr3W+AHc7KRoo3Y8v8XGjqP4Ie5npcJpSmy+WJ+hqbobCSwdWjIIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsq2B8k+eQa096+Pjdwku4SEbcnTbAnhqkz1mpj5iCZKZQuAR6
+	V/AK2c+v+WHXfZ2nDWw7Kf+fBwXFb9uoa3akjhaAsx3lc9dP6DdHDQQVgorQUsXAnpH+Z2lvkI5
+	4WnQ1p7XTC/n0PESwiqd922acCDJ1QA4=
+X-Gm-Gg: AY/fxX4RFZFzkBdTJXHO42P+rOcKvzku8lGVCYGoplI+PpFT7JTIUoPjb+SOWNyWO2M
+	GiqeqlqG7pgkbVc0TCxWj7OA3mE/V/SlM5AeB5ag/i4XvE4rxdQlDIg11WusXjhzq04t2WT9O05
+	bAsqfGAGMw9kHVwJIP0FNqyY0XWRJ99rk9eAhCB3v0VNye87aWvfubG3eEIwp4sVznQNO4F3Y0W
+	BrHIL1EJI/Y5ueT1W31ySoAx/MDCpD4pzBiJoU21TXrbwFlpNR3lU05fm1FNlnGghO0npo=
+X-Google-Smtp-Source: AGHT+IFN7r6MdsN+3u+BWquyqDiAUfI+IXjZ78DS8TNKJjhl/MtcmlawVNvxSFgEW+f6oLFDkN8lhc1JOLCQ/pq1OA8=
+X-Received: by 2002:a05:690c:6187:b0:786:62bb:f6f5 with SMTP id
+ 00721157ae682-78fb3f36848mr215482237b3.17.1766431769660; Mon, 22 Dec 2025
+ 11:29:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bhw91ua8kd46xeiwp6xqseu6cm1isc6j
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: C69B46000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+ZeY1gRXrfPVHTXdV06fMLtOdC1nsm634=
-X-HE-Tag: 1766423639-972695
-X-HE-Meta: U2FsdGVkX18CF9ChIIGdxWYxT7VA+r3sFrR8dEccwh6o4wWKTLNIdKQRaGPsvDY4FOoWd3R7kva3KI8GNs33XKGXfIO5EUDHZ8hkZQ1b3vY5eETIHt1uru40ATmqv1MDRWG2figR1z/QefRtX71aCWwaK/ilRGfuf1/q0XAFI2Mvz2cxvBBimk/wDgnyCIqq+quP6ra300Z4HmK18GR0p5AmAk/NdlnAkAZlvJ8FxBP/i2buSnRnVABLkXzJDgHjTBJ7z668SV4h5oD+RYsZvVzJRHFxsWDTG4sLyLvit4eiXRfS1gwhx9T/P1Hk6QD4iWVOrn3nDW2oXZEAsysedaflmCGSAovG/NHzr3pTC4MR2l/AKD3kmaBrBDwcOoxZbQwrV2WvLgw=
+References: <20251220-helper_proto-v1-0-2206e0d9422d@gmail.com>
+In-Reply-To: <20251220-helper_proto-v1-0-2206e0d9422d@gmail.com>
+From: Amery Hung <ameryhung@gmail.com>
+Date: Mon, 22 Dec 2025 11:29:17 -0800
+X-Gm-Features: AQt7F2pDre-9Uf33VZRt52PeSiSug36qR3S9wTTSvNriR_c0NcOhfhR59Bftfrw
+Message-ID: <CAMB2axPpB7Km=_7J_QTcQV8SvuFMKqg-_fCyRHEZKNfr7WL2Gg@mail.gmail.com>
+Subject: Re: [RFC bpf PATCH 0/2] bpf: Fix memory access tags in helper prototypes
+To: Zesen Liu <ftyghome@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Shuah Khan <shuah@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Shuran Liu <electronlsr@gmail.com>, 
+	Peili Gao <gplhust955@gmail.com>, Haoran Ni <haoran.ni.cs@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Dec 2025 16:02:53 +0800
-liujing40 <liujing.root@gmail.com> wrote:
+On Sat, Dec 20, 2025 at 3:35=E2=80=AFAM Zesen Liu <ftyghome@gmail.com> wrot=
+e:
+>
+> Hi,
+>
+> This series adds missing memory access tags (MEM_RDONLY or MEM_WRITE) to
+> several bpf helper function prototypes that use ARG_PTR_TO_MEM but lack t=
+he
+> correct type annotation.
+>
+> Missing memory access tags in helper prototypes can lead to critical
+> correctness issues when the verifier tries to perform code optimization.
+> After commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type
+> tracking"), the verifier relies on the memory access tags, rather than
+> treating all arguments in helper functions as potentially modifying the
+> pointed-to memory.
+>
+> We have already seen several reports regarding this:
+>
+> - commit ac44dcc788b9 ("bpf: Fix verifier assumptions of bpf_d_path's
+>    output buffer") adds MEM_WRITE to bpf_d_path;
+> - commit 2eb7648558a7 ("bpf: Specify access type of bpf_sysctl_get_name
+>    args") adds MEM_WRITE to bpf_sysctl_get_name.
+>
+> This series looks through all prototypes in the kernel and completes the
+> tags. In addition, this series also adds selftests for some of these
+> functions.
+>
+> I marked the series as RFC since the introduced selftests are fragile and
+> ad hoc (similar to the previously added selftests). The original goal of
+> these tests is to reproduce the case where the verifier wrongly optimizes
+> reads after the helper function is called. However, triggering the error
+> often requires carefully designed code patterns. For example, I had to
+> explicitly use "if (xx !=3D 0)" in my attached tests, because using memcm=
+p
+> will not reproduce the issue. This makes the reproduction heavily depende=
+nt
+> on the verifier's internal optimization logic and clutters the selftests
+> with specific, unnatural patterns.
+>
+> Some cases are also hard to trigger by selftests. For example, I couldn't
+> find a triggering pattern for bpf_read_branch_records, since the
+> execution of program seems to be messed up by wrong tags. For
+> bpf_skb_fib_lookup, I also failed to reproduce it because the argument
+> needs content on entry, but the verifier seems to only enable this
+> optimization for fully empty buffers.
+>
+> Since adding selftests does not help with existing issues or prevent futu=
+re
+> occurrences of similar problems, I believe one way to resolve it is to
+> statically restrict ARG_PTR_TO_MEM from appearing without memory access
+> tags. Using ARG_PTR_TO_MEM alone without tags is nonsensical because:
+>
+> - If the helper does not change the argument, missing MEM_RDONLY causes
+>    the verifier to incorrectly reject a read-only buffer.
 
-> The Dynamic ftrace feature is not enabled in Android for security reasons,
-> forcing us to fall back on kretprobe.
+Perhaps you are conflating one of your proposals here? This is fine
+currently. ARG_PTR_TO_MEM without any annotation is viewed as BPF_READ
+so passing a read-only buffer should work.
 
-Really? I would say kretprobe is a much bigger security risk than ftrace.
-Ftrace only attaches to a set of defined functions and anything that is
-enabled is displayed in /sys/kernel/tracing/enabled_functions (for security
-reasons!)
+> - If the helper does change the argument, missing MEM_WRITE causes the
+>    verifier to incorrectly assume the memory is unchanged, leading to
+>    potential errors.
+>
+> I am still wondering, if we agree on the above, how should we enforce thi=
+s
+> restriction? Should we let ARG_PTR_TO_MEM imply MEM_WRITE semantics by
+> default, and change ARG_PTR_TO_MEM | MEM_RDONLY to ARG_CONST_PTR_TO_MEM? =
+Or
+> should we add a check in the verifier to ensure ARG_PTR_TO_MEM always com=
+es
+> with an access tag (though this seems to only catch errors at
+> runtime/testing)?
 
-Whereas kretprobe can attach to anything, and call anything. Not to
-mention, there's no way to know if a kretprobe is there or not. So rootkits
-that would use this can most definitely go under the wire, whereas they
-can't with ftrace.
+I think it is better to make the MEM_WRITE, MEM_RDONLY annotation
+explicit and check it in the verifier.
 
-So if they disable ftrace for security reasons, they most definitely should
-be disabling kprobes!
+Flipping the default MEM_RDONLY semantic to MEM_WRITE does not prevent
+a similar bug in the future when we have helpers/optimizations/checks
+rely on an implicit semantic.
 
--- Steve
-
-
-> https://source.android.com/docs/core/tests/debug/ftrace#dftrace
-> 
-> I will provide the benchmark test results as soon as possible.
+>
+> Any insights and comments are welcome. If the individual fix patches for
+> the prototypes look correct, I would also really appreciate it if they
+> could be merged ahead of the discussion.
+>
+> Thanks,
+>
+> Zesen Liu
+>
+> Signed-off-by: Zesen Liu <ftyghome@gmail.com>
+> ---
+> Zesen Liu (2):
+>       bpf: Fix memory access tags in helper prototypes
+>       selftests/bpf: add regression tests for snprintf and get_stack help=
+ers
+>
+>  kernel/bpf/helpers.c                                      |  2 +-
+>  kernel/trace/bpf_trace.c                                  |  6 +++---
+>  net/core/filter.c                                         |  8 ++++----
+>  tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c | 15 +++++++++=
+++++--
+>  tools/testing/selftests/bpf/prog_tests/snprintf.c         |  6 ++++++
+>  tools/testing/selftests/bpf/prog_tests/snprintf_btf.c     |  3 +++
+>  tools/testing/selftests/bpf/progs/netif_receive_skb.c     | 13 +++++++++=
++++-
+>  tools/testing/selftests/bpf/progs/test_get_stack_rawtp.c  | 11 +++++++++=
++-
+>  tools/testing/selftests/bpf/progs/test_snprintf.c         | 12 +++++++++=
++++
+>  9 files changed, 64 insertions(+), 12 deletions(-)
+> ---
+> base-commit: 22cc16c04b7893d8fc22810599f49a305d600b9e
+> change-id: 20251220-helper_proto-fb6e64182467
+>
+> Best regards,
+> --
+> Zesen Liu <ftyghome@gmail.com>
+>
+>
