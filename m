@@ -1,92 +1,145 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3E429BD89;
-	Sun, 21 Dec 2025 18:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EA03C0C;
+	Mon, 22 Dec 2025 01:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766342714; cv=none; b=tQOvYsjItslQAeSVp+Qq5bH5/SorpsILQi/A2WKWvENOlqKjDSVAwf4oXLRJ9JKMFd1AyKJgnCRQ5JYRagfjJx8erqCTa2s2R5nX0QW/WH7z+nXwQFTt0dl4fBR1tz1Sgr/VDNhFekS1BLtHxcgfmNrBGwARsT+EKC1vj+9i9lc=
+	t=1766368229; cv=none; b=QXJezDAT1V/ROFCDv3D/75vW0jcvMjA/0HHrbNy+hJi6UId1HsvkiYaokw7VIMuE5Pv4+SwkyU2/tCwYs+XtybNXa2p7VsB1J2A0o3/NBBjBtvhfkDmUXOyKGekkLd3+yDV0XjJcClQwMpig/+2/kkrGvQam0oR2f5azyS5PGVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766342714; c=relaxed/simple;
-	bh=uqzf0F9FOuyRCoi0rmOpP9qD37K2Wd+JeGbGEFQldoU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tyogzwLFDz6IqF2vtR2VgzNZ/E7n6ERhldl5Pi7vgNfYOFYt0baSwfqX44xJlw7ra9Ir3+1xVh+1cjsVkxyBBa3YGrYyZHOJHTmD3w83A5NjTcvMMB5gR9PetuGDy9W0avu1T2P8t3FeJ1S/59Ok8Ps4HtbAwS1t2jsxj5iP5/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=K1lOQKsm; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="K1lOQKsm"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4dZ9Dt6h8Mz9v3b;
-	Sun, 21 Dec 2025 19:45:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1766342703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uqzf0F9FOuyRCoi0rmOpP9qD37K2Wd+JeGbGEFQldoU=;
-	b=K1lOQKsmpc99LY1z4ASEtcypSgfFu6viCOzZ7w12P81Sp8FbTkf3jPa91QDIKONhRTR/Bs
-	01DgKIPvJ8t0ZkmqhdzYu4H5egtf9rJWLx1CdGJ6F80NuAh3M4jOkL2L6tuB0A8uwVmZ8M
-	q3XcTubvZVJoiopdVEdmDidhWEgFeKv2Ndjnl5m1GoEQmR1PbRDdcvK6noPw3rmsUBpioN
-	45HAcinGFtinQNp/f1KyNyNU9Xt1Hfj4pJiQlS/2mbGkQX3f0+GUG5K9fm8QLxeU6n6yIi
-	uo7TggrX6H1foj/3bxR2wKUjJBJ47JdzJChSTvsLrC64WHlPrdENz3FWXrNCMw==
-Message-ID: <e9ab026c91a2e7da84702d9fd2455ae64f25b32a.camel@mailbox.org>
-Subject: Re: [PATCH v4 0/2] kallsyms: Always initialize modbuildid
-From: Maurice Hieronymus <mhi@mailbox.org>
-To: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com, 
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- song@kernel.org,  yonghong.song@linux.dev, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com,  jolsa@kernel.org, rostedt@goodmis.org,
- mhiramat@kernel.org, mark.rutland@arm.com,  mathieu.desnoyers@efficios.com
-Cc: georges.aureau@hpe.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org
-Date: Sun, 21 Dec 2025 19:44:55 +0100
-In-Reply-To: <20251220181838.63242-1-mhi@mailbox.org>
-References: <20251220181838.63242-1-mhi@mailbox.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1766368229; c=relaxed/simple;
+	bh=Oc8Fi0rIXk1g5QN6HUUP0SiT3rmvZTkFtPm1zj+TXdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msGaY3qfvm94q5u1DuDNyBfe+jekHET2n1qDWnAlkzNpA9nDCs4dZP3wZYd5xPG0EOyLAdGZPvyacR18McMnJkcH8w4EJxFO5sQPFXSh+n83iBW+4myeLLOl7NlcYbPxosTpeGqrXuxyDph1l6+Zv4EHlb89NBDkgneyJPYSF68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 8e9fd87cded811f0a38c85956e01ac42-20251222
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_COMM, GTI_C_CI, GTI_FG_IT
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:8cf28f5d-305d-4cad-9f3a-beaba38ef46f,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:8cf28f5d-305d-4cad-9f3a-beaba38ef46f,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:63a9c8397fb1ad5ae67631b9b7bbcbd3,BulkI
+	D:251220220743X67KSFCW,BulkQuantity:2,Recheck:0,SF:17|19|64|66|78|80|81|82
+	|83|102|127|841|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:1,File:nil
+	,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,D
+	KP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 8e9fd87cded811f0a38c85956e01ac42-20251222
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(183.242.174.21)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1683954580; Mon, 22 Dec 2025 09:50:13 +0800
+Date: Mon, 22 Dec 2025 09:50:10 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: yangtiezhu@loongson.cn, rostedt@goodmis.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
+	zhangtianyang@loongson.cn, masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, youling.tang@linux.dev, jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke()
+ function
+Message-ID: <20251222015010.GA119291@chenghao-pc>
+References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
+ <20251217061435.802204-7-duanchenghao@kylinos.cn>
+ <CAEyhmHRbacxpfTkPJq4MerBupH0bJkFfx8xGUvHMvGOzDDJUow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 45a22b6f940ff08cc72
-X-MBO-RS-META: hnshh8eifp969k9zopsmzix9ssowzytt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEyhmHRbacxpfTkPJq4MerBupH0bJkFfx8xGUvHMvGOzDDJUow@mail.gmail.com>
 
-On Sat, 2025-12-20 at 19:18 +0100, Maurice Hieronymus wrote:
-> modbuildid is never set when kallsyms_lookup_buildid is returning via
-> successful bpf_address_lookup or ftrace_mod_address_lookup.
->=20
-> This leads to an uninitialized pointer dereference on x86 when
-> CONFIG_STACKTRACE_BUILD_ID=3Dy inside __sprint_symbol.
->=20
-> Prevent this by always initializing modbuildid.
->=20
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220717
->=20
-> Changes to v3:
-> - Split the changes into separate ftrace and bpf patches
-> - Replace IS_ENABLED() with plain #ifdef
->=20
-> Maurice Hieronymus (2):
-> =C2=A0 kallsyms: Always initialize modbuildid on ftrace address
-> =C2=A0 kallsyms: Always initialize modbuildid on bpf address
->=20
-> =C2=A0include/linux/filter.h | 6 ++++--
-> =C2=A0include/linux/ftrace.h | 4 ++--
-> =C2=A0kernel/kallsyms.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 ++--
-> =C2=A0kernel/trace/ftrace.c=C2=A0 | 8 +++++++-
-> =C2=A04 files changed, 15 insertions(+), 7 deletions(-)
->=20
->=20
-> base-commit: dd9b004b7ff3289fb7bae35130c0a5c0537266af
+On Sat, Dec 20, 2025 at 10:07:25PM +0800, Hengqi Chen wrote:
+> On Wed, Dec 17, 2025 at 2:15 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > Enhance the bpf_arch_text_poke() function to enable accurate location
+> > of BPF program entry points.
+> >
+> > When modifying the entry point of a BPF program, skip the move t0, ra
+> > instruction to ensure the correct logic and copy of the jump address.
+> >
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > index 3dbabacc8856..0c16a1b18e8f 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+> >                        void *new_addr)
+> 
+> The signature of bpf_arch_text_poke() was changed in v6.19 ([1]), please rebase.
+> 
+>   [1]: https://github.com/torvalds/linux/commit/ae4a3160d19cd16b874737ebc1798c7bc2fe3c9e
 
-This patch is obsolete and already fixed by [1]
+Thank you for your review and for pointing out the API change in v6.19.
 
-[1]
-https://lore.kernel.org/bpf/20251128135920.217303-1-pmladek@suse.com/#t
+I believe my patch series already accounts for this. It was developed on
+top of commit ae4a3160d19c ("bpf: specify the old and new poke_type for bpf_arch_text_poke"),
+so all modifications to bpf_arch_text_poke() call sites within my
+patches should already be using the updated signature.
+
+Please let me know if you find any inconsistencies or if further
+adjustments are needed.
+
+Best regards,
+Chenghao
+
+> 
+> >  {
+> >         int ret;
+> > +       unsigned long size = 0;
+> > +       unsigned long offset = 0;
+> > +       char namebuf[KSYM_NAME_LEN];
+> > +       void *image = NULL;
+> >         bool is_call;
+> >         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> >         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+> > @@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+> >         /* Only poking bpf text is supported. Since kernel function entry
+> >          * is set up by ftrace, we rely on ftrace to poke kernel functions.
+> >          */
+> > -       if (!is_bpf_text_address((unsigned long)ip))
+> > +       if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
+> >                 return -ENOTSUPP;
+> >
+> > +       image = ip - offset;
+> > +       /* zero offset means we're poking bpf prog entry */
+> > +       if (offset == 0)
+> > +               /* skip to the nop instruction in bpf prog entry:
+> > +                * move t0, ra
+> > +                * nop
+> > +                */
+> > +               ip = image + LOONGARCH_INSN_SIZE;
+> > +
+> >         is_call = old_t == BPF_MOD_CALL;
+> >         ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
+> >         if (ret)
+> > --
+> > 2.25.1
+> >
