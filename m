@@ -1,46 +1,40 @@
 Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3143321B0;
-	Mon, 22 Dec 2025 17:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDDD2D8DD4;
+	Mon, 22 Dec 2025 17:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766423005; cv=none; b=K/xST28COHVEM/ztP2QbUlBhPoj/DN7XxescH7m5i7PM1yly7lnygLFmTW+y8cfmSRebr/7MI9FPWeLlzt3ZYhSAdPGoOXJGh5ISChzHbzz+fZfvhu1D0yKnmbpxSHkgDaNnW1xithGOsdSlOMruDbBGVfEBMU2AV6H9hft00PM=
+	t=1766423648; cv=none; b=LVgGhVQdjAyloLZcOtEetl3ysG+V1foIEKJ6V8sk8AsWC1IE/gfX1gvg3BslqdyrqvbDC7dw3a+wEvfH9Dtmm3Jn2cowrfbfH9BcQEReEOSOdahL1znFP1AKdsjZTXzX6VQfEcZZqHCPo+TOPDfuLB6Pip+gNQTYRDVMipilGmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766423005; c=relaxed/simple;
-	bh=tOdaR65YOpwL7PP9q5fAyDm5EnGzNSPkDiuPtxl8hkQ=;
+	s=arc-20240116; t=1766423648; c=relaxed/simple;
+	bh=iUcvJFzEIxQE0YuXD16Jb0QM5rBcC5p0hD16V8QIR6Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FCBpOkFL2BQkKNNXgWdSPiD3gxOOOCJwYu097yFgBqIi/BQO1mfqcQCaEGmjpkYNxN05GXjzL/03JGWicm+E1XGi2/rGdHIS5X7x3FHPiCn4bb7Qe/ZC2YzCwH5nEJoiBDu4iu6ySwAAJocpYepnkTq8ZUxx89h0YFVJoGVMBoQ=
+	 MIME-Version:Content-Type; b=aJUoxMJwgmxzCDT3siVhrqBgdh3bLECFkK/ydBjN+WdgaFw1e6RKMeUd8rxEwM1rmI3LW8sqIfxwwpHvjYghOj1OSpmh0eMQv2xp+ZUroDivTy1ltNHSU97JugAnY9VhX0MC4HorumrwBHLl4ts+UeoVDS5yAVdXSy9Ml+rsm/0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id B497713A662;
-	Mon, 22 Dec 2025 17:03:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C220C6000C;
-	Mon, 22 Dec 2025 17:03:11 +0000 (UTC)
-Date: Mon, 22 Dec 2025 12:04:59 -0500
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id A500C1402CB;
+	Mon, 22 Dec 2025 17:14:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id C69B46000E;
+	Mon, 22 Dec 2025 17:13:59 +0000 (UTC)
+Date: Mon, 22 Dec 2025 12:15:47 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
-Cc: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Xiang Gao
- <gxxa03070307@gmail.com>, "sumit.semwal@linaro.org"
- <sumit.semwal@linaro.org>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
- "dhowells@redhat.com" <dhowells@redhat.com>, "kuba@kernel.org"
- <kuba@kernel.org>, "brauner@kernel.org" <brauner@kernel.org>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [External Mail]Re: [PATCH v8] dma-buf: add some tracepoints to
- debug.
-Message-ID: <20251222120459.644e50ee@gandalf.local.home>
-In-Reply-To: <e9046d36a74d4eefbe85936fd2ff7cba@xiaomi.com>
-References: <20251218062853.819744-1-gxxa03070307@gmail.com>
-	<eb2e048b-ac39-4379-98b8-6dae2145be7e@amd.com>
-	<c8dab5d09fa24bc58309062910347e7a@xiaomi.com>
-	<e9046d36a74d4eefbe85936fd2ff7cba@xiaomi.com>
+To: liujing40 <liujing.root@gmail.com>
+Cc: menglong.dong@linux.dev, andrii@kernel.org, ast@kernel.org,
+ bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com,
+ haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, liujing40@xiaomi.com,
+ martin.lau@linux.dev, mhiramat@kernel.org, sdf@fomichev.me,
+ song@kernel.org, yonghong.song@linux.dev
+Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi
+ link
+Message-ID: <20251222121547.39b35b0d@gandalf.local.home>
+In-Reply-To: <20251222080253.2314895-1-liujing40@xiaomi.com>
+References: <24197762.6Emhk5qWAg@7940hx>
+	<20251222080253.2314895-1-liujing40@xiaomi.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,138 +42,38 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Stat-Signature: wwj8d98jrga53of55yjujmnjjh1jyq54
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: C220C6000C
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: bhw91ua8kd46xeiwp6xqseu6cm1isc6j
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: C69B46000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+OzYT3+DzkfjjO5N9xkiQl2sy06YlbtSw=
-X-HE-Tag: 1766422991-614254
-X-HE-Meta: U2FsdGVkX18S7MPFx/Edj80NuArl9Lelu7WD2IEzK5TKzvAaNnk+gxl0qUZlDfx91zxz27wSjt5d/RYbZcCK1AZSUHI4qt19bkAUYeek/NeuJytXJHnZBfqv92CPrIycJmFb9mens+pD5MgVsb7CZn1b7Qu5qGVF1He+fS57QtA2lHdtQOY9MjFmnFNPpLlWsI0JLq5rZkvlUF5cXYmda38409XBom1LzMAB8Rct4O2vsdg+2sF/e9zVHv7v6HcBoXYuo6BmO03Uyp8j8NV3To1GL2Bs+v82dCVbEBoU3KU0eoTPjhDNJO7plG4zffQff5GQefzfd9f9LVYV2j9Lc331fGwwER/F
+X-Session-ID: U2FsdGVkX1+ZeY1gRXrfPVHTXdV06fMLtOdC1nsm634=
+X-HE-Tag: 1766423639-972695
+X-HE-Meta: U2FsdGVkX18CF9ChIIGdxWYxT7VA+r3sFrR8dEccwh6o4wWKTLNIdKQRaGPsvDY4FOoWd3R7kva3KI8GNs33XKGXfIO5EUDHZ8hkZQ1b3vY5eETIHt1uru40ATmqv1MDRWG2figR1z/QefRtX71aCWwaK/ilRGfuf1/q0XAFI2Mvz2cxvBBimk/wDgnyCIqq+quP6ra300Z4HmK18GR0p5AmAk/NdlnAkAZlvJ8FxBP/i2buSnRnVABLkXzJDgHjTBJ7z668SV4h5oD+RYsZvVzJRHFxsWDTG4sLyLvit4eiXRfS1gwhx9T/P1Hk6QD4iWVOrn3nDW2oXZEAsysedaflmCGSAovG/NHzr3pTC4MR2l/AKD3kmaBrBDwcOoxZbQwrV2WvLgw=
 
-On Mon, 22 Dec 2025 01:41:28 +0000
-=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
+On Mon, 22 Dec 2025 16:02:53 +0800
+liujing40 <liujing.root@gmail.com> wrote:
 
-> > there was some whitespace issues with the macro. =20
->=20
-> I check the patch with checkpatch.pl, couldn't find whitespace issues.
->=20
+> The Dynamic ftrace feature is not enabled in Android for security reasons,
+> forcing us to fall back on kretprobe.
 
+Really? I would say kretprobe is a much bigger security risk than ftrace.
+Ftrace only attaches to a set of defined functions and anything that is
+enabled is displayed in /sys/kernel/tracing/enabled_functions (for security
+reasons!)
 
-> > +DECLARE_EVENT_CLASS(dma_buf,
-> > +
-> > +     TP_PROTO(struct dma_buf *dmabuf),
-> > +
-> > +     TP_ARGS(dmabuf),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __string(exp_name, dmabuf->exp_name)
-> > +             __field(size_t, size)
-> > +             __field(ino_t, ino)
-> > +     ),
+Whereas kretprobe can attach to anything, and call anything. Not to
+mention, there's no way to know if a kretprobe is there or not. So rootkits
+that would use this can most definitely go under the wire, whereas they
+can't with ftrace.
 
-These don't follow checkpatch recommendations for whitespace, because they
-are "special". Please update these to look more like a structure:
-
-     TP_STRUCT__entry(
-             __string(	exp_name,		dmabuf->exp_name)
-             __field(	size_t,			size)
-             __field(	ino_t,			ino)
-     ),
-
-
-> > +
-> > +     TP_fast_assign(
-> > +             __assign_str(exp_name);
-> > +             __entry->size =3D dmabuf->size;
-> > +             __entry->ino =3D dmabuf->file->f_inode->i_ino;
-> > +     ),
-> > +
-> > +     TP_printk("exp_name=3D%s size=3D%zu ino=3D%lu",
-> > +               __get_str(exp_name),
-> > +               __entry->size,
-> > +               __entry->ino)
-> > +);
-> > +
-> > +DECLARE_EVENT_CLASS(dma_buf_attach_dev,
-> > +
-> > +     TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attac=
-h,
-> > +             bool is_dynamic, struct device *dev),
-> > +
-> > +     TP_ARGS(dmabuf, attach, is_dynamic, dev),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __string(dev_name, dev_name(dev))
-> > +             __string(exp_name, dmabuf->exp_name)
-> > +             __field(size_t, size)
-> > +             __field(ino_t, ino)
-> > +             __field(struct dma_buf_attachment *, attach)
-> > +             __field(bool, is_dynamic)
-> > +     ),
-
-Same here too:
-
-     TP_STRUCT__entry(
-             __string(	dev_name,			dev_name(dev))
-             __string(	exp_name,			dmabuf->exp_name)
-             __field(	size_t,				size)
-             __field(	ino_t,				ino)
-             __field(	struct dma_buf_attachment *,	attach)
-             __field(	bool,				is_dynamic)
-     ),
-
-
-> > +
-> > +     TP_fast_assign(
-> > +             __assign_str(dev_name);
-> > +             __assign_str(exp_name);
-> > +             __entry->size =3D dmabuf->size;
-> > +             __entry->ino =3D dmabuf->file->f_inode->i_ino;
-> > +             __entry->is_dynamic =3D is_dynamic;
-> > +             __entry->attach =3D attach;
-> > +     ),
-> > +
-> > +     TP_printk("exp_name=3D%s size=3D%zu ino=3D%lu attachment:%p is_dy=
-namic=3D%d dev_name=3D%s",
-> > +               __get_str(exp_name),
-> > +               __entry->size,
-> > +               __entry->ino,
-> > +               __entry->attach,
-> > +               __entry->is_dynamic,
-> > +               __get_str(dev_name))
-> > +);
-> > +
-> > +DECLARE_EVENT_CLASS(dma_buf_fd,
-> > +
-> > +     TP_PROTO(struct dma_buf *dmabuf, int fd),
-> > +
-> > +     TP_ARGS(dmabuf, fd),
-> > +
-> > +     TP_STRUCT__entry(
-> > +             __string(exp_name, dmabuf->exp_name)
-> > +             __field(size_t, size)
-> > +             __field(ino_t, ino)
-> > +             __field(int, fd)
-> > +     ),
-
-And the above.
+So if they disable ftrace for security reasons, they most definitely should
+be disabling kprobes!
 
 -- Steve
 
-> > +
-> > +     TP_fast_assign(
-> > +             __assign_str(exp_name);
-> > +             __entry->size =3D dmabuf->size;
-> > +             __entry->ino =3D dmabuf->file->f_inode->i_ino;
-> > +             __entry->fd =3D fd;
-> > +     ),
-> > +
-> > +     TP_printk("exp_name=3D%s size=3D%zu ino=3D%lu fd=3D%d",
-> > +               __get_str(exp_name),
-> > +               __entry->size,
-> > +               __entry->ino,
-> > +               __entry->fd)
-> > +);
-> > +
+
+> https://source.android.com/docs/core/tests/debug/ftrace#dftrace
+> 
+> I will provide the benchmark test results as soon as possible.
