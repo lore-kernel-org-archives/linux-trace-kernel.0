@@ -1,112 +1,96 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CA9266565;
-	Tue, 23 Dec 2025 14:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A032D47E8;
+	Tue, 23 Dec 2025 16:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766498829; cv=none; b=oWelUJpPwLc5xd0IN/0TOp+y4ROjzx8fV3fXlZu+vhiJIw1iyH0zNqB7EO6mjlS+PN72HMreiwYqazH9UM01kmEWeZv479gdE7vVoCZZkAJfHAY8OAeEnaSHFC2HdnUd4uu5dfPF3uAdvhQ2M1WSZc+rDjIiRRPXhNM1TPls4/U=
+	t=1766508161; cv=none; b=LKKDxaqTKOlH+I5MDmd5n6oozu/tN9tDc4g9k4eNBME0hY1UUyyNElWfxmWD8T5e5KjcrbnA+jVettPHvh519xnOxVPXWPV86E6MRQxwTvib6FOU02jCF/081+G9nrxC7Ns2p2daAJeKbO5iYG4N66GBcOuzrTUDHYXW1ixJ5oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766498829; c=relaxed/simple;
-	bh=e9d09gKSnz/LKxgtnozd0IchyxCDy9q0lUawpKboysA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bRpneyeFO7F/O6dG8EvtRNBKeqoyfa2TX6ct5j3M2dGy1k+hMw2GUN53MZ5JHBygZnriFhTIN37S8c8f7nck/l92G5WmUEz2+WzCa7O5P9FCcrO0qC71uuoRmvRBEYPJtHHRrSKxiMWDYC2gz6eBc+yAdnwsnmzBfeUPmabhYwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-208-105-009.092.208.pools.vodafone-ip.de ([92.208.105.9] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1vY2mn-003sEJ-2z;
-	Tue, 23 Dec 2025 14:50:49 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>
-Cc: linux-riscv@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH] riscv: trace: fix snapshot deadlock with sbi ecall
-Date: Tue, 23 Dec 2025 14:50:06 +0100
-Message-ID: <20251223135043.1336524-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1766508161; c=relaxed/simple;
+	bh=6vka/YE3aJcwn2utS9yYSG1sxC7gToxVmZnewTkY5h4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cIjDWtO15vpnX/1nK4dfZ2h/s+WNIWV4MCdBT3w3UBuU0PVxZJyra9NoR/7PxdNvmXhehlRB4s18nndAJVu8u0U65V5kIbMFi01xbmjOsPOneq8IHeQfPfRWBUZAqWJ/uA1INFxR6uCb6tJ+7heRujcbnp/5UeK3r5tpDVCnxWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 53D3A8ADC1;
+	Tue, 23 Dec 2025 16:42:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 44A942D;
+	Tue, 23 Dec 2025 16:42:34 +0000 (UTC)
+Date: Tue, 23 Dec 2025 11:44:24 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Xiang Gao <gxxa03070307@gmail.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, mhiramat@kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ dhowells@redhat.com, kuba@kernel.org, brauner@kernel.org,
+ akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, gaoxiang17
+ <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH v9] dma-buf: add some tracepoints to debug.
+Message-ID: <20251223114424.1c539f7a@gandalf.local.home>
+In-Reply-To: <20251223032749.1371913-1-gxxa03070307@gmail.com>
+References: <20251223032749.1371913-1-gxxa03070307@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: grxkiozmi3msuufb6c4ww3d6b1ijzhoh
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 44A942D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+yIprTkm+nIvFVTiCDFSCukILDs9di80M=
+X-HE-Tag: 1766508154-450411
+X-HE-Meta: U2FsdGVkX1/RMwvb/I3i66TmfvJP/QYAChkQEo2YHhW8EcjemzG38cb5Wi0oW9rzAnkMwaEDpLPpnWxB+lFGcG97mdgnpnzmrWP679NlNX8FNGrdVhWTd65GLMBMoMUr+SjHIm1x2OKOW3x3Yv5CQqb+xZt2qB7wjbS1JbKgAmebXsOyZB7tdTKDStorhsE6A6YcLG7G2iDftxGHuAgcuZBnDFIVSxVQONazrjqzWjA/HgVOvmkCxGokE7ftA5fACYCUn8q6WO482an5qtVkv15JdqiiOObr0sXCp29/2DixiBpihMzyh/7Q8Y5Eio/BGGEmiOHfDVWrXM5VvhaHMuxVHi0VGfeK
 
-If sbi_ecall.c's functions are traceable,
+On Tue, 23 Dec 2025 11:27:49 +0800
+Xiang Gao <gxxa03070307@gmail.com> wrote:
 
-echo "__sbi_ecall:snapshot" > /sys/kernel/tracing/set_ftrace_filter
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/dma_buf.h>
+> +
+> +/*
+> + * dmabuf->name must be accessed with holding dmabuf->name_lock.
+> + * we need to take the lock around the tracepoint call itself where
+> + * it is called in the code.
+> + *
+> + * Note: FUNC##_enabled() is a static branch that will only
+> + *       be set when the trace event is enabled.
+> + */
+> +#define DMA_BUF_TRACE(FUNC, ...)					\
+> +	do {											\
+> +		if (FUNC##_enabled()) {						\
+> +			guard(spinlock)(&dmabuf->name_lock);	\
+> +			FUNC(__VA_ARGS__);						\
+> +		} else if (IS_ENABLED(CONFIG_LOCKDEP)) {	\
+> +			/* Expose this lock when lockdep is enabled */	\
+> +			guard(spinlock)(&dmabuf->name_lock);	\
+> +		}											\
+> +	} while (0)
+> +
 
-may get the kernel into a deadlock.
+I hate to make another comment here, but I was just thinking that this can
+be made to look a little nicer. Basically, we want to make sure that when
+LOCKDEP is active, we always take the lock. But we also need to take the
+lock when tracing is enabled. The tracepoint itself is a static branch,
+which means it is a nop when not active, so there's no real problem with
+calling it. Thus, this could look better as:
 
-(Functions in sbi_ecall.c are excluded from tracing if
-CONFIG_RISCV_ALTERNATIVE_EARLY is set.)
+#define DMA_BUF_TRACE(FUNC, ...)					\
+	do {								\
+		/* Always expose lock if lockdep is enabled */		\
+		if (IS_ENABLED(CONFIG_LOCKDEP) || FUNC##_enabled()) {	\
+			guard(spinlock)(&dmabuf->name_lock);		\
+			FUNC(__VA_ARGS__);				\
+		}							\
+	} while (0)
 
-__sbi_ecall triggers a snapshot of the ringbuffer. The snapshot code
-raises an IPI interrupt, which results in another call to __sbi_ecall
-and another snapshot...
 
-All it takes to get into this endless loop is one initial __sbi_ecall.
-On RISC-V systems without SSTC extension, the clock events in
-timer-riscv.c issue periodic sbi ecalls, making the problem easy to
-trigger.
-
-Always exclude the sbi_ecall.c functions from tracing to fix the
-potential deadlock.
-
-sbi ecalls can easiliy be logged via trace events, excluding ecall
-functions from function tracing is not a big limitation.
-
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- arch/riscv/kernel/Makefile | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 9026400cba10..cabb99cadfb6 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -3,12 +3,6 @@
- # Makefile for the RISC-V Linux kernel
- #
- 
--ifdef CONFIG_FTRACE
--CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
--endif
- CFLAGS_syscall_table.o	+= $(call cc-disable-warning, override-init)
- CFLAGS_compat_syscall_table.o += $(call cc-disable-warning, override-init)
- 
-@@ -24,7 +18,6 @@ CFLAGS_sbi_ecall.o := -mcmodel=medany
- ifdef CONFIG_FTRACE
- CFLAGS_REMOVE_alternative.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_cpufeature.o = $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_sbi_ecall.o = $(CC_FLAGS_FTRACE)
- endif
- ifdef CONFIG_RELOCATABLE
- CFLAGS_alternative.o += -fno-pie
-@@ -43,6 +36,14 @@ CFLAGS_sbi_ecall.o += -D__NO_FORTIFY
- endif
- endif
- 
-+ifdef CONFIG_FTRACE
-+CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_sbi_ecall.o = $(CC_FLAGS_FTRACE)
-+endif
-+
- always-$(KBUILD_BUILTIN) += vmlinux.lds
- 
- obj-y	+= head.o
--- 
-2.43.7
-
+-- Steve
