@@ -1,167 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D91A2E8B74
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Dec 2025 08:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CA9266565;
+	Tue, 23 Dec 2025 14:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766479756; cv=none; b=f/0a9UFzoGRyosgKe3NgEtr4rfB8nGqHdO0OecoFNk9mTxc8Gq3SDTAkRrKQ4hRkrJfFTF+nZhpWxLqA0GVnYScJsfTf7W7cENbe11AClZoSunKTe96iHzfZ2S22zXrVv4zg3pbuSWf3PBpOBkW5hfOgWe+qXASpJ+1JQ1X4+gE=
+	t=1766498829; cv=none; b=oWelUJpPwLc5xd0IN/0TOp+y4ROjzx8fV3fXlZu+vhiJIw1iyH0zNqB7EO6mjlS+PN72HMreiwYqazH9UM01kmEWeZv479gdE7vVoCZZkAJfHAY8OAeEnaSHFC2HdnUd4uu5dfPF3uAdvhQ2M1WSZc+rDjIiRRPXhNM1TPls4/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766479756; c=relaxed/simple;
-	bh=uMPdjFR3AUHODA1yruGTL+xnrZMVCFfKoSwes/LbfHE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aGcyvnQL4VpfFQ3Hm3QR/kaMgwt4a7CGcbM1QKvDdAVkXQu95EE4RGHiQLtPZCw50CxVvOKme6RFoV2IM0/eSy6F8qF5iIcdMWdhwUq6jUG79Vk6inCy+1aU8+NNOg7Yuu/2kPl2eFBhP8VYv42Pfq0vByLvbvMuMfCTNDNUfTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJ483G2+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJ483G2+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F801C2BCB1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Dec 2025 08:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766479756;
-	bh=uMPdjFR3AUHODA1yruGTL+xnrZMVCFfKoSwes/LbfHE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VJ483G2+ZySmqHB4Q1NPQUS2U+BHMOl0/9HDViAwAcKG33qYpNjrq8ReIYRNvF2tW
-	 y6/DgPrWaYN7wTB+LD7RZGasHewhybUpEvkpOKl74AwGuSLFUf/oCjyf8dLGnHAgHz
-	 D9Dh4uEg/dEbaEfkwns8sJ3QioDUn7el0+Hse+YIoL0rduBsWA1pufRY1RJ1TfOciz
-	 KeNVErkULRHT8hPDK2MWsVnvSPS4QpV4oMap3VZGm69uxUj34Mha9gTq/ePRwffpWZ
-	 1z5p2JOga6mBeml93tqIkVk2FqR3ih6sh8K+uRCgg1kbNcDemtJRA9CLImR0SAMpfX
-	 qtJgPppqoopeQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64d1ef53cf3so3148542a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Dec 2025 00:49:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXVRKG1wg7+vxLwXoajNY+WQKwc3DPYXAdocd349yx5RophBhZXrZWbwT0l19HyXSm1EsMjPXvtAQnQ6esWi+/Cu0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm+MZu9/G05VojK2P3eljPxsqy1EZ4lzpQTJQv/7Sp9DQt6el1
-	gCst0z02kpa7lxuPsEXmaM1gruQrLDwvmS+xYey5CC0W5VpIbvTFj6cfR8Wcr/07/FHzvHD0w6B
-	ZrIsTFtT7ZPEtqt9NxkbmlFXPuej5PWI=
-X-Google-Smtp-Source: AGHT+IGqICKA6Tt0g8gdCDQ5skcFxPNmflpiNOGftMkEGt7c41HtMhVaOn2SEP7jhGrIAw6lkvDjXUUHiFwAyoNuylk=
-X-Received: by 2002:a17:907:980f:b0:b73:8b79:a322 with SMTP id
- a640c23a62f3a-b8036f1222emr1491784766b.11.1766479754647; Tue, 23 Dec 2025
- 00:49:14 -0800 (PST)
+	s=arc-20240116; t=1766498829; c=relaxed/simple;
+	bh=e9d09gKSnz/LKxgtnozd0IchyxCDy9q0lUawpKboysA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bRpneyeFO7F/O6dG8EvtRNBKeqoyfa2TX6ct5j3M2dGy1k+hMw2GUN53MZ5JHBygZnriFhTIN37S8c8f7nck/l92G5WmUEz2+WzCa7O5P9FCcrO0qC71uuoRmvRBEYPJtHHRrSKxiMWDYC2gz6eBc+yAdnwsnmzBfeUPmabhYwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from ipservice-092-208-105-009.092.208.pools.vodafone-ip.de ([92.208.105.9] helo=nb282.user.codasip.com)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <martin@kaiser.cx>)
+	id 1vY2mn-003sEJ-2z;
+	Tue, 23 Dec 2025 14:50:49 +0100
+From: Martin Kaiser <martin@kaiser.cx>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-riscv@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH] riscv: trace: fix snapshot deadlock with sbi ecall
+Date: Tue, 23 Dec 2025 14:50:06 +0100
+Message-ID: <20251223135043.1336524-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
- <20251217061435.802204-7-duanchenghao@kylinos.cn> <CAEyhmHRbacxpfTkPJq4MerBupH0bJkFfx8xGUvHMvGOzDDJUow@mail.gmail.com>
- <20251222015010.GA119291@chenghao-pc> <CAEyhmHRkW67wiz_JX0i+sf2Y5LoYnpmTSt_Dh+asU8EEVTdk=w@mail.gmail.com>
-In-Reply-To: <CAEyhmHRkW67wiz_JX0i+sf2Y5LoYnpmTSt_Dh+asU8EEVTdk=w@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 23 Dec 2025 16:49:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4cutccVGOmvHjMF3NaGEYqdTYa6-eqz39bO+U-HgO1-Q@mail.gmail.com>
-X-Gm-Features: AQt7F2oKz5REz7f5rWcYliHHB6z3xEFCgbSsFXHZ5UfkPwEWshKkES1HPpR325Y
-Message-ID: <CAAhV-H4cutccVGOmvHjMF3NaGEYqdTYa6-eqz39bO+U-HgO1-Q@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>, yangtiezhu@loongson.cn, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mark.rutland@arm.com, kernel@xen0n.name, 
-	zhangtianyang@loongson.cn, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, youling.tang@linux.dev, 
-	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 23, 2025 at 10:23=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com=
-> wrote:
->
-> On Mon, Dec 22, 2025 at 9:50=E2=80=AFAM Chenghao Duan <duanchenghao@kylin=
-os.cn> wrote:
-> >
-> > On Sat, Dec 20, 2025 at 10:07:25PM +0800, Hengqi Chen wrote:
-> > > On Wed, Dec 17, 2025 at 2:15=E2=80=AFPM Chenghao Duan <duanchenghao@k=
-ylinos.cn> wrote:
-> > > >
-> > > > Enhance the bpf_arch_text_poke() function to enable accurate locati=
-on
-> > > > of BPF program entry points.
-> > > >
-> > > > When modifying the entry point of a BPF program, skip the move t0, =
-ra
-> > > > instruction to ensure the correct logic and copy of the jump addres=
-s.
-> > > >
-> > > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > > > ---
-> > > >  arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
-> > > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_=
-jit.c
-> > > > index 3dbabacc8856..0c16a1b18e8f 100644
-> > > > --- a/arch/loongarch/net/bpf_jit.c
-> > > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > > @@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_te=
-xt_poke_type old_t,
-> > > >                        void *new_addr)
-> > >
-> > > The signature of bpf_arch_text_poke() was changed in v6.19 ([1]), ple=
-ase rebase.
-> > >
-> > >   [1]: https://github.com/torvalds/linux/commit/ae4a3160d19cd16b87473=
-7ebc1798c7bc2fe3c9e
-> >
-> > Thank you for your review and for pointing out the API change in v6.19.
-> >
-> > I believe my patch series already accounts for this. It was developed o=
-n
-> > top of commit ae4a3160d19c ("bpf: specify the old and new poke_type for=
- bpf_arch_text_poke"),
-> > so all modifications to bpf_arch_text_poke() call sites within my
-> > patches should already be using the updated signature.
->
-> Fine, it seems like the LoongArch tree is not up-to-date.
-LoongArch tree now updated to 6.19-rc2, hope patches can be applied cleanly=
-.
+If sbi_ecall.c's functions are traceable,
 
-Huacai
+echo "__sbi_ecall:snapshot" > /sys/kernel/tracing/set_ftrace_filter
 
->
-> >
-> > Please let me know if you find any inconsistencies or if further
-> > adjustments are needed.
-> >
-> > Best regards,
-> > Chenghao
-> >
-> > >
-> > > >  {
-> > > >         int ret;
-> > > > +       unsigned long size =3D 0;
-> > > > +       unsigned long offset =3D 0;
-> > > > +       char namebuf[KSYM_NAME_LEN];
-> > > > +       void *image =3D NULL;
-> > > >         bool is_call;
-> > > >         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > >         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > > @@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_te=
-xt_poke_type old_t,
-> > > >         /* Only poking bpf text is supported. Since kernel function=
- entry
-> > > >          * is set up by ftrace, we rely on ftrace to poke kernel fu=
-nctions.
-> > > >          */
-> > > > -       if (!is_bpf_text_address((unsigned long)ip))
-> > > > +       if (!__bpf_address_lookup((unsigned long)ip, &size, &offset=
-, namebuf))
-> > > >                 return -ENOTSUPP;
-> > > >
-> > > > +       image =3D ip - offset;
-> > > > +       /* zero offset means we're poking bpf prog entry */
-> > > > +       if (offset =3D=3D 0)
-> > > > +               /* skip to the nop instruction in bpf prog entry:
-> > > > +                * move t0, ra
-> > > > +                * nop
-> > > > +                */
-> > > > +               ip =3D image + LOONGARCH_INSN_SIZE;
-> > > > +
-> > > >         is_call =3D old_t =3D=3D BPF_MOD_CALL;
-> > > >         ret =3D emit_jump_or_nops(old_addr, ip, old_insns, is_call)=
-;
-> > > >         if (ret)
-> > > > --
-> > > > 2.25.1
-> > > >
->
+may get the kernel into a deadlock.
+
+(Functions in sbi_ecall.c are excluded from tracing if
+CONFIG_RISCV_ALTERNATIVE_EARLY is set.)
+
+__sbi_ecall triggers a snapshot of the ringbuffer. The snapshot code
+raises an IPI interrupt, which results in another call to __sbi_ecall
+and another snapshot...
+
+All it takes to get into this endless loop is one initial __sbi_ecall.
+On RISC-V systems without SSTC extension, the clock events in
+timer-riscv.c issue periodic sbi ecalls, making the problem easy to
+trigger.
+
+Always exclude the sbi_ecall.c functions from tracing to fix the
+potential deadlock.
+
+sbi ecalls can easiliy be logged via trace events, excluding ecall
+functions from function tracing is not a big limitation.
+
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+ arch/riscv/kernel/Makefile | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 9026400cba10..cabb99cadfb6 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -3,12 +3,6 @@
+ # Makefile for the RISC-V Linux kernel
+ #
+ 
+-ifdef CONFIG_FTRACE
+-CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
+-endif
+ CFLAGS_syscall_table.o	+= $(call cc-disable-warning, override-init)
+ CFLAGS_compat_syscall_table.o += $(call cc-disable-warning, override-init)
+ 
+@@ -24,7 +18,6 @@ CFLAGS_sbi_ecall.o := -mcmodel=medany
+ ifdef CONFIG_FTRACE
+ CFLAGS_REMOVE_alternative.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_cpufeature.o = $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_sbi_ecall.o = $(CC_FLAGS_FTRACE)
+ endif
+ ifdef CONFIG_RELOCATABLE
+ CFLAGS_alternative.o += -fno-pie
+@@ -43,6 +36,14 @@ CFLAGS_sbi_ecall.o += -D__NO_FORTIFY
+ endif
+ endif
+ 
++ifdef CONFIG_FTRACE
++CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_sbi_ecall.o = $(CC_FLAGS_FTRACE)
++endif
++
+ always-$(KBUILD_BUILTIN) += vmlinux.lds
+ 
+ obj-y	+= head.o
+-- 
+2.43.7
+
