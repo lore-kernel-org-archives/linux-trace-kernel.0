@@ -1,400 +1,222 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90B626D4E5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Dec 2025 01:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1977314A8B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Dec 2025 12:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766540105; cv=none; b=HU1v7hOZp1cEj7cihnnOryWX1aiuUe6EpxLPyASUhso7pk0WMdiq3PKZDdrZom9cm3Av+v9vuMqM18GPmehriSuc2RNoa3DqA0XeEZh9qFqjUvQv+pEnhS8qivjFAN/U0vT2HSIIjIm5jUXx1Nbkqg0EoM17zGfM6uBxbmPA1N4=
+	t=1766580682; cv=none; b=XnOixrMuZXL5TK06nfiZ6iogj+zBbTQ8NwR9Vnaw6poPfwdQsrD8cuFtc22aijWC1XJEvk1O80uhGj67LJ5RlTskTzcwfFRC3LwOSDb/dojRaotITr2qVarrQrbcdRlAwcwM/qaBuTV5C4BZRqRHOE2qIG44kbGSr6bs6MdD8b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766540105; c=relaxed/simple;
-	bh=Tv4vtw7Tbr+wgMrHd9/3cbmNcKI2RBnt+0OwiSlgBuU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H1+rzoziJW66xAzNh1e3YniOtbTNfnnANsQ5kzcQVyKTjmr9hrgh8nKfKslpMvGpYLxa5uPATpD8ZJDNuaxNLJOEGm/P5G6M6iI4hfZtgsYkJEa+q2UBnpXt+NNin0S0r16bT7ZtWh5wzcHSJDPkOJl/12taG5Y8YtUu/TrRjxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ho5Df/GZ; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766580682; c=relaxed/simple;
+	bh=dP8hT5Iu0RAejp/EVTjdBuZy8bVHWAsAm0/tcmV/4y4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=m2g93EeR4VrmgpuB16Uyoj7rx8rywK/7xwf0b8Vh4n3njHk7P+2cr3w0YV9qPyg1IfjUN6kBSGQ1CYSYkY44Tci3WY+gjtCW6vUipjMHCkOVApQZa7wo6fH9HbRt0ugrZBX7k+rSjIs8bBhbKoRyCa1DJDNwMJbkyJJSh//qNdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BKKmMlGd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ho5Df/GZ"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7f0db5700b2so4960473b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Dec 2025 17:35:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766540103; x=1767144903; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eLgDSVcqpjH9P0lPmmEO0GCItc6WAA5nc00aszWHtzk=;
-        b=Ho5Df/GZZUCIZOrlM8/PQRX3Q0cZM3cUAcClf1msdbC5TWpwagfNaH/TtOsszo77mO
-         BkS0Gfn3jRd8CpwHO70z3EBC3faoZvnf+CResrUQZzJnefZHwT1DooIXp0EyrqpY8lAz
-         081g4VguqQjrWh32HeyWFCO1OHbfKHFxHAwg76Q/06La/qcwoeuu9HpmKhPYhFUzFnq/
-         5+ZGp5ipQKGyTCilTCkkFL651nQTY+15UT+zQWl2qq0+SH7lvOHmuMJZpLeZRUX0mlli
-         imC81vEkwKhsjxHgEoJGwjNamJ1rEWITjovKUqtbl/9hkWavC+p6t1OWU2Hj6o8Vcbyz
-         1Hpg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKKmMlGd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1766580680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jdolHyh9rh5rJ5MkRWABLiPIWLLCxDNdClFu6iuDitI=;
+	b=BKKmMlGdg8Yv05N/D2lJgZ7Zv3NCSEnRT1aYp3azDaMsop5eqPbeP1MTxK6s6PIFG1Ob7S
+	e1mJZdTtGfBIwG/c4bk1jlXNEX+AkpuKO68Td17I4bLFJ2T9sOFX9fEer1ARcJTmGOvGRQ
+	IP8Q71d7xhPbsXS+P+H9kGdibPPt7rs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-581-izvWx_PrNTOLeCIW-JhXqg-1; Wed, 24 Dec 2025 07:51:18 -0500
+X-MC-Unique: izvWx_PrNTOLeCIW-JhXqg-1
+X-Mimecast-MFC-AGG-ID: izvWx_PrNTOLeCIW-JhXqg_1766580678
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-47d1622509eso32505125e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Dec 2025 04:51:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766540103; x=1767144903;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eLgDSVcqpjH9P0lPmmEO0GCItc6WAA5nc00aszWHtzk=;
-        b=EZ0YRxlB1XizJej3EtgW9BpKGCiYJT2F4VwqobsRK+G2xXqENov/SGIatbEIsxfUly
-         9PzIpaAEPwv5PhvdAkJOUicJ/BREYV9biw39oJG+vIc04q7iB3HWtzsInqIO0nJM5PXI
-         9cHyn2VKD/erK7eM9bJtp7gtvCoLlC1uiis2nPIVriIKP6weakXT7HqS+Mk6QkLnL1ou
-         GSW4Kjsjti8LLc7156/ShilUqEmESiAaPy0SKOtK9BydHTVLKS0VsZsxl1rNsLhc4TOJ
-         nqo44vYN2IYIspXKJVLk3jHIS/IWehXK3RqHsNU/5NfpOlNrJRgNaiLRvtqCyDJQTPq9
-         d5ow==
-X-Forwarded-Encrypted: i=1; AJvYcCX87dlxYycD8qCbGBMwGslOMcun0KuG8IblEfyhvP8WZSD0rhRnAKTsRrVu+OTtm+FretO28Y5Z6oKpj0D5Nw7VrI4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEv7LfPyQfjvbJjTDk7K3vnkc29GjInY0XU7jQKW2m9HQjhIxK
-	vp5vsXWoF8IKMZ9lq9TeID4+ovnEe4c1uvOEJ5IA7GVkhkr0R0K2XtMN
-X-Gm-Gg: AY/fxX5XeABPRBQYziyBa5+lMuWWX8xyEu8MwvV8TsZvK6RbRUedY/FDXdTy5SBdt4n
-	u0gFkfI9jIS6SaQgjbeH2yva0k0UoPS4d0I7SEtn+39nHHG1OdbHt+4QQCr462/NGnmiV3XFQv+
-	hfV5WS4Q8la/pjiSgBlftfWmfZ0gZFg6B6yjYARZYs9wVDp7xafTg1EpfXmTiFguC6Qb/j72moV
-	ihkFk2WWGqaVd7klJA+rSIp+VnnUWyb4gMYoSnh8Ndz2die70Q+F81i9phQ9tjNVutSalFMgy/N
-	/TtbyscKY0+Orra5TMRzR0D9iQ6Ebcm9Udo78OZywZDAkJnbgQy76ioCttzJtK88kvYgpogPcpz
-	DmjTsyDVFXTRc5OBjFW9P7iQqZ0jhfGUmI9g1qKKl9R0cITf2BN7+k/mnQPXFjP8Vly2glV4KoS
-	cCg0t71SUePv9TKLBtA4Ci
-X-Google-Smtp-Source: AGHT+IFTBuM3TfizJm1mOjlbks6r4SS68r/TDo9u052WC6bOg2K+nOmrc49Dnw3fRCDvPURsdk9ABQ==
-X-Received: by 2002:a05:6a20:9392:b0:366:14af:9bc2 with SMTP id adf61e73a8af0-376ab2e7a5dmr14766328637.76.1766540102836;
-        Tue, 23 Dec 2025 17:35:02 -0800 (PST)
-Received: from xiao.mioffice.cn ([43.224.245.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e682870sm14956614b3a.57.2025.12.23.17.34.59
+        d=1e100.net; s=20230601; t=1766580677; x=1767185477;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jdolHyh9rh5rJ5MkRWABLiPIWLLCxDNdClFu6iuDitI=;
+        b=p8amG06Drkh3JNkUDHKu9+LvQncnbYQOIj7YSCyRln2+M/T1G5RZJYAIdxFsVG8g6N
+         73las1WMHuH9UwphOKGku8iklp+MK0lAjY1gnDzDH8wrkVhVk6QyQrj7k8eOduexxSVc
+         vGxAgAcZGv4proCrLLzgKCLB6yf2qnWSXQTgHpQ22X0Oq3ZObkPf/qMZ/QkcPsTRtzv/
+         JsDvavv44IHjyGeUSS2O+Z0l2oNtrWBr657RaaCxA0R+enPaAB+3OEgSM6UZemMGCgE0
+         KKYsxAsKjspJkEKXyGuaq0OC1i33eXkbAwwbdh/RqXj+HKQ+7RuagaoMYdLFUGfJGijG
+         gqxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNW3BaI2iQsa61itefoJrkvxnC6Vq/0jO8BUZWd4Lttz7PfL0pvKKniBACGI8BCPcKWQFEBUubOZa0P9fkneJEXeA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWl6XBMccOd91qvw0Iq2QL0j40kEh+DsAvMgRM/HGEhApzFKQv
+	BLaXzbzv+AQ/EHqPclbpqaTdFrGake2QfoFS1yv8xX7LjyJ2kBCNJZdos2IlwOmCaDaA+3N0rSG
+	IfHFD30P8Yu5SSfaI89p1yR92c3l4TwU8mvG4O1eDJR1mwa150AgMBQ6kcGw1iEtpUsh9TCaapQ
+	==
+X-Gm-Gg: AY/fxX4QIng8V/2M6a8pb7jQJefCX8EuiONd3MW9I6OHdTVPwdTrEqSbZS13EUE2JoQ
+	URXFtwHnMFKtC//apedRZk06CxAdP0mcjKZ22/6hT6/POpZaXsPzImRSoZtOjJDDP0H0znY8YNo
+	4oMHgPstUBy1q5SGRNAwG5ET5bhgJmVyROoLKPS3KUxczPKAWZWNIO3VmCzL1qM9lmrfC3diDYw
+	euLWpK7ro6ee/9TWnpQQPC/Tzi72Fo+2hTSYhNiU/sRsOaMf5lAISap2+4E1FG9OsPxflo7RVFC
+	TmacbyKOst5BIfHYTtALtWwsUKDI801DcxJXxMsJYgt7kj9uR2WPsZNA6m+7FVXXNlDHIq5mIw7
+	O/UA6qStV41FzB1IkzOGkFgTBPqQ=
+X-Received: by 2002:a05:600c:c105:b0:47d:3ffb:16c9 with SMTP id 5b1f17b1804b1-47d3ffb184amr10424955e9.23.1766580677556;
+        Wed, 24 Dec 2025 04:51:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFf6nRlud3tbCmYPb3EeHZKF6Drkld0nQn08zBBkGr5/rtpie5AQr3WYCUYqGyri/LayKcyVg==
+X-Received: by 2002:a05:600c:c105:b0:47d:3ffb:16c9 with SMTP id 5b1f17b1804b1-47d3ffb184amr10424725e9.23.1766580677104;
+        Wed, 24 Dec 2025 04:51:17 -0800 (PST)
+Received: from costa-tp.redhat.com ([2a00:a041:e294:5000:b694:8e49:4f51:966d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4327791d2f3sm699415f8f.11.2025.12.24.04.51.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 17:35:02 -0800 (PST)
-From: Xiang Gao <gxxa03070307@gmail.com>
-To: sumit.semwal@linaro.org,
-	christian.koenig@amd.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	dhowells@redhat.com,
-	kuba@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
+        Wed, 24 Dec 2025 04:51:16 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
-	gaoxiang17 <gaoxiang17@xiaomi.com>
-Subject: [PATCH v10] dma-buf: add some tracepoints to debug.
-Date: Wed, 24 Dec 2025 09:34:55 +0800
-Message-Id: <20251224013455.1649879-1-gxxa03070307@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] tools/rtla: Deduplicate cgroup path opening code
+Date: Wed, 24 Dec 2025 14:50:56 +0200
+Message-ID: <20251224125058.1771519-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: xvaMRF2DSUgdjVOQCxifhEkUqCXHRLxSxMastL2i-8A_1766580678
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: gaoxiang17 <gaoxiang17@xiaomi.com>
+Both set_pid_cgroup() and set_comm_cgroup() functions contain
+identical code for opening the cgroup.procs file.
 
-Since we can only inspect dmabuf by iterating over process FDs or the
-dmabuf_list, we need to add our own tracepoints to track its status in
-real time in production.
+Extract this common code into a new helper function open_cgroup_procs()
+to reduce code duplication and improve maintainability.
 
-For example:
-   binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_name=qcom,system size=12685312 ino=2738
-   binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=qcom,system size=12685312 ino=2738 fd=8
-   binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal: exp_name=qcom,system size=28672 ino=2739
-     kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=qcom,system size=12685312 ino=2738
-    RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=qcom,system size=12771328 ino=2762 fd=176
-    RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
-    RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
-
-Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- drivers/dma-buf/dma-buf.c      |  49 +++++++++-
- include/trace/events/dma_buf.h | 157 +++++++++++++++++++++++++++++++++
- 2 files changed, 204 insertions(+), 2 deletions(-)
- create mode 100644 include/trace/events/dma_buf.h
+ tools/tracing/rtla/src/utils.c | 65 +++++++++++++++++-----------------
+ 1 file changed, 32 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index edaa9e4ee4ae..5e6f65cd0306 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -35,6 +35,26 @@
- 
- #include "dma-buf-sysfs-stats.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/dma_buf.h>
-+
-+/*
-+ * dmabuf->name must be accessed with holding dmabuf->name_lock.
-+ * we need to take the lock around the tracepoint call itself where
-+ * it is called in the code.
-+ *
-+ * Note: FUNC##_enabled() is a static branch that will only
-+ *       be set when the trace event is enabled.
-+ */
-+#define DMA_BUF_TRACE(FUNC, ...)					\
-+	do {											\
-+		/* Always expose lock if lockdep is enabled */ 	\
-+		if (IS_ENABLED(CONFIG_LOCKDEP) || FUNC##_enabled()) {						\
-+			guard(spinlock)(&dmabuf->name_lock);	\
-+			FUNC(__VA_ARGS__);						\
-+		}											\
-+	} while (0)
-+
- static inline int is_dma_buf_file(struct file *);
- 
- static DEFINE_MUTEX(dmabuf_list_mutex);
-@@ -220,6 +240,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- 	    dmabuf->size >> PAGE_SHIFT)
- 		return -EINVAL;
- 
-+	DMA_BUF_TRACE(trace_dma_buf_mmap_internal, dmabuf);
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 9cf5a0098e9a..0b84e02b13df 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -784,27 +784,27 @@ static int get_self_cgroup(char *self_cg, int sizeof_self_cg)
  }
  
-@@ -745,6 +767,8 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
- 
- 	__dma_buf_list_add(dmabuf);
- 
-+	DMA_BUF_TRACE(trace_dma_buf_export, dmabuf);
-+
- 	return dmabuf;
- 
- err_dmabuf:
-@@ -768,10 +792,16 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_export, "DMA_BUF");
+ /*
+- * set_comm_cgroup - Set cgroup to pid_t pid
++ * open_cgroup_procs - Open the cgroup.procs file for the given cgroup
+  *
+- * If cgroup argument is not NULL, the threads will move to the given cgroup.
+- * Otherwise, the cgroup of the calling, i.e., rtla, thread will be used.
++ * If cgroup argument is not NULL, the cgroup.procs file for that cgroup
++ * will be opened. Otherwise, the cgroup of the calling, i.e., rtla, thread
++ * will be used.
+  *
+  * Supports cgroup v2.
+  *
+- * Returns 1 on success, 0 otherwise.
++ * Returns the file descriptor on success, -1 otherwise.
   */
- int dma_buf_fd(struct dma_buf *dmabuf, int flags)
+-int set_pid_cgroup(pid_t pid, const char *cgroup)
++static int open_cgroup_procs(const char *cgroup)
  {
-+	int fd;
-+
- 	if (!dmabuf || !dmabuf->file)
- 		return -EINVAL;
+ 	char cgroup_path[MAX_PATH - strlen("/cgroup.procs")];
+ 	char cgroup_procs[MAX_PATH];
+-	char pid_str[24];
+ 	int retval;
+ 	int cg_fd;
  
--	return FD_ADD(flags, dmabuf->file);
-+	fd = FD_ADD(flags, dmabuf->file);
-+	if (fd >= 0)
-+		DMA_BUF_TRACE(trace_dma_buf_fd, dmabuf, fd);
-+
-+	return fd;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
- 
-@@ -786,6 +816,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
- struct dma_buf *dma_buf_get(int fd)
- {
- 	struct file *file;
-+	struct dma_buf *dmabuf;
- 
- 	file = fget(fd);
- 
-@@ -797,7 +828,11 @@ struct dma_buf *dma_buf_get(int fd)
- 		return ERR_PTR(-EINVAL);
+ 	retval = find_mount("cgroup2", cgroup_path, sizeof(cgroup_path));
+ 	if (!retval) {
+ 		err_msg("Did not find cgroupv2 mount point\n");
+-		return 0;
++		return -1;
  	}
  
--	return file->private_data;
-+	dmabuf = file->private_data;
-+
-+	DMA_BUF_TRACE(trace_dma_buf_get, dmabuf, fd);
-+
-+	return dmabuf;
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
+ 	if (!cgroup) {
+@@ -812,7 +812,7 @@ int set_pid_cgroup(pid_t pid, const char *cgroup)
+ 				sizeof(cgroup_path) - strlen(cgroup_path));
+ 		if (!retval) {
+ 			err_msg("Did not find self cgroup\n");
+-			return 0;
++			return -1;
+ 		}
+ 	} else {
+ 		snprintf(&cgroup_path[strlen(cgroup_path)],
+@@ -824,6 +824,29 @@ int set_pid_cgroup(pid_t pid, const char *cgroup)
+ 	debug_msg("Using cgroup path at: %s\n", cgroup_procs);
  
-@@ -817,6 +852,8 @@ void dma_buf_put(struct dma_buf *dmabuf)
- 		return;
+ 	cg_fd = open(cgroup_procs, O_RDWR);
++	if (cg_fd < 0)
++		return -1;
++
++	return cg_fd;
++}
++
++/*
++ * set_pid_cgroup - Set cgroup to pid_t pid
++ *
++ * If cgroup argument is not NULL, the threads will move to the given cgroup.
++ * Otherwise, the cgroup of the calling, i.e., rtla, thread will be used.
++ *
++ * Supports cgroup v2.
++ *
++ * Returns 1 on success, 0 otherwise.
++ */
++int set_pid_cgroup(pid_t pid, const char *cgroup)
++{
++	char pid_str[24];
++	int retval;
++	int cg_fd;
++
++	cg_fd = open_cgroup_procs(cgroup);
+ 	if (cg_fd < 0)
+ 		return 0;
  
- 	fput(dmabuf->file);
-+
-+	DMA_BUF_TRACE(trace_dma_buf_put, dmabuf);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
+@@ -853,8 +876,6 @@ int set_pid_cgroup(pid_t pid, const char *cgroup)
+  */
+ int set_comm_cgroup(const char *comm_prefix, const char *cgroup)
+ {
+-	char cgroup_path[MAX_PATH - strlen("/cgroup.procs")];
+-	char cgroup_procs[MAX_PATH];
+ 	struct dirent *proc_entry;
+ 	DIR *procfs;
+ 	int retval;
+@@ -866,29 +887,7 @@ int set_comm_cgroup(const char *comm_prefix, const char *cgroup)
+ 		return 0;
+ 	}
  
-@@ -971,6 +1008,9 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
- 	list_add(&attach->node, &dmabuf->attachments);
- 	dma_resv_unlock(dmabuf->resv);
+-	retval = find_mount("cgroup2", cgroup_path, sizeof(cgroup_path));
+-	if (!retval) {
+-		err_msg("Did not find cgroupv2 mount point\n");
+-		return 0;
+-	}
+-
+-	if (!cgroup) {
+-		retval = get_self_cgroup(&cgroup_path[strlen(cgroup_path)],
+-				sizeof(cgroup_path) - strlen(cgroup_path));
+-		if (!retval) {
+-			err_msg("Did not find self cgroup\n");
+-			return 0;
+-		}
+-	} else {
+-		snprintf(&cgroup_path[strlen(cgroup_path)],
+-				sizeof(cgroup_path) - strlen(cgroup_path), "%s/", cgroup);
+-	}
+-
+-	snprintf(cgroup_procs, MAX_PATH, "%s/cgroup.procs", cgroup_path);
+-
+-	debug_msg("Using cgroup path at: %s\n", cgroup_procs);
+-
+-	cg_fd = open(cgroup_procs, O_RDWR);
++	cg_fd = open_cgroup_procs(cgroup);
+ 	if (cg_fd < 0)
+ 		return 0;
  
-+	DMA_BUF_TRACE(trace_dma_buf_dynamic_attach, dmabuf, attach,
-+		dma_buf_attachment_is_dynamic(attach), dev);
-+
- 	return attach;
- 
- err_attach:
-@@ -1015,6 +1055,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
- 	if (dmabuf->ops->detach)
- 		dmabuf->ops->detach(dmabuf, attach);
- 
-+	DMA_BUF_TRACE(trace_dma_buf_detach, dmabuf, attach,
-+		dma_buf_attachment_is_dynamic(attach), attach->dev);
-+
- 	kfree(attach);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
-@@ -1480,6 +1523,8 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
- 	vma_set_file(vma, dmabuf->file);
- 	vma->vm_pgoff = pgoff;
- 
-+	DMA_BUF_TRACE(trace_dma_buf_mmap, dmabuf);
-+
- 	return dmabuf->ops->mmap(dmabuf, vma);
- }
- EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
-diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
-new file mode 100644
-index 000000000000..2c9ba8533467
---- /dev/null
-+++ b/include/trace/events/dma_buf.h
-@@ -0,0 +1,157 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM dma_buf
-+
-+#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DMA_BUF_H
-+
-+#include <linux/dma-buf.h>
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(dma_buf,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf),
-+
-+	TP_STRUCT__entry(
-+		__string(	exp_name,		dmabuf->exp_name)
-+		__field(	size_t,			size)
-+		__field(	ino_t,			ino)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		__entry->size	= dmabuf->size;
-+		__entry->ino	= dmabuf->file->f_inode->i_ino;
-+	),
-+
-+	TP_printk("exp_name=%s size=%zu ino=%lu",
-+		  __get_str(exp_name),
-+		  __entry->size,
-+		  __entry->ino)
-+);
-+
-+DECLARE_EVENT_CLASS(dma_buf_attach_dev,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
-+		bool is_dynamic, struct device *dev),
-+
-+	TP_ARGS(dmabuf, attach, is_dynamic, dev),
-+
-+	TP_STRUCT__entry(
-+		__string(	dev_name,			dev_name(dev))
-+		__string(	exp_name,			dmabuf->exp_name)
-+		__field(	size_t,				size)
-+		__field(	ino_t,				ino)
-+		__field(	struct dma_buf_attachment *,	attach)
-+		__field(	bool,				is_dynamic)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+		__assign_str(exp_name);
-+		__entry->size		= dmabuf->size;
-+		__entry->ino		= dmabuf->file->f_inode->i_ino;
-+		__entry->is_dynamic	= is_dynamic;
-+		__entry->attach		= attach;
-+	),
-+
-+	TP_printk("exp_name=%s size=%zu ino=%lu attachment:%p is_dynamic=%d dev_name=%s",
-+		  __get_str(exp_name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->attach,
-+		  __entry->is_dynamic,
-+		  __get_str(dev_name))
-+);
-+
-+DECLARE_EVENT_CLASS(dma_buf_fd,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd),
-+
-+	TP_STRUCT__entry(
-+		__string(	exp_name,		dmabuf->exp_name)
-+		__field(	size_t,			size)
-+		__field(	ino_t,			ino)
-+		__field(	int,			fd)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(exp_name);
-+		__entry->size	= dmabuf->size;
-+		__entry->ino	= dmabuf->file->f_inode->i_ino;
-+		__entry->fd	= fd;
-+	),
-+
-+	TP_printk("exp_name=%s size=%zu ino=%lu fd=%d",
-+		  __get_str(exp_name),
-+		  __entry->size,
-+		  __entry->ino,
-+		  __entry->fd)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_export,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_mmap,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf, dma_buf_put,
-+
-+	TP_PROTO(struct dma_buf *dmabuf),
-+
-+	TP_ARGS(dmabuf)
-+);
-+
-+DEFINE_EVENT(dma_buf_attach_dev, dma_buf_dynamic_attach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
-+		bool is_dynamic, struct device *dev),
-+
-+	TP_ARGS(dmabuf, attach, is_dynamic, dev)
-+);
-+
-+DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
-+		bool is_dynamic, struct device *dev),
-+
-+	TP_ARGS(dmabuf, attach, is_dynamic, dev)
-+);
-+
-+DEFINE_EVENT(dma_buf_fd, dma_buf_fd,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd)
-+);
-+
-+DEFINE_EVENT(dma_buf_fd, dma_buf_get,
-+
-+	TP_PROTO(struct dma_buf *dmabuf, int fd),
-+
-+	TP_ARGS(dmabuf, fd)
-+);
-+
-+#endif /* _TRACE_DMA_BUF_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
 -- 
-2.34.1
+2.52.0
 
