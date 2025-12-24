@@ -1,455 +1,88 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EE83093AE;
-	Wed, 24 Dec 2025 17:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65102580DE;
+	Wed, 24 Dec 2025 20:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766598409; cv=none; b=n8F495Qi6SmQF4a9V+kJ+NvbafgXfLQ4JiuwPDz1Pxb/j8QKkw6iUIkY5wTLwT2NaBgTnNHmzx6l9qwprZZ3lEZoYoENPVXtg97L/GlhvaB27zYyBZ8tnPScuMVCRe49OZZpzuLKbc6OQhcZBK/uJS3ysUfigKbjdrNMPO8DzwU=
+	t=1766608998; cv=none; b=C2Y/FMXugG1t619Xe7FlvFY5lCENg8pbHVo7f9VnzstHAwUyETSDQbymOaedoOK3drlkxR1j3hbf16bsD3iym4srGW9OX8L3ouAP3AsVmJCv1Y1865MCscXsLlOKYqfzEHjz0kYkGHExo9lwAHiXyzzb3+4/Pn40Y/3dknoNHAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766598409; c=relaxed/simple;
-	bh=K3+O9S2DYcshW3EYjtELoF9Lf2rdI0qHxj/Fitnq6nE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rKm0n0AFFy0+JUO/AYGDkEOtaYNtDCU3RyCRjHM7da+/XQudxoEQgorAb7toFyd76SmpscdQC7sxeDvA2PMSrys/Sw/BlgDRu5F25Ys6JTlNdwILwmFzIdz9eKyHH4z/8kaErkfEyWejDljP6pSBQN7sN7NARsj0ACJaRDiNxMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=xL2s0QK6; arc=none smtp.client-ip=158.69.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="xL2s0QK6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1766598405;
-	bh=pYLpM2XRTM5l3VJzOyjtgXcqyrifc7E1JbB0hg3uv44=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=xL2s0QK61qjrQj8iOI4hIh9iQ8WPPZGtl/Lz5ZA/l8tuXr7my65eJYYv9dr/KEOon
-	 Zxsbnt+hRKfbpUtqHG38OWIVjPbK0UcSTxo9ETpsvnrf97K9Kmd39miLnLEsQjKZCm
-	 haO6YJ7Xs8c44qBOxk5Y0EiXGQj27hQVfT97C6oA3Oy8UBvEB8+1QE8LpEYtnz35nY
-	 zi3a0bi+K0GH01obRBTLHdUrTPTUO9xgRiAWQKwbpn3eppRmYy5crba6PXMTx1X5GK
-	 Sm2zmwyCp2MbeFqYxz2K3Blr0TYY5/ZMXiKH1XiNo9ZeN2LYc1TwfGvsxijjDjHGNP
-	 K0PpoNUQIoO2A==
-Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4dbzpF25HmzfFG;
-	Wed, 24 Dec 2025 12:46:45 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>,
-	christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <liam.howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: [PATCH v11 3/3] mm: Implement precise OOM killer task selection
-Date: Wed, 24 Dec 2025 12:46:38 -0500
-Message-Id: <20251224174638.650551-4-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251224174638.650551-1-mathieu.desnoyers@efficios.com>
-References: <20251224174638.650551-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1766608998; c=relaxed/simple;
+	bh=GQnpe2+5ZSMIYY9pMfawdM/bNw3xhk4JfCTB3kAQ3kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aGwxumWdbIfG7YlktTrKGTUt8t7sAsANekTdd93TcuBdEEZodyYJvRsEMkM5jsUNsmu8NX5cerrC+7Aw1tdeAwKL+TELZRKC3XQB78oc3Qhmic9MzvNEzFV0+kehf9TOgf+ED79ddnKCnFrFkXoLV0HZi1qJx1zwhxVeXtZ8TfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 31A7C58EA0;
+	Wed, 24 Dec 2025 20:43:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id E601380009;
+	Wed, 24 Dec 2025 20:43:06 +0000 (UTC)
+Date: Wed, 24 Dec 2025 15:44:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Tejun
+ Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, Frederic
+ Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Replace use of system_wq with system_percpu_wq
+Message-ID: <20251224133210.7b62ba5e@gandalf.local.home>
+In-Reply-To: <20251224162000.141731-1-marco.crivellari@suse.com>
+References: <20251224162000.141731-1-marco.crivellari@suse.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ifqoenecgmgq3ro6kywxuabn1dndx58k
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: E601380009
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+djofSNu05EBYfcS//jkNluPc36x5SlHI=
+X-HE-Tag: 1766608986-794064
+X-HE-Meta: U2FsdGVkX19ORhYbayY4cErkMT03zXV0te4ZAX4G+OpAF2xKqmSx2g2ekFAjo2PBOeO4XWGUVNvncTKoG5PhumaCA1VHpXGuE6w8QON/ycEiynuyi8QCBZAvToJnhpDsxTWoAB7EuZ83FXhBQetGJnM4K0vfc2IDXhibcjsvRdZ8CD9qOY2lzNRqNULr1EeBpZqUf7v0Tk2wKAWjbUMbY2jDIoO2qmjJBFXyeVywCPa8bvOc6GYtpcQZRtLnpTkxjkbgJ/K4hwLctKiWbMciWHy8iR8y+SDzH0xUBzD7xrUnMRkMrXQlSlIuKkMln/Mo+Xc2cIuf0K83FCq5lpBwfIKuy4TusFeKHQzS4d9z+Gp5sDlPoIDG3EfnkUsPYz+OPWe8Xl+giJWh1aMxFGdvMw==
 
-Use the hierarchical tree counter approximation to implement the OOM
-killer task selection with a 2-pass algorithm. The first pass selects
-the process that has the highest badness points approximation, and the
-second pass compares each process using the current max badness points
-approximation.
+On Wed, 24 Dec 2025 17:20:00 +0100
+Marco Crivellari <marco.crivellari@suse.com> wrote:
 
-The second pass uses an approximate comparison to eliminate all processes
-which are below the current max badness points approximation accuracy
-range.
+> Before that to happen after a careful review and conversion of each individual
+> case, workqueue users must be converted to the better named new workqueues with
+> no intended behaviour changes:
+> 
+>    system_wq -> system_percpu_wq
+>    system_unbound_wq -> system_dfl_wq
+> 
+> This way the old obsolete workqueues (system_wq, system_unbound_wq) can be
+> removed in the future.
+> 
+> Suggested-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> ---
+>  kernel/trace/trace_events_filter.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 385af8405392..bb6de1d38f78 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1375,7 +1375,7 @@ static void free_filter_list_tasks(struct rcu_head *rhp)
+>  	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
+>  
+>  	INIT_RCU_WORK(&filter_list->rwork, free_filter_list_work);
+> -	queue_rcu_work(system_wq, &filter_list->rwork);
+> +	queue_rcu_work(system_percpu_wq, &filter_list->rwork);
 
-Summing the per-CPU counters to calculate the precise badness of tasks
-is only required for tasks with an approximate badness within the
-accuracy range of the current max points value.
+This is just garbage collection and has no need to be done on the CPU it
+was queued on. I guess this can use system_dfl_wq?
 
-Limit to 16 the maximum number of badness sums allowed for an OOM killer
-task selection before falling back to the approximated comparison. This
-ensures bounded execution time for scenarios where many tasks have
-badness within the accuracy of the maximum badness approximation.
+-- Steve
 
-Tested with the following script:
 
-  #!/bin/sh
-
-  for a in $(seq 1 10); do (tail /dev/zero &); done
-  sleep 5
-  for a in $(seq 1 10); do (tail /dev/zero &); done
-  sleep 2
-  for a in $(seq 1 10); do (tail /dev/zero &); done
-  echo "Waiting for tasks to finish"
-  wait
-
-Results: OOM kill order on a 128GB memory system
-================================================
-
-* systemd and sd-pam are chosen first due to their oom_score_ajd:100:
-
-Out of memory: Killed process 3502 (systemd) total-vm:20096kB, anon-rss:0kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:72kB oom_score_adj:100
-Out of memory: Killed process 3503 ((sd-pam)) total-vm:21432kB, anon-rss:0kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:76kB oom_score_adj:100
-
-* The first batch of 10 processes are gradually killed, consecutively
-  picking the one that uses the most memory. The fact that we are
-  freeing memory from the previous processes increases the threshold
-  at which the remaining processes of that group are killed. Processes
-  from the second and third batches of 10 processes have time to start
-  before we complete killing the first 10 processes:
-
-Out of memory: Killed process 3703 (tail) total-vm:6591280kB, anon-rss:6578176kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:12936kB oom_score_adj:0
-Out of memory: Killed process 3705 (tail) total-vm:6731716kB, anon-rss:6709248kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:13212kB oom_score_adj:0
-Out of memory: Killed process 3707 (tail) total-vm:6977216kB, anon-rss:6946816kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:13692kB oom_score_adj:0
-Out of memory: Killed process 3699 (tail) total-vm:7205640kB, anon-rss:7184384kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:14136kB oom_score_adj:0
-Out of memory: Killed process 3713 (tail) total-vm:7463204kB, anon-rss:7438336kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:14644kB oom_score_adj:0
-Out of memory: Killed process 3701 (tail) total-vm:7739204kB, anon-rss:7716864kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:15180kB oom_score_adj:0
-Out of memory: Killed process 3709 (tail) total-vm:8050176kB, anon-rss:8028160kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:15792kB oom_score_adj:0
-Out of memory: Killed process 3711 (tail) total-vm:8362236kB, anon-rss:8339456kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:16404kB oom_score_adj:0
-Out of memory: Killed process 3715 (tail) total-vm:8649360kB, anon-rss:8634368kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:16972kB oom_score_adj:0
-Out of memory: Killed process 3697 (tail) total-vm:8951788kB, anon-rss:8929280kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:17560kB oom_score_adj:0
-
-* Even though there is a 2 seconds delay between the 2nd and 3rd batches
-  those appear to execute in mixed order. Therefore, let's consider them
-  as a single batch of 20 processes. We are hitting oom at a lower
-  memory threshold because at this point the 20 remaining proceses are
-  running rather than the previous 10. The process with highest memory
-  usage is selected for oom, thus making room for the remaining
-  processes so they can use more memory before they fill the available
-  memory, thus explaining why the memory use for selected processes
-  gradually increases, until all system memory is used by the last one:
-
-Out of memory: Killed process 3731 (tail) total-vm:7089868kB, anon-rss:7077888kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:13912kB oom_score_adj:0
-Out of memory: Killed process 3721 (tail) total-vm:7417248kB, anon-rss:7405568kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:14556kB oom_score_adj:0
-Out of memory: Killed process 3729 (tail) total-vm:7795864kB, anon-rss:7766016kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:15300kB oom_score_adj:0
-Out of memory: Killed process 3723 (tail) total-vm:8259620kB, anon-rss:8224768kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:16208kB oom_score_adj:0
-Out of memory: Killed process 3737 (tail) total-vm:8695984kB, anon-rss:8667136kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:17060kB oom_score_adj:0
-Out of memory: Killed process 3735 (tail) total-vm:9295980kB, anon-rss:9265152kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:18240kB oom_score_adj:0
-Out of memory: Killed process 3727 (tail) total-vm:9907900kB, anon-rss:9895936kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:19428kB oom_score_adj:0
-Out of memory: Killed process 3719 (tail) total-vm:10631248kB, anon-rss:10600448kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:20844kB oom_score_adj:0
-Out of memory: Killed process 3733 (tail) total-vm:11341720kB, anon-rss:11321344kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:22232kB oom_score_adj:0
-Out of memory: Killed process 3725 (tail) total-vm:12348124kB, anon-rss:12320768kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:24204kB oom_score_adj:0
-Out of memory: Killed process 3759 (tail) total-vm:12978888kB, anon-rss:12967936kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:25440kB oom_score_adj:0
-Out of memory: Killed process 3751 (tail) total-vm:14386412kB, anon-rss:14352384kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:28196kB oom_score_adj:0
-Out of memory: Killed process 3741 (tail) total-vm:16153168kB, anon-rss:16130048kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:31652kB oom_score_adj:0
-Out of memory: Killed process 3753 (tail) total-vm:18414856kB, anon-rss:18391040kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:36076kB oom_score_adj:0
-Out of memory: Killed process 3745 (tail) total-vm:21389456kB, anon-rss:21356544kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:41904kB oom_score_adj:0
-Out of memory: Killed process 3747 (tail) total-vm:25659348kB, anon-rss:25632768kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:50260kB oom_score_adj:0
-Out of memory: Killed process 3755 (tail) total-vm:32030820kB, anon-rss:32006144kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:62720kB oom_score_adj:0
-Out of memory: Killed process 3743 (tail) total-vm:42648456kB, anon-rss:42614784kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:83504kB oom_score_adj:0
-Out of memory: Killed process 3757 (tail) total-vm:63971028kB, anon-rss:63938560kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:125228kB oom_score_adj:0
-Out of memory: Killed process 3749 (tail) total-vm:127799660kB, anon-rss:127778816kB, file-rss:0kB, shmem-rss:0kB, UID:1000 pgtables:250140kB oom_score_adj:0
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
----
- fs/proc/base.c      |  2 +-
- include/linux/mm.h  | 34 +++++++++++++++++----
- include/linux/oom.h | 12 +++++++-
- mm/oom_kill.c       | 72 +++++++++++++++++++++++++++++++++++++--------
- 4 files changed, 101 insertions(+), 19 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 4eec684baca9..d75d0ce97032 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -589,7 +589,7 @@ static int proc_oom_score(struct seq_file *m, struct pid_namespace *ns,
- 	unsigned long points = 0;
- 	long badness;
- 
--	badness = oom_badness(task, totalpages);
-+	badness = oom_badness(task, totalpages, false, NULL, NULL);
- 	/*
- 	 * Special case OOM_SCORE_ADJ_MIN for all others scale the
- 	 * badness value into [0, 2000] range which we have been
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 79ac9895cb95..c8c0e054fb53 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2864,14 +2864,32 @@ static inline struct percpu_counter_tree_level_item *get_rss_stat_items(struct m
- /*
-  * per-process(per-mm_struct) statistics.
-  */
-+static inline unsigned long __get_mm_counter(struct mm_struct *mm, int member, bool approximate,
-+					     unsigned int *accuracy_under, unsigned int *accuracy_over)
-+{
-+	if (approximate) {
-+		if (accuracy_under && accuracy_over) {
-+			unsigned int under, over;
-+
-+			percpu_counter_tree_approximate_accuracy_range(&mm->rss_stat[member], &under, &over);
-+			*accuracy_under += under;
-+			*accuracy_over += over;
-+		}
-+		return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
-+	} else {
-+		return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
-+	}
-+}
-+
- static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
- {
--	return percpu_counter_tree_approximate_sum_positive(&mm->rss_stat[member]);
-+	return __get_mm_counter(mm, member, true, NULL, NULL);
- }
- 
-+
- static inline unsigned long get_mm_counter_sum(struct mm_struct *mm, int member)
- {
--	return percpu_counter_tree_precise_sum_positive(&mm->rss_stat[member]);
-+	return get_mm_counter(mm, member);
- }
- 
- void mm_trace_rss_stat(struct mm_struct *mm, int member);
-@@ -2912,11 +2930,17 @@ static inline int mm_counter(struct folio *folio)
- 	return mm_counter_file(folio);
- }
- 
-+static inline unsigned long __get_mm_rss(struct mm_struct *mm, bool approximate,
-+					 unsigned int *accuracy_under, unsigned int *accuracy_over)
-+{
-+	return __get_mm_counter(mm, MM_FILEPAGES, approximate, accuracy_under, accuracy_over) +
-+		__get_mm_counter(mm, MM_ANONPAGES, approximate, accuracy_under, accuracy_over) +
-+		__get_mm_counter(mm, MM_SHMEMPAGES, approximate, accuracy_under, accuracy_over);
-+}
-+
- static inline unsigned long get_mm_rss(struct mm_struct *mm)
- {
--	return get_mm_counter(mm, MM_FILEPAGES) +
--		get_mm_counter(mm, MM_ANONPAGES) +
--		get_mm_counter(mm, MM_SHMEMPAGES);
-+	return __get_mm_rss(mm, true, NULL, NULL);
- }
- 
- static inline unsigned long get_mm_hiwater_rss(struct mm_struct *mm)
-diff --git a/include/linux/oom.h b/include/linux/oom.h
-index 7b02bc1d0a7e..ef3919e4c7f2 100644
---- a/include/linux/oom.h
-+++ b/include/linux/oom.h
-@@ -48,6 +48,13 @@ struct oom_control {
- 	unsigned long totalpages;
- 	struct task_struct *chosen;
- 	long chosen_points;
-+	bool approximate;
-+	/*
-+	 * Number of precise badness points sums performed by this task
-+	 * selection.
-+	 */
-+	int nr_precise;
-+	unsigned long accuracy_under;
- 
- 	/* Used to print the constraint info. */
- 	enum oom_constraint constraint;
-@@ -97,7 +104,10 @@ static inline vm_fault_t check_stable_address_space(struct mm_struct *mm)
- }
- 
- long oom_badness(struct task_struct *p,
--		unsigned long totalpages);
-+		unsigned long totalpages,
-+		bool approximate,
-+		unsigned int *accuracy_under,
-+		unsigned int *accuracy_over);
- 
- extern bool out_of_memory(struct oom_control *oc);
- 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 5eb11fbba704..91ecf2b90fe0 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -53,6 +53,14 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/oom.h>
- 
-+/*
-+ * Maximum number of badness sums allowed before using an approximated
-+ * comparison. This ensures bounded execution time for scenarios where
-+ * many tasks have badness within the accuracy of the maximum badness
-+ * approximation.
-+ */
-+static int max_precise_badness_sums = 16;
-+
- static int sysctl_panic_on_oom;
- static int sysctl_oom_kill_allocating_task;
- static int sysctl_oom_dump_tasks = 1;
-@@ -194,12 +202,16 @@ static bool should_dump_unreclaim_slab(void)
-  * oom_badness - heuristic function to determine which candidate task to kill
-  * @p: task struct of which task we should calculate
-  * @totalpages: total present RAM allowed for page allocation
-+ * @approximate: whether the value can be approximated
-+ * @accuracy_under: accuracy of the badness value approximation (under value)
-+ * @accuracy_over: accuracy of the badness value approximation (over value)
-  *
-  * The heuristic for determining which task to kill is made to be as simple and
-  * predictable as possible.  The goal is to return the highest value for the
-  * task consuming the most memory to avoid subsequent oom failures.
-  */
--long oom_badness(struct task_struct *p, unsigned long totalpages)
-+long oom_badness(struct task_struct *p, unsigned long totalpages, bool approximate,
-+		 unsigned int *accuracy_under, unsigned int *accuracy_over)
- {
- 	long points;
- 	long adj;
-@@ -228,7 +240,8 @@ long oom_badness(struct task_struct *p, unsigned long totalpages)
- 	 * The baseline for the badness score is the proportion of RAM that each
- 	 * task's rss, pagetable and swap space use.
- 	 */
--	points = get_mm_rss(p->mm) + get_mm_counter(p->mm, MM_SWAPENTS) +
-+	points = __get_mm_rss(p->mm, approximate, accuracy_under, accuracy_over) +
-+		__get_mm_counter(p->mm, MM_SWAPENTS, approximate, accuracy_under, accuracy_over) +
- 		mm_pgtables_bytes(p->mm) / PAGE_SIZE;
- 	task_unlock(p);
- 
-@@ -309,6 +322,7 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
- static int oom_evaluate_task(struct task_struct *task, void *arg)
- {
- 	struct oom_control *oc = arg;
-+	unsigned int accuracy_under = 0, accuracy_over = 0;
- 	long points;
- 
- 	if (oom_unkillable_task(task))
-@@ -339,9 +353,28 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
- 		goto select;
- 	}
- 
--	points = oom_badness(task, oc->totalpages);
--	if (points == LONG_MIN || points < oc->chosen_points)
--		goto next;
-+	points = oom_badness(task, oc->totalpages, true, &accuracy_under, &accuracy_over);
-+	if (oc->approximate) {
-+		if (points == LONG_MIN || points < oc->chosen_points)
-+			goto next;
-+	} else {
-+		/*
-+		 * Eliminate processes which are below the chosen
-+		 * points accuracy range with an approximation.
-+		 */
-+		if (points == LONG_MIN || (long)(points + accuracy_over + oc->accuracy_under - oc->chosen_points) < 0)
-+			goto next;
-+
-+		if (oc->nr_precise < max_precise_badness_sums) {
-+			accuracy_under = 0;
-+			accuracy_over = 0;
-+			oc->nr_precise++;
-+			/* Precise evaluation. */
-+			points = oom_badness(task, oc->totalpages, false, NULL, NULL);
-+			if (points == LONG_MIN || (long)(points + oc->accuracy_under - oc->chosen_points) < 0)
-+				goto next;
-+		}
-+	}
- 
- select:
- 	if (oc->chosen)
-@@ -349,6 +382,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
- 	get_task_struct(task);
- 	oc->chosen = task;
- 	oc->chosen_points = points;
-+	oc->accuracy_under = accuracy_under;
- next:
- 	return 0;
- abort:
-@@ -358,14 +392,8 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
- 	return 1;
- }
- 
--/*
-- * Simple selection loop. We choose the process with the highest number of
-- * 'points'. In case scan was aborted, oc->chosen is set to -1.
-- */
--static void select_bad_process(struct oom_control *oc)
-+static void select_bad_process_iter(struct oom_control *oc)
- {
--	oc->chosen_points = LONG_MIN;
--
- 	if (is_memcg_oom(oc))
- 		mem_cgroup_scan_tasks(oc->memcg, oom_evaluate_task, oc);
- 	else {
-@@ -379,6 +407,26 @@ static void select_bad_process(struct oom_control *oc)
- 	}
- }
- 
-+/*
-+ * Simple selection loop. We choose the process with the highest number of
-+ * 'points'. In case scan was aborted, oc->chosen is set to -1.
-+ */
-+static void select_bad_process(struct oom_control *oc)
-+{
-+	oc->chosen_points = LONG_MIN;
-+	oc->accuracy_under = 0;
-+	oc->nr_precise = 0;
-+
-+	/* Approximate scan. */
-+	oc->approximate = true;
-+	select_bad_process_iter(oc);
-+	if (oc->chosen == (void *)-1UL)
-+		return;
-+	/* Precise scan. */
-+	oc->approximate = false;
-+	select_bad_process_iter(oc);
-+}
-+
- static int dump_task(struct task_struct *p, void *arg)
- {
- 	struct oom_control *oc = arg;
--- 
-2.39.5
-
+>  }
+>  
