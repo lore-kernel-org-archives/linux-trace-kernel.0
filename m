@@ -1,369 +1,413 @@
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022088.outbound.protection.outlook.com [52.101.101.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A9B305962;
-	Thu, 25 Dec 2025 08:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766649748; cv=fail; b=iA0lNPXNdVMAKYN7kv5CCiVwcFK77UDu/dAHOuuZ5o1DfytJs0NNylsGBrWzW+f/7hG5IXlFdDT+dkh3TPSZHszEQWZkoQhqythvNxeSA0F+zDD9x0VLdVWWfJ9FT3k9gBVe6dPZbmI4sCFft9JOYOEHXKFiRXK5aJdwFNS3uQs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766649748; c=relaxed/simple;
-	bh=4U22II8eAyNYO5967nG6quANHht75kjQAwuUmeN5Hgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fpKv9NGWUYVddA7CqVndr6/ncHU/EFcWVi5JPTc5P4sdrT8EJBF2zGIzLHE6fLXIhBjgpyUaxFkRZnt2OtGyzEy9PX0m8vyDXAEZtSRMkbALjQ/+pWMQ31VjNAECy36I7YVSz5qh9k26v3KuNrK4kO3NQ9lIG7m2LM3uTcwz2sU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JPpnNmKH/bpnuzBp214RP1/ioBEtXRVa8lS7jqrMcUCL3EXGHtRsgm3UxRWNEdiAwpesrFAn5eBX54/TSaUbParPRmYwk03zFZ+MhtDJiSpC3FdveO+YCHY3LrYHKt9WnDaVlxQ1srRhuLqkfeNLg5ka6fULKTwFVSqkjEvyGPuxXt+CDXaGOSM3f6FF74Fk0Kb0a/fYf+sB8xF2mJesOkFW7b/w5fKywYSRnNnwvJJQT4JNv9c/wJCE8zuLw3kr4fcgWVDT49ffUN0Gfz/B0l8ENqYTdP5zMclcY8SNxSMIuaY2SQ0dR1QQv0eZSTAKXl5JjVCnbJqh7a1lRafVXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BlEDqhq3hcpTzdVcA/Uqhx7HTZB1J6vpGz61KN0ZeYY=;
- b=MVPnwmxl7CBp0roYNv1DJQLtMMwt2jDffeCicfoT5jWfPo14PLVmWT/zimWLmTSVmnFNIVkzVFphIVaJNrtNL39ndNSIgsVmnUbslkckT0PmhKP0VrNaqox0dyy5RRIqPiJGqoqb0wQIaIe5Ii5TJqSTHKdMg8Q4ANL/HFHPx7Fuz34YY51Ip3glVrH6hhnNuD0ibId7sX1cj2EA5inhpMsGigFV6eIAQeiD9zN/AXCR2RBlJmpq/Ux2XjxuSaGrm+c8QaOGOpKg6+pYbWo2llrd+jsK6tzk4eFw0R/pNdvYP5zgB/0DZuRHLd1KdC2T2sxRkiOMiABoJNCgdvIyOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by CWLP123MB3540.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:63::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.12; Thu, 25 Dec
- 2025 08:02:24 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%5]) with mapi id 15.20.9456.008; Thu, 25 Dec 2025
- 08:02:24 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: sean@ashe.io,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315281D5178
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Dec 2025 12:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766664689; cv=none; b=Xa3KxLkTeJAbYII0KKPWcSmRtp4UFGoPvxOKAq+tc1i2axYLfG0m3qLMoZQip4zPWyd+PjP1jzCxPmMnExVe7Cs4Lg1h+ZWxIt1H3Ikf0ZsJ9lNauy9UYcgymeL/K2w4lZQfxGEBX8G1Y8b5oKZhERGbdPHGNWMRf6nDbz6JCYQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766664689; c=relaxed/simple;
+	bh=8rDyRCgIjsUhiqcvzxkerAqwGCdejD5NJQIxTlkudB0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p2recKjaFxnbn9l6P7HYIgnG3v2adhOaaOovk59+UDDdRfQ5X10WWg2aJb2+/0sVGVN2sFc8J1DtW1qAIOqNZlJIgjUZ97n6KC+YaR77Cunw3NXYW+AZnANwHUN/WrfQzx/sM7M5ie3Slj7ViBmUrNKRSaDb1Z2Ke5hfFN29owA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CzRLhTpo; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzRLhTpo"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a2ea96930cso75078655ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Dec 2025 04:11:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766664687; x=1767269487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/qVfC/AvRydB28Fs2EBUThXHyWI75iS6yLDDHLqZDk=;
+        b=CzRLhTpoa4IXAxQhckwWD8nzsoeDybTQRLeCFg4mu1NN1psC/cwGlq/A0LIVPW3JYu
+         JBVXHi0YOKdve9rDHoH7Wgg8I802A7ehjNhdGTQ08DEEUntj0ekBaGqtWngGZHcKD7i5
+         8Ds8I3bDERwmhum3vYseh7MUUzkSNaLhNY+JGyqXs2ksqhgIXS23muG42tHILv4bWa1C
+         JWCm+y/+nXxJJRKR9da4PoICsQw/q6AI3cuwF6kgOgII2iuA3VgjX4omgMSIEsv1M5l1
+         isaYpDqTHF6T7qeYPbj35xcwYmqOD6VYGPbyx4HUbKAQ9AgQYBlCblcJ7mTEOcpQk+XC
+         yFpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766664687; x=1767269487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7/qVfC/AvRydB28Fs2EBUThXHyWI75iS6yLDDHLqZDk=;
+        b=h9u2GT6t+i7JT5pAfYerT1p2zsfGdf4TwD1aW99xA3IGvDJMRwJQdpetqvyONRJdP5
+         46oL1AeO/y9CCyL0ML5z7tFar/6Fhoc5U8wkeu++s6UUpfixwqyVp90pkAV0Gy1H6uNt
+         X5ibN+VVE0+bWFrz2ROI8WySOOIp6gCRif3A1G5gxY/pdYFWNLTjHMS1gPjfZR+4Dw6D
+         FACqZwYDA7IWlvdajYMaVMbO/TUnOCX1Rbaka/v8LIF80rRkxM5r7PTZfplGfkj5t7dp
+         /MnnaUmQjoG1vcRPtlY0cGLk+RPt5uqqY731OhDnBPNtzO0b8v8K8Cn7ZgB973rKbz3l
+         hR2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVkxQXC8VkdUoPxYXJr2drlRbeXhAluUD9NJleT2Nxt1CCFAVH0ytRxRdG9rZN80WVrPHcf4mN+o6Bk/Bawf5Kc09A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1zMphk4arnCHetVM8ANcakuNUbbCV3OV5ixT0i297vXSkc3/
+	1wrEWXhmbhh8sj7RkM10X8Ks0vMj5jfhGxcvYg+579oiY6zNRWrwlqsZ
+X-Gm-Gg: AY/fxX7gyhIqJ1MP9zr+S+JaVNByED5RRQXRU6NIJcYxXEr5IyiDfcperIOyI/WIK3f
+	2AsyeAXa5Fa5HcC3VJC/+yzCvqXJ2j3dxAYT3xWwTDosxwn7z+xiPaIL5DxOkGBWEgV5WxNBAJF
+	w79lD28JsrX2DJjF/5EJdqtiIRSYaktl1AiP+SWwz9iDJgcDyAdltmDudv17Se4Ih6+pQemxFSy
+	MJIem+FSid8Yv+fdiLZ3fstnwWvCfUtCQDKhZEcw/Mny3OsUnNTPAickM2CfIETXTJ+GFBaOyzZ
+	jhoxw+eNCo5SAMLdUDv049x3xWPNWt2fxd38k07khxld5/CAEfFZ6Y377tj04ZWKd6uLJJgdYfD
+	bnAhWtp1MD49OGcvZcYDz1EIjphi6xKR5r8FMYTuVvel2UnF+gAzDzvTp1rFoNI6mm9Tjq39q/V
+	LZIYoWIrotm4Px7ShDAU4k
+X-Google-Smtp-Source: AGHT+IGKSGLk+HAEoaCu8V384ucYE3DTSdv9SDdoysVjqmukISJp3LxTXqZw/EKDCi7QbOEAX6pb+g==
+X-Received: by 2002:a17:903:19ef:b0:2a0:daa7:8a3d with SMTP id d9443c01a7336-2a2f2329b79mr206038155ad.23.1766664687443;
+        Thu, 25 Dec 2025 04:11:27 -0800 (PST)
+Received: from xiao.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3d5d3e1sm177780205ad.76.2025.12.25.04.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Dec 2025 04:11:26 -0800 (PST)
+From: Xiang Gao <gxxa03070307@gmail.com>
+To: sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	dhowells@redhat.com,
+	kuba@kernel.org,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [v2 PATCH 1/1] tracing: Add bitmask-list option for human-readable bitmask display
-Date: Thu, 25 Dec 2025 03:02:16 -0500
-Message-ID: <20251225080216.2196411-2-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251225080216.2196411-1-atomlin@atomlin.com>
-References: <20251225080216.2196411-1-atomlin@atomlin.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN0PR04CA0129.namprd04.prod.outlook.com
- (2603:10b6:408:ed::14) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: [PATCH v11] dma-buf: add some tracepoints to debug.
+Date: Thu, 25 Dec 2025 20:11:19 +0800
+Message-Id: <20251225121119.2194228-1-gxxa03070307@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|CWLP123MB3540:EE_
-X-MS-Office365-Filtering-Correlation-Id: a13e8e59-125c-4563-8f6c-08de438bf027
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7142099003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eHUrYLrtibQcHaohc67984TySAdWB72AD+3l7989zueC9/jyZikm8oe7tvfg?=
- =?us-ascii?Q?DXGB4K9nqwM1yk20U1mrLTPM3Q/YMo9SV3CY6j3BJKBAG+Z20qHQzGKIRQ99?=
- =?us-ascii?Q?aYqwtfP28IQoWbWncoZJCsWl75slMoBCXeD4msv4sqQNOE6WAr6q06T9ZmuR?=
- =?us-ascii?Q?H56DE4/s3ZlzqifecquEtC2B4IEE+66AMT6R8XLTCzlpTyKR2gQQN+lSGdfD?=
- =?us-ascii?Q?0d7XpYsl9G6vAPaa7XKTQMSl09tgps6YlLEV2rUcyyEJI1h6i+aqbbDCJDRD?=
- =?us-ascii?Q?kTYN8xpzp/Hpv+smxbHUHD6yE9PfYm5PONV8INMnelpTm7HcTkxJ16GQMUOn?=
- =?us-ascii?Q?pnYK3Ouy2QLkrZ1It72x2h4TJoNt4dXjNjm3r5LvPOPDgOU2uAX4gbHEZP1t?=
- =?us-ascii?Q?CjunqAm1pKENMHSDd4O+HYYHLR3CORnrBz26E8+dOT0KziN5IUXM8tAwpbG6?=
- =?us-ascii?Q?vGyXJtviazmzVD9qnXxmkEJm+W0sVz7ixA4fJ0gNRUp6DdJz/6vQKbi1JPEJ?=
- =?us-ascii?Q?AN9mBtNNm6ZxOj5h83OIDHBaCwseeDC4TDazwHijIvME8rzSixuEieh15piX?=
- =?us-ascii?Q?YQe25UfUL9GjAVWJy+36WNjTNKoQLKeJST7oSUD4vrtsAKunkQTxm6nZrEhJ?=
- =?us-ascii?Q?tR/FxCkHBzYRUnSsPc2KMLqJ4dZrh+6KxF0j1aJW7jZNFN4sMeEndgcbmOu5?=
- =?us-ascii?Q?zujwJpr3UEQUi0SFsoUlds+RVPI6L1bdtDR2dbJPAP0Gq1U/+MkjOKkJDRs9?=
- =?us-ascii?Q?8RwUtg8SOlif9OuNl3yruTma7RIE5q/v1BH4u7OaCiK3gTQ1c7zf4kAkRLdz?=
- =?us-ascii?Q?o+A2rcIJ2N28fKCVeC0ZPD4uPVLhlupb/SnQdlw/m6LBe9Pk1pV2FUAgA6j6?=
- =?us-ascii?Q?bvJGWKoQ5ChAhdO+lCb2j0ISGj+KtWc1feDD8rmJN8hePgRmcku2O4/BzrxB?=
- =?us-ascii?Q?TujhE3KXu9zrIAdd4d1d7StenJDyhZFS2MppdX/oZyYZRA2khl3P0ZsbXgAR?=
- =?us-ascii?Q?20ij3dmoneS7dxKJgW5SOAhx35eAXdn/Q81nsa0mVW5x/gO3tx2o4bIp544f?=
- =?us-ascii?Q?+3kGD1LSK391wPnYgf+t1RMNuBO0Z8AgW7hQDbVdS8qyup4OZdMGy6+QKRL+?=
- =?us-ascii?Q?+lHyYjreBJqOvzSLuHPymq100XZfXWAIjgJ0zi0CMrBOz9DxAl5+uQNU1kKO?=
- =?us-ascii?Q?pFaLVk6JqPPH0T40pdIPKGIpStJKJjvMx6Cn+Ds9jchuOM32dPfZK3+wG0XS?=
- =?us-ascii?Q?BmXjAp+vbzCbBk1XBCK58o3Os8+pIh4AX2lgmokE2BcxsEwRrlhucTb96wZo?=
- =?us-ascii?Q?bN72nQnSj8bcBnOipEh8gGFCEzSWaFJbHQmUg1fXL5IZzEM1JWLgBuj4E39W?=
- =?us-ascii?Q?/7meXOVtYHLjw2OdEK/XhqlnGrO3xQg2YvFXqW47MqItgwt4ZiSx9KDBr4b2?=
- =?us-ascii?Q?SXVoA+FWUKBEttJaH8d7hVlW2Xg/aWjT?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7142099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cS01HSQzMZZemKQLnOXmxFqmWEmlodk76tVk+dbci+4ARRlz5uFtzRWb/Txw?=
- =?us-ascii?Q?naUrjWo36PJo+tYEtlG0kgouBlhrXP7aVgPei8fgjlVSV6w0JD33dscQRT+7?=
- =?us-ascii?Q?pzcbZUR6mX/Lr6A7mvTIMUrkyRD+75EQFwFuxhdazDRtibsEYKDH6IEM9VRU?=
- =?us-ascii?Q?5kHTzwIkn8HEAGAdQkvUa7VxmAeWt+niUEd3+oQSkGhyA4ebfax2c8bQqDDs?=
- =?us-ascii?Q?wK8iAnVh223NOPTuza8KnTrf7dJuFoKFvQnHey9HBHg3cvstFBzTDk1JFKO2?=
- =?us-ascii?Q?BynQmMh6NYP3sjoCGB6uPEuGpIRHto6n4E2aP+8RcAsI0Hpbx7U4EJy8vCmz?=
- =?us-ascii?Q?laSWrv5PbbkD61l5RqSrPJaaE78/FQjHow7tsIHPwyztfioeL80RFAnhl16J?=
- =?us-ascii?Q?Inu2PXekJgoTXJALedPjorDrt2Pk9+Glvs+j/QYxq8nRrfsUsJlvhQeXTQ8O?=
- =?us-ascii?Q?u40RsN0sTpv9DeYDGhjShtqsiQgGNQ61NCBuXNbDKvPCL5ghDhqlgqhtKZfN?=
- =?us-ascii?Q?thftCk6ri3uzBBfYuLi+tJwl32eN+hIo6Ksn1XxfdQuqylveeqkyl4bgEJqG?=
- =?us-ascii?Q?O7Qnul5Q0gxf9feqogV8VvMOnru1eTCdf+MQxDZnhpp61nCpvM3pOpsyKJQS?=
- =?us-ascii?Q?Pqc+8jhxMGp24Uyg+D5J/urmty8AIzWJJheln8fS3d1G+PgEos7vTNoqyuM+?=
- =?us-ascii?Q?w9jzThTefhmzHMMO/rL0CjAwQkgMuP4WMfH7UnP4jBkKNcL4N0bp/rV+TLPG?=
- =?us-ascii?Q?7/f38CnE8dhg4mLwyrPBEk3letZZbFweKMi1kPrUAMd/lAGA2bWMFnZg40eQ?=
- =?us-ascii?Q?1xYgW/zVt9JzqldNJPoztXZLFAp9pTGzouosPrBS8TfhBVI+Nw7lmnHhI25g?=
- =?us-ascii?Q?8R7C9kxfKd5bbmFX7WFlx4oxsAFIlQ0Fj3mOLUMAdun4/h9vRIL9rW4vOOVt?=
- =?us-ascii?Q?wVOpamIqxF2r8sGoiWtmMx3s6nPMZDf2w2c7/O2bWvDdH8pPyJQdYDbIXck+?=
- =?us-ascii?Q?7FWHu8ilRmCW7vQzh2gKEfIaHEp32zwLnjHGv/FGNtzRGfy7MRxHx87ZdalH?=
- =?us-ascii?Q?eKJqnBnd+Qd3RGXUUwKRvNcU0D5doPvo5fOoYc/6xu8/VQiX9viF0oYSytAn?=
- =?us-ascii?Q?/cOOiFreg6ZItNHbVPPiOoLTku2Afxj8etHzD0+YC0ZTdTMdTZbR6RCb/wEJ?=
- =?us-ascii?Q?a7hraaLIUPCIyT9nAPwIcsX2vdbKGc+mluTYojzGOXpzw+3LHVnGl11LyV9l?=
- =?us-ascii?Q?hJX8ghk6jGETDMdxK1j9MX/dbaqtDpW1sBlW18AvXZyXfUEycsWe+31i+g2K?=
- =?us-ascii?Q?KxKXlCNqvd13YgCYjvIMAaJ1lOcqMLAcTZyuRIeNh1svngkwZ/fQ9U4DXPIR?=
- =?us-ascii?Q?GKcZmxue6FnGUVYBZcLJxdl2beL+X1+oFgWIHYq3++3oeaQFptbJ43ceqYFU?=
- =?us-ascii?Q?pMHWeFbSXRoOxMjcLeUtwLZyhYPnzrhJqcthM3zL/JwPs7f/NcXTPPIWZyx5?=
- =?us-ascii?Q?ga7smXQBsGR4bK+e4bWkTrM5Y7M6vFJVeM6rrKwuJUNZ0IUCSPfOE4dZE+q8?=
- =?us-ascii?Q?/vaJJ1ERyfFBQfLiMmoCh3XGrJaGYHTJuwHgLQ7XF/P9JRQdMHJCZHgaG2OD?=
- =?us-ascii?Q?retc0Vh01QTxCXb6otOVr7WWRvZkn3RIA3z03PlVGRd0nK2eafNh1vNdsQXJ?=
- =?us-ascii?Q?owT+QASsfeYuB6d3iJ9yZ9Q6rVQmzoGrhpgpJEntbPADOOxrYAxwdlsTtSGn?=
- =?us-ascii?Q?3zkiGwbBzQ=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a13e8e59-125c-4563-8f6c-08de438bf027
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Dec 2025 08:02:24.4608
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: egMR+JnCJbAgXbozES1+q17bTrc13q/N+hGkLNK7SIY7C49uj42paAkpQSylW732N4tnOgPjJaiD0skNRn2hYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB3540
+Content-Transfer-Encoding: 8bit
 
-Add support for displaying bitmasks in human-readable list format (e.g.,
-0,2-5,7) in addition to the default hexadecimal bitmap representation.
-This is particularly useful when tracing CPU masks and other large
-bitmasks where individual bit positions are more meaningful than their
-hexadecimal encoding.
+From: gaoxiang17 <gaoxiang17@xiaomi.com>
 
-When the "bitmask-list" option is enabled, the printk "%*pbl" format
-specifier is used to render bitmasks as comma-separated ranges, making
-trace output easier to interpret for complex CPU configurations and
-large bitmask values.
+Since we can only inspect dmabuf by iterating over process FDs or the
+dmabuf_list, we need to add our own tracepoints to track its status in
+real time in production.
 
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+For example:
+   binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_name=qcom,system size=12685312 ino=2738
+   binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=qcom,system size=12685312 ino=2738 fd=8
+   binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal: exp_name=qcom,system size=28672 ino=2739
+     kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=qcom,system size=12685312 ino=2738
+    RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=qcom,system size=12771328 ino=2762 fd=176
+    RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
+    RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
+
+Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
 ---
- Documentation/trace/ftrace.rst             |  9 +++++++
- include/linux/trace_events.h               |  8 +++---
- include/linux/trace_seq.h                  | 12 ++++++++-
- include/trace/stages/stage3_trace_output.h |  4 +--
- kernel/trace/trace.h                       |  1 +
- kernel/trace/trace_output.c                | 30 +++++++++++++++++++---
- kernel/trace/trace_seq.c                   | 29 ++++++++++++++++++++-
- 7 files changed, 82 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index d1f313a5f4ad..639f4d95732f 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1290,6 +1290,15 @@ Here are the available options:
-         This will be useful if you want to find out which hashed
-         value is corresponding to the real value in trace log.
+Changes since v10: https://lore.kernel.org/all/20251224013455.1649879-1-gxxa03070307@gmail.com/
+Changes since v9: https://lore.kernel.org/all/20251223032749.1371913-1-gxxa03070307@gmail.com/
+Changes since v8: https://lore.kernel.org/all/20251218062853.819744-1-gxxa03070307@gmail.com/
+Changes since v7: https://lore.kernel.org/all/20251217105132.643300-1-gxxa03070307@gmail.com/
+Changes since v6: https://lore.kernel.org/all/20251216063952.516364-1-gxxa03070307@gmail.com/
+Changes since v5: https://lore.kernel.org/all/20251201112148.843572-1-gxxa03070307@gmail.com/
+Changes since v4: https://lore.kernel.org/all/20251128085215.550100-1-gxxa03070307@gmail.com/
+Changes since v3: https://lore.kernel.org/all/20251127004352.376307-1-gxxa03070307@gmail.com/
+Changes since v2: https://lore.kernel.org/all/20251125162949.220488-1-gxxa03070307@gmail.com/
+Changes since v1: https://lore.kernel.org/all/20251124133648.72668-1-gxxa03070307@gmail.com/
+
+ drivers/dma-buf/dma-buf.c      |  48 +++++++++-
+ include/trace/events/dma_buf.h | 159 +++++++++++++++++++++++++++++++++
+ 2 files changed, 205 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/dma_buf.h
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index edaa9e4ee4ae..dee59d4c0b12 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -35,6 +35,26 @@
  
-+  bitmask-list
-+        When enabled, bitmasks are displayed as a human-readable list of
-+        ranges (e.g., 0,2-5,7) using the printk "%*pbl" format specifier.
-+        When disabled (the default), bitmasks are displayed in the
-+        traditional hexadecimal bitmap representation. The list format is
-+        particularly useful for tracing CPU masks and other large bitmasks
-+        where individual bit positions are more meaningful than their
-+        hexadecimal encoding.
+ #include "dma-buf-sysfs-stats.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/dma_buf.h>
 +
-   record-cmd
- 	When any event or tracer is enabled, a hook is enabled
- 	in the sched_switch trace point to fill comm cache
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 3690221ba3d8..0a2b8229b999 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -38,7 +38,10 @@ const char *trace_print_symbols_seq_u64(struct trace_seq *p,
- 								 *symbol_array);
- #endif
- 
--const char *trace_print_bitmask_seq(struct trace_seq *p, void *bitmask_ptr,
-+struct trace_iterator;
-+struct trace_event;
++/*
++ * dmabuf->name must be accessed with holding dmabuf->name_lock.
++ * we need to take the lock around the tracepoint call itself where
++ * it is called in the code.
++ *
++ * Note: FUNC##_enabled() is a static branch that will only
++ *       be set when the trace event is enabled.
++ */
++#define DMA_BUF_TRACE(FUNC, ...)					\
++	do {								\
++		/* Always expose lock if lockdep is enabled */		\
++		if (IS_ENABLED(CONFIG_LOCKDEP) || FUNC##_enabled()) {	\
++			guard(spinlock)(&dmabuf->name_lock);		\
++			FUNC(__VA_ARGS__);				\
++		}							\
++	} while (0)
 +
-+const char *trace_print_bitmask_seq(struct trace_iterator *iter, void *bitmask_ptr,
- 				    unsigned int bitmask_size);
+ static inline int is_dma_buf_file(struct file *);
  
- const char *trace_print_hex_seq(struct trace_seq *p,
-@@ -54,9 +57,6 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
- 			 int prefix_type, int rowsize, int groupsize,
- 			 const void *buf, size_t len, bool ascii);
+ static DEFINE_MUTEX(dmabuf_list_mutex);
+@@ -220,6 +240,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ 	    dmabuf->size >> PAGE_SHIFT)
+ 		return -EINVAL;
  
--struct trace_iterator;
--struct trace_event;
--
- int trace_raw_output_prep(struct trace_iterator *iter,
- 			  struct trace_event *event);
- extern __printf(2, 3)
-diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
-index 4a0b8c172d27..37772d8f97f8 100644
---- a/include/linux/trace_seq.h
-+++ b/include/linux/trace_seq.h
-@@ -114,7 +114,11 @@ extern void trace_seq_putmem_hex(struct trace_seq *s, const void *mem,
- extern int trace_seq_path(struct trace_seq *s, const struct path *path);
- 
- extern void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
--			     int nmaskbits);
-+			      int nmaskbits);
++	DMA_BUF_TRACE(trace_dma_buf_mmap_internal, dmabuf);
 +
-+extern void trace_seq_bitmask_list(struct trace_seq *s,
-+				   const unsigned long *maskp,
-+				   int nmaskbits);
- 
- extern int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
- 			      int prefix_type, int rowsize, int groupsize,
-@@ -137,6 +141,12 @@ trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
- {
+ 	return dmabuf->ops->mmap(dmabuf, vma);
  }
  
-+static inline void
-+trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
-+		  int nmaskbits)
-+{
-+}
+@@ -745,6 +767,8 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 
+ 	__dma_buf_list_add(dmabuf);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_export, dmabuf);
 +
- static inline int trace_print_seq(struct seq_file *m, struct trace_seq *s)
- {
- 	return 0;
-diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
-index 1e7b0bef95f5..fce85ea2df1c 100644
---- a/include/trace/stages/stage3_trace_output.h
-+++ b/include/trace/stages/stage3_trace_output.h
-@@ -39,7 +39,7 @@
- 		void *__bitmask = __get_dynamic_array(field);		\
- 		unsigned int __bitmask_size;				\
- 		__bitmask_size = __get_dynamic_array_len(field);	\
--		trace_print_bitmask_seq(p, __bitmask, __bitmask_size);	\
-+		trace_print_bitmask_seq(iter, __bitmask, __bitmask_size);	\
- 	})
+ 	return dmabuf;
  
- #undef __get_cpumask
-@@ -51,7 +51,7 @@
- 		void *__bitmask = __get_rel_dynamic_array(field);		\
- 		unsigned int __bitmask_size;				\
- 		__bitmask_size = __get_rel_dynamic_array_len(field);	\
--		trace_print_bitmask_seq(p, __bitmask, __bitmask_size);	\
-+		trace_print_bitmask_seq(iter, __bitmask, __bitmask_size);	\
- 	})
- 
- #undef __get_rel_cpumask
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b6d42fe06115..8888fc9335b6 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1411,6 +1411,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(COPY_MARKER,		"copy_trace_marker"),	\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
-+		C(BITMASK_LIST,		"bitmask-list"),	\
- 		FUNCTION_FLAGS					\
- 		FGRAPH_FLAGS					\
- 		STACK_FLAGS					\
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index cc2d3306bb60..1996d7aba038 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -194,13 +194,37 @@ trace_print_symbols_seq_u64(struct trace_seq *p, unsigned long long val,
- EXPORT_SYMBOL(trace_print_symbols_seq_u64);
- #endif
- 
-+/**
-+ * trace_print_bitmask_seq - print a bitmask to a sequence buffer
-+ * @iter: The trace iterator for the current event instance
-+ * @bitmask_ptr: The pointer to the bitmask data
-+ * @bitmask_size: The size of the bitmask in bytes
-+ *
-+ * Prints a bitmask into a sequence buffer as either a hex string or a
-+ * human-readable range list, depending on the instance's "bitmask-list"
-+ * trace option. The bitmask is formatted into the iterator's temporary
-+ * scratchpad rather than the primary sequence buffer. This avoids
-+ * duplication and pointer-collision issues when the returned string is
-+ * processed by a "%s" specifier in a TP_printk() macro.
-+ *
-+ * Returns a pointer to the formatted string within the temporary buffer.
-+ */
- const char *
--trace_print_bitmask_seq(struct trace_seq *p, void *bitmask_ptr,
-+trace_print_bitmask_seq(struct trace_iterator *iter, void *bitmask_ptr,
- 			unsigned int bitmask_size)
- {
--	const char *ret = trace_seq_buffer_ptr(p);
-+	struct trace_seq *p = &iter->tmp_seq;
-+	const struct trace_array *tr = iter->tr;
-+	const char *ret;
-+
-+	trace_seq_init(p);
-+	ret = trace_seq_buffer_ptr(p);
-+
-+	if (tr->trace_flags & TRACE_ITER(BITMASK_LIST))
-+		trace_seq_bitmask_list(p, bitmask_ptr, bitmask_size * 8);
-+	else
-+		trace_seq_bitmask(p, bitmask_ptr, bitmask_size * 8);
- 
--	trace_seq_bitmask(p, bitmask_ptr, bitmask_size * 8);
- 	trace_seq_putc(p, 0);
- 
- 	return ret;
-diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
-index 32684ef4fb9d..85f6f10d107f 100644
---- a/kernel/trace/trace_seq.c
-+++ b/kernel/trace/trace_seq.c
-@@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(trace_seq_printf);
-  * Writes a ASCII representation of a bitmask string into @s.
+ err_dmabuf:
+@@ -768,10 +792,15 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_export, "DMA_BUF");
   */
- void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
--		      int nmaskbits)
-+		       int nmaskbits)
+ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
  {
- 	unsigned int save_len = s->seq.len;
++	int fd;
++
+ 	if (!dmabuf || !dmabuf->file)
+ 		return -EINVAL;
  
-@@ -124,6 +124,33 @@ void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
+-	return FD_ADD(flags, dmabuf->file);
++	fd = FD_ADD(flags, dmabuf->file);
++	DMA_BUF_TRACE(trace_dma_buf_fd, dmabuf, fd);
++
++	return fd;
  }
- EXPORT_SYMBOL_GPL(trace_seq_bitmask);
+ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
  
-+/**
-+ * trace_seq_bitmask_list - write a bitmask array in its list representation
-+ * @s:		trace sequence descriptor
-+ * @maskp:	points to an array of unsigned longs that represent a bitmask
-+ * @nmaskbits:	The number of bits that are valid in @maskp
-+ *
-+ * Writes a list representation (e.g., 0-3,5-7) of a bitmask string into @s.
-+ */
-+void trace_seq_bitmask_list(struct trace_seq *s, const unsigned long *maskp,
-+		       int nmaskbits)
-+{
-+	unsigned int save_len = s->seq.len;
+@@ -786,6 +815,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+ struct dma_buf *dma_buf_get(int fd)
+ {
+ 	struct file *file;
++	struct dma_buf *dmabuf;
+ 
+ 	file = fget(fd);
+ 
+@@ -797,7 +827,11 @@ struct dma_buf *dma_buf_get(int fd)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return file->private_data;
++	dmabuf = file->private_data;
 +
-+	if (s->full)
-+		return;
++	DMA_BUF_TRACE(trace_dma_buf_get, dmabuf, fd);
 +
-+	__trace_seq_init(s);
++	return dmabuf;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
+ 
+@@ -817,6 +851,8 @@ void dma_buf_put(struct dma_buf *dmabuf)
+ 		return;
+ 
+ 	fput(dmabuf->file);
 +
-+	seq_buf_printf(&s->seq, "%*pbl", nmaskbits, maskp);
++	DMA_BUF_TRACE(trace_dma_buf_put, dmabuf);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
+ 
+@@ -971,6 +1007,9 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 	list_add(&attach->node, &dmabuf->attachments);
+ 	dma_resv_unlock(dmabuf->resv);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_dynamic_attach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), dev);
 +
-+	if (unlikely(seq_buf_has_overflowed(&s->seq))) {
-+		s->seq.len = save_len;
-+		s->full = 1;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(trace_seq_bitmask_list);
+ 	return attach;
+ 
+ err_attach:
+@@ -1015,6 +1054,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+ 	if (dmabuf->ops->detach)
+ 		dmabuf->ops->detach(dmabuf, attach);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_detach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), attach->dev);
 +
- /**
-  * trace_seq_vprintf - sequence printing of trace information
-  * @s: trace sequence descriptor
+ 	kfree(attach);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
+@@ -1480,6 +1522,8 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+ 	vma_set_file(vma, dmabuf->file);
+ 	vma->vm_pgoff = pgoff;
+ 
++	DMA_BUF_TRACE(trace_dma_buf_mmap, dmabuf);
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
+diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
+new file mode 100644
+index 000000000000..3bb88d05bcc8
+--- /dev/null
++++ b/include/trace/events/dma_buf.h
+@@ -0,0 +1,159 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM dma_buf
++
++#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DMA_BUF_H
++
++#include <linux/dma-buf.h>
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(dma_buf,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf),
++
++	TP_STRUCT__entry(
++		__string(	exp_name,		dmabuf->exp_name)
++		__field(	size_t,			size)
++		__field(	ino_t,			ino)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size	= dmabuf->size;
++		__entry->ino	= dmabuf->file->f_inode->i_ino;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino)
++);
++
++DECLARE_EVENT_CLASS(dma_buf_attach_dev,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev),
++
++	TP_STRUCT__entry(
++		__string(	dev_name,			dev_name(dev))
++		__string(	exp_name,			dmabuf->exp_name)
++		__field(	size_t,				size)
++		__field(	ino_t,				ino)
++		__field(	struct dma_buf_attachment *,	attach)
++		__field(	bool,				is_dynamic)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name);
++		__assign_str(exp_name);
++		__entry->size		= dmabuf->size;
++		__entry->ino		= dmabuf->file->f_inode->i_ino;
++		__entry->is_dynamic	= is_dynamic;
++		__entry->attach		= attach;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu attachment:%p is_dynamic=%d dev_name=%s",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->attach,
++		  __entry->is_dynamic,
++		  __get_str(dev_name))
++);
++
++DECLARE_EVENT_CLASS(dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_STRUCT__entry(
++		__string(	exp_name,		dmabuf->exp_name)
++		__field(	size_t,			size)
++		__field(	ino_t,			ino)
++		__field(	int,			fd)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size	= dmabuf->size;
++		__entry->ino	= dmabuf->file->f_inode->i_ino;
++		__entry->fd	= fd;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu fd=%d",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->fd)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_export,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_put,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_dynamic_attach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT_CONDITION(dma_buf_fd, dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_CONDITION(fd >= 0)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_get,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++#endif /* _TRACE_DMA_BUF_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
-2.51.0
+2.34.1
 
