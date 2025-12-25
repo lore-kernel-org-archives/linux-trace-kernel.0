@@ -1,55 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09E78834;
-	Thu, 25 Dec 2025 01:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4BF3A1E90;
+	Thu, 25 Dec 2025 01:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766625370; cv=none; b=QrANSjgHIdSUhHtC+ZBiilVBTHrXN3wrafnSIt8LVIS6noRd32BsbGOG1goxRIOSz5j8+DNNg7PVStg+RhgLye5+RvuxdNMGalAPeGg3e0SP5TLuUyKMtKZo+JLNNMG0+LsCvF4aRv+8VxOecSGeA7/povZu4zjK3F6UpsUXcEk=
+	t=1766626525; cv=none; b=Cpc5iBRWn6izUjm5SNcbYihV4tlFx202OVbk//LNGtUadqoDn6A8mW23o2kjSTMd8gsI8EK4REI2Js4yZlybB8edLMQdCjzZex7+1YAC91maRGrs+KHmqu9yeLd8kQBt2N4ZsNAfbiE5MVmd+N3ZRiruIBGjCgT2Pho5KOaJ9Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766625370; c=relaxed/simple;
-	bh=LOYmlOe1Vq/VYImbaMRny9/DAx9G21eUGcDCanz9mdk=;
+	s=arc-20240116; t=1766626525; c=relaxed/simple;
+	bh=4k5Vh63TfKbbtmXiNbg0EnRUPOlUjZwmEv+D2oh9WjM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jt+BZApKCY7r6qnzfHe039/hiAT1SmkPYfsEIBY96Mbm0CLjk/962bU4c+MQvx2jRLjJEpTbxZph4tLKH17O9+PPre0Z/4jJu5Y8CqBj3ocdHdYQ3Rx0VM+mqB8Af3ofeGeft36/N7SwOlHTTUyK+mcshYmSfVq2OsG6IyvUix4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=soDboTPJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+s/2MCpN; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=N1IuOm0ofFBo8UPNCC2PrUyDlYjhDJa31cFEOwHxIAcV6QErwfPvSqcQIxKQYHqNuD2T3+22Et58hGjn6OucsIO3Dc1J+uibrrpjGnoqJynsLSE6qiGuaC+4OAguKbY1LWPOE8MS7J/QZIkaEvLIOjaHNDXMVPzVsgAtqx+ARaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MQ7lYWLa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ti6a1Kgr; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="soDboTPJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+s/2MCpN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MQ7lYWLa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ti6a1Kgr"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1766625365;
+	s=2020; t=1766626521;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LOYmlOe1Vq/VYImbaMRny9/DAx9G21eUGcDCanz9mdk=;
-	b=soDboTPJvKuX0d1j5LOQ8+uafrFv+kUqHvSl9JhfaDEJxvC787f2DVRIUWriiS/rw6dIPf
-	ZGorxnwPXXq+U+8X2G3BP57E1D+xqNWxHGNUB7ytCXm47CtRMQAvQ6GEaZb1k319QNMH+e
-	KdltnXttJSlYEVPok8Lqg8m+Sh23a6O3h7zGvVyI9DjrdFhRne/H3rMwSEmrYQ+3HGdW1a
-	eaya4HW8BBZbHZLIOvm7yGZ8MWL1KWxXnRi86VHEJLN5HG1hm8r3oeOSdeOhkbKlf9d4AV
-	Z1PVJADvKAQebjQZpUEin/5JAGZzNfh9sh23AMwmW9vKp153NsAI7zi2+HGUPQ==
+	bh=W6P5PsP0rcCMugTHiacRPCl9s22uAJFGr3/d5SQkINw=;
+	b=MQ7lYWLae8uwkBUfd8nTXhekcFM/ToNgl3OMopBEHV45fRLRAZNpWwFt3MUx8n7FS9YzEg
+	RZ6+jYfwJXN5oZbsHm4LOH5xBz722xP09BUrTpJHKcneIkx2av/aUvqgKSIGzzL6e66rRm
+	LjcuKcHbKqnD8DVt5OR2RxGUyWBcF2qUZFOKRNnCxqU/aD7wexRKn9qXRnhrMGg83ow04l
+	G888cxaLOQQAU++B793eQpDUE/HXk2/OO4Qys1UQ/7ZGOcjiAiIdhAH9Ql7SwBy1p/zKDi
+	d024FNmUI15mhlI1CYmQF2QNL3HdfgOTzvogAUhdQE2jjy8QtwPkvDglWXlTgA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1766625365;
+	s=2020e; t=1766626521;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LOYmlOe1Vq/VYImbaMRny9/DAx9G21eUGcDCanz9mdk=;
-	b=+s/2MCpN69NsMJzLMlUq53feMyZkCd+81GKiPuOdhJ+LBr3NceUM3JmzxMeE47HG9X7ES/
-	RKW0JHHE/cVlGHBQ==
+	bh=W6P5PsP0rcCMugTHiacRPCl9s22uAJFGr3/d5SQkINw=;
+	b=Ti6a1KgrsMHUSV2aBkkSB7HZVhT7uOW9AspY6tV/uLrT5g5NlGM71JLRRyeygKcWjUspHd
+	3neRwQaMiCwTswCA==
 To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
  Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco
- <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+ <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
  Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v3 05/13] Documentation/rv: Add documentation about
- hybrid automata
-In-Reply-To: <20251205131621.135513-6-gmonaco@redhat.com>
+Subject: Re: [PATCH v3 12/13] rv: Add deadline monitors
+In-Reply-To: <20251205131621.135513-13-gmonaco@redhat.com>
 References: <20251205131621.135513-1-gmonaco@redhat.com>
- <20251205131621.135513-6-gmonaco@redhat.com>
-Date: Thu, 25 Dec 2025 08:16:01 +0700
-Message-ID: <877bubbbu6.fsf@yellow.woof>
+ <20251205131621.135513-13-gmonaco@redhat.com>
+Date: Thu, 25 Dec 2025 08:35:12 +0700
+Message-ID: <874ipfbay7.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,12 +59,22 @@ MIME-Version: 1.0
 Content-Type: text/plain
 
 Gabriele Monaco <gmonaco@redhat.com> writes:
-> Describe theory and implementation of hybrid automata in the dedicated
-> page hybrid_automata.rst
-> Include a section on how to integrate a hybrid automaton in
-> monitor_synthesis.rst
-> Also remove a hanging $ in deterministic_automata.rst
+> Add the deadline monitors collection to validate the deadline scheduler,
+> both for deadline tasks and servers.
+>
+> The currently implemented monitors are:
+> * throttle:
+>     validate dl entities are throttled when they use up their runtime
+> * nomiss:
+>     validate dl entities run to completion before their deadiline
 >
 > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
+There are some helper functions that I am a bit uncomfortable with
+(e.g. pi_of, is_dl_boosted, dl_is_implicit, ...) because they are
+relying on implementation details of deadline scheduler which can be
+changed. So ideally this patch should have an Ack from the scheduler people.
+
+I can't comment on the model, since I don't know scheduler. But from RV
+perspective:
 Reviewed-by: Nam Cao <namcao@linutronix.de>
