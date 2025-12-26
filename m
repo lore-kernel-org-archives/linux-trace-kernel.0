@@ -1,43 +1,49 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A91C1A7264
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Dec 2025 09:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA633195F8;
+	Fri, 26 Dec 2025 11:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766740371; cv=none; b=CDZ8oYQAnCPnsQ38hqUWvaJO8t26BHMjgGXCVmzXPzVOLUgNj9fso6c4Wuk7NLiN1pRHsxoXu/Wsbj9c9o5Je2oxDpDLsz5CQH+0s3kRp2JkMb7/rkh3oI1EflQSIP9L40EtgL6t+fjatdmsp+FPhG9uayV1pk5crTmx1vA5Dno=
+	t=1766747162; cv=none; b=isi8cFIkwuTDnDzpemtao1z4UaLmOK8qZDoO+epl7mnCK1Spbsl8WNeeyUA3Wd+1UpMajSLobVlcRKe6SrtYrstwSgPktzFa/d4KsA36xUmucXjah0DGPvDGb/GZl1ja+SIZsbPDQm04fTj0uWJAPtEp753evCEiHisPaUjLM5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766740371; c=relaxed/simple;
-	bh=AtrdlCV+YHjlWykxoRGGwakWl+iiQcP8jaoqVooxEL8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cftRC7j8URzMzfXiX85AARJq33lPFbwnKIFSIWVQK6WLRVcZeQiiTU4W6beNjbs/whUNL5bIzw06Bs6qRakVCAAtyv9iu53TNCa2Z6CqyinggljHJVKjJpfj4OsXbtHIeOQDzvfbYSWp4JOScJzYLdrO9y4ACEBw9rn/Vi+R3yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FHtAA0Ay; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1766747162; c=relaxed/simple;
+	bh=yhU3jjId44lSe/Pd5qeULoYaErLgaFQgQgEHdU+B6Gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AxBJwn5FBXM92GwBY1L0Zwi9HqV9XWvIw/z6K7dEWG+Hqea8T1DwrBpiepTG0l5UsCDWuQDY/YhTq2V37tmr0aPDHaBfsbJp76R9+EJRAPBP24k522oIbCkVrfvMcShWMc0KGtXoLjx3nEW/gKVDrf7TIsAXkTmjq70en+OXIpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=J1NpjQ1J; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FHtAA0Ay"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766740366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tP79jUlxQqteTlJTZcbdsCyV2FTopmoHAhDCb8dWps8=;
-	b=FHtAA0AyeDgP27abECFFsD0xufv6Uz1tCV9vAo8IJQorB1yhc6vmNBlsR1eVvDPMAnGHOZ
-	wi87nDFwA2RzqGP6drknNEGYQxmeVC1xS/o8n9y7ZosrXA7wgTqu8WVk1rmV/5LwMW3rO7
-	ly3jzJr4dxLEUjdINfaRPrTtXdMyw1Q=
-From: Fushuai Wang <fushuai.wang@linux.dev>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org,
-	wangfushuai@baidu.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Fushuai Wang <fushuai.wang@linux.dev>
-Subject: [PATCH] selftests/tracing: Fix test_multiple_writes stall
-Date: Fri, 26 Dec 2025 17:12:17 +0800
-Message-Id: <20251226091217.58992-1-fushuai.wang@linux.dev>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="J1NpjQ1J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MkbWufrSLN155drEYLw+EYsREebSy0IRgHefwoBBqIs=;
+  b=J1NpjQ1JqicgQu0hkwSWAiONftRh98HLWfnM11qXbLmWdNtm5b+RyUF5
+   FtSIceAtIK5aXZy30xwcQOAQEHlUOvFaV01jMEQ+6x7CkKyR4KzmNJ96c
+   RCDmazohxnY4R1w2EQYEfmY3BDyvnpyAa9XsV/W6FwhI4OS7Xn0ZlUl8g
+   I=;
+X-CSE-ConnectionGUID: upmWl5PGS6+3gRHxAg77rQ==
+X-CSE-MsgGUID: lNfwDtLcTfSBQ5UrYs5f+w==
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.21,177,1763420400"; 
+   d="scan'208";a="134569106"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.102.196])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2025 12:05:51 +0100
+From: Julia Lawall <Julia.Lawall@inria.fr>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Gabriele Paoloni <gpaoloni@redhat.com>,
+	keisuke.nishimura@inria.fr
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: drop unneeded assignment to soft_mode
+Date: Fri, 26 Dec 2025 12:05:31 +0100
+Message-Id: <20251226110531.4129794-1-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,73 +51,43 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
-the test_multiple_writes test will stall and wait for more
-input due to insufficient buffer space.
+soft_mode is not read in the enable case, so drop the assignment.
+Drop also the comment text that refers to the assignment and realign
+the comment.
 
-This patch check current buffer_size_kb value before the test.
-If it is less than 12KB, it temporarily increase the buffer to
-12KB, and restore the original value after the tests are completed.
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
-Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 ---
- .../ftrace/test.d/00basic/trace_marker_raw.tc    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-index 7daf7292209e..216f87d89c3f 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -58,7 +58,7 @@ test_multiple_writes() {
- 	echo stop > trace_marker
- 
- 	# Check to make sure the number of entries is the id (rounded up by 4)
--	awk '/.*: # [0-9a-f]* / {
-+	awk -v ORIG="${ORIG}" '/.*: # [0-9a-f]* / {
- 			print;
- 			cnt = -1;
- 			for (i = 0; i < NF; i++) {
-@@ -70,6 +70,7 @@ test_multiple_writes() {
- 					# The number of items is always rounded up by 4
- 					cnt2 = int((cnt + 3) / 4) * 4;
- 					if (cnt2 != num) {
-+						system("echo \""ORIG"\" > buffer_size_kb");
- 						exit 1;
- 					}
- 					break;
-@@ -89,6 +90,7 @@ test_buffer() {
- 	# The id must be four bytes, test that 3 bytes fails a write
- 	if echo -n abc > ./trace_marker_raw ; then
- 		echo "Too small of write expected to fail but did not"
-+		echo $ORIG > buffer_size_kb
- 		exit_fail
- 	fi
- 
-@@ -99,9 +101,21 @@ test_buffer() {
- 
- 	if write_buffer 0xdeadbeef $size ; then
- 		echo "Too big of write expected to fail but did not"
-+		echo $ORIG > buffer_size_kb
- 		exit_fail
- 	fi
- }
- 
-+ORIG=`cat buffer_size_kb`
-+
-+# test_multiple_writes test needs at least 12KB buffer
-+NEW_SIZE=12
-+
-+if [ ${ORIG} -lt ${NEW_SIZE} ]; then
-+	echo ${NEW_SIZE} > buffer_size_kb
-+fi
-+
- test_buffer
- test_multiple_writes
-+
-+echo $ORIG > buffer_size_kb
--- 
-2.36.1
+Since soft_more is not used, there is no direct line from the goal of
+verification to finding this problem.
+
+kernel/trace/trace_events.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 76067529db61..137b4d9bb116 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -826,16 +826,15 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		 * When soft_disable is set and enable is set, we want to
+ 		 * register the tracepoint for the event, but leave the event
+ 		 * as is. That means, if the event was already enabled, we do
+-		 * nothing (but set soft_mode). If the event is disabled, we
+-		 * set SOFT_DISABLED before enabling the event tracepoint, so
+-		 * it still seems to be disabled.
++		 * nothing. If the event is disabled, we set SOFT_DISABLED
++		 * before enabling the event tracepoint, so it still seems
++		 * to be disabled.
+ 		 */
+ 		if (!soft_disable)
+ 			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+ 		else {
+ 			if (atomic_inc_return(&file->sm_ref) > 1)
+ 				break;
+-			soft_mode = true;
+ 			/* Enable use of trace_buffered_event */
+ 			trace_buffered_event_enable();
+ 		}
 
