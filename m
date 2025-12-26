@@ -1,184 +1,129 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D723D2417C2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Dec 2025 18:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636941A7264;
+	Fri, 26 Dec 2025 02:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766689042; cv=none; b=HoJMyqzApg/fzWuoCq5HBF45ldWMQwACCVqkGdBcUVcXxBwkC+fXYeKCuwHznWWVgyURPqjhQNcg+4YNI8PVCQH2Ha4WcCKYIzTWk9H4p53nIaIu22iQcYy95MmIbD26snOGoFFXGICkLaPVkh8jZbExp/WXh10YVffYWtzQOBk=
+	t=1766717637; cv=none; b=eXNwCFxN7oJ/FT/C8tLicvTm2HLzyAWR9LAcRg31xC8QiZfXXeTVkXB6Ou+Ei/K0UajUh9xSE3iKHozovGEyQrvA2Lht4J9Coit9DXjuyxsAKzFu2rPHxi+bcqi7aKk9TQynsJ7y4XAfCRVAZ48z8y3a4D8pHTdECOlDeaOtDbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766689042; c=relaxed/simple;
-	bh=Sp3BBI7rqWS/x5u5n95rHXBvTYUWZEdDT2uy0cYwMU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ehLkhsyKqcuiSYUbFmR6LpP9aAiJqESF1O4AKwfjZX/rEIOlUCldz03hGiLo37FX7NX9giPWtMkfLs1qsCtQq26L4erwCAvePXCv+48GQroARIpDlhHNfqmCNzNmj7OXuokkCNYKB5msO3Omup5Qn/ZDRGPCtp+xdJaKij2WloI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FuCfHOZi; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766717637; c=relaxed/simple;
+	bh=OHjl3JQxL/6xfLqlXiRj90uFkadQP6C1PA3i60+bZ1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uC2wwVOb/eLoNKIqhXny26wbjimt5Yuss3TDY9i0ojRWRJGRUGUCIUcLmpyRHVr2QdCbjg3rrLIjuQZ1OCpIwdWi7E/UOLx8guaTHZfQoym14eF5i/tgO9XL5UhierPcxkaQGiAnFpjoJzXsz/Tq12CnXrFCDUW5asIgGtfzTPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RO1dmih0; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuCfHOZi"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-88a347c424aso90471846d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Dec 2025 10:57:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766689040; x=1767293840; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hauBx7stO8fgVv7cwKU+lRmpmOfl414DpJwGxBenCpM=;
-        b=FuCfHOZix7y2ThWq8rWfdcyq4DjCRvkK86/Jd2b8Q995TRuXsugmf4coVGCCp1Zo/D
-         WgDLKmk0J3Y3IiXU0H1DcDx/xl42KwTKWEOTn1Ew/+fy2v2llI87ipt+YKl7is58Po1q
-         Q5sJlXGzZ6dfCPJnWafGKxq/HfQH4V8+WoiYMvKJsR8GdbfvRS7SBPncsF8fFMYEgzjS
-         jkjAKO1nfRtvcggc+S+KW8GYqH0pGn9hQaELF8qCWjXpPmm6AUPhMJE+sjHVt3twUtpQ
-         Lxqm5qWM5XAuX6LLNDbU11PsUrd/7vrUgVcpXy/f5c54GtzMX80ji/fFRQTcgHGjm+OM
-         IUXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766689040; x=1767293840;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hauBx7stO8fgVv7cwKU+lRmpmOfl414DpJwGxBenCpM=;
-        b=XZwZdhLTuc3LINmCdjWH9gp/hQaTMCIDdMIdyZkCcszKZmuW3qjMPWv03W5oKnVnox
-         KrLncApvxz3oYf62sF7e0W3YkuHOUxIMfmNBGIKxbp1Tj7AxAOB/djwnH+Mx/lZe24+j
-         JRBu5fFLPPRm+Gl9g1DExnLOmXFeIu4B7ZsvYeVC9MCF5XbqqN9roUdkjbcqsPlfaL8j
-         dY3nbpyRGHdzcW9ENum/FaBov42+ncsweSuK7NpN1nSYCE8zaPqnkmkC/Y+st5UQZEGL
-         UsSE6/vPEAajgSCVKS1lBQazZ5INMaVaUEwHghLOFW/GBEzDwnjOEWcWUdaJ0QnI4b68
-         fRLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvlyKTRpxKvWnjdgcImTONQ4YjsUc/zyGZvOWdfAszwIrave0IMOx7ldUU+4DxL53ZrWORNtRLLX2+17AT+ja2Lmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkXfs0CCptMpXhuSAnB/iM1ivk4GsC9JZNquzyHXFsNtuxp/fh
-	z5cYbyBvjDg5BCgE/CJ/BFz68EIs6ZBj5eobeom17qf6LeweEavMa5ItL0zR+w==
-X-Gm-Gg: AY/fxX7hnq7IYTPdIUu6ceMvNBTxug7QUuv2704byP+9xHv2l2hsoYBeypDBhkkAAA8
-	6uNToRM+LPPyFsJEfwu7zsR84dOvWFvPgfMEokaYAvE9apsOMI02tVRV3/MB7eUae2V5eHpCu70
-	ow80rP5xPny6wcFU94N9SL7uazYE+IdVFFAKK9FDqSF7xalNh5Nzo/u83J4kLKDCWkPXK6tDABO
-	/P6ZjmFSPPlieqz72epulXV5Ac87VRtukAK4eKuYzH6YFIVMDd0HxSDJk/cD9rGYwMrAfsNUAPg
-	loIOxfOwd/UHBvXGBQMWGuFp+tZQKkHcevJR1yMmZFwhwnNx+shbhTdZxtRcPunpvTdR0PJpc5n
-	y29hKWKfrr2YwxRWaHWRLCFH2P9y+xGcTiJHVWN5OLhpu3BDVlPPNNp6s+0/MD8g4wQ+wj8taM4
-	S9J/ycpZI=
-X-Google-Smtp-Source: AGHT+IFOC5KnXE7Y/86OXEfn0VfROKTdlo6cIy7sSNHG4HuRQ93qgtI5LmuQjuxLc/KbIiLosqGOQg==
-X-Received: by 2002:a53:8592:0:b0:63f:ad6d:cbd5 with SMTP id 956f58d0204a3-6466a900e02mr12636421d50.60.1766682577930;
-        Thu, 25 Dec 2025 09:09:37 -0800 (PST)
-Received: from localhost ([2601:346:0:79bd:5a70:118b:3656:4527])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6466a8bd6ffsm9803141d50.9.2025.12.25.09.09.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 09:09:37 -0800 (PST)
-From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	David Laight <david.laight@runbox.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Subject: [PATCH v4 5/7] tracing: Remove size parameter in __trace_puts()
-Date: Thu, 25 Dec 2025 12:09:27 -0500
-Message-ID: <20251225170930.1151781-6-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251225170930.1151781-1-yury.norov@gmail.com>
-References: <20251225170930.1151781-1-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RO1dmih0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766717636; x=1798253636;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OHjl3JQxL/6xfLqlXiRj90uFkadQP6C1PA3i60+bZ1g=;
+  b=RO1dmih0ITDteP+3zO7EnUUFfn9rIJVYNeMsqoiX3RSPWa3ZIfQF52i3
+   nieTlNkogdTOdxSC+KELGp57AlmQExLNdhe0ZgFGrcfMFWg/fM34Jo9Lv
+   YuHz5Otf/ez95GqfQDa+7XqXM8+kOseFRSOuuNx48XSmrbcUwL/MM8tKW
+   kcEUcuz3NGlOyt5UpG58O3ZAegENBP+3MTmx2vdyMvEf9di3clPA+AbW7
+   L3oVzjiHPt08kui8kSsXvS2WX7gX7zi0qx18k28Dq9U7rO4XxjskC0etH
+   CO7MpuSb3ve8UDcosu36+ZdpkFQzQ9F3DuNIyhZ9i+93+5YDgZoHpL54w
+   g==;
+X-CSE-ConnectionGUID: 0rbkGTa/Qh2YhQEXYDxxdw==
+X-CSE-MsgGUID: x9L/4vj2RBWHqFMEov9i7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="72114565"
+X-IronPort-AV: E=Sophos;i="6.21,177,1763452800"; 
+   d="scan'208";a="72114565"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2025 18:53:55 -0800
+X-CSE-ConnectionGUID: mhY8JzCbR66budecBOyQaQ==
+X-CSE-MsgGUID: 1bSeLnFiR/61fphAl5AtKQ==
+X-ExtLoop1: 1
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Dec 2025 18:53:52 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vYxxd-000000004dV-3Rmn;
+	Fri, 26 Dec 2025 02:53:49 +0000
+Date: Fri, 26 Dec 2025 10:53:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Aaron Tomlin <atomlin@atomlin.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, corbet@lwn.net
+Cc: oe-kbuild-all@lists.linux.dev, sean@ashe.io,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [v2 PATCH 1/1] tracing: Add bitmask-list option for
+ human-readable bitmask display
+Message-ID: <202512261011.nLEYLg1y-lkp@intel.com>
+References: <20251225080216.2196411-2-atomlin@atomlin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251225080216.2196411-2-atomlin@atomlin.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi Aaron,
 
-The __trace_puts() function takes a string pointer and the size of the
-string itself. All users currently simply pass in the strlen() of the
-string it is also passing in. There's no reason to pass in the size.
-Instead have the __trace_puts() function do the strlen() within the
-function itself.
+kernel test robot noticed the following build errors:
 
-This fixes a header recursion issue where using strlen() in the macro
-calling __trace_puts() requires adding #include <linux/string.h> in order
-to use strlen(). Removing the use of strlen() from the header fixes the
-recursion issue.
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master v6.19-rc2 next-20251219]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Link: https://lore.kernel.org/all/aUN8Hm377C5A0ILX@yury/
+url:    https://github.com/intel-lab-lkp/linux/commits/Aaron-Tomlin/tracing-Add-bitmask-list-option-for-human-readable-bitmask-display/20251225-160415
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20251225080216.2196411-2-atomlin%40atomlin.com
+patch subject: [v2 PATCH 1/1] tracing: Add bitmask-list option for human-readable bitmask display
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20251226/202512261011.nLEYLg1y-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251226/202512261011.nLEYLg1y-lkp@intel.com/reproduce)
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
----
- include/linux/kernel.h | 4 ++--
- kernel/trace/trace.c   | 7 +++----
- kernel/trace/trace.h   | 2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512261011.nLEYLg1y-lkp@intel.com/
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5b879bfea948..4ee48fb10dec 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -329,10 +329,10 @@ int __trace_printk(unsigned long ip, const char *fmt, ...);
- 	if (__builtin_constant_p(str))					\
- 		__trace_bputs(_THIS_IP_, trace_printk_fmt);		\
- 	else								\
--		__trace_puts(_THIS_IP_, str, strlen(str));		\
-+		__trace_puts(_THIS_IP_, str);				\
- })
- extern int __trace_bputs(unsigned long ip, const char *str);
--extern int __trace_puts(unsigned long ip, const char *str, int size);
-+extern int __trace_puts(unsigned long ip, const char *str);
- 
- extern void trace_dump_stack(int skip);
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6f2148df14d9..57f24e2cd19c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1178,11 +1178,10 @@ EXPORT_SYMBOL_GPL(__trace_array_puts);
-  * __trace_puts - write a constant string into the trace buffer.
-  * @ip:	   The address of the caller
-  * @str:   The constant string to write
-- * @size:  The size of the string.
-  */
--int __trace_puts(unsigned long ip, const char *str, int size)
-+int __trace_puts(unsigned long ip, const char *str)
- {
--	return __trace_array_puts(printk_trace, ip, str, size);
-+	return __trace_array_puts(printk_trace, ip, str, strlen(str));
- }
- EXPORT_SYMBOL_GPL(__trace_puts);
- 
-@@ -1201,7 +1200,7 @@ int __trace_bputs(unsigned long ip, const char *str)
- 	int size = sizeof(struct bputs_entry);
- 
- 	if (!printk_binsafe(tr))
--		return __trace_puts(ip, str, strlen(str));
-+		return __trace_puts(ip, str);
- 
- 	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
- 		return 0;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b6d42fe06115..de4e6713b84e 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2116,7 +2116,7 @@ extern void tracing_log_err(struct trace_array *tr,
-  * about performance). The internal_trace_puts() is for such
-  * a purpose.
-  */
--#define internal_trace_puts(str) __trace_puts(_THIS_IP_, str, strlen(str))
-+#define internal_trace_puts(str) __trace_puts(_THIS_IP_, str)
- 
- #undef FTRACE_ENTRY
- #define FTRACE_ENTRY(call, struct_name, id, tstruct, print)	\
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/trace_events.h:7,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:95,
+                    from include/linux/syscalls_api.h:1,
+                    from kernel/sched/sched.h:61,
+                    from kernel/sched/rq-offsets.c:5:
+>> include/linux/trace_seq.h:145:1: error: redefinition of 'trace_seq_bitmask'
+     145 | trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
+         | ^~~~~~~~~~~~~~~~~
+   include/linux/trace_seq.h:139:1: note: previous definition of 'trace_seq_bitmask' with type 'void(struct trace_seq *, const long unsigned int *, int)'
+     139 | trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
+         | ^~~~~~~~~~~~~~~~~
+   make[3]: *** [scripts/Makefile.build:182: kernel/sched/rq-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1299: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +/trace_seq_bitmask +145 include/linux/trace_seq.h
+
+   143	
+   144	static inline void
+ > 145	trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
+   146			  int nmaskbits)
+   147	{
+   148	}
+   149	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
