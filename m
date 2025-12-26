@@ -1,40 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B5F1643B;
-	Fri, 26 Dec 2025 16:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AF441C71;
+	Fri, 26 Dec 2025 16:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766766068; cv=none; b=oqB7bQPFFbDqk+dKgNAYHvyJQbk44z51qeJxchPbyYWSXn9xZcBzT/kIuvPE4ZkSIjGzOBbZ9RjrRajMgbyzdYrzXkO1VLn1HoYmz/faEob1fi/FJJI7wF6/UTJ3MAUAli1dNlb2sPKFbkvZp4ORYVfjZWUvy05cRCz4Bpf781g=
+	t=1766767349; cv=none; b=XsGvLFOVydedqEnKWuxELzrh4A/oL6RtBi947nO12o1P8uG3nFp1zwTOebJlXntXmh80lhW885XMTmX9djPS2Nc9txmRhKSZLlNbFaCZImkT2HknGta0VfZfPdiSoRg+HmItXCnYIUO7ijI1aBNwu8j0IuOp0nJQx46swdtCQYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766766068; c=relaxed/simple;
-	bh=ojrA7RhQq9vA2j9DdcxvWP6UnQOQoYXjrN9y5yJuleE=;
+	s=arc-20240116; t=1766767349; c=relaxed/simple;
+	bh=Db0M6QRjaiDj95ol3hwsbB+lgYyxQJrKVF2XpJt4aT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Asx52AcpJdnROkrcnpgpMKEEVAvWS6FTqfuUYTrN6PvqzdaWFKEzvHa8kRjV6QJ4bBj/Fg436F2t4oXTRdDTypEVRgq13lVIvLrxO2OLJRXXj/KwXGw16IoIJScZ6steg7YGb2WJowRdrd9mx0fyNi7hZzhXMkIOXy2DYq2X+ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 MIME-Version:Content-Type; b=fIvMZdFkBzSbKI6b1Q39fzNYUyCNaOaLf1F24A+HcN7wBsCjMpqLHwQp36OaXSDcovMNZ7Z6D24HxucKDEIBCGvkDfHJl6SU9x8o55Qy9tnc2/qVUqayEtUt6dBhpkYd/lOjb1Xl/AUySeUxXVoY0zbMysFBOX2Ohq7ImPlKVwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 27A315FBD7;
-	Fri, 26 Dec 2025 16:20:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 04A576000C;
-	Fri, 26 Dec 2025 16:20:55 +0000 (UTC)
-Date: Fri, 26 Dec 2025 11:20:54 -0500
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id A00F7161978;
+	Fri, 26 Dec 2025 16:42:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id C35DF20025;
+	Fri, 26 Dec 2025 16:42:16 +0000 (UTC)
+Date: Fri, 26 Dec 2025 11:42:15 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, corbet@lwn.net, sean@ashe.io,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH] tracing: Add bitmask-list option for human-readable
- bitmask display
-Message-ID: <20251226112054.44b2e440@gandalf.local.home>
-In-Reply-To: <qw6wgsrmuu4vhuam3ay3zdsqxlowbe7xqrh3wolei7bnbkkwyw@jshbmlr67goc>
-References: <20251223035622.2084081-1-atomlin@atomlin.com>
-	<20251223133452.416fd539@gandalf.local.home>
-	<wgkjg2bpsyonl5qkgxgdrpmzzaduuyiti7vtifxbtdnmlrhptl@jchrtoaltfv3>
-	<20251224085848.26387f5d@gandalf.local.home>
-	<qw6wgsrmuu4vhuam3ay3zdsqxlowbe7xqrh3wolei7bnbkkwyw@jshbmlr67goc>
+To: Xiang Gao <gxxa03070307@gmail.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, mhiramat@kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ dhowells@redhat.com, kuba@kernel.org, brauner@kernel.org,
+ akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, gaoxiang17
+ <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH v11] dma-buf: add some tracepoints to debug.
+Message-ID: <20251226114215.02be95a3@gandalf.local.home>
+In-Reply-To: <20251225121119.2194228-1-gxxa03070307@gmail.com>
+References: <20251225121119.2194228-1-gxxa03070307@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,64 +40,119 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 04A576000C
-X-Stat-Signature: p5ry1jcitpzoi16nhdxxsdwboy3qnzh8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: C35DF20025
+X-Stat-Signature: sb3okpjn4xktd9o367eubuc7tjpuuo8w
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18CuRtiDyHgPV9BznWhBHXCQbD/Fhk1q0A=
-X-HE-Tag: 1766766055-174451
-X-HE-Meta: U2FsdGVkX18tlOylEYGorLobJyW1V6dZrLQx0TDSbmUG1uTjCh3iG9ier0QMOrveblmmgqYXPg5ysm+OtKli4vDvg131WBfQx1LDRsgVXeN1uHvHSKFLrSynfWdknCcZg4vAEySX7Q9UxJ+Tucq2s1Owa1IZpT9x0qjpXg1BQiZ258i3I0LKHZFAzSjl20p5lJqycfta2USwiTCxkdAzppa0s7OIjPoKt2WICGmATS0YO6G94hZIdOuDjF9KkeBsrWYWftSSagV8+tqvn2r6+JADIKYBlRBwA0pjt5HSIj/cQP5Wzeia1Gw9eUavtbxo8bY5F8BM3ShzT+eUvooyVfi4/KKS7TinLn+Y27oYTcUht/bf/mXXcy7spev0+0Zo
+X-Session-ID: U2FsdGVkX19y+kWzNgiBVYvXdKvKhYqoIT4fp8XtU9A=
+X-HE-Tag: 1766767336-212146
+X-HE-Meta: U2FsdGVkX19gExpci4Wk1XwFWElhAQMVFkVQMAJTMNsriPzFgQn959SDYSuxQJdsirEAsvSI6xQ0DiUq8KM/8ZkpbMBkNyu4pqs40H2rT4AqUiwb0VkaaCmlzz64evx4R68xA/OC59jcOftx01SCBKOoSDIz90pJqE1Q2CGYf4cYJL7CpHbs1VY8lWRAcuxaIdNi7jK1/9+11Ll2ud2gi0UVBeq2fqO9ukLjyXeCmNdPjYydj7HzROqKGW+1gzNLZOk9JKsKEuWQf28dqyVm4SGVIItuJocV7tLjFaCsmfBBXXw+xte/1t0/ygVua2bdW9a721Ni1NNgxpzHYxHxEHrDTJBtdUiBp+KIuLFnYAevQ8n5nmm1GqblgXxRVM7h/rdaIpyr1cHt4kkb4pegJOdAHIMUGyxwmVC+eGw99dRTwKqca51ET7Sp4izAra0zE17qM1x8aq4=
 
-On Thu, 25 Dec 2025 02:38:03 -0500
-Aaron Tomlin <atomlin@atomlin.com> wrote:
+On Thu, 25 Dec 2025 20:11:19 +0800
+Xiang Gao <gxxa03070307@gmail.com> wrote:
 
-> On Wed, Dec 24, 2025 at 08:58:48AM -0500, Steven Rostedt wrote:
-> > Should we just make all cpu bitmask range lists instead?  
-> 
-> Hi Steve,
-> 
-> I am somewhat hesitant to adopt that suggestion as I would prefer to avoid
-> breaking any existing tooling that relies upon the default hexadecimal
-> bitmask format.
+> From: gaoxiang17 <gaoxiang17@xiaomi.com>
+>=20
+> Since we can only inspect dmabuf by iterating over process FDs or the
+> dmabuf_list, we need to add our own tracepoints to track its status in
+> real time in production.
+>=20
+> For example:
+>    binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_na=
+me=3Dqcom,system size=3D12685312 ino=3D2738
+>    binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=
+=3Dqcom,system size=3D12685312 ino=3D2738 fd=3D8
+>    binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal:=
+ exp_name=3Dqcom,system size=3D28672 ino=3D2739
+>      kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=
+=3Dqcom,system size=3D12685312 ino=3D2738
+>     RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=
+=3Dqcom,system size=3D12771328 ino=3D2762 fd=3D176
+>     RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach=
+: exp_name=3Dqcom,system size=3D12771328 ino=3D2762 attachment:ffffff880a18=
+dd00 is_dynamic=3D0 dev_name=3Dkgsl-3d0
+>     RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_na=
+me=3Dqcom,system size=3D12771328 ino=3D2762 attachment:ffffff880a18dd00 is_=
+dynamic=3D0 dev_name=3Dkgsl-3d0
+>=20
+> Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+> ---
+>=20
+> Changes since v10: https://lore.kernel.org/all/20251224013455.1649879-1-g=
+xxa03070307@gmail.com/
 
-I am too. But the "do not break user space" rule is basically, "it's only
-broken if user space notices". If people complain about the change, we can
-always revert it ;-)
+You only need to show the last revision (but since you haven't showed the
+others, before it's good to show them now). But you also want to say "what =
+changed"
 
-> 
-> Whilst range lists are undoubtedly superior for human interpretation, the
-> hexadecimal output is a well-established standard throughout the kernel.
-> For instance, the hexadecimal format is still strictly adhered to for
-> "Cpus_allowed:" within /proc/[pid]/status. Introducing a global change to
-> ftrace defaults could disrupt parsers and scripts that expect this
-> consistency across the system.
+For example:
 
-Really, any scripts that parse the ASCII output is broken by design, as
-things change there all the time, and it can be really slow to read.
-There's a binary interface for such things. Heck, I bet this change would
-probably make the scripts simpler, as searching ranges is easier to parse
-than a hex number.
+- Used DEFINE_EVENT_CONDITION() to move the condition branch into the trace=
+point.
 
-> 
-> By leveraging the existing bitmask-list trace option via
-> trace_print_bitmask_seq(), we offer users the requisite flexibility for
-> high-core-count systems whilst preserving backward compatibility for the
-> wider ecosystem.
 
-Perhaps it should only be cpumask-list, and only touch bitmasks that are
-CPU lists. Although, right now I only see one user of the bitmask code, and
-it's using it on a cpumask. Perhaps we should change it to use the cpumask.
+> Changes since v9: https://lore.kernel.org/all/20251223032749.1371913-1-gx=
+xa03070307@gmail.com/
+> Changes since v8: https://lore.kernel.org/all/20251218062853.819744-1-gxx=
+a03070307@gmail.com/
+> Changes since v7: https://lore.kernel.org/all/20251217105132.643300-1-gxx=
+a03070307@gmail.com/
+> Changes since v6: https://lore.kernel.org/all/20251216063952.516364-1-gxx=
+a03070307@gmail.com/
+> Changes since v5: https://lore.kernel.org/all/20251201112148.843572-1-gxx=
+a03070307@gmail.com/
+> Changes since v4: https://lore.kernel.org/all/20251128085215.550100-1-gxx=
+a03070307@gmail.com/
+> Changes since v3: https://lore.kernel.org/all/20251127004352.376307-1-gxx=
+a03070307@gmail.com/
+> Changes since v2: https://lore.kernel.org/all/20251125162949.220488-1-gxx=
+a03070307@gmail.com/
+> Changes since v1: https://lore.kernel.org/all/20251124133648.72668-1-gxxa=
+03070307@gmail.com/
+>=20
+>  drivers/dma-buf/dma-buf.c      |  48 +++++++++-
+>  include/trace/events/dma_buf.h | 159 +++++++++++++++++++++++++++++++++
+>  2 files changed, 205 insertions(+), 2 deletions(-)
+>  create mode 100644 include/trace/events/dma_buf.h
+>=20
 
-There's not many users of the bitmask in tracepoints, and it is mostly with
-the new IPI tracepoints (Cc'ing Valentin to get his throughts).
 
-> 
-> I shall send a new version of the patch shortly. This version incorporates
-> the use of iter->tmp_seq to ensure the implementation is robust,
-> instance-aware, and free from buffer contention or duplication issues.
+> +/*
+> + * dmabuf->name must be accessed with holding dmabuf->name_lock.
+> + * we need to take the lock around the tracepoint call itself where
+> + * it is called in the code.
+> + *
+> + * Note: FUNC##_enabled() is a static branch that will only
+> + *       be set when the trace event is enabled.
+> + */
+> +#define DMA_BUF_TRACE(FUNC, ...)					\
+> +	do {								\
+> +		/* Always expose lock if lockdep is enabled */		\
+> +		if (IS_ENABLED(CONFIG_LOCKDEP) || FUNC##_enabled()) {	\
+> +			guard(spinlock)(&dmabuf->name_lock);		\
+> +			FUNC(__VA_ARGS__);				\
+> +		}							\
+> +	} while (0)
+> +
+>  static inline int is_dma_buf_file(struct file *);
+> =20
 
-Thanks,
+> +
+> +DEFINE_EVENT_CONDITION(dma_buf_fd, dma_buf_fd,
+> +
+> +	TP_PROTO(struct dma_buf *dmabuf, int fd),
+> +
+> +	TP_ARGS(dmabuf, fd),
+> +
+> +	TP_CONDITION(fd >=3D 0)
+> +);
+> +
+
+
+=46rom a tracing point of view (It's up to the dma maintainers to decide to
+take this patch):
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
-
