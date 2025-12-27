@@ -1,107 +1,125 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE095288AD
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 27 Dec 2025 04:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC64A2A1AA;
+	Sat, 27 Dec 2025 14:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766809139; cv=none; b=AVTmWp7mDVUr7xGPp8XlOfEOW8MzxsHma1Okp4cDH+JJc2cn0MTUjj2+ll6RYDAwv7HcfR+jSyW5J7fU1FS7sXV8wuk/cd4NanzCbD7k05Hcqufi3aY0s0MVODOK+J6lGBtfRFTu3l4k6LdMmUuAv3+lUEYR/3ByeTIBjInarrs=
+	t=1766846757; cv=none; b=KAljvcknWr8h9rSk40GmWPB8zQKCeVy50WztzbKuQOqwDwRhfjyMJIS2ctPm/WySXjJ/FjQaTrZPQS2qFFNnuWPl/SLoWlCs+kbVHJLnv/gKtSMtjFBbZ0aGNyP6mYt9bAkhkdEXVvGNsROdRHsu1nAtEd/OqrhTsVqbhn+8E5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766809139; c=relaxed/simple;
-	bh=o1RUad+aZ9UVL6/6FlfP2EK+BgGs8Pl//NkdOKeXrPo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dkto2dAuDoTl8tPqG8N+b1u1kkI0p13XLPlpxcuSW8RlVXlhwBL7EtWvoTBqCoXoy+k89np0wZ7C4S8PhM9JacO8Eww61ByIknkHKPO8IymvZeljqABBsfWM7+bqD3iMY9DC6yh5BKduROCymKAh4nPtR1iVhMKEkeBktMr/CWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YzmOIgM/; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1766846757; c=relaxed/simple;
+	bh=ozcx0gKLWqYdPO0l3hd3hB0x6/DN+2pZQgLoQ7CvLVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBaMShIme2LMG+UltuGOL+YbwW+0n04q4VpYOvivZy3uV007nSGIp+z5UZuFFI0jDwzpdyj6ckufnYr9WQUuW+4AFx9oA0dd8xRw+DSh3DKWMjVvyfcdxA660NOaRU1KjoJ1OU9c2bPKAIESYHS0Ct7EPbnkhCMwEl7ClF942ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNvysmwo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YzmOIgM/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766809125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sv5/q9tNo6t2sWaapaRofb8WIXYpEQOeZK5xAp6YEHU=;
-	b=YzmOIgM/P/DmFO2KIV529BvkFdMK20ks1BJlwYYAetNG0SqX34x0vHMdF9wN92KyKo8TJR
-	orK1m31l63FMLIN0c7q80m5o5ctHhujMSIbO2i8yJMFUyhO6vV6TyUCtdHYBBx10BZyFQa
-	rPdfRbtjtwHVdb0VSEA1msA0cAWbNw0=
-From: Fushuai Wang <fushuai.wang@linux.dev>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org,
-	wangfushuai@baidu.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Fushuai Wang <fushuai.wang@linux.dev>
-Subject: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
-Date: Sat, 27 Dec 2025 12:18:21 +0800
-Message-Id: <20251227041821.75504-1-fushuai.wang@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNvysmwo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766846756; x=1798382756;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ozcx0gKLWqYdPO0l3hd3hB0x6/DN+2pZQgLoQ7CvLVY=;
+  b=GNvysmwol2TFa9w2h0oJWdrW4nUVkeb/njTHAVNbMQgTdUJIBrw67U1z
+   nws1mNG2zKffFGg+jqZXhGm+g8GSHUQ/+3EqqQK+VqILLQWqvF0YSWiax
+   0Oq/ZL2u+7E0Ug4tbnYuMszY6Y7eYjapp3XdWuy2D8zN0JEdf3E03FqHc
+   bUmQLzWmqqOX6OpK25WiffSO/Xf/Dptmq85Y8SFKqYPpww344u0v+uyFW
+   sa70KcPCBoDcTSKdHM0piCqDjgBUNb49nfxBIabEWxt/xB9fcI2kL8FyH
+   ZkLZScZglcZElpjuRlMGrUcwIh7yGkp7fY4YdAc8I2/1TNqywza3U1yxF
+   A==;
+X-CSE-ConnectionGUID: x8D9uxZRSwKnOtIyLR1Fkg==
+X-CSE-MsgGUID: QQWG3acHTYO5QgqL25KzCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11654"; a="71128649"
+X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
+   d="scan'208";a="71128649"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 06:45:55 -0800
+X-CSE-ConnectionGUID: FC2sVHjDQVaxTJuz2GjCZQ==
+X-CSE-MsgGUID: Og0tXdcbQZWsd846IPkl+w==
+X-ExtLoop1: 1
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.211])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 06:45:50 -0800
+Date: Sat, 27 Dec 2025 16:45:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+Message-ID: <aU_xG7pK9iauff65@smile.fi.intel.com>
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251226115848.298465d4@gandalf.local.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
-the test_multiple_writes test will stall and wait for more
-input due to insufficient buffer space.
+On Fri, Dec 26, 2025 at 11:58:48AM -0500, Steven Rostedt wrote:
+> On Thu, 25 Dec 2025 12:09:29 -0500
+> "Yury Norov (NVIDIA)" <yury.norov@gmail.com> wrote:
+> 
+> > The trace_printk.h header is debugging-only by nature, but now it's
+> > included by almost every compilation unit via kernel.h.
+> > 
+> > Removing trace_printk.h saves 1.5-2% of compilation time on my
+> > Ubuntu-derived x86_64/localyesconfig.
+> > 
+> > There's ~30 files in the codebase, requiring trace_printk.h for
+> > non-debugging reasons: mostly to disable tracing on panic or under
+> > similar conditions. Include the header for those explicitly.
+> > 
+> > This implicitly decouples linux/kernel.h and linux/instruction_pointer.h
+> > as well, because it has been isolated to trace_printk.h early in the
+> > series.
+> > 
+> > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+> 
+> I'm still against this patch. It means every time someone adds
+> trace_printk() they need to add the header for it.
+> 
+> trace_printk() should be as available to the kernel as printk() is. If
+> there's a place that one can add printk() without adding a header, then
+> they should be able to add trace_printk() to that same location without
+> adding any header. If that's not the case, then I'm adding an official
+> 
+>  Nacked-by: Steven Rostedt <rostedt@goodmis.org>
+> 
+> I'm fine for trying other ways to speed up the compilation, but removing
+> full access to trace_printk() isn't one of them.
 
-Check current buffer_size_kb value before the test. If it is
-less than 12KB, it temporarily increase the buffer to 12KB,
-and restore the original value after the tests are completed.
+I interpreted this as if the header inclusion should be moved from kernel.h
+to printk.h as a compromise that satisfies all (?) stakeholders. Is it possible
+approach?
 
-Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
----
-V1 -> V2: Restore buffer_size_kb outside of awk script.
-
- .../ftrace/test.d/00basic/trace_marker_raw.tc  | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-index 7daf7292209e..a2c42e13f614 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -89,6 +89,7 @@ test_buffer() {
- 	# The id must be four bytes, test that 3 bytes fails a write
- 	if echo -n abc > ./trace_marker_raw ; then
- 		echo "Too small of write expected to fail but did not"
-+		echo ${ORIG} > buffer_size_kb
- 		exit_fail
- 	fi
- 
-@@ -99,9 +100,24 @@ test_buffer() {
- 
- 	if write_buffer 0xdeadbeef $size ; then
- 		echo "Too big of write expected to fail but did not"
-+		echo ${ORIG} > buffer_size_kb
- 		exit_fail
- 	fi
- }
- 
-+ORIG=`cat buffer_size_kb`
-+
-+# test_multiple_writes test needs at least 12KB buffer
-+NEW_SIZE=12
-+
-+if [ ${ORIG} -lt ${NEW_SIZE} ]; then
-+	echo ${NEW_SIZE} > buffer_size_kb
-+fi
-+
- test_buffer
--test_multiple_writes
-+if ! test_multiple_writes; then
-+	echo ${ORIG} > buffer_size_kb
-+	exit_fail
-+fi
-+
-+echo ${ORIG} > buffer_size_kb
 -- 
-2.36.1
+With Best Regards,
+Andy Shevchenko
+
 
