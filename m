@@ -1,130 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B112B3A1E8C;
-	Sat, 27 Dec 2025 14:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2280B2192E4;
+	Sat, 27 Dec 2025 15:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766847038; cv=none; b=TElq6Dd5nQgnZiTWdt4zo6uNqNpssW5zCkh3wefI5gAaPyxXbaPii0T5i6KMvCy2NxBunsb5S7dKUhnhnwGBDtxsIwGs5W+NkIfcuFPGsv/IwupPtKQfKsogpVAX1ZTIIkdmGqBWNH8hmlNZXo9luYpCWNh4tLvg+7Jqzf8PO/I=
+	t=1766851041; cv=none; b=Xqf7XRdmnvOJ+k0w4Oq0YYJPM7aniwbGDtieFPnPUuXLlq27vrEP109AUfFOa7zLUJ99bBJP/mBv+j9BW5756OIczjz5RxQBUm91Txd5xZw5csTo3ZCDkKmI4O0UI6NsLt/bLitfV2lVW6nt+0ANtwKfvXm/cPUkz/TGZOqjtfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766847038; c=relaxed/simple;
-	bh=agRaZ2qn8iGUDwGx0pm/utEXG1tRsSPPIZC9YbnVHhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j60yItf/eQWPIuGiDlEICqAvmYq5TJ6PkUJio74o9CQ0kiFCU/rINeu+WHZPvtz4SzBv+yzNurN9sen6qk7TmXXOXBAaYyvlFd1EQpvtcbjY8+jQYbBHnVjkongfvwBWDExvjSfvBCwNz2cwkMB6L5HMTvr8vTNeiJLMFSKkdUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDc6obbc; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDc6obbc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766847037; x=1798383037;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=agRaZ2qn8iGUDwGx0pm/utEXG1tRsSPPIZC9YbnVHhk=;
-  b=GDc6obbcL4oXfnSnxmfMg6ROqROmjkJbbFR0SOVmCboMPfR/zKUQFIhP
-   IyK6dPg2YtKALrdJy1IV75564pnN3bx4b41KPAT2jf8teYPEp+ncPJt1e
-   l+8PVGYDOSHlbSYIedrRuELEbLPOJgJlz4nkUgJU4rAgX8+QmVMhtTFJm
-   gD6Tj3ZE2BkjiqnCLdmyI16sIahqotTvJkAWeE6QOINZ1O4Zho1Y9fu7X
-   mNOH+S4M4dtDZnThvKSnliPdaqNTOhL65ZkqC17PHwQ50/B1QB6jc6X99
-   IWyGJ89tgJLd2shNbxwPkSineasWMgjVDtqF90uGCZ/yBKeKb1pnYjt5o
-   g==;
-X-CSE-ConnectionGUID: Lyd4BPhOTJGnlSw+NxZBsw==
-X-CSE-MsgGUID: j5EeKtsCSSWKxijzXlSqrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11654"; a="67746607"
-X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
-   d="scan'208";a="67746607"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 06:50:36 -0800
-X-CSE-ConnectionGUID: IA2r5lQCRxqLIY/qge67gg==
-X-CSE-MsgGUID: v/3GM6fwSxC70TDwEy1EbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,180,1763452800"; 
-   d="scan'208";a="199795529"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.211])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2025 06:50:31 -0800
-Date: Sat, 27 Dec 2025 16:50:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	David Laight <david.laight@runbox.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1766851041; c=relaxed/simple;
+	bh=0eTr0dox93jaYzcBNfvnikWqIefOS1Az8/PDvZAw/n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C/1sduFXKaa/vT7DJ51vc9HO8YqMcmEFl8/HpPNUqlj3n4N7Tmm81JG2SiDOuYKPtasBRzCGfz7rwdG8wHHStP2PQFobQzGc8RbwqQjTYujI6L2fx71uMPrYjKEe7Q0HHUXkoqH17cl2qObs5ORaWp8QQi6g7LSzsjKi3b1bbow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4CE1D13D079;
+	Sat, 27 Dec 2025 15:57:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 0FD8820028;
+	Sat, 27 Dec 2025 15:57:10 +0000 (UTC)
+Date: Sat, 27 Dec 2025 10:57:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christophe Leroy
+ <chleroy@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
+ <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
+ Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
-Message-ID: <aU_yNNJmIjUMIFlU@smile.fi.intel.com>
+Message-ID: <20251227105701.5cbeb47e@robin>
+In-Reply-To: <aU_xG7pK9iauff65@smile.fi.intel.com>
 References: <20251225170930.1151781-1-yury.norov@gmail.com>
- <20251225170930.1151781-8-yury.norov@gmail.com>
+	<20251225170930.1151781-8-yury.norov@gmail.com>
+	<20251226115848.298465d4@gandalf.local.home>
+	<aU_xG7pK9iauff65@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251225170930.1151781-8-yury.norov@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4bi56z6prjoxpu5k77kdk7niwsunwdbw
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 0FD8820028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+BV7GvsBH3P8RqkX5NIpmjPk/ZJZbh6cc=
+X-HE-Tag: 1766851030-923509
+X-HE-Meta: U2FsdGVkX19nNp9zKnXj3G8Z7Pf9W6fMJYGbsN003UTQvQm4hf6cBcmJNUvxVZ41ch4Z2eLmAMch67kPfmcme6XcLa2Mv8IEzDX5INq30iCx2g1VpdzfxyezF7cNWadHiSrle/Ec2CmZA11MJfXtfW3nDT256CsdmmoEEgzwQQ0DSW9ajErxpqSgSVfdTPJgyS4Y4NFG06SUGRoMvHI4RQFPt449Q79rbxo8tttv+jPMfdETOa4wmCbP+b8RBotJSzZgiZEWmJG9IxLiVIha+0GFi56mvy7D1fFUFx+iEIj6AKI9Ufg7NdgyUG0W0HW/ozB3/cuaj5tG2CZFymW4FwwpPA3qk8lPxsVDHUNSGkeoaK6JomqPPg==
 
-On Thu, Dec 25, 2025 at 12:09:29PM -0500, Yury Norov (NVIDIA) wrote:
-> The trace_printk.h header is debugging-only by nature, but now it's
-> included by almost every compilation unit via kernel.h.
+On Sat, 27 Dec 2025 16:45:47 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+
+> > I'm fine for trying other ways to speed up the compilation, but removing
+> > full access to trace_printk() isn't one of them.  
 > 
-> Removing trace_printk.h saves 1.5-2% of compilation time on my
-> Ubuntu-derived x86_64/localyesconfig.
-> 
-> There's ~30 files in the codebase, requiring trace_printk.h for
-> non-debugging reasons: mostly to disable tracing on panic or under
-> similar conditions. Include the header for those explicitly.
-> 
-> This implicitly decouples linux/kernel.h and linux/instruction_pointer.h
-> as well, because it has been isolated to trace_printk.h early in the
-> series.
+> I interpreted this as if the header inclusion should be moved from kernel.h
+> to printk.h as a compromise that satisfies all (?) stakeholders. Is it possible
+> approach?
 
-...
+I'm fine with putting the include of trace_printk.h into printk.h. If
+you remove printk.h from kernel.h I would expect a lot more people to
+complain about it. Including Linus himself.
 
->  #include <linux/pagevec.h>
->  #include <linux/scatterlist.h>
->  #include <linux/workqueue.h>
-> +#include <linux/trace_printk.h>
-
-I believe 't' is followed by 'w' and not vise versa.
-
-...
-
-> index 20b3cb29cfff..549fdeaf4508 100644
-> --- a/drivers/gpu/drm/i915/i915_gem.h
-> +++ b/drivers/gpu/drm/i915/i915_gem.h
-> @@ -27,6 +27,7 @@
->  
->  #include <linux/bug.h>
->  #include <linux/types.h>
-> +#include <linux/trace_printk.h>
-
-In the similar way 'r' then 'y'.
-
-...
-
-Please, double check these and the rest.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-- Steve
