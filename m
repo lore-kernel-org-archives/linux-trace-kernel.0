@@ -1,139 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9326561E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Dec 2025 07:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E03B4A0C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Dec 2025 10:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766991656; cv=none; b=bbfpfx11gTsooJGXpsz1qWpSbiVi4ArcCYkx0bHgrc9MbUE3aJpEVdorNUJlYQFCPcgVUrb8skvXuthM/T5IWLjDSXFpf3TxevtPAI2/PogLhviXQemQcl5rDFQk0fwiW3uqjex2SKLKTYEjAjg94aijTuFH5GoHbWCW+FGPeNc=
+	t=1767005682; cv=none; b=aqu38J+u0Sux0aUrLfQUJ6GTT6x34MWEL8qBWCC81brGs7SxH3nMutvpF+VPibsMtFUzVXwdmVd0T80iprjrTPyNVgtGq/1DkNWuoyWe6tjd8mxieMV7JvXi6mSpPYfug0mboD4RM6HDrTzQNQQTdMKYr+Mh7W+E/SJJ3WsJI7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766991656; c=relaxed/simple;
-	bh=t8OcG2twO/nrzWxVIrhkWMvBJQ/Zx/Os/S+s48QKCNc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O43kuTnd3Hs47gyc3/J+/HIte8Ca7h9fuTf/m8Ac8xurt1bqgi0Sm2ZQ601Gj9dSzfa23FpkcJUmUoeTBNKmNza4qKCj66CvJiuUUlxVr8HIusoNHEDnHX0eY/sexK7DVv39Q/Qw4wD6vFBCLUP+nDMes6n5RrEiClqJBYYH9F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R8MBgbym; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767005682; c=relaxed/simple;
+	bh=rRhzqE0GjBkOpPzAOIMjFCaIrpK569o/S6+3CrWFfkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FhKxzaleZpWMfs4QOvEG40FETOtWu4mW9Mg+TBAtACXS2suNfmO4gys2sNTE/31YKkcD1b+pce98PUqcgPKro6bItzOJMJDUoAVI2bpMmrmtQPenLmfZoinlZy16kYFSJxip0SmA9+fDr4dww2vfjvLmIAA/aG6J7tSs8gv+br8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Xl3mYaqY; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8MBgbym"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1766991654;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=t8OcG2twO/nrzWxVIrhkWMvBJQ/Zx/Os/S+s48QKCNc=;
-	b=R8MBgbymyCFXxYpFjri6djiOeQk9ieexe2NQMsky3o6sE2VXe0r4EfEJ74QFYS0aeviloW
-	kihnJnkV4HqM1mh6SLDhbhoX7MYkNSqsyNEHwooPRGH1RbGjMa2Xo8AEBdwktpJIu1J7qY
-	k1qF7bwZ41hvul23+HPcDFXzOwZvHBE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-HRyf4ugRM826fespeV1qJg-1; Mon, 29 Dec 2025 02:00:52 -0500
-X-MC-Unique: HRyf4ugRM826fespeV1qJg-1
-X-Mimecast-MFC-AGG-ID: HRyf4ugRM826fespeV1qJg_1766991647
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47d3c9b8c56so39911875e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Dec 2025 23:00:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766991647; x=1767596447;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8OcG2twO/nrzWxVIrhkWMvBJQ/Zx/Os/S+s48QKCNc=;
-        b=MAAIYcAqAlzFf30Fq7pn5KsWyCqSEBITlfMvI85SNidwN76thknL8YcwndFOwiMbC5
-         FXEYunk+qmVRpo9bx4sT71Ug+5vj5DqoRonPIsPJ7mcER9R54Z4p7USjDp9bHbtNCW/J
-         jW9yAmwiD2GxK1eRjBRc5bYg+OHmHAMF0fgOriBKfefVFW/nz0yvMScmhM3MoNAmJvSK
-         v2PAdm6vHqnFsjOQYIwEH50YNi4EHvdDa1M7zXYOfQGO6tm1xkdIwJT+MRVpoOeIwsJv
-         mM7TpcaBH9JpjGmEPAb+sR9+nfXfQyJR57wMJQ4W4lwUFSJmWGzKxaYrCj7BjVe4OVlm
-         0INA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGWvhZNnobZNQ0HoRsoG6czA/+iylA9IUjPljG1z5US+Xo/Idmlb401LnIrnj004hssx7+2tEOlzdtlTLi6Vdbzek=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+6XKPS3mpiiA+p2CpVddX/K33QAQLlBb+V9QJFwQLWMDgC/9O
-	TV9u85stZOn0oOxVPMg+NeVaVK8Hnx44KINksWGsR/HBBHPgqMYEZKWdXSdEVRAAQyqCh+SofEF
-	b4WhB4BssIMGt1sNWHfHGNPxCpFkeTjz6SKe+sb1SgXtLKWMHMRK0KVadqOa1Xw7qM/8e30bdJw
-	==
-X-Gm-Gg: AY/fxX6Kex2/p1k0wGIvqmrxVJPIQzxpUkSfyHXE2goUMKyTmxUrFS+fThnG5w4fdHI
-	T70lCq0l4j1BeYDkN6CcEwFGmx9I631hiQA640ZFiqf6cgzBChDqDewvwHcsf+/iMaFCOHCfkqM
-	iryXUGgnJonC2JMt82vZX7CwsJkI+epW4SmxY2ImPMEGouLjy1+qv32a35UVArtbe9j8Gp+wKRx
-	noQt9VozptJpGB3vfZgbH1zhrgkRmMvJX82PFOw1OOUCo1R5CDj8qP77MCBxLIXlaT5AKgr5klz
-	DLypyVNofqHBWSmUKLdn+Td4Pa4ADnlzU4pUPzGIhFXi3k9qx+1Uae3IF1sf6qGV5glqRy7hYb0
-	ZIl11HgOdDHFHfrB9nYunbQH2x7eOiEYwtzjeWGNDJ+BgN9uwG1vkf9uzDlkT6PzqmYZ4orL+n4
-	y1Gy1g5kJi
-X-Received: by 2002:a05:600c:1d1d:b0:477:abea:9023 with SMTP id 5b1f17b1804b1-47d19577fb8mr332907655e9.9.1766991647284;
-        Sun, 28 Dec 2025 23:00:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEmFC/mzoVHhr44ireW2o9YalzKlM0MsJyH2BzxwmYl5AR9TFxemVezBupGB3gx7MCpUqcDFQ==
-X-Received: by 2002:a05:600c:1d1d:b0:477:abea:9023 with SMTP id 5b1f17b1804b1-47d19577fb8mr332907295e9.9.1766991646898;
-        Sun, 28 Dec 2025 23:00:46 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be3af6dbdsm232499725e9.19.2025.12.28.23.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Dec 2025 23:00:46 -0800 (PST)
-Message-ID: <765e80ba6895985aadafc5c1bfe8a361575252f2.camel@redhat.com>
-Subject: Re: [PATCH v3 12/13] rv: Add deadline monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>, Clark
- Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>
-Date: Mon, 29 Dec 2025 08:00:44 +0100
-In-Reply-To: <87y0mr9vaw.fsf@yellow.woof>
-References: <20251205131621.135513-1-gmonaco@redhat.com>
-	 <20251205131621.135513-13-gmonaco@redhat.com> <874ipfbay7.fsf@yellow.woof>
-	 <87y0mr9vaw.fsf@yellow.woof>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xl3mYaqY"
+Received: from LAPTOP-U3CCR7C6.corp.microsoft.com (unknown [108.143.43.187])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DC65A200D65A;
+	Mon, 29 Dec 2025 02:54:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC65A200D65A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1767005674;
+	bh=yJlbbI284/D8x4Ik/0uEnuc7Flo2SmmRKYLOMZleia0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Xl3mYaqYJ2gM2xqPep/sY7XF3o6JNO92pGmbiB4Cd1QxH5OUhy7TDzMPHxs8udkH2
+	 /ezSr32QYnhPLslrzhFOzyQKS7lwx3naEcyU0blqMwJe/JYk3aQ2GUSQc+jfey3890
+	 37ZsECY9rpop0J7J8gL5LTc5OZLPB+C7pUxIq2jc=
+From: Thomas Ballasi <tballasi@linux.microsoft.com>
+To: rostedt@goodmis.org
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	tballasi@linux.microsoft.com
+Subject: Re: [PATCH v2 2/2] mm: vmscan: add PIDs to vmscan tracepoints
+Date: Mon, 29 Dec 2025 02:54:27 -0800
+Message-Id: <20251229105427.14720-1-tballasi@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251216130302.5202ca81@gandalf.local.home>
+References: <20251216130302.5202ca81@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: BNN9UQkHCyRYz7G2ybfLlJ833AepqVYQW6q-Atryq1c_1766991647
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-12-25 at 08:58 +0700, Nam Cao wrote:
-> Nam Cao <namcao@linutronix.de> writes:
-> > There are some helper functions that I am a bit uncomfortable with
-> > (e.g. pi_of, is_dl_boosted, dl_is_implicit, ...) because they are
-> > relying on implementation details of deadline scheduler which can be
-> > changed. So ideally this patch should have an Ack from the scheduler pe=
-ople.
+On Tue, Dec 16, 2025 at 01:03:02PM -0500, Steven Rostedt wrote:
+> On Tue, 16 Dec 2025 06:02:52 -0800
+> Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
+> 
+> > The changes aims at adding additionnal tracepoints variables to help
+> > debuggers attribute them to specific processes.
+> > 
+> > The PID field uses in_task() to reliably detect when we're in process
+> > context and can safely access current->pid.  When not in process
+> > context (such as in interrupt or in an asynchronous RCU context), the
+> > field is set to -1 as a sentinel value.
+> > 
+> > Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
+> 
+> Is this really needed? The trace events already show if you are in
+> interrupt context or not.
+> 
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 25817/25817   #P:8
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq   <<<<------ Shows irq context
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>           <idle>-0       [002] d..1. 11429.293552: rcu_watching: Startirq 0 1 0x74c
+>           <idle>-0       [000] d.H1. 11429.293564: rcu_utilization: Start scheduler-tick
+>           <idle>-0       [000] d.H1. 11429.293566: rcu_utilization: End scheduler-tick
+>           <idle>-0       [002] dN.1. 11429.293567: rcu_watching: Endirq 1 0 0x74c
+>           <idle>-0       [002] dN.1. 11429.293568: rcu_watching: Start 0 1 0x754
+>           <idle>-0       [000] d.s1. 11429.293577: rcu_watching: --= 3 1 0xdf4
+>           <idle>-0       [002] dN.1. 11429.293579: rcu_utilization: Start context switch
+>           <idle>-0       [002] dN.1. 11429.293580: rcu_utilization: End context switch
+>        rcu_sched-15      [002] d..1. 11429.293589: rcu_grace_period: rcu_sched 132685 start
+>           <idle>-0       [000] dN.1. 11429.293592: rcu_watching: Endirq 1 0 0xdf4
+>        rcu_sched-15      [002] d..1. 11429.293592: rcu_grace_period: rcu_sched 132685 cpustart
+>        rcu_sched-15      [002] d..1. 11429.293592: rcu_grace_period_init: rcu_sched 132685 0 0 7 ff
+>           <idle>-0       [000] dN.1. 11429.293593: rcu_watching: Start 0 1 0xdfc
+> 
+> Thus, you can already tell if you are in interrupt context or not, and you
+> always get the current pid. The 'H', 'h' or 's' means you are in a
+> interrupt type context. ('H' for hard interrupt interrupting a softirq, 'h'
+> for just a hard interrupt, and 's' for a softirq).
+> 
+> What's the point of adding another field to cover the same information
+> that's already available?
+> 
+> -- Steve
 
-Thanks for the review!
-I'm going to ping scheduler guys some time after the holidays.
+(re-sending the reply as I believe I missed the reply all)
 
-> Think about this again, perhaps we should move all these helpers to
-> include/linux/sched/deadline.h instead? The scheduler people must be
-> aware of these functions, and maintain them. I don't want a situation
-> where the scheduler people make changes, and something else (which they
-> do not know exist) breaks.
+It indeed shows whether or not we're in an IRQ, but I believe the
+kernel shouldn't show erronous debugging values. Even though it can be
+obvious that we're in an interrupt, some people might look directly at
+the garbage PID value without having second thoughts and taking it for
+granted. On the other hand, it takes just a small check to mark the
+debugging information as clearly invalid, which complements the IRQ
+context flag.
 
-That's a fair point, I just copied those functions from kernel/sched/deadli=
-ne.c
-but that's dirty indeed.
-Going to try exporting them to deadline.h and see if no one complains.
+If we shouldn't put that check there, I'd happily remove it, but I'd
+tend to think it's a trivial addition that can only be for the best.
 
-> Ideally, non-scheduler code should not look at private fields of
-> scheduler's structs.
-
-Yeah, one may argue those modules shouldn't be doing what they're doing wit=
-h the
-deadline entities. To be fair those modules are quite dependant on the data
-structure implementation, but the alternative would be to maintain a set of
-getter functions which might as well break.
-Or at least I don't see a better way.
-
-Thanks,
-Gabriele
+Thomas
 
