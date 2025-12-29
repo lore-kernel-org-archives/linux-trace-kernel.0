@@ -1,125 +1,92 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFD9222560;
-	Mon, 29 Dec 2025 16:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8404E23535E;
+	Mon, 29 Dec 2025 16:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767025079; cv=none; b=N1I9AvLpjYwkX5acYw38ah5ThHAo+8OId1jWvEPFEEp0Hq2eYvgrS+NFYe9KMHyMCP6/RYZlmAg+Gq8ynK8m4m9PnuRwiTTtZPw2B8mffKaaTrbkkhKsjCKX8aDH6FBtoKs8wVCptUee3ZyiflXlDGlz3cSh4BGQDF4vB9V7Rh8=
+	t=1767026505; cv=none; b=sCXdqDUrTfwgzgj3ERP7MQKdUJZs1jIzH8tpiZ8wTTI+IOI67jVkKjJ/2Gdn9K5tINqVSKy3ho0IFsjHXXFS/0pWzV8urdTahbMY9og+eWyjE/ZeDnKy9YCegN6+WrLqTTyXqXmmutpW6v/rAx+qA8z7pd2MKjwiJy49hFCUDv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767025079; c=relaxed/simple;
-	bh=dcL7eLke23ldKKfjvV6eO7tnBxy52TppOapio5rpWLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z8fJudDd0OZrkzMEM4op5BeKNwzULLdtWL0yrIfA9RXlnJZTKzZSyIihYyc0mMVyGNZ/j38dsHnozbQDK2fdut1u5xxj+3zZqztJNCenI+4OskWjPyJKCPK7umt9gSzcmDUDcbYEW9pMlfmEfvG6QkJxNImBSCCKhH6/8bG6mrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 2010C140225;
-	Mon, 29 Dec 2025 16:17:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 37D1A20028;
-	Mon, 29 Dec 2025 16:17:43 +0000 (UTC)
-Date: Mon, 29 Dec 2025 11:17:48 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Christophe Leroy
- <chleroy@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar
- <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
- <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
- <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
- Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
-Message-ID: <20251229111748.3ba66311@gandalf.local.home>
-In-Reply-To: <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
-References: <20251225170930.1151781-1-yury.norov@gmail.com>
-	<20251225170930.1151781-8-yury.norov@gmail.com>
-	<20251226115848.298465d4@gandalf.local.home>
-	<20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767026505; c=relaxed/simple;
+	bh=fcoV0QeqQ+GG4ebz8LT6JHQhUB85r9DPN/+bdPdWAaI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=BgxCvHyc4MaHOpGniLBvvCN/4pBMUfZ+WTmDt4wd1vCFtXlE+SXsoEIUhj96T+q6sfgxQFBF5IMWERf7VJKq2hB/ifVb8V91NlAEmo9z3hOZxrE74n+m64+ns4yBilFsZOuZ7U6Lbj4cEa+mJJluGKzFTsn1St8fiedKCSvJC3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIDPe0Hw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIDPe0Hw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E71C4CEF7;
+	Mon, 29 Dec 2025 16:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767026505;
+	bh=fcoV0QeqQ+GG4ebz8LT6JHQhUB85r9DPN/+bdPdWAaI=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=BIDPe0HwRNB5xB8QtYWNvfu0UyoqcIfsl5zQ05a3OTWPhdpXGd3ivMoz6kF2NDx/6
+	 P9tVlWKLNp9/Cw3/fg+WDuU+W+kkDsHZuweSVmiYrlDe1ENVxzSRO5xKMYvmpKXOZe
+	 +sblb1DuN7gHVp3oCu79PF58avpDtHPWfqC0hdVSPxLviLAYb6xBrSdrIvh7Eh3yve
+	 w/2XkvYhGVJR0hruy0WOBclsZbZFYHw3xy+zNKIH0a56l7yDWrDWTBFkcU4jhmadP+
+	 UOpXp82He2BRbNdRkQ4B4LlRA6skEUxVF9xordWGW0qHYKaXPmVQjfMFYIFXKXP7VH
+	 OWCp64owuie9Q==
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 37D1A20028
-X-Stat-Signature: oxnmnxaxjupkiu3iarufwha35ep93ydr
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18UdLvhf5+Gh+C8Yu8piG7TO+TD4jGUDeM=
-X-HE-Tag: 1767025063-591563
-X-HE-Meta: U2FsdGVkX1/Rcu1THkBVWnM2COrCaOUOPqZLp3WQjzp/z2bw69sAkpB0U1+/iNdY3f8qdUSiefMGe0tQpTZEcMLUsMn1zcewUSfQogHG0OCoODgI9zEd9w/VC5nXvpyQmxrsxtCuvWWbd0QxvqqUnCF5wEOpnDEU7nezgH9GRbj7VE1sz4eGcHkvXMXMNmxVLg3lF53A9Ya7T2B0vA1XXqF9Uz8jhrDEtIEImwrzclDXO8PriLXWgs4sMZ8DfA6L+AjM00SJhu7aLJWKztIeN8S6jLmFzEg87H2QUmkD1boJOK6lDomJYeGYIMjMgGE8SV6yktR6COSWDhUDoM4ATM7lU7FLxleuAE1dNJJE1lu8KDxd3e4KA2BYXhEZz644
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 29 Dec 2025 17:41:38 +0100
+Message-Id: <DFAUM72AR4OG.1CHGTHZK2CZ4@kernel.org>
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, "Yury Norov (NVIDIA)"
+ <yury.norov@gmail.com>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>, "Christophe Leroy"
+ <chleroy@kernel.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Ingo Molnar"
+ <mingo@kernel.org>, "Jani Nikula" <jani.nikula@linux.intel.com>, "Joonas
+ Lahtinen" <joonas.lahtinen@linux.intel.com>, "David Laight"
+ <david.laight@runbox.com>, "Petr Pavlu" <petr.pavlu@suse.com>, "Andi Shyti"
+ <andi.shyti@kernel.org>, "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "Tvrtko
+ Ursulin" <tursulin@ursulin.net>, "Daniel Gomez" <da.gomez@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <intel-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+ <linux-modules@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+To: "Steven Rostedt" <rostedt@goodmis.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
+ <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
+ <20251229111748.3ba66311@gandalf.local.home>
+In-Reply-To: <20251229111748.3ba66311@gandalf.local.home>
 
-On Sun, 28 Dec 2025 13:31:50 -0800
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Mon Dec 29, 2025 at 5:17 PM CET, Steven Rostedt wrote:
+> It will waste a lot of kernel developers time. Go to conferences and talk
+> with developers. trace_printk() is now one of the most common ways to deb=
+ug
+> your code. Having to add "#include <linux/trace_printk.h>" in every file
+> that you use trace_printk() (and after your build fails because you forgo=
+t
+> to include that file **WILL** slow down kernel debugging for hundreds of
+> developers! It *is* used more than printk() for debugging today. Because
+> it's fast and can be used in any context (NMI, interrupt handlers, etc).
 
-> > trace_printk() should be as available to the kernel as printk() is.  
-> 
-> um, why?  trace_printk is used 1% as often as is printk.  Seems
-> reasonable to include a header file to access such a rarely-used(!) and
-> specialized thing?
+I strongly agree with this. I heavly use trace_printk() for debugging for a=
+ long
+time and have recommended it to dozens of people that all have been very
+thankful for it -- especially when it comes to debugging race conditions on=
+ a
+tough timing, where a normal printk() simply "fixes" the race.
 
-It will waste a lot of kernel developers time. Go to conferences and talk
-with developers. trace_printk() is now one of the most common ways to debug
-your code. Having to add "#include <linux/trace_printk.h>" in every file
-that you use trace_printk() (and after your build fails because you forgot
-to include that file **WILL** slow down kernel debugging for hundreds of
-developers! It *is* used more than printk() for debugging today. Because
-it's fast and can be used in any context (NMI, interrupt handlers, etc).
+Having to include additional headers would be very painful, especially when
+debugging large code bases with lots of files. For instance, one of the
+components I maintain is the nouveau driver with 773 C files and 1390 files
+overall.
 
-But sure, if you want to save the few minutes that is added to "make
-allyesconfig" by sacrificing minutes of kernel developer's time. Go ahead
-and make this change.
+I suppose it would be fair to argue that such codebases usually have their =
+own
+common header files that could be reused, but even in that case, I=E2=80=99=
+d consider
+the ergonomic cost too high.
 
-I don't know how much you debug and develop today, but lots of people I
-talk to at conferences thank me for trace_printk() because it makes
-debugging their code so much easier.
-
-The "shotgun" approach is very common. That is, you add:
-
-	trace_printk("%s:%d\n", __func__, __LINE__);
-
-all over your code to find out where things are going wrong. With the
-persistent ring buffer, you can even extract that information after a
-crash and reboot.
-
-There's very few instances of it in the kernel because I made it that way.
-If you add a trace_printk() in the kernel, you get the banner:
-
- **********************************************************
- **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
- **                                                      **
- ** trace_printk() being used. Allocating extra memory.  **
- **                                                      **
- ** This means that this is a DEBUG kernel and it is     **
- ** unsafe for production use.                           **
- **                                                      **
- ** If you see this message and you are not debugging    **
- ** the kernel, report this immediately to your vendor!  **
- **                                                      **
- **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
- **********************************************************
-
-in your dmesg.
-
-I've been recommending people that if you find a "trace_printk()" useful,
-you should convert it into a normal TRACE_EVENT() for submission. Which
-many developers have done.
-
-Yes, it's not in your kernel, but it is in several other people's kernels
-as they develop it. And adding a requirement that they need to include a
-header file for every place they add it (and then have to remember to
-remove that header file when they are done debugging) is going to waste
-more precious time that kernel developers don't have much of.
-
--- Steve
+- Danilo
