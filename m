@@ -1,34 +1,32 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00915330D2F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Dec 2025 18:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4889F125B2;
+	Mon, 29 Dec 2025 21:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767033447; cv=none; b=cGPGWlSgF4+mJ3QdGijWuvo6pfPWcRkCUUKtfLyKTRqGhYy7hcwyqhpbul/Jn3Q6EC4naF4UNwrxDwoin7o+vTFBhgLstx+pvBkQePxzQae6A70E/R48JV7beNdHeaPVL4VWIpyz5Tsgw+7qLX1cxuXGA8xBuXKlB2dbGWTdK7M=
+	t=1767044115; cv=none; b=GIglEisF9sD8AlmqttgMnAw5Ysa80o5vHdXl/W8asSz1CrFLGcR5PY5TbSDp9zinZg1eWZSk0cvNiq5UPN+YetwSXwYOruHiuHv5WVptbaGw2vueGzgYlVF6isosKGx9F+wIV648BG1en1Yll8oCP96Q9uoC7ZWhK9DFmtwtFFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767033447; c=relaxed/simple;
-	bh=Jx+EO9Ce1F9T173mpF4siJiSEmsC0Yy9s9mwqd1Frnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B1oIJdxHavJXslrqgFxZDt5I4ba+lAU5DedWdXFNYO82yKSWFHtAGt5CqS0Dl397xcdONF2Lp+jnG2q4uP6G2ZaYtiZRjkPyuDi4gQDux9LTgoSx87UkCSlZq0f6QIUCLKDwq4IbMbBvf4bvJ56ZnOZ+GJhhYqw/Utlrmk4WVvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1767044115; c=relaxed/simple;
+	bh=SO8t7QnJwih/QKJfn3HQw1+TBnCcRiOlF+z7gCW4zRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VUARx9NW4K8u3pY5hf7NF3EOyqSDnrRFjI5eb2lvAjk/gpX6GoZIZuQBHQtlVvoFzqVNtPxMUFWcJ1EEZUbKHRNAt1fwIjkUytKD6eDtvzq3E7DhO2bnVwI0ZdoWmOFOZxbAK58YROmSE5ck1xYdcikjgTjNU7nP6uXQnB5/xEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 303EE59A0C;
-	Mon, 29 Dec 2025 18:29:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 7A3832F;
-	Mon, 29 Dec 2025 18:29:36 +0000 (UTC)
-Date: Mon, 29 Dec 2025 13:29:42 -0500
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id D83AD1A635B;
+	Mon, 29 Dec 2025 21:35:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 2D02F20027;
+	Mon, 29 Dec 2025 21:35:09 +0000 (UTC)
+Date: Mon, 29 Dec 2025 16:35:15 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Thomas Ballasi <tballasi@linux.microsoft.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH v2 2/2] mm: vmscan: add PIDs to vmscan tracepoints
-Message-ID: <20251229132942.31a2b583@gandalf.local.home>
-In-Reply-To: <20251229105427.14720-1-tballasi@linux.microsoft.com>
-References: <20251216130302.5202ca81@gandalf.local.home>
-	<20251229105427.14720-1-tballasi@linux.microsoft.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Ballasi
+ <tballasi@linux.microsoft.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] tracing: Add __event_in_*irq() helpers
+Message-ID: <20251229163515.3d1b0bba@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,68 +36,33 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 7A3832F
-X-Stat-Signature: gnhnftzf34duj18fbzhtmxtnnxzqp7bu
+X-Rspamd-Queue-Id: 2D02F20027
+X-Stat-Signature: mmg1mqzahqdoeuhw6zjrdho3o9p6s6wr
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18X0yaxY/nuYiParjAbf7uR2X56SJVmoqE=
-X-HE-Tag: 1767032976-144404
-X-HE-Meta: U2FsdGVkX19+vMrYqJreb8g9AH/d7iocmx6izFefRJgUMGcZ6pRpl0T0gATfc3vgSaHQvZuwrgZFi81dwYrPPgkXujotpa/+Y7OlN37CpG2XlT/ADsBhOFP6CpKwmdPn8m1w4XqD7hRovBP0Ymnk3DkGm07XLbBCg7JgqGPExuZJz1kZcjROtwAoSjFaq5b5AlejqUZkh92hSnppLxVlfvGZShcGBCKkk0CQ7+//J4ii0hhHwEVVI6bs/LgqSGibLQbbzGygz82kueaURx05JpKBpPdO6XjRXfPha2SXldO7XlZCJYFJ6z86LJOmF1p7cgHjLNyv2BooB4U5UtftN8642ywAPV79
+X-Session-ID: U2FsdGVkX1+9YblZEktJ8OdSqbHqd/BQp1XtVdLWBqU=
+X-HE-Tag: 1767044109-673832
+X-HE-Meta: U2FsdGVkX187UPkluNOivEYAprESfQFbaVLp38ZwVAtsdLaIhd1PbfdYofrGEytErGWo+XEJBsZOazodMtxDCKEOW/hZaZkWHPGFv2TLCacPVfZ+7YiQxCbh8sskp8u005OqYm0zToo3k8r0nXJ6eqwzFR+TYx51KFQUZWGO6VKo2j3VRsBq+jgu3njQ4UAGh4GFlYXGzSs12POI6wccRSCJtd1XJvOq8e5nHsr1BON3uFnxjMiXPzzWOzkk7PpHxHQDUFbgRofLrXVDN1rGgubc18WZFG3xoMudLV0sS1pZQAcbDF0XPl8c+Iqj7BoRkXXrS/eYEBYZK3iXBVrGmW8Y/hRzY7QzA276O0sO3Ijy1Ru/RQ9ot11atyyvYTF7uCoaKNXCbN/pMZ7tgUgEdw==
 
-On Mon, 29 Dec 2025 02:54:27 -0800
-Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> It indeed shows whether or not we're in an IRQ, but I believe the
-> kernel shouldn't show erronous debugging values. Even though it can be
-> obvious that we're in an interrupt, some people might look directly at
-> the garbage PID value without having second thoughts and taking it for
-> granted. On the other hand, it takes just a small check to mark the
-> debugging information as clearly invalid, which complements the IRQ
-> context flag.
-> 
-> If we shouldn't put that check there, I'd happily remove it, but I'd
-> tend to think it's a trivial addition that can only be for the best.
+Some trace events want to expose in their output if they were triggered in
+an interrupt or softirq context. Instead of recording this in the event
+structure itself, as this information is stored in the flags portion of
+the event header, add helper macros that can be used in the print format:
 
-I just don't like wasting valuable ring buffer space for something that can
-be easily determined without it.
+  TP_printk("val=%d %s", __entry->val, __entry_in_irq() ? "(in-irq)" : "")
 
-How about this. I just wrote up this patch, and it could be something you
-use. I tested it against the sched waking events, by adding:
+This will output "(in-irq)" for the event in the trace data if the event
+was triggered in hard or soft interrupt context.
 
- 		__entry->target_cpu	= task_cpu(p);
- 	),
- 
--	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d",
-+	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d %s",
- 		  __entry->comm, __entry->pid, __entry->prio,
--		  __entry->target_cpu)
-+		  __entry->target_cpu,
-+		  __event_in_irq() ? "(in-irq)" : "")
- );
- 
-Which produces:
+Link: https://lore.kernel.org/all/20251229132942.31a2b583@gandalf.local.home/
 
-          <idle>-0     [003] d.h4.    44.832126: sched_waking:         comm=in:imklog pid=619 prio=120 target_cpu=006 (in-irq)
-          <idle>-0     [003] d.s3.    44.832180: sched_waking:         comm=rcu_preempt pid=15 prio=120 target_cpu=001 (in-irq)
-       in:imklog-619   [006] d..2.    44.832393: sched_waking:         comm=rs:main Q:Reg pid=620 prio=120 target_cpu=003 
-
-You can see it adds "(in-irq)" when the even is executed from IRQ context
-(soft or hard irq). But I also added __event_in_hardirq() and
-__event_in_softirq() if you wanted to distinguish them.
-
-Now you don't need to update what goes into the ring buffer (and waste its
-space), but only update the output format that makes it obvious that the
-task was in interrupt context or not.
-
-I also used trace-cmd to record the events, and it still parses properly
-with no updates to libtraceevent needed.
-
-Would this work for you?
-
-Below is the patch that allows for this:
-
--- Steve
-
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/stages/stage3_trace_output.h |  8 ++++++++
+ include/trace/stages/stage7_class_define.h | 19 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
 index 1e7b0bef95f5..53a23988a3b8 100644
@@ -147,3 +110,6 @@ index fcd564a590f4..47008897a795 100644
  /*
   * The below is not executed in the kernel. It is only what is
   * displayed in the print format for userspace to parse.
+-- 
+2.51.0
+
