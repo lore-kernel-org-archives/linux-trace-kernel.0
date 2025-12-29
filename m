@@ -1,288 +1,438 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CDC285C99
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Dec 2025 22:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9711B17C21C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Dec 2025 03:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766962780; cv=none; b=NSPaLm/84BJ/eSOzXijVyzu4pf7NVrJO3hL9UgyPgqi4y3pHuKHQespFtmAxUCFDG0z4dxtFzTrwosREbO3SzQ2b2GrvemfWUracJNlzh/BGIHIzH5wurE9oTk2XQPGFyHnpRPZmfoAbk68Y7DtVOhTAuOwP1z2kDe/130uyOZI=
+	t=1766978157; cv=none; b=QOdt/y92kr7/0wlqYBvkfrWkhSWhKvR7cEKha5WZao8tKPBSd2LYI0P6HJL0qxEmJ56fDL3ImO+r/QE6LqeGpDTFOogWF1T8tHRcNLKMAL8IcAdTUjocsdLpBXe8pVyC5dCa00Bdf+7of7E5MI8rMNKFU/YrI6bzgJStmALX0Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766962780; c=relaxed/simple;
-	bh=SnI/sZneONUNTFINlR52iLxzEy1RPhmaeCVzPxkT7IA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pe1onDj4badiUOgIUDihsmG8SIOBTc4TA/SHNyAdleLutPI/nbYdPs4S0of9lMJz1pYUAO4IjcYUZ9A2VM5mNMzpIK/AsZabgcCCWETs9O5LptBXgu/YT2rsma5SWAZzLipwIHcDUaaWckukVTGSIrrQjQ2OonHNGeJym8116AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1fopVA3; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1766978157; c=relaxed/simple;
+	bh=tjLDeYcpl/vpg2S6X8j0JtmfiEoYZ1rjjdk8EACqhpo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u/1lPW5+A/OykhWgQvGH54Psw9YTbWyvTcAUCapTiAJr64RlIEGcPqRj+R1pDtyZm73xcpaqPSZkZSOvASO+yVatTDpBjQ2zims7nziQa3ta6HdK9F+q1jnduVd2Ft5kDRDAxzX1+gz9t81nJAOjrtq1uJZotdTxc2rTWhpbTM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lp/4jH3i; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1fopVA3"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4775ae77516so84501365e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Dec 2025 14:59:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lp/4jH3i"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7f651586be1so4109504b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 28 Dec 2025 19:15:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766962777; x=1767567577; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bf2bXjhDilXWzzb4SUI4bAUZ6hOhvd01u3js7UteToY=;
-        b=h1fopVA3OVfsrSOJ0Gnc9/f4aCYBvnesplfFZflo/+VB5F2Ir4RTorY0GyqmpsIZgq
-         Jh3Iw+GtD7q44J85BEEko9mgnAHHLZ2o3ZKI4CvRgMDbGel6nH12Ov/vZ7Hd78ib+yQU
-         8T71iW28goX5ErWyJ1amvtZ67Qi+5q5tV6K59/dHzF2V4mhly90AJbHEWTLHmp42v6/s
-         HJBcuWPjQXwh6XrZTP3UFvtczK+Gr23kkt8auRRr3AC5CoFpYvQXczUfnIqJ3O4jI3hz
-         Wp62TqmCdN7j/U4nJQMzN2rFfWmCStsbdwuc44mUd4YHuiSWvvuiB420YnTK3CB0kCst
-         ioeA==
+        d=gmail.com; s=20230601; t=1766978155; x=1767582955; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6kLoZB5QMQc+K/aIrEr+4NYhtJKe9kWjjOywPC1m2Es=;
+        b=Lp/4jH3iVLt3MNri1oYdsiyobKqTsAHENFM1ku+fsTeV17TwYhjjjHvBytg35LGVp4
+         hmzZaBcDxFXz207z90KEOtRmeKRRdpUINBepl+bFMx1Aynz3DLCHVIeUDY2sRtpc91Lj
+         7/Eym6aS617DsD4l02cWlg+dDfuTo2c1rVhHcsleBlMuFJWJ43iE4DcyYcm71uUC8dKb
+         UHrIg2Jp/ptpNgvxZGLsc8xRFOMS3Scjr+ORzj76vRAuiymmawd5EvwXG9NzoCsWjGix
+         020cCQdRVz9vnU0Qs0qzzST7omjGbsEzCziYrNxOh7+2aTDJzSYBj74JuOXI7KLk0M7B
+         d4Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766962777; x=1767567577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bf2bXjhDilXWzzb4SUI4bAUZ6hOhvd01u3js7UteToY=;
-        b=hLd2XZzwO25KZ5luoBmMQfuDRknhKkjM28XRfsPMbwJmWSERVLqqYdw9gxNNQOUCnY
-         VsAuuaZhhOi6Ds2KclgTTq5NijZ5pbVza/j+oL2vooGmPdZ0kVmJ8OTg3DuVodDITIkO
-         weT7s2sDyT7KuYUrsmqDOW8DOEmrTd+wbVj7AytHhRnR9BPogV6+oGksbfBl2It5G9eG
-         9adEJ/MAbWFs9rxZkebCMn2PTHJ6bpeZpwziaJmbXEqLNjPmgisJXy87i9F0VMUEZS6M
-         rMATcsMG47iBoNOIcMF8kN9IE4yFSaK8tDJHdZE7NuVc/hPOuRQFxYPNTnr+iM5OYBjW
-         h5gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWF6/f5lUSCkZT3WE92SPL0Ly//rdY2pt6EEcBgdQwzz3TDzBVZGsvbC/kCC2dmgKBKyszyLcEHhEUiRNKLmFbcGP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBJWKIVpaZbiSTwimQYrbyisI5uM8R5dS72W5KzXdn7yG0Kdva
-	f14YGHmlGj97B/Brh63xEF2eEfdI646sNj5zAUqyAjjlpRk3N04bSk1E
-X-Gm-Gg: AY/fxX7y+Dx4N2hx3TWpC4TUZ6c6dDUvz5hekVkdOOcPOgD0oLnDZhwjhddfAclRF9t
-	wbrGdd/bvpXqh+BexFq68Tw6UZKHqcyMig70vAUzC7cZVP0cnEZi2j1bX3hUG2vrbH/DWu3tKxm
-	hNxYFFUvnpxDZ4iCb7FzXzYkjhkPgVp09+DUJwskMOD46tuAuuDNHS4udCiQhdZx/KtwTQfPZTs
-	dYjVxxS+KxgHMcWuvYgn2diWaB6k2OclDjhqbfC4XjgclVP2VfMcIEoK2m5VY0iLSGFBxNPuDfn
-	3SnscfEVSMQR6lE+zZ+G7+Ae3RvhhqZKyAF/yd0xRBdQDfYtxmwCp/fZVvKSIIRx3uVqywiqg6W
-	/+klAK5MzmeMmevBrIFnnb67/LytLA24qhcCp3Izw7BYnLC+vrrMIJKA4OKAWBOH560D/1ETEYl
-	c=
-X-Google-Smtp-Source: AGHT+IHdkP7yesZaXjkos2ZAbiaBQ5KnJuaSa4FqfVZRSZQZMMqUiM/aT1sIN8tSR+ZFzDYT867HiA==
-X-Received: by 2002:a05:600c:4fd3:b0:477:63b5:6f39 with SMTP id 5b1f17b1804b1-47d195a702bmr279842115e9.19.1766962776938;
-        Sun, 28 Dec 2025 14:59:36 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432613f7e6esm48079487f8f.21.2025.12.28.14.59.35
+        d=1e100.net; s=20230601; t=1766978155; x=1767582955;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6kLoZB5QMQc+K/aIrEr+4NYhtJKe9kWjjOywPC1m2Es=;
+        b=FxgfO5sBYZqVV69Nx1AhX5jWti8kyTuSbkoYt4LV9wUv5bi7Bf7BGx/y90WamYRj66
+         NoGsTLLe+9ZXBYDbt5FIgr8syYifUpTPiFxUnVH/dRi3bOvWT04hs0gZtpuP7Q9AH/CG
+         YUp1PRUKo0HSw73Z86C8zjidEwOKsYde887oxBfQgl2xD7Uhsnf9ZvejrTO0YfZ1lWtv
+         6kNMuWEa+5When7g6WE4rqjjA8a8E22h8pbUczW7TiIvJ3QtIcBEIPQtYSWE5njGpjsn
+         iksBOOVAELj6asDzH6QHCbp6jcLTumPxJS+VMMg1KlfuaGIuioF3kJgGzE+GAUqzik/M
+         cfgg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8gjM/dPhXJROtc0Z3Rh2J8qN2k21WR3V6b4POafRBPBlnEbIYCLtFT6jwOQyFyUWt8HSwe0W3+nyGHGL41+gqg0k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6neM+0iZl4Qu/mtS1oq0kphxq3bVqC1Rg6r0BDY/3e6TObgIp
+	KKX4cWaP6+WHqZB8F+OwDGh/1lbXQ+aPIbYeVsTXdMiH4C18hO/RIRdw
+X-Gm-Gg: AY/fxX5aRY1mlWk2U5QGlGB9ZXRU2BrnGUa0u3Q/djjJnGyTyczKnfAwHjzgYRZEFOI
+	vyH2PM1PG6e7lOt8Zun/pKSHg+7hcr+FSNQVeudbCdQlYiqeMPBdpH4nouC4P/PoFBGsTLb9ecd
+	IBcAouHwP+O+Rn7wnjxT98yXbvJOBtU1BWXxUG8BaL0wo8q+DJ3hNfUHm+krxW5yW52zen7GCCg
+	4I3PG87/j4xIKdFgk+nQoyhDkeGrBrwn+SdwYA/iChEoPWcwkXrdqLw8+3iWnZQmNRf2Ee865cj
+	uPbfYUl9ZjFCxuofEgc0/sbOEedpD7tHDaTaIqYXs6mMs9peeivCPUx5CRraV5jv1UMI1Jh8vVU
+	na+Uo50ZHd7HZTvSq/V4yaYsQ31nH8PDuOD5KHSnB6XhlBmp5e4v/5FK7NvaAymWDD1KHbtB4Mq
+	8qtsiEDrm+iph2K8DJeF7S4SVeXdqiFK0=
+X-Google-Smtp-Source: AGHT+IFaS92fvg7qIdSkG8OVXret7v/N5DAvufFQ6j12Iv44PrQ8ceHxTlqDy0oxGWdWmtlvryWrgQ==
+X-Received: by 2002:a05:6a00:451c:b0:7e8:3fcb:bc46 with SMTP id d2e1a72fcca58-7ff54c01878mr28259482b3a.27.1766978154707;
+        Sun, 28 Dec 2025 19:15:54 -0800 (PST)
+Received: from xiao.mioffice.cn ([43.224.245.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7af2b537sm27529677b3a.20.2025.12.28.19.15.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Dec 2025 14:59:36 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 28 Dec 2025 23:59:34 +0100
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] tracing: Allow perf to read synthetic events
-Message-ID: <aVG2VoBpFoEEE1gG@krava>
-References: <20251217113920.50b56246@gandalf.local.home>
+        Sun, 28 Dec 2025 19:15:54 -0800 (PST)
+From: Xiang Gao <gxxa03070307@gmail.com>
+To: sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	dhowells@redhat.com,
+	kuba@kernel.org,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	linux-trace-kernel@vger.kernel.org,
+	gaoxiang17 <gaoxiang17@xiaomi.com>
+Subject: [PATCH v12] dma-buf: add some tracepoints to debug.
+Date: Mon, 29 Dec 2025 11:15:47 +0800
+Message-Id: <20251229031547.59272-1-gxxa03070307@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251217113920.50b56246@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 17, 2025 at 11:39:20AM -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Currently, perf can not enable synthetic events. When it does, it either
-> causes a warning in the kernel or errors with "no such device".
-> 
-> Add the necessary code to allow perf to also attach to synthetic events.
-> 
-> Reported-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+From: gaoxiang17 <gaoxiang17@xiaomi.com>
 
-hi,
-I don't see the crash, but perf record/script gives me 'FAILED TO PARSE' in perf script:
+Since we can only inspect dmabuf by iterating over process FDs or the
+dmabuf_list, we need to add our own tracepoints to track its status in
+real time in production.
 
-  # cd /sys/kernel/tracing
-  # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
-  # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=common_stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
-  # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,s=$st:onmax($delta).trace(block_lat,prev_pid,$delta,$s)' >> events/sched/sched_switch/trigger
-  # echo 1 > events/synthetic/block_lat/enable
+For example:
+   binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_name=qcom,system size=12685312 ino=2738
+   binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=qcom,system size=12685312 ino=2738 fd=8
+   binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal: exp_name=qcom,system size=28672 ino=2739
+     kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=qcom,system size=12685312 ino=2738
+    RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=qcom,system size=12771328 ino=2762 fd=176
+    RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
+    RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_name=qcom,system size=12771328 ino=2762 attachment:ffffff880a18dd00 is_dynamic=0 dev_name=kgsl-3d0
 
-  # perf record -e 'synthetic:block_lat' -a
-  ^C[ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.259 MB perf.data (1 samples) ]
-  # perf script
-  kworker/u33:2-w     244 [000]  1707.836263: synthetic:block_lat: [FAILED TO PARSE] pid=244 delta=21 stack=ARRAY[0b, 00, 00, 00, 00, 00, 00, 00, 1d, 72, 9d, 82, ff, ff, ff, ff, 0d, 7d, 9d, 82, ff, ff, ff, ff, 3d, 3d, 9e, 82, ff, ff, ff, ff, 05, 91, 9d, 82, ff, ff, ff, ff, 40, 7a, 42, 81, ff, ff, ff, ff, 5e, f4, 0c, 82, ff, ff, ff, ff, 43, 8d, 0c, 82, ff, ff, ff, ff, 82, 2d, 89, 81, ff, ff, ff, ff, 9b, 39, 89, 81, ff, ff, ff, ff, a6, 5a, 9c, 82, ff, ff, ff, ff, 2f, 01, 00, 81, ff, ff, ff, ff]
+Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
+---
 
-not sure it's fixed in the latest libtraceevent, mine is
-  libtraceevent-1.8.4-3.fc42.x86_64
+Changes since v11: https://lore.kernel.org/all/20251225121119.2194228-1-gxxa03070307@gmail.com/
+- Lined up the backslashes nicely for the macro DMA_BUF_TRACE.
+- Used DEFINE_EVENT_CONDITION() to move the condition branch into the tracepoint.
 
-jirka
+Changes since v10: https://lore.kernel.org/all/20251224013455.1649879-1-gxxa03070307@gmail.com/
+- Always expose dmabuf->name_lock if lockdep is enabled.
 
+Changes since v9: https://lore.kernel.org/all/20251223032749.1371913-1-gxxa03070307@gmail.com/
+- Fixed some whitespace issues with the macro DMA_BUF_TRACE again.
 
-> ---
->  kernel/trace/trace_events_synth.c | 121 +++++++++++++++++++++++-------
->  1 file changed, 94 insertions(+), 27 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index 4554c458b78c..026e06f28958 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -493,28 +493,19 @@ static unsigned int trace_stack(struct synth_trace_event *entry,
->  	return len;
->  }
->  
-> -static notrace void trace_event_raw_event_synth(void *__data,
-> -						u64 *var_ref_vals,
-> -						unsigned int *var_ref_idx)
-> +static __always_inline int get_field_size(struct synth_event *event,
-> +					  u64 *var_ref_vals,
-> +					  unsigned int *var_ref_idx)
->  {
-> -	unsigned int i, n_u64, val_idx, len, data_size = 0;
-> -	struct trace_event_file *trace_file = __data;
-> -	struct synth_trace_event *entry;
-> -	struct trace_event_buffer fbuffer;
-> -	struct trace_buffer *buffer;
-> -	struct synth_event *event;
-> -	int fields_size = 0;
-> -
-> -	event = trace_file->event_call->data;
-> -
-> -	if (trace_trigger_soft_disabled(trace_file))
-> -		return;
-> +	int fields_size;
->  
->  	fields_size = event->n_u64 * sizeof(u64);
->  
-> -	for (i = 0; i < event->n_dynamic_fields; i++) {
-> +	for (int i = 0; i < event->n_dynamic_fields; i++) {
->  		unsigned int field_pos = event->dynamic_fields[i]->field_pos;
->  		char *str_val;
-> +		int val_idx;
-> +		int len;
->  
->  		val_idx = var_ref_idx[field_pos];
->  		str_val = (char *)(long)var_ref_vals[val_idx];
-> @@ -529,18 +520,18 @@ static notrace void trace_event_raw_event_synth(void *__data,
->  
->  		fields_size += len;
->  	}
-> +	return fields_size;
-> +}
->  
-> -	/*
-> -	 * Avoid ring buffer recursion detection, as this event
-> -	 * is being performed within another event.
-> -	 */
-> -	buffer = trace_file->tr->array_buffer.buffer;
-> -	guard(ring_buffer_nest)(buffer);
-> -
-> -	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
-> -					   sizeof(*entry) + fields_size);
-> -	if (!entry)
-> -		return;
-> +static __always_inline void write_synth_entry(struct synth_event *event,
-> +					      struct synth_trace_event *entry,
-> +					      u64 *var_ref_vals,
-> +					      unsigned int *var_ref_idx)
-> +{
-> +	int data_size = 0;
-> +	int i, n_u64;
-> +	int val_idx;
-> +	int len;
->  
->  	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
->  		val_idx = var_ref_idx[i];
-> @@ -581,10 +572,83 @@ static notrace void trace_event_raw_event_synth(void *__data,
->  			n_u64++;
->  		}
->  	}
-> +}
-> +
-> +static notrace void trace_event_raw_event_synth(void *__data,
-> +						u64 *var_ref_vals,
-> +						unsigned int *var_ref_idx)
-> +{
-> +	struct trace_event_file *trace_file = __data;
-> +	struct synth_trace_event *entry;
-> +	struct trace_event_buffer fbuffer;
-> +	struct trace_buffer *buffer;
-> +	struct synth_event *event;
-> +	int fields_size;
-> +
-> +	event = trace_file->event_call->data;
-> +
-> +	if (trace_trigger_soft_disabled(trace_file))
-> +		return;
-> +
-> +	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-> +
-> +	/*
-> +	 * Avoid ring buffer recursion detection, as this event
-> +	 * is being performed within another event.
-> +	 */
-> +	buffer = trace_file->tr->array_buffer.buffer;
-> +	guard(ring_buffer_nest)(buffer);
-> +
-> +	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
-> +					   sizeof(*entry) + fields_size);
-> +	if (!entry)
-> +		return;
-> +
-> +	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
->  
->  	trace_event_buffer_commit(&fbuffer);
->  }
->  
-> +#ifdef CONFIG_PERF_EVENTS
-> +static notrace void perf_event_raw_event_synth(void *__data,
-> +					       u64 *var_ref_vals,
-> +					       unsigned int *var_ref_idx)
-> +{
-> +	struct trace_event_call *call = __data;
-> +	struct synth_trace_event *entry;
-> +	struct hlist_head *perf_head;
-> +	struct synth_event *event;
-> +	struct pt_regs *regs;
-> +	int fields_size;
-> +	size_t size;
-> +	int context;
-> +
-> +	event = call->data;
-> +
-> +	perf_head = this_cpu_ptr(call->perf_events);
-> +
-> +	if (!perf_head || hlist_empty(perf_head))
-> +		return;
-> +
-> +	fields_size = get_field_size(event, var_ref_vals, var_ref_idx);
-> +
-> +	size = ALIGN(sizeof(*entry) + fields_size, 8);
-> +
-> +	entry = perf_trace_buf_alloc(size, &regs, &context);
-> +
-> +	if (unlikely(!entry))
-> +		return;
-> +
-> +	write_synth_entry(event, entry, var_ref_vals, var_ref_idx);
-> +
-> +	perf_fetch_caller_regs(regs);
-> +
-> +	perf_trace_buf_submit(entry, size, context,
-> +			      call->event.type, 1, regs,
-> +			      perf_head, NULL);
-> +}
-> +#endif
-> +
->  static void free_synth_event_print_fmt(struct trace_event_call *call)
->  {
->  	if (call) {
-> @@ -911,6 +975,9 @@ static int register_synth_event(struct synth_event *event)
->  	call->flags = TRACE_EVENT_FL_TRACEPOINT;
->  	call->class->reg = synth_event_reg;
->  	call->class->probe = trace_event_raw_event_synth;
-> +#ifdef CONFIG_PERF_EVENTS
-> +	call->class->perf_probe = perf_event_raw_event_synth;
-> +#endif
->  	call->data = event;
->  	call->tp = event->tp;
->  
-> -- 
-> 2.51.0
-> 
+Changes since v8: https://lore.kernel.org/all/20251218062853.819744-1-gxxa03070307@gmail.com/
+- Expose dmabuf->name_lock when lockdep is enabled but trace event is not.
+
+Changes since v7: https://lore.kernel.org/all/20251217105132.643300-1-gxxa03070307@gmail.com/
+- Fixed some whitespace issues with the macro DMA_BUF_TRACE.
+
+Changes since v6: https://lore.kernel.org/all/20251216063952.516364-1-gxxa03070307@gmail.com/
+- Add a comment for the macro DMA_BUF_TRACE.
+
+Changes since v5: https://lore.kernel.org/all/20251201112148.843572-1-gxxa03070307@gmail.com/
+- Add the macro DMA_BUF_TRACE.
+- Modify the commit message.
+
+Changes since v4: https://lore.kernel.org/all/20251128085215.550100-1-gxxa03070307@gmail.com/
+- Remove the tracepoints exporting.
+- Remove the file refcount for the trace.
+- Print the dev_name last.
+- Add the parameter of whether dma_buf attachment is dynamic.
+
+Changes since v3: https://lore.kernel.org/all/20251127004352.376307-1-gxxa03070307@gmail.com/
+- Take the dmabuf->name_lock around the tracepoint call itself.
+- Used DECLARE_EVENT_CLASS() and a DEFINE_EVENT().
+
+Changes since v2: https://lore.kernel.org/all/20251125162949.220488-1-gxxa03070307@gmail.com/
+- Add more explanation to the commit message.
+
+ drivers/dma-buf/dma-buf.c      |  48 +++++++++-
+ include/trace/events/dma_buf.h | 159 +++++++++++++++++++++++++++++++++
+ 2 files changed, 205 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/dma_buf.h
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index edaa9e4ee4ae..dee59d4c0b12 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -35,6 +35,26 @@
+ 
+ #include "dma-buf-sysfs-stats.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/dma_buf.h>
++
++/*
++ * dmabuf->name must be accessed with holding dmabuf->name_lock.
++ * we need to take the lock around the tracepoint call itself where
++ * it is called in the code.
++ *
++ * Note: FUNC##_enabled() is a static branch that will only
++ *       be set when the trace event is enabled.
++ */
++#define DMA_BUF_TRACE(FUNC, ...)					\
++	do {								\
++		/* Always expose lock if lockdep is enabled */		\
++		if (IS_ENABLED(CONFIG_LOCKDEP) || FUNC##_enabled()) {	\
++			guard(spinlock)(&dmabuf->name_lock);		\
++			FUNC(__VA_ARGS__);				\
++		}							\
++	} while (0)
++
+ static inline int is_dma_buf_file(struct file *);
+ 
+ static DEFINE_MUTEX(dmabuf_list_mutex);
+@@ -220,6 +240,8 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ 	    dmabuf->size >> PAGE_SHIFT)
+ 		return -EINVAL;
+ 
++	DMA_BUF_TRACE(trace_dma_buf_mmap_internal, dmabuf);
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ 
+@@ -745,6 +767,8 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 
+ 	__dma_buf_list_add(dmabuf);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_export, dmabuf);
++
+ 	return dmabuf;
+ 
+ err_dmabuf:
+@@ -768,10 +792,15 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_export, "DMA_BUF");
+  */
+ int dma_buf_fd(struct dma_buf *dmabuf, int flags)
+ {
++	int fd;
++
+ 	if (!dmabuf || !dmabuf->file)
+ 		return -EINVAL;
+ 
+-	return FD_ADD(flags, dmabuf->file);
++	fd = FD_ADD(flags, dmabuf->file);
++	DMA_BUF_TRACE(trace_dma_buf_fd, dmabuf, fd);
++
++	return fd;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+ 
+@@ -786,6 +815,7 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_fd, "DMA_BUF");
+ struct dma_buf *dma_buf_get(int fd)
+ {
+ 	struct file *file;
++	struct dma_buf *dmabuf;
+ 
+ 	file = fget(fd);
+ 
+@@ -797,7 +827,11 @@ struct dma_buf *dma_buf_get(int fd)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return file->private_data;
++	dmabuf = file->private_data;
++
++	DMA_BUF_TRACE(trace_dma_buf_get, dmabuf, fd);
++
++	return dmabuf;
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_get, "DMA_BUF");
+ 
+@@ -817,6 +851,8 @@ void dma_buf_put(struct dma_buf *dmabuf)
+ 		return;
+ 
+ 	fput(dmabuf->file);
++
++	DMA_BUF_TRACE(trace_dma_buf_put, dmabuf);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_put, "DMA_BUF");
+ 
+@@ -971,6 +1007,9 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 	list_add(&attach->node, &dmabuf->attachments);
+ 	dma_resv_unlock(dmabuf->resv);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_dynamic_attach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), dev);
++
+ 	return attach;
+ 
+ err_attach:
+@@ -1015,6 +1054,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+ 	if (dmabuf->ops->detach)
+ 		dmabuf->ops->detach(dmabuf, attach);
+ 
++	DMA_BUF_TRACE(trace_dma_buf_detach, dmabuf, attach,
++		dma_buf_attachment_is_dynamic(attach), attach->dev);
++
+ 	kfree(attach);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_detach, "DMA_BUF");
+@@ -1480,6 +1522,8 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+ 	vma_set_file(vma, dmabuf->file);
+ 	vma->vm_pgoff = pgoff;
+ 
++	DMA_BUF_TRACE(trace_dma_buf_mmap, dmabuf);
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_mmap, "DMA_BUF");
+diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
+new file mode 100644
+index 000000000000..3bb88d05bcc8
+--- /dev/null
++++ b/include/trace/events/dma_buf.h
+@@ -0,0 +1,159 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM dma_buf
++
++#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DMA_BUF_H
++
++#include <linux/dma-buf.h>
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(dma_buf,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf),
++
++	TP_STRUCT__entry(
++		__string(	exp_name,		dmabuf->exp_name)
++		__field(	size_t,			size)
++		__field(	ino_t,			ino)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size	= dmabuf->size;
++		__entry->ino	= dmabuf->file->f_inode->i_ino;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino)
++);
++
++DECLARE_EVENT_CLASS(dma_buf_attach_dev,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev),
++
++	TP_STRUCT__entry(
++		__string(	dev_name,			dev_name(dev))
++		__string(	exp_name,			dmabuf->exp_name)
++		__field(	size_t,				size)
++		__field(	ino_t,				ino)
++		__field(	struct dma_buf_attachment *,	attach)
++		__field(	bool,				is_dynamic)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name);
++		__assign_str(exp_name);
++		__entry->size		= dmabuf->size;
++		__entry->ino		= dmabuf->file->f_inode->i_ino;
++		__entry->is_dynamic	= is_dynamic;
++		__entry->attach		= attach;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu attachment:%p is_dynamic=%d dev_name=%s",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->attach,
++		  __entry->is_dynamic,
++		  __get_str(dev_name))
++);
++
++DECLARE_EVENT_CLASS(dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_STRUCT__entry(
++		__string(	exp_name,		dmabuf->exp_name)
++		__field(	size_t,			size)
++		__field(	ino_t,			ino)
++		__field(	int,			fd)
++	),
++
++	TP_fast_assign(
++		__assign_str(exp_name);
++		__entry->size	= dmabuf->size;
++		__entry->ino	= dmabuf->file->f_inode->i_ino;
++		__entry->fd	= fd;
++	),
++
++	TP_printk("exp_name=%s size=%zu ino=%lu fd=%d",
++		  __get_str(exp_name),
++		  __entry->size,
++		  __entry->ino,
++		  __entry->fd)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_export,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap_internal,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_mmap,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf, dma_buf_put,
++
++	TP_PROTO(struct dma_buf *dmabuf),
++
++	TP_ARGS(dmabuf)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_dynamic_attach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT(dma_buf_attach_dev, dma_buf_detach,
++
++	TP_PROTO(struct dma_buf *dmabuf, struct dma_buf_attachment *attach,
++		bool is_dynamic, struct device *dev),
++
++	TP_ARGS(dmabuf, attach, is_dynamic, dev)
++);
++
++DEFINE_EVENT_CONDITION(dma_buf_fd, dma_buf_fd,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd),
++
++	TP_CONDITION(fd >= 0)
++);
++
++DEFINE_EVENT(dma_buf_fd, dma_buf_get,
++
++	TP_PROTO(struct dma_buf *dmabuf, int fd),
++
++	TP_ARGS(dmabuf, fd)
++);
++
++#endif /* _TRACE_DMA_BUF_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+-- 
+2.34.1
+
