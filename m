@@ -1,82 +1,26 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1EC8F5B;
-	Mon, 29 Dec 2025 22:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB774246BC5;
+	Mon, 29 Dec 2025 23:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767048539; cv=none; b=Ymgnb7YPc5n0FqYTxb7XGkyyExB8XSFDzCXaxTdQWmkLEkcTMzPSW5+YkBJN6ftn3DPhYORoNO8pAgJfw6witIm1K7EVHrB6tGfw4hsSFHPX7AM0eRH2mzMrk4eJubEbZgzzJIkXS94WALwpM2g0DwoWiL2osQVGBxqzzIbcHME=
+	t=1767051393; cv=none; b=eMgPTJ58I4Ok5O5Dl/7IVbhznKUybbifJvL3EEtNaPeqOL5b0phV1l5vTEtTy/gCDY7TPF3g48UgkmQynPF3PpD0bPF6wTOlUaduNAghW5luO9dGHtKNTQgPnFfCHx2VPM0XwwZZHvWRzYrJw+/X4zEmxtKp5jcDK0MYL7TFSeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767048539; c=relaxed/simple;
-	bh=B7NG9nFiNNKScW5AjDDmFVww46ldJFJkgPplkrxI/lI=;
+	s=arc-20240116; t=1767051393; c=relaxed/simple;
+	bh=CB44Eysb/KH8ZRHxDLYPbxtTHagaGYqI8hBSMqf7ftw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kPO1BkM3GPU7iG/yhfLiVeiT66ZG4ZFs2+WoWkrrinTm21qFd4ca48nEjgQsUb3ikdczOgjWKw1u1R7Lk4CYn3JVZRfLl0MlSC5IOEMwWxPAKpn7UiwuQ+Mjis6IA5ctlC3ofooJ/LWc+eD4SI4GnhHI2g0HH4dT25f5PMAfJcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rostedt.org; spf=pass smtp.mailfrom=rostedt.org; dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b=Rmdz8oWB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uLAqhLhq; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rostedt.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rostedt.org header.i=@rostedt.org header.b="Rmdz8oWB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uLAqhLhq"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 501C614000BB;
-	Mon, 29 Dec 2025 17:48:56 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 29 Dec 2025 17:48:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rostedt.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1767048536;
-	 x=1767134936; bh=I+mKgNyt8REBLUFyoNxZmBuNP6m66JdvsPrH0uiJvm0=; b=
-	Rmdz8oWBsfmBK0lha0iHDynlknQqVAuZiGeWgjMu6bRb2ojoHt8tls34mCm/4GdD
-	yAKUM+6QrvkHjIyPiQxWFEaqlwOKU941fbpGN5Kfc4l+ssZcLZ2MwvCvDu/VJ3Y3
-	j2Sd67VU4jSy3PYLoFpwZYwvVRr80wlV8eXe7e0qwrAwXEJSFZv7huDXbfdD6KRw
-	oTXbVihfCGHP7OBPcyzqJeLJrf+4gRalwJYjN4djWbkzVpTe3zn/Z3pnLgAQv/BP
-	oCX2Zd5qOlzTD/4bnJvvs8331m4bS9Pg+ZSM1Kzp4E6CCvDJORtF199MCSjuxkv4
-	p6XKgYye8ih1A2mlihJayA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767048536; x=
-	1767134936; bh=I+mKgNyt8REBLUFyoNxZmBuNP6m66JdvsPrH0uiJvm0=; b=u
-	LAqhLhqo3PcatnZPbLAy8KzWpW7UH1win1H0OgKjUrJCm/lT4TqfBaRROVPz5uiZ
-	xln8OqOSIrmRQV2oYzkh6D4fgWNx47vj/SLzGj63TgnPHNvqfxad9kHC0vX6CFh9
-	OSVwhfddgtsbCZuO/yrZuuZ+eckYFPYBRSLAd1NTYkdilLujIvsat/GWLIEUPe8c
-	iogCZgImrehEc2aLfOenbT5YdFUWSNV/GY6hDMnDLgS0QbeUqEbIaaYBDl1GSAIs
-	lwUgc+1yhqjwDkxIFh/lo6GglfVzzTG6rmHXRg6O2hEf7U0+VGIKab9ulTawlFkb
-	CndYdznaMQkomLAudPYdg==
-X-ME-Sender: <xms:VwVTaUXxP_xcxH-cfGI9Cy6DlaZaQAOlLakVDv7INIXPFtuCTm0xbA>
-    <xme:VwVTadhtJimzxOz8SejqtQEj7s5KfhjANpgodDxysJ_MUTlyLxuC2PXsa6kXdjV60
-    R511Qdvm0UiNOPred-rYy9wEjRCWX0gI-8SoHo-7lQfjiSD7Z6IKto>
-X-ME-Received: <xmr:VwVTacoErSA7XH_9fiNRO6EHxDdFKP5mFeE9ugpgmZChuFwt292RTY9LXB2dRZSYpv2iQ4Ff>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejkeefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfgjfhfogggtgfesthejredtredtvdenucfhrhhomhepufhtvghvvghn
-    ucftohhsthgvughtuceoshhtvghvvghnsehrohhsthgvughtrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeelteehvdekvdfgfffgvefhgfdutdfgueeuvedujeelvdeluddugefhteeg
-    tdetgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hsthgvvhgvnhesrhhoshhtvgguthdrohhrghdpnhgspghrtghpthhtohepledpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepohhlshgrjhhirhhisehgmhgrihhlrdgtohhmpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepmhhhihhrrghmrghtsehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehmrghthhhivghurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtg
-    homhdprhgtphhtthhopehirhhoghgvrhhssehgohhoghhlvgdrtghomhdprhgtphhtthho
-    pegrtghmvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrmhhhhihunhhgsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhr
-    gh
-X-ME-Proxy: <xmx:VwVTaTE80gN6e_ZYJphRkm1B_gKNO4Q-tbuqlTTfBxxxOMC6x8tWkw>
-    <xmx:VwVTaR6jykbS8B9hLTycdJe9p71RxsJmuIvWOdSy4mgzOVL1Z2L8ng>
-    <xmx:VwVTabdOSA51Wrl4zNUpjWW2TTg3xsyQb0pbtcWD1Biapdw4Rpx1DQ>
-    <xmx:VwVTac4m3MEmjEijr6yxQwymNF9LCRzR69l7ThbxIxA9qBPp2krzxQ>
-    <xmx:WAVTaVbJ-poVZB8Zn9NTBR9OsCe0_ElKPjDKTnM1_6DsmMX4RcfQf4g_>
-Feedback-ID: id06e481b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 Dec 2025 17:48:55 -0500 (EST)
-Date: Mon, 29 Dec 2025 17:49:01 -0500
-From: Steven Rostedt <steven@rostedt.org>
+	 MIME-Version:Content-Type; b=uJMib+uUTP0Ag1gfNl23weE/KlSpaiPZYLZljbBg7I/bWc27GJQKMcVinTfsaC3FMcBi/KhkkYv99Y/ELgl/z/wbWUxqYXPXTQMi0o0X+vUrwsq7ZL5NvmRpH6C9M3WnkSkTx8Fp1kLD1HdRZGEZiU1+4FkdNjrlwYqH5zT3NIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 091511A6DF0;
+	Mon, 29 Dec 2025 23:36:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 0287F2000D;
+	Mon, 29 Dec 2025 23:36:26 +0000 (UTC)
+Date: Mon, 29 Dec 2025 18:36:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Jiri Olsa <olsajiri@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
@@ -85,10 +29,11 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
  <peterz@infradead.org>
 Subject: Re: [PATCH] tracing: Allow perf to read synthetic events
-Message-ID: <20251229174901.0e62eab0@gandalf.local.home>
-In-Reply-To: <aVG2VoBpFoEEE1gG@krava>
+Message-ID: <20251229183632.7b518b8d@gandalf.local.home>
+In-Reply-To: <20251229174901.0e62eab0@gandalf.local.home>
 References: <20251217113920.50b56246@gandalf.local.home>
 	<aVG2VoBpFoEEE1gG@krava>
+	<20251229174901.0e62eab0@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -98,50 +43,221 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 0287F2000D
+X-Stat-Signature: mqgirosjkj85ehtw6ttbmyeef54kmtzo
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18U27ymyHr7ID7EDKNZEETzfR9bZjlTL+Y=
+X-HE-Tag: 1767051386-918152
+X-HE-Meta: U2FsdGVkX1/U58kF5Tx+iM7QiV+01US94F5kihi8pzOJwF37VDPmSmwna2kqmHMDDRmQ5k81D8P+4YT5mqiEDIbB8Q7hfgpCSG1+RWUsBmsokbJkqYCUBwCDSuQ7uhcT+hftfoGr+ZsJiT7X3cUY3qGBexP0ABObMSk0YRcagDX4g8dwmz5JoCJGWXzEaCUvnBP1g7yeOa34ekKe90ZiyHV7ji+l+JmzAqFyLMHUGd/Rh0ZztGSEsYiH4qJUX/vyvlPYrvx7ai+UfC8JE7EHCsDtsTJFPr4J4bSGfUd7Bui8y1WLeVDD5F7WZZeSRIVW/uBMW75BM+G+7uBhi4MXRwNo5q6cUO3ua4Lp759quI9wMuTbAPBl4wICoicP0WdHXJQ9MGzeETR8mZTY0Xh133EVTy7tHhOf
 
-On Sun, 28 Dec 2025 23:59:34 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Mon, 29 Dec 2025 17:49:01 -0500
+Steven Rostedt <steven@rostedt.org> wrote:
 
-> hi,
-> I don't see the crash, but perf record/script gives me 'FAILED TO PARSE' in perf script:
-> 
->   # cd /sys/kernel/tracing
->   # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
->   # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=common_stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
->   # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,s=$st:onmax($delta).trace(block_lat,prev_pid,$delta,$s)' >> events/sched/sched_switch/trigger
->   # echo 1 > events/synthetic/block_lat/enable
-> 
->   # perf record -e 'synthetic:block_lat' -a
->   ^C[ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.259 MB perf.data (1 samples) ]
->   # perf script
->   kworker/u33:2-w     244 [000]  1707.836263: synthetic:block_lat: [FAILED TO PARSE] pid=244 delta=21 stack=ARRAY[0b, 00, 00, 00, 00, 00, 00, 00, 1d, 72, 9d, 82, ff, ff, ff, ff, 0d, 7d, 9d, 82, ff, ff, ff, ff, 3d, 3d, 9e, 82, ff, ff, ff, ff, 05, 91, 9d, 82, ff, ff, ff, ff, 40, 7a, 42, 81, ff, ff, ff, ff, 5e, f4, 0c, 82, ff, ff, ff, ff, 43, 8d, 0c, 82, ff, ff, ff, ff, 82, 2d, 89, 81, ff, ff, ff, ff, 9b, 39, 89, 81, ff, ff, ff, ff, a6, 5a, 9c, 82, ff, ff, ff, ff, 2f, 01, 00, 81, ff, ff, ff, ff]
-> 
-> not sure it's fixed in the latest libtraceevent, mine is
->   libtraceevent-1.8.4-3.fc42.x86_64
+> Looks like I only need to add "__get_stacktrace()" to the libtraceevent parsing.
 
-Yeah, it's not supported yet by libtraceevent (fails for trace-cmd record
-as well). But this should be easily fixed:
+The below patch appears to work:
 
- ># trace-cmd list -e block_lat -F --full
- system: synthetic
- name: block_lat
- ID: 1871
- format:
-	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-	field:int common_pid;	offset:4;	size:4;	signed:1;
-
-	field:pid_t pid;	offset:8;	size:4;	signed:1;
-	field:u64 delta;	offset:16;	size:8;	signed:0;
-	field:__data_loc unsigned long[] stack;	offset:24;	size:8;	signed:1;
-
- print fmt: "pid=%d delta=%llu stack=%s", REC->pid, REC->delta, __get_stacktrace(stack)
-
-Looks like I only need to add "__get_stacktrace()" to the libtraceevent parsing.
-
-Thanks,
+           <...>-22    [001] d..5.  2891.837516: block_lat:            pid=22 delta=159 stack=
+=> __schedule+0xded
+=> schedule+0x123
+=> io_schedule+0x44
+=> bit_wait_io+0x11
+=> __wait_on_bit+0x4a
+=> out_of_line_wait_on_bit+0x9d
+=> ext4_read_bh+0x95
+=> ext4_bread+0x51
+=> __ext4_read_dirblock+0x45
+=> htree_dirblock_to_tree+0x76
+=> ext4_htree_fill_tree+0x3b1
+=> ext4_readdir+0xa9b
+=> iterate_dir+0xef
+=> __se_sys_getdents64+0x76
+=> do_syscall_64+0x93
+           <...>-254   [004] d..5.  2892.173786: block_lat:            pid=254 delta=57 stack=
+=> __schedule+0xded
+=> schedule+0x123
+=> io_schedule+0x44
+=> bit_wait_io+0x11
+=> __wait_on_bit+0x4a
+=> out_of_line_wait_on_bit+0x9d
+=> ext4_read_bh+0x95
+=> ext4_bread+0x51
+=> __ext4_read_dirblock+0x45
+=> htree_dirblock_to_tree+0x76
+=> ext4_htree_fill_tree+0x1e5
+=> ext4_readdir+0xa9b
+=> iterate_dir+0xef
+=> __se_sys_getdents64+0x76
+=> do_syscall_64+0x93
 
 -- Steve
 
+diff --git a/include/traceevent/event-parse.h b/include/traceevent/event-parse.h
+index ebfc2c7..9c1abfa 100644
+--- a/include/traceevent/event-parse.h
++++ b/include/traceevent/event-parse.h
+@@ -138,6 +138,11 @@ struct tep_print_arg_bitmask {
+ 	struct tep_format_field	*field;
+ };
+ 
++struct tep_print_arg_stacktrace {
++	char			*stacktrace;
++	struct tep_format_field	*field;
++};
++
+ struct tep_print_arg_field {
+ 	char			*name;
+ 	struct tep_format_field	*field;
+@@ -215,6 +220,7 @@ enum tep_print_arg_type {
+ 	TEP_PRINT_DYNAMIC_ARRAY_LEN,
+ 	TEP_PRINT_HEX_STR,
+ 	TEP_PRINT_CPUMASK,
++	TEP_PRINT_STACKTRACE,
+ };
+ 
+ struct tep_print_arg {
+@@ -231,6 +237,7 @@ struct tep_print_arg {
+ 		struct tep_print_arg_func	func;
+ 		struct tep_print_arg_string	string;
+ 		struct tep_print_arg_bitmask	bitmask;
++		struct tep_print_arg_stacktrace	stacktrace;
+ 		struct tep_print_arg_op		op;
+ 		struct tep_print_arg_dynarray	dynarray;
+ 	};
+diff --git a/src/event-parse.c b/src/event-parse.c
+index 939b0a8..09d9092 100644
+--- a/src/event-parse.c
++++ b/src/event-parse.c
+@@ -1129,6 +1129,9 @@ static void free_arg(struct tep_print_arg *arg)
+ 		free_arg(arg->op.left);
+ 		free_arg(arg->op.right);
+ 		break;
++	case TEP_PRINT_STACKTRACE:
++		free(arg->stacktrace.stacktrace);
++		break;
+ 	case TEP_PRINT_FUNC:
+ 		while (arg->func.args) {
+ 			farg = arg->func.args;
+@@ -2895,6 +2898,7 @@ static int arg_num_eval(struct tep_print_arg *arg, long long *val)
+ 	case TEP_PRINT_BSTRING:
+ 	case TEP_PRINT_BITMASK:
+ 	case TEP_PRINT_CPUMASK:
++	case TEP_PRINT_STACKTRACE:
+ 	default:
+ 		do_warning("invalid eval type %d", arg->type);
+ 		ret = 0;
+@@ -2925,6 +2929,7 @@ static char *arg_eval (struct tep_print_arg *arg)
+ 	case TEP_PRINT_BSTRING:
+ 	case TEP_PRINT_BITMASK:
+ 	case TEP_PRINT_CPUMASK:
++	case TEP_PRINT_STACKTRACE:
+ 	default:
+ 		do_warning("invalid eval type %d", arg->type);
+ 		break;
+@@ -3462,6 +3467,34 @@ process_cpumask(struct tep_event *event __maybe_unused, struct tep_print_arg *ar
+ 	return type;
+ }
+ 
++static enum tep_event_type
++process_stacktrace(struct tep_event *event, struct tep_print_arg *arg, char **tok)
++{
++	enum tep_event_type type;
++	char *token;
++
++	if (read_expect_type(event->tep, TEP_EVENT_ITEM, &token) < 0)
++		goto out_free;
++
++	arg->type = TEP_PRINT_STACKTRACE;
++	arg->stacktrace.stacktrace = token;
++	arg->stacktrace.field = NULL;
++
++	if (read_expected(event->tep, TEP_EVENT_DELIM, ")") < 0)
++		goto out_err;
++
++	type = read_token(event->tep, &token);
++	*tok = token;
++
++	return type;
++
++ out_free:
++	free_token(token);
++ out_err:
++	*tok = NULL;
++	return TEP_EVENT_ERROR;
++}
++
+ static struct tep_function_handler *
+ find_func_handler(struct tep_handle *tep, char *func_name)
+ {
+@@ -3750,6 +3783,10 @@ process_function(struct tep_event *event, struct tep_print_arg *arg,
+ 		free_token(token);
+ 		return process_dynamic_array_len(event, arg, tok);
+ 	}
++	if (strcmp(token, "__get_stacktrace") == 0) {
++		free_token(token);
++		return process_stacktrace(event, arg, tok);
++	}
+ 	if (strcmp(token, "__builtin_expect") == 0) {
+ 		free_token(token);
+ 		return process_builtin_expect(event, arg, tok);
+@@ -4414,6 +4451,7 @@ eval_num_arg(void *data, int size, struct tep_event *event, struct tep_print_arg
+ 	case TEP_PRINT_BSTRING:
+ 	case TEP_PRINT_BITMASK:
+ 	case TEP_PRINT_CPUMASK:
++	case TEP_PRINT_STACKTRACE:
+ 		return 0;
+ 	case TEP_PRINT_FUNC: {
+ 		struct trace_seq s;
+@@ -4859,6 +4897,33 @@ more:
+ 	free(str);
+ }
+ 
++static void print_stacktrace_to_seq(struct tep_handle *tep,
++				    struct trace_seq *s, const char *format,
++				    int len_arg, const void *data, int size)
++{
++	int nr_funcs = size / tep->long_size;
++	struct func_map *func;
++	unsigned long long val;
++
++	trace_seq_putc(s, '\n');
++
++	/* The first entry is a counter, skip it */
++	data += tep->long_size;
++
++	for (int i = 1; i < nr_funcs; i++) {
++		trace_seq_puts(s, "=> ");
++		val = tep_read_number(tep, data, tep->long_size);
++		func = find_func(tep, val);
++		if (func) {
++			trace_seq_puts(s, func->func);
++			trace_seq_printf(s, "+0x%llx\n", val - func->addr);
++		} else {
++			trace_seq_printf(s, "%llx\n", val);
++		}
++		data += tep->long_size;
++	}
++}
++
+ static void print_str_arg(struct trace_seq *s, void *data, int size,
+ 			  struct tep_event *event, const char *format,
+ 			  int len_arg, struct tep_print_arg *arg)
+@@ -5097,6 +5162,17 @@ static void print_str_arg(struct trace_seq *s, void *data, int size,
+ 				     data + offset, len);
+ 		break;
+ 	}
++	case TEP_PRINT_STACKTRACE: {
++		if (!arg->stacktrace.field) {
++			arg->stacktrace.field = tep_find_any_field(event, arg->stacktrace.stacktrace);
++			if (!arg->stacktrace.field)
++				break;
++		}
++		dynamic_offset_field(tep, arg->stacktrace.field, data, size, &offset, &len);
++		print_stacktrace_to_seq(tep, s, format, len_arg,
++					data + offset, len);
++		break;
++	}
+ 	case TEP_PRINT_OP:
+ 		/*
+ 		 * The only op for string should be ? :
