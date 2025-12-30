@@ -1,150 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021092.outbound.protection.outlook.com [40.107.192.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84482E6CD9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Dec 2025 11:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767094160; cv=none; b=W3E8jaV5suSBrQTKjaWO1t9p16Rxo8r80E3oif8c25eMrLC3X7cBF0xUFdaKQNOZrU8GsCn+BilBiSPyyOMUpqhkvzC0lM3an4qWZ5CFligzTCRDdFvEN09J/qlO5lAYy50yF5DAh91SMbASMnt0YpXd12UjlxZOJ+YI3b75rtU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767094160; c=relaxed/simple;
-	bh=O00ZI4FSKFfmFHzARhRnzhqzPgDhkFvxMgFn0UfMCrk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hGy5IGWq39zKVUSMuLcee+FReYQX7XZZJQ3nw95d4I8YlzrrmD4ZIkRwTRqHqWsLcgOc0mTtF8kYTnUl2+E0MXx3A8Cktg9ZreBYRUEoNA3QkiZn1yBh/NTtqrKu/q6UqP9w6gAqDwQl/7N2oSTIXiKztx722TVbImp1G1O0maA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XvQ2HFo2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB68A15E97;
+	Tue, 30 Dec 2025 14:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767104471; cv=fail; b=L094c12JV5/OpxV9Fn9sZdD6Y86hHk+wrTV71CzQHgFI/7xP/IBrV02UdSKxG0KE0WB1JImHapIzyTfZpMp9rqeUqCm7LNfsAFX2jcbKIOM+HttjLUT3CZGV2EB/2ecdjN2k60Mr0qTSp/T7YtdZVQhrP452uBmgxZLmAxve+wo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767104471; c=relaxed/simple;
+	bh=QLzMJ3XjRawcJgfY+qu8EBxmlNae8OD0C0EGP8Sx5MQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=K5uiqGhCv7tRJqydWs/b8F/LpgLCjFD/EEOfbHIdgqt/O1vSiHZOEY6MYaM4dOKciJQGOBup3xUWIaba8Lc8Zf3hZ3hi85uFub0S+H0tyRnfUTlQR3/aVCdYHd7of+ep1x46ZvAfEE4712VTrdh/0jsOWM4fursijdG3/YA5NNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=dBYbn3FU; arc=fail smtp.client-ip=40.107.192.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvQ2HFo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767094157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O00ZI4FSKFfmFHzARhRnzhqzPgDhkFvxMgFn0UfMCrk=;
-	b=XvQ2HFo2JWSM7CFO9a5Wma1kzNbIxIFxIw/2NZuvUEzsT5r8pm1zc1SrKXzM6RGn0gR9Ef
-	eovRW87GR2MDmm0IPtVa/wa8gKwCSS1gZH25ob0mJDz/kv8ZXOOJPvFCzErf9RsUxoFpk4
-	0kM75VbIXGgFTVi/5ij+GA2rZ33svpI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-e3ELJWswPDa4VxovE3nvTA-1; Tue, 30 Dec 2025 06:29:16 -0500
-X-MC-Unique: e3ELJWswPDa4VxovE3nvTA-1
-X-Mimecast-MFC-AGG-ID: e3ELJWswPDa4VxovE3nvTA_1767094155
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-42fdbba545fso5985063f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Dec 2025 03:29:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767094155; x=1767698955;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O00ZI4FSKFfmFHzARhRnzhqzPgDhkFvxMgFn0UfMCrk=;
-        b=L0Ir7We/5UFYYTSkzMg6JkFIUFQWblvbsN7xIYO8ttq+UXh5VK2gmoxI7nhP8ZeOSo
-         apoIjkIEGoTesvcLb93M8P+BpKRAxfns4gb/hgKegFAlID6D343XzLVJBi67t0WM1CVU
-         Y8sc6OnYyejQE0QUz70QxRm3Hen325k9n3Nl+CUTyNbxC87PBlQCLIiezRmi9agFOnXY
-         6fY5BMZz+b/+nuVZx34Dl0HOXwZSbniZTWpFmzhrS1nsg7SGxnIaODdvsKYMvRfl+tax
-         2K5Aa5BlINF90XgidVWRf2pSjoobcCOWwKxDn8E3tplCDQ0SOofIhShe4haF8sYCt5ql
-         Qefg==
-X-Gm-Message-State: AOJu0YyImX+k/wgXRqbW6Hwh/BKBeInudQ4YTaaZSjeBDQEsQGbisyqR
-	moJiWVU2xpznb3i0+6GtoqQjx+1WzRjl0VPJ97l0rGtOi+UBxaztAwEjd+AmkpK6KUsi9kEYh3A
-	DPiHxcTvmNWCOEMKPQ8fG+NSwd3RIewOOaUWzWt732wTlFQwRDgtXO/LO/dqEpE+jsQvk9ngzO2
-	ZibvIzDfsl
-X-Gm-Gg: AY/fxX5/4BaZefMTNbJxs3XtHHyP83fo1w1x1Wn+7GsRUGWrQUeGfItYli2jHeJA1i6
-	RDQe3Gwt4xmDKbHH6U1PATn4BUgpU65iev0VbGjUeZQebPkxkNWAyj2pTeogTgun659ISS0ceMh
-	2OwaCbPSTmqTjIq2vJBQKkEOWS7pUsg9QgXfHyD8dFGOj4/KJ9GlT7zbgkbgU6ur0mqA0vhMt2J
-	1kqJPxzOb1HbxWa7XRv0CKMBG50diCtfqfC/jdcVHLo0zRDG0JIU9nReX0xd3y7Rij4Ii0hlcyv
-	2R0t5RqnuplcQZe1y9IHa6wKPvSj3vMHwviSqDIr1SB0LAo0H40ducE9S1I+O1V6Y1mzOZ+xdxd
-	uenHBC1JNlzlaA0DQz+lnBXG7Lq8q4F8q5Z3CUSQ1gfCBsQuBOWT4nXJeH5PH2zslZAvhSj21hp
-	Kn+9tktEKx
-X-Received: by 2002:a05:6000:3113:b0:430:fbce:458a with SMTP id ffacd0b85a97d-432448b7f11mr43246422f8f.18.1767094155274;
-        Tue, 30 Dec 2025 03:29:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFfRHqLPwk9g7p4qHvFp0IOhopjCpyEPKce1VEHzqrt49HJKpbTMuKAaiiQ8+a3wvsqFQikMg==
-X-Received: by 2002:a05:6000:3113:b0:430:fbce:458a with SMTP id ffacd0b85a97d-432448b7f11mr43246403f8f.18.1767094154851;
-        Tue, 30 Dec 2025 03:29:14 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324ea227casm67401590f8f.15.2025.12.30.03.29.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Dec 2025 03:29:14 -0800 (PST)
-Message-ID: <5a8b1ef45e775d4724237057f60ed49cf5432ae8.camel@redhat.com>
-Subject: Re: [PATCH v2] rv: Fix documentation reference in da_monitor.h
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Shubham Sharma <slopixelz@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rostedt@goodmis.org
-Date: Tue, 30 Dec 2025 12:29:13 +0100
-In-Reply-To: <20251230075337.11993-1-slopixelz@gmail.com>
-References: <20251230075337.11993-1-slopixelz@gmail.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="dBYbn3FU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h7MFn/wt9+b0IubkS3+hnAMbNzvHIJs6gj11CkXlZdkwAYqrvas76IXiNOTyuZXa9JYZKyR4CUIveFgZYI+ln63reEeRpVghgJfIpvyJ6+LApuYLqkJ9RsVpivOyFnNpFXTJPSHH9gkDIe6VkHriwS9ktUNWmzirWYI0+k8XxC9V0pSSd7XeNzvfpXxgMHxpTSi+40Ex2cwi8EPje3QT8c67OyG2apT+svx+ATO5QvU/2VaSeOax+gDhmXRkDpUdjK5jaZKSzbob+4u2djj2w/c8tc0K5nHxUJ8vzHhhM663ddnqJM8z6Nps9xU8JkCxR/2XJaazH2M79PwGeb3aCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xmfOm970tR0LMfVhppECJYwa31qtTvA7VdHsreylcy0=;
+ b=b4FEQOdTnsgtfp9nfCzIyJjb4Txv0Dw+q6gvaBSfqLpLcI1gGeMO+GOSQYwtU7jnZAg5c4zDhxsLUqlVVGE0VSQH/JeHRB2NIvZU2PFq4qPnOpIMnq5o7SiHdTiz7juuSPmw7U1fM1MaefOVWZoLNp7NbTkQPUfo/5nAYCrw1CreT2hgoxwFxsZLR4ZOkDR2wm/okAyMzC4etrFCmb+E4MxRSqozJy4vhTMJpTcwSFmEUv7Mb4fNaVSH7kAheQntyW8RXVfhUQZiuvbO5NIulgRpraMc5B0nmoQlpPcpFcgmvT+Xtc357PFzeOAQDIsdwRzO4gzsb2aQhs/qr1uBuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xmfOm970tR0LMfVhppECJYwa31qtTvA7VdHsreylcy0=;
+ b=dBYbn3FUM8OpJ3zUhI4YcRuiN2Mvp+duZAFXmB8IfYS6pTZtbLRmXAKybWQWb5TID7mmkLKSKGBybTKWQXBhLWsCq6U6a3vpcDHLHJJkyZaa4XWAULe4s2alH1/hwiMeuHD3WB3dSkU48KZAoqgz8E1vDGewuxWJInhmleh2VEVPzBdxgJC0E1ydpmZ2Z4p/VxCz78RC/73TNX5azPl5615aDoRXuCRg6Ge4nD+cy5nOdpq6lPSD76l2TPOYHQf72j9oERBBTitkIXZcjEtbS0lCR+QQgAMezaMND1P8GsjZ7q9EkAzfloXama8jX+zzWDSFxoI3Ptp2qr8Fv5pFEg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT3PR01MB10796.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:95::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Tue, 30 Dec
+ 2025 14:21:04 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9456.013; Tue, 30 Dec 2025
+ 14:21:04 +0000
+Message-ID: <71767aa7-0247-4bcc-8746-3338905197b3@efficios.com>
+Date: Tue, 30 Dec 2025 09:21:00 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Christophe Leroy
+ <chleroy@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ David Laight <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
+ <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
+ <20251229111748.3ba66311@gandalf.local.home>
+ <9833cb61-1ec5-4cc1-ad9d-3e07f3deff80@efficios.com>
+ <aVOTbArAxmbT5LY9@smile.fi.intel.com>
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <aVOTbArAxmbT5LY9@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0345.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6b::19) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rT04L_YqtjJlP4bTgjfGl-cYIlJHEAOtyWA4k6Ohup4_1767094155
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB10796:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d66e775-d2bc-46b7-a473-08de47aeaa4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a003RE0yYk1ra0FKRXZ0ZzRjT3B2U2toTkhYMXFVZlhQeXpHVURIekpmMmhl?=
+ =?utf-8?B?Z2tTYUk0VGh4MnhlQVZBZFA1Mnc2WVVFZzJ3cTUwTGtXMXpPR3RIMlV3V1My?=
+ =?utf-8?B?UzVIRTgwTkNoYS8zV0VzMmJBWkZxSVBYTTdsLzJaSnZ3T2tpL0Jhbk95T09j?=
+ =?utf-8?B?YVpZbVMxdEQ4enViVWNkcm5zcEJLVVlucXpMSUlzNkNDU24vNGF0QVpTZnJQ?=
+ =?utf-8?B?cmtYTEp3ajZHYis1bzFteEt2ZFpDQVNCMXc3Y3VuUHN2ek5DZnlyeXl5RlJG?=
+ =?utf-8?B?cEVSYmJPL01tdTNFTzNydGVmbjJNODl4MTBUYW9KZHVmOTNqZUdUZCtuclMx?=
+ =?utf-8?B?RnZXaE5oc050Wk5uNmtkWER6V0huSWdXMW5KR3J4V05BR0lZZ1FwWVUyNnFw?=
+ =?utf-8?B?M1loWHVhZ3Eza3N5Vi9BclY4VFc0WFZUZE5iK2lIQ3JJTlhRUnBsNGpGSG1t?=
+ =?utf-8?B?bzVvTGtkcFh6ai9URlRoL1BlcFhCNEMrUFlMdVRHSitsRldJQzhZT1BoRmtV?=
+ =?utf-8?B?RHpTM2VzU0pHbFJVcm1qNmJXUVorT3duZ1djczd5dkZ2cktGaWhyYjBpeTFk?=
+ =?utf-8?B?TExNUEV3MUpUZnNuMlJTZnRxUzNzdWdzUnExVmd3MVdPSzBZMHVCTUxnVXRC?=
+ =?utf-8?B?NHFTOW5YQTlVclVOdVZacGlxVk9SbWZYSEVkN1YvQXZLWVNsazdjSTE5RnpT?=
+ =?utf-8?B?QUdmY0c2SDRCUXlpUEFLOHRuaFlKcVlXV2hPelpuZFdLYndMRUYzbnZVZERF?=
+ =?utf-8?B?YWptUVp1WjRCREtBVld1YktJNDlMZWl6WTRCbFBwUlFYWXJNWnRJdTFVQzVO?=
+ =?utf-8?B?N2NXeFk4VTZIb3VQSUhCTXY4a3JVcFpibHpiWEFpUEp3dklSRmFHV0wrZVFK?=
+ =?utf-8?B?YytsdGRKTHhkWmp3MWFMOHFtWWlLcFpwSlV4OHRod0tsNWk2Q0lqOTJzaU9N?=
+ =?utf-8?B?S25SSHkvTldNcXpDMzJ0TE9ZUmdVN1kvd1VzblBKMjdYRnZlRGpyVWdldGNM?=
+ =?utf-8?B?aXk5M3FrVGRVd1hBL1RqQWtlbkFhbmwrZnd4L0d5YXc0TGd6NXdnTnVTWitK?=
+ =?utf-8?B?N1ZoU2NXbk12NVp5ekpwMDhBN2hPU3dWRk9OblNzYUM3a0NHU0JWNDAwempT?=
+ =?utf-8?B?R0VBc0gyOFlRblkzOEpVSDcza1JxTVRLOWxCclpvVUpWVW40REhNUXF0WHhp?=
+ =?utf-8?B?Z09GVWp3TnpWem4yTU9VOE1TbkZaTXF5TDlyV1R0dmhHbzRtOFowbkVIMEg5?=
+ =?utf-8?B?SVpiRVRVYmZjZldmUm84ayt3WGhOcVBUMEtVVXhVQ2pTaEZKMUNLUlQ4NURi?=
+ =?utf-8?B?SUZuVnZQOVlHUzFCL1JBRE1SL0VqTURaQkZibXNFNkl6MnQ3SEovSi9UL1Qx?=
+ =?utf-8?B?ZW1qYUFza253ZjdTRGl1ZnNTU1FUeVE3ZHQvdUxxdk5GSWdxeFNyY3JiMVVC?=
+ =?utf-8?B?MjQ5VG1MZFMyM0J6QzVlS0o0WE9reVlDV3F5V2szYnNCUEVNckR4NDhMaFFt?=
+ =?utf-8?B?TVpqbjg1alpyYmJjRnFzanRYcmora09UbXZ2YjNyQlZUT21NWUE2aUZETTRG?=
+ =?utf-8?B?SjNKVXRoY3YwSnA2Z3VtYzl0Wm02c1N4QU9OTzU5ZDJoeWFKdEt0a1MxUUtW?=
+ =?utf-8?B?dHhmTWxXa2JmcDlLeUNKVm1WL0pMdHh2YUF6b3dMRkdoc29Ra1JzTEltcHYx?=
+ =?utf-8?B?aEViSlVSbmlQU1BydjBVYlk0TkN6VGhpcEpTcFVqUEthYnpJTjlmK3RBSWUw?=
+ =?utf-8?B?NktyRXdqZ1V1KzdKVnp2eFp1T0YyK0ZZVEtIdXJVTW5yTndHVEVKaFBRekxy?=
+ =?utf-8?B?ZGliaTNSUURFak9GeVdsWVJ6YVhhRk1XYmtxaE9sWkliU0IwTTJDbHNEZENN?=
+ =?utf-8?B?Wk5lUVhzbW1iVzVpYVl0VnBaOTZKNjNIS2ZodnJLbGVSZWc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d2hvZUxrem9kdm50NVUySFRPVXZyenE2eXRwZnFJSVpqOEhYbzZyNGd0NVZw?=
+ =?utf-8?B?dVhONEZEc29MVWhvVmVVQXlPdk9FQ0JIZUdvdkZIRExUaG01N3U1Rno1M1VL?=
+ =?utf-8?B?cGxsd1MwUFhJdFhpQ3IxUVdETkVvb3diaHVSWnRNSDNDQWVzcjlDbllXRmxE?=
+ =?utf-8?B?VTBzbzZ6bWJBQS80YkdhcW9RNlZHbm1vWVh4dHZ6NmJaNlhndCtyVUJLblp0?=
+ =?utf-8?B?R0gvbWZnYVdjTngxeUt6VVBJWC9BdCtnaExNd1lEdEdZQnZNR241Tm1jd0F1?=
+ =?utf-8?B?QUVFbDRSK2pKM0hycVc1a2lWajZxNDkvTUJ5eHBQbnMxcGhvdTR4NzZ0Yk13?=
+ =?utf-8?B?dHhram9LRWNzTUlFK0xZOUFUMi9VVTFOdUMrOUcrd21RZGx0MWt4MGQ5RWdw?=
+ =?utf-8?B?SFNYcVF6UkJDQ1ZOK3FiU3ppUEY3V1hzMWlBcW5Rb1ZpRDBPZ2ttMGY3WENk?=
+ =?utf-8?B?Mnlucnp3OTNlTU9zNmJLZ1ZKK0E4TjlCMHdKR1JldmpEMXpPWTR6b3l1QkNX?=
+ =?utf-8?B?UnQ2SGJpTzVzLzI3eWM1TUYwZHI2OHhiRGw1d09vdE9TQ2RhcjVkUFBzWkdK?=
+ =?utf-8?B?YlQrZlVtbmUvSmlxY3VhY2hycVhpZTVQRk82dkM0Z0srQ3NzVk00Q2xUQnlq?=
+ =?utf-8?B?RjhEdEEyZWpMNDU5dnI2R2JKVzBlOW5wb3JiMkUxRHdpbzdSc2tjUXF2MHQ0?=
+ =?utf-8?B?M3RYVUtaaENSOHpXYzNDR2xxMU9zVGthZFc0VDdLaTVyaU9BbHZ2RkU3RjR3?=
+ =?utf-8?B?RG5mWVRtdDdqWUp0QWQ5N3JPRjFNZWxvRGpVVDB5OGwydXlRNExDODdsVWFu?=
+ =?utf-8?B?d3hsVm9sTGRsR01xZjM3ZVdkWUhqUUhNNkFBYlVhbUI1ZExNU1JpYUhERzJY?=
+ =?utf-8?B?NGtFUXRXUmp1dDFrMFpHaDRoWi9UelBMQ1R1RElPZDlCTkN4WXM3cHFFTGQ4?=
+ =?utf-8?B?V2VzdE5rT3V5R3NqU2xoQ09ycmRuLy9VY25JOFhyNjRwMGhjbUpyNWhUWU1J?=
+ =?utf-8?B?emR4WDkzN09RVHNxYXd0cG94Q0YrcXNYSkhqODFmK0ZwTHljZmdsR0Exa1Mv?=
+ =?utf-8?B?UGJhYVFvdUNMdkZiU3dPbG1oemVZNW9tQWtTQjMyd3p3OWdCd3ZTTThLUnVk?=
+ =?utf-8?B?cTBhenZhMlY1NXk4Vk5Pb3JOV1UwSjZ6OTBXS05vR2pETHRDNDZrbk5wVHBV?=
+ =?utf-8?B?V29ZM1pkblVONk5QTEM2MDIxWXRLY1Ivb0QrMTZybmd0Q2dlNFYwb3BYSnFF?=
+ =?utf-8?B?eEVkMG1LUk9QZEl6Q05ISWN5bmxhV1Y0TFY5WDg1RU0xOVp4YWZGMnlzYVhY?=
+ =?utf-8?B?VTRlaWd0T0JPK1dHQWJ1cjdINHFhdGFwREFNaG1nRXlmVTZ6SnRaM3RNdFFV?=
+ =?utf-8?B?Vko0bysvMTBxNjhhanhDcTBabkpSblJ3UnZxamovSmFGYkE3TmU5SkkwbnFI?=
+ =?utf-8?B?RXk0V20rZG9qOGZiRnNhTTJwNDIybWpKVlljY2EwMkY1NFl3OUhzQUxnajQw?=
+ =?utf-8?B?Uk1rRjdZOFdTZUJ5OU4rQnlxWHdOY3RyRG12aVJBQmlqS0hYeEEzTUNvbitE?=
+ =?utf-8?B?aE52dkQxU2NOZWdHdW51K3ZnbTZBTEk0Y3pTK2NIWjhmK2ZjZ1VwdGQ3aml4?=
+ =?utf-8?B?SS9ZVnNOQTV0S1JSNmtJaDc2SzdaTGhzaE0zb0dtRThaSXVyb1BEbWIwMEln?=
+ =?utf-8?B?eDZzaW9HZ1RxTHh0cEloTkx6N1B3ejN3eVFyR0EraEtjZ2RXUmFHMnVsSVc0?=
+ =?utf-8?B?aWNrM0JZd1l5UDY1OVFTYS9VbDNpYk41cFdKUlcrNnhyVmJmbmxaSjVUQmtX?=
+ =?utf-8?B?Vzg4UTNXWHZyWFlRbzcrNzQycUIzblJ5N21ncmNyc3d6SS9FZWk0NDhZVS9h?=
+ =?utf-8?B?eVZ1eTc1ZDJTQmlDMWJrVy9SdXF5TWFoRC8zQXlEZTdmeEQvS3RSSVBvODl5?=
+ =?utf-8?B?bzc3Nm5xMmZzWVZKVVdrQXRCUHM5eHB5dUwzdEtMalovL1UwWXBycytJZGZB?=
+ =?utf-8?B?M3ZTdm5odEt4ZDFnWitUYW5OMUJqTEozVk5tNUNGOVEvVU9jSi83ZXl6M25T?=
+ =?utf-8?B?UXBuWGtyUHh0VWtZV1FCMFZBbnRwam11WlVYNlU2UFB2ejhOalVCWUJIOGUw?=
+ =?utf-8?B?SnIzc21ZZFA5YzlidUN3eUVuRUpKZGVPcDFBTjZWN1RJK1ZHVURqUmNRYTdX?=
+ =?utf-8?B?SzMzSk5ianFFZERJQzRhYnREa2xnWDcwQi9BNnFjaXpCZElYM3czVnNUU1ZN?=
+ =?utf-8?B?MDZTTDhmT0FTYmQwQlNLVlR2eTloejdvYjhRaWhOQzIzRGRhbzM2b3V5TWVJ?=
+ =?utf-8?B?bkJHMkxXbHpPSzE0akRFdzEyUXpQYmY0RklDRFFubzBYRUhvQ2VVYzB6M1RT?=
+ =?utf-8?Q?G1HflB6xF7D/RPzA=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d66e775-d2bc-46b7-a473-08de47aeaa4c
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2025 14:21:04.1974
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tJCCHMKchYxyXY2sxleL8Lpf8nRlze7XuANf1WfsibXtaT/a9uWrNJvXAoUhd8ucx13la9EGZISrZKd11VMOIEoEo2Np32tJkrC4uEnrDRE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB10796
 
-On Tue, 2025-12-30 at 13:23 +0530, Shubham Sharma wrote:
-> Update documentation reference to reflect the file rename.
-> Monitor synthesis documentation was renamed in commit f40a7c060207
-> ("Documentation/rv: Prepare monitor synthesis document for LTL inclusion"=
-)
-> from da_monitor_synthesis.rst to monitor_synthesis.rst.
->=20
-> Signed-off-by: Shubham Sharma <slopixelz@gmail.com>
+On 2025-12-30 03:55, Andy Shevchenko wrote:
+> On Mon, Dec 29, 2025 at 05:25:08PM -0500, Mathieu Desnoyers wrote:
+> 
+> ...
+> 
+>> One possible compromise would be to move it to its own header file,
+>> and introduce a CONFIG_TRACE_PRINTK Kconfig option (default Y) that
+>> would surround an include from linux/kernel.h with a preprocessor
+>> conditional. But please make sure the default stays as it is today:
+>> include the trace printk header by default.
+> 
+> "by default" where exactly? The problem is that kernel.h is a total mess and
+> it's included in a lot of mysterious ways (indirectly), and in C you _must_
+> include a header anyway for a custom API, just define *which* one.
 
-Looks good, thanks! I'm going to apply it to my tree.
+This patch series moves the guts of trace_printk into its own header
+file, which reduces clutter. So that's already progress. :)
 
+> 
+> Based on the Steven's first replies I see a compromise in having it inside
+> printk.h. If you want to debug something with printf() (in general) the same
+> header should provide all species. Do you agree?
 
-Small note for next time, although it doesn't make a big difference with th=
-is
-tiny patch, when you send a new version after getting a review, try to prop=
-agate
-the review tag.
-
-Simply copy:
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-(or whoever reviewed/acked) before the signoff in the commit message.
-This helps when reviewing larger series and when using tools like patchwork=
-.
-
-(now you don't need to do it, most tools will pick it from this answer)
+I don't have a strong opinion about including trace_printk.h from either
+kernel.h or printk.h. As long as it's still included by a default kernel
+config the same way it has been documented/used since 2009.
 
 Thanks,
-Gabriele
 
-> ---
-> v2: Removed backslashes as suggested by Gabriele Monaco
->=20
-> =C2=A0include/rv/da_monitor.h | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-> index 0cef64366538..810cfb140131 100644
-> --- a/include/rv/da_monitor.h
-> +++ b/include/rv/da_monitor.h
-> @@ -8,7 +8,7 @@
-> =C2=A0 * The dot2k tool is available at tools/verification/dot2k/
-> =C2=A0 *
-> =C2=A0 * For further information, see:
-> - *=C2=A0=C2=A0 Documentation/trace/rv/da_monitor_synthesis.rst
-> + *=C2=A0=C2=A0 Documentation/trace/rv/monitor_synthesis.rst
-> =C2=A0 */
-> =C2=A0
-> =C2=A0#include <rv/automata.h>
+Mathieu
 
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
