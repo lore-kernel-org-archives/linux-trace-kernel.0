@@ -1,407 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB6322B76;
-	Tue, 30 Dec 2025 14:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF26C23D291
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Dec 2025 16:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767106314; cv=none; b=YZdhbQJimViJT2l1WR+Zhqo5uf5bGLMdepl9S/idIcKqRMRsQq2WCFJzZ/8igi/D5VsYmYGFey4ODD08I1TPyI2Q08RnRCYDNlPuep5O2P4ifLLViHq6zg21maSGve0/1L5jpa7t4+arQ9Qf301MlRoT/BfSMbqop6V70lkpeGo=
+	t=1767111521; cv=none; b=rvDeUHCH88XxxLe7yHM2KSPEPA2lxbvRxp6wOZs1cXZH8WXH60HyvxoNGtKidUg4hSZDAWKIUDzGNrhu+x0n3chy2vHBAyK/VfJU50r6tKJNou0P7NmRtYBRyznGqTCdvj4pUM1X8S+iafeW7vHd+vfvnIRQQ/7tiV/hE0+gVG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767106314; c=relaxed/simple;
-	bh=WKE/XYNcBzOf0ZIHqjBiCq2xvyLfPnltvhfX9fnz+wg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ISeo4x0bJuC8DkZ+VPSb6enLADrfIkzYV8+khPKLriI7NToeI9Ym4OgiOWyMYcysOE8ThAtRj6u919GitmBnF6vQ57m2G5sFhV/7Ip5boHYgh8Gutw359QYeUjxjvUvSNW1O3puRv5n4h9i5Pk7rgrujnz8zxRAphswzwzm0B9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl7+of8P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767111521; c=relaxed/simple;
+	bh=SEDmRYF3sC4jFxtJOkX4DoWYzz+dShc4NSCac80QCAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqaAJpueCJSQQkGa/UFUwU2qTtLi1F/fbzNghlsSmmXouNOvnmaYZMe+Nrh4o7unEhV+pYNS25c+cRvCcsvvmLrBNXPXMc1JS2bSasTxz+w4GnrDX44PdTEh4jq7GVv3QMWcEZUtQhGosX7S4GEyL1tCwgG7joU4jMaoace6P00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7oBMHjE; arc=none smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl7+of8P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84D9C4CEFB;
-	Tue, 30 Dec 2025 14:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767106313;
-	bh=WKE/XYNcBzOf0ZIHqjBiCq2xvyLfPnltvhfX9fnz+wg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dl7+of8PQYOKIbHtdfkfn9V6WccfsEMLmBm3vSay7LfTce7rS6hUBXCstI6zqs2S2
-	 mxI2+AEmlNwOjAiayujxul9mbt0CziwYRSo+oZZC0Lv+e72cal3klBjWdwsV2+RjFT
-	 P8Kp+AFpAag9iEAu0Gnt3IgxXT/PL7gm8gOw7+6pJALE+pc3dwcUsevv82oP4+ReD9
-	 D2sO0MnaTNBfFsQ5stQAqV/48nqMI2q0Z1osWYDSYxPlxLQK1YCzK+qSBbLSVlbV9r
-	 OH5Iv257OUYsstpUXbYN9uT36JO5BBnJdHp0HAhaZaAxOk1YO4qRTACRjkknlqIKHG
-	 uex1b0GcXT11w==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>,
-	Florent Revest <revest@google.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Song Liu <song@kernel.org>
-Subject: [PATCHv6 bpf-next 9/9] bpf,x86: Use single ftrace_ops for direct calls
-Date: Tue, 30 Dec 2025 15:50:10 +0100
-Message-ID: <20251230145010.103439-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251230145010.103439-1-jolsa@kernel.org>
-References: <20251230145010.103439-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7oBMHjE"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-644798bb299so7938974d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Dec 2025 08:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767111519; x=1767716319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MPsyxbejDKzht/HLlmTw2OYeWbm6m6QfdKcYrQLdRPs=;
+        b=E7oBMHjEr8dxA1QNQpikfjAU+/luKg1/T5q50ptUNYDcPBC5dIhMkIitf/wdtc7fd7
+         IwqD6oDU6dseSl66oMkc2xNTR+uL0x4JlbIo3B+FVDOPr38qgEev7Gh4qO+TqqVCNVZO
+         BooJB40h4D0129zZ2NMcCz2VIOlQzbv2aUDFW+F/QDMm1mSOHv9RcH+hW906jJZln3tF
+         JISkuS+0ZX0eIybGeRknZKo2UN8Y9abDBE9rBevY6TIZh/mayax6xDBEG9TGLYlGTwI6
+         HQ3Uj6W3fUmKF/6WDLE5jy/rXjT5bfUOjloZHsKHfQaV9Yx0KPOAyRHvpDEXhKf9pt+F
+         SLOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767111519; x=1767716319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MPsyxbejDKzht/HLlmTw2OYeWbm6m6QfdKcYrQLdRPs=;
+        b=bN4rPCv4OrDB1x4j2s1HWc/CHah9Jrbli69y5C3uDE5mXNzluWm7QCJxlaVx5PiUzr
+         f0YeElKGN0eptTH7Yt0MR5V9cn3gww8BLHVDPof4F5Hhjftw8quCtVPzP1+8uKMYOn8m
+         yoVtn0512KkOndJvFxt0k3t66MbRZYckBLjMEcDEe5ERjOAspVR4dzrtVPR1tk6KaarV
+         zAmREoyba1ufpKHWUXXOhL4bSrJls9eoEt1ff1EAGDMCUQAL7ptsjZo5SoURRNv/EKAc
+         1oiqUK9YCiR42QH+FsyHyh4uynm2HZ008wi8Ky671kaz4AA3xpaXFoVXW6TmKKKdgIPi
+         b0og==
+X-Forwarded-Encrypted: i=1; AJvYcCXbWn2jj9pqk1XriZwLf4AxfLgXl3BPmGLRzrRw35fIguiRKTmyd2uwbo7xbI/NWbUYiewM0Yif7AD9HJBFgl7NfEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPnc65X3DNqgzjq+eQODvREqv6w6tcCNzURw2iUb5y39OGSMbQ
+	iQVqF2OFjenfWieTgLjho91vuAYjwdvnLINk/31H9joL5wNSQzGw+ms2
+X-Gm-Gg: AY/fxX4P9sLdQREut+n7uVdyUZLqKwd3BJigyCkRK/r3afrZ3uncF81jOCjdcXMPx8A
+	d6D08w8aAIox+9WZH7rCaipyIT4EOjdd1EwBgXK/HUwc7HRUwVYsR8X0oR5B/GQ4ePe3fOfaqrk
+	H+XFrtlUFhWSw3lQnsUZ83UOtOZ1tZOs+r8QOsxQYDGHpByIrp3BB1Q6yLeOSKElMSh/bsd+cQp
+	us9y7v7dhF80mAvBHZ7iHZbpOPE0Ce9Y0yFHdVkkDUVY81myI7fwF+sXwK8EoOBgEAPDJ4tbOBv
+	bRQ528w/URgJFlcVi4AqVZmcFEVmkrLjZ+j8ohJXVZJthTK3hkhYOYoFBCCU8AwAvQ1ukxzBaHv
+	D18lwhcXtPaKVWGoDD+GuQB7U11/0kTadthq8GGhfwapAq3IYeWcolDJr0UeorroxesT9NWgGrh
+	hcPjgEU1o=
+X-Google-Smtp-Source: AGHT+IEgiqEBna6+E3gk4ji1N98UDvQ4ZQ6HTSlvv4L7zUJHLtl+Nax+qoAvUGugh8jqgLuKhXifXA==
+X-Received: by 2002:a05:690e:11c7:b0:644:6adf:cbf0 with SMTP id 956f58d0204a3-6466a8e6db0mr24510128d50.92.1767111518890;
+        Tue, 30 Dec 2025 08:18:38 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:79bc:cbcc:ae9e:6e4e])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78fb44f0670sm126746507b3.26.2025.12.30.08.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Dec 2025 08:18:38 -0800 (PST)
+Date: Tue, 30 Dec 2025 11:18:37 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+Message-ID: <aVP7XVtYwb4YV9gy@yury>
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
+ <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
+ <20251229111748.3ba66311@gandalf.local.home>
+ <9833cb61-1ec5-4cc1-ad9d-3e07f3deff80@efficios.com>
+ <aVOTbArAxmbT5LY9@smile.fi.intel.com>
+ <71767aa7-0247-4bcc-8746-3338905197b3@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71767aa7-0247-4bcc-8746-3338905197b3@efficios.com>
 
-Using single ftrace_ops for direct calls update instead of allocating
-ftrace_ops object for each trampoline.
+On Tue, Dec 30, 2025 at 09:21:00AM -0500, Mathieu Desnoyers wrote:
+> On 2025-12-30 03:55, Andy Shevchenko wrote:
+> > On Mon, Dec 29, 2025 at 05:25:08PM -0500, Mathieu Desnoyers wrote:
+> > 
+> > ...
+> > 
+> > > One possible compromise would be to move it to its own header file,
+> > > and introduce a CONFIG_TRACE_PRINTK Kconfig option (default Y) that
+> > > would surround an include from linux/kernel.h with a preprocessor
+> > > conditional.
 
-With single ftrace_ops object we can use update_ftrace_direct_* api
-that allows multiple ip sites updates on single ftrace_ops object.
+We already have CONFIG_TRACING, and everything in the new
+trace_printk.h is conditional on it. We can protect the header in
+kernel.h with the same config.
 
-Adding HAVE_SINGLE_FTRACE_DIRECT_OPS config option to be enabled on
-each arch that supports this.
+> > > But please make sure the default stays as it is today:
+> > > include the trace printk header by default.
+> > 
+> > "by default" where exactly?
 
-At the moment we can enable this only on x86 arch, because arm relies
-on ftrace_ops object representing just single trampoline image (stored
-in ftrace_ops::direct_call). Archs that do not support this will continue
-to use *_ftrace_direct api.
+Seemingly nowhere.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/Kconfig        |   1 +
- kernel/bpf/trampoline.c | 220 ++++++++++++++++++++++++++++++++++------
- kernel/trace/Kconfig    |   3 +
- kernel/trace/ftrace.c   |   7 +-
- 4 files changed, 200 insertions(+), 31 deletions(-)
+> > The problem is that kernel.h is a total mess and
+> > it's included in a lot of mysterious ways (indirectly),
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 80527299f859..53bf2cf7ff6f 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -336,6 +336,7 @@ config X86
- 	select SCHED_SMT			if SMP
- 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
- 	select ARCH_SUPPORTS_SCHED_MC		if SMP
-+	select HAVE_SINGLE_FTRACE_DIRECT_OPS	if X86_64 && DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index e5a0d58ed6dc..248cd368fa37 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -33,12 +33,40 @@ static DEFINE_MUTEX(trampoline_mutex);
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mutex);
- 
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+static struct bpf_trampoline *direct_ops_ip_lookup(struct ftrace_ops *ops, unsigned long ip)
-+{
-+	struct hlist_head *head_ip;
-+	struct bpf_trampoline *tr;
-+
-+	mutex_lock(&trampoline_mutex);
-+	head_ip = &trampoline_ip_table[hash_64(ip, TRAMPOLINE_HASH_BITS)];
-+	hlist_for_each_entry(tr, head_ip, hlist_ip) {
-+		if (tr->ip == ip)
-+			goto out;
-+	}
-+	tr = NULL;
-+out:
-+	mutex_unlock(&trampoline_mutex);
-+	return tr;
-+}
-+#else
-+static struct bpf_trampoline *direct_ops_ip_lookup(struct ftrace_ops *ops, unsigned long ip)
-+{
-+	return ops->private;
-+}
-+#endif /* CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS */
-+
- static int bpf_tramp_ftrace_ops_func(struct ftrace_ops *ops, unsigned long ip,
- 				     enum ftrace_ops_cmd cmd)
- {
--	struct bpf_trampoline *tr = ops->private;
-+	struct bpf_trampoline *tr;
- 	int ret = 0;
- 
-+	tr = direct_ops_ip_lookup(ops, ip);
-+	if (!tr)
-+		return -EINVAL;
-+
- 	if (cmd == FTRACE_OPS_CMD_ENABLE_SHARE_IPMODIFY_SELF) {
- 		/* This is called inside register_ftrace_direct_multi(), so
- 		 * tr->mutex is already locked.
-@@ -137,6 +165,162 @@ void bpf_image_ksym_del(struct bpf_ksym *ksym)
- 			   PAGE_SIZE, true, ksym->name);
- }
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+/*
-+ * We have only single direct_ops which contains all the direct call
-+ * sites and is the only global ftrace_ops for all trampolines.
-+ *
-+ * We use 'update_ftrace_direct_*' api for attachment.
-+ */
-+struct ftrace_ops direct_ops = {
-+	.ops_func = bpf_tramp_ftrace_ops_func,
-+};
-+
-+static int direct_ops_alloc(struct bpf_trampoline *tr)
-+{
-+	tr->fops = &direct_ops;
-+	return 0;
-+}
-+
-+static void direct_ops_free(struct bpf_trampoline *tr) { }
-+
-+static struct ftrace_hash *hash_from_ip(struct bpf_trampoline *tr, void *ptr)
-+{
-+	unsigned long ip, addr = (unsigned long) ptr;
-+	struct ftrace_hash *hash;
-+
-+	ip = ftrace_location(tr->ip);
-+	if (!ip)
-+		return NULL;
-+	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
-+	if (!hash)
-+		return NULL;
-+	if (bpf_trampoline_use_jmp(tr->flags))
-+		addr = ftrace_jmp_set(addr);
-+	if (!add_ftrace_hash_entry_direct(hash, ip, addr)) {
-+		free_ftrace_hash(hash);
-+		return NULL;
-+	}
-+	return hash;
-+}
-+
-+static int direct_ops_add(struct bpf_trampoline *tr, void *addr)
-+{
-+	struct ftrace_hash *hash = hash_from_ip(tr, addr);
-+	int err;
-+
-+	if (!hash)
-+		return -ENOMEM;
-+	err = update_ftrace_direct_add(tr->fops, hash);
-+	free_ftrace_hash(hash);
-+	return err;
-+}
-+
-+static int direct_ops_del(struct bpf_trampoline *tr, void *addr)
-+{
-+	struct ftrace_hash *hash = hash_from_ip(tr, addr);
-+	int err;
-+
-+	if (!hash)
-+		return -ENOMEM;
-+	err = update_ftrace_direct_del(tr->fops, hash);
-+	free_ftrace_hash(hash);
-+	return err;
-+}
-+
-+static int direct_ops_mod(struct bpf_trampoline *tr, void *addr, bool lock_direct_mutex)
-+{
-+	struct ftrace_hash *hash = hash_from_ip(tr, addr);
-+	int err;
-+
-+	if (!hash)
-+		return -ENOMEM;
-+	err = update_ftrace_direct_mod(tr->fops, hash, lock_direct_mutex);
-+	free_ftrace_hash(hash);
-+	return err;
-+}
-+#else
-+/*
-+ * We allocate ftrace_ops object for each trampoline and it contains
-+ * call site specific for that trampoline.
-+ *
-+ * We use *_ftrace_direct api for attachment.
-+ */
-+static int direct_ops_alloc(struct bpf_trampoline *tr)
-+{
-+	tr->fops = kzalloc(sizeof(struct ftrace_ops), GFP_KERNEL);
-+	if (!tr->fops)
-+		return -ENOMEM;
-+	tr->fops->private = tr;
-+	tr->fops->ops_func = bpf_tramp_ftrace_ops_func;
-+	return 0;
-+}
-+
-+static void direct_ops_free(struct bpf_trampoline *tr)
-+{
-+	if (!tr->fops)
-+		return;
-+	ftrace_free_filter(tr->fops);
-+	kfree(tr->fops);
-+}
-+
-+static int direct_ops_add(struct bpf_trampoline *tr, void *ptr)
-+{
-+	unsigned long addr = (unsigned long) ptr;
-+	struct ftrace_ops *ops = tr->fops;
-+	int ret;
-+
-+	if (bpf_trampoline_use_jmp(tr->flags))
-+		addr = ftrace_jmp_set(addr);
-+
-+	ret = ftrace_set_filter_ip(ops, tr->ip, 0, 1);
-+	if (ret)
-+		return ret;
-+	return register_ftrace_direct(ops, addr);
-+}
-+
-+static int direct_ops_del(struct bpf_trampoline *tr, void *addr)
-+{
-+	return unregister_ftrace_direct(tr->fops, (long)addr, false);
-+}
-+
-+static int direct_ops_mod(struct bpf_trampoline *tr, void *ptr, bool lock_direct_mutex)
-+{
-+	unsigned long addr = (unsigned long) ptr;
-+	struct ftrace_ops *ops = tr->fops;
-+
-+	if (bpf_trampoline_use_jmp(tr->flags))
-+		addr = ftrace_jmp_set(addr);
-+	if (lock_direct_mutex)
-+		return modify_ftrace_direct(ops, addr);
-+	return modify_ftrace_direct_nolock(ops, addr);
-+}
-+#endif /* CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS */
-+#else
-+static void direct_ops_free(struct bpf_trampoline *tr) { }
-+
-+static int direct_ops_alloc(struct bpf_trampoline *tr)
-+{
-+	return 0;
-+}
-+
-+static int direct_ops_add(struct bpf_trampoline *tr, void *addr)
-+{
-+	return -ENODEV;
-+}
-+
-+static int direct_ops_del(struct bpf_trampoline *tr, void *addr)
-+{
-+	return -ENODEV;
-+}
-+
-+static int direct_ops_mod(struct bpf_trampoline *tr, void *ptr, bool lock_direct_mutex)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-+
- static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
- {
- 	struct bpf_trampoline *tr;
-@@ -154,16 +338,11 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
- 	tr = kzalloc(sizeof(*tr), GFP_KERNEL);
- 	if (!tr)
- 		goto out;
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
--	tr->fops = kzalloc(sizeof(struct ftrace_ops), GFP_KERNEL);
--	if (!tr->fops) {
-+	if (direct_ops_alloc(tr)) {
- 		kfree(tr);
- 		tr = NULL;
- 		goto out;
- 	}
--	tr->fops->private = tr;
--	tr->fops->ops_func = bpf_tramp_ftrace_ops_func;
--#endif
- 
- 	tr->key = key;
- 	tr->ip = ftrace_location(ip);
-@@ -206,7 +385,7 @@ static int unregister_fentry(struct bpf_trampoline *tr, u32 orig_flags,
- 	int ret;
- 
- 	if (tr->func.ftrace_managed)
--		ret = unregister_ftrace_direct(tr->fops, (long)old_addr, false);
-+		ret = direct_ops_del(tr, old_addr);
- 	else
- 		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr, NULL);
- 
-@@ -220,15 +399,7 @@ static int modify_fentry(struct bpf_trampoline *tr, u32 orig_flags,
- 	int ret;
- 
- 	if (tr->func.ftrace_managed) {
--		unsigned long addr = (unsigned long) new_addr;
--
--		if (bpf_trampoline_use_jmp(tr->flags))
--			addr = ftrace_jmp_set(addr);
--
--		if (lock_direct_mutex)
--			ret = modify_ftrace_direct(tr->fops, addr);
--		else
--			ret = modify_ftrace_direct_nolock(tr->fops, addr);
-+		ret = direct_ops_mod(tr, new_addr, lock_direct_mutex);
- 	} else {
- 		ret = bpf_trampoline_update_fentry(tr, orig_flags, old_addr,
- 						   new_addr);
-@@ -251,15 +422,7 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
- 	}
- 
- 	if (tr->func.ftrace_managed) {
--		unsigned long addr = (unsigned long) new_addr;
--
--		if (bpf_trampoline_use_jmp(tr->flags))
--			addr = ftrace_jmp_set(addr);
--
--		ret = ftrace_set_filter_ip(tr->fops, (unsigned long)ip, 0, 1);
--		if (ret)
--			return ret;
--		ret = register_ftrace_direct(tr->fops, addr);
-+		ret = direct_ops_add(tr, new_addr);
- 	} else {
- 		ret = bpf_trampoline_update_fentry(tr, 0, NULL, new_addr);
- 	}
-@@ -910,10 +1073,7 @@ void bpf_trampoline_put(struct bpf_trampoline *tr)
- 	 */
- 	hlist_del(&tr->hlist_key);
- 	hlist_del(&tr->hlist_ip);
--	if (tr->fops) {
--		ftrace_free_filter(tr->fops);
--		kfree(tr->fops);
--	}
-+	direct_ops_free(tr);
- 	kfree(tr);
- out:
- 	mutex_unlock(&trampoline_mutex);
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index bfa2ec46e075..d7042a09fe46 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -50,6 +50,9 @@ config HAVE_DYNAMIC_FTRACE_WITH_REGS
- config HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	bool
- 
-+config HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	bool
-+
- config HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
- 	bool
- 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 02030f62d737..4ed910d3d00d 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2631,8 +2631,13 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
- static void call_direct_funcs(unsigned long ip, unsigned long pip,
- 			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
- {
--	unsigned long addr = READ_ONCE(ops->direct_call);
-+	unsigned long addr;
- 
-+#ifdef CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS
-+	addr = ftrace_find_rec_direct(ip);
-+#else
-+	addr = READ_ONCE(ops->direct_call);
-+#endif
- 	if (!addr)
- 		return;
- 
--- 
-2.52.0
+Yes!
 
+> > and in C you _must_
+> > include a header anyway for a custom API, just define *which* one.
+>
+> This patch series moves the guts of trace_printk into its own header
+> file, which reduces clutter. So that's already progress. :)
+> 
+> > 
+> > Based on the Steven's first replies I see a compromise in having it inside
+> > printk.h. If you want to debug something with printf() (in general) the same
+> > header should provide all species. Do you agree?
+ 
+It may sound logical, but I don't like this idea. Printk() is used
+for debugging by everyone, but its main goal is to communicate to
+userspace and between different parts of the kernel. Notice how all
+debugging and development API in linux/pritnk.h is protected with the
+corresponding ifdefery. 
+
+Contrary to that, trace_printk() is a purely debugging feature. There's
+no use for it after the debugging is done. (Or I missed something?)
+
+Everyone admits that kernel.h is a mess. Particularly, it's a mess of
+development and production features. So, moving trace_printk() from an
+already messy kernel.h to a less messy printk.h - to me it looks like
+spreading the mess.
+
+> I don't have a strong opinion about including trace_printk.h from either
+> kernel.h or printk.h. As long as it's still included by a default kernel
+> config the same way it has been documented/used since 2009.
+
+Can you please point to the documentation and quote the exact piece
+stating that? Git history points to the commit 40ada30f9621f from Ingo
+that decouples tracers from DEBUG_KERNEL, and the following 422d3c7a577
+from Kosaki that force-enables the new TRACING_SUPPORT regardless of
+the DEBUG_KERNEL state.
+
+To me, decoupling tracing from DEBUG_KERNEL looks accidental rather than
+intentional. So maybe simply restore that dependency?
+
+Currently, even with tinyconfig, DEBUG_KERNEL is enabled (via EXPERT).
+And even if EXPERT and DEBUG_KERNEL are off, tracers are still enabled.
+This doesn't look right...
+
+Thanks,
+Yury
