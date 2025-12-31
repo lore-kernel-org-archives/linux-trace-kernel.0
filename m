@@ -1,180 +1,139 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D3F259C84;
-	Tue, 30 Dec 2025 16:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E98315D2F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 12:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767113176; cv=none; b=WdA5OuaPwdyU2aYtoq9+grGHM7qyQ8X8waeF7EjYSvYt7sK/RnW5AMVgubh1HrLWXdJrZ+/3G4lFj5Yu4KiFlRtX9xN6ec2E5CwQcAsxBRHiiaah6Ev1fi4z/7dgoEbp78p5O9hrEG3WUQcgyCJNZAl7Jv4YEz59lNMQC1SswnA=
+	t=1767185067; cv=none; b=IoZOe0Rred0cfMnXaHbABGQ1SMkdjO1z7gEIWmvQwIg/hFJIuKhAwROo4pLyQs4nXEdPmHBuLkclcSfoD9Uys63d0dBB1Ki+SbxY/Xc9UMSe6uXVLIniQaWXqnh/gdM3wwbP+kdrH39h+/tZEUj8hMgeZGFz0c/BLR9F1cDhFxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767113176; c=relaxed/simple;
-	bh=R4SxyFI83waj6Lu9i7GQ4O/KwnSnmH1EUTPwS0QAwhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BiuxYcH7+vvN4ICAuzCYRLA3hVhSiIXHUXhYF5ru+4Q2CLsXeqLp0quCytgVSq5dnyhM9j7hGY//6UhlvEOOyxiD9pKdwHxk37VRjT6rfS/I5VFLeznbqaUMhwhVRhcKlY4iA8wJ6CkU2bkol/kjgMeEGFX8pDp8wp8DHM3vyss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 3A4561AC02;
-	Tue, 30 Dec 2025 16:46:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 3C3872000E;
-	Tue, 30 Dec 2025 16:46:00 +0000 (UTC)
-Date: Tue, 30 Dec 2025 11:46:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Morton
- <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Christophe Leroy <chleroy@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, David Laight <david.laight@runbox.com>,
- Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
-Message-ID: <20251230114608.4d016ad3@gandalf.local.home>
-In-Reply-To: <aVP7XVtYwb4YV9gy@yury>
-References: <20251225170930.1151781-1-yury.norov@gmail.com>
-	<20251225170930.1151781-8-yury.norov@gmail.com>
-	<20251226115848.298465d4@gandalf.local.home>
-	<20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
-	<20251229111748.3ba66311@gandalf.local.home>
-	<9833cb61-1ec5-4cc1-ad9d-3e07f3deff80@efficios.com>
-	<aVOTbArAxmbT5LY9@smile.fi.intel.com>
-	<71767aa7-0247-4bcc-8746-3338905197b3@efficios.com>
-	<aVP7XVtYwb4YV9gy@yury>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767185067; c=relaxed/simple;
+	bh=rtQ9YOzpTI1rtYAALDX3LhmxVAFBXeE/3oqvYKuAQ8c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BucXlnmXKuH4s6Gv9B0hCjDI/rpderU4XQyQLDx96PESZJJQ/8Q8TWFJbYX/NdzPQGhLDCXznSsF2SdwHlFZZEy3Yo2eDnsPc7aOING8dKST33l1BS8DFCRVqT+by7PA7kSU7tms39+JkTV8IEcHs5sM79bmc5MXZBmE9wPaEmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7c78d30649aso7333243a34.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 04:44:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767185065; x=1767789865;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=doIBT3kveDHefqqmJXIbpBpDJYXHZZ9gY6YG0CQ1W1s=;
+        b=RoOjTSx2IcGOIfPjjK76V1mDd/IcveGhSvZ8FscTC6SFSMRYYo41UEBIjHp2UDnCcw
+         CrnpMnZTlejjGrRalHC7uqwsJZgeeW0vrBWv8fAzQLheSkjwejKdb47C59awsRQB1BHZ
+         f9jEL+vZ/zHRD/HZD0EmkPsKIs+fzcSel+X3YIk06tz2rjI4vIveBmsRMb0X9wt+gWD7
+         +h73+oO4CNbHm3D3Hae8O4I1XNz4uPihigwU6ow9JxxymMefovnqTYN9mcau0wrVd/96
+         M4GsAR3fKteCUG7h8uVtIUCTB3KbbtZ8GqXq/a5TTgF0oM8rk7fomdyC57MF/NbegV1T
+         wYdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpKCsrNjFp5GTXUZSWMQxJGsbLlWQDjbv7zbqQQG5fgsj/I3VYUUe8Tmxe2BbVIccdCBRX3yFlorQXOJQMfVZcqxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL4cxLagHmBNwnbBurh6A567ZoMbrXSZwFaUyXDR73nWAlSVbB
+	pv8xhIUuPOxA/qOcn+k2waMcbZy2CCYX4kq+cde1PvJWmSkirji6xnGTAMVpzA==
+X-Gm-Gg: AY/fxX7KGDtzCHvmBjlGjNZeYLYHbe90uXiruYrD2omxfH9DeR/2cQ4W1y8mZGx+N+N
+	wtlqUsZq6WQvpk/HDVl2PeCHDl3Lwy3qeZqSxaBguKgb0BCzdB9AjGNCUZ/sPTOGREyz9bdKsOl
+	HogJmBdEwOsSiAVmXzs+KYP8lPKz51CClNSP9+NXz7EK0Pyy3mz3/cusfh0zqbeDzTPbiNpBlVW
+	6UWFdZXQ/q5Z/W6O9g71F2biKD7eSQOKvc6qtQX3kky1FV3BFhS1LZ1qfroGU/c+oKzrGIYVhSg
+	4Hj6J5SW21rBLu/BdaeKqWLaumbiaeKwGFlX/64iiDa34q0LipgqVUw39BOjDyKfnvngPnDIC8X
+	hnnf3d+vdTQd6Ngmd/3Lil7raZGl+oAQGTC8NIgsp4a0fSHmbCYbpEGx0rNRBDW73vZFLKF9tSM
+	OCSlVVfzQR4A==
+X-Google-Smtp-Source: AGHT+IFVj7a9FUlEf5NH6KpIT/kaUw0oiLWglRHiOzK9tALgQw37NwF6rJUHBW5v0Oj+IkC3OkEsQw==
+X-Received: by 2002:a05:6830:3154:b0:7c1:12c5:334e with SMTP id 46e09a7af769-7cc66a023c7mr23119448a34.17.1767185065067;
+        Wed, 31 Dec 2025 04:44:25 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cc667d6b04sm24557658a34.16.2025.12.31.04.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Dec 2025 04:44:24 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 31 Dec 2025 04:44:05 -0800
+Subject: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 4i9hewjpr3gbis1q6d3ttnkhanok4op7
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 3C3872000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18O6dPuVd6GpggnxnHsJ7vt65oCGcSBmjI=
-X-HE-Tag: 1767113160-914064
-X-HE-Meta: U2FsdGVkX18pw+VknCW4DxjOFTSyQBTc345WFVz/6FnLY9YrBVc+F9/yrODI8xntUzXr6QDAUTdwfVKc2ji52wMkx+htI+Dz48K8SQi/wWRO2PFdggctocbIDZ5uEWPoDkRnaAh25vBcp2AJUUygYwNwh/JrMwAbIPXdqK9Tcrzvo7CnkiLt7z4jGH0nkAFlAvkuq4vJv4757f0HurjAvcOTdxeG8PfzZHXSAP7l2112HEI/BbnRhX84nNssrD2zF9mPTP/WWzuKXZzPJFvm6bYURwv1iQUdmJ4Btt6EYP/lD/A5Gh+qz40ZHZK6TEeWi+OOS6gMWcRgJnjXFYTpHVKKNdF2FB0XpS+54YY1zUvhwOh/RzvjoRCBjkhlhsp+
+Message-Id: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
+X-B4-Tracking: v=1; b=H4sIAJUaVWkC/yXMwQqEIBQF0F953HVCKhH4KzEL01e9FjaoxUD07
+ 0O1PJtzonAWLnB0IvMhRbYER7ohhMWnmZVEOIJpTaeN1cqntFVfOaq+i2wna0PsRzSEb+ZJfs8
+ 1fF6XfVw51DvAdf0Be9PcO20AAAA=
+X-Change-ID: 20251231-annotated-75de3f33cd7b
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Laura Abbott <labbott@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org, 
+ usamaarif642@gmail.com, kernel-team@meta.com, stable@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1769; i=leitao@debian.org;
+ h=from:subject:message-id; bh=rtQ9YOzpTI1rtYAALDX3LhmxVAFBXeE/3oqvYKuAQ8c=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpVRqoMlyZ1wZ3Pzr1vXtCo85272KEY4xVGFmrE
+ b2oMh6CVkmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaVUaqAAKCRA1o5Of/Hh3
+ bQZwEACnPfBsC/ChcFSyk6SAwxKoOvb1ERUF80rfaNxXBJiaA1VgbqM7C/wBw+YbXrQmhzVqY/e
+ zB/ndUjEg1Qw/f1EkWqLpRYykPjwyQ/nZsHL8RUh+lvvsu2vH83B4FgCIL991+rvhDFZW75ecWY
+ Wx27xdC7xpaYRNPR/lCGRyKw9GRdkZybGZhUqed7Tu0UwVGNJkdEonPSWzsyXQhxdAKqPkaTXwP
+ yI+5HdfEAuA8nCB56AYgRaMxUUmY+Gg0JtwVD5CS/lsrFAcsngfXp0I0h2TMFDOYF1Hlwo5ZZ/z
+ w8qA3nMwS0murcRCerIFfvy/jgPPx+OW9JE1WcwbAEDqZjXSQ/Po0ENzua7Nu8JciG9+Xf46Ikv
+ xH/PK9ICIZQsNLJszbbllCh6smeoREyPb7MLH7utDd9lbPy0K7ALIeJJJOM77UoSBmIX3yJlEl8
+ 8FLJGGRpDH2/y2YbFkzWthRAgG9qFm3dVwpY8HtXJsFRnxAb2lQW3w99ahtwb5b+WzXzGXSaks4
+ csHXIdZitAVmfvtZvoZc2hJ9fpfI2ggf5vrK2Z+gT7SN4VIA6agvZWESHTh3BpTcabZIWqPxwIl
+ 7GUbaPEl3NeaOpCjDiB438p2p4W5UwQstGYeLrTvFjKj8PLdWHg5liU52jhLlKSvVXXC2iAk+iL
+ +BJxQOoAcO2C7tA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Tue, 30 Dec 2025 11:18:37 -0500
-Yury Norov <yury.norov@gmail.com> wrote:
+The arm64 kernel doesn't boot with annotated branches
+(PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
 
-> On Tue, Dec 30, 2025 at 09:21:00AM -0500, Mathieu Desnoyers wrote:
-> > On 2025-12-30 03:55, Andy Shevchenko wrote:  
-> > > On Mon, Dec 29, 2025 at 05:25:08PM -0500, Mathieu Desnoyers wrote:
-> > > 
-> > > ...
-> > >   
-> > > > One possible compromise would be to move it to its own header file,
-> > > > and introduce a CONFIG_TRACE_PRINTK Kconfig option (default Y) that
-> > > > would surround an include from linux/kernel.h with a preprocessor
-> > > > conditional.  
-> 
-> We already have CONFIG_TRACING, and everything in the new
-> trace_printk.h is conditional on it. We can protect the header in
-> kernel.h with the same config.
+Bisecting it, I found that disabling branch profiling in arch/arm64/mm
+solved the problem. Narrowing down a bit further, I found that
+physaddr.c is the file that needs to have branch profiling disabled to
+get the machine to boot.
 
-Tracing is used in production all the time. So I think we can have a new
-config just for trace_printk(). I was actually thinking of adding a
-CONFIG_HIDE_TRACE_PRINTK, with the description of:
+I suspect that it might invoke some ftrace helper very early in the boot
+process and ftrace is still not enabled(!?).
 
-  trace_printk() is an extremely powerful utility to debug and develop
-  kernel code. It is defined in kernel.h so that it can be easily accessed
-  during development or having to debug existing code.
+Disable branch profiling for physaddr.o to allow booting an arm64
+machine with CONFIG_PROFILE_ANNOTATED_BRANCHES and
+CONFIG_DEBUG_VIRTUAL together.
 
-  But trace_printk() is not to be included in the final result, and having
-  it in kernel.h during normal builds where the builder has no plans of
-  debugging the kernel causes wasted cycles and time in compiling the kernel.
+Cc: stable@vger.kernel.org
+Fixes: ec6d06efb0bac ("arm64: Add support for CONFIG_DEBUG_VIRTUAL")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Another approach is to disable profiling on all arch/arm64 code, similarly to
+x86, where DISABLE_BRANCH_PROFILING is called for all arch/x86 code. See
+commit 2cbb20b008dba ("tracing: Disable branch profiling in noinstr
+code").
+---
+ arch/arm64/mm/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  By saying yes here, the include of trace_printk() macros will be hidden
-  from kernel.h and help speed up the compile.
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index c26489cf96cd..8bfe2451ea26 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -14,5 +14,10 @@ obj-$(CONFIG_ARM64_MTE)		+= mteswap.o
+ obj-$(CONFIG_ARM64_GCS)		+= gcs.o
+ KASAN_SANITIZE_physaddr.o	+= n
+ 
++# Branch profiling isn't noinstr-safe
++ifdef CONFIG_TRACE_BRANCH_PROFILING
++CFLAGS_physaddr.o += -DDISABLE_BRANCH_PROFILING
++endif
++
+ obj-$(CONFIG_KASAN)		+= kasan_init.o
+ KASAN_SANITIZE_kasan_init.o	:= n
 
-  If you do not plan on debugging this kernel, say Y
+---
+base-commit: c8ebd433459bcbf068682b09544e830acd7ed222
+change-id: 20251231-annotated-75de3f33cd7b
 
-And then have in kernel.h:
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
-#ifndef CONFIG_HIDE_TRACE_PRINTK
-# include <linux/trace_printk.h>
-#endif
-
-This also means it gets set for allyesconfig builds, which I doubt anyone
-wants to debug anyway.
-
-> 
-> > > > But please make sure the default stays as it is today:
-> > > > include the trace printk header by default.  
-> > > 
-> > > "by default" where exactly?  
-> 
-> Seemingly nowhere.
-> 
-> > > The problem is that kernel.h is a total mess and
-> > > it's included in a lot of mysterious ways (indirectly),  
-> 
-> Yes!
-> 
-> > > and in C you _must_
-> > > include a header anyway for a custom API, just define *which* one.  
-> >
-> > This patch series moves the guts of trace_printk into its own header
-> > file, which reduces clutter. So that's already progress. :)
-> >   
-> > > 
-> > > Based on the Steven's first replies I see a compromise in having it inside
-> > > printk.h. If you want to debug something with printf() (in general) the same
-> > > header should provide all species. Do you agree?  
->  
-> It may sound logical, but I don't like this idea. Printk() is used
-> for debugging by everyone, but its main goal is to communicate to
-> userspace and between different parts of the kernel. Notice how all
-> debugging and development API in linux/pritnk.h is protected with the
-> corresponding ifdefery. 
-> 
-> Contrary to that, trace_printk() is a purely debugging feature. There's
-> no use for it after the debugging is done. (Or I missed something?)
-
-I actually agree with you here. I don't think adding trace_printk.h into
-printk.h is appropriate. I only said that anywhere you can add a printk()
-for debugging, you should also be able to add trace_printk(). I believe
-kernel.h is the appropriate place for both.
-
-> 
-> Everyone admits that kernel.h is a mess. Particularly, it's a mess of
-> development and production features. So, moving trace_printk() from an
-> already messy kernel.h to a less messy printk.h - to me it looks like
-> spreading the mess.
-> 
-> > I don't have a strong opinion about including trace_printk.h from either
-> > kernel.h or printk.h. As long as it's still included by a default kernel
-> > config the same way it has been documented/used since 2009.  
-> 
-> Can you please point to the documentation and quote the exact piece
-> stating that? Git history points to the commit 40ada30f9621f from Ingo
-> that decouples tracers from DEBUG_KERNEL, and the following 422d3c7a577
-> from Kosaki that force-enables the new TRACING_SUPPORT regardless of
-> the DEBUG_KERNEL state.
-> 
-> To me, decoupling tracing from DEBUG_KERNEL looks accidental rather than
-> intentional. So maybe simply restore that dependency?
-
-Absolutely not. Tracing is used to debug production kernels, and things
-like live kernel patching also depend on it, not to mention BPF.
-
-> 
-> Currently, even with tinyconfig, DEBUG_KERNEL is enabled (via EXPERT).
-> And even if EXPERT and DEBUG_KERNEL are off, tracers are still enabled.
-> This doesn't look right...
-
-Looks fine to me.
-
--- Steve
