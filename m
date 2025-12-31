@@ -1,139 +1,120 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E98315D2F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 12:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1EF30C36E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 19:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767185067; cv=none; b=IoZOe0Rred0cfMnXaHbABGQ1SMkdjO1z7gEIWmvQwIg/hFJIuKhAwROo4pLyQs4nXEdPmHBuLkclcSfoD9Uys63d0dBB1Ki+SbxY/Xc9UMSe6uXVLIniQaWXqnh/gdM3wwbP+kdrH39h+/tZEUj8hMgeZGFz0c/BLR9F1cDhFxA=
+	t=1767210615; cv=none; b=eKGpcFYZFmFr9/cMn9eKN+EmEtwsDqRxRv2myaHWz7FaxzaKSjdmNZ2+rs9QahetN85fXI1Y+zP53SrhG5ckGrIXTObGg6wQny8TPrzhdmkwIZre5QY5JxYC6jHn3ghpcDSgvy5cEgytyNFH+tdENA494UOMzO+j6OZkc61Eqok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767185067; c=relaxed/simple;
-	bh=rtQ9YOzpTI1rtYAALDX3LhmxVAFBXeE/3oqvYKuAQ8c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BucXlnmXKuH4s6Gv9B0hCjDI/rpderU4XQyQLDx96PESZJJQ/8Q8TWFJbYX/NdzPQGhLDCXznSsF2SdwHlFZZEy3Yo2eDnsPc7aOING8dKST33l1BS8DFCRVqT+by7PA7kSU7tms39+JkTV8IEcHs5sM79bmc5MXZBmE9wPaEmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7c78d30649aso7333243a34.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 04:44:26 -0800 (PST)
+	s=arc-20240116; t=1767210615; c=relaxed/simple;
+	bh=1nTG02+cFhCSgRt+ehKjArzMkG1sm5NflheH5nhNZqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=epvfUEz0TUMjL/OBQ/7LHkTMAwDasDjIjS3bufMr/Pa7BHlcb6g9AYD3k577MLTZH2fOU7Rav5Q687MNTvnhwZMkDu32wHWpwj6zohi/FlgXqFInSJZis6mtyyE0L3c1hxt7Aw7Fi3PTgYvWgdasrTaL67KSpYqwQG0KcQ1aZp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NAQN1tr7; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NAQN1tr7"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-787d5555274so101539037b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Dec 2025 11:50:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1767210612; x=1767815412; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=maEYF369L0uPYuEDq459k1fu2OdLy1XBNdtHglonY9Y=;
+        b=NAQN1tr7iwB4Xaj7bLBF0XQzvcsZPDgUxVtMCkgEFhs18Bk44cTniy7MumycCK39LW
+         2H0y2c5L626Uk2vYjMhOUfGLPoD23OYf0+TYFYVZexskgH7fUO3mlvjDMESTKc4wjKRz
+         p9+mkfdu/9a1qgBHHH4+LPALCjLkd+CyM3GJo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767185065; x=1767789865;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=doIBT3kveDHefqqmJXIbpBpDJYXHZZ9gY6YG0CQ1W1s=;
-        b=RoOjTSx2IcGOIfPjjK76V1mDd/IcveGhSvZ8FscTC6SFSMRYYo41UEBIjHp2UDnCcw
-         CrnpMnZTlejjGrRalHC7uqwsJZgeeW0vrBWv8fAzQLheSkjwejKdb47C59awsRQB1BHZ
-         f9jEL+vZ/zHRD/HZD0EmkPsKIs+fzcSel+X3YIk06tz2rjI4vIveBmsRMb0X9wt+gWD7
-         +h73+oO4CNbHm3D3Hae8O4I1XNz4uPihigwU6ow9JxxymMefovnqTYN9mcau0wrVd/96
-         M4GsAR3fKteCUG7h8uVtIUCTB3KbbtZ8GqXq/a5TTgF0oM8rk7fomdyC57MF/NbegV1T
-         wYdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpKCsrNjFp5GTXUZSWMQxJGsbLlWQDjbv7zbqQQG5fgsj/I3VYUUe8Tmxe2BbVIccdCBRX3yFlorQXOJQMfVZcqxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL4cxLagHmBNwnbBurh6A567ZoMbrXSZwFaUyXDR73nWAlSVbB
-	pv8xhIUuPOxA/qOcn+k2waMcbZy2CCYX4kq+cde1PvJWmSkirji6xnGTAMVpzA==
-X-Gm-Gg: AY/fxX7KGDtzCHvmBjlGjNZeYLYHbe90uXiruYrD2omxfH9DeR/2cQ4W1y8mZGx+N+N
-	wtlqUsZq6WQvpk/HDVl2PeCHDl3Lwy3qeZqSxaBguKgb0BCzdB9AjGNCUZ/sPTOGREyz9bdKsOl
-	HogJmBdEwOsSiAVmXzs+KYP8lPKz51CClNSP9+NXz7EK0Pyy3mz3/cusfh0zqbeDzTPbiNpBlVW
-	6UWFdZXQ/q5Z/W6O9g71F2biKD7eSQOKvc6qtQX3kky1FV3BFhS1LZ1qfroGU/c+oKzrGIYVhSg
-	4Hj6J5SW21rBLu/BdaeKqWLaumbiaeKwGFlX/64iiDa34q0LipgqVUw39BOjDyKfnvngPnDIC8X
-	hnnf3d+vdTQd6Ngmd/3Lil7raZGl+oAQGTC8NIgsp4a0fSHmbCYbpEGx0rNRBDW73vZFLKF9tSM
-	OCSlVVfzQR4A==
-X-Google-Smtp-Source: AGHT+IFVj7a9FUlEf5NH6KpIT/kaUw0oiLWglRHiOzK9tALgQw37NwF6rJUHBW5v0Oj+IkC3OkEsQw==
-X-Received: by 2002:a05:6830:3154:b0:7c1:12c5:334e with SMTP id 46e09a7af769-7cc66a023c7mr23119448a34.17.1767185065067;
-        Wed, 31 Dec 2025 04:44:25 -0800 (PST)
-Received: from localhost ([2a03:2880:10ff::])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cc667d6b04sm24557658a34.16.2025.12.31.04.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Dec 2025 04:44:24 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 31 Dec 2025 04:44:05 -0800
-Subject: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
+        d=1e100.net; s=20230601; t=1767210612; x=1767815412;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=maEYF369L0uPYuEDq459k1fu2OdLy1XBNdtHglonY9Y=;
+        b=Mfjg63pTpMdWuuWulM8DB5M2j2zwHTSWN/O0vTF+kBhxupB3Ye4Nf1G8lNFzI+lRaJ
+         HyOgU9aGduitczZUcnao0RhCVZOXOrf4omUTORYPr/ZeaEMfXBS/g2N1ZsNkgoIkQspm
+         10Tt5fuWMDhTGleDjm1jh7tnc3E4BUSn4UYI42gFgP2tLM9BBDUs70zbU68/NdpTj5wk
+         dOgd/QCInuJVxsf/sVeCfSoOW04g1+7RX4wF8C+ggFy1yNwCvxKU+YuDyyhdPk0kmNQg
+         jLU5o1YZ3nnUrvZvTLd7bpoHmvyTOwrmKu/AAFAU5g3jjkM2gIh0ft5l1qqInpyWsZu+
+         Bb3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWmnlGkJz5lYnwy4190vooX5YifiRauqc7Zc05YHI9C3OSmNe3Etp9b1+p7In/u4pftwfK3JYECizyet4J+5k74QQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI7eC/tMDvfK2jsnZZzWZpr9JtXZ1LxfSjl0z1rKw08TmemUNL
+	+dvAooBGQkB8793PuaYZOVNnnFz1/URDulG9cgPmnbV3Q4On1LAeaskKOKEMcTKnIyh5/czpHbV
+	zQTx9
+X-Gm-Gg: AY/fxX44ugwAGZgpTnzeLB04jnN+1Z/g//islYpFFC0/BSetVoXLUsOo8HT2kxwzf3n
+	Cvh5V03HMtcQazG2UhoOgD8I6op6ADx3WEV/rFGe/OGqiLcpnGP3tinrXFSWWxLgEj7yCgZMA2X
+	nfsuQ+xWopIyMgc/7av0LylOzNhvsW4dFgKtMFqN4aE6X4OGlezOf3Cwtc0uK988mmjFwf+ExO+
+	Z40f8KfkganKRsttGsUTQ3SbGXoOWOAjhfAbCIpBOtdTF8xA0HqwER6FfLYOhjSntpzduuz/pvu
+	63BkTVk2tSXUDZ/vMFR56ZMGfdVR8nZ96bqH8paCbQaMoLXsmeGNqOFI5OM7aoD6e7vy1eLazHp
+	91mUqk6WYs5kCHd/cG6fzhDaocpPkmJ5eGQKQxTWn1JyRwWM6T/IheilK505MHj4/1BBL+2FES7
+	gv/mZLxi1uzlk95moagLt7ihc=
+X-Google-Smtp-Source: AGHT+IEHH80RGrTfxuAhiuir8H8nSeW1HDOa1c4Ztm/JyOGbm48G01zOg28illc45JuiROUURZwGtQ==
+X-Received: by 2002:a05:690e:1cb:b0:640:caa5:57be with SMTP id 956f58d0204a3-6466a8460aamr25140621d50.28.1767210611707;
+        Wed, 31 Dec 2025 11:50:11 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.187.108])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6466a92c5f6sm17853490d50.21.2025.12.31.11.50.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Dec 2025 11:50:11 -0800 (PST)
+Message-ID: <382c86f1-03b0-40b7-aad6-143bdacd8a6f@linuxfoundation.org>
+Date: Wed, 31 Dec 2025 12:50:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
-X-B4-Tracking: v=1; b=H4sIAJUaVWkC/yXMwQqEIBQF0F953HVCKhH4KzEL01e9FjaoxUD07
- 0O1PJtzonAWLnB0IvMhRbYER7ohhMWnmZVEOIJpTaeN1cqntFVfOaq+i2wna0PsRzSEb+ZJfs8
- 1fF6XfVw51DvAdf0Be9PcO20AAAA=
-X-Change-ID: 20251231-annotated-75de3f33cd7b
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Laura Abbott <labbott@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org, 
- usamaarif642@gmail.com, kernel-team@meta.com, stable@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1769; i=leitao@debian.org;
- h=from:subject:message-id; bh=rtQ9YOzpTI1rtYAALDX3LhmxVAFBXeE/3oqvYKuAQ8c=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpVRqoMlyZ1wZ3Pzr1vXtCo85272KEY4xVGFmrE
- b2oMh6CVkmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaVUaqAAKCRA1o5Of/Hh3
- bQZwEACnPfBsC/ChcFSyk6SAwxKoOvb1ERUF80rfaNxXBJiaA1VgbqM7C/wBw+YbXrQmhzVqY/e
- zB/ndUjEg1Qw/f1EkWqLpRYykPjwyQ/nZsHL8RUh+lvvsu2vH83B4FgCIL991+rvhDFZW75ecWY
- Wx27xdC7xpaYRNPR/lCGRyKw9GRdkZybGZhUqed7Tu0UwVGNJkdEonPSWzsyXQhxdAKqPkaTXwP
- yI+5HdfEAuA8nCB56AYgRaMxUUmY+Gg0JtwVD5CS/lsrFAcsngfXp0I0h2TMFDOYF1Hlwo5ZZ/z
- w8qA3nMwS0murcRCerIFfvy/jgPPx+OW9JE1WcwbAEDqZjXSQ/Po0ENzua7Nu8JciG9+Xf46Ikv
- xH/PK9ICIZQsNLJszbbllCh6smeoREyPb7MLH7utDd9lbPy0K7ALIeJJJOM77UoSBmIX3yJlEl8
- 8FLJGGRpDH2/y2YbFkzWthRAgG9qFm3dVwpY8HtXJsFRnxAb2lQW3w99ahtwb5b+WzXzGXSaks4
- csHXIdZitAVmfvtZvoZc2hJ9fpfI2ggf5vrK2Z+gT7SN4VIA6agvZWESHTh3BpTcabZIWqPxwIl
- 7GUbaPEl3NeaOpCjDiB438p2p4W5UwQstGYeLrTvFjKj8PLdWHg5liU52jhLlKSvVXXC2iAk+iL
- +BJxQOoAcO2C7tA==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] selftests/ftrace: traceonoff_triggers: strip off names
+To: Steven Rostedt <rostedt@goodmis.org>, Yipeng Zou <zouyipeng@huawei.com>
+Cc: shuah@kernel.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20230818013226.2182299-1-zouyipeng@huawei.com>
+ <20230821111358.7540bdc9@gandalf.local.home>
+ <33503bb2-6248-426b-a614-9f0f92899d70@huawei.com>
+ <20251218182719.34334341@gandalf.local.home>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20251218182719.34334341@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The arm64 kernel doesn't boot with annotated branches
-(PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
+On 12/18/25 16:27, Steven Rostedt wrote:
+> On Sat, 13 Apr 2024 10:47:14 +0800
+> Yipeng Zou <zouyipeng@huawei.com> wrote:
+> 
+>> 在 2023/8/21 23:13, Steven Rostedt 写道:
+>>> On Fri, 18 Aug 2023 09:32:26 +0800
+>>> Yipeng Zou <zouyipeng@huawei.com> wrote:
+>>>   
+>>>> The func_traceonoff_triggers.tc sometimes goes to fail
+>>>> on my board, Kunpeng-920.
+>>> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>>
+>>> Shuah, can you take this through your tree?
+>>>
+>>> -- Steve
+>>
+>> Hi:
+>>
+>>       I just notice that it haven't been picked in Linux-next.
+>>
+>>       It's there other issue about this patch?
+> 
+> Wow, this is a couple of years old (noticed while looking at the archived
+> patches in patchwork).
+> 
+> Shuah, I believe this is still needed.
+> 
 
-Bisecting it, I found that disabling branch profiling in arch/arm64/mm
-solved the problem. Narrowing down a bit further, I found that
-physaddr.c is the file that needs to have branch profiling disabled to
-get the machine to boot.
+Thanks for digging these up and others. It got buried deep
+in my Inbox.
 
-I suspect that it might invoke some ftrace helper very early in the boot
-process and ftrace is still not enabled(!?).
+Applied to linux-kselftest fixes for the next rc
 
-Disable branch profiling for physaddr.o to allow booting an arm64
-machine with CONFIG_PROFILE_ANNOTATED_BRANCHES and
-CONFIG_DEBUG_VIRTUAL together.
-
-Cc: stable@vger.kernel.org
-Fixes: ec6d06efb0bac ("arm64: Add support for CONFIG_DEBUG_VIRTUAL")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Another approach is to disable profiling on all arch/arm64 code, similarly to
-x86, where DISABLE_BRANCH_PROFILING is called for all arch/x86 code. See
-commit 2cbb20b008dba ("tracing: Disable branch profiling in noinstr
-code").
----
- arch/arm64/mm/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index c26489cf96cd..8bfe2451ea26 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -14,5 +14,10 @@ obj-$(CONFIG_ARM64_MTE)		+= mteswap.o
- obj-$(CONFIG_ARM64_GCS)		+= gcs.o
- KASAN_SANITIZE_physaddr.o	+= n
- 
-+# Branch profiling isn't noinstr-safe
-+ifdef CONFIG_TRACE_BRANCH_PROFILING
-+CFLAGS_physaddr.o += -DDISABLE_BRANCH_PROFILING
-+endif
-+
- obj-$(CONFIG_KASAN)		+= kasan_init.o
- KASAN_SANITIZE_kasan_init.o	:= n
-
----
-base-commit: c8ebd433459bcbf068682b09544e830acd7ed222
-change-id: 20251231-annotated-75de3f33cd7b
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+thanks,
+-- Shuah
 
