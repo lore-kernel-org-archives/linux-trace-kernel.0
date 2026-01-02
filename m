@@ -1,34 +1,32 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042C12BDC19
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jan 2026 18:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECC72A1BB;
+	Fri,  2 Jan 2026 19:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767380293; cv=none; b=pVl3KEE4RrBw1XVu2WkpPXWyATN8bhrowFML0rV+KEEhr7kJFRxZy+QUtXUwy9+0UBR/1MZjE6R9QPPPz3bW837MTug+pBK+zb76vRfXPl4Z50Drja0l0fQTDlwhj549Une8zWM4g4Hf8RUeE91iYGLCViZL6PzX8hzghROpc+I=
+	t=1767382299; cv=none; b=TAebMlTqxOgUuAkWXAtWYebMaOnJ5tJuvzDO3xz8wuR8obh/L1kaurEw2RFCABz479mXsNwflbH6ZKIngUCdT8Nri9FnpHtLstRAGtM3UGG/cvnnPu+2rgvD+rCPhNHURI7Ecapz6itGH6zIdUCwzixQH7BWSPPx36Iwgn32950=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767380293; c=relaxed/simple;
-	bh=YX0kcZGxP0VsQIBhN5wsZsokz0bJ9c7VMSdBs67yhsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dWZK2CF3aBRaAlhTdMpZ5T9LNEVgzApVCqxwbOxLRDgMXjx/ybjrtbPZ38g4Hw/GnxRGcK0utIr8ChrHTG0v8+2rZlBHD+1Ahecm9umU4hnIbejTAFuErmlnLkNOnTCfhOEmf53pbKKdA4K1ZDTDPnvwuFz1rVU3OVJWJZoL9nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	s=arc-20240116; t=1767382299; c=relaxed/simple;
+	bh=EfN5hdup5v/WVV0Va70goiCNOxcElw6t5jwjSNIX9lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=riWtOIkp5Fw5VQO6o1un4h3dyDnAc2GQFLIq8Q1nZqdvyoo00sOGwE/gJHUxk3bk9pYW2zvvBeDSi+sIEJeouC0wBHoQ6lY6Kxv3oVlfsUz8uiqpMwhQshMOpkEEVy0BmdOSElCt7YTus/3mXS8/SmMdiLyMznYL02Yy5E7WxpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 1731F8CA4A;
-	Fri,  2 Jan 2026 18:58:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 8EDC16000D;
-	Fri,  2 Jan 2026 18:58:08 +0000 (UTC)
-Date: Fri, 2 Jan 2026 13:58:23 -0500
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 47531140353;
+	Fri,  2 Jan 2026 19:31:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 7311260010;
+	Fri,  2 Jan 2026 19:31:33 +0000 (UTC)
+Date: Fri, 2 Jan 2026 14:31:48 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: pengdonglin <pengdonglin@xiaomi.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [bug report] function_graph: Enable funcgraph-args and
- funcgraph-retaddr to work simultaneously
-Message-ID: <20260102135823.37578148@gandalf.local.home>
-In-Reply-To: <20260102135630.0a5d91fb@gandalf.local.home>
-References: <aS6kGi0maWBl-MjZ@stanley.mountain>
-	<20260102135630.0a5d91fb@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ pengdonglin <pengdonglin@xiaomi.com>
+Subject: [PATCH] ftrace: Make ftrace_graph_ent depth field signed
+Message-ID: <20260102143148.251c2e16@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,29 +37,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 8EDC16000D
-X-Stat-Signature: rhquu9fdpy3e9nysguxuibk78mbptqzh
+X-Rspamd-Queue-Id: 7311260010
+X-Stat-Signature: o4ega1747nb493ahgkp571bsjd16xmps
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Ypi35uhYGf+OCbxSMUEvkHRJhS/RqTzA=
-X-HE-Tag: 1767380288-366998
-X-HE-Meta: U2FsdGVkX1965BJimWZpRYauSx02cqxO2xwABc9k1NE4thY9fOXWNFhx6hWgXz7rt9A0zSsxniDAUz9JrE/j18B/g7nOt4dT5jVGC8+Q5KevbWzfqy8PT/GjjbHTRp3wnBdhKX0rlvDIWQnAqfcm5oYa/3rYvf/RzbSSQBtElC+saQJ5wrsvyI+leGkIYeKpGd08XD3avOVQyZiS5RI86aYwTxvejdndpKcrGVmeI0e6zOhhesPscbW7Nr5wLT6XyLu1BIdfkLYCIGTU9834G+RhxQt58g7QFbtHzB5narlhreSSzX0ifWP5+IafO8NI1YNRgQFvGb0GL0IuS4oaCR4M9b5ArO4sAD2ZRA0FTnwF++RjOetcO3EQ5K+RDsXs
+X-Session-ID: U2FsdGVkX19g3WGXFwqX5v2huaMvYmb6+pekEiowmRU=
+X-HE-Tag: 1767382293-424486
+X-HE-Meta: U2FsdGVkX1/68ZtCOWMcMTAeT8WhJW5/JZSTD9D1dARRC9MwFVIxamO3MLISPbTwGdZYGTNUQOOBlyFlCed4NfsZmLmI1Qbucl+zZsmcMXjL9cUqr7dsyZ1Jqwudn6hs+lxNh0HqLNXiJACnZmHsE7trNRInHiVex4YzGQCkiKW2uvsmxfszSZ8uCtEFlpszr5ZyZRhAjPs0uXOXZLV/fX/NCm+Ja2OwgRQpM1Hxpj5BisE7q6putVUHr0KNTI2as37nAOE3vxTwU+6SuwKrq6JbU333Jl5J4ZaxfK3WQyYipOpw/MpNIU3PX6B0lHMK8ToelvWktjwhUkODTImC3SIukCIzalnPO19vek3fDIyFkhyStxYOv1fhz696yKbbjcL4/DI13CN+EyBjFSexnyL4t0sRbEjpPdyEYgvFRdTQ0qcno0S3jCoCLy//Qu7IX+XvEPwAyeq/58eqmqKDcg==
 
-On Fri, 2 Jan 2026 13:56:30 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> >     1031                 /* Save this function pointer to see if the exit matches */
-> >     1032                 if (call->depth < FTRACE_RETFUNC_DEPTH &&  
-> > --> 1033                     !WARN_ON_ONCE(call->depth < 0))    
-> >                                            ^^^^^^^^^^^^^^^
-> > The patch changed call->depth from int to unsigned long.  
-> 
-> Yep, I'm fixing this with:
-> 
-> 			!WARN_ON_ONCE((long)call->depth < 0))
-> 
+The code has integrity checks to make sure that depth never goes below
+zero. But the depth field has recently been converted to unsigned long
+from "int" (for alignment reasons). As unsigned long can never be less
+than zero, the integrity checks no longer work.
 
-Thinking about this more. I think it is more robust to change depth to
-"long" from "unsigned long" in case there's other locations that expect
-depth to be signed.
+Convert depth to long from unsigned long to allow the integrity checks to
+work again.
 
--- Steve
+Cc: stable@vger.kernel.org
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/aS6kGi0maWBl-MjZ@stanley.mountain/
+Fixes: f83ac7544fbf7 ("function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ftrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 770f0dc993cc..a3a8989e3268 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1167,7 +1167,7 @@ static inline void ftrace_init(void) { }
+  */
+ struct ftrace_graph_ent {
+ 	unsigned long func; /* Current function */
+-	unsigned long depth;
++	long depth; /* signed to check for less than zero */
+ } __packed;
+ 
+ /*
+-- 
+2.51.0
+
