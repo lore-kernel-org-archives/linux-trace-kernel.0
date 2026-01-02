@@ -1,193 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC6A2E6CC7;
-	Fri,  2 Jan 2026 11:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BC221B9C0
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jan 2026 13:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767354233; cv=none; b=S/H2iWQn/8ZiiuYex7bN/VpEvFqq7I6iWplMFcSnMDOlaRAbzHC0N9//nQA1laLd+ep3Ovfe2yBH2UjhRYvXQm+F5XrtcRTBmlUOylZNH/uKdiu+vQrWyIIa5fcs3pzQOLkvYGiSSrUorUoFXqPW/JM6MAMryNcU24Nx2BLltkE=
+	t=1767358851; cv=none; b=BAfKJB5TcL4rkcSZbd0fjgYVCXX00aKImyuELwVDcZuZXle4lP9rqHnJabWnb/NbXOogMb6AajYcPRCtCmA1X6NGLIa9A+mqbwgyipHFvw2LWK5QIWo0JHCjlGTuVyapJNNCn+mK5en+4M+Un3QGiXT/ZsY8r1zJstj9wowkex4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767354233; c=relaxed/simple;
-	bh=sLC8UGfwzdnc6FYoiWOajoAfu6XPBRq07y6jMEZyH48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R2AOZS2J8wyXiMB1S4+yf8xpNZnTGL6VArN2W0MQLyWwje8XnMZdPvzMbuReFmQzwR/LAier/TWv9rq94lUX1v+3JSI8qD8vtiqDIFCEDhWMZ4aYoUw2f9dSKSd2s2ikQ/tQWhZp5jKT/Gn/c+RJpSbauxtoIPAlWn916xZynBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3fsaD/4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767358851; c=relaxed/simple;
+	bh=6OLSMhMi4Duo74Nab2H7e8y1jhpOlkPBEHP0Ari8koI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WLt3PR1Atl0nZqW3b6f9n/jHF70dsSGpuvAGNw8dTVjwg4OWR5rikj4TBvoJrtw6dTEKv5fcAYuhMiFNWtzyNWC7Ef8ibP/6pEu2cMUZIRJEMvxPXGuj9bD3KSibQzw/nB9UUV81mLq3xSohvxakGjL0TuO9WvICg7kGoXbf/2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dys/qpm/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3fsaD/4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A9D0C116B1;
-	Fri,  2 Jan 2026 11:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767354232;
-	bh=sLC8UGfwzdnc6FYoiWOajoAfu6XPBRq07y6jMEZyH48=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z3fsaD/4vuOolaxerlDlxL1Bj/DiNisIBjNQzFjqKCxYe622dgmwAkbSavcMcdDlR
-	 BbS+uSjB5sU9XRbgkGibLXyT8xOf1TqXeOCrse8wBqSF9IcXehXXO+PGys4U73S24r
-	 1yfgyR1ihp/Tcgy/2nSZA0wEoL+1gZxP6DzXN4W/5NBOm2q6jLJmjmuv6P0lZE84Vn
-	 Q1fIj19BfxqoK7x0r8Iq+swKKyMJt+AEC6zfHTStjpJpjAiP7ZfFg7YK9I9tALC1bG
-	 Y5Pavf2mY1+de8MUqzeZwIWDfovA/hZgfGDXsIFIZL0R2bKUbnv3/6/iGjyyDh1mga
-	 peYhcUjkb0JGw==
-Message-ID: <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
-Date: Fri, 2 Jan 2026 12:43:46 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dys/qpm/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767358848;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTNGRVtfKAKI2uclmLVeaanTjMK73StcJvnGSTEYzLs=;
+	b=dys/qpm/xo/v78ynvqZbaA2DAZ2VGyHwwhPdkGXDBD+TYM2DIsoS/oquE67/p596UrhcaO
+	vajkTMerBBT5jBiABNWASWMJXUyTqygT/Z2XE29wzwz9up63OPiXYG9b5QvO75EnPlp5uN
+	vbbYZytix4AUiPaxbHzBuQ5XSnrA54M=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-533-wqzL__ISPWWnC8gTeckgSg-1; Fri, 02 Jan 2026 08:00:47 -0500
+X-MC-Unique: wqzL__ISPWWnC8gTeckgSg-1
+X-Mimecast-MFC-AGG-ID: wqzL__ISPWWnC8gTeckgSg_1767358846
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8395caeb26so313514666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Jan 2026 05:00:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767358846; x=1767963646;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oTNGRVtfKAKI2uclmLVeaanTjMK73StcJvnGSTEYzLs=;
+        b=E8msXQexe8mhY7pMN8EFDsLJuybaQtp1QvuZlW+r+K0377wSrqTK302GQS2PocBTrQ
+         zhYEYJZu4WqDjLtCkCRabrlYHXlV9s+XE6XAPQXRX/BWxYLZDBhof0MLgASze7KXFn6f
+         4N11U+OC4MKnY3Cr4c0E9/RRsftMJxuNrOyfqahpc/v9qQ7q7IIVm//7dzZCFHNP6S+Q
+         nqmXG4QEH96yDf70OqIl+8C6DO1ZgKMu42LvUGVoy+Ph9I+iYelJanLSNE8VqaLF4DvZ
+         fcnlyADHOPG0MUPMyQX3o+PdzY+I1xgNl8mnDnJluOwZyfSqjlTVNTFQ/Alj3FcTc0uv
+         Fcwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYteXdPdWQOaqxkrRetc8VPgcpbFFBvZ8g9oscTdnnvR8mU5m4rob7Tm/qEjiSQLw4csG8qIeWrZwFwVEyRD7YMTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx46oONbMOJR7cc986QodnnYOu4vYwaRDJ2oQEV3g92h0LVsBPv
+	zUae4Cnf6OoV0wmtrw3oxdd9FaO4fff41IHUpW71+N+zOu/RdbTWIm3+bRU9sS772b8EnXOSP3M
+	uvc6EioQd5NuIfV0fy/mHRR2hoqsWef5EWk/1exWTk10DrRxBOyQ91blLN0GO3dVfDccKndCSdH
+	fVaDTYxN+NG68QI+4Ddd5CDnywevetBYsiE2opSKNv7ty5PLQm
+X-Gm-Gg: AY/fxX4E67LOVIuXtM9GCwFvcCoYmJNMqM+/VDnibWGXoDnHzapXasPj5xxwMzxyTB7
+	IpKYWLX+tIS4fTf/x3x5yQsXQFTJrIO/qY0uyMATEmbMcaLdTljF/vu7AurhIhLjd1CRF4AYWdH
+	c9D8Q9E/uEzXKR0RpugIQZUAe46Sp3Xm1hvImnPwazJRVJ2Xfs9+87qJX+PKTaRADvBNxV07kbT
+	THtyzKelfZ4YwMBaZJf3MkT
+X-Received: by 2002:a17:906:6a26:b0:b76:3478:7d52 with SMTP id a640c23a62f3a-b803705d9e2mr4078372566b.38.1767358846091;
+        Fri, 02 Jan 2026 05:00:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGoZPseC5+gqplCCy6UFjB5TWuN1SeOylByiLhAOSBP6m/GwqpDfdjUhHyeeitv3X9DdgtcP16s8gwoPgCMqrQ=
+X-Received: by 2002:a17:906:6a26:b0:b76:3478:7d52 with SMTP id
+ a640c23a62f3a-b803705d9e2mr4078368566b.38.1767358845607; Fri, 02 Jan 2026
+ 05:00:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] page_pool: Add page_pool_release_stalled
- tracepoint
-To: Leon Hwang <leon.hwang@linux.dev>, netdev@vger.kernel.org
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Leon Huang Fu <leon.huangfu@shopee.com>, Dragos Tatulea
- <dtatulea@nvidia.com>, kernel-team <kernel-team@cloudflare.com>,
- Yan Zhai <yan@cloudflare.com>
-References: <20260102071745.291969-1-leon.hwang@linux.dev>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20260102071745.291969-1-leon.hwang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20251224125058.1771519-1-costa.shul@redhat.com>
+In-Reply-To: <20251224125058.1771519-1-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 2 Jan 2026 14:00:34 +0100
+X-Gm-Features: AQt7F2rM9YWbNdZwqyC3I0wYeSIHCvBJgnvrB0BCsPqeMN-iFMD80A29BWsaQAE
+Message-ID: <CAP4=nvRxrs2b0PoiH=R7gPYHh3+XT_uUhsRspEuEfWuCBMcOTg@mail.gmail.com>
+Subject: Re: [PATCH v1] tools/rtla: Deduplicate cgroup path opening code
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: qAT0BkQUKCGU04VvJNrOlA28XAgfkBROw2b7FBGQoxs_1767358846
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 02/01/2026 08.17, Leon Hwang wrote:
-> Introduce a new tracepoint to track stalled page pool releases,
-> providing better observability for page pool lifecycle issues.
-> 
-
-In general I like/support adding this tracepoint for "debugability" of
-page pool lifecycle issues.
-
-For "observability" @Kuba added a netlink scheme[1][2] for page_pool[3], 
-which gives us the ability to get events and list page_pools from userspace.
-I've not used this myself (yet) so I need input from others if this is 
-something that others have been using for page pool lifecycle issues?
-
-Need input from @Kuba/others as the "page-pool-get"[4] state that "Only 
-Page Pools associated with a net_device can be listed".  Don't we want 
-the ability to list "invisible" page_pool's to allow debugging issues?
-
-  [1] https://docs.kernel.org/userspace-api/netlink/intro-specs.html
-  [2] https://docs.kernel.org/userspace-api/netlink/index.html
-  [3] https://docs.kernel.org/netlink/specs/netdev.html
-  [4] https://docs.kernel.org/netlink/specs/netdev.html#page-pool-get
-
-Looking at the code, I see that NETDEV_CMD_PAGE_POOL_CHANGE_NTF netlink
-notification is only generated once (in page_pool_destroy) and not when
-we retry in page_pool_release_retry (like this patch).  In that sense,
-this patch/tracepoint is catching something more than netlink provides.
-First I though we could add a netlink notification, but I can imagine
-cases this could generate too many netlink messages e.g. a netdev with
-128 RX queues generating these every second for every RX queue.
-
-Guess, I've talked myself into liking this change, what do other
-maintainers think?  (e.g. netlink scheme and debugging balance)
-
-
-> Problem:
-> Currently, when a page pool shutdown is stalled due to inflight pages,
-> the kernel only logs a warning message via pr_warn(). This has several
-> limitations:
-> 
-> 1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
->     making it difficult to track the progression of stalled releases
-> 2. There's no structured way to monitor or analyze these events
-> 3. Debugging tools cannot easily capture and correlate stalled pool
->     events with other network activity
-> 
-> Solution:
-> Add a new tracepoint, page_pool_release_stalled, that fires when a page
-> pool shutdown is stalled. The tracepoint captures:
-> - pool: pointer to the stalled page_pool
-> - inflight: number of pages still in flight
-> - sec: seconds since the release was deferred
-> 
-> The implementation also modifies the logging behavior:
-> - pr_warn() is only emitted during the first warning interval
->    (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
-> - The tracepoint is fired always, reducing log noise while still
->    allowing monitoring tools to track the issue
-> 
-> This allows developers and system administrators to:
-> - Use tools like perf, ftrace, or eBPF to monitor stalled releases
-> - Correlate page pool issues with network driver behavior
-> - Analyze patterns without parsing kernel logs
-> - Track the progression of inflight page counts over time
-> 
-> Signed-off-by: Leon Huang Fu <leon.huangfu@shopee.com>
-> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+st 24. 12. 2025 v 13:51 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
+>
+> Both set_pid_cgroup() and set_comm_cgroup() functions contain
+> identical code for opening the cgroup.procs file.
+>
+> Extract this common code into a new helper function open_cgroup_procs()
+> to reduce code duplication and improve maintainability.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 > ---
-> v2 -> v3:
->   - Print id using '%u'.
->   - https://lore.kernel.org/netdev/20260102061718.210248-1-leon.hwang@linux.dev/
-> 
-> v1 -> v2:
->   - Drop RFC.
->   - Store 'pool->user.id' to '__entry->id' (per Steven Rostedt).
->   - https://lore.kernel.org/netdev/20251125082207.356075-1-leon.hwang@linux.dev/
-> ---
->   include/trace/events/page_pool.h | 24 ++++++++++++++++++++++++
->   net/core/page_pool.c             |  6 ++++--
->   2 files changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/trace/events/page_pool.h b/include/trace/events/page_pool.h
-> index 31825ed30032..a851e0f6a384 100644
-> --- a/include/trace/events/page_pool.h
-> +++ b/include/trace/events/page_pool.h
-> @@ -113,6 +113,30 @@ TRACE_EVENT(page_pool_update_nid,
->   		  __entry->pool, __entry->pool_nid, __entry->new_nid)
->   );
->   
-> +TRACE_EVENT(page_pool_release_stalled,
-> +
-> +	TP_PROTO(const struct page_pool *pool, int inflight, int sec),
-> +
-> +	TP_ARGS(pool, inflight, sec),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(const struct page_pool *, pool)
-> +		__field(u32,			  id)
-> +		__field(int,			  inflight)
-> +		__field(int,			  sec)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->pool		= pool;
-> +		__entry->id		= pool->user.id;
-> +		__entry->inflight	= inflight;
-> +		__entry->sec		= sec;
-> +	),
-> +
-> +	TP_printk("page_pool=%p id=%u inflight=%d sec=%d",
-> +		  __entry->pool, __entry->id, __entry->inflight, __entry->sec)
-> +);
-> +
->   #endif /* _TRACE_PAGE_POOL_H */
->   
->   /* This part must be outside protection */
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index 265a729431bb..01564aa84c89 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -1222,8 +1222,10 @@ static void page_pool_release_retry(struct work_struct *wq)
->   	    (!netdev || netdev == NET_PTR_POISON)) {
->   		int sec = (s32)((u32)jiffies - (u32)pool->defer_start) / HZ;
->   
-> -		pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
-> -			__func__, pool->user.id, inflight, sec);
-> +		if (sec >= DEFER_WARN_INTERVAL / HZ && sec < DEFER_WARN_INTERVAL * 2 / HZ)
-> +			pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
-> +				__func__, pool->user.id, inflight, sec);
-> +		trace_page_pool_release_stalled(pool, inflight, sec);
->   		pool->defer_warn = jiffies + DEFER_WARN_INTERVAL;
->   	}
->   
+>  tools/tracing/rtla/src/utils.c | 65 +++++++++++++++++-----------------
+>  1 file changed, 32 insertions(+), 33 deletions(-)
+>
+
+Is this meant to be a v2 of [1] with an updated commit description and comm=
+ents?
+
+[1] https://lore.kernel.org/all/20251030144231.40058-1-costa.shul@redhat.co=
+m/
+
+Tomas
 
