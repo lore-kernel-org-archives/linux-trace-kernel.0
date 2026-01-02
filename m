@@ -1,109 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BC221B9C0
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jan 2026 13:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A24207A32
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jan 2026 13:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767358851; cv=none; b=BAfKJB5TcL4rkcSZbd0fjgYVCXX00aKImyuELwVDcZuZXle4lP9rqHnJabWnb/NbXOogMb6AajYcPRCtCmA1X6NGLIa9A+mqbwgyipHFvw2LWK5QIWo0JHCjlGTuVyapJNNCn+mK5en+4M+Un3QGiXT/ZsY8r1zJstj9wowkex4=
+	t=1767362088; cv=none; b=ZqKbJW+UpKfsrSdw3+FUN8PYxgvOK+LGK4d3SZu1iWwDIktcH9Cjlr7N6cZPa1mdC+zU9E4Rn6HJ94vVuChn0WE1RHG3j7licEiEtCQ8sXDiLCq1/ljLhT+Mzvdm6zlO9ItZe1VCCOLaq5LuADlJoIcoLuQUDmjmThuYg412OTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767358851; c=relaxed/simple;
-	bh=6OLSMhMi4Duo74Nab2H7e8y1jhpOlkPBEHP0Ari8koI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WLt3PR1Atl0nZqW3b6f9n/jHF70dsSGpuvAGNw8dTVjwg4OWR5rikj4TBvoJrtw6dTEKv5fcAYuhMiFNWtzyNWC7Ef8ibP/6pEu2cMUZIRJEMvxPXGuj9bD3KSibQzw/nB9UUV81mLq3xSohvxakGjL0TuO9WvICg7kGoXbf/2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dys/qpm/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767362088; c=relaxed/simple;
+	bh=sfgzLw6T/MQzpo/xhzZ+DWJl9w43rzPkLh3LYn4joxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UYhuYGLaa6/k3PJCJJZIis87PFsCFmSIvKR1b1YUT5XBOZTtjXQvp91t2u8sCUJyDi4O5YjP0Gf1sppGIn7bl+mXCNzzGlciakrYU8Z1dAgljxL/ORCVwH/vj2vlaZ8OpPE/S9yuhFwcMJ19Hbrck3xSXmvg12VE2N6GLU4wHso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TjSVEr+l; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dys/qpm/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767358848;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TjSVEr+l"
+Message-ID: <3461bd2d-2ee6-4592-9069-2c7a4b8a0b4b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767362072;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oTNGRVtfKAKI2uclmLVeaanTjMK73StcJvnGSTEYzLs=;
-	b=dys/qpm/xo/v78ynvqZbaA2DAZ2VGyHwwhPdkGXDBD+TYM2DIsoS/oquE67/p596UrhcaO
-	vajkTMerBBT5jBiABNWASWMJXUyTqygT/Z2XE29wzwz9up63OPiXYG9b5QvO75EnPlp5uN
-	vbbYZytix4AUiPaxbHzBuQ5XSnrA54M=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-533-wqzL__ISPWWnC8gTeckgSg-1; Fri, 02 Jan 2026 08:00:47 -0500
-X-MC-Unique: wqzL__ISPWWnC8gTeckgSg-1
-X-Mimecast-MFC-AGG-ID: wqzL__ISPWWnC8gTeckgSg_1767358846
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8395caeb26so313514666b.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Jan 2026 05:00:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767358846; x=1767963646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oTNGRVtfKAKI2uclmLVeaanTjMK73StcJvnGSTEYzLs=;
-        b=E8msXQexe8mhY7pMN8EFDsLJuybaQtp1QvuZlW+r+K0377wSrqTK302GQS2PocBTrQ
-         zhYEYJZu4WqDjLtCkCRabrlYHXlV9s+XE6XAPQXRX/BWxYLZDBhof0MLgASze7KXFn6f
-         4N11U+OC4MKnY3Cr4c0E9/RRsftMJxuNrOyfqahpc/v9qQ7q7IIVm//7dzZCFHNP6S+Q
-         nqmXG4QEH96yDf70OqIl+8C6DO1ZgKMu42LvUGVoy+Ph9I+iYelJanLSNE8VqaLF4DvZ
-         fcnlyADHOPG0MUPMyQX3o+PdzY+I1xgNl8mnDnJluOwZyfSqjlTVNTFQ/Alj3FcTc0uv
-         Fcwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWYteXdPdWQOaqxkrRetc8VPgcpbFFBvZ8g9oscTdnnvR8mU5m4rob7Tm/qEjiSQLw4csG8qIeWrZwFwVEyRD7YMTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx46oONbMOJR7cc986QodnnYOu4vYwaRDJ2oQEV3g92h0LVsBPv
-	zUae4Cnf6OoV0wmtrw3oxdd9FaO4fff41IHUpW71+N+zOu/RdbTWIm3+bRU9sS772b8EnXOSP3M
-	uvc6EioQd5NuIfV0fy/mHRR2hoqsWef5EWk/1exWTk10DrRxBOyQ91blLN0GO3dVfDccKndCSdH
-	fVaDTYxN+NG68QI+4Ddd5CDnywevetBYsiE2opSKNv7ty5PLQm
-X-Gm-Gg: AY/fxX4E67LOVIuXtM9GCwFvcCoYmJNMqM+/VDnibWGXoDnHzapXasPj5xxwMzxyTB7
-	IpKYWLX+tIS4fTf/x3x5yQsXQFTJrIO/qY0uyMATEmbMcaLdTljF/vu7AurhIhLjd1CRF4AYWdH
-	c9D8Q9E/uEzXKR0RpugIQZUAe46Sp3Xm1hvImnPwazJRVJ2Xfs9+87qJX+PKTaRADvBNxV07kbT
-	THtyzKelfZ4YwMBaZJf3MkT
-X-Received: by 2002:a17:906:6a26:b0:b76:3478:7d52 with SMTP id a640c23a62f3a-b803705d9e2mr4078372566b.38.1767358846091;
-        Fri, 02 Jan 2026 05:00:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGoZPseC5+gqplCCy6UFjB5TWuN1SeOylByiLhAOSBP6m/GwqpDfdjUhHyeeitv3X9DdgtcP16s8gwoPgCMqrQ=
-X-Received: by 2002:a17:906:6a26:b0:b76:3478:7d52 with SMTP id
- a640c23a62f3a-b803705d9e2mr4078368566b.38.1767358845607; Fri, 02 Jan 2026
- 05:00:45 -0800 (PST)
+	bh=Um8VhsKFWm3QgNgqCqwn+UbLKJeOFTEy1s5gZCC82xA=;
+	b=TjSVEr+laVrs4xS/ZqgUOcA+M6r50cnGYXq/pLXedv0hKsxXhLP/9dC7+acKKQu+Kxwqbw
+	jMx+EhlXsi/avIYKJqF/lwhjlho0VnydlCLuMd3mCW/09UwmBm/P2Xp2PJBRdtVUvrCLoS
+	/xvUfChlTlN/C7PjLD7ekSEGQzSmDUw=
+Date: Fri, 2 Jan 2026 21:54:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251224125058.1771519-1-costa.shul@redhat.com>
-In-Reply-To: <20251224125058.1771519-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 2 Jan 2026 14:00:34 +0100
-X-Gm-Features: AQt7F2rM9YWbNdZwqyC3I0wYeSIHCvBJgnvrB0BCsPqeMN-iFMD80A29BWsaQAE
-Message-ID: <CAP4=nvRxrs2b0PoiH=R7gPYHh3+XT_uUhsRspEuEfWuCBMcOTg@mail.gmail.com>
-Subject: Re: [PATCH v1] tools/rtla: Deduplicate cgroup path opening code
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: qAT0BkQUKCGU04VvJNrOlA28XAgfkBROw2b7FBGQoxs_1767358846
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v3] page_pool: Add page_pool_release_stalled
+ tracepoint
+To: Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Leon Huang Fu <leon.huangfu@shopee.com>, Dragos Tatulea
+ <dtatulea@nvidia.com>, kernel-team <kernel-team@cloudflare.com>,
+ Yan Zhai <yan@cloudflare.com>
+References: <20260102071745.291969-1-leon.hwang@linux.dev>
+ <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-st 24. 12. 2025 v 13:51 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> Both set_pid_cgroup() and set_comm_cgroup() functions contain
-> identical code for opening the cgroup.procs file.
->
-> Extract this common code into a new helper function open_cgroup_procs()
-> to reduce code duplication and improve maintainability.
->
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  tools/tracing/rtla/src/utils.c | 65 +++++++++++++++++-----------------
->  1 file changed, 32 insertions(+), 33 deletions(-)
->
 
-Is this meant to be a v2 of [1] with an updated commit description and comm=
-ents?
 
-[1] https://lore.kernel.org/all/20251030144231.40058-1-costa.shul@redhat.co=
-m/
+On 2026/1/2 19:43, Jesper Dangaard Brouer wrote:
+> 
+> 
+> On 02/01/2026 08.17, Leon Hwang wrote:
+>> Introduce a new tracepoint to track stalled page pool releases,
+>> providing better observability for page pool lifecycle issues.
+>>
+> 
+> In general I like/support adding this tracepoint for "debugability" of
+> page pool lifecycle issues.
+> 
+> For "observability" @Kuba added a netlink scheme[1][2] for page_pool[3],
+> which gives us the ability to get events and list page_pools from
+> userspace.
+> I've not used this myself (yet) so I need input from others if this is
+> something that others have been using for page pool lifecycle issues?
+> 
+> Need input from @Kuba/others as the "page-pool-get"[4] state that "Only
+> Page Pools associated with a net_device can be listed".  Don't we want
+> the ability to list "invisible" page_pool's to allow debugging issues?
+> 
+>  [1] https://docs.kernel.org/userspace-api/netlink/intro-specs.html
+>  [2] https://docs.kernel.org/userspace-api/netlink/index.html
+>  [3] https://docs.kernel.org/netlink/specs/netdev.html
+>  [4] https://docs.kernel.org/netlink/specs/netdev.html#page-pool-get
+> 
+> Looking at the code, I see that NETDEV_CMD_PAGE_POOL_CHANGE_NTF netlink
+> notification is only generated once (in page_pool_destroy) and not when
+> we retry in page_pool_release_retry (like this patch).  In that sense,
+> this patch/tracepoint is catching something more than netlink provides.
+> First I though we could add a netlink notification, but I can imagine
+> cases this could generate too many netlink messages e.g. a netdev with
+> 128 RX queues generating these every second for every RX queue.
+> 
+> Guess, I've talked myself into liking this change, what do other
+> maintainers think?  (e.g. netlink scheme and debugging balance)
+> 
 
-Tomas
+Hi Jesper,
+
+Thanks for the thoughtful review and for sharing the context around the
+existing netlink-based observability.
+
+I ran into a real-world issue where stalled pages were still referenced
+by dangling TCP sockets. I wrote up the investigation in more detail in
+my blog post “let page inflight” [1] (unfortunately only available in
+Chinese at the moment).
+
+In practice, the hardest part was identifying *who* was still holding
+references to the inflight pages. With the current tooling, it is very
+difficult to introspect the active users of a page once it becomes stalled.
+
+If we can expose more information about current page users—such as the
+user type and a user pointer, it becomes much easier to debug these
+issues using BPF-based tools. For example, by tracing
+page_pool_state_hold and page_pool_state_release, tools like bpftrace
+[2] or bpfsnoop [3] (which I implemented) can correlate inflight page
+pointers with their active users. This significantly lowers the barrier
+to diagnosing page pool lifecycle problems.
+
+As you noted, the existing netlink notifications are generated only at
+page_pool_destroy, and not during retries in page_pool_release_retry. In
+that sense, the proposed tracepoint captures a class of issues that
+netlink does not currently cover, and does so without the risk of
+generating excessive userspace events.
+
+Thanks again for the feedback, and I’m happy to refine the approach
+based on further input from you, Kuba, or other maintainers.
+
+Links:
+[1] https://blog.leonhw.com/post/linux-networking-6-inflight-page/
+[2] https://github.com/bpftrace/bpftrace/
+[3] https://github.com/bpfsnoop/bpfsnoop/
+
+Thanks,
+Leon
+
+[...]
 
