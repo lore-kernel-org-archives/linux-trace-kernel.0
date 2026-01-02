@@ -1,30 +1,30 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DCF1397
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jan 2026 06:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C029F1D6BB;
+	Fri,  2 Jan 2026 07:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767334699; cv=none; b=lPvhUCi5l0Am/DYxbJawtdXt3Z3giaIq6qSJhwqzlfrhxNPRX8CxQXlg+XFTQWIM/hKmSgWbQI3dEC+2VTbEmwm/8SwGBdOmlCOMlPr7RCgMp0N8cb60WM17hgJ9LMu3oaj5aurRPOGWx89x9BNAGQwzoSQZGDcf+evsh7ItYzA=
+	t=1767338304; cv=none; b=uOyVkp5kuO7jz37IUzRDKilHAxr9N/8CwzKF0pyjdFVVd+DryOSI7WIg/3DtmQNXV7ADiF50gCTz03+dijNxEMo6uWmK2MnagjgW3efH5CYVnsPXDq/G9qvEOVqJtYYpH6EyxSKkvfr/Kk3S7MJjGBITEHS/aXupDJdzISHFVXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767334699; c=relaxed/simple;
-	bh=rvVUTxI3sl/dBrj9ZY9pXH6xhKb5bAk61+SpRF95xos=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MmucweBtDrAe2iRfox+pLYxRBkgHz0ypN3P22LUBfbNBX/JG3OqmGJBUey03Ra51AQ7RXoBwtxsqoFHe0P+dxxPf5U5tk1O4Be5hx1wljdCu9vgulMDd6E3qagfwICdvp5Cfzleg2ECsP45ffcM4K+7uphW01uEHihkvgSzhHQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hy7dwZk0; arc=none smtp.client-ip=91.218.175.178
+	s=arc-20240116; t=1767338304; c=relaxed/simple;
+	bh=/KuBx49d5gjgzKReNkIRGAu7sAvVLIwxW3BdCaWxRPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VQnc7HBdSePAMOFU6HeFvFd4NTblVNZmkad/NpoX+n+Rm4DUgi38TlG7xKwtt/CwURYWSqfagPMuwbQ0JCSR5qKs67p8UwwWbJHO5i/zoWRuN0n3yyI8uqewHilyHi1iD+dXydL7aVIUCTljtcjSqUxXNj79fA94Sj7741jMTLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xpxQh49s; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hy7dwZk0"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xpxQh49s"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767334683;
+	t=1767338298;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=wIgtotwjXNQ9yqFMyPJfsL0psaFasUQk+W6358KND8c=;
-	b=Hy7dwZk0P0FYPxT4jmdk5pOT2DvnnqliJSn1wK0MzHHZf+9ZNURW07+EXtHYhVrBfSLfDh
-	1BM9CwW+tcI4sRfVBswpoKmwjW6YkvCfwc5NM6HhICG5ZfI4zxO0cIAB/Z3YxOCBQ+vHBS
-	69WqXfx8HcaYh3bt8xLKHq/+Zu79D8Y=
+	bh=eylvSQmChZMfxijIPHskgRliJXun0Tl2206mxguAE+g=;
+	b=xpxQh49s1u+S1m2kshVe0GLjWLkTw4Nc2M4WVXGCH/pADxVqY4brhLmZGBZm0h2BZb5TQd
+	ITOJFVM/Jdvt6bJsZBdB5MeqsXQh+a6Af3UBrtQ5+oF0azRxMo+C1dazp6baClicZ+sufI
+	85F1TQfScRIoa72gqphiPx/vgVIUUrQ=
 From: Leon Hwang <leon.hwang@linux.dev>
 To: netdev@vger.kernel.org
 Cc: Jesper Dangaard Brouer <hawk@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Jesper Dangaard Brouer <hawk@kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
 	Leon Hwang <leon.hwang@linux.dev>,
 	Leon Huang Fu <leon.huangfu@shopee.com>
-Subject: [PATCH net-next v2] page_pool: Add page_pool_release_stalled tracepoint
-Date: Fri,  2 Jan 2026 14:17:18 +0800
-Message-ID: <20260102061718.210248-1-leon.hwang@linux.dev>
+Subject: [PATCH net-next v3] page_pool: Add page_pool_release_stalled tracepoint
+Date: Fri,  2 Jan 2026 15:17:45 +0800
+Message-ID: <20260102071745.291969-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -92,6 +92,10 @@ This allows developers and system administrators to:
 Signed-off-by: Leon Huang Fu <leon.huangfu@shopee.com>
 Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
 ---
+v2 -> v3:
+ - Print id using '%u'.
+ - https://lore.kernel.org/netdev/20260102061718.210248-1-leon.hwang@linux.dev/
+
 v1 -> v2:
  - Drop RFC.
  - Store 'pool->user.id' to '__entry->id' (per Steven Rostedt).
@@ -102,7 +106,7 @@ v1 -> v2:
  2 files changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/include/trace/events/page_pool.h b/include/trace/events/page_pool.h
-index 31825ed30032..c34de6a5ae80 100644
+index 31825ed30032..a851e0f6a384 100644
 --- a/include/trace/events/page_pool.h
 +++ b/include/trace/events/page_pool.h
 @@ -113,6 +113,30 @@ TRACE_EVENT(page_pool_update_nid,
@@ -129,7 +133,7 @@ index 31825ed30032..c34de6a5ae80 100644
 +		__entry->sec		= sec;
 +	),
 +
-+	TP_printk("page_pool=%p id=%d inflight=%d sec=%d",
++	TP_printk("page_pool=%p id=%u inflight=%d sec=%d",
 +		  __entry->pool, __entry->id, __entry->inflight, __entry->sec)
 +);
 +
