@@ -1,211 +1,128 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010040.outbound.protection.outlook.com [52.101.46.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F18E2749C7;
-	Sat,  3 Jan 2026 00:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767401467; cv=fail; b=KYDbzk9YAT2DrLNE0kfzdA9/FInuFp9+77lQWIoOHETxlZCz7gLLMwYjRyFxc1NDzfKqcOnHBDw2TcUYjPbsID96T4j46TcQCpTuzqwP2jmHsrIkwx5zgkskUrtSjGfqGc417bgwMLvbYI37m6KUwKXzLTMXumGZD1BPH8TZDyQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767401467; c=relaxed/simple;
-	bh=zfc5eBk/KcwZ9rzCCyBLNsD+XxvrTUP/hrTM6bqgI0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XwXTvezzFByfmZaAGJN7raAbiWKW0iOvA8uFx5yZXNWyX7Zsiz8sm5wzQ1ligqj5EOdjzMFheFp8QOXMqJqHIABD9K8TFIrLuYwoEcx53StA8qpGUp7q3nSyz1ob8RWsRnAty+IdbMTSGdN8dwVafWjeQUCiPxdX4cYIrL94XjE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r7N9WLNi; arc=fail smtp.client-ip=52.101.46.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2802D17A316
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  3 Jan 2026 08:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767430069; cv=none; b=u++RXlKm2eBGca+rP4jn2ElXkbNqlwZz3xr0u7GeUCH98wfWezD14uYI/yf04B1XFGPE4qDxAINS7lF35U66cDogIxsObJRc3fHNszdl5ApeEa2J3d0xT/+6lX9EcAMFNd8rX8hUkzRp8m1kIFOAv+ESEj9+/sgtYz4tyjWkKfo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767430069; c=relaxed/simple;
+	bh=e5hoLtxYWSBKCaXnzyOlvdkNn/9oqCrmBamB2u6C5RI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rBNvG4PJHBeOFTceVhth1fDFqLd2LCq3xrykK5tSASXPzW1HVdLphgtZPwR3Q05QH2vhKRSUFWFst6l05aqVX4D9w5fOAhpXdy3bCN1wEls28jyBdfAtOw49d3JVqd1dXI9+etXUWVNKxfbGlS+sUWuIsmVuB+fMg7MKRouofd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrZts75H; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r7N9WLNi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y9PFPLTw4SWtKGTsyB0ZWrMoaEt+gmKM5gj65bqiO1+347hmSuWNzuAqOTwfUswncjsk5XFRnmrGqlLvn6bcXpY3ZMiWjBcTFEfpkRAXBNTxXFouxi01CYRGxnSVI4IoHtHOKJgajBvjA1FCNMCH8Pt5Ha3tH5VIgR4hQILL8WDNVFHhNXxlqRdnryJkO2AT0f/U1ZQBQfBsVBvURJF9u6s54l5+9nzlgKRKQz7TqoRABnB0T5zJ3Z7KVaX8ZIBypU0K3GAlEiRSR72t+4RlPmv+XUrqr7opEtS4A5CUEZgFD2hsnBkFkd6sKs5F09CGtBpkebe92MA5bKNUyr6TZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yxq+MHMFw4APyzja8hu1mgjpWQ/mABLK0XY8rQMDz1k=;
- b=EfTBv5AfC2CcAElopIcSbOculDp4e9DgaKO5JsJIU0QWuUUDVn3GkWVRBHNDTP1NZiPXXPGaZj5G2hcmIloV55wSHLjmOqjdL+qGFRdgT9A5m+J3LWCA5UNzHeEkjL+sAyU//fdF7mN48AFAI4oze8+giG0RZq+D6rSR7I9h3TRkQZ2o4YjHYY+MVRsWhOKy+ESBTkwcwGYfLanMAdPDLAjPeF2tSteLEcs/fo0hwznqN0kj43gHA3Kiu/x3MQPQr0tZ7iwXF0T76FphyCza6tgbE0O1K4nKfWUc+PiYK7hd7lQMMnXBj93BP6Oj5i9sGcpnF1RfC8vfQx0AuuCciw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yxq+MHMFw4APyzja8hu1mgjpWQ/mABLK0XY8rQMDz1k=;
- b=r7N9WLNiko9kuKu+2WIP1upIGVyXlGA/it0Lr70IAnbJ0NeO1xmbs1+l0rehwlTAjBQ3SM7o4VOKxsMHTBjxFGs9MpXLBSheGdhh6f0A0D/WAEY+ubPkeoMYMkJEA9fqHyMosfpJMuHiRv67HbwbgRp7ZjkKOXHN2TtA2pDFdItiUkqMsBvmILIzA+Jgr/D0vYsDOHAvRd/xSeqNtm1gTYyQRLdeHSZFHRLjxdAiwQJUxIHRzK9f+Qkx/Xhzy14KE0yjjrUcBYARbxNyxEboV4j5ZKA+rYq6Yqo68UaJXGh6aSzcJ2rjL3c0aUXxGQfrveDUkVdBdGpLrUD6suad6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CY5PR12MB6454.namprd12.prod.outlook.com (2603:10b6:930:36::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Sat, 3 Jan
- 2026 00:51:01 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9478.004; Sat, 3 Jan 2026
- 00:51:01 +0000
-Date: Fri, 2 Jan 2026 19:50:59 -0500
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	David Laight <david.laight@runbox.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
-Message-ID: <20260103005059.GA11015@joelbox2>
-References: <20251225170930.1151781-1-yury.norov@gmail.com>
- <20251225170930.1151781-8-yury.norov@gmail.com>
- <20251226115848.298465d4@gandalf.local.home>
- <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
- <20251229111748.3ba66311@gandalf.local.home>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251229111748.3ba66311@gandalf.local.home>
-X-ClientProxiedBy: MN2PR02CA0008.namprd02.prod.outlook.com
- (2603:10b6:208:fc::21) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrZts75H"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7f651586be1so232604b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 03 Jan 2026 00:47:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767430067; x=1768034867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LLfzaNCKblQsWrgVFWjAAIDp8UyGda/a68IUZKqrEfs=;
+        b=KrZts75HRzouzgG+XYA3TsuMuTGd957/RdLxYB6+BJjO4MuoooVt5TmExf57G/aFgb
+         fBfNCBHsoTliQNgUSQiOjm3xt3DxZd4LrF5UEqgP3cscxq8ooI/fkIDCJzZbLCh3QyNW
+         BY/l29Bch6zhxtS2DRajxc2TxZ8OOnjz8k7fNhPZpY6UnAEPggwBlrezeNF256xuWaXS
+         1RWR4GX8ealUR2bdhWUHkgMPYKGNX8Puja/NLu8Upf7ElL2gSsLL3tV1I4zpMOxEkmEU
+         UXTgBfJDWLAWXJNw8tZtG5TachYD2WRZaJ+2AIVxSHaCdCSyNlr0LlTRedca5buS0Lxl
+         ziGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767430067; x=1768034867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LLfzaNCKblQsWrgVFWjAAIDp8UyGda/a68IUZKqrEfs=;
+        b=qm8qKwCbNQH00w6ooqwoArldOHA3nyESz/yIEhw+zuwo21VzRfrd/OOrtEx1+B1my0
+         Aax+gkcedzGisZJO6cF2vKNsgODPwtfAZRkancqwiFjf4jTlcixmNhH+sYZQTdPuqMI+
+         rb2MD2A5L4bPSAkFmoD9DVILqcgCAHTkRsYjOJD4NONFiHqwG6j5anw4ZOdANNmlo1Iq
+         H2JfRwq3F7lf3lfm+zp6ykgb7fyUINZATHqAtEH2lKDGxQgEo3DmJCzoU2s/GULK4gXp
+         48PLVfBzAVNrv0iU4L958t68UJ3BHaL6OPZ4a8EDzGDPDSiBD3SrCSZhz1cGFX71epjK
+         9auA==
+X-Forwarded-Encrypted: i=1; AJvYcCX83AakBTYAXDYwOyA3uL/bgG5zpeFfFKrUWqF01DM/yBkQjST9fRUAoB7qNdokJn8kjXov0eCix0E8nsiykNLsVUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXjgUNCNKgvGY5sc8cn6O/kyyQF0gwu4biqPa/oFWt9nZQiipw
+	aWTblqe6ccvcOYJCvUZGZBM9vcRwQiNPTT1zGqBppVouGafpdwg7LAF7
+X-Gm-Gg: AY/fxX4dctWSLcYt7oKCIvpnmcRWPUIF74PbL+iaQEvWc+5iwPqLOEIdPVFHG9OjpQs
+	k2tsGAf0bOC3s26AK9unwStxWNe5OcWviLEUQ6BY7zBEOZJkc68tiXNijHj9XwMeVmgdBiLOvyX
+	7AB9zpjnYi6dbWdgUtjdrhwSBu3SMLg+lgXIzwaYxPV0jxhZbQ1oF1N8yEP4CbXzUGhIn4/IBdf
+	HjuHmL/nF3oT7zNjW0INwQD+8J6Je2SHq0Tx2O7R87AfJl8wjawDBt5p1g6v0wda5PxQ0CQE5Av
+	p8KSEn89wUibhaDkk6VvLVwQKaV5LfJmibg+ovxKi3IqpFg1clFpeiD8pqFSNqIAFL8HArhXikL
+	OTDwmrjdOe0o7BJ1xxICX0P1LoXyxQbZnUG8LUV6wuNHTup+hpBT+izhvvPGNO5jV295jtiIRaI
+	OAuiFkT69YPt3whym03ZftY1iMoAHcmsm1jrg=
+X-Google-Smtp-Source: AGHT+IFlp8qcq2QazAOf3KnrJVHQQLc5fUVTVkMNEtXBSYaNUnUycb5/s395woDebt+kaXn7KmVKuQ==
+X-Received: by 2002:a05:6a00:4ace:b0:7e8:3fcb:9afb with SMTP id d2e1a72fcca58-8148ba19ccdmr1341264b3a.17.1767430067508;
+        Sat, 03 Jan 2026 00:47:47 -0800 (PST)
+Received: from jvle-ThinkPad-X1-Carbon-Gen-8.. ([210.73.43.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e197983sm42704939b3a.33.2026.01.03.00.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Jan 2026 00:47:47 -0800 (PST)
+From: Keke Ming <ming.jvle@gmail.com>
+To: mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org
+Cc: linux@armlinux.org.uk,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tsbogend@alpha.franken.de,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Keke Ming <ming.jvle@gmail.com>
+Subject: [PATCH 0/5] uprobes: transition from kmap_atomic to kmap_local_page
+Date: Sat,  3 Jan 2026 16:42:38 +0800
+Message-ID: <20260103084243.195125-1-ming.jvle@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CY5PR12MB6454:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a45e441-3da7-4504-06d8-08de4a622a87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dsDv/L5uxfnBOoB0EqkVKcPZFK8R/R0QEfCJAqs5rhPTbzD0Kux6kK8Yyqgc?=
- =?us-ascii?Q?UZh5nnQceV3jq/xNN/wAmvjlfC9IA+fu5eak2EPL8aJvnjvQiuFFqQkTlW8x?=
- =?us-ascii?Q?fDSUiieckM91nBTwQGVTEUXsxSTBEZvnPYnhp6ir1VtTP+mode0MM/lyDbl8?=
- =?us-ascii?Q?YsHQ/zPTX1ovpfKnwBMTDLS47nDZMo9hnyjZUYyPTGPoynCA8P8MNhiLymgR?=
- =?us-ascii?Q?3blUEf3ZLGUpJEbIFDj0H9TaDMd5uoMeeVlUPBvj9YA8x6TJBcD6Ic5MT1kv?=
- =?us-ascii?Q?gst9Zp70PPBJ3MKshJqzlkYiEOhc02ojrrSUbD0b4IxI2vjSEnbLw1Ke0/4i?=
- =?us-ascii?Q?yQOVgYOBWmcCIP7WgSUyHXwTPz7OvKasglvvMAzAmgicSMtPnWZohejN2MOo?=
- =?us-ascii?Q?NL3m5ufOQju2pXkjsBrfb6i6L1DhnDyyI4bkGU9nw2JHA3qYGdvAvuAP7OCf?=
- =?us-ascii?Q?eod0WX/CaMeEBUU5kexx1LB6Cmb9nLqgUdvvPep/WXuPbYjdfBYnycnb/yCY?=
- =?us-ascii?Q?BwQvIdEZGlNKZ+Zp3A2SlbtpI21Ad0NSt4kkMJFOhpzgMSyMQoXLeatKyFUU?=
- =?us-ascii?Q?3r/Vhc2B7n+F3fuRYo6D5OPTBGNAtphHhhrOY2ipOjlqfyzOXtMD8amEDv75?=
- =?us-ascii?Q?XEa/ESJ3Z+4QDZEjKmEanLtAyGCBMtGcDbtC4WscH8OolDOQW2MYB7gEWeL2?=
- =?us-ascii?Q?H9sWGb2dswHYh2U8ggMemO6CiHKGdqXV8W+DuqD9AFVmB8zVAyDwvTPF1hpa?=
- =?us-ascii?Q?3t9SXHk8AeFQiFtg/fubpxpDsTSDCfc17PyqXQUBOu5gj/Xo8hqbzdvhyJzV?=
- =?us-ascii?Q?hREmS50zr5DA6ZXWj0xvmC1jpikl39mGiY6R3l0RxCmkQehgNm/F99V+tW0v?=
- =?us-ascii?Q?PzJeBn9h6HwWXp/vIIXHTxCSMNpvO5LcEnQkaCyHb8oRnNzJ2Xv6NxV7E972?=
- =?us-ascii?Q?fws61uj1m+gxob8WQvS7nlhMXDg5zlAhgyLQe2je2sM4p5EckAELiDx4EGtv?=
- =?us-ascii?Q?oTHihNmYwNmVi2XAL4yxJ8hfmFamQ3za+AaH/M30ZozwbZGwTfuWweBaV5ZL?=
- =?us-ascii?Q?nhH1EXwWpkq4mI2pQxf4zu3PPqcmwbm5GEPQGzma7G4Se9s/OiidoweJC9qR?=
- =?us-ascii?Q?lpGMFxayvnBWvE3hp8rSc20LgyR7F6JvIBmLP9ghhjJ5Iot3CCXIYMmbf8qj?=
- =?us-ascii?Q?CdZ/mx+1Zb0AhOVwUzYigj+K/19Mkw7zgbgyb5I+JvArRXHkF8Wx9b9P6uAY?=
- =?us-ascii?Q?4iV40FbmSjFzffzHM00he1lMT9ozysToJl172EsFF1TrI6qlhcq+GTewzQWM?=
- =?us-ascii?Q?bnSJkOge35CokBEP0KIonM5ATOvv4+F4s9otmorfj+18ngSudtS6O7moGN2I?=
- =?us-ascii?Q?S9BiX2wJzv72besYtCi8VBlCrzh9WOtJDflU8giZPCQaXzzb2iM+bYp9MvNs?=
- =?us-ascii?Q?GkbnN/m+pkdcoDzraM79oQsDPzdtp3zO?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?26qmSiQsIeLMJtd1Wjxg5ifOY7cK38Vg/WqZJi7k58vmHF/WJkcrqc9WYXIi?=
- =?us-ascii?Q?0f8M/Xzu83qZpLze/SVZLDu0T57zU3XYswVMPUhDiYz6AGhTEQ+8Vl9hvpeM?=
- =?us-ascii?Q?D5/omRUG1Lr0nGiULtOfD260PVztJw5UNFzs5KqGhzX4ngTApfOh0Oy2C1DJ?=
- =?us-ascii?Q?HLqVCWlrH1p5hGqtFkMl22vN9q0EMnLtEnwAIryOH8UaaemCNsE7wKhRGY5h?=
- =?us-ascii?Q?z/0agOgkvL99L7a9R/T+DbfbO1Iv/zfL4EdT71+3up+w2TTK+Z+fdcclqJua?=
- =?us-ascii?Q?M2oSg7RmsRQU5f1wHE7mdO/RoDtDtIciLLKmnp9tyWCccdxrgVuzRYzrC/T8?=
- =?us-ascii?Q?YbfXyxKtMOJqfWQRxs7vpvVxnw6BMi+N9EDsPkXpczivpnIEaeY7WpY9wr6C?=
- =?us-ascii?Q?8ii/Cn0dQcJb2kUQDcW8t3WSmuGX9GCMkJSKA3UyYgQF02lea1nQZzT0jAQd?=
- =?us-ascii?Q?tJox9n8WZMAtVjwAybTtp86i4Dswbrhu4kGuY2uexOV1Pfbz8iIa0IW1yd8K?=
- =?us-ascii?Q?wxxg093/fT7r/cc/9PLrGwVJZpAn4w+4iqZ3gGaEllGNstMzfKgrAFjpD13M?=
- =?us-ascii?Q?VvzWEmV5DCtAfDqG1SkeTGy7vi+jGqKRLEZQOtDfRsT29WeFTJ43SLCgeMZy?=
- =?us-ascii?Q?nBuXTsnumK+8e1kUjKc6qKOLJ/mmhT5b4ewmZT1J3z4vFGUFjSFGKvRFdnPo?=
- =?us-ascii?Q?jRoRMPRKbRt5qpbHYSS6Q2YWHNpFoYYNK18NUTr0OIotKD69rDiHjnUZ/8iQ?=
- =?us-ascii?Q?rvSpZE1V9fk0qIuiDfcysuey/dGZR0SoyIPvTvaatZKWtlFK1Eb+jsP9vVgV?=
- =?us-ascii?Q?Fwwk8qp/vVC89lElgM5jpK3Yc6GnmT0II+PLGnmov+RMTHOaYFmgwDBGi7bn?=
- =?us-ascii?Q?qVfjv+rXEGP2iY66C1hT40HiQbHmFkPW02bbb0uSzTkM/GQb2tixhu2EX0YQ?=
- =?us-ascii?Q?G7WMt1p7EqhrWh302IdcSQJErswMkNYlX4Kx/JaM3ppsPv/4r0t5rdH8+J5p?=
- =?us-ascii?Q?WV4lhjjk222M8lNjVWPZJapxH44/9vqInd97eVEri64d6XDXl4XfUR7r7iRn?=
- =?us-ascii?Q?8a3pY29ot867Pyr1TAFTZwlJDkOhoZMruRpTYfzSl2hQjYqdNkB5fp6EZnx2?=
- =?us-ascii?Q?LfMU4l+ZlP8SV25ROUENdV4AWL+4/kvY4RjJP0BbnMeaQPlr5tFJgVy76zG6?=
- =?us-ascii?Q?bgOGx5R7Kb7Z0DuO+itg/MC9RXqclCQB1yNRUQAASPC+gJIIqbfrY9M83xQD?=
- =?us-ascii?Q?DB0JgTHN2DZTJrOfKv/0oJL5NM++pMp+GcE5uHDD4Rr84cxM4TyG0JlxoH/2?=
- =?us-ascii?Q?n2t2X95nkvLqyS9gx3coZhlKdBWsDjrxpqSjA1JE1H4XHN+6ntz9IZKlZhB2?=
- =?us-ascii?Q?BtxFuWeEcXknHJnsvfCJyGKa/6H4QbWWbfloOSuJ26UBAfNWvP9sJlQEQ/Vw?=
- =?us-ascii?Q?5s8FQTPdk8s9rBtKSql3NSWGyBbqNlbZLMbAbFbm/cN6ggjVjuYCWC7KnrhI?=
- =?us-ascii?Q?7qJvxy7/4gYtCv+r1GnEuPFFSrUhLgo9qGsHFG7tPpE/A+oNk+7G5MLCUkOq?=
- =?us-ascii?Q?dczrfAn88NFeQ9uiIs5k6oKf0UtUmoCM7JBf6uuBz32OVtL6D/Cdl0tLcneo?=
- =?us-ascii?Q?tFKKVQwwFWEaCb00IYD045le7YnfBp2VDkj8UbZ0RdFsodQHMDSx7sEMUFSw?=
- =?us-ascii?Q?lg/yBiVFsI9WAUC+smS8CwnrXcfE7R6jg13oal2VZhjdZvV06IFMC6y3jvFI?=
- =?us-ascii?Q?FzG/avirqw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a45e441-3da7-4504-06d8-08de4a622a87
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2026 00:51:01.4654
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aqCi8ZRoQtGGPvDN+haozGZ93C/q3Z9tR+ywx93BM0lMlbFPLFHGIEhn/YcFQux/iX8D5J0pJgaXPlHs+axmDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6454
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 29, 2025 at 11:17:48AM -0500, Steven Rostedt wrote:
-> On Sun, 28 Dec 2025 13:31:50 -0800
-> Andrew Morton <akpm@linux-foundation.org> wrote:
-> 
-> > > trace_printk() should be as available to the kernel as printk() is.  
-> > 
-> > um, why?  trace_printk is used 1% as often as is printk.  Seems
-> > reasonable to include a header file to access such a rarely-used(!) and
-> > specialized thing?
-> 
-> It will waste a lot of kernel developers time. Go to conferences and talk
-> with developers. trace_printk() is now one of the most common ways to debug
-> your code. Having to add "#include <linux/trace_printk.h>" in every file
-> that you use trace_printk() (and after your build fails because you forgot
-> to include that file **WILL** slow down kernel debugging for hundreds of
-> developers! It *is* used more than printk() for debugging today. Because
-> it's fast and can be used in any context (NMI, interrupt handlers, etc).
-> 
-> But sure, if you want to save the few minutes that is added to "make
-> allyesconfig" by sacrificing minutes of kernel developer's time. Go ahead
-> and make this change.
-> 
-> I don't know how much you debug and develop today, but lots of people I
-> talk to at conferences thank me for trace_printk() because it makes
-> debugging their code so much easier.
-> 
-> The "shotgun" approach is very common. That is, you add:
-> 
-> 	trace_printk("%s:%d\n", __func__, __LINE__);
-> 
-> all over your code to find out where things are going wrong. With the
-> persistent ring buffer, you can even extract that information after a
-> crash and reboot.
+The use of kmap_atomic/kunmap_atomic is deprecated. The purpose of
+kmap-like functions is to create temporary mappings.
 
-I use trace_printk() all the time for kernel, particularly RCU development.
-One of the key usecases I have is dumping traces on panic (with panic on warn
-and stop tracing on warn enabled). This is extremely useful since I can add
-custom tracing and dump traces when rare conditions occur. I fixed several
-bugs with this technique.
+kmap_atomic() typically disables preemption, while kmap_local_page()
+allows preemption.
 
-I also recommend keeping it convenient to use.
+According to the documentation, kmap_atomic() is primarily necessary
+for contexts that cannot sleep.
 
-thanks,
+> kmap_atomic() may also be used by interrupt contexts, since it does
+> not sleep and the callers too may not sleep until after
+> kunmap_atomic() is called.
 
- - Joel
+> kunmap_atomic() may implicitly depend on the side effects of atomic
+> mappings, i.e. disabling page faults or preemption, or both. In that
+> case, explicit calls to pagefault_disable() or preempt_disable() or
+> both must be made in conjunction with the use of kmap_local_page().
+
+Link: https://docs.kernel.org/mm/highmem.html#temporary-virtual-mappings
+Link: https://lwn.net/Articles/836144/
+
+Keke Ming (5):
+  riscv/uprobes: use kmap_local_page() in arch_uprobe_copy_ixol()
+  arm64/uprobes: use kmap_local_page() in arch_uprobe_copy_ixol()
+  mips/uprobes: use kmap_local_page() in arch_uprobe_copy_ixol()
+  arm/uprobes: use kmap_local_page() in arch_uprobe_copy_ixol()
+  uprobes: use kmap_local_page() for temporary page mappings
+
+ arch/arm/probes/uprobes/core.c     |  4 ++--
+ arch/arm64/kernel/probes/uprobes.c |  4 ++--
+ arch/mips/kernel/uprobes.c         |  4 ++--
+ arch/riscv/kernel/probes/uprobes.c |  4 ++--
+ kernel/events/uprobes.c            | 12 ++++++------
+ 5 files changed, 14 insertions(+), 14 deletions(-)
+
+-- 
+2.43.0
 
