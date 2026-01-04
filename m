@@ -1,91 +1,60 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C392882A7
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  4 Jan 2026 11:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131B418C332;
+	Sun,  4 Jan 2026 13:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767527783; cv=none; b=eECPRhsGhwKwhlRI5xJ1ialr0aEUvAVfSi09X099CJCPDKwNl5Hy/MprDWXpYxsj3bl/xG8hU48OobbHolxr1ULHPJyfjTKHh5edQbtKxsI+g3vEb4uWI/bCQLRqkqmKKr6du525FxEzDJGqW6/8fACWov7GbspENY634qeji1Q=
+	t=1767533661; cv=none; b=ouHwf04DBouQemNZ2+CbLWKr7rM0DdE54cWzHGiSSL7EafsIJcOfx+hcB7v/0ishVF7aKltD3fJmYW5DNfJjFbx1s8idkXCSykbbTK+l2LTNLVUSmF18AzcOrFrlQ1zdzyvYdJ//I4k4Pry784qvowJThwHoAbkmSXQBVl/kCrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767527783; c=relaxed/simple;
-	bh=GAoHNm2kxQ3VVMYBhOd0J23ZuTQPhy4Pg9gBc2k7exk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BIN0goNzZRqcJHmYjcnzq6duy9P8jrAWrPllmlu3xYt5nii1mKIRmeZhYur2x97491/lGqCD5nzLYrpjKXpU+BeMkyUqkOZnqF2UHNCszhyeUiYPdnoQs8Faa7RTqJJJgJWretbjGVBR9lDKf1LBa5JDdM4lOPXpvXIfqiyD9Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvmWHaNV; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767533661; c=relaxed/simple;
+	bh=N0L6XvnNB1qvZL1c++Orzx2mTUa1KFODZzyzqoGfs/w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=It8sX0ragR82JNF7syhUCNfDH49DbkELeP6q6WB1gqy/1/q4BqxO7Ln/rD1QCwKV3rUPlqkLpd5YZ7SOyDPU7rVtZ3Xjp6mN5YPzwkETHM6Hrg2HR7tdrE29c3wSWsg5HXl9TKmU229bg9ICmYfVhrkHU8wsCyedSvY5pITeZac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF2/Qqmx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvmWHaNV"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47796a837c7so85050815e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 04 Jan 2026 03:56:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767527779; x=1768132579; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHWuScMnE43MBF17SntuhCPn9/ypQW7BMwUOJWNkTIA=;
-        b=hvmWHaNVEpnLx5kUvhRSHFpEoR9HQcpWjX/LoBkx5uBs4lAHExfoY97zVOiqunoUka
-         ZC5B30hZsZ9T6BWuhyppNvQt5TQxtDIEMnf4pFS5cmEZWLih3KyY2b8tQ1xmj9aVyoIN
-         x486/7nrbgwLywAD6HB/DQg0ZL7FPFXeMA7NwciFHloYMLGKA1ERPFU2m7lNkQmA7alJ
-         To//iag9Jqr+Kr1v7vTzEoQzmTH/9yx4IjvbhlgZFSfgtPrGSN7vO9S3H0sR7ew6QpXF
-         Ig35DxxoZDki118NbtdgqYMLmIOLhYND5qons/ldOm0KsLaHmzrSVAZPl/3HXWGKdQao
-         OeuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767527779; x=1768132579;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HHWuScMnE43MBF17SntuhCPn9/ypQW7BMwUOJWNkTIA=;
-        b=weI7/2ZbErcWO+otTtRk1lRA7NWFABdrNNrzkp4DsoMNBEEobKmbxTeUMDWmLILs+C
-         FYYuey860ROJn6VbZ1Hg27O1W+V2mw07AEQUTsG829M9EdEy0SiUtgMuBy076qCu1gLe
-         402KUcoQIW+Zsvw0EGFGRyVFwSXp5r+lHSUotyce/8UVNhtyRGYB17i0ZXB5mYUBRIsK
-         OMCPZg81uOzKWbNcjX6WaXbQjs5M4xREy9PyslWEkngUua6m8hmC0skOQWeK8tusSuBJ
-         Sy5ERXm/sl3I6t00Fs+TXChtOoHbL/VLQji6aW5xYkvNKg4MR7EgzH87t312noOIWtkZ
-         NcBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9ocS2BGAqr9lVQllwctGKecnj9aLUEon0prOjQ5QFb5c/KcoH0+TEBT0iEzkiAaUNNPcqI2wUwdVLwzg25MOx8+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEsn4CQpAOIv1opmgC/JTySCfYeinYfNcqa5pDSd1ht2dN8oVI
-	5QMUcRvTa9biil8wi3QLbDEsENsw6U6eC96La+z6/H02U9/gEHgqsxWl
-X-Gm-Gg: AY/fxX6UfKo7WKV9hkRXV7Sj8dbTRG2ZBi/ad9g09uCk2cR4Iz/SLtzJYy5Z+Qp39p2
-	bq0YWrbeC3g2ZkNVluSYU6OOi27NoCNKM3CCRDh9fMCMY11yTYc5AAKsMvvVmzmyCtCFOnwI5Ci
-	YezYVZk4buGdb/bc7E0aLGeF7Fkrkby8LfHk/0aR5X/qvf3aW56znetMh/1k/ZVp8y4X5bFTufG
-	LB7baZOXcwcdz2QJBxET6W64geRHyZ+pTq9AiHhqRBCeQrJHH7BT2ehhkhn1TO7AHi6rfo11jqb
-	lEs1Px1BXlsiwJ/Z95gd3qdo1JXF8hFTVKrGojw3604WxXAh4yI5kvc4TfhpGpOsiCw+LG62m1F
-	wQoOtwPKM2YmY8Xfnyt0GkAnWtpWe5jSLidYFD9cjHM3kT3QkOHl8SGGAhimi
-X-Google-Smtp-Source: AGHT+IHIZnfdFKqNFB8eAXksIPvZyz9IWgsHY++6OlvULt6SnYStqYI9H7OUETi7olVZTWz0wUJceA==
-X-Received: by 2002:a05:600c:a31c:b0:47d:264e:b435 with SMTP id 5b1f17b1804b1-47d264eb68dmr411443735e9.22.1767527779267;
-        Sun, 04 Jan 2026 03:56:19 -0800 (PST)
-Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6ba5001esm36036965e9.3.2026.01.04.03.56.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jan 2026 03:56:18 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 4 Jan 2026 12:56:17 +0100
-To: Will Deacon <will@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mahe Tardy <mahe.tardy@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF2/Qqmx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B715C4CEF7;
+	Sun,  4 Jan 2026 13:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767533660;
+	bh=N0L6XvnNB1qvZL1c++Orzx2mTUa1KFODZzyzqoGfs/w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LF2/Qqmx7cycOOAoJ7Vc+ukOjTVc4eYgk0QIxW0/1mYoC4aMyCkVQJ4E9IpPCmYRx
+	 KpOnbyfpoY/W4/1N6l5dtg/PAAkl8sqH+aP72FXIagGjxMgtUGv0YCS9RR/h//5YmK
+	 E5UJ6Dgiy+K30aACPyjyScD4p6FtWcsmKV318iNzEB3auutal8izRdVwhuh823H7CT
+	 IA+wi+6VSaYCbS6h879ioIClNilpLhg/dWqg67qwGEY5b9KVeUUI8jNgvHyWoer/E5
+	 2LjcBlceRrdIf9Mk8quOZ/FjxBSQHxKbyMWR8rrKdZTWTC6kShMUDYr17iHMLUNslr
+	 MEj9it+WYZc1g==
+Date: Sun, 4 Jan 2026 22:34:15 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>, Will Deacon <will@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org, Yonghong Song
+ <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko
+ <andrii@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mahe Tardy
+ <mahe.tardy@gmail.com>
 Subject: Re: [BUG/RFC 1/2] arm64/ftrace,bpf: Fix partial regs after
  bpf_prog_run
-Message-ID: <aVpVYUaBOWk22RtO@krava>
+Message-Id: <20260104223415.0a31f423c861c0b651de966b@kernel.org>
+In-Reply-To: <aVfbqYsWdGXu4lh8@willie-the-truck>
 References: <20251105125924.365205-1-jolsa@kernel.org>
- <aVfbqYsWdGXu4lh8@willie-the-truck>
+	<aVfbqYsWdGXu4lh8@willie-the-truck>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aVfbqYsWdGXu4lh8@willie-the-truck>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 02, 2026 at 02:52:25PM +0000, Will Deacon wrote:
+On Fri, 2 Jan 2026 14:52:25 +0000
+Will Deacon <will@kernel.org> wrote:
+
 > On Wed, Nov 05, 2025 at 01:59:23PM +0100, Jiri Olsa wrote:
 > > hi,
 > > Mahe reported issue with bpf_override_return helper not working
@@ -138,34 +107,14 @@ On Fri, Jan 02, 2026 at 02:52:25PM +0000, Will Deacon wrote:
 > and ftrace_regs_set_return_value() to update the relevant registers from
 > the core code?
 
-I knew I forgot some change.. thanks for replying
+I agreed with using the generic APIs. Also, ftrace_partial_regs_fix() is
+not self-explained. Maybe ftrace_regs_set_by_regs()?
 
-ftrace_partial_regs is overloaded in arm64 and because of that we need
-to propagate the change to pt_regs, so I think the ftrace_partial_regs_fix
-code is arm64 specific, so can't see that in core code
+Thank you,
 
-also wrt ftrace_partial_regs_fix name, I was thinking it might be better
-to have begin/end functions, like:
-
-  ftrace_partial_regs_begin
-  ftrace_partial_regs_end
-
-thanks,
-jirka
+> 
+> Will
 
 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2560,10 +2560,11 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
- 	}
- 
- 	rcu_read_lock();
--	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
-+	regs = ftrace_partial_regs_begin(fregs, bpf_kprobe_multi_pt_regs_ptr());
- 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
- 	err = bpf_prog_run(link->link.prog, regs);
- 	bpf_reset_run_ctx(old_run_ctx);
-+	ftrace_partial_regs_end(fregs, bpf_kprobe_multi_pt_regs_ptr());
- 	rcu_read_unlock();
- 
-  out:
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
