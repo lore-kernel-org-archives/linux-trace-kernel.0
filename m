@@ -1,140 +1,171 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8636E19D093;
-	Sun,  4 Jan 2026 02:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C392882A7
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  4 Jan 2026 11:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767493153; cv=none; b=tFpKVZ3cWwtKPslNHxA1w9IOEE4ozDw5LNVSyu5WOQsYfV5nLaL0hevuqLNH7irDZZPXAZtaosMvNNbFYFsNtBKVkwDabNA0SHgjFHC+KOIUHDjNsMXsDAtBVZvK9KxOz6XUIfhBNa/kAgaK1qqp2KYdYfKSFAvlJIY9x3IIN1s=
+	t=1767527783; cv=none; b=eECPRhsGhwKwhlRI5xJ1ialr0aEUvAVfSi09X099CJCPDKwNl5Hy/MprDWXpYxsj3bl/xG8hU48OobbHolxr1ULHPJyfjTKHh5edQbtKxsI+g3vEb4uWI/bCQLRqkqmKKr6du525FxEzDJGqW6/8fACWov7GbspENY634qeji1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767493153; c=relaxed/simple;
-	bh=y3QaYbrkjyyOPmdsHqhgwhgovdLb2QZ3keKDHZJtdCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tn5bzHPrkBjCPl4olTJw6qBFyvyL1KyLLHTzEe+eo9ZAABpeeBB8Q2/xpXr8zYk0sblU3MMy/xl4JEEghJGlznqVAP+gRUUCUaSKRKbGy5lJxCBmULPKxl9xxE3WhO2PIKNgTdlYJBfSWDoPjef3TOU8jz1nUloNwL2S/jL+jos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=f6c33vgW; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1767527783; c=relaxed/simple;
+	bh=GAoHNm2kxQ3VVMYBhOd0J23ZuTQPhy4Pg9gBc2k7exk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BIN0goNzZRqcJHmYjcnzq6duy9P8jrAWrPllmlu3xYt5nii1mKIRmeZhYur2x97491/lGqCD5nzLYrpjKXpU+BeMkyUqkOZnqF2UHNCszhyeUiYPdnoQs8Faa7RTqJJJgJWretbjGVBR9lDKf1LBa5JDdM4lOPXpvXIfqiyD9Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvmWHaNV; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="f6c33vgW"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=6z5+S1yxCPSNbxBzivMIIqV9f4PGVRzEFQUWbP9fmvs=;
-	b=f6c33vgW9RV+dsQlbKk7K4l6byfS340uX2l8nOr5kmPf6avZao3sY5n+HSNANjrl6rT+uUU6O
-	EtpJkBCT8OhQeZttZNPaTwxDVzG+SR8wUjxtIfGyaIFkz3Sfu0OwRj7YIMgcbrQ5mKwjmlOz73A
-	yT0AXdwDGNXU8Y27T+pdwhk=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dkLcw0qxPzpStt;
-	Sun,  4 Jan 2026 10:15:44 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B1F74036C;
-	Sun,  4 Jan 2026 10:18:59 +0800 (CST)
-Received: from [10.67.112.40] (10.67.112.40) by dggpemf200006.china.huawei.com
- (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sun, 4 Jan
- 2026 10:18:58 +0800
-Message-ID: <dfc33064-f99f-4728-858f-95c80300bcff@huawei.com>
-Date: Sun, 4 Jan 2026 10:18:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvmWHaNV"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47796a837c7so85050815e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 04 Jan 2026 03:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767527779; x=1768132579; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HHWuScMnE43MBF17SntuhCPn9/ypQW7BMwUOJWNkTIA=;
+        b=hvmWHaNVEpnLx5kUvhRSHFpEoR9HQcpWjX/LoBkx5uBs4lAHExfoY97zVOiqunoUka
+         ZC5B30hZsZ9T6BWuhyppNvQt5TQxtDIEMnf4pFS5cmEZWLih3KyY2b8tQ1xmj9aVyoIN
+         x486/7nrbgwLywAD6HB/DQg0ZL7FPFXeMA7NwciFHloYMLGKA1ERPFU2m7lNkQmA7alJ
+         To//iag9Jqr+Kr1v7vTzEoQzmTH/9yx4IjvbhlgZFSfgtPrGSN7vO9S3H0sR7ew6QpXF
+         Ig35DxxoZDki118NbtdgqYMLmIOLhYND5qons/ldOm0KsLaHmzrSVAZPl/3HXWGKdQao
+         OeuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767527779; x=1768132579;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HHWuScMnE43MBF17SntuhCPn9/ypQW7BMwUOJWNkTIA=;
+        b=weI7/2ZbErcWO+otTtRk1lRA7NWFABdrNNrzkp4DsoMNBEEobKmbxTeUMDWmLILs+C
+         FYYuey860ROJn6VbZ1Hg27O1W+V2mw07AEQUTsG829M9EdEy0SiUtgMuBy076qCu1gLe
+         402KUcoQIW+Zsvw0EGFGRyVFwSXp5r+lHSUotyce/8UVNhtyRGYB17i0ZXB5mYUBRIsK
+         OMCPZg81uOzKWbNcjX6WaXbQjs5M4xREy9PyslWEkngUua6m8hmC0skOQWeK8tusSuBJ
+         Sy5ERXm/sl3I6t00Fs+TXChtOoHbL/VLQji6aW5xYkvNKg4MR7EgzH87t312noOIWtkZ
+         NcBg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9ocS2BGAqr9lVQllwctGKecnj9aLUEon0prOjQ5QFb5c/KcoH0+TEBT0iEzkiAaUNNPcqI2wUwdVLwzg25MOx8+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEsn4CQpAOIv1opmgC/JTySCfYeinYfNcqa5pDSd1ht2dN8oVI
+	5QMUcRvTa9biil8wi3QLbDEsENsw6U6eC96La+z6/H02U9/gEHgqsxWl
+X-Gm-Gg: AY/fxX6UfKo7WKV9hkRXV7Sj8dbTRG2ZBi/ad9g09uCk2cR4Iz/SLtzJYy5Z+Qp39p2
+	bq0YWrbeC3g2ZkNVluSYU6OOi27NoCNKM3CCRDh9fMCMY11yTYc5AAKsMvvVmzmyCtCFOnwI5Ci
+	YezYVZk4buGdb/bc7E0aLGeF7Fkrkby8LfHk/0aR5X/qvf3aW56znetMh/1k/ZVp8y4X5bFTufG
+	LB7baZOXcwcdz2QJBxET6W64geRHyZ+pTq9AiHhqRBCeQrJHH7BT2ehhkhn1TO7AHi6rfo11jqb
+	lEs1Px1BXlsiwJ/Z95gd3qdo1JXF8hFTVKrGojw3604WxXAh4yI5kvc4TfhpGpOsiCw+LG62m1F
+	wQoOtwPKM2YmY8Xfnyt0GkAnWtpWe5jSLidYFD9cjHM3kT3QkOHl8SGGAhimi
+X-Google-Smtp-Source: AGHT+IHIZnfdFKqNFB8eAXksIPvZyz9IWgsHY++6OlvULt6SnYStqYI9H7OUETi7olVZTWz0wUJceA==
+X-Received: by 2002:a05:600c:a31c:b0:47d:264e:b435 with SMTP id 5b1f17b1804b1-47d264eb68dmr411443735e9.22.1767527779267;
+        Sun, 04 Jan 2026 03:56:19 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6ba5001esm36036965e9.3.2026.01.04.03.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jan 2026 03:56:18 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 4 Jan 2026 12:56:17 +0100
+To: Will Deacon <will@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mahe Tardy <mahe.tardy@gmail.com>
+Subject: Re: [BUG/RFC 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <aVpVYUaBOWk22RtO@krava>
+References: <20251105125924.365205-1-jolsa@kernel.org>
+ <aVfbqYsWdGXu4lh8@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] page_pool: Add page_pool_release_stalled
- tracepoint
-To: Jesper Dangaard Brouer <hawk@kernel.org>, Leon Hwang
-	<leon.hwang@linux.dev>, <netdev@vger.kernel.org>
-CC: Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, <kerneljasonxing@gmail.com>, <lance.yang@linux.dev>,
-	<jiayuan.chen@linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, Leon Huang Fu
-	<leon.huangfu@shopee.com>, Dragos Tatulea <dtatulea@nvidia.com>, kernel-team
-	<kernel-team@cloudflare.com>, Yan Zhai <yan@cloudflare.com>
-References: <20260102071745.291969-1-leon.hwang@linux.dev>
- <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVfbqYsWdGXu4lh8@willie-the-truck>
 
-On 2026/1/2 19:43, Jesper Dangaard Brouer wrote:
+On Fri, Jan 02, 2026 at 02:52:25PM +0000, Will Deacon wrote:
+> On Wed, Nov 05, 2025 at 01:59:23PM +0100, Jiri Olsa wrote:
+> > hi,
+> > Mahe reported issue with bpf_override_return helper not working
+> > when executed from kprobe.multi bpf program on arm.
+> > 
+> > The problem seems to be that on arm we use alternate storage for
+> > pt_regs object that is passed to bpf_prog_run and if any register
+> > is changed (which is the case of bpf_override_return) it's not
+> > propagated back to actual pt_regs object.
+> > 
+> > The change below seems to fix the issue, but I have no idea if
+> > that's proper fix for arm, thoughts?
+> > 
+> > I'm attaching selftest to actually test bpf_override_return helper
+> > functionality, because currently we only test that we are able to
+> > attach a program with it, but not the override itself.
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > ---
+> >  arch/arm64/include/asm/ftrace.h | 11 +++++++++++
+> >  include/linux/ftrace.h          |  3 +++
+> >  kernel/trace/bpf_trace.c        |  1 +
+> >  3 files changed, 15 insertions(+)
+> > 
+> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> > index ba7cf7fec5e9..ad6cf587885c 100644
+> > --- a/arch/arm64/include/asm/ftrace.h
+> > +++ b/arch/arm64/include/asm/ftrace.h
+> > @@ -157,6 +157,17 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> >  	return regs;
+> >  }
+> >  
+> > +static __always_inline void
+> > +ftrace_partial_regs_fix(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> > +{
+> > +	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+> > +
+> > +	if (afregs->pc != regs->pc) {
+> > +		afregs->pc = regs->pc;
+> > +		afregs->regs[0] = regs->regs[0];
+> > +	}
+> > +}
 > 
-> 
-> On 02/01/2026 08.17, Leon Hwang wrote:
->> Introduce a new tracepoint to track stalled page pool releases,
->> providing better observability for page pool lifecycle issues.
->>
-> 
-> In general I like/support adding this tracepoint for "debugability" of
-> page pool lifecycle issues.
-> 
-> For "observability" @Kuba added a netlink scheme[1][2] for page_pool[3], which gives us the ability to get events and list page_pools from userspace.
-> I've not used this myself (yet) so I need input from others if this is something that others have been using for page pool lifecycle issues?
-> 
-> Need input from @Kuba/others as the "page-pool-get"[4] state that "Only Page Pools associated with a net_device can be listed".  Don't we want the ability to list "invisible" page_pool's to allow debugging issues?
-> 
->  [1] https://docs.kernel.org/userspace-api/netlink/intro-specs.html
->  [2] https://docs.kernel.org/userspace-api/netlink/index.html
->  [3] https://docs.kernel.org/netlink/specs/netdev.html
->  [4] https://docs.kernel.org/netlink/specs/netdev.html#page-pool-get
-> 
-> Looking at the code, I see that NETDEV_CMD_PAGE_POOL_CHANGE_NTF netlink
-> notification is only generated once (in page_pool_destroy) and not when
-> we retry in page_pool_release_retry (like this patch).  In that sense,
-> this patch/tracepoint is catching something more than netlink provides.
-> First I though we could add a netlink notification, but I can imagine
-> cases this could generate too many netlink messages e.g. a netdev with
-> 128 RX queues generating these every second for every RX queue.
-> 
-> Guess, I've talked myself into liking this change, what do other
-> maintainers think?  (e.g. netlink scheme and debugging balance)
-> 
-> 
->> Problem:
->> Currently, when a page pool shutdown is stalled due to inflight pages,
->> the kernel only logs a warning message via pr_warn(). This has several
->> limitations:
->>
->> 1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
->>     making it difficult to track the progression of stalled releases
->> 2. There's no structured way to monitor or analyze these events
->> 3. Debugging tools cannot easily capture and correlate stalled pool
->>     events with other network activity
->>
->> Solution:
->> Add a new tracepoint, page_pool_release_stalled, that fires when a page
->> pool shutdown is stalled. The tracepoint captures:
->> - pool: pointer to the stalled page_pool
->> - inflight: number of pages still in flight
->> - sec: seconds since the release was deferred
->>
->> The implementation also modifies the logging behavior:
->> - pr_warn() is only emitted during the first warning interval
->>    (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
->> - The tracepoint is fired always, reducing log noise while still
->>    allowing monitoring tools to track the issue
+> This looks a bit grotty to me and presumably other architectures would
+> need similar treatement. Wouldn't it be cleaner to reuse the existing
+> API instead? For example, by calling ftrace_regs_set_instruction_pointer()
+> and ftrace_regs_set_return_value() to update the relevant registers from
+> the core code?
 
-If the initial log is still present, I don't really see what's the benefit
-of re-triggering logs or tracepoints when the first two fields are unchanged
-and the last two fields can be inspected using some tool? If there are none,
-perhaps we only need to print the first trigger log and a log upon completion
-of page_pool destruction.
+I knew I forgot some change.. thanks for replying
 
->>
->> This allows developers and system administrators to:
->> - Use tools like perf, ftrace, or eBPF to monitor stalled releases
->> - Correlate page pool issues with network driver behavior
->> - Analyze patterns without parsing kernel logs
->> - Track the progression of inflight page counts over time
->>
->> Signed-off-by: Leon Huang Fu <leon.huangfu@shopee.com>
->> Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+ftrace_partial_regs is overloaded in arm64 and because of that we need
+to propagate the change to pt_regs, so I think the ftrace_partial_regs_fix
+code is arm64 specific, so can't see that in core code
+
+also wrt ftrace_partial_regs_fix name, I was thinking it might be better
+to have begin/end functions, like:
+
+  ftrace_partial_regs_begin
+  ftrace_partial_regs_end
+
+thanks,
+jirka
+
+
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2560,10 +2560,11 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 	}
+ 
+ 	rcu_read_lock();
+-	regs = ftrace_partial_regs(fregs, bpf_kprobe_multi_pt_regs_ptr());
++	regs = ftrace_partial_regs_begin(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
++	ftrace_partial_regs_end(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	rcu_read_unlock();
+ 
+  out:
