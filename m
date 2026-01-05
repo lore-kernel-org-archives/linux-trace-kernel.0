@@ -1,150 +1,121 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2090932274B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 06:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C610A32C92A;
+	Mon,  5 Jan 2026 09:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767594234; cv=none; b=AknhDsF2J45E76boRXlli+V1gGBay03jLsh4BwAmDLfBwC30Frhzn9ZjR9V4T3DoVNyoRc2LJoArRvvCNqovMXGxA6c02j81DaTP8yjsh2DowzQYtrIeBKv4nZC5NQfk0TK3J6SJCOZsdtEcYQ43q6fGoPguhypfewUzitJmGcA=
+	t=1767605411; cv=none; b=hoIJOxy91m05gpH2VFoQcVvygN7pHqOKnEXnU3pF4Ls1OHLwTlzeCY+3A1xoJHrB5cjo7A0XnZgvK74ouie1+icdBcIT6AL1NxYoIWi8zp5JN0TDkwxhfEIPeNWRtSfqJEsTO08l/5ntBQ2cMKRUAPe1zVj4GdGXnohCURkqnA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767594234; c=relaxed/simple;
-	bh=A6+CEtfq0VwzTkHZqgHPIZ2n+e/fR+INR4ete83AY48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AleadRfkOABQrBdf6Pr/o8ibRR0Rlwj3NSoR06ZEP0mYuHSL8O85AC0Y2LVPPdLaLgqfMag7q5kbrSQltQPYIegvYdlClCKjMi9Nz0HoWW+Qc+0YovUtOKL0UB6PXRukI73qG07Dom7EMbUKBrk8SfeLNGDaSdHGjCXOoetbvag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KK7NpNdN; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767605411; c=relaxed/simple;
+	bh=3aeeMp6ak1HerM3cNE27GpqkM0XuOeP2yNlseSEMLac=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gaeujwwvh97COrWUnn+jKfVklExBPBQotA2Zq7WrsL0a3gdvXMelz0zISj//zeM7tzGUb57Q1a/9Fv0xdsYtSY5ojv4ol1baIuL5sCO2cw7+dr0B3yZaS4uO8kqPxBa5pRDQovCeXjlHF5Ga6t4vfouFqh5sEKq3jnEUxocu2S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hPjNB+l0; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KK7NpNdN"
-Message-ID: <130d8c90-6285-41b0-926e-d6df9791bcd4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767594219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NSRGwI+y5Xp8Cwj5Qnu7i8q65ZGA395EeFAJkdkgb7c=;
-	b=KK7NpNdNAhjcCVjMneXpn1xmj+vKRCCHDDlJyKIYqe18SfnkQSgk9Q+vdpeGH6LtP4WXxT
-	0dgeDzeDQPO6/pb/Kb8nTuXKaarElMrZRDy2Ns5bgjT7F6QilWiSWv1YCkhzWmIwKVCcg0
-	Chu6a3SStKZhNZ/E3E43msOAMvZTBuY=
-Date: Mon, 5 Jan 2026 14:23:27 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hPjNB+l0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767605407; x=1799141407;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=3aeeMp6ak1HerM3cNE27GpqkM0XuOeP2yNlseSEMLac=;
+  b=hPjNB+l0I8OK6O3P8VgIBF0avKzP+qt3BlP1O1mHnobP8M+kqTUUMfRI
+   aJJwIGaJqChAjrAkcUToKGLosN2zMBtyQr9gvynzPSa95DNIsWZxkMyhJ
+   IB+L5dmH+viuAdBkjaCITqy3+7y/xoqbdrHl+pkkEetS7o/VZydw6Q6OI
+   PYi4Rvd0DOtD+o+UuCap64w8ceBSMxwoHVZnEooiu0h8Gv0zKaRbCsR+a
+   HNlzYSY9E9BKw3m4IcFzVebQMqGuUwdK3DL8Oi+TNGQ3j4HPmO46qKZAv
+   gpFx78DwuEUF0O8E1cVkxUAtYk0glk4AZXckwET0gTjVut181LU3JecKX
+   A==;
+X-CSE-ConnectionGUID: L/Vwt71qQ+2jYvMOxwjDtw==
+X-CSE-MsgGUID: J0lj3E+CRo+wx+KyeY1tjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11661"; a="69043959"
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="69043959"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 01:30:03 -0800
+X-CSE-ConnectionGUID: l5Ti4E8eQMaEq5OK4MdMvw==
+X-CSE-MsgGUID: SK370VCUT9avmAy9E63dhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="233043201"
+Received: from ettammin-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.246.3])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 01:29:55 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Yury Norov <yury.norov@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Christophe Leroy <chleroy@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
+ <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
+ Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+In-Reply-To: <aVkmQ4EGIQgAddZQ@yury>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
+ <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
+ <20251229111748.3ba66311@gandalf.local.home>
+ <20260103005059.GA11015@joelbox2> <aVkSVk2L6VH9MYGz@smile.fi.intel.com>
+ <aVkmQ4EGIQgAddZQ@yury>
+Date: Mon, 05 Jan 2026 11:29:51 +0200
+Message-ID: <254c1096c3b892923dd12b07a8b80291b88c0e9b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v3] page_pool: Add page_pool_release_stalled
- tracepoint
-Content-Language: en-US
-To: Yunsheng Lin <linyunsheng@huawei.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Leon Huang Fu <leon.huangfu@shopee.com>, Dragos Tatulea
- <dtatulea@nvidia.com>, kernel-team <kernel-team@cloudflare.com>,
- Yan Zhai <yan@cloudflare.com>
-References: <20260102071745.291969-1-leon.hwang@linux.dev>
- <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
- <dfc33064-f99f-4728-858f-95c80300bcff@huawei.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <dfc33064-f99f-4728-858f-95c80300bcff@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
+On Sat, 03 Jan 2026, Yury Norov <yury.norov@gmail.com> wrote:
+> On Sat, Jan 03, 2026 at 02:57:58PM +0200, Andy Shevchenko wrote:
+>> On Fri, Jan 02, 2026 at 07:50:59PM -0500, Joel Fernandes wrote:
+>> > On Mon, Dec 29, 2025 at 11:17:48AM -0500, Steven Rostedt wrote:
+>> 
+>> ...
+>> 
+>> > I use trace_printk() all the time for kernel, particularly RCU development.
+>> > One of the key usecases I have is dumping traces on panic (with panic on warn
+>> > and stop tracing on warn enabled). This is extremely useful since I can add
+>> > custom tracing and dump traces when rare conditions occur. I fixed several
+>> > bugs with this technique.
+>> > 
+>> > I also recommend keeping it convenient to use.
+>> 
+>> Okay, you know C, please share your opinion what header is the best to hold the
+>> trace_printk.h to be included.
+>
+> What if we include it on Makefile level, similarly to how W=1 works?
+>
+>         make D=1 // trace_printk() is available
+>         make D=0 // trace_printk() is not available
+>         make     // trace_printk() is not available
+>
+> Where D stands for debugging.
+>
+> D=1 may be a default setting if you prefer, but the most important is
+> that every compilation unit will have an access to debugging without
+> polluting core headers.
 
+You do realize this means recompiling everything when adding D=1 for
+debugging?
 
-On 4/1/26 10:18, Yunsheng Lin wrote:
-> On 2026/1/2 19:43, Jesper Dangaard Brouer wrote:
->>
->>
->> On 02/01/2026 08.17, Leon Hwang wrote:
->>> Introduce a new tracepoint to track stalled page pool releases,
->>> providing better observability for page pool lifecycle issues.
->>>
->>
->> In general I like/support adding this tracepoint for "debugability" of
->> page pool lifecycle issues.
->>
->> For "observability" @Kuba added a netlink scheme[1][2] for page_pool[3], which gives us the ability to get events and list page_pools from userspace.
->> I've not used this myself (yet) so I need input from others if this is something that others have been using for page pool lifecycle issues?
->>
->> Need input from @Kuba/others as the "page-pool-get"[4] state that "Only Page Pools associated with a net_device can be listed".  Don't we want the ability to list "invisible" page_pool's to allow debugging issues?
->>
->>  [1] https://docs.kernel.org/userspace-api/netlink/intro-specs.html
->>  [2] https://docs.kernel.org/userspace-api/netlink/index.html
->>  [3] https://docs.kernel.org/netlink/specs/netdev.html
->>  [4] https://docs.kernel.org/netlink/specs/netdev.html#page-pool-get
->>
->> Looking at the code, I see that NETDEV_CMD_PAGE_POOL_CHANGE_NTF netlink
->> notification is only generated once (in page_pool_destroy) and not when
->> we retry in page_pool_release_retry (like this patch).  In that sense,
->> this patch/tracepoint is catching something more than netlink provides.
->> First I though we could add a netlink notification, but I can imagine
->> cases this could generate too many netlink messages e.g. a netdev with
->> 128 RX queues generating these every second for every RX queue.
->>
->> Guess, I've talked myself into liking this change, what do other
->> maintainers think?  (e.g. netlink scheme and debugging balance)
->>
->>
->>> Problem:
->>> Currently, when a page pool shutdown is stalled due to inflight pages,
->>> the kernel only logs a warning message via pr_warn(). This has several
->>> limitations:
->>>
->>> 1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
->>>     making it difficult to track the progression of stalled releases
->>> 2. There's no structured way to monitor or analyze these events
->>> 3. Debugging tools cannot easily capture and correlate stalled pool
->>>     events with other network activity
->>>
->>> Solution:
->>> Add a new tracepoint, page_pool_release_stalled, that fires when a page
->>> pool shutdown is stalled. The tracepoint captures:
->>> - pool: pointer to the stalled page_pool
->>> - inflight: number of pages still in flight
->>> - sec: seconds since the release was deferred
->>>
->>> The implementation also modifies the logging behavior:
->>> - pr_warn() is only emitted during the first warning interval
->>>    (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
->>> - The tracepoint is fired always, reducing log noise while still
->>>    allowing monitoring tools to track the issue
-> 
-> If the initial log is still present, I don't really see what's the benefit
-> of re-triggering logs or tracepoints when the first two fields are unchanged
-> and the last two fields can be inspected using some tool? If there are none,
-> perhaps we only need to print the first trigger log and a log upon completion
-> of page_pool destruction.
-> 
+BR,
+Jani.
 
-Even though it is possible to inspect the last two fields via the
-workqueue (e.g., by tracing page_pool_release_retry with BPF tools),
-this is not a practical approach for routine monitoring or debugging.
-
-With the proposed tracepoint, obtaining these fields becomes
-straightforward and lightweight, making it much easier to observe and
-reason about stalled page pool releases in real systems.
-
-In the issue I encountered, it was crucial to notice that the inflight
-count was gradually decreasing over time. This gave me confidence that
-some orphaned pages were eventually being returned to the page pool.
-Based on that signal, I was then able to capture the call stack of
-page_pool_put_defragged_page (kernel v6.6) to identify the code path
-responsible for returning those pages.
-
-Without repeated pr_warn logs or tracepoint events, it would have been
-significantly harder to observe this progression and correlate it with
-the eventual page returns.
-
-Thanks,
-Leon
+-- 
+Jani Nikula, Intel
