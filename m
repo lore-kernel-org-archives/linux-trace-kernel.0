@@ -1,83 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F14285CA7;
-	Mon,  5 Jan 2026 21:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B452C0F9A;
+	Mon,  5 Jan 2026 21:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767647746; cv=none; b=T6WQKqcaP29mLFhCrU3btpntRltCylKgghA2j1p+ECs2IXIzgHP5SIRw+an5uYIkenhrLAN/S3IEUZ4I/hldjJoh+gAyxx+YC0alU+wxa/MS5kaOvPvGpK/taCALKlODN6vObXFLRsSyx7NvWEgDfEeZ0Rpkw7+Og/QtRPmKaHI=
+	t=1767648131; cv=none; b=GUxvL1soNWssohy4aglG6a4emWPfryoJ1/6dotpSaEPz+Kmw9wi6BDxPVoExHvHmBQEjoGNnRhNKf11r5GvCCPc7TQnkXuMvpvhLOI2b7ZzfpfNC3M4rpj7Qawohb04Oee4LCsVpwg5tg9FBKk09n9pjfoaxQQwfUB0GYa1JzNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767647746; c=relaxed/simple;
-	bh=IM2DuJa9reEiCLBZk8E9Dct8k60mL22ZGzV0MUiRdLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SCwyxLTv7yG1YeTtcSLwgFevIy9/b6Xc9Hd/Ls4Jc2rQGCLzinXkQW+/Y6cEQJQAP1ZiAAx4bpunvi0QgVTnzjW7IrIVUPN7V1wXDKKpWjHDklGMqTskuHjmcdRzMQwKuZ0Zvfpd8m8y65oJnygPL/wCPZONesGTtYaoFGKjcqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El51bi7+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El51bi7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D92C116D0;
-	Mon,  5 Jan 2026 21:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767647746;
-	bh=IM2DuJa9reEiCLBZk8E9Dct8k60mL22ZGzV0MUiRdLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=El51bi7+imH1giJ9Ep7MrHAH2+KZ4vdS0Xc4iaeVVVorQyVRxjbDjwfylCWGA24M2
-	 pQWhRim60LLFJZimahW/BvYZ/panBYw3o1W99hKzDBSrDcVnvSNLADmXQ5ICCL5fIZ
-	 IAoA67GeM65lzXWBH2OtCgbvCPvke7mGAUYM4e9wZsqy9BGJ7+WyhHa0FgdtTcE37s
-	 RzK7G/zlLiGfFW/5pAT6jMcgu2T1jI610MpQZ3gjF2c/UBhzw4gB/xCQuQWfekMDYb
-	 aIo5RrU3Ne8S5jJQJk+s9IVIQCrZTgDm9ULPpDbFgBN6QvnY+CkqJQ+oEWXmLv+V13
-	 Z0rz2XAhrxriA==
-Date: Mon, 5 Jan 2026 21:15:40 +0000
-From: Will Deacon <will@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Laura Abbott <labbott@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org,
-	usamaarif642@gmail.com, kernel-team@meta.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
-Message-ID: <aVwp_BJx84gXHPlD@willie-the-truck>
-References: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
+	s=arc-20240116; t=1767648131; c=relaxed/simple;
+	bh=/4LG7CDdqJUY6pZpMD1nOz2/+uLhL8GybzhjhqfdOu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=grTfY47K+5h02mvt5x3zyRm66e8YLPnc5IJBYpAd998DTBuKNNX4yIrSIHY9A6Xc9IiSET0CvTTL4lQ31+uuDyvMcRVnbSuHRbqe3JU9/ayA3HIdEL9hEVHmwmJj0au1nkvshUI/H9pV5Na+bJi+SHl/bGpRIZOML6CqGkDnh0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 078001A0230;
+	Mon,  5 Jan 2026 21:22:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 5A2488000F;
+	Mon,  5 Jan 2026 21:21:58 +0000 (UTC)
+Date: Mon, 5 Jan 2026 16:22:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Will Deacon <will@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ x86@kernel.org, Yonghong Song <yhs@fb.com>, Song Liu
+ <songliubraving@fb.com>, Andrii Nakryiko <andrii@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mahe Tardy <mahe.tardy@gmail.com>
+Subject: Re: [BUG/RFC 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <20260105162220.6ba5129a@gandalf.local.home>
+In-Reply-To: <20260104223415.0a31f423c861c0b651de966b@kernel.org>
+References: <20251105125924.365205-1-jolsa@kernel.org>
+	<aVfbqYsWdGXu4lh8@willie-the-truck>
+	<20260104223415.0a31f423c861c0b651de966b@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 5A2488000F
+X-Stat-Signature: xt5nzh7j77fp944s7jzizhee1d83wp5j
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19QBzPgleTeDd4xKX+cLaHUy58FxQPd0Kc=
+X-HE-Tag: 1767648118-884322
+X-HE-Meta: U2FsdGVkX1+rGfZVoK/OULBRFq26IDTCOyJJZkPrf1/Qa14p2mE3SqwSd2AimRvlIvDVEd8pQgw0Y72mGmizrkSEvnjFQ91d+SsTt2Ihf1ODGxFW+OEY6DInWgnHijwrMtbOQ58FqR6KY7yGryX5bEkGZExbO4di5WotTjnQacEQ42hk8Ktkd7J9fG0WrCvcO97/OKDk+be0YtNFkroPVr4HXRGjix1N8zS6oUsNujtLAyaaVLmj5YsKDUOXe9fRTNDkdHckDe1ArW4kboKsHf2mGMb2i4ClK7czP2og0vQZQniUMj3+3yvA4v+IhIQWnzBFXkWNPqDrdzlbtpx/y5s3DpEYaggy
 
-On Wed, Dec 31, 2025 at 04:44:05AM -0800, Breno Leitao wrote:
-> The arm64 kernel doesn't boot with annotated branches
-> (PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
-> 
-> Bisecting it, I found that disabling branch profiling in arch/arm64/mm
-> solved the problem. Narrowing down a bit further, I found that
-> physaddr.c is the file that needs to have branch profiling disabled to
-> get the machine to boot.
-> 
-> I suspect that it might invoke some ftrace helper very early in the boot
-> process and ftrace is still not enabled(!?).
-> 
-> Disable branch profiling for physaddr.o to allow booting an arm64
-> machine with CONFIG_PROFILE_ANNOTATED_BRANCHES and
-> CONFIG_DEBUG_VIRTUAL together.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: ec6d06efb0bac ("arm64: Add support for CONFIG_DEBUG_VIRTUAL")
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> Another approach is to disable profiling on all arch/arm64 code, similarly to
-> x86, where DISABLE_BRANCH_PROFILING is called for all arch/x86 code. See
-> commit 2cbb20b008dba ("tracing: Disable branch profiling in noinstr
-> code").
+On Sun, 4 Jan 2026 22:34:15 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Yes, let's start with arch/arm64/. We know that's safe and then if
-somebody wants to make it finer-grained, it's on them to figure out a
-way to do it without playing whack-a-mole.
+> > This looks a bit grotty to me and presumably other architectures would
+> > need similar treatement. Wouldn't it be cleaner to reuse the existing
+> > API instead? For example, by calling ftrace_regs_set_instruction_pointer()
+> > and ftrace_regs_set_return_value() to update the relevant registers from
+> > the core code?  
+> 
+> I agreed with using the generic APIs. Also, ftrace_partial_regs_fix() is
+> not self-explained. Maybe ftrace_regs_set_by_regs()?
 
-Will
+Or perhaps: ftrace_partial_regs_update() where you call it if you need to
+update the regs.
+
+/*
+ * ftrace_partial_regs_update - update the original ftrace_regs from regs
+ * @fregs: The ftrace_regs to update from @regs
+ * @regs: The partial regs from ftrace_partial_regs() that was updated
+ *
+ * Some architectures have the partial regs living in the ftrace_regs
+ * structure, whereas other architectures need to make a different copy
+ * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
+ * if the code using @regs updates a field (like the instruction pointer or
+ * stack pointer) it may need to propagate that change to the original @fregs
+ * it retrieved the partial @regs from. Use this function to guarantee that
+ * update happens.
+ */
+static __always_inline void
+ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs) {
+	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+
+	if (afregs->pc != regs->pc) {
+		afregs->pc = regs->pc;
+		afregs->regs[0] = regs->regs[0];
+	}
+}
+
+-- Steve
