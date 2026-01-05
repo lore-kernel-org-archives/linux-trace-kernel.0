@@ -1,170 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11B22129B;
-	Mon,  5 Jan 2026 04:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2090932274B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 06:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767589084; cv=none; b=rAIE4nTQ6M3ipDPnAHDcA/K8B6ref/rMhE352ueWKHtnT3rpuAjDuvrR2p5lGKF5r/W7MySIA8xmZ8ICIcjL2uwkp27veqswtXPFEJ8XYdjQyZn15x77eU9vNiYL8XOUfMNvDEQh3v0o4A82wRu3Z3G7jGKpL/zIGrk+IGuxDC0=
+	t=1767594234; cv=none; b=AknhDsF2J45E76boRXlli+V1gGBay03jLsh4BwAmDLfBwC30Frhzn9ZjR9V4T3DoVNyoRc2LJoArRvvCNqovMXGxA6c02j81DaTP8yjsh2DowzQYtrIeBKv4nZC5NQfk0TK3J6SJCOZsdtEcYQ43q6fGoPguhypfewUzitJmGcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767589084; c=relaxed/simple;
-	bh=iK+Qknn7JtfXqOzfxAFZee7osfGCMP+bnjPqUZc7uMA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Tm/w6dEvRJxAGaozJQJnhA2z8yS/Np81XDDflp/26IH/woSHMtufBPXp+uchQSBb8AZHCQZLx9LOIFL6E3TwWN0mdKxQu+quHCuLa9h4RmRkvjrpsiACkT5pK6w1VEtSbP7kFMiFxW+afdJMaXlYuixhvd3A4XzxTHdBBuxr8NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgMs13cP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767594234; c=relaxed/simple;
+	bh=A6+CEtfq0VwzTkHZqgHPIZ2n+e/fR+INR4ete83AY48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AleadRfkOABQrBdf6Pr/o8ibRR0Rlwj3NSoR06ZEP0mYuHSL8O85AC0Y2LVPPdLaLgqfMag7q5kbrSQltQPYIegvYdlClCKjMi9Nz0HoWW+Qc+0YovUtOKL0UB6PXRukI73qG07Dom7EMbUKBrk8SfeLNGDaSdHGjCXOoetbvag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KK7NpNdN; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgMs13cP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5C5C116D0;
-	Mon,  5 Jan 2026 04:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767589084;
-	bh=iK+Qknn7JtfXqOzfxAFZee7osfGCMP+bnjPqUZc7uMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qgMs13cPfORvObmCiQOsH9a1glIXFt0iru8kdrNoHLzCxBm27m87/qG9gXzLU9v60
-	 Nf2Nk0tKQr3aXtntY29d+I4SpY6dMfCRL2IEolEcJmTK2fu4bf78FFr1FmBucNewmD
-	 X+wYWtv2KBvQxURjnLWMSQEguHYfLKjJcyIR8Dc458HgXuhwssfp26C1KT5qCCSttX
-	 iRMNWdBVi8CpTmZNYAPt/16Nb5e+vp4y6R4gaCt+JljlFoOaY87U/M2KOWpm2/j0X2
-	 dswD1vEr8nxITJ1pFyXYaKtDhZtA1ApluZfMczosXJEyvb89P7qslxQ7mOS6ScNhba
-	 ljuNnNySMvQvA==
-Date: Mon, 5 Jan 2026 13:58:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: hongao <hongao@uniontech.com>
-Cc: naveen@kernel.org, anil.s.keshavamurthy@intel.com, davem@davemloft.net,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [[PATCH v2] 1/1] kprobes: retry pending optprobe after freeing
- blocker
-Message-Id: <20260105135800.1f9f05ab5635e2ab85a2f2bd@kernel.org>
-In-Reply-To: <C5E6295166D4EDE9+20251210033321.2895692-1-hongao@uniontech.com>
-References: <C5E6295166D4EDE9+20251210033321.2895692-1-hongao@uniontech.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KK7NpNdN"
+Message-ID: <130d8c90-6285-41b0-926e-d6df9791bcd4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767594219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NSRGwI+y5Xp8Cwj5Qnu7i8q65ZGA395EeFAJkdkgb7c=;
+	b=KK7NpNdNAhjcCVjMneXpn1xmj+vKRCCHDDlJyKIYqe18SfnkQSgk9Q+vdpeGH6LtP4WXxT
+	0dgeDzeDQPO6/pb/Kb8nTuXKaarElMrZRDy2Ns5bgjT7F6QilWiSWv1YCkhzWmIwKVCcg0
+	Chu6a3SStKZhNZ/E3E43msOAMvZTBuY=
+Date: Mon, 5 Jan 2026 14:23:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Subject: Re: [PATCH net-next v3] page_pool: Add page_pool_release_stalled
+ tracepoint
+Content-Language: en-US
+To: Yunsheng Lin <linyunsheng@huawei.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ kerneljasonxing@gmail.com, lance.yang@linux.dev, jiayuan.chen@linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Leon Huang Fu <leon.huangfu@shopee.com>, Dragos Tatulea
+ <dtatulea@nvidia.com>, kernel-team <kernel-team@cloudflare.com>,
+ Yan Zhai <yan@cloudflare.com>
+References: <20260102071745.291969-1-leon.hwang@linux.dev>
+ <011ca15e-107b-4679-8203-f5f821f27900@kernel.org>
+ <dfc33064-f99f-4728-858f-95c80300bcff@huawei.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <dfc33064-f99f-4728-858f-95c80300bcff@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Hongao,
 
-Thanks for updating. After a detailed review, we don't need a new boolean
-flag for it. Since the "queued unused probe" (which is handled by
-do_free_cleaned_kprobes() eventually) is always disarmed. Thus, we only
-need to check all probes to reoptimize sibling probes in the
-do_free_cleaned_kprobes().
 
-On Wed, 10 Dec 2025 11:33:21 +0800
-hongao <hongao@uniontech.com> wrote:
-
-> The freeing_list cleanup now retries optimizing any sibling probe that was
-> deferred while this aggregator was being torn down.  Track the pending
-> address in struct optimized_kprobe so __disarm_kprobe() can defer the
-> retry until kprobe_optimizer() finishes disarming.
+On 4/1/26 10:18, Yunsheng Lin wrote:
+> On 2026/1/2 19:43, Jesper Dangaard Brouer wrote:
+>>
+>>
+>> On 02/01/2026 08.17, Leon Hwang wrote:
+>>> Introduce a new tracepoint to track stalled page pool releases,
+>>> providing better observability for page pool lifecycle issues.
+>>>
+>>
+>> In general I like/support adding this tracepoint for "debugability" of
+>> page pool lifecycle issues.
+>>
+>> For "observability" @Kuba added a netlink scheme[1][2] for page_pool[3], which gives us the ability to get events and list page_pools from userspace.
+>> I've not used this myself (yet) so I need input from others if this is something that others have been using for page pool lifecycle issues?
+>>
+>> Need input from @Kuba/others as the "page-pool-get"[4] state that "Only Page Pools associated with a net_device can be listed".  Don't we want the ability to list "invisible" page_pool's to allow debugging issues?
+>>
+>>  [1] https://docs.kernel.org/userspace-api/netlink/intro-specs.html
+>>  [2] https://docs.kernel.org/userspace-api/netlink/index.html
+>>  [3] https://docs.kernel.org/netlink/specs/netdev.html
+>>  [4] https://docs.kernel.org/netlink/specs/netdev.html#page-pool-get
+>>
+>> Looking at the code, I see that NETDEV_CMD_PAGE_POOL_CHANGE_NTF netlink
+>> notification is only generated once (in page_pool_destroy) and not when
+>> we retry in page_pool_release_retry (like this patch).  In that sense,
+>> this patch/tracepoint is catching something more than netlink provides.
+>> First I though we could add a netlink notification, but I can imagine
+>> cases this could generate too many netlink messages e.g. a netdev with
+>> 128 RX queues generating these every second for every RX queue.
+>>
+>> Guess, I've talked myself into liking this change, what do other
+>> maintainers think?  (e.g. netlink scheme and debugging balance)
+>>
+>>
+>>> Problem:
+>>> Currently, when a page pool shutdown is stalled due to inflight pages,
+>>> the kernel only logs a warning message via pr_warn(). This has several
+>>> limitations:
+>>>
+>>> 1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
+>>>     making it difficult to track the progression of stalled releases
+>>> 2. There's no structured way to monitor or analyze these events
+>>> 3. Debugging tools cannot easily capture and correlate stalled pool
+>>>     events with other network activity
+>>>
+>>> Solution:
+>>> Add a new tracepoint, page_pool_release_stalled, that fires when a page
+>>> pool shutdown is stalled. The tracepoint captures:
+>>> - pool: pointer to the stalled page_pool
+>>> - inflight: number of pages still in flight
+>>> - sec: seconds since the release was deferred
+>>>
+>>> The implementation also modifies the logging behavior:
+>>> - pr_warn() is only emitted during the first warning interval
+>>>    (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
+>>> - The tracepoint is fired always, reducing log noise while still
+>>>    allowing monitoring tools to track the issue
 > 
-> Signed-off-by: hongao <hongao@uniontech.com>
-> ---
-> Changes since v1:
-> - Replace `kprobe_opcode_t *pending_reopt_addr` with `bool reopt_unblocked_probes`
->   in `struct optimized_kprobe` to avoid storing an address and simplify logic.
-> - Use `op->kp.addr` when looking up the sibling optimized probe instead of
->   keeping a separate stored address.
-> - Defer re-optimization by setting/clearing `op->reopt_unblocked_probes` in
->   `__disarm_kprobe()` / consuming it in `do_free_cleaned_kprobes()` so the
->   retry runs after the worker finishes disarming.
-> - Link to v1: https://lore.kernel.org/all/2B0BC73E9D190B7B+20251027130535.2296913-1-hongao@uniontech.com/
-> ---
->  include/linux/kprobes.h |  1 +
->  kernel/kprobes.c        | 28 ++++++++++++++++++++++------
->  2 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-> index 8c4f3bb24..4f49925a4 100644
-> --- a/include/linux/kprobes.h
-> +++ b/include/linux/kprobes.h
-> @@ -338,6 +338,7 @@ DEFINE_INSN_CACHE_OPS(insn);
->  struct optimized_kprobe {
->  	struct kprobe kp;
->  	struct list_head list;	/* list for optimizing queue */
-> +	bool reopt_unblocked_probes;
->  	struct arch_optimized_insn optinsn;
->  };
-
-This is not needed. 
-
->  
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index da59c68df..799542dff 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -514,6 +514,7 @@ static LIST_HEAD(freeing_list);
->  
->  static void kprobe_optimizer(struct work_struct *work);
->  static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-> +static void optimize_kprobe(struct kprobe *p);
->  #define OPTIMIZE_DELAY 5
->  
->  /*
-> @@ -591,6 +592,21 @@ static void do_free_cleaned_kprobes(void)
->  			 */
->  			continue;
->  		}
-> +		if (op->reopt_unblocked_probes) {
-> +			struct kprobe *unblocked;
-> +
-> +			/*
-> +			 * The aggregator was holding back another probe while it sat on the
-> +			 * unoptimizing/freeing lists.  Now that the aggregator has been fully
-> +			 * reverted we can safely retry the optimization of that sibling.
-> +			 */
-> +
-> +			unblocked = get_optimized_kprobe(op->kp.addr);
-> +			if (unlikely(unblocked))
-> +				optimize_kprobe(unblocked);
-> +			op->reopt_unblocked_probes = false;
-> +		}
-
-This is what we need. (but do not need to check/update reopt_unblocked_probes.
-
-> +
->  		free_aggr_kprobe(&op->kp);
->  	}
->  }
-
-
-
-> @@ -1009,13 +1025,13 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
->  		_p = get_optimized_kprobe(p->addr);
->  		if (unlikely(_p) && reopt)
->  			optimize_kprobe(_p);
-> +	} else if (reopt && kprobe_aggrprobe(p)) {
-> +		struct optimized_kprobe *op =
-> +			container_of(p, struct optimized_kprobe, kp);
-> +
-> +		/* Defer the re-optimization until the worker finishes disarming. */
-> +		op->reopt_unblocked_probes = true;
-
-Do not need this.
-
->  	}
-> -	/*
-> -	 * TODO: Since unoptimization and real disarming will be done by
-> -	 * the worker thread, we can not check whether another probe are
-> -	 * unoptimized because of this probe here. It should be re-optimized
-> -	 * by the worker thread.
-> -	 */
-
-Only remove this comment.
-
-Thank you,
-
->  }
->  
->  #else /* !CONFIG_OPTPROBES */
-> -- 
-> 2.47.2
+> If the initial log is still present, I don't really see what's the benefit
+> of re-triggering logs or tracepoints when the first two fields are unchanged
+> and the last two fields can be inspected using some tool? If there are none,
+> perhaps we only need to print the first trigger log and a log upon completion
+> of page_pool destruction.
 > 
 
+Even though it is possible to inspect the last two fields via the
+workqueue (e.g., by tracing page_pool_release_retry with BPF tools),
+this is not a practical approach for routine monitoring or debugging.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+With the proposed tracepoint, obtaining these fields becomes
+straightforward and lightweight, making it much easier to observe and
+reason about stalled page pool releases in real systems.
+
+In the issue I encountered, it was crucial to notice that the inflight
+count was gradually decreasing over time. This gave me confidence that
+some orphaned pages were eventually being returned to the page pool.
+Based on that signal, I was then able to capture the call stack of
+page_pool_put_defragged_page (kernel v6.6) to identify the code path
+responsible for returning those pages.
+
+Without repeated pr_warn logs or tracepoint events, it would have been
+significantly harder to observe this progression and correlate it with
+the eventual page returns.
+
+Thanks,
+Leon
