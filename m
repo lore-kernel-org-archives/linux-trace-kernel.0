@@ -1,70 +1,73 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400E31A5B9D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 22:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC53311C24;
+	Mon,  5 Jan 2026 22:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767653215; cv=none; b=QyghbMOl4R22cyoh7l8puhz/ys5lE1AjY8xpDb5Yj2nh8YZ7m/2tB+8RdonswYi1qkuMPrpZCk+49bk5vSqJkq0e9QAgQ+hu1UImXqsjFpjYjF1Kw95TCY9NzwyAD/9PHKrn+sWIJHe3tq06WJh0kDWZBpr4okyWKj7F3Xejq4Y=
+	t=1767653937; cv=none; b=EWa3e1bwdqSUEYPjpVJGMC6sJx4pbwdFkhr3YQirjewym43Rmv/uhZ9HRpTIgpHUWnQZ0y3EzhI94SLsVZWb67KVWkBRGro6yLnL4ni+h1g7bs2a8kwv9L8DV/mUruSoatKfdP66W8c+s289evULasm2X4ZyQilwLKWHbP7bhwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767653215; c=relaxed/simple;
-	bh=701lOG8MnSEq2jYr/EnElfdCx8O8JpQZoT2tBXYB4wo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7vZHQkyAIrJZ4jbWB4k+54yXBehA2fcgWGezHCxEoFr8HvrncCAlge30rRdtp8078bqIGBoJZzgxTG8vBmyQs7zvW2mqrWO8Lt9IVNA67DvN8tFrhCE60ar1RA/LoHIf15tqUnYqY8NPRG1mTAeBT6q9uzACIcHxyj/x3NcTcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m+ier64v; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767653937; c=relaxed/simple;
+	bh=JFPOBvbTjmeMqXOwXhUAcaRqRs6h5mCTAz9J+WLFGV4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bqwBKHOsGgPWKVDBEualerl0bsh8HVqxbyU2GGGRpyLDrOtMejBTNbZ3Sq5Kl9BK4Y0NTwPcKzzjyxdj60atyxL0bZ0PNIYm5piFyQBTwJ1BffJw+yzp/8j4jTMOriTndAld93UsntAmMq1amuKkeILvtS84jOWYVg50Noex21I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCKsMQy9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m+ier64v"
-Date: Mon, 5 Jan 2026 14:46:39 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767653210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=79XQ6RhIGnnd6I8pgKkQJHOMbLiB8lF2So69igEwoAA=;
-	b=m+ier64v0ySqhJplW6HeK3ggP5za7wzEsI8O1Mi7sF7RtzARaAI+0KouF0WymvLfEpoi8q
-	c/eE69n5lmrQbmNm0pZMo8QOfRVl22T8I5vPS31HaY0wIFx5eVi3Nj4px35wU5+0ahtUrj
-	8F9BnapdxHXTjcKjQpiD/rROVMtRgcc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Thomas Ballasi <tballasi@linux.microsoft.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
-Message-ID: <62ia3v3oduyt2srkaneccoei7cwimifwduarteyn2ugpmmbw3p@rivcqvcksgpt>
-References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
- <20260105160423.23708-1-tballasi@linux.microsoft.com>
- <20260105160423.23708-2-tballasi@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCKsMQy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BEDCC16AAE;
+	Mon,  5 Jan 2026 22:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767653937;
+	bh=JFPOBvbTjmeMqXOwXhUAcaRqRs6h5mCTAz9J+WLFGV4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vCKsMQy9EpaX08WQG2C4dwkfLcRRS+BH/zMGoHUv0EWLDweFyqvrTylCH4BCl1glb
+	 O5usHNjvzbmnwACa4EuLZjX1K6H79oOmIOR+147TEGSzWYJzGYUetWWV7GmkF09h42
+	 7P6hWwN+CqDEE2uWypmaQXMHYbgB2ih3fihvDjnUcvaVtL6uzDDhHT4QN9D6usTX9L
+	 Sz4Q/eneWLGNws3wWK05aRvASSA9VhrTz0nLyZKU+iD9GgTAWG/Ys9fujsM8bpn1Ee
+	 71VIOZMm0hjh0a8a76DSRbxcUP6mLO4VuBwpsAcQWnUnXrA66OSNQxl87tzvOaOU+M
+	 3O3I1EpK/M8FA==
+From: Will Deacon <will@kernel.org>
+To: mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	catalin.marinas@arm.com,
+	Osama Abdelkader <osama.abdelkader@gmail.com>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: simplify arch_uprobe_xol_was_trapped return
+Date: Mon,  5 Jan 2026 22:58:25 +0000
+Message-ID: <176763137996.1384236.2783577028215975576.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251126223130.216302-1-osama.abdelkader@gmail.com>
+References: <20251126223130.216302-1-osama.abdelkader@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260105160423.23708-2-tballasi@linux.microsoft.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 05, 2026 at 08:04:22AM -0800, Thomas Ballasi wrote:
-> Memory reclaim events are currently difficult to attribute to
-> specific cgroups, making debugging memory pressure issues
-> challenging.  This patch adds memory cgroup ID (memcg_id) to key
-> vmscan tracepoints to enable better correlation and analysis.
+On Thu, 27 Nov 2025 00:31:30 +0200, Osama Abdelkader wrote:
+> convert arch_uprobe_xol_was_trapped() from explicit if/return true
+> return false pattern to direct boolean expression return in
+> arch/arm64/kernel/probes/uprobes.c
 > 
-> For operations not associated with a specific cgroup, the field
-> is defaulted to 0.
 > 
-> Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
 
-Couple of comments:
+Applied to arm64 (for-next/misc), thanks!
 
-1. memcg_id is u64 but the patch is using 'unsigned short'.
-2. I would prefer memcg pointer be passed in tracepoint and then in
-trace header file cgroup_id() be used similar to other users in
-include/trace/events/ folder.
+[1/1] arm64: simplify arch_uprobe_xol_was_trapped return
+      https://git.kernel.org/arm64/c/484626209600
 
-Orthogonally I am cleaning up memcg id usage and after that cleanup,
-mem_cgroup_id() would be preferred way to get the ID. No need to do
-anything now as I will cleanup this usage later as well.
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
