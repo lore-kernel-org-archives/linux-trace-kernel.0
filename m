@@ -1,26 +1,26 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022086.outbound.protection.outlook.com [52.101.96.86])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022126.outbound.protection.outlook.com [52.101.96.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1DA2EA171;
-	Mon,  5 Jan 2026 14:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2FB2FE060;
+	Mon,  5 Jan 2026 14:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.126
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767623391; cv=fail; b=s7IuuGxu55FtAjTsZBQ2syTWrz6Zs1OeJ9iLK+9cGVSC+EcgY2l9XeQ1JhD/NMtFxWBI/ph5weH68GJVdfFUTlzYcnQgLPCXDMXD64SV/Ha7xLDONrLnSd9yhRNohGhbuVdrQpbG2HPrVgAOIfZg3aK/SOi0J7T0oBkWAazbDug=
+	t=1767623395; cv=fail; b=Joc0EIJTg5FJLrwAJ+imEBG22+z893pKvO2+ent1WAZyENfNEgQO5edEc0stwNHU1iXhs83vfr8d3V/zqpbrgNF/y+nb8FIkfiUfHWKXevHb53caxfTO11rZOTT9qVWFJalCS2SntmBw/zoN9VG7FNgnk2TWHDdBRpy8IPKbDdE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767623391; c=relaxed/simple;
-	bh=d7vFCkJDXontKGbckxibXT+btE7bMaM3LNKpC5ZZMDs=;
+	s=arc-20240116; t=1767623395; c=relaxed/simple;
+	bh=8Sskcd2nTUBOGFkT6aDosWrldGqp18IiEoB2T2A5yfQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YnhkN9isPV/AUuNOgaeLbL3ZqGnBgK3gPEXOBVZbQfoggk2pE0mGnz1j9RsgvjC0R/U3hifRARkJjyY1gxlbiApmprlovlBhG5rmDkuTW/aq4SOZNBSNUSHUm9q8SOSo/+dK/d6UTI+daFpVM5u7ltqVgacDmr4SOjCFuigLEPc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.86
+	 Content-Type:MIME-Version; b=X1mN+ylyrs0vhfPj8gYE3H7+5yCfTaHfrZHTrIng66RtQNmtm7GH1uR7QxQJBrq60HpINUHeoXb5u8u4+2MDVzAtXCI3Uvt9nmwORd2PqKvBU3ki2a2wM/yW4VFRlBN0ou+fIVhbEaM/TunfKAWJCPhX7+Et2dIY58jK6db7mIw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.126
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cf3EvE0oMFqqpdqPPvv3xerIIElo9ihGKVZQzjyYoRrx4c2hdYLSFsYVxTmA4tVx9KDMYNCxGrE+rI1dw61YbUslONAY1pG7xmck+eZv8CcavHAK2KGQpXAP9+AU4msLZds70R6e3rJgoQgqKgNC/8DURpG345B6/L5DAUQFq97ydFqZ0LvLb09nUI0hfOKoU7apOcT7DHNwtrjdVvC0WUF3xzhw9NdEaYb2tnBx0OsILazJ3kSnaNnDfb/n9zzmZYbynEjYanwgToBoix2MWhn8rCjQQuMo2kfENF4fzQcLWT8rmXbf9MzrIA/8p6gNHjXnGLxFQAbyfLcJm1vvEw==
+ b=ZeesS4WMX9A0iYx3bEnWzCwy3L5pJn+L9jXQv9rKcS7egbMKbUyo2P+ebRXQKSqBLqFu1/qPu0fUuY7z2zB8WXCmP3V0X3tge0tsu4LkxN7XzwXjwEIUaOL/vhRWwtVSP92fYJWaH7l40v0J+hVwCOUg6LI5S04mVW+lftqaG5uMymd6ky2oFBJn+wRfSu+JmoDWxHisy0C854DCHsW3aNohETmKUcU1pvtSskQG3AMwKmsPTt5EQm5/s0pis1u/iXknE5vuUGCEtT3wGUBMF4zFa+OAgK5VUHkgAlNyvC4J4Y9O/5SB/dZWFBaC6S95xZtRQZ3lUIXRXfEnlKXkSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SI6WhCZfE/npcvfasJOTo0tQO2+PWUpaXcZPZzkezs8=;
- b=Aa+daOdpFgf329ouVoxbUIEjMME9fFuwld7iBuaVVa/xNVTbplF5x+7Mf/XILP3f2y40sO2/rNBvqxVjJ8maGtydb1jkHkj8V1DZMjC4eyeaZczOoFRWSBboO9aL5AZA7FGgOw64wLNKlpPmYavWP4015fnQbxdw+VUdvQCpWZUEtqMcZzhHE6kskVG52exxTamlmUyUFwO/tml1s4Glfgqt3Mp6OJcC6fwRthw9rJ6hTyTqv/eBqk+oEg8IL8WyUujQT9IfAh6oboi6PAGUWuUbRxx87aoutvUSHH4torFy2AZhG3CJ+613K1C20FC37sIB32xfMgnaLQFgyf+tSg==
+ bh=6bqLrvkWi3tcqaqMJa5S2cjc5X7DdbcsrvEP7oDKWIg=;
+ b=uuZsI55T9VhgCHZGlY4R9uonJ80f1VGSUIUWzowmnfIOeuqRWdEvcicdrut50b6Wlg14VPGCVEdG2VaiYCsKJpDXZMvSwf66Y7ctoQvS1A0Ew5bmYNvPFm48ZieSILo/bGi85UqMxNll43398v07ekVUzqj2VC5VIZMWxLG1oYC+2qSuKnqcSiUGEtdgsvwkuTzzqaz9zo4muFVo8q3z+aF4e1HzByJx5v/IvhBG3nEd09cdS1pFOirvrZ9W5mhSFlYgxa5fIoy1c9Vq9SzT2Mcpca+eIOYtJZBvLryJGImDqt4XRSdBvvuhHaaoXrH+iIvx2+dSCMv8Kyy1qbFz/Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -30,11 +30,11 @@ Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
  by LO6P123MB6932.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:324::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 14:29:47 +0000
+ 2026 14:29:51 +0000
 Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
  ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
  ([fe80::de8e:2e4f:6c6:f3bf%5]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
- 14:29:47 +0000
+ 14:29:51 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -46,16 +46,16 @@ Cc: neelx@suse.com,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [v2 PATCH 1/2] tracing: Add show_event_filters to expose active event filters
-Date: Mon,  5 Jan 2026 09:29:38 -0500
-Message-ID: <20260105142939.2655342-2-atomlin@atomlin.com>
+Subject: [v2 PATCH 2/2] tracing: Add show_event_triggers to expose active event triggers
+Date: Mon,  5 Jan 2026 09:29:39 -0500
+Message-ID: <20260105142939.2655342-3-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260105142939.2655342-1-atomlin@atomlin.com>
 References: <20260105142939.2655342-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0921.namprd03.prod.outlook.com
- (2603:10b6:408:107::26) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: MN2PR18CA0005.namprd18.prod.outlook.com
+ (2603:10b6:208:23c::10) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -65,114 +65,113 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO6P123MB6932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7935af67-ea7d-468e-e3fe-08de4c66e080
+X-MS-Office365-Filtering-Correlation-Id: 27a95066-118f-4a56-af5b-08de4c66e2d1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FGDBXULUsvvIbplA3Ll14/F1n1dvdmsKezjBS/3jUaSzt0H6F6Z3voC+x0mi?=
- =?us-ascii?Q?8UvBY3DrCMvLW8DsEQTB4ulvAdYs4KAlHQvACG/5vnSrxqrQ8JSllw9VO3jl?=
- =?us-ascii?Q?kPv0ExCufnvLRfqX3QpU7Hm6nhC5bctaz//J/N8z/oiM8xpDMCZduAh6jln2?=
- =?us-ascii?Q?xQHEelCVN57ScSqU7ITJtOaNO14PdoDCbMybYCI8K66ge4NYkgaelxX+mR7C?=
- =?us-ascii?Q?8QNOM5qDgX3HH8azykxsOiuLdBq2imqZRQJx82nd11CEWq8ZjaV4Ae4zkDft?=
- =?us-ascii?Q?nsc9zUtrcOZJ53GOdtsfI1dBu6fBj+sq1JMAPnhZXDJskGzWL7lZs1HScg9J?=
- =?us-ascii?Q?f7T6rN57w+NXGzXhmgKio8hkDuulAhc0DWzrMjV9uhMkrk7+hTAMST+N2LtY?=
- =?us-ascii?Q?qmfoWxPG+tpo8zHEytH7xzXlclRKEPm6PE93Qa0Yo5ZnUg6FjV6Uq02IKZ7Y?=
- =?us-ascii?Q?Ln4T/nhu/MjD1h4IGPzPju9by2KvYHtvJAl1I5nUVko0x9yFH4zdindr7BCk?=
- =?us-ascii?Q?p/xjmWNOvHfNN6lJ3SObE2J8whtrzbnGAMeoBy72sy8BCEq+d35kIgiYlmFa?=
- =?us-ascii?Q?W914Pvs2vNVbwjCf6bstoJaj9Mv6EmXNZsj8TFmkwzO6fACXbVzQi+JikhNw?=
- =?us-ascii?Q?70EMl10yxJ3tUaEPo3uP7RC0cERvsQv9kdT/iPoVugGzxTTzGv1ba+uhnj/m?=
- =?us-ascii?Q?cNb4r6CSBDR9KxhrpEVMSvi+u5wQkmWf3fJt/Qk3AMXtxwAT5uHbtwgQU88z?=
- =?us-ascii?Q?SUcMryi9GEpVRdWXN2rAAzw9MDYZmdvxjvgMEATAVNqetBeFw57jbFtp+nph?=
- =?us-ascii?Q?scCRAAcl5CgAiMpu+yED8rWuUwYv2OAn91G4UjpcEWsVkqkFLdJ9W6J4UDbk?=
- =?us-ascii?Q?KD7RneDxWY9fmvDNs5O9VFPiKy78suQx+Pjp7W/0YCWBchM0ljUGiJHQ6nLn?=
- =?us-ascii?Q?Tfvg88V+Z6TefXj9ecGFmyn9Zg1HX4Dz3MMwhynPdT525O0W8ZviviYiofUF?=
- =?us-ascii?Q?G8Ac1yadiZh2YCVlN+L7yORAxATZPjIN+O28TF5iWCBgDJLbI+u1bqs/r751?=
- =?us-ascii?Q?yAx681IAS2CpbLiKGdRHI53AH5J/TaaG92xBmeKiWlFIzooSg4Q87oxSQE8Y?=
- =?us-ascii?Q?9Q2fKyNtc0TyYBj4+lyg+C2gus9j+GfkVUvYodClG2eyqJ65XaDfIknCAqJx?=
- =?us-ascii?Q?rtvNsJz6vP30HoxDAKSyvgX8KVgjVaSno5ZMUuGT706t6hZSwnXVEb9vkKVR?=
- =?us-ascii?Q?KUy1VdUH9PiXzRaNoJlfyoYYJ+NFaTqRQ247ehmkWYn8xS7hmB3svy4eRwD9?=
- =?us-ascii?Q?C7wnROOnzrudaX4MefuGuXwUJr9wdE97TC4GOaEgt4/yD/sof++tTY5EJVE9?=
- =?us-ascii?Q?wYU2uWVTYSjiLAZfHASBKdpISKpCF+w6EYU9pvTk/tQZxuce0OD2aL06Wbyf?=
- =?us-ascii?Q?D7xoIZg8L8Qc+Q+tp9btEwPgkBBN4HK8?=
+	=?us-ascii?Q?B1Sf4jC03SQTqmqOwOAaycdZe45HYKtzgyXatW0KUK0QLWb9QmGIbiNdOpy6?=
+ =?us-ascii?Q?rzRHtAAUM3Re4CYmWVZTX6uqfW99h3m/N02LXspUOgkAxcQClEowGzaU3q44?=
+ =?us-ascii?Q?YN/2ppGr03jD7Lbs2sTcv4sqEvCEF6pB6OTZioova87w80Cz1qTXgp91ENnN?=
+ =?us-ascii?Q?jFdu8u2zB2JqlqB2is46lW7SFkGcou/0kW+6ATvUz0fn/Nk3VY9Dj3QCczY5?=
+ =?us-ascii?Q?21NmNJ7lPwwwQ2DoDX5MI3IGPxMod+Pm6leOLTHYlm9wuBFVN3fvEWPtH1Sy?=
+ =?us-ascii?Q?zKvgwZr+V9I0zp9CnjaykvJDypBUuGTe4pGeAuDOC0qoapmVhXXjb5cvDxIg?=
+ =?us-ascii?Q?aZKBpvF2r3Jy0kRTExJZwG1a3yII+VOIw7b3Eq4h8H+1A2R+ayPNNpNr2+NJ?=
+ =?us-ascii?Q?+/aR3J9rPKw03h57Ut6UcRfb+oMKDiEL8qA1asULFNgPs6FldtZPN6OZNDbp?=
+ =?us-ascii?Q?NAiOtADYwxTiWumaZMTvuVfO8/1dsO9EDS7Xz3UOC8OrIaHjvO9fwi7T5ya4?=
+ =?us-ascii?Q?gEW5+SDXtrrv4MznJCE0pddBIlYDfTMJi+P6JASYv6WVodkbOxX97Qd81Q+3?=
+ =?us-ascii?Q?y9B+dPHQ3FQhWEhLN7TC7gt6MoBS+56d4UttTvMQJSIB3tJ1qTVt0dmcLrG4?=
+ =?us-ascii?Q?5ddOh/f42/cbduCsM+WCvNls4m1CiIzq+CIoPety+8kZ+MwW/YnB+ub5PAwW?=
+ =?us-ascii?Q?zCPAlJixx+uUBP+f/W0kBM11Ol4MN1n8sY6479OyKadPow0meKlJuNgm/lGO?=
+ =?us-ascii?Q?LhyFfxszIFUBD4RP8T5ctLbnsc187PZ/GzvCksryT+w+thboAONV3rDVyGnU?=
+ =?us-ascii?Q?bzVS9Dr403qMxPD7X295EqkJgNdgf6+MOfS24MQLal1sY+lpClPFg3TpJlE0?=
+ =?us-ascii?Q?SfYsEWrbRyUjgFv+EdYkaZc+uQc71ohaLOHF/gEXxRiSTH3YzN2Dxt8/R1oe?=
+ =?us-ascii?Q?Fd3qVnI3+qmjkzDzkpT1irCL+TpqsVyu4R9I4R7c2a7qgDX7lCxZ+NNA5fGD?=
+ =?us-ascii?Q?Y0shTTCYSPmXoMmeL/gj/ZdzB+jA4bwcX4pUgObBckpDQGMizHSwhunIDCrY?=
+ =?us-ascii?Q?gJRJZ/2AcwTp5NpvlYMQj67WZ/3HM2wZDcWO+aVYSZeZEUCPAvsEQM7/R3hE?=
+ =?us-ascii?Q?nm/cop8xhkkKpJbjyL6vSNWDPDUu+DAZFxp34ZJzUnBQW9IGYuMrq4ePKmao?=
+ =?us-ascii?Q?QZ5XHVIO2l2lti/dSkEbwHtIzOsM7I36UpGAZwvxKuhu5Fh/B44MXX+/opTA?=
+ =?us-ascii?Q?FPYiUvGJEi9ewygV9x4MU6g+GBkUr9GlKXMolUKDJ0vv7YdfgPNvAkxvKl+M?=
+ =?us-ascii?Q?J/fG8Mll+lai1TNtMN6wDRcuaqiX5iP8syC0mlVK559nRGWx8SPMR6cFlFuD?=
+ =?us-ascii?Q?awUqK6PXx+QRMTnl6MXKJIp4u+YOnhfcCxEq4V/8HawJYcnVqYBivmfm1BJx?=
+ =?us-ascii?Q?XvOCgjP/Nt5/FTtL/cuRMXNsm3+0u0tL?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RWL5Zn9PFNchZUPTrc90mSmujAMhWS0xnXqJooOwddeyGkTD4SMqt8xQ6wWG?=
- =?us-ascii?Q?efbp+PDSe2VMoVBBE8Cu1EHOqfhclTXfqfI6Bvz4IT26gOh3AqATzw18e0VQ?=
- =?us-ascii?Q?P4YFWc5d/CKBuk+ymKFJk8i1YQy/zMD5KqOZ4QpHYjbCIrOi0fCJg6sMRzqi?=
- =?us-ascii?Q?dw6HAy/tKf3jM0s2rb1hSHfuUk3GQOtPJBqbIkPtIpJk/i3Kps+IkvJSXirG?=
- =?us-ascii?Q?BOYuMOWlTXMfxbkAC9RfI3Bt2YNTlTv3b+exNjZeuGzSYhvKO+Gll3JvWq/J?=
- =?us-ascii?Q?jy8tkfIt464O/2UIWi2IsNSD5yGSnxn5D47evPsfa6M2pOrrACQVpFyryfJs?=
- =?us-ascii?Q?fFGvQXDzePJZOKjx6aMmQ1s3PRUUHNdSBD76PQak0Knc69666jCTzBN+1oJP?=
- =?us-ascii?Q?YSlmHQEbpi9+D2iszPz6AeaXIFakMvUAbSMSVa1znY51o3OpLv+4mrTJkNaq?=
- =?us-ascii?Q?JWwqCHwfeSILq8DEkTT0Jk6PS4eliP4IKd2OvbaMHbW3rqPZkTGPR49WE7PH?=
- =?us-ascii?Q?RJM6hBIPK8psAyteJoWsIALKNcgibPd0i6weS8MzcuVZ7zrwwB9TumLApckc?=
- =?us-ascii?Q?u6ks/hpx3M4yd8XU1HyKgo4GpaJAQDrAcxhOuGoDtZvKx4uNE8mHWe79nQBY?=
- =?us-ascii?Q?8S5rDPW5yGXEijwLtbCpE844pStHXpSfUSpQNN9Y4Uy9LzuvYRlEQ/9ao4V1?=
- =?us-ascii?Q?n4yJqgVXAYtTN9YcATmaRt5rsVrUbAplT6pG4cn4MLIHC/OARc+yv/xMCGmv?=
- =?us-ascii?Q?xrNdKya16RJtj4zv4trh4mr5xEtF17PtZc4bFECpjGKeyRbtDLA733tJGz9M?=
- =?us-ascii?Q?ZnLatU3dr6lzkzmz3XtV50RKNqKEbhxVg0csUbubArFH4ZLhRYkcuc9FBpBB?=
- =?us-ascii?Q?HxiNMBFQOarnDwmAi/fRP0rkAbn8jK27NzS+NP3FBxx4AvPEPE2ZqG83jarM?=
- =?us-ascii?Q?lqWNtxCeqvRDdKfE9zPuSTQJGgthJSq9qpf1Z4MU6KOn2/lBVH6RGmL7qQF8?=
- =?us-ascii?Q?UbF9aDP15LnuZSi5hlWV4xgxqoch+m9cYIp2dmAROkPNtSxbGTpCWohqqo2q?=
- =?us-ascii?Q?Q3aW6Kgt6Bzb784+bAq/YgIIeWraepmy/A9upajHEmFwlRvYG81poL86+ko0?=
- =?us-ascii?Q?4iSD4m+/tsQBDgLoudH/4HIQif/5O/FIg0tnIJ/2GYQBL7NSS+QKC5aKDcmJ?=
- =?us-ascii?Q?/jcK8t0kY7agsbuWKvfIfh2cXRAUjBlgHGFzhzpsANgmm5G+BUCUZErVgamC?=
- =?us-ascii?Q?+Kd6etWkCEhOyHayCrYJZNiLks4aSEOaMg04VrJqQPv3jJifaC64iWDZVWkl?=
- =?us-ascii?Q?iz9MmH9lz9tIw4ITAomOFChN5f1tBsR+SxcFRapaLpxMGCeY1YpPMCS4o8XT?=
- =?us-ascii?Q?InOODB2R/Plp5RNTjp49H/EGDLLyT437OwiYoaatPCpAS+Vtpd8P5eHdSjQ7?=
- =?us-ascii?Q?HaMJ571vfKL3Pp+GNlrSbD4rXG0WaQibBgTEJk1K/hUdNOgERj362s75OJvG?=
- =?us-ascii?Q?r6IcEY09/euy3y0HAyxH5MdJe1li/5+MXjFWOqZQ1MVdoPGnkvj1BKTbLG0i?=
- =?us-ascii?Q?ErZ/+G2V0z+8gbXqLcHubGuj75y7uq3+R8gqNcVlO2UjGesLJHjNX3xBHvQ/?=
- =?us-ascii?Q?2ymKyP5wmEq6j5Uejlkl4ifE2fBZeIzK5ja756wFUMRyOfCQ09NQTSfxKqBl?=
- =?us-ascii?Q?iPQhsEYKbdRcz+t/yJCGL1o6PQCyVoIpsTlPcN2VHpTX3rxeghVNAmiqcJCh?=
- =?us-ascii?Q?6i7FKBUb7g=3D=3D?=
+	=?us-ascii?Q?lXLpKAtiL1ZKDpgBw8rm5PPsXuUohiUy4InayjVIZyQGaRT9yyQZEuCmu91d?=
+ =?us-ascii?Q?yHvL3x37AHm7iCI+l1dVnNfs2zSCDG4fikGXnn0UYF1EeWTF7fuBk6S3YYb5?=
+ =?us-ascii?Q?66ZXz8roI+6S7QVN1me8to4Z4Gk9kCaZcS0nswSO87JtrnKvjpN7Ai/27Zkd?=
+ =?us-ascii?Q?trFHcLsNH2KiQClbA5rjp8r1WS1QVTCIs8w/TMUwJ1DwJqdGR8V2TwPJ0LcS?=
+ =?us-ascii?Q?63p+fqK+M7mcgrhQ7JTrRAqVDzViNeKVeAP7bGpEgUx9p2owNnzl2WfuDrFM?=
+ =?us-ascii?Q?Cdx9mwU34VBDuJ0ojji2lhPAqMyZiT4BnJjrL09LawflNYXZmNkg8VgRJuV/?=
+ =?us-ascii?Q?r0GwVIAaVkpQYz5VU7VwLuuWFJXAcNsET72OcuW1ECZ8dUXWlLQThWRkkFCr?=
+ =?us-ascii?Q?Y+/AkrdeB81wCZWk7LsOnmCbLjSltIzaa75m7sBa05QyKKgYdFoKkz7R61Y/?=
+ =?us-ascii?Q?T4a8pK9AU00UrpJ/Dd7HKOUGEaBQ0yMsfmkvlN9cREZnqgDwdWPvfeQfLfi0?=
+ =?us-ascii?Q?eV8CXXURSYXDKw899J1Jr7Rm7/tQHqrDpOVPIgMyan8ClVtenK49QOtUMAwv?=
+ =?us-ascii?Q?dKR4LhlS3K+1FhXpK3mMPA0T5TQX0+UGpkHwBa9VJMMN6Tlp+bBvB3sM7LoA?=
+ =?us-ascii?Q?yhMFJWnj/ZNu3J77eS4VSILuX+uu8hVSckwF+B7GVe0hpLQsd0yPeSuG1L1v?=
+ =?us-ascii?Q?ONn1uerruzJB7prBDq7khhFXrZdgN+IAmYk2DSub5hhkhEoB3zNjoLmmTcrg?=
+ =?us-ascii?Q?+eHsL1qazwg3SLh+8FszqBaNjI1w2Q8gzF3yVSts7yf3S6mLFWNQrhXbsvbl?=
+ =?us-ascii?Q?A2xjD9NCdapisz+ac5Zrfa84o8pWsY9wg/+WTRxqTIo2SO9mrUpFrrQHsbfD?=
+ =?us-ascii?Q?+Q/YXxYVNPZX2FhoaOFe64RXbNuqshk5F23Gq4hyrIW1HkqygKLXF5406o4E?=
+ =?us-ascii?Q?rE22xvtnw+yFSdJFQ4r/mLUluXyG/AnQBI8hUEJRf1N3HArIiu1WqhdkRAON?=
+ =?us-ascii?Q?rCWzSDPQWKb+oUt5CCW5WT/0k17yRLLPz0e9WmFWdoYDlsQj66klafCFO6N2?=
+ =?us-ascii?Q?c5Gn5EWtcs+pWWEs3TFeSrtn2ApEyR24AOC/AbKy90hX2YALgpOLWgRZ1cyL?=
+ =?us-ascii?Q?LALnwAcL9MTU9IdxMSjxUbz0cpPaG4suwF++8Suowjkv/7afKOZ5BCWjjqyH?=
+ =?us-ascii?Q?Sx6kTVRocR8+J2PsKmwecD6S7x2AWkFPIkEr5jLHhW6X/GG37CZrQyUzt2JY?=
+ =?us-ascii?Q?+ZW641y3xpv5xFU1DBhKGE7b+l8vJfUyiWVlERHtJBAEXlZcsCdF5laDqC3P?=
+ =?us-ascii?Q?pop6iOP4vkQtKzKsOxU4ZXLZO3r3o7Up4ed6lzfI6U8z5kR3OQejaqz6sh8W?=
+ =?us-ascii?Q?FRQsG45gs60HXX6so5UH62eOxu/1gODlittMaJzQ/9pY90cvqtNftIe+NxVL?=
+ =?us-ascii?Q?yL6oyk/SJW7D5Bmu4NxoKCDKv1cLtrX8mDi01veV4+L2CTHBztv2G/H8YN7f?=
+ =?us-ascii?Q?XhjeJ+HWCoSiIE7eu+Flff+3q8MLoPGf3rDkUd+DI1ZdK+Ng9pVrKUrAfeZG?=
+ =?us-ascii?Q?7laFjLgeXtXxkNYHYAfJEbabVfU84oDVs9OT/PzlnoNH4bYEkRJMx55oAnsu?=
+ =?us-ascii?Q?Y/kiE02c4vwInwVpMIFc6uk3Cb3aDO4TdviXix1M3jb48U0PDUCzW71qHStc?=
+ =?us-ascii?Q?bYIZvkw8ZN2d7AX/suFNvws3lK+HI49ax7EzIrRVBcpuWifDfeml0FSfS2xU?=
+ =?us-ascii?Q?w9uUj4T3MA=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7935af67-ea7d-468e-e3fe-08de4c66e080
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27a95066-118f-4a56-af5b-08de4c66e2d1
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 14:29:47.2002
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 14:29:51.0912
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uJhNKzOrMd5DivOVYjxYfAtvyQeWfAHIoZdro2d0sx2kJRdGc2RdG4rqiSBEIc2m4NXg16rJXSVgkgi4C881Yw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: TtdpHmnY8E+4MW4R8lfpR1y73Bn3tOwqthKjUa+tHfpA//50XBymAq8vVdIokRqJrMYUFljfwdBfIDe2QwCUyQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB6932
 
-Currently, to audit active Ftrace event filters, userspace must
-recursively traverse the events/ directory and read each individual
-filter file. This is inefficient for monitoring tools and debugging.
+To audit active event triggers, userspace currently must traverse the
+events/ directory and read each individual trigger file. This is
+cumbersome for system-wide auditing or debugging.
 
-Introduce "show_event_filters" at the trace root directory. This file
-displays all events that currently have a filter applied, alongside the
-actual filter string, in a consolidated system:event [tab] filter
-format.
+Introduce "show_event_triggers" at the trace root directory. This file
+displays all events that currently have one or more triggers applied,
+alongside the trigger configuration, in a consolidated
+system:event [tab] trigger format.
 
-The implementation reuses the existing trace_event_file iterators to
-ensure atomic traversal of the event list and utilises guard(rcu)() for
-automatic, scope-based protection when accessing volatile filter
-strings.
+The implementation leverages the existing trace_event_file iterators
+and uses the trigger's own print() operation to ensure output
+consistency with the per-event trigger files.
 
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
  Documentation/trace/ftrace.rst |  8 +++++
- kernel/trace/trace_events.c    | 58 ++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+ kernel/trace/trace_events.c    | 64 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
 diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 639f4d95732f..4ce01e726b09 100644
+index 4ce01e726b09..b9efb148a5c2 100644
 --- a/Documentation/trace/ftrace.rst
 +++ b/Documentation/trace/ftrace.rst
-@@ -684,6 +684,14 @@ of ftrace. Here is a list of some of the key files:
+@@ -692,6 +692,14 @@ of ftrace. Here is a list of some of the key files:
  
  	See events.rst for more information.
  
-+  show_event_filters:
++  show_event_triggers:
 +
-+	A list of events that have filters. This shows the
-+	system/event pair along with the filter that is attached to
++	A list of events that have triggers. This shows the
++	system/event pair along with the trigger that is attached to
 +	the event.
 +
 +	See events.rst for more information.
@@ -181,35 +180,41 @@ index 639f4d95732f..4ce01e726b09 100644
  
  	A list of events that can be enabled in tracing.
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b16a5a158040..5ede4214c4df 100644
+index 5ede4214c4df..e2a67561253d 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -1661,6 +1661,32 @@ static void t_stop(struct seq_file *m, void *p)
- 	mutex_unlock(&event_mutex);
+@@ -1687,6 +1687,38 @@ static int t_show_filters(struct seq_file *m, void *v)
+ 	return 0;
  }
  
 +/**
-+ * t_show_filters - seq_file callback to display active event filters
++ * t_show_triggers - seq_file callback to display active event triggers
 + * @m: The seq_file interface for formatted output
 + * @v: The current trace_event_file being iterated
 + *
-+ * Identifies and prints active filters for the current event file in the
-+ * iteration. If a filter is applied to the current event and, if so,
-+ * prints the system name, event name, and the filter string.
++ * Iterates through the trigger list of the current event file and prints
++ * each active trigger's configuration using its associated print
++ * operation.
 + */
-+static int t_show_filters(struct seq_file *m, void *v)
++static int t_show_triggers(struct seq_file *m, void *v)
 +{
 +	struct trace_event_file *file = v;
 +	struct trace_event_call *call = file->event_call;
-+	struct event_filter *filter;
++	struct event_trigger_data *data;
 +
-+	guard(rcu)();
-+	filter = rcu_dereference(file->filter);
-+	if (!filter || !filter->filter_string)
++	/*
++	 * The event_mutex is held by t_start(), protecting the
++	 * file->triggers list traversal.
++	 */
++	if (list_empty(&file->triggers))
 +		return 0;
 +
-+	seq_printf(m, "%s:%s\t%s\n", call->class->system,
-+		   trace_event_name(call), filter->filter_string);
++	list_for_each_entry_rcu(data, &file->triggers, list) {
++		seq_printf(m, "%s:%s\t", call->class->system,
++			   trace_event_name(call));
++
++		data->cmd_ops->print(m, data);
++	}
 +
 +	return 0;
 +}
@@ -217,34 +222,34 @@ index b16a5a158040..5ede4214c4df 100644
  #ifdef CONFIG_MODULES
  static int s_show(struct seq_file *m, void *v)
  {
-@@ -2488,6 +2514,7 @@ ftrace_event_npid_write(struct file *filp, const char __user *ubuf,
- 
+@@ -2515,6 +2547,7 @@ ftrace_event_npid_write(struct file *filp, const char __user *ubuf,
  static int ftrace_event_avail_open(struct inode *inode, struct file *file);
  static int ftrace_event_set_open(struct inode *inode, struct file *file);
-+static int ftrace_event_show_filters_open(struct inode *inode, struct file *file);
+ static int ftrace_event_show_filters_open(struct inode *inode, struct file *file);
++static int ftrace_event_show_triggers_open(struct inode *inode, struct file *file);
  static int ftrace_event_set_pid_open(struct inode *inode, struct file *file);
  static int ftrace_event_set_npid_open(struct inode *inode, struct file *file);
  static int ftrace_event_release(struct inode *inode, struct file *file);
-@@ -2506,6 +2533,13 @@ static const struct seq_operations show_set_event_seq_ops = {
- 	.stop = s_stop,
+@@ -2540,6 +2573,13 @@ static const struct seq_operations show_show_event_filters_seq_ops = {
+ 	.stop = t_stop,
  };
  
-+static const struct seq_operations show_show_event_filters_seq_ops = {
++static const struct seq_operations show_show_event_triggers_seq_ops = {
 +	.start = t_start,
 +	.next = t_next,
-+	.show = t_show_filters,
++	.show = t_show_triggers,
 +	.stop = t_stop,
 +};
 +
  static const struct seq_operations show_set_pid_seq_ops = {
  	.start = p_start,
  	.next = p_next,
-@@ -2535,6 +2569,13 @@ static const struct file_operations ftrace_set_event_fops = {
- 	.release = ftrace_event_release,
+@@ -2576,6 +2616,13 @@ static const struct file_operations ftrace_show_event_filters_fops = {
+ 	.release = seq_release,
  };
  
-+static const struct file_operations ftrace_show_event_filters_fops = {
-+	.open = ftrace_event_show_filters_open,
++static const struct file_operations ftrace_show_event_triggers_fops = {
++	.open = ftrace_event_show_triggers_open,
 +	.read = seq_read,
 +	.llseek = seq_lseek,
 +	.release = seq_release,
@@ -253,33 +258,33 @@ index b16a5a158040..5ede4214c4df 100644
  static const struct file_operations ftrace_set_event_pid_fops = {
  	.open = ftrace_event_set_pid_open,
  	.read = seq_read,
-@@ -2679,6 +2720,20 @@ ftrace_event_set_open(struct inode *inode, struct file *file)
- 	return ret;
+@@ -2734,6 +2781,20 @@ ftrace_event_show_filters_open(struct inode *inode, struct file *file)
+ 	return ftrace_event_open(inode, file, &show_show_event_filters_seq_ops);
  }
  
 +/**
-+ * ftrace_event_show_filters_open - open interface for set_event_filters
++ * ftrace_event_show_triggers_open - open interface for show_event_triggers
 + * @inode: The inode of the file
 + * @file: The file being opened
 + *
-+ * Connects the set_event_filters file to the sequence operations
-+ * required to iterate over and display active event filters.
++ * Connects the show_event_triggers file to the sequence operations
++ * required to iterate over and display active event triggers.
 + */
 +static int
-+ftrace_event_show_filters_open(struct inode *inode, struct file *file)
++ftrace_event_show_triggers_open(struct inode *inode, struct file *file)
 +{
-+	return ftrace_event_open(inode, file, &show_show_event_filters_seq_ops);
++	return ftrace_event_open(inode, file, &show_show_event_triggers_seq_ops);
 +}
 +
  static int
  ftrace_event_set_pid_open(struct inode *inode, struct file *file)
  {
-@@ -4399,6 +4454,9 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
- 	if (!entry)
- 		return -ENOMEM;
+@@ -4457,6 +4518,9 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
+ 	trace_create_file("show_event_filters", TRACE_MODE_READ, parent, tr,
+ 			  &ftrace_show_event_filters_fops);
  
-+	trace_create_file("show_event_filters", TRACE_MODE_READ, parent, tr,
-+			  &ftrace_show_event_filters_fops);
++	trace_create_file("show_event_triggers", TRACE_MODE_READ, parent, tr,
++			  &ftrace_show_event_triggers_fops);
 +
  	nr_entries = ARRAY_SIZE(events_entries);
  
