@@ -1,47 +1,45 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7006F2F1FE7;
-	Mon,  5 Jan 2026 16:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D527A3370EE;
+	Mon,  5 Jan 2026 16:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767631133; cv=none; b=a0YJTa1/0gQjozUcRo4dYpNpfAw8F0vqSS21X+yVgDnizhbhbc5A9d75IdK7480CnClDdZZnXIXlkffyHpbpNcdB83X4auf1toZa3zINMCV6bo3wN61Y4JGNFOalyTSHsXSNJB9zrukgdtquuXKeTduCQXDEl6F6+otKNAKGTY8=
+	t=1767631816; cv=none; b=RV5iXoft7o06opZ5aqXurodEljhf9e9is60UsDPrC+Yms5JCdDACfNhVJqcc+04NxrR1DZvY/iqL2zh9TfK6NUNHs3qLIII6p7WZKEB6ecuUi9pW/XvQNRBFiZisR/B5BkpZfJnKTpMPqF2NbZgQZaKl3cUvAR0Ups9GL8IJxNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767631133; c=relaxed/simple;
-	bh=wXbadJNSWlxQN7elyxY2q066pwk9XzvuoBl2RZaKjuM=;
+	s=arc-20240116; t=1767631816; c=relaxed/simple;
+	bh=QjQm+bycDFFeDXde1Pcoj2+ekMzkM7nvek428bxmyzI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cq5ezmyL5BG0HJArEV1yAAoXUjYvnTmZ/bf8l71JYmsdLsBhmg5kMan7/LxsSrMBToBhg13AiyRtxJCKgWm+hdEfIgMwJ72pmlyI5aliWna0ih9hpdGJqIfdp0kFcOWsFpNDrvRk98Opfku9+aGd1fQ0KJRDYaPEfipp8lMr5tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=O8OjMuugqtJVY6vaZWuYI+pNyokLQDOmmLT+EEdbIFJsb2wxLqnybd1xIwU4BWyCtzqaMGQoMejuEpNKd81WXhLsNGDgHQFnZr6ZV/Do0mggBrD0Z6H9DKRdPdx39KgpHinfidQdOYsjqKWyXQXQwV47GRzt30Gs6yL7sKwXzJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 3DBD91401F4;
-	Mon,  5 Jan 2026 16:38:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 332146000F;
-	Mon,  5 Jan 2026 16:38:40 +0000 (UTC)
-Date: Mon, 5 Jan 2026 11:39:02 -0500
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id CC54D1A01B0;
+	Mon,  5 Jan 2026 16:50:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id C74542002D;
+	Mon,  5 Jan 2026 16:50:05 +0000 (UTC)
+Date: Mon, 5 Jan 2026 11:50:27 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Yury Norov <yury.norov@gmail.com>, Masami
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Joel Fernandes
+ <joelagnelf@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, Masami
  Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Christophe Leroy <chleroy@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jani
- Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, David Laight <david.laight@runbox.com>,
- Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti <andi.shyti@kernel.org>, Vivi
- Rodrigo <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
- Daniel Gomez <da.gomez@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "intel-gfx@lists.freedesktop.org"
- <intel-gfx@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-modules@vger.kernel.org"
- <linux-modules@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>
+ Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, David Laight
+ <david.laight@runbox.com>, Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko
+ Ursulin <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
-Message-ID: <20260105113902.6bdfcfa8@gandalf.local.home>
-In-Reply-To: <aVmyZ0iXzTkNU86y@smile.fi.intel.com>
+Message-ID: <20260105115027.1aea85c1@gandalf.local.home>
+In-Reply-To: <aVvoe5fQN3EUtEAJ@yury>
 References: <20251225170930.1151781-1-yury.norov@gmail.com>
 	<20251225170930.1151781-8-yury.norov@gmail.com>
 	<20251226115848.298465d4@gandalf.local.home>
@@ -49,8 +47,9 @@ References: <20251225170930.1151781-1-yury.norov@gmail.com>
 	<20251229111748.3ba66311@gandalf.local.home>
 	<20260103005059.GA11015@joelbox2>
 	<aVkSVk2L6VH9MYGz@smile.fi.intel.com>
-	<937926D0-00DC-499B-9FD8-D921C903882D@nvidia.com>
-	<aVmyZ0iXzTkNU86y@smile.fi.intel.com>
+	<aVkmQ4EGIQgAddZQ@yury>
+	<254c1096c3b892923dd12b07a8b80291b88c0e9b@intel.com>
+	<aVvoe5fQN3EUtEAJ@yury>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,35 +59,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 332146000F
-X-Stat-Signature: hxafjg4ncmsykt4dmwkuqhja4ftxwj3q
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: C74542002D
+X-Stat-Signature: idz13ryxxjr91atgwngrfok7zygtutt3
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX199ZWLWJbelqoMLbQ2B2b7gz7EOu9A69rc=
-X-HE-Tag: 1767631120-776187
-X-HE-Meta: U2FsdGVkX18TUKraAk9eDUTCBhjaAdWPFKNooHz+bfcqdqTcVxbKlaESTN1xHRIB6bXyrScasXjrWy/3tM0ZrDxQAGqCLVLwVKm57gBsEwoFaSvbPuFa6ZF8p7ypWmVVtEWieJ8iVXsWD8ppbKOLCHHgXRfQ9b66RDkuS+8eywo/mwhrWIWOkEjGSMxpYfhS2nRw+EBRkEfuP7BPrD741gQX5GUPCRv7D+Pp6rItqZxb74QWi4UN23XLFzBZIQRSFV7Pg0YPuoCqqJaJ+BLy9AgN/m9GtU1Y9fq/d0BeFZJIPKrjt5fce/GLegTG7kC3mQkO8pLLW+MOKZ/tPWybZKagezHVMnXP
+X-Session-ID: U2FsdGVkX19supINbnwdWCMLx4+n0XP8la5ZW/l1co0=
+X-HE-Tag: 1767631805-694570
+X-HE-Meta: U2FsdGVkX1+D8ZxAlfx8ZTVUS8+VHfa4a5PuEEthOEndhQMr9j2WAdgNMKfNU0JLX+BZY7qz3ZwBP4OjtLh7tZKe9tsd59Wq9quN9m878arog0rbH0c/PP/WNy/05wieg/ovromGkJWys/94+HqDbQkfNO4m2bQENCWW7M7HN4dZzBlz+MiWzmDhPACeRXOIMG9sqBtd7u43+eRpVfAOllFgDTSccJOm1WVk4ruNei0wABLD0aIjqTqeU434OOWRQYq6RRx8qQI75kGh5P/79Qi+Lofqn39i8/aOeATec6cZFugLPICmiznlhqq9HfxGF97w/bIjotFGopaZ+dbLsxdK6TFPXcDvfIJjK12tRcgjtonU6SeUsROudhlB2cIhhkGqW8Zz5zks4Ki6Y2IbXg==
 
-On Sun, 4 Jan 2026 02:20:55 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, 5 Jan 2026 11:36:11 -0500
+Yury Norov <yury.norov@gmail.com> wrote:
 
-> > 
-> > I do not think it is necessary to move it.  
+> > You do realize this means recompiling everything when adding D=1 for
+> > debugging?  
 > 
-> I'm not talking about move, I'm talking about the C 101 thingy. Any custom API
-> should be included before use, otherwise compiler won't see it. Which header do
-> you want to include to have this API being provided? Note, it's really bad
-> situation right now with the header to be included implicitly via non-obvious
-> or obscure path. The discussion moved as far as I see it towards the finding a
-> good place for the trace_printk.h.
+> Yes sir I do.
+> 
+> It would be as simple (or hard) as building another arch:
+> 
+>         make O=../build/linux-arm64
+>         make O=../build/linux-x86_64
+>         make D=1 W=1 O=../build/linux-x86_64-dev
+> 
+> If you're both developer and CI engineer in your company, you're likely
+> already doing something like that. If you're CI-only, there're no
+> changes for you. If you're a developer - yeah, you'd have to learn a
+> new flag.
 
-It's not a normal API. It's for debugging the kernel. Thus it should be
-available everywhere without having to add a header. Hence, the best place
-to include trace_printk.h, is in kernel.h.
+I'm saying this right now.
 
-I'm thinking that my proposed config option is the best solution now. For
-those that do not care about debugging the kernel, you enable the
-"HIDE_TRACE_PRINTK" config so that your builds will be "quicker". But for
-everyone else, it will not slow down their workflow when they need to debug
-code.
+Hard-nacked-by: Steven Rostedt <rostedt@goodmis.org>
+
+Why do you want to burden developers?
+
+> 
+> The real problem of course is the status inflation. The fact that
+> defconfig enables CONFIG_EXPERT and CONFIG_DEBUG_KERNEL implies that
+> every random person who is able to do:
+> 
+>         git clone && make && sudo make install
+> 
+> now assumed an expert kernel user and active developer. It is not
+> correct, and it leads to bloating kernel with dev-only features.
+> 
+> What we discuss here is a new marker for those real experts and
+> developers, I think. (In an hope that it will inflate not very fast.)
+
+This is a generic feature that helps all developers. The ones spending the
+most time in maintaining the kernel.
+
+Add the config I mentioned:
+
+config HIDE_TRACE_PRINTK
+  depends on TRACING
+  help
+    trace_printk() is an extremely powerful utility to debug and develop
+    kernel code. It is defined in kernel.h so that it can be easily accessed
+    during development or having to debug existing code.
+
+    But trace_printk() is not to be included in the final result, and having
+    it in kernel.h during normal builds where the builder has no plans of
+    debugging the kernel causes wasted cycles and time in compiling the kernel.
+
+    By saying yes here, the include of trace_printk() macros will be hidden
+    from kernel.h and help speed up the compile.
+
+    If you do not plan on debugging this kernel, say Y
+
+
+It is default 'n' as the normal person building their own kernel likely
+wants to debug it. Once you set this to 'y' then you get your "fast" builds.
+
+Then in kernel.h have:
+
+#ifndef CONFIG_HIDE_TRACE_PRINTK
+# include <linux/trace_printk.h>
+#endif
 
 -- Steve
