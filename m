@@ -1,359 +1,166 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAA42339B3C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 16:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C70A2F999A
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 16:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767629487; cv=none; b=o4c2DcSdBOHQrMR1MZiee7sD6h+LnFkPYrkt31s6E4+iQuGe/dMwpV3hVVA6fQ2rmzQmdpgmVvp8TluI9lK8SXMCf7B0JQYoVrQY4V/EsVcRiF4+iy2wr0MyOY44EriveD8cKWvMterL92TsNzdpisCVEd/QfKz1Kyqno6ttUzA=
+	t=1767630978; cv=none; b=YxI1rxMVY0DzKpJrQ7x9ANG1QGdc4CBtOeSdZL5CTW2uq4ks3NEiJnvGtMABgnNfjFbEcv3ZxdDyhOlsVOwXAx6058c1DtRqUUtAGfmvKTukq+oUXAnhKUIVzVX3wS6CzI3G3wEVcM69hrNTYqJLtn0MEjue/uWDqCfgOfzUgn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767629487; c=relaxed/simple;
-	bh=4KHZ6R/i2j4SIpjA6cOF5CPr6UE5/cnZFyaAiY/5dT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aX/8B0WOxPnPDNa5hT6jKXR2s3AWo2BoUrIQVU2irZCWH23rcWU5VnhsHaw9MOod0PCCG+KCGHP00+/jheA48Wb+qjDLs6/tPqCCIeF29dOj7p9LMXYISK9VW1JKR/GizQOoR9WY7SwTV0gsBhFsYnuzMGerrXoei0B4Xsp+WyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MWuhD8hI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1767630978; c=relaxed/simple;
+	bh=Cne43cGOBFzbsHriSJTKpbMxofM1/GdzL1+MVAry/W4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/Iaw2qW2HCqhZcAUY3yJLfGaEI1zzwvvW5i+zofU1Ckd1Pw39BgaH3v3tY6lHQLrznuvJK3eszXFu8kEFTjfV5izyUqRTMmt9cC/7mYj98ux73SXcSnDRFjmwjoSmmObQXjeGCTDDhqxy8OL9cp9NtanjHZYaMugcBsO1/TSHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipjMY4/1; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MWuhD8hI"
-Received: from LAPTOP-U3CCR7C6.corp.microsoft.com (unknown [108.142.230.59])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DD35D21260D8;
-	Mon,  5 Jan 2026 08:05:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD35D21260D8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767629116;
-	bh=rI0TvHgUv293a0UICu/+AtOCRmV6zkuUTLQ0CV2rzpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MWuhD8hISYwGkyIY9yc+wREPaoy+iYjQcBOz9xqtN5sk5pMu7PiSW3UdYPxxaPgYZ
-	 ZzpTZ/LocJTZssPGPFZcLa1qNo0HOigK/L4rc1QUkCfLtkOCpwaMZGm7WgbizqrOYo
-	 WoiHZGubuDwp4pHpPJyWkFg0pdTdbyYUEU+82pBU=
-From: Thomas Ballasi <tballasi@linux.microsoft.com>
-To: tballasi@linux.microsoft.com
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org
-Subject: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
-Date: Mon,  5 Jan 2026 08:04:22 -0800
-Message-Id: <20260105160423.23708-2-tballasi@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260105160423.23708-1-tballasi@linux.microsoft.com>
-References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
- <20260105160423.23708-1-tballasi@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipjMY4/1"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-78fc520433aso1637087b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Jan 2026 08:36:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767630972; x=1768235772; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmLroKiaaSIEDmiG3hNy96115cezpvbgC/O0Qw/mmcE=;
+        b=ipjMY4/19KtfqRv0jJBNwzk99KWVbeD7mlC1CKhkX3LMa43NLmIOAXegcSUIWxhef2
+         qNn/wV1C7mfUiqs67gUTOdQNDvqAZL74N0iz6/a6+T4G/qysNy/dRQsRPJfKDjEf06eN
+         a1vi6sT5yHAN77fOeERlGW5gtUCiGQJkbPHcv5vvQJFGmNYY89aApFSJrSyau9tjw2QG
+         5h5+Qq7Et/LX8XjN001SGTjFBB9Wu7OXl0GKpzV8fPDIPYdis5IUrNGL0jfm3oPb1Oz0
+         CwiB5Gs6+oL9V6btK4L6YkmF1hvOuyojPJmOLqwrfLrOEoQe2v99FhFsOFUiqazQ+Cpp
+         YnFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767630972; x=1768235772;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pmLroKiaaSIEDmiG3hNy96115cezpvbgC/O0Qw/mmcE=;
+        b=vBsXx+oM9n4cl8+6cCEftT/PCY0zvLaaAx+STnBOTsVMI39XiTsA97/iohhR0K+uIX
+         dJeuPpsY+SY961cDbWhcORBh4ES9hrbZcpMUjnk+lo7k4EMelpMkFyUDJRfT4laDjzHO
+         hdSgwMu7Cf0DWMiW3Y6azki9xIg9FRQH1/xvdA7xDj0Rt2Cp2tVJE40lVr294MhL5Jhv
+         dHSX9iYt8YB3Nraqe6m9HHCVODV8Ckv/eOSTh+oVYkRXl/y1jO/CkhwZ0q2+TMxD6p5n
+         gAVQH1tg+uD1hQRdFUSyBL8NzFDdBwZQk7mBEDTzPaIBNdgRt8OBE3altXQTmms0HQa8
+         Eu4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVAnxztVORbeTch8xwVanRVeJgOLyNzwsEPV7sdQeXzdFXWy8qzEICZaRscVG0Tf8Q8vW6wLP6DnC/4Ju5cWxYUPIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCqOAWHbCPAmux6XhPWHRBpbUIuTPQsAX39sSgCB2hqtar8PiU
+	hb/ZBhTXL0xcf/FXTDTrqU5VEq4IVJ7SkO3AkjQXV3zS2hLchSJytGv8
+X-Gm-Gg: AY/fxX6exPBH4M0dK1NkKluOssEZ8sqSzamjA9eNqUJ93GFmpImiiZq9dPdzQiM5QM2
+	pY8Q6LSy7YpWN4/trWYsEm/SQa9oq8yVX4QeVEhew+QefR16MUmTYAUzHf+Q2QpnpfI+pPZ49F0
+	2rosa6srQCMA5TxOBgh9+MOQE/pE3qygZpTZaC/a4vGAYCnGspx+1j1tp2ZzwtlVK2RElMIzlb0
+	rV9xYUw2gG+VQxIltxUMyytskkqLSHngK281MxgFvSuFpXlK60hAaUZiq6lythil98BbzDRaw1y
+	9eZ+PNPFgUFyFWTNq4ZQLx6sHZ55v8N3CyCPcnwKnAKKufBLWZUAbcQg7Xx6VrtPOH2il8zBhoz
+	bHhIPwc5RWeDfFy09P2BMiOcSqQbeQtVkbJo8MOOaLItIWve2oFOEOBSF1tugK08q/hzG/ZP3Yr
+	zhUk1Wnrk=
+X-Google-Smtp-Source: AGHT+IHZnvqij0p2dsVEyUAqfbDQF6JM3zbwBqi4iRccM72+GqOmYwfEQER+7XbmOSanBy2kuKO6sw==
+X-Received: by 2002:a05:690c:45ca:b0:78f:aa6d:48cd with SMTP id 00721157ae682-790a88f50b1mr1761297b3.0.1767630972421;
+        Mon, 05 Jan 2026 08:36:12 -0800 (PST)
+Received: from localhost ([2601:346:0:79bd:830c:9f83:df41:3e7d])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-790a87dce60sm648267b3.13.2026.01.05.08.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 08:36:12 -0800 (PST)
+Date: Mon, 5 Jan 2026 11:36:11 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] kernel.h: drop trace_printk.h
+Message-ID: <aVvoe5fQN3EUtEAJ@yury>
+References: <20251225170930.1151781-1-yury.norov@gmail.com>
+ <20251225170930.1151781-8-yury.norov@gmail.com>
+ <20251226115848.298465d4@gandalf.local.home>
+ <20251228133150.1d5731d04bc1b685b0fe81c1@linux-foundation.org>
+ <20251229111748.3ba66311@gandalf.local.home>
+ <20260103005059.GA11015@joelbox2>
+ <aVkSVk2L6VH9MYGz@smile.fi.intel.com>
+ <aVkmQ4EGIQgAddZQ@yury>
+ <254c1096c3b892923dd12b07a8b80291b88c0e9b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <254c1096c3b892923dd12b07a8b80291b88c0e9b@intel.com>
 
-Memory reclaim events are currently difficult to attribute to
-specific cgroups, making debugging memory pressure issues
-challenging.  This patch adds memory cgroup ID (memcg_id) to key
-vmscan tracepoints to enable better correlation and analysis.
+On Mon, Jan 05, 2026 at 11:29:51AM +0200, Jani Nikula wrote:
+> On Sat, 03 Jan 2026, Yury Norov <yury.norov@gmail.com> wrote:
+> > On Sat, Jan 03, 2026 at 02:57:58PM +0200, Andy Shevchenko wrote:
+> >> On Fri, Jan 02, 2026 at 07:50:59PM -0500, Joel Fernandes wrote:
+> >> > On Mon, Dec 29, 2025 at 11:17:48AM -0500, Steven Rostedt wrote:
+> >> 
+> >> ...
+> >> 
+> >> > I use trace_printk() all the time for kernel, particularly RCU development.
+> >> > One of the key usecases I have is dumping traces on panic (with panic on warn
+> >> > and stop tracing on warn enabled). This is extremely useful since I can add
+> >> > custom tracing and dump traces when rare conditions occur. I fixed several
+> >> > bugs with this technique.
+> >> > 
+> >> > I also recommend keeping it convenient to use.
+> >> 
+> >> Okay, you know C, please share your opinion what header is the best to hold the
+> >> trace_printk.h to be included.
+> >
+> > What if we include it on Makefile level, similarly to how W=1 works?
+> >
+> >         make D=1 // trace_printk() is available
+> >         make D=0 // trace_printk() is not available
+> >         make     // trace_printk() is not available
+> >
+> > Where D stands for debugging.
+> >
+> > D=1 may be a default setting if you prefer, but the most important is
+> > that every compilation unit will have an access to debugging without
+> > polluting core headers.
+> 
+> You do realize this means recompiling everything when adding D=1 for
+> debugging?
 
-For operations not associated with a specific cgroup, the field
-is defaulted to 0.
+Yes sir I do.
 
-Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
----
- include/trace/events/vmscan.h | 79 ++++++++++++++++++++---------------
- mm/shrinker.c                 |  2 +-
- mm/vmscan.c                   | 17 ++++----
- 3 files changed, 56 insertions(+), 42 deletions(-)
+It would be as simple (or hard) as building another arch:
 
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index 490958fa10dee..93a9a9ba9405d 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -114,85 +114,92 @@ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
- 
- DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
- 
--	TP_PROTO(int order, gfp_t gfp_flags),
-+	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
- 
--	TP_ARGS(order, gfp_flags),
-+	TP_ARGS(gfp_flags, order, memcg_id),
- 
- 	TP_STRUCT__entry(
--		__field(	int,	order		)
- 		__field(	unsigned long,	gfp_flags	)
-+		__field(	int,	order		)
-+		__field(	unsigned short,	memcg_id	)
- 	),
- 
- 	TP_fast_assign(
--		__entry->order		= order;
- 		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
-+		__entry->order		= order;
-+		__entry->memcg_id	= memcg_id;
- 	),
- 
--	TP_printk("order=%d gfp_flags=%s",
-+	TP_printk("order=%d gfp_flags=%s memcg_id=%u",
- 		__entry->order,
--		show_gfp_flags(__entry->gfp_flags))
-+		show_gfp_flags(__entry->gfp_flags),
-+		__entry->memcg_id)
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
- 
--	TP_PROTO(int order, gfp_t gfp_flags),
-+	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
- 
--	TP_ARGS(order, gfp_flags)
-+	TP_ARGS(gfp_flags, order, memcg_id)
- );
- 
- #ifdef CONFIG_MEMCG
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
- 
--	TP_PROTO(int order, gfp_t gfp_flags),
-+	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
- 
--	TP_ARGS(order, gfp_flags)
-+	TP_ARGS(gfp_flags, order, memcg_id)
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_softlimit_reclaim_begin,
- 
--	TP_PROTO(int order, gfp_t gfp_flags),
-+	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
- 
--	TP_ARGS(order, gfp_flags)
-+	TP_ARGS(gfp_flags, order, memcg_id)
- );
- #endif /* CONFIG_MEMCG */
- 
- DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_end_template,
- 
--	TP_PROTO(unsigned long nr_reclaimed),
-+	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
- 
--	TP_ARGS(nr_reclaimed),
-+	TP_ARGS(nr_reclaimed, memcg_id),
- 
- 	TP_STRUCT__entry(
- 		__field(	unsigned long,	nr_reclaimed	)
-+		__field(	unsigned short,	memcg_id	)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->nr_reclaimed	= nr_reclaimed;
-+		__entry->memcg_id	= memcg_id;
- 	),
- 
--	TP_printk("nr_reclaimed=%lu", __entry->nr_reclaimed)
-+	TP_printk("nr_reclaimed=%lu memcg_id=%u",
-+		__entry->nr_reclaimed,
-+		__entry->memcg_id)
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_direct_reclaim_end,
- 
--	TP_PROTO(unsigned long nr_reclaimed),
-+	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
- 
--	TP_ARGS(nr_reclaimed)
-+	TP_ARGS(nr_reclaimed, memcg_id)
- );
- 
- #ifdef CONFIG_MEMCG
- DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_memcg_reclaim_end,
- 
--	TP_PROTO(unsigned long nr_reclaimed),
-+	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
- 
--	TP_ARGS(nr_reclaimed)
-+	TP_ARGS(nr_reclaimed, memcg_id)
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_memcg_softlimit_reclaim_end,
- 
--	TP_PROTO(unsigned long nr_reclaimed),
-+	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
- 
--	TP_ARGS(nr_reclaimed)
-+	TP_ARGS(nr_reclaimed, memcg_id)
- );
- #endif /* CONFIG_MEMCG */
- 
-@@ -208,31 +215,34 @@ TRACE_EVENT(mm_shrink_slab_start,
- 	TP_STRUCT__entry(
- 		__field(struct shrinker *, shr)
- 		__field(void *, shrink)
--		__field(int, nid)
- 		__field(long, nr_objects_to_shrink)
- 		__field(unsigned long, gfp_flags)
- 		__field(unsigned long, cache_items)
- 		__field(unsigned long long, delta)
- 		__field(unsigned long, total_scan)
- 		__field(int, priority)
-+		__field(int, nid)
-+		__field(unsigned short, memcg_id)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->shr = shr;
- 		__entry->shrink = shr->scan_objects;
--		__entry->nid = sc->nid;
- 		__entry->nr_objects_to_shrink = nr_objects_to_shrink;
- 		__entry->gfp_flags = (__force unsigned long)sc->gfp_mask;
- 		__entry->cache_items = cache_items;
- 		__entry->delta = delta;
- 		__entry->total_scan = total_scan;
- 		__entry->priority = priority;
-+		__entry->nid = sc->nid;
-+		__entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
- 	),
- 
--	TP_printk("%pS %p: nid: %d objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
-+	TP_printk("%pS %p: nid: %d memcg_id: %u objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
- 		__entry->shrink,
- 		__entry->shr,
- 		__entry->nid,
-+		__entry->memcg_id,
- 		__entry->nr_objects_to_shrink,
- 		show_gfp_flags(__entry->gfp_flags),
- 		__entry->cache_items,
-@@ -242,36 +252,39 @@ TRACE_EVENT(mm_shrink_slab_start,
- );
- 
- TRACE_EVENT(mm_shrink_slab_end,
--	TP_PROTO(struct shrinker *shr, int nid, int shrinker_retval,
-+	TP_PROTO(struct shrinker *shr, struct shrink_control *sc, int shrinker_retval,
- 		long unused_scan_cnt, long new_scan_cnt, long total_scan),
- 
--	TP_ARGS(shr, nid, shrinker_retval, unused_scan_cnt, new_scan_cnt,
-+	TP_ARGS(shr, sc, shrinker_retval, unused_scan_cnt, new_scan_cnt,
- 		total_scan),
- 
- 	TP_STRUCT__entry(
- 		__field(struct shrinker *, shr)
--		__field(int, nid)
- 		__field(void *, shrink)
- 		__field(long, unused_scan)
- 		__field(long, new_scan)
--		__field(int, retval)
- 		__field(long, total_scan)
-+		__field(int, nid)
-+		__field(int, retval)
-+		__field(unsigned short, memcg_id)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->shr = shr;
--		__entry->nid = nid;
- 		__entry->shrink = shr->scan_objects;
- 		__entry->unused_scan = unused_scan_cnt;
- 		__entry->new_scan = new_scan_cnt;
--		__entry->retval = shrinker_retval;
- 		__entry->total_scan = total_scan;
-+		__entry->nid = sc->nid;
-+		__entry->retval = shrinker_retval;
-+		__entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
- 	),
- 
--	TP_printk("%pS %p: nid: %d unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
-+	TP_printk("%pS %p: nid: %d memcg_id: %u unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
- 		__entry->shrink,
- 		__entry->shr,
- 		__entry->nid,
-+		__entry->memcg_id,
- 		__entry->unused_scan,
- 		__entry->new_scan,
- 		__entry->total_scan,
-@@ -504,9 +517,9 @@ TRACE_EVENT(mm_vmscan_node_reclaim_begin,
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_node_reclaim_end,
- 
--	TP_PROTO(unsigned long nr_reclaimed),
-+	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
- 
--	TP_ARGS(nr_reclaimed)
-+	TP_ARGS(nr_reclaimed, memcg_id)
- );
- 
- TRACE_EVENT(mm_vmscan_throttled,
-diff --git a/mm/shrinker.c b/mm/shrinker.c
-index 4a93fd433689a..e3b894c20bec8 100644
---- a/mm/shrinker.c
-+++ b/mm/shrinker.c
-@@ -461,7 +461,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
- 	 */
- 	new_nr = add_nr_deferred(next_deferred, shrinker, shrinkctl);
- 
--	trace_mm_shrink_slab_end(shrinker, shrinkctl->nid, freed, nr, new_nr, total_scan);
-+	trace_mm_shrink_slab_end(shrinker, shrinkctl, freed, nr, new_nr, total_scan);
- 	return freed;
- }
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b2fc8b626d3df..3ac9f45461795 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -6642,11 +6642,11 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- 		return 1;
- 
- 	set_task_reclaim_state(current, &sc.reclaim_state);
--	trace_mm_vmscan_direct_reclaim_begin(order, sc.gfp_mask);
-+	trace_mm_vmscan_direct_reclaim_begin(sc.gfp_mask, order, 0);
- 
- 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
- 
--	trace_mm_vmscan_direct_reclaim_end(nr_reclaimed);
-+	trace_mm_vmscan_direct_reclaim_end(nr_reclaimed, 0);
- 	set_task_reclaim_state(current, NULL);
- 
- 	return nr_reclaimed;
-@@ -6675,8 +6675,9 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
- 	sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
- 			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
- 
--	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
--						      sc.gfp_mask);
-+	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.gfp_mask,
-+						      sc.order,
-+						      cgroup_id(memcg->css.cgroup));
- 
- 	/*
- 	 * NOTE: Although we can get the priority field, using it
-@@ -6687,7 +6688,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
- 	 */
- 	shrink_lruvec(lruvec, &sc);
- 
--	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
-+	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed, cgroup_id(memcg->css.cgroup));
- 
- 	*nr_scanned = sc.nr_scanned;
- 
-@@ -6723,13 +6724,13 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
- 
- 	set_task_reclaim_state(current, &sc.reclaim_state);
--	trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask);
-+	trace_mm_vmscan_memcg_reclaim_begin(sc.gfp_mask, 0, cgroup_id(memcg->css.cgroup));
- 	noreclaim_flag = memalloc_noreclaim_save();
- 
- 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
- 
- 	memalloc_noreclaim_restore(noreclaim_flag);
--	trace_mm_vmscan_memcg_reclaim_end(nr_reclaimed);
-+	trace_mm_vmscan_memcg_reclaim_end(nr_reclaimed, cgroup_id(memcg->css.cgroup));
- 	set_task_reclaim_state(current, NULL);
- 
- 	return nr_reclaimed;
-@@ -7675,7 +7676,7 @@ static unsigned long __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask,
- 	delayacct_freepages_end();
- 	psi_memstall_leave(&pflags);
- 
--	trace_mm_vmscan_node_reclaim_end(sc->nr_reclaimed);
-+	trace_mm_vmscan_node_reclaim_end(sc->nr_reclaimed, 0);
- 
- 	return sc->nr_reclaimed;
- }
--- 
-2.33.8
+        make O=../build/linux-arm64
+        make O=../build/linux-x86_64
+        make D=1 W=1 O=../build/linux-x86_64-dev
 
+If you're both developer and CI engineer in your company, you're likely
+already doing something like that. If you're CI-only, there're no
+changes for you. If you're a developer - yeah, you'd have to learn a
+new flag.
+
+The real problem of course is the status inflation. The fact that
+defconfig enables CONFIG_EXPERT and CONFIG_DEBUG_KERNEL implies that
+every random person who is able to do:
+
+        git clone && make && sudo make install
+
+now assumed an expert kernel user and active developer. It is not
+correct, and it leads to bloating kernel with dev-only features.
+
+What we discuss here is a new marker for those real experts and
+developers, I think. (In an hope that it will inflate not very fast.)
+
+Thanks,
+Yury
