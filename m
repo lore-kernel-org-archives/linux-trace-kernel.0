@@ -1,294 +1,147 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022126.outbound.protection.outlook.com [52.101.96.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2FB2FE060;
-	Mon,  5 Jan 2026 14:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767623395; cv=fail; b=Joc0EIJTg5FJLrwAJ+imEBG22+z893pKvO2+ent1WAZyENfNEgQO5edEc0stwNHU1iXhs83vfr8d3V/zqpbrgNF/y+nb8FIkfiUfHWKXevHb53caxfTO11rZOTT9qVWFJalCS2SntmBw/zoN9VG7FNgnk2TWHDdBRpy8IPKbDdE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767623395; c=relaxed/simple;
-	bh=8Sskcd2nTUBOGFkT6aDosWrldGqp18IiEoB2T2A5yfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X1mN+ylyrs0vhfPj8gYE3H7+5yCfTaHfrZHTrIng66RtQNmtm7GH1uR7QxQJBrq60HpINUHeoXb5u8u4+2MDVzAtXCI3Uvt9nmwORd2PqKvBU3ki2a2wM/yW4VFRlBN0ou+fIVhbEaM/TunfKAWJCPhX7+Et2dIY58jK6db7mIw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZeesS4WMX9A0iYx3bEnWzCwy3L5pJn+L9jXQv9rKcS7egbMKbUyo2P+ebRXQKSqBLqFu1/qPu0fUuY7z2zB8WXCmP3V0X3tge0tsu4LkxN7XzwXjwEIUaOL/vhRWwtVSP92fYJWaH7l40v0J+hVwCOUg6LI5S04mVW+lftqaG5uMymd6ky2oFBJn+wRfSu+JmoDWxHisy0C854DCHsW3aNohETmKUcU1pvtSskQG3AMwKmsPTt5EQm5/s0pis1u/iXknE5vuUGCEtT3wGUBMF4zFa+OAgK5VUHkgAlNyvC4J4Y9O/5SB/dZWFBaC6S95xZtRQZ3lUIXRXfEnlKXkSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6bqLrvkWi3tcqaqMJa5S2cjc5X7DdbcsrvEP7oDKWIg=;
- b=uuZsI55T9VhgCHZGlY4R9uonJ80f1VGSUIUWzowmnfIOeuqRWdEvcicdrut50b6Wlg14VPGCVEdG2VaiYCsKJpDXZMvSwf66Y7ctoQvS1A0Ew5bmYNvPFm48ZieSILo/bGi85UqMxNll43398v07ekVUzqj2VC5VIZMWxLG1oYC+2qSuKnqcSiUGEtdgsvwkuTzzqaz9zo4muFVo8q3z+aF4e1HzByJx5v/IvhBG3nEd09cdS1pFOirvrZ9W5mhSFlYgxa5fIoy1c9Vq9SzT2Mcpca+eIOYtJZBvLryJGImDqt4XRSdBvvuhHaaoXrH+iIvx2+dSCMv8Kyy1qbFz/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
- by LO6P123MB6932.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:324::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 14:29:51 +0000
-Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- ([fe80::de8e:2e4f:6c6:f3bf%5]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
- 14:29:51 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: neelx@suse.com,
-	sean@ashe.io,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [v2 PATCH 2/2] tracing: Add show_event_triggers to expose active event triggers
-Date: Mon,  5 Jan 2026 09:29:39 -0500
-Message-ID: <20260105142939.2655342-3-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260105142939.2655342-1-atomlin@atomlin.com>
-References: <20260105142939.2655342-1-atomlin@atomlin.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR18CA0005.namprd18.prod.outlook.com
- (2603:10b6:208:23c::10) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:70::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84003370F9
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 15:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767626618; cv=none; b=fAqTiUEmImCNRFESObUqWyw1QtgQcQskXxOHbpAXXgQH/u4jW/kYpclTdjlwhef99Dyx6AbVkNbXHfQXH9TKkY6+6GzOrZSwlErDzGiRtYVwKNl+M5cuqr961baVzJqXQWEfhIJAEQCrWujD9pRn9qD5Eldu4LSYAKuhzvCLTis=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767626618; c=relaxed/simple;
+	bh=HKueogURHSYT6ByKs0shdGR/psbijyhL9NrCI/IzZ0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=oixTWGhJmwzYQlvn4QxzYxdt9TVLBcVrVFdOZmeby3iWVxQRhd0c64ZXQ07OojvYDLl4HSk6O7NTjwL/r6ocAZh++SucaHhNq+nGh1AR7JdSh6AO+rntny8S0rSFiJOBu2Mx1D21xB/MCmwKzPCDBCS039QzSI9KIUHMaNaT5PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tu3zmpzC; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tu3zmpzC"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-432755545fcso4635860f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Jan 2026 07:23:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1767626615; x=1768231415; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HaYTQ7BWPsiVNKxI7qR6p+hkO0uDJULloleKtGqvInE=;
+        b=tu3zmpzC2tzj5AwgGkUz582lBDPbV5jmLeTWZXCag6+ELmr5dZk4wi7xJKwf517ijo
+         Z5CnFGwbEzKzwEkMR2cAF5u7M5bhhN8NL44D3scvWU664/KuMLvQYtzI2OUR5GjFIJXa
+         dEOUucSb0YU06BBxBK5n3sYJw4qgajT22I9Apl8sr9iDggE5o2yI2asfKxxwDr6mgV+8
+         aW8OuRmeuyKZteKWBECNAg2DC5A0lbiFV/ZIAbB+yoT57hNm2V+3HV+oO30VcbXDquTR
+         QZiJQ8Y22s1dvauoGk5NngybEtwOfZgaQkdQI/0hBp3TdhazPBgDxtCmLsNtsah2DlMx
+         Bf1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767626615; x=1768231415;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HaYTQ7BWPsiVNKxI7qR6p+hkO0uDJULloleKtGqvInE=;
+        b=b+09MTVJqztm3hU+jBaZ3ybh4ur3z+k8CTw8j80pgKiU2xMT51BFs7byti004FDQYm
+         8iPPTK7awASVHUvN+lDq7Fb4T/O2+MzqIGnklaTBcWWTqOc95DGJsdUFUTv7zF1PBxe0
+         EaaTJedGwul5nZa0Wt6lazKXNxBPPBCZv8fvA5/juk/86LuD2fczgHATVkv1GQ7cr/Wc
+         kHbE1Z3W4s9x/YYUGXYAtcwo2x3C3/gNtdB9gm4mBI6deiBACQbR8oc5EHuZMdtzTthT
+         aChYnA7zC4+Rr4yzcqXxurpyw+2xxWEa4SlSO6n4PgS7tfySUKNTL328vh6lkCw9Oshl
+         v4+g==
+X-Forwarded-Encrypted: i=1; AJvYcCV7zEEv96zwS5VX/RhrkcREATBIlT2jJKTQkNrbcm0HW8hUVWQhdr0inUsEt6TdU1dxfLLhv5/CtrQIJyevW/c5uws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjV3TmqTS659bKeuBJl+C3AcAFLR9sYFPrtDeC8QIamt5DIK5C
+	zPzMJMHZmc5M9RSz/dJmiBt0HJOKymHRDX7r/bGBlEJQVElyEd2iyIsxj8zUei3NWow=
+X-Gm-Gg: AY/fxX49+PA31I4mp8wT0EIjSwQNq9+77w3einsxdgnq2nJP13x+GWU6RzJJknkpMfz
+	P7ehM52dOe1NzeYUCuFeJxss4HtM6HyCTq8gwax4k3qq+rKLcAhmjwAxRAp8JJ6iWD1yVZdP8ir
+	lGs2s5H6uxadDMR9r+NxvH7Oghr7sWeJ6XOKmvYJGStkntmh2u81HzWjSKXNDa4DS4ALPK/DuWh
+	uFfUIJrxmSJuBhQIictrB8LlVBNAmem4BKqagNw3iXM90zo9EcYI38PsKyJ4s9QPoKQuPHRwrZS
+	qwDew7kKejRh44EOz2Vebg7duIzCwt9f3iDSBQ+clA3a+lPHqEaPUEKcyYrKQNuCabj0siqWA1u
+	Howunt6Tddir3nAFy6Ba8lp+bEj/8ggiPAGsFtuH5fgmzpQuIhst3PiePgtkwlMPqUoucvPzTgq
+	KwXoDOHU97uQsipUEH
+X-Google-Smtp-Source: AGHT+IEbzAH4Mwt8s7uaZyKDja05IxXDpz9rS7YosY9x88I2jrHj3aj2heYz9G34c7JpuT0cp6DgjA==
+X-Received: by 2002:a05:6000:40ce:b0:431:8f8:7f17 with SMTP id ffacd0b85a97d-432bca2c441mr136677f8f.10.1767626614828;
+        Mon, 05 Jan 2026 07:23:34 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bc9dfaa2sm152913f8f.0.2026.01.05.07.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 07:23:34 -0800 (PST)
+Date: Mon, 5 Jan 2026 18:23:31 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH 3/5] tracing: Have tracer option be instance specific
+Message-ID: <202511071533.domGENBS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|LO6P123MB6932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27a95066-118f-4a56-af5b-08de4c66e2d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?B1Sf4jC03SQTqmqOwOAaycdZe45HYKtzgyXatW0KUK0QLWb9QmGIbiNdOpy6?=
- =?us-ascii?Q?rzRHtAAUM3Re4CYmWVZTX6uqfW99h3m/N02LXspUOgkAxcQClEowGzaU3q44?=
- =?us-ascii?Q?YN/2ppGr03jD7Lbs2sTcv4sqEvCEF6pB6OTZioova87w80Cz1qTXgp91ENnN?=
- =?us-ascii?Q?jFdu8u2zB2JqlqB2is46lW7SFkGcou/0kW+6ATvUz0fn/Nk3VY9Dj3QCczY5?=
- =?us-ascii?Q?21NmNJ7lPwwwQ2DoDX5MI3IGPxMod+Pm6leOLTHYlm9wuBFVN3fvEWPtH1Sy?=
- =?us-ascii?Q?zKvgwZr+V9I0zp9CnjaykvJDypBUuGTe4pGeAuDOC0qoapmVhXXjb5cvDxIg?=
- =?us-ascii?Q?aZKBpvF2r3Jy0kRTExJZwG1a3yII+VOIw7b3Eq4h8H+1A2R+ayPNNpNr2+NJ?=
- =?us-ascii?Q?+/aR3J9rPKw03h57Ut6UcRfb+oMKDiEL8qA1asULFNgPs6FldtZPN6OZNDbp?=
- =?us-ascii?Q?NAiOtADYwxTiWumaZMTvuVfO8/1dsO9EDS7Xz3UOC8OrIaHjvO9fwi7T5ya4?=
- =?us-ascii?Q?gEW5+SDXtrrv4MznJCE0pddBIlYDfTMJi+P6JASYv6WVodkbOxX97Qd81Q+3?=
- =?us-ascii?Q?y9B+dPHQ3FQhWEhLN7TC7gt6MoBS+56d4UttTvMQJSIB3tJ1qTVt0dmcLrG4?=
- =?us-ascii?Q?5ddOh/f42/cbduCsM+WCvNls4m1CiIzq+CIoPety+8kZ+MwW/YnB+ub5PAwW?=
- =?us-ascii?Q?zCPAlJixx+uUBP+f/W0kBM11Ol4MN1n8sY6479OyKadPow0meKlJuNgm/lGO?=
- =?us-ascii?Q?LhyFfxszIFUBD4RP8T5ctLbnsc187PZ/GzvCksryT+w+thboAONV3rDVyGnU?=
- =?us-ascii?Q?bzVS9Dr403qMxPD7X295EqkJgNdgf6+MOfS24MQLal1sY+lpClPFg3TpJlE0?=
- =?us-ascii?Q?SfYsEWrbRyUjgFv+EdYkaZc+uQc71ohaLOHF/gEXxRiSTH3YzN2Dxt8/R1oe?=
- =?us-ascii?Q?Fd3qVnI3+qmjkzDzkpT1irCL+TpqsVyu4R9I4R7c2a7qgDX7lCxZ+NNA5fGD?=
- =?us-ascii?Q?Y0shTTCYSPmXoMmeL/gj/ZdzB+jA4bwcX4pUgObBckpDQGMizHSwhunIDCrY?=
- =?us-ascii?Q?gJRJZ/2AcwTp5NpvlYMQj67WZ/3HM2wZDcWO+aVYSZeZEUCPAvsEQM7/R3hE?=
- =?us-ascii?Q?nm/cop8xhkkKpJbjyL6vSNWDPDUu+DAZFxp34ZJzUnBQW9IGYuMrq4ePKmao?=
- =?us-ascii?Q?QZ5XHVIO2l2lti/dSkEbwHtIzOsM7I36UpGAZwvxKuhu5Fh/B44MXX+/opTA?=
- =?us-ascii?Q?FPYiUvGJEi9ewygV9x4MU6g+GBkUr9GlKXMolUKDJ0vv7YdfgPNvAkxvKl+M?=
- =?us-ascii?Q?J/fG8Mll+lai1TNtMN6wDRcuaqiX5iP8syC0mlVK559nRGWx8SPMR6cFlFuD?=
- =?us-ascii?Q?awUqK6PXx+QRMTnl6MXKJIp4u+YOnhfcCxEq4V/8HawJYcnVqYBivmfm1BJx?=
- =?us-ascii?Q?XvOCgjP/Nt5/FTtL/cuRMXNsm3+0u0tL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lXLpKAtiL1ZKDpgBw8rm5PPsXuUohiUy4InayjVIZyQGaRT9yyQZEuCmu91d?=
- =?us-ascii?Q?yHvL3x37AHm7iCI+l1dVnNfs2zSCDG4fikGXnn0UYF1EeWTF7fuBk6S3YYb5?=
- =?us-ascii?Q?66ZXz8roI+6S7QVN1me8to4Z4Gk9kCaZcS0nswSO87JtrnKvjpN7Ai/27Zkd?=
- =?us-ascii?Q?trFHcLsNH2KiQClbA5rjp8r1WS1QVTCIs8w/TMUwJ1DwJqdGR8V2TwPJ0LcS?=
- =?us-ascii?Q?63p+fqK+M7mcgrhQ7JTrRAqVDzViNeKVeAP7bGpEgUx9p2owNnzl2WfuDrFM?=
- =?us-ascii?Q?Cdx9mwU34VBDuJ0ojji2lhPAqMyZiT4BnJjrL09LawflNYXZmNkg8VgRJuV/?=
- =?us-ascii?Q?r0GwVIAaVkpQYz5VU7VwLuuWFJXAcNsET72OcuW1ECZ8dUXWlLQThWRkkFCr?=
- =?us-ascii?Q?Y+/AkrdeB81wCZWk7LsOnmCbLjSltIzaa75m7sBa05QyKKgYdFoKkz7R61Y/?=
- =?us-ascii?Q?T4a8pK9AU00UrpJ/Dd7HKOUGEaBQ0yMsfmkvlN9cREZnqgDwdWPvfeQfLfi0?=
- =?us-ascii?Q?eV8CXXURSYXDKw899J1Jr7Rm7/tQHqrDpOVPIgMyan8ClVtenK49QOtUMAwv?=
- =?us-ascii?Q?dKR4LhlS3K+1FhXpK3mMPA0T5TQX0+UGpkHwBa9VJMMN6Tlp+bBvB3sM7LoA?=
- =?us-ascii?Q?yhMFJWnj/ZNu3J77eS4VSILuX+uu8hVSckwF+B7GVe0hpLQsd0yPeSuG1L1v?=
- =?us-ascii?Q?ONn1uerruzJB7prBDq7khhFXrZdgN+IAmYk2DSub5hhkhEoB3zNjoLmmTcrg?=
- =?us-ascii?Q?+eHsL1qazwg3SLh+8FszqBaNjI1w2Q8gzF3yVSts7yf3S6mLFWNQrhXbsvbl?=
- =?us-ascii?Q?A2xjD9NCdapisz+ac5Zrfa84o8pWsY9wg/+WTRxqTIo2SO9mrUpFrrQHsbfD?=
- =?us-ascii?Q?+Q/YXxYVNPZX2FhoaOFe64RXbNuqshk5F23Gq4hyrIW1HkqygKLXF5406o4E?=
- =?us-ascii?Q?rE22xvtnw+yFSdJFQ4r/mLUluXyG/AnQBI8hUEJRf1N3HArIiu1WqhdkRAON?=
- =?us-ascii?Q?rCWzSDPQWKb+oUt5CCW5WT/0k17yRLLPz0e9WmFWdoYDlsQj66klafCFO6N2?=
- =?us-ascii?Q?c5Gn5EWtcs+pWWEs3TFeSrtn2ApEyR24AOC/AbKy90hX2YALgpOLWgRZ1cyL?=
- =?us-ascii?Q?LALnwAcL9MTU9IdxMSjxUbz0cpPaG4suwF++8Suowjkv/7afKOZ5BCWjjqyH?=
- =?us-ascii?Q?Sx6kTVRocR8+J2PsKmwecD6S7x2AWkFPIkEr5jLHhW6X/GG37CZrQyUzt2JY?=
- =?us-ascii?Q?+ZW641y3xpv5xFU1DBhKGE7b+l8vJfUyiWVlERHtJBAEXlZcsCdF5laDqC3P?=
- =?us-ascii?Q?pop6iOP4vkQtKzKsOxU4ZXLZO3r3o7Up4ed6lzfI6U8z5kR3OQejaqz6sh8W?=
- =?us-ascii?Q?FRQsG45gs60HXX6so5UH62eOxu/1gODlittMaJzQ/9pY90cvqtNftIe+NxVL?=
- =?us-ascii?Q?yL6oyk/SJW7D5Bmu4NxoKCDKv1cLtrX8mDi01veV4+L2CTHBztv2G/H8YN7f?=
- =?us-ascii?Q?XhjeJ+HWCoSiIE7eu+Flff+3q8MLoPGf3rDkUd+DI1ZdK+Ng9pVrKUrAfeZG?=
- =?us-ascii?Q?7laFjLgeXtXxkNYHYAfJEbabVfU84oDVs9OT/PzlnoNH4bYEkRJMx55oAnsu?=
- =?us-ascii?Q?Y/kiE02c4vwInwVpMIFc6uk3Cb3aDO4TdviXix1M3jb48U0PDUCzW71qHStc?=
- =?us-ascii?Q?bYIZvkw8ZN2d7AX/suFNvws3lK+HI49ax7EzIrRVBcpuWifDfeml0FSfS2xU?=
- =?us-ascii?Q?w9uUj4T3MA=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27a95066-118f-4a56-af5b-08de4c66e2d1
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 14:29:51.0912
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TtdpHmnY8E+4MW4R8lfpR1y73Bn3tOwqthKjUa+tHfpA//50XBymAq8vVdIokRqJrMYUFljfwdBfIDe2QwCUyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB6932
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251105161935.545400234@kernel.org>
 
-To audit active event triggers, userspace currently must traverse the
-events/ directory and read each individual trigger file. This is
-cumbersome for system-wide auditing or debugging.
+Hi Steven,
 
-Introduce "show_event_triggers" at the trace root directory. This file
-displays all events that currently have one or more triggers applied,
-alongside the trigger configuration, in a consolidated
-system:event [tab] trigger format.
+kernel test robot noticed the following build warnings:
 
-The implementation leverages the existing trace_event_file iterators
-and uses the trigger's own print() operation to ensure output
-consistency with the per-event trigger files.
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
----
- Documentation/trace/ftrace.rst |  8 +++++
- kernel/trace/trace_events.c    | 64 ++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Remove-dummy-options-and-flags/20251106-010511
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20251105161935.545400234%40kernel.org
+patch subject: [PATCH 3/5] tracing: Have tracer option be instance specific
+config: i386-randconfig-r072-20251107 (https://download.01.org/0day-ci/archive/20251107/202511071533.domGENBS-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 4ce01e726b09..b9efb148a5c2 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -692,6 +692,14 @@ of ftrace. Here is a list of some of the key files:
- 
- 	See events.rst for more information.
- 
-+  show_event_triggers:
-+
-+	A list of events that have triggers. This shows the
-+	system/event pair along with the trigger that is attached to
-+	the event.
-+
-+	See events.rst for more information.
-+
-   available_events:
- 
- 	A list of events that can be enabled in tracing.
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 5ede4214c4df..e2a67561253d 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1687,6 +1687,38 @@ static int t_show_filters(struct seq_file *m, void *v)
- 	return 0;
- }
- 
-+/**
-+ * t_show_triggers - seq_file callback to display active event triggers
-+ * @m: The seq_file interface for formatted output
-+ * @v: The current trace_event_file being iterated
-+ *
-+ * Iterates through the trigger list of the current event file and prints
-+ * each active trigger's configuration using its associated print
-+ * operation.
-+ */
-+static int t_show_triggers(struct seq_file *m, void *v)
-+{
-+	struct trace_event_file *file = v;
-+	struct trace_event_call *call = file->event_call;
-+	struct event_trigger_data *data;
-+
-+	/*
-+	 * The event_mutex is held by t_start(), protecting the
-+	 * file->triggers list traversal.
-+	 */
-+	if (list_empty(&file->triggers))
-+		return 0;
-+
-+	list_for_each_entry_rcu(data, &file->triggers, list) {
-+		seq_printf(m, "%s:%s\t", call->class->system,
-+			   trace_event_name(call));
-+
-+		data->cmd_ops->print(m, data);
-+	}
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_MODULES
- static int s_show(struct seq_file *m, void *v)
- {
-@@ -2515,6 +2547,7 @@ ftrace_event_npid_write(struct file *filp, const char __user *ubuf,
- static int ftrace_event_avail_open(struct inode *inode, struct file *file);
- static int ftrace_event_set_open(struct inode *inode, struct file *file);
- static int ftrace_event_show_filters_open(struct inode *inode, struct file *file);
-+static int ftrace_event_show_triggers_open(struct inode *inode, struct file *file);
- static int ftrace_event_set_pid_open(struct inode *inode, struct file *file);
- static int ftrace_event_set_npid_open(struct inode *inode, struct file *file);
- static int ftrace_event_release(struct inode *inode, struct file *file);
-@@ -2540,6 +2573,13 @@ static const struct seq_operations show_show_event_filters_seq_ops = {
- 	.stop = t_stop,
- };
- 
-+static const struct seq_operations show_show_event_triggers_seq_ops = {
-+	.start = t_start,
-+	.next = t_next,
-+	.show = t_show_triggers,
-+	.stop = t_stop,
-+};
-+
- static const struct seq_operations show_set_pid_seq_ops = {
- 	.start = p_start,
- 	.next = p_next,
-@@ -2576,6 +2616,13 @@ static const struct file_operations ftrace_show_event_filters_fops = {
- 	.release = seq_release,
- };
- 
-+static const struct file_operations ftrace_show_event_triggers_fops = {
-+	.open = ftrace_event_show_triggers_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = seq_release,
-+};
-+
- static const struct file_operations ftrace_set_event_pid_fops = {
- 	.open = ftrace_event_set_pid_open,
- 	.read = seq_read,
-@@ -2734,6 +2781,20 @@ ftrace_event_show_filters_open(struct inode *inode, struct file *file)
- 	return ftrace_event_open(inode, file, &show_show_event_filters_seq_ops);
- }
- 
-+/**
-+ * ftrace_event_show_triggers_open - open interface for show_event_triggers
-+ * @inode: The inode of the file
-+ * @file: The file being opened
-+ *
-+ * Connects the show_event_triggers file to the sequence operations
-+ * required to iterate over and display active event triggers.
-+ */
-+static int
-+ftrace_event_show_triggers_open(struct inode *inode, struct file *file)
-+{
-+	return ftrace_event_open(inode, file, &show_show_event_triggers_seq_ops);
-+}
-+
- static int
- ftrace_event_set_pid_open(struct inode *inode, struct file *file)
- {
-@@ -4457,6 +4518,9 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
- 	trace_create_file("show_event_filters", TRACE_MODE_READ, parent, tr,
- 			  &ftrace_show_event_filters_fops);
- 
-+	trace_create_file("show_event_triggers", TRACE_MODE_READ, parent, tr,
-+			  &ftrace_show_event_triggers_fops);
-+
- 	nr_entries = ARRAY_SIZE(events_entries);
- 
- 	e_events = eventfs_create_events_dir("events", parent, events_entries,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202511071533.domGENBS-lkp@intel.com/
+
+smatch warnings:
+kernel/trace/trace.c:6313 tracing_set_tracer() warn: iterator used outside loop: 't'
+
+vim +/t +6313 kernel/trace/trace.c
+
+9c5b9d3d65e4858 Masami Hiramatsu         2020-01-11  6285  int tracing_set_tracer(struct trace_array *tr, const char *buf)
+09d23a1d8a82e81 Steven Rostedt (Red Hat  2015-02-03  6286) {
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6287  	struct tracer *trace;
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6288  	struct tracers *t;
+12883efb670c28d Steven Rostedt (Red Hat  2013-03-05  6289) #ifdef CONFIG_TRACER_MAX_TRACE
+34600f0e9c33c9c Steven Rostedt           2013-01-22  6290  	bool had_max_tr;
+12883efb670c28d Steven Rostedt (Red Hat  2013-03-05  6291) #endif
+d33b10c0c73adca Steven Rostedt           2024-12-24  6292  	int ret;
+bc0c38d139ec7fc Steven Rostedt           2008-05-12  6293  
+d33b10c0c73adca Steven Rostedt           2024-12-24  6294  	guard(mutex)(&trace_types_lock);
+1027fcb206a0fb8 Steven Rostedt           2009-03-12  6295  
+7a1d1e4b9639ff0 Steven Rostedt (Google   2024-06-12  6296) 	update_last_data(tr);
+7a1d1e4b9639ff0 Steven Rostedt (Google   2024-06-12  6297) 
+a1f157c7a3bb342 Zheng Yejian             2023-09-06  6298  	if (!tr->ring_buffer_expanded) {
+2b6080f28c7cc3e Steven Rostedt           2012-05-11  6299  		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+438ced1720b5840 Vaibhav Nagarnaik        2012-02-02  6300  						RING_BUFFER_ALL_CPUS);
+73c5162aa362a54 Steven Rostedt           2009-03-11  6301  		if (ret < 0)
+d33b10c0c73adca Steven Rostedt           2024-12-24  6302  			return ret;
+73c5162aa362a54 Steven Rostedt           2009-03-11  6303  		ret = 0;
+73c5162aa362a54 Steven Rostedt           2009-03-11  6304  	}
+73c5162aa362a54 Steven Rostedt           2009-03-11  6305  
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6306  	list_for_each_entry(t, &tr->tracers, list) {
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6307  		if (strcmp(t->tracer->name, buf) == 0)
+bc0c38d139ec7fc Steven Rostedt           2008-05-12  6308  			break;
+bc0c38d139ec7fc Steven Rostedt           2008-05-12  6309  	}
+d33b10c0c73adca Steven Rostedt           2024-12-24  6310  	if (!t)
+
+t can't be NULL here.  It needs to be if (list_entry_is_head()) return;
+
+d33b10c0c73adca Steven Rostedt           2024-12-24  6311  		return -EINVAL;
+d33b10c0c73adca Steven Rostedt           2024-12-24  6312  
+4699bbb369ba1d3 Steven Rostedt           2025-11-05 @6313  	if (t->tracer == tr->current_trace)
+d33b10c0c73adca Steven Rostedt           2024-12-24  6314  		return 0;
+bc0c38d139ec7fc Steven Rostedt           2008-05-12  6315  
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6316  	trace = t->tracer;
+4699bbb369ba1d3 Steven Rostedt           2025-11-05  6317  
+
 -- 
-2.51.0
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
