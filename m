@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA92E31AA9C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAA42339B3C
 	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jan 2026 16:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767629487; cv=none; b=TEzdLSq85Cr5dXQhG0hIlQvzFnY+sIevODUf19fcVCOjTVhL4iLrS6mGy7RWRx+QfZMkeWc/tf0hwhl8XIp1jF/ZssIOO3vQ3YylA5CDskfm3jCwtScxvaYv2P7tKR+e26fkGm6QCVQaW6KJY7gmNXzTR7g/ZUXAUc0Skr4+n8c=
+	t=1767629487; cv=none; b=o4c2DcSdBOHQrMR1MZiee7sD6h+LnFkPYrkt31s6E4+iQuGe/dMwpV3hVVA6fQ2rmzQmdpgmVvp8TluI9lK8SXMCf7B0JQYoVrQY4V/EsVcRiF4+iy2wr0MyOY44EriveD8cKWvMterL92TsNzdpisCVEd/QfKz1Kyqno6ttUzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767629487; c=relaxed/simple;
-	bh=cibhD3unE0vOwv5NoMbSJ+/xlKS/9bn33N83oGI72oI=;
+	bh=4KHZ6R/i2j4SIpjA6cOF5CPr6UE5/cnZFyaAiY/5dT8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fJgyIf6Y6YhhDDJX1Lwtd9L7os9LS0cUl3EN+H4IiQWEOmXaTEtN70jrPM1rRYQkmKm8aSk+bZpiiCoQRPD1JEkD2OnQKmNFlJf/hxSkntA2jgaJzyDrAvqiIWSZZg27GSgdUOL4B1IBa/5ZkYiunMJqDmjlO1pImKwYcGgHbgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=faemh3aa; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=aX/8B0WOxPnPDNa5hT6jKXR2s3AWo2BoUrIQVU2irZCWH23rcWU5VnhsHaw9MOod0PCCG+KCGHP00+/jheA48Wb+qjDLs6/tPqCCIeF29dOj7p9LMXYISK9VW1JKR/GizQOoR9WY7SwTV0gsBhFsYnuzMGerrXoei0B4Xsp+WyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MWuhD8hI; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="faemh3aa"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MWuhD8hI"
 Received: from LAPTOP-U3CCR7C6.corp.microsoft.com (unknown [108.142.230.59])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5976021260DB;
-	Mon,  5 Jan 2026 08:05:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5976021260DB
+	by linux.microsoft.com (Postfix) with ESMTPSA id DD35D21260D8;
+	Mon,  5 Jan 2026 08:05:14 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD35D21260D8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1767629118;
-	bh=h/FTPDvAe0kBCPN0cxH7L3pGPOpB1MWPz7S11VhSCwY=;
+	s=default; t=1767629116;
+	bh=rI0TvHgUv293a0UICu/+AtOCRmV6zkuUTLQ0CV2rzpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=faemh3aaViYAj6Uua4LMH1ma42MSRKm+E1qg7J2vphI7woGFFz/AlV0t6kcA1ozrx
-	 XvTdlgMkeTAY/xgYMMp7NhSctV+chFLmDcczPRPVrJ0T4X7xf0cpsKEJ0bncc0BEao
-	 0C49wXBtb/XgLiqqDGR4WqLfjFaZVCrYV6fevUGE=
+	b=MWuhD8hISYwGkyIY9yc+wREPaoy+iYjQcBOz9xqtN5sk5pMu7PiSW3UdYPxxaPgYZ
+	 ZzpTZ/LocJTZssPGPFZcLa1qNo0HOigK/L4rc1QUkCfLtkOCpwaMZGm7WgbizqrOYo
+	 WoiHZGubuDwp4pHpPJyWkFg0pdTdbyYUEU+82pBU=
 From: Thomas Ballasi <tballasi@linux.microsoft.com>
 To: tballasi@linux.microsoft.com
 Cc: akpm@linux-foundation.org,
@@ -32,9 +32,9 @@ Cc: akpm@linux-foundation.org,
 	linux-trace-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
 	rostedt@goodmis.org
-Subject: [PATCH v3 2/2] mm: vmscan: add PIDs to vmscan tracepoints
-Date: Mon,  5 Jan 2026 08:04:23 -0800
-Message-Id: <20260105160423.23708-3-tballasi@linux.microsoft.com>
+Subject: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
+Date: Mon,  5 Jan 2026 08:04:22 -0800
+Message-Id: <20260105160423.23708-2-tballasi@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260105160423.23708-1-tballasi@linux.microsoft.com>
 References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
@@ -47,143 +47,313 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The changes aims at adding additionnal tracepoints variables to help
-debuggers attribute them to specific processes.
+Memory reclaim events are currently difficult to attribute to
+specific cgroups, making debugging memory pressure issues
+challenging.  This patch adds memory cgroup ID (memcg_id) to key
+vmscan tracepoints to enable better correlation and analysis.
 
-The PID field uses in_task() to reliably detect when we're in process
-context and can safely access current->pid.  When not in process
-context (such as in interrupt or in an asynchronous RCU context), the
-field is set to -1 as a sentinel value.
+For operations not associated with a specific cgroup, the field
+is defaulted to 0.
 
 Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
 ---
- include/trace/events/vmscan.h | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ include/trace/events/vmscan.h | 79 ++++++++++++++++++++---------------
+ mm/shrinker.c                 |  2 +-
+ mm/vmscan.c                   | 17 ++++----
+ 3 files changed, 56 insertions(+), 42 deletions(-)
 
 diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index 93a9a9ba9405d..d438abfa03ebb 100644
+index 490958fa10dee..93a9a9ba9405d 100644
 --- a/include/trace/events/vmscan.h
 +++ b/include/trace/events/vmscan.h
-@@ -121,19 +121,23 @@ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+@@ -114,85 +114,92 @@ TRACE_EVENT(mm_vmscan_wakeup_kswapd,
+ 
+ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
+ 
+-	TP_PROTO(int order, gfp_t gfp_flags),
++	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
+ 
+-	TP_ARGS(order, gfp_flags),
++	TP_ARGS(gfp_flags, order, memcg_id),
+ 
  	TP_STRUCT__entry(
+-		__field(	int,	order		)
  		__field(	unsigned long,	gfp_flags	)
- 		__field(	int,	order		)
-+		__field(	int,	pid		)
- 		__field(	unsigned short,	memcg_id	)
++		__field(	int,	order		)
++		__field(	unsigned short,	memcg_id	)
  	),
  
  	TP_fast_assign(
+-		__entry->order		= order;
  		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
- 		__entry->order		= order;
-+		__entry->pid		= current->pid;
- 		__entry->memcg_id	= memcg_id;
++		__entry->order		= order;
++		__entry->memcg_id	= memcg_id;
  	),
  
--	TP_printk("order=%d gfp_flags=%s memcg_id=%u",
-+	TP_printk("order=%d gfp_flags=%s pid=%d memcg_id=%u %s",
+-	TP_printk("order=%d gfp_flags=%s",
++	TP_printk("order=%d gfp_flags=%s memcg_id=%u",
  		__entry->order,
- 		show_gfp_flags(__entry->gfp_flags),
--		__entry->memcg_id)
-+		__entry->pid,
-+		__entry->memcg_id,
-++		__event_in_irq() ? "(in-irq)" : "")
+-		show_gfp_flags(__entry->gfp_flags))
++		show_gfp_flags(__entry->gfp_flags),
++		__entry->memcg_id)
  );
  
  DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
-@@ -167,17 +171,21 @@ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_end_template,
+ 
+-	TP_PROTO(int order, gfp_t gfp_flags),
++	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
+ 
+-	TP_ARGS(order, gfp_flags)
++	TP_ARGS(gfp_flags, order, memcg_id)
+ );
+ 
+ #ifdef CONFIG_MEMCG
+ DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
+ 
+-	TP_PROTO(int order, gfp_t gfp_flags),
++	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
+ 
+-	TP_ARGS(order, gfp_flags)
++	TP_ARGS(gfp_flags, order, memcg_id)
+ );
+ 
+ DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_softlimit_reclaim_begin,
+ 
+-	TP_PROTO(int order, gfp_t gfp_flags),
++	TP_PROTO(gfp_t gfp_flags, int order, unsigned short memcg_id),
+ 
+-	TP_ARGS(order, gfp_flags)
++	TP_ARGS(gfp_flags, order, memcg_id)
+ );
+ #endif /* CONFIG_MEMCG */
+ 
+ DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_end_template,
+ 
+-	TP_PROTO(unsigned long nr_reclaimed),
++	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
+ 
+-	TP_ARGS(nr_reclaimed),
++	TP_ARGS(nr_reclaimed, memcg_id),
  
  	TP_STRUCT__entry(
  		__field(	unsigned long,	nr_reclaimed	)
-+		__field(	int,	pid		)
- 		__field(	unsigned short,	memcg_id	)
++		__field(	unsigned short,	memcg_id	)
  	),
  
  	TP_fast_assign(
  		__entry->nr_reclaimed	= nr_reclaimed;
-+		__entry->pid		= current->pid;
- 		__entry->memcg_id	= memcg_id;
++		__entry->memcg_id	= memcg_id;
  	),
  
--	TP_printk("nr_reclaimed=%lu memcg_id=%u",
-+	TP_printk("nr_reclaimed=%lu pid=%d memcg_id=%u %s",
- 		__entry->nr_reclaimed,
--		__entry->memcg_id)
-+		__entry->pid,
-+		__entry->memcg_id,
-+		__event_in_irq() ? "(in-irq)" : "")
+-	TP_printk("nr_reclaimed=%lu", __entry->nr_reclaimed)
++	TP_printk("nr_reclaimed=%lu memcg_id=%u",
++		__entry->nr_reclaimed,
++		__entry->memcg_id)
  );
  
  DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_direct_reclaim_end,
-@@ -222,6 +230,7 @@ TRACE_EVENT(mm_shrink_slab_start,
- 		__field(unsigned long, total_scan)
- 		__field(int, priority)
- 		__field(int, nid)
-+		__field(int, pid)
- 		__field(unsigned short, memcg_id)
- 	),
  
-@@ -235,20 +244,23 @@ TRACE_EVENT(mm_shrink_slab_start,
- 		__entry->total_scan = total_scan;
- 		__entry->priority = priority;
- 		__entry->nid = sc->nid;
-+		__entry->pid = current->pid;
- 		__entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
- 	),
+-	TP_PROTO(unsigned long nr_reclaimed),
++	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
  
--	TP_printk("%pS %p: nid: %d memcg_id: %u objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
-+	TP_printk("%pS %p: nid: %d pid: %d memcg_id: %u objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d %s",
- 		__entry->shrink,
- 		__entry->shr,
- 		__entry->nid,
-+		__entry->pid,
- 		__entry->memcg_id,
- 		__entry->nr_objects_to_shrink,
- 		show_gfp_flags(__entry->gfp_flags),
- 		__entry->cache_items,
- 		__entry->delta,
- 		__entry->total_scan,
--		__entry->priority)
-+		__entry->priority,
-++		__event_in_irq() ? "(in-irq)" : "")
+-	TP_ARGS(nr_reclaimed)
++	TP_ARGS(nr_reclaimed, memcg_id)
  );
  
- TRACE_EVENT(mm_shrink_slab_end,
-@@ -266,29 +278,32 @@ TRACE_EVENT(mm_shrink_slab_end,
- 		__field(long, total_scan)
- 		__field(int, nid)
- 		__field(int, retval)
-+		__field(int, pid)
- 		__field(unsigned short, memcg_id)
+ #ifdef CONFIG_MEMCG
+ DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_memcg_reclaim_end,
+ 
+-	TP_PROTO(unsigned long nr_reclaimed),
++	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
+ 
+-	TP_ARGS(nr_reclaimed)
++	TP_ARGS(nr_reclaimed, memcg_id)
+ );
+ 
+ DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_memcg_softlimit_reclaim_end,
+ 
+-	TP_PROTO(unsigned long nr_reclaimed),
++	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
+ 
+-	TP_ARGS(nr_reclaimed)
++	TP_ARGS(nr_reclaimed, memcg_id)
+ );
+ #endif /* CONFIG_MEMCG */
+ 
+@@ -208,31 +215,34 @@ TRACE_EVENT(mm_shrink_slab_start,
+ 	TP_STRUCT__entry(
+ 		__field(struct shrinker *, shr)
+ 		__field(void *, shrink)
+-		__field(int, nid)
+ 		__field(long, nr_objects_to_shrink)
+ 		__field(unsigned long, gfp_flags)
+ 		__field(unsigned long, cache_items)
+ 		__field(unsigned long long, delta)
+ 		__field(unsigned long, total_scan)
+ 		__field(int, priority)
++		__field(int, nid)
++		__field(unsigned short, memcg_id)
  	),
  
  	TP_fast_assign(
  		__entry->shr = shr;
--		__entry->shrink = shr->scan_objects;
- 		__entry->unused_scan = unused_scan_cnt;
- 		__entry->new_scan = new_scan_cnt;
+ 		__entry->shrink = shr->scan_objects;
+-		__entry->nid = sc->nid;
+ 		__entry->nr_objects_to_shrink = nr_objects_to_shrink;
+ 		__entry->gfp_flags = (__force unsigned long)sc->gfp_mask;
+ 		__entry->cache_items = cache_items;
+ 		__entry->delta = delta;
  		__entry->total_scan = total_scan;
- 		__entry->nid = sc->nid;
- 		__entry->retval = shrinker_retval;
-+		__entry->pid = current->pid;
- 		__entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
+ 		__entry->priority = priority;
++		__entry->nid = sc->nid;
++		__entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
  	),
  
--	TP_printk("%pS %p: nid: %d memcg_id: %u unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
-+	TP_printk("%pS %p: nid: %d pid: %d memcg_id: %u unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d %s",
+-	TP_printk("%pS %p: nid: %d objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
++	TP_printk("%pS %p: nid: %d memcg_id: %u objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
  		__entry->shrink,
  		__entry->shr,
  		__entry->nid,
-+		__entry->pid,
- 		__entry->memcg_id,
++		__entry->memcg_id,
+ 		__entry->nr_objects_to_shrink,
+ 		show_gfp_flags(__entry->gfp_flags),
+ 		__entry->cache_items,
+@@ -242,36 +252,39 @@ TRACE_EVENT(mm_shrink_slab_start,
+ );
+ 
+ TRACE_EVENT(mm_shrink_slab_end,
+-	TP_PROTO(struct shrinker *shr, int nid, int shrinker_retval,
++	TP_PROTO(struct shrinker *shr, struct shrink_control *sc, int shrinker_retval,
+ 		long unused_scan_cnt, long new_scan_cnt, long total_scan),
+ 
+-	TP_ARGS(shr, nid, shrinker_retval, unused_scan_cnt, new_scan_cnt,
++	TP_ARGS(shr, sc, shrinker_retval, unused_scan_cnt, new_scan_cnt,
+ 		total_scan),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(struct shrinker *, shr)
+-		__field(int, nid)
+ 		__field(void *, shrink)
+ 		__field(long, unused_scan)
+ 		__field(long, new_scan)
+-		__field(int, retval)
+ 		__field(long, total_scan)
++		__field(int, nid)
++		__field(int, retval)
++		__field(unsigned short, memcg_id)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->shr = shr;
+-		__entry->nid = nid;
+ 		__entry->shrink = shr->scan_objects;
+ 		__entry->unused_scan = unused_scan_cnt;
+ 		__entry->new_scan = new_scan_cnt;
+-		__entry->retval = shrinker_retval;
+ 		__entry->total_scan = total_scan;
++		__entry->nid = sc->nid;
++		__entry->retval = shrinker_retval;
++		__entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
+ 	),
+ 
+-	TP_printk("%pS %p: nid: %d unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
++	TP_printk("%pS %p: nid: %d memcg_id: %u unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
+ 		__entry->shrink,
+ 		__entry->shr,
+ 		__entry->nid,
++		__entry->memcg_id,
  		__entry->unused_scan,
  		__entry->new_scan,
  		__entry->total_scan,
--		__entry->retval)
-+		__entry->retval,
-++		__event_in_irq() ? "(in-irq)" : "")
+@@ -504,9 +517,9 @@ TRACE_EVENT(mm_vmscan_node_reclaim_begin,
+ 
+ DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_node_reclaim_end,
+ 
+-	TP_PROTO(unsigned long nr_reclaimed),
++	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
+ 
+-	TP_ARGS(nr_reclaimed)
++	TP_ARGS(nr_reclaimed, memcg_id)
  );
  
- TRACE_EVENT(mm_vmscan_lru_isolate,
+ TRACE_EVENT(mm_vmscan_throttled,
+diff --git a/mm/shrinker.c b/mm/shrinker.c
+index 4a93fd433689a..e3b894c20bec8 100644
+--- a/mm/shrinker.c
++++ b/mm/shrinker.c
+@@ -461,7 +461,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	 */
+ 	new_nr = add_nr_deferred(next_deferred, shrinker, shrinkctl);
+ 
+-	trace_mm_shrink_slab_end(shrinker, shrinkctl->nid, freed, nr, new_nr, total_scan);
++	trace_mm_shrink_slab_end(shrinker, shrinkctl, freed, nr, new_nr, total_scan);
+ 	return freed;
+ }
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b2fc8b626d3df..3ac9f45461795 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -6642,11 +6642,11 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+ 		return 1;
+ 
+ 	set_task_reclaim_state(current, &sc.reclaim_state);
+-	trace_mm_vmscan_direct_reclaim_begin(order, sc.gfp_mask);
++	trace_mm_vmscan_direct_reclaim_begin(sc.gfp_mask, order, 0);
+ 
+ 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
+ 
+-	trace_mm_vmscan_direct_reclaim_end(nr_reclaimed);
++	trace_mm_vmscan_direct_reclaim_end(nr_reclaimed, 0);
+ 	set_task_reclaim_state(current, NULL);
+ 
+ 	return nr_reclaimed;
+@@ -6675,8 +6675,9 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+ 	sc.gfp_mask = (gfp_mask & GFP_RECLAIM_MASK) |
+ 			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
+ 
+-	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
+-						      sc.gfp_mask);
++	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.gfp_mask,
++						      sc.order,
++						      cgroup_id(memcg->css.cgroup));
+ 
+ 	/*
+ 	 * NOTE: Although we can get the priority field, using it
+@@ -6687,7 +6688,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
+ 	 */
+ 	shrink_lruvec(lruvec, &sc);
+ 
+-	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed);
++	trace_mm_vmscan_memcg_softlimit_reclaim_end(sc.nr_reclaimed, cgroup_id(memcg->css.cgroup));
+ 
+ 	*nr_scanned = sc.nr_scanned;
+ 
+@@ -6723,13 +6724,13 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+ 	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
+ 
+ 	set_task_reclaim_state(current, &sc.reclaim_state);
+-	trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask);
++	trace_mm_vmscan_memcg_reclaim_begin(sc.gfp_mask, 0, cgroup_id(memcg->css.cgroup));
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 
+ 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
+ 
+ 	memalloc_noreclaim_restore(noreclaim_flag);
+-	trace_mm_vmscan_memcg_reclaim_end(nr_reclaimed);
++	trace_mm_vmscan_memcg_reclaim_end(nr_reclaimed, cgroup_id(memcg->css.cgroup));
+ 	set_task_reclaim_state(current, NULL);
+ 
+ 	return nr_reclaimed;
+@@ -7675,7 +7676,7 @@ static unsigned long __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask,
+ 	delayacct_freepages_end();
+ 	psi_memstall_leave(&pflags);
+ 
+-	trace_mm_vmscan_node_reclaim_end(sc->nr_reclaimed);
++	trace_mm_vmscan_node_reclaim_end(sc->nr_reclaimed, 0);
+ 
+ 	return sc->nr_reclaimed;
+ }
 -- 
 2.33.8
 
