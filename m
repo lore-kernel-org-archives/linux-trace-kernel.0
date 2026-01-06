@@ -1,62 +1,62 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19223328FB
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 13:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950EE33290C
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 13:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767706754; cv=none; b=qmhyQhB9/smh8bIChgszVdDlmgboywxm4EylhgX1SK9vjl6ZNZk17C7g6Gn6+r3q9/R1511Dw2ZDJyNkxmKt7GDYcUA9o4EodcMDDN+aW+79SfGE9sOb9s9sibyg0waZka6YiAEQ3BvyyjOutFRiizkA3GzlJDZYyc4ffgUL9DM=
+	t=1767706797; cv=none; b=ffQwgt8Z8o9tSiboB0tQlRBd0bSok+8+tcXP4P7R4A8WC9EbKbIQbqJc1Qm3ggJ/3HFbLksqzG36HloBKxGN5W3l/zwXbi+63yqaMKXDbe6NIndBlK1r7fE68NPRKkhqqWKkJpGHj6rSZKKzIVVwz49TzHRpSfr/rJDTTgc1G7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767706754; c=relaxed/simple;
-	bh=I6Y2Bnj5DjlTKswbTwkLRHVOQ3wPXG/AMGsGn2yZi04=;
+	s=arc-20240116; t=1767706797; c=relaxed/simple;
+	bh=2eL6u1tYXRr0f4T07e3bqQR8vmyHHp/n5Y06Uc7Bdt0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dr1DSHInifNTgoCGRNBjbNGPZC0WM05r4wfT5aS48yS6edurAMitDgxVd4KECubobF2Jxa2weuq4iinbgUiriPPLIM8ot/gnZHDuFv8vpXezCPLm22HsNfI9rrTwgURd18PKuXQ4VN3sAm31WePGhjzZqm4cZNwGF25hhUV5b1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IJqlgTqD; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ExvLHu2u9ZBEHpRDnsHXBpKwF++SpF4ePnr0nNjz6K6NO5mmH2jVKlR2RK9gORE7afCWFffDgHVBxOPsb1rzixz5Ip5KXOyfwhdJ+uHzD2IHDWupsIUe45yglY306G0I6nxBQqZIk7TCm0Adk8F1sN5/vlYkOt8eDc2ovsqN1FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Thj+MmYH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJqlgTqD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Thj+MmYH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767706751;
+	s=mimecast20190719; t=1767706787;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5uaMzECtULTxucImjVPwH8LTz8bTXnv1pm1HYLWyzkw=;
-	b=IJqlgTqDeAZZ31BgOqThcvrQ/OhGV9e7nYEdt8LZUaeDkoOKID1rD6058FJRXTSoQNeZkX
-	7CGOMm7XeEdDfq4nncul6/sMcFyRvW2Axuj9M7i4A99qTXEMGekKmYE7IgOQI9xW+nU0/S
-	Hi6bgzUD7fiRRwjO2IBJ40YfqZ7y5vE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=9x6woanR4M28vlHIWpobUJ+jS/qyut7AGYHXp5l5JGc=;
+	b=Thj+MmYHaXCxx1xtVKTNW4bsdAmQ4yQn0EXIkTNC/pOGCcuoCWuONN+jByELbUksQn4mTh
+	w7ttJcYSPl45IJLoAbVpS4CYjjfWMesXfymupco+tyRhTrEerkc4yOFY3c3C3jI1VYWoRP
+	H2m6cCkocJhiS/y4yt93Ov5v5PFNozY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-tYE0V7fbMImPiH-ewnz63g-1; Tue,
- 06 Jan 2026 08:39:08 -0500
-X-MC-Unique: tYE0V7fbMImPiH-ewnz63g-1
-X-Mimecast-MFC-AGG-ID: tYE0V7fbMImPiH-ewnz63g_1767706747
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-307--aQgs27MOXSidvNkQQP4JQ-1; Tue,
+ 06 Jan 2026 08:39:46 -0500
+X-MC-Unique: -aQgs27MOXSidvNkQQP4JQ-1
+X-Mimecast-MFC-AGG-ID: -aQgs27MOXSidvNkQQP4JQ_1767706784
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E1F41800625;
-	Tue,  6 Jan 2026 13:39:07 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF8611800654;
+	Tue,  6 Jan 2026 13:39:43 +0000 (UTC)
 Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.89.23])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 23BD2180035A;
-	Tue,  6 Jan 2026 13:39:02 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AA0251800367;
+	Tue,  6 Jan 2026 13:39:39 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
 	Crystal Wood <crwood@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
 	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
 	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
 	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [PATCH v2 02/18] rtla: Use strdup() to simplify code
-Date: Tue,  6 Jan 2026 08:49:38 -0300
-Message-ID: <20260106133655.249887-3-wander@redhat.com>
+Subject: [PATCH v2 03/18] rtla: Introduce for_each_action() helper
+Date: Tue,  6 Jan 2026 08:49:39 -0300
+Message-ID: <20260106133655.249887-4-wander@redhat.com>
 In-Reply-To: <20260106133655.249887-1-wander@redhat.com>
 References: <20260106133655.249887-1-wander@redhat.com>
 Precedence: bulk
@@ -68,43 +68,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The actions_add_trace_output() and actions_add_shell() functions were
-using calloc() followed by strcpy() to allocate and copy a string.
-This can be simplified by using strdup(), which allocates memory and
-copies the string in a single step.
+The for loop to iterate over the list of actions is used in
+more than one place. To avoid code duplication and improve
+readability, introduce a for_each_action() helper macro.
 
-Replace the calloc() and strcpy() calls with strdup(), making the
-code more concise and readable.
+Replace the open-coded for loops with the new helper.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 ---
- tools/tracing/rtla/src/actions.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/tracing/rtla/src/actions.c | 6 ++++--
+ tools/tracing/rtla/src/actions.h | 5 +++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
-index ff7811e175930..090d514fe4126 100644
+index 090d514fe4126..a4d0dc47e6aa1 100644
 --- a/tools/tracing/rtla/src/actions.c
 +++ b/tools/tracing/rtla/src/actions.c
-@@ -69,8 +69,7 @@ actions_add_trace_output(struct actions *self, const char *trace_output)
+@@ -32,7 +32,9 @@ void
+ actions_destroy(struct actions *self)
+ {
+ 	/* Free any action-specific data */
+-	for (struct action *action = self->list; action < self->list + self->len; action++) {
++	struct action *action;
++
++	for_each_action(self, action) {
+ 		if (action->type == ACTION_SHELL)
+ 			free(action->command);
+ 		if (action->type == ACTION_TRACE_OUTPUT)
+@@ -217,7 +219,7 @@ actions_perform(struct actions *self)
+ 	int pid, retval;
+ 	const struct action *action;
  
- 	self->present[ACTION_TRACE_OUTPUT] = true;
- 	action->type = ACTION_TRACE_OUTPUT;
--	action->trace_output = calloc_fatal(strlen(trace_output) + 1, sizeof(char));
--	strcpy(action->trace_output, trace_output);
-+	action->trace_output = strdup_fatal(trace_output);
- }
+-	for (action = self->list; action < self->list + self->len; action++) {
++	for_each_action(self, action) {
+ 		switch (action->type) {
+ 		case ACTION_TRACE_OUTPUT:
+ 			retval = save_trace_to_file(self->trace_output_inst, action->trace_output);
+diff --git a/tools/tracing/rtla/src/actions.h b/tools/tracing/rtla/src/actions.h
+index fb366d6509b8b..034048682fefb 100644
+--- a/tools/tracing/rtla/src/actions.h
++++ b/tools/tracing/rtla/src/actions.h
+@@ -42,6 +42,11 @@ struct actions {
+ 	struct tracefs_instance *trace_output_inst;
+ };
  
- /*
-@@ -97,8 +96,7 @@ actions_add_shell(struct actions *self, const char *command)
- 
- 	self->present[ACTION_SHELL] = true;
- 	action->type = ACTION_SHELL;
--	action->command = calloc_fatal(strlen(command) + 1, sizeof(char));
--	strcpy(action->command, command);
-+	action->command = strdup_fatal(command);
- }
- 
- /*
++#define for_each_action(actions, action)			\
++	for ((action) = (actions)->list;			\
++	     (action) < (actions)->list + (actions)->len;	\
++	     (action)++)
++
+ void actions_init(struct actions *self);
+ void actions_destroy(struct actions *self);
+ void actions_add_trace_output(struct actions *self, const char *trace_output);
 -- 
 2.52.0
 
