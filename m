@@ -1,93 +1,85 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935652D1F6B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 02:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C80E2FFF9B;
+	Tue,  6 Jan 2026 06:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767666100; cv=none; b=QAWg1oSExjDN6Tbh4yVUExJsh84BeaPJPduWxgiuD0m9kTze3doXD4uIMkWK7jxIl63X4zOQEyrgVfjWNtqoOnxGLhMEo0m0SIE3UE2dmtE4oIY5ujYG/QcagXZTYItWfvecF0V9WzN1Lo25KeDjdqRhUZrPoKYU3HpJ2uP7/Hs=
+	t=1767679850; cv=none; b=MNZvP7/h2TW/UDqTduKOlKocPmcS/oYkmtU/PBJOShZuzdsYAwCAZWbsVJd/cM3Ur9CKtV+YqesblA4/m6+vW8M4zidlHp9fMPqg/tC0c9NIsq/PKTjLdARqvlMJPS/m1qSGqe8nL04JvTzH6D5KMyRuNy/hE+G/UHwmjtxm1iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767666100; c=relaxed/simple;
-	bh=9wCgZGW7nxl/c5vpeAOnnkhs8zBWIJYUg7JcxkxuwD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d0RNLOBaTPbIVzXwA6v6zbLZCno8b2nrfsmm1Ro9y4srr22Sn2jfEHyOM8c76RCbaaV/WCSImnrIQKLPzrmVIDoY2BeT8U4Z4qiiSW5RElP2GGBFxB4EDVYLBL3NXN37CfatQO7CbZQg7f4hN//lujib+HYR1gSLpJRJDqZY1ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 329EEC1879;
-	Tue,  6 Jan 2026 02:21:36 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 6939830;
-	Tue,  6 Jan 2026 02:21:34 +0000 (UTC)
-Date: Mon, 5 Jan 2026 21:21:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Ballasi <tballasi@linux.microsoft.com>, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH v3 0/2] mm: vmscan: add PID and cgroup ID to vmscan
- tracepoints
-Message-ID: <20260105212157.503db606@gandalf.local.home>
-In-Reply-To: <20260105180640.2072c151c9f1f56458cb2dd2@linux-foundation.org>
-References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
-	<20260105160423.23708-1-tballasi@linux.microsoft.com>
-	<20260105180640.2072c151c9f1f56458cb2dd2@linux-foundation.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767679850; c=relaxed/simple;
+	bh=yDnqfx7Xtpqg/kBnR5uF+gu4LSY2j5dxsPSmxheg0/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t85ewUGtWcLa6i1WTSQjwRVVR8K5ZOv6qyweUXQws34q0S5LlJuFivu2K14deSklQxzIPC06uHa3kovOexBPUgK1HTGNvgHT5BkTt2az+SQBlYjcrte4bTUoDJ3W0nJvk4N0t/ZGBh/ERUX2N0N64KHU4PRMOHCS0EpIuIdxet4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ipWsFnd+; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ipWsFnd+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=/0GUmICIrAvBdSBnhOk5as4wAwpoKO0AzhZXINqW1zU=; b=ipWsFnd+o90CBmcfFlq2NhJgv5
+	wi/5IKUTMVpIQpZWYn94CEhPyyJauFMlnFi7kaqTdjPDNINCp3Q4S/h4sKDdHpQ2cfcm4c5ZS5YGu
+	vwO+s3IjkCjQHbZqmYvmxKbB1YrK9Xd5Kk8ZdAqtIragDrBeUwHcdZIZ4CA4ZiLcRo1dTiBSwa12v
+	IfHuY+IXRCisvFMbqgRsLpA+7unVWn8ck28QftCNpE1h6N94yGlvY2JiXGEy7IzdGk7VnM1nPd9+H
+	mDA51StgIssSPbJmayEB4psIa+EoWu56++GvdF84lv2bv8xg1QxHDvHRasDqI02xK4CdUxqmo5nZf
+	F/Z9Vjqg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vd0HA-0000000CST1-10q4;
+	Tue, 06 Jan 2026 06:10:41 +0000
+Message-ID: <95feb439-2298-4539-8833-e05ed06f273b@infradead.org>
+Date: Mon, 5 Jan 2026 22:10:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 PATCH 2/2] tracing: Add show_event_triggers to expose active
+ event triggers
+To: Aaron Tomlin <atomlin@atomlin.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+ corbet@lwn.net
+Cc: neelx@suse.com, sean@ashe.io, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260105142939.2655342-1-atomlin@atomlin.com>
+ <20260105142939.2655342-3-atomlin@atomlin.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260105142939.2655342-3-atomlin@atomlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: a6jckkp7odd3h8kkgnary3opzd6shgtg
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 6939830
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Ras5liyNeNz5fAhJE8zcGxrgBhR/tU1Y=
-X-HE-Tag: 1767666094-528518
-X-HE-Meta: U2FsdGVkX19LJ3kgQO6B3sHlGOz1ndXlzIrbk28EcFCTzPW8dESrGl1l7tnYBNlXRKMILkXGAhR2hscB+zmT+O7D8yyVVaJlOOdr76FF3H8Y1ChSJEsEogYVE+44mdpz5Byk8MeefL/ygMmQVB+1GjKJxg+yudF1q4zSs5Zt/sc4sMCBHVpeAVRid+6TqPfzLZ1CEFN/xLeu3wgsbAk2ekwSA4YkeUD8rN3Q2MIMZrSgHUA1swNiFQ6kg8cVs4VTnoMPfracbND0M/r8x3BQInCjgyvMxuIB59OWy4KsbTlaOlIKe+5GhrM6Gd6dkljuQ7HihROblc+VXAvvrZg/wMMM99qy7ZPGCdIp9VzgLmWcyG6gQU4wafLNoT6KxF/rvncM7GLPnIZzTKzgc8sC0H5jUqieDWO9oWi1FcE07Ss=
 
-On Mon, 5 Jan 2026 18:06:40 -0800
-Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi,
 
-> On Mon,  5 Jan 2026 08:04:21 -0800 Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
-> 
-> > Changes in v3:
-> > - Swapped multiple field entries to prevent a hole in the ring buffer
-> > - Replaced in_task() with __event_in_irq
-> > - Replaced mem_cgroup_id(memcg) with cgroup_id(memcg->css.cgroup)
-> > - Rebased the tree to latest 6.18  
-> 
-> x86_64 allmodconfig;
-> 
-> 
-> In file included from ./include/trace/define_trace.h:132,
->                  from ./include/trace/events/vmscan.h:569,
->                  from mm/vmscan.c:73:
-> ./include/trace/events/vmscan.h: In function 'trace_raw_output_mm_vmscan_direct_reclaim_begin_template':
-> ./include/trace/events/vmscan.h:140:17: error: implicit declaration of function '__event_in_irq' [-Wimplicit-function-declaration]
->   140 | +               __event_in_irq() ? "(in-irq)" : "")
->       |                 ^~~~~~~~~~~~~~
-> ./include/trace/trace_events.h:219:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
->   219 |         trace_event_printf(iter, print);                                \
->       |                                  ^~~~~
-> ./include/trace/events/vmscan.h:135:9: note: in expansion of macro 'TP_printk'
->   135 |         TP_printk("order=%d gfp_flags=%s pid=%d memcg_id=%u %s",
->       |         ^~~~~~~~~
-> make[3]: *** [scripts/Makefile.build:287: mm/vmscan.o] Error 1
-> make[2]: *** [scripts/Makefile.build:556: mm] Error 2
-> make[1]: *** [/usr/src/25/Makefile:2054: .] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
+On 1/5/26 6:29 AM, Aaron Tomlin wrote:
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index 4ce01e726b09..b9efb148a5c2 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -692,6 +692,14 @@ of ftrace. Here is a list of some of the key files:
+>  
+>  	See events.rst for more information.
+>  
+> +  show_event_triggers:
+> +
+> +	A list of events that have triggers. This shows the
+> +	system/event pair along with the trigger that is attached to
+> +	the event.
+> +
+> +	See events.rst for more information.
+> +
 
-This is dependent on my patch:
+Isn't this the same chunk that was in patch 1/2?
 
-  https://lore.kernel.org/all/20251229163515.3d1b0bba@gandalf.local.home/
+>    available_events:
+>  
+>  	A list of events that can be enabled in tracing.
 
-Where I said you can take this patch. But I don't see it as part of the
-series.
-
-  https://lore.kernel.org/all/20251229163634.5aad205d@gandalf.local.home/
-
--- Steve
+-- 
+~Randy
 
