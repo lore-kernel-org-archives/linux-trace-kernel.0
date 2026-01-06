@@ -1,156 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5052933123D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 13:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081EE3358A9
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 14:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767707347; cv=none; b=H1EvdPDrklDFSIjM8mWlSUC9DXhX9IxXUKdu2vqwG3SC0U9K0UjiqC/iveBzlgqe5zRVhIpQqf6WDr3NAjJrqy5crKbcvq9ZkVIWA3Jp/Smm0j5dAEZp00CEU45xQbQv436ziEoxchXryHfcwIjvq6E67DISQom1HzvPoeS9Uz8=
+	t=1767708342; cv=none; b=RNl5xLdaH7NzfgcTF8jdub9KV7SyGiocOyUmUDPBQxcMgokwV5uruf0sc4Z8EOTZ8kzkfD4IGoi/GByLDTxpp0UjDafgb+vLYD/xxI6uIDlM+ICuq6JytMhsP+yFcD73WzTNWMt4njqeplfQD3sMBzH3H0vOiYa5qxnMfXTFgys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767707347; c=relaxed/simple;
-	bh=khr4HXouOlKmupfOwr1RNYMaHRidP4N+XAnyKcMrmB4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DoCMM+fvpxxtC62cKuq8noEKQzHZsA5qTrPUMl/v8BwPlnkCUqGaz5NUS9MOybe5/ViFRWoq0V6Ovf/zVHJp/cUOdGQ8JPKBxq7RMopoSNhNeOfsW7T0BaR3CjibXDvwVGsVbzYR6T8evirt5Yy1f4IC9aAhbB2mNDmJTii9wqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRkVaQ5x; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRkVaQ5x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767707344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Km5rA7vjuSWs0NIc9MqaKbnKolitv5jNiI4g81bW+B4=;
-	b=HRkVaQ5x0B9gKTD1XZDuPEzh3j0F6Hd1XpvylHGRqbcs9ypKOF3LM0A0b4NEz68Ov0rsDN
-	/5zhX4hFNcrFDOpY5QcOlPzIuHlLzw9RcWvBLLuCxPC/tLxSZibbJfwwXO+p+zAK90yvEx
-	0ZP5Ng8yh+tGsGX0gERtdOJPOBvdGz0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-ES6CsnRGPX2AIcy5TtcRvw-1; Tue,
- 06 Jan 2026 08:49:03 -0500
-X-MC-Unique: ES6CsnRGPX2AIcy5TtcRvw-1
-X-Mimecast-MFC-AGG-ID: ES6CsnRGPX2AIcy5TtcRvw_1767707342
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 083B81801207;
-	Tue,  6 Jan 2026 13:49:02 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.89.23])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9A3181800576;
-	Tue,  6 Jan 2026 13:48:57 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [PATCH v2 18/18] rtla: Simplify code by caching string lengths
-Date: Tue,  6 Jan 2026 08:49:54 -0300
-Message-ID: <20260106133655.249887-19-wander@redhat.com>
-In-Reply-To: <20260106133655.249887-1-wander@redhat.com>
-References: <20260106133655.249887-1-wander@redhat.com>
+	s=arc-20240116; t=1767708342; c=relaxed/simple;
+	bh=jn+4SpWXKb7N3/U9AAui93xy+20kHsX2m1NThTyiOfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcD4e6WjKVrDRGkMSK1Q+08FpS7/+W1jTUS3qlt8rpiNJMrwEC+hS7At3quT57pxqfHAAx/boGEVyW+qr3hfNbkHJ6Mud8ZvWamJqnDwkO/5fiunG76eOZLZMLdd/1wao91egYn7YyVa3B2fGgPA/h79Jl6iMtVbD/wzrBNYM1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7c6dbdaced8so800782a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 06:05:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767708340; x=1768313140;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tu154TMX/+mXm3su25sIKI5TQFzYMOjfJ7G1hsxByO0=;
+        b=qUPNyW2cfeNluq8GyPNKggmi2wyPASiQ6Soz5r/00r8y1pNJo5iDjY6jP0aKK3TjVg
+         N2mp7/OB35pVC7yXHnFw/nTtsw8Q+8+MJbtIcuSB+1Xw5QROIImCiwPYMheJ6191uDm7
+         uTjFbnFtuj8dQ4gKj8J1QVpHT0jHra8kmU31VJse5OYR00syKBa3LjTfgQ5/evIa44zC
+         8GonxsNBp5gqDWRc9uMWl7mKqwYwzLUI/C6ZBk8QscD2EAHbAp72uM7nbvy1ibTftVc1
+         ekou0LfZmqRsxALpGJkX+1EtkNf84kH9L1fz5jtBEyuKdl+zXAfOgBdbyPHAhSU+zM1U
+         JPQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTznwKkVVsH/qND6g1HseSQDYxzwfx+uz4RVGVKiZC3uvQRaA2XxHxswrf3lsoCVSOOSDKsGOXvg8zOeU7uOux3+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGFJM+4AhRoG6U3QvzfiYPnT1Y23jMwvfXwrf/bc0cu9FOXL/h
+	2tm+b7u61c+U+eww38N1CCoE7NhXLkRwIV5fA3++n74dR1B7ssrEeu5W
+X-Gm-Gg: AY/fxX5D2Rh3Ao5KxGNLpGhLSCXdvifTIxqs1WC5H2q3KgK4hB6F2Dzqk+6uWW3zJdk
+	go4n1X8Zh9t2dwrAKWQQZL6kl5l4BhJPgudghkVrAOD7ixIdClMjIdqEYUZfnDHHSqMq8YYxKky
+	Et8T2A9LazguUwyjxck/0p7i+78Gu1IsI7eGNUrsHbv4ZedCvAJvpwXffnc3t6pK2eiUc6t+70F
+	twTNbX3Z3ZiH1OALQM/4OxacpWd/CRWQnzKP/95XFtDBDXHsYsPE2WD/zjqq/IrR+ZAmWo3ajG8
+	4+EBCwVxkXY83fGyM2sBYkNfwTGhbd5XrMr34JpjRzQAAYvpz/TWbEYr5DwCSxpqjy4aQKNw8nh
+	Wq84TS2f6M9UrgLTr8xkbalLswjFwp1u878N10swnGN3yCSxBqR766PrMAZX62b82tbY/Hl+N+i
+	9yV++0hpcZ9L2GDw==
+X-Google-Smtp-Source: AGHT+IFAyCOognsDglACCwRtgGmfQBOzfISqmFQxoBN8Ni16ip7RMf//hSvC9Q3nMRwn6KHPU/PCow==
+X-Received: by 2002:a05:6830:439e:b0:7c7:827f:872b with SMTP id 46e09a7af769-7ce46767c8fmr2483407a34.37.1767708339811;
+        Tue, 06 Jan 2026 06:05:39 -0800 (PST)
+Received: from gmail.com ([2a03:2880:10ff:54::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce47832780sm1459846a34.12.2026.01.06.06.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 06:05:39 -0800 (PST)
+Date: Tue, 6 Jan 2026 06:05:37 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Laura Abbott <labbott@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, kernel-team@meta.com, 
+	puranjay@kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
+Message-ID: <tj43kozcibuidfzoqzrvk6gsxylddfpyftkdiy7xb2zm7yncx5@z33xu7tavuts>
+References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
+ <aVz-NHMG7rSJ9u1N@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVz-NHMG7rSJ9u1N@J2N7QTR9R3>
 
-Simplify trace_event_save_hist() and set_comm_cgroup() by computing
-string lengths once and storing them in local variables, rather than
-calling strlen() multiple times on the same unchanged strings. This
-makes the code clearer by eliminating redundant function calls and
-improving readability.
+On Tue, Jan 06, 2026 at 12:21:47PM +0000, Mark Rutland wrote:
+> On Tue, Jan 06, 2026 at 02:16:35AM -0800, Breno Leitao wrote:
+> > The arm64 kernel doesn't boot with annotated branches
+> > (PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
+> > 
+> > Bisecting it, I found that disabling branch profiling in arch/arm64/mm
+> > solved the problem. Narrowing down a bit further, I found that
+> > physaddr.c is the file that needs to have branch profiling disabled to
+> > get the machine to boot.
+> > 
+> > I suspect that it might invoke some ftrace helper very early in the boot
+> > process and ftrace is still not enabled(!?).
+> > 
+> > Rather than playing whack-a-mole with individual files, disable branch
+> > profiling for the entire arch/arm64 tree, similar to what x86 already
+> > does in arch/x86/Kbuild.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: ec6d06efb0bac ("arm64: Add support for CONFIG_DEBUG_VIRTUAL")
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> I don't think ec6d06efb0bac is to blame here, and CONFIG_DEBUG_VIRTUAL
+> is unsound in a number of places, so I'd prefer to remove that Fixes tag
+> and backport this for all stable trees.
 
-In trace_event_save_hist(), the write loop previously called strlen()
-on the hist buffer twice per iteration for both the size calculation
-and loop condition. Store the length in hist_len before entering the
-loop. In set_comm_cgroup(), strlen() was called on cgroup_path up to
-three times in succession. Store the result in cg_path_len to use in
-both the offset calculation and size parameter for subsequent append
-operations.
+That is fair, thanks for the review.
 
-This simplification makes the code easier to read and maintain without
-changing program behavior.
+Should I submit a new version without the fixes tag, or, do you guys do
+it while merging the patch?
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
----
- tools/tracing/rtla/src/trace.c |  6 ++++--
- tools/tracing/rtla/src/utils.c | 11 +++++++----
- 2 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trace.c
-index 092fcab77dc4c..223ab97e50aed 100644
---- a/tools/tracing/rtla/src/trace.c
-+++ b/tools/tracing/rtla/src/trace.c
-@@ -346,6 +346,7 @@ static void trace_event_save_hist(struct trace_instance *instance,
- 	mode_t mode = 0644;
- 	char path[MAX_PATH];
- 	char *hist;
-+	size_t hist_len;
- 
- 	if (!tevent)
- 		return;
-@@ -376,9 +377,10 @@ static void trace_event_save_hist(struct trace_instance *instance,
- 	}
- 
- 	index = 0;
-+	hist_len = strlen(hist);
- 	do {
--		index += write(out_fd, &hist[index], strlen(hist) - index);
--	} while (index < strlen(hist));
-+		index += write(out_fd, &hist[index], hist_len - index);
-+	} while (index < hist_len);
- 
- 	free(hist);
- out_close:
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 4093030e446ab..aee7f02b1e9b4 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -870,6 +870,7 @@ int set_comm_cgroup(const char *comm_prefix, const char *cgroup)
- 	DIR *procfs;
- 	int retval;
- 	int cg_fd;
-+	size_t cg_path_len;
- 
- 	if (strlen(comm_prefix) >= MAX_PATH) {
- 		err_msg("Command prefix is too long: %d < strlen(%s)\n",
-@@ -883,16 +884,18 @@ int set_comm_cgroup(const char *comm_prefix, const char *cgroup)
- 		return 0;
- 	}
- 
-+	cg_path_len = strlen(cgroup_path);
-+
- 	if (!cgroup) {
--		retval = get_self_cgroup(&cgroup_path[strlen(cgroup_path)],
--				sizeof(cgroup_path) - strlen(cgroup_path));
-+		retval = get_self_cgroup(&cgroup_path[cg_path_len],
-+				sizeof(cgroup_path) - cg_path_len);
- 		if (!retval) {
- 			err_msg("Did not find self cgroup\n");
- 			return 0;
- 		}
- 	} else {
--		snprintf(&cgroup_path[strlen(cgroup_path)],
--				sizeof(cgroup_path) - strlen(cgroup_path), "%s/", cgroup);
-+		snprintf(&cgroup_path[cg_path_len],
-+				sizeof(cgroup_path) - cg_path_len, "%s/", cgroup);
- 	}
- 
- 	snprintf(cgroup_procs, MAX_PATH, "%s/cgroup.procs", cgroup_path);
--- 
-2.52.0
-
+thanks
+--breno
