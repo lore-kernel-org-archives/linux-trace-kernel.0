@@ -1,37 +1,34 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6772024679C;
-	Tue,  6 Jan 2026 23:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506E125FA10;
+	Tue,  6 Jan 2026 23:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767742676; cv=none; b=FW9vdBaCBumPyRPWobhCS3EYSIOy8h7sSFrRf2Axgt1AdtpI/DMmxVUonXHK3w1Bnb+LhxFiatQ8rmZ1pCZogvyyZOy+Rmdhjn4ig3c9qc0HOr41lwd/EMAyFgY7Z9u6rGHQnyblqFLGGlE0+pzA77hBNxAhrbnq56qGtRQlf90=
+	t=1767742872; cv=none; b=i8AD7qpuS4Mu6Bycsn/kY64biR3eN1WyzpljPyD3tkZSFFtPcjmKrKW3+0ADDCZHKOM8DMKhMsIL2NY7Wtc88VvGEg+kAIK7DCVuBCFbCpto/JbxdH8f/J0lBlRb2X0sfjNcIoC3BIqLb26Xvyy7wENPWgIKn1/vpDz6+LmTGh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767742676; c=relaxed/simple;
-	bh=Ao6gSWts5YeN7bKSpvaqV4kYXRslwZ3KmaFiyNJKHWk=;
+	s=arc-20240116; t=1767742872; c=relaxed/simple;
+	bh=bq9O43pH0l347A80OPXrPoMh9DHD+pF0xB3+faFQ3wQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J+q31UqKewuT19/I7EmJSn/T3UyNTZJhLKkjixpdao5bRUF6bqHdBqlNkaohnOpvDbkl5ZMF+WNvgquInzzxC/qAVwLbVWCC7FZJDjwNlFhBG7D+b9uaskfu7fANAFAjzzBU3eevV4fdyPWRx7AmxyeuDDbWki10+yrQ1ibQxRc=
+	 MIME-Version:Content-Type; b=YQvug30Cywzm65oXef2ovhHLnpJmHbIbNquneg4CkmGDim0YcCdeo3Am3aGONVQi0qkx7X9/niGkafuzTrulzAQWGvzS1RHK2SOnTkL85qbaAC/MTh8GUK6gRE/EPcc/gFNpaQbaEKzmvTaItTenKaSlQjpAS3+symYwsCPdfrQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id D637FC46EE;
-	Tue,  6 Jan 2026 23:37:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 11F5220011;
-	Tue,  6 Jan 2026 23:37:50 +0000 (UTC)
-Date: Tue, 6 Jan 2026 18:38:15 -0500
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 160B91AD62F;
+	Tue,  6 Jan 2026 23:41:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5A1FE2002D;
+	Tue,  6 Jan 2026 23:41:07 +0000 (UTC)
+Date: Tue, 6 Jan 2026 18:41:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Do not over-allocate ftrace memory
-Message-ID: <20260106183815.33fa41f9@gandalf.local.home>
-In-Reply-To: <0a9cd12e-6db8-4b41-979e-95f06e9390f6@roeck-us.net>
-References: <20260106203533.2896197-1-linux@roeck-us.net>
-	<20260106161844.02ab387f@gandalf.local.home>
-	<dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
-	<0a9cd12e-6db8-4b41-979e-95f06e9390f6@roeck-us.net>
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH] trace: ftrace_dump_on_oops[] is not exported, make it
+ static
+Message-ID: <20260106184132.23a73aca@gandalf.local.home>
+In-Reply-To: <20260106231054.84270-1-ben.dooks@codethink.co.uk>
+References: <20260106231054.84270-1-ben.dooks@codethink.co.uk>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,73 +38,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 11F5220011
-X-Stat-Signature: pzegrh3hjcxqh6fjcm6b59t7eb3xzpju
+X-Stat-Signature: 4in3nuujfpf58hz69dr9wnz5zdet4qqg
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5A1FE2002D
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX183DHvSZFmqlzRw3T43cNxiqhNbq8eZuCs=
-X-HE-Tag: 1767742670-463286
-X-HE-Meta: U2FsdGVkX18QPejJGtt/j/0Y1+XiFr87WMzBwSzqDv0ev+vNSx74yGMhn2+BScLMiPvA0KzqXcNT16GxVtTOK+tVN8AdvqGP1AbkiXJJQVU45zzBjh4Gq6kfDia192BTxhfCvvHURQtAz5FkWn+4SNyYmp9LyzY8decE/0D2IbrTVnXT7KbdZuS2r+UGT+UqHrRHAvLEByrUmEdwulKvTbi4ZdAfbRCcIkPywCn1rlIK8veQts1Pts8Wuw1iHRO+FrekW8ZVXpKDP5iV7FlnjAkZiMdz7jeZ9dPiO4dA2nEeQUOL6bIoJLK6hcxw/+TaJvT32iab9n2sBwp/ogAcWZrlEVPXUIkDREKrk+KiLaQ3gqEEgnWoSLM1kTdrN6aS
+X-Session-ID: U2FsdGVkX19Tf/H/JtAzBxDKBBhqwd9qAS7fQ8fYmIA=
+X-HE-Tag: 1767742867-617401
+X-HE-Meta: U2FsdGVkX1/gF3aRFKaztAfWxv/V2eygF/iV2tW86ZVc97D6+qu6BPpMidFE7/oOuUzsijdcM+Jb1o5mM46zis4zgyDl6WU+EJm4g702YRbeNTnUGOzybeXGMXBMlyY1t3eqFWzc1D/1SblIC3EuNVrtsVQWITmXFOgCb6KrtaGyvolEx8W7QuZ8BrVIPPNxUZlYJMn/jnPH1QngUAwT9/0ftAihwtJb9EAoCr5tQglaefqvYsczgX8Ftcs3fa5e/9ZUkwPhWnZLH3pI9oFZ5MO7kvcmz6QznF+77v/j2ZeaRD5H8+urnnuh/oA+YXpQHCSGUXHEtPbLyXbytQR9gzNfIMnsn07WQu5iIPqYJMYa+cHgp+wThDW5D9fqeXgo
 
-On Tue, 6 Jan 2026 15:05:25 -0800
-Guenter Roeck <linux@roeck-us.net> wrote:
+On Tue,  6 Jan 2026 23:10:54 +0000
+Ben Dooks <ben.dooks@codethink.co.uk> wrote:
 
-> > > 	/*
-> > > 	 * Use ftrace_number_of_pages to determine how many pages were
-> > > 	 * allocated
-> > > 	 */
-> > > 	pages = ftrace_number_of_pages;
-> > > 
-> > > 	start_pg = ftrace_allocate_pages(count);
-> > > 	if (!start_pg)
-> > > 		return -ENOMEM;
-> > > 
-> > > 	/* ftrace_allocate_pages() increments ftrace_number_of_pages */
-> > > 	pages = ftrace_number_of_pages - pages;
-> > >   
-> > 
-> > That might work, assuming that the code updating ftrace_number_of_pages
-> > is (mutex) protected. I don't immediately see that, and the
-> > "mutex_lock(&ftrace_lock);" right after the above code makes me a bit
-> > concerned.
-> >   
+> The ftrace_dump_on_oops string is not used outside of trace.c so
+> make it static to avoid the export warning from sparse:
 > 
-> One way to avoid the locking problem without potentially risky code changes
-> would be to pass a pointer to pages to ftrace_allocate_pages() and to
-> ftrace_allocate_records(), and to update it from there. I tested that and
-> confirmed that it works.
+> kernel/trace/trace.c:141:6: warning: symbol 'ftrace_dump_on_oops' was not declared. Should it be static?
+> 
 
-I was originally going to suggest that, but when looking at the code, I
-noticed that these variables could be useful. They are only updated on boot
-up, module load, module unload and when module memory is freed.
+This could probably have:
 
-But looking into the module code, these updates are done outside of the
-module_mutex. This means these values need to be converted to atomics as
-they are updated without any protection.
+Fixes: dd293df6395a2 ("tracing: Move trace sysctls into trace.c")
 
-Yeah, better to just get the value from passing in a parameter to both
-ftrace_allocate_pages() and to ftrace_allocate_records().
-
-Something like:
-
-	unsigend long pages = 0;
-
-	[..]
-	start_pg = ftrace_allocate_pages(count, &pages);
-
-[..]
-	ftrace_allocate_pages(unsigned long num_to_init, unsigned long *num_pages) {
-		[..]
-			cnt = ftrace_allocate_records(pg, num_to_init, num_pages);
-
-And have ftrace_allocte_records() have:
-
-	pages = 1 << order;
-	*num_pages += pages;
-	ftrace_number_of_pages += pages;
-
-And I'll add another patch on top of this to make the variables atomic.
-
-Thanks,
+as that was the commit to move the usage of that variable back into the
+defining file.
 
 -- Steve
+
+
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+>  kernel/trace/trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 6f2148df14d9..5c196ea93768 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -138,7 +138,7 @@ cpumask_var_t __read_mostly	tracing_buffer_mask;
+>   * by commas.
+>   */
+>  /* Set to string format zero to disable by default */
+> -char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
+> +static char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
+>  
+>  /* When set, tracing will stop when a WARN*() is hit */
+>  static int __disable_trace_on_warning;
+
