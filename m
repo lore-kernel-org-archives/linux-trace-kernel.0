@@ -1,176 +1,136 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com [209.85.210.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EC430C36E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 09:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B410D31E0EF
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 10:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767690654; cv=none; b=lzwbZPCGhHyaaVNikbtfG4dvxWE0UmU5SuIiz240KA5Vl92RcyU8h8/kYoH15Sf1M1tCYzBDf0hVQit0wptzaKW9/YFUG9eEHQm1PChdTAYylkNqBNoA/bvXC+cGnwByCaLlPj9X0eYUieAwJ+h/zCU5vbnY3k2ykoan1iEyTX0=
+	t=1767694612; cv=none; b=i5QMwSDClPr496wnRWjkMVbJ45k5Or11cMBzHNzpO8eabtE9EFc7Rb2UrXr0m8o37yIwVZyUk+EBZJKV+dGN0eDM+RMDdDst0ooO4b//ol2w5mYEW6SBcCJwNeO4cg+W6iGXhEEuXO4uQONnCPez+8JhR8QEXstkT0Vfguemx0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767690654; c=relaxed/simple;
-	bh=/YCcFx9fK4X6vkZb2r65rdSswmVUHKmtCmFNEnHBgpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OD+yJERpQUOhaHTPue0pfRfitBITBoaoDkwEdUyqDgX+opFmDT7DheRVXourJYr+W7GFOJGynSWEOFtO//8CkQrLOT6WMyXwPF2yZXJw6tGNrkbEqLcyY0JoImq+7rYxO3/a9AxaFpg4BP/hlFT0QftvIf8AXTkuMYPUOTaabs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b1OHgoBK; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b1OHgoBK"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4779cd413b4so796545e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 01:10:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1767690651; x=1768295451; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pq+ApTTyCsVEAV3Mh5mFQtTRHKhX3x1YwcZ2qcrzmns=;
-        b=b1OHgoBKvUtNlCidH/Sa/UxG+SvyNuBhxliL92vJHmHVuurBwb2KfMW+bdyCdMjrTU
-         bpRBrK0rI6coepCZ+3X6hzmHx053NRscoy0nX8icy6HD9KLOo59WGhGlzq7hnbLa9WRP
-         XFs6YtepugPlL//s9loX0pzQrp7ywSb/KUhmdPFhBRK7VE349q9i9pXF20wQJnFTlFox
-         7QGatOcxuj4vpnAONBLbWnoz+4turMAAFm4sjqO8XnVYE340dkc3SGpPeTBKq9H60NH4
-         Zaqo48v5uc8SxMn8U/vzmnsrWRvch6YfgkPo9P+aojJ8YQK+XyUW+9XZNH/l8z7bZ/dv
-         q70Q==
+	s=arc-20240116; t=1767694612; c=relaxed/simple;
+	bh=R0brKy11lWk9rG1Hszq3cr5excGuzAybyASfH2xcz9g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aT1E1AiH0SLNQBfqSVLiAmC18QPbZpXdpCHlNT4U3wI9MoZaxzRe+d/zKoT5W5eGOF5wkhzomzx4abt/Y80h07g9Pk2rQ3Xxkw6bAtPq2wsRC9dTtgAeseegNGaut/9RARcu46lck85IGRCOpAzv5c8bSHVNLQOjCn1uKWni8Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f68.google.com with SMTP id 46e09a7af769-7c6cc366884so493294a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 02:16:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767690651; x=1768295451;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1767694608; x=1768299408;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Pq+ApTTyCsVEAV3Mh5mFQtTRHKhX3x1YwcZ2qcrzmns=;
-        b=oSVBB6XMxhL11PTYdQIR+xlN0VChxjT5RDIXuaCVU6Yf6WMLOtnAEwT1sLGgYqiX09
-         iA8IErSBymmSzvVKuFnsw8IlK+4NYRpAVBGiZor2pLSomgjJPhLbukPtHFptxLIAg1Fe
-         E3c4j69B/xM8pvVlDwIDZKpHA+FCkZG4rzGqin9wCxNYVboCwPNUeGz9tMJefdPCy+P1
-         5DEMl7W92E3YN53zbzTsMuvvclQXbpQJb9Bu0Ow/cHgaSxkhl4gPFPjrysnOzInZhROe
-         MSyVWxEKoEYf9fClwtcmEEOG5SjRqvTgchWgfJTJnwMCr/hDm1X+BI1u4rcE0S7M/Hh+
-         0uig==
-X-Forwarded-Encrypted: i=1; AJvYcCWncBCi+gq1pHm2DYXcSP2WZrgO/Zmfs4Dg/+KkLHr4H1S1LGVJ4zUyHfkCHaiLlC3/E7wq8uMHsaWQtfrrHcyoWIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9JrhFJdSgji1Jl/vKL2jXrKBav4WnjIkFYMcfZuuU5TmPHYGG
-	TkgpaVNnUwqVEFq70bZb2sn2Wg3BiqEgIfAngaPraFzFTyLUpg6n6m6V79n7z8l7DNU=
-X-Gm-Gg: AY/fxX5qtxXynogUD7dwl4iuPZl67crgV7URRSNueTWgUQmpS0HiEr5PSPN0PoEBV8D
-	pL/4JK143bvUDF1VQMdjVLpSFEcL3uh0cW3KlYqmph//NvGEMqmQXr1KE+mWiNVx1fqFwi0DW/7
-	NI0Q4usVucoF9YiVD+8IfO0WLjLJTKe4gTRJ95p+e6Eg+V12TYH++D+i+h/0/9ug0tkhdwPcs5Q
-	nyWchbw92Xo/Flm2aSyL+NRLRDZAJWACE0TkrIyX4WrwE2oKiKRBuXuc0oCQGVDXKRB/gB8qQ3v
-	tadY8c0AhojxuL4gkW942eef4amrmuWhhPy8dz8bD7ftEfOs6sS5edka6iOiTwwFh+0oOiBRCSU
-	7WlbDvPlN0ougFe/SdSdboYRQMjJbqknuSED2HRApu3yjdhVa5fdfElXpYhSemw8bFggAiuL+Jc
-	5SG87b6OiX7R51auVKwui/nzWZcPlzibDr
-X-Google-Smtp-Source: AGHT+IHcR0555ohsRlawXEi+d03mZxbXk81vFyB7IVZMXoTi2fYsuDrx0nGHYaHbE3bLvtvjD41pxQ==
-X-Received: by 2002:a05:600c:4753:b0:477:9dd9:ac57 with SMTP id 5b1f17b1804b1-47d7f01502cmr13171025e9.0.1767690651096;
-        Tue, 06 Jan 2026 01:10:51 -0800 (PST)
-Received: from localhost (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f653c78sm33651745e9.11.2026.01.06.01.10.50
+        bh=uNNcUB7lgyIwf3R57Px+ObUOuuqMHsgwS/LskqhZlIo=;
+        b=gl3a990HVmCevcTIemXzcoU7wjz1a/Q6QxMTS1DVxQfsz+S4gpENcKF5beGycvDHZ6
+         t5Zp8MgsglWDbeR4/QgDY+pzI8xFDSeZD8jodZ86FjFDBL97JynuBsnzXaNKkrHuzIJz
+         QQHj1Hc+sozxUg+41t+ghWw4iKJx/dc25vjiuk3lfnaowIFx56t8wUdpR1Wx4F0QbLEN
+         LArGR70l/M5yx3fppQh7lre+xORxqKdMTDthF2Dci0GfILF1tIkIgrHR2ibSnBdxOT7w
+         wv5LHdSaaj6xY66PclLcVGQo8wAcXyHqsJjkWAAVB9fP0AvzXsf1eHGZqSJb1gkdkGSm
+         Lf8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVqPHDt7R/+jmOCfpT2Ybk/lvjGd2XGngli6beEFaCTV0NGC2X1Mr+fWgQvJfZ98ke7zoWfFzraDgZFfiNBGeR+xlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEw7LLyQEeob8X96gm3atHem7BBd7/u5hjHzMDUv+1o6Peibmt
+	X+O61UXH0fbbww0FfCgyviaItG+qdorDhCfNgktKCAVe7i+DhnDoc5jG
+X-Gm-Gg: AY/fxX7ScKLTmUuZh0Q3HMnuqkFl5ksJduxITAl9krZkUIQJA425DvHfbRnVyy4084o
+	arvCLGamZAH4OkKcv/v8zO7J7M4Pr2xbKwvJ+iaLX4cdxlVYMYSFCJbOyX65UL/6YLQ3p/zG6ZP
+	vbWShe0TgEA5Lza2nLWEmKPqpfBUTeiEw0qeSWSXTItqYFMFs1iuoz2oVJvJgnTy54NzsL1Il6m
+	HuRbUj8viqCpsex6+rGVD2OSPCWkce6YbY+4g/bJEUGTEbPqgTFsNTI1sLygwOz6tNs1G9NW+w4
+	nJLn8UtXEuhNMITuyMAkQed1UPQ0RPZjt8+u/jY7rr6sK+e1iIgvk/ah0b5jEpYM7xYTZqMB6+1
+	jIcWUl1RdvZxZ9fx5BYpeivfp1xUPfMg+zLaMGXZaVAXZrs3esBEUK4Gmqxd6zL8P6/WbP3Npn2
+	b5HvrppzH3bl97TQ==
+X-Google-Smtp-Source: AGHT+IHpik8hWyPXo+y5CoXoGZNP7a5BRxyJotM7yoa4j2oD5Z6LvXpzD97F1AyaKuGImA/76c6nUQ==
+X-Received: by 2002:a05:6830:314e:b0:7c7:b28:227c with SMTP id 46e09a7af769-7ce4663ba8dmr1405642a34.4.1767694607636;
+        Tue, 06 Jan 2026 02:16:47 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff:59::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce47832780sm1149346a34.12.2026.01.06.02.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 01:10:50 -0800 (PST)
-From: Petr Tesarik <ptesarik@suse.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
-Date: Tue,  6 Jan 2026 10:10:39 +0100
-Message-ID: <20260106091039.2012108-1-ptesarik@suse.com>
-X-Mailer: git-send-email 2.52.0
+        Tue, 06 Jan 2026 02:16:47 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 06 Jan 2026 02:16:35 -0800
+Subject: [PATCH v2] arm64: Disable branch profiling for all arm64 code
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
+X-B4-Tracking: v=1; b=H4sIAAPhXGkC/yXMwQqFIBAF0F8Z7jqhlAj8lWhhOtW0sFCLB9G/P
+ 6rl2ZwLmZNwhqULiU/JskVY0hXBLy7OrCTAEnSt20abRrkYt+IKB9W1gc1kjA/diIqwJ57k917
+ 98Dkf48q+PAHu+w/4tl4nbQAAAA==
+X-Change-ID: 20251231-annotated-75de3f33cd7b
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Laura Abbott <labbott@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, kernel-team@meta.com, 
+ puranjay@kernel.org, stable@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1627; i=leitao@debian.org;
+ h=from:subject:message-id; bh=R0brKy11lWk9rG1Hszq3cr5excGuzAybyASfH2xcz9g=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpXOEOE3XW9TBI5+gt0t62QrPhBcRn/qigH4pDn
+ 4gtfXOidi6JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaVzhDgAKCRA1o5Of/Hh3
+ bUDDD/9rIz9FUmTyftcZ2SiYxTdKVB+boYTZiBL/TZMurMwpO/5crdYad5bRGL5PnmNRnAeXZjf
+ 4bJExaoMmBMiuWAyvQvis+Kgdu+xYgXT0mYC9e+ofnCp05M+Yv5GS5f5vATolKFIjKTnu/Xl6cG
+ DPkerSX2xPxChN78jd88Nf/ckcBu3vOkDA4cAtYIRrpN/m3yM6qoukboZHnxNKVOoLV1FQHepcu
+ K5wMSl7Tl/DNZwbD/rvR1VKmO39xdu64RTE9kWrmZ9CQRY6OdsEsNhFeCrTTRO8ELUkVvKf1bVY
+ ImufebVYkB7WsBLoG8pQ9Nvnw1QknNczA8BbYtGKz0EboKTFJauoROuLtb3QLUaycljbGbK8y/W
+ tJUssGjN9WA24lPTVxmN3vmb9gv0/OqmVsrHwt0wF7UvJbUKTr0SqCSZrbXchU8kVyiGUw7K0Y4
+ oLR1uNKGJYHlOxO0fAJZH3QEW3JLiJ3kuN/pbIw5aKZi+WLDgZ37YiRQS66jDV26TfYKdP40ply
+ ERVMouE96PDsf9EjIYu4xRE1dyOhITnjRaPhNThdNXkgm54dBgEkQSx7LGlbeV7Us9pbVThNkV3
+ /9sSDLDoLxAVm6uTFXtDXG/F6GHzX11cLaNJCkS9QIXeLC4NLaACGOLvz2bDIEohjUxyUGPc0jr
+ Pp5K+kknoJuxX8Q==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Avoid running the wakeup irq_work on an isolated CPU. Since the wakeup can
-run on any CPU, let's pick a housekeeping CPU to do the job.
+The arm64 kernel doesn't boot with annotated branches
+(PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
 
-This change reduces additional noise when tracing isolated CPUs. For
-example, the following ipi_send_cpu stack trace was captured with
-nohz_full=2 on the isolated CPU:
+Bisecting it, I found that disabling branch profiling in arch/arm64/mm
+solved the problem. Narrowing down a bit further, I found that
+physaddr.c is the file that needs to have branch profiling disabled to
+get the machine to boot.
 
-          <idle>-0       [002] d.h4.  1255.379293: ipi_send_cpu: cpu=2 callsite=irq_work_queue+0x2d/0x50 callback=rb_wake_up_waiters+0x0/0x80
-          <idle>-0       [002] d.h4.  1255.379329: <stack trace>
- => trace_event_raw_event_ipi_send_cpu
- => __irq_work_queue_local
- => irq_work_queue
- => ring_buffer_unlock_commit
- => trace_buffer_unlock_commit_regs
- => trace_event_buffer_commit
- => trace_event_raw_event_x86_irq_vector
- => __sysvec_apic_timer_interrupt
- => sysvec_apic_timer_interrupt
- => asm_sysvec_apic_timer_interrupt
- => pv_native_safe_halt
- => default_idle
- => default_idle_call
- => do_idle
- => cpu_startup_entry
- => start_secondary
- => common_startup_64
+I suspect that it might invoke some ftrace helper very early in the boot
+process and ftrace is still not enabled(!?).
 
-The IRQ work interrupt alone adds considerable noise, but the impact can
-get even worse with PREEMPT_RT, because the IRQ work interrupt is then
-handled by a separate kernel thread. This requires a task switch and makes
-tracing useless for analyzing latency on an isolated CPU.
+Rather than playing whack-a-mole with individual files, disable branch
+profiling for the entire arch/arm64 tree, similar to what x86 already
+does in arch/x86/Kbuild.
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+Cc: stable@vger.kernel.org
+Fixes: ec6d06efb0bac ("arm64: Add support for CONFIG_DEBUG_VIRTUAL")
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- kernel/trace/ring_buffer.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Changes in v2:
+- Expand the scope to arch/arm64 instead of just physaddr.c
+- Link to v1: https://lore.kernel.org/all/20251231-annotated-v1-1-9db1c0d03062@debian.org/
+---
+ arch/arm64/Kbuild | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 41c9f5d079beb..ed9160599091d 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2008 Steven Rostedt <srostedt@redhat.com>
-  */
-+#include <linux/sched/isolation.h>
- #include <linux/trace_recursion.h>
- #include <linux/trace_events.h>
- #include <linux/ring_buffer.h>
-@@ -4011,19 +4012,31 @@ static void rb_commit(struct ring_buffer_per_cpu *cpu_buffer)
- 	rb_end_commit(cpu_buffer);
- }
- 
-+static inline bool
-+rb_irq_work_queue(struct rb_irq_work *irq_work)
-+{
-+	int cpu = housekeeping_any_cpu(HK_TYPE_KERNEL_NOISE);
+diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
+index 5bfbf7d79c99..d876bc0e5421 100644
+--- a/arch/arm64/Kbuild
++++ b/arch/arm64/Kbuild
+@@ -1,4 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0-only
 +
-+	/*
-+	 * If CPU isolation is not active, cpu is always the current
-+	 * CPU, and the following is equivallent to irq_work_queue().
-+	 */
-+	return irq_work_queue_on(&irq_work->work, cpu);
-+}
++# Branch profiling isn't noinstr-safe
++subdir-ccflags-$(CONFIG_TRACE_BRANCH_PROFILING) += -DDISABLE_BRANCH_PROFILING
 +
- static __always_inline void
- rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	if (buffer->irq_work.waiters_pending) {
- 		buffer->irq_work.waiters_pending = false;
- 		/* irq_work_queue() supplies it's own memory barriers */
--		irq_work_queue(&buffer->irq_work.work);
-+		rb_irq_work_queue(&buffer->irq_work);
- 	}
- 
- 	if (cpu_buffer->irq_work.waiters_pending) {
- 		cpu_buffer->irq_work.waiters_pending = false;
- 		/* irq_work_queue() supplies it's own memory barriers */
--		irq_work_queue(&cpu_buffer->irq_work.work);
-+		rb_irq_work_queue(&cpu_buffer->irq_work);
- 	}
- 
- 	if (cpu_buffer->last_pages_touch == local_read(&cpu_buffer->pages_touched))
-@@ -4043,7 +4056,7 @@ rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- 	cpu_buffer->irq_work.wakeup_full = true;
- 	cpu_buffer->irq_work.full_waiters_pending = false;
- 	/* irq_work_queue() supplies it's own memory barriers */
--	irq_work_queue(&cpu_buffer->irq_work.work);
-+	rb_irq_work_queue(&cpu_buffer->irq_work);
- }
- 
- #ifdef CONFIG_RING_BUFFER_RECORD_RECURSION
--- 
-2.52.0
+ obj-y			+= kernel/ mm/ net/
+ obj-$(CONFIG_KVM)	+= kvm/
+ obj-$(CONFIG_XEN)	+= xen/
+
+---
+base-commit: c8ebd433459bcbf068682b09544e830acd7ed222
+change-id: 20251231-annotated-75de3f33cd7b
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
