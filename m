@@ -1,83 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799EF34EEFC;
-	Tue,  6 Jan 2026 17:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9082222AC
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 17:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767720087; cv=none; b=HS8kZeb1v2X+Er/fPQstsrZ5Oapye/oJV0H6XAbeg1uuB0fRYC2Q8wnkGFhw855P9PY+7deapjnnG51tNwBTp/R+s97hLJuy79H+muqhflQa/muDkJMYOnr1S/jk8L6NGg11kU4kv7X64bmTvi5weXK6GYXzyDGwCxm0dHz+d2s=
+	t=1767721209; cv=none; b=A/ophWzHSQuHLIv6xVZxLcbJlgwrgY/US461bcjojkI5tMXb02Zi24nh7a99LK/eFqymiRqKJwwy7CcLhm6/PrIhrI4LsDe8P9Ws72g2QtEBDjGbuV8bJnBqG6BO76YA9UkrtLjbJWtYPUMiAd2SqGzNHOPLJxRh6NbSROJejGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767720087; c=relaxed/simple;
-	bh=Gfi25kQf2oeXUXW5YRgBHXP10a0G48W+88AW833xfKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VysPrUzg9C9tW7YwwOTcKaBG1MLmxFHeck/z6AxYV+qMGHlDkKkSigKEnR5Dtr4/t37rqXy7glIJKRJsgqpsR8Qdv0Z/lQqPf4zkJlR32BFx8J9H6B51hjelFJbrRZ/auVwBhJMRzwt3Hc/7dd2vKvV1f2vEn7A8U8slqeZmKgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 265198C11C;
-	Tue,  6 Jan 2026 17:21:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 6B09F6000F;
-	Tue,  6 Jan 2026 17:21:21 +0000 (UTC)
-Date: Tue, 6 Jan 2026 12:21:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sahil Gupta <s.gupta@arista.com>
-Cc: linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
- Kevin Mitchell <kevmitch@arista.com>, stable@vger.kernel.org
-Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
-Message-ID: <20260106122145.42e4ec09@gandalf.local.home>
-In-Reply-To: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
-References: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767721209; c=relaxed/simple;
+	bh=C+K0pugC42dKNe5Lg5PpIsrRcNGMne12C9aznegF4kw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByrWUEG7tPir3vyAR6urpm7KhnrmAd8jZRkI/aCYP5eAEB+BSkHYdc1tEU6U/gfsRzHkKFKCgKf9ZjG6s7KdHamc6oeK1k6GF5OEl+q52YG0WnWCYPZGIDxu3uiU8U2V8kI9fdA4kicCJW7aF6DIfjw+wy/M1b1Fl6uEJkAqfSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Ap2na+KJ; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Ap2na+KJ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64b7a38f07eso1849187a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 09:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1767721204; x=1768326004; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C+K0pugC42dKNe5Lg5PpIsrRcNGMne12C9aznegF4kw=;
+        b=Ap2na+KJ0rWRrIlNtTjIZKRslkOBP01Yo9XGbuFeyYhuR31K+01h545Uxe5Z+Ckg3g
+         AqzVtioIo6XW7wo86waeRvqwcVYzb52ukq27PJh5UBe5EdubBwL85XY//YlX5XY5PXyH
+         8uWtod2YBk/t1bMx58O2cuCFHh+Sy99FhitwbI1zO+IJ5IeYnXQTJSkUkbE2CRWsJ5bS
+         QtGtBIoVdQ1RBMrVymn0/9fLk8zFU8/fOS2oTtp3B1elYb22L+E2QxKlY2HuCYLp07iP
+         bDOEeCKiD/I9Hk8RviW8jhMvBO0NPpWP/8HW3IhN9XrwvSFJQma8lIRcejkRWswhBVXv
+         ZX6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767721204; x=1768326004;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C+K0pugC42dKNe5Lg5PpIsrRcNGMne12C9aznegF4kw=;
+        b=hgOZ/NofX42sTWP1dJFEfR07J43/N/ZMDsf5111D0cmex1EwQU8O4l3qHT2S7YmXGD
+         L+k8Fp14Pkx29nx4tzJwibCsaAz8zFnWZ+wwaiHPRW9c6YyEPnsMg48Z3fKpIBWb6h15
+         1P/H+6ooJB69f97C9vHo7Uw+/TAhQtDdxt82Jx2iiAI5LMQ8vZti/C0iR2aw0QKD49yH
+         ox7vAKERY4Jxtl7juLe0TyIi6hHjZqum/yttk0/pyiU8+gZ68JIkUf/2KTDsicjX9xH/
+         4DIWV/pvnjZJcCjBD4p9J5K8wXFyDMtNOtFiZaDVnuejyCApi4JuGFfToeLDRJdNJZeD
+         tsAA==
+X-Gm-Message-State: AOJu0YwBHiuUcTeUFr1EAzVV4NrGXv2Qjsw1DnlWLVNJymr8eoPaLy0x
+	eMvECxvgACrVhbecgQSZpqwZg1pFXZibLQ7Zvnro3xOor0MXNnXyPdFWTSlvGwRaJIT5mqh17t5
+	Xkbx0wyQn5zVGEgO15IeO5nyTdCm31TSQCg5RFROC
+X-Gm-Gg: AY/fxX4dt+Am7nvSoHHyAVq4whhSBwOBJ1bjps4ppQ9BH7P9EeO/g+7C/50xvnOIDeQ
+	Po8tntFI6W6c0Z1BK4AmeGajmOlh05cSw9ZwtOTMDbSSKBn3IAV4Tx0zRpHyZT0mL/cCdJvyxow
+	MCbItWHKlcmA6auj9i18/7CEuK3VkOGZCsTs3uCh4PQPJ/rmWVdOE2snFdPB9+RIqUSs8G4toHd
+	SHI23F43+DJJZYoGb0I7c3ir4Fvtmf0R4/WpH1v88xyy+8AO2INlQMDgM9vljHrkjTOLNYvbfnB
+	C5dLuz+AM62G2sg2t3l2dbgqa40=
+X-Google-Smtp-Source: AGHT+IFuxDaI2kZ7cHSY2Kz1GjfzJaY1eypcwp4cBlF+EgBynjn5Bn9sDbWxNkqBQGo+Ag362FM7cepnVAWFp8yjRik=
+X-Received: by 2002:a05:6402:430a:b0:64b:4c70:a5f0 with SMTP id
+ 4fb4d7f45d1cf-6507967c1f2mr3123713a12.24.1767721204380; Tue, 06 Jan 2026
+ 09:40:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6B09F6000F
-X-Stat-Signature: 67mhoxg1wszrth1tye4hd6yh8e3n3dpe
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+PhE6QeNkzxh+qsVKtgzYA6SdxjXHXrHE=
-X-HE-Tag: 1767720081-314175
-X-HE-Meta: U2FsdGVkX18MB6/yUeUq9GR1/vfsEPXOGlQZJsH3zor6b0Q1rZ4CPgFetRf8UpSkaB/GD+eHFH246v6ikprzURrmVWYFKnNEdsL7uLWPn32jrc52YO5MxV25Yfl2+wwv6Gx6IfMjtwTwnjy0Ir6W0ptuzeF0fsyVfUDGbTTBF2P6MqBwEbIUWDfLJvdMWXVI2da8MPW8Ipett/i6Iy0S8Gvt0lHzOhQsXrxKIm7zCwF+jOpU5tfcpclwNbkfH7jF8vRYvFRg28+5edf+Tsg0OPmnXtchnFO4qIkt5DagwmnuVY3ykTHwjumemtjbDixzUjBOviF0OGyZfvbz7uN9VU54eKBb9xDPt+8MjV7fpVZ4DL6gSKE+1VZxb6yY7gWH
+References: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
+ <20260106122145.42e4ec09@gandalf.local.home>
+In-Reply-To: <20260106122145.42e4ec09@gandalf.local.home>
+From: Sahil Gupta <s.gupta@arista.com>
+Date: Tue, 6 Jan 2026 12:39:53 -0500
+X-Gm-Features: AQt7F2rgE_ZkqaV6Qp1Le8nRnQr9lZIjOGXOC391_JEnLYDbd_vknu4KpfrJbhQ
+Message-ID: <CABEuK15immVy=+Ji3soYwB=q3tKcNVWuForEhQSPqNOqOye3bQ@mail.gmail.com>
+Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>, 
+	Kevin Mitchell <kevmitch@arista.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 20 Mar 2025 17:02:06 -0500
-Sahil Gupta <s.gupta@arista.com> wrote:
+Sounds good, many thanks.
 
-> Hi Steven,
-
-Hi,
-
-Sorry for the really late reply. I'm cleaning out my inbox and just noticed
-this email.
-
-> 
-> On 6.12.0, sorttable is unable to sort 64-bit ELFs on 32-bit hosts
-> because of the parsing of the start_mcount_loc and stop_mcount_loc
-> values in get_mcount_loc():
-> 
->   *_start = strtoul(start_buff, NULL, 16);
-> 
-> and
-> 
->  *_stop = strtoul(stop_buff, NULL, 16);
-> 
-> This code makes the (often correct) assumption that the host and the
-> target have the same architecture, however it runs into issues when
-> compiling for a 64-bit target on a 32-bit host, as unsigned long is
-> shorter than the pointer width. As a result, I've noticed that both
-> start and stop max out at 2^32 - 1.
-> 
-> It seems that commit 4acda8ed fixes this issue inadvertently by
-> directly extracting them from the ELF using the correct width. I'm
-> wondering if it is possible to backport this as well as the other
-> sorttable refactors to 6.12.0 since they fix this issue.
-
-I think this is a good reason to mark that commit as stable and backport it
-to 6.12.
-
--- Steve
+Sahil
