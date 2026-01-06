@@ -1,39 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12D32367AC;
-	Tue,  6 Jan 2026 16:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799EF34EEFC;
+	Tue,  6 Jan 2026 17:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767715884; cv=none; b=L1tG4Qv+jBF/SL99MK2LHEB0vdjjQ1/ADXRMR9oRmCpYRy0Ml/aYEwtF/36Ls/c3bJ+BSzlb/mLG2umHznCPCqs7EAu5LJTm2N+g00kQYa2QwoZcZ7bnWEDLkXD/Ix8sCrcTiTDi0hc+kgYWmJlpE/bRuWJ4+pAOqaXdhqPoPXs=
+	t=1767720087; cv=none; b=HS8kZeb1v2X+Er/fPQstsrZ5Oapye/oJV0H6XAbeg1uuB0fRYC2Q8wnkGFhw855P9PY+7deapjnnG51tNwBTp/R+s97hLJuy79H+muqhflQa/muDkJMYOnr1S/jk8L6NGg11kU4kv7X64bmTvi5weXK6GYXzyDGwCxm0dHz+d2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767715884; c=relaxed/simple;
-	bh=COoezE+UR5NmrYGrnBk8fvvrlSdW6ofEXOny5bNBzRA=;
+	s=arc-20240116; t=1767720087; c=relaxed/simple;
+	bh=Gfi25kQf2oeXUXW5YRgBHXP10a0G48W+88AW833xfKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QXUv6ne7INT5s2MXGy9mz0yBceMXa2MPNvWtypWtnm4U16XlbJ2RqycyamU4Ebaw+pRLhAzN0qSsgT0dAWZHnfahsrxVixSg9RBACDyEoRgv71wr3CFN5nSPcj/sUytVFp89rXT6n51/dt581u7ftcpFZd8VpJ03gg/hkApiqoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=VysPrUzg9C9tW7YwwOTcKaBG1MLmxFHeck/z6AxYV+qMGHlDkKkSigKEnR5Dtr4/t37rqXy7glIJKRJsgqpsR8Qdv0Z/lQqPf4zkJlR32BFx8J9H6B51hjelFJbrRZ/auVwBhJMRzwt3Hc/7dd2vKvV1f2vEn7A8U8slqeZmKgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 8FEA01A0448;
-	Tue,  6 Jan 2026 16:11:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 116C12E;
-	Tue,  6 Jan 2026 16:11:17 +0000 (UTC)
-Date: Tue, 6 Jan 2026 11:11:42 -0500
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 265198C11C;
+	Tue,  6 Jan 2026 17:21:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 6B09F6000F;
+	Tue,  6 Jan 2026 17:21:21 +0000 (UTC)
+Date: Tue, 6 Jan 2026 12:21:45 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Breno Leitao <leitao@debian.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Laura Abbott
- <labbott@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, kernel-team@meta.com, puranjay@kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
-Message-ID: <20260106111142.1c123f12@gandalf.local.home>
-In-Reply-To: <aVz-6WozGIxGiTUR@J2N7QTR9R3>
-References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
-	<aVz-NHMG7rSJ9u1N@J2N7QTR9R3>
-	<aVz-6WozGIxGiTUR@J2N7QTR9R3>
+To: Sahil Gupta <s.gupta@arista.com>
+Cc: linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+ Kevin Mitchell <kevmitch@arista.com>, stable@vger.kernel.org
+Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
+Message-ID: <20260106122145.42e4ec09@gandalf.local.home>
+In-Reply-To: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
+References: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,36 +37,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 5frgoyscigx4z31rwt79z9asah1swst1
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 116C12E
+X-Rspamd-Queue-Id: 6B09F6000F
+X-Stat-Signature: 67mhoxg1wszrth1tye4hd6yh8e3n3dpe
+X-Rspamd-Server: rspamout05
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19aqk1VEwjvwODk6X1+zCgl3U2uFvAxYoY=
-X-HE-Tag: 1767715877-848853
-X-HE-Meta: U2FsdGVkX1+ONV73ZDOr3t6sUAMyVZ7qm6Lb1s+RwQ0nN2WCWtlSUJo4v4y1iXVQcMd4kBU8MbWXC6SUWuAOnfBiTl/yO4QKJIc7g+XwLRXQi6UqM90FGf5v0+Hxuoifaxo9VE7ngpPe+LYhUG/s7/dFRsrJ9nwIm4nhHw7gX0xlS+PeLbs44jSLfmBvZ2toHk1sh5qMGe65b9ydF75/CE88LH/pTWuUQ86EzBp4p3KH8kRSA4GssbWIQJc5MkqlorQ9BmekkCDNYQlld9Rwibgc21qhN1Kfq64y5eRgEnNms85TEEOeCCUbHtRyrC0sz5GfMfZEnz6yBd2zy+wI9fxdx5vBoD/KqGnYe6s2f0ukI6t4zTviCVvSKJ1uWRlVB8dl3nFJgIBkxJuuQ07ASluxfuvFaQss3NPT6UlB2lqz39LVgCjjc/Ef5RYXXuQW
+X-Session-ID: U2FsdGVkX1+PhE6QeNkzxh+qsVKtgzYA6SdxjXHXrHE=
+X-HE-Tag: 1767720081-314175
+X-HE-Meta: U2FsdGVkX18MB6/yUeUq9GR1/vfsEPXOGlQZJsH3zor6b0Q1rZ4CPgFetRf8UpSkaB/GD+eHFH246v6ikprzURrmVWYFKnNEdsL7uLWPn32jrc52YO5MxV25Yfl2+wwv6Gx6IfMjtwTwnjy0Ir6W0ptuzeF0fsyVfUDGbTTBF2P6MqBwEbIUWDfLJvdMWXVI2da8MPW8Ipett/i6Iy0S8Gvt0lHzOhQsXrxKIm7zCwF+jOpU5tfcpclwNbkfH7jF8vRYvFRg28+5edf+Tsg0OPmnXtchnFO4qIkt5DagwmnuVY3ykTHwjumemtjbDixzUjBOviF0OGyZfvbz7uN9VU54eKBb9xDPt+8MjV7fpVZ4DL6gSKE+1VZxb6yY7gWH
 
-On Tue, 6 Jan 2026 12:24:09 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+On Thu, 20 Mar 2025 17:02:06 -0500
+Sahil Gupta <s.gupta@arista.com> wrote:
 
+> Hi Steven,
 
-> Whoops; s/CONFIG_DEBUG_VIRTUAL/PROFILE_ANNOTATED_BRANCHES/ in both
-> places in my reply.
+Hi,
 
-Note, it could still be useful ;-) 
+Sorry for the really late reply. I'm cleaning out my inbox and just noticed
+this email.
 
-I've been running my yearly branch profiling build on both my main
-workstation and my server. I post the results from my server publicly (this
-is updated every night):
+> 
+> On 6.12.0, sorttable is unable to sort 64-bit ELFs on 32-bit hosts
+> because of the parsing of the start_mcount_loc and stop_mcount_loc
+> values in get_mcount_loc():
+> 
+>   *_start = strtoul(start_buff, NULL, 16);
+> 
+> and
+> 
+>  *_stop = strtoul(stop_buff, NULL, 16);
+> 
+> This code makes the (often correct) assumption that the host and the
+> target have the same architecture, however it runs into issues when
+> compiling for a 64-bit target on a 32-bit host, as unsigned long is
+> shorter than the pointer width. As a result, I've noticed that both
+> start and stop max out at 2^32 - 1.
+> 
+> It seems that commit 4acda8ed fixes this issue inadvertently by
+> directly extracting them from the ELF using the correct width. I'm
+> wondering if it is possible to backport this as well as the other
+> sorttable refactors to 6.12.0 since they fix this issue.
 
-   https://rostedt.org/branches/current
-
-If you check out the branch_annotated file, you can see there's still quite
-a bit that gets it wrong. Some of these is because of bad assumptions by
-the developer, others is because the code moved around causing new branches
-to make later annotated branches go the opposite way.
-
-Note, its still slow to download, not only because my internet is 20mbs up,
-but also because that web server is running on a machine with this
-profiling still enabled. I'll rebuild the kernel and disable it this weekend.
+I think this is a good reason to mark that commit as stable and backport it
+to 6.12.
 
 -- Steve
