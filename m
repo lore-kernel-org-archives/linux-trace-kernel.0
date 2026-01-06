@@ -1,123 +1,79 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D503E2EBB89
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 23:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5DA2E542C;
+	Tue,  6 Jan 2026 23:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767740729; cv=none; b=Cbc+qtqWoUGU5yC1zkD2BJvCeErPOVZezQHFxveG2Ww1m9lT3wEL04jWtylI3jr3Dqhyiu/4Zu/GMA9IEZAaS5o5NRrOOUA2JoFElfFevJIY79HhdMM1Z+75nAxER4CxOzSd3Bukl0WgtarOcFAM7dRKTGr/5jWFlACyPxx9msE=
+	t=1767741064; cv=none; b=gLEXZ/CHpQfZ8TU7fucpOEM5EnbP6762G/2OeG+0Da35BrMLS1H+Gc60ooCJN3IWQMVOCvy8RblxbnMRC9JHjehEA7ucKoCes5w7LJSSfvnkvnsDqWlD7+jru0I1BMTBoeniPnDNAQVpv+G+5CJgcd9VS6mmblKhmSoiZr8AMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767740729; c=relaxed/simple;
-	bh=qDhdsHg500t08EujPpH4z0abJDuCvTZSLH9532pgjUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h3gkPU8RZqc3VqTqMMXie/30prw68j7Y/ypuyKkqmSrOCt0D+hyamPG/3pqilbZe5nyLqAHAByANzDW81k1s8ZJ+j4k/2ie4MRXRipSYp4y57SwtkwoDraQg8n1lQaYdYqAisvobaE42wVBiyqDgs/vKMfVA5+8zZsA+NDjGt4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk1nHiuC; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767741064; c=relaxed/simple;
+	bh=VxnBrO1/IiParbQFoVGZ3Ak+Y5mmkMSO+x0JyAMZB78=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VclI//7EIWHWS131avQZfbl00PzOurphBRl0ygAHZxOIS0jCT4iFETHTJtNi8N+VmCEXbv05OnmRT4TNY1bfsf3BdbAqeEBfSr+fE5RSufuAioAeEBr8XmLA+hr64kMJwMuajhG/p5re6d89rLeBU8Nz+k7ov7AbPVSXzgPcYkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=eg8oKh/1; arc=none smtp.client-ip=188.40.203.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk1nHiuC"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2ae38f81be1so920106eec.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 15:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767740727; x=1768345527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PrWh1NMNMKJq1atbYoQOFuGNwGmrHd2hv0Gwbt9ha6A=;
-        b=hk1nHiuCOFtsyakZHVZfJTzzPXRI8hIrCmLCiKuz5NFbhQr9LJaQlaDpAmDLbF8f37
-         8FCp7/dGw5C4CB66Ghn7sqIc19C5Bfjht5L61kYKO8JXQcwtFIamNPImSQNJxJ8RphX/
-         5cTbho8FpnOIxCVJQtO8xic8MUB0GSvw/++TyRQIM6PUS9aYCffdZh4O4OfeNUDaGgMQ
-         +j61QmV1UsIgt4ZcTtXeMNa/GCpG5uk0EaTi4Z+iEbv6rPOQG+QrPAHNKFeGkiz13b3h
-         91Zq2u8LH3812/FXDDe4EjMfwzYMSFEJfn/rgMoSOL7VQjHw9ccbZfBtLy1UQ4uRIzCP
-         o1fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767740727; x=1768345527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PrWh1NMNMKJq1atbYoQOFuGNwGmrHd2hv0Gwbt9ha6A=;
-        b=SusgAzDVyXWRGDw6OihxGEZDrP2M5DZn+qTU5mbYkKMW4y4OLkl9LUBjVz1LesR2uT
-         BQURZdkk4mDoR16jYSKbIjtKw36FbuC+ttorXaOTB4rft3QQgg/0axOUC62HNEFISn6Z
-         bfGMRwsuA/cS/Zrf7X1v/DJKoIxG+YazLXejcs0hWqp1peHCVNUKyxZu0YpEVjdKpaWL
-         1hYLP+Ny8er9W2Z7rF/PDJHN7+M81dPakms5/81bcKg375qN6endlE5qwYFhJWk0wylz
-         OC/MhlKBHGvjrsNAYI9Yj4A59dOzLRWMD6ir4IklJudy8YHN7+KulslwErWhgDQIekn0
-         RiPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXw1mo65RsW77jmqbh6epngJgj9CxHV2pgum71T1Y9UcA/Iv5VmZEyr9G204WuPKg/YgYlzNlWSho98Q+gApHdU6sA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxECqabBQLxbXOPYcW/YE87HI59//z0Wer0EyQzR2SWTbSWOFEE
-	/OSlhLEovTHQ30qcuexouifIpKckLWyNucFTlJ81Mp5A0VlwN9zezxLi
-X-Gm-Gg: AY/fxX6YzaKKccuJaWiZzxELHO7/gYq8SNV6tSPzuDeU2nBKaal7fjqPqga0vurf6Lj
-	tJgL351mYgWa3MnSmOjM57U7oSMo4W+muKevQ1D0RKBHjTBaTzSeiHVhGjst3+FUwT9c/5hlFsZ
-	Oq0QE27la4D7oKu5gPYXs/6VHHeI6AbMGuTgM7ThND8Ct3KyI4h3s5KtP99q7OfH0CNBYmYAPYf
-	zSe8BSC6IstKeJynFlIjqGEFPSHSBvqTT7rfkHb2Y7rsjDgpOJheiMb6rCqN3G/pZEyEuspf7JV
-	Y5oqA8zy18iVsPzWv8Y+meq0p1PRM4CRfdm1XrY3dmlhTNLC0hZCAtFZIRKbvYoZ7JkHc+1hCKL
-	yiLLqlnHklHxa7Scl9hAHVh7dMVQcOAijVKZGBRny2wTjHa8K/5a8+zqAahmgF4gDX7r0sDWc8b
-	KdMDkRCbZMNwmpeJVZrmAQ6R7N
-X-Google-Smtp-Source: AGHT+IEDGhuQ4meRR+PYZ6y0FiO9yq8v5Znwcil7S9VZulGnbyyjnVVwgLyVREHTr5cFKEHXCqyvpg==
-X-Received: by 2002:a05:7301:578d:b0:2a4:3593:c7c5 with SMTP id 5a478bee46e88-2b17d1f058bmr489259eec.5.1767740726634;
-        Tue, 06 Jan 2026 15:05:26 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b1706a53f0sm5312715eec.10.2026.01.06.15.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 15:05:26 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 6 Jan 2026 15:05:25 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Do not over-allocate ftrace memory
-Message-ID: <0a9cd12e-6db8-4b41-979e-95f06e9390f6@roeck-us.net>
-References: <20260106203533.2896197-1-linux@roeck-us.net>
- <20260106161844.02ab387f@gandalf.local.home>
- <dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="eg8oKh/1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:In-Reply-To:
+	References; bh=OgvaNCYOKbAO4nZMK3bpBDhFm8EcueI4CTUg7sO8nl0=; b=eg8oKh/1KnKzy3
+	evgfF8heljcx6fHuFZqW2u0vPVN7UCjyMi/w0PI+63aSeWsD3s7xOIaijbJnqiwk5dGyYRzpWDQYu
+	19m+NmVWEeNMWMYuhJ/Wn51Z1OfuFbs2RUgE677MqCOx3QQb4WvGEM6orzcSAdQblthnc6mQg1o87
+	qu7TcNf8se5CfOaNYXaHXMcP7JbOWsRZDfCrZUxwFKg2fiNAVlPZtUgm5yMhS3tuE/IKxGwV+DIZa
+	hMVYZJYYjPE3hggK7jo7lalAa7WNPEDEm+VEsk8hLMwCYWkgLnjeFYL0eUWVuLy+152nXJIFL9anF
+	yXoXOcm/pUcdJ1Wup1UQ==;
+Received: from [63.135.74.212] (helo=rainbowdash)
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1vdGCV-008flT-R1; Tue, 06 Jan 2026 23:10:55 +0000
+Received: from ben by rainbowdash with local (Exim 4.99.1)
+	(envelope-from <ben@rainbowdash>)
+	id 1vdGCV-00000000LvP-1HQC;
+	Tue, 06 Jan 2026 23:10:55 +0000
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	rostedt@goodmis.org,
+	Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] trace: ftrace_dump_on_oops[] is not exported, make it static
+Date: Tue,  6 Jan 2026 23:10:54 +0000
+Message-Id: <20260106231054.84270-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.37.2.352.g3c44437643
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+Sender: srv_ts003@codethink.com
 
-On Tue, Jan 06, 2026 at 02:26:23PM -0800, Guenter Roeck wrote:
-> > >  
-> > >  			pages -= remaining;
-> > 
-> > I think pages is meaningless here, as it was set in the beginning with:
-> > 
-> > 	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
-> > 
-> > Which is incorrect. I wonder if we should set it via:
-> > 
-> I know, I just didn't want to make more changes than absolutely
-> necessary.
-> 
-> > 	/*
-> > 	 * Use ftrace_number_of_pages to determine how many pages were
-> > 	 * allocated
-> > 	 */
-> > 	pages = ftrace_number_of_pages;
-> > 
-> > 	start_pg = ftrace_allocate_pages(count);
-> > 	if (!start_pg)
-> > 		return -ENOMEM;
-> > 
-> > 	/* ftrace_allocate_pages() increments ftrace_number_of_pages */
-> > 	pages = ftrace_number_of_pages - pages;
-> > 
-> 
-> That might work, assuming that the code updating ftrace_number_of_pages
-> is (mutex) protected. I don't immediately see that, and the
-> "mutex_lock(&ftrace_lock);" right after the above code makes me a bit
-> concerned.
-> 
+The ftrace_dump_on_oops string is not used outside of trace.c so
+make it static to avoid the export warning from sparse:
 
-One way to avoid the locking problem without potentially risky code changes
-would be to pass a pointer to pages to ftrace_allocate_pages() and to
-ftrace_allocate_records(), and to update it from there. I tested that and
-confirmed that it works.
+kernel/trace/trace.c:141:6: warning: symbol 'ftrace_dump_on_oops' was not declared. Should it be static?
 
-Guenter
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6f2148df14d9..5c196ea93768 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -138,7 +138,7 @@ cpumask_var_t __read_mostly	tracing_buffer_mask;
+  * by commas.
+  */
+ /* Set to string format zero to disable by default */
+-char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
++static char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
+ 
+ /* When set, tracing will stop when a WARN*() is hit */
+ static int __disable_trace_on_warning;
+-- 
+2.37.2.352.g3c44437643
+
