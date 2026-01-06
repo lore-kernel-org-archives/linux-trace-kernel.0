@@ -1,116 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FE17260D;
-	Tue,  6 Jan 2026 00:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666891F63CD;
+	Tue,  6 Jan 2026 01:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767660751; cv=none; b=C3Mnd0SuGpFv3yn33Udl3NsnzZa74S+zn1bcypYJnubtcLWY9oNi6IhbTlIC6uzgFloXxmdGseFrho0Nn2OZ3wyk9Ne8N9XluYaIZt17vfYBOrBeheuocrWAiNb7aqPVaqkRSA9LonSd22fuTqWCsXeYJ2ULu8vx+n9OyMLuexw=
+	t=1767663085; cv=none; b=cgmphfFR8/QQv2QtnEIpdWeiOWfiykWXSTi4ZWtcQb2LL19AFaXrVjWZeoo8q2/g3SCz5kiFPt3OsJVOxr6InyVmE+wzpV/7zUfLENHeDoIgD/cCHUmzM1Yn6BDN3ktyz/j1kq4zxBQXpkprzGYpQ6qkA7Itj69S3HWup6TjM2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767660751; c=relaxed/simple;
-	bh=Qog7+iQQQxOnwzc9mbSXRPC+4h9WsleX9uiSCYqrkBc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rU8mNVvijkdCYyg9BBo5VRH3dFiKj9eqLaGNcRdk3gwxRUCei/rsixSLVqwM/2QZqMI/DMcO98YZ/T3nOeF+2oyQrpzi5kTwKTx+eBfPvftIRCB1OeXVv992+TWFV2lCxoRg+LBEoiyoP98urszoVMqd31FxUjYZIYMlDSmSC54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jhp8APPo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jhp8APPo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C98C116D0;
-	Tue,  6 Jan 2026 00:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767660751;
-	bh=Qog7+iQQQxOnwzc9mbSXRPC+4h9WsleX9uiSCYqrkBc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jhp8APPoVax3FOh5oo/u+QLsT6HESKlw98iiuJZjzAn/XDCMM+riXaphEFZTyQH2b
-	 n3mChhGqtK9G2MY3l1mE5WCAQ71FYn2H+4RXFEU5cruUiZcyOQFcEg8iymoOH2cWvE
-	 DB+QGOWt/E6tQbDoY8VEf965Bam4IAuWwI8cI4s70M39UA14UXwnuvDezQmuH4xjRe
-	 0UaPLjB/FH8l7M/QjdzZ95RIJFc/x2eYPNByCWD4B17bPPGt5D2VE3psNeOb/y+Nba
-	 fQa3KQzG5ln5yeGT2elEccbyHkp1CE+kdsOHJqMGK8mm1tda4YF1wA1VjEHaqDPQl6
-	 Kzc8WP+lvv+IQ==
-Date: Tue, 6 Jan 2026 09:52:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Wupeng Ma <mawupeng1@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ring-buffer: Avoid softlockup in ring_buffer_resize()
- during memory free
-Message-Id: <20260106095227.fb363651e87e5aa1855779bc@kernel.org>
-In-Reply-To: <20251228065008.2396573-1-mawupeng1@huawei.com>
-References: <20251228065008.2396573-1-mawupeng1@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767663085; c=relaxed/simple;
+	bh=af12608cBm+UXtOClXsbHYZFCoiKJ4GFXnZQCqwBrn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=axrZJ9754MSpsuu8UeGDFnl6IfMvr/KTLu81nLIRUmt0T5xXA3xvc+J355m1TOvWDXUkBiErypN5se0zbdZ7+yDOaEDPsmkiR85xOCnSLNshr0BNhtKepa5ZRq27HTxql9CkE06gZ0+1Hq1HT04gIYMg6YoljL0fsXumzQML4sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 9CEEF1402E1;
+	Tue,  6 Jan 2026 01:31:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id BAE7630;
+	Tue,  6 Jan 2026 01:31:18 +0000 (UTC)
+Date: Mon, 5 Jan 2026 20:31:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Joel Fernandes <joel@joelfernandes.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Yao Kai <yaokai34@huawei.com>,
+ Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH] tracing: Add recursion protection in kernel stack trace
+ recording
+Message-ID: <20260105203141.515cd49f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: kbzddff3ye567pq8dhksb4fe3y866aww
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: BAE7630
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18brEZF82Ke4B4ar1UW602pC/3RNla7liA=
+X-HE-Tag: 1767663078-860938
+X-HE-Meta: U2FsdGVkX19QU9v2VQzh5Fziqbk+/yr/Vt1cQcMH7Fl/ZkX2q5KQySG3GB8wDaFeA/GxTBERMkkapB9QzTYLl6NM9n5JKuSruQZD8PDGgetYwfbuRD5rN8L7Cuiy9dOq5X1p1D+NGbP748a+XirxylpN1Zaj2sCMsybfPJIDuqnA42Qlt36s9aW8kCVL0LP7uRpnGDq57v25U5UG0XEcAWDdv2h6G4CNs3y79m+dzk9aymjj46V6tXOXBOYOONUOc+Ji/ELxmsuvSrX5eqM0zR3yn8GIIgCuYUUxiSQdESxuMvjfA6n5ll2CZ+pUFoPg1YZeHyAtEvFjUlfb1odlFp0AN7UczYb0GE72Wsd18sRvIjqEELJZBRWUVnfgMElXCOf3IFOp51kE9klw+hDqnUhag+poDXasuwHNiCWArWE=
 
-On Sun, 28 Dec 2025 14:50:07 +0800
-Wupeng Ma <mawupeng1@huawei.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> When user resize all trace ring buffer through file 'buffer_size_kb',
-> then in ring_buffer_resize(), kernel allocates buffer pages for each
-> cpu in a loop.
-> 
-> If the kernel preemption model is PREEMPT_NONE and there are many cpus
-> and there are many buffer pages to be freed, it may not give up cpu
-> for a long time and finally cause a softlockup.
-> 
-> To avoid it, call cond_resched() after each cpu buffer free as Commit
-> f6bd2c92488c ("ring-buffer: Avoid softlockup in ring_buffer_resize()")
-> does.
-> 
-> Detailed call trace as follow:
-> 
->   rcu: INFO: rcu_sched self-detected stall on CPU
->   rcu: 	24-....: (14837 ticks this GP) idle=521c/1/0x4000000000000000 softirq=230597/230597 fqs=5329
->   rcu: 	(t=15004 jiffies g=26003221 q=211022 ncpus=96)
->   CPU: 24 UID: 0 PID: 11253 Comm: bash Kdump: loaded Tainted: G            EL      6.18.2+ #278 NONE
->   pc : arch_local_irq_restore+0x8/0x20
->    arch_local_irq_restore+0x8/0x20 (P)
->    free_frozen_page_commit+0x28c/0x3b0
->    __free_frozen_pages+0x1c0/0x678
->    ___free_pages+0xc0/0xe0
->    free_pages+0x3c/0x50
->    ring_buffer_resize.part.0+0x6a8/0x880
->    ring_buffer_resize+0x3c/0x58
->    __tracing_resize_ring_buffer.part.0+0x34/0xd8
->    tracing_resize_ring_buffer+0x8c/0xd0
->    tracing_entries_write+0x74/0xd8
->    vfs_write+0xcc/0x288
->    ksys_write+0x74/0x118
->    __arm64_sys_write+0x24/0x38
-> 
-> Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
+A bug was reported about an infinite recursion caused by tracing the rcu
+events with the kernel stack trace trigger enabled. The stack trace code
+called back into RCU which then called the stack trace again.
 
-Looks good to me.
+Expand the ftrace recursion protection to add a set of bits to protect
+events from recursion. Each bit represents the context that the event is
+in (normal, softirq, interrupt and NMI).
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Have the stack trace code use the interrupt context to protect against
+recursion.
 
-Thanks!
+Note, the bug showed an issue in both the RCU code as well as the tracing
+stacktrace code. This only handles the tracing stack trace side of the
+bug. The RCU fix will be handled separately.
 
-> ---
->  kernel/trace/ring_buffer.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index afcd3747264d2..3ba08fc1b7d05 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3121,6 +3121,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
->  					list) {
->  			list_del_init(&bpage->list);
->  			free_buffer_page(bpage);
-> +
-> +			cond_resched();
->  		}
->  	}
->   out_err_unlock:
-> -- 
-> 2.43.0
-> 
+Link: https://lore.kernel.org/all/20260102122807.7025fc87@gandalf.local.home/
 
+Cc: stable@vger.kernel.org
+Reported-by: Yao Kai <yaokai34@huawei.com>
+Tested-by: Yao Kai <yaokai34@huawei.com>
+Fixes: 5f5fa7ea89dc ("rcu: Don't use negative nesting depth in __rcu_read_unlock()")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/trace_recursion.h | 9 +++++++++
+ kernel/trace/trace.c            | 6 ++++++
+ 2 files changed, 15 insertions(+)
 
+diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
+index ae04054a1be3..e6ca052b2a85 100644
+--- a/include/linux/trace_recursion.h
++++ b/include/linux/trace_recursion.h
+@@ -34,6 +34,13 @@ enum {
+ 	TRACE_INTERNAL_SIRQ_BIT,
+ 	TRACE_INTERNAL_TRANSITION_BIT,
+ 
++	/* Internal event use recursion bits */
++	TRACE_INTERNAL_EVENT_BIT,
++	TRACE_INTERNAL_EVENT_NMI_BIT,
++	TRACE_INTERNAL_EVENT_IRQ_BIT,
++	TRACE_INTERNAL_EVENT_SIRQ_BIT,
++	TRACE_INTERNAL_EVENT_TRANSITION_BIT,
++
+ 	TRACE_BRANCH_BIT,
+ /*
+  * Abuse of the trace_recursion.
+@@ -58,6 +65,8 @@ enum {
+ 
+ #define TRACE_LIST_START	TRACE_INTERNAL_BIT
+ 
++#define TRACE_EVENT_START	TRACE_INTERNAL_EVENT_BIT
++
+ #define TRACE_CONTEXT_MASK	((1 << (TRACE_LIST_START + TRACE_CONTEXT_BITS)) - 1)
+ 
+ /*
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6f2148df14d9..aef9058537d5 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3012,6 +3012,11 @@ static void __ftrace_trace_stack(struct trace_array *tr,
+ 	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	int stackidx;
++	int bit;
++
++	bit = trace_test_and_set_recursion(_THIS_IP_, _RET_IP_, TRACE_EVENT_START);
++	if (bit < 0)
++		return;
+ 
+ 	/*
+ 	 * Add one, for this function and the call to save_stack_trace()
+@@ -3080,6 +3085,7 @@ static void __ftrace_trace_stack(struct trace_array *tr,
+ 	/* Again, don't let gcc optimize things here */
+ 	barrier();
+ 	__this_cpu_dec(ftrace_stack_reserve);
++	trace_clear_recursion(bit);
+ }
+ 
+ static inline void ftrace_trace_stack(struct trace_array *tr,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.51.0
+
