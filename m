@@ -1,36 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E4C27713;
-	Tue,  6 Jan 2026 22:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40A5288C13;
+	Tue,  6 Jan 2026 22:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767737033; cv=none; b=ofy7KOapsZ8XN3opKOdLrXb9XRwEchwhVRifReezds1MGR2Q5y4T4Yaz077UqsvlYwx1Cwlfxk9imSyYRYfyOLeWOij8GVQkY3PXwaJ/+swryYXXuDO83CqjAWhIRycEjpeiN/blHMxzA+2wfgJgWaCHuwsPGJkruRuA3MYFpkE=
+	t=1767737435; cv=none; b=SlmrSX0WYB8jkgLF9CryOxkYWbXhU21CZYBatRXTH+aP+Vfu7ByrylFPorn7nRfGrJakX2KQOD5V9/sFsXcOTr1HM2Y9OyJ1NxvLMYUl+fjgYJdVoerdYnXP4H9HwAqgnqWFYSPSHRuvTK1MmsD9olNmxLBjc36Eytd20EUOfLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767737033; c=relaxed/simple;
-	bh=NmxawiGYeZGNT2STbWv1u4GHkTgRaYlzUSmCMM56NvI=;
+	s=arc-20240116; t=1767737435; c=relaxed/simple;
+	bh=Rjn2+Zh0YmbYp4cmDyke6Ltz+kBscEC6w6lZHLQuqoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IBo6lB+vl+m+/ZWXXlf6fiRQk7dySAE/sOKM57oYMNNc0bgrjk8ALBo69vUDPJglwOUqjYqwnFuji3a4KfClB+OVX2RNBbQWV3d/hPFReOYxZ2Gq5icXBoiVLdADx8mng+Cya/l0/CtZMOPXbl9IbDBR3upkdBkeQKaxJ7c6Z8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=PcCA/psYlBY5SbmOgjKHOfso1XF1PlxIDGjMJjioTjKmtoH/X7w0O2Tj77pr72c1q6e5vXO/DeZt9tGXT8TWPPNY3b4tlXcEWCfs5McbVnVuj45Mlz3OcZIsU6ADUEosnPJIcZS0joskSqt80Otq9fHVRpUmwvX91aDFRmZM29c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 0AD745D5EA;
-	Tue,  6 Jan 2026 22:03:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id D690F6000C;
-	Tue,  6 Jan 2026 22:03:40 +0000 (UTC)
-Date: Tue, 6 Jan 2026 17:04:05 -0500
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id A177E13C358;
+	Tue,  6 Jan 2026 22:10:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id CBCED60011;
+	Tue,  6 Jan 2026 22:10:22 +0000 (UTC)
+Date: Tue, 6 Jan 2026 17:10:47 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
-Message-ID: <20260106170405.425f469e@gandalf.local.home>
-In-Reply-To: <20260106091039.2012108-1-ptesarik@suse.com>
-References: <20260106091039.2012108-1-ptesarik@suse.com>
+To: Xiang Gao <gxxa03070307@gmail.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, mhiramat@kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ dhowells@redhat.com, kuba@kernel.org, brauner@kernel.org,
+ akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, gaoxiang17
+ <gaoxiang17@xiaomi.com>
+Subject: Re: [PATCH v12] dma-buf: add some tracepoints to debug.
+Message-ID: <20260106171047.766d826f@gandalf.local.home>
+In-Reply-To: <20251229031547.59272-1-gxxa03070307@gmail.com>
+References: <20251229031547.59272-1-gxxa03070307@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,59 +40,46 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D690F6000C
-X-Stat-Signature: af1aa643cd8wxtjher1afkxuj3kbipku
-X-Rspamd-Server: rspamout05
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: CBCED60011
+X-Stat-Signature: nxwhsk3uahg9fg6b4b4foaktayt5rcrt
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX180NfdP+h0JYjA+07/dQpmGCvBLbOVqfFQ=
-X-HE-Tag: 1767737020-329942
-X-HE-Meta: U2FsdGVkX180tmf7oAjpQsVuUGx/iTnUh2cVGgU2zBiA9g6cWQkJyCK0R4DC+2k+/2wvO2nqr8WygD+9Ty8xXT3v2fOaKG/R8n28KmQkzssI3cHqikzgx2XwiFJnqr4NnL/WiGDRSd08xzq9PP8PGcUd7OMEyXHtMFl1e7zQ57zVqnknGNWPjZkHhPWGknntA5l6wELeW58VUcnHdvNdfAHifFlm8W/e0MPJwEbUIhouaoDxJgQVJh5wbslUY5YT7++pgLMOWlPiRPR3FPINTx1uKEScXt77ocTEEu59PQYl42Qo0EBgXvyzxKFNSWMgzjEolmFn/Oo8DS73S+PE5xFdO2y8jHa8LaRpIhYTO8+c3qd9xH4SIaD1n/NyBkuw
+X-Session-ID: U2FsdGVkX19uyhsKHaO7BoxxPx6nTLgSBJzsvmK6sSQ=
+X-HE-Tag: 1767737422-377508
+X-HE-Meta: U2FsdGVkX1++sGP9isx8ZBi5GSpBQtv7kAzfi0YpXt/KKuPRRRkFsJjQFiEIx7rTHXbhyow8Z6Y2N+P/uryCm1M1fPpclOp9SXHgfUb1jhFKUwclnmvkBG1Six4hXSnPV1jLxx5FqZ+hxAQFoZRRm9EzlbuNWO+a4e520oCYj/7oXCoKHFZIU5j5eTUMnvpCEKBU0IASZxyzQw+fvqtRfHetkXlLH5nwLHgGBDfVk9bZzxaynZv8zxhSXLyYaOWDIyUD+ZyMZrGoodKeUDaeOdXQ7D4g7EGpzbPKfwBMB8b3jZUeIwTHFv9ATwsa3ra2hbq23hIrcBnrCqX2FbF2MTpllbP+iuILF+aQtuM/bf01IPHIUOg/K644iQK9Q218965zng+u1zBpg5in22LIzM/g2XyZ6fZBmvTnWHaMvbI=
 
-On Tue,  6 Jan 2026 10:10:39 +0100
-Petr Tesarik <ptesarik@suse.com> wrote:
+On Mon, 29 Dec 2025 11:15:47 +0800
+Xiang Gao <gxxa03070307@gmail.com> wrote:
 
-> Avoid running the wakeup irq_work on an isolated CPU. Since the wakeup can
-> run on any CPU, let's pick a housekeeping CPU to do the job.
-> 
-> This change reduces additional noise when tracing isolated CPUs. For
-> example, the following ipi_send_cpu stack trace was captured with
-> nohz_full=2 on the isolated CPU:
-> 
->           <idle>-0       [002] d.h4.  1255.379293: ipi_send_cpu: cpu=2 callsite=irq_work_queue+0x2d/0x50 callback=rb_wake_up_waiters+0x0/0x80
->           <idle>-0       [002] d.h4.  1255.379329: <stack trace>
->  => trace_event_raw_event_ipi_send_cpu
->  => __irq_work_queue_local
->  => irq_work_queue
->  => ring_buffer_unlock_commit
->  => trace_buffer_unlock_commit_regs
->  => trace_event_buffer_commit
->  => trace_event_raw_event_x86_irq_vector
->  => __sysvec_apic_timer_interrupt
->  => sysvec_apic_timer_interrupt
->  => asm_sysvec_apic_timer_interrupt
->  => pv_native_safe_halt
->  => default_idle
->  => default_idle_call
->  => do_idle
->  => cpu_startup_entry
->  => start_secondary
->  => common_startup_64  
+> From: gaoxiang17 <gaoxiang17@xiaomi.com>
+>=20
+> Since we can only inspect dmabuf by iterating over process FDs or the
+> dmabuf_list, we need to add our own tracepoints to track its status in
+> real time in production.
+>=20
+> For example:
+>    binder:3016_1-3102    [006] ...1.   255.126521: dma_buf_export: exp_na=
+me=3Dqcom,system size=3D12685312 ino=3D2738
+>    binder:3016_1-3102    [006] ...1.   255.126528: dma_buf_fd: exp_name=
+=3Dqcom,system size=3D12685312 ino=3D2738 fd=3D8
+>    binder:3016_1-3102    [006] ...1.   255.126642: dma_buf_mmap_internal:=
+ exp_name=3Dqcom,system size=3D28672 ino=3D2739
+>      kworker/6:1-86      [006] ...1.   255.127194: dma_buf_put: exp_name=
+=3Dqcom,system size=3D12685312 ino=3D2738
+>     RenderThread-9293    [006] ...1.   316.618179: dma_buf_get: exp_name=
+=3Dqcom,system size=3D12771328 ino=3D2762 fd=3D176
+>     RenderThread-9293    [006] ...1.   316.618195: dma_buf_dynamic_attach=
+: exp_name=3Dqcom,system size=3D12771328 ino=3D2762 attachment:ffffff880a18=
+dd00 is_dynamic=3D0 dev_name=3Dkgsl-3d0
+>     RenderThread-9293    [006] ...1.   318.878220: dma_buf_detach: exp_na=
+me=3Dqcom,system size=3D12771328 ino=3D2762 attachment:ffffff880a18dd00 is_=
+dynamic=3D0 dev_name=3Dkgsl-3d0
+>=20
+> Signed-off-by: Xiang Gao <gaoxiang17@xiaomi.com>
 
-I take it that even with this patch you would still get the above events.
-The only difference would be the "cpu=" in the event info will not be the
-same as the CPU it executed on, right?
+=46rom a tracing POV:
 
-> 
-> The IRQ work interrupt alone adds considerable noise, but the impact can
-> get even worse with PREEMPT_RT, because the IRQ work interrupt is then
-> handled by a separate kernel thread. This requires a task switch and makes
-> tracing useless for analyzing latency on an isolated CPU.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-
-LGTM,
-
-I'll queue it up for the next merge window.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
