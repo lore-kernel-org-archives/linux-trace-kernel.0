@@ -1,66 +1,66 @@
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC8E7E0FF
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 22:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D503E2EBB89
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 23:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767738387; cv=none; b=Mg7epLoQkacykI33Lyb9V0KtYLbPQbytZCLVJ5AepQ3wm5fVDyo0lLssNq5CKcHj9I51WUKOTvHy6JlbrZrK+djGKt2QiPFLm/xCDn6susz5rBUp+Vc5eDJkMMMqLgPT65CA/Jtf+Gx2c3Q/BDun3JUF3CxMW+jk/UkLFjI0CIE=
+	t=1767740729; cv=none; b=Cbc+qtqWoUGU5yC1zkD2BJvCeErPOVZezQHFxveG2Ww1m9lT3wEL04jWtylI3jr3Dqhyiu/4Zu/GMA9IEZAaS5o5NRrOOUA2JoFElfFevJIY79HhdMM1Z+75nAxER4CxOzSd3Bukl0WgtarOcFAM7dRKTGr/5jWFlACyPxx9msE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767738387; c=relaxed/simple;
-	bh=9C4xJyXOrqri6xysIJdWUvdgifHbTQD3B23s8Ss8Vlo=;
+	s=arc-20240116; t=1767740729; c=relaxed/simple;
+	bh=qDhdsHg500t08EujPpH4z0abJDuCvTZSLH9532pgjUw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppZX0yv1NC189HwuQS9TZouq+VbvOmv40pdMaUPo0DxwsuPX0dxc8ztnzH8WcZw5QC22KL809v+IzvLgAn6mW84pZviygIAF2L1U2PkUo56vg3j9RL18WmvK6t9mHd0TwCUElUWrSLjWFba9VL2ZhRCS70cnnLAsdk6is6SG+vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AhB32d8Y; arc=none smtp.client-ip=74.125.82.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3gkPU8RZqc3VqTqMMXie/30prw68j7Y/ypuyKkqmSrOCt0D+hyamPG/3pqilbZe5nyLqAHAByANzDW81k1s8ZJ+j4k/2ie4MRXRipSYp4y57SwtkwoDraQg8n1lQaYdYqAisvobaE42wVBiyqDgs/vKMfVA5+8zZsA+NDjGt4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk1nHiuC; arc=none smtp.client-ip=74.125.82.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhB32d8Y"
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2abf5900cd5so868098eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 14:26:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk1nHiuC"
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2ae38f81be1so920106eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 15:05:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767738384; x=1768343184; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767740727; x=1768345527; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/kjmn0Gkm53dEKwQ2oBGR8R7b9+ZNKMwT392qI9GhFo=;
-        b=AhB32d8YPCvJJTmerr0ejbOL0sfhWvCW9HDeRl+myQllyZlVhpz8k0cSwOSzkA5qIQ
-         FeR0kbtUQ2q92N7F68WFwaQ4LNdpwY0MiGJVddD34KQb4JQx5EVObSLDEtzZKf8FCkqx
-         OAmYl0yCxT8QvUZBboGVm00XSit3G+kc2oGIVMiG41KOIFOG/o+wgdNaXY9cTPbmS6bL
-         fdWBxAZ8SC8B5FTEWILnhlSdu65RULBq0uHw1UCgQl8uA8ITLvyIEMhYyFfWPA2f9wMJ
-         m9XRsOn9Xhfwf+ogxCcC7+lxAsZTgGv7ggppj9KUdcIFFRkQOuIx8aw0dU3+ekEBayk0
-         w0bQ==
+        bh=PrWh1NMNMKJq1atbYoQOFuGNwGmrHd2hv0Gwbt9ha6A=;
+        b=hk1nHiuCOFtsyakZHVZfJTzzPXRI8hIrCmLCiKuz5NFbhQr9LJaQlaDpAmDLbF8f37
+         8FCp7/dGw5C4CB66Ghn7sqIc19C5Bfjht5L61kYKO8JXQcwtFIamNPImSQNJxJ8RphX/
+         5cTbho8FpnOIxCVJQtO8xic8MUB0GSvw/++TyRQIM6PUS9aYCffdZh4O4OfeNUDaGgMQ
+         +j61QmV1UsIgt4ZcTtXeMNa/GCpG5uk0EaTi4Z+iEbv6rPOQG+QrPAHNKFeGkiz13b3h
+         91Zq2u8LH3812/FXDDe4EjMfwzYMSFEJfn/rgMoSOL7VQjHw9ccbZfBtLy1UQ4uRIzCP
+         o1fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767738384; x=1768343184;
+        d=1e100.net; s=20230601; t=1767740727; x=1768345527;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=/kjmn0Gkm53dEKwQ2oBGR8R7b9+ZNKMwT392qI9GhFo=;
-        b=LnnczAHwXOjmJFOAJcwDdsRYugXR5Byc/BAouX/U2iGuFBp1Alf3QqcSkrCGmH248Q
-         U674ktPllseObU/m9Mx/Srn6IkKEeLv0bSrWn6DtsupQwvn+0pv4WLOpqPbgtjVkoL6W
-         ugehPEbsFVO0bNDigrsg+lg7zggcope/W9J4Rwszxcr0OzyF9EvuupY7Z1+R3L6coVBu
-         S5GKL3tn8LaYjcXekL49Zbt/uph/XXooxRTL+ZKYGuDExBGVV8jHlSOgogf3y8ig09tG
-         AGMvMZWu2yi01Zn5wps789+7BKF3OLjNa7zc9aeBR3xfYmK3RSZMV8DmRgzi116n08Px
-         Mm/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Nl+BgB2kv2bohc2YBG+6HJYHzmuxXC39T/ChoBlNTKzRGoH8H0A8Uc3MZECBTsIZkwH21MZjCtCaFY5N17EiEsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWSG6Net1MunSgA+S2VMnfyjoqhgMYKRhZBe6J9cvFRwgPQg4z
-	snWxVTVHrl/nCt3TOX78aeuaYjKCubrl6BohScjF1jl7CkFy4okzRInQ
-X-Gm-Gg: AY/fxX7gQebKOKxDx7pX2veQa5TZgvHew9wRegNypwKxm+9yYo7Nqt8DIMi7zx1V8Sr
-	lQMym5/JOqW3WBVsAKndkrasa/+lkLmf66QT9KpwfKxf4PNcjNssZwZNs7fVv+AOsmFiW50yfJP
-	oMyOBvMV70ON8rsNkdWxpygKYypdnPPUqiBgKkjCNrK/vGVvKVtwGgYmzIFtwTdP8FEwu4tLVmv
-	yuL2g5pKpCcC4Fg+D00VvuCwgKA1nej2ZzeB8peMKesUKVmvZyXXsznF0634DxJek9wSUuQS/Y6
-	ochPJTpJDf2PW/T0yncth8YlkCt1C0pSEtha+D6bZ2oQRoCmm9N9BP+zpIZCaFozZGxOvnUflN8
-	gizeLc/ANjq2NCbbA3dXzLejSnOPrjTv0RHxlrWGeEZVtHfII39DwJIv9FdrCgLE3Z69Wagk1GK
-	1zeJmLendBcz/FKxbIzGTto4Wy
-X-Google-Smtp-Source: AGHT+IHHheezepTswBiukzyPRzPdj4aYFP9A5Xbf5sahVwHloo1EodEYskLxmT9EJp6qR8GEVUeYpg==
-X-Received: by 2002:a05:7300:a14a:b0:2b0:520c:df62 with SMTP id 5a478bee46e88-2b17d235272mr481939eec.19.1767738383638;
-        Tue, 06 Jan 2026 14:26:23 -0800 (PST)
+        bh=PrWh1NMNMKJq1atbYoQOFuGNwGmrHd2hv0Gwbt9ha6A=;
+        b=SusgAzDVyXWRGDw6OihxGEZDrP2M5DZn+qTU5mbYkKMW4y4OLkl9LUBjVz1LesR2uT
+         BQURZdkk4mDoR16jYSKbIjtKw36FbuC+ttorXaOTB4rft3QQgg/0axOUC62HNEFISn6Z
+         bfGMRwsuA/cS/Zrf7X1v/DJKoIxG+YazLXejcs0hWqp1peHCVNUKyxZu0YpEVjdKpaWL
+         1hYLP+Ny8er9W2Z7rF/PDJHN7+M81dPakms5/81bcKg375qN6endlE5qwYFhJWk0wylz
+         OC/MhlKBHGvjrsNAYI9Yj4A59dOzLRWMD6ir4IklJudy8YHN7+KulslwErWhgDQIekn0
+         RiPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw1mo65RsW77jmqbh6epngJgj9CxHV2pgum71T1Y9UcA/Iv5VmZEyr9G204WuPKg/YgYlzNlWSho98Q+gApHdU6sA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxECqabBQLxbXOPYcW/YE87HI59//z0Wer0EyQzR2SWTbSWOFEE
+	/OSlhLEovTHQ30qcuexouifIpKckLWyNucFTlJ81Mp5A0VlwN9zezxLi
+X-Gm-Gg: AY/fxX6YzaKKccuJaWiZzxELHO7/gYq8SNV6tSPzuDeU2nBKaal7fjqPqga0vurf6Lj
+	tJgL351mYgWa3MnSmOjM57U7oSMo4W+muKevQ1D0RKBHjTBaTzSeiHVhGjst3+FUwT9c/5hlFsZ
+	Oq0QE27la4D7oKu5gPYXs/6VHHeI6AbMGuTgM7ThND8Ct3KyI4h3s5KtP99q7OfH0CNBYmYAPYf
+	zSe8BSC6IstKeJynFlIjqGEFPSHSBvqTT7rfkHb2Y7rsjDgpOJheiMb6rCqN3G/pZEyEuspf7JV
+	Y5oqA8zy18iVsPzWv8Y+meq0p1PRM4CRfdm1XrY3dmlhTNLC0hZCAtFZIRKbvYoZ7JkHc+1hCKL
+	yiLLqlnHklHxa7Scl9hAHVh7dMVQcOAijVKZGBRny2wTjHa8K/5a8+zqAahmgF4gDX7r0sDWc8b
+	KdMDkRCbZMNwmpeJVZrmAQ6R7N
+X-Google-Smtp-Source: AGHT+IEDGhuQ4meRR+PYZ6y0FiO9yq8v5Znwcil7S9VZulGnbyyjnVVwgLyVREHTr5cFKEHXCqyvpg==
+X-Received: by 2002:a05:7301:578d:b0:2a4:3593:c7c5 with SMTP id 5a478bee46e88-2b17d1f058bmr489259eec.5.1767740726634;
+        Tue, 06 Jan 2026 15:05:26 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b1707d7fc9sm5253730eec.35.2026.01.06.14.26.22
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b1706a53f0sm5312715eec.10.2026.01.06.15.05.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 14:26:23 -0800 (PST)
+        Tue, 06 Jan 2026 15:05:26 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 6 Jan 2026 14:26:21 -0800
+Date: Tue, 6 Jan 2026 15:05:25 -0800
 From: Guenter Roeck <linux@roeck-us.net>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -68,9 +68,10 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] ftrace: Do not over-allocate ftrace memory
-Message-ID: <dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
+Message-ID: <0a9cd12e-6db8-4b41-979e-95f06e9390f6@roeck-us.net>
 References: <20260106203533.2896197-1-linux@roeck-us.net>
  <20260106161844.02ab387f@gandalf.local.home>
+ <dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,144 +80,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260106161844.02ab387f@gandalf.local.home>
+In-Reply-To: <dc80ae8e-54f6-45f0-bf2f-69012c3b47aa@roeck-us.net>
 
-Hi Steven,
-
-On Tue, Jan 06, 2026 at 04:18:44PM -0500, Steven Rostedt wrote:
-> On Tue,  6 Jan 2026 12:35:33 -0800
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > The pg_remaining calculation in ftrace_process_locs() assumes that
-> > ENTRIES_PER_PAGE multiplied by 2^order equals the actual capacity of the
-> > allocated page group. However, ENTRIES_PER_PAGE is PAGE_SIZE / ENTRY_SIZE
-> > (integer division). When PAGE_SIZE is not a multiple of ENTRY_SIZE (e.g.
-> > 4096 / 24 = 170 with remainder 16), high-order allocations (like 256 pages)
-> > have significantly more capacity than 256 * 170. This leads to pg_remaining
-> > being underestimated, which in turn makes skip (derived from skipped -
-> > pg_remaining) larger than expected, causing the WARN(skip != remaining)
-> > to trigger.
-> 
-> Nice catch! I guess you have a machine that allows much higher order
-> allocations than I do ;-)
-> 
-
-I have actually seen the problem when the system tried to allocate 341
-entries. 2 x 170 = 340, so the code allocated three pages, and things
-went downhill from there.
-
-Here is a specific example of the allocation sequence with debug
-information.
-
-ftrace_allocate_records: Requesting 52904 entries: 310 pages [order 8]. Alternate: 312 pages [order 8]
-Allocated 43690 records, 9214 remaining
-ftrace_allocate_records: Requesting 9214 entries: 54 pages [order 5]. Alternate: 55 pages [order 5]
-Allocated 5461 records, 3753 remaining
-ftrace_allocate_records: Requesting 3753 entries: 22 pages [order 4]. Alternate: 23 pages [order 4]
-Allocated 2730 records, 1023 remaining
-ftrace_allocate_records: Requesting 1023 entries: 6 pages [order 2]. Alternate: 7 pages [order 2]
-Allocated 682 records, 341 remaining
-ftrace_allocate_records: Requesting 341 entries: 2 pages [order 1]. Alternate: 3 pages [order 1]
-Allocated 341 records, 0 remaining
-
-The description above is just a more extreme example. 
-
+On Tue, Jan 06, 2026 at 02:26:23PM -0800, Guenter Roeck wrote:
+> > >  
+> > >  			pages -= remaining;
 > > 
-> > Extra allocated pages for ftrace: 2 with 654 skipped
-> > WARNING: CPU: 0 PID: 0 at kernel/trace/ftrace.c:7295 ftrace_process_locs+0x5bf/0x5e0
+> > I think pages is meaningless here, as it was set in the beginning with:
 > > 
-> > A similar problem in ftrace_allocate_records() can result in allocating
-> > too many pages. This can trigger the second warning in
-> > ftrace_process_locs().
+> > 	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
 > > 
-> > Extra allocated pages for ftrace
-> > WARNING: CPU: 0 PID: 0 at kernel/trace/ftrace.c:7276 ftrace_process_locs+0x548/0x580
+> > Which is incorrect. I wonder if we should set it via:
 > > 
-> > Use the actual capacity of a page group to determine if too many pages
-> > have been allocated to solve the problem. Also use the actual capacity
-> > of a page group to determine the number of pages needed to avoid over-
-> > allocations in ftrace_allocate_records().
+> I know, I just didn't want to make more changes than absolutely
+> necessary.
+> 
+> > 	/*
+> > 	 * Use ftrace_number_of_pages to determine how many pages were
+> > 	 * allocated
+> > 	 */
+> > 	pages = ftrace_number_of_pages;
 > > 
-> > Fixes: 4a3efc6baff93 ("ftrace: Update the mcount_loc check of skipped entries")
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> >  kernel/trace/ftrace.c | 25 +++++++++++++++++--------
-> >  1 file changed, 17 insertions(+), 8 deletions(-)
+> > 	start_pg = ftrace_allocate_pages(count);
+> > 	if (!start_pg)
+> > 		return -ENOMEM;
 > > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index ef2d5dca6f70..211ec7a04f7e 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -3844,7 +3844,7 @@ static int ftrace_allocate_records(struct ftrace_page *pg, int count)
-> >  		return -EINVAL;
-> >  
-> >  	/* We want to fill as much as possible, with no empty pages */
-> > -	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
-> > +	pages = DIV_ROUND_UP(count * ENTRY_SIZE, PAGE_SIZE);
-> >  	order = fls(pages) - 1;
-> >  
-> >   again:
-> > @@ -7308,24 +7308,33 @@ static int ftrace_process_locs(struct module *mod,
-> >  		unsigned long skip;
-> >  
-> >  		/* Count the number of entries unused and compare it to skipped. */
-> > -		pg_remaining = (ENTRIES_PER_PAGE << pg->order) - pg->index;
-> > +		pg_remaining = (PAGE_SIZE << pg->order) / ENTRY_SIZE - pg->index;
-> >  
-> >  		if (!WARN(skipped < pg_remaining, "Extra allocated pages for ftrace")) {
-> > +			unsigned long space = 0;
-> >  
-> >  			skip = skipped - pg_remaining;
-> >  
-> > -			for (pg = pg_unuse; pg; pg = pg->next)
-> > +			for (pg = pg_unuse; pg; pg = pg->next) {
-> >  				remaining += 1 << pg->order;
-> > +				/*
-> > +				 * The capacity of a page group is
-> > +				 *     (PAGE_SIZE << order) / ENTRY_SIZE
-> > +				 * Accumulate the total capacity of unused pages.
-> > +				 */
-> > +				space += (PAGE_SIZE << pg->order) / ENTRY_SIZE;
-> > +			}
-> >  
-> >  			pages -= remaining;
+> > 	/* ftrace_allocate_pages() increments ftrace_number_of_pages */
+> > 	pages = ftrace_number_of_pages - pages;
+> > 
 > 
-> I think pages is meaningless here, as it was set in the beginning with:
-> 
-> 	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
-> 
-> Which is incorrect. I wonder if we should set it via:
-> 
-I know, I just didn't want to make more changes than absolutely
-necessary.
-
-> 	/*
-> 	 * Use ftrace_number_of_pages to determine how many pages were
-> 	 * allocated
-> 	 */
-> 	pages = ftrace_number_of_pages;
-> 
-> 	start_pg = ftrace_allocate_pages(count);
-> 	if (!start_pg)
-> 		return -ENOMEM;
-> 
-> 	/* ftrace_allocate_pages() increments ftrace_number_of_pages */
-> 	pages = ftrace_number_of_pages - pages;
+> That might work, assuming that the code updating ftrace_number_of_pages
+> is (mutex) protected. I don't immediately see that, and the
+> "mutex_lock(&ftrace_lock);" right after the above code makes me a bit
+> concerned.
 > 
 
-That might work, assuming that the code updating ftrace_number_of_pages
-is (mutex) protected. I don't immediately see that, and the
-"mutex_lock(&ftrace_lock);" right after the above code makes me a bit
-concerned.
+One way to avoid the locking problem without potentially risky code changes
+would be to pass a pointer to pages to ftrace_allocate_pages() and to
+ftrace_allocate_records(), and to update it from there. I tested that and
+confirmed that it works.
 
-> This will make pages equal the number of pages that were allocated. Then
-> I'm not sure we need this extra logic.
-> 
-
-Which extra logic do you refer to ? Everything in "if (pg_unused)"
-except for the calls to synchronize_rcu() and ftrace_free_pages() ?
-If so I'll be more than happy to drop that.
-
-Thanks,
 Guenter
