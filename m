@@ -1,159 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21DA218E91
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 20:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC83133E37C
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jan 2026 20:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767730898; cv=none; b=SQI/ghlr4CBuSErBISpCW7eUoiLa/Gv0XL1qDMwSL5os4Qk3XyxF+AZWyoP1qF8+ZdF/99PrWeEF15iDyXbWo3/y3P2d6b06EaR1iKg+yTsaGnb0Vhy2OLOiRSBQx8K2oUkHa3TtnwfIShVHb0TvCnEl2PyTVNfcNlQVH8ZafO0=
+	t=1767731740; cv=none; b=OzvgewEO7srVjoL9PmqYdoIIvS2AfU76hsjbzCnUQGC9sg14I6LQOUy8mRBNoKIm9Sc5Pm9T0rwUYdq2H/gZRs0H7bQKjWJce/VRDDT2mwhvlCLA3b+uyaLN8+IapdkuZRweQ98WLW098oHt1Rj8rtqYFh8a671EIINPkJwkY2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767730898; c=relaxed/simple;
-	bh=8JScIQPr4+VCXK2OisNel78o25mqB81NGhnI6lAi3gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2CkRrRFu+v/UAo4pN1VYqXUPc04N2sVBGzDKyJ5Q8uLl+riwNW7y0yOBGeEOkbPk+SSHWQzeCXJ/7woAnKeZQgUsdtUBNDJTnjR6XkDsOmfG103VWqLqszQ5GemPt3SfPGXlFQEbawlD6rWg9nPwVF6HBs116hMhGqzdmOIaWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QGEJsUph; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767731740; c=relaxed/simple;
+	bh=D9yQ2o5oNf3ScOdvwc+oEkWVYycM8zjIe/4vKH7dBiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N1koQMXeQTMzcPQxR16TNrDHTS4JvCq07j7ikfBHA/bn56NS8zaXwv46F468eSEhB1wx0jgPUjcPeDMcA4nC6zXdA6WLc34Hrw9q6Qr/PRTYuBpuxCYkdJ3gL6O2TaP3WZMXSESXkiu4bElbpHw88R1zZzrblkr+jUzINKzG1KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egowkKl1; arc=none smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGEJsUph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767730895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=csijp+RWt7sKbkNSiyb6B92HOwDRjpWdJYGhRcdiOKw=;
-	b=QGEJsUphHmB0lfwJPicXfrM9KXxAMkQ4IrI3vl1v/3qeCOP3YCQfEzzIBKEdjmaN0Dwusl
-	4Um8FZfu4lAAxQ1W2IGla+4SgqvqfbPWGWSMN2h+m3qo9HQriVhOXtOoYGJf4BR1oHIZrM
-	JQbNAeJOj2TM8N4dMj4Mo4ZbMtAZEZQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-39-LKzVER5KOC2lJg6L9F3i1g-1; Tue,
- 06 Jan 2026 15:21:32 -0500
-X-MC-Unique: LKzVER5KOC2lJg6L9F3i1g-1
-X-Mimecast-MFC-AGG-ID: LKzVER5KOC2lJg6L9F3i1g_1767730891
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0450A19560B2;
-	Tue,  6 Jan 2026 20:21:31 +0000 (UTC)
-Received: from pauld.westford.csb (unknown [10.22.64.202])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B465430001B9;
-	Tue,  6 Jan 2026 20:21:27 +0000 (UTC)
-Date: Tue, 6 Jan 2026 15:21:24 -0500
-From: Phil Auld <pauld@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/13] sched: Export hidden tracepoints to modules
-Message-ID: <20260106202124.GA401789@pauld.westford.csb>
-References: <20251205131621.135513-1-gmonaco@redhat.com>
- <20251205131621.135513-9-gmonaco@redhat.com>
- <20251205133552.GA400972@pauld.westford.csb>
- <20251211223643.GA557546@pauld.westford.csb>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egowkKl1"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2b04fb5c7a7so699782eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 12:35:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767731738; x=1768336538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/rnn3ELMzpSfEF1jjvUjW3hY2TqsWtJHmr7YBzUjJw=;
+        b=egowkKl1ALHnKVn97TVWXlm4u8d7KAXQhtnaxT0cSV9+qQaNdCj4a919f/zkHrVDDz
+         Jjyv/p4M+rGFPspY0XhJ6DqIb5Ob21+77sS0MVYyqhRD3/PAesbb6lHRrfU79FQ8aNFu
+         /8roEVzOupnfvO4kBjm8oZTR5qfOwHdj2ih+nSMeGFsClAwhMF+xZT7ZjZddgTGa+UpN
+         fSuuqcZnhAanXE6hEENubxTrH7q/rMxoojEqwk4sfe+B55tLl1vCbqqmt5TNw0sO+Nni
+         CXv+kmld11bwDA/yxfkR0TZ5CNkJL29gwYcyCxVIZnuEnO0H4prxbauL6UYLpeut7G4/
+         Qw5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767731738; x=1768336538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5/rnn3ELMzpSfEF1jjvUjW3hY2TqsWtJHmr7YBzUjJw=;
+        b=dTALlvkSeyR+x0gYuVwl8CGMw6/qoeJ5T54Em8FO5LcLDUv1vGG2ND8EIBG+3hdmBf
+         n6spPWALw41C2HMRNl7T9waOZprYneKpQUvuMnHjsvCn3wZm19J7qsTvP9opiHYEIvPc
+         v1zNC9roLlWdy3/PPc+l5diJUs3IIFBASBok3FDDaXBOT9IseGW2uM6YOekR4yDf4vC3
+         mSPv9/D0pBb6O1VVIkZPMEq8Y+8f8BZWjc4owHonafQDthZdAUh/RnOmTbWNXY58O75m
+         ubgUEtmFHPUPgonB9dMqaOts3XtTOfD/4OQFIulGyTcs9ak5Vr/+XsNhs4X4lSaRtFpY
+         Yc9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVmJ5rq1OpmIbyWi7q40qu/pBK73f9Bgnvpu3W3f2IM4iEzYLykG7cNle48l1SPGGSwM58FCBv7kAcheLLcaOjmVZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+tnAm2/HOTNKC+JyfS3Z70Rt3MBT90bILZAJBTZmMHQNEUnyv
+	BF40EOX4WxQbD2WrWixpVsYSD7W8KNpTSwRijzG/MPHzg41O8zqSjeJl
+X-Gm-Gg: AY/fxX6LQITtdA4zidD0DcQeN3QfJiEAXQukJlw9IeqdZwpUHRkanifxdVf++IEnbRG
+	AzgsRflgT51SmbojaoeaE0WXXiOK9CnLUb0rKH5PPfmAL78dYmgE3QYJdbpw/OHSTSaYVNXGn8I
+	zr+7DXdBaBukVgsv517VBJt2zCFBap94VmMjEuCCP46RIRB1X15jKBwfj9RNDpkIRkdTTD8Fx6X
+	GiiLTsUa6lBMkFo1FGcXXvjHwrSuFpgbilOVm3JSM+KOrelFFzhXlGwNHSFM3Ddg7XShyJE6M+e
+	+Yy7J8OcnOO3J/mb4pIDx9kkYeFGCVSQ/MHitw6H3Q0WYnILCDKmL4g9NRl2AvRfedZMMaCTllx
+	ioj9xtpsX3NTNuO3GE1bnlNmOFz8GOv4WIY2Is1reROWLbimmJGaj8Lfh/fDlPzyMeYJG2U/FP2
+	aQztvHQTlxE6LtyltXaSf5qfh1
+X-Google-Smtp-Source: AGHT+IFiJA+rdlCtKkoxFpOGnLicEwGAcgBp1ff416NZWS9VUF0qprC4FkRzIHCQFO3T97V7ug3zlw==
+X-Received: by 2002:a05:7300:1829:b0:2b0:5834:44d2 with SMTP id 5a478bee46e88-2b17d34428amr142148eec.39.1767731737566;
+        Tue, 06 Jan 2026 12:35:37 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b1706a5d3dsm4674177eec.13.2026.01.06.12.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 12:35:37 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] ftrace: Do not over-allocate ftrace memory
+Date: Tue,  6 Jan 2026 12:35:33 -0800
+Message-ID: <20260106203533.2896197-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251211223643.GA557546@pauld.westford.csb>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
 
+The pg_remaining calculation in ftrace_process_locs() assumes that
+ENTRIES_PER_PAGE multiplied by 2^order equals the actual capacity of the
+allocated page group. However, ENTRIES_PER_PAGE is PAGE_SIZE / ENTRY_SIZE
+(integer division). When PAGE_SIZE is not a multiple of ENTRY_SIZE (e.g.
+4096 / 24 = 170 with remainder 16), high-order allocations (like 256 pages)
+have significantly more capacity than 256 * 170. This leads to pg_remaining
+being underestimated, which in turn makes skip (derived from skipped -
+pg_remaining) larger than expected, causing the WARN(skip != remaining)
+to trigger.
 
-Ping...
+Extra allocated pages for ftrace: 2 with 654 skipped
+WARNING: CPU: 0 PID: 0 at kernel/trace/ftrace.c:7295 ftrace_process_locs+0x5bf/0x5e0
 
-On Fri, Dec 12, 2025 at 07:36:43AM +0900 Phil Auld wrote:
-> 
-> Hi Peter,
-> 
-> On Fri, Dec 05, 2025 at 08:35:52AM -0500 Phil Auld wrote:
-> > On Fri, Dec 05, 2025 at 02:16:16PM +0100 Gabriele Monaco wrote:
-> > > The tracepoints sched_entry, sched_exit and sched_set_need_resched
-> > > are not exported to tracefs as trace events, this allows only kernel
-> > > code to access them. Helper modules like [1] can be used to still have
-> > > the tracepoints available to ftrace for debugging purposes, but they do
-> > > rely on the tracepoints being exported.
-> > > 
-> > > Export the 3 not exported tracepoints.
-> > > Note that sched_set_state is already exported as the macro is called
-> > > from modules.
-> > > 
-> > > [1] - https://github.com/qais-yousef/sched_tp.git
-> > > 
-> > > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> > 
-> > This makes sense.
-> > 
-> > Reviewed-by: Phil Auld <pauld@redhat.com>
-> > 
-> 
-> Any chance we can get this one in even if the rest of the series
-> needs more time?
-> 
-> Without this, out of tree modules fail to link.
+A similar problem in ftrace_allocate_records() can result in allocating
+too many pages. This can trigger the second warning in
+ftrace_process_locs().
 
-Any thoughts on this? Please?
+Extra allocated pages for ftrace
+WARNING: CPU: 0 PID: 0 at kernel/trace/ftrace.c:7276 ftrace_process_locs+0x548/0x580
 
-Anything including linux/sched.h fails to link due to
-these:
-__trace_set_need_resched 
-__tracepoint_sched_set_need_resched_tp
+Use the actual capacity of a page group to determine if too many pages
+have been allocated to solve the problem. Also use the actual capacity
+of a page group to determine the number of pages needed to avoid over-
+allocations in ftrace_allocate_records().
 
+Fixes: 4a3efc6baff93 ("ftrace: Update the mcount_loc check of skipped entries")
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ kernel/trace/ftrace.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-
-Thanks,
-Phil
-
-> 
-> I don't know if it's worth adding:
-> 
-> Fixes: adcc3bfa8806 ("sched: Adapt sched tracepoints for RV task model")
-> 
-> 
-> Cheers,
-> Phil
-> 
-> > 
-> > Cheers,
-> > Phil
-> > 
-> > > ---
-> > >  kernel/sched/core.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index 41ba0be16911..5516778c19eb 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -119,6 +119,9 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
-> > >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
-> > >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
-> > >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
-> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
-> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
-> > > +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
-> > >  
-> > >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-> > >  DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
-> > > -- 
-> > > 2.52.0
-> > > 
-> > > 
-> > 
-> > -- 
-> > 
-> 
-> -- 
-> 
-> 
-
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index ef2d5dca6f70..211ec7a04f7e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3844,7 +3844,7 @@ static int ftrace_allocate_records(struct ftrace_page *pg, int count)
+ 		return -EINVAL;
+ 
+ 	/* We want to fill as much as possible, with no empty pages */
+-	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
++	pages = DIV_ROUND_UP(count * ENTRY_SIZE, PAGE_SIZE);
+ 	order = fls(pages) - 1;
+ 
+  again:
+@@ -7308,24 +7308,33 @@ static int ftrace_process_locs(struct module *mod,
+ 		unsigned long skip;
+ 
+ 		/* Count the number of entries unused and compare it to skipped. */
+-		pg_remaining = (ENTRIES_PER_PAGE << pg->order) - pg->index;
++		pg_remaining = (PAGE_SIZE << pg->order) / ENTRY_SIZE - pg->index;
+ 
+ 		if (!WARN(skipped < pg_remaining, "Extra allocated pages for ftrace")) {
++			unsigned long space = 0;
+ 
+ 			skip = skipped - pg_remaining;
+ 
+-			for (pg = pg_unuse; pg; pg = pg->next)
++			for (pg = pg_unuse; pg; pg = pg->next) {
+ 				remaining += 1 << pg->order;
++				/*
++				 * The capacity of a page group is
++				 *     (PAGE_SIZE << order) / ENTRY_SIZE
++				 * Accumulate the total capacity of unused pages.
++				 */
++				space += (PAGE_SIZE << pg->order) / ENTRY_SIZE;
++			}
+ 
+ 			pages -= remaining;
+ 
+-			skip = DIV_ROUND_UP(skip, ENTRIES_PER_PAGE);
+-
+ 			/*
+-			 * Check to see if the number of pages remaining would
+-			 * just fit the number of entries skipped.
++			 * Check to see if extra pages have been allocated.
++			 * Only warn if the number of unused entries is larger
++			 * than the number of entries per page to avoid false
++			 * positives due to rounding.
+ 			 */
+-			WARN(skip != remaining, "Extra allocated pages for ftrace: %lu with %lu skipped",
++			WARN(space - skip > ENTRIES_PER_PAGE,
++			     "Extra allocated pages for ftrace: %lu with %lu skipped",
+ 			     remaining, skipped);
+ 		}
+ 		/* Need to synchronize with ftrace_location_range() */
 -- 
+2.45.2
 
