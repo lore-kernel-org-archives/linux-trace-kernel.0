@@ -1,144 +1,420 @@
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC1110FD
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 01:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767750976; cv=none; b=KMkYttR73PwsP9+Kg1Ke/d07DeLktl7bFipgNwEGZ8IUENUTMEwSPim/A5tqehAp+O+emU3qfgcy4OKmOmbC4kesKXUgV7INsN7aqw60qFcJFfDsaDqHFrtTFshUbRypQKMQ02vVjlUgXFqlXiYESYiAOI4u7GQlG1uXU5hFpr4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767750976; c=relaxed/simple;
-	bh=i9CvjPjYzHpXfy395Iu7hC/J5xvVGAm9SRv099YEo+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSx+4fmoqvDda8+sVP7M2RKd2wP6gi1FncniLKJQYhfu/fMOTZvzPSmPeAcQqLoiKmEbhSU5J0cylELLvKehEuajNOK8pPkUJGHOxjhJn0QRc0wTIZvqzJnl8VO+h2ChtVH52MejJOfCFPdwCcOrqeNo9CNvLru7+8YE4xSJABw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0ov6vfc; arc=none smtp.client-ip=74.125.82.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C633B22FDE6
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 01:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767751039; cv=fail; b=YxEXqjCTay5XqXBaHO9nZkRqSincaO3fHZBeLezZBXuqTLLaBX+gvF16ACYSWK1d+NKGABtGcOkK0KqmtlMkNzP7deH/a0kRy9Q/YhzMWj1qaBPOY+uyMkQgWLih2aa7jRCnIXCi1t6XNvjmVhTZkVOIgw0jPaasax9UL2WRAQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767751039; c=relaxed/simple;
+	bh=nHchlc01NXZgpR4N/RqIf8vP5nUi8FOYe8f9nrJ2aAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fcyvM7cW4AQmrZ1zgj+6EjHqDsNo1jN7UW7ucVD3aVoHCiAwS3fOrc+B+540ICaUFGZzqktJFd8Tmbj4bgkdJwr8bmhgCm5lIoGgw/UH5Xk+EhOXfuMOS5O9hwBNB24Set1kKJdpifxFbMur8gEgX67tMAkLbOh7SZ7B9m9CCt4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ix/rMvav; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bvLp5w3F; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0ov6vfc"
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-12056277571so1126460c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 17:56:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ix/rMvav";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bvLp5w3F"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6070Qqm1778465;
+	Wed, 7 Jan 2026 01:56:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=tqTd9PnTv+y7ePT5bYjh/wa1gZyBxESIv8q29QYGRLM=; b=
+	ix/rMvavBJG5frjEmGi2vcQ5cjQM66OSaOUG2o2TciY4eOLBloNgA8WyjxNMW8vo
+	iH3mgkIRbSpZ7LyOB68EKaG/TaaKaEqZMz2wziLxtatSnFRAiW+H6FcS9rbU2a9b
+	wYToobXiEvugdNP6hi6khSSZCew3qJ2z302PXdtw36c7RnmqJFmAhQTzSmNtns8k
+	QxTbZu+HD+a1TMouraExqL0TkmrWjpAKokqPJxssxInbBBHNobtQPUvadEIIy+tw
+	1QR9vTFjH6U31N+U4XuWICn9u2ECsCyZ/Wg2QnNV5jCwXuYcnARcjtwWKnztqAXK
+	oE5S4AhE1jfT/bmd0OpVQw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bhcxhr2hx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 Jan 2026 01:56:59 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 6070JMYC034049;
+	Wed, 7 Jan 2026 01:56:58 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011069.outbound.protection.outlook.com [52.101.52.69])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4besj99vqf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 Jan 2026 01:56:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YPpdXRY5GgMZk6GoTycu+EgHFxt4HCYK4RSYCVBRweQr2I/JUY6NCEWMjj3Dwsl6fjmUISHJqkO6lGlxEOUsM0X+uHS0aSG1PqXsuQxuQe2DrJRTpRIuNsmKZAs1UKj2kbnsv5AK1SzgPksvLqlcHfjgRHeVrDuIvtmTOFO1fgSOFC6IN4hDZqUE/mr3QN57e191L9XS+1lSB+/wRx0gKpY+QBwqyQQaKvlWBAQnMyFIQpYHdCXuAzAhCwJByV1rJklFFwpcE5eaZjTfNQgnyFsZe5UdnqVoBUzSEPvKh5sKtTEhMMYDENryhN2XPcAU/frnAlkPYcTOquBJQAAeGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tqTd9PnTv+y7ePT5bYjh/wa1gZyBxESIv8q29QYGRLM=;
+ b=GNORu7qLlrKOE17OYkKc81QRyNO5kxSEoYEW0q0r4QOGMUT/IjVCbcgs1HzHJzyklnoNTjoJZObPJUOsDWAsi2e+XH0ekYWwB0/C5kPp9aSRseRgAmz6KYMYwQ6vU9ec0jsOJcxDt4GtlIk7xRjVw4oaTylc15dj/K7pPLsZkSxmXe/lvv3Xc/ZQmCeN4oe+3ctGe7olu6gBF1P8ACLcoHBzRaZwXel3cO9BIJrVfzqsNY9SV37PJe91Z9wwXXm7IBlGdFS/1fkWpKMap6GZkiGpBHmz5R6mJiSSs11uqrAHRhLEgjYa05SwYKpFfK0ZDOnY2xPjD5MlGkEG0aDG6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767750974; x=1768355774; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VlVS6vkxouJ7ZRpCqrQRqBlJbY8szTHfi0a3hUoZ0w0=;
-        b=E0ov6vfcn4eFH2cc2//o7Wrm8t3qXZxQ0Wwpyb1VfNNJ/+mX5qvdOTPXVvaLx5LmuT
-         oVhBIQjr8MFQ+UhPIaHWwTtjpfLcs+S3tCZpD98F1rA3cfYkclg4KmuYZs/E+ap4AeB1
-         g9EgOnA7tZ6Plz4ii5FRj3B5WIrdKyuNs5klPDIbj09lNO5tSdBWBX2v985HIBJYqRy0
-         AOtUd3+kMvZX/h46fxoRawbgVpo/wQ3O8Djn5OZcEJpNK4nHfUPQeHm+6IPU7exJ/UNc
-         i4wSdee4Rbh3J6Y/ppiI2/DfzLodnhaSz6zexfYNUHJSr//qgJiSqDj2aCVmtHCDEFPZ
-         ltSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767750974; x=1768355774;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VlVS6vkxouJ7ZRpCqrQRqBlJbY8szTHfi0a3hUoZ0w0=;
-        b=qmeBJnbzGiH/oBYSUHLqGgX7ydbFxGnmojX5vSeQWQunVHtXTm7Q5Gwug2EgzJmKPh
-         UuXX7ml4KecwEJjhteNmfevGgwRgJekXx6d9v6fIOcO3krjdw5H7RljugkLtqIPKyLK9
-         FEwm77azaw3cIScp2PHndj2kJnJgB92GjQCBi75AvEDIllRJVIgsFBadqk0BWbGW42oG
-         i+Dx/QQWKh/SxALqOw6jS81sH17SIFOFzvvaCAuwn2seSwbsOsdtHGgR2wSGvM/uI9bS
-         CEKTB7K1oFyVyGVEjMctozCAeB4xgrQT0dW4v+W3eZEcTbiUvjmQxvZXyImWxioxB1+u
-         D+bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZUC7K6e4l1ZeCjlJ4vGtTUnnCuJhPl8BUWAIP73wlzE8rDCTyXqrBdU8N8PDwokM1AMhfhYuMLlSgEQN6gZSMSkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ7oAYYdo7xpvyaOPIokwqeLP78Z3msjl5udj+ROhhrhVukXOL
-	pbm3TaXOhHkpiy9IItUvXH5M1RMfcE/4KRn/3ujt2R/sEThY2JYWGSCBdUbxfA==
-X-Gm-Gg: AY/fxX53rVFyfwjJhT+f4RdL9pgxo3KcL0MOJVavXOqsF68UoqsXNF3eRn0fFMsW5t5
-	1XhswXcDAlZi4UVW6Pd88AKLoYq/e7zJt+PRrBvQSbgJ3maz+SGJWt522jOoOES6SVna/a7ou5/
-	+TsnWKtF5Hm60t1eLIPREp5wvp9OXtSW4YEUhFYpFFCnXhKV0/qqYXlQMfILwLS74WWcaDDSy2g
-	yidJlFWlx1tGw5HCgg84BnpLc1OAl3nYJHAIBb1gD2zm+VQ+76xOrJtMyMWeeG+h9iworvLexti
-	4WUopBoJSHMPD8tlv3FT8xJjGhQHF6EKpYlUSxGp1owT2OgYFQZ1tQE0A4B3+oMcw3Eq+d87C6T
-	YJLPTHWiITAIA/6PVZUbMcHlkZ7Dpomxd/9EJ1oQGFrdC1TnBL+llf1nS7cnSLRG1pM/IPkoJo+
-	IoBYhQm5Of77PFfsF9ZnnSldYT
-X-Google-Smtp-Source: AGHT+IEBWQtWJBseWfjNgkmXq7j6uMZfwSor2aBaCRQOVa9jlxzgUupLVdrE+xkHOoSJNLYUTSRXPg==
-X-Received: by 2002:a05:7022:697:b0:119:e56b:98a5 with SMTP id a92af1059eb24-121f8b0db87mr773223c88.12.1767750974079;
-        Tue, 06 Jan 2026 17:56:14 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121f243421esm8332977c88.2.2026.01.06.17.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 17:56:13 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 6 Jan 2026 17:56:12 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Do not over-allocate ftrace memory
-Message-ID: <3cd8b2bf-c18f-4fb2-85ff-afcaaa1b38ca@roeck-us.net>
-References: <20260107002428.2904852-1-linux@roeck-us.net>
- <20260106194355.66cf869e@fedora>
- <b13af4e1-3510-4240-9347-31459d5f0ef6@roeck-us.net>
- <20260106203352.539b9548@gandalf.local.home>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tqTd9PnTv+y7ePT5bYjh/wa1gZyBxESIv8q29QYGRLM=;
+ b=bvLp5w3FuGLoL5wt5PWCTUapIlLG/TwmyyliLBatzMhoF8K2mRRg9Ito/2yy+hm18zj0jAVtBpeRLCi7yPyB18CDNSIkkeWJCh7ATyPoJIkLbTnUsOuIIt74ZI2o+4nUBHwCIiAPBgpvETPHGvaGDmq9RP13DCsdMx4PWVuAkVU=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by MN6PR10MB8144.namprd10.prod.outlook.com (2603:10b6:208:4fa::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Wed, 7 Jan
+ 2026 01:56:55 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71%7]) with mapi id 15.20.9499.002; Wed, 7 Jan 2026
+ 01:56:55 +0000
+Date: Wed, 7 Jan 2026 10:56:46 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Thomas Ballasi <tballasi@linux.microsoft.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+        rostedt@goodmis.org
+Subject: build error on CONFIG_MEMCG=n "error: invalid use of undefined type
+ 'struct mem_cgroup'"
+Message-ID: <aV29Xj2wo786xVn1@hyeyoo>
+References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
+ <20260105160423.23708-1-tballasi@linux.microsoft.com>
+ <20260105160423.23708-2-tballasi@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260105160423.23708-2-tballasi@linux.microsoft.com>
+X-ClientProxiedBy: SE2P216CA0093.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2c2::14) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260106203352.539b9548@gandalf.local.home>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|MN6PR10MB8144:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f4040f5-44e4-41e3-9277-08de4d90085d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R2JQOGFYYUk0b0c1cFNBWWJydEFRUm1GNHgvVDA2NVdpRHhrRDNhYWlGL2pW?=
+ =?utf-8?B?MDBySlo4WTZEL2k4NVhDc2dBTisyVU9qWTZoNjRSelZjRnFveCtpaEhVRENq?=
+ =?utf-8?B?VENiMnFnSVVEblltZUU3eEQyYzFxR0p1NnNLb1BveXlwUmp6OXY2WmViUXBX?=
+ =?utf-8?B?ajJ5blYza0llNzNyWmthYk1FMUUxZC83SUFSK1h3b0xsKzJEM21RaE02SlBu?=
+ =?utf-8?B?VnFtcko4VTNmR2NxVHI1M0xLNmdXVFBlM1N6dUNNcE5xR2sySVNsMExWRXlP?=
+ =?utf-8?B?OUVIUk1WckJXMU9rNmRuSVN2bDNJT0dncmU0QlVRazRRZXNkTFFtRWFrTXhi?=
+ =?utf-8?B?Q3B6bXlSMmRhK09mSVFFMGtvUWJLdGV2RENKM2NXa3Nhd2QxTFRkRXRBdWpZ?=
+ =?utf-8?B?S3pBb0pMQUJOVDZVV085bkphcExzZDJKdmhtNnFUMzNZSGI2ZTluYmdKU0pK?=
+ =?utf-8?B?Y01xVm92QTgwRTk1TW1xNGVSdFgzVGFwNHpmZEpLRU5nUFExU2RhYTczdFNv?=
+ =?utf-8?B?R3krVjRGcmRBYXd3UmZjZ05UZE1OT0QrUEdUdldycWxkSmRlM0JTeEg3SjYz?=
+ =?utf-8?B?QVNEMFZBT2NuOUFUN05EWm8wdW8xUk5HMnc4d0VmTTFKMFI5cFJOQVlXTXR5?=
+ =?utf-8?B?bm1ic0szOVdFcDRzZ2tTV2NXTVliLzdDMVlqeWRSQ2RLRHMvZUVLcVIrakdt?=
+ =?utf-8?B?VFJlT2N5WGFIekcwdm9WeU0reGVTUmZKYTlpMUhJYU5lcEUvSEx0RWRQVzFY?=
+ =?utf-8?B?NjFRV3VTWkdFbTVWamhRK2IvWkM2cksza0NvQURmN0ZKV1JsVzhkQldxS2ll?=
+ =?utf-8?B?T01sakIyTVdscHFoeE5wdkNVYUIreHRUcEN3Mytjem5hKzd6QllMcmlHbUFx?=
+ =?utf-8?B?b21DQWVVYmoyZEFCRTZlZG1oTkd6YS9iNDEwQWpEeVNpbGhMbEdzSVBnb3JT?=
+ =?utf-8?B?TlZKRDdRUDVZbGJpN0NxQjEybzZ6dGZzaVRFY2YyS0JRRkxjS2F5UUxQYVlv?=
+ =?utf-8?B?dStyeGNSdy8yVDVpSGJHalJKM2N0aERYK0puV1JMK3M5OHRHS2NIUHkrN2Rh?=
+ =?utf-8?B?NldjQTNXaXdlZVludnBBOVpaVGs2cnNkYTRQVm1vRWpudUowREMyTStxZWp1?=
+ =?utf-8?B?ZEp0S3VBTjVsSThpVUtvcThrUUtIRTFkalNieVg1dDZBMG5EeHAzWVZtT1Qw?=
+ =?utf-8?B?Y2VTZDZ4WlVENmpVV2dvc3NSMDVSSGdGZ1J3OU45RXU2aVFwV3p3Tlpuellk?=
+ =?utf-8?B?cnBHaVpiTFZDeDJUdDM4MjNNUFRmQW0xMkpQb0U2cmM0VmpQOEcxdmR1MjFF?=
+ =?utf-8?B?cEsrZmRKL2s0TW9SN3B5WXVDOGxNdXBrRkk1c3Zsazd5Yy9wL1YwNElzb3FB?=
+ =?utf-8?B?emxhZ0JVUzR2aDFxVHlOK2gvZ2JNV2dEZktFZTRPaXVVb1h4T3pJckJaV3Rz?=
+ =?utf-8?B?Y09GNTRXK0dYSWhXSHlOT1NCQThZR0IrTkpWcFR6UjZTZGlwYXRUZytUYzl0?=
+ =?utf-8?B?WTVVcTI5dVcyQ2dtZ3A1UGI3LzBNUC9YbENRTmdUQ0JwaGhDZmlyR2crWHIv?=
+ =?utf-8?B?NWI5ZEs4VXRZRDdTTXh6TXRlME0rMzliRTVjWHZnYk1KbUY3OFJXN3F4aG9W?=
+ =?utf-8?B?emhMcURYQ0ppcFFkRE52elh2QjBmNWVvRXpxNEVFMWoxK01qWEF4UCtjZ1J3?=
+ =?utf-8?B?TkZHNGNuRExOYUxKOFZDdWFkV1VyLzNTMXhCUDRROVZOSTVteFY3aTRBbE5n?=
+ =?utf-8?B?RytiQzJFczlRT1Nqazl1M2dPT3Vwanl1UEc5Q3pQcWJ1dFQxQnBpUE9QemVL?=
+ =?utf-8?B?SWFMZFg4S3hiTENGMEU5cHorUkM0a0dNVDV0OVhxK0dqTHQ5c3M3UjVsaXNu?=
+ =?utf-8?B?ZFlXZzhWYUR4YVNJV1FsQm80cnZCUkdxM0d1RUhFQU9LSWhGVUN6d1dDbjhF?=
+ =?utf-8?Q?VV6RvMBWHWrFt8gay4UHec+m8ldzaI7E?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aHBRWHAzekd4QXRXbGtha2ZmWkFreTVKbjRBR01UUHlvRHUxK1p2UU5oMXF2?=
+ =?utf-8?B?cTlwWnRrbHgwbmZoTGVGLzJNb015c1Y3UGxsVzJpSGd2UGU3Sm1ma3VGNjY5?=
+ =?utf-8?B?dDc5NldNbURaZTZxV0NmMVRVaHd6aTBNeW91ZlZvdlpxKzNwQUtNTlFxbVBU?=
+ =?utf-8?B?Zk5nM0lIZlo4eHNnOGFWYVZpbmx3dGhsZ1VUUGNlY1JDVi96UHN1Sk1ZdDJM?=
+ =?utf-8?B?WHJBbDk2dDdGa3hBeFlOL1N0MkhJYVR2SFlENERzeHQrSzFQSTUwUXVEZ25q?=
+ =?utf-8?B?eGhDc20vTXczR2tFMWF2OCtsMnJZUlJ3OWROYkhpNlM3cGQ0Tm9XRFdzWmFN?=
+ =?utf-8?B?eFplUFMvQTRXVnU5dzFaQS9BZU5ibnc0akEzbFo1QmhRbWNzZ0NxeGRseC96?=
+ =?utf-8?B?eXlqaEpiY3c5VWhlbDJjQ3YySG93U01WVk8rMmZ6akhjNGxqcGRCYnBmemZs?=
+ =?utf-8?B?eVBoZXp6U1Q0UFBFaXBJdDJLSmUvbCtUdmFJSGZYUlRwTkFBcUNRZFdaczhN?=
+ =?utf-8?B?d0pBTU9rb256eTAzdWFMV2RQLzVRU3B3eFducFVjWHhjT2dRa1lsWkc4Q3d5?=
+ =?utf-8?B?Q3ViRHk4aExWcG90Ky9BKzNJU3JneHZyNWxnU3FrQXk1N2hnLzdVUXVqWWFp?=
+ =?utf-8?B?UzJUYmEzWlhEY0ZOb0I0TldDV2dDS0F2eDdGaVN1ZkZiQ2Y4T2FsSzZEaTZQ?=
+ =?utf-8?B?b0pKdU4vWHkveHpnOVRnYXUyWVRTcFdqS2RmeXBVdCtIK0JVRXZQa1N1OWJP?=
+ =?utf-8?B?d0w4OUF1UUJuYmRDQ1NubldVZ3FmVmEwRVV2VHVHMXJJSHVVSWlUVE90dzA3?=
+ =?utf-8?B?bWF0RHhkb05KWSsySGJrcjUrVWp6K0tEeE4vVVUxVVl6SjNodnFRb25kUFZL?=
+ =?utf-8?B?Rkl2NUx5dHp2R2FwbW94dldma1dNM2lKZGc3c21INmhaZHlNYjFaUDQ5UGQy?=
+ =?utf-8?B?a1BCMFB4ZXR0V0hhSFliMVV2T3RhTTJBaXRTVTc5ZHNHUWJzb21iZTdqRTg2?=
+ =?utf-8?B?SGd6eUNsbUdMaWFPekV1c2JQR2FCMjJEUDhUMjZYUVQ0T0pHOE5BRnNEaVNl?=
+ =?utf-8?B?NzIyWmMwS3NPZ0RlSUtIUlFtZXNxcmF4cXdmRzNMenUzUVVkNUZLUlUzeEkz?=
+ =?utf-8?B?Qkp0THFrUFRUTnBLNm1CbFhKQXNmSnAzM01kSjdUaWNEbGVYeG9CR2NGMGk4?=
+ =?utf-8?B?SDZvTllWMW5SdXFHNGhwLzIwNnFBVzlNbHpUY3E5eHUvMldtUmUwRHRKc0kw?=
+ =?utf-8?B?VFo1ZDc0bHgzenJoVU8zWVlJczFzTStLTXhNUUY4MEwzZDViMHNBR001WmN4?=
+ =?utf-8?B?ald3NEVreC9DcDFmbGJLbkUvS0JSckVxSFc0WDYyRERaNWNiK2dhZjlQbHN6?=
+ =?utf-8?B?U1VaOUVKMlRuSVlwbDdGeVkxcnVCM0M3TnMyL0dDbm1uVU83cmJ0MWVIV0o4?=
+ =?utf-8?B?S1l1MmNCU0NVY09ZdndRb1Q5aXFBRW1tVGtPUktFcmp4Q3lUd0ZhWk1qT1Q0?=
+ =?utf-8?B?S1pIV21oQU82ZldEVXJCekE5SSt4dDNMYU42WnM3aHlOQmJjM2JwTDFjTUVv?=
+ =?utf-8?B?ZTBMNm9Fc084REp5RkprM2tyVERSZnlTQ3RldVlLbXRTY0RRYU1YMXZhdDBW?=
+ =?utf-8?B?clJMRFFNdmlKc2dmSDhwWmg0a25UaHFwemRjMUFTdmF3Yks2QUdCbWxhdXdz?=
+ =?utf-8?B?VXBLYUNDZ3lzTTBLTi85ZzRDeWw0VCthOHB1UFA2Rjc2WDVxWXJQOWhWQVRI?=
+ =?utf-8?B?Y1czN2FVRXQxanRNd2VVbXA4cThxQzZSamE4aFZyNjZaQ0tJTk5lR2hCNFg0?=
+ =?utf-8?B?Slo0ZFd2QWFLQzd6MkdkcXh3WXZLTHMxa2JlcCtmUWJtTDZLR3lsemZQbkRG?=
+ =?utf-8?B?a2c5NE5HRk9KK1h1VVVTbUNhMFdWUisxaWxRZ3NrbzU0WFVvOUdwZ0dCby8w?=
+ =?utf-8?B?QjRoMGNNN2NtSm1WdmZBVGZmY0htL1o4V05OTUhzYnY4emNkVDJjdFlMWUxZ?=
+ =?utf-8?B?K3dxYnp0MngybUVSdVc1K0JXdVFJMndSTk5tMVRIOXVLeEV0RDhZdG45STJC?=
+ =?utf-8?B?UzJzdDgrUDdsTUF0Zk9hcVRDWDlmcUtrOEZHTXk0clZPRWN5Vmx3enVoaVQ1?=
+ =?utf-8?B?QnpYMVBFeFU3UnczV0ZxNkE2MVYyNVorOVFqWXR3YzBJQmtCOXVKbDFDQVN3?=
+ =?utf-8?B?RTU3UkhWcmtuRGk3Rll2K21hVHBRaXhkdWx0VGg5ZFc1VFRhb1ZqRS9IYU5E?=
+ =?utf-8?B?eEl1Nlh1ODVJRW55RGc2QWVQMFhveEhLV3gwN0UzNG1WN3l6VjVxUUovYmVD?=
+ =?utf-8?B?NlR5c1U3MDJzYThUMWtiTUNoM2UzSFdMTkpVOGF3RXNHLzVmRERUdz09?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	2IXnYSxIvlXMzIiGxHtNi4sCz4MqjIv3cbGmfFb2Tgnf1WVcOuylLLGRK9nTxsWFKbv4kysXpJzISL6jTDgVRoel8AVvHU3mF0qoTyt/e1vSTGKGxQJUZyp3aVReXQd13p9YG/B4RPHDdQQd0bS7TnNWUee9CJuM855ko+KIJOfn2FJCkL61Iga8DItOoyfDRcBSddzb0pb8NsVtX7BOmViD2BC1cT3NYg89/OPq7HB8wuKUuXfHAT2p46nOFxxGt5TyG+kAfC4sfqsx7EDn16LC/VoOCTlChwlYB6AwXF1BER7d2FiqPOfvr8a9rpJvVrNwY4s8HtUIod8+LWa1XJmjD8pmE5t3QJUnwobkkslqs1U5H7tSVbeUsV7fkpltydR+nAKTrykQZL9gqPavmD6Y+ssPlK2/Pk1mTAKd0sjOvlUizZGPKVs70Wa3BBXFT27Bl3koLxyyDodTDqAxZewc7rmNyoDJJQZz5+BRHI63wVYv9dC9WWe+IRtYSxZDUJSEAnPGEV15ETKxI9w1M44zKOa78la/v9Q3KPhbWSPqehSHt42y495tZnixYQKwkT7c98p/Fab1XMx4pXosMzym/Lcp3mJMu+Tm2vhsLNo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f4040f5-44e4-41e3-9277-08de4d90085d
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2026 01:56:54.9028
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZlM3qWTu3zdJQEANk7ek/igqg5kHF9VlgrXrFQi4zb8jSUArk6oBeODpoimX9h/V72/QjCz1O+s5GbByTRx8xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB8144
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-06_03,2026-01-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2512120000 definitions=main-2601070014
+X-Authority-Analysis: v=2.4 cv=NPrYOk6g c=1 sm=1 tr=0 ts=695dbd6b b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yMhMjlubAAAA:8 a=v0LIXEgrRPRinlxJrn8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA3MDAxNCBTYWx0ZWRfX0bLn/Bp0gjhW
+ Mt2PiGRe74OklPocK/thyroboPzUKm39Hp8Gge4/OCrn4aYfLrLQOYaqf63PY8ZTwN57dJdJgVa
+ /IUTYxEf/AYYQSAJDcufPdx6gfqSoepc80M3gZws07iQPp/Ry3BKLAPNsPN0rDiNeqKzygS0dd6
+ eWXrkeopcbAGtnVAqaIterVG9N+4WhCe195biB/jwlVVvsPcG9s1WgUpfP7YFCdpkojzGdoGW6D
+ hCb3egz485QJTIOqvblPprfSwyKtFqpEnYheS6YOQIey7as1f4XQE9gMvjGB6shL/3r18MbVS3x
+ eP8p0V8Ywl7qR7gW27nmmQBB2HvFIPQ1cdCQLrCSGgFoAoy2XxKTV2tijn93fZ52wwUvWDt+/4c
+ o0kk522cjO4ZUURoL6dXm7h6J3eSN8hSiZyghT4TjQdQXIjpFxEa9ugjGCqNf7wdLbXL6VE4aJs
+ bMscEZAKpKkIzD3FSXg==
+X-Proofpoint-ORIG-GUID: VIWoxtYPTpqexMzXz0j4HGmbQDlVhEvQ
+X-Proofpoint-GUID: VIWoxtYPTpqexMzXz0j4HGmbQDlVhEvQ
 
-On Tue, Jan 06, 2026 at 08:33:52PM -0500, Steven Rostedt wrote:
-> On Tue, 6 Jan 2026 16:54:27 -0800
-> Guenter Roeck <linux@roeck-us.net> wrote:
+On Mon, Jan 05, 2026 at 08:04:22AM -0800, Thomas Ballasi wrote:
+> Memory reclaim events are currently difficult to attribute to
+> specific cgroups, making debugging memory pressure issues
+> challenging.  This patch adds memory cgroup ID (memcg_id) to key
+> vmscan tracepoints to enable better correlation and analysis.
 > 
-> > > Don't remove this block. It's still needed. A lot of entries are
-> > > skipped when adding the records. Weak functions and zero'd pointers
-> > > that were part of the count are skipped. This is the code that handles
-> > > that. It has nothing to do with rounding errors.
-> > >   
-> > Sorry, misunderstanding. I thought that is what you meant with "This will
-> > make pages equal the number of pages that were allocated. Then I'm not sure
-> > we need this extra logic."
-> > 
-> > What is the no longer needed extra logic ?
+> For operations not associated with a specific cgroup, the field
+> is defaulted to 0.
 > 
-> I meant the added logic you had there, as I was a bit confused by the
-> "spaces" part.
+> Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
+> ---
+>  include/trace/events/vmscan.h | 79 ++++++++++++++++++++---------------
+>  mm/shrinker.c                 |  2 +-
+>  mm/vmscan.c                   | 17 ++++----
+>  3 files changed, 56 insertions(+), 42 deletions(-)
 > 
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index 490958fa10dee..93a9a9ba9405d 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -208,31 +215,34 @@ TRACE_EVENT(mm_shrink_slab_start,
+>  	TP_fast_assign(
+>  		__entry->shr = shr;
+>  		__entry->shrink = shr->scan_objects;
+> -		__entry->nid = sc->nid;
+>  		__entry->nr_objects_to_shrink = nr_objects_to_shrink;
+>  		__entry->gfp_flags = (__force unsigned long)sc->gfp_mask;
+>  		__entry->cache_items = cache_items;
+>  		__entry->delta = delta;
+>  		__entry->total_scan = total_scan;
+>  		__entry->priority = priority;
+> +		__entry->nid = sc->nid;
+> +		__entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
 
-That was just to avoid "skip" going negative in the for loop.
-The code below should work as well. I'll give it a try.
+Hi Thomas, this is breaking CONFIG_MEMCG=n builds.
 
-Thanks,
-Guenter
+In file included from ./include/trace/define_trace.h:132,
+                 from ./include/trace/events/vmscan.h:569,
+                 from mm/vmscan.c:73:
+./include/trace/events/vmscan.h: In function ‘do_trace_event_raw_event_mm_shrink_slab_start’:
+./include/trace/events/vmscan.h:248:68: error: invalid use of undefined type ‘struct mem_cgroup’
+  248 |                 __entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
+      |                                                                    ^~
+./include/trace/trace_events.h:427:11: note: in definition of macro ‘__DECLARE_EVENT_CLASS’
+  427 |         { assign; }                                                     \
+      |           ^~~~~~
+./include/trace/trace_events.h:435:23: note: in expansion of macro ‘PARAMS’
+  435 |                       PARAMS(assign), PARAMS(print))                    \
+      |                       ^~~~~~
+./include/trace/trace_events.h:40:9: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
+   40 |         DECLARE_EVENT_CLASS(name,                              \
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+   44 |                              PARAMS(assign),                   \
+      |                              ^~~~~~
+./include/trace/events/vmscan.h:214:1: note: in expansion of macro ‘TRACE_EVENT’
+  214 | TRACE_EVENT(mm_shrink_slab_start,
+      | ^~~~~~~~~~~
+./include/trace/events/vmscan.h:237:9: note: in expansion of macro ‘TP_fast_assign’
+  237 |         TP_fast_assign(
+      |         ^~~~~~~~~~~~~~
+./include/trace/events/vmscan.h: In function ‘do_trace_event_raw_event_mm_shrink_slab_end’:
+./include/trace/events/vmscan.h:293:56: error: invalid use of undefined type ‘struct mem_cgroup’
+  293 |                 __entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
+      |                                                        ^~
+./include/trace/trace_events.h:427:11: note: in definition of macro ‘__DECLARE_EVENT_CLASS’
+  427 |         { assign; }                                                     \
+      |           ^~~~~~
+./include/trace/trace_events.h:435:23: note: in expansion of macro ‘PARAMS’
+  435 |                       PARAMS(assign), PARAMS(print))                    \
+      |                       ^~~~~~
+./include/trace/trace_events.h:40:9: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
+   40 |         DECLARE_EVENT_CLASS(name,                              \
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+   44 |                              PARAMS(assign),                   \
+      |                              ^~~~~~
+./include/trace/events/vmscan.h:266:1: note: in expansion of macro ‘TRACE_EVENT’
+  266 | TRACE_EVENT(mm_shrink_slab_end,
+      | ^~~~~~~~~~~
+./include/trace/events/vmscan.h:285:9: note: in expansion of macro ‘TP_fast_assign’
+  285 |         TP_fast_assign(
+      |         ^~~~~~~~~~~~~~
+In file included from ./include/trace/define_trace.h:133:
+./include/trace/events/vmscan.h: In function ‘do_perf_trace_mm_shrink_slab_start’:
+./include/trace/events/vmscan.h:248:68: error: invalid use of undefined type ‘struct mem_cgroup’
+  248 |                 __entry->memcg_id = sc->memcg ? cgroup_id(sc->memcg->css.cgroup) : 0;
+      |                                                                    ^~
+./include/trace/perf.h:51:11: note: in definition of macro ‘__DECLARE_EVENT_CLASS’
+   51 |         { assign; }                                                     \
+      |           ^~~~~~
+./include/trace/perf.h:67:23: note: in expansion of macro ‘PARAMS’
+   67 |                       PARAMS(assign), PARAMS(print))                    \
+      |                       ^~~~~~
+./include/trace/trace_events.h:40:9: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
+   40 |         DECLARE_EVENT_CLASS(name,                              \
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+   44 |                              PARAMS(assign),                   \
+      |                              ^~~~~~
+./include/trace/events/vmscan.h:214:1: note: in expansion of macro ‘TRACE_EVENT’
+  214 | TRACE_EVENT(mm_shrink_slab_start,
+      | ^~~~~~~~~~~
+./include/trace/events/vmscan.h:237:9: note: in expansion of macro ‘TP_fast_assign’
+  237 |         TP_fast_assign(
+      |         ^~~~~~~~~~~~~~
+./include/trace/events/vmscan.h: In function ‘do_perf_trace_mm_shrink_slab_end’:
+./include/trace/events/vmscan.h:293:56: error: invalid use of undefined type ‘struct mem_cgroup’
+  293 |                 __entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
+      |                                                        ^~
+./include/trace/perf.h:51:11: note: in definition of macro ‘__DECLARE_EVENT_CLASS’
+   51 |         { assign; }                                                     \
+      |           ^~~~~~
+./include/trace/perf.h:67:23: note: in expansion of macro ‘PARAMS’
+   67 |                       PARAMS(assign), PARAMS(print))                    \
+      |                       ^~~~~~
+./include/trace/trace_events.h:40:9: note: in expansion of macro ‘DECLARE_EVENT_CLASS’
+   40 |         DECLARE_EVENT_CLASS(name,                              \
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+   44 |                              PARAMS(assign),                   \
+      |                              ^~~~~~
+./include/trace/events/vmscan.h:266:1: note: in expansion of macro ‘TRACE_EVENT’
+  266 | TRACE_EVENT(mm_shrink_slab_end,
+      | ^~~~~~~~~~~
+./include/trace/events/vmscan.h:285:9: note: in expansion of macro ‘TP_fast_assign’
+  285 |         TP_fast_assign(
+      |         ^~~~~~~~~~~~~~
+  CC      arch/x86/mm/extable.o
+make[3]: *** [scripts/Makefile.build:287: mm/vmscan.o] Error 1
+make[2]: *** [scripts/Makefile.build:556: mm] Error 2
+make[2]: *** Waiting for unfinished jobs....
 
-> The logic still needs to be updated, but I think it can be done with the
-> following:
-> 
-> 	if (pg_unuse) {
-> 		unsigned long pg_remaining, remaining = 0;
-> 		long skip;
-> 
-> 		/* Count the number of entries unused and compare it to skipped. */
-> 		pg_remaining = (PAGE_SIZE << pg->order) / ENTRIES_SIZE - pg->index;
-> 
-> 		if (!WARN(skipped < pg_remaining, "Extra allocated pages for ftrace")) {
-> 
-> 			skip = skipped - pg_remaining;
-> 
-> 			for (pg = pg_unuse; pg && skip > 0; pg = pg->next) {
-> 				remaining += 1 << pg->order;
-> 				skip -= (PAGE_SIZE << pg->order) / ENTRIES_SIZE;
-> 			}
-> 
-> 			pages -= remaining;
-> 
-> 			/*
-> 			 * Check to see if the number of pages remaining would
-> 			 * just fit the number of entries skipped.
-> 			 */
-> 			WARN(pg || skip > 0, "Extra allocated pages for ftrace: %lu with %lu skipped",
-> 			     remaining, skipped);
-> 		}
-> 		/* Need to synchronize with ftrace_location_range() */
-> 		synchronize_rcu();
-> 		ftrace_free_pages(pg_unuse);
-> 	}
-> 
-> -- Steve
+-- 
+Cheers,
+Harry / Hyeonggon
+
+>  	),
+>  
+> -	TP_printk("%pS %p: nid: %d objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
+> +	TP_printk("%pS %p: nid: %d memcg_id: %u objects to shrink %ld gfp_flags %s cache items %ld delta %lld total_scan %ld priority %d",
+>  		__entry->shrink,
+>  		__entry->shr,
+>  		__entry->nid,
+> +		__entry->memcg_id,
+>  		__entry->nr_objects_to_shrink,
+>  		show_gfp_flags(__entry->gfp_flags),
+>  		__entry->cache_items,
+> @@ -242,36 +252,39 @@ TRACE_EVENT(mm_shrink_slab_start,
+>  );
+>  
+>  TRACE_EVENT(mm_shrink_slab_end,
+> -	TP_PROTO(struct shrinker *shr, int nid, int shrinker_retval,
+> +	TP_PROTO(struct shrinker *shr, struct shrink_control *sc, int shrinker_retval,
+>  		long unused_scan_cnt, long new_scan_cnt, long total_scan),
+>  
+> -	TP_ARGS(shr, nid, shrinker_retval, unused_scan_cnt, new_scan_cnt,
+> +	TP_ARGS(shr, sc, shrinker_retval, unused_scan_cnt, new_scan_cnt,
+>  		total_scan),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(struct shrinker *, shr)
+> -		__field(int, nid)
+>  		__field(void *, shrink)
+>  		__field(long, unused_scan)
+>  		__field(long, new_scan)
+> -		__field(int, retval)
+>  		__field(long, total_scan)
+> +		__field(int, nid)
+> +		__field(int, retval)
+> +		__field(unsigned short, memcg_id)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->shr = shr;
+> -		__entry->nid = nid;
+>  		__entry->shrink = shr->scan_objects;
+>  		__entry->unused_scan = unused_scan_cnt;
+>  		__entry->new_scan = new_scan_cnt;
+> -		__entry->retval = shrinker_retval;
+>  		__entry->total_scan = total_scan;
+> +		__entry->nid = sc->nid;
+> +		__entry->retval = shrinker_retval;
+> +		__entry->memcg_id = cgroup_id(sc->memcg->css.cgroup);
+>  	),
+>  
+> -	TP_printk("%pS %p: nid: %d unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
+> +	TP_printk("%pS %p: nid: %d memcg_id: %u unused scan count %ld new scan count %ld total_scan %ld last shrinker return val %d",
+>  		__entry->shrink,
+>  		__entry->shr,
+>  		__entry->nid,
+> +		__entry->memcg_id,
+>  		__entry->unused_scan,
+>  		__entry->new_scan,
+>  		__entry->total_scan,
+> @@ -504,9 +517,9 @@ TRACE_EVENT(mm_vmscan_node_reclaim_begin,
+>  
+>  DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_node_reclaim_end,
+>  
+> -	TP_PROTO(unsigned long nr_reclaimed),
+> +	TP_PROTO(unsigned long nr_reclaimed, unsigned short memcg_id),
+>  
+> -	TP_ARGS(nr_reclaimed)
+> +	TP_ARGS(nr_reclaimed, memcg_id)
+>  );
+>  
+>  TRACE_EVENT(mm_vmscan_throttled,
