@@ -1,136 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF21312801
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 13:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A2133EB13;
+	Wed,  7 Jan 2026 14:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767793839; cv=none; b=H6vsim+o4vOuCfhcK3WZ2e8eIQebHp6Vbydt1jNqFT13zmy9ezIGJdfRNTXfdI6x68KSZrBdXyVBukneALJJfWiXiP943m7/vmE/CXxxhlZrs1mqx9uwwwClZmsYTSdgrwMK/L5sd8chM1rwO4KuiXQr0ptBSeG2yojElz3Hri4=
+	t=1767795371; cv=none; b=bub7//TK9uq9c7yVtTVvDlisizq7gpEcSayuBsDFeF055SzFSarYf42pLl+KbLENhWISiPIif6T/noB3Uqx3i/oL1rPN55aWhB1LmiQu1yPvi9oDE+fZaPZBvl20I4NDYA4Rcs3Hhtzn9thA6AECNS/AA5YcmgG75dy6j84TElQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767793839; c=relaxed/simple;
-	bh=fK02nfm3x/WpspVjzqsxTFJxRC/x1RuacbvrfeaPNFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hrBnbqDVHGg6kFtECX/ZwVie7IDAy6mUPiLT5QZgmicpTfnREDk3ojEWC7/NK90FoiqvfWHKUEepEKm3/kMNMKHj9d9jt87DB/zxHOJ8bemcQaovXjZlE7zjoxJyEmB0C4EBVye7gUkmVnfy3y7470o6UkyFLkqdkMIqu0B9YPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M6NGY53S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767795371; c=relaxed/simple;
+	bh=Hfk0xs9mtMTgHWqYqiIZSwai97YK7tXfeXKFSxGISsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=He96GHWhJlE215gBreXw2oJTc45Rba7p1AV739FgKS/DvkbpLWXrbKr/PQawKwarGWaMY1DRu1Rdbeh+WaakoO5Meko6YInBHYTlIwGaiT/sT5XTJ1vuVuWAOJd7/5C35DMd6zSZoNuuIgpIaIGPswM+CRtPpoXO1PhCJz0bSGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOew/IRO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M6NGY53S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767793836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LwU3Ac+NpGby+4CQIUS5mhzem4J8LDUziJc+mt+weZc=;
-	b=M6NGY53SvZdqcok2/vEkS+o1Be+flSXui11kHO04hlf1rKFRc6wxDjhdNXIQAd5kuF0a1S
-	mQ/s/QFweK2QKgpCPUsQJWYyYaMfb69/HkGoHmlYzAuiViUAye9Z4rGnPfXVejgQ8woSyS
-	54G0FOjQMtGgPZ2j7wA3OXpzKv/4/GY=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-122-cA0EVmCyNGKIyq2xQ_y_Sg-1; Wed, 07 Jan 2026 08:50:35 -0500
-X-MC-Unique: cA0EVmCyNGKIyq2xQ_y_Sg-1
-X-Mimecast-MFC-AGG-ID: cA0EVmCyNGKIyq2xQ_y_Sg_1767793834
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-38306501f14so2070051fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 05:50:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767793834; x=1768398634;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LwU3Ac+NpGby+4CQIUS5mhzem4J8LDUziJc+mt+weZc=;
-        b=ei0wqt2megkoDwJ5HbJ43dJjkua2bL1GRyykJ7Bz43LpQ2rZmJiy3Cwvg9BJW60eGS
-         vOfsjONJwGAfl2SMnv7AjbAsWZrAelxEZPyWxbVZqceU384tJssOjClTfQ1OIzq7jZhi
-         Chq7Rblhu0WpD2xdv+a1dTrkTGnWndsl0KHBHCUgZ0LWvIZ/UbT00snWvwX3f8CG50E3
-         MydgGjO3rSn+wS47OF3aW3dp4kLliA26Dk3e3obH4yLi04ljz0u1A3vvp1xo8/rzBr6B
-         HF6WOi59xbgMdDktfGsKXz+kid2IzU/QQL5wstdz2FAG3rrsUUx9vhgezJ5t5DNCMP1m
-         LPUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmW+o9FYnTGXoFok5REhx8oU4qIJRBcxbQMp24rvY/h/xfx8ZH5LT5SDBJwpIEZrKO9Ea9GF16sOEwYEIll3MfAto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytltxZurYTGKpKtW9N4Ee9A34QTisa6TLTn2zznzW7iaGubyA4
-	nB9T9jQr0ZyQovHpfARu6vPQYWdBIRzlRn0ejSdFjV0HCUN3rHXSn0x5arxMQ/0XCYPWmbYD6q3
-	UXafCDfQRhawexZksNfJrwyBlSy0fL6ojnvAKdy74UO5vjxKt/5rEAMJpPVDtp5H/2ND5KblXKG
-	v35tBW689QoUq7soKfTRPZu0fAs3ERFEPo1/TNYHdPxQRNm76A
-X-Gm-Gg: AY/fxX5f2x5nM75Qk8Uie5NnTvZuf3rvZczIj5cifXSwG/wkE2ZXPo22HnX9+lgf51q
-	xUCfCS36Rlg93KQysGQREgvSQ15GYC+CyPwl6mLBmQYq6Q6XDfl/66IuD8sFtbjKQp39i4Dsc52
-	dp8HAMM+E0CfQMYHM4Fe3MptZoAkOWyG7nj4NogU98Hzes/Um3QBmupMQlooJDVTbViy7f4Ivvu
-	+XcGXUE+oPNxt8a4nS824Fr4A9jznvZMvO3bSmJ2bKyHpQ+iawRbvwfRYTAqyWU57LYQw==
-X-Received: by 2002:a05:651c:2212:b0:37a:584c:23fb with SMTP id 38308e7fff4ca-382ff6dd8eemr7013511fa.20.1767793833670;
-        Wed, 07 Jan 2026 05:50:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHm0tMT9u9iiOgRGj9K4E0/pPEVxnBe2X5bK9p2XFMNMGYd0BXK04nFgMfu+eVzo44KLvloczFrjtUOGz4zwfc=
-X-Received: by 2002:a05:651c:2212:b0:37a:584c:23fb with SMTP id
- 38308e7fff4ca-382ff6dd8eemr7013361fa.20.1767793833177; Wed, 07 Jan 2026
- 05:50:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOew/IRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911F4C4CEF1;
+	Wed,  7 Jan 2026 14:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767795371;
+	bh=Hfk0xs9mtMTgHWqYqiIZSwai97YK7tXfeXKFSxGISsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cOew/IROfm9qzOOTQIlOisZOSH2KDoX3TgEbHyuflgqC5Z5szpbbIyuEetC1flL6Y
+	 SYTDzqJW12y5zkLVrJYPlpNkw9Wxr3Wl6b6qFj2lSry637N+RjGLs1BNZp3EX/T67s
+	 doWTIk3TUg3TiyRXTEGzUuGaNUaYKOTU75qGJxUFaPkUDAdFQlmbe0SXBxJB+IQaq8
+	 a1gL6Qy83KbVAlQgf6RA1sokeiZ2VtjnXC/YcLo3oT9GhG7GFW01i8XXcMFp9YP8Ju
+	 1t/kHF5utWwL9fzUqEQ285i3g1aeqr3Kn+MnpolB5I9wfd2ytmGhbMHTjmxNF/kKxZ
+	 YCtS4FD8oCXVw==
+Date: Wed, 7 Jan 2026 14:16:05 +0000
+From: Will Deacon <will@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mahe Tardy <mahe.tardy@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <aV5qpZwxgVRu2Q8w@willie-the-truck>
+References: <20260107093256.54616-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260106133655.249887-1-wander@redhat.com> <20260106133655.249887-8-wander@redhat.com>
- <CAP4=nvT2oPtM73nfPkSJZ4612mcAPw1LWbHNrszFBVAmSJOVbw@mail.gmail.com>
- <CAAq0SUmrRecimVNCa=zv-h3uPm-GpQo3g+ZTV4zLNVA4ZVo-EQ@mail.gmail.com> <CAP4=nvTeFtHF+K0h0FkWMh6uLb5Qwy6LnYPcrbrbNOM6M6kFNA@mail.gmail.com>
-In-Reply-To: <CAP4=nvTeFtHF+K0h0FkWMh6uLb5Qwy6LnYPcrbrbNOM6M6kFNA@mail.gmail.com>
-From: Wander Lairson Costa <wander@redhat.com>
-Date: Wed, 7 Jan 2026 10:50:21 -0300
-X-Gm-Features: AQt7F2rnfMsmprZP2rAt--ee_rglZ18N55qI7Xvqb6bhHKWfVtx_oS-Vwti0GG8
-Message-ID: <CAAq0SU=QWnfQnfKM=YOcBVBh6wuqaFub4kDf5taSv7PCMaOfnA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/18] rtla: Introduce common_restart() helper
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jt8ljbliKs5pHpHSW0Dv-0srmNyZJeSwllSpOoLWbYE_1767793834
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107093256.54616-1-jolsa@kernel.org>
 
-On Wed, Jan 7, 2026 at 10:47=E2=80=AFAM Tomas Glozar <tglozar@redhat.com> w=
-rote:
->
-> st 7. 1. 2026 v 13:43 odes=C3=ADlatel Wander Lairson Costa
-> <wander@redhat.com> napsal:
-> > >
-> > > The deduplication idea is good, but I find the name of the helper
-> > > quite confusing. The main function of the helper is not to restart
-> > > tracing, it is to handle a latency threshold overflow - restarting
-> > > tracing is only one of possible effects, and one that is only applied
-> > > when using --on-threshold continue which is not the most common use
-> > > case. Could something like common_handle_stop_tracing() perhaps be
-> > > better?
-> > >
-> >
-> > Sure, I will change the name in v3.
-> >
->
-> Thanks.
->
-> > > > +enum restart_result {
-> > > > +       RESTART_OK,
-> > > > +       RESTART_STOP,
-> > > > +       RESTART_ERROR =3D -1,
-> > > > +};
-> > >
-> > > Do we really need a separate return value enum just for this one help=
-er?
-> > >
-> >
-> > If it was success/failure type of return value, we wouldn't need.
-> > However, a three state code, I think it is worth for code readiness.
-> > Do you have something else in mind?
-> >
->
-> The main loop can simply use the continue flag, just like in the old
-> version, no need to duplicate that information into the return value
-> of common_restart().
->
+On Wed, Jan 07, 2026 at 10:32:55AM +0100, Jiri Olsa wrote:
+> Mahe reported issue with bpf_override_return helper not working when
+> executed from kprobe.multi bpf program on arm.
+> 
+> The problem is that on arm we use alternate storage for pt_regs object
+> that is passed to bpf_prog_run and if any register is changed (which
+> is the case of bpf_override_return) it's not propagated back to actual
+> pt_regs object.
+> 
+> Fixing this by introducing and calling ftrace_partial_regs_update function
+> to propagate the values of changed registers (ip and stack).
+> 
+> Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
+> Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+> v1 changes:
+>  - used ftrace_partial_regs_update with comments from Steven
+> 
+>  arch/arm64/include/asm/ftrace.h | 24 ++++++++++++++++++++++++
+>  include/linux/ftrace.h          |  3 +++
+>  kernel/trace/bpf_trace.c        |  1 +
+>  3 files changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1621c84f44b3..177c7bbf3b84 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -157,6 +157,30 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+>  	return regs;
+>  }
+>  
+> +/*
+> + * ftrace_partial_regs_update - update the original ftrace_regs from regs
+> + * @fregs: The ftrace_regs to update from @regs
+> + * @regs: The partial regs from ftrace_partial_regs() that was updated
+> + *
+> + * Some architectures have the partial regs living in the ftrace_regs
+> + * structure, whereas other architectures need to make a different copy
+> + * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
+> + * if the code using @regs updates a field (like the instruction pointer or
+> + * stack pointer) it may need to propagate that change to the original @fregs
+> + * it retrieved the partial @regs from. Use this function to guarantee that
+> + * update happens.
+> + */
+> +static __always_inline void
+> +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> +{
+> +	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+> +
+> +	if (afregs->pc != regs->pc) {
+> +		afregs->pc = regs->pc;
+> +		afregs->regs[0] = regs->regs[0];
+> +	}
+> +}
 
-Ok, I will change it in v3.
+I still don't understand why we need anything new in the arch code for this.
 
-> Tomas
->
+We've selected HAVE_ARCH_FTRACE_REGS and we implement
+ftrace_regs_set_instruction_pointer() and ftrace_regs_set_return_value()
+so the core code already has everything it needs to make this work
+without additional arch support.
 
+Will
