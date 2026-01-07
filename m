@@ -1,66 +1,67 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A467C3164D8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 12:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B72F314B77
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 12:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767788543; cv=none; b=iQ2vWHj++IY6/AukCpkPNzjgbsJLmh1kYOYt5UNCQ7X8RDizxSVsVfyk+SzF+oNMpx/QDLvlQOQZMQkNb0bTXinYMi+VqskujfeHKkv/t6TV1J5jpnFZKQAZwonAe1KZmQjgbXs/BQopLrNZ+HS9md2UTtJJopOlZALO8nfh8Rk=
+	t=1767788550; cv=none; b=TbmDwozYorBE7u6XGFz7mWrOOXl5n4ABV7FiSG+lfxTihw+jTiYaJ+2DO6wCY8nOwZJgXvxPclZOjRwhEpWOHuux6I6D3Ol33Zyrs0k2aOS+K6jSTdrTWyxEmQT5Ioq/MNa21xd+RvXTm2Z2ihdWaYCCrOwbLd2bOJk233mp//0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767788543; c=relaxed/simple;
-	bh=im6+FmUa4bUrtYoqyvdPdobyaHlhncXg5H7WqmB2EoQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=etLeZj9lPXVPYJX2PoEHV/S+C3lntgN4FJ0dbDnjtLkW+g37t8yUASo60XsMgCSKfcf06os+urVfDblbdyoUIipufdZR8YTY+Uxoc3Dc+a2HN4bIKAGrdhvNAGoZDO2FkgCBH3Q3Og6knO1O8OQhmaCk5AhcfAnxMYCPctL9Ppw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCUjThau; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1767788550; c=relaxed/simple;
+	bh=6oDFp6ikqBgS4NvjQlEcN+NYxI3tGIrBI1QcoO9lYMw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eJfIwqvDVv/7Wky2edz+6KgTZrePugz1R8fY+feqUJNO0FqzS6FiDBWuMsZ2OSILIaIofZ1ltrJ0UhiI9oH23YbBnFLZezeBM6L8t9AOMKeMIEhUK3ZFXDnpqKGHwOkXs2Hblxh2+IFnllrjD+VTJ33Q+bgtf+dol8/0+YNHipM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHy6lYO6; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCUjThau"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a0d06ffa2aso16485995ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 04:22:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHy6lYO6"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-34c868b197eso2017987a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 04:22:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767788541; x=1768393341; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGrLo1T/GXWCd4yT4qDDB4M00lQE1SksrWNKQr8UGaA=;
-        b=gCUjThauMASaq0N5h1HZH5drWl7/mU3lrlDzES6q1vrBU/vnE7GcOTbfGE+SGGNifJ
-         y3VAMG5lGJzROmxmhKDWUDUDNgRliHGNlqDkk2HaL6UPEof5AKbJrBkhEKxx3WCJCOPa
-         9W9B6D2FDLdUHzaTI2pBtqpbsh83ZLN4xFJK0HZtUsq2QXGXH9i1/fdgpqoXkoVYZ9fB
-         IXR0o2JH2fKVmVDyxqIhHyDe55IReIUJmAx4uN6J+RyedkgSAfNo9gV5JKLmX3bhr776
-         2X94+V2m3uhJQfIdVHjUhVIj3IXs1BsjArEIXXPcYW3L8oH6zysw0FxOJRdWOznVH48c
-         DW8Q==
+        d=gmail.com; s=20230601; t=1767788549; x=1768393349; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZxLt1bPb5cLdWg0B5PWvieuskeOyEx2nDLq7pSp3TII=;
+        b=fHy6lYO6jp3lRLyMYZe3IygWIqqN7HP2cXK33FZo2crbhXlFtHJRk4jECq3kmTY7Jg
+         z6EFkPFOCMC9YGdp+9txFypWOgbu7Ka98dxPJoypWsEiiJ3ZoxY3lxzZQ4FLPNdKD3J6
+         YE9atPKkJN+s+Hiu4+nxo8PtSh3ZlAn21OnVrvbGqUffnxC8ZhNh7tB4wW2n9RFGE6Ir
+         4YWp+1yrvHyvT3wvUjSaAz5AlnCzpdDaFpHJPRqiRhjFHmE6mBt2rEuQX2LVJ+exrlnX
+         Vb4XUuuIP5D6YLY1HmNenG+mF7KQ0RW/otIr1SzC3qycaDPPKbPklOp2Y0qh+D8v/aYH
+         tg1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767788541; x=1768393341;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SGrLo1T/GXWCd4yT4qDDB4M00lQE1SksrWNKQr8UGaA=;
-        b=J8G/7R2/ljY9ZkNy1hdlD29qLgHC2n5FzE2lnu/r72/ZkUtb5chzDFi/GycYR+5z08
-         Ux3N9asbATeBH0Ur8DigeK0P3T3K1xJiA2Ry7MqjB48AItUgygTKjZnlFQ6l+4vLj2ts
-         TxKigIl8raoP8qTec3zrwB4HqHUmqL+lGi9vhjcgAPHnC0EjA/vDy15+Qlqfp/nTeq+F
-         j7e8vMOOQVDcHhouqkcmoz35oCxHZONmhMf0S+5w5vjbrGMowLlTeXDoTtnnN8zSUNhl
-         keyEymIu4JbNPmgO+grtGuHcy1kBjyn/mAAOYXPcOKc1ruppaTlIn5ZGFe7WGft5U0J1
-         oSIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2zEBAye2ZkrCaViAazfcv14mvfwWqTeNgfNG+KSKU3eFbAcrdjKFxeoifBqTw3EQj7h924PAOHw00bNr4fZ92ZnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4HiFPpS8jqz6GZIUvCJPkD8nPBrXW0PwjobVXYTJqpUmNL8db
-	vuqOQ4RM0vKli1yDIA3cySSOkVdo9T6nSNj7BGyPbZTescv+PdCVcHhK
-X-Gm-Gg: AY/fxX7aNxhCoC/onA5cCm1/nPDRsldqOVzb5N0k7EIVhxwVYjJ7VIUYd0HLWgo9+ka
-	zUNls0texHHJsxsoCjD+iv8ftM/nlIIXXAynwu0UQIHvcydP5R0xgxobFayUMiPQW3j+ubyKP4l
-	6Rrlt9D4d2vIs6OWh6a2APh+PBIwOP2B9xo5L7xmpBfj+6UGkjCcx9Nty8GwySm4SpZcKcFhy45
-	qNNVNQl1btZwHxSLFRI/2F8HMEJhi7owTx1qHLTa2O8axflEtFkO1S8DyEMHx0Jq53lAYKvSs0L
-	mcsWE0P23Iye/bx5xS3Jm1KbHS/2Yq4IGpfq6QP2eRz8BD50XH6t+qcEsZipeGQ/fbGzAb+f/s6
-	qX/lLT60LlEeVzS/xz3C00YnCkDqO/qTkNpDU1nnRBk76hfRFBGPvMSXBW9XByez2rcmUeSRvv0
-	lfi65d3ydS/zU=
-X-Google-Smtp-Source: AGHT+IFRchTfsduoJn0oX6m0fWHXyRosMYVgZHpA1UJaa4M9jq2wiA3YsmjcaDKgVMcgaLKr+eTvyw==
-X-Received: by 2002:a17:902:cece:b0:298:2afa:796d with SMTP id d9443c01a7336-2a3ee4c432bmr20560315ad.61.1767788540464;
-        Wed, 07 Jan 2026 04:22:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1767788549; x=1768393349;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZxLt1bPb5cLdWg0B5PWvieuskeOyEx2nDLq7pSp3TII=;
+        b=hpF4CeLASRZU8sSBnb3wgqv7IaBEdEVzcMZJc7Z25fQi4FHGSTCmDJqLzXBdQcAJGY
+         O3dckvTY3u+BFT/8l6XsPf8r9m23NyNJ76PjVxuvvrlLp10ZTY612riG5EP/cXr+SDdU
+         y2UHcEEGIv9oscBPvh+jUTw5EZSetOThjIObl1h+1H1eqQ9AndaLm1gWZeCrelDN/3ID
+         mc/78t+HMe11JHdNpyscsYBIPZdAJF4J0DWGtXXJCDIRDif4pqaiZbn/99vIUacDzvzL
+         dGL8PifnT+eJoF+RiQkPViSWU6PK/uVCEann+QXA1ld+1uvzxxEIEA5nuguSOvKlwg+T
+         WWIg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2EZKLx89XyEjT23Nn81OcHUOAKc41LpSWWqPH+0o1GNGqzNHvLwHkHKFdEFZi4cv6ZaZ/0Hx8UnxN8aTVrLGg+94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHGQoLb3AYvRlcIVZjg/jW5B+Zbh2DiYIz6qK1W5OFEEpg7kJQ
+	pZ74rmPQx5HDWl943UX6mEu0JxtARZKD5I5EhKCRXoEUTd4HqhhkB2Cd
+X-Gm-Gg: AY/fxX65pCiTvhv/L8v0KqlJki1tUDEdLD7Va4pXXxxtaeQMudr6AkYWLv2JsI1pwnm
+	b5phsQrIp4pVyaaTswi4GErIJmiNzkAcA/jDhPFzEN7dYI7in/IZgPDOv8yiXx7w7elyjORa9SV
+	uz5FSk2RW6lThSswwkZK43uut8V+JR+MZ7411rMl7KD9CTsIS//psn2BLT21qtUJnZSdhhP+nCb
+	2kmDE+CWiCauqIxLjDlsn4CI4RYroZsKk9O72ZLz20pBFQbOcahkK545e97zAtcKFqhyRbeBlYg
+	HgVbHlBiRG3CPKSH+yhUi/hifIDL/IUbUnEvJz+2EHdYIzuTf6Bm9cbHtlvXWw8/LGnH12DHFQW
+	FiG70yVCv3vcUYXVi7xfunELSFkCD2EAEfUCoH6mlpaydXwL4o/hm/BDTpWStUCPPj8/XVx7rED
+	lKC8FI1frXCWuLtNGz5edn9A==
+X-Google-Smtp-Source: AGHT+IGMhHuRS5o+GTE6fiL+UGv/YA7yMKM0gxu6LQ29zfgnf2FGe0JFwDg0odk/A2Q3yA/ZyxafNA==
+X-Received: by 2002:a17:90b:4ad1:b0:34c:7d65:e4a with SMTP id 98e67ed59e1d1-34f68c62b7fmr2222804a91.31.1767788548263;
+        Wed, 07 Jan 2026 04:22:28 -0800 (PST)
 Received: from [127.0.0.1] ([188.253.121.153])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f5f8b1526sm5025946a91.14.2026.01.07.04.22.13
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f5f8b1526sm5025946a91.14.2026.01.07.04.22.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 04:22:20 -0800 (PST)
+        Wed, 07 Jan 2026 04:22:27 -0800 (PST)
 From: Zesen Liu <ftyghome@gmail.com>
-Subject: [PATCH bpf 0/2] bpf: Fix memory access flags in helper prototypes
-Date: Wed, 07 Jan 2026 20:21:37 +0800
-Message-Id: <20260107-helper_proto-v1-0-e387e08271cc@gmail.com>
+Date: Wed, 07 Jan 2026 20:21:38 +0800
+Subject: [PATCH bpf 1/2] bpf: Fix memory access flags in helper prototypes
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,11 +70,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANFPXmkC/22NwQ6CMBBEf4Xs2Zp2haKe/A9DDJQtbAK0aQnRE
- P7dyskDx5nJe7NCpMAU4Z6tEGjhyG5KQZ0yMH09dSS4TRlQYqEQpehp8BRePrjZCdto0rm6Yq5
- LSIgPZPm9657QeAtVKnuOswuf/WJR+3RsW5SQIrWaZHvLEdtHN9Y8nI0bf/IEaalkeQQpWxd4s
- cbYf6jatu0LDlaxAeIAAAA=
-X-Change-ID: 20251220-helper_proto-fb6e64182467
+Message-Id: <20260107-helper_proto-v1-1-e387e08271cc@gmail.com>
+References: <20260107-helper_proto-v1-0-e387e08271cc@gmail.com>
+In-Reply-To: <20260107-helper_proto-v1-0-e387e08271cc@gmail.com>
 To: Alexei Starovoitov <ast@kernel.org>, 
  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
  Martin KaFai Lau <martin.lau@linux.dev>, 
@@ -93,69 +92,149 @@ Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
  Shuran Liu <electronlsr@gmail.com>, Peili Gao <gplhust955@gmail.com>, 
  Haoran Ni <haoran.ni.cs@gmail.com>, Zesen Liu <ftyghome@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2113; i=ftyghome@gmail.com;
- h=from:subject:message-id; bh=im6+FmUa4bUrtYoqyvdPdobyaHlhncXg5H7WqmB2EoQ=;
- b=owGbwMvMwCXWI1/u+8bXqJ3xtFoSQ2ac/+eQ+OhzsvkdJ+oKCppF4/PlwgI1hFmXTEuq6a5M/
- 7L33OOOUhYGMS4GWTFFlt4fhndXZpobb7NZcBBmDisTyBAGLk4BmEhoPyPDhvalsXW6SoV+8oks
- bY72h/oXecpbv5/FtmRR2P5gnZ3XGRmmXPfYNCHcc++RJersW/6vVm4sO77s+9yei48kPyzinar
- JDQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5550; i=ftyghome@gmail.com;
+ h=from:subject:message-id; bh=6oDFp6ikqBgS4NvjQlEcN+NYxI3tGIrBI1QcoO9lYMw=;
+ b=kA0DAAoWjB93TexNMocByyZiAGleT/Sj3Tw1qRS4iEQ5ZKqX/Zr0iIRtDyzucPnnik5D1j16s
+ Ih1BAAWCgAdFiEEjfgx3alpNzO2PKDBjB93TexNMocFAmleT/QACgkQjB93TexNMocb3AEA8+Sn
+ cCnGk681RIuEzT5Q4i2a/JxVXbY5lQnUlvxzD74BAMI+ocInMSeAHlMOLy27XdeCylBYw9c9DjP
+ yt7LIErQP
 X-Developer-Key: i=ftyghome@gmail.com; a=openpgp;
  fpr=8DF831DDA9693733B63CA0C18C1F774DEC4D3287
 
-Hi,
+After commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type tracking"),
+the verifier started relying on the access type flags in helper
+function prototypes to perform memory access optimizations.
 
-This series adds missing memory access flags (MEM_RDONLY or MEM_WRITE) to
-several bpf helper function prototypes that use ARG_PTR_TO_MEM but lack the
-correct flag. It also adds a new check in verifier to ensure the flag is
-specified.
+Currently, several helper functions utilizing ARG_PTR_TO_MEM lack the
+corresponding MEM_RDONLY or MEM_WRITE flags. This omission causes the
+verifier to incorrectly assume that the buffer contents are unchanged
+across the helper call. Consequently, the verifier may optimize away
+subsequent reads based on this wrong assumption, leading to correctness
+issues.
 
-Missing memory access flags in helper prototypes can lead to critical
-correctness issues when the verifier tries to perform code optimization.
-After commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type
-tracking"), the verifier relies on the memory access flags, rather than
-treating all arguments in helper functions as potentially modifying the
-pointed-to memory.
+For bpf_get_stack_proto_raw_tp, the original MEM_RDONLY was incorrect
+since the helper writes to the buffer. Change it to ARG_PTR_TO_UNINIT_MEM
+which correctly indicates write access to potentially uninitialized memory.
 
-Using ARG_PTR_TO_MEM alone without flags does not make sense because:
+Similar issues were recently addressed for specific helpers in commit
+ac44dcc788b9 ("bpf: Fix verifier assumptions of bpf_d_path's output buffer")
+and commit 2eb7648558a7 ("bpf: Specify access type of bpf_sysctl_get_name args").
 
-- If the helper does not change the argument, missing MEM_RDONLY causes the
-   verifier to incorrectly reject a read-only buffer.
-- If the helper does change the argument, missing MEM_WRITE causes the
-   verifier to incorrectly assume the memory is unchanged, leading to
-   errors in code optimization.
+Fix these prototypes by adding the correct memory access flags.
 
-We have already seen several reports regarding this:
-
-- commit ac44dcc788b9 ("bpf: Fix verifier assumptions of bpf_d_path's
-   output buffer") adds MEM_WRITE to bpf_d_path;
-- commit 2eb7648558a7 ("bpf: Specify access type of bpf_sysctl_get_name
-   args") adds MEM_WRITE to bpf_sysctl_get_name.
-
-This series looks through all prototypes in the kernel and completes the
-flags. It also adds a new check (check_func_proto) in
-verifier.c to statically restrict ARG_PTR_TO_MEM from appearing without
-memory access flags. 
-
-Thanks,
-
-Zesen Liu
-
+Fixes: 37cce22dbd51 ("bpf: verifier: Refactor helper access type tracking")
+Co-developed-by: Shuran Liu <electronlsr@gmail.com>
+Signed-off-by: Shuran Liu <electronlsr@gmail.com>
+Co-developed-by: Peili Gao <gplhust955@gmail.com>
+Signed-off-by: Peili Gao <gplhust955@gmail.com>
+Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
+Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
+Signed-off-by: Zesen Liu <ftyghome@gmail.com>
 ---
-Zesen Liu (2):
-      bpf: Fix memory access flags in helper prototypes
-      bpf: Require ARG_PTR_TO_MEM with memory flag
+ kernel/bpf/helpers.c     | 2 +-
+ kernel/bpf/syscall.c     | 2 +-
+ kernel/trace/bpf_trace.c | 6 +++---
+ net/core/filter.c        | 8 ++++----
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
- kernel/bpf/helpers.c     |  2 +-
- kernel/bpf/syscall.c     |  2 +-
- kernel/bpf/verifier.c    | 17 +++++++++++++++++
- kernel/trace/bpf_trace.c |  6 +++---
- net/core/filter.c        |  8 ++++----
- 5 files changed, 26 insertions(+), 9 deletions(-)
----
-base-commit: ab86d0bf01f6d0e37fd67761bb62918321b64efc
-change-id: 20251220-helper_proto-fb6e64182467
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index db72b96f9c8c..f66284f8ec2c 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -1077,7 +1077,7 @@ const struct bpf_func_proto bpf_snprintf_proto = {
+ 	.func		= bpf_snprintf,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+-	.arg1_type	= ARG_PTR_TO_MEM_OR_NULL,
++	.arg1_type	= ARG_PTR_TO_MEM_OR_NULL | MEM_WRITE,
+ 	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
+ 	.arg3_type	= ARG_PTR_TO_CONST_STR,
+ 	.arg4_type	= ARG_PTR_TO_MEM | PTR_MAYBE_NULL | MEM_RDONLY,
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 4ff82144f885..ee116a3b7baf 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -6407,7 +6407,7 @@ static const struct bpf_func_proto bpf_kallsyms_lookup_name_proto = {
+ 	.func		= bpf_kallsyms_lookup_name,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+-	.arg1_type	= ARG_PTR_TO_MEM,
++	.arg1_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
+ 	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
+ 	.arg3_type	= ARG_ANYTHING,
+ 	.arg4_type	= ARG_PTR_TO_FIXED_SIZE_MEM | MEM_UNINIT | MEM_WRITE | MEM_ALIGNED,
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index fe28d86f7c35..59c2394981c7 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1022,7 +1022,7 @@ const struct bpf_func_proto bpf_snprintf_btf_proto = {
+ 	.func		= bpf_snprintf_btf,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+-	.arg1_type	= ARG_PTR_TO_MEM,
++	.arg1_type	= ARG_PTR_TO_MEM | MEM_WRITE,
+ 	.arg2_type	= ARG_CONST_SIZE,
+ 	.arg3_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
+ 	.arg4_type	= ARG_CONST_SIZE,
+@@ -1526,7 +1526,7 @@ static const struct bpf_func_proto bpf_read_branch_records_proto = {
+ 	.gpl_only       = true,
+ 	.ret_type       = RET_INTEGER,
+ 	.arg1_type      = ARG_PTR_TO_CTX,
+-	.arg2_type      = ARG_PTR_TO_MEM_OR_NULL,
++	.arg2_type      = ARG_PTR_TO_MEM_OR_NULL | MEM_WRITE,
+ 	.arg3_type      = ARG_CONST_SIZE_OR_ZERO,
+ 	.arg4_type      = ARG_ANYTHING,
+ };
+@@ -1661,7 +1661,7 @@ static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type	= ARG_PTR_TO_CTX,
+-	.arg2_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
++	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
+ 	.arg3_type	= ARG_CONST_SIZE_OR_ZERO,
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 616e0520a0bb..6e07bb994aa7 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -6399,7 +6399,7 @@ static const struct bpf_func_proto bpf_xdp_fib_lookup_proto = {
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type      = ARG_PTR_TO_CTX,
+-	.arg2_type      = ARG_PTR_TO_MEM,
++	.arg2_type      = ARG_PTR_TO_MEM | MEM_WRITE,
+ 	.arg3_type      = ARG_CONST_SIZE,
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+@@ -6454,7 +6454,7 @@ static const struct bpf_func_proto bpf_skb_fib_lookup_proto = {
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type      = ARG_PTR_TO_CTX,
+-	.arg2_type      = ARG_PTR_TO_MEM,
++	.arg2_type      = ARG_PTR_TO_MEM | MEM_WRITE,
+ 	.arg3_type      = ARG_CONST_SIZE,
+ 	.arg4_type	= ARG_ANYTHING,
+ };
+@@ -8010,7 +8010,7 @@ static const struct bpf_func_proto bpf_tcp_raw_gen_syncookie_ipv4_proto = {
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type	= ARG_PTR_TO_FIXED_SIZE_MEM,
+ 	.arg1_size	= sizeof(struct iphdr),
+-	.arg2_type	= ARG_PTR_TO_MEM,
++	.arg2_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
+ 	.arg3_type	= ARG_CONST_SIZE_OR_ZERO,
+ };
+ 
+@@ -8042,7 +8042,7 @@ static const struct bpf_func_proto bpf_tcp_raw_gen_syncookie_ipv6_proto = {
+ 	.ret_type	= RET_INTEGER,
+ 	.arg1_type	= ARG_PTR_TO_FIXED_SIZE_MEM,
+ 	.arg1_size	= sizeof(struct ipv6hdr),
+-	.arg2_type	= ARG_PTR_TO_MEM,
++	.arg2_type	= ARG_PTR_TO_MEM | MEM_RDONLY,
+ 	.arg3_type	= ARG_CONST_SIZE_OR_ZERO,
+ };
+ 
 
-Best regards,
 -- 
-Zesen Liu <ftyghome@gmail.com>
+2.43.0
 
