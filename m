@@ -1,161 +1,116 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72E8331A70
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 13:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D0D33B6D3
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 13:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767792165; cv=none; b=oC/O2flwkUhqRB99Ryb4hqPrTXLO5bnVf6pysUykCfoo0I7y087R1l3vWTvHy6CIc8NRyuy/68W3l2rHGkISrzZ/PPJ6uW+3xjQrzxsYRq38zfbfWvsYX/XruCIfhMxS2MVFzSZPHEFYx1yBXrJExrcecwZTRsZBK0y68p6dbkg=
+	t=1767792301; cv=none; b=ANHzH8Dz9xKVz3qNpgRA27ia+h8Tcrnle/tn872IHYjdhuZTnAWg/IHYvJyMeUil7jRDQVnrUYGbRSfpMyACgZ30+7NJIvtmo2d1epZKBw0j4NjtoRY5/xxhBTDnuwmPcEH/YwEOok2cR781U+stA0QgKjoLiXlYOTM19MgMTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767792165; c=relaxed/simple;
-	bh=unytFKZ8LCGZbWiIqqle1BjuJ9OKga7Krn0YjNtEcU4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZFd5TcvrmPhx9oIgT2Wqwtm04VEz7H60Y87kc0OwEbZxzSEqVCy8puq4TaN5QcYfZ/AB8HE2vxjMb0XPZAYVd/63ebv++3abOmlnE7P03FxVt48wQHRz4aSQiNppoWL18yBzy6owgGBp028dOQLW/qp7S/qum1POIX+NmXDNaKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SOnitJg+; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767792301; c=relaxed/simple;
+	bh=yEqsB60VUUiSvZef4yR/lKFwaZig+oFC8NOOkXv0P8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UWmARcSzpaTSQ5rnK2VZZ/KMMHA8RrfmAchIgFxNuNkuN6HzwKrkxtkrobS+rBjTVIOMihcAoJUSGSrfxjghNHr43vP+OwwZHfzn/AC8PQELxqaWgZ/fEGgBI7oVJQJtz3Evbv+Dt4MImbKI0Kv+zC2DYHn17TcAAso0MciP+N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hZJip5cq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOnitJg+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2a099233e8dso16871335ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 05:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767792163; x=1768396963; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=htJmJ2nOl5HS2d4lrmu4G6awIswx3aqJ66sxEqxOU2k=;
-        b=SOnitJg+hVNmVJlkwgk6o2H6/EhOte0DlJvlj8MJEn0dEWu0JMlQzYioj0qc3CIS1k
-         H1ooZnU2xiniV7uT2rzxd2ZIa4Mx0SwC5yS3A0Covjgq5DzIslb14tDyddB/o55gYEaK
-         Vp4Sw6tbLDxVZ6SXZDdKlQ4sJuiR0sfMbDzycke8XaMV9ujj0rh8S2F1dSUZBXjD+OBL
-         gR1HN9GgQB5/GAZ3tNwHin6NSHdCnGj7UxjineA1dJuvAHI5Rxsgq+sQP7Quk3zSWnvS
-         mUeb9TsipgTtm2aR2TMufCulDuurhfjCt6LCQ+WVoVyNsZCa1rSkK67jbZ4q0wUFBELL
-         GguQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hZJip5cq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767792298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WTXeW4ZAylqeo4C6/c+qkj78SBOOk3H0bhNujdt3nhA=;
+	b=hZJip5cqgboqGgMr/pSyOjpJh1cNxZAMZsjhnTHeDEmJNH5YKKIPi5SH/tIfB0gQnRVGN8
+	M6y+8E63i/m0n2Nz7t8GHUrxaDoC6j63oOsMVy0nafaGcmo783gpWsDUqxg/AB0FRQ260d
+	Fj/9H6qQnxqDwUNlA33wdqChyb+rAoU=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-589-3QNRPD_ZP3KWEfxL_cd8gg-1; Wed, 07 Jan 2026 08:24:57 -0500
+X-MC-Unique: 3QNRPD_ZP3KWEfxL_cd8gg-1
+X-Mimecast-MFC-AGG-ID: 3QNRPD_ZP3KWEfxL_cd8gg_1767792296
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-37fc7967c41so10559681fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 05:24:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767792163; x=1768396963;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=htJmJ2nOl5HS2d4lrmu4G6awIswx3aqJ66sxEqxOU2k=;
-        b=TfdQCsyqK+p0DgnKBtD2SuWN0UhpcAiqX1Kp4jN7VEtFYLgr8q07PMM2io78Z/rxzh
-         k3md3OlfhE03xsVTBMqAnpi3mreqhvP2pnHHQisvaRiubTCuHw7z+sBhyP+murtpIgJq
-         3O25KIN1c3rIf0ifZeywTvYJZrrT/uPCsQTSq/z3Q23ibYrsJraH35OpbpEayUtHK0ql
-         iLqYS4Pb6wGFF+lLJkd+9DxtROZAeom9gVdoRhpS5/HNz4pB0py/v7dGs2KWyQP7HbN5
-         2ykDzHHNCuLNMCN9S9wivcDrrlKt0/MJ+RPd1mu61+QrhARzYg++9qjtqZ+hcgfvVlML
-         dFFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsdwWU+Aiyi1ly3BgWMIoY10jVzfk/1c6UxMJKeRmySHykZWJHIQA+Akm+N/pc+WCq3hkZIGw7LuH50PIbrZqpU1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkLLJ7KpZzEbgJY3PZbfI5u+CTpVAQohrJULEY+zPeAqWRaj8P
-	ns7zMBdgn1Lk9ZiE+wc63OGNc+WDKJB75B4J1aTl3E8+AsJgumA5KZ+V
-X-Gm-Gg: AY/fxX6gs6arktXYqdO38LoEAJHAzFibzK/NV+wDf1E3ZMJz6NOX282ShKs0KceXV/0
-	THTFcFOxalSjj9YS3JWfSYw++h1tGktG1JyclXUM8d6TBbWfeiYoh0h8MJMg8x45tbgJfoRgLoR
-	YjNFUTCR8RGYBrqJ1e94h/XEfRw7uQCIcfIFTJbMWW7T2wjBQN5To6p1GgLFalYTKy7VEGhZVau
-	SwDgjCVeSjDL7+SpXeOkOUFa+RV+QO7b3HT25FVhliYH4zDrn1oWDTz060S7nK5cS7ED/UwYhes
-	YZdfvhm6SeL0SFy68DHaIs+Ejg/gir6iH5Mg29IIZaJ96J5CVcKo+N/1gVR8+3yxCIV6eisQHKC
-	JCsjlEPLyCJd5aTCxvBm32uUTvn4bRxpqntBzeyIVvgicZgEz+8poHKdMy4ZofOZUpifWBmXThM
-	b2lzoDiPr22uRCtKypUmA33w==
-X-Google-Smtp-Source: AGHT+IEvtZa3zLpS6a5Y/+nmtOmpeeuGMbTxkqCETXk3Efe8UmRkWBRknzvf6eczc+NkOyxjXeazrg==
-X-Received: by 2002:a17:902:daca:b0:2a0:da38:96d8 with SMTP id d9443c01a7336-2a3ee443bf0mr20830455ad.25.1767792162588;
-        Wed, 07 Jan 2026 05:22:42 -0800 (PST)
-Received: from [127.0.0.1] ([188.253.121.152])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cc7912sm52511685ad.67.2026.01.07.05.22.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 05:22:42 -0800 (PST)
-From: Zesen Liu <ftyghome@gmail.com>
-Date: Wed, 07 Jan 2026 21:21:43 +0800
-Subject: [PATCH bpf v2 2/2] bpf: Require ARG_PTR_TO_MEM with memory flag
+        d=1e100.net; s=20230601; t=1767792295; x=1768397095;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WTXeW4ZAylqeo4C6/c+qkj78SBOOk3H0bhNujdt3nhA=;
+        b=A+qfY+Gd08n7K2OGiwByb5+Ss+8Ri+zx8asB4TOxQl1MD2r6CvXwv1b40AdiGILH+S
+         V/PBaw0VEYvxdlv5Df3DXn0SJtUSS4UfJxaaN4p3flMM3y0w4tj2EtMTFLQtv11HVV+y
+         5Se/Av0HzAocTGDOaD1L9yvtBch6Wze/PpHxvteFz0+gmIlntQEcU9qv61gEjIb4zSqV
+         VN7E9YDjjSj9AJcd6vqHoBNYsmgyxzhLCS6aQjozw6ACYcyfSz8IN2Ipq2s4+DXpBcE8
+         jf5VfelhfO0gsBAeHiFEe6WkyNxhP8mjCTr8ST4yqZtaJVd39PEDdzL9XCadoFE+6Y+u
+         ZUbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXAZ6Ti1mjsRngoF9TAy34GXSzgGBZRZM0DjP0GHUZFCDt2nk2/sz5didppajBv/RZ5CTuDN6fcfgnUmzZ5jMSDBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF48uiCAgLKrL7bGG7mmcLKJK+7Cw912HwHeRk0tlAtgx4POnI
+	xmYxxnURbG8/rfNFn/Vb8gpEDbbAzpD6RE/z99eAGfYv8SVDEL9F8NM9GemDTrvymySQh0e/InJ
+	MtyLVXox3ZIVtNdslTPEgSzT+i3spM4fYjbKVNzZ7VbnyNZn3MI1kEjJ3j3IOOF7+Pq5UGw8nZM
+	ZfFmPDunXtXcBZiRFSeolAGxD3CLv1xoDouWuM4iL0gUTTvijp
+X-Gm-Gg: AY/fxX4DsXZqPxBy25Mt8ZVpHrC49G6a+xs291Fp8IheBy/VL13JWydQ39/6p6RgUCG
+	gEc/UbB9+gUqWT/e4t4gwUtI8AbXPmZeqGJwzkoRkUd1icYuMh2KsdcjqDm9Ql4W/7hmuA5V6qy
+	ypnkeLlFxStU+J+SCjq+h/z8EFmJbxhb+BhkqHnSv+hLQvz+rkEnEZO6egDsqBOGf2RYr7ENUgi
+	bLvjZki4uxIRRCrt7xpURquMDDNIbMYfdCnKnpQVzegbZWeH0nTnsYJ0uqmZ3TtKNQ+WRpUoVt6
+	R6xiSVRiHJxa
+X-Received: by 2002:a05:651c:4cb:b0:37f:e645:9aaa with SMTP id 38308e7fff4ca-382ff68f5d0mr7279021fa.16.1767792295549;
+        Wed, 07 Jan 2026 05:24:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyawBIep3Ik0XO0p0nY5zOT4BWCobPTD6vp/nnCBtidrWgs1APGZFenLumvjNgvAs21TAmCXukSA/QbA3PgoY=
+X-Received: by 2002:a05:651c:4cb:b0:37f:e645:9aaa with SMTP id
+ 38308e7fff4ca-382ff68f5d0mr7278881fa.16.1767792295044; Wed, 07 Jan 2026
+ 05:24:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260107-helper_proto-v2-2-4c562bcca5a8@gmail.com>
-References: <20260107-helper_proto-v2-0-4c562bcca5a8@gmail.com>
-In-Reply-To: <20260107-helper_proto-v2-0-4c562bcca5a8@gmail.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Shuran Liu <electronlsr@gmail.com>, Peili Gao <gplhust955@gmail.com>, 
- Haoran Ni <haoran.ni.cs@gmail.com>, Zesen Liu <ftyghome@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1786; i=ftyghome@gmail.com;
- h=from:subject:message-id; bh=unytFKZ8LCGZbWiIqqle1BjuJ9OKga7Krn0YjNtEcU4=;
- b=owGbwMvMwCXWI1/u+8bXqJ3xtFoSQ2ZcHKfXnRfM7Bz8sbOPtxaeKuSre5UuvjNs77NkU+Od5
- 73+er3tKGVhEONikBVTZOn9YXh3Zaa58TabBQdh5rAygQxh4OIUgIkcimX47yj3//irmXOKCkSf
- py4VeqYl3l5yOXj/g2anJTI2DKcUvjEydH6csH5bW6CMziyV3XniFTfVHzjWFVxWcK590+SR4Di
- LCQA=
-X-Developer-Key: i=ftyghome@gmail.com; a=openpgp;
- fpr=8DF831DDA9693733B63CA0C18C1F774DEC4D3287
+References: <20260106133655.249887-1-wander@redhat.com> <20260106133655.249887-16-wander@redhat.com>
+ <20260106110519.40c97efe@gandalf.local.home>
+In-Reply-To: <20260106110519.40c97efe@gandalf.local.home>
+From: Wander Lairson Costa <wander@redhat.com>
+Date: Wed, 7 Jan 2026 10:24:43 -0300
+X-Gm-Features: AQt7F2pnk_lk_Dg3GLoifyjkvvfBEFoRWSzObyVIZ9HVC1Wwtre9bKph1GmQoxA
+Message-ID: <CAAq0SUmW7mUP0iiHMJevR+T6BKHJiFoU4M8sCVjJSRMFnT2J_w@mail.gmail.com>
+Subject: Re: [PATCH v2 15/18] rtla: Make stop_tracing variable volatile
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3r8xmaAzir2Hb4eR4Sa3-agvszx_Q9LRJdAA8hiv7k4_1767792296
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add check to ensure that ARG_PTR_TO_MEM is used with either MEM_WRITE or
-MEM_RDONLY.
+On Tue, Jan 6, 2026 at 1:05=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Tue,  6 Jan 2026 08:49:51 -0300
+> Wander Lairson Costa <wander@redhat.com> wrote:
+>
+> > Add the volatile qualifier to stop_tracing in both common.c and
+> > common.h to ensure all accesses to this variable bypass compiler
+> > optimizations and read directly from memory. This guarantees that
+> > when the signal handler sets stop_tracing, the change is immediately
+> > visible to the main program loop, preventing potential hangs or
+> > delayed shutdown when termination signals are received.
+>
+> In the kernel, this is handled via the READ_ONCE() macro. Perhaps rtla
+> should implement that too.
+>
 
-Using ARG_PTR_TO_MEM alone without tags does not make sense because:
+I considered that, but, in this use case, I saw no point because it
+didn't bring any advantage and volatile was simpler.
+Furthermore, as Crystal pointed out, using volatile for variables
+shared with signals is a pretty standard practice.
 
-- If the helper does not change the argument, missing MEM_RDONLY causes the
-verifier to incorrectly reject a read-only buffer.
-- If the helper does change the argument, missing MEM_WRITE causes the
-verifier to incorrectly assume the memory is unchanged, leading to errors
-in code optimization.
-
-Co-developed-by: Shuran Liu <electronlsr@gmail.com>
-Signed-off-by: Shuran Liu <electronlsr@gmail.com>
-Co-developed-by: Peili Gao <gplhust955@gmail.com>
-Signed-off-by: Peili Gao <gplhust955@gmail.com>
-Co-developed-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Haoran Ni <haoran.ni.cs@gmail.com>
-Signed-off-by: Zesen Liu <ftyghome@gmail.com>
----
- kernel/bpf/verifier.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index f0ca69f888fa..c7ebddb66385 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -10349,10 +10349,27 @@ static bool check_btf_id_ok(const struct bpf_func_proto *fn)
- 	return true;
- }
- 
-+static bool check_mem_arg_rw_flag_ok(const struct bpf_func_proto *fn)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fn->arg_type); i++) {
-+		enum bpf_arg_type arg_type = fn->arg_type[i];
-+
-+		if (base_type(arg_type) != ARG_PTR_TO_MEM)
-+			continue;
-+		if (!(arg_type & (MEM_WRITE | MEM_RDONLY)))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int check_func_proto(const struct bpf_func_proto *fn, int func_id)
- {
- 	return check_raw_mode_ok(fn) &&
- 	       check_arg_pair_ok(fn) &&
-+		   check_mem_arg_rw_flag_ok(fn) &&
- 	       check_btf_id_ok(fn) ? 0 : -EINVAL;
- }
- 
-
--- 
-2.43.0
+> -- Steve
+>
 
