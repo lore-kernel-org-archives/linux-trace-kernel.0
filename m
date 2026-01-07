@@ -1,71 +1,160 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA321E08D
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 20:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C78288C96
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 21:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767818132; cv=none; b=jKyPP7SRF5H+9bkgtIb3HH154eomq/0AJ20Dm6tch+SW8P3oo0Eq7gZu8ETOEfbBYMiTSzbky0N2AzvgFv6jC1oxMnTGdpJZn6de50ZNST/R2cgJlqNNZr191m61ZXTUUVGHV2J9PbQjfxmJBSJwwov4GDu6Tj3rVdUcf8nKt1E=
+	t=1767819698; cv=none; b=CGieuiJJ+p/ex4R+bcwKAP/YgBb/GOi5wCTFYcrBYTig2LH1jVpjQOJrKHSixIK0eXq8byZ2znHw/MuqWTSqsgFpPPOPkqWed9/3db53uMhFBN/i/EBY5fW8ncn7Hy5vZ80jgqMpoo/x6FASU6+FEKG1fqpGSR4hl2/Z5HBkOwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767818132; c=relaxed/simple;
-	bh=DYsosLdGRBIRROhwU9v8kIh0MBPdaE22UfvH2vgCH7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4D2JNNjKkB9FaNCU1nzXFPyePEDV++ievb2bMSkpMPIGgaLEys4ZqjH7IvthHlF5R+M23xL74RGgnOjLblxefrb4DDrpLyHE9fFAM1zGHqu8vJ7ye9uGDhviQsuKFYaeHJJsc/EOcyFcNOVRhCvnxRFXJSU8Xqv7XykBCDVPLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=s/i757TN; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="s/i757TN"
-Date: Wed, 7 Jan 2026 12:35:19 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767818128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BwCFjFalN2/8s1wbIvxRRJTe8J6YxTX0NCS4gLgdyQE=;
-	b=s/i757TN1Q+PmiyZqrczqMqOj6PaAuzgQEDneTiRTrmkURkycvc+g6rgbwq8QyvK6BGb5z
-	3mTYUHZiUOa1h1n9TUV2izrMQDP8aeHcR6pIoL6ojXnWR+9zdeY3iwM54pRqEAGLEL19/a
-	ieDc0mtseSkFb1q4/GX8iftVYeN2z+Y=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Ballasi <tballasi@linux.microsoft.com>, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
-Message-ID: <hpbntcznzgnwxerqzvyrauibecqg2ttgzch5d762mzn3q7dkzr@dm3vp6pnsnjo>
-References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
- <20260105160423.23708-1-tballasi@linux.microsoft.com>
- <20260105160423.23708-2-tballasi@linux.microsoft.com>
- <62ia3v3oduyt2srkaneccoei7cwimifwduarteyn2ugpmmbw3p@rivcqvcksgpt>
- <ovqxo2mmjiuymqk36t2xydcyzvtppcqsog62yx3qtwsknbkgzq@3phadh5gfyjd>
- <20260107103208.e64fe3c26d02bfcb21404dd9@linux-foundation.org>
+	s=arc-20240116; t=1767819698; c=relaxed/simple;
+	bh=svbXz6QwZmZZutYCyDA/vwOZpaivfZPm6H0oEcHlEbs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=iE0yN5ZCo+x4GV9E0wl7lNPI4n06O0x2TC02uQPK5wXGzio/2OuK48j22a1K1+8ysuHduZX+m/l8WUle0l7dd3+TMMub9RG8+UbnEC5uut/rJ1thW65R7VRX9EQs5V2KvT0oQg7njpu4s4vdtvTrjfcsK0VCICBjR5c9+kRvcoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-65ed4d39a1bso7828677eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 13:01:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767819695; x=1768424495;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQCqX6kWiG9Ax9dPgEFr63876bw1qGgkAwiAS4CGSg4=;
+        b=iOGKdwNC30ror8KAqjJm17aGtsN9twjXYOhyv2OSJoJlximOiur7SVEk3ps+c/+pJV
+         aGukrSrtHL3LGrfQpKIswl8mYq0p+eoJJ251/fqTOuuvUwaQR3dvucISdR+jsfGWwAy4
+         msQ9AGT51nCbVGBelExikZUKba7PQ0J5tUz8gkWY3e5BBJGIGFvOnpsOJs1GJUK18gP8
+         F2pOw585Kv6kms611/GppGrodLwIt4ZCG56QYc7FOEdAHcDT9Lt/UL3U74bmnKkHK06w
+         b1EY/QClQKs6f0on9h/KGgVvZ+grOmbuuHLrMt1R9a6QlblkC3ROF88LOTaSLQcYBjsC
+         pyxg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7j4TIk/1VBq2wcxv6bi1qbkIQnAMYKTLcoDE9BO3c+2qAQtX6Hk7OT7JRqpy4bcNGQHkdYg1KDztTsvHwYO1Cyp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAiJbIRnnyIF1CNGT2J9rQVM/AFxk+FnjQHJYJDz8JFy+4Nuo9
+	wWtaIcVeTLJSzVHbRoxRdIfYiI+jE6FB1Mp7ahMNp3AuFY8tgpNtusqFJiHsiJ0tssb6/wCOpJR
+	+UleMK78wwcakxTj7lQrBZsUAeCbk8ukqVR4gsYzRIJa8FI/GIsqnrxnewPg=
+X-Google-Smtp-Source: AGHT+IGMOnxovbIoT6GN2XGJGsdfciW2WbfLn2wUP6PWmbKEnbnIGAr5RyinnPH3Tv0EO+NZxg4ZLuFppLl+Fr8/6Ot6Ad7if63e
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260107103208.e64fe3c26d02bfcb21404dd9@linux-foundation.org>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a4a:d814:0:b0:65d:c79:8b87 with SMTP id
+ 006d021491bc7-65f54ed647dmr1322354eaf.5.1767819695373; Wed, 07 Jan 2026
+ 13:01:35 -0800 (PST)
+Date: Wed, 07 Jan 2026 13:01:35 -0800
+In-Reply-To: <20260107-helper_proto-v1-0-e387e08271cc@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <695ec9af.050a0220.1c677c.037d.GAE@google.com>
+Subject: [syzbot ci] Re: bpf: Fix memory access flags in helper prototypes
+From: syzbot ci <syzbot+cicac8180258d8bceb@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, dxu@dxuuu.xyz, eddyz87@gmail.com, 
+	edumazet@google.com, electronlsr@gmail.com, ftyghome@gmail.com, 
+	gplhust955@gmail.com, haoluo@google.com, haoran.ni.cs@gmail.com, 
+	horms@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org, 
+	kpsingh@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	mathieu.desnoyers@efficios.com, mattbobrowski@google.com, mhiramat@kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, rostedt@goodmis.org, 
+	sdf@fomichev.me, song@kernel.org, yonghong.song@linux.dev
+Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 07, 2026 at 10:32:08AM -0800, Andrew Morton wrote:
-> On Wed, 7 Jan 2026 10:14:53 -0800 Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> 
-> > On Mon, Jan 05, 2026 at 02:46:39PM -0800, Shakeel Butt wrote:
-> > [...]
-> > > 
-> > > Orthogonally I am cleaning up memcg id usage and after that cleanup,
-> > > mem_cgroup_id() would be preferred way to get the ID. No need to do
-> > > anything now as I will cleanup this usage later as well.
-> > 
-> > The series has been landed in mm-new. Please use mem_cgroup_id() instead
-> > of cgroup_id(memcg->css.cgroup).
-> 
-> fyi, I removed this series yesterday due to a CONFIG_MEMCG=n build failure.
+syzbot ci has tested the following series
 
-Oh sorry, I meant my series [1] landed in mm-new and with that Thomas
-can directly use mem_cgroup_id() without worrying about CONFIG_MEMCG=n.
+[v1] bpf: Fix memory access flags in helper prototypes
+https://lore.kernel.org/all/20260107-helper_proto-v1-0-e387e08271cc@gmail.com
+* [PATCH bpf 1/2] bpf: Fix memory access flags in helper prototypes
+* [PATCH bpf 2/2] bpf: Require ARG_PTR_TO_MEM with memory flag
 
-[1] https://lkml.kernel.org/r/20251225232116.294540-1-shakeel.butt@linux.dev
+and found the following issue:
+WARNING in check_helper_call
+
+Full report is available here:
+https://ci.syzbot.org/series/020c2fa8-b95d-4273-9bc0-2f82fa714a8e
+
+***
+
+WARNING in check_helper_call
+
+tree:      bpf
+URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/bpf/bpf.git
+base:      ab86d0bf01f6d0e37fd67761bb62918321b64efc
+arch:      amd64
+compiler:  Debian clang version 21.1.8 (++20251202083448+f68f64eb8130-1~exp1~20251202083504.46), Debian LLD 21.1.8
+config:    https://ci.syzbot.org/builds/9a24b0e7-35e4-4718-b939-3b210b6b5126/config
+C repro:   https://ci.syzbot.org/findings/8fcbdcf8-4480-46d8-b7a8-f1de9401a8ac/c_repro
+syz repro: https://ci.syzbot.org/findings/8fcbdcf8-4480-46d8-b7a8-f1de9401a8ac/syz_repro
+
+------------[ cut here ]------------
+verifier bug: incorrect func proto bpf_tcp_raw_check_syncookie_ipv6#207
+WARNING: kernel/bpf/verifier.c:11546 at check_helper_call+0xc00/0x6e10 kernel/bpf/verifier.c:11546, CPU#0: syz.0.17/5981
+Modules linked in:
+CPU: 0 UID: 0 PID: 5981 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:check_helper_call+0xc16/0x6e10 kernel/bpf/verifier.c:11546
+Code: ef e6 ff 49 bf 00 00 00 00 00 fc ff df 48 8d 1d a0 c2 ea 0d 44 8b 64 24 24 44 89 e7 e8 d3 32 0c 00 48 89 df 48 89 c6 44 89 e2 <67> 48 0f b9 3a 49 81 c6 80 08 00 00 44 89 e7 e8 b6 32 0c 00 4c 89
+RSP: 0018:ffffc90007116fa0 EFLAGS: 00010246
+RAX: ffffffff8b934740 RBX: ffffffff8fc645d0 RCX: dffffc0000000000
+RDX: 00000000000000cf RSI: ffffffff8b934740 RDI: ffffffff8fc645d0
+RBP: ffffc900071171b0 R08: ffff88816b42ba80 R09: 0000000000000002
+R10: 0000000000000004 R11: 0000000000000000 R12: 00000000000000cf
+R13: f8f8f8f8f8f8f8f8 R14: ffff888112440000 R15: dffffc0000000000
+FS:  000055557af7b500(0000) GS:ffff88818e40e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd892207dac CR3: 0000000161682000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ do_check_insn kernel/bpf/verifier.c:20417 [inline]
+ do_check+0x99eb/0xec30 kernel/bpf/verifier.c:20598
+ do_check_common+0x19cc/0x25b0 kernel/bpf/verifier.c:23882
+ do_check_main kernel/bpf/verifier.c:23965 [inline]
+ bpf_check+0x5f0d/0x1c4a0 kernel/bpf/verifier.c:25272
+ bpf_prog_load+0x1484/0x1ae0 kernel/bpf/syscall.c:3088
+ __sys_bpf+0x570/0x920 kernel/bpf/syscall.c:6164
+ __do_sys_bpf kernel/bpf/syscall.c:6274 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6272 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6272
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xe2/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd891f9acb9
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffee24b6bb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007fd892205fa0 RCX: 00007fd891f9acb9
+RDX: 0000000000000094 RSI: 0000200000000300 RDI: 0000000000000005
+RBP: 00007fd892008bf7 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fd892205fac R14: 00007fd892205fa0 R15: 00007fd892205fa0
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	ef                   	out    %eax,(%dx)
+   1:	e6 ff                	out    %al,$0xff
+   3:	49 bf 00 00 00 00 00 	movabs $0xdffffc0000000000,%r15
+   a:	fc ff df
+   d:	48 8d 1d a0 c2 ea 0d 	lea    0xdeac2a0(%rip),%rbx        # 0xdeac2b4
+  14:	44 8b 64 24 24       	mov    0x24(%rsp),%r12d
+  19:	44 89 e7             	mov    %r12d,%edi
+  1c:	e8 d3 32 0c 00       	call   0xc32f4
+  21:	48 89 df             	mov    %rbx,%rdi
+  24:	48 89 c6             	mov    %rax,%rsi
+  27:	44 89 e2             	mov    %r12d,%edx
+* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
+  2f:	49 81 c6 80 08 00 00 	add    $0x880,%r14
+  36:	44 89 e7             	mov    %r12d,%edi
+  39:	e8 b6 32 0c 00       	call   0xc32f4
+  3e:	4c                   	rex.WR
+  3f:	89                   	.byte 0x89
+
+
+***
+
+If these findings have caused you to resend the series or submit a
+separate fix, please add the following tag to your commit message:
+  Tested-by: syzbot@syzkaller.appspotmail.com
+
+---
+This report is generated by a bot. It may contain errors.
+syzbot ci engineers can be reached at syzkaller@googlegroups.com.
