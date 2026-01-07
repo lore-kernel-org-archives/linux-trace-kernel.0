@@ -1,71 +1,71 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD503446DE;
-	Wed,  7 Jan 2026 19:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA321E08D
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 20:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767815062; cv=none; b=TnK7NCfzG206vghR8p3ehAkntjGezkbWVSLc9WiwtIbcRcg5LbR7yyrxs1Bwzcj2cvNQp4VYiyVUZIQN/kYBRyEwzICtmx8qsMn7oGFlt14rFlZM0NxVRh/fdEaF2jl4btr3WyizdaZp8PQkJjooAm6Tc+riWu0hWpjiX1bVS3k=
+	t=1767818132; cv=none; b=jKyPP7SRF5H+9bkgtIb3HH154eomq/0AJ20Dm6tch+SW8P3oo0Eq7gZu8ETOEfbBYMiTSzbky0N2AzvgFv6jC1oxMnTGdpJZn6de50ZNST/R2cgJlqNNZr191m61ZXTUUVGHV2J9PbQjfxmJBSJwwov4GDu6Tj3rVdUcf8nKt1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767815062; c=relaxed/simple;
-	bh=BDWvavId5yMpmavgH+5HopBuuoPKcwZOJTX/4K6NxXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iTC2CENovOuqS/NQuWE9EL0ffp6hmPta+Qr5MzviWQaTK5BZ568MOmhRZLv30K83pcdHGwQIzxwGLHQRO5oPupAEdS1VEC3UqUxxB2PftBTa1Fxs7r5qKQe6ReQBBAvuTnM8C+z/QK8zinPrLg4X1RA6HySUK13+IvXNQ0hB434=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 75D3F8BC0E;
-	Wed,  7 Jan 2026 19:44:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 7B40480014;
-	Wed,  7 Jan 2026 19:44:07 +0000 (UTC)
-Date: Wed, 7 Jan 2026 14:44:34 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Maurice Hieronymus <mhi@mailbox.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- georges.aureau@hpe.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] kallsyms: Always initialize modbuildid on ftrace
- address
-Message-ID: <20260107144434.233c1c15@gandalf.local.home>
-In-Reply-To: <20251220181838.63242-2-mhi@mailbox.org>
-References: <20251220181838.63242-1-mhi@mailbox.org>
-	<20251220181838.63242-2-mhi@mailbox.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767818132; c=relaxed/simple;
+	bh=DYsosLdGRBIRROhwU9v8kIh0MBPdaE22UfvH2vgCH7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d4D2JNNjKkB9FaNCU1nzXFPyePEDV++ievb2bMSkpMPIGgaLEys4ZqjH7IvthHlF5R+M23xL74RGgnOjLblxefrb4DDrpLyHE9fFAM1zGHqu8vJ7ye9uGDhviQsuKFYaeHJJsc/EOcyFcNOVRhCvnxRFXJSU8Xqv7XykBCDVPLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=s/i757TN; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="s/i757TN"
+Date: Wed, 7 Jan 2026 12:35:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767818128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BwCFjFalN2/8s1wbIvxRRJTe8J6YxTX0NCS4gLgdyQE=;
+	b=s/i757TN1Q+PmiyZqrczqMqOj6PaAuzgQEDneTiRTrmkURkycvc+g6rgbwq8QyvK6BGb5z
+	3mTYUHZiUOa1h1n9TUV2izrMQDP8aeHcR6pIoL6ojXnWR+9zdeY3iwM54pRqEAGLEL19/a
+	ieDc0mtseSkFb1q4/GX8iftVYeN2z+Y=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Ballasi <tballasi@linux.microsoft.com>, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
+Message-ID: <hpbntcznzgnwxerqzvyrauibecqg2ttgzch5d762mzn3q7dkzr@dm3vp6pnsnjo>
+References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
+ <20260105160423.23708-1-tballasi@linux.microsoft.com>
+ <20260105160423.23708-2-tballasi@linux.microsoft.com>
+ <62ia3v3oduyt2srkaneccoei7cwimifwduarteyn2ugpmmbw3p@rivcqvcksgpt>
+ <ovqxo2mmjiuymqk36t2xydcyzvtppcqsog62yx3qtwsknbkgzq@3phadh5gfyjd>
+ <20260107103208.e64fe3c26d02bfcb21404dd9@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7B40480014
-X-Stat-Signature: 1fzuq6dibqskupp1hcexpedbrfzekfmd
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19RdrMjBReEh0DGiEMvIHZvmu5ln5nIhyE=
-X-HE-Tag: 1767815047-727664
-X-HE-Meta: U2FsdGVkX18A3DoOlTzqb88a5+Y6hLUBJ/DBCmaRfaYIrm4fpHBY4XIzY5lecY0xf2GZ0Mwp8GEmdCAEWG92zRK9XElcvGX+MMMX19/slztkuSW7uPraPNdTmxRMSThH61rMbAYT5S63u1Nq7ixUpnkRZUd3n2CjdwCJHTVRzcyrNutzWi9k258AgzhwdyUH16nOVVIGB/dbLOQ6dZv5G2eMEzfhlEIOGLfwK4ZCO4HWjYzafIvJF5tePcQqgtLT1cPKwMBDe2xRFmeQ2SfSBpAiRKQtOIatNj1XKQdKUnxtS8CpPe1gxjxXLPHAv39WsgQUrPK7QeFUMn0PnBgeLrMXZqYpM2eNWuUEBrJqnQLiIbNZ1MiwrGQ6Eq/7vtvW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107103208.e64fe3c26d02bfcb21404dd9@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, 20 Dec 2025 19:18:37 +0100
-Maurice Hieronymus <mhi@mailbox.org> wrote:
-
-> modbuildid is never set when kallsyms_lookup_buildid is returning via
-> successful ftrace_mod_address_lookup.
+On Wed, Jan 07, 2026 at 10:32:08AM -0800, Andrew Morton wrote:
+> On Wed, 7 Jan 2026 10:14:53 -0800 Shakeel Butt <shakeel.butt@linux.dev> wrote:
 > 
-> This leads to an uninitialized pointer dereference on x86 when
-> CONFIG_STACKTRACE_BUILD_ID=y inside __sprint_symbol.
+> > On Mon, Jan 05, 2026 at 02:46:39PM -0800, Shakeel Butt wrote:
+> > [...]
+> > > 
+> > > Orthogonally I am cleaning up memcg id usage and after that cleanup,
+> > > mem_cgroup_id() would be preferred way to get the ID. No need to do
+> > > anything now as I will cleanup this usage later as well.
+> > 
+> > The series has been landed in mm-new. Please use mem_cgroup_id() instead
+> > of cgroup_id(memcg->css.cgroup).
 > 
+> fyi, I removed this series yesterday due to a CONFIG_MEMCG=n build failure.
 
-Nothing should be getting a buildid from the ftrace kallsyms lookup.
+Oh sorry, I meant my series [1] landed in mm-new and with that Thomas
+can directly use mem_cgroup_id() without worrying about CONFIG_MEMCG=n.
 
-This code is used to find the names of init functions of modules after
-those init functions have been freed. Nothing but ftrace should be looking
-for these addresses, and ftrace doesn't care about buildids.
-
--- Steve
+[1] https://lkml.kernel.org/r/20251225232116.294540-1-shakeel.butt@linux.dev
