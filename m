@@ -1,163 +1,202 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268A827280A
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 07:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133DF27281E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 08:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767772219; cv=none; b=Ig+oT1/Pv5b1couCyCBu99Fuh0R0XcgTE88QG0IFjpIWdo27wYTFugx4Cy8dBHuziIbk34fvNvjjdZx2Om1Epg107jnU0s1Hh/IC5zvJc6bC/TdPv+Qcq8rZJuDYjtAdKbvxH0HaVALMFF9bChQv72gC3jwnvPmOzzvkNnsRWs4=
+	t=1767774186; cv=none; b=rOxNwOcuQnvf/rC96C+fdqdo4KSxGG4r453p1AEUofqYfnWHmXxLu3GFP/MSAmmbWrtUux5Jbf9+i6nqoAyCaki+BeDyqNdiL/GTeFqHANURPdRztVQdMmpOoHqLnCIBC48uxcpDZYrX8aEILjqg6nUx2gWCAOXbgHDR5AVbJCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767772219; c=relaxed/simple;
-	bh=7tiwIhJYnE3dx5jyQCWjPRVoHabKi0Yd5MocQaeuTG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kw31qxzm8WCRHaQJSVE+MXbLXBzCrIS8p3khtT7VxdxXVNBHWpPmXOxDJsIN6RzeWkeq/dwckYG847ADvVvsmdjWX7MbFsx3gPJA5So+EJlkZxX83Z/cw8fvrouegHi8suWAi7aKKLZvh/nbMGyqarU3Xy4nFs+R5vDHODWMew8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=M9XIRsP9; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1767774186; c=relaxed/simple;
+	bh=6Y8LJF/IT28MILsR6fkqJKlCJIu/OktP8AH8ej/hsy4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kddzdl3D32IV/C0vaJuLS90zxm6VNSsTFbmeQ7czlGyyVt6e6I7fEvgTPttWfQ63H6NMprU4afVCNKH1fODfO4+Z1HRUpqtjUCNz/629k4C6dwxaf4KWHlt9DecCCj/p68KNrN48h6QGPrDiLrsfu8C8KSvX/IPzQE7l4ljIacM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZaa/Afk; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="M9XIRsP9"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-477985aea2bso2327115e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Jan 2026 23:50:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZaa/Afk"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42e2ba54a6fso659858f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 00:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1767772213; x=1768377013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NTwsEdCvk1LcWq9yzHvV8qXzDbqu/xI5jjC5aep5ibc=;
-        b=M9XIRsP9CxqYQjbzMmkD1ybnVN659/ZkpGzTGwtHJbRlEeLiP6wOz72fc21VpJJeOo
-         J+GdvrN8+TqFcIrka+w1tHoHuCUZ9I51N4wgJ0HZxJcqOC2U/Iu6oEZVmq52y2P5Y0r3
-         +gz/4s3mQI+7XDU1u1AhAzJQ87mrA+hsEAB/lySIWKYfoGGjT7RVoC+g4l6zcGtk2ya9
-         EajK630nCIDhfhFaOLe7pxNb3DM7OvLrx7+7ghr12g0gaUBXrQOZOgtZHT3NTpyrngr1
-         ooukkOoH/DcQE2Xi5iwEf7nbzbCq8PRycx0ctGbOX7+Df1m08E6cU5YNP5LWUH6Sb79M
-         PZBg==
+        d=gmail.com; s=20230601; t=1767774183; x=1768378983; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=df7REDb65mq75PTRlD31qjVxgAgGX1+69KUNZyHym1g=;
+        b=IZaa/AfkwErFItrcuMmDMhHZ2sLBXvBtMbH9kbrADL5zbgaf0wfy6Jjw46dQ+w+siL
+         B7G+A7B+skytcVLOP8ijb9Q4gWH53XtDi0j4OPezrMH878ulAxBMjoam8fH5BPEktHD+
+         sZLKV/H+Gg8y/EHzx7DoqXHD2dmwAbyn3ZSL2qyYWOZWG49kOo+0QrkiM4LRHN7D/GSp
+         yEIklJWIqCA+vqpZXWO8gZKRR7TgO9cMyZHQJCOX0Ct/p+ZnyqIRiWX0YpUv+HmCJl1H
+         hAZ7FfnaujtjYvNy/z2piLqKjLKYqqPNIZaZuBcjV171hNWew242Lvw57oXTDXFnuyUW
+         40Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767772213; x=1768377013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NTwsEdCvk1LcWq9yzHvV8qXzDbqu/xI5jjC5aep5ibc=;
-        b=XKgvcldfgwI79fzFSrT1S1FjkHNriSg5G7KpO7+lrlIdBlLfCi7pKD0Pmh4DoPO8Iq
-         30d4s8KWTVHnvl/RVP9hSySqu0MflWapz0Pxc6dZZaTIAeDz5ffPZJV2nTL/pE/fx9a4
-         4zzfHt+G3GuoyYV+Z6chwMNsmyUt7M7z5PwZHYPbOhUrSL/BcePJloX3kUJTi47HlN+0
-         OOFjCzu0INgP75yUKPnThBLDr8pY9n3syDAH7dofbZ3P59L4p2eQznKl+dW1BmzaSTDx
-         q28i8q5uPSpSWzbQVxGgWFMJTmwOqdwSulI6YeA9+EouG8SqtR74xZ61BeL6yZsi/5BV
-         oQXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGdO99acn9VmH6bG1VIndNv8m7KFatlY6z4p3Of/m5/uZgxmTcaQd2f7W9PKAbxxjMYyfF4xqHrN/3fmYA592zjxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznfbxiqVVhkmQEt4s334lA1XrgSFB91BVbPS2eL5djDwVYYvKb
-	FQI6B6LLbt71+UPygb0w1PP/bcr5/P3bhH6+ga2AgVfuSB+86HqELtSisPBjnGcenHY=
-X-Gm-Gg: AY/fxX7yZrHQ5olEV/mWG+Jkx5x3JRgyZxaOARK6mWJEBACbt2prVVojp8hej1AqYr5
-	3sS/dZiXZP9TQUj0+KLhn0/mDch+7/HviTowuaPnhF9fCjzhSvoQ/xVSHAEMjNKt+8XxTYD4bm8
-	TzFfD+m2jwPztEHRoDlYt5Eu4Wsr0f3DYmHGSIhbTxsy/Nu1ki7eJevEQquvtdJClaq7IcTKdBg
-	IIy0BNY194Nn+c7g6Nl0vRqm5q0fTfSRNF1ve7G/HiqKDhWyt67XWM6GSnBKzjOvhMxNQl2KDYc
-	kqq6wEkoxUZkDeFIkRYhGnKY5TS4lAtm5ZDW2cL7a/dMivhUQlujl0fhqlCt9hO7G+bRpuCT2mN
-	/rgOKrNbElYze+V8dbE64Evb6iONcArhc+a/ZrOYDz72PjlmooHR1kzyICSJnCGkUWQGhxsnfho
-	YDKHve1JA47q6/Pm/VsiAPjF84FtaBnRNaOS46GIVKxGNl3q028qHMgA1fr/kWdcWC0uO5u255p
-	rYj
-X-Google-Smtp-Source: AGHT+IEeSL9a0sO/p+itJvQV8zFNgZvIXQnOGqZK2SqTOEnng5pUuSMZXMvpl/vjk4ZvT6vQlklhNA==
-X-Received: by 2002:a05:600c:310b:b0:477:9a4d:b92d with SMTP id 5b1f17b1804b1-47d84b37d1bmr7849795e9.5.1767772212776;
-        Tue, 06 Jan 2026 23:50:12 -0800 (PST)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f41eb3bsm85554685e9.7.2026.01.06.23.50.11
+        d=1e100.net; s=20230601; t=1767774183; x=1768378983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=df7REDb65mq75PTRlD31qjVxgAgGX1+69KUNZyHym1g=;
+        b=raKL+7wqFwAjzqeURBJUaGCf03kLpdNQZ8SQhrUPIU3ZJ7/K0tV+pbEGVLGnB2u6qj
+         TSX1j+SyzYyqhMCp6yoPiRE++NWqkYMU2+zOkAof5kVyRP9s8s0XZ2BQBaZOcEZmcGAo
+         g9n4N8a6esjhSNdvOJttJwNwcQamlU0HzmtBHOqvGFs5duEbJwDoj3Zu3HP1XIx2uE+g
+         BnYZ5WZ6V8ORMq0O2H8I7UPVnS+3yoZjW7p3xYo1jIHSEfYwoxyXIfrA3utAPpub45iN
+         JbAKDJiNJPAacwprBKMsyMUovpa375L/dtp493cz+2/967JhPRcYTC5ri7+8pwdlFwlJ
+         gJdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5o5YA6lZhk5hy89UGNQC/oZEjNbF3uYc4baC7s5hiZIoXNFhQBHX/PdV/2Z+3pN4yIm+nOgGlvxZmXktKFTHmEig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHV5cWfbQv9UN/egQJWDEiFOfYwvQc2nWzoRg3ZrMGahhO5ZTb
+	IJoqNJvnnG/ejvh+VfavY5T6+oy7WW73ZDx9jJf9k1ss99OZWznWzj/m
+X-Gm-Gg: AY/fxX75WtiqnASZDhpMvu6UbHLGdwlVlO5dxeYUCJIH6tTTaNDEaJLoUG3tFkY6NWq
+	COtzlG/ovFKvzGXsj95ziQA/QdZWfbRMXmcNfJljOy7bvfUYKnu3wWxZOF9zWDoaU1cmGRux0ES
+	bKMC5wiwDgWMBod+KgYvM7LXexcfsKTefdOvTdwvk8hzYnOu5XhO9ePMovCf2gJ82W0GqAEWZE8
+	YENW9MkLkj1mvzA6AWa3iGaekPM9AVlHCGP26978NsOBm5DxUFjKDj3DZuPesDLJYj27nc1OxiO
+	cfNDtMtEdQObcM3/kzQg2WDMtRHOKqb/1o/hNaqxQAqJjZ1FU34pGHExE/4XXNS473DzK5qoEn1
+	R5yqEze9ZNK4xxSHPCbqkkGvQQI/NTk+fH4X9bPoY3liYQ7xf8MaNTDno1qOdWL+f473hT8CY5H
+	w=
+X-Google-Smtp-Source: AGHT+IEsMNPHr9nzJaTOIYJD2qWD9ZSw80mTVgJ/kjHVyTIrFlwwtX/5Na2psG+/SMS1rx4kKZSw8Q==
+X-Received: by 2002:a05:6000:290b:b0:432:8651:4071 with SMTP id ffacd0b85a97d-432c3632942mr1904226f8f.18.1767774183031;
+        Wed, 07 Jan 2026 00:23:03 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ff319sm8920997f8f.43.2026.01.07.00.23.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 23:50:12 -0800 (PST)
-Date: Wed, 7 Jan 2026 08:50:09 +0100
-From: Petr Tesarik <ptesarik@suse.com>
+        Wed, 07 Jan 2026 00:23:02 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 7 Jan 2026 09:23:01 +0100
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
-Message-ID: <20260107085009.58fcffd4@mordecai>
-In-Reply-To: <20260106170405.425f469e@gandalf.local.home>
-References: <20260106091039.2012108-1-ptesarik@suse.com>
-	<20260106170405.425f469e@gandalf.local.home>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-suse-linux-gnu)
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mahe Tardy <mahe.tardy@gmail.com>
+Subject: Re: [BUG/RFC 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <aV4X5Yx07LomQji4@krava>
+References: <20251105125924.365205-1-jolsa@kernel.org>
+ <aVfbqYsWdGXu4lh8@willie-the-truck>
+ <20260104223415.0a31f423c861c0b651de966b@kernel.org>
+ <20260105162220.6ba5129a@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260105162220.6ba5129a@gandalf.local.home>
 
-On Tue, 6 Jan 2026 17:04:05 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue,  6 Jan 2026 10:10:39 +0100
-> Petr Tesarik <ptesarik@suse.com> wrote:
+On Mon, Jan 05, 2026 at 04:22:20PM -0500, Steven Rostedt wrote:
+> On Sun, 4 Jan 2026 22:34:15 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> > Avoid running the wakeup irq_work on an isolated CPU. Since the wakeup can
-> > run on any CPU, let's pick a housekeeping CPU to do the job.
+> > > This looks a bit grotty to me and presumably other architectures would
+> > > need similar treatement. Wouldn't it be cleaner to reuse the existing
+> > > API instead? For example, by calling ftrace_regs_set_instruction_pointer()
+> > > and ftrace_regs_set_return_value() to update the relevant registers from
+> > > the core code?  
 > > 
-> > This change reduces additional noise when tracing isolated CPUs. For
-> > example, the following ipi_send_cpu stack trace was captured with
-> > nohz_full=2 on the isolated CPU:
-> > 
-> >           <idle>-0       [002] d.h4.  1255.379293: ipi_send_cpu: cpu=2 callsite=irq_work_queue+0x2d/0x50 callback=rb_wake_up_waiters+0x0/0x80
-> >           <idle>-0       [002] d.h4.  1255.379329: <stack trace>  
-> >  => trace_event_raw_event_ipi_send_cpu
-> >  => __irq_work_queue_local
-> >  => irq_work_queue
-> >  => ring_buffer_unlock_commit
-> >  => trace_buffer_unlock_commit_regs
-> >  => trace_event_buffer_commit
-> >  => trace_event_raw_event_x86_irq_vector
-> >  => __sysvec_apic_timer_interrupt
-> >  => sysvec_apic_timer_interrupt
-> >  => asm_sysvec_apic_timer_interrupt
-> >  => pv_native_safe_halt
-> >  => default_idle
-> >  => default_idle_call
-> >  => do_idle
-> >  => cpu_startup_entry
-> >  => start_secondary
-> >  => common_startup_64    
+> > I agreed with using the generic APIs. Also, ftrace_partial_regs_fix() is
+> > not self-explained. Maybe ftrace_regs_set_by_regs()?
 > 
-> I take it that even with this patch you would still get the above events.
-> The only difference would be the "cpu=" in the event info will not be the
-> same as the CPU it executed on, right?
-
-Yes, this is trace of a similar event after applying the patch:
-
-          <idle>-0       [002] d.h4.   313.334367: ipi_send_cpu: cpu=1 callsite=irq_work_queue_on+0x55/0x90 callback=generic_smp_call_function_single_interrupt+0x0/0x20
-          <idle>-0       [002] d.h4.   313.334390: <stack trace>
- => trace_event_raw_event_ipi_send_cpu
- => __smp_call_single_queue
- => irq_work_queue_on
- => ring_buffer_unlock_commit
- => trace_buffer_unlock_commit_regs
- => trace_event_buffer_commit
- => trace_event_raw_event_x86_irq_vector
- => __sysvec_apic_timer_interrupt
- => sysvec_apic_timer_interrupt
- => asm_sysvec_apic_timer_interrupt
- => pv_native_safe_halt
- => default_idle
- => default_idle_call
- => do_idle
- => cpu_startup_entry
- => start_secondary
- => common_startup_64
-
-The callback function in the trace event is different. That's because
-send_call_function_single_ipi() always uses this value. Maybe it can be
-improved, and I can look into it, but that's clearly a very separate
-issue.
-
-> > The IRQ work interrupt alone adds considerable noise, but the impact can
-> > get even worse with PREEMPT_RT, because the IRQ work interrupt is then
-> > handled by a separate kernel thread. This requires a task switch and makes
-> > tracing useless for analyzing latency on an isolated CPU.
-> > 
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>  
+> Or perhaps: ftrace_partial_regs_update() where you call it if you need to
+> update the regs.
 > 
-> LGTM,
+> /*
+>  * ftrace_partial_regs_update - update the original ftrace_regs from regs
+>  * @fregs: The ftrace_regs to update from @regs
+>  * @regs: The partial regs from ftrace_partial_regs() that was updated
+>  *
+>  * Some architectures have the partial regs living in the ftrace_regs
+>  * structure, whereas other architectures need to make a different copy
+>  * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
+>  * if the code using @regs updates a field (like the instruction pointer or
+>  * stack pointer) it may need to propagate that change to the original @fregs
+>  * it retrieved the partial @regs from. Use this function to guarantee that
+>  * update happens.
+>  */
+> static __always_inline void
+> ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs) {
+> 	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
 > 
-> I'll queue it up for the next merge window.
+> 	if (afregs->pc != regs->pc) {
+> 		afregs->pc = regs->pc;
+> 		afregs->regs[0] = regs->regs[0];
+> 	}
+> }
+> 
+> -- Steve
 
-Thank you!
+lgtm, the full change is below, I'll send new version of the patchset
 
-Petr T
+thanks,
+jirka
+
+
+---
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 1621c84f44b3..177c7bbf3b84 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -157,6 +157,30 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+ 	return regs;
+ }
+ 
++/*
++ * ftrace_partial_regs_update - update the original ftrace_regs from regs
++ * @fregs: The ftrace_regs to update from @regs
++ * @regs: The partial regs from ftrace_partial_regs() that was updated
++ *
++ * Some architectures have the partial regs living in the ftrace_regs
++ * structure, whereas other architectures need to make a different copy
++ * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
++ * if the code using @regs updates a field (like the instruction pointer or
++ * stack pointer) it may need to propagate that change to the original @fregs
++ * it retrieved the partial @regs from. Use this function to guarantee that
++ * update happens.
++ */
++static __always_inline void
++ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
++{
++	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
++
++	if (afregs->pc != regs->pc) {
++		afregs->pc = regs->pc;
++		afregs->regs[0] = regs->regs[0];
++	}
++}
++
+ #define arch_ftrace_fill_perf_regs(fregs, _regs) do {		\
+ 		(_regs)->pc = arch_ftrace_regs(fregs)->pc;			\
+ 		(_regs)->regs[29] = arch_ftrace_regs(fregs)->fp;		\
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 770f0dc993cc..ae22559b4099 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -213,6 +213,9 @@ ftrace_partial_regs(struct ftrace_regs *fregs, struct pt_regs *regs)
+ 	return regs;
+ }
+ 
++static __always_inline void
++ftrace_partial_regs_update(struct ftrace_regs *fregs, struct pt_regs *regs) { }
++
+ #endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_FTRACE_REGS_HAVING_PT_REGS */
+ 
+ #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6e076485bf70..3a17f79b20c2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2564,6 +2564,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
++	ftrace_partial_regs_update(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	rcu_read_unlock();
+ 
+  out:
+-- 
+2.52.0
+
