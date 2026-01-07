@@ -1,41 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF643502B5;
-	Wed,  7 Jan 2026 16:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8845318EC0;
+	Wed,  7 Jan 2026 16:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767802219; cv=none; b=Hwjau43MbN1R8dEeaqU4OaNQLxxIOlYDcWE+c7DQZ+LZm6BrbHsWIaXZfdovjsyA0+mMFSwVnwrfZfsfPYZOMi3KlYxYCDU0v+92p03wGIJJdzt8qhjTWDJGwWiEsfd/DtrozUL0Fg/nur4u8/cUUxsCs8Tt77G92EVqGFV371g=
+	t=1767802618; cv=none; b=lVvw+Ah+diELJnFrj8ZJgRX7KjxU2yRM9emmjmE3MlbWZPP+oOaX/4ETjoGMlqD804NDAWjuiNP1ncCYbVhvU3c9+oLKEHEL8dwy6YzoRCDNd0f4OZWH0acc7FZ7ZHzi4e2xIgGvZubXc+mf43S/XnNQFj1P/pVWHGIlbqhzem0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767802219; c=relaxed/simple;
-	bh=v4xyIC/PxCWb8QaKeYiX/JdahNMf2rBuSomOIgoNSmQ=;
+	s=arc-20240116; t=1767802618; c=relaxed/simple;
+	bh=ZPXqCY0tho6GkwmA6fbStYsMzfpN/ihT2eAucHg9+6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LWWqqQ3Fd/U0r4ice5wF47JagfBImK9U5c7LTY+vj+FTg/w55GtXogVZx95yJWuYalzyVOZA64FCOuFbG/9+kYd5Z3TzltmKiA1AblBLdU5nDomAfhPHNZ368sdegNgp6ya+7D5gnH7KC/un59zR+uUPz9HNUqoYO7pXLkoLgtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=mKiR2PelAHhvySSwi0BP5Zhf+soeB3j2ZAT6qedtYvcb55Qj9QTmfChgW4JdJmQXSQgL064fLMtrJfoClaWVwB7//tkd/mlV2Mqi6MkE8UWec/0XYn/wLPnb57BE6dQszLvFowlqMWzIOOS15QRGgQ109bjgYaesAlHpc5ESB64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 65CB31AAD5F;
-	Wed,  7 Jan 2026 16:10:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id DA1A12002D;
-	Wed,  7 Jan 2026 16:10:02 +0000 (UTC)
-Date: Wed, 7 Jan 2026 11:10:29 -0500
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id C35701A0434;
+	Wed,  7 Jan 2026 16:16:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id ADB0218;
+	Wed,  7 Jan 2026 16:16:42 +0000 (UTC)
+Date: Wed, 7 Jan 2026 11:17:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Laura Abbott
- <labbott@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, kernel-team@meta.com, puranjay@kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
-Message-ID: <20260107111029.28e0c52b@gandalf.local.home>
-In-Reply-To: <frfmxk2ifpf5shcws42q3eeykb3xyflxocbic6junm7mzvmqik@vktwefe2zmw7>
-References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
-	<aVz-NHMG7rSJ9u1N@J2N7QTR9R3>
-	<aVz-6WozGIxGiTUR@J2N7QTR9R3>
-	<20260106111142.1c123f12@gandalf.local.home>
-	<frfmxk2ifpf5shcws42q3eeykb3xyflxocbic6junm7mzvmqik@vktwefe2zmw7>
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
+Message-ID: <20260107111709.0d115cd8@gandalf.local.home>
+In-Reply-To: <20260107105137.4cf9a67e@mordecai>
+References: <20260106091039.2012108-1-ptesarik@suse.com>
+	<20260106170405.425f469e@gandalf.local.home>
+	<20260107085009.58fcffd4@mordecai>
+	<20260107105137.4cf9a67e@mordecai>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,34 +43,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: khippqaiyx8cd5m1dse5kww4arzqhpxh
+X-Stat-Signature: inzb3rjx98gangpw8ut1k8r1t7gaxxdb
 X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: DA1A12002D
+X-Rspamd-Queue-Id: ADB0218
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX186ZkSD32iPpRx5ow4Xmjt+UAgCjzMt04s=
-X-HE-Tag: 1767802202-773670
-X-HE-Meta: U2FsdGVkX19vKCXb5K+qpusqOqSjw8DJI3OWGz/LwzFg+F+VEV1dTBh8MA6eTmVsqAqy8P1lCIp7g8VSiwdNyXJjA4k+cwHYlU7CJMArTtnVhzZ3IS59JSgTxf/pcV2CD9mQ1DrzxMjnApWld23yV0xKpCfnvlZXe0bAskSnFshPdP05mS3lJ9ddA2RDCsU5Wx7+v/t84oEnQkGzpG1lAZ+yxThfxovX52OJgA6WTBBWjWgtq698VQxEcteo9G7Az+M19vhLRRv2bZvYgTPGqs1UPWdTP4oQGu2IXrCgTeWgUgCiQv4sevX86v+/U2CLaAKbrKzqDAaYwrGGd7UCLgp4R2muFF2gJuFDYEwHtDtmgQ/2a1TTbw==
+X-Session-ID: U2FsdGVkX19wzP8VKZmWVZCPfE0i6TVAtAqY+P8NKJk=
+X-HE-Tag: 1767802602-156917
+X-HE-Meta: U2FsdGVkX19Kri1jK5kubktxQQFJRrmq4ZI847AS2na2jPx5t5RfZXCXYwig/ta7ww642uasvv6l69u0UB28AT1SyNeL0O4RYptw0XHlE3c1llKWYlKarx3fTGG1umQlyn7kX30f+QPsOCqQe1n0mhkiV+mwVJ3QgLDBckoQwDjYgpdjsLnfhouY26iS1WZgk/4jAfpZ//LWfqTrqRho6yx3/480jWCSYRPqwfWzv75qfW5+hvD4A0Y7iEIikq1SC42w0CxS9k9EHhv+D1PEBv9RfB1n2fn7UYprmMCeYl1uOsrC1s8L3P5qQoqIcrpZihHfvTholYVDZ/zXoVlRoZKdhVJDMshlerQfhZ3BEHP7IVGcMVYuK35VP1dJ9a4s
 
-On Wed, 7 Jan 2026 01:37:36 -0800
-Breno Leitao <leitao@debian.org> wrote:
+On Wed, 7 Jan 2026 10:51:37 +0100
+Petr Tesarik <ptesarik@suse.com> wrote:
 
-> I am starting to look and remove some of these likely/unlikely hint that
-> are 100% wrong on some very sane configuration (arm64 baremetal hosts
-> running a webserver).
+> Erm. It's actually good I had a look. :-(
 > 
-> So far, these are the fixes I have in flight now.
+> A helpful comment in irq_work_queue_on() explains that "arch remote IPI
+> send/receive backend aren't NMI safe". That's something I wasn't aware
+> of, and I'm afraid it's the end of story. The comment is followed by a
+> WARN_ON_ONCE(in_nmi()), and I can easily trigger it with "perf top"
+> while nmi:nmi_handler is traced.
 > 
->  * https://lore.kernel.org/all/20260105-dcache-v1-1-f0d904b4a7c2@debian.org/
->  * https://lore.kernel.org/all/20260106-blk_unlikely-v1-1-90fb556a6776@debian.org/
->  * https://lore.kernel.org/all/20260105-annotated_idle-v1-1-10ddf0771b58@debian.org/
+> Please, remove the patch again. I'm sorry.
 
-Nice. Thanks for letting me know. I'm happy to see that someone besides me
-is using the annotated branch profiler to fix real issues in the kernel.
+Or we simply change it to:
 
-I would love it if more people did the same. Anyway, please advertise this
-as much as possible. If it shows that it is helping to fix real bugs, maybe
-it would attract the interest of more developers, and more importantly, it
-keeps the tooling in place. I'm constantly fighting to keep it from being
-removed from the kernel :-p
+static inline void
+rb_irq_work_queue(struct rb_irq_work *irq_work)
+{
+	int cpu;
+
+	/* irq_work_queue_on() is not allowed in NMI context */
+	if (in_nmi()) {
+		irq_work_queue(&irq_work->work, cpu);
+		return;
+	}
+
+	cpu = housekeeping_any_cpu(HK_TYPE_KERNEL_NOISE);
+	/*
+	 * If CPU isolation is not active, cpu is always the current
+	 * CPU, and the following is equivallent to irq_work_queue().
+	 */
+	irq_work_queue_on(&irq_work->work, cpu);
+}
+
 
 -- Steve
