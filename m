@@ -1,79 +1,138 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A42B376BCC;
-	Wed,  7 Jan 2026 15:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041993A89DC;
+	Wed,  7 Jan 2026 15:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767799106; cv=none; b=B1T43Hru71syM6tqJ30vro4eokTwoW57DnF8zHtLvsy6LaANlGfG2xS07OJYc9aqRfiWee6bvNNj3sbG8foo8twzOmXNKv6JMXgEIBpDZLIdFtWIcqXdPXK25N7rmbAPIslkH8zla7aRG3J/BgeQqYjiQNMkbdqVRRP3lH4EppY=
+	t=1767800426; cv=none; b=qZkRgnFON9I+8m20yW8PPFztM4RZT1Txm/9BAP2j/RVvy79w97awtsWnuP3AzENxV32sa7CsAJOgFnlqav/G0mecAHcHCLQGhzZCzdlXMaqf9ojQPV9qdqzgGMgGig05s5w6We1S878bOtCSTwm6+7UxZpWqLqSb30ak468R2YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767799106; c=relaxed/simple;
-	bh=NNoNs2hoP285pXc4LULLJAeVOtQRPx8llLbOsS3srsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=myZksO7uHQoaouMxkE0g7jidJvR1uR2oeuqzsubJAeN4TnxrP9l/FkEuV5z7x5ADtDBhsVBXkWKodNJqoQkA4+6UmYcLyq0kdVTUqD+IgeW7Cl/llWPCCGBjtx1lp4tICTXCyThritxTnh3qSgM8vqXkgxCpCdVFuREoIHR7ryY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 866911AAA30;
-	Wed,  7 Jan 2026 15:18:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 5F9311A;
-	Wed,  7 Jan 2026 15:18:20 +0000 (UTC)
-Date: Wed, 7 Jan 2026 10:18:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Fushuai Wang <fushuai.wang@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, shuah@kernel.org, wangfushuai@baidu.com, Shuah Khan
- <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
-Message-ID: <20260107101846.61c182e0@gandalf.local.home>
-In-Reply-To: <20260107034914.22315-1-fushuai.wang@linux.dev>
-References: <20251227041821.75504-1-fushuai.wang@linux.dev>
-	<20260107034914.22315-1-fushuai.wang@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767800426; c=relaxed/simple;
+	bh=Xr0NRyAzk4dBNy+oJhpszKz1ke0Az0ldJi1gPQPAEJg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gFWhmfn1wkJh9o1akRLVNLfE0rMmArn0C7jqY15iXpWhilOiW0nco+8kLRssuorLOovxdzj6uyDtHCIrJ+d0gnhRVO1yqh5HnpzIEKNsMTV72ni6iyXIMRfEI0w6vj2RJbO4uh8x8XwNikhr0+NEkzIsWkXEa0AzQk/dtAM646s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOZErcX2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOZErcX2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DE2C4CEF1;
+	Wed,  7 Jan 2026 15:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767800425;
+	bh=Xr0NRyAzk4dBNy+oJhpszKz1ke0Az0ldJi1gPQPAEJg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LOZErcX2LYG0+yb4trCkM6SjaIIN5aaC/qd8DDOyfR5SLQ/PZzt5cNQGiJbB4sKXV
+	 z2zwYcX+CqTPLMmFU/MLMGeWLkRaSXpVjzn9Z/gwSOOgJZoRQ3r5BNi52MEOefOoXk
+	 JvLwu1LCzhZ8dBq1BiH5c+L1hU3T1cT/u3wutxBumRGaqUv9S9zQ0bjQ/ePba4pZeM
+	 KYbWDbWJulDpTC00SC42AqKS/mco6qzTP8QXZ24aO+BDQ6FMd3fWep/5uploOzLEjF
+	 Iz+JQN2yL+xK+U195UXvwR3pQkI6tmiQxe+gux1Qfmhzky257VUJTaVhHBtK2L2WKB
+	 NFcb+0IoxSijg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vdVe2-000000007Z8-3nQ6;
+	Wed, 07 Jan 2026 15:40:23 +0000
+Date: Wed, 07 Jan 2026 15:40:22 +0000
+Message-ID: <868qe9mnx5.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 29/30] KVM: arm64: Add selftest event support to nVHE/pKVM hyp
+In-Reply-To: <20251202093623.2337860-30-vdonnefort@google.com>
+References: <20251202093623.2337860-1-vdonnefort@google.com>
+	<20251202093623.2337860-30-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 5F9311A
-X-Stat-Signature: 8mbmda3r93zytg45akb4fkp8hkyf6yjo
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19HqUC8bNA02ynABqBYvLkKo06yN5Uf0UA=
-X-HE-Tag: 1767799100-19994
-X-HE-Meta: U2FsdGVkX1/MD/Ud+ppc5N89H6R19eHi6YrCeTPtyzMFJSnHVR6J9E3M+zU2Jup8OIiNnHCCw/oQ+gdkk6iCQ7wap/SdnsH5cqR3iDYZvasv/vGKVSjoOlZodG7+zEKbyrzi0DeOKXLxW1f77uyr7b3j4Q0jveNXWo8iouGPI5HqBomG5wLV8aWwCGBMBeyCBSO8kWb3Wk4f1B+IejX/29q6TBV7YjCyV0uJHM2Vgi4Tu8S3KkmDwgc64X5jFkTsWeyJikH1tEzqWHA3+uombEr+LJ61tzHgXayBWozC/1z+GPSkNvmpk363WcqJn1qlfE2mUcsPOfk6/+mWpv79uFT0Ez7wJuMVm9SzlZKnInTfJyz5/zBg4PPm7L0CFUWFZJcSNlxetGck2E9Bf1RWcQ==
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed,  7 Jan 2026 11:49:14 +0800
-Fushuai Wang <fushuai.wang@linux.dev> wrote:
-
-> > When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
-> > the test_multiple_writes test will stall and wait for more
-> > input due to insufficient buffer space.
-> > 
-> > Check current buffer_size_kb value before the test. If it is
-> > less than 12KB, it temporarily increase the buffer to 12KB,
-> > and restore the original value after the tests are completed.
-> > 
-> > Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>  
+On Tue, 02 Dec 2025 09:36:22 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Gentle ping.
+> Add a selftest event that can be triggered from a `write_event` tracefs
+> file. This intends to be used by trace remote selftests.
 > 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 37c015b54ff6..e2de7ad64938 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -96,6 +96,7 @@ enum __kvm_host_smccc_func {
+>  	__KVM_HOST_SMCCC_FUNC___tracing_update_clock,
+>  	__KVM_HOST_SMCCC_FUNC___tracing_reset,
+>  	__KVM_HOST_SMCCC_FUNC___tracing_enable_event,
+> +	__KVM_HOST_SMCCC_FUNC___tracing_write_event,
+>  };
+>  
+>  #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
+> diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
+> index 268b3cd7a1b2..c276fd28e0bf 100644
+> --- a/arch/arm64/include/asm/kvm_hypevents.h
+> +++ b/arch/arm64/include/asm/kvm_hypevents.h
+> @@ -42,4 +42,15 @@ HYP_EVENT(hyp_exit,
+>  	),
+>  	HE_PRINTK("reason=%s", __hyp_enter_exit_reason_str(__entry->reason))
+>  );
+> +
+> +HYP_EVENT(selftest,
+> +	HE_PROTO(u64 id),
+> +	HE_STRUCT(
+> +		he_field(u64, id)
+> +	),
+> +	HE_ASSIGN(
+> +		__entry->id = id;
+> +	),
+> +	RE_PRINTK("id=%llu", __entry->id)
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Not strictly related to this patch, but I find that the trace itself
+lacks context. For example:
 
-Shuah,
+[001]	  323.847422: hyp_enter reason=hvc
+[001]	  323.847423: hyp_exit reason=eret_host
+[001]	  323.847688: hyp_enter reason=hvc
+[001]	  323.847688: hyp_exit reason=eret_host
+[001]	  323.847706: hyp_enter reason=hvc
+[001]	  323.847707: hyp_exit reason=eret_host
+[001]	  323.847722: hyp_enter reason=hvc
+[001]	  323.847723: hyp_exit reason=eret_host
 
-Care to take this through your tree? It does fix a bug so it likely should
-go into the rc releases and not wait for the next merge window.
+That's all fine as long as I'm dealing with a single guest, or even
+with a single vcpu. Trying to trace multiple guests, or even multiple
+vcpus makes the whole thing completely unusable, because I have no
+idea what I'm looking at.
+
+To make this useful, having some context provided by the host really
+is required.
 
 Thanks,
 
--- Steve
+	M.
 
+-- 
+Without deviation from the norm, progress is not possible.
