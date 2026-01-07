@@ -1,35 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D556834DCFC;
-	Wed,  7 Jan 2026 15:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A42B376BCC;
+	Wed,  7 Jan 2026 15:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767798958; cv=none; b=mtIpVfueO7puUXa4wgUmzJlD1VOXq9IYeLk+5j1edemoWqFsgR1IEJupNCzaV5LbaNmE8OLc9IuZYRMZeuqsbkPtDEJVlYXAqCU1cc86EDKgozAvRlcFQF7q1f3R/nMX/i7SujXVljNPAT70/hTjwrQa2Rws9Z8JCX6rFcMs5y4=
+	t=1767799106; cv=none; b=B1T43Hru71syM6tqJ30vro4eokTwoW57DnF8zHtLvsy6LaANlGfG2xS07OJYc9aqRfiWee6bvNNj3sbG8foo8twzOmXNKv6JMXgEIBpDZLIdFtWIcqXdPXK25N7rmbAPIslkH8zla7aRG3J/BgeQqYjiQNMkbdqVRRP3lH4EppY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767798958; c=relaxed/simple;
-	bh=lWG8b96u1UevFVESCbPPRPuEvioBvJTEalwm/TgiIqk=;
+	s=arc-20240116; t=1767799106; c=relaxed/simple;
+	bh=NNoNs2hoP285pXc4LULLJAeVOtQRPx8llLbOsS3srsE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nBAw8xVpVQYKLy2U7NGb6rCLUQSz5UMWjDD/AfEAZkHNlJAlfM7Iu4C+pEh2z0SzUio3XE0fZ5MSOFWIrnHzeJ8jX+NYkY3k1dEMZbXKK0rWqDgCyjd/TrFtsY0GeFKA88lju+gWWh1bUp2VsO1R2FYTpJFZ/PLZ1EAwIvVwU/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=myZksO7uHQoaouMxkE0g7jidJvR1uR2oeuqzsubJAeN4TnxrP9l/FkEuV5z7x5ADtDBhsVBXkWKodNJqoQkA4+6UmYcLyq0kdVTUqD+IgeW7Cl/llWPCCGBjtx1lp4tICTXCyThritxTnh3qSgM8vqXkgxCpCdVFuREoIHR7ryY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 1264B14014C;
-	Wed,  7 Jan 2026 15:15:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D4BA52000E;
-	Wed,  7 Jan 2026 15:15:44 +0000 (UTC)
-Date: Wed, 7 Jan 2026 10:16:11 -0500
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 866911AAA30;
+	Wed,  7 Jan 2026 15:18:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 5F9311A;
+	Wed,  7 Jan 2026 15:18:20 +0000 (UTC)
+Date: Wed, 7 Jan 2026 10:18:46 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: sunliming@linux.dev
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, sunliming <sunliming@kylinos.cn>,
- kernel test robot <lkp@intel.com>, Dan Carpenter <error27@gmail.com>
-Subject: Re: [PATCH] fgraph: Make sure fregs is non-null when accessing
-Message-ID: <20260107101611.527f0772@gandalf.local.home>
-In-Reply-To: <20260107015125.27659-1-sunliming@linux.dev>
-References: <20260107015125.27659-1-sunliming@linux.dev>
+To: Fushuai Wang <fushuai.wang@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, shuah@kernel.org, wangfushuai@baidu.com, Shuah Khan
+ <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
+Message-ID: <20260107101846.61c182e0@gandalf.local.home>
+In-Reply-To: <20260107034914.22315-1-fushuai.wang@linux.dev>
+References: <20251227041821.75504-1-fushuai.wang@linux.dev>
+	<20260107034914.22315-1-fushuai.wang@linux.dev>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,51 +40,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: o8nkq4fmqseusi81un7bnt3ifdmzt4wj
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: D4BA52000E
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 5F9311A
+X-Stat-Signature: 8mbmda3r93zytg45akb4fkp8hkyf6yjo
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/dwHeHZ7pQz0J5KLumUlHl0DSoZ1aibOU=
-X-HE-Tag: 1767798944-414159
-X-HE-Meta: U2FsdGVkX1+4NeHzvs8GceHUuV4CTJNyjLw0AzhXHmkyvHW9XbFuQ1dg4ujTVCRwLv/DHXPRqHyXDEOYMJjfNMPfDpEWcGuPNH1ljkCC0EufG1NRYhtpjFzGfUZCvrXvvosjovMTtOKIaLejlF99EIrllvTXNu1y+Wkxq3UJ6BEqmnJ1Z8rotz/cqSCeMSMjdcLn4zgeSJTkXAaF5MjYI7WXV1MaF10kH06j3MFRgilZ4llhWnTa78hfw1cLXpWzs5FJJp/4gGwNXCxsgRJUZwr3LgjibpRb3rmpFGQYSkBjVC1JXInDSVKyWVde9gyoC0mJDuBLWLXsQOxvIBui2gdN4hueU7OLMVhUXNjZ7UCAhdiOioB9o8pfTditq7Fy/aEkQwvy55o=
+X-Session-ID: U2FsdGVkX19HqUC8bNA02ynABqBYvLkKo06yN5Uf0UA=
+X-HE-Tag: 1767799100-19994
+X-HE-Meta: U2FsdGVkX1/MD/Ud+ppc5N89H6R19eHi6YrCeTPtyzMFJSnHVR6J9E3M+zU2Jup8OIiNnHCCw/oQ+gdkk6iCQ7wap/SdnsH5cqR3iDYZvasv/vGKVSjoOlZodG7+zEKbyrzi0DeOKXLxW1f77uyr7b3j4Q0jveNXWo8iouGPI5HqBomG5wLV8aWwCGBMBeyCBSO8kWb3Wk4f1B+IejX/29q6TBV7YjCyV0uJHM2Vgi4Tu8S3KkmDwgc64X5jFkTsWeyJikH1tEzqWHA3+uombEr+LJ61tzHgXayBWozC/1z+GPSkNvmpk363WcqJn1qlfE2mUcsPOfk6/+mWpv79uFT0Ez7wJuMVm9SzlZKnInTfJyz5/zBg4PPm7L0CFUWFZJcSNlxetGck2E9Bf1RWcQ==
 
-On Wed,  7 Jan 2026 09:51:25 +0800
-sunliming@linux.dev wrote:
+On Wed,  7 Jan 2026 11:49:14 +0800
+Fushuai Wang <fushuai.wang@linux.dev> wrote:
 
-> From: sunliming <sunliming@kylinos.cn>
+> > When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
+> > the test_multiple_writes test will stall and wait for more
+> > input due to insufficient buffer space.
+> > 
+> > Check current buffer_size_kb value before the test. If it is
+> > less than 12KB, it temporarily increase the buffer to 12KB,
+> > and restore the original value after the tests are completed.
+> > 
+> > Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>  
 > 
-> Fix below smatch warnings:
-> kernel/trace/fgraph.c:834 __ftrace_return_to_handler() error: we previously
-> assumed 'fregs' could be null (see line 830)
+> Gentle ping.
 > 
 
-NACK!
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <error27@gmail.com>
-> Closes: https://lore.kernel.org/r/202512131657.JQUt5fXQ-lkp@intel.com/
+Shuah,
 
-Really? Did you not read this thread you are "closing"?
+Care to take this through your tree? It does fix a bug so it likely should
+go into the rc releases and not wait for the next merge window.
+
+Thanks,
 
 -- Steve
-
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
->  kernel/trace/fgraph.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index cc48d16be43e..0f50a55032c5 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -837,7 +837,8 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
->  		goto out;
->  
->  #ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-> -	trace.retval = ftrace_regs_get_return_value(fregs);
-> +	if (fregs)
-> +		trace.retval = ftrace_regs_get_return_value(fregs);
->  #endif
->  
->  	bitmap = get_bitmap_bits(current, offset);
 
