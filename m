@@ -1,118 +1,224 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A2133EB13;
-	Wed,  7 Jan 2026 14:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0573314C4;
+	Wed,  7 Jan 2026 14:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767795371; cv=none; b=bub7//TK9uq9c7yVtTVvDlisizq7gpEcSayuBsDFeF055SzFSarYf42pLl+KbLENhWISiPIif6T/noB3Uqx3i/oL1rPN55aWhB1LmiQu1yPvi9oDE+fZaPZBvl20I4NDYA4Rcs3Hhtzn9thA6AECNS/AA5YcmgG75dy6j84TElQ=
+	t=1767795800; cv=none; b=Po+6RxqOufJRlpn88YJ+wFxs1xRol2oqJG0sbvr6e8NIPNm77wIhUKw+kmUoNn2Usz4AWXecmnUt09CbXzwD18EU2hIRaWbzkgKag8KjuhGszR/s/S965ZYckxXRlbWkfR3gWdFZ8se3Vxw8OtiXUlevVVAEILhl+nasPVilntA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767795371; c=relaxed/simple;
-	bh=Hfk0xs9mtMTgHWqYqiIZSwai97YK7tXfeXKFSxGISsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=He96GHWhJlE215gBreXw2oJTc45Rba7p1AV739FgKS/DvkbpLWXrbKr/PQawKwarGWaMY1DRu1Rdbeh+WaakoO5Meko6YInBHYTlIwGaiT/sT5XTJ1vuVuWAOJd7/5C35DMd6zSZoNuuIgpIaIGPswM+CRtPpoXO1PhCJz0bSGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOew/IRO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767795800; c=relaxed/simple;
+	bh=5UKSsihQ8uBHKEEpz2pGVATVXYt1q/oiiCprN1RFCIk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QOk4V+CiiiylnZIcScTwwx6ADo+2PEyoBb+B2wdRQpe0lXR7TKOYpXBzc1FxKs9b+8GjGLyo4bZhFXFpWEs+QSlv/QXHd14f26bS8nHTLE3w9bAQkrKtW9qiLj9i4s7850e6WWTRB54O6FCY8PsleCEB93Y8fFJfQMjdVPUTxBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p421+hZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOew/IRO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911F4C4CEF1;
-	Wed,  7 Jan 2026 14:16:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p421+hZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B7EC4CEF1;
+	Wed,  7 Jan 2026 14:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767795371;
-	bh=Hfk0xs9mtMTgHWqYqiIZSwai97YK7tXfeXKFSxGISsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cOew/IROfm9qzOOTQIlOisZOSH2KDoX3TgEbHyuflgqC5Z5szpbbIyuEetC1flL6Y
-	 SYTDzqJW12y5zkLVrJYPlpNkw9Wxr3Wl6b6qFj2lSry637N+RjGLs1BNZp3EX/T67s
-	 doWTIk3TUg3TiyRXTEGzUuGaNUaYKOTU75qGJxUFaPkUDAdFQlmbe0SXBxJB+IQaq8
-	 a1gL6Qy83KbVAlQgf6RA1sokeiZ2VtjnXC/YcLo3oT9GhG7GFW01i8XXcMFp9YP8Ju
-	 1t/kHF5utWwL9fzUqEQ285i3g1aeqr3Kn+MnpolB5I9wfd2ytmGhbMHTjmxNF/kKxZ
-	 YCtS4FD8oCXVw==
-Date: Wed, 7 Jan 2026 14:16:05 +0000
-From: Will Deacon <will@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mahe Tardy <mahe.tardy@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	s=k20201202; t=1767795799;
+	bh=5UKSsihQ8uBHKEEpz2pGVATVXYt1q/oiiCprN1RFCIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p421+hZXHWdO0ictRkRluuI5Tkh2oysMgF1rLf2zsJXCej+RjCifpk855q986ERUp
+	 IzolNiPKbx6MFs9Tb4YGWeOrW7F8sOxG+709oc7Z3bchESwavV9xjPdGr3vNIDwko+
+	 Gaulhha/Q3QubVKE7JrZvcK5/Q4wut2kr1vIU63pETrVjq91j8BZxzwN14znJTkXjd
+	 Sh51iQSmHXYjBWxkWnsolxPmT9cD+BKapX1oIEuUgMYSWm8hT8fhFyaaj1diiS51l2
+	 EJbx/pbgT5sTbgecHeLkkYr1ipD3NlHIKYVEWZ+7+ARXO89AwN6ZyrlwmvYRNfbccJ
+	 qIUodVx0FBmdg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vdURQ-000000006DR-2ZBD;
+	Wed, 07 Jan 2026 14:23:16 +0000
+Date: Wed, 07 Jan 2026 14:23:16 +0000
+Message-ID: <86bjj5mrhn.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
 	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
- bpf_prog_run
-Message-ID: <aV5qpZwxgVRu2Q8w@willie-the-truck>
-References: <20260107093256.54616-1-jolsa@kernel.org>
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Christopher S. Hall" <christopher.s.hall@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v9 25/30] KVM: arm64: Sync boot clock with the nVHE/pKVM hyp
+In-Reply-To: <20251202093623.2337860-26-vdonnefort@google.com>
+References: <20251202093623.2337860-1-vdonnefort@google.com>
+	<20251202093623.2337860-26-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260107093256.54616-1-jolsa@kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, sboyd@kernel.org, christopher.s.hall@intel.com, richardcochran@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jan 07, 2026 at 10:32:55AM +0100, Jiri Olsa wrote:
-> Mahe reported issue with bpf_override_return helper not working when
-> executed from kprobe.multi bpf program on arm.
+On Tue, 02 Dec 2025 09:36:18 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> The problem is that on arm we use alternate storage for pt_regs object
-> that is passed to bpf_prog_run and if any register is changed (which
-> is the case of bpf_override_return) it's not propagated back to actual
-> pt_regs object.
+> Configure the hypervisor tracing clock with the kernel boot clock. For
+> tracing purposes, the boot clock is interesting: it doesn't stop on
+> suspend. However, it is corrected on a regular basis, which implies the
+> need to re-evaluate it every once in a while.
 > 
-> Fixing this by introducing and calling ftrace_partial_regs_update function
-> to propagate the values of changed registers (ip and stack).
+> Cc: John Stultz <jstultz@google.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Christopher S. Hall <christopher.s.hall@intel.com>
+> Cc: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> Fixes: b9b55c8912ce ("tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs")
-> Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
-> v1 changes:
->  - used ftrace_partial_regs_update with comments from Steven
-> 
->  arch/arm64/include/asm/ftrace.h | 24 ++++++++++++++++++++++++
->  include/linux/ftrace.h          |  3 +++
->  kernel/trace/bpf_trace.c        |  1 +
->  3 files changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index 1621c84f44b3..177c7bbf3b84 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -157,6 +157,30 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
->  	return regs;
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index f83650a7aad9..375607c67285 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -93,6 +93,7 @@ enum __kvm_host_smccc_func {
+>  	__KVM_HOST_SMCCC_FUNC___tracing_unload,
+>  	__KVM_HOST_SMCCC_FUNC___tracing_enable,
+>  	__KVM_HOST_SMCCC_FUNC___tracing_swap_reader,
+> +	__KVM_HOST_SMCCC_FUNC___tracing_update_clock,
+>  };
+>  
+>  #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/trace.h b/arch/arm64/kvm/hyp/include/nvhe/trace.h
+> index 7da8788ce527..fd641e1b1c23 100644
+> --- a/arch/arm64/kvm/hyp/include/nvhe/trace.h
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/trace.h
+> @@ -11,6 +11,7 @@ int __tracing_load(unsigned long desc_va, size_t desc_size);
+>  void __tracing_unload(void);
+>  int __tracing_enable(bool enable);
+>  int __tracing_swap_reader(unsigned int cpu);
+> +void __tracing_update_clock(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc);
+>  #else
+>  static inline void *tracing_reserve_entry(unsigned long length) { return NULL; }
+>  static inline void tracing_commit_entry(void) { }
+> @@ -19,5 +20,6 @@ static inline int __tracing_load(unsigned long desc_va, size_t desc_size) { retu
+>  static inline void __tracing_unload(void) { }
+>  static inline int __tracing_enable(bool enable) { return -ENODEV; }
+>  static inline int __tracing_swap_reader(unsigned int cpu) { return -ENODEV; }
+> +static inline void __tracing_update_clock(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc) { }
+>  #endif
+>  #endif
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index 8b78b29c2069..45b8f70828de 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -613,6 +613,18 @@ static void handle___tracing_swap_reader(struct kvm_cpu_context *host_ctxt)
+>  	cpu_reg(host_ctxt, 1) = __tracing_swap_reader(cpu);
 >  }
 >  
-> +/*
-> + * ftrace_partial_regs_update - update the original ftrace_regs from regs
-> + * @fregs: The ftrace_regs to update from @regs
-> + * @regs: The partial regs from ftrace_partial_regs() that was updated
-> + *
-> + * Some architectures have the partial regs living in the ftrace_regs
-> + * structure, whereas other architectures need to make a different copy
-> + * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
-> + * if the code using @regs updates a field (like the instruction pointer or
-> + * stack pointer) it may need to propagate that change to the original @fregs
-> + * it retrieved the partial @regs from. Use this function to guarantee that
-> + * update happens.
-> + */
-> +static __always_inline void
-> +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> +static void handle___tracing_update_clock(struct kvm_cpu_context *host_ctxt)
 > +{
-> +	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+> +	DECLARE_REG(u32, mult, host_ctxt, 1);
+> +	DECLARE_REG(u32, shift, host_ctxt, 2);
+> +	DECLARE_REG(u64, epoch_ns, host_ctxt, 3);
+> +	DECLARE_REG(u64, epoch_cyc, host_ctxt, 4);
 > +
-> +	if (afregs->pc != regs->pc) {
-> +		afregs->pc = regs->pc;
-> +		afregs->regs[0] = regs->regs[0];
-> +	}
+> +	__tracing_update_clock(mult, shift, epoch_ns, epoch_cyc);
+> +
+> +	cpu_reg(host_ctxt, 1) = 0;
+
+What's the purpose of setting X1 to 0? This is a call returning void,
+so I don't immediately see the need for this.
+
 > +}
+> +
+>  typedef void (*hcall_t)(struct kvm_cpu_context *);
+>  
+>  #define HANDLE_FUNC(x)	[__KVM_HOST_SMCCC_FUNC_##x] = (hcall_t)handle_##x
+> @@ -658,6 +670,7 @@ static const hcall_t host_hcall[] = {
+>  	HANDLE_FUNC(__tracing_unload),
+>  	HANDLE_FUNC(__tracing_enable),
+>  	HANDLE_FUNC(__tracing_swap_reader),
+> +	HANDLE_FUNC(__tracing_update_clock),
+>  };
+>  
+>  static void handle_host_hcall(struct kvm_cpu_context *host_ctxt)
+> diff --git a/arch/arm64/kvm/hyp/nvhe/trace.c b/arch/arm64/kvm/hyp/nvhe/trace.c
+> index df9d66fcb3c9..97e9f6c1a52c 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/trace.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/trace.c
+> @@ -271,3 +271,19 @@ int __tracing_swap_reader(unsigned int cpu)
+>  
+>  	return ret;
+>  }
+> +
+> +void __tracing_update_clock(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
+> +{
+> +	int cpu;
+> +
+> +	/* After this loop, all CPUs are observing the new bank... */
+> +	for (cpu = 0; cpu < hyp_nr_cpus; cpu++) {
+> +		struct simple_rb_per_cpu *simple_rb = per_cpu_ptr(trace_buffer.simple_rbs, cpu);
+> +
+> +		while (READ_ONCE(simple_rb->status) == SIMPLE_RB_WRITING)
+> +			;
+> +	}
+> +
+> +	/* ...we can now override the old one and swap. */
+> +	trace_clock_update(mult, shift, epoch_ns, epoch_cyc);
+> +}
+> diff --git a/arch/arm64/kvm/hyp_trace.c b/arch/arm64/kvm/hyp_trace.c
+> index 2866effe28ec..1e5fc27f0e9d 100644
+> --- a/arch/arm64/kvm/hyp_trace.c
+> +++ b/arch/arm64/kvm/hyp_trace.c
+> @@ -4,15 +4,133 @@
+>   * Author: Vincent Donnefort <vdonnefort@google.com>
+>   */
+>  
+> +#include <linux/cpumask.h>
+>  #include <linux/trace_remote.h>
+> +#include <linux/tracefs.h>
+>  #include <linux/simple_ring_buffer.h>
+>  
+> +#include <asm/arch_timer.h>
+>  #include <asm/kvm_host.h>
+>  #include <asm/kvm_hyptrace.h>
+>  #include <asm/kvm_mmu.h>
+>  
+>  #include "hyp_trace.h"
+>  
+> +/* Same 10min used by clocksource when width is more than 32-bits */
+> +#define CLOCK_MAX_CONVERSION_S	600
+> +/*
+> + * Time to give for the clock init. Long enough to get a good mult/shift
+> + * estimation. Short enough to not delay the tracing start too much.
+> + */
+> +#define CLOCK_INIT_MS		100
+> +/*
+> + * Time between clock checks. Must be small enough to catch clock deviation when
+> + * it is still tiny.
+> + */
+> +#define CLOCK_UPDATE_MS		500
 
-I still don't understand why we need anything new in the arch code for this.
+If these definitions are common, can't we reuse the existing ones?
+Specially given that this isn't EL2 code.
 
-We've selected HAVE_ARCH_FTRACE_REGS and we implement
-ftrace_regs_set_instruction_pointer() and ftrace_regs_set_return_value()
-so the core code already has everything it needs to make this work
-without additional arch support.
+Thanks,
 
-Will
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
