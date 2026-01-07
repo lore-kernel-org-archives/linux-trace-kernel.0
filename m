@@ -1,62 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E543339875
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 18:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336A2459DD;
+	Wed,  7 Jan 2026 19:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767810732; cv=none; b=rpkdc3DCVaaaS6MpgpTnGo9QvjPUF03OJ2jkklmNOwq/Ub/9LUiByi5mzQmVlYvt0iGE9cmQTL/UmBCK8F0s8BjgK/sCxPlmovyKCV8+D255tyVk32MQic4sJU4f8vfAcVcPMNvjPwNUnDccTJmPNqCxrSrHQ1QX+drnr9dQ+XI=
+	t=1767813971; cv=none; b=qpF674dVWm/8Ll4GMh2wtFI4ORlbJuk7jPzut9hhIN6pdOK5LAiyi7S5G7ac68sncw5Lqa1e0nQwUB6tP0QCeehJfbyqCyIx3XjdvNjqtdsI0wQEKWAjPNoJ4HqH8arTq1JSV5MHwdzKaXn6Hl4kJ0DtqHQFwyaNkZDyDr68RXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767810732; c=relaxed/simple;
-	bh=7ICgTImWvYWCenkI2+hXNPLSdjtpu4hBw3mxjXZeAlk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WzTuam76BL+Z9ORgVG8zX2kN5Mw7Smdwo1EKklTs64apPkmgq9+Nh9iq2XuCEFE6uLwLDYzdmn8fRuMNNzUiFgkGH+qLXswkndOixYHIeu8oIHK7eNObHqIk3S+cr7AnJ1KDBlk/zMTMk2L0/eSEnUcY0ECo9kpqLPtcJn165lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jjTWHxQh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jjTWHxQh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73219C4CEF1;
-	Wed,  7 Jan 2026 18:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1767810729;
-	bh=7ICgTImWvYWCenkI2+hXNPLSdjtpu4hBw3mxjXZeAlk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jjTWHxQhmiDt6mFITXMLh7G4TTTr7lD6lgQzc33gGccDRZD7o7luipSPDYygxWlr1
-	 DEkgWhhcWVA4LxZE50vb4udhBsjJV5C609p8TMYa1XrqnK/1DJPTA1gQFMEGikO5hi
-	 ricr2Vpg6Ve2FrP/lw4dDsSQYDfMdIbvfZBWwRKs=
-Date: Wed, 7 Jan 2026 10:32:08 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Thomas Ballasi <tballasi@linux.microsoft.com>, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- rostedt@goodmis.org
-Subject: Re: [PATCH v3 1/2] mm: vmscan: add cgroup IDs to vmscan tracepoints
-Message-Id: <20260107103208.e64fe3c26d02bfcb21404dd9@linux-foundation.org>
-In-Reply-To: <ovqxo2mmjiuymqk36t2xydcyzvtppcqsog62yx3qtwsknbkgzq@3phadh5gfyjd>
-References: <20251216140252.11864-1-tballasi@linux.microsoft.com>
-	<20260105160423.23708-1-tballasi@linux.microsoft.com>
-	<20260105160423.23708-2-tballasi@linux.microsoft.com>
-	<62ia3v3oduyt2srkaneccoei7cwimifwduarteyn2ugpmmbw3p@rivcqvcksgpt>
-	<ovqxo2mmjiuymqk36t2xydcyzvtppcqsog62yx3qtwsknbkgzq@3phadh5gfyjd>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767813971; c=relaxed/simple;
+	bh=kQoI40bzdL7ie1wnvtSaQYyVpPxjHRJemCKD3bwPjKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GNvmc6L7yxT1EZ/rMVTXZBq/U4BTeQ4xsDsp0pLU57b3mqPCHl0aKtidmCn7dhlNksf/kcOIAFLDBr3tEq+thrFgnz5oUfEyrcVizuHfGRDTWdYU6RJLqubOOzAYnPFEB5eSQQTfP+M+Q7BMUo+vmkJFBg+MGJAGfedD1Gbhskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 90B151AAFD2;
+	Wed,  7 Jan 2026 19:26:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id BFF4520027;
+	Wed,  7 Jan 2026 19:26:05 +0000 (UTC)
+Date: Wed, 7 Jan 2026 14:26:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tracing: Avoid possible signed 64-bit truncation
+Message-ID: <20260107142632.0dec5b10@gandalf.local.home>
+In-Reply-To: <20251209213135.13eb68f4@fedora>
+References: <20251209224024.2322124-1-irogers@google.com>
+	<20251209213135.13eb68f4@fedora>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: p9ncoy6pp6kji5wgp9qwo4rk9k39oipw
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: BFF4520027
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1++PxF0GtOVVTpUMC7k69NqR3l0MN0b9os=
+X-HE-Tag: 1767813965-283697
+X-HE-Meta: U2FsdGVkX1+SRCuz3x5MKKVeOD8Qg7GV6B4yRzu1lWYL4AhzQd21Edwi29JE+6ZhMIA9IBF2k/FtokxZW/YyLxsiIdKn+j8Sd5ygzqhOU63aj+8/O9cGuNJon7hXvYD452jWrjo5wzz+08DL7SYwOgJ4Ne83XP7n3jnIfHylrdHGwAhFJyWqIid6cHFh25GSylcpPX8vz1nL5qpZwzaDPfo8WNW7/gwATSA4jvJf2UhGzWr8zXKb8UT03TL1TwAlQklkcYFXLsv7RpZQHdb9+IbvVrdJUTWxBSSY77vzVLRdsn0aXVsvX91GOA5+5lHnCUOtakaZIZWs14iN58/l35iGoKM/2ym9o2UA3aSewF8uBU/ISQX0hz1ixpmPe+v5
 
-On Wed, 7 Jan 2026 10:14:53 -0800 Shakeel Butt <shakeel.butt@linux.dev> wrote:
+On Tue, 9 Dec 2025 21:31:35 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Mon, Jan 05, 2026 at 02:46:39PM -0800, Shakeel Butt wrote:
-> [...]
+> > ---
+> >  kernel/trace/trace.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > > 
-> > Orthogonally I am cleaning up memcg id usage and after that cleanup,
-> > mem_cgroup_id() would be preferred way to get the ID. No need to do
-> > anything now as I will cleanup this usage later as well.
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index d1e527cf2aae..e6a80cbe9326 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -6057,8 +6057,10 @@ static int cmp_mod_entry(const void *key, const void *pivot)
+> >  
+> >  	if (addr >= ent[0].mod_addr && addr < ent[1].mod_addr)
+> >  		return 0;
+> > +	else if (addr > ent->mod_addr)
+> > +		return 1;
+> >  	else
+> > -		return addr - ent->mod_addr;
+> > +		return -1;  
 > 
-> The series has been landed in mm-new. Please use mem_cgroup_id() instead
-> of cgroup_id(memcg->css.cgroup).
+> Could we still keep this down to a single if check?
+> 
+> 	if (addr < ent->mod_addr)
+> 		return -1;
+> 
+> 	return addr >= ent[1].mod_addr;
 
-fyi, I removed this series yesterday due to a CONFIG_MEMCG=n build failure.
+Care to send a v2?
+
+-- Steve
