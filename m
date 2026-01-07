@@ -1,138 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041993A89DC;
-	Wed,  7 Jan 2026 15:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB91399A54;
+	Wed,  7 Jan 2026 15:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767800426; cv=none; b=qZkRgnFON9I+8m20yW8PPFztM4RZT1Txm/9BAP2j/RVvy79w97awtsWnuP3AzENxV32sa7CsAJOgFnlqav/G0mecAHcHCLQGhzZCzdlXMaqf9ojQPV9qdqzgGMgGig05s5w6We1S878bOtCSTwm6+7UxZpWqLqSb30ak468R2YI=
+	t=1767801198; cv=none; b=CI+D9Ba3r+x34eKskEKDcGZd8fqsHSGD1+uA+Va5hVVUqVlo52roWQH3scIJjcRs0yaY0M8n9jbo4OoG7e/URC9BMddY/eMP4fxNT3VxUzYIpAwXALdMZSGSYFEs7/LEJZQC9htItatYZJRaiN2Kqv0UI0QfdNdpYP92/62Hm20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767800426; c=relaxed/simple;
-	bh=Xr0NRyAzk4dBNy+oJhpszKz1ke0Az0ldJi1gPQPAEJg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gFWhmfn1wkJh9o1akRLVNLfE0rMmArn0C7jqY15iXpWhilOiW0nco+8kLRssuorLOovxdzj6uyDtHCIrJ+d0gnhRVO1yqh5HnpzIEKNsMTV72ni6iyXIMRfEI0w6vj2RJbO4uh8x8XwNikhr0+NEkzIsWkXEa0AzQk/dtAM646s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOZErcX2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOZErcX2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DE2C4CEF1;
-	Wed,  7 Jan 2026 15:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767800425;
-	bh=Xr0NRyAzk4dBNy+oJhpszKz1ke0Az0ldJi1gPQPAEJg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LOZErcX2LYG0+yb4trCkM6SjaIIN5aaC/qd8DDOyfR5SLQ/PZzt5cNQGiJbB4sKXV
-	 z2zwYcX+CqTPLMmFU/MLMGeWLkRaSXpVjzn9Z/gwSOOgJZoRQ3r5BNi52MEOefOoXk
-	 JvLwu1LCzhZ8dBq1BiH5c+L1hU3T1cT/u3wutxBumRGaqUv9S9zQ0bjQ/ePba4pZeM
-	 KYbWDbWJulDpTC00SC42AqKS/mco6qzTP8QXZ24aO+BDQ6FMd3fWep/5uploOzLEjF
-	 Iz+JQN2yL+xK+U195UXvwR3pQkI6tmiQxe+gux1Qfmhzky257VUJTaVhHBtK2L2WKB
-	 NFcb+0IoxSijg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vdVe2-000000007Z8-3nQ6;
-	Wed, 07 Jan 2026 15:40:23 +0000
-Date: Wed, 07 Jan 2026 15:40:22 +0000
-Message-ID: <868qe9mnx5.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 29/30] KVM: arm64: Add selftest event support to nVHE/pKVM hyp
-In-Reply-To: <20251202093623.2337860-30-vdonnefort@google.com>
-References: <20251202093623.2337860-1-vdonnefort@google.com>
-	<20251202093623.2337860-30-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1767801198; c=relaxed/simple;
+	bh=Tt2AtrMSewMzULqLE1VhdgEpismAuO+TcOXUIcITff0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qfeT2CtMNjEoZM/Wkw3WUTkqP8JLxGrUNnotgKo+gzsLSWhr7NdT+/9dgWa/f3eEnFytUhh6SMAFD2LGtBHlLLET5plt3xMb+q1xy7RJfV7/I/7SNAmymi83M3MiyeAePA9JgTB2PXD/dV0lwwce3MkJ8hhv9tszQCAuRKThu+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 5F3D8140441;
+	Wed,  7 Jan 2026 15:52:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id A363F20019;
+	Wed,  7 Jan 2026 15:52:49 +0000 (UTC)
+Date: Wed, 7 Jan 2026 10:53:16 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Will Deacon
+ <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org, Yonghong Song
+ <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko
+ <andrii@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mahe Tardy
+ <mahe.tardy@gmail.com>
+Subject: Re: [BUG/RFC 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <20260107105316.2b70a308@gandalf.local.home>
+In-Reply-To: <aV4X5Yx07LomQji4@krava>
+References: <20251105125924.365205-1-jolsa@kernel.org>
+	<aVfbqYsWdGXu4lh8@willie-the-truck>
+	<20260104223415.0a31f423c861c0b651de966b@kernel.org>
+	<20260105162220.6ba5129a@gandalf.local.home>
+	<aV4X5Yx07LomQji4@krava>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: d78ujc6wjwrs4np7zp9k9df8wcrg8spq
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: A363F20019
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19y53fBfBOjUg/Mlrbjm27/1NrjOMyHETA=
+X-HE-Tag: 1767801169-452600
+X-HE-Meta: U2FsdGVkX1+hldrlx96Y7+EcduT/AqiVoSH8QmMOWvVLBMrUv1IVv6IO41fhZ4RVAeaEuFfgunBNpxHvG1O1TGLPQ3JiX1a9nfHStvtPjZ+qC6M8Sj4BCMDlqjH//NEprQR2dFXHSO2Q85qKa8ZWd1JmEn8jCjbgD2LzKFFzpxSkbyws8Nw8h5fNGqR9CTdBpatoTRQgXUAqlhWk4gttSADniPTDpYyuvv2n2RwYFSFCyOQdUT8abxn44s6dkRK5JKxdWq5ttP5G1uGsINNp7MeadAIwBGYnyflqKunhECWqX14W7J8qUJy2BT5whAKLzhYH1LrALs1vk1R4DAhVELV+ikzLGxZWFRGjXFouFsoppxNwQBvckPM+gbwdLbSg
 
-On Tue, 02 Dec 2025 09:36:22 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> Add a selftest event that can be triggered from a `write_event` tracefs
-> file. This intends to be used by trace remote selftests.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-> index 37c015b54ff6..e2de7ad64938 100644
-> --- a/arch/arm64/include/asm/kvm_asm.h
-> +++ b/arch/arm64/include/asm/kvm_asm.h
-> @@ -96,6 +96,7 @@ enum __kvm_host_smccc_func {
->  	__KVM_HOST_SMCCC_FUNC___tracing_update_clock,
->  	__KVM_HOST_SMCCC_FUNC___tracing_reset,
->  	__KVM_HOST_SMCCC_FUNC___tracing_enable_event,
-> +	__KVM_HOST_SMCCC_FUNC___tracing_write_event,
->  };
+On Wed, 7 Jan 2026 09:23:01 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> ---
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1621c84f44b3..177c7bbf3b84 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -157,6 +157,30 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+>  	return regs;
+>  }
 >  
->  #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
-> diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
-> index 268b3cd7a1b2..c276fd28e0bf 100644
-> --- a/arch/arm64/include/asm/kvm_hypevents.h
-> +++ b/arch/arm64/include/asm/kvm_hypevents.h
-> @@ -42,4 +42,15 @@ HYP_EVENT(hyp_exit,
->  	),
->  	HE_PRINTK("reason=%s", __hyp_enter_exit_reason_str(__entry->reason))
->  );
+> +/*
+> + * ftrace_partial_regs_update - update the original ftrace_regs from regs
+> + * @fregs: The ftrace_regs to update from @regs
+> + * @regs: The partial regs from ftrace_partial_regs() that was updated
+> + *
+> + * Some architectures have the partial regs living in the ftrace_regs
+> + * structure, whereas other architectures need to make a different copy
+> + * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
+> + * if the code using @regs updates a field (like the instruction pointer or
+> + * stack pointer) it may need to propagate that change to the original @fregs
+> + * it retrieved the partial @regs from. Use this function to guarantee that
+> + * update happens.
+> + */
+
+I think the kernel doc should go into the generic function, and this just say:
+
+  /* See description of this function in the generic header */
+
+or something similar.
+
+Also, should probably have the description in the general function say:
+
+  *
+  * For architectures that need to update @fregs from @regs, this function needs to be
+  * defined.
+
+Or something similar.
+
+-- Steve
+
+> +static __always_inline void
+> +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> +{
+> +	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
 > +
-> +HYP_EVENT(selftest,
-> +	HE_PROTO(u64 id),
-> +	HE_STRUCT(
-> +		he_field(u64, id)
-> +	),
-> +	HE_ASSIGN(
-> +		__entry->id = id;
-> +	),
-> +	RE_PRINTK("id=%llu", __entry->id)
-
-Not strictly related to this patch, but I find that the trace itself
-lacks context. For example:
-
-[001]	  323.847422: hyp_enter reason=hvc
-[001]	  323.847423: hyp_exit reason=eret_host
-[001]	  323.847688: hyp_enter reason=hvc
-[001]	  323.847688: hyp_exit reason=eret_host
-[001]	  323.847706: hyp_enter reason=hvc
-[001]	  323.847707: hyp_exit reason=eret_host
-[001]	  323.847722: hyp_enter reason=hvc
-[001]	  323.847723: hyp_exit reason=eret_host
-
-That's all fine as long as I'm dealing with a single guest, or even
-with a single vcpu. Trying to trace multiple guests, or even multiple
-vcpus makes the whole thing completely unusable, because I have no
-idea what I'm looking at.
-
-To make this useful, having some context provided by the host really
-is required.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> +	if (afregs->pc != regs->pc) {
+> +		afregs->pc = regs->pc;
+> +		afregs->regs[0] = regs->regs[0];
+> +	}
+> +}
+> +
+>  #define arch_ftrace_fill_perf_regs(fregs, _regs) do {		\
+>  		(_regs)->pc = arch_ftrace_regs(fregs)->pc;			\
+>  		(_regs)->regs[29] = arch_ftrace_regs(fregs)->fp;		\
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 770f0dc993cc..ae22559b4099 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -213,6 +213,9 @@ ftrace_partial_regs(struct ftrace_regs *fregs, struct pt_regs *regs)
+>  	return regs;
+>  }
+>  
+> +static __always_inline void
+> +ftrace_partial_regs_update(struct ftrace_regs *fregs, struct pt_regs *regs) { }
+> +
+>  #endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_FTRACE_REGS_HAVING_PT_REGS */
+>  
+>  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 6e076485bf70..3a17f79b20c2 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2564,6 +2564,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+>  	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+>  	err = bpf_prog_run(link->link.prog, regs);
+>  	bpf_reset_run_ctx(old_run_ctx);
+> +	ftrace_partial_regs_update(fregs, bpf_kprobe_multi_pt_regs_ptr());
+>  	rcu_read_unlock();
+>  
+>   out:
+> -- 
