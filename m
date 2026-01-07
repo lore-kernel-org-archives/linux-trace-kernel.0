@@ -1,146 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BF83242B3;
-	Wed,  7 Jan 2026 13:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495EB322C7B
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 13:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767793514; cv=none; b=AAPzon6/W2/oP/hH1nKZZPD7mLbkUdrtSc9ums3MeCTDxIdLK4sjDC4HFaOxkIlGPDE38omgb1mThYjR4HW32Nbn6YNH3RC3aumebuORbykAkqULYPmhmRphAfx0RH1W6prMweZIcHT5JvTMxZQZXz8K2rB8XxaaH5/N8nOZOiw=
+	t=1767793644; cv=none; b=s+N6I33Td9Tj4iFgLZkHLmBy+jrnWlffYY0QsC9EXU1Ba1ysD5irIjQ5NiZrLXtK8Q5XgOM9mjs/I663WSgHrDJZoxH5Jp6RhqtV2q6WkWOs7OfpKHLwpgjpffbIiOysDv8wDOk0broDWCItL1tYnu4XtOeoYJOrPO3o4osNAG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767793514; c=relaxed/simple;
-	bh=FUnu2/d32Z+rAwqi5Nbaz8wsPSyg/MoQclwAm3YXqJk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cBJ7xjE++cATlKO68DblykCeI2dLwgI9QJ2tyWa8+wnIUDJXJOm7uLxbr1WO9HbsUNkzNmFHmBM9W3ERlDfWv20R0fwMtLWI3vxtW+KjlboOZoVnFCxnWEzQMKvR8cojZqQAWZWirBJQK35TU6uvOqHr7OnEK8J9hfF95S0PBJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itAl+snn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767793644; c=relaxed/simple;
+	bh=5UeIv+085j7X+A2KkpBcuIkf8eSlo8D6e6Ms8n27crs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRiHUJNJ/G0IwtMOtMwq5Dmwt4fiTP/uUpCAOXVsFQs+0Iv6le91W2KP54M+8L+mSgTbQm+GzgCvAZcM+eJPbjWvCG/1GB4pl4iyWZiieC0kQo/eZZYeXk1Vax9jixVSm9jwQh6nM1bbHTvTDygCu66XtVwHUmMAFq2NweTVHR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ExWGNxVA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itAl+snn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6149C4CEF7;
-	Wed,  7 Jan 2026 13:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767793514;
-	bh=FUnu2/d32Z+rAwqi5Nbaz8wsPSyg/MoQclwAm3YXqJk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=itAl+snnQm40572JvVmDdz8fg0UKD82AkqmTnYzf0FqWfkzJSUt0WvzaReVRrJJ6h
-	 tcVIJ36cfg7wOZJxuEo4QQi4XI9UziTM88AFs/dLEspvRUANEw1qFwfaHDfyTpQyrY
-	 htNZP/BPlGFclpvjzFxaEF5Jewz7fMmxrsyvz1YoQJyKb5RztrkKM8lk7ZI0W11Orw
-	 gasKTLhSTJcXU97+VdtxTxi4j7q8FS2YgLDEL9foemX5/udIE5TQBbEUX44jq0ZQEa
-	 IANNpcfJuWELF5OFxMIO8orhEG4cpTIGTUpCe0d3HwoPr/SJY5njTSzlGgBAS3VXFB
-	 7HB12GuhC2CvA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vdTqZ-000000005dY-2U3q;
-	Wed, 07 Jan 2026 13:45:11 +0000
-Date: Wed, 07 Jan 2026 13:45:11 +0000
-Message-ID: <86cy3lmt94.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 21/30] KVM: arm64: Initialise hyp_nr_cpus for nVHE hyp
-In-Reply-To: <20251202093623.2337860-22-vdonnefort@google.com>
-References: <20251202093623.2337860-1-vdonnefort@google.com>
-	<20251202093623.2337860-22-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExWGNxVA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767793641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZLoPxkvg9MQAFGxKvostktDgMdVNq96nmc+PVOzg14c=;
+	b=ExWGNxVADYrF9YeNp3DNJFvJRwzb00SkBox1AO4eq7w7PywNsZwupstpT8cXrhGXNGzWC6
+	pZeDlyxAxb9J99n8Exh9iA0Wo0C68KdpNadT3Tzjm9kAcJ+NgJ6DhDi/jwlMyt7nP4mbJw
+	3srhQRDR+yzCOTsgpaWMmDnrVCghP3c=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-520-jIMzcGK-OeqDN_dFzEMc2w-1; Wed, 07 Jan 2026 08:47:20 -0500
+X-MC-Unique: jIMzcGK-OeqDN_dFzEMc2w-1
+X-Mimecast-MFC-AGG-ID: jIMzcGK-OeqDN_dFzEMc2w_1767793639
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-b726a3c3214so193535866b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 05:47:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767793639; x=1768398439;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZLoPxkvg9MQAFGxKvostktDgMdVNq96nmc+PVOzg14c=;
+        b=fJe9lEEj0ydgQhIjQ5maIUPuv9upC01/ggLIfqVFgZ4Ezem+4Ymj/cCgxN9vYDDBvf
+         fja71R9k9pyPsNT9D9nKwjD99LSodPw9eugATqCtxk5c5tfmP7bjWFio4pcbYDf2rR9q
+         /mbT7ohnmoJZlajhUc9np3WVZuJh7POCBF/OB5sudFXQ8jDfSF3gJS/9N+Uxuxy1Qfbh
+         OJUqyHRfT8GgkfI9BH/5kk/6HVEFtatQm0v7B13SgBP5Dg5KX2IrTlIJzif8Uru9kL1+
+         1wD5cDkcbQ6Fiu3QnDHVWzeJnwdjz39St1PkJZfKAu9GkY/Q+TxP7Bf5oUVtvjCeyMdb
+         1H+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQxLxzwOeC/MdynKO4AMh50GwIAi3QP1rysDHlq3+6PKJW7ANm0WdjBTFJXB8foYQ57+PHkX+J8q/BPWJkBtER6Tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwEO6O/+g99c/6QUfrG2zqVnU3FC8wMmfd7Ml0fusdvlG1Bd8N
+	V76fx2FvwORHrW3StJMUlj9iEgiNVNThdHGEt1dDsS20FdwR5yNliPnFfNHZgmD2VBoRS9v3+rL
+	pPXN/UR9177fpXTqafwgYKvjfiN7UfxHXcdG/9M/eHmJJqftPtt+D+kZKLbwBXkXsLbhsTuDZPc
+	kmC01JRpnJMW5lyQ9wmdlcwJ9nDPBZi+PxzcbmydEx6qz21cXn
+X-Gm-Gg: AY/fxX52z1PVGqBeNDtIRtuwWV/OdGwtWr+p018d7XYF+jXaZoa5R229/s5lC39BG5C
+	2EaTnSQgVjEINnAr8WYj35BSoZKWypXk+9JA0+stU/x4Crje60AkQrj96Sul1L72cdIHr/aY6YJ
+	KOdTW7CUZiBUaAs8uq4r8GhudimlgfZkpd3FxDs2esjoDSv4tjSWLluhifYi+eYRcTQ5huyfTjL
+	gW7k/QaOy939kalbRVlSvbx
+X-Received: by 2002:a17:907:97d3:b0:b76:4c16:6afa with SMTP id a640c23a62f3a-b844520d854mr274385266b.28.1767793638870;
+        Wed, 07 Jan 2026 05:47:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE1i2QRzGxxzUUyfW72AkZX83kM1+QBJ7NrayLZXt+2mPD0j700Gvi3U/l9XmWKJUNVUbEXTKZjcZRfR/KKLT4=
+X-Received: by 2002:a17:907:97d3:b0:b76:4c16:6afa with SMTP id
+ a640c23a62f3a-b844520d854mr274382666b.28.1767793638425; Wed, 07 Jan 2026
+ 05:47:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20260106133655.249887-1-wander@redhat.com> <20260106133655.249887-8-wander@redhat.com>
+ <CAP4=nvT2oPtM73nfPkSJZ4612mcAPw1LWbHNrszFBVAmSJOVbw@mail.gmail.com> <CAAq0SUmrRecimVNCa=zv-h3uPm-GpQo3g+ZTV4zLNVA4ZVo-EQ@mail.gmail.com>
+In-Reply-To: <CAAq0SUmrRecimVNCa=zv-h3uPm-GpQo3g+ZTV4zLNVA4ZVo-EQ@mail.gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 7 Jan 2026 14:47:07 +0100
+X-Gm-Features: AQt7F2ph3Al6PnRm9hkpWdRKwER31ZBY_y1Igwr58DOaNMEWshQZaPUQl5IDXow
+Message-ID: <CAP4=nvTeFtHF+K0h0FkWMh6uLb5Qwy6LnYPcrbrbNOM6M6kFNA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/18] rtla: Introduce common_restart() helper
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ct-_e_tKzw9to6T1f4NFv4F9QWkw24UysZckZbWSXUA_1767793639
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 02 Dec 2025 09:36:14 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> Knowing the number of CPUs is necessary for determining the boundaries
-> of per-cpu variables, which will be used for upcoming hypervisor
-> tracing. hyp_nr_cpus which stores this value, is only initialised for
-> the pKVM hypervisor. Make it accessible for the nVHE hypervisor as well.
-> 
-> With the kernel now responsible for initialising hyp_nr_cpus, the
-> nr_cpus parameter is no longer needed in __pkvm_init.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> index e6be1f5d0967..b169d85458f9 100644
-> --- a/arch/arm64/include/asm/kvm_hyp.h
-> +++ b/arch/arm64/include/asm/kvm_hyp.h
-> @@ -128,8 +128,7 @@ void __noreturn __hyp_do_panic(struct kvm_cpu_context *host_ctxt, u64 spsr,
->  #ifdef __KVM_NVHE_HYPERVISOR__
->  void __pkvm_init_switch_pgd(phys_addr_t pgd, unsigned long sp,
->  		void (*fn)(void));
-> -int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long nr_cpus,
-> -		unsigned long *per_cpu_base, u32 hyp_va_bits);
-> +int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long *per_cpu_base, u32 hyp_va_bits);
->  void __noreturn __host_enter(struct kvm_cpu_context *host_ctxt);
->  #endif
->  
-> @@ -146,5 +145,6 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
->  extern unsigned long kvm_nvhe_sym(__icache_flags);
->  extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
->  extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
-> +extern unsigned long kvm_nvhe_sym(hyp_nr_cpus);
->  
->  #endif /* __ARM64_KVM_HYP_H__ */
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 052bf0d4d0b0..7ba427f9608c 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -35,6 +35,7 @@
->  #include <asm/kvm_arm.h>
->  #include <asm/kvm_asm.h>
->  #include <asm/kvm_emulate.h>
-> +#include <asm/kvm_hyp.h>
->  #include <asm/kvm_mmu.h>
->  #include <asm/kvm_nested.h>
->  #include <asm/kvm_pkvm.h>
-> @@ -2396,7 +2397,7 @@ static int __init do_pkvm_init(u32 hyp_va_bits)
->  	preempt_disable();
->  	cpu_hyp_init_context();
->  	ret = kvm_call_hyp_nvhe(__pkvm_init, hyp_mem_base, hyp_mem_size,
-> -				num_possible_cpus(), kern_hyp_va(per_cpu_base),
-> +				kern_hyp_va(per_cpu_base),
->  				hyp_va_bits);
->  	cpu_hyp_init_features();
->  
-> @@ -2605,6 +2606,8 @@ static int __init init_hyp_mode(void)
->  		kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu] = (unsigned long)page_addr;
->  	}
->  
-> +	kvm_nvhe_sym(hyp_nr_cpus) = num_possible_cpus();
+st 7. 1. 2026 v 13:43 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+> >
+> > The deduplication idea is good, but I find the name of the helper
+> > quite confusing. The main function of the helper is not to restart
+> > tracing, it is to handle a latency threshold overflow - restarting
+> > tracing is only one of possible effects, and one that is only applied
+> > when using --on-threshold continue which is not the most common use
+> > case. Could something like common_handle_stop_tracing() perhaps be
+> > better?
+> >
+>
+> Sure, I will change the name in v3.
+>
 
-Is num_possible_cpus() always the correct thing to do? Given that pKVM
-doesn't support late onlining, this really should be the number of
-online CPUs.
+Thanks.
 
-Probably not a big deal, but worth thinking about it.
+> > > +enum restart_result {
+> > > +       RESTART_OK,
+> > > +       RESTART_STOP,
+> > > +       RESTART_ERROR =3D -1,
+> > > +};
+> >
+> > Do we really need a separate return value enum just for this one helper=
+?
+> >
+>
+> If it was success/failure type of return value, we wouldn't need.
+> However, a three state code, I think it is worth for code readiness.
+> Do you have something else in mind?
+>
 
-Thanks,
+The main loop can simply use the continue flag, just like in the old
+version, no need to duplicate that information into the return value
+of common_restart().
 
-	M.
+Tomas
 
--- 
-Without deviation from the norm, progress is not possible.
