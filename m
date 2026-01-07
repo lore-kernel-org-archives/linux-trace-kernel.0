@@ -1,197 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF8649659;
-	Wed,  7 Jan 2026 09:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE732309F1D
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 09:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767778399; cv=none; b=ChA90Bn7J+TAUVIqqr6NJ3PbJK2DipNc1el+/qhIBXSFJL/8LKwcknuXc2JdLZ2HTA3kdQXRIyiJXu1xDh896ppUoZGMCp7nP85nFudz9bdTNQUXodQrbNz/KkyB2p4gXfeI2qIGSvN6m5IHLEcN92XktN7fPdxB+bVpCaSlS58=
+	t=1767778662; cv=none; b=YPoSPVOlz35hbNVRL6b1mvRAGTosoWReMRj72YRH9Z0cROqJe1tR+yTId70eF4cI7eVqUS+NyQOoIGiHbiaHw79DfHLIldGA1EnKavaLQeCUy5icf85XqqFw0A5LSZMc7VwZa62a1CJP6Yv2RCs8PoVVs2eGutqzMiHtZ3sbz2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767778399; c=relaxed/simple;
-	bh=fcHHOaQzVIpjZZVBB6MbIxlqagyeNtB33hqQC3c9Nms=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ICXQ1/5k6vjfs370R48xz2s17ipdUJOUkH0zuymsyJlqltsL50QY/SyDhekmuHoqzWsVh+VzT0CbbB31t7LXHzmFnHR9rQ4gGKV3D7qqEfiZh+WWBQLdvEXk431jr5HRxGMK21b4vAU5aMb+HJZQN1L8Pwv1TyMBiELtUXQqxDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljRT/CaQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljRT/CaQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6BFC4CEF7;
-	Wed,  7 Jan 2026 09:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767778398;
-	bh=fcHHOaQzVIpjZZVBB6MbIxlqagyeNtB33hqQC3c9Nms=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ljRT/CaQGA0P+r1we4XG2EBhSLwD/70pG9mVCQocq4lTaLvK5dV/WoqudiHL/fUKo
-	 PyQDybJatQ+49AEZFiD/ZTHnR0ijLrHZnHtqG+15hiVn9Dls5C+bdKjMtLbfczLr/I
-	 ch9J7EX9AR7eV4IfAPjU5R0XdCUcdqx8zU4tKFCmsoExPDCn1FM5SneKSmE2CbzOE8
-	 XindnCRTfJJ/ku7cWHmV8ssyVHv9qx8yJxQ/SbyXllDTjaRqZhvvwuQJ9OcOYtpQ0T
-	 krpBHPZw4ZJbSCgS0kQrUk9U62AcDAZv3K8yyn7uVHsOoWNeDAHiAeswkyxWAYVE8H
-	 I+DdHdAzkwYgA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Will Deacon <will@kernel.org>
-Cc: Song Liu <song@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	Yonghong Song <yhs@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mahe Tardy <mahe.tardy@gmail.com>
-Subject: [PATCH bpf-next 2/2] selftests/bpf: Add test for bpf_override_return helper
-Date: Wed,  7 Jan 2026 10:32:56 +0100
-Message-ID: <20260107093256.54616-2-jolsa@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260107093256.54616-1-jolsa@kernel.org>
-References: <20260107093256.54616-1-jolsa@kernel.org>
+	s=arc-20240116; t=1767778662; c=relaxed/simple;
+	bh=P3bmIaKbj4dlQJDQsd4YExNB4f0vddu/W5Umr6N15ZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOg+JV4p0Y3N3sIYMG3xJO1t5a8lqrZdLlfbiYFoDrY4c02qkp8zknrJu3MFByWNMwXq+NMs6wqoWA/hkrabgHqXrwEDSUnYSkoZrVp5iDhXxIBUaC1K38nK0v5kq99U9SUxJHPiFiHNazoV4PLY3aAcFFu7VTcjeRbk4nhXhvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-457c1148a5bso708560b6e.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 01:37:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767778659; x=1768383459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WSOFVzjnYNB1d5rrdzoosTOvprcgQBQWb0G+083URhQ=;
+        b=BmEoc6hCZZK/L5CTJrT4wRfwyQQXg9pGOxOc8TkB7O+0iwMzWtHbwoSYWPYIlma+ft
+         zguY1K8wHD4Ma0DIoZ4CDaq/nQzcV8I2qsmuZZa1uTfSMiCv8XCWFHt+v0It3wT6wAj7
+         2Bvg+TgkCxMBnJjBi7C6yTLloXwMuH1qZtN6v/nzGXlh9m3+sAMAK6/jLU6VNNtIkHNI
+         cXBhVV8NcU+fhLhcxaprK1naKB88FEH6qi0l7+nzhTWRkhSuhdTPErRYiWIV6Ue6pKsh
+         T45RVBp/7MyA+LDkt34zo+8MpQ5OgHE8SQ0sjROZgSo44HMOuuCuWXJX5OxSNW9/o3go
+         FvxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTLcnjKNKbK36oVaHh/vfE0r5z08MswptFoRDdPiDHD0q1/+AYVDiVtRl8VmlYzIHnezVA0wN1CnISlpoPjmUkmwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdAkCag5t8u+Q1lyBI5nmWexaTGMQbijqqxzGj/umm+rPg9l6Y
+	hpQ8RSLEtspkIIwDkMizeq/XArp0X6wvh44DHLB9AtdpvrtdGA1KLyk4
+X-Gm-Gg: AY/fxX7OyOgY2qcZQSOvmY1BdgCMAHDXCSL3fLQzGse5w2XXfb/mr1rQY9a8jSsHekb
+	Zfcws0xntTru94uk2g5d/IyseJ9hE5bMH65klmd1ZED2j+fzbqiZe3rVsh/VVn+PZ2w+WiYKvoX
+	sohMG9NBsI55jHkI+d6eVmqpdt4k21/TWcur0frCI9dHmnVf9sbyKERyIVg+MF/Y8/9JEGEZ0ua
+	YEMpMXctkrSdPKRPyQCkcMqQu6Yy36eYIGn/pkOzc+GU9VZTBPuh+VCLr/z5KGxgup188j2+1KM
+	yTLMe9jvDk+NId4K08fuykFMIT7/3cGHn87SrCZt4hmJkzLkqGMwd7sIsdTmrtF+ZtUSI9meGXE
+	bOkbLN6o1kvu/QwlOxTAzpDQFTi1lKhsrvTgcwIB3qUtC/WIRStutConv/zW7Z2vLG8wauFB31E
+	WTq10/JXnhGWseMw==
+X-Google-Smtp-Source: AGHT+IE6mzfvESbk566yQV8NURTCe+ARwpNwZIV2RSmTygG0udCgbDFLYujQwW54LSoVrkMmFxWFbA==
+X-Received: by 2002:a05:6808:120a:b0:455:d817:513f with SMTP id 5614622812f47-45a6bcc87f7mr802717b6e.14.1767778658722;
+        Wed, 07 Jan 2026 01:37:38 -0800 (PST)
+Received: from gmail.com ([2a03:2880:10ff:40::])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e288d5fsm2230196b6e.14.2026.01.07.01.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 01:37:38 -0800 (PST)
+Date: Wed, 7 Jan 2026 01:37:36 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Laura Abbott <labbott@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, kernel-team@meta.com, puranjay@kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
+Message-ID: <frfmxk2ifpf5shcws42q3eeykb3xyflxocbic6junm7mzvmqik@vktwefe2zmw7>
+References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
+ <aVz-NHMG7rSJ9u1N@J2N7QTR9R3>
+ <aVz-6WozGIxGiTUR@J2N7QTR9R3>
+ <20260106111142.1c123f12@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260106111142.1c123f12@gandalf.local.home>
 
-We do not actually test the bpf_override_return helper functionality
-itself at the moment, only the bpf program being able to attach it.
+Hello Steven,
 
-Adding test that override prctl syscall return value on top of
-kprobe and kprobe.multi.
+On Tue, Jan 06, 2026 at 11:11:42AM -0500, Steven Rostedt wrote:
+> On Tue, 6 Jan 2026 12:24:09 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> 
+> > Whoops; s/CONFIG_DEBUG_VIRTUAL/PROFILE_ANNOTATED_BRANCHES/ in both
+> > places in my reply.
+> 
+> Note, it could still be useful ;-) 
+> 
+> I've been running my yearly branch profiling build on both my main
+> workstation and my server. I post the results from my server publicly (this
+> is updated every night):
+> 
+>    https://rostedt.org/branches/current
+> 
+> If you check out the branch_annotated file, you can see there's still quite
+> a bit that gets it wrong. Some of these is because of bad assumptions by
+> the developer, others is because the code moved around causing new branches
+> to make later annotated branches go the opposite way.
 
-Acked-by: Song Liu <song@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
-v1 changes:
-- added ack from Song
-- moved SYS_PREFIX to trace_helpers.h
+I am starting to look and remove some of these likely/unlikely hint that
+are 100% wrong on some very sane configuration (arm64 baremetal hosts
+running a webserver).
 
- .../bpf/prog_tests/kprobe_multi_test.c        | 44 +++++++++++++++++++
- .../bpf/progs/kprobe_multi_override.c         | 15 +++++++
- tools/testing/selftests/bpf/trace_helpers.h   | 12 +++++
- 3 files changed, 71 insertions(+)
+So far, these are the fixes I have in flight now.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-index 6cfaa978bc9a..9caef222e528 100644
---- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-@@ -1,4 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
-+#include <sys/prctl.h>
- #include <test_progs.h>
- #include "kprobe_multi.skel.h"
- #include "trace_helpers.h"
-@@ -540,6 +542,46 @@ static void test_attach_override(void)
- 	kprobe_multi_override__destroy(skel);
- }
- 
-+static void test_override(void)
-+{
-+	struct kprobe_multi_override *skel = NULL;
-+	int err;
-+
-+	skel = kprobe_multi_override__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "kprobe_multi_empty__open_and_load"))
-+		goto cleanup;
-+
-+	skel->bss->pid = getpid();
-+
-+	/* no override */
-+	err = prctl(0xffff, 0);
-+	ASSERT_EQ(err, -1, "err");
-+
-+	/* kprobe.multi override */
-+	skel->links.test_override = bpf_program__attach_kprobe_multi_opts(skel->progs.test_override,
-+						SYS_PREFIX "sys_prctl", NULL);
-+	if (!ASSERT_OK_PTR(skel->links.test_override, "bpf_program__attach_kprobe_multi_opts"))
-+		goto cleanup;
-+
-+	err = prctl(0xffff, 0);
-+	ASSERT_EQ(err, 123, "err");
-+
-+	bpf_link__destroy(skel->links.test_override);
-+	skel->links.test_override = NULL;
-+
-+	/* kprobe override */
-+	skel->links.test_kprobe_override = bpf_program__attach_kprobe(skel->progs.test_kprobe_override,
-+							false, SYS_PREFIX "sys_prctl");
-+	if (!ASSERT_OK_PTR(skel->links.test_kprobe_override, "bpf_program__attach_kprobe"))
-+		goto cleanup;
-+
-+	err = prctl(0xffff, 0);
-+	ASSERT_EQ(err, 123, "err");
-+
-+cleanup:
-+	kprobe_multi_override__destroy(skel);
-+}
-+
- #ifdef __x86_64__
- static void test_attach_write_ctx(void)
- {
-@@ -597,6 +639,8 @@ void test_kprobe_multi_test(void)
- 		test_attach_api_fails();
- 	if (test__start_subtest("attach_override"))
- 		test_attach_override();
-+	if (test__start_subtest("override"))
-+		test_override();
- 	if (test__start_subtest("session"))
- 		test_session_skel_api();
- 	if (test__start_subtest("session_cookie"))
-diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi_override.c b/tools/testing/selftests/bpf/progs/kprobe_multi_override.c
-index 28f8487c9059..14f39fa6d515 100644
---- a/tools/testing/selftests/bpf/progs/kprobe_multi_override.c
-+++ b/tools/testing/selftests/bpf/progs/kprobe_multi_override.c
-@@ -5,9 +5,24 @@
- 
- char _license[] SEC("license") = "GPL";
- 
-+int pid = 0;
-+
- SEC("kprobe.multi")
- int test_override(struct pt_regs *ctx)
- {
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	bpf_override_return(ctx, 123);
-+	return 0;
-+}
-+
-+SEC("kprobe")
-+int test_kprobe_override(struct pt_regs *ctx)
-+{
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
- 	bpf_override_return(ctx, 123);
- 	return 0;
- }
-diff --git a/tools/testing/selftests/bpf/trace_helpers.h b/tools/testing/selftests/bpf/trace_helpers.h
-index 9437bdd4afa5..a5576b2dfc26 100644
---- a/tools/testing/selftests/bpf/trace_helpers.h
-+++ b/tools/testing/selftests/bpf/trace_helpers.h
-@@ -4,6 +4,18 @@
- 
- #include <bpf/libbpf.h>
- 
-+#ifdef __x86_64__
-+#define SYS_PREFIX "__x64_"
-+#elif defined(__s390x__)
-+#define SYS_PREFIX "__s390x_"
-+#elif defined(__aarch64__)
-+#define SYS_PREFIX "__arm64_"
-+#elif defined(__riscv)
-+#define SYS_PREFIX "__riscv_"
-+#else
-+#define SYS_PREFIX ""
-+#endif
-+
- #define __ALIGN_MASK(x, mask)	(((x)+(mask))&~(mask))
- #define ALIGN(x, a)		__ALIGN_MASK(x, (typeof(x))(a)-1)
- 
--- 
-2.52.0
-
+ * https://lore.kernel.org/all/20260105-dcache-v1-1-f0d904b4a7c2@debian.org/
+ * https://lore.kernel.org/all/20260106-blk_unlikely-v1-1-90fb556a6776@debian.org/
+ * https://lore.kernel.org/all/20260105-annotated_idle-v1-1-10ddf0771b58@debian.org/
