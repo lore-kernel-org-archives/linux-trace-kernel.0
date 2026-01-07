@@ -1,164 +1,122 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19ED313268
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 09:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D3A308F2E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 12:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767779506; cv=none; b=ta8WVqXe/fi7SAcXe3hMFkH/f8jiKKaVPhX03Ei3TjKRcaUiXwp5A+5qt4okE180Mz+hEKiLwIQH/cdEo9j66QzcwR7wV6vnrF605DwfMbPwXDq+MNCBGLDNvL7Q06uYTjdoTGUWMibXmBpJco83aQhx/PG6ogacY6jVR6c0bgA=
+	t=1767787430; cv=none; b=r2dMOKD/3vB1J7849/Ho0MPOhroG1re6qsYWR+h7rxB9Xtk3H9iyuTn0Mo909C0OsoE+fmiSUUr0DG9SY3PaVxAIZ4lxmMlXVdc4/ALDc+5TupLwTh1jS2RBQllswO5Mv8XzLo6iCkho74NEY88IatN5ci673Ww7wOCOR5h4xAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767779506; c=relaxed/simple;
-	bh=iiT2R8UnHUrK/rPGvAFhFVgfetfWj89nepLFbQiox64=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tc7TdyWkxCZz8QZ/Xpt6togO2ljst2n19B/xNIsS/jv98mTnXLhvFb+xfC3gaE4YCTvajksOU7ST059FwlRT8buL+h3EQ88trO2DLJ+CLx8x+BsA4OFyScssGI8gVTLb+RA20bf5eQAKXQj8Jbqd1k9t9mLY5N6Yxv9sPyPn420=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e7V+MxZA; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1767787430; c=relaxed/simple;
+	bh=BV3qLeOvMcaNZVUP69c1YtN/wbMYGTCv2M+gokMVuCQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZZgcl/VWUaSLcdYJ0oFjx1RxPDs8ZQcGhOjEGZ2zPhyyt3xXUOy/JOYVTfbCCx5nvinwV/jbMBqoG0yrOB1EPpYyOg/JLCKtNcjd2XKmw1heTz/aNk7VZ0X+COZEntxXD/CeVDzVhxHrqUHlnc2dViPUW9Qze8/x1+uyTto5rro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JYnZvUEX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e7V+MxZA"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47d211aee52so2290975e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 01:51:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1767779502; x=1768384302; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NkfocqoVaxgUjAmHmf02FgYq+uCwVg0Btx7TYoadT20=;
-        b=e7V+MxZAX26mEbmvSSNJ3K6XCeKoHG3MzvXSddS6rwIRDWGPOUCaECYT3wUGcm9NkC
-         frQtPnDcrWPCp8QG2kGuOMmaJ95vZUb/ytvpXWgO3H/fLACEhEWHZz2hi3vCZDTY8UFJ
-         awKqfEHNOprlS9xqDl7fUXPbhUDIebty7YD2hqNcJ90ddEgYML8Sg0DDpIT8zYLQaxFo
-         bO2fQiuT03Kwhx+Ha6RAPfQZCeBdWpuJypmVtX9cFE/S//K+ofgIcjcpqBoaN8QbYHK6
-         cRzAN9f0pbXib1Im1q/8AU9n1EtNEAkDSlVJNg8W9H0ZOHm8sBzSriBYTYD7e1oyffVk
-         ISqg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYnZvUEX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767787427;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Al4OPVFE0mOhMlBb5QMwhatYcqi1Bruqbnv2tfRXugQ=;
+	b=JYnZvUEXVk6pNep+DZwPixVL3bVstefCdmO5duvhTzef5+WMZjQ+iEQ6Si8Ph1m29P9Jfj
+	+vKGCzVgqnxJPzBnM5I8Tjj3OMjwtMu22E7zaqtiNsFr5J6TZt7JeaG40BrcOf6sUuFtjz
+	lYFiVgU8LSKDt/14UDK8y29Fr06kAZc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-Y4fQthFOOO6hCLjiheEatw-1; Wed, 07 Jan 2026 07:03:46 -0500
+X-MC-Unique: Y4fQthFOOO6hCLjiheEatw-1
+X-Mimecast-MFC-AGG-ID: Y4fQthFOOO6hCLjiheEatw_1767787425
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b7cea4b3f15so313506566b.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 04:03:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767779502; x=1768384302;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1767787425; x=1768392225;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=NkfocqoVaxgUjAmHmf02FgYq+uCwVg0Btx7TYoadT20=;
-        b=b0AZ5fzDB7ASEAN4zgnyeWERpM1k8LcpLRixMdt9h1R3+JiBKSvqsvlztdn0U6YT3e
-         y2VSFSwbSrJ9dI0UuP/gaSBCV1uafDaHssbR05PRihtvZrEsSlufEnGugb528Mm4UOCv
-         WXr7Zu+4ZwzvwYeMwidGAV12OpRNs5gFonLhbNgZsJDoad6c5JayxYpnfv+Oo621mH73
-         ZHXCL+/jWzjAyNOiFxpQnWk4BOTWKgSJNHfEfTfJuUIAHKmLqr6eUOSR/MB4+w+ikZ2Z
-         f3J8wiFYAeU1xlCGdIdavraTkDMwIMR39ZsRRkAdF8TATnGRGKL1LWWq6uTmEPLglvtO
-         Ok4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVFpc+fXMHtGFA/gpW64mp7wOuQrB3Wgq8s9dDUfb7XX7XW31fZSnD6sTWhxoArl8KhFPYdSeImwVJgJ30aXDBZSP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1K+T7pzvrtfalDGLbwc9gL06aNRruZw2ZNCuT+UZ5rZLW2jRC
-	ov24ioHODQCPapeqJEftAL7yRAX+oZdsZkvoeNxYsbqmvbC5kasPbGC8caniLy/h2Ys=
-X-Gm-Gg: AY/fxX5tXp6oFHHuCpKbhG+LktDoSFiynEKV2VAyY/gB9leUKbNK7qYskh3s1DrybQl
-	TCWLxNBj7Fx46QDpFJIMtAfN1lgXZbnpJPwwKog3u0gj3VqMpLbF1oCnUq4nM3v+vY7m4unMnpC
-	E6oQ8Jh3eb6IZIVRk62mTmY+PZm4JeSIv0rjQb6obc22xzX7GRnAcmYRelYZDUy4+Ie+zeMF/9d
-	ar6JCP0/29JgwqmBySOAsxjd50GgcDdmuUbbGnUFi0jcBTWS+6S3x8Vs9Ej4GF7fpYzhon1DULy
-	rPB5KmjHX9D/318K//HewaEeGa/bkGxm6lA+EdG36MCg6PJAq2boxcUpneQlHUiE3IdzoXhQXhO
-	iXXTkmidHYYSJ45UotuB+ZDxN+2P4Gwgpm26E0o2RQTLsnJirRYi5CB7q5TS34dj7WdBTzwqjLc
-	gn9DL4GIyehFbVfZPHVR2J9GY+TdGYPSPFWvZL6OA9LthIP7mIugrpK+WcDkh1QhKkQeXdo9hPr
-	Mkq
-X-Google-Smtp-Source: AGHT+IFbMuCYRQqFyYc3iW2AQwZ3ygkAVP5hORsbEHKVe3DoFNpU5VkF5QR76ZXtOw48GVJBALlpkg==
-X-Received: by 2002:a05:600c:3556:b0:477:9fd6:7a53 with SMTP id 5b1f17b1804b1-47d84b04e1amr11902665e9.2.1767779501536;
-        Wed, 07 Jan 2026 01:51:41 -0800 (PST)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f703a8csm88569435e9.13.2026.01.07.01.51.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 01:51:41 -0800 (PST)
-Date: Wed, 7 Jan 2026 10:51:37 +0100
-From: Petr Tesarik <ptesarik@suse.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
-Message-ID: <20260107105137.4cf9a67e@mordecai>
-In-Reply-To: <20260107085009.58fcffd4@mordecai>
-References: <20260106091039.2012108-1-ptesarik@suse.com>
-	<20260106170405.425f469e@gandalf.local.home>
-	<20260107085009.58fcffd4@mordecai>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-suse-linux-gnu)
+        bh=Al4OPVFE0mOhMlBb5QMwhatYcqi1Bruqbnv2tfRXugQ=;
+        b=byItMtSnNHa+Btg/g0VbcnNbWCm+uNk0E9ds9gl56mHoHDwFy8qDQOYCg0cI2+PGM1
+         YJPHjPRaO3F9pVEfHeOnGgDBhRT1ttcl2BxrQNMYa4wIFOmatyh4asxM3wqb0s2t7PCj
+         yZIjRTIOyYU9AYNDIq1oyWXQNBroGCCYlbac11fAhT9f/VT6R/qlegc+izc1sgYPjMkj
+         GGe2dfLepbr2FenjDYvRU/yJlRwUNz31w7L4twY7nfKOPQX6p1MF1mb8qzWdyimFbfiO
+         nu8pAPRlLSVJWDijRAixc9GyMhPiYp1VGgU0W0r8pfCQ1j/r8ZyeSyXO78aWPs+WF01N
+         uRyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUASHZo/9RuYgoz7mAmHYqk85AWMSHr1UJwjscnc6JXPOcwThUC5eVHZfZkTCdASyuIUT5kMvCGaHkHx6Bormv0P4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL7JLKXSXDdJJq6GsOvGrUuQUi9zDtFXBSpsegMMylVcKfjiRD
+	QSlq2i+FwAYxCuE7PYTWXTjgowBBS57CwJzT+tGYARpOtKA799hL8Y229o9f+e7X3uumjhzVUel
+	gNGovzKfAJJaWlMVIaPA6bWT4OpIr83BJ0Lxl/ZQFbo1K36Mg88YAUoBdQbJD0GX1VkhTXGK3Z3
+	YdcYuoPHTuS9ugLmTrq8L6UMXxwMS8lrOw+2yuqiLDjoBJDiTb
+X-Gm-Gg: AY/fxX6vmbEAu9jpaOCWhdu1IhrhEMR+d14S9lZVpC6+c6CFWM2KpRbyZRg8czKZ/Gg
+	GdfhHhm7QNnwloGlX61K71JkD0Ez/IhFuvseXgi8PLXXqWeTNbqlk/Sc9iaoid6sAXJQP7bbCpw
+	0xPBiOEX19n4q80lnkQmhkdlsujAGHioRpu+AZcLtsFmsXRgoaMU16ZTE0qvPeDdkRoVpCsKrVN
+	Yfam2inQb8tQgBbXpn51QHA
+X-Received: by 2002:a17:907:2d2b:b0:b77:18a0:3c8b with SMTP id a640c23a62f3a-b8444c4d2bamr194806866b.1.1767787425336;
+        Wed, 07 Jan 2026 04:03:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEc3hhh6pev/A+PbACCMi4+m1wjCgaQ133+hHqE1gnCXiQmaW7gjia4wxOa3u0Bbnghah13U2BNLs8CltmHlkg=
+X-Received: by 2002:a17:907:2d2b:b0:b77:18a0:3c8b with SMTP id
+ a640c23a62f3a-b8444c4d2bamr194804166b.1.1767787424908; Wed, 07 Jan 2026
+ 04:03:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260106133655.249887-1-wander@redhat.com> <20260106133655.249887-8-wander@redhat.com>
+In-Reply-To: <20260106133655.249887-8-wander@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 7 Jan 2026 13:03:32 +0100
+X-Gm-Features: AQt7F2o7jlt0YO3V4XYuBaar_aNRy0h6LrccZdVcN1LsGdXmgJoS71bsNR4IS3c
+Message-ID: <CAP4=nvT2oPtM73nfPkSJZ4612mcAPw1LWbHNrszFBVAmSJOVbw@mail.gmail.com>
+Subject: Re: [PATCH v2 07/18] rtla: Introduce common_restart() helper
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: T6feyGSWTZ9Ey1m-ndR4vfGEEoJKHrwJSHmEInZjhlU_1767787425
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 7 Jan 2026 08:50:09 +0100
-Petr Tesarik <ptesarik@suse.com> wrote:
+=C3=BAt 6. 1. 2026 v 14:42 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+>
+> A few functions duplicate the logic for handling threshold actions.
+> When a threshold is reached, these functions stop the trace, perform
+> actions, and restart the trace if configured to continue.
+>
+> Create a new helper function, common_restart(), to centralize this
+> shared logic and avoid code duplication. This function now handles the
+> threshold actions and restarts the necessary trace instances.
+>
+> Refactor the affected functions main loops to call the new helper.
+> This makes the code cleaner and more maintainable.
+>
 
-> On Tue, 6 Jan 2026 17:04:05 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Tue,  6 Jan 2026 10:10:39 +0100
-> > Petr Tesarik <ptesarik@suse.com> wrote:
-> >   
-> > > Avoid running the wakeup irq_work on an isolated CPU. Since the wakeup can
-> > > run on any CPU, let's pick a housekeeping CPU to do the job.
-> > > 
-> > > This change reduces additional noise when tracing isolated CPUs. For
-> > > example, the following ipi_send_cpu stack trace was captured with
-> > > nohz_full=2 on the isolated CPU:
-> > > 
-> > >           <idle>-0       [002] d.h4.  1255.379293: ipi_send_cpu: cpu=2 callsite=irq_work_queue+0x2d/0x50 callback=rb_wake_up_waiters+0x0/0x80
-> > >           <idle>-0       [002] d.h4.  1255.379329: <stack trace>    
-> > >  => trace_event_raw_event_ipi_send_cpu
-> > >  => __irq_work_queue_local
-> > >  => irq_work_queue
-> > >  => ring_buffer_unlock_commit
-> > >  => trace_buffer_unlock_commit_regs
-> > >  => trace_event_buffer_commit
-> > >  => trace_event_raw_event_x86_irq_vector
-> > >  => __sysvec_apic_timer_interrupt
-> > >  => sysvec_apic_timer_interrupt
-> > >  => asm_sysvec_apic_timer_interrupt
-> > >  => pv_native_safe_halt
-> > >  => default_idle
-> > >  => default_idle_call
-> > >  => do_idle
-> > >  => cpu_startup_entry
-> > >  => start_secondary
-> > >  => common_startup_64      
-> > 
-> > I take it that even with this patch you would still get the above events.
-> > The only difference would be the "cpu=" in the event info will not be the
-> > same as the CPU it executed on, right?  
-> 
-> Yes, this is trace of a similar event after applying the patch:
-> 
->           <idle>-0       [002] d.h4.   313.334367: ipi_send_cpu: cpu=1 callsite=irq_work_queue_on+0x55/0x90 callback=generic_smp_call_function_single_interrupt+0x0/0x20
->           <idle>-0       [002] d.h4.   313.334390: <stack trace>
->  => trace_event_raw_event_ipi_send_cpu
->  => __smp_call_single_queue
->  => irq_work_queue_on
->  => ring_buffer_unlock_commit
->  => trace_buffer_unlock_commit_regs
->  => trace_event_buffer_commit
->  => trace_event_raw_event_x86_irq_vector
->  => __sysvec_apic_timer_interrupt
->  => sysvec_apic_timer_interrupt
->  => asm_sysvec_apic_timer_interrupt
->  => pv_native_safe_halt
->  => default_idle
->  => default_idle_call
->  => do_idle
->  => cpu_startup_entry
->  => start_secondary
->  => common_startup_64  
-> 
-> The callback function in the trace event is different. That's because
-> send_call_function_single_ipi() always uses this value. Maybe it can be
-> improved, and I can look into it, but that's clearly a very separate
-> issue.
+The deduplication idea is good, but I find the name of the helper
+quite confusing. The main function of the helper is not to restart
+tracing, it is to handle a latency threshold overflow - restarting
+tracing is only one of possible effects, and one that is only applied
+when using --on-threshold continue which is not the most common use
+case. Could something like common_handle_stop_tracing() perhaps be
+better?
 
-Erm. It's actually good I had a look. :-(
+> +enum restart_result {
+> +       RESTART_OK,
+> +       RESTART_STOP,
+> +       RESTART_ERROR =3D -1,
+> +};
 
-A helpful comment in irq_work_queue_on() explains that "arch remote IPI
-send/receive backend aren't NMI safe". That's something I wasn't aware
-of, and I'm afraid it's the end of story. The comment is followed by a
-WARN_ON_ONCE(in_nmi()), and I can easily trigger it with "perf top"
-while nmi:nmi_handler is traced.
+Do we really need a separate return value enum just for this one helper?
 
-Please, remove the patch again. I'm sorry.
+Tomas
 
-Petr T
