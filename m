@@ -1,40 +1,41 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAAE369214;
-	Wed,  7 Jan 2026 16:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B5638759C;
+	Wed,  7 Jan 2026 16:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767802761; cv=none; b=cxiVm6EoLYXsUNGrf04y3SpUjFwTREMSU0vVLrR/Xcq8E63CEmEEBvVrhfonFzWw04Dz1Kc/o1Oi8qf0D8orQPUe9l3lCAc1KkONVxo0gxxNiia5Tu7boyNXehjmyNevnfpc2mAcmcMKeBMg+sDUnvHlOoINqgAL61vqYaDv8FI=
+	t=1767803487; cv=none; b=ASC188XvrlANXWltxRi9pagtPu+e6ahfCrJJdNceTLToK4HTNMRsG94SYo4TzTuPBsRirZ+2lz+jaa5AZsFyLaWkQfcf4AWEjPjQQXHIM07d/C/aX/f4Scoi2pV+VnekAxqwCNe5+VOmZMoVvYKAKBXLLIMd77M2qKp4JLnVdSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767802761; c=relaxed/simple;
-	bh=h4g1T8+nTdGRiKEX2zWnm5RgnG79J06XV+19EmwzTxw=;
+	s=arc-20240116; t=1767803487; c=relaxed/simple;
+	bh=J3LAhts01TSTvdTr+QbNJ9nDbiWBGUbfy51kI6fgFl4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lhkgdsh9gbi3kx2G3/xj91rfipU3sO+DJeBcFtXGfJCa/FYNgTeiZ90TW/VyWfanieXQBT3anM9y7sLDj0MUosXxAhPh0yoQqa4uBvZ7jJD4HeZUrb6I1zy0gFkWvFSUKdAjmAmb7iUl+bX34gBmrmcbOUmeO+OTGhezdiI1ePw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 MIME-Version:Content-Type; b=q1godeSV1Wg3FEcPiaEIDGThQiFNkTQ6ajfPPk5oTVrjqSaKwhShMfbLE0KoZXDG2+zQdLNmS7wy9JqskewUNBr2KMrNAMsDMyHMovuK4aHzyiWqOCR/i8rFvxZU7KohlTFoj+NOP3b+rjRqZToWZn0Azknc8PgS01z4Z1gQdJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4E792160476;
-	Wed,  7 Jan 2026 16:19:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 37D5E20018;
-	Wed,  7 Jan 2026 16:19:09 +0000 (UTC)
-Date: Wed, 7 Jan 2026 11:19:35 -0500
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 4319F140446;
+	Wed,  7 Jan 2026 16:31:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id E149B6000C;
+	Wed,  7 Jan 2026 16:31:05 +0000 (UTC)
+Date: Wed, 7 Jan 2026 11:31:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
-Message-ID: <20260107111935.3befc296@gandalf.local.home>
-In-Reply-To: <20260107111709.0d115cd8@gandalf.local.home>
-References: <20260106091039.2012108-1-ptesarik@suse.com>
-	<20260106170405.425f469e@gandalf.local.home>
-	<20260107085009.58fcffd4@mordecai>
-	<20260107105137.4cf9a67e@mordecai>
-	<20260107111709.0d115cd8@gandalf.local.home>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>,
+ Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin
+ <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, "open list:Real-time Linux Analysis (RTLA) tools"
+ <linux-trace-kernel@vger.kernel.org>, "open list:Real-time Linux Analysis
+ (RTLA) tools" <linux-kernel@vger.kernel.org>, "open list:BPF
+ [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+Subject: Re: [PATCH v2 15/18] rtla: Make stop_tracing variable volatile
+Message-ID: <20260107113132.7c05cd53@gandalf.local.home>
+In-Reply-To: <CAAq0SUmW7mUP0iiHMJevR+T6BKHJiFoU4M8sCVjJSRMFnT2J_w@mail.gmail.com>
+References: <20260106133655.249887-1-wander@redhat.com>
+	<20260106133655.249887-16-wander@redhat.com>
+	<20260106110519.40c97efe@gandalf.local.home>
+	<CAAq0SUmW7mUP0iiHMJevR+T6BKHJiFoU4M8sCVjJSRMFnT2J_w@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,42 +45,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: regmgp5xptze837exf5tromfaembwfp4
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 37D5E20018
+X-Stat-Signature: aozjwsgeo4ybe7wxrcmexaez1doo1gue
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: E149B6000C
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19t1uYnw622G91V7nQiZPO3aimEGwqxAoA=
-X-HE-Tag: 1767802749-236976
-X-HE-Meta: U2FsdGVkX18/wIi3/OMgHpXPjGUWt6PrTQOjaOrUDU49HogZnJHHwu/Vm2eb5nYUPuBswgrudCYbFK+vo10c6w2pMHNJK7/+WEwVvkSJLf36+FPI+RKB5AeZs3FpGCNIcOToiqYvHRHb/k7FvXEfvEDrt0NvqhLbvBPL5fFjsbXWDmBQRidwfZBOlSHDVKrA1pJsRzRUp8MEsOTMheAINzSHEBq2dNsj6GomR4KOCjB8KVbaVPcI8+lAbquE3f4FbbNhpGEwykX3OtF5Dg06cxsRGeGWaIingNANJERPMnRvvG++Q/TODzxbQxRTgQS7kPoY4qTrURw3ZSW6Yp+BsVsOPExFFjcH3LJC1NYS8UNcsN8pPOCfRLvzdocTvn7G
+X-Session-ID: U2FsdGVkX1+pjuSXFsl32O24eq1V52N+QslxA4cC3uA=
+X-HE-Tag: 1767803465-756638
+X-HE-Meta: U2FsdGVkX1/BVuZ/pAowZ4akA6E+ncWgKMBm/Se/QyTdD3qBOaBELwKgJ8nOcMyYaU3/goDz9VshtumzbkoHQB72liVFsp+1lnIsgeNzsfj7pgE6wdK+Ndt/biRty6b/xwxtc3yYyzJWusW+UlFL0Q8azM2dX9u7R7vGHpw0ZRMu+qW8EC2L63KJ48k5iKzHBw3XJLq45anhXvutNVCGDdo9F0O5EVFUwEq5M9AO3zMwvcRDGewCqisCDJSsvW7qGX+OwLyEx7cg0DbR/Q9Iv9eKpbm8Z5V0WGtKIBtoDDuMTax/0x3+sr6NR5oyn3JgXvpje+vD3x1VzckdKYfQQuMpwFixltmeAOBC2Z+NyEFCpWKzw7+Rvw==
 
-On Wed, 7 Jan 2026 11:17:09 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 7 Jan 2026 10:24:43 -0300
+Wander Lairson Costa <wander@redhat.com> wrote:
 
-> Or we simply change it to:
+> > In the kernel, this is handled via the READ_ONCE() macro. Perhaps rtla
+> > should implement that too.
+> >  
 > 
-> static inline void
+> I considered that, but, in this use case, I saw no point because it
+> didn't bring any advantage and volatile was simpler.
+> Furthermore, as Crystal pointed out, using volatile for variables
+> shared with signals is a pretty standard practice.
 
-Actually, the above should be noinline, as it's in a slower path, and
-should not be adding logic into the cache of the fast path.
+OK, I've just been broken in by Linus yelling at anyone defining any
+variable as volatile ;-)  I now avoid it at all costs, and only have the
+locations that need to be volatile defined that way.
 
 -- Steve
-
-
-> rb_irq_work_queue(struct rb_irq_work *irq_work)
-> {
-> 	int cpu;
-> 
-> 	/* irq_work_queue_on() is not allowed in NMI context */
-> 	if (in_nmi()) {
-> 		irq_work_queue(&irq_work->work, cpu);
-> 		return;
-> 	}
-> 
-> 	cpu = housekeeping_any_cpu(HK_TYPE_KERNEL_NOISE);
-> 	/*
-> 	 * If CPU isolation is not active, cpu is always the current
-> 	 * CPU, and the following is equivallent to irq_work_queue().
-> 	 */
-> 	irq_work_queue_on(&irq_work->work, cpu);
-> }
-
