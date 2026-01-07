@@ -1,160 +1,79 @@
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C78288C96
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jan 2026 21:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D427602C;
+	Wed,  7 Jan 2026 21:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767819698; cv=none; b=CGieuiJJ+p/ex4R+bcwKAP/YgBb/GOi5wCTFYcrBYTig2LH1jVpjQOJrKHSixIK0eXq8byZ2znHw/MuqWTSqsgFpPPOPkqWed9/3db53uMhFBN/i/EBY5fW8ncn7Hy5vZ80jgqMpoo/x6FASU6+FEKG1fqpGSR4hl2/Z5HBkOwY=
+	t=1767820492; cv=none; b=RvtZ8SqJXV4V5Z1ZIDdB9Hys+wjLsNii+WeFxCwBWTREmVIo315yF83ecJmGj59t7Y1ufjwzPEJ3mt8JTmIVCkmwbukyYEWaDt4Xcqy7rhunK5ASBOWTKZMxKopC+d7ZUb1FPrgefsUnFprJvqo/r7l7DoNy9rbhdGAMtkYro00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767819698; c=relaxed/simple;
-	bh=svbXz6QwZmZZutYCyDA/vwOZpaivfZPm6H0oEcHlEbs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=iE0yN5ZCo+x4GV9E0wl7lNPI4n06O0x2TC02uQPK5wXGzio/2OuK48j22a1K1+8ysuHduZX+m/l8WUle0l7dd3+TMMub9RG8+UbnEC5uut/rJ1thW65R7VRX9EQs5V2KvT0oQg7njpu4s4vdtvTrjfcsK0VCICBjR5c9+kRvcoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-65ed4d39a1bso7828677eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jan 2026 13:01:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767819695; x=1768424495;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vQCqX6kWiG9Ax9dPgEFr63876bw1qGgkAwiAS4CGSg4=;
-        b=iOGKdwNC30ror8KAqjJm17aGtsN9twjXYOhyv2OSJoJlximOiur7SVEk3ps+c/+pJV
-         aGukrSrtHL3LGrfQpKIswl8mYq0p+eoJJ251/fqTOuuvUwaQR3dvucISdR+jsfGWwAy4
-         msQ9AGT51nCbVGBelExikZUKba7PQ0J5tUz8gkWY3e5BBJGIGFvOnpsOJs1GJUK18gP8
-         F2pOw585Kv6kms611/GppGrodLwIt4ZCG56QYc7FOEdAHcDT9Lt/UL3U74bmnKkHK06w
-         b1EY/QClQKs6f0on9h/KGgVvZ+grOmbuuHLrMt1R9a6QlblkC3ROF88LOTaSLQcYBjsC
-         pyxg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7j4TIk/1VBq2wcxv6bi1qbkIQnAMYKTLcoDE9BO3c+2qAQtX6Hk7OT7JRqpy4bcNGQHkdYg1KDztTsvHwYO1Cyp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAiJbIRnnyIF1CNGT2J9rQVM/AFxk+FnjQHJYJDz8JFy+4Nuo9
-	wWtaIcVeTLJSzVHbRoxRdIfYiI+jE6FB1Mp7ahMNp3AuFY8tgpNtusqFJiHsiJ0tssb6/wCOpJR
-	+UleMK78wwcakxTj7lQrBZsUAeCbk8ukqVR4gsYzRIJa8FI/GIsqnrxnewPg=
-X-Google-Smtp-Source: AGHT+IGMOnxovbIoT6GN2XGJGsdfciW2WbfLn2wUP6PWmbKEnbnIGAr5RyinnPH3Tv0EO+NZxg4ZLuFppLl+Fr8/6Ot6Ad7if63e
+	s=arc-20240116; t=1767820492; c=relaxed/simple;
+	bh=/aev3IonLbxxYminO0KvmPzvOxAEBZQtvx2NCi4/kBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=In0kyZ6J6yQdWg3FHTmMmJYds7Sy1bgpbwR6jPE3m2fFroSBSc8pvId5Va+2DmRrLWC6MfJPNhoKcFWnpPIbJX5b09JHyng2oHquknYDzbis8geRjtWZYNvDzlFa0yfgDk1CwvZX7u7nviSVa06K9ksWgvGewOWvEBTeSspvcjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6BC3413B149;
+	Wed,  7 Jan 2026 21:14:45 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id B422560018;
+	Wed,  7 Jan 2026 21:14:43 +0000 (UTC)
+Date: Wed, 7 Jan 2026 16:15:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Li Zhong <floridsleeves@gmail.com>
+Subject: [PATCH] tracing: Check the return value of tracing_update_buffers()
+Message-ID: <20260107161510.4dc98b15@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a4a:d814:0:b0:65d:c79:8b87 with SMTP id
- 006d021491bc7-65f54ed647dmr1322354eaf.5.1767819695373; Wed, 07 Jan 2026
- 13:01:35 -0800 (PST)
-Date: Wed, 07 Jan 2026 13:01:35 -0800
-In-Reply-To: <20260107-helper_proto-v1-0-e387e08271cc@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <695ec9af.050a0220.1c677c.037d.GAE@google.com>
-Subject: [syzbot ci] Re: bpf: Fix memory access flags in helper prototypes
-From: syzbot ci <syzbot+cicac8180258d8bceb@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, dxu@dxuuu.xyz, eddyz87@gmail.com, 
-	edumazet@google.com, electronlsr@gmail.com, ftyghome@gmail.com, 
-	gplhust955@gmail.com, haoluo@google.com, haoran.ni.cs@gmail.com, 
-	horms@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org, 
-	kpsingh@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, 
-	mathieu.desnoyers@efficios.com, mattbobrowski@google.com, mhiramat@kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, yonghong.song@linux.dev
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: B422560018
+X-Stat-Signature: 6pfsua9r9jxzhsxdiouzgxg5anjryjm6
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/f55tTmV1Xy4l+DdhrT5ge3qHpGGva3tk=
+X-HE-Tag: 1767820483-340451
+X-HE-Meta: U2FsdGVkX1/ehJVROlcBb8BLpw8kjhULhxp8Sh2iTNa7TKrb7lZ/7kBurn88m0goR6hptSE9E+lsyGaXcUfJAk1LfN7YIM2M1AaowVLI4KMuitrKq+omwT+IBGDebWeKTONU9MLB2EZKIB1/MEmIrrxQnmQyGqy3o2fHQ2yZa3YEsI7Y60gwifg0nrKN4zGgH7ehGRNa0jTHTij4iYy3NDqykNvO5vR2TrWJBexJCBtbCh7dTUyMR/r8IdT4XoO8vZ4tRyt1qpxwVsTa5tE6WsG9B81Djb1sj4O0ZuMBx2Mwzynb08bije8xUlrKH4QI9WTCeHcvaasIhUFErxASlUgbEVfVXdFAF2J/LeKHp8rPEfOUErszFGKs9TY4jxIpBciZV7U9J/GHGSJqA8p4mk3BLmYsyVpB1nG9YCBNjNQ=
 
-syzbot ci has tested the following series
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[v1] bpf: Fix memory access flags in helper prototypes
-https://lore.kernel.org/all/20260107-helper_proto-v1-0-e387e08271cc@gmail.com
-* [PATCH bpf 1/2] bpf: Fix memory access flags in helper prototypes
-* [PATCH bpf 2/2] bpf: Require ARG_PTR_TO_MEM with memory flag
+In the very unlikely event that tracing_update_buffers() fails in
+trace_printk_init_buffers(), report the failure so that it is known.
 
-and found the following issue:
-WARNING in check_helper_call
+Link: https://lore.kernel.org/all/20220917020353.3836285-1-floridsleeves@gmail.com/
 
-Full report is available here:
-https://ci.syzbot.org/series/020c2fa8-b95d-4273-9bc0-2f82fa714a8e
-
-***
-
-WARNING in check_helper_call
-
-tree:      bpf
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/bpf/bpf.git
-base:      ab86d0bf01f6d0e37fd67761bb62918321b64efc
-arch:      amd64
-compiler:  Debian clang version 21.1.8 (++20251202083448+f68f64eb8130-1~exp1~20251202083504.46), Debian LLD 21.1.8
-config:    https://ci.syzbot.org/builds/9a24b0e7-35e4-4718-b939-3b210b6b5126/config
-C repro:   https://ci.syzbot.org/findings/8fcbdcf8-4480-46d8-b7a8-f1de9401a8ac/c_repro
-syz repro: https://ci.syzbot.org/findings/8fcbdcf8-4480-46d8-b7a8-f1de9401a8ac/syz_repro
-
-------------[ cut here ]------------
-verifier bug: incorrect func proto bpf_tcp_raw_check_syncookie_ipv6#207
-WARNING: kernel/bpf/verifier.c:11546 at check_helper_call+0xc00/0x6e10 kernel/bpf/verifier.c:11546, CPU#0: syz.0.17/5981
-Modules linked in:
-CPU: 0 UID: 0 PID: 5981 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:check_helper_call+0xc16/0x6e10 kernel/bpf/verifier.c:11546
-Code: ef e6 ff 49 bf 00 00 00 00 00 fc ff df 48 8d 1d a0 c2 ea 0d 44 8b 64 24 24 44 89 e7 e8 d3 32 0c 00 48 89 df 48 89 c6 44 89 e2 <67> 48 0f b9 3a 49 81 c6 80 08 00 00 44 89 e7 e8 b6 32 0c 00 4c 89
-RSP: 0018:ffffc90007116fa0 EFLAGS: 00010246
-RAX: ffffffff8b934740 RBX: ffffffff8fc645d0 RCX: dffffc0000000000
-RDX: 00000000000000cf RSI: ffffffff8b934740 RDI: ffffffff8fc645d0
-RBP: ffffc900071171b0 R08: ffff88816b42ba80 R09: 0000000000000002
-R10: 0000000000000004 R11: 0000000000000000 R12: 00000000000000cf
-R13: f8f8f8f8f8f8f8f8 R14: ffff888112440000 R15: dffffc0000000000
-FS:  000055557af7b500(0000) GS:ffff88818e40e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd892207dac CR3: 0000000161682000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- do_check_insn kernel/bpf/verifier.c:20417 [inline]
- do_check+0x99eb/0xec30 kernel/bpf/verifier.c:20598
- do_check_common+0x19cc/0x25b0 kernel/bpf/verifier.c:23882
- do_check_main kernel/bpf/verifier.c:23965 [inline]
- bpf_check+0x5f0d/0x1c4a0 kernel/bpf/verifier.c:25272
- bpf_prog_load+0x1484/0x1ae0 kernel/bpf/syscall.c:3088
- __sys_bpf+0x570/0x920 kernel/bpf/syscall.c:6164
- __do_sys_bpf kernel/bpf/syscall.c:6274 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6272 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6272
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xe2/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd891f9acb9
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffee24b6bb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007fd892205fa0 RCX: 00007fd891f9acb9
-RDX: 0000000000000094 RSI: 0000200000000300 RDI: 0000000000000005
-RBP: 00007fd892008bf7 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fd892205fac R14: 00007fd892205fa0 R15: 00007fd892205fa0
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	ef                   	out    %eax,(%dx)
-   1:	e6 ff                	out    %al,$0xff
-   3:	49 bf 00 00 00 00 00 	movabs $0xdffffc0000000000,%r15
-   a:	fc ff df
-   d:	48 8d 1d a0 c2 ea 0d 	lea    0xdeac2a0(%rip),%rbx        # 0xdeac2b4
-  14:	44 8b 64 24 24       	mov    0x24(%rsp),%r12d
-  19:	44 89 e7             	mov    %r12d,%edi
-  1c:	e8 d3 32 0c 00       	call   0xc32f4
-  21:	48 89 df             	mov    %rbx,%rdi
-  24:	48 89 c6             	mov    %rax,%rsi
-  27:	44 89 e2             	mov    %r12d,%edx
-* 2a:	67 48 0f b9 3a       	ud1    (%edx),%rdi <-- trapping instruction
-  2f:	49 81 c6 80 08 00 00 	add    $0x880,%r14
-  36:	44 89 e7             	mov    %r12d,%edi
-  39:	e8 b6 32 0c 00       	call   0xc32f4
-  3e:	4c                   	rex.WR
-  3f:	89                   	.byte 0x89
-
-
-***
-
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
-
+Suggested-by: Li Zhong <floridsleeves@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
+ kernel/trace/trace.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2d387d56dcd4..1722e01e2238 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3418,9 +3418,10 @@ void trace_printk_init_buffers(void)
+ 	pr_warn("**********************************************************\n");
+ 
+ 	/* Expand the buffers to set size */
+-	tracing_update_buffers(&global_trace);
+-
+-	buffers_allocated = 1;
++	if (tracing_update_buffers(&global_trace) < 0)
++		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
++	else
++		buffers_allocated = 1;
+ 
+ 	/*
+ 	 * trace_printk_init_buffers() can be called by modules.
+-- 
+2.51.0
+
