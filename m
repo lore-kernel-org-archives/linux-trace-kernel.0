@@ -1,99 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFC6500942;
-	Thu,  8 Jan 2026 14:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC35204583;
+	Thu,  8 Jan 2026 16:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767883478; cv=none; b=slc5Z2Ja2iOPZlJdP1+dtLNQVrqcxTZXG+FMZcsDVJBjZEjIsB+z4uqvMOW3slfM2aBdfzHvc/OqLMJLD5f2MrQIWJuT83Iz19T4BR9fgJ+KRNFp1/ewKfBG4ax5y1Iwid7hbNr2VHOrlvWT54TEaV6WZuCJhLULSigbGQxThp0=
+	t=1767888380; cv=none; b=DKEahUzLCK1AbAMTnq71jS+ljR+LHxnIdc3bCxjRJ1mmyq8zHdp1X6tyjL4P6nsqV9SL2nxFlqqabSgWkcrdgf7ZcB0P49EBSZ+Q3o4jDkvDHDCYZ0/bY8DvZvRVV+TP0zycZ/rAfW0XonUzlMTLgLV+Z0ukENW+rmSCUa/Q4Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767883478; c=relaxed/simple;
-	bh=h26F11PgNQuCwDzr9W+5zeXwLBX2W89RHkDerVNEuRA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HVviNAarsDTq2mj116LuqfeRPzSFylKL+dkUycmSaYSLR9h+vgsR/0/iKIG9oRLZslA9vnBJsuEU3skW6w/vrPHRMtZth59z2aYf1RQ1mJ/ZTC+rXz7REIWZsvqDLvlr11mdXlGzFZJqWnS2QNYWIVfOhkCEPgJahtuudvg8Wfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvzYGCVL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvzYGCVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523A6C16AAE;
-	Thu,  8 Jan 2026 14:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767883478;
-	bh=h26F11PgNQuCwDzr9W+5zeXwLBX2W89RHkDerVNEuRA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WvzYGCVL6qBZYieziNGmeADDEedq3FkdAvx+5nPjP4KVLdcLWtmrJVFtIXMT3F/zp
-	 DZVdn9bzfP1PmSpWVkxu3YdSDPEvd7me3vsvL4z+1syOLcInJrA/DEjhSVqRFSLQwf
-	 STWHMmn09QXIvE/Go5FZxNIOzrVzVwEPCeFg2WBcktPCfiC3iMRofAYdVOV5pB4p0F
-	 K9gtntJB+pNVI9ASOuGFrOPJVDo25RJhUwuOnO5m9fFGEd3263KiZ25tis5WSELUgf
-	 GpGePomcW0rpA2qrDPPJNyLralLDKKz4jqaxy7sTY3nI3NUlEimhXNIy5VcvXaJtIq
-	 xxCFzdhOi6+lw==
-Date: Thu, 8 Jan 2026 23:44:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+	s=arc-20240116; t=1767888380; c=relaxed/simple;
+	bh=UJWiJfJXZGYu0syNYpB3ssxGeGhaiTzlfLuo/sDcIWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XqSsZH5XnmuEiX8HZ3Ic8eWq/ON6WfDqtGg87n61pRMvQnEFzWaO7PKoEyDNlPjNn1+GCIKsC9wIqB0LD7nB+/7xfgwUexrtbaWE2SZgS30XWU5hnpjybP4gxe59xU4jUHJ1l0gCoXzhmZR7YBW5ggAQNCj3sTilmfm0nGTLZrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id D2B3156593;
+	Thu,  8 Jan 2026 16:06:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 549DA20010;
+	Thu,  8 Jan 2026 16:06:05 +0000 (UTC)
+Date: Thu, 8 Jan 2026 11:06:33 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Documentation <linux-doc@vger.kernel.org>, Linux Kernel Tracing
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Li Zhong <floridsleeves@gmail.com>
-Subject: Re: [PATCH] tracing: Check the return value of
- tracing_update_buffers()
-Message-Id: <20260108234435.c848eb17889b760f42c435aa@kernel.org>
-In-Reply-To: <20260107161510.4dc98b15@gandalf.local.home>
-References: <20260107161510.4dc98b15@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ Jonathan Corbet <corbet@lwn.net>, Shuai Xue <xueshuai@linux.alibaba.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Swaraj Gaikwad
+ <swarajgaikwad1925@gmail.com>
+Subject: Re: [PATCH 0/2] PCI tracepoint documentation fixes
+Message-ID: <20260108110633.5691a824@gandalf.local.home>
+In-Reply-To: <20260108013956.14351-1-bagasdotme@gmail.com>
+References: <20260108013956.14351-1-bagasdotme@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 549DA20010
+X-Stat-Signature: 1qpgjedwofunocicakofago1ted71wep
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Z3h8SZQXE23IaSbkjBGAD3lRZkv2KrgI=
+X-HE-Tag: 1767888365-269768
+X-HE-Meta: U2FsdGVkX1/EdKc4TQJTyXm6Nj/rEw3xpLXWHwd8FHWDc1stdE9+plpxOF7WhCqGXf3J/nsDwiKz5b6nEvUUof9NKcTtnhoufAjXXfHIdTdxBh8X4z+o4pgxLTDWnjd6zCfwR7fmKMfTDeMD12JdVm/3qf/q8cbBa2YBBBbl5WYTiDqD+h/QLx96dHySLte8qXhz1AS3zVT3ksq9/6xWy/EJ5xb9VGSemG6JwXrQiVBP5a3qR8M3G1AVLytRG/ApPe4aTbcOef4psexNjbe+Vn2CYLZ1djpoZv3OQOJL1ePbjDf19LMO2kVQyzM9EE9d4FnQmFRG028G1QrI9H8ihNMgnaRNJbpOOo7tAs6+5umrTjzKs+2YfkiqH7xP2ybPjfLR6hi8ZkmjxcohfxLcvj3XP9ejxKjSkW4ulpcKgGzCLSNuvvBoPdVBuow7SfF9FlcBYQ/ZAvIsikpVi50oefI8jvSDJmw6ob+i34QyytY=
 
-On Wed, 7 Jan 2026 16:15:10 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu,  8 Jan 2026 08:39:54 +0700
+Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
+> Hi,
 > 
-> In the very unlikely event that tracing_update_buffers() fails in
-> trace_printk_init_buffers(), report the failure so that it is known.
+> Here are two fixes for htmldocs warnings on PCI tracepoint docs as reported in
+> linux-next [1]. The shortlog below should be self-explanatory.
 > 
-> Link: https://lore.kernel.org/all/20220917020353.3836285-1-floridsleeves@gmail.com/
-
-Good catch! Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
+> Enjoy!
 > 
-> Suggested-by: Li Zhong <floridsleeves@gmail.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> [1]: https://lore.kernel.org/linux-next/20260105160000.0368ec8d@canb.auug.org.au/
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 2d387d56dcd4..1722e01e2238 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3418,9 +3418,10 @@ void trace_printk_init_buffers(void)
->  	pr_warn("**********************************************************\n");
->  
->  	/* Expand the buffers to set size */
-> -	tracing_update_buffers(&global_trace);
-> -
-> -	buffers_allocated = 1;
-> +	if (tracing_update_buffers(&global_trace) < 0)
-> +		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
-> +	else
-> +		buffers_allocated = 1;
->  
->  	/*
->  	 * trace_printk_init_buffers() can be called by modules.
-> -- 
-> 2.51.0
+> Bagas Sanjaya (2):
+>   Documentation: tracing: Add toctree entry for PCI tracepoint
+>   Documentation: tracing: Wrap PCI tracepoint examples
+> 
+>  Documentation/trace/events-pci.rst | 4 ++--
+>  Documentation/trace/index.rst      | 1 +
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 > 
 > 
+> base-commit: 29a77b4897f1a0f40209bee929129d4c3f9c7a4b
 
+Fine with me. Jon feel free to take these patches.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
