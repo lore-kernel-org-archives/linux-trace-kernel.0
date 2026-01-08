@@ -1,190 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9716047AF60;
-	Thu,  8 Jan 2026 14:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA0D3EC54B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Jan 2026 14:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767882193; cv=none; b=DgMjvFtak066jXtfCRH8n1Hzil5bANXUkdVZzbCeO680j9v6LavgA469nhAzsUPb/NSSRSgfzUG0NHQCm6f4PJn4joEAmQHL9MxPi5R9S9hLQ8TPohELRU/JH9ZB1wgZ1b2gzxXnc656d/dyeINuECNBEzflpX8gRlL2HcC+ocg=
+	t=1767882766; cv=none; b=BMtIaD1zIx9Sxm+7SwQvqPxP3OIh1srHl6b9EO89jk+oYtFrueurzSOTM68MImmyisn3v8lzjQ6OJxFIcq/Hc7lhA+EtO9VXjdsgM6z9oWpavpYrJoW7Euv3ex/3jCLoGfiqkx0eqXImL3TaM7QVr2UUTPbi2jdzTtmztC35LXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767882193; c=relaxed/simple;
-	bh=J97sQnaVFXB8iaJTRSYhgCw2Ny3W6xvVeT9aZMdEBtw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D32pOK4sFM4rWkecYC5P9kKwDVdCo+/oONiBX1/jxNvoDrxjx01g7YqTGwVGfwbDJIRUc3QXOE3Z46KRqMgeL+a4M1qzmAddRcAQDPT7kV8kpKcK0lylL0obYipsGx+Hp4icJxEV2FwS39GenVd2ZC/j4UGwR+RlnhaTtJr+Prw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkfguMAT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767882766; c=relaxed/simple;
+	bh=dHjIgFqdeoPzZ5z+03xbnogVyQwTr9wuLKUwgnPwV5g=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4RtWaheYG87A6j5xGbU5XaMZ0tcmGekj9HF0/yxzFa9o/eCnQmiVOMA5TJytFnYUFvjEvAehjy4bv4sEq0KfDr2SrLj2+yZTHMN08OfKyjgV+Y2/GzcjfVwj3Wf+JfcrJvAZyPAJcYnaxDAvOE80/mtCYVUyIEvH+5/RV1qcs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3ESvgyB; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkfguMAT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE45C116C6;
-	Thu,  8 Jan 2026 14:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767882193;
-	bh=J97sQnaVFXB8iaJTRSYhgCw2Ny3W6xvVeT9aZMdEBtw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jkfguMATACMHmD69NVs0+tRL9yRT1Iq3Plmj3O22LGGwfSy+eLschTM1FNB9x1KHh
-	 wR8f2xUtsj+Ea41sofwpMotjXNrJNAvvJZkCpHiQOPCGDR3amUVpm+Ek0a7/0nPEgB
-	 C/Zeb4rPpsltQtDmVTux+b3eLjnkJ6EVFednZH9xq2ayrLP4qCsgGeVls/+JK74rLU
-	 HciimZBpmbd1aOsteVmNe5RVFGFZM0ZZ31nya24WVWiiTQpQNOaVJOpTkLC+X5cAx+
-	 o0Tx7nWIaqIhyfmgrU5Fr9794n64ev8+kvDIbR8BWNJW4oSjWyG9lWaqIihD6WCMEL
-	 55fOqO2U87QJw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3ESvgyB"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47775fb6c56so30585785e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Jan 2026 06:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767882763; x=1768487563; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dKsZk5STRUk0X4Pv4cc5SZyi6XswPBivoY5uNi8SKAU=;
+        b=e3ESvgyBt9gQC42atr/ki2jdc8asvgjXgWS7NTslxdIZMC+NBmxPxSwI3k0RKU5SO9
+         /UyneP+AJEY7kAZPrr8Cin3d6ob9M20cbqWCCf1NvimjKDyUV/KuPVJ+89IxyKLVFjED
+         ejkMuPr1PprNWktCdPuA35EKU7tRdtm2G+oXEko3C+ynagQTCJ7kkBkt0yPQHNxhl55l
+         t5zikgTxhmK1Ey+/km+FWTHUMPKAB6G3emEa/YSlV1Mc8c1+h4DJ0w/w1Mqj7Jr/OoRJ
+         gZOciTuVfrCV2gZkV6RK3bYcVRvYsxfoGwLTDqy6YGD288vtNUi6uH7pRR/DyEWBZSp8
+         B0IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767882763; x=1768487563;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dKsZk5STRUk0X4Pv4cc5SZyi6XswPBivoY5uNi8SKAU=;
+        b=M2Z2kjFVwWKX6CJSRETi+/Kl9KHoR74Q3sEyIA+rzkoUJUGdFNPVcg7Tqm6tq1aPf9
+         5z2yz6jplXqpVZ8zXXNHjbgDOnMBKc4ZVWsG3DUkfyR7w12fdlq9oBDmd4qNTdf9W6r+
+         fTkoPFxWo5/IcCbnO2YKDNMD2iJI2avlPbxznmhIcLzRbOfgMrgNFmc0tyUF6PKC+to6
+         /eswBYPDexHesIDML+9mRAz8qUpVQA4Ol3YlXXE75L4kgdKj9yCivcPf2Bl+NllQ01Wv
+         NSPlpj+/DLoiT9liU/xyS65PISNOen9yhnrHnQ5fMNlGNOqMUsCMjSEw0vtZum7qf8CA
+         Xo7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCUzj4PQZ81UTnkyIS/PoS6WRKd1POk8nF7m7mvwgPNs5pe/VoisNFcHditEZix7lfUdEzFnpFECdTuGBO374PQTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZglGuvixdIhzKxnTEMxRiDoR5fPCbRPFJWqKLNdPRfGxBWEEb
+	y/lad/+vBGudbTWdKPSdJrX6kAlGrAAi2+TJFIInmPv7gT59Ta7P7sKx
+X-Gm-Gg: AY/fxX4I/d/gHxYrpp+bFVrsUF/3sKDB4Uln6n15B53QWPute4fxRkOEZaAfEtZJEdp
+	CQvCDzW1K8st7fkvc49T+QpQ0O3WoUHHLUhzTXJroxmTvusetHYz3FY95n3VZzWSXasqdXT+Io8
+	4LXDPA83d9e5bAJF3I5rAXMZD2Xmc7D5Vh9pv8RFWhcuyNYc8dcA9QE5pcJ9C7yPlskz/g2miQz
+	kci69puzSHPTBv7CG7hxR2fuhSqaGbCmZ3TXMbS4+qjn8DpKg31ntH/IY3CvrI+HzvwJamnAwjE
+	ghTzdinFW6KG80IEcOHi9uIIr/7dvS3j8Ovpxo9A5SCCHuCKp3adjbPs1XShBLud1FYJLA+xwj0
+	U521FCi3Yf2vYj44LCdS1BIGcZQqGxlcpPLXIIvrjGiDJCHOcbZYwY3ADv+egbQ1MdwxTk+Hhcg
+	A=
+X-Google-Smtp-Source: AGHT+IGnDsY3fisUw/PeO5pgI1mNCLBNotubRxiPg3jCybSey6S3sceqOXla0zwMBu7+42vl1Y5nvA==
+X-Received: by 2002:a05:600c:4ed1:b0:47d:18b0:bb9a with SMTP id 5b1f17b1804b1-47d84b54031mr77169965e9.33.1767882763275;
+        Thu, 08 Jan 2026 06:32:43 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f41eb3bsm159970735e9.7.2026.01.08.06.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 06:32:42 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 8 Jan 2026 15:32:40 +0100
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] tracing: Add autoremove feature to the backup instance
-Date: Thu,  8 Jan 2026 23:23:10 +0900
-Message-ID:  <176788219069.1398317.13803610975411308454.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
-In-Reply-To:  <176788217131.1398317.11144318616426272901.stgit@mhiramat.tok.corp.google.com>
-References:  <176788217131.1398317.11144318616426272901.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Will Deacon <will@kernel.org>,
+	Mahe Tardy <mahe.tardy@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+Message-ID: <aV_ACGtNHRfheAme@krava>
+References: <20260107093256.54616-1-jolsa@kernel.org>
+ <20260107110352.3fd7ddda@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107110352.3fd7ddda@gandalf.local.home>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Jan 07, 2026 at 11:03:52AM -0500, Steven Rostedt wrote:
+> On Wed,  7 Jan 2026 10:32:55 +0100
+> Jiri Olsa <jolsa@kernel.org> wrote:
+> 
+> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> > index 1621c84f44b3..177c7bbf3b84 100644
+> > --- a/arch/arm64/include/asm/ftrace.h
+> > +++ b/arch/arm64/include/asm/ftrace.h
+> > @@ -157,6 +157,30 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> >  	return regs;
+> >  }
+> >  
+> 
+> See my reply in the other email thread:
+> 
+>   https://lore.kernel.org/all/20260107105316.2b70a308@gandalf.local.home/
 
-Since the backup instance is readonly, after reading all data
-via pipe, no data is left on the instance. Thus it can be
-removed safely after closing all files.
+ah ok, thanks
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace.c |   64 +++++++++++++++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace.h |    6 +++++
- 2 files changed, 69 insertions(+), 1 deletion(-)
+jirka
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1b87595413fe..c0b05a560203 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -590,6 +590,55 @@ void trace_set_ring_buffer_expanded(struct trace_array *tr)
- 	tr->ring_buffer_expanded = true;
- }
- 
-+static int __remove_instance(struct trace_array *tr);
-+
-+static void trace_array_autoremove(struct work_struct *work)
-+{
-+	struct trace_array *tr = container_of(work, struct trace_array, autoremove_work);
-+
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
-+
-+	/*
-+	 * This can be fail if someone gets @tr before starting this
-+	 * function, but in that case, this will be kicked again when
-+	 * putting it. So we don't care the result.
-+	 */
-+	__remove_instance(tr);
-+}
-+
-+static struct workqueue_struct *autoremove_wq;
-+
-+static void trace_array_init_autoremove(struct trace_array *tr)
-+{
-+	INIT_WORK(&tr->autoremove_work, trace_array_autoremove);
-+}
-+
-+static void trace_array_kick_autoremove(struct trace_array *tr)
-+{
-+	if (!work_pending(&tr->autoremove_work) && autoremove_wq)
-+		queue_work(autoremove_wq, &tr->autoremove_work);
-+}
-+
-+static void trace_array_cancel_autoremove(struct trace_array *tr)
-+{
-+	if (work_pending(&tr->autoremove_work))
-+		cancel_work(&tr->autoremove_work);
-+}
-+
-+__init static int trace_array_init_autoremove_wq(void)
-+{
-+	autoremove_wq = alloc_workqueue("tr_autoremove_wq",
-+					WQ_UNBOUND | WQ_HIGHPRI, 0);
-+	if (!autoremove_wq) {
-+		pr_err("Unable to allocate tr_autoremove_wq\n");
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+late_initcall_sync(trace_array_init_autoremove_wq);
-+
- LIST_HEAD(ftrace_trace_arrays);
- 
- int trace_array_get(struct trace_array *this_tr)
-@@ -598,7 +647,7 @@ int trace_array_get(struct trace_array *this_tr)
- 
- 	guard(mutex)(&trace_types_lock);
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr == this_tr) {
-+		if (tr == this_tr && !tr->free_on_close) {
- 			tr->ref++;
- 			return 0;
- 		}
-@@ -611,6 +660,12 @@ static void __trace_array_put(struct trace_array *this_tr)
- {
- 	WARN_ON(!this_tr->ref);
- 	this_tr->ref--;
-+	/*
-+	 * When free_on_close is set, prepare removing the array
-+	 * when the last reference is released.
-+	 */
-+	if (this_tr->ref == 1 && this_tr->free_on_close)
-+		trace_array_kick_autoremove(this_tr);
- }
- 
- /**
-@@ -6225,6 +6280,10 @@ static void update_last_data(struct trace_array *tr)
- 	/* Only if the buffer has previous boot data clear and update it. */
- 	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
- 
-+	/* If this is a backup instance, mark it for autoremove. */
-+	if (tr->flags & TRACE_ARRAY_FL_VMALLOC)
-+		tr->free_on_close = true;
-+
- 	/* Reset the module list and reload them */
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
-@@ -10428,6 +10487,8 @@ trace_array_create_systems(const char *name, const char *systems,
- 	if (ftrace_allocate_ftrace_ops(tr) < 0)
- 		goto out_free_tr;
- 
-+	trace_array_init_autoremove(tr);
-+
- 	ftrace_init_trace_array(tr);
- 
- 	init_trace_flags_index(tr);
-@@ -10576,6 +10637,7 @@ static int __remove_instance(struct trace_array *tr)
- 	if (update_marker_trace(tr, 0))
- 		synchronize_rcu();
- 
-+	trace_array_cancel_autoremove(tr);
- 	tracing_set_nop(tr);
- 	clear_ftrace_function_probes(tr);
- 	event_trace_del_tracer(tr);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 4fae5cf1182c..b6b56e790b13 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -447,6 +447,12 @@ struct trace_array {
- 	 * we do not waste memory on systems that are not using tracing.
- 	 */
- 	bool ring_buffer_expanded;
-+	/*
-+	 * If the ring buffer is a read only backup instance, it will be
-+	 * removed after dumping all data via pipe, because no readable data.
-+	 */
-+	bool free_on_close;
-+	struct work_struct	autoremove_work;
- };
- 
- enum {
-
+> 
+> -- Steve
+> 
+> 
+> > +/*
+> > + * ftrace_partial_regs_update - update the original ftrace_regs from regs
+> > + * @fregs: The ftrace_regs to update from @regs
+> > + * @regs: The partial regs from ftrace_partial_regs() that was updated
+> > + *
+> > + * Some architectures have the partial regs living in the ftrace_regs
+> > + * structure, whereas other architectures need to make a different copy
+> > + * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
+> > + * if the code using @regs updates a field (like the instruction pointer or
+> > + * stack pointer) it may need to propagate that change to the original @fregs
+> > + * it retrieved the partial @regs from. Use this function to guarantee that
+> > + * update happens.
+> > + */
+> > +static __always_inline void
+> > +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> > +{
+> > +	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+> > +
+> > +	if (afregs->pc != regs->pc) {
+> > +		afregs->pc = regs->pc;
+> > +		afregs->regs[0] = regs->regs[0];
+> > +	}
+> > +}
