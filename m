@@ -1,90 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B0430EF92;
-	Thu,  8 Jan 2026 18:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73452DFA31;
+	Thu,  8 Jan 2026 19:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767896848; cv=none; b=q9WzNMvwy6kLFEO72weQRZjsMWvTMmdxgU/Ixt00M77ww0X4UMhF5PmWbPegXKeag8Jg+BYnp6DlW2lHdPQV2kepygdhCl349oIWcpbnwZH1XEGkfkBhIrqdaoWtu7wRusVtMFaV25Pr8bM4fPuUFrKPSJBGhwnLMtT/KFQQmNo=
+	t=1767901704; cv=none; b=HUtcE9eVAeFxVvnb1lJMz+GB7seZMc9fCJ3ajKkSLIM7CSgW6FQbiv9DYclL01MXGrpbJGNwf2nZDDvhGPWEs9uZgKIYSYnsfK2tQ9+lLrStruGd1+yHFKYft7bwKpMyLdwc9K5kmz8C3A6EpqCkhNQ4XWTeNMa7Czy6R092Xcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767896848; c=relaxed/simple;
-	bh=4Vw3X+a+IKioJ+NPJzphxslue2bnilccQe6uqoqbw3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AhiT3EShaFPz6F0boOeFjopRpieujZU7rngygJaR+vc+Fuq3TX1mhybwL/fCkrTFnZwh9UR6EmMQMtI7Fh5p73dB7v0HVet7ZoYqkkQfhqgwbwsF1BC8d8a3ruy1A//9vHoPMdO0IiccUunZaajAxMWzieT8lRRkIJbDM38wRz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iwx/MBab; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iwx/MBab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88B3C116C6;
-	Thu,  8 Jan 2026 18:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767896848;
-	bh=4Vw3X+a+IKioJ+NPJzphxslue2bnilccQe6uqoqbw3o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Iwx/MBabhg9Mn+RsGiViYT+ZtBLk+a0OIAgTpLgDDHowndzS8Ks5rr++DhJ+hwH0Z
-	 hrNA6qp/oQ4uM9w3j7wjJmszJ28L8101AyR46VWdSygNb14gJhNGBTOMGLBLUT9h8I
-	 ORbImCIpzVZ7YEqgk8J+ONeLu26JUgXIP1y5qJZwbIaRWDp9lsm0ZIulZVwSdY67u/
-	 rDse34I/dswNeGsuXAgSojzYyNYEjo6/I5KTBjb9G1qZf3P/N9jDPdFnS6GUuZxQ/B
-	 3rHmnZLd/iaQAI/QRoYQr3LJV17RKT2e4JX0xX8Hwi/RNlnOLXNbLko4CArC6zJJms
-	 bBG44Az3Aoa8w==
-Message-ID: <4513bb41-e493-48bb-bd58-f1cc3ea44e5f@kernel.org>
-Date: Thu, 8 Jan 2026 11:27:26 -0700
+	s=arc-20240116; t=1767901704; c=relaxed/simple;
+	bh=Q9YulQ2Q91+00TxIBVhdbvmj1kOhQK/OChBk5P1N1aA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LMTYSepLYaXH+8oHdCy2wqSISzAC81bb+so0LRltY+inocByLc97z+oWciGVLxnJqINFcz+CPU6K/2+yuGKm0WIXxGP64D6uATMMVIJfNuMfRBLx8kwgQFYlANL4uiJH6Sb+vYMBhv7eLz92gWiZ2hRIc43HyvNX6eSYxE/qqE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 9A7DEB787D;
+	Thu,  8 Jan 2026 19:48:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 61D0018;
+	Thu,  8 Jan 2026 19:48:13 +0000 (UTC)
+Date: Thu, 8 Jan 2026 14:48:42 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuah <shuah@kernel.org>
+Cc: Fushuai Wang <fushuai.wang@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, wangfushuai@baidu.com,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
+Message-ID: <20260108144842.0663008c@gandalf.local.home>
+In-Reply-To: <4513bb41-e493-48bb-bd58-f1cc3ea44e5f@kernel.org>
+References: <20251227041821.75504-1-fushuai.wang@linux.dev>
+	<20260107034914.22315-1-fushuai.wang@linux.dev>
+	<20260107101846.61c182e0@gandalf.local.home>
+	<4513bb41-e493-48bb-bd58-f1cc3ea44e5f@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
-To: Steven Rostedt <rostedt@goodmis.org>,
- Fushuai Wang <fushuai.wang@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, shuah@kernel.org, wangfushuai@baidu.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20251227041821.75504-1-fushuai.wang@linux.dev>
- <20260107034914.22315-1-fushuai.wang@linux.dev>
- <20260107101846.61c182e0@gandalf.local.home>
-Content-Language: en-US
-From: Shuah <shuah@kernel.org>
-In-Reply-To: <20260107101846.61c182e0@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 8syyknp4nyfkdnsmb1h9os9mtbo11osb
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 61D0018
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18DV4NUvQiax3uIETwXgOh8kY8zIPOZULo=
+X-HE-Tag: 1767901693-277265
+X-HE-Meta: U2FsdGVkX18gkmNDHiHN92/lWnSGHjHDwNcghf+Z1KbbBRNkbiJ9HdKgjJIpEwD8LlwfxbIZ9w8ckCIb212GbZcZGsnOKMb5MFsn9c9CgDctwJGhfPgi2uLB4oLQ/fcW4P4AmfJPdWQms1depEGnOkQbiVzkSrALbPFPDXHS2JUocWS2phQ5tCRMzLTaLmT5hJVCO9LBtq3COir9uETEWvzbSET+/IHkPMiOis8xtSc5ECz2HZ6039l2aNKnJHzum0k9+2t1APLjA9W4XSRssG7xWS30PcrxBxF1A3RH89VFilcezjThdTIEeFue5q27tmJVOoC19VURvfnOOh4s1cKW0rjXh4qnldnpcG6ecMCdy25jo/eaEyNn1aym5LHSg0u131BLbASVcpDG718HIrP1/A8KrPJd/D8tdGtyDXIVXYqaqx3DXXd3DkTMWXTm6HmAIGTOOQ0=
 
-On 1/7/26 08:18, Steven Rostedt wrote:
-> On Wed,  7 Jan 2026 11:49:14 +0800
-> Fushuai Wang <fushuai.wang@linux.dev> wrote:
-> 
->>> When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
->>> the test_multiple_writes test will stall and wait for more
->>> input due to insufficient buffer space.
->>>
->>> Check current buffer_size_kb value before the test. If it is
->>> less than 12KB, it temporarily increase the buffer to 12KB,
->>> and restore the original value after the tests are completed.
->>>
->>> Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
->>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
->>> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
->>
->> Gentle ping.
->>
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> Shuah,
-> 
-> Care to take this through your tree? It does fix a bug so it likely should
-> go into the rc releases and not wait for the next merge window.
-> 
+On Thu, 8 Jan 2026 11:27:26 -0700
+Shuah <shuah@kernel.org> wrote:
 
-Yes I can take this through and send this for rc5 or rc6.
-But first the following warning needs fixing before I can
-apply the patch
+> Yes I can take this through and send this for rc5 or rc6.
+> But first the following warning needs fixing before I can
+> apply the patch
+> 
+> WARNING: From:/Signed-off-by: email address mismatch: 'From: Fushuai Wang <fushuai.wang@linux.dev>' != 'Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>'
 
-WARNING: From:/Signed-off-by: email address mismatch: 'From: Fushuai Wang <fushuai.wang@linux.dev>' != 'Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>'
+Hmm, do emails have to match? There's times I used a different SoB than the
+From. The From is different than the SoB. The important part I found was to
+make sure the name is the same. But I didn't think the email address was
+important. And this will become more of an issue, as gmail blocks my
+goodmis.org account, so I send with my kernel.org account when my goodmis
+is the only one I sign off with. Thus this restriction will fail for me on
+my patches.
 
-Fushuai, please send me v3
-
-thanks,
--- Shuah
+-- Steve
