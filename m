@@ -1,242 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A6A3EDABD
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Jan 2026 09:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940932BE7AC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Jan 2026 10:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767865885; cv=none; b=jEmLoDlrrAyAUBKG5CZyVO8pr7IEU4lEDIiUy+RHVqf2esshQeAmgE5lDTgWwtwFj7rWKSet6xhX0MsfSRgjyggqP7GCJh2LvRjUopNMhKHgN/49N2U2xj32E53x1ocLPhPfvzZj6w6w99ysUiMLlTxZwzfHLaPuJbUgQU2jHX0=
+	t=1767869184; cv=none; b=R6AbtKxFsGcpGc1FpvEtRUtdEqc8X5Zbj7n4lnCbDP0Gf1M+XglqhABTVeRFBICKpI4hGUklD88H1H9gSqYP0OJCiueeEBe3F5WN1aHw6NfiETEwo8YPRkd8camj1AuusepwpLt7lYWozZtiOlLPbVNQmnerS0L3RI2rkpE4b+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767865885; c=relaxed/simple;
-	bh=SuLNrz3Wes0/pJvpNloKTunHGX7P3Yn5n5zDeoT2tGM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=fhLsgKwWNxO67nFC3paTBJwUT36QRluYbxbAQS0NwlPsczRAPdzwBMc+B/sPgowF7wc+tHFNiX+Hjy0Mmcmf+zypy/LhH4vHk2C7s8R5yyPp/d37+0xbEvxzEFMxgMHuYajQhe47LrDckDGC2iB6QPC1n/zfK9lkHA2zWJce7ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLR7AUQj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1767869184; c=relaxed/simple;
+	bh=8DMIYjsADq5oGXB/idiFns1XxpaSaoX5Tvu7oL8sKjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IDZXjv1F+DXS6Cn6x4MhoJFEve6/2Ll4zIIVNN5uKUCztoXbqwvRIgoUch1ReFVEHzrUnxvWTSabcsuKtoN7OE9I5MFilOBGhhDUnmL+sbrYAY/Qyg5TI5SVyTPIRm+jxDHw3SMa9D5/w1ATE/RarOfbOtxH/lwy+ts52l0H0B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=fail smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MndPWu5T; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLR7AUQj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767865870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=n/qG/vo5uiZxrmVn+D6q59bRYSUzjsYV+KJyxKKhli0=;
-	b=VLR7AUQjaC1CXMy6+/0RDN+DV2c8/YOSLK/Sm6s12chTFm0mZtqxRYiRZyKQBFIgmDuk8d
-	vPa8hVaKfi0iSmH4VDVKFymUVfLxcA1n6LfiQ3NmhzELlAUGTeFT/9cLCwvgN3rAK4p/ZK
-	uSeYye7RA+3Ay+g4wScMeMVXFvtUzHQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-fvfaiKfSOCe6VUFhf6t7XA-1; Thu, 08 Jan 2026 04:51:09 -0500
-X-MC-Unique: fvfaiKfSOCe6VUFhf6t7XA-1
-X-Mimecast-MFC-AGG-ID: fvfaiKfSOCe6VUFhf6t7XA_1767865868
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-477c49f273fso30515965e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Jan 2026 01:51:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MndPWu5T"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-47797676c62so4116485e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Jan 2026 02:46:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1767869178; x=1768473978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ib649LYcFubip2cWtXdZTA/LYveMY5mkmekbtPClLBw=;
+        b=MndPWu5Tg8v1AnQuFke03obzDHj1T/fA8Ms9Kp/bSOpbQLzPlHB43X36ctRqHuvFvJ
+         W6VVri/d6obEuLhkIitK4OiPLilRsXfc2jKYWX1mQDYOi9d09qwivtLvQcuwqLykF560
+         zywjAQjqZrAb0bJJ2PYCZIPzoznxIivXR/QFMDQ7R94UqL05+CGDwv5ZC0w+76DR1AL7
+         aTp5UY52aRQIe+42yaZbYZeVBS/2nAmCHNZ3ZecoEMM13QM1kvpuWvbfW1B8ra0G+ejU
+         2dJECQXBhG5VIjd1k2Bcu3bRVgZnoe+vx0Gr5UyRFPlL/xEhnuQ3B/n+4nKxl67pOMiZ
+         d4wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767865868; x=1768470668;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n/qG/vo5uiZxrmVn+D6q59bRYSUzjsYV+KJyxKKhli0=;
-        b=fHLKBwfLQnSsXgRUuJ3JpU5X+eFFpoi54uvh4rX7oT9GJgwuv4Eu2SN8mcVyHJ3aqS
-         /P3xcmsh3zaE4XTf5xsmYt6YesByey0yJmrnOc85w2inU8kuVo6zmmr4FLo55Fj16+gT
-         u4xVProrokHaiM9k0UE2ojp6645OBZ3ZnfS6FtKEl8SHKpuuj4rvXlhK7pY5cv1hWf1b
-         xMNHRcMBxUFXKe61ag+FhDjwelXHaJ+DdrbLM35c+yN5IlqyOAbvHJJ1lgIADUGu8DL9
-         ECc9wg8zNegb+H7VO0/O5UkocRxjWY7jsRzleAQ+BMnQnGpiu+m8gLGUXp6zJ/3F3UO+
-         JKkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqaDrowVl4xQF0ChFWRsSGhwcGYuzuh6zTaDI5tiZZ+IWjgqqO3OE5HqsXLYJsPTYfaNOVVW/3BCMdErBhxZ7Z7qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRgFYye+OcjMkMlWFLEVVg7dQXWZ1EQCRooGoBZ6uzbxS67On5
-	DZQ5gj/1dUSAWHxIt/B9NFyns8Jy7rsR1PN8vOV3oYX/eI/JXkq/ahEK0qGQ4VBevLP7aoyroJv
-	g1tEFvGVE9JCb3XmLC9XryvTOYBPe+EIIex+hbaoQxcMpAOEkbiEjUCSATdzaGLpWFtOsrvurXQ
-	==
-X-Gm-Gg: AY/fxX7fJl170Yf3GmAm+/GT82ZPCglHozC7NfyHR9qAjFx7/TbamBD2wTRtIpEU7UT
-	TMj3L+GDHuqZnpAUDJ1I52wWxU8P+nCM7ElNQ2Ka1if1RBW6tqHkZlL9XdSdcSwqj0j0PgIWIeX
-	HUCcLI87qHunGwflu3gZraZDl+bJfpwPxfc/5hrG3ojJuSgzfGfxqz6Kh/uDDSaLSSRC1wNfv7p
-	0pLwAteXuOKMOFjIq9OxmlF6Ydxn+85ZPWfJg+nZMv0Q+sDqVMBhC4ieuO/8tJroCsK1GbyS7D9
-	O+O5RfRrcpUsN8PkLDS+QA+0ezHcpojWaLRd/O6C2RuHbzbiuyW9+rhAnTO5ulZopqQempP85r4
-	N1HkP0tJKlu2g+f/minQrfw==
-X-Received: by 2002:a05:6000:1886:b0:432:a9f0:48c with SMTP id ffacd0b85a97d-432c38d26f6mr7083934f8f.63.1767865868148;
-        Thu, 08 Jan 2026 01:51:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEkqw8qcmUgoA8mC0TH98TFcHP34mNo4yMgAAgBUIPtadXeGFTh50WxGruEp0kESFHrPnWmjw==
-X-Received: by 2002:a05:6000:1886:b0:432:a9f0:48c with SMTP id ffacd0b85a97d-432c38d26f6mr7083902f8f.63.1767865867666;
-        Thu, 08 Jan 2026 01:51:07 -0800 (PST)
-Received: from costa-tp.bos2.lab ([2a00:a041:e23c:600:cadf:120:2b7f:a706])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5df939sm15128268f8f.21.2026.01.08.01.51.06
+        d=1e100.net; s=20230601; t=1767869178; x=1768473978;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ib649LYcFubip2cWtXdZTA/LYveMY5mkmekbtPClLBw=;
+        b=nAxQgH+1FOXspkDyKKsoHuFZcwdsonIyCAs/RvFezO+8AEg5DRF+ia2Dk+jkDD4FW6
+         P5ul3tgjE4MSAn0x3MWX4Ap1VNeBk6vPTbTuRhPr0NGxRC90Dzrmg3LHzMJGJPSltDqo
+         9XjcnJOrBuUSJgWmlb6qAan7tu3+9sDNPW+WVfzSamPfmiz1xiNddTnQ3TMkEEsy16qW
+         nsLSsc/On+f/OqRNfVVcEdgDLJjdhuG81QqhYlX2HN/ysp7Ee4lKKaJ9f7zU0r9NoM3j
+         IxuJDvFtEDMkgWXMcjNUj/mjDkkP7CLUjUONQO+V7P4djzEoOn9Tx0A5flwsyyDCTaQ/
+         fUsw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4Z/pBcm+9En3vbaEgonouan0sjvuXTfSaNXVMog+9h3A4BeH5J2A/r5fhk8thD2jol8lmWW4mPZVFUwfdSPicTSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfy0TwvjjX9n0wL3fG8LXODeKxQLouxjrfwnubYig3OELgzG+u
+	rp8tOc1Cg1gUvqB8MpeOipncDMU5V9VtqdyugiM0G1YZC3fB+IRZWYDiwzvSA3aaPEg=
+X-Gm-Gg: AY/fxX7nd4F69MEMf4if0ueu22BRlZ8DTamALRm9hMLiNxBSWaIoeeRvUhG34lafqju
+	1TiOtycTCKTVeqaR/7Ng31KKW1yaFiu4U6R0Eui15PtjihumH4jMXDg98Hq3gZ27AfbhCV8l95y
+	Tsvsc7BUa6dwWoUqT1oq8HYp9H3ZbGMN4TxT8xgjvrCTSy9wGAYdrI3UToKomG+fPii8n9YxuZB
+	z6WuR40SR+1IBdmw0QX0z1pk3VfE1e6JJ9ULRBF1zci8XF+1MgsTJqnn6BWMHoMJjKyOWFYfzX3
+	AuTq5vemeqY1I/IVZuV32sZe9U4QtSjtufgrlE78Vk2ISkNXeKnBmlcQtKG5rRj1WP7KEdm0bcV
+	S+I2Dc2AUzKnEHjV1VjJtGMR33lVjcPh+hErSvfxvsJ4MZ2pldmwogJQpm5AbyZTomgns0TbTtt
+	/QMmM4tODrI2SJPSJqaGcsSDMmuUlg5pAUBBi522FDii5SMoWxHv6o2P7MJEY+GPNeCvcxA+GuE
+	EYo
+X-Google-Smtp-Source: AGHT+IFJqp1SOAxk3q3pW4y2QgpTbPyTlEjg0+NaiBYrsrzs+VyELuO27rZMwFwlcACfdvU9pFjKyQ==
+X-Received: by 2002:a05:600c:34c5:b0:47d:3ffb:39ed with SMTP id 5b1f17b1804b1-47d84b30104mr42672595e9.4.1767869178019;
+        Thu, 08 Jan 2026 02:46:18 -0800 (PST)
+Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d86637b90sm38000875e9.2.2026.01.08.02.46.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 01:51:07 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] tools/rtla: Generate optstring from long options
-Date: Thu,  8 Jan 2026 11:49:55 +0200
-Message-ID: <20260108095011.2115719-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.52.0
+        Thu, 08 Jan 2026 02:46:17 -0800 (PST)
+Date: Thu, 8 Jan 2026 11:46:15 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
+Message-ID: <20260108114615.02cd0c7c@mordecai>
+In-Reply-To: <20260108093932.252f6bc7@mordecai>
+References: <20260106091039.2012108-1-ptesarik@suse.com>
+	<20260106170405.425f469e@gandalf.local.home>
+	<20260107085009.58fcffd4@mordecai>
+	<20260107105137.4cf9a67e@mordecai>
+	<20260107111709.0d115cd8@gandalf.local.home>
+	<20260107111935.3befc296@gandalf.local.home>
+	<20260108093932.252f6bc7@mordecai>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9jLHOPmRrdHmCJNqtkgudhdqWOpOKXTVoyhNbIENWYw_1767865868
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-getopt_long() processes short and long options independently.
-RTLA, like the majority of applications, uses both short and long
-variants for each logical option.
+On Thu, 8 Jan 2026 09:39:32 +0100
+Petr Tesarik <ptesarik@suse.com> wrote:
 
-Since the val member of struct option holds the letter of the short
-variant, the string of short options can be reconstructed from the
-array of long options.
+> On Wed, 7 Jan 2026 11:19:35 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Wed, 7 Jan 2026 11:17:09 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > > Or we simply change it to:
+> > > 
+> > > static inline void    
+> > 
+> > Actually, the above should be noinline, as it's in a slower path, and
+> > should not be adding logic into the cache of the fast path.  
+> 
+> However, to be honest, I'm surprized this is considered slow path. My
+> use case is to record a few selected trace events with "trace-cmd
+> record", which spends most time polling trace_pipe_raw. Consequently,
+> there is almost always a pending waiter that requires a wakeup.
+> 
+> In short, irq_work_queue() is the hot path for me.
+> 
+> OTOH I don't mind making it noinline, because on recent Intel and AMD
+> systems, a function call (noinline) is often cheaper than an increase
+> in L1 cache footprint (caused by inlining). But I'm confused. I have
+> always thought most people use tracing same way as I do.
+> 
+> > > rb_irq_work_queue(struct rb_irq_work *irq_work)
+> > > {
+> > > 	int cpu;
+> > > 
+> > > 	/* irq_work_queue_on() is not allowed in NMI context */
+> > > 	if (in_nmi()) {
+> > > 		irq_work_queue(&irq_work->work, cpu);
+> > > 		return;
+> > > 	}  
+> 
+> Thanks for the idea. There are some downsides. IIUC there is no
+> fundamental reason IPIs to other CPUs cannot be sent from NMI context.
+> It's just a limitation of the current Linux kernel code. As such, it
+> may be lifted in the future, and at that point nobody will remember to
+> remove this condition.
+> 
+> My current plan is it to keep the patch on hold and have a look why IPI
+> backends are not NMI-safe. In fact, I'm not even 100% sure the comment
+> is correct. The issue may have fixed itself e.g. by removing the last
+> affected architecture. ;-)
 
-Add getopt_auto() to generate optstring from an array of long options,
-eliminating the need to maintain separate short option strings.
+This turned to be an interesting digression. Since we still support
+old xAPIC (not x2APIC) systems, there is a reason in hardware. The xAPIC
+ICR is programmed by writing to two 32-bit registers. If an NMI occurs
+between those two writes, we'd have to restore the upper 32 bits of
+ICR. Alternatively, we could queue the request if ICR write is in
+progress and flush the queue after finishing the write to the ICR (out
+of NMI context). The code could even be arch-independent...
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/common.c        | 32 +++++++++++++++++++++++++-
- tools/tracing/rtla/src/common.h        |  2 ++
- tools/tracing/rtla/src/osnoise_hist.c  |  3 +--
- tools/tracing/rtla/src/osnoise_top.c   |  3 +--
- tools/tracing/rtla/src/timerlat_hist.c |  3 +--
- tools/tracing/rtla/src/timerlat_top.c  |  3 +--
- 6 files changed, 37 insertions(+), 9 deletions(-)
+However, it's not worth the effort just for this one corner case.
+Besides, it seems that other people have always been aware that
+irq_work_queue_on() is NMI-unsafe, so in case the future brings a
+better reason to make it NMI-safe, there's a fair chance that all
+the extra code in rb_irq_work_queue() gets reviewed.
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index ceff76a62a30..f310b0d59ad3 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -39,6 +39,36 @@ static void set_signals(struct common_params *params)
- 	}
- }
- 
-+/*
-+ * getopt_auto - auto-generates optstring from long_options
-+ */
-+int getopt_auto(int argc, char **argv, const struct option *long_opts)
-+{
-+	char opts[256];
-+	int n = 0;
-+
-+	for (int i = 0; long_opts[i].name; i++) {
-+		if (long_opts[i].val < 32 || long_opts[i].val > 127)
-+			continue;
-+
-+		if (n + 4 >= sizeof(opts))
-+			fatal("optstring buffer overflow");
-+
-+		opts[n++] = long_opts[i].val;
-+
-+		if (long_opts[i].has_arg == required_argument)
-+			opts[n++] = ':';
-+		else if (long_opts[i].has_arg == optional_argument) {
-+			opts[n++] = ':';
-+			opts[n++] = ':';
-+		}
-+	}
-+
-+	opts[n] = '\0';
-+
-+	return getopt_long(argc, argv, opts, long_opts, NULL);
-+}
-+
- /*
-  * common_parse_options - parse common command line options
-  *
-@@ -69,7 +99,7 @@ int common_parse_options(int argc, char **argv, struct common_params *common)
- 	};
- 
- 	opterr = 0;
--	c = getopt_long(argc, argv, "c:C::Dd:e:H:P:", long_options, NULL);
-+	c = getopt_auto(argc, argv, long_options);
- 	opterr = 1;
- 
- 	switch (c) {
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 7602c5593ef5..d4b3715700be 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #pragma once
- 
-+#include <getopt.h>
- #include "actions.h"
- #include "timerlat_u.h"
- #include "trace.h"
-@@ -156,6 +157,7 @@ int osnoise_set_stop_us(struct osnoise_context *context, long long stop_us);
- int osnoise_set_stop_total_us(struct osnoise_context *context,
- 			      long long stop_total_us);
- 
-+int getopt_auto(int argc, char **argv, const struct option *long_opts);
- int common_parse_options(int argc, char **argv, struct common_params *common);
- int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
- int top_main_loop(struct osnoise_tool *tool);
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 9d70ea34807f..5c863e7aad28 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -506,8 +506,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hp:r:s:S:t::T:01234:5:6:7:",
--				 long_options, NULL);
-+		c = getopt_auto(argc, argv, long_options);
- 
- 		/* detect the end of the options. */
- 		if (c == -1)
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index d54d47947fb4..b7aed40fd216 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -358,8 +358,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hp:qr:s:S:t::T:0:1:2:3:",
--				 long_options, NULL);
-+		c = getopt_auto(argc, argv, long_options);
- 
- 		/* Detect the end of the options. */
- 		if (c == -1)
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 4e8c38a61197..096de8ba3efb 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -825,8 +825,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:b:E:hi:knp:s:t::T:uU0123456:7:8:9\1\2:\3:",
--				 long_options, NULL);
-+		c = getopt_auto(argc, argv, long_options);
- 
- 		/* detect the end of the options. */
- 		if (c == -1)
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 284b74773c2b..27c14aa71a8b 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -588,8 +588,7 @@ static struct common_params
- 		if (common_parse_options(argc, argv, &params->common))
- 			continue;
- 
--		c = getopt_long(argc, argv, "a:hi:knp:qs:t::T:uU0:1:2:345:6:7:",
--				 long_options, NULL);
-+		c = getopt_auto(argc, argv, long_options);
- 
- 		/* detect the end of the options. */
- 		if (c == -1)
--- 
-2.52.0
-
+Petr T
