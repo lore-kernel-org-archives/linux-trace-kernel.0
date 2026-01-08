@@ -1,81 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A061B4223;
-	Thu,  8 Jan 2026 22:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8EF32C94A;
+	Thu,  8 Jan 2026 22:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767911399; cv=none; b=WDOvOZtn0NbqNPWzBmTD5HecUhO3nETild6CRkIUWcvfFG35WVqh775BdIlKcIG35T3ZnMDsF0Jj2j913gRtVS/TJpCrkgkKgXKLD8DTfqQQxetbCP5agEBs5d011HbplWINtNeH4Wi1OCo38NJlf0oxnJILRJzroopGBfruGWk=
+	t=1767912240; cv=none; b=YLMkW5GvYxhwrTaZ4sJrOid5sHmz/G+/8XxhBE/bWjXAz3QwcpyAP2DzsdpKyOiu5KPsNcn9Ha4fpjfOEPLnV5D0h9Of4AVkypgFNdL8M2IORChG6sWInqYoyLMZ5lC4TRn6I64fPg2zIugkQ7R6oACs/ixzVyJo+1cLYZmzjMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767911399; c=relaxed/simple;
-	bh=Zc539l3fQP67RQ3PA4+JN/sDBZn6/BFbAN/DKJlIfMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aOYGlvxpw1zuHwmLNm6VossFjg+NMR+eru6bbv5iPM/9azhfQVgSQh4UEsC5w4Dr1i22WFTA8x9ddokushBvuXuLGjIGEEhR12832wIfL3JP1o1ViszWrFTztDwl3q5jCc9+3vrlIZNnb6yzKmEvOvYbV9c3ta2ufT3328zgSd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWhbO4To; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767912240; c=relaxed/simple;
+	bh=HeiWW3fNlr5ujb8IgDiStM3Ms65aD7jakELXskU6xK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bM5LxoErfNcwD9IBhLlGdP1h8JXfDfpwlMlKqvTAByrVPHK9IA56wRaRg0Z0MjYqDWDLtolRcNHbrhR0JXHhXflWcBFN+5eWzBK+SCWA0tpmp66Jg9408A/RJzRBN7HjC3l6WODYmCrTsnZ3tLPvQctDhWliLRQBXblbIsIzr3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LqpuITZW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWhbO4To"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B069C116C6;
-	Thu,  8 Jan 2026 22:29:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LqpuITZW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D1BC116C6;
+	Thu,  8 Jan 2026 22:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767911398;
-	bh=Zc539l3fQP67RQ3PA4+JN/sDBZn6/BFbAN/DKJlIfMA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NWhbO4Tojnk5cH5lfB6+pIVBs8X9zuvtraEkr/0Mxtw7iDgLp/WW9Q+0QewXqlD/f
-	 zE1XfXHgWzrqcVG8P6VkWYMLKgIP82SsKLKyvl0VVfUemMrXtQTHW0/dWmX0rh7Ts1
-	 6yOU90ivoSgw2xEhLwpTh0g3tawlLjNWerZGcQqCqlfBa7/MkvSgP5LSxgx4gs/75o
-	 vwsPS1ek9S4Fvd4wI3rn+Erw0no46eFmnfpwMG1+ouRAk73TiM2Sj1VhV/u407ne4c
-	 f4UJJ4qbi3YhgtQDn2CHLXwQ7/SzoJ6mQe3rmOszoWudR1CyNl+EKADxi/IEKFXQm0
-	 Mpbd/4Esxk3dw==
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Laura Abbott <labbott@redhat.com>,
-	Breno Leitao <leitao@debian.org>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	kernel-team@meta.com,
-	puranjay@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
-Date: Thu,  8 Jan 2026 22:29:46 +0000
-Message-ID: <176790876272.654154.10766231430439106278.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
-References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
+	s=k20201202; t=1767912240;
+	bh=HeiWW3fNlr5ujb8IgDiStM3Ms65aD7jakELXskU6xK4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LqpuITZWM9lWRq1c9kWhm8TkFxYVbKpRrRPMVsIWRsFhbdiqh26MY4X94h8a10t0T
+	 jjAk6kSFjk4EPtWeVkrn/OREvTsBrVCuO7OoZ9/pDRr272I7qW0QOb0vvlDzp6klOT
+	 p5mhelH4dFATQ++KOVfkU0SvCxYk0xpmkHrs6bKyqif4eAbBKgt6IltkKlDDHJezN2
+	 S6C+1tNN6FIOKTajxVG2HYkmrSXVTktsTECuIYGDIgXex/8l4QrFuL8CZeGg7vA26c
+	 maKrQEZH2GgRwCCFYxyPeeAAKfX7C32EwL/tAvKfR5z3/tUZDmFIxKBqiOIUiNTON7
+	 n6cuxZ64TEjpg==
+Date: Thu, 8 Jan 2026 17:44:29 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Miaoqian Lin <linmq006@gmail.com>
+Subject: [PATCH] tracing: Remove redundant call to
+ event_trigger_reset_filter() in event_hist_trigger_parse()
+Message-ID: <20260108174429.2d9ca51f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 06 Jan 2026 02:16:35 -0800, Breno Leitao wrote:
-> The arm64 kernel doesn't boot with annotated branches
-> (PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
-> 
-> Bisecting it, I found that disabling branch profiling in arch/arm64/mm
-> solved the problem. Narrowing down a bit further, I found that
-> physaddr.c is the file that needs to have branch profiling disabled to
-> get the machine to boot.
-> 
-> [...]
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Applied to arm64 (for-next/misc), thanks!
+With the change to replace kfree() with trigger_data_free(), which starts
+out doing the exact same thing as event_trigger_reset_filter(), there's no
+reason to call event_trigger_reset_filter() before calling
+trigger_data_free(). Remove the call to it.
 
-[1/1] arm64: Disable branch profiling for all arm64 code
-      https://git.kernel.org/arm64/c/f22c81bebf8b
+Link: https://lore.kernel.org/linux-trace-kernel/20251211204520.0f3ba6d1@fedora/
 
-Cheers,
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index f9886fff7123..4a7f945e368d 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6898,8 +6898,6 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+  out_unreg:
+ 	event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+  out_free:
+-	event_trigger_reset_filter(cmd_ops, trigger_data);
+-
+ 	remove_hist_vars(hist_data);
+ 
+ 	trigger_data_free(trigger_data);
 -- 
-Will
+2.51.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
