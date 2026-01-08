@@ -1,92 +1,81 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C60329C53;
-	Thu,  8 Jan 2026 21:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A061B4223;
+	Thu,  8 Jan 2026 22:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767909143; cv=none; b=htavYNuzuVk2k6/mH+znrUIMnuvNupt4ARLE1ifenFjAxhsyOQLMdpD/W2JVOEffQwBZva+Kh4TAPeLQ/UeY0BoGFP+m3VQMFsanwT2zJoUC6Gbcx+KHaJ56czDj/cZYm35dw8tmHGS0OwHOUTUfENh9c+XpnxJJMls6oHg/OX4=
+	t=1767911399; cv=none; b=WDOvOZtn0NbqNPWzBmTD5HecUhO3nETild6CRkIUWcvfFG35WVqh775BdIlKcIG35T3ZnMDsF0Jj2j913gRtVS/TJpCrkgkKgXKLD8DTfqQQxetbCP5agEBs5d011HbplWINtNeH4Wi1OCo38NJlf0oxnJILRJzroopGBfruGWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767909143; c=relaxed/simple;
-	bh=A/nBz3mdkKl+I6E9bussskCC3dzJs5B84blrFw9lSTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sk89IPbavO+a+y0NRoYfXf4HqJqx+liozg1X6uPkxAlsIssDqb7LphUGQWXlz/TsxQEZ8d3uBoOPfx9VLA9zxHwONEjYb7cvqoPFCyi2xCmQSYWOmUFwsxBzmqac/4PhrBQHUh0L0wmn/a8E/YMAlL1zca5C0gzmXrC2N1cAab4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id ECB961A9FCC;
-	Thu,  8 Jan 2026 21:52:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id C7BD430;
-	Thu,  8 Jan 2026 21:52:17 +0000 (UTC)
-Date: Thu, 8 Jan 2026 16:52:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Shuah <shuah@kernel.org>, Fushuai Wang <fushuai.wang@linux.dev>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, wangfushuai@baidu.com
-Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
-Message-ID: <20260108165247.3ae2f21a@gandalf.local.home>
-In-Reply-To: <3d31087c-ce86-4ce2-9b70-f955720a7311@linuxfoundation.org>
-References: <20251227041821.75504-1-fushuai.wang@linux.dev>
-	<20260107034914.22315-1-fushuai.wang@linux.dev>
-	<20260107101846.61c182e0@gandalf.local.home>
-	<4513bb41-e493-48bb-bd58-f1cc3ea44e5f@kernel.org>
-	<20260108144842.0663008c@gandalf.local.home>
-	<3d31087c-ce86-4ce2-9b70-f955720a7311@linuxfoundation.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1767911399; c=relaxed/simple;
+	bh=Zc539l3fQP67RQ3PA4+JN/sDBZn6/BFbAN/DKJlIfMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aOYGlvxpw1zuHwmLNm6VossFjg+NMR+eru6bbv5iPM/9azhfQVgSQh4UEsC5w4Dr1i22WFTA8x9ddokushBvuXuLGjIGEEhR12832wIfL3JP1o1ViszWrFTztDwl3q5jCc9+3vrlIZNnb6yzKmEvOvYbV9c3ta2ufT3328zgSd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWhbO4To; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWhbO4To"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B069C116C6;
+	Thu,  8 Jan 2026 22:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767911398;
+	bh=Zc539l3fQP67RQ3PA4+JN/sDBZn6/BFbAN/DKJlIfMA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NWhbO4Tojnk5cH5lfB6+pIVBs8X9zuvtraEkr/0Mxtw7iDgLp/WW9Q+0QewXqlD/f
+	 zE1XfXHgWzrqcVG8P6VkWYMLKgIP82SsKLKyvl0VVfUemMrXtQTHW0/dWmX0rh7Ts1
+	 6yOU90ivoSgw2xEhLwpTh0g3tawlLjNWerZGcQqCqlfBa7/MkvSgP5LSxgx4gs/75o
+	 vwsPS1ek9S4Fvd4wI3rn+Erw0no46eFmnfpwMG1+ouRAk73TiM2Sj1VhV/u407ne4c
+	 f4UJJ4qbi3YhgtQDn2CHLXwQ7/SzoJ6mQe3rmOszoWudR1CyNl+EKADxi/IEKFXQm0
+	 Mpbd/4Esxk3dw==
+From: Will Deacon <will@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Laura Abbott <labbott@redhat.com>,
+	Breno Leitao <leitao@debian.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	kernel-team@meta.com,
+	puranjay@kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: Disable branch profiling for all arm64 code
+Date: Thu,  8 Jan 2026 22:29:46 +0000
+Message-ID: <176790876272.654154.10766231430439106278.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
+References: <20260106-annotated-v2-1-fb7600ebd47f@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: kjx3cohqubfb6rifk7rbmhrm4dswd6qh
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: C7BD430
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Qt+0mfqD+t5hW4heq/NHhl+KWsN/a118=
-X-HE-Tag: 1767909137-851556
-X-HE-Meta: U2FsdGVkX1+tTQoM2Vp9myGt4uf/Dvt6WWWb+mwsHTTAPy65SzDlUNFdWHqx2mdMohRRrenuE4uj5t4G9G7nlYzWMOxUk/WH7XIjsy0MmF085WRBkZoSpuAM8wGoN+kHdhA22+hjXTDZ3YEb2bMwLjMxnkgZVLxDZSiPMVSMPfBdbxtDjHR5XLujprfqpX5df9h+siVfrTsZ3fehThkW82PuAVViLo+vX8MSXKg+hJAT4fJBhvmPrmR9M+PR2U1sv1edGJKJtwhpY3076jKu1ZzlaF2r1Qphv3497XDpjy9lg26TLi/bKvKRB4aILbt+tFnB9AeNQpAoQfSlfFUxE2V4Oxr4NjHQHthTE+y57P5S3W5a529Ew8Kdbp4K2vvAk11sanln6ZZFG4Juea+24cDwAIo6wzUwooyginEXszXn5nbryq0FLQRV2SSxg0SC5UgOPyEu8pcHnomMBscbm83xbJHfgoxOHT+Qf1EKC2w=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 8 Jan 2026 14:03:31 -0700
-Shuah Khan <skhan@linuxfoundation.org> wrote:
-
-> On 1/8/26 12:48, Steven Rostedt wrote:
-> > On Thu, 8 Jan 2026 11:27:26 -0700
-> > Shuah <shuah@kernel.org> wrote:
-> >   
-> >> Yes I can take this through and send this for rc5 or rc6.
-> >> But first the following warning needs fixing before I can
-> >> apply the patch
-> >>
-> >> WARNING: From:/Signed-off-by: email address mismatch: 'From: Fushuai Wang <fushuai.wang@linux.dev>' != 'Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>'  
-> > 
-> > Hmm, do emails have to match? There's times I used a different SoB than the
-> > From. The From is different than the SoB. The important part I found was to
-> > make sure the name is the same. But I didn't think the email address was
-> > important. And this will become more of an issue, as gmail blocks my
-> > goodmis.org account, so I send with my kernel.org account when my goodmis
-> > is the only one I sign off with. Thus this restriction will fail for me on
-> > my patches.  
+On Tue, 06 Jan 2026 02:16:35 -0800, Breno Leitao wrote:
+> The arm64 kernel doesn't boot with annotated branches
+> (PROFILE_ANNOTATED_BRANCHES) enabled and CONFIG_DEBUG_VIRTUAL together.
 > 
-> I go by the warning - I don't take patches unless From address
-> matches the SoB.
+> Bisecting it, I found that disabling branch profiling in arch/arm64/mm
+> solved the problem. Narrowing down a bit further, I found that
+> physaddr.c is the file that needs to have branch profiling disabled to
+> get the machine to boot.
+> 
+> [...]
 
-I guess my patches would then fail your requirements ;-)
+Applied to arm64 (for-next/misc), thanks!
 
-Anyway, Fushuai, you can add to the top of your commit:
+[1/1] arm64: Disable branch profiling for all arm64 code
+      https://git.kernel.org/arm64/c/f22c81bebf8b
 
-From: Fushuai Wang <wangfushuai@baidu.com>
+Cheers,
+-- 
+Will
 
-and that will make the From and SoB match without having to change your
-mail client. I usually have that. Because Linus doesn't like my patches
-having my company name in it for the "author" but I have it in the SoB to
-give credit to the one paying me to do the work.
-
--- Steve
-
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
