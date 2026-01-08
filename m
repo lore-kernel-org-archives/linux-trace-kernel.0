@@ -1,101 +1,76 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C4C143C61;
-	Thu,  8 Jan 2026 04:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F383002CF;
+	Thu,  8 Jan 2026 05:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767846613; cv=none; b=F1Qx11/vLSPhNwinrM05k/P5tw4rtpLjCT3FpgWL8/ryiUF2TTUbuEIEU1GlGrfsPKM18eEjqELFqXxCLF1hziuANGGjcul5dy1uFK18Gwk53ITlbAnVNOJE9K0IfYAiD5/VsYWhyTjhPLK44Gtuj/WqSOJJjki+FP7bi4NF/Sc=
+	t=1767850204; cv=none; b=AuITwQBVdIk+Dd0XrEZd/3oaTrr+mTH5fMHWwSEeh19/ooeHjC2DD41udvBrDqrkELwM6/7/mFSGdPyOl2ze+GmvLUaWI0g+uyZApfdO2kX837hcmXYml1Fd9fMG7CQSapgZPmBtrL8LJ5WPfnvtLBCvnRDn3NGd86FNNInmWzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767846613; c=relaxed/simple;
-	bh=gvRAqHbuqKKRtFvO+f1PJjVO/NnS+jLGecjdReyCo6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0GB2p0SBQgNYfIwCW/ZsroX4SaQPbKUmSQ+MBU2C2E2FpdnYPisyTBxmJba3T6MpDCh5oyS7vbSYLdg26NOYcQ1RUilhW0NE6HHegSvU3aBzdeRk3TH9Scw2sixPzTQfAxkp4AybMI3xw+UsaFIRSwMphRnRDxhmB39HtYdLb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g4ufmmph; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1767850204; c=relaxed/simple;
+	bh=Q4mxnyg+sI5KPbe0gC+yq+6wPRUv6KpgFrv3+Rl9MVg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=W+6yAQA0ntX2BvpUE+Mcuqdp3hqeyq3AYk1n0KdvOrA7GL4JCqK5Fg/tr8SbRlUYx60IdgebBCz6DjztxaN9n0BDh658LW6fmvj0rAaQ7kU1U15fljB8Ow9vQr1fLOiZBsZgBetMCrk3oRM5ymqVDtuuxsinHaDwvXPughJmNMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLbYFnMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g4ufmmph"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=rILTvcfFCzMBvDAydZNMKJHZ64tLxPLyYof9q+dNOEk=; b=g4ufmmpht7nKKUq7R2AEokCLj5
-	3CUzvn8vhj5sYhPl8p3yburK2t/5+1iV25wlCGCibDkk8fQWLTYeGpRzETQ+tXpoqEWJBgObqbh0U
-	nc+YoO8NPcFGPNJ++ks5g/dcZeCMC53aYj9zaGwqsFhrxD9egWharhn28y+4Q15HQCjPrsihHoxoX
-	oCUWvXDcAy6YxPKnDqoSj9E8GJlXb4Xx7BBvLU0dv8RfsJapy8K7tl2rSbi4V9ojPBSnzuSSd4uG8
-	pYF4mAuhnc6TmmiLPAftV4uzNco+1EWceXheYCJyNyJODHBAmY3Q2D64imSI0ZGjnXiKpMGJhHYj8
-	NU5KISQg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdhf0-0000000Fuc2-0TRu;
-	Thu, 08 Jan 2026 04:30:10 +0000
-Message-ID: <3a771987-d2fc-481c-892f-92c61819d282@infradead.org>
-Date: Wed, 7 Jan 2026 20:30:09 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLbYFnMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712CBC116C6;
+	Thu,  8 Jan 2026 05:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767850204;
+	bh=Q4mxnyg+sI5KPbe0gC+yq+6wPRUv6KpgFrv3+Rl9MVg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jLbYFnMo7LAZ+HH6va4GpA9FSadz5rEMrvON8YdTSHPB1OLRixIqeC5GxJsvyrcTE
+	 8MEF4kqayOewIQ4BH+9+n5o3I3Jmw2uobAwXRQqothUSJ9A3CWuzMsATVZ/yTx349C
+	 Udlf84D1rHYfRegVvU87tCTZLg1Td/pxrc3qrpZhv07CzeswJWSH7Jo2o/+eDpY2EC
+	 xu1563KgW9fGejGYI88N3BTfQNib1KAPnI8F29U4SXmSl7GH5xj/2moqOOxgxHCzss
+	 MdGZ8IPqKUNVvltshCsANLHaGlhga6cV/xZ6XoHE7j4T/nqaxn38zv6rGpzq4iS9Az
+	 P9pEMdzGAVY4g==
+Date: Thu, 8 Jan 2026 14:30:01 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: Make the backup instance readonly
+Message-Id: <20260108143001.95237e93acda8c03e617b116@kernel.org>
+In-Reply-To: <20260107220542.0128abf1@fedora>
+References: <176779714767.4193242.1978666866487010024.stgit@mhiramat.tok.corp.google.com>
+	<176779715937.4193242.8486149802702305279.stgit@mhiramat.tok.corp.google.com>
+	<20260107114133.7f14dac2@gandalf.local.home>
+	<20260108115125.b832464d94ebcfd0ea3b5af4@kernel.org>
+	<20260107220542.0128abf1@fedora>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Documentation: tracing: Add toctree entry for PCI
- tracepoint
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Swaraj Gaikwad <swarajgaikwad1925@gmail.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20260108013956.14351-1-bagasdotme@gmail.com>
- <20260108013956.14351-2-bagasdotme@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260108013956.14351-2-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 7 Jan 2026 22:05:42 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 1/7/26 5:39 PM, Bagas Sanjaya wrote:
-> Sphinx reports missing toctree entry htmldocs warning:
+> On Thu, 8 Jan 2026 11:51:25 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Documentation/trace/events-pci.rst: WARNING: document isn't included in any toctree [toc.not_included]
+> > > We may need to make sure they can't be changed to write as well. But that
+> > > will require a change to tracefs (and eventfs).  
+> > 
+> > Ah, you mean the permission check is not correctly done in tracefs/eventfs yet?
 > 
-> Fix it by adding the entry for PCI tracepoint documentation.
+> Actually, i think we could use a different fops for read only instances
+> that do not have a write callback. And for eventfs we could have it for
+> read only instances to only create the id and format files.
+
+Ah, OK. Let me update it.
+
+Thanks,
+
 > 
-> Fixes: d0eb853678a21b ("Documentation: tracing: Add PCI tracepoint documentation")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20260105160000.0368ec8d@canb.auug.org.au/
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> -- Steve
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  Documentation/trace/index.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-> index b4a429dc4f7ad6..0a40bfabcf19bf 100644
-> --- a/Documentation/trace/index.rst
-> +++ b/Documentation/trace/index.rst
-> @@ -54,6 +54,7 @@ applications.
->     events-power
->     events-nmi
->     events-msr
-> +   events-pci
->     boottime-trace
->     histogram
->     histogram-design
 
 -- 
-~Randy
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
