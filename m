@@ -1,91 +1,67 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6302D063E
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 19:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19F61A285;
+	Fri,  9 Jan 2026 19:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767986414; cv=none; b=d1ZHyVAMQunqDp8BlcSFjtA628E/w8msWI42GDwaXLMGNWxj9B3qnQe3YJhFhyzbvjwyYfhjZLyW+cc7rJoRPJ8Gi+x+tOKCQQqI/XWaO09TJTMtmQYIIO+mDlHT1KUZ6zub0c1fj5/ge/AbmRKuYGDcgz1rNHAxlr7e1BSdyD0=
+	t=1767986853; cv=none; b=KY+DTrL+V873JaWmGAlPSc9rvJ7bSo+L75vK6i2Rwf/82oH5OEM2s80z3/0NyNdHRRFpE/0kXgFCE05G9h3jWQqEu5ZIz3l/1CVlHJcg1DFbcPsy2KHvkkwitU1mX7cis7/yf8Vu2//2bXf8KJotoS9GFmWHomLU0PgyHFPrScU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767986414; c=relaxed/simple;
-	bh=UA1W3ffSHy7mmLgxQmLPlqFxO0jlzVXsdLrfVgn9j0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZMQ3oTk/8/SmLuPMUV3LXrwDdazfb/V4RUCejxyeFewOThKQjZ98UnCds6e7AeqpmwfA6+j6tlkP/mB2C+fge4D7BZVfJU5/ACRME2TeLP0+hK+zyzBkysixyd507Q/NePOuRZPv6dxj/Y2wXjIcniK2JhNDg9AaUYTItx7gOls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vttmsl0D; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vttmsl0D"
-Message-ID: <dcc3a509-d8fd-4f46-8051-683d7277fde7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767986400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UA1W3ffSHy7mmLgxQmLPlqFxO0jlzVXsdLrfVgn9j0g=;
-	b=Vttmsl0DV1JUxe2J1IX2yXZn0oMFTmNsr0ZW1XJKtM/WQGp/gwI+E52GE0zK5yP6JfadOM
-	sw78Cdxe3/6bazMgiHftgF8t4uwBnxNmPRqjgnbQruZ+KbB9q9RTy5SHTkrQiLNTB1l4gF
-	wklC42gZp+4Ln5jS2V7V6iCt5ZfdwF0=
-Date: Fri, 9 Jan 2026 11:19:55 -0800
+	s=arc-20240116; t=1767986853; c=relaxed/simple;
+	bh=OenCN6HjgGMHYIHj9sPx0OSi6qw6Ed/g+qzaqsxFHhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IjmDCNNh+rmraxVp2h1/46sJAeYr2IRjm5agfDxaEbE/RhCR12uxNEWK6J+Rix3CDxS1lU+FBqBHQucr3bNargQptB1AsFJ2n+bCiaboy7yKUHeM2Vl3QiGLjH3dc82GwOeAVVjSBp5Vx+Uj0zP+wm7TS2z4lhpiU5XcoDvw4U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id DAA2A5B75A;
+	Fri,  9 Jan 2026 19:27:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 7CA8E6000A;
+	Fri,  9 Jan 2026 19:27:27 +0000 (UTC)
+Date: Fri, 9 Jan 2026 14:27:58 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Tejun
+ Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, Frederic
+ Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2] tracing: Replace use of system_wq with system_dfl_wq
+Message-ID: <20260109142758.145f57f8@gandalf.local.home>
+In-Reply-To: <20251230094236.358ae2d8@gandalf.local.home>
+References: <20251230142820.173712-1-marco.crivellari@suse.com>
+	<20251230094236.358ae2d8@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-Content-Language: en-GB
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- bpf <bpf@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20260108220550.2f6638f3@fedora>
- <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
- <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 8koh9yizza1xkeju5qigiw3qzry8ekkk
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 7CA8E6000A
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19T+HqThgZMoB4pM+VO2FIrrY1DmOyDiUY=
+X-HE-Tag: 1767986847-43518
+X-HE-Meta: U2FsdGVkX19RjaI9IZoJWGFiLDTLSqnoEntCrd4KusakDxv11uo4+qWv9rjdXWbUPYgNH8kE2qLTuqsXgqiWdDl5qDgMR/s1BrMOD/FxIdQKzF3Sn0zcGW3B9yPaZiZfI62DF1/F1x7iScvh0jkFBqDHSdjq0B0UXi77Dh/41Ew3VXV4Oho1SiUL56/bwZchrzXzZv0UoDRPLk4hLYpVtVe5F97avU9MOdYDaymgs0NlMgYWl0O8qqGF4N3rGYNWVF6t51WQtOXUa3av60/6qi22JOadchZmHNVOu692//jg8X6EIM9QwD95gj1t6O4ZF8OZQtn15R7885L8JAwYothcyisdvUbdOQMTj03NF0bT7UItgUeLDNjmEoRQQ04Ra90nn2UvIFnqIzbzNrb2x/d4aUlXcUClt3Jcp5QZ95DvsTiPQeYbeP9tRb3iXfiR1JkhIVDuQGZBRrJwTK9SOA==
 
+On Tue, 30 Dec 2025 09:42:36 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
+> > Suggested-by: Tejun Heo <tj@kernel.org>
+> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> > ---
+> > Changes in v2:
+> > - use system_dfl_wq instead of system_percpu_wq because this workload has no
+> >   benefits being per-cpu.  
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-On 1/9/26 11:10 AM, Alexei Starovoitov wrote:
-> On Fri, Jan 9, 2026 at 6:45 AM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->> On 2026-01-08 22:05, Steven Rostedt wrote:
->>> From: "Paul E. McKenney" <paulmck@kernel.org>
->> [...]
->>
->> I disagree with many elements of the proposed approach.
->>
->> On one end we have BPF wanting to hook on arbitrary tracepoints without
->> adding significant latency to PREEMPT RT kernels.
->>
->> One the other hand, we have high-speed tracers which execute very short
->> critical sections to serialize trace data into ring buffers.
->>
->> All of those users register to the tracepoint API.
->>
->> We also have to consider that migrate disable is *not* cheap at all
->> compared to preempt disable.
-> Looks like your complaint comes from lack of engagement in kernel
-> development.
-> migrate_disable _was_ not cheap.
-> Try to benchmark it now.
-> It's inlined. It's a fraction of extra overhead on top of preempt_disable.
->
-The following are related patches to inline migrate_disable():
+I guess I'll take this through my tree, as I'm pulling in patches now to
+base off of -rc5.
 
-35561bab768977c9e05f1f1a9bc00134c85f3e28 arch: Add the macro COMPILE_OFFSETS to all the asm-offsets.c
-88a90315a99a9120cd471bf681515cc77cd7cdb8 rcu: Replace preempt.h with sched.h in include/linux/rcupdate.h
-378b7708194fff77c9020392067329931c3fcc04 sched: Make migrate_{en,dis}able() inline
-
+-- Steve
