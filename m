@@ -1,104 +1,80 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7513927FD48
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 19:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9C72DF134;
+	Fri,  9 Jan 2026 19:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767985830; cv=none; b=Y996HjB8DdMi54fEtb0QDtAS1ujlYp9eskKprkZeYTvIHEJBfwIL91ixHw/HJfjtqvtBTS8A+PBJSUU4ZAJLTeCGbN+GHPNZ5NXPwrCtxvvQdFqmsQCqHpVKYFOwUZwkHooAoSFIRT5o7kMH3mQD5AIXQjwfKMIofxBGgqs3wrY=
+	t=1767986345; cv=none; b=a3/UduMsWc6UaIOF7538XNuZNlrOrTq7Ui5sqD7YgkZxpQwWu+rmENgJHeIgxrHOW+xuQPHaqCsGGoSoJLiYFgMwlCwZRP6GKf2+034zYHb2adJhH/QSma26+k6sZ8bCHCNmCaif/UlvKzBIRxGk47ejgEuWMeIQOt9eVRJ90oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767985830; c=relaxed/simple;
-	bh=1xhvN85TB4UEq+IIEOBG/k7NvMp9qQEZ1H+rsYW6/Ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q7oGPGa61dff6+pRNDZa0YUehmcCh8e0QV0pt6bTPrPbe0ttG8deDsHwDNMkZkOi4om05RfBn/B5+c6hj1vDTWB/krSBIgcJce3dr3x+r4UZM58vp2ZssvXnO82NXPz+99R12XRLoWV7sr+qMMvL2DRqpe5gNhs4Xhe10g9EX8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwPaGK6y; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwPaGK6y"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so38010675e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jan 2026 11:10:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767985828; x=1768590628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1xhvN85TB4UEq+IIEOBG/k7NvMp9qQEZ1H+rsYW6/Ik=;
-        b=AwPaGK6y4cIuw25gY5e8WIkURlo4eSdyP+U/ZuUc68RY77cu33+8TbSPqZsebrZe7M
-         770YjMHVJLLnxQOMZLuOh3l4IS9dJjx2eD/4m6NJKkdaONnWbkDpW8zTnhgTPDUoVCCW
-         WE30VeXqCgYFuPzmO2DySnPOtgzA19q7taJ4q5kP9FYKEeqs3W7L2fyUgUqPHT5SjTOX
-         od44tBpx0xu41u73EKhaEBbD5znxZBFto229xLXh8u0jV6K0EY5HkKTJnSVwWQR+wOQW
-         FXEqhCaqSN0Q3qoIVuHqObjRrb69Izw7QHkxQNbyavgmKMmfpNV5tWI0geGVKYJuhRnk
-         tbZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767985828; x=1768590628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1xhvN85TB4UEq+IIEOBG/k7NvMp9qQEZ1H+rsYW6/Ik=;
-        b=T1PMD5mjhV2Dtn6vwV7vTFABkYCemgCZrUraa20TYw5jtQ1yMT4BuZFEeBehhUUyNE
-         VMQWhWtX5h8MQGH8drTMm221IkKUeli2/g/XK9/2wcOLRpk/7zUrc6AgIdU5/8azPYH4
-         2z/7obQKEFcn8Nunw1swvru1/m3w0tzoXjarDFWoRzyKHUYMPH5X2eGjWskMP0oXgZ7v
-         00e0awZ65GXnpat1VV0r7nNvBKzSlzADCqVYCeubl6+pQRgp8Z5UWb3dAHt37HPrKnW4
-         wBBc8aD9Qrv2nrrZ2WYcaXOezXYi0AUmYWuzF+DSn3PM0LmubPSsC//kbhtrEmHp+JEP
-         JasA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOMd3ntRwBYerVELQYlunCxtYjc4uPmvuIxIfQBREI8CXm+FMW3Lro7vUSVY5jY84+CmBh8p1i2jzjtW7FWufK0TA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNTHRm+r01qnJYjV87wdM6rbw4JczMOZNncqplV7173QcThgvt
-	HJAfzUkzFvFrWvKtPg7ih3KFkB+MugEMTRUoZ6FjYAEsAOpFygwzXWFMZThNT52skVBai41UVip
-	0EJy8gcvpT5S2D6zbNlE8VgH93+6QeOWZzg==
-X-Gm-Gg: AY/fxX5PkB3YRh6jwh4Z8GHpni70SjruRaNvEpOQqafRabpDH4a0PcibpfkElU+plMQ
-	6V1UZWNNaYwzto2rnUG2oxXM+dlHoKZg7GoeOsCk9UVoc/MsHBiL0E1zKkJBEYYmlZVgYnURUEE
-	zhkanOSX0u2UN6lv3le1Jk8FZvlLkXpt88oK/fS5ZYdIhdn0fohbxe9iViGTMUDUVLTkft5SILH
-	zQG9tJ7bNmJIVWl1FRmRaVjGLsn8iB61oMjrjeQb903zRzrC2EGbvSNf0Hfs5hHS1Q6nCBlG4JB
-	qH8SLaG8DEApaWQjIw12iIH3PAEk
-X-Google-Smtp-Source: AGHT+IGCA/LEYVTWUrX9KAIYdfMYJCZpS+oMbhPxZE2ZJPBTP5d+xWoHiQl/KaPfPT1JqMx+Lfan2oGwA5Nmv4TJyYs=
-X-Received: by 2002:a05:600c:3543:b0:47d:649b:5c48 with SMTP id
- 5b1f17b1804b1-47d8e4a3c73mr62018205e9.36.1767985827558; Fri, 09 Jan 2026
- 11:10:27 -0800 (PST)
+	s=arc-20240116; t=1767986345; c=relaxed/simple;
+	bh=b9fkAHjAXiET4tDCdZO1d2UxiZ7wSIMCge1r9CaDPe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=me3nG2G6RLAoF7zG0gkhQMBCP8t47Krr/ho8n2gt6btR8PxYBH7Agrq/LEvJW2x5zKeXfP4kWUjuiU833TU0QNiNPOi6IHzkLIJ4ev2OVQalIgIp1Z9F4cAVrbH2AkECsJmaLR+W/1GF35g5CrWaM0kT5j0LWR628+sjMI2hhBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id AB4C6BB599;
+	Fri,  9 Jan 2026 19:19:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 80D2D3D;
+	Fri,  9 Jan 2026 19:18:58 +0000 (UTC)
+Date: Fri, 9 Jan 2026 14:19:30 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+Message-ID: <20260109141930.6deb2a0a@gandalf.local.home>
+In-Reply-To: <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+References: <20260108220550.2f6638f3@fedora>
+	<da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+	<CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108220550.2f6638f3@fedora> <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
-In-Reply-To: <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 9 Jan 2026 11:10:16 -0800
-X-Gm-Features: AZwV_QjcVAwec7ZuTAKhzlsAjlEUvQcPDYYfd4qq_4MFRTrN2yy8vZMt5WIw9Fw
-Message-ID: <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 80D2D3D
+X-Stat-Signature: mrxwuctbtb6qzwocxk1ia8h7ctoxwbwk
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18cMV76IqjIgBX803+m9q4qinkTmK1Zris=
+X-HE-Tag: 1767986338-843608
+X-HE-Meta: U2FsdGVkX19BAUi14sanQ9ajQTBpJxaO+v588L2XOniSoSYcGLFgUKxufpmR0en9l5+F99W2EiFzznSLDbaDocOPmF0Q0H5Cmgk1ZqzjH8A3Q3hnd/gBfpW75VfzYTdmuD+DZsKUzDf2u8vsk4tLcTdfYcQBv38ksntwQZmGwIKfYWBOqO457LbD1CTyLNI5pMUlmpbrhUGU1Lj5fhylOSkHt9DYm3RzcIX05uXPbkMGXxexc+CW8ocxjwP8TQP5vF+YhrNI+fteOITUftA0lvVUb1NGtmB3RbLKAEvGFn3BDIslz6sbJQ+X93S1tNUq5tTw584x0aSy1EaVpoZylQV94mVYcZnd
 
-On Fri, Jan 9, 2026 at 6:45=E2=80=AFAM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> On 2026-01-08 22:05, Steven Rostedt wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> [...]
->
-> I disagree with many elements of the proposed approach.
->
-> On one end we have BPF wanting to hook on arbitrary tracepoints without
-> adding significant latency to PREEMPT RT kernels.
->
-> One the other hand, we have high-speed tracers which execute very short
-> critical sections to serialize trace data into ring buffers.
->
-> All of those users register to the tracepoint API.
->
-> We also have to consider that migrate disable is *not* cheap at all
-> compared to preempt disable.
+On Fri, 9 Jan 2026 11:10:16 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Looks like your complaint comes from lack of engagement in kernel
+\> >
+> > We also have to consider that migrate disable is *not* cheap at all
+> > compared to preempt disable.  
+> 
+> Looks like your complaint comes from lack of engagement in kernel
+> development.
+
+No need to make comments like that. The Linux kernel is an ocean of code.
+It's very hard to keep up on everything that is happening. I knew of work
+being done on migrate_disable but I didn't know what the impacts of that
+work was. Mathieu is still very much involved and engaged in kernel
 development.
-migrate_disable _was_ not cheap.
-Try to benchmark it now.
-It's inlined. It's a fraction of extra overhead on top of preempt_disable.
+
+> migrate_disable _was_ not cheap.
+> Try to benchmark it now.
+> It's inlined. It's a fraction of extra overhead on top of preempt_disable.
+
+It would be good to have a benchmark of the two. What about fast_srcu? Is
+that fast enough to replace the preempt_disable()? If so, then could we
+just make this the same for both RT and !RT?
+
+-- Steve
+
