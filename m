@@ -1,69 +1,114 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from mail-m3294.qiye.163.com (mail-m3294.qiye.163.com [220.197.32.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B4826ED59
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 03:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D861925BC;
+	Fri,  9 Jan 2026 03:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767929295; cv=none; b=jOQmZsfASSeLvCIrxIwrd+0Dk/1xHgZwQooncKFYlGT6skxqfUiokpUdUmn/cWJFbhofwWsRb9KLx+wcdVd5ELTsJxMm0Ov9F3pHmA9zNVx0g54YV5TKj+o0j/6iOKP19107vryqEIIjO3uSwVEcBIO1HpVv7V0D0nTHM6pEOxw=
+	t=1767929429; cv=none; b=YGOauPanHur365QfRJErYfmCkXyE234Lf0tXGwm4UdmU3SajoVZV5NutDrwv58rY+6eTYTXzPhnEA0zYuMa1mJutupx0c2ylMyPWu5NyFtCEDU858/aeHw5f8WTwqas6GuAVVqXI1wj9sPApBAPbece+XX+LVZH5nPqWvd44FOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767929295; c=relaxed/simple;
-	bh=kWS5tTopYKaYJ1BcbzxRgQBoc0MZoxNlw60BQQcaDZ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AqXLEmryWcEymANkm3csnNJgJnfarPzOoKSZnZ61uIC//R+PPZI2mLHX9Gb1VMgiPqQ8umZ+j41V65DngHYIaXotyybquhp8dZ0Z8RgbS9+2/KFp4MCYMe4rR6uJeOr2ukjfDUNGjovdcCIzxqn32js2DjzREMiQOSjOXREnaIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tYz/BA0P; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767929429; c=relaxed/simple;
+	bh=Z2AOheaRyTKoa4eKdWLKbN6ZlONk4KlQ1HzH3j78jD0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JhM6h5XpAZpc8sKx50y1DMsX507Dy5grLBs3T1pf1VKLlV9zdSPQDnalBI9ylOgBULT+hfiBy21xcr1DhlRW5TDWG2MPlwQvohFCW6jW/P97oV7RhVNOXCi3E1V9y0YrrcignkItMSyYs9D0CRPW3RN2QoZ94o2wKge7Z78rDU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GRA+VPa7; arc=none smtp.client-ip=220.197.32.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tYz/BA0P"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767929282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=viLl8OWkqVDAtr8Gv96r7ncFOA8X08RNHplLEAR/RZU=;
-	b=tYz/BA0PcokAJy2Cwwci7FwF+E965IG9nNdpSwhq2h6rAkjTq5mZ2aEmA0LtGWJufqe2mk
-	nXJQ4Guk9lFDdWesj6LbtO/yt01PW9LOZzSfXEBy9hf2ARVBWoj/mJOc+XYNx//pPRfLvv
-	1XEdnfvRFD+KOAGoThf43MIdnaffhS4=
-From: Fushuai Wang <fushuai.wang@linux.dev>
-To: rostedt@goodmis.org
-Cc: fushuai.wang@linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GRA+VPa7"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 30079383f;
+	Fri, 9 Jan 2026 11:30:20 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-rockchip@lists.infradead.org,
+	linux-pci@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	wangfushuai@baidu.com
-Subject: Re: [PATCH v2] selftests/tracing: Fix test_multiple_writes stall
-Date: Fri,  9 Jan 2026 11:27:47 +0800
-Message-Id: <20260109032747.25042-1-fushuai.wang@linux.dev>
-In-Reply-To: <20260108165247.3ae2f21a@gandalf.local.home>
-References: <20260108165247.3ae2f21a@gandalf.local.home>
+	linux-doc@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v2 2/3] Documentation: tracing: Add PCI controller event documentation
+Date: Fri,  9 Jan 2026 11:29:48 +0800
+Message-Id: <1767929389-143957-3-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9ba0ce18f709cckunm22b4d6c66ba24
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkpPTFZPQ0seSk1PGk5DGUJWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0
+	xVSktLVUtZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=GRA+VPa7x561UGIY01XJaPAMGI6fxMn6JuSCwA9i6CC2NZ+320nr5ZKJBGUr7WyZ93xKVoGm3JRWgyMmIpyLIQVCCWWwQpi0mnCfhy6LaIzyzWk1TeQbq+q2Sh2TSekmdZ6M5HtAn6Z/1G9JfirhEcBMriFqbDl9WmQdJ3osbS4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=KJlKjShPuR5n49PnlmzBndjHgapvw97Q1f3mXNv5yPQ=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-> Anyway, Fushuai, you can add to the top of your commit:
-> 
-> From: Fushuai Wang <wangfushuai@baidu.com>
-> 
-> and that will make the From and SoB match without having to change your
-> mail client. I usually have that. Because Linus doesn't like my patches
-> having my company name in it for the "author" but I have it in the SoB to
-> give credit to the one paying me to do the work.
+The available tracepoint, pcie_ltssm_state_transition, monitors the LTSSM state
+transistion for debugging purpose. Add description about it.
 
-Thanks!
-I will send a v3 shortly.
-
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
-Regards,
-WANG
+
+Changes in v2: None
+
+ Documentation/trace/events-pci-conotroller.rst | 41 ++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/trace/events-pci-conotroller.rst
+
+diff --git a/Documentation/trace/events-pci-conotroller.rst b/Documentation/trace/events-pci-conotroller.rst
+new file mode 100644
+index 0000000..8253d00
+--- /dev/null
++++ b/Documentation/trace/events-pci-conotroller.rst
+@@ -0,0 +1,41 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================================
++Subsystem Trace Points: PCI Controller
++======================================
++
++Overview
++========
++The PCI controller tracing system provides tracepoints to monitor controller level
++information for debugging purpose. The events normally show up here:
++up here:
++
++	/sys/kernel/tracing/events/pci_controller
++
++Cf. include/trace/events/pci_controller.h for the events definitions.
++
++Available Tracepoints
++=====================
++
++pcie_ltssm_state_transition
++-----------------------
++
++Monitors PCIe LTSSM state transition including state and rate information
++::
++
++    pcie_ltssm_state_transition  "dev: %s state: %s rate: %s\n"
++
++**Parameters**:
++
++* ``dev`` - PCIe root port name
++* ``state`` - PCIe LTSSM state
++* ``rate`` - PCIe bus speed
++
++**Example Usage**:
++
++    # Enable the tracepoint
++    echo 1 > /sys/kernel/debug/tracing/events/pci/pcie_ltssm_state_transition/enable
++
++    # Monitor events (the following output is generated when a device is linking)
++    cat /sys/kernel/debug/tracing/trace_pipe
++       kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
+-- 
+2.7.4
+
