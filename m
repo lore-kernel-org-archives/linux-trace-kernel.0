@@ -1,242 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39F30C620;
-	Fri,  9 Jan 2026 14:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA5F2877FE;
+	Fri,  9 Jan 2026 15:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767969995; cv=none; b=AV5pDFA054tuwlQ05VDbVskxYvcTKgPk6Yf/FcpnZcjB613kT8DZGiUpjQvDCg82v3yqUPTnTkAZvcjHKBLks5POB2/wLKRmjcx1d9j/qqrY/43tRrLzcR7KdZHZvOw/dEHTFpvycGpKdgWI6gteaTx01jFOH+jwnHQbd6wIKeg=
+	t=1767972156; cv=none; b=XLVjJhP9OrD4eY+xaAt5tKci2P2s0YqJmx6HgMD2c5O1yQj9odM659kNgVyCoip2EfasCIw+mCpcaF2CrOjRSgtVqSMA2HGeAZbp3Nt8HQ5VO+Do7S/STsg1v/VgGsNOJIT7N/3zyl/ZVeDSA6YIORnLWStXd6RHwC0oIAPi6Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767969995; c=relaxed/simple;
-	bh=TiX3+Mf2/1XrF5Wi9iq9L5ZAotC8Ji5SdKgsf6S+mLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BxkAIjj91otOBv8/Gia8byAIVbTqhwBGF9cDnGi+JI/RBhfVf5J7ukBzPuFJtOkgiGLAFk6J+K5m4L1nZy+6gbDOUwbieQjNlTK4PfkZ64VLKuA50loQTv9p+xNwdNed764y+E0I6cPmSo7mwKpz0gU5U+CbDtER6VpbcBF6BUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZUjYGj2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZUjYGj2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE468C4CEF1;
-	Fri,  9 Jan 2026 14:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767969994;
-	bh=TiX3+Mf2/1XrF5Wi9iq9L5ZAotC8Ji5SdKgsf6S+mLw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uZUjYGj2vzAU/895Kp1TsSc1LFPAvhNfYFyiQDT/1sHdc86Fb7CYXvrSKCDHqJ9l9
-	 OSWqCHO0/cYPa3ylDhqf6y820RTSZtL93ba0/jGN1oVlEHjGaHVVykQ3MCU+Z6yj5W
-	 Stp2vxGoONL9lIG5qlLIvwPqw495ZXWRGOcbNNcduB2d9QF46/J+RZy3jhW8UW+Yoe
-	 5lypxi/zl4Ku7tZnxaxkw12IeQII5MIXEcGtCs7SxEBmWncna6ityUGGr3As4XirRc
-	 zrtFEF64kiJCzQIJjj/FtQi84qhO0pj2g1lozr3UvVSKZgWbxb5zl5K461ANhI+fVX
-	 rz+yJMFWSC3+A==
-Message-ID: <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
-Date: Fri, 9 Jan 2026 15:46:26 +0100
+	s=arc-20240116; t=1767972156; c=relaxed/simple;
+	bh=l0K0iHQxhWpbfVeLEUJ7Fm+JtumcN7lMgtZ7tN4usXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MbxbDvSwrwxrGxLjjMjlA3WWhnAbkCSSqIAErhGxDjhKtkx7L2ou6qfRzs2LeiBrWJDWh/2pHqwIRy55HNqUidrQZymjiA4R5wGNFwN5wls3WZg7T0a72A5NkKuFnq2PZM67utsB9R+xgjabIPcI0r/XSLNvAzwFszHCewl9/M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 32F721398C3;
+	Fri,  9 Jan 2026 15:22:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id D407020037;
+	Fri,  9 Jan 2026 15:22:29 +0000 (UTC)
+Date: Fri, 9 Jan 2026 10:23:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, lkp@intel.com,
+ oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux Memory Management List
+ <linux-mm@kvack.org>
+Subject: Re: [PATCH 3/5] tracing: Have tracer option be instance specific
+Message-ID: <20260109102301.19daeb27@gandalf.local.home>
+In-Reply-To: <202511071533.domGENBS-lkp@intel.com>
+References: <20251105161935.545400234@kernel.org>
+	<202511071533.domGENBS-lkp@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 2/2] mm/khugepaged: retry with sync writeback for
- MADV_COLLAPSE
-To: Shivank Garg <shivankg@amd.com>, Andrew Morton
- <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Branden Moore <Branden.Moore@amd.com>
-References: <20251215084615.5283-3-shivankg@amd.com>
- <20251215084615.5283-7-shivankg@amd.com>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
-In-Reply-To: <20251215084615.5283-7-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D407020037
+X-Stat-Signature: jcuq6amaw9651isigmpghnke7jqeogp4
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19jdSeoFBztHLOMU/lMm14vAteYNKPwXT0=
+X-HE-Tag: 1767972149-424104
+X-HE-Meta: U2FsdGVkX19ilsxq7u3MRtKL3dJWwByiZPh/dNykQoGfoiGRpH0i/9tNzbovF3etCkRCiRnHo67ShzJFR/TraY0X0a9rM0tfe2y6bnDYxcu0iNSbLdNupEDNpoREIG8kiiV2i0pLDtLKSY8sKgGq0GEuZauFHyo4PITU50uRah6+FlLoS8w5Qyivk6Ee+beVybcCb7dexIMQy2UaVsru7qRMocTetT5YY+f2ZfBaBdn9FI0gDV25+4Mcn4mWhfr3Q/0CJd8HA68QvRB3EjoCMa9AX9JXcPu+3ezm/eGMG2WDkxQMuCckiyUEIvqbV3rrGoh9OFBNR6KXtvyT8FzvabHby38Ah4Wc3MGLKpJhF68+U9PWPpv6gwZpjzPdzv5Zhleh7hguR73jsagOpzzOhgaj25IoZY7Pf0i1lB3A5ROKNBONjkfzbHQXswos25UOP7DjiG+U+l55bw7GCXi+W7A6UTqnz/VcizWk5Q2JAFmq6RhP7PU6BaVhFOzmiM6zQwqiT3rbbzdHA/1gHeXNng==
 
-On 12/15/25 09:46, Shivank Garg wrote:
-> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
-> text sections), the pages may still be dirty from recent writes.
-> collapse_file() will trigger async writeback and fail with
-> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+On Mon, 5 Jan 2026 18:23:31 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
+
+> Hi Steven,
+
+Hi Dan,
+
 > 
-> MADV_COLLAPSE is a synchronous operation where userspace expects
-> immediate results. If the collapse fails due to dirty pages, perform
-> synchronous writeback on the specific range and retry once.
+> kernel test robot noticed the following build warnings:
 > 
-> This avoids spurious failures for freshly written executables while
-> avoiding unnecessary synchronous I/O for mappings that are already clean.
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
-> Reported-by: Branden Moore <Branden.Moore@amd.com>
-> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
-> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Tested-by: Lance Yang <lance.yang@linux.dev>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->   mm/khugepaged.c | 40 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
+> url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Remove-dummy-options-and-flags/20251106-010511
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+> patch link:    https://lore.kernel.org/r/20251105161935.545400234%40kernel.org
+
+This is an old patch (v1) and v3 fixed this issue:
+   https://lore.kernel.org/all/20251110234341.767135255@kernel.org/
+
+ and v4 was applied and is now in mainline.
+
+The patch you are reporting on was sent Nov 5th, the fix was sent Nov 10th.
+
+Why is this sending reports about an old patch that is obsolete? Is there
+something wrong with your setup?
+
+-- Steve
+
+> patch subject: [PATCH 3/5] tracing: Have tracer option be instance specific
+> config: i386-randconfig-r072-20251107 (https://download.01.org/0day-ci/archive/20251107/202511071533.domGENBS-lkp@intel.com/config)
+> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 219dfa2e523c..6c8c35d3e0c9 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -22,6 +22,7 @@
->   #include <linux/dax.h>
->   #include <linux/ksm.h>
->   #include <linux/pgalloc.h>
-> +#include <linux/backing-dev.h>
->   
->   #include <asm/tlb.h>
->   #include "internal.h"
-> @@ -2787,9 +2788,11 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   	hend = end & HPAGE_PMD_MASK;
->   
->   	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
-> +		bool retried = false;
->   		int result = SCAN_FAIL;
->   
->   		if (!mmap_locked) {
-> +retry:
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> | Closes: https://lore.kernel.org/r/202511071533.domGENBS-lkp@intel.com/
+> 
+> smatch warnings:
+> kernel/trace/trace.c:6313 tracing_set_tracer() warn: iterator used outside loop: 't'
+> 
+> vim +/t +6313 kernel/trace/trace.c
+> 
+> 9c5b9d3d65e4858 Masami Hiramatsu         2020-01-11  6285  int tracing_set_tracer(struct trace_array *tr, const char *buf)
+> 09d23a1d8a82e81 Steven Rostedt (Red Hat  2015-02-03  6286) {
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6287  	struct tracer *trace;
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6288  	struct tracers *t;
+> 12883efb670c28d Steven Rostedt (Red Hat  2013-03-05  6289) #ifdef CONFIG_TRACER_MAX_TRACE
+> 34600f0e9c33c9c Steven Rostedt           2013-01-22  6290  	bool had_max_tr;
+> 12883efb670c28d Steven Rostedt (Red Hat  2013-03-05  6291) #endif
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6292  	int ret;
+> bc0c38d139ec7fc Steven Rostedt           2008-05-12  6293  
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6294  	guard(mutex)(&trace_types_lock);
+> 1027fcb206a0fb8 Steven Rostedt           2009-03-12  6295  
+> 7a1d1e4b9639ff0 Steven Rostedt (Google   2024-06-12  6296) 	update_last_data(tr);
+> 7a1d1e4b9639ff0 Steven Rostedt (Google   2024-06-12  6297) 
+> a1f157c7a3bb342 Zheng Yejian             2023-09-06  6298  	if (!tr->ring_buffer_expanded) {
+> 2b6080f28c7cc3e Steven Rostedt           2012-05-11  6299  		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+> 438ced1720b5840 Vaibhav Nagarnaik        2012-02-02  6300  						RING_BUFFER_ALL_CPUS);
+> 73c5162aa362a54 Steven Rostedt           2009-03-11  6301  		if (ret < 0)
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6302  			return ret;
+> 73c5162aa362a54 Steven Rostedt           2009-03-11  6303  		ret = 0;
+> 73c5162aa362a54 Steven Rostedt           2009-03-11  6304  	}
+> 73c5162aa362a54 Steven Rostedt           2009-03-11  6305  
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6306  	list_for_each_entry(t, &tr->tracers, list) {
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6307  		if (strcmp(t->tracer->name, buf) == 0)
+> bc0c38d139ec7fc Steven Rostedt           2008-05-12  6308  			break;
+> bc0c38d139ec7fc Steven Rostedt           2008-05-12  6309  	}
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6310  	if (!t)
+> 
+> t can't be NULL here.  It needs to be if (list_entry_is_head()) return;
+> 
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6311  		return -EINVAL;
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6312  
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05 @6313  	if (t->tracer == tr->current_trace)
+> d33b10c0c73adca Steven Rostedt           2024-12-24  6314  		return 0;
+> bc0c38d139ec7fc Steven Rostedt           2008-05-12  6315  
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6316  	trace = t->tracer;
+> 4699bbb369ba1d3 Steven Rostedt           2025-11-05  6317  
+> 
 
-Jumping into an if block is nasty :)
-
->   			cond_resched();
->   			mmap_read_lock(mm);
->   			mmap_locked = true;
-> @@ -2819,6 +2822,43 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->   		if (!mmap_locked)
->   			*lock_dropped = true;
->   
-> +		/*
-> +		 * If the file-backed VMA has dirty pages, the scan triggers
-> +		 * async writeback and returns SCAN_PAGE_DIRTY_OR_WRITEBACK.
-> +		 * Since MADV_COLLAPSE is sync, we force sync writeback and
-> +		 * retry once.
-> +		 */
-> +		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !retried) {
-> +			/*
-> +			 * File scan drops the lock. We must re-acquire it to
-> +			 * safely inspect the VMA and hold the file reference.
-> +			 */
-> +			if (!mmap_locked) {
-> +				cond_resched();
-> +				mmap_read_lock(mm);
-> +				mmap_locked = true;
-> +				result = hugepage_vma_revalidate(mm, addr, false, &vma, cc);
-> +				if (result != SCAN_SUCCEED)
-> +					goto handle_result;
-> +			}
-> +
-> +			if (!vma_is_anonymous(vma) && vma->vm_file &&
-> +			    mapping_can_writeback(vma->vm_file->f_mapping)) {
-> +				struct file *file = get_file(vma->vm_file);
-> +				pgoff_t pgoff = linear_page_index(vma, addr);
-> +				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
-> +				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
-> +
-> +				mmap_read_unlock(mm);
-> +				mmap_locked = false;
-> +				*lock_dropped = true;
-> +				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
-> +				fput(file);
-> +				retried = true;
-> +				goto retry;
-> +			}
-> +		}
-> +
-
-This looks a bit complicated. Can't we move that handing up, where we have most of that
-information already? Or am I missing something important?
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 97d1b2824386f..c7271877c5220 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -22,6 +22,7 @@
-  #include <linux/dax.h>
-  #include <linux/ksm.h>
-  #include <linux/pgalloc.h>
-+#include <linux/backing-dev.h>
-  
-  #include <asm/tlb.h>
-  #include "internal.h"
-@@ -2786,7 +2787,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
-  
-         for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
-                 int result = SCAN_FAIL;
-+               bool triggered_wb = false;
-  
-+retry:
-                 if (!mmap_locked) {
-                         cond_resched();
-                         mmap_read_lock(mm);
-@@ -2809,6 +2812,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
-                         mmap_locked = false;
-                         result = hpage_collapse_scan_file(mm, addr, file, pgoff,
-                                                           cc);
-+
-+                       if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
-+                           mapping_can_writeback(file->f_mapping)) {
-+                               loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
-+                               loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
-+
-+                               filemap_write_and_wait_range(file->f_mapping, lstart, lend);
-+                               triggered_wb = true;
-+                               goto retry;
-+                       }
-                         fput(file);
-                 } else {
-                         result = hpage_collapse_scan_pmd(mm, vma, addr,
-
-
--- 
-Cheers
-
-David
