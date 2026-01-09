@@ -1,396 +1,242 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021141.outbound.protection.outlook.com [40.107.192.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE7F35FF63;
-	Fri,  9 Jan 2026 14:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767969623; cv=fail; b=MrjtdnGVBQXoK2Vcg309jlbe3IJnVkHA2CY2+hTKz8VedasON3JnJtXFS0CTh4p3/eG87clfQ9tqxaJBV3hvBd6ylkWgxv1P2BfxfoiyZXMdxWmIRnO5+pJ6sqTFpW5egPmJs53gGuTXCGEXHU7+rYaUS2cHepWUunmNFsR2acA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767969623; c=relaxed/simple;
-	bh=h2YVkOuZrTCNGSw6UdMEGkagEZGV0ShQ0YIEbYoYvMc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Gx4sDXYs4hIhyPS+Wmd7mAHwdEFT+rqJD8A679ORkfunrxxycsGJp/WeNgtmyR+u4jOgq+5WGfW/TnF2pDYI60ku5Hf+RN8oRGxxmWWTN2jf9ue7vr3TTcq0IuTI/HRBW47JM3cn5lTpMMaRBOe4b5YDHfmYJWN7QJ5KB/3vfv0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Cw3gpUdG; arc=fail smtp.client-ip=40.107.192.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39F30C620;
+	Fri,  9 Jan 2026 14:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767969995; cv=none; b=AV5pDFA054tuwlQ05VDbVskxYvcTKgPk6Yf/FcpnZcjB613kT8DZGiUpjQvDCg82v3yqUPTnTkAZvcjHKBLks5POB2/wLKRmjcx1d9j/qqrY/43tRrLzcR7KdZHZvOw/dEHTFpvycGpKdgWI6gteaTx01jFOH+jwnHQbd6wIKeg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767969995; c=relaxed/simple;
+	bh=TiX3+Mf2/1XrF5Wi9iq9L5ZAotC8Ji5SdKgsf6S+mLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BxkAIjj91otOBv8/Gia8byAIVbTqhwBGF9cDnGi+JI/RBhfVf5J7ukBzPuFJtOkgiGLAFk6J+K5m4L1nZy+6gbDOUwbieQjNlTK4PfkZ64VLKuA50loQTv9p+xNwdNed764y+E0I6cPmSo7mwKpz0gU5U+CbDtER6VpbcBF6BUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZUjYGj2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Cw3gpUdG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AcHrY/02UWCMYJ5ISxCZ/px1mCa5G2doh792kpdA+n7UgO5s2m7Fp+tHBjfq5YJzIGyFzB/gVB9w861oriC7jzIdF+thh3fwRDEMfc9TVIok4NUwhXoMmGW9vhWMOK8PloWPrBtpXmESwL2l+yzcsAhN2WtIXPhD1U6q/TfWOpSuL4X5ISXJIv5izcoEa0IHU15fbJVCddqqE+lmc1rRLhnp2VcX0+n3Cn+5QOpasLunNV/JoT0XQhSiLTGcxPNtgDh3Xv74TS7e7lWhVFsxkP7jAysO0EK1rlo+9JvK9pRjNfWDUNZVZuPEMFFxj5qODGtWah08jTdHTlX2JnhuwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mqC+hohqa8ZPdVcwGie9Ki7kGXHu8HAgAfuKul8jFw8=;
- b=s5gTs+MfiVMbHiDM5xI1y+/KTfGGO6kKXipswgB6B7naEds88wceMb+3BSACIlpr/HpFtdCPH9qk1a3+1FBLvYqUjSUOeU9YMHEQ4Eo+zNE6ICVrQvjakm3vwMdelNX/lWKWwF+txKRQuHTnmLL2ZiX+lfH+N2oVtq0xXgxII9RNcXFDHdkHhPAoekB4Skfo3v8l77SE+SeO93jTSqBaen0j3E3z28/5lJ7yfFqu6unZfWNHf2Xr4QLEfPkMcfI2GG1EDOQpyeDnCIPlJ7TA5z+tIwppQg2AZ51v+J2xLNqH7qBfchoSKmbP2GMH2mzOhJJCllwoHh64jYyU73deNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mqC+hohqa8ZPdVcwGie9Ki7kGXHu8HAgAfuKul8jFw8=;
- b=Cw3gpUdGAvTpIslkJLp+2pB78HjVOBl+mflojELOCeJyRx/nbINr8JZvlnbxV39mRkwhrlxDzVPpdBphnnL4IDs1kkc08B5qA/2320fAHTEOcXRsHepsaYj0de//O3TIX0K0ODpDIwGEZesmnMcOBCajjo52SbJPNbxhlNIlKyD+dmNQ4sTweWTKnxz9FnmTMYjHZWwZ7MNLW2D+ZMIM4gKkyU3kLdyGBWhOTVhikHxkSb6QioNSeSBprEq9W5bO0XADmfcqM0KNViM4vBFG9qri2ZEgeufW8U52/J3APA/8x2GToTvHLHAHyBHTnT1Nl01H5lR98F/YQp0vaRp/Kw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT1PR01MB8250.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:c1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.5; Fri, 9 Jan
- 2026 14:40:18 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9499.003; Fri, 9 Jan 2026
- 14:40:18 +0000
-Message-ID: <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
-Date: Fri, 9 Jan 2026 09:40:17 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20260108220550.2f6638f3@fedora>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20260108220550.2f6638f3@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBPR01CA0149.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:7e::13) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZUjYGj2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE468C4CEF1;
+	Fri,  9 Jan 2026 14:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767969994;
+	bh=TiX3+Mf2/1XrF5Wi9iq9L5ZAotC8Ji5SdKgsf6S+mLw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uZUjYGj2vzAU/895Kp1TsSc1LFPAvhNfYFyiQDT/1sHdc86Fb7CYXvrSKCDHqJ9l9
+	 OSWqCHO0/cYPa3ylDhqf6y820RTSZtL93ba0/jGN1oVlEHjGaHVVykQ3MCU+Z6yj5W
+	 Stp2vxGoONL9lIG5qlLIvwPqw495ZXWRGOcbNNcduB2d9QF46/J+RZy3jhW8UW+Yoe
+	 5lypxi/zl4Ku7tZnxaxkw12IeQII5MIXEcGtCs7SxEBmWncna6ityUGGr3As4XirRc
+	 zrtFEF64kiJCzQIJjj/FtQi84qhO0pj2g1lozr3UvVSKZgWbxb5zl5K461ANhI+fVX
+	 rz+yJMFWSC3+A==
+Message-ID: <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
+Date: Fri, 9 Jan 2026 15:46:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT1PR01MB8250:EE_
-X-MS-Office365-Filtering-Correlation-Id: d4a80c6d-20ab-466e-2c53-08de4f8d0279
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Rk15ODdGMzBjdkl4ME5IeFNvb3VVbVhEcXZOQTZFQkhNMSswN1dBaDNkSUV4?=
- =?utf-8?B?Z0Z2TTRJNDdpdWZwVldPVlpySGZGWFE4b0QySDF4ajRmRDZhYW1ESGo5OTA3?=
- =?utf-8?B?cTJFQnJDZmUrdGRvekJIR3dIaG10bkMzbGI0ay9EOWxpM2YySnF0bDJ4MEp1?=
- =?utf-8?B?eHJzdjkxa0VJRUY2dEhVWndhVFBoZEJiNXE1MWE2SUFXcWVpSmtRWXgxU1Qx?=
- =?utf-8?B?K3FYVW5HVW4wTHM4NTBWR290YmtWZ3Q0c09nU0ZrMWxCTS9IOXZXZ2tpSUFQ?=
- =?utf-8?B?UW1RWU9WN2xEVUNhYTdDQ05sMjdkWjBCcTNGMzFDMjNPdTFuV0lTZXp0TGk2?=
- =?utf-8?B?UTlST3NYdnZycjkyYWx2UDNiYzVKUzY1bEJYRmNOYkprQWFCc05kMlpmTGJF?=
- =?utf-8?B?QTJaejN1Zy9nYzF6R2ovY1NuenVMcnhNOXJmOUFzQnF3OEhmcy9iam03NFN6?=
- =?utf-8?B?WEVQZ3FTNzhhY3JtbitlT25xR1ZuY01ZaXBkTS9vdGtsYlI4Vm5Ja2RaZlZi?=
- =?utf-8?B?NWFYaFk4V3hXcnY5OFJMVUdoaHNEbjJoUVl2bm9iTkF2NFZwb2xDVy91MSs1?=
- =?utf-8?B?cFNRY0krN0tvMmJlT2t0NllVSjZRRWdOUVlQZm90RldTR2l0NGhUZkNPZjdL?=
- =?utf-8?B?dDlKK2U1SWYrZFJoV04xUStuYW5nZEtwb0tuc29mdUE0Z3VKbkRldVRhOFJx?=
- =?utf-8?B?eElXOHJLdUVIcDJZN0VsU0pKUnRYbmVmKzMxZXUvSVNvSDFVRTFsa3hpUVhS?=
- =?utf-8?B?NllTaDl2TTR1TVdoZHFZWE1TcEJuZmRLSHlwOHJEQ3BKTDE2Rzc2Y2hMOXB5?=
- =?utf-8?B?L2RvQm9YV002aGZDSWs5dVJ6bEJNenhZUzZFZkxTbmI2RzE0SWdEMmpaSXlw?=
- =?utf-8?B?Q3dKZStwUUZGSUVaUi9MazAzY2xqRWdLOHd0T1RmR2ZEZU10TThHRk9idUNp?=
- =?utf-8?B?SFI5RUhib0UwSTBTNGZRb2ltOWpSTE5mWERnem9EMGlRQ2FaaGlaeUdCbUtE?=
- =?utf-8?B?bFFwSlN1Q2FFOFF5L00xZUQ1b3c5cmV6NHo1dGRRa0pOUExsRktHRDE5MS9E?=
- =?utf-8?B?RnJiMkpCMVhsTDRPT2g1d1JzaTVua21oN2hGNVM1YlZ5Vzd4MStKVHU0aGVG?=
- =?utf-8?B?amxZMXFmd1c4eStWVmhFQkthZ3greVhvbnoxaE9jbjdhZXk4bnFYZld4YkpK?=
- =?utf-8?B?L20xQ2pnVkVNYjNYWWI4SUI1Z25oYlcxUHg2bFZwYlRXSmZZVU15RE1YQndL?=
- =?utf-8?B?OUg4dWdiYlV1Q3Q1d3VpamN5aUZUeFVPUytQTWdmSGQxbmswd2owTkJnR1lt?=
- =?utf-8?B?T0RoaHVaN1JEa2ZDR0ZZdW5mUjBVR09PL3JScmtGYUdLbXBLNEZrbFd4YndE?=
- =?utf-8?B?R1hRaGVTT1o4T3J1dndZejZhNG5aNGUzbUxaSGkydFR6OHcxcUF2QkJKaTJ1?=
- =?utf-8?B?akl4cTNFZkt4U25qTDM1SmMxRUhxeDR3Qmswd0YwbXVLNnNrbGxDNnhQdlhp?=
- =?utf-8?B?WHNWb0FXL1c5bld0U1FheWFxTlpnMW0wYi9wT3dUWmpXMU5WOWVMandVNTdU?=
- =?utf-8?B?eDNqOUYxd05zMlZQT1l0aVhzVGUzU0RNNHVLdmUrWGRFR2sxc2lUZUx6ODdl?=
- =?utf-8?B?MzltN1JKMHBDcmh5eEVFR1M2OHJiWS9QUzcxV1JyUzJacHdodGFjZjQ1NkZq?=
- =?utf-8?B?YmtFOXErZmlWVFUydjk3cFNId2xZeUI3L0VNZ1NoeER2bXFiNWNRQnhOTVRM?=
- =?utf-8?B?Q1JEc3hMQlhKcnQwS2RHdXNxVWlYQWJxN2hYM0tQLzBtYUJPTHpZcjYrcWVv?=
- =?utf-8?B?ZWFxUjBCa3QxUUdCZWFOYTQvZk1ZSXJVbnFIRkVCK3RhZ3E3NklOeTRBL1Mr?=
- =?utf-8?B?eEVINmR3TWw1Y29uTTR3WG0xL0c4M2hxUCtnRHBDQ0s1T0E9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WEV2MXlYSUtwYmNvUlRBUGlrMWI2VXhtbmZtc05DT2JNWVZYUDRIVkEvd0Y4?=
- =?utf-8?B?MURCWXdNdkdoOUpDZERMNEhIeDJSN3pYaFV1T3NMaTJoN3lPVGJST1NjWHkv?=
- =?utf-8?B?RWlGRERoaXIySjNVSFoxRGFkbTA0Rk5qd2o2WGdZT24rMkhUSEdxYkZFQkRG?=
- =?utf-8?B?QkpuZzhlVjRzN1hwRUwwMlZoWXN1TUc2LzgxYy9DdDRLSGprY1JvMWN1MGpY?=
- =?utf-8?B?aDlsTEdyOE4wY0hWYXg4NzJWYmJHZ3hVQStseTBUVForYnZ5ZnZwSkNpdWpK?=
- =?utf-8?B?R3AyaVFuUEJBSDI2RzY4Y1J1eHhFNnlpQmlHanorZzNDMlhpQmM5U2RvM2g5?=
- =?utf-8?B?ZFNhd2dERUJXY3hlZmNoanBNUlpRdlE3N0RhQ3RMVGwyV21oMXZtMUQ3Rkl4?=
- =?utf-8?B?enQyOWhkb3A5MXE0cTN1dDUzK2E5VmN3dnF1NG43b3NXdDlnckxCeUlHRVdr?=
- =?utf-8?B?c0RWMEF5anhMb2ZDc3U3YUxWT0RhbXAzUnI3V3ZRbkJ2SC9Xd21JVFNaQVZ3?=
- =?utf-8?B?UWhjVHpBUFhXRVVWM2tsTkpIbEpUWHBWZEVqOUpKWmR6Rjdhcyt4UU9MeWNX?=
- =?utf-8?B?aFBjWXRNTkFaZGdoVG9YK2t1bFpubjlodG5MdXVCSGxlVUpreGZraWp1OUJu?=
- =?utf-8?B?YkV4SW0weHpaaEYyYUg5SDhwVmllWlYwVnE2MjQ2blo2WTZXWFh0SGRkank3?=
- =?utf-8?B?aWxZbENwOG42VzFUREVyWDNyOUJaUUtOUmFXNnJEMmdXOU42WWp6UjY4WkJS?=
- =?utf-8?B?RGVKSWIzL0k2VkhYV0JPZUx2bWFtM1Z1Y0lCUllyYTRha2RGWWNPa1BwZzlY?=
- =?utf-8?B?OGN4TlZiK25TY21TdzFzZXJBMVo5MHZTV0l6VnVPNW1wSXNTQ21ZT1d2Yk90?=
- =?utf-8?B?NUc5OFhZYUZqUVlac0ZCM0d6dlFIOC9sb1k1Z2pVUU11SU8rVjNQL25EeXlk?=
- =?utf-8?B?dUJvcCtXendscEtKMU91UlN0MGN4Z2lVM1dIcTZZakg1aGtYcWpmRGxaNG1W?=
- =?utf-8?B?SzdBakd1THloNDdTTVhqaDJoMUE4cUJSR1kydnU2aDNzcnhyRURZdkRick5I?=
- =?utf-8?B?UTBWQ0ZjL0MwZ0tZU1ZlOEs3MDNCZm9YWXk0a1I3YSttN1lBb0RQZXY0cFpP?=
- =?utf-8?B?ckR1aE1PZURLWUJva2JKUUxFeFE1Sk92eWdJcXNBVHZyTzRXRGZXSERJdk81?=
- =?utf-8?B?cE8vY2I4ek4vNDNqSFFKaTd5SWdHZjRLSWlxNGh4MkxVZGhVdThJc3gzb3di?=
- =?utf-8?B?b3F6VE5ybmpRVEEzZzI2NVV1TDBERnducDNoRGVpZzlXMnRiY3dGbk9zN2RY?=
- =?utf-8?B?bDFnVUVTSEh5eENQbkh0MStTcEd5R0l5b2h6c2FjM0psL3pQVUFHUzJFV2FZ?=
- =?utf-8?B?RjBXMitDRVpjQTdGemRYcFg3Mm1Sa2EvVy9vTW1sV0VWMU9sQ21pdGN3NUVW?=
- =?utf-8?B?eWp5bkIyZVpuTXVyeDNDRk5qTkRLaHJOaFJFS3pIbDN2VEFRNGNwN1U1dkM5?=
- =?utf-8?B?SHcrbGF5SzBvNTNiVGZLdmp5V0NJRDdFRUhOZGRrd1RLVlFxM05GZE00NXdJ?=
- =?utf-8?B?VExmMFExdlFQZjFzQ1NJTm03ek82VDkzSmRTSmE1dEVNWXl3dWZVMXBSMmVO?=
- =?utf-8?B?ZGtmWWYxWFY4OFhTUmtjbHY5c3RvRDlrWkU1SjdYL1grTDBoVURvaHlncjdI?=
- =?utf-8?B?TXd3OE5RMmczN3hxWlh4YlprRUhFRFZONGV5NDJlQVBySWRKOS9zOEhBZnFI?=
- =?utf-8?B?Vnh4ZEZOZTJka29qYUppNk5KNkplMjIwc0xQejRsSmNOeld0dno3QzlGNks3?=
- =?utf-8?B?bjdPYWdKS2YvWFUrb3l2NFphZnFtMFM1WU5GRTVlQ2syVG16ZzcxRjhyTEFK?=
- =?utf-8?B?YS85U0NnL09DSFBGTWc4emRVYlFzamxnK0F2eERRU3VGdmUrS1Ivc1VvdnRx?=
- =?utf-8?B?Wk9wMzNDUFp3bnN1OFBmNldCS0xTei9wOUdPOCtlYTNBQ0xMQTU2R3dhOHNh?=
- =?utf-8?B?QnFMQVd1NURwdUVuSWxZdjRsQ3NqYXhVMlZhbFZNUTFlTFd4SGx5K0c3USsz?=
- =?utf-8?B?R3R5T1doOFpGZHFiSko3R2hYVlFUd3h0ZjZYenJSZmlMQUZ6T3h1SlBqb2JI?=
- =?utf-8?B?Qm9TZkQxaUdqTy84OW9BY2lxNFovYVJNSmhjZ25nb0N5dFRXMExZSmdTWXpV?=
- =?utf-8?B?VU1kcGVDVFRyQ0VwdVRnTXA4aEdEUnNGZ3IwQjhVYjlYZzh3UlNvRGgyRGZa?=
- =?utf-8?B?Nzk1elBTeVdyWXY5c3IvS25mYnhjSlF5ZUVZSW9JVUlTaWNCK3pqTmRvWm9v?=
- =?utf-8?B?bVlPWVlTM2xacmZ2MUlJaEVzNzdKV05ZZ1A3aTFNUGUyZFhXLzNCRzduaDBH?=
- =?utf-8?Q?LTfy9vKwLCgQbPCjhnNduS+jJSKeSmZFyuuOR?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4a80c6d-20ab-466e-2c53-08de4f8d0279
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 14:40:18.4952
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ykJ534+l1uR7tDdplBfXPpu9uh7yCnmor1Y4ArzxFMfeNH9E+FqKmcelUl3xm9t2YFCOjk0LlR/IqzKUKhzDUrXEcoGpDUCJzxLqSE+kofY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PR01MB8250
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: Shivank Garg <shivankg@amd.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20251215084615.5283-3-shivankg@amd.com>
+ <20251215084615.5283-7-shivankg@amd.com>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+In-Reply-To: <20251215084615.5283-7-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2026-01-08 22:05, Steven Rostedt wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-[...]
-
-I disagree with many elements of the proposed approach.
-
-On one end we have BPF wanting to hook on arbitrary tracepoints without
-adding significant latency to PREEMPT RT kernels.
-
-One the other hand, we have high-speed tracers which execute very short
-critical sections to serialize trace data into ring buffers.
-
-All of those users register to the tracepoint API.
-
-We also have to consider that migrate disable is *not* cheap at all
-compared to preempt disable.
-
-So I'm wondering why all tracepoint users need to pay the migrate
-disable runtime overhead on preempt RT kernels for the sake of BPF ?
-
-Using SRCU-fast to protect tracepoint callback iteration makes sense
-for preempt-rt, but I'd recommend moving the migrate disable guard
-within the bpf callback code rather than slowing down other tracers
-which execute within a short amount of time. Other tracers can then
-choose to disable preemption rather than migration if that's a better
-fit for their needs.
-
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 3690221ba3d8..a2704c35eda8 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -222,6 +222,26 @@ static inline unsigned int tracing_gen_ctx_dec(void)
->   	return trace_ctx;
->   }
+On 12/15/25 09:46, Shivank Garg wrote:
+> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+> text sections), the pages may still be dirty from recent writes.
+> collapse_file() will trigger async writeback and fail with
+> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+> 
+> MADV_COLLAPSE is a synchronous operation where userspace expects
+> immediate results. If the collapse fails due to dirty pages, perform
+> synchronous writeback on the specific range and retry once.
+> 
+> This avoids spurious failures for freshly written executables while
+> avoiding unnecessary synchronous I/O for mappings that are already clean.
+> 
+> Reported-by: Branden Moore <Branden.Moore@amd.com>
+> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Tested-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
+>   mm/khugepaged.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 40 insertions(+)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 219dfa2e523c..6c8c35d3e0c9 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/dax.h>
+>   #include <linux/ksm.h>
+>   #include <linux/pgalloc.h>
+> +#include <linux/backing-dev.h>
 >   
-> +/*
-> + * When PREEMPT_RT is enabled, trace events are called with disabled
-> + * migration. The trace events need to know if the tracepoint disabled
-> + * migration or not so that what is recorded to the ring buffer shows
-> + * the state of when the trace event triggered, and not the state caused
-> + * by the trace event.
-> + */
-> +#ifdef CONFIG_PREEMPT_RT
-> +static inline unsigned int tracing_gen_ctx_dec_cond(void)
-> +{
-> +	unsigned int trace_ctx;
-> +
-> +	trace_ctx = tracing_gen_ctx_dec();
-> +	/* The migration counter starts at bit 4 */
-> +	return trace_ctx - (1 << 4);
-
-We should turn this hardcoded "4" value into an enum label or a
-define. That define should be exposed by tracepoint.h. We should
-not hardcode expectations about the implementation of distinct APIs
-across the tracing subsystem.
-
-[...]
-
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -100,6 +100,25 @@ void for_each_tracepoint_in_module(struct module *mod,
->   }
->   #endif /* CONFIG_MODULES */
+>   #include <asm/tlb.h>
+>   #include "internal.h"
+> @@ -2787,9 +2788,11 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>   	hend = end & HPAGE_PMD_MASK;
 >   
-> +/*
-> + * BPF programs can attach to the tracepoint callbacks. But if the
-> + * callbacks are called with preemption disabled, the BPF programs
-> + * can cause quite a bit of latency. When PREEMPT_RT is enabled,
-> + * instead of disabling preemption, use srcu_fast_notrace() for
-> + * synchronization. As BPF programs that are attached to tracepoints
-> + * expect to stay on the same CPU, also disable migration.
-> + */
-> +#ifdef CONFIG_PREEMPT_RT
-> +extern struct srcu_struct tracepoint_srcu;
-> +# define tracepoint_sync() synchronize_srcu(&tracepoint_srcu);
-> +# define tracepoint_guard()				\
-> +	guard(srcu_fast_notrace)(&tracepoint_srcu);	\
-> +	guard(migrate)()
-> +#else
-> +# define tracepoint_sync() synchronize_rcu();
-> +# define tracepoint_guard() guard(preempt_notrace)()
-> +#endif
-
-Doing migrate disable on PREEMPT RT for BPF vs preempt disable in other
-tracers should come in a separate preparation patch. It belongs to the
-tracers, not to tracepoints.
-
-[...]
-				\
-> diff --git a/include/trace/perf.h b/include/trace/perf.h
-> index a1754b73a8f5..348ad1d9b556 100644
-> --- a/include/trace/perf.h
-> +++ b/include/trace/perf.h
-> @@ -71,6 +71,7 @@ perf_trace_##call(void *__data, proto)					\
->   	u64 __count __attribute__((unused));				\
->   	struct task_struct *__task __attribute__((unused));		\
->   									\
-> +	guard(preempt_notrace)();					\
->   	do_perf_trace_##call(__data, args);				\
->   }
+>   	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+> +		bool retried = false;
+>   		int result = SCAN_FAIL;
 >   
-> @@ -85,9 +86,8 @@ perf_trace_##call(void *__data, proto)					\
->   	struct task_struct *__task __attribute__((unused));		\
->   									\
->   	might_fault();							\
-> -	preempt_disable_notrace();					\
-> +	guard(preempt_notrace)();					\
->   	do_perf_trace_##call(__data, args);				\
-> -	preempt_enable_notrace();	
+>   		if (!mmap_locked) {
+> +retry:
 
-Move this to a perf-specific preparation patch.				\
->   }
->   
->   /*
-> diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-> index 4f22136fd465..6fb58387e9f1 100644
-> --- a/include/trace/trace_events.h
-> +++ b/include/trace/trace_events.h
-> @@ -429,6 +429,22 @@ do_trace_event_raw_event_##call(void *__data, proto)			\
->   	trace_event_buffer_commit(&fbuffer);				\
->   }
->   
-> +/*
-> + * When PREEMPT_RT is enabled, the tracepoint does not disable preemption
-> + * but instead disables migration. The callbacks for the trace events
-> + * need to have a consistent state so that it can reflect the proper
-> + * preempt_disabled counter.
+Jumping into an if block is nasty :)
 
-Having those defines within trace_events.h is poking holes within any
-hope of abstraction we can have from the tracepoint.h API. This adds
-strong coupling between tracepoint and trace_event.h.
-
-Rather than hardcoding preempt counter expectations across tracepoint
-and trace-events, we should expose a #define in tracepoint.h which
-will make the preempt counter nesting level available to other
-parts of the kernel such as trace_events.h. This way we keep everything
-in one place and we don't add cross-references about subtle preempt
-counter nesting level details.
-
-> + */
-> +#ifdef CONFIG_PREEMPT_RT
-> +/* disable preemption for RT so that the counters still match */
-> +# define trace_event_guard() guard(preempt_notrace)()
-> +/* Have syscalls up the migrate disable counter to emulate non-syscalls */
-> +# define trace_syscall_event_guard() guard(migrate)()
-> +#else
-> +# define trace_event_guard()
-> +# define trace_syscall_event_guard()
-> +#endif
-This should be moved to separate tracer-specific prep patches.
-
-[...]
-
-> + * The @trace_file is the desrciptor with information about the status
-
-descriptor
-
-[...]
-
-> + *
-> + * Returns a pointer to the data on the ring buffer or NULL if the
-> + *   event was not reserved (event was filtered, too big, or the buffer
-> + *   simply was disabled for write).
-
-odd spaces here.
-
-[...]
-
->   
-> +#ifdef CONFIG_PREEMPT_RT
-> +static void srcu_free_old_probes(struct rcu_head *head)
-> +{
-> +	kfree(container_of(head, struct tp_probes, rcu));
-> +}
-> +
-> +static void rcu_free_old_probes(struct rcu_head *head)
-> +{
-> +	call_srcu(&tracepoint_srcu, head, srcu_free_old_probes);
-> +}
-> +#else
->   static void rcu_free_old_probes(struct rcu_head *head)
->   {
->   	kfree(container_of(head, struct tp_probes, rcu));
->   }
-> +#endif
->   
->   static inline void release_probes(struct tracepoint *tp, struct tracepoint_func *old)
->   {
-> @@ -112,6 +149,13 @@ static inline void release_probes(struct tracepoint *tp, struct tracepoint_func
->   		struct tp_probes *tp_probes = container_of(old,
->   			struct tp_probes, probes[0]);
+>   			cond_resched();
+>   			mmap_read_lock(mm);
+>   			mmap_locked = true;
+> @@ -2819,6 +2822,43 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>   		if (!mmap_locked)
+>   			*lock_dropped = true;
 >   
 > +		/*
-> +		 * Tracepoint probes are protected by either RCU or
-> +		 * Tasks Trace RCU and also by SRCU.  By calling the SRCU
-
-I'm confused.
-
-My understanding is that in !RT we have:
-
-- RCU (!tracepoint_is_faultable(tp))
-- RCU tasks trace (tracepoint_is_faultable(tp))
-
-And for RT:
-
-- SRCU-fast (!tracepoint_is_faultable(tp))
-- RCU tasks trace (tracepoint_is_faultable(tp))
-
-So I don't understand this comment, and also I don't understand why we
-need to chain the callbacks rather than just call the appropriate
-call_rcu based on the tracepoint "is_faultable" state.
-
-What am I missing ?
-
-> +		 * callback in the [Tasks Trace] RCU callback we cover
-> +		 * both cases. So let us chain the SRCU and [Tasks Trace]
-> +		 * RCU callbacks to wait for both grace periods.
+> +		 * If the file-backed VMA has dirty pages, the scan triggers
+> +		 * async writeback and returns SCAN_PAGE_DIRTY_OR_WRITEBACK.
+> +		 * Since MADV_COLLAPSE is sync, we force sync writeback and
+> +		 * retry once.
 > +		 */
->   		if (tracepoint_is_faultable(tp))
->   			call_rcu_tasks_trace(&tp_probes->rcu, rcu_free_old_probes);
->   		else
+> +		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !retried) {
+> +			/*
+> +			 * File scan drops the lock. We must re-acquire it to
+> +			 * safely inspect the VMA and hold the file reference.
+> +			 */
+> +			if (!mmap_locked) {
+> +				cond_resched();
+> +				mmap_read_lock(mm);
+> +				mmap_locked = true;
+> +				result = hugepage_vma_revalidate(mm, addr, false, &vma, cc);
+> +				if (result != SCAN_SUCCEED)
+> +					goto handle_result;
+> +			}
+> +
+> +			if (!vma_is_anonymous(vma) && vma->vm_file &&
+> +			    mapping_can_writeback(vma->vm_file->f_mapping)) {
+> +				struct file *file = get_file(vma->vm_file);
+> +				pgoff_t pgoff = linear_page_index(vma, addr);
+> +				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+> +				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+> +
+> +				mmap_read_unlock(mm);
+> +				mmap_locked = false;
+> +				*lock_dropped = true;
+> +				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+> +				fput(file);
+> +				retried = true;
+> +				goto retry;
+> +			}
+> +		}
+> +
 
-Thanks,
+This looks a bit complicated. Can't we move that handing up, where we have most of that
+information already? Or am I missing something important?
 
-Mathieu
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 97d1b2824386f..c7271877c5220 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -22,6 +22,7 @@
+  #include <linux/dax.h>
+  #include <linux/ksm.h>
+  #include <linux/pgalloc.h>
++#include <linux/backing-dev.h>
+  
+  #include <asm/tlb.h>
+  #include "internal.h"
+@@ -2786,7 +2787,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+  
+         for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+                 int result = SCAN_FAIL;
++               bool triggered_wb = false;
+  
++retry:
+                 if (!mmap_locked) {
+                         cond_resched();
+                         mmap_read_lock(mm);
+@@ -2809,6 +2812,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+                         mmap_locked = false;
+                         result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+                                                           cc);
++
++                       if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
++                           mapping_can_writeback(file->f_mapping)) {
++                               loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
++                               loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
++
++                               filemap_write_and_wait_range(file->f_mapping, lstart, lend);
++                               triggered_wb = true;
++                               goto retry;
++                       }
+                         fput(file);
+                 } else {
+                         result = hpage_collapse_scan_pmd(mm, vma, addr,
+
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Cheers
+
+David
