@@ -1,206 +1,125 @@
-Received: from mail-m49244.qiye.163.com (mail-m49244.qiye.163.com [45.254.49.244])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AEB32FA3D;
-	Fri,  9 Jan 2026 09:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2402F332EB8;
+	Fri,  9 Jan 2026 09:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767950008; cv=none; b=ST+rECWTaZ1xgcEMExjzEZNw6TFXrkypEsClYMpGG2YSSFbAOYTfdgRD4ivTlVC1eUr9o6sE9RAHAOyc/Mlxd6DgIXIX93q2VshwJGfBp2yRvNhq9Cfb94KoqeqqWYc1hdkyPWCaiC3auMlhcg1SC4e8bPC9WD7BGG8tBn/lk80=
+	t=1767951308; cv=none; b=SSnfxaiW/9tE39JyoMyZg1+sDFhZnvpcSfPGGIDNkb7ZFCLo1cD/JKIg5/4/KtT/1YZIbI+fzMxJDIBzZ79j9HpX+uBHV6rQQvqGTtTdKDuuX+p5BvHCnb6LeEfRIcrWY36byvQGkVXwwWwu6Q1Za5L1jEkJvtVgDlPHFYEE/8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767950008; c=relaxed/simple;
-	bh=S/MQWbxy8Jf9kjh2xBJ/I06kUtwJ4EHwni4njMhHItI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Ho21yYgtCthISxspMWSiI5UkE7aYx6U4qU2Pg1i0gOe3rMJ7uYaEApHqkLMSO/GhqFtRqjDPpGVKFkHtB+nUQGBSYsSVIZKGwf63aQtXeE10OLVoNkwabUTguJ2wJ6ZlYAw6hazbF0YrtOwZVIclyDLdTvuIRJn/F6dCIpKp7TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=k0eDM6eq; arc=none smtp.client-ip=45.254.49.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1767951308; c=relaxed/simple;
+	bh=pPkYhOhuvx7Qqn/awx2pSNRq1M/gtoJcWz56iO/SzvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3+5kIxiVTm6+KD5xY1R8eJydWhAnOHS9I0yVclhg5082UGdTzvJk+XcFkJxMT52I8o47jiUAzbI+kNcPo40dKGzX4jg0p+XRapwUmGGOkyAOpwxbcPZplqhHqxEoN7IG88qYtdMJCZkIxBqmp+E8Ist5tE6jjUlN5adeqG7wHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCBq9faD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="k0eDM6eq"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 30079385a;
-	Fri, 9 Jan 2026 11:30:23 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCBq9faD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F4AC4CEF1;
+	Fri,  9 Jan 2026 09:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767951307;
+	bh=pPkYhOhuvx7Qqn/awx2pSNRq1M/gtoJcWz56iO/SzvY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DCBq9faDNPiKa+ckMvzFykF7/66rf1wwwECMIdXx5M48fvxUJULot7JPelGaj2FI/
+	 snrf8X0KA67Ua1AuU/v2CAjYSv0Vuag/UJR3X9pB1rxb0af0EQ8HmyB5lDO0ihJH1X
+	 qzXTG0jsmv1cP4AXrMmNHN6tmMWY5ZkApDNEaRAfOOK8tim6R5ooLvi6aYz03z0SSu
+	 EGYI0RhsRIMT0W4Iz6MYhx6tBr/TkSjPixe0Zm2eExIsq9zt7z4WS6OSLXO5rTt9Jd
+	 LT8tDThV6Dkv9MC0vW7hCimYJ2KIxzpSuomjB7HfpsaL6E9yMFPAKaKI5lMr0BGklJ
+	 IKKxLOCO4CFVg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
-Date: Fri,  9 Jan 2026 11:29:49 +0800
-Message-Id: <1767929389-143957-4-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9ba0ce27fb09cckunm22b4d6c66ba6e
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQxpIGFZOQh9NGR8YSUMdS0JWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=k0eDM6eqwZSeX/Oc3KneGFr36hVDHx4oK87YiANv3ixOzw3KbPKihQOEtAZLoklyPwopRdxI5ArBMIE50MgX4N++zQMw5PGEeGMQGIKPKCP/Tw7zUkJ1mktXqmjYvmNBEtTwnwb232Zg4HD8f9FhcURt0STdYXjA2ULvJS8CXMQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=3OqxevSjKFpVpGpcQ3zo/K+tGfL1K3Z3iA/7SQlFIiM=;
-	h=date:mime-version:subject:message-id:from;
+	Will Deacon <will@kernel.org>
+Cc: Mahe Tardy <mahe.tardy@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Yonghong Song <yhs@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCHv2 bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after bpf_prog_run
+Date: Fri,  9 Jan 2026 10:34:53 +0100
+Message-ID: <20260109093454.389295-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
-LTSSM history. Any LTSSM change will be recorded. It's userful
-for debug purpose, for example link failure, etc.
+Mahe reported issue with bpf_override_return helper not working when
+executed from kprobe.multi bpf program on arm.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+The problem is that on arm we use alternate storage for pt_regs object
+that is passed to bpf_prog_run and if any register is changed (which
+is the case of bpf_override_return) it's not propagated back to actual
+pt_regs object.
+
+Fixing this by introducing and calling ftrace_partial_regs_update function
+to propagate the values of changed registers (ip and stack).
+
+Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
+v2 changes:
+- moved ftrace_partial_regs_update to generic code [Will]
 
-Changes in v2:
-- use tracepoint
+ include/linux/ftrace_regs.h | 25 +++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c    |  1 +
+ 2 files changed, 26 insertions(+)
 
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 92 +++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 352f513..be9639aa 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -22,6 +22,8 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
-+#include <linux/workqueue.h>
-+#include <trace/events/pci_controller.h>
+diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
+index 15627ceea9bc..f9a7c009cdae 100644
+--- a/include/linux/ftrace_regs.h
++++ b/include/linux/ftrace_regs.h
+@@ -33,6 +33,31 @@ struct ftrace_regs;
+ #define ftrace_regs_get_frame_pointer(fregs) \
+ 	frame_pointer(&arch_ftrace_regs(fregs)->regs)
  
- #include "../../pci.h"
- #include "pcie-designware.h"
-@@ -73,6 +75,18 @@
- #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
- #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
- 
-+/* Debug FIFO information */
-+#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
-+#define  PCIE_CLIENT_DBG_EN		0xffff0007
-+#define  PCIE_CLIENT_DBG_DIS		0xffff0000
-+#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
-+#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
-+#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
-+#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
-+#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
-+#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
-+#define PCIE_DBG_LTSSM_HISTORY_CNT	64
++static __always_inline void
++ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs) { }
 +
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
- #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-@@ -96,6 +110,7 @@ struct rockchip_pcie {
- 	struct irq_domain *irq_domain;
- 	const struct rockchip_pcie_of_data *data;
- 	bool supports_clkreq;
-+	struct delayed_work trace_work;
- };
- 
- struct rockchip_pcie_of_data {
-@@ -206,6 +221,79 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
- 	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
- }
- 
-+#ifdef CONFIG_TRACING
-+static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
-+{
-+	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
-+						trace_work.work);
-+	struct dw_pcie *pci = &rockchip->pci;
-+	enum dw_pcie_ltssm state;
-+	u32 val, rate, l1ss, loop, prev_val = DW_PCIE_LTSSM_UNKNOWN;
-+
-+	for (loop = 0; loop < PCIE_DBG_LTSSM_HISTORY_CNT; loop++) {
-+		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
-+		rate = (val & GENMASK(22, 20)) >> 20;
-+		l1ss = (val & GENMASK(10, 8)) >> 8;
-+		val &= PCIE_LTSSM_STATUS_MASK;
-+
-+		/* Two consecutive identical LTSSM means invalid subsequent data */
-+		if ((loop > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
-+			break;
-+
-+		state = prev_val = val;
-+		if (val == DW_PCIE_LTSSM_L1_IDLE) {
-+			if (l1ss == 2)
-+				state = DW_PCIE_LTSSM_L1_2;
-+			else if (l1ss == 1)
-+				state = DW_PCIE_LTSSM_L1_1;
-+		}
-+
-+		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
-+					dw_pcie_ltssm_status_string(state),
-+					((rate + 1) > pci->max_link_speed) ?
-+					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
-+	}
-+
-+	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
-+}
-+
-+static void rockchip_pcie_ltssm_trace(struct rockchip_pcie *rockchip,
-+				      bool en)
-+{
-+	if (en) {
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_TRANSITION_DATA,
-+					 PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0);
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_TRANSITION_DATA,
-+					 PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1);
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_TRANSITION_DATA,
-+					 PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0);
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_TRANSITION_DATA,
-+					 PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1);
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_EN,
-+					 PCIE_CLIENT_DBG_FIFO_MODE_CON);
-+
-+		INIT_DELAYED_WORK(&rockchip->trace_work,
-+				  rockchip_pcie_ltssm_trace_work);
-+		schedule_delayed_work(&rockchip->trace_work, 0);
-+	} else {
-+		rockchip_pcie_writel_apb(rockchip,
-+					 PCIE_CLIENT_DBG_DIS,
-+					 PCIE_CLIENT_DBG_FIFO_MODE_CON);
-+		cancel_delayed_work_sync(&rockchip->trace_work);
-+	}
-+}
 +#else
-+static void rockchip_pcie_ltssm_trace(struct rockchip_pcie *rockchip,
-+				      bool en)
++
++/*
++ * ftrace_partial_regs_update - update the original ftrace_regs from regs
++ * @fregs: The ftrace_regs to update from @regs
++ * @regs: The partial regs from ftrace_partial_regs() that was updated
++ *
++ * Some architectures have the partial regs living in the ftrace_regs
++ * structure, whereas other architectures need to make a different copy
++ * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
++ * if the code using @regs updates a field (like the instruction pointer or
++ * stack pointer) it may need to propagate that change to the original @fregs
++ * it retrieved the partial @regs from. Use this function to guarantee that
++ * update happens.
++ */
++static __always_inline void
++ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
 +{
++	ftrace_regs_set_instruction_pointer(fregs, instruction_pointer(regs));
++	ftrace_regs_set_return_value(fregs, regs_return_value(regs));
 +}
-+#endif
 +
- static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-@@ -289,6 +377,9 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
- 	 * 100us as we don't know how long should the device need to reset.
- 	 */
- 	msleep(PCIE_T_PVPERL_MS);
-+
-+	rockchip_pcie_ltssm_trace(rockchip, true);
-+
- 	gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
+ #endif /* HAVE_ARCH_FTRACE_REGS */
  
- 	return 0;
-@@ -299,6 +390,7 @@ static void rockchip_pcie_stop_link(struct dw_pcie *pci)
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+ /* This can be overridden by the architectures */
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6e076485bf70..3a17f79b20c2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2564,6 +2564,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
++	ftrace_partial_regs_update(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	rcu_read_unlock();
  
- 	rockchip_pcie_disable_ltssm(rockchip);
-+	rockchip_pcie_ltssm_trace(rockchip, false);
- }
- 
- static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+  out:
 -- 
-2.7.4
+2.52.0
 
