@@ -1,37 +1,38 @@
 Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19F61A285;
-	Fri,  9 Jan 2026 19:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C1D1339A4;
+	Fri,  9 Jan 2026 19:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767986853; cv=none; b=KY+DTrL+V873JaWmGAlPSc9rvJ7bSo+L75vK6i2Rwf/82oH5OEM2s80z3/0NyNdHRRFpE/0kXgFCE05G9h3jWQqEu5ZIz3l/1CVlHJcg1DFbcPsy2KHvkkwitU1mX7cis7/yf8Vu2//2bXf8KJotoS9GFmWHomLU0PgyHFPrScU=
+	t=1767988041; cv=none; b=CAKEyLhRNDZ6E6T7PUhwjstaduuZECaEQg5osRgF41p0qxqXJ6DonszMtckNAu4MoRzSHWiKyAesdNn6CW83ORcidvRZwkjVrB9AynGYIGP4cywGXgvOwQAP+172ncwAN/7sOZOYe/CEFcaceeTj3KaHAy++bohhBw0QV2GyeeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767986853; c=relaxed/simple;
-	bh=OenCN6HjgGMHYIHj9sPx0OSi6qw6Ed/g+qzaqsxFHhY=;
+	s=arc-20240116; t=1767988041; c=relaxed/simple;
+	bh=3+G9HPXvnZjQghjiy8rA3xjq3Z2FEovFHz4a2z2sNH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IjmDCNNh+rmraxVp2h1/46sJAeYr2IRjm5agfDxaEbE/RhCR12uxNEWK6J+Rix3CDxS1lU+FBqBHQucr3bNargQptB1AsFJ2n+bCiaboy7yKUHeM2Vl3QiGLjH3dc82GwOeAVVjSBp5Vx+Uj0zP+wm7TS2z4lhpiU5XcoDvw4U0=
+	 MIME-Version:Content-Type; b=KByP+2ZJI05XdtsOKrSbPAVBUN5XoOho1fi6IJ/tcHg5kujYl+YzJsgI4Kk4fV9wE+1jbrbhGI2KF4pJ8msorP2jSEBHXnSIp4dy0oe7FrsGYK3q765DetcOlA0dESsqr6zvuR9So0oLy3ZgAyJZFnKZl4NeYlB2iSMBplu40v4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id DAA2A5B75A;
-	Fri,  9 Jan 2026 19:27:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 7CA8E6000A;
-	Fri,  9 Jan 2026 19:27:27 +0000 (UTC)
-Date: Fri, 9 Jan 2026 14:27:58 -0500
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 78E1213BED1;
+	Fri,  9 Jan 2026 19:47:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id B7B0330;
+	Fri,  9 Jan 2026 19:47:14 +0000 (UTC)
+Date: Fri, 9 Jan 2026 14:47:46 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Tejun
- Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, Frederic
- Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] tracing: Replace use of system_wq with system_dfl_wq
-Message-ID: <20260109142758.145f57f8@gandalf.local.home>
-In-Reply-To: <20251230094236.358ae2d8@gandalf.local.home>
-References: <20251230142820.173712-1-marco.crivellari@suse.com>
-	<20251230094236.358ae2d8@gandalf.local.home>
+To: Will Deacon <will@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Laura
+ Abbott <labbott@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org,
+ usamaarif642@gmail.com, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
+Message-ID: <20260109144746.4b86aff0@gandalf.local.home>
+In-Reply-To: <aVwp_BJx84gXHPlD@willie-the-truck>
+References: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
+	<aVwp_BJx84gXHPlD@willie-the-truck>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,27 +42,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 8koh9yizza1xkeju5qigiw3qzry8ekkk
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 7CA8E6000A
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: B7B0330
+X-Stat-Signature: y1irfeaeo9r3qazg5i1ufgoowtmksn5x
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19T+HqThgZMoB4pM+VO2FIrrY1DmOyDiUY=
-X-HE-Tag: 1767986847-43518
-X-HE-Meta: U2FsdGVkX19RjaI9IZoJWGFiLDTLSqnoEntCrd4KusakDxv11uo4+qWv9rjdXWbUPYgNH8kE2qLTuqsXgqiWdDl5qDgMR/s1BrMOD/FxIdQKzF3Sn0zcGW3B9yPaZiZfI62DF1/F1x7iScvh0jkFBqDHSdjq0B0UXi77Dh/41Ew3VXV4Oho1SiUL56/bwZchrzXzZv0UoDRPLk4hLYpVtVe5F97avU9MOdYDaymgs0NlMgYWl0O8qqGF4N3rGYNWVF6t51WQtOXUa3av60/6qi22JOadchZmHNVOu692//jg8X6EIM9QwD95gj1t6O4ZF8OZQtn15R7885L8JAwYothcyisdvUbdOQMTj03NF0bT7UItgUeLDNjmEoRQQ04Ra90nn2UvIFnqIzbzNrb2x/d4aUlXcUClt3Jcp5QZ95DvsTiPQeYbeP9tRb3iXfiR1JkhIVDuQGZBRrJwTK9SOA==
+X-Session-ID: U2FsdGVkX18aQfYKwLFjc+j1fBAjUkFY2tQx54zt9Ag=
+X-HE-Tag: 1767988034-189395
+X-HE-Meta: U2FsdGVkX18aSF6HsSAMAz6VNgb0vhA/XykPHWKINq6EKVrPtdLYvWkca/CTYzPz962OC0FHShZH6YI8a5V0BZu08PDbuO6zi2PCdYYg3XkjdEg4yGu9sG+ItQzMQ+COZxGcRyEppbC4oBmsakrHKsKgb0BzEOJ2gNlytKlsKvxTOARvTNCwdpr02i3oViBFBEtXUe536R3LDv7lHSA8qchlGSqV5PU74Wi5l6CwzZQdU1+6T1SQMz4F8FM9u3YJ0NcVkEoRm/Y8viZObsnvBSXnn9u10mjEw6ADZCArqJ+petiaq83Sy6DqJXPViXpfCEnAZ9F/2WTn67tnRftG9A/IbPmiQ49D
 
-On Tue, 30 Dec 2025 09:42:36 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 5 Jan 2026 21:15:40 +0000
+Will Deacon <will@kernel.org> wrote:
 
-> > Suggested-by: Tejun Heo <tj@kernel.org>
-> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> > ---
-> > Changes in v2:
-> > - use system_dfl_wq instead of system_percpu_wq because this workload has no
-> >   benefits being per-cpu.  
+> > Another approach is to disable profiling on all arch/arm64 code, similarly to
+> > x86, where DISABLE_BRANCH_PROFILING is called for all arch/x86 code. See
+> > commit 2cbb20b008dba ("tracing: Disable branch profiling in noinstr
+> > code").  
 > 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Yes, let's start with arch/arm64/. We know that's safe and then if
+> somebody wants to make it finer-grained, it's on them to figure out a
+> way to do it without playing whack-a-mole.
 
-I guess I'll take this through my tree, as I'm pulling in patches now to
-base off of -rc5.
+OK, so by adding -DDISABLE_BRANCH_PROFILING to the Makefile configs and for
+the files that were audited, could be opt-in?
+
+CFLAGS_REMOVE_<autdit_file>.o = -DDISABLE_BRANCH_PROFILING
+
+And add that for each file that has been fully audited?
 
 -- Steve
