@@ -1,104 +1,118 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93460364025;
-	Fri,  9 Jan 2026 16:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3172D8377
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 16:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767976310; cv=none; b=PuY2ZAdKjqLYhcclTW1dVxgtXAH1eZmUdYo1W316GZHy9s4zqQKFYkWnOT9s3J+FuhfXgpKs2pHnpdI9QDfzDBqNjntgvgnTHJKimYxIJw8hChqjEx0AkN65Zau5hDqorivJ5uo7zN6wfam38PFJDWtCz4EeOEsvqvRasVj4UxA=
+	t=1767977669; cv=none; b=Zspd5pcevojHt/bzKV2aITc+OsfzOo5wTfzTzGVifpnKppDtrN1GNEGgQDp489C+RSYbbzlKl2THiGdvqbUwm22jb34bjQ/crErkXWZ4xnGNVSNArs2Wp9i3BQwgQImL19ovrFhLjYvaPCVg5NwmeIUZUv+Eg7giz5Kcj/J0bKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767976310; c=relaxed/simple;
-	bh=BCRMP2eyuWt/cu6xQkRQpDmqsMIlGvgreC2eYv+qXgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HWJyoM16CblGt+cQUIhrv0qB84O9c8wergzYvz42icczFMZC2amN0yfE2wuRJDXp53IoXXPfUvvsX7qXoBy8l3+3b/b7ias9mMH2XOm4VaBQh7/WosbSydLZ92z5jg4s/ypr3oImfvulhCeSSBIj704dUN3R8vVE9qaZSfn7tZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jbxnvxnF; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767977669; c=relaxed/simple;
+	bh=8Bi0wnXNNoO6BUdS0PfFuCedKJjgtAMsXms/52+KB0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U1Fh0xm58UkFnKOcYXvhktMeMUEg30N6hmB0Y5Pk6nIC1xmV+BJynA9Nub/TiI87+eL2pWe45b2aV6ZaTQAIHhy6CtIT9+Km8e+Vb7lEEO5niXT0/lqODutXU8HRywv6o2mIlbbzYcZr3S+3A4WF3B/OI5kH+5PXGDKJsClbGYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GV4mq/zX; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jbxnvxnF"
-Message-ID: <216a9728-ae69-43af-8632-471b71c56607@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767976296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m76scKJtcG0f+dGnY7fKIibaFnzEOHd/0jl+nbkZ6eY=;
-	b=jbxnvxnFjlfyjXnAnVY3GRMUKcPkHWm/nZvlrsuH8xBOhF7hR/8erFycp+tmsGUMpZVrSx
-	nt/p5Ggn+hboMbDHzGnJD55WkF0fJg1stkFeetLmsHjlOMYFOti9jshlSZMaOR+B3lioeS
-	H0HZCDx3JuVadET64fJNMuIdZ1Uvntk=
-Date: Sat, 10 Jan 2026 00:31:20 +0800
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GV4mq/zX"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42fb8aa0c3eso400763f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jan 2026 08:54:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1767977667; x=1768582467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nWjDb7yk2PJrpDy9G76TtUQePp9Bz/8mN/oD8ydAWuQ=;
+        b=GV4mq/zXz1ObnEMRPn8wQ3e9jbWQpP4Mz2UGdM7kLKA6hwGjWHIYJEM51MBWhcUYHO
+         QgBFUt5p79MAHnw37p24laOYETwgHFW8HWU7og8ftvCv+PMf8R5d+cTsc77PtoDnhZeh
+         kjBwDA073b7iq2A/u7BInu1V4ux2+cXUvafHqv2ymOryyzJYjsmAceQ1wqnZvYO2gEk3
+         x9bHWqH1pMXpTM+chL/sG5iCN/xmAPWOf5FcrdkNsKxOlmyBBa7qFg1hHdqISI4PI4HK
+         K/MO0xAykpyGZG47QKtktYWZQf8Mv3k8AeoiO4Ut9ETi9H2VD0MWcwklHUS0gbdCOfFQ
+         2MpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767977667; x=1768582467;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nWjDb7yk2PJrpDy9G76TtUQePp9Bz/8mN/oD8ydAWuQ=;
+        b=I5FnoW/hy6+uq1SWBtblwHrLetZsnRSx4nDfOWaIRgUJFmB/PgZlBEgHAcb6kstQK+
+         hm544tF7if2Tcvp8Iy3G7DAvud0QbJg9p2SIHtAzGPxXkR7aetUWvioWseFtYlvUlQbA
+         68W6aEXvplZQYR08d7dZbOxg5Anl4jeJa/BBtVoKGbo8aMcCgi2ZReKaygCicrRPj+Gb
+         0Xsis1vXWYti5uWw02QoaCswPQbJ+C86lcGlhmP7xOt1qQl//EpQk3sSv5EFUgQn19Q1
+         +IUx3afmdXLAHtE8uovxae32UxMBAKAUK3zkGyj6DoXJtg+gbYCFajLuxaiSoGVueaEe
+         pIug==
+X-Forwarded-Encrypted: i=1; AJvYcCX2FZ/lVc6b/WIdpx8HCSRYIUSTFZdNI+ow0lFKDM2ijd0432PBDh723hzotaVXjpVDA2vn1m8jRtvi/CwpluPM3AI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzuUzbKh6Tiyz/0LO5a2VdtZzBKU5MOFcDnLAxtCydS+iS/n4c
+	0oA2mgE5JUFrz1N7EuMi8Q2I11jzFVUQVhb9ZcPqVTvDU+fNaHX1JZd84OLltpDw7r6r2DufG0y
+	/Exqb
+X-Gm-Gg: AY/fxX5DTdSnNr+vseLurB+yggK3SJNlr9iO2v8wpSpzG7jwLz97kx5TkDos9CEZaBx
+	mO1ZQkbj7Wk8V3nP2Xa45ekQFLjZ2Hv6ZdxQwAij2SAwtc52SmYXDtwEljvlxXgzDfmAkgZLtvC
+	D+i9/gKTbK1OVbKLhTl4VUiEUtY4DXuXMzjRiBM73FSjyFG0HdXol14270ohkhPIOd/dvaR0nXp
+	WqEngi77GcVoc5qNmUr6Beq99NGKXtmWPMTqi2Y+QITTOvpLaCKDlo1+iKu99VDz52mFY5skgg+
+	5ush0EZSJ8jdh0ijxEd/NGjNCE84fJO4RcKn3RrFUDMBI8rL9JlUwQqgyAn7VF6HIbyMnIeMEZI
+	1gNVkVY3cRPtcPBMtfQxCWN3tAtyx7uIvp2UkrI99I6qrwfxL+yLdg75fwJq+mBNn65+8Tkjdrc
+	o94E7mUN2uA/7w+y/V+IICSo3bEcmKzF6PWbuY7/SmP2Op8LqygRHFPQ0frcXO4+Fa4J2jURDvX
+	JEG
+X-Google-Smtp-Source: AGHT+IFG2ZorT+yxyJ5NBPvYvfTR4y6bLlncZmb9SB5fsFuF81d8MrxzFB1XL1V3NoA55qYcPCf7Ww==
+X-Received: by 2002:a05:600c:4e86:b0:477:5b01:7d49 with SMTP id 5b1f17b1804b1-47d84b3377amr68838595e9.4.1767977666780;
+        Fri, 09 Jan 2026 08:54:26 -0800 (PST)
+Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f6ef868sm214237245e9.11.2026.01.09.08.54.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 08:54:26 -0800 (PST)
+Date: Fri, 9 Jan 2026 17:54:23 +0100
+From: Petr Tesarik <ptesarik@suse.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
+Message-ID: <20260109175423.70ba42d7@mordecai>
+In-Reply-To: <20260109111506.66ad545a@gandalf.local.home>
+References: <20260106091039.2012108-1-ptesarik@suse.com>
+	<20260106170405.425f469e@gandalf.local.home>
+	<20260107085009.58fcffd4@mordecai>
+	<20260107105137.4cf9a67e@mordecai>
+	<20260107111709.0d115cd8@gandalf.local.home>
+	<20260107111935.3befc296@gandalf.local.home>
+	<20260108093932.252f6bc7@mordecai>
+	<20260108115800.7a7fc8a7@gandalf.local.home>
+	<20260109095756.13deb429@mordecai>
+	<20260109111506.66ad545a@gandalf.local.home>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/3] bpf, x64: Call perf_snapshot_branch_stack in
- trampoline
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>, Matt Bobrowski
- <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Network Development <netdev@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- kernel-patches-bot@fb.com
-References: <20260109153420.32181-1-leon.hwang@linux.dev>
- <20260109153420.32181-2-leon.hwang@linux.dev>
- <CAADnVQK4O-igzuSvfgjG1ZqdUBXrjNL=4tJZuS1uy36GCD2mVg@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAADnVQK4O-igzuSvfgjG1ZqdUBXrjNL=4tJZuS1uy36GCD2mVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 9 Jan 2026 11:15:06 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 2026/1/10 00:24, Alexei Starovoitov wrote:
-> On Fri, Jan 9, 2026 at 7:37 AM Leon Hwang <leon.hwang@linux.dev> wrote:
->>
-
-[...]
-
->> @@ -3366,6 +3416,14 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
->>
->>         save_args(m, &prog, regs_off, false, flags);
->>
->> +       if (bpf_prog_copy_branch_snapshot(fentry)) {
->> +               /* Get branch snapshot asap. */
->> +               if (invoke_branch_snapshot(&prog, image, rw_image)) {
->> +                       ret = -EINVAL;
->> +                       goto cleanup;
->> +               }
->> +       }
+> On Fri, 9 Jan 2026 09:57:56 +0100
+> Petr Tesarik <ptesarik@suse.com> wrote:
 > 
-> Andrii already tried to do it.
-> I hated it back then and still hate the idea.
-> We're not going to add custom logic for one specific use case
-> no matter how appealing it sounds to save very limited LBR entries.
-> The HW will get better, but we will be stuck with this optimization forever.
+> > I have removed both "inline" and "noinline" in v2, leaving it at the
+> > discretion of the compiler. If you believe it deserves a "noinline",
+> > feel free to add it. FWIW on x86-64, I didn't observe any measurable
+> > diference either in latency or instruction cache footprint.  
 > 
+> Please add the noinline. I went through and added strategic "noinline" and
+> "__always_inline", as well as placing "likely()" and "unlikely()" and
+> dropped the cost of adding an event from just under 300ns down to less than
+> 150ns.
+> 
+> This code is called during function tracing (hit at every function call),
+> and yes, every little bit helps!
 
-Understood, thanks for the explanation.
+I'm going to wait a few days for further comments, then add it in v3.
 
-I won’t pursue this approach further.
+Thanks for your time!
 
-Thanks,
-Leon
-
+Petr T
