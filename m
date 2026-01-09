@@ -1,130 +1,111 @@
-Received: from mail-m49218.qiye.163.com (mail-m49218.qiye.163.com [45.254.49.218])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F2333987;
-	Fri,  9 Jan 2026 03:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DDC23EA87
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 03:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767929736; cv=none; b=NaBTO6Tv+nVjeEkDy5ZS5J3FHxyxph8ZeggF9QUoBZNdCZLuyylQc6WawAyAezdpN6CO2D9i0wxIMVVgdwKfRgdqbcmNW8p9eUpSTA8mpRIHCjaD4EX7FA6Ujf7uzXaXDsLuDlW1Tl1QY7bOzc+xvJvoeUANOw/06iXr6Y80Mlg=
+	t=1767929879; cv=none; b=tFN9N9IM90zadOlzAX5twyyOzES53Ste9DKr5cqF5GUk/KjVdHyMsGwe/EJaHBsyFad+5AYn1sc+12ZwiKFjH1bQCCILORriLp/2VuP61t2zk+N+JnuDJrVxGggsjHwgrjbJ+JqcZs8S5KnWzHaKadLLWncACGdfRM4ZFM6AmKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767929736; c=relaxed/simple;
-	bh=4N9eocZwqn4fYVwLR2fw4gvFv1i7FjnDCcjRAD0TKi0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=jXBObHULchbeIOkKta9VTgky5LiZAKJbcd5Q+nr4BxpDqIFwweCPIyo6K24P8Dg5Lsw33BOIfFqdJIGp7mdKGN8Sjc7/jWyFqyMj04xdPAis9OYNSTfoUqAL7RRDYplL1S/Eamc22jNsoWlutM7X18RPQmUdZfqDHFHcc5pn04A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hAva6aqc; arc=none smtp.client-ip=45.254.49.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1767929879; c=relaxed/simple;
+	bh=pQXuVp23KmJTwl1uNecClxnb6Bjg8ReC/eYBTC9HMh8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NTQQm5/U3jcIXQEW3InCSQQ8XOvsCOYxSuov5UqFX5oQ3Z8oVZzKJMjOoGWP6P/uKdvO56k/Bxp3IIRT0Y4Mm/esBHTfiNt9FfLI9J6ssJXL6PhfaoppIw/tN7bNjmq2BuvCFnwTluJfhF7AfXhpY1jq2bSsfbw/9f44Ki4goOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CLyR6ptv; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hAva6aqc"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 30079381d;
-	Fri, 9 Jan 2026 11:30:14 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org,
-	linux-pci@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CLyR6ptv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767929865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OntszklQiyhOLBA2hStKkvGHmLOPE0BPoaUp0XUIGLc=;
+	b=CLyR6ptvctGbNIE22zTU8HkpTLigXRfp7jNzgncnNK9KX7itRwtRezSBSPtWOYZe/5xjHe
+	1o08LAZPi4Uuhwf7cZ6porM6n+pwZqng25+q45TuXRHZMLP64UEfGh2TRhJRwQ/vQG7Uqj
+	MWbPQNL4yw3K0OyQMAUoe3tMEgHp1rI=
+From: Fushuai Wang <fushuai.wang@linux.dev>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org,
+	wangfushuai@baidu.com
+Cc: skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 1/3] PCI: trace: Add PCI controller LTSSM transition tracepoint
-Date: Fri,  9 Jan 2026 11:29:47 +0800
-Message-Id: <1767929389-143957-2-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9ba0ce046a09cckunm22b4d6c66b9d0
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR9CTFZNGUMYGk5DS0wZSExWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	pVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=hAva6aqchK7biBwKARd9U+DIFhw2WoW0xYi4NxqBCnWAOOagk3ChaPdqJtC4KAikjAvFWNZENgqwq3JGOY8m4OOpmGOVJlIMyzFZLHsAYZvFr2Lo3fHrCeW14J9nCCsVgWt9yBjQawyJKEbqnF0lfPDkfyRucrJjHpOfsR9jO/k=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=i08S/nmL7O46KuoZksfkUSbqUI8SI00SQLBmIK4mKe8=;
-	h=date:mime-version:subject:message-id:from;
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3] selftests/tracing: Fix test_multiple_writes stall
+Date: Fri,  9 Jan 2026 11:36:20 +0800
+Message-Id: <20260109033620.25727-1-fushuai.wang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Some platforms may provide LTSSM trace functionality, recording historical
-LTSSM state transition information. This is very useful for debugging, such
-as when certain devices cannot be recognized or link broken during test.
-Implement the pci controller tracepoint for recording LTSSM and rate.
+From: Fushuai Wang <wangfushuai@baidu.com>
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
+the test_multiple_writes test will stall and wait for more
+input due to insufficient buffer space.
 
+Check current buffer_size_kb value before the test. If it is
+less than 12KB, it temporarily increase the buffer to 12KB,
+and restore the original value after the tests are completed.
+
+Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
+V2 -> V3: Make the From and SoB match.
+V1 -> V2: Restore buffer_size_kb outside of awk script.
 
-Changes in v2: None
+ .../ftrace/test.d/00basic/trace_marker_raw.tc  | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
- drivers/pci/trace.c                   |  1 +
- include/trace/events/pci_controller.h | 44 +++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
- create mode 100644 include/trace/events/pci_controller.h
-
-diff --git a/drivers/pci/trace.c b/drivers/pci/trace.c
-index cf11abc..c1da9d3 100644
---- a/drivers/pci/trace.c
-+++ b/drivers/pci/trace.c
-@@ -9,3 +9,4 @@
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+index 7daf7292209e..a2c42e13f614 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+@@ -89,6 +89,7 @@ test_buffer() {
+ 	# The id must be four bytes, test that 3 bytes fails a write
+ 	if echo -n abc > ./trace_marker_raw ; then
+ 		echo "Too small of write expected to fail but did not"
++		echo ${ORIG} > buffer_size_kb
+ 		exit_fail
+ 	fi
  
- #define CREATE_TRACE_POINTS
- #include <trace/events/pci.h>
-+#include <trace/events/pci_controller.h>
-diff --git a/include/trace/events/pci_controller.h b/include/trace/events/pci_controller.h
-new file mode 100644
-index 0000000..47d54c6
---- /dev/null
-+++ b/include/trace/events/pci_controller.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pci_controller
+@@ -99,9 +100,24 @@ test_buffer() {
+ 
+ 	if write_buffer 0xdeadbeef $size ; then
+ 		echo "Too big of write expected to fail but did not"
++		echo ${ORIG} > buffer_size_kb
+ 		exit_fail
+ 	fi
+ }
+ 
++ORIG=`cat buffer_size_kb`
 +
-+#if !defined(_TRACE_HW_EVENT_PCI_CONTROLLER_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HW_EVENT_PCI_CONTROLLER_H
++# test_multiple_writes test needs at least 12KB buffer
++NEW_SIZE=12
 +
-+#include <uapi/linux/pci_regs.h>
-+#include <linux/tracepoint.h>
++if [ ${ORIG} -lt ${NEW_SIZE} ]; then
++	echo ${NEW_SIZE} > buffer_size_kb
++fi
 +
-+TRACE_EVENT(pcie_ltssm_state_transition,
-+	TP_PROTO(const char *dev_name, const char *state, u32 rate),
-+	TP_ARGS(dev_name, state, rate),
+ test_buffer
+-test_multiple_writes
++if ! test_multiple_writes; then
++	echo ${ORIG} > buffer_size_kb
++	exit_fail
++fi
 +
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name)
-+		__string(state, state)
-+		__field(u32, rate)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name);
-+		__assign_str(state);
-+		__entry->rate = rate;
-+	),
-+
-+	TP_printk("dev: %s state: %s rate: %s",
-+		__get_str(dev_name), __get_str(state),
-+		__print_symbolic(__entry->rate,
-+			{ PCIE_SPEED_2_5GT,  "2.5 GT/s" },
-+			{ PCIE_SPEED_5_0GT,  "5.0 GT/s" },
-+			{ PCIE_SPEED_8_0GT,  "8.0 GT/s" },
-+			{ PCIE_SPEED_16_0GT, "16.0 GT/s" },
-+			{ PCIE_SPEED_32_0GT, "32.0 GT/s" },
-+			{ PCIE_SPEED_64_0GT, "64.0 GT/s" },
-+			{ PCI_SPEED_UNKNOWN, "Unknown" }
-+		)
-+	)
-+);
-+
-+#endif /* _TRACE_HW_EVENT_PCI_CONTROLLER_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
++echo ${ORIG} > buffer_size_kb
 -- 
-2.7.4
+2.36.1
 
