@@ -1,26 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C1D1339A4;
-	Fri,  9 Jan 2026 19:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5532C35A932;
+	Fri,  9 Jan 2026 19:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767988041; cv=none; b=CAKEyLhRNDZ6E6T7PUhwjstaduuZECaEQg5osRgF41p0qxqXJ6DonszMtckNAu4MoRzSHWiKyAesdNn6CW83ORcidvRZwkjVrB9AynGYIGP4cywGXgvOwQAP+172ncwAN/7sOZOYe/CEFcaceeTj3KaHAy++bohhBw0QV2GyeeI=
+	t=1767988193; cv=none; b=Igp+A7SI/L7rMGuAhNZjxB50S9WuaRAlzFYU2G7xUg34Eh4Ie2aZITmRCvAPptuDsxQ31FpGis4nsr4uIPCJjlOhgceJj2TXAhlinMrMjsrYyM5BGV+M1xL7NC78yJEzo640Dcynj1joADZvcM0jIo/YYfhD+QDLy03qcGuEp5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767988041; c=relaxed/simple;
-	bh=3+G9HPXvnZjQghjiy8rA3xjq3Z2FEovFHz4a2z2sNH4=;
+	s=arc-20240116; t=1767988193; c=relaxed/simple;
+	bh=gxptkWFKGqjGUpnowhws6x+yALAnQviMH3p9X5YSQtY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KByP+2ZJI05XdtsOKrSbPAVBUN5XoOho1fi6IJ/tcHg5kujYl+YzJsgI4Kk4fV9wE+1jbrbhGI2KF4pJ8msorP2jSEBHXnSIp4dy0oe7FrsGYK3q765DetcOlA0dESsqr6zvuR9So0oLy3ZgAyJZFnKZl4NeYlB2iSMBplu40v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 78E1213BED1;
-	Fri,  9 Jan 2026 19:47:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id B7B0330;
-	Fri,  9 Jan 2026 19:47:14 +0000 (UTC)
-Date: Fri, 9 Jan 2026 14:47:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
+	 MIME-Version:Content-Type; b=OHnCny5f7n9kto8FxYrhOh/2xUKczrVagbepn9du4fw4GbE54tr20rgVfzZv+m2AD8Rar8rybOb2hl9B5qSy4tAikbcNoyvNfnD8NKom3RXvER98sf6qCcikTStqKP7JsencpQqBj56kRJujs0Gke6OJYHDEHjLqlDKKvpD+Wck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqhRI0+v; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqhRI0+v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819F0C19422;
+	Fri,  9 Jan 2026 19:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767988192;
+	bh=gxptkWFKGqjGUpnowhws6x+yALAnQviMH3p9X5YSQtY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EqhRI0+vJQyE3ayoQmpkAO9dmShbp5UzdpE6/LGmkPGBF24H02ae3Gr0OOJRgHQyC
+	 u8kwUzOOngJPL23yMF7DZ6g6wpUI3T0RzsRoEjqTuFT7EzmUSCtiRgsYR1TP75kByJ
+	 SOGLynvhVAI9qKrmnWNx1dJBkPjyqDNab6dACNchYyD1kQ7NaCqdVyLr6Bc6KGJCED
+	 5SHyQ33zL+xxf5QiTHdXKwnMCg78RBHAzY7qWNe71xrfmkGTcqLKTmIBRXeMyMOhYA
+	 YxCmdEC9Mgu3O6DBoe6cf0MOnZVeJByjApUjBXam4P3KAM7ct5RjNdZeJ3l/1SXvg8
+	 Ou+lpLZ4tAukg==
+Date: Fri, 9 Jan 2026 14:50:22 -0500
+From: Steven Rostedt <rostedt@kernel.org>
 To: Will Deacon <will@kernel.org>
 Cc: Breno Leitao <leitao@debian.org>, Catalin Marinas
  <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Laura
@@ -29,10 +36,10 @@ Cc: Breno Leitao <leitao@debian.org>, Catalin Marinas
  Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org,
  usamaarif642@gmail.com, kernel-team@meta.com, stable@vger.kernel.org
 Subject: Re: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
-Message-ID: <20260109144746.4b86aff0@gandalf.local.home>
+Message-ID: <20260109145022.35da01a3@gandalf.local.home>
 In-Reply-To: <aVwp_BJx84gXHPlD@willie-the-truck>
 References: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
-	<aVwp_BJx84gXHPlD@willie-the-truck>
+ <aVwp_BJx84gXHPlD@willie-the-truck>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,13 +49,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: B7B0330
-X-Stat-Signature: y1irfeaeo9r3qazg5i1ufgoowtmksn5x
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18aQfYKwLFjc+j1fBAjUkFY2tQx54zt9Ag=
-X-HE-Tag: 1767988034-189395
-X-HE-Meta: U2FsdGVkX18aSF6HsSAMAz6VNgb0vhA/XykPHWKINq6EKVrPtdLYvWkca/CTYzPz962OC0FHShZH6YI8a5V0BZu08PDbuO6zi2PCdYYg3XkjdEg4yGu9sG+ItQzMQ+COZxGcRyEppbC4oBmsakrHKsKgb0BzEOJ2gNlytKlsKvxTOARvTNCwdpr02i3oViBFBEtXUe536R3LDv7lHSA8qchlGSqV5PU74Wi5l6CwzZQdU1+6T1SQMz4F8FM9u3YJ0NcVkEoRm/Y8viZObsnvBSXnn9u10mjEw6ADZCArqJ+petiaq83Sy6DqJXPViXpfCEnAZ9F/2WTn67tnRftG9A/IbPmiQ49D
+
+[ Resending with my kernel.org email, as I received a bunch of messages from gmail saying it's blocking me :-p ]
 
 On Mon, 5 Jan 2026 21:15:40 +0000
 Will Deacon <will@kernel.org> wrote:
