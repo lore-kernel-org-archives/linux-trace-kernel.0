@@ -1,89 +1,66 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243FB33B6EA
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 15:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3E9320CC9
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 15:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767972228; cv=none; b=CsMyxKsPp9nih5cIaImrumAeBiRG6fLETLp+B9fnBgrqyvAUlP+c4HeV/9qaAw3z7vXJUyvtCBEoGLzux16ZTg8ao3WuFxaWAarS2fp20R/pUGRFQgwCcXx6SE9FiEzM75kzOLHNuQfyUwJxd2XKtbwnMUx+j0KCp4ujkoaP/Yw=
+	t=1767973031; cv=none; b=XZf6zdg4mqHsjnQytJiK0wlRKqlJNbI4e+xWosdc/sxPOzvkCdZeq6HWHHkVWwpYk9/tfWdo4gTmPTZpqYePwYa0JjEsbtomAQCi+GT9sr3WxdtJv/fUUR98It31LO9KtkbISq9F9zajGqdD0xyQSsD0v0jnEl6Ip5H9PT6plhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767972228; c=relaxed/simple;
-	bh=QIvd1MKc6lq0zu107pFg6fKNOlzrcPbUphpZfU5JEuo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k4Se4B7fJ0HGf46cW4Jap8M09nF6sS2pMusp6tApdfDhDYQq7xneiMF05PXCDYDYpKFZQF9KmtJpfRunDM2cnOWxNMP+RHbS3FzaadovQFoxB6RUMg/8clZ/tNn5w8iF6x6/HS+JTQ05Uu7ejBDRQChnYKpfPEWiB9u5otoxf24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KcXCt+3W; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LPYObc20; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KcXCt+3W; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LPYObc20; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1767973031; c=relaxed/simple;
+	bh=UiHnQOX8n8z/sEk6RLsE9km58+/qOu0e4tMQxCdsk0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tSWnqn9MSnFz+An6/0QQq0rqsSR2P6w5wU8dRWFo9IekBaIdikUPMJViz87/f4eQAW4goCeSm5IFvXSjeQPEwxbOH1F9ciAS8Vd1wDiooZqdIjfZXMIod67vWq5YkeY+UdjbCk9o2IoMbvOD5wRoOWQQpn0Qeq5I2g09pYoB2rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d2KYLebv; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KcXCt+3W";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LPYObc20";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KcXCt+3W";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LPYObc20"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 696875BE80;
-	Fri,  9 Jan 2026 15:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767972225; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzMIAqRka9gmKfGVSHN68HS6crHUULtTryPwU9xf3k8=;
-	b=KcXCt+3WVY8tl+GrrCpMWrGh0wZmEvfGEkdnU3SGBRK8sADyZ/nbEHYRUb19poodhlf3hR
-	3H1hIQF0edoOx4Bo7oUJJMkqky+Zrrn86yHJXhPz33r0rJo3V+T54mWPA3eXRNVPCBYLc9
-	PVyMssCdsbM8+cMOveqG3G9TVrzEQ54=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767972225;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzMIAqRka9gmKfGVSHN68HS6crHUULtTryPwU9xf3k8=;
-	b=LPYObc20L3ZEu9T2fJUfE2/LVhypb0sjRm9pBqmpakw/wqjHQaelrztx6Kq5pYlYL/ddzS
-	bp9AItuMQCFfNfCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767972225; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzMIAqRka9gmKfGVSHN68HS6crHUULtTryPwU9xf3k8=;
-	b=KcXCt+3WVY8tl+GrrCpMWrGh0wZmEvfGEkdnU3SGBRK8sADyZ/nbEHYRUb19poodhlf3hR
-	3H1hIQF0edoOx4Bo7oUJJMkqky+Zrrn86yHJXhPz33r0rJo3V+T54mWPA3eXRNVPCBYLc9
-	PVyMssCdsbM8+cMOveqG3G9TVrzEQ54=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767972225;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzMIAqRka9gmKfGVSHN68HS6crHUULtTryPwU9xf3k8=;
-	b=LPYObc20L3ZEu9T2fJUfE2/LVhypb0sjRm9pBqmpakw/wqjHQaelrztx6Kq5pYlYL/ddzS
-	bp9AItuMQCFfNfCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05C233EA65;
-	Fri,  9 Jan 2026 15:23:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KAwEO4AdYWkVZAAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Fri, 09 Jan 2026 15:23:44 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-doc@vger.kernel.org
-Cc: Petr Vorel <pvorel@suse.cz>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d2KYLebv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767973017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=btTxvIehuKA9Wli51TouY54utCzePLidNshQnisty/w=;
+	b=d2KYLebv5utowYBuU4UqGGjExr3k+VQQAPDSDqlkAB7UCGlwTIrKVpqy7qFQjN4h26lif3
+	fXSC8aR0TAx0SKsSHha3wwPKEkuvvhG2M6M5DYjYowe1rkvm6MAcHqmV00KzHjkOg/qPqh
+	/iDBW7Semt8/oACj8RYRGJtfiB+8HHs=
+From: Leon Hwang <leon.hwang@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Leon Hwang <leon.hwang@linux.dev>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 2/2] Documentation/trace: Fix links to other documents
-Date: Fri,  9 Jan 2026 16:23:36 +0100
-Message-ID: <20260109152336.84674-2-pvorel@suse.cz>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260109152336.84674-1-pvorel@suse.cz>
-References: <20260109152336.84674-1-pvorel@suse.cz>
+	linux-kselftest@vger.kernel.org,
+	kernel-patches-bot@fb.com
+Subject: [PATCH bpf-next 0/3] bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY flag for bpf_get_branch_snapshot helper
+Date: Fri,  9 Jan 2026 23:34:17 +0800
+Message-ID: <20260109153420.32181-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -91,65 +68,72 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
+X-Migadu-Flow: FLOW_OUT
 
-Link to another document does not require 'file:'. Removing it fixes
-links in generated html docs.
+When the PMU LBR is running in branch-sensitive mode,
+'perf_snapshot_branch_stack()' may capture branch entries from the
+trampoline entry up to the call site inside a BPF program. These branch
+entries are not useful for analyzing the control flow of the tracee.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
- Documentation/trace/fprobe.rst      | 2 +-
- Documentation/trace/ftrace-uses.rst | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+To eliminate such noise for tracing programs, the branch snapshot should
+be taken as early as possible:
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 06b0edad01796..1d9e0b1693494 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -79,7 +79,7 @@ The above is defined by including the header::
- 
- Same as ftrace, the registered callbacks will start being called some time
- after the register_fprobe() is called and before it returns. See
--:file:`Documentation/trace/ftrace.rst`.
-+`Documentation/trace/ftrace.rst`.
- 
- Also, the unregister_fprobe() will guarantee that both enter and exit
- handlers are no longer being called by functions after unregister_fprobe()
-diff --git a/Documentation/trace/ftrace-uses.rst b/Documentation/trace/ftrace-uses.rst
-index e225cc46b71eb..e7cea7b1a74d9 100644
---- a/Documentation/trace/ftrace-uses.rst
-+++ b/Documentation/trace/ftrace-uses.rst
-@@ -253,7 +253,7 @@ If @buf is NULL and reset is set, all functions will be enabled for tracing.
- The @buf can also be a glob expression to enable all functions that
- match a specific pattern.
- 
--See Filter Commands in :file:`Documentation/trace/ftrace.rst`.
-+See Filter Commands in `Documentation/trace/ftrace.rst`.
- 
- To just trace the schedule function:
- 
--- 
-2.51.0
+* Call 'perf_snapshot_branch_stack()' at the very beginning of the
+  trampoline for fentry programs.
+* Call 'perf_snapshot_branch_stack()' immediately after invoking the
+  tracee for fexit programs.
 
+With this change, LBR snapshots remain meaningful even when multiple BPF
+programs execute before the one requesting LBR data.
+
+In addition, more relevant branch entries can be captured on AMD CPUs,
+which provide a 16-entry-deep LBR stack.
+
+Testing
+
+The series was tested in a VM configured with LBR enabled:
+
+vmtest --kvm-cpu-args 'host,pmu=on,lbr-fmt=0x5' -k $(make -s image_name) -
+
+Branch records were verified using bpfsnoop [1]:
+
+/path/to/bpfsnoop -k '(l)icmp_rcv' -E 1 -v \
+  --kernel-vmlinux /path/to/kernel/vmlinux
+
+For comparison, the following command was used without
+BPF_BRANCH_SNAPSHOT_F_COPY:
+
+/path/to/bpfsnoop -k '(l)icmp_rcv' -E 1 -v \
+  --force-get-branch-snapshot --kernel-vmlinux /path/to/kernel/vmlinux
+
+Without BPF_BRANCH_SNAPSHOT_F_COPY, no branch records related to the
+tracee are captured. With it enabled, 17 branch records from the tracee
+are observed.
+
+Detailed verification results are available in the gist [2].
+
+With this series applied, retsnoop [3] can benefit from improved LBR
+support when using the '--lbr --fentries' options.
+
+Links:
+[1] https://github.com/bpfsnoop/bpfsnoop
+[2] https://gist.github.com/Asphaltt/cffdeb4b2f2db4c3c42f91a59109f9e7
+[3] https://github.com/anakryiko/retsnoop
+
+Leon Hwang (3):
+  bpf, x64: Call perf_snapshot_branch_stack in trampoline
+  bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY flag for
+    bpf_get_branch_snapshot helper
+  selftests/bpf: Add BPF_BRANCH_SNAPSHOT_F_COPY test
+
+ arch/x86/net/bpf_jit_comp.c                   | 66 +++++++++++++++++++
+ include/linux/bpf.h                           | 18 ++++-
+ include/linux/bpf_verifier.h                  |  1 +
+ kernel/bpf/verifier.c                         | 30 +++++++++
+ kernel/trace/bpf_trace.c                      | 17 ++++-
+ .../bpf/prog_tests/get_branch_snapshot.c      | 26 +++++++-
+ .../selftests/bpf/progs/get_branch_snapshot.c |  3 +-
+ 7 files changed, 153 insertions(+), 8 deletions(-)
+
+--
+2.52.0
