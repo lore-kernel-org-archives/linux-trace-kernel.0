@@ -1,157 +1,75 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8B31A051
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 15:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFD7225408;
+	Fri,  9 Jan 2026 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767973058; cv=none; b=g+gOHhrPf9NohxL6uv5sWaR2+e+m88xPD/ap/fxYXA6RYzfgyP7TIC5OL05PKJyUjxPAJqdIN6SXpRi+M+9NQtJ0Gz2G31AQ0ltGCk7rvjVb0OSXlSKlbAUhBpVhnaT0xBPCqPnWqKp4ulMf5K6xu3QIqdOp1nZISPVYGGcH10c=
+	t=1767975286; cv=none; b=rpFOEXwXl1Et3TeGjGSxz3FMnjL5kVeVaR+7mbrgYy2B3jvgokFUM2Cox5wyWwpqhHwcsa97jkiSFoW92K5C7+TXr8SeV/nZrqoLADMrzC53djZ6dESqGZ3u2hcEgEy+tQDX8Tk4WS/yM9KLkSlzWCzMa25ubtmguzEEPsQPeRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767973058; c=relaxed/simple;
-	bh=olXGm4lhKZ/DUlPJ4xDJl2D4L2YZF2AiKKcbPFW+qYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kSX7tJRr1jB/JqryZgMRw3+vKN02HZMJd5TAaUBPmUPROw3sXPNJP6nAla5Or/fUTeBmJI0FP5hlDXZukf09kZ/MiOxvYhTilU4kb9hzj0YrjswkGH2PPt4suEX5LRWCjrAmkus1odMfbaCT8er9TC5C1TPKi2ICOlKd3RodWKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mm1147DI; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mm1147DI"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767973053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zGmQZRRwHlrtsRbft3WSiOCAz3aFQwD5zodc3tv48HM=;
-	b=Mm1147DIHhLW7zP2EauxyHdsXI9RKxz3GC3qUwmoLQ4yuNjCPdidgxYYT9PcDapwg/HC7B
-	MIvVhpXMv5LqUDNM6kDVe2b6YwJnRCuX5+WfKrlJoHQ8IOb6UHl2QQHnDRVNPXoNFbNqIf
-	R0eRMuWuubcK/ROndIFPVPTrdcatV40=
-From: Leon Hwang <leon.hwang@linux.dev>
-To: bpf@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Leon Hwang <leon.hwang@linux.dev>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kernel-patches-bot@fb.com
-Subject: [PATCH bpf-next 3/3] selftests/bpf: Add BPF_BRANCH_SNAPSHOT_F_COPY test
-Date: Fri,  9 Jan 2026 23:34:20 +0800
-Message-ID: <20260109153420.32181-4-leon.hwang@linux.dev>
-In-Reply-To: <20260109153420.32181-1-leon.hwang@linux.dev>
-References: <20260109153420.32181-1-leon.hwang@linux.dev>
+	s=arc-20240116; t=1767975286; c=relaxed/simple;
+	bh=OWC1ntZBQKWTkIZk633veMv1AKus1gRIEYKhERIX7BA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tWpauoXs3DlgULeBNMEqKC6Newh2DVtQ3RpSPvbU/qfFg4K40qAd6nVShV+68s+BN7fd1G8qZVowtQB49ezmXsgzWRN9dAhhzZOSGAIdwJF8FkQRgSLj1sYPUrO3aysVL0r9+bV90PGimXNKdevnSZRZQJ5W4Koy9bXTtpOOP7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 8CCA61A0325;
+	Fri,  9 Jan 2026 16:14:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 77B3730;
+	Fri,  9 Jan 2026 16:14:35 +0000 (UTC)
+Date: Fri, 9 Jan 2026 11:15:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH] ring-buffer: Use a housekeeping CPU to wake up waiters
+Message-ID: <20260109111506.66ad545a@gandalf.local.home>
+In-Reply-To: <20260109095756.13deb429@mordecai>
+References: <20260106091039.2012108-1-ptesarik@suse.com>
+	<20260106170405.425f469e@gandalf.local.home>
+	<20260107085009.58fcffd4@mordecai>
+	<20260107105137.4cf9a67e@mordecai>
+	<20260107111709.0d115cd8@gandalf.local.home>
+	<20260107111935.3befc296@gandalf.local.home>
+	<20260108093932.252f6bc7@mordecai>
+	<20260108115800.7a7fc8a7@gandalf.local.home>
+	<20260109095756.13deb429@mordecai>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ihb8rxsfsw8zrdo3szasojjm3ouwg3zs
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 77B3730
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+oky8s4MPjftNUIdm5FDOaAGDH+y5fxEA=
+X-HE-Tag: 1767975275-701826
+X-HE-Meta: U2FsdGVkX19shqUHAwfxAoXdYF4FPvcwR/jQmaYQwN2e1O6cR4XGs/kBLqxWcBQDErfEO2PCfRGVEMCv+MuQz/T1PTHAWDFTEK4tKq+KpqLUDPtVsyPPBCynXC3nOGDTpLBqcaJRw1phM2Rd0l7MW0S8UYxv1mRA+VOifB4Kw07DJssOj5YUDQOPYlsJhR3mev3uce6rLBKzjzTXnYz071S9YpkYTUt9ZaPUvZ7AYC2eaBtm4q+OcZQnLjIeM8oHqK0VQv3vCqr8vKAg95uZQm3V9P7vkDUR/MajcHlHaMZ7hWj1XntnsmW5XD9dF7dkomoUZXs5Hak9z37u0giCxYbZ51k5mXYIMUusxjcuOQpteWDA2i0vAT2iOkUYGYio
 
-Add test for BPF_BRANCH_SNAPSHOT_F_COPY flag by adding flag to the
-callsite of bpf_get_branch_snapshot helper.
+On Fri, 9 Jan 2026 09:57:56 +0100
+Petr Tesarik <ptesarik@suse.com> wrote:
 
-Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
----
- .../bpf/prog_tests/get_branch_snapshot.c      | 26 ++++++++++++++++---
- .../selftests/bpf/progs/get_branch_snapshot.c |  3 ++-
- 2 files changed, 25 insertions(+), 4 deletions(-)
+> I have removed both "inline" and "noinline" in v2, leaving it at the
+> discretion of the compiler. If you believe it deserves a "noinline",
+> feel free to add it. FWIW on x86-64, I didn't observe any measurable
+> diference either in latency or instruction cache footprint.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/get_branch_snapshot.c b/tools/testing/selftests/bpf/prog_tests/get_branch_snapshot.c
-index 0394a1156d99..6b8ab1655ab0 100644
---- a/tools/testing/selftests/bpf/prog_tests/get_branch_snapshot.c
-+++ b/tools/testing/selftests/bpf/prog_tests/get_branch_snapshot.c
-@@ -73,7 +73,7 @@ static void close_perf_events(void)
- 	free(pfd_array);
- }
- 
--void serial_test_get_branch_snapshot(void)
-+static void test_branch_snapshot(int flags)
- {
- 	struct get_branch_snapshot *skel = NULL;
- 	int err;
-@@ -89,8 +89,14 @@ void serial_test_get_branch_snapshot(void)
- 		goto cleanup;
- 	}
- 
--	skel = get_branch_snapshot__open_and_load();
--	if (!ASSERT_OK_PTR(skel, "get_branch_snapshot__open_and_load"))
-+	skel = get_branch_snapshot__open();
-+	if (!ASSERT_OK_PTR(skel, "get_branch_snapshot__open"))
-+		goto cleanup;
-+
-+	skel->rodata->flags = flags;
-+
-+	err = get_branch_snapshot__load(skel);
-+	if (!ASSERT_OK(err, "get_branch_snapshot__load"))
- 		goto cleanup;
- 
- 	err = kallsyms_find("bpf_testmod_loop_test", &skel->bss->address_low);
-@@ -128,3 +134,17 @@ void serial_test_get_branch_snapshot(void)
- 	get_branch_snapshot__destroy(skel);
- 	close_perf_events();
- }
-+
-+void serial_test_get_branch_snapshot(void)
-+{
-+	test_branch_snapshot(0);
-+}
-+
-+enum {
-+	BPF_BRANCH_SNAPSHOT_F_COPY	= 1,	/* Copy branch snapshot from bpf_branch_snapshot. */
-+};
-+
-+void serial_test_copy_branch_snapshot(void)
-+{
-+	test_branch_snapshot(BPF_BRANCH_SNAPSHOT_F_COPY);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/get_branch_snapshot.c b/tools/testing/selftests/bpf/progs/get_branch_snapshot.c
-index 511ac634eef0..47a1984bdf46 100644
---- a/tools/testing/selftests/bpf/progs/get_branch_snapshot.c
-+++ b/tools/testing/selftests/bpf/progs/get_branch_snapshot.c
-@@ -6,6 +6,7 @@
- 
- char _license[] SEC("license") = "GPL";
- 
-+volatile const int flags = 0;
- __u64 test1_hits = 0;
- __u64 address_low = 0;
- __u64 address_high = 0;
-@@ -25,7 +26,7 @@ int BPF_PROG(test1, int n, int ret)
- {
- 	long i;
- 
--	total_entries = bpf_get_branch_snapshot(entries, sizeof(entries), 0);
-+	total_entries = bpf_get_branch_snapshot(entries, sizeof(entries), flags);
- 	total_entries /= sizeof(struct perf_branch_entry);
- 
- 	for (i = 0; i < ENTRY_CNT; i++) {
--- 
-2.52.0
+Please add the noinline. I went through and added strategic "noinline" and
+"__always_inline", as well as placing "likely()" and "unlikely()" and
+dropped the cost of adding an event from just under 300ns down to less than
+150ns.
 
+This code is called during function tracing (hit at every function call),
+and yes, every little bit helps!
+
+-- Steve
