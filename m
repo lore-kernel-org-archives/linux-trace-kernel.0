@@ -1,111 +1,82 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DDC23EA87
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 03:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A949F23EA87;
+	Fri,  9 Jan 2026 03:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767929879; cv=none; b=tFN9N9IM90zadOlzAX5twyyOzES53Ste9DKr5cqF5GUk/KjVdHyMsGwe/EJaHBsyFad+5AYn1sc+12ZwiKFjH1bQCCILORriLp/2VuP61t2zk+N+JnuDJrVxGggsjHwgrjbJ+JqcZs8S5KnWzHaKadLLWncACGdfRM4ZFM6AmKQ=
+	t=1767930173; cv=none; b=bVpDUdHkrXZp4f3e9m7EGDn+MsKjrrI8m0OC1NsIoNd06G4+r4DRGff9plmdnt3EIHWHe4kritJn1nQ0AfrsDYqfgtLn4W8gkd2ZEXOLdcwhKMsv3VC6Iev4Ktd/N3J3zJpQ3wUMngnKr7ulVpzWY4q3bYu1uC4YVqIo33jiqUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767929879; c=relaxed/simple;
-	bh=pQXuVp23KmJTwl1uNecClxnb6Bjg8ReC/eYBTC9HMh8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NTQQm5/U3jcIXQEW3InCSQQ8XOvsCOYxSuov5UqFX5oQ3Z8oVZzKJMjOoGWP6P/uKdvO56k/Bxp3IIRT0Y4Mm/esBHTfiNt9FfLI9J6ssJXL6PhfaoppIw/tN7bNjmq2BuvCFnwTluJfhF7AfXhpY1jq2bSsfbw/9f44Ki4goOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CLyR6ptv; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CLyR6ptv"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767929865;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OntszklQiyhOLBA2hStKkvGHmLOPE0BPoaUp0XUIGLc=;
-	b=CLyR6ptvctGbNIE22zTU8HkpTLigXRfp7jNzgncnNK9KX7itRwtRezSBSPtWOYZe/5xjHe
-	1o08LAZPi4Uuhwf7cZ6porM6n+pwZqng25+q45TuXRHZMLP64UEfGh2TRhJRwQ/vQG7Uqj
-	MWbPQNL4yw3K0OyQMAUoe3tMEgHp1rI=
-From: Fushuai Wang <fushuai.wang@linux.dev>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org,
-	wangfushuai@baidu.com
-Cc: skhan@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3] selftests/tracing: Fix test_multiple_writes stall
-Date: Fri,  9 Jan 2026 11:36:20 +0800
-Message-Id: <20260109033620.25727-1-fushuai.wang@linux.dev>
+	s=arc-20240116; t=1767930173; c=relaxed/simple;
+	bh=4fBZa53/AN1hTKBs44t7KsGQ67w2j3iipZhGC44TkCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=afAMpHxs5OgqQffSWy0Ev7wxRPv7e+3RRcZNgsOXOGZJsRh3DImH9OH4lWcIYGiqGte53m2J3dsrvQ5wd2jPRsfo9fXf0bPFSMUn9gfvhzse5JY/LhrdpfduzJePdGkGzaS388aYgmMyQHEEwqVf0A7rIU/np2/qlIcXglhpL78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 21759B86AB;
+	Fri,  9 Jan 2026 03:42:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 1CAB32000E;
+	Fri,  9 Jan 2026 03:42:48 +0000 (UTC)
+Date: Thu, 8 Jan 2026 22:42:46 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 1/3] PCI: trace: Add PCI controller LTSSM transition
+ tracepoint
+Message-ID: <20260108224246.316e3ee0@fedora>
+In-Reply-To: <1767929389-143957-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
+	<1767929389-143957-2-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1CAB32000E
+X-Stat-Signature: ixen3nko6phz4ok8ow8qaq99cnwj1w9q
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+VwLkx5rS4QfHZ8DMusTQAIQzr8G333kA=
+X-HE-Tag: 1767930168-399124
+X-HE-Meta: U2FsdGVkX18Ltj9i1968eJbmgEAL+747dfB1oVBPxwLb1uXRsYerWn2Rr18GkjXPeyB0dgstmGgCc5Ftp8WbtdC9PisjKj5OIVhhd0ExdcvXyChlc7ORzNPXvrSbuKIWGxQzATADF/bkugHttN//qYQCLYVCBwA5GqUob9gXvwqzhBAUXq0DrGcWiKwY+Vxv4fXw59c7G8bAXph65pmOihRBL+3o4vjRTFWa5FKPiAa6jTyYC2lD2lA6w8CElCc4vkoFfZE4H0Knu0SriyYhugrdLDlpw0sRuzOlnGcf+XNmnzuQyrlELYrZXQwRAF7XbWx3GN85gf6BQfvLTDxj3BLjU0WP+whaVs1MGmMLXKqiuYF4WwHKiaenl3/5mVt7
 
-From: Fushuai Wang <wangfushuai@baidu.com>
+On Fri,  9 Jan 2026 11:29:47 +0800
+Shawn Lin <shawn.lin@rock-chips.com> wrote:
 
-When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
-the test_multiple_writes test will stall and wait for more
-input due to insufficient buffer space.
+> +	TP_printk("dev: %s state: %s rate: %s",
+> +		__get_str(dev_name), __get_str(state),
+> +		__print_symbolic(__entry->rate,
+> +			{ PCIE_SPEED_2_5GT,  "2.5 GT/s" },
+> +			{ PCIE_SPEED_5_0GT,  "5.0 GT/s" },
+> +			{ PCIE_SPEED_8_0GT,  "8.0 GT/s" },
+> +			{ PCIE_SPEED_16_0GT, "16.0 GT/s" },
+> +			{ PCIE_SPEED_32_0GT, "32.0 GT/s" },
+> +			{ PCIE_SPEED_64_0GT, "64.0 GT/s" },
+> +			{ PCI_SPEED_UNKNOWN, "Unknown" }
 
-Check current buffer_size_kb value before the test. If it is
-less than 12KB, it temporarily increase the buffer to 12KB,
-and restore the original value after the tests are completed.
+As these values are all enums, you may want to add in this file:
 
-Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-V2 -> V3: Make the From and SoB match.
-V1 -> V2: Restore buffer_size_kb outside of awk script.
+TRACE_DEFINE_ENUM(PCIE_SPEED_2_5GT);
+TRACE_DEFINE_ENUM(PCIE_SPEED_5_0GT);
+[..]
+TRACE_DEFINE_ENUM(PCIE_SPEED_UNKNOWN);
 
- .../ftrace/test.d/00basic/trace_marker_raw.tc  | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+So that this can be parsed by user space tooling such as trace-cmd and
+perf.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-index 7daf7292209e..a2c42e13f614 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
-@@ -89,6 +89,7 @@ test_buffer() {
- 	# The id must be four bytes, test that 3 bytes fails a write
- 	if echo -n abc > ./trace_marker_raw ; then
- 		echo "Too small of write expected to fail but did not"
-+		echo ${ORIG} > buffer_size_kb
- 		exit_fail
- 	fi
- 
-@@ -99,9 +100,24 @@ test_buffer() {
- 
- 	if write_buffer 0xdeadbeef $size ; then
- 		echo "Too big of write expected to fail but did not"
-+		echo ${ORIG} > buffer_size_kb
- 		exit_fail
- 	fi
- }
- 
-+ORIG=`cat buffer_size_kb`
-+
-+# test_multiple_writes test needs at least 12KB buffer
-+NEW_SIZE=12
-+
-+if [ ${ORIG} -lt ${NEW_SIZE} ]; then
-+	echo ${NEW_SIZE} > buffer_size_kb
-+fi
-+
- test_buffer
--test_multiple_writes
-+if ! test_multiple_writes; then
-+	echo ${ORIG} > buffer_size_kb
-+	exit_fail
-+fi
-+
-+echo ${ORIG} > buffer_size_kb
--- 
-2.36.1
+-- Steve
 
+
+> +		)
+> +	)
+> +);
+> +
