@@ -1,105 +1,115 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F83346796
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jan 2026 22:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05E51C1F02
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jan 2026 00:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767999099; cv=none; b=Qbz4FQ9g43XLITThEpaFc8ddo/xopNrEkuVq01WWi+IDXNX7IqFUvcazOqC4CUfBYQ2eZbeVUrbzn05+O0kN8r6kJgOlAddGo2GPvIzwYDlAmjg/UyCgzBegLR5HgW9WYrdeTsX4T75UxdLUI1Qq1ZcI7tMYoq5Eznjy1ZKHdqc=
+	t=1768005325; cv=none; b=UgvsadZkQ75CgiVVnK+lnrdcvKZNIY/U2GrLJugxDmUmDYp2fxYdeEHB7p8GjN6AKzG0Ck4ed4v/lfp/jask8JOisQCGnbmVuUSSN/yLrCL9lBf47O53Pi2eooujeB98jtnepxQuYpuGMpKvi/WGEAtquqxQvJmv1o14/6SMOco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767999099; c=relaxed/simple;
-	bh=FxBy4FZqdwNrjXp7kUgNP2DTPQwGCA11DgvPugnUAQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nMTY/Xc+KUsenykaHcN2vWcxraYW+qyydUHi8zcZ64hrbvOdBNH5uPZrvDM2B6XRuvEo+TYkAPHNQj3aKkvB34NR1aojXI4GmG5ZrOjaREhxwuWoLq79pE1vC9BCGSGsSDaW37nocSjwFx/GaJLdEyuaw+z8pVanvN2oEMhxePU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ajACC4zp; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1768005325; c=relaxed/simple;
+	bh=nYiS4uilyETQDbIQtzOwkALPQdi5rc3kAMuT+u+f0uI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ssyFsKwebxegbwmjw40z2JFpRN3a2hFdFCUqj7W6wD2ytG34EI45pMD67st0uW3fQ3ws8RwSNlqXuESROycMmJZ+HwW2zC3idJcLspWWXBHXI09drp/eKTk6BswJM96vPhpRp0bNDI5u64XxcGbtHgWq7ToeEiZ1SL+59hsAt5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CW8zmoty; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ajACC4zp"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-450be85b7d9so3089363b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jan 2026 14:51:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CW8zmoty"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-4327778df7fso2953413f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jan 2026 16:35:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1767999096; x=1768603896; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qqxdc3iSw1oDJtxQ6sPbrPeu0O6MQwhvX4RqMc6t0PE=;
-        b=ajACC4zpVV8JO2n5ZkWe0gZIvLd5YBX2/c+xd7zOxHqhaooazmFovM4mPHeAMh/oud
-         mwaEVf6k7QyUOzDjvRj8I6tixhlgtfKVadoyQO0EWhUQ5BJ7xfIdz/d/CNL9Nv0tNDKK
-         r0t/ErVQopgSjHf+Ut29aDcVfq2wa6RYPykkI=
+        d=gmail.com; s=20230601; t=1768005322; x=1768610122; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nYiS4uilyETQDbIQtzOwkALPQdi5rc3kAMuT+u+f0uI=;
+        b=CW8zmotyWs/48jFTG1A6SnJAEYAU9nZaEFdquTl8HBy5LrEr0/Zn6B9cCCot0SxOzI
+         C1RF3vmrDuJkb59UUR/gQGB5UYYE9lQbfMeWFOsaCHLFVsaD/sEUxZ7fcTnVttdVcAI3
+         dUyXliUT+gogY8udZIWmZViZoh8JajFtIMiRp2zYxY8petKMeRDNyCUetvoN+LUcxKLF
+         D0Pw9bteHOLOJE2zsscgaL1Tba2/3Yob1fGIAw6+hjvnwny++x5J2Yq9Z/KHuzcAQbRD
+         4NBuBXJxeuLU7m6yYE3JsoJQCuZwTSF3p8aIf/MSHYZcnnTmeojO3Be8DlNcJe6IxwsJ
+         4uzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767999096; x=1768603896;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qqxdc3iSw1oDJtxQ6sPbrPeu0O6MQwhvX4RqMc6t0PE=;
-        b=aidTFki1YKx7f4BpIOIlRY7/8CFeNPFYh1gOhMnL9wuZWz/5a8o3dErPCR+kYmTDd3
-         t5JjWB8OJG8wC/X/6KrXHK+OHfhtqsEAgAm5/TFX4Wo/VoKpyJCbJrYGFV5i5KfXXEiJ
-         3UlDx59m5s1H8stPxapqUftbvXPsOdaithcuGpvNRJSdlWj7T7lfGSGLGRfOuY1jcOiH
-         p3Y00ZE/3QjIDqeIvdG7j/tqbYNpKYM1RsCr2L656OKDww2l+qLD+yvQLiJXUUxhYq+S
-         d9Pnx0b+T8BPvtpdoIb7gmjkggWrcYke0hm/GDvxM9GPDzIkU/zP9G16tN3ewkIa70SQ
-         bKSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Nhkv4k19Qg9gsCz78l4jlen1TrFclEPYX34bEZpbuJAN2QPrWfWeiDEZJy+T5BGbzAWRk83CxrbGpWYzhCX1MH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcmex+IF6/maTkvviSE9fJuFA86dzW7oK/lYDFnj7qg5ULwFWA
-	I04uLfrqp8dEqpaEnEU+wIMnGhKZI4Pe8YKvW0Cf8xVQcoJr/hRQzPUS+sbBuo73FVo=
-X-Gm-Gg: AY/fxX42S8Q91v4tw68m2LB5xlkJIL/Lw6pBS/t7yiCgPVtDWcjhPCv5u5meghgaRPi
-	Cq+j29vwqzSTvzLZqtXThyRCMKlCaZ2X2HgmAeUr0BM7rZZUSwcCC1PQ1ly5e9HaIP+1x6Os3Hj
-	zGdRNY4c2TwJQLH7rkFjZ07SQ0LUMZ40jh9WVer6p9HYJ44ZsxCHxPOyIzU4BIU+CVT+nbQXko8
-	PVVBWt7MVyOuT4/ylbvs2EntYoCsdP/JbWxSqMqx7e/t8gcNwmS9gUmCReylXiAbtPkWWkGBzDw
-	B00O3fL8aC1kjafpKEKGTxpxOuD2Ds08xLdlMB7D63fYyHW2aWyQnlXGrnZX6x5cNRoTEWVlE7m
-	g1pgAkdW7hM1EVq617/nkipfDJjvVU/nnBWhtEoWPibjeQ/ZuiZD8VcrRs2SAjJdV4hjD8B1XdB
-	VF+8SbXZd/Dq5JmmseW5XCba8=
-X-Google-Smtp-Source: AGHT+IHHPWtAASdfA2cFXKfe0WnH9UpvIrOeltbh6InlGG6D5LTffSmeRA6Rg1LT0cGbIBcuXn49rQ==
-X-Received: by 2002:a05:6808:158e:b0:442:82:3efd with SMTP id 5614622812f47-45a6bd690b2mr6631377b6e.18.1767999096215;
-        Fri, 09 Jan 2026 14:51:36 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.187.108])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-45a5e2e8fb1sm5117059b6e.21.2026.01.09.14.51.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jan 2026 14:51:35 -0800 (PST)
-Message-ID: <1d52f1ee-0f60-410e-8c7e-c5fee0a92402@linuxfoundation.org>
-Date: Fri, 9 Jan 2026 15:51:34 -0700
+        d=1e100.net; s=20230601; t=1768005322; x=1768610122;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nYiS4uilyETQDbIQtzOwkALPQdi5rc3kAMuT+u+f0uI=;
+        b=XEeV4vDiqz3DQ/jgc2TrhrmXM/IRRxMgsBuEw7IjSKC0bgJo9NHlzGZ1N666ruQrdx
+         u+qSnYgObl1XUFmZKk07sSGQgE9+CPWrlXw3dge8vp90k9JTJPa3/fSD65SQTwozeZql
+         nbPSOftq24shpwNE4alsRmAbieSEyaFDHOraVAueQea95hvK5ul1Yke8Bs6SK/pFMFva
+         LXI6xiif12kTz1QlugucBCk4jUPU67YEBwlytrApc3/784ue8IhsV9/zIoGWWn/F8rpM
+         MMyuEEDQWDwh4byaZkghoNr2Z2OmHNxNwKeqft55AQOuPGo3u70DmAHDqGxZdJH9MTrq
+         ZLcg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2YghMLy7MRO90wmmQ+wQ3yQ04G8sGWN+ksMccQLKy2kcXuzgv3cAnEXEIiVFLQrcFrsoZWOWl3qWOoaPHRLj+gXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywbv+uP7+GSPZqkWHMptZQVscTYbVyfn+JpAEsM7Bk8WeK5NXI
+	XPIR76urUh4O36z1jMbZaFPHNrZ+j0/FrR8qS+jJSYcIb6tr95z6l4xnFWWvhdRuzIDRQb3/JX8
+	LL5rxAW2uTdFQBv5PdKzWI/fpwuHKRgo=
+X-Gm-Gg: AY/fxX7G8kMDCWP2BsMvrB2fwWgy3z6DWmPLYNWOX6WTOv7JpxZIrPqA8iPqTw60Gdx
+	P5eP6HDRAATEfNcfizo1YKZ6i4+pWo8m/vZx3GxlFhL2hfvLWf80zxtoX3YM1FG0Wls+/f+0jaM
+	VV7Y2F6knfEzZh3+OOGrmTgi2ROHHm7WXkIr7bDXGAm1poSdfbSc5dRUAQgiLon/G5jvKZm+t3B
+	qP+3eW7WvEM6VK6Zuud+qDMXjW5JqkMbDXhk2Cqrs9bXOhI9Y80iIIK2tXbDWLyZXYvxdP80PRB
+	Z2mRHgrDOweRU0IA2QyAd06ktOUe
+X-Google-Smtp-Source: AGHT+IE4XaA3jxjGFghWJSP6TdEeGSeNUk/8yX/j0ToKhLfGGGq7jwkCc7XpN+TmOnkbW/zNz1GmPORhjHCbgjOMA7g=
+X-Received: by 2002:a05:6000:2087:b0:430:f8b3:e834 with SMTP id
+ ffacd0b85a97d-432c3629b4amr15079467f8f.11.1768005321410; Fri, 09 Jan 2026
+ 16:35:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] selftests/tracing: Fix test_multiple_writes stall
-To: Fushuai Wang <fushuai.wang@linux.dev>, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- wangfushuai@baidu.com
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20260109033620.25727-1-fushuai.wang@linux.dev>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20260109033620.25727-1-fushuai.wang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260108220550.2f6638f3@fedora> <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+ <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+ <20260109141930.6deb2a0a@gandalf.local.home> <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+ <CAADnVQLeCLRhx1Oe5DdJCT0e+WWq4L3Rdee1Ky0JNNh3LdozeQ@mail.gmail.com>
+ <20260109170028.0068a14d@fedora> <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
+ <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
+In-Reply-To: <20260109173915.1e8a784e@fedora>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 9 Jan 2026 16:35:10 -0800
+X-Gm-Features: AZwV_QisbaDK1B8dOAo5PHdFATblspEn41lOmKMZV_0j2nND-tC1Aq3Fxa83rZk
+Message-ID: <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/8/26 20:36, Fushuai Wang wrote:
-> From: Fushuai Wang <wangfushuai@baidu.com>
-> 
-> When /sys/kernel/tracing/buffer_size_kb is less than 12KB,
-> the test_multiple_writes test will stall and wait for more
-> input due to insufficient buffer space.
-> 
-> Check current buffer_size_kb value before the test. If it is
-> less than 12KB, it temporarily increase the buffer to 12KB,
-> and restore the original value after the tests are completed.
-> 
-> Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> V2 -> V3: Make the From and SoB match.
-> V1 -> V2: Restore buffer_size_kb outside of awk script.
+On Fri, Jan 9, 2026 at 2:39=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Fri, 9 Jan 2026 17:33:26 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > How is this about lttng? Sure he cares about that, but even tracepoints
+> > that lttng uses doesn't get affected any more than ftrace or bpf.
+> > Because lttng is one of the callbacks. The migrate disable happens in
+> > the in-tree portion of the code.
+> >
+> > So you are saying that all the tracepoints for xfs are not in a fastpat=
+h?
+>
+> Regardless of tracing. I now have my RT hat on. The spin_locks that are
+> converted to mutex use migrate disable. The fact that migrate_disable
+> in modules are close to 10x slower than the same code in-kernel is
+> troubling to say the least. It means that modules in RT take a hit
+> every time they take a spin_lock().
+>
+> The migrate disable being slow for modules is no longer just a tracing
+> issue. It's a PREEMPT_RT issue.
 
-Thank you. Applied to linux-kselftest fixes branch.
-I will send this up for the next rc.
+migrate_enable/disable() wasn't inlined for a long time.
+It bothered us enough, since sleepable bpf is the main user
+of it besides RT, so we made an effort to inline it.
 
-thanks,
--- Shuah
+RT, at the same time, doesn't inline rt_spin_lock() itself
+so inlining migrate_disable() or not is not 10x at all.
+Benchmark spin_lock on RT in-tree and in-module and I bet
+there won't be a big difference.
