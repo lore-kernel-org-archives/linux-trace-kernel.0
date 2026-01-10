@@ -1,110 +1,233 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6AB1DDC28
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jan 2026 00:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5617FBA2;
+	Sat, 10 Jan 2026 14:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768005420; cv=none; b=qQifex5tvZtFrMcZmTcBi2oz5JPaBthc263Hv7w60clv/s7dpyvLS7bMmfCyvKMtOdTlvLAiffwGM42JP++dBXpzN2m1sGB247rMVXBpVBrboL5OCrLQheo0L4X5KV1D7kyWtioY8ZE5G/WUIyw+h1lRqve6r4UcXWRTDIfSCLw=
+	t=1768055632; cv=none; b=hDffDz7qyd0JdM/2ZKPDacKc5PwQTrpiviodeg5H2QeXgwcYHI4rlAv5Mg9Ni5suWmrItjz5zqwfIPY4zKcCCLkQPe4i39qkdnIhVovbKjiYd1IKi+XKc00RVo0nCHjPIKONRLmRSQiL2nMyrzxPkibeaYHTYh/wxV06avlJCCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768005420; c=relaxed/simple;
-	bh=2cOpOmPdOQSBLA0FveuKSmKkN2jTG20cgo3J5WOB/58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ER+s5u28DnzRVFPrIhVfwqCMxQZ2Cj6bsXhTUounhBpQ4OVyARQWpl7szASG0iu08JTbMrPgRU8NGPx9ux7tW/axxvYiEWsHZQ4ZR+a5IwNaiBCywRJwsaHGBcT83nJOtSJD8WGnkTPBJL2U80LN4POZ2E/3lxd3GQD7HCUtkpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fQWwON57; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768055632; c=relaxed/simple;
+	bh=Yfbw6WrJfLHOkK3yDM4FTdbEQfDUyIfd7z3ybJJVuxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=phjmCWIpKKjmP7FB5ytaMYHAX4XJBVMYP/J4hU5kIWIV9xz4PQ6m2i3cbCPPHR7Q+0P/5MkN9hWZUX/SJ1s1McsNRTAtu5gKaCk1SPv1Tib7o5RuF2I4KZmQ3YLMJPWjuo3Nt+VIsJDs/+3IANgg61T7UOFxo8lhLEHW/ak8+FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PW/bgbnu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQWwON57"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-bc4b952cc9dso2172856a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jan 2026 16:36:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768005419; x=1768610219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qSxvsKP02jf1cnbkhlOj52mufxl6NmofMhFwuClP36I=;
-        b=fQWwON57jNwSdgr8RpqX4/dYRAjncsO5pFvDls31mglChXYZljkk4CzUtxsxjncPxe
-         BqVwsMirC18x03j9O8tX6SUpf2uPHqLxNjb0Om3GpLYB0I293P1WyBmt1yxb7r0AdZuc
-         YrzsmYq/ylQ/UglKm6cuRQ3Ju+h677F8NdVFa+F1MMkYrlbvtHBj54S87SI5oTwYq6AO
-         YdNQmLeKlPDzNnIXeoZHW6tvzBGV+59V2hu7iOSxoQHNM1wF/baoaTzrh+Pqz2uR676V
-         amowsn3T9pfIEFRlt+97jTy61/ZkMmRiXq/8jLDt+uJgqc+AoEmXEWbseG/9WTeLaqbp
-         3jlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768005419; x=1768610219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qSxvsKP02jf1cnbkhlOj52mufxl6NmofMhFwuClP36I=;
-        b=LKpTRo5diq6cCzw09trknUA4Nh3k4wYFNmRmC9uf/mV1PCXaAe9F6djmX0NfWQ5bZ+
-         y+GP+J5ua3bYEHVNJHS4trpAd/yc58ncugMOeDEAbFPCaHLgFfv3dvmANUqp6OsS8T74
-         5OgXLCsgPFyU8T6KFnuFaL55PiM2E88dMJcBVQZkLMUeOST87z04yt6pVy0OZH9CvEkq
-         UErK+lF2nvolzl622kL0dkpU5u+d6awjvrc2B/REK2Vc0G40qA9O8tIVGi2GSj1VlVU3
-         mhJHISCIxQDABbo4BLahGZuuZi+/wZIYmf1zxi5Rfj18uN6SWB9r4K7EHzT2A6W3RJju
-         78/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHm25sWoZunFn0PDgNr4NlNMzWWcARJ0xHzT9zIHF3SpQVqIzp2P6fmt6FYk8qSdhPiV1R8/V1CXZTmNg+ksJonT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW51mxPurUzRHtXTSop2NRPBLamYmF8Lu/Vcv9pXQB+qeSHa24
-	R1eRccXqpubB0f8BUmPrz2xJ3UBz99AYseQv6HYlo4YPHs4QChGfEmBzVyvdzR+WnO9DjutXNtf
-	w+QAJ3+fn9tOy1oTbxf7knvQXNzQFSLU=
-X-Gm-Gg: AY/fxX42mqD2h9nhohrbtTgqtLChNfZaNnSvboquviLf5z1WzcIcUnIChNJLkTdIQli
-	0zQGrt1lPUR53Lb5yzKeOtoItJ1QCBHKDND229xjzufc5bMOEk+DsgeEuOabt5iSWTa0zP1ACuZ
-	1cDgjRDiRsRMue7xNkHrcPxtE+jFQAXyIlb0X3CInzIghrygwYpdLcj+C8Zavqk9lHzLnkA6nqF
-	c3/wEIeF+8aohyJFTbO4iMR5J0+8Ufy5C5uaK2vpa75+c0kuvHgH6KirA+yRx92zKiixiLZCorm
-	uykDIjQRcMc87Pt6Nuw=
-X-Google-Smtp-Source: AGHT+IGM3SIsuNL3/dMuNpHCUQ1cqrUQQjji6eUGqvYpxJAa/wVfpCqyvAIs3ghIt9fdukZQ7mtDD7SDbuqV/HYZR7E=
-X-Received: by 2002:a17:90b:2692:b0:34c:fe57:278c with SMTP id
- 98e67ed59e1d1-34f68c47243mr10186165a91.34.1768005418846; Fri, 09 Jan 2026
- 16:36:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PW/bgbnu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F426C4CEF1;
+	Sat, 10 Jan 2026 14:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768055631;
+	bh=Yfbw6WrJfLHOkK3yDM4FTdbEQfDUyIfd7z3ybJJVuxs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PW/bgbnu28QQ8AO6NDpoosV9VW1ItIbcgMGeQ4kpEJqNISPjVpg+N11tt46TLEung
+	 PSpa9kstf6ZuhcudeVuSrw8gQp5FiCc64ON8LNl64Z9xOhNHru6mUHKiCNdKDISbfc
+	 6QaRz2j8PQoTyRUrATDFW1aGmnqmi31L5fAInmPpOAN2cWi4uh32lD0tKErHJgEnmH
+	 g22sb/SqDOkkvyrShQGEJE4Opf2/gQrz5Bqcc/agSYXR02+B3CkrVrQ/IDmhpdUDHE
+	 y+YBFyXb4QJUe1jZNvu3qRsykAnUAJprC9ojvevKBuRsdctmgDR2YYcgpxw27Ek6oq
+	 7rjW30N988ESg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] kprobes: Use dedicated kthread for kprobe optimizer
+Date: Sat, 10 Jan 2026 23:33:47 +0900
+Message-ID: <176805562740.355924.11587476104510049915.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251230145010.103439-1-jolsa@kernel.org> <20251230145010.103439-10-jolsa@kernel.org>
-In-Reply-To: <20251230145010.103439-10-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 9 Jan 2026 16:36:45 -0800
-X-Gm-Features: AQt7F2pTOA8QTYmqFAVkFZ4-jcuY9II_x2OlDmi2JNLmaJvmLei8_Ech6tHhqpU
-Message-ID: <CAEf4Bzay1q2oMYSDfdQi8LXt7HjFVXF+C+=+jLurp_GixWbD8Q@mail.gmail.com>
-Subject: Re: [PATCHv6 bpf-next 9/9] bpf,x86: Use single ftrace_ops for direct calls
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 30, 2025 at 6:51=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Using single ftrace_ops for direct calls update instead of allocating
-> ftrace_ops object for each trampoline.
->
-> With single ftrace_ops object we can use update_ftrace_direct_* api
-> that allows multiple ip sites updates on single ftrace_ops object.
->
-> Adding HAVE_SINGLE_FTRACE_DIRECT_OPS config option to be enabled on
-> each arch that supports this.
->
-> At the moment we can enable this only on x86 arch, because arm relies
-> on ftrace_ops object representing just single trampoline image (stored
-> in ftrace_ops::direct_call). Archs that do not support this will continue
-> to use *_ftrace_direct api.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/Kconfig        |   1 +
->  kernel/bpf/trampoline.c | 220 ++++++++++++++++++++++++++++++++++------
->  kernel/trace/Kconfig    |   3 +
->  kernel/trace/ftrace.c   |   7 +-
->  4 files changed, 200 insertions(+), 31 deletions(-)
->
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-As far as I can follow, everything looks reasonable
+Instead of using generic workqueue, use a dedicated kthread for optimizing
+kprobes, because it can wait (sleep) for a long time inside the process
+by synchronize_rcu_task(). This means other works can be stopped until it
+finishes.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/kprobes.c |  105 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 85 insertions(+), 20 deletions(-)
 
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index ab8f9fc1f0d1..40e3d6af4370 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -32,6 +32,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/sysctl.h>
+ #include <linux/kdebug.h>
++#include <linux/kthread.h>
+ #include <linux/memory.h>
+ #include <linux/ftrace.h>
+ #include <linux/cpu.h>
+@@ -40,6 +41,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/execmem.h>
+ #include <linux/cleanup.h>
++#include <linux/wait.h>
+ 
+ #include <asm/sections.h>
+ #include <asm/cacheflush.h>
+@@ -514,8 +516,17 @@ static LIST_HEAD(optimizing_list);
+ static LIST_HEAD(unoptimizing_list);
+ static LIST_HEAD(freeing_list);
+ 
+-static void kprobe_optimizer(struct work_struct *work);
+-static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
++static struct task_struct *kprobe_optimizer_task;
++static wait_queue_head_t kprobe_optimizer_wait;
++static atomic_t optimizer_state;
++enum {
++	OPTIMIZER_ST_IDLE = 0,
++	OPTIMIZER_ST_KICKED = 1,
++	OPTIMIZER_ST_FLUSHING = 2,
++};
++
++static DECLARE_COMPLETION(optimizer_completion);
++
+ #define OPTIMIZE_DELAY 5
+ 
+ /*
+@@ -597,14 +608,10 @@ static void do_free_cleaned_kprobes(void)
+ 	}
+ }
+ 
+-/* Start optimizer after OPTIMIZE_DELAY passed */
+-static void kick_kprobe_optimizer(void)
+-{
+-	schedule_delayed_work(&optimizing_work, OPTIMIZE_DELAY);
+-}
++static void kick_kprobe_optimizer(void);
+ 
+ /* Kprobe jump optimizer */
+-static void kprobe_optimizer(struct work_struct *work)
++static void kprobe_optimizer(void)
+ {
+ 	guard(mutex)(&kprobe_mutex);
+ 
+@@ -635,9 +642,52 @@ static void kprobe_optimizer(struct work_struct *work)
+ 		do_free_cleaned_kprobes();
+ 	}
+ 
+-	/* Step 5: Kick optimizer again if needed */
++	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
++	if (completion_done(&optimizer_completion))
++		complete(&optimizer_completion);
++
+ 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+-		kick_kprobe_optimizer();
++		kick_kprobe_optimizer();	/*normal kick*/
++}
++
++static int kprobe_optimizer_thread(void *data)
++{
++	set_freezable();
++	while (!kthread_should_stop()) {
++		wait_event_freezable(kprobe_optimizer_wait,
++				     atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
++				     kthread_should_stop());
++
++		if (kthread_should_stop())
++			break;
++
++		if (try_to_freeze())
++			continue;
++
++		/*
++		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
++		 * This wait can be interrupted by a flush request.
++		 */
++		if (atomic_read(&optimizer_state) == 1)
++			wait_event_freezable_timeout(kprobe_optimizer_wait,
++				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
++				kthread_should_stop(),
++				OPTIMIZE_DELAY);
++
++		atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
++
++		kprobe_optimizer();
++	}
++	return 0;
++}
++
++/* Start optimizer after OPTIMIZE_DELAY passed */
++static void kick_kprobe_optimizer(void)
++{
++	lockdep_assert_held(&kprobe_mutex);
++	if (atomic_cmpxchg(&optimizer_state,
++		OPTIMIZER_ST_IDLE, OPTIMIZER_ST_KICKED) == OPTIMIZER_ST_IDLE)
++		wake_up(&kprobe_optimizer_wait);
+ }
+ 
+ static void wait_for_kprobe_optimizer_locked(void)
+@@ -645,13 +695,17 @@ static void wait_for_kprobe_optimizer_locked(void)
+ 	lockdep_assert_held(&kprobe_mutex);
+ 
+ 	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+-		mutex_unlock(&kprobe_mutex);
+-
+-		/* This will also make 'optimizing_work' execute immmediately */
+-		flush_delayed_work(&optimizing_work);
+-		/* 'optimizing_work' might not have been queued yet, relax */
+-		cpu_relax();
++		init_completion(&optimizer_completion);
++		/*
++		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
++		 * idle. If it's already kicked, it will see the state change.
++		 */
++		if (atomic_xchg_acquire(&optimizer_state,
++			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
++			wake_up(&kprobe_optimizer_wait);
+ 
++		mutex_unlock(&kprobe_mutex);
++		wait_for_completion(&optimizer_completion);
+ 		mutex_lock(&kprobe_mutex);
+ 	}
+ }
+@@ -1010,8 +1064,21 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+ 	 */
+ }
+ 
++static void __init init_optprobe(void)
++{
++#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
++	/* Init 'kprobe_optinsn_slots' for allocation */
++	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
++#endif
++
++	init_waitqueue_head(&kprobe_optimizer_wait);
++	atomic_set(&optimizer_state, 0);
++	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
++					    "kprobe-optimizer");
++}
+ #else /* !CONFIG_OPTPROBES */
+ 
++#define init_optprobe()				do {} while (0)
+ #define optimize_kprobe(p)			do {} while (0)
+ #define unoptimize_kprobe(p, f)			do {} while (0)
+ #define kill_optimized_kprobe(p)		do {} while (0)
+@@ -2694,10 +2761,8 @@ static int __init init_kprobes(void)
+ 	/* By default, kprobes are armed */
+ 	kprobes_all_disarmed = false;
+ 
+-#if defined(CONFIG_OPTPROBES) && defined(__ARCH_WANT_KPROBES_INSN_SLOT)
+-	/* Init 'kprobe_optinsn_slots' for allocation */
+-	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
+-#endif
++	/* Initialize the optimization infrastructure */
++	init_optprobe();
+ 
+ 	err = arch_init_kprobes();
+ 	if (!err)
 
-[...]
