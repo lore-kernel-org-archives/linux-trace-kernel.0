@@ -1,156 +1,375 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013031.outbound.protection.outlook.com [40.93.201.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E970323C4F4
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jan 2026 17:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768064776; cv=none; b=qaeE0+SuDs+72EQwG2tWfL+Ge6/t3uuK/jn9hkYasJz83mAUw2jC0g2PQooCwivNaLYcbb2fMoP0uMiE8pSIpceJXReJodnjhEY0SjjsV8aF0zxSBRpqr9seaRSNvIwc9KGs5IXcGMwH0saWCnHXbMQ3P1Af0czryJawlWNK6SE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768064776; c=relaxed/simple;
-	bh=ZgKkQQhJVH4KoUyUYAU4gBvTjAsrFKRPpfGehHQikOA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZpWxgfx1JQrtUpxDTj+At6Z9iPFZ0+IM8NLbwixGou3kkjAr9ynrHGF7xL8Lkt9ynTJvIk0S41tSiiv5rz5EE0wPucQR3KCUMXtXAgRarqRrCbOZmduIDMxDsudQtufle7N6Y7lYL87haPN/glb+K3eqWV4JPnXbQIBB9zT8yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCWbzOE+; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF6A4A02;
+	Sat, 10 Jan 2026 18:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768069252; cv=fail; b=UbxKoljLZRZtQolgKulDeluUNCea1j3TkV8WmwoOg17P2yj1saoo4NadxpxMy1OMhlATG1Eha1XMy2twtqKBt7N1sqGdPs85F4YPC7N/swdtH5yhm3sEZC20eLyk+vhYTF6DWqfu3MGvFfgMprU7EoUzRxuOIbnhE7kKSdvU9G4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768069252; c=relaxed/simple;
+	bh=hNKe09YsDuWQzephbTuOpUF0Qqjckin9U8q7dkUyw9I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=J/titg51R6+D1Gs13Kwa8QuQKl3tWz8+jeK3ymKrHm/V2c7FxWFj7dYm5JZTEyK48UpLprkPMnxMdllt1Jy6FKq2fIuw1ylVIoIvwi/+rgcv29uM6U8sJQRzxyHnocFSP6+L0RIfHm6RHyuSaUi1enJ2L05w1Idz27ZlvBZi5B0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pnCMQ395; arc=fail smtp.client-ip=40.93.201.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCWbzOE+"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-432d256c2e6so2014298f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jan 2026 09:06:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768064773; x=1768669573; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=32edYZCX+nxG87B8UKMbk1Tq/DYM0xHuea3J9HZlJwM=;
-        b=lCWbzOE+hij2VN9DnMh7bvgmeob/xG8YRqLP61arYkoIkpZo7oTxzg9l1hu5ca2GY5
-         bYDWeuRD2ljw0oe9E/JUT865B83h3rZSfhhlwFFUXhKdHdsFe8HRuqlRPYfLOzlJsQL5
-         FX85mJjElf3u2umhRp/TJNqJfBgrfrrwGr5BEj/vuSZCxHAMFJNjcZ0bQ8izihgsIFTV
-         lajzKXwTrC+FtimqvUV75uUNfQfZocDXDLpzDWzW89wy3L59k/vGsfScBvzLpdKGKPzB
-         NLYr+nPfjxmglErHB6X7vbUv01SR+JbF77FTPcUmhjjjseNe8JpOL4NSwykBle5F1oXO
-         lPSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768064773; x=1768669573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=32edYZCX+nxG87B8UKMbk1Tq/DYM0xHuea3J9HZlJwM=;
-        b=AfqZlks7Vpg84QPsCY+QVywg7DEIa5MaOZE08h6KIvhFoxa/f45JUmQQT4G2Hk/UWD
-         bRwe3SKV4AYyU8hOzGP3k+L+cDEWjd5jCjSwMFqTSD3o53oYhxX0Ftuy8dtGcTrbAHLq
-         IrykbdkpTlPpbofCj4b+fRZTFJaB3DvBt9EetjQxeAz2ppRlaWFywU7r3Cc33CFq4o+5
-         ResyDQbkIWuED3BlqtpdpBPo64VjCOep2bYHV5s7UWgoE+WPzsI6td9nBisGRKaHS7AA
-         8OZnGqmGF2wY+9DnRr3Qz/zMz2B7c19nGyxmGRtWm470CJESqJCVh5Lsw5EhVEPiN5vY
-         4g5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX8uYgyq8SFUn3jWAlvKY7smCGiObF7rBeSRcuAE2kvXNHgBqNJvzxlcIvaCkkYg5lUvEs9Bhj8nslF1QAaPtbXbOM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcsEYmKIUbUJpX2WxNHaF5Y7pvoHUmMGh7Y1rdEewFWby9hJuH
-	UojVh7aS5n0+TYxZR908H0qV+LqMB4ZTGcBqYy/8r9trWJvW6iaQgAJz
-X-Gm-Gg: AY/fxX68RUAy//30yG4oa2P4uk9+2JHVlg9dhSbjIWkIH70B8jmC5n7ynI3s9ySIa1/
-	LapBmlmfcdGdmZunyGnIZ5JFNl90rAww2dp/2Ep0Hw5bFZC2MzL3XAg71M5mUVQd8NQBZJQ9NeT
-	sYUEIPMlI1iHfitEcWeEIbBui8u35DyHktt++16ebKi/1xw04wrLEi+xTlx2fSFD8OB/N8KVdCw
-	qCW0VrAjdNAbYBL/9PL0oq3j25HWMmSBAJFJFBqsukIAoOsyTdI87ErPLtYK9qCrydjk8EWpm+0
-	xd3B9U1hk3S8KgPEzgCiLMBKn9jUyOTPx18Xz99QUrrCJIhSdfiwgOBhEzKQ8W0jiTOD/oOrLmR
-	h+O6xWCqJ7S7UBqk05wk1OoZp0LBrnVaePPMpn5hVWSy/a1FTaeRaO8oFWBxtvyZF4c3F9Yq5XJ
-	o=
-X-Google-Smtp-Source: AGHT+IG0Ti6DzshFViKpEmON8fAI3DAmGgT0yWSR0PX1XYk1V7FQ0GIt3qDuCMNIYEkaE/4289eXjA==
-X-Received: by 2002:a05:6000:2084:b0:430:f742:fbb8 with SMTP id ffacd0b85a97d-432c3775ad0mr16027947f8f.21.1768064772988;
-        Sat, 10 Jan 2026 09:06:12 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e16d2sm29753038f8f.13.2026.01.10.09.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Jan 2026 09:06:12 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sat, 10 Jan 2026 18:06:11 +0100
-To: Will Deacon <will@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mahe Tardy <mahe.tardy@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv2 bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
- bpf_prog_run
-Message-ID: <aWKHA2bldOSZ0lMB@krava>
-References: <20260109093454.389295-1-jolsa@kernel.org>
- <aWEG685zlaV0o7M7@willie-the-truck>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pnCMQ395"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NiUt84FtM/3fJr9zko71SW75+FK+M6o5MRimC0C7n8cLZ9f1F2ahGZLTaTs5Y3zWkzrvtO+fSTbDUft0Nk1Xv2HL6pEKYEl74dqGVNoG/79wRRV4ZxpxdvBnh34783PzN+N1UEaEDZSkKb2uoWKZk7ounErmyFUu+Gxhztiiux4y/iY0m/hWDhWUFR6UjtUCIXE/uPfpJPFUK9yMnf6vyizF/K/KEff2TDd8VOgSIStcTa/qlsk0BKZM1hjn8UZsxz43xkjxVHr0WYpTQ7KxB76XswY2GxiKlkc7Fc37/hIUBw+Oz85IbaBfzX8Zb6SnY0PaeKbXeXOwoGbDRqRqFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ojB9COjcpSRzpUYsPLC1MiQdTUTjnqbvdMIawwoOc20=;
+ b=mcAGvFMBaHH/m1Vy2AZ3ccsQ9RNtb4DV0Bbv8WADztJgsAQU6aSEN08vny2POhWCVb2cUb3Axso+jL+hb47sJs1RhJEAQFOi39ojpxQUM8calz6WKoT/bGUbXO4IJ6RdTNPKXR0b9RHPbnuKzxpcZrmfR1bd8LtxRAsksvlQg0gFq/Y2o36D6pJxNKxaUWMpIgV3tUqWzXjno+grc0WFzQf8vxgANcxT0Gmxhx/ppGHQC4CHCwotjSBIHN2TiCBcX+T6+0+R+Os7qU2/5cotzyhs1WoQvIj72hU1bzpNgcAuozYeCF1EiBr2ZRV3q4fQOCCxrWfSbRqVpRIjoq074Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ojB9COjcpSRzpUYsPLC1MiQdTUTjnqbvdMIawwoOc20=;
+ b=pnCMQ395LFQDxXL1HAyaSqRkiTpiRVAMGTjOuQ7Dz85Vy5Q5gtKOEHf5XOoLBei3Oq02BNZYPwR8KIazhbzavN78WWtAkzVXuBHnChvuQ5lqaMkYceau8WDUkKJBgRfuLSBExiF623ItNUauaV+4Be2voz2KXXTNwmD4dMG5mrQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
+ by SJ2PR12MB8979.namprd12.prod.outlook.com (2603:10b6:a03:548::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Sat, 10 Jan
+ 2026 18:20:33 +0000
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9499.005; Sat, 10 Jan 2026
+ 18:20:32 +0000
+Message-ID: <dbbfc5f1-d9e5-4d39-a2df-e35d6ba73063@amd.com>
+Date: Sat, 10 Jan 2026 23:50:17 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20251215084615.5283-3-shivankg@amd.com>
+ <20251215084615.5283-7-shivankg@amd.com>
+ <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
+Content-Language: en-US
+From: "Garg, Shivank" <shivankg@amd.com>
+In-Reply-To: <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BM1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::22) To SJ0PR12MB7458.namprd12.prod.outlook.com
+ (2603:10b6:a03:48d::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aWEG685zlaV0o7M7@willie-the-truck>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|SJ2PR12MB8979:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff711bf6-ce55-4074-c81c-08de5074f13c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?clFDdFpvTW82enRSM0hneHF2M29DUFVMUlF4dzVSWlVPS0hobzc1djluRjEw?=
+ =?utf-8?B?Nmx1MFVsWXd6Y2hVeEdaYTAzMEFXTCtPc2lCTlAxTkxWK2l3SFBORTh4YWpS?=
+ =?utf-8?B?ellIMFdmSGFNSEFpdnd2enJMZ255bzFSV084VFMwLy9laENoREpQUURzMFRP?=
+ =?utf-8?B?WjBndnl0Q2t5aERHLzJOSEVTeUpBQkhOZk5qaGpWYy92bG54WHVmZXFiV0l3?=
+ =?utf-8?B?a2JpRHNRakl4K3VjMEJhRG1DTit2NHh2UVM3cHdIY2VyZEwyUHhRTDdQY2to?=
+ =?utf-8?B?ZkNLcnM3VmhaTG9vTUFQZ0hJWk1WVVgxK2hwRkRkTVp4MDl5dkpQRFhPRExO?=
+ =?utf-8?B?Z0xlVGU3eGc5dFpVUHh3aFJ6Qm9wTWhOcklMWmx4aHlaR2ZYUXI3WTZkVEZD?=
+ =?utf-8?B?N0I1K3NVQkI4RDRaRUlkK0J1cVQ5Vm93UmFLc3dQNlEwWTl2N29UTkdReXlY?=
+ =?utf-8?B?R0RxR1hUUjY1ZFJpRUJvcFlJSytsN3lhQXNrODJDU0c4UDdXYzlmZFVhZ3ZZ?=
+ =?utf-8?B?azNvZ00weDNlMFg5RXlySlVVNm5ibTZoK2hxeVlhdUI1NXIvbkxOT1hrS3hS?=
+ =?utf-8?B?TWMzTmMvMUFKelZwUXV4SUIzOCt3c0FobUF2eXU1dkVmVXZkOTNSMkZOMlpu?=
+ =?utf-8?B?ejhWSGoreW9nSGp3ZUhLSnczSnZUcE9RNXBPYWZSYmcxbFN3ZnZzN3N1MGFi?=
+ =?utf-8?B?MVp2VVZGeVcyNzJyQ1N3bTZVM0VXVDIrcU1wMVhzMW00bUpTSHBXZWF3N3FE?=
+ =?utf-8?B?eDlxVEk0ZmdaVFRpWXd6WDlGMTRFc0YyQmllTnhGcEQ3MnBNaVdDSWNhVnQ4?=
+ =?utf-8?B?SVp2SDNublJDVklTTGc2SVBUVWNlOXpaencvcE1VcTFEKy92TlRXQWl5NDc1?=
+ =?utf-8?B?MmVacTlpbkRJSGZjdW1sZkZzbExMZGFoZ3NzWHdqSE1pRi9HeW5IUUNRMTJR?=
+ =?utf-8?B?SW9oZzdPZlpFN1RpWE8yK0tScGo1VU1ZVUh3U21ZalRacSs4SE1DQWVrMzh2?=
+ =?utf-8?B?Y2R0cHRxVGVQcC9GQzllQlZVR0QrYnVZWFNYcmZJYkp4SWVJY0RkcEJWRVV0?=
+ =?utf-8?B?WDJUNHJZVlRLbDZMOWMxd1I4OXlXYVE0ckxDOTZvNEhSVC91VlFoakZtVHV5?=
+ =?utf-8?B?OTF4TDlPNFcvSHE4QnJIQUFCQnFsZnlGc0VTQ090TlNEQytSMGxhL1krQ3Qz?=
+ =?utf-8?B?Q0Z2VitTdDBBVFNXeXN3aVFDdSt1QWNjcTV2SllCOGRXNWN3UTNiMFBGcHY0?=
+ =?utf-8?B?RXFaSW1zRGhVV2FEMHMzTEFsdWJjRmljdTNucU1aWEVMQ29aRVZPMWZoNy9E?=
+ =?utf-8?B?RDhyK1Q1azIxZzBKc2ZCY0J1MTRDd1RjSTE4V1FSUWR0S2VhOVF3TnI3VS9i?=
+ =?utf-8?B?WnRsVkJxTWlkZEUxQUdlWC9PVTdOUExBaTlRWDNGRmc1MWZHZXl2Q2FrRXNJ?=
+ =?utf-8?B?S1FndU5vS3UyZG1vK2prMkRDdWRkcC81cStlNTZob0VHL2lpS3ZUVktaNXY2?=
+ =?utf-8?B?VE1icnlrZEhMWkh1Q2V3TklVS1FaNXNhWGloMWtYaG9JT05vN1hUeU5UQmlW?=
+ =?utf-8?B?NnVRWEp3Z3lBa1BrUS9FclJHQTUwbUtPSzRPb3IxWDV2ZjdVc3p5SzcxWU53?=
+ =?utf-8?B?bFlwK25GWXRMUGxSYWhiNGlEa1ZGYjNoVkNva0UvUWtyTjllbnZaaldsQVdv?=
+ =?utf-8?B?aE5INkNSQzZ2MDkxQXdKc3ZvUWJQM016bC80NTlubE5ZUFlPVTNFN3VOM2VP?=
+ =?utf-8?B?STkxYjlSZkFmYzBVa2J2bDh1aDd5UHAwU04wR1djL1NJa2dzd0JhY0d6MnlE?=
+ =?utf-8?B?a2UwU2RwaTUvQXY3TGZPd2tWZzZWcTludnFhY3E2RVIzVk13R1o4MURvUVRB?=
+ =?utf-8?B?eWQxSWZYcUZRQXdLT0ZXRitNcEdDOWh0U1Awd0U3V0dGd1plS1J3SFVmUDMr?=
+ =?utf-8?B?aDRCZ1BqVmJWMVZPSk9LSHdxdDJkcGlDZW9rNzhXaGlTN1NWUG9BUytnaVdl?=
+ =?utf-8?B?WEUvUHd5Q3lRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N3VyVFhJL05JblUxVHEvZmQ2K2Q3UzdieXFIZ1kxOXJqdzhPWTBsbWpINU5s?=
+ =?utf-8?B?SStJYjYrT1ROVUdBY3NVWnVyTTJmOFc0TjdrMmtKVHFBN3U2Z1VjNUN4T0k0?=
+ =?utf-8?B?c1ZrY0l2SFA2RGVnelRWUGYxZlUxbDhkOFVEVzI5OVlUcXVpYURmRFBYSWEv?=
+ =?utf-8?B?YlA1TW5aYzQwYWRwc3RSZjl0RXlta3FZRkF3em5WdnEwTi92cGsrVlIrbXds?=
+ =?utf-8?B?ejVoWE1URTNKZzY0aE5JK04wRm5YWE5weFYvQ25HV1hEVlg0VzVUeXRhNjd0?=
+ =?utf-8?B?S1dTM003U1lZdXVRU0YwNGpCcVgxNWxkSzNJR0FaZkVVSEtpMlJ6Qm1yd29X?=
+ =?utf-8?B?VytLYWJzaWRJRFFmU0hZSmg1RnJzamh4d096Q1lRQ2U0aDF5ZWR5L21ETllq?=
+ =?utf-8?B?REdnWUVFa1VHMGpzNTVMSjUxaHR0SmRNRzFMcEJWaGJSRlBjcERaRDZjSlhC?=
+ =?utf-8?B?ckZHS2xyT2RsYzY2cmFETStGL0xsWlZKY3VrTWdoaXdPWWZ4TjlieXd1anBF?=
+ =?utf-8?B?VE9EUUdPMjVKK2hIS0pkL3craXFnSzhjZ0hvTG1FdWY5dnpPUTEwUE40U2Qx?=
+ =?utf-8?B?OGpDOHVCZm5rZXZIazdsa3hhQnNzTm5qaTJWczEzczZoS2sxOGxUbFIzWWJO?=
+ =?utf-8?B?eFZNNkhFd2hzZitFSzllT1Iyc0NTYlhMSlpCMEFGVWtQcWdMR1RaY1Jyd2dE?=
+ =?utf-8?B?NXd1dzVVNDlwSXcraGowVjRMWTJYN0hobXZLNjRlcXYrb2FQbzkvOURQdFRy?=
+ =?utf-8?B?b1pGeWxMODJpRnIvTHBuM1M4bi8ydTVERHFpZUY5OFYwMHk1N0pidVVkcmw2?=
+ =?utf-8?B?STdaVUIvZ21Vb1NWTWZxRHZlMk9GUitCYWtMSzhTS3VXYnJYRHZ4U1h3VVJG?=
+ =?utf-8?B?WlB3dkc0cDNCbEZBaU1QV3o3ekdTWURsMmxsV01NWm9VSmVwNTBXT3pvOEZv?=
+ =?utf-8?B?VzN2ai9hVHViWGwrbzBDQnBDYmdIaXdsanZSZE1KTWp5MjFVVW5VdU9xaWY2?=
+ =?utf-8?B?akRUMlZCOSswSUxxcEd1VjFmanhIaFRFcXlrRG5lekpuRU5TZ0p4QUc1aTFm?=
+ =?utf-8?B?SDJDbXR2SnVxZUZpUURmSU5xVVM5OHpxZnUwamZpdnk1czBQeWYrczE0bkxW?=
+ =?utf-8?B?eU5YM0NWN0JQZ3I2a1B4enUwZFJJSG9JcmlOdUZzYWlCbnJMSjZaV0tPQmgv?=
+ =?utf-8?B?YVEvbVZTeWxsRDNuUmN5cmJUcmFaYmRnMWs5bXd2dWQwcWhVOElwVHFjVXZt?=
+ =?utf-8?B?WTFkaVgvZzhnZHMrSE9zWU1GVTBONDdDK2MvcEcveXhMdFFvaUtXbUNzWS9k?=
+ =?utf-8?B?c2creEJ2MWdNNXBGWHNZemxXOW5pVjkwZTIyTGExZnFMT0lMRTYwTjgzUXV0?=
+ =?utf-8?B?cEo1Nk96bFZGamFHTWxMU2tlR0ZSME53bnJINGFjbW5YYWhqd2hmTkhPcENF?=
+ =?utf-8?B?Z1R1U2pTTEtSTlIyck5sTmlLejk1K0Y4RWNsYXlkZFh2Uit2YlM5NWNIRS8r?=
+ =?utf-8?B?Z0dQaFdYZjVtWUdEYkZhVjNZZk5UMFZaUUpRdUEzU0lVN1Vkd0RUdi8vcTNH?=
+ =?utf-8?B?cTNtK2lZVHk2RHVWMC9aZ1hnRkVMb1BoWlNaeG5jdmhKdkNYMnFQWGN6ODB1?=
+ =?utf-8?B?RStySU5KRiswU0tWa1lGRXRjRXRvOTVNKzJXc0hRSlhGaC9CekFPTmVCQWp1?=
+ =?utf-8?B?ODVxK1FxbXVNbUt6eFhESG9VRG5HMjlTVWFoMW03ZzJNSnE2cmpRRFZRUHNX?=
+ =?utf-8?B?eE51RU9RS3k0eUMwRys3ZFlEdkhIdkdNL2JzSGVabWxtR0hqb0NwMCttZHE2?=
+ =?utf-8?B?Z3dIbmIyazY0Tk1BUkZwZVMwdEppcUcxTFNlVVVGRlVwbkpRRjZZM2NWUGIw?=
+ =?utf-8?B?bmkzSzhtWkVRY01HVXdSWkNFSXhpVzlGeXpYU3Ywd2xqdHd4NjFlcE9xRVBW?=
+ =?utf-8?B?MzQ3WDN5Uk5PSGdQNk9zbzg2NlRzZmNRaEtZVGZxQTBINzZTNXJlUHpTeWRk?=
+ =?utf-8?B?MkdnS0k5T25rSTJvZFNqM3g0TEtuRVdXdzkxWWZ3MUtKQXB5UmVSWnRKZGp0?=
+ =?utf-8?B?NEhXT3FhTGtNM2NGUEhBNkFjdTBsaGFnL1hybjlGQjErbGxFNEw2bHlvaHA5?=
+ =?utf-8?B?blM4c1hoMWN5ZElodktCZUQ0Y2lzcUl1cE5LVUk2VXI4RXZUeGRUVVI4ZmYx?=
+ =?utf-8?B?N3MvNVcvdzZVc3JNb1dFM3AzT3JiVDNBWGs2WmZtd2tUN0p6WXZjUzJ5cXhG?=
+ =?utf-8?B?dTAzMWNkdUxadHlRUG9Fa2c0TXJJQzNsTDRiUjkwdXpyWnNtUWNudlkxaVEz?=
+ =?utf-8?B?T25YRzh4SHZKcmlYRFE3OGhOdG9kUWhLSngrSXRwbDZhVDZIMFU2UT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff711bf6-ce55-4074-c81c-08de5074f13c
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2026 18:20:32.8148
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JBO4ANFyT6I3jWAYV6mU38KkidtIvnOK+TmSBEwczSQrylR49bZIIdYNB+DPyhNFcEk+k6kFYTiQjCaxkN2GJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8979
 
-On Fri, Jan 09, 2026 at 01:47:23PM +0000, Will Deacon wrote:
-> On Fri, Jan 09, 2026 at 10:34:53AM +0100, Jiri Olsa wrote:
-> > Mahe reported issue with bpf_override_return helper not working when
-> > executed from kprobe.multi bpf program on arm.
-> > 
-> > The problem is that on arm we use alternate storage for pt_regs object
-> > that is passed to bpf_prog_run and if any register is changed (which
-> > is the case of bpf_override_return) it's not propagated back to actual
-> > pt_regs object.
-> > 
-> > Fixing this by introducing and calling ftrace_partial_regs_update function
-> > to propagate the values of changed registers (ip and stack).
-> > 
-> > Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> > v2 changes:
-> > - moved ftrace_partial_regs_update to generic code [Will]
-> > 
-> >  include/linux/ftrace_regs.h | 25 +++++++++++++++++++++++++
-> >  kernel/trace/bpf_trace.c    |  1 +
-> >  2 files changed, 26 insertions(+)
-> > 
-> > diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
-> > index 15627ceea9bc..f9a7c009cdae 100644
-> > --- a/include/linux/ftrace_regs.h
-> > +++ b/include/linux/ftrace_regs.h
-> > @@ -33,6 +33,31 @@ struct ftrace_regs;
-> >  #define ftrace_regs_get_frame_pointer(fregs) \
-> >  	frame_pointer(&arch_ftrace_regs(fregs)->regs)
-> >  
-> > +static __always_inline void
-> > +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs) { }
-> > +
-> > +#else
-> > +
-> > +/*
-> > + * ftrace_partial_regs_update - update the original ftrace_regs from regs
-> > + * @fregs: The ftrace_regs to update from @regs
-> > + * @regs: The partial regs from ftrace_partial_regs() that was updated
-> > + *
-> > + * Some architectures have the partial regs living in the ftrace_regs
-> > + * structure, whereas other architectures need to make a different copy
-> > + * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
-> > + * if the code using @regs updates a field (like the instruction pointer or
-> > + * stack pointer) it may need to propagate that change to the original @fregs
-> > + * it retrieved the partial @regs from. Use this function to guarantee that
-> > + * update happens.
-> > + */
-> > +static __always_inline void
-> > +ftrace_partial_regs_update(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> > +{
-> > +	ftrace_regs_set_instruction_pointer(fregs, instruction_pointer(regs));
-> > +	ftrace_regs_set_return_value(fregs, regs_return_value(regs));
-> > +}
+
+
+On 1/9/2026 8:16 PM, David Hildenbrand (Red Hat) wrote:
+> On 12/15/25 09:46, Shivank Garg wrote:
+>> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+>> text sections), the pages may still be dirty from recent writes.
+>> collapse_file() will trigger async writeback and fail with
+>> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+>>
+>> MADV_COLLAPSE is a synchronous operation where userspace expects
+>> immediate results. If the collapse fails due to dirty pages, perform
+>> synchronous writeback on the specific range and retry once.
+>>
+>> This avoids spurious failures for freshly written executables while
+>> avoiding unnecessary synchronous I/O for mappings that are already clean.
+>>
+>> Reported-by: Branden Moore <Branden.Moore@amd.com>
+>> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+>> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+>> Suggested-by: David Hildenbrand <david@kernel.org>
+>> Tested-by: Lance Yang <lance.yang@linux.dev>
+>> Signed-off-by: Shivank Garg <shivankg@amd.com>
+>> ---
+>>   mm/khugepaged.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 219dfa2e523c..6c8c35d3e0c9 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/dax.h>
+>>   #include <linux/ksm.h>
+>>   #include <linux/pgalloc.h>
+>> +#include <linux/backing-dev.h>
+>>     #include <asm/tlb.h>
+>>   #include "internal.h"
+>> @@ -2787,9 +2788,11 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>       hend = end & HPAGE_PMD_MASK;
+>>         for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>> +        bool retried = false;
+>>           int result = SCAN_FAIL;
+>>             if (!mmap_locked) {
+>> +retry:
 > 
-> I think the AI thingy is right about dropping the const qualifier here
-
-yes, will resend, thanks
-
-jirka
-
-> but overall I prefer this to the previous revisions. Thanks for sticking
-> with it!
+> Jumping into an if block is nasty :)
 > 
-> Acked-by: Will Deacon <will@kernel.org>
+>>               cond_resched();
+>>               mmap_read_lock(mm);
+>>               mmap_locked = true;
+>> @@ -2819,6 +2822,43 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>           if (!mmap_locked)
+>>               *lock_dropped = true;
+>>   +        /*
+>> +         * If the file-backed VMA has dirty pages, the scan triggers
+>> +         * async writeback and returns SCAN_PAGE_DIRTY_OR_WRITEBACK.
+>> +         * Since MADV_COLLAPSE is sync, we force sync writeback and
+>> +         * retry once.
+>> +         */
+>> +        if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !retried) {
+>> +            /*
+>> +             * File scan drops the lock. We must re-acquire it to
+>> +             * safely inspect the VMA and hold the file reference.
+>> +             */
+>> +            if (!mmap_locked) {
+>> +                cond_resched();
+>> +                mmap_read_lock(mm);
+>> +                mmap_locked = true;
+>> +                result = hugepage_vma_revalidate(mm, addr, false, &vma, cc);
+>> +                if (result != SCAN_SUCCEED)
+>> +                    goto handle_result;
+>> +            }
+>> +
+>> +            if (!vma_is_anonymous(vma) && vma->vm_file &&
+>> +                mapping_can_writeback(vma->vm_file->f_mapping)) {
+>> +                struct file *file = get_file(vma->vm_file);
+>> +                pgoff_t pgoff = linear_page_index(vma, addr);
+>> +                loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+>> +                loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+>> +
+>> +                mmap_read_unlock(mm);
+>> +                mmap_locked = false;
+>> +                *lock_dropped = true;
+>> +                filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+>> +                fput(file);
+>> +                retried = true;
+>> +                goto retry;
+>> +            }
+>> +        }
+>> +
 > 
-> Will
+> This looks a bit complicated. Can't we move that handing up, where we have most of that
+> information already? Or am I missing something important?
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 97d1b2824386f..c7271877c5220 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/dax.h>
+>  #include <linux/ksm.h>
+>  #include <linux/pgalloc.h>
+> +#include <linux/backing-dev.h>
+>  
+>  #include <asm/tlb.h>
+>  #include "internal.h"
+> @@ -2786,7 +2787,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  
+>         for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>                 int result = SCAN_FAIL;
+> +               bool triggered_wb = false;
+>  
+> +retry:
+>                 if (!mmap_locked) {
+>                         cond_resched();
+>                         mmap_read_lock(mm);
+> @@ -2809,6 +2812,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>                         mmap_locked = false;
+			  
+			  *lock_dropped = true;
+>                         result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+>                                                           cc);
+> +
+> +                       if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
+> +                           mapping_can_writeback(file->f_mapping)) {
+> +                               loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+> +                               loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+> +
+> +                               filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+> +                               triggered_wb = true;
+
+				  fput(file);
+
+> +                               goto retry;
+> +                       }
+>                         fput(file);
+>                 } else {
+>                         result = hpage_collapse_scan_pmd(mm, vma, addr,
+> 
+> 
+
+Thank you for the suggestion, this approach looks much simpler.
+
+There are two small nits I observed:
+
+1. In the retry loop, it is possible that we reacquire the mmap_lock and set
+   mmap_locked to true. This can cause issues later when we do:
+
+       if (!mmap_locked)
+               *lock_dropped = true;
+
+   because the caller would no longer see that the lock was dropped earlier.
+
+2. We need an fput() to balance the file reference taken at line 2795.
+
+fixed patch: (tested it no longer reproduce the issue):
+
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 87ca577c2668..b88bbb54f109 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -21,6 +21,7 @@
+ #include <linux/shmem_fs.h>
+ #include <linux/dax.h>
+ #include <linux/ksm.h>
++#include <linux/backing-dev.h>
+ 
+ #include <asm/tlb.h>
+ #include <asm/pgalloc.h>
+@@ -2771,7 +2772,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+ 
+ 	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+ 		int result = SCAN_FAIL;
++		bool triggered_wb = false;
+ 
++retry:
+ 		if (!mmap_locked) {
+ 			cond_resched();
+ 			mmap_read_lock(mm);
+@@ -2794,8 +2797,20 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+ 
+ 			mmap_read_unlock(mm);
+ 			mmap_locked = false;
++			*lock_dropped = true;
+ 			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+ 							  cc);
++
++			if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
++			    mapping_can_writeback(file->f_mapping)) {
++				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
++				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
++
++				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
++				triggered_wb = true;
++				fput(file);
++				goto retry;
++			}
+ 			fput(file);
+ 		} else {
+ 			result = hpage_collapse_scan_pmd(mm, vma, addr,
