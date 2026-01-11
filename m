@@ -1,162 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588112D5419
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 22:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB03150997
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 23:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768171013; cv=none; b=mhRZaH53V6XbYosrN/U4fPfBmPyUbmxDqF1/ymtwp7COdxXNTqTtr1oI1+1pV3gLLQCUnVccxKL+1oh4X6UXqC9KrHAn8g1RoQZilDeSjYWSPytgnQQBLrmjFOFTGrIwhaiXhh1YlzXrV8+WGLOF4qy0Dzoj2YhZIT7esKiFFTM=
+	t=1768174732; cv=none; b=Qbf46DcKMAxugxmJywMfQYZIwfrop1wOL+WaV5CdqmrlhQd2HTmyGDOwUZiFmF1XUaxqfNzAJFp18XdibByVyAvEDyl4qiKUVUPy8tiLGv8r2GXwLHgXtWA/8R799Xs/JMfohu67HRwRFcuuW5WRfTFbJmf61YtKOIwpZ7XQRHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768171013; c=relaxed/simple;
-	bh=afYM+GVZZEA5LAVLP6Pc1kt0Y9sVNE6RMsDjdKMYv+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=upPMM56kkiw/ohMX3O4y7yoxlY3R9W2orbn2EMitnA3mV69PwBA6BInyCql6rnP2k+SaIMwirjNyxaGuGabInCtNoMP3EwaMWpZrZ1tzQe9/env766jG5PltUly7iz6Xs8XBGFTL7oFch7CVSC3AZHDsU3dWT0l6YMMWHgRvPpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nMF5qyGY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xqpIEShM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nMF5qyGY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xqpIEShM; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1768174732; c=relaxed/simple;
+	bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K6NSpk1tVY6zh1TlCxjLYEIR99nFmP+QwnH5DiZIl0YEcATL5cEU2XZfGTrxDehexP8WHZDveoUmM1d6vBrlcuRtvenw5wiyLtWf7rA8ae5fNe7AuPQ3cg9ewevMZ7XucbB3AryaJ9BrM4OP9eZNXnXBKssWqZlW5exHi1BH9Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V1GsXbc7; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nMF5qyGY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xqpIEShM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nMF5qyGY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xqpIEShM"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3EFA35BCFB;
-	Sun, 11 Jan 2026 22:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768171010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zLOxGJfYIVp3nhJUFUVVGna2hCDOFk9XxC+CTR3iww=;
-	b=nMF5qyGY47xjv3g9+xu8SnWy3PMGkTskWa2q/NktqC7W0Pq2B/qV76Is4f1vfvrczBxTCi
-	mv2SkgB9I5ZkjP6CgC6fBysL/lfbMnc3Y/tOU6fX/R+MnrCvm9OxgKnUt6Zin7GiA2htiA
-	YlCzXnadqk5IiiFfgo+MA7uyW97I0hs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768171010;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zLOxGJfYIVp3nhJUFUVVGna2hCDOFk9XxC+CTR3iww=;
-	b=xqpIEShMSdd6DvB9iTHOQ5M2PPDIpNoKAd3cEmNwGl5ofqP6KzEwsgNMkqx1qC7+DtzSJX
-	ZveCqySjPwokCXCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768171010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zLOxGJfYIVp3nhJUFUVVGna2hCDOFk9XxC+CTR3iww=;
-	b=nMF5qyGY47xjv3g9+xu8SnWy3PMGkTskWa2q/NktqC7W0Pq2B/qV76Is4f1vfvrczBxTCi
-	mv2SkgB9I5ZkjP6CgC6fBysL/lfbMnc3Y/tOU6fX/R+MnrCvm9OxgKnUt6Zin7GiA2htiA
-	YlCzXnadqk5IiiFfgo+MA7uyW97I0hs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768171010;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zLOxGJfYIVp3nhJUFUVVGna2hCDOFk9XxC+CTR3iww=;
-	b=xqpIEShMSdd6DvB9iTHOQ5M2PPDIpNoKAd3cEmNwGl5ofqP6KzEwsgNMkqx1qC7+DtzSJX
-	ZveCqySjPwokCXCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DD7B03EA65;
-	Sun, 11 Jan 2026 22:36:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CPz/MgEmZGnIYQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Sun, 11 Jan 2026 22:36:49 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-doc@vger.kernel.org
-Cc: Petr Vorel <pvorel@suse.cz>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] Documentation/trace: Fix links to other documents
-Date: Sun, 11 Jan 2026 23:36:43 +0100
-Message-ID: <20260111223643.174812-2-pvorel@suse.cz>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260111223643.174812-1-pvorel@suse.cz>
-References: <20260111223643.174812-1-pvorel@suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1GsXbc7"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fb0fc5aa4so4337960f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 15:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768174729; x=1768779529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
+        b=V1GsXbc7qHCqdkB30tri7P3dRfDxGmDg0h3datuwhBVVKAOL5jgFJGSqVrdNh3BVBP
+         nZ9mEM/ZJVFaOtyz4T4p8FvlYEzgOgdFipeGG08JMgQiGPCzgOLYkuKxJnR1JB5losbd
+         eCgF4tvyZG3SwinyLbXgQ3GYf6Q0c3vXHnaM5vIhzEOUYfoCBXRVypCiVIaaUj5jNaYg
+         Iu6rFaUfK4zPKfFHO+ofbtpWH6ts5f+HH3rktq6suD9b9AfXyqF7fW/HwGZL2hKYKY/6
+         adPlUKDesamGBDUxC0m6bJscDn5RCoOJbIfmFT+/Yu2JXFED52+JeUwtKeBP+TpdBuBZ
+         N4Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768174729; x=1768779529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
+        b=XJASfazVpHvjbJUp9WRSFagz6hzbkWQSkAYCeUIu/m4vTuETZiNLJeFYOVm2vjmffV
+         r5aIERo5UlFBz+58RkEiWrNWurTG6sH9kbmq1xMhOCYS1ejr60OfO2MIK8ICZPs0hLj2
+         oHE3vwg2RgYXPb8Lw7h8fgPjpYyjHuhvdhRSH4aFnNsAQ59L16pFJsKLF2Sjzr/2siwM
+         kkaaaSMP8f6jDJmt76wuFaG1trIgFopD2X3y2qY/COQWbZt+uEkARkzqnaax2is8xUql
+         FgYxkc7qRWF0tWlMbr2kIGJIWEQWZmOGUJXWwL0KrCHzfLgW8pkxlrXNKfkB4eNP5tVv
+         OAwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUy2enUyYWcLdY6U0yl+yhmrlhVp4GOjK+EEXCFe2cNaqgreeF5dvtdupylfiE0b1zJBGMwWHvZ7N+qQ1pT0FKCcKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzWydH1t5hC+hspR14CJdylVvSODKGEegxYAOJeeAevNR7uPa5
+	FWseaacfHo+7EMAmqVAqbTePvpIc7O+wDne9SP1mFG+cBAuFcqC5/1iyQvY5stMe0Y2f1XbMP/K
+	QF+HBu5ChDFWVBuktbK9NhJ/QIxBG9/w=
+X-Gm-Gg: AY/fxX6CFg6LUerN7arIYL4BxNJs7sxVP35FbsjVGCpX8mNC0YlrtMPTtHXGgHSyB25
+	H3xToi0wkTpvEAR4U0A9JpSTejoNpRihsT40R8WezXEAJlxtvoFb1HY2dfMqn+sQFr/zx1jhYLg
+	DnjrS73sQnb/i087aXTyYk8NyLIk8xWFcvcmB7OtanEipDiXFOkcXvOWelXphF5k4D6GaMB+CBZ
+	was9dpoVaYTLMjCr7rGclq1cQGbqxji6cG97wldTelcckfQa36NyGoODAGKDXtVj2TGLxtbXlmc
+	15z060hi6ZhWPBYTMU/R3nmBYC0ToERmRnrzZ3c=
+X-Google-Smtp-Source: AGHT+IFUOvDT34dvyomwn3c7ZwM6ALEAOAqRH7FWOKzQCzQUJjuK/9NtjeBwyRJsMcrShx2AnzXOyQRd8inlOoww4Fo=
+X-Received: by 2002:a05:6000:4287:b0:430:f41f:bd5d with SMTP id
+ ffacd0b85a97d-432c37a300emr17145280f8f.55.1768174729186; Sun, 11 Jan 2026
+ 15:38:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+References: <20260108220550.2f6638f3@fedora> <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+ <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+ <20260109141930.6deb2a0a@gandalf.local.home> <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+ <CAADnVQLeCLRhx1Oe5DdJCT0e+WWq4L3Rdee1Ky0JNNh3LdozeQ@mail.gmail.com>
+ <20260109170028.0068a14d@fedora> <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
+ <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
+ <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
+ <20260110111454.7d1a7b66@fedora> <CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
+ <20260111170953.49127c00@fedora>
+In-Reply-To: <20260111170953.49127c00@fedora>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 11 Jan 2026 15:38:38 -0800
+X-Gm-Features: AZwV_QhL36czEI7sCQwGEwK5X-GlTAcDBYsReVH0tRCSZhjpYR06hlv9A0Tnzbo
+Message-ID: <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Link to another document does not require 'file:'. Removing it fixes
-links in generated html docs.
+On Sun, Jan 11, 2026 at 2:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Sun, 11 Jan 2026 12:04:51 -0800
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+> > The diff has nothing to do with bpf needs and/or bpf internals.
+> > It's really about being a good citizen of PREEMP_RT.
+> > bpf side already does migrate_disable,
+> > rcu_read_lock, srcu_fast/task_trace when necessary.
+> > Most of the time we don't rely on any external preempt state or rcu/src=
+u.
+> > Removing guard(preempt_notrace)(); from tracepoint invocation
+> > would be just fine for bpf. Simple remove will trigger bug
+> > on cant_sleep(), but that's a trivial fix.
+>
+> Oh, so you are OK replacing the preempt_disable in the tracepoint
+> callbacks with fast SRCU?
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-Changes v1->v2:
-* Remove backticks (Jonathan Corbet)
+yes, but..
 
-Link to v1:
-https://lore.kernel.org/linux-doc/20260109152336.84674-2-pvorel@suse.cz/
+> Then I guess we can simply do that. Would it be fine to do that for
+> both RT and non-RT? That will simplify the code quite a bit.
 
- Documentation/trace/fprobe.rst      | 2 +-
- Documentation/trace/ftrace-uses.rst | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Agree. perf needs preempt_disable in their callbacks (as this patch does)
+and bpf side needs to add migrate_disable in __bpf_trace_run for now.
+Though syscall tracepoints are sleepable we don't take advantage of
+that on the bpf side. Eventually we will, and then rcu_lock
+inside __bpf_trace_run will become srcu_fast_lock.
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 06b0edad01796..95998b189ae33 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -79,7 +79,7 @@ The above is defined by including the header::
- 
- Same as ftrace, the registered callbacks will start being called some time
- after the register_fprobe() is called and before it returns. See
--:file:`Documentation/trace/ftrace.rst`.
-+Documentation/trace/ftrace.rst.
- 
- Also, the unregister_fprobe() will guarantee that both enter and exit
- handlers are no longer being called by functions after unregister_fprobe()
-diff --git a/Documentation/trace/ftrace-uses.rst b/Documentation/trace/ftrace-uses.rst
-index e225cc46b71eb..a9701add27c51 100644
---- a/Documentation/trace/ftrace-uses.rst
-+++ b/Documentation/trace/ftrace-uses.rst
-@@ -253,7 +253,7 @@ If @buf is NULL and reset is set, all functions will be enabled for tracing.
- The @buf can also be a glob expression to enable all functions that
- match a specific pattern.
- 
--See Filter Commands in :file:`Documentation/trace/ftrace.rst`.
-+See Filter Commands in Documentation/trace/ftrace.rst.
- 
- To just trace the schedule function:
- 
--- 
-2.51.0
+The way to think about generic infrastructure like tracepoints is
+to minimize their overhead no matter what out-of-tree and in-tree
+users' assumptions are today, so why do we need preempt_disable
+or srcu_fast there?
+I think today it's there because all callbacks (perf, ftrace, bpf)
+expect preemption to be disabled, but can we just remove it from tp side?
+and move preempt_disable to callbacks that actually need it?
 
+I'm looking at release_probes(). It's fine as-is, no?
