@@ -1,126 +1,132 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-oo1-f79.google.com (mail-oo1-f79.google.com [209.85.161.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB03150997
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 23:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7AE3C17
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 00:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768174732; cv=none; b=Qbf46DcKMAxugxmJywMfQYZIwfrop1wOL+WaV5CdqmrlhQd2HTmyGDOwUZiFmF1XUaxqfNzAJFp18XdibByVyAvEDyl4qiKUVUPy8tiLGv8r2GXwLHgXtWA/8R799Xs/JMfohu67HRwRFcuuW5WRfTFbJmf61YtKOIwpZ7XQRHg=
+	t=1768177528; cv=none; b=JY1axRuCbe/1GqgGGJ/VpiRth5/ueSUYIuBYE9ed6AY58vb4NmoT5e0oEEVSALfL4Bi/+qRugVxGzk5QYe94Sa1R7UVl98G+CC2VBLDx48AZSjaKZgxHEqyXHMv8PGQ3ezPPLMG9Tg3Qve9hn6BP953nDPiDFSmh+0XQqczdJDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768174732; c=relaxed/simple;
-	bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K6NSpk1tVY6zh1TlCxjLYEIR99nFmP+QwnH5DiZIl0YEcATL5cEU2XZfGTrxDehexP8WHZDveoUmM1d6vBrlcuRtvenw5wiyLtWf7rA8ae5fNe7AuPQ3cg9ewevMZ7XucbB3AryaJ9BrM4OP9eZNXnXBKssWqZlW5exHi1BH9Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V1GsXbc7; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1GsXbc7"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fb0fc5aa4so4337960f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 15:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768174729; x=1768779529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
-        b=V1GsXbc7qHCqdkB30tri7P3dRfDxGmDg0h3datuwhBVVKAOL5jgFJGSqVrdNh3BVBP
-         nZ9mEM/ZJVFaOtyz4T4p8FvlYEzgOgdFipeGG08JMgQiGPCzgOLYkuKxJnR1JB5losbd
-         eCgF4tvyZG3SwinyLbXgQ3GYf6Q0c3vXHnaM5vIhzEOUYfoCBXRVypCiVIaaUj5jNaYg
-         Iu6rFaUfK4zPKfFHO+ofbtpWH6ts5f+HH3rktq6suD9b9AfXyqF7fW/HwGZL2hKYKY/6
-         adPlUKDesamGBDUxC0m6bJscDn5RCoOJbIfmFT+/Yu2JXFED52+JeUwtKeBP+TpdBuBZ
-         N4Ag==
+	s=arc-20240116; t=1768177528; c=relaxed/simple;
+	bh=nrDZGFZaO0P3QWBP4A5cQyLofFBcaIHFWuZVxq54Ku0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=K8yp/1RC+lqUdzP+BNj+SOHMXL/+TPnfMw8M1PGtBDQJc/Vp6Ox3nqRNjEqXRbr7Hu5DjPgLoLdAEari/vgzU6dY36e6MzVblHaYngdYti110K91vedTrn9AriAa1pwvH1X7aplsyHyzh1teageiRFQ2kFnxRo0Ksf1CpI6w/mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f79.google.com with SMTP id 006d021491bc7-65b73eb22d2so5659701eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 16:25:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768174729; x=1768779529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kiXWuKzIX1x06aBMcxfYYewoOyDtnrGOZE+OOoXbLNM=;
-        b=XJASfazVpHvjbJUp9WRSFagz6hzbkWQSkAYCeUIu/m4vTuETZiNLJeFYOVm2vjmffV
-         r5aIERo5UlFBz+58RkEiWrNWurTG6sH9kbmq1xMhOCYS1ejr60OfO2MIK8ICZPs0hLj2
-         oHE3vwg2RgYXPb8Lw7h8fgPjpYyjHuhvdhRSH4aFnNsAQ59L16pFJsKLF2Sjzr/2siwM
-         kkaaaSMP8f6jDJmt76wuFaG1trIgFopD2X3y2qY/COQWbZt+uEkARkzqnaax2is8xUql
-         FgYxkc7qRWF0tWlMbr2kIGJIWEQWZmOGUJXWwL0KrCHzfLgW8pkxlrXNKfkB4eNP5tVv
-         OAwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUy2enUyYWcLdY6U0yl+yhmrlhVp4GOjK+EEXCFe2cNaqgreeF5dvtdupylfiE0b1zJBGMwWHvZ7N+qQ1pT0FKCcKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzWydH1t5hC+hspR14CJdylVvSODKGEegxYAOJeeAevNR7uPa5
-	FWseaacfHo+7EMAmqVAqbTePvpIc7O+wDne9SP1mFG+cBAuFcqC5/1iyQvY5stMe0Y2f1XbMP/K
-	QF+HBu5ChDFWVBuktbK9NhJ/QIxBG9/w=
-X-Gm-Gg: AY/fxX6CFg6LUerN7arIYL4BxNJs7sxVP35FbsjVGCpX8mNC0YlrtMPTtHXGgHSyB25
-	H3xToi0wkTpvEAR4U0A9JpSTejoNpRihsT40R8WezXEAJlxtvoFb1HY2dfMqn+sQFr/zx1jhYLg
-	DnjrS73sQnb/i087aXTyYk8NyLIk8xWFcvcmB7OtanEipDiXFOkcXvOWelXphF5k4D6GaMB+CBZ
-	was9dpoVaYTLMjCr7rGclq1cQGbqxji6cG97wldTelcckfQa36NyGoODAGKDXtVj2TGLxtbXlmc
-	15z060hi6ZhWPBYTMU/R3nmBYC0ToERmRnrzZ3c=
-X-Google-Smtp-Source: AGHT+IFUOvDT34dvyomwn3c7ZwM6ALEAOAqRH7FWOKzQCzQUJjuK/9NtjeBwyRJsMcrShx2AnzXOyQRd8inlOoww4Fo=
-X-Received: by 2002:a05:6000:4287:b0:430:f41f:bd5d with SMTP id
- ffacd0b85a97d-432c37a300emr17145280f8f.55.1768174729186; Sun, 11 Jan 2026
- 15:38:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768177525; x=1768782325;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A5CdI+LHGD1oIYjo8i4mEjp3QkZf7AObmkripepwXvM=;
+        b=UogFnEhOsnSFcglPHL/IiBd1LeeMesJyzShZmAzA5gKOKZbpVOHrh3RHMsCHQDafzB
+         M4H7wZ6g6BkHbAi/byCqCtCxjhzuPjJyqx0JGGjLYscZXVNSUKQPdcgvtyQYthYpnxwi
+         6syNGembeGRivdtMsQDUSE2FDZeb6mXqe2TEeEZVQqJFtd8WbL0shzoPo+0EF5Lh82Be
+         y41zPHPlNhvQ1kDfJvBKEhwggJ2zL7yASua52XnuFepyBDkQJtr2KEVCkh3RkznkmMoZ
+         A2OMNEAftgJaNlxnvmFAABCKUDY4KNwfQvmgmveqegIF8Bd9UCp/6XpkyEBqE2TJzEsI
+         yrMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUA/haMWixbc580p2u8ueAv2gpOnR/QPc4yW7VUAilLWYT16Drn7ZoS9t+xpkVu06zIsmcSZxH7L/u/u9/aJ/eWkj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5URwAEGkG0iS2nTa/SZOZ1c3qz+cEgoULz8K8tGYnWQbySYsj
+	8EF9QjrQASnJP8iDRuGN301GBJ82xiOb7R71oklhW6CMAogHBjyr//Gb/e2ntWzAq4qJDg60C4A
+	8nwhWy3qxg5fhUfixLLabgF8clt03POzn4SBwDat2gvF7pOnH2UOIsu5Sqkw=
+X-Google-Smtp-Source: AGHT+IGrQBq8ozZXBtjPQna0qFV2PGtZa23LZeSMNb9bq9wg1PL/iBOvSKuPISuJvzVLbRbvxdFb+XDICYq7feMUzhuQ5YaoJJOb
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108220550.2f6638f3@fedora> <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
- <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
- <20260109141930.6deb2a0a@gandalf.local.home> <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
- <CAADnVQLeCLRhx1Oe5DdJCT0e+WWq4L3Rdee1Ky0JNNh3LdozeQ@mail.gmail.com>
- <20260109170028.0068a14d@fedora> <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
- <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
- <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
- <20260110111454.7d1a7b66@fedora> <CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
- <20260111170953.49127c00@fedora>
-In-Reply-To: <20260111170953.49127c00@fedora>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 11 Jan 2026 15:38:38 -0800
-X-Gm-Features: AZwV_QhL36czEI7sCQwGEwK5X-GlTAcDBYsReVH0tRCSZhjpYR06hlv9A0Tnzbo
-Message-ID: <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
+X-Received: by 2002:a4a:e2d6:0:b0:659:9a49:8e82 with SMTP id
+ 006d021491bc7-65f5508a76emr5336039eaf.82.1768177525471; Sun, 11 Jan 2026
+ 16:25:25 -0800 (PST)
+Date: Sun, 11 Jan 2026 16:25:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69643f75.050a0220.eaf7.007a.GAE@google.com>
+Subject: [syzbot] [trace?] WARNING in ring_buffer_map_get_reader (2)
+From: syzbot <syzbot+c7143161d8215214a993@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 11, 2026 at 2:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Sun, 11 Jan 2026 12:04:51 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > The diff has nothing to do with bpf needs and/or bpf internals.
-> > It's really about being a good citizen of PREEMP_RT.
-> > bpf side already does migrate_disable,
-> > rcu_read_lock, srcu_fast/task_trace when necessary.
-> > Most of the time we don't rely on any external preempt state or rcu/src=
-u.
-> > Removing guard(preempt_notrace)(); from tracepoint invocation
-> > would be just fine for bpf. Simple remove will trigger bug
-> > on cant_sleep(), but that's a trivial fix.
->
-> Oh, so you are OK replacing the preempt_disable in the tracepoint
-> callbacks with fast SRCU?
+Hello,
 
-yes, but..
+syzbot found the following issue on:
 
-> Then I guess we can simply do that. Would it be fine to do that for
-> both RT and non-RT? That will simplify the code quite a bit.
+HEAD commit:    b6151c4e60e5 Merge tag 'erofs-for-6.19-rc5-fixes' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14b8f19a580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ae589cd0a6acd9be
+dashboard link: https://syzkaller.appspot.com/bug?extid=c7143161d8215214a993
+compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Agree. perf needs preempt_disable in their callbacks (as this patch does)
-and bpf side needs to add migrate_disable in __bpf_trace_run for now.
-Though syscall tracepoints are sleepable we don't take advantage of
-that on the bpf side. Eventually we will, and then rcu_lock
-inside __bpf_trace_run will become srcu_fast_lock.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-The way to think about generic infrastructure like tracepoints is
-to minimize their overhead no matter what out-of-tree and in-tree
-users' assumptions are today, so why do we need preempt_disable
-or srcu_fast there?
-I think today it's there because all callbacks (perf, ftrace, bpf)
-expect preemption to be disabled, but can we just remove it from tp side?
-and move preempt_disable to callbacks that actually need it?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fa89172b8626/disk-b6151c4e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/19077b87b7b3/vmlinux-b6151c4e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6793df315bec/bzImage-b6151c4e.xz
 
-I'm looking at release_probes(). It's fine as-is, no?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c7143161d8215214a993@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: kernel/trace/ring_buffer.c:7363 at ring_buffer_map_get_reader+0x689/0x8d0 kernel/trace/ring_buffer.c:7363, CPU#0: syz.3.3873/24523
+Modules linked in:
+CPU: 0 UID: 0 PID: 24523 Comm: syz.3.3873 Tainted: G             L      syzkaller #0 PREEMPT(full) 
+Tainted: [L]=SOFTLOCKUP
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
+RIP: 0010:ring_buffer_map_get_reader+0x689/0x8d0 kernel/trace/ring_buffer.c:7363
+Code: 02 00 00 49 8b 0c 24 8b 74 24 44 4c 89 ea 48 c7 c7 00 6c 93 8b e8 37 5f d9 ff e9 e6 fe ff ff 4c 8b 64 24 60 e8 f8 b3 fb ff 90 <0f> 0b 90 e8 ef b3 fb ff 48 89 df 31 db e8 c5 f9 fd ff 48 8b 74 24
+RSP: 0018:ffffc9000bad7db0 EFLAGS: 00010087
+RAX: 0000000000000790 RBX: ffff88813ff68800 RCX: ffffc9000eff9000
+RDX: 0000000000080000 RSI: ffffffff81c2b728 RDI: 0000000000000007
+RBP: dffffc0000000000 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: ffff88813ff688b0 R12: ffff88813ff68990
+R13: 0000000000000000 R14: ffff88813ff688a8 R15: ffff88813ff688b0
+FS:  00007f7297ae16c0(0000) GS:ffff8881248fa000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f7d9ff8 CR3: 0000000087a78000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ tracing_buffers_ioctl+0x2ab/0x360 kernel/trace/trace.c:8938
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:597 [inline]
+ __se_sys_ioctl fs/ioctl.c:583 [inline]
+ __x64_sys_ioctl+0x18e/0x210 fs/ioctl.c:583
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7296b8f7c9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f7297ae1038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7296de6090 RCX: 00007f7296b8f7c9
+RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
+RBP: 00007f7296c13f91 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f7296de6128 R14: 00007f7296de6090 R15: 00007ffcb9ff62d8
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
