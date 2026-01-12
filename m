@@ -1,76 +1,100 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DFB3612CB;
-	Mon, 12 Jan 2026 15:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3026302CD9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 15:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232175; cv=none; b=FxyaSN4+MCPTitQ6cil7Sw4036tVBgY+DLZBjTInikkxRw2h/DYrbbKng8PsufaCUY7cigpnaO/1Gaq+vd6QUET/L6cFDTVb02fUKpQPh1LY6yQKwfq1YiG+dteDx9NEbf5K6UtfzrMv8kVS5ldtFHjPJzWtgfHPdJLeQbGoqSg=
+	t=1768232459; cv=none; b=qSCOaB9Ubu3jdCBF3wFTlzQvx8xjP6uVceODRcccLcIdEIzA44I5k5wQ7YxZgnjJ7mcr1+EVQEIWOjK6Fqhnijc+1RTPypQbFsLmz8VKjLBN398APoFSZaZuks5PLtLVRWHf1KP1nOuURgjG6+b5Ox6Q2G0z6cyEeaogQRQXpF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232175; c=relaxed/simple;
-	bh=IJTeafi3GdmngR/Ug8cbCa4yRhJh7eOjuoI6sV6L7u8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fFnp3u2sJ/4K+Khi5DqC+fL6YwVSxTz3QCE6UwyVMYJ894epZL9aZrlkwKvaKCI7eKXSnsWgO9pQmXotgg7ny9aLnxJYm5t2s6r9Kk0Q3RGchoAVKke/rDifKeNUMNPIjhV7VCmUazN8mDuloIvWGW2HI/Jbgff6Xx0dGsNYkwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id C5417D0F22;
-	Mon, 12 Jan 2026 15:36:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 78FE060009;
-	Mon, 12 Jan 2026 15:36:09 +0000 (UTC)
-Date: Mon, 12 Jan 2026 10:36:12 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Linux
- trace kernel <linux-trace-kernel@vger.kernel.org>, bpf
- <bpf@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Paul E.
- McKenney" <paulmck@kernel.org>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Linus
- Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-Message-ID: <20260112103612.41dd4f03@gandalf.local.home>
-In-Reply-To: <20260112153128.GO830755@noisy.programming.kicks-ass.net>
-References: <20260108220550.2f6638f3@fedora>
-	<da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
-	<CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
-	<20260109141930.6deb2a0a@gandalf.local.home>
-	<3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
-	<20260109160202.22975aa4@gandalf.local.home>
-	<20260112153128.GO830755@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1768232459; c=relaxed/simple;
+	bh=Gumagb2Kelv1gToIkJNxiJ7CnRF5JhGc9vpKxcqq6gI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=R3Q+QxEntnDvk/cLQ82lmkzAE9PPpV+ZXOay6K/H09xaFg6kFXhc0GpUG6IlJQhol9p88GOxxJVF+02OHFvYjUmU9X8c9aVOKGxLhnyngqqIVmAq23NNJZqEyGCEZqml+EciadwdHBCMQPKcY5JoCTmz2tbvReGiRj1pVAtJu3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FMwMQsSc; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMwMQsSc"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b8704795d25so184601666b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:40:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768232454; x=1768837254; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2qapUBTgVNiqcTXmWdBy92/Srtil3uAAM7XaJAm2tpE=;
+        b=FMwMQsScvMFMXyu+pC4UFVIiyDewS5BPwcDiO7oQ3hiesiytsPTNch0V7ECa94XaCU
+         rUVqEetlyjOevNThuZvhSewoPxyM8LYEmU5+/UBTtQr+vRhbIZ1PdhfHaFGqX30P7QTy
+         fYSJhLrn+uZ2bKHnz/OMNnzCrtRi6kwAqDTMPny9B6cdnVHVRdKvP7mQ0aYOIEIW3jCo
+         LhbiHaoQwy38Wi8TLcxnGPVScbtUPmT5ZVN8/YDvFaDmPlPaOV+vUyiXNibUb7Fl0Bnp
+         Sdve6YFtMtMp7Fzcj+zHlY0gliWEjz5Y7UdKLDzstxCxyjH/3lJjhKgsdq+pXttHpP38
+         jMqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768232454; x=1768837254;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2qapUBTgVNiqcTXmWdBy92/Srtil3uAAM7XaJAm2tpE=;
+        b=VPKtg0SHjbnIBuB+dt6o+Ii4kUoHZ3+d1j/eJl6Sf9xQMDh8CimP7fU2PhSABslLmy
+         4mpVAPoHUkV9TJrnuvLrBCszpUyL6GS/eg0xIq2Ake4t0cF8Dknkt459ahZ4FeAMOnM8
+         46MZHH6/9scBTRq2O68cvResTv+NjIZJFY8UhFYuW57m+6HGcgV+PwV6VefLivAxsPq5
+         0mxRFGWYe5HDPrE1Vh7ROUuXQsyQCxNCJBMIq1oJcnUotgv+E9R0PvNoGVSwo/xjTHDe
+         3ZiFYGs2YXwSa9rUd0ST+XO2eBgR86wma+xSGOOShbxsB+HvnDg8MTbVWMxVZv6vPs7r
+         Uqxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ0xTBDvl9jouUMsBRHX8G3iIltGlPlsO0ogcxrae6inIVlWtHp9TTCdpzZqjYMAo3DCbqwZrfz5Fc5TIEhrEzX4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydt0tbNz8VP4R+wzga8Q4XmAZcdG0O59d74KKP1v+S0elwcYxf
+	TT74mTCnrIQyxd9DNptnigj+DLcLwCKkyDdVzaDf+vwBQe8UYwaTwTcxFsDUEf1mPixIKZO0iPT
+	tfglDJIHkr/7YQkXuoA==
+X-Google-Smtp-Source: AGHT+IHYpJ+ANWMsEPYGdlwYlVceaIe7xjP0Mb8XSqLVAMvUK02djlwbBFkmzuZ0j6VKF7A3vEi+XuD+bATUtIk=
+X-Received: from ejchw19.prod.google.com ([2002:a17:907:a0d3:b0:b76:da45:a7c3])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:906:fe0b:b0:b73:6d56:f3ff with SMTP id a640c23a62f3a-b84451d416cmr1924364766b.20.1768232454411;
+ Mon, 12 Jan 2026 07:40:54 -0800 (PST)
+Date: Mon, 12 Jan 2026 15:40:53 +0000
+In-Reply-To: <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 78FE060009
-X-Stat-Signature: 1bw1oymr1hzm7aif4p945ohzhcf8qy8i
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX188wDl0ClLWtdgAsR3BixK7EB7H0d78LlA=
-X-HE-Tag: 1768232169-489420
-X-HE-Meta: U2FsdGVkX1+25cV6CkjInKsAbuf455j8HF4zIIWJCb05b5Z+ZtTTGVIxEHyWOaEHHSdnB9fsl8qRwU2XZCu9j/3UtsvVRiB1HdKMXSTL6+J92LberiGxt34Y6/c4teMSnU5PZ745Zq1u1LkJLtQvnCERC3AXPDzgYDBRJUdDR6Fc43RvOudT0uZgp/tXcQeyJC5lGXX5cpTsEEK5t85cLPSUYb5Xd/US8CKkiomGTe7stWFD+8P7b70WrtJIeWMgC+uFmyFdncl082dPu1/mUKoh1F5qqVxCNj8CUF9R64FZ3JxMBczoQ4T83HJBccWgBWZOrbr+GAX0SzH3bKO6FBhK9Gsw1vdRKs1Kk7xvcZwzLgVMhvcmsjmJYCWliZC9
+Mime-Version: 1.0
+References: <CAH5fLgiPdBEN7mjgK64u19VGE_AWghTnCCHYuQQuwnTdvDaYkw@mail.gmail.com>
+ <20260112122236.22214-1-fushuai.wang@linux.dev> <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
+Message-ID: <aWUWBfKhP8DvzhDl@google.com>
+Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
+From: Alice Ryhl <aliceryhl@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Fushuai Wang <fushuai.wang@linux.dev>, akpm@linux-foundation.org, brauner@kernel.org, 
+	cyphar@cyphar.com, dave.hansen@linux.intel.com, hpa@zytor.com, jack@suse.cz, 
+	kees@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, luto@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mingo@redhat.com, 
+	peterz@infradead.org, rostedt@goodmis.org, tglx@kernel.org, vmalik@redhat.com, 
+	wangfushuai@baidu.com, x86@kernel.org, yury.norov@gmail.com
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, 12 Jan 2026 16:31:28 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> > OUCH! So migrate disable/enable has a much larger overhead when executed in
-> > a module than in the kernel? This means all spin_locks() in modules
-> > converted to mutexes in PREEMPT_RT are taking this hit!  
+On Mon, Jan 12, 2026 at 02:22:38PM +0100, Borislav Petkov wrote:
+> On Mon, Jan 12, 2026 at 08:22:36PM +0800, Fushuai Wang wrote:
+> > > strncpy_from_user() succeeds even if userspace data does not contain a
+> > > nul. Then it reads length bytes.
+> > 
+> > Yes, but if there is no NUL byte in the user buf, whether you use
+> > strncpy_from_user() or copy_from_user(), you need to manually add
+> > a '\0' in the kernel buf to ensure it is properly NUL-terminated.
 > 
-> Not so, the migrate_disable() for PREEMPT_RT is still in core code --
-> kernel/locking/spinlock_rt.c is very much not build as a module.
+> This looks like a bunch of churn to save a "= \0" line.
+> 
+> The more important question, IMO, would be whether there are cases in the
+> kernel which *miss* a NUL termination, audit them and fix them.
+> 
+> That'll give you a better idea whether such a *_nul() helper is even needed.
+> 
+> Because converting only a handful of obvious places in the face of thousands
+> of copy_from_user() invocations in the kernel is not doing anything useful.
 
-True. But still, wouldn't it be cleaner to have that variable separate from
-the run queue and make the code a bit simpler?
+I'm getting the impression that strncpy_from_user() is the real problem
+here. It should append a nul byte.
 
-As now it doesn't look like it will even bother tracing, as it appears that
-only BPF would need it. So this would just be a clean up.
+That would also be a lot less error-prone than the suggested new API.
+Requiring a length of N+1 is not the most immediately-obvious API.
 
--- Steve
+Alice
