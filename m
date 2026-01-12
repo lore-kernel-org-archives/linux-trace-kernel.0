@@ -1,100 +1,91 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3026302CD9
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 15:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7C2BD5BB;
+	Mon, 12 Jan 2026 15:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232459; cv=none; b=qSCOaB9Ubu3jdCBF3wFTlzQvx8xjP6uVceODRcccLcIdEIzA44I5k5wQ7YxZgnjJ7mcr1+EVQEIWOjK6Fqhnijc+1RTPypQbFsLmz8VKjLBN398APoFSZaZuks5PLtLVRWHf1KP1nOuURgjG6+b5Ox6Q2G0z6cyEeaogQRQXpF8=
+	t=1768232594; cv=none; b=RWnfNXMEU2hx5zBdFUyEoJk0uT76U1SXW9yNyIyVXz415pZwrVt3MnGFEWqYYFESOij70jHj3ti4+4X/EuWFnu0Q07aShcKdrDTXtJP1ce6O86Bog9F8mNAj9fll8iD1AcMDzLm5HmzOdDFO0r9v6s+CIm/srnOc2/+uHyrd3Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232459; c=relaxed/simple;
-	bh=Gumagb2Kelv1gToIkJNxiJ7CnRF5JhGc9vpKxcqq6gI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R3Q+QxEntnDvk/cLQ82lmkzAE9PPpV+ZXOay6K/H09xaFg6kFXhc0GpUG6IlJQhol9p88GOxxJVF+02OHFvYjUmU9X8c9aVOKGxLhnyngqqIVmAq23NNJZqEyGCEZqml+EciadwdHBCMQPKcY5JoCTmz2tbvReGiRj1pVAtJu3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FMwMQsSc; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMwMQsSc"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-b8704795d25so184601666b.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:40:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768232454; x=1768837254; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2qapUBTgVNiqcTXmWdBy92/Srtil3uAAM7XaJAm2tpE=;
-        b=FMwMQsScvMFMXyu+pC4UFVIiyDewS5BPwcDiO7oQ3hiesiytsPTNch0V7ECa94XaCU
-         rUVqEetlyjOevNThuZvhSewoPxyM8LYEmU5+/UBTtQr+vRhbIZ1PdhfHaFGqX30P7QTy
-         fYSJhLrn+uZ2bKHnz/OMNnzCrtRi6kwAqDTMPny9B6cdnVHVRdKvP7mQ0aYOIEIW3jCo
-         LhbiHaoQwy38Wi8TLcxnGPVScbtUPmT5ZVN8/YDvFaDmPlPaOV+vUyiXNibUb7Fl0Bnp
-         Sdve6YFtMtMp7Fzcj+zHlY0gliWEjz5Y7UdKLDzstxCxyjH/3lJjhKgsdq+pXttHpP38
-         jMqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768232454; x=1768837254;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2qapUBTgVNiqcTXmWdBy92/Srtil3uAAM7XaJAm2tpE=;
-        b=VPKtg0SHjbnIBuB+dt6o+Ii4kUoHZ3+d1j/eJl6Sf9xQMDh8CimP7fU2PhSABslLmy
-         4mpVAPoHUkV9TJrnuvLrBCszpUyL6GS/eg0xIq2Ake4t0cF8Dknkt459ahZ4FeAMOnM8
-         46MZHH6/9scBTRq2O68cvResTv+NjIZJFY8UhFYuW57m+6HGcgV+PwV6VefLivAxsPq5
-         0mxRFGWYe5HDPrE1Vh7ROUuXQsyQCxNCJBMIq1oJcnUotgv+E9R0PvNoGVSwo/xjTHDe
-         3ZiFYGs2YXwSa9rUd0ST+XO2eBgR86wma+xSGOOShbxsB+HvnDg8MTbVWMxVZv6vPs7r
-         Uqxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ0xTBDvl9jouUMsBRHX8G3iIltGlPlsO0ogcxrae6inIVlWtHp9TTCdpzZqjYMAo3DCbqwZrfz5Fc5TIEhrEzX4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydt0tbNz8VP4R+wzga8Q4XmAZcdG0O59d74KKP1v+S0elwcYxf
-	TT74mTCnrIQyxd9DNptnigj+DLcLwCKkyDdVzaDf+vwBQe8UYwaTwTcxFsDUEf1mPixIKZO0iPT
-	tfglDJIHkr/7YQkXuoA==
-X-Google-Smtp-Source: AGHT+IHYpJ+ANWMsEPYGdlwYlVceaIe7xjP0Mb8XSqLVAMvUK02djlwbBFkmzuZ0j6VKF7A3vEi+XuD+bATUtIk=
-X-Received: from ejchw19.prod.google.com ([2002:a17:907:a0d3:b0:b76:da45:a7c3])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:906:fe0b:b0:b73:6d56:f3ff with SMTP id a640c23a62f3a-b84451d416cmr1924364766b.20.1768232454411;
- Mon, 12 Jan 2026 07:40:54 -0800 (PST)
-Date: Mon, 12 Jan 2026 15:40:53 +0000
-In-Reply-To: <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
+	s=arc-20240116; t=1768232594; c=relaxed/simple;
+	bh=zc0Wt28XmAyG258QU5LNywvxiHWlyYYomnAQewieYWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dz0P/4IGP4yCB7AT5ALg2IDdFIOa9inguhwjow14ZxQwU2oewgydwXzvoByMUGXsmNi1evVNnfcYsIwjQL4zajQ6egIYzHF1UVyxVet0HiS/IH5qZ3AAePF0Vyvxu2PkLnbsH8rX8Vxg3AAsDEoefvTy+WBP451XnbCHG29Nz3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 63973140518;
+	Mon, 12 Jan 2026 15:43:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 18A5630;
+	Mon, 12 Jan 2026 15:43:00 +0000 (UTC)
+Date: Mon, 12 Jan 2026 10:43:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Fushuai Wang <fushuai.wang@linux.dev>
+Cc: tglx@kernel.org, peterz@infradead.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, aliceryhl@google.com, yury.norov@gmail.com,
+ vmalik@redhat.com, kees@kernel.org, dave.hansen@linux.intel.com,
+ luto@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ mhiramat@kernel.org, brauner@kernel.org, jack@suse.cz, cyphar@cyphar.com,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-trace-kernel@vger.kernel.org, wangfushuai@baidu.com
+Subject: Re: [PATCH v2 3/6] tracing: Use copy_from_user_nul() instead of
+ copy_from_user()
+Message-ID: <20260112104302.76462c73@gandalf.local.home>
+In-Reply-To: <20260112073039.1185-4-fushuai.wang@linux.dev>
+References: <20260112073039.1185-1-fushuai.wang@linux.dev>
+	<20260112073039.1185-4-fushuai.wang@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAH5fLgiPdBEN7mjgK64u19VGE_AWghTnCCHYuQQuwnTdvDaYkw@mail.gmail.com>
- <20260112122236.22214-1-fushuai.wang@linux.dev> <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
-Message-ID: <aWUWBfKhP8DvzhDl@google.com>
-Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
-From: Alice Ryhl <aliceryhl@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Fushuai Wang <fushuai.wang@linux.dev>, akpm@linux-foundation.org, brauner@kernel.org, 
-	cyphar@cyphar.com, dave.hansen@linux.intel.com, hpa@zytor.com, jack@suse.cz, 
-	kees@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, luto@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, rostedt@goodmis.org, tglx@kernel.org, vmalik@redhat.com, 
-	wangfushuai@baidu.com, x86@kernel.org, yury.norov@gmail.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 18A5630
+X-Stat-Signature: znkn9ceiqct94ajt4g5nhoqp7bufefdh
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+PbTRD0q5RQVfExPtU7QrgGg+/6cgjoMw=
+X-HE-Tag: 1768232580-582637
+X-HE-Meta: U2FsdGVkX1/qCfodGH5OJif+Ga2mSvax0+7rfi50kfGk0/9WyQ1u6/UrH6IizIOZwEFbEGTeooKwwpw2X7uhO9W54/mw/jxsKSbY7o+rmhwoRJswTjE9Sz9DI2qiLbqMpovXhlVYJ3yGfbMDPb4dsXIXcsv0Wom1q53A4AdtUbnwErib+R8pT/stNLx5O+l1HaOMJ1Sux0NvDpXvWsen0gfixst5+CDoOc8VcKel0vw5LsMpB+sFDO0ieitEot9T2C3N5mHq9JqlOwZ8hohiISV07lI5H1VtSl0+1yVmqJCfceLsEJ3I+T9KsZ4sr4nfS74xZB9IWlFbU89VQn9r7m9d79rvl/3jDH4QlAsPVFVsfZ/6qOkb9Egz+JLO4I+ia+xdJ9RpTuJbzgZFrQA13g==
 
-On Mon, Jan 12, 2026 at 02:22:38PM +0100, Borislav Petkov wrote:
-> On Mon, Jan 12, 2026 at 08:22:36PM +0800, Fushuai Wang wrote:
-> > > strncpy_from_user() succeeds even if userspace data does not contain a
-> > > nul. Then it reads length bytes.
-> > 
-> > Yes, but if there is no NUL byte in the user buf, whether you use
-> > strncpy_from_user() or copy_from_user(), you need to manually add
-> > a '\0' in the kernel buf to ensure it is properly NUL-terminated.
-> 
-> This looks like a bunch of churn to save a "= \0" line.
-> 
-> The more important question, IMO, would be whether there are cases in the
-> kernel which *miss* a NUL termination, audit them and fix them.
-> 
-> That'll give you a better idea whether such a *_nul() helper is even needed.
-> 
-> Because converting only a handful of obvious places in the face of thousands
-> of copy_from_user() invocations in the kernel is not doing anything useful.
+On Mon, 12 Jan 2026 15:30:36 +0800
+Fushuai Wang <fushuai.wang@linux.dev> wrote:
 
-I'm getting the impression that strncpy_from_user() is the real problem
-here. It should append a nul byte.
+> From: Fushuai Wang <wangfushuai@baidu.com>
+> 
+> Use copy_from_user_nul() instead of copy_from_user() to simplify
+> the code.
+> 
+> No functional change.
+> 
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 
-That would also be a lot less error-prone than the suggested new API.
-Requiring a length of N+1 is not the most immediately-obvious API.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Alice
+-- Steve
+
+> ---
+>  kernel/trace/trace.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index baec63134ab6..b6ffd006fcf9 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -11266,10 +11266,9 @@ ssize_t trace_parse_run_command(struct file *file, const char __user *buffer,
+>  		if (size >= WRITE_BUFSIZE)
+>  			size = WRITE_BUFSIZE - 1;
+>  
+> -		if (copy_from_user(kbuf, buffer + done, size))
+> +		if (copy_from_user_nul(kbuf, buffer + done, size))
+>  			return -EFAULT;
+>  
+> -		kbuf[size] = '\0';
+>  		buf = kbuf;
+>  		do {
+>  			tmp = strchr(buf, '\n');
+
