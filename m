@@ -1,32 +1,32 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1832E154
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7584329C78
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768203134; cv=none; b=phv6XIlpdj4HVEhJ4OyJe4RMKMmG+mtR9fjh4HHimG/LdzleY91HkOCFMr6KLn+85N3lQ70k3X1lT2OMAyJFobzLOjievBlAYrYL/2s/6EPt6Fs5JJ27HEArkqx0o1jxvz31zeu3uxPaaOymhmPgujO+tpBOAeJN4Xb96jR3yYQ=
+	t=1768203136; cv=none; b=NI7eJlpKi3y0LsUvWPffjeM6l0+JKb8MtgRkd17yjq0J+/m/OIvK4nVy95fR49FN9KykXGO3Iu/rbCCmQtvQkglsjs3VCvVmpEzEda5fSGpPdYblnEot8A9JZynIbUVrcXEqwfYAVRp2wlKd0AR5Ckt97VfS1oeyiQ+nZLP4mFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768203134; c=relaxed/simple;
-	bh=OnqAbUWVy7D0WXGNVBkrLwkuw9vg94fN5udfoCsYN8g=;
+	s=arc-20240116; t=1768203136; c=relaxed/simple;
+	bh=/Pe3//9w7IjRlZ5PxKu63g76brGyRa5s21C2q9PEXSY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KywjbRfRDv3l9IqVwDM38Qlm6cjV0w0LOaxLp230cLWC5WqODtbH4je9nHbfkQ/po2UvePOs2ZRzVflzR0NYOKvNjwHBAnTXdUkbxnxDwR8KvzQ3oaR/j9mG+eYSMZWD/f1CMaA6tMxMdexKoCjGYZjUGVCQkKoPGN/4qd7vah0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QQzgX29E; arc=none smtp.client-ip=91.218.175.181
+	 MIME-Version; b=cldhiYwGDtIlOcGhRguhCL9pFq5fnbXjH6ZMEALPiOIiekBbDw6bFid2DGJ0gSwz2SzJPmmFx1hZ241Q1t1sITLgex5mh1Yu7wkyjKpaEwR/vok+4sBYM7rM/iTRIqeqSzbDKAuZRAIKFCZRCWsNgN9tdhA4NcPY3m02YyYficQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NkQ4kSRY; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QQzgX29E"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NkQ4kSRY"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768203126;
+	t=1768203131;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AwRqj4wTYeIgUDX0xZiGWFeCRQeFcAPC39VTqib2tBs=;
-	b=QQzgX29EQmy4am2md5KjS0HuRT47z1dVNL4CH+BM0JYJb/YmzU4y/+lWkgxufMtBChEJ9G
-	VcJND5bpCED/8yd1po0iwV4o93eczOgcIUlhgDMVZOGrhCqSQwJn8BqLoguJloK/x6VmCU
-	bWhz9AVqeugOgV5pVfu2xggICKU01BI=
+	bh=dey/oVwL655ps/UccfLJszueXjmKm4iUYtixNmkF++Q=;
+	b=NkQ4kSRYHQKog9dolagfPy1l0wY9hoVzmEFzdXdqH4dPhXxiyjiZiuHb5gP5imP5m1h/6k
+	N49ll2G027dYaf1RuzrZDTzgdaiJkDyMdPxGz/D7J56gEF5JvM5WeYE7hOM6PE43uGmMv9
+	DTzCtcwOQfKAOFrNlm2dc1KTu2B+chw=
 From: Fushuai Wang <fushuai.wang@linux.dev>
 To: tglx@kernel.org,
 	peterz@infradead.org,
@@ -50,9 +50,9 @@ Cc: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	wangfushuai@baidu.com
-Subject: [PATCH v2 4/6] userns: Use copy_from_user_nul() instead of copy_from_user()
-Date: Mon, 12 Jan 2026 15:30:37 +0800
-Message-Id: <20260112073039.1185-5-fushuai.wang@linux.dev>
+Subject: [PATCH v2 5/6] time: Use copy_from_user_nul() instead of copy_from_user()
+Date: Mon, 12 Jan 2026 15:30:38 +0800
+Message-Id: <20260112073039.1185-6-fushuai.wang@linux.dev>
 In-Reply-To: <20260112073039.1185-1-fushuai.wang@linux.dev>
 References: <20260112073039.1185-1-fushuai.wang@linux.dev>
 Precedence: bulk
@@ -73,24 +73,24 @@ No functional change.
 
 Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 ---
- kernel/user_namespace.c | 3 +--
+ kernel/time/test_udelay.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 03cb63883d04..881a05a3502c 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -1239,9 +1239,8 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
+diff --git a/kernel/time/test_udelay.c b/kernel/time/test_udelay.c
+index 783f2297111b..08ff8fd43471 100644
+--- a/kernel/time/test_udelay.c
++++ b/kernel/time/test_udelay.c
+@@ -107,9 +107,8 @@ static ssize_t udelay_test_write(struct file *file, const char __user *buf,
+ 	if (count >= sizeof(lbuf))
+ 		return -EINVAL;
  
- 	/* What was written? */
- 	ret = -EFAULT;
--	if (copy_from_user(kbuf, buf, count))
-+	if (copy_from_user_nul(kbuf, buf, count))
- 		goto out;
--	kbuf[count] = '\0';
- 	pos = kbuf;
+-	if (copy_from_user(lbuf, buf, count))
++	if (copy_from_user_nul(lbuf, buf, count))
+ 		return -EFAULT;
+-	lbuf[count] = '\0';
  
- 	/* What is being requested? */
+ 	ret = sscanf(lbuf, "%d %d", &usecs, &iters);
+ 	if (ret < 1)
 -- 
 2.36.1
 
