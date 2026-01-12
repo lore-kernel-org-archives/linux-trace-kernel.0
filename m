@@ -1,102 +1,201 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CD317BB21
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 17:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C561376BF2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 17:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768238157; cv=none; b=OcJRO+2vbCvxIyinptUidUnWpq37OAH8PPw4+6xucuBBkDxsGGXfMvodFFUwvE73Y61nTEbP/z1lavanG9/b8JHhKkUhcyIGc1vLgQ40Kd1V271+YDkkJW+mVNG11qqB3LNUFQBoIo9p0Jmb5P0rew7Fs4S5ULpVi5xqMIsFTqk=
+	t=1768238413; cv=none; b=nN9s6Vttg4iO6JuWLQdvl7xD5etZ50lUvbep3TS1V77tecA3dQiZmjiCIpe8khF8BwNCu7ziqrm06eWNL5S86c6aeNygeKBm7FdKNUqA9O6qwKfQTcud0aYUe4lH8mzpBpyaQDvoGuYlW0J4W51QlaFGdw+jLcc4FdOzWd28k8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768238157; c=relaxed/simple;
-	bh=U5/YI+ZjTewt/M8uJHnSgM6EbiiwOwSY292udpEViDk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cq1FNQp/iiYlCi4K//7iVqF9kCgFg7XDMzQKLls0TsnOsPgXIna51ORyuuWxa/4nSWVRWNs09p4IBkbfoMwv4S5gdqeGvBdB+rYfIv0aX/KscMMu92bCYABYy+sm9CjEgOXs/Q22bUls47WByOA6tabDIzC4RIoRK60D+1x8XvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=stHkps/v; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768238413; c=relaxed/simple;
+	bh=WjqCWoD1rTd0tAoOL5oGFUBibEdR95jENn5cj2vf8ho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VRPqqnSstdMhgAHW2cGg9v3KqETLZ6fZQFhbOJN/PX8A2tVTysBixExnniuQsojLuW18tVE/AGMEuezARYtr4soLVoAboCY8+4Wnz+U7eAA5B0hpgP5Ae7FaFOVbRwWr0h2MueX8Aog7ze/L4Fva/iGkz7EgWLwm6hu39/y6lRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xfu146Oy; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="stHkps/v"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768238152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nOW0Y2WwzMDSvX6e6gxQ8/DR62t44tPrvU+xaCSB0EY=;
-	b=stHkps/vtcyG6bwWOUBgkwNhYjEhcBGwxkbKERZThkcxe+4bD7FI3ULaLSlI7vjxzdPSSi
-	vYJA2OmB2MHtSwB39YOg5/B1ba/whGdM6Zoj9X09B1umme4/2htOtQch3w0BMCNUEFBdCc
-	3pdFzXXV499KIBrCMkX5srkf1HeNf1o=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-  linux-kernel@vger.kernel.org,  "Paul E. McKenney" <paulmck@kernel.org>,
-  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Dennis Zhou <dennis@kernel.org>,  Tejun Heo
- <tj@kernel.org>,  Christoph Lameter <cl@linux.com>,  Martin Liu
- <liumartin@google.com>,  David Rientjes <rientjes@google.com>,
-  christian.koenig@amd.com,  Shakeel Butt <shakeel.butt@linux.dev>,
-  SeongJae Park <sj@kernel.org>,  Michal Hocko <mhocko@suse.com>,  Johannes
- Weiner <hannes@cmpxchg.org>,  Sweet Tea Dorminy
- <sweettea-kernel@dorminy.me>,  Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>,  "Liam R . Howlett"
- <liam.howlett@oracle.com>,  Mike Rapoport <rppt@kernel.org>,  Suren
- Baghdasaryan <surenb@google.com>,  Vlastimil Babka <vbabka@suse.cz>,
-  Christian Brauner <brauner@kernel.org>,  Wei Yang
- <richard.weiyang@gmail.com>,  David Hildenbrand <david@redhat.com>,
-  Miaohe Lin <linmiaohe@huawei.com>,  Al Viro <viro@zeniv.linux.org.uk>,
-  linux-mm@kvack.org,  linux-trace-kernel@vger.kernel.org,  Yu Zhao
- <yuzhao@google.com>,  Mateusz Guzik <mjguzik@gmail.com>,  Matthew Wilcox
- <willy@infradead.org>,  Baolin Wang <baolin.wang@linux.alibaba.com>,
-  Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v12 0/3] mm: Fix OOM killer inaccuracy on large
- many-core systems
-In-Reply-To: <6fbb17fe-f2b1-4233-9834-5a5020cd87b3@efficios.com> (Mathieu
-	Desnoyers's message of "Sun, 11 Jan 2026 13:04:59 -0500")
-References: <20260111150249.1222944-1-mathieu.desnoyers@efficios.com>
-	<20260111094823.6fcb1fcceb7cfca2dd37b66e@linux-foundation.org>
-	<6fbb17fe-f2b1-4233-9834-5a5020cd87b3@efficios.com>
-Date: Mon, 12 Jan 2026 09:15:40 -0800
-Message-ID: <871pjuu4zn.fsf@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xfu146Oy"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42fb5810d39so3482817f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 09:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768238410; x=1768843210; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4wfo1H3rAgV/t1VxtARBz5MkJzax/TOyF8ts8rowgvw=;
+        b=Xfu146Oydv7DoYt8Fz41DwqYx9JGsGUxSv2ZevD/LH4/MpZ4Vssq7RsMHBBay9yfSJ
+         WFw98oyBsfB16pQfdrCDMyVSzwTqUINWPSzG7S7GczKHB5hvDnDIibstFlbo+bDTxM/j
+         vWxPcKE0mmIgw4/H18IzjBm6AasthSJ3plDULMkFLGUSFwjXMPd9f5vUngS4u/HgvPkd
+         FmkRojLFxNaKqijzWgWBZOXL/XNzm/xmYEMK06E0GNZWBWK+hNuLovuJ0/UVq3UQjTYd
+         ++gRHeNxvK0XRUnwVxBT/SRxU2Jp6ImoIUb8t2ppZiHtTKc9mae6JZP/XEFnF77jsk6U
+         wpMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768238410; x=1768843210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4wfo1H3rAgV/t1VxtARBz5MkJzax/TOyF8ts8rowgvw=;
+        b=KxJPYnem+UXedup4pof9Adwtl5A9PKfAXf3dZfpfBkrSwY6/8q3ZephLODF+XlwnTS
+         yJBEZolcrFV8WGDvzewMJRp7vwP9wtvZWf2O1aTT0Ujd6POHOBTUTjiZ71IrbrCHJea5
+         3h1bUviJULNUowWJv1IktxOp3xiXFJo1h+kAuvSKBFXgRf9Xn2lQ9UMowiY6xbgHtbh3
+         X893IN3jtceLkWtMjn4dl38RWmPoSkWqbcjNr8X9NwqVRQ2z/62DpgAlhha4fNXdt+22
+         rB4aFCRYnthkLLguXSDogCIAqwyR8QZvFZSruwuXfKZtVZYeC5qBax6hvsD/PX4yPZB5
+         Kp/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXJnHCDl4OjWy1hnPrhCrcSAMsQvY4iJtWIrz+4mX4+1z5ITpkXr5yJwgxrA5xuwVJj5jSMto/g616abjUm1wnrDiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsI5GrtBs1pW08HvJvA6rbILwWt9jLFFmseT5Wph7lQtuOgIjM
+	CTbqOxXWGNwPx0/e7EoMhRccKiHPYHfd+dCa95P74ocdurnyxmivE3Iw5rvxpX5Ar4U4wEl0FmJ
+	R5Vct9EMtut+XCj29EetmLey37eDWsB4=
+X-Gm-Gg: AY/fxX4HWWhe4T/HA6BZWkpf4YLuONG/jzV+sPfOcqa7qi1CK+3x8oTaiXeqLs0IU1C
+	RRhrCr/ax3bGUfxXKRsW7J/h7GxQfekd2RtT5ymriYYM+zreLp+PmQ6eGDWqtOuycQFcovcK66B
+	8+BF381haby5/SFswcdjwBL1FZJlJZfi7hIJLkN9EgnSJTqEfw53S8yKWEfN79+dHUcpKVV6hW4
+	PJ2NdlIAy31BaPbFRF0lnbENDX6WanhnsCYgQqdeF325ySJoT6FaveRZt/YEUW/uoTDUM91T2Er
+	HG94xd+YxXg=
+X-Google-Smtp-Source: AGHT+IHvbbHU5KMjzoEWzZpYrZ+40iRqLkc+O4ilyBXQOzUUk85eh2NEk9DM2NyRTSf3VS+sRcfChVOK+g6Cz/MM4FY=
+X-Received: by 2002:a05:6000:2c02:b0:425:769e:515a with SMTP id
+ ffacd0b85a97d-432c37610e6mr24456763f8f.42.1768238410323; Mon, 12 Jan 2026
+ 09:20:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Migadu-Flow: FLOW_OUT
+References: <20260108220550.2f6638f3@fedora> <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+ <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+ <20260109141930.6deb2a0a@gandalf.local.home> <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+ <CAADnVQLeCLRhx1Oe5DdJCT0e+WWq4L3Rdee1Ky0JNNh3LdozeQ@mail.gmail.com>
+ <20260109170028.0068a14d@fedora> <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
+ <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
+ <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
+ <20260110111454.7d1a7b66@fedora> <CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
+ <20260111170953.49127c00@fedora> <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
+ <20260112085257.26bb7b5b@fedora>
+In-Reply-To: <20260112085257.26bb7b5b@fedora>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 12 Jan 2026 09:19:58 -0800
+X-Gm-Features: AZwV_QhtAWSH2DkU1WaheKjYNsqxXpmrkcmEEtxcChGC1gzMi1oK1QaiN4zEk0M
+Message-ID: <CAADnVQKvY026HSFGOsavJppm3-Ajm-VsLzY-OeFUe+BaKMRnDg@mail.gmail.com>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
-
-> On 2026-01-11 12:48, Andrew Morton wrote:
->> On Sun, 11 Jan 2026 10:02:46 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
->> 
->>> Notable changes for v12:
->>>
->>> - Reduce per-CPU counters memory allocation size to sizeof long
->>>    (fixing mixup with sizeof intermediate cache line aligned items).
->>> - Use "long" counters types rather than "int".
->>> - get_mm_counter_sum() returns a precise sum.
->>> - Introduce and use functions to calculate the min/max possible precise
->>>    sum values associated with an approximate sum.
->> May I ask, as an early adopter, what is your overall impression of
->> the Gemini reviewbot?
+On Mon, Jan 12, 2026 at 5:53=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
-> The review comments were all spot-on. This is the level of review I
-> would expect from a good reviewer who spends a significant amount of
-> effort digging into the proposed change to make sure the type limits
-> are OK for the intended purpose stated in the commit message and that
-> the intent stated in comments match the code.
+> On Sun, 11 Jan 2026 15:38:38 -0800
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 >
-> As a patch author, I find this feedback really useful. Is there
-> an easy way to get this feedback privately before sending out my
-> patches ?
+> > > Oh, so you are OK replacing the preempt_disable in the tracepoint
+> > > callbacks with fast SRCU?
+> >
+> > yes, but..
+> >
+> > > Then I guess we can simply do that. Would it be fine to do that for
+> > > both RT and non-RT? That will simplify the code quite a bit.
+> >
+> > Agree. perf needs preempt_disable in their callbacks (as this patch doe=
+s)
+> > and bpf side needs to add migrate_disable in __bpf_trace_run for now.
+> > Though syscall tracepoints are sleepable we don't take advantage of
+> > that on the bpf side. Eventually we will, and then rcu_lock
+> > inside __bpf_trace_run will become srcu_fast_lock.
+> >
+> > The way to think about generic infrastructure like tracepoints is
+> > to minimize their overhead no matter what out-of-tree and in-tree
+> > users' assumptions are today, so why do we need preempt_disable
+> > or srcu_fast there?
+>
+> Either preempt disable or srcu_fast is still needed.
+>
+> > I think today it's there because all callbacks (perf, ftrace, bpf)
+> > expect preemption to be disabled, but can we just remove it from tp sid=
+e?
+> > and move preempt_disable to callbacks that actually need it?
+>
+> Yes if we are talking about switching from preempt_disable to src_fast.
+> No if you mean to remove both as it still needs RCU protection. It's
+> used for synchronizing changes in the tracepoint infrastructure itself.
+> That __DO_TRACE_CALL() macro is the guts of the tracepoint callback
+> code. It needs to handle races with additions and removals of callbacks
+> there, as the callbacks also get data passed to them. If it gets out of
+> sync, a callback could be called with another callback's data.
+>
+> That's why it has:
+>
+>                 it_func_ptr =3D                                          =
+ \
+>                         rcu_dereference_raw((&__tracepoint_##name)->funcs=
+);
+>
+> >
+> > I'm looking at release_probes(). It's fine as-is, no?
+>
+> That's just freeing, and as you see, there's RCU synchronization
+> required.
+>
+> Updates to tracepoints require RCU protection. It started out with
+> preempt_disable() for all tracepoints (which was synchronized with
+> synchronized_sched() which later became just synchronize_rcu()).
 
-If you need to review a limited number of patches, the easiest way to
-use gemini cli/claude code or similar tools with a consumer grade
-subscription (most are $20/month these days).
-I maintain a pre-configured environment for Gemini:
-git@github.com:rgushchin/kengp.git , but it's not hard to hack something
-similar for other tools.
+I see.
 
-Thanks!
+> The issue that came about was that both ftrace and perf had an
+> assumption that its tracepoint callbacks always have preempt disabled
+> when being called. To move to srcu_fast() that is no longer the case.
+> And we need to do that for PREEMPT_RT if BPF is running very long
+> callbacks to the tracepoints.
+>
+> Ftrace has been fixed to not require it, but still needs to take into
+> account if tracepoints disable preemption or not so that it can display
+> the preempt_count() of when the tracepoint was called correctly.
+>
+> Perf is trivial to fix as it can simply add a preempt_disable() in its
+> handler.
+>
+> But we were originally told that BPF had an issue because it had the
+> assumption that tracepoint callbacks wouldn't migrate. That's where
+> this patch came about.
+>
+> Now if you are saying that BPF will handle migrate_disable() on its own
+> and not require the tracepoint infrastructure to do it for it, then
+> this is perfect. And I can then simplify this code, and just use
+> srcu_fast for both RT and !RT.
+
+Agree. Just add migrate_disable to __bpf_trace_run,
+or, better yet, use rcu_read_lock_dont_migrate() in there.
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index fe28d86f7c35..abbf0177ad20 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2062,7 +2062,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link
+*link, u64 *args)
+        struct bpf_run_ctx *old_run_ctx;
+        struct bpf_trace_run_ctx run_ctx;
+
+-       cant_sleep();
++       rcu_read_lock_dont_migrate();
+        if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
+                bpf_prog_inc_misses_counter(prog);
+                goto out;
+@@ -2071,13 +2071,12 @@ void __bpf_trace_run(struct bpf_raw_tp_link
+*link, u64 *args)
+        run_ctx.bpf_cookie =3D link->cookie;
+        old_run_ctx =3D bpf_set_run_ctx(&run_ctx.run_ctx);
+
+-       rcu_read_lock();
+        (void) bpf_prog_run(prog, args);
+-       rcu_read_unlock();
+
+        bpf_reset_run_ctx(old_run_ctx);
+ out:
+        this_cpu_dec(*(prog->active));
++       rcu_read_unlock_migrate();
+ }
