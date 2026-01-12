@@ -1,97 +1,140 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F097358D09;
-	Mon, 12 Jan 2026 13:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E5827FD45;
+	Mon, 12 Jan 2026 14:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768224197; cv=none; b=BWxwTTulEXCawtwGWFAbnnprVwks4+C0npgGVeCG9Q2ear/zVB/3Q/mmU3DxOzVS+0MyO1GwnxhKLf9DXJFowxwNaFvJA6to94eREYJk5roSr77P+zoLoRh2unkgwGxbb9tJXW774ZgOYg1Y2Q7oJbOn1BTG+af3YrCHK+c6K5I=
+	t=1768226539; cv=none; b=NdhiPpsEXptQ8Z63fMr0JvJyEYFzvUPVlu7HR+FmYWgCb+g52t4C2qfcRG8/BzGwn3rGxzIuOtEKODe9+587988iobPCzjtRqXdnV8F581h9KRyCPYgKnx+IS1p7Bg7QKnCTmwRspapeid9/gd/HoPFFWZtjXi3aprLtSdnZKY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768224197; c=relaxed/simple;
-	bh=+qtEBoYbCBcUz2Lo/1IEvx6RpEjyWM5yuchSJzfeU6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jWpTHD9gv4/fiuqxfRgaGluTDYS/ESRXyPUsSCTK9266OGzynWyOVuQDIFaYgWBWnHnd2EsW3z4P6ZMdxJckftNivhwLgezBoeowNmywqt+zAtDdWA7zO3khlVuJBJncm0Jb94rTjp7K8a3eY1TkMDVwix4Yr2OBRXLJWa+ZUvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f0nEfXAR; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f0nEfXAR"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 04D5540E0268;
-	Mon, 12 Jan 2026 13:23:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id yjFRVYEpdAKX; Mon, 12 Jan 2026 13:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1768224186; bh=UqfCjtUHTnkTwZwYSVVnE3ioksfVqtUmKz1zLfW+ggk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f0nEfXARFiTG84aq/XRV3His9qiHJARMVGajsrTbj9f/S4xO0i8/aU8QB2KTjbfzk
-	 PADfq+lo80r8XNvwVsLDh5Kru2bpoTMUTUhidMb4hfm+I2t6r/+LElt25VCAfP2e1G
-	 emE0Sa2Ry8ITbFp7CPw43MfGhAFOxu0ypLMq1o+80xGUbeu+4CoO+BDnJLnatq/f2/
-	 edg40C+eVGfXaLAadZtl5gqGUrG7PwKhTY0H31Bbqnq5XmqspMqpSrWXYdHIWxc/Vj
-	 qF67ZM2p12zNGMvoVeR9j66vmOQMZTZ+k425Lw8+a6SA4gruwm4T3lu2FRUwj21oiJ
-	 mdnaLQfmLFZulhIeDYRKFH1hiYH2T8WFu1L3ytrMGEtJ0ovNPWjRNrkWy5vgV23eCj
-	 bWGY/LRLyiNneOdtfhYLJeB+DNoQ78SoFwkYZveM13BR/+3n6KhVPVNWYiDwyxxGPV
-	 VmERbHrprEs87KGA8pa16nGbwulmsmLUG/lfxKPiosIUhNer2+Amcng/FEeGL0OJGA
-	 WTR8gdvbAn3PN6camG4R3LymOEet3QSzgKmgriF3TSgLv04CoiNa41XrU7fkOdCivP
-	 MRWtUOahBmbXVsqzi6LGAsSpGFtEckB2jM6Y63tsCXTGzfxYLvc8NO15ZWsfqqRSEt
-	 mxVNQBtaNYsy6FUdWz75cj/s=
-Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 3C17540E00DE;
-	Mon, 12 Jan 2026 13:22:44 +0000 (UTC)
-Date: Mon, 12 Jan 2026 14:22:38 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Fushuai Wang <fushuai.wang@linux.dev>
-Cc: aliceryhl@google.com, akpm@linux-foundation.org, brauner@kernel.org,
-	cyphar@cyphar.com, dave.hansen@linux.intel.com, hpa@zytor.com,
-	jack@suse.cz, kees@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, luto@kernel.org,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
-	tglx@kernel.org, vmalik@redhat.com, wangfushuai@baidu.com,
-	x86@kernel.org, yury.norov@gmail.com
-Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
-Message-ID: <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
-References: <CAH5fLgiPdBEN7mjgK64u19VGE_AWghTnCCHYuQQuwnTdvDaYkw@mail.gmail.com>
- <20260112122236.22214-1-fushuai.wang@linux.dev>
+	s=arc-20240116; t=1768226539; c=relaxed/simple;
+	bh=XmcTzjP+IJ00WyfHItPCpaDCCeKe1TYq6v4q5Ysbfgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rewhoa2tzbx8PWYHef3f9EHOyCId3NhLTj+IwtJaBiby/UCnRWpd6c/Qic4DKiBwtQZp46fH6jQ8YxCAOimgnGv4bunnyu/a0l1wognRYMnINIMG6j/13MPJWnXMfys292lgo9UpU9zAZWTYSq2pQQT+hWGcC+T2oFX1HwQgtDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 45DC11AC23A;
+	Mon, 12 Jan 2026 13:53:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 1890B20012;
+	Mon, 12 Jan 2026 13:53:20 +0000 (UTC)
+Date: Mon, 12 Jan 2026 08:53:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+Message-ID: <20260112085257.26bb7b5b@fedora>
+In-Reply-To: <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
+References: <20260108220550.2f6638f3@fedora>
+	<da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+	<CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+	<20260109141930.6deb2a0a@gandalf.local.home>
+	<3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+	<CAADnVQLeCLRhx1Oe5DdJCT0e+WWq4L3Rdee1Ky0JNNh3LdozeQ@mail.gmail.com>
+	<20260109170028.0068a14d@fedora>
+	<CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
+	<20260109173326.616e873c@fedora>
+	<20260109173915.1e8a784e@fedora>
+	<CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
+	<20260110111454.7d1a7b66@fedora>
+	<CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
+	<20260111170953.49127c00@fedora>
+	<CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260112122236.22214-1-fushuai.wang@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 1890B20012
+X-Stat-Signature: gcjjox51mrxtmsrreow5a3i5gw9tp9u1
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18VqfY3Eg7yuckf9KrSUxHmnxOL9VS9acY=
+X-HE-Tag: 1768226000-715225
+X-HE-Meta: U2FsdGVkX1+wTUSCcvJ9YKpsslDni28EAev+O6hnTL6tiTGLW0myv/79edh+fekfijsTR7aIpnz8hmKYF2xhvPXobM33rS2uQkTVovE2iyUdXw0rOq7B6E/4uX86Jjy+eftROHVdeBEaxZal79AXTNZkiNEVP6iIFv8v5TPx7M95BmtmfvkQPmNR1EvQel25yBF8V417IqDiLvCakFAO6b0Rje3Mxqst/KERgAA79+LQ26kJMd0u0Ghq2pOXZqPFggnEww5/QYezuNqZCfByYGTxwo0Jl3PQt+Y2+CP499laogRxBUT1XxWYJ9irixSKd3Iw5B2VRttQTRHg43D2bTkoIXr/c2my
 
-On Mon, Jan 12, 2026 at 08:22:36PM +0800, Fushuai Wang wrote:
-> > strncpy_from_user() succeeds even if userspace data does not contain a
-> > nul. Then it reads length bytes.
+On Sun, 11 Jan 2026 15:38:38 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> > Oh, so you are OK replacing the preempt_disable in the tracepoint
+> > callbacks with fast SRCU?  
 > 
-> Yes, but if there is no NUL byte in the user buf, whether you use
-> strncpy_from_user() or copy_from_user(), you need to manually add
-> a '\0' in the kernel buf to ensure it is properly NUL-terminated.
+> yes, but..
+> 
+> > Then I guess we can simply do that. Would it be fine to do that for
+> > both RT and non-RT? That will simplify the code quite a bit.  
+> 
+> Agree. perf needs preempt_disable in their callbacks (as this patch does)
+> and bpf side needs to add migrate_disable in __bpf_trace_run for now.
+> Though syscall tracepoints are sleepable we don't take advantage of
+> that on the bpf side. Eventually we will, and then rcu_lock
+> inside __bpf_trace_run will become srcu_fast_lock.
+> 
+> The way to think about generic infrastructure like tracepoints is
+> to minimize their overhead no matter what out-of-tree and in-tree
+> users' assumptions are today, so why do we need preempt_disable
+> or srcu_fast there?
 
-This looks like a bunch of churn to save a "= \0" line.
+Either preempt disable or srcu_fast is still needed.
 
-The more important question, IMO, would be whether there are cases in the
-kernel which *miss* a NUL termination, audit them and fix them.
+> I think today it's there because all callbacks (perf, ftrace, bpf)
+> expect preemption to be disabled, but can we just remove it from tp side?
+> and move preempt_disable to callbacks that actually need it?
 
-That'll give you a better idea whether such a *_nul() helper is even needed.
+Yes if we are talking about switching from preempt_disable to src_fast.
+No if you mean to remove both as it still needs RCU protection. It's
+used for synchronizing changes in the tracepoint infrastructure itself.
+That __DO_TRACE_CALL() macro is the guts of the tracepoint callback
+code. It needs to handle races with additions and removals of callbacks
+there, as the callbacks also get data passed to them. If it gets out of
+sync, a callback could be called with another callback's data.
 
-Because converting only a handful of obvious places in the face of thousands
-of copy_from_user() invocations in the kernel is not doing anything useful.
+That's why it has:
 
-Thx.
+                it_func_ptr =                                           \
+                        rcu_dereference_raw((&__tracepoint_##name)->funcs);
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> I'm looking at release_probes(). It's fine as-is, no?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+That's just freeing, and as you see, there's RCU synchronization
+required.
+
+Updates to tracepoints require RCU protection. It started out with
+preempt_disable() for all tracepoints (which was synchronized with
+synchronized_sched() which later became just synchronize_rcu()).
+
+The issue that came about was that both ftrace and perf had an
+assumption that its tracepoint callbacks always have preempt disabled
+when being called. To move to srcu_fast() that is no longer the case.
+And we need to do that for PREEMPT_RT if BPF is running very long
+callbacks to the tracepoints.
+
+Ftrace has been fixed to not require it, but still needs to take into
+account if tracepoints disable preemption or not so that it can display
+the preempt_count() of when the tracepoint was called correctly.
+
+Perf is trivial to fix as it can simply add a preempt_disable() in its
+handler.
+
+But we were originally told that BPF had an issue because it had the
+assumption that tracepoint callbacks wouldn't migrate. That's where
+this patch came about.
+
+Now if you are saying that BPF will handle migrate_disable() on its own
+and not require the tracepoint infrastructure to do it for it, then
+this is perfect. And I can then simplify this code, and just use
+srcu_fast for both RT and !RT.
+
+-- Steve
