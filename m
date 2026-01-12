@@ -1,116 +1,195 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051982DECAA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 15:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09842BD5BB;
+	Mon, 12 Jan 2026 15:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768230719; cv=none; b=uYVhnlvY5UTS3Ap5BE4yHzr3KDiCi6ry/zNC/8DMmUbHMgDXbwqxY90b+h6cCbAtAwtHASuO1T9LwlG39jJTFVoY6gwYgNvUrORRju2bVferRwtpmtkORndpvp/HCBtkkeJ0PVatz7Mo0Or/+Fnq30JZ0aDD7FuqW4vlRHmCGk8=
+	t=1768231007; cv=none; b=jdbEJlqP99xOmwg+rNbe0aKOTkW7v3FbFDrpTkjSNyhQwWXjhnJEzcsV1eWsQrFMKXz7fpQ4Wv0Di3uy8ExiXsZXNENgIHjXO3A5EFNWEz1P2vgvMTG/AdAl8mN422ATWaQaGOf7TPclsN+gfAAZb7Pb0+gDPRc5fe/DTD6xyno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768230719; c=relaxed/simple;
-	bh=hbVdS31AjGbxiM4REiWfB3EQ5mxh8v0ze3TE0QbCrro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cvMaxPb8AAI0Ow3ov2Wuwcxx7+EGxfAEEDKPUPN78/sVgyX+RYrTyVgw7u0zQRhUHkaMITaa4O+lcbDn1wnXdGv3INKF4FqJfOhTeHMfKAtqr6bySaWhWO1DhJTVD6LnuZe46n2Dwwj01tt/rkXT/yhEsVEMlAeKQvLoH2IuhDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KoUzoaXB; arc=none smtp.client-ip=74.125.82.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoUzoaXB"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2b446aa37a2so4889eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768230713; x=1768835513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lPNUpExGPZ0eP2PL8HPQ+bLbS1S2GR59K/pZ0qOKnYA=;
-        b=KoUzoaXBRYbZftvo2Qcuv9vFmxlgSd3VdHgKlsroMvRAk9dzp/X1TH7QufvLELI6wF
-         H9cDObAwbTuC2Uug8RjQgRaBojeYP6g5ITal6cdJugOzN9QmeTeJ252N1BZRgl4PdOBD
-         8hSVQBjrP4ohSQBz57kp9Bc6fLQQRH65HMC0KRNpp5Z93fBUqTcGy2JdH4tB5AylnNtV
-         Uiib2A1Aw9Y8N9nfkHcwTnKovV6qjfestkBup6iowR77bZX2CE4r3nzYoU7N8z8cpun8
-         nI12vdcv89PY9/GMiF3pR0TwbMOgvyG4gUoi5xrYqiDEhJ5hbYI5fpE7ZXsA83tBdjQu
-         G+rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768230713; x=1768835513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lPNUpExGPZ0eP2PL8HPQ+bLbS1S2GR59K/pZ0qOKnYA=;
-        b=BtILHqXSOSWyltJTd5CWE11AueXVxrUhVlSQsCOFiL0pExwvMiAgJ+SKcl1B8yM/6l
-         OoHTKH62erbTs/pNATKRqfFo4b4ygWpMls6aaU6aKIWG2jeRhtc0h6AmUF81Q4ehh8Y3
-         7/D73GLxbq5Frdj4gwNBhLFemPMayrObXbCwr2bnnUH/52CakaacvhT8g9M0HUDdFcfW
-         yZdMvboA54eT2HN/MAmEptc0MkYbGV4rUR0raqzF1YosGqGSMFZ8pC+3C9PWPIM62EEy
-         OPvhYYJEwvWnRUTifyFQuK6tzObzToj/O/eE/ukOd8fsurbCd9ynlz2oRY6ew1FCnPs+
-         H/8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCWjWDA35ssnfIzI8n2dUcM2iI1/0krhbqrpX+dSfDDD3dAGnQtWTV0tq0hL00tFxwWEG7O/bIxRPP3iFHzDyIdBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmFsEPlcPkWG3RkW919Ocw9C7e9K4lw8qjzqh3u/cjB9c8rqz+
-	cthzzT5T0sF6YdEhdzYVmyrSag90KpErfjebzgEKgaGtJaNkztSIj5ZjYMmzdpCMCz/elgguBV9
-	J9iuQwoll9Kfl76KxpomGAPVIAixlVQo=
-X-Gm-Gg: AY/fxX6efsXDHajP7yZVYfFHSLTDQ+eYop9o2jrgyjOkmMoRv7ZqNZ6B9TtFSUCBf5C
-	/GlkEP6zdkthGEEn48LEu0hEVVlowUkcbWok8EwUdiWoW+O0twRi2tC7gcEJ6rYXwgBGZZTRjOe
-	INhpfT2snRO+btkHAK0UldF52r4Xjxoi2XpYF6K+zoqWd4cFlYaCszyaMmfQPHaNB+RzN+71hqB
-	BLandOKRTiyP0TdCv01pjkPZ5FmbDbBTdkuQA98abB2GlCQLEOlrLcC7SO5OhnWID0jnTPv+Ev4
-	bUmGx2lL5htjCW8ili6G1wbwknUlE/AblPQlMpRkxpn0sTlHRHRWeNTMQTT9AXpCVti9pifRiUJ
-	p+YHn4jGxAXgT
-X-Google-Smtp-Source: AGHT+IE2JSir18sRr+yPNaQngfQaMGaAN7gWIs8BQSI0z2/mMFjuJJRFlyAYimBq8J0DGl6BL9+5OvXrK6zDhUChif0=
-X-Received: by 2002:a05:7300:8244:b0:2ae:5f73:1968 with SMTP id
- 5a478bee46e88-2b17d24286amr6565850eec.2.1768230713100; Mon, 12 Jan 2026
- 07:11:53 -0800 (PST)
+	s=arc-20240116; t=1768231007; c=relaxed/simple;
+	bh=wPgiadCiymx4SgYtzEsDOyDQF6+5TWtuEQapElgaS7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CmqROHSJiov6wjuiw9BuhtUayWMCPV/Y4PIO7nxSKIqpu2pKgqH1nNUXpn9rCfRDMJUiRBfZ1ApZMkt3sFks36X6YrglZOp0GEjI3qsjdVtqSrBw7SosH77vQ0Q91/A2lkv/Jirvwk5xHlA6I1l3ebYQeerUJGYFWkV5+deZjL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id F167F59162;
+	Mon, 12 Jan 2026 15:16:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id EF4E42002B;
+	Mon, 12 Jan 2026 15:16:41 +0000 (UTC)
+Date: Mon, 12 Jan 2026 10:16:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add
+ pcie_ltssm_state_transition trace support
+Message-ID: <20260112101644.5c1b772a@gandalf.local.home>
+In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
+References: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
+	<1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260107-jump-label-rust-maintainers-v1-1-702b03482f2e@google.com>
- <CANiq72nV0Z_UjdAwT=41TjjfmKnT6WL4hVNcxg_QCe7TAEYK_Q@mail.gmail.com> <20260112100006.7db6d31d@gandalf.local.home>
-In-Reply-To: <20260112100006.7db6d31d@gandalf.local.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 12 Jan 2026 16:11:40 +0100
-X-Gm-Features: AZwV_Qhbvsj27jGvnxGNOxIBWj7t_7rzsFvwEcJvm8EWQBeKdpII1fMvWchJec4
-Message-ID: <CANiq72nY2xUj0aG4q7YOKxt0EV29Jwos_kjAPD89eE3_irsr0g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add Rust files to STATIC BRANCH/CALL and TRACING
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: EF4E42002B
+X-Stat-Signature: pkqtmyjz99xk34i7gczso7nyxz4r8ksh
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18oHLU8bzt/wclyIb/7L7zxrvbI6h4Fzu4=
+X-HE-Tag: 1768231001-775116
+X-HE-Meta: U2FsdGVkX1+0ozTFidj5QYjHCytY6PnsZObGBoyUvQcbsME2aCgsV8Bqd+z+IQn22TVG6Z9v8kx5BcmsxhLQ03JfJ31/nTKUJdXObmPF2Px22LW4PizSVFOX2/RuPs+msd4DYCf0nlSKYNELv2zSL09/SIKtkfsV8dsMOq1e0qNaGjg/Mpdw2MX8D7eV0mI0nbxycs4HQgBOtWCpt02W9D/1M24aOTFqQT5cxO/zJnqgRfltvPmQ7qaXxU5BFuQZM2jLNV4ct33BvnmecUYgDZt6f+s9JMFu5bF/Bz7WT0mVxRdn8j622pKY1JKQPmYRwYI++4n3gkCiPcmgm/m+Nu07fmtKft/NgqqxYlC4Yp9ysE5mvNSK5Bvamus1PKygTFIILVUMsta+5MJvHzx2aWRwwYMiEd2F
 
-On Mon, Jan 12, 2026 at 4:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> I guess the question is are those with expertise on the list of people to
-> Cc?
->
-> I think it may be better to have a separate section for RUST so that the
-> rust maintainers can be included in the M: part too. Perhaps:
->
-> STATIC BRANCH/CALL (RUST)
->
->   and
->
-> TRACING (RUST)
->
-> And have the M of the other sections be R here?
+On Mon, 12 Jan 2026 09:20:00 +0800
+Shawn Lin <shawn.lin@rock-chips.com> wrote:
 
-There are several ways subsystems have gone about it:
+> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
+> LTSSM history. Any LTSSM change will be recorded. It's userful
+> for debug purpose, for example link failure, etc.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v3:
+> - reorder variables(Mani)
+> - rename loop to i; rename en to enable(Mani)
+> - use FIELD_GET(Mani)
+> - add comment about how the FIFO works(Mani)
+> 
+> Changes in v2:
+> - use tracepoint
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 352f513..344e0b9 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/reset.h>
+> +#include <linux/workqueue.h>
+> +#include <trace/events/pci_controller.h>
+>  
+>  #include "../../pci.h"
+>  #include "pcie-designware.h"
+> @@ -73,6 +75,20 @@
+>  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
+>  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
+>  
+> +/* Debug FIFO information */
+> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
+> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
+> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
+> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
+> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
+> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
+> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
+> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
+> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
+> +#define  PCIE_DBG_FIFO_RATE_MASK	GENMASK(22, 20)
+> +#define  PCIE_DBG_FIFO_L1SUB_MASK	GENMASK(10, 8)
+> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
+> +
+>  /* Hot Reset Control Register */
+>  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>  #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
+> @@ -96,6 +112,7 @@ struct rockchip_pcie {
+>  	struct irq_domain *irq_domain;
+>  	const struct rockchip_pcie_of_data *data;
+>  	bool supports_clkreq;
+> +	struct delayed_work trace_work;
+>  };
+>  
+>  struct rockchip_pcie_of_data {
+> @@ -206,6 +223,89 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
+>  	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
+>  }
+>  
+> +#ifdef CONFIG_TRACING
+> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
+> +{
+> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
+> +						trace_work.work);
+> +	struct dw_pcie *pci = &rockchip->pci;
+> +	enum dw_pcie_ltssm state;
+> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
+> +
+> +	for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
+> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
+> +		rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
+> +		l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
+> +		val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
+> +
+> +		/*
+> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
+> +		 * - 'last-read-point': maintains the user's last read position
+> +		 * - 'last-valid-point': tracks the hardware's last state update
+> +		 *
+> +		 * Software Handling: When two consecutive LTSSM states are identical,
+> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
+> +		 * skip the remaining entries. The dual-counter design ensures that on
+> +		 * the next state transition, reading can resume from the last user
+> +		 * position.
+> +		 */
+> +		if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
+> +			break;
+> +
+> +		state = prev_val = val;
+> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
+> +			if (l1ss == 2)
+> +				state = DW_PCIE_LTSSM_L1_2;
+> +			else if (l1ss == 1)
+> +				state = DW_PCIE_LTSSM_L1_1;
+> +		}
+> +
+> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
+> +					dw_pcie_ltssm_status_string(state),
+> +					((rate + 1) > pci->max_link_speed) ?
+> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
+> +	}
 
-  - Sometimes they may just add the people to the existing entry.
+Does it make sense to call this work function every 5 seconds when the
+tracepoint isn't enabled?
 
-  - Sometimes they create sub-entries like you suggest (usually with
-square brackets like " [RUST]" but there is also a " - RUST" used),
-e.g.
+You can add a function callback to when the tracepoint is enabled by defining:
 
-        BLOCK LAYER DEVICE DRIVER API [RUST]
-        MEMORY MANAGEMENT - RUST
+TRACE_EVENT_FN(<name>
+ TP_PROTO(..)
+ TP_ARGS(..)
+ TP_STRUCT__entry(..)
+ TP_fast_assign(..)
+ TP_printk(..)
 
-  - Sometimes they add them into the existing entry but with an added
-"(RUST)" after their names, e.g. Boqun in LOCKING PRIMITIVES:
+ reg,
+ unreg)
 
-        M:    Boqun Feng <boqun.feng@gmail.com> (LOCKDEP & RUST)
+reg() gets called when the tracepoint is first enabled. This could be where
+you can start the work function. And unreg() would stop it.
 
-Cheers,
-Miguel
+You would likely need to also include state variables as I guess you don't
+want to start it if the link is down. Also, if the tracepoint is enabled
+when the link goes up you want to start the work queue.
+
+I would recommend this so that you don't call this work function when it's
+not doing anything useful.
+
+-- Steve
+
+ 
+
+> +
+> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
+> +}
+> +
