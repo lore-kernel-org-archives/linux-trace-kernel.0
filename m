@@ -1,132 +1,151 @@
-Received: from mail-oo1-f79.google.com (mail-oo1-f79.google.com [209.85.161.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m15591.qiye.163.com (mail-m15591.qiye.163.com [101.71.155.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7AE3C17
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 00:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC2A47A6B;
+	Mon, 12 Jan 2026 01:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768177528; cv=none; b=JY1axRuCbe/1GqgGGJ/VpiRth5/ueSUYIuBYE9ed6AY58vb4NmoT5e0oEEVSALfL4Bi/+qRugVxGzk5QYe94Sa1R7UVl98G+CC2VBLDx48AZSjaKZgxHEqyXHMv8PGQ3ezPPLMG9Tg3Qve9hn6BP953nDPiDFSmh+0XQqczdJDQ=
+	t=1768180840; cv=none; b=OZttf9YYIxDL1OY5XgPJxt3G6PgyK5GnRtJpCxkftwXEUEsTfm6aUG21t5e5jfCt5CmGMqEqHVOUxFStay6ht+BlqYEH1CHAVJDvnhvQLM00FTuoq4+6Xr0Ikj+XHrg5Emes70vlvNZwUWkI6WRLsslOB00J5sV+OrIPL8/M6rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768177528; c=relaxed/simple;
-	bh=nrDZGFZaO0P3QWBP4A5cQyLofFBcaIHFWuZVxq54Ku0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=K8yp/1RC+lqUdzP+BNj+SOHMXL/+TPnfMw8M1PGtBDQJc/Vp6Ox3nqRNjEqXRbr7Hu5DjPgLoLdAEari/vgzU6dY36e6MzVblHaYngdYti110K91vedTrn9AriAa1pwvH1X7aplsyHyzh1teageiRFQ2kFnxRo0Ksf1CpI6w/mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f79.google.com with SMTP id 006d021491bc7-65b73eb22d2so5659701eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 16:25:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768177525; x=1768782325;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A5CdI+LHGD1oIYjo8i4mEjp3QkZf7AObmkripepwXvM=;
-        b=UogFnEhOsnSFcglPHL/IiBd1LeeMesJyzShZmAzA5gKOKZbpVOHrh3RHMsCHQDafzB
-         M4H7wZ6g6BkHbAi/byCqCtCxjhzuPjJyqx0JGGjLYscZXVNSUKQPdcgvtyQYthYpnxwi
-         6syNGembeGRivdtMsQDUSE2FDZeb6mXqe2TEeEZVQqJFtd8WbL0shzoPo+0EF5Lh82Be
-         y41zPHPlNhvQ1kDfJvBKEhwggJ2zL7yASua52XnuFepyBDkQJtr2KEVCkh3RkznkmMoZ
-         A2OMNEAftgJaNlxnvmFAABCKUDY4KNwfQvmgmveqegIF8Bd9UCp/6XpkyEBqE2TJzEsI
-         yrMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUA/haMWixbc580p2u8ueAv2gpOnR/QPc4yW7VUAilLWYT16Drn7ZoS9t+xpkVu06zIsmcSZxH7L/u/u9/aJ/eWkj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5URwAEGkG0iS2nTa/SZOZ1c3qz+cEgoULz8K8tGYnWQbySYsj
-	8EF9QjrQASnJP8iDRuGN301GBJ82xiOb7R71oklhW6CMAogHBjyr//Gb/e2ntWzAq4qJDg60C4A
-	8nwhWy3qxg5fhUfixLLabgF8clt03POzn4SBwDat2gvF7pOnH2UOIsu5Sqkw=
-X-Google-Smtp-Source: AGHT+IGrQBq8ozZXBtjPQna0qFV2PGtZa23LZeSMNb9bq9wg1PL/iBOvSKuPISuJvzVLbRbvxdFb+XDICYq7feMUzhuQ5YaoJJOb
+	s=arc-20240116; t=1768180840; c=relaxed/simple;
+	bh=Tz+YRASi/oZHsQuBt2O11YHy80lXZodv1Y5Hnn5NdTs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=en+cBu5djRvKYTmbRFwoABgpEhEsh0MoQBLZ+msbfFashwegs6egg5J3gQhpeMbIwrQgAvmvx3uGzwvbynGDA6ivXEHS2d34/EF9sbNB/5qD0IyDMavpGFpjRNjY3q2OYEFxtzE6TWXgkzM73jBu/Y1BYYtpIKh54Q/P/qCbFRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=kRE00F16; arc=none smtp.client-ip=101.71.155.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="kRE00F16"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 303e9190b;
+	Mon, 12 Jan 2026 09:20:24 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-rockchip@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v3 0/3] PCI Controller event and LTSSM tracepoint support
+Date: Mon, 12 Jan 2026 09:19:57 +0800
+Message-Id: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Tid: 0a9bafca36c309cckunme7c7221b25b1b7
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhofH1YdTh8eSE0eHU5LHUpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=kRE00F16qzlyjH3K3HMPRz1iGKsClCrSy8nVo+igKhs4etc08DZjlc7gmb4SuOF//MY7XcY5yNAYH05AbiiO7dsmKthxTJ1CGapDP0VwVQb/a/4QVgOb7PAqa/fKweVnuRd22bjORw134o2rruNrZ41tEdFVhkVEOMDS6d+60Sw=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=kkhEQlnOEXnjorPS87Efdu+3pm3OaHqhpE4I48ps7Qw=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a4a:e2d6:0:b0:659:9a49:8e82 with SMTP id
- 006d021491bc7-65f5508a76emr5336039eaf.82.1768177525471; Sun, 11 Jan 2026
- 16:25:25 -0800 (PST)
-Date: Sun, 11 Jan 2026 16:25:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69643f75.050a0220.eaf7.007a.GAE@google.com>
-Subject: [syzbot] [trace?] WARNING in ring_buffer_map_get_reader (2)
-From: syzbot <syzbot+c7143161d8215214a993@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    b6151c4e60e5 Merge tag 'erofs-for-6.19-rc5-fixes' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14b8f19a580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae589cd0a6acd9be
-dashboard link: https://syzkaller.appspot.com/bug?extid=c7143161d8215214a993
-compiler:       gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fa89172b8626/disk-b6151c4e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/19077b87b7b3/vmlinux-b6151c4e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6793df315bec/bzImage-b6151c4e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c7143161d8215214a993@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: kernel/trace/ring_buffer.c:7363 at ring_buffer_map_get_reader+0x689/0x8d0 kernel/trace/ring_buffer.c:7363, CPU#0: syz.3.3873/24523
-Modules linked in:
-CPU: 0 UID: 0 PID: 24523 Comm: syz.3.3873 Tainted: G             L      syzkaller #0 PREEMPT(full) 
-Tainted: [L]=SOFTLOCKUP
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/25/2025
-RIP: 0010:ring_buffer_map_get_reader+0x689/0x8d0 kernel/trace/ring_buffer.c:7363
-Code: 02 00 00 49 8b 0c 24 8b 74 24 44 4c 89 ea 48 c7 c7 00 6c 93 8b e8 37 5f d9 ff e9 e6 fe ff ff 4c 8b 64 24 60 e8 f8 b3 fb ff 90 <0f> 0b 90 e8 ef b3 fb ff 48 89 df 31 db e8 c5 f9 fd ff 48 8b 74 24
-RSP: 0018:ffffc9000bad7db0 EFLAGS: 00010087
-RAX: 0000000000000790 RBX: ffff88813ff68800 RCX: ffffc9000eff9000
-RDX: 0000000000080000 RSI: ffffffff81c2b728 RDI: 0000000000000007
-RBP: dffffc0000000000 R08: 0000000000000007 R09: 0000000000000000
-R10: 0000000000000000 R11: ffff88813ff688b0 R12: ffff88813ff68990
-R13: 0000000000000000 R14: ffff88813ff688a8 R15: ffff88813ff688b0
-FS:  00007f7297ae16c0(0000) GS:ffff8881248fa000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2f7d9ff8 CR3: 0000000087a78000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- tracing_buffers_ioctl+0x2ab/0x360 kernel/trace/trace.c:8938
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:597 [inline]
- __se_sys_ioctl fs/ioctl.c:583 [inline]
- __x64_sys_ioctl+0x18e/0x210 fs/ioctl.c:583
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7296b8f7c9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f7297ae1038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f7296de6090 RCX: 00007f7296b8f7c9
-RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
-RBP: 00007f7296c13f91 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f7296de6128 R14: 00007f7296de6090 R15: 00007ffcb9ff62d8
- </TASK>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
+which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
+Bytes FIFO for recording LTSSM transition.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Dependency
+======
+Need to apply on top of Mani's rework of error handling of dw_pcie_wait_for_link()
+API in order to show the proper LTSSM name for dwc-based controller[1].
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+[1] https://lore.kernel.org/linux-pci/20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com/T/#mfc5885b2afdeef4db1322597eaee61967558821e
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Testing
+=======
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+This series was tested on RK3588/RK3588s EVB1 with NVMe SSD connected to PCIe3 and PCIe2
+root ports.
 
-If you want to undo deduplication, reply with:
-#syz undup
+echo 1 > /sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
+cat /sys/kernel/debug/tracing/trace_pipe
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 64/64   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+      kworker/0:0-9       [000] .....     5.600194: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
+      kworker/0:0-9       [000] .....     5.600198: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_WAIT rate: Unknown
+      kworker/0:0-9       [000] .....     5.600199: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
+      kworker/0:0-9       [000] .....     5.600201: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_ACTIVE rate: Unknown
+      kworker/0:0-9       [000] .....     5.600202: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_CONFIG rate: Unknown
+      kworker/0:0-9       [000] .....     5.600204: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_START rate: Unknown
+      kworker/0:0-9       [000] .....     5.600206: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_ACEPT rate: Unknown
+      kworker/0:0-9       [000] .....     5.600207: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_WAI rate: Unknown
+      kworker/0:0-9       [000] .....     5.600208: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_ACEPT rate: Unknown
+      kworker/0:0-9       [000] .....     5.600210: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_COMPLETE rate: Unknown
+      kworker/0:0-9       [000] .....     5.600212: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_IDLE rate: Unknown
+      kworker/0:0-9       [000] .....     5.600213: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 2.5 GT/s
+      kworker/0:0-9       [000] .....     5.600214: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
+      kworker/0:0-9       [000] .....     5.600216: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: Unknown
+      kworker/0:0-9       [000] .....     5.600217: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_SPEED rate: Unknown
+      kworker/0:0-9       [000] .....     5.600218: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
+      kworker/0:0-9       [000] .....     5.600220: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ1 rate: Unknown
+      kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600222: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ3 rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600224: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600225: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600226: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600227: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600228: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600229: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600231: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600232: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600233: pcie_ltssm_state_transition: dev: a40000000.pcie state: L123_SEND_EIDLE rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600234: pcie_ltssm_state_transition: dev: a40000000.pcie state: L1_IDLE rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600236: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600237: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600238: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
+      kworker/0:0-9       [000] .....     5.600239: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
+
+
+Changes in v3:
+- add TRACE_DEFINE_ENUM for all enums(Steven Rostedt)
+- Add toctree entry in Documentation/trace/index.rst(Bagas Sanjaya)
+- fix mismatch section underline length(Bagas Sanjaya)
+- Make example snippets in code block(Bagas Sanjaya)
+- warp context into 80 columns and fix the file name(Bjorn)
+- reorder variables(Mani)
+- rename loop to i; rename en to enable(Mani)
+- use FIELD_GET(Mani)
+- add comment about how the FIFO works(Mani)
+- Link to v2: https://lore.kernel.org/linux-pci/1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com/T/#t
+
+Changes in v2:
+- use tracepoint
+- Link to v1: https://lore.kernel.org/linux-pci/ym435w3ltwc7vln7g6j3ijswsarubwjazux65ttcqtrbr3i5fu@gig3qlzdkopf/T/#t
+
+Shawn Lin (3):
+  PCI: trace: Add PCI controller LTSSM transition tracepoint
+  Documentation: tracing: Add PCI controller event documentation
+  PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
+
+ Documentation/trace/events-pci-controller.rst |  42 +++++++++++
+ Documentation/trace/index.rst                 |   1 +
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
+ drivers/pci/trace.c                           |   1 +
+ include/trace/events/pci_controller.h         |  52 +++++++++++++
+ 5 files changed, 200 insertions(+)
+ create mode 100644 Documentation/trace/events-pci-controller.rst
+ create mode 100644 include/trace/events/pci_controller.h
+
+-- 
+2.7.4
+
