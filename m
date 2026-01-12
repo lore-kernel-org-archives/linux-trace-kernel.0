@@ -1,91 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7C2BD5BB;
-	Mon, 12 Jan 2026 15:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD933370EB;
+	Mon, 12 Jan 2026 15:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232594; cv=none; b=RWnfNXMEU2hx5zBdFUyEoJk0uT76U1SXW9yNyIyVXz415pZwrVt3MnGFEWqYYFESOij70jHj3ti4+4X/EuWFnu0Q07aShcKdrDTXtJP1ce6O86Bog9F8mNAj9fll8iD1AcMDzLm5HmzOdDFO0r9v6s+CIm/srnOc2/+uHyrd3Go=
+	t=1768232658; cv=none; b=A5NWv5/sO4pxwI6DX0kn1XrZRF2rv9tXgSekQgo0zBW6+AgWT5C3l6bs0Y+GR4DcMwUc+qbQisDX8sueD/K57/ILFoj4jT1MaIrXuSY/7h7wV+k5ReTfW0RAGTt7vL1uwQr/cE8BcTtNP6GEYl39cn2DCswqu0gWv0ktvWM38Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232594; c=relaxed/simple;
-	bh=zc0Wt28XmAyG258QU5LNywvxiHWlyYYomnAQewieYWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dz0P/4IGP4yCB7AT5ALg2IDdFIOa9inguhwjow14ZxQwU2oewgydwXzvoByMUGXsmNi1evVNnfcYsIwjQL4zajQ6egIYzHF1UVyxVet0HiS/IH5qZ3AAePF0Vyvxu2PkLnbsH8rX8Vxg3AAsDEoefvTy+WBP451XnbCHG29Nz3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 63973140518;
-	Mon, 12 Jan 2026 15:43:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 18A5630;
-	Mon, 12 Jan 2026 15:43:00 +0000 (UTC)
-Date: Mon, 12 Jan 2026 10:43:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Fushuai Wang <fushuai.wang@linux.dev>
-Cc: tglx@kernel.org, peterz@infradead.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, aliceryhl@google.com, yury.norov@gmail.com,
- vmalik@redhat.com, kees@kernel.org, dave.hansen@linux.intel.com,
- luto@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- mhiramat@kernel.org, brauner@kernel.org, jack@suse.cz, cyphar@cyphar.com,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-trace-kernel@vger.kernel.org, wangfushuai@baidu.com
-Subject: Re: [PATCH v2 3/6] tracing: Use copy_from_user_nul() instead of
- copy_from_user()
-Message-ID: <20260112104302.76462c73@gandalf.local.home>
-In-Reply-To: <20260112073039.1185-4-fushuai.wang@linux.dev>
-References: <20260112073039.1185-1-fushuai.wang@linux.dev>
-	<20260112073039.1185-4-fushuai.wang@linux.dev>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1768232658; c=relaxed/simple;
+	bh=F+dD0O5rdLlpkSFu3XJPiUpuzGcIGKqS1IYu4fWWxf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pg6f6lRVQBGaEWnaFAJXBlOrEy9cSIVg/jYh2l4Fe7AzMsvwxqDo9AS8BNqrJDjSAKXL7g1+aP2wLvW5cLj99vWjjHNykeoS1C+bBOoCN+KFX3v+vGrdehx01MYKoO4TaNie7LToGd5q1wGmmOKnNIWmFjthNi+gK/4JgT+kNJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=omZjSHsE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="omZjSHsE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GHlgTWqk7Lzv2HzCIc5hb0RdKxS5l4uVv2fCHeXt8IA=; b=omZjSHsE59RIJ9X/oCtNVQogsk
+	/zXhvFRscrDOejzz00XtcugWOPBxkTRtZs+reSIvVCvVnJPTaa/Q0GeoQz4XCf2/DyU+xPMf5Dmmw
+	VKtzVKkl9U3BoL7E5lKjpUR0sECg5wZ2FFgqI/NMSdklpxZEnh48icd71Z53h9vwFVX9mSbcTLQQh
+	YwWZSXh1zpooKvZK8fSBbAw6FvG8hAytclWumF5VV+M3h+Vv4MD2TVpgl7WSlz95wIGvN+H7XpPoX
+	nAcAJ+Ncuu7aIUOdFYKaeAuCCPsL9fqXBpIwVRAB/qnm5m78joVWIWDugLPmjTOc3WS6eRBWqVkIo
+	6qDhhkIQ==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vfK5U-000000015Sc-0C5h;
+	Mon, 12 Jan 2026 15:44:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 060AF3030B0; Mon, 12 Jan 2026 16:44:11 +0100 (CET)
+Date: Mon, 12 Jan 2026 16:44:10 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+Message-ID: <20260112154410.GA830229@noisy.programming.kicks-ass.net>
+References: <20260108220550.2f6638f3@fedora>
+ <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+ <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+ <20260109141930.6deb2a0a@gandalf.local.home>
+ <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+ <20260109160202.22975aa4@gandalf.local.home>
+ <20260112153128.GO830755@noisy.programming.kicks-ass.net>
+ <20260112103612.41dd4f03@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 18A5630
-X-Stat-Signature: znkn9ceiqct94ajt4g5nhoqp7bufefdh
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+PbTRD0q5RQVfExPtU7QrgGg+/6cgjoMw=
-X-HE-Tag: 1768232580-582637
-X-HE-Meta: U2FsdGVkX1/qCfodGH5OJif+Ga2mSvax0+7rfi50kfGk0/9WyQ1u6/UrH6IizIOZwEFbEGTeooKwwpw2X7uhO9W54/mw/jxsKSbY7o+rmhwoRJswTjE9Sz9DI2qiLbqMpovXhlVYJ3yGfbMDPb4dsXIXcsv0Wom1q53A4AdtUbnwErib+R8pT/stNLx5O+l1HaOMJ1Sux0NvDpXvWsen0gfixst5+CDoOc8VcKel0vw5LsMpB+sFDO0ieitEot9T2C3N5mHq9JqlOwZ8hohiISV07lI5H1VtSl0+1yVmqJCfceLsEJ3I+T9KsZ4sr4nfS74xZB9IWlFbU89VQn9r7m9d79rvl/3jDH4QlAsPVFVsfZ/6qOkb9Egz+JLO4I+ia+xdJ9RpTuJbzgZFrQA13g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260112103612.41dd4f03@gandalf.local.home>
 
-On Mon, 12 Jan 2026 15:30:36 +0800
-Fushuai Wang <fushuai.wang@linux.dev> wrote:
-
-> From: Fushuai Wang <wangfushuai@baidu.com>
+On Mon, Jan 12, 2026 at 10:36:12AM -0500, Steven Rostedt wrote:
+> On Mon, 12 Jan 2026 16:31:28 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Use copy_from_user_nul() instead of copy_from_user() to simplify
-> the code.
+> > > OUCH! So migrate disable/enable has a much larger overhead when executed in
+> > > a module than in the kernel? This means all spin_locks() in modules
+> > > converted to mutexes in PREEMPT_RT are taking this hit!  
+> > 
+> > Not so, the migrate_disable() for PREEMPT_RT is still in core code --
+> > kernel/locking/spinlock_rt.c is very much not build as a module.
 > 
-> No functional change.
-> 
-> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+> True. But still, wouldn't it be cleaner to have that variable separate from
+> the run queue and make the code a bit simpler?
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  kernel/trace/trace.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index baec63134ab6..b6ffd006fcf9 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -11266,10 +11266,9 @@ ssize_t trace_parse_run_command(struct file *file, const char __user *buffer,
->  		if (size >= WRITE_BUFSIZE)
->  			size = WRITE_BUFSIZE - 1;
->  
-> -		if (copy_from_user(kbuf, buffer + done, size))
-> +		if (copy_from_user_nul(kbuf, buffer + done, size))
->  			return -EFAULT;
->  
-> -		kbuf[size] = '\0';
->  		buf = kbuf;
->  		do {
->  			tmp = strchr(buf, '\n');
-
+I still don't like exporting variables either way around. Exporting
+functions is much saner.
