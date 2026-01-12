@@ -1,75 +1,50 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E23033D1
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 19:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85682E7BDC;
+	Mon, 12 Jan 2026 20:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768247290; cv=none; b=U1/PHaaKtz1uFFeXa3TOCqh3XaLWOUr+Nkml/Y5x2yNFsk0mMEIiYR2P0FFEUZvo/FcVhl73rI9a0H7pCDLx+oxoBl22s5l1NZ+hGoJctQsxOdOxllKckDnRWQ4qBWJYEGABJVxgj4p0QiqTYkHxUvDyVwuoBQZuMrtLuq8WJCI=
+	t=1768248078; cv=none; b=JB5RCSpIMx4mvfV47QwvKNdIn6gwlFbuKyoFWWnIVdD/twnq+HfkHbKzDBMP3ltYjkBMtQBWHBky/LmP+Ve9atKuaEv8CpV+DKxeR8bhinoVNEOeHTAiAwZwieauZ/etDHiAofoRChvaRy7355DrgHWIFlONs1X8tfQR6o4ws5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768247290; c=relaxed/simple;
-	bh=RVjiN4DP9fSW/O10it19QP2bn8wGkaJ6vL7xbjZI3Pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1ZR5az7//1+eusUM2wLwAyyrmHcgVjFfzbCmNROcmeBYH06pi96rYW25fIvW/BTZHP69Cl09LNCmaHRPmBV7ikqlcFgqDDlogQJeP9J6K3nTz2PHSBJIDAInzueBYHvRRE2vHN4Z1eHv3HaxWzfcYtQU80v4jCz864PKxCDeXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TbhnRHZh; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768248078; c=relaxed/simple;
+	bh=zp4HPfI5ae0TEAVq32kDpjODcaCC3v1NG5I//9ABBOI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i1MrFTv9W6hkjAWwAjH052r4YmXMuUMMoi0N81u4D93R/8+tP2RbPtNW0A60hnZxG5oD2D/3Y0erSyn40uPeSruUqZOlNWf+qhvN9KLfmLCjcowCFMIU5mpc93YPmBgsJo5eAe6IfYYD4tKgwAOyBgz3WeohIC+Vad9oBHuIZ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=BijV+8lS; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TbhnRHZh"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42fb6ce71c7so5768008f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 11:48:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768247287; x=1768852087; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BGyo51WmDqtagxgoVSIwRWG3W5A40tN9gD1xGhmOgu0=;
-        b=TbhnRHZhvuPPC/Nc46X8GJ1IBvwjdJJMOIUtkfbafW2y4yr9G+wyGKjbEv+V13gVCA
-         VkeLkrvAw+pyqs6M2bJ6TszAQQq+82tAIYZBw566J/8sgLDtg74LDtY2jEFJkjE7pIdI
-         tBQ1rOCZwfyzCJnTU/0eW+XkIdgDg0grcvwGvxM+mQL4felbN1NfdydYdfjO0pbMsBfW
-         vbEDpYs7rW4LWyPhQ4MFAsYGGX5Qu+1ahP89h46+dE/ZvwN8rO1rH+uUHztBcL1/OlUH
-         F8p7MeYDSP1VdDZ2GNp4S76LUg8q3Jj5Lu4pv7G1WaLfFHUwnIF8qshDHhJJ5nkqu4Lg
-         xF2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768247287; x=1768852087;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BGyo51WmDqtagxgoVSIwRWG3W5A40tN9gD1xGhmOgu0=;
-        b=MyrU/3O+PTlrpgLFQiFmnBCI2AuZpr5hEcCzz7aftB5Pi+OvizKow6USzQrKrhl7Ae
-         Qpg6b0u93zCDCIMwLOvwme8Y/zYEVnNBH+d8Y9pUzYxWTaaunYXVqY2AYlc2Wg4Ov294
-         K0XPfWHSRWubiaupzVx9pLoPyaTXGombOY/80yvj/ZeENJkwHFEXD2wQ6/GkiNAhO/Nj
-         68QYCCSgF9JVC4sv7jPRmlcY2lq+PSgeC2eh4uy/DV6gbgc9tewgp6IPpeP42icRg7gj
-         VdWhiMUF5QUnj3RKw5HSKyhmBfR+4Jpoym1mtyMFcSTm0tscFtau0p5aM1WA7jVn8+Ko
-         zsZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ9omQ75AX5yOwRgB3/wyPJoRUXcAXR/Uo5bzNg77mNU0ErhD1bjDLLmnAE+1cAJC1NpacO1wi74BJW+Yhxptd3yQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu232t0SwwHjpGvoIsJc26K6NZBGXyoDgoKF8ZKorWoVl34RNb
-	TnkUiCbh8uWL1WCCfvYSJAp2ZjuzYx0bxKr7WY5DpILM0Is8ZTn5SKBAgv1dh4ntjcI=
-X-Gm-Gg: AY/fxX5q+F4sZu4WY+vGCOpsxOrh5IDo65gyZt8jRhhzJNg1TZ/kADKCRAEsBZ3b3rx
-	nP6NxGWtANyOrFX86PnF+EQJK6qcrqPnaGwRs0+xNYCBZxAVeJWqRrIp3c4ZqfSxUgAAFIXxTXf
-	sO47AUW37KZ3VShjiIU3s2S/LBTCLIqaKM/L6vW/vCoFKuJcsew0QvtrRKtqy1VX2ljhkQ4EUku
-	Eop8HNzKoSU8PqMOjdSR4lxk3mxAkd6TMpHrs0NEAC7aCF7pA4XXrApW2ZBUvLWYbZQ/bNMKBhj
-	TOF1YLyQiP5H3X+kkhpS7tWpsTjnf7RZADWP+raOd0A2eR8neAA60qZPomCQdK1D0BeK2GCyxrb
-	P90acM9aT6AhU1l/d4p0/7c1/IUmVAExAJbRRiU2wF0cK7odFPu3AvlMJzKmlYzB68ipbDGm4Db
-	l+ppyOoIC/f/Rq0FV7nae3D4Kc
-X-Google-Smtp-Source: AGHT+IHE1lXvEz53VmoWzLLJVZRvVBwxgOdGb5mMIjcwZPpGkPDDOGRk+/iknTtt3x3D/wmw7rPQqQ==
-X-Received: by 2002:a05:6000:1886:b0:432:a9f0:48c with SMTP id ffacd0b85a97d-432c38d26f6mr24261001f8f.63.1768247287544;
-        Mon, 12 Jan 2026 11:48:07 -0800 (PST)
-Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ee893sm39721819f8f.37.2026.01.12.11.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 11:48:07 -0800 (PST)
-Date: Mon, 12 Jan 2026 20:48:06 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BijV+8lS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1768248070;
+	bh=BxBSRmGxgfXg/cqYvYDq8dvF1zaNPsFOZi5Vw1+H8Lw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BijV+8lSFalUiReQfK65dQWqBj1T3ltynENnDHrcIvy5TapIKD7QVnDcnF/Z6Fq6I
+	 QUeBEmLRTeSIMgsU1J/qk1GDp1r/AUyazsIm7oKS1pndyTm/wERjJWpKYZQD65tzB6
+	 dN2q1W0X8luat7dQESVxy6dwM8tsR2v07CSLQ3FsR4T33t/C1o4wpb5IwbiCPMOdl5
+	 7fjyfyzPzMBq2wfyVNFmI523yByzO0EKyguxc75eXo4AUWiutscco9OHpAqUtUBApC
+	 JobNzP2CEv54z3yRrCbIVsHeE0gTToqCtAMl1Qd3XmZ8/dUTDwT7kIySbqKz8/AhsI
+	 J7JlKMCyP0zOg==
+Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4dqjtZ0tMPzkqd;
+	Mon, 12 Jan 2026 15:01:10 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
 	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	SeongJae Park <sj@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	"Liam R . Howlett" <liam.howlett@oracle.com>,
@@ -80,109 +55,136 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
 	Wei Yang <richard.weiyang@gmail.com>,
 	David Hildenbrand <david@redhat.com>,
 	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
 	Mateusz Guzik <mjguzik@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v13 2/3] mm: Fix OOM killer inaccuracy on large many-core
- systems
-Message-ID: <aWVP9sPqG8VC8Oq_@tiehlicka>
-References: <20260111194958.1231477-1-mathieu.desnoyers@efficios.com>
- <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
- <aWSz5OHBwtfYrruu@tiehlicka>
- <f2c04264-17ca-418f-bc43-e8aa6fa6cd0d@efficios.com>
+Subject: [PATCH v14 0/3] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Mon, 12 Jan 2026 15:00:53 -0500
+Message-Id: <20260112200056.1250404-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2c04264-17ca-418f-bc43-e8aa6fa6cd0d@efficios.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon 12-01-26 14:37:49, Mathieu Desnoyers wrote:
-> On 2026-01-12 03:42, Michal Hocko wrote:
-> > Hi,
-> > sorry to jump in this late but the timing of previous versions didn't
-> > really work well for me.
-> > 
-> > On Sun 11-01-26 14:49:57, Mathieu Desnoyers wrote:
-> > [...]
-> > > Here is a (possibly incomplete) list of the prior approaches that were
-> > > used or proposed, along with their downside:
-> > > 
-> > > 1) Per-thread rss tracking: large error on many-thread processes.
-> > > 
-> > > 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
-> > >     increased system time in make test workloads [1]. Moreover, the
-> > >     inaccuracy increases with O(n^2) with the number of CPUs.
-> > > 
-> > > 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
-> > >     error is high with systems that have lots of NUMA nodes (32 times
-> > >     the number of NUMA nodes).
-> > > 
-> > > The approach proposed here is to replace this by the hierarchical
-> > > per-cpu counters, which bounds the inaccuracy based on the system
-> > > topology with O(N*logN).
-> > 
-> > The concept of hierarchical pcp counter is interesting and I am
-> > definitely not opposed if there are more users that would benefit.
-> > 
-> >  From the OOM POV, IIUC the primary problem is that get_mm_counter
-> > (percpu_counter_read_positive) is too imprecise on systems when the task
-> > is moving around a large number of cpus. In the list of alternative
-> > solutions I do not see percpu_counter_sum_positive to be mentioned.
-> > oom_badness() is a really slow path and taking the slow path to
-> > calculate a much more precise value seems acceptable. Have you
-> > considered that option?
-> I must admit I assumed that since there was already a mechanism in place
-> to ensure it's not necessary to sum per-cpu counters when the oom killer
-> is trying to select tasks, it must be because this
-> 
->   O(nr_possible_cpus * nr_processes)
-> 
-> operation must be too slow for the oom killer requirements.
-> 
-> AFAIU, the oom killer is executed when the memory allocator fails to
-> allocate memory, which can be within code paths which need to progress
-> eventually. So even though it's a slow path compared to the allocator
-> fast path, there must be at least _some_ expectations about it
-> completing within a decent amount of time. What would that ballpark be ?
+Introduce hierarchical per-cpu counters and use them for RSS tracking to
+fix the per-mm RSS tracking which has become too inaccurate for OOM
+killer purposes on large many-core systems.
 
-I do not think we have ever promissed more than the oom killer will try
-to unlock the system blocked on memory shortage.
+The following rss tracking issues were noted by Sweet Tea Dorminy [1],
+which lead to picking wrong tasks as OOM kill target:
 
-> To give an order of magnitude, I've tried modifying the upstream
-> oom killer to use percpu_counter_sum_positive and compared it to
-> the hierarchical approach:
-> 
-> AMD EPYC 9654 96-Core (2 sockets)
-> Within a KVM, configured with 256 logical cpus.
-> 
->                    nr_processes=40    nr_processes=10000
-> Counter sum:            0.4 ms             81.0 ms
-> HPCC with 2-pass:       0.3 ms              9.3 ms
+  Recently, several internal services had an RSS usage regression as part of a
+  kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
+  read RSS statistics in a backup watchdog process to monitor and decide if
+  they'd overrun their memory budget. Now, however, a representative service
+  with five threads, expected to use about a hundred MB of memory, on a 250-cpu
+  machine had memory usage tens of megabytes different from the expected amount
+  -- this constituted a significant percentage of inaccuracy, causing the
+  watchdog to act.
 
-These are peanuts for the global oom situations. We have had situations
-when soft lockup detector triggered because of the process tree
-traversal so adding 100ms is not really critical.
+  This was a result of commit f1a7941243c1 ("mm: convert mm's rss stats
+  into percpu_counter") [1].  Previously, the memory error was bounded by
+  64*nr_threads pages, a very livable megabyte. Now, however, as a result of
+  scheduler decisions moving the threads around the CPUs, the memory error could
+  be as large as a gigabyte.
 
-> So as we scale up the number of processes on large SMP systems,
-> the latency caused by the oom killer task selection greatly
-> increases with the counter sums compared with the hierarchical
-> approach.
+  This is a really tremendous inaccuracy for any few-threaded program on a
+  large machine and impedes monitoring significantly. These stat counters are
+  also used to make OOM killing decisions, so this additional inaccuracy could
+  make a big difference in OOM situations -- either resulting in the wrong
+  process being killed, or in less memory being returned from an OOM-kill than
+  expected.
 
-Yes, I am not really questioning the hierarchical approach will perform
-much better but I am thinking of a good enough solution and calculating
-the number might be just that stop gap solution (that would be also
-suitable for stable tree backports). I am not ruling out improving on
-top of that by a more clever solution like your hierarchical counters
-approach. Especially if there are more benefits from that elsewhere.
+The approach proposed here is to replace this by the hierarchical
+per-cpu counters, which bounds the inaccuracy based on the system
+topology with O(N*logN).
+
+Notable changes for v14:
+
+- Change check_mm print format from %d to %ld (was folded into the wrong
+  patch).
+
+I've done moderate testing of this series on a 256-core VM with 128GB
+RAM. Figuring out whether this indeed helps solve issues with real-life
+workloads will require broader feedback from the community.
+
+This series is based on v6.19-rc4, on top of the following two
+preparation series:
+
+https://lore.kernel.org/linux-mm/20251224173358.647691-1-mathieu.desnoyers@efficios.com/T/#t
+https://lore.kernel.org/linux-mm/20251224173810.648699-1-mathieu.desnoyers@efficios.com/T/#t
+
+Andrew, this series replaces v13, for testing in mm-new.
+
+Thanks!
+
+Mathieu
+
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
+
+Mathieu Desnoyers (3):
+  lib: Introduce hierarchical per-cpu counters
+  mm: Fix OOM killer inaccuracy on large many-core systems
+  mm: Implement precise OOM killer task selection
+
+ fs/proc/base.c                      |   2 +-
+ include/linux/mm.h                  |  49 +-
+ include/linux/mm_types.h            |  54 ++-
+ include/linux/oom.h                 |  11 +-
+ include/linux/percpu_counter_tree.h | 344 ++++++++++++++
+ include/trace/events/kmem.h         |   2 +-
+ init/main.c                         |   2 +
+ kernel/fork.c                       |  22 +-
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 702 ++++++++++++++++++++++++++++
+ mm/oom_kill.c                       |  84 +++-
+ 11 files changed, 1223 insertions(+), 50 deletions(-)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
 
 -- 
-Michal Hocko
-SUSE Labs
+2.39.5
