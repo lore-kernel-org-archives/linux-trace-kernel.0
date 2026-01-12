@@ -1,93 +1,141 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35E31194C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 08:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2573D34107E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 08:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768206277; cv=none; b=UqSWSEA+4cbMZcXlkjCRqmAKy0pYo5HB8V5UPoJ/oR/rNAHz61/e7uXjwX0rFgpw08vX34e3doaJZHZ0bkcFqx550MX+wGAmJXgU2C+rUmgMeaAB0gj5+6uUYq7vtSKg3o9Odn/NIqH0oxCMVFyoMjBcfG7d9LvvJqR1dkB/DCc=
+	t=1768207337; cv=none; b=Uw16GX4il8036bt/Rvo1DXAJ/Otom9jm7GB8qoxu78tpxvM20WlIvpxU8bYa2l77fiP0vl2eIkJHtcplhgirczzwxCXZE+s2eqNxth85G7qHJE1Yw9W3zqAL6BslEL1o834K3XXEpFzmopZtirb3/ep6m7R4zTPCOfkWH+RZN4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768206277; c=relaxed/simple;
-	bh=lfhp0xOpEYm5BA51occmCsqJF2exBFweB+jCpxqtXBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s48T7XQGgEpxvUogDg80UgFZLbWDh9eg7xXY0nn1gFjZOlfCDZxG8VKI2ugK6oMrlbMonARLNZ3/gKiAmFo554dOFOO9NHuc4I2rnw8d+n2nkMVwUVOzYfpvxYM5iqKUyI5iWGy8nJVfoXyc1fmmLQyBpaVZSQmGtILtGMOZ3Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YVtdk5Lc; arc=none smtp.client-ip=209.85.208.170
+	s=arc-20240116; t=1768207337; c=relaxed/simple;
+	bh=rjITqn12+D2tvtJTf7/BRP0AALPZnd8r3PQY4MECiIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MFLrhuhVDoACuoq/FKvyZBMsr588WhZ2AoCqMNEJU4lO9OqlBTblXq0GLDPX1G4AOZh2iREzmwJ7dBXO7LrFh9ngm0HKxuc84DB3XpESJ0MOf1lkEYsWcyxYvZ8d9t3cmMtdDWEOIbAppi2GNvdRCBv0SiUVJSlPoMxF5aYJqCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ECMsPALb; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YVtdk5Lc"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-382fa66fa9dso41242831fa.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 00:24:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ECMsPALb"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-477563e28a3so33027345e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 00:42:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768206275; x=1768811075; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lfhp0xOpEYm5BA51occmCsqJF2exBFweB+jCpxqtXBA=;
-        b=YVtdk5LcmWB8BZyGd/IlAWsLujgxY/Zus4EwJvxwvq4FwBmRmNYFl6WQk7dCIBHFYX
-         mdlmqU0IXs/fZBu+1C7Rbk5c9JPNoqbt7tijYeCDwEpiPZ5k+lr6h7n2M2Efw6PgZX/q
-         ywBlb5cBMKzQRacDNkhNBJayQbp6iCCVeG8tXdsNMv1RmKikbEdNPlZ//PHAQ98tVdas
-         UCFID+mphZxRJcAW1BnldsofDe38QJ4NhA14tXTlZMdR1OCekxL0FvdXWHVXIYJuiGWZ
-         +04lxRZWu/nYKT2B1e+yZWzv7kuDym3PonUdfS3NHYGO+bJ8rPXV/aCRBYictb6ytJXk
-         SuJw==
+        d=suse.com; s=google; t=1768207334; x=1768812134; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CDfFNoiSuTKA5KfAUoXISxuSK51bp7lujfs6vADIdxE=;
+        b=ECMsPALbh38oKqxWkweA8gysOOon0feqAtyuXePZlNC8xXrr2CugQ/ykGFDLCYIo+I
+         xv2m7iBI0t9mvHg2JGY2rVLY1wUuwbPHXMX/pME2zoOh/n/GH5I4HRqi/uasbl6t9ljU
+         1sjCWoTfadNh/PbwUetBw99/0XLPAiX/lVtj7+91xnRazzkSxbhTrcdhyrCYCIEDHvvU
+         UIkRrhQpE+YRErb80gOnrwsOTfTG7tSH/7cyPCiRkgsElZmsMs5FZ1G1v8c1XbhudRpq
+         wVeC5U89KChbpVBHtiCh3f8ro2sWFlGJJ/P8xNdwXWcNM6fnxx/S+ssy3nVvazNdGU//
+         X+AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768206275; x=1768811075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lfhp0xOpEYm5BA51occmCsqJF2exBFweB+jCpxqtXBA=;
-        b=F/CBrNLxhZeJwhGtSKVSaaL4Gw5mSoZAIbYENP2nmwyYmYFkil8Z4lJCXW4DjCwuiy
-         pyRlp1VThvIxBr11i9J8TLdhGDtf6daQMylNdCdD/jRD3Sr9Rc/9BXRc3TgwMBxeOhBv
-         wRSCVj7ADgAxdApCo8mWZut2O63jiIrpBeFjVGZ1VHsX2pux+Js2BkeJRqirSFyd5lji
-         E9mFoD0K5NG5up7P6lWGU9SqvyPq6Uh8bzcpTwPpDJv05YYSca4s0xQR2ZCh7EpYg+TI
-         Ywp+VzU8TRh/isNsJlNqOtHv/fZnvpZhR+M5E3p4/ISo6Kh7Bb7Cch/WGrCYxne1wmmS
-         kmPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQbLfTHG2VuK3IvApfPlLJujHGKe4+fImCroCTV7v0Ksw4/3f+V6Jhvz3u2gr82DvuC2HlTa2EIlNyV4c6tMDIWJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxzk094Tx/DJs+8kCw4wjn9lKevs2divMoOUP4FY2wdw/ASuaw
-	fYYXTwmD8j1kwgoE/pquBuaNDvbfcx5s3lbWMZNeOWnv/+MFO/mOGLF94AN/VyB/WgPsGPU13qG
-	iRZw6+TyVBYfNK39KuJZRJbBZHfmeQIR3BrzodkNByQ==
-X-Gm-Gg: AY/fxX6YaKu+/gulMio9Roberg5IBC65een09n0Jz6cucd3uV0W7u28jjAypwhRy69z
-	DoN8NVwySfKmrpzmKbD7iAlKT49ZGP2Hni9CdXTLQGlTmKTJ+BRh6zPiXia8ud11d5YdHliMsEh
-	NglcFeREPN4K/CkPGR2ce+rWG+PXWmwybALV00CcHwIht5Ybmv+TzyQk9VLzcOBjYngaUY9AD6o
-	QtIIYqKaexPuZxk6B+32DS1emYeseQX7Id39J4PSWPJMY+V70WSyQJD7PC3dBilImzF+X3JAjS4
-	wOggZZ5pvrmANTxBbAe2oLIlGmxU
-X-Google-Smtp-Source: AGHT+IG/tXabyyT59kXpBkJtq7aIwfkDlohuutNxueNT2jOC0zVIWgOJx/KzKA8PO9DED/xc6lcUEp5iHU2ymYjeTgE=
-X-Received: by 2002:a2e:b890:0:b0:382:fea1:10b3 with SMTP id
- 38308e7fff4ca-382ff696686mr50817121fa.13.1768206274742; Mon, 12 Jan 2026
- 00:24:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768207334; x=1768812134;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CDfFNoiSuTKA5KfAUoXISxuSK51bp7lujfs6vADIdxE=;
+        b=FTna4CsPewm6HIlzpPcoab+MqqlOtoHwbKqY7wTuOVyvsLRewL4281MJcjnqDvErwD
+         wQfUSPS0NyqahKzC9WC05/gZwURCGBuJKWWjfwxAfvg/XZTnvgJu3kUx3S3S84l/fWLB
+         LGb50CT4oIZ24syg7nv9d4GT8MbBI/hkrVJ0juhWaLAjT6i+69sOCrgueG45fmosYbkl
+         Qr2ybIFPlOCHJyQL18GLK31eW/UhgkGzvBVoRkfLazjDNKFCujjhrB8tcQ31I9mlNfWR
+         orxiDvcWaRUA8Mf1aydTcr9pqcyBOPbv29l24L2BvS393Bio75PsoWu9Ynvd0js/jv5Q
+         12JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/+qJ4zw1u6XPnQQKXnShb1dzJkBrjoEZswfWKQvjfVrj+9lrGPichHQCMVeUJUPgN1iw8gghU6w8dkYCG/X71P3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxluIcd1sLt1xIWnN7Xai18nzGrhVTaQ0/i+IQf0kkACn6gmCHa
+	gLLK9c/Qih4r+/O4eX/0CmkFmzg+/eBJcLHHyR4UoOAr96/OOJWBFQ+NvOYizc/s0xc=
+X-Gm-Gg: AY/fxX6EKJ8JUTV5F380ZYeBFszi5GnSlmdsl6AkVrRdAt6PGjKbPZUuecn0oxpxk83
+	6wOQPtypg4PhS7SHPSAP3BrsCUJiVBkpMJh9osVIWsmBweoAsYkYcIrTPscMFtp5lx6HKZUm6Ks
+	ruduu1JO4zn0HBQWddE7zXl9E1iEZ/4M2Vl+86smxyPzhhIfZGPCkDv0nytGNmYgmMZ29Pn3uC0
+	6+2AmgpSeIakg+le5VpOJwA6h78eUnLKLQhMXc5l1/ZgTfNTAdAkCeKJgjrxnWrAoDkpCW8qX8l
+	avCpkdDnXOLCIxwUl++UomSkkMwqlUUBoEK8yOgeCwEyfauSvOWQSLFiZwtyVsOZo2Mt9rufWKF
+	nhvlsl0FHaYG27NhvPRQZTBbfx71xSCVoMfKqfiWAZSGQBYN/c/w5ISdeVjvoXxiplr9QJ+V6ET
+	tZKqt63XOK0T6ll+ulNuBf8XsuViNToknF6c4=
+X-Google-Smtp-Source: AGHT+IGOZ9lkMoCzrUzWNxChXoAXhL7/lCG+k3HeWbbjlLCJz2d0Tg02k9SjW7Z9t8X4D9e1/0CcXQ==
+X-Received: by 2002:a05:600c:3b05:b0:475:ddad:c3a9 with SMTP id 5b1f17b1804b1-47d84877e51mr207488795e9.13.1768207334460;
+        Mon, 12 Jan 2026 00:42:14 -0800 (PST)
+Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d865f84besm132725385e9.1.2026.01.12.00.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 00:42:13 -0800 (PST)
+Date: Mon, 12 Jan 2026 09:42:12 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: Re: [PATCH v13 2/3] mm: Fix OOM killer inaccuracy on large many-core
+ systems
+Message-ID: <aWSz5OHBwtfYrruu@tiehlicka>
+References: <20260111194958.1231477-1-mathieu.desnoyers@efficios.com>
+ <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251230142820.173712-1-marco.crivellari@suse.com>
- <20251230094236.358ae2d8@gandalf.local.home> <20260109142758.145f57f8@gandalf.local.home>
-In-Reply-To: <20260109142758.145f57f8@gandalf.local.home>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Mon, 12 Jan 2026 09:24:23 +0100
-X-Gm-Features: AZwV_QgeCJjuPhuNhl5sgCtKkp3OQo0sHzToyZMjx1bdQZ0T9jco9vcJ4K5_O5k
-Message-ID: <CAAofZF74Bhx9R_jud2zQ2ERcgGU2Ch+jD1QwdMNPBAzp4va+EA@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing: Replace use of system_wq with system_dfl_wq
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal Hocko <mhocko@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
 
-On Fri, Jan 9, 2026 at 8:27=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
-> [...]
-> I guess I'll take this through my tree, as I'm pulling in patches now to
-> base off of -rc5.
+Hi,
+sorry to jump in this late but the timing of previous versions didn't
+really work well for me.
 
-Many thanks Steven!
+On Sun 11-01-26 14:49:57, Mathieu Desnoyers wrote:
+[...]
+> Here is a (possibly incomplete) list of the prior approaches that were
+> used or proposed, along with their downside:
+> 
+> 1) Per-thread rss tracking: large error on many-thread processes.
+> 
+> 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
+>    increased system time in make test workloads [1]. Moreover, the
+>    inaccuracy increases with O(n^2) with the number of CPUs.
+> 
+> 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
+>    error is high with systems that have lots of NUMA nodes (32 times
+>    the number of NUMA nodes).
+> 
+> The approach proposed here is to replace this by the hierarchical
+> per-cpu counters, which bounds the inaccuracy based on the system
+> topology with O(N*logN).
 
---=20
+The concept of hierarchical pcp counter is interesting and I am
+definitely not opposed if there are more users that would benefit.
 
-Marco Crivellari
+From the OOM POV, IIUC the primary problem is that get_mm_counter
+(percpu_counter_read_positive) is too imprecise on systems when the task
+is moving around a large number of cpus. In the list of alternative
+solutions I do not see percpu_counter_sum_positive to be mentioned.
+oom_badness() is a really slow path and taking the slow path to
+calculate a much more precise value seems acceptable. Have you
+considered that option?
 
-L3 Support Engineer
+-- 
+Michal Hocko
+SUSE Labs
