@@ -1,126 +1,128 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0E234D928
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 11:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324ED15665C;
+	Mon, 12 Jan 2026 12:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768216858; cv=none; b=lzrxywgY5NAcGn0z8gMIo6LLAHl52wmj2OvxgCkcpAqB3wrep3pQ9edZzNOw6Us/ApAbw7XHfneyGjes37Hah+5BfGZstUt9JlpdesnOxAJxgQFFEg+U1iK0FTjstxpN9mtB+0rlJk81KFL6qHOYi0O/nsD/0YNXKXlJ0ru9UXQ=
+	t=1768219931; cv=none; b=cSB9JekCXk7IUxAW0HAAzII1uIwgXG5FNYtpbvMlVucTOHexcGgs/LKyqZHqCFf2OdjdEUn2cG9iT4B73QFjeyKbMg6KcPqHqRbuOIcdcDcHZATvpBYRjd9iOzq6V8z0nI5fwRBmGpTnccSmpzRv/oKt+7M0MaK+h0o+OQKdggw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768216858; c=relaxed/simple;
-	bh=80vDx172K38JVXXoGjjGExixmhv72jasiNuq6fEFSvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sAt8yE5EsL7WUqNI7hCXGdgP/WlFya9X7QwyGJveUoo6kZFi81hkbeJz73oId6S5gzShRPY17iOGU3P17AzwGfQP1DVkOsT2kI8QdQ3FCdN1T/kuqorAJz3Og8uwd0i/jVbptkCKuQ9H7T4OJUMC565QrVLaklCdgOVXds8cuZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YxBM+eon; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1768219931; c=relaxed/simple;
+	bh=n+svx5fkeE5YImMc49W7xxRF+Ubqh9i7V5UVorUcq94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QXht9Kc88hWcuplik5UyEpt5aD4F/5/IhaDMRBeWw5f1pUvcNvuLMn9u8fEggtM7U1wHlsnquZjmQtvCCkp3w1vQ0pp2W7+eo1jkSKp5lZDLJUQ3qiafsR7JBQOpBcZuNTFdH46ovL61fVgmJVe4mThKwcEjL0L9gSG9o4mOcTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCoYWzDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YxBM+eon"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-430fbb6012bso5018650f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 03:20:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768216856; x=1768821656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WSljOrgcnpMxKsFMt7qzzrVtZrbIJt+W3Zu8aaC1wcI=;
-        b=YxBM+eoncBVOKzhkYc13f1lmEgYwmVL/2RPvhBZkGU1+GBJJyFU16T0YFCakIH68vi
-         CJenDamjb6+KXMQHChYoOQ9f+oN3MtbjWcfj20MynZtgscbLRSrXppR/yEACL9tn4Rbl
-         5JL+f88PO25Yaa3yhtQWjwWFYMYSbdRU2A4tHO91ihJeWNFGDh1Mif1xQCuHaGmutyD7
-         JBak6hR6kX6vRtKGakOJo4fPK19LjvGPl07XaZhZaUUSsvUyI1XLnXI55nxXs2cjoyBF
-         QD0NjOkHvhF0CLicxh9HAyrN1JUoBEEIPtRIPRKWFBRFRs7OkZ30bS11GZvTj5lJLqdo
-         if0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768216856; x=1768821656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WSljOrgcnpMxKsFMt7qzzrVtZrbIJt+W3Zu8aaC1wcI=;
-        b=QAbpzLTOf/vL4I42nIH0Jrlngs3jmVgqOIUPW515H2NbAHiJe2YFw0ODSqFzAV9Pn9
-         vSdzt6PsLGPs8knAUpludBb5nhIKHGBKOJnuF/tpDIb/aagpBnvFAixwjbsRyRt0ClDJ
-         VY/rwxN1/0gtCX+cWRmaQCbGF+w9EggStiVJB2GNtu055dTLM+NONC7I23GcO2+5r4A/
-         ETROTIOMTmgXbAL/Wgu44HGgHU4OizY0oCA0WnBSlnlFymdNtr0Yq3pT5xkG2ueHbyRN
-         2YX4eAgxfCrtU35cddIvGghfu5meFFQGnK6Uf74yx4R6fIptroarl4ODqTFT8df7t4Cg
-         B1ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUOf7E7SoaQzyrijfz39znfIRZwhiI4nc6DD6LXfaBWRL3sfqwSzmA6P7fEfScQfBT8NAhZOM6juxPU/LxMTqxn+ZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqCtva7Pw4R8mloQqXhaRpsMGcB/TUH0ztvcs5xnepylwbVWMm
-	rcCE0M+x3wgjSM5qHQrlNMR1OWtJPiz1WZfacWinzdLWCqUWGP3ZRGJFMq1lprn8ytQrCOofTai
-	MwFpBECy4xkVg1mlywwr0YElnJwSh1sVZuITl8pZq
-X-Gm-Gg: AY/fxX5PnJDGu6L0ncrxK1/wh38uX+RQJPIWqeENfk5xUiLvdU9fhZM+Bw40NoiPWN2
-	cN5fcI93W2H925ZR/v3fzIK5xpdYGE0WoaL3d+KRHoIlrrDljyhjD1JGmgHjrEJ3AaEy94Q42Ua
-	0n4PRyD/GWocWwxTqAREtfbfxUbUftVmhgJVV+M9BTPzvD7Vc5Dn+fI5XOfwOFb+5yNu3LTQGp5
-	UqhsC+EwN98PwcU0v1ksr1i6PxiFR1F1EMSOIv3rvPA8AYVV/pZ+r++iyf2RXhAlQm5XJWNg5bx
-	icvZf2vEiW2xd9s7e5C3PMif2d7raJc4oropyVS1rxqlsf56Ut4X6hHDO0I/nN2YUJo0
-X-Google-Smtp-Source: AGHT+IEN8r1RmzogxIovaxQkpXNvQjt43QOedMNAYUrKwophbrZqVbqY224onR1X4LMrOo4+y4R2b5xO+sJ2UoLQYcs=
-X-Received: by 2002:a05:6000:3106:b0:432:c0b8:ee58 with SMTP id
- ffacd0b85a97d-432c3617c2cmr17668239f8f.0.1768216855538; Mon, 12 Jan 2026
- 03:20:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCoYWzDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B428C16AAE;
+	Mon, 12 Jan 2026 12:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768219930;
+	bh=n+svx5fkeE5YImMc49W7xxRF+Ubqh9i7V5UVorUcq94=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DCoYWzDbQQzHfOsVALDJjNFMowUJNh7cvrpEsY0T9IpSPIfHsFho8xvAiLZ9uRiT/
+	 UJlAvjbepq7i4omK1vVk5jfn2m52M3fi0MgOY+7ViRz3edRwnX+sta1ja5/Z/PYSv4
+	 PqfXZhDz5unC5AyZCGlZfQopW/qcG6wMhQ7LQC0Sq4wgzljF37WtjxIJpktRIRKK3h
+	 o5ChMZGCdQPqK7S6RBYkx2SJogqNJcPNFf0+ji0BQehLIuxHjoEOBRxn1m0m3+n+sN
+	 fto4I1Q1xJDehojU8Jo6r3LbJgEYnmuCD8rVtv14TdlaJoBm1kEawKulzTuPvQ3Mcz
+	 DYz1jXU9w0ehg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Will Deacon <will@kernel.org>
+Cc: Mahe Tardy <mahe.tardy@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Yonghong Song <yhs@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCHv3 bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after bpf_prog_run
+Date: Mon, 12 Jan 2026 13:11:56 +0100
+Message-ID: <20260112121157.854473-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aWS9nOj4MAa7pYmS@google.com> <20260112100059.12139-1-fushuai.wang@linux.dev>
-In-Reply-To: <20260112100059.12139-1-fushuai.wang@linux.dev>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 12 Jan 2026 12:20:43 +0100
-X-Gm-Features: AZwV_QhCAzGudvn1k2e6DHog-YXcuhXd_Z2Wyyrhc08Dhs8X2lfNXe83_kk2vqE
-Message-ID: <CAH5fLgiPdBEN7mjgK64u19VGE_AWghTnCCHYuQQuwnTdvDaYkw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
-To: Fushuai Wang <fushuai.wang@linux.dev>
-Cc: akpm@linux-foundation.org, bp@alien8.de, brauner@kernel.org, 
-	cyphar@cyphar.com, dave.hansen@linux.intel.com, hpa@zytor.com, jack@suse.cz, 
-	kees@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, luto@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, rostedt@goodmis.org, tglx@kernel.org, vmalik@redhat.com, 
-	wangfushuai@baidu.com, x86@kernel.org, yury.norov@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 12, 2026 at 11:01=E2=80=AFAM Fushuai Wang <fushuai.wang@linux.d=
-ev> wrote:
->
-> >> From: Fushuai Wang <wangfushuai@baidu.com>
-> >>
-> >> Many places call copy_from_user() to copy a buffer from user space,
-> >> and then manually add a NULL terminator to the destination buffer,
-> >> e.g.:
-> >>
-> >>      if (copy_from_user(dest, src, len))
-> >>              return -EFAULT;
-> >>      dest[len] =3D '\0';
-> >>
-> >> This is repetitive and error-prone. Add a copy_from_user_nul() helper =
-to
-> >> simplify such patterns. It copied n bytes from user space to kernel sp=
-ace,
-> >> and NUL-terminates the destination buffer.
-> >>
-> >> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-> >
-> > Hmm, this function is very very similar to strncpy_from_user(). Should
-> > they be using that instead?
-> >
-> > Alice
->
-> The strncpy_from_user() is for NUL-terminated strings and stops at the
-> first NUL in userspace. But copy_from_user_nul() always copies a fixed le=
-ngth
-> and adds a NUL at the end in kernel space, even if userspace data doesn=
-=E2=80=99t
-> contain a NUL.
->
-> So I think they are for different cases and can=E2=80=99t replace each ot=
-her.
+Mahe reported issue with bpf_override_return helper not working when
+executed from kprobe.multi bpf program on arm.
 
-strncpy_from_user() succeeds even if userspace data does not contain a
-nul. Then it reads length bytes.
+The problem is that on arm we use alternate storage for pt_regs object
+that is passed to bpf_prog_run and if any register is changed (which
+is the case of bpf_override_return) it's not propagated back to actual
+pt_regs object.
 
-As far as I can tell, when a nul byte is present, none of these kernel
-use-cases use data after the nul byte. So the behavior is identical
-except that copy_from_user_nul() may result in EFAULT if there are
-unmapped bytes between the first nul byte in `src` and `src+len`.
+Fixing this by introducing and calling ftrace_partial_regs_update function
+to propagate the values of changed registers (ip and stack).
 
-Alice
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Will Deacon <will@kernel.org>
+Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+v3 changes:
+- drop const from fregs argument [ci]
+- added acks
+
+ include/linux/ftrace_regs.h | 25 +++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c    |  1 +
+ 2 files changed, 26 insertions(+)
+
+diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
+index 15627ceea9bc..386fa48c4a95 100644
+--- a/include/linux/ftrace_regs.h
++++ b/include/linux/ftrace_regs.h
+@@ -33,6 +33,31 @@ struct ftrace_regs;
+ #define ftrace_regs_get_frame_pointer(fregs) \
+ 	frame_pointer(&arch_ftrace_regs(fregs)->regs)
+ 
++static __always_inline void
++ftrace_partial_regs_update(struct ftrace_regs *fregs, struct pt_regs *regs) { }
++
++#else
++
++/*
++ * ftrace_partial_regs_update - update the original ftrace_regs from regs
++ * @fregs: The ftrace_regs to update from @regs
++ * @regs: The partial regs from ftrace_partial_regs() that was updated
++ *
++ * Some architectures have the partial regs living in the ftrace_regs
++ * structure, whereas other architectures need to make a different copy
++ * of the @regs. If a partial @regs is retrieved by ftrace_partial_regs() and
++ * if the code using @regs updates a field (like the instruction pointer or
++ * stack pointer) it may need to propagate that change to the original @fregs
++ * it retrieved the partial @regs from. Use this function to guarantee that
++ * update happens.
++ */
++static __always_inline void
++ftrace_partial_regs_update(struct ftrace_regs *fregs, struct pt_regs *regs)
++{
++	ftrace_regs_set_instruction_pointer(fregs, instruction_pointer(regs));
++	ftrace_regs_set_return_value(fregs, regs_return_value(regs));
++}
++
+ #endif /* HAVE_ARCH_FTRACE_REGS */
+ 
+ /* This can be overridden by the architectures */
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6e076485bf70..3a17f79b20c2 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2564,6 +2564,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.session_ctx.run_ctx);
+ 	err = bpf_prog_run(link->link.prog, regs);
+ 	bpf_reset_run_ctx(old_run_ctx);
++	ftrace_partial_regs_update(fregs, bpf_kprobe_multi_pt_regs_ptr());
+ 	rcu_read_unlock();
+ 
+  out:
+-- 
+2.52.0
+
