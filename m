@@ -1,83 +1,69 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD933370EB;
-	Mon, 12 Jan 2026 15:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B41934EF1C;
+	Mon, 12 Jan 2026 15:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232658; cv=none; b=A5NWv5/sO4pxwI6DX0kn1XrZRF2rv9tXgSekQgo0zBW6+AgWT5C3l6bs0Y+GR4DcMwUc+qbQisDX8sueD/K57/ILFoj4jT1MaIrXuSY/7h7wV+k5ReTfW0RAGTt7vL1uwQr/cE8BcTtNP6GEYl39cn2DCswqu0gWv0ktvWM38Mo=
+	t=1768232813; cv=none; b=el1ZC39toD2GJBvxUdcaraCOh0p5yH94kX+jYhLh2csCysNY/gFOg036fblvpIkq2746fEAKbke4uW91VcDktftznBHQ/UZb2Tv7lZbfVrFMtJzk4jLeGOM6aZYR75lEMTOOIbwrmAYo0gs1J3r/Vf2GRRd+7xg7o+Nd0LKCf5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232658; c=relaxed/simple;
-	bh=F+dD0O5rdLlpkSFu3XJPiUpuzGcIGKqS1IYu4fWWxf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pg6f6lRVQBGaEWnaFAJXBlOrEy9cSIVg/jYh2l4Fe7AzMsvwxqDo9AS8BNqrJDjSAKXL7g1+aP2wLvW5cLj99vWjjHNykeoS1C+bBOoCN+KFX3v+vGrdehx01MYKoO4TaNie7LToGd5q1wGmmOKnNIWmFjthNi+gK/4JgT+kNJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=omZjSHsE; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1768232813; c=relaxed/simple;
+	bh=JEeaRryvCEJ/W41M0JBPJiMLbD1SKq+cht4PwCoyAKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VsaoEU2URjJ0kGenCvE1Hvu4wMmS2OqZFIu2WqhrJvVAMYsmgToz45fkFqLNS/8kH7wa9R6E5FuTzcc+mlb0NRtpNPN4AlKprJJ5v7R+FTebB70uuAm09KdIf0mciF83kbU4112xWjKbee72aPELFJhB1XTZ3makMnYOpw0fG1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzhRKxsR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="omZjSHsE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GHlgTWqk7Lzv2HzCIc5hb0RdKxS5l4uVv2fCHeXt8IA=; b=omZjSHsE59RIJ9X/oCtNVQogsk
-	/zXhvFRscrDOejzz00XtcugWOPBxkTRtZs+reSIvVCvVnJPTaa/Q0GeoQz4XCf2/DyU+xPMf5Dmmw
-	VKtzVKkl9U3BoL7E5lKjpUR0sECg5wZ2FFgqI/NMSdklpxZEnh48icd71Z53h9vwFVX9mSbcTLQQh
-	YwWZSXh1zpooKvZK8fSBbAw6FvG8hAytclWumF5VV+M3h+Vv4MD2TVpgl7WSlz95wIGvN+H7XpPoX
-	nAcAJ+Ncuu7aIUOdFYKaeAuCCPsL9fqXBpIwVRAB/qnm5m78joVWIWDugLPmjTOc3WS6eRBWqVkIo
-	6qDhhkIQ==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfK5U-000000015Sc-0C5h;
-	Mon, 12 Jan 2026 15:44:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 060AF3030B0; Mon, 12 Jan 2026 16:44:11 +0100 (CET)
-Date: Mon, 12 Jan 2026 16:44:10 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-Message-ID: <20260112154410.GA830229@noisy.programming.kicks-ass.net>
-References: <20260108220550.2f6638f3@fedora>
- <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
- <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
- <20260109141930.6deb2a0a@gandalf.local.home>
- <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
- <20260109160202.22975aa4@gandalf.local.home>
- <20260112153128.GO830755@noisy.programming.kicks-ass.net>
- <20260112103612.41dd4f03@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzhRKxsR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4532AC19422;
+	Mon, 12 Jan 2026 15:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768232812;
+	bh=JEeaRryvCEJ/W41M0JBPJiMLbD1SKq+cht4PwCoyAKs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HzhRKxsRlhqCAiWzSEiMSQZQDqlq/ySiuzXFs720/BU7rqJckInmInBEy/v/VASUb
+	 OLXslX69v2sY2Ij2MoVNx4oNU50PENWyQKeMdaqyUQRRjSLIG4eaQUvJ+mh9oqZDhe
+	 CgjztB4su9fUU9C3oQclrEdEPird1v+rKTTKRmzIoqm2GC1ujwqAC037OLbwfOgPjr
+	 usQ7e4Qvh6zHFscn+NToTXYczmv5MLX1PNBWw099YLFMv/iU/qgVgGYZMxz4xIGCT3
+	 ZBEZ6DrI2P8w2wH/54nhFiSUxlvUdYCAiyKqnonZj5Xhy1SyPQpg728YyPsb1OJDe+
+	 SHDtJUDUXiBdw==
+Date: Mon, 12 Jan 2026 10:46:53 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Will Deacon <will@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Laura
+ Abbott <labbott@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, puranjay@kernel.org,
+ usamaarif642@gmail.com, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH] arm64/mm: Fix annotated branch unbootable kernel
+Message-ID: <20260112104653.301e1177@gandalf.local.home>
+In-Reply-To: <74f52o5tq2nodc3otsvknrsf2rpzphtaba7lxia5u3i7322vni@giqfw3ofnnyk>
+References: <20251231-annotated-v1-1-9db1c0d03062@debian.org>
+	<aVwp_BJx84gXHPlD@willie-the-truck>
+	<20260109145022.35da01a3@gandalf.local.home>
+	<74f52o5tq2nodc3otsvknrsf2rpzphtaba7lxia5u3i7322vni@giqfw3ofnnyk>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260112103612.41dd4f03@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 12, 2026 at 10:36:12AM -0500, Steven Rostedt wrote:
-> On Mon, 12 Jan 2026 16:31:28 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > OUCH! So migrate disable/enable has a much larger overhead when executed in
-> > > a module than in the kernel? This means all spin_locks() in modules
-> > > converted to mutexes in PREEMPT_RT are taking this hit!  
-> > 
-> > Not so, the migrate_disable() for PREEMPT_RT is still in core code --
-> > kernel/locking/spinlock_rt.c is very much not build as a module.
-> 
-> True. But still, wouldn't it be cleaner to have that variable separate from
-> the run queue and make the code a bit simpler?
+On Mon, 12 Jan 2026 01:42:47 -0800
+Breno Leitao <leitao@debian.org> wrote:
 
-I still don't like exporting variables either way around. Exporting
-functions is much saner.
+> > OK, so by adding -DDISABLE_BRANCH_PROFILING to the Makefile configs and for
+> > the files that were audited, could be opt-in?  
+> 
+> How to do the audit in this case? I suppose we want to disable branch
+> profiling for files that have any function that would eventually call
+> noinstr functions, right?
+
+IIUC, noinstr is mostly used for the transition between user space and the
+kernel (interrupts, exceptions, syscalls, etc). There shouldn't be any
+random calls to noinstr functions unless it's going into user space, right?
+
+-- Steve
