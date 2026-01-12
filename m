@@ -1,195 +1,86 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09842BD5BB;
-	Mon, 12 Jan 2026 15:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08BC35E52C;
+	Mon, 12 Jan 2026 15:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768231007; cv=none; b=jdbEJlqP99xOmwg+rNbe0aKOTkW7v3FbFDrpTkjSNyhQwWXjhnJEzcsV1eWsQrFMKXz7fpQ4Wv0Di3uy8ExiXsZXNENgIHjXO3A5EFNWEz1P2vgvMTG/AdAl8mN422ATWaQaGOf7TPclsN+gfAAZb7Pb0+gDPRc5fe/DTD6xyno=
+	t=1768231905; cv=none; b=XxK3NryZ0e+Nz1H8rt8tkJRwSSs+ac89bm2rc2jwJXcWyi+l9SN/KPx2SBwHkdg+NylM1be/sKeWOhWLdKLc4jesUqEpNbfRU3lV8h6NjTGdSZm6RyLVpGTk3MngNJrCH1intPVHlYVxiGldnNU56VIjwVCQAvE633Ms6Vne4cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768231007; c=relaxed/simple;
-	bh=wPgiadCiymx4SgYtzEsDOyDQF6+5TWtuEQapElgaS7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CmqROHSJiov6wjuiw9BuhtUayWMCPV/Y4PIO7nxSKIqpu2pKgqH1nNUXpn9rCfRDMJUiRBfZ1ApZMkt3sFks36X6YrglZOp0GEjI3qsjdVtqSrBw7SosH77vQ0Q91/A2lkv/Jirvwk5xHlA6I1l3ebYQeerUJGYFWkV5+deZjL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id F167F59162;
-	Mon, 12 Jan 2026 15:16:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id EF4E42002B;
-	Mon, 12 Jan 2026 15:16:41 +0000 (UTC)
-Date: Mon, 12 Jan 2026 10:16:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add
- pcie_ltssm_state_transition trace support
-Message-ID: <20260112101644.5c1b772a@gandalf.local.home>
-In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
-References: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
-	<1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1768231905; c=relaxed/simple;
+	bh=iNuKlYergc1Qti4EM+/2W5oSqvu/mQWpHDVVV2PTmlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KSlleohkIiJK77RkVgaR5oq8TtAOY/BLmoPb++D3dGdyVUGTCwQR5VjX2Skv8E3MQQSuo5tUq9FFSAHhWy5+4t6P4Yz+7e3syP+QZ01A6lkU0U6EP68TEukz7ednXegPjhuxDvm/i3HHk7qNskES8QaiIMOHzO6Lg4qVzJsr7cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jjNVCcCQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jjNVCcCQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mpvI4NMGhfa99WAkU0UXnKdY/goH2f25zOH4yuWCuBc=; b=jjNVCcCQGFUAfUf/5hIb4rmrOw
+	9b33Wp8ICmPI8CEfoxZ05ZS4eANhNx1k1OOHjBhAUIGTh9dkm69hGlZqIwN0a2cYdhR+xvJa9RrPl
+	VB9qwwfcFUBbK93wkvDv1p0Zo+dDUM/cXFXckGIODPuU+UQ1RVjfU67sC65Xqme/Sf07I6+YtD+4F
+	tORrrPK9jAe9RRmDcKUPfdkBUerDH86STDdLTX3/xCn3UcGdep0vdZl3PrcR6JFYAzd3FmwP7IfER
+	s9Nb3RMxu105Vx5dyaFmtSJXVMZfGw7kV6tvg9R7O5cGA8gWdVVDz22IJK3x/Ifhykb+l0AmWPhdK
+	Xc3mZ1eQ==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vfJtB-00000003Pow-1aZN;
+	Mon, 12 Jan 2026 15:31:29 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4A8C7302D3E; Mon, 12 Jan 2026 16:31:28 +0100 (CET)
+Date: Mon, 12 Jan 2026 16:31:28 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+Message-ID: <20260112153128.GO830755@noisy.programming.kicks-ass.net>
+References: <20260108220550.2f6638f3@fedora>
+ <da261242-482f-4b47-81c6-b065c5a95c4b@efficios.com>
+ <CAADnVQJMa+p_BcYxKUgve2=sqRBwSs3wLGAGhbA0r6hwFpJ+6Q@mail.gmail.com>
+ <20260109141930.6deb2a0a@gandalf.local.home>
+ <3c0df437-f6e5-47c6-aed5-f4cc26fe627a@efficios.com>
+ <20260109160202.22975aa4@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: EF4E42002B
-X-Stat-Signature: pkqtmyjz99xk34i7gczso7nyxz4r8ksh
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18oHLU8bzt/wclyIb/7L7zxrvbI6h4Fzu4=
-X-HE-Tag: 1768231001-775116
-X-HE-Meta: U2FsdGVkX1+0ozTFidj5QYjHCytY6PnsZObGBoyUvQcbsME2aCgsV8Bqd+z+IQn22TVG6Z9v8kx5BcmsxhLQ03JfJ31/nTKUJdXObmPF2Px22LW4PizSVFOX2/RuPs+msd4DYCf0nlSKYNELv2zSL09/SIKtkfsV8dsMOq1e0qNaGjg/Mpdw2MX8D7eV0mI0nbxycs4HQgBOtWCpt02W9D/1M24aOTFqQT5cxO/zJnqgRfltvPmQ7qaXxU5BFuQZM2jLNV4ct33BvnmecUYgDZt6f+s9JMFu5bF/Bz7WT0mVxRdn8j622pKY1JKQPmYRwYI++4n3gkCiPcmgm/m+Nu07fmtKft/NgqqxYlC4Yp9ysE5mvNSK5Bvamus1PKygTFIILVUMsta+5MJvHzx2aWRwwYMiEd2F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260109160202.22975aa4@gandalf.local.home>
 
-On Mon, 12 Jan 2026 09:20:00 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
-
-> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
-> LTSSM history. Any LTSSM change will be recorded. It's userful
-> for debug purpose, for example link failure, etc.
+On Fri, Jan 09, 2026 at 04:02:02PM -0500, Steven Rostedt wrote:
+> On Fri, 9 Jan 2026 15:21:19 -0500
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
+> > * preempt disable/enable pair:                                     1.1 ns
+> > * srcu-fast lock/unlock:                                           1.5 ns
+> > 
+> > CONFIG_RCU_REF_SCALE_TEST=y
+> > * migrate disable/enable pair:                                     3.0 ns
+> > * calls to migrate disable/enable pair within noinline functions: 17.0 ns
+> > 
+> > CONFIG_RCU_REF_SCALE_TEST=m
+> > * migrate disable/enable pair:                                    22.0 ns
 > 
-> Changes in v3:
-> - reorder variables(Mani)
-> - rename loop to i; rename en to enable(Mani)
-> - use FIELD_GET(Mani)
-> - add comment about how the FIFO works(Mani)
-> 
-> Changes in v2:
-> - use tracepoint
-> 
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
->  1 file changed, 104 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 352f513..344e0b9 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -22,6 +22,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
-> +#include <linux/workqueue.h>
-> +#include <trace/events/pci_controller.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> @@ -73,6 +75,20 @@
->  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
->  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
->  
-> +/* Debug FIFO information */
-> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
-> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
-> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
-> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
-> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
-> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
-> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
-> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
-> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
-> +#define  PCIE_DBG_FIFO_RATE_MASK	GENMASK(22, 20)
-> +#define  PCIE_DBG_FIFO_L1SUB_MASK	GENMASK(10, 8)
-> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
-> +
->  /* Hot Reset Control Register */
->  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
->  #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-> @@ -96,6 +112,7 @@ struct rockchip_pcie {
->  	struct irq_domain *irq_domain;
->  	const struct rockchip_pcie_of_data *data;
->  	bool supports_clkreq;
-> +	struct delayed_work trace_work;
->  };
->  
->  struct rockchip_pcie_of_data {
-> @@ -206,6 +223,89 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
->  	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
->  }
->  
-> +#ifdef CONFIG_TRACING
-> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
-> +{
-> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
-> +						trace_work.work);
-> +	struct dw_pcie *pci = &rockchip->pci;
-> +	enum dw_pcie_ltssm state;
-> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
-> +
-> +	for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
-> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
-> +		rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
-> +		l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
-> +		val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
-> +
-> +		/*
-> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
-> +		 * - 'last-read-point': maintains the user's last read position
-> +		 * - 'last-valid-point': tracks the hardware's last state update
-> +		 *
-> +		 * Software Handling: When two consecutive LTSSM states are identical,
-> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
-> +		 * skip the remaining entries. The dual-counter design ensures that on
-> +		 * the next state transition, reading can resume from the last user
-> +		 * position.
-> +		 */
-> +		if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
-> +			break;
-> +
-> +		state = prev_val = val;
-> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
-> +			if (l1ss == 2)
-> +				state = DW_PCIE_LTSSM_L1_2;
-> +			else if (l1ss == 1)
-> +				state = DW_PCIE_LTSSM_L1_1;
-> +		}
-> +
-> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
-> +					dw_pcie_ltssm_status_string(state),
-> +					((rate + 1) > pci->max_link_speed) ?
-> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
-> +	}
+> OUCH! So migrate disable/enable has a much larger overhead when executed in
+> a module than in the kernel? This means all spin_locks() in modules
+> converted to mutexes in PREEMPT_RT are taking this hit!
 
-Does it make sense to call this work function every 5 seconds when the
-tracepoint isn't enabled?
+Not so, the migrate_disable() for PREEMPT_RT is still in core code --
+kernel/locking/spinlock_rt.c is very much not build as a module.
 
-You can add a function callback to when the tracepoint is enabled by defining:
-
-TRACE_EVENT_FN(<name>
- TP_PROTO(..)
- TP_ARGS(..)
- TP_STRUCT__entry(..)
- TP_fast_assign(..)
- TP_printk(..)
-
- reg,
- unreg)
-
-reg() gets called when the tracepoint is first enabled. This could be where
-you can start the work function. And unreg() would stop it.
-
-You would likely need to also include state variables as I guess you don't
-want to start it if the link is down. Also, if the tracepoint is enabled
-when the link goes up you want to start the work queue.
-
-I would recommend this so that you don't call this work function when it's
-not doing anything useful.
-
--- Steve
-
- 
-
-> +
-> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
-> +}
-> +
