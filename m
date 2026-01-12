@@ -1,119 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE6C311C17;
-	Mon, 12 Jan 2026 19:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0819332254E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 19:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768245767; cv=none; b=PoZtR1j3bdfJw55KXkT8mnGWCf2DPt25KFUPuyu8zzNZcOQCVZZ9ld3MSMLg8P+PFptaIWcFgUxVE7pGA41yFG57Aqz4kpEPLtgrbZmJCb4E3jhJF1wRweBoK7MF1dQ5I7NwUJVQq3VmJvNg0vZaUBwWhWt/RVWhdOSPj6FaVME=
+	t=1768246030; cv=none; b=KcjBX46UVlpSGpJV99SspwkX41SqLi10DxulCtGTBQmeV9rnPeY//+bXYDnycTQEs5TwG/Y1km7xCeJ/T5j0PGW9eKrMgCWRLr7nUgvBUhjT++R47NNrAaC7fIecF8tIWxB0lB8LEy9K999rLr6+TLGupcGYNgsjtvqhHop3eHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768245767; c=relaxed/simple;
-	bh=gy3vUzeNs/9BwKXtMR4uniH68yQHA+hJ41Jnz6faEIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUdIc3Z3B+utFvoVnYVOK5U3Tk/OrY/7heVycXv0xHbUCTGZc5UFlzaL5lFU7il+RdaC0RHT71sSSvMc2Db6JBXuT96U1I3tuISr3DU63l2SO38LBMFh8wuWBhko1IzAzfBIOSHNy/y2ROnmg4DFqi9SyN2sEX1g2beuvegXTpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMc2VYzS; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768246030; c=relaxed/simple;
+	bh=R7JwleE/Tson4DuHsVL+MShFRymRWsCSXRCJB49Z1g0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=GVUv+KtFz7TVWQSkU/9yf4+nDChB8eioF5i2iostujA6gUlfXlnmzF+QAOfO9XGH3TYfV/9nfZHW+rlJbrLeSZEcdKjE18eTSZfgsBiJB+G0Q3yWeTz84DYlf8iVoLf/f5uVxcWUd3Ut4gA3wEdXkksYfg/O872M5WvgUaAnw88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f2NQI0Aq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMc2VYzS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768245766; x=1799781766;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gy3vUzeNs/9BwKXtMR4uniH68yQHA+hJ41Jnz6faEIM=;
-  b=ZMc2VYzSquSajN6kv1927+5UfrI12PNR7To/VfrurD/W1STSoH36TWr3
-   v13giALa9e9vzUTR0N6c6xeZaF7feKH8bOMzXl/s1ofyEHp12m3B1xc0i
-   pGyINlwiaShF70RMA7siAbQPX77c2rveBmBxjJVcTHGOXdSMQwRejaGnF
-   01fLtCNFJKczPjtSSFTYpASmByWkkEhD0pCtzMxfK8Gi8J7AFLYPB0KHp
-   Zp69V9E7UtHEoK5950/GJjqTPveGdxwqM5hN6DlaG1CG1cELFPJvuCC+M
-   yXKBELwTK7yTfR40/btjmIeD0+7aU8OeV+u4ZDOnth+OSGOu7ePblQclV
-   g==;
-X-CSE-ConnectionGUID: iuBLUA5TQN2VbdU4j5CfyA==
-X-CSE-MsgGUID: XOG1mdt3SziU7q191vypPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="69259621"
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="69259621"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:22:45 -0800
-X-CSE-ConnectionGUID: CjsHXDcET8G3zdx532W5jQ==
-X-CSE-MsgGUID: Et1a2lnCR3m3hPhoCRr6cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="235411831"
-Received: from igk-lkp-server01.igk.intel.com (HELO 8581b2e2a62c) ([10.211.93.152])
-  by fmviesa001.fm.intel.com with ESMTP; 12 Jan 2026 11:22:39 -0800
-Received: from kbuild by 8581b2e2a62c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vfNUq-000000000yP-3Vw4;
-	Mon, 12 Jan 2026 19:22:36 +0000
-Date: Mon, 12 Jan 2026 20:22:22 +0100
-From: kernel test robot <lkp@intel.com>
-To: Leon Hwang <leon.hwang@linux.dev>, bpf@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Leon Hwang <leon.hwang@linux.dev>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/3] bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY
- flag for bpf_get_branch_snapshot helper
-Message-ID: <202601122013.hmoeIXXs-lkp@intel.com>
-References: <20260109153420.32181-3-leon.hwang@linux.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2NQI0Aq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768246028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DvjD/UNgideSUYT1rmAsSZG3Nca8X070zkLBGlqFUZE=;
+	b=f2NQI0AqoaRPUtGtMzEozjEVQ8HB2vz9utjBrnW3xnFr+RqDUjtUQ9pH3TCUCKovaRSCRk
+	223lylYNSwY1ixz7IFZSCKmLRsnT1N1bvoT2yXB9M0FWn7PfLbUZ+9aDoznRTChqRSh9L2
+	gkFNcePDZgFKptnQdzZRbcL8GGIfVKA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-127-ErvOARppMm-OUE1JCtR2sg-1; Mon, 12 Jan 2026 14:27:04 -0500
+X-MC-Unique: ErvOARppMm-OUE1JCtR2sg-1
+X-Mimecast-MFC-AGG-ID: ErvOARppMm-OUE1JCtR2sg_1768246024
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-477bf8c1413so45527205e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 11:27:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768246023; x=1768850823;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DvjD/UNgideSUYT1rmAsSZG3Nca8X070zkLBGlqFUZE=;
+        b=oWxHTMDhuyXxzRV6tMa2FZuqwgUkB1OmDCbimXpoQYRJD6eUAuoOiilPwbv9kidOE4
+         2/Yhqs8DAvKZRiGbfGbB77jvzoXRcqYV3190sXHBu9glNyH/0P6bulh1Xmo0E3bKD5ti
+         Ldq2y5K4lrxeG57ZFbtbh1+HTqMJXNCnpVaspcrjODjLK8slY1I58hi9SOW8e9ALAhbo
+         eunE1gi9YmlwHk37TXMzijcbUDHB/lAne+HKSZxFNUSw31MH7tcjtlZVe9txZ4KOZBCd
+         M4IkGb8a/ZBN2GaBGbz8cOkkrW09zMVr1LLvCujuQuwPeiscelU/vUsVswkOC1n6jP1k
+         yH3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVVpPP1dX49aWIBrba+RJazEP1zN2BvEcCzbTPe88gn4fuA+aPGxVWQ7KMqxHLLe7LMD0fgK9cEj64Stt5xxsZF/MI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7s61cQRCtvLH2afBnpSA27Hnc0lmKlCRUjTCRV3bkBFBqNY33
+	oCO43ElGTd0v7vMlt655NHGXRXvHtRV4yb5I6MEm0FOP4GDs1WvQQSnMorDUMN/0OmXY3kVZxhX
+	OdRx3CULvoXYwu3FWxlzLG4eqEREMDdy9rNLOYWWVM+7ZYW0eLVsPwbX4TJFRcvxJPnzrmE5Rag
+	==
+X-Gm-Gg: AY/fxX5MRvGLEhjfaYRImi1kxPeXzz7UqqzcE4sg/tyXSoLOG6Y1SJHLXxL9+BjIuGb
+	GcxZvfZ7mBlyBgfBGJVljwo7zEbatgB/kEbgfZ3aPdW2Jt20VKCELuymxL+A0eR34VdCbygQpzP
+	V9LtnM5ICb2csI9cOfsSG+0wIC/TNlRlrdMOfSeulLhc60U7SAFmzulESJiHrEO8oAUdqsZKW3z
+	wjhGyRr3O4tIApeISIEWMszJ9Q6NQBxQ9egsaCEG/xdEz5Gy4iZMdxNJkexuYKQS85J5rd6rJwY
+	SrW25DHo0d0DTO9QFFngqkSu0acYw3/LUuwu4rfQ93qVy6gxNtpN8Cki9CQWfhxfm5WmmLH2Tqy
+	+TGdo8wQW3KlOLFM//QyiBP01
+X-Received: by 2002:a05:600c:1c28:b0:477:632c:5b91 with SMTP id 5b1f17b1804b1-47d84b1a2e7mr240922025e9.16.1768246023557;
+        Mon, 12 Jan 2026 11:27:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHt0jLiXlNtdXOUnceerwpsmguRccrH0dPl2CJPtvOxDYVUlY4lHWrFkVDs+bgfSs838J1kSg==
+X-Received: by 2002:a05:600c:1c28:b0:477:632c:5b91 with SMTP id 5b1f17b1804b1-47d84b1a2e7mr240921815e9.16.1768246023183;
+        Mon, 12 Jan 2026 11:27:03 -0800 (PST)
+Received: from costa-tp.redhat.com ([2a00:a041:e23c:600:cadf:120:2b7f:a706])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ed8ae8a86sm2646465e9.4.2026.01.12.11.27.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 11:27:02 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] rtla: Fix parse_cpu_set() bug introduced by strtoi()
+Date: Mon, 12 Jan 2026 21:26:41 +0200
+Message-ID: <20260112192642.212848-2-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260109153420.32181-3-leon.hwang@linux.dev>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _G2GVoaQC2Fyo978k7T3W5PNBIjuhbsXOQxx3uuBS6A_1768246024
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Leon,
+The patch 'Replace atoi() with a robust strtoi()' introduced a bug
+in parse_cpu_set(), which relies on partial parsing of the input string.
 
-kernel test robot noticed the following build errors:
+The function parses CPU specifications like '0-3,5' by incrementing
+a pointer through the string. strtoi() rejects strings with trailing
+characters, causing parse_cpu_set() to fail on any CPU list with
+multiple entries.
 
-[auto build test ERROR on bpf-next/master]
+Restore the original use of atoi() in parse_cpu_set().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Leon-Hwang/bpf-x64-Call-perf_snapshot_branch_stack-in-trampoline/20260109-234435
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20260109153420.32181-3-leon.hwang%40linux.dev
-patch subject: [PATCH bpf-next 2/3] bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY flag for bpf_get_branch_snapshot helper
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260112/202601122013.hmoeIXXs-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260112/202601122013.hmoeIXXs-lkp@intel.com/reproduce)
+Fixes: 7e9dfccf8f11 ("rtla: Replace atoi() with a robust strtoi()")
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601122013.hmoeIXXs-lkp@intel.com/
+v2:
+- Split the patch.
 
-All errors (new ones prefixed by >>):
+---
+ tools/tracing/rtla/src/utils.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
->> ld.lld: error: undefined symbol: bpf_branch_snapshot
-   >>> referenced by bpf_trace.c:1182 (kernel/trace/bpf_trace.c:1182)
-   >>>               vmlinux.o:(bpf_get_branch_snapshot)
-   >>> referenced by bpf_trace.c:0 (kernel/trace/bpf_trace.c:0)
-   >>>               vmlinux.o:(bpf_get_branch_snapshot)
-
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 18986a5aed3c..0da3b2470c31 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -128,18 +128,16 @@ int parse_cpu_set(char *cpu_list, cpu_set_t *set)
+ 	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+ 
+ 	for (p = cpu_list; *p; ) {
+-		if (strtoi(p, &cpu))
+-			goto err;
+-		if (cpu < 0 || cpu >= nr_cpus)
++		cpu = atoi(p);
++		if (cpu < 0 || (!cpu && *p != '0') || cpu >= nr_cpus)
+ 			goto err;
+ 
+ 		while (isdigit(*p))
+ 			p++;
+ 		if (*p == '-') {
+ 			p++;
+-			if (strtoi(p, &end_cpu))
+-				goto err;
+-			if (end_cpu < cpu || end_cpu >= nr_cpus)
++			end_cpu = atoi(p);
++			if (end_cpu < cpu || (!end_cpu && *p != '0') || end_cpu >= nr_cpus)
+ 				goto err;
+ 			while (isdigit(*p))
+ 				p++;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.52.0
+
