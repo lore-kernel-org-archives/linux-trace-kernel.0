@@ -1,254 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F66F30B532
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 13:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F097358D09;
+	Mon, 12 Jan 2026 13:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768224132; cv=none; b=olDx9AjgN3oDAmydRVC94gPlZnVwjtUxaHTJ61Ppc51fygIOvLKBmI67xwLrm012OKdV50zUVEanGKxCfcoC9x66umqaxfvcijufjgbRahhmGM6++N9l0AkqFDqBQihYTTAtmZHoqGkas+P1ZMSH53wyfjF3MpEWd58ER3FHkuI=
+	t=1768224197; cv=none; b=BWxwTTulEXCawtwGWFAbnnprVwks4+C0npgGVeCG9Q2ear/zVB/3Q/mmU3DxOzVS+0MyO1GwnxhKLf9DXJFowxwNaFvJA6to94eREYJk5roSr77P+zoLoRh2unkgwGxbb9tJXW774ZgOYg1Y2Q7oJbOn1BTG+af3YrCHK+c6K5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768224132; c=relaxed/simple;
-	bh=NXluUWsGUJWbvUwBY8QcwnUX2+oyPNqQQeow5Lv3DsI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=IdrCjWuhKO/10gmqdyQI5RcXrG7iKy/w5U77xjs3lbqTtNZtTV0HZoE6tuI2zk4Sog0oYiph2knhcR+FuKG7YhELWWN1+1yV0VjJ5vP+RuHIK4T9u2sk4dM9GBNr1CUJdMYhR9HWQyEOlfkfShZ2wcXQA3RLonv43oeQkrJ2tX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NceNciFc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768224197; c=relaxed/simple;
+	bh=+qtEBoYbCBcUz2Lo/1IEvx6RpEjyWM5yuchSJzfeU6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jWpTHD9gv4/fiuqxfRgaGluTDYS/ESRXyPUsSCTK9266OGzynWyOVuQDIFaYgWBWnHnd2EsW3z4P6ZMdxJckftNivhwLgezBoeowNmywqt+zAtDdWA7zO3khlVuJBJncm0Jb94rTjp7K8a3eY1TkMDVwix4Yr2OBRXLJWa+ZUvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f0nEfXAR; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NceNciFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768224130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Q4s+OdLx4i189wcto/R0uWmzncKq8UkLGmJxKDFcZ3U=;
-	b=NceNciFc1Lz/hqbO3Kbsn+qhzUhGpUgfyXlZN7zLAu5dr4ldddEwlLRu6gsO3RF/JeS0Af
-	D5lOfbp4Ln8fuRHVZs21VGNZVrCHImpi3VAuj6wbgMETcZFKXABb4uUjek+f4liL+rL4kD
-	9jIbt4PiX51sATz3dj5TVQHcBYbGJ5A=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-114-x7_y_DzHPyK5No3ZcWtJHQ-1; Mon, 12 Jan 2026 08:22:09 -0500
-X-MC-Unique: x7_y_DzHPyK5No3ZcWtJHQ-1
-X-Mimecast-MFC-AGG-ID: x7_y_DzHPyK5No3ZcWtJHQ_1768224128
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4775d110fabso64447565e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 05:22:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768224127; x=1768828927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q4s+OdLx4i189wcto/R0uWmzncKq8UkLGmJxKDFcZ3U=;
-        b=dFJQDSu8pHWxgS/pZPu7zgaEnR/ARCBi0yypo59KK206nq3dBIsEfKfp2mNw3wsKrC
-         q8YP3RdPhnKbljb3X1amJ6v5WylLBuQ6rf+sRph91Jep6t3uYiC9cBDvuY+TtrkMyo/+
-         lS4ORTYfM07MCHDSIxPtA7S1FKz7tDSRJtLB67UDG4L+ZHZhQuMOcreBpuTl2eexpEgd
-         r1w7K3KTzTxVwbdnpu20h/6286WJ8gX55cZo+gE0wXU40CqUrX4XEIN2ndq1EDelyMB5
-         xaatNMJyH3uFvfKF3IyBC5AGDS9Z3dWxRsdrjvY4O12ca1geD7HPJMCxTU08C50wYxDC
-         z4lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4m/sKWEhkWsps7SdYkTD7XWNYnbePF5jH8r4Pp3CZrATwX6PHMJIRPE50J3RAGTtaEDbngv/VrMaDZVZSWcFeYnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIMC7+Bxi4O5udheNfCVevQtlKS8IECTsMdEarzdCkP7Bwk6UL
-	1y1puQobbIiOJAvQ8IkbvCM0l9uGiohOiu6wWI720SahWHdHFrhdrKK2YB7sU44rAsAJP608xxE
-	jRx/3tw5Q3U/dTkuW5YfWYbPYjun6ed4+ud5PFS8Dk+yGEyrCo4PkcFLfCF9fwAPxn30zj9r9yz
-	lds/h6ZQ==
-X-Gm-Gg: AY/fxX6G1/LqWuo3YDcc+tFd+4ZI/CUH3bdJQSnAs6xc+MY3vXXo2yqJXfLzOlMnzIE
-	B/JrKoXlMu7YvACcylcxoGsA+M/ajL+ZHXg0RJLEATYIo/CjSyLwewXLxfW/b7wrGp9STssu6I1
-	61xF0GOTp/QHq4Jm+7OuconwDlwge6LwDNVvludLX2Xw2mkwUQlvo0r7+sqvxmReKMDZF/WlxpJ
-	7PlqEAnY1DWRSuH6jxKId9G9a+y/W18pnckNX+iMl5ad0IUfUlmHb+2nP164ia7MVx2vnG817lx
-	fqjXZ/Ew83HhZ7UkY6hKAKUBK6b0Pn/1KonEk7/RsvtE2beoJkvym2o2FrYil0cnF59IDCY5F2h
-	8lqP+Ga/hMcFJHe4xZlsoMCwg
-X-Received: by 2002:a05:600c:64cc:b0:465:a51d:d4 with SMTP id 5b1f17b1804b1-47d84b09250mr195011325e9.6.1768224127550;
-        Mon, 12 Jan 2026 05:22:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHDJ6tQs4rCkcz2rRpswvhE3OYFURr3aglB5GxYqkRI9WjKRZzWoUkm0sPtVtevYCQc/Y+8fQ==
-X-Received: by 2002:a05:600c:64cc:b0:465:a51d:d4 with SMTP id 5b1f17b1804b1-47d84b09250mr195011025e9.6.1768224127058;
-        Mon, 12 Jan 2026 05:22:07 -0800 (PST)
-Received: from costa-tp.redhat.com ([2a00:a041:e23c:600:cadf:120:2b7f:a706])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d86637b90sm139400205e9.2.2026.01.12.05.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 05:22:06 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v1] tools/rtla: Fix parse_cpu_set() and add unit test
-Date: Mon, 12 Jan 2026 15:21:28 +0200
-Message-ID: <20260112132140.156956-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f0nEfXAR"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 04D5540E0268;
+	Mon, 12 Jan 2026 13:23:10 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id yjFRVYEpdAKX; Mon, 12 Jan 2026 13:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1768224186; bh=UqfCjtUHTnkTwZwYSVVnE3ioksfVqtUmKz1zLfW+ggk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f0nEfXARFiTG84aq/XRV3His9qiHJARMVGajsrTbj9f/S4xO0i8/aU8QB2KTjbfzk
+	 PADfq+lo80r8XNvwVsLDh5Kru2bpoTMUTUhidMb4hfm+I2t6r/+LElt25VCAfP2e1G
+	 emE0Sa2Ry8ITbFp7CPw43MfGhAFOxu0ypLMq1o+80xGUbeu+4CoO+BDnJLnatq/f2/
+	 edg40C+eVGfXaLAadZtl5gqGUrG7PwKhTY0H31Bbqnq5XmqspMqpSrWXYdHIWxc/Vj
+	 qF67ZM2p12zNGMvoVeR9j66vmOQMZTZ+k425Lw8+a6SA4gruwm4T3lu2FRUwj21oiJ
+	 mdnaLQfmLFZulhIeDYRKFH1hiYH2T8WFu1L3ytrMGEtJ0ovNPWjRNrkWy5vgV23eCj
+	 bWGY/LRLyiNneOdtfhYLJeB+DNoQ78SoFwkYZveM13BR/+3n6KhVPVNWYiDwyxxGPV
+	 VmERbHrprEs87KGA8pa16nGbwulmsmLUG/lfxKPiosIUhNer2+Amcng/FEeGL0OJGA
+	 WTR8gdvbAn3PN6camG4R3LymOEet3QSzgKmgriF3TSgLv04CoiNa41XrU7fkOdCivP
+	 MRWtUOahBmbXVsqzi6LGAsSpGFtEckB2jM6Y63tsCXTGzfxYLvc8NO15ZWsfqqRSEt
+	 mxVNQBtaNYsy6FUdWz75cj/s=
+Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 3C17540E00DE;
+	Mon, 12 Jan 2026 13:22:44 +0000 (UTC)
+Date: Mon, 12 Jan 2026 14:22:38 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Fushuai Wang <fushuai.wang@linux.dev>
+Cc: aliceryhl@google.com, akpm@linux-foundation.org, brauner@kernel.org,
+	cyphar@cyphar.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	jack@suse.cz, kees@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, luto@kernel.org,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+	tglx@kernel.org, vmalik@redhat.com, wangfushuai@baidu.com,
+	x86@kernel.org, yury.norov@gmail.com
+Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
+Message-ID: <20260112132238.GDaWT1ntPxY8VD1hlH@fat_crate.local>
+References: <CAH5fLgiPdBEN7mjgK64u19VGE_AWghTnCCHYuQQuwnTdvDaYkw@mail.gmail.com>
+ <20260112122236.22214-1-fushuai.wang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2vgsAb_3se4HwsFBugMXIL1az7qfG9fAW5Y3ZGaPYKQ_1768224128
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260112122236.22214-1-fushuai.wang@linux.dev>
 
-The patch "Replace atoi() with a robust strtoi()" introduced a bug
-in parse_cpu_set(), which relies on partial parsing of the input
-string.
+On Mon, Jan 12, 2026 at 08:22:36PM +0800, Fushuai Wang wrote:
+> > strncpy_from_user() succeeds even if userspace data does not contain a
+> > nul. Then it reads length bytes.
+> 
+> Yes, but if there is no NUL byte in the user buf, whether you use
+> strncpy_from_user() or copy_from_user(), you need to manually add
+> a '\0' in the kernel buf to ensure it is properly NUL-terminated.
 
-Restore the original use of atoi() in parse_cpu_set().
+This looks like a bunch of churn to save a "= \0" line.
 
-Add a unit test to prevent accidental regressions.
+The more important question, IMO, would be whether there are cases in the
+kernel which *miss* a NUL termination, audit them and fix them.
 
-Fixes: 7e9dfccf8f11 ("rtla: Replace atoi() with a robust strtoi()")
+That'll give you a better idea whether such a *_nul() helper is even needed.
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/Makefile           |  3 ++
- tools/tracing/rtla/src/utils.c        | 10 ++--
- tools/tracing/rtla/tests/Makefile     | 12 +++++
- tools/tracing/rtla/tests/test_utils.c | 74 +++++++++++++++++++++++++++
- 4 files changed, 93 insertions(+), 6 deletions(-)
- create mode 100644 tools/tracing/rtla/tests/Makefile
- create mode 100644 tools/tracing/rtla/tests/test_utils.c
+Because converting only a handful of obvious places in the face of thousands
+of copy_from_user() invocations in the kernel is not doing anything useful.
 
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 2701256abaf3..1805916c7dba 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -109,7 +109,10 @@ clean: doc_clean fixdep-clean
- 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
- 	$(Q)rm -rf feature
- 	$(Q)rm -f src/timerlat.bpf.o src/timerlat.skel.h example/timerlat_bpf_action.o
-+
- check: $(RTLA) tests/bpf/bpf_action_map.o
-+	make -C tests/ check
- 	RTLA=$(RTLA) BPFTOOL=$(SYSTEM_BPFTOOL) prove -o -f -v tests/
-+
- examples: example/timerlat_bpf_action.o
- .PHONY: FORCE clean check
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 18986a5aed3c..0da3b2470c31 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -128,18 +128,16 @@ int parse_cpu_set(char *cpu_list, cpu_set_t *set)
- 	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 
- 	for (p = cpu_list; *p; ) {
--		if (strtoi(p, &cpu))
--			goto err;
--		if (cpu < 0 || cpu >= nr_cpus)
-+		cpu = atoi(p);
-+		if (cpu < 0 || (!cpu && *p != '0') || cpu >= nr_cpus)
- 			goto err;
- 
- 		while (isdigit(*p))
- 			p++;
- 		if (*p == '-') {
- 			p++;
--			if (strtoi(p, &end_cpu))
--				goto err;
--			if (end_cpu < cpu || end_cpu >= nr_cpus)
-+			end_cpu = atoi(p);
-+			if (end_cpu < cpu || (!end_cpu && *p != '0') || end_cpu >= nr_cpus)
- 				goto err;
- 			while (isdigit(*p))
- 				p++;
-diff --git a/tools/tracing/rtla/tests/Makefile b/tools/tracing/rtla/tests/Makefile
-new file mode 100644
-index 000000000000..fe187306a404
---- /dev/null
-+++ b/tools/tracing/rtla/tests/Makefile
-@@ -0,0 +1,12 @@
-+LIBS := -lcheck
-+
-+test_utils: test_utils.c ../src/utils.c
-+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
-+
-+check: test_utils
-+	./test_utils
-+
-+clean:
-+	rm -f test_utils
-+
-+.PHONY: check clean
-diff --git a/tools/tracing/rtla/tests/test_utils.c b/tools/tracing/rtla/tests/test_utils.c
-new file mode 100644
-index 000000000000..92ed49d60d33
---- /dev/null
-+++ b/tools/tracing/rtla/tests/test_utils.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Unit tests for src/utils.c parsing functions
-+ */
-+
-+#define _GNU_SOURCE
-+#include <check.h>
-+#include <unistd.h>
-+
-+#include "../src/utils.h"
-+
-+START_TEST(test_parse_cpu_set)
-+{
-+	cpu_set_t set;
-+	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-+
-+	ck_assert_int_eq(parse_cpu_set("0", &set), 0);
-+	ck_assert(CPU_ISSET(0, &set));
-+	ck_assert(!CPU_ISSET(1, &set));
-+
-+	if (nr_cpus > 2) {
-+		ck_assert_int_eq(parse_cpu_set("0,2", &set), 0);
-+		ck_assert(CPU_ISSET(0, &set));
-+		ck_assert(CPU_ISSET(2, &set));
-+	}
-+
-+	if (nr_cpus > 3) {
-+		ck_assert_int_eq(parse_cpu_set("0-3", &set), 0);
-+		ck_assert(CPU_ISSET(0, &set));
-+		ck_assert(CPU_ISSET(1, &set));
-+		ck_assert(CPU_ISSET(2, &set));
-+		ck_assert(CPU_ISSET(3, &set));
-+	}
-+
-+	if (nr_cpus > 5) {
-+		ck_assert_int_eq(parse_cpu_set("1-3,5", &set), 0);
-+		ck_assert(!CPU_ISSET(0, &set));
-+		ck_assert(CPU_ISSET(1, &set));
-+		ck_assert(CPU_ISSET(2, &set));
-+		ck_assert(CPU_ISSET(3, &set));
-+		ck_assert(!CPU_ISSET(4, &set));
-+		ck_assert(CPU_ISSET(5, &set));
-+	}
-+
-+	ck_assert_int_ne(parse_cpu_set("-1", &set), 0);
-+	ck_assert_int_ne(parse_cpu_set("abc", &set), 0);
-+	ck_assert_int_ne(parse_cpu_set("9999", &set), 0);
-+}
-+END_TEST
-+
-+Suite *utils_suite(void)
-+{
-+	Suite *s = suite_create("utils");
-+	TCase *tc = tcase_create("core");
-+
-+	tcase_add_test(tc, test_parse_cpu_set);
-+
-+	suite_add_tcase(s, tc);
-+	return s;
-+}
-+
-+int main(void)
-+{
-+	int num_failed;
-+	SRunner *sr;
-+
-+	sr = srunner_create(utils_suite());
-+	srunner_run_all(sr, CK_NORMAL);
-+	num_failed = srunner_ntests_failed(sr);
-+
-+	srunner_free(sr);
-+
-+	return (num_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-+}
+Thx.
+
 -- 
-2.52.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
