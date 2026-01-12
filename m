@@ -1,32 +1,32 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5B2314B72
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8372E329C78
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 07:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768203112; cv=none; b=S54HCEmHdSez7bbxHYBMpGFc3EiClvTG41F7ooMBRVKOn9Jk8SG2hHb39pbDyMHql+DzBi7evGtrbIMWqLcL+zntzb2YP7ng7+rx+qlEe8hjEktiYFQ5aEgEeQ+QkFW9Gk2wwdYqYeJGKUBKP191Ag8TJ7RwTaulNz25PuKLNhM=
+	t=1768203120; cv=none; b=jFjiXv4saXxY2G/O09OKqpCmG8GxGsLaoixAfRhj//fpNMt35zidBipRW6PZnfcLvUh4UyqkFUgAVLvn59eFCzF/0NPpV+XpmagWARpmyUb9fPZGznEhxalJhDV0HKsKwtQoBBcSngH4hgWbkm/YEddkV9v69a40myyivPsZrB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768203112; c=relaxed/simple;
-	bh=0w8glGv5zehTU8mYqRipHl0MsH4jVNl2Z7VDxD4FQoc=;
+	s=arc-20240116; t=1768203120; c=relaxed/simple;
+	bh=dalNA0BxdWJLQHtJZnm34WkI5gbCzurqkKSSozGr3Z8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gyQz1MBz/0pHQ36kBxChbZRhFOU0ln1Q3isUU68vGaKglz4aFFbHeQQRrWzKjDyy15FCYqcQxl4d/+q6kcf4zH0Ptfd6Pz+4OtOtGSA1TuFsGfW799YugfF2st3jT211nTVrtcZ0/FQ4IQur8uC663QUGmXhID1ZEwn+ewPWhpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=phie3JAT; arc=none smtp.client-ip=91.218.175.181
+	 MIME-Version; b=snSxw/DgPvw/ae4cO83mHYHlcCWkHLlI1i/ugr7QZkpiRCrWnMq1+y/BJdeZu3TZ73h+OttYp8NvHXHMpxd+6/vFmlbKD8YZzc01nbIlPBowEVfOpAqEslJR1wvl+UO6uGlXks8pmKUaqIpHUAuyFivtl62K/qB03lnB5TLG8KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jE7S1QL7; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="phie3JAT"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jE7S1QL7"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768203109;
+	t=1768203114;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RVzCy4in+NcnK6/nhRnifh8d5UAeV3WaYJGZ0fRZrUk=;
-	b=phie3JATXRtHR8qqfJ1kMcrZDQ5Rbzu7BArH8wdeNaW8ggrVtzX9ioBSiFPL8Q9ojxBo5n
-	CyPvTA1tMXk5zHbrObIyWAG8nTFNN88TOv88pBLXRyfj3rsjm3cNT4z7JDBHah3I1ESa42
-	w4YBmXmv/doUmbkeZzFzvvmwhtqC6R0=
+	bh=RW/CePLfpA2cGIbxlZCaBzT9qs/BsPWVBCiDlhNUjWo=;
+	b=jE7S1QL7faF8pM+PQ3qz7/gONZwLuf22VH7YNNseR6jXXdqtKxNBogGlV4nqM3wPpeSAPD
+	eQwJGXWmgaXqtAgLzd06r41dY4j74XFyLyzr0lj6KlKa9d/+tQ6YWI2mKCpf2ihDi4SRQp
+	tz6xHlGi1cjtwYfx4OvbNHsV7sXfWDQ=
 From: Fushuai Wang <fushuai.wang@linux.dev>
 To: tglx@kernel.org,
 	peterz@infradead.org,
@@ -50,9 +50,9 @@ Cc: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	wangfushuai@baidu.com
-Subject: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
-Date: Mon, 12 Jan 2026 15:30:34 +0800
-Message-Id: <20260112073039.1185-2-fushuai.wang@linux.dev>
+Subject: [PATCH v2 2/6] x86/tlb: Use copy_from_user_nul() instead of copy_from_user()
+Date: Mon, 12 Jan 2026 15:30:35 +0800
+Message-Id: <20260112073039.1185-3-fushuai.wang@linux.dev>
 In-Reply-To: <20260112073039.1185-1-fushuai.wang@linux.dev>
 References: <20260112073039.1185-1-fushuai.wang@linux.dev>
 Precedence: bulk
@@ -66,53 +66,32 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Fushuai Wang <wangfushuai@baidu.com>
 
-Many places call copy_from_user() to copy a buffer from user space,
-and then manually add a NULL terminator to the destination buffer,
-e.g.:
+Use copy_from_user_nul() instead of copy_from_user() to simplify
+the code.
 
-	if (copy_from_user(dest, src, len))
-		return -EFAULT;
-	dest[len] = '\0';
-
-This is repetitive and error-prone. Add a copy_from_user_nul() helper to
-simplify such patterns. It copied n bytes from user space to kernel space,
-and NUL-terminates the destination buffer.
+No functional change.
 
 Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 ---
- include/linux/uaccess.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/x86/mm/tlb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 1f3804245c06..fe9a1db600c7 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -224,6 +224,25 @@ copy_from_user(void *to, const void __user *from, unsigned long n)
- #endif
- }
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index f5b93e01e347..ae81e5cb510e 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -1807,10 +1807,9 @@ static ssize_t tlbflush_write_file(struct file *file,
+ 	int ceiling;
  
-+/*
-+ * copy_from_user_nul - Copy a block of data from user space and NUL-terminate
-+ *
-+ * @to:   Destination address, in kernel space. This buffer must be at least
-+ *        @n+1 bytes long!
-+ * @from: Source address, in user space.
-+ * @n:    Number of bytes to copy.
-+ *
-+ * Return: 0 on success, -EFAULT on failure.
-+ */
-+static __always_inline int __must_check
-+copy_from_user_nul(void *to, const void __user *from, unsigned long n)
-+{
-+	if (copy_from_user(to, from, n))
-+		return -EFAULT;
-+	((char *)to)[n] = '\0';
-+	return 0;
-+}
-+
- static __always_inline unsigned long __must_check
- copy_to_user(void __user *to, const void *from, unsigned long n)
- {
+ 	len = min(count, sizeof(buf) - 1);
+-	if (copy_from_user(buf, user_buf, len))
++	if (copy_from_user_nul(buf, user_buf, len))
+ 		return -EFAULT;
+ 
+-	buf[len] = '\0';
+ 	if (kstrtoint(buf, 0, &ceiling))
+ 		return -EINVAL;
+ 
 -- 
 2.36.1
 
