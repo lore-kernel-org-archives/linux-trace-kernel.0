@@ -1,109 +1,186 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0733E1A9F91
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 02:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E9530F812;
+	Mon, 12 Jan 2026 06:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768184169; cv=none; b=GD8YGTEO3QvxnPyEnErd5o7VTqtvfCl2c3GpfIebokXr2BU73ZrJqEE5pRBZ3CjEPI9IvVFZklhuU0sO7Et9l6qglHp3fegtkQKgn3BW3rya5Lm587wogDvv4aD8QI9a+8jgm/Zy6iQP1SqDWe2h+N0EaN5KMGlFGfCquASUhjA=
+	t=1768200186; cv=none; b=SZLct2VQaeeijekNGayAwJedytkZp927UGcEzhKGBnNchfYHQDhAqDb0SOKlVuaN3xLimJZF+rSRZeJVzSQspN84ivDexnXKUP5cEA+/k9kgZLpU/4FQ9kJPRb8UXSnvXnWlBsYDpj/dMZasXlHM7A10vn+5nXENwr7aakhYarQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768184169; c=relaxed/simple;
-	bh=B5FfKozUW0NcIj5zt5YFL5fVXpavwUO2OUM+5DwC5mQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vCLpCj2ox6/5Omj+X/AcL9/lKs00PA159tvIAq/H0twh82cGH7UsOIOpezBxaaAwSSC7fm23aYn9uQPeFzHcwTv3FjZhEWbwZyhjGk4StozMQElAbSpWnnimY3n3YLzeu6RkP6hI/hFq7kvpDfalhYPfCQVwmhM/ClMYu37ydSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPkTkZJ3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768200186; c=relaxed/simple;
+	bh=KRUlzmZT+Po3605XqLGK09mDfYi+PQG5J8+1DirPpHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=idB9PA3KeOWPsQ4USATPwzSHoIsonUFdJqqC+oQ/f12lgpoiYWZql6PTrUFMROlXc3d/r1nQsyaW63j1Hc46ZnS4zVePiH58e0XLl9VqjK/c69iAdts/tub7K3cxLpDlx3lg13Kbxq3raohNpJk3O2NJ3ETflgj56igimOp+Zts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j566+UPn; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPkTkZJ3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a1388cdac3so42330095ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Jan 2026 18:16:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768184167; x=1768788967; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t0uAkNpDPiVFicZcGdNzE7rrmCZO2YKCotnRT3KoGY8=;
-        b=kPkTkZJ3XvdSg4b8EBu2dZIu1SimS/8UqEBhdu33rIGtZX2uDUeCR6LbWHVmFf2L4N
-         rNHGOwLYBam5+ZeGagaR0Ox8suJWyRHIOQwvH3KwbrA4LS7JNdEI326AGqHHhNnqkvwQ
-         SKe3ZCXVUVvxGwfP7cjpg44XrJoLfnbKg4453Ryd9wlhPOZdC9CytF2VGiGAWCsIKeRw
-         tjfCr/MBIJOwZRSfWLnf+WBWXtU2JJlp5oOUG0gBNcaw1QAzwSvdoqZnoRWv4Fs3ZXuA
-         QuTaGDIhnXq4wNfsOBFdD7eCmujVQc1j7U24L1ZhEgHnhLImA+tG902XBVA1b9mNuZFT
-         qaLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768184167; x=1768788967;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t0uAkNpDPiVFicZcGdNzE7rrmCZO2YKCotnRT3KoGY8=;
-        b=GUrFTF1YyffGm2E0wyn5xXyabp4Ymk2zcm6aceykB84YkwTy8PnatPSbh6UhIRVgmv
-         GxT8NwElSBn+55n43A2YIIEoFsqhZdAWQrWDRx4pf+Ln+mSW2wZinxAgf+hMd0JnKcWN
-         PEFHVX8EdQ25TP6LgRhcKEb8TEnsHzzOzFDQGYAft+SgaMnfIaQjxyUTVXRn/YnyB+J0
-         gZqcDQQF0BbzL/Vdmi0h1PJ8CLSFCa2prGrrAXdLNAptZcQvC7WIjb2MQNP6RJZyfdVp
-         rswzo28VC8OqCVxXk+cYA7WeYt6xmXQGu/H/4UA4WGyIdAUjm7Ok/ZR+oTbHQimq3S+s
-         z9Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9+Tylqb+64bhfUWgGc3DGOYm/MgVOsuCkv4W69mn3fEjc11T5RU3LWP2/Vr0lSBH1laI5yi12Ihn2jjPluNUCKNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGH3IDc1WlZxBEl5xr+E7Q2UMbCLejFG30H+Kr6s8hjBH9K0YD
-	UActeiO/MFyoqXU09kH15lK01POITKpXDBvjxV8c451pNQDvD08/+6qt
-X-Gm-Gg: AY/fxX4WN4y4WxMKwuu7yAB6ziUkTXw0TRg1ANmsnUeeURdtctAYCEuUzkRVukODq4c
-	VUBbEd3kZXA/wiJwoPrjsP6jVB6K7VW9H9s52WqlvDBffT95EVR4iUfTlqtiX6VtGcP8A4HPsAI
-	TfgyM/IweP31dXJ9yPI2nPvOgOS0A42S1e5cJCyzK5UgX6s31UJNLh9IpHTu4R+XMSqcIDVS11U
-	++K9ZtIVsgZnoJ95e4AVMIK14PnUhMS9tp05dujUHHrU8vZQjx3bc0GU4u7OHFQsk2BrfOmUipG
-	EvShQmX1cwrQ9Eis05nxRf9UbFufUvWPleXvOY/7DqIOQQZo3Ao6CaFTQ7eWo5rCfjQd19Oai3x
-	a9wrZ3c3ecrPnjEoi2plgIuq6NYrEiP0iaQxjwKbOYJfv0tTNGZ9k8v5v0+E9aXSHBNYF73EreX
-	RV1fa730I497L05AZ79nwNNNB9iAA=
-X-Google-Smtp-Source: AGHT+IEwEYcAJq1cetdUP3i6jeooEmEtD3UhltjnVGz/MnuEVRILp5YdBihUyYh2+SQByOom0O2QxQ==
-X-Received: by 2002:a17:903:2f4e:b0:2a1:deb:c460 with SMTP id d9443c01a7336-2a3ee48ab74mr179903165ad.33.1768184167282;
-        Sun, 11 Jan 2026 18:16:07 -0800 (PST)
-Received: from pengdl-pc.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c5ce06sm156208185ad.44.2026.01.11.18.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jan 2026 18:16:06 -0800 (PST)
-From: Donglin Peng <dolinux.peng@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Donglin Peng <pengdonglin@xiaomi.com>
-Subject: [PATCH v2] function_graph: Fix args pointer mismatch in print_graph_retval()
-Date: Mon, 12 Jan 2026 10:16:01 +0800
-Message-Id: <20260112021601.1300479-1-dolinux.peng@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j566+UPn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768200184; x=1799736184;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KRUlzmZT+Po3605XqLGK09mDfYi+PQG5J8+1DirPpHE=;
+  b=j566+UPn17nW0VlMd8in9zN7Ap4XKJ/YrXRazq8niO13l+3jrizhmceK
+   MhMC6x61HIm+ftuWjX/LrThQZcXd3w7JjP35qPfXF0fsBhTMoZAcSAUr/
+   sWXpnCQmJHgeVao14nDbMmWU+M7iSvrg2OPo+bOLw6lv/1QzmENU+a7V3
+   0+W0nJ4pIt25Wutj64aZ2DA1A3z49VNnsQydnSNhYIhGINZ1NMelji2U8
+   wl5B7lKnLHKzQbD7OsPaDE+mulAMcydje2C35lUMisOxMF5vYNalQDQsd
+   VA5oGoFGNrbwAOgZL0tykS50mNpQQ/dEjPl8xfugC0A2JJm7zpYSRqOq9
+   A==;
+X-CSE-ConnectionGUID: R+8dLbE5Q82mWNvBDq2a3g==
+X-CSE-MsgGUID: ShetzyQsSlejVmGHu7zcsg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11668"; a="87057181"
+X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
+   d="scan'208";a="87057181"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2026 22:43:04 -0800
+X-CSE-ConnectionGUID: +5Qtarv8RWW4G95y5DgeJg==
+X-CSE-MsgGUID: fJOLnsbZQiCSQQ+NuTJRFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
+   d="scan'208";a="204082216"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 11 Jan 2026 22:43:01 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vfBdi-00000000D4G-3xjw;
+	Mon, 12 Jan 2026 06:42:58 +0000
+Date: Mon, 12 Jan 2026 14:42:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-rockchip@lists.infradead.org,
+	linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
+ trace support
+Message-ID: <202601121428.WVvakywZ-lkp@intel.com>
+References: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
 
-From: Donglin Peng <pengdonglin@xiaomi.com>
+Hi Shawn,
 
-When funcgraph-args and funcgraph-retaddr are both enabled, many kernel
-functions display invalid parameters in trace logs[1].
+kernel test robot noticed the following build errors:
 
-The issue occurs because print_graph_retval() passes a mismatched args
-pointer to print_function_args(). Fix this by retrieving the correct
-args pointer using the FGRAPH_ENTRY_ARGS() macro.
+[auto build test ERROR on pci/next]
+[also build test ERROR on next-20260109]
+[cannot apply to pci/for-linus trace/for-next mani-mhi/mhi-next linus/master v6.19-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[1] https://gitee.com/pengdonglin137/funcgraph_visualization/raw/master/samples/error_args.png
-Fixes: f83ac7544fbf ("function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously")
-Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
----
- kernel/trace/trace_functions_graph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Shawn-Lin/PCI-trace-Add-PCI-controller-LTSSM-transition-tracepoint/20260112-100141
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/1768180800-63364-4-git-send-email-shawn.lin%40rock-chips.com
+patch subject: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
+config: loongarch-randconfig-002-20260112 (https://download.01.org/0day-ci/archive/20260112/202601121428.WVvakywZ-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260112/202601121428.WVvakywZ-lkp@intel.com/reproduce)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index b1e9c9913309..1de6f1573621 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -901,7 +901,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 		trace_seq_printf(s, "%ps", func);
- 
- 		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
--			print_function_args(s, entry->args, (unsigned long)func);
-+			print_function_args(s, FGRAPH_ENTRY_ARGS(entry), (unsigned long)func);
- 			trace_seq_putc(s, ';');
- 		} else
- 			trace_seq_puts(s, "();");
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601121428.WVvakywZ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/pci/controller/dwc/pcie-dw-rockchip.c: In function 'rockchip_pcie_ltssm_trace_work':
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:41: error: implicit declaration of function 'dw_pcie_ltssm_status_string' [-Wimplicit-function-declaration]
+     264 |                                         dw_pcie_ltssm_status_string(state),
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:41: error: passing argument 2 of 'trace_pcie_ltssm_state_transition' makes pointer from integer without a cast [-Wint-conversion]
+     264 |                                         dw_pcie_ltssm_status_string(state),
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                         |
+         |                                         int
+   In file included from include/trace/events/pci_controller.h:9,
+                    from drivers/pci/controller/dwc/pcie-dw-rockchip.c:26:
+   include/trace/events/pci_controller.h:20:52: note: expected 'const char *' but argument is of type 'int'
+      20 |         TP_PROTO(const char *dev_name, const char *state, u32 rate),
+         |                                        ~~~~~~~~~~~~^~~~~
+   include/linux/tracepoint.h:288:41: note: in definition of macro '__DECLARE_TRACE'
+     288 |         static inline void trace_##name(proto)                          \
+         |                                         ^~~~~
+   include/linux/tracepoint.h:494:31: note: in expansion of macro 'PARAMS'
+     494 |         __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),              \
+         |                               ^~~~~~
+   include/linux/tracepoint.h:632:9: note: in expansion of macro 'DECLARE_TRACE_EVENT'
+     632 |         DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+         |         ^~~~~~~~~~~~~~~~~~~
+   include/linux/tracepoint.h:632:35: note: in expansion of macro 'PARAMS'
+     632 |         DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+         |                                   ^~~~~~
+   include/trace/events/pci_controller.h:19:1: note: in expansion of macro 'TRACE_EVENT'
+      19 | TRACE_EVENT(pcie_ltssm_state_transition,
+         | ^~~~~~~~~~~
+   include/trace/events/pci_controller.h:20:9: note: in expansion of macro 'TP_PROTO'
+      20 |         TP_PROTO(const char *dev_name, const char *state, u32 rate),
+         |         ^~~~~~~~
+
+
+vim +/dw_pcie_ltssm_status_string +264 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+
+   225	
+   226	#ifdef CONFIG_TRACING
+   227	static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
+   228	{
+   229		struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
+   230							trace_work.work);
+   231		struct dw_pcie *pci = &rockchip->pci;
+   232		enum dw_pcie_ltssm state;
+   233		u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
+   234	
+   235		for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
+   236			val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
+   237			rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
+   238			l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
+   239			val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
+   240	
+   241			/*
+   242			 * Hardware Mechanism: The ring FIFO employs two tracking counters:
+   243			 * - 'last-read-point': maintains the user's last read position
+   244			 * - 'last-valid-point': tracks the hardware's last state update
+   245			 *
+   246			 * Software Handling: When two consecutive LTSSM states are identical,
+   247			 * it indicates invalid subsequent data in the FIFO. In this case, we
+   248			 * skip the remaining entries. The dual-counter design ensures that on
+   249			 * the next state transition, reading can resume from the last user
+   250			 * position.
+   251			 */
+   252			if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
+   253				break;
+   254	
+   255			state = prev_val = val;
+   256			if (val == DW_PCIE_LTSSM_L1_IDLE) {
+   257				if (l1ss == 2)
+   258					state = DW_PCIE_LTSSM_L1_2;
+   259				else if (l1ss == 1)
+   260					state = DW_PCIE_LTSSM_L1_1;
+   261			}
+   262	
+   263			trace_pcie_ltssm_state_transition(dev_name(pci->dev),
+ > 264						dw_pcie_ltssm_status_string(state),
+   265						((rate + 1) > pci->max_link_speed) ?
+   266						PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
+   267		}
+   268	
+   269		schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
+   270	}
+   271	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
