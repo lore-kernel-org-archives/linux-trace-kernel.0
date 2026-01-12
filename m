@@ -1,141 +1,94 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2573D34107E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 08:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8BE34845F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 09:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768207337; cv=none; b=Uw16GX4il8036bt/Rvo1DXAJ/Otom9jm7GB8qoxu78tpxvM20WlIvpxU8bYa2l77fiP0vl2eIkJHtcplhgirczzwxCXZE+s2eqNxth85G7qHJE1Yw9W3zqAL6BslEL1o834K3XXEpFzmopZtirb3/ep6m7R4zTPCOfkWH+RZN4s=
+	t=1768209828; cv=none; b=q51XhdRIZc4aSxl3wmqxLyfUT1UwIaTRCjmqFcrQ7YUB0cRFIQ2YKSdflG3Nt7pyn4l7BOHutDS2f5KE6TOUYrh8qL3CDMFQ2+Tu/TEmsupc6EFrVwg5q/GHuIE/sLf8nUTluSB/Nb78R+yeuT/l2jY9uZPk/JoT/1ENxi/jQmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768207337; c=relaxed/simple;
-	bh=rjITqn12+D2tvtJTf7/BRP0AALPZnd8r3PQY4MECiIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFLrhuhVDoACuoq/FKvyZBMsr588WhZ2AoCqMNEJU4lO9OqlBTblXq0GLDPX1G4AOZh2iREzmwJ7dBXO7LrFh9ngm0HKxuc84DB3XpESJ0MOf1lkEYsWcyxYvZ8d9t3cmMtdDWEOIbAppi2GNvdRCBv0SiUVJSlPoMxF5aYJqCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ECMsPALb; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768209828; c=relaxed/simple;
+	bh=8KdFw0MRLSjN2SSKph517IRPNaJGWIqsDCisI3qVD6M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OcJZoWSto0GwdDaveDYCU2BiUaMrX4uYOHH6U4F2v5rCKtVgWYlJxXE5NeCLp3ZODfOD/PTgqmDNKKhBPXdJddkJigss4U/DGixwkp+DTXSKjxMM3U2imiEk1PBNHRLMTnb4zEDt6E22+QW62P7UM7iFTr5nBXtkRALNTkhU6js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U2I0QO5K; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ECMsPALb"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-477563e28a3so33027345e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 00:42:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U2I0QO5K"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47777158a85so68620715e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jan 2026 01:23:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768207334; x=1768812134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CDfFNoiSuTKA5KfAUoXISxuSK51bp7lujfs6vADIdxE=;
-        b=ECMsPALbh38oKqxWkweA8gysOOon0feqAtyuXePZlNC8xXrr2CugQ/ykGFDLCYIo+I
-         xv2m7iBI0t9mvHg2JGY2rVLY1wUuwbPHXMX/pME2zoOh/n/GH5I4HRqi/uasbl6t9ljU
-         1sjCWoTfadNh/PbwUetBw99/0XLPAiX/lVtj7+91xnRazzkSxbhTrcdhyrCYCIEDHvvU
-         UIkRrhQpE+YRErb80gOnrwsOTfTG7tSH/7cyPCiRkgsElZmsMs5FZ1G1v8c1XbhudRpq
-         wVeC5U89KChbpVBHtiCh3f8ro2sWFlGJJ/P8xNdwXWcNM6fnxx/S+ssy3nVvazNdGU//
-         X+AQ==
+        d=google.com; s=20230601; t=1768209821; x=1768814621; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dnm1aPHgilJoZAdIhSLPs0ANyMPq33iohJKF/BMUNF0=;
+        b=U2I0QO5KDme1jsJw2g/9h/GKBmPOgEo1YYDE4L/JgJ6JjhKvwZ8J72Td2h/GI/Ya/N
+         kjOA6tkXvhV5KLDksOuDqLZm43s99GTUU2pK3f2cw23AgxC+tg5crFhrXQvJdMbfuVXT
+         ULx8LpgUiUYNPpxSmaZzGirxgeXKhS7ZdCH3i73tUWgJlXjiT6ybg0NA2I6uAlW56LB2
+         FKJHZLEbT7TFjygW58k1GZh8JKM2/tGrNCRKfBGo8lwLT6uB9bujjZZexR0jYam2N6Qy
+         nKLfzqwaOIRyM4cyzY3P0wZBrtms7H9nQsnSYY4MMABH6Fd1W/dFOo1g+YNsDCdTM6Q1
+         IJPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768207334; x=1768812134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CDfFNoiSuTKA5KfAUoXISxuSK51bp7lujfs6vADIdxE=;
-        b=FTna4CsPewm6HIlzpPcoab+MqqlOtoHwbKqY7wTuOVyvsLRewL4281MJcjnqDvErwD
-         wQfUSPS0NyqahKzC9WC05/gZwURCGBuJKWWjfwxAfvg/XZTnvgJu3kUx3S3S84l/fWLB
-         LGb50CT4oIZ24syg7nv9d4GT8MbBI/hkrVJ0juhWaLAjT6i+69sOCrgueG45fmosYbkl
-         Qr2ybIFPlOCHJyQL18GLK31eW/UhgkGzvBVoRkfLazjDNKFCujjhrB8tcQ31I9mlNfWR
-         orxiDvcWaRUA8Mf1aydTcr9pqcyBOPbv29l24L2BvS393Bio75PsoWu9Ynvd0js/jv5Q
-         12JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/+qJ4zw1u6XPnQQKXnShb1dzJkBrjoEZswfWKQvjfVrj+9lrGPichHQCMVeUJUPgN1iw8gghU6w8dkYCG/X71P3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxluIcd1sLt1xIWnN7Xai18nzGrhVTaQ0/i+IQf0kkACn6gmCHa
-	gLLK9c/Qih4r+/O4eX/0CmkFmzg+/eBJcLHHyR4UoOAr96/OOJWBFQ+NvOYizc/s0xc=
-X-Gm-Gg: AY/fxX6EKJ8JUTV5F380ZYeBFszi5GnSlmdsl6AkVrRdAt6PGjKbPZUuecn0oxpxk83
-	6wOQPtypg4PhS7SHPSAP3BrsCUJiVBkpMJh9osVIWsmBweoAsYkYcIrTPscMFtp5lx6HKZUm6Ks
-	ruduu1JO4zn0HBQWddE7zXl9E1iEZ/4M2Vl+86smxyPzhhIfZGPCkDv0nytGNmYgmMZ29Pn3uC0
-	6+2AmgpSeIakg+le5VpOJwA6h78eUnLKLQhMXc5l1/ZgTfNTAdAkCeKJgjrxnWrAoDkpCW8qX8l
-	avCpkdDnXOLCIxwUl++UomSkkMwqlUUBoEK8yOgeCwEyfauSvOWQSLFiZwtyVsOZo2Mt9rufWKF
-	nhvlsl0FHaYG27NhvPRQZTBbfx71xSCVoMfKqfiWAZSGQBYN/c/w5ISdeVjvoXxiplr9QJ+V6ET
-	tZKqt63XOK0T6ll+ulNuBf8XsuViNToknF6c4=
-X-Google-Smtp-Source: AGHT+IGOZ9lkMoCzrUzWNxChXoAXhL7/lCG+k3HeWbbjlLCJz2d0Tg02k9SjW7Z9t8X4D9e1/0CcXQ==
-X-Received: by 2002:a05:600c:3b05:b0:475:ddad:c3a9 with SMTP id 5b1f17b1804b1-47d84877e51mr207488795e9.13.1768207334460;
-        Mon, 12 Jan 2026 00:42:14 -0800 (PST)
-Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d865f84besm132725385e9.1.2026.01.12.00.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 00:42:13 -0800 (PST)
-Date: Mon, 12 Jan 2026 09:42:12 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <liam.howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v13 2/3] mm: Fix OOM killer inaccuracy on large many-core
- systems
-Message-ID: <aWSz5OHBwtfYrruu@tiehlicka>
-References: <20260111194958.1231477-1-mathieu.desnoyers@efficios.com>
- <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
+        d=1e100.net; s=20230601; t=1768209821; x=1768814621;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dnm1aPHgilJoZAdIhSLPs0ANyMPq33iohJKF/BMUNF0=;
+        b=hfbzdJxV5syhevqID5F5rEvWK55A6iVcbz2Zs0B12ZHgUY3j3ib34MCWXHI9NR0Elb
+         sKYj1+4mWEwqlN1WfPufDVs/HIY1umPmZ3qPYoIQ41LcewiMkITN7RSAP+5GcliTa3SO
+         twakdojbxPARjxNeEP4DHNe0bcLXpH8luagrRMAhiZu4jpWdoa8HbnjB6YYOeva37Gk0
+         haQc0HEF1jnNqnFHguBFyFbK0ZqiBwJOWTxJPyk+XCdX9bTopaWMk5kpmzNs+RPTBpdG
+         XvclNy1zKhlS0wHJZV4US9hvS6vHiEr+Ms0E/eQ6M+dVpsWLLfL36Ou4qP8cD79kMsmT
+         Wr8g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Q0ibu02+5H8UFrVVRQRC8eMBagdvxGygMBByLvsw7U8fPa7Pme6AW/3wzEmZIqBR3XPgL+9P279q/BiSLAtD+y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMXHHbUz1HpzfiC4lryuHZ9eNmMDbhGPndbu49sbGe+9H7EuFx
+	WtxjONBPAy1J0wu4gxhRxu446AqWBoL80nrDHq9N1CX1cGlJrQ1i+0CNZmknTZjEoUOmj0g6NY0
+	+lMkU7pWUYzia4fh9mQ==
+X-Google-Smtp-Source: AGHT+IF+IGvzp/ocb46tvnb8ue3XNMptPM6XgiWmKG8LHZGqAUCdzgBmxebkdTzyELsd/RpdGoEqlP6DpeEBX0Q=
+X-Received: from wmkn12.prod.google.com ([2002:a7b:c5cc:0:b0:47b:e2d9:2e56])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3152:b0:479:1a0a:ebbe with SMTP id 5b1f17b1804b1-47d84b18db4mr198851805e9.14.1768209821309;
+ Mon, 12 Jan 2026 01:23:41 -0800 (PST)
+Date: Mon, 12 Jan 2026 09:23:40 +0000
+In-Reply-To: <20260112073039.1185-2-fushuai.wang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
+Mime-Version: 1.0
+References: <20260112073039.1185-1-fushuai.wang@linux.dev> <20260112073039.1185-2-fushuai.wang@linux.dev>
+Message-ID: <aWS9nOj4MAa7pYmS@google.com>
+Subject: Re: [PATCH v2 1/6] uaccess: Add copy_from_user_nul helper
+From: Alice Ryhl <aliceryhl@google.com>
+To: Fushuai Wang <fushuai.wang@linux.dev>
+Cc: tglx@kernel.org, peterz@infradead.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, yury.norov@gmail.com, vmalik@redhat.com, 
+	kees@kernel.org, dave.hansen@linux.intel.com, luto@kernel.org, 
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, brauner@kernel.org, jack@suse.cz, cyphar@cyphar.com, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, wangfushuai@baidu.com
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
-sorry to jump in this late but the timing of previous versions didn't
-really work well for me.
-
-On Sun 11-01-26 14:49:57, Mathieu Desnoyers wrote:
-[...]
-> Here is a (possibly incomplete) list of the prior approaches that were
-> used or proposed, along with their downside:
+On Mon, Jan 12, 2026 at 03:30:34PM +0800, Fushuai Wang wrote:
+> From: Fushuai Wang <wangfushuai@baidu.com>
 > 
-> 1) Per-thread rss tracking: large error on many-thread processes.
+> Many places call copy_from_user() to copy a buffer from user space,
+> and then manually add a NULL terminator to the destination buffer,
+> e.g.:
 > 
-> 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
->    increased system time in make test workloads [1]. Moreover, the
->    inaccuracy increases with O(n^2) with the number of CPUs.
+> 	if (copy_from_user(dest, src, len))
+> 		return -EFAULT;
+> 	dest[len] = '\0';
 > 
-> 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
->    error is high with systems that have lots of NUMA nodes (32 times
->    the number of NUMA nodes).
+> This is repetitive and error-prone. Add a copy_from_user_nul() helper to
+> simplify such patterns. It copied n bytes from user space to kernel space,
+> and NUL-terminates the destination buffer.
 > 
-> The approach proposed here is to replace this by the hierarchical
-> per-cpu counters, which bounds the inaccuracy based on the system
-> topology with O(N*logN).
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 
-The concept of hierarchical pcp counter is interesting and I am
-definitely not opposed if there are more users that would benefit.
+Hmm, this function is very very similar to strncpy_from_user(). Should
+they be using that instead?
 
-From the OOM POV, IIUC the primary problem is that get_mm_counter
-(percpu_counter_read_positive) is too imprecise on systems when the task
-is moving around a large number of cpus. In the list of alternative
-solutions I do not see percpu_counter_sum_positive to be mentioned.
-oom_badness() is a really slow path and taking the slow path to
-calculate a much more precise value seems acceptable. Have you
-considered that option?
-
--- 
-Michal Hocko
-SUSE Labs
+Alice
