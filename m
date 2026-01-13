@@ -1,237 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92977267B89;
-	Tue, 13 Jan 2026 01:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB623314B;
+	Tue, 13 Jan 2026 01:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768268850; cv=none; b=IeCWEJOL2hFnQ4rble1+nRHrGPGsCET9ZZMkaZsYDFDLOr7h4lMHIBYYybYITBvVd8nwIxweSjHObUvOYwi8xEkzBEb4jCku9fFJgExBSl1Ig3X4SWvsE81GjdWueX69+pmYJVX5YQ6wmcPGZiGEcasQjZLKMwfzKjMfb08YDu0=
+	t=1768268986; cv=none; b=pirpSotjWviFN8Jh6FlZtzFMAl+icfz+KxvsUjxDaXqmty5xjJFCGjcusn/AmzEd4twi3pCp2oh4b84YaeDjr8p4JsO+BAxNxHhEpsRZCjLNcOYdFeANVI5FYqIU6taJ1Wy1zpw9P6PrVzPSrm8P52GUHwO3etGjragwLZfb98I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768268850; c=relaxed/simple;
-	bh=VlYijItPWeGJrcex7X+XGdUUZA/2vSFa+RIBMAWLFUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IwTr3idJ2ym+Ls9oJlzeGTF4AQ+D/3ISMvPY81nKBR93ZtfTpX1AgqgEgc1O48S5Zp7Wt3K9RfosKRXmPX8VJ7RJOrw5Om/QPDgwYg7LeRjhBHhesL47W4asxdTX1BGyFYopuKnoqEuAQ/bTvjrx00uOSqj2EfUZrtq+V11RpUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEkTmZZm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768268986; c=relaxed/simple;
+	bh=5I8p2tqBNive2q0EWgybvUYUZT/9DX4bawoOlpAjBIY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JxbhtT86GfDqfqP62MnRlUiz8/VUxscU/YjFuPqcM8msRNtLTlSDoW1R9eyY3Zi6gpXy0FaE1kmYQ4QBeFnv28WLdbVs2iWCxliki9VGBnBCATm8mv7ZghztL5czI1W7UCQvtmPzmUJRaFhOpBYZNN/RTCfmLpeJtalhEzWO4sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwYEMfKn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEkTmZZm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B125BC2BCB4;
-	Tue, 13 Jan 2026 01:47:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwYEMfKn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7CE3C19424;
+	Tue, 13 Jan 2026 01:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768268850;
-	bh=VlYijItPWeGJrcex7X+XGdUUZA/2vSFa+RIBMAWLFUo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pEkTmZZmmITSeA9tAPgw/TdZbkvGwBq3sv6b+AtmDDhF8nwxsNg6IJlCfI7FCNOeF
-	 tn1oF0S+ltpK4uKAC2fF3W91TX27HuGB3ehlJjvlSOk/Bt2YfNPHlBIrp2gubMHY/K
-	 5T8QwmQwK1sLZr7VHrGycKiP+dX+QMPiRZvt4F43yA/+qsn9wAbAvlcMWBE+1EHbyV
-	 Jy8PGFrE/5ID/R6Wg1xDoK5h8zSwL9cVxjo8VwISqNu1/KV7VMy9x81g7v52EOy50d
-	 M82ue8NzcX+d6nrCR3jlfAA0FnKgAjCtlY89HETakAAjnaiB2ERMQS/lkUsyYcaHEQ
-	 PpvMCT7rdrbMQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] kprobes: Use dedicated kthread for kprobe optimizer
-Date: Tue, 13 Jan 2026 10:47:26 +0900
-Message-ID: <176826884613.429923.16578111751623731056.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=k20201202; t=1768268986;
+	bh=5I8p2tqBNive2q0EWgybvUYUZT/9DX4bawoOlpAjBIY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hwYEMfKn8hYAJ1QiZ1ltYOv/Xgt5MfIDcP/RuySWbPmGVdvFeRSg1ycrEIBaDDrPK
+	 ZiQXtm6V6F/LRiCgP1eZB6xW3sX6YXRi302vrwngm/o73w5j/ETy7int/AAbhJ//vl
+	 ESIHAUnB3MOUeX4ht+M6wFkOXbl9+c6ppnRbHa6qwyRzLc1Qcx7HWYBxLr4jaSqqLB
+	 jFf2c79DPtyiaKkkT6yBFopYY86QCI6z7P8FVsAxIwlnLXPseElFMRmwT7giQS2FJc
+	 SU9RPXj9bI7BXzX2Pbh+v/eO0cHoY77474QWgqcxl2E5Dky8tv+8dBa2LIVaJMmbFL
+	 QWSodvNJ+C6DQ==
+Date: Tue, 13 Jan 2026 10:49:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Naveen N Rao <naveen@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Use dedicated kthread for kprobe optimizer
+Message-Id: <20260113104942.9eaed0b4c92e85ce33a368cb@kernel.org>
+In-Reply-To: <176805562740.355924.11587476104510049915.stgit@devnote2>
+References: <176805562740.355924.11587476104510049915.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, 10 Jan 2026 23:33:47 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Instead of using generic workqueue, use a dedicated kthread for optimizing
-kprobes, because it can wait (sleep) for a long time inside the process
-by synchronize_rcu_task(). This means other works can be stopped until it
-finishes.
+> +static int kprobe_optimizer_thread(void *data)
+> +{
+> +	set_freezable();
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Make the kthread unfreezable same as workqueue.
-  - Add kthread_should_stop() check right before calling optimizer too.
-  - Initialize optimizer_state to OPTIMIZER_ST_IDLE instead of 0.
----
- kernel/kprobes.c |  104 ++++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 84 insertions(+), 20 deletions(-)
+Steve pointed that the kthread usually don't need to be freezable and
+the workqueue is not freezable too. So I decided to remove this.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index ab8f9fc1f0d1..4778bfca19b8 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -32,6 +32,7 @@
- #include <linux/debugfs.h>
- #include <linux/sysctl.h>
- #include <linux/kdebug.h>
-+#include <linux/kthread.h>
- #include <linux/memory.h>
- #include <linux/ftrace.h>
- #include <linux/cpu.h>
-@@ -40,6 +41,7 @@
- #include <linux/perf_event.h>
- #include <linux/execmem.h>
- #include <linux/cleanup.h>
-+#include <linux/wait.h>
- 
- #include <asm/sections.h>
- #include <asm/cacheflush.h>
-@@ -514,8 +516,17 @@ static LIST_HEAD(optimizing_list);
- static LIST_HEAD(unoptimizing_list);
- static LIST_HEAD(freeing_list);
- 
--static void kprobe_optimizer(struct work_struct *work);
--static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
-+static struct task_struct *kprobe_optimizer_task;
-+static wait_queue_head_t kprobe_optimizer_wait;
-+static atomic_t optimizer_state;
-+enum {
-+	OPTIMIZER_ST_IDLE = 0,
-+	OPTIMIZER_ST_KICKED = 1,
-+	OPTIMIZER_ST_FLUSHING = 2,
-+};
-+
-+static DECLARE_COMPLETION(optimizer_completion);
-+
- #define OPTIMIZE_DELAY 5
- 
- /*
-@@ -597,14 +608,10 @@ static void do_free_cleaned_kprobes(void)
- 	}
- }
- 
--/* Start optimizer after OPTIMIZE_DELAY passed */
--static void kick_kprobe_optimizer(void)
--{
--	schedule_delayed_work(&optimizing_work, OPTIMIZE_DELAY);
--}
-+static void kick_kprobe_optimizer(void);
- 
- /* Kprobe jump optimizer */
--static void kprobe_optimizer(struct work_struct *work)
-+static void kprobe_optimizer(void)
- {
- 	guard(mutex)(&kprobe_mutex);
- 
-@@ -635,9 +642,51 @@ static void kprobe_optimizer(struct work_struct *work)
- 		do_free_cleaned_kprobes();
- 	}
- 
--	/* Step 5: Kick optimizer again if needed */
-+	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
-+	if (completion_done(&optimizer_completion))
-+		complete(&optimizer_completion);
-+
- 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
--		kick_kprobe_optimizer();
-+		kick_kprobe_optimizer();	/*normal kick*/
-+}
-+
-+static int kprobe_optimizer_thread(void *data)
-+{
-+	while (!kthread_should_stop()) {
-+		wait_event(kprobe_optimizer_wait,
-+			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
-+			   kthread_should_stop());
-+
-+		if (kthread_should_stop())
-+			break;
-+
-+		/*
-+		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
-+		 * This wait can be interrupted by a flush request.
-+		 */
-+		if (atomic_read(&optimizer_state) == 1)
-+			wait_event_timeout(kprobe_optimizer_wait,
-+				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
-+				kthread_should_stop(),
-+				OPTIMIZE_DELAY);
-+
-+		if (kthread_should_stop())
-+			break;
-+
-+		atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
-+
-+		kprobe_optimizer();
-+	}
-+	return 0;
-+}
-+
-+/* Start optimizer after OPTIMIZE_DELAY passed */
-+static void kick_kprobe_optimizer(void)
-+{
-+	lockdep_assert_held(&kprobe_mutex);
-+	if (atomic_cmpxchg(&optimizer_state,
-+		OPTIMIZER_ST_IDLE, OPTIMIZER_ST_KICKED) == OPTIMIZER_ST_IDLE)
-+		wake_up(&kprobe_optimizer_wait);
- }
- 
- static void wait_for_kprobe_optimizer_locked(void)
-@@ -645,13 +694,17 @@ static void wait_for_kprobe_optimizer_locked(void)
- 	lockdep_assert_held(&kprobe_mutex);
- 
- 	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
--		mutex_unlock(&kprobe_mutex);
--
--		/* This will also make 'optimizing_work' execute immmediately */
--		flush_delayed_work(&optimizing_work);
--		/* 'optimizing_work' might not have been queued yet, relax */
--		cpu_relax();
-+		init_completion(&optimizer_completion);
-+		/*
-+		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
-+		 * idle. If it's already kicked, it will see the state change.
-+		 */
-+		if (atomic_xchg_acquire(&optimizer_state,
-+			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
-+			wake_up(&kprobe_optimizer_wait);
- 
-+		mutex_unlock(&kprobe_mutex);
-+		wait_for_completion(&optimizer_completion);
- 		mutex_lock(&kprobe_mutex);
- 	}
- }
-@@ -1010,8 +1063,21 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
- 	 */
- }
- 
-+static void __init init_optprobe(void)
-+{
-+#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
-+	/* Init 'kprobe_optinsn_slots' for allocation */
-+	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
-+#endif
-+
-+	init_waitqueue_head(&kprobe_optimizer_wait);
-+	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
-+	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
-+					    "kprobe-optimizer");
-+}
- #else /* !CONFIG_OPTPROBES */
- 
-+#define init_optprobe()				do {} while (0)
- #define optimize_kprobe(p)			do {} while (0)
- #define unoptimize_kprobe(p, f)			do {} while (0)
- #define kill_optimized_kprobe(p)		do {} while (0)
-@@ -2694,10 +2760,8 @@ static int __init init_kprobes(void)
- 	/* By default, kprobes are armed */
- 	kprobes_all_disarmed = false;
- 
--#if defined(CONFIG_OPTPROBES) && defined(__ARCH_WANT_KPROBES_INSN_SLOT)
--	/* Init 'kprobe_optinsn_slots' for allocation */
--	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
--#endif
-+	/* Initialize the optimization infrastructure */
-+	init_optprobe();
- 
- 	err = arch_init_kprobes();
- 	if (!err)
+> +	while (!kthread_should_stop()) {
+> +		wait_event_freezable(kprobe_optimizer_wait,
+> +				     atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
+> +				     kthread_should_stop());
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		if (try_to_freeze())
+> +			continue;
+> +
+> +		/*
+> +		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
+> +		 * This wait can be interrupted by a flush request.
+> +		 */
+> +		if (atomic_read(&optimizer_state) == 1)
+> +			wait_event_freezable_timeout(kprobe_optimizer_wait,
+> +				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
+> +				kthread_should_stop(),
+> +				OPTIMIZE_DELAY);
 
+Also, forgot to add kthread_should_stop() check here.
+
+Let me update to v2.
+
+Thanks,
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
