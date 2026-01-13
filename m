@@ -1,229 +1,327 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00952FFF89
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 09:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768296291; cv=none; b=Cf2mFj+htfsDMxnxrD4N97kmkPNCw1YBl9AnQluP2pHLA4OtflsSKdSuxpmpduEUKEU34sQOy4+xRX+eb/ufc9tLiDD42Lk+fO/ntox9H3aO3bxo7ePqLnAzIdCy16KZH9v+vJSjFTxks8NOAXrPAc3DlllAZTxYEmmsJ/wp6nU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768296291; c=relaxed/simple;
-	bh=0jn24JEKWb0/9Saq/hawmriPzmuV9BAKK4nMxc5tsuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulwCr4R5ho4O/5wcQDIqGKVBfvCn3M6nHEQte75kDfGqT9RLzoHj/3rAkcays5Me5pmBZpHiYrPEnfGcLidnxaHUEWXfQ207cF8jMdrnff02pa2A4mHUpdAotSufkfzqNrGuYdY3HMBYLwB54NVcGKkCT73DAuVF+hhOtJaalYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QXeaHx2i; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEC338B7AD;
+	Tue, 13 Jan 2026 11:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768302191; cv=fail; b=YTKTxV+cENjyOpjai+cDadCeag/YQP+WG0lLCHZ7K1GAxsXoGlz8iAOL80HfslmnNBX4n/d3CMEMmqY7HVuS5GgDcSi7bgau5sTQpZLxST8Q2QzGZKqt4acltzLpw0lZmqRSaFlzel+5xzb3ZpJoI0oQgB65pXjL6VH1x/GFXLc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768302191; c=relaxed/simple;
+	bh=oADBmZ5gxL/xOj0WPvnPwGQZhBsncw0UtCzagZCvbrc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MZtElZPgSCynYOgVfN0ogsdzjte6IJRIFFa5QzcdE2Uok+8KrssvVI4WCx+cv3NO5jmanwT7J5CRsvzNHLseHa306WhM5Acdq0fRoewYACgtr7ioA/wVh45wGXVz9ATWECJ8iTSJFffC0H0yOGHYmdjzN+EdDET5MN3Wh/O2bbM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SA+yLG4e; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YL4xh8eH; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QXeaHx2i"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4308d81fdf6so3783009f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 01:24:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SA+yLG4e";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YL4xh8eH"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60D1h1492754251;
+	Tue, 13 Jan 2026 11:02:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=Bu5W73V2MAULy/GWSKrAZXzlnYdGNK5ho+//7iDqog4=; b=
+	SA+yLG4e4tyk6S+Inyx2W5AaOGtmY7u58O9GXnUvwdmHRddcOtZmgrF8V3UzaVVT
+	jfQ1BKnzHc6owKNCp3KzMFvA2w5YVx3uzpd2l0PYBCH9XvZCgd6DQOkRjJiK8Qte
+	R/khqCylwSB5R0LXfzzZeb4N/6tHfJiYOuXHxs8WAbNBco/Dwf0Tu15eiPob8sa3
+	snZd1tUAtVLClagtyIDhD7KtTwqZqOHb+Ayuv94SBIt/w1VzhNtcczrpLFvkeYTP
+	r7bwNInMX90yJy6WA39wcvj3O2Ctx15CLRhdPWpFTBaIqokXqZDW3SzMySon0DPD
+	6xrALKZXB5YXCNy9XKcXfg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bkpwgk83p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Jan 2026 11:02:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60DAfQln028706;
+	Tue, 13 Jan 2026 11:02:45 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010038.outbound.protection.outlook.com [52.101.56.38])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4bkd78k0v8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Jan 2026 11:02:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q0mM4g5UijsZth1hN1WJTLqZnONMEU72zpJ1PlKRssXmWBIENqpbcjN7FtiexMjNWzuTOee8Lbu6xiMhXMg7/wescxmvDpV1mG+KQkhQjlrejKc645foXWmnjqde5d2TQhWd/M5p1hLDpQx3m3FutxxQgO4fPGvsZyjqouVV9+T8XBer88oWjof92oTNY6ZX9wSKRKHKb5p9zQBwDXL0+ATtPlmLFSN8uDNF7/xf4/P7iF1VvnZzIJEgLt9qm/vFD8yUTeH6dT232FZhQqtj8h6HjFiuAu5Vu5kzAbnUdNie6bDVd4FYA9qlbV9xVYMX6yRbxPlnYJlMmFXzOgaemQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bu5W73V2MAULy/GWSKrAZXzlnYdGNK5ho+//7iDqog4=;
+ b=jIuDfGnMlln3GVOnL8SYvocfhnN8aobq3K9I3gRcBceYvrZVtZr/hbfBmSS1bB99sQY6PpOucke2Jjt+A8lxDRgTAYjz1aWRRmavWWdVXlrflveyGydd4KGI2T9AchPE/LKBbANEwCeZQcsGkO+93RSkmpoETFmd1cD+L9QOSXoH8iNZk/V/6SZCkJWhmH9qZGbvQmKNeumKAIXhhQ8RUE5iZj8+xPrjdoGgJ7JrixO8dfcYnPjthP+4b9vad4VimcoXSfM7VVHV28D7KeriDvA+AswpRd9nayMFpC/OtVfmC63Y+Q1uAB2F41PdYEPo1Mbe/2DALMEZlFxCPHmmEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768296282; x=1768901082; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZyF9oSCiMio2wmOHsADV3M+vA6ApPBpXUawJoezOv4=;
-        b=QXeaHx2iQddPnvlJUTny7x9XCHlJt32YcUK3wvyddOSl5Z2lKA4VWlkUJGYXP1z8ZC
-         SmQDiggrVPjm/ThsU27KydqrF5lvKQwGqbw0K6Dg9mDkGWg5UVz878qmczRHSAYoV0qb
-         cFEZ4W0HpDos5sHxwAKoV198zmF/JtUzrbK/DiDwA/ajk/zPwMQgTYkK6BkrcBhWM30s
-         i642TSzb+Qy/rNx4VfIVWtRSn4pOAMyzk+41Xf5D1VoUA4NexH4uZxDBtYZJKJHv5UHk
-         x/V/Fxrx7xxDOVUg/jOohpBznRm7izEKIndAxhDJTo63e8uY5DbYpsrsjTlI2pE7p742
-         J4Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768296282; x=1768901082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sZyF9oSCiMio2wmOHsADV3M+vA6ApPBpXUawJoezOv4=;
-        b=TfTP9/xWJaFd1MBE1ppx4mCCHMrcl3hSkid0o5zl7jQy8GwS0R0p0gUlRk6f+NbAL9
-         4L0l+BOHMJ2e2LZb037Db6ipk2Tkm7t01VBbRtDm+Pm6uPLkkT2BUwxqhRKXTYIGgAfX
-         dAeV4zqJ69dTgt1uQLuH3vU3zi7i3ThAuaNiYzNGGW8UAA9zukT5N37vWtL/6ERPvA7x
-         /m7HXFmrxmNztSMBniOp8kTcjTIAnFlVwQ2y/DjZdHpphWcBxB4DyQ/+GxOM9/aTGimO
-         Szy93v7hq/51xIYi6k7ZlIj6GCWq6Ovru6rQv4PPJmDvNdIHB8FEBOruRw+zI40w/uBO
-         e61w==
-X-Forwarded-Encrypted: i=1; AJvYcCX53vdTGNSF1siZeob5c3kQGPQNQ2WViN2wZtWB+fBJ5OXX7qeyR+6/SMfboBX/Z0J00+MLLLAeZWwUJa4zGpLva18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXBBphV7nw56n9TvBZlzYo5Qgl7vaSOT1sg9gXpqXtKJZdB78X
-	ZrgoGFEZXxeqpn4oj24KgF50mzXRoSltPucXqg8qgfUPEtJx+FsDJ41he2UUdITHQe0=
-X-Gm-Gg: AY/fxX6nGt+zEVA6KzpeEtsVGwJnyZJZmscbA0bvTciWwWCUDhek1y/JjZ0PagYKA5i
-	p68zcPv1nPoIVWukxNt1MYWP00IuME3razoVKOstt4F1hgW8wgQPm/dPEYSUapzA4uslF4xEg5H
-	JI8tg9awnTHtTlYBAsRru47pRU47tHAaGyKuVbia2PQKSwGeVA5tQf0pOk4aNBThsqg0wf5Pxh2
-	9yCd6DctsrWnOC5LSJqAY4vIlhtj1sVu8Mt7Hk4sTX1EtQPAUVV1UsV7BerycaDoe2sUu5bl967
-	3qN5y7gdXHtfJUyXzq7rZhWVtDc/MZw/j3Pcw9F3ZZlYy0h+t9qFrzoAC7qwGTv8u5v0WNgw3R7
-	+kl4hxLHk/a7dipPxo+kT1qd1B1cX/YBOSswYPBoHO2Hzkp8urC/xt/mNu3D/VaXriMGgFGzHEh
-	uaZTsdOPi8uON9NA2WCP0WbyFR
-X-Google-Smtp-Source: AGHT+IHxVARX0CcBthdCu6T5JJaZCa1h1WP2ZhQZH2siQrl0JD5UEBh8+2HwINiFB9HE7IPyLrLj0w==
-X-Received: by 2002:a05:600c:a314:b0:479:3876:22a8 with SMTP id 5b1f17b1804b1-47d84b2d285mr218894715e9.16.1768296282317;
-        Tue, 13 Jan 2026 01:24:42 -0800 (PST)
-Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f68f4ddsm405518135e9.2.2026.01.13.01.24.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 01:24:41 -0800 (PST)
-Date: Tue, 13 Jan 2026 10:24:40 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <liam.howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v13 2/3] mm: Fix OOM killer inaccuracy on large many-core
- systems
-Message-ID: <aWYPWNIv4lR2FpUZ@tiehlicka>
-References: <20260111194958.1231477-1-mathieu.desnoyers@efficios.com>
- <20260111194958.1231477-3-mathieu.desnoyers@efficios.com>
- <aWSz5OHBwtfYrruu@tiehlicka>
- <f2c04264-17ca-418f-bc43-e8aa6fa6cd0d@efficios.com>
- <aWVP9sPqG8VC8Oq_@tiehlicka>
- <b779c646-64c7-49f8-8847-8819227e3f1f@efficios.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bu5W73V2MAULy/GWSKrAZXzlnYdGNK5ho+//7iDqog4=;
+ b=YL4xh8eHzSnHkJh/c4CJQ7fzVMpuP19sTFOeDnLn0c2+SktgG8KMgqd9MBanAS3Azm7P/V253GyzsB3mvKLZNWj6g+VJO5mrDtlSHam70uMQqdAIueviMM0EKyKZ1Ki+MWAhAh894z5hAYuTtoKPWmpWonXgaaxfRz9b1LYOr2g=
+Received: from DS0PR10MB6271.namprd10.prod.outlook.com (2603:10b6:8:d1::15) by
+ IA1PR10MB7309.namprd10.prod.outlook.com (2603:10b6:208:3fe::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 11:02:42 +0000
+Received: from DS0PR10MB6271.namprd10.prod.outlook.com
+ ([fe80::940b:88ca:dd2d:6b0c]) by DS0PR10MB6271.namprd10.prod.outlook.com
+ ([fe80::940b:88ca:dd2d:6b0c%7]) with mapi id 15.20.9478.004; Tue, 13 Jan 2026
+ 11:02:40 +0000
+Message-ID: <98436a72-236a-43c4-b6ac-9d74b53b0223@oracle.com>
+Date: Tue, 13 Jan 2026 11:02:33 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 bpf-next 7/9] bpf: Add trampoline ip hash table
+To: Jiri Olsa <olsajiri@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>
+References: <20251230145010.103439-1-jolsa@kernel.org>
+ <20251230145010.103439-8-jolsa@kernel.org>
+ <CAEf4BzYgqWXoKTffa5Y6Xm-nPbL9aFgrStR0GfUs4-88f10EgQ@mail.gmail.com>
+ <aWVnVzeqWJBXwBze@krava>
+Content-Language: en-GB
+From: Alan Maguire <alan.maguire@oracle.com>
+In-Reply-To: <aWVnVzeqWJBXwBze@krava>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO3P265CA0018.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:bb::23) To DS0PR10MB6271.namprd10.prod.outlook.com
+ (2603:10b6:8:d1::15)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b779c646-64c7-49f8-8847-8819227e3f1f@efficios.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB6271:EE_|IA1PR10MB7309:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6da6fc8e-a98a-4e5a-bcf8-08de529344b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7142099003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c1lEcjdvK0ZKSGtwcGZlUnNNOU96ZlFWYVc5VUdwVExNSGsvdC8rdkVwSFdX?=
+ =?utf-8?B?OStxRCsra1JZUGZ1aWUxVGcvd2ZYdEVOV2FFZzFJUzhvSXNhYXA5K1lGRkxv?=
+ =?utf-8?B?TFcrYjRHL0JyZU1vcmR2VDhoNUx5aVJzaWhlVmFxelYxWTFJVFN1N2htSXg5?=
+ =?utf-8?B?enV0NGdIZU40a2c0K0M4bkhNV0ZKcy90ZjhtK0VvVkdtY1Y5YkRIeFo5V2RR?=
+ =?utf-8?B?RFJ2N0ZYNVFyejRaTGozdTI4Um95ODRlQ3RPTExGSFRzWVd6TlBVUENKY09i?=
+ =?utf-8?B?aVJjS0hHbGFJNFFGTmRYeGkySFZCR1lPWFhSajdDU0Vtb3I3WG5XR3pGVnVr?=
+ =?utf-8?B?SE5tMEUzd2ZHZlhCYVBnY0V3Q3MvdWtCSThhWFMrRkswQ0NoYjVvdzJKMVlr?=
+ =?utf-8?B?Ny8zVnFLZTU0N0xLQTU0b1owL3BWVHJick5CUEk2SDZmUHNtZHpURGJrMmMy?=
+ =?utf-8?B?QjN4VjduOG5kS3oyakRZTU5ycFI1MnlqeUJNU2dUcGVmYUJKelBqcGNGQ3d1?=
+ =?utf-8?B?MVYwVjFwTFVreVpzRU9ObnBQaWVQK0JIL2s5Ly9PTTlVcXk1NnVKZU1oNnFK?=
+ =?utf-8?B?RTR0KzFKR3p6WnB4b1ZUSWR5RTZaRTh4Nm1ZaUdKbU9pdlFIc1ZicjAzdWY3?=
+ =?utf-8?B?N1ZLSVdQRWNxM09zdWd4WFBobkx5cWYycEpjL09PSlZtT1hIMjA5cVJQNDBU?=
+ =?utf-8?B?NlpTWFY1Q3RCYThjREdIOW5raWhGL0lHbmRzWHBoaG04cHpHR0Q3a2lid2VM?=
+ =?utf-8?B?ZFJKelBaN1h1UHdkV2owMU4vOW9ibkpoem51aVdiMkwzRGpsWGdxckdQeTZY?=
+ =?utf-8?B?UnhqSlF2MDUxSWFKUWNjQk5mVHhjczRKMk92WkpWQ0VudHJSaDQ0YTNsdFRa?=
+ =?utf-8?B?VlJUNHhmWkJiSlpheUU3Z0dXbCszZVlHblI2VjBJbXk3WjczTGNJM2pZa1Js?=
+ =?utf-8?B?YmJDT20wdC9XT2E1RGY2eFFlUWY3QnNkUmhUV1d5cWhyelkrcFlPWWxoMWhK?=
+ =?utf-8?B?cVRQdzFWTC9OTWtMZTFyM0hsMElFeDlMN1hZV0k3ajZGQU1iNlpQM3lOaDJV?=
+ =?utf-8?B?YUsxRmlQY3psQjd3WC9Vb0MyS1EweHZVRzZjUDB4UUtpSGRoeHJHdzFvSzJy?=
+ =?utf-8?B?QkFiSGhsaEZyNmVHaEhaKzRsU3Q3Y0lnZWVJRmlaNGg0TCsvUS9Gdk5UakVh?=
+ =?utf-8?B?a2swUGRBdnFRTzNuTUluc200c09LRjIwL3JuOGtWZFdNQlhPM0dGMEtWTUVW?=
+ =?utf-8?B?cVJSK3E3OG9qU1BQWGV5Z2Q3WlY5UlBtcDRVcHR6M05YaVAxa0YrL2FhTkZ3?=
+ =?utf-8?B?NzBwbXJ6OTZLVFlVbVBIQ2V1K2FmUnZWd3lFVnZWRzNLMUlVeVN6RytmVE1p?=
+ =?utf-8?B?QWhaZk9xQyswUkQrNHQ0RXFOZDNDRGJHNFI0YkJKOUM3SkhHZ3ZiY202SUhS?=
+ =?utf-8?B?RXFERk1PSU5rRklsUmxFd0toUDliVmVyVXZNaU44TGdSZzI2NWt4NXkwY3NP?=
+ =?utf-8?B?YnBUNk5nMmNncWYxbkh5bllOZVlVa1o5UmorbDBQSHlOWDg1UDF5TktCcTRQ?=
+ =?utf-8?B?YlQwY2hVY2FkTkEvM3hsdXdSblJpd0dHRFcyNWpIcDlCS3ZjejFGTGt4OVVN?=
+ =?utf-8?B?VXFqRU5LcUh5ZngvK0h6MG9wYldVYW42NUxaT2poa1hSN0Q2bVdtRm05a3l0?=
+ =?utf-8?B?aWs1MWV6RWRsazIvZ0pleDc5TVlJSXZOb1F5cTZvcWkwY2tyV0h2Sk5ONWxV?=
+ =?utf-8?B?dE9haFVIOGcxVDFyWndzaUo1a3lZRFk3KzZ6QlJISDVyT244WDFJVXg2MHRl?=
+ =?utf-8?B?L3NOZEp4Mi92d3h6NDNpeHQ0Z2pJbFpTMG91NVNhMkQvcmI2dEg5SzFtaVFO?=
+ =?utf-8?B?UEtzRlFkVHhybTVjRmVoWTBaUVduTzFVU0JiMXRoaFZVeE92LzU5T0J4VGVC?=
+ =?utf-8?Q?sL5usNFExCYB5DTGYZw8cyLS4BEzYdhl?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6271.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7142099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eUJFMmcvZkt6bUwyN2wvZGVHdzFQR2FaeW9GWWc3alhpbHlVOEcxVzNBdk1H?=
+ =?utf-8?B?TGtJZlhheGduTmdLeFBvRjh2YVZ4QzVNQmdoMzc1bW9MWW9oYXF4WWVoVXgr?=
+ =?utf-8?B?S2kybktpMUpsRXlVbmxFMDhSZmJkTjNRMlB2Z3Fhb3FwTXlyWk1zOWRHMjZq?=
+ =?utf-8?B?WWcwU0NyR0RnbEZicXNKdlhFVlQxRjNlTWNoanBwVjJXSWJ0aTlrMnZ1cElB?=
+ =?utf-8?B?VTloaGloMzh3ZzhEWTdyNjFQTlhUNUhSaWZtcXVyRWR6TzRXNU9jTExxN0JG?=
+ =?utf-8?B?TjFzYVdJOXMrZFpVR0dtMHV0c0tiaUJ0c2RVREd5bm1XL1E0Yk9oNk42dVpW?=
+ =?utf-8?B?dTl1REZYVkFvTkQ5RjBtTHVaa0FjSzU0WFFZNGQrL0dRQXNBbklZRUhwNnJv?=
+ =?utf-8?B?Z284eEpNSDdISFdFUU0zUHpETFc3UlhXVmRneUVoRGNLRmpqK25Zd21FeHVh?=
+ =?utf-8?B?WlVCNEtnWE16bUZ6MzJteG9oRGIvdUR3SWMzQ3hMTVN1YjBJRWlGQUk0clJ4?=
+ =?utf-8?B?dkRBTDVmbU1YQlpJTUl3NjdpQUo1TlcxVTZPSkxxQmozbVdKTzl2UHBXVUZr?=
+ =?utf-8?B?bGdwbVdiNkF4aFBnREFaTDM1ZVgzem5ZdmMyc1JIUWxsUklUSjJITjhESGlj?=
+ =?utf-8?B?dnBHdUxBTlRSVEpucjVUVTM0aHFtUS9WY1JkaGJXMXozUndZaElSakhZdnBX?=
+ =?utf-8?B?ME5Fb0tGSmwyRktUVHVrRjJjRHpjYi9tRFpYMkNFWlYzcHJlbnRCdW5PL2pE?=
+ =?utf-8?B?M2U3bWxEeCtrSkdjdXZLa21lWG5ITUpkWU5WTm1ySDNQTUl4WmIxQTc5YkZ4?=
+ =?utf-8?B?YnBsenNUSXRTNFE4d3E1RlRldUtSM1Njb3ZibTNPemNjdE5EMERLUUZjWjds?=
+ =?utf-8?B?NndZUUplUWNZU1JyNmRueGU0dVVGb1ZZTkxMMjVRdHRzVzRLeFRscmpqR0pj?=
+ =?utf-8?B?WUF5QnVqTTBudzBMcFM0amk4Q2lOYm83V01PVzNIS3dTeUhPcVR0U0FyQXRU?=
+ =?utf-8?B?NWlWNzZ3RXdBNjQreUNvdkRwOWZvZ25FTGxWWm9vR1ZDZ0xtMUVvSU5lOERk?=
+ =?utf-8?B?aFAzejNCVjF4ODkxYkJ2d1pyQUczY1kwSU52VmE4N25VRU1VNEZJa1c4VEZ2?=
+ =?utf-8?B?NmZDN2R0ajFUeWhFcDk1U3BNK3J4VEN6cURtcVJuUk9WYjh6VnpDV0VMUDdr?=
+ =?utf-8?B?TWVIRHZKbXhReUh3cjFkRG5yYWtjUjZBNDZTdVIzcG40aVBBVG5mQmJRdEtx?=
+ =?utf-8?B?cFVIU05BNnJJNjZBYnRVUHNGY1Nucy9zVlVzZ2ZiUTQyL0RycUR2QTkwMGcr?=
+ =?utf-8?B?MG9RUEE1bHh5Rk5OU21KQ2ZWZWFoTXZhQjFZR3V1NTA3UFlBMUNNNkhIWWVp?=
+ =?utf-8?B?SzJRdWdoa2RXWEZSVmdPbmh1OFhOWlBmUTRtRlowMEVSTEI3ajBVOVdrMU1j?=
+ =?utf-8?B?eVBUMk1TZ0ZZUy9zdjFrYks3cXdQM1NtOFBWQkVZVGxHcWMzSmRrSExOY3FS?=
+ =?utf-8?B?SXI4STRjYzhGQzFkOE5ZUU9mOU1rTFlsOEU0WkpBc2RIM09mR2poYjZCcUNR?=
+ =?utf-8?B?SEN6Z2tzVUI5MTB2b0ltZnJCMG82Z216Rnlqd3JuL1FaMzlxdTRCZnZVVGFt?=
+ =?utf-8?B?U1RVMHM3MFg4ZE1CbWM1aGtjQzNDdUtrYUZ0MWJXeS9SUGpsYjRLdTZrY0xL?=
+ =?utf-8?B?d2FiQUhDbjFYeFZnb1BGS0VzQTBrUzlrRUViM0JPaEFzYXpOZGM5d3N4NGw2?=
+ =?utf-8?B?WnpacXg5ZWxTSWtYcVMyNjVXcTJSajUrUklFTFBYdEorNWthVU9RTVdyckg0?=
+ =?utf-8?B?K0t4ZDdsaklTOHcvTHRaYmVLMFNKMlAvVWpwd1VKSzA3UVNQMzY5UjhEbEZo?=
+ =?utf-8?B?V2ZlQjVBRzVLd3J5UEoyUnZiclNaWm1JZno5Sk9vVkJvN0tkeGlTdnh6b1dN?=
+ =?utf-8?B?WFpMOVVsdlo0VG9YbFFqL1NVd1pSYTNIWjRJaDJGdUVwM3N6WVpuVWM4dVFk?=
+ =?utf-8?B?YjRVQjBrYWZ3WWpnZ21VckJRN1plOHhEbXV6TWV0NHZiVFRINDBKc1Vvc1FK?=
+ =?utf-8?B?eEh6K3gvMkxDVTFqRHhHQ2REMDdjN0ZtY3IvQXpCa3liU1h6Q0JCNEdsaGJP?=
+ =?utf-8?B?M1VuY2h0WEhaTEhVT1E0QlhaSTk3UVRNVGNDeFpGaGFNQVJBNjl5bnpRUFZ3?=
+ =?utf-8?B?SmM4N3F3K3dNZUJ4cW1rUTRzZzFmNWx5bDJ1UDF6amVOd1NFUzBkTGtDTlBs?=
+ =?utf-8?B?Y20rS0FmT0ZBMkNIZUV4dXdHYzNGY1NoNlkyOXh0aEZPc283MzFOTVBjSE1s?=
+ =?utf-8?B?V0N2Vmx6cEp0SFhCVDNnS0tmQTNPUytHNUlQNEFiNUloc3h5aWsvQT09?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	vpDpEUB+xrtlKbFA3HzakAnbVQOqA1fyqF4x7ffcloEU8h1NTNYGmN5AH7WhV+zpW1qrIe9wD1LQrGX6w8jf3ZfXeqTbbvvo3VxAW92c20Vyz8B1b4//pNbn1mAF2TqQAPG5CgZ/aCFg+6mIaiPFvBbExWJGrdOj5dCv/+qOJn2/5EE+Stbfy1u3sLk6c4CZ/PRcQU6y/6GjjKpTbGLnv/Dy5p4M5FKSjRXIW8wQtfUReBJd3ihCu/Msrtf/IwZi7I87vcko3CfUalLqwxE+MKfsarIPdHnCEdsI7w2eHyC3yoq1izPbYqmYItO0w4dqhx1fxSbBnzp+IlPPLLg15XNrvQLKCh/09EamBIpO71S91/n0pkhKovSjKNY0dibGarm3/sZ1CcKVbH2pkwgJjcG5qO//8U5carOXZqPt2Jh0c0efavjHFr5YBf234JP1gDIP2Ujkj8AAmOghnawEfGV9IMtSMW3wXv2etEU/8iM318MMePrh8u7mCXVXZvd480BCkOsJlzkKJWip2g8cwOpcbKTcV4OyPUO3IckT5KNmDeOxtadxjH4cEOcdf9Uo1akWe0SKCebAMmiBeTZJx/U5iQzFW/t7P2VUC/U2PLM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6da6fc8e-a98a-4e5a-bcf8-08de529344b8
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6271.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 11:02:40.2496
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EkbelhMuMIWJU5VqyIaVPtAV4OHdDZalNrpEcNvNAKkZ70fTynsWpaQbr7acKEXqsEQmQEfiVdqe8pfjovogug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7309
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-13_02,2026-01-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2512120000
+ definitions=main-2601130093
+X-Proofpoint-GUID: vGeoY63jQm8cpyex_zG6j7tHemT_ZBVV
+X-Proofpoint-ORIG-GUID: vGeoY63jQm8cpyex_zG6j7tHemT_ZBVV
+X-Authority-Analysis: v=2.4 cv=ZtLg6t7G c=1 sm=1 tr=0 ts=69662655 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=t18Owuh5Nn7Kg4ywImYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDA5MyBTYWx0ZWRfX/ny+0ugz3vYR
+ 4It3z0JzPfvRgPYMR3XSlNrUYy8/fjSiG5Foe/ra9N1eYobp2DmRozNK0dhkNq94thtlvZ+EqXA
+ nW4jazGscAEDeCvhJSo9n7EPTyktrtOc1l5zbhd2ZhA5Tkg4LmPVHhIrVikuwatbYOrolL6lqPt
+ Xsjf9M34LaqfLuk9fwMW7REB5ROu0pwnEBAV3JHE6sWgYpWOq0WvE2gxJiJliGLlnvaBZ4DwzTw
+ yUdpWhSi7xrocKp5/Nk/YJ+ocCMyBo7+hItoGdHGIm0YVsubZtXN9qIUNu1dlmOJBDARsX3FCZA
+ evXQQP7SQgtyxWvIjfx9dFeMfDFrVye0fhf40fj08MBFdjVRg6d3JDQoXGXTb3R8D8eoTAdGf+l
+ NBCwo4XDdo1lWFOc5wjG5z1z2s7PbgNsrNIiznZ4tiUYcrk32M7QIx+Mq9rct26/+pI2yEEApcQ
+ IlHV4zFrVinWIj4XjxA==
 
-On Mon 12-01-26 19:47:54, Mathieu Desnoyers wrote:
-> On 2026-01-12 14:48, Michal Hocko wrote:
-> > On Mon 12-01-26 14:37:49, Mathieu Desnoyers wrote:
-> > > On 2026-01-12 03:42, Michal Hocko wrote:
-> > > > Hi,
-> > > > sorry to jump in this late but the timing of previous versions didn't
-> > > > really work well for me.
-> > > > 
-> > > > On Sun 11-01-26 14:49:57, Mathieu Desnoyers wrote:
-> > > > [...]
-> > > > > Here is a (possibly incomplete) list of the prior approaches that were
-> > > > > used or proposed, along with their downside:
-> > > > > 
-> > > > > 1) Per-thread rss tracking: large error on many-thread processes.
-> > > > > 
-> > > > > 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
-> > > > >      increased system time in make test workloads [1]. Moreover, the
-> > > > >      inaccuracy increases with O(n^2) with the number of CPUs.
-> > > > > 
-> > > > > 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
-> > > > >      error is high with systems that have lots of NUMA nodes (32 times
-> > > > >      the number of NUMA nodes).
-> > > > > 
-> > > > > The approach proposed here is to replace this by the hierarchical
-> > > > > per-cpu counters, which bounds the inaccuracy based on the system
-> > > > > topology with O(N*logN).
-> > > > 
-> > > > The concept of hierarchical pcp counter is interesting and I am
-> > > > definitely not opposed if there are more users that would benefit.
-> > > > 
-> > > >   From the OOM POV, IIUC the primary problem is that get_mm_counter
-> > > > (percpu_counter_read_positive) is too imprecise on systems when the task
-> > > > is moving around a large number of cpus. In the list of alternative
-> > > > solutions I do not see percpu_counter_sum_positive to be mentioned.
-> > > > oom_badness() is a really slow path and taking the slow path to
-> > > > calculate a much more precise value seems acceptable. Have you
-> > > > considered that option?
-> > > I must admit I assumed that since there was already a mechanism in place
-> > > to ensure it's not necessary to sum per-cpu counters when the oom killer
-> > > is trying to select tasks, it must be because this
-> > > 
-> > >    O(nr_possible_cpus * nr_processes)
-> > > 
-> > > operation must be too slow for the oom killer requirements.
-> > > 
-> > > AFAIU, the oom killer is executed when the memory allocator fails to
-> > > allocate memory, which can be within code paths which need to progress
-> > > eventually. So even though it's a slow path compared to the allocator
-> > > fast path, there must be at least _some_ expectations about it
-> > > completing within a decent amount of time. What would that ballpark be ?
-> > 
-> > I do not think we have ever promissed more than the oom killer will try
-> > to unlock the system blocked on memory shortage.
-> > 
-> > > To give an order of magnitude, I've tried modifying the upstream
-> > > oom killer to use percpu_counter_sum_positive and compared it to
-> > > the hierarchical approach:
-> > > 
-> > > AMD EPYC 9654 96-Core (2 sockets)
-> > > Within a KVM, configured with 256 logical cpus.
-> > > 
-> > >                     nr_processes=40    nr_processes=10000
-> > > Counter sum:            0.4 ms             81.0 ms
-> > > HPCC with 2-pass:       0.3 ms              9.3 ms
-> > 
-> > These are peanuts for the global oom situations. We have had situations
-> > when soft lockup detector triggered because of the process tree
-> > traversal so adding 100ms is not really critical.
-> > 
-> > > So as we scale up the number of processes on large SMP systems,
-> > > the latency caused by the oom killer task selection greatly
-> > > increases with the counter sums compared with the hierarchical
-> > > approach.
-> > 
-> > Yes, I am not really questioning the hierarchical approach will perform
-> > much better but I am thinking of a good enough solution and calculating
-> > the number might be just that stop gap solution (that would be also
-> > suitable for stable tree backports). I am not ruling out improving on
-> > top of that by a more clever solution like your hierarchical counters
-> > approach. Especially if there are more benefits from that elsewhere.
-> > 
+On 12/01/2026 21:27, Jiri Olsa wrote:
+> On Fri, Jan 09, 2026 at 04:36:41PM -0800, Andrii Nakryiko wrote:
+>> On Tue, Dec 30, 2025 at 6:51 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>>>
+>>> Following changes need to lookup trampoline based on its ip address,
+>>> adding hash table for that.
+>>>
+>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>>> ---
+>>>  include/linux/bpf.h     |  7 +++++--
+>>>  kernel/bpf/trampoline.c | 30 +++++++++++++++++++-----------
+>>>  2 files changed, 24 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+>>> index 4e7d72dfbcd4..c85677aae865 100644
+>>> --- a/include/linux/bpf.h
+>>> +++ b/include/linux/bpf.h
+>>> @@ -1325,14 +1325,17 @@ struct bpf_tramp_image {
+>>>  };
+>>>
+>>>  struct bpf_trampoline {
+>>> -       /* hlist for trampoline_table */
+>>> -       struct hlist_node hlist;
+>>> +       /* hlist for trampoline_key_table */
+>>> +       struct hlist_node hlist_key;
+>>> +       /* hlist for trampoline_ip_table */
+>>> +       struct hlist_node hlist_ip;
+>>>         struct ftrace_ops *fops;
+>>>         /* serializes access to fields of this trampoline */
+>>>         struct mutex mutex;
+>>>         refcount_t refcnt;
+>>>         u32 flags;
+>>>         u64 key;
+>>> +       unsigned long ip;
+>>>         struct {
+>>>                 struct btf_func_model model;
+>>>                 void *addr;
+>>> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+>>> index 789ff4e1f40b..bdac9d673776 100644
+>>> --- a/kernel/bpf/trampoline.c
+>>> +++ b/kernel/bpf/trampoline.c
+>>> @@ -24,9 +24,10 @@ const struct bpf_prog_ops bpf_extension_prog_ops = {
+>>>  #define TRAMPOLINE_HASH_BITS 10
+>>>  #define TRAMPOLINE_TABLE_SIZE (1 << TRAMPOLINE_HASH_BITS)
+>>>
+>>> -static struct hlist_head trampoline_table[TRAMPOLINE_TABLE_SIZE];
+>>> +static struct hlist_head trampoline_key_table[TRAMPOLINE_TABLE_SIZE];
+>>> +static struct hlist_head trampoline_ip_table[TRAMPOLINE_TABLE_SIZE];
+>>>
+>>> -/* serializes access to trampoline_table */
+>>> +/* serializes access to trampoline tables */
+>>>  static DEFINE_MUTEX(trampoline_mutex);
+>>>
+>>>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>>> @@ -135,15 +136,15 @@ void bpf_image_ksym_del(struct bpf_ksym *ksym)
+>>>                            PAGE_SIZE, true, ksym->name);
+>>>  }
+>>>
+>>> -static struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
+>>> +static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
+>>>  {
+>>>         struct bpf_trampoline *tr;
+>>>         struct hlist_head *head;
+>>>         int i;
+>>>
+>>>         mutex_lock(&trampoline_mutex);
+>>> -       head = &trampoline_table[hash_64(key, TRAMPOLINE_HASH_BITS)];
+>>> -       hlist_for_each_entry(tr, head, hlist) {
+>>> +       head = &trampoline_key_table[hash_64(key, TRAMPOLINE_HASH_BITS)];
+>>> +       hlist_for_each_entry(tr, head, hlist_key) {
+>>>                 if (tr->key == key) {
+>>>                         refcount_inc(&tr->refcnt);
+>>>                         goto out;
+>>> @@ -164,8 +165,12 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
+>>>  #endif
+>>>
+>>>         tr->key = key;
+>>> -       INIT_HLIST_NODE(&tr->hlist);
+>>> -       hlist_add_head(&tr->hlist, head);
+>>> +       tr->ip = ftrace_location(ip);
+>>> +       INIT_HLIST_NODE(&tr->hlist_key);
+>>> +       INIT_HLIST_NODE(&tr->hlist_ip);
+>>> +       hlist_add_head(&tr->hlist_key, head);
+>>> +       head = &trampoline_ip_table[hash_64(tr->ip, TRAMPOLINE_HASH_BITS)];
+>>
+>> For key lookups we check that there is no existing trampoline for the
+>> given key. Can it happen that we have two trampolines at the same IP
+>> but using two different keys?
 > 
-> Would you be OK with introducing changes in the following order ?
-> 
-> 1) Fix the OOM killer inaccuracy by using counter sum (iteration on all
->    cpu counters) in task selection. This may slow down the oom killer,
->    but would at least fix its current inaccuracy issues. This could be
->    backported to stable kernels.
-> 
-> 2) Introduce the hierarchical percpu counters on top, as a oom killer
->    task selection performance optimization (reduce latency of oom kill).
-> 
-> This way, (2) becomes purely a performance optimization, so it's easy
-> to bissect and revert if it causes issues.
+> so multiple keys (different static functions with same name) resolving to
+> the same ip happened in past and we should now be able to catch those in
+> pahole, right? CC-ing Alan ;-)
+>
 
-Yes, this makes more sense.
+We could catch this I think, but today we don't. We have support to avoid 
+encoding BTF where a function name has multiple instances (ambiguous address).
+Here you're concerned with mapping from ip to function name, where multiple 
+names share the same ip, right?
 
-> I agree that bringing a fix along with a performance optimization within
-> a single commit makes it hard to backport to stable, and tricky to
-> revert if it causes problems.
-> 
-> As for finding other users of the hpcc, I have ideas, but not so much
-> time available to try them out, as I'm pretty much doing this in my
-> spare time.
+A quick scan of System.map suggests there's a ~150 of these,
+excluding __pfx_ entries:
 
-I do understand this constrain and motivation to have OOM situation
-addressed with a priority. I am pretty sure that if you see issues in
-OOM path then other consumers of get_mm_counter would be affected as
-well. Namely /proc/<pid>/stat. There might be others but I can imagine
-that some of them are more performance than precision sensitive.
-All that being said it seems that we need slow-and-precise and
-fast-approximate interfaces to have incremental path for other users as
-well. Looking at patch 1 it seems there are interfaces available for
-that. I think it would be great to call those out explicitly in the
-highlevel doc to give some guidance what to use when with what kind of
-expectations.
+$ awk 'NR > 1 && ($2 == "T" || $2 == "t") && $1 == prev_field { print;} { prev_field = $1}' System.map|egrep -v __pfx|wc -l
+155
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Alan
