@@ -1,205 +1,108 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FC626B74A;
-	Tue, 13 Jan 2026 23:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA136BCC9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 23:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768346032; cv=none; b=Tpbn1M8VLWMAp+Deg6zNq/FL/Opl46Q6o9h0dYkNocz7mxy3kUZz1+25Gy6sGhnqy3pozjGMxS/4YzZhbIiLaz6fUo45LqbD2C43EmE09IwCpxwG3SoEqx5IvnnPgkONt7tCZWuWOq+boqvDzyXk1aUXodbiFFdlMNsPYO50pAY=
+	t=1768347878; cv=none; b=fUDz2E3AZQxANaeLt3kgPOuQZQ1jw27VJ0FJr+zS9yCqILYJSvUAvl7ScI7f+7q0RL3NH87TF9Db9gOVifH81q2AutnepmiaJPUlxmaOxqWRzhW0rgbScOAFEvUN2mtvDSb3CZCR8J35xhuAj4byqh/2/R5L+bBcnb40OXu2JEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768346032; c=relaxed/simple;
-	bh=pL6O0xc9qxnlWkXFaYtPJbO1YELosPyh9YQ4IOndaXQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m0UMEKJ3HRVh3mxxV2CA0TIoupQFHfITJyflUD6oUmMyLclcEgmwkwdk498gCb8Z0eIHkLy8i+dGh3ony03+GmEZn0JpLb+DK39tG9T7fZyr0QmPukUe5ldJMsPVV40S4avRyA3xJK8f1nqCltq/egHQf7zAs4KzZ8fH4vlOFV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ggUe5AZi; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1768347878; c=relaxed/simple;
+	bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fgJ6hoi55VeIf2tl4pUnRzUMiLZkmgZezW2jlgnS3Cqy8KWpnHsZ+Lsz3SjwpRBGn2WQoKHaeaDXTi1jZmnyso2Nyk1QAby+LQz914MTsMgKw6+sqyBrB4IL/+5NacH1slYMCxIvQPne18xY3A2GP0NB4G/O43x60nZ4xyCfvWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hEDNyfpP; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ggUe5AZi"
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60DJdo4X3597538;
-	Tue, 13 Jan 2026 15:13:14 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=6b8lhji3oxV30DYJl9hk8PPRW00E8IBcoZn7eC/2TZ0=; b=ggUe5AZiRPYJ
-	M5Ht6Qu+EbaTJTqAcfGlNPDca8SGxU6MU7GhWm6lm6ZewM9R9nnjfnX5xZP5WOoa
-	jUGkKFNIEghdQuCPqhFZdH5mlPP/AWFbU6Zl6ImP2U3xsqpXotxbrGj93ke/Bqsq
-	lx5BJ6EXIPFE2tRKAt5eMwz4fZLsjuAGjugTsKC0E17iGNsGNSP5ZJy6TWvZqHpZ
-	CuihkxRZUjjC6vLbbdyM8RMNdmT8vC1gqxp2zbCSzoM0nJxk4wNefdtkdVH0GWVt
-	jt//M7N/POX8bCqn0BvU/eGc9OjOqWgTPOOQh2rcIiubinbgeFHQZ+ASUwftJQaY
-	I6qeLCODHA==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bnqktmu4q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 13 Jan 2026 15:13:13 -0800 (PST)
-Received: from devbig003.atn7.facebook.com (2620:10d:c085:108::150d) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Tue, 13 Jan 2026 23:13:11 +0000
-From: Chris Mason <clm@meta.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-CC: Chris Mason <clm@meta.com>, Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, David Hildenbrand <david@redhat.com>,
-        "Liam
- R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Masami
- Hiramatsu" <mhiramat@kernel.org>,
-        Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>,
-        Jann Horn <jannh@google.com>, Pedro Falcato
-	<pfalcato@suse.de>,
-        Zi Yan <ziy@nvidia.com>, Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts
-	<ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song
-	<baohua@kernel.org>,
-        Lance Yang <lance.yang@linux.dev>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: Re: [PATCH v4 5/9] mm: introduce copy-on-fork VMAs and make VM_MAYBE_GUARD one
-Date: Tue, 13 Jan 2026 15:12:55 -0800
-Message-ID: <20260113231257.3002271-1-clm@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <5d41b24e7bc622cda0af92b6d558d7f4c0d1bc8c.1763460113.git.lorenzo.stoakes@oracle.com>
-References:
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEDNyfpP"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so4374693f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 15:44:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768347875; x=1768952675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
+        b=hEDNyfpPmk7rSlHY7ocQAO5eIShqlrfcBBUJ3bzBlZmysJw+HGu7hP2lDP4Yno+W/C
+         xtzbkpVzU16BM/JlLbCscKV3kqzEhi5nTFWgZv8dSdApl0QrzDZUqN3Cu3dEhbbJEt27
+         qNwchFflme1TsAJLLvIlTgisf9Q/MnSI58q5LpPBaTutlOT+H8bQAY4LuA5OA735uqb+
+         Ujjq7uH7U7LuJtLTjfvul5nlk8k0pu0HFJ/cB29B1aCioHSObW4cxKOnYQZXUIB6UVyY
+         me/8rNkgVWvTzxodP3W+crtPd0CrX9jb0rEjhKmmakkFrMIw0OMyIUjyUIMOVIps1BCq
+         LsOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768347875; x=1768952675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
+        b=FPdPNw7HySDOmrfIFE5OWcATZP68UxWdb9q1PTCT7VXUEEKdm6WgTHwTeSkpprqqd/
+         YRS/m31irtCF6oe+X0+y8UZTaJB0wb3NUCpd1gPZd1JL5uEuGkVnHmGbbW+aXEUxXsa1
+         4cpqRYY0EaNfReO1li/ddh0x5CbVD7pqlMvjCYtvXoH3OckbZGRWASc47aIxzyEdBi6Q
+         //frAdSUAlpBBl04pYxxb73Pj1TvPpzALEYFC4lmAAK2w0I4h0JId+HxPeHYQpZ4FRq2
+         onb+6OIeKSsdZU1iJpCbtb7je7/IR34mP5olL/hrC5lkcvQb9SXbjS3uXDcLCXLh8qr0
+         ng7g==
+X-Forwarded-Encrypted: i=1; AJvYcCV+/zt0X/Mm2FA7jEMzesRr6twAUE382hwTzuuE4qBebF1KGBoD6MzTy46ThEaBl1jveTVj0+RUzHAxpCDNLIg8WHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVebNPxsWSkx2eNocM/2B/HCdwbFC2a3FkXPZUMWU/QdQjfN1u
+	PrkkUyQh2IR24qKYWDJX7kpQC0u3c8TN8pBctcyu77wFES1RtEmFiMI8IrIXUi4Xt1dPWAZ04XO
+	R5fMY0spzeEtJVSA4cS/FM2noTpqIIv8=
+X-Gm-Gg: AY/fxX467Sdtst84v37SOdGD2AtKGMp7cb0OCc5RzuSCxwYEzVCQ41JHYL2v20c4vc1
+	BSMmqbmVKr2xH4kzeqTCPsm0X01j+eWjl3U/nNaSZ5po/KffHc/FZ1fdY/eekPbL+WNYLsSuevz
+	UbDyhbHH9fxV5LO6VdNjYvlsiynlhC49M3K/KAfpYLphtqEF+W5e+RqHqlV136YVyrWGI82UDEV
+	xVLAwlky3qjbmflmCVaDo3ipCJ8hH9IKxNJ7rvIyEsQm430VT4ZH+35WdbqVTB0gNrf8UtfvKbg
+	ug+4YIm44nma5/JUFG47lD3BAxJ7
+X-Received: by 2002:a05:6000:2502:b0:430:f622:8cd4 with SMTP id
+ ffacd0b85a97d-4342c5576a2mr546852f8f.49.1768347875049; Tue, 13 Jan 2026
+ 15:44:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=M89A6iws c=1 sm=1 tr=0 ts=6966d189 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=K3mAnt_iSIqV1N-OikAA:9
-X-Proofpoint-GUID: 5-CcFQBuNngsaUgw3TgiRUAET30XzMDq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDE4OCBTYWx0ZWRfX2DhGmdnpVK4A
- LH9faNP4/xk97+1ec61zl/gKesEZTMzKwF6k//6ncpB1RaeYymPjCSpxJ2jEETu4T6gnYwJtU54
- dCwogLU/Q5/xmR5fK6UN4t2MiJawyueXAkZxe2JhOIpCHtoLoChUAEp1Q978J5aUsRTT54fXXCb
- t//mqC+Wss6Uei+7zmlvdgyGai3YYItrHWylZL6bWh93e1NzYhgcrC8OwtP0uc4YaVy0xk0E/ew
- 5lMnpZ5m1uEStBT0eIYFluWR8uKtLQGQZEljmswk8De8/R0v817ts8rGwdem4EtuzHqnXZpGUZt
- hJ2a+EgsGXYZ9brFHP5PkXFK9nJ55WexMz96w3yMLDjEJuyuVLlFzxoi3+ZP2CLDcdGo2YG543E
- vGDTJ5RNMtJMQcwkxZzJAqV3L09aYdLn+a2xisbuVVTHDsD2f7m1SCWF9PeLUo6Ka6XaKaNnEG/
- nKjXIdXrS1R7qgsJg0Q==
-X-Proofpoint-ORIG-GUID: 5-CcFQBuNngsaUgw3TgiRUAET30XzMDq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-13_04,2026-01-09_02,2025-10-01_01
+References: <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
+ <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
+ <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
+ <20260110111454.7d1a7b66@fedora> <CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
+ <20260111170953.49127c00@fedora> <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
+ <20260112085257.26bb7b5b@fedora> <CAADnVQKvY026HSFGOsavJppm3-Ajm-VsLzY-OeFUe+BaKMRnDg@mail.gmail.com>
+ <20260113142340.xEFFVvni@linutronix.de>
+In-Reply-To: <20260113142340.xEFFVvni@linutronix.de>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 13 Jan 2026 15:44:23 -0800
+X-Gm-Features: AZwV_QiZTOkqU7DSGKGdqwRyoCz_0cyvCLSbxWK4R4mCP4W56GAgkxLydSRDg94
+Message-ID: <CAADnVQKMR6kkqC5JQceg6A8F6qSd_cYQE--1ToxwDUxTytPbGA@mail.gmail.com>
+Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
+ __DO_TRACE_CALL() with SRCU-fast
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Nov 2025 10:17:47 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> Gather all the VMA flags whose presence implies that page tables must be
-> copied on fork into a single bitmap - VM_COPY_ON_FORK - and use this
-> rather than specifying individual flags in vma_needs_copy().
-> 
-> We also add VM_MAYBE_GUARD to this list, as it being set on a VMA implies
-> that there may be metadata contained in the page tables (that is - guard
-> markers) which would will not and cannot be propagated upon fork.
-> 
-> This was already being done manually previously in vma_needs_copy(), but
-> this makes it very explicit, alongside VM_PFNMAP, VM_MIXEDMAP and
-> VM_UFFD_WP all of which imply the same.
-> 
-> Note that VM_STICKY flags ought generally to be marked VM_COPY_ON_FORK too
-> - because equally a flag being VM_STICKY indicates that the VMA contains
-> metadat that is not propagated by being faulted in - i.e.  that the VMA
-> metadata does not fully describe the VMA alone, and thus we must propagate
-> whatever metadata there is on a fork.
-> 
-> However, for maximum flexibility, we do not make this necessarily the case
-> here.
-> 
-
-Hi Lorenzo, one more from the review automation:
-
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index fea113d1d723c..af2904aeb1631 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -555,6 +555,32 @@ extern unsigned int kobjsize(const void *objp);
->  */
-> #define VM_IGNORE_MERGE (VM_SOFTDIRTY | VM_STICKY)
+On Tue, Jan 13, 2026 at 6:23=E2=80=AFAM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> +/*
-> + * Flags which should result in page tables being copied on fork. These are
-> + * flags which indicate that the VMA maps page tables which cannot be
-> + * reconsistuted upon page fault, so necessitate page table copying upon
-> + *
-> + * VM_PFNMAP / VM_MIXEDMAP - These contain kernel-mapped data which cannot be
-> + *                           reasonably reconstructed on page fault.
-> + *
-> + *              VM_UFFD_WP - Encodes metadata about an installed uffd
-> + *                           write protect handler, which cannot be
-> + *                           reconstructed on page fault.
-> + *
-> + *                           We always copy pgtables when dst_vma has uffd-wp
-                                                           ^^^^^^^
-The comment says "dst_vma" but the new code in vma_needs_copy() checks
-src_vma->vm_flags. Is this intentional?
+> On 2026-01-12 09:19:58 [-0800], Alexei Starovoitov wrote:
+> > > Now if you are saying that BPF will handle migrate_disable() on its o=
+wn
+> > > and not require the tracepoint infrastructure to do it for it, then
+> > > this is perfect. And I can then simplify this code, and just use
+> > > srcu_fast for both RT and !RT.
+> >
+> > Agree. Just add migrate_disable to __bpf_trace_run,
+> > or, better yet, use rcu_read_lock_dont_migrate() in there.
+>
+> Wonderful, thank you.
+>
+> Is this "must remain on the same CPU and can be re-entrant" because BPF
+> core code such memory allocator/ data structures use per-CPU data
+> structures and must use the same through the whole invocation?
 
-The old code checked userfaultfd_wp(dst_vma), which tests whether the
-child VMA has VM_UFFD_WP set. After dup_userfaultfd() clears VM_UFFD_WP
-from the child when !UFFD_FEATURE_EVENT_FORK, the old code would skip
-page table copying since the child no longer needs uffd-wp protection.
-
-The new code checks src_vma->vm_flags & VM_COPY_ON_FORK, which includes
-VM_UFFD_WP. Since the parent VMA still has VM_UFFD_WP set, this will now
-force page table copying even when the child has had VM_UFFD_WP cleared.
-
-For file-backed VMAs (e.g., shmem) with uffd-wp but !UFFD_FEATURE_EVENT_FORK,
-this appears to cause unnecessary page table copying where the old code
-would have allowed the child to fault pages in fresh.
-
-The call chain is:
-
-    dup_mmap()
-      -> vm_area_dup(mpnt)                  // child gets same flags
-      -> dup_userfaultfd(tmp, &uf)          // may clear VM_UFFD_WP from child
-      -> copy_page_range(tmp, mpnt)
-           -> vma_needs_copy(dst_vma=tmp, src_vma=mpnt)
-
-> + *                           enabled even if it's file-backed
-> + *                           (e.g. shmem). Because when uffd-wp is enabled,
-> + *                           pgtable contains uffd-wp protection information,
-> + *                           that's something we can't retrieve from page cache,
-> + *                           and skip copying will lose those info.
-> + *
-> + *          VM_MAYBE_GUARD - Could contain page guard region markers which
-> + *                           by design are a property of the page tables
-> + *                           only and thus cannot be reconstructed on page
-> + *                           fault.
-> + */
-> +#define VM_COPY_ON_FORK (VM_PFNMAP | VM_MIXEDMAP | VM_UFFD_WP | VM_MAYBE_GUARD)
-
-[ ... ]
-
-> diff --git a/mm/memory.c b/mm/memory.c
-> index d1728d0538d64..27bc457b32c2e 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1463,25 +1463,15 @@ copy_p4d_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
-> static bool
-> vma_needs_copy(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
-> {
-> +	if (src_vma->vm_flags & VM_COPY_ON_FORK)
-        ^^^^^^^^
-Was the change from checking dst_vma to src_vma for VM_UFFD_WP intentional?
-
-The old code was:
-
-    if (userfaultfd_wp(dst_vma))
-        return true;
-
-which expanded to:
-
-    if (dst_vma->vm_flags & VM_UFFD_WP)
-        return true;
-
+It's per-cpu maps.
+htab_percpu_map_lookup_elem() returns a pointer to per-cpu value
+which needs to be valid for the duration of the program.
+Not much else.
