@@ -1,225 +1,81 @@
-Received: from mail-m49238.qiye.163.com (mail-m49238.qiye.163.com [45.254.49.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8300F3126A5;
-	Tue, 13 Jan 2026 03:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5932F6925;
+	Tue, 13 Jan 2026 06:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768276528; cv=none; b=B78J90gxaYvUypwqf0vpphRefjEuvarcyCZ2jGs7QY6za0gatmUWbP03t8FXtMWMOXE+mFweLl75GNVS0I/GBdqRwHLukUV8kxyRcMFJlt/QPlsIGs5j+Cgy/h7yglCA7E4+6yb36k3UZr+bMiI0enRuRnJNUcGZ/IEXg/BqR0Y=
+	t=1768284301; cv=none; b=dxQTxD/x/iBj94eKs7uwy7FEXs4BWodHLpyqcMGF2PH0RcDdvY2Z9FXvi+AGi9OQXwBqWdgSTPanZARkXFLs7pUfBdrcf3F1HdmqO98qz+W1qnh4iux/TzO5TDEyor/42EUeogSb2rkT0nPkU3jUuor7WY8ukVi2znFotHg7Vx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768276528; c=relaxed/simple;
-	bh=EHNqyewQacUvW1Ibjpfbw+396u5i06O1R0vbwIlKdZo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PNRIUckc5dlr7c37zCBltrbuCJMeKtOrH05cTsUrB9PTy5FEnwVicGft9hZ+cCDRlHkY6vMrkXAmLvTiYI6jIlkIOT00ktUgRwEKoH2flQhvLsf3eSac4cLPstGMcazIsF0fiUdD87VcA3T+mxjkvAe51JYIn3Wf584tWuZf4uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=arlC/2hp; arc=none smtp.client-ip=45.254.49.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1768284301; c=relaxed/simple;
+	bh=So/I7dcnXA8geV0rv4KIVzrTgNQT/4ud956Kf+nGjS0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hSDwugoarjVfsg69DI2Asps7t0JqgoeY0EeKycKJdvO3EAeQ0gktMYHj2Mj7a25g5135SMFv1zyu9Bsq9Ny9Jsoy0fDvXGvr8IVE7G0IqhT2x8+5tbl0YM+CsLQCTcgIJJF70iWmDSVsuPKT0g7YErDU5HCjdiBer/sLJajAtkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUEuRuKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="arlC/2hp"
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 306b4e5b4;
-	Tue, 13 Jan 2026 11:55:14 +0800 (GMT+08:00)
-Message-ID: <02b530b1-93e2-4bd3-9d29-a009c24eb3e3@rock-chips.com>
-Date: Tue, 13 Jan 2026 11:55:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUEuRuKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8891C116C6;
+	Tue, 13 Jan 2026 06:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768284300;
+	bh=So/I7dcnXA8geV0rv4KIVzrTgNQT/4ud956Kf+nGjS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fUEuRuKNa1TOR8rV+EU6jHiJD+eQdpJoMXcjzlTDesqHaVcjdjF/fotjnLtnKc69N
+	 ediP4M3o2fxhRQiRy6vdf0fsnlhOkbaB/eINNvTbfJdpwMPlwu2i8XAalnCcNCvHsB
+	 jB4yTm24PDM+N4cvxt2IWdHuIFEc62gHAPksf5xoewNh42fGysoOS2KEMQUJuDOMf1
+	 0KKRkKAzBd+JXwfhOBUA22i0n5s85/JpT7BmUYKUExiaGxlWgm6qOHcxBWcvu1yBoZ
+	 NO7PNhykMYG/fp4weYVuRQn3FKzrPImJv1I3DMnqstCfSzXi29pmUICsmn3ruMazz1
+	 FDxc8nN2VoFmg==
+Date: Tue, 13 Jan 2026 15:04:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: Make the backup instance readonly
+Message-Id: <20260113150458.8633891cf9f377565642124b@kernel.org>
+In-Reply-To: <20260112194722.19164ca7@gandalf.local.home>
+References: <176788217131.1398317.11144318616426272901.stgit@mhiramat.tok.corp.google.com>
+	<176788218294.1398317.13118277798168167277.stgit@mhiramat.tok.corp.google.com>
+	<20260113093100.e91c5be8b8fa5f1e64899ba4@kernel.org>
+	<20260112194551.2446d041@gandalf.local.home>
+	<20260112194722.19164ca7@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
- trace support
-To: Steven Rostedt <rostedt@goodmis.org>
-References: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
- <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
- <20260112101644.5c1b772a@gandalf.local.home>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20260112101644.5c1b772a@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9bb57e572c09cckunm550ec7913638ae
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUlMGVZMSh1CSh1IThlDGE1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=arlC/2hpapH734Cab1zvf2Yb8LMjgLHJIrMyDRwen7eggJ6RsaiEC9o213XgQ9SFECTFfN1sVLYvfcJ+imAsWTGCeOaE9mAk0+BJlVGrcjtjASneRg8gYUEBkTvEbCJxVSHjy/K7K5PF2xHD0UUk5J/y1tlZ6CSNqqlLVteGm6M=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=97V1F7S4KJ+9mZWTw8AYWTllOD9spM17YItPb7AVlu0=;
-	h=date:mime-version:subject:message-id:from;
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Steven,
+On Mon, 12 Jan 2026 19:47:22 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-在 2026/01/12 星期一 23:16, Steven Rostedt 写道:
-> On Mon, 12 Jan 2026 09:20:00 +0800
-> Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> On Mon, 12 Jan 2026 19:45:51 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
->> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
->> LTSSM history. Any LTSSM change will be recorded. It's userful
->> for debug purpose, for example link failure, etc.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->> Changes in v3:
->> - reorder variables(Mani)
->> - rename loop to i; rename en to enable(Mani)
->> - use FIELD_GET(Mani)
->> - add comment about how the FIFO works(Mani)
->>
->> Changes in v2:
->> - use tracepoint
->>
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
->>   1 file changed, 104 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index 352f513..344e0b9 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -22,6 +22,8 @@
->>   #include <linux/platform_device.h>
->>   #include <linux/regmap.h>
->>   #include <linux/reset.h>
->> +#include <linux/workqueue.h>
->> +#include <trace/events/pci_controller.h>
->>   
->>   #include "../../pci.h"
->>   #include "pcie-designware.h"
->> @@ -73,6 +75,20 @@
->>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
->>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
->>   
->> +/* Debug FIFO information */
->> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
->> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
->> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
->> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
->> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
->> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
->> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
->> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
->> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
->> +#define  PCIE_DBG_FIFO_RATE_MASK	GENMASK(22, 20)
->> +#define  PCIE_DBG_FIFO_L1SUB_MASK	GENMASK(10, 8)
->> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
->> +
->>   /* Hot Reset Control Register */
->>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
->>   #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
->> @@ -96,6 +112,7 @@ struct rockchip_pcie {
->>   	struct irq_domain *irq_domain;
->>   	const struct rockchip_pcie_of_data *data;
->>   	bool supports_clkreq;
->> +	struct delayed_work trace_work;
->>   };
->>   
->>   struct rockchip_pcie_of_data {
->> @@ -206,6 +223,89 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
->>   	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
->>   }
->>   
->> +#ifdef CONFIG_TRACING
->> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
->> +{
->> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
->> +						trace_work.work);
->> +	struct dw_pcie *pci = &rockchip->pci;
->> +	enum dw_pcie_ltssm state;
->> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
->> +
->> +	for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
->> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
->> +		rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
->> +		l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
->> +		val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
->> +
->> +		/*
->> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
->> +		 * - 'last-read-point': maintains the user's last read position
->> +		 * - 'last-valid-point': tracks the hardware's last state update
->> +		 *
->> +		 * Software Handling: When two consecutive LTSSM states are identical,
->> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
->> +		 * skip the remaining entries. The dual-counter design ensures that on
->> +		 * the next state transition, reading can resume from the last user
->> +		 * position.
->> +		 */
->> +		if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
->> +			break;
->> +
->> +		state = prev_val = val;
->> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
->> +			if (l1ss == 2)
->> +				state = DW_PCIE_LTSSM_L1_2;
->> +			else if (l1ss == 1)
->> +				state = DW_PCIE_LTSSM_L1_1;
->> +		}
->> +
->> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
->> +					dw_pcie_ltssm_status_string(state),
->> +					((rate + 1) > pci->max_link_speed) ?
->> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
->> +	}
+> > Let's not add any flags to the eventfs_entry. That is created for every
+> > event, and events are already too big in size. I don't want to increase the
+> > size of each event for this feature.
 > 
-> Does it make sense to call this work function every 5 seconds when the
-> tracepoint isn't enabled?
-> 
+> Actually, there's not many of these. But they are all static variables. How
+> are you going to differentiate them?
 
-That's a good question. We don't need to read fifo and call
-trace_pcie_ltssm_state_transition if tracepoint isn't enabled.
-Will improve in v4.
+Since the format/id files are always readonly, so we can put a mode flag on
+each entry.
 
-> You can add a function callback to when the tracepoint is enabled by defining:
-> 
-> TRACE_EVENT_FN(<name>
->   TP_PROTO(..)
->   TP_ARGS(..)
->   TP_STRUCT__entry(..)
->   TP_fast_assign(..)
->   TP_printk(..)
-> 
->   reg,
->   unreg)
-> 
-> reg() gets called when the tracepoint is first enabled. This could be where
-> you can start the work function. And unreg() would stop it.
-> 
+Anyway, I will just share the readonly entries in the same array, but
+put them at the beginning of it.
 
-As how to start/stop it may vary from host to host, so I think we could
-use reg()/unreg() to set a status to indicate whether this tracepoint is
-enabled. Then the host drivers could decide how to implement trace work
-based on it.
+Let me update it to v3.
 
-> You would likely need to also include state variables as I guess you don't
-> want to start it if the link is down. Also, if the tracepoint is enabled
-> when the link goes up you want to start the work queue.
-
-
-Frankly, I do want to start it if the link is down as the link may come
-up later and that will make us able to dump the transition in time.
-
-> 
-> I would recommend this so that you don't call this work function when it's
-> not doing anything useful.
-
-Sure, very appreciate your suggestion.
-
-Thanks.
+Thanks, 
 
 > 
 > -- Steve
 > 
->   
-> 
->> +
->> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
->> +}
->> +
-> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
