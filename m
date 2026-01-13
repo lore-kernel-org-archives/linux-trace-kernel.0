@@ -1,108 +1,133 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA136BCC9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 23:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C028EA72;
+	Tue, 13 Jan 2026 23:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768347878; cv=none; b=fUDz2E3AZQxANaeLt3kgPOuQZQ1jw27VJ0FJr+zS9yCqILYJSvUAvl7ScI7f+7q0RL3NH87TF9Db9gOVifH81q2AutnepmiaJPUlxmaOxqWRzhW0rgbScOAFEvUN2mtvDSb3CZCR8J35xhuAj4byqh/2/R5L+bBcnb40OXu2JEY=
+	t=1768348543; cv=none; b=I1hdCkYbo0jSQP1ZEHGaucGNBTPqufQmu++6XbTaSMAJLlIJ1M4CvdjbB4uyHCiTRqdcbHjTcX0cNKyxdh7u2lBgOkGAa909xlRjhcQsEgBh1hIlTHoImXmcncfDiFnJppCKGtZy/qIphXbgsxwTDCILMCO0+R1oVgJbzgRn+6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768347878; c=relaxed/simple;
-	bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fgJ6hoi55VeIf2tl4pUnRzUMiLZkmgZezW2jlgnS3Cqy8KWpnHsZ+Lsz3SjwpRBGn2WQoKHaeaDXTi1jZmnyso2Nyk1QAby+LQz914MTsMgKw6+sqyBrB4IL/+5NacH1slYMCxIvQPne18xY3A2GP0NB4G/O43x60nZ4xyCfvWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hEDNyfpP; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768348543; c=relaxed/simple;
+	bh=wFoCy9Y9KpIUogkM2AHajucOyerXJdtm/9lw1BUwhns=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gv1VKqqe/OeaF+du6MLBIulFsyiU8rz+hlV2GNOiO91js+YonWQMInOwdZ0ZIwFLJwZeAHxvd6I8nXrs1ay5dwVlLNfe0L23yl3s1Z2o/fR9fsyqtV/ZBuHGnY1K9vU4/Z+jtgjIdjAqU0M6vYYnNpRmNb6EXVIEYz1GPH+UqvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=oNDPTWg3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEDNyfpP"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so4374693f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 15:44:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768347875; x=1768952675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
-        b=hEDNyfpPmk7rSlHY7ocQAO5eIShqlrfcBBUJ3bzBlZmysJw+HGu7hP2lDP4Yno+W/C
-         xtzbkpVzU16BM/JlLbCscKV3kqzEhi5nTFWgZv8dSdApl0QrzDZUqN3Cu3dEhbbJEt27
-         qNwchFflme1TsAJLLvIlTgisf9Q/MnSI58q5LpPBaTutlOT+H8bQAY4LuA5OA735uqb+
-         Ujjq7uH7U7LuJtLTjfvul5nlk8k0pu0HFJ/cB29B1aCioHSObW4cxKOnYQZXUIB6UVyY
-         me/8rNkgVWvTzxodP3W+crtPd0CrX9jb0rEjhKmmakkFrMIw0OMyIUjyUIMOVIps1BCq
-         LsOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768347875; x=1768952675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=naWJNIFRQlEdpMHmk5ownLngDFSb+6b+Xjr/XcBcU3c=;
-        b=FPdPNw7HySDOmrfIFE5OWcATZP68UxWdb9q1PTCT7VXUEEKdm6WgTHwTeSkpprqqd/
-         YRS/m31irtCF6oe+X0+y8UZTaJB0wb3NUCpd1gPZd1JL5uEuGkVnHmGbbW+aXEUxXsa1
-         4cpqRYY0EaNfReO1li/ddh0x5CbVD7pqlMvjCYtvXoH3OckbZGRWASc47aIxzyEdBi6Q
-         //frAdSUAlpBBl04pYxxb73Pj1TvPpzALEYFC4lmAAK2w0I4h0JId+HxPeHYQpZ4FRq2
-         onb+6OIeKSsdZU1iJpCbtb7je7/IR34mP5olL/hrC5lkcvQb9SXbjS3uXDcLCXLh8qr0
-         ng7g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+/zt0X/Mm2FA7jEMzesRr6twAUE382hwTzuuE4qBebF1KGBoD6MzTy46ThEaBl1jveTVj0+RUzHAxpCDNLIg8WHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVebNPxsWSkx2eNocM/2B/HCdwbFC2a3FkXPZUMWU/QdQjfN1u
-	PrkkUyQh2IR24qKYWDJX7kpQC0u3c8TN8pBctcyu77wFES1RtEmFiMI8IrIXUi4Xt1dPWAZ04XO
-	R5fMY0spzeEtJVSA4cS/FM2noTpqIIv8=
-X-Gm-Gg: AY/fxX467Sdtst84v37SOdGD2AtKGMp7cb0OCc5RzuSCxwYEzVCQ41JHYL2v20c4vc1
-	BSMmqbmVKr2xH4kzeqTCPsm0X01j+eWjl3U/nNaSZ5po/KffHc/FZ1fdY/eekPbL+WNYLsSuevz
-	UbDyhbHH9fxV5LO6VdNjYvlsiynlhC49M3K/KAfpYLphtqEF+W5e+RqHqlV136YVyrWGI82UDEV
-	xVLAwlky3qjbmflmCVaDo3ipCJ8hH9IKxNJ7rvIyEsQm430VT4ZH+35WdbqVTB0gNrf8UtfvKbg
-	ug+4YIm44nma5/JUFG47lD3BAxJ7
-X-Received: by 2002:a05:6000:2502:b0:430:f622:8cd4 with SMTP id
- ffacd0b85a97d-4342c5576a2mr546852f8f.49.1768347875049; Tue, 13 Jan 2026
- 15:44:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="oNDPTWg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48ADC116C6;
+	Tue, 13 Jan 2026 23:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1768348542;
+	bh=wFoCy9Y9KpIUogkM2AHajucOyerXJdtm/9lw1BUwhns=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oNDPTWg3As9b4/IoWoDYObKJbmE2BB/hi0wmGKS5YwB53tgMgdYTyaqeZRLCuXEHq
+	 GJjdm0tTbmUSA8x/ZOXB59//Cnpt/kq7KUphyJ80w+zEVXgFISjYFt4Fx/JbcRJTnd
+	 yvESKNRQiaSKpc9jZoqeV61AmDuB6ASSj+30c9zk=
+Date: Tue, 13 Jan 2026 15:55:41 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
+ <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu
+ <liumartin@google.com>, David Rientjes <rientjes@google.com>,
+ christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>, SeongJae
+ Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett"
+ <liam.howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Christian Brauner <brauner@kernel.org>, Wei Yang
+ <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, Miaohe
+ Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-mm@kvack.org, stable@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Roman
+ Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: Re: [PATCH v1 1/1] mm: Fix OOM killer and proc stats inaccuracy on
+ large many-core systems
+Message-Id: <20260113155541.1da4b93e2acbb2b4f2cda758@linux-foundation.org>
+In-Reply-To: <c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
+References: <20260113194734.28983-1-mathieu.desnoyers@efficios.com>
+	<20260113194734.28983-2-mathieu.desnoyers@efficios.com>
+	<20260113134644.9030ba1504b8ea41ec91a3be@linux-foundation.org>
+	<c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAADnVQKGm-t2SdN_vFVMn0tNiQ5Fs6FutD2Au-jO69aGdhKS7Q@mail.gmail.com>
- <20260109173326.616e873c@fedora> <20260109173915.1e8a784e@fedora>
- <CAADnVQKB4dAWtX7T15yh31NYNcBUugoqcnTZ3U9APo8SZkTuwg@mail.gmail.com>
- <20260110111454.7d1a7b66@fedora> <CAADnVQJ_L_TvFogq0+-qOH=vxe5bzU9iz3c-6-N7VFYE6cBnjQ@mail.gmail.com>
- <20260111170953.49127c00@fedora> <CAADnVQJiEhDrfYVEyV8eGUECE_XFt7PGG=PFJRKU4jRBn-TsvA@mail.gmail.com>
- <20260112085257.26bb7b5b@fedora> <CAADnVQKvY026HSFGOsavJppm3-Ajm-VsLzY-OeFUe+BaKMRnDg@mail.gmail.com>
- <20260113142340.xEFFVvni@linutronix.de>
-In-Reply-To: <20260113142340.xEFFVvni@linutronix.de>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 13 Jan 2026 15:44:23 -0800
-X-Gm-Features: AZwV_QiZTOkqU7DSGKGdqwRyoCz_0cyvCLSbxWK4R4mCP4W56GAgkxLydSRDg94
-Message-ID: <CAADnVQKMR6kkqC5JQceg6A8F6qSd_cYQE--1ToxwDUxTytPbGA@mail.gmail.com>
-Subject: Re: [PATCH v5] tracing: Guard __DECLARE_TRACE() use of
- __DO_TRACE_CALL() with SRCU-fast
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 13, 2026 at 6:23=E2=80=AFAM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2026-01-12 09:19:58 [-0800], Alexei Starovoitov wrote:
-> > > Now if you are saying that BPF will handle migrate_disable() on its o=
-wn
-> > > and not require the tracepoint infrastructure to do it for it, then
-> > > this is perfect. And I can then simplify this code, and just use
-> > > srcu_fast for both RT and !RT.
-> >
-> > Agree. Just add migrate_disable to __bpf_trace_run,
-> > or, better yet, use rcu_read_lock_dont_migrate() in there.
->
-> Wonderful, thank you.
->
-> Is this "must remain on the same CPU and can be re-entrant" because BPF
-> core code such memory allocator/ data structures use per-CPU data
-> structures and must use the same through the whole invocation?
+On Tue, 13 Jan 2026 17:16:16 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-It's per-cpu maps.
-htab_percpu_map_lookup_elem() returns a pointer to per-cpu value
-which needs to be valid for the duration of the program.
-Not much else.
+> On 2026-01-13 16:46, Andrew Morton wrote:
+> > On Tue, 13 Jan 2026 14:47:34 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> > 
+> >> Use the precise, albeit slower, precise RSS counter sums for the OOM
+> >> killer task selection and proc statistics. The approximated value is
+> >> too imprecise on large many-core systems.
+> > 
+> > Thanks.
+> > 
+> > Problem: if I also queue your "mm: Reduce latency of OOM killer task
+> > selection" series then this single patch won't get tested, because the
+> > larger series erases this patch, yes?
+> 
+> That's a good point.
+> 
+> > 
+> > Obvious solution: aim this patch at next-merge-window and let's look at
+> > the larger series for the next -rc cycle.  Thoughts?
+> 
+> Yes, that works for me. Does it mean I should re-submit the hpcc
+> series after the next merge window closes, or do you keep a queue of
+> stuff waiting for the next -rc cycle somewhere ?
+
+I do keep such a queue, but I rarely use it - things go stale quickly. 
+So a fresh version would be best please.
+
+> >> Note that commit 82241a83cd15 ("mm: fix the inaccurate memory statistics
+> >> issue for users") introduced get_mm_counter_sum() for precise proc
+> >> memory status queries for _some_ proc files. This change renames
+> >> get_mm_counter_sum() to get_mm_counter(), thus moving the rest of the
+> >> proc files to the precise sum.
+> > 
+> > Please confirm - switching /proc functions from get_mm_counter_sum() to
+> > get_mm_counter_sum() doesn't actually change anything, right?  It would
+> > be concerning to add possible overhead to things like task_statm().
+> 
+> The approach proposed by this patch is to switch all proc ABIs which
+> query RSS to the precise sum to eliminate any discrepancy caused by too
+> imprecise approximate sums. It's a big hammer, and it can slow down
+> those proc interfaces, including task_statm().
+
+Oh, so I misunderstood.
+
+> Is it an issue ?
+
+Well it might be - there are a lot of users out there and they do the
+weirdest stuff.
+
+> The hpcc series introduces an approximation which provides accuracy
+> limits on the approximation that make the result is still somewhat
+> meaninful on large many core systems.
+
+Can we leave the non-oom related parts of procfs as-is for now, then
+migrate them over to hpcc when that is available?  Safer that way.
+
+> The overall approach here would be to move back those proc interfaces
+> which care about low overhead to the hpcc approximate sum when it lands
+> upstream. But in order to learn that, we need to know which proc
+> interface files are performance-sensitive. How can we get that data ?
+
+Gee.  Wait for the unhappy emails :(
+
+People do sometimes search all-of-open-source for API changes, but that
+doesn't cover in-house things, and tools which whack away at /proc
+files are often in-house-only.
+
