@@ -1,107 +1,237 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E39F274B40
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jan 2026 01:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92977267B89;
+	Tue, 13 Jan 2026 01:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768268613; cv=none; b=u99DbFuhHciZI6SQKm9KaG3NYVDWKnPHuFIh2iPr0IvUGNUBEVAqBjZoG8kP4G93JcSsxH6RbU3S9OCrPTXWXWnvKh32xmtnPAw0cGJ4bhhv8Gp7o0NVaukQL3cW47FSvatif9hq4JzJs85qpgl2fsRhNIHZI4CmINy/dD0Cgbo=
+	t=1768268850; cv=none; b=IeCWEJOL2hFnQ4rble1+nRHrGPGsCET9ZZMkaZsYDFDLOr7h4lMHIBYYybYITBvVd8nwIxweSjHObUvOYwi8xEkzBEb4jCku9fFJgExBSl1Ig3X4SWvsE81GjdWueX69+pmYJVX5YQ6wmcPGZiGEcasQjZLKMwfzKjMfb08YDu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768268613; c=relaxed/simple;
-	bh=AzGYY8TVf6kHgCekFCUzEbv5VDS1oXckWndMM4wUWIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lBvsJOm4WsBQuQeW60qx/CoV6ykMcKyytc+yCOkNlDADG3mrPHlVitxdIT3Mlfi8rvscEhJGmo9aGpSiWGmHGBKEgqqk+rFafg9Op6lmBgxHzCd+wsrr6RcipcAozhIAv4e0dhJLvSZDIE2gY4FjtAo/7CT/iDzWpEfE+LniF+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WAnavtjN; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768268850; c=relaxed/simple;
+	bh=VlYijItPWeGJrcex7X+XGdUUZA/2vSFa+RIBMAWLFUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IwTr3idJ2ym+Ls9oJlzeGTF4AQ+D/3ISMvPY81nKBR93ZtfTpX1AgqgEgc1O48S5Zp7Wt3K9RfosKRXmPX8VJ7RJOrw5Om/QPDgwYg7LeRjhBHhesL47W4asxdTX1BGyFYopuKnoqEuAQ/bTvjrx00uOSqj2EfUZrtq+V11RpUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEkTmZZm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WAnavtjN"
-Message-ID: <39acf3ae-031e-41fe-8343-9445775f312c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768268599;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlY+CfNE9yvpYaQbltrehDKBAIWVYvJbFw7ICzfvQHs=;
-	b=WAnavtjN1+zzKw4FnoeX0yz4HzyCQ7l3gW29koNOFbo8Zn1rd132wS6VXPuiccj09DukFR
-	DQa9tTNenc+jK1CJJX2Rvy95LPOqU7GeSjJIRiLLDmi90sMXRQi4rmbj5Dql2r6uMQ+Qq/
-	KB67rxnIDrFeqvIYT0uMhIXiZ3RJ/V0=
-Date: Tue, 13 Jan 2026 09:43:02 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEkTmZZm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B125BC2BCB4;
+	Tue, 13 Jan 2026 01:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768268850;
+	bh=VlYijItPWeGJrcex7X+XGdUUZA/2vSFa+RIBMAWLFUo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pEkTmZZmmITSeA9tAPgw/TdZbkvGwBq3sv6b+AtmDDhF8nwxsNg6IJlCfI7FCNOeF
+	 tn1oF0S+ltpK4uKAC2fF3W91TX27HuGB3ehlJjvlSOk/Bt2YfNPHlBIrp2gubMHY/K
+	 5T8QwmQwK1sLZr7VHrGycKiP+dX+QMPiRZvt4F43yA/+qsn9wAbAvlcMWBE+1EHbyV
+	 Jy8PGFrE/5ID/R6Wg1xDoK5h8zSwL9cVxjo8VwISqNu1/KV7VMy9x81g7v52EOy50d
+	 M82ue8NzcX+d6nrCR3jlfAA0FnKgAjCtlY89HETakAAjnaiB2ERMQS/lkUsyYcaHEQ
+	 PpvMCT7rdrbMQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] kprobes: Use dedicated kthread for kprobe optimizer
+Date: Tue, 13 Jan 2026 10:47:26 +0900
+Message-ID: <176826884613.429923.16578111751623731056.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 2/3] bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY
- flag for bpf_get_branch_snapshot helper
-Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, bpf@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S . Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Matt Bobrowski
- <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20260109153420.32181-3-leon.hwang@linux.dev>
- <202601122013.hmoeIXXs-lkp@intel.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <202601122013.hmoeIXXs-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi kernel test robot,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thanks for the test results.
+Instead of using generic workqueue, use a dedicated kthread for optimizing
+kprobes, because it can wait (sleep) for a long time inside the process
+by synchronize_rcu_task(). This means other works can be stopped until it
+finishes.
 
-No further testing is needed for this patch series, as it will not be
-pursued further and is not expected to be accepted upstream.
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v2:
+  - Make the kthread unfreezable same as workqueue.
+  - Add kthread_should_stop() check right before calling optimizer too.
+  - Initialize optimizer_state to OPTIMIZER_ST_IDLE instead of 0.
+---
+ kernel/kprobes.c |  104 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 84 insertions(+), 20 deletions(-)
 
-Thanks again for the testing effort.
-
-Thanks,
-Leon
-
-On 13/1/26 03:22, kernel test robot wrote:
-> Hi Leon,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on bpf-next/master]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Leon-Hwang/bpf-x64-Call-perf_snapshot_branch_stack-in-trampoline/20260109-234435
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-> patch link:    https://lore.kernel.org/r/20260109153420.32181-3-leon.hwang%40linux.dev
-> patch subject: [PATCH bpf-next 2/3] bpf: Introduce BPF_BRANCH_SNAPSHOT_F_COPY flag for bpf_get_branch_snapshot helper
-> config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260112/202601122013.hmoeIXXs-lkp@intel.com/config)
-> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260112/202601122013.hmoeIXXs-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202601122013.hmoeIXXs-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> ld.lld: error: undefined symbol: bpf_branch_snapshot
->    >>> referenced by bpf_trace.c:1182 (kernel/trace/bpf_trace.c:1182)
->    >>>               vmlinux.o:(bpf_get_branch_snapshot)
->    >>> referenced by bpf_trace.c:0 (kernel/trace/bpf_trace.c:0)
->    >>>               vmlinux.o:(bpf_get_branch_snapshot)
-> 
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index ab8f9fc1f0d1..4778bfca19b8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -32,6 +32,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/sysctl.h>
+ #include <linux/kdebug.h>
++#include <linux/kthread.h>
+ #include <linux/memory.h>
+ #include <linux/ftrace.h>
+ #include <linux/cpu.h>
+@@ -40,6 +41,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/execmem.h>
+ #include <linux/cleanup.h>
++#include <linux/wait.h>
+ 
+ #include <asm/sections.h>
+ #include <asm/cacheflush.h>
+@@ -514,8 +516,17 @@ static LIST_HEAD(optimizing_list);
+ static LIST_HEAD(unoptimizing_list);
+ static LIST_HEAD(freeing_list);
+ 
+-static void kprobe_optimizer(struct work_struct *work);
+-static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
++static struct task_struct *kprobe_optimizer_task;
++static wait_queue_head_t kprobe_optimizer_wait;
++static atomic_t optimizer_state;
++enum {
++	OPTIMIZER_ST_IDLE = 0,
++	OPTIMIZER_ST_KICKED = 1,
++	OPTIMIZER_ST_FLUSHING = 2,
++};
++
++static DECLARE_COMPLETION(optimizer_completion);
++
+ #define OPTIMIZE_DELAY 5
+ 
+ /*
+@@ -597,14 +608,10 @@ static void do_free_cleaned_kprobes(void)
+ 	}
+ }
+ 
+-/* Start optimizer after OPTIMIZE_DELAY passed */
+-static void kick_kprobe_optimizer(void)
+-{
+-	schedule_delayed_work(&optimizing_work, OPTIMIZE_DELAY);
+-}
++static void kick_kprobe_optimizer(void);
+ 
+ /* Kprobe jump optimizer */
+-static void kprobe_optimizer(struct work_struct *work)
++static void kprobe_optimizer(void)
+ {
+ 	guard(mutex)(&kprobe_mutex);
+ 
+@@ -635,9 +642,51 @@ static void kprobe_optimizer(struct work_struct *work)
+ 		do_free_cleaned_kprobes();
+ 	}
+ 
+-	/* Step 5: Kick optimizer again if needed */
++	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
++	if (completion_done(&optimizer_completion))
++		complete(&optimizer_completion);
++
+ 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+-		kick_kprobe_optimizer();
++		kick_kprobe_optimizer();	/*normal kick*/
++}
++
++static int kprobe_optimizer_thread(void *data)
++{
++	while (!kthread_should_stop()) {
++		wait_event(kprobe_optimizer_wait,
++			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
++			   kthread_should_stop());
++
++		if (kthread_should_stop())
++			break;
++
++		/*
++		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
++		 * This wait can be interrupted by a flush request.
++		 */
++		if (atomic_read(&optimizer_state) == 1)
++			wait_event_timeout(kprobe_optimizer_wait,
++				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
++				kthread_should_stop(),
++				OPTIMIZE_DELAY);
++
++		if (kthread_should_stop())
++			break;
++
++		atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
++
++		kprobe_optimizer();
++	}
++	return 0;
++}
++
++/* Start optimizer after OPTIMIZE_DELAY passed */
++static void kick_kprobe_optimizer(void)
++{
++	lockdep_assert_held(&kprobe_mutex);
++	if (atomic_cmpxchg(&optimizer_state,
++		OPTIMIZER_ST_IDLE, OPTIMIZER_ST_KICKED) == OPTIMIZER_ST_IDLE)
++		wake_up(&kprobe_optimizer_wait);
+ }
+ 
+ static void wait_for_kprobe_optimizer_locked(void)
+@@ -645,13 +694,17 @@ static void wait_for_kprobe_optimizer_locked(void)
+ 	lockdep_assert_held(&kprobe_mutex);
+ 
+ 	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+-		mutex_unlock(&kprobe_mutex);
+-
+-		/* This will also make 'optimizing_work' execute immmediately */
+-		flush_delayed_work(&optimizing_work);
+-		/* 'optimizing_work' might not have been queued yet, relax */
+-		cpu_relax();
++		init_completion(&optimizer_completion);
++		/*
++		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
++		 * idle. If it's already kicked, it will see the state change.
++		 */
++		if (atomic_xchg_acquire(&optimizer_state,
++			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
++			wake_up(&kprobe_optimizer_wait);
+ 
++		mutex_unlock(&kprobe_mutex);
++		wait_for_completion(&optimizer_completion);
+ 		mutex_lock(&kprobe_mutex);
+ 	}
+ }
+@@ -1010,8 +1063,21 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+ 	 */
+ }
+ 
++static void __init init_optprobe(void)
++{
++#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
++	/* Init 'kprobe_optinsn_slots' for allocation */
++	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
++#endif
++
++	init_waitqueue_head(&kprobe_optimizer_wait);
++	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
++	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
++					    "kprobe-optimizer");
++}
+ #else /* !CONFIG_OPTPROBES */
+ 
++#define init_optprobe()				do {} while (0)
+ #define optimize_kprobe(p)			do {} while (0)
+ #define unoptimize_kprobe(p, f)			do {} while (0)
+ #define kill_optimized_kprobe(p)		do {} while (0)
+@@ -2694,10 +2760,8 @@ static int __init init_kprobes(void)
+ 	/* By default, kprobes are armed */
+ 	kprobes_all_disarmed = false;
+ 
+-#if defined(CONFIG_OPTPROBES) && defined(__ARCH_WANT_KPROBES_INSN_SLOT)
+-	/* Init 'kprobe_optinsn_slots' for allocation */
+-	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
+-#endif
++	/* Initialize the optimization infrastructure */
++	init_optprobe();
+ 
+ 	err = arch_init_kprobes();
+ 	if (!err)
 
