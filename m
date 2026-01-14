@@ -1,58 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C028EA72;
-	Tue, 13 Jan 2026 23:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98642184;
+	Wed, 14 Jan 2026 00:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768348543; cv=none; b=I1hdCkYbo0jSQP1ZEHGaucGNBTPqufQmu++6XbTaSMAJLlIJ1M4CvdjbB4uyHCiTRqdcbHjTcX0cNKyxdh7u2lBgOkGAa909xlRjhcQsEgBh1hIlTHoImXmcncfDiFnJppCKGtZy/qIphXbgsxwTDCILMCO0+R1oVgJbzgRn+6A=
+	t=1768349263; cv=none; b=Xuvse9d3rANNI1dAzPHxwqBaLGcyf+1XAS49WH48wPUiZBDvW8+F5pAZtuxt+pcMAVCZySuNW8VYjWpsegfK6BE9XbDE7yjFc0HlbYzRGqJ/P36LGVq6YPRblO8Z4+oe0flKeb63n3QXJzgtT1G1+uGJwH+QlRddBJTRz04S0UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768348543; c=relaxed/simple;
-	bh=wFoCy9Y9KpIUogkM2AHajucOyerXJdtm/9lw1BUwhns=;
+	s=arc-20240116; t=1768349263; c=relaxed/simple;
+	bh=mRcJM1sPgpaagXL/gypCVs95fqo57KyskFtRMw+AzE0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gv1VKqqe/OeaF+du6MLBIulFsyiU8rz+hlV2GNOiO91js+YonWQMInOwdZ0ZIwFLJwZeAHxvd6I8nXrs1ay5dwVlLNfe0L23yl3s1Z2o/fR9fsyqtV/ZBuHGnY1K9vU4/Z+jtgjIdjAqU0M6vYYnNpRmNb6EXVIEYz1GPH+UqvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=oNDPTWg3; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=cFAsQUuNblPrzL3/IiPPtm4G9SKkWAQTYx3pJyVgBJNw75zgmgSnyH4+tLZIJE1V9YHFp3CodMX+erkqiGiWD3SterLWzTZCvBTlZj35sDmf13A/AgodHUcEd/WmVm5Lnu0OlgwbBithhOcC1T5Zkztd7t31NriSOo9Wc5pNMVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE6JmlqY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="oNDPTWg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48ADC116C6;
-	Tue, 13 Jan 2026 23:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1768348542;
-	bh=wFoCy9Y9KpIUogkM2AHajucOyerXJdtm/9lw1BUwhns=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE6JmlqY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87C66C116C6;
+	Wed, 14 Jan 2026 00:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768349263;
+	bh=mRcJM1sPgpaagXL/gypCVs95fqo57KyskFtRMw+AzE0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oNDPTWg3As9b4/IoWoDYObKJbmE2BB/hi0wmGKS5YwB53tgMgdYTyaqeZRLCuXEHq
-	 GJjdm0tTbmUSA8x/ZOXB59//Cnpt/kq7KUphyJ80w+zEVXgFISjYFt4Fx/JbcRJTnd
-	 yvESKNRQiaSKpc9jZoqeV61AmDuB6ASSj+30c9zk=
-Date: Tue, 13 Jan 2026 15:55:41 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
- <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu
- <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>, SeongJae
- Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett"
- <liam.howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Christian Brauner <brauner@kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, Miaohe
- Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, stable@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Roman
- Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v1 1/1] mm: Fix OOM killer and proc stats inaccuracy on
- large many-core systems
-Message-Id: <20260113155541.1da4b93e2acbb2b4f2cda758@linux-foundation.org>
-In-Reply-To: <c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
-References: <20260113194734.28983-1-mathieu.desnoyers@efficios.com>
-	<20260113194734.28983-2-mathieu.desnoyers@efficios.com>
-	<20260113134644.9030ba1504b8ea41ec91a3be@linux-foundation.org>
-	<c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
+	b=fE6JmlqYhIgRx8Lx+9fdRYc9wrxjuRmclOfKGf0KrxG8pyMXcqrs3qgr8iS8yyw74
+	 AX1IdU7MmF3jQCi2TRn30onzEnpaq0gwPmE/Ga3VJKGOhnhk+cac7UyZnKgoO7Qifz
+	 FVoJBRCYD0DWLTMOLscCweCIRIeZ92/78DLh0KIJi1Cjy1cc2Qllf/l6NeLIPgVTS/
+	 aq1/68U9+pVT+DNy/0K4n3afajdm/a8+9cWDOZSnK4KtsMSfbLrWVVRp6VvoktRhRg
+	 VWWBt9lBRggLKdRk/LLFVPa/xnj48XkLpy4sUI9BkFiEOJoOZSQuPnEz+Kl8Lf+2xD
+	 rDaNYxC2yZMBA==
+Date: Wed, 14 Jan 2026 09:07:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Aaron Tomlin <atomlin@atomlin.com>
+Subject: Re: [PATCH] tracing: Have show_event_trigger/filter format a bit
+ more in columns
+Message-Id: <20260114090738.e791b28f94479116fa32ffa6@kernel.org>
+In-Reply-To: <20260112153408.18373e73@gandalf.local.home>
+References: <20260112153408.18373e73@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -63,71 +48,127 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 13 Jan 2026 17:16:16 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Mon, 12 Jan 2026 15:34:08 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On 2026-01-13 16:46, Andrew Morton wrote:
-> > On Tue, 13 Jan 2026 14:47:34 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> > 
-> >> Use the precise, albeit slower, precise RSS counter sums for the OOM
-> >> killer task selection and proc statistics. The approximated value is
-> >> too imprecise on large many-core systems.
-> > 
-> > Thanks.
-> > 
-> > Problem: if I also queue your "mm: Reduce latency of OOM killer task
-> > selection" series then this single patch won't get tested, because the
-> > larger series erases this patch, yes?
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> That's a good point.
+> By doing:
 > 
-> > 
-> > Obvious solution: aim this patch at next-merge-window and let's look at
-> > the larger series for the next -rc cycle.  Thoughts?
+>  # trace-cmd sqlhist -e -n futex_wait select TIMESTAMP_DELTA_USECS as lat from sys_enter_futex as start join sys_exit_futex as end on start.common_pid = end.common_pid
 > 
-> Yes, that works for me. Does it mean I should re-submit the hpcc
-> series after the next merge window closes, or do you keep a queue of
-> stuff waiting for the next -rc cycle somewhere ?
-
-I do keep such a queue, but I rarely use it - things go stale quickly. 
-So a fresh version would be best please.
-
-> >> Note that commit 82241a83cd15 ("mm: fix the inaccurate memory statistics
-> >> issue for users") introduced get_mm_counter_sum() for precise proc
-> >> memory status queries for _some_ proc files. This change renames
-> >> get_mm_counter_sum() to get_mm_counter(), thus moving the rest of the
-> >> proc files to the precise sum.
-> > 
-> > Please confirm - switching /proc functions from get_mm_counter_sum() to
-> > get_mm_counter_sum() doesn't actually change anything, right?  It would
-> > be concerning to add possible overhead to things like task_statm().
+> and
 > 
-> The approach proposed by this patch is to switch all proc ABIs which
-> query RSS to the precise sum to eliminate any discrepancy caused by too
-> imprecise approximate sums. It's a big hammer, and it can slow down
-> those proc interfaces, including task_statm().
+>  # trace-cmd start -e futex_wait -f 'lat > 100' -e page_pool_state_release -f 'pfn == 1'
+> 
+> The output of the show_event_trigger and show_event_filter files are well
+> aligned because of the inconsistent 'tab' spacing:
+> 
+>  ~# cat /sys/kernel/tracing/show_event_triggers
+> syscalls:sys_exit_futex	hist:keys=common_pid:vals=hitcount:__lat_12046_2=common_timestamp.usecs-$__arg_12046_1:sort=hitcount:size=2048:clock=global:onmatch(syscalls.sys_enter_futex).trace(futex_wait,$__lat_12046_2) [active]
+> syscalls:sys_enter_futex	hist:keys=common_pid:vals=hitcount:__arg_12046_1=common_timestamp.usecs:sort=hitcount:size=2048:clock=global [active]
+> 
+>  ~# cat /sys/kernel/tracing/show_event_filters
+> synthetic:futex_wait	(lat > 100)
+> page_pool:page_pool_state_release	(pfn == 1)
+> 
+> This makes it not so easy to read. Instead, force the spacing to be at
+> least 32 bytes from the beginning (one space if the system:event is longer
+> than 30 bytes):
+> 
+>  ~# cat /sys/kernel/tracing/show_event_triggers
+> syscalls:sys_exit_futex          hist:keys=common_pid:vals=hitcount:__lat_8125_2=common_timestamp.usecs-$__arg_8125_1:sort=hitcount:size=2048:clock=global:onmatch(syscalls.sys_enter_futex).trace(futex_wait,$__lat_8125_2) [active]
+> syscalls:sys_enter_futex         hist:keys=common_pid:vals=hitcount:__arg_8125_1=common_timestamp.usecs:sort=hitcount:size=2048:clock=global [active]
+> 
+>  ~# cat /sys/kernel/tracing/show_event_filters
+> synthetic:futex_wait             (lat > 100)
+> page_pool:page_pool_state_release (pfn == 1)
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Oh, so I misunderstood.
+Looks good to me.
 
-> Is it an issue ?
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Well it might be - there are a lot of users out there and they do the
-weirdest stuff.
+Thanks,
 
-> The hpcc series introduces an approximation which provides accuracy
-> limits on the approximation that make the result is still somewhat
-> meaninful on large many core systems.
+> ---
+> [
+>   This is based on top of these patches:
+>     https://lore.kernel.org/linux-trace-kernel/20260105142939.2655342-1-atomlin@atomlin.com/
+> ]
+>  kernel/trace/trace_events.c | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 36936697fa2a..f372a6374164 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -1662,6 +1662,18 @@ static void t_stop(struct seq_file *m, void *p)
+>  	mutex_unlock(&event_mutex);
+>  }
+>  
+> +static int get_call_len(struct trace_event_call *call)
+> +{
+> +	int len;
+> +
+> +	/* Get the length of "<system>:<event>" */
+> +	len = strlen(call->class->system) + 1;
+> +	len += strlen(trace_event_name(call));
+> +
+> +	/* Set the index to 32 bytes to separate event from data */
+> +	return len >= 32 ? 1 : 32 - len;
+> +}
+> +
+>  /**
+>   * t_show_filters - seq_file callback to display active event filters
+>   * @m: The seq_file interface for formatted output
+> @@ -1676,14 +1688,17 @@ static int t_show_filters(struct seq_file *m, void *v)
+>  	struct trace_event_file *file = v;
+>  	struct trace_event_call *call = file->event_call;
+>  	struct event_filter *filter;
+> +	int len;
+>  
+>  	guard(rcu)();
+>  	filter = rcu_dereference(file->filter);
+>  	if (!filter || !filter->filter_string)
+>  		return 0;
+>  
+> -	seq_printf(m, "%s:%s\t%s\n", call->class->system,
+> -		   trace_event_name(call), filter->filter_string);
+> +	len = get_call_len(call);
+> +
+> +	seq_printf(m, "%s:%s%*.s%s\n", call->class->system,
+> +		   trace_event_name(call), len, "", filter->filter_string);
+>  
+>  	return 0;
+>  }
+> @@ -1702,6 +1717,7 @@ static int t_show_triggers(struct seq_file *m, void *v)
+>  	struct trace_event_file *file = v;
+>  	struct trace_event_call *call = file->event_call;
+>  	struct event_trigger_data *data;
+> +	int len;
+>  
+>  	/*
+>  	 * The event_mutex is held by t_start(), protecting the
+> @@ -1710,9 +1726,11 @@ static int t_show_triggers(struct seq_file *m, void *v)
+>  	if (list_empty(&file->triggers))
+>  		return 0;
+>  
+> +	len = get_call_len(call);
+> +
+>  	list_for_each_entry_rcu(data, &file->triggers, list) {
+> -		seq_printf(m, "%s:%s\t", call->class->system,
+> -			   trace_event_name(call));
+> +		seq_printf(m, "%s:%s%*.s", call->class->system,
+> +			   trace_event_name(call), len, "");
+>  
+>  		data->cmd_ops->print(m, data);
+>  	}
+> -- 
+> 2.51.0
+> 
 
-Can we leave the non-oom related parts of procfs as-is for now, then
-migrate them over to hpcc when that is available?  Safer that way.
 
-> The overall approach here would be to move back those proc interfaces
-> which care about low overhead to the hpcc approximate sum when it lands
-> upstream. But in order to learn that, we need to know which proc
-> interface files are performance-sensitive. How can we get that data ?
-
-Gee.  Wait for the unhappy emails :(
-
-People do sometimes search all-of-open-source for API changes, but that
-doesn't cover in-house things, and tools which whack away at /proc
-files are often in-house-only.
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
