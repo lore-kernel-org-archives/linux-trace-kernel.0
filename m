@@ -1,52 +1,52 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021099.outbound.protection.outlook.com [40.107.192.99])
+Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022140.outbound.protection.outlook.com [40.107.193.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B7F345725;
-	Wed, 14 Jan 2026 19:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9A123184F;
+	Wed, 14 Jan 2026 19:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768418500; cv=fail; b=PfwlGwiSSt4ExcpJk5Hv8ewrqVvloYczSo1N1uAHa2PlVXLE3gyKqw3Z2FCjV1YjZVEsMccF9ihrvfLu8x9yGCjQyanC3ZKFeXRY6i+Sbd7y2dlZeiNh2i9qObb4s1wRr4euebN9k1c6juzLBfw4+hpaIpIwDRJMl9aSz7cXxm4=
+	t=1768419412; cv=fail; b=nPX1C6eZ2n85tfEsAEGDhUMsI47ptMAUZn3yY3v9Tgx5i0Pdlgs7VEL361WlZG+6hWrTSdD6wRFBva9o0R4ENkhRW+K6ldmieilB/Xhb+4Z7RTC168dRyfU8jd09x3KovVo5rPrTGvGbZARqv8Spt1aH8Xz4x1mRsubi/ENZIug=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768418500; c=relaxed/simple;
-	bh=W21CbxHjcPX9pOwrKKZnkwEwobJmXf/H7QICtHOa1bE=;
+	s=arc-20240116; t=1768419412; c=relaxed/simple;
+	bh=DMbCeo8QOQvXA1aful8DdQ/yRwZkyq2h37EjyxTPgpU=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tEdKMCopxoF5Ik9n3aPKu0afw+IJXGLbNuAfViS4Pn8nJ9DRi8+trM+7EFsJx//BZYgG+UCypRaQI5y02I8xoI+v+9sRxQY+D5/v/rvxZ0D6JN+2B1lkS9tWL2ELylL1iNAtnsU8Ls5In0rr6VcplZ9I+gTnJ3FAYW5ADGlzfBg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Iw0AMdLP; arc=fail smtp.client-ip=40.107.192.99
+	 Content-Type:MIME-Version; b=TUJ+7vypmeeYOdVBLJd6E0xwJH7GmBvYYOxoxd+HMpNrHt1Oh2J7EMb1HjYXSn/gmLFjTdjoIW85uUVabdlxt1GxaCxCuUBkJj/EJVYjNc7RalB/mV3BjvpdeLB344aRhB7ebCQlvxz3t82zOZrcLGtC22PlNNKaU6lHMTk8eTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=kLGZqaA1; arc=fail smtp.client-ip=40.107.193.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Iw0AMdLP"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kLGZqaA1"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G2lqpbf5pq0/SdQ6ob/Jv6lzBvIXnrpAAqMZi5WEPrH6xPc7Lyd75ER5X6k7uvvrT5Ou1w+r9SKHDS7bnMbwzZgYkze7NS4KGYahBIS73ELEQMDUdulTrvCfYjthuFd4UYHz5OApeXu0nOnLZ4gLl7p2F8IMFBvHuS4ttEb0NO+9r4CmbGHOZBKyHeKtu+gMGl2pnhBQJG7YuuKZmWxHjbC/FdEiNKB8Tmz4JyWdAeKEFpWrLIlq+wo02fxaAONB0DaRwr6LAnhz8jxJnMRfB6e6y3js4rfEWjuehTz19Fdyta4lZ2wwjrDcY6REcrl+1D12tsVakMh1Pxk/LfunSw==
+ b=qvFosMKyEzu2RK0hlB1xfjjgQse8ej2OPTjwWRBy64ISc2dzfaQrhM2u1MgnRnLBXba6eTAumplVn8zmycYjsdi7joLeIHFElvtuECt82FNM/Msic3psr03eXclxO849nDkp9/Vdpr9VO4Y3FTmIRr6hNGmfhVcoipXzt/xWs/JY9vBOKpbZvQ8tApomNOOFg4Rs+zh0oiYSLbM7lvmSJqiyCnIOdHBAuxUzE7jm1BagX2BJqnxc5nQb0421cNxO82ITFXoBzsCaQ0zBbWp7NlNWISOmf/MeJKc/SBQKiGWBF57WWOnZsrMRJbjWEnlfhqm2Nylszbel/LJXIjDHYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2u/7ogJNvia6EH0YSQkofhuXKCwzceq8Jd/0MxeG/ks=;
- b=wGt9SPQjI5Stgl/1ac1neDgJW7F85HPJJdNCS2Ya1mER8rWOFG86Xa3FIrMbNWKAKF+lZp3Sf4NwNmEZ8eFRo1Pv54bGVtXj81WCueC4DjcUa7WE8UFHBCSBipc2pjF7wMcNQozouLiz3k1AyowH42EjdVSvBhUCYfbae4HRfdo6jeC28lMKc1z0eIXVw4QnMzX1GO0tUK31b8FGas53S9MBS7V1pWPZ32pyjwX8/w6gOQkuzKwxs3X2wsCqC1ZNZp70KbywdWiaQ4451IGYf3ADs5TO0SiICNgW71uvmrl0iUk94EUilunRYSPxqy9gVK2A2SUttIBSueIp2Bm+wA==
+ bh=SOX8Ov3j5ESnVD+6UvK+BszDdy7WtHToyWxfoNeGtVg=;
+ b=RzjJY2Xq4mg+9n/WLI3r1wD8rtKTFhVORp/PtTMz9kBSawzXse7giGzxKiSL88HxbaUg1PVcJExVyv5yMOC7A2hR98VW/6J/pLKBrUtrSrZ0wirZdm2S+qqvyXWwGJDySoSuzehMsq91Bb01gVdy0sr5vCaqdqYEJgmDBc/yH15sf1/JnRtuhw53ZUWKnEb8oNWHJS6rFvV+2T5j0Q1XQ69Rjm9uroagSNX+9nq7YXzfNiUYNP3nCgvSu3O5AGv/xxxRVwLnBB+/vR5r7UqQ5ztCq+PvzajWW1krx2B4GJ8NtzwowyM2XbiSwZ5ybcdGS+8Njdo8RswiFxuIG7ctJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
  dkim=pass header.d=efficios.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2u/7ogJNvia6EH0YSQkofhuXKCwzceq8Jd/0MxeG/ks=;
- b=Iw0AMdLPcOEg7o8h0jNIxVnaoc8vVsBdKBhILJOcwrAwV5k7npsAGG9/p60eESMEH89IzGtWNvO7X1Rk51RWdcBJ4//Wb1S81+Bir7U0EXSCT+eAcN62d5H0HifjleoBc1BGxqcWkQwZnFhUcnYjojUaaDimvPno0ggxt3gl0NDOJLsjpDP3qN9ZKCvQOFvuMGuLLgHGsCh0d9ShWeSV8ltas8zR0hv3iZAVJNFp3OJKTPgpbIKHbQWT/yP6wudqMoR8aCLWkMc7JpRkGSRYiJMHPktgEzCSABMJ7ZM7QVLaPMCmW2O/mjAKTdK06HiGpkkc0GrePetzRWkgJWusdA==
+ bh=SOX8Ov3j5ESnVD+6UvK+BszDdy7WtHToyWxfoNeGtVg=;
+ b=kLGZqaA1ad6/yH9o37ym3r7rGynCdfRgspHQqza8UldL52e2iI889njPlOplYljMMX5h1WwuTPFpN7jnc1dyXdvUzoY6dlGlQ/GmjTErMJ8b958KH/5yy+KzgFsjnlQyZm0xXINYjbt7VbjfWeoq2KdAWGs63OejcIkc7y9GDaqIykJZxU6JuHdfxT2ArCevLKgcAmQkwEIpuKYQuvT5QvSBQVGKnaJWpxbML/yZ3XoEHZWqmK0HSjedTk2W+7Xs/tTRkv0e+pXpYCgFEn7XKKKiXeILFGadXHK/z7RCtSaRmALZNkpFkd/NVX9KjFgyFuLpuFt02iGgexF9R5aPoQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=efficios.com;
 Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PR01MB5807.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:57::17) with
+ by YT4PR01MB9846.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:e4::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Wed, 14 Jan
- 2026 19:21:35 +0000
+ 2026 19:36:47 +0000
 Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
  ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
  ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9520.005; Wed, 14 Jan 2026
- 19:21:35 +0000
-Message-ID: <56bafa34-073e-4791-9f21-c625723ffc30@efficios.com>
-Date: Wed, 14 Jan 2026 14:21:34 -0500
+ 19:36:47 +0000
+Message-ID: <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
+Date: Wed, 14 Jan 2026 14:36:44 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 2/3] mm: Improve RSS counter approximation accuracy
- for proc interfaces
+Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
+ with 2-pass algorithm
 To: Michal Hocko <mhocko@suse.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
  "Paul E. McKenney" <paulmck@kernel.org>, Steven Rostedt
@@ -69,15 +69,15 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
  Baolin Wang <baolin.wang@linux.alibaba.com>,
  Aboorva Devarajan <aboorvad@linux.ibm.com>
 References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-3-mathieu.desnoyers@efficios.com>
- <aWfIwKzzIihhByJ9@tiehlicka>
+ <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
+ <aWfNMKCoEp2LuA2v@tiehlicka>
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Content-Language: en-US
-In-Reply-To: <aWfIwKzzIihhByJ9@tiehlicka>
+In-Reply-To: <aWfNMKCoEp2LuA2v@tiehlicka>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0288.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:109::16) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-ClientProxiedBy: YQZPR01CA0129.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:87::20) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
  (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -86,213 +86,213 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB5807:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35c8cbfe-dfb3-4b20-8ed8-08de53a2221a
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT4PR01MB9846:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3690a018-c7ef-4978-1be8-08de53a44143
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S1ZkMmpndGN2aGROblRjbTRQZnZPQmh6bDNVQjFldXNQZ1Vad2hrM21kVk92?=
- =?utf-8?B?cGNFZGwrUGdLT09EU1dzTGdOdmgrNXZrdlgzWGNRQUF3U0lJNGswZXd4NXFk?=
- =?utf-8?B?MGIxVHVEeWxHdmNXL1djZHEzZklFUlU1N1h1Q2lxQmNwV2MxSldmS2FmVlAz?=
- =?utf-8?B?b2dYVnhiVTN4WERsVzlVa2ZSdThvekdZN1RKZ2x5YUtTKzl4Mmo2THFhNHNk?=
- =?utf-8?B?RE9jZGRaT2hTNW5sQ3doSjFYWWQ0YUE4WjAzYWcxOWEzUlN0eEkrdUozd1pW?=
- =?utf-8?B?ZWRsM3ZKOU1oRldSdEVYeGk1dkVOdTg2N0prTytwR2lUUS9UdzVNRWJDZGtv?=
- =?utf-8?B?aS82dlYyY2JEWUhXYWNCTDhmUW1xWnludXJtNkgrME4zL0Rtd3lWNXh1ZjJw?=
- =?utf-8?B?eWNRL1g1R1MyTUo1NDNXQ09yRnFDYkNsdVl5c3hzVlFwVVB5dnBjMXBjS1Rl?=
- =?utf-8?B?dGJQYVJ1MVQzeW1xSTA0R1QwVEtKSjM0QmFVYlcwTVhmcnlBZXZjTzBvaUJW?=
- =?utf-8?B?a0krUWs0TnF4N0g2a2xFQVdZRVBvK3dwRnV2Z3plR2Y0K2diS09ubFN4bkV3?=
- =?utf-8?B?KzVMT0MrYnorQTBkeTJKZmdJWjhpYVo5VmNJV2NCK1duc3B4MGEvQzJyaDdy?=
- =?utf-8?B?YnpLakpJR1RQWFZlN2xPa0dXZ1c0OHkxSmlyVnhrMkZaa0VqVk1UWUcwTXps?=
- =?utf-8?B?RXRIY2g1WFU4TnFqL2Y4blB3TFhJR2JhNnlxbWhUUjM5Y05zaXJzQjh2UGtr?=
- =?utf-8?B?RFJHWGtUOHhBNUdnN3YyemtQNW93THRtNzk0cFBGZC9ScmJZOXNmTEdJZmti?=
- =?utf-8?B?eW9ONkRaT0lBcENsZWNkS1pFV3MvY1VIMnptNVRvWTRycXJqK0xuRmFSTDN6?=
- =?utf-8?B?RFJaSDdrS05hTVVzOW9yb3FBY2hKR2JzdUQ5dEhOSmgzaEZjSytzeWZyYjVw?=
- =?utf-8?B?NzVPTnUycDJMeG4rb2FIU2lTbHNFUEQwNEswajJhUDZYNSs4QjdCVGVYeXlw?=
- =?utf-8?B?dHg2cFljNldVSmNZL3owS2pyVnZFbEVvN2h5bjUzdWJ6M0s0RTU5NDBMRmND?=
- =?utf-8?B?UUdHcmhudHVadjlubDhsOE4xL1F1NUlzSWNDYWZoRWtDTVBwTFhoVm1OOEgz?=
- =?utf-8?B?eFZwL2t0eFAwcnY1ZmNTL0NqTGZUVjlqTU53c0kvRDdhcE9oc0VlT2ZDb2hO?=
- =?utf-8?B?SnlBbXk3bDlWZDFQNlZueUxsRFo4OWorWTFzTVlidUpoZGJ0cGRLSXRkbmp1?=
- =?utf-8?B?SHVxL252RGhUUERjUTlKZjhOTDBWcDBHRGNGOTVXUjQwYWFGNndNT1U3dnpp?=
- =?utf-8?B?Z2ltTkVCaDR4dWFNMGdzR1NJRml5U3pRSXorRDJJL29keGZvMUZPZ05wMTMx?=
- =?utf-8?B?R2U4dXAzNzFBR1N3Q0VsMHIzRnVjdjNNNE5nTk9pSGlOSUNwcDFKZ2s2d3Zi?=
- =?utf-8?B?NCtlVXIvZG9tZ0h0OVN6a0kvL0lPcnBaaEtaaGxhckJuM0xtbWx1bnQ1NHpN?=
- =?utf-8?B?djhqK0YzbVNuZnlRczVETDZ1eEY2b2QyUkJSMHdKOFU5VHVtZ2VYTEFZdmFq?=
- =?utf-8?B?aGxyTWRWTkJraUJBMTErNEg0OEdKNGxuNzhBUTdmdGFmVzQzQ2gvS3lFYlFx?=
- =?utf-8?B?elYzOXpoWnhpVmk5U05YcnQrSjFNNUJBNng3S1VKWDVzdGtmbm5lQTR3MGZF?=
- =?utf-8?B?VUlrUUM4QVR3SmRxMGJtVmZveDVLMS9ydy9OZ3QrSmRzaWt3SDhHK2d4d3Z2?=
- =?utf-8?B?cGJQSGM5d0t4SEF0UjFMaEdXTDJmZlRXc0J5dWhJUCtCYkNuanl3QWMxcmpM?=
- =?utf-8?B?TnlKUi8rREd6S0ZzcG10ckllZWRJN3BVSGNLb0hnWFpYR21zTW9NYW1iZ2I3?=
- =?utf-8?B?Mk5Ec0VMaVpWRzdZZExuWXJwMzk1a1NTWGFRSTN5a2tHY3FCT1dHeGxlbm02?=
- =?utf-8?B?UGxMUndwM2I5WkN0b2xtYmJhSHg1S2hWcTZaNndyZzMySnZPVm9IS2NIWUor?=
- =?utf-8?B?czlrVXlTaW1kb2ROSDZmWkFaclVIWHFKSFc0N1p3M0EvS05mTlZHYmFtSERp?=
- =?utf-8?Q?XOnt/Y?=
+	=?utf-8?B?bnNMRFRSaXVNYzgvVGZQS3dIVjNMbG9OWjBZN3BsLzZBMDhycDl5cHdMMXRk?=
+ =?utf-8?B?VXcxK1JoTWdHN1NHQ0hyTEovV1RrUHpoQnFWemsySmRRd0dyakc2UHR2bmJK?=
+ =?utf-8?B?U3A2TytIYVJVWjFkaXp1dnJBclJHSmhJbFJQcFEvR3gwbU5iYUwxMEFOVzlN?=
+ =?utf-8?B?Mk1QRXplbGF3NkE5Um1XUEZ3bkQ5Z3FXQU1vUnJKaU1CMjhRTTFZVFN4dzUy?=
+ =?utf-8?B?bFFBZ3U5MDVlRkZubDRDU0pxWGdvUUNnRXhOeGc2WWczNDZGT2RCTWpiSnpI?=
+ =?utf-8?B?djNNZForSk85Sy95NmtxRmNaWk50b1pxR1dPMWtyMVNhS2wyMEJlOFBtNkpN?=
+ =?utf-8?B?UGljNFFuVUpEZUQwdnVvL0NQbXVEb01uaGZxR002TW9OQzFCZHpXb0RzNUMw?=
+ =?utf-8?B?ODVkTldkbGdNY21sV0VNMUxYTkZuVGFmTGp2Wkpja3FrK3hvZm1RU05Qcmtl?=
+ =?utf-8?B?b3ZMbnc0aE1abXVmMEJBc1ZCR1FORVd4ZUlDZEJqNXVyUVRWZlN1UEEwemhQ?=
+ =?utf-8?B?bWowbXV2Tk54ZWdjbGxReVAreGZvOEh4OWtNdE1ENlQ2c1VqZTFwc3o2Q21J?=
+ =?utf-8?B?QWoydnN5UWp1N0ZadFpTRDhvNktLeFV3dFc5QklEZXFUWmxRWnc1bjRpeE5O?=
+ =?utf-8?B?cEcrY2lXNGh3RlFzbjRKQUZJN28raHgzaUNmdTJ4M0lLNWJ1a3JXcVRCLytx?=
+ =?utf-8?B?V0Nla1dPOUZWSUFCV0xRVnJhY1BUOUF2TksyaVpsU3VuVnlubE56OTZpSFBB?=
+ =?utf-8?B?TWJOM1dXY2dkZ2lnOXdsNXJBYUVXeHhCemo1RktNckJIdTcwUnhHZUZuT2g2?=
+ =?utf-8?B?VGFMK0dxM3B5NWErejZtVEgxdEtrV2FMeXBJZmsrdVNJUWdERWZGeWlWdlJz?=
+ =?utf-8?B?ZjlEQ0N1Yk1UWHExYWVObWxoZnZXa2p6T0RrTDE4TTQvWVZCeXdiMkdtbFIr?=
+ =?utf-8?B?ejZLRzY0TThFWnlkMHJ4cDdNSHhHNlN2QW1MYTNKWnE5YVFyK0QxaDZmRlpv?=
+ =?utf-8?B?NnVjZDlFOVpVNkRiMGR2cm91TDJOU2x4WDdyZTc0bGFZMmZyUU1lOGx6emtF?=
+ =?utf-8?B?VnlZcXFzVXRrcUtDTnNXc3BsOEtVZ2FQV3BZeURvQnJHTEJBaWZxaTMwQjBm?=
+ =?utf-8?B?LzlnbUQxaWVqVUVrcVllK0tid0ZRQmlTdnAxL0VZNUhxU2hPN1p4aWExRXBP?=
+ =?utf-8?B?Ky95UTM4WnMveW5QdlR1Z0tFSE9hQ2NCTENTS1dDbERVZ01VSEE5RWc4RXVp?=
+ =?utf-8?B?RjJTT3V6ODNkYkNOUFNhMFJmc0wwR21ZU2hGdm5RRVdxYU5XWFJWUngwRkRk?=
+ =?utf-8?B?R2FmVXFseTcxWU5Mcm5PcFgrbVRuV21uSmZIeUxJVlpZU1h5Y2M4Tkd4NDFu?=
+ =?utf-8?B?dzhOMEQzOUdOUkFsdW5qbk9Pa1RoNmJMRkZDT0JqV0pydXhxTkFFaktReDBa?=
+ =?utf-8?B?eEoxbEVPdVpOMGRRZ1duTkV6dkpCVTRuMFB5SlE5UkNZZWVrdStEbFp1cmEx?=
+ =?utf-8?B?WWpVT05SWmlFQzY1bzFjY1dFaWk3eUlBRmt1VjdjdGNxMm8reW1iNVVFNVNi?=
+ =?utf-8?B?V2pSM0Fnb01CS1BiRWRWakY4aXcxOVdaa2NUMDBrSmNKSldUcEY2TkJpZ3lF?=
+ =?utf-8?B?WU5sbmF2SU5YTmNLYml1TGZCRHhjaDh3T1ZhT0E2bkNqalNHeXRGeWJVVS9z?=
+ =?utf-8?B?UDZvZUlsRDFEcml6RzdhV0V3N05aaFdCcC9HQlFrSmhiRmRuUFNqMm83RzZT?=
+ =?utf-8?B?YXhhUUp3Smx0cTNMNGhtK0xoZGdpcGpPSHFDMzVDRW5ycTI1dEE5QVhKTGNB?=
+ =?utf-8?B?eDBNdGt3THpIbzQrZDZvVWFtK05COWRVU0NTZEZPMDFWOEM3dWxqWEd1bk1C?=
+ =?utf-8?B?ZGtCa3VXOWw4RnVOQ1lqa2JvRlFvREVvZTZsaEFxTXlCUEtoSVRpOTVWMVdT?=
+ =?utf-8?B?RnhFZkJaVmgvR3h3R1JWNlF3bUNPN1BSaDhjZFBiV2FGL1d2YS9hVnZjSWtF?=
+ =?utf-8?B?Rm8vcmpLRTl3V2VHZm5KNmllVHBlOFZNWE5abnNPcFZoTmR6RWFBbDMwMk5X?=
+ =?utf-8?Q?Vs0Yjv?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b3F1NmNaenlFMHFaanEvaEIrbG9QRXlETjhJVUVVa2JqaHYvVy9qL2NXUUZI?=
- =?utf-8?B?emlFVFhJTU9Ba2NSdkhBb0JxOTJEdnpNcHVpVU1maGhDeFlhK1h5WFhJZEQ4?=
- =?utf-8?B?U2VKOExDSG9hTFRCcENvUTVtZVJOdzZ2TEsvMEE1WU5ITnprVkowUmFWTGVp?=
- =?utf-8?B?QlVhNDhzS0ozNHRKV09kRFIzZ2YyQW44N0twY0VvRDFGNzgycDZKYnF4RC8w?=
- =?utf-8?B?SHY1RlZGdDFlRnFwcGl3OHlpYzZKUTMvRjU4V2JCR2ozaW1GUS9kMW5VRkwy?=
- =?utf-8?B?QmRjakJ1WGlKVUhXcWZuY3FDRGEzLy9uZ0JOcDFzaHZrWWRGbC9iOTF3Z1Fz?=
- =?utf-8?B?MXhBTTFrVkg0aUswQ2ppaC9ybFhuYmk2OTJyUWJqR1NPaHlQY2l3WFp4TTBU?=
- =?utf-8?B?RC90dVNQV3JoK0VpenZMMS9nMWQ3b3M1UCttOUUzN3hzcUxrMDhVdnRsSk1l?=
- =?utf-8?B?dFY4L2hKZHlHck9vdm45cnZBZDhVVytrc25FNmdYaGE3Qm1zc0llRmtyNjBp?=
- =?utf-8?B?OGxuMUtCTllhSUo3eDd3QU1qU3BYdmhCdUlmQkI0ZWVWcThSdFdxVk9FVWtN?=
- =?utf-8?B?V3VONEFGSlg4YU1NWVVXSXNHVHU5RDZXVER4bi9TSGxVc04yeGc3dFFlTzRK?=
- =?utf-8?B?M2dQM1Jjd2J5ck5uNE5ORVlNM1p0UytOS3NqTHppa1BUMGRMaWZYSmNaZFZV?=
- =?utf-8?B?TzdpbXFjejl1NUUwNHdUbXJvMFRIRWJLSmZGaGJ3dnhXWUI2ZVVEUXRJTy9U?=
- =?utf-8?B?RXZqdjZpWStrcWVGeVlQWkxYMEFXRldWdWViZDFzMWFBaUlQTmtFWlE4Z2xP?=
- =?utf-8?B?VkY0RFBTdEJMZUV2ZXdTZHlQSXJGUnFxYUFhVzc0d1c5SGNBY2I2NkpTZ0NJ?=
- =?utf-8?B?M3IyU2hCWHRkeHQ4YXhoRGladndOQlRkUWk1cll5Zk4rYWxiZXBYclRTTWtR?=
- =?utf-8?B?UFNkOVJCN2ZoUUdnK1hmSDg0YlRwbWNiVkhnZGVvV0c5UzRYbW9aNGFPUE9K?=
- =?utf-8?B?Q0hUcHVWS1lRelRFTStnZmdMTGtCQ1FXbitGYW5nNm5wL2tBaVZWU25iY3RE?=
- =?utf-8?B?Ui9KNmN4YUR1WDN3R3lHUkJhS3M3cjRHSmMzLzhQazVWOTlPbit3KzBRWkpZ?=
- =?utf-8?B?Y3R1YXUvdVJ2UDdzbmI5WitvVlVHNnQvSmpyd1pFeXdrcDVzK2VCS2xSdU5N?=
- =?utf-8?B?NDVGbk5HUGF0clk3MWxGcXhHZVpvd2hyWWtTUmNCTUZzeW1iRGV5ZWF4RkVi?=
- =?utf-8?B?WGNZbFRmTFRlSUVJRkg3OEFXVlBVZGdRVGlvemFJRHlCZ1VHVkF5VEZscnpK?=
- =?utf-8?B?SHgvOWdGaUcxZ0lLbU85OGx2SzhHeVlkOTNVc3ZSWCtLNEYwSksxOTV4bFc4?=
- =?utf-8?B?ckQzdjlKeVRXczJxaGxiWmgrNEhaZzhYZTFXY1Y2Ylg2R3MzWG9xcVV0dENK?=
- =?utf-8?B?K2NXcFdkY3BPTEhtckpvYWZrMUZBOEdub1BCZTkvb1NkbnQvdXg5TmNkNHhw?=
- =?utf-8?B?TmJRbjVobEpPMC9FNS9PMVR5WWxDT2pjdldoWjZmcXAwVzc3VStVS1lTSjE1?=
- =?utf-8?B?Wkp4dTNieFl1YVk5R1VvcDFFQjFkdSsvaWswRWw0WTdMb3BQSWdielFxc0Er?=
- =?utf-8?B?T2xBWmFMam1KUFRNVHJhOWIyUGV1ODBOVUFzUjdhZXRQL1V2Nlc2QkZoMHIx?=
- =?utf-8?B?M0lPTUo5Zmh4QzVhM0hMNVpiMGpsZEIxRm92Zk5pbC9FajJqdmt6Q2NaVHo1?=
- =?utf-8?B?Y0Yzd1JZUHpCZy9XOThuSHdqamhMVFlhbHM1Z2Ryc3NCSnhDOVg1c3J1MkxU?=
- =?utf-8?B?emNxeVNzQ1lpb2lQRzZ4ak5oWElQYWVLaHdYYTdsTUJWYm50RGI0cXg3S3R5?=
- =?utf-8?B?ZG9IcE5Ud2RVczBsMmNrdS9sM2ZCck5JR3dqelp6QXBtcDhFT1VzYklJTHFm?=
- =?utf-8?B?aGN6TTBOZ3NZYzdyVVZJQ0drZHVDZjM0eHJscFdKbTB4VkM2NUc0cUJ6a09u?=
- =?utf-8?B?RHhWcXZvTERRTFozV0ZYSCtGVElMemtvVFkxclVUek5qUWE2R3VtdTlGTjB6?=
- =?utf-8?B?ekdNWGlpSmNkOHFiN2lYQjZaV1FZcUNyYUJwZjBSLzM4d09KK3hhKzVEWkJZ?=
- =?utf-8?B?YlJZVENHMVdPOEhnVDFFa295MVBxejh0bHMxUTR0cnVjUTVESngrWGhvSnMw?=
- =?utf-8?B?NE4ycEhSOERibHpNZVVjdC85dXFBU1MvRnBuN2ErV2JVLy9wTHlkUXdzaDdm?=
- =?utf-8?B?TlVzSEVuRnRFTUkraVRrWHpyUzZrbGtPNHpqTnE2WTg2MWFHQm9Xa0tySDZm?=
- =?utf-8?B?NEpPVU9rU2EvdzBheExMUHF6TDJvQ2NjSHBuK05jTXpRTmhIajRjZXBrcUtJ?=
- =?utf-8?Q?ihZgJ6UJuoWjQ8lc=3D?=
+	=?utf-8?B?WEgyMFRlSXFXdnA1bU15cm9zNGRSNnQySjd2eU5DZTFhQW1vWmZlbGVpaWZW?=
+ =?utf-8?B?S2h2UTdsVDlDM2lONUFBQlppR0tLYmF1TWNFYjdMMHNISTczUkJxZWgzUlBS?=
+ =?utf-8?B?UnpmeC91YlJuQ3NPSmRJS0plUW9KcG92OWtKTHhFTitGVjI2ZHc1d2d4bE95?=
+ =?utf-8?B?QlFHbTVBQnJBZ1FHZHpCUTUzTHhRK0R1S1ZjUWVIQjNFcTRnd2VqOEthVVdo?=
+ =?utf-8?B?cjhzQjhEWWJnY09PclFpSXN1d2lFeG1pTXJJTndUQTdBU2FpM1BUQ3ZxTXFu?=
+ =?utf-8?B?d2UySHBUY2dLQ2RrVVpvUmNyc2tJSzc3QnlEZDVDWlhKRS9md29IVVNVQ0U4?=
+ =?utf-8?B?bFhTaEErWUhqckxhbnZmVTIyLyt5VVlHTVRkUGlRV1hmTjZ5Zk1UUmEzQktw?=
+ =?utf-8?B?UzA0RWtjMDdGTVNNZFg4aFYxVmhoUkRvZE9XeWQ3ZkZ2R0NGdTBlZFlnV2Er?=
+ =?utf-8?B?VmpVQnhDRUVBejRDTjlvdkFUMW1HWitjamxORU9CUEJqK3AvYzFqMSswS3dv?=
+ =?utf-8?B?V0o3ajBlWENIcmlNMm1jYys1OURDVUEzeDR6UHZKcnlXOEw3MjhDSGdia1N2?=
+ =?utf-8?B?U0tLMVlmUjhlZ2R4VENtR1F6MnFxcHo0aU54NWtjNFdaZVYraWQ2MDdPOVdq?=
+ =?utf-8?B?Qkh3NGZPdThtYlNualgzYk13cEJ1ZGpWT1Y5RnY1aVU1NTBncnJGWjBYakVT?=
+ =?utf-8?B?aVQ5VHBvTGExV3Z2SXdkbWtpZVMrRzcyZFVwTUJyMkRTcFQ2UDQ2T016b2pj?=
+ =?utf-8?B?NDAwbHAxb1RqODRTNDNoS2ZHRlZlWlBYZzlWa0JJMWhIYVpZYU9CNVQ1Mlc4?=
+ =?utf-8?B?Wm9kYTFONnZhZS94YU5OK2VjMGF6aDd5WlB5bDlZVjNVWUhaR3lrOUdoMDhJ?=
+ =?utf-8?B?WURCbEhJS0RGOCtLUHVHL2FFVUdrMDRXRlB0U09BRTIzQlpPTTI4b0dvNU1r?=
+ =?utf-8?B?NmZJTTFlQ0lJMzB1VklUeG9CRExtQnR5aGxtOUdueGIrejY0ZVBseXE1RXB6?=
+ =?utf-8?B?MTdVSGc5U1EvYldsUDlNZEc3VDYyQXFVbmlqeVVkbFVSYU9LZFdENWgzdjlJ?=
+ =?utf-8?B?T0pMTHZhSFVXM2dTQTBuOElPMEpYZXNCVlpXaUVIVXp6a0F6K3l1YU5pdk1u?=
+ =?utf-8?B?cUFXL2ZkaWY1ZVhjdlVuVEF5czFQOE9KM3pJd3Y3bVJJREZ1c1lWVlU0OXpQ?=
+ =?utf-8?B?ZTBSMGgzZFZGTjFaUGdhS0xkK0s1OVhQamdEZ2lWSDk0cXFhSUUyMndjaTJY?=
+ =?utf-8?B?WVpwWTRXb3IvZm1tVUN5eG42djZCdENoOXllclp2QXkwWk5YQ1N5Zm45emZp?=
+ =?utf-8?B?S3FyWjhoOTNCUHhKRHNuYjNGSml2TnhqMmRvamNYWlZjeFB0cnpyaWdBWjl1?=
+ =?utf-8?B?ZmJYRW12UFYwTnlwYzZWN21UeGowOHNBTFE0elJIZUkyZG5JV2JxQUFqQXMz?=
+ =?utf-8?B?MDVlZWk4NWFLWDh0R1p6L0VwVHl0NmwrL2FDdWp5ZFhQWEw2cEVQMGlZSlNa?=
+ =?utf-8?B?S3BDeE15Sm9icWVMVXBvVTl3d01zY3pVRGRUREltbkg5RXlndDRCYWpjZkdN?=
+ =?utf-8?B?NEdqYTloZEFSTjBFeW1lUThzOUF5d1I5dUdSSjhrMUdOSEhtMHdOVGlsMzlE?=
+ =?utf-8?B?RUFmOVdxVUhMRm9Mem9ZYkg0c1VadlpJaVQxSjlxVExwNlcvQmpMNDlBUkQ0?=
+ =?utf-8?B?a2tqZFpzdjlRSlBGRU1wR2NSY3gzanZMUXl0OGtaTU0rdENDbWZJVWdZdSsz?=
+ =?utf-8?B?NmxjU2hWNzhlR1BZTlR4YXlwK3VUbEFpVUx6dmh5blcyR3A0YjdtY2dVOVlu?=
+ =?utf-8?B?eXREd1REQXVROFlsakppZGdjMzVoL0xkTklBL0tZOVpBSzF6bVUvVEs5YTV6?=
+ =?utf-8?B?VlAwRk42amtDeWJ6Zk42U0VoL0NGVDVzK0tqM3EreHhHNmNJNGp2VTVvUUx6?=
+ =?utf-8?B?eWI0TzJvT2RtYkZGSjJxQ0w2MERiUmJiZzc2SkQ3WjNMZFlHSVBJZHFkZnVJ?=
+ =?utf-8?B?cXgxNk1jR2YxQTkwNzAxam1rdWIycU1VZWhDdWJUemRGbnRnRDlSVHU4TnZi?=
+ =?utf-8?B?OEFvUTN4L2ovai80S2tBcHY2cWZLT2RRSS9NajY5SXRTQXBHdUg3L0VmMTMr?=
+ =?utf-8?B?bm1ZeFk3QkVDZ21LUG9oeDc4aVFETjJ6a0poM3JiUzBYRElSTUFIbTJ6QUpE?=
+ =?utf-8?B?Z0NMYXlMSGlHM1VIM2VwVHVuQ2x6eHJUWFA5ZUFxbFpabFVWY2hpTW9mY1Jv?=
+ =?utf-8?B?eEpNdnRvQWV3Wmtnd2lpOVhRWjFHdkppNnJFNmR0cm40NXVRYTdVM2FNQm4x?=
+ =?utf-8?B?dU10SkdrbE5pY2w4QndxeVZMaFFtSkU2SEVnSUQrUFg5M01EZkhucVpTdHVB?=
+ =?utf-8?Q?xMMcyHKPWHQ0jKEs=3D?=
 X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35c8cbfe-dfb3-4b20-8ed8-08de53a2221a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3690a018-c7ef-4978-1be8-08de53a44143
 X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 19:21:35.6480
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 19:36:47.0165
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LK26UqGyQFAM+2Y7N+t1Hv5ZSYYlT0GXF17Jz2d1ZkjmsXjrjybpPQ+zWke9PJ1gNdvE/EftvYF3tKi6ggq0Dtb/4GL/Y5O/H0NBIYcl2MY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB5807
+X-MS-Exchange-CrossTenant-UserPrincipalName: i8R32/s/0Vae7XBWWw70Z9WHX7ba372MMMan8a6YlAVEeTttMh/BaSgzQ9/ppxx8BZ/OsexxIuSXkze/iiXtXk2vxud2QuEbkvhr4wB2C3I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT4PR01MB9846
 
-On 2026-01-14 11:48, Michal Hocko wrote:
-> On Wed 14-01-26 09:59:14, Mathieu Desnoyers wrote:
->> Use hierarchical per-cpu counters for RSS tracking to improve the
->> accuracy of per-mm RSS sum approximation on large many-core systems [1].
->> This improves the accuracy of the RSS values returned by proc
->> interfaces.
+On 2026-01-14 12:06, Michal Hocko wrote:
+> On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
+>> Use the hierarchical tree counter approximation (hpcc) to implement the
+>> OOM killer task selection with a 2-pass algorithm. The first pass
+>> selects the process that has the highest badness points approximation,
+>> and the second pass compares each process using the current max badness
+>> points approximation.
 >>
->> This is also a preparation step to introduce a 2-pass OOM killer task
->> selection which leverages the approximation and accuracy ranges to
->> quickly eliminate tasks which are outside of the range of the current
->> selection, and thus reduce the latency introduced by execution of the
->> OOM killer.
+>> The second pass uses an approximate comparison to eliminate all processes
+>> which are below the current max badness points approximation accuracy
+>> range.
 >>
->> Here is a (possibly incomplete) list of the prior approaches that were
->> used or proposed, along with their downside:
+>> Summing the per-CPU counters to calculate the precise badness of tasks
+>> is only required for tasks with an approximate badness within the
+>> accuracy range of the current max points value.
 >>
->> 1) Per-thread rss tracking: large error on many-thread processes.
+>> Limit to 16 the maximum number of badness sums allowed for an OOM killer
+>> task selection before falling back to the approximated comparison. This
+>> ensures bounded execution time for scenarios where many tasks have
+>> badness within the accuracy of the maximum badness approximation.
 >>
->> 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
->>     increased system time in make test workloads [1]. Moreover, the
->>     inaccuracy increases with O(n^2) with the number of CPUs.
+>> Testing the execution time of select_bad_process() with a single
+>> tail -f /dev/zero:
 >>
->> 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
->>     error is high with systems that have lots of NUMA nodes (32 times
->>     the number of NUMA nodes).
+>>      AMD EPYC 9654 96-Core (2 sockets)
+>>      Within a KVM, configured with 256 logical cpus.
 >>
->> 4) Use a percise per-cpu counter sum for each counter value query:
->>     Requires iteration on each possible CPUs for each sum, which
->>     adds overhead (and thus increases OOM killer latency) on large
->>     many-core systems running many processes.
+>>                                        | precise sum |   hpcc   |
+>>      ----------------------------------|-------------|----------|
+>>      nr_processes=40                   |    0.5 ms   |   0.3 ms |
+>>      nr_processes=10000                |   80.0 ms   |   7.9 ms |
 >>
->> The approach proposed here is to replace the per-cpu counters by the
->> hierarchical per-cpu counters, which bounds the inaccuracy based on the
->> system topology with O(N*logN).
->>
->> * Testing results:
->>
->> Test hardware: 2 sockets AMD EPYC 9654 96-Core Processor (384 logical CPUs total)
->>
->> Methodology:
->>
->> Comparing the current upstream implementation with the hierarchical
->> counters is done by keeping both implementations wired up in parallel,
->> and running a single-process, single-threaded program which hops
->> randomly across CPUs in the system, calling mmap(2) and munmap(2) on
->> random CPUs, keeping track of an array of allocated mappings, randomly
->> choosing entries to either map or unmap.
->>
->> get_mm_counter() is instrumented to compare the upstream counter
->> approximation to the precise value, and print the delta when going over
->> a given threshold. The delta of the hierarchical counter approximation
->> to the precise value is also printed for comparison.
->>
->> After a few minutes running this test, the upstream implementation
->> counter approximation reaches a 1GB delta from the
->> precise value, compared to 80MB delta with the hierarchical counter.
->> The hierarchical counter provides a guaranteed maximum approximation
->> inaccuracy of 192MB on that hardware topology.
->>
->> * Fast path implementation comparison
->>
->> The new inline percpu_counter_tree_add() uses a this_cpu_add_return()
->> for the fast path (under a certain allocation size threshold).  Above
->> that, it calls a slow path which "trickles up" the carry to upper level
->> counters with atomic_add_return.
->>
->> In comparison, the upstream counters implementation calls
->> percpu_counter_add_batch which uses this_cpu_try_cmpxchg() on the fast
->> path, and does a raw_spin_lock_irqsave above a certain threshold.
->>
->> The hierarchical implementation is therefore expected to have less
->> contention on mid-sized allocations than the upstream counters because
->> the atomic counters tracking those bits are only shared across nearby
->> CPUs. In comparison, the upstream counters immediately use a global
->> spinlock when reaching the threshold.
->>
->> * Benchmarks
->>
->> Using will-it-scale page_fault1 benchmarks to compare the upstream
->> counters to the hierarchical counters. This is done with hyperthreading
->> disabled. The speedup is within the standard deviation of the upstream
->> runs, so the overhead is not significant.
->>
->>                                            upstream   hierarchical    speedup
->> page_fault1_processes -s 100 -t 1           614783         615558      +0.1%
->> page_fault1_threads -s 100 -t 1             612788         612447      -0.1%
->> page_fault1_processes -s 100 -t 96        37994977       37932035      -0.2%
->> page_fault1_threads -s 100 -t 96           2484130        2504860      +0.8%
->> page_fault1_processes -s 100 -t 192       71262917       71118830      -0.2%
->> page_fault1_threads -s 100 -t 192          2446437        2469296      +0.1%
->>
->> This change depends on the following patch:
->> "mm: Fix OOM killer inaccuracy on large many-core systems" [2]
+>> Tested with the following script:
 > 
-> As mentioned in the previous patch, it would be great to explicitly
-> mention what is the memory price for the new tracking data structure.
+> I am confused by these numbers. Are you saying that 2 pass over all
+> tasks and evaluating all of them is 10 times faster than a single pass
+> with exact sum of pcp counters?
 
-Yes, I can add the explanation here as well.
+Yes, that's correct.
+
+This is because we can use the approximate value and the
+min/max possible precise sum ranges to eliminate most tasks,
+so we only have to do a precise sum on very few tasks.
+
+So we're basically going from a 1-pass doing precise sum for
+all tasks to 2-passes doing approximated sum for all tasks,
+and only precise sums for the very few tasks that happen to
+be in the vicinity of the task chosen by the 1st pass.
+
+We could probably do something more clever and do all this
+within a single pass if we keep track of the possible candidates
+in a separate list, and then only iterate on those candidates
+to do a precise sum at the end of the pass. But I chose to keep
+things simple, hence the 2 pass algo.
 
 > 
-> Other than that this seems like a generally useful improvement for
-> larger systems and it is my understanding that it doesn't add almost any
-> overhead on small end systems, correct?
+>>
+>>    #!/bin/sh
+>>
+>>    for a in $(seq 1 10); do (tail /dev/zero &); done
+>>    sleep 5
+>>    for a in $(seq 1 10); do (tail /dev/zero &); done
+>>    sleep 2
+>>    for a in $(seq 1 10); do (tail /dev/zero &); done
+>>    echo "Waiting for tasks to finish"
+>>    wait
+>>
+>> Results: OOM kill order on a 128GB memory system
+>> ================================================
+> 
+> I find this section confusing as well. Is that before/after comparision.
+> If yes it would be great to call out explicit behavior before and after.
 
-Indeed, the impact is mostly on large many-core systems, not so much on
-smaller systems.
+Not really. I'm just testing the "after" to make sure we get the
+expected killing order.
+
+> 
+> My overall impression is that the implementation is really involved and
+> at this moment I do not really see a big benefit of all the complexity.
+
+Note that we can get the proc ABI RSS accuracy improvements with the
+previous 2 patches without this 2-pass algo. Do you see more value in
+the RSS accuracy improvements than in the oom killer latency reduction ?
+
+> 
+> It would help to explicitly mention what is the the overall imprecision
+> of the oom victim selection with the new data structure (maybe this is
+> good enough[*]). What if we go with exact precision with the new data
+> structure comparing to the original pcp counters.
+
+Do you mean comparing using approximate sums with the new data
+structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
+compared to the old data structure which had an inaccuracy of
+O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
+is good enough for OOM task selection, we could go from precise sum
+back to an approximation and just use that with the new data
+structure.
 
 Thanks,
 
 Mathieu
+
+> 
+> 
+> [*] please keep in mind that oom victim selection is by no means an
+> exact science, we try to pick up a task that is likely to free up some
+> memory to unlock the system from memory depletion. We want that to be a
+> big memory consumer to reduce number of tasks to kill and we want to
+> roughly apply oom_score_adj.
+
 
 -- 
 Mathieu Desnoyers
