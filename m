@@ -1,58 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A831D2D5946
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 12:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619F22FDC5D;
+	Wed, 14 Jan 2026 14:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768394307; cv=none; b=HFJdtHCZ35anotZwuLk482XRapBoLU0StTbTcVD1qqtb0zEJGeRG7UKTE2PO4jlD55ge+MCXIByq/q6xvPlqbki97KabU6gfvQ9lCg3jB+1CuSqlloSvW6c/18Puq02dkT1gs79pb8nq6zVEAP1S8o8ZwxiniTItYlUwes53yB8=
+	t=1768401409; cv=none; b=J4CAMAgv2s1ArVgaYc896ZV8IJuuYqsu2u3fS1hUxZZEBZmYhvJN8jtFoQwJISsJDPazTUaeAhEtvxHE6N8qvVHugu+Ek6K6Zpas7mWpX4neG9QHVY9hxN3bok5/mWfdxpu05LP9qEMf274n4JsdspPLJaejiJDgQ/UOyn0PMSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768394307; c=relaxed/simple;
-	bh=St5hY/xdPV64+Z36nIFqhnh9NvmhRzlS6P1W8UdKUx8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LadbB1c2hI4mjc3H0Tzx/l98KBMoH4DOi5xeoUFHEDxLgtOYt5XdK20GCGDR2pFj6WABVdXMN5eBeQwdZrXxgDKQ1mKGDiOVtHic7Hww91mqIZDc2Ae5Et4T6vZiqsekNxJJomcXRH3syplzz3GB0ewwIOx8Q3mwIPlGrJg1Qxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L64hv2u3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768401409; c=relaxed/simple;
+	bh=ME0gs6VMJ5CZqGmbSieOhI5IwLbZI1M07sm8V5/k2UA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UtQ0MwwCpb484ih25ytXXCRNYjnxZYoJmH4XWAZLcCjRjll3Q7lCcjj2mkiWZDhUvu6M+4v2lu9SXx66nMO9erbyV2GJ6eEQAGAsILFE5ErtAFYqICsIvuZ05UL6SXtEaTF2JEVXC4vmjETJNxJ7gzdREd1lECmNb2layy6jaMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=wBO1cDgX; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L64hv2u3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768394303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5hLPIxf1skim8eXLrM4/NJDBybR6ErvrcqNCgp+dZ1A=;
-	b=L64hv2u3iCc1CtRRUHXhat74qgfRVu8XZIkKkSYrLnCBq2LLG8BRMVC5hxa8GGlZpgPE89
-	XhuZVf9MrKB2R6vVsxictFsbLwWpABdZ9575mizxGq2KFfvJhgdnL0mVd9s6p8J+vcTwwy
-	x5IbEirJcHCLp4BQTShz7cXbL3P2oAY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-313-Ssdj70xxN6ejXOowHq1d6g-1; Wed,
- 14 Jan 2026 07:38:19 -0500
-X-MC-Unique: Ssdj70xxN6ejXOowHq1d6g-1
-X-Mimecast-MFC-AGG-ID: Ssdj70xxN6ejXOowHq1d6g_1768394298
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 38FEB195608F;
-	Wed, 14 Jan 2026 12:38:18 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.32.147])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 475D419560A2;
-	Wed, 14 Jan 2026 12:38:14 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Crystal Wood <crwood@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH] tracing/osnoise: Fix OSN_WORKLOAD-related crash
-Date: Wed, 14 Jan 2026 13:35:47 +0100
-Message-ID: <20260114123547.583859-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="wBO1cDgX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1768401404;
+	bh=a4JTIpkP7Lienlrmm6a5VnUFXePFWSCp1ppP2dbbkgA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=wBO1cDgXgkiUkGrtHBWZaWXqXHfUTrJFFFuHCPcnjGC+LVjjcddGdSdoluNx6jvIp
+	 suCLLqVmcEWWhO2O5evgtqhHhYZw6MK9OrLPVdlc9Nh7uiqTEScRXbdhBNUHeksaX5
+	 QjtJC87XDkVoVjX1VBo2vDnDdL9rf9jvxYyrCUExqrkHyyN3Pjf0KN9raAn7N49DjW
+	 JLSKv0NITJ8THXHwPED8AILq2OCZq7IWm+oh6oLoWXHiS0pZvSjXxEXFwVes0KJCfE
+	 YFE8C8rUrH7zSFWZU9YcZUvGOoGpmQw3w72iCEKZOGSdeTPzz2+ZoKA5c36pcYhbGU
+	 U7/DkJFq6fNfA==
+Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4drpbJ3WKwzl8N;
+	Wed, 14 Jan 2026 09:36:44 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michal Hocko <mhocko@suse.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	stable@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [PATCH v2 1/1] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Wed, 14 Jan 2026 09:36:42 -0500
+Message-Id: <20260114143642.47333-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,135 +76,195 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-A kernel panic was observed in the timerlat tracer with the following
-reproducer:
+Use the precise, albeit slower, precise RSS counter sums for the OOM
+killer task selection and console dumps. The approximated value is
+too imprecise on large many-core systems.
 
-   #!/bin/bash
-   while true; do
-      rtla timerlat hist -u -d 5s & PID=$!
-      sleep 2
-      echo OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
-      rtla timerlat hist -k -d 1s
-   done
+The following rss tracking issues were noted by Sweet Tea Dorminy [1],
+which lead to picking wrong tasks as OOM kill target:
 
-The kernel first displays several WARN traces with the following pattern:
+  Recently, several internal services had an RSS usage regression as part of a
+  kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
+  read RSS statistics in a backup watchdog process to monitor and decide if
+  they'd overrun their memory budget. Now, however, a representative service
+  with five threads, expected to use about a hundred MB of memory, on a 250-cpu
+  machine had memory usage tens of megabytes different from the expected amount
+  -- this constituted a significant percentage of inaccuracy, causing the
+  watchdog to act.
 
-   WARNING: CPU: 1 PID: 1822 at kernel/trace/trace_osnoise.c:1959 stop_kthread+0xb7/0xc0
-   ...
-   CPU: 1 UID: 0 PID: 1822 Comm: bash
-   ..
-   Call Trace:
-     ...
-     ? stop_kthread+0xb7/0xc0
-     stop_per_cpu_kthreads+0xf/0x40
-     osnoise_options_write+0xda/0x1b0
-     vfs_write+0xf5/0x450
-     ...
-     ksys_write+0x6d/0xf0
-     do_syscall_64+0x7d/0x160
-     ...
-     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+  This was a result of commit f1a7941243c1 ("mm: convert mm's rss stats
+  into percpu_counter") [1].  Previously, the memory error was bounded by
+  64*nr_threads pages, a very livable megabyte. Now, however, as a result of
+  scheduler decisions moving the threads around the CPUs, the memory error could
+  be as large as a gigabyte.
 
-Then, it displays a similar pattern, but in start_per_cpu_kthreads():
+  This is a really tremendous inaccuracy for any few-threaded program on a
+  large machine and impedes monitoring significantly. These stat counters are
+  also used to make OOM killing decisions, so this additional inaccuracy could
+  make a big difference in OOM situations -- either resulting in the wrong
+  process being killed, or in less memory being returned from an OOM-kill than
+  expected.
 
-   WARNING: CPU: 1 PID: 2120 at kernel/trace/trace_osnoise.c:2068 start_per_cpu_kthreads+0xfe/0x110
-   ...
-   CPU: 1 UID: 0 PID: 2120 Comm: rtla
-   ...
-   Call Trace:
-     ...
-     ? start_per_cpu_kthreads+0xfe/0x110
-     ...
-     osnoise_workload_start+0xb1/0x2d0
-     timerlat_tracer_start+0x50/0x70
-     rb_simple_write+0x13a/0x160
-     vfs_write+0xf5/0x450
-     ...
-     ksys_write+0x6d/0xf0
-     do_syscall_64+0x7d/0x160
-     ...
-     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Here is a (possibly incomplete) list of the prior approaches that were
+used or proposed, along with their downside:
 
-and finally a null pointer reference BUG:
+1) Per-thread rss tracking: large error on many-thread processes.
 
-   BUG: kernel NULL pointer dereference, address: 0000000000000030
-   ...
-   CPU: 1 UID: 0 PID: 2155 Comm: timerlatu/1
-   ...
-   Call Trace:
-     ...
-     ? timerlat_fd_read+0xf2/0x370
-     ? timerlat_fd_read+0xee/0x370
-     vfs_read+0xe8/0x370
-     ksys_read+0x6d/0xf0
-     do_syscall_64+0x7d/0x160
-     ...
-     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
+   increased system time in make test workloads [1]. Moreover, the
+   inaccuracy increases with O(n^2) with the number of CPUs.
 
-Fix the bug by disallowing OSNOISE_WORKLOAD to be set if timerlat is
-running with NO_OSNOISE_WORKLOAD and a user workload is attached to at
-least one CPU.
+3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
+   error is high with systems that have lots of NUMA nodes (32 times
+   the number of NUMA nodes).
 
-To implement this, a new function osnoise_validate_option() is added.
-The function validates any osnoise option change, and return an error
-value if the change is not valid. EBUSY is used for this particular
-case.
+commit 82241a83cd15 ("mm: fix the inaccurate memory statistics issue for
+users") introduced get_mm_counter_sum() for precise proc memory status
+queries for some proc files.
 
-Fixes: 30838fcd8107 ("tracing/osnoise: Add OSNOISE_WORKLOAD option")
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+The simple fix proposed here is to do the precise per-cpu counters sum
+every time a counter value needs to be read. This applies to the OOM
+killer task selection, oom task console dumps (printk).
+
+This change increases the latency introduced when the OOM killer
+executes in favor of doing a more precise OOM target task selection.
+Effectively, the OOM killer iterates on all tasks, for all relevant page
+types, for which the precise sum iterates on all possible CPUs.
+
+As a reference, here is the execution time of the OOM killer
+before/after the change:
+
+AMD EPYC 9654 96-Core (2 sockets)
+Within a KVM, configured with 256 logical cpus.
+
+                                  |  before  |  after   |
+----------------------------------|----------|----------|
+nr_processes=40                   |  0.3 ms  |   0.5 ms |
+nr_processes=10000                |  3.0 ms  |  80.0 ms |
+
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: stable@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
 ---
- kernel/trace/trace_osnoise.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+This patch replaces v1. It's aimed at mm-new.
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 827104d00bc0..6a6d4f8bc19f 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2186,6 +2186,31 @@ static const struct seq_operations osnoise_options_seq_ops = {
- 	.stop		= s_options_stop
- };
+Changes since v1:
+- Only change the oom killer RSS values from approximated to precise
+  sums. Do not change other RSS values users.
+---
+ include/linux/mm.h |  7 +++++++
+ mm/oom_kill.c      | 22 +++++++++++-----------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 6f959d8ca4b4..bfa1307264df 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2901,6 +2901,13 @@ static inline unsigned long get_mm_rss(struct mm_struct *mm)
+ 		get_mm_counter(mm, MM_SHMEMPAGES);
+ }
  
-+/**
-+ * osnoise_validate_option - Check if set option is valid
-+ * @option: The index of the option
-+ * @enabled: The requested state of the option
-+ *
-+ * Verify if the requested osnoise option is valid with regards to the current
-+ * state of the tracer.
-+ *
-+ * If valid, return 0, if not, return error number.
-+ */
-+static int osnoise_validate_option(int option, int enabled)
++static inline unsigned long get_mm_rss_sum(struct mm_struct *mm)
 +{
-+	int cpu;
-+
-+	if (option == OSN_WORKLOAD && enabled &&
-+	    !test_bit(OSN_WORKLOAD, &osnoise_options)) {
-+		/* Trying to enable kernel threads while user workload is running? */
-+		for_each_online_cpu(cpu)
-+			if (per_cpu(per_cpu_osnoise_var, cpu).pid)
-+				return -EBUSY;
-+	}
-+
-+	return 0;
++	return get_mm_counter_sum(mm, MM_FILEPAGES) +
++		get_mm_counter_sum(mm, MM_ANONPAGES) +
++		get_mm_counter_sum(mm, MM_SHMEMPAGES);
 +}
 +
- static int osnoise_options_open(struct inode *inode, struct file *file)
+ static inline unsigned long get_mm_hiwater_rss(struct mm_struct *mm)
  {
- 	return seq_open(file, &osnoise_options_seq_ops);
-@@ -2229,6 +2254,10 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
- 	if (option < 0)
- 		return -EINVAL;
- 
-+	retval = osnoise_validate_option(option, enable);
-+	if (retval != 0)
-+		return retval;
-+
- 	/*
- 	 * trace_types_lock is taken to avoid concurrency on start/stop.
+ 	return max(mm->hiwater_rss, get_mm_rss(mm));
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 5eb11fbba704..214cb8cb939b 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -228,7 +228,7 @@ long oom_badness(struct task_struct *p, unsigned long totalpages)
+ 	 * The baseline for the badness score is the proportion of RAM that each
+ 	 * task's rss, pagetable and swap space use.
  	 */
+-	points = get_mm_rss(p->mm) + get_mm_counter(p->mm, MM_SWAPENTS) +
++	points = get_mm_rss_sum(p->mm) + get_mm_counter_sum(p->mm, MM_SWAPENTS) +
+ 		mm_pgtables_bytes(p->mm) / PAGE_SIZE;
+ 	task_unlock(p);
+ 
+@@ -402,10 +402,10 @@ static int dump_task(struct task_struct *p, void *arg)
+ 
+ 	pr_info("[%7d] %5d %5d %8lu %8lu %8lu %8lu %9lu %8ld %8lu         %5hd %s\n",
+ 		task->pid, from_kuid(&init_user_ns, task_uid(task)),
+-		task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
+-		get_mm_counter(task->mm, MM_ANONPAGES), get_mm_counter(task->mm, MM_FILEPAGES),
+-		get_mm_counter(task->mm, MM_SHMEMPAGES), mm_pgtables_bytes(task->mm),
+-		get_mm_counter(task->mm, MM_SWAPENTS),
++		task->tgid, task->mm->total_vm, get_mm_rss_sum(task->mm),
++		get_mm_counter_sum(task->mm, MM_ANONPAGES), get_mm_counter_sum(task->mm, MM_FILEPAGES),
++		get_mm_counter_sum(task->mm, MM_SHMEMPAGES), mm_pgtables_bytes(task->mm),
++		get_mm_counter_sum(task->mm, MM_SWAPENTS),
+ 		task->signal->oom_score_adj, task->comm);
+ 	task_unlock(task);
+ 
+@@ -604,9 +604,9 @@ static bool oom_reap_task_mm(struct task_struct *tsk, struct mm_struct *mm)
+ 
+ 	pr_info("oom_reaper: reaped process %d (%s), now anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+ 			task_pid_nr(tsk), tsk->comm,
+-			K(get_mm_counter(mm, MM_ANONPAGES)),
+-			K(get_mm_counter(mm, MM_FILEPAGES)),
+-			K(get_mm_counter(mm, MM_SHMEMPAGES)));
++			K(get_mm_counter_sum(mm, MM_ANONPAGES)),
++			K(get_mm_counter_sum(mm, MM_FILEPAGES)),
++			K(get_mm_counter_sum(mm, MM_SHMEMPAGES)));
+ out_finish:
+ 	trace_finish_task_reaping(tsk->pid);
+ out_unlock:
+@@ -960,9 +960,9 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	mark_oom_victim(victim);
+ 	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+ 		message, task_pid_nr(victim), victim->comm, K(mm->total_vm),
+-		K(get_mm_counter(mm, MM_ANONPAGES)),
+-		K(get_mm_counter(mm, MM_FILEPAGES)),
+-		K(get_mm_counter(mm, MM_SHMEMPAGES)),
++		K(get_mm_counter_sum(mm, MM_ANONPAGES)),
++		K(get_mm_counter_sum(mm, MM_FILEPAGES)),
++		K(get_mm_counter_sum(mm, MM_SHMEMPAGES)),
+ 		from_kuid(&init_user_ns, task_uid(victim)),
+ 		mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_adj);
+ 	task_unlock(victim);
 -- 
-2.52.0
+2.39.5
 
