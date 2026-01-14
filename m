@@ -1,174 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020084.outbound.protection.outlook.com [52.101.189.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98642184;
-	Wed, 14 Jan 2026 00:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768349263; cv=none; b=Xuvse9d3rANNI1dAzPHxwqBaLGcyf+1XAS49WH48wPUiZBDvW8+F5pAZtuxt+pcMAVCZySuNW8VYjWpsegfK6BE9XbDE7yjFc0HlbYzRGqJ/P36LGVq6YPRblO8Z4+oe0flKeb63n3QXJzgtT1G1+uGJwH+QlRddBJTRz04S0UI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768349263; c=relaxed/simple;
-	bh=mRcJM1sPgpaagXL/gypCVs95fqo57KyskFtRMw+AzE0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cFAsQUuNblPrzL3/IiPPtm4G9SKkWAQTYx3pJyVgBJNw75zgmgSnyH4+tLZIJE1V9YHFp3CodMX+erkqiGiWD3SterLWzTZCvBTlZj35sDmf13A/AgodHUcEd/WmVm5Lnu0OlgwbBithhOcC1T5Zkztd7t31NriSOo9Wc5pNMVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE6JmlqY; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E58D287245;
+	Wed, 14 Jan 2026 01:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768353745; cv=fail; b=OsiDDggsGi3DfTY1pSP21Xz2Q7eFGjjbI4jrKnE0XlMjOMoZmCsehNIRaB3O1LsRPUjp7piT4qdg/XzYdHq7lWAGEbzWZiySEgLPekv7xo9r79rM4/MiC88FeGl+7s/1Sqhg9m1X1Um8y4jD65z2G7u1675VC1kWbeZFseT6g/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768353745; c=relaxed/simple;
+	bh=s2zXSwLfYl3QQ0TLQlCDauR5wiwZrph9rDYb9KgBcVE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ldr8Hq0hBStSz403gmI922yZROsnr44cLm3KvvP66t2g4MbhNG59vsguRmdqEMaNcW1ZuKzQdGHeGgO4wG+DUoAepzNWK/FXx3L+RF4tH5GbpRDuPt5sqD21jFmrmRBn6Qwi29vIdjQU+HDjZvI8Zn9w78fxqb9Wv9cBe8A01jw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=QNTdMk+3; arc=fail smtp.client-ip=52.101.189.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE6JmlqY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87C66C116C6;
-	Wed, 14 Jan 2026 00:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768349263;
-	bh=mRcJM1sPgpaagXL/gypCVs95fqo57KyskFtRMw+AzE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fE6JmlqYhIgRx8Lx+9fdRYc9wrxjuRmclOfKGf0KrxG8pyMXcqrs3qgr8iS8yyw74
-	 AX1IdU7MmF3jQCi2TRn30onzEnpaq0gwPmE/Ga3VJKGOhnhk+cac7UyZnKgoO7Qifz
-	 FVoJBRCYD0DWLTMOLscCweCIRIeZ92/78DLh0KIJi1Cjy1cc2Qllf/l6NeLIPgVTS/
-	 aq1/68U9+pVT+DNy/0K4n3afajdm/a8+9cWDOZSnK4KtsMSfbLrWVVRp6VvoktRhRg
-	 VWWBt9lBRggLKdRk/LLFVPa/xnj48XkLpy4sUI9BkFiEOJoOZSQuPnEz+Kl8Lf+2xD
-	 rDaNYxC2yZMBA==
-Date: Wed, 14 Jan 2026 09:07:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Aaron Tomlin <atomlin@atomlin.com>
-Subject: Re: [PATCH] tracing: Have show_event_trigger/filter format a bit
- more in columns
-Message-Id: <20260114090738.e791b28f94479116fa32ffa6@kernel.org>
-In-Reply-To: <20260112153408.18373e73@gandalf.local.home>
-References: <20260112153408.18373e73@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QNTdMk+3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gRzpv/ALRlg/QUsD2Bb8s7OyH0MHQ8FQ5Y7j1eYVNb3JsLd/nPUTvajwM9QCExGwzObONoVx8YJ8TR3fbEaMcrLJ+xwXGQkEVgCE0hUZ9d84PJoGaCcbK+iJwIeLHqBxIIHReihLmviLWP0A3esltoJunt/aj/qWAgRljC5PQzEnSCo5bf6FJm/ZTm4c8jXRITlKJs5W4VEeGnlUWLyZkR6KOmMeemncLEOPzFBwOmoGPyF4oU39Wa5SwWZywK3PZybQ9GYt+qixCUMqg+xcz1KwhEAEclp33rInt6AY2aTm5hY/teVqJbh8IPUUis9gJpxgsAWL8Farz07NnjbqTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UDUzEzvfpg/U9Jlhdg7Dq9u8gt4LzLODtj2D4cHboLU=;
+ b=qyPNcURn5SkIWO3Ew51ombeJmeaL35NFVXpLbMP3ppbzkzYU9T4QUjl3W3V6CjihOhlPpAbzXmLwxJXKTPKQQ/MBjr7S1YmrZxHaI4tudCGhwSlkfqkrst4HM7vM1Pgc8OKqI4cHwFOHgFZW7AcTSo0m/hcHw63MKu2SuLBFEhWcyyL0iNizNeeeYR1FiRCONd5g1qyXzfBy5/c/3E9RfGQDLhr1FOb6KyCEIY4k4LS8akLlsDqt5XK4m5uVAv9pibxXWK3XO3EidIVsJ+6O3odztjCEJCtRtp1HFMC4vk4QloCUP06iKXeY1cLz4I95XmojJi3PocpXmAfSxkztRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UDUzEzvfpg/U9Jlhdg7Dq9u8gt4LzLODtj2D4cHboLU=;
+ b=QNTdMk+3Hikwih+IVaBawhLW4jHbpLnLI5mOTXMBYz7fzXMxZTRn2tWbHD+x1f2gcGJ7xvADpZAo4zpG9aPUTWOAEarz08ii7Y79DroR5qjLY+w7XVT9hJBLFLOIuxPLduJmO0btwmDxhc1EJh+VZieiGdCflB2coGESJtwd2owYF11ArGznGBUv2qC22G4eXiD9XwkTVrYpvryhLYtIYVzekb9LChQ4b/8llkUNojZL22ZIbwTOZayORHzkuMzymWgcCQej2WSCOJ0D+hrZLUKVmDchj1OtMPRaSaKaPeXy8mpH2QIgNevUwzoqtuQBJkHA9fF1jbxvgGn3HzV+Zw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT3PR01MB5229.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:61::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.8; Wed, 14 Jan
+ 2026 01:22:18 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9499.008; Wed, 14 Jan 2026
+ 01:22:18 +0000
+Message-ID: <162c241c-8dd9-4700-a538-0a308de2de8d@efficios.com>
+Date: Tue, 13 Jan 2026 20:22:16 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] mm: Fix OOM killer and proc stats inaccuracy on
+ large many-core systems
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
+ christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>,
+ SeongJae Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <liam.howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>,
+ Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-mm@kvack.org, stable@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik
+ <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <20260113194734.28983-1-mathieu.desnoyers@efficios.com>
+ <20260113194734.28983-2-mathieu.desnoyers@efficios.com>
+ <20260113134644.9030ba1504b8ea41ec91a3be@linux-foundation.org>
+ <c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
+ <20260113155541.1da4b93e2acbb2b4f2cda758@linux-foundation.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20260113155541.1da4b93e2acbb2b4f2cda758@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0287.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6d::13) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB5229:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10ab02ab-e910-4fa8-d725-08de530b5bdc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YVRXcUNiRy9JaStkVEJvZ1M3aFJERnVWSTdBVHV5cTBLS1pOUGUwM255V2JB?=
+ =?utf-8?B?UW1QYnpxcWRBNmsxdGFxOExHdFNheVgzc1A5RVd2Ny93b3hrU3pwV2NGeVBE?=
+ =?utf-8?B?RFJ1YUl2cFEwYjJOMHEvdUNhSXJNdm1FY05sWkFabk9Wb2lzeEdnMml2V2tr?=
+ =?utf-8?B?T2I2VFpJK3p6RlRPWStxaFBWVHRMSlM1cEhqRVJjMzNWWEhRejFVM0dFYzly?=
+ =?utf-8?B?MHEyT2lET2RuN2FZNHVYVzlVZVJnMTJ1bFRyWlNYbElDSW9wTy8zQXpOcGx5?=
+ =?utf-8?B?Vms0UFlNSkkzWEpVazllSHZkMFZ2dXVidkFYdTZhemFrbXJwTFk2eGZCS0Fm?=
+ =?utf-8?B?d0lvWDl1NURwVTRwWjRYaXBoNXdxYTNVS0ZNMzNQeDRTRlR6Tkg1SEZSZ2g1?=
+ =?utf-8?B?ODlJSEw1Z3I1SzhRUUFJalhXRTl5b2c4ckJ3N2M1N3RJSXJlY2krcVVYbUt2?=
+ =?utf-8?B?aW8yZE5YYVZldFhUYnkyYlpmazFPOUhCV3AvRmpyZ2tSVmtCK0ljcXlsZjMx?=
+ =?utf-8?B?Yy93NzBnM0gwd1RqcFA0OG13MlRSNWplZ0pBTExCZktxVkZZV3NNK0dBZ25N?=
+ =?utf-8?B?OUlaM2htUCszRmxmOHpyZWgrM0E0dlpNTnJ0VjBiMEM1Yml0MFp5VW80alhy?=
+ =?utf-8?B?YjREeEJuWXpIbitlMEd1WkFBdFR4OVpUVC9wOGxkK3VpSEdQcjVhQjNFV0Nj?=
+ =?utf-8?B?dEo3MU1LZGdseDd1U2ZQUXYvNHZRNUYzMm9qb3hyS1JDcmNRNFRKVTBsclAx?=
+ =?utf-8?B?V3FZZkt2T2VqL1dDNDNXQmFCWWRMcktnQ0o0MHVCdHhxd056NkpMQzZHOTVt?=
+ =?utf-8?B?TzBYSlc5am9nUzFXWnlMbWRIMmlYcjlrenFKREtRQzBsc1NwRVdKalUrMFBw?=
+ =?utf-8?B?MS9SdTVSWGdxeE1TNFYzOW40YkZqYVNuUjRTRjZqdUVOODhScmVyak5ISmxH?=
+ =?utf-8?B?T2VqazdWak9xVVY1UDZGQ2hxWEJHeUZWTTY1NkZ5S3E4TXdmOVltWWpMeDlo?=
+ =?utf-8?B?N21lc1JId20vSDBTRU5tZTdxQTJwcytmUnFkZG5JMFRrUm9QVzF6WEZXcnE1?=
+ =?utf-8?B?YUIyTWovWFBMRU56dlhOSk53VnRQU2h6RXcvRVBabjhGRHkra3BnZ04wM2xE?=
+ =?utf-8?B?aWhXNUE0V0hOV1AxQWR1WnhhOG5FL0J3NmVDbXFPTVgxdkwzNTdnNHhHRjJm?=
+ =?utf-8?B?Y2U2UEZlVHlyRDJwY0F0VWNRNW0yYXMxSDgyTkF3eVlCRnNLY2p4TEoxa0Rv?=
+ =?utf-8?B?ancrVlVlQUhQcjcwdkRZUXh1dlE2bkRiVkdrWjdBblZ2MFVOZHU2d1N5MlJ6?=
+ =?utf-8?B?OFVzdDZVdHp4aDM1bk5FNEo3M1ExbE9VNlBUMVNUcnZVZ3IzS3ZydGJyVlVr?=
+ =?utf-8?B?M0YvcG1MSVFKUjVrOGpQN1pXZGJlS3RMYnl2Y2ZkTCtIMlFuSm83cmN3T0k2?=
+ =?utf-8?B?YWw4STZRWVdHUnNKUEtadXZ0RGJIVEJOY01EcklCb1NPSHdxdDBJVzIrK1hm?=
+ =?utf-8?B?K2pUa3p0RXprRDkwd0NUY0syb01DWGRSdHVwUFdFSnpYa0k3SUNFaGQ4UE9H?=
+ =?utf-8?B?TS83Sm5sQXB3T3JseS9JdGxtaTRUaGNYOSs5cCs0Vnl6K2hFTExuTEVrZ1NF?=
+ =?utf-8?B?QkJzVlNwZ3RuRjg2SXE4RmxrS3BPZkF1TWVwU2w3M2hpTmtSTTg0SC9HRWZz?=
+ =?utf-8?B?S2pGMUdXTkhrcVdwckVEWHU0K0F6T29sUHIwdUt2dEdGbHRKSEErL3FJZ2Iv?=
+ =?utf-8?B?enpqcEJKZFNQNkFWNDVTeFZGZ2MzV1Y5MFJjRVNNMGNwQ0x6Y2JSOUF6SXZO?=
+ =?utf-8?B?dkUvbHc0Z29oOElJS3UxMVQ5RFhKcnVZYXJIT2VQTTU1bDI0VUM3djMzNmox?=
+ =?utf-8?B?aEFQRGRRRk8wR0tjb2JndFhRSUhYWGs3d1ZYYnlkRW4rNGc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(10070799003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S3U5M1hXQU1GbW1ZZUxPcUFqT0p6Vzd1N0UxemJiQnZaRmU3YzdBaTE1cmpM?=
+ =?utf-8?B?R0M2TnovYlo1Q1M1bGZEdGdXQit6ZHlqOCtBaXdiS1c0NVNXekpLdHVsRmxN?=
+ =?utf-8?B?Vlc3K1cyT0VQaEVrcTN6dmxZcUhxSHJ4UDdoTlQ4RW5TSSswWVFOeHMvQldE?=
+ =?utf-8?B?Q1BGZFBKd3hNNU9VcEVKVURFeXhVaklRbnplM1BuTFhYcE9nK0VGMFJQWm9Y?=
+ =?utf-8?B?dm93bjBDdGdoSW5uUzlyazRJWkkxcmxIRmdBTGNHSWlGQk4xOWc2bXZXeUFI?=
+ =?utf-8?B?VFlxUksxSnBzdVkxZjM5dENYZi94QlN0RFlURUx6a0hhZlo3ZTEzVi9wQ1lY?=
+ =?utf-8?B?a25qcWpRRWYzVzcrNnlBMGkyUVNTS2R3T1pwVnYva09rTDhMOW9mVkVmY3U4?=
+ =?utf-8?B?dGNvVkF3dXJYWktFZ0x6WWs1bWRpMHp5eDY1SlBXckhRM1lTcGt1RVRqcmNn?=
+ =?utf-8?B?T1dSeXJoenJCd2FBb2o4WmVqWDZ3OE5IWUxkUkZjY0Q4RW5IL1I1aVdWOGVS?=
+ =?utf-8?B?M3pqRzZCTW1xZXh4ODRWOWdkTW13SjVnWUNOcHZDc05hNHFMeXFSeUJzSHRO?=
+ =?utf-8?B?ZEhHcUtpMS9jM0didFAyWGVnMnNYWG0rZGZRbkNxRTNwMEc2OHN2aWwvV2Rj?=
+ =?utf-8?B?eHIzVzd4QmRNWXorYjczOE5LN3A4ZXBKUDJnL1RxYjIzVUFyeENjSzA3cUtR?=
+ =?utf-8?B?aXdqTWQrRjdTT01McWROTnduZEJDRWVzUXFxM1FtdkJ4YXk0SnJ1UHFaNDFm?=
+ =?utf-8?B?ckkwcTNCWVFZYndGU1F1Y3hnZGFuK2NwNDhtdHdNMXZVNWJablUwalliNlJG?=
+ =?utf-8?B?RzZrRlJlNmltb0Vja1gvNjFDU3NDZm5xSEd3SHlJUFBabnFaSmxYeGREZHh2?=
+ =?utf-8?B?cTVubUIwSEFhdkx5TDZTTmpCbFZYcXNucW1Oc0ZlU1U1WnJERy9rdUNoYkVS?=
+ =?utf-8?B?cDBTRnhhUjdVSUlRcFRCMHJFQUlkWWpmMEp5TFM2QmNxTS9QWmlyUG5LQmh0?=
+ =?utf-8?B?V0MrY3Q5cWgxNWpkcXV5dGdOZjZRbnhsNTI4RlFNOXJ6QXA3YTIxQ3BpT0Fp?=
+ =?utf-8?B?bTJ5S1ZxSkxmT0ZoZWgyWlRBQUJSWkRFcHB2Z0FyWnNQUURsVk1WSFFUWHBt?=
+ =?utf-8?B?RTZiVHBmdkx5dSt3SGtOem1MVGc0K1FacFRJbUR0UGI0bGthaHlxejJvd0U5?=
+ =?utf-8?B?UHdUYUlaWnV1WHhDcWVLTFhKcGJVR3luU2pPT0xBa1lLdTRQM1NCS2dBVWR2?=
+ =?utf-8?B?dVh1b3FVT1FMUWtiMC91ejJsUHZVNUR1R1orM1BpR2ZrOUJ0bGZHSU42a05F?=
+ =?utf-8?B?K1FubkptS1ZmdkFlUWhKaFVpTWVNdng2aTRVakhtQ0lDMUJSTEduMWZyN01U?=
+ =?utf-8?B?dDZHMlZTS29jVWZxUnhZT2F3eS90NEI0VkUyeDQ1K2hHUmtlRnowOExnd2tK?=
+ =?utf-8?B?QUNrc1BGWEZldXpVWFlBZ0ZEWHZiaU5ydHhjYTJZSXYySERkVy85c3l2anRK?=
+ =?utf-8?B?aFZDblFoVjkvWHczSHhOOU0vUlVPalFYUW9OMExjVTZTbXpyK0UzN0p4K0k2?=
+ =?utf-8?B?U0RKT2ZqZEVWQVpyQldCZFdpeFcrcjFWUFVra0c1OGN3Mk5rc1A3VjFNTURn?=
+ =?utf-8?B?SWlMY3l4Slh5d2hTUFh6aGNpK09pdW5mb0d6TG8vSFpxY05YWkxLTlhmMVh6?=
+ =?utf-8?B?S1NUMmdnRE13eXBnblhRY3g4ZEtRTksvWGg5TndUT2Z6aWVRM0FHYm9VTHNx?=
+ =?utf-8?B?YlFsTXZkaUVOTzlFY0ZRbmt5Qlk3U3NKSkNMS3lDWlJMazJ4dFF5UFRrZU1Z?=
+ =?utf-8?B?YUp1OThCclB1WG1nSFM4TjFUMFg5QUZLRno1S2dSWDhjdU5iNmx6K1doY0xW?=
+ =?utf-8?B?V2FMWldHdGI5d0pHS3FDWG4wUStiY2E2czU5L2RTWG1UNDg5NzdMYmlTVW0w?=
+ =?utf-8?B?cmlhWlp0aUhORm02TXhqZ0dIa1VwdjllQVRhYWdhY3ptbTlxTklpVGdVbENS?=
+ =?utf-8?B?WmVIMzV4REpuelR5b1puQXpkUFd4TUZRdXFVR2Mya2NQUWp1K1orMno5b1ZZ?=
+ =?utf-8?B?ZWs2UENIMVpqUVNoV3Z2UU5LWmtRSTJPYXN6bjNxdDA2eDh2TnVhNFdWR0Jv?=
+ =?utf-8?B?b3kwWkhqQkF3bm1JN25MRFVwLy9oeXFPLzJCUzZTeHQ2c2o0TjBrTndGdjE0?=
+ =?utf-8?B?M1cwbkg0UTNkb0lWQms2L3ZDdTBscG1mUXFsMkhRT00weTlkZ1BodExNSGN1?=
+ =?utf-8?B?TGc3TE81QVNjaC9pempKWE9qUHI3bDU5T0IvZ2szeGhyZWxQTW1vVzkwaFhv?=
+ =?utf-8?B?dVFDMEJwanNNN0dxb2JacVk3NDd1ZUJrOU0rZXV2MXpXWXZaWVpvRkZjaU1j?=
+ =?utf-8?Q?kP/5gYHOJLx2mGEJR9+PaC7X1Pjl6VR2B/0rWPIjfgxFR?=
+X-MS-Exchange-AntiSpam-MessageData-1: 4vCUSex1Djxug2tb2nRX57kkm0XTA9cGRTQ=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ab02ab-e910-4fa8-d725-08de530b5bdc
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 01:22:18.5281
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qcbuy5bngaYvyj+hGb1p0XC63m4GbgveZyc6y5VWR7rx2JaJGom7cPPQ+x7If3nZQE1RGZQNJlLTnJGh4uNGpaQQERY6ln7SheAia2Yp1pM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB5229
 
-On Mon, 12 Jan 2026 15:34:08 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2026-01-13 18:55, Andrew Morton wrote:
+> On Tue, 13 Jan 2026 17:16:16 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> The hpcc series introduces an approximation which provides accuracy
+>> limits on the approximation that make the result is still somewhat
+>> meaninful on large many core systems.
+> 
+> Can we leave the non-oom related parts of procfs as-is for now, then
+> migrate them over to hpcc when that is available?  Safer that way.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> By doing:
-> 
->  # trace-cmd sqlhist -e -n futex_wait select TIMESTAMP_DELTA_USECS as lat from sys_enter_futex as start join sys_exit_futex as end on start.common_pid = end.common_pid
-> 
-> and
-> 
->  # trace-cmd start -e futex_wait -f 'lat > 100' -e page_pool_state_release -f 'pfn == 1'
-> 
-> The output of the show_event_trigger and show_event_filter files are well
-> aligned because of the inconsistent 'tab' spacing:
-> 
->  ~# cat /sys/kernel/tracing/show_event_triggers
-> syscalls:sys_exit_futex	hist:keys=common_pid:vals=hitcount:__lat_12046_2=common_timestamp.usecs-$__arg_12046_1:sort=hitcount:size=2048:clock=global:onmatch(syscalls.sys_enter_futex).trace(futex_wait,$__lat_12046_2) [active]
-> syscalls:sys_enter_futex	hist:keys=common_pid:vals=hitcount:__arg_12046_1=common_timestamp.usecs:sort=hitcount:size=2048:clock=global [active]
-> 
->  ~# cat /sys/kernel/tracing/show_event_filters
-> synthetic:futex_wait	(lat > 100)
-> page_pool:page_pool_state_release	(pfn == 1)
-> 
-> This makes it not so easy to read. Instead, force the spacing to be at
-> least 32 bytes from the beginning (one space if the system:event is longer
-> than 30 bytes):
-> 
->  ~# cat /sys/kernel/tracing/show_event_triggers
-> syscalls:sys_exit_futex          hist:keys=common_pid:vals=hitcount:__lat_8125_2=common_timestamp.usecs-$__arg_8125_1:sort=hitcount:size=2048:clock=global:onmatch(syscalls.sys_enter_futex).trace(futex_wait,$__lat_8125_2) [active]
-> syscalls:sys_enter_futex         hist:keys=common_pid:vals=hitcount:__arg_8125_1=common_timestamp.usecs:sort=hitcount:size=2048:clock=global [active]
-> 
->  ~# cat /sys/kernel/tracing/show_event_filters
-> synthetic:futex_wait             (lat > 100)
-> page_pool:page_pool_state_release (pfn == 1)
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Of course.
 
-Looks good to me.
+So AFAIU the plan is:
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+1) update the oom accuracy fix to only use the precise sum for
+    the oom killer, no changes to procfs ABIs. This targets mm-new.
+
+2) update the hpcc series to base them on top of the new fix from (1).
+    Update their commit messages to indicate that they bring accuracy
+    improvements to the procfs ABI on large many-core systems, as well as
+    latency improvements to the oom killer. This will target upstreaming
+    after the next merge window, but I will still post it soon to gather
+    feedback.
+
+Does that plan look OK ?
 
 Thanks,
 
-> ---
-> [
->   This is based on top of these patches:
->     https://lore.kernel.org/linux-trace-kernel/20260105142939.2655342-1-atomlin@atomlin.com/
-> ]
->  kernel/trace/trace_events.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 36936697fa2a..f372a6374164 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1662,6 +1662,18 @@ static void t_stop(struct seq_file *m, void *p)
->  	mutex_unlock(&event_mutex);
->  }
->  
-> +static int get_call_len(struct trace_event_call *call)
-> +{
-> +	int len;
-> +
-> +	/* Get the length of "<system>:<event>" */
-> +	len = strlen(call->class->system) + 1;
-> +	len += strlen(trace_event_name(call));
-> +
-> +	/* Set the index to 32 bytes to separate event from data */
-> +	return len >= 32 ? 1 : 32 - len;
-> +}
-> +
->  /**
->   * t_show_filters - seq_file callback to display active event filters
->   * @m: The seq_file interface for formatted output
-> @@ -1676,14 +1688,17 @@ static int t_show_filters(struct seq_file *m, void *v)
->  	struct trace_event_file *file = v;
->  	struct trace_event_call *call = file->event_call;
->  	struct event_filter *filter;
-> +	int len;
->  
->  	guard(rcu)();
->  	filter = rcu_dereference(file->filter);
->  	if (!filter || !filter->filter_string)
->  		return 0;
->  
-> -	seq_printf(m, "%s:%s\t%s\n", call->class->system,
-> -		   trace_event_name(call), filter->filter_string);
-> +	len = get_call_len(call);
-> +
-> +	seq_printf(m, "%s:%s%*.s%s\n", call->class->system,
-> +		   trace_event_name(call), len, "", filter->filter_string);
->  
->  	return 0;
->  }
-> @@ -1702,6 +1717,7 @@ static int t_show_triggers(struct seq_file *m, void *v)
->  	struct trace_event_file *file = v;
->  	struct trace_event_call *call = file->event_call;
->  	struct event_trigger_data *data;
-> +	int len;
->  
->  	/*
->  	 * The event_mutex is held by t_start(), protecting the
-> @@ -1710,9 +1726,11 @@ static int t_show_triggers(struct seq_file *m, void *v)
->  	if (list_empty(&file->triggers))
->  		return 0;
->  
-> +	len = get_call_len(call);
-> +
->  	list_for_each_entry_rcu(data, &file->triggers, list) {
-> -		seq_printf(m, "%s:%s\t", call->class->system,
-> -			   trace_event_name(call));
-> +		seq_printf(m, "%s:%s%*.s", call->class->system,
-> +			   trace_event_name(call), len, "");
->  
->  		data->cmd_ops->print(m, data);
->  	}
-> -- 
-> 2.51.0
-> 
-
+Mathieu
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
