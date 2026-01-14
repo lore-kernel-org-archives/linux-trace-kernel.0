@@ -1,63 +1,63 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0DF3B5314
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 22:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8072E3B5312
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 22:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768428756; cv=none; b=K5VezYD+yH0jVQzKjBpQ2I34NWmII97f/UTlOjxlRCXpl+ubvCS6xOXFeh7HFQA1F75MA1r2Wj9/AehJzBjKdBApLvo5R77FrOgvnHmrc0yRRfhuR9iwFsQlzUwk/TGCBpEyKJmLIIOy3dZZxQVb4o0i+tlhjWTOoURs5nDYodg=
+	t=1768428833; cv=none; b=XpToMaJcu2JWgQipe1mBPTpFWF5PB4mEqouM4CVme8uoGmJmYTZJ+wRjSfVkEh8Ny4n+2O7oCEBff8hFeMfFHpt2cjpez6tUR2w3Wwt5hMQW7mlZIAkUwu+wySP1etQoAWH3FJQw74l0iSsFsOS83ujVKlbfwDSRK5V7t5R067U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768428756; c=relaxed/simple;
-	bh=v/6ny77OEhOTDZTQ79j46inEoAHozIzSVLV54SqB5XU=;
+	s=arc-20240116; t=1768428833; c=relaxed/simple;
+	bh=IZqAGizxkk9ErROuOBGZmrieBz1ow5xW+bA7VsOBVFI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rz2kAhbm+gcHiS/f9CSr+Q3FooZlTP6wf0QkvRXjrvFhFcUROXRNkMeCs2hDTum36UfaeYtpTePcBHgsif93t4SRI5Hq83PJpllqwSkBpzUCKxGNk/PMArGuzwTdsfbwtfGCqbCUnG0OaDUc+K4N4i14HzXW2TCgUFMt8jEjfg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddWWI+FR; arc=none smtp.client-ip=209.85.160.177
+	 MIME-Version; b=PJL8ebsXbvdWr9X2eDLwS4Luo7x1QCwvpPLIHkoc3QxZfk2dK6gMx6KG7Tfjaxlz2YhhONocEC45xP4eqLDE52hNrvnX5NneXcksPc9Ulubnw6AFPp1An4iqe8u9bBgSfovph2GDqlDXjjzd37HJ/mt84lVA/ea3HviHD/tFLRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WO4tddO7; arc=none smtp.client-ip=209.85.222.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddWWI+FR"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-501502318b1so2278571cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 14:12:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WO4tddO7"
+Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-8c53198a65fso32048685a.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 14:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768428743; x=1769033543; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768428827; x=1769033627; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ckc2PkyYWXkN9ubnJOQKa6sgkDYo191+Pf3SF4+RdaY=;
-        b=ddWWI+FRLumCuusgHg2nvzmSWJc0Ve1vPjN0qxW3mKB7ybPluQdol7T3MJfDcaW840
-         woR2r49G1wj9G31aWOSJptkBrwK5yQYUUWort0yJMvFhc/eCEfv3tvIGBv1BFkACMkOt
-         k/7Z03hf5gKEn9FPVZ58A/PM4/xQ4vSZHtGzS0iInqeZP1ypwBUJ9XYby7Lprs1gXkCD
-         9DhW9BUFb3+5iWGkVHx7MvOzySCwUNXuSIq5Y+xraCVPkYooFcBqV09c97aPqYY5VMbN
-         K24M39GB9uTFdiYO2lx/wA6VfiNWIEupMYhnCT8UkuSeT0dhtFZAlDx6qxzwcRlsLcIW
-         2seg==
+        bh=WXFVdIECi6ilyP/TUQ5Ud/VbVwJbO6QDA7pbbRj1oPg=;
+        b=WO4tddO7xAYYTf9hDsF5hBYqWylnDKYCtVCM3g5Bu2Ww9Xv17G0AZ3RiMCeQwCSxhU
+         8kaIqew1Cj+bgucV+m8L8PZirehadkRbtJqDSRXPk6rEmt4UXf5ZLqLsN8FjeHxc2ucX
+         rFRcPDiPwEPOQNe8SIkaXBwBbgvZJ7+vJ5fSAPZTG9rZ2gnmlRdiJ+kSSgGcfToaxhzH
+         Efftzc2YdIxe+P/RPDi1LM553BI1MzUamD99yYorWtKzygvlAiqb3RSrYdqJeFvjy4og
+         gTm3gpiSpRgyPK1krhxxxZE3LdXKsVKfVMiyPoamSL+EEuLS3ioJgR1gA/jh5qHQBMEU
+         4hvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768428743; x=1769033543;
+        d=1e100.net; s=20230601; t=1768428827; x=1769033627;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ckc2PkyYWXkN9ubnJOQKa6sgkDYo191+Pf3SF4+RdaY=;
-        b=iqfD0INxQl44E21a0FcXMEweVDGHTm4pNxOU3N7L3Pxghz4G57qgZ0MYgHUqv9T5ZR
-         p2AyaYI07rX8d4UQrK9xoQcKAmSobV4F3lxdBkhz37xX2LA83RZ/dm+nyaUlM5rPCuuo
-         bsLfrBiqVKxTMSF4zhTGedoYl3wddhM36tBZy23EdaYYPFAEQj0qW/6BVNeljjuPzALV
-         yjSoflixv2oUDDXF6HsQi6NzL+lBaKYTY+OCwM0t+JlvoyX/sTAMgnjGvZLTVCiTCDEF
-         b8akC1FxBt8E/FTMf+jU52w3LU/RyOFS9bPmag2RsyxvRRBlk81amjCF6jJwTgejwO+W
-         jBXw==
-X-Forwarded-Encrypted: i=1; AJvYcCV78WeZPh840dnFPh3Vbg6E+56ihMzFS2J6HcYUaem2cxD9nUKVk7GUMtRckSxxe9BIu5A0DkSxW9wKMXaO0jz7PM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwywVXjs4g+q5m9yvbFG8Ae2MIfi2fvF0bs+LR5WTnwS9pl/IXR
-	zTFO5tS86km7bOD0YyHvansTAyR70aywVwPD46TY+Q2hgLXEDdFmlzPo
-X-Gm-Gg: AY/fxX6itsF0xoeU0ppaALyIu3Pe05ztxYYAXhZNN5NFjIcKitTcofeE9SUKufNLH1h
-	I2D3efxojNcp4vL2cxxuxybKtgBhRZVyqXM2ZVhKk32UEWt5tUR6vW8RC8p+KZfVTFOtweIQMhV
-	ZpV+4hFIDYF+GqlsIBYT4wg3GEYwxaKscNMNYbb+8+dXDM0pFWhCwLhUQmC6vcLsIabj/jX3xQT
-	MkS6+SfsePJrV/pxJzQ3Qa2fJL1s1VUrWvOzTWBZl13aUcIu10CWJ/BORtlL9DeanyjKS42qPVq
-	73b7YnkAijTXrFQmeLH/GmIA34qqV3dXsopYAPQABKuWgTWh8d5pGMZBe2eZYWhmkcS20IpPWx3
-	ChL5VBAexPu1XGySUYJFKvvvFMnI3f2TVHMvj3etIYX2bmZMm9vresCRZZX88bT80gag7cY+0Du
-	6JM9hrIcqtzdU84VhmsToS4XL2QwjfDWgEBa0LVXd740Jqw0YrsQbbbPZr6Thj6sneypkfkFA=
-X-Received: by 2002:a05:622a:ec2:b0:501:48c4:28dd with SMTP id d75a77b69052e-50148c42c2cmr38121401cf.72.1768428742964;
-        Wed, 14 Jan 2026 14:12:22 -0800 (PST)
+        bh=WXFVdIECi6ilyP/TUQ5Ud/VbVwJbO6QDA7pbbRj1oPg=;
+        b=WEwS5+iiZi2SbBinjodBXnXpz5vhpmwjPy6pRXYQfWEmunJtyS/m4GbJIIdsRhJrAJ
+         wINGaMy9ff3lcbizjDHU1jsQRBcK/hgH5utMBEoqNkgfQFWd8bfm62PXzsfDPCMDcQ+X
+         EEn3NlN+X2oJGsF/19dr3dJo4iRwOdX+UZDIpc5FlETHkCQhBjV6DJpNn+Ir6S8Bs+7R
+         euQpSKppFgl6uFnaFG3GQQkVSdjP3JCQ+Yab0YuaHJuYUsJzPnwfpiTwlbQF0rUno8m/
+         0pqltDMf/favT5PiEDToMYoPL7YEUurGblrtJh8niMeHiA7l8FNu2c2ls8QyDhXqQ+89
+         ZuDw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2hjOxzHs5yo8ZP7snEPPUXwKlv9OiteqUtvU6I7UpUyKbqVvacJknjPMufW2cbtkRiaE2gHZBguApASiJj3zm2zY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqR/mzD3ABE5XOCQqQ/vDEQe5++A7qfLaAqIwTklDt4mcPdIB5
+	yxHQC9OzhfsHJ6ohNuhw9fUNMxyNrDD76ikbR4zvdy4lZFd54/zkyGSU
+X-Gm-Gg: AY/fxX5mSUnSH0lahDbP6gBScN/ie/81CW/RsXej4Nb3xWDwS5mOzxhWRNpcASbkDya
+	QHtDUMVzYIhQAZ97hu6doeC+lSLrTt5i93uvg4SRAx59FJ4VY8kG/gMVPCwmZUbQX8ntKN1fjf5
+	i/HSLFm9SsdnqYtWfYDGqsTMR4s2xJEnAZP8p20erNUD0D4R0Qfv7RJiIskJmiUi2wDWzhGdMW3
+	MC85wIDyUw7DSxqP7Lj5mq3oTVT//QWXK67IMNlF8nqlppmFi81rgK2Dh8G/1RzJhKW90MzvFym
+	5/qgp0Qooznd3TY5xGYOKETmr5HAl6uFrpIulfrZ/PgghPq9ZXLdULZcTjoSrqomxdbUxaAmTCQ
+	AglWHX/q+IirmtSVzH3f278gMeLfaLPzN866xuSFNvm+8nnnwCNV8D3hHb251CElUsGerOhaqpY
+	0S78vl+KMbH5Ko/vlav8R4LQ3EpgE0E4T5CUeJMmeEEykztR9rgjwtGd8PvYTBLoI0bThrtAU=
+X-Received: by 2002:a05:620a:29cc:b0:8b2:e1fa:6eab with SMTP id af79cd13be357-8c52fbb918bmr575020685a.62.1768428827000;
+        Wed, 14 Jan 2026 14:13:47 -0800 (PST)
 Received: from pc.mynetworksettings.com ([2600:4041:4491:2000:c1bc:6046:8762:e96])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50148dd766fsm21715341cf.7.2026.01.14.14.12.21
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c530bb685fsm250007785a.44.2026.01.14.14.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 14:12:22 -0800 (PST)
+        Wed, 14 Jan 2026 14:13:46 -0800 (PST)
 From: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -69,12 +69,13 @@ Cc: mathieu.desnoyers@efficios.com,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-Subject: [PATCH v5 0/3] tracing/fprobe: Support comma-separated symbols and :entry/:exit
-Date: Wed, 14 Jan 2026 17:12:16 -0500
-Message-ID: <20260114221219.127777-1-seokwoo.chung130@gmail.com>
+Subject: [PATCH v5 2/3] docs: tracing/fprobe: Document list filters and :entry/:exit
+Date: Wed, 14 Jan 2026 17:13:39 -0500
+Message-ID: <20260114221341.128038-3-seokwoo.chung130@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251126184110.72241-1-seokwoo.chung130@gmail.com>
+In-Reply-To: <20260114221341.128038-1-seokwoo.chung130@gmail.com>
 References: <20251126184110.72241-1-seokwoo.chung130@gmail.com>
+ <20260114221341.128038-1-seokwoo.chung130@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -83,60 +84,52 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series extends fprobe dynamic events to accept a comma-separated list of
-symbols and explicit/suffixes.
+Signed-off-by: Seokwoo Chung (Ryan) <seokwoo.chung130@gmail.com>
+---
+ Documentation/trace/fprobetrace.rst | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-Currently, fprobe only supports a single symbol (or wildcard) per event. This
-series allow users to specify a comma-separated list of symbols, including
-exclusions, and to select entry/exit explicitly using /
-
-Examples:
-- f:[GRP/][EVENT] func1,func2,func3
-- f:[GRP/][EVENT] func1,!func2,func3 (exclude with '!')
-
-Logic changes:
-- Refactor parsing logic into parse_fprobe_spec()
-- Support comma-separated lists and '!' exclusions
-- Add / suffixes for explicit entry/exit selection
-- Preserve legacy single-symbol behavior (single symbols still accept %return)
-- Disable BTF-based signature lookup when list/wildcard is used, since one
-  function signature cannot apply to multiple functions
-- Reject mixed legacy/new syntax where applicable (e.g. list + %return)
-- Update tracefs/README and fprobe documentation
-- Add ftrace selftests covering accepted list syntax cases
-
-*Patch order is adjusted: code first, then docs, then selftest
-
-Changes in v5:
-- Reordered patches (code->docs->selftests) as suggested
-- Addressed review feedback on README help text to show both legacy and list
-  syntaxes
-- Added missing traceprobe error IDs used by the new validation and fixed
-  parsing/bracing issues found by automated builds
-- Removed the dedicated list_mode field and infer list behavior from presence of
-  filter/nofilter and keep struct trace_probe as the last member
-- Link to v4: https://lore.kernel.org/linux-trace-kernel/20251127151218.4763b25c751bb2aac4b1ee36@kernel.org/
-
-I am not fully confident the runtime testing coverage that I did is sufficient
-across configs/architectures, so additional verification would be appreciated.
-
-Best regards,
-Ryan Chung
-
-Seokwoo Chung (Ryan) (3):
-  tracing/fprobe: Support comma-separated symbols and :entry/:exit
-  docs: tracing/fprobe: Document list filters and :entry/:exit
-  selftests/ftrace: Add accept cases for fprobe list syntax
-
- Documentation/trace/fprobetrace.rst           | 18 +++++--
- kernel/trace/trace.c                          |  4 +-
- kernel/trace/trace_fprobe.c                   | 49 ++++++++++---------
- kernel/trace/trace_probe.h                    |  2 +
- .../ftrace/test.d/dynevent/fprobe_list.tc     |  2 +-
- 5 files changed, 47 insertions(+), 28 deletions(-)
-
-
-base-commit: f0c13b210e4366e03bd9e8967347b06b227e20a4
+diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
+index b4c2ca3d02c1..5efd9c374365 100644
+--- a/Documentation/trace/fprobetrace.rst
++++ b/Documentation/trace/fprobetrace.rst
+@@ -25,14 +25,19 @@ Synopsis of fprobe-events
+ -------------------------
+ ::
+ 
+-  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
+-  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
++  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]			: Probe on function entry
++  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS] : Probe on function exit
++  f[:[GRP1/][EVENT1] SYM[,[!]SYM[,...][:entry|:exit] [FETCHARGS] : Probe on
++  list/wildcard
+   t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
+ 
+  GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
+  GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
+  EVENT1         : Event name for fprobe. If omitted, the event name is
+-                  "SYM__entry" or "SYM__exit".
++          - For a single literal symbol, the event name is
++            "SYM__entry" or "SYM__exit".
++          - For a *list or any wildcard*, an explicit [GRP1/][EVENT1] is
++            required.
+  EVENT2         : Event name for tprobe. If omitted, the event name is
+                   the same as "TRACEPOINT", but if the "TRACEPOINT" starts
+                   with a digit character, "_TRACEPOINT" is used.
+@@ -40,6 +45,13 @@ Synopsis of fprobe-events
+                   can be probed simultaneously, or 0 for the default value
+                   as defined in Documentation/trace/fprobe.rst
+ 
++ SYM        : Function name or comma-separated list of symbols.
++          - SYM prefixed with "!" are exclusions.
++          - ":entry" suffix means it probes entry of given symbols
++            (default)
++          - ":exit" suffix means it probes exit of given symbols.
++          - "%return" suffix means it probes exit of SYM (single
++            symbol).
+  FETCHARGS      : Arguments. Each probe can have up to 128 args.
+   ARG           : Fetch "ARG" function argument using BTF (only for function
+                   entry or tracepoint.) (\*1)
 -- 
 2.43.0
 
