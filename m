@@ -1,63 +1,63 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150263570C6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 15:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC803A4F2E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 16:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406054; cv=none; b=mUTrdEZuHdNnzTKC9w02OaWMrY5HjOdPs3quI3SPgA8PyauuBwoswOxDNQzRzUVUcY/wtedoYr/nN8sPrXpCrcWHTP6s14jYLB2uvkz569hO8hvUBR/yaNrhRyvtLIVmmkRgp1YpvkaSKQab3JP9ZgR57KCN8yHBGxsJ47reNJ0=
+	t=1768408914; cv=none; b=PORf4mXj5cLcnfid95ILd/UhZlD9VnKir5yzeBy2Wps2rFwCWXQKWq2RB77tVbGBH4eDMQ9mImW/jydtg5Z2kobE1EtPozVglhs0F5wjDdye2oXouQ149xFMX+prfMSecGn31WX+XqajnGfKChHSRSjmlP4nu/Q6yRlmNoCt7zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406054; c=relaxed/simple;
-	bh=wjb7DV6a6LwACgVmzzJ/EBZrxDOQc5PVuk7UZ2S02XU=;
+	s=arc-20240116; t=1768408914; c=relaxed/simple;
+	bh=Cx7kvRIX8Qrq0TT1Ah/lwLqz6bmyUkl+ja3kUOilRek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBrssOVP0TYFRWXao1Vp1gSSV20TYeEjaAcSzSsj2XpCi6C6K2quhU5QWjTdfI9swLADRWnvpmAyNlNL39hLQgm2pupAp8dMLbulm0Msn5q6RUpb3+HBrw2z2CQstfWlFR/0VmVWQJfkCNZ85lkZ4uNmDdC5Vgxd+TFCatmgKQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fjQGs/OQ; arc=none smtp.client-ip=209.85.221.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=qqwZXEVghddtElxYHH6HvlxbzkHHiL3ndF55lla6tEC6xbw7rt17jwpvnzcV1aqVRdku1+ZPBxw44miAgchPUCEjQG90hfC+yqy5nV4FQOcj3JQmzx/2WD2m5+6uYCKCV0TMsEqarLZQgOmGqSDP0UAZWUSaYoN+4rvh5oMBfYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=U9wSIwSo; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fjQGs/OQ"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-432d256c2e6so5060806f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 07:54:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="U9wSIwSo"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47edd6111b4so350625e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 08:41:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768406051; x=1769010851; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1768408911; x=1769013711; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xs1zwttE7p4/0ur/jP8GIFx6Rfs9HdyvBQXhSiEgK3o=;
-        b=fjQGs/OQdMpw8kQFMKC7K/MgXEWBgzzAqkvKXn7iyAsZBuuPfJ+Q+BGqqJ3vOtAu9O
-         Nut96e9MZs8EY+61PMOTN0XDs8GJGg9Vy7H7ve1BOqXG8hqdsar2zfVjnPuu+rTkrj/p
-         bin7OWavLJ/o5hpSgHyyMgyM3p0mQz4WDgmX4ObwhA79W4u8yGZjnhDSDlRwUzzM5ccP
-         sth+bvLACak6XKLHH55e9RbkbrVw7FmG8UX9F0esGlipmM2iPQ5rckUnWlweu2cDOEUf
-         pCdyrjfhDrSvFTXg5ohh9HdLgngBaMBZqsu7HwQ+G54IwaReH7rYfadqmsYV91aw/Z2L
-         N2gQ==
+        bh=a5XsqmTd3Wuf5i5kP7cIwbfY5FVmF/Do+b5WJ9+iLQY=;
+        b=U9wSIwSodCs06wB7tdkolYgmsgzIFQLUpE1w4ZxkVPJkx7mJxb0rvve4y+SKNsTsrs
+         pb1DhXcIRwZmGPHt5pUfhwQ6mZTs+GwzNZ4GQHXnTVCAVBDXOL6xhifiPJSQ27rA9xpr
+         yG826RjZRslf9YZGiihDwHwNnKJRTE7Tav0CrK9MZhE5gEjHLADjjOU8WGSEoAusX4+n
+         xnH9pWqhEWh4U8rb0tMVQzLE7kHkxFfMgXfWDkBkrAuKjPSfHBhahrH8sW5V+5QlrKaN
+         WV81egIsfqrVyDoPEGsNyCHaez3fyzws95CuvxYFOFL1hwSdiQkG19CUwWs/BoGeZhbA
+         Nisw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768406051; x=1769010851;
+        d=1e100.net; s=20230601; t=1768408911; x=1769013711;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xs1zwttE7p4/0ur/jP8GIFx6Rfs9HdyvBQXhSiEgK3o=;
-        b=vCqtOxcUi5iNH2ZzFJSqf2VMrFgjZbwDHRhNg4gyZoAov0g5Wc4qsoDuq5GxqS0q91
-         UR7yS2zN9QzglNrnERAX+2OgjvgYnV1Eh0oCRLqjG/naXy0Yc3EmxBCaeanUp9byRrdv
-         6oh+EbVIFLTJGOZlDhi9PhVh7kzsX/v3wPDLLIDzOKZioiE/4k6DxFx+LDWR2o9fBN7C
-         UG4Q7lyjMwjALx1ZWWkLZuZ1EKT/5QFhHtYPfbu+xwSeu3t6hBcXu/RZ4HQsIlrUPDQh
-         e0Bwelw+bPahRA8DEmsNcec8mwBPq6EW/luPfIf0lmuw59o3HDDY3WIpuBKbP+KrU6KT
-         dcFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRSoXL4fhKl2a/m5977FOMF7SDm3UpCy3pgASGknmwse6PCeflC3Ke/d7FAbX3FIlJrf8fYJJZfesKHmmykk7lK0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqPX3sPm3VrkZAL1xHy69wvPs0ZSE1/ONZFXj668Qtyy9vqYu6
-	BK/MsoKNUSWovhAbEG67ZvIKr9eSg0Upk2VJy++1GOw9/ku1LuL8B5zwO+amJN7Nlhc=
-X-Gm-Gg: AY/fxX4iB4VxBhjcX0VluLyzETsXoUiqV9lrJfXgSdCj2BLWwIVqhsWleGhBDMLQh2t
-	wkqfwK0JdurjYGdPPymxB5JMn1fYCFZtBRY1QYlbPLilrSnjZEkDKwuowVQij9LeNiUNeZcg+ri
-	fXCe+QFiWtzQ7E5RnRGkhHc/A9OWrnrE1zI4n+h6GEV3ZL7P1eonbWWPGEakyETewDuO1x2jpyY
-	9AoMC1jqMAjO7ux2kUqnOcUy7TtKOGjY2R8+uhkdixjGKXc0o1pVV2lrK5Oqh7VOTaeprOdzx1q
-	rJupjLSDCEqXm9H2pHQhGeqaZ1r34Ytat/tnA7kLAbBDMPb/YUff1A7vrOEcWX7XqPGcLJ4fNl8
-	rp/S0nSwGj43pAvPscXcFAJOIuNG0PRbH6mMAX7471jYAcWZHorDxehiIp6gviqHIT6x9CdKya2
-	jIeRObmOmoIqZ9fvoTx5SjwX8f
-X-Received: by 2002:a05:6000:40e1:b0:431:54c:6f0 with SMTP id ffacd0b85a97d-4342c4f4d19mr3125206f8f.4.1768406051369;
-        Wed, 14 Jan 2026 07:54:11 -0800 (PST)
+        bh=a5XsqmTd3Wuf5i5kP7cIwbfY5FVmF/Do+b5WJ9+iLQY=;
+        b=segDX3krau0CZCYA27suG4BA/CkIMq7lSQ3HDgPTlSAnLhk0Hx+aaSoWxFU3hGUiku
+         Z/SG5Hu6Wf/2IMK7whVSkeiri6LmxjdOBWDTzXVe+ojfvTef0DBHwNxWf9x7X+wUCp2O
+         UulFp0Nwv7hSnADmGWtWB+1VQ+Xy0/jbcWpaPrjvenMuJHKMl762wwR61vknlYO/9BM/
+         Sw7YbBD/fB3UCOMlLmx7hE2kVJCJd7bQOpgJicgGixVuXBXiNozvKwZaVEID+ZWQDPYX
+         LEjA6VM4KU3Vj7Dqmkz8qO2Z/aWbjQ5MhjZZ8dbVnncXpMqwzl/slQ7oGHwnHiYhxP2B
+         ib+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBeJgry1Y+AOA8CIHk1k4cPjwBLoVAi/avjkWbQBvwd1cua/rx6Mfn7JhgrfEsXecUBl7xXLUTk4IrYvQ7bHAJ3tw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6/NxVoAPv7IfibBM31Q6/TC1Ao9newVpigV6GpJTPTOxp4fCK
+	x1cZjbuVw7IF/Lpz+i6t7jEVpbkGhh/tyT/pX3qij9XzE7h00Oc1GMvh1D1AK1I/WKQ=
+X-Gm-Gg: AY/fxX5jofBN/BlDlKWWCM/kmBQY5uS68kHZUZKhzwHgvTQUE4VME0sMAYFv6+E0Twn
+	1Vf7568EA1WH22mZSet8VJwQBVS/Pw6dNJ6s/l9VMHLhmajQfDvrQZc9Ol8Bg8qb9MbZKJvEX6w
+	pG3BSDln7G3M/cdYUtLksJZZzcRzMJC9xkUd4jkj06S5hpgEYBJ8WSbpGK6N4L+9r99/jdZK4bi
+	anHmKYQhSU/YShwnM7shl0xIoH4Srwre30K5xpdsLiRCbGWPikbuIpgVTDuSiWFQzKIV+/LE1TG
+	Ka6vtAlu0lhxNzuwdlQn0UX16ZOqe+s9dzzFeVzV92QfjlvMQUKhgnTupPi7rMeiUIuoFqNqnso
+	8JJuQnxgoTIsZxcH2juBjW36/rNycCwN6Q8Rj3PzyyHG0jb0olXeKpziR5XLaEWKtW6LgwKhpcb
+	4WP2J4WZXN9v3xrn0fD/AfcSD6ca0vQ5vDOEo=
+X-Received: by 2002:a05:6000:4387:b0:432:c092:ee3b with SMTP id ffacd0b85a97d-4342d5dd58cmr4121853f8f.62.1768408910801;
+        Wed, 14 Jan 2026 08:41:50 -0800 (PST)
 Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5fe67csm50716588f8f.40.2026.01.14.07.54.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-434af64a643sm284591f8f.1.2026.01.14.08.41.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 07:54:10 -0800 (PST)
-Date: Wed, 14 Jan 2026 16:54:09 +0100
+        Wed, 14 Jan 2026 08:41:50 -0800 (PST)
+Date: Wed, 14 Jan 2026 17:41:48 +0100
 From: Michal Hocko <mhocko@suse.com>
 To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
@@ -80,17 +80,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
 	David Hildenbrand <david@redhat.com>,
 	Miaohe Lin <linmiaohe@huawei.com>,
 	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	stable@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Yu Zhao <yuzhao@google.com>,
+	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
 	Mateusz Guzik <mjguzik@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] mm: Fix OOM killer inaccuracy on large many-core
- systems
-Message-ID: <aWe8IdTYEMJt3GTH@tiehlicka>
-References: <20260114143642.47333-1-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v16 1/3] lib: Introduce hierarchical per-cpu counters
+Message-ID: <aWfHTLDA8-Fja_gD@tiehlicka>
+References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
+ <20260114145915.49926-2-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -99,88 +98,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260114143642.47333-1-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20260114145915.49926-2-mathieu.desnoyers@efficios.com>
 
-On Wed 14-01-26 09:36:42, Mathieu Desnoyers wrote:
-> Use the precise, albeit slower, precise RSS counter sums for the OOM
-> killer task selection and console dumps. The approximated value is
-> too imprecise on large many-core systems.
+On Wed 14-01-26 09:59:13, Mathieu Desnoyers wrote:
+> * Motivation
 > 
-> The following rss tracking issues were noted by Sweet Tea Dorminy [1],
-> which lead to picking wrong tasks as OOM kill target:
+> The purpose of this hierarchical split-counter scheme is to:
 > 
->   Recently, several internal services had an RSS usage regression as part of a
->   kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
->   read RSS statistics in a backup watchdog process to monitor and decide if
->   they'd overrun their memory budget. Now, however, a representative service
->   with five threads, expected to use about a hundred MB of memory, on a 250-cpu
->   machine had memory usage tens of megabytes different from the expected amount
->   -- this constituted a significant percentage of inaccuracy, causing the
->   watchdog to act.
+> - Minimize contention when incrementing and decrementing counters,
+> - Provide fast access to a sum approximation,
+> - Provide a sum approximation with an acceptable accuracy level when
+>   scaling to many-core systems.
+> - Provide approximate and precise comparison of two counters, and
+>   between a counter and a value.
+> - Provide possible precise sum ranges for a given sum approximation.
 > 
->   This was a result of commit f1a7941243c1 ("mm: convert mm's rss stats
->   into percpu_counter") [1].  Previously, the memory error was bounded by
->   64*nr_threads pages, a very livable megabyte. Now, however, as a result of
->   scheduler decisions moving the threads around the CPUs, the memory error could
->   be as large as a gigabyte.
+> Its goals are twofold:
 > 
->   This is a really tremendous inaccuracy for any few-threaded program on a
->   large machine and impedes monitoring significantly. These stat counters are
->   also used to make OOM killing decisions, so this additional inaccuracy could
->   make a big difference in OOM situations -- either resulting in the wrong
->   process being killed, or in less memory being returned from an OOM-kill than
->   expected.
+> - Improve the accuracy of the approximated RSS counter values returned
+>   by proc interfaces [1],
+> - Reduce the latency of the OOM killer on large many-core systems.
 > 
-> Here is a (possibly incomplete) list of the prior approaches that were
-> used or proposed, along with their downside:
+> * Design
 > 
-> 1) Per-thread rss tracking: large error on many-thread processes.
+> The hierarchical per-CPU counters propagate a sum approximation through
+> a N-way tree. When reaching the batch size, the carry is propagated
+> through a binary tree which consists of logN(nr_cpu_ids) levels. The
+> batch size for each level is twice the batch size of the prior level.
 > 
-> 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
->    increased system time in make test workloads [1]. Moreover, the
->    inaccuracy increases with O(n^2) with the number of CPUs.
+> Example propagation diagram with 8 cpus through a binary tree:
 > 
-> 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
->    error is high with systems that have lots of NUMA nodes (32 times
->    the number of NUMA nodes).
+> Level 0:  0    1    2    3    4    5    6    7
+>           |   /     |   /     |   /     |   /
+>           |  /      |  /      |  /      |  /
+>           | /       | /       | /       | /
+> Level 1:  0         1         2         3
+>           |       /           |       /
+>           |    /              |    /
+>           | /                 | /
+> Level 2:  0                   1
+>           |               /
+>           |         /
+>           |   /
+> Level 3:  0
 > 
-> commit 82241a83cd15 ("mm: fix the inaccurate memory statistics issue for
-> users") introduced get_mm_counter_sum() for precise proc memory status
-> queries for some proc files.
+> For a binary tree, the maximum inaccuracy is bound by:
+>    batch_size * log2(nr_cpus) * nr_cpus
+> which evolves with O(n*log(n)) as the number of CPUs increases.
 > 
-> The simple fix proposed here is to do the precise per-cpu counters sum
-> every time a counter value needs to be read. This applies to the OOM
-> killer task selection, oom task console dumps (printk).
-> 
-> This change increases the latency introduced when the OOM killer
-> executes in favor of doing a more precise OOM target task selection.
-> Effectively, the OOM killer iterates on all tasks, for all relevant page
-> types, for which the precise sum iterates on all possible CPUs.
->
-> As a reference, here is the execution time of the OOM killer
-> before/after the change:
-> 
-> AMD EPYC 9654 96-Core (2 sockets)
-> Within a KVM, configured with 256 logical cpus.
-> 
->                                   |  before  |  after   |
-> ----------------------------------|----------|----------|
-> nr_processes=40                   |  0.3 ms  |   0.5 ms |
-> nr_processes=10000                |  3.0 ms  |  80.0 ms |
-> 
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
-> Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> For a N-way tree, the maximum inaccuracy can be pre-calculated
+> based on the the N-arity of each level and the batch size.
 
-OOM is a rare situation - therefore a slow path - and handling taking
-care of a huge imprecesion is much more important than adding ~100ms
-overhead to calculate more precise memory consuption.
+One thing you should probably mention here is the memory consumption of
+the structure.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+I have briefly looked at the implementation and concluded that I do not
+have enough time to make a thorough review. Sorry about that. As I've
+said in previous version the overall idea is sound. Especially if the
+additional memory consumption is not a factor. I will let others judge
+implementation details.
 
 Thanks!
-
 -- 
 Michal Hocko
 SUSE Labs
