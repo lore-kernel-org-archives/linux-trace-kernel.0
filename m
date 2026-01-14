@@ -1,84 +1,77 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022140.outbound.protection.outlook.com [40.107.193.140])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010024.outbound.protection.outlook.com [40.93.198.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9A123184F;
-	Wed, 14 Jan 2026 19:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E80DA41;
+	Wed, 14 Jan 2026 19:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.24
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768419412; cv=fail; b=nPX1C6eZ2n85tfEsAEGDhUMsI47ptMAUZn3yY3v9Tgx5i0Pdlgs7VEL361WlZG+6hWrTSdD6wRFBva9o0R4ENkhRW+K6ldmieilB/Xhb+4Z7RTC168dRyfU8jd09x3KovVo5rPrTGvGbZARqv8Spt1aH8Xz4x1mRsubi/ENZIug=
+	t=1768420090; cv=fail; b=PnFHL0VtqNk+UW/BFG4Ti3pCUbTaOBFljrwwRSkdh5buy09JS1Zsk9dNMXSNp1WV5aS2xXTXY+YyaCmtc34KSH8Qz/oY8rXjEL+KwRtliVTymZDWDxwVf/hyRfIJV6XxLK3vZcKDCt54GI8wvcdJhjs5EyD5FRORWCjkMcmm4F8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768419412; c=relaxed/simple;
-	bh=DMbCeo8QOQvXA1aful8DdQ/yRwZkyq2h37EjyxTPgpU=;
+	s=arc-20240116; t=1768420090; c=relaxed/simple;
+	bh=EL/YR//0RiGi7Lmp0LbHrra/6gVoEqZ/4YwqwHDv/FA=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TUJ+7vypmeeYOdVBLJd6E0xwJH7GmBvYYOxoxd+HMpNrHt1Oh2J7EMb1HjYXSn/gmLFjTdjoIW85uUVabdlxt1GxaCxCuUBkJj/EJVYjNc7RalB/mV3BjvpdeLB344aRhB7ebCQlvxz3t82zOZrcLGtC22PlNNKaU6lHMTk8eTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=kLGZqaA1; arc=fail smtp.client-ip=40.107.193.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	 Content-Type:MIME-Version; b=RH96Of/OD3bXYQsvckI4uhozP3Qc68Htdege7XHZNN2TLNvGt4N8CrmBT61Gpu12jCB39ObTiO781ApKaaBgjGtDfagMZoSWFvQGe52h/+0T3BAILe2dUobijHNTh6aYzqgHMb1kILMingQhB+y3Oh+UwHOzQLW3Ti5DbgGUdaM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GuFbK/CN; arc=fail smtp.client-ip=40.93.198.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kLGZqaA1"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GuFbK/CN"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qvFosMKyEzu2RK0hlB1xfjjgQse8ej2OPTjwWRBy64ISc2dzfaQrhM2u1MgnRnLBXba6eTAumplVn8zmycYjsdi7joLeIHFElvtuECt82FNM/Msic3psr03eXclxO849nDkp9/Vdpr9VO4Y3FTmIRr6hNGmfhVcoipXzt/xWs/JY9vBOKpbZvQ8tApomNOOFg4Rs+zh0oiYSLbM7lvmSJqiyCnIOdHBAuxUzE7jm1BagX2BJqnxc5nQb0421cNxO82ITFXoBzsCaQ0zBbWp7NlNWISOmf/MeJKc/SBQKiGWBF57WWOnZsrMRJbjWEnlfhqm2Nylszbel/LJXIjDHYQ==
+ b=PpOZNHowYDl3Nx+15dSoNEKpvlE0tsxynAEiHx8PxSund5EiIQq/xeZhuCjHytKE2NnagBf1VpOIfcchtFSMxwcBKspgIfAV/bWccqbGnZCdvLQ5OAlhsJmMEz1ie8HKEfjAv1wAmXIfdccdTgDJ+XxqghYssXjxyWJIdVuj8QhNLUbhjsdSRRieFU1H4xQMZF5wquqbP9ERevB1RQyNNyOy3PUU+10Eq0CNXHTw1PiUT47vacCGBQrCzGecdCkJ3mdxYQhgTo+c5IJldBqW5P4AZeqn13JYTTg9tpTe/+3WK1iBI5rUPPGIHy2o3poUYuilIOWJqjgWBHsp1BITtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SOX8Ov3j5ESnVD+6UvK+BszDdy7WtHToyWxfoNeGtVg=;
- b=RzjJY2Xq4mg+9n/WLI3r1wD8rtKTFhVORp/PtTMz9kBSawzXse7giGzxKiSL88HxbaUg1PVcJExVyv5yMOC7A2hR98VW/6J/pLKBrUtrSrZ0wirZdm2S+qqvyXWwGJDySoSuzehMsq91Bb01gVdy0sr5vCaqdqYEJgmDBc/yH15sf1/JnRtuhw53ZUWKnEb8oNWHJS6rFvV+2T5j0Q1XQ69Rjm9uroagSNX+9nq7YXzfNiUYNP3nCgvSu3O5AGv/xxxRVwLnBB+/vR5r7UqQ5ztCq+PvzajWW1krx2B4GJ8NtzwowyM2XbiSwZ5ybcdGS+8Njdo8RswiFxuIG7ctJw==
+ bh=MhuR1LiAVdrVkHn9zisJkr0QCEzjrsnw1A3gaD7RxQo=;
+ b=hZzi762henbOYprnnseYiTritHPIUZ7+N2PEkOmAHlcoVJW8fgvD71z2VYaueR/YCqOJ3B3zG1jHX7wGIdHi9gc3idrg26DG03NhS9pTwuyw3FMrZwrRB1+C79AAWjLhgCwQFkfBK3dxPsrKdOxRBHYdfVkCyD3YNaixL92oLrn9+Dq0O7g1sm6k6OWwwUmbd+lAiYQaW43wdEM2H/la0aOBxpomfCH18ZPnanM/WYGRyLGihtJMKtNh7f3lmy7tBupE7HMlOOPJ75DuRtKclaO4A6C2+e8t/x9nkK3t+swAfko6iCy93QQg4L+aTv6Ap2Mv29cX9NmuzYKJe/b15Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SOX8Ov3j5ESnVD+6UvK+BszDdy7WtHToyWxfoNeGtVg=;
- b=kLGZqaA1ad6/yH9o37ym3r7rGynCdfRgspHQqza8UldL52e2iI889njPlOplYljMMX5h1WwuTPFpN7jnc1dyXdvUzoY6dlGlQ/GmjTErMJ8b958KH/5yy+KzgFsjnlQyZm0xXINYjbt7VbjfWeoq2KdAWGs63OejcIkc7y9GDaqIykJZxU6JuHdfxT2ArCevLKgcAmQkwEIpuKYQuvT5QvSBQVGKnaJWpxbML/yZ3XoEHZWqmK0HSjedTk2W+7Xs/tTRkv0e+pXpYCgFEn7XKKKiXeILFGadXHK/z7RCtSaRmALZNkpFkd/NVX9KjFgyFuLpuFt02iGgexF9R5aPoQ==
+ bh=MhuR1LiAVdrVkHn9zisJkr0QCEzjrsnw1A3gaD7RxQo=;
+ b=GuFbK/CNKpsbv977ExQ9XjbOq1CoLKfwKUH/TVVFn3In3owSChw3avrw5JXp6VkoFcY63LAgjVaF/F/KLfRsZc6a0Z/1wPtkXPX6kNvViay2uK4M9gE1Wva6I2Bv86jM1kOOVDRz82GpK8bznoeE5SUYkv1LQ9oJdspSLytf/10=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT4PR01MB9846.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:e4::18) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com (2603:10b6:a03:48d::13)
+ by CH0PR12MB8532.namprd12.prod.outlook.com (2603:10b6:610:191::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Wed, 14 Jan
- 2026 19:36:47 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9520.005; Wed, 14 Jan 2026
- 19:36:47 +0000
-Message-ID: <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
-Date: Wed, 14 Jan 2026 14:36:44 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Wed, 14 Jan
+ 2026 19:48:03 +0000
+Received: from SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d]) by SJ0PR12MB7458.namprd12.prod.outlook.com
+ ([fe80::83e7:e6cf:26ed:2f3d%6]) with mapi id 15.20.9520.005; Wed, 14 Jan 2026
+ 19:48:03 +0000
+Message-ID: <7a42515f-ae57-4f4d-831c-87689930a797@amd.com>
+Date: Thu, 15 Jan 2026 01:17:51 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
- with 2-pass algorithm
-To: Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- "Paul E. McKenney" <paulmck@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
- David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
- Shakeel Butt <shakeel.butt@linux.dev>, SeongJae Park <sj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <liam.howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>,
- Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>,
- Mateusz Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
- <aWfNMKCoEp2LuA2v@tiehlicka>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH V4 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20251215084615.5283-3-shivankg@amd.com>
+ <20251215084615.5283-7-shivankg@amd.com>
+ <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
+ <dbbfc5f1-d9e5-4d39-a2df-e35d6ba73063@amd.com>
+ <d6287c39-59a7-4592-8afe-bdbdbcd70b04@kernel.org>
 Content-Language: en-US
-In-Reply-To: <aWfNMKCoEp2LuA2v@tiehlicka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0129.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:87::20) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+From: "Garg, Shivank" <shivankg@amd.com>
+In-Reply-To: <d6287c39-59a7-4592-8afe-bdbdbcd70b04@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MA5P287CA0031.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:17a::8) To SJ0PR12MB7458.namprd12.prod.outlook.com
+ (2603:10b6:a03:48d::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -86,215 +79,191 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT4PR01MB9846:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3690a018-c7ef-4978-1be8-08de53a44143
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB7458:EE_|CH0PR12MB8532:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6276ac02-cd0b-415d-ac6d-08de53a5d471
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnNMRFRSaXVNYzgvVGZQS3dIVjNMbG9OWjBZN3BsLzZBMDhycDl5cHdMMXRk?=
- =?utf-8?B?VXcxK1JoTWdHN1NHQ0hyTEovV1RrUHpoQnFWemsySmRRd0dyakc2UHR2bmJK?=
- =?utf-8?B?U3A2TytIYVJVWjFkaXp1dnJBclJHSmhJbFJQcFEvR3gwbU5iYUwxMEFOVzlN?=
- =?utf-8?B?Mk1QRXplbGF3NkE5Um1XUEZ3bkQ5Z3FXQU1vUnJKaU1CMjhRTTFZVFN4dzUy?=
- =?utf-8?B?bFFBZ3U5MDVlRkZubDRDU0pxWGdvUUNnRXhOeGc2WWczNDZGT2RCTWpiSnpI?=
- =?utf-8?B?djNNZForSk85Sy95NmtxRmNaWk50b1pxR1dPMWtyMVNhS2wyMEJlOFBtNkpN?=
- =?utf-8?B?UGljNFFuVUpEZUQwdnVvL0NQbXVEb01uaGZxR002TW9OQzFCZHpXb0RzNUMw?=
- =?utf-8?B?ODVkTldkbGdNY21sV0VNMUxYTkZuVGFmTGp2Wkpja3FrK3hvZm1RU05Qcmtl?=
- =?utf-8?B?b3ZMbnc0aE1abXVmMEJBc1ZCR1FORVd4ZUlDZEJqNXVyUVRWZlN1UEEwemhQ?=
- =?utf-8?B?bWowbXV2Tk54ZWdjbGxReVAreGZvOEh4OWtNdE1ENlQ2c1VqZTFwc3o2Q21J?=
- =?utf-8?B?QWoydnN5UWp1N0ZadFpTRDhvNktLeFV3dFc5QklEZXFUWmxRWnc1bjRpeE5O?=
- =?utf-8?B?cEcrY2lXNGh3RlFzbjRKQUZJN28raHgzaUNmdTJ4M0lLNWJ1a3JXcVRCLytx?=
- =?utf-8?B?V0Nla1dPOUZWSUFCV0xRVnJhY1BUOUF2TksyaVpsU3VuVnlubE56OTZpSFBB?=
- =?utf-8?B?TWJOM1dXY2dkZ2lnOXdsNXJBYUVXeHhCemo1RktNckJIdTcwUnhHZUZuT2g2?=
- =?utf-8?B?VGFMK0dxM3B5NWErejZtVEgxdEtrV2FMeXBJZmsrdVNJUWdERWZGeWlWdlJz?=
- =?utf-8?B?ZjlEQ0N1Yk1UWHExYWVObWxoZnZXa2p6T0RrTDE4TTQvWVZCeXdiMkdtbFIr?=
- =?utf-8?B?ejZLRzY0TThFWnlkMHJ4cDdNSHhHNlN2QW1MYTNKWnE5YVFyK0QxaDZmRlpv?=
- =?utf-8?B?NnVjZDlFOVpVNkRiMGR2cm91TDJOU2x4WDdyZTc0bGFZMmZyUU1lOGx6emtF?=
- =?utf-8?B?VnlZcXFzVXRrcUtDTnNXc3BsOEtVZ2FQV3BZeURvQnJHTEJBaWZxaTMwQjBm?=
- =?utf-8?B?LzlnbUQxaWVqVUVrcVllK0tid0ZRQmlTdnAxL0VZNUhxU2hPN1p4aWExRXBP?=
- =?utf-8?B?Ky95UTM4WnMveW5QdlR1Z0tFSE9hQ2NCTENTS1dDbERVZ01VSEE5RWc4RXVp?=
- =?utf-8?B?RjJTT3V6ODNkYkNOUFNhMFJmc0wwR21ZU2hGdm5RRVdxYU5XWFJWUngwRkRk?=
- =?utf-8?B?R2FmVXFseTcxWU5Mcm5PcFgrbVRuV21uSmZIeUxJVlpZU1h5Y2M4Tkd4NDFu?=
- =?utf-8?B?dzhOMEQzOUdOUkFsdW5qbk9Pa1RoNmJMRkZDT0JqV0pydXhxTkFFaktReDBa?=
- =?utf-8?B?eEoxbEVPdVpOMGRRZ1duTkV6dkpCVTRuMFB5SlE5UkNZZWVrdStEbFp1cmEx?=
- =?utf-8?B?WWpVT05SWmlFQzY1bzFjY1dFaWk3eUlBRmt1VjdjdGNxMm8reW1iNVVFNVNi?=
- =?utf-8?B?V2pSM0Fnb01CS1BiRWRWakY4aXcxOVdaa2NUMDBrSmNKSldUcEY2TkJpZ3lF?=
- =?utf-8?B?WU5sbmF2SU5YTmNLYml1TGZCRHhjaDh3T1ZhT0E2bkNqalNHeXRGeWJVVS9z?=
- =?utf-8?B?UDZvZUlsRDFEcml6RzdhV0V3N05aaFdCcC9HQlFrSmhiRmRuUFNqMm83RzZT?=
- =?utf-8?B?YXhhUUp3Smx0cTNMNGhtK0xoZGdpcGpPSHFDMzVDRW5ycTI1dEE5QVhKTGNB?=
- =?utf-8?B?eDBNdGt3THpIbzQrZDZvVWFtK05COWRVU0NTZEZPMDFWOEM3dWxqWEd1bk1C?=
- =?utf-8?B?ZGtCa3VXOWw4RnVOQ1lqa2JvRlFvREVvZTZsaEFxTXlCUEtoSVRpOTVWMVdT?=
- =?utf-8?B?RnhFZkJaVmgvR3h3R1JWNlF3bUNPN1BSaDhjZFBiV2FGL1d2YS9hVnZjSWtF?=
- =?utf-8?B?Rm8vcmpLRTl3V2VHZm5KNmllVHBlOFZNWE5abnNPcFZoTmR6RWFBbDMwMk5X?=
- =?utf-8?Q?Vs0Yjv?=
+	=?utf-8?B?d1dxZ21GS05ScldPR1N3RWhqeDVVL3hLSyt3OENVZ0hWY1dud2NGRXk4M0pQ?=
+ =?utf-8?B?ZXVtd2IwUVZWaEZhblJTNCtXM0NzVGpkajRtSXBlOWRVb014Q05RTTIrYm1K?=
+ =?utf-8?B?Njc0WkRFWUovTGpWMGxhb1RBeWo0Y2ZiQ01tTWFnc1BoSzVqcnFiL3ZWeWJH?=
+ =?utf-8?B?M0Exc2tnbjhpNm9MOS9mSSs5d2M0bEVaZDBuM2hXa2NhdER4bU5sQVB1ODFl?=
+ =?utf-8?B?UHBmdEZObmdzYUV6eHJHY1F6ZFpUZTgvdi9sN0xTTlNwWUp3KzQzL0VUbGJ6?=
+ =?utf-8?B?ZzUzbUtsaGwxaEM5V0svOFpzeUVFd1BzMUY0ZXV3VE16RXRyVmg2aFR4Z29L?=
+ =?utf-8?B?OGIrYlVUeW8xSlM0SmRBaWxVcVJCcXIrTHhsM3YycU8xYzE5dXkreDgreUFB?=
+ =?utf-8?B?aHlNQ05wQmhLanN4WTBGSWRvMjIydmVWT2xqSVJFOW9jWmhrZ3hFdXJWeFhQ?=
+ =?utf-8?B?cXFJdlJDUUlJSlpSd09nM0xYWUYzeFhQTS9ZRnFWdm80bEs5bUx3Qk1MdjlZ?=
+ =?utf-8?B?UkszUFdUbHpST2h1elJ5ajRKNjlUcGRqeGlpYnRWNURDYTVYK0p1NElIbnNy?=
+ =?utf-8?B?Qm14WTU1RncxTjNWOHJBaFVyQ0NSREVScUUxKzdoR1EyblFzRkhGUGtMZlJB?=
+ =?utf-8?B?WnhHczZtS0tKNzR4bUcwR0RuRVZ6UjB5d3BrTFFzKzN4RDF6TXBNWk5hN24y?=
+ =?utf-8?B?ZXZzSWtjR0VtYzlSNVJ0NFI0Yzhua3MyTGkvbEtjUFZnUUl6Q1hRS1ZPeDNB?=
+ =?utf-8?B?RmdjNmswYTVUYi9ycmt5RHd6QkM2bmpSWFdObm1xZGFzbjdtZEQwOHphOFlL?=
+ =?utf-8?B?WDVCaXRlUUhMQk9zUThpRDcxd3NjNDVuakdiNklVN1RwenUra2xTSzR3ZUth?=
+ =?utf-8?B?S2Q4eTRiMDcwWW4raGZhUHk3Z1ZCN0RlUUFNMDRkSjk1TmpCVVc4dFp6YkNo?=
+ =?utf-8?B?dFRTSWNoWG9TcU5ETlZVZS9jeENFUVNEUTZGRDRNWi9WM3pTTHFaMjVKbENT?=
+ =?utf-8?B?RVFnVGk5T2RTV2RrU2VsZkxTUTdEajBQaHdKb1B4M1dPQWV6K2hDRGx6cDN1?=
+ =?utf-8?B?c0YydWFEcGZmQkdYRlZQb1o3NHBhZVJYajlyajlIZUtEUVU0bmw4Z0VmclFV?=
+ =?utf-8?B?bTdIbTRRaDBFeVp3dHh2TjNxRFJlTDFZT3pkT3ZrNVpoS0V5WXJmYnk1dFRj?=
+ =?utf-8?B?UThqeUloY2g4WTJYQzY4aG1Ob24xUTk5SWQzeEdDczJDMnkzZlZCeWlGWXNi?=
+ =?utf-8?B?eUo5QWM4TUtnMHdkTjhGVEZqdDhHeFdEWkRVaWM4cTZZdHFBT1Jma0d4Y3hZ?=
+ =?utf-8?B?dUxHQzcxcVBqVUlVSENBS0FGSjA1VEQrNnQ2Z0lvbG5Zb1JRdFBkVUU2ay8w?=
+ =?utf-8?B?NmE4UnFNOFJTM2MvQzRvYUg1L3FXUnNQdm5ScmhKYVFBUk84T3BieVJiZWcy?=
+ =?utf-8?B?UENUbnlDa3JlNTFVWXp4YWF1ZnBzOTVxN0EvZU80U3pwTUR5MUk3aVJDNEtn?=
+ =?utf-8?B?VDVFV29HbmQyRGx5TzJRTWx1TXpyRVNFQjk5T0ZBQ0JVY1Y0U05SSS8wTFND?=
+ =?utf-8?B?Qm5vNk1CeG52WGJ3RlYxNXV4Y1A1Vk5zQzhkYzlOSWkvbkpyM2lZU0FtdDgv?=
+ =?utf-8?B?azFTNkZjSGxQMFpmc1lBUm1RYVcrN0o1Z3l0TG9oMjZqdTJjdkFJU29DQmtp?=
+ =?utf-8?B?WVJPZVZSby9YM25JZ0pQNmxhNzNybnM2d2F4bm1zY1dNZ2dGclNEZkh3Ukxz?=
+ =?utf-8?B?QmpGUFZmb3M2TDQreHUvdVBicjdlZXl0ZVhwWVhGTkxFZ1VRT3U1b1FWOC9l?=
+ =?utf-8?B?enNKbmVjMnFVZG1hK0RGd0VlcmVDRTdpeWxuc2JocEVsUGZyMmRRTzhjZGt4?=
+ =?utf-8?B?S3A0SjF5YXY5SVkza3dmYVFBUVpuNXovbWVRV0Q0QlNYNWl2T0Rrd2xIU3ho?=
+ =?utf-8?B?ZjVCczFtbHMzZ1hyMjJoSFQxaWhzM2ZiZk1pMnl1NFZsS21FUHlWWUNaaXRl?=
+ =?utf-8?B?MzR5clVyWVNuQ0oyVU43U0cyRkszYy9Vc1ZiQ1FTUWVoaXZIeDdFZXl0UVpx?=
+ =?utf-8?B?THdHeGR1NTZmL0oxZ0pYaDdYUS9jYXgzeVhDRm1HVEt0Y2dJRlkvM2lrZ25F?=
+ =?utf-8?Q?CfyY=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WEgyMFRlSXFXdnA1bU15cm9zNGRSNnQySjd2eU5DZTFhQW1vWmZlbGVpaWZW?=
- =?utf-8?B?S2h2UTdsVDlDM2lONUFBQlppR0tLYmF1TWNFYjdMMHNISTczUkJxZWgzUlBS?=
- =?utf-8?B?UnpmeC91YlJuQ3NPSmRJS0plUW9KcG92OWtKTHhFTitGVjI2ZHc1d2d4bE95?=
- =?utf-8?B?QlFHbTVBQnJBZ1FHZHpCUTUzTHhRK0R1S1ZjUWVIQjNFcTRnd2VqOEthVVdo?=
- =?utf-8?B?cjhzQjhEWWJnY09PclFpSXN1d2lFeG1pTXJJTndUQTdBU2FpM1BUQ3ZxTXFu?=
- =?utf-8?B?d2UySHBUY2dLQ2RrVVpvUmNyc2tJSzc3QnlEZDVDWlhKRS9md29IVVNVQ0U4?=
- =?utf-8?B?bFhTaEErWUhqckxhbnZmVTIyLyt5VVlHTVRkUGlRV1hmTjZ5Zk1UUmEzQktw?=
- =?utf-8?B?UzA0RWtjMDdGTVNNZFg4aFYxVmhoUkRvZE9XeWQ3ZkZ2R0NGdTBlZFlnV2Er?=
- =?utf-8?B?VmpVQnhDRUVBejRDTjlvdkFUMW1HWitjamxORU9CUEJqK3AvYzFqMSswS3dv?=
- =?utf-8?B?V0o3ajBlWENIcmlNMm1jYys1OURDVUEzeDR6UHZKcnlXOEw3MjhDSGdia1N2?=
- =?utf-8?B?U0tLMVlmUjhlZ2R4VENtR1F6MnFxcHo0aU54NWtjNFdaZVYraWQ2MDdPOVdq?=
- =?utf-8?B?Qkh3NGZPdThtYlNualgzYk13cEJ1ZGpWT1Y5RnY1aVU1NTBncnJGWjBYakVT?=
- =?utf-8?B?aVQ5VHBvTGExV3Z2SXdkbWtpZVMrRzcyZFVwTUJyMkRTcFQ2UDQ2T016b2pj?=
- =?utf-8?B?NDAwbHAxb1RqODRTNDNoS2ZHRlZlWlBYZzlWa0JJMWhIYVpZYU9CNVQ1Mlc4?=
- =?utf-8?B?Wm9kYTFONnZhZS94YU5OK2VjMGF6aDd5WlB5bDlZVjNVWUhaR3lrOUdoMDhJ?=
- =?utf-8?B?WURCbEhJS0RGOCtLUHVHL2FFVUdrMDRXRlB0U09BRTIzQlpPTTI4b0dvNU1r?=
- =?utf-8?B?NmZJTTFlQ0lJMzB1VklUeG9CRExtQnR5aGxtOUdueGIrejY0ZVBseXE1RXB6?=
- =?utf-8?B?MTdVSGc5U1EvYldsUDlNZEc3VDYyQXFVbmlqeVVkbFVSYU9LZFdENWgzdjlJ?=
- =?utf-8?B?T0pMTHZhSFVXM2dTQTBuOElPMEpYZXNCVlpXaUVIVXp6a0F6K3l1YU5pdk1u?=
- =?utf-8?B?cUFXL2ZkaWY1ZVhjdlVuVEF5czFQOE9KM3pJd3Y3bVJJREZ1c1lWVlU0OXpQ?=
- =?utf-8?B?ZTBSMGgzZFZGTjFaUGdhS0xkK0s1OVhQamdEZ2lWSDk0cXFhSUUyMndjaTJY?=
- =?utf-8?B?WVpwWTRXb3IvZm1tVUN5eG42djZCdENoOXllclp2QXkwWk5YQ1N5Zm45emZp?=
- =?utf-8?B?S3FyWjhoOTNCUHhKRHNuYjNGSml2TnhqMmRvamNYWlZjeFB0cnpyaWdBWjl1?=
- =?utf-8?B?ZmJYRW12UFYwTnlwYzZWN21UeGowOHNBTFE0elJIZUkyZG5JV2JxQUFqQXMz?=
- =?utf-8?B?MDVlZWk4NWFLWDh0R1p6L0VwVHl0NmwrL2FDdWp5ZFhQWEw2cEVQMGlZSlNa?=
- =?utf-8?B?S3BDeE15Sm9icWVMVXBvVTl3d01zY3pVRGRUREltbkg5RXlndDRCYWpjZkdN?=
- =?utf-8?B?NEdqYTloZEFSTjBFeW1lUThzOUF5d1I5dUdSSjhrMUdOSEhtMHdOVGlsMzlE?=
- =?utf-8?B?RUFmOVdxVUhMRm9Mem9ZYkg0c1VadlpJaVQxSjlxVExwNlcvQmpMNDlBUkQ0?=
- =?utf-8?B?a2tqZFpzdjlRSlBGRU1wR2NSY3gzanZMUXl0OGtaTU0rdENDbWZJVWdZdSsz?=
- =?utf-8?B?NmxjU2hWNzhlR1BZTlR4YXlwK3VUbEFpVUx6dmh5blcyR3A0YjdtY2dVOVlu?=
- =?utf-8?B?eXREd1REQXVROFlsakppZGdjMzVoL0xkTklBL0tZOVpBSzF6bVUvVEs5YTV6?=
- =?utf-8?B?VlAwRk42amtDeWJ6Zk42U0VoL0NGVDVzK0tqM3EreHhHNmNJNGp2VTVvUUx6?=
- =?utf-8?B?eWI0TzJvT2RtYkZGSjJxQ0w2MERiUmJiZzc2SkQ3WjNMZFlHSVBJZHFkZnVJ?=
- =?utf-8?B?cXgxNk1jR2YxQTkwNzAxam1rdWIycU1VZWhDdWJUemRGbnRnRDlSVHU4TnZi?=
- =?utf-8?B?OEFvUTN4L2ovai80S2tBcHY2cWZLT2RRSS9NajY5SXRTQXBHdUg3L0VmMTMr?=
- =?utf-8?B?bm1ZeFk3QkVDZ21LUG9oeDc4aVFETjJ6a0poM3JiUzBYRElSTUFIbTJ6QUpE?=
- =?utf-8?B?Z0NMYXlMSGlHM1VIM2VwVHVuQ2x6eHJUWFA5ZUFxbFpabFVWY2hpTW9mY1Jv?=
- =?utf-8?B?eEpNdnRvQWV3Wmtnd2lpOVhRWjFHdkppNnJFNmR0cm40NXVRYTdVM2FNQm4x?=
- =?utf-8?B?dU10SkdrbE5pY2w4QndxeVZMaFFtSkU2SEVnSUQrUFg5M01EZkhucVpTdHVB?=
- =?utf-8?Q?xMMcyHKPWHQ0jKEs=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3690a018-c7ef-4978-1be8-08de53a44143
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+	=?utf-8?B?a1EvMlZETERnQ0d2eGZwR3Z4a2JSOVVMMktoRmV0S29YUjBvZFJXRmx5Q2ZR?=
+ =?utf-8?B?T1pNdHFndVI2NWVjWXFBK2JiVGxkSWJOcjM3eFhVQlRpeEthNXlTMWo0aUVC?=
+ =?utf-8?B?c0RaeEErV0pBalNicU9BZ242OEJ0dERCVW9wZVRoRWR1Lzk1MTNHMWVCdHFM?=
+ =?utf-8?B?dXJkcUVJRDFjYzRYUWp0U3ZMZ3lDMkxDZ2pVeGRpelYxaFdYSmthYUd3bGYy?=
+ =?utf-8?B?bmNhL09SV2FDUnJLck5NOXJxbWRFcG4vUkRWaC84dVBkZDZxN3FJbkdJandw?=
+ =?utf-8?B?bWFpUDM4dkIvMGFPeTlVVnQyTEtob3FDV25kRkdlZ1FlSnlrTGV0dkMxTjV1?=
+ =?utf-8?B?NTBGVkp5cjFlZ25SUGFjQXNVN0NldHlUOHRianBUaWVkY0FLMW5pTmNVTm1H?=
+ =?utf-8?B?SnVpQkxZcERKOHVHSVhhYlA5RkRSSTRZVEJSME5MMDMvcjNVV0xUQzI0VTZD?=
+ =?utf-8?B?TGZMMVlvTnB5cXRtUGpQMGllTVpDSGgvK2FPM25XWXNYNjdRZWZrdk1zallC?=
+ =?utf-8?B?NEdDNkpFWktqZndBS3N2VWJ0S0xSUm91bG8vdEs4KzJaSlkwa0tBL1YxNFdo?=
+ =?utf-8?B?Yi96VGU5djM4cEl2TWhtcld1T29HamxQekNraGFDL1JwTndJdkRCdmFaTmVG?=
+ =?utf-8?B?ZzVzWVphMVFmTldSRWsxVW1DQUFLM2pPQ09ZRnlSb21BU2JubDFia2JOOVMr?=
+ =?utf-8?B?ekg5UkZCdDB5R1RseFhKelhqOVpmaU1kMzBLMUpSQkk2RHFoRmZIV2NHeHh0?=
+ =?utf-8?B?bFpnWEptSkhjalRZK2U5UFRDNVExeUwrWllYSWxodVVGQnpOemZzQVh6cjlM?=
+ =?utf-8?B?MDBFL0ZrZytjb0VlSnNEeG5qb0ZMOUxvMlh4RmlhaWRyNTN2TGFOMFUyeFVH?=
+ =?utf-8?B?SmdicWxPT0tkUmI5bGZZOFpRRUl1MzJzVXhHQzFGYlgzMmd1TWJNL29EajFn?=
+ =?utf-8?B?aWh4Q09kM0JFZjVnWFhsdDJEc0duL2xTNTJEMFNPbEhVUm5saHBTeVlSRWVT?=
+ =?utf-8?B?UlBFMzVBQXBKdThOd1o1aTgvQThyOWZsUkRrbVB3ZWc1SjZiN0k1NXlnaDE3?=
+ =?utf-8?B?dE5maUEvc1V4Z3lGVk0xZ3FwRUtvcEkyUktQRlFZSkxaTmR5V0UyZUxIYUVJ?=
+ =?utf-8?B?bzlOTlNmUjRNZEpEaWZHQkx4enRYTTBPb3JkOXVjWEIydnpkeFNuRExPeDZn?=
+ =?utf-8?B?S0ZQSzVzUWFYZk5BTTljcElLcG9icXA4V2xkY0tJS2V0RlYxQmdvaStlWWJ1?=
+ =?utf-8?B?MXMxUmh2MFpybXppeHk4NFpTTHB2N0V1YlhDOWRsMDFFK3pDSWd1NkJOVmEx?=
+ =?utf-8?B?YTNCN3dFT09SZkZPVWlRT2Mrd1VGV0tkeHE3Ykx0VHZiOWxCZ2d0Qzg2R3Ew?=
+ =?utf-8?B?TFZSSnVBd01PVzl5dk54M1VSQjBjL05VZ3YyVExGbk45WDFRSXA0Szh0ZlZi?=
+ =?utf-8?B?UmNtazBqS3V3Tk1qaGxLSXJNQm10YlNRMmJBdmdrZU9lRzZqLzFFeVk5WGJa?=
+ =?utf-8?B?VEdtZGJiVCthY3c5MEhBd2RhazNQbWNFR2U0MWZNaFJYNm1qTTdVWXdQQ0Vq?=
+ =?utf-8?B?aThXL21tSzlCdkovNkpPSU5WUDZQMC9nVVBldnh2T0VoNFZjVzJudU5ZcWtq?=
+ =?utf-8?B?dHVwaGRWRlRmMy96bktzS3VNeDBURDB6Rm1kR1k3NTNtaHVDWEgyMEFGcUpr?=
+ =?utf-8?B?aEptOE9xYTYycmE3TmVKVjVBb1ZIZzcrVWhtUXNHcUc4YU82bnE1YkNNbno2?=
+ =?utf-8?B?akkxTDNIMnhqTjVua3oxaUY0bmFVbkp1UWwwYktydVZHb1hidUFqUjVlYm9i?=
+ =?utf-8?B?bUNnQUMrOWU3R0pLbEVoNlJPemtNZ0xyVU1nR2JWSFRpOWNBUlpWVTEyZjNE?=
+ =?utf-8?B?N2wzcGNwaEd5TXFoekJESCtZTWxFUm9QYWpBRFZTa2sxZk5IU01MeHkyRzZF?=
+ =?utf-8?B?RVNUZlpBV2V0a3RWYldXUXZxZkhJaDlxT1pEMkpIL096U2VYakVEb3BrMkVY?=
+ =?utf-8?B?SlVUaytzZGU4YjNDMGdQNmpETlAvRmVGdjRBeVQ2bmVTRlJLVEY4VjB1cit5?=
+ =?utf-8?B?Q2c3TUpPZW9MZGJxNXB5cGZFanJ5Wng2NjZwZ3B2T2J6MWNXZUk5YjN6ajZn?=
+ =?utf-8?B?YVc0RmE4ZHdMYnpCRldBV3AyWkxKeW5Xc3VCZ1ZyRDhsRFVyY00rRHhKdCt2?=
+ =?utf-8?B?N3ljWlAycHl2eEhnUnRoM0RXekx2UEZaaTRJTk5MaHlDQ0h3NmhobTNnMGpP?=
+ =?utf-8?B?UGFoVlpGZEk1VTFnR25lQUcrSzJWSng2WlowOXFvd0lpRFNhOWpDWU9SVis1?=
+ =?utf-8?B?TUlkWjFBeCtNU25JTGRQZUZpMEc2MUhSZHBVQ3N3aktYblBBVXl3UT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6276ac02-cd0b-415d-ac6d-08de53a5d471
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7458.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 19:36:47.0165
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 19:48:03.3701
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: i8R32/s/0Vae7XBWWw70Z9WHX7ba372MMMan8a6YlAVEeTttMh/BaSgzQ9/ppxx8BZ/OsexxIuSXkze/iiXtXk2vxud2QuEbkvhr4wB2C3I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT4PR01MB9846
+X-MS-Exchange-CrossTenant-UserPrincipalName: x113Ma6TabHO762AOLbVQRZaYMUPvrjdA7IQ/yRJcjHb7r0jxY4yReujOGm3Moei+lLqFuQwl124/v+vcb6YPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8532
 
-On 2026-01-14 12:06, Michal Hocko wrote:
-> On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
->> Use the hierarchical tree counter approximation (hpcc) to implement the
->> OOM killer task selection with a 2-pass algorithm. The first pass
->> selects the process that has the highest badness points approximation,
->> and the second pass compares each process using the current max badness
->> points approximation.
+
+
+On 1/11/2026 4:59 PM, David Hildenbrand (Red Hat) wrote:
+> On 1/10/26 19:20, Garg, Shivank wrote:
 >>
->> The second pass uses an approximate comparison to eliminate all processes
->> which are below the current max badness points approximation accuracy
->> range.
 >>
->> Summing the per-CPU counters to calculate the precise badness of tasks
->> is only required for tasks with an approximate badness within the
->> accuracy range of the current max points value.
+>> On 1/9/2026 8:16 PM, David Hildenbrand (Red Hat) wrote:
+>>> On 12/15/25 09:46, Shivank Garg wrote:
+
+>>>
+>>> This looks a bit complicated. Can't we move that handing up, where we have most of that
+>>> information already? Or am I missing something important?
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index 97d1b2824386f..c7271877c5220 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -22,6 +22,7 @@
+>>>   #include <linux/dax.h>
+>>>   #include <linux/ksm.h>
+>>>   #include <linux/pgalloc.h>
+>>> +#include <linux/backing-dev.h>
+>>>     #include <asm/tlb.h>
+>>>   #include "internal.h"
+>>> @@ -2786,7 +2787,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>            for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>>>                  int result = SCAN_FAIL;
+>>> +               bool triggered_wb = false;
+>>>   +retry:
+>>>                  if (!mmap_locked) {
+>>>                          cond_resched();
+>>>                          mmap_read_lock(mm);
+>>> @@ -2809,6 +2812,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>                          mmap_locked = false;
+>>            
+>>               *lock_dropped = true;
+>>>                          result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+>>>                                                            cc);
+>>> +
+>>> +                       if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
+>>> +                           mapping_can_writeback(file->f_mapping)) {
+>>> +                               loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+>>> +                               loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+>>> +
+>>> +                               filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+>>> +                               triggered_wb = true;
 >>
->> Limit to 16 the maximum number of badness sums allowed for an OOM killer
->> task selection before falling back to the approximated comparison. This
->> ensures bounded execution time for scenarios where many tasks have
->> badness within the accuracy of the maximum badness approximation.
+>>                   fput(file);
 >>
->> Testing the execution time of select_bad_process() with a single
->> tail -f /dev/zero:
+>>> +                               goto retry;
+>>> +                       }
+>>>                          fput(file);
+>>>                  } else {
+>>>                          result = hpage_collapse_scan_pmd(mm, vma, addr,
+>>>
+>>>
 >>
->>      AMD EPYC 9654 96-Core (2 sockets)
->>      Within a KVM, configured with 256 logical cpus.
+>> Thank you for the suggestion, this approach looks much simpler.
 >>
->>                                        | precise sum |   hpcc   |
->>      ----------------------------------|-------------|----------|
->>      nr_processes=40                   |    0.5 ms   |   0.3 ms |
->>      nr_processes=10000                |   80.0 ms   |   7.9 ms |
->>
->> Tested with the following script:
+>> There are two small nits I observed:
 > 
-> I am confused by these numbers. Are you saying that 2 pass over all
-> tasks and evaluating all of them is 10 times faster than a single pass
-> with exact sum of pcp counters?
-
-Yes, that's correct.
-
-This is because we can use the approximate value and the
-min/max possible precise sum ranges to eliminate most tasks,
-so we only have to do a precise sum on very few tasks.
-
-So we're basically going from a 1-pass doing precise sum for
-all tasks to 2-passes doing approximated sum for all tasks,
-and only precise sums for the very few tasks that happen to
-be in the vicinity of the task chosen by the 1st pass.
-
-We could probably do something more clever and do all this
-within a single pass if we keep track of the possible candidates
-in a separate list, and then only iterate on those candidates
-to do a precise sum at the end of the pass. But I chose to keep
-things simple, hence the 2 pass algo.
-
+> Yeah, was a quick untested hack to see if this can be simplified :)
 > 
 >>
->>    #!/bin/sh
+>> 1. In the retry loop, it is possible that we reacquire the mmap_lock and set
+>>     mmap_locked to true. This can cause issues later when we do:
 >>
->>    for a in $(seq 1 10); do (tail /dev/zero &); done
->>    sleep 5
->>    for a in $(seq 1 10); do (tail /dev/zero &); done
->>    sleep 2
->>    for a in $(seq 1 10); do (tail /dev/zero &); done
->>    echo "Waiting for tasks to finish"
->>    wait
+>>         if (!mmap_locked)
+>>                 *lock_dropped = true;
+> 
+> That whole logic of having two variables that express whether locks have been taken/dropped is just absolutely confusing. Any way we can clean that up?
+>
 >>
->> Results: OOM kill order on a 128GB memory system
->> ================================================
+>>     because the caller would no longer see that the lock was dropped earlier.
+>>
+>> 2. We need an fput() to balance the file reference taken at line 2795.
 > 
-> I find this section confusing as well. Is that before/after comparision.
-> If yes it would be great to call out explicit behavior before and after.
+> Ah, yes, makes sense. Having a single fput() would be nicer, but that would require yet another temporary variable.
+>
 
-Not really. I'm just testing the "after" to make sure we get the
-expected killing order.
+I agree, that this interaction for lock taken/droped is confusing.
+However, a proper clean-up would require refactoring the locking logic across multiple functions in the collapse call-flow path.
+This seems significantly more invasive and risky.
 
-> 
-> My overall impression is that the implementation is really involved and
-> at this moment I do not really see a big benefit of all the complexity.
+I would like to handle this refactoring but in a separate TODO for later.
+Could we please proceed with these minimal changes for now?
 
-Note that we can get the proc ABI RSS accuracy improvements with the
-previous 2 patches without this 2-pass algo. Do you see more value in
-the RSS accuracy improvements than in the oom killer latency reduction ?
-
-> 
-> It would help to explicitly mention what is the the overall imprecision
-> of the oom victim selection with the new data structure (maybe this is
-> good enough[*]). What if we go with exact precision with the new data
-> structure comparing to the original pcp counters.
-
-Do you mean comparing using approximate sums with the new data
-structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
-compared to the old data structure which had an inaccuracy of
-O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
-is good enough for OOM task selection, we could go from precise sum
-back to an approximation and just use that with the new data
-structure.
+Since, V4 has been in the linux-next/mm-unstable for a while, should I send a v5 or an incremental clean-up on top for this?
 
 Thanks,
-
-Mathieu
-
-> 
-> 
-> [*] please keep in mind that oom victim selection is by no means an
-> exact science, we try to pick up a task that is likely to free up some
-> memory to unlock the system from memory depletion. We want that to be a
-> big memory consumer to reduce number of tasks to kill and we want to
-> roughly apply oom_score_adj.
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Shivank
