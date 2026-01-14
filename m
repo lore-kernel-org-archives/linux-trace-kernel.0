@@ -1,163 +1,206 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5896C3093BF
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 19:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC12E352FB2;
+	Wed, 14 Jan 2026 20:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768420171; cv=none; b=Lwc7V3sKz8uKZNoOTQojMg1GFUAvqef9prf/mxbJEacPIsU0XJZkwRnLpZCtB8HmgRVpdVU7Bu9RzV68Akr8OKXVEKafBss6CQ1lwr/Fb3hd8WJzyc3rdTBJYeysVJx3ZeooauM2JdAK/b0lbWnjtuVOB8lucd8b3INoLAkK988=
+	t=1768421655; cv=none; b=bzV/2G8bdbR9OdiQh0YTXyNfZSKkfwuR+xEy8dd3ZrSrUxTKHW1uOBJAN8Zsm7Y/u8kaSbefKWaxpS4iXARoCosFxMBUzmXoNtIE+XoOhuEGVwplMjOIBqr5t1lm8mRw9yy7YWX8bgEveupMFevbcTLJqMjapzbOaqT5y1/sZNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768420171; c=relaxed/simple;
-	bh=YOJg043NjtgIa7Vv2vbLQnw1pcnmrebVgIWH7HMe8As=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JXWR/S+0JWpNlI1GPovIRLQetlmNr05dmdmXgslOXk9DfI2AsZBsuLDPhsPBd/zhmDw9KMs0BTomFzS5LXcZnJZ4mGHE+2bgUf7GPFhTIgHIvTaXkxUVduZJwXsvObWRAzrbCoWmCjsioe4vM3KfHTqja6/wZ87jB1zx+GaiLBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gytgdo4U; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768421655; c=relaxed/simple;
+	bh=ln4PO0exRBfvEWi16/ut6iLsNheqOyuMABH4qKzzpYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IeQzoeI+vdeuSX0znrNLCCdHJRxl8ltNwdJeq1eVo6WUjQsRCct15D4wLC6wz8kRMs8FbY9g7+usT6YSpXvO9CqKRpYOXez/Va2erpgvcyPv0bcfINpb5CWCLMbNav7OnoT+4z5WUpuS0sE/SClVLgy1PIL1YE+75IJmok8I/x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXIK6kEv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gytgdo4U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768420168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vky6hSZDPT1dPXG8ZdsJ6xXMx0R9gF+jMjhFy5SupRE=;
-	b=Gytgdo4UwdRkvkkYmZaCM+33ZSfM4j3whujzlUrjUttvDKi/8ahM+XEx/4vazEOlK9it9O
-	sRH86o4TQ/cakaO5xbS+4csaOz/8RdtLyXhzX1BSc2uUacQjVv5lR75H49jPP7VnrPe1xy
-	HsxVeM/fqJJyY9dQY/eFiE7jpZhDUPU=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674--w46DHoWOYCnpJ6lMCMTzQ-1; Wed, 14 Jan 2026 14:49:24 -0500
-X-MC-Unique: -w46DHoWOYCnpJ6lMCMTzQ-1
-X-Mimecast-MFC-AGG-ID: -w46DHoWOYCnpJ6lMCMTzQ_1768420164
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-56344627228so175447e0c.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 11:49:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768420164; x=1769024964;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u++Xz0cnjGkJEP63pY4RzjASIAxlnVi2WZSHFYYKOxA=;
-        b=IKvZUndOK38yUv5JUQZljO898NxB51UbmTsh03SR/Xkkabr+AguVkmntYEsR05fo/f
-         uwzZjamYLTofGjLOydxUoZYM+PuSt9E9bYtRECI8OvN/HCoozD4hdINwFU8tJRSqmpLz
-         bBdNAUOxInnoPsMD7tizm8+E2YslYddAb22nwbCvWofmixl8J1qWsSm1PdlYBGQpGaeD
-         ONbK2D3L/teRJYh5DD629/WrXjHu6SsyDHU2DHXcEImBhCTXhgAt91BuSd26D2q2Fse6
-         unjCy04KjYX9Sn1oa+CaxKV04EqYzMt86bZGjhYZ00b4FCHodT6zEl8audUBO+U9/9Nh
-         Dr9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVAOPLZfnY3Re8AQD9rBat2zrqICqudp3gCylTZcVMUgw//jzm0ukAYpBDGFtbQ95BIFnPV+jvfpTJpdLBiG9G/QaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBJc0vrip8OPWPCRnNqYwUw99YHOdLDscP3ZHWw86qcuh5MinO
-	eaRkmEFkD9D8ns0pUSweTL9uDDCY9CbgfoPGO3M6B/2sXV18GK4pZg9YS8z5l777WDeBtixD0vI
-	0sSTG6AcuaJlLvkDDGSWiFZgKwmTsR6jvc56St0KILsStxT5mWeyCetH/mKoP0btGrMWG1I9FvA
-	==
-X-Gm-Gg: AY/fxX4fBmT9QCz7dQlUfzFWNeWsJ7nnHkLrpnCSOsfPivxX8fViQuy3XYx5uEpmvNP
-	/uBlaJ8sKsa/eZ4bdQ3Q0lENMjS3eXzHazR73CjGRdQSSySn8/9ADl5LkNAJam6x2ija6pu3DKj
-	GteWxjA09pA0liewcnBWF6ryygntPIwAJTLTNvqv/c5nApbkinBPfSjPyX1s4XaNV8WiRvxthQT
-	rxV+kz4wZcynx081DKc5Bf8T7OrNwdo++E9bSfGpUqUZOZo06YjB0539KgPemAOPFGE18tzrv/z
-	scVXz7h/XWWGWZQ2+VAd2nPQQm85eI3JPelBz5SPl8kvGpSiFN/bk+haxgyOeMpkGraCXPRbEd0
-	M3ItPS3SZbFggenwsqaX7EmedS2SWeKGTr54cEfOjwA==
-X-Received: by 2002:a05:6122:c8d:b0:563:6012:53b4 with SMTP id 71dfb90a1353d-563a0a4882dmr1479703e0c.16.1768420163803;
-        Wed, 14 Jan 2026 11:49:23 -0800 (PST)
-X-Received: by 2002:a05:6122:c8d:b0:563:6012:53b4 with SMTP id 71dfb90a1353d-563a0a4882dmr1479698e0c.16.1768420163404;
-        Wed, 14 Jan 2026 11:49:23 -0800 (PST)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:cc81:56d0:ab94:b2cb:29a6:7ac0])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5633a20a183sm23841288e0c.9.2026.01.14.11.49.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 11:49:23 -0800 (PST)
-Message-ID: <bbb834f13cb1480b2517497481a1b3e0137d089a.camel@redhat.com>
-Subject: Re: [PATCH] tracing/osnoise: Fix OSN_WORKLOAD-related crash
-From: Crystal Wood <crwood@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
-  Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, John Kacur
-	 <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, LKML
-	 <linux-kernel@vger.kernel.org>, Linux Trace Kernel
-	 <linux-trace-kernel@vger.kernel.org>
-Date: Wed, 14 Jan 2026 13:49:17 -0600
-In-Reply-To: <20260114123547.583859-1-tglozar@redhat.com>
-References: <20260114123547.583859-1-tglozar@redhat.com>
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXIK6kEv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5610CC4CEF7;
+	Wed, 14 Jan 2026 20:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768421655;
+	bh=ln4PO0exRBfvEWi16/ut6iLsNheqOyuMABH4qKzzpYw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PXIK6kEvsZ23eqAxs3owI5uGeoC7MTSnqlL5xkVO4usRMOdEZdWFedia1iUOyo19R
+	 uoZwi4skY9hQvPOwj1AwVz19JM1eAxUlWUKbKBTWoNQweZFseAvzP26ARB7scjXgsr
+	 G3n4WW9zvnC0jSkfnNRI25sSPJ6J0taDOJ7iu4Kkx9zI5AM4ObLC/t+4S94Gm/+3ZH
+	 ryEz7Tl8/NPYikFnadjg6Fanrt7LVEjM+BDsXkW00BGLcpGIFEdaO7w+TMtnxX1eOd
+	 wgqx5cltZN21CPrkk2rgv1FVzx30KGO74TvwQj9X/101XtsLTw3V8djgIvSZV4prJe
+	 zq4bDJmlYxtZw==
+Message-ID: <976561d0-0edb-4f09-8ed1-ab8f85c9aa87@kernel.org>
+Date: Wed, 14 Jan 2026 21:14:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hfNxFxkgZ2YXNiVEx-UoWkwtd9QI2K5txpRSupv9WmE_1768420164
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: "Garg, Shivank" <shivankg@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20251215084615.5283-3-shivankg@amd.com>
+ <20251215084615.5283-7-shivankg@amd.com>
+ <3cc27720-8f53-4b6f-9202-42b3b73928b8@kernel.org>
+ <dbbfc5f1-d9e5-4d39-a2df-e35d6ba73063@amd.com>
+ <d6287c39-59a7-4592-8afe-bdbdbcd70b04@kernel.org>
+ <7a42515f-ae57-4f4d-831c-87689930a797@amd.com>
+From: "David Hildenbrand (Red Hat)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+In-Reply-To: <7a42515f-ae57-4f4d-831c-87689930a797@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-01-14 at 13:35 +0100, Tomas Glozar wrote:
-> A kernel panic was observed in the timerlat tracer with the following
-> reproducer:
->=20
->    #!/bin/bash
->    while true; do
->       rtla timerlat hist -u -d 5s & PID=3D$!
->       sleep 2
->       echo OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
->       rtla timerlat hist -k -d 1s
->    done
->=20
-> The kernel first displays several WARN traces with the following pattern:
->=20
->    WARNING: CPU: 1 PID: 1822 at kernel/trace/trace_osnoise.c:1959 stop_kt=
-hread+0xb7/0xc0
+On 1/14/26 20:47, Garg, Shivank wrote:
+> 
+> 
+> On 1/11/2026 4:59 PM, David Hildenbrand (Red Hat) wrote:
+>> On 1/10/26 19:20, Garg, Shivank wrote:
+>>>
+>>>
+>>> On 1/9/2026 8:16 PM, David Hildenbrand (Red Hat) wrote:
+>>>> On 12/15/25 09:46, Shivank Garg wrote:
+> 
+>>>>
+>>>> This looks a bit complicated. Can't we move that handing up, where we have most of that
+>>>> information already? Or am I missing something important?
+>>>>
+>>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>>> index 97d1b2824386f..c7271877c5220 100644
+>>>> --- a/mm/khugepaged.c
+>>>> +++ b/mm/khugepaged.c
+>>>> @@ -22,6 +22,7 @@
+>>>>    #include <linux/dax.h>
+>>>>    #include <linux/ksm.h>
+>>>>    #include <linux/pgalloc.h>
+>>>> +#include <linux/backing-dev.h>
+>>>>      #include <asm/tlb.h>
+>>>>    #include "internal.h"
+>>>> @@ -2786,7 +2787,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>>             for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>>>>                   int result = SCAN_FAIL;
+>>>> +               bool triggered_wb = false;
+>>>>    +retry:
+>>>>                   if (!mmap_locked) {
+>>>>                           cond_resched();
+>>>>                           mmap_read_lock(mm);
+>>>> @@ -2809,6 +2812,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>>>>                           mmap_locked = false;
+>>>             
+>>>                *lock_dropped = true;
+>>>>                           result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+>>>>                                                             cc);
+>>>> +
+>>>> +                       if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
+>>>> +                           mapping_can_writeback(file->f_mapping)) {
+>>>> +                               loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+>>>> +                               loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+>>>> +
+>>>> +                               filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+>>>> +                               triggered_wb = true;
+>>>
+>>>                    fput(file);
+>>>
+>>>> +                               goto retry;
+>>>> +                       }
+>>>>                           fput(file);
+>>>>                   } else {
+>>>>                           result = hpage_collapse_scan_pmd(mm, vma, addr,
+>>>>
+>>>>
+>>>
+>>> Thank you for the suggestion, this approach looks much simpler.
+>>>
+>>> There are two small nits I observed:
+>>
+>> Yeah, was a quick untested hack to see if this can be simplified :)
+>>
+>>>
+>>> 1. In the retry loop, it is possible that we reacquire the mmap_lock and set
+>>>      mmap_locked to true. This can cause issues later when we do:
+>>>
+>>>          if (!mmap_locked)
+>>>                  *lock_dropped = true;
+>>
+>> That whole logic of having two variables that express whether locks have been taken/dropped is just absolutely confusing. Any way we can clean that up?
+>>
+>>>
+>>>      because the caller would no longer see that the lock was dropped earlier.
+>>>
+>>> 2. We need an fput() to balance the file reference taken at line 2795.
+>>
+>> Ah, yes, makes sense. Having a single fput() would be nicer, but that would require yet another temporary variable.
+>>
+> 
+> I agree, that this interaction for lock taken/droped is confusing.
+> However, a proper clean-up would require refactoring the locking logic across multiple functions in the collapse call-flow path.
+> This seems significantly more invasive and risky.
+> 
+> I would like to handle this refactoring but in a separate TODO for later.
+> Could we please proceed with these minimal changes for now?
 
-The line number doesn't match up for me; is this the first or second
-WARN_ON in that function?
+Sure, fine with me.
 
-> and finally a null pointer reference BUG:
->=20
->    BUG: kernel NULL pointer dereference, address: 0000000000000030
->    ...
->    CPU: 1 UID: 0 PID: 2155 Comm: timerlatu/1
->    ...
->    Call Trace:
->      ...
->      ? timerlat_fd_read+0xf2/0x370
->      ? timerlat_fd_read+0xee/0x370
->      vfs_read+0xe8/0x370
->      ksys_read+0x6d/0xf0
->      do_syscall_64+0x7d/0x160
->      ...
->      entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Since, V4 has been in the linux-next/mm-unstable for a while, should I send a v5 or an incremental clean-up on top for this?
 
-What's the actual fault location?  And those ? lines in the call trace
-are "considered to be additional clues" rather than actual unwound
-frames; what was in the ... above them?
+Just send a v4, unless Andrew tells you otherwise :)
 
->  static int osnoise_options_open(struct inode *inode, struct file *file)
->  {
->  =09return seq_open(file, &osnoise_options_seq_ops);
-> @@ -2229,6 +2254,10 @@ static ssize_t osnoise_options_write(struct file *=
-filp, const char __user *ubuf,
->  =09if (option < 0)
->  =09=09return -EINVAL;
-> =20
-> +=09retval =3D osnoise_validate_option(option, enable);
-> +=09if (retval !=3D 0)
-> +=09=09return retval;
-> +
->  =09/*
->  =09 * trace_types_lock is taken to avoid concurrency on start/stop.
->  =09 */
+-- 
+Cheers
 
-Shouldn't this be done under interface_lock to avoid concurrent
-timerlat_fd_open()?  FWIW, your test script doesn't appear to cover the
-case of option setting racing with timerlat starting (due to the 2
-second delay).
-
-Of course, this is complicated by stop_per_cpu_kthreads() happening
-before interface_lock is acquired.  Do we know why that happens outside
-the lock?  That might even be the actual cause of this bug.
-
-Though even in the non-race case, we might still want to return -EBUSY
-rather than just killing the thread (which might still have races since
-we don't wait for the user thread to die).
-
--Crystal
-
+David
