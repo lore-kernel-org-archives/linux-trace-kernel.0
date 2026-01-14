@@ -1,302 +1,147 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E935335E546
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 07:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBC537E2E2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 08:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768376495; cv=none; b=ZJkm+ruihTZiRIcAXYtEN9xFo8NnTOUPxsvGijh6oJzNZnzS0bI5opwtJJpKb/LhlHow7PaO16Kzi686s5PeFx+N0wIqzVSmn/ZYFoPmrIG2Ni7MG/LGcJLzBZwbHwnxzhKIlqJb+MjnD2lU103kW5s2Y1Ez15tbyYgZmT5hSUE=
+	t=1768378717; cv=none; b=dwTx5ZSTtDCgYHAIVuDZemNK0EpDxODpXeYioOsn8/sWobmB1xqzqlf+DMMyPMuQWcmyKL5Qct4gBZuHfWLYRB4nUuAfizhWu9yaUo5RqMeUL7D/a2tU3mpV+cUSoUlOv6zc0nmHUsMdK8pM5DRTW+QL0RZAu7ud0/OxE5mf63E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768376495; c=relaxed/simple;
-	bh=DhQb4dNhELPWC8zIgpmV+VnbB0DpBj+2058/o+oR8Dw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YHTLRRXDSxrFjK0PCvqSRnLPtoKOMIqXaUOFaHfa3gnZQI469lqDgTHXphIGuZW1D0JpA8YI9ouHkw0qcUDP1EAswc0IVt0z3IwDqrwkmAxNQX0wll/t0VprwC9Yp+lNhGBWZ2H4h2Emb5PNgol+32UpFRVTcScEw1w6p0BxeGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EwIKnBY0; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768378717; c=relaxed/simple;
+	bh=2rIhPbY6ae6VI8ZyQYMQitssWKnS1Vd903IkWFk6G2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ob+KzP6BHXv6JRFywqMhOizxmxXVRZXeEDgeycQ8scRMQzAcCdgISO5LFITJknYbbQWcVRN54gWoor2pYXdNGAGbkgRUZ8XKlwi+zAU21Gfs1B4yhYSPY5MHqwfFOIeYd+BILTD4BSEZu9DJxr/uYO72vX4NmTs8VX3H/m+M/zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=F4BjAfHV; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EwIKnBY0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768376488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8x3YqP9ZG6FyL2JK7Cc+pkWrJriDPOZs61tUnMuCISM=;
-	b=EwIKnBY0ptJt79ezcxQtB+XpWywMpIAhrAHe/965yMbyYfj/AB6iOJvD0YLPcAWnpaGVYn
-	l66Gxdy+0N1R+XFSDbjz5JWdK7Ki2JexfGflIoyCyuwprwpCp0UCIqd4CR/GmwGRvOVK1e
-	M+iUSM9aWzMnwm043wnCZkMuRFMmgf0=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: linux-mm@kvack.org,
-	shakeel.butt@linux.dev
-Cc: Jiayuan Chen <jiayuan.chen@shopee.com>,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="F4BjAfHV"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-432d2c7a8b9so4606969f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 00:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1768378712; x=1768983512; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X8y3eBpdpZ4jiLb2IpPbzYhjPFac6qto4kOtboVZXAA=;
+        b=F4BjAfHVOTbK7cj4O4iZiH6hCLmrvT4Ll85x5Dz6S181097YQzaaxbgP9HLTsUcuJ2
+         qejf6vtPbIfYJft3cbwhKpiEekG+gvXKj/YhABoZm/66yEY1j1qhkMD2nvp1giR1ZDvF
+         zunpkz2XURefF/mKvsO6G/IO4rmxSnk98dSWz3bu1iY1yyEcC+rgVdYhIBNIpoKwg059
+         KXhJad3CRVlJU08HtUl9MugxEE73SmKH74uqOjerQgLYhXNHh3hgiYOezgEGZMhAAarA
+         XARBM4r/C6NouBuQ84VP8ZQdqn0iVgsZJelHp0gQADRth5EI0jbbPrscR6Rl+SU3J5fT
+         nmxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768378712; x=1768983512;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X8y3eBpdpZ4jiLb2IpPbzYhjPFac6qto4kOtboVZXAA=;
+        b=ei1vRPVKYBdciabxSbvArhs//Tnj1M3NIZVtzhJXFWScQAQ8Ljv6ItwzQ7dwofMe2d
+         PBbjZgTvOZk2XjecoTd9pRb8X2hY3bqhkSd0ly9dMheeGPC8+iqKXPcYLyGmalrrjRhH
+         QDchtIWtcLxunzJ0smvwgZ12XEQfx3Jp5fbxsMCeG7d1hd/2/1tBe62RM6ib0sJ/MDXG
+         ZvyiNgHplsRVHGU7YM7Nq0aAgjgEjl4cCGotpjLB1VbVSnByG4oAURCpsC1+pazqMgPT
+         ZAaTxb6c692KK1ZC8SKTyc8/GqmfNcqiZXTU70pmfvJyBG+tDOFGg2CtBzF9JZpaa/oe
+         on2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHeNAW+F75u584Cy9OarZ7Nf9rjs+jqa375EP/Fv8wG7JgjSTBNe/dGHszLZBS8sVvSvrM2jq+vtcZnuWMF66y9ag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkfwv9TtC/cDjPb/w9eAljQGzo6m4m2yOfJ8MpCUASTHNXJO88
+	Pwr4c9S0OfV97GjrudSkt3V5gEkrTglBjN4ihghL24eKJKbPaUtH9AXfO2MDdnQo/e0=
+X-Gm-Gg: AY/fxX49UwAliBDFyCKfj8Y+iGIVkB81Ewg6ge9Y51be2pm1pTh8/kFuXbNahNkggv8
+	uGFv50MW+DPUiiwRW3QkpLd5fvdrC9pIl8dH9KNg98TJma8GJVANf4GTCRQZzkNu7weOd1Q0AOX
+	M200k/W2SEJ1SWKZRhlWIZHgZSobf7nSjcQSVKz+ahroh7hisyZOEt8outnGbM9VoB303Uj8+e8
+	iqK6tpYLI5WJugMZJlG3ErYMXJEWWWiyS4RSQdB0I+tNR6S8gK9j6IhiYyrLZ8gS0M1ccoh5HHQ
+	aoadeGKs4raVbqXqhcJa589ayj6N8PbM3VLBS7dFfwYnSen2wipcktMTi6Fkgia5sDtCAex8+73
+	6v37TTfHgew7wmZNjWFFj6boyaQQtEPCooyaTV+cK8MiQ/q9VTdFOZ82XKjbabLsA1YZ9D6nZK5
+	ZZmNaaVswrXa/3iLrnkKInHOvGm9AXcYJpEjY=
+X-Received: by 2002:a05:6000:1a88:b0:431:327:5dd4 with SMTP id ffacd0b85a97d-4342c557825mr1897922f8f.46.1768378711829;
+        Wed, 14 Jan 2026 00:18:31 -0800 (PST)
+Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0dacc5sm48487321f8f.5.2026.01.14.00.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 00:18:31 -0800 (PST)
+Date: Wed, 14 Jan 2026 09:18:29 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] mm/vmscan: add tracepoint and reason for kswapd_failures reset
-Date: Wed, 14 Jan 2026 15:40:36 +0800
-Message-ID: <20260114074049.229935-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20260114074049.229935-1-jiayuan.chen@linux.dev>
-References: <20260114074049.229935-1-jiayuan.chen@linux.dev>
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
+	stable@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: Re: [PATCH v1 1/1] mm: Fix OOM killer and proc stats inaccuracy on
+ large many-core systems
+Message-ID: <aWdRVY6Bzw2kjedk@tiehlicka>
+References: <20260113194734.28983-1-mathieu.desnoyers@efficios.com>
+ <20260113194734.28983-2-mathieu.desnoyers@efficios.com>
+ <20260113134644.9030ba1504b8ea41ec91a3be@linux-foundation.org>
+ <c5d48b86-6b8e-4695-bbfa-a308d59eba52@efficios.com>
+ <20260113155541.1da4b93e2acbb2b4f2cda758@linux-foundation.org>
+ <162c241c-8dd9-4700-a538-0a308de2de8d@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162c241c-8dd9-4700-a538-0a308de2de8d@efficios.com>
 
-From: Jiayuan Chen <jiayuan.chen@shopee.com>
+On Tue 13-01-26 20:22:16, Mathieu Desnoyers wrote:
+> On 2026-01-13 18:55, Andrew Morton wrote:
+> > On Tue, 13 Jan 2026 17:16:16 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> > 
+> > > The hpcc series introduces an approximation which provides accuracy
+> > > limits on the approximation that make the result is still somewhat
+> > > meaninful on large many core systems.
+> > 
+> > Can we leave the non-oom related parts of procfs as-is for now, then
+> > migrate them over to hpcc when that is available?  Safer that way.
+> 
+> Of course.
+> 
+> So AFAIU the plan is:
+> 
+> 1) update the oom accuracy fix to only use the precise sum for
+>    the oom killer, no changes to procfs ABIs. This targets mm-new.
+> 
+> 2) update the hpcc series to base them on top of the new fix from (1).
+>    Update their commit messages to indicate that they bring accuracy
+>    improvements to the procfs ABI on large many-core systems, as well as
+>    latency improvements to the oom killer. This will target upstreaming
+>    after the next merge window, but I will still post it soon to gather
+>    feedback.
+> 
+> Does that plan look OK ?
 
-Currently, kswapd_failures is reset in multiple places (kswapd,
-direct reclaim, PCP freeing, memory-tiers), but there's no way to
-trace when and why it was reset, making it difficult to debug
-memory reclaim issues.
+I was about to propose the same. 1) is a regression fix and should be
+merged first and go to stable trees (it is a low priority fix but still
+worth having addressed).
 
-This patch:
+Also a minor nit. You do not have to send cover letter for a single
+patch series.
 
-1. Introduce pgdat_reset_kswapd_failures() as a wrapper function to
-   centralize kswapd_failures reset logic.
+Thanks for working on this Mathieu!
 
-2. Add reset_kswapd_failures_reason enum to distinguish reset sources:
-   - RESET_KSWAPD_FAILURES_KSWAPD: reset from kswapd context
-   - RESET_KSWAPD_FAILURES_DIRECT: reset from direct reclaim
-   - RESET_KSWAPD_FAILURES_PCP: reset from PCP page freeing
-   - RESET_KSWAPD_FAILURES_OTHER: reset from other paths
-
-3. Add tracepoints for better observability:
-   - mm_vmscan_reset_kswapd_failures: traces each reset with reason
-   - mm_vmscan_kswapd_reclaim_fail: traces each kswapd reclaim failure
-
----
-Test results:
-
-$ trace-cmd record -e vmscan:mm_vmscan_reset_kswapd_failures -e vmscan:mm_vmscan_kswapd_reclaim_fail
-$ # generate memory pressure
-$ trace-cmd report
-cpus=4
-kswapd1-73  [002]  24.863112: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=1
-kswapd1-73  [002]  24.863472: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=2
-kswapd1-73  [002]  24.863813: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=3
-kswapd1-73  [002]  24.864141: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=4
-kswapd1-73  [002]  24.864462: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=5
-kswapd1-73  [002]  24.864779: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=6
-kswapd1-73  [002]  24.865103: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=7
-kswapd1-73  [002]  24.865421: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=8
-kswapd1-73  [002]  24.865737: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=9
-kswapd1-73  [002]  24.866070: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=10
-kswapd1-73  [002]  24.866385: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=11
-kswapd1-73  [002]  24.866701: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=12
-kswapd1-73  [002]  24.867016: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=13
-kswapd1-73  [002]  24.867333: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=14
-kswapd1-73  [002]  24.867649: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=15
-kswapd1-73  [002]  24.867965: mm_vmscan_kswapd_reclaim_fail: nid=1 failures=16
-kswapd0-72  [001]  25.020464: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=1
-kswapd0-72  [001]  25.021054: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=2
-kswapd0-72  [001]  25.021628: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=3
-kswapd0-72  [001]  25.022217: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=4
-kswapd0-72  [001]  25.022790: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=5
-kswapd0-72  [001]  25.023366: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=6
-kswapd0-72  [001]  25.023937: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=7
-kswapd0-72  [001]  25.024511: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=8
-kswapd0-72  [001]  25.025092: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=9
-kswapd0-72  [001]  25.025665: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=10
-kswapd0-72  [001]  25.026249: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=11
-kswapd0-72  [001]  25.026824: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=12
-kswapd0-72  [001]  25.027398: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=13
-kswapd0-72  [001]  25.027976: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=14
-kswapd0-72  [001]  25.028554: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=15
-kswapd0-72  [001]  25.029140: mm_vmscan_kswapd_reclaim_fail: nid=0 failures=16
-ann-416     [002]  25.577925: mm_vmscan_reset_kswapd_failures: nid=0 reason=PCP
-dd-417      [002]  35.111721: mm_vmscan_reset_kswapd_failures: nid=1 reason=DIRECT
-
-Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- include/linux/mmzone.h        |  9 +++++++
- include/trace/events/vmscan.h | 51 +++++++++++++++++++++++++++++++++++
- mm/memory-tiers.c             |  2 +-
- mm/page_alloc.c               |  2 +-
- mm/vmscan.c                   | 16 +++++++----
- 5 files changed, 73 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 75ef7c9f9307..3f4d2928d8dc 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1531,6 +1531,15 @@ static inline unsigned long pgdat_end_pfn(pg_data_t *pgdat)
- 	return pgdat->node_start_pfn + pgdat->node_spanned_pages;
- }
- 
-+enum reset_kswapd_failures_reason {
-+	RESET_KSWAPD_FAILURES_OTHER = 0,
-+	RESET_KSWAPD_FAILURES_KSWAPD,
-+	RESET_KSWAPD_FAILURES_DIRECT,
-+	RESET_KSWAPD_FAILURES_PCP,
-+};
-+
-+void pgdat_reset_kswapd_failures(pg_data_t *pgdat, enum reset_kswapd_failures_reason reason);
-+
- #include <linux/memory_hotplug.h>
- 
- void build_all_zonelists(pg_data_t *pgdat);
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index 490958fa10de..0747ad2f7932 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -40,6 +40,16 @@
- 		{_VMSCAN_THROTTLE_CONGESTED,	"VMSCAN_THROTTLE_CONGESTED"}	\
- 		) : "VMSCAN_THROTTLE_NONE"
- 
-+TRACE_DEFINE_ENUM(RESET_KSWAPD_FAILURES_OTHER);
-+TRACE_DEFINE_ENUM(RESET_KSWAPD_FAILURES_KSWAPD);
-+TRACE_DEFINE_ENUM(RESET_KSWAPD_FAILURES_DIRECT);
-+TRACE_DEFINE_ENUM(RESET_KSWAPD_FAILURES_PCP);
-+
-+#define reset_kswapd_src				\
-+	{RESET_KSWAPD_FAILURES_KSWAPD,	"KSWAPD"},	\
-+	{RESET_KSWAPD_FAILURES_DIRECT,	"DIRECT"},	\
-+	{RESET_KSWAPD_FAILURES_PCP,	"PCP"},		\
-+	{RESET_KSWAPD_FAILURES_OTHER,	"OTHER"}
- 
- #define trace_reclaim_flags(file) ( \
- 	(file ? RECLAIM_WB_FILE : RECLAIM_WB_ANON) | \
-@@ -535,6 +545,47 @@ TRACE_EVENT(mm_vmscan_throttled,
- 		__entry->usec_delayed,
- 		show_throttle_flags(__entry->reason))
- );
-+
-+TRACE_EVENT(mm_vmscan_kswapd_reclaim_fail,
-+
-+	TP_PROTO(int nid, int failures),
-+
-+	TP_ARGS(nid, failures),
-+
-+	TP_STRUCT__entry(
-+		__field(int, nid)
-+		__field(int, failures)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->nid = nid;
-+		__entry->failures = failures;
-+	),
-+
-+	TP_printk("nid=%d failures=%d",
-+		__entry->nid, __entry->failures)
-+);
-+
-+TRACE_EVENT(mm_vmscan_reset_kswapd_failures,
-+
-+	TP_PROTO(int nid, int reason),
-+
-+	TP_ARGS(nid, reason),
-+
-+	TP_STRUCT__entry(
-+		__field(int, nid)
-+		__field(int, reason)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->nid = nid;
-+		__entry->reason = reason;
-+	),
-+
-+	TP_printk("nid=%d reason=%s",
-+		__entry->nid,
-+		__print_symbolic(__entry->reason, reset_kswapd_src))
-+);
- #endif /* _TRACE_VMSCAN_H */
- 
- /* This part must be outside protection */
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 864811fff409..8188f341bd77 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -956,7 +956,7 @@ static ssize_t demotion_enabled_store(struct kobject *kobj,
- 		struct pglist_data *pgdat;
- 
- 		for_each_online_pgdat(pgdat)
--			atomic_set(&pgdat->kswapd_failures, 0);
-+			pgdat_reset_kswapd_failures(pgdat, RESET_KSWAPD_FAILURES_OTHER);
- 	}
- 
- 	return count;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c380f063e8b7..cadf2c8b06a5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2918,7 +2918,7 @@ static bool free_frozen_page_commit(struct zone *zone,
- 		 */
- 		if (atomic_read(&pgdat->kswapd_failures) >= MAX_RECLAIM_RETRIES &&
- 		    next_memory_node(pgdat->node_id) < MAX_NUMNODES)
--			atomic_set(&pgdat->kswapd_failures, 0);
-+			pgdat_reset_kswapd_failures(pgdat, RESET_KSWAPD_FAILURES_PCP);
- 	}
- 	return ret;
- }
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6fd100130987..8d9f3d29fe3b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2650,9 +2650,11 @@ static bool can_age_anon_pages(struct lruvec *lruvec,
- 			  lruvec_memcg(lruvec));
- }
- 
--static void pgdat_reset_kswapd_failures(pg_data_t *pgdat)
-+void pgdat_reset_kswapd_failures(pg_data_t *pgdat, enum reset_kswapd_failures_reason reason)
- {
--	atomic_set(&pgdat->kswapd_failures, 0);
-+	/* Only trace actual resets, not redundant zero-to-zero */
-+	if (atomic_xchg(&pgdat->kswapd_failures, 0))
-+		trace_mm_vmscan_reset_kswapd_failures(pgdat->node_id, reason);
- }
- 
- /*
-@@ -2666,7 +2668,8 @@ static inline void pgdat_try_reset_kswapd_failures(struct pglist_data *pgdat,
- 						   struct scan_control *sc)
- {
- 	if (pgdat_balanced(pgdat, sc->order, sc->reclaim_idx))
--		pgdat_reset_kswapd_failures(pgdat);
-+		pgdat_reset_kswapd_failures(pgdat, current_is_kswapd() ?
-+			RESET_KSWAPD_FAILURES_KSWAPD : RESET_KSWAPD_FAILURES_DIRECT);
- }
- 
- #ifdef CONFIG_LRU_GEN
-@@ -7153,8 +7156,11 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 	 * watermark_high at this point. We need to avoid increasing the
- 	 * failure count to prevent the kswapd thread from stopping.
- 	 */
--	if (!sc.nr_reclaimed && !boosted)
--		atomic_inc(&pgdat->kswapd_failures);
-+	if (!sc.nr_reclaimed && !boosted) {
-+		int fail_cnt = atomic_inc_return(&pgdat->kswapd_failures);
-+		/* kswapd context, low overhead to trace every failure */
-+		trace_mm_vmscan_kswapd_reclaim_fail(pgdat->node_id, fail_cnt);
-+	}
- 
- out:
- 	clear_reclaim_active(pgdat, highest_zoneidx);
 -- 
-2.43.0
-
+Michal Hocko
+SUSE Labs
