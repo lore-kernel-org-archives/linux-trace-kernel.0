@@ -1,108 +1,183 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFE23AEF44
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 22:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756382629D;
+	Thu, 15 Jan 2026 01:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768428847; cv=none; b=LR/XljybltOQQLHfi2UOBwwfqtZDmSUAELT/jxKa51Bxc7zfXWgW5Ej2ec8xlhy1yOvn+TQUUcvni14DiGEJlzIzBrR9qpHThAJqFrql3VqISwtFayy0SMa8lP9Ra5Xp4H4rfjnzUY1d99wkswvzN5rjTBUP9rPcOQLw727mIo4=
+	t=1768441236; cv=none; b=PoPh3gmXCkzACfJl/CGwYKBtGe4E+SHuCgrD/03k/E/b/O4LS9zGc8hr413jna1EFI92LI6ZXRZtkFMXRcEvYYNqSPe0LX1H0LsOBZrBr2NYRaId8ahfTI/IpIfplrcCwBXYclAsJ1DMHgiwO1x9kwvetYe1TzJJPz5qLcHmx20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768428847; c=relaxed/simple;
-	bh=A8Qn2ZXNyjvn8gNDuWwA+Rtb50kD3BeNv2696tgjRjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pad0hFQSUcZd3/jAYKwk3AsBemOpkn23ROm6m+FTgOiQijuHpBU4SwvNQ63D5JI6+//XZW2CoMxpOK97nHxGe6LW1DkysJhF0+6W2ZSGoLLjg3z4e8edj6KkCWbXNzDuA0nTPYK9hDh/hI0oOYM4YfnnkeNcgXsVu+JQoyT1Mk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkFSUbeM; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768441236; c=relaxed/simple;
+	bh=DK8Gr7N9Xi4J3r67s5bV0RfRa9OH59I5PGwSqNqlEPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lBe4BXPXYQS7cXIrOdjBtd9RB1L9rINiw74Q6kZd72LV6TqQgTyQrfg4NEf02RINYm9lB2pCGWpqtNM0FKYPkSCc47RyOZgwr8OLTGi6Gl0k0JIa7Ebx/AEceC9HnbuUbOLL++bnblPYGU6ngk3wMUI9vW3f9liKib1do1SkBpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wyR9qutU; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkFSUbeM"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8c52c67f64cso32088385a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jan 2026 14:13:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768428828; x=1769033628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lVTV9saCiqOGcBv4/N1kZOQdjcejYiLRdluYVStkd9M=;
-        b=KkFSUbeMrfhGDKaMkcBs1gAfFq6i4S05xZsadrVDqLIjDc58XprImxwIwuuNeNYowF
-         gP+Dc3oOBEHLBWJ81YZvIZaYPHFQZJS/eayyUVt8WEBjMGAPf+g67kQ9sLe9rZ8XRJpC
-         BkQLHHCsA/+9pCdqroGPtuAeuaeLK781dhZcGJeKNh89MKrdzUyQJjwT1Vd9IsV4esIl
-         upz8N1YbOjI3Ll11oaCts5RgRnZCVhFv4w5JTiwfmDoabFCGYX5snatjYlW+qIlSAJnW
-         TL2us52c6ZFX5vPc1RescPzu1E/6IYJvM+9JxAPgKIJm+Gcuqu+ryoyML14NrM84S/ii
-         YIDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768428828; x=1769033628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lVTV9saCiqOGcBv4/N1kZOQdjcejYiLRdluYVStkd9M=;
-        b=uafVq+xKSJ24Y3RQIE4OVU9MMuOUHmdRIBhbLcbHiGZW8DQFHTPf6J6Sfk2Jn9LDeD
-         u8WftiCdZwE4sXigQ7ZpLmil9HGH9zjm/vKIH7+9sf3B/3OyD7L98vUmiyB7zSyMTlf2
-         xhJIZxcNifhb6lCjKJ9HeMb7awGrr4yKADA40IWM8yzrb5jOCosM1U6W/p/W7cDJk4y9
-         gjCqX/Pys/Xq2Fo3Ll0uPrLhLJq9XvmQcFTYR1GdZf9L5sL4v8BA1vZ9jUAe01a+GJwy
-         e3iMFqcyhHOZ2nJvddiL18dbDDA+KdG/p/CFCebKw4bhoGba0zW39o4F0SfFI0sNwvSm
-         ugUg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0+VP/wTcYPRVXkFDsuE+rwUqdV2IfOxYPzRuvBNVtiAsbF7fcaCVocITGSOvVhhfnGaLN8gQ79b7zBILktiEw2xM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5839BfRNsrimaiVmtIaRBTS5kcw/mwgsuSPx3T147crC4P5qX
-	zTQqzaTEC3pVvQWpyAf12OkcJw6S9eoAyPzqlPDA96Ihk5LlB5u3Yc3p
-X-Gm-Gg: AY/fxX6+o3JLxEaLLXAIcEvIXIAWvcD+t1nHb7w5PqQ8fKwlDghNgDGjJiF4gbTKdIG
-	IJLmfL+eDOJ9p3MbG/nZ+hyRCt5MIhuTzULb49qLWvC0RqDG97aDrnSkgPEeCRzoQHSy/UR5kA2
-	8gm9d0TaMZK3WOUgMdApq4KG4PI45xkqmn4qMWO3vgLYxrpW1/Xhb/1bVlnn0LsLLYmgY8ubTjd
-	kN8Nj3AD+IuQZutsdRpdsq/CG/tc81Pbbwc5EDAv/S71blc4DCuEgWJTDtfUI07l3TjqGfUcF9B
-	LOIEDCmmjKTj7u+wJgHe/gvrY0jCOHFSxs5tRFvhoOgrjpnIUKFuVcJGVejDtW+PPMsMJL+p2LH
-	OqfYe2jsWFMe4hyLP8JsQKYVSFtgCcD7Oa90tXIbGkAVBuqqJlfq/ZGr1loZHLXz4PbIKT6yQK1
-	0JJ3HCxVUJ/2229g++zpj4fTXKs1Pl7FyYxget1GMT8pWSn3IKBHeJr5MO8/bhHKAsi1np+zeki
-	rpvNcv7vw==
-X-Received: by 2002:a05:620a:2946:b0:8c6:670c:953f with SMTP id af79cd13be357-8c6670c9641mr44853285a.58.1768428828498;
-        Wed, 14 Jan 2026 14:13:48 -0800 (PST)
-Received: from pc.mynetworksettings.com ([2600:4041:4491:2000:c1bc:6046:8762:e96])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c530bb685fsm250007785a.44.2026.01.14.14.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 14:13:48 -0800 (PST)
-From: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	corbet@lwn.net,
-	shuah@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-Subject: [PATCH v5 3/3] selftests/ftrace: Add accept cases for fprobe list syntax
-Date: Wed, 14 Jan 2026 17:13:40 -0500
-Message-ID: <20260114221341.128038-4-seokwoo.chung130@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260114221341.128038-1-seokwoo.chung130@gmail.com>
-References: <20251126184110.72241-1-seokwoo.chung130@gmail.com>
- <20260114221341.128038-1-seokwoo.chung130@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wyR9qutU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768441231; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=80TCqG31BZccfJd1y9d1qf5FUP3rjufN8RqunSRYkQE=;
+	b=wyR9qutUatqGuZRP3erR3Z26WTgbOn4qW/JKHD/5K00oVPvbw5YqkPYg/k2zRnR4JK4l4n+gIYxGL0z5zu07MLzFDPjPaaquBr56FKL0AQkfJYuXbYzqgQ+ofXlNek2UIv/JRmQERMaGL6eYDGS9FDSyZ6MEfu1/zeDl7jK3+ZU=
+Received: from 30.74.144.130(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wx4h7kd_1768441227 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 15 Jan 2026 09:40:28 +0800
+Message-ID: <03529c5c-daaa-4999-b1c0-32ba1590db4b@linux.alibaba.com>
+Date: Thu, 15 Jan 2026 09:40:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm: Fix OOM killer inaccuracy on large many-core
+ systems
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
+ David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+ Shakeel Butt <shakeel.butt@linux.dev>, SeongJae Park <sj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <liam.howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>,
+ Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-mm@kvack.org, stable@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik
+ <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <20260114143642.47333-1-mathieu.desnoyers@efficios.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20260114143642.47333-1-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Seokwoo Chung (Ryan) <seokwoo.chung130@gmail.com>
----
- tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-index 45e57c6f487d..79392e268929 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Fprobe event list syntax and :entry/:exit suffixes
--# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[:entry|:exit] [<args>]":README
-+# requires: dynamic_events "f[:[<group>/][<event>]] <func-list>[:entry|:exit] [<args>]":README
- 
- # Setup symbols to test. These are common kernel functions.
- PLACE=vfs_read
--- 
-2.43.0
 
+On 1/14/26 10:36 PM, Mathieu Desnoyers wrote:
+> Use the precise, albeit slower, precise RSS counter sums for the OOM
+> killer task selection and console dumps. The approximated value is
+> too imprecise on large many-core systems.
+> 
+> The following rss tracking issues were noted by Sweet Tea Dorminy [1],
+> which lead to picking wrong tasks as OOM kill target:
+> 
+>    Recently, several internal services had an RSS usage regression as part of a
+>    kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
+>    read RSS statistics in a backup watchdog process to monitor and decide if
+>    they'd overrun their memory budget. Now, however, a representative service
+>    with five threads, expected to use about a hundred MB of memory, on a 250-cpu
+>    machine had memory usage tens of megabytes different from the expected amount
+>    -- this constituted a significant percentage of inaccuracy, causing the
+>    watchdog to act.
+> 
+>    This was a result of commit f1a7941243c1 ("mm: convert mm's rss stats
+>    into percpu_counter") [1].  Previously, the memory error was bounded by
+>    64*nr_threads pages, a very livable megabyte. Now, however, as a result of
+>    scheduler decisions moving the threads around the CPUs, the memory error could
+>    be as large as a gigabyte.
+> 
+>    This is a really tremendous inaccuracy for any few-threaded program on a
+>    large machine and impedes monitoring significantly. These stat counters are
+>    also used to make OOM killing decisions, so this additional inaccuracy could
+>    make a big difference in OOM situations -- either resulting in the wrong
+>    process being killed, or in less memory being returned from an OOM-kill than
+>    expected.
+> 
+> Here is a (possibly incomplete) list of the prior approaches that were
+> used or proposed, along with their downside:
+> 
+> 1) Per-thread rss tracking: large error on many-thread processes.
+> 
+> 2) Per-CPU counters: up to 12% slower for short-lived processes and 9%
+>     increased system time in make test workloads [1]. Moreover, the
+>     inaccuracy increases with O(n^2) with the number of CPUs.
+> 
+> 3) Per-NUMA-node counters: requires atomics on fast-path (overhead),
+>     error is high with systems that have lots of NUMA nodes (32 times
+>     the number of NUMA nodes).
+> 
+> commit 82241a83cd15 ("mm: fix the inaccurate memory statistics issue for
+> users") introduced get_mm_counter_sum() for precise proc memory status
+> queries for some proc files.
+> 
+> The simple fix proposed here is to do the precise per-cpu counters sum
+> every time a counter value needs to be read. This applies to the OOM
+> killer task selection, oom task console dumps (printk).
+> 
+> This change increases the latency introduced when the OOM killer
+> executes in favor of doing a more precise OOM target task selection.
+> Effectively, the OOM killer iterates on all tasks, for all relevant page
+> types, for which the precise sum iterates on all possible CPUs.
+> 
+> As a reference, here is the execution time of the OOM killer
+> before/after the change:
+> 
+> AMD EPYC 9654 96-Core (2 sockets)
+> Within a KVM, configured with 256 logical cpus.
+> 
+>                                    |  before  |  after   |
+> ----------------------------------|----------|----------|
+> nr_processes=40                   |  0.3 ms  |   0.5 ms |
+> nr_processes=10000                |  3.0 ms  |  80.0 ms |
+> 
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
+> Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Martin Liu <liumartin@google.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: christian.koenig@amd.com
+> Cc: Shakeel Butt <shakeel.butt@linux.dev>
+> Cc: SeongJae Park <sj@kernel.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Miaohe Lin <linmiaohe@huawei.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-mm@kvack.org
+> Cc: stable@vger.kernel.org
+> Cc: linux-trace-kernel@vger.kernel.org
+> Cc: Yu Zhao <yuzhao@google.com>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Mateusz Guzik <mjguzik@gmail.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> ---
+> This patch replaces v1. It's aimed at mm-new.
+> 
+> Changes since v1:
+> - Only change the oom killer RSS values from approximated to precise
+>    sums. Do not change other RSS values users.
+> ---
+
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
