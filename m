@@ -1,261 +1,245 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFA639A805
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 18:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768503139; cv=none; b=PFD0SYag2ve4ElQ6GT10kkM19Dc9+E50BlVrogerzqdONBGKr4KAmHLP4EVDUTQVQdkRxkNAHpRtCMa2r8cz2zV5R8nH/98TLHEfwM6vmTHLUqdzwpaWuO6+C6zIpczWjC8Kg2rjeLoF45V91Cgnxf88c7O5jRHxxhih+++rh8s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768503139; c=relaxed/simple;
-	bh=2Rd+T2fxxjOULfBFXLH5UIRvtWG8/G7q1lCPuJeByr0=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEFB3C0098
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 18:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768503264; cv=pass; b=RvHPNHMDfXgi+LYb4r5aE/J7nskzEAZ/kWdPj7dwI0nQ3tTf1ZQTUWWWzijTBnXNuWRpR0TSxeF4I8LJOxpiUL9Nmii2ilUgWy/ew24FBfmagh2h3jZyFAePaaZvChv1KU2naw+FlVBSrd6dkImd1m61w5cbJUVJxc+D1oHhIdo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768503264; c=relaxed/simple;
+	bh=7dV2gC3i6v7x5QNrTKY/jnqxzJHYoS51E3vSMMeqd+c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBsns1fMtt4sq46wxSyKqgV4M/ku86hmnxvgPcdDGkIGBSwig8rEaMdCM+ecmre8DF11okkr6cvHRYkZleKDjtrGyZA78VdJYJozOqJSxBzdhkxE4ZGYBapagIvLAaaBA/vhP2xDtSOdbLvuDI6QHaqomTKwpz8CxsmVF5Hkfgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KoyRHDKF; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=swiPwCcJzGkUAAlC/13leIpp5nTVhrkQm2Aj3jzRLvuCx8A9pvRre84uJ5yXnLCCvdhb0KSf/6xWWAaPdYTN00gf2AiW9N/Mg3+tYTChTJAs8yvqN+jaezXDP4e8SZPIAP6jXjYdqrlaIxso+rs+RBrWWRwhuKZEsjxkoAN2Agk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbwEz/OD; arc=pass smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoyRHDKF"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a0c09bb78cso8961895ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 10:52:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbwEz/OD"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c2dc870e194so539230a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 10:54:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768503262; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YoQf3LWIGzuqVS0dACAxhzuKFdesGRGeY72Xn31xQhPmE8hm/cV2KBpAu9HIt8hBpb
+         pwUCv12jT6et67JwkaRv8hrySgcDZ9QPNReumOCgN3Wl1TeS3NBL4o+nwySC/EjFjSd1
+         uijHNjFTxGNTgIe4dhsqC0QOTrrTJH0bM6+3O07bJlkQ9UwNqu6no4DA6GeQNuN0lygd
+         nUt6U/arwSkTn1/K8e0qqMKohIRLHBzKtjvGXrkNBsRTOSzvjBNbccaLTPNHWIatd6Ze
+         nEbeEsvkjIJ85+NNbmC1dyuzKHfVNUP0MCE0LgeUAQe04qkHF/r2LvcrPVXd8kUZ/ytX
+         IPfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=EpbTbJbIYQW2HGVw5tfKbZOFlETWSnwKBDBmcbacs/s=;
+        fh=bikBE0k/hvbpJcaXIZ4EVBJEiwwwQm3sLSeKe6bZuSs=;
+        b=WUAYe8OpUGuwp7oIloB/Wx9HCOGjlI2q4RRe1V3uBgroFvvUQcjahBGjHxLwLF1ovN
+         qvSZCCCingBHwck+AKPld0i8apO7R4IVCiEbsxZu6RTIAOtiWAqp/gZXmgwtS08gWv9M
+         TjByvaba/LcnNasqbH8DglvmfouxFCtQl0SXp/j0gj1+s5ZcKH4XtHtb/UE1lebCH627
+         Wla/MlUJAPKzJ3WtZk3zD6M2vsH5HKGutNvun1+VHme3YM3gpF4jeR9gGEskPoxHpWYe
+         4Sh/JM4ZPwp3/flC/5viBL2RUnvraKMrFCj+Lh+xZCaHRd4/R8lyocaWAOiBudx5Z/Im
+         Tfpw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768503137; x=1769107937; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768503262; x=1769108062; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tD0n2wghIe+hwlFHDxEK9qHpYzp/XoQTH/HMSUPUjZc=;
-        b=KoyRHDKFWEaz7VDX0iAPtNbdlfdOOQiudOkt5yX/eWexixakiQVh7iP+9x1hB/8ZZA
-         4UbDI8BeaC4H5Uf2Q8WrIfb+Je6lqmUz+34cSPQlF5x4i/qxejJebo1G33UT5E2feYgH
-         Myi1uZevgZsnfQMuvUbP23XcXIMNQzqxtVZaCdSwVRyzL/WtzH+xY9eIHIQl39HqInln
-         XNno268/AfaRaoZehmgM+8J/HlLBO35aUelaiSRCc7ETRJYHekpxCNFKILHdq2RN5/W7
-         /m2JRNSrzkSa6SiD+zB1yj7z6IMMeX7WtlxqZTgg0/+Ymo9w9mpFz93WaRQ1LmNfvB+1
-         VzuA==
+        bh=EpbTbJbIYQW2HGVw5tfKbZOFlETWSnwKBDBmcbacs/s=;
+        b=lbwEz/ODkoLfn+u/4BdN9MMY7c5cIpjhgEVetLD2VmTFnIF6pyWSCe91WD9eg8OpQP
+         hHH0fb6rs+I488eIDqiTMGKm6XMi/mxMvAqy56YMXXgAMKNHom6SgWSP+MSdLOZ1Q+x3
+         PMIgNgTmJznBrm2yT3ghk7UUEwHFQs/LjOAlh6nul2u+yjtOtjQp5YN54GCZ1l8px7qu
+         bUjVxzkVbV4Yt9m3bzS87DsH55I6TYNsLTi65pXjb1/9BD5vmJLou7dpym5BaxI1pgse
+         iiMztNoPe0aFSW8kEIzbZn+8ppCuiJGoTov+vC76nOb65Sf4uTjaM67CHlBj4G8+kwRv
+         gV1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768503137; x=1769107937;
+        d=1e100.net; s=20230601; t=1768503262; x=1769108062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tD0n2wghIe+hwlFHDxEK9qHpYzp/XoQTH/HMSUPUjZc=;
-        b=J0qqj+WeYZxqun1UDRjWuFS+opSn22QFyfRfW5ykJntUs9thAuD+lwg6cC6ozQvGFo
-         ua4oVPImXiaPF/jNaF3XPi/vXZWNG3OZCje4gwklExjBK18cmCGPpP1vI++2DQdFis13
-         GiZKpEYJ+LeN8lXbVN57esmG3avJdfGMXDWx7iBGTVY8sOYxqfwzGXn89rDAx5RDh/p7
-         Kflc0VTCt2LAL+Oxp8MQVqT/UJtY+aItEuo9cgkxDyIjwuI2w8Ju0vIeY+7gPFhFmXMz
-         r5vPmeeWeuAU8w5dYDY7SOxn0XGMsIRRr9O/xjROU+iJzooqO7Svdtxrzjb5kurYxLXx
-         PQcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUsoZzwMaQj7jN7E0I+siIP+vnXvxUG4Ims092CdjkLl3srPtOFEFXbTRDQl6X97K4HS2wbLui9zdRtJ9tmeebc+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7clk06tZul8WGeRury+5zYnC+jkXTohGXm1zyKmLXF4t1ITyz
-	x7zUseVt+d5f+QPAf4x2HCQIl4oWxyNaft+A6mN6WPuCphJh/Mmiod1xLjtj9Jym6nQk8zyuuwI
-	o3Xb1lQzMOAj+vrs0xqjI2qN6ANtNJMg=
-X-Gm-Gg: AY/fxX65UtTt0BshiqEkJC+a1aPEeMmh5tayY3sZbkR75tz0oHAVXIanAUfdVC6RKm6
-	Jag9Wl7ekwuS5/sRYtJqjsloMpdwtD3lEspOM7h52NO/pwBithRkyip8Cza+C8HSEUOMzlihDwL
-	Oj8p6rm7NQJltD459xObt4sYwImrvPldDKhnms7TNhe6fxFpU02S9jnBLJ5uS86cX0/SeEp0GAL
-	LS8OYV9lcjOZkjDXGqKXa8q9zoD0k20luXo1T0RKaimRjpOBfNGh6B3kQZscalSymk6j/hL5GM1
-	WeABLdrv
-X-Received: by 2002:a17:902:c407:b0:2a0:99f7:67b4 with SMTP id
- d9443c01a7336-2a71756c272mr4420715ad.8.1768503137511; Thu, 15 Jan 2026
- 10:52:17 -0800 (PST)
+        bh=EpbTbJbIYQW2HGVw5tfKbZOFlETWSnwKBDBmcbacs/s=;
+        b=dAwdm0G2bRDyYKtgGa7rleod7Sz93swzNOKNSySiWYW235lrC1EiOu7tWNNEZzjICD
+         UVnnYsQwQlpmASAv/qzP3Xtv28+fcvRCV5TOpiIGz2IJNfKz/OW1UXOnvAG1RpWFZBUl
+         m3ntDAs7PgcSHCOjR0rfGrwXPKa5USrdcQVGpz7aNlo6n0Xr86pVpE5Hm0Wbj0Y1xDl8
+         07ZTtM7v0vSpkWI/E7ji2V6wCkYYs48gnhvtSp3HgjxoltgD0o7IVZD+9cv/jLHCn8lZ
+         LG8CsSrkNuzzpo7QF0QA0j75JD4PCy1lfCD7pc/ah5BDlBUT80vDusEjf1t9gVAv8NqZ
+         95QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVytJSWObf1HtYlYWJ8GBA+2ARHJkm8iInk/I2p4ABMmWeC2DXOo+hSA3E9B2XHPB+cgFxXtqTagBS+3WQjluRkCOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6XSZz0fHTnXmLN/J8+ZwMzXqva46LeWcGkrU2ZSepd3foE96d
+	YnRrNpF0mYZqDnxsH3qpua8o2J8XowQhOd5pJYHnRIWfAMlI89biuhI1ry0IpBFIiIlorc8hTdT
+	1V9vyf1nHMd5cMAHaRBF4SD/VcR2zb/I2cw==
+X-Gm-Gg: AY/fxX4zA0gUnBR3OZq6aBhItdFHHBANhvYiWFkyR9NctvIehbuwBbRjpbV/agYjzk6
+	mLW0dK5QY1VRcWJjDRx828S5w71FzGSytAYDuTNuH1nHGmsj/w7KhB97KIEHkogWn1IthhMFRx+
+	kCN1Rsm3HV6yZpLCo0kSGzJgPwc7zwgahWGltGPe3DFozTyLEaK1itBmQDpeqktcnUBfrb5rG2O
+	oSWRMldUk23RndDzqbvJFlAyvGqLg7nzOorrEWH1H7jX3U0hazjrkg/AyVvm0IWX5RiBbrd7oHa
+	B7q3MFV2
+X-Received: by 2002:a17:90b:2682:b0:341:88c9:ca62 with SMTP id
+ 98e67ed59e1d1-35272f8c54bmr287868a91.31.1768503261661; Thu, 15 Jan 2026
+ 10:54:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260112214940.1222115-1-jolsa@kernel.org> <20260112214940.1222115-3-jolsa@kernel.org>
- <20260112170757.4e41c0d8@gandalf.local.home> <aWYv6864cdO2PWbb@krava>
-In-Reply-To: <aWYv6864cdO2PWbb@krava>
+References: <20251230145010.103439-1-jolsa@kernel.org>
+In-Reply-To: <20251230145010.103439-1-jolsa@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 Jan 2026 10:52:04 -0800
-X-Gm-Features: AZwV_QjXO-yhEtC-_YSLoFVniP-2k2iYTwX1IjXIqEh7rIM5iZ-xHOytlXiEqcY
-Message-ID: <CAEf4BzZ-sPD4UZF-TL2ep-zQOyeOC3K5XC2o3Gsx4Q6XpN-zQw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/4] x86/fgraph,bpf: Switch kprobe_multi program
- stack unwind to hw_regs path
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Mahe Tardy <mahe.tardy@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andrii@kernel.org>
+Date: Thu, 15 Jan 2026 10:54:09 -0800
+X-Gm-Features: AZwV_QiwkBtwLCiJrqG34-zTIw_OQKLb1v72y1BxE2HMZ_jpyB1tumI3srsjTrw
+Message-ID: <CAEf4BzaRU0DoM9hHtW5Bm7njodfg06JzTOe=ABAqZ6iMjAt4iQ@mail.gmail.com>
+Subject: Re: [PATCHv6 bpf-next 0/9] ftrace,bpf: Use single direct ops for bpf trampolines
+To: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@kernel.org>
+Cc: Florent Revest <revest@google.com>, Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 13, 2026 at 3:43=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
+On Tue, Dec 30, 2025 at 6:50=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> On Mon, Jan 12, 2026 at 05:07:57PM -0500, Steven Rostedt wrote:
-> > On Mon, 12 Jan 2026 22:49:38 +0100
-> > Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > > To recreate same stack setup for return probe as we have for entry
-> > > probe, we set the instruction pointer to the attached function addres=
-s,
-> > > which gets us the same unwind setup and same stack trace.
-> > >
-> > > With the fix, entry probe:
-> > >
-> > >   # bpftrace -e 'kprobe:__x64_sys_newuname* { print(kstack)}'
-> > >   Attaching 1 probe...
-> > >
-> > >         __x64_sys_newuname+9
-> > >         do_syscall_64+134
-> > >         entry_SYSCALL_64_after_hwframe+118
-> > >
-> > > return probe:
-> > >
-> > >   # bpftrace -e 'kretprobe:__x64_sys_newuname* { print(kstack)}'
-> > >   Attaching 1 probe...
-> > >
-> > >         __x64_sys_newuname+4
-> > >         do_syscall_64+134
-> > >         entry_SYSCALL_64_after_hwframe+118
-> >
-> > But is this really correct?
-> >
-> > The stack trace of the return from __x86_sys_newuname is from offset "+=
-4".
-> >
-> > The stack trace from entry is offset "+9". Isn't it confusing that the
-> > offset is likely not from the return portion of that function?
+> hi,
+> while poking the multi-tracing interface I ended up with just one ftrace_=
+ops
+> object to attach all trampolines.
 >
-> right, makes sense.. so standard kprobe actualy skips attached function
-> (__x86_sys_newuname) on return probe stacktrace.. perhaps we should do
-> the same for kprobe_multi
+> This change allows to use less direct API calls during the attachment cha=
+nges
+> in the future code, so in effect speeding up the attachment.
+>
+> In current code we get a speed up from using just a single ftrace_ops obj=
+ect.
+>
+> - with current code:
+>
+>   Performance counter stats for 'bpftrace -e fentry:vmlinux:ksys_* {} -c =
+true':
+>
+>      6,364,157,902      cycles:k
+>        828,728,902      cycles:u
+>      1,064,803,824      instructions:u                   #    1.28  insn =
+per cycle
+>     23,797,500,067      instructions:k                   #    3.74  insn =
+per cycle
+>
+>        4.416004987 seconds time elapsed
+>
+>        0.164121000 seconds user
+>        1.289550000 seconds sys
+>
+>
+> - with the fix:
+>
+>    Performance counter stats for 'bpftrace -e fentry:vmlinux:ksys_* {} -c=
+ true':
+>
+>      6,535,857,905      cycles:k
+>        810,809,429      cycles:u
+>      1,064,594,027      instructions:u                   #    1.31  insn =
+per cycle
+>     23,962,552,894      instructions:k                   #    3.67  insn =
+per cycle
+>
+>        1.666961239 seconds time elapsed
+>
+>        0.157412000 seconds user
+>        1.283396000 seconds sys
+>
+>
+>
+> The speedup seems to be related to the fact that with single ftrace_ops o=
+bject
+> we don't call ftrace_shutdown anymore (we use ftrace_update_ops instead) =
+and
+> we skip the synchronize rcu calls (each ~100ms) at the end of that functi=
+on.
+>
+> rfc: https://lore.kernel.org/bpf/20250729102813.1531457-1-jolsa@kernel.or=
+g/
+> v1:  https://lore.kernel.org/bpf/20250923215147.1571952-1-jolsa@kernel.or=
+g/
+> v2:  https://lore.kernel.org/bpf/20251113123750.2507435-1-jolsa@kernel.or=
+g/
+> v3:  https://lore.kernel.org/bpf/20251120212402.466524-1-jolsa@kernel.org=
+/
+> v4:  https://lore.kernel.org/bpf/20251203082402.78816-1-jolsa@kernel.org/
+> v5:  https://lore.kernel.org/bpf/20251215211402.353056-10-jolsa@kernel.or=
+g/
+>
+> v6 changes:
+> - rename add_hash_entry_direct to add_ftrace_hash_entry_direct [Steven]
+> - factor hash_add/hash_sub [Steven]
+> - add kerneldoc header for update_ftrace_direct_* functions [Steven]
+> - few assorted smaller fixes [Steven]
+> - added missing direct_ops wrappers for !CONFIG_DYNAMIC_FTRACE_WITH_DIREC=
+T_CALLS
+>   case [Steven]
+>
 
-but it is quite nice to see what function we were kretprobing,
-actually... How hard would it be to support that for singular kprobe
-as well? And what does fexit's stack trace show for such case?
+So this looks good from BPF side, I think. Steven, if you don't mind
+giving this patch set another look and if everything is to your liking
+giving your ack, we can then apply it to bpf-next. Thanks!
 
+> v5 changes:
+> - do not export ftrace_hash object [Steven]
+> - fix update_ftrace_direct_add new_filter_hash leak [ci]
 >
-> I managed to get that with the change below, but it's wrong wrt arch code=
-,
-> note the ftrace_regs_set_stack_pointer(fregs, stack + 8) .. will try to
-> figure out better way when we agree on the solution
+> v4 changes:
+> - rebased on top of bpf-next/master (with jmp attach changes)
+>   added patch 1 to deal with that
+> - added extra checks for update_ftrace_direct_del/mod to address
+>   the ci bot review
+>
+> v3 changes:
+> - rebased on top of bpf-next/master
+> - fixed update_ftrace_direct_del cleanup path
+> - added missing inline to update_ftrace_direct_* stubs
+>
+> v2 changes:
+> - rebased on top fo bpf-next/master plus Song's livepatch fixes [1]
+> - renamed the API functions [2] [Steven]
+> - do not export the new api [Steven]
+> - kept the original direct interface:
+>
+>   I'm not sure if we want to melt both *_ftrace_direct and the new interf=
+ace
+>   into single one. It's bit different in semantic (hence the name change =
+as
+>   Steven suggested [2]) and I don't think the changes are not that big so
+>   we could easily keep both APIs.
+>
+> v1 changes:
+> - make the change x86 specific, after discussing with Mark options for
+>   arm64 [Mark]
 >
 > thanks,
 > jirka
 >
 >
+> [1] https://lore.kernel.org/bpf/20251027175023.1521602-1-song@kernel.org/
+> [2] https://lore.kernel.org/bpf/20250924050415.4aefcb91@batman.local.home=
+/
 > ---
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
-h
-> index c56e1e63b893..b0e8ce4934e7 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -71,6 +71,9 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  #define ftrace_regs_set_instruction_pointer(fregs, _ip)        \
->         do { arch_ftrace_regs(fregs)->regs.ip =3D (_ip); } while (0)
+> Jiri Olsa (9):
+>       ftrace,bpf: Remove FTRACE_OPS_FL_JMP ftrace_ops flag
+>       ftrace: Make alloc_and_copy_ftrace_hash direct friendly
+>       ftrace: Export some of hash related functions
+>       ftrace: Add update_ftrace_direct_add function
+>       ftrace: Add update_ftrace_direct_del function
+>       ftrace: Add update_ftrace_direct_mod function
+>       bpf: Add trampoline ip hash table
+>       ftrace: Factor ftrace_ops ops_func interface
+>       bpf,x86: Use single ftrace_ops for direct calls
 >
-> +#define ftrace_regs_set_stack_pointer(fregs, _sp)      \
-> +       do { arch_ftrace_regs(fregs)->regs.sp =3D (_sp); } while (0)
-> +
+>  arch/x86/Kconfig        |   1 +
+>  include/linux/bpf.h     |   7 ++-
+>  include/linux/ftrace.h  |  31 +++++++++-
+>  kernel/bpf/trampoline.c | 259 ++++++++++++++++++++++++++++++++++++++++++=
+++++++++++++++++++++++++---------------
+>  kernel/trace/Kconfig    |   3 +
+>  kernel/trace/ftrace.c   | 406 ++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++--------
+>  6 files changed, 632 insertions(+), 75 deletions(-)
 >
->  static __always_inline unsigned long
->  ftrace_regs_get_return_address(struct ftrace_regs *fregs)
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 6279e0a753cf..b1510c412dcb 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -717,7 +717,8 @@ int function_graph_enter_regs(unsigned long ret, unsi=
-gned long func,
->  /* Retrieve a function return address to the trace stack on thread info.=
-*/
->  static struct ftrace_ret_stack *
->  ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *r=
-et,
-> -                       unsigned long frame_pointer, int *offset)
-> +                       unsigned long *stack, unsigned long frame_pointer=
-,
-> +                       int *offset)
->  {
->         struct ftrace_ret_stack *ret_stack;
->
-> @@ -762,6 +763,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trac=
-e, unsigned long *ret,
->
->         *offset +=3D FGRAPH_FRAME_OFFSET;
->         *ret =3D ret_stack->ret;
-> +       *stack =3D (unsigned long) ret_stack->retp;
->         trace->func =3D ret_stack->func;
->         trace->overrun =3D atomic_read(&current->trace_overrun);
->         trace->depth =3D current->curr_ret_depth;
-> @@ -810,12 +812,13 @@ __ftrace_return_to_handler(struct ftrace_regs *freg=
-s, unsigned long frame_pointe
->         struct ftrace_ret_stack *ret_stack;
->         struct ftrace_graph_ret trace;
->         unsigned long bitmap;
-> +       unsigned long stack;
->         unsigned long ret;
->         int offset;
->         int bit;
->         int i;
->
-> -       ret_stack =3D ftrace_pop_return_trace(&trace, &ret, frame_pointer=
-, &offset);
-> +       ret_stack =3D ftrace_pop_return_trace(&trace, &ret, &stack, frame=
-_pointer, &offset);
->
->         if (unlikely(!ret_stack)) {
->                 ftrace_graph_stop();
-> @@ -824,8 +827,11 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs=
-, unsigned long frame_pointe
->                 return (unsigned long)panic;
->         }
->
-> -       if (fregs)
-> -               ftrace_regs_set_instruction_pointer(fregs, trace.func);
-> +       if (fregs) {
-> +               ftrace_regs_set_instruction_pointer(fregs, ret);
-> +               ftrace_regs_set_stack_pointer(fregs, stack + 8);
-> +       }
-> +
->
->         bit =3D ftrace_test_recursion_trylock(trace.func, ret);
->         /*
-> diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c b/to=
-ols/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> index e1a9b55e07cb..852830536109 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_ips.c
-> @@ -74,12 +74,20 @@ static void test_stacktrace_ips_kprobe_multi(bool ret=
-probe)
->
->         load_kallsyms();
->
-> -       check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), skel->bss-=
->stack_key, 5,
-> -                            ksym_get_addr("bpf_testmod_stacktrace_test")=
-,
-> -                            ksym_get_addr("bpf_testmod_stacktrace_test_3=
-"),
-> -                            ksym_get_addr("bpf_testmod_stacktrace_test_2=
-"),
-> -                            ksym_get_addr("bpf_testmod_stacktrace_test_1=
-"),
-> -                            ksym_get_addr("bpf_testmod_test_read"));
-> +       if (retprobe) {
-> +               check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), sk=
-el->bss->stack_key, 4,
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_3"),
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_2"),
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_1"),
-> +                                    ksym_get_addr("bpf_testmod_test_read=
-"));
-> +       } else {
-> +               check_stacktrace_ips(bpf_map__fd(skel->maps.stackmap), sk=
-el->bss->stack_key, 5,
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test"),
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_3"),
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_2"),
-> +                                    ksym_get_addr("bpf_testmod_stacktrac=
-e_test_1"),
-> +                                    ksym_get_addr("bpf_testmod_test_read=
-"));
-> +       }
->
->  cleanup:
->         stacktrace_ips__destroy(skel);
