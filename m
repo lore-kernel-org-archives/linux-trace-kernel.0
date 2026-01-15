@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595463D1CD5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 17:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F2B3D3317
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 17:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768498030; cv=none; b=oIjb5JJillWi1QpuIlBHe3z58UYt56d9Ad4vEFaGVor0FTsaIULOiRJDznByQcmpVk16wY6Wo+Nq8pTzVXoEJfIwmTGHWbuFQX448uvASeERkZLN07iF2JvKaPoyKZjutikZ2uxhQ6a7G9TdwWIW/YtJoVbgXX1x8iNL+sqlAKw=
+	t=1768498049; cv=none; b=pmETjivgFg+MytqodPKywDSMuAZIamGUK4PA23+e7AIX7K/6EO23rt+tl8cA7YDD2ubnsjV27YFpEnxGaCM4nBKGTPi7cbxRj7Xk/3J6gJ/3qZExLE4y6JKzs/jAJNlnGtp+rPSkJh5azGULgO2PoNjUlpqtc7Cm+sb2BARWJ2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768498030; c=relaxed/simple;
-	bh=tJLt5B2DZji/ml4Afp0udSPkcIunpC8Iq9d4OE08FUY=;
+	s=arc-20240116; t=1768498049; c=relaxed/simple;
+	bh=pf4PhOMROdXPWvou4acT8TMe1DaE0/Vcfn0EXJ5jwGU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R9SkJqx4TdP/Tu7WmuONxAoYl4tOKBQFmLEXdTnOjQXGeyAPXIvxokvLu53oiFzCwCu4vSDTMMGB9LlJ/5lf5I/rzJTjYYDujF07Zzv4qSqmbxrfETnk3x7r1Z+yIU3vlc2xZtuuoMIovAcfeuvXyOweyTLvgew1s93gvYpd2hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OQKx8x+Y; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=UbWtixTbmxKbwj45kUYZ1B9IJ4lQCyn+Ov5Fh14FYQUnwxRTrXwkvYJSPIEa9n9WybJx5CK4TrS8IdW4OH0I4THJIxAe+NMa2Ap4YCNJhdyquarGyjvI7VQ0gFkrv1v/ndx0vRcI97VS5lrq+82m+/OSOV+iVPmkd3LNmrVSkWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SoH3wfb5; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQKx8x+Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SoH3wfb5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768498028;
+	s=mimecast20190719; t=1768498046;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FkBXskbl+1yjIDirDDZ66gzhrdCqszVJfA3kLEp28sU=;
-	b=OQKx8x+YdGRhbJem0ESbWEIuk/J/zsKBniKS3l84JQmXGB9nfPHjwyiw2NBzL5uyRwXngO
-	X2reRXieO6uY/e7fU9FCv/5HlzTaTDu6VOH339lASJi24jwLy4Y0uIxE1T/8UE6B99C08s
-	OqU29jbDkfvlIf+le/wHk/wAv8Z6DGE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=jeefTd42LAWau21bgi4bPgUTY/EIGN9zI5P01XBYpQo=;
+	b=SoH3wfb5aq5gyuS+bh68QgHAONG350XMRKEnPn+3jWPzhBGMZOT2vAWdJwJDtFR3Cxc7tV
+	I6fSTOdBeczL1gS+ZYigTIH8VKg8uNeQ+8lyyAewtdUgsbnMUuhejH85S3o9jeVIioSqVU
+	jjZR+GacvVvZfsq9IXfo2XDeLfslyVE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-zEVz8VLlNKOeoLOTAr2Ztw-1; Thu,
- 15 Jan 2026 12:27:03 -0500
-X-MC-Unique: zEVz8VLlNKOeoLOTAr2Ztw-1
-X-Mimecast-MFC-AGG-ID: zEVz8VLlNKOeoLOTAr2Ztw_1768498022
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-7mQIheweNQKnyjthnAyH-A-1; Thu,
+ 15 Jan 2026 12:27:23 -0500
+X-MC-Unique: 7mQIheweNQKnyjthnAyH-A-1
+X-Mimecast-MFC-AGG-ID: 7mQIheweNQKnyjthnAyH-A_1768498041
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45BB7180047F;
-	Thu, 15 Jan 2026 17:27:02 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C788C1955F38;
+	Thu, 15 Jan 2026 17:27:21 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.64.87])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E7F318004D8;
-	Thu, 15 Jan 2026 17:26:57 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3CD2D18007D2;
+	Thu, 15 Jan 2026 17:27:16 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
@@ -51,15 +51,14 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Costa Shulyupin <costa.shul@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Haiyong Sun <sunhaiyong@loongson.cn>,
 	Daniel Wagner <dwagner@suse.de>,
 	Daniel Bristot de Oliveira <bristot@kernel.org>,
 	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
 	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
 	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [PATCH v3 08/18] rtla/timerlat: Add bounds check for softirq vector
-Date: Thu, 15 Jan 2026 13:31:51 -0300
-Message-ID: <20260115163650.118910-9-wander@redhat.com>
+Subject: [PATCH v3 09/18] rtla: Handle pthread_create() failure properly
+Date: Thu, 15 Jan 2026 13:31:52 -0300
+Message-ID: <20260115163650.118910-10-wander@redhat.com>
 In-Reply-To: <20260115163650.118910-1-wander@redhat.com>
 References: <20260115163650.118910-1-wander@redhat.com>
 Precedence: bulk
@@ -71,39 +70,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add bounds checking when accessing the softirq_name array using the
-vector value from kernel trace data. The vector field from the
-osnoise:softirq_noise event is used directly as an array index without
-validation, which could cause an out-of-bounds read if the kernel
-provides an unexpected vector value.
+Add proper error handling when pthread_create() fails to create the
+timerlat user-space dispatcher thread. Previously, the code only logged
+an error message but continued execution, which could lead to undefined
+behavior when the tool later expects the thread to be running.
 
-The softirq_name array contains 10 elements corresponding to the
-standard Linux softirq vectors. While the kernel should only provide
-valid vector values in the range 0-9, defensive programming requires
-validating untrusted input before using it as an array index. If an
-out-of-range vector is encountered, display the word UNKNOWN instead
-of attempting to read beyond the array bounds.
+When pthread_create() returns an error, the function now jumps to the
+out_trace error path to properly clean up resources and exit. This
+ensures consistent error handling and prevents the tool from running
+in an invalid state without the required user-space thread.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 ---
- tools/tracing/rtla/src/timerlat_aa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/tracing/rtla/src/common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/tracing/rtla/src/timerlat_aa.c b/tools/tracing/rtla/src/timerlat_aa.c
-index 30ef56d644f9c..bc421637cc19b 100644
---- a/tools/tracing/rtla/src/timerlat_aa.c
-+++ b/tools/tracing/rtla/src/timerlat_aa.c
-@@ -417,8 +417,8 @@ static int timerlat_aa_softirq_handler(struct trace_seq *s, struct tep_record *r
- 	taa_data->thread_softirq_sum += duration;
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index cbc207fa58707..73906065e7772 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -303,8 +303,10 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
+ 		params->user.cgroup_name = params->cgroup_name;
  
- 	trace_seq_printf(taa_data->softirqs_seq, "  %24s:%-3llu %.*s %9.2f us\n",
--			 softirq_name[vector], vector,
--			 24, spaces,
-+			 vector < ARRAY_SIZE(softirq_name) ? softirq_name[vector] : "UNKNOWN",
-+			 vector, 24, spaces,
- 			 ns_to_usf(duration));
- 	return 0;
- }
+ 		retval = pthread_create(&user_thread, NULL, timerlat_u_dispatcher, &params->user);
+-		if (retval)
++		if (retval) {
+ 			err_msg("Error creating timerlat user-space threads\n");
++			goto out_trace;
++		}
+ 	}
+ 
+ 	retval = ops->enable(tool);
 -- 
 2.52.0
 
