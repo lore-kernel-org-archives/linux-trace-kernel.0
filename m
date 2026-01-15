@@ -1,108 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EEE3BFE52
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 17:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361FC3D331D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 18:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768498228; cv=none; b=BtokX+1sKjNCb3AEn5Q0iSqHZg3hvFcQKh4uEy2qPwUCbTOH5Zmv8GeT/m1kQt6SkzcT9U578UoYpEquvJacEvuOPw1Wt3Vq4DfYEKPCd3BqrkdSHk8ifnvm5tCGDljd49YnGGglrrNcjVzNN3+yAg8JaKrHdmd6wSwuSR8TOfU=
+	t=1768500390; cv=none; b=uku8ueLr7iVViA8IKhPLkYO6mYrpuKq7csExGOjC5MqRQaht+vrIzBt11rllA0/yTMAw+jYnX4sRwP+7BFerzflMHRpItSqyFD6yjeE6fyuPoh3NLhcIVuCi6Bu2CavrRElm0kcEI8IhYjUrRdIZ4WqeV/ULt1zlYgP5hm9xCV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768498228; c=relaxed/simple;
-	bh=KoiAGygCsP7LdXIPJKl87sZsR/SSo6UkoSgUMxQy9Hc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tnIUcZ5J6rsYhBya8vC9DnHo4Q+6hLOy2AfIr25fLClpTufHgyPX6IxSnixqvY/W7wU8xD6lrNqg2P8GL3ujPdYkoVyoxyt/JDK98n25CsJB83X4V5gssd80EaYIrpVar/90xptBbwJaS8ol/Pi06L/7dyO15+8F7Col5UfsIW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BB/Z6PyK; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1768500390; c=relaxed/simple;
+	bh=qPqVwD+N89+OmXZMVjyMgTwuUQROi1yXruu77aZuTtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6slLq5Qt5+3KYMDrcofYNjC0Hg2MMlaj4v2fZ8AzouDBCIv6DPhg3f48AE+nEQ7zlmr6x4syFEYthM8IpYDnN7J4mFktKAtcQbcvtscwhyfo4/3Bj4BM6JEqnqmiYv7fhMrCXCKsvQAYnm5yvecYqQ+FcRAlvOx5mH0xokhQeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D8X5f9ZM; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BB/Z6PyK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8X5f9ZM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768498225;
+	s=mimecast20190719; t=1768500387;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2Tu3p1Zj6pQY7Vz4/LZDPBl0XAGrdE37S9bZ1+G2txM=;
-	b=BB/Z6PyKu+FGW+rMF20VH/t+PYYPe1QThrYvyYWj0k7G756qfoSJWrnC4eugj7cD7e1Irr
-	+9mMF9ZPuNBW/JE5qHlNRDJIlY9LDw9iIFtyBkRIwaS9igYt2ChmbypQ+hRrQdjPjYqQH4
-	nwVgQxI5ZufZFrAoZWmYl9lJp3UHfM8=
+	bh=3l5p+BX+C0koUHxT6Sf+Jk/kA4Mq4uveo7bobvP6QJE=;
+	b=D8X5f9ZMa9VV+PtVNp46m0axJ3U94p5A5k9hH3x5FlWb8fgwEhAQ604Mf2hovwZgU4Ru2j
+	zrFtuu+kBV2yT8Y2RmN3YnM6pxJ9f0FlvdGEp2E/UnukWOLN+ILSRoASOBd1HoMnP8nUbb
+	CPuTyo69Sohgqm5W9Nsu6yw757zBwKo=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-573-F7Y7gd1ZOAmofL9UcD7uvg-1; Thu,
- 15 Jan 2026 12:30:22 -0500
-X-MC-Unique: F7Y7gd1ZOAmofL9UcD7uvg-1
-X-Mimecast-MFC-AGG-ID: F7Y7gd1ZOAmofL9UcD7uvg_1768498220
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-5AwuhdExMwm66ZU6dG7ptQ-1; Thu,
+ 15 Jan 2026 13:06:24 -0500
+X-MC-Unique: 5AwuhdExMwm66ZU6dG7ptQ-1
+X-Mimecast-MFC-AGG-ID: 5AwuhdExMwm66ZU6dG7ptQ_1768500383
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A82EF19560B5;
-	Thu, 15 Jan 2026 17:30:20 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.64.87])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 194AC1800285;
-	Thu, 15 Jan 2026 17:30:15 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5DFCE1956052;
+	Thu, 15 Jan 2026 18:06:23 +0000 (UTC)
+Received: from fedora (unknown [10.22.64.87])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E52D51800994;
+	Thu, 15 Jan 2026 18:06:19 +0000 (UTC)
+Date: Thu, 15 Jan 2026 15:06:17 -0300
 From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Daniel Wagner <dwagner@suse.de>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [PATCH v3 18/18] rtla/utils: Fix loop condition in PID validation
-Date: Thu, 15 Jan 2026 13:32:01 -0300
-Message-ID: <20260115163650.118910-19-wander@redhat.com>
-In-Reply-To: <20260115163650.118910-1-wander@redhat.com>
-References: <20260115163650.118910-1-wander@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tools/rtla: Generate optstring from long options
+Message-ID: <aWksWtNyxUlcVvso@fedora>
+References: <20260108095011.2115719-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108095011.2115719-1-costa.shul@redhat.com>
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The procfs_is_workload_pid() function iterates through a directory
-entry name to validate if it represents a process ID. The loop
-condition checks if the pointer t_name is non-NULL, but since
-incrementing a pointer never makes it NULL, this condition is always
-true within the loop's context. Although the inner isdigit() check
-catches the NUL terminator and breaks out of the loop, the condition
-is semantically misleading and not idiomatic for C string processing.
+On Thu, Jan 08, 2026 at 11:49:55AM +0200, Costa Shulyupin wrote:
+> getopt_long() processes short and long options independently.
+> RTLA, like the majority of applications, uses both short and long
+> variants for each logical option.
+> 
+> Since the val member of struct option holds the letter of the short
+> variant, the string of short options can be reconstructed from the
+> array of long options.
+> 
+> Add getopt_auto() to generate optstring from an array of long options,
+> eliminating the need to maintain separate short option strings.
+> 
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+...
 
-Correct the loop condition from checking the pointer (t_name) to
-checking the character it points to (*t_name). This ensures the loop
-terminates when the NUL terminator is reached, aligning with standard
-C string iteration practices. While the original code functioned
-correctly due to the existing character validation, this change
-improves code clarity and maintainability.
+That's very clever.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
----
- tools/tracing/rtla/src/utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 1ea9980d8ecd3..3d47f3ed52dee 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -296,7 +296,7 @@ static int procfs_is_workload_pid(const char *comm_prefix, struct dirent *proc_e
- 		return 0;
- 
- 	/* check if the string is a pid */
--	for (t_name = proc_entry->d_name; t_name; t_name++) {
-+	for (t_name = proc_entry->d_name; *t_name; t_name++) {
- 		if (!isdigit(*t_name))
- 			break;
- 	}
--- 
-2.52.0
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
