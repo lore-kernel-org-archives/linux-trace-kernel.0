@@ -1,82 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361FC3D331D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 18:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A763C1FE3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 18:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768500390; cv=none; b=uku8ueLr7iVViA8IKhPLkYO6mYrpuKq7csExGOjC5MqRQaht+vrIzBt11rllA0/yTMAw+jYnX4sRwP+7BFerzflMHRpItSqyFD6yjeE6fyuPoh3NLhcIVuCi6Bu2CavrRElm0kcEI8IhYjUrRdIZ4WqeV/ULt1zlYgP5hm9xCV8=
+	t=1768502927; cv=none; b=CAUB4/EIU21n3zNFUmOqWOO04LO8WU8vLIR0PTWqGd/snxHDM/VRV6s+49mfNjpiFhVCtKRP5uAsixRPE1FqERdR7wgchzMP2wEtySRgrrAoZBqrcV3ApOfzjXJNDwJU86ZDgQFhrqgzaAjO2gQwGPJVmIoS9K89QsQH/YfqaUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768500390; c=relaxed/simple;
-	bh=qPqVwD+N89+OmXZMVjyMgTwuUQROi1yXruu77aZuTtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6slLq5Qt5+3KYMDrcofYNjC0Hg2MMlaj4v2fZ8AzouDBCIv6DPhg3f48AE+nEQ7zlmr6x4syFEYthM8IpYDnN7J4mFktKAtcQbcvtscwhyfo4/3Bj4BM6JEqnqmiYv7fhMrCXCKsvQAYnm5yvecYqQ+FcRAlvOx5mH0xokhQeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D8X5f9ZM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768502927; c=relaxed/simple;
+	bh=UQrMhLzAWtEW2fNPRRa41ReV0ebPBQO/kw9fUUbSz0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lh6sKEfLKjdcBxdqLyB2S/WNWKfMWqy9Ia4dQySsEnHvkACPH7sDmGhtm6oMTByVI+xmM3+LUUwpjG/tj+GGoG9kxd4QkUCDVDWAvnK3u9wHFB3jaQVHv85yHFaMTYoI7lzGa1G6oaC5gAdqfPheEN+/1C0m/B2rk5qnCi62EE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0AHG3uU; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8X5f9ZM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768500387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3l5p+BX+C0koUHxT6Sf+Jk/kA4Mq4uveo7bobvP6QJE=;
-	b=D8X5f9ZMa9VV+PtVNp46m0axJ3U94p5A5k9hH3x5FlWb8fgwEhAQ604Mf2hovwZgU4Ru2j
-	zrFtuu+kBV2yT8Y2RmN3YnM6pxJ9f0FlvdGEp2E/UnukWOLN+ILSRoASOBd1HoMnP8nUbb
-	CPuTyo69Sohgqm5W9Nsu6yw757zBwKo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-5AwuhdExMwm66ZU6dG7ptQ-1; Thu,
- 15 Jan 2026 13:06:24 -0500
-X-MC-Unique: 5AwuhdExMwm66ZU6dG7ptQ-1
-X-Mimecast-MFC-AGG-ID: 5AwuhdExMwm66ZU6dG7ptQ_1768500383
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5DFCE1956052;
-	Thu, 15 Jan 2026 18:06:23 +0000 (UTC)
-Received: from fedora (unknown [10.22.64.87])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E52D51800994;
-	Thu, 15 Jan 2026 18:06:19 +0000 (UTC)
-Date: Thu, 15 Jan 2026 15:06:17 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] tools/rtla: Generate optstring from long options
-Message-ID: <aWksWtNyxUlcVvso@fedora>
-References: <20260108095011.2115719-1-costa.shul@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0AHG3uU"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-34c2f335681so631081a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 10:48:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768502922; x=1769107722; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aHYgSO64FJPmGn4to5xXyL76aKmYw2DEo0/XWOgIEws=;
+        b=h0AHG3uUeEJIndx/HnYM5H/I6laHcDhUX6XxYbe4JY1Ay8V2ZYekhnmjnafbo1C9++
+         V+mB5AoZuubh2Qat2ouR82OTwnZME3mrzfriy4mHgq7ZI7bGERkQ4t6TvhPypPJ/zzci
+         bht0lWFeCral/wwVd3wCiRuTgPN5Pd+RbYyYWP8laaKdCM5xrw1mY5Rpz7knQ6AkHJ8M
+         cNF/4fSi5uoRJSrsfTsSoPZXQya8az17I1Usg69RAchJTuxgM7utGql1i+iDJIrLh41W
+         9TmFLBzu2sozIY5nyBoJxuc5yt31b3JQWN7N8DR6M0fhwbb4SEPZFAt+xV+JOxVsEMBZ
+         X/Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768502922; x=1769107722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aHYgSO64FJPmGn4to5xXyL76aKmYw2DEo0/XWOgIEws=;
+        b=sS2FvhsiKf+SKCCsTOozbYg7hxWn+rfoe0E1i4PbrD71zClYlqHB8r3Kb2iD+6wGLi
+         UepAYvs7/3OUecz/nOU+9HpZ2KMFOsIaXf8tzb+oq/8N541TDUJiZPa007hWwpFS0AX1
+         7AEoO5tVd9jDngn6sODxeJspug0vMUROCpBJwkRtoxogRa7SbZ/Iu2pLXXqN/oJrpGXN
+         J5Q5v3vnogQuQvPEWlh7EOhtT+8rxrnpTmqOBNspdZ7LY8ZMitqyqEmf8bglt7eFxaL9
+         qm/p5ReHRjJjahyH9KuApIZX+7kwWBSBeeOH7CQ9JeCYiXhqkQIlslEzFCmF/15li2LW
+         PeSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHtjG7D93uoSoJm6PLxm90mePc1rUb1yBcCZCir5GB40c+L86ghJxJt/eTmVK1b9CY64BHPD+TpM1PECr0SAbIrTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHepDMQysW+r9kB3OLGbIhp7Om7gJtECO49uj6f4qWZ9Cm5Hgy
+	6EvnTP9T1cpvW2b0TQVEunMvhkO5YgJw2us3kro/ogYm8pySGkhFFs3Y2SOwvis/wQgPq17tQ3r
+	UFZTPWQflV7vZxJff0ij6Hwxm1fbzECk=
+X-Gm-Gg: AY/fxX7woNtgllfm0cHtXqSR8j8OWoY0UEOuWGe30rMoHxc9FCEfd64zCS5C2cfhAVG
+	nJ409kBmXqrbBmkfUKe/xTm+WBVjnD3LotDokobVcm/GvqGcRJXhCxp/uo3eFlSko+2WU6XqUCu
+	hU7OuF7lzRREjTV9yikqdDzHkMdK3mwphu5lDcGHwcg30Dm/d7IU7QR5ynwunpx1XtMomsJKGPi
+	hihfo93ttUR2+r1grvX1hc0eUfkpJSVjBy5hy5KYMTIwdAgFMxCKQKzlQbCI0QsF17EjRyU77Ts
+	D4A11OeU
+X-Received: by 2002:a17:90b:4a44:b0:340:be44:dd0b with SMTP id
+ 98e67ed59e1d1-35273298af9mr230008a91.34.1768502921893; Thu, 15 Jan 2026
+ 10:48:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108095011.2115719-1-costa.shul@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20260112214940.1222115-1-jolsa@kernel.org> <20260112214940.1222115-5-jolsa@kernel.org>
+In-Reply-To: <20260112214940.1222115-5-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 15 Jan 2026 10:48:29 -0800
+X-Gm-Features: AZwV_QjX7VrTUtsAMUBt5BaayEmgkKUeqnOB-9FMhVngm8sFa5SmN6zLgjvUsfQ
+Message-ID: <CAEf4BzaXhGpkycs-TO_1V81-irq3d8Mjfyk=LMc0OC-NW-FnRg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 4/4] selftests/bpf: Allow to benchmark trigger
+ with stacktrace
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Mahe Tardy <mahe.tardy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 08, 2026 at 11:49:55AM +0200, Costa Shulyupin wrote:
-> getopt_long() processes short and long options independently.
-> RTLA, like the majority of applications, uses both short and long
-> variants for each logical option.
-> 
-> Since the val member of struct option holds the letter of the short
-> variant, the string of short options can be reconstructed from the
-> array of long options.
-> 
-> Add getopt_auto() to generate optstring from an array of long options,
-> eliminating the need to maintain separate short option strings.
-> 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-...
+On Mon, Jan 12, 2026 at 1:50=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support to call bpf_get_stackid helper from trigger programs,
+> so far added for kprobe multi.
+>
+> Adding the --stacktrace/-g option to enable it.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/testing/selftests/bpf/bench.c            |  4 ++++
+>  tools/testing/selftests/bpf/bench.h            |  1 +
+>  .../selftests/bpf/benchs/bench_trigger.c       |  1 +
+>  .../selftests/bpf/progs/trigger_bench.c        | 18 ++++++++++++++++++
+>  4 files changed, 24 insertions(+)
+>
 
-That's very clever.
+This now actually becomes a stack trace benchmark :) But I don't mind,
+I think it would be good to be able to benchmark this. But I think we
+should then implement it for all different tracing programs (tp,
+raw_tp, fentry/fexit/fmod_ret) for consistency and so we can compare
+and contrast?...
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+> diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftest=
+s/bpf/bench.c
+> index bd29bb2e6cb5..8dadd9c928ec 100644
+> --- a/tools/testing/selftests/bpf/bench.c
+> +++ b/tools/testing/selftests/bpf/bench.c
+> @@ -265,6 +265,7 @@ static const struct argp_option opts[] =3D {
+>         { "verbose", 'v', NULL, 0, "Verbose debug output"},
+>         { "affinity", 'a', NULL, 0, "Set consumer/producer thread affinit=
+y"},
+>         { "quiet", 'q', NULL, 0, "Be more quiet"},
+> +       { "stacktrace", 'g', NULL, 0, "Get stack trace"},
 
+bikeshedding time: why "g"? why not -S or something like that?
+
+>         { "prod-affinity", ARG_PROD_AFFINITY_SET, "CPUSET", 0,
+>           "Set of CPUs for producer threads; implies --affinity"},
+>         { "cons-affinity", ARG_CONS_AFFINITY_SET, "CPUSET", 0,
+> @@ -350,6 +351,9 @@ static error_t parse_arg(int key, char *arg, struct a=
+rgp_state *state)
+>         case 'q':
+>                 env.quiet =3D true;
+>                 break;
+> +       case 'g':
+> +               env.stacktrace =3D true;
+> +               break;
+>         case ARG_PROD_AFFINITY_SET:
+>                 env.affinity =3D true;
+>                 if (parse_num_list(arg, &env.prod_cpus.cpus,
+> diff --git a/tools/testing/selftests/bpf/bench.h b/tools/testing/selftest=
+s/bpf/bench.h
+> index bea323820ffb..7cf21936e7ed 100644
+> --- a/tools/testing/selftests/bpf/bench.h
+> +++ b/tools/testing/selftests/bpf/bench.h
+> @@ -26,6 +26,7 @@ struct env {
+>         bool list;
+>         bool affinity;
+>         bool quiet;
+> +       bool stacktrace;
+>         int consumer_cnt;
+>         int producer_cnt;
+>         int nr_cpus;
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/t=
+esting/selftests/bpf/benchs/bench_trigger.c
+> index 34018fc3927f..aeec9edd3851 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> @@ -146,6 +146,7 @@ static void setup_ctx(void)
+>         bpf_program__set_autoload(ctx.skel->progs.trigger_driver, true);
+>
+>         ctx.skel->rodata->batch_iters =3D args.batch_iters;
+> +       ctx.skel->rodata->stacktrace =3D env.stacktrace;
+>  }
+>
+>  static void load_ctx(void)
+> diff --git a/tools/testing/selftests/bpf/progs/trigger_bench.c b/tools/te=
+sting/selftests/bpf/progs/trigger_bench.c
+> index 2898b3749d07..479400d96fa4 100644
+> --- a/tools/testing/selftests/bpf/progs/trigger_bench.c
+> +++ b/tools/testing/selftests/bpf/progs/trigger_bench.c
+> @@ -25,6 +25,23 @@ static __always_inline void inc_counter(void)
+>         __sync_add_and_fetch(&hits[cpu & CPU_MASK].value, 1);
+>  }
+>
+> +volatile const int stacktrace;
+> +
+> +typedef __u64 stack_trace_t[128];
+> +
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> +       __uint(max_entries, 16384);
+> +       __type(key, __u32);
+> +       __type(value, stack_trace_t);
+> +} stackmap SEC(".maps");
+> +
+> +static __always_inline void do_stacktrace(void *ctx)
+> +{
+> +       if (stacktrace)
+> +               bpf_get_stackid(ctx, &stackmap, 0);
+> +}
+> +
+>  SEC("?uprobe")
+>  int bench_trigger_uprobe(void *ctx)
+>  {
+> @@ -96,6 +113,7 @@ SEC("?kprobe.multi/bpf_get_numa_node_id")
+>  int bench_trigger_kprobe_multi(void *ctx)
+>  {
+>         inc_counter();
+> +       do_stacktrace(ctx);
+>         return 0;
+>  }
+>
+> --
+> 2.52.0
+>
