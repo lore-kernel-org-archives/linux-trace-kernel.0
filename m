@@ -1,178 +1,139 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012060.outbound.protection.outlook.com [40.107.200.60])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64839299947;
-	Fri, 16 Jan 2026 14:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768575014; cv=fail; b=WmGmESHGPpyV82rpNyCcKqeAMxqzZZ8YGB/xNZ/5Y/u2q2Vhmrg1p9UfjUvI4mNS/cNQU6n45qcRYsm2YRWszE+nSW0bPP0yX2cOibnn3w070S3uDOm738z2p5+CR6oFn9XOfbKwFSomepvYHz5JEwP2gpb6PHwE13KUeB/csZ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768575014; c=relaxed/simple;
-	bh=AqaHoZ7iG2/F8K4ipK4M2XsV7Ylr2qq/43ZdvtAfK0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j6+7//Uif3qP/YuOn84efbSXKoexPye5m1Jj9yxEpZ5tqGLFpP5uawzdVIsx4iuj0gUAwD1OIE7avfgU92KfOUJKKryVbXCLeuh0rxwYkYD+6NmoFLNwiuSJEXeeK0e6oJFyC6VsXRmakC9bnH2zXLz1tpUp8KD3cvtEegiQutE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WFNQQM8q; arc=fail smtp.client-ip=40.107.200.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6C6339871
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 15:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768575701; cv=none; b=F5vjZ3R/7uD+SrgnCY0y8q3xa08kr/qlarYajbx+nN09nqc2x3L/xtqNrpOF8d9GtXJFaDyY59Pl+2Yx9GvgF+aXLAVYr4jYf+ePGoeUILli/CWkMi+ZH4ZluWoLFpk1mclhoglQM/yXl3yeMk9tFVJfKDbcBa54vTxVwt537zM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768575701; c=relaxed/simple;
+	bh=DgG6V6+gnO57Zu/Qsm8q4E/uJdoEAASINApgNq8vo00=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=allMF7Xqp2vVWFtbHV7ARrKXQeib79y1OnRa7KTyzXSciollMqB9XkAqUdyAYvZUmQ3M2kmFvYES2Lrej7jFLoE1nf8RlVSY0c72UOeViwSGUzgMQKpt6bPEaazOVvW5ISqgpNgxRaobrJVQsphV7VXcA46ZDOVgKr51nCtpktg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e06mldx3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WFNQQM8q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sEflvtQM8XPiUi+BH+uvKLgD+FNPbIs0ux7mvOZcVy1iAuwGp4yDEYBwJs+s7pdT3akwj+EfsSko5CaRyIvN4WzZUe8K4R9QpCrt9W2GGvEQwN8gnFvsYUpvq6vaE27zyk509e9t2J26r3nq85Ui+I++33XHKFkygWfr41n7x0exd5gGgofw5FGQ8VfpGoE3hVW9H+S1oLteTb1JdwkypK9NrN1wmRMVNMZKnq+5VJ+ufrwgkL/dcADTq7pPJExohdcEKYH+Ro7Dzj3oJhmAjSqba1TMpw39i+hq/1LFFmnfcQ19y24covxMsgpMGWRfHujXvTcbswbYKpxGNLflbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1/0uBUA7DJH610dyt+0MX7UEW16JLZFq+0Sw9r5PiKs=;
- b=Xth/M9rir/7EAve+gPTMSo3xcokk1JrsWJ8QgzanAAqOGXOylYKSGMO/8KPAPwTvyPwHeksSo0r+vCIeYsqG/iualWOlyHTzHu9uihvYWsH225hsJ/cPJ4ZSU1XATddA1coLy0CP5O+ayTWr1E3CK9nYCbvutrp53HzLClqglt8EcKb4Vb5SjeCx0oODr3ERB7MmUG/0ck4qQNS3UjMkD/qeQoxkcNJtZy7meY2q/73rNCkEX/ZyFJ6Bhf4z4ZK5MBdWEAxlt2NUiW8zGreli0JsPPj8kTp+86liXH6aA2bP8dH8tRhL9UEnl81j/3a2LuwHsZJORpwHpOOhEpwyHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1/0uBUA7DJH610dyt+0MX7UEW16JLZFq+0Sw9r5PiKs=;
- b=WFNQQM8qXDIt5csshD4vF9/qP0HGTC85Nwh5bC0XLq2WXSa50k5fwiOOXqTGfLw8L9fXRt+IhU2lRDdR+y6Zg1ZglaJhNIDWRfU6IXyeQbtdsJgRDdUHrbJJ9OGQGf84Ng6j+lB/5XpUmorUgOtFWsN1N0FMBgt8DBgSBfEqToU=
-Received: from SJ0PR05CA0174.namprd05.prod.outlook.com (2603:10b6:a03:339::29)
- by CH1PPF6B6BCC42C.namprd12.prod.outlook.com (2603:10b6:61f:fc00::612) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Fri, 16 Jan
- 2026 14:50:09 +0000
-Received: from MWH0EPF000971E8.namprd02.prod.outlook.com
- (2603:10b6:a03:339:cafe::46) by SJ0PR05CA0174.outlook.office365.com
- (2603:10b6:a03:339::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.5 via Frontend Transport; Fri,
- 16 Jan 2026 14:50:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MWH0EPF000971E8.mail.protection.outlook.com (10.167.243.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Fri, 16 Jan 2026 14:50:09 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Fri, 16 Jan
- 2026 08:50:07 -0600
-Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 16 Jan
- 2026 08:50:07 -0600
-Received: from [172.31.184.125] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Fri, 16 Jan 2026 08:50:04 -0600
-Message-ID: <17f243a1-8977-4d52-aa26-d4556d62e12f@amd.com>
-Date: Fri, 16 Jan 2026 20:20:02 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e06mldx3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768575698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DgG6V6+gnO57Zu/Qsm8q4E/uJdoEAASINApgNq8vo00=;
+	b=e06mldx3dBgXlipGMg5JO7xWMbTk1bxZ90fDLcPXBXGHAFX6E3N+Uxahmo9xEGJL43gBE0
+	oQngf2hiuDOPo9Alv5OBz0DnJ4vVLK80DMXddDdNGxA6dB9uVGE/5ZFDttfL+uGvFFrxTr
+	sxJ7k5X5WAIv+5Kdf2Whg9sIOB2z9Q0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-538-BpTosawANNudo7RPMDjncA-1; Fri, 16 Jan 2026 10:01:36 -0500
+X-MC-Unique: BpTosawANNudo7RPMDjncA-1
+X-Mimecast-MFC-AGG-ID: BpTosawANNudo7RPMDjncA_1768575695
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-430fcf10287so1824714f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 07:01:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768575695; x=1769180495;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKg+lg08Z6N5Xk6F7Tf5pQeMj1OVmK93OUBlVqb40gM=;
+        b=BXcCH14XqT1TNwlsYKvPgtK7lbV4+ML6Kogpgjvh0QhHqxAsGxFiKuAyESK6m+We5s
+         g5t70tTDteK7EXfqCMDwMaoaxNrdlMih3cIMVGIo/PF1I2alZYKEYKZmYNUEiadOhWWh
+         fbSjc8B0CWbelq/sHdzEN+HFd6upUcHnfHQshwoYWbJ32S0vtP8r4eijPjbZvdOQA+Uu
+         SZuFqQ+IyGBYrVWuATIaOqCBHsFcIZJY+U0rHhuz52oY2uaI8EQceS2bTfDuxFAyFHKo
+         W6J45xD3HpQeW1bklXK7ABajCiGQafJzH5dNDc7HpNMDbVX60Rb0K6A4V+8XVtQ7NAFD
+         NJRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQmJXz0a3XoNk8Wz8msrADj/7u1WZ94oMvCTnWrTAcpEQSrGt18pc38e+5OzkIdfqX3ez5JXJRzOjpnFlA+G/XHo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGr9hx48rxXJjspxVUv5r7ASCijIFPNDRK9MSXVIh6nhClwyT6
+	vmNlSsZIT0ReD1X4ytJ/PHxQ29f4WtFIzXFOCbrjckF/mJF52+2qbIOEWid58hGHZ1cIZC6kzOW
+	/SKTJdBCkwufEZYpGfA79JnI4Qc8Xv0hrteLmM4ahLfwJF/zXDxdH7J7HU/icDQjwhKg5B2l5Yw
+	==
+X-Gm-Gg: AY/fxX7JRr34TMWMZSQQtAJF+lnXAGuMNLadIy2ZMl4xRKIwuzFcwJ5KO6+ZqR7Doqr
+	UM/PW/Oo3j65LI+OwwgrOwcsSPutYrHRjWRd62+b3V/f677weMobtSGiG0hJGhTEW17KM/BcU8+
+	A0bgrqmmnCM106jQ3VojWdVtnyra98ml4HW5JzFd7x7QsqjrmAg6UaM1Lfiu3EChuqM/DsynEoc
+	STbLg5lTzsLDmXuKBAyQQN2cg0tN1z9hL0+uCegISjyBMLK76E0BYd0OF5ZuVhdXmsMWVJG1bl9
+	D/BwXuSXUuw3FX7hb70GAXhc0tUP595jxhGnWYVXgXppQcAcR1M7H8xXCICUqoQ+S2+qK27/Xw0
+	4vUyyaJjOv90XuFzf1Jkuu731bP9IUtRbrEiBPixCwQVhxYiDhZtM7Wd8USNWKSyiVrDniQY26o
+	nwDgcLPlAC
+X-Received: by 2002:a05:6000:2387:b0:430:fbad:687a with SMTP id ffacd0b85a97d-4356997f7bfmr4389019f8f.13.1768575694252;
+        Fri, 16 Jan 2026 07:01:34 -0800 (PST)
+X-Received: by 2002:a05:6000:2387:b0:430:fbad:687a with SMTP id ffacd0b85a97d-4356997f7bfmr4388934f8f.13.1768575693570;
+        Fri, 16 Jan 2026 07:01:33 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435699271dfsm5596932f8f.15.2026.01.16.07.01.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jan 2026 07:01:33 -0800 (PST)
+Message-ID: <5e6c71ca24103a54c4909ae57e58544aec4a56be.camel@redhat.com>
+Subject: Re: [PATCH v4 10/15] sched: Add task enqueue/dequeue trace points
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Tomas Glozar <tglozar@redhat.com>, Clark Williams <williams@redhat.com>,
+  John Kacur <jkacur@redhat.com>, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>,  Nam Cao <namcao@linutronix.de>, Juri Lelli
+ <jlelli@redhat.com>, Masami Hiramatsu	 <mhiramat@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>,
+ linux-trace-kernel@vger.kernel.org
+Date: Fri, 16 Jan 2026 16:01:30 +0100
+In-Reply-To: <17f243a1-8977-4d52-aa26-d4556d62e12f@amd.com>
+References: <20260116123911.130300-1-gmonaco@redhat.com>
+	 <20260116123911.130300-11-gmonaco@redhat.com>
+	 <17f243a1-8977-4d52-aa26-d4556d62e12f@amd.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/15] sched: Add task enqueue/dequeue trace points
-To: Gabriele Monaco <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, "Juri
- Lelli" <jlelli@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, "Ingo
- Molnar" <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	<linux-trace-kernel@vger.kernel.org>
-CC: Tomas Glozar <tglozar@redhat.com>, Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-References: <20260116123911.130300-1-gmonaco@redhat.com>
- <20260116123911.130300-11-gmonaco@redhat.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20260116123911.130300-11-gmonaco@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OuPrZEgznr6LvHHxA3khuXWzBrOQLYGAVRV4F5wLaIU_1768575695
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB03.amd.com: kprateek.nayak@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E8:EE_|CH1PPF6B6BCC42C:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0f744c5-1ad3-40fa-08e2-08de550e8bb3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SGZkdXVTaFVWMVM4WjRFTW9jZG5QK0VPREIyM0tEYXFidWxxME5yaGRlTSs4?=
- =?utf-8?B?NjgyNGh2U0lCL3JTRmZzdVh4OEJQOC9oNjhQWVIyeStaQ3lVcnE0UEtCaXNG?=
- =?utf-8?B?eDVIb1NGM3drTml2VEl3K1ROU0hTS2xhRTNXU0U3ZnpacTcvbmpmZnBrWndi?=
- =?utf-8?B?SXkrVzJvbE96RnFhUURFd2xMb25MSlpVMXlGNDM3WVVBRE5FZThra01FOGVv?=
- =?utf-8?B?bEZiZ3IyZWloemtOK0F4OFB6eTF2WkJPQzhQd1VLaUdSNzhQNUFvNXJONEhr?=
- =?utf-8?B?emVNNWpsemF2NVF4SjZwNHJKZE1rTUdPZXJIRWVQbmphaTNtcnFNelhINWFN?=
- =?utf-8?B?YXlqR2tBN0pmdmQ4OWhjZ0lqZkdGZW9JMTJYTjdxbDBhdU9HRXBRWmVPZ0tG?=
- =?utf-8?B?YTRVOE44Tlo3NCtEUFhHNkRhRmZ4MTFsREE0bzFBNExyWVY1YmlYZlF2bmYx?=
- =?utf-8?B?V2dVVFlraVR2b3BiNDhndUYvSXI5dzlTckZOVjlYaStFRGVVYkRDRXlPdnpn?=
- =?utf-8?B?TStOUlVBRkR0cEt2M09tL2h4MkRMdWcxY0RxT3JNQnZoRStHY3huTUd0ZCt3?=
- =?utf-8?B?QmhCL3gvQW1VczUxSzBmdjg0Q3duNHBjd21Pc0NzMEJ6Z1Z2TXlKZXhoRGt1?=
- =?utf-8?B?RWRablpJWC9NZ2xsSkJCam1ONTZKYXAyNzBPUHA5UENEd3lybXBQMnFaYUY1?=
- =?utf-8?B?ZlpNMUVhL0xkdlg3NEpQYytsZEtNLzQ2MEY0bzdmUWRHVzJzeVdwWDNSd2Rn?=
- =?utf-8?B?d3U2aUt3ZW9xUzM4MXZTOGE3Q3V6K0JmeVpHeUNxS25HSlZkK0RrU0VibW8y?=
- =?utf-8?B?SU5hdmh3bmtIS3dHK3pqWUovdHU5MHBzemRmOHFsYVp3QWxnZDNTNHJWUUQz?=
- =?utf-8?B?bDdBSThiQzJSb3Z2L1llcUoxbW9qUmhEbVZub1htZEkwV2o0U28wVzlFOXNj?=
- =?utf-8?B?QkgrYm5GS2lKZFE2bytNZnFsbDRsUE5nMFBSUU5LWHhYV3BkT3JKOEJhNXNK?=
- =?utf-8?B?RjR3STVFRmtmZ3hYV3NiVnkrTFFmdFFpYmgyTTdnTktNSjlEMlZvQUJVQm9i?=
- =?utf-8?B?emtrKzJEcGpOSVRScHRIT1ZOcDFuYS9uYWoxcnNkRmd0Q3J4cHUrRlc4cG03?=
- =?utf-8?B?RTRrbks0T1RUQ1BXY2JjcWs1NG9melN3ZzJ2cGRHeTdDWVd5ZmMzM1V1NHU5?=
- =?utf-8?B?dEl2SlZlK3h1TkdVaE1Md0ljVHlhbmpKTzFEdmxCMjEvSW1ac0dKOHRTOFc4?=
- =?utf-8?B?bVFEVThyRDRKUGlPVGdrNjlxWFRzeXBXQU1UbG8waCtVYzVSRENxODhHb1RZ?=
- =?utf-8?B?TlFOSjhtVVFYN1BsYWR0STc0U2wzQ0VHTG9Iem9zb1Bod0VlazdGcUx1NEtt?=
- =?utf-8?B?ZTZuTVNGYWFNbWM0aXRqcndaV0xRb0V0bllKbTlvRWVzUmQraWtUQ0YzS0cw?=
- =?utf-8?B?VDNLYkpKWmpkL01QY2YvekNUdlBSMDlWZ3N6OE5jenpFTHBYaTlpK2s4SFZW?=
- =?utf-8?B?WXovNzlXU013VGZDbWhTVWhLbGdpZ05sVGpBTU1FNjJoSzBucHNBWVhlanJO?=
- =?utf-8?B?MlFoODhJbVo4RTZIL0Y2NTJKbU55Z3l0TkM0NEFRY2JwZEFjNXo4YVIzdVZl?=
- =?utf-8?B?VklSWnNVUW5BN3NJdVlPZTh4WEF3cEdINlV6czEvdTNxVmNCcWJHeFpuNTBi?=
- =?utf-8?B?bElrOUptaGRGUzFITFgvbGI0SDBpM3d6b1MyUWpMNWlTK084T0tYN0R0MUdr?=
- =?utf-8?B?ZEdZWmpNb1VBWldsL1ZDVnZSZCtiMHo1bGVQeHNnUXJ5WTEzMHFZRlpIdG1T?=
- =?utf-8?B?Sm8xdGt3K21HS0d4Wi9uUW1wNk1WTHNiblloSzdqN25jUTYyUThTbDlMbGZT?=
- =?utf-8?B?SHF2aW1XWmYycnlLOUdxZnlWNTlseHYzb3AzY2FzdGJXS0JqUXd2NVMyQXlK?=
- =?utf-8?B?Tm1EdXhqZ01kNzRUYVlCK3F5VTd0aGFoZDZ3S2QybG9PV1BFUFBYNERGdzVK?=
- =?utf-8?B?VmFnV1JtcFlyVm0vRnVOZ2RPZHZLRHZGc3JNakNnMjNBVXovUENhMVVQVnYz?=
- =?utf-8?B?M3NKMnBZNXdsaDV5TTVvdzk4S3EwYmJVaWs3WFBMbEpWaDE3Zkw3emFKWEpV?=
- =?utf-8?B?QlBSZzlFbFQxUk5LaW85Z2RUN3ZIN2J4TWRXR1J6L3RYazYvMzhIaWI3ZUZr?=
- =?utf-8?B?czBZRGljOU5oS1AzM2NGeVpBU1hEamtkUkpmN0lHc1lLUUUvYnVlNmVIaEg3?=
- =?utf-8?B?VCtIUytSQ2cyN2hyZEdEQjRiTVRBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 14:50:09.4068
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0f744c5-1ad3-40fa-08e2-08de550e8bb3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF6B6BCC42C
+Content-Transfer-Encoding: quoted-printable
 
-Hello Gabriele, Nam,
+On Fri, 2026-01-16 at 20:20 +0530, K Prateek Nayak wrote:
+> Hello Gabriele, Nam,
+>=20
+> On 1/16/2026 6:09 PM, Gabriele Monaco wrote:
+> > @@ -2087,6 +2087,8 @@ unsigned long get_wchan(struct task_struct *p)
+> > =C2=A0
+> > =C2=A0void enqueue_task(struct rq *rq, struct task_struct *p, int flags=
+)
+> > =C2=A0{
+>=20
+> For delayed task, I think you'll need:
+>=20
+> =09if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_DELAYED))
+>=20
+> > +=09=09trace_sched_enqueue_tp(p, rq->cpu);
+> > +
+> > =C2=A0=09if (!(flags & ENQUEUE_NOCLOCK))
+> > =C2=A0=09=09update_rq_clock(rq);
+>=20
+> Since delayed tasks haven't hit __block_task(), they are essentially
+> still enqueued. Peter should be able to confirm. Other than that,
+> the placements of the tracepoints look good now. Feel free to include:
+>=20
+> Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-On 1/16/2026 6:09 PM, Gabriele Monaco wrote:
-> @@ -2087,6 +2087,8 @@ unsigned long get_wchan(struct task_struct *p)
->  
->  void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
->  {
+Mmh, I was sure I missed something after the comments on Nam's patch, thank=
+s for
+the heads up and review!
 
-For delayed task, I think you'll need:
+Going to try your suggestion.
 
-	if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_DELAYED))
-
-> +		trace_sched_enqueue_tp(p, rq->cpu);
-> +
->  	if (!(flags & ENQUEUE_NOCLOCK))
->  		update_rq_clock(rq);
-
-Since delayed tasks haven't hit __block_task(), they are essentially
-still enqueued. Peter should be able to confirm. Other than that,
-the placements of the tracepoints look good now. Feel free to include:
-
-Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
--- 
-Thanks and Regards,
-Prateek
+Thanks,
+Gabriele
 
