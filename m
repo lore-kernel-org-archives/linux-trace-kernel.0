@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238821DF258
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 12:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EFB21D590
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 12:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768567226; cv=none; b=WQJk2frtqMtrPywkYV/EARM4TCb4l5b0Emtc2zK69BVCZy/GirrUqB0cvHXqo3CEzlRWBKPIhO+yrb0vWTH1yHWpRgimVGB3MiD/sXboI6l5dx16guTFkbaguTyPhiXUWTDbH/pPr3lYTuToqAMbOfRBFPwHuckz2yUy2ULjHGw=
+	t=1768567231; cv=none; b=YL5PLvpiJeKdVM5yUI2B/XmeMxeoAI7482U60WQRuWFWQPGCWN1zntoAsC+xUMkfP2xgKCmlw+RGyjmAzdDn+Tu2dUCCwhzCwXRcoWiyVD16aSjL58p1ak8CjQsxB3a8JWl8iOhbX+wkW2kslqyMSSq7N+sl9Om1+h3VUKVXVF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768567226; c=relaxed/simple;
-	bh=3pb4tvoMPRbwjRConuA18iVLmMx3CNKMb4t86AoYTfs=;
+	s=arc-20240116; t=1768567231; c=relaxed/simple;
+	bh=YOh+WmjF31wq+7/wt12u5OvU27Q8rBeiXQ9dC6AT3H8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=imAjk2Baq9f2CaA85ZGiojrFBrESGv5bG9fp/rWrIz+No6JLCQnp+91nNWE7/dzN9uAEtzCblDWyzSzgWSTjKPQtHNe8RuEBgc2hOSnACMtA3UH5+CQuP7ELPhwfh0qLmakPBF3RT4onEzj6Wrv8CjZYvfHki7V6leNLzQuEfzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R787IJnW; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=mHyukymD4UxVcOv8bFOPvV1SJ7NQ4UiwZr3B621AyFCIMZSg5RoZjDU42w/Sq6o+CNSNgv3KH6Q+wzjSXb1+uXCHuSiBtj+acaIDT9x2w4qJ8DoKsy+aL9bfA28KB8cSE/md2hr16IpEUYscvGYyv4pZJYPhzcLRnmsl+fJslco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hK9OwRsQ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R787IJnW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hK9OwRsQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768567221;
+	s=mimecast20190719; t=1768567228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VUAldtIVXccPkmZj84jsujvjZRg6n9/+aaEPOLMw72s=;
-	b=R787IJnWCfIUno6V5QI/wObZWEycwEseBYQ8ZZ29/7TzZalYStRB+76Q9kUDmSCisdTiLc
-	XSbQI5QUgL6xtvo5Y5Yw2KZrpgwEq2ShRAqDUp+5ejsgztfuQLBVPMOXIsPVpAIy71rQEj
-	AKx+novRAwqO34Yg91lDonG+FFK7aUk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=bsinfdR1Sheg5tPjDYElGsfZJDd1jewwP9udfKybc04=;
+	b=hK9OwRsQ8VeQuWEp49vkiSGvfeLpuzHCellyLAH78ZCEHL0rP/FkaVKSE5XzawMO/hlNvn
+	4Nasz4YIvF2OWqI8DTiTK0GSsqIWXHO7hbVSDkpfNyYYx2tPGBxriGSqBomrKpPm53ZKtw
+	QrNqubYxltafkRWRcL5nIg9T3YcmCto=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-e4bbCxElMpmph7HcajHwGQ-1; Fri,
- 16 Jan 2026 07:40:19 -0500
-X-MC-Unique: e4bbCxElMpmph7HcajHwGQ-1
-X-Mimecast-MFC-AGG-ID: e4bbCxElMpmph7HcajHwGQ_1768567218
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-611--tsmu2GmMmewfCrJlqbCoA-1; Fri,
+ 16 Jan 2026 07:40:25 -0500
+X-MC-Unique: -tsmu2GmMmewfCrJlqbCoA-1
+X-Mimecast-MFC-AGG-ID: -tsmu2GmMmewfCrJlqbCoA_1768567224
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99F0319560AF;
-	Fri, 16 Jan 2026 12:40:18 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45BDF18005AE;
+	Fri, 16 Jan 2026 12:40:24 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.224.42])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DF4B11955F22;
-	Fri, 16 Jan 2026 12:40:13 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E99C0195419D;
+	Fri, 16 Jan 2026 12:40:19 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -52,13 +52,12 @@ To: linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Phil Auld <pauld@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v4 09/15] sched: Add deadline tracepoints
-Date: Fri, 16 Jan 2026 13:39:05 +0100
-Message-ID: <20260116123911.130300-10-gmonaco@redhat.com>
+Subject: [PATCH v4 10/15] sched: Add task enqueue/dequeue trace points
+Date: Fri, 16 Jan 2026 13:39:06 +0100
+Message-ID: <20260116123911.130300-11-gmonaco@redhat.com>
 In-Reply-To: <20260116123911.130300-1-gmonaco@redhat.com>
 References: <20260116123911.130300-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -70,128 +69,90 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add the following tracepoints:
+From: Nam Cao <namcao@linutronix.de>
 
-* sched_dl_throttle(dl_se, cpu):
-    Called when a deadline entity is throttled
-* sched_dl_replenish(dl_se, cpu):
-    Called when a deadline entity's runtime is replenished
-* sched_dl_server_start(dl_se, cpu):
-    Called when a deadline server is started
-* sched_dl_server_stop(dl_se, cpu):
-    Called when a deadline server is stopped
+Add trace points into enqueue_task() and dequeue_task().
 
-Those tracepoints can be useful to validate the deadline scheduler with
-RV and are not exported to tracefs.
-
-Reviewed-by: Phil Auld <pauld@redhat.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
-
-Notes:
-    V3:
-    * Rename dl argument to dl_se in tracepoints
-
- include/trace/events/sched.h | 16 ++++++++++++++++
- kernel/sched/core.c          |  4 ++++
- kernel/sched/deadline.c      |  7 +++++++
- 3 files changed, 27 insertions(+)
+ include/trace/events/sched.h | 13 +++++++++++++
+ kernel/sched/core.c          |  9 ++++++++-
+ kernel/sched/sched.h         |  2 ++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 7b2645b50e78..366b2e8ec40c 100644
+index 366b2e8ec40c..f4e1d3554e3e 100644
 --- a/include/trace/events/sched.h
 +++ b/include/trace/events/sched.h
-@@ -896,6 +896,22 @@ DECLARE_TRACE(sched_set_need_resched,
- 	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
- 	TP_ARGS(tsk, cpu, tif));
+@@ -912,6 +912,19 @@ DECLARE_TRACE(sched_dl_server_stop,
+ 	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
+ 	TP_ARGS(dl_se, cpu));
  
-+DECLARE_TRACE(sched_dl_throttle,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
++/*
++ * The two trace points below may not work as expected for fair tasks due
++ * to delayed dequeue. See:
++ * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd.com/
++ */
++DECLARE_TRACE(sched_enqueue,
++	TP_PROTO(struct task_struct *tsk, int cpu),
++	TP_ARGS(tsk, cpu));
 +
-+DECLARE_TRACE(sched_dl_replenish,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
-+DECLARE_TRACE(sched_dl_server_start,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
-+
-+DECLARE_TRACE(sched_dl_server_stop,
-+	TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
-+	TP_ARGS(dl_se, cpu));
++DECLARE_TRACE(sched_dequeue,
++	TP_PROTO(struct task_struct *tsk, int cpu),
++	TP_ARGS(tsk, cpu));
 +
  #endif /* _TRACE_SCHED_H */
  
  /* This part must be outside protection */
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 6380afe3de63..f6293fa02fb7 100644
+index f6293fa02fb7..8958c013fb2c 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -122,6 +122,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
- EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_start_tp);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_stop_tp);
+@@ -2087,6 +2087,8 @@ unsigned long get_wchan(struct task_struct *p)
  
- DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
- DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 7441b7e52cd9..a69d2f073916 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -733,6 +733,7 @@ static inline void replenish_dl_new_period(struct sched_dl_entity *dl_se,
- 		dl_se->dl_throttled = 1;
- 		dl_se->dl_defer_armed = 1;
- 	}
-+	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq));
+ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+ {
++	trace_sched_enqueue_tp(p, rq->cpu);
++
+ 	if (!(flags & ENQUEUE_NOCLOCK))
+ 		update_rq_clock(rq);
+ 
+@@ -2114,6 +2116,8 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+  */
+ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ {
++	int ret;
++
+ 	if (sched_core_enabled(rq))
+ 		sched_core_dequeue(rq, p, flags);
+ 
+@@ -2131,7 +2135,10 @@ inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ 	 */
+ 	uclamp_rq_dec(rq, p);
+ 	rq->queue_mask |= p->sched_class->queue_mask;
+-	return p->sched_class->dequeue_task(rq, p, flags);
++	ret = p->sched_class->dequeue_task(rq, p, flags);
++	if (trace_sched_dequeue_tp_enabled() && !(flags & DEQUEUE_SLEEP))
++		trace_sched_dequeue_tp(p, rq->cpu);
++	return ret;
  }
  
- /*
-@@ -850,6 +851,8 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
- 	if (dl_se->dl_throttled)
- 		dl_se->dl_throttled = 0;
+ void activate_task(struct rq *rq, struct task_struct *p, int flags)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e885a935b716..8465472b40fa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2918,6 +2918,8 @@ static inline void sub_nr_running(struct rq *rq, unsigned count)
  
-+	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq));
+ static inline void __block_task(struct rq *rq, struct task_struct *p)
+ {
++	trace_sched_dequeue_tp(p, rq->cpu);
 +
- 	/*
- 	 * If this is the replenishment of a deferred reservation,
- 	 * clear the flag and return.
-@@ -1341,6 +1344,7 @@ static inline void dl_check_constrained_dl(struct sched_dl_entity *dl_se)
- 	    dl_time_before(rq_clock(rq), dl_next_period(dl_se))) {
- 		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(dl_se)))
- 			return;
-+		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq));
- 		dl_se->dl_throttled = 1;
- 		if (dl_se->runtime > 0)
- 			dl_se->runtime = 0;
-@@ -1504,6 +1508,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+ 	if (p->sched_contributes_to_load)
+ 		rq->nr_uninterruptible++;
  
- throttle:
- 	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) {
-+		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq));
- 		dl_se->dl_throttled = 1;
- 
- 		/* If requested, inform the user about runtime overruns. */
-@@ -1800,6 +1805,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
- 	if (WARN_ON_ONCE(!cpu_online(cpu_of(rq))))
- 		return;
- 
-+	trace_sched_dl_server_start_tp(dl_se, cpu_of(rq));
- 	dl_se->dl_server_active = 1;
- 	enqueue_dl_entity(dl_se, ENQUEUE_WAKEUP);
- 	if (!dl_task(dl_se->rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
-@@ -1811,6 +1817,7 @@ void dl_server_stop(struct sched_dl_entity *dl_se)
- 	if (!dl_server(dl_se) || !dl_server_active(dl_se))
- 		return;
- 
-+	trace_sched_dl_server_stop_tp(dl_se, cpu_of(dl_se->rq));
- 	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
- 	hrtimer_try_to_cancel(&dl_se->dl_timer);
- 	dl_se->dl_defer_armed = 0;
 -- 
 2.52.0
 
