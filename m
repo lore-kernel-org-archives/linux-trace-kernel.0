@@ -1,142 +1,151 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F22533E36F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 15:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AFA8F4A;
+	Fri, 16 Jan 2026 16:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768578935; cv=none; b=fuR5QtB3x/JhFJWk+dVgs3W3kCb2+nHiU30FkSa8zPVaSp+dtsTwJrdFgV6aiiarx6JLaVj4QYzOwJp2XhiJMdk7IDkYo8qXxfjJ6gRau0ANCWns1HJbqAEerJfsoVlVZv3A+Etbwu3aewkc54ErwGE3e0jSdQlnmeZO4AhMXE4=
+	t=1768579369; cv=none; b=lPrnS16SeZZq0F7BObwOZ67AJVRZkgVwN/uw9bUev+Kzmhcn1l8c6GZZQVh6Sk85XGdfPSC44FVxiRBTg5jvfIzmQYDjZOYCTQNndV4aHaj3VyTC7E58kNCDEf4lAQio9m8Yuqls/An/8PWJ7WfgfzPvLIXsRjpPxHr9tkttj0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768578935; c=relaxed/simple;
-	bh=gYRLTx/x34zgvDGr8Ikg/savTmJY601nWRaB0KVkXwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M1xr/g96Rr11Lp4RVStQbWG+sMIQD8F+qWivPS6c6p83/2l8SoQ+8m+icPvhs5FambYbr6BZREFUxxOSLXZrypQpehYbRDCBRPaXByRWRfw51Vg00EZpDXgczySAyUOxNjVKCHXfpIGYJ/tvMw0FurwO8ZvcCMDTL/JYit/LfFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NE8FiOyk; arc=none smtp.client-ip=209.85.128.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768579369; c=relaxed/simple;
+	bh=mQjjBgHaxyIhHcS3H6xxws4vC3O+oyUSUxtA+52E5jY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Yv+Mj1wHjqakde0y1vDHKvh972TSt5g1k+sqhy6AL/mx8G9nx9Kslwj1LgPQ+psNjVIPKSlBDT1eFQwC6gc5XQ1A+OumjjD38ybY0pmwBZBBa29Q+pqa14hwuI2MdbYBlU6FUeHGjvW/p10ak9UPqpGbDxBl4YdKR9EJ5jvo7jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=g7pqTYzt; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NE8FiOyk"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4801c731d0aso11616315e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 07:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768578927; x=1769183727; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nC1t8XaX/bq14ENSBQ5Fda7IB2vEXwzrtJEP49kE9AQ=;
-        b=NE8FiOykdnhDOMKOtxxcUZ2A8byokPHbFAfOK5GO64nMeeDvjWiq0bsUAyJ+jngW2m
-         /Jpa3fuCUlDE5b7mlmdpT1GsZTogNatJk/18TC/8ukSAFpoQUCp2/V1VnrahOPuT6MlP
-         ReKNrOHjA5ANiRTgGGMAXYGEnEZ/uOVZCHw1VErcWhRQl1GkgDklJOo+5VCnFTMd/OJX
-         nPiqrQh/aESx3YtVefF0ktumIfI5gkNbAt1wL69LJFL4G5z7P3QA233hJPwsoxK9bbcc
-         pq2Yd/uPVv6ReSJXp49ygr+FPjazMwO53m+ZQjR9KeDTskpI/efYkchFs1ERb0k/c5fs
-         qQ0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768578927; x=1769183727;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nC1t8XaX/bq14ENSBQ5Fda7IB2vEXwzrtJEP49kE9AQ=;
-        b=tMjJl6S8laNcOKQ2mWtMz/BiB224VY+oN65R1fbQeoGp2doDA2+nsPLYFvsGItMK/c
-         FzJ+3ZvYbtD2gG3ZDReSJ8DlZVYNzYiKfMlj2NNLnjqLiQBuHPbVQzqu8DmUER30noxo
-         N01oA52kLj91Z5IBTp0DFeunZSqsGx6QhbnjnTx3gXKwGWu1o4ZEsBu9TcpLoVRhVgI7
-         MucOL1e5jBwzDvBPe+NCjN2HXQiXXmYyNyQ1BtqA6T9Tc1TFrz4kqNf0fa/XnGBzl+A5
-         /96c0y3C9X7AUMcMDWkCgKKtjZtqVvtIkhsRlcUteXlBBsGQYzWySd2Hi02nI4g0jbCP
-         Nfbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi8sjcKJx2TGSJR5VkFwhf0ciu7/7ybbfoadxa+gNJqEHMRgI06GESthLDC7j8Db7+1C+ZY5/bv2ivEOA5XMkWJsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwttcwVZIT7EhW9VS9cBQWAZ24Q2O2pjK2fca1ekI3ZmuQuNBOm
-	YKhJX/Vaegd5IbMRphfpVwgScfjcvkv0134CATgIOoVWP0JIE9I/S/MM7cqvUcNZFFE=
-X-Gm-Gg: AY/fxX7VL5AE57snRJWVi2ClJRSrCC0I2qL6GScc3izRx+Y70tb4wyLsSsa7LmJhSlX
-	YyqcsQ2kQiMglxlsYVt7VdjiK8IP2FlrbK1dAL9vEaOK680pEbYTEtfUD1mRZFDt1K2Czyp9CtQ
-	ynPdUjuWqulnfJRG+PLcPPRy0H3beTJQave+HqPkrK5mT6g0WHAk4lCzKXk/iqVyiGQKfIzGroq
-	QnNJ2ZvGhOxqBPpwStOvculEfngFfSRj/BJ7KEpGJl/b1y9wcL5RoJHXwd5l6T8OgiJBQkW671F
-	lsd6A/BCEpitWtIZi2bVn1+9pKDTJCcoejDCDuFTt8PuBMgKicQ1pTAID3pMA+G1dp3cDJF1BLz
-	NRI66kYzysBeotg38kitF8gVP5QdFN+EAgN+Qc+wBNstftLL2xh7zpJNBoursxsAxAP3o+V9zN2
-	K4GfjqKG4lORbUH8DF4SHuWdbvMay7cf2aQC0=
-X-Received: by 2002:a05:600c:1f12:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4801e34ce8emr40733615e9.30.1768578927236;
-        Fri, 16 Jan 2026 07:55:27 -0800 (PST)
-Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801fdefed9sm19855285e9.3.2026.01.16.07.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 07:55:26 -0800 (PST)
-Date: Fri, 16 Jan 2026 16:55:25 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <liam.howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
- with 2-pass algorithm
-Message-ID: <aWpfbSJe5vREzzyd@tiehlicka>
-References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
- <aWfNMKCoEp2LuA2v@tiehlicka>
- <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="g7pqTYzt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1768579358; x=1769184158; i=markus.elfring@web.de;
+	bh=RahEOyQwJocIFS646Fn0CzFq9Wit2v7YAMI5BK2dUO4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g7pqTYztp3NBU9Bx3x4gxHX5baHreRr01dpwB8X+5cImdscHij6muD1ydkMKdb50
+	 zOuXXAzAsToJgjEjRwH2c1F7DuW4DdjuL6q64xeaaN3nkxuz9CZ4nbem6fq7Iz27Q
+	 qczMCRwesJum/oueMRNG0OxC48DzwmHqvphn/g+yK9jF4KPNtlFLvDRK8j+bdIad3
+	 BS6y7Bahw/q4dP3Qit5ff+YRXnKMq+G2e5r/UIqEWlY1OfVsdqq+MXouuaXQoC+bJ
+	 UfzlVWdGFABm6+bgOmkEy90uZK/m8mZB6ws3PfVqYn8HI0OOWrGZhAs3Ni1Y3+IcA
+	 ew29h6tpdrUl3sYOhg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.218]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MGxQX-1vc5SH1gpv-00E5Ui; Fri, 16
+ Jan 2026 17:02:38 +0100
+Message-ID: <fca8f2cd-c3e5-40b0-a793-bded109e37bc@web.de>
+Date: Fri, 16 Jan 2026 17:02:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
+User-Agent: Mozilla Thunderbird
+To: Daniel Thompson <daniel@riscstar.com>,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Will Deacon <will@kernel.org>
+References: <20260116-iommu-io_page_fault_null_fix-v1-1-6c20c2e62987@riscstar.com>
+Subject: Re: [PATCH] iommu: Fix NULL pointer deref when io_page_fault
+ tracepoint fires
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260116-iommu-io_page_fault_null_fix-v1-1-6c20c2e62987@riscstar.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1FTKJkaMi8gpomCx5H3xe7LEvwBiTrFaijdUx2Aj7gfs0+co6kF
+ OydeSJM2HuFgj0Tr6tNwq1E6UHJGg9hJ/MJI1TDJUSIYxb/MMR201BNVS8i1IzpFUXSlNmW
+ B+U2QaEwExvNA3gutCzn9nh+uDvt4Igc4qRMzlAmsfWOa9O5XvUd6iBHfxZEp/pHh/rC/5q
+ LbYIQroeVg7U90mJh8qLw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Mk6c8yA1AIw=;6vyQr/06AjdgiVjaW9favKvfSoR
+ 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
+ r73MTZ9iVPuTmmV7wcnXV40pvXQBme99h3qwzT
 
-On Wed 14-01-26 14:36:44, Mathieu Desnoyers wrote:
-> On 2026-01-14 12:06, Michal Hocko wrote:
-> > On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
-[...]
-Thanks to those clarifications
- 
-> > My overall impression is that the implementation is really involved and
-> > at this moment I do not really see a big benefit of all the complexity.
-> 
-> Note that we can get the proc ABI RSS accuracy improvements with the
-> previous 2 patches without this 2-pass algo. Do you see more value in
-> the RSS accuracy improvements than in the oom killer latency reduction ?
+=E2=80=A6
+> Fix this by adding logic to the tracepoint to safely propagate NULL.
 
-Yes, TBH I do not see oom latency as a big problem. As already mention
-this is a slow path and we are not talking about a huge latency anyway.
-proc numbers are much more sensitive to latency as they are regularly
-read by user space tools and accuracy for those matters as well (being
-off by 100s MB or GBs is simply making those numbers completely bogus).
- 
-> > It would help to explicitly mention what is the the overall imprecision
-> > of the oom victim selection with the new data structure (maybe this is
-> > good enough[*]). What if we go with exact precision with the new data
-> > structure comparing to the original pcp counters.
-> 
-> Do you mean comparing using approximate sums with the new data
-> structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
-> compared to the old data structure which had an inaccuracy of
-> O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
-> is good enough for OOM task selection, we could go from precise sum
-> back to an approximation and just use that with the new data
-> structure.
+* How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and=
+ =E2=80=9CCc=E2=80=9D) accordingly?
 
-Exactly!
+* Would a summary phrase like =E2=80=9CPrevent null pointer dereference fo=
+r a tracepoint=E2=80=9D
+  be a bit nicer?
 
--- 
-Michal Hocko
-SUSE Labs
+
+Regards,
+Markus
