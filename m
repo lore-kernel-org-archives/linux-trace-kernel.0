@@ -1,63 +1,63 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9FD33B6C0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 15:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F22533E36F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 15:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768578685; cv=none; b=QLTR4mF3nC6ssVsKRmqqJbtX4rHyRYizyGHoaakvPGs4xeX2xpIyzUc5RP253zKjLWlbBxD47PFHeTRtpTnUp114ZV+qCjfCMBU3ZZ/87fEEc/8lJbdP1RsCdnTGQodjrATLW/e0fCcFpjHrdMb+Jxa8HbOcExFeFjjoyUEWa9g=
+	t=1768578935; cv=none; b=fuR5QtB3x/JhFJWk+dVgs3W3kCb2+nHiU30FkSa8zPVaSp+dtsTwJrdFgV6aiiarx6JLaVj4QYzOwJp2XhiJMdk7IDkYo8qXxfjJ6gRau0ANCWns1HJbqAEerJfsoVlVZv3A+Etbwu3aewkc54ErwGE3e0jSdQlnmeZO4AhMXE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768578685; c=relaxed/simple;
-	bh=sWsFXuclsCQHF1wp24NKR1BJW2Va0NelV/xUk3GRd+c=;
+	s=arc-20240116; t=1768578935; c=relaxed/simple;
+	bh=gYRLTx/x34zgvDGr8Ikg/savTmJY601nWRaB0KVkXwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4czgeKll2XyKZx5HnS3KJTQDnsR9kHQu+77se+UlnUL03cOH/kQr28XYViUp+zQUtX7iI/QajL7XI9t0/oEP4qTKeT/X3C0zOyPkLERuNVHnXcK4x8WCtsI4wCnv/KQYdacrfkfJ5guppjOe6p3Ey+Tfl4go5bEvEKW0Wh0T9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FcdsOP3M; arc=none smtp.client-ip=209.85.128.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=M1xr/g96Rr11Lp4RVStQbWG+sMIQD8F+qWivPS6c6p83/2l8SoQ+8m+icPvhs5FambYbr6BZREFUxxOSLXZrypQpehYbRDCBRPaXByRWRfw51Vg00EZpDXgczySAyUOxNjVKCHXfpIGYJ/tvMw0FurwO8ZvcCMDTL/JYit/LfFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NE8FiOyk; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FcdsOP3M"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4801c314c84so11577715e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 07:51:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NE8FiOyk"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4801c731d0aso11616315e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 07:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768578681; x=1769183481; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1768578927; x=1769183727; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yxikc1y77Ls9+KOGiahB2sX17dgvn1C4IYfzeZk12RM=;
-        b=FcdsOP3MR4AEmQ4rmKuDfT3DYfQ++lQvmNZ0fM2IJgj+GNzEw1EEpJiJZDwkSzYRh8
-         4L5PTc2/9gvJlUTY/BY7AC7bilte4mIAUjGXWdpK3iM1pW5PbQ4selN8wMa3PK2Oo/CW
-         eEN2kyWMUOID0muh11EHFIQA7GfF2yuxqr3M3Kfb8nAVBAoxqRwh5aehDdvD7mRSs/dr
-         GRr5jijSzAeZIv2IK8HZbV+t4IOUfWIPBpFUxmVDexQW9/ivDOLXxrAkkCUoRellTBSd
-         HIb9tVVMbIWJfHy7rfRf0GjWkOc3oza5kuEFsAa6T2dOh82vbcPLBS0P0Db0RnUdEp9h
-         YqZw==
+        bh=nC1t8XaX/bq14ENSBQ5Fda7IB2vEXwzrtJEP49kE9AQ=;
+        b=NE8FiOykdnhDOMKOtxxcUZ2A8byokPHbFAfOK5GO64nMeeDvjWiq0bsUAyJ+jngW2m
+         /Jpa3fuCUlDE5b7mlmdpT1GsZTogNatJk/18TC/8ukSAFpoQUCp2/V1VnrahOPuT6MlP
+         ReKNrOHjA5ANiRTgGGMAXYGEnEZ/uOVZCHw1VErcWhRQl1GkgDklJOo+5VCnFTMd/OJX
+         nPiqrQh/aESx3YtVefF0ktumIfI5gkNbAt1wL69LJFL4G5z7P3QA233hJPwsoxK9bbcc
+         pq2Yd/uPVv6ReSJXp49ygr+FPjazMwO53m+ZQjR9KeDTskpI/efYkchFs1ERb0k/c5fs
+         qQ0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768578681; x=1769183481;
+        d=1e100.net; s=20230601; t=1768578927; x=1769183727;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yxikc1y77Ls9+KOGiahB2sX17dgvn1C4IYfzeZk12RM=;
-        b=C8vsEfhDnaUuU1cTuEQFaHP2OEc2dsLVIJp1h5ocBA+LBCjUUGP6V0cY9pe+/F1BZV
-         KoHYAWmCQMkw/LoEXL1/hNPRYwHZ/fc65/KSIh1UnBqRq5W42oVPD+XNSrJJf1wQ4rKi
-         hONjHbAsm2YAmXuVBrV3MFsrx9tMwI1HrNqvznAJGdVfFhFhuBRazOTPlFE/0uW40jDX
-         zOgrTGLWNgsE84manhV2sjkDqWXyGQMH0B5FtJ+fGVgv7nURMM9pCUoFvF/FemJCtggi
-         WNBGrNyfuy/sZauEVY9cGBjxfUP68LKSPDy30iV/48EUz3hGuP8GBdWKe/vtURFyYCKM
-         RoJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvp+SSNiYU9lqUtdFR4kcugw2YSxJirsbjuIWAlgn/np612hzU5U5UrS1/RVcWlTVJNg328yaTG1Fa02QhcW/Cfbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjqp/akH2FrX6CgkWh9cifTFo78BQspICSfu9y6YW53S2f05i2
-	up4p+4kh3iFHWZCZi+2rKCpl1gS3tUPGIICklLeluXPs04uCDl/ycmRNt9LXAUC3Yic=
-X-Gm-Gg: AY/fxX4tAe6cWskYTV8K7qclkEcgVPxk96YWkwWRwN4dcLGWbN8YvzR7LBcwV69CPvH
-	woy0sJOx8FBMDa1a4/Kt+bbF+Q8Q75klfiQHb7123g2duFWWpn+3lBtVecqvlCPkCYOn1F5l6nD
-	GS9WVxq1MYz6wNwn7v1jWXza8nliRJMruhEDY74AXDJbMb3qna1Ajb4beytiCxElk58vWyoaZ+a
-	Q4+HAA4zve0rR1r06OvNK7h7oMvepEwPYRs/U1Xy3QI+ZlWKJeDe50idMHFkivGD4w2KZYOLmjp
-	AJ93QfIhszc0KgBO9Annv+T0xz+GB/CDxV7azbAA5YW2Hod05WR+KD2HCSpTCZ44RIzP5vOQezT
-	4WhgCqtq167ujmf1YCRhMGIlIR9YZlLBeDccEGEtlZqNS9Jbm4v1DcjchL8vw9nv1X9jYkjaVpe
-	CXFuvCR8gI9YZi+Fv76EY2Nfg1
-X-Received: by 2002:a05:600c:3b9e:b0:477:9a28:b09a with SMTP id 5b1f17b1804b1-4801e2a5861mr49417745e9.0.1768578681507;
-        Fri, 16 Jan 2026 07:51:21 -0800 (PST)
+        bh=nC1t8XaX/bq14ENSBQ5Fda7IB2vEXwzrtJEP49kE9AQ=;
+        b=tMjJl6S8laNcOKQ2mWtMz/BiB224VY+oN65R1fbQeoGp2doDA2+nsPLYFvsGItMK/c
+         FzJ+3ZvYbtD2gG3ZDReSJ8DlZVYNzYiKfMlj2NNLnjqLiQBuHPbVQzqu8DmUER30noxo
+         N01oA52kLj91Z5IBTp0DFeunZSqsGx6QhbnjnTx3gXKwGWu1o4ZEsBu9TcpLoVRhVgI7
+         MucOL1e5jBwzDvBPe+NCjN2HXQiXXmYyNyQ1BtqA6T9Tc1TFrz4kqNf0fa/XnGBzl+A5
+         /96c0y3C9X7AUMcMDWkCgKKtjZtqVvtIkhsRlcUteXlBBsGQYzWySd2Hi02nI4g0jbCP
+         Nfbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUi8sjcKJx2TGSJR5VkFwhf0ciu7/7ybbfoadxa+gNJqEHMRgI06GESthLDC7j8Db7+1C+ZY5/bv2ivEOA5XMkWJsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwttcwVZIT7EhW9VS9cBQWAZ24Q2O2pjK2fca1ekI3ZmuQuNBOm
+	YKhJX/Vaegd5IbMRphfpVwgScfjcvkv0134CATgIOoVWP0JIE9I/S/MM7cqvUcNZFFE=
+X-Gm-Gg: AY/fxX7VL5AE57snRJWVi2ClJRSrCC0I2qL6GScc3izRx+Y70tb4wyLsSsa7LmJhSlX
+	YyqcsQ2kQiMglxlsYVt7VdjiK8IP2FlrbK1dAL9vEaOK680pEbYTEtfUD1mRZFDt1K2Czyp9CtQ
+	ynPdUjuWqulnfJRG+PLcPPRy0H3beTJQave+HqPkrK5mT6g0WHAk4lCzKXk/iqVyiGQKfIzGroq
+	QnNJ2ZvGhOxqBPpwStOvculEfngFfSRj/BJ7KEpGJl/b1y9wcL5RoJHXwd5l6T8OgiJBQkW671F
+	lsd6A/BCEpitWtIZi2bVn1+9pKDTJCcoejDCDuFTt8PuBMgKicQ1pTAID3pMA+G1dp3cDJF1BLz
+	NRI66kYzysBeotg38kitF8gVP5QdFN+EAgN+Qc+wBNstftLL2xh7zpJNBoursxsAxAP3o+V9zN2
+	K4GfjqKG4lORbUH8DF4SHuWdbvMay7cf2aQC0=
+X-Received: by 2002:a05:600c:1f12:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4801e34ce8emr40733615e9.30.1768578927236;
+        Fri, 16 Jan 2026 07:55:27 -0800 (PST)
 Received: from localhost (109-81-19-111.rct.o2.cz. [109.81.19.111])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801fe65883sm18036695e9.15.2026.01.16.07.51.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801fdefed9sm19855285e9.3.2026.01.16.07.55.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 07:51:20 -0800 (PST)
-Date: Fri, 16 Jan 2026 16:51:19 +0100
+        Fri, 16 Jan 2026 07:55:26 -0800 (PST)
+Date: Fri, 16 Jan 2026 16:55:25 +0100
 From: Michal Hocko <mhocko@suse.com>
 To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
@@ -86,12 +86,13 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v16 1/3] lib: Introduce hierarchical per-cpu counters
-Message-ID: <aWped4MIi5i0Y7-R@tiehlicka>
+Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
+ with 2-pass algorithm
+Message-ID: <aWpfbSJe5vREzzyd@tiehlicka>
 References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-2-mathieu.desnoyers@efficios.com>
- <aWfHTLDA8-Fja_gD@tiehlicka>
- <67bdfd38-1acf-4b90-9e34-ce752632ddb1@efficios.com>
+ <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
+ <aWfNMKCoEp2LuA2v@tiehlicka>
+ <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -100,81 +101,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67bdfd38-1acf-4b90-9e34-ce752632ddb1@efficios.com>
+In-Reply-To: <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
 
-On Wed 14-01-26 14:19:38, Mathieu Desnoyers wrote:
-> On 2026-01-14 11:41, Michal Hocko wrote:
-> > 
-> > One thing you should probably mention here is the memory consumption of
-> > the structure.
-> Good point.
+On Wed 14-01-26 14:36:44, Mathieu Desnoyers wrote:
+> On 2026-01-14 12:06, Michal Hocko wrote:
+> > On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
+[...]
+Thanks to those clarifications
+ 
+> > My overall impression is that the implementation is really involved and
+> > at this moment I do not really see a big benefit of all the complexity.
 > 
-> The most important parts are the per-cpu counters and the tree items
-> which propagate the carry.
-> 
-> In the proposed implementation, the per-cpu counters are allocated
-> within per-cpu data structures, so they end up using:
-> 
->   nr_possible_cpus * sizeof(unsigned long)
-> 
-> In addition, the tree items are appended at the end of the mm_struct.
-> The size of those items is defined by the per_nr_cpu_order_config
-> table "nr_items" field.
-> 
-> Each item is aligned on cacheline size (typically 64 bytes) to minimize
-> false sharing.
-> 
-> Here is the footprint for a few nr_cpus on a 64-bit arch:
-> 
-> nr_cpus     percpu counters (bytes)     nr_items       items size (bytes)     total (bytes)
->   2                 16                     1                 64                    80
->   4                 32                     3                192                   224
->   8                 64                     7                448                   512
->  64                 512                   21               1344                  1856
-> 128                1024                   21               1344                  2368
-> 256                2048                   37               2368                  4416
-> 512                4096                   73               4672                  8768
+> Note that we can get the proc ABI RSS accuracy improvements with the
+> previous 2 patches without this 2-pass algo. Do you see more value in
+> the RSS accuracy improvements than in the oom killer latency reduction ?
 
-I assume this is nr_possible_cpus not NR_CPUS, right?
+Yes, TBH I do not see oom latency as a big problem. As already mention
+this is a slow path and we are not talking about a huge latency anyway.
+proc numbers are much more sensitive to latency as they are regularly
+read by user space tools and accuracy for those matters as well (being
+off by 100s MB or GBs is simply making those numbers completely bogus).
+ 
+> > It would help to explicitly mention what is the the overall imprecision
+> > of the oom victim selection with the new data structure (maybe this is
+> > good enough[*]). What if we go with exact precision with the new data
+> > structure comparing to the original pcp counters.
+> 
+> Do you mean comparing using approximate sums with the new data
+> structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
+> compared to the old data structure which had an inaccuracy of
+> O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
+> is good enough for OOM task selection, we could go from precise sum
+> back to an approximation and just use that with the new data
+> structure.
 
-> There are of course various trade offs we can make here. We can:
-> 
-> * Increase the n-arity of the intermediate items to shrink the nr_items
->   required for a given nr_cpus. This will increase contention of carry
->   propagation across more cores.
-> 
-> * Remove cacheline alignment of intermediate tree items. This will
->   shrink the memory needed for tree items, but will increase false
->   sharing.
-> 
-> * Represent intermediate tree items on a byte rather than long.
->   This further reduces the memory required for intermediate tree
->   items, but further increases false sharing.
-> 
-> * Represent per-cpu counters on bytes rather than long. This makes
->   the "sum" operation trickier, because it needs to iterate on the
->   intermediate carry propagation nodes as well and synchronize with
->   ongoing "tree add" operations. It further reduces memory use.
-> 
-> * Implement a custom strided allocator for intermediate items carry
->   propagation bytes. This shares cachelines across different tree
->   instances, keeping good locality. This ensures that all accesses
->   from a given location in the machine topology touch the same
->   cacheline for the various tree instances. This adds complexity,
->   but provides compactness as well as minimal false-sharing.
-> 
-> Compared to this, the upstream percpu counters use a 32-bit integer per-cpu
-> (4 bytes), and accumulate within a 64-bit global value.
-> 
-> So yes, there is an extra memory footprint added by the current hpcc
-> implementation, but if it's an issue we have various options to consider
-> to reduce its footprint.
-> 
-> Is it OK if I add this discussion to the commit message, or should it
-> be also added into the high level design doc within
-> Documentation/core-api/percpu-counter-tree.rst ?
-
-I would mention them in both changelog and the documentation.
+Exactly!
 
 -- 
 Michal Hocko
