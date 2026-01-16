@@ -1,70 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E5432863E;
-	Thu, 15 Jan 2026 23:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C59A1E505;
+	Fri, 16 Jan 2026 00:43:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768520361; cv=none; b=tPOVDvIX1RG/qU4OLWZHkj5HjrapszVzBHWEtmb3gee5FNfrx2+M147Nm6TwSnN040Xi17clGGk/BErJq9fxsg8iZK93evddMa1/e7JMnkfscU+yEAagmJxVvlf280rmpGj2DdMUmaztVfK2GYlF5hcsL+ankQlpT1TdgyX1mFI=
+	t=1768524216; cv=none; b=h9TdJiKGU6J7j/5xTwp+mhvyt2uVAjMHwAt/x0BCEaTClNkj1DjR0+EAwAt3/kKzdtktHv/aASxJulOvVfrwbrpHoAZ7A+LHdYuBn3IBbS4HXA2edPhbrwNDIOglHWcC1CPWe40Ms5jL39lGu0hYxj9kOmNj9k/Aq1cGLjX0cFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768520361; c=relaxed/simple;
-	bh=KCeARxCrKeSqaMItrCLAnyFOC+geLL3gQ/QCeIKrP0M=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DRGoP8jIW5arlTD6GJgq8meT1P97QKEgWWZ2GfaGUUyk37ho6YPfv0/vIEl3hmgkVOEoN8iDhFnlpIDCcDOIbTp5AKkRIhdJ96y72hEX5+uY+wR87CuP1UAY+RRtwaPm4eZyQIIHTozFZ2zMymrEKxq+n9mK1Eg4MvRoEm8AjJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RAxIlLnG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768524216; c=relaxed/simple;
+	bh=9keAJjnhw1gCE+azgxtlmJQmRyzmwC1hmC4fiX8WgoU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=TyN6x8JEAEOB863NBLLdevPW6UDWSkEINbE6FUVoJc78UKCBJhVw1sJPfOyR+G6WQqtTAXu3I7OcVhur1SujTn/FfD+7TlSewupAg8mgUxsb4e73SNF9ywaG0ul4zoRARP7tIWET70vX2QvSm6BavHV423FxWxOpsn6nruQj3Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icTY1lTC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RAxIlLnG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3450C116D0;
-	Thu, 15 Jan 2026 23:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1768520360;
-	bh=KCeARxCrKeSqaMItrCLAnyFOC+geLL3gQ/QCeIKrP0M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RAxIlLnGNLMCPBtrDZMsUIEU3zhooo1hJa7Hoq355FoDqojW0Bh8gt7tyyySW+Bh9
-	 29+Kl8v/FsTalODBJZQkPo3vx9OL1A+3innwvH4FZaP4W4FeGKNc0wwbPHN4v1ainQ
-	 QV/JuRm+LyKKabK+9C+1KjxCyToZ3vd4L3BsizFs=
-Date: Thu, 15 Jan 2026 15:39:19 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: linux-mm@kvack.org, shakeel.butt@linux.dev, David Hildenbrand
- <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
- <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
- <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Qi Zheng
- <zhengqi.arch@bytedance.com>, Jiayuan Chen <jiayuan.chen@shopee.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] mm/vmscan: mitigate spurious kswapd_failures
- reset and add tracepoints
-Message-Id: <20260115153919.6c3253ba9e81d57efe2d4716@linux-foundation.org>
-In-Reply-To: <20260114074049.229935-1-jiayuan.chen@linux.dev>
-References: <20260114074049.229935-1-jiayuan.chen@linux.dev>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icTY1lTC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD27C116D0;
+	Fri, 16 Jan 2026 00:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768524216;
+	bh=9keAJjnhw1gCE+azgxtlmJQmRyzmwC1hmC4fiX8WgoU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=icTY1lTCYROv7LHIqbjbv26JLIe+mgKxBsRtl+WzeTGDbitI8TqW6o1iF+OxMpEnw
+	 rhgF4+ev+C927l9Eg30tA9s+VSZL+yQnw6/aQJDRMYRPqE7DHvITeWD058pqE8v9d/
+	 UyhTU2pNYiBQ5NHPpVaAC3yXdXqE9km5MqXGJq+v+zGRRLpHIBJzXalIr43sqNCsGt
+	 kPWsjTPv4fWvvK4Lb50SXDRxvmGrVcOyDWJ935mrWeC74vxSjcFU7PrlklWkXTGVhx
+	 XBhMGltkz0YMyse4IzrgnMCyb+ni7qP1ufMZfG8YhLfopXnXhxOYtQSiqfIxtvky8W
+	 krHkpY9bnwaww==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3BD0C380AA49;
+	Fri, 16 Jan 2026 00:40:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv3 bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
+ bpf_prog_run
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176852400806.26467.15167160333849251669.git-patchwork-notify@kernel.org>
+Date: Fri, 16 Jan 2026 00:40:08 +0000
+References: <20260112121157.854473-1-jolsa@kernel.org>
+In-Reply-To: <20260112121157.854473-1-jolsa@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, will@kernel.org,
+ mahe.tardy@gmail.com, peterz@infradead.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ x86@kernel.org, yhs@fb.com, songliubraving@fb.com, andrii@kernel.org,
+ mark.rutland@arm.com
 
-On Wed, 14 Jan 2026 15:40:34 +0800 Jiayuan Chen <jiayuan.chen@linux.dev> wrote:
+Hello:
 
-> == Problem ==
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Mon, 12 Jan 2026 13:11:56 +0100 you wrote:
+> Mahe reported issue with bpf_override_return helper not working when
+> executed from kprobe.multi bpf program on arm.
 > 
-> We observed an issue in production on a multi-NUMA system where kswapd
-> runs endlessly, causing sustained heavy IO READ pressure across the
-> entire system.
+> The problem is that on arm we use alternate storage for pt_regs object
+> that is passed to bpf_prog_run and if any register is changed (which
+> is the case of bpf_override_return) it's not propagated back to actual
+> pt_regs object.
 > 
-> == Solution ==
->
-> ...
->
+> [...]
 
-Thanks, I'll update mm.git to this version to keep the series under
-test while Michal and Shakeel continue their review (please!).
+Here is the summary with links:
+  - [PATCHv3,bpf-next,1/2] arm64/ftrace,bpf: Fix partial regs after bpf_prog_run
+    https://git.kernel.org/bpf/bpf-next/c/276f3b6daf60
+  - [PATCHv3,bpf-next,2/2] selftests/bpf: Add test for bpf_override_return helper
+    https://git.kernel.org/bpf/bpf-next/c/934d9746ed02
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
