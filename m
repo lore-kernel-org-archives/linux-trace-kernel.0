@@ -1,100 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC6F35C1B3;
-	Fri, 16 Jan 2026 10:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FF93064AA;
+	Fri, 16 Jan 2026 10:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768558114; cv=none; b=jp/xHq+fxaWuQJi4cIG1FHEqvQafqr2gX1IuzgnPf/mp/IPeQEhnBgsN7FcpbiNhmoauthsnNcn6LjltIHOIZN9MMf5DUsiEPqhHftGbZW3Kq3Tpof4p8THSXyTmLTsOffjfUPmhtxzN3lJm8YBOaPv3NrnE+KDQJIovE+zU+34=
+	t=1768559952; cv=none; b=LFuFfai0RgP5G14mS0PH31ccq03k4A1UQTHQYCBnWcVqbCGF5LboZwk21GV0kO9z1EqMgiIwHfdt5CVEs5bAY9UjLo+H+SQyHEmtOpGiBUKF2O5DRRkQ4+oddGGOPBbzVAS2Q0yyKLfOqH/gV/PxPehocpOI/w4+Q3Rf2jH9aqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768558114; c=relaxed/simple;
-	bh=XRelOpMp31lCZB3YOytf3J6vADbo0Gp6vzluwm5f0Ko=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UTNGo6oxUB5wFvbgPo3iPr66Kf+6+7c3Hwc7dnxdTD1W7gHWSaB745vnMwws+7UeiG/R+7sOylJdUaWQ5ngKwGQkO7gnxtHUQ2JYQW5+AOeOtm7upfbdt/vuaiGGwCwjDWK9NsEdkvIjpnSkKHtmwv4n04vWs5JJ9+q/UaqpmIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1a1hl0S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768559952; c=relaxed/simple;
+	bh=6vNrFyt9pKsyjaHJvFfeVXE3gFVxD5FmN8r8HpRCAL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FmrmZ3Gu0uduTURn1AaSF4AeRFO8PWN7Wo1pxQhiZEXwx52su9Og4UeFYEN1e9In7SBhqVHfIhJqyFhISwaHcLqx8T00d3Qh5GcFErBj7umL7ydhdIfZU2ES0Z6UvPTSDPVLUmJDdY3iCy63rv2I78O7BzN5FVkGaU6xhzZP9Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzNXiI7t; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1a1hl0S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7CFC19421;
-	Fri, 16 Jan 2026 10:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768558114;
-	bh=XRelOpMp31lCZB3YOytf3J6vADbo0Gp6vzluwm5f0Ko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j1a1hl0S8M45KIZ/eYAGMhf9Y2aLaTao7DdKIoQe/dBzdMcs8S9GtDORBHC27WGry
-	 n3RC/ziGvXtwBep2h4CjXlmMvWw9TjLmZf8HifMfoJlF6eiqtjJpW7d01fK08eXZHI
-	 Psr5lwJ/FpEa99H9IyE2MLMZ9dae9Vp/B5T1LdanQrlF3NMkXQx2Wct9WMgf/ZlMKL
-	 DREnJJ6VsSaQ9aCWmfkTYA52pLK7m22+0VtTdpptMleeNyCkn2CxQTZvXLaiiF+ge2
-	 ranIPNaK677JkSJd4XijPEzscco7DCSzZlnvbgpxNCRYx2XsEuuo/GPffl+xUa7Nu7
-	 pWmRgyLGpJtWQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vggkp-00000002q1W-2JVo;
-	Fri, 16 Jan 2026 10:08:31 +0000
-Date: Fri, 16 Jan 2026 10:08:31 +0000
-Message-ID: <86a4yddg4g.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzNXiI7t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768559951; x=1800095951;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6vNrFyt9pKsyjaHJvFfeVXE3gFVxD5FmN8r8HpRCAL4=;
+  b=nzNXiI7tOb0u8RkwNX+OotGM1Gwj53vp/3DxDja8F24Ud0lFVBGm3hGZ
+   N/Z/yewAH93PZe9tMJz3O1/iBIYd6EBgLrF+Dn/2Ou4EjGpdLbO0/WqDs
+   At5J8bRJGqbkeLpdlAup1WI8KrxKJJGfTbTxM4gzov960GGb2FZZZhFkA
+   BgOYu2g6a/kFxn4ER8RMLpnTG9ikqCT8U2GSXvU/VsHerJL52etSmw7Gj
+   yG2qn8k9fUAZuScRJf/Mqa7nCUnWsdQbgV5Di0f5mgOi75gkeOMBYlA9v
+   Li5k+kjieOKqg0yycC5yERUjrg+QmM87MotD/Jc9VT9yHnE4Air2kWoLO
+   A==;
+X-CSE-ConnectionGUID: hFH+KvReQwyH5qi++zDwJw==
+X-CSE-MsgGUID: Ot0+l9rWRtOuDB3RzLl6Mg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69077067"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="69077067"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 02:39:11 -0800
+X-CSE-ConnectionGUID: +TNIa+a4RweZweo1j82YLw==
+X-CSE-MsgGUID: qENavIesRUuTn8PEvbP5wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="204420540"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 02:39:05 -0800
+Date: Fri, 16 Jan 2026 12:39:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yury Norov <ynorov@nvidia.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 00/30] Tracefs support for pKVM
-In-Reply-To: <20260107115936.4f4a8965@gandalf.local.home>
-References: <20251202093623.2337860-1-vdonnefort@google.com>
-	<867bttmmzw.wl-maz@kernel.org>
-	<20260107115936.4f4a8965@gandalf.local.home>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	"Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Subject: Re: [PATCH v5 0/6] Unload linux/kernel.h
+Message-ID: <aWoVRlm1GFux-Z-9@smile.fi.intel.com>
+References: <20260116042510.241009-1-ynorov@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260116042510.241009-1-ynorov@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, 07 Jan 2026 16:59:36 +0000,
-Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> On Wed, 07 Jan 2026 16:00:19 +0000
-> Marc Zyngier <maz@kernel.org> wrote:
-> 
-> > I quite like the shape of this now, at least for the KVM side of
-> > things. The comments I have can be addressed down the line, and don't
-> > impact the actual functionality.
-> > 
-> > Now, the first 18 patches definitely need acks from the relevant
-> > maintainers before I can queue this.
-> > 
-> > Steven?
-> 
-> Yeah, it's on my todo list to finish my review.
+On Thu, Jan 15, 2026 at 11:25:03PM -0500, Yury Norov wrote:
+> kernel.h hosts declarations that can be placed better. This series
+> decouples kernel.h with some explicit and implicit dependencies; also,
+> moves tracing functionality to a new independent header.
 
-Do you have an ETA for that? I'm planning to switch the KVM/arm64
--next branch to fixes only towards the end of next week.
-
-Thanks,
-
-	M.
+Thanks! Which tree should it go through?
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
+
+
