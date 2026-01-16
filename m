@@ -1,35 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C59A1E505;
-	Fri, 16 Jan 2026 00:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FDF29A1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 03:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768524216; cv=none; b=h9TdJiKGU6J7j/5xTwp+mhvyt2uVAjMHwAt/x0BCEaTClNkj1DjR0+EAwAt3/kKzdtktHv/aASxJulOvVfrwbrpHoAZ7A+LHdYuBn3IBbS4HXA2edPhbrwNDIOglHWcC1CPWe40Ms5jL39lGu0hYxj9kOmNj9k/Aq1cGLjX0cFg=
+	t=1768535436; cv=none; b=j1DpquK+Glqa6MOFf8pAmz6MHA22dla3Qlh4WeTbK4YgizOakBZwaRs7ZT3VwPDtwbU1oekCeXjBQu544kSowawolMHo8VV4EmywI4UN/EXNvvGpG3vwJF3ZkC8I5lmSVbzqMbkTyYsDh3glXOrdYjT2AG5d4r7JETv2vFiA4es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768524216; c=relaxed/simple;
-	bh=9keAJjnhw1gCE+azgxtlmJQmRyzmwC1hmC4fiX8WgoU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TyN6x8JEAEOB863NBLLdevPW6UDWSkEINbE6FUVoJc78UKCBJhVw1sJPfOyR+G6WQqtTAXu3I7OcVhur1SujTn/FfD+7TlSewupAg8mgUxsb4e73SNF9ywaG0ul4zoRARP7tIWET70vX2QvSm6BavHV423FxWxOpsn6nruQj3Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icTY1lTC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768535436; c=relaxed/simple;
+	bh=W5vHBekSY53Vj7NOebsIaB44z4J+hbyazQnXmcWOrXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TxaqwIiZO1xQRG9ZLWej2PeKNlK3mPdzEIcFeNwePZ4wicrOUsocc/8OUBMd8Nd/83sAUwc8E4TAuLJuE4rIBCNZuyixYelG/4BxMwmIOe9TtTMO1t1p8uNhn1jGRMXgz/ygc0GRnh7kaBJ5hfNW5uxjxiI4D9WlWuUdvL7bxpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H+bXTpyK; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icTY1lTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD27C116D0;
-	Fri, 16 Jan 2026 00:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768524216;
-	bh=9keAJjnhw1gCE+azgxtlmJQmRyzmwC1hmC4fiX8WgoU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=icTY1lTCYROv7LHIqbjbv26JLIe+mgKxBsRtl+WzeTGDbitI8TqW6o1iF+OxMpEnw
-	 rhgF4+ev+C927l9Eg30tA9s+VSZL+yQnw6/aQJDRMYRPqE7DHvITeWD058pqE8v9d/
-	 UyhTU2pNYiBQ5NHPpVaAC3yXdXqE9km5MqXGJq+v+zGRRLpHIBJzXalIr43sqNCsGt
-	 kPWsjTPv4fWvvK4Lb50SXDRxvmGrVcOyDWJ935mrWeC74vxSjcFU7PrlklWkXTGVhx
-	 XBhMGltkz0YMyse4IzrgnMCyb+ni7qP1ufMZfG8YhLfopXnXhxOYtQSiqfIxtvky8W
-	 krHkpY9bnwaww==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3BD0C380AA49;
-	Fri, 16 Jan 2026 00:40:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+bXTpyK"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-81f46b5e2ccso943451b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jan 2026 19:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768535435; x=1769140235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I4Nw1xHIHRTPBZ6KLjZI9nX2i+deS8eDOs2dsUOkwu0=;
+        b=H+bXTpyKC+a0lHXxHs0bDv6NOkgPGAhlB1njlc76p7Z4fonjj/E4FvtY3Ow1HgsqGm
+         yfpAHfr6QphQg7E8Ie61hnv6oMO3OOhI0qWY0+LKs051ry+xpwCEw6nYl26hSAOhOKwH
+         GvtQQXCSMbOQ55+toZYCXaQbkxCk38t3q2I/dW5TzoxUQhoCTS4efWkbe/kPqk7Ne+RQ
+         x+wpWTu0dySyJHfHAEnktVBD6VMxjPWGJNQcSM61nODCUkFOKx6KPJqQrfItadVygw9p
+         3SJ1gVbp4VZ0m3yu1tayhcvgzmVJK4odfKkYHhQuw3zygLjTHbmC0QxRrmPbpaEEKtI1
+         ByzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768535435; x=1769140235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I4Nw1xHIHRTPBZ6KLjZI9nX2i+deS8eDOs2dsUOkwu0=;
+        b=Rfp3zWhZk5HxFMGHZKDcYfrzyvO+r6rJtNQ8DMgkBc/Ql9dZ5lrGncOrgxSLm06xvo
+         m7jre0eU7oY7vCthfT+Dtid1bwAioNoZjmOTTnRMGX3fsZe6bNscHLWjiDVja+wRWK3H
+         jPN7Bnm3Oa4v1/VZNjzhzz/NBavR99u20nUB5oqyRLdigSwP+/xOYOTz7IvuBX0CPE0j
+         upxsh01XLu3Ng5KBY3/XiBa3xJv76JKysHibZAwKp7B89au1bnkbELlyP2jN/JIelSYr
+         oK5QcW8hygkbNp6m2shC1YP5++aLBhnSNhN9SoZdWLvf0m8iBek8J/VRH+GZ4IlmbPFh
+         l9ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXJE02vDJ91C2OqCYMqVZO5xF3GTqaTYdB7ZrKcUzyWmkoJve+eobYCq25yMasbHo8c04miKFGjIrgO+vlrB05NmZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymZjxeYArspbNC4a4krdka3MeZOOzb+TBcDf8WUwXSSno3Md09
+	bRlC/h27FolL73ZFK1Qw7uye9RlsltuCzKAjtZEN0xUfwsfW3JqNdKfz
+X-Gm-Gg: AY/fxX74RH+iGhwZXoQ6r9KFK0f/xMDnA0meUxSHl6a2bLj3RiFIj69H0K0Tgn1ZxV5
+	+styB7AOFGBM8ZeOy8h3y2l/3iELx4iRheXxhZ18VaAifaltA9j4vUY6SchbHo62S1zwONcAgQe
+	01ZmxUqgE5pAsqi2R4aH4T3G5ejBK0cTEMzmG9cDCrax+VkKVD4f0VDVxFeiNR3HqETgRi6arEN
+	t70dCMgofqjMDg7CYYfr++0Wk7YUFCc0xeyf4wTEG9c3EjsWA+HBNJfEuz7y+wF2G4b0m1X0WWl
+	JqZ3sQR6zMjmkd/OI/VajR8Y5v1ioFwWiBKzQU9rclsN/3QUa9E3yS32CaI+C7NPHl8BydCMvvf
+	sDBwyRGaBRW85g1ucFDHvc/qux5S3FXjHmLsW6QtYzaSnoCRKxOjO052CfKretoDpRbC1nEzODf
+	pnC5mbaww=
+X-Received: by 2002:a05:6a21:683:b0:38d:e676:6da4 with SMTP id adf61e73a8af0-38dfe5bedf6mr1791438637.11.1768535434866;
+        Thu, 15 Jan 2026 19:50:34 -0800 (PST)
+Received: from 7940hx ([160.187.0.149])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c5edf37c9d7sm684504a12.35.2026.01.15.19.50.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 19:50:34 -0800 (PST)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: ast@kernel.org
+Cc: daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next 0/2] bpf: support bpf_get_func_arg() for BPF_TRACE_RAW_TP
+Date: Fri, 16 Jan 2026 11:50:22 +0800
+Message-ID: <20260116035024.98214-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,46 +88,22 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv3 bpf-next 1/2] arm64/ftrace,bpf: Fix partial regs after
- bpf_prog_run
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176852400806.26467.15167160333849251669.git-patchwork-notify@kernel.org>
-Date: Fri, 16 Jan 2026 00:40:08 +0000
-References: <20260112121157.854473-1-jolsa@kernel.org>
-In-Reply-To: <20260112121157.854473-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: mhiramat@kernel.org, rostedt@goodmis.org, will@kernel.org,
- mahe.tardy@gmail.com, peterz@infradead.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, yhs@fb.com, songliubraving@fb.com, andrii@kernel.org,
- mark.rutland@arm.com
 
-Hello:
+Support bpf_get_func_arg() for BPF_TRACE_RAW_TP by getting the function
+argument count from tracepoint prototype during verifier inline.
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+Menglong Dong (2):
+  bpf: support bpf_get_func_arg() for BPF_TRACE_RAW_TP
+  selftests/bpf: test bpf_get_func_arg() for tp_btf
 
-On Mon, 12 Jan 2026 13:11:56 +0100 you wrote:
-> Mahe reported issue with bpf_override_return helper not working when
-> executed from kprobe.multi bpf program on arm.
-> 
-> The problem is that on arm we use alternate storage for pt_regs object
-> that is passed to bpf_prog_run and if any register is changed (which
-> is the case of bpf_override_return) it's not propagated back to actual
-> pt_regs object.
-> 
-> [...]
+ kernel/bpf/verifier.c                         | 28 ++++++++++--
+ kernel/trace/bpf_trace.c                      |  4 +-
+ .../bpf/prog_tests/get_func_args_test.c       |  1 +
+ .../selftests/bpf/progs/get_func_args_test.c  | 44 +++++++++++++++++++
+ .../bpf/test_kmods/bpf_testmod-events.h       | 10 +++++
+ .../selftests/bpf/test_kmods/bpf_testmod.c    |  4 ++
+ 6 files changed, 85 insertions(+), 6 deletions(-)
 
-Here is the summary with links:
-  - [PATCHv3,bpf-next,1/2] arm64/ftrace,bpf: Fix partial regs after bpf_prog_run
-    https://git.kernel.org/bpf/bpf-next/c/276f3b6daf60
-  - [PATCHv3,bpf-next,2/2] selftests/bpf: Add test for bpf_override_return helper
-    https://git.kernel.org/bpf/bpf-next/c/934d9746ed02
-
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.52.0
 
