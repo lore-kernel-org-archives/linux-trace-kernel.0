@@ -1,194 +1,178 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011060.outbound.protection.outlook.com [40.93.194.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5828834677D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 17:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768582809; cv=none; b=n+BWL2vvV9SKYQ0NMTtGtm6JprbYKG4Uyu/cFWltlWPTLkLloTllW8Hegtgt4YZc5GB7LZPZoxPI83YJv86/u3OsDE7CszoIWIax5Xps25UFvfybIEPFwEENRt+7ui0tVrPbBPwWpRLKAF6CHfDWj/9iIPhS9K0l5WNV76n4lCg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768582809; c=relaxed/simple;
-	bh=w12kVIum+5hT80KSmtydVQZ1iiEJ4xy9RJwvCyIwfMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OsQslq4KrTk/tUBhqgQs8K25x61BWkRK39GIZemFVAj19qYEpZvkXgE3ys6yGf0lT8q1vEbFmLzCb8qjIhDy1eVpcVNLXuVkI9TFzThfUnmzT4T4whGDa/VkE738JMLm8pBk27FWPCRWBRUuMSFtkDMwZsfBvfHIICKE5sRfp0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b=lSwLgUxD; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EB6340A67;
+	Fri, 16 Jan 2026 17:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768583206; cv=fail; b=t1HEzx0twSrKUJAGw8UFr1qtPv+uNQtb2wylu3EYdQ5CGiRTR6ub20sBOCQCHsBdhszUUKT2P9gN8xJB2Pa30woPRvH96/786YcvDwAKkCtgD6HTB3EajGgHzJWxeV+Eqs3uL9zAT3Cf/werzReB/Amx1eYMdI3ZXyybCIkG6a8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768583206; c=relaxed/simple;
+	bh=q9YpL5TpxYgCjAA51J1ZHY6g9HPa73ede5AQwZYupFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TU+aJSfapa7HgGPFFF9kzarBpyn7z8AALYx0apjJk+p84oxYuHRSSKlKByCTHbcG77100SVHOrxktMQyF0tWgXXO4y6K74ILYdteQA1uiW7HWmml3LKOqsyHguUHIr5ERod2oEA39DPMo3DShp9IC5da7tuVeR2gxf4skTE+2fw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GrU6s6PD; arc=fail smtp.client-ip=40.93.194.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b="lSwLgUxD"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-8c6af798a83so22325885a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Jan 2026 09:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg.org; s=google; t=1768582805; x=1769187605; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=39r+L65CbocMKJ2hSULIQG9yHS2j8i36ygEvkdqqJZE=;
-        b=lSwLgUxD0o35X/iBW9QsKvB7g/cK4P2opSpPbzJT0ownCctwZhZ2zxHHLpQhQ91UQb
-         2nfNBP/lQYG4aPacOFEK+XHlHDfl3JArjCSowyAvDViqp7NtcWCqIuOhMh2TYdfqhqJB
-         /vwYsGK6TT0/Dx4V+NXYoGE2klgO0AfLixL1I3jV3+T2httzEjA7QuKtNfkXH3eNlrx6
-         6erzdsuMWgCvnGjisoFqYunp21r5wZ7sbOD4aoiPXmr0NadYotlF4I70n0SWuNyld1F6
-         2Myb9yAPdJ4kdJ6h4fPDyIpV+zM84yzP7Oc2hf+OVFFfcI2AqJ313Ol7fK+8jq//NXw9
-         NUZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768582805; x=1769187605;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=39r+L65CbocMKJ2hSULIQG9yHS2j8i36ygEvkdqqJZE=;
-        b=mN+ihAfiEW0gsNak29x3W3Umu8y20ZaUvMo7UicmpbrJngkDUMJ3z6AztspwvLfpqV
-         3ZOzJ8V7w8BitJALKiE6rxJrRNHh7EZ/36pdEPfUMNymPChKkry0VogM0JYnnNYihISl
-         gRtPo8UXgQiT1b2UTTN7VP6kf915HWm1zGtrcpsGh2ftsZaxOjUgUYogJxAM11cvq9nn
-         QelR0GTztmTs3Q2ayPzGA870SFYW/RPgEDWKilDFopKvRUHyl7wgehyDQRpZmsJQtNTQ
-         1ZumoGxQY/rPhjqHlHjibqJ98PJBNNWwMmgQm24A9eNbK6YhDt8wOwX8Lh207NOL2FXk
-         l1hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUQTbdlSk53AHgjThDmjvJqCDqdI+HLiYut2wCUzEXS/xl4mH6QYe9e8lI1/0jnWKLaZo85VPja7NWbq8uSC4GYlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo3c2Dv1dn5O//infaHyiVoEZdoTxDdGTDTpNBKEzs3MMGyaBm
-	movY4qzcgQjmDdx1E+dJFvcGvfA1fSaBuxzLr4eqT3RoE95RHkWUpq7XSn9GbK4jwJ4=
-X-Gm-Gg: AY/fxX5+pAAjCzkBB3dXJhwUcK9uxXscCu7GPZnpvBt8SZqLPkatIluMYTV3WibMqPy
-	DUzG9yD5btGwr2xby+Ilz6PPfHb+uyL1HY7Nr5lxvM89ROyshnak//vhLh4oS11lT+yjAKqGftr
-	+650WQ+KbXuV+j6dztc61v82zADlc8LgBE42GPDwasvnTWvvUvWhRvCfn6CXMoMBEXG13A4Ostz
-	pnEC3zd5TrJOB4WXhTpHsIe02uz9gkZbt0dQQqMfTYm1YwJ/GUpzakbb8JnJLlejFcvfw2XJM77
-	rJM3Pkg464Q7xvfcPv3U0ukH8EUtZrpaUUEL2nFQrAtlzwFgrW3KA/W0xednRI5Vu2SiwVxv+IK
-	NGw62tHiijhGnFkCTtqmqEP+35zCiQs2BibauTgXkwzOsnQkkg2uGIFsPvECb9DMq3aTyRht51w
-	mGGt7COSC/WA==
-X-Received: by 2002:a05:620a:710c:b0:8c5:2e1b:7913 with SMTP id af79cd13be357-8c6a66ef7fbmr529344385a.25.1768582804795;
-        Fri, 16 Jan 2026 09:00:04 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6a71d5b93sm262341185a.23.2026.01.16.09.00.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 09:00:03 -0800 (PST)
-Date: Fri, 16 Jan 2026 12:00:00 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: linux-mm@kvack.org, shakeel.butt@linux.dev,
-	Jiayuan Chen <jiayuan.chen@shopee.com>,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GrU6s6PD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JErl0mnU9+JD6WuB7D0c3hRKOER333KVe/vEG2qdV9d1xAE68FeNNjMGZACBiXFkwlFOi97KBGPKZne20b1dYRRbXMSx6teNZw2iV1JpZO2+5VP2Ucfpv6cWqidwr2YyOgpaTBW4hypoVIPs5PoURNr2oYEd4uq09u9VOsCQMQCVie71BpxrhXqMdgvyOCFGrYIwyzPB8BEOOnsmsegv6yWmWEsOwalG6dQGom9c/TujPLQbXlZJqCyTn/1L34weV9FOMBQgh0N9wBjeopH2m94JzC6fUZLIzPzazEWPk5jSxYXyK3MJeKYBFXpVTG5SItyv94jWWg9OpSGUh5XM5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EUA5ix9tTMTbY+JqkLaoDy5b9QXqh7I9mxGJIKR92KU=;
+ b=jFDxKcjWb/6TQbaWnfy9/S43Q9dVZelsINzpVpECIW0K/FoABcZZ3SbV31SBiAjqbJyLyVS7UAIzaiQ/4KlP8L1ahStFzm59lkf6OUeerkqqx9rN+axQ6yUgmdiAqFhDaRqhljqdq+5UJpTmkXZovVr/etstBnBHryft3i72TUAnAT2Sz9k1hkMX1ijl+mVj94HDcXteruslAWOqtjecZKOrd3Flb4YaUxmBBW2DCmsVbp+KA/H9radkkkJfp0r+Z+QW491tazvX9VJZ4oATIiOUH29lKIs0Vns057jdrBmQbmTg72xe6jfLNpH9qO8xIGsu6zm/IoS2F2hfIw/8vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EUA5ix9tTMTbY+JqkLaoDy5b9QXqh7I9mxGJIKR92KU=;
+ b=GrU6s6PDWbjvwM4/oflcRdSp7NdJg7GX8LsF2vzBm989arJ8VLtu6+Nbo0MO+MTlLwY0u7pfN3KO7tC79zpkvuJwiLX8JiR6mz/kv4IAQllbjQI6X8RMwcU3spVGwMXyRdE/ZWrXy+YnDcoS6SLlPMzU7ufNnnSy51BfhHXg4REOSCpFwAcvx6qdEqibMDxyx2zNvFVF6u8+m9tlXYGFfgM4ev/muQYJfrTVXafcBBxUCWGznkiilyQdfxTHtD7EYoMi6QAsu93TVxcFnbG32q+h0UaGBLXSCdcvZSlxDuagB7cV3VRfQR2WzrvROPCQGmLxCQ4XonPbPJVTF4QEhA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB8786.namprd12.prod.outlook.com (2603:10b6:8:149::17)
+ by CH3PR12MB8329.namprd12.prod.outlook.com (2603:10b6:610:12e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Fri, 16 Jan
+ 2026 17:06:39 +0000
+Received: from DS0PR12MB8786.namprd12.prod.outlook.com
+ ([fe80::cd1a:bacf:6ab9:6f91]) by DS0PR12MB8786.namprd12.prod.outlook.com
+ ([fe80::cd1a:bacf:6ab9:6f91%3]) with mapi id 15.20.9520.005; Fri, 16 Jan 2026
+ 17:06:39 +0000
+Date: Fri, 16 Jan 2026 12:06:37 -0500
+From: Yury Norov <ynorov@nvidia.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>, Zi Yan <ziy@nvidia.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] mm/vmscan: mitigate spurious kswapd_failures
- reset from direct reclaim
-Message-ID: <aWpukFnKRoeSrcEZ@cmpxchg.org>
-References: <20260114074049.229935-1-jiayuan.chen@linux.dev>
- <20260114074049.229935-2-jiayuan.chen@linux.dev>
+	Christophe Leroy <chleroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	David Laight <david.laight@runbox.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"Yury Norov (NVIDIA)" <yury.norov@gmail.com>
+Subject: Re: [PATCH v5 0/6] Unload linux/kernel.h
+Message-ID: <aWpwHbrvQ2MMGgH-@yury>
+References: <20260116042510.241009-1-ynorov@nvidia.com>
+ <aWoVRlm1GFux-Z-9@smile.fi.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWoVRlm1GFux-Z-9@smile.fi.intel.com>
+X-ClientProxiedBy: BN1PR13CA0024.namprd13.prod.outlook.com
+ (2603:10b6:408:e2::29) To DS0PR12MB8786.namprd12.prod.outlook.com
+ (2603:10b6:8:149::17)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114074049.229935-2-jiayuan.chen@linux.dev>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB8786:EE_|CH3PR12MB8329:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a16e140-1da1-4453-500a-08de55219d4e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aKTZDQDkJcFpNO/kEL3BFWT2ReW1BSXW9G5L9KKRxJavqrC63d9BkXeQ8X9v?=
+ =?us-ascii?Q?9UT7C/FvS/ITX5TDPrUzrk9XvC8EdC4We73gEj7234GzL6uQifogtjOkpPxI?=
+ =?us-ascii?Q?7SiofOrjH1wxh4y0pzLUmt1wxCaGr4KuOgJ9hRyfhAU6WA//5/P6tohk7BHI?=
+ =?us-ascii?Q?E1DD2yKfDvKFMSjksdsVRwYFtA4ewEfPcY9SnsePFvMGst+/jEM2JfkZREro?=
+ =?us-ascii?Q?1yj114wJU3bvLvbtzlOIJbq33UwzonR1Tyb4tlMo/h1R1K4Qd7uLaVkPBf2X?=
+ =?us-ascii?Q?z7x4gYZJGf30Tb5vJNVJ/2D2F9YOyFbZ0B+moM+6ehMoBzZaLUEc8JqTKe+/?=
+ =?us-ascii?Q?WNVt9ucb/AD8/sXorm1A79/Z7tPYABijkCBApEchhyVGN/NV5rd2Qk6iy5vU?=
+ =?us-ascii?Q?SQSPvgElflfVHd91ejWZLIWpI6nHpVg6+UPpde1mfxCYamo4chPydK6r6hEC?=
+ =?us-ascii?Q?P/2mLzSamqWoFqGIjgdVm6hCCKIhLYCXDPRcWlQVjFou9Ddxln2d8Mop+Z/Q?=
+ =?us-ascii?Q?tbBd3cMWLT2SLI3VzyqTBWp+QYL3jpVFQX6kwxgXb4n8J+CGUdu8CznZl4ZT?=
+ =?us-ascii?Q?0Nf8v/1GfvX8GgsgG+JmHhWmnyQb56LepX4/xZ8YVvjUCvjfHwmB6/3y5Rde?=
+ =?us-ascii?Q?VVjUMaSC8WfrtyT8rMu9PpguOrFOq993TikTuzcC3raGt1bZ2CQ4zfP+dWn9?=
+ =?us-ascii?Q?3RfeS3ke6ntCFDVmmrdLHW/lfXNenKmSr9lFe/Sn7cZbIgqQpeFETjFKvibN?=
+ =?us-ascii?Q?UBMTMmlhuzUeRwMq8aHqD/cCKrqbUoDTGIQ+8SP3E1SgYO291749FXmSBSL+?=
+ =?us-ascii?Q?1tipyiG2xqCMZbRzWUR6D/51UZ3ERWB6LgIDCQtK64vMIULBfo9CqmQjKkVD?=
+ =?us-ascii?Q?9NtQ3N0au/TMkIu/VhhTN/WoKUHDUY+uYHiInuEtOukC3aUZ027dJj2PAprK?=
+ =?us-ascii?Q?QZyLkPOVIvKHNakzQLPvyNn2lHMcWaQ7/jwLDs9AhllxR87XhFMCKE1htBMw?=
+ =?us-ascii?Q?qmx8/s/SK1LxK4qxWt+idJNK5gWGYJjpH2db4+C9qimEkxEe6Wsqsm0h7lZ0?=
+ =?us-ascii?Q?NWDX1I23NrgfLe7vGhaMBBJb3CtLd90WEE5uyY2Iiv8C7IugT6N+P2RnHsob?=
+ =?us-ascii?Q?vOjJf8fcZ6CbF1Ia30KoUxbV50KKUzcvc1X8SGphAVTjXUsGfuWWT8PwaiCb?=
+ =?us-ascii?Q?Rg0V6ySzWR96UoMkNqvzzYbm5UiN28kv9l8L0Qz0/zV8O4GqCN4sl5dwRnrB?=
+ =?us-ascii?Q?Vu7MKsOxTmV54Sx9t7b/aQe9QDf87AyhgHVjigmtdi734GsDa+rkhhOYe1iH?=
+ =?us-ascii?Q?VkrASbNObmHOt12baqC3uaTVI50ptZWKXBSiT1LjRiRUs1LaT895IyO13RlM?=
+ =?us-ascii?Q?OkHSJ81ntrX7/DKOAl4gLIJk/OD6pVKTa/3hk2CGj9dNemAiHwBkYFE2znlM?=
+ =?us-ascii?Q?Xj1Oakys85sXsxB4tniw54/ZRWX+w5sBTJfYtdHmOu4fXwFw9wvvG9NvC92f?=
+ =?us-ascii?Q?NF/XD5+HttwX4o4E0dB3p3s8M3tDKOq/stvVH7v7pnxiYTFPnrJbtte4viLM?=
+ =?us-ascii?Q?hh4F2Moygvb/EtJVM0o=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8786.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Fg+kVQQc9GKHhLQCXz2LlWRGAOJcsS8WdEOmyqIzl3rr2QO3sNMU9ikNWkai?=
+ =?us-ascii?Q?QUQ0odBOXGl+N2skf61IXOpJNaCRtwvUPS7v6KZBiBR8RSEl+wicrnkUcNfS?=
+ =?us-ascii?Q?InoEZet9aXHwweKJk1DIFlAjUZlae+1C0y3qXkVtcK6CZCEu35chTXvSdYld?=
+ =?us-ascii?Q?fHnI/JSeoDDDNFpXfaNMdaxY4+uuf7jct8sY5DNq4HiorcEdLCdD6EB/fj4S?=
+ =?us-ascii?Q?xZhV0E52T+puH08wS++tnW+z68aJIeSwee5jpWqZDmlFg1O3y2kD5ieDRJAo?=
+ =?us-ascii?Q?PIb60ySkpts7F/HkaHGrQS3tQdFVIN6nA6k3wwDsq1i03noDyfHpOKHFJNgf?=
+ =?us-ascii?Q?Ufb+lHpEUV2K0m0vMZdU85vU7VaRKsNbOeS4I9L31EiPB/rYRtqr369XI4qL?=
+ =?us-ascii?Q?L0tk6AG1cEpttH9u+jkf1cmiklndBrIplSG27lKsax8gbrQ2Ot//wSB32YEM?=
+ =?us-ascii?Q?0Mm5TWgfgVFN/yWPoCbNwj70IK6p+2W6O6LKmZtyb/8TEfNzPSMQ2lfTZ7SC?=
+ =?us-ascii?Q?FUejZgro2i0ZgEiGNDCSRodntJ47Zuo85u3kYf4ZynqvRkoHGYPzDdlirgbw?=
+ =?us-ascii?Q?Sk/c5RnbkyysP3AnvM4A5mUQtwIahj+GcpcSBXgp72TClAh4Zj84avJzUKZu?=
+ =?us-ascii?Q?4TyBs+NG0YQggj7AkDoN4BTeNpi4uXoDvsJgotTHBOlCLkmAbQBs7FUpSHOW?=
+ =?us-ascii?Q?hQ3kmiIKRFbAY4rZ95BT9gxci/z2M3uEUqSQ4xF0P5Jag6ElEufJNDgDMiz6?=
+ =?us-ascii?Q?f2QBx1bROJ5gy4/cEMMejwiqGjRQnPcY4helkLZcTSbDeu/s5oefxauwc9qS?=
+ =?us-ascii?Q?rOwigSFMoZhAK2b1DauoOdvv0ZJcphpK12VjlkzjAT8Asyml/0fCqcIN8K63?=
+ =?us-ascii?Q?N1kgI8VhuUtlZElGDoQU3Q4AqQ98g+FqmULh+A3Nmb1yy+ByS8PKgszCEGx6?=
+ =?us-ascii?Q?seWkwx1hlNp8bl0mADPpfqIFWNubvkkEHaqalr2ud3SgZcMGL/8wbnmcNbtY?=
+ =?us-ascii?Q?UOYVuhy0gyJFymOUTBEfIb+8hUt+gOEsC/kj9ewIBcQuzPCa6UyIQ4e/JEiu?=
+ =?us-ascii?Q?lqWjuP1LNBhUw30RRXoh61ZsqFDe5TxKq4Pdrwt8exSYgwEGSIo0ia7ieSBe?=
+ =?us-ascii?Q?PK/zAttRhYOuNZ7LzBKQOKlRGEJaHMxrn5CXpeuCiC703UYgI4+8tH+EC73m?=
+ =?us-ascii?Q?Ou0WSNKta5OXHyHFS7ncKDROGqa0n9+ziyjpesNswvdIj0TdmrH+Wyldl1TE?=
+ =?us-ascii?Q?/nkd2GSNAEF59qEq16YeOVzCuZeapmfEXfvectmbIQCMI+GjsYoFLD2Pb3iR?=
+ =?us-ascii?Q?JY/BnNWlopgusPrhPpX/x+MWIOc9wjXYVpiYDyqcsMOVG3ApNcn9pQ7efo8d?=
+ =?us-ascii?Q?ECMaHmX1FzBkZ2PvQdeIFZ+CF+GoAu0NQBD8ZxeFwN8AeXFGHs5fBZFmHVrF?=
+ =?us-ascii?Q?3OJEonUBHeEfOXP+PByKr3KLSC8CUEwR+5WbGUm6WtnBQxz3eyLGk4EDqYZ1?=
+ =?us-ascii?Q?EL0GhE2MwfN09vzrGe+a5IXiN439iDajbevSppIFbHtlvRbcppOZ35GBtKtX?=
+ =?us-ascii?Q?HuhvxEZdBKnViASHPr6JIZZOfVTKhjzaAL7sEtZ0/+0g9JRtIO7Peazy1uBg?=
+ =?us-ascii?Q?vt4tcSJ7/lz5PCl535t/VZwhP/4x2wzRmDCiioKvzFc5RXogUFMOs2b+Joio?=
+ =?us-ascii?Q?xztG/ymH71uUGQIYr0gJSjsDmuDDpoUjAjhv5S8oydzHU1NuwvutAwSJIy6/?=
+ =?us-ascii?Q?YSBHUk++qU8P5a54gcaW5d78kKKnwuiWWdeB2+6DczyvTWmfnKxP?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a16e140-1da1-4453-500a-08de55219d4e
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8786.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 17:06:39.7406
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3+Trq3B/agv/XYU3mEGmuqJtfc7vFSWmWHvx63JIWk/bdFwQds1jdWDgXjTK9To8NXt1gh2vgTRp9zhgKG3uOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8329
 
-On Wed, Jan 14, 2026 at 03:40:35PM +0800, Jiayuan Chen wrote:
-> From: Jiayuan Chen <jiayuan.chen@shopee.com>
+On Fri, Jan 16, 2026 at 12:39:02PM +0200, Andy Shevchenko wrote:
+> On Thu, Jan 15, 2026 at 11:25:03PM -0500, Yury Norov wrote:
+> > kernel.h hosts declarations that can be placed better. This series
+> > decouples kernel.h with some explicit and implicit dependencies; also,
+> > moves tracing functionality to a new independent header.
 > 
-> When kswapd fails to reclaim memory, kswapd_failures is incremented.
-> Once it reaches MAX_RECLAIM_RETRIES, kswapd stops running to avoid
-> futile reclaim attempts. However, any successful direct reclaim
-> unconditionally resets kswapd_failures to 0, which can cause problems.
-> 
-> We observed an issue in production on a multi-NUMA system where a
-> process allocated large amounts of anonymous pages on a single NUMA
-> node, causing its watermark to drop below high and evicting most file
-> pages:
-> 
-> $ numastat -m
-> Per-node system memory usage (in MBs):
->                           Node 0          Node 1           Total
->                  --------------- --------------- ---------------
-> MemTotal               128222.19       127983.91       256206.11
-> MemFree                  1414.48         1432.80         2847.29
-> MemUsed                126807.71       126551.11       252358.82
-> SwapCached                  0.00            0.00            0.00
-> Active                  29017.91        25554.57        54572.48
-> Inactive                92749.06        95377.00       188126.06
-> Active(anon)            28998.96        23356.47        52355.43
-> Inactive(anon)          92685.27        87466.11       180151.39
-> Active(file)               18.95         2198.10         2217.05
-> Inactive(file)             63.79         7910.89         7974.68
-> 
-> With swap disabled, only file pages can be reclaimed. When kswapd is
-> woken (e.g., via wake_all_kswapds()), it runs continuously but cannot
-> raise free memory above the high watermark since reclaimable file pages
-> are insufficient. Normally, kswapd would eventually stop after
-> kswapd_failures reaches MAX_RECLAIM_RETRIES.
-> 
-> However, containers on this machine have memory.high set in their
-> cgroup. Business processes continuously trigger the high limit, causing
-> frequent direct reclaim that keeps resetting kswapd_failures to 0. This
-> prevents kswapd from ever stopping.
-> 
-> The key insight is that direct reclaim triggered by cgroup memory.high
-> performs aggressive scanning to throttle the allocating process. With
-> sufficiently aggressive scanning, even hot pages will eventually be
-> reclaimed, making direct reclaim "successful" at freeing some memory.
-> However, this success does not mean the node has reached a balanced
-> state - the freed memory may still be insufficient to bring free pages
-> above the high watermark. Unconditionally resetting kswapd_failures in
-> this case keeps kswapd alive indefinitely.
-> 
-> The result is that kswapd runs endlessly. Unlike direct reclaim which
-> only reclaims from the allocating cgroup, kswapd scans the entire node's
-> memory. This causes hot file pages from all workloads on the node to be
-> evicted, not just those from the cgroup triggering memory.high. These
-> pages constantly refault, generating sustained heavy IO READ pressure
-> across the entire system.
-> 
-> Fix this by only resetting kswapd_failures when the node is actually
-> balanced. This allows both kswapd and direct reclaim to clear
-> kswapd_failures upon successful reclaim, but only when the reclaim
-> actually resolves the memory pressure (i.e., the node becomes balanced).
-> 
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> Thanks! Which tree should it go through?
 
-Great analysis, and I agree with both the fix and adding tracepoints.
+Andrew or Steven maybe? As a last resort, I can move it myself.
 
-Two minor nits:
-
-> @@ -2650,6 +2650,25 @@ static bool can_age_anon_pages(struct lruvec *lruvec,
->  			  lruvec_memcg(lruvec));
->  }
->  
-> +static void pgdat_reset_kswapd_failures(pg_data_t *pgdat)
-> +{
-> +	atomic_set(&pgdat->kswapd_failures, 0);
-> +/*
-> + * Reset kswapd_failures only when the node is balanced. Without this
-> + * check, successful direct reclaim (e.g., from cgroup memory.high
-> + * throttling) can keep resetting kswapd_failures even when the node
-> + * cannot be balanced, causing kswapd to run endlessly.
-> + */
-> +static bool pgdat_balanced(pg_data_t *pgdat, int order, int highest_zoneidx);
-> +static inline void pgdat_try_reset_kswapd_failures(struct pglist_data *pgdat,
-
-Please remove the inline, the compiler will figure it out.
-
-> +						   struct scan_control *sc)
-> +{
-> +	if (pgdat_balanced(pgdat, sc->order, sc->reclaim_idx))
-> +		pgdat_reset_kswapd_failures(pgdat);
-> +}
-
-As this is kswapd API, please move these down to after wakeup_kswapd().
-
-I think we can streamline the names a bit. We already use "hopeless"
-for that state in the comments; can you please rename the functions
-kswapd_clear_hopeless() and kswapd_try_clear_hopeless()?
-
-We should then also replace the open-coded kswapd_failure checks with
-kswapd_test_hopeless(). But I can send a follow-up patch if you don't
-want to, just let me know.
+Thanks to you and everyone for review!
