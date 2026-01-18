@@ -1,199 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A79517D6;
-	Sun, 18 Jan 2026 06:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373D11DB54C
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Jan 2026 08:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768718174; cv=none; b=T7X3NLpotNtC+8asSXHQgwBkGGlB48iXkjoGjkMrVC49tFiUhW6ygefTP33UsLeZ1k96pH2h+MCJFOu0Vxizz+eCZ2k14B1TrB8fpDEj4zRR6RJQpTLYkvHlXWiDvqpSi0xZIqmnJ1kKyt0vO/mjuLVWe+Bq19LxYXkSqS7A8mo=
+	t=1768724243; cv=none; b=GrrrAHWVeXdMJ+3HUgfivb5iWAxP66nwTbJUEs3FIaq8Hzl39mJ3wUqZn86lxdfSgl8QmLm5X3gRR/OCt64ifnGJv3G9AVSzTJpDowgZxYKdRPogJAekPgkk2z5CQbRytswP4mGCXeenk12C7i1UHq3ZTaV8dDZbhIuwktq51Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768718174; c=relaxed/simple;
-	bh=aKLCKvaFUBdlP+9DOV2yYz6au92+CHN/1gNqOaUJJBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYyywrd65tJBH68DfARUUs8nfcWzRr6YCC4/Tq307RBIlULc2oE6TxDPm4XpPB5Nc1YKO1e7YJ6/Sm6y1jteFYpY5+pREA0aAx7Uxog6e9viTmrIvPDcsONXOripPzcIUAYBjYNYN3GPfmBWGfyq8aNDDnkPzhxGoO3xAsQ1pIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zee7kwuB; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768724243; c=relaxed/simple;
+	bh=Pj1sPigIp/NebNJ8oa/bhXNBS40dnz2XB0+eNSKkJvo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ry3p0kMoiVwMuZope947defT065h4rjpwba0s17ZmDr17tJcpc47tWSk3nmvZOYnQYINjCFYL9whP4iRSQWXNps2LfYUOOUaWOwvH6iI/sOejdBw6GpEFK5ngu40WM+8+ddfkLy1ojzMuMrnVsWdfMyZvCjDXwsqVs82mx+vP4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWwZKq09; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zee7kwuB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768718172; x=1800254172;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aKLCKvaFUBdlP+9DOV2yYz6au92+CHN/1gNqOaUJJBw=;
-  b=Zee7kwuBTH0z0TLAJV/NuGEofMzRh7y1wFn/F/d6SIqO/Emng9f3CDvq
-   dl4yBpFrfY/b1euhMVgnvmsM0azMSB6ZUkrqq+yySndcd0TNONVLTXpKd
-   kRHDciW8GQaNRznq+5IelkQp+CuTuqgjStjXsYdMG2uqoS7dSQVFZ4ZuN
-   kLiQB3Qb9x3ZoBSrBN0aO0J0pFzo8q99SxdFFEUK7DvYTF+qHSchHP0xd
-   +iY7+9ITzZsYQRe5vmzxMsM8z0Nk4uk0XFz+Ya4IJsgCpROEjNdrYAJMC
-   +Jt4CgxBZ1uxEWy14a2Mo8xh6+K92DJtEIFaiBJSSiGw25UdrgxG/kEdy
-   g==;
-X-CSE-ConnectionGUID: Km32jQg8TmGIXQnmpmGnBQ==
-X-CSE-MsgGUID: NNiWPGzgQwW/FF+/fpyWdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11674"; a="73821862"
-X-IronPort-AV: E=Sophos;i="6.21,235,1763452800"; 
-   d="scan'208";a="73821862"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2026 22:36:12 -0800
-X-CSE-ConnectionGUID: BPpWmG+ISj6n4H7uIA0V8g==
-X-CSE-MsgGUID: fZ4T/Se/QxyYisLOhJurYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,235,1763452800"; 
-   d="scan'208";a="236270915"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 17 Jan 2026 22:36:08 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vhMOL-00000000MjQ-42l9;
-	Sun, 18 Jan 2026 06:36:05 +0000
-Date: Sun, 18 Jan 2026 14:36:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>,
-	rostedt@goodmis.org, mhiramat@kernel.org, corbet@lwn.net,
-	shuah@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-Subject: Re: [PATCH v5 v5 2/3] tracing/fprobe: Support comma-separated
- symbols and :entry/:exit
-Message-ID: <202601181443.vv7qeHyx-lkp@intel.com>
-References: <20260118011815.56516-3-seokwoo.chung130@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWwZKq09"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c06cb8004e8so1057441a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Jan 2026 00:17:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768724241; x=1769329041; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eEP5iKdXQBSTEl9I4Q+Cs17dhqRzcqmuf37yAQk7v9Q=;
+        b=iWwZKq09MSYQu0avfOEQBEEyb6WzCtjjYNO+WZd/Ul2R/MZ9z6e4pJNelAJggKCsPp
+         zMPmyxFInbNQR9mynkFO2SHw46qFWnKDSIJ5xkRxDabd08wPtEXwamKNwDbnha4htTiK
+         K4sukEgVk0jbyxdrYXsbLH05tr+MAb4I7j9RTUyPTTxnsVqhVHxps5m3R9Ps4S+7iRhD
+         iU+tPr/3c+/RpESiKG6BlOhwR9+fdep2+wR1T1rtntm+1Rw1i7uDrtNMDXMeOiwL0ZwH
+         rZTtJgnnr/c5BQq8LU9rRjfPvaO89oWLDNS80L9sBxb8LxEhkZnn3exCbQdlM6Oh3flK
+         uEtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768724241; x=1769329041;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eEP5iKdXQBSTEl9I4Q+Cs17dhqRzcqmuf37yAQk7v9Q=;
+        b=L+/x9/CWWehKmTSBWdjMq62kXQBZfYebikKQ8+SYCCcZWUWop8A4rSPzygCKA5LdpH
+         AX4FzWvaFrWOETu9bd8S/vWHQ6cAl1+vQz0RkQQE7NMPq74/pA2MJ8+JXpbL5Ya3Lj40
+         QGUuPHY/CIT2pJKwvVyaXoiX3FAGOK9PrPr5ylYPsx+uzOc6aSKNeNcLQzOy8MD07EpL
+         XX55axUxxspQAkvbMg/AcTzVBHWJZfGvI5j1qbs9UYCdTWcOURC2iEljq7JkVKYaNQVc
+         rQ9zH7AqjVyr7nWRSStAULyF6L3TbP6nEDhvJ+DEm0u+4xcO0K4f9ZbNiFGbw7GQ/KJa
+         Bizg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlsniB8d1t9tsFfGsrr2nFeNY/HQzn4nOkFoUgdD3h1lkGfGEswcSFb9SnSvkdz4kGJqw2cSJ7Jn0P4OhQK1v1Jx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8d/TadMXymLolKAmDQhp8e/bw2HdoSovM4sEMHLfKS7txxEI8
+	XhMEYYHmVohqqL9S5DxVZkGVRl6817Qaoy4XfXTiHQerr+o0Q9DWvkU1
+X-Gm-Gg: AY/fxX6qNA61tcCsc3OTZ4xbWDn3ncclBFNm2oQPfbE70BR3bT+3Dn+Z4+WAMawQdGW
+	yV4kKzs/rAsIj7iU+9mrLeAGs9plwZoHTTEeUx3G+sTCuBrqj/ifwfdaL0zD5xFOvBneaVTlH4A
+	BCk1WaQSTzp+j8QwNLhavMKxH22ycO615yRXU2VKc8xbJHraaVokax3ucLoSEWaBt5It8FNsiZ6
+	2GS8fhFbSw4RqEWEgeYGRCvfBtqCwQDwX9vM8Yw/671/7t8xLZajtefV+R1KjZSEDISBvlt1Z2i
+	LI7wqzR6+iwLHJBN+1nIozftubWUCQBzPCw076iGERp8aBitjdNZ3foUYIFyOyqFxAO+NEczDV+
+	JQ8SzYVrxcdVRWp2ohN8c7XZiMz2wwaOvAqk5DYzTNvKdLCQWMh8GjMou+ExMPfQxN22QbGT6s6
+	BoUc563ZTk
+X-Received: by 2002:a05:6a20:a10e:b0:363:e4d7:2c34 with SMTP id adf61e73a8af0-38dfe772e84mr8200324637.57.1768724240888;
+        Sun, 18 Jan 2026 00:17:20 -0800 (PST)
+Received: from [127.0.0.1] ([38.207.158.11])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c5edf32d1f1sm5917393a12.22.2026.01.18.00.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jan 2026 00:17:20 -0800 (PST)
+From: Zesen Liu <ftyghome@gmail.com>
+Subject: [PATCH bpf RESEND v2 0/2] bpf: Fix memory access flags in helper
+ prototypes
+Date: Sun, 18 Jan 2026 16:16:38 +0800
+Message-Id: <20260118-helper_proto-v2-0-ab3a1337e755@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260118011815.56516-3-seokwoo.chung130@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOaWbGkC/43OPQ+CMBAG4L9COlvTnlDQyUFWBx2NMeW4QhOwp
+ BCiMfx3K4mJA4PjfTx374v15C31bBe9mKfR9tbdQwGriGGt7xVxW4aagYBEAgheU9ORv3XeDY6
+ bQpGKZQaxSlkgnSdjH/O5Cys6E53yc348sGuY1bYfnH/On0Y5bywfHSUXPHQViXIbA5T7qtW2W
+ aNrPz8CUkKKdAlJoxPYGETzP6JNlpLIIJWIP+gTeYRvzCUMAceYKCgQdaKzXzxN0xsyWYlHWwE
+ AAA==
+X-Change-ID: 20251220-helper_proto-fb6e64182467
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Shuran Liu <electronlsr@gmail.com>, Peili Gao <gplhust955@gmail.com>, 
+ Haoran Ni <haoran.ni.cs@gmail.com>, Zesen Liu <ftyghome@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2233; i=ftyghome@gmail.com;
+ h=from:subject:message-id; bh=Pj1sPigIp/NebNJ8oa/bhXNBS40dnz2XB0+eNSKkJvo=;
+ b=owGbwMvMwCXWI1/u+8bXqJ3xtFoSQ2bOdI4//0sX75KOcjrXvYe55mrw5e0XJHZeXj5VMbQ0q
+ CVCwVKqo5SFQYyLQVZMkaX3h+HdlZnmxttsFhyEmcPKBDKEgYtTACbi18/IMLv3wQezHzKJzzyr
+ r18qVbapNmMOZatc/jf7MtOqHF2fA4wME+5tnLUier6H2NdcfwHmbH2FSZpqxwQ5T1/RNtiZYaH
+ DCQA=
+X-Developer-Key: i=ftyghome@gmail.com; a=openpgp;
+ fpr=8DF831DDA9693733B63CA0C18C1F774DEC4D3287
 
-Hi Seokwoo,
+Hi,
 
-kernel test robot noticed the following build errors:
+This series adds missing memory access flags (MEM_RDONLY or MEM_WRITE) to
+several bpf helper function prototypes that use ARG_PTR_TO_MEM but lack the
+correct flag. It also adds a new check in verifier to ensure the flag is
+specified.
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.19-rc5 next-20260116]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Missing memory access flags in helper prototypes can lead to critical
+correctness issues when the verifier tries to perform code optimization.
+After commit 37cce22dbd51 ("bpf: verifier: Refactor helper access type
+tracking"), the verifier relies on the memory access flags, rather than
+treating all arguments in helper functions as potentially modifying the
+pointed-to memory.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Seokwoo-Chung-Ryan/docs-tracing-fprobe-Document-list-filters-and-entry-exit/20260118-092055
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260118011815.56516-3-seokwoo.chung130%40gmail.com
-patch subject: [PATCH v5 v5 2/3] tracing/fprobe: Support comma-separated symbols and :entry/:exit
-config: x86_64-randconfig-012-20260118 (https://download.01.org/0day-ci/archive/20260118/202601181443.vv7qeHyx-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260118/202601181443.vv7qeHyx-lkp@intel.com/reproduce)
+Using ARG_PTR_TO_MEM alone without flags does not make sense because:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601181443.vv7qeHyx-lkp@intel.com/
+- If the helper does not change the argument, missing MEM_RDONLY causes the
+   verifier to incorrectly reject a read-only buffer.
+- If the helper does change the argument, missing MEM_WRITE causes the
+   verifier to incorrectly assume the memory is unchanged, leading to
+   errors in code optimization.
 
-All errors (new ones prefixed by >>):
+We have already seen several reports regarding this:
 
-   kernel/trace/trace_fprobe.c: In function 'parse_fprobe_spec':
-   kernel/trace/trace_fprobe.c:1282:12: error: invalid storage class for function 'trace_fprobe_create_internal'
-    1282 | static int trace_fprobe_create_internal(int argc, const char *argv[],
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1513:12: error: invalid storage class for function 'trace_fprobe_create_cb'
-    1513 | static int trace_fprobe_create_cb(int argc, const char *argv[])
-         |            ^~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1530:12: error: invalid storage class for function 'trace_fprobe_create'
-    1530 | static int trace_fprobe_create(const char *raw_command)
-         |            ^~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1535:12: error: invalid storage class for function 'trace_fprobe_release'
-    1535 | static int trace_fprobe_release(struct dyn_event *ev)
-         |            ^~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1545:12: error: invalid storage class for function 'trace_fprobe_show'
-    1545 | static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
-         |            ^~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1572:12: error: invalid storage class for function 'enable_trace_fprobe'
-    1572 | static int enable_trace_fprobe(struct trace_event_call *call,
-         |            ^~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1608:12: error: invalid storage class for function 'disable_trace_fprobe'
-    1608 | static int disable_trace_fprobe(struct trace_event_call *call,
-         |            ^~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1653:12: error: invalid storage class for function 'fprobe_register'
-    1653 | static int fprobe_register(struct trace_event_call *event,
-         |            ^~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1683:19: error: invalid storage class for function 'init_fprobe_trace_early'
-    1683 | static __init int init_fprobe_trace_early(void)
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~
-   In file included from include/linux/fprobe.h:6,
-                    from kernel/trace/trace_fprobe.c:8:
->> include/linux/compiler.h:284:51: error: initializer element is not constant
-     284 |         __UNIQUE_ID(__PASTE(addressable_, sym)) = (void *)(uintptr_t)&sym;
-         |                                                   ^
-   include/linux/compiler.h:287:9: note: in expansion of macro '___ADDRESSABLE'
-     287 |         ___ADDRESSABLE(sym, __section(".discard.addressable"))
-         |         ^~~~~~~~~~~~~~
-   include/linux/init.h:251:9: note: in expansion of macro '__ADDRESSABLE'
-     251 |         __ADDRESSABLE(fn)
-         |         ^~~~~~~~~~~~~
-   include/linux/init.h:256:9: note: in expansion of macro '__define_initcall_stub'
-     256 |         __define_initcall_stub(__stub, fn)                      \
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/init.h:269:9: note: in expansion of macro '____define_initcall'
-     269 |         ____define_initcall(fn,                                 \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/init.h:275:9: note: in expansion of macro '__unique_initcall'
-     275 |         __unique_initcall(fn, id, __sec, __initcall_id(fn))
-         |         ^~~~~~~~~~~~~~~~~
-   include/linux/init.h:277:35: note: in expansion of macro '___define_initcall'
-     277 | #define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
-         |                                   ^~~~~~~~~~~~~~~~~~
-   include/linux/init.h:295:41: note: in expansion of macro '__define_initcall'
-     295 | #define core_initcall(fn)               __define_initcall(fn, 1)
-         |                                         ^~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1702:1: note: in expansion of macro 'core_initcall'
-    1702 | core_initcall(init_fprobe_trace_early);
-         | ^~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1702:1: error: expected declaration or statement at end of input
-   kernel/trace/trace_fprobe.c: At top level:
-   kernel/trace/trace_fprobe.c:28:12: warning: 'trace_fprobe_create' used but never defined
-      28 | static int trace_fprobe_create(const char *raw_command);
-         |            ^~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:29:12: warning: 'trace_fprobe_show' used but never defined
-      29 | static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev);
-         |            ^~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:30:12: warning: 'trace_fprobe_release' used but never defined
-      30 | static int trace_fprobe_release(struct dyn_event *ev);
-         |            ^~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:741:12: warning: 'fprobe_register' used but never defined
-     741 | static int fprobe_register(struct trace_event_call *event,
-         |            ^~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1653:12: warning: 'fprobe_register' defined but not used [-Wunused-function]
-    1653 | static int fprobe_register(struct trace_event_call *event,
-         |            ^~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1545:12: warning: 'trace_fprobe_show' defined but not used [-Wunused-function]
-    1545 | static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
-         |            ^~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1535:12: warning: 'trace_fprobe_release' defined but not used [-Wunused-function]
-    1535 | static int trace_fprobe_release(struct dyn_event *ev)
-         |            ^~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_fprobe.c:1530:12: warning: 'trace_fprobe_create' defined but not used [-Wunused-function]
-    1530 | static int trace_fprobe_create(const char *raw_command)
-         |            ^~~~~~~~~~~~~~~~~~~
+- commit ac44dcc788b9 ("bpf: Fix verifier assumptions of bpf_d_path's
+   output buffer") adds MEM_WRITE to bpf_d_path;
+- commit 2eb7648558a7 ("bpf: Specify access type of bpf_sysctl_get_name
+   args") adds MEM_WRITE to bpf_sysctl_get_name.
 
+This series looks through all prototypes in the kernel and completes the
+flags. It also adds a new check (check_func_proto) in
+verifier.c to statically restrict ARG_PTR_TO_MEM from appearing without
+memory access flags. 
 
-vim +284 include/linux/compiler.h
+Changelog
+=========
 
-0ef8047b737d74 Juergen Gross  2024-11-29  275  
-7290d58095712a Ard Biesheuvel 2018-08-21  276  /*
-7290d58095712a Ard Biesheuvel 2018-08-21  277   * Force the compiler to emit 'sym' as a symbol, so that we can reference
-7290d58095712a Ard Biesheuvel 2018-08-21  278   * it from inline assembler. Necessary in case 'sym' could be inlined
-7290d58095712a Ard Biesheuvel 2018-08-21  279   * otherwise, or eliminated entirely due to lack of references that are
-7290d58095712a Ard Biesheuvel 2018-08-21  280   * visible to the compiler.
-7290d58095712a Ard Biesheuvel 2018-08-21  281   */
-92efda8eb15295 Sami Tolvanen  2022-09-08  282  #define ___ADDRESSABLE(sym, __attrs)						\
-92efda8eb15295 Sami Tolvanen  2022-09-08  283  	static void * __used __attrs						\
-9f14f1f91883aa Josh Poimboeuf 2025-09-17 @284  	__UNIQUE_ID(__PASTE(addressable_, sym)) = (void *)(uintptr_t)&sym;
-0ef8047b737d74 Juergen Gross  2024-11-29  285  
+v2:
+  - Add missing MEM_RDONLY flags to protos with ARG_PTR_TO_FIXED_SIZE_MEM.
 
+Thanks,
+
+Zesen Liu
+
+---
+Zesen Liu (2):
+      bpf: Fix memory access flags in helper prototypes
+      bpf: Require ARG_PTR_TO_MEM with memory flag
+
+ kernel/bpf/helpers.c     |  2 +-
+ kernel/bpf/syscall.c     |  2 +-
+ kernel/bpf/verifier.c    | 17 +++++++++++++++++
+ kernel/trace/bpf_trace.c |  6 +++---
+ net/core/filter.c        | 20 ++++++++++----------
+ 5 files changed, 32 insertions(+), 15 deletions(-)
+---
+base-commit: ab86d0bf01f6d0e37fd67761bb62918321b64efc
+change-id: 20251220-helper_proto-fb6e64182467
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Zesen Liu <ftyghome@gmail.com>
+
