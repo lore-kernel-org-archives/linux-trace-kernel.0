@@ -1,198 +1,137 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7630A2D77EA
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Jan 2026 04:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE301474CC
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Jan 2026 01:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768625048; cv=none; b=n4cLqy+YA4ZjWOpX3FxdQ3BThyGdmNVQ3VseCyzQCV0TLxtyesspDtcu9/Xq/YoakMwASjOalZvS6zSPqQfZwm6OdWUhaI9OJoOd60ypssnwRbW6US0E/gP6x/tA+fzu57ryItQ9KqwuOWU2N0+AR+ERPypBSQjhqcG483z2pSs=
+	t=1768699103; cv=none; b=VYkcoTaz3sdMi5ByEVzqc+MAAENIeq1HXQ3IBoHDKa8AKHhNgYX+mDwAbph/nXzeFSDXGrYE8GkAd+sQbfZDWVDwzsW9zUtHDxHcFe6uN593ap9Di8Ucv9wUUXu7IFNc1wouBAfgl9IFAhFNfPSb3cQX9ArZ/c8GlBcnaVl6dYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768625048; c=relaxed/simple;
-	bh=7ZQia/w/2QzVxs+BWGV/6qgmtKk8eJZeY0I548cuPfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZExUyQ3yb08TpvD16hBpvNC4bFDALKm/6p6Vqctw8noQZz9H/EtE9P85L9YPH4MQfTJWY2bH7P4aGgMBti+eyzPf411rn6RYV9CElEQnPp9kiXqhSxEF8hzKMgHl1Abs4et+oe4X98rApvCxlmEdKfrooL3HgrJ73qF7Ydx3TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EMn2hs1g; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768699103; c=relaxed/simple;
+	bh=o255kqj9N8oeGK/I9xWWmtlxK6I+tQ2294asnIjtCKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TubxY/JVDFwrG+ZT3bVrAndC9WWM/lNxMIEAxT7aYDpVomLnLfIBFJ5VsvKPOx8LKTwpTzLzsY+Yee8JEMfNn9ELHxZqy8zWMemijrlAskKy5e9PhBlc6ZXLN2R4cEcveBJ3vTxUCWYzWRaKvccdqx/DPAkMdipf79SIi7t4ZIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nmc6wRa1; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EMn2hs1g"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768625042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HqG9gBi1RD2iYm6CufQDxWqvQoEZs3+30Tc/xZMevJQ=;
-	b=EMn2hs1gVnhsFXCJFdRYgq9HEKSq1WCSzNr7WMfnfg3UD53Zu+g6iDMFowNn4TJj5xht6M
-	C5e96xErRXUqXiBCeyTnkbeEMemCmfkD1EJSfKOuWwfW5C2/CBZegae9YkM10/OxG83uZL
-	rG5hTRjO/CenP4dSVfuHtlh8wCtHj3g=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Menglong Dong <menglong8.dong@gmail.com>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mattbobrowski@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject:
- Re: [PATCH bpf-next v2 1/2] bpf: support bpf_get_func_arg() for
- BPF_TRACE_RAW_TP
-Date: Sat, 17 Jan 2026 12:43:17 +0800
-Message-ID: <3480448.44csPzL39Z@7950hx>
-In-Reply-To:
- <CAEf4BzazwvaLVy+4SByCt0cvkOm6eNSmDmGBfUM8u9scFseGCw@mail.gmail.com>
-References:
- <20260116071739.121182-1-dongml2@chinatelecom.cn>
- <20260116071739.121182-2-dongml2@chinatelecom.cn>
- <CAEf4BzazwvaLVy+4SByCt0cvkOm6eNSmDmGBfUM8u9scFseGCw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nmc6wRa1"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8c5349ba802so306523585a.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Jan 2026 17:18:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768699100; x=1769303900; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xHdYO4hylg5Fck4tzGsglyFOuT/7NqghvPt+ikirSH0=;
+        b=Nmc6wRa1BxZf6HAPU0ZjvSP03equlZEDZ+2RxwoMXkSCvmMzJZmpNHg5hkcJl80AMs
+         CMkiPLhzMp/f5PUBV9eZ1TmB8Oowu1EDKa4lCBhD0KDjdMdr3dW4AWVQq4tr5zOCMk4U
+         98phJzvZhttnyPNI9LxU1sgMX0MjK0VdaAAgnfXio6eUQ4WDm1HkNUNtW9AcgC99O4wt
+         kuyNIuNIxM7mYQuSc5bR1fvjHddY2MFJ34sJpYq8CkHMNrfxGenQCqhmJWWq/2AMRTLj
+         oFSPFI/x+ykKdyCCs0QVmLfah+WaxDs1G161opInE80VZ/sFiBL9qTNFZdR3+SkRm+DD
+         Fm5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768699100; x=1769303900;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xHdYO4hylg5Fck4tzGsglyFOuT/7NqghvPt+ikirSH0=;
+        b=doyHn61kkW0fr9B7yvrLac+xC3V8PVMKDwJO4n0f1/m0HBr/Wr9F7cyMvfAfndA9J0
+         1sYIUBXwzCg4M/qeSwGoxX2+Pv9uiAVcgpU0QTyT+I/OURiIgLx6k9WC6mkvW2nXZqU+
+         GpByZyDuT3GGBtqWTmpxlscOPUwNnrVccdRpRM+yjUn/MuXTfqBIhXpzZVLTgH+QQTK6
+         8mGrQ80Bkr+X0jKiW5e+6dBfMDahzG7fEepVJXVSY4lZV11Aezi2DLSEzBVRxIQZgjjw
+         uD1n8iYAFKR8+/cRdK80twQknNvXXa/dFcwehk0qgRFjy8W2H3vjUoYhzxA+qyBtEN1B
+         GicQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBObKfyLJgeUdENe0JiJJRyz0VBNYz+UlC/+4u5G957U86kfiY91bo+s87G5bxGU1gmU0zm8Yv+XR8SiR76rpGysU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkVMnVal3FjC6nLRTY8UhcVuUHNp3tOOArDpDBHK0IhgYkE6iW
+	tSOXhRkMGXFckx3ygCeMTEeU23ZuSpI+ZtgAhDkgLayZbWrJs+m+squ7
+X-Gm-Gg: AY/fxX658ovh59hu6w2gX6EIjityAFfJMUvb2alsxc2FVibyED31XnLAIxInSQHb08V
+	iSp/+zcoZ9xjTpuSXLy/lRbVeNvhCaaY+VwM7Ohn6gnqBbOo9qLSwgQ778ipUV2hTPdnUdJf6G6
+	0n7cLhgHoHHxU0Tgg58Rj5NKuo0sXh48lV2l9+0zArLLFdQNzrOwJ1zK2ct1fV2ODR+ti/tf72c
+	2Z38nf1YKzQPnZuCrW719A4Tl0w/iThPjyYByQDmYdTbgmRHY9qgqkAZ9l5EzQcdr3VSUNZxeEt
+	hIX8VGwOwnIsbv2+ElEuDs1n2X8C6sqvUaq79s7lgDkTnE4QkkkC/C9p3wlbBidN2AkCerlCBf9
+	yv4Rb22djIOZxZtD91l8BhUDUoMEhTXVCUAC2UauNWqxcmBPziQBVMmih5WDd4zbIkkjNRoN2ql
+	grNcyU1FDU3wb2+d99sVIpUocgO0ED06bBaKp6h/FPSV1OeM9t56mcLxEBssVSU2NvTSkZDNA=
+X-Received: by 2002:a05:620a:3953:b0:8c6:a5aa:465c with SMTP id af79cd13be357-8c6a676df81mr1041091985a.55.1768699100327;
+        Sat, 17 Jan 2026 17:18:20 -0800 (PST)
+Received: from pc.tail882856.ts.net ([2600:4041:4491:2000:8a64:ec6b:4:f1])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6a72642fdsm512290285a.46.2026.01.17.17.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Jan 2026 17:18:19 -0800 (PST)
+From: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	corbet@lwn.net,
+	shuah@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
+Subject: [PATCH v5 v5 0/3] tracing/fprobe: Support comma-separated symbols and :entry/:exit
+Date: Sat, 17 Jan 2026 20:18:12 -0500
+Message-ID: <20260118011815.56516-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2026/1/17 07:32, Andrii Nakryiko wrote:
-> On Thu, Jan 15, 2026 at 11:18=E2=80=AFPM Menglong Dong <menglong8.dong@gm=
-ail.com> wrote:
-> >
-> > For now, bpf_get_func_arg() and bpf_get_func_arg_cnt() is not supported=
- by
-> > the BPF_TRACE_RAW_TP, which is not convenient to get the argument of the
-> > tracepoint, especially for the case that the position of the arguments =
-in
-> > a tracepoint can change.
-> >
-> > The target tracepoint BTF type id is specified during loading time,
-> > therefore we can get the function argument count from the function
-> > prototype instead of the stack.
-> >
-> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > ---
-> > v2:
-> > - for nr_args, skip first 'void *__data' argument in btf_trace_##name
-> >   typedef
-> > ---
-> >  kernel/bpf/verifier.c    | 36 ++++++++++++++++++++++++++++++++----
-> >  kernel/trace/bpf_trace.c |  4 ++--
-> >  2 files changed, 34 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index faa1ecc1fe9d..422d35c100ff 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -23316,8 +23316,22 @@ static int do_misc_fixups(struct bpf_verifier_=
-env *env)
-> >                 /* Implement bpf_get_func_arg inline. */
-> >                 if (prog_type =3D=3D BPF_PROG_TYPE_TRACING &&
-> >                     insn->imm =3D=3D BPF_FUNC_get_func_arg) {
-> > -                       /* Load nr_args from ctx - 8 */
-> > -                       insn_buf[0] =3D BPF_LDX_MEM(BPF_DW, BPF_REG_0, =
-BPF_REG_1, -8);
-> > +                       if (eatype =3D=3D BPF_TRACE_RAW_TP) {
-> > +                               int nr_args;
-> > +
-> > +                               if (!prog->aux->attach_func_proto)
-> > +                                       return -EINVAL;
->=20
-> can this happen? can we have tp_btf program without attach_func_proto
-> properly set?
+This series extends fprobe dynamic events to accept a comma-separated list of
+symbols and explicit/suffixes.
 
-I saw it can be NULL in some case, such as bpf2bpf. Maybe it can't
-happen for tp_btf, and I'll do further analysis on this point.
+Currently, fprobe only supports a single symbol (or wildcard) per event. This
+series allow users to specify a comma-separated list of symbols, including
+exclusions, and to select entry/exit explicitly using /
 
-Thanks!
-Menglong Dong
+Examples:
+- f:[GRP/][EVENT] func1,func2,func3
+- f:[GRP/][EVENT] func1,!func2,func3 (exclude with '!')
+
+Logic changes:
+- Refactor parsing logic into parse_fprobe_spec()
+- Support comma-separated lists and '!' exclusions
+- Add / suffixes for explicit entry/exit selection
+- Preserve legacy single-symbol behavior (single symbols still accept %return)
+- Disable BTF-based signature lookup when list/wildcard is used, since one
+  function signature cannot apply to multiple functions
+- Reject mixed legacy/new syntax where applicable (e.g. list + %return)
+- Update tracefs/README and fprobe documentation
+- Add ftrace selftests covering accepted list syntax cases
+
+*Patch order is adjusted: code first, then docs, then selftest
+
+Changes in v5:
+- Reordered patches (code->docs->selftests) as suggested
+- Addressed review feedback on README help text to show both legacy and list
+  syntaxes
+- Added missing traceprobe error IDs used by the new validation and fixed
+  parsing/bracing issues found by automated builds
+- Removed the dedicated list_mode field and infer list behavior from presence of
+  filter/nofilter and keep struct trace_probe as the last member
+- Link to v4: https://lore.kernel.org/linux-trace-kernel/20251127151218.4763b25c751bb2aac4b1ee36@kernel.org/
+
+I am not fully confident the runtime testing coverage that I did is sufficient
+across configs/architectures, so additional verification would be appreciated.
+
+Best regards,
+Ryan Chung
 
 
->=20
-> > +                               /*
-> > +                                * skip first 'void *__data' argument i=
-n btf_trace_##name
-> > +                                * typedef
-> > +                                */
-> > +                               nr_args =3D btf_type_vlen(prog->aux->at=
-tach_func_proto) - 1;
-> > +                               /* Save nr_args to reg0 */
-> > +                               insn_buf[0] =3D BPF_MOV64_IMM(BPF_REG_0=
-, nr_args);
-> > +                       } else {
-> > +                               /* Load nr_args from ctx - 8 */
-> > +                               insn_buf[0] =3D BPF_LDX_MEM(BPF_DW, BPF=
-_REG_0, BPF_REG_1, -8);
-> > +                       }
-> >                         insn_buf[1] =3D BPF_JMP32_REG(BPF_JGE, BPF_REG_=
-2, BPF_REG_0, 6);
-> >                         insn_buf[2] =3D BPF_ALU64_IMM(BPF_LSH, BPF_REG_=
-2, 3);
-> >                         insn_buf[3] =3D BPF_ALU64_REG(BPF_ADD, BPF_REG_=
-2, BPF_REG_1);
-> > @@ -23369,8 +23383,22 @@ static int do_misc_fixups(struct bpf_verifier_=
-env *env)
-> >                 /* Implement get_func_arg_cnt inline. */
-> >                 if (prog_type =3D=3D BPF_PROG_TYPE_TRACING &&
-> >                     insn->imm =3D=3D BPF_FUNC_get_func_arg_cnt) {
-> > -                       /* Load nr_args from ctx - 8 */
-> > -                       insn_buf[0] =3D BPF_LDX_MEM(BPF_DW, BPF_REG_0, =
-BPF_REG_1, -8);
-> > +                       if (eatype =3D=3D BPF_TRACE_RAW_TP) {
-> > +                               int nr_args;
-> > +
-> > +                               if (!prog->aux->attach_func_proto)
-> > +                                       return -EINVAL;
-> > +                               /*
-> > +                                * skip first 'void *__data' argument i=
-n btf_trace_##name
-> > +                                * typedef
-> > +                                */
-> > +                               nr_args =3D btf_type_vlen(prog->aux->at=
-tach_func_proto) - 1;
-> > +                               /* Save nr_args to reg0 */
-> > +                               insn_buf[0] =3D BPF_MOV64_IMM(BPF_REG_0=
-, nr_args);
-> > +                       } else {
-> > +                               /* Load nr_args from ctx - 8 */
-> > +                               insn_buf[0] =3D BPF_LDX_MEM(BPF_DW, BPF=
-_REG_0, BPF_REG_1, -8);
-> > +                       }
-> >
-> >                         new_prog =3D bpf_patch_insn_data(env, i + delta=
-, insn_buf, 1);
-> >                         if (!new_prog)
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 6e076485bf70..9b1b56851d26 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -1734,11 +1734,11 @@ tracing_prog_func_proto(enum bpf_func_id func_i=
-d, const struct bpf_prog *prog)
-> >         case BPF_FUNC_d_path:
-> >                 return &bpf_d_path_proto;
-> >         case BPF_FUNC_get_func_arg:
-> > -               return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ar=
-g_proto : NULL;
-> > +               return &bpf_get_func_arg_proto;
-> >         case BPF_FUNC_get_func_ret:
-> >                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_re=
-t_proto : NULL;
-> >         case BPF_FUNC_get_func_arg_cnt:
-> > -               return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ar=
-g_cnt_proto : NULL;
-> > +               return &bpf_get_func_arg_cnt_proto;
-> >         case BPF_FUNC_get_attach_cookie:
-> >                 if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
-> >                     prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
-> > --
-> > 2.52.0
-> >
->=20
->=20
+Seokwoo Chung (Ryan) (3):
+  docs: tracing/fprobe: Document list filters and :entry/:exit
+  tracing/fprobe: Support comma-separated symbols and :entry/:exit
+  selftests/ftrace: Add accept cases for fprobe list syntax
 
+ Documentation/trace/fprobetrace.rst           |  17 +-
+ kernel/trace/trace.c                          |   3 +-
+ kernel/trace/trace_fprobe.c                   | 209 ++++++++++++++----
+ .../ftrace/test.d/dynevent/fprobe_list.tc     |  92 ++++++++
+ 4 files changed, 269 insertions(+), 52 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
 
-
+-- 
+2.43.0
 
