@@ -1,131 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E702E2FF66A;
-	Mon, 19 Jan 2026 10:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8025E20C463
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 10:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768817293; cv=none; b=NCR5Fj9uzwmhCOZCuJ72KpNYD9TnB1l3+aG70L5pBSoNV4PJRygWoDjHX1TXTTFhf+nctHaKMrC+z0QmBbDBe1pbNz97NanILwmMKxrgO6pcd6xk9fcRkFhNHB6EDq/2yUzskaYPelIMqe8tC4EL9VBhoQG2t2uEZBSOnGJZwVc=
+	t=1768817312; cv=none; b=UXV8QshCkgTZTZ23cM9QzzUn1ejQ+b36+TpqT57qDbrlwEvlBA6R58YBQxEJsyMVkyZi0xURn6eKarCRg8I2ECXal/1WIPCd4YozikbSwkgHH++96qarDA7Zej2phSv4sNYIM3TidfQsBTKrKXddRk4Ps6Xxf2tKmKKHeJNz20k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768817293; c=relaxed/simple;
-	bh=AE57TIsmlva7rZ+tGbHhruAtmwUG689KaCOC5eS4PRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RyXgj4Ve8rOER8m1uYaX+GwUfH2jIq/07ni7ozWyY2gTm/Q5fncHdxPUvmyHVC10GFEMxHJm7MHMkxuE53u90EsAcOCNvyz8Sj0Ra5N+c/lcom/SsXDioNQOGcasPh6RzC7StE725w+tCHFmO0RvyGvGejxRcMu9bOq5awUbooc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1EvONks; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768817312; c=relaxed/simple;
+	bh=TUFVCNib8T+nbe4wBU5VeHHQIGyP6QrkuXb0DjWvDoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=Hcob7ZbcgVttMHt2ex4HJolaPTAK5jtTTXuSVUnr+bnoqCfMv4CL1TiFr2oawT2F/0u9HuLoRxqEcmbJ2wdUqQ5lCdmm16JqNnv0Gwo490UKfZLikF/DXFMcDeeK5tJ07HZhxiNs04h2BIQFBKtAthhqgiVNfGW9FY7AbEx6FfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dREXa4rB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1EvONks"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4DAC16AAE;
-	Mon, 19 Jan 2026 10:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768817292;
-	bh=AE57TIsmlva7rZ+tGbHhruAtmwUG689KaCOC5eS4PRA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a1EvONksaiYmLSxCFTwMjjYMbZ2a3RJ73mX0Lrnbk0OmaszKbjtEtXoNDeFE2+GYV
-	 jC+rBDn/ytqQkhQKb1yWcSaslOxDh0Sddfn9Wr3zdqDpxP5A08YkpZqyMpuLiQuNC7
-	 4czbEpX1QdN9cXwvyOFZFXS4GfckP7CVIRz/GLVJMjauogD40CvyGHmcmSRl2yuF7D
-	 QAc+XqXVTkd+AeWDDaKCz2NaGGW3GvbdDzr4LIeeYM3L9tNf/KVxHJrr/9TrIjgrWF
-	 yfZnCyJv6wOgAotqrhpcaXNWeEBRopZ8Y+fGX/haEUOitRnv8/Xj+7wB99XYg488gy
-	 JhIhHAdvkE7ng==
-Message-ID: <df4ca339-15aa-4346-bd66-00dc6002b630@kernel.org>
-Date: Mon, 19 Jan 2026 11:08:05 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dREXa4rB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768817310;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qp2TxXybZzHflyZA4K0OJx6HlCbr+bAousuWY6dDVlM=;
+	b=dREXa4rBMEM4xPPldNXChQ323D7SclIjOxznQKlluLHqBU8kIU69MAkQV8L5Ujv8fREklm
+	Xxdq1/GU+8nmjQIixPbr9GR3tXtiGbsUt7Z3hRCWpeIZzriEuqzUHUHR3pT9+hXLn6qK0x
+	QHpjOBvn+UR/3KSmLWl72/Ml0qfal0k=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-138-dRj85VcdOHijwk8lf2MnMA-1; Mon, 19 Jan 2026 05:08:28 -0500
+X-MC-Unique: dRj85VcdOHijwk8lf2MnMA-1
+X-Mimecast-MFC-AGG-ID: dRj85VcdOHijwk8lf2MnMA_1768817308
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47ee7346f8bso21995895e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 02:08:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768817307; x=1769422107;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qp2TxXybZzHflyZA4K0OJx6HlCbr+bAousuWY6dDVlM=;
+        b=OkjZunJEA+GTYHXb0UcqajPAbswZVl4oFA53yoTzM/P+NhkVQ/X6hghrRk1/aliaVl
+         IINlXon0wpk2cuf99MJk6WwphLhnLW/Y21io1Xz4TZ3pauBuTeDGyEW3lFFBBrHrc6rT
+         dKJYwYDfi7VPRyRjSCGg5lYNYpMTrLyAJHC4/o7OJ1EXgodvfmbDfV/yUmSq2MASjosB
+         MDJnuDesfW8faY+Zc6fIexEd0oPg+MZg4jgQmaQIewzkci6xMOPF7AZ9w8ZwdwfZh06C
+         zr1MjMt2gb6w7NO+FKP/GU2oWUgaswdsMk0mXS3Zsii8NX0uxanAzS7muITbuwjC+Ie7
+         guUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjJrz21TT6z9Qph236Zo702yeVRvlYMV3wTdDiXUC23FwAIP0P1EWm2rvC/6xvGkiGrHeok0fWZg4AvUHrYb0nx0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT6TP+LzkCNQ9DeMu97cU9u0IlHzvS4yhxDiodSzQ5KDlhQzbq
+	yiSIqvuwtNtUHhZYRl/mzXgaQuvYqay40aqtr182hDVDtnYaAwDq5P7P1YACUqfWv1/YPz7TXg/
+	zk5vn0wfb+RCL6xF9w4wH5Ulp6PrCK+qx2263AIYh3u9zBcFni4Mf2bSpV2GJxc+0w+iuyU954g
+	==
+X-Gm-Gg: AY/fxX6CoyNdZbjLv308Q+pF1BZC6p1HJ+MTlMZSTUCtBzXV+SCFuC0ZHR81C5oKIhI
+	jchy8hfrVyuSxiEhl5zMU6fJ9USGMUAodKQ/CXS1r+pToqUgbGzlAHoW5WaIBPD0yJ0m8XuM9Uc
+	TPBzYOdvksc38exrADCI0VIpvNgo8ZwAPeiYc4MpXGKR0GgoEPh5Mlt/SRLLB54QI9aNzPNV8wH
+	rB3OEL5eDh4yj27VZhE7cAaO+BHtYGwZDTxJXpk2vEF0emRzeunmAMWvpztdnsDmK4AYAFZDb9f
+	znInXC/nyAoGusig/Y5tATAvbNDQ5tyfjLk4U+vQEccK7aPdzFV1HWNOg8h+nccG8erLwP9Biuz
+	mb8fVATk9g+hRvXGiCVrjLMRDKgL5ryCvEHq8zixi
+X-Received: by 2002:a05:600c:870c:b0:47d:25ac:3a94 with SMTP id 5b1f17b1804b1-4801eb092demr137077185e9.17.1768817307502;
+        Mon, 19 Jan 2026 02:08:27 -0800 (PST)
+X-Received: by 2002:a05:600c:870c:b0:47d:25ac:3a94 with SMTP id 5b1f17b1804b1-4801eb092demr137076905e9.17.1768817307090;
+        Mon, 19 Jan 2026 02:08:27 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.129.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435699271easm22288554f8f.14.2026.01.19.02.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 02:08:26 -0800 (PST)
+Date: Mon, 19 Jan 2026 11:08:24 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 13/15] sched/deadline: Move some utility functions to
+ deadline.h
+Message-ID: <aW4CmOTG6IOsmbGp@jlelli-thinkpadt14gen4.remote.csb>
+References: <20260116123911.130300-1-gmonaco@redhat.com>
+ <20260116123911.130300-14-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 2/2] mm/khugepaged: retry with sync writeback for
- MADV_COLLAPSE
-To: Shivank Garg <shivankg@amd.com>, Andrew Morton
- <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
- Branden Moore <Branden.Moore@amd.com>
-References: <20260118190939.8986-2-shivankg@amd.com>
- <20260118190939.8986-7-shivankg@amd.com>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
-In-Reply-To: <20260118190939.8986-7-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260116123911.130300-14-gmonaco@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: aZrDkvz4gDDsHmOLERt5WiQuBjS66zp1kzH7ea_CqX4_1768817308
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 1/18/26 20:09, Shivank Garg wrote:
-> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
-> text sections), the pages may still be dirty from recent writes.
-> collapse_file() will trigger async writeback and fail with
-> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+Hello,
+
+On 16/01/26 13:39, Gabriele Monaco wrote:
+> Some utility functions on sched_dl_entity can be useful outside of
+> deadline.c , for instance for modelling, without relying on raw
+> structure fields.
 > 
-> MADV_COLLAPSE is a synchronous operation where userspace expects
-> immediate results. If the collapse fails due to dirty pages, perform
-> synchronous writeback on the specific range and retry once.
+> Move functions like pi_of, is_dl_boosted, dl_is_implicit to deadline.h
+> to make them available outside.
 > 
-> This avoids spurious failures for freshly written executables while
-> avoiding unnecessary synchronous I/O for mappings that are already clean.
-> 
-> Reported-by: Branden Moore <Branden.Moore@amd.com>
-> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
-> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Tested-by: Lance Yang <lance.yang@linux.dev>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 > ---
+>  include/linux/sched/deadline.h | 51 ++++++++++++++++++++++++++++++++++
+>  kernel/sched/deadline.c        | 50 +--------------------------------
+>  2 files changed, 52 insertions(+), 49 deletions(-)
+> 
+> diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
+> index c40115d4e34d..9468a9b1090c 100644
+> --- a/include/linux/sched/deadline.h
+> +++ b/include/linux/sched/deadline.h
+> @@ -37,4 +37,55 @@ extern void dl_clear_root_domain_cpu(int cpu);
+>  extern u64 dl_cookie;
+>  extern bool dl_bw_visited(int cpu, u64 cookie);
+>  
+> +extern struct rv_monitor rv_deadline;
+> +
+> +static bool dl_server(struct sched_dl_entity *dl_se)
 
-Looks good to me now, thanks Shivank!
+Think we want to make this 'inline'? Just in case compiler decides not
+to inline it.
 
-Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
+> +{
+> +	return dl_se->dl_server;
+> +}
 
--- 
-Cheers
+Thanks,
+Juri
 
-David
