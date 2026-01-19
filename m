@@ -1,122 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B851729A9C9
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 10:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1272FE071
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 10:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768818017; cv=none; b=UVyix4bMqMTXCjNySPLDPKFj5hQb4e57W59L7Zd1jyOWoksVjI2LrLBSH6VUO1LwxQTU0bd75uXBsMYyrQeadrPw7NIyoXFBbNWUUb9TlURQBT2yyuiIuOGwfzjnQ5PCcOltMd+EXXEg6zjDgozBGeZNDc2C4W9vqPeEsQ8woUY=
+	t=1768818267; cv=none; b=dvbfMTT7S7w/NOcIaVIG7fiS9oFo5FwnNXviAtmupdDBB5UAM4Y3XIth+Qz+4RMXDwohe45BoZ6LWwU9F0TWm/wcGHBK5edNKPHa97chw4xqqZS8NeadMstyrJOQCfLC57u3lfDnhqLVeUGYwWwDS7fDkawvL1KYEKaPKwpSf/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768818017; c=relaxed/simple;
-	bh=rvbQI62i4mtAotc2MpDRqaxn9YoF5/eNwEuQEPtP2sA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=gT9L+Rurqyb4f+DQpHh6Mx7ucF5y671DHDT3OnGSnEm5EiAlFwqaAi69hIqXd22mqdUObX8evMHV2A1ah6u8ifEA0DXCaT7lsCSHWEJDWN/C94k3n+xr4e88xBVVRKO0x1AiZqXnDAiub7fVqB8sLyqucIrmAxswoQ0uNDC9C+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XcKujNjL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768818267; c=relaxed/simple;
+	bh=GQFcCgB9R8zm685nHCYu33zEwGKEBFqhbL7sxn4dsY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VtUh7FR0WU5EWySx68JpePH4rJBTEFmJcjQayviZ3o/SpYnPUxIORjcXEWh5s8NwD06/aw6Uq90zufCLPhK1xYXIwCLnvc8AAae85BRiEcWULq1c3IqI8/aoNfo+aHiuz2OYQPTdm+NIQ30VRGRRagHCiCHtXmpP0/SFSdmTjPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lwLVVrYW; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcKujNjL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768818014;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lwLVVrYW"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1768818262;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CZ7h+X5PUzUJFRlyxGa26OCMfvSLNsMYWmHGIZyf0n8=;
-	b=XcKujNjLkDq0Ipu1Ng95YoX/PpYUWXCo7WnCRWjCKqPM9ezeh4OOlw+BNrxO4wCMt+OtdA
-	xUC3QHgCAS8wCQWUXThPKiXdg5Z9M+FrUL5S1OH8/KmoT8m21A37KyO78PPmImSlanxQGv
-	k0Ht6zAUHnGgRotbAlrDnuztD6EHpts=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-Wh-llpJ3Nyy7BbvSMmQ_3g-1; Mon, 19 Jan 2026 05:20:13 -0500
-X-MC-Unique: Wh-llpJ3Nyy7BbvSMmQ_3g-1
-X-Mimecast-MFC-AGG-ID: Wh-llpJ3Nyy7BbvSMmQ_3g_1768818012
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4801ad6e51cso33829955e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 02:20:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768818012; x=1769422812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CZ7h+X5PUzUJFRlyxGa26OCMfvSLNsMYWmHGIZyf0n8=;
-        b=FdABQput0yRoBnr4nibrxJPqC/oSEiR/+WBbcoYgoP+J6EzAMBenNeZSs3bRiPUKjq
-         LhLvWrrHsD4j3Y2j/heUzS23YkGsyU+XwGY09yt9+9sjbvhmN1fYLzGCK4QtyyC4Hn8y
-         lAmxLlk/KO0o3/VId7myuUxQN3mbeAWKF8vdO+yEpqZVYPGCBJZOJC7/2HW6+feBO4sJ
-         a3gHsrKVbRME91+/RrEYj78WWwOz7il3hsJrKP+L5qSNSYT5+tdEP7WjBB0NkN5lZfHc
-         66Fw99/612DbnelSCNM5T9LvWBc+WDaLik3XisGQ9sQGFUesyj2pVNsx4ZNbhmUrTkb3
-         Q+Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlNeOlFtA5aIV9XhrEV5eXqsiDp4PhpDZuKKT2l4tJPsGmqQ3AmXfRtWSdCwVnk4Wv/rx2fEXJbaEwv49r6rTblq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwa1N1mdAPa2fEB09fbBtGuxFIDsBaNM/Bzk9JVSQroLotyufk
-	HqX7FpMs0H8S8QPzCgQdWT1cir2mWsfarxkqSJtQyriLKx4gwgTncX2bc+TiMDALrfR6y5Nk7Yn
-	R1qtpIS+ZnnAllG9eXWH4lxqOTbDs97dV296sLEzXUy/hc0vn5uBefmgFNhoyTX8fFQoz406/Ew
-	==
-X-Gm-Gg: AY/fxX7HEonmCZTEutFT021ReIwUnyApUN53pBLjjyLNHXfaWZih5/0wMLK9qjHcBsJ
-	APy39gJd39GFobB1t3WhulY5O0Dygzn333iOoB4iTTqfIlbq/OhdYRovxJ+bJB4wHyEfWJuDf56
-	j2uwVs0kdmko+o9AxBDglXdoukW/AILKCQ8glTKmFi6vvXiRyvqdSsgqCpX3g+L4gVF+q/Ikknb
-	n/4RFzQvb0M+1FVypm/pmIwofMZkLGSNG8FLNlNsnFu0WkBikfhyzxgkBTlFUGpIWUzmX2guBIe
-	RopAanD9tTqZB0PW4nV3PVrvx8M4IZ6z+xuJ4pmZadweaOxRxy3rUOsQo6RcmqSTu1qAmrKlrH5
-	A2uz4nHuEDuJF0BaHxmw3dHLryOQPGIec9MTcwu21
-X-Received: by 2002:a05:600c:4e43:b0:47e:d943:ec08 with SMTP id 5b1f17b1804b1-4801e33dc26mr125607945e9.28.1768818012241;
-        Mon, 19 Jan 2026 02:20:12 -0800 (PST)
-X-Received: by 2002:a05:600c:4e43:b0:47e:d943:ec08 with SMTP id 5b1f17b1804b1-4801e33dc26mr125607705e9.28.1768818011852;
-        Mon, 19 Jan 2026 02:20:11 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.129.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e9ce5aasm84014345e9.2.2026.01.19.02.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 02:20:11 -0800 (PST)
-Date: Mon, 19 Jan 2026 11:20:09 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WKbhwHETp9lQVp4X1qT343o8DBHuZUjbE2HkDCgnbz0=;
+	b=lwLVVrYWS8wYW2NcNkFcCGIkE39tSlTWlPHtjkFRQxCTNoiZenYIS9X0dybG0p8IQTRprJ
+	euxXzI6inQ7FcdD2ty0qptWdnUmWouzm0ZpQ64z4RWMkEiktpjSKVxYkr66zkvCnFOgMuS
+	c+PzUTqlJ0e1ViZ8tCdm7+4YknmnLrs=
+From: Leon Hwang <leon.hwang@linux.dev>
+To: netdev@vger.kernel.org
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v4 09/15] sched: Add deadline tracepoints
-Message-ID: <aW4FWVqgtk_cwPPI@jlelli-thinkpadt14gen4.remote.csb>
-References: <20260116123911.130300-1-gmonaco@redhat.com>
- <20260116123911.130300-10-gmonaco@redhat.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	kerneljasonxing@gmail.com,
+	lance.yang@linux.dev,
+	jiayuan.chen@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Leon Hwang <leon.hwang@linux.dev>,
+	Leon Huang Fu <leon.huangfu@shopee.com>
+Subject: [PATCH net-next v4] page_pool: Add page_pool_release_stalled tracepoint
+Date: Mon, 19 Jan 2026 18:21:19 +0800
+Message-ID: <20260119102119.176211-1-leon.hwang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260116123911.130300-10-gmonaco@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3X0Bs8yZv5ipTzVht0EKFpzQ7h3owlE81rRfhDIcFDY_1768818012
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+Introduce a new tracepoint to track stalled page pool releases,
+providing better observability for page pool lifecycle issues.
 
-On 16/01/26 13:39, Gabriele Monaco wrote:
-> Add the following tracepoints:
-> 
-> * sched_dl_throttle(dl_se, cpu):
->     Called when a deadline entity is throttled
-> * sched_dl_replenish(dl_se, cpu):
->     Called when a deadline entity's runtime is replenished
-> * sched_dl_server_start(dl_se, cpu):
->     Called when a deadline server is started
-> * sched_dl_server_stop(dl_se, cpu):
->     Called when a deadline server is stopped
-> 
-> Those tracepoints can be useful to validate the deadline scheduler with
-> RV and are not exported to tracefs.
-> 
-> Reviewed-by: Phil Auld <pauld@redhat.com>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Problem:
+Currently, when a page pool shutdown is stalled due to inflight pages,
+the kernel only logs a warning message via pr_warn(). This has several
+limitations:
 
-Looks good!
+1. The warning floods the kernel log after the initial DEFER_WARN_INTERVAL,
+   making it difficult to track the progression of stalled releases
+2. There's no structured way to monitor or analyze these events
+3. Debugging tools cannot easily capture and correlate stalled pool
+   events with other network activity
 
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Solution:
+Add a new tracepoint, page_pool_release_stalled, that fires when a page
+pool shutdown is stalled. The tracepoint captures:
+- pool: pointer to the stalled page_pool
+- inflight: number of pages still in flight
+- sec: seconds since the release was deferred
 
-Thanks,
-Juri
+The implementation also modifies the logging behavior:
+- pr_warn() is only emitted during the first warning interval
+  (DEFER_WARN_INTERVAL to DEFER_WARN_INTERVAL*2)
+- The tracepoint is fired always, reducing log noise while still
+  allowing monitoring tools to track the issue
+
+This allows developers and system administrators to:
+- Use tools like perf, ftrace, or eBPF to monitor stalled releases
+- Correlate page pool issues with network driver behavior
+- Analyze patterns without parsing kernel logs
+- Track the progression of inflight page counts over time
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+Signed-off-by: Leon Huang Fu <leon.huangfu@shopee.com>
+Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
+---
+v3 -> v4:
+ - Collect Reviewed-by from Steven, thanks.
+ - Collect Acked-by from Jesper, thanks.
+ - https://lore.kernel.org/netdev/20260102071745.291969-1-leon.hwang@linux.dev/
+
+v2 -> v3:
+ - Print id using '%u'.
+ - https://lore.kernel.org/netdev/20260102061718.210248-1-leon.hwang@linux.dev/
+
+v1 -> v2:
+ - Drop RFC.
+ - Store 'pool->user.id' to '__entry->id' (per Steven Rostedt).
+ - https://lore.kernel.org/netdev/20251125082207.356075-1-leon.hwang@linux.dev/
+---
+ include/trace/events/page_pool.h | 24 ++++++++++++++++++++++++
+ net/core/page_pool.c             |  6 ++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/include/trace/events/page_pool.h b/include/trace/events/page_pool.h
+index 31825ed30032..a851e0f6a384 100644
+--- a/include/trace/events/page_pool.h
++++ b/include/trace/events/page_pool.h
+@@ -113,6 +113,30 @@ TRACE_EVENT(page_pool_update_nid,
+ 		  __entry->pool, __entry->pool_nid, __entry->new_nid)
+ );
+ 
++TRACE_EVENT(page_pool_release_stalled,
++
++	TP_PROTO(const struct page_pool *pool, int inflight, int sec),
++
++	TP_ARGS(pool, inflight, sec),
++
++	TP_STRUCT__entry(
++		__field(const struct page_pool *, pool)
++		__field(u32,			  id)
++		__field(int,			  inflight)
++		__field(int,			  sec)
++	),
++
++	TP_fast_assign(
++		__entry->pool		= pool;
++		__entry->id		= pool->user.id;
++		__entry->inflight	= inflight;
++		__entry->sec		= sec;
++	),
++
++	TP_printk("page_pool=%p id=%u inflight=%d sec=%d",
++		  __entry->pool, __entry->id, __entry->inflight, __entry->sec)
++);
++
+ #endif /* _TRACE_PAGE_POOL_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 265a729431bb..01564aa84c89 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -1222,8 +1222,10 @@ static void page_pool_release_retry(struct work_struct *wq)
+ 	    (!netdev || netdev == NET_PTR_POISON)) {
+ 		int sec = (s32)((u32)jiffies - (u32)pool->defer_start) / HZ;
+ 
+-		pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
+-			__func__, pool->user.id, inflight, sec);
++		if (sec >= DEFER_WARN_INTERVAL / HZ && sec < DEFER_WARN_INTERVAL * 2 / HZ)
++			pr_warn("%s() stalled pool shutdown: id %u, %d inflight %d sec\n",
++				__func__, pool->user.id, inflight, sec);
++		trace_page_pool_release_stalled(pool, inflight, sec);
+ 		pool->defer_warn = jiffies + DEFER_WARN_INTERVAL;
+ 	}
+ 
+-- 
+2.52.0
 
