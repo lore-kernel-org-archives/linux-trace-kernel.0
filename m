@@ -1,97 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4B3002BA;
-	Mon, 19 Jan 2026 07:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6DB2DF14C;
+	Mon, 19 Jan 2026 08:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768807826; cv=fail; b=DmOhXxW+7+LnU25SZJitXCtnfiwr2OJvwPMWSrzAfBzCQv7Mg1Kh2AZWGAmpSLYiYrkHAwfd4GhAaLN5zBe1S8c+jBhl1HvbuCpMn7vaYmPuktAP+sj68Wh/5TWTlKKeHdv4bDSAyVQmANJtSiRJHwVpnEt6jiecr/yxWLNu+4k=
+	t=1768809807; cv=fail; b=WubC/htxPwatPqnE5uF4x3DwPic4dyeWXCIiazgb/OMH9ljZbK26hIVQZ5WQocjV7cy8AVaBWqFBtkeMVzYbgi/DGSj5gOc4g7TYcK/zyVOpIWSXswBsAuHkIy9l0kJqkOn8SaucYqDLHqxvC3+CVzwCDGW8/rADlJG/P5wHQVw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768807826; c=relaxed/simple;
-	bh=OZGwg0Kr/B7idZIiZ8bduN5o8XCcXlvut0nDLGC/29A=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EBQ3aaMYxfDzKcP8MUlsQ2E6ViXvOYrC0F0+SbuyrGOqMWcngE2sU/2UkkUcDw7HwWNHUBSElemJCUkWCSHo9lbiPzRVgbKz8aoTL3AS3yE82rwAkAKmgspIeGYuQ1UQJuWyePvznrH5gD2OQD4yLItQjXQBGDsMdPg7UFzXuPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NbMm0+ZT; arc=fail smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1768809807; c=relaxed/simple;
+	bh=MA7GmuZDOnxNSGB3qYApMpomRrmq2/xMchfrqr2BUmQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IQkKYYqmDx7d91IqcDJ6LRNTt0qvWZD5S7QdS/+411z3ep3nyLRDLtf5oomRVX2kKCRu+bBS6+i+D5JyCQufDjxaEnQxvkQ2vtjJ0x0KIG6NwzzvTRL+naDjjqr8RekW3Z8KfkdKaAeCrIH9t+8Sc1HcJUZNeJy4r/yRA7wdgIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLsdbfsS; arc=fail smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NbMm0+ZT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLsdbfsS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768807820; x=1800343820;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   mime-version;
-  bh=OZGwg0Kr/B7idZIiZ8bduN5o8XCcXlvut0nDLGC/29A=;
-  b=NbMm0+ZTE4OV/g/AU46YvgZA5rTkgkpXfQmjBNj6gdvzby5wDY0m8Nw4
-   drvNm2/EVHchAMcsIBs2/fOi5NtT8nbsshTHjdby6LzppzhXGegNLBBoS
-   TO6fnKtUIVTMeMJZJlxMf5Rssq8AkrgS3Elka0eUKdOU52gC9oIMkND18
-   mCtfC2XKTLXGbU6lYmMLFD8DecvwsEM4y/Rsvfvb46yJd/lnTIpHB9HGR
-   FqoVn/HrJymcWo1FtkN8KzCMSI9I3R7V9bN0gGqVJoG5aKFkYfUhPmuLG
-   p9uw4NwjB7adt6R+3Axy0t1x03asosGVgavkH2cpLr4OvFoQLYn+O2nSe
+  t=1768809805; x=1800345805;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=MA7GmuZDOnxNSGB3qYApMpomRrmq2/xMchfrqr2BUmQ=;
+  b=PLsdbfsSCTIiqY3PsmgtRW1uUFy1eXJHOEKQ1+PeJB4CUYxKJij3cvq3
+   dtXOi2qTHIw+J08GlZ4nv0sDrkBJZCchGoR/5xsE4ZTf1ltbz7ACZuzzE
+   s72FeOaHyQ4BRokEUrRyh+meJSbgXkN4fPfes0Y3sxmtldZJf495E8Cel
+   GzWz8MvK6q8FI4oHhgi0kLlqc9n63jeR3rhtndk+pB6cqUfyuucZeZm9g
+   BEhuV4Lu2QcAWE1iBuuYqQAMgN9sxfHnP0jnGWyW+3GpCvKpLrzh47Rm2
+   tIH0vvhQ5X0l33VqdyJB48Sl3+ce76junVDV5fdRbS6rQbLRhZ+dW79/u
    g==;
-X-CSE-ConnectionGUID: QkSXCy6QRPO9yLhpmR7Vdg==
-X-CSE-MsgGUID: iWlXH4LzR3GaP61GvjRuKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="87429502"
+X-CSE-ConnectionGUID: 4R2R5kkRQH+tSUxJ4P9OLQ==
+X-CSE-MsgGUID: DftFfGesTvSHkb2ndr8TtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="69919904"
 X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="87429502"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:30:18 -0800
-X-CSE-ConnectionGUID: r5Qa3YdmT/Cju5UO3VQ1lA==
-X-CSE-MsgGUID: p1JGIiUfQWmexsN30uxbIQ==
+   d="scan'208";a="69919904"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 00:03:20 -0800
+X-CSE-ConnectionGUID: 3Qk5rQz/RXK3Ti7JZc8tvQ==
+X-CSE-MsgGUID: Y6I75pqsTlG34pD6cE++Uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
-   d="scan'208";a="206153582"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2026 23:30:17 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+   d="scan'208";a="205419650"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 00:03:20 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Sun, 18 Jan 2026 23:30:16 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.2.2562.35; Mon, 19 Jan 2026 00:03:08 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Sun, 18 Jan 2026 23:30:16 -0800
-Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.12) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ 15.2.2562.35 via Frontend Transport; Mon, 19 Jan 2026 00:03:08 -0800
+Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.4) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Sun, 18 Jan 2026 23:30:15 -0800
+ 15.2.2562.29; Mon, 19 Jan 2026 00:02:30 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jfjf5yeUReqB36zUcrsvY+tpcCl61DsERKGVeouAecDMan4EVSC5qW6ftlFx5T/GCFlBvVhoiRLd7leEFhJyXmF//4NfBgdnDxUmBIIdVyOf7+j0SklgV1cK4m4Ko7/3oLBeT5zDtiJjY2qqERxHrGUcHrlv16iP45/olnh9Tcz7f1IRNvdIL05M9cvD7EibkJOXGi5xPaW4W4HnEWoSQ4HzsrR8awnEqSt1LQdMZ8DYO6jwL5iSvXFUlpA2dj1vMfxiEm1/K8kJozrQOsjm79cx9MbWhGGfuPw1TDgVScovkfytyEUy7aJVTvc/8FGo5CMULu/9CChG7o1kGn0+XQ==
+ b=C2OiRn7AV4hjTW8BRvnoiSojiDeP/SlAqXcT9hziAXsRlx3R+OeMufbp/DMfL3Fvr+SXzH8dRzOy0TfXkkigCstk5ifZ4C1xyTtsXgOF5XheW7w8w032FbXhXY+HYvvGWUt8G0/8TmTn9VpYGyBDLRmaw7+eLh0rCgvWiFFaQOKgmR5qJUwHU91IdFpEcT2gT0wMW/GxDH7zA9O0kPaTmPcTgtHrRgW9D/gbzuYSYB1WZVBg2VxmjV1L7CTmcbnFYU9EPMox46LY4ZG2UbM6u9bhnehf7/IzV3pBsENBot2gll0r23RbPzna+8ACXCE4TFsOn2+QX+X/05iLi1GezA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MegOCeHG2B7fQy3JOBH1jx7iyQyuS9Tvtr5reMLCatk=;
- b=Tk1Slf+90zsSv3HEzEUMGIfVXI+9tIDGWsKqmpdf7ainwDLJED7MMddBS8AQJsTbV9cfv+snOrlLranmiqCe6YYPXGBEj+fBjJKRO6tcTqNzKlDZZyPyo85k5SjatfLHyoQgD0cK2Hgu5H4rHHpE0FDBoBId5CZEK1xnYjkNW9eRCcxzQRuUXZQGVq3aSc2/zeVF445JHiEN97SzRUm8BovNW8bLejFJyOHolVxBfe+XG+CcHYSU2rEPVfkAY5hex5qx6XyTPJusoHdm4XUG2xNrGEYVkxJsHCmq2kCBwbm71hfojXQtf8WE2bdyrb6uQvxXK5WzKFl4hvMnnv3rGQ==
+ bh=sB4LxW1Chlm2kIHtKsmG5jzdQpZRxHKZaNYdn6kr+2g=;
+ b=t3lWn66Q3hz6nH/LDXbx45BhwNaAsskvk36vhTwiiIvksAgKdGWjpxBy2z6dh/fkY4IQSduZ/uRxremRB2mVKOa+PSCkxzNcknOJGuxWLgPjj/H/ircxP4Y8Ajnbqup/xg9wwkRO+6jzK5l6oGxt1HcF7WKIsCe+1vxymk97MFWhr2vDLt842GIoUnY7sYIa5iByDJyWmmiaRCRubofl9EmMS5X8AK47UjCvL8Bc1au1Mb6/9aYtb4t8QsynTevyBZ9+EhPeoUugPlcq2S1EE2zE4UZkdR12p4gOdRJ0q/g93cqscXmz45WgjYWQIUWwhA2xw3BIvoB9WSjFRMFYDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DM4PR11MB6480.namprd11.prod.outlook.com (2603:10b6:8:8d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.10; Mon, 19 Jan
- 2026 07:30:08 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9520.009; Mon, 19 Jan 2026
- 07:30:08 +0000
-Date: Mon, 19 Jan 2026 15:29:58 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Steven Rostedt
-	<rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>, Masami Hiramatsu
-	<mhiramat@kernel.org>, <oliver.sang@intel.com>
-Subject: Re: [PATCH v2] kprobes: Use dedicated kthread for kprobe optimizer
-Message-ID: <202601191507.74fccd0c-lkp@intel.com>
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ IA1PR11MB7318.namprd11.prod.outlook.com (2603:10b6:208:426::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.11; Mon, 19 Jan 2026 08:01:56 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::413f:aab:68fa:b1b2]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::413f:aab:68fa:b1b2%4]) with mapi id 15.20.9520.010; Mon, 19 Jan 2026
+ 08:01:56 +0000
+Date: Mon, 19 Jan 2026 15:58:50 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Ackerley Tng <ackerleytng@google.com>
+CC: <cgroups@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<akpm@linux-foundation.org>, <binbin.wu@linux.intel.com>, <bp@alien8.de>,
+	<brauner@kernel.org>, <chao.p.peng@intel.com>, <chenhuacai@kernel.org>,
+	<corbet@lwn.net>, <dave.hansen@intel.com>, <dave.hansen@linux.intel.com>,
+	<david@redhat.com>, <dmatlack@google.com>, <erdemaktas@google.com>,
+	<fan.du@intel.com>, <fvdl@google.com>, <haibo1.xu@intel.com>,
+	<hannes@cmpxchg.org>, <hch@infradead.org>, <hpa@zytor.com>,
+	<hughd@google.com>, <ira.weiny@intel.com>, <isaku.yamahata@intel.com>,
+	<jack@suse.cz>, <james.morse@arm.com>, <jarkko@kernel.org>, <jgg@ziepe.ca>,
+	<jgowans@amazon.com>, <jhubbard@nvidia.com>, <jroedel@suse.de>,
+	<jthoughton@google.com>, <jun.miao@intel.com>, <kai.huang@intel.com>,
+	<keirf@google.com>, <kent.overstreet@linux.dev>, <liam.merwick@oracle.com>,
+	<maciej.wieczor-retman@intel.com>, <mail@maciej.szmigiero.name>,
+	<maobibo@loongson.cn>, <mathieu.desnoyers@efficios.com>, <maz@kernel.org>,
+	<mhiramat@kernel.org>, <mhocko@kernel.org>, <mic@digikod.net>,
+	<michael.roth@amd.com>, <mingo@redhat.com>, <mlevitsk@redhat.com>,
+	<mpe@ellerman.id.au>, <muchun.song@linux.dev>, <nikunj@amd.com>,
+	<nsaenz@amazon.es>, <oliver.upton@linux.dev>, <palmer@dabbelt.com>,
+	<pankaj.gupta@amd.com>, <paul.walmsley@sifive.com>, <pbonzini@redhat.com>,
+	<peterx@redhat.com>, <pgonda@google.com>, <prsampat@amd.com>,
+	<pvorel@suse.cz>, <qperret@google.com>, <richard.weiyang@gmail.com>,
+	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+	<roypat@amazon.co.uk>, <rppt@kernel.org>, <seanjc@google.com>,
+	<shakeel.butt@linux.dev>, <shuah@kernel.org>, <steven.price@arm.com>,
+	<steven.sistare@oracle.com>, <suzuki.poulose@arm.com>, <tabba@google.com>,
+	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <vannapurve@google.com>,
+	<vbabka@suse.cz>, <viro@zeniv.linux.org.uk>, <vkuznets@redhat.com>,
+	<wei.w.wang@intel.com>, <will@kernel.org>, <willy@infradead.org>,
+	<wyihan@google.com>, <xiaoyao.li@intel.com>, <yilun.xu@intel.com>,
+	<yuzenghui@huawei.com>, <zhiquan1.li@intel.com>
+Subject: Re: [RFC PATCH v1 01/37] KVM: guest_memfd: Introduce per-gmem
+ attributes, use to guard user mappings
+Message-ID: <aW3kOgKL7TjpW4AT@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <cover.1760731772.git.ackerleytng@google.com>
+ <638600e19c6e23959bad60cf61582f387dff6445.1760731772.git.ackerleytng@google.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <176826884613.429923.16578111751623731056.stgit@devnote2>
-X-ClientProxiedBy: SI2PR01CA0029.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::8) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+In-Reply-To: <638600e19c6e23959bad60cf61582f387dff6445.1760731772.git.ackerleytng@google.com>
+X-ClientProxiedBy: KU2P306CA0018.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:3b::9) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -99,306 +130,169 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DM4PR11MB6480:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0d6f11c-cd61-4b6c-efb2-08de572c9278
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|IA1PR11MB7318:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9aebaa6-1ff9-49af-6eb7-08de573103fc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?dYoajYlWZ7SUQkQAE3QS7EyiH/MmS+Ipbonw5TphO3rUcphschcnp0HUX9s+?=
- =?us-ascii?Q?BPkkmc41kdlslR2/g2q8bx3ukXNqPQVWOz8Wtzfk9B4bCiYtpPVdhUL3ubXu?=
- =?us-ascii?Q?9v5VjgNFCCuww2guY80TyOBg/sRCEUcBGfi1VNRSTZ2ys5ieTCpgIALK2NyW?=
- =?us-ascii?Q?IAWJ1OlJC6Dk8YM3eDKs5LS40fRR63ptexhRQuatsYt2y6HtUk8hkiedga1N?=
- =?us-ascii?Q?9kwG7pbUcvtdoQpSbC/9Mkwm3ckcH1yVlAaFyJm44KcYQIb4YJQYkp4Y2vPM?=
- =?us-ascii?Q?Ai3MWeX/7kphL0osij7HMPdYcc0Ed2Vw+g2BTliRyDbU3v1yvAEUYpUZ29xf?=
- =?us-ascii?Q?aJG/VzN71JkD7QiHZ0uGVRoTQCrHpXIrju5fxbAUtYjOldFYl+nNFOkWKeF7?=
- =?us-ascii?Q?TRqBQdRQdMts75aeP5sTlgtqXq5aoU2RjkMOGgAxBnw/N07OEl3At3bk4xBi?=
- =?us-ascii?Q?gZEKfsv7sdfNwZ8VzFEj50/3IgboBFWodj1OydEMXUplJ56GPhwhBkF/yKMY?=
- =?us-ascii?Q?ry4jvyVNDzd9wkE+QAqqeuGmOue0nyZjZ9euhOBIP0Q4mTyNwN/bN5xxR7g2?=
- =?us-ascii?Q?QEIip2xQGEJXBrygD94ZBLlDaiId+TePrTpBCL2mgNFUDfNyKw6g0Kx+QGzD?=
- =?us-ascii?Q?OCdKHj0svgL8HWcJ2OQUSbYdSXle76CRrpdoXhUDt3Cr2xl91CHzbLfqcdcq?=
- =?us-ascii?Q?H/q4cGs97XtNHLJYW8XYf4UxgQc8LjHYjgH2hcHTZyLGPD/IuHB9Iv4ZJHNn?=
- =?us-ascii?Q?61Vm7ocDYs7EghJjx9S6v9thwh/Ek+geyZ5JAw2mZQNhIHT2RpyC4hdFWf/j?=
- =?us-ascii?Q?AFd5+9EoJ69F4O7ETnRckG+b0GLJ9XeurDl8WWvFfe5K3N2X9iNRtsIPz9Yf?=
- =?us-ascii?Q?cD3MRVsbI9IWWHAoqyRlzo9t3hmr8uB1CDlQYdIzPzPwCjdeBznIMRCuLEI7?=
- =?us-ascii?Q?tijjrQEVYovYU0XgmF9S98JuOBN7Nfac0E2ZXqI9OzEs0c48B08lFa/HageV?=
- =?us-ascii?Q?Qw8jussfJGDcEdmbz+Lcx+iLda1WxcP+/ZFWMYZlnyA5o9JsOdNcN+F7EhNa?=
- =?us-ascii?Q?pUth7AXZv0I51NYDw6ffx4sMKlJMYQmfIHS2bQUFXYB3ToGuLA9dSjW6Ydxe?=
- =?us-ascii?Q?MRF4InCoDl6ioobVPoEWpngVWkn1lDTt6eldx4zP2QynK5OOhSTVCDZgR+gD?=
- =?us-ascii?Q?JxZrQ8/NGObCmK71J/5EH+D3YAnsCIPplUheca5IEc2Y2JYZ9x0qD7LJ0BMR?=
- =?us-ascii?Q?F5JDAssvLDaGGGdUu+imBR/XyGgXjVqzefhIo6q9Xby1/j/hJXeH/5c0DoX/?=
- =?us-ascii?Q?cpacjqgndUnr42InmcFRb6rw3EQQxNxGmdScB7e3A5VK7SWhbyuD1TNPtHSX?=
- =?us-ascii?Q?/ey51iOplSnZhe4wh4aqYtmQ3kNSgVOH54V+8iBfW+GxwhLEOT6dWXmxj3if?=
- =?us-ascii?Q?zjAMQSvp/SkRsK4pmD8wOVhCTZVdecxBBP3UVt3A47t/C5UujWuCvc1lTFU+?=
- =?us-ascii?Q?8D8OtBCgRau2+MGlfG2JPl1CnbDJ2JKf96hvSd+f0FP9pPvj7iSJxdI7n5vj?=
- =?us-ascii?Q?zwy+rJkT4qrX74oYf8sGiKSc1QQyu4ehkBXpJBUv?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vVYEliQ/LonOBolkZv2Q5oe0XBFj7QD5zoZgYtLDBQrbJEe+/DPYNSxfIYKF?=
+ =?us-ascii?Q?fiN5lI62/uDxnWspOXPAsFeLK+a/nRCGimACzWpoJFUESaIluabZzkbtM0cb?=
+ =?us-ascii?Q?ZY52UDr9w6IV5x44wjhCsqGeiwpThJrYy1JuIet8QVQGmTH3ZI43gnlR3F7m?=
+ =?us-ascii?Q?0PWWIqTuCZNuhyZ1Szre/GMsMuDzx8o1q12Hj8xOXwdE77NalZjdQgCAxKOy?=
+ =?us-ascii?Q?vMhiUZAeo//FEOQ/FNrW9dUMJDyCYlyqXqI9L0fvkGcqL5+atJW1FoIpwkmL?=
+ =?us-ascii?Q?iTjk18jrBYwHiub3vUHp5z/f0j3Q45Aisw2ZyjFxincfD4z+Sx3kNGKv3Xwr?=
+ =?us-ascii?Q?HOm60QWUmEYe7MRAR4yiEZ71ABZvzYBDvZuO+/2P+x1dbtKoy7wOu15G0ZVD?=
+ =?us-ascii?Q?btZNo40AuP6WjBUkQMarp3YmOy7kXBpYu+S2zpXD3hszA/M7M9ByuNgEAQUe?=
+ =?us-ascii?Q?DR0X9p+NAdV9floxiAhahbCb0NXy+uQ+9lC6GA/Rz4o1d+VX0MfSMmEbdZS9?=
+ =?us-ascii?Q?4FqJXFlWEAYMt30+6qrB/Ma5sdjf7/39uSn9B0pEWJFJWeafotVaWR8MRmB0?=
+ =?us-ascii?Q?D4sIsg48WnF8ZJeTJhHLQGFxoVMYCaUP0FEo7Vqe4AfCwI0kkte3Oi6Seuxz?=
+ =?us-ascii?Q?aNKWyA+fq5f6Rjmj412/8wXR+CMS7wcozINuKGJOF0AE+wyw+2nK1Th/k5MT?=
+ =?us-ascii?Q?Wwih5dA+BScPFvxU1Qi7FCVSeEkGYHwzovwoUf9oDU6gUjCjQpd/NqphPCe9?=
+ =?us-ascii?Q?TlH8exxvSCsa4GTJ0l4noPSERZyD43fe0qQJ0dpatntyXQKalQeUC17qTI1r?=
+ =?us-ascii?Q?B+WBK2L3gMmbKoLKOM/pJGc4p3JdBVWxrhRLgJrQwsihguMjkZX1jifbnQm5?=
+ =?us-ascii?Q?D9u5Vqcc4uUuq9gfNEKeRQ8C9WzXzGP6PO2mNK1ATH+67Kk7B3yGUgvSR1bJ?=
+ =?us-ascii?Q?weOFCUDFJVAkQf4mZrnN24uP0vPYDbljZwvkPulduQAzz+jfHBNOhWkhH9Rz?=
+ =?us-ascii?Q?TpjzOAOXs9sQo3eIvcjJJ2jrdbb9gj69X4XJPVFKQckwwWZz+5dEm1xyd2wh?=
+ =?us-ascii?Q?tJeiOw76HZYqjXaKl+vAn9j0kk4L2lmQSeKTDtIbMm82C0nhCem4T0QsxffQ?=
+ =?us-ascii?Q?W9VHhQ8zJXu0+Yg0UOiuIKCyoYSYYjRKSCLQyj+wtKGyyxX9bDr9fQwpTMPO?=
+ =?us-ascii?Q?kPxbAFPXvCoe61UEyHQAQBx0l4m1nT6GZ1Gospnn5X518sFmgnFmuVibVgBk?=
+ =?us-ascii?Q?izVGEWKdVnQ5Su+iUaMAN/6VRayPQQcwLNrYBXCR3X/MPve8bsTk+DgSp0tW?=
+ =?us-ascii?Q?6u+cAna+Psi9o+uDnHqN4Km2OnHtUgzaLGno33C7hAP2ZTCJ3NFNrRypsvZv?=
+ =?us-ascii?Q?XvS/Zc0Wj+C2gWcc2yXX8KTgU3CQcKxF2XHubP01sel487mpPBKpEQxzs+Tk?=
+ =?us-ascii?Q?4mUwfMcjc+wcjb+qRPrc9Xd68fKC07+zMCJTTkSwP8LRD6rvz4EDR8DL2t6j?=
+ =?us-ascii?Q?HWtd8ac258VF+WQIF82s5YL/BJsSmAqkISqsY75Us1k9Aw/n0vpwl3YVfu/0?=
+ =?us-ascii?Q?wyy8JpibX4Z15EhI6HE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NCXRL8j6ABoJkO+EMZsQXt54jH7zOGDIS0tK2jdX2XuX9xhxaEFd9laIHR9o?=
- =?us-ascii?Q?o1H4BYkGMSv/UFrx1YDnG7etb5DoeJnrM9pOTy6k7scPsNCCLf/Kvwie/3QN?=
- =?us-ascii?Q?yWT+U4gcf3F8Azv+tcjGHJEe6QwGVTDRMvcfQFd8MJa5WtEyGiINq2v802W5?=
- =?us-ascii?Q?Is0JJzPyLgPmRg43JKqZeEgCWr9kRXJM9O5MHsCLEE98HtqeXHZe6JCBbmCT?=
- =?us-ascii?Q?rE74tqAlOQGH2uWUZSWHpFPfWnVoV8gdi6LOQACMD+7z3CsZnCqjbp1+CEEP?=
- =?us-ascii?Q?UvuGnRRZobpyBUXsdGF5+UTSTKtze54SL5gLpBwPVB+0MS/cMeRQFi/ipH47?=
- =?us-ascii?Q?nReTphL9mb0WQOXF6hqzZpZArMsp4lP8fNct/0F0Io03lYgRQxlH/uYr0mA5?=
- =?us-ascii?Q?TOhOJjbsZ2VUFyrJOuw9tEfYyIVrAcl4iK2FksT/dpoJA/pI0Lkk4KBy7Uyk?=
- =?us-ascii?Q?X5uHkK7dCFHTSHn5JRz3emjLbBQ4//+D87y10aJArJyF71PhKk+V4wxP5FIC?=
- =?us-ascii?Q?fh1ncIJSg3gpDI8AA6MGvNOsT90ssJCuHcaz5+CJFpDOS5BnWdvYgT5KU8H5?=
- =?us-ascii?Q?Q0l+TrbVMOa4UfU49tBivHbaNWk+RyFl0oYikpqleY/4dBO07mk4Dd9LsmmV?=
- =?us-ascii?Q?wz8gTNQJqCLySxIZeKbCKPRHyju/n/kjIhHJVmwkquT7oejwmIGCoqEYEkIB?=
- =?us-ascii?Q?0CMHaOGGXs7bTvhpcLWXIYBZNmDHhjEEI0Fy/McSJRlc2LTZSuL196pp5yH1?=
- =?us-ascii?Q?oBjCUQWAkxnPXiNhRhYPPXy+8z3My5PolwCJlqedA8kSt+fb1yW+tpym2Xxg?=
- =?us-ascii?Q?F/yXF0f2PC3y+wSEwQAjhvKkgd1PI/thPR3HfnGI50MOLR3rvR6LAp/nqHwo?=
- =?us-ascii?Q?9yDNdLg05HcjqN/uIM0KioLpAV+i58D2LoEe3YVDa4y1C706u4zbcEW6GFTz?=
- =?us-ascii?Q?N2gELVm8gR3Z/b6mpJM2SYexn4nBGTeUbEkkNqujnYDUAOq8U8erTHwj05oE?=
- =?us-ascii?Q?D+BeZS4ERmObOa7yErtONj6ZPRAdZeZVJad+1eesgFC93aPsD0Tn0VEO7YgG?=
- =?us-ascii?Q?NAASRd0yvC0Npv6YuD+HRcWnxEYGoH3k1KpyHNWqRm3VmjYHaxFcYq3+U9rM?=
- =?us-ascii?Q?1K8oOlGNcYEwf5o2Nm121niaAHpR48ZnAuv6+T5NwW0yVUamYuSTwWtr5kZ3?=
- =?us-ascii?Q?/D7wdaRYSxT1sJwK17K8EW9Z37e5SFLqZuGR2bf73UgOLQTnLma8kvkL9NP6?=
- =?us-ascii?Q?l6GRzKcLZBERUCmlw7mctzQRpReeLCOsAKpV/yiULT1n2MHVk6zp//SAb/bB?=
- =?us-ascii?Q?wSZv/RDgSaRI2YeDowHx/G9vTuA8uTzXLwfo1nCAGMO7W7q/62JJ2+PQdaen?=
- =?us-ascii?Q?sdvRdq2RoW7sXAtrNmsvpvHULeaiQ1YCMDPL5mf17870QVxwJALD28ZXYKCJ?=
- =?us-ascii?Q?qJJ++I7pszviWsV83GQFo1D09jzOVad59y8OTrk0lgyuOXFzEpt8sbFwg4Mp?=
- =?us-ascii?Q?PrHWMj9905T4IMmAq3F2xNhvetPbOPXsPf2ILMiflz/eJApfhySa/U9FZNUy?=
- =?us-ascii?Q?zE5XxfHcgYQO14MWz237UJCJMsRR0BETMGGzdfyIug2EbZ5zIABoxWWae73T?=
- =?us-ascii?Q?gUVqGvmDZ9lumZ56omxXJpjlETSCZjTU91CLWft0sPPR5CY/bXMEZNCI2sB1?=
- =?us-ascii?Q?YeRE9QNQaym8IH+XsHTXHK1MqTqYMNBLBXuWilcx1Ep2v28nZISWW7qzx+3x?=
- =?us-ascii?Q?2bLCBAOJEA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d6f11c-cd61-4b6c-efb2-08de572c9278
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Mk+II8GlOPbxLsfdzqvDDcoV6reG4Amx9JC1FVOlmFhyt7Rb18i0MsaqxHBg?=
+ =?us-ascii?Q?khVDv0Gi+TTvUaPeS/aLetiwUynXBN2IlGXIwHeNywag4lVvDKbG5eCCzlmY?=
+ =?us-ascii?Q?barwTCrQJu2lQIbN2Ny0LbL6gBzP2sqbyjXuIUqt+GRnyPJZcHxTTzMdSThO?=
+ =?us-ascii?Q?Tt0jTKHTfdkcMPe1mxm11zJtEnBgTyUcLpkmtt9mruJZzcOuxOVybslScD16?=
+ =?us-ascii?Q?nFWeCT/ttKObZuYPCf4BXvWH6xL8bM+19xSPzMsI+M4HmcT26fvjpgccAOZq?=
+ =?us-ascii?Q?x+2unrHKpWsa8czQV6iWTnuQMy0ob0zu4EW8LfX9tf2t9V4VAxYWJAox1fjQ?=
+ =?us-ascii?Q?120FZBtQv2fNHFkpmYfrW6e/oCphlODPFZJeu31UWJBAqN4No6P96A/Vzfab?=
+ =?us-ascii?Q?ve0WA7nC4TGi+wvQDfrbkr7CDbA793UIUQb3cgoFMS0s5nCPYixzlv7Yq1Pl?=
+ =?us-ascii?Q?wlCCkzv6YgEMa8NWX3P8UE9cL58puwmaPFp2InX0SMA3MSbV8sP8I8n6e0sG?=
+ =?us-ascii?Q?mTgwS0hdpor41QNHXcLoNgUYiukcJem6EnyOOpWk/DoC91SVjRf6PjT26Thn?=
+ =?us-ascii?Q?0pNKQBZ0crY0uBYvpO7aPh7h8m/sNPEgdyAJeFG9EUJo1z2v2esFfaKB17+/?=
+ =?us-ascii?Q?3Jkr8+R3+/VD3I8sd8hohpjJtsTcDvM1K2Jo2pzSidEk6Dtl6u98k9yEPHoe?=
+ =?us-ascii?Q?02O+h3WGFJEiRwCCtgGk6u+zzyDsOa2jA5Mox3Vm1CTaOln4sxTvMlmKK3T5?=
+ =?us-ascii?Q?XCa9Gi5cImeR87NKWL2V64e19Af/Bp15U7UtQeGbz5ws6req5o017NBPDjf3?=
+ =?us-ascii?Q?wOjavsr/KZWUOvK8fIufW3uazRBRqMIjuqiSSydKwP89NJSiKgdjNTgUX3mI?=
+ =?us-ascii?Q?QAOGaO35kJJOj6pLuZSgEzpg6/35OiL89ae3WWt+YFPmHDz8T0SHbxTyf2bi?=
+ =?us-ascii?Q?XOtRgYnL/Ji2PBK15gtdRqKR4bxCK7/4QB+6H9vGD48J1G0ebB+x+QfiNXRr?=
+ =?us-ascii?Q?9FKOsWTs9DQK5/HvL/Y8vcZvesHWyGTYdOeoxDTvb6ZIM2YzJNbGvjJJm33E?=
+ =?us-ascii?Q?G11g0FKR+IZdGKKnzob0l5wlmlYVq4Fw0RtdJI+rsI0HqUpyW/v4v5pUglex?=
+ =?us-ascii?Q?DAbjfCCeawNFhyBtEWO0JYbxI1p5dLEPYpQ1S1ghHba+UWBa5lBeuo99YVZu?=
+ =?us-ascii?Q?OqimYnhF/HoFp/UD0qLZjqt0IrmsIZUdAnq7pY1eVns7uYnR79IeTlJgESK4?=
+ =?us-ascii?Q?HWmy1rpGmdSD1zP3BRp44scJ4jk6W7wRjJCjwWe+Fa/8+p8VLHifgZvZgmX7?=
+ =?us-ascii?Q?xbAAnf6waE3O1YjPzR6647L3p6wyWLgVrP68xz+QNWc7dLW5LVIiCrj6stcx?=
+ =?us-ascii?Q?/pWVeVcYwa+fC4/6N7oQ5FcROgezJqWqa5gcFAe9dlSzjt1Yud2qxOl79acQ?=
+ =?us-ascii?Q?oMsmg/bBwCYikikdg72i4Wq1LXMwzgoVzol1P1cal85IJaGrkr3PcYmfMkLF?=
+ =?us-ascii?Q?1vfXwZPDJkg3/5ujNtjYbAC474gNEdvEo8eECfhznZdycKs6tWcwzCKZScW4?=
+ =?us-ascii?Q?i/Q0iAN0f9qv7i8jp5fkVt5uq9piuuykx60lA9x+odtneoXU2aGSFpjuvQUx?=
+ =?us-ascii?Q?x3l5PGEf0kEPNm4daE8l29rsz0ADNcsQFBcsHB1VcU7yd/EzCA53yjrvZUEI?=
+ =?us-ascii?Q?8Le8dJWbRMFqbBx4PWgEcBc6wzsdhxJLAxpNgY4QQS0cOfUJjPK4EC4c0jXx?=
+ =?us-ascii?Q?k5zb7FkoTg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9aebaa6-1ff9-49af-6eb7-08de573103fc
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 07:30:08.2868
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 08:01:56.7488
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XgMtYgyoP4mfe+XeL/38S/2HmmvDAgpqIYJrkxfo8+1hqKzUypI9dGOdaIABALrlMz96eMD9/wfsL3GiGIJGTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6480
+X-MS-Exchange-CrossTenant-UserPrincipalName: /I/VKXl71tByz1N0PLdAnEVN+FEV7A4CewPoV/LHNxHibidz/KYicbmjeYFYPrtC9GUF+30eQCGZF5FryDQdjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7318
 X-OriginatorOrg: intel.com
 
+On Fri, Oct 17, 2025 at 01:11:42PM -0700, Ackerley Tng wrote:
+> Use the filemap invalidation lock to protect the maple tree, as taking the
+> lock for read when faulting in memory (for userspace or the guest) isn't
+> expected to result in meaningful contention, and using a separate lock
+> would add significant complexity (avoid deadlock is quite difficult).
+... 
+> +static u64 kvm_gmem_get_attributes(struct inode *inode, pgoff_t index)
+> +{
+> +	void *entry = mtree_load(&GMEM_I(inode)->attributes, index);
+> +
+> +	return WARN_ON_ONCE(!entry) ? 0 : xa_to_value(entry);
+> +}
+It looks like kvm_gmem_get_attributes() is possible to be invoked outside the
+protection of inode->i_mapping->invalidate_lock.
 
+kvm_tdp_mmu_page_fault
+    kvm_mmu_faultin_pfn(vcpu, fault, ACC_ALL)
+        kvm_mem_is_private(kvm, fault->gfn)
+            kvm_get_memory_attributes
+	        kvm_gmem_get_memory_attributes
+		    kvm_gmem_get_attributes
 
-Hello,
+> +static int kvm_gmem_init_inode(struct inode *inode, loff_t size, u64 flags)
+> +{
+> +	struct gmem_inode *gi = GMEM_I(inode);
+> +	MA_STATE(mas, &gi->attributes, 0, (size >> PAGE_SHIFT) - 1);
+> +	u64 attrs;
+> +	int r;
+> +
+> +	inode->i_op = &kvm_gmem_iops;
+> +	inode->i_mapping->a_ops = &kvm_gmem_aops;
+> +	inode->i_mode |= S_IFREG;
+> +	inode->i_size = size;
+> +	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
+> +	mapping_set_inaccessible(inode->i_mapping);
+> +	/* Unmovable mappings are supposed to be marked unevictable as well. */
+> +	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+> +
+> +	gi->flags = flags;
+> +
+> +	mt_set_external_lock(&gi->attributes,
+> +			     &inode->i_mapping->invalidate_lock);
+> +
+But here, it's declared that mtree is protected by the invalidate_lock.
 
-kernel test robot noticed "INFO:task_blocked_for_more_than#seconds" on:
+> +	/*
+> +	 * Store default attributes for the entire gmem instance. Ensuring every
+> +	 * index is represented in the maple tree at all times simplifies the
+> +	 * conversion and merging logic.
+> +	 */
+> +	attrs = gi->flags & GUEST_MEMFD_FLAG_INIT_SHARED ? 0 : KVM_MEMORY_ATTRIBUTE_PRIVATE;
+> +
+> +	/*
+> +	 * Acquire the invalidation lock purely to make lockdep happy. There
+> +	 * should be no races at this time since the inode hasn't yet been fully
+> +	 * created.
+> +	 */
+> +	filemap_invalidate_lock(inode->i_mapping);
+> +	r = mas_store_gfp(&mas, xa_mk_value(attrs), GFP_KERNEL);
+> +	filemap_invalidate_unlock(inode->i_mapping);
+> +
+> +	return r;
+> +}
+> +
 
-commit: 62f65c2531ad66e84c1a5ef91389322357ef6db4 ("[PATCH v2] kprobes: Use dedicated kthread for kprobe optimizer")
-url: https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/kprobes-Use-dedicated-kthread-for-kprobe-optimizer/20260113-094928
-base: https://git.kernel.org/cgit/linux/kernel/git/trace/linux-trace for-next
-patch link: https://lore.kernel.org/all/176826884613.429923.16578111751623731056.stgit@devnote2/
-patch subject: [PATCH v2] kprobes: Use dedicated kthread for kprobe optimizer
+> @@ -925,13 +986,39 @@ static struct inode *kvm_gmem_alloc_inode(struct super_block *sb)
+> 
+>  	mpol_shared_policy_init(&gi->policy, NULL);
+> 
+> +	/*
+> +	 * Memory attributes are protected the filemap invalidation lock, but
+> +	 * the lock structure isn't available at this time.  Immediately mark
+> +	 * maple tree as using external locking so that accessing the tree
+> +	 * before its fully initialized results in NULL pointer dereferences
+> +	 * and not more subtle bugs.
+> +	 */
+> +	mt_init_flags(&gi->attributes, MT_FLAGS_LOCK_EXTERN);
+And here.
+>  	gi->flags = 0;
+>  	return &gi->vfs_inode;
+>  }
 
-in testcase: trinity
-version: trinity-x86_64-294c4652-1_20251011
-with following parameters:
+So, it's possible for kvm_mem_is_private() to access invalid mtree data and hit
+the WARN_ON_ONCE() in kvm_gmem_get_attributes().
 
-	runtime: 300s
-	group: group-03
-	nr_groups: 5
+I reported a similar error in [*].
 
-
-
-config: x86_64-kexec
-compiler: clang-20
-test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 32G
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-+-----------------------------------------+------------+------------+
-|                                         | 78a419b44e | 62f65c2531 |
-+-----------------------------------------+------------+------------+
-| INFO:task_blocked_for_more_than#seconds | 0          | 6          |
-+-----------------------------------------+------------+------------+
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202601191507.74fccd0c-lkp@intel.com
-
-
-
-[  972.359932][   T32] INFO: task kprobe-optimize:18 blocked for more than 491 seconds.
-[  972.361221][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[  972.362516][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  972.364322][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[  972.366628][   T32] Call Trace:
-[  972.367378][   T32]  <TASK>
-[  972.368066][   T32]  __schedule (kernel/sched/core.c:5259)
-[  972.370837][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[  972.371679][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[  972.373219][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[  972.374017][   T32]  kthread (kernel/kthread.c:465)
-[  972.374573][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[  972.375364][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[  972.376005][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[  972.376679][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[  972.377305][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[  972.377958][   T32]  </TASK>
-[ 1463.879952][   T32] INFO: task kprobe-optimize:18 blocked for more than 983 seconds.
-[ 1463.882239][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 1463.884371][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1463.887443][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 1463.891867][   T32] Call Trace:
-[ 1463.893396][   T32]  <TASK>
-[ 1463.894468][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 1463.903984][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 1463.904926][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 1463.905949][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 1463.907111][   T32]  kthread (kernel/kthread.c:465)
-[ 1463.907954][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 1463.909157][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 1463.910045][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 1463.910939][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 1463.911933][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 1463.912947][   T32]  </TASK>
-[ 1955.399991][   T32] INFO: task kprobe-optimize:18 blocked for more than 1474 seconds.
-[ 1955.404266][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 1955.407452][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1955.414557][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 1955.416961][   T32] Call Trace:
-[ 1955.417705][   T32]  <TASK>
-[ 1955.418382][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 1955.419274][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 1955.419929][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 1955.421071][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 1955.422303][   T32]  kthread (kernel/kthread.c:465)
-[ 1955.423217][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 1955.424452][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 1955.425189][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 1955.425913][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 1955.426645][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 1955.427357][   T32]  </TASK>
-[ 2446.919964][   T32] INFO: task kprobe-optimize:18 blocked for more than 1966 seconds.
-[ 2446.922105][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 2446.925697][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 2446.926569][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 2446.927775][   T32] Call Trace:
-[ 2446.928242][   T32]  <TASK>
-[ 2446.928609][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 2446.929827][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 2446.930256][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 2446.930789][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 2446.931434][   T32]  kthread (kernel/kthread.c:465)
-[ 2446.931926][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 2446.932624][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 2446.933079][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 2446.933534][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 2446.933983][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 2446.934450][   T32]  </TASK>
-[ 2938.439916][   T32] INFO: task kprobe-optimize:18 blocked for more than 2457 seconds.
-[ 2938.441278][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 2938.442281][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 2938.444599][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 2938.446316][   T32] Call Trace:
-[ 2938.446892][   T32]  <TASK>
-[ 2938.447449][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 2938.449286][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 2938.450230][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 2938.451347][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 2938.452611][   T32]  kthread (kernel/kthread.c:465)
-[ 2938.453462][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 2938.454622][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 2938.455583][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 2938.456604][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 2938.457614][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 2938.458645][   T32]  </TASK>
-[ 3429.960057][   T32] INFO: task kprobe-optimize:18 blocked for more than 2949 seconds.
-[ 3429.962853][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 3429.965133][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 3429.967986][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 3429.971731][   T32] Call Trace:
-[ 3429.973021][   T32]  <TASK>
-[ 3429.974169][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 3429.975713][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 3429.977206][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 3429.978375][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 3429.979623][   T32]  kthread (kernel/kthread.c:465)
-[ 3429.980602][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 3429.981810][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 3429.982797][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 3429.983793][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 3429.984838][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 3429.985864][   T32]  </TASK>
-[ 3921.480064][   T32] INFO: task kprobe-optimize:18 blocked for more than 3440 seconds.
-[ 3921.482942][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 3921.485260][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 3921.488269][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 3921.491811][   T32] Call Trace:
-[ 3921.493488][   T32]  <TASK>
-[ 3921.494960][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 3921.508616][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 3921.509430][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 3921.510413][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 3921.511467][   T32]  kthread (kernel/kthread.c:465)
-[ 3921.512331][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 3921.513388][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 3921.514202][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 3921.514976][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 3921.515773][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 3921.516817][   T32]  </TASK>
-[ 4413.000017][   T32] INFO: task kprobe-optimize:18 blocked for more than 3932 seconds.
-[ 4413.004653][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 4413.007745][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 4413.010446][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 4413.013906][   T32] Call Trace:
-[ 4413.015027][   T32]  <TASK>
-[ 4413.016134][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 4413.017465][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 4413.018294][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 4413.019366][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 4413.020594][   T32]  kthread (kernel/kthread.c:465)
-[ 4413.021350][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 4413.022331][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 4413.023124][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 4413.023925][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 4413.025015][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 4413.026074][   T32]  </TASK>
-[ 4904.520028][   T32] INFO: task kprobe-optimize:18 blocked for more than 4423 seconds.
-[ 4904.521949][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 4904.528612][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 4904.529924][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 4904.531461][   T32] Call Trace:
-[ 4904.531896][   T32]  <TASK>
-[ 4904.532406][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 4904.532947][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 4904.533381][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 4904.533944][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 4904.534547][   T32]  kthread (kernel/kthread.c:465)
-[ 4904.534985][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 4904.535670][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 4904.536359][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 4904.536831][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 4904.537310][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 4904.537788][   T32]  </TASK>
-[ 5396.039936][   T32] INFO: task kprobe-optimize:18 blocked for more than 4915 seconds.
-[ 5396.040939][   T32]       Not tainted 6.19.0-rc5-00040-g62f65c2531ad #1
-[ 5396.041631][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 5396.042742][   T32] task:kprobe-optimize state:D stack:0     pid:18    tgid:18    ppid:2      task_flags:0x208040 flags:0x00080000
-[ 5396.045182][   T32] Call Trace:
-[ 5396.045723][   T32]  <TASK>
-[ 5396.046266][   T32]  __schedule (kernel/sched/core.c:5259)
-[ 5396.046928][   T32]  schedule (arch/x86/include/asm/preempt.h:85 kernel/sched/core.c:6946 kernel/sched/core.c:6960)
-[ 5396.047542][   T32]  kprobe_optimizer_thread (kernel/kprobes.c:656)
-[ 5396.048329][   T32]  ? __pfx_autoremove_wake_function (kernel/sched/wait.c:402)
-[ 5396.049182][   T32]  kthread (kernel/kthread.c:465)
-[ 5396.049803][   T32]  ? __pfx_kprobe_optimizer_thread (kernel/kprobes.c:654)
-[ 5396.050654][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 5396.051353][   T32]  ret_from_fork (arch/x86/kernel/process.c:164)
-[ 5396.052048][   T32]  ? __pfx_kthread (kernel/kthread.c:412)
-[ 5396.052723][   T32]  ret_from_fork_asm (arch/x86/entry/entry_64.S:256)
-[ 5396.053187][   T32]  </TASK>
-[ 5396.053524][   T32] Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings
-BUG: kernel hang in test stage
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20260119/202601191507.74fccd0c-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+[*] https://lore.kernel.org/all/aIwD5kGbMibV7ksk@yzhao56-desk.sh.intel.com
+ 
