@@ -1,314 +1,123 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714B91DE3B7;
-	Mon, 19 Jan 2026 10:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768820094; cv=fail; b=CgBtZhsJowRnm3Bj52ZmP4I7pMhLlwl7Lu72hcI/gW8vdOR1CmxjNg94tbiPVTaT1wu+4VSqExAn4Vv89gs4eWff6rypkuMOt+/XdOFXzIrtj2P/YMhVhHX83HQhZz/V72/AyclVV3U+A0zk++dbQfm/aPcERuqDVZX7ucDWkrQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768820094; c=relaxed/simple;
-	bh=mMzNPL3QmA/8WSIpHIrZluPfEGmNz29MdEibVZ6KJ7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Cj9KXhYPvSFsBHOMf68NbJzlPlu5GPO3gOHY4sl/DOmnkfvURVCSCA7rrhN0UE2L2ev7unicSp6DPGcbfS4/W/M32iol1YbyEUoAebdVfKUiem2tiQ1p1CgwvE8UOmJMYlLcFGi8duqPsWVOgzDSWd4ia+8tX7n9M0gN6nWYvZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=N5TJz6Nh; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vc40Rw80; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9112333CE8A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 10:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768820356; cv=none; b=TeYOuILgnxcYQIitIT6LAYKiaDPHl1SSiqvlpChx9KG+uEHiI1ZykCAHAGT0SgmVx/Rwir2agQCLsi/IaJ5DX/2gjQ2RQSzZIo+UdRekfw0VJq6YA/OdakEwo6UzSMj8AuIkAYSlOXAGO5eAP4loBXy4OS67fwHHShKPNCSEEYI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768820356; c=relaxed/simple;
+	bh=IYxM8cWoTeKECwHlqfYvlUuxrpcZJHZrkwx5sGS6mGQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=MFhSfJPjvQzXgJCTJ77LbajF2WmSnv1Z6e7Z+gpFic39q9pq1BlE0nwco/6/hsKuMHx5Sv/oi4cmhqQ34QD4r9JoqbsW8y48s+5TuotgGN/uQ9XqRawYGtwsQPeuiWAinnv93jnzlrJs05rvLTeiMBUPfeIPWKwFs8kWr8Wiswc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U5VjNbzA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N5TJz6Nh";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vc40Rw80"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60IN4I6P106065;
-	Mon, 19 Jan 2026 10:54:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=mPwg4XI6mfU06GoIin
-	WVoSSBEXjlCU4eF/dPq/K76ss=; b=N5TJz6Nh6euKdTVtam2IRXMD/7keZ/HhRX
-	xN6zXL0SM+7S+To5X7zvLtPTk5IDkZ1Pbz7n/5pmjKUuZECxF9V/DUjxq7eaUyzR
-	eMsJ+NrkAzpSpMkKa1Nex8z/Yx7XxqyN6cW4lBh83QCTsnAZzqsHMxcn/RM85u1X
-	z+lM2gCJRLD8pHriOlCpTo4ljd0FJOAxjG42G0UXY1+NMiFtlDU5XwBGe7oTGhBG
-	02QhuYJkowtQV9Sagfdv4v8zAfDnJFRhiLsZ2qnNZP4GUNGmHiDsO0d+vx6kKMse
-	9MZ4k6FZLCGIK4YH1vnY8T0/CsOiF/As/y7dRNkMfJ118+pDBLFA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br1b8a426-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 10:54:03 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60JAW9dM022480;
-	Mon, 19 Jan 2026 10:54:02 GMT
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012052.outbound.protection.outlook.com [40.107.200.52])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4br0vc01db-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 10:54:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dsDmBU80bIClB3ON7UK/IpXdQ9JVZgMPtps8G91ZoMov8t/kR8Jjh9lyjvwRO1YmVj2Gg2z72Y8q7v+OoOt8mXACYFYILlbybsr0Nv4yls2NKVshI+Q72XuUYaEJppyScBvZPP0/MLwkj0WgVc5/JwS/ASv6em28zaHROH0BX6S4ja5Czzu45xe7mV432CoST3QNUVUIW/ZFSrq/sdgMAKudGBNQsRecTnfRW3kTgMyvFYt4F0rW00a0ByK3e1JEOD15WfFojIsIquvccEt+EQg3HgLw//9xRMTFpTHOp0CFsL2HM9Bf7OQWmFtcIojZbWe60/KJSsXxNC+9GSsIDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mPwg4XI6mfU06GoIinWVoSSBEXjlCU4eF/dPq/K76ss=;
- b=Q++vEbjQtju53rlWmpxS7YrZXfWKuucBR+TCTyChF3n0zq2w+t9YWPsEKwqydNoT9tYvZsZZ1Rnc3z874dqsjZpjwObwGKw6LWYzG4fKSiAgynzJ1qwi35NEz08SgCCzoHSMnrQYrHOP8VQa56qPgmDJW4kytB3ED65/PxUcYOg/kUGASbk5UvCQDiGmWHjREg1xXk+YU7V9b7vLDQqQ898/vwuIg4oRYoMHro6zNEnT0MLq921fMDvHZTj49A/J9H1kp4kzk6iBWbqTNa9yif3bXRA8zyR0fxBGMFzqK/X52udSzYbBmbtxqz1MqUTUyh7qZLp8IlSUkjxS+aI4gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mPwg4XI6mfU06GoIinWVoSSBEXjlCU4eF/dPq/K76ss=;
- b=vc40Rw80A6/1nBjMNHsr9ZhDJpMbIR1BOvL1oJkxZAhG/gmZE/XMPgRFWkbl7199CGOM/tcyXPW+NR5lN/3/Gwu1IhODwnhLDgZ7O3TqH39xyAtWYUo5XrVW4WuZY/HK82KfLFU3M1WT9wcXtrJfa9bdvcHPDrLknLgApip/Fp4=
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
- by SA1PR10MB6614.namprd10.prod.outlook.com (2603:10b6:806:2b9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.11; Mon, 19 Jan
- 2026 10:53:59 +0000
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Mon, 19 Jan 2026
- 10:53:58 +0000
-Date: Mon, 19 Jan 2026 10:54:01 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Cc: "Garg, Shivank" <shivankg@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Lance Yang <lance.yang@linux.dev>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH V5 0/2] mm/khugepaged: fix dirty page handling for
- MADV_COLLAPSE
-Message-ID: <eee7244e-af6a-4d4b-9514-77ee766641e1@lucifer.local>
-References: <20260118190939.8986-2-shivankg@amd.com>
- <20260118122229.dcdda884bbb19a9c30ec6f1e@linux-foundation.org>
- <12b6747e-b844-4931-9918-fd095a6d772b@amd.com>
- <c63df10d-c61c-4337-9c88-ed1ce81204a1@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c63df10d-c61c-4337-9c88-ed1ce81204a1@kernel.org>
-X-ClientProxiedBy: LO4P265CA0096.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bc::14) To BL4PR10MB8229.namprd10.prod.outlook.com
- (2603:10b6:208:4e6::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5VjNbzA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768820354;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PTvPCqDoUp1cSjrDXhisSvGlwvpu7tya5IpVk2EVoYA=;
+	b=U5VjNbzADSTMAI9PsbB4z+SCTqbzglh1JgJH8lY4r2Cqm6i9+j0pLoevdHPM9aORpY0ca1
+	T6B3gOQVGpcAlITDSZg5wQ2m97bNjqzYoqmavR52zP08/J856jHbxvNLMPQ92MaUjg8m+S
+	RtVvkkMwuim9VbgxxLYi8p20ZuW1cgA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-H5wvhg68McGfPy6CCfKGBw-1; Mon, 19 Jan 2026 05:59:13 -0500
+X-MC-Unique: H5wvhg68McGfPy6CCfKGBw-1
+X-Mimecast-MFC-AGG-ID: H5wvhg68McGfPy6CCfKGBw_1768820352
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47d3c9b8c56so53087645e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 02:59:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768820352; x=1769425152;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PTvPCqDoUp1cSjrDXhisSvGlwvpu7tya5IpVk2EVoYA=;
+        b=Uzk0Nj+xfLk0A9ODVhv3LtHQn9xRnFamp4ucY3is2CeJPeGzcnxRoB4ghUr5BM6mN6
+         iv/TOa78BcsMf6CkxB6/O2Z8DqyhLrJnpcVVl17Xpcyr87c+WSwr9LOdwxA5G4hsz1Zm
+         /h0QNUf/xxjwAbh2fPwvek4xhPueWMGDqpKbUF2P49RSqXRD/mTEJS90hM3MWQsLH+NN
+         hr94YX64aQw7Tm3uvvqL4r5xkx9YPi+9u0fYzxUajHRqhJjSu4YpVCj20Tan1TMXhy1s
+         o7ycCtRTL5Ns0dzEzXmU1WVuKUDQA2PGK/ly2fN6Idv4qrG82CF0yBCiGSo/kWMI4Ga9
+         IjWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrF3fQVq8BUtfUMQwh33c3ZoV+LOQriR+MDcg/67SVLe/ZjyWq3m/0sp/0mey7fr8EQg5Sb82koxlngDUWH0tQF3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmA+jOebSGfvgEWZTWZv0i2Jc+PmWKXwCjenNHNFBfQAdkGUnZ
+	NMutsiOAlBfSdg7h2tjVzWfnlOzIeCsGcqc/6TYWwRuxjRBNwdh+VKJJq3uuhtVCwueFvv8ikxf
+	IDD9Rjz8L4wH7u0c0ebGLBQw0hcAUd4pnHdl69szaYKj+WKIQUPW4FVepIKsJ1+V2v0x27FnozQ
+	==
+X-Gm-Gg: AY/fxX6ptL4kSSUn47q2hJoYhHRaQHWdYNpH38w9hMG3CjmOvg3A7kYwTEWOrLCS2uv
+	0MaopTpDPPJrfTew/MKDw4zdcyx/Bje6DokE+Ov6rx/IAzvbwd5N8n/fP8prYgUZn+FTuDcH5my
+	1vG94hc3GYdiuDSHV7vPgDR55nGSei4orrxlgnobJtAETjRCr8mD3rlg8x0MHZDGE/qpxmRKJnj
+	DKrSvUN2hZQHUfomNzvARKWCrn9CZ1MlnCB8Y6he/chXwa0zxIvQv0iVSKxcJwkTBgXqULwWBuP
+	2X4jnYDN3V+fDlZyaMpvKueossk8hwpMrpuEMQHVMU5+z8lUptHXikLwdRZjvOER1I5hzWjZw0H
+	bFx/Dwp0i0QXMbFm49JkLyQ==
+X-Received: by 2002:a05:600c:3d97:b0:47d:403e:4eaf with SMTP id 5b1f17b1804b1-48029b7db7dmr78915415e9.10.1768820352006;
+        Mon, 19 Jan 2026 02:59:12 -0800 (PST)
+X-Received: by 2002:a05:600c:3d97:b0:47d:403e:4eaf with SMTP id 5b1f17b1804b1-48029b7db7dmr78915125e9.10.1768820351574;
+        Mon, 19 Jan 2026 02:59:11 -0800 (PST)
+Received: from costa-tp.bos2.lab ([2a00:a041:e23c:600:cadf:120:2b7f:a706])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569922032sm23320735f8f.8.2026.01.19.02.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 02:59:11 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Blake Jones <blakejones@google.com>,
+	Yuzhuo Jing <yuzhuo@google.com>,
+	Leo Yan <leo.yan@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] tools/rtla: Add unit tests
+Date: Mon, 19 Jan 2026 12:58:55 +0200
+Message-ID: <20260119105857.797498-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|SA1PR10MB6614:EE_
-X-MS-Office365-Filtering-Correlation-Id: 427a70f1-6fdc-4ebb-febd-08de57490c6d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RzVkmb3gW3e9uqlfVjwUmeTPK43TokbsdalywyORezcbm10g2GHbaxQ/m2A3?=
- =?us-ascii?Q?QRDM8bvrR5s71NBcAh+9VoHeH3QZ1ES/uhscXMZ/s1fC6iz8cQZGrVTVWCCp?=
- =?us-ascii?Q?38IAOCo4F76RBrJqmWyHOq2I6/khtNPGbeaY/nlWDHJ1RQQz50ExMddu69G+?=
- =?us-ascii?Q?Di8IJBc4M2LN5JCIYtF3wV/4MaHpNk0sprOnRnG8+4hWwZUx/QTh3xgxg3hW?=
- =?us-ascii?Q?L+lhOnsO1xf9uBZJHZ5FFlg6kT5Z0FGaDqzjkrECkWfGLGfZr0nneHhefUwS?=
- =?us-ascii?Q?iO7fArYeSxvWULC+epjRNfmZ43WTJrk8k3jPt20Ow1x9gGt3b5nNNFe8sn9K?=
- =?us-ascii?Q?sJOfpsA6jPzf0KWp3PXjMrEKovL7SLVFHUEkO5eztYrUaIX9MeR5MSUjFMEA?=
- =?us-ascii?Q?vnYfSH6KRYP/xXH/Urg1u+P0e3H+l+xVMaP2j7IHePPhdIjlRG0zFMVDmv3K?=
- =?us-ascii?Q?PD+c6NSa7KCUZLXNda07srkPH8jgms6DtJN4IQXoTxZlL4XZdbCzoOgvdle2?=
- =?us-ascii?Q?MN9Fcwxglxjv0dZrzNNXJ2H9nTetPzV6JTJ22kPE2Pkxjw7NV+43/D+Y1Zjz?=
- =?us-ascii?Q?4nI2lb/EhHCLARSZ7X77AwzX7rsYgkgPfYTDprpx5liFIn9+ITw8/gWnkWDn?=
- =?us-ascii?Q?boKHjq/uZs0hCojx8uKSb9B7iqeMiJGI1wO0s7Yun18PGHnbhnQrgG4xcQin?=
- =?us-ascii?Q?teqLtWS4Xtmmv0VYrU5+yVDbbIdhcezjvXRcj7fVuj/bJWKsfqmRXEPebAY3?=
- =?us-ascii?Q?9VjBNy3XA6zRXItKgB0wCnl7w1Dri4ZdfbLaG/mjNyeZvtuau5riFTmeiFvp?=
- =?us-ascii?Q?IB80ePcpegzNkpzeNKPagZ3M6re1bAH8skiRXNK/J9lbaEoqGdSlZRZySmuL?=
- =?us-ascii?Q?LzLcF0vD5jDB9UY5JS5hGKnwdRF+Ce6dNa7BS2/lCmTabh5COL7hwNsSsXmC?=
- =?us-ascii?Q?aR2kwIxaXk85t/E+gmP+CoGjeQE2/aDLFY+wW0JhkGYcCWzLesWTO0+Al0lF?=
- =?us-ascii?Q?NY6xzgYXssgfHl+bUKETqkYBQWG+JGcxBswr+AfgcOG6IJCRyd6ZO9BF/CnH?=
- =?us-ascii?Q?XHxAqUxqBAsiQ2XKx5sVv93PRMmPS/5s/HEYVSfumfhYDfXd71OWHmiPO25o?=
- =?us-ascii?Q?sfJpoXJt3E0z/fbIMyn8XXh4QkkYsp7Fd4YGBg7L/I50ui+D+asT0JH65xA3?=
- =?us-ascii?Q?nHG8YHX79BQLsOsPXCouG91R8bwrgY7hAyI5qgAOm9i/g84SX9Dwzf51OPBw?=
- =?us-ascii?Q?7g8aCYdv7eqMASkVUNiieiKHzDAbPTrleju/+/Sg/7giGXgBgUu4ddhe7Lc5?=
- =?us-ascii?Q?52KS1U10W1V5XJGqaglFt7bHsKG79ru80OmGkRS1YK2Fp31sGj/haIQoX3ck?=
- =?us-ascii?Q?bCteUJ6gawyPw1GKoBF6u4mTiKi2OI23xVH+UkqMiibtoW8eQKzsnbDtVKV8?=
- =?us-ascii?Q?mg0M/pVu1IXMbmOnxhwUDvuU/taJomhYdfFeTfabMUAckMfrde/fwPCqPNiZ?=
- =?us-ascii?Q?PDjj/iPFztRIFc+O5NMv02sEV6N4CIYljAuiOzjYgtIAawbOXBrdMAQWhXgA?=
- =?us-ascii?Q?3fps8Ys07tDajmniN4o=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Xbd9yfJeU3Tk230prd6L2l0zK/hcaqNUVZif6CHPiIpQekBTP8wF6Gs0NOBL?=
- =?us-ascii?Q?BUZBNXgniKnb9MJ/2ID+ZIxdPu3MB37ijz0YkH62FCM4/92pqBeBlnm/8m7a?=
- =?us-ascii?Q?JubBVmzYZIdi3SBNARc9ND6cOPbQxA3b77YJiFIwiwdKA99mQaOb5YkY/Rnb?=
- =?us-ascii?Q?YDbQSDXsvPUlYSbnUx4nj63RjvISPYzUzFIRhOROlZJSpiT0i0xeHIGJflTI?=
- =?us-ascii?Q?re+Cpagwy/KsP+Skwgn3Hvzncs54GPHHSC3kgSE0F1OrKcAHDeTIEq8ZJ6+8?=
- =?us-ascii?Q?Ik9lyGzouQZIq5zQZoeFLXLrbt8sGSMGyaFqrMbzbAygW3CoBCEVZHIzcXVW?=
- =?us-ascii?Q?qe14dFJppHdlfKtnQ1HxxXtEKVi45jYW7UgqZiQW2540XNt0SP2P5xars6B8?=
- =?us-ascii?Q?Sa8Vlmi1Z+gsixzHufAP+iWRcZTnbDbE9hypOKDQ2d0TA1jaCGz43/4F9hSY?=
- =?us-ascii?Q?UTDKAoLMwkWdCl6qACgRZnZt4ayWoOla1zwyobX9mA9kIxLtq7CpB23y1i5F?=
- =?us-ascii?Q?TagiEtyiMKcWkzWyZT5haQ4FQhwXVlZ8Zbn4lxCB5m+j9Wh2xrl5L+ZILWXB?=
- =?us-ascii?Q?SduUa4O9v9awWMTkZqRf6tOPjPQzbu829cQbMABsV3+syhTJWaiVbXtXqzCp?=
- =?us-ascii?Q?bqTJw+TCnZ7loEOR3hhfSxp1wJpWIjWgdE/CpkLdGVWQrhUgerAs4bb20KAu?=
- =?us-ascii?Q?xagxRNwstxjiFY1IUFFnog0OtUGCEz8la9Vq4+FetrzxmnByHuoIzYBWSSlW?=
- =?us-ascii?Q?nE+MdHE09o6zMkrzbJA22ovAh+L72L5a212bnnuBE8wleeDKlrqxol5+VpoD?=
- =?us-ascii?Q?lfeqT0UtNyW0QcgIxwnT6qgwGD5/kXjKiEqlyZf1TtglA0AyCB7a8DIJQlBY?=
- =?us-ascii?Q?lWNSGFCnB81IYnX7mJXIzRd8789RufI4oNDPGtB6P5A7nd20uPoMiLmy8tNa?=
- =?us-ascii?Q?dYcgWWySbCaXPUQ31g7VpwQeTL/70X5tsXHJe+XX8rGGBi7/hjr5KIQcxFWK?=
- =?us-ascii?Q?8FmBR8Mx8YZVsGtfpGVdd9DrAY5InK+EyCqP8cqv0VfYFZWXe1YHQpvU2YN8?=
- =?us-ascii?Q?Nh0CbF93Up54o3SD3tuHfB/JWefA37/twkq82e4q8Dhlp3jQ5QBHmpp6MfSr?=
- =?us-ascii?Q?qA60o5+8akrPeZWXSdPVhzZzFWyUgXlI+lVud/ZvbTy8KOOqdnUeQ0gqMEDc?=
- =?us-ascii?Q?IKc8xldktzpDAtsoPBb1DrSISNkSvdfkoWymqFxvdD6a7oqSH8CcfiLGnfS4?=
- =?us-ascii?Q?9hucyHGj1fikImvwrdBOLpDbsrE37QeuRX4k61N5CbBW7V3Rhzpj4+AgI4zy?=
- =?us-ascii?Q?sxbBS4JQYtYaslYOjs02cmoYHJwufD48qifudvI6MpwmyNXufZAtiBbJ/Bve?=
- =?us-ascii?Q?2k6VZJ54kLgxtVa7rAcm1GPq8KuvYPrSHB8xYRqIwJ8UbH1VMr+g9uJIf8Nx?=
- =?us-ascii?Q?SfB+ibpBNx3Mkg/MZXTC6NpTJtdR2P8BJhITQJxP7c9K/GLYizgrqamtMRZg?=
- =?us-ascii?Q?CZpvvcNLbw141pmxN4GKRsHm/7JlU5bfnl5KtgDHu5m3ESyVeDyAkVbV6QZ1?=
- =?us-ascii?Q?yaYnARWwp54ReX61N6NrwQSkeHjQjQqrLeFLO4JbpbNkzwlm1LbaojFbQE8Z?=
- =?us-ascii?Q?ckRCJWrrXt9YgpCM7uqVjOKrI0YDK6v/vl+pui3yiO5WK9ddIEX4wjxhRHDE?=
- =?us-ascii?Q?EwkZyGNQbp6hA+uci9xM9yvuDZsZ+P1lxOOSNxH+X9cQWK/ycLWFNew/6r7M?=
- =?us-ascii?Q?HUS+WvDJxo8Ujzne66Q/jBzp1VOwah4=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	t6DpQCjfFaTWKLsktGFBVK08DnJS/JIshuvGvCLJ+dAxkpHpAWhujxeHGwP1+7ZL4haHCsBKbiD+eqos2nDb8xGUZs+mRXHczyGzd+ReIHSaRBi8U+b7gtaiblrRkfrzUrq9wSpUcRMpBUHLZDF/BFnpflaG5fdQ1CVIUBmdGakiMnThHorLIXQdbpsIptBGGtQWZhKaGEcZTJ/9ndlf/UnanDNpsqUYc6PI+NukhDB00LQiX6ygL1Wa6js0VQ4RyCgh9URxfvx/65zGvEfYFAhKWAdVtl3Ni4Pmc3VXU2mLugvGIo/ZRV4k1Ovk9q9G+ob/2jBgX0B1nvmfP6hJx8wpsje2Wqmxdbtqs7fUX4vGZaQs9RKbkq2IJXO2oa+VLUK3bU56M/frypMu5RVoYnGPXP/mwnKKH1L8KNqiJzXrfZrVq3BHeyEaWXS4MbYc9r5UjKZpIYt7j/796csZ/YNfHB/+AC411RRllt+l8eezWR/Mjolam4a37KNp4RiBsLQC9v+bGieol23huE7iC5hT6f9zUAGL/m2WZXl8+Dd1RUPmIuCBLiQbP+jQlRGzSaUzZgnf4edqYxTDdZh3jezHeqtENWd3E7yljxp1qm4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 427a70f1-6fdc-4ebb-febd-08de57490c6d
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 10:53:58.9427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c7Vq11LE4I+jgQQdkc5yoE7tIcpREUYJOUAoguKF78wgWVT4rraAZMzGtqcVB6+Hngc3jfjBwamxmVWU6PI4yr5SK5LK4PXxb+37ORJT8qk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6614
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-19_02,2026-01-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
- definitions=main-2601190090
-X-Authority-Analysis: v=2.4 cv=WbcBqkhX c=1 sm=1 tr=0 ts=696e0d4b b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=Mvo7nO4hehIkFS7eSN4A:9 a=CjuIK1q_8ugA:10
- cc=ntf awl=host:12109
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDA4OSBTYWx0ZWRfX36wmEdeIJKyY
- mFKlQPfl8HM3lSoZET9g0pObNQZWW0GbqkDXX1B4Xqt+darle1NEojkDs2No8bACvFVruHl6gue
- 3+oiyP9IwA+5Xq9zpV8ZSEv2uGvH7TlH3rnjb+wOGGwr0+JJFlDVNbfcTHFO71rjCScMroJRTSI
- T1elCs57jv8ax57pGQi7VkQUMBqMMOShN0MEPAufPzN9ivI6XcoX1jgAfQgL8WETHxPD9mNhEID
- emml4ecFkxi7PJaM1dt3j9wUy+VTPkGLWv4IGa6tYtOCjEWI4iehHSFMvpMAFe6XD2glcCOqkXs
- z+yXtTL7fyHZwoKPCJpP3ud4N6XP92oe5kDe8+SNYpWfG+OM8FfF5QpOXguLaXf1l6lNd2eQjG4
- Dbcl+6xAnGJXnTMIJyqYl6EvooOOqKgP9dg8l6a2j8h3devQE8yPX1wBmX1mngRmscQ5aVu2Xme
- Ud00MKtV3o5833Kg7IrWnskMN1p1m8nSzO87Bz/U=
-X-Proofpoint-ORIG-GUID: nR0mEC6-i9qcRz5Wf6icC6FUrXWrchc7
-X-Proofpoint-GUID: nR0mEC6-i9qcRz5Wf6icC6FUrXWrchc7
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: GoxYAsjbIErE9E03NH_B51ch73RB4CST5ddKhi8jGnw_1768820352
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Mon, Jan 19, 2026 at 10:58:39AM +0100, David Hildenbrand (Red Hat) wrote:
-> On 1/19/26 06:07, Garg, Shivank wrote:
-> >
-> >
-> > On 1/19/2026 1:52 AM, Andrew Morton wrote:
-> > > Please tolerate a little whining about the timeliess here.  We're at
-> > > -rc6, v4 was added to mm.git over a month ago, had quite a lot of
-> > > review, this is very close to being moved into the mm-stable branch and now
-> > > we get v5.  Argh.
+v2: Address feedback from Tomas Glozar
+- Split the patch.
+- Extract separate target unit-tests.
+- Use build system
+- Add libcheck to tools/build dependency detection
 
-As co-maintainer of THP:
+Costa Shulyupin (2):
+  tools/build: Add feature test for libcheck
+  tools/rtla: Add unit tests for utils.c
 
-Can I explicitly request that you not merge anything in THP without EXPLICIT
-sub-M sign-off, i.e. either me or David.
+ tools/build/Makefile.feature                |   3 +
+ tools/build/feature/Makefile                |   4 +
+ tools/build/feature/test-libcheck.c         |   8 ++
+ tools/tracing/rtla/Build                    |   1 +
+ tools/tracing/rtla/Makefile                 |   5 +
+ tools/tracing/rtla/Makefile.config          |   8 ++
+ tools/tracing/rtla/README.txt               |   1 +
+ tools/tracing/rtla/tests/unit/Build         |   2 +
+ tools/tracing/rtla/tests/unit/Makefile.unit |  17 +++
+ tools/tracing/rtla/tests/unit/unit_tests.c  | 123 ++++++++++++++++++++
+ 10 files changed, 172 insertions(+)
+ create mode 100644 tools/build/feature/test-libcheck.c
+ create mode 100644 tools/tracing/rtla/tests/unit/Build
+ create mode 100644 tools/tracing/rtla/tests/unit/Makefile.unit
+ create mode 100644 tools/tracing/rtla/tests/unit/unit_tests.c
 
-Obviously I have publicly and privately request that we do this for all of mm,
-but in THP especially, we CANNOT accept series landing without this.
+-- 
+2.52.0
 
-THP workload is one of the worst in mm and is completely overwhelming.
-
-Again - David is working whilst being on holiday to handle the load because by
-default we auto-merge.
-
-And here you are complaining that you can't auto-merge (...!), it's completely
-unworkable.
-
-People can just _wait_ for things to land sometimes. It's OK. It's part of why
-the whole rc- approach was added - I think Greg KH explicitly wrote about this
-elsewhere - people can just wait for the next cycle and not be too disappointed,
-it realy isn't that long.
-
-Stability trumps speed of merge.
-
-I don't want to have to write a script to auto-NAK anything that doesn't match
-this requirement, but I'm starting to feel like I have to... Let's try to avoid
-that.
-
-> > >
-> > I sincerely apologize for this.
-
-You don't need to apologise Shivank, you just might have to wait a cycle.
-
-> >
-> > I had this doubt on sending an incremental patch or V5:
-> > https://lore.kernel.org/linux-mm/7a42515f-ae57-4f4d-831c-87689930a797@amd.com
-> >
-> >
-> > > > V5:
-> > > > - In patch 2/2, Simplify dirty writeback retry logic (David)
-> > > Are you sure this is the only change?  It looks like a lot for a
-> > > simplification and I'm wondering if we should retain the v4 series and
-> > > defer a simplification for separate consideration during the next
-> > > cycle.
-> >
-> > Yes, patch 1/2 is unchanged and patch 2/2 is the only change.
-> > The diff looks larger due to code movement but logic is actually simpler now.
-> >
-> > I completely understand if you prefer to keep V4 and defer this
-> > refactoring. I'm sorry for creating this late-cycle churn. Please let me
-> > know what you'd prefer and I'll follow your guidance.
->
-> There is no reason to rush any of this. :)
-
-Yes absolutely.
-
-It's patently INSANE and in fact a ongoing security risk to rush things in mm in
-general, and we really need to stop this.
-
->
-> Review was not over and due to multiple factors my review on v4 came in
-> later than I wanted.
-
-Also you're on leave from work :)
-
-I have taken a step back from review somewhat due to this insanity, but now feel
-like I have to step it back up... due to this insanity.
-
-Or maybe write a script...
-
->
-> Andrew, if you prefer, I can start sending as a reply to every patch set
-> that I want to review so you are aware that it is on my review backlog.
-
-This is ridiculous and shouldn't be necessary.
-
->
-> Unfortunately we can't have nice things (sub-maintainer acks).
-
-Well we can start having less nice things like a NAK script if this unworkable
-situation continues.
-
->
-> --
-> Cheers
->
-> David
-
-Again Andrew - as THP co-maintainer - I politely ask that, while you might not
-want to implement a sub-M A-b/R-b requirement across mm (though you should),
-that you implement one for THP explicitly.
-
-If you don't then I don't really see any other option than to start NAK'ing
-everything in THP that hits mm-stable which either David or I have not
-explicitly tagged.
-
-Thanks, Lorenzo
