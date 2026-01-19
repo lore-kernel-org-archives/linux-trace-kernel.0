@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E7627F756
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 21:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC9F2E1747
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 21:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768856494; cv=none; b=A2p2fNERV5xHfOUoNLH+3W1PWMil3VMG+9w5r6eitZwr38j7z1HBMvPHlQ0Wwghj7ThKH/+4E2T9FjIAeLXagarR7MxZylnJr2my15DkHZ4hinD3ZOQMkP7gAMaykeA8URbvlFoyI7fZq1cbWB7VZR4HEXCPtCOJqlo7v1tyjL0=
+	t=1768856518; cv=none; b=K/KJSAjiRWEwfvzPxoFAzmQfaqoeOvMawu0AkMBIXR3sRdEULivgZJ46fskLJwJB3/c5ZZ/hRNOkUdGBMyxn1LCtLKQqiogvcCJ22WSVG8lcHo1AspZUOPVoR3iUh+Ep4+Zcij3EmdPWUQAwQ1mKEfmqMBDn6MsRhel8GAXrvEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768856494; c=relaxed/simple;
-	bh=pW65pJ3HZRQGJKGr2pCi9tYX8rTKrrz+q8humsAMrA0=;
+	s=arc-20240116; t=1768856518; c=relaxed/simple;
+	bh=wCKv6i46VQo8RzJYs6rWEhK41I7MDPwLrrLLY3O/SZM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aEBzl7Xme1Y6R8bPTna2eYjD/Vd3rKR6qXeqpRD0TzBUex2asO4QXl1cVqd/NeXPKsxL536EVG37NkuNXm4Z2zCPTw3YYzb9paLulpO/wlXSNqS9aQcx9LvAf5dDQwNuYtn1zxGCrrSKXHTOqBCKtZef5z43v/Q6NlfYO7kBFrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLUN2C/6; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=B4JnO+xNmAveq6JXgtGBBxJgPvtgbP/R0moWyNku//1j3gcoR4OsB3gZarxgPPkvvKUl20kZNMCgoXKuVmCJ8qVbtLesPC8NrkyNqDamzbqmtnrpEy0m/as8EZKlAuPr7oV4lbDmbwzvGnmkwPs9jtg812tWqq6xKutHVAXK24M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E2crzw/k; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLUN2C/6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E2crzw/k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768856491;
+	s=mimecast20190719; t=1768856515;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XERC8Z3HUdi/lg0y+Jk/anNqkNoun9YsdNJdLNhv39g=;
-	b=VLUN2C/6nnNuMi0Md1h4e+vsvvxqbcgaa/W5xJE7cY8GqePcxoUuV2BQ7BhUWnmag6k7IW
-	M9MxVDlbkn9z6GUQT7m8v+UFH06GNVUooJh9z2Z5AZ0Xy/bP4rWE1aSfvrDifefGZ005gS
-	qVORwLXS8x2NeQV0M/ioRhxFNGsFvYs=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=JAD9YBzMW3eH6RwLMXXyDtAG2c4/YXRh5uCCHihgJCY=;
+	b=E2crzw/ki1vwLD97GpYyvR26vOj9C4vF1j0flhhJCUmY2wudmEgTswavYAP1DJpiosA16A
+	cEUtJqI0Yef9sgqKNhoWBBdh4rNrTg26kSBQhNIzru0m25zNeHeGSTMhSSGI4BuRhcmtyT
+	kb+CMjJdbuCeaOrEKPFdPkT19ZVWDQw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-136-P9elRolsMQyGYWDwqm3Jxw-1; Mon,
- 19 Jan 2026 16:01:30 -0500
-X-MC-Unique: P9elRolsMQyGYWDwqm3Jxw-1
-X-Mimecast-MFC-AGG-ID: P9elRolsMQyGYWDwqm3Jxw_1768856489
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-EOWiOGirNuKtyZrakNyJCw-1; Mon,
+ 19 Jan 2026 16:01:54 -0500
+X-MC-Unique: EOWiOGirNuKtyZrakNyJCw-1
+X-Mimecast-MFC-AGG-ID: EOWiOGirNuKtyZrakNyJCw_1768856513
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 545A71800378;
-	Mon, 19 Jan 2026 21:01:29 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0F6A1956094;
+	Mon, 19 Jan 2026 21:01:53 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.80.137])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 80BF619560AB;
-	Mon, 19 Jan 2026 21:01:26 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2476719560AB;
+	Mon, 19 Jan 2026 21:01:50 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -49,9 +49,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV))
-Subject: [PATCH 07/26] rv/rvgen: replace __contains__() with in operator
-Date: Mon, 19 Jan 2026 17:45:43 -0300
-Message-ID: <20260119205601.105821-8-wander@redhat.com>
+Subject: [PATCH 08/26] rv/rvgen: simplify boolean comparison
+Date: Mon, 19 Jan 2026 17:45:44 -0300
+Message-ID: <20260119205601.105821-9-wander@redhat.com>
 In-Reply-To: <20260119205601.105821-1-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
 Precedence: bulk
@@ -63,17 +63,19 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Replace the direct call to the __contains__() dunder method with the
-idiomatic in operator in the dot2c module. The previous implementation
-explicitly called the __contains__() method to check for membership in
-the final_states collection, which is not the recommended Python
-style.
+Replace explicit boolean comparison with truthiness test in the dot2c
+module. The previous implementation used the redundant pattern of
+comparing a boolean variable directly to False, which is not idiomatic
+Python and adds unnecessary verbosity to the code.
 
-Python provides the in operator as the proper way to test membership,
-which internally calls the __contains__() method. Directly calling
-dunder methods bypasses Python's abstraction layer and reduces code
-readability. Using the in operator makes the code more natural and
-familiar to Python developers while maintaining identical functionality.
+Python's truthiness allows for more concise and readable boolean
+checks. The expression "if not first" is clearer and more Pythonic
+than "if first == False" while maintaining identical semantics. This
+pattern is preferred in PEP 8 and is the standard approach in the
+Python community.
+
+This change continues the ongoing code quality improvements to align
+the codebase with modern Python best practices.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 ---
@@ -81,18 +83,18 @@ Signed-off-by: Wander Lairson Costa <wander@redhat.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index b9a2c009a9246..c97bb9466af6d 100644
+index c97bb9466af6d..fa9e9ae16640f 100644
 --- a/tools/verification/rvgen/rvgen/dot2c.py
 +++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -207,7 +207,7 @@ class Dot2c(Automata):
+@@ -202,7 +202,7 @@ class Dot2c(Automata):
+         line = ""
+         first = True
+         for state in self.states:
+-            if first == False:
++            if not first:
+                 line = line + ', '
              else:
                  first = False
- 
--            if self.final_states.__contains__(state):
-+            if state in self.final_states:
-                 line = line + '1'
-             else:
-                 line = line + '0'
 -- 
 2.52.0
 
