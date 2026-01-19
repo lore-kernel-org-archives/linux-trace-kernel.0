@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774D02D780A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 21:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56D9239E75
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 21:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768856665; cv=none; b=YpW56OMNVLL+S0o+5VSKV39s3sM9Msk0pZKL6PYblbOgt92U34panbrq5JjvrZnVhTI/jcqs+sjqYLlVv6uU4kQC0W+eyHOzjy/HihLiRN1JVhOOicZZbqSjbxrM/pkM2ebbf/MzV/T5XF8r6UJYIKgTupK5NVG/KC3h/1rqJmg=
+	t=1768856701; cv=none; b=MwXu70KmQAdHdAi+k2ojnMqcMvMWxJ+24hhJaoqTTuhD05biZYkTwmPPDsvDfYeCqMAckSzBYtQLS0VGlR3UWS0+qdulpGseyWk5zci9KSmvef8gCBZe0ar2Sr9G3JSleJhjZyGQAPXguFX/FYEh0/5ICukn/Sxmhtgf+MVqmbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768856665; c=relaxed/simple;
-	bh=m9SgkT9h440yDgM1IFR3W05ovIC3RTHv6DSomoxtF6c=;
+	s=arc-20240116; t=1768856701; c=relaxed/simple;
+	bh=f2SqH/fw4uU2GRKBJhy3PgUfEnkJ0k0kZ7Wj00Pd78A=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D6nUjAjNHtJRTHSXPWkzfvQZH35+Z2WfUJn5wzfH9imRdSbEuAfPWIox3r/pQkZr/CRX1jz1ucYIDW7LgBZx/RskoCsHukXCi3IHEWDfSfvAPdSD/gZ+U7sktbm6DfJxXQExufLoPlqZQ4yL8otnUqLQqRUj0aeyXSlTERUIDyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OmPgf8dj; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=dJPjpCa67oD8e6rgYOgQHXpYOm/8p25G4OROFzjwb+Z/BtDDsbqR49ijIRlQPbrdS+yS86tH2g4sctmIUG1+iv/0djbZy6soG60z1qndVleo1vbz2ikxuieoY1wis1vCGfpbUf5WiLJIap+i0RaqD0bjOpffBY07/B6QGvaS26U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iaBVuq1v; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OmPgf8dj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iaBVuq1v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768856662;
+	s=mimecast20190719; t=1768856688;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=30iPcyx/O8od5igxVL7D4WfM9SXUj78edNZ/Hh8l0iU=;
-	b=OmPgf8djfV2c7bvIoyFQqt15UtTaxRCqs6UyVvYlCNjWmE8w/zkfag5J/16nZPASIlABZq
-	hMdv89KvI8f1wmYdL/oiI+UacZvRmxUPCCDldePLFPGdzguRsnA7QVgDFD1vOCSkvzgvjH
-	GqUrUrSQrNasOWfqgLsUZH2s5g8xAng=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=oKSRzVqBoQOOo4lbHRVM5q4aKhOza8YqKKV/MGsaxoE=;
+	b=iaBVuq1vlAMDZZIuLu9CH3fQZbE0bSUAz+kwOkK9VpUn6oS6hk8TRyVtxv9CQAWGfXQ5+K
+	PTNnk1CpYmukb0I6DWgYc2vN2chw3d8wbRYL395oaN4xAVNar1NXSBZ/+t+3nvwm5FQQpf
+	6XwqrNcYe4vsk6/23BTUawmO3/KZAfs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-YVv8qnjTOS6Z50DaGdaPMw-1; Mon,
- 19 Jan 2026 16:04:21 -0500
-X-MC-Unique: YVv8qnjTOS6Z50DaGdaPMw-1
-X-Mimecast-MFC-AGG-ID: YVv8qnjTOS6Z50DaGdaPMw_1768856660
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-384-naREuLfuMpWfuNh6olJyqQ-1; Mon,
+ 19 Jan 2026 16:04:45 -0500
+X-MC-Unique: naREuLfuMpWfuNh6olJyqQ-1
+X-Mimecast-MFC-AGG-ID: naREuLfuMpWfuNh6olJyqQ_1768856684
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ECCD11954B06;
-	Mon, 19 Jan 2026 21:04:19 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 31CD21956095;
+	Mon, 19 Jan 2026 21:04:44 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.80.137])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E34B19560AB;
-	Mon, 19 Jan 2026 21:04:17 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AC78D19560AB;
+	Mon, 19 Jan 2026 21:04:41 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -49,9 +49,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-kernel@vger.kernel.org (open list),
 	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV))
-Subject: [PATCH 14/26] rv/rvgen: remove redundant initial_state removal
-Date: Mon, 19 Jan 2026 17:45:50 -0300
-Message-ID: <20260119205601.105821-15-wander@redhat.com>
+Subject: [PATCH 15/26] rv/rvgen: use class constant for init marker
+Date: Mon, 19 Jan 2026 17:45:51 -0300
+Message-ID: <20260119205601.105821-16-wander@redhat.com>
 In-Reply-To: <20260119205601.105821-1-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
 Precedence: bulk
@@ -63,38 +63,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Remove an unnecessary and incorrect list removal operation in the
-automata state variable processing. The code attempted to remove
-initial_state from the states list, but this element was never
-added to the list in the first place. States with the __init_
-prefix are explicitly excluded from the states list during the
-parsing loop, with only the initial_state variable being set
-from them.
+Replace hardcoded string literal and magic number with a class
+constant for the initial state marker in DOT file parsing. The
+previous implementation used the magic string "__init_" directly
+in the code along with a hardcoded length of 7 for substring
+extraction, which made the code less maintainable and harder to
+understand.
 
-Calling remove() on an element that does not exist in a list
-raises a ValueError. This code would have failed during execution
-when processing any DOT file containing an initial state marker.
-The subsequent insert operation at index 0 correctly adds the
-initial_state to the beginning of the states list, making the
-removal operation both incorrect and redundant.
+This change introduces a class constant init_marker to serve as
+a single source of truth for the initial state prefix. The code
+now uses startswith() for clearer intent and calculates the
+substring position dynamically using len(), eliminating the magic
+number. If the marker value needs to change in the future, only
+the constant definition requires updating rather than multiple
+locations in the code.
+
+The refactoring improves code readability and maintainability
+while preserving the exact same runtime behavior.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 ---
- tools/verification/rvgen/rvgen/automata.py | 1 -
- 1 file changed, 1 deletion(-)
+ tools/verification/rvgen/rvgen/automata.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
-index 7841a6e70bad2..b302af3e5133e 100644
+index b302af3e5133e..8548265955570 100644
 --- a/tools/verification/rvgen/rvgen/automata.py
 +++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -111,7 +111,6 @@ class Automata:
-             cursor += 1
+@@ -25,6 +25,7 @@ class Automata:
+     """
  
-         states = sorted(set(states))
--        states.remove(initial_state)
+     invalid_state_str = "INVALID_STATE"
++    init_marker = "__init_"
  
-         # Insert the initial state at the beginning of the states
-         states.insert(0, initial_state)
+     def __init__(self, file_path, model_name=None):
+         self.__dot_path = file_path
+@@ -96,8 +97,8 @@ class Automata:
+ 
+             #  "enabled_fired"}; -> enabled_fired
+             state = raw_state.replace('"', '').replace('};', '').replace(',', '_')
+-            if state[0:7] == "__init_":
+-                initial_state = state[7:]
++            if state.startswith(self.init_marker):
++                initial_state = state[len(self.init_marker):]
+             else:
+                 states.append(state)
+                 if "doublecircle" in self.__dot_lines[cursor]:
 -- 
 2.52.0
 
