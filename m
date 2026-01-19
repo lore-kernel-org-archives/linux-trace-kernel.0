@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CC3309EF7;
-	Mon, 19 Jan 2026 09:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E702E2FF66A;
+	Mon, 19 Jan 2026 10:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768816726; cv=none; b=VZn60E54o+9/7A5Ai3QaxJQ+6kEyg7ZU/tlQCle8lVb7IK++tVw//cYoYmj+kVk1yFsitvNc8aLnk1X3YhkAoLVaxgkHlE4fPLlCVQEWio0DaBahNhQRRr2TJ2UVlklzh2NO8d963HJZMspVSuZVjEhAAuBtaYXQCAW+D72JpDc=
+	t=1768817293; cv=none; b=NCR5Fj9uzwmhCOZCuJ72KpNYD9TnB1l3+aG70L5pBSoNV4PJRygWoDjHX1TXTTFhf+nctHaKMrC+z0QmBbDBe1pbNz97NanILwmMKxrgO6pcd6xk9fcRkFhNHB6EDq/2yUzskaYPelIMqe8tC4EL9VBhoQG2t2uEZBSOnGJZwVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768816726; c=relaxed/simple;
-	bh=Zsi1qPdOMD+ErrBY6bIANoezkKlNDWSRtk7EwJJVjYg=;
+	s=arc-20240116; t=1768817293; c=relaxed/simple;
+	bh=AE57TIsmlva7rZ+tGbHhruAtmwUG689KaCOC5eS4PRA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aFkpXHl3ywhQTM3DtOJOgk8b2g71mCMc3mTX+VgRJMKfucTLUDtyUMiQrYIl1GC6IExNZAwpFOib3gaUHPwN1Tttyg9v4SmSzV3e4197FuRJOJ5gWvUl/m53iZvbFvkhAR6mXUQq0S90bVe9MKl37PT3cnp92MfQCETmZhrmcck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCTI++KS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RyXgj4Ve8rOER8m1uYaX+GwUfH2jIq/07ni7ozWyY2gTm/Q5fncHdxPUvmyHVC10GFEMxHJm7MHMkxuE53u90EsAcOCNvyz8Sj0Ra5N+c/lcom/SsXDioNQOGcasPh6RzC7StE725w+tCHFmO0RvyGvGejxRcMu9bOq5awUbooc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1EvONks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCTI++KS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2771CC116C6;
-	Mon, 19 Jan 2026 09:58:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1EvONks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4DAC16AAE;
+	Mon, 19 Jan 2026 10:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768816725;
-	bh=Zsi1qPdOMD+ErrBY6bIANoezkKlNDWSRtk7EwJJVjYg=;
+	s=k20201202; t=1768817292;
+	bh=AE57TIsmlva7rZ+tGbHhruAtmwUG689KaCOC5eS4PRA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mCTI++KSyzq4RiwthjEmkDupntGGr9peSpAHhr7+gs48rQ8HcSlHmBxYT93v4imLX
-	 0nmXpGdOGV07+qkmJh6EMXbUf0LMP9lz6FxEejsqeSM+lhqHfSO7rimeNoZWJgEIxW
-	 6mRRklCbHCEk/R5NkeZzmKvjPHEb+15eXpD4jLtoQVe1cNfeJVWCriP7ML7s9can2W
-	 TlVA9yutXMas6xX4MAnMwViVVe33ze2eHc17AqSpkgqg1CQeQ3NNA6aHiW6XbhPKUq
-	 HlwLjNsOesXPrZZuCeGG6exZyq2WGpGflVJxO+vQ1tZisSxotIblR2gSKU/oFYlVdh
-	 zVwRfXKYeci/Q==
-Message-ID: <c63df10d-c61c-4337-9c88-ed1ce81204a1@kernel.org>
-Date: Mon, 19 Jan 2026 10:58:39 +0100
+	b=a1EvONksaiYmLSxCFTwMjjYMbZ2a3RJ73mX0Lrnbk0OmaszKbjtEtXoNDeFE2+GYV
+	 jC+rBDn/ytqQkhQKb1yWcSaslOxDh0Sddfn9Wr3zdqDpxP5A08YkpZqyMpuLiQuNC7
+	 4czbEpX1QdN9cXwvyOFZFXS4GfckP7CVIRz/GLVJMjauogD40CvyGHmcmSRl2yuF7D
+	 QAc+XqXVTkd+AeWDDaKCz2NaGGW3GvbdDzr4LIeeYM3L9tNf/KVxHJrr/9TrIjgrWF
+	 yfZnCyJv6wOgAotqrhpcaXNWeEBRopZ8Y+fGX/haEUOitRnv8/Xj+7wB99XYg488gy
+	 JhIhHAdvkE7ng==
+Message-ID: <df4ca339-15aa-4346-bd66-00dc6002b630@kernel.org>
+Date: Mon, 19 Jan 2026 11:08:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 0/2] mm/khugepaged: fix dirty page handling for
+Subject: Re: [PATCH V5 2/2] mm/khugepaged: retry with sync writeback for
  MADV_COLLAPSE
-To: "Garg, Shivank" <shivankg@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
+To: Shivank Garg <shivankg@amd.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
  "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
  <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
  Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
@@ -48,10 +47,10 @@ Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
  Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Branden Moore <Branden.Moore@amd.com>
 References: <20260118190939.8986-2-shivankg@amd.com>
- <20260118122229.dcdda884bbb19a9c30ec6f1e@linux-foundation.org>
- <12b6747e-b844-4931-9918-fd095a6d772b@amd.com>
+ <20260118190939.8986-7-shivankg@amd.com>
 From: "David Hildenbrand (Red Hat)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -97,48 +96,34 @@ Autocrypt: addr=david@kernel.org; keydata=
  cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
  EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
  qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
-In-Reply-To: <12b6747e-b844-4931-9918-fd095a6d772b@amd.com>
+In-Reply-To: <20260118190939.8986-7-shivankg@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/19/26 06:07, Garg, Shivank wrote:
+On 1/18/26 20:09, Shivank Garg wrote:
+> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+> text sections), the pages may still be dirty from recent writes.
+> collapse_file() will trigger async writeback and fail with
+> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
 > 
+> MADV_COLLAPSE is a synchronous operation where userspace expects
+> immediate results. If the collapse fails due to dirty pages, perform
+> synchronous writeback on the specific range and retry once.
 > 
-> On 1/19/2026 1:52 AM, Andrew Morton wrote:
->> Please tolerate a little whining about the timeliess here.  We're at
->> -rc6, v4 was added to mm.git over a month ago, had quite a lot of
->> review, this is very close to being moved into the mm-stable branch and now
->> we get v5.  Argh.
->>
-> I sincerely apologize for this.
+> This avoids spurious failures for freshly written executables while
+> avoiding unnecessary synchronous I/O for mappings that are already clean.
 > 
-> I had this doubt on sending an incremental patch or V5:
-> https://lore.kernel.org/linux-mm/7a42515f-ae57-4f4d-831c-87689930a797@amd.com
-> 
-> 
->>> V5:
->>> - In patch 2/2, Simplify dirty writeback retry logic (David)
->> Are you sure this is the only change?  It looks like a lot for a
->> simplification and I'm wondering if we should retain the v4 series and
->> defer a simplification for separate consideration during the next
->> cycle.
-> 
-> Yes, patch 1/2 is unchanged and patch 2/2 is the only change.
-> The diff looks larger due to code movement but logic is actually simpler now.
-> 
-> I completely understand if you prefer to keep V4 and defer this
-> refactoring. I'm sorry for creating this late-cycle churn. Please let me
-> know what you'd prefer and I'll follow your guidance.
+> Reported-by: Branden Moore <Branden.Moore@amd.com>
+> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Tested-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
 
-There is no reason to rush any of this. :)
+Looks good to me now, thanks Shivank!
 
-Review was not over and due to multiple factors my review on v4 came in 
-later than I wanted.
-
-Andrew, if you prefer, I can start sending as a reply to every patch set 
-that I want to review so you are aware that it is on my review backlog.
-
-Unfortunately we can't have nice things (sub-maintainer acks).
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 
 -- 
 Cheers
