@@ -1,106 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A01436CE1E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 13:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBA833ADA9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 14:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768830651; cv=none; b=FF2Y7F5wRu+6jPcRclJUw9x/EmwpJDHmAi0sBhDccLN0+RgruM3nm95HlSbe/yhXxt+P08YWMmHknnCyrgXzPQJmSbEZZhyT5mlcbZyFmKqAFEZl87mj2GfQPhDFYsiJXCGzlwLh0/kyOQwBO6hhifhDiy5qEmWr1iOaFyVgcb4=
+	t=1768833574; cv=none; b=gi1Q2HaZ7dj/j0dtXNWxBO4HtHPH/b+NYiN+TLpmbxtyVli2NrkZBlRS5VTlXp6MYkUOB2Uab4KDpi2ISD51Box1ZWLDrn7sKR+KIfpdZgmfvRaAd7lnTAo9xzBbEXfunqBy/vixJLABv/6JnM92cy+vIYEmxZBOXiP73d0ogj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768830651; c=relaxed/simple;
-	bh=ymnxlvbnscMXsNpA9pMPg+Z+OFN+wSBHjzzhWO+/kz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=njlfwgsUKkhmaTK/icHOy0abpQOcOiRH4Xd7iZRVjBjyJN5+FnODXAR/iWX8HwNINUOSnkGY4oP+k5aN2eFcGrQPNT4IqXNdv8h8+lBNTtdCZ+TauNZ2Pt6hVx8cv8LfVZ7AuWUUenBDCksjVbujO3169g1Qf11dUNJuHCeLQhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dp1GPXaN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768833574; c=relaxed/simple;
+	bh=2dJlh51NJrHUTf0lubg/WtQ1TdYnj9PHI5PYAn7cutk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Txp83Cp37rqUTDGFbrKcc0kGsuUU+7OMIFXoVfgeBsvFknlPdxWJ4rSJuJYGqSqh3/jwfr0lfCdFAa9LCtF5DmJrN0i92K8/Kw1scLxjRt/rSs5DUYc7EPChidYVPSp1Q9Ff4lCsjUeJrxdl7ARXQtrDPmQBaAZSpFbj0PEjNso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Vw298HYo; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dp1GPXaN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768830647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MMehZMg/kw3DNT8DgMJ+tS+8zKMICcmIPRJ4ZIh9O4Y=;
-	b=Dp1GPXaNAQx3ZRPIT5PnxDgotAc9NUYqvQnjD/Oi834CbG2xI9i37Y37Yu6NGUYQ+2vvF/
-	gEbdymtjkSQEd7got2CZxzmiu98LlcgR3tJC2zFPpueLIAU3vdNbbR3QNE8A7trm/MJhwV
-	ODdLsQj7hBrsMxWKgzy5nI32SQnD3ps=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-OZzsFHHgOcKmVtvmekn5kQ-1; Mon,
- 19 Jan 2026 08:50:46 -0500
-X-MC-Unique: OZzsFHHgOcKmVtvmekn5kQ-1
-X-Mimecast-MFC-AGG-ID: OZzsFHHgOcKmVtvmekn5kQ_1768830645
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED0A1180034D;
-	Mon, 19 Jan 2026 13:50:44 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.34.49])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E9E1C19560AB;
-	Mon, 19 Jan 2026 13:50:42 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>,
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Vw298HYo"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47d63594f7eso30150155e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 06:39:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1768833571; x=1769438371; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=C44Hzf/BGJ1hEivAUCRdCyF7sts8+63+SuDB5GtrMgM=;
+        b=Vw298HYocLGGUOby2R/LVDj9JCdtP45KTgKBBxyc8IW0Ntie8X+YOKkmUPAuxP37Qr
+         rHKszYQsmGc1hQJM5cnDRzDiM1ZgnGQDbE4nQf1VF5YAK0JOUPhGouf/cHaL50hOOvMp
+         8lc3agf1mw5WwaKKtKKpiIRdr2SGqKnBgpvauYpUqUvt6y8mgjOrOWKFSjhqyE3qQ5Rn
+         ttQvuAboQ+UVyEyt4JjRsmhIYcvCXf+ff+sBc7BhlOIvccSTX8ds1srDQqh/v+n1S0Tl
+         pRagfkoyhR7nmFvm+j6CBO3vqK+3Z+0eifieazA1rkWFRO3AzONxJgma/EeOUlVss8FZ
+         e+tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768833571; x=1769438371;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C44Hzf/BGJ1hEivAUCRdCyF7sts8+63+SuDB5GtrMgM=;
+        b=lPJRDPBtr1Tfl+d0ofQzAPDXlVT+DHsIb/qQFDHAuwno175D6FEdzurDSYrBFwtafu
+         IAfWh6vmEXpNeIajDS/IBrokZggYgB2wsaNU27vahP4yDd22ktpFJ4UzsrfIRynU+xcy
+         N0FkivJdoU7ThrI3vkvHDzjEbnWmaTSyqsF6kjVIros4TBx3Fb4gGO9ZYUnfryNtafWW
+         FYuawGxhEJRiDRpuJHf2yqgFYK6gUlj0K91tP9F+0C6v8uiza2wVqDqYvIAbt1k0+Fcu
+         2CH4YoZn6bVp3DwMo50HTsW+lvprBXteJjWKFWsqtdOREmQXsAl59N7sKmLnRhxOnQkH
+         /2vQ==
+X-Gm-Message-State: AOJu0YzzP9zHRfczAnim3IYZ1J9wsL5Ud6tVoVPyOkEGcd75Vx3ufWty
+	nSpCS6DRcSoE2jM03vkDhapHXU54r03Zs8l7N/ym4FZ6VbAhVT4XG3F0mSrvUZtj/j0=
+X-Gm-Gg: AY/fxX5ELDrtK8cFsXnyieau7icBCHSQFygQ02o4sX9GqxPdwN5QyMT4uilNK1OBgyp
+	IVojgNN0QX98sKdMZ9swoaQw30pdTKBhvZxCy1LJFt2KCT1K1S8V/svWu+hb3TYhQ7hhAL69y2r
+	t/91nQ5zZwegv0uguILn5XsOOPd4F2YpHLDVlwlcJl6K53Yy4I0fd66710h/Sk39g4Lc8h27NUi
+	vTa8b0mPuDRg4M1BSpRJiYW/eztBV4d+55PS1zi4s+3bnLOosZq8lUURXShj1uvlkNfXZkz1uOT
+	XaT8QfvjsgmaTsVh8H4ctIKxnt4uBrHpmDVeoqcWiflreOihCXe8Pp3Hmo06jY5q6aWeU1KE7pK
+	n5VwaIkM6T0mlpkyeqsYZXHcISFN8i/NYmDqbDgl/Zpnxho7c7omr7mOa05XATkEzQBpqVn2OYC
+	j1t1BgBKbbwyMykrr570hzBFvs1kJ7j0EUbnrWVsj554VqZ/M2f6442XZntu+kQCOAGr/VPBosS
+	z7+M5Hgll+35NikH4rNHKbOiVpfDUBiBvxXOV8Paaf+2vJKZLK1zloPJ+4BU+4IAFEOzJuu
+X-Received: by 2002:a05:600c:a305:b0:480:2521:4d92 with SMTP id 5b1f17b1804b1-4802521516emr95758905e9.24.1768833571562;
+        Mon, 19 Jan 2026 06:39:31 -0800 (PST)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f429071a2sm249813135e9.11.2026.01.19.06.39.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 06:39:30 -0800 (PST)
+Date: Mon, 19 Jan 2026 14:39:28 +0000
+From: Daniel Thompson <daniel@riscstar.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [GIT PULL] RTLA additional fixes for v6.20
-Date: Mon, 19 Jan 2026 14:50:38 +0100
-Message-ID: <20260119135038.756221-1-tglozar@redhat.com>
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] iommu: Fix NULL pointer deref when io_page_fault
+ tracepoint fires
+Message-ID: <aW5CIA1aCC8FVyFl@aspen.lan>
+References: <20260116-iommu-io_page_fault_null_fix-v1-1-6c20c2e62987@riscstar.com>
+ <fca8f2cd-c3e5-40b0-a793-bded109e37bc@web.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <fca8f2cd-c3e5-40b0-a793-bded109e37bc@web.de>
 
-Steven,
+On Fri, Jan 16, 2026 at 05:02:35PM +0100, Markus Elfring wrote:
+> …
+> > Fix this by adding logic to the tracepoint to safely propagate NULL.
+>
+> * How do you think about to add any tags (like “Fixes” and “Cc”) accordingly?
 
-please pull additional fixes for bugs that were caught in RTLA during
-the testing of linux-next.
+I could add a
 
-Thanks,
-Tomas
+Fixes: f8f934c180f6 ("iommu/arm-smmu: Add support for driver IOMMU fault handlers")
 
-The following changes since commit fb8b8183208d8efe824e8d2c73fb1ab5ad1191fd:
+However, who do you think I neglected to Cc:?
 
-  rtla: Fix parse_cpu_set() return value documentation (2026-01-07 15:57:56 +0100)
 
-are available in the Git repository at:
+> * Would a summary phrase like “Prevent null pointer dereference for a tracepoint”
+>   be a bit nicer?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/ tags/rtla-v6.20-fixups
+I don't understand what is wrong with the original phrasing. Can you
+explain why this change matters to you?
 
-for you to fetch changes up to 6ea8a206108fe8b5940c2797afc54ae9f5a7bbdd:
 
-  rtla: Fix parse_cpu_set() bug introduced by strtoi() (2026-01-13 08:32:52 +0100)
-
-----------------------------------------------------------------
-RTLA additional fixes for v6.20
-
-- Fix bug in cpuset parsing
-
-A commit queued for 6.20 changed atoi() to a new strtoi() function on
-a tree-wide level. This broke cpuset parsing, which relies on atoi()'s
-behavior of skipping non-numeric prefixes.
-
-Revert cpuset parsing back to using atoi() to prevent the breakage.
-
-The log entries above are purely informative; since the fix is for a bug
-not yet merged upstream, it needs no mention in the merge description.
-
-The tag was tested (make && make check) as well as pre-tested on top of
-next-20260116. There are no additional known conflicts.
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-
-----------------------------------------------------------------
-Costa Shulyupin (1):
-      rtla: Fix parse_cpu_set() bug introduced by strtoi()
-
- tools/tracing/rtla/src/utils.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
+Daniel.
