@@ -1,82 +1,83 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8ED2BE047
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 08:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00EF3BC4EC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 09:03:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768899559; cv=none; b=NYTMZosV5IUjztwUb+sNRcVsHkQW3788NssTO1za3Jgs9HA2mgyS+144mL0/rbWS2gkL4yk3YkldDxq3wX+5DNmdZwJxhRg50Jm+dXh3vchilGb1vToye9NbOEme18IrhebwJ6KR6IYPwdMGIjP7jS6utjXAcSjHoXqaJTr2CPs=
+	t=1768899809; cv=none; b=MlRpZqEOAJVbsDTB8Q4VcoYg3HGgXOwEUvSJXiCY2aYuA4NYFtR22dJijlU2puVWZMgPVnpoeA8WtFjKaz3vY6hDCXwhUrCyRKtTwnxC3V7SLaDhTgull5eMeXhVFHuJxNWgEM5z0EtzIaQ4QxZnmHizCasabUlUiJbr18fgx6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768899559; c=relaxed/simple;
-	bh=sMdRSvoG+LSVpXw+Rc3meOm0dLuxbQwv4p4D05xn+yg=;
+	s=arc-20240116; t=1768899809; c=relaxed/simple;
+	bh=GLa7jXj54X9WgBa54METRecXc3wNl/aOHp59fQnxOtY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BlN3m1KGnNRKbv79hygfAxrGPVi0XWhoqSo9DeVhyLrt7CM78osI3QaWsQ26MUJxMw/lMXEpHLJzbnArlZCa8tgm4neWkixfSdyyrgYNZ9gpdpwYw+madwFgh0B60FSJz4iQpQ1PCTLxsuFqtff/I7reVGsbjYXTCi6FY+slHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fjivNP15; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=Sh2GILAbeJz3dhylQwTXLU/GloPsHy1H9PqTstpxTKMq/nWcRzDEFoD+Xeds6aZCO5aKsNRN66beIOGocFxRWUkCB5HxsxqANklzhK+yOwIWwhdfbE8q46UI50Mw/PBLcEKGsX/guL6JJvXLXOmHAvrAep1Cc1PY77YV9RTV6mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mv+Fisg0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fjivNP15"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mv+Fisg0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768899556;
+	s=mimecast20190719; t=1768899805;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6iFMtHhoL3bOSCrpSbQA5IrtnTyZJVqCZfgJ4obY6M4=;
-	b=fjivNP15pcpI3YPSlbIxwzMyCZGtOXV2pCsfXlqaqF18zLoaDpCxTLcA6xgRXsHJsSzw2v
-	0c/GABqBnCCL1xtBPF9EOEx5rfAED6MmGcp1SSSI8u7x8fzJ6cq0edFAjz4MDB8RPyjGQt
-	BRWChqlVaHqTdIIKwBD/qcW1YQROFTQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=GLa7jXj54X9WgBa54METRecXc3wNl/aOHp59fQnxOtY=;
+	b=Mv+Fisg03ROPQplfdaYQqEAUyC1IXBcQ5VMy9EovBi4ZdFH4bDaZxr/PRTubvmaDMs0zUM
+	BYT+urhXy0GljujtMcIBVTTNT86H6pEN11VDIkpBEM5suS4U57iwu3FQ2p123wxtaI0Hfr
+	RkovDnh7qOfogfe198Y+v+c0vlnFOGI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-DtY1YVsTOyyonJZzBNmERg-1; Tue, 20 Jan 2026 03:59:15 -0500
-X-MC-Unique: DtY1YVsTOyyonJZzBNmERg-1
-X-Mimecast-MFC-AGG-ID: DtY1YVsTOyyonJZzBNmERg_1768899554
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47d62cc05daso35293075e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 00:59:15 -0800 (PST)
+ us-mta-27-Y_usU4lPP5mLyEEGe3vXJA-1; Tue, 20 Jan 2026 04:03:24 -0500
+X-MC-Unique: Y_usU4lPP5mLyEEGe3vXJA-1
+X-Mimecast-MFC-AGG-ID: Y_usU4lPP5mLyEEGe3vXJA_1768899803
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-47edee0b11cso26502645e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 01:03:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768899554; x=1769504354;
+        d=1e100.net; s=20230601; t=1768899803; x=1769504603;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6iFMtHhoL3bOSCrpSbQA5IrtnTyZJVqCZfgJ4obY6M4=;
-        b=fH2RjA45kRM9w2MLw4RpQxskM5YDo9YX1uoqNmhrP09O9JUHX97w9OC3GynvAhMDrt
-         30uyQIFH8ZPrbjaUyJmr3X4cfHi3jyezr7WZUYwqxLOsdwSzafrDWUKWX92AIAJ3i4Nx
-         NqvIrGv+XI3YxRgPCUj2hihOFf3ESLvina3iAasIGibDyb2Knri+U/o0xyU1gQbkSoTw
-         awB0vlrGrLpq4kZxFtdWecBpzJe56qORmwu7LHIaKS0fP/V3BLn7tiUdahNEzARy7bCz
-         jXdndG54aPD/2KX+FSTGiKSmI3VIjJ7lVK73XYMMJOOTMjYyjvroV4EqnZl1Gs7YV8F/
-         2SCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1D7HktFrnbtuJDbjyQsysgpzezGEnWZId9ZDCKu+/ayXx2K1QoQdcKPnCv2HU1G0V1fODeM5Blv/bewrMkLpRVJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI6BTK4qwiRUd8KHR4jP3yTawt7aZBdcMnheKPooo3x946Vt+p
-	TaR+UHgyY+4+BRs9JAYZZ46uGDku40LaIlWR+x/LLn9+fGtSCObIUq4BZaWDyJdfLEqQdB6U5e1
-	ytBTJVyIWPD47dAGdOlzeK2pMOflkjxzPbm7iAM00MPa2Uojvnnt4fdGXTsfb3IOfj8MH9B8L0A
+        bh=GLa7jXj54X9WgBa54METRecXc3wNl/aOHp59fQnxOtY=;
+        b=m/r4dIt9pP7zcAyHXgEWpMuWWacx+mgiKERoxMRjhMUFEm2DQLoO6/1xEBxKWLquMT
+         5V6H+w8rqHQqmp0nOpVxvw3KfMvIKweOjdVqBPXcChIyJ8uqKJ6ZQo6uJvk02SVTHq7Z
+         /ay7JTHr9pG9tj7Co37bAek70V+oMn6PiwYKxxK+4cpIJhuEUu7Iu1Ui91zFq/XxHYeX
+         ZBFr5AQN0O57xFhJbRnnNazIVKl6xns0+QgIoSWjMN49U9Px2GPCWl7vwSSDcr3MrH+1
+         SzKQ/Ow4Ar2lJRTcT18t4VY2PkDIgAx6RF7yij/UexUIgmJIF9Mw1I7qjuhi4S9xSSFY
+         +3YA==
+X-Forwarded-Encrypted: i=1; AJvYcCX54aI2I6WAkxLSKL7Rm9x34tEF7ikOHYjRYGobCbX9dH5h1vF0m1GNYiYr8KgdDgj8wAJey8jIg4vXDb+DxJiSi4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwspmxCbIEom1YDbnsqDAjwzom7ULqcKSCCU7SMjMjyTqruiP0l
+	f+epDKW6HJ0hSX4df6/fVeaVinjNyTIpxH63iaiz/XHxk7rBKoCUR3QWCvDOPW+X3EYqmgyUN8C
+	b+Swy/ComesIOy7FSBfP81cTtHwYCpULw5K/mEPGwCGUlVS3fxjp/Ys//kXSPJMW85BT+9jJdIA
 	==
-X-Gm-Gg: AY/fxX66iVBsbtRq3DXpv5gGJZgEbQ7PGoqf1/Ud/7KefI0qjG2e0/t1RCkH7slzZ7E
-	aYOv3AIyou7inXSp2gaM7AixbtA/0pYK7CLujAD9xnmNUAKrFVPG2U3Y1p3CJobrawfNz6FLo5V
-	eu3iH3hC4PLKdmZkiXcZtTnVVqQ51zfrYqCwhAJPygdc2hDjXOEHT1UzTZTKkGENYBUwLerIZWs
-	uVGJqW6ZCvlolqzvjD1+fh7BUhZBlPAl09MuADye5BQ9rDue3lbcjy0Voba/NC00gcVUoQutdP/
-	ISZigNsCrfsEh1jwoNBmXH6JaTQ8SBCKK2r5Z5rYxzFu2acN6/K1qrlse1hxZDE7lCqdOHCia4O
-	OwbtSaSALzc153a2P/oqxlIEtCNgFzYHZ0jRRiWYmGMFlOpyjC6wTBG1yVAVx1yWCjUezgueanq
-	rFUhR1ERMC
-X-Received: by 2002:a05:600c:528c:b0:47e:e61d:b8d2 with SMTP id 5b1f17b1804b1-4803e7f18d4mr13837395e9.27.1768899554034;
-        Tue, 20 Jan 2026 00:59:14 -0800 (PST)
-X-Received: by 2002:a05:600c:528c:b0:47e:e61d:b8d2 with SMTP id 5b1f17b1804b1-4803e7f18d4mr13837165e9.27.1768899553635;
-        Tue, 20 Jan 2026 00:59:13 -0800 (PST)
+X-Gm-Gg: AY/fxX6eVq1LmAO/N8rwqVYRSoUOkcTGSXP21mLYKwJHfZMIA8ZDl4YkgofwFoAtVAd
+	faEU/0fDCj6oGDgnSsKLSPVgWki5Q8mgmkGUv7KSzzENfwwWjiO7wJmEO2+ewV4uD8k9Bkk2/fC
+	fmvoj2HxuRv6A308C5/ursV3ugTKjMshqvZ+KanthO91CXGsrofQqycjrMPo3MOxD87hCDlIzeH
+	M/wmKi6chGC9gOyuFw3qflnA+U4iI9uK6mJ6V1jWvD7jqC1tJ/Z3q1CqaV6ZdObwCW6AzkCuWNP
+	gX7xwUa/0ZnmXbrY6wY+tyicThB3bmD7dzlzKy6ufA6mL2DOPp+N8FmJsfbtTBavKUtcRMFF2Th
+	HpISxirl9B7L91bSBrQUDysICUhl63dMeu9ppQgkqYiLAOBqPq4Zls1B0ipBdw3yaUAmI4RkaqG
+	MCf3Rwcv41
+X-Received: by 2002:a05:600c:4451:b0:477:63b5:6f3a with SMTP id 5b1f17b1804b1-4801eb0eeb8mr166643125e9.27.1768899802623;
+        Tue, 20 Jan 2026 01:03:22 -0800 (PST)
+X-Received: by 2002:a05:600c:4451:b0:477:63b5:6f3a with SMTP id 5b1f17b1804b1-4801eb0eeb8mr166642695e9.27.1768899802147;
+        Tue, 20 Jan 2026 01:03:22 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f4b2755absm365703365e9.15.2026.01.20.00.59.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f429071a2sm290674505e9.11.2026.01.20.01.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 00:59:13 -0800 (PST)
-Message-ID: <b8a2b88e484cac27a82e1c27d0e27599515c4bc6.camel@redhat.com>
-Subject: Re: [PATCH 17/26] rv/rvgen: fix possibly unbound variable in ltl2k
+        Tue, 20 Jan 2026 01:03:21 -0800 (PST)
+Message-ID: <0383d9a3fdaeb2b66e48a7857791bcbfe324958d.camel@redhat.com>
+Subject: Re: [PATCH 26/26] rv/rvgen: extract node marker string to class
+ constant
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Wander Lairson Costa <wander@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
  open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
  (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 09:59:11 +0100
-In-Reply-To: <20260119205601.105821-18-wander@redhat.com>
+Date: Tue, 20 Jan 2026 10:03:20 +0100
+In-Reply-To: <20260119205601.105821-27-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-18-wander@redhat.com>
+	 <20260119205601.105821-27-wander@redhat.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,77 +95,61 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: DWIPFpkzwzyFLsDdzf_ab6MbFevhzfo2jWF1p0B0V9I_1768899554
+X-Mimecast-MFC-PROC-ID: JpeU18VmLflLWxKSxtFt_tX8fIVrTSr-ZZTYGMCTlgU_1768899803
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 
-On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
-> Initialize loop variable `i` before the for loop in abbreviate_atoms
-> function to fix pyright static type checker error. The previous code
-> left `i` potentially unbound in edge cases where the range could be
-> empty, though this would not occur in practice since the loop always
-> executes at least once with the given range parameters.
->=20
-> The initialization to zero ensures that `i` has a defined value before
-> entering the loop scope, satisfying static analysis requirements
-> while preserving the existing logic. The for loop immediately assigns
-> i to the first value from the range, so the initialization value is
-> never actually used in normal execution paths.
->=20
-> This change resolves the pyright reportPossiblyUnbound error without
-> altering the function's behavior or performance characteristics.
-
-So are we just pleasing the tool or is there a real implication of this?
-
-Apparently code like
-
-for i in range(len([]), -1, -1):
-    pass
-print(i)
-
-works just fine since range() returns at least 0 (as you mentioned in the c=
-ommit
-message) and i is not used before assignation in the loop, so I don't reall=
-y see
-a problem.
-
-Apparently pyright devs don't want ([1]) to implement a logic to sort out t=
-he
-/possibly/ unbound error here.
-
-From what I understand, this code is already not pythonic, so rather than
-silence the warning to please this tool I'd just refactor the code not to u=
-se i
-after the loop (or leave it as it is, since it works fine).
-
-What do you think?
-
-Thanks,
-Gabriele
-
-[1] - https://github.com/microsoft/pyright/issues/844
-
->=20
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-> ---
-> =C2=A0tools/verification/rvgen/rvgen/ltl2k.py | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/tools/verification/rvgen/rvgen/ltl2k.py
-> b/tools/verification/rvgen/rvgen/ltl2k.py
-> index fa9ea6d597095..94dc64af1716d 100644
-> --- a/tools/verification/rvgen/rvgen/ltl2k.py
-> +++ b/tools/verification/rvgen/rvgen/ltl2k.py
-> @@ -45,6 +45,7 @@ def abbreviate_atoms(atoms: list[str]) -> list[str]:
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 abbrs =3D []
-> =C2=A0=C2=A0=C2=A0=C2=A0 for atom in atoms:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i =3D 0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for i in range(len(atom)=
-, -1, -1):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-if sum(a.startswith(atom[:i]) for a in atoms) > 1:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 break
+T24gTW9uLCAyMDI2LTAxLTE5IGF0IDE3OjQ2IC0wMzAwLCBXYW5kZXIgTGFpcnNvbiBDb3N0YSB3
+cm90ZToKPiBBZGQgYSBub2RlX21hcmtlciBjbGFzcyBjb25zdGFudCB0byB0aGUgQXV0b21hdGEg
+Y2xhc3MgdG8gcmVwbGFjZSB0aGUKPiBoYXJkY29kZWQgIntub2RlIiBzdHJpbmcgbGl0ZXJhbCB1
+c2VkIHRocm91Z2hvdXQgdGhlIERPVCBmaWxlIHBhcnNpbmcKPiBsb2dpYy4gVGhpcyBmb2xsb3dz
+IHRoZSBleGlzdGluZyBwYXR0ZXJuIGVzdGFibGlzaGVkIGJ5IHRoZSBpbml0X21hcmtlcgo+IGFu
+ZCBpbnZhbGlkX3N0YXRlX3N0ciBjbGFzcyBjb25zdGFudHMgaW4gdGhlIHNhbWUgY2xhc3MuCj4g
+Cj4gVGhlICJ7bm9kZSIgc3RyaW5nIGlzIHVzZWQgYXMgYSBtYXJrZXIgdG8gaWRlbnRpZnkgbm9k
+ZSBkZWNsYXJhdGlvbgo+IGxpbmVzIGluIERPVCBmaWxlcyBkdXJpbmcgc3RhdGUgdmFyaWFibGUg
+ZXh0cmFjdGlvbiBhbmQgY3Vyc29yCj4gcG9zaXRpb25pbmcuIEV4dHJhY3RpbmcgaXQgdG8gYSBu
+YW1lZCBjb25zdGFudCBpbXByb3ZlcyBjb2RlCj4gbWFpbnRhaW5hYmlsaXR5IGFuZCBtYWtlcyB0
+aGUgbWFya2VyJ3MgcHVycG9zZSBleHBsaWNpdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBXYW5kZXIg
+TGFpcnNvbiBDb3N0YSA8d2FuZGVyQHJlZGhhdC5jb20+CgpMb29rcyBmaW5lIGZvciBtZSwgdGhh
+bmtzIQoKSSB3b25kZXIgaWYgd2UgY291bGQgbWVyZ2UgdGhpcyBwYXRjaCB3aXRoIDE1LzI2IHRo
+YXQgaXMgaW50cm9kdWNpbmcgYSB2ZXJ5CnNpbWlsYXIgY2hhbmdlIG9uIGluaXRfbWFya2VyLgoK
+QW55d2F5OgoKUmV2aWV3ZWQtYnk6IEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29t
+PgoKPiAtLS0KPiDCoHRvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9hdXRvbWF0YS5weSB8
+IDkgKysrKystLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0
+aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS90b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4v
+YXV0b21hdGEucHkKPiBiL3Rvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9hdXRvbWF0YS5w
+eQo+IGluZGV4IGE2ODg5ZDBjMjZjM2YuLjVmMjNkYjE4NTVjZDMgMTAwNjQ0Cj4gLS0tIGEvdG9v
+bHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2F1dG9tYXRhLnB5Cj4gKysrIGIvdG9vbHMvdmVy
+aWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2F1dG9tYXRhLnB5Cj4gQEAgLTI5LDYgKzI5LDcgQEAgY2xh
+c3MgQXV0b21hdGE6Cj4gwqAKPiDCoMKgwqDCoCBpbnZhbGlkX3N0YXRlX3N0ciA9ICJJTlZBTElE
+X1NUQVRFIgo+IMKgwqDCoMKgIGluaXRfbWFya2VyID0gIl9faW5pdF8iCj4gK8KgwqDCoCBub2Rl
+X21hcmtlciA9ICJ7bm9kZSIKPiDCoAo+IMKgwqDCoMKgIGRlZiBfX2luaXRfXyhzZWxmLCBmaWxl
+X3BhdGgsIG1vZGVsX25hbWU9Tm9uZSk6Cj4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLl9fZG90X3Bh
+dGggPSBmaWxlX3BhdGgKPiBAQCAtNzYsNyArNzcsNyBAQCBjbGFzcyBBdXRvbWF0YToKPiDCoMKg
+wqDCoMKgwqDCoMKgIGZvciBjdXJzb3IsIGxpbmUgaW4gZW51bWVyYXRlKHNlbGYuX19kb3RfbGlu
+ZXMpOgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzcGxpdF9saW5lID0gbGluZS5zcGxpdCgp
+Cj4gwqAKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBsZW4oc3BsaXRfbGluZSkgYW5kIHNw
+bGl0X2xpbmVbMF0gPT0gIntub2RlIjoKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBsZW4o
+c3BsaXRfbGluZSkgYW5kIHNwbGl0X2xpbmVbMF0gPT0gc2VsZi5ub2RlX21hcmtlcjoKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gY3Vyc29yCj4gwqAKPiDCoMKgwqDC
+oMKgwqDCoMKgIHJhaXNlIEF1dG9tYXRhRXJyb3IoIkNvdWxkIG5vdCBmaW5kIGEgYmVnaW5uaW5n
+IHN0YXRlIikKPiBAQCAtOTEsOSArOTIsOSBAQCBjbGFzcyBBdXRvbWF0YToKPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb250aW51ZQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGlmIHN0YXRlID09IDA6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBp
+ZiBsaW5lWzBdID09ICJ7bm9kZSI6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBp
+ZiBsaW5lWzBdID09IHNlbGYubm9kZV9tYXJrZXI6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBzdGF0ZSA9IDEKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbGlm
+IGxpbmVbMF0gIT0gIntub2RlIjoKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbGlmIGxpbmVb
+MF0gIT0gc2VsZi5ub2RlX21hcmtlcjoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBicmVhawo+IMKgwqDCoMKgwqDCoMKgwqAgZWxzZToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcmFpc2UgQXV0b21hdGFFcnJvcigiQ291bGQgbm90IGZpbmQgYmVnaW5uaW5nIGV2ZW50IikK
+PiBAQCAtMTE2LDcgKzExNyw3IEBAIGNsYXNzIEF1dG9tYXRhOgo+IMKgwqDCoMKgwqDCoMKgwqAg
+IyBwcm9jZXNzIG5vZGVzCj4gwqDCoMKgwqDCoMKgwqDCoCBmb3IgbGluZSBpbiBpc2xpY2Uoc2Vs
+Zi5fX2RvdF9saW5lcywgY3Vyc29yLCBOb25lKToKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+c3BsaXRfbGluZSA9IGxpbmUuc3BsaXQoKQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIG5v
+dCBzcGxpdF9saW5lIG9yIHNwbGl0X2xpbmVbMF0gIT0gIntub2RlIjoKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBpZiBub3Qgc3BsaXRfbGluZSBvciBzcGxpdF9saW5lWzBdICE9IHNlbGYubm9k
+ZV9tYXJrZXI6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWsKPiDCoAo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYXdfc3RhdGUgPSBzcGxpdF9saW5lWy0xXQo=
 
