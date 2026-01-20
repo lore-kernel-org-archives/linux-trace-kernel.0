@@ -1,82 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0C63A0B1A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 07:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CCB328B69
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 07:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768895313; cv=none; b=ZkHS/H6jTm8XaQ+nIDyxgk4YqsrE4uJnJgNPS/Br2Dsbs3GU/sXpfp5nED7E62gwJku0xBJh9QiW05NM/J4ifHFbPr821Z4rF2frg7a/+QCshczgcxwnbhES7pmqYhUV2FBlEAJXCfWSHjwuo7Ew4WzP1M02QY6RWvoZbgQ95fk=
+	t=1768895492; cv=none; b=DeHQpV122LDyYZzbaj8cIMGwdpXZA9Zy6nIS7j4Qt5D1KRAzma2iUdoQNy53/5+/9gzQsMweCQH1ajLQ5AkYSOIXLlMgwDoQjPoG/HEz304uTmwN5LMSNMEcmKh5IDqLIoOU5SkhhdKNq3vEeuLjdEca2ZaYxENssv3hA1FwPKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768895313; c=relaxed/simple;
-	bh=Dl2oWfBwtiPo7WzVz9Y3r/pgOLtbYy6Lx+/AgLj3Y70=;
+	s=arc-20240116; t=1768895492; c=relaxed/simple;
+	bh=f4V08HQVokgA9xFD0oqKvstbP2a1PHXdtABRTaBZiRY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2Sd8BcRI7coVC9IWRTiu1RsGlpBCZMSRKABZKoI5ixTieWblDW1J3oLHSx4jDBnAp5hSMnOosw2S9RJE0DB6UKD6vN8xK4HMCiZDaEbz8of/UKbILs2cnM2zD9bjrlLCZsHE60rDlwh/Slg14/cbvaj8f/bM2w7emkAaWIhMaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATqqHmyy; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=EgAK2hBze+KWIc0o1zROYVLKdgdyTb/Y3qby/nid4qJJMno/O2MDa+eKRrl1ehc+bhAW6nXTOH0QIdzpJkVXCjCMm0IH/spO88Ceoxj23ZHRPTK274/nHCkTbl86qjJ33JvA6y0/7D/LPzozfYQ9vWAK6hlTp/9+IRkGvqnWugc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XbwrQ69G; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATqqHmyy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XbwrQ69G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768895310;
+	s=mimecast20190719; t=1768895489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Dl2oWfBwtiPo7WzVz9Y3r/pgOLtbYy6Lx+/AgLj3Y70=;
-	b=ATqqHmyy1NTs7k1Qxay/o8myZsQ89rtyC68/yPuOVo8oGFM/TM2wQA9X2vnbH1i7odMi/J
-	eTsA+VUPVEYjXuDvXIUX7H7fPIkCCkYqn5pqi4Le4AbCC8YY2V8LeH9XdrDjg/8D2kizh6
-	cqC86oyi0QXI5Yl1CtgR9gYLZCBiLFI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=f4V08HQVokgA9xFD0oqKvstbP2a1PHXdtABRTaBZiRY=;
+	b=XbwrQ69Gjv90KSido3T2M95UsUG7aER00yHzJprgjiINrRyLbac3LEfZ+Uy2izI1rUxmaE
+	AOvImtDGK/wJyIlDXc+SXWygXHNu6+qEerqNDJquYtN1IZar1gWCVdnH8jjsaka1NLDZfg
+	ketA7pFNv5vD22/y5M0i9jmSK5d6BQM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-372-b7NAgrmwOi6oyC7eBvjRSg-1; Tue, 20 Jan 2026 02:48:28 -0500
-X-MC-Unique: b7NAgrmwOi6oyC7eBvjRSg-1
-X-Mimecast-MFC-AGG-ID: b7NAgrmwOi6oyC7eBvjRSg_1768895308
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47ed980309aso27925905e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 23:48:28 -0800 (PST)
+ us-mta-219-Ubssi8EoMc21sFIu04OJDQ-1; Tue, 20 Jan 2026 02:51:28 -0500
+X-MC-Unique: Ubssi8EoMc21sFIu04OJDQ-1
+X-Mimecast-MFC-AGG-ID: Ubssi8EoMc21sFIu04OJDQ_1768895487
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47ee8808ffbso38207175e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 23:51:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768895307; x=1769500107;
+        d=1e100.net; s=20230601; t=1768895487; x=1769500287;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dl2oWfBwtiPo7WzVz9Y3r/pgOLtbYy6Lx+/AgLj3Y70=;
-        b=NzykO8RCYDNounaqsc5e30gELTCPryD6eLGPjmJ8FgluzqCESCDXWMqe9OmJKAewCu
-         GX2OF1/+SNb+2gnD99SddPDDpVuFMsbBffBmh9/W0FvFgV7lVLOpSi6b6xt8cn7P2G7M
-         i0Wh2jP/4cVwoTiI5BMhOh5oO98gCTEiC/UwNe7gjLU8RxXY47NUgvIjApalWFWDaFTJ
-         EcA8NLyKPh+YE1xQ8hnP+RBOLb/WJN4neu9eURm3UfHbCa/fbdw9G/4ADRBDcIEz1gnv
-         xzsGYd+p/TJYRA6piIpyVcUemMQe8duJwrZ8tBi4+nHP6BGegjbkKlIv75stJjMZdIy0
-         OZFg==
-X-Forwarded-Encrypted: i=1; AJvYcCU59NDszKdpaN8+m6IgOaNR8EHG9guKk3TtKwRnH6y/GIl6Q175dRjCqHSGXpGkMGRKUd3QwsmWRNGiMyZCo+d1zfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr/fWIXlStYDYRGPd7msfXX8bMOIyYPzT9FUDdigPtd4nE+vgv
-	sr6JMo4sKmbhg9P+qiZZEDXSQH2RqgYeq59nK7mYsEhVGRQSuyQo37tvcowbf64wLZFY5DrgfVq
-	gBAasGi6EcQaBl0BjwZ5m9/fnhlHfSXqKZvNjIkdW2YuSdKtlB6vaY88wGGYOLbuFPpoTCSzkmQ
+        bh=f4V08HQVokgA9xFD0oqKvstbP2a1PHXdtABRTaBZiRY=;
+        b=YXP0cZafPPlObIPf730IlwUaUZira9aaKLyhsED+/8Bo7zWBKyTkokFdpmHqk7OaY2
+         m7NbijvR3srk8f99DOTqxcJUe/o7Gy8PwHJTJpgo4AhrbNF3stmf7m5R4+2rIdySAWL2
+         Fy+oMyO/Xa1Cn/EmpK55+8L/YN+RCCQ/O08X5/LiYctxLaKweGXFj0or39ZdK5UrG+VE
+         X2mFl/A1JF8IbHI3eG3ZYdOwxeaMc38Ob0RtLNaiEhvSopaP/iQElOJTl4lYumi2xYqa
+         Vir4BXpVWU7+oKf5oYSTiYdPgX2zHuyeopyvyuY3KNiJZ0n/6Pr0GwYo3EgIx8/lwz9K
+         ha2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX2wpW8sYJy647NHrfwZFvWLAAK9Phhwa2cDV9KG1itDlqp8SfKsJ9V9OcARigZ4a6x8YajanMZkV7HXWojwBedSvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOli0YkxtYtwcPMn94+poIzeUifoU1zyuhVaw8FwLPuOvkoiw4
+	zC4DfrinXlNIrA7WhHpseeUC74H8moYvUYCb+F9/OqgaXqAY5J73F5fFHsc29kMG0sYKkRSe3+c
+	6EdjDn8DqJ3E++LvnoSyCJ34KxyTJl7lCl65TxXXVkUv9pG2XvpVQW/EHqpmSpMLwNIttumGycQ
 	==
-X-Gm-Gg: AY/fxX62Jeh9S9jy591vgM2ISumSzZ6G/evy9tZt1FfDi/p6hPOb8/wIP0GKLu4roHV
-	m/8HNdAvsUgsJEAmfLpAw+tqRPxmiREnH4qhELzuBORwFyc/P3hibqq5oepARU5mikz1NTPYR+K
-	wEt/sM69zf35e7PMsXUCsjiI8TBU0jsHIDzh68EdU01qkss9TKMcOXYDgQC5/n65fFQ49imSR9+
-	RdsTBrJkg3dOMLbwhu+AbXqnsHgfw90oHA3smnfS5JbiYQikVi7J4PUZTDKHQzoDPHtAsFsjAFo
-	92ErHVnlspq0jSk9DNVUuCIlKUoFDFIO24ucsjA60dyih2DyyebZY15lsPdD2ckFnepsgtk6ryo
-	isn8cj8I7VXSz/StQNUNNDMGEKuKUMmG/13TC3Yqm8+Um6i17tgASXTsx5sp+I/EvSKMWFA48MK
-	IJSzLsE7hK
-X-Received: by 2002:a05:600c:300b:b0:47e:e452:ec12 with SMTP id 5b1f17b1804b1-47f429033bdmr130927335e9.15.1768895307525;
-        Mon, 19 Jan 2026 23:48:27 -0800 (PST)
-X-Received: by 2002:a05:600c:300b:b0:47e:e452:ec12 with SMTP id 5b1f17b1804b1-47f429033bdmr130927205e9.15.1768895307114;
-        Mon, 19 Jan 2026 23:48:27 -0800 (PST)
+X-Gm-Gg: AY/fxX6vUNTkSCF1LbIU5EHvAobi303Yt8oWJdR0zh66XM3hkcE8ypOF5deBma++auz
+	qHZw8lKBMLp0G6ivJSFNndUlDN9sCPBgpwgJ/2qyVuSAuLsuxxoKxDzew52YCvVxO0dxaVykb9t
+	okMNOQi49cclfIlzFqciTl6Zu2HKIYRYZNCXOpW24ZtYe1jmiyFPgO9i6he+tmaIUKXq+xxtO/D
+	SBFhdncKNF9mtGGoveCKiodt/wItXKaURr7uAASCW0SVOHga5TD5DaOWRLzWsYqyDAE09cMoBWs
+	Q3aWTfeHnoRDDlmDKmN0875cm/RIt6Se5O4Zr4eO82cQ4yyJkYDpkiG8hYz9j+aNq10deqPtWAw
+	Qb7rG44eM40Dm6kD6060yVRV3MW9+njyM+LRWOCBu3MDwOa4y2joDMXbOhcc5iPshnIzfHgHp+i
+	bt4Ms/dF3+
+X-Received: by 2002:a05:600c:35c2:b0:480:3b26:82cc with SMTP id 5b1f17b1804b1-4803b2683c0mr47852805e9.18.1768895487160;
+        Mon, 19 Jan 2026 23:51:27 -0800 (PST)
+X-Received: by 2002:a05:600c:35c2:b0:480:3b26:82cc with SMTP id 5b1f17b1804b1-4803b2683c0mr47852605e9.18.1768895486815;
+        Mon, 19 Jan 2026 23:51:26 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356992c6f2sm27197638f8f.19.2026.01.19.23.48.26
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435699271dfsm27149313f8f.15.2026.01.19.23.51.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 23:48:26 -0800 (PST)
-Message-ID: <223e99ae6c154a189a372bb51875d3998c1f9a50.camel@redhat.com>
-Subject: Re: [PATCH 08/26] rv/rvgen: simplify boolean comparison
+        Mon, 19 Jan 2026 23:51:26 -0800 (PST)
+Message-ID: <3f4c9c640ba1b64c6a6adab779c5fd05a0189972.camel@redhat.com>
+Subject: Re: [PATCH 11/26] rv/rvgen: fix typo in generator module docstring
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Wander Lairson Costa <wander@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
  open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
  (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 08:48:25 +0100
-In-Reply-To: <20260119205601.105821-9-wander@redhat.com>
+Date: Tue, 20 Jan 2026 08:51:25 +0100
+In-Reply-To: <20260119205601.105821-12-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-9-wander@redhat.com>
+	 <20260119205601.105821-12-wander@redhat.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,62 +94,46 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yijQpRLiwh76EZ-_eSqptODt020mGy5ponfyc0lDsJE_1768895308
+X-Mimecast-MFC-PROC-ID: 30BBkV7lFB4cahaV7QWCJu8b-lh20r0xT7nWKq5K6Z4_1768895487
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
-> Replace explicit boolean comparison with truthiness test in the dot2c
-> module. The previous implementation used the redundant pattern of
-> comparing a boolean variable directly to False, which is not idiomatic
-> Python and adds unnecessary verbosity to the code.
->=20
-> Python's truthiness allows for more concise and readable boolean
-> checks. The expression "if not first" is clearer and more Pythonic
-> than "if first =3D=3D False" while maintaining identical semantics. This
-> pattern is preferred in PEP 8 and is the standard approach in the
-> Python community.
->=20
-> This change continues the ongoing code quality improvements to align
-> the codebase with modern Python best practices.
+> Fix typo in the module docstring: "Abtract" should be "Abstract".
 >=20
 > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> ---
+> =C2=A0tools/verification/rvgen/rvgen/generator.py | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/verification/rvgen/rvgen/generator.py
+> b/tools/verification/rvgen/rvgen/generator.py
+> index fc9be5f6aaa1f..ea1fa0f5d818d 100644
+> --- a/tools/verification/rvgen/rvgen/generator.py
+> +++ b/tools/verification/rvgen/rvgen/generator.py
+> @@ -3,7 +3,7 @@
+> =C2=A0#
+> =C2=A0# Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira
+> <bristot@kernel.org>
+> =C2=A0#
+> -# Abtract class for generating kernel runtime verification monitors from
+> specification file
+> +# Abstract class for generating kernel runtime verification monitors fro=
+m
+> specification file
+> =C2=A0
+> =C2=A0import platform
+> =C2=A0import os
 
-I'm starting to wonder if those simple cleanup patches with a tiny change a=
-nd 3
-paragraph of commit message aren't a bit too noisy. We may put at least the
-simple ones together.
-
-Other than that:
+I believe you can fix typos together in the same patch (i.e. merge 10/26 an=
+d
+11/26).
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
+to both.
+
 Thanks,
 Gabriele
-
-> ---
-> =C2=A0tools/verification/rvgen/rvgen/dot2c.py | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/verification/rvgen/rvgen/dot2c.py
-> b/tools/verification/rvgen/rvgen/dot2c.py
-> index c97bb9466af6d..fa9e9ae16640f 100644
-> --- a/tools/verification/rvgen/rvgen/dot2c.py
-> +++ b/tools/verification/rvgen/rvgen/dot2c.py
-> @@ -202,7 +202,7 @@ class Dot2c(Automata):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 line =3D ""
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 first =3D True
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for state in self.states=
-:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if fi=
-rst =3D=3D False:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if no=
-t first:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 line =3D line + ', '
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-else:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 first =3D False
 
