@@ -1,82 +1,82 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BDF3BBA11
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 08:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BC1346786
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 08:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768896068; cv=none; b=bgrqPmkdsWhYDTIioLP9JZt4DKeGQ6y8ecROUzeVFimcTKw20VW0ZepSjZWMKCT1efJ1uYPiL5hEdnB6EWSzBcP5a5IF2fshy3ecTFtlOk+XdTCNpmhqB8+wgR2eimP6GPLcM3iH+BfK4zPS+upnKy7Ct+sGktexR3A2bpJD52I=
+	t=1768896414; cv=none; b=GAbP/Ouik9NUoT/rKjK4n1Ti0TnKghpRYTiLrZiDrJKwKlSuag0ujl0YUagS0fnuVmA3VVfE8Yo1Vb7CzjUzxsy+Qj1oVeNNxPadl7zdfrt3c1NSZtIC0GqDh9h/l+KnCf1cah3ZY/VQcOGOcVTXlFx0AJUMvV5Rxf+zSmlveRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768896068; c=relaxed/simple;
-	bh=xTRa0o3xOsfjH2gIPBCSvZ2S1Pumgzmfp//GVvSXTIQ=;
+	s=arc-20240116; t=1768896414; c=relaxed/simple;
+	bh=8w5tcm4WLnxiXrxrgHIZ8ff3Wu3v5gxtpnsuOPkgZ3Y=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bpTlJsoXJsBs0s6PJOljowv/N5oHDP2aco9AuLpslngzsDUEhpnx+4kfm6MzNK0E0rB0kSXJKmLYTuZJWyNuMPCC1yGU2a1QtAVAiBpHMeUn4nxnXdOo5jQrUbWjaT3YCdKQXkXYqWgXQGFxm6zE1vEaUFAER9KT2K8JsnZoIgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=en22/rg1; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=Xy5qgbiYyJfnzX0+jHfjap8+HBYv4cUJNUQ8KlFXLkjnZCF1cZcLlELjSStoBrigHWJ5/3LJewDxMPs9n1w0veyu9KngQ1Yn/n0T2iwyayrW65fgbrEO0/QV3F35IvaAHJfQbKEPF8C8fq6PICJqAAR6ebqFcCXqsKqr3UiyvqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ONtZhOFc; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="en22/rg1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ONtZhOFc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768896065;
+	s=mimecast20190719; t=1768896411;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xTRa0o3xOsfjH2gIPBCSvZ2S1Pumgzmfp//GVvSXTIQ=;
-	b=en22/rg1ky3Lo3E3Cw6AsuOia/lvkhQCqYGFqzKd271hE5QLa1nnfyEBLOZltVkLasmop+
-	8y5Tu//MaZg4ex1SEN45OLPaHgZ3ooTiwGm1ogvhvanIjKeJtyRrDwsZ97D3Sq0ec9ZHv8
-	4JYXPS7IRFdlHrlgRIeOZ+WdH/NFDS0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8w5tcm4WLnxiXrxrgHIZ8ff3Wu3v5gxtpnsuOPkgZ3Y=;
+	b=ONtZhOFcfWFMJ5CMh67OnKHJFHWvz7wnIREMetw4+hVkIbWBzk2eqP1vc70N8aMB0poQt4
+	3teTrw1rxiY+sXYMhRia2bymoXDsOvOLB1ek7GWPYdVNGwObOsSciVb54Kv2S9de8lqnlV
+	avYn3XJLU9UJjVWt+BUton9/w/4q530=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-64-QV_yDgsYPVmFXH6Tc-hbUw-1; Tue, 20 Jan 2026 03:01:04 -0500
-X-MC-Unique: QV_yDgsYPVmFXH6Tc-hbUw-1
-X-Mimecast-MFC-AGG-ID: QV_yDgsYPVmFXH6Tc-hbUw_1768896063
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4801e2e3532so20055925e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 00:01:03 -0800 (PST)
+ us-mta-564-1tnPWhjzNY6s4-Dtvx3w3w-1; Tue, 20 Jan 2026 03:06:50 -0500
+X-MC-Unique: 1tnPWhjzNY6s4-Dtvx3w3w-1
+X-Mimecast-MFC-AGG-ID: 1tnPWhjzNY6s4-Dtvx3w3w_1768896409
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-430fc83f58dso3390425f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 00:06:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768896063; x=1769500863;
+        d=1e100.net; s=20230601; t=1768896409; x=1769501209;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xTRa0o3xOsfjH2gIPBCSvZ2S1Pumgzmfp//GVvSXTIQ=;
-        b=iVSyAx/pIplEGe/xa2GvHvQFBQIUF+AB2ShTz3L4j3Jw/K5vTpgh+fWJAMN2BhOy4J
-         4yipxpFAhVHRs/MPGZn5UIAHFehG0pAkLoe7nCFBREqYh2ZgT+Cp6p1oguw1qHuZA5nd
-         QIDnf6LuF2liqBuLPAkFRivbDE6Zl5lHFdnCUSyWfFP47TfyXPkSgwD8j0cNrBFwnOHs
-         BNC1qYld3qo4HePiMShd2oHYng6sU/HWIpT+uiLZBaGUMvUgjinnHA6znF5SVGJWygNA
-         9rnqVbGmmNfolR52knc9hXrRt6BiT7VSKftauf8TIkxJ3h2S9e8vPj5Yx/Lvj17CY1qn
-         qCRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWL+vRAIEwBXdGgDqJA+rVuINjna8Kt8A/KIvkO+1tjUGOseKK0p7+IPucspDsKdm2RZHZC1Ww4pe+4j/uXWAMmH8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqdeqbX/6oPYYEKuW9O2ppXRbMaK0UqIflktHWum+vL80klV9q
-	ECqynxZ8faybMGDCXIrhMkTnafLNASuFJvDyd43+rpWocWq4wFR0Mkc9mPYRYlvwlkOS7lpdIUs
-	HLBCJuo3wlPBLYEovtAGbrS+6JNa12QuZFYPIi5VqXsaSMchYSAQMQKg9qE6EO3IpHAi8yLSqZw
+        bh=8w5tcm4WLnxiXrxrgHIZ8ff3Wu3v5gxtpnsuOPkgZ3Y=;
+        b=W9NfvbbiZ3iwtBhGKzULFnJBk+6FQT4760dLJr++T7PAEmZ1ozBfNmhJtCIPicZBlE
+         BWgbkSBPZoniR8gEdNV8RvUZduoV+fq/aHVCZO3za+XKdfGuB+cMTUEyGczsFBeQwhxR
+         J32yfxLe+0HPv7FT/riq1wSC41KyFu1qyfAGJLECG4+24hM+Qkh9GKYkaOYOyiHCJ0CF
+         eCHyinyyeEjzHv1fipPireJpi66NrW85+KdR69d6U+yAaEgdGIErF0p2EIRuI/DfOc9k
+         u6qVu8A4p2gwiUlKZ3KYFm5nMhwAQLeJzlLRPVDePjIYuNhrgFVaEgS3O+24iocJ9uWf
+         ObBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUftofXlUA4i8Qh7CLjq+jugt6flLgL4r/byyyfu1mGNz59Je5xL6ln4G2SsmTbpjJf25iLifEQzwP1Z2XHG4Ja3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz5KQgVt66wjfc1oqToGNyBh8LA4tgB1z1sgamYyQzI7kvIsz7
+	tcoQAOfBWhrEEonkEW/KLYn4iTBKU+MOJHz0MPrqdGgH63dc7TLjdWQG+Zi1/ApW29utLVz0jJZ
+	4V5Y71G99iyeCoJmNUSNs4ABchpMzyO5nCsD7XewxEIrm/ooIChG9/IxtIBi+OHw0WlVjD3ADpw
 	==
-X-Gm-Gg: AY/fxX59QmqCFkWKAFLBusWnWQ5Rue+f+IesigLPjFwFQFcju+8hFfyVAmffPggzB95
-	HkbMP2Ld4HOADMwypvMxuZaFFsVrqbWD9uSPSYAHVILNhLBqSYXgv2iZWHkb4s9Sbryrrk+tjr7
-	63wIv2GnNCD/gQHDOt+A3hErV/WyGkGCCBewnzC88WFe/q7z6eylu1H+3b6BJP/YRLob4LSaevI
-	mRkiayrqBUr5qRr8m2+MxHJQrt4nm/As7rQC/ByEoKphb9NhO9EtFblJffKH4YaYVb2ZdP90CMD
-	jPIJf8W/iSWuOJsfLaI0jmTZvj2syrKHvJKFAoaeZefk/A0plEXQYdE4AG0otMhtjiX96IZOh3Q
-	uyF06aVgJar2ae0DF1ZL3B7dNSxIwMnvBqNvjIvGVoDgSIsMLw0JXzDg1FpkgAZn8pnP9DtP3Rq
-	QK85ZIr9eI
-X-Received: by 2002:a05:600c:8b64:b0:47a:8cce:2940 with SMTP id 5b1f17b1804b1-4801eac0f22mr163463285e9.14.1768896062835;
-        Tue, 20 Jan 2026 00:01:02 -0800 (PST)
-X-Received: by 2002:a05:600c:8b64:b0:47a:8cce:2940 with SMTP id 5b1f17b1804b1-4801eac0f22mr163462915e9.14.1768896062437;
-        Tue, 20 Jan 2026 00:01:02 -0800 (PST)
+X-Gm-Gg: AY/fxX7z8XRw7f39sia+L9fjEpnnVk3TCOfgetTBC3bSdWdpIhgR8GjIICXMQPaoiwX
+	TO2uXHws8+6PSjba5VYDQPZbNb3BThiaGMaj7B9Q2QazCDsx2ndBHFu6sh1CAqo1TgsTaw56P/n
+	lLHLr+mYF2QlIsdLQtNUHHL+1Xa6EWEY5SUYmLuKHJhKnRfNF1/6RZGkSF4O4UazJ1RyxDtXpWT
+	5IpsCXVW3flcb4zS4HgD14IBtlaoNOpTPVF1dkB/pUY2VvGRpOfjoCwg76TRIEIfmVlNWiP0va0
+	zKhI+xupzWxcXd5KSATrgszewgBdbmxepJiNuidrobwq+74AGtIwWcvltDUr5TmrHdvAJiWGlMd
+	lU4F7Il6BrRgR1At+RPPmKmZlnYi6zvlc2MXnwfCxEZlIH/uIQACfZjKsVXOlqaXKeLB4UlSiQ9
+	SsADoDFIx1
+X-Received: by 2002:a05:600c:1f8e:b0:47b:df60:8a14 with SMTP id 5b1f17b1804b1-4801e30ef39mr172534375e9.9.1768896408974;
+        Tue, 20 Jan 2026 00:06:48 -0800 (PST)
+X-Received: by 2002:a05:600c:1f8e:b0:47b:df60:8a14 with SMTP id 5b1f17b1804b1-4801e30ef39mr172534025e9.9.1768896408581;
+        Tue, 20 Jan 2026 00:06:48 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f4b2672d6sm295520805e9.14.2026.01.20.00.01.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e8c9cbcsm232707945e9.12.2026.01.20.00.06.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 00:01:02 -0800 (PST)
-Message-ID: <63e032341807f9ece73937d5e20eee9e3162fb61.camel@redhat.com>
-Subject: Re: [PATCH 14/26] rv/rvgen: remove redundant initial_state removal
+        Tue, 20 Jan 2026 00:06:48 -0800 (PST)
+Message-ID: <dafb08f254efaa7ba5703b5a0fb17f901ca5fa1c.camel@redhat.com>
+Subject: Re: [PATCH 15/26] rv/rvgen: use class constant for init marker
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Wander Lairson Costa <wander@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
  open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
  (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 09:01:01 +0100
-In-Reply-To: <20260119205601.105821-15-wander@redhat.com>
+Date: Tue, 20 Jan 2026 09:06:47 +0100
+In-Reply-To: <20260119205601.105821-16-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-15-wander@redhat.com>
+	 <20260119205601.105821-16-wander@redhat.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -94,60 +94,74 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: t1SpqwfWCpyjOfgdFpBgy961lgmAVds1tO6lMlUAG7w_1768896063
+X-Mimecast-MFC-PROC-ID: eMq9HycFFHcZ_UTRJ0eLmD44S6e3HtQA3Z8DWK96xLk_1768896409
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
-> Remove an unnecessary and incorrect list removal operation in the
-> automata state variable processing. The code attempted to remove
-> initial_state from the states list, but this element was never
-> added to the list in the first place. States with the __init_
-> prefix are explicitly excluded from the states list during the
-> parsing loop, with only the initial_state variable being set
-> from them.
-
-The initial state is not the state with __init_, but the state pointed to b=
-y
-that, the purpose of removing it after sorting and putting it back is for i=
-t to
-be the first (we may argue there are better ways to do that, but it works).
-
-After this change, the initial state is duplicated..
-I think we should just drop this.
-
-Thanks,
-Gabriele
-
+> Replace hardcoded string literal and magic number with a class
+> constant for the initial state marker in DOT file parsing. The
+> previous implementation used the magic string "__init_" directly
+> in the code along with a hardcoded length of 7 for substring
+> extraction, which made the code less maintainable and harder to
+> understand.
 >=20
-> Calling remove() on an element that does not exist in a list
-> raises a ValueError. This code would have failed during execution
-> when processing any DOT file containing an initial state marker.
-> The subsequent insert operation at index 0 correctly adds the
-> initial_state to the beginning of the states list, making the
-> removal operation both incorrect and redundant.
+> This change introduces a class constant init_marker to serve as
+> a single source of truth for the initial state prefix. The code
+> now uses startswith() for clearer intent and calculates the
+> substring position dynamically using len(), eliminating the magic
+> number. If the marker value needs to change in the future, only
+> the constant definition requires updating rather than multiple
+> locations in the code.
 >=20
+> The refactoring improves code readability and maintainability
+> while preserving the exact same runtime behavior.
+>=20
+
+Looks good, thanks.
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
 > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 > ---
-> =C2=A0tools/verification/rvgen/rvgen/automata.py | 1 -
-> =C2=A01 file changed, 1 deletion(-)
+> =C2=A0tools/verification/rvgen/rvgen/automata.py | 5 +++--
+> =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
 >=20
 > diff --git a/tools/verification/rvgen/rvgen/automata.py
 > b/tools/verification/rvgen/rvgen/automata.py
-> index 7841a6e70bad2..b302af3e5133e 100644
+> index b302af3e5133e..8548265955570 100644
 > --- a/tools/verification/rvgen/rvgen/automata.py
 > +++ b/tools/verification/rvgen/rvgen/automata.py
-> @@ -111,7 +111,6 @@ class Automata:
+> @@ -25,6 +25,7 @@ class Automata:
+> =C2=A0=C2=A0=C2=A0=C2=A0 """
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 invalid_state_str =3D "INVALID_STATE"
+> +=C2=A0=C2=A0=C2=A0 init_marker =3D "__init_"
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 def __init__(self, file_path, model_name=3DNone)=
+:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.__dot_path =3D file=
+_path
+> @@ -96,8 +97,8 @@ class Automata:
+> =C2=A0
 > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-cursor +=3D 1
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states =3D sorted(set(st=
-ates))
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.remove(initial_state)
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Insert the initial sta=
-te at the beginning of the states
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.insert(0, initial=
-_state)
+#=C2=A0 "enabled_fired"}; -> enabled_fired
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+state =3D raw_state.replace('"', '').replace('};', '').replace(',',
+> '_')
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if st=
+ate[0:7] =3D=3D "__init_":
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 initial_state =3D state[7:]
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if st=
+ate.startswith(self.init_marker):
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 initial_state =3D state[len(self.init_marker):]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+else:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 states.append(state)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 if "doublecircle" in self.__dot_lines[cursor]:
 
