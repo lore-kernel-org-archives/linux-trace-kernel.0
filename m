@@ -1,213 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADBA425CDE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 11:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5F4423A8E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 12:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768910005; cv=none; b=AGpOF1Jk43I8C/ZJFyfqxq/vjNB4bv8o7HSnUxNEMs9VXV4EfkEA3C3VmwNDM0tlwgaeT3mUDvh+GySIvhxXZMzTNhe3MzEm3j0ApW+XJeMd5oX4GdmIL9qNhJrE/F7hac8NRJO+Sn4DCBw6CiicYgIql1Wh1Y7k/Fm7+pFt+Js=
+	t=1768910748; cv=none; b=FxdcMXjh63g9bUYHporJxtaRq+7JfoDoW09uzAy3kmZXafrafa/EhQAmz16f1lpJiiLvTDTY0g9gbQ1PTr94/s4USvrZzVjeINqnAyHd67GPhIUjiMk/FTCRI1FcdAJytrTteDKbgnhOkcZZI00iRANMwxOqU8B8RS5AB7tRaiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768910005; c=relaxed/simple;
-	bh=oAYRaP0sviwwsubVjuEkI89QEv9WKEzqgtZNZwsV8jQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SIxZ2d2HVqjE7IXesLQDK6nkPsTj9twpGs/iKO9OY6K5FkuuM73asvUtAgESHAwroO7Ak5ugqG4vrfRDK9POHwlTDk6ZLI74wALzO+k7H4lFO6uvIOnNcECmgC+exci3S6U8fYl1QKhKFC7FMBTrX7xQS+6iYENlgqJ0inqlqbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i/gl8S9u; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1768910748; c=relaxed/simple;
+	bh=4i84Zr5QJmHYBeYGEX++9UTt0UzmWuKcdGfkvw5wjLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEJUZGOAELNF+lwnTkCitntIOWUHKRQLJQU0GVR1UMzTSCtMzZFNqVWaOOl08uuB8jZld17TOKwaB98QCNLkWdqOSOnFNslvfVnLi2YGKEc8lSi3pDDCooYTbF56UXugGRUOWtZTI725mJ1cQ7ll2/i1zn2r6B0X47chmVUgTj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G/HvJGgo; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/gl8S9u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G/HvJGgo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768909999;
+	s=mimecast20190719; t=1768910745;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=oAYRaP0sviwwsubVjuEkI89QEv9WKEzqgtZNZwsV8jQ=;
-	b=i/gl8S9ur2JiVFzcY667HdhYJnd96Tk9PXQq6GoBM7NmO4UrfvBVCAiiU0siHhkqhtg1uI
-	javMG50DkRitnb0tPgEzwLLeZXTxyvKoPViF+WuA/toCQ2mg1je4a5BV4TbzrtgQCUk4Dg
-	7DxpyOX56zkBw8tc13P06uTG9Qd0Hcc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-pvI1M7-CM16qhZAfyV2adQ-1; Tue, 20 Jan 2026 06:53:18 -0500
-X-MC-Unique: pvI1M7-CM16qhZAfyV2adQ-1
-X-Mimecast-MFC-AGG-ID: pvI1M7-CM16qhZAfyV2adQ_1768909997
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-4358f90fe8dso370840f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 03:53:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768909997; x=1769514797;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oAYRaP0sviwwsubVjuEkI89QEv9WKEzqgtZNZwsV8jQ=;
-        b=I6Zs+lttEz7ff1PIWUp5Qzm6nIjwZKercHQ7lozBpSQ7jHD23xthLC4aYzq8+dVjuI
-         BEnNrbbZuiDHbZkY6Q3SKLPgFI9L+xhKgx0GhiEhZX+4O5YQR9pEqFMlej5PmAumr6u9
-         154W0PFDQaqDez7soY/Y72sHhZyQF1zgrGfpDkREeSPYqQ7k+BlWAVxLMTwhlSB0viLu
-         D1JpgXf3+3B/Mf1ioUcJ8lww71BZalXWNo44DVnrY/19Yz/ZjoUibau7T72cTYYsje1b
-         BJcwz647O1aqnYpC9RiOkFS5FgenAb4KbakabcxddaQxY02NsTht25uMNYifUWw3ILxp
-         iNkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWM85RQrmQ4eWdVvkoHM0lZO4QTeC3zlSQ1IYqu3Ujf3kun/tu/V29MatLv+DlSYr7DTrKLqrtGi6mhmz8PJfWqD6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6OEy12+27+wO26Zr1da9Vy20AwP4mh6zkESetF7kI4Tbj9Qhi
-	UTRtR8hen69uNu3b5p26xbKjYRhSltieX9s6vAb/QGy7M9uLJSiuK0pZ52M5TsuwbPhRtRvb6VK
-	NiFDWm9Pg+ZDplA/zJ95oxRsF6Ogq1U7zu3hH2X8za/DSSdzwvUQfattNg+V0+22fKLTZNZ1pzQ
-	==
-X-Gm-Gg: AZuq6aLfk398p08slyTGsqiCG03Sz5mqydT84+3hnKMO6Kh08acL7sOpv/Ti91rfijP
-	Mu87wNokkW20xKCx8Oleq3juzYpybPSDr41Y/vzS0FGxI8hQn6L+2Gays3Fg2XFa1nzXBcaUVEZ
-	1LP/PAHDw6yjD+2T8vsMPbdaMsFgFJV0nsd8Om79e7YH77iS16IOk6uKtwzELVykAM2IPBLLD4x
-	UciLWQEq0AlN+UyEbepxWtkrc7g9ZwAE9tozDontX/Q94UTlhWiR5LWNqtCnVotSr5R/0mwN7VQ
-	8aHIMieKAy157tpaKcy1xKHFykx7H3Dh+F97BcNZZNjneEnGWVzB4WUxgXRWFxOoNfzwgTBJ2/l
-	Xk29TcMjHmRWceJjR+jX5f08WjocxaB/qYIuB/YscYkR4FFTpZSA+8bRgDVP9VXPGdnOyUnOLOm
-	go2oav0SGD
-X-Received: by 2002:a5d:648e:0:b0:432:d9ef:3bea with SMTP id ffacd0b85a97d-4356953f9bbmr16047282f8f.5.1768909997189;
-        Tue, 20 Jan 2026 03:53:17 -0800 (PST)
-X-Received: by 2002:a5d:648e:0:b0:432:d9ef:3bea with SMTP id ffacd0b85a97d-4356953f9bbmr16047257f8f.5.1768909996761;
-        Tue, 20 Jan 2026 03:53:16 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356996dad0sm28893935f8f.27.2026.01.20.03.53.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 03:53:16 -0800 (PST)
-Message-ID: <d202a832314e45832591ce42b6f168cb977060f2.camel@redhat.com>
-Subject: Re: [PATCH 16/26] rv/rvgen: fix unbound initial_state variable
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
+	 in-reply-to:in-reply-to:references:references;
+	bh=crF2Sn134nFLgpNgCxCLXGTh7gt6kUTztOUgmfIrZvY=;
+	b=G/HvJGgoA6I4nJb495Yu3jHMHEMHaP9JJoVAWG7gSNnZVIOkYtrFzfoZnDHKFOCQRPDEet
+	9QlekG8vEifTv1uMYdi9YVqC3Y+4KtiB5vaQwgTp9nv5qvCWimbLZ8MYh/1PXISN+wZfw/
+	BbUquEiUeSzzneQ+Xz6g4QJld9A7UzU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-121--YUJEtLENue94KXtPrLLVA-1; Tue,
+ 20 Jan 2026 07:05:42 -0500
+X-MC-Unique: -YUJEtLENue94KXtPrLLVA-1
+X-Mimecast-MFC-AGG-ID: -YUJEtLENue94KXtPrLLVA_1768910741
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E43F119560A1;
+	Tue, 20 Jan 2026 12:05:40 +0000 (UTC)
+Received: from fedora (unknown [10.22.80.33])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4CBC230002DA;
+	Tue, 20 Jan 2026 12:05:38 +0000 (UTC)
+Date: Tue, 20 Jan 2026 09:05:36 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 12:53:15 +0100
-In-Reply-To: <aW9o_lSOvSdME6MP@fedora>
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:RUNTIME VERIFICATION (RV)" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/26] rv/rvgen: remove redundant initial_state removal
+Message-ID: <aW9qSrJ_7f9FGeqM@fedora>
 References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-17-wander@redhat.com>
-	 <7d37e29989e08e62a419f2ae8000ed7ec1913713.camel@redhat.com>
-	 <aW9o_lSOvSdME6MP@fedora>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+ <20260119205601.105821-15-wander@redhat.com>
+ <63e032341807f9ece73937d5e20eee9e3162fb61.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: sZ_8DbTaeT7183n2hE2UJ0DmxIhV1YmGAtUM3Cf1Fbo_1768909997
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63e032341807f9ece73937d5e20eee9e3162fb61.camel@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-T24gVHVlLCAyMDI2LTAxLTIwIGF0IDA4OjQyIC0wMzAwLCBXYW5kZXIgTGFpcnNvbiBDb3N0YSB3
-cm90ZToKPiBPbiBUdWUsIEphbiAyMCwgMjAyNiBhdCAwOToyMTowMUFNICswMTAwLCBHYWJyaWVs
-ZSBNb25hY28gd3JvdGU6Cj4gCj4gPiAKPiA+IEkgYmVsaWV2ZSB0aGVzZSBuZXdsaW5lcyB3ZXJl
-IGFkZGVkIGF1dG9tYXRpY2FsbHkgYnkgc29tZSB0b29scywgbm90IHN1cmUgaWYKPiA+IHdlCj4g
-PiByZWFsbHkgd2FudCB0aGVtIGJ1dCB0aGV5IGRvbid0IGJlbG9uZyBpbiB0aGlzIHBhdGNoIChz
-aW5jZSAxLzI2IGFkZGVkIHRoaXMKPiA+IGNsYXNzKS4KPiA+IAo+IFRoZXJlIGFyZSBweXRob24g
-Zm9ybWF0dGluZyB0b29scyB0aGF0IHB1dCAyIGxpbmVzIGFmdGVyIGEgdHlwZQo+IGRlZmluaXRp
-b24uIEFueXdheSwgSSBjYW4gcmVtb3ZlIGl0IGluIHYyLgoKSWYgdGhhdCdzIGNvbW1vbiBwcmFj
-dGljZSBJJ20gZmluZSBrZWVwaW5nIGl0LCBJIGp1c3Qgd291bGQgY3JlYXRlIHRoaXMgY2xhc3MK
-ZGlyZWN0bHkgd2l0aCB0aGUgbmV3bGluZXMgc2VwYXJhdG9ycyBpbiAxLzI2IGluc3RlYWQgb2Yg
-YWRkaW5nIHRoZXNlIGxpbmVzCmxhdGVyIGluIHRoZSBzYW1lIHNlcmllcy4gSnVzdCB0byByZWR1
-Y2UgdGhlIG5vaXNlLgoKPiAKPiA+ID4gwqBjbGFzcyBBdXRvbWF0YToKPiA+ID4gwqDCoMKgwqAg
-IiIiQXV0b21hdGEgY2xhc3M6IFJlYWRzIGEgZG90IGZpbGUgYW5kIHBhcnNlcyBpdCBhcyBhbiBh
-dXRvbWF0YS4KPiA+ID4gwqAKPiA+ID4gQEAgLTMxLDcgKzMzLDkgQEAgY2xhc3MgQXV0b21hdGE6
-Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5fX2RvdF9wYXRoID0gZmlsZV9wYXRoCj4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqAgc2VsZi5uYW1lID0gbW9kZWxfbmFtZSBvciBzZWxmLl9fZ2V0X21v
-ZGVsX25hbWUoKQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuX19kb3RfbGluZXMgPSBzZWxm
-Ll9fb3Blbl9kb3QoKQo+ID4gPiAtwqDCoMKgwqDCoMKgwqAgc2VsZi5zdGF0ZXMsIHNlbGYuaW5p
-dGlhbF9zdGF0ZSwgc2VsZi5maW5hbF9zdGF0ZXMgPQo+ID4gPiBzZWxmLl9fZ2V0X3N0YXRlX3Zh
-cmlhYmxlcygpCj4gPiA+ICvCoMKgwqDCoMKgwqDCoCBzZWxmLnN0YXRlcywgc2VsZi5pbml0aWFs
-X3N0YXRlLCBzZWxmLmZpbmFsX3N0YXRlcyA9ICgKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgc2VsZi5fX2dldF9zdGF0ZV92YXJpYWJsZXMoKQo+ID4gPiArwqDCoMKgwqDCoMKgwqAgKQo+
-ID4gCj4gPiBUaGVyZSBpcyBubyBzdHJpY3QgODAgY2hhcmFjdGVyIGxpbWl0IGZvciBweXRob24g
-Y29kZSBhbmQgSSBwZXJzb25hbGx5IGZpbmQKPiA+IHRoaXMKPiA+IGxlc3MgcmVhZGFibGUuIElz
-IHRoaXMgYWdhaW4gd2hhdCB0aGUgdG9vbCBzdWdnZXN0ZWQ/Cj4gPiAKPiAKPiBJbiBnZW5lcmFs
-LCAxMDAgbGluZXMgaXMgYXNzdW1lZCB0aGUgdG8gYSBnb29kIGxpbWl0LiBBbnl3YXksIHRoaXMg
-aXMKPiBtaW5vciBhbmQgSSBjYW4gcmVtb3ZlIHRoZSBjaGFuZ2UgaW4gdjIgaWYgZGVzaXJlZC4K
-ClllYWggMTAwIGlzIHByb2JhYmx5IGFsc28gd2hhdCBjaGVja3BhdGNoLnBsIHVzZXMgKGFsdGhv
-dWdoIEkgdGhpbmsgaXQgc2tpcHMKcHl0aG9uIGZpbGVzKSwgc2luY2UgdGhpcyBpcyBiZWxvdyA5
-MCBjb2x1bW5zLCBJIHdvdWxkbid0IHRvdWNoIGl0LgoKVGhhbmtzLApHYWJyaWVsZQoKPiAKPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmV2ZW50cyA9IHNlbGYuX19nZXRfZXZlbnRfdmFyaWFi
-bGVzKCkKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoCBzZWxmLmZ1bmN0aW9uID0gc2VsZi5fX2NyZWF0
-ZV9tYXRyaXgoKQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgIHNlbGYuZXZlbnRzX3N0YXJ0LCBzZWxm
-LmV2ZW50c19zdGFydF9ydW4gPQo+ID4gPiBzZWxmLl9fc3RvcmVfaW5pdF9ldmVudHMoKQo+ID4g
-PiBAQCAtODYsNiArOTAsNyBAQCBjbGFzcyBBdXRvbWF0YToKPiA+ID4gwqDCoMKgwqDCoMKgwqDC
-oCAjIHdhaXQgZm9yIG5vZGUgZGVjbGFyYXRpb24KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoCBzdGF0
-ZXMgPSBbXQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgIGZpbmFsX3N0YXRlcyA9IFtdCj4gPiA+ICvC
-oMKgwqDCoMKgwqDCoCBpbml0aWFsX3N0YXRlID0gTm9uZQo+ID4gPiDCoAo+ID4gPiDCoMKgwqDC
-oMKgwqDCoMKgIGhhc19maW5hbF9zdGF0ZXMgPSBGYWxzZQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKg
-IGN1cnNvciA9IHNlbGYuX19nZXRfY3Vyc29yX2JlZ2luX3N0YXRlcygpCj4gPiA+IEBAIC05Niw5
-ICsxMDEsOSBAQCBjbGFzcyBBdXRvbWF0YToKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJhd19zdGF0ZSA9IGxpbmVbLTFdCj4gPiA+IMKgCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCAjwqAgImVuYWJsZWRfZmlyZWQifTsgLT4gZW5hYmxlZF9maXJlZAo+ID4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBzdGF0ZSA9IHJhd19zdGF0ZS5yZXBsYWNlKCciJywgJycpLnJlcGxh
-Y2UoJ307JywKPiA+ID4gJycpLnJlcGxhY2UoJywnLAo+ID4gPiAnXycpCj4gPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHN0YXRlID0gcmF3X3N0YXRlLnJlcGxhY2UoJyInLCAiIikucmVwbGFj
-ZSgifTsiLAo+ID4gPiAiIikucmVwbGFjZSgiLCIsCj4gPiA+ICJfIikKPiA+IAo+ID4gT2sgdGhp
-cyBjaGFuZ2UgaXMgZ29vZC4KPiA+IAo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYg
-c3RhdGUuc3RhcnRzd2l0aChzZWxmLmluaXRfbWFya2VyKToKPiA+ID4gLcKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBpbml0aWFsX3N0YXRlID0gc3RhdGVbbGVuKHNlbGYuaW5pdF9tYXJr
-ZXIpOl0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpbml0aWFsX3N0YXRl
-ID0gc3RhdGVbbGVuKHNlbGYuaW5pdF9tYXJrZXIpIDpdCj4gPiAKPiA+IFlvdSBmaXhlZCBzcGFj
-aW5nIGluIDEyLzI2LiBXZSBjb3VsZCBlaXRoZXIga2VlcCBtb3ZlIHRoaXMgY2hhbmdlIHRoZXJl
-IG9yCj4gPiBqdXN0Cj4gPiBtZXJnZSB0aGF0IHBhdGNoIHdpdGggb3RoZXJzIHRvdWNoaW5nIHRo
-ZSBzYW1lIGZpbGVzLgo+ID4gCj4gCj4gTnAsIEkgY2FuIG1vdmUgdGhpcyBjaGFuZ2UgdG8gdGhl
-cmUuCj4gCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+ID4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdGF0ZXMuYXBwZW5kKHN0YXRlKQo+ID4gPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAiZG91YmxlY2lyY2xlIiBpbiBzZWxmLl9f
-ZG90X2xpbmVzW2N1cnNvcl06Cj4gPiA+IEBAIC0xMTEsNiArMTE2LDkgQEAgY2xhc3MgQXV0b21h
-dGE6Cj4gPiA+IMKgCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjdXJzb3IgKz0gMQo+
-ID4gPiDCoAo+ID4gPiArwqDCoMKgwqDCoMKgwqAgaWYgaW5pdGlhbF9zdGF0ZSBpcyBOb25lOgo+
-ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0YUVycm9yKCJUaGUgYXV0
-b21hdG9uIGRvZXNuJ3QgaGF2ZSBhIGluaXRpYWwKPiA+ID4gc3RhdGUiKQo+ID4gPiArCj4gPiAK
-PiA+IFllYWggdGhhdCdzIG5lZWRlZC4KPiA+IAo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgIHN0YXRl
-cyA9IHNvcnRlZChzZXQoc3RhdGVzKSkKPiA+ID4gwqAKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoCAj
-IEluc2VydCB0aGUgaW5pdGlhbCBzdGF0ZSBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBzdGF0ZXMK
-PiA+ID4gQEAgLTEzMiw3ICsxNDAsNyBAQCBjbGFzcyBBdXRvbWF0YToKPiA+ID4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgICPCoCAtLS0tLS0tLS0tLS0gZXZlbnQgaXMgaGVyZSAtLS0tLS0tLS0t
-LS1eXl5eXgo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgc2VsZi5fX2RvdF9saW5l
-c1tjdXJzb3JdLnNwbGl0KClbMV0gPT0gIi0+IjoKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgbGluZSA9IHNlbGYuX19kb3RfbGluZXNbY3Vyc29yXS5zcGxpdCgpCj4gPiA+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXZlbnQgPSBsaW5lWy0yXS5yZXBsYWNl
-KCciJywgJycpCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXZlbnQgPSBs
-aW5lWy0yXS5yZXBsYWNlKCciJywgIiIpCj4gPiA+IMKgCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgICMgd2hlbiBhIHRyYW5zaXRpb24gaGFzIG1vcmUgdGhhbiBvbmUgbGFi
-ZWxzLCB0aGV5IGFyZQo+ID4gPiBsaWtlCj4gPiA+IHRoaXMKPiA+ID4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgIyAibG9jYWxfaXJxX2VuYWJsZVxuaHdfbG9jYWxfaXJxX2VuYWJs
-ZV9uIgo+ID4gPiBAQCAtMTYyLDcgKzE3MCw5IEBAIGNsYXNzIEF1dG9tYXRhOgo+ID4gPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgbnJfc3RhdGUgKz0gMQo+ID4gPiDCoAo+ID4gPiDCoMKgwqDC
-oMKgwqDCoMKgICMgZGVjbGFyZSB0aGUgbWF0cml4Li4uLgo+ID4gPiAtwqDCoMKgwqDCoMKgwqAg
-bWF0cml4ID0gW1tzZWxmLmludmFsaWRfc3RhdGVfc3RyIGZvciB4IGluIHJhbmdlKG5yX2V2ZW50
-KV0gZm9yIHkKPiA+ID4gaW4KPiA+ID4gcmFuZ2UobnJfc3RhdGUpXQo+ID4gPiArwqDCoMKgwqDC
-oMKgwqAgbWF0cml4ID0gWwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbc2VsZi5pbnZh
-bGlkX3N0YXRlX3N0ciBmb3IgeCBpbiByYW5nZShucl9ldmVudCldIGZvciB5IGluCj4gPiA+IHJh
-bmdlKG5yX3N0YXRlKQo+ID4gPiArwqDCoMKgwqDCoMKgwqAgXQo+ID4gPiDCoAo+ID4gPiDCoMKg
-wqDCoMKgwqDCoMKgICMgYW5kIHdlIGFyZSBiYWNrISBMZXQncyBmaWxsIHRoZSBtYXRyaXgKPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoCBjdXJzb3IgPSBzZWxmLl9fZ2V0X2N1cnNvcl9iZWdpbl9ldmVu
-dHMoKQo+ID4gPiBAQCAtMTcwLDkgKzE4MCw5IEBAIGNsYXNzIEF1dG9tYXRhOgo+ID4gPiDCoMKg
-wqDCoMKgwqDCoMKgIHdoaWxlIHNlbGYuX19kb3RfbGluZXNbY3Vyc29yXS5sc3RyaXAoKVswXSA9
-PSAnIic6Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBzZWxmLl9fZG90X2xpbmVz
-W2N1cnNvcl0uc3BsaXQoKVsxXSA9PSAiLT4iOgo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBsaW5lID0gc2VsZi5fX2RvdF9saW5lc1tjdXJzb3JdLnNwbGl0KCkKPiA+ID4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvcmlnaW5fc3RhdGUgPSBsaW5lWzBdLnJl
-cGxhY2UoJyInLCAnJykucmVwbGFjZSgnLCcsICdfJykKPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBkZXN0X3N0YXRlID0gbGluZVsyXS5yZXBsYWNlKCciJywgJycpLnJlcGxh
-Y2UoJywnLCAnXycpCj4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcG9zc2li
-bGVfZXZlbnRzID0gbGluZVstMl0ucmVwbGFjZSgnIicsCj4gPiA+ICcnKS5yZXBsYWNlKCJcXG4i
-LCAiCj4gPiA+ICIpCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgb3JpZ2lu
-X3N0YXRlID0gbGluZVswXS5yZXBsYWNlKCciJywgIiIpLnJlcGxhY2UoIiwiLCAiXyIpCj4gPiA+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVzdF9zdGF0ZSA9IGxpbmVbMl0ucmVw
-bGFjZSgnIicsICIiKS5yZXBsYWNlKCIsIiwgIl8iKQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHBvc3NpYmxlX2V2ZW50cyA9IGxpbmVbLTJdLnJlcGxhY2UoJyInLAo+ID4g
-PiAiIikucmVwbGFjZSgiXFxuIiwgIgo+ID4gPiAiKQo+ID4gCj4gPiBBbGwgaW4gYWxsIGxvb2tz
-IGdvb2QsIHRoYW5rcy4KPiA+IAo+ID4gUmV2aWV3ZWQtYnk6IEdhYnJpZWxlIE1vbmFjbyA8Z21v
-bmFjb0ByZWRoYXQuY29tPgo+ID4gCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGZvciBldmVudCBpbiBwb3NzaWJsZV9ldmVudHMuc3BsaXQoKToKPiA+ID4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtYXRyaXhbc3RhdGVzX2RpY3Rbb3JpZ2lu
-X3N0YXRlXV1bZXZlbnRzX2RpY3RbZXZlbnRdXQo+ID4gPiA9Cj4gPiA+IGRlc3Rfc3RhdGUKPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGN1cnNvciArPSAxCg==
+On Tue, Jan 20, 2026 at 09:01:01AM +0100, Gabriele Monaco wrote:
+> On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
+> > Remove an unnecessary and incorrect list removal operation in the
+> > automata state variable processing. The code attempted to remove
+> > initial_state from the states list, but this element was never
+> > added to the list in the first place. States with the __init_
+> > prefix are explicitly excluded from the states list during the
+> > parsing loop, with only the initial_state variable being set
+> > from them.
+> 
+> The initial state is not the state with __init_, but the state pointed to by
+> that, the purpose of removing it after sorting and putting it back is for it to
+> be the first (we may argue there are better ways to do that, but it works).
+> 
+> After this change, the initial state is duplicated..
+> I think we should just drop this.
+
+Ah, now I understood the reasoning, thanks. I will drop the patch.
+
+> 
+> Thanks,
+> Gabriele
+> 
+> > 
+> > Calling remove() on an element that does not exist in a list
+> > raises a ValueError. This code would have failed during execution
+> > when processing any DOT file containing an initial state marker.
+> > The subsequent insert operation at index 0 correctly adds the
+> > initial_state to the beginning of the states list, making the
+> > removal operation both incorrect and redundant.
+> > 
+> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> > ---
+> >  tools/verification/rvgen/rvgen/automata.py | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/tools/verification/rvgen/rvgen/automata.py
+> > b/tools/verification/rvgen/rvgen/automata.py
+> > index 7841a6e70bad2..b302af3e5133e 100644
+> > --- a/tools/verification/rvgen/rvgen/automata.py
+> > +++ b/tools/verification/rvgen/rvgen/automata.py
+> > @@ -111,7 +111,6 @@ class Automata:
+> >              cursor += 1
+> >  
+> >          states = sorted(set(states))
+> > -        states.remove(initial_state)
+> >  
+> >          # Insert the initial state at the beginning of the states
+> >          states.insert(0, initial_state)
+> 
 
