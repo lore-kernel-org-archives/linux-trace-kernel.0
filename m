@@ -1,147 +1,126 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87BA33121B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 03:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093333314DE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 03:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768880266; cv=none; b=tzpUFvhMKdynrz/ZhaWwC8Oj15HScsOZn+ABR06FLUU5fAtFXqOXQEw6TZTW5H54ckfMmRMu4BnDiiL5tPrekhzJiIaO0K+LbwsM5tWhf5/dWy2glPgYXagAdAmZzne5GhbDRZQOCq9nJJBLPJYINC9yjmwpFhoEjbtZpXe4T4c=
+	t=1768880397; cv=none; b=Yis9Zs4A/rzgcZhtl74EWBK/zAWjb5bEsIjjyZgMejy+HhW45EgTljAAylufm3l7gPAYvneJqB3074ChH+G0+AYmQXvwoXaLg1MzK+za2NTOdwhksxtvn/RxJMnOCTrB3naIDGySQad3kv4jhsX7vvX0vA03Rc/vz5EhWQQaJQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768880266; c=relaxed/simple;
-	bh=oVfpMv215nFVlCyqVOAEsiwuEnayAo6kct65sZY0bVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hnin2zBDA9xaya5fYBIGxCn4jn59NdSGMub+8wWoNhBLNpdaVVVfJtnqMx6YkU5ktixNEX9jtkAEIL8eeWolzSra2wLZtRA8Wwz0aAk82tKynLLfk30bek2eKOBiTh2aDkXLx0WJcb0QNa3OOLueBudFRmbi5ACakA0OG7FoFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cKUK6QBn; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768880397; c=relaxed/simple;
+	bh=PkQnT9HrASsJc7IurqBQq+Uzv9yailjV38eVPJVHhAg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=EytkeGOc3mhAANKAQNKLpuzvFhzPt69QxXtUCwHS7HSiX4TPTMFB6QYkEtSZBn0gGHpt0bFloxFwZ3acPnTZPIKhT5hwoPONMTgHSuKnQWsOzZWU63HYnhvZbfJrooHiHZ3GSb0pEU1Q8PEvB2alW2H1KbKnRhrTnEtPrZZa+oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gw/BMzIS; arc=none smtp.client-ip=74.125.224.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cKUK6QBn"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768880261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i1K2ecHWtAyNI8GOayMKvK7FUh2cGuRh0U/BL+EvV5E=;
-	b=cKUK6QBnY2uz9T6owUj2WMbFjKHb7dh0glg/MA+2n6JjrmkRYBEghIx9tjIw642HA9X3SU
-	AdxcYncU+hyE7B8jOfwy4sXzs3MIKo/IGRaH1Jn3K8mPAGrCGUVNwFtWPEUgAmPE/aWzKg
-	IEtoDXl2ojX/8B6Klx+YK8iqJ+5b/mw=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: menglong8.dong@gmail.com, andrii@kernel.org, ast@kernel.org,
- bot+bpf-ci@kernel.org
-Cc: daniel@iogearbox.net, john.fastabend@gmail.com, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
- martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
- clm@meta.com, ihor.solodrai@linux.dev
-Subject:
- Re: [PATCH bpf-next v3 1/2] bpf: support bpf_get_func_arg() for
- BPF_TRACE_RAW_TP
-Date: Tue, 20 Jan 2026 11:37:25 +0800
-Message-ID: <2814392.mvXUDI8C0e@7950hx>
-In-Reply-To:
- <c83188087c6d6409524b80b2078285813ccfea8e42ea82e88542e6e8d5e5f73d@mail.kernel.org>
-References:
- <20260119023732.130642-2-dongml2@chinatelecom.cn>
- <c83188087c6d6409524b80b2078285813ccfea8e42ea82e88542e6e8d5e5f73d@mail.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw/BMzIS"
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64471fcdef0so3932124d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jan 2026 19:39:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768880395; x=1769485195; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+f2e7dJ5whTj9SkU/TlgqUpo4cL0LQRd5uYBnJ44hS4=;
+        b=Gw/BMzISSY9TwPlVTqjdrPv5xoy9IucnPOywTAMIcOG2d12GuE3BvIM86jkEIbbzWG
+         jpQfag4w2e4OcO7fVhb82Tjtz+ElJSnDDkyjXAu43uJK5vVfwcnHiJJUyKUf8z8+5IR+
+         ErBQ5n6LqGlXzEtzS2F3wWMRj2F7UTcD6E6/XRnDugIhEVvynaqHWLQZtrQ8po/oN3KV
+         y5kbkfdOZZSZRtz0wHQVRcklTCp1KWbX5UXdKBG9bHhL7aEcdaqiokMuDW7n04SUGRXw
+         BkO9TQs5GWdB/TKji+PeaIXS+mlcUhQdE/GFtMW8BktTG+Y2Lu3w/rzkaUe91V3llMjG
+         6v1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768880395; x=1769485195;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+f2e7dJ5whTj9SkU/TlgqUpo4cL0LQRd5uYBnJ44hS4=;
+        b=mrztZjkZ69U9aBCJ4he5n8fgu13harPoQyDxbev344GP9oB/vkVFaZ1SsSX8MmzeQc
+         T5djvepeJBdBFk9K6W0QZJ+JkB8/0QNiKSlW1rXCL4bx5PRTro4UUB5VFcMu+SbIrP+R
+         S4ED3D2aI4npmqH8ab2Z+ySJmxTmOjZYQQaLznjzcu4Ma2KyUF8nx2wuHlfZps5KirIz
+         xyWF2r4/sFG/LAXqdH6h5s8Sfn7pIrRT0MUhnLwZ28R1F4MPWS/9e9z0Yir5mXcbLrVq
+         SUSJsx6RBIwapQPuuCZBucK8VsZCp4a1JqC3wRYU3Tpy9k5bb3amYFNMSDyKk+yESgWv
+         cr6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVYV3Kh6ZhnjmFBz5MlqHef9G9DBRHn+Qt8yqiAg+RpvSZWB1ixsA2znOxASu9of8Y6WHlsO6QM0lJLV/VfnECCBaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8nZWRvwZgNKFvYGV41+AwtmAnAc9x/MQasHaZEVQdczsbCMM8
+	O9QPjfwz1OIczW4PhySsWWFsrMad2REw4DD2PdMS17tIAnIAcNJQ4Wbc
+X-Gm-Gg: AZuq6aIXMiexcXKzY9E4aepxGgEbtO3+4/757ylSmuQi79ixDaT8V9wCAramV0dqBj1
+	dCdsyzgazSqg4t7fgHyhYRA3Ho32bvm6aNaZvUJCQhmJQkNFyPEtj15pFKs2ADA2eH2a7O/cNnF
+	CyzKyFp651cijq8U4CA7eIFGL2VK26XLYz6bocviz7iK0Xy+te4ZnFR4qQ72rW+/eNLl/6Gjntj
+	/rdSTx29ymi6qM+z9zJYeR6ueeClF2x4Ljs9iSeWBwzFOIMQXa5lnkQ/yEKPh6Jbscq0RgvRwPe
+	Cs/hjK3CmblDbIkzne9v7yCw0oHJbPNCMQ5CdubnT0BFlScR+zQ5JrzTGQ2MJ2GETXVn/xDZpxw
+	wINmRJnCo3TtZoxZE1blnf9XX30oJhHks1+5gkv8xlncPdu45tZcGQxSVQKc/TAbhAhffEaGqs6
+	X9XdP0X3LOtVV8/zx9k3FJcLTloGBJLKi0VU8a8d+K7uCHBiykvSF7MFlVONuH3qbV2TU=
+X-Received: by 2002:a05:690c:dd3:b0:794:35b:af5e with SMTP id 00721157ae682-7940a0e6771mr11618687b3.5.1768880394417;
+        Mon, 19 Jan 2026 19:39:54 -0800 (PST)
+Received: from smtpclient.apple (2607-8700-5500-8678-0000-0000-0000-0002.16clouds.com. [2607:8700:5500:8678::2])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-793c68d305dsm47643947b3.55.2026.01.19.19.39.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Jan 2026 19:39:53 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH bpf RESEND v2 1/2] bpf: Fix memory access flags in helper
+ prototypes
+From: Zesen Liu <ftyghome@gmail.com>
+In-Reply-To: <55f01664fc714615206cc8d100cabf4f310f2302.camel@gmail.com>
+Date: Tue, 20 Jan 2026 11:39:31 +0800
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>,
+ Daniel Xu <dxu@dxuuu.xyz>,
+ bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ netdev@vger.kernel.org,
+ Shuran Liu <electronlsr@gmail.com>,
+ Peili Gao <gplhust955@gmail.com>,
+ Haoran Ni <haoran.ni.cs@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B91D5A7E-4967-416D-A2AC-CD3428F3C702@gmail.com>
+References: <20260118-helper_proto-v2-0-ab3a1337e755@gmail.com>
+ <20260118-helper_proto-v2-1-ab3a1337e755@gmail.com>
+ <55f01664fc714615206cc8d100cabf4f310f2302.camel@gmail.com>
+To: Eduard Zingerman <eddyz87@gmail.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
 
-On 2026/1/20 02:44, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index f73e08c223b5..64976009ba3c 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -1734,11 +1734,11 @@ tracing_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-> >  	case BPF_FUNC_d_path:
-> >  		return &bpf_d_path_proto;
-> >  	case BPF_FUNC_get_func_arg:
-> > -		return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_proto : NULL;
-> > +		return &bpf_get_func_arg_proto;
-> 
-> Removing the bpf_prog_has_trampoline() check here allows all TRACING
-> program types to use bpf_get_func_arg(), not just RAW_TP and trampoline-
-> based types. In particular, BPF_TRACE_ITER programs can now use this
-> helper.
-> 
-> However, looking at do_misc_fixups() in verifier.c, the inline code
-> generation only handles BPF_TRACE_RAW_TP specially. For other non-
-> trampoline types like BPF_TRACE_ITER, the else branch generates:
-> 
->     BPF_LDX_MEM(BPF_DW, BPF_REG_0, BPF_REG_1, -8)
-> 
-> This loads nr_args from ctx-8, but ITER programs use a different context
-> layout (e.g. struct bpf_iter__bpf_map_elem with meta, map, key, value
-> pointers). There is no nr_args at ctx-8 for ITER programs.
-> 
-> Would this cause ITER programs using bpf_get_func_arg() to read arbitrary
-> memory at ctx-8, potentially leaking kernel data or causing incorrect
-> bounds checks for subsequent argument access?
+[...]
 
-You are right. As Yonghong said, I missed the bpf_iter case, and it should
-be skipped.
+> On Jan 20, 2026, at 04:24, Eduard Zingerman <eddyz87@gmail.com> wrote:
+>=20
+> Q: why ARG_PTR_TO_UNINIT_MEM here, but not for a previous function and
+>   not for snprintf variants?
 
-I'll fix it in the next version.
+For bpf_get_stack_proto_raw_tp, I chose ARG_PTR_TO_UNINIT_MEM to be =
+consistent with its siblings:
 
-> 
-> >  	case BPF_FUNC_get_func_ret:
-> >  		return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ret_proto : NULL;
-> >  	case BPF_FUNC_get_func_arg_cnt:
-> > -		return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_cnt_proto : NULL;
-> > +		return &bpf_get_func_arg_cnt_proto;
-> 
-> Same question applies here for bpf_get_func_arg_cnt() with ITER programs.
-> 
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index 9de0ec0c3ed9..0b281b7c41eb 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -23323,8 +23323,20 @@ static int do_misc_fixups(struct bpf_verifier_env *env)
-> >  		/* Implement bpf_get_func_arg inline. */
-> >  		if (prog_type == BPF_PROG_TYPE_TRACING &&
-> >  		    insn->imm == BPF_FUNC_get_func_arg) {
-> > +			if (eatype == BPF_TRACE_RAW_TP) {
-> > +				int nr_args = btf_type_vlen(prog->aux->attach_func_proto);
-> > +
-> > +				/*
-> > +				 * skip first 'void *__data' argument in btf_trace_##name
-> > +				 * typedef
-> > +				 */
-> > +				nr_args--;
-> > +				/* Save nr_args to reg0 */
-> > +				insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, nr_args);
-> > +			} else {
-> > +				/* Load nr_args from ctx - 8 */
-> > +				insn_buf[0] = BPF_LDX_MEM(BPF_DW, BPF_REG_0, BPF_REG_1, -8);
-> > +			}
-> 
-> This else branch now applies to BPF_TRACE_ITER as well, since the
-> trampoline check was removed in tracing_prog_func_proto(). Should the
-> condition be extended to also handle ITER, or should ITER be explicitly
-> blocked from using these helpers?
-> 
-> [ ... ]
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21147849826
-> 
+=E2=80=A2 bpf_get_stack_proto_tp (bpf_trace.c:1425)
+=E2=80=A2 bpf_get_stack_proto (stackmap.c:525)
+=E2=80=A2 bpf_get_stack_sleepable_proto (stackmap.c:541)
 
-
-
-
+All of these are wrappers around the same core function bpf_get_stack() =
+/ __bpf_get_stack(), passing the buffer with identical semantics, and =
+all use ARG_PTR_TO_UNINIT_MEM.=
