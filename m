@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5AF19755B;
-	Tue, 20 Jan 2026 01:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B897260A;
+	Tue, 20 Jan 2026 01:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768871363; cv=none; b=bN2EFInJsxGtYoLnRrDHV5Ewo8Uj0TF+6Kp5YTwMq/FicHwxJJ0ZNFTkBnwrum0/LqQXsbhFcAwn++R8zy2+9nGIx611QgssQco7IpRksJ+m1DdvED6MmpSiGvQ5ptlKWpo7H62HSP3jVnLRJ1h5Ro63nrTeHlk15Y1IE+DEkoU=
+	t=1768871370; cv=none; b=MvivOlyecY7+HqFD4/r2mcNhf6E7bv7xDt0bcid4rSeQhXYIlUY5Xfu0PeIuFOAoKaIUn3VO7pLy+ayGByesayVDFkrLir14hNUng04EpWaSWmzpTsN7OUuqfSFWoucoL/lcMVr++eQzwTdhDJ69ctQ54oKGcCUg9QZCsm/Eul0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768871363; c=relaxed/simple;
-	bh=aUYgHSf+Ykg3c4stTD+2nquv+r2MqQ8YzOLLK/oLYvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZCvypV0ycjuIoy5rAP7gLQQtI8BTd/fqfvR2D+aIwS1MsvBb/zDNNvGlFVvYGBas+7PV9WHv1C2bs6LtWEhXf1AKVJyaMk+0OI1uIG1UHE2M9CbRybwpO0cpbPJVwQwtDrzDHFrNOT3xhEuO3iTHBLCjM4cegboYlHBqw1IIZzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SACkl8e4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768871370; c=relaxed/simple;
+	bh=Cf2mbEmWcovYW5tS3zoShNkU5qDl/ggFL8Kh+ngWJ18=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oXksGnRRWmUsMh9PKYQ2h+0fmHmoi2RR245Ib1vZI4pB+z9E9Up4gpYpl0/K8OMBAtVSuvVB7g3EMZqsiL7VliiEenWpDhmF2/LYBwgttKM6GAGQPc2a/PlhaKxH3OHpYbK24RVb+MeaJXXIsuzbvqXDNyDugJi5q5zXKSm5UuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4W9mAZQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SACkl8e4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D99C116C6;
-	Tue, 20 Jan 2026 01:09:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4W9mAZQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE55C116C6;
+	Tue, 20 Jan 2026 01:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768871362;
-	bh=aUYgHSf+Ykg3c4stTD+2nquv+r2MqQ8YzOLLK/oLYvo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SACkl8e4P3cmOOT6Ii9tVL3MvIXXR/KQLyDNOpCMZ81nq3y3TxCiCJZiqfcp+M/2C
-	 qXrRg6g13Gi+FGrx47Dm1AucESWa12OreHQss96DWEMm6p8mCC8ybcp8LkD+KH39RW
-	 m5EgUS1tRn7nqvuNEZWwIb9/lNNAcOjC9ybRJRRN5C1t5qPUTd3nYrl5zRRGYNTWZg
-	 LwnZ87+JhveuLJjVfiQKQrZTQiCojTDg5iaW0V3T49DUINtgPFo/iFkXSiGl5LrpRC
-	 RN+aSqlQAw0eggUoOEX8Txrs380bXjklXzEKnx5zA0Sd4udIUnct1Q2ECkaEfr6I3I
-	 DBO5ydTvwkzQg==
+	s=k20201202; t=1768871370;
+	bh=Cf2mbEmWcovYW5tS3zoShNkU5qDl/ggFL8Kh+ngWJ18=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=a4W9mAZQWSo4dOPW9Jd1lJpCeB9jFuaeg0wIykKSAhtvqVTx4RW9vWTWYmsKcvlnK
+	 AFyHCQnqd+p/RkU7zsgdi9WYuk6Gts550rLdqm5u8f+Y8Ct7XgfGj/jZ3ea6RW823A
+	 elwWORb1kX0UMN8hIW+eCMHHxqme8F/LPTCvE2/xuD868aC5lTKeufVqxQHYh5xjDm
+	 jQKSBoQpRUeWlxuNoCeG4sz+XSQrtw7fMtXVGjHToIwvNZksOubnbKZosQdcTXYxw0
+	 XDAZGJtb4/s0a31LUB3Uj6FfF+FBbTw0xKGYCOK5+t2GLXDuK2DGtrYDeyuJAFDZq+
+	 KT6z22Dwbe/rw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 0/4] tracing: Remove backup instance after read all
-Date: Tue, 20 Jan 2026 10:09:16 +0900
-Message-ID:  <176887135615.578403.6988045330349053692.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v4 1/4] tracing: Reset last_boot_info if ring buffer is reset
+Date: Tue, 20 Jan 2026 10:09:28 +0900
+Message-ID:  <176887136789.578403.10711988283653763711.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+In-Reply-To:  <176887135615.578403.6988045330349053692.stgit@mhiramat.tok.corp.google.com>
+References:  <176887135615.578403.6988045330349053692.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,46 +48,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 4th version of the series to improve backup instances of
-the persistent ring buffer. The previous version is here:
+Commit 32dc0042528d ("tracing: Reset last-boot buffers when reading
+out all cpu buffers") resets the last_boot_info when user read out
+all data via trace_pipe* files. But it is not reset when user
+resets the buffer from other files. (e.g. write `trace` file)
 
-https://lore.kernel.org/all/176828713313.2161268.62228177827727824.stgit@mhiramat.tok.corp.google.com/
+Reset it when the corresponding ring buffer is reset too.
 
-In this version, I added new fix [1/4] to reset last_boot_info when
-the ring buffer is reset. [2/4] is updated to allow resetting the
-readonly ring buffer via trace file. And [4/4] is adding a section
-for the backup instance to `debugging.rst`.
-
-Since backup instances are a kind of snapshot of the persistent
-ring buffer, it should be readonly. And if it is readonly
-there is no reason to keep it after reading all data via trace_pipe
-because the data has been consumed. But user should be able to remove
-the readonly instance by rmdir or truncating `trace` file.
-
-Thus, [2/3] makes backup instances readonly (not able to write any
-events, cleanup trace, change buffer size). Also, [3/3] removes the
-backup instance after consuming all data via trace_pipe.
-With this improvements, even if we makes a backup instance (using
-the same amount of memory of the persistent ring buffer), it will
-be removed after reading the data automatically.
-
+Fixes: 32dc0042528d ("tracing: Reset last-boot buffers when reading out all cpu buffers")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ kernel/trace/trace.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Masami Hiramatsu (Google) (4):
-      tracing: Reset last_boot_info if ring buffer is reset
-      tracing: Make the backup instance non-reusable
-      tracing: Remove the backup instance automatically after read
-      tracing/Documentation: Add a section about backup instance
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 38f7a7a55c23..5ddaeced9cb3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4873,6 +4873,8 @@ static int tracing_single_release_tr(struct inode *inode, struct file *file)
+ 	return single_release(inode, file);
+ }
+ 
++static bool update_last_data_if_empty(struct trace_array *tr);
++
+ static int tracing_open(struct inode *inode, struct file *file)
+ {
+ 	struct trace_array *tr = inode->i_private;
+@@ -4897,6 +4899,8 @@ static int tracing_open(struct inode *inode, struct file *file)
+ 			tracing_reset_online_cpus(trace_buf);
+ 		else
+ 			tracing_reset_cpu(trace_buf, cpu);
++
++		update_last_data_if_empty(tr);
+ 	}
+ 
+ 	if (file->f_mode & FMODE_READ) {
+@@ -5963,6 +5967,7 @@ tracing_set_trace_read(struct file *filp, char __user *ubuf,
+ int tracer_init(struct tracer *t, struct trace_array *tr)
+ {
+ 	tracing_reset_online_cpus(&tr->array_buffer);
++	update_last_data_if_empty(tr);
+ 	return t->init(tr);
+ }
+ 
+@@ -7781,6 +7786,7 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
+ 		ring_buffer_set_clock(tr->max_buffer.buffer, trace_clocks[i].func);
+ 	tracing_reset_online_cpus(&tr->max_buffer);
+ #endif
++	update_last_data_if_empty(tr);
+ 
+ 	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
+ 		struct trace_scratch *tscratch = tr->scratch;
+@@ -8018,6 +8024,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 				tracing_reset_online_cpus(&tr->max_buffer);
+ 			else
+ 				tracing_reset_cpu(&tr->max_buffer, iter->cpu_file);
++			update_last_data_if_empty(tr);
+ 		}
+ 		break;
+ 	}
 
-
- Documentation/trace/debugging.rst |   19 ++++
- kernel/trace/trace.c              |  164 ++++++++++++++++++++++++++++++-------
- kernel/trace/trace.h              |   14 +++
- kernel/trace/trace_boot.c         |    5 +
- kernel/trace/trace_events.c       |   68 +++++++++------
- 5 files changed, 212 insertions(+), 58 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
