@@ -1,158 +1,234 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AB83A1A5D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 10:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768903542; cv=none; b=B+jZhjO3jEQpOIakF+CTQ2q10KjTtINu1HRYWcqJCe0HjFLzJ3BOf7vXy3xvg/2cyvIkZs6cFYF8RQ9Hk9zs0p7QO1odHJKwnwX5WB/BfBDQMruNJbkjZeFv3lxbNhluFitp0+ZTAWkJZkw2s+bAIc9sl1uvIOB7Z/icsqGO3oM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768903542; c=relaxed/simple;
-	bh=s9Db6hnd+tq7fewLpdNWptLw0uJIGOyxuVnvykQWJAs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ibWSVbcHW6sXYIPvih/YHvEdy9jL7uWz1Nl8ej06sgn/+OPkNO843iwDgduS/kazug/sHSpln7zVGuqO0wjksKltsdipcTOfvTfOO8mdiIW/D8Sial2Mdjmtl0zWJYxRb5/XDuNgLxGl2Z7MoNTJwzf55sxewJmSFPwE0/0RZFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ur6v2u8r; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20751381710;
+	Tue, 20 Jan 2026 11:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768908366; cv=pass; b=mj6ELW5TJTmWgzM4IAxCwqrwfkx5cEjdO/Y5Kbz2c++w2lu+Dq2kjDb3pBuMysDb/Wp1sMccJk7QzgB/zkRTJSoF6t9voMB7Ut1hzGONALOcJQH9lVSqbGpjt/sg6PkjzQAENnY5jH1B9K/yr1qB6lZAXcgHuqRIMjVnX62eJw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768908366; c=relaxed/simple;
+	bh=AihJugOS3gLP08BL42FR/nxgtKOT4iuoFcgzvHoyuMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iTAiaQ7BrvJdAlNctTUUC1t9f3g+tdzIZw2RLl7xc3aLRStGVv/SMQkHArpJaHgKa4MI6y+dobaXpknxNJ1OW87Tihb5judLzMYfhi4uoHzFiUU3DyIuv7reSXulrTCtCuLDzcKCKBqSwb0nPX3M6rWqEKBnGGLVg/K1QymoSSc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=PIHmInI1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ur6v2u8r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768903538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s9Db6hnd+tq7fewLpdNWptLw0uJIGOyxuVnvykQWJAs=;
-	b=Ur6v2u8r6lP9op7uQJZR6sqxlWYw32mBaoUZHOq08hsTD4zdvg5oXB+2hcfV6z8vR/ytDR
-	0XwJrmnxpuk9kwhF3mfFAhIDxglsRbgzOUyTKT1aI9P3amTqr4N2CTul4fPpNw9NhUREL7
-	939IDa/WeEcMTEInrp1UPjIhPJsLKxU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-ilrlP6GRN-CvhJ_y098TMg-1; Tue, 20 Jan 2026 05:05:35 -0500
-X-MC-Unique: ilrlP6GRN-CvhJ_y098TMg-1
-X-Mimecast-MFC-AGG-ID: ilrlP6GRN-CvhJ_y098TMg_1768903534
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-43102ac1da8so4356797f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 02:05:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768903534; x=1769508334;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s9Db6hnd+tq7fewLpdNWptLw0uJIGOyxuVnvykQWJAs=;
-        b=KjqCzWWHY+jDtS7TBig3xjBicb+riswl6lRGOoMNCFVAa3ESftRmRSgP7L5Jvg0XTS
-         /2zuP24P5MCQ9nNEGTa66GbUNT9Kw8PXQYgT9Oa6S1Xwd/E0l1kjrYWjZnAnzTEbg0xn
-         tuqPe3sBJPsj13aC9qUtnhOotOQiY5MpX0Z8PHzk5n6nZH+1XuZcbRut27Z6+Yog3GrR
-         V5QJE1jxGynB8v5lT+UPL9LemOx0nLD4n/QSwBpUfTC3CG00Gt21bwMFeGBhZpmIAgre
-         pgyDlIdc5PHM1jYXCeKorLDEKPgjCFpc0NpeU9EviXnWNZbi0gXWeC/SbnFwKqeLZy2g
-         v9Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF7PXsEifwBjozfOnuCt50dHDfhvh4MDQDQ9R6CR77V9DL1fhlrfWyyK2fBbsWYnooCkBJBi+vGLS0CcPN1pEcB1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBgk0yBrkF629kF8R/cNPlSbUBr4sFC7+wVeOoKugZC1OnkXzl
-	HaTS5A02bS3QBUdGd+U9A3guSWswkKC2KHE6I8ENMNB7p01PrsbbyZ44yI3WuMPOI0dQBIrtkDy
-	el14eTbjulmyuUqfrJgUq1A2uCzTd710YctRNtucf/+EqP/+44PFBKiNPzyfJjFLWvzSwLaFDoA
-	==
-X-Gm-Gg: AZuq6aI/vuVfdKzkYcYcTdkdNi3FBE3shD4WhceiSv4YxWt9Fsvzemf7D06oGlo9AOC
-	qGXYrLKJ97B19PxL1iQ2fxeSPBTu9TxD+4vLDTOyHtbro3gjZiGkrpUBaVtXCVtwqcmLYX0pH5I
-	XtUB0JcyP/9Kbuh6a787bJ0Ye0R81a8lqERm/sgtJOj/ty1eg+IjPAXP1mqsToot0uVETkx/Fm5
-	c4p9X5mk0gruLDLzjx7/+9SqblS/9+FyKxaqbfr7a7R0NtTObANfxvgGQIuuHCQM0ZUN+L5yE+Z
-	XdbtT5IjCa8sJtP7nPr89xEMKDANg6vIJ3k8YzPt2/a+WdkODVBBCQ3nz/0FsTmpHxIYCYnMxHH
-	Wnmym+dhSwsxWbLQ55UJjZTl90Rq6Bt+3ELiXwrxOw1kMM5zYKwH7aEiZ59GLUNH4DROl2LOQhT
-	zQAMsFU6go
-X-Received: by 2002:a05:6000:40cc:b0:432:8651:4070 with SMTP id ffacd0b85a97d-4358fed143dmr1830437f8f.10.1768903533856;
-        Tue, 20 Jan 2026 02:05:33 -0800 (PST)
-X-Received: by 2002:a05:6000:40cc:b0:432:8651:4070 with SMTP id ffacd0b85a97d-4358fed143dmr1830398f8f.10.1768903533296;
-        Tue, 20 Jan 2026 02:05:33 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997ed8bsm28863121f8f.36.2026.01.20.02.05.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 02:05:33 -0800 (PST)
-Message-ID: <a277296a5fcfdca0c744f01a59d68a8864ef5e8c.camel@redhat.com>
-Subject: Re: [PATCH 02/26] rv/rvgen: remove bare except clauses in generator
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 11:05:31 +0100
-In-Reply-To: <20260119205601.105821-3-wander@redhat.com>
-References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-3-wander@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="PIHmInI1"
+ARC-Seal: i=1; a=rsa-sha256; t=1768908354; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kb8gYW3Asb7HGLlCea/xd+6RNcReRYm1DxDbOHxtQ58QKivJiRvxtUSstuPJMe0YZwjimBRZUmhQaCcCHn3DniMmYWNem6ZmnX6Hrm3gObzNtDpQJ5yBEg9RXh2HFsNAV+a/+S1giGzTUT8eOxArCuhJgV+H/gWKiE525QZmxUI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768908354; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dMRtyO3IFkZenH++skFdvqhARhJ4aUIDMxaEfng6wAE=; 
+	b=G1GIwvrAIh7ORcMOvVBFYxhW2NMYky79sdYJraJEeXzXJ5z+z15FJmD0eqGmPuM7DVbKxYKTIUb9BNxz8bStjXH+dn6o0NPDnWjcB1c7U45vUkohrScQkzjgtdMYr8KrGmi7H1Ef2P3g9mYPUEhRC7cB04i7Lh5V2zuyoe3f5zw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768908354;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=dMRtyO3IFkZenH++skFdvqhARhJ4aUIDMxaEfng6wAE=;
+	b=PIHmInI1eqWmtmQRJTCEId57pupRk4i4nf8HlId/MAfAD9oM62myh1astP30jAq3
+	sGQYY0TPdi/c9yqP4cLpXNIrqFWxqvvEFhWXxZv+e0n2I2nRJrXWdi77lGi7A91NQ98
+	3anrdK0+/nvcoko+7gF3/sB9D/VMP43VgYRbJOw0=
+Received: by mx.zohomail.com with SMTPS id 176890835186879.78263753608076;
+	Tue, 20 Jan 2026 03:25:51 -0800 (PST)
+From: Li Chen <me@linux.beauty>
+To: Zhang Yi <yi.zhang@huaweicloud.com>,
+	"Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-ext4@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC v4 0/7] ext4: fast commit: snapshot inode state for FC log
+Date: Tue, 20 Jan 2026 19:25:29 +0800
+Message-ID: <20260120112538.132774-1-me@linux.beauty>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: F2GiasSc_hhROb6FTFC7N9c0pb2gf-H1mg8PmZSmZzw_1768903534
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
-> Remove bare except clauses from the generator module that were
-> catching all exceptions including KeyboardInterrupt and SystemExit.
-> This follows the same exception handling improvements made in the
-> previous AutomataError commit and addresses PEP 8 violations.
->=20
-> The bare except clause in __create_directory was silently catching
-> and ignoring all errors after printing a message, which could mask
-> serious issues. For __write_file, the bare except created a critical
-> bug where the file variable could remain undefined if open() failed,
-> causing a NameError when attempting to write to or close the file.
->=20
-> These methods now let OSError propagate naturally, allowing callers
-> to handle file system errors appropriately. This provides clearer
-> error reporting and allows Python's exception handling to show
-> complete stack traces with proper error types and locations.
->=20
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+Hi,
 
-Looks good to me, thanks!
+(This RFC v4 series is based on linux-next tag next-20260106, plus the
+prerequisite patch "ext4: fast commit: make s_fc_lock reclaim-safe" posted at:
+https://lore.kernel.org/all/20260106120621.440126-1-me@linux.beauty/)
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Zhang Yi in RFC v3 review pointed out that postponing lockdep assertions only
+masks the issue, and that sleeping in ext4_fc_track_inode() while holding
+i_data_sem can form a real ABBA deadlock if the fast commit writer also needs
+i_data_sem while the inode is in FC_COMMITTING.
 
-> ---
-> =C2=A0tools/verification/rvgen/rvgen/generator.py | 9 +--------
-> =C2=A01 file changed, 1 insertion(+), 8 deletions(-)
->=20
-> diff --git a/tools/verification/rvgen/rvgen/generator.py
-> b/tools/verification/rvgen/rvgen/generator.py
-> index a7bee6b1ea70c..af1662e2c20a7 100644
-> --- a/tools/verification/rvgen/rvgen/generator.py
-> +++ b/tools/verification/rvgen/rvgen/generator.py
-> @@ -198,17 +198,10 @@ obj-$(CONFIG_RV_MON_%s) +=3D monitors/%s/%s.o
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-os.mkdir(path)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except FileExistsError:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-return
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
-("Fail creating the output dir: %s" % self.name)
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 def __write_file(self, file_name, content):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file =
-=3D open(file_name, 'w')
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
-("Fail writing to file: %s" % file_name)
-> -
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file =3D open(file_name, 'w')
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file.write(content)
-> -
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file.close()
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 def _create_file(self, file_name, content):
+Zhang Yi suggested two possible directions to address the root cause:
 
+1. "Ha, the solution seems to have already been listed in the TODOs in
+fast_commit.c.
+
+  Change ext4_fc_commit() to lookup logical to physical mapping using extent
+  status tree. This would get rid of the need to call ext4_fc_track_inode()
+  before acquiring i_data_sem. To do that we would need to ensure that
+  modified extents from the extent status tree are not evicted from memory."
+
+2. "Alternatively, recording the mapped range of tracking might also be
+feasible."
+
+This series implements a hybrid way: it implements approach 2 by snapshotting inode image
+and mapped ranges at commit time, and consuming only snapshots during log
+writing.
+
+Approach 2 still needs a mapping source while building the snapshot
+(logical-to-physical and unwritten/hole semantics). Calling ext4_map_blocks()
+there would take i_data_sem and can block inside the
+jbd2_journal_lock_updates() window, which risks deadlocks or unbounded stalls.
+So the snapshot path uses approach 1's extent status lookups as a best-effort
+mapping source to avoid ext4_map_blocks().
+
+I did not fuly implement approach 1 (making extent status lookups
+authoritative by preventing reclaim of needed entries) because that would need
+additional pinning/integration under memory pressure and a larger correctness
+surface. Instead, the extent status tree is treated as a cache and the
+snapshot path falls back to full commit on cache misses or unstable mappings
+(e.g. delayed allocation).
+
+Lock inversion / deadlock model (before):
+
+CPU0 (metadata update)               CPU1 (fast commit)
+--------------------               -----------------
+... hold i_data_sem (A)             mutex_lock(s_fc_lock) (B)
+    ext4_fc_track_inode()             ext4_fc_write_inode_data()
+      mutex_lock(s_fc_lock) (B)         ext4_map_blocks()
+      wait FC_COMMITTING (sleep)          down_read(i_data_sem) (A)
+
+This creates i_data_sem (A) -> s_fc_lock (B) on update paths, and
+s_fc_lock (B) -> i_data_sem (A) on commit paths. Once CPU0 sleeps while
+holding (A), CPU1 can block on (A) while holding (B), completing the ABBA
+cycle.
+
+New model (this series):
+
+CPU0 (metadata update)               CPU1 (fast commit)
+--------------------               -----------------
+... maybe hold i_data_sem (A)        jbd2_journal_lock_updates()
+    ext4_fc_track_*()                 snapshot inode + ranges (no map_blocks)
+      mutex_lock(s_fc_lock) (B)       jbd2_journal_unlock_updates()
+      if FC_COMMITTING: set FC_REQUEUE s_fc_lock (B)
+      no sleep                         write FC log from snapshots only
+                                    cleanup: clear COMMITTING, requeue if set
+
+The commit path no longer takes i_data_sem while holding s_fc_lock, and
+tracking no longer sleeps waiting for FC_COMMITTING. If an inode is updated
+during a fast commit, EXT4_STATE_FC_REQUEUE records that fact and the inode
+is moved to FC_Q_STAGING for the next commit.
+The only remaning FC_COMMITTING waiter is ext4_fc_del(), which drops
+s_fc_lock before sleeping.
+
+This series snapshots the on-disk inode and tracked data ranges while journal
+updates are locked and existing handles are drained. The log writing phase then
+serializes only snapshots, so it no longer needs to call ext4_map_blocks() and
+take i_data_sem under s_fc_lock. This is done in two steps: patch 1 drops
+ext4_map_blocks() from log writing by introducing commit-time snapshots, and
+patch 5 drops ext4_map_blocks() from the snapshot path by using the extent
+status cache. The snapshot also records whether a mapped extent is unwritten,
+so the ADD_RANGE records (and replay) preserve unwritten semantics.
+
+Snapshotting runs under jbd2_journal_lock_updates(). Since a cache miss in
+ext4_get_inode_loc() can start synchronous inode table I/O and stall handle
+starts for milliseconds, patch 1 uses ext4_get_inode_loc_noio() and falls back
+to full commit if the inode table block is not present or not uptodate.
+
+ext4_fc_track_inode() also stops waiting for FC_COMMITTING. Updates during an
+ongoing fast commit are marked with EXT4_STATE_FC_REQUEUE and are replayed in
+the next fast commit, while ext4_fc_del() waits for FC_COMMITTING so an inode
+cannot be removed while the commit thread is still using it.
+
+The extent status tree is a cache, not an authoritative source, so the snapshot
+path falls back to full commit on cache misses or unstable mappings (e.g.
+delayed allocation). This includes cases where extent status entries are not
+present (or have been reclaimed) under memory pressure. The snapshot path does
+not try to rebuild mappings by calling ext4_map_blocks(); instead it simply
+marks the transaction fast commit ineligible.
+
+To keep the updates-locked window bounded, the snapshot path caps the number of
+snapshotted inodes and ranges per fast commit (currently 1024 inodes and 2048
+ranges) and falls back to full commit when the cap is exceeded. The series also
+handles the journal inode i_data_sem lockdep false positive via subclassing;
+journal inode mapping may still take i_data_sem even when data inode mapping is
+avoided.
+
+Patch 6 adds the ext4_fc_lock_updates tracepoint to quantify the updates-locked
+window and snapshot fallback reasons. Patch 7 extends
+/proc/fs/ext4/<sb_id>/fc_info with best-effort snapshot counters. If the /proc
+interface is undesirable, I can drop patch 7 and keep the tracepoint only, or
+drop even both.
+
+Testing and mesurement were done on a QEMU/KVM guest with virtio-pmem + dax
+(ext4 -O fast_commit, mounted dax,noatime). The workload does python3 500x
+{4K write + fsync}, fallocate 256M, and python3 500x {creat + fsync(dir)}.
+Over 3 cold boots, ext4_fc_lock_updates reported locked_ns p50 2.88-2.92 us,
+p99 <= 6.71 us, and max <= 102.71 us, with snap_err always 0. Under stress-ng
+memory pressure (stress-ng --vm 4 --vm-bytes 75% --timeout 60s), locked_ns p50
+2.94 us, p99 <= 4.97 us, and max <= 20.07 us. The fc_info snapshot failure
+counters stayed at 0.
+These hold times are in the low microseconds range, and the caps keep the
+worst case bounded.
+
+Comments and guidance are very welcome. Please let me know if there are any
+concerns about correctness, corner cases, or better approaches.
+
+RFC v3 -> RFC v4:
+- Replace lockdep_assert movement with removing the wait in
+  ext4_fc_track_inode() and using EXT4_STATE_FC_REQUEUE to capture updates
+  during an ongoing fast commit.
+- Replace dropping s_fc_lock around log writing with commit-time snapshots of
+  inode image and mapped ranges (recording the mapped range of tracking as
+  suggested by Zhang Yi) so log writing consumes only snapshots.
+- Avoid inode table I/O under jbd2_journal_lock_updates() via
+  ext4_get_inode_loc_noio() and fallback to full commit on cache misses.
+- Use the extent status cache for snapshot mappings and fall back to full
+  commit on cache misses or unstable mappings (e.g. delayed allocation).
+- Add tracepoint and /proc snapshot stats to quantify the updates-locked window
+  and snapshot fallback reasons.
+
+RFC v2 -> RFC v3:
+- rebase ontop of https://lore.kernel.org/linux-ext4/20251223131342.287864-1-me@linux.beauty/T/#u
+
+RFC v1 -> RFC v2:
+- patch 1: move comments to correct place
+- patch 2: add it to patchset.
+- add missing RFC prefix
+
+RFC v1: https://lore.kernel.org/linux-ext4/20251222032655.87056-1-me@linux.beauty/T/#u
+RFC v2: https://lore.kernel.org/linux-ext4/20251222151906.24607-1-me@linux.beauty/T/#t
+RFC v3: https://lore.kernel.org/linux-ext4/20251224032943.134063-1-me@linux.beauty/
+
+Thanks,
+
+Li Chen (7):
+  ext4: fast commit: snapshot inode state before writing log
+  ext4: lockdep: handle i_data_sem subclassing for special inodes
+  ext4: fast commit: avoid waiting for FC_COMMITTING
+  ext4: fast commit: avoid self-deadlock in inode snapshotting
+  ext4: fast commit: avoid i_data_sem by dropping ext4_map_blocks() in
+    snapshots
+  ext4: fast commit: add lock_updates tracepoint
+  ext4: fast commit: export snapshot stats in fc_info
+
+ fs/ext4/ext4.h              |  58 ++-
+ fs/ext4/fast_commit.c       | 718 +++++++++++++++++++++++++++++-------
+ fs/ext4/inode.c             |  51 +++
+ fs/ext4/super.c             |   9 +
+ include/trace/events/ext4.h |  33 ++
+ 5 files changed, 735 insertions(+), 134 deletions(-)
+
+-- 
+2.52.0
