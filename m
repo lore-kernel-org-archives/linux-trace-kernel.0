@@ -1,323 +1,247 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BE74279EF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 12:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE42381710
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 13:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768912788; cv=none; b=ThMa5JIsNI6CoayeqUsvc1VicmjJFxWQNYkQ4zZeIWpRCDLVlu++U6Kwy6uo+6XU00j887AbRnk7nxuq/TGVitqUq81g2JzKh5yObNNoSyId6/koU1YFlbfjTzqzmeKj0DxFHtuwR2rhobQzyJ7tvFPms0cK3etq/K3YbWjw/QE=
+	t=1768914714; cv=none; b=fGeDvWO742CYYziGa+iWoc0epnjhD9yREUXk1ZOFIId/zD8a2SCjjC4kSYrV4MXk7mifJuSjxZN82E3K7y/3DUQINOzaCO2veuyP1eO9ooByweK5YRMjPwNibWRyXP01ZutCeJCWqFqX7Nbqwq7eAF1LkT1FNG1WgbXCI8UkMTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768912788; c=relaxed/simple;
-	bh=KaHgaPP5JkmipFx+mvbl5ozQOzxRxt/047W2960GcFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3qyuVk6v0LObAvv9msG7nSVMAreb4IsfP7+pVCsGnqsAjqCQgY5hQNxRMueTn9U2mvwN9b0pADxGPdnXq1tYT0P0QkqDqVA47pn2rHYA4e1zIiH4hHan+zUd+Nu/1LkBo7Qa8I6Ch7QcWyHRap6z6vM/Lmm2A4rgG3QtAxpeSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D0Eun3yV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1768914714; c=relaxed/simple;
+	bh=IjmP9Ryi85s9+rZFklMkA94sn+toExpDe2wDripnhfc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HhboG2727PAuwHhyveiQI14cNIPF+I4MsXbX2EEybagQDTSuk4BB3f3nkpoPewa2RR0GXrt9BR53ByYkNTWXRyWS5FNprS91A/pkANneLYgghDX7SF+gR+k8fsOyuleHU1lUfBdGCVZNUX4c09Xew930WCb0DSB7NwcpCqJyMeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JlVpGUgX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0Eun3yV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JlVpGUgX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768912784;
+	s=mimecast20190719; t=1768914711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lSDxLBtJimv4fbb9hNUxnliLbqBuc0Woc8j15mhZbf0=;
-	b=D0Eun3yVO2LFEn4kF1dBIJ78RGYUkCU5+BaVedewyGh2ns2HsydbUSq1zFRRl3KHn61T9R
-	qIorPya24q24GnWZlAaBXvb9LDscK3hIKcb7JI6YGfD8X5mhAv9h8ehd7Bp9dCyB+qQr51
-	Ox+gCVALYWiYo7/RmG0kHvWOB65gPiM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-594-wxi1dJ7bMXqf18dDlZ5KAg-1; Tue,
- 20 Jan 2026 07:39:41 -0500
-X-MC-Unique: wxi1dJ7bMXqf18dDlZ5KAg-1
-X-Mimecast-MFC-AGG-ID: wxi1dJ7bMXqf18dDlZ5KAg_1768912780
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6676E195605F;
-	Tue, 20 Jan 2026 12:39:40 +0000 (UTC)
-Received: from fedora (unknown [10.22.80.33])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A0C5B1955F43;
-	Tue, 20 Jan 2026 12:39:37 +0000 (UTC)
-Date: Tue, 20 Jan 2026 09:39:35 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:RUNTIME VERIFICATION (RV)" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/26] rv/rvgen: introduce AutomataError exception class
-Message-ID: <aW9ySuaPMZVm-MrN@fedora>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IjmP9Ryi85s9+rZFklMkA94sn+toExpDe2wDripnhfc=;
+	b=JlVpGUgXhudZELYlseStpguo5UR0JooToeaDL2+jLfFgEbzKBnGTd5npw27ePUZLYM8SyM
+	r9rXyyu5uWLgGH6VmN6Umc1q5zNWcd0bjJMkBVK53aRffNOI3JE0aDR8r+XYXIRJTf5Ab9
+	lkLp/cxUCsV1Pdhqx/I+q7Ce8iHvsck=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-228-c45GfC1eNdCupTjADfiWOQ-1; Tue, 20 Jan 2026 08:11:50 -0500
+X-MC-Unique: c45GfC1eNdCupTjADfiWOQ-1
+X-Mimecast-MFC-AGG-ID: c45GfC1eNdCupTjADfiWOQ_1768914709
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4779ecc3cc8so39172685e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 05:11:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768914709; x=1769519509;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IjmP9Ryi85s9+rZFklMkA94sn+toExpDe2wDripnhfc=;
+        b=Ff+ebbsOxvPQdM2iR0dobHp4LFcjNztV6KSyX+0U/M9WOMOwt7NrXGifvVxBHHK64K
+         bSDKVOCpEOMbLSS5skT8bkCcusPE0BVftJR3RC9E20ATIH0psNzhsBfjxuFVrkFb2dW1
+         ZjvQzG9ePmkyjcjB4jHwFrWkDWbkrpfE/c/YUjpg3lGARy/j5QQISIbFS2rZDwoVw5rg
+         A2BWowBwgOKktWRFP0u7TLb7yznmY+kyBM21llM3yyQ/uK7RA06l9+sKmIcxHpidgMJ2
+         ccbIgv7WCNg0KHuAmcanCOIOLVWVJSlxj94X29W5KjGrBGTDPdg4/27Tut3JeykFZugR
+         RlTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1kNZIvgTZ+FJ/eTu0l7D67TSQholuA71Pz3XEROrrFMZeWJsHMLhSHRQVXqrx09nRPGY2fELxxu25a47IakKIixQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCdbKNFkQ+Ajf+Lf3padTvi4+7A2Dw3ZkNd9H4qhB7eW4cbhvI
+	mg0JoQ2pywPlbS++8Ru/7eLDP6LRqsWvZ5ZlesnIHejzWkGlhQlQbal7RErxQZ90OOh5KIzOacQ
+	zMnnZc07LTcUJZA5qX1sKgPHc8LQSaY+YZrKXVb6tDjK23VcU8W1gu4tQ4kvRZcq3Xr8WgbLa0w
+	==
+X-Gm-Gg: AY/fxX4az4DB3Su7r1PjuCcIl7DJvTRPlFzkGHln+0mk/qIdNZytl2vQvk8Tho+K8Fs
+	GVztoAIsGhq4MTpp+KTzfoZkqK8n9nU2Iacsn85h062nOdeSbHuLgjinFsfw1oVAMlhsECZoZxY
+	fTAIkWLsBZ3JU9zNd9VGb0DmvXdzOusImg0l6dBlLdrWURO/bE/X5i0PeT1Oxhkr6LzOgHeJEys
+	SlthlCWiezLzrWRcR4pps3WYy1OXwBf8Tu3cvMXaPCdGEDFskPJe75xlDD29q3ka9rqoC/jsBGQ
+	oHDfo58UQdgqZQUosXEAg8FueWHL0qtVqSWUFyVYaIAKfJvezdqbOOtwnQbMmes7i+jBD/em2Rw
+	nCqb1NYald19PdA/fhlKfhxb4u/fr6aRFy48YGE9R0zgCv/FC3p+1K51Y/7BSLJIQUJmiLPU5Rj
+	n6P9HpWkfZ
+X-Received: by 2002:a05:600c:1f88:b0:47d:18b0:bb9a with SMTP id 5b1f17b1804b1-4803e801d8dmr22531785e9.33.1768914708845;
+        Tue, 20 Jan 2026 05:11:48 -0800 (PST)
+X-Received: by 2002:a05:600c:1f88:b0:47d:18b0:bb9a with SMTP id 5b1f17b1804b1-4803e801d8dmr22531325e9.33.1768914708295;
+        Tue, 20 Jan 2026 05:11:48 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f428b954esm302419555e9.7.2026.01.20.05.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 05:11:47 -0800 (PST)
+Message-ID: <d15348f9f6d8ed71ba3e928ae1b5da15711894e3.camel@redhat.com>
+Subject: Re: [PATCH 26/26] rv/rvgen: extract node marker string to class
+ constant
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
+ open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
+ (RV)"	 <linux-trace-kernel@vger.kernel.org>
+Date: Tue, 20 Jan 2026 14:11:46 +0100
+In-Reply-To: <85c7d4762464e6a50b4318f4ea56a70202a4b287.camel@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
- <20260119205601.105821-2-wander@redhat.com>
- <24e308b019cf9272884091f85b6675fd05201a2b.camel@redhat.com>
+		 <20260119205601.105821-27-wander@redhat.com>
+		 <0383d9a3fdaeb2b66e48a7857791bcbfe324958d.camel@redhat.com>
+		 <aW9nfu8r0YcGj0z5@fedora>
+	 <85c7d4762464e6a50b4318f4ea56a70202a4b287.camel@redhat.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <24e308b019cf9272884091f85b6675fd05201a2b.camel@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: egWY08Se6Cr5GWsY7yzNETYMsC-MfYHD9NPCGXSf6ww_1768914709
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 20, 2026 at 08:33:10AM +0100, Gabriele Monaco wrote:
-> On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
-> > Replace generic Exception usage with a custom AutomataError class
-> > that inherits from OSError throughout the rvgen tool. This change
-> > provides more precise exception handling for automata parsing and
-> > validation errors while avoiding overly broad exception catches that
-> > could mask programming errors like SyntaxError or TypeError.
-> > 
-> > The AutomataError class inherits from OSError rather than Exception
-> > because most error conditions involve file I/O operations such as
-> > reading DOT files or handling file access issues. This semantic
-> > alignment makes exception handling more specific and appropriate.
-> > The exception is raised when DOT file processing fails due to invalid
-> > format, I/O errors, or malformed automaton definitions.
-> > 
-> > Additionally, remove the broad try-except block from __main__.py that
-> > was catching all exceptions. This allows Python's default exception
-> > handling to provide complete stack traces, making debugging
-> > significantly easier by showing exact error types and locations.
-> > 
-> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-> 
-> Thanks for the extensive series!
-> See my comments below.
-> Mind that I likely know python less than you do, so just call me out when I
-> start babbling.
-> 
-> > ---
-> >  tools/verification/rvgen/__main__.py        | 25 +++++++++------------
-> >  tools/verification/rvgen/rvgen/automata.py  | 17 +++++++++-----
-> >  tools/verification/rvgen/rvgen/dot2c.py     |  4 ++--
-> >  tools/verification/rvgen/rvgen/generator.py |  7 ++----
-> >  4 files changed, 26 insertions(+), 27 deletions(-)
-> > 
-> > diff --git a/tools/verification/rvgen/__main__.py
-> > b/tools/verification/rvgen/__main__.py
-> > index fa6fc1f4de2f7..768b11a1e978b 100644
-> > --- a/tools/verification/rvgen/__main__.py
-> > +++ b/tools/verification/rvgen/__main__.py
-> > @@ -39,22 +39,17 @@ if __name__ == '__main__':
-> >  
-> >      params = parser.parse_args()
-> >  
-> > -    try:
-> > -        if params.subcmd == "monitor":
-> > -            print("Opening and parsing the specification file %s" %
-> > params.spec)
-> > -            if params.monitor_class == "da":
-> > -                monitor = dot2k(params.spec, params.monitor_type,
-> > vars(params))
-> > -            elif params.monitor_class == "ltl":
-> > -                monitor = ltl2k(params.spec, params.monitor_type,
-> > vars(params))
-> > -            else:
-> > -                print("Unknown monitor class:", params.monitor_class)
-> > -                sys.exit(1)
-> > +    if params.subcmd == "monitor":
-> > +        print("Opening and parsing the specification file %s" % params.spec)
-> > +        if params.monitor_class == "da":
-> > +            monitor = dot2k(params.spec, params.monitor_type, vars(params))
-> > +        elif params.monitor_class == "ltl":
-> > +            monitor = ltl2k(params.spec, params.monitor_type, vars(params))
-> >          else:
-> > -            monitor = Container(vars(params))
-> > -    except Exception as e:
-> > -        print('Error: '+ str(e))
-> > -        print("Sorry : :-(")
-> > -        sys.exit(1)
-> > +            print("Unknown monitor class:", params.monitor_class)
-> > +            sys.exit(1)
-> > +    else:
-> > +        monitor = Container(vars(params))
-> >  
-> 
-> I agree catching all exceptions like this is quite detrimental while debugging,
-> but I see the original intent.
-> When you run commands written in python, you normally don't expect them to blurt
-> a stack trace when doing relatively normal things, like opening a wrong file.
-> Sure that might be useful when debugging, but for a user-facing tool we want to
-> write a meaningful error message and gracefully fail.
-> 
+On Tue, 2026-01-20 at 13:36 +0100, Gabriele Monaco wrote:
+> On Tue, 2026-01-20 at 08:34 -0300, Wander Lairson Costa wrote:
+> > On Tue, Jan 20, 2026 at 10:03:20AM +0100, Gabriele Monaco wrote:
+> > > On Mon, 2026-01-19 at 17:46 -0300, Wander Lairson Costa wrote:
+> > > > Add a node_marker class constant to the Automata class to replace t=
+he
+> > > > hardcoded "{node" string literal used throughout the DOT file parsi=
+ng
+> > > > logic. This follows the existing pattern established by the init_ma=
+rker
+> > > > and invalid_state_str class constants in the same class.
+> > > >=20
+> > > > The "{node" string is used as a marker to identify node declaration
+> > > > lines in DOT files during state variable extraction and cursor
+> > > > positioning. Extracting it to a named constant improves code
+> > > > maintainability and makes the marker's purpose explicit.
+> > > >=20
+> > > > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> > >=20
+> > > Looks fine for me, thanks!
+> > >=20
+> > > I wonder if we could merge this patch with 15/26 that is introducing =
+a
+> > > very
+> > > similar change on init_marker.
+> >=20
+> > The idea was to make each patch doing one thing to make the reviewer's
+> > life easier (I think I broke my own rule in a couple of patch). But if
+> > there is a strong feeling about the merge, I could merged them in a
+> > possible v2 patch series.
+> >=20
+>=20
+> Yeah I get the idea, I guess I could just pick the most obvious patches a=
+nd
+> send
+> a PR to Steve before the merge window, so I can see directly if it makes =
+sense
+> to squash them and you don't need to send them all in the v2.
 
-One option I thought was to keep it as it is but adding a --debug option
-which would reraise the exception and then print the stack trace.
-But as the users are developers themselves, leaving the exception
-unchaught would help them identify the error (although I am strongly
-against doing this in server side code). Another reason is the case
-when the code itself has a bug. That would facilitate bug reports.
+Screamed victory too fast.. I tried the patches on the latest version of th=
+e
+tree (which reached already linux-next) and they're have several conflicts.
 
-Perhaps we could catch more specific exceptions that would indicate a
-problem with the dot files instead of Exception. Like
+I don't have time to rebase them one by one right now, let's continue with =
+this
+series as a whole.
+As a rule of thumb, considering these patches get first reviewed, then PR-e=
+d to
+Steve and then to Linus, I'd favour to lower the number if possible, but fe=
+el
+free to choose where it makes sense for them to stay separate.
 
-try: ...
-except AutomataError as e:
-    print(f"There was a problem processing {dot_file}: {str(e)}",
-          file=sys.stderr)
-    sys.exit(1)
+Thanks,
+Gabriele
 
-Which would be a common case. And leaving other types of exceptions
-unchaught.
-
-> Other story is when the exception is something unexpected (that's why leaving a
-> generic Exception here is bad).
-> 
-> >      print("Writing the monitor into the directory %s" % monitor.name)
-> >      monitor.print_files()
-> > diff --git a/tools/verification/rvgen/rvgen/automata.py
-> > b/tools/verification/rvgen/rvgen/automata.py
-> > index d9a3fe2b74bf2..8d88c3b65d00d 100644
-> > --- a/tools/verification/rvgen/rvgen/automata.py
-> > +++ b/tools/verification/rvgen/rvgen/automata.py
-> > @@ -10,6 +10,13 @@
-> >  
-> >  import ntpath
-> >  
-> > +class AutomataError(OSError):
-> > +    """Exception raised for errors in automata parsing and validation.
-> > +
-> > +    Raised when DOT file processing fails due to invalid format, I/O errors,
-> > +    or malformed automaton definitions.
-> > +    """
-> > +
-> 
-> I'm not quite familiar with modern python best practices (so again, take my
-> comments with a grain of salt ;) ), but what is the advantage of using this
-> custom exception instead of using pre-existing specific exception types?
-> 
-> Although the difference is minimal, here you're throwing an OSError for
-> something that quite isn't (e.g. wrong format for the dot file).
-> A ValueError feels more appropriate to me in most of the instances here.
-> 
-> All in all, I would do something like:
-> * throw a ValueError (or a custom one based on that) whenever we expect wrong
-> data not dependent on OS features
-> * throw OSError whenever that was the exception, perhaps changing the message to
-> something more meaningful to us (like you're already doing here)
-> * intercept only those errors in main.py and print the message without stack
-> trace (if the message is clear enough we shouldn't need it).
-> 
-> Does it make sense to you?
-> 
-
-The reasoning behind specific exception types is to allow the calling code
-process diferent exceptions in more specialized code paths, like the
-example above.
-
-AutomataError could derive from both OSError and ValueError.
-
-class AutomataError(OSError, ValueError): ...
-
-Which would address your (valid) point. This way, the calling code could
-either process specific automata related errors with AutomataError, or
-handle general file error, like that:
-
-try...
-except OSError as e:
-    print(f"File error: {str(e)", file=sys.stderr)
-except AutomataError as e:
-    print(f"Ill formed dot file: {str(e)", file=stderr)
-
-> Thanks,
+>=20
+> I'm leaving the longer or trickier ones for the next cycle so that I can =
+test
+> them a bit better and perhaps get some rvgen selftest help with that. Als=
+o for
+> some it's better to wait for Nam's comments.
+>=20
+> Will let you know the ones I pick. Thanks again for the extensive work!
+>=20
 > Gabriele
-> 
-> >  class Automata:
-> >      """Automata class: Reads a dot file and part it as an automata.
-> >  
-> > @@ -32,11 +39,11 @@ class Automata:
-> >          basename = ntpath.basename(self.__dot_path)
-> >          if not basename.endswith(".dot") and not basename.endswith(".gv"):
-> >              print("not a dot file")
-> > -            raise Exception("not a dot file: %s" % self.__dot_path)
-> > +            raise AutomataError("not a dot file: %s" % self.__dot_path)
-> >  
-> >          model_name = ntpath.splitext(basename)[0]
-> >          if model_name.__len__() == 0:
-> > -            raise Exception("not a dot file: %s" % self.__dot_path)
-> > +            raise AutomataError("not a dot file: %s" % self.__dot_path)
-> >  
-> >          return model_name
-> >  
-> > @@ -45,8 +52,8 @@ class Automata:
-> >          dot_lines = []
-> >          try:
-> >              dot_file = open(self.__dot_path)
-> > -        except:
-> > -            raise Exception("Cannot open the file: %s" % self.__dot_path)
-> > +        except OSError as exc:
-> > +            raise AutomataError(f"Cannot open the file: {self.__dot_path}")
-> > from exc
-> >  
-> >          dot_lines = dot_file.read().splitlines()
-> >          dot_file.close()
-> > @@ -55,7 +62,7 @@ class Automata:
-> >          line = dot_lines[cursor].split()
-> >  
-> >          if (line[0] != "digraph") and (line[1] != "state_automaton"):
-> > -            raise Exception("Not a valid .dot format: %s" % self.__dot_path)
-> > +            raise AutomataError("Not a valid .dot format: %s" %
-> > self.__dot_path)
-> >          else:
-> >              cursor += 1
-> >          return dot_lines
-> > diff --git a/tools/verification/rvgen/rvgen/dot2c.py
-> > b/tools/verification/rvgen/rvgen/dot2c.py
-> > index b9b6f14cc536a..1a1770e7f20c0 100644
-> > --- a/tools/verification/rvgen/rvgen/dot2c.py
-> > +++ b/tools/verification/rvgen/rvgen/dot2c.py
-> > @@ -13,7 +13,7 @@
-> >  # For further information, see:
-> >  #   Documentation/trace/rv/deterministic_automata.rst
-> >  
-> > -from .automata import Automata
-> > +from .automata import Automata, AutomataError
-> >  
-> >  class Dot2c(Automata):
-> >      enum_suffix = ""
-> > @@ -93,7 +93,7 @@ class Dot2c(Automata):
-> >              min_type = "unsigned int"
-> >  
-> >          if self.states.__len__() > 1000000:
-> > -            raise Exception("Too many states: %d" % self.states.__len__())
-> > +            raise AutomataError("Too many states: %d" %
-> > self.states.__len__())
-> >  
-> >          return min_type
-> >  
-> > diff --git a/tools/verification/rvgen/rvgen/generator.py
-> > b/tools/verification/rvgen/rvgen/generator.py
-> > index 3441385c11770..a7bee6b1ea70c 100644
-> > --- a/tools/verification/rvgen/rvgen/generator.py
-> > +++ b/tools/verification/rvgen/rvgen/generator.py
-> > @@ -51,10 +51,7 @@ class RVGenerator:
-> >          raise FileNotFoundError("Could not find the rv directory, do you have
-> > the kernel source installed?")
-> >  
-> >      def _read_file(self, path):
-> > -        try:
-> > -            fd = open(path, 'r')
-> > -        except OSError:
-> > -            raise Exception("Cannot open the file: %s" % path)
-> > +        fd = open(path, 'r')
-> >  
-> >          content = fd.read()
-> >  
-> > @@ -65,7 +62,7 @@ class RVGenerator:
-> >          try:
-> >              path = os.path.join(self.abs_template_dir, file)
-> >              return self._read_file(path)
-> > -        except Exception:
-> > +        except OSError:
-> >              # Specific template file not found. Try the generic template file
-> > in the template/
-> >              # directory, which is one level up
-> >              path = os.path.join(self.abs_template_dir, "..", file)
-> 
+>=20
+> > >=20
+> > > Anyway:
+> > >=20
+> > > Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> > >=20
+> > > > ---
+> > > > =C2=A0tools/verification/rvgen/rvgen/automata.py | 9 +++++----
+> > > > =C2=A01 file changed, 5 insertions(+), 4 deletions(-)
+> > > >=20
+> > > > diff --git a/tools/verification/rvgen/rvgen/automata.py
+> > > > b/tools/verification/rvgen/rvgen/automata.py
+> > > > index a6889d0c26c3f..5f23db1855cd3 100644
+> > > > --- a/tools/verification/rvgen/rvgen/automata.py
+> > > > +++ b/tools/verification/rvgen/rvgen/automata.py
+> > > > @@ -29,6 +29,7 @@ class Automata:
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 invalid_state_str =3D "INVALID_STATE"
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 init_marker =3D "__init_"
+> > > > +=C2=A0=C2=A0=C2=A0 node_marker =3D "{node"
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 def __init__(self, file_path, model_name=
+=3DNone):
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.__dot_path =
+=3D file_path
+> > > > @@ -76,7 +77,7 @@ class Automata:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for cursor, line i=
+n enumerate(self.__dot_lines):
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 split_line =3D line.split()
+> > > > =C2=A0
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ if len(split_line) and split_line[0] =3D=3D "{node":
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ if len(split_line) and split_line[0] =3D=3D self.node_marker:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return cursor
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise AutomataErro=
+r("Could not find a beginning state")
+> > > > @@ -91,9 +92,9 @@ class Automata:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 if state =3D=3D 0:
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 if line[0] =3D=3D "{node":
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 if line[0] =3D=3D self.node_marker:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state =3D 1
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ elif line[0] !=3D "{node":
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ elif line[0] !=3D self.node_marker:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 raise AutomataError("Could not find beginning event")
+> > > > @@ -116,7 +117,7 @@ class Automata:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # process nodes
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for line in islice=
+(self.__dot_lines, cursor, None):
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 split_line =3D line.split()
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ if not split_line or split_line[0] !=3D "{node":
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ if not split_line or split_line[0] !=3D self.node_marker:
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 raw_state =3D split_line[-1]
 
