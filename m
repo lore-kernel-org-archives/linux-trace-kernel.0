@@ -1,375 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B47B44DB6A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 15:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012953019DC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 16:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768921710; cv=none; b=uSetff9fJAcvQ8i35U/SmyqZvCE2/WVDaCzTlU4a2gDLno4J2zi2BzXYw7JT9dhskE5u2soFr+2JWUetUkZT4Iq1Wo0riZc09Fjxiop1MgmjZaU/SoPCf9G8sWK/P/TRktBYA8wdgtFRQ4q10RKW10Lz9GgaB+zAcgJLoicPgkY=
+	t=1768925833; cv=none; b=W2GAbNyoWeEb0ChxhpkJAvsGG0GLTMG7TzygWPHaAfFGUCR+RLT89P/VtvpVj32MIA4ML5z+CH/r+d+LqRIQTNCW5LSExaR/nkaBerovP4+32GwgA9cAKSLKAobsMLoqqGclWSQhX9qy4QQdBjmP9MoZM9JYrDGoTW7T4XizWB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768921710; c=relaxed/simple;
-	bh=EVI4jkeh3zL/fFfXmk1dmFj/bIJk4+q7h5X87OJKKk0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BEbXIr3wHAert1CrXG97UQSzAHybbHmWdmMZotZcKGeCYhtU6oyXU8K6sCXLiJJKum53AUUsplgJ16+sYhBo1Jat5CioTiciJXBtrC4SZJ5JD/ftgg+zvjw0yTukn21TVyPukKcPutUkfz7/WaI8iA3uDa1pnF6jw5t9+GKhxTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/6J6QKL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1768925833; c=relaxed/simple;
+	bh=PmOIAqTODMTgWMF8/2juxnklYND8v64jg8vnxapTPvs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkzZmMcduzo5K0JxSvKMc8dzJi6ZXk4v6tEW4LeX/QLqu/9CvbWfbvMDSaLjq/WIBNsQj7MMs11aRDklCSgDxqiwK0pWovKFWTufTvj0SKbKuCoaO6hTPrQ8ddyVs1U6kV4PWiUIU1dMxG5GOVv1CM7rI7uXiUT5u9WON9Lwd70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOObbfQQ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/6J6QKL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768921707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EVI4jkeh3zL/fFfXmk1dmFj/bIJk4+q7h5X87OJKKk0=;
-	b=U/6J6QKLMj/LTpO07Kg3fweLh/HGTvq9rBg75B3Q+i2bSOCgR3VrVD6TUNu4Y9r3zIhtaT
-	vPgGb4EcPhX+M31yWJQVsPeiKZOzIjZRUIA3wenpX/qOd8apBnaA2uxW9gVB0fV8wfbs2Z
-	gxnll7P0Ye+epURZ8nBzTN/ND9TmspM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-tl9IIXZlPMqzn4542FKI7A-1; Tue, 20 Jan 2026 10:08:26 -0500
-X-MC-Unique: tl9IIXZlPMqzn4542FKI7A-1
-X-Mimecast-MFC-AGG-ID: tl9IIXZlPMqzn4542FKI7A_1768921704
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-43284f60a8aso4665808f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 07:08:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOObbfQQ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4801bbbdb4aso28901315e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jan 2026 08:17:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768925830; x=1769530630; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=koUhaSfBzYpa7sLxEUiUMYtFrPSfWsUlovv+DUvky20=;
+        b=XOObbfQQWQ486VC8bUZF3ob+RE0qCgmayOfE7Bp5vAyS7o9HWBaaUYHHUlo3XCd2hL
+         wEzwRxz5X0doiIVZSuacoHi2jB8jhAJMgccLfgVUyXlyuz2zM4nm3Ak9mSlPmo3+iGQ+
+         yKOPBkNS9oW/SE51VswH89/NO759YzasUoOV2QAhXCFKc81sOG4D/EJA1TisHZaFEjgf
+         Yau3TjIN2tSOulZLk1dkfD8Gx7SMBR9aOACvvErIlwLIF6Nwm6ePOBKshZjQOoZo7pq8
+         ylzPJq/5m3AwLD0ADjKDj6WF2qt3MuFjzyb1w5sYBYZOn2DgImMGpFO9OGoo4qDX717U
+         jkog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768921704; x=1769526504;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVI4jkeh3zL/fFfXmk1dmFj/bIJk4+q7h5X87OJKKk0=;
-        b=Gmx8LgfNSQ8TG7GBW44Lb+jAUgb1uBtDbQw/OY54U/e5wmy2wKLzqltw0mVQuKllus
-         c00yA2O4AZ6PtbW3wL5qneTWg4GhWa8mp0ajVTt/I9vFvmi7hWu6AK0DucWQZS7gETgz
-         ko3hHjvwtt46LI16s+sFR6AU7gkweOL8zvoHf31pMVGz194ScpaWLRNXghRRUTE3MGDx
-         K6nJ84dwQP9IvHudysO+oQe/zt0NGAeKFunKYPjBWRZIzigIc+9aekR9UYqxJqnZeMMQ
-         lz0ksYi9zc6n0G5pMg8VPa1QfCJ5A+Sa+dii208kVaILpzcb/dMO8tFbFjDwA/5jdv96
-         yZbA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/EFM+ZRt6kMxZ9kYZx9rGR95RvSOzzGz39XgkEaBkIhhVRFo4GTmQAB8Est56yZ3cmUszy3EVxDxxXFUSmlYqi6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxabBXxtofl+DS+zt6p2aQicMIYklhujMBN0nDiUwBZviOdVHiu
-	EAVWH33u6v7BYuHJvhUHYWneam65sT96tTgDPzZzPGgd6E1WLWTXzdxp5Mgy6e4LnuIPPCS6KTp
-	c0uR2ss6cnc8Y7TIQMLDkbH7Nb5RhMUALwft4U9c2W/W5Sh5IrfGE6jN+NvRdbuejIheHdXgKsQ
-	==
-X-Gm-Gg: AY/fxX7+0mQxuMZp8LgO4Qwl2hTVfUCeSQ2Sq9ui9OyQLTfZwMa5LQJMOI70DOFK+5/
-	Rm0Wze1YIt/THz8LnwnvNtsnuv59eOYWaYd2InFoYinA+vTLUny/oZr/YuUvoj0n4INlsAbeZ7L
-	aNyKWt4p29qDPc6q2O18fjHnbMuqRr1EeY7I+IJGbBNA/bM32VoeIiVgBayGM+Ed+wYTpJOUjfP
-	ibduu9WRI/gv5UqKo6RHf+w6KoMaDQv5wMY7N0y2XtQIV9rzq7s4I93BewdtR8CMeFty+6DAb6V
-	O94qBbmt98vK8zDgQL11zrbJp64RkG9/6HhVvCxzxoM2pjYgqr6Edcl8mmSrvCKocOdjMYLf6OQ
-	trXBkLCUzfVKtMztAFoFOfALdui50xdS2WKD63SZFSeZhYkPrFOEHEBJN3eZdV2Ei8Z2yngXqx4
-	oF4PeDsJrg
-X-Received: by 2002:a05:600c:630e:b0:479:3a86:dc1e with SMTP id 5b1f17b1804b1-4801e34f6e7mr212601965e9.36.1768921703851;
-        Tue, 20 Jan 2026 07:08:23 -0800 (PST)
-X-Received: by 2002:a05:600c:630e:b0:479:3a86:dc1e with SMTP id 5b1f17b1804b1-4801e34f6e7mr212601405e9.36.1768921703214;
-        Tue, 20 Jan 2026 07:08:23 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e8c9cbcsm250037655e9.12.2026.01.20.07.08.22
+        d=1e100.net; s=20230601; t=1768925830; x=1769530630;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=koUhaSfBzYpa7sLxEUiUMYtFrPSfWsUlovv+DUvky20=;
+        b=KElG11IOdk86T+c4iy6EmMHkpfDQ3YiGoxumyg4R1QeBy7GZ0etosS+yHGBq0anwRt
+         W7LxML8DqbGnXuml8zxbv2ka8yYZBmeXr1d/TW1Haprsq3+jV8AfRn8+1s/fPX+exePX
+         ZVRV3TINpaAgg1SgzxtwAhMLFnhHMQXdCwkRNSMDXd28LseaaySssc50veOxBz+Ap05K
+         rxTBQhi3ibdsOG1oyzp/GOwWKU/lML7cps2yi+pZVzmqNx7LM3vjuv1DSKxWRn7jluUX
+         oF1HJspGA3Ocosl3xXLKUiQZzokNpYpD1DUuLDHxWCYLPXGl6LVjOd/rqjklSYga6L0k
+         LRIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWwP5w2HmX7W3r3Z8DKe014lzxzKcpEvSP729IB64nYlgeET+8D4mENpFmV+GExCmNQf6bpIV4fStHyxrCTGcUozE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjgczGa3jGIfaPBtG+orwLmwR/UBYU+Js6Pjf51UO4yR80rIQD
+	9iw8NdUdiWakYL4cAGZHZksR8ZIrRlr7td2vgMf6GsxYaZF2NLyjapuL
+X-Gm-Gg: AY/fxX5hzo+0pUYjhTi2sgHhSPCk5oUfMQ/c5QK8I7jfsoN7X3m7UoRLPLu2iTs0P0B
+	fdZDelul0I2BJxseRVnpWVWDfpHV67qdiBlaHOFNJCItbIyZW0uENCLLUpcwhy8s7E9WxSkPHJF
+	4S1VjuALsTg52p264su7BAp2QqXiuikncGgKfbmFDPOFtBoonJPbw9HcAn/L1U5wCI6O1TvNIRx
+	vGf8HICpbuBQEbouIXfUBjz5/8idx7O9S3RKRhZhbrToSEv9g/KyQLVc/2tGU9YoHu+XafzWTUr
+	plj4BdHHxCBHjHlwJAx0lCcVWMIFp3gkBlCySz6fVz/jR4/OzwDB/Jn6ySzSdRTxXzWpdu0HE+Y
+	+86ajtAtxK+gAeO4DTFKiqGE6t7QAjSsTEN79HNR0dkdJl54VeLBELdA5MU2u
+X-Received: by 2002:a05:600c:314f:b0:479:13e9:3d64 with SMTP id 5b1f17b1804b1-4801e67c8ecmr190818375e9.15.1768925829948;
+        Tue, 20 Jan 2026 08:17:09 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4801e9434d9sm116205165e9.0.2026.01.20.08.17.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 07:08:22 -0800 (PST)
-Message-ID: <fb6b81910e32dbf7aa16e1961dc1dca0a9bfbf57.camel@redhat.com>
-Subject: Re: [PATCH 01/26] rv/rvgen: introduce AutomataError exception class
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
- open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Tue, 20 Jan 2026 16:08:21 +0100
-In-Reply-To: <aW9ySuaPMZVm-MrN@fedora>
-References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-2-wander@redhat.com>
-	 <24e308b019cf9272884091f85b6675fd05201a2b.camel@redhat.com>
-	 <aW9ySuaPMZVm-MrN@fedora>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+        Tue, 20 Jan 2026 08:17:09 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 20 Jan 2026 17:17:08 +0100
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mahe Tardy <mahe.tardy@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH bpf-next 2/4] x86/fgraph,bpf: Switch kprobe_multi program
+ stack unwind to hw_regs path
+Message-ID: <aW-qhJ2pige8aRl4@krava>
+References: <20260112214940.1222115-1-jolsa@kernel.org>
+ <20260112214940.1222115-3-jolsa@kernel.org>
+ <20260112170757.4e41c0d8@gandalf.local.home>
+ <aWYv6864cdO2PWbb@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Oxdz9df6_T8Nip0VAHBqM48rJH7VouIxKgAoZU2Q3vk_1768921704
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWYv6864cdO2PWbb@krava>
 
-On Tue, 2026-01-20 at 09:39 -0300, Wander Lairson Costa wrote:
-> On Tue, Jan 20, 2026 at 08:33:10AM +0100, Gabriele Monaco wrote:
-> > I agree catching all exceptions like this is quite detrimental while
-> > debugging,
-> > but I see the original intent.
-> > When you run commands written in python, you normally don't expect them=
- to
-> > blurt
-> > a stack trace when doing relatively normal things, like opening a wrong
-> > file.
-> > Sure that might be useful when debugging, but for a user-facing tool we=
- want
-> > to
-> > write a meaningful error message and gracefully fail.
-> >=20
->=20
-> One option I thought was to keep it as it is but adding a --debug option
-> which would reraise the exception and then print the stack trace.
-> But as the users are developers themselves, leaving the exception
-> unchaught would help them identify the error (although I am strongly
-> against doing this in server side code). Another reason is the case
-> when the code itself has a bug. That would facilitate bug reports.
+On Tue, Jan 13, 2026 at 12:43:39PM +0100, Jiri Olsa wrote:
+> On Mon, Jan 12, 2026 at 05:07:57PM -0500, Steven Rostedt wrote:
+> > On Mon, 12 Jan 2026 22:49:38 +0100
+> > Jiri Olsa <jolsa@kernel.org> wrote:
+> > 
+> > > To recreate same stack setup for return probe as we have for entry
+> > > probe, we set the instruction pointer to the attached function address,
+> > > which gets us the same unwind setup and same stack trace.
+> > > 
+> > > With the fix, entry probe:
+> > > 
+> > >   # bpftrace -e 'kprobe:__x64_sys_newuname* { print(kstack)}'
+> > >   Attaching 1 probe...
+> > > 
+> > >         __x64_sys_newuname+9
+> > >         do_syscall_64+134
+> > >         entry_SYSCALL_64_after_hwframe+118
+> > > 
+> > > return probe:
+> > > 
+> > >   # bpftrace -e 'kretprobe:__x64_sys_newuname* { print(kstack)}'
+> > >   Attaching 1 probe...
+> > > 
+> > >         __x64_sys_newuname+4
+> > >         do_syscall_64+134
+> > >         entry_SYSCALL_64_after_hwframe+118
+> > 
+> > But is this really correct?
+> > 
+> > The stack trace of the return from __x86_sys_newuname is from offset "+4".
+> > 
+> > The stack trace from entry is offset "+9". Isn't it confusing that the
+> > offset is likely not from the return portion of that function?
+> 
+> right, makes sense.. so standard kprobe actualy skips attached function
+> (__x86_sys_newuname) on return probe stacktrace.. perhaps we should do
+> the same for kprobe_multi
+> 
+> I managed to get that with the change below, but it's wrong wrt arch code,
+> note the ftrace_regs_set_stack_pointer(fregs, stack + 8) .. will try to
+> figure out better way when we agree on the solution
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> index c56e1e63b893..b0e8ce4934e7 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -71,6 +71,9 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
+>  #define ftrace_regs_set_instruction_pointer(fregs, _ip)	\
+>  	do { arch_ftrace_regs(fregs)->regs.ip = (_ip); } while (0)
+>  
+> +#define ftrace_regs_set_stack_pointer(fregs, _sp)	\
+> +	do { arch_ftrace_regs(fregs)->regs.sp = (_sp); } while (0)
+> +
+>  
+>  static __always_inline unsigned long
+>  ftrace_regs_get_return_address(struct ftrace_regs *fregs)
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 6279e0a753cf..b1510c412dcb 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -717,7 +717,8 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
+>  /* Retrieve a function return address to the trace stack on thread info.*/
+>  static struct ftrace_ret_stack *
+>  ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+> -			unsigned long frame_pointer, int *offset)
+> +			unsigned long *stack, unsigned long frame_pointer,
+> +			int *offset)
+>  {
+>  	struct ftrace_ret_stack *ret_stack;
+>  
+> @@ -762,6 +763,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+>  
+>  	*offset += FGRAPH_FRAME_OFFSET;
+>  	*ret = ret_stack->ret;
+> +	*stack = (unsigned long) ret_stack->retp;
+>  	trace->func = ret_stack->func;
+>  	trace->overrun = atomic_read(&current->trace_overrun);
+>  	trace->depth = current->curr_ret_depth;
+> @@ -810,12 +812,13 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+>  	struct ftrace_ret_stack *ret_stack;
+>  	struct ftrace_graph_ret trace;
+>  	unsigned long bitmap;
+> +	unsigned long stack;
+>  	unsigned long ret;
+>  	int offset;
+>  	int bit;
+>  	int i;
+>  
+> -	ret_stack = ftrace_pop_return_trace(&trace, &ret, frame_pointer, &offset);
+> +	ret_stack = ftrace_pop_return_trace(&trace, &ret, &stack, frame_pointer, &offset);
+>  
+>  	if (unlikely(!ret_stack)) {
+>  		ftrace_graph_stop();
+> @@ -824,8 +827,11 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+>  		return (unsigned long)panic;
+>  	}
+>  
+> -	if (fregs)
+> -		ftrace_regs_set_instruction_pointer(fregs, trace.func);
+> +	if (fregs) {
+> +		ftrace_regs_set_instruction_pointer(fregs, ret);
+> +		ftrace_regs_set_stack_pointer(fregs, stack + 8);
 
-That could be a good tradeoff. Users are developer but (although I'm not su=
-re if
-it really happened yet) are not the rvgen developers, they don't need to kn=
-ow
-where exactly the code complained, unless it really broke.
-All errors that are expected (OSError or wrong format) should have a meanin=
-gful
-message for the user, I believe by doing that we'd have a pretty clear idea
-where the error came from in the code too (e.g. event parsing, opening a fi=
-le,
-etc.).
+actually looks like this might be better solution.. storing the proper
+rsp value directly to the regs in return_to_handler
 
-If the code has a bug, then yes we should throw the exception as is, that's=
- why
-I think it's good not to catch Exception, but to catch only the few excepti=
-ons
-we know can happen, all others would be bugs.
+jirka
 
->=20
-> Perhaps we could catch more specific exceptions that would indicate a
-> problem with the dot files instead of Exception. Like
->=20
-> try: ...
-> except AutomataError as e:
-> =C2=A0=C2=A0=C2=A0 print(f"There was a problem processing {dot_file}: {st=
-r(e)}",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file=3Dsys.stderr)
-> =C2=A0=C2=A0=C2=A0 sys.exit(1)
->=20
-> Which would be a common case. And leaving other types of exceptions
-> unchaught.
 
-Yeah pretty much
-
->=20
-> > Other story is when the exception is something unexpected (that's why
-> > leaving a
-> > generic Exception here is bad).
-> >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 print("Writing the monitor into the director=
-y %s" % monitor.name)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 monitor.print_files()
-> > > diff --git a/tools/verification/rvgen/rvgen/automata.py
-> > > b/tools/verification/rvgen/rvgen/automata.py
-> > > index d9a3fe2b74bf2..8d88c3b65d00d 100644
-> > > --- a/tools/verification/rvgen/rvgen/automata.py
-> > > +++ b/tools/verification/rvgen/rvgen/automata.py
-> > > @@ -10,6 +10,13 @@
-> > > =C2=A0
-> > > =C2=A0import ntpath
-> > > =C2=A0
-> > > +class AutomataError(OSError):
-> > > +=C2=A0=C2=A0=C2=A0 """Exception raised for errors in automata parsin=
-g and validation.
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 Raised when DOT file processing fails due to inva=
-lid format, I/O
-> > > errors,
-> > > +=C2=A0=C2=A0=C2=A0 or malformed automaton definitions.
-> > > +=C2=A0=C2=A0=C2=A0 """
-> > > +
-> >=20
-> > I'm not quite familiar with modern python best practices (so again, tak=
-e my
-> > comments with a grain of salt ;) ), but what is the advantage of using =
-this
-> > custom exception instead of using pre-existing specific exception types=
-?
-> >=20
-> > Although the difference is minimal, here you're throwing an OSError for
-> > something that quite isn't (e.g. wrong format for the dot file).
-> > A ValueError feels more appropriate to me in most of the instances here=
-.
-> >=20
-> > All in all, I would do something like:
-> > * throw a ValueError (or a custom one based on that) whenever we expect
-> > wrong
-> > data not dependent on OS features
-> > * throw OSError whenever that was the exception, perhaps changing the
-> > message to
-> > something more meaningful to us (like you're already doing here)
-> > * intercept only those errors in main.py and print the message without =
-stack
-> > trace (if the message is clear enough we shouldn't need it).
-> >=20
-> > Does it make sense to you?
-> >=20
->=20
-> The reasoning behind specific exception types is to allow the calling cod=
-e
-> process diferent exceptions in more specialized code paths, like the
-> example above.
->=20
-> AutomataError could derive from both OSError and ValueError.
->=20
-> class AutomataError(OSError, ValueError): ...
->=20
-> Which would address your (valid) point. This way, the calling code could
-> either process specific automata related errors with AutomataError, or
-> handle general file error, like that:
->=20
-> try...
-> except OSError as e:
-> =C2=A0=C2=A0=C2=A0 print(f"File error: {str(e)", file=3Dsys.stderr)
-> except AutomataError as e:
-> =C2=A0=C2=A0=C2=A0 print(f"Ill formed dot file: {str(e)", file=3Dstderr)
->=20
-
-Yes! That's exactly what I mean, those are exceptions we expect, so no spla=
-t,
-all others can just propagate.
-
-Thanks,
-Gabriele
-
-> > Thanks,
-> > Gabriele
-> >=20
-> > > =C2=A0class Automata:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 """Automata class: Reads a dot file and part=
- it as an automata.
-> > > =C2=A0
-> > > @@ -32,11 +39,11 @@ class Automata:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 basename =3D ntpath.=
-basename(self.__dot_path)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not basename.ends=
-with(".dot") and not
-> > > basename.endswith(".gv"):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 print("not a dot file")
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("not a dot file: %s" % self.__dot_path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise AutomataError("not a dot file: %s" % self.__dot_path)
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 model_name =3D ntpat=
-h.splitext(basename)[0]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if model_name.__len_=
-_() =3D=3D 0:
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("not a dot file: %s" % self.__dot_path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise AutomataError("not a dot file: %s" % self.__dot_path)
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return model_name
-> > > =C2=A0
-> > > @@ -45,8 +52,8 @@ class Automata:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_lines =3D []
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 dot_file =3D open(self.__dot_path)
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except:
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("Cannot open the file: %s" % self.__dot_path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError as exc:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise AutomataError(f"Cannot open the file:
-> > > {self.__dot_path}")
-> > > from exc
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_lines =3D dot_fi=
-le.read().splitlines()
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_file.close()
-> > > @@ -55,7 +62,7 @@ class Automata:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 line =3D dot_lines[c=
-ursor].split()
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (line[0] !=3D "di=
-graph") and (line[1] !=3D "state_automaton"):
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("Not a valid .dot format: %s" %
-> > > self.__dot_path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise AutomataError("Not a valid .dot format: %s" %
-> > > self.__dot_path)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 cursor +=3D 1
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dot_lines
-> > > diff --git a/tools/verification/rvgen/rvgen/dot2c.py
-> > > b/tools/verification/rvgen/rvgen/dot2c.py
-> > > index b9b6f14cc536a..1a1770e7f20c0 100644
-> > > --- a/tools/verification/rvgen/rvgen/dot2c.py
-> > > +++ b/tools/verification/rvgen/rvgen/dot2c.py
-> > > @@ -13,7 +13,7 @@
-> > > =C2=A0# For further information, see:
-> > > =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
-> > > =C2=A0
-> > > -from .automata import Automata
-> > > +from .automata import Automata, AutomataError
-> > > =C2=A0
-> > > =C2=A0class Dot2c(Automata):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 enum_suffix =3D ""
-> > > @@ -93,7 +93,7 @@ class Dot2c(Automata):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 min_type =3D "unsigned int"
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if self.states.__len=
-__() > 1000000:
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("Too many states: %d" %
-> > > self.states.__len__())
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise AutomataError("Too many states: %d" %
-> > > self.states.__len__())
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return min_type
-> > > =C2=A0
-> > > diff --git a/tools/verification/rvgen/rvgen/generator.py
-> > > b/tools/verification/rvgen/rvgen/generator.py
-> > > index 3441385c11770..a7bee6b1ea70c 100644
-> > > --- a/tools/verification/rvgen/rvgen/generator.py
-> > > +++ b/tools/verification/rvgen/rvgen/generator.py
-> > > @@ -51,10 +51,7 @@ class RVGenerator:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise FileNotFoundEr=
-ror("Could not find the rv directory, do you
-> > > have
-> > > the kernel source installed?")
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 def _read_file(self, path):
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f=
-d =3D open(path, 'r')
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError:
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-aise Exception("Cannot open the file: %s" % path)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fd =3D open(path, 'r')
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 content =3D fd.read(=
-)
-> > > =C2=A0
-> > > @@ -65,7 +62,7 @@ class RVGenerator:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 path =3D os.path.join(self.abs_template_dir, file)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return self._read_file(path)
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except Exception:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 # Specific template file not found. Try the generic template
-> > > file
-> > > in the template/
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 # directory, which is one level up
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 path =3D os.path.join(self.abs_template_dir, "..", file)
-> >=20
-
+---
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index a132608265f6..971883045b75 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -368,13 +368,16 @@ SYM_CODE_START(return_to_handler)
+ 	subq $8, %rsp
+ 	UNWIND_HINT_FUNC
+ 
++	movq %rsp, %rdi
++	addq $8, %rdi
++
+ 	/* Save ftrace_regs for function exit context  */
+ 	subq $(FRAME_SIZE), %rsp
+ 
+ 	movq %rax, RAX(%rsp)
+ 	movq %rdx, RDX(%rsp)
+ 	movq %rbp, RBP(%rsp)
+-	movq %rsp, RSP(%rsp)
++	movq %rdi, RSP(%rsp)
+ 	movq %rsp, %rdi
+ 
+ 	call ftrace_return_to_handler
