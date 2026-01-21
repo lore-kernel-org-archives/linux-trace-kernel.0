@@ -1,75 +1,83 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1EC30EF8E;
-	Wed, 21 Jan 2026 14:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99A236E46D;
+	Wed, 21 Jan 2026 17:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769007224; cv=none; b=n8i7j7GgdgSqQdE2BsM9chNEnL4D7xdeIQlj7TetcSaZDWFFqqDCDp8cYF8jHdrwCNHgnWmeU9FrCDpvTSyY3CRS5lQrsaUafpA91Cv3o8UJi/NSLXmLDP/grgCD+H2UvHW1uJOV5Zb949rZ7He6669eBmJO2sJrVy2ccdnw44A=
+	t=1769017211; cv=none; b=EBHmTJh9KDAeqDvXnvtWcWf8SRjkqEUxVaH9nG9QUpYqkHKqKaaYtMkFEop23b8c2h1GZGx5Sg6+NecVvt+93oSqAKtwyBFq8Vh+gyf8s9GCLHiA2skO9eXYst1ijRvfHmiAXpM15i87HPWQcosj1J5uVc7yywCrvA7M+hCCp0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769007224; c=relaxed/simple;
-	bh=rGnr3IaClsAviexlx2psE8oibYD3ZJKjpZ+iDoFLnxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DgGHfwXPrbwr0pa4Oyw3918vyBC0DXEZfJaCQK6Io7I/PRjD5kwElgRE1AokZWxLN8tV6WgKeaaQNX2TmF6AWKBYqlfLFx+CDRxLyYVlteC+7SEXOe3VR0XqxdX5/Lwoxfcp0Zax3sjlsg57DmNzazPMUXdiXZuira/448+eEU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id AF48513B056;
-	Wed, 21 Jan 2026 14:53:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 753B320012;
-	Wed, 21 Jan 2026 14:53:33 +0000 (UTC)
-Date: Wed, 21 Jan 2026 09:53:56 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yury Norov <ynorov@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christophe Leroy <chleroy@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, David Laight <david.laight@runbox.com>,
- Petr Pavlu <petr.pavlu@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, Daniel Gomez <da.gomez@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Joel Fernandes
- <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, "Yury
- Norov (NVIDIA)" <yury.norov@gmail.com>
-Subject: Re: [PATCH v5 0/6] Unload linux/kernel.h
-Message-ID: <20260121095356.5b90b1ad@gandalf.local.home>
-In-Reply-To: <aWpwHbrvQ2MMGgH-@yury>
-References: <20260116042510.241009-1-ynorov@nvidia.com>
-	<aWoVRlm1GFux-Z-9@smile.fi.intel.com>
-	<aWpwHbrvQ2MMGgH-@yury>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769017211; c=relaxed/simple;
+	bh=0a7UionxedEFE9bTWe9aMwNbENMDs5Wq/yYa4BGnEd4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=X3xMxmoIIUkpvqyVrQ3PO8f9jajBR5uEhDeOo+tukwY0vTKjEAw0PHbDMQbYV8C8yqm4ASY+C8kYnsajatH0TopX5BF5sw6nkGMcM1Js47r5ygm85bpXWo1rFEPPCWct9iEKWen1SLWwFjghet7ZJbSlbmqn2nllpzXUOmJNjpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/j3EpV6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/j3EpV6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D85C4CEF1;
+	Wed, 21 Jan 2026 17:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769017211;
+	bh=0a7UionxedEFE9bTWe9aMwNbENMDs5Wq/yYa4BGnEd4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=e/j3EpV6XO6A162EzSSIG9zcq0Egt430wdrFnu254reCsq824copRhQvuWrJFqof1
+	 PE0uUStrEWz4oOgctuXDIawklEZ6p5u193tWdEplTTDh7PdcLt7NakRK7GjyhUXROZ
+	 3f3gLGg2FVsFdX7bACRmmRAoJP6Qg8G2sj5ailHYQ6/JPu4u6GrXYXKYwvVrheRrUa
+	 2GBHoWZj4M/ox4ylDIaMW5/5HUKBd6a0tl/2JndZ9vw+nLs2oGkosNG/Ubsvf6pqPv
+	 1xYh1hER2i94qcxcELHyZInDrUfe7hrxul4lnhaJ8B2bFNKPK3Jwr7jVM7UpAhSmSO
+	 zpghVC+y97+zw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4EB8D3808200;
+	Wed, 21 Jan 2026 17:40:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 753B320012
-X-Stat-Signature: 7hndaqh4hbjwzuwg6rf9q9e8akwt1g1d
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+CBSYa8KCvUhwdLmHjFWraz0AOAVFSDEI=
-X-HE-Tag: 1769007213-216120
-X-HE-Meta: U2FsdGVkX1/EE2lFftZ6F21i0EqRoDcSVTjbX2oqW5/7OP38ayT8yTN4YkVkKSQf0zMYGzeBHy8gpS5qYvvt9xlAuOqkBmGcCmTJG7MTudhVj+V2SrKmaaxzuz5NcKCHxlf4JFeEv0BDDHQxUNEisro+vEDfU7EuSiyw+D1AWo+4ZwH877vmvdOCb4/O9u22SXDVzqDAzj2YYfKJsuEdXY/wKY0wMaBevSDCPebyFZbe4tpdledMCmT4+0Sb+1kP/zs7I6IT0gSVEJCU/DrLz1WZbU/FlBWhcLAsHDYNNgVw+/2V3uSuUrS3rt3tr8D4Yw1bNVwqox2qF4QdbVswXbpuSis4mK2ScucIIDTJQELTzYLFMk03sg==
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v5 0/2] bpf: support bpf_get_func_arg() for
+ BPF_TRACE_RAW_TP
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176901720810.1387878.7393789218608952602.git-patchwork-notify@kernel.org>
+Date: Wed, 21 Jan 2026 17:40:08 +0000
+References: <20260121044348.113201-1-dongml2@chinatelecom.cn>
+In-Reply-To: <20260121044348.113201-1-dongml2@chinatelecom.cn>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: ast@kernel.org, andrii@kernel.org, yonghong.song@linux.dev,
+ daniel@iogearbox.net, john.fastabend@gmail.com, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, mattbobrowski@google.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 
-On Fri, 16 Jan 2026 12:06:37 -0500
-Yury Norov <ynorov@nvidia.com> wrote:
+Hello:
 
-> > Thanks! Which tree should it go through?  
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Wed, 21 Jan 2026 12:43:46 +0800 you wrote:
+> Support bpf_get_func_arg() for BPF_TRACE_RAW_TP by getting the function
+> argument count from "prog->aux->attach_func_proto" during verifier inline.
 > 
-> Andrew or Steven maybe? As a last resort, I can move it myself.
+> Changes v5 -> v4:
+> * some format adjustment in the 1st patch
+> * v4: https://lore.kernel.org/bpf/20260120073046.324342-1-dongml2@chinatelecom.cn/
+> 
+> [...]
 
-I think it makes the most sense for Andrew to take it.
+Here is the summary with links:
+  - [bpf-next,v5,1/2] bpf: support bpf_get_func_arg() for BPF_TRACE_RAW_TP
+    https://git.kernel.org/bpf/bpf-next/c/85c7f9147147
+  - [bpf-next,v5,2/2] selftests/bpf: test bpf_get_func_arg() for tp_btf
+    https://git.kernel.org/bpf/bpf-next/c/1ed797764315
 
-Thanks,
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
--- Steve
+
