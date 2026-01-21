@@ -1,83 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E420033D6C1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Jan 2026 13:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67ED22D4DD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Jan 2026 13:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769003048; cv=none; b=jth5Ck+NF7UvJZzPmyyMjfCvtksETLUtQnOtbhobqmT3l7jpAn0t5nhiDNURL9n1LS59jGIscTAridg/KxbJEDs0SfwXxN3YqURtr7m5Cy4tZQcFCPFfcqf/OUZIf81OyRqvKeWjWw54SMg4WX7OMXruwctpBQ/D2ShJGj5CFBM=
+	t=1769003830; cv=none; b=c7HnkBGAIkxRYYkzBgkGMQy1PQmpRmJXY4erANKt5reP6Wviwbi03mdo+2i/HoqA0uFYyVsZO+5lZALq4ajj5LKiimKgbQLuMaC3w+6FBbdNZ+khUvz2rfcCuHl+ZdPv38MIWgNd5r9XDRomt0PQS827lX4UjFSOUWrwTrzufAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769003048; c=relaxed/simple;
-	bh=Q7Ax6j/bSX7wjx7A+SEIOMV04l40q375Z2jGslCodMw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xgn1gQRNA5YpD3/u4V0xwJM8naK29aCGwvreGnjSkedaYjUHXfi1ETJYBDuz/dH+0IjO0gRbGquSd8Bu0C3ZljDjtHdVzHaW3b9PonET9ufBO6tC+98CR1LBxzYvLo7MIndHRDtVq14EDaY7WJ+IIm6HbQv/Qo0zpbyGVsTutqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d3n2sxa0; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1769003830; c=relaxed/simple;
+	bh=JdplGQJf+BfrG/OQ6lJ2yz0j9UM5Z34otsbxl3N6ZvA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dKyOgMIy2EFewljVBr8GkdxsZoVCGGjUFop6M1b5dlD8ZbU/Oesbw4D8q5cwXWleHcfpqdayMBvHU5aK+Ym0XfYP/eSPnQUnTfgQwbUFS0tutGf8eBpvDZ2aJAeANNicGWLyrYvanVzkGALRk5mNkuV36+gkcE5eyAkjPgjGBjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gzyPBcXz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d3n2sxa0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gzyPBcXz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769003044;
+	s=mimecast20190719; t=1769003826;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0ySSMpi/fJ/0LmtMMKxQ5EmM8mjj/cLtAeTe6QHLFJ8=;
-	b=d3n2sxa0v/pFsdLKb3orypNCuvwlf5f5ZGAhfBj41W6B70BfgxL0vOS9aC2SoMGzcdG9EX
-	lJZJ9WAJlVVTSVG6UVO/pfqSps5rur00sbsTnRI2EtKDJKCja+ThyUWyamvRnpFg/Zqx9J
-	4/FYNMWfNd/a9vAK2WThk8mxd1SKuKQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=JdplGQJf+BfrG/OQ6lJ2yz0j9UM5Z34otsbxl3N6ZvA=;
+	b=gzyPBcXzcPgkg/oaA6igpJXfHIRVecPt789CklG2bmPi+lOXJ94jweY1U8Mrga++b/ezGV
+	taZ3l7xtwUolYqZk4CIip2SbRGhq+9pQeLMKV8AhdVNmQq5bp1f0ZJ920vdGp3z7u33b8b
+	/OiynW5AvT5a1/znQRZxisa49rphPwU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-xvsBCmakPgSVx9nRZ-olPg-1; Wed, 21 Jan 2026 08:44:03 -0500
-X-MC-Unique: xvsBCmakPgSVx9nRZ-olPg-1
-X-Mimecast-MFC-AGG-ID: xvsBCmakPgSVx9nRZ-olPg_1769003042
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4358f1c082eso623366f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Jan 2026 05:44:03 -0800 (PST)
+ us-mta-663-CqTZ7F0cOJaPwhYzi9s33w-1; Wed, 21 Jan 2026 08:57:05 -0500
+X-MC-Unique: CqTZ7F0cOJaPwhYzi9s33w-1
+X-Mimecast-MFC-AGG-ID: CqTZ7F0cOJaPwhYzi9s33w_1769003825
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47d3c9b8c56so76942925e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Jan 2026 05:57:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769003042; x=1769607842;
+        d=1e100.net; s=20230601; t=1769003824; x=1769608624;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :references:in-reply-to:date:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ySSMpi/fJ/0LmtMMKxQ5EmM8mjj/cLtAeTe6QHLFJ8=;
-        b=C9/vToOLRnHvX/Ow/P4VVVOU3OoSUil9d64tqnpVE2K3xoUPB2Ghm3lXVbyKDXeqdN
-         GLZjvR6CU3AU6Wx7LjK1q3iTUlt3pvovTI219y7vnEi9ySz3wtYuoizwwn59B19Iz/4Z
-         8eCO80ipGVn5LymViYggSuvfh8+YZV2OVhasex7FCzbZkTmz1WyqQviqGOVSksAyh4UM
-         3E2CWj0N5qP4mY0EGLu3woNmKPLkJWjP/gq5lLN7d6/+a5TZ090beLiGXHAPunBY9HsP
-         HebuwLKuiAcjjuyvhIBjCCSNLDnVDU73xcMbFLoHIA0bYc9L8X83ZV3DnijGG4P5JQrl
-         k4uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWos8KyRCPRS+dO5aoSSVFiXz2CdNG/LWMQk2S9ES5tmvM0mHKqc0TAY4fMqJKEYvbcTyV2E+OB3CO9vb4BfAV83V4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyD9nhkynds0m7KSZ4bnGk0Lt9gcNo2gMSIqCLsOcUMyHXJRIe
-	oRldi/2oG7ch+/h6xh3amyaqmcnH9FAUDs+Td5OdnG9v7Z8ED9B3jDqjqGosgpdLo5sf2EjUcci
-	eV99w1yMmJ2qejXS0/yiINiPq6D8EqJ9hutjbt85xaoBzH6JeP4SVE3joaEADv9PhEq9PNvdb59
-	oPkcDsoJRx
-X-Gm-Gg: AZuq6aIaAAI+IHKT3/UxS68U2zYfLGv09cRAD8Gsi0ZOgld5MrlT8oDehZd/bUT5WPl
-	ehpjyO8hL2lrkjWHGM+jHUeJ5/v5UZHxI180A+EUZaSCvolxSQhhTlgr1hYo5kjRK7wriyXu1pc
-	Y4mNuTNf6iyLs6MkMJ46axTtEGWlUSzAQcgdgvryW17TiMkXIih/wuwv+Dkq+qJznOpkyzCrZSd
-	0l/vSovyGQ378nYUqkwNUNwdox+2P9ZKpuuDxAVp/B1KbcHDNJSzSIBgmKAQYvsTPpWTDBiekIA
-	DAiva/tVMgXvxcQ9c0dmcPywt1muoDwrHbKuWtqZi8ugvZn4fZA1oGGXRbgcddu2OyIv8DLRQP/
-	6686hgDdk6/igPIC3/XHAFWyUo2qI1Rivi+LUlZ34Q8cyrYesRsbkyNXxQVP7/8Tph81ZErxLnK
-	DtOx4mvrOs
-X-Received: by 2002:a05:6000:128d:b0:435:92c6:d556 with SMTP id ffacd0b85a97d-43592c6d608mr7777626f8f.16.1769003041938;
-        Wed, 21 Jan 2026 05:44:01 -0800 (PST)
-X-Received: by 2002:a05:6000:128d:b0:435:92c6:d556 with SMTP id ffacd0b85a97d-43592c6d608mr7777615f8f.16.1769003041460;
-        Wed, 21 Jan 2026 05:44:01 -0800 (PST)
+        bh=JdplGQJf+BfrG/OQ6lJ2yz0j9UM5Z34otsbxl3N6ZvA=;
+        b=qW1ZARI1diMykObhs+tAHjAwHI8iI5P2fSdcaIGekzGfY9Czab9JODSUfSJZyv6zlQ
+         w/1mODahzc44MHGYAHlXibUIe0NIRllHIhFz4gUOh/luMlUnOpCIeCIkcn+RISJbFpcn
+         A9Gg6hD5e5Z2rPxJi7nzM5I5LRALWfjXcK9g7lnc2i1VnYg9Tr/+YSEiciz9k+eteIru
+         Uw8097vddKu4jLhzj2Iy8AcLqBN490GMnrKe66jJX8B697Oy5dTQuMaX/pqA3EtMyC0s
+         fw6Q8jk0YD/16eRyjxy93wHzl2g6BavjBpqmjgVJE9m5p/I+nw1tv74UTgptJ2Noj0w3
+         Ww6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWxkJWqi49iaKaI/rNbHRF5AGtG0e9yxhWk5lmWhW5hcJyGZyrqPrc3NDH6EdsxzjuWaqV4AODAio0XcL33TY8LBIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0cj5Om30RbkPx1UlIjna7MMN/gPFhsqya3NLih/NFtA1k92RA
+	cTLlWcES9p5UhJT0O6p7YVKZKtw+IJ7jMIJnWQcb++Za1oB8oJjVotZC9fkyqmGx4jVoannfRO8
+	Bo9Vuea82P7JxsBoBtbX1YY4nO/wwCwUcdwcTixbpEl66P4+lbvYmZyYlGtB1HEDjqBcO7Wt1vs
+	114EUJCDvE
+X-Gm-Gg: AZuq6aII8h/o2iVtfFkFHh/lczZMs0qFZVvplCoUrNXCsKExhWfv4jPuWPyZ2Sa3omk
+	jaLfzjjE9pFLTXlg8KZFnMdpU0VQfEUsF/BeRzIjJc8qPNjA5cOY67wq15foiIhImWPvfyQBEjU
+	nrO7YSJCxTQWigVFTRwnOHGTyup2BoMc+9kmozkdMKvLlSfJcUUHBC8+xDuKy45nL0veX+HDaK2
+	/5ECVvOjfWS9xrCPN/FTkTEeIjCV3l8rDkuehfdcPrG+0ZYQKr/V7kZgB2Qj7rXnxCV3ln2tLnG
+	fYACNIY5J3c5IjGEXFtUEy6SEnHkJen4LVJLa1p78qFWbKESL/j1vTPNG94Gl3pVYNFtkkL70f0
+	TOE4f3BC+VMYiXS8znMflTV9QVdOCN1GtUKCTRSQukGkzjZxIlREjdogl6Hfsj/cdRTx7J8+fpS
+	TTueLOC1BF
+X-Received: by 2002:a05:600c:81c8:b0:47e:e807:a042 with SMTP id 5b1f17b1804b1-4801eac800amr231482555e9.15.1769003824449;
+        Wed, 21 Jan 2026 05:57:04 -0800 (PST)
+X-Received: by 2002:a05:600c:81c8:b0:47e:e807:a042 with SMTP id 5b1f17b1804b1-4801eac800amr231482265e9.15.1769003824080;
+        Wed, 21 Jan 2026 05:57:04 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43595e0a705sm8896830f8f.14.2026.01.21.05.44.00
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f4b2755absm469405775e9.15.2026.01.21.05.57.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jan 2026 05:44:01 -0800 (PST)
-Message-ID: <123046455f123d9964970dd8fcf87f2c0b780fda.camel@redhat.com>
-Subject: Re: [PATCH 09/26] rv/rvgen: replace inline NotImplemented with
- decorator
+        Wed, 21 Jan 2026 05:57:03 -0800 (PST)
+Message-ID: <1f168ff5ffb531570fd83e3f398380e8df053275.camel@redhat.com>
+Subject: Re: [PATCH 18/26] rv/rvgen: add fill_tracepoint_args_skel stub to
+ ltl2k
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Wed, 21 Jan 2026 14:43:59 +0100
-In-Reply-To: <20260119205601.105821-10-wander@redhat.com>
+To: Wander Lairson Costa <wander@redhat.com>, Steven Rostedt
+	 <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, open list
+	 <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION (RV)"
+	 <linux-trace-kernel@vger.kernel.org>
+Date: Wed, 21 Jan 2026 14:57:02 +0100
+In-Reply-To: <20260119205601.105821-19-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-10-wander@redhat.com>
+	 <20260119205601.105821-19-wander@redhat.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -95,93 +95,60 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: iWCcfVoG5T41qwGOdNW6TrTEJwH-1xwpJZyP6y-zdEQ_1769003042
+X-Mimecast-MFC-PROC-ID: oUel_B3OsNC15Jw8IRRlkpu9aJC3LwbxWiTdijfaH6o_1769003825
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
+> The ltl2k class inherits from Monitor which requires subclasses to
+> implement fill_tracepoint_args_skel(). However, the ltl2k template
+> uses hardcoded tracepoint arguments rather than the placeholders that
+> this method would fill. The base class fill_trace_h() method calls
+> fill_tracepoint_args_skel() unconditionally, which was exposed when
+> the @not_implemented decorator was introduced.
 >=20
-[...]
-> +=C2=A0=C2=A0=C2=A0 @not_implemented
-> +=C2=A0=C2=A0=C2=A0 def fill_tracepoint_detach_helper(self): ...=C2=A0
-[...]=C2=A0
-> +=C2=A0=C2=A0=C2=A0 @not_implemented
-> =C2=A0=C2=A0=C2=A0=C2=A0 def normalize(self):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise NotImplementedError
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...=C2=A0
+> Add a stub implementation that returns an empty string. Since the
+> ltl2k trace.h template does not contain the placeholder strings that
+> would be replaced, the empty return value has no effect on the
+> generated output while satisfying the base class interface contract.
+>=20
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 
-Is there a reason why you didn't collapse it all on the same line here (lik=
-e you
-did above)?
+Mmh, this is a bit fishy though.
+We the patch using the decorator seems fine, but highlights how this method
+isn't meant to be in Monitor if not all monitors use it..
+Adding a stub here is just sweeping dust under the carpet.
 
-  @not_implemented
-  def normalize(self): ...
+Here should probably keep the common part of fill_trace_h() in Monitor (e.g=
+.
+replacing MODEL_NAME and other common things) and create specific
+implementations in dot2k and ltl2k for what is not common while calling the
+super() counterpart for the rest.
 
-I see it's probably better to break the line if there is a type annotation
-making the line longer. Did you keep it separated because you will add
-annotation in a separate patch?
+Does it make sense to you?
 
-Anyway this is minor and the change is good, thanks.
+Thanks,
+Gabriele
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-> diff --git a/tools/verification/rvgen/rvgen/utils.py
-> b/tools/verification/rvgen/rvgen/utils.py
-> new file mode 100644
-> index 0000000000000..e09c943693edf
-> --- /dev/null
-> +++ b/tools/verification/rvgen/rvgen/utils.py
-> @@ -0,0 +1,36 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0-only
+> ---
+> =C2=A0tools/verification/rvgen/rvgen/ltl2k.py | 3 +++
+> =C2=A01 file changed, 3 insertions(+)
+>=20
+> diff --git a/tools/verification/rvgen/rvgen/ltl2k.py
+> b/tools/verification/rvgen/rvgen/ltl2k.py
+> index 94dc64af1716d..f1eafc16c754b 100644
+> --- a/tools/verification/rvgen/rvgen/ltl2k.py
+> +++ b/tools/verification/rvgen/rvgen/ltl2k.py
+> @@ -257,6 +257,9 @@ class ltl2k(generator.Monitor):
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return '\n'.join(buf)
+> =C2=A0
+> +=C2=A0=C2=A0=C2=A0 def fill_tracepoint_args_skel(self, tp_type) -> str:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ""
 > +
-> +
-> +def not_implemented(func):
-> +=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0 Decorator to mark functions as not yet implemented.
-> +
-> +=C2=A0=C2=A0=C2=A0 This decorator wraps a function and raises a NotImple=
-mentedError when the
-> +=C2=A0=C2=A0=C2=A0 function is called, rather than executing the functio=
-n body. This is
-> useful
-> +=C2=A0=C2=A0=C2=A0 for defining interface methods or placeholder functio=
-ns that need to be
-> +=C2=A0=C2=A0=C2=A0 implemented later.
-> +
-> +=C2=A0=C2=A0=C2=A0 Args:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 func: The function to be wrap=
-ped.
-> +
-> +=C2=A0=C2=A0=C2=A0 Returns:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 A wrapper function that raise=
-s NotImplementedError when called.
-> +
-> +=C2=A0=C2=A0=C2=A0 Raises:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NotImplementedError: Always r=
-aised when the decorated function is
-> called.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 The e=
-xception includes the function name and any arguments that
-> were
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 passe=
-d to the function.
-> +
-> +=C2=A0=C2=A0=C2=A0 Example:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 @not_implemented
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 def future_feature(arg1, arg2=
-):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pass
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Calling future_feature will=
- raise:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # NotImplementedError('future=
-_feature', arg1_value, arg2_value)
-> +=C2=A0=C2=A0=C2=A0 """
-> +=C2=A0=C2=A0=C2=A0 def inner(*args, **kwargs):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise NotImplementedError(fun=
-c.__name__, *args, **kwargs)
-> +
-> +=C2=A0=C2=A0=C2=A0 return inner
+> =C2=A0=C2=A0=C2=A0=C2=A0 def fill_monitor_class_type(self):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return "LTL_MON_EVENTS_I=
+D"
+> =C2=A0
 
