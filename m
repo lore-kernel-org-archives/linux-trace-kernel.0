@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D6394465
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 19:31:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2412539571A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 19:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769110294; cv=none; b=qY2TaKyqnvicipjkQfSTtjNmGb3ynWsxQhY/VDNJBYcin0HBDbDoM5bYu4U9cTipiSVQpI5OK1CvmUrEB2oeHd4wu4rUy4uYwf0Y0alIqQhlBf5mBv+HsWHJh5kKoJRKK6cXhTQgsW9ftyUfDjG4n4PVTLc21BKJgRCvHQfQ3FU=
+	t=1769110314; cv=none; b=XaGB++OaUP/skZDXJf3jC0FF4H4gsxxICJCmkdNjRYIrn3fKBo6wPBpqoEyIawGdb95R2lP4Az2UuoLSOSOJ5fgSz98mfj9P3km68FESjPd69RVfsfF9gH4t/dyAcuO4TQuYkfansb3F9EMyfNu2r3AXhzyHuilkXwucJjj4phE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769110294; c=relaxed/simple;
-	bh=XAxprdPWng4+i6jr5PgJHEsY1SrsslYOg3AAmefkPWo=;
+	s=arc-20240116; t=1769110314; c=relaxed/simple;
+	bh=XKDxFzCTgfvdwqS16TtnVlGAzIXYXev+dE6P4GLUfKI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I1IMS7oYHNO5Y6dpnodhGZ2ZRFKpNKaQ1tShbCRpz32ArVmPx/f2lL5fsiy04tscviHoeXPkFF3cIzgJ0WDo8jeJJ1Msz0vu9osVzAFV6vRSy8vOFcjpvFNIAUMwLMJZrC9Bfi9snwBxW+Lc8zoVqiuZSbdWzRXxeEONX6Arc0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZydazQLd; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=hm1jlNZfTlfCGRgLjvI0Ccv55zZtEjlwvulEa5qSh5IBNGN3gDjmo6M9Abtn/UBrGfUf+b2r8aZWUaClsif7ugj5hlJmfe8a5zy8tG503Y+Qi0iVrxpIf3dKfhrSp34F8OEA5pq2+OYUx3i5/DpD7rNp0VHqe2gMrcy4247+lOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hd6dqVyV; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZydazQLd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hd6dqVyV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769110286;
+	s=mimecast20190719; t=1769110305;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Gc2Ga0FmrZbM/w9mX8iAH7QabuKS+HLM+fgeK8Kcqrw=;
-	b=ZydazQLdXpox6yLPdn0kGZuFg0Kr+E/6ZdIgRT96mTr3coTOBeO2z+UX1Q8sFy3rE60ODt
-	ixQFeK7isEz0N7c3tJ24eAkyZCHpXFB6A31rxOjRnPB8eUCdni5ImOzOmRVxbXvZ6K5n5K
-	SVGejshMUwjvJV2UnlM/w5oJ7X0Jtow=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=vnTtNcQqLnyAtCjmCaSMz8Sgg0jhE6UAUhgK77mSITg=;
+	b=Hd6dqVyV8WNFx+V2ZVIpbtJfebQwNUx+UzexheZiXmsFxF/Bb8xhs1WHTp63k7+Ef6oPWu
+	2Z65mN6hJb55feHKOg1DtHvZF7HHM7mFNKvZmA3fPmQY6i78mq+D5d/5qJhcQ2oh9b8hZk
+	KI3ULdFbAzX18/oP3CHJrVo0srrS2/w=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-U8dihcHzOKWzYTy2Zqg_qQ-1; Thu,
- 22 Jan 2026 14:31:23 -0500
-X-MC-Unique: U8dihcHzOKWzYTy2Zqg_qQ-1
-X-Mimecast-MFC-AGG-ID: U8dihcHzOKWzYTy2Zqg_qQ_1769110282
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-266-J4Z3VOGEMfuYKGVw5YZC6Q-1; Thu,
+ 22 Jan 2026 14:31:42 -0500
+X-MC-Unique: J4Z3VOGEMfuYKGVw5YZC6Q-1
+X-Mimecast-MFC-AGG-ID: J4Z3VOGEMfuYKGVw5YZC6Q_1769110301
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5547718005B2;
-	Thu, 22 Jan 2026 19:31:22 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9ED7D1955F2C;
+	Thu, 22 Jan 2026 19:31:41 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.88.59])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4AEDB1958DC2;
-	Thu, 22 Jan 2026 19:31:13 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 44AFF1958DC6;
+	Thu, 22 Jan 2026 19:31:32 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
@@ -101,9 +101,9 @@ Cc: npache@redhat.com,
 	rdunlap@infradead.org,
 	hughd@google.com,
 	richard.weiyang@gmail.com
-Subject: [PATCH mm-unstable v14 08/16] khugepaged: generalize collapse_huge_page for mTHP collapse
-Date: Thu, 22 Jan 2026 12:28:33 -0700
-Message-ID: <20260122192841.128719-9-npache@redhat.com>
+Subject: [PATCH mm-unstable v14 10/16] khugepaged: add per-order mTHP collapse failure statistics
+Date: Thu, 22 Jan 2026 12:28:35 -0700
+Message-ID: <20260122192841.128719-11-npache@redhat.com>
 In-Reply-To: <20260122192841.128719-1-npache@redhat.com>
 References: <20260122192841.128719-1-npache@redhat.com>
 Precedence: bulk
@@ -115,256 +115,154 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Pass an order and offset to collapse_huge_page to support collapsing anon
-memory to arbitrary orders within a PMD. order indicates what mTHP size we
-are attempting to collapse to, and offset indicates were in the PMD to
-start the collapse attempt.
+Add three new mTHP statistics to track collapse failures for different
+orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
 
-For non-PMD collapse we must leave the anon VMA write locked until after
-we collapse the mTHP-- in the PMD case all the pages are isolated, but in
-the mTHP case this is not true, and we must keep the lock to prevent
-changes to the VMA from occurring.
+- collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
+	PTEs
+
+- collapse_exceed_none_pte: Counts when mTHP collapse fails due to
+  	exceeding the none PTE threshold for the given order
+
+- collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
+  	PTEs
+
+These statistics complement the existing THP_SCAN_EXCEED_* events by
+providing per-order granularity for mTHP collapse attempts. The stats are
+exposed via sysfs under
+`/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
+supported hugepage size.
+
+As we currently dont support collapsing mTHPs that contain a swap or
+shared entry, those statistics keep track of how often we are
+encountering failed mTHP collapses due to these restrictions.
 
 Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- mm/khugepaged.c | 111 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 71 insertions(+), 40 deletions(-)
+ Documentation/admin-guide/mm/transhuge.rst | 24 ++++++++++++++++++++++
+ include/linux/huge_mm.h                    |  3 +++
+ mm/huge_memory.c                           |  7 +++++++
+ mm/khugepaged.c                            | 16 ++++++++++++---
+ 4 files changed, 47 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index c51932e6275d..eebb1f6bbc6c 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -714,6 +714,30 @@ nr_anon_partially_mapped
+        an anonymous THP as "partially mapped" and count it here, even though it
+        is not actually partially mapped anymore.
+ 
++collapse_exceed_none_pte
++       The number of collapse attempts that failed due to exceeding the
++       max_ptes_none threshold. For mTHP collapse, Currently only max_ptes_none
++       values of 0 and (HPAGE_PMD_NR - 1) are supported. Any other value will
++       emit a warning and no mTHP collapse will be attempted. khugepaged will
++       try to collapse to the largest enabled (m)THP size; if it fails, it will
++       try the next lower enabled mTHP size. This counter records the number of
++       times a collapse attempt was skipped for exceeding the max_ptes_none
++       threshold, and khugepaged will move on to the next available mTHP size.
++
++collapse_exceed_swap_pte
++       The number of anonymous mTHP PTE ranges which were unable to collapse due
++       to containing at least one swap PTE. Currently khugepaged does not
++       support collapsing mTHP regions that contain a swap PTE. This counter can
++       be used to monitor the number of khugepaged mTHP collapses that failed
++       due to the presence of a swap PTE.
++
++collapse_exceed_shared_pte
++       The number of anonymous mTHP PTE ranges which were unable to collapse due
++       to containing at least one shared PTE. Currently khugepaged does not
++       support collapsing mTHP PTE ranges that contain a shared PTE. This
++       counter can be used to monitor the number of khugepaged mTHP collapses
++       that failed due to the presence of a shared PTE.
++
+ As the system ages, allocating huge pages may be expensive as the
+ system uses memory compaction to copy data around memory to free a
+ huge page for use. There are some counters in ``/proc/vmstat`` to help
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 9941fc6d7bd8..e8777bb2347d 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -144,6 +144,9 @@ enum mthp_stat_item {
+ 	MTHP_STAT_SPLIT_DEFERRED,
+ 	MTHP_STAT_NR_ANON,
+ 	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
++	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
++	MTHP_STAT_COLLAPSE_EXCEED_NONE,
++	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+ 	__MTHP_STAT_COUNT
+ };
+ 
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 00fc92062d70..7c0b072fc6b2 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -639,6 +639,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+ DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+ DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+ DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
++
+ 
+ static struct attribute *anon_stats_attrs[] = {
+ 	&anon_fault_alloc_attr.attr,
+@@ -655,6 +659,9 @@ static struct attribute *anon_stats_attrs[] = {
+ 	&split_deferred_attr.attr,
+ 	&nr_anon_attr.attr,
+ 	&nr_anon_partially_mapped_attr.attr,
++	&collapse_exceed_swap_pte_attr.attr,
++	&collapse_exceed_none_pte_attr.attr,
++	&collapse_exceed_shared_pte_attr.attr,
+ 	NULL,
+ };
+ 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 9b7e05827749..76cb17243793 100644
+index 8bb70e1401ad..96f1c28646ba 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1151,44 +1151,54 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
- 	return SCAN_SUCCEED;
- }
- 
--static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long address,
--		int referenced, int unmapped, struct collapse_control *cc)
-+static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long start_addr,
-+		int referenced, int unmapped, struct collapse_control *cc,
-+		bool *mmap_locked, unsigned int order)
- {
- 	LIST_HEAD(compound_pagelist);
- 	pmd_t *pmd, _pmd;
--	pte_t *pte;
-+	pte_t *pte = NULL;
- 	pgtable_t pgtable;
- 	struct folio *folio;
- 	spinlock_t *pmd_ptl, *pte_ptl;
- 	enum scan_result result = SCAN_FAIL;
- 	struct vm_area_struct *vma;
- 	struct mmu_notifier_range range;
-+	bool anon_vma_locked = false;
-+	const unsigned long nr_pages = 1UL << order;
-+	const unsigned long pmd_address = start_addr & HPAGE_PMD_MASK;
- 
--	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
-+	VM_WARN_ON_ONCE(pmd_address & ~HPAGE_PMD_MASK);
- 
- 	/*
- 	 * Before allocating the hugepage, release the mmap_lock read lock.
- 	 * The allocation can take potentially a long time if it involves
- 	 * sync compaction, and we do not need to hold the mmap_lock during
- 	 * that. We will recheck the vma after taking it again in write mode.
-+	 * If collapsing mTHPs we may have already released the read_lock.
- 	 */
--	mmap_read_unlock(mm);
-+	if (*mmap_locked) {
-+		mmap_read_unlock(mm);
-+		*mmap_locked = false;
-+	}
- 
--	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
-+	result = alloc_charge_folio(&folio, mm, cc, order);
- 	if (result != SCAN_SUCCEED)
- 		goto out_nolock;
- 
- 	mmap_read_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
--					 HPAGE_PMD_ORDER);
-+	*mmap_locked = true;
-+	result = hugepage_vma_revalidate(mm, pmd_address, true, &vma, cc, order);
- 	if (result != SCAN_SUCCEED) {
- 		mmap_read_unlock(mm);
-+		*mmap_locked = false;
- 		goto out_nolock;
- 	}
- 
--	result = find_pmd_or_thp_or_none(mm, address, &pmd);
-+	result = find_pmd_or_thp_or_none(mm, pmd_address, &pmd);
- 	if (result != SCAN_SUCCEED) {
- 		mmap_read_unlock(mm);
-+		*mmap_locked = false;
- 		goto out_nolock;
- 	}
- 
-@@ -1198,13 +1208,16 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
- 		 * released when it fails. So we jump out_nolock directly in
- 		 * that case.  Continuing to collapse causes inconsistency.
- 		 */
--		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
--						     referenced, HPAGE_PMD_ORDER);
--		if (result != SCAN_SUCCEED)
-+		result = __collapse_huge_page_swapin(mm, vma, start_addr, pmd,
-+						     referenced, order);
-+		if (result != SCAN_SUCCEED) {
-+			*mmap_locked = false;
- 			goto out_nolock;
-+		}
- 	}
- 
- 	mmap_read_unlock(mm);
-+	*mmap_locked = false;
- 	/*
- 	 * Prevent all access to pagetables with the exception of
- 	 * gup_fast later handled by the ptep_clear_flush and the VM
-@@ -1214,20 +1227,20 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
- 	 * mmap_lock.
- 	 */
- 	mmap_write_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc,
--					 HPAGE_PMD_ORDER);
-+	result = hugepage_vma_revalidate(mm, pmd_address, true, &vma, cc, order);
- 	if (result != SCAN_SUCCEED)
- 		goto out_up_write;
- 	/* check if the pmd is still valid */
- 	vma_start_write(vma);
--	result = check_pmd_still_valid(mm, address, pmd);
-+	result = check_pmd_still_valid(mm, pmd_address, pmd);
- 	if (result != SCAN_SUCCEED)
- 		goto out_up_write;
- 
- 	anon_vma_lock_write(vma->anon_vma);
-+	anon_vma_locked = true;
- 
--	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
--				address + HPAGE_PMD_SIZE);
-+	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, start_addr,
-+				start_addr + (PAGE_SIZE << order));
- 	mmu_notifier_invalidate_range_start(&range);
- 
- 	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
-@@ -1239,24 +1252,21 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
- 	 * Parallel GUP-fast is fine since GUP-fast will back off when
- 	 * it detects PMD is changed.
- 	 */
--	_pmd = pmdp_collapse_flush(vma, address, pmd);
-+	_pmd = pmdp_collapse_flush(vma, pmd_address, pmd);
- 	spin_unlock(pmd_ptl);
- 	mmu_notifier_invalidate_range_end(&range);
- 	tlb_remove_table_sync_one();
- 
--	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
-+	pte = pte_offset_map_lock(mm, &_pmd, start_addr, &pte_ptl);
- 	if (pte) {
--		result = __collapse_huge_page_isolate(vma, address, pte, cc,
--						      HPAGE_PMD_ORDER,
--						      &compound_pagelist);
-+		result = __collapse_huge_page_isolate(vma, start_addr, pte, cc,
-+						      order, &compound_pagelist);
- 		spin_unlock(pte_ptl);
- 	} else {
- 		result = SCAN_NO_PTE_TABLE;
- 	}
- 
- 	if (unlikely(result != SCAN_SUCCEED)) {
--		if (pte)
--			pte_unmap(pte);
- 		spin_lock(pmd_ptl);
- 		BUG_ON(!pmd_none(*pmd));
- 		/*
-@@ -1266,21 +1276,21 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
- 		 */
- 		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
- 		spin_unlock(pmd_ptl);
--		anon_vma_unlock_write(vma->anon_vma);
- 		goto out_up_write;
- 	}
- 
- 	/*
--	 * All pages are isolated and locked so anon_vma rmap
--	 * can't run anymore.
-+	 * For PMD collapse all pages are isolated and locked so anon_vma
-+	 * rmap can't run anymore. For mTHP collapse we must hold the lock
- 	 */
--	anon_vma_unlock_write(vma->anon_vma);
-+	if (is_pmd_order(order)) {
-+		anon_vma_unlock_write(vma->anon_vma);
-+		anon_vma_locked = false;
-+	}
- 
- 	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
--					   vma, address, pte_ptl,
--					   HPAGE_PMD_ORDER,
--					   &compound_pagelist);
--	pte_unmap(pte);
-+					   vma, start_addr, pte_ptl,
-+					   order, &compound_pagelist);
- 	if (unlikely(result != SCAN_SUCCEED))
- 		goto out_up_write;
- 
-@@ -1290,20 +1300,42 @@ static enum scan_result collapse_huge_page(struct mm_struct *mm, unsigned long a
- 	 * write.
- 	 */
- 	__folio_mark_uptodate(folio);
--	pgtable = pmd_pgtable(_pmd);
-+	if (is_pmd_order(order)) { /* PMD collapse */
-+		pgtable = pmd_pgtable(_pmd);
- 
--	spin_lock(pmd_ptl);
--	BUG_ON(!pmd_none(*pmd));
--	pgtable_trans_huge_deposit(mm, pmd, pgtable);
--	map_anon_folio_pmd_nopf(folio, pmd, vma, address);
-+		spin_lock(pmd_ptl);
-+		WARN_ON_ONCE(!pmd_none(*pmd));
-+		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-+		map_anon_folio_pmd_nopf(folio, pmd, vma, pmd_address);
-+	} else { /* mTHP collapse */
-+		pte_t mthp_pte = mk_pte(folio_page(folio, 0), vma->vm_page_prot);
+@@ -602,7 +602,9 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 				continue;
+ 			} else {
+ 				result = SCAN_EXCEED_NONE_PTE;
+-				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
++				if (is_pmd_order(order))
++					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
++				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+ 				goto out;
+ 			}
+ 		}
+@@ -632,10 +634,17 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 			 * shared may cause a future higher order collapse on a
+ 			 * rescan of the same range.
+ 			 */
+-			if (!is_pmd_order(order) || (cc->is_khugepaged &&
+-			    shared > khugepaged_max_ptes_shared)) {
++			if (!is_pmd_order(order)) {
++				result = SCAN_EXCEED_SHARED_PTE;
++				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
++				goto out;
++			}
 +
-+		mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-+		spin_lock(pmd_ptl);
-+		WARN_ON_ONCE(!pmd_none(*pmd));
-+		folio_ref_add(folio, nr_pages - 1);
-+		folio_add_new_anon_rmap(folio, vma, start_addr, RMAP_EXCLUSIVE);
-+		folio_add_lru_vma(folio, vma);
-+		set_ptes(vma->vm_mm, start_addr, pte, mthp_pte, nr_pages);
-+		update_mmu_cache_range(NULL, vma, start_addr, pte, nr_pages);
-+
-+		smp_wmb(); /* make PTEs visible before PMD. See pmd_install() */
-+		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
-+	}
- 	spin_unlock(pmd_ptl);
- 
- 	folio = NULL;
- 
- 	result = SCAN_SUCCEED;
- out_up_write:
-+	if (anon_vma_locked)
-+		anon_vma_unlock_write(vma->anon_vma);
-+	if (pte)
-+		pte_unmap(pte);
- 	mmap_write_unlock(mm);
-+	*mmap_locked = false;
- out_nolock:
-+	WARN_ON_ONCE(*mmap_locked);
- 	if (folio)
- 		folio_put(folio);
- 	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
-@@ -1471,9 +1503,8 @@ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
- 	pte_unmap_unlock(pte, ptl);
- 	if (result == SCAN_SUCCEED) {
- 		result = collapse_huge_page(mm, start_addr, referenced,
--					    unmapped, cc);
--		/* collapse_huge_page will return with the mmap_lock released */
--		*mmap_locked = false;
-+					    unmapped, cc, mmap_locked,
-+					    HPAGE_PMD_ORDER);
- 	}
- out:
- 	trace_mm_khugepaged_scan_pmd(mm, folio, referenced,
++			if (cc->is_khugepaged &&
++			    shared > khugepaged_max_ptes_shared) {
+ 				result = SCAN_EXCEED_SHARED_PTE;
+ 				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
++				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+ 				goto out;
+ 			}
+ 		}
+@@ -1082,6 +1091,7 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
+ 		 * range.
+ 		 */
+ 		if (!is_pmd_order(order)) {
++			count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
+ 			pte_unmap(pte);
+ 			mmap_read_unlock(mm);
+ 			result = SCAN_EXCEED_SWAP_PTE;
 -- 
 2.52.0
 
