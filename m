@@ -1,61 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F39360729
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 15:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1383A366828
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 15:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769097345; cv=none; b=Fk0Kk7n91tHjTGuUk9Cr/9DJNvx6cNgj+KrxBqnZ99K16z623iPkmFWSMSmzuvPkd0pWWIL6T++m4scsEgX8U2ZamYAhF7TxNI1NeQxWoM3fiIbkihftS8pyp8vguakd3aPSedg3HjzBZE1rU0UCQCJkabej/0WpicIpy2JU4Vk=
+	t=1769097347; cv=none; b=NOahp3vo9VmsdqsFsVsI0Q/En6/jcGbqJGgK0Ty1oLVZFj5bWjMuq988/JyXgTgfY0BnXHlpJpaG35DMYpankC7QH3sVUd5mEyJEi52IhB6/+1boQtaXc0n4nnDNzWj36eNq58hM5OF7iH7mxauYMy0MgaXlY2/3Kcm8HyoyW/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769097345; c=relaxed/simple;
-	bh=bvqcyi3Z+y75bRocVEBYemRXLaOVspafHgP5Hgb0u8Q=;
+	s=arc-20240116; t=1769097347; c=relaxed/simple;
+	bh=RXqX5VGLgzQnLsLZw4pnVrMIfaK4Z9Cjtt9gebf3Os8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p2do3tMLOj3RBBFTmadKbvLzbtlOoVcTRrbcy52Y53q93biC6BpToTDIW+DROMOVuEzc8ofaoESaiWpptd4TyN7NfXzjCOEtgsUZ9kUSZis9OBitwPvD6Ri/g3DLbNL26l3qMfc/MxgS6BkqWBaCVLmDyDQdu0I7VHjbNi0Ztew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ncy7rxLD; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=oIRZiuUNA8WwheM8P8Aw5nTjc4F8U/tLSEur8k1DQCvTOpiLIhsG6ulTynat/IQlV+q+apdE0ZVSC5Z0vdMDhqtnY3kYShVmP0vNt764owf8BKCkbphGB8X8Ezco7Uzgu7shbLWXS98dKDFgLT1jgGZPBx1U4PWNUhm1vTiwHUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tl9Nm0kk; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ncy7rxLD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tl9Nm0kk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769097326;
+	s=mimecast20190719; t=1769097336;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NEBnKvU3yqrUyCt3aKMcO6UMWfUnjv91z2xwtPsQQBI=;
-	b=Ncy7rxLDA5HchtfgeQFbvkIUDD/OTr9vG0lOQmX1D2Pg6/H6NcNeopCG0b9n9KOTT1QBvR
-	7vzhqtyRmzOjIleYWoBjfbMDnpfRuWMD3YP2vMZRj176ZZzogxw10aoWQGZJT1AbogrAos
-	6OeWmHsA9D6yAkToAayn0H/0BWySoxE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=XmlNzH+NyPfnFBkGo8u4o8/WMdhWzE2SyJkhD/kBVXY=;
+	b=Tl9Nm0kkyrrevHo4OKqdsbfgtzXORgPYy696cawjOopTFrJKLgT/KZV/7OlIhlSQQ0FbRu
+	EmapmJZXDFbc26flxlGdo+lXL5tXVibOCCI6zTq4qr2dLiO9kmHr5t2r3Ccr3AZZmWmUWY
+	XlKXiVLRQTRw0v7akBg0OrKyQtiaU8M=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-166-j6mPstDqPHCaaMMvZfaN0g-1; Thu,
- 22 Jan 2026 10:55:22 -0500
-X-MC-Unique: j6mPstDqPHCaaMMvZfaN0g-1
-X-Mimecast-MFC-AGG-ID: j6mPstDqPHCaaMMvZfaN0g_1769097321
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-ZXbJHFneORWVygCVJ_Misw-1; Thu,
+ 22 Jan 2026 10:55:33 -0500
+X-MC-Unique: ZXbJHFneORWVygCVJ_Misw-1
+X-Mimecast-MFC-AGG-ID: ZXbJHFneORWVygCVJ_Misw_1769097332
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 94FE51955DB1;
-	Thu, 22 Jan 2026 15:55:21 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D706F19775A9;
+	Thu, 22 Jan 2026 15:55:31 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.45.224.47])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7BA1C1801760;
-	Thu, 22 Jan 2026 15:55:17 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56C951800577;
+	Thu, 22 Jan 2026 15:55:28 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Juri Lelli <jlelli@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v5 02/15] rv: Add Hybrid Automata monitor type
-Date: Thu, 22 Jan 2026 16:54:47 +0100
-Message-ID: <20260122155500.362683-3-gmonaco@redhat.com>
+Subject: [PATCH v5 04/15] verification/rvgen: Add support for Hybrid Automata
+Date: Thu, 22 Jan 2026 16:54:49 +0100
+Message-ID: <20260122155500.362683-5-gmonaco@redhat.com>
 In-Reply-To: <20260122155500.362683-1-gmonaco@redhat.com>
 References: <20260122155500.362683-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -67,870 +66,948 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Deterministic automata define which events are allowed in every state,
-but cannot define more sophisticated constraint taking into account the
-system's environment (e.g. time or other states not producing events).
+Add the possibility to parse dot files as hybrid automata and generate
+the necessary code from rvgen.
 
-Add the Hybrid Automata monitor type as an extension of Deterministic
-automata where each state transition is validating a constraint on a
-finite number of environment variables.
-Hybrid automata can be used to implement timed automata, where the
-environment variables are clocks.
+Hybrid automata are very similar to deterministic ones and most
+functionality is shared, the dot files include also constraints together
+with event names (separated by ;) and state names (separated by \n).
 
-Also implement the necessary functionality to handle clock constraints
-(ns or jiffy granularity) on state and events.
+The tool can now generate the appropriate code to validate constraints
+at runtime according to the dot specification.
 
 Reviewed-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
 
 Notes:
-    V5:
-    * Remove useless variable reset when resetting Hybrid Automata
     V4:
-    * Improve ns to jiffy rounding in HA timers
-    V3:
-    * Improve functions naming for HA helpers
+    * Sort self_loop_reset_events to avoid unpredictable order
 
- include/linux/rv.h         |  38 +++
- include/rv/da_monitor.h    |  83 ++++++-
- include/rv/ha_monitor.h    | 475 +++++++++++++++++++++++++++++++++++++
- kernel/trace/rv/Kconfig    |  13 +
- kernel/trace/rv/rv_trace.h |  63 +++++
- 5 files changed, 663 insertions(+), 9 deletions(-)
- create mode 100644 include/rv/ha_monitor.h
+ tools/verification/rvgen/__main__.py          |   8 +-
+ tools/verification/rvgen/rvgen/automata.py    | 141 +++++-
+ tools/verification/rvgen/rvgen/dot2c.py       |  49 ++
+ tools/verification/rvgen/rvgen/dot2k.py       | 473 +++++++++++++++++-
+ tools/verification/rvgen/rvgen/generator.py   |   2 +
+ .../rvgen/rvgen/templates/dot2k/main.c        |   2 +-
+ .../rvgen/templates/dot2k/trace_hybrid.h      |  16 +
+ 7 files changed, 677 insertions(+), 14 deletions(-)
+ create mode 100644 tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 58774eb3aecf..0aef9e3c785c 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -81,11 +81,49 @@ struct ltl_monitor {};
+diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
+index fa6fc1f4de2f..b8e07e463293 100644
+--- a/tools/verification/rvgen/__main__.py
++++ b/tools/verification/rvgen/__main__.py
+@@ -9,7 +9,7 @@
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
  
- #endif /* CONFIG_RV_LTL_MONITOR */
+ if __name__ == '__main__':
+-    from rvgen.dot2k import dot2k
++    from rvgen.dot2k import da2k, ha2k
+     from rvgen.generator import Monitor
+     from rvgen.container import Container
+     from rvgen.ltl2k import ltl2k
+@@ -29,7 +29,7 @@ if __name__ == '__main__':
+     monitor_parser.add_argument("-p", "--parent", dest="parent",
+                                 required=False, help="Create a monitor nested to parent")
+     monitor_parser.add_argument('-c', "--class", dest="monitor_class",
+-                                help="Monitor class, either \"da\" or \"ltl\"")
++                                help="Monitor class, either \"da\", \"ha\" or \"ltl\"")
+     monitor_parser.add_argument('-s', "--spec", dest="spec", help="Monitor specification file")
+     monitor_parser.add_argument('-t', "--monitor_type", dest="monitor_type",
+                                 help=f"Available options: {', '.join(Monitor.monitor_types.keys())}")
+@@ -43,7 +43,9 @@ if __name__ == '__main__':
+         if params.subcmd == "monitor":
+             print("Opening and parsing the specification file %s" % params.spec)
+             if params.monitor_class == "da":
+-                monitor = dot2k(params.spec, params.monitor_type, vars(params))
++                monitor = da2k(params.spec, params.monitor_type, vars(params))
++            elif params.monitor_class == "ha":
++                monitor = ha2k(params.spec, params.monitor_type, vars(params))
+             elif params.monitor_class == "ltl":
+                 monitor = ltl2k(params.spec, params.monitor_type, vars(params))
+             else:
+diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
+index 977ba859c34e..252c9960ee1c 100644
+--- a/tools/verification/rvgen/rvgen/automata.py
++++ b/tools/verification/rvgen/rvgen/automata.py
+@@ -9,24 +9,63 @@
+ #   Documentation/trace/rv/deterministic_automata.rst
  
-+#ifdef CONFIG_RV_HA_MONITOR
-+/*
-+ * In the future, hybrid automata may rely on multiple
-+ * environment variables, e.g. different clocks started at
-+ * different times or running at different speed.
-+ * For now we support only 1 variable.
-+ */
-+#define MAX_HA_ENV_LEN 1
+ import ntpath
++import re
++from typing import Iterator
 +
-+/*
-+ * Monitors can pick the preferred timer implementation:
-+ * No timer: if monitors don't have state invariants.
-+ * Timer wheel: lightweight invariants check but far less precise.
-+ * Hrtimer: accurate invariants check with higher overhead.
-+ */
-+#define HA_TIMER_NONE 0
-+#define HA_TIMER_WHEEL 1
-+#define HA_TIMER_HRTIMER 2
++class _ConstraintKey:
++    """Base class for constraint keys."""
 +
-+/*
-+ * Hybrid automaton per-object variables.
-+ */
-+struct ha_monitor {
-+	struct da_monitor da_mon;
-+	u64 env_store[MAX_HA_ENV_LEN];
-+	union {
-+		struct hrtimer hrtimer;
-+		struct timer_list timer;
-+	};
-+};
++class _StateConstraintKey(_ConstraintKey, int):
++    """Key for a state constraint. Under the hood just state_id."""
++    def __new__(cls, state_id: int):
++        return super().__new__(cls, state_id)
 +
-+#else
-+
-+struct ha_monitor { };
-+
-+#endif /* CONFIG_RV_HA_MONITOR */
-+
- #define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
++class _EventConstraintKey(_ConstraintKey, tuple):
++    """Key for an event constraint. Under the hood just tuple(state_id,event_id)."""
++    def __new__(cls, state_id: int, event_id: int):
++        return super().__new__(cls, (state_id, event_id))
  
- union rv_task_monitor {
- 	struct da_monitor	da_mon;
- 	struct ltl_monitor	ltl_mon;
-+	struct ha_monitor	ha_mon;
- };
+ class Automata:
+     """Automata class: Reads a dot file and part it as an automata.
  
- #ifdef CONFIG_RV_REACTORS
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 6b564fad8c4d..4d0f9fb60e3c 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -3,9 +3,9 @@
-  * Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira <bristot@kernel.org>
-  *
-  * Deterministic automata (DA) monitor functions, to be used together
-- * with automata models in C generated by the dot2k tool.
-+ * with automata models in C generated by the rvgen tool.
-  *
-- * The dot2k tool is available at tools/verification/dot2k/
-+ * The rvgen tool is available at tools/verification/rvgen/
-  *
-  * For further information, see:
-  *   Documentation/trace/rv/da_monitor_synthesis.rst
-@@ -22,6 +22,33 @@
- 
- static struct rv_monitor rv_this;
- 
-+/*
-+ * Hook to allow the implementation of hybrid automata: define it with a
-+ * function that takes curr_state, event and next_state and returns true if the
-+ * environment constraints (e.g. timing) are satisfied, false otherwise.
-+ */
-+#ifndef da_monitor_event_hook
-+#define da_monitor_event_hook(...) true
-+#endif
++    It supports both deterministic and hybrid automata.
 +
-+/*
-+ * Hook to allow the implementation of hybrid automata: define it with a
-+ * function that takes the da_monitor and performs further initialisation
-+ * (e.g. reset set up timers).
-+ */
-+#ifndef da_monitor_init_hook
-+#define da_monitor_init_hook(da_mon)
-+#endif
+     Attributes:
+         dot_file: A dot file with an state_automaton definition.
+     """
+ 
+     invalid_state_str = "INVALID_STATE"
++    # val can be numerical, uppercase (constant or macro), lowercase (parameter or function)
++    # only numerical values should have units
++    constraint_rule = re.compile(r"""
++        ^
++        (?P<env>[a-zA-Z_][a-zA-Z0-9_]+)  # C-like identifier for the env var
++        (?P<op>[!<=>]{1,2})              # operator
++        (?P<val>
++            [0-9]+ |                     # numerical value
++            [A-Z_]+\(\) |                # macro
++            [A-Z_]+ |                    # constant
++            [a-z_]+\(\) |                # function
++            [a-z_]+                      # parameter
++        )
++        (?P<unit>[a-z]{1,2})?            # optional unit for numerical values
++        """, re.VERBOSE)
++    constraint_reset = re.compile(r"^reset\((?P<env>[a-zA-Z_][a-zA-Z0-9_]+)\)")
+ 
+     def __init__(self, file_path, model_name=None):
+         self.__dot_path = file_path
+         self.name = model_name or self.__get_model_name()
+         self.__dot_lines = self.__open_dot()
+         self.states, self.initial_state, self.final_states = self.__get_state_variables()
+-        self.events = self.__get_event_variables()
+-        self.function = self.__create_matrix()
++        self.env_types = {}
++        self.env_stored = set()
++        self.constraint_vars = set()
++        self.self_loop_reset_events = set()
++        self.events, self.envs = self.__get_event_variables()
++        self.function, self.constraints = self.__create_matrix()
+         self.events_start, self.events_start_run = self.__store_init_events()
++        self.env_stored = sorted(self.env_stored)
++        self.constraint_vars = sorted(self.constraint_vars)
+ 
+     def __get_model_name(self) -> str:
+         basename = ntpath.basename(self.__dot_path)
+@@ -116,11 +155,12 @@ class Automata:
+ 
+         return states, initial_state, final_states
+ 
+-    def __get_event_variables(self) -> list[str]:
++    def __get_event_variables(self) -> tuple[list[str], list[str]]:
+         # here we are at the begin of transitions, take a note, we will return later.
+         cursor = self.__get_cursor_begin_events()
+ 
+         events = []
++        envs = []
+         while self.__dot_lines[cursor].lstrip()[0] == '"':
+             # transitions have the format:
+             # "all_fired" -> "both_fired" [ label = "disable_irq" ];
+@@ -134,12 +174,74 @@ class Automata:
+                 # so split them.
+ 
+                 for i in event.split("\\n"):
+-                    events.append(i)
++                    # if the event contains a constraint (hybrid automata),
++                    # it will be separated by a ";":
++                    # "sched_switch;x<1000;reset(x)"
++                    ev, *constr = i.split(";")
++                    if constr:
++                        if len(constr) > 2:
++                            raise ValueError("Only 1 constraint and 1 reset are supported")
++                        envs += self.__extract_env_var(constr)
++                    events.append(ev)
++            else:
++                # state labels have the format:
++                # "enable_fired" [label = "enable_fired\ncondition"];
++                #  ----- label is here -----^^^^^
++                # label and node name must be the same, condition is optional
++                state = self.__dot_lines[cursor].split("label")[1].split('"')[1]
++                _, *constr = state.split("\\n")
++                if constr:
++                    if len(constr) > 1:
++                        raise ValueError("Only 1 constraint is supported in the state")
++                    envs += self.__extract_env_var([constr[0].replace(" ", "")])
+             cursor += 1
+ 
+-        return sorted(set(events))
+-
+-    def __create_matrix(self) -> list[list[str]]:
++        return sorted(set(events)), sorted(set(envs))
 +
-+/*
-+ * Hook to allow the implementation of hybrid automata: define it with a
-+ * function that takes the da_monitor and performs further reset (e.g. reset
-+ * all clocks).
-+ */
-+#ifndef da_monitor_reset_hook
-+#define da_monitor_reset_hook(da_mon)
-+#endif
++    def _split_constraint_expr(self, constr: list[str]) -> Iterator[tuple[str,
++                                                                          str | None]]:
++        """
++        Get a list of strings of the type constr1 && constr2 and returns a list of
++        constraints and separators: [[constr1,"&&"],[constr2,None]]
++        """
++        exprs = []
++        seps = []
++        for c in constr:
++            while "&&" in c or "||" in c:
++                a = c.find("&&")
++                o = c.find("||")
++                pos = a if o < 0 or 0 < a < o else o
++                exprs.append(c[:pos].replace(" ", ""))
++                seps.append(c[pos:pos+2].replace(" ", ""))
++                c = c[pos+2:].replace(" ", "")
++            exprs.append(c)
++            seps.append(None)
++        return zip(exprs, seps)
 +
- /*
-  * Type for the target id, default to int but can be overridden.
-  */
-@@ -43,6 +70,7 @@ static void react(enum states curr_state, enum events event)
-  */
- static inline void da_monitor_reset(struct da_monitor *da_mon)
- {
-+	da_monitor_reset_hook(da_mon);
- 	da_mon->monitoring = 0;
- 	da_mon->curr_state = model_get_initial_state();
- }
-@@ -57,6 +85,7 @@ static inline void da_monitor_start(struct da_monitor *da_mon)
- {
- 	da_mon->curr_state = model_get_initial_state();
- 	da_mon->monitoring = 1;
-+	da_monitor_init_hook(da_mon);
- }
++    def __extract_env_var(self, constraint: list[str]) -> list[str]:
++        env = []
++        for c, _ in self._split_constraint_expr(constraint):
++            rule = self.constraint_rule.search(c)
++            reset = self.constraint_reset.search(c)
++            if rule:
++                env.append(rule["env"])
++                if rule.groupdict().get("unit"):
++                    self.env_types[rule["env"]] = rule["unit"]
++                if rule["val"][0].isalpha():
++                    self.constraint_vars.add(rule["val"])
++                # try to infer unit from constants or parameters
++                val_for_unit = rule["val"].lower().replace("()", "")
++                if val_for_unit.endswith("_ns"):
++                    self.env_types[rule["env"]] = "ns"
++                if val_for_unit.endswith("_jiffies"):
++                    self.env_types[rule["env"]] = "j"
++            if reset:
++                env.append(reset["env"])
++                # environment variables that are reset need a storage
++                self.env_stored.add(reset["env"])
++        return env
++
++    def __create_matrix(self) -> tuple[list[list[str]], dict[_ConstraintKey, list[str]]]:
+         # transform the array into a dictionary
+         events = self.events
+         states = self.states
+@@ -157,6 +259,7 @@ class Automata:
  
- /*
-@@ -106,14 +135,14 @@ static inline bool da_monitor_handling_event(struct da_monitor *da_mon)
- /*
-  * global monitor (a single variable)
-  */
--static struct da_monitor da_mon_this;
-+static union rv_task_monitor da_mon_this;
+         # declare the matrix....
+         matrix = [[ self.invalid_state_str for x in range(nr_event)] for y in range(nr_state)]
++        constraints: dict[_ConstraintKey, list[str]] = {}
  
- /*
-  * da_get_monitor - return the global monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return &da_mon_this;
-+	return &(da_mon_this.da_mon);
- }
+         # and we are back! Let's fill the matrix
+         cursor = self.__get_cursor_begin_events()
+@@ -168,10 +271,22 @@ class Automata:
+                 dest_state = line[2].replace('"','').replace(',','_')
+                 possible_events = "".join(line[line.index("label")+2:-1]).replace('"','')
+                 for event in possible_events.split("\\n"):
++                    event, *constr = event.split(";")
++                    if constr:
++                        key = _EventConstraintKey(states_dict[origin_state], events_dict[event])
++                        constraints[key] = constr
++                        # those events reset also on self loops
++                        if origin_state == dest_state and "reset" in "".join(constr):
++                            self.self_loop_reset_events.add(event)
+                     matrix[states_dict[origin_state]][events_dict[event]] = dest_state
++            else:
++                state = self.__dot_lines[cursor].split("label")[1].split('"')[1]
++                state, *constr = state.replace(" ", "").split("\\n")
++                if constr:
++                    constraints[_StateConstraintKey(states_dict[state])] = constr
+             cursor += 1
  
- /*
-@@ -136,7 +165,10 @@ static inline int da_monitor_init(void)
- /*
-  * da_monitor_destroy - destroy the monitor
-  */
--static inline void da_monitor_destroy(void) { }
-+static inline void da_monitor_destroy(void)
+-        return matrix
++        return matrix, constraints
+ 
+     def __store_init_events(self) -> tuple[list[bool], list[bool]]:
+         events_start = [False] * len(self.events)
+@@ -203,3 +318,13 @@ class Automata:
+         if any(self.events_start):
+             return False
+         return self.events_start_run[self.events.index(event)]
++
++    def is_hybrid_automata(self) -> bool:
++        return bool(self.envs)
++
++    def is_event_constraint(self, key: _ConstraintKey) -> bool:
++        """
++        Given the key in self.constraints return true if it is an event
++        constraint, false if it is a state constraint
++        """
++        return isinstance(key, _EventConstraintKey)
+diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
+index 06a26bf15a7e..7f2efcfe3e52 100644
+--- a/tools/verification/rvgen/rvgen/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -19,6 +19,7 @@ class Dot2c(Automata):
+     enum_suffix = ""
+     enum_states_def = "states"
+     enum_events_def = "events"
++    enum_envs_def = "envs"
+     struct_automaton_def = "automaton"
+     var_automaton_def = "aut"
+ 
+@@ -61,6 +62,39 @@ class Dot2c(Automata):
+ 
+         return buff
+ 
++    def __get_non_stored_envs(self) -> list[str]:
++        return [ e for e in self.envs if e not in self.env_stored ]
++
++    def __get_enum_envs_content(self) -> list[str]:
++        buff = []
++        # We first place env variables that have a u64 storage.
++        # Those are limited by MAX_HA_ENV_LEN, other variables
++        # are read only and don't require a storage.
++        unstored = self.__get_non_stored_envs()
++        for env in list(self.env_stored) + unstored:
++            buff.append("\t%s%s," % (env, self.enum_suffix))
++
++        buff.append("\tenv_max%s," % self.enum_suffix)
++        buff.append("\tenv_max_stored%s = %s%s," %
++                    (self.enum_suffix,
++                     unstored[0] if len(unstored) else "env_max",
++                     self.enum_suffix))
++
++        return buff
++
++    def format_envs_enum(self) -> list[str]:
++        buff = []
++        if self.is_hybrid_automata():
++            buff.append("enum %s {" % self.enum_envs_def)
++            buff += self.__get_enum_envs_content()
++            buff.append("};\n")
++            buff.append('_Static_assert(env_max_stored%s <= MAX_HA_ENV_LEN, "Not enough slots");' %
++                        (self.enum_suffix))
++            if {"ns", "us", "ms", "s"}.intersection(self.env_types.values()):
++                buff.append("#define HA_CLK_NS")
++            buff.append("")
++        return buff
++
+     def get_minimun_type(self) -> str:
+         min_type = "unsigned char"
+ 
+@@ -81,6 +115,8 @@ class Dot2c(Automata):
+         buff.append("struct %s {" % self.struct_automaton_def)
+         buff.append("\tchar *state_names[state_max%s];" % (self.enum_suffix))
+         buff.append("\tchar *event_names[event_max%s];" % (self.enum_suffix))
++        if self.is_hybrid_automata():
++            buff.append("\tchar *env_names[env_max%s];" % (self.enum_suffix))
+         buff.append("\t%s function[state_max%s][event_max%s];" % (min_type, self.enum_suffix, self.enum_suffix))
+         buff.append("\t%s initial_state;" % min_type)
+         buff.append("\tbool final_states[state_max%s];" % (self.enum_suffix))
+@@ -113,6 +149,17 @@ class Dot2c(Automata):
+ 
+         return buff
+ 
++    def format_aut_init_envs_string(self) -> list[str]:
++        buff = []
++        if self.is_hybrid_automata():
++            buff.append("\t.env_names = {")
++            # maintain consistent order with the enum
++            ordered_envs = list(self.env_stored) + self.__get_non_stored_envs()
++            buff.append(self.__get_string_vector_per_line_content(ordered_envs))
++            buff.append("\t},")
++
++        return buff
++
+     def __get_max_strlen_of_states(self) -> int:
+         max_state_name = max(self.states, key = len).__len__()
+         return max(max_state_name, self.invalid_state_str.__len__())
+@@ -205,10 +252,12 @@ class Dot2c(Automata):
+         buff += self.format_states_enum()
+         buff += self.format_invalid_state()
+         buff += self.format_events_enum()
++        buff += self.format_envs_enum()
+         buff += self.format_automaton_definition()
+         buff += self.format_aut_init_header()
+         buff += self.format_aut_init_states_string()
+         buff += self.format_aut_init_events_string()
++        buff += self.format_aut_init_envs_string()
+         buff += self.format_aut_init_function()
+         buff += self.format_aut_init_initial_state()
+         buff += self.format_aut_init_final_states()
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
+index 6128fe238430..e72369ec1ad7 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -8,8 +8,10 @@
+ # For further information, see:
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+ 
++from collections import deque
+ from .dot2c import Dot2c
+ from .generator import Monitor
++from .automata import _EventConstraintKey, _StateConstraintKey
+ 
+ 
+ class dot2k(Monitor, Dot2c):
+@@ -20,12 +22,16 @@ class dot2k(Monitor, Dot2c):
+         Monitor.__init__(self, extra_params)
+         Dot2c.__init__(self, file_path, extra_params.get("model_name"))
+         self.enum_suffix = "_%s" % self.name
++        self.monitor_class = extra_params["monitor_class"]
+ 
+     def fill_monitor_type(self) -> str:
+-        return self.monitor_type.upper()
++        buff = [ self.monitor_type.upper() ]
++        buff += self._fill_timer_type()
++        return "\n".join(buff)
+ 
+     def fill_tracepoint_handlers_skel(self) -> str:
+         buff = []
++        buff += self._fill_hybrid_definitions()
+         for event in self.events:
+             buff.append("static void handle_%s(void *data, /* XXX: fill header */)" % event)
+             buff.append("{")
+@@ -77,6 +83,7 @@ class dot2k(Monitor, Dot2c):
+         #
+         self.enum_states_def = "states_%s" % self.name
+         self.enum_events_def = "events_%s" % self.name
++        self.enum_envs_def = "envs_%s" % self.name
+         self.struct_automaton_def = "automaton_%s" % self.name
+         self.var_automaton_def = "automaton_%s" % self.name
+ 
+@@ -107,8 +114,14 @@ class dot2k(Monitor, Dot2c):
+                 ("char *", "state"),
+                 ("char *", "event"),
+                 ]
++        tp_args_error_env = tp_args_error + [("char *", "env")]
++        tp_args_dict = {
++                "event": tp_args_event,
++                "error": tp_args_error,
++                "error_env": tp_args_error_env
++                }
+         tp_args_id = ("int ", "id")
+-        tp_args = tp_args_event if tp_type == "event" else tp_args_error
++        tp_args = tp_args_dict[tp_type]
+         if self.monitor_type == "per_task":
+             tp_args.insert(0, tp_args_id)
+         tp_proto_c = ", ".join([a+b for a,b in tp_args])
+@@ -117,6 +130,14 @@ class dot2k(Monitor, Dot2c):
+         buff.append("	     TP_ARGS(%s)" % tp_args_c)
+         return '\n'.join(buff)
+ 
++    def _fill_hybrid_definitions(self) -> list:
++        """Stub, not valid for deterministic automata"""
++        return []
++
++    def _fill_timer_type(self) -> list:
++        """Stub, not valid for deterministic automata"""
++        return []
++
+     def fill_main_c(self) -> str:
+         main_c = super().fill_main_c()
+ 
+@@ -127,5 +148,453 @@ class dot2k(Monitor, Dot2c):
+         main_c = main_c.replace("%%MIN_TYPE%%", min_type)
+         main_c = main_c.replace("%%NR_EVENTS%%", str(nr_events))
+         main_c = main_c.replace("%%MONITOR_TYPE%%", monitor_type)
++        main_c = main_c.replace("%%MONITOR_CLASS%%", self.monitor_class)
+ 
+         return main_c
++
++class da2k(dot2k):
++    """Deterministic automata only"""
++    def __init__(self, *args, **kwargs):
++        super().__init__(*args, **kwargs)
++        if self.is_hybrid_automata():
++            raise ValueError("Detected hybrid automata, use the 'ha' class")
++
++class ha2k(dot2k):
++    """Hybrid automata only"""
++    def __init__(self, *args, **kwargs):
++        super().__init__(*args, **kwargs)
++        if not self.is_hybrid_automata():
++            raise ValueError("Detected deterministic automata, use the 'da' class")
++        self.trace_h = self._read_template_file("trace_hybrid.h")
++        self.__parse_constraints()
++
++    def fill_monitor_class_type(self) -> str:
++        if self.monitor_type == "per_task":
++            return "HA_MON_EVENTS_ID"
++        return "HA_MON_EVENTS_IMPLICIT"
++
++    def fill_monitor_class(self) -> str:
++        """
++        Used for tracepoint classes, since they are shared we keep da
++        instead of ha (also for the ha specific tracepoints).
++        The tracepoint class is not visible to the tools.
++        """
++        return super().fill_monitor_class()
++
++    def __adjust_value(self, value: str | int, unit: str | None) -> str:
++        """Adjust the value in ns"""
++        try:
++            value = int(value)
++        except ValueError:
++            # it's a constant, a parameter or a function
++            if value.endswith("()"):
++                return value.replace("()", "(ha_mon)")
++            return value
++        match unit:
++            case "us":
++                value *= 10**3
++            case "ms":
++                value *= 10**6
++            case "s":
++                value *= 10**9
++        return str(value) + "ull"
++
++    def __parse_single_constraint(self, rule: dict, value: str) -> str:
++        return "ha_get_env(ha_mon, %s%s, time_ns) %s %s" % (
++                rule["env"], self.enum_suffix, rule["op"], value)
++
++    def __get_constraint_env(self, constr: str) -> str:
++        """Extract the second argument from an ha_ function"""
++        env = constr.split("(")[1].split()[1].rstrip(")").rstrip(",")
++        assert env.rstrip(f"_{self.name}") in self.envs
++        return env
++
++    def __start_to_invariant_check(self, constr:str) -> str:
++        # by default assume the timer has ns expiration
++        env = self.__get_constraint_env(constr)
++        clock_type = "ns"
++        if self.env_types.get(env.rstrip(f"_{self.name}")) == "j":
++            clock_type = "jiffy"
++
++        return "return ha_check_invariant_%s(ha_mon, %s, time_ns)" % (clock_type, env)
++
++    def __start_to_conv(self, constr: str) -> str:
++        """
++        Undo the storage conversion done by ha_start_timer_
++        """
++        return "ha_inv_to_guard" + constr[constr.find("("):]
++
++    def __parse_timer_constraint(self, rule: dict, value: str) -> str:
++        # by default assume the timer has ns expiration
++        clock_type = "ns"
++        if self.env_types.get(rule["env"]) == "j":
++            clock_type = "jiffy"
++
++        return "ha_start_timer_%s(ha_mon, %s%s, %s, time_ns)" % (clock_type, rule["env"],
++                                                                 self.enum_suffix, value)
++
++    def __format_guard_rules(self, rules: list[str]) -> list[str]:
++        """
++        Merge guard constraints as a single C return statement.
++        If the rules include a stored env, also check its validity.
++        Break lines in a best effort way that tries to keep readability.
++        """
++        if not rules:
++            return []
++
++        invalid_checks = [f"ha_monitor_env_invalid(ha_mon, {env}{self.enum_suffix}) ||"
++                         for env in self.env_stored if any(env in rule for rule in rules)]
++        if invalid_checks and len(rules) > 1:
++            rules[0] = "(" + rules[0]
++            rules[-1] = rules[-1] + ")"
++        rules = invalid_checks + rules
++
++        separator = "\n\t\t      " if sum(len(r) for r in rules) > 80 else " "
++        return ["res = " + separator.join(rules)]
++
++    def __validate_constraint(self, key: tuple[int, int] | int, constr: str,
++                              rule, reset) -> None:
++        # event constrains are tuples and allow both rules and reset
++        # state constraints are only used for expirations (e.g. clk<N)
++        if self.is_event_constraint(key):
++            if not rule and not reset:
++                raise ValueError("Unrecognised event constraint (%s/%s: %s)"
++                                 % (self.states[key[0]], self.events[key[1]], constr))
++            if rule and (rule["env"] in self.env_types and
++                         rule["env"] not in self.env_stored):
++                raise ValueError("Clocks in hybrid automata always require a storage (%s)"
++                                 % rule["env"])
++        else:
++            if not rule:
++                raise ValueError("Unrecognised state constraint (%s: %s)"
++                                 % (self.states[key], constr))
++            if rule["env"] not in self.env_stored:
++                raise ValueError("State constraints always require a storage (%s)"
++                                 % rule["env"])
++            if rule["op"] not in ["<", "<="]:
++                raise ValueError("State constraints must be clock expirations like clk<N (%s)"
++                                 % rule.string)
++
++    def __parse_constraints(self) -> None:
++        self.guards: dict[_EventConstraintKey, str] = {}
++        self.invariants: dict[_StateConstraintKey, str] = {}
++        for key, constraint in self.constraints.items():
++            rules = []
++            resets = []
++            for c, sep in self._split_constraint_expr(constraint):
++                rule = self.constraint_rule.search(c)
++                reset = self.constraint_reset.search(c)
++                self.__validate_constraint(key, c, rule, reset)
++                if rule:
++                    value = rule["val"]
++                    value_len = len(rule["val"])
++                    unit = None
++                    if rule.groupdict().get("unit"):
++                        value_len += len(rule["unit"])
++                        unit = rule["unit"]
++                    c = c[:-(value_len)]
++                    value = self.__adjust_value(value, unit)
++                    if self.is_event_constraint(key):
++                        c = self.__parse_single_constraint(rule, value)
++                        if sep:
++                            c += f" {sep}"
++                    else:
++                        c = self.__parse_timer_constraint(rule, value)
++                    rules.append(c)
++                if reset:
++                    c = "ha_reset_env(ha_mon, %s%s, time_ns)" % (reset["env"],
++                                                                 self.enum_suffix)
++                    resets.append(c)
++            if self.is_event_constraint(key):
++                res = self.__format_guard_rules(rules) + resets
++                self.guards[key] = ";".join(res)
++            else:
++                self.invariants[key] = rules[0]
++
++    def __fill_verify_invariants_func(self) -> list[str]:
++        buff = []
++        if not self.invariants:
++            return []
++
++        buff.append(
++"""static inline bool ha_verify_invariants(struct ha_monitor *ha_mon,
++\t\t\t\t\tenum %s curr_state, enum %s event,
++\t\t\t\t\tenum %s next_state, u64 time_ns)
++{""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
++
++        _else = ""
++        for state, constr in self.invariants.items():
++            check_str = self.__start_to_invariant_check(constr)
++            buff.append("\t%sif (curr_state == %s%s)" %
++                        (_else, self.states[state], self.enum_suffix))
++            buff.append("\t\t%s;" % check_str)
++            _else = "else "
++
++        buff.append("\treturn true;\n}\n")
++        return buff
++
++    def __fill_convert_inv_guard_func(self) -> list[str]:
++        buff = []
++        if not self.invariants:
++            return []
++
++        conflict_guards, conflict_invs = self.__find_inv_conflicts()
++        if not conflict_guards and not conflict_invs:
++            return []
++
++        buff.append(
++"""static inline void ha_convert_inv_guard(struct ha_monitor *ha_mon,
++\t\t\t\t\tenum %s curr_state, enum %s event,
++\t\t\t\t\tenum %s next_state, u64 time_ns)
++{""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
++        buff.append("\tif (curr_state == next_state)\n\t\treturn;")
++
++        _else = ""
++        for state, constr in self.invariants.items():
++            # a state with invariant can reach us without reset
++            # multiple conflicts must have the same invariant, otherwise we cannot
++            # know how to reset the value
++            conf_i = [start for start, end in conflict_invs if end == state]
++            # we can reach a guard without reset
++            conf_g = [e for s, e in conflict_guards if s == state]
++            if not conf_i and not conf_g:
++                continue
++            buff.append("\t%sif (curr_state == %s%s)" %
++                        (_else, self.states[state], self.enum_suffix))
++            buff.append("\t\t%s;" % self.__start_to_conv(constr))
++            _else = "else "
++
++        buff.append("}\n")
++        return buff
++
++    def __fill_verify_guards_func(self) -> list[str]:
++        buff = []
++        if not self.guards:
++            return []
++
++        buff.append(
++"""static inline bool ha_verify_guards(struct ha_monitor *ha_mon,
++\t\t\t\t    enum %s curr_state, enum %s event,
++\t\t\t\t    enum %s next_state, u64 time_ns)
 +{
-+	da_monitor_reset_all();
-+}
- 
- #elif RV_MON_TYPE == RV_MON_PER_CPU
- /*
-@@ -146,14 +178,14 @@ static inline void da_monitor_destroy(void) { }
- /*
-  * per-cpu monitor variables
-  */
--static DEFINE_PER_CPU(struct da_monitor, da_mon_this);
-+static DEFINE_PER_CPU(union rv_task_monitor, da_mon_this);
- 
- /*
-  * da_get_monitor - return current CPU monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return this_cpu_ptr(&da_mon_this);
-+	return &this_cpu_ptr(&da_mon_this)->da_mon;
- }
- 
- /*
-@@ -165,7 +197,7 @@ static void da_monitor_reset_all(void)
- 	int cpu;
- 
- 	for_each_cpu(cpu, cpu_online_mask) {
--		da_mon = per_cpu_ptr(&da_mon_this, cpu);
-+		da_mon = &per_cpu_ptr(&da_mon_this, cpu)->da_mon;
- 		da_monitor_reset(da_mon);
- 	}
- }
-@@ -182,7 +214,10 @@ static inline int da_monitor_init(void)
- /*
-  * da_monitor_destroy - destroy the monitor
-  */
--static inline void da_monitor_destroy(void) { }
-+static inline void da_monitor_destroy(void)
-+{
-+	da_monitor_reset_all();
-+}
- 
- #elif RV_MON_TYPE == RV_MON_PER_TASK
- /*
-@@ -203,6 +238,24 @@ static inline struct da_monitor *da_get_monitor(struct task_struct *tsk)
- 	return &tsk->rv[task_mon_slot].da_mon;
- }
- 
-+/*
-+ * da_get_task - return the task associated to the monitor
-+ */
-+static inline struct task_struct *da_get_task(struct da_monitor *da_mon)
-+{
-+	return container_of(da_mon, struct task_struct, rv[task_mon_slot].da_mon);
-+}
++\tbool res = true;
++""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
 +
-+/*
-+ * da_get_id - return the id associated to the monitor
++        _else = ""
++        for edge, constr in self.guards.items():
++            buff.append("\t%sif (curr_state == %s%s && event == %s%s)" %
++                        (_else, self.states[edge[0]], self.enum_suffix,
++                         self.events[edge[1]], self.enum_suffix))
++            if constr.count(";") > 0:
++                buff[-1] += " {"
++            buff += [ "\t\t%s;" % c for c in constr.split(";") ]
++            if constr.count(";") > 0:
++                _else = "} else "
++            else:
++                _else = "else "
++        if _else[0] == "}":
++            buff.append("\t}")
++        buff.append("\treturn res;\n}\n")
++        return buff
++
++    def __find_inv_conflicts(self) -> tuple[set[tuple[int, _EventConstraintKey]],
++                                            set[tuple[int, _StateConstraintKey]]]:
++        """
++        Run a breadth first search from all states with an invariant.
++        Find any conflicting constraints reachable from there, this can be
++        another state with an invariant or an edge with a non-reset guard.
++        Stop when we find a reset.
++
++        Return the set of conflicting guards and invariants as tuples of
++        conflicting state and constraint key.
++        """
++        conflict_guards : set[tuple[int, _EventConstraintKey]] = set()
++        conflict_invs : set[tuple[int, _StateConstraintKey]] = set()
++        for start_idx in self.invariants:
++            queue = deque([(start_idx, 0)])  # (state_idx, distance)
++            env = self.__get_constraint_env(self.invariants[start_idx])
++
++            while queue:
++                curr_idx, distance = queue.popleft()
++
++                # Check state condition
++                if curr_idx != start_idx and curr_idx in self.invariants:
++                    conflict_invs.add((start_idx, _StateConstraintKey(curr_idx)))
++                    continue
++
++                # Check if we should stop
++                if distance > len(self.states):
++                    break
++                if curr_idx != start_idx and distance > 1:
++                    continue
++
++                for event_idx, next_state_name in enumerate(self.function[curr_idx]):
++                    if next_state_name == self.invalid_state_str:
++                        continue
++                    curr_guard = self.guards.get((curr_idx, event_idx), "")
++                    if "reset" in curr_guard and env in curr_guard:
++                        continue
++
++                    if env in curr_guard:
++                        conflict_guards.add((start_idx,
++                                             _EventConstraintKey(curr_idx, event_idx)))
++                        continue
++
++                    next_idx = self.states.index(next_state_name)
++                    queue.append((next_idx, distance + 1))
++
++        return conflict_guards, conflict_invs
++
++    def __fill_setup_invariants_func(self) -> list[str]:
++        buff = []
++        if not self.invariants:
++            return []
++
++        buff.append(
++"""static inline void ha_setup_invariants(struct ha_monitor *ha_mon,
++\t\t\t\t       enum %s curr_state, enum %s event,
++\t\t\t\t       enum %s next_state, u64 time_ns)
++{""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
++
++        conditions = ["next_state == curr_state"]
++        conditions += ["event != %s%s" % (e, self.enum_suffix)
++                       for e in self.self_loop_reset_events]
++        condition_str = " && ".join(conditions)
++        buff.append(f"\tif ({condition_str})\n\t\treturn;")
++
++        _else = ""
++        for state, constr in self.invariants.items():
++            buff.append("\t%sif (next_state == %s%s)" %
++                        (_else, self.states[state], self.enum_suffix))
++            buff.append("\t\t%s;" % constr)
++            _else = "else "
++
++        for state in self.invariants:
++            buff.append("\telse if (curr_state == %s%s)" %
++                        (self.states[state], self.enum_suffix))
++            buff.append("\t\tha_cancel_timer(ha_mon);")
++
++        buff.append("}\n")
++        return buff
++
++    def __fill_constr_func(self) -> list[str]:
++        buff = []
++        if not self.constraints:
++            return []
++
++        buff.append(
++"""/*
++ * These functions are used to validate state transitions.
 + *
-+ * For per-task monitors, the id is the task's PID.
-+ */
-+static inline da_id_type da_get_id(struct da_monitor *da_mon)
-+{
-+	return da_get_task(da_mon)->pid;
-+}
++ * They are generated by parsing the model, there is usually no need to change them.
++ * If the monitor requires a timer, there are functions responsible to arm it when
++ * the next state has a constraint, cancel it in any other case and to check
++ * that it didn't expire before the callback run. Transitions to the same state
++ * without a reset never affect timers.
++ * Due to the different representations between invariants and guards, there is
++ * a function to convert it in case invariants or guards are reachable from
++ * another invariant without reset. Those are not present if not required in
++ * the model. This is all automatic but is worth checking because it may show
++ * errors in the model (e.g. missing resets).
++ */""")
 +
- static void da_monitor_reset_all(void)
- {
- 	struct task_struct *g, *p;
-@@ -247,6 +300,8 @@ static inline void da_monitor_destroy(void)
- 	}
- 	rv_put_task_monitor_slot(task_mon_slot);
- 	task_mon_slot = RV_PER_TASK_MONITOR_INIT;
++        buff += self.__fill_verify_invariants_func()
++        inv_conflicts = self.__fill_convert_inv_guard_func()
++        buff += inv_conflicts
++        buff += self.__fill_verify_guards_func()
++        buff += self.__fill_setup_invariants_func()
 +
-+	da_monitor_reset_all();
- }
- #endif /* RV_MON_TYPE */
++        buff.append(
++"""static bool ha_verify_constraint(struct ha_monitor *ha_mon,
++\t\t\t\t enum %s curr_state, enum %s event,
++\t\t\t\t enum %s next_state, u64 time_ns)
++{""" % (self.enum_states_def, self.enum_events_def, self.enum_states_def))
++
++        if self.invariants:
++            buff.append("\tif (!ha_verify_invariants(ha_mon, curr_state, event, next_state, time_ns))\n\t\treturn false;\n")
++        if inv_conflicts:
++            buff.append("\tha_convert_inv_guard(ha_mon, curr_state, event, next_state, time_ns);\n")
++
++        if self.guards:
++            buff.append("\tif (!ha_verify_guards(ha_mon, curr_state, event, next_state, time_ns))\n\t\treturn false;\n")
++
++        if self.invariants:
++            buff.append("\tha_setup_invariants(ha_mon, curr_state, event, next_state, time_ns);\n")
++
++        buff.append("\treturn true;\n}\n")
++        return buff
++
++    def __fill_env_getter(self, env: str) -> str:
++        if env in self.env_types:
++            match self.env_types[env]:
++                case "ns" | "us" | "ms" | "s":
++                    return "ha_get_clk_ns(ha_mon, env, time_ns);"
++                case "j":
++                    return "ha_get_clk_jiffy(ha_mon, env);"
++        return "/* XXX: how do I read %s? */" % env
++
++    def __fill_env_resetter(self, env: str) -> str:
++        if env in self.env_types:
++            match self.env_types[env]:
++                case "ns" | "us" | "ms" | "s":
++                    return "ha_reset_clk_ns(ha_mon, env, time_ns);"
++                case "j":
++                    return "ha_reset_clk_jiffy(ha_mon, env);"
++        return "/* XXX: how do I reset %s? */" % env
++
++    def __fill_hybrid_get_reset_functions(self) -> list[str]:
++        buff = []
++        if self.is_hybrid_automata():
++            for var in self.constraint_vars:
++                if var.endswith("()"):
++                    func_name = var.replace("()", "")
++                    if func_name.isupper():
++                        buff.append("#define %s(ha_mon) /* XXX: what is %s(ha_mon)? */\n" % (func_name, func_name))
++                    else:
++                        buff.append("static inline u64 %s(struct ha_monitor *ha_mon)\n{" % func_name)
++                        buff.append("\treturn /* XXX: what is %s(ha_mon)? */;" % func_name)
++                        buff.append("}\n")
++                elif var.isupper():
++                    buff.append("#define %s /* XXX: what is %s? */\n" % (var, var))
++                else:
++                    buff.append("static u64 %s = /* XXX: default value */;" % var)
++                    buff.append("module_param(%s, ullong, 0644);\n" % var)
++            buff.append("""/*
++ * These functions define how to read and reset the environment variable.
++ *
++ * Common environment variables like ns-based and jiffy-based clocks have
++ * pre-define getters and resetters you can use. The parser can infer the type
++ * of the environment variable if you supply a measure unit in the constraint.
++ * If you define your own functions, make sure to add appropriate memory
++ * barriers if required.
++ * Some environment variables don't require a storage as they read a system
++ * state (e.g. preemption count). Those variables are never reset, so we don't
++ * define a reset function on monitors only relying on this type of variables.
++ */""")
++            buff.append("static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs%s env, u64 time_ns)\n{" % self.enum_suffix)
++            _else = ""
++            for env in self.envs:
++                buff.append("\t%sif (env == %s%s)\n\t\treturn %s" %
++                            (_else, env, self.enum_suffix, self.__fill_env_getter(env)))
++                _else = "else "
++            buff.append("\treturn ENV_INVALID_VALUE;\n}\n")
++            if len(self.env_stored):
++                buff.append("static void ha_reset_env(struct ha_monitor *ha_mon, enum envs%s env, u64 time_ns)\n{" % self.enum_suffix)
++                _else = ""
++                for env in self.env_stored:
++                    buff.append("\t%sif (env == %s%s)\n\t\t%s" %
++                                (_else, env, self.enum_suffix, self.__fill_env_resetter(env)))
++                    _else = "else "
++                buff.append("}\n")
++        return buff
++
++    def _fill_hybrid_definitions(self) -> list[str]:
++        return self.__fill_hybrid_get_reset_functions() + self.__fill_constr_func()
++
++    def _fill_timer_type(self) -> list:
++        if self.invariants:
++            return [
++                    "/* XXX: If the monitor has several instances, consider HA_TIMER_WHEEL */",
++                    "#define HA_TIMER_TYPE HA_TIMER_HRTIMER"
++                    ]
++        return []
+diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
+index 3441385c1177..b80af3fd6701 100644
+--- a/tools/verification/rvgen/rvgen/generator.py
++++ b/tools/verification/rvgen/rvgen/generator.py
+@@ -255,12 +255,14 @@ class Monitor(RVGenerator):
+         monitor_class_type = self.fill_monitor_class_type()
+         tracepoint_args_skel_event = self.fill_tracepoint_args_skel("event")
+         tracepoint_args_skel_error = self.fill_tracepoint_args_skel("error")
++        tracepoint_args_skel_error_env = self.fill_tracepoint_args_skel("error_env")
+         trace_h = trace_h.replace("%%MODEL_NAME%%", self.name)
+         trace_h = trace_h.replace("%%MODEL_NAME_UP%%", self.name.upper())
+         trace_h = trace_h.replace("%%MONITOR_CLASS%%", monitor_class)
+         trace_h = trace_h.replace("%%MONITOR_CLASS_TYPE%%", monitor_class_type)
+         trace_h = trace_h.replace("%%TRACEPOINT_ARGS_SKEL_EVENT%%", tracepoint_args_skel_event)
+         trace_h = trace_h.replace("%%TRACEPOINT_ARGS_SKEL_ERROR%%", tracepoint_args_skel_error)
++        trace_h = trace_h.replace("%%TRACEPOINT_ARGS_SKEL_ERROR_ENV%%", tracepoint_args_skel_error_env)
+         return trace_h
  
-@@ -273,6 +328,14 @@ static inline void da_trace_error(struct da_monitor *da_mon,
- 	CONCATENATE(trace_error_, MONITOR_NAME)(curr_state, event);
- }
+     def print_files(self):
+diff --git a/tools/verification/rvgen/rvgen/templates/dot2k/main.c b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
+index a14e4f0883db..bf0999f6657a 100644
+--- a/tools/verification/rvgen/rvgen/templates/dot2k/main.c
++++ b/tools/verification/rvgen/rvgen/templates/dot2k/main.c
+@@ -21,7 +21,7 @@
+  */
+ #define RV_MON_TYPE RV_MON_%%MONITOR_TYPE%%
+ #include "%%MODEL_NAME%%.h"
+-#include <rv/da_monitor.h>
++#include <rv/%%MONITOR_CLASS%%_monitor.h>
  
-+/*
-+ * da_get_id - unused for implicit monitors
-+ */
-+static inline da_id_type da_get_id(struct da_monitor *da_mon)
-+{
-+	return 0;
-+}
-+
- #elif RV_MON_TYPE == RV_MON_PER_TASK
  /*
-  * Trace events for per_task monitors, report the PID of the task.
-@@ -317,6 +380,8 @@ static inline bool da_event(struct da_monitor *da_mon, enum events event, da_id_
- 			return false;
- 		}
- 		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state))) {
-+			if (!da_monitor_event_hook(da_mon, curr_state, event, next_state, id))
-+				return false;
- 			da_trace_event(da_mon, model_get_state_name(curr_state),
- 				       model_get_event_name(event),
- 				       model_get_state_name(next_state),
-diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
+  * This is the instrumentation part of the monitor.
+diff --git a/tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h b/tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
 new file mode 100644
-index 000000000000..b6cf3b2ba989
+index 000000000000..c8290e9ba2f4
 --- /dev/null
-+++ b/include/rv/ha_monitor.h
-@@ -0,0 +1,475 @@
++++ b/tools/verification/rvgen/rvgen/templates/dot2k/trace_hybrid.h
+@@ -0,0 +1,16 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2025-2028 Red Hat, Inc. Gabriele Monaco <gmonaco@redhat.com>
-+ *
-+ * Hybrid automata (HA) monitor functions, to be used together
-+ * with automata models in C generated by the rvgen tool.
-+ *
-+ * This type of monitors extends the Deterministic automata (DA) class by
-+ * adding a set of environment variables (e.g. clocks) that can be used to
-+ * constraint the valid transitions.
-+ *
-+ * The rvgen tool is available at tools/verification/rvgen/
-+ *
-+ * For further information, see:
-+ *   Documentation/trace/rv/monitor_synthesis.rst
-+ */
-+
-+#ifndef _RV_HA_MONITOR_H
-+#define _RV_HA_MONITOR_H
-+
-+#include <rv/automata.h>
-+
-+#ifndef da_id_type
-+#define da_id_type int
-+#endif
-+
-+static inline void ha_monitor_init_env(struct da_monitor *da_mon);
-+static inline void ha_monitor_reset_env(struct da_monitor *da_mon);
-+static inline void ha_setup_timer(struct ha_monitor *ha_mon);
-+static inline bool ha_cancel_timer(struct ha_monitor *ha_mon);
-+static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
-+					 enum states curr_state,
-+					 enum events event,
-+					 enum states next_state,
-+					 da_id_type id);
-+#define da_monitor_event_hook ha_monitor_handle_constraint
-+#define da_monitor_init_hook ha_monitor_init_env
-+#define da_monitor_reset_hook ha_monitor_reset_env
-+
-+#include <rv/da_monitor.h>
-+#include <linux/seq_buf.h>
-+
-+/* This simplifies things since da_mon and ha_mon coexist in the same union */
-+_Static_assert(offsetof(struct ha_monitor, da_mon) == 0,
-+	       "da_mon must be the first element in an ha_mon!");
-+#define to_ha_monitor(da) container_of(da, struct ha_monitor, da_mon)
-+
-+#define ENV_MAX CONCATENATE(env_max_, MONITOR_NAME)
-+#define ENV_MAX_STORED CONCATENATE(env_max_stored_, MONITOR_NAME)
-+#define envs CONCATENATE(envs_, MONITOR_NAME)
-+
-+/* Environment storage before being reset */
-+#define ENV_INVALID_VALUE U64_MAX
-+/* Error with no event occurs only on timeouts */
-+#define EVENT_NONE EVENT_MAX
-+#define EVENT_NONE_LBL "none"
-+#define ENV_BUFFER_SIZE 64
-+
-+#ifdef CONFIG_RV_REACTORS
 +
 +/*
-+ * ha_react - trigger the reaction after a failed environment constraint
-+ *
-+ * The transition from curr_state with event is otherwise valid, but the
-+ * environment constraint is false. This function can be called also with no
-+ * event from a timer (state constraints only).
-+ */
-+static void ha_react(enum states curr_state, enum events event, char *env)
-+{
-+	rv_react(&rv_this,
-+		 "rv: monitor %s does not allow event %s on state %s with env %s\n",
-+		 __stringify(MONITOR_NAME),
-+		 event == EVENT_NONE ? EVENT_NONE_LBL : model_get_event_name(event),
-+		 model_get_state_name(curr_state), env);
-+}
-+
-+#else /* CONFIG_RV_REACTOR */
-+
-+static void ha_react(enum states curr_state, enum events event, char *env) { }
-+#endif
-+
-+/*
-+ * model_get_state_name - return the (string) name of the given state
-+ */
-+static char *model_get_env_name(enum envs env)
-+{
-+	if ((env < 0) || (env >= ENV_MAX))
-+		return "INVALID";
-+
-+	return RV_AUTOMATON_NAME.env_names[env];
-+}
-+
-+/*
-+ * Monitors requiring a timer implementation need to request it explicitly.
-+ */
-+#ifndef HA_TIMER_TYPE
-+#define HA_TIMER_TYPE HA_TIMER_NONE
-+#endif
-+
-+#if HA_TIMER_TYPE == HA_TIMER_WHEEL
-+static void ha_monitor_timer_callback(struct timer_list *timer);
-+#elif HA_TIMER_TYPE == HA_TIMER_HRTIMER
-+static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer);
-+#endif
-+
-+/*
-+ * ktime_get_ns is expensive, since we usually don't require precise accounting
-+ * of changes within the same event, cache the current time at the beginning of
-+ * the constraint handler and use the cache for subsequent calls.
-+ * Monitors without ns clocks automatically skip this.
-+ */
-+#ifdef HA_CLK_NS
-+#define ha_get_ns() ktime_get_ns()
-+#else
-+#define ha_get_ns() 0
-+#endif /* HA_CLK_NS */
-+
-+/* Should be supplied by the monitor */
-+static u64 ha_get_env(struct ha_monitor *ha_mon, enum envs env, u64 time_ns);
-+static bool ha_verify_constraint(struct ha_monitor *ha_mon,
-+				 enum states curr_state,
-+				 enum events event,
-+				 enum states next_state,
-+				 u64 time_ns);
-+
-+/*
-+ * ha_monitor_reset_all_stored - reset all environment variables in the monitor
-+ */
-+static inline void ha_monitor_reset_all_stored(struct ha_monitor *ha_mon)
-+{
-+	for (int i = 0; i < ENV_MAX_STORED; i++)
-+		WRITE_ONCE(ha_mon->env_store[i], ENV_INVALID_VALUE);
-+}
-+
-+/*
-+ * ha_monitor_init_env - setup timer and reset all environment
-+ *
-+ * Called from a hook in the DA start functions, it supplies the da_mon
-+ * corresponding to the current ha_mon.
-+ * Not all hybrid automata require the timer, still set it for simplicity.
-+ */
-+static inline void ha_monitor_init_env(struct da_monitor *da_mon)
-+{
-+	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
-+
-+	ha_monitor_reset_all_stored(ha_mon);
-+	ha_setup_timer(ha_mon);
-+}
-+
-+/*
-+ * ha_monitor_reset_env - stop timer and reset all environment
-+ *
-+ * Called from a hook in the DA reset functions, it supplies the da_mon
-+ * corresponding to the current ha_mon.
-+ * Not all hybrid automata require the timer, still clear it for simplicity.
-+ */
-+static inline void ha_monitor_reset_env(struct da_monitor *da_mon)
-+{
-+	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
-+
-+	/* Initialisation resets the monitor before initialising the timer */
-+	if (likely(da_monitoring(da_mon)))
-+		ha_cancel_timer(ha_mon);
-+}
-+
-+/*
-+ * ha_monitor_env_invalid - return true if env has not been initialised
-+ */
-+static inline bool ha_monitor_env_invalid(struct ha_monitor *ha_mon, enum envs env)
-+{
-+	return READ_ONCE(ha_mon->env_store[env]) == ENV_INVALID_VALUE;
-+}
-+
-+static inline void ha_get_env_string(struct seq_buf *s,
-+				     struct ha_monitor *ha_mon, u64 time_ns)
-+{
-+	const char *format_str = "%s=%llu";
-+
-+	for (int i = 0; i < ENV_MAX; i++) {
-+		seq_buf_printf(s, format_str, model_get_env_name(i),
-+			       ha_get_env(ha_mon, i, time_ns));
-+		format_str = ",%s=%llu";
-+	}
-+}
-+
-+#if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
-+static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
-+				      char *curr_state, char *event, char *env,
-+				      da_id_type id)
-+{
-+	CONCATENATE(trace_error_env_, MONITOR_NAME)(curr_state, event, env);
-+}
-+#elif RV_MON_TYPE == RV_MON_PER_TASK
-+static inline void ha_trace_error_env(struct ha_monitor *ha_mon,
-+				      char *curr_state, char *event, char *env,
-+				      da_id_type id)
-+{
-+	CONCATENATE(trace_error_env_, MONITOR_NAME)(id, curr_state, event, env);
-+}
-+#endif /* RV_MON_TYPE */
-+
-+/*
-+ * ha_get_monitor - return the current monitor
-+ */
-+#define ha_get_monitor(...) to_ha_monitor(da_get_monitor(__VA_ARGS__))
-+
-+/*
-+ * ha_monitor_handle_constraint - handle the constraint on the current transition
-+ *
-+ * If the monitor implementation defines a constraint in the transition from
-+ * curr_state to event, react and trace appropriately as well as return false.
-+ * This function is called from the hook in the DA event handle function and
-+ * triggers a failure in the monitor.
-+ */
-+static bool ha_monitor_handle_constraint(struct da_monitor *da_mon,
-+					 enum states curr_state,
-+					 enum events event,
-+					 enum states next_state,
-+					 da_id_type id)
-+{
-+	struct ha_monitor *ha_mon = to_ha_monitor(da_mon);
-+	u64 time_ns = ha_get_ns();
-+	DECLARE_SEQ_BUF(env_string, ENV_BUFFER_SIZE);
-+
-+	if (ha_verify_constraint(ha_mon, curr_state, event, next_state, time_ns))
-+		return true;
-+
-+	ha_get_env_string(&env_string, ha_mon, time_ns);
-+	ha_react(curr_state, event, env_string.buffer);
-+	ha_trace_error_env(ha_mon,
-+			   model_get_state_name(curr_state),
-+			   model_get_event_name(event),
-+			   env_string.buffer, id);
-+	return false;
-+}
-+
-+static inline void __ha_monitor_timer_callback(struct ha_monitor *ha_mon)
-+{
-+	enum states curr_state = READ_ONCE(ha_mon->da_mon.curr_state);
-+	DECLARE_SEQ_BUF(env_string, ENV_BUFFER_SIZE);
-+	u64 time_ns = ha_get_ns();
-+
-+	ha_get_env_string(&env_string, ha_mon, time_ns);
-+	ha_react(curr_state, EVENT_NONE, env_string.buffer);
-+	ha_trace_error_env(ha_mon, model_get_state_name(curr_state),
-+			   EVENT_NONE_LBL, env_string.buffer,
-+			   da_get_id(&ha_mon->da_mon));
-+
-+	da_monitor_reset(&ha_mon->da_mon);
-+}
-+
-+/*
-+ * The clock variables have 2 different representations in the env_store:
-+ * - The guard representation is the timestamp of the last reset
-+ * - The invariant representation is the timestamp when the invariant expires
-+ * As the representations are incompatible, care must be taken when switching
-+ * between them: the invariant representation can only be used when starting a
-+ * timer when the previous representation was guard (e.g. no other invariant
-+ * started since the last reset operation).
-+ * Likewise, switching from invariant to guard representation without a reset
-+ * can be done only by subtracting the exact value used to start the invariant.
-+ *
-+ * Reading the environment variable (ha_get_clk) also reflects this difference
-+ * any reads in states that have an invariant return the (possibly negative)
-+ * time since expiration, other reads return the time since last reset.
++ * Snippet to be included in rv_trace.h
 + */
 +
-+/*
-+ * Helper functions for env variables describing clocks with ns granularity
-+ */
-+static inline u64 ha_get_clk_ns(struct ha_monitor *ha_mon, enum envs env, u64 time_ns)
-+{
-+	return time_ns - READ_ONCE(ha_mon->env_store[env]);
-+}
-+static inline void ha_reset_clk_ns(struct ha_monitor *ha_mon, enum envs env, u64 time_ns)
-+{
-+	WRITE_ONCE(ha_mon->env_store[env], time_ns);
-+}
-+static inline void ha_set_invariant_ns(struct ha_monitor *ha_mon, enum envs env,
-+				       u64 value, u64 time_ns)
-+{
-+	WRITE_ONCE(ha_mon->env_store[env], time_ns + value);
-+}
-+static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon,
-+					 enum envs env, u64 time_ns)
-+{
-+	return READ_ONCE(ha_mon->env_store[env]) >= time_ns;
-+}
-+/*
-+ * ha_invariant_passed_ns - prepare the invariant and return the time since reset
-+ */
-+static inline u64 ha_invariant_passed_ns(struct ha_monitor *ha_mon, enum envs env,
-+				   u64 expire, u64 time_ns)
-+{
-+	u64 passed = 0;
++#ifdef CONFIG_RV_MON_%%MODEL_NAME_UP%%
++DEFINE_EVENT(event_%%MONITOR_CLASS%%, event_%%MODEL_NAME%%,
++%%TRACEPOINT_ARGS_SKEL_EVENT%%);
 +
-+	if (env < 0 || env >= ENV_MAX_STORED)
-+		return 0;
-+	if (ha_monitor_env_invalid(ha_mon, env))
-+		return 0;
-+	passed = ha_get_env(ha_mon, env, time_ns);
-+	ha_set_invariant_ns(ha_mon, env, expire - passed, time_ns);
-+	return passed;
-+}
++DEFINE_EVENT(error_%%MONITOR_CLASS%%, error_%%MODEL_NAME%%,
++%%TRACEPOINT_ARGS_SKEL_ERROR%%);
 +
-+/*
-+ * Helper functions for env variables describing clocks with jiffy granularity
-+ */
-+static inline u64 ha_get_clk_jiffy(struct ha_monitor *ha_mon, enum envs env)
-+{
-+	return get_jiffies_64() - READ_ONCE(ha_mon->env_store[env]);
-+}
-+static inline void ha_reset_clk_jiffy(struct ha_monitor *ha_mon, enum envs env)
-+{
-+	WRITE_ONCE(ha_mon->env_store[env], get_jiffies_64());
-+}
-+static inline void ha_set_invariant_jiffy(struct ha_monitor *ha_mon,
-+					  enum envs env, u64 value)
-+{
-+	WRITE_ONCE(ha_mon->env_store[env], get_jiffies_64() + value);
-+}
-+static inline bool ha_check_invariant_jiffy(struct ha_monitor *ha_mon,
-+					    enum envs env, u64 time_ns)
-+{
-+	return time_after64(READ_ONCE(ha_mon->env_store[env]), get_jiffies_64());
-+
-+}
-+/*
-+ * ha_invariant_passed_jiffy - prepare the invariant and return the time since reset
-+ */
-+static inline u64 ha_invariant_passed_jiffy(struct ha_monitor *ha_mon, enum envs env,
-+				      u64 expire, u64 time_ns)
-+{
-+	u64 passed = 0;
-+
-+	if (env < 0 || env >= ENV_MAX_STORED)
-+		return 0;
-+	if (ha_monitor_env_invalid(ha_mon, env))
-+		return 0;
-+	passed = ha_get_env(ha_mon, env, time_ns);
-+	ha_set_invariant_jiffy(ha_mon, env, expire - passed);
-+	return passed;
-+}
-+
-+/*
-+ * Retrieve the last reset time (guard representation) from the invariant
-+ * representation (expiration).
-+ * It the caller's responsibility to make sure the storage was actually in the
-+ * invariant representation (e.g. the current state has an invariant).
-+ * The provided value must be the same used when starting the invariant.
-+ *
-+ * This function's access to the storage is NOT atomic, due to the rarity when
-+ * this is used. If a monitor allows writes concurrent to this, likely
-+ * other things are broken and need rethinking the model or additional locking.
-+ */
-+static inline void ha_inv_to_guard(struct ha_monitor *ha_mon, enum envs env,
-+				   u64 value, u64 time_ns)
-+{
-+	WRITE_ONCE(ha_mon->env_store[env], READ_ONCE(ha_mon->env_store[env]) - value);
-+}
-+
-+#if HA_TIMER_TYPE == HA_TIMER_WHEEL
-+/*
-+ * Helper functions to handle the monitor timer.
-+ * Not all monitors require a timer, in such case the timer will be set up but
-+ * never armed.
-+ * Timers start since the last reset of the supplied env or from now if env is
-+ * not an environment variable. If env was not initialised no timer starts.
-+ * Timers can expire on any CPU unless the monitor is per-cpu,
-+ * where we assume every event occurs on the local CPU.
-+ */
-+static void ha_monitor_timer_callback(struct timer_list *timer)
-+{
-+	struct ha_monitor *ha_mon = container_of(timer, struct ha_monitor, timer);
-+
-+	__ha_monitor_timer_callback(ha_mon);
-+}
-+static inline void ha_setup_timer(struct ha_monitor *ha_mon)
-+{
-+	int mode = 0;
-+
-+	if (RV_MON_TYPE == RV_MON_PER_CPU)
-+		mode |= TIMER_PINNED;
-+	timer_setup(&ha_mon->timer, ha_monitor_timer_callback, mode);
-+}
-+static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum envs env,
-+					u64 expire, u64 time_ns)
-+{
-+	u64 passed = ha_invariant_passed_jiffy(ha_mon, env, expire, time_ns);
-+
-+	mod_timer(&ha_mon->timer, get_jiffies_64() + expire - passed);
-+}
-+static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum envs env,
-+				     u64 expire, u64 time_ns)
-+{
-+	u64 passed = ha_invariant_passed_ns(ha_mon, env, expire, time_ns);
-+
-+	ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
-+			     nsecs_to_jiffies(expire - passed + TICK_NSEC - 1), time_ns);
-+}
-+/*
-+ * ha_cancel_timer - Cancel the timer
-+ *
-+ * Returns:
-+ *  *  1 when the timer was active
-+ *  *  0 when the timer was not active or running a callback
-+ */
-+static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
-+{
-+	return timer_delete(&ha_mon->timer);
-+}
-+#elif HA_TIMER_TYPE == HA_TIMER_HRTIMER
-+/*
-+ * Helper functions to handle the monitor timer.
-+ * Not all monitors require a timer, in such case the timer will be set up but
-+ * never armed.
-+ * Timers start since the last reset of the supplied env or from now if env is
-+ * not an environment variable. If env was not initialised no timer starts.
-+ * Timers can expire on any CPU unless the monitor is per-cpu,
-+ * where we assume every event occurs on the local CPU.
-+ */
-+static enum hrtimer_restart ha_monitor_timer_callback(struct hrtimer *hrtimer)
-+{
-+	struct ha_monitor *ha_mon = container_of(hrtimer, struct ha_monitor, hrtimer);
-+
-+	__ha_monitor_timer_callback(ha_mon);
-+	return HRTIMER_NORESTART;
-+}
-+static inline void ha_setup_timer(struct ha_monitor *ha_mon)
-+{
-+	hrtimer_setup(&ha_mon->hrtimer, ha_monitor_timer_callback,
-+		      CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
-+}
-+static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enum envs env,
-+				     u64 expire, u64 time_ns)
-+{
-+	int mode = HRTIMER_MODE_REL_HARD;
-+	u64 passed = ha_invariant_passed_ns(ha_mon, env, expire, time_ns);
-+
-+	if (RV_MON_TYPE == RV_MON_PER_CPU)
-+		mode |= HRTIMER_MODE_PINNED;
-+	hrtimer_start(&ha_mon->hrtimer, ns_to_ktime(expire - passed), mode);
-+}
-+static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, enum envs env,
-+					u64 expire, u64 time_ns)
-+{
-+	u64 passed = ha_invariant_passed_jiffy(ha_mon, env, expire, time_ns);
-+
-+	ha_start_timer_ns(ha_mon, ENV_MAX_STORED,
-+			  jiffies_to_nsecs(expire - passed), time_ns);
-+}
-+/*
-+ * ha_cancel_timer - Cancel the timer
-+ *
-+ * Returns:
-+ *  *  1 when the timer was active
-+ *  *  0 when the timer was not active or running a callback
-+ */
-+static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
-+{
-+	return hrtimer_try_to_cancel(&ha_mon->hrtimer) == 1;
-+}
-+#else /* HA_TIMER_NONE */
-+/*
-+ * Start function is intentionally not defined, monitors using timers must
-+ * set HA_TIMER_TYPE to either HA_TIMER_WHEEL or HA_TIMER_HRTIMER.
-+ */
-+static inline void ha_setup_timer(struct ha_monitor *ha_mon) { }
-+static inline bool ha_cancel_timer(struct ha_monitor *ha_mon)
-+{
-+	return false;
-+}
-+#endif
-+
-+#endif
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 5b4be87ba59d..4ad392dfc57f 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -23,6 +23,19 @@ config LTL_MON_EVENTS_ID
- config RV_LTL_MONITOR
- 	bool
- 
-+config RV_HA_MONITOR
-+	bool
-+
-+config HA_MON_EVENTS_IMPLICIT
-+	select DA_MON_EVENTS_IMPLICIT
-+	select RV_HA_MONITOR
-+	bool
-+
-+config HA_MON_EVENTS_ID
-+	select DA_MON_EVENTS_ID
-+	select RV_HA_MONITOR
-+	bool
-+
- menuconfig RV
- 	bool "Runtime Verification"
- 	select TRACING
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 4a6faddac614..7c598967bc0e 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -65,6 +65,36 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- #include <monitors/opid/opid_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
- 
-+#ifdef CONFIG_HA_MON_EVENTS_IMPLICIT
-+/* For simplicity this class is marked as DA although relevant only for HA */
-+DECLARE_EVENT_CLASS(error_env_da_monitor,
-+
-+	TP_PROTO(char *state, char *event, char *env),
-+
-+	TP_ARGS(state, event, env),
-+
-+	TP_STRUCT__entry(
-+		__string(	state,	state	)
-+		__string(	event,	event	)
-+		__string(	env,	env	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(state);
-+		__assign_str(event);
-+		__assign_str(env);
-+	),
-+
-+	TP_printk("event %s not expected in the state %s with env %s",
-+		__get_str(event),
-+		__get_str(state),
-+		__get_str(env))
-+);
-+
-+// Add new monitors based on CONFIG_HA_MON_EVENTS_IMPLICIT here
-+
-+#endif
-+
- #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
- 
- #ifdef CONFIG_DA_MON_EVENTS_ID
-@@ -128,6 +158,39 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- #include <monitors/sssw/sssw_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
- 
-+#ifdef CONFIG_HA_MON_EVENTS_ID
-+/* For simplicity this class is marked as DA although relevant only for HA */
-+DECLARE_EVENT_CLASS(error_env_da_monitor_id,
-+
-+	TP_PROTO(int id, char *state, char *event, char *env),
-+
-+	TP_ARGS(id, state, event, env),
-+
-+	TP_STRUCT__entry(
-+		__field(	int,	id	)
-+		__string(	state,	state	)
-+		__string(	event,	event	)
-+		__string(	env,	env	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(state);
-+		__assign_str(event);
-+		__assign_str(env);
-+		__entry->id	= id;
-+	),
-+
-+	TP_printk("%d: event %s not expected in the state %s with env %s",
-+		__entry->id,
-+		__get_str(event),
-+		__get_str(state),
-+		__get_str(env))
-+);
-+
-+// Add new monitors based on CONFIG_HA_MON_EVENTS_ID here
-+
-+#endif
-+
- #endif /* CONFIG_DA_MON_EVENTS_ID */
- #ifdef CONFIG_LTL_MON_EVENTS_ID
- DECLARE_EVENT_CLASS(event_ltl_monitor_id,
++DEFINE_EVENT(error_env_%%MONITOR_CLASS%%, error_env_%%MODEL_NAME%%,
++%%TRACEPOINT_ARGS_SKEL_ERROR_ENV%%);
++#endif /* CONFIG_RV_MON_%%MODEL_NAME_UP%% */
 -- 
 2.52.0
 
