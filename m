@@ -1,56 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E971F8AC8;
-	Thu, 22 Jan 2026 14:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4668634FF55;
+	Thu, 22 Jan 2026 14:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769092803; cv=none; b=mmptoMzDYZfzNNcGgQ6DGx9DcnhH7EhF/UmLUy42+mEaG+P+PYuTcn/iyuwAqG3uttSzLDNQrsO2Qx9lb7ZOtZz49/7oIkkoyfGH1a/7Q8dwhF1aJ5CH+9k40qNsnIqCR99nwwJYXK5ij4BtD6QDOD3XMxkRMraLdA6keHKxMSo=
+	t=1769093021; cv=none; b=AGeRPznjjVUErYfwwUuOqX3TCw/yciBInj48myFzNQz/jJfe+D2q098b85NZ/IvF/ffApkgxWwzY/Kyymn6gikWSvFSJ1tol2DM0VxiKXp11wYjMtLuZtgpCx1/ydxJcGFlPGU1KSs+Rur+I03/ok/FEjXHBHjXRv/TAyUtIB1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769092803; c=relaxed/simple;
-	bh=Cd7f3A9GqhLNPaSZyYZjrztwoJlDUQehfPo1kePr9eg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AoTZLiKQxywgBi+VfCyz3sPVC4kyCPmCuS4s0Unh8LpFyd85j0NH0Rr/BlIn0A39Uwj7XG3OcGHa1hAotNoxHl9mBT4DayVpv1y/Iu7K1JKy/ykVj0yHfKaQ6YzsZfBloaKrHGQFym52HF8KEwzoBznH+LZAcq2D7yXE08r/3+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wmH+HaSi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lKqB79N7; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1769093021; c=relaxed/simple;
+	bh=1knOfDL4BgBzv0Fe2WoK8w6OQ7JZrvTtqwsF1kB2BrA=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GAuiCGCkG188K7R0x6AvqLcvVlDMy8vb66FWb4LAl0izWvYQv6rk1m7OFkOIHdxQL0NaY4VKWbF52ct2Ny2Lvz9RJy9CwfIfCRuyZUoHqACNuKGD1/RPApEeoJ/ekOHfZkFXGXiABH/Ukz/oVpDPGb689POOOaKhmkbHwBpGtYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HUfVSIVA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f++KMlZz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wmH+HaSi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lKqB79N7"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HUfVSIVA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f++KMlZz"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1769092798;
+	s=2020; t=1769093017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Cd7f3A9GqhLNPaSZyYZjrztwoJlDUQehfPo1kePr9eg=;
-	b=wmH+HaSiVtoDNAGBdE3TG558BXMLaFej8kWN+fHuqAb+twTixdgdLyVJb8IWEpk0GwmuZL
-	n7NxxCgeUk8BmeNjghhDR9GxwP0iTpDZ1K04mHvuXVnOlHehjDNGpbmQLVud3x1Ub+9D/C
-	dF0naReXejf/Dndo3T7pPekEDrrsD/bKXLeGyd5yp7AaX33qsmkzFlOPLstcP7+g6PxIN1
-	FliP4Dil6AO0D6lEwMGWqkq+KjRSemjomK6k/V9OB8lLNCYxGvvdzxDUbceFd/VC1z3HXz
-	/8UD6y/0tBk0XZXjSQEq9lwMrobvqmSK2kf6TS2Cwd4L4XDTmrWrBSgOPWHIrw==
+	bh=1knOfDL4BgBzv0Fe2WoK8w6OQ7JZrvTtqwsF1kB2BrA=;
+	b=HUfVSIVAZQurc8GUU5O/bCHVQOkRJOqmCgUYzRE0kEfUnEXqCGJYv+mdJn59NEvj5uS9CW
+	fXdBuyQACEy7p++duMxnBZS+XDGS+98p/kRJfiARWhVY9C/r9/rwVHWnzGI1bCYXhep4mU
+	M3he9bk4qKayLzvLlf+Pv1auU4xAZ7X+rybAAbl/LvFGvDs3HYW90bVaC6hUs+KU66Fqs0
+	O1J8moig+5Rmw8KENhBVxULU9YKL7N+9aJpMtEjuPDtsivj5RzWhMVD8N7xuWTHm1LzhQn
+	vqXKYdttT4Cj2qbkxzsTEHBn6tN5Xa/CPnrrY7oBTftjI00mBXP4HoKzsG0DMg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1769092798;
+	s=2020e; t=1769093017;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Cd7f3A9GqhLNPaSZyYZjrztwoJlDUQehfPo1kePr9eg=;
-	b=lKqB79N7/2PLfTgNy/zu1bSSuRQhLudsEg0VO3wLv6DV+f0tGg1WpuE40RWhnxH1p03I6X
-	wJyvUCMhxfW6umAg==
-To: Gabriele Monaco <gmonaco@redhat.com>, Wander Lairson Costa
- <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/26] rv/rvgen: introduce AutomataError exception class
-In-Reply-To: <fb6b81910e32dbf7aa16e1961dc1dca0a9bfbf57.camel@redhat.com>
+	bh=1knOfDL4BgBzv0Fe2WoK8w6OQ7JZrvTtqwsF1kB2BrA=;
+	b=f++KMlZzQuv/FgXVPP88l2dp+LyBk76TRq2ZbWJo4r1HdMXDGycc6i3qH8FcZ2cbRHt/f8
+	q53JREoA0g78ijDA==
+To: Wander Lairson Costa <wander@redhat.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Wander
+ Lairson Costa <wander@redhat.com>, open list
+ <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION (RV)"
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/26] rv/rvgen: remove bare except clauses in generator
+In-Reply-To: <20260119205601.105821-3-wander@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
- <20260119205601.105821-2-wander@redhat.com>
- <24e308b019cf9272884091f85b6675fd05201a2b.camel@redhat.com>
- <aW9ySuaPMZVm-MrN@fedora>
- <fb6b81910e32dbf7aa16e1961dc1dca0a9bfbf57.camel@redhat.com>
-Date: Thu, 22 Jan 2026 15:39:58 +0100
-Message-ID: <87ms25soch.fsf@yellow.woof>
+ <20260119205601.105821-3-wander@redhat.com>
+Date: Thu, 22 Jan 2026 15:43:36 +0100
+Message-ID: <87jyx9so6f.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,25 +56,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Gabriele Monaco <gmonaco@redhat.com> writes:
-> That could be a good tradeoff. Users are developer but (although I'm not sure if
-> it really happened yet) are not the rvgen developers, they don't need to know
-> where exactly the code complained, unless it really broke.
-> All errors that are expected (OSError or wrong format) should have a meaningful
-> message for the user, I believe by doing that we'd have a pretty clear idea
-> where the error came from in the code too (e.g. event parsing, opening a file,
-> etc.).
+Wander Lairson Costa <wander@redhat.com> writes:
+> Remove bare except clauses from the generator module that were
+> catching all exceptions including KeyboardInterrupt and SystemExit.
+> This follows the same exception handling improvements made in the
+> previous AutomataError commit and addresses PEP 8 violations.
 >
-> If the code has a bug, then yes we should throw the exception as is, that's why
-> I think it's good not to catch Exception, but to catch only the few exceptions
-> we know can happen, all others would be bugs.
+> The bare except clause in __create_directory was silently catching
+> and ignoring all errors after printing a message, which could mask
+> serious issues. For __write_file, the bare except created a critical
+> bug where the file variable could remain undefined if open() failed,
+> causing a NameError when attempting to write to or close the file.
+>
+> These methods now let OSError propagate naturally, allowing callers
+> to handle file system errors appropriately. This provides clearer
+> error reporting and allows Python's exception handling to show
+> complete stack traces with proper error types and locations.
+>
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 
-I second this. We should only catch expected exceptions (e.g. the .dot
-file is malformed) and print meaningful message. Otherwise, just leave
-it uncaught.
-
-While working with rvgen, I usually just remove the try-catch, because
-it takes away all the useful debug information while not offering
-anything else.
-
-Nam
+Reviewed-by: Nam Cao <namcao@linutronix.de>
