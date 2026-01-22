@@ -1,170 +1,129 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75FB3A4AA6
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 08:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 185D1363C6E;
+	Thu, 22 Jan 2026 11:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769070912; cv=none; b=niqccvHNJzZ/1k9mXYGUJN3HpWXFB24wDWGiwfkFnVzgOIRvQCNoHuO21FAtA3HRVpvD7hrJGBii+/hNuRtaC2Eps5IfradKNshR+Y0J8sOMupQbC446EktVqMAza5KPrCk2mBKC8LkSnOXMBKJYdbj+TctvOZW3gHCTKErwd54=
+	t=1769080082; cv=none; b=HqHVZKrp2W2HFaMeCDQqQ8rHKObchNfZRHQI4zETEvgG4mz9FATdJYA92UXTXi5wf50l/z9NSDbavD68/Paknn0pzgzB0uiMU2m0+zzf8zwj4b69lo5qpnfjMV7K5GcapSBFwLxOkW0zGf/FiiYalwo+XN/pE0sSKXz5Ph2/rXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769070912; c=relaxed/simple;
-	bh=liNxOHqtS4owacMiu+udobP6pfVRmWGgqJuFGkWX1uY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVv5ek8PKxknsEt4vlYLHDFgdaEs8etWAI1qnP43EpGLykqtwehZWNFvbHmZL9ak6PF+8cp+s36EoNcSrHG/Mkd4lyIXAuMXKMZWSlOhVDE41ybnK3XJJRryEE3HIP5rdnBERAKFASFicIrSPuy6DVCb9hrAVw9M0RpZ3WMLKQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JfBlyAVk; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfBlyAVk"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47ee07570deso5396475e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Jan 2026 00:35:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769070909; x=1769675709; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JlbrNRekBYaQARK5CsNzqxZ3EG2Jrckv5T/Vqrwj6ms=;
-        b=JfBlyAVkQEzBDNUdEnaIWPaB3DB/hC+iaw3AOV6WYubBlC07fQBAN50JbitY4dCriL
-         EfCVT4QxmPtKJA/siLC3Jnt1NNJIZ0LqT4rcDEx++kbd/2/I2gyd3HqHc0ekCWd4qnkc
-         CUcTqWrmkEkvz0Z8dFT/rdL6TMxgPl/FnxnJElHRFY6O6IxUsobQ0aZIlDKQU8YPlXZd
-         lH9RyEdaG9mreLGkHxpIwpalieWifMFt6tQagXXaMEIlDEj9Sx99ooXFGTG68lOWclEc
-         vrXl60pH95saHMK6B2G4lZ5YmYySlLo7fJZud1/Ue672yN/ZGcq7rD11ylxTjJs3uQ8l
-         9lqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769070909; x=1769675709;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JlbrNRekBYaQARK5CsNzqxZ3EG2Jrckv5T/Vqrwj6ms=;
-        b=AY7fDELYCJM652AbUZlMPZOqJMzP0B4RMEdexo34LbUtM3nlMmU6NtsgHoZiyiuL3+
-         n7bVEMt2FP+57Fw5jp80GPbjpWcr4LrpgG7qve3v4/Cy7sqMA9oFTLpNuzer08ZEg10L
-         l88/eI0+QF3WWtn4whb9mIWmQBWcwJeqO9w2xO7boJVKqpF19LeE/RfvA1H6a6BIjAPC
-         utAZ4UE6+gD5yUXxhx1VXBhiwKspXGw7s0VKIs8smC4fyziC2a6jPktOsQ7gO9Atlc+r
-         tj2L/IuzQ8cIri4XBcEZqhUdiq9pjWixEjLlSyQzZTEez0MgD4eQHq4NL9j+nC6WvSXN
-         Mcjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWaAz7iiTStUTsWLHZ5LlnUevd2BBF1w7QukxhjUqLlYDnNYgPmNcowwtZP2ofrL1avLpyajbOTTSRn2G49L+tO4M8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7WQMc5hvvF2ecFhXnKnei4K1GCF+eeqMSktoISf8KDsJ4pzw8
-	hjAguNSRtKTWkYa2zQBYJ3gV2auy8HoEkU2FgOCmlqPClaaU7nIhkeLR
-X-Gm-Gg: AZuq6aIPQ6ARloNc8Fa2uCA/0Y2B54BPbLAsvX/CBUtuPROmn4oWHkQ2qT048AzZpN1
-	4eotxZndosqbZ7+ZLBoH9DgtEVrmQ0ABFviefiT2oypDK7xJJRCz22AGggEuzamnyXA9teoaoMN
-	sdwvKdtA39RiRgWtFc0uvdEcLK5VztdrPFI7KSp06IdpqebmdaR68Iflc9Zuh+aP3q8hVi3q6RV
-	BmZKJcvoBPQ2SjbWG5rmAkBQfzlopDLoFKl8avEhYLuzv9b60r79YtF34b5y9zUUR+0z1M5SqcJ
-	hgDj/XfRHAc5JyKhS3A8/9Ti9h1kpmeAEoN2iryBOANM5GXNB3ZZmmctvbnQeSQC5Zt42geH5kN
-	/bW1ybw5ez+o0uzGo9K5I6c+3kZM3TYmqwbjT8/JYF7AmJA4No5Mi9cfGBmlm
-X-Received: by 2002:a05:600c:811a:b0:477:63db:c718 with SMTP id 5b1f17b1804b1-4801ead0fd1mr264704155e9.16.1769070908912;
-        Thu, 22 Jan 2026 00:35:08 -0800 (PST)
-Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804704087asm48051015e9.6.2026.01.22.00.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 00:35:08 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 22 Jan 2026 09:35:07 +0100
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mahe Tardy <mahe.tardy@gmail.com>
-Subject: Re: [PATCH bpf-next 4/4] selftests/bpf: Allow to benchmark trigger
- with stacktrace
-Message-ID: <aXHhO6R_PRw5yClo@krava>
-References: <20260112214940.1222115-1-jolsa@kernel.org>
- <20260112214940.1222115-5-jolsa@kernel.org>
- <CAEf4BzaXhGpkycs-TO_1V81-irq3d8Mjfyk=LMc0OC-NW-FnRg@mail.gmail.com>
+	s=arc-20240116; t=1769080082; c=relaxed/simple;
+	bh=hgpDkh2v8iqAT1V2jdsYmt94LE57iPmLaWXsiqgUzlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gVleAJy1awOW4+6bdK9oSKhWwc7LA1NKSVeAlnIrRGL9PdhHFYxYgu/gQKDVWjEjIzLmr00UdXkroQEu+0i5ZhPhXjDGl8vkMdNdyfhojWh/ts+FcEPW82KfuwpxAQz3HwHRCj6c6eZCrEFErWvQ4pi4tlRYMtrJ5GAu1T9jBMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DF911476;
+	Thu, 22 Jan 2026 03:07:52 -0800 (PST)
+Received: from [10.164.18.63] (MacBook-Pro.blr.arm.com [10.164.18.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD5E93F632;
+	Thu, 22 Jan 2026 03:07:53 -0800 (PST)
+Message-ID: <3aaa3e5d-7f66-40fc-a5b0-ea6a384a88a8@arm.com>
+Date: Thu, 22 Jan 2026 16:37:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzaXhGpkycs-TO_1V81-irq3d8Mjfyk=LMc0OC-NW-FnRg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 2/2] mm/khugepaged: retry with sync writeback for
+ MADV_COLLAPSE
+To: Shivank Garg <shivankg@amd.com>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zach O'Keefe <zokeefe@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Branden Moore <Branden.Moore@amd.com>
+References: <20260118190939.8986-2-shivankg@amd.com>
+ <20260118190939.8986-7-shivankg@amd.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20260118190939.8986-7-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 15, 2026 at 10:48:29AM -0800, Andrii Nakryiko wrote:
-> On Mon, Jan 12, 2026 at 1:50 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding support to call bpf_get_stackid helper from trigger programs,
-> > so far added for kprobe multi.
-> >
-> > Adding the --stacktrace/-g option to enable it.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/testing/selftests/bpf/bench.c            |  4 ++++
-> >  tools/testing/selftests/bpf/bench.h            |  1 +
-> >  .../selftests/bpf/benchs/bench_trigger.c       |  1 +
-> >  .../selftests/bpf/progs/trigger_bench.c        | 18 ++++++++++++++++++
-> >  4 files changed, 24 insertions(+)
-> >
-> 
-> This now actually becomes a stack trace benchmark :) But I don't mind,
-> I think it would be good to be able to benchmark this. But I think we
-> should then implement it for all different tracing programs (tp,
-> raw_tp, fentry/fexit/fmod_ret) for consistency and so we can compare
-> and contrast?...
 
-fyi I updated the bench for all program types and got some stats
+On 19/01/26 12:39 am, Shivank Garg wrote:
+> When MADV_COLLAPSE is called on file-backed mappings (e.g., executable
+> text sections), the pages may still be dirty from recent writes.
+> collapse_file() will trigger async writeback and fail with
+> SCAN_PAGE_DIRTY_OR_WRITEBACK (-EAGAIN).
+>
+> MADV_COLLAPSE is a synchronous operation where userspace expects
+> immediate results. If the collapse fails due to dirty pages, perform
+> synchronous writeback on the specific range and retry once.
+>
+> This avoids spurious failures for freshly written executables while
+> avoiding unnecessary synchronous I/O for mappings that are already clean.
+>
+> Reported-by: Branden Moore <Branden.Moore@amd.com>
+> Closes: https://lore.kernel.org/all/4e26fe5e-7374-467c-a333-9dd48f85d7cc@amd.com
+> Fixes: 34488399fa08 ("mm/madvise: add file and shmem support to MADV_COLLAPSE")
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Tested-by: Lance Yang <lance.yang@linux.dev>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
+>  mm/khugepaged.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 219dfa2e523c..16582bdcb6ff 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/dax.h>
+>  #include <linux/ksm.h>
+>  #include <linux/pgalloc.h>
+> +#include <linux/backing-dev.h>
+>  
+>  #include <asm/tlb.h>
+>  #include "internal.h"
+> @@ -2788,7 +2789,9 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  
+>  	for (addr = hstart; addr < hend; addr += HPAGE_PMD_SIZE) {
+>  		int result = SCAN_FAIL;
+> +		bool triggered_wb = false;
+>  
+> +retry:
+>  		if (!mmap_locked) {
+>  			cond_resched();
+>  			mmap_read_lock(mm);
+> @@ -2809,8 +2812,20 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  
+>  			mmap_read_unlock(mm);
+>  			mmap_locked = false;
+> +			*lock_dropped = true;
+>  			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+>  							  cc);
+> +
+> +			if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
+> +			    mapping_can_writeback(file->f_mapping)) {
+> +				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+> +				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+> +
+> +				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
 
-current fix WITHOUT stacktrace:
+So we don't care about the return value here because this is best-effort.
+I really wish we had in our coding-style.rst to typecast such things to (void),
+so we know explicitly that we are ignoring the return value, and not that the
+function itself returns void.
 
-        usermode-count :  810.652 ± 1.036M/s
-        kernel-count   :  336.645 ± 2.812M/s
-        syscall-count  :   27.798 ± 0.063M/s
-        fentry         :   67.677 ± 0.291M/s
-        fexit          :   49.970 ± 0.214M/s
-        fmodret        :   52.860 ± 0.237M/s
-        rawtp          :   65.196 ± 0.224M/s
-        tp             :   34.120 ± 0.042M/s
-        kprobe         :   25.157 ± 0.019M/s
-        kprobe-multi   :   33.223 ± 0.205M/s
-        kprobe-multi-all:    4.739 ± 0.003M/s
-        kretprobe      :   10.904 ± 0.020M/s
-        kretprobe-multi:   15.996 ± 0.023M/s
-        kretprobe-multi-all:    2.559 ± 0.092M/s
+Nothing jumps out at me,
 
-current fix WITH stacktrace:
+Reviewed-by: Dev Jain <dev.jain@arm.com>
 
-        usermode-count :  782.529 ± 5.866M/s
-        kernel-count   :  341.116 ± 2.247M/s
-        syscall-count  :   27.481 ± 0.267M/s
-        fentry         :    2.397 ± 0.026M/s
-        fexit          :    2.472 ± 0.008M/s
-        fmodret        :    2.475 ± 0.014M/s
-        rawtp          :    2.593 ± 0.031M/s
-        tp             :    2.641 ± 0.020M/s
-        kprobe         :    3.848 ± 0.014M/s
-        kprobe-multi   :    4.188 ± 0.025M/s
-        kprobe-multi-all:    0.261 ± 0.026M/s
-        kretprobe      :    3.782 ± 0.011M/s
-        kretprobe-multi:    4.157 ± 0.023M/s
-        kretprobe-multi-all:    0.177 ± 0.000M/s
-
-with similar fix for fentry/fexit/raw_tp/tp WITH stacktrace:
-
-        usermode-count :  792.613 ± 1.322M/s
-        kernel-count   :  337.725 ± 2.422M/s
-        syscall-count  :   27.363 ± 0.030M/s
-        fentry         :   14.911 ± 0.083M/s
-        fexit          :   13.749 ± 0.060M/s
-        fmodret        :   13.987 ± 0.049M/s
-        rawtp          :   13.760 ± 0.042M/s
-        tp             :    7.060 ± 0.026M/s
-        kprobe         :    3.920 ± 0.012M/s
-        kprobe-multi   :    4.186 ± 0.030M/s
-        kprobe-multi-all:    0.281 ± 0.006M/s
-        kretprobe      :    3.782 ± 0.005M/s
-        kretprobe-multi:    4.030 ± 0.014M/s
-        kretprobe-multi-all:    0.178 ± 0.000M/s
-
-so cutting the extra initial unwind gets some speedup ex expected
-
-I'm getting wrong callstack for rawtp programs, so I need to find out why,
-but the rest of the tracing programs fentry/fexit.. work ok
-
-jirka
+> +				triggered_wb = true;
+> +				fput(file);
+> +				goto retry;
+> +			}
+>  			fput(file);
+>  		} else {
+>  			result = hpage_collapse_scan_pmd(mm, vma, addr,
