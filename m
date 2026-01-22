@@ -1,135 +1,96 @@
-Received: from mail-m15590.qiye.163.com (mail-m15590.qiye.163.com [101.71.155.90])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0A33C1FD4;
-	Thu, 22 Jan 2026 03:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEE2364021;
+	Thu, 22 Jan 2026 03:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769051903; cv=none; b=Fu0VP8tkI2bzLH88KqGHi21M0mZ6vyQ1idjj7s0G9lLnDOL9EHFrl2AXAgSMoCjWQ2BAD6JR2xGBDeXYSP/3HppW3K9+scb+U+6cZdAvdJTTJJeyrJj7yRVg8QrAgaTQlV6Db4bppVvxVe8qfGmHJGdPlT/oO2znmHV/C3s6GQI=
+	t=1769052068; cv=none; b=uNq8Qo+oZNTaTdqVXbzU3DiiW+FVKsn9m34DPZdUvPEdzRdNLZYlgbxwHUXzB5KP2yl2OQlNxxAB1fp9qZvIP7G/TZa4oV87kMb8JGDSlmfDJvxxS5/NuKZjvPgcLCbH3Kbh4dtaUx6cY3Ue60BgjK88AS/kPDp/IvEEhJEzD7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769051903; c=relaxed/simple;
-	bh=pj5Gf7liDdqIKaP/BfzzjluqZt5UziHOPCEWulZVRZ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=M0eJ2CclVIG1ORd9Manz4JDJbLstPF+S6uqDTjZaVL5L/iOsJ6mM9VA6Un9ELEDeXriZMg66Ov5plWiueh+kHViUhXVH7gq++4aVT2R9yBZnwnyUrlLOWe03siCYFxoADwqsmGvZCPisE4n+pgrrNTulOjh2SYikxg/eUZt4jTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=j06J+bG9; arc=none smtp.client-ip=101.71.155.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="j06J+bG9"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 3184fafd1;
-	Thu, 22 Jan 2026 10:02:32 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org,
-	linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1769052068; c=relaxed/simple;
+	bh=Dg3xrbG19bmf7BvMEY5Oi5oo6yyTybta1g+N+AuC80I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pV+S+4VmcbRYaJFBKvv7Wt8CMH5qPDJ48IN0to8loRgGJn3OlcVL9YLJRj9uhuuDuz1ncbgOvu3Dd0R84Ai5NBns8mONTVk6SWk447o2uYmizdf0Pyqc8/n9dlZEbYvF6+Y4U3oZ1PDCO3JU5lwpYDWY7mjMdv5s1fda0+JmoMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5c895adaf74111f0b0f03b4cfa9209d1-20260122
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:ec27543e-0d6c-4838-9801-62110f39717f,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:ec27543e-0d6c-4838-9801-62110f39717f,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:9d064d2d8753d9b6baceed23da2edd8a,BulkI
+	D:260122112056D80L1X2Q,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 5c895adaf74111f0b0f03b4cfa9209d1-20260122
+X-User: tianyaxiong@kylinos.cn
+Received: from localhost.localdomain [(223.153.93.110)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1706183838; Thu, 22 Jan 2026 11:20:54 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: axboe@kernel.dk,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v4 2/3] Documentation: tracing: Add PCI controller event documentation
-Date: Thu, 22 Jan 2026 10:02:19 +0800
-Message-Id: <1769047340-113287-3-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9be37065ba09cckunm8c44f6d054e35
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkwYGVZNHUIYGB0aGBlMH0tWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=j06J+bG9m8u26Dh+mvv9HQIUZWD/watbt7COLqzsjr56ppyCf2KwQYO2Gl/k+QHFVM/1BQBbEOvE+biT0lu0vrdG4zS2VjhjhjJYOuES6tpXXMxh03WHxE4LvO8RgCQIfx1q37SNaGrMIawOU2wAD6dbExrSLlcCoZdv9D4Iz0g=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=1EORHdYl0hQQuji7whDcNAsRcycC/y/m3V41T1wuTxI=;
-	h=date:mime-version:subject:message-id:from;
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH 0/3] Tracing: Accelerate Kernel Boot by Asynchronizing
+Date: Thu, 22 Jan 2026 11:20:51 +0800
+Message-Id: <20260122032051.386331-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The available tracepoint, pcie_ltssm_state_transition, monitors the LTSSM state
-transition for debugging purpose. Add description about it.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+On my ARM64 platform, I observed that certain tracing module
+initializations run for up to 200ms—for example, init_kprobe_trace().
+Analysis reveals the root cause: the execution flow eval_map_work_func()
+→trace_event_update_with_eval_map()→trace_event_update_all()
+is highly time-consuming. Although this flow is placed in eval_map_wq
+for asynchronous execution, it holds the trace_event_sem lock, causing
+other modules to be blocked either directly or indirectly.
 
-Changes in v4: None
-Changes in v3:
-- Add toctree entry in Documentation/trace/index.rst(Bagas Sanjaya)
-- fix mismatch section underline length(Bagas Sanjaya)
-- Make example snippets in code block(Bagas Sanjaya)
-- warp context into 80 columns and fix the file name(Bjorn)
+To resolve this issue, I exported eval_map_wq and moved other
+initialization functions under the tracing subsystem that are related
+to this lock to run asynchronously on this workqueue. After this
+optimization, boot time is reduced by approximately 200ms.
 
-Changes in v2: None
+Yaxiong Tian (3):
+  tracing: Export eval_map_wq for asynchronous use by other modules
+  tracing/kprobes: Make setup_boot_kprobe_events() asynchronous
+  blktrace: Make init_blk_tracer() asynchronous
 
- Documentation/trace/events-pci-controller.rst | 42 +++++++++++++++++++++++++++
- Documentation/trace/index.rst                 |  1 +
- 2 files changed, 43 insertions(+)
- create mode 100644 Documentation/trace/events-pci-controller.rst
+ kernel/trace/blktrace.c     | 23 ++++++++++++++++++++++-
+ kernel/trace/trace.c        |  2 +-
+ kernel/trace/trace.h        |  2 ++
+ kernel/trace/trace_kprobe.c | 14 +++++++++++++-
+ 4 files changed, 38 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/trace/events-pci-controller.rst b/Documentation/trace/events-pci-controller.rst
-new file mode 100644
-index 0000000..cb9f715
---- /dev/null
-+++ b/Documentation/trace/events-pci-controller.rst
-@@ -0,0 +1,42 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+Subsystem Trace Points: PCI Controller
-+======================================
-+
-+Overview
-+========
-+The PCI controller tracing system provides tracepoints to monitor controller
-+level information for debugging purpose. The events normally show up here:
-+
-+	/sys/kernel/tracing/events/pci_controller
-+
-+Cf. include/trace/events/pci_controller.h for the events definitions.
-+
-+Available Tracepoints
-+=====================
-+
-+pcie_ltssm_state_transition
-+---------------------------
-+
-+Monitors PCIe LTSSM state transition including state and rate information
-+::
-+
-+    pcie_ltssm_state_transition  "dev: %s state: %s rate: %s\n"
-+
-+**Parameters**:
-+
-+* ``dev`` - PCIe controller instance
-+* ``state`` - PCIe LTSSM state
-+* ``rate`` - PCIe date rate
-+
-+**Example Usage**:
-+
-+.. code-block:: shell
-+
-+    # Enable the tracepoint
-+    echo 1 > /sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
-+
-+    # Monitor events (the following output is generated when a device is linking)
-+    cat /sys/kernel/debug/tracing/trace_pipe
-+       kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index 0a40bfa..6101317 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -55,6 +55,7 @@ applications.
-    events-nmi
-    events-msr
-    events-pci
-+   events-pci-controller
-    boottime-trace
-    histogram
-    histogram-design
 -- 
-2.7.4
+2.25.1
 
