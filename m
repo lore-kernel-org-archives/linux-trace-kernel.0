@@ -1,53 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC23904EA;
-	Thu, 22 Jan 2026 15:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD46314D3F;
+	Thu, 22 Jan 2026 15:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769095876; cv=none; b=PgTq4ANjG0/0HcOe5VH/Ss7JLDdVRRnNU/aoRgzF6eHktDH4RwETeh6hZPp79nWpEQqxIs+gxK7ERTHBcViWdKCuB8pTYnLy9nDJ2KVkGF327vXMHp1eiKZYjAIyGpwAEwky5++2b7W9cHgraFqWwXG2K/hu5B1MMvztsBnlvq8=
+	t=1769096044; cv=none; b=EcKkn23Z9i3PoOr5pNzSDrPt5WqHpTGGqz/Ul+JbJAfqOxMOy0I7vQltLTe31sdTqiiFKScvShYKYKUz4v304cTPpviArpuY6YqXLlnJ2yDXrI7GMGE0968MfRxO92L6TZrTE10iyzTFcZnQDBYqHzlws74qv8IPXfkKN8U6e80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769095876; c=relaxed/simple;
-	bh=puESBhdhhwbIfUgoAjfBLvqVUvOFQ21fLWnTkElEf0E=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AEN7+gRAM2T9j2W2Y/hv7RGCm7jbNYspd4YhtpFKOnh49fAvW/UXJQESbu+mmHPTCZnmda0d40Zq1hEAB23NL+IHIlF4Ui/5EFRvf36Hp8aoa42WGInf9NOSNZObLT1OBzn8cNsl9mynzVgcU1+Tz04/3W7zvFjSyx2Jzb7demA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iwTUgD8u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PFm1WMOS; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1769096044; c=relaxed/simple;
+	bh=IZRurR/nx2K02EpPyXwgnplF1N2v/rWhb49tM8bqnyI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ptRoqo2TLKEBGclkTnEgMl6ADu3SS2c2Z8iI1Uy4hauz08T3YT4/LAjQDkQpQ+IJsy5/BANWZLtOz13skwl7LisDgESPZdQo/HYQdPTXAi7Ls8Zl0J7he4VvEu55KnS6db7b+sruoYsPlPGAJfluIrhT7k9gtTRVn9wdR/XRzwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FFrfAP7b; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ROz8t533; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iwTUgD8u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PFm1WMOS"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FFrfAP7b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROz8t533"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1769095871;
+	s=2020; t=1769096036;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=puESBhdhhwbIfUgoAjfBLvqVUvOFQ21fLWnTkElEf0E=;
-	b=iwTUgD8us6Heatbn2xbXxG84IVaYz84KLVOWjNxgMW3wJ5IcS5bH245Y5MxIMyMoN5GuWM
-	OZVu2iZsqzsO+ao8dV6o/eENeFnc7tMdFjTc7lmIWdRjxVoHLS4DhnzWv2c1SLeMtCTwvB
-	iKmz9i9St/2A0FKc5rLG3e4Wiw9qzzT3N4Zon9agPcmbspK3wdQ7sXYy6NxK+/VOT2t7SS
-	a9IZ9Zd4w9zTioDQBYsf0SAG1Wj2kyCYgN39kNKj20mMSOlvO4JsrG9H7FsR2a/e90Gjs/
-	cu+z+kWbPH/OS7IZ7ylCASo9/Q6tVkL10pDz2PhJnyTQNs6rdfwUfGkek+ZGBA==
+	bh=/IysMrstJdEqOP6OyoXrOZGiFAkuRZFl4iZBjV4olWw=;
+	b=FFrfAP7bZ/60mfB8/VJoGCcfOqcdDZcZ7ODjW8wDt3oZB0jlUw+FQI9hujgdDDpI3M2Hd0
+	pY2eUB4TQeMuAYywo2ZAqpJ3N9dn1a3RppDMEtqW0NHKs6kHu7YHu+vsz9RymB0Mnwvb/1
+	843UA5fn9TqShCQB8NvMPvr3FnKwJcqi1BH6I4+RMT5Bwk1K3Iudq0Fvp9HTjNtHXnHnKr
+	I3EsfWowAl9155VwRhTW0cE59HEwT3iTdqxlXpMkWvcN6AhXtCoL5WZLfQtJ4iOnlC4qXg
+	3SD+wckH6F78F32GPFOK6R12VlvVgGQjsTLA0D6Uft7SEhS64BIzoIgmTloIIA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1769095871;
+	s=2020e; t=1769096036;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=puESBhdhhwbIfUgoAjfBLvqVUvOFQ21fLWnTkElEf0E=;
-	b=PFm1WMOS8qd5TyYpjP/YJ3cXDycDv4NvgsIspXuAUPCjPhBaaaptjLQoub21sNETxA1Tgn
-	qlSDJMq5cKpk2GAA==
-To: Wander Lairson Costa <wander@redhat.com>, Steven Rostedt
- <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>, Wander
- Lairson Costa <wander@redhat.com>, open list
- <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION (RV)"
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 17/26] rv/rvgen: fix possibly unbound variable in ltl2k
-In-Reply-To: <20260119205601.105821-18-wander@redhat.com>
+	bh=/IysMrstJdEqOP6OyoXrOZGiFAkuRZFl4iZBjV4olWw=;
+	b=ROz8t533ocSbPhiou7vEt3EVvfLtLnytAqYqjf5yh6Bq+Dc+PQ4S0v0M8MUfdbyZMzuYFo
+	jvw32exkBIviCsBg==
+To: Gabriele Monaco <gmonaco@redhat.com>, Wander Lairson Costa
+ <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, open list
+ <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
+ (RV)" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 19/26] rv/rvgen: add abstract method stubs to Container
+ class
+In-Reply-To: <69298b5dcfda02051c5c1fe995efc333f980664f.camel@redhat.com>
 References: <20260119205601.105821-1-wander@redhat.com>
- <20260119205601.105821-18-wander@redhat.com>
-Date: Thu, 22 Jan 2026 16:31:10 +0100
-Message-ID: <87bjilis01.fsf@yellow.woof>
+ <20260119205601.105821-20-wander@redhat.com>
+ <69298b5dcfda02051c5c1fe995efc333f980664f.camel@redhat.com>
+Date: Thu, 22 Jan 2026 16:33:56 +0100
+Message-ID: <878qdpirvf.fsf@yellow.woof>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,26 +58,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Wander Lairson Costa <wander@redhat.com> writes:
-
-> Initialize loop variable `i` before the for loop in abbreviate_atoms
-> function to fix pyright static type checker error. The previous code
-> left `i` potentially unbound in edge cases where the range could be
-> empty, though this would not occur in practice since the loop always
-> executes at least once with the given range parameters.
+Gabriele Monaco <gmonaco@redhat.com> writes:
+> On Mon, 2026-01-19 at 17:45 -0300, Wander Lairson Costa wrote:
+>> The Container class extends RVGenerator but was missing implementations
+>> for several abstract methods decorated with @not_implemented in the base
+>> class. This could lead to NotImplementedError exceptions if code paths
+>> attempt to call these methods on Container instances.
+>> 
+>> Add empty-string returning stub implementations for
+>> fill_tracepoint_handlers_skel,
+>> fill_tracepoint_attach_probe, fill_tracepoint_detach_helper, and
+>> fill_monitor_class_type. These empty returns are semantically correct
+>> since Container is a grouping mechanism for organizing monitors, not an
+>> actual monitor that generates tracepoint-specific C code.
+>> 
+>> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+>> ---
 >
-> The initialization to zero ensures that `i` has a defined value before
-> entering the loop scope, satisfying static analysis requirements
-> while preserving the existing logic. The for loop immediately assigns
-> i to the first value from the range, so the initialization value is
-> never actually used in normal execution paths.
->
-> This change resolves the pyright reportPossiblyUnbound error without
-> altering the function's behavior or performance characteristics.
->
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> Just like the previous patch, the NotImplementedError here highlights a weakness
+> in the design we should improve instead of cover.
+> If all those fillers don't make sense for containers, we should instead move
+> them to Monitor and leave RVGenerator alone.
 
-I understand this is just to suppress a false warning, not fixing real
-problem.
+Agree.
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Nam
