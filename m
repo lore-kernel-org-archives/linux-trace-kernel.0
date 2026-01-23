@@ -1,34 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D25243376;
-	Fri, 23 Jan 2026 17:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678BC239E9A;
+	Fri, 23 Jan 2026 17:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769188714; cv=none; b=oseBsvZs+salzAb7q/dRQNFSP6h6xcOxGHhJubxTxR0k0P0CBUU73FJAwEFQRFTOowqHRG+h1rGpUw4SS8p8O4tk1YcljJqjnnBd6+Cswvy58Y/VWQ9BwXQeL0fQGXrkNFSlXyhZAJZC+Vh03F8Dflr6aq284zU717yYYxACKB8=
+	t=1769190122; cv=none; b=KJ+6i8VbV1GyoNP+h32ipl65qL4ma8tja44oXDb1HZo1Z1O9DwfRpCfWHfSMK9n2ibOw715m8fTgjHt3EDjX4rQc9A+4ROURbHamJahcnxHn14JhVGCDB5FD3s6YEHPnNpYovj1K6x4ULNRlHXAG0IiMeGgQcnKDc+rkttWzItk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769188714; c=relaxed/simple;
-	bh=BPDmo2pqNofRGg0Am4xMIVD2hUS+OETWGUGeD00A+JU=;
+	s=arc-20240116; t=1769190122; c=relaxed/simple;
+	bh=RfMmAoVyjDRNcU9D238omex5NDRcm+yblcLBmObhjig=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I2jOVwWDNeFAU74O5GTdjT2YahJSdZ1LS+bJvikwMuP1XHxcFbEJ0nQW0p80csHJpNcoPBZAdA/o6/mgOaN1EAglgBAkRxA4ayU0UfjR0ZY6M9zLAOyWmUadWNSnn5S0TKdCOoIzYGACVAhM5NM2CwvTl5LIhOI1k0c8mSxqzwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=dzkKAjXCnYjWqOI3C3JU+sNsWuljKb8ynrYt4d+EV5iB6+ybEgloj0GNWkj+VyBCgma9EA6j9sy+OtER2Z1w7QYT4YVqINm8/ff8/tOn/llWTC3s9BjNo+aNDPaJ0+S0CYoThRj4mLIMD9ZC0bA8Lk+E4mUVwcBP7+/EQOzC1Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 282D9140465;
-	Fri, 23 Jan 2026 17:18:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 531342000D;
-	Fri, 23 Jan 2026 17:18:30 +0000 (UTC)
-Date: Fri, 23 Jan 2026 12:18:58 -0500
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2BB738BB50;
+	Fri, 23 Jan 2026 17:41:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 6FCAE20029;
+	Fri, 23 Jan 2026 17:41:51 +0000 (UTC)
+Date: Fri, 23 Jan 2026 12:42:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Donglin Peng <dolinux.peng@gmail.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Donglin Peng <pengdonglin@xiaomi.com>
-Subject: Re: [PATCH v2] function_graph: Fix args pointer mismatch in
- print_graph_retval()
-Message-ID: <20260123121858.0f7c3e98@gandalf.local.home>
-In-Reply-To: <20260112021601.1300479-1-dolinux.peng@gmail.com>
-References: <20260112021601.1300479-1-dolinux.peng@gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Weigang He <geoffreyhe2@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] scripts/tracepoint-update: fix memory leak in
+ add_string() on failure
+Message-ID: <20260123124219.689f35f1@gandalf.local.home>
+In-Reply-To: <20260121112253.3e02bd1ebb50ad6d1651bb1f@kernel.org>
+References: <20260119114542.1714405-1-geoffreyhe2@gmail.com>
+	<20260121112253.3e02bd1ebb50ad6d1651bb1f@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,36 +40,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 531342000D
-X-Stat-Signature: wa8who3adj7a6xdednbhq3kzdph1hdu8
+X-Rspamd-Queue-Id: 6FCAE20029
+X-Stat-Signature: rpb17mx11mbxug6t6bqpgydoarms7wb6
 X-Rspamd-Server: rspamout05
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18RcqiC1Y5tQ76WdJXjeI4sW5l71GxLZHo=
-X-HE-Tag: 1769188710-469073
-X-HE-Meta: U2FsdGVkX18ZTBzm6GDlX8ogsnU92j7G+mAX+RM/33Z7kEATWcdvUSUaJVBmEh/sPyOYkKJVh69QiXK3/MjvvRJLVBpGuSR6E4ldzXOS7sw9PmpsQ3e1f6vFL+mgmVNz7hWllwJGnmoCYsMOQTzHYmlQEbCKugL3Amh9/VIPa+fA7lyI2HeDMSE8M6u5tazSd9/XBsxxNKGWYcLGuAlRXN3J7rukWB8lsePk2v0LgRh9xb9sMpqNfZPo7m6YJQ/8WobUii7OjnUPSfJZaX5mvEr1oE9r04vN6t1KLVJgEOZ2exA7RPqro8uwjS4ZbovmiBgDp3Za/Iuas2eWrfKEDN0MkX2t9xSE8XDZp6Z4vUhUeZDWnQD+jqM4f5F0xeDU4DmSDY+x1MU=
+X-Session-ID: U2FsdGVkX18TrLh5zTfvz7ZnIcwzLF4fSLNLZ3bj3Es=
+X-HE-Tag: 1769190111-900534
+X-HE-Meta: U2FsdGVkX183faBbw9ocLezPCAfZ0ybROsv1wMu9JH8Dl/d317mJ/xfc0FDD9ABiOXqj5HcUCy3P52qq7AishljnkNfoecAl3UyUC7vBMcCNwA0OFmS4o+q6OOmvPCbdbPmeggoNSITWlBdf8cVYhSt9C6M3n9qVmIcm01bUCuHd06HsVOFl9BWXWeXvtGN4r8U0sWMiz9okIhs1xQKz3KeAp9d8KW7EyTbIQQ/3Ha/NFKTvLYc3SjWfxIcRFf01uoxN2cLXcZgqCsNb2aBBJoTmRICK7mmVLZHmV8fo1plafmhHDpclf61MIsIMINew//yDKN9jFV4yrMZX25pmFOGL5VedoXnO
 
-On Mon, 12 Jan 2026 10:16:01 +0800
-Donglin Peng <dolinux.peng@gmail.com> wrote:
+On Wed, 21 Jan 2026 11:22:53 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: Donglin Peng <pengdonglin@xiaomi.com>
+> > 
+> > Fix this by freeing *vals and setting it to NULL when realloc() fails.
+> > This makes the error handling self-contained in add_string() so callers
+> > don't need to handle cleanup on failure.  
 > 
-> When funcgraph-args and funcgraph-retaddr are both enabled, many kernel
-> functions display invalid parameters in trace logs[1].
+> This looks not enough. If the memory allocation is failed, it should NOT
+> continue anything.
 > 
-> The issue occurs because print_graph_retval() passes a mismatched args
-> pointer to print_function_args(). Fix this by retrieving the correct
-> args pointer using the FGRAPH_ENTRY_ARGS() macro.
-> 
-> [1] https://gitee.com/pengdonglin137/funcgraph_visualization/raw/master/samples/error_args.png
+> I think we need to make the command itself failure when it fails to
+> allocate memory, as below:
 
-Please do not provide links to images. This stays in the git logs for the
-lifetime of the Linux kernel. Images like this will likely not live as long
-and the link becomes wasted space in the git history.
-
-Either do a cut and paste of the bad output, or don't include it at all.
+That's a separate bug. I'm taking this current patch as-is as a fix for the
+leak. Not stopping immediately is a separate issue.
 
 -- Steve
-
-
-> Fixes: f83ac7544fbf ("function_graph: Enable funcgraph-args and funcgraph-retaddr to work simultaneously")
-> Signed-off-by: Donglin Peng <pengdonglin@xiaomi.com>
