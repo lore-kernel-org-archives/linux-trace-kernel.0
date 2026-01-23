@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26C52E2DDD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 15:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FF22F618B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 15:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769183013; cv=none; b=T/nDX/vo1CzV6meQG1p4qoD1Jz0ZLwfG+xeDM5lb0oCABZuQj0OM6E7Jve8tpQiEnY4JxpxHZT07D4bvplt7R9i0JxPLsGJaPHYBdFaB8Y4doQOlOQP65zpAGZ5HP9IYtdH6CHmmxdiqlui0g8zfuDqDzSrQpwdIM25nhf0R7W4=
+	t=1769183019; cv=none; b=oMMgw/c51VPRssxotsnVWp920K6mQAQr87VSCCbjHFxB+YXFXHA0fSM7QPrpRrydlZZYLS9xpw802eCD4Bd4o4emHJSAy9K0SSI9QHpAEUUKivETrdgAxAgiE9sqOkz0EJ4H3QdtnD3LraXXjlTqCie+jBliNBQo8+dz1Bken7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769183013; c=relaxed/simple;
-	bh=io6Axc8Zw06pqqNF8zTkCdEAw36zOo1RbWMEMrv5PiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T7EdUS3lEFFDr5Kpn1BDJkDh77bwFmyxFr+GmRvYf1LXO0AlSgz9CX63a3O/o0p6a5T0UviDslQsEd6793KHa6CIZskpOviHvhXpY8FaW8Pbh33uWJgQl0l7fWkZIx5ILuAZxuPATQMOw+Jdco/tKupl2U2Qz7hhg35H040REnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UYZ/Z9T0; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1769183019; c=relaxed/simple;
+	bh=9LoUwfXrMrjPUPnHDS7DWd0SWwF3Ha/G4b/0MLy344w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Wd9n2l0OF7zXaZO0Ej80XmBlTYYOJqEaRSuwWESdMLFtuNpg3bhJKsQ2SrDzVEvjDL+yn1Zkx/z4TGNXxHsCtEYUasTQo5qUenThKJcOWw9bvw8WSc8cY8yvHfBtbDYBRz7g4nOTUVZvXuDjp7KE9cVENucl9MNaO3YII1JmYdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PHT3OgXt; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYZ/Z9T0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHT3OgXt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769183010;
+	s=mimecast20190719; t=1769183014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=euKT/VjBXiLb8DY3+3vm6VEzIejDpKPic0S7QebozOs=;
-	b=UYZ/Z9T0kWQMw65UQOKMa7/1zbkcEtQppskFixSvvjuzzwrDCnYMnrrKy3XHIBbj3tqJoU
-	UMCUpHawoWavIfuM7OKRACABNVeq6JX3J9zZ9CCzAYl1JQXs28w1Hx3r8j+WOzNZED9VVy
-	3zLyIfLD/PBqqAUFgI5bSsCfh5Y7gwY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LTMLV/ktvUIYmallXY3510Gw9B5viJgJMKNSmr/W1f8=;
+	b=PHT3OgXtfb4t+QTUTdyKf/59O1kUpjPavtB5+wYYpFYobLvauYOrJhnj1n0EcooRHv04kG
+	H4k9EEffLz4KIPeyyR2r48PcAE53Y8aEeR1RzJ4f8AWiTyHvsOtfrXzKQUpeDXeQhJPHiY
+	Wvu7pGvzuFH/oZuL+Lj8auTO1mJeB3c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-09lIhQddNFK4P6OjpT_FwA-1; Fri,
- 23 Jan 2026 10:43:20 -0500
-X-MC-Unique: 09lIhQddNFK4P6OjpT_FwA-1
-X-Mimecast-MFC-AGG-ID: 09lIhQddNFK4P6OjpT_FwA_1769182999
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-437-YpqCMGX4Mo-jaOX6q2FnSQ-1; Fri,
+ 23 Jan 2026 10:43:30 -0500
+X-MC-Unique: YpqCMGX4Mo-jaOX6q2FnSQ-1
+X-Mimecast-MFC-AGG-ID: YpqCMGX4Mo-jaOX6q2FnSQ_1769183009
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D0C31944EB7;
-	Fri, 23 Jan 2026 15:43:19 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC4E41955D80;
+	Fri, 23 Jan 2026 15:43:29 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.44.33.59])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 98B9B18004D8;
-	Fri, 23 Jan 2026 15:43:15 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AAB6718004D8;
+	Fri, 23 Jan 2026 15:43:26 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -50,9 +52,11 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [RFC PATCH 0/3] rtla: Synchronize sample collection methods
-Date: Fri, 23 Jan 2026 16:25:31 +0100
-Message-ID: <20260123152534.1036533-1-tglozar@redhat.com>
+Subject: [RFC PATCH 3/3] rtla/timerlat: Attach BPF program before tracers
+Date: Fri, 23 Jan 2026 16:25:34 +0100
+Message-ID: <20260123152534.1036533-4-tglozar@redhat.com>
+In-Reply-To: <20260123152534.1036533-1-tglozar@redhat.com>
+References: <20260123152534.1036533-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,77 +66,60 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This is a proposal to synchronize the start of sample collection throughout
-all places where samples are collected in RTLA, using a lockless method of
-tracking the count of active tracefs instances set to the timerlat tracer.
+If osnoise:timerlat_sample has instance count fields, attach the BPF program
+before starting trace instances in BPF/mixed mode.
 
-There are three different places where timerlat samples are collected in RTLA:
-two tracefs instances (auto-analysis and record), and a BPF program attached
-to the osnoise:timerlat_sample tracepoint.
+This ensures that what is seen by BPF sample collection is exactly what
+is seen by the last enabled tracefs instance.
 
-The BPF program collects all samples and generates the main statistics from
-them in either top or hist mode, while the auto-analysis and record instances
-are used as ring buffers with the intention of capturing the tail of both
-timerlat samples and additional tracepoints.
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/timerlat.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-In instances where BPF support is not available, the BPF program is replaced
-by a third tracefs instance, called the "main instance".
-
-One problem with this approach is each of these sample collectors is
-turned on [1] separately, in the present state of RTLA, in the following order:
-
-- record instance
-- auto-analysis instance
-- BPF program / main instance
-
-[1] By "turned on", I mean toggling tracing on (for tracefs instances) or
-attachment (for the BPF program). Note that timerlat starts measurement
-on tracer registration, even if tracing is off by default. This might have
-been originally unintentional - considering that explicitly turning off
-tracing stops the measurement threads - but is now relied upon in RTLA.
-
-This leads to some samples being seen only by tracers that are enabled
-earlier, leading to confusing results. For example, auto-analysis might
-show spikes that are not seen in the histogram, and trace output (record)
-might show samples that are not seen by either the histogram or
-auto-analysis.
-
-To enable RTLA to analyze samples consistently, the first patch adds two fields
-to the osnoise:timerlat_sample tracepoint: instances_registered and
-instances_on. During the recording of a timerlat sample, timerlat counts
-how many instances are registered and how many are on, and attaches
-the information to the osnoise:timerlat_sample trace event, which is moved
-to occur after the samples are recorded.
-
-The second patch makes RTLA count how many tracefs instances are to be enabled
-in total, passes this number to the BPF program, and makes it drop any samples
-that arrive before the instances are turned on. This ensures all samples
-recorded in the main statistics (e.g. histogram) are seen by all active tracefs
-instances, that is, auto-analysis and trace output (record).
-
-The third patch then moves the attachment of the BPF program before the enabling
-of the tracefs instances, provided that the kernel supports instance counting
-introduced in the first patch. The second patch enforces that all samples
-recorded by the program are seen by the last enabled tracefs instance.
-
-Synchronization between different tracefs instances, that is, auto-analysis and
-trace output, and the main instance in non-BPF mode, is possible by looking at
-the osnoise:timerlat_sample record that comes after each sample, but is not yet
-implemented in the current version of the patchset.
-
-Tomas Glozar (3):
-  tracing/osnoise: Record timerlat instance counts
-  rtla/timerlat_bpf: Filter samples unseen by tracer
-  rtla/timerlat: Attach BPF program before tracers
-
- include/trace/events/osnoise.h        | 14 ++++++---
- kernel/trace/trace_osnoise.c          | 10 +++++--
- tools/tracing/rtla/src/timerlat.bpf.c |  9 ++++++
- tools/tracing/rtla/src/timerlat.c     | 43 +++++++++++++++++++++++++--
- tools/tracing/rtla/src/timerlat.h     |  2 ++
- tools/tracing/rtla/src/timerlat_bpf.c |  8 +++++
- 6 files changed, 78 insertions(+), 8 deletions(-)
-
+diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
+index 069f916100e7..da2e2d003ec9 100644
+--- a/tools/tracing/rtla/src/timerlat.c
++++ b/tools/tracing/rtla/src/timerlat.c
+@@ -170,6 +170,21 @@ int timerlat_enable(struct osnoise_tool *tool)
+ 			return -1;
+ 	}
+ 
++	if (params->mode != TRACING_MODE_TRACEFS && params->has_instance_count_fields) {
++		/*
++		 * If the timerlat tracer has instance count fields, it is safe
++		 * to attach the BPF program before starting the trace instances.
++		 *
++		 * The BPF program will ignore any samples that arrive before
++		 * the trace instances are started.
++		 */
++		retval = timerlat_bpf_attach();
++		if (retval) {
++			err_msg("Error attaching BPF program\n");
++			return retval;
++		}
++	}
++
+ 	/*
+ 	 * Start the tracers here, after having set all instances.
+ 	 *
+@@ -183,7 +198,15 @@ int timerlat_enable(struct osnoise_tool *tool)
+ 		trace_instance_start(&tool->aa->trace);
+ 	if (params->mode == TRACING_MODE_TRACEFS) {
+ 		trace_instance_start(&tool->trace);
+-	} else {
++	} else if (!params->has_instance_count_fields) {
++		/*
++		 * Without instance count fields, play safe and attach the BPF program
++		 * after starting the trace instances.
++		 *
++		 * This might lead to samples being seen only by trace output and
++		 * auto analysis, but it is better than RTLA reporting results over
++		 * threshold that cannot be analyzed further.
++		 */
+ 		retval = timerlat_bpf_attach();
+ 		if (retval) {
+ 			err_msg("Error attaching BPF program\n");
 -- 
 2.52.0
 
