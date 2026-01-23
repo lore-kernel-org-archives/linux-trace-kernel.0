@@ -1,140 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EDC2D0605
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 12:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8B23A1C9;
+	Fri, 23 Jan 2026 12:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769171212; cv=none; b=H49MXxGvKBhqvreRo9QcgzKh7YjohwuYG5rrimsvGdnVm3nZwAU90mYWV1fmQXqfwE0Y1K+gzF0Gh2Ms6QF+8F80a8n/TzEM6zXnUYfYjulC6NcdJ9HjI4+mS8trESGuDLIVhjLuI+GLhDj3YueRJfAGVW6P30Euuw2PVXNS150=
+	t=1769172438; cv=none; b=saSeg7oWNSKfiDrL2lbampvmCtqRKb/TSZ7Eqxy0X6ndz/MGi5ziQzNSQKHkxDUv+iaYK7QqAWE+Tx3YvDJsvzEs0XmQm8rvUnsy8S0KNTv2az1WVTFLNh22nljXLpxkKBkBfkOc/fKmBokGzeM5KmkawRTOBJIw+WiEvBbCApc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769171212; c=relaxed/simple;
-	bh=QeD1TYjFxayYg14f0fV4inrfOgKhQgi+K/KjaHS2PqQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gKQYo1yW6cNezuV9Glp0laql/lQcz/NEv7jBaXDTEScnKCWefDnKADsghDPl9QWn9ayhce0R9htDdQ44Fwjpf2keeWlOCVtGmLfDforDzGSZMiHxlfgywjSXWBlB6Ws2hkrb/p+bQSo7cz5leUMdujOEm9eI+M1s0e30Ph7mIaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d3yQbZMe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1769172438; c=relaxed/simple;
+	bh=SpX5nlI+FpfkHYgP+EVPBN97fd681gAviX/lFFZNJ+8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FCDl4arr5Zh02UvvBWhjpB3PzOSZaZmPdjVR40UyZ8lDYUMGPPrlqTKobVGvQ13KiFYVfpJLBiIcivNJQUMYvLjKaXInY/qtB1nd9S58l82ylKAW5835yB2lw58t1+zLXpC1MkFDFKu6MDYU1/PRCTDEKAJTQpF41N/T4sZnxpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElqLJZSz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d3yQbZMe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769171210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QeD1TYjFxayYg14f0fV4inrfOgKhQgi+K/KjaHS2PqQ=;
-	b=d3yQbZMe19wdVp8bobDnK95UM1HG/u96zsYBE8Hr/ucMx1g7ihifXrNjaDBneIUsiD19WT
-	3iG05zwQwaCKO8v4bp5+FRptGWd7SVQ6T+ZOAd5zjYVn2ERtEIEbGNKhT13o3xa4uUTQXY
-	Jd82YW/sWQbOxNoqRJjxKeDbb2uC6wg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-v2wPUA6LPimJbP2mu-peQA-1; Fri, 23 Jan 2026 07:26:49 -0500
-X-MC-Unique: v2wPUA6LPimJbP2mu-peQA-1
-X-Mimecast-MFC-AGG-ID: v2wPUA6LPimJbP2mu-peQA_1769171208
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47ee056e5cfso17234895e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 04:26:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769171208; x=1769776008;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QeD1TYjFxayYg14f0fV4inrfOgKhQgi+K/KjaHS2PqQ=;
-        b=o9WfUxjGC5uVIq/iSoyFOjOYeZ7xtgBtkdnohrG8XKvKQ+30HpMPTDZ0BHHSYVjEwZ
-         ABN2ueXv60RQ7hrqDFDjrFL0sDUslpECjqnJYP/lxGse5/phWQosehE54skmpOp9icMS
-         456E8KJy6VwWVj29LfwlnEQEw4RdOSJEDoDPPckyNmWuDF0LemV1zXoP322B0tB73itB
-         bthAtcf/Q1JedXY+3ySWCsvOTAxkItuXvpEQ9awZ7bs0gPETTHs71nSs4L/p14a1sqv3
-         yyrspp2W1qMcV9QsMCIt4wt+S2mF2ro/IQgLMm7Qpc2ZmltVmfxtyUwu/mfF3gx71dcn
-         xlxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX01yryUrhygG5VJUCAHbUhnVlipu8IsSwPdPdZv9UjNQTKqYh9KVbWHaYvg3S8cGJcXrKgYJzHlCU92iBNIooglbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmbTmBJ3GLXcvdOyFoWaE10XlcJdheHNH5FJaFBQNBU1plvlX5
-	01HwIZnNNETbkp7/4iXyd0eLE8PIW6deycb0P8RvtsiLZXSMWOcUvUQE12KOKX7+LNyzl8qp4a6
-	Fz5jxfLFIFkfPVq4Tl62xTItDHTLEAuHb9PX/gCHTrDkP1BGt3Z6ztokO59vflU8RI63CTFkHkA
-	==
-X-Gm-Gg: AZuq6aKuLNgaDoZHm2o8HC2bk2eYxHrF9lktWbO58JBdO2qmLq+Fkuo8KysM64oQcpk
-	fLfWP7v39BrTEb+1vrZGx8nBCrNhjO/1/1bEPwvwT+JDS8SmQLYoeMv2TWeNaHW5mOyMfyVot3v
-	qYzH9N1j+DSHj6ig7C8p56OFUbxIWCQ+xZHr2c10dpUSHOyWd0bpS/Ytq+DNIvpj5ssRSZC11km
-	gBcKQIij+RxoGEX6vOAsmjCVoPsof46JJjaXB4QTbYdreIy7rTHSaV++tIMEtjSef9jJkandmCI
-	mv+8WB2Th8Z76gktCqSpGPteHTKO7COx4G0LZvOe/+Jr75jptYMuorlkoICW5utiXN7mMC61ZMI
-	jjBoYTt0Rt9difFtdaioXEz3kRt5Ndx2EIQTVoaMEpHT0ceemYBzp9rSksVk8B7+p/FXEZjNwBG
-	2QdJoOrTti
-X-Received: by 2002:a05:600c:4f48:b0:477:63b5:6f76 with SMTP id 5b1f17b1804b1-4804c9b8854mr50670035e9.25.1769171207964;
-        Fri, 23 Jan 2026 04:26:47 -0800 (PST)
-X-Received: by 2002:a05:600c:4f48:b0:477:63b5:6f76 with SMTP id 5b1f17b1804b1-4804c9b8854mr50669735e9.25.1769171207565;
-        Fri, 23 Jan 2026 04:26:47 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804d84588fsm55069225e9.2.2026.01.23.04.26.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jan 2026 04:26:47 -0800 (PST)
-Message-ID: <c866db81d6213862baf4a4d3d9f2f013b7ef058b.camel@redhat.com>
-Subject: Re: [PATCH 18/26] rv/rvgen: add fill_tracepoint_args_skel stub to
- ltl2k
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- open list <linux-kernel@vger.kernel.org>, "open list:RUNTIME VERIFICATION
- (RV)"	 <linux-trace-kernel@vger.kernel.org>
-Date: Fri, 23 Jan 2026 13:26:45 +0100
-In-Reply-To: <aXNkusXPp9MyRX9y@fedora>
-References: <20260119205601.105821-1-wander@redhat.com>
-	 <20260119205601.105821-19-wander@redhat.com>
-	 <1f168ff5ffb531570fd83e3f398380e8df053275.camel@redhat.com>
-	 <aXESFlL56FA0PyTZ@fedora> <aXIhSGAQvflGAEsN@fedora>
-	 <ed5ffb1045a5d0734947019ad31b9bf46bdca3ab.camel@redhat.com>
-	 <aXNkusXPp9MyRX9y@fedora>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElqLJZSz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70597C4CEF1;
+	Fri, 23 Jan 2026 12:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769172438;
+	bh=SpX5nlI+FpfkHYgP+EVPBN97fd681gAviX/lFFZNJ+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ElqLJZSz5em091t3wwNsbj3EjkzZsPNajERR83xC126xn2ZlETjjwYY5Xfhc+Eq0T
+	 Ry7QyC9VVuyUs36KXpRrAd3yrMFaohmY69mkcc/mKhPsWdSihRmHNEDcrbZHTvKmrU
+	 aElVMF+AiEyTg5qRXU1l/IE/4PVNnNU/AgfhJ6scksN5htvf6kwlSvFC848cjaUhud
+	 11MFzjsrAkfzSzlgUhAoiNOxbRvht4Fh7fl5eLs9ObYC7DCZkpjm5nhQln9FxRDx8b
+	 WJUHkkV70HlRrVr9OGDba1wkRNIR4gv+PaU9e7qvsy/ijccFRLwandNAF3AFWeJy0r
+	 d5h0eX5253SZA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vjGZI-000000053M0-0V7n;
+	Fri, 23 Jan 2026 12:47:16 +0000
+Date: Fri, 23 Jan 2026 12:47:15 +0000
+Message-ID: <86o6mkbing.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 29/30] KVM: arm64: Add selftest event support to nVHE/pKVM hyp
+In-Reply-To: <aXNmKpHqVw93BegX@google.com>
+References: <20251202093623.2337860-1-vdonnefort@google.com>
+	<20251202093623.2337860-30-vdonnefort@google.com>
+	<868qe9mnx5.wl-maz@kernel.org>
+	<aXNmKpHqVw93BegX@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: O2ctuk-PWN-mkPOtTbSNKw5JLjCYi4EWouqWYR8mZvk_1769171208
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 2026-01-23 at 09:19 -0300, Wander Lairson Costa wrote:
-> On Thu, Jan 22, 2026 at 02:49:59PM +0100, Gabriele Monaco wrote:
-> > Why fill_tracepoint_args_skel() is not required by LTL is an implementa=
-tion
-> > detail, so that stub could even stay, in case future monitors are going=
- to
-> > need
-> > the entire thing.
-> > Though I still find it cleaner to move that away too until there's a ne=
-ed
-> > for it
-> > shared in Monitor.
->=20
-> I didn't catch what is included in "that"...
+On Fri, 23 Jan 2026 12:14:34 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> On Wed, Jan 07, 2026 at 03:40:22PM +0000, Marc Zyngier wrote:
+> > On Tue, 02 Dec 2025 09:36:22 +0000,
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > 
+> > Not strictly related to this patch, but I find that the trace itself
+> > lacks context. For example:
+> > 
+> > [001]	  323.847422: hyp_enter reason=hvc
+> > [001]	  323.847423: hyp_exit reason=eret_host
+> > [001]	  323.847688: hyp_enter reason=hvc
+> > [001]	  323.847688: hyp_exit reason=eret_host
+> > [001]	  323.847706: hyp_enter reason=hvc
+> > [001]	  323.847707: hyp_exit reason=eret_host
+> > [001]	  323.847722: hyp_enter reason=hvc
+> > [001]	  323.847723: hyp_exit reason=eret_host
+> > 
+> > That's all fine as long as I'm dealing with a single guest, or even
+> > with a single vcpu. Trying to trace multiple guests, or even multiple
+> > vcpus makes the whole thing completely unusable, because I have no
+> > idea what I'm looking at.
+> > 
+> > To make this useful, having some context provided by the host really
+> > is required.
+> 
+> I could add to the event header the VM pid related to the currently loaded vCPU
+> (if any). I can access it easily with host_kvm->userspace_pid. WDYS?
 
-Right, it ended up quite cryptic, I meant fill_tracepoint_args_skel() could=
- stay
-in Monitor although not all Monitors need it, though I honestly prefer to m=
-ove
-it away and not rely on the stub.=20
+It really should be the thread name, just like we already have for the
+kernel tracing. For example:
 
-> > What do you think?
->=20
-> I agreed. fill_tracepoint_args_skel() makes sense in the Monitor class.
-> If a derived class doesn't need it, it is an implementation detail.
->=20
+vgic_irq-2007    [005] ..... 180926.476735: kvm_sys_access: PC: 4119e4 SYS_ICC_DIR_EL1 (3,0,12,11,1) write
+vgic_irq-2010    [005] ..... 180926.534771: kvm_sys_access: PC: 40254c SYS_CNTV_CVAL_EL0 (3,3,14,3,2) write
+vgic_irq-2010    [005] ..... 180926.534777: kvm_sys_access: PC: 402554 SYS_CNTV_CTL_EL0 (3,3,14,3,1) write
+vgic_irq-2010    [005] ..... 180926.534789: kvm_sys_access: PC: 4025b8 SYS_CNTV_CTL_EL0 (3,3,14,3,1) write
+vgic_irq-2011    [010] ..... 180926.534790: kvm_sys_access: PC: 40254c SYS_CNTV_CVAL_EL0 (3,3,14,3,2) write
+vgic_irq-2010    [005] ..... 180926.534793: kvm_sys_access: PC: 4119e4 SYS_ICC_DIR_EL1 (3,0,12,11,1) write
 
-But I get your stance and agree with that too, where fill_tracepoint_args_s=
-kel()
-goes is just nitpicking at this point.
+This is a single guest, with concurrent vcpus. I'd like to be able to
+correlate that with what the hypervisor tracing outputs. At the very
+least the thread's PID. But the VM itself is pretty much irrelevant.
 
 Thanks,
-Gabriele
 
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
