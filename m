@@ -1,183 +1,119 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1A627B4FA;
-	Fri, 23 Jan 2026 17:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382E52C08B1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 20:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769191039; cv=none; b=ZIATnswe6vCE451VAP4CEOrD1vppxewkSkYa21X9ZdldkgceLHcAtyCuc2C5YOtZZN/+kTxbsrZo2rRBR+jjK5Bdtbpezv7fGCiXSwOqoSyLe2nR3ATHWS2/e28wOEnCtXgfCeoby0ZzvZwqbA7HSgAZ2BbkPqEZRm/zf1TDW04=
+	t=1769198790; cv=none; b=ZbezQyPrDFNNNYjIzt2YNI5ngn+hK4ej1cGNa+TN17eIUJCrNA6pFVqDzs6v7eugg1OpIdXdbRJ5A9/LfqqfS5liWaE+Wj6GpImiUfUdy3uQtvNI2Tue7zvqmdAt5S+F+P+kWKtPIe7gwzzoGv0UzAY6s91LmaOn4nHyARHD7gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769191039; c=relaxed/simple;
-	bh=4+QLjb/CwCDeH3ExRuHJJg9vjVRhUFB/O1UZTA+VLAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nX4UF+duEP8iUL78d6rM49Fu9jMC1kHTotx5YO5KP3qiT7v2ZhS7d82n07JBERi2opeKKBpZdM0d0TXRwZpCLMkc1J4q0oRb4LX853iL/3F9G/leRVTJnfK4PYJPH86zFVrjKzkp6FRkT3kQ2fJdOe71iBo4VKBJ6qkaUmiH+mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id EAA1A16022B;
-	Fri, 23 Jan 2026 17:57:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id D940920024;
-	Fri, 23 Jan 2026 17:57:08 +0000 (UTC)
-Date: Fri, 23 Jan 2026 12:57:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Li Chen <me@linux.beauty>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, "Theodore Ts'o" <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC v4 6/7] ext4: fast commit: add lock_updates tracepoint
-Message-ID: <20260123125737.2b6ddbbe@gandalf.local.home>
-In-Reply-To: <20260120112538.132774-7-me@linux.beauty>
-References: <20260120112538.132774-1-me@linux.beauty>
-	<20260120112538.132774-7-me@linux.beauty>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769198790; c=relaxed/simple;
+	bh=v1sXU4PdFUfhYag1oK10C//CQAN0sHDfsL1wvzXt6y4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HEY6DCk+1sVYAlPjg2y/SAuuzyyQcEIyJbiAcjOuZ6tDE6EKoCOaiFZobBffIt3PyQkb83NnT8F+c4ztjPWO/2NHndHhbUO/TP+//65dMlmfJZ9Acx0znOtYEnIvr7xxTyWHxPpnJVMaom8k92MRmPy4nuGsC8YLhIhI21QsO2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1tcdEVu; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1tcdEVu"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-8217f2ad01eso2478890b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jan 2026 12:06:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769198788; x=1769803588; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mz/jgqDQ6Gq5gSxog3VT5ArFAGGJtxquZRf1ad8YXHk=;
+        b=S1tcdEVuPrbbJ0zQRvSen5L/Gh3KLfQZElojDjGWZI99gmATzKzHSppLksH31bq/6G
+         tWAkzjm2AtCe3Foj6ge2Kf1ezx29j8A6WqFEz5CvzVU1GY+z4dInJ3apAdkwU1YoZQKy
+         a+C95/Bf3QB3rElWDK0hpnH/CkfflpEQYL6wX+ioxABiZdb13tWejv+cEbC+OQHla+Bq
+         zplhmLIIe7uj45Pk9A7rGY+0jzH8uwPsBZ8COKf6WJafLgxVvld200Mmss89BmUy57Re
+         hOIUlmzAZqPZZRpIxiq4zowhvDQczyD/z0NpbeYDhpjQpEpfFU1cFpOka5c5hDBJ/uol
+         9aXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769198788; x=1769803588;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mz/jgqDQ6Gq5gSxog3VT5ArFAGGJtxquZRf1ad8YXHk=;
+        b=V0exlxhVIiWBtGqGfY9gKb64jCBrxSmE7WcTPs1C2IKKQMyxdgV/V9GI9EGzys9vKW
+         zCQbfWoWLmPDs6QaQFfYQCXafq8fibQSRxpqXDuxeDB6UjeyqXSqvJjXtWp2p/es+zhs
+         fzh6dfPWF9POCyqSNB5ZJlxI0GsuwjqvyOMyazRLEtGK3C9zgaSeOSDGzYHwqggwZLBC
+         gQCDIYB+Tl+LnREMBeXA1UqksiPT52qIUjTrvTF3PldgFhNnlF9snjL+XdGAaqImS18P
+         o84Eq0Esdo3vfGhZVcMYD/ZGkti+r6tk+rfShPGu8R9NAXbe1oZhCMBmQ2OJ5a7NZ6zh
+         CbEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6vPeiGo5HCSYyHgDwmgM1qwM2YgDzBYdpTG+3X/+sxyXbCv5+m6/438hGhDGErkGsJi+CZwPiVkExLZOtit50QMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdJCyXp/e8Ps8DS4ylpLbEI36/MO32fOfjvp5kauGPidqmxXPT
+	7SblKP3bIXIDBbXonIesUScVgWBRjXP0IeERREtIv5Hjq1zK/FUBl0XX
+X-Gm-Gg: AZuq6aJpuN6JOz/3aFvNchBqfDbSdDUEUx39LnpvKan99qYJFwhMhXq9hlgoiu1nGsw
+	gi9XgeNTqEhssAKPB3bF/Wsw8oIoD3y7fUr1iEeER2+FPd4IP2XT4m+cXf4VkV1PfCxEjHlJNqt
+	8RcrGeMC4+pG7RjgjaK/54hkBnn498llRE6OaYCQLIUAJldBqIezN6WKoLwNF6LE6ysDR6gGyOi
+	EI/GlZykYXECvgGTxU7eQ/PiSRP7dEixLB9vpifgdl3q4Rzc0a4fT7nr69NUxEblnWpYDsicqyo
+	QCZhCQ58rRhb286aITd4BvtgIN94SSfVso9YtwCuMefNXk7e5sS32y0EkwDj699HK/5QuKktnUI
+	7NQclqURz9ux5C5wl7/NENruhiU1vvhXWSKxhF0cTER8CEtmQKd0hBvUv4KzmOQFKP/045I73pv
+	nqkI+mdf0P0bIHHK4cRGU=
+X-Received: by 2002:a05:6a20:9c92:b0:38b:e944:3e94 with SMTP id adf61e73a8af0-38e6f7dad49mr3505436637.39.1769198788579;
+        Fri, 23 Jan 2026 12:06:28 -0800 (PST)
+Received: from [192.168.7.12] ([103.182.158.109])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c635a142e71sm2770571a12.11.2026.01.23.12.06.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jan 2026 12:06:28 -0800 (PST)
+Message-ID: <c79d4fbd-e9a4-4d73-a650-b01f437a4c0b@gmail.com>
+Date: Sat, 24 Jan 2026 01:36:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rv: Fix dead link to monitor_synthesis.rst
+To: linux-kernel-mentees@lists.linuxfoundation.org
+Cc: shuah@kernel.org, skhan@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org
+References: <20251203202259.69116-1-sohammetha01@gmail.com>
+Content-Language: en-US
+From: Soham Metha <sohammetha01@gmail.com>
+In-Reply-To: <20251203202259.69116-1-sohammetha01@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D940920024
-X-Stat-Signature: 5cfcpomb4bsdhw65j6p7jyceep8ki3oe
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18ayUQTicwAkS19YmBMQjsoWLi9S4LSZbM=
-X-HE-Tag: 1769191028-289448
-X-HE-Meta: U2FsdGVkX18itwA3BKwJlBEvi7szA+ksv6rm9NUwPu/bfijaonP9EG+vaXbUVIXknmiNkJfv7pQwpqC/XM9UwwY9lcXu3qgum5zj5LeL1mbHMaWD2eX8t1r5uWLyWgMOduLC0zptT1ezNzx8y32jslJZ9MX3IV7ZZk4xBdkPyIjdbET6KzCLiH6S0O2jbBkH5drxKnanh6Ou79hNJxRgbBAkqQOHH7HLeIOx4XDbZddKY+aqrvzPsM0z5K+9vNWuSB+TZ7zoKEtGicmz9PbvOM7OUciy8gM/YImsLvrmxMTC1lJdklb9DcsmKb+8ACcU
 
-On Tue, 20 Jan 2026 19:25:35 +0800
-Li Chen <me@linux.beauty> wrote:
 
-> Commit-time fast commit snapshots run under jbd2_journal_lock_updates(),
-> so it is useful to quantify the time spent with updates locked and to
-> understand why snapshotting can fail.
+
+On 04/12/25 01:52, Soham Metha wrote:
+> The file 'da_monitor_synthesis.rst' was renamed to 'monitor_synthesis.rst' in
+> commit f40a7c060207
+> ("Documentation/rv: Prepare monitor synthesis document for LTL inclusion").
 > 
-> Add a new tracepoint, ext4_fc_lock_updates, reporting the time spent in
-> the updates-locked window along with the number of snapshotted inodes
-> and ranges. Record the first snapshot failure reason in a stable snap_err
-> field for tooling.
+> Update the reference to point to the new filename.
 > 
-> Signed-off-by: Li Chen <me@linux.beauty>
+> Signed-off-by: Soham Metha <sohammetha01@gmail.com>
 > ---
->  fs/ext4/fast_commit.c       | 86 ++++++++++++++++++++++++++++++-------
->  include/trace/events/ext4.h | 33 ++++++++++++++
->  2 files changed, 104 insertions(+), 15 deletions(-)
+> No functional changes.
 > 
-> diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
-> index d1eefee60912..d266eb2a4219 100644
-> --- a/fs/ext4/fast_commit.c
-> +++ b/fs/ext4/fast_commit.c
-> @@ -193,6 +193,27 @@ static struct kmem_cache *ext4_fc_range_cachep;
->  #define EXT4_FC_SNAPSHOT_MAX_INODES	1024
->  #define EXT4_FC_SNAPSHOT_MAX_RANGES	2048
+>  include/rv/da_monitor.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index 17fa4f6e5ea6..c2cea209f230 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -8,7 +8,7 @@
+>   * The dot2k tool is available at tools/verification/dot2k/
+>   *
+>   * For further information, see:
+> - *   Documentation/trace/rv/da_monitor_synthesis.rst
+> + *   Documentation/trace/rv/monitor_synthesis.rst
+>   */
 >  
-> +/*
-> + * Snapshot failure reasons for ext4_fc_lock_updates tracepoint.
-> + * Keep these stable for tooling.
-> + */
-> +enum ext4_fc_snap_err {
-> +	EXT4_FC_SNAP_ERR_NONE = 0,
-> +	EXT4_FC_SNAP_ERR_ES_MISS,
-> +	EXT4_FC_SNAP_ERR_ES_DELAYED,
-> +	EXT4_FC_SNAP_ERR_ES_OTHER,
-> +	EXT4_FC_SNAP_ERR_INODES_CAP,
-> +	EXT4_FC_SNAP_ERR_RANGES_CAP,
-> +	EXT4_FC_SNAP_ERR_NOMEM,
-> +	EXT4_FC_SNAP_ERR_INODE_LOC,
-> +};
-> +
-> +static inline void ext4_fc_set_snap_err(int *snap_err, int err)
-> +{
-> +	if (snap_err && *snap_err == EXT4_FC_SNAP_ERR_NONE)
-> +		*snap_err = err;
-> +}
-> +
+>  #include <rv/automata.h>
 
+Hi,
 
+Just a gentle ping on this documentation patch in case it was missed.
+Please let me know if any changes are needed.
 
-> diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
-> index fd76d14c2776..a1493971821d 100644
-> --- a/include/trace/events/ext4.h
-> +++ b/include/trace/events/ext4.h
-> @@ -2812,6 +2812,39 @@ TRACE_EVENT(ext4_fc_commit_stop,
->  		  __entry->num_fc_ineligible, __entry->nblks_agg, __entry->tid)
->  );
->  
-
-Why not make the snap_err into a human readable format?
-
-#define TRACE_SNAP_ERR		\
-	EM(NONE)		\
-	EM(ES_MISS)		\
-	EM(ES_DELAYED)		\
-	EM(ES_OTHER)		\
-	EM(INODES_CAP)		\
-	EM(RANGES_CAP)		\
-	EM(NOMEM)		\
-	EMe(INODE_LOC)		\
-
-#undef EM
-#undef EMe
-
-#define EM(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
-#define EMe(a)	TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
-
-TRACE_SNAP_ERR
-
-#undef EM
-#undef EMe
-
-#define EM(a)	{ EXT4_FC_SNAP_ERR_##a, #a },
-#define EM(a)	{ EXT4_FC_SNAP_ERR_##a, #a }
-
-
-> +TRACE_EVENT(ext4_fc_lock_updates,
-> +	    TP_PROTO(struct super_block *sb, tid_t commit_tid, u64 locked_ns,
-> +		     unsigned int nr_inodes, unsigned int nr_ranges, int err,
-> +		     int snap_err),
-> +
-> +	TP_ARGS(sb, commit_tid, locked_ns, nr_inodes, nr_ranges, err, snap_err),
-> +
-> +	TP_STRUCT__entry(/* entry */
-> +		__field(dev_t, dev)
-> +		__field(tid_t, tid)
-> +		__field(u64, locked_ns)
-> +		__field(unsigned int, nr_inodes)
-> +		__field(unsigned int, nr_ranges)
-> +		__field(int, err)
-> +		__field(int, snap_err)
-> +	),
-> +
-> +	TP_fast_assign(/* assign */
-> +		__entry->dev = sb->s_dev;
-> +		__entry->tid = commit_tid;
-> +		__entry->locked_ns = locked_ns;
-> +		__entry->nr_inodes = nr_inodes;
-> +		__entry->nr_ranges = nr_ranges;
-> +		__entry->err = err;
-> +		__entry->snap_err = snap_err;
-> +	),
-> +
-> +	TP_printk("dev %d,%d tid %u locked_ns %llu nr_inodes %u nr_ranges %u err %d snap_err %d",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
-> +		  __entry->locked_ns, __entry->nr_inodes, __entry->nr_ranges,
-> +		  __entry->err, __entry->snap_err)
-
-And instead of having the raw value of __entry->snap_err, use:
-
-		__entry->err, __print_symbolic(__entry->snap_err, TRACE_SNAP_ERR))
-
--- Steve
-
-
-> +);
-> +
->  #define FC_REASON_NAME_STAT(reason)					\
->  	show_fc_reason(reason),						\
->  	__entry->fc_ineligible_rc[reason]
-
-1
+Thanks,
+Soham
