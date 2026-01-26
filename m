@@ -1,89 +1,102 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8228248B;
-	Mon, 26 Jan 2026 02:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326513EBF2D;
+	Mon, 26 Jan 2026 04:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769395542; cv=none; b=rgtbgEtGFakynBjkELpLMtChOkqh9uPSqzWnGieQEeIJrTjX7nnm1JkCTWtSn2fRqIUfoAIeI5r2+h5Gw5lBJTeqh1vfU46XhUyLeDhu7oUYyyDRz1Lg/rukT93bBCje1p6OiRVhuzP5H+hqTtxNE2nZwzR9B3lDeohEiMylCwE=
+	t=1769401311; cv=none; b=H/OOWJoon+W3Fnm3kb3kx1zxAs0I483xMUNLrIGLUlbvDZhiSnwmzbijZYvlya9UqWEh21C7xQYYHFQUnODp/U3JqI5lwZ+gkGTVyn1aidCzUb0Jy2b//18O38WxFc9VpZ5beT4dHXtu6oEVs7Sce11i4J4sSVjD35bTS6NI8I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769395542; c=relaxed/simple;
-	bh=+cN5ZOiciUWvsWPyD8/EilVaTmFNcsbKfHcYB9FJcKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W4+aJ3Lg80vjdMewX3vlaaKRH3opvpRZ+y51S4gDNPONGJ7slGl02v8je+of1BibzMaK0cuQqDiSitk+cGr/SZgewo6qW3DhKq+Sl+bsVVg55grnItcKT+0udISsXSpHvugDOQKXLSbCgCPaLycZ2gkBN6VlojQyFk1fCqnXQnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1798514cfa6111f0b0f03b4cfa9209d1-20260126
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:57b3c94e-ee81-4ec5-8cd1-c4119b88192b,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:57b3c94e-ee81-4ec5-8cd1-c4119b88192b,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:1e55da3c77d56adf754c616902a7389a,BulkI
-	D:260124043231HN9O7BOU,BulkQuantity:1,Recheck:0,SF:17|19|64|66|78|80|81|82
-	|83|102|127|841|898,TC:nil,Content:0|15|52,EDM:-3,IP:-2,URL:0,File:nil,RT:
-	nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0
-	,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 1798514cfa6111f0b0f03b4cfa9209d1-20260126
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.200.43.20] [(223.153.105.152)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 2040554667; Mon, 26 Jan 2026 10:45:36 +0800
-Message-ID: <d9e906f5-adfe-45da-84fe-d47ef9a159ba@kylinos.cn>
-Date: Mon, 26 Jan 2026 10:45:32 +0800
+	s=arc-20240116; t=1769401311; c=relaxed/simple;
+	bh=L7T0YqQWyxghbfsXlz/uKE3hC4fr+BRvc8hpMQuHiJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BAeTolZhdUNBlNXCdkbMblM5iu0lwWjIKe2m9s/rQfE528a8o/Qlv21xuij5kQzbtPjB5MoSwIxMN41HcHUmRuAqaDbkOpiGFZ4JwDyyTj+Vh+ljw2xFh44+7L3JLJDqaxhChAImfhRBLgH34HsLlpSfIgdicOMqATynioUTUhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 1C60F59FB9;
+	Mon, 26 Jan 2026 04:21:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 24FD918;
+	Mon, 26 Jan 2026 04:21:41 +0000 (UTC)
+Date: Sun, 25 Jan 2026 23:21:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: sunliming <sunliming@linux.dev>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, sunliming
+ <sunliming@kylinos.cn>
+Subject: Re: [PATCH] tracing: kprobe-event: Return directly when
+ dyn_event_list is empty
+Message-ID: <20260125232139.0e971011@robin>
+In-Reply-To: <01b1d5a3-8be0-4d9a-45d4-4da7c3edf746@linux.dev>
+References: <20260123013641.23066-1-sunliming@linux.dev>
+	<20260124120233.17926a82@robin>
+	<01b1d5a3-8be0-4d9a-45d4-4da7c3edf746@linux.dev>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] tracing: Export eval_map_wq for asynchronous use by
- other modules
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: axboe@kernel.dk, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260122032051.386331-1-tianyaxiong@kylinos.cn>
- <20260122032415.395548-1-tianyaxiong@kylinos.cn>
- <20260123153247.004688f6@gandalf.local.home>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20260123153247.004688f6@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 24FD918
+X-Stat-Signature: 6oopbaaa5rsizeif3ix315gpfzkanf9a
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/puuICIlQVktCo7STrt9LHlixR+pDOXS4=
+X-HE-Tag: 1769401301-956519
+X-HE-Meta: U2FsdGVkX19riHIXwwPdMoelskLEucbYFhxLjfomwYOwD11e1Ibn8/h0weA1qIKbxOt9tCXNcNiY++L9cW0NPxE6NVoPtJZ2vz9blqEI/N8WRKiey4oihYVTyuD7VXsZ6fv2bH1XYj8BTItz6v5Iz/B167K+4qpnF8WAV8POZb/8Hh4cjhpv8YGRYueRUa3P6QBxZ6ku4kW6o1fyP7rToA+0NpeebJiaCYGzi+2My1r9htaYi/MN8kZw6l6ADj18bxBHe15pw95/RVGo1xrrFBRtM2qpOAQgHoJKjsFBmPkqEehgOC0LE65V6nFmd3zyxJE3r3Z+bWyFGiVHVbJKHAXEbQUOF56u
 
+On Mon, 26 Jan 2026 10:56:59 +0800
+sunliming <sunliming@linux.dev> wrote:
 
-在 2026/1/24 04:32, Steven Rostedt 写道:
-> On Thu, 22 Jan 2026 11:24:15 +0800
-> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
->
->> The eval_map_work_func() function, though queued in eval_map_wq,
->> holds the trace_event_sem read-write lock for a long time during
->> kernel boot. This causes blocking issues for other functions.
->>
->> Making eval_map_wq extern allows other modules to schedule their
->> work asynchronously on this queue,  preventing it from blocking
->> the main boot thread.
-> If you are going to make this wq generic for other parts of the tracing
-> code, then let's rename it. As "eval_map" is specific to the enum mappings
-> being updated (which I hope someday I can get that update working at build
-> time. And when I do, the name will be totally meaningless).
->
-> Let's rename it to "trace_init_wq" instead.
->
-> -- Steve
+> During kernel boot, the setup_boot_kprobe_events() function causes
+> significant delays, increasing overall startup time.
+>=20
+> The root cause is a lock contention chain: its child function
+>=20
+> enable_boot_kprobe_events() requires the event_mutex, which is already
+>=20
+> held by early_event_add_tracer(). early_event_add_tracer() itself is=20
+> blocked
 
-Thank you for your suggestion. I have renamed it to trace_init_wq and 
-released the V2 version.
+Ah, early_event_add_tracer() is called by the work function that sets
+up tracers (and the event directories within them).
 
+>=20
+> waiting for the trace_event_sem=C2=A0 read-write lock, which is held for =
+an=20
+> extended
+>=20
+>  =C2=A0period by trace_event_update_all(). trace_event_update_all()=C2=A0=
+ is=20
+> runing in
+>=20
+> eval_map_work_func() in=C2=A0=C2=A0 eval_map_wq.
+>=20
+> On my ARM64 platform machine, the latency can reach around 200ms=EF=BC=9A
+>=20
+> [ 0.268848] trace_kprobe: try_get_event_mutex=20
+> kernel/trace/tracekprobe.c,1902,enable_boot_kprobe_events
+> [ 0.268849] try down_write=20
+> kernel/trace/traceevents.c,4114,early_event_add_tracer
+> [ 0.482382] done up_write=20
+> kernel/trace/trace_events.c,3074,trace_event_eval_update
+> [ 0.482386] done down_write=20
+> kernel/trace/trace_events.c,4116,early_event_add_tracer
+> [ 0.482868] done up_write=20
+> kernel/trace/trace_events.c,4119,early_event_add_tracer
+> [ 0.482877] trace_kprobe: enable_boot_kprobe_events geted eventmutex
+> [ 0.482879] trace_kprobe: enable_bootk_probe_events release eventmutex
 
+I take it that you are aware of this work, as it comes from someone
+with the same email domain as you have.
 
+  https://lore.kernel.org/all/20260122032051.386331-1-tianyaxiong@kylinos.c=
+n/
+
+That is moving the kprobe setup into the same work function.
+
+-- Steve
