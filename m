@@ -1,161 +1,77 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C3C1D435F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 17:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85211FC7FB;
+	Mon, 26 Jan 2026 18:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769449631; cv=none; b=ahzsLn5OPFczQ9AOsqXyeTyBxnUxH9RYSvVtUI/M/a3accCJ4UWVxmompXd79bi1Md7yeREUfUNCJ+UlDoIzm2bwhoRQP9Wzo9EAGOh9ThfftQGoiUHYTtz5KOYGGiF8/Prx5vjQuvYvVVd4h4cyxRxuKxQ7aF/EVQGQb+s6OE4=
+	t=1769450440; cv=none; b=SWQtI5MWwd8UNBcOGJ5wCvGEHX06bEYqbTYA6BvhNVYBHWsSmSBWU1wRLHNDtsASaKufGhjmU2oeD3emC5IzwBYgbCZEdjFYFZo8l7FukNQ3FEYH4nUWq/l1KXHAsAsOv7nu9Ng1td/TPRG+m5k4l2YzLbV7FegZkvotBQzIBf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769449631; c=relaxed/simple;
-	bh=SxiigcO5jULVZQb+1TTV1IfnLgHH67BQCQAXlPCmZV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcJcik0ZgXBSNqolQ9W0rRFtS7pMkOe/h0eiMf75l/hr/xPdM+o80DMrxMNJ0jBFpprnaAaOTb51QO5o75BwwhukskDH3bEOg8LGlscf3HBBNCmboqmaDMNTqH/+yXREqeNekAj3OBpoKbYxZmNjB3Krw6rDYt6K+wdAT05TeEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=INOgFblc; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="INOgFblc"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-4801c1ad878so53376435e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 09:47:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1769449628; x=1770054428; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mb/leG6Ch5DsFFPtx2vrqbxxpTr3aeU3kEJMHwQ4pjU=;
-        b=INOgFblcWXjeH2dHKVybFbRSezcR7FNBmpFFUh3Rz9jBMPwl9weKbhvTQFfPzRBGCa
-         3oUVakKJ65ScTyOP/FhHSGTGyCz1AQfTFDXZlmak6kIvZ2tR+vYD04nKMzBPgisytc9M
-         qS/aj8abAsWHw4rMKYhUJbaFbIb/kJFOK8VteyQDJr8hEccOMbcBKTx+E8LqeAnTY7Cz
-         aqFnBh9OESJMDQoETVhBGaaFOksJaqIFBzoGI8+uB/VyFX8oE7ytyYhwmrNAEfUYnag1
-         D1+E8keeAWg5zFiOISn0JPC6o2BcoV9uH2V1T5OEKdnoVSkgNClSx7v2Z/kXvqyPBnS+
-         kggA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769449628; x=1770054428;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mb/leG6Ch5DsFFPtx2vrqbxxpTr3aeU3kEJMHwQ4pjU=;
-        b=Kfeao+qshHGvDqIDudJL/R4buA9hXPCteNwQ+aK0XLiHdWeags+dQZ1VFF5mofa+ct
-         PPG7wvIN3LY96DUC6jswrAfhBt326AG4suexUauiENYSsXFaPI4xWSRJdp4d3vBTpL6i
-         yoCM21g9LwJ7Cpw5DjR+9mbMDY0tT9ql77E/QRwWWbtCpDLAQyZmsnqQvdNYn/+EP3Zg
-         qw3lui8B9mkh/wA0GJu07sbrJc2w/Ltw+HczdhK/7ynSpLd21MacaRcmjUy3QFpsHLlC
-         rCSCc5g7bl4VL3TsEniXw4Qu9akLFOFy1I/V8N+gEavucqZfaZ7Dfghc4y9GG/mhab9e
-         1s2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWTJ7ddCD2teZNWBKB2MPVyEqpMVGMWyKbHFgybspx51FpuUhKe5pdUWiIAhRIOKE6AsrGL/i9X+TvJp+Xnf0QRPoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6UyJ/gbtFTmHYXb34vf12vR8yB75QWFXxsJmBTQbVJ9bVKerV
-	yqnn5Z7ACrv7QL3EtKt+t6aWQJLMiuew3OzntWhEvtD/XTwrC13rNqL4FJsSSyLX6lk=
-X-Gm-Gg: AZuq6aJeuPQn9qcb3gmuKt1F4auUJ4t69PDuSeEkDdoyPFf4Vrx4RTrI6Y85UNTIyPB
-	r4Xh+2p3kN6ZS6JeTcI0i3lNW4+zS9rzxDiFvRg74bBKUjEUAlr6yDJQXZFxIoGMzv0/M/iDonX
-	rUVm2p3RCCaYmCv1lYCPqbKW6yPjDT0rWiIJwqTOA4rX658ZrUM1PqKxQNsRAJvkAl6tKipsqI/
-	HJWkqsKOBFKoGHCEac5UaoJ58KM9eUYVkkuDZFzl01YkMgxyhkrn/iteHg1hIUPhfCEeemEhldI
-	l2G6cZh32ljTBoiDPlei1MkSTZNAzyh9ZiROB+JX5y5+EUtk7/sCFnzSvwvEcjwAdRjDKV49rw7
-	e71EPWEleNDk0qvDuRO1zl7Hm8l5ux6r+uQJhGPdV3OZJ7ShBTewSD1YvYCmUc0TRAfJlYkcFsO
-	tuDGUENble5U4LRm7gMhI2WBLH
-X-Received: by 2002:a05:600c:8b11:b0:47e:e2ec:9960 with SMTP id 5b1f17b1804b1-4805d06cdadmr105139335e9.35.1769449627682;
-        Mon, 26 Jan 2026 09:47:07 -0800 (PST)
-Received: from localhost (109-81-26-156.rct.o2.cz. [109.81.26.156])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48066bee000sm3831515e9.4.2026.01.26.09.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jan 2026 09:47:07 -0800 (PST)
-Date: Mon, 26 Jan 2026 18:47:06 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <liam.howlett@oracle.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
- with 2-pass algorithm
-Message-ID: <aXeommbTq_KNpUZa@tiehlicka>
-References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
- <aWfNMKCoEp2LuA2v@tiehlicka>
- <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
- <aWpfbSJe5vREzzyd@tiehlicka>
- <0079bc61-5655-4677-a421-1a61f4c52d59@efficios.com>
+	s=arc-20240116; t=1769450440; c=relaxed/simple;
+	bh=45KasaFR6y+1FQoCE5U8JN3wpN2OA3XTEsLGhSC+jjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VPHRTnuf3ICIQFBWlqN42DObkNS+etXjkt03Pmb7X+4Ugd4Fe1fLL9sOK9DKMpQ9kS7KuR081YQNALTfqeDjJnXmuURYUOSycos1pqbj9r+Q9s0hi8hwjz+SuqRTCCaHj0wkR0hpHkVxGtBSW2wUDPixwQku2PUiULt+zB47sHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 4CFC51608AA;
+	Mon, 26 Jan 2026 18:00:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 872346000B;
+	Mon, 26 Jan 2026 18:00:35 +0000 (UTC)
+Date: Mon, 26 Jan 2026 13:00:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Remove duplicate ENABLE_EVENT_STR and 
+ DISABLE_EVENT_STR macros
+Message-ID: <20260126130037.4ba201f9@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0079bc61-5655-4677-a421-1a61f4c52d59@efficios.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 872346000B
+X-Stat-Signature: 5qg4kqtsibq3pj3r99oec7mrk777cakt
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+HHEZ9g2+V+Rl7M5CPmUZMvtVvVtTjo64=
+X-HE-Tag: 1769450435-758238
+X-HE-Meta: U2FsdGVkX1/xiHgQKdU2aAjIe8+sn5XeanXklc7eL7Uw7HEYYiP/ZD5BJ0Vd8ZamzUPjPG/S3z9/+QNwWv8iGIeauZfwMnPTQEe74Dx8M1hiM5l6hlzGuBLyCca0phPI7kDhV0NFIYAwP8FkicpZ5eC9C1xNJ1uNoejGCdZZBfRUJsWij275dbwKXDAsMlC34RCBliQvX75rVfaGduzskB4n/lYtjaVl3/h/Bs1ojDllpHJGAxJsJY7ohGWVIq2YknZQmYHH1JS3ymV7xUZUoxJkVFG+NwDY/VU9FjAPkPqmkyGH00KTfHGZ2WoKxppf/pXtm0yLQ4D9df9BkK671OcNdvZGBBbh5FqhMclES/P42kXnkoocoBfaWjaFwKI8E4pdQQOF5accY0x+qiShhg==
 
-On Mon 26-01-26 11:39:33, Mathieu Desnoyers wrote:
-> On 2026-01-16 16:55, Michal Hocko wrote:
-> > On Wed 14-01-26 14:36:44, Mathieu Desnoyers wrote:
-> > > On 2026-01-14 12:06, Michal Hocko wrote:
-> > > > On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
-> > [...]
-> > Thanks to those clarifications
-> > > > My overall impression is that the implementation is really involved and
-> > > > at this moment I do not really see a big benefit of all the complexity.
-> > > 
-> > > Note that we can get the proc ABI RSS accuracy improvements with the
-> > > previous 2 patches without this 2-pass algo. Do you see more value in
-> > > the RSS accuracy improvements than in the oom killer latency reduction ?
-> > 
-> > Yes, TBH I do not see oom latency as a big problem. As already mention
-> > this is a slow path and we are not talking about a huge latency anyway.
-> > proc numbers are much more sensitive to latency as they are regularly
-> > read by user space tools and accuracy for those matters as well (being
-> > off by 100s MB or GBs is simply making those numbers completely bogus).
-> 
-> It makes sense.
-> 
-> > > > It would help to explicitly mention what is the the overall imprecision
-> > > > of the oom victim selection with the new data structure (maybe this is
-> > > > good enough[*]). What if we go with exact precision with the new data
-> > > > structure comparing to the original pcp counters.
-> > > 
-> > > Do you mean comparing using approximate sums with the new data
-> > > structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
-> > > compared to the old data structure which had an inaccuracy of
-> > > O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
-> > > is good enough for OOM task selection, we could go from precise sum
-> > > back to an approximation and just use that with the new data
-> > > structure.
-> > 
-> > Exactly!
-> OK, so based on your feedback, I plan to remove this 2-pass algo
-> from the series, and simply keep using the precise sum for the OOM
-> killer. If people complain about its latency, then we can eventually
-> use the approximation provided by the hierarchical counters. But let's
-> wait until someone asks for it rather than add this complexity when
-> there is no need.
-> 
-> The hierarchical counters are still useful as they increase the
-> accuracy of approximations exported through /proc.
-> 
-> How does that sound ?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Works for me.
+The macros ENABLE_EVENT_STR and DISABLE_EVENT_STR were added to trace.h so
+that more than one file can have access to them, but was never removed
+from their original location. Remove the duplicates.
 
-Thanks!
+Fixes: d0bad49bb0a09 ("tracing: Add enable_hist/disable_hist triggers")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 166b0d59be3d..af6d1fe5cab7 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -4113,11 +4113,6 @@ void trace_put_event_file(struct trace_event_file *file)
+ EXPORT_SYMBOL_GPL(trace_put_event_file);
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+-
+-/* Avoid typos */
+-#define ENABLE_EVENT_STR	"enable_event"
+-#define DISABLE_EVENT_STR	"disable_event"
+-
+ struct event_probe_data {
+ 	struct trace_event_file	*file;
+ 	unsigned long			count;
 -- 
-Michal Hocko
-SUSE Labs
+2.51.0
+
