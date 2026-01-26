@@ -1,247 +1,149 @@
-Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020097.outbound.protection.outlook.com [52.101.189.97])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C5A339709;
-	Mon, 26 Jan 2026 16:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769445585; cv=fail; b=sKn3EbMVHbPLw6cXW+P1Z8FzJZVvRfQx5vYNnbkuT4N0TSZfJO/T/u/n+8d3U5QJ1zoVCICa52+3nt8vZ1Ml2XaUJIv0widSRDHvOpp5+AAqYPXu+ITjfg3wGV+795HRCpylMxav04TrLfbtgC49rIVTADq7P4mwgynxAbBQ6gk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769445585; c=relaxed/simple;
-	bh=bjx0KQJN8yS6bHYhdWMlfBTr5M2x9Ck4EbNVl/WWOXM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NvJDVF9eXjk9jwIoZRUSBr6EzCyw/c/ed46lgmJ4BKkqLbQsCMz6Epibp48CY8tQVMEiQfyfBlNfld5smfXbbIGPAzAUYQB2s9kCQfRRefuwQ8QWwgta6HIPMF0gogQ3DgXZ8dDjlG6Ww0527kH7PXyEPVU3ULUThrn2H25gBKA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FcGAZtII; arc=fail smtp.client-ip=52.101.189.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA0D347FD1;
+	Mon, 26 Jan 2026 16:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769446259; cv=none; b=Uu/8XKTucZDdwO3eOZtZy+7cGP4Td5B3cyzNoBfL/HtbfbdsHBThsyO0WJvT6iSy8/tjvjjb7WLnaI5arZ0amcX8iKEP4xHRPoplYEdZ7m+jVCSdeR3iCALhep29xDB8MdA4w/zM8nz6k2fCXIiEyCE9aQnYlXK3oxLLqzDQQjE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769446259; c=relaxed/simple;
+	bh=ZR+j5w8xZGYwomoDHtjl/Oi6085wX9tT2RTJYLwsqrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xx6U/U5pGaUVLwwygu6CLtSxhzaiDv/iZEcdJcX20WhLDFTH3O0ayg6QcVzhvlAzn9rtO0/jsvU2DJAa75BcWke/NP64Xe711KK0exR+tAii4pmUVn8qdOlNewksFa9OSIU8F0YkeZLe7nIZu2/nCYseBcRaqS3qXiK+MWAN3p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4yawpg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FcGAZtII"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z/gunAo4NIb3btR2b03NlMmYrN5GQMUeMU0dJXtTtwNH1t/Q4Y0Wuj90QZ700Y8NfeLW1pOu9NKCWTnZNKzNEuJ7KXXlf+it4g0nuaRuuIRDHtAnWFOgUAN4zWFGZBszJI+OwgnTzVPCd9QIxqRu23ac4KL4qLVUc+/AgQyAky8RfHboqcbxY/fBjQAL06U5wTHkbeKfBcfwEuHOG+bStd3ZISKq9wHTczTRbCYLKCUimKuUge1HUkDxH79Y+oHT+IOKtML/s3NKnaJtJogZZG3RV//vogXTvG+lhiqSljXnMrclpKWVmPBAl3ACiL7C5klsGtC/eidMr1i4kx4iOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pMjcrHQTeJoxFDGvwEEyayzU0VFj8pDeMXZBqtWMubU=;
- b=krJWu7oKjjdctEdjYHDA9w2KvB5/a1IESyH84GQZniVIgv99yY+SvTCkbA+GL6lybkGF/6qoJpM0br97Oa1qOV8xU3K2KqKTmt0u8AfJK1FEh0qmUowxjHBA0Fgdu7rxN0rxVvcJ8oXkN0XpQacuUPUHTTEmWG6dtIhcSJehQ4RHsR3kekYpbFOZNOFjurtb3u8VHdWN/IsIZNptaE8SfWI4WpKJ6VbLKKXEzS1Q/zx6G+rr80ofKLtebYFA8YtNX3ZoCKdxgzAV4zCwaL0761FepFcEOEnjPm4ievUzqFReUaYfLSQhYBVHHTdI+rVXLEqL+hlirTr3gh5i36RSug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pMjcrHQTeJoxFDGvwEEyayzU0VFj8pDeMXZBqtWMubU=;
- b=FcGAZtIIFaUkJ+/unjMAPoodlT8GU/PLTWdGJNvOKByDcdOtmI/BKSmQ82E8ysEnXuJBbf4sIKtU4DQzb9fS11Y+w4jR1pxqmdbGR5xCQ7If7dksNwm9pNYNyoZfUttoDWqlQkFgaRhLHuj5GKvp3bLb9L3p0VK/C9KfKGCRQeA2gTodd/2CJoNg7sRDuXJDoRAIoC54Kdl7K0OtotZYCel17czZgGNTrqs5hIioMvv2U4Z/CTKRuC+6IwtLHejdJpCPnhvicTYZKqu1ChK1aiD5yK2P/gcrWiYRumJe7Jvva0YoVxV91W67XY5qjD41dq5iuGfHcJFXKzZRXo06UA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PR01MB8391.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:b2::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Mon, 26 Jan
- 2026 16:39:40 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1%5]) with mapi id 15.20.9542.015; Mon, 26 Jan 2026
- 16:39:40 +0000
-Message-ID: <0079bc61-5655-4677-a421-1a61f4c52d59@efficios.com>
-Date: Mon, 26 Jan 2026 11:39:33 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
- with 2-pass algorithm
-To: Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- "Paul E. McKenney" <paulmck@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
- Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
- David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
- Shakeel Butt <shakeel.butt@linux.dev>, SeongJae Park <sj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <liam.howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>,
- Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>,
- Mateusz Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
- <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
- <aWfNMKCoEp2LuA2v@tiehlicka>
- <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
- <aWpfbSJe5vREzzyd@tiehlicka>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <aWpfbSJe5vREzzyd@tiehlicka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0170.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8b::9) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4yawpg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39710C16AAE;
+	Mon, 26 Jan 2026 16:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769446259;
+	bh=ZR+j5w8xZGYwomoDHtjl/Oi6085wX9tT2RTJYLwsqrQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L4yawpg8tUnnP118U2ygODAR3XO6grMF4upkbJHZOaoKfw6OYKmpvdaHht4Uj7wT1
+	 JBkLZBAcJMz+t2EGZpTHhTz7Fx559Lm0fzNVicG62VMo0hdJGawkHBT5fPL90Py7TO
+	 F0sR0G+GBiMHVfp5OyK6f0XoyQcVtbmBFo7Cl//PlqReEC+Ai3UNJYiNlmXSMCK3z7
+	 UQBRvxQcj/6g1Sos84eC/D8fBUgi7pHBq5UpB9D9LwfQtZod6XXwIitD7iVP/RwB2d
+	 o/wwyGuFqWM9sIuSoOHz1aScjLdFlkTHmfCIxYqJNyimZwXPn6dPhV6MFvNKBmweuN
+	 do+Q7XheQIb7A==
+Date: Mon, 26 Jan 2026 11:50:59 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: Re: [RESEND][PATCH 3/5] perf: Use current->flags &
+ PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
+Message-ID: <20260126115059.3d345ca3@gandalf.local.home>
+In-Reply-To: <0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
+References: <20250820180338.701352023@kernel.org>
+	<20250820180428.592367294@kernel.org>
+	<0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB8391:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e68001b-da6e-407e-c401-08de5cf98070
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NStTdTFHclFMTlJwZ0tHSFY0dkxBZDIwcGVmT1J3dmxJRHBMWUV0cE5BSW9h?=
- =?utf-8?B?bU9jQlY0emtJN0lLVzhhOEo3aTF0dnJVSnYwYUgrWUlIV0QraHp1T3E2KzZV?=
- =?utf-8?B?ZDdsQkVJQitpbWx1WEhiMERYakQ5S3VXaVg1ZzVhVjJjTTNQaUdDZmtoR2Rx?=
- =?utf-8?B?b3k3MklXK0dsQnJyOU40NEFpMTlNVUszdkxsUWpodm1Jc1ZGYmNIbGI4QWJu?=
- =?utf-8?B?bVNqczNHS0pYRG8zSG4ySFV5NU9vSjlxUThiV0JLOGNaR2JIYkdwNkZMMjZu?=
- =?utf-8?B?LzYxL2htMmlvbVE5bUNFK3hTNGcvaHlYek9MT1hGVi95Rk95ZnJxRENtZFc1?=
- =?utf-8?B?RW9USzJBcVQxa0hodk9LL0pMekFnVzJJM2tiNlBNdTRrVStXSG5vVFplcFU0?=
- =?utf-8?B?TklRRjE1RkxKbFhITkRMREhPVmFUd0RCZUczK0N3MzNjTHNGMCtrRmFRcnlj?=
- =?utf-8?B?YnJ4SkFTdHAvLzhjblRlY1dpRUpPaFQ3SmhZSnZaOC9PSGlQby9PM2hOTVFn?=
- =?utf-8?B?ZVo5OW5Bek9oOG0zQm5sQ2trc3B5L3FCdDJxYVZKZUxQNkpUWDArcnNScGhP?=
- =?utf-8?B?NmpIaENhY2plNFpQc0JvbkNlcjAreXFubDNJZ2lBYklFb2loWkMwbzBWRWd6?=
- =?utf-8?B?RmJYUS9RcUFCTjlZMHNvdnJtK2hTZjJkZm0xUzJpMmxROG1uTXlTbldOdG43?=
- =?utf-8?B?amd1Rm1IdnRaTGtKcjFLQWhlZjdtbDNsSzZlQWJNbnVPQjN5SjA5RG1wZit2?=
- =?utf-8?B?SzZoVUkwbVRpT3U2TitMdGJUQWIzV3NuUU51YUpKU1dzZS9lM25DWmQ5NGxE?=
- =?utf-8?B?a1UrbWlWVnhJMnYwcGp1V1JUSzF5bmMxYUxqZUVuZ2MyaUd5dHpHZHhhOXQ2?=
- =?utf-8?B?bnV0bjE5Q3pqMCtHRnorcThxMGRzTkN5Q0k3RTZQYkVtdFhRb1BROXp0bG04?=
- =?utf-8?B?RTM3blBLK2tVVE9NSXNQR3pFQzJaSWJiVDRjRjlGTGRBZHFGNXdHejBVc3Qv?=
- =?utf-8?B?UDBORE8xcEs0VzViOUFXeHpBY1NSMmcxT0NOSzN0ZEVzWXUzTmRlMVRjVjVm?=
- =?utf-8?B?SmpqRzdJL0doQ09mWHJ1WS9maVpEMldwQWpVT0xFa1R6L1FhMmdIRVJHdHpJ?=
- =?utf-8?B?RmJZcmNaclR1OFBMcS9VK1RBdno2RjduZm9YRUZGdnhvMGorRlVRUnR2dWFL?=
- =?utf-8?B?RHk5NlV3YzVUcXN5dWE2dC8waFljdnhPWlFuTVRCdm13WUdHUmVPUXpISnpH?=
- =?utf-8?B?SHZEVkFKelUyZnpmeUR4Uk1OQzViNEJEYlhRa0tFUkJGOEJIMXQvYktMRGR5?=
- =?utf-8?B?Q3E4TEFsTVlzeU5DY1l5aVU1NVQxVTZ3VkJocHNVZ1Z0b0Z0L0ZiczhkaC9G?=
- =?utf-8?B?Nzd5cUtRNEt1U2x6bEROZVBoOEZUbU9JTXNObS8zbkRpd0lmb2ZnWW16NnZn?=
- =?utf-8?B?NE5tdGZ6cGJiZDUxSThvbTI3VWpiMDdCSFFzZjAxWU5kQi9KeVVwTVltOGxx?=
- =?utf-8?B?Qlg4UHZIMUlSV0Z5c21INGJhT0VxcFQxS0ZlWDc2dk9qY3ZGM3ZZMDgyR3Nq?=
- =?utf-8?B?RC9GK3RoOXhLZkZpeGJnb0w1WGRJa1ZHbFpRb0lVdXRPcXhwdjdScWw2YWk2?=
- =?utf-8?B?bVRzK0FUSUc2QUNYOGlZTDRBVDdDOStYT2psWkxtSTBCRDF5UnR6NFhvQWZq?=
- =?utf-8?B?RXNQM1piTUpVc3d6Znd1UGdsZXgvNURkdG43ZCtFOEVwZHBhTU5PbG9xaC8v?=
- =?utf-8?B?OGd4K2piNHBneEpldHY5WkVtaGVobTRPdHJvejBPeUFGQ1hwUC95ZG5TU1Bl?=
- =?utf-8?B?eWJCVGhCcDRKcjZ2c09EVkJpQ1hqUkpTcHoweWdEZzRFWGJId0Q0TW5uWmYv?=
- =?utf-8?B?WnVUZEx4Wk1pbEdicG9MTlp2cEZsWVZSMExBeFNTcmZNWDJ1aTdFZ2I4Qjg2?=
- =?utf-8?B?TVdwa1lvWnVFL0FMUFVJdE5wSFd4aG5PRUIxdEJKYnFseC9GYmZ3NnAvdTJ5?=
- =?utf-8?B?eEFXcVJrZFByOWkrR2toR0hoWEtzaUhBUmJ2bFd2dGNRYVY5K0hhODczYk42?=
- =?utf-8?Q?GnnLWS?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NmVJa2dJa2FxY0ZCUzVISERBOFlTRnZLdEZySDUrUElTL2NlU0lSaE1MUGR4?=
- =?utf-8?B?U09CcGNaQWxuczVLNlg0Z3dhOXBEbk5tdEdqVVNWbkZoeGNyMmU1eVF4YXhC?=
- =?utf-8?B?U1RKeVY3KzhUdXFXb0RtMXRYRXQ1dEF6S1IybEdpWU1qSlhJbU9saVMxN2Q0?=
- =?utf-8?B?dW9HdEdUKzliaFJCeW02SHZleDZ5N0o4QTVSRU1XMnBsS1VIZ1VvUkxUc1hl?=
- =?utf-8?B?QUQ0MlJmYStzNzNreUhqNGs4ZkFJV0szZEpNRFJhUjI4VGxjbHpjNmxxTGNn?=
- =?utf-8?B?L3RONUFFSU1yQUlOUVlhUXNPdmdsU1h2d3NuSjR2MmUrU2E4S1l4S3FrWFdS?=
- =?utf-8?B?eVAveDNRbFpGMXNOeDJuRTkxM1l3TVhxc0pUMkhsc2hFci9vZElxcGVOYjlD?=
- =?utf-8?B?NWZ1eTk2djc1ekwyL1d6NVZPY251eU81Z0tjVGczUVVnWXdqYUp0bm9NcUJB?=
- =?utf-8?B?WFJ2MlRVWjdaVm9DZDBnbHp2WkFHTElWM0xneWJZSHRoODZqSk41d0ZKS3Yz?=
- =?utf-8?B?YkRkb2pHZUVWQTIxNUZzUmJZTm81dERBaXZPK2ZoNnZrWXN5QkNLOFRxWGpJ?=
- =?utf-8?B?cC9sWCtHS01ZaEY3UytvK2tRRmhSa3FMRVFZQ01iQmtpOTJjTWVSYzc4TkJC?=
- =?utf-8?B?SVpiSWd3NU9hZW1ycjQ0a3phRThNSmxOTFl6VzRFOGJWWStNR3lUcjJ2VER5?=
- =?utf-8?B?cjJpSE5VLzJ0NFA3cFkvVTd6NVdsMFNuckdkY01xWmdxK2pmODY5Tmh2WVAx?=
- =?utf-8?B?bDBjNmxtOTBWWlI2RTNMeE9xdENrMXhkMjNvQWt3WFRIVVpiVlJ6ZHE3VE9L?=
- =?utf-8?B?cDdjNTVQV1N6OFJzNFlFTVVzNG5qZHN6WWJlMkFTTUlkRTVOdlFEVWpYbUpi?=
- =?utf-8?B?eERPRGUwWWUrN0VBM0ZpN0lqU215aFJ4MDQ5aE1jdUNXL0xQTlFsR09IRDdU?=
- =?utf-8?B?WkY0eVZwek5MREpVNW4rQllVbHJMNXBBUjVlWlhuOEhLL1FoZlBFeDdRQ1Iy?=
- =?utf-8?B?SE8rczI4dDlxc3N4ZitqZjFwd1hXcTgzWUpLOHZ3Zkc1ZUNjWjZEK0o3ay9n?=
- =?utf-8?B?ZHg2MVJrNVhZZDZuRFhtY21KemErKzdvYVRhL1JOM3NXK3IvTytybnRPbU5B?=
- =?utf-8?B?RVdlWU5NaVhEOE11bzlCS2NoT3E3bm1ENm80VUV2WXV6c3dRdThsRlpXU3pT?=
- =?utf-8?B?M2o2NSthbEhuWUFEeWF3Q2loQzhWMHRyZWMyS21yY3orMTcwU3V0cE41QUhw?=
- =?utf-8?B?NElvMjNPUzdweVIzY2Fyd2Z4cjZUV3prMVdQYmJtTjdhcEtwenlzb1lZNWw3?=
- =?utf-8?B?VHVrQVRzM05LaEMxM1A0ZTBvaFhpRXEzZXRPZTVHREhFTnZNZk5aZE00Zld1?=
- =?utf-8?B?UnhCTENoOWdzdHdxVS9ubSt1RnRBSEhCOTdBeW4yRkVOYTY0SEhQdk9JNmEw?=
- =?utf-8?B?aTdvSGNxRk1qRDNJM3p0MTdEcUwzeml1TkZrRFlPd0JFcW9RanF5M1ZhZXI0?=
- =?utf-8?B?VWxnUFo2SUNXdS9FS09oSUVIVm9xWWFiRmExT1ovenZsNFZteXlVZS9Ba3Ex?=
- =?utf-8?B?VGg1UnMxVnBqYlVxZkoxNWk2OXEwbHJab3ZCVjE0ZkIwSlF1ZjdRVGVMOUlF?=
- =?utf-8?B?YXdndEkvZ3YyOXZ3ZWxSUUZoaDVkQVdINFVnV3B3VHozby9zUUprd2lsMy80?=
- =?utf-8?B?b1ViMVdHRXQ3cEhoRmx2MnMzT09xZkFWM2ZXVVZSMTVKSElDOFZGWENCRWJR?=
- =?utf-8?B?akV3MFJUYzhVaXU4Smh6N2ZKTlJoY3o5NzZOMkdVSTBPSVZ3dk9Rc2RyckdI?=
- =?utf-8?B?bVlLMDRYY1pFQ1NXWVNxOEdXZzR2UUhORVJaZ1JVRlcybFZYcGRSNUtQUTJR?=
- =?utf-8?B?SEFaam5iTjgvTFRxaVl4WWVYVXM5VEVXb1JnQ1NqYXJZUCtXandpWEpzaFJW?=
- =?utf-8?B?VmlFTXhWZ0xXQkd2Y3FZOWpoNVNsTXFkREJzUEZjb2l1R2RVYUFoTVY4RHMr?=
- =?utf-8?B?dzM1czVHOVR5ZW5LeWR6SHRrVzdLQkN1bWlCN25mUlhSN1Q0VnArUFplWjFv?=
- =?utf-8?B?TnFPOXhyUDY2RnI1ZVNXVGZCdnZUNCtseWp3eUdXV09RVWdMa0kxTi9md2Ni?=
- =?utf-8?B?dFlXNzVJTnc2dXgrYkxxR2xxcnp1M0E0WmNyYWVwN3BMVTF0T0l6R1NlNHR6?=
- =?utf-8?B?QmJ2cUdOTHJHbnpsNVQxdUszMkVEaFZ1SUd2TFNZM0Y0VmNQZ1UvUkx2Qngw?=
- =?utf-8?B?a2JiZzhGQmRjemphV0k2czkyUDVYQUFKYVlKSDU5N0dsNXlPMi9FaVlvZnV5?=
- =?utf-8?B?eXYyQ0k1d3VaV0ZmR2l0UnM2ZUhwM2MxcjFKb1JJTlhuSVJ0allRN0FNdWpL?=
- =?utf-8?Q?c7mer9mO33dlN8UQ6TARCQu8pUMRNrpYrJLw8FOC4jgbE?=
-X-MS-Exchange-AntiSpam-MessageData-1: QXoL+NV84rlcEDpt7CPwQssqPrQT3ir6D6g=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e68001b-da6e-407e-c401-08de5cf98070
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2026 16:39:40.6422
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gvf3Sh1pKOl+ouaPbvvqPmD7B6DXvWylQFbHlhinjYo+UkYXhoPRf5BmA+HgWgBDv3Cll+288mUtrz6HyqtwOXMOqjg3pJgplAM3GfbzbIU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB8391
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2026-01-16 16:55, Michal Hocko wrote:
-> On Wed 14-01-26 14:36:44, Mathieu Desnoyers wrote:
->> On 2026-01-14 12:06, Michal Hocko wrote:
->>> On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
-> [...]
-> Thanks to those clarifications
->   
->>> My overall impression is that the implementation is really involved and
->>> at this moment I do not really see a big benefit of all the complexity.
->>
->> Note that we can get the proc ABI RSS accuracy improvements with the
->> previous 2 patches without this 2-pass algo. Do you see more value in
->> the RSS accuracy improvements than in the oom killer latency reduction ?
+On Wed, 12 Nov 2025 19:11:15 -0800
+Guenter Roeck <linux@roeck-us.net> wrote:
+
+> Hi Steven,
+
+Hi Guenter,
+
+Somehow this got filed away in my archive without me seeing it.
+
 > 
-> Yes, TBH I do not see oom latency as a big problem. As already mention
-> this is a slow path and we are not talking about a huge latency anyway.
-> proc numbers are much more sensitive to latency as they are regularly
-> read by user space tools and accuracy for those matters as well (being
-> off by 100s MB or GBs is simply making those numbers completely bogus).
-
-It makes sense.
-
->   
->>> It would help to explicitly mention what is the the overall imprecision
->>> of the oom victim selection with the new data structure (maybe this is
->>> good enough[*]). What if we go with exact precision with the new data
->>> structure comparing to the original pcp counters.
->>
->> Do you mean comparing using approximate sums with the new data
->> structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
->> compared to the old data structure which had an inaccuracy of
->> O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
->> is good enough for OOM task selection, we could go from precise sum
->> back to an approximation and just use that with the new data
->> structure.
+> On Wed, Aug 20, 2025 at 02:03:41PM -0400, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > To determine if a task is a kernel thread or not, it is more reliable to
+> > use (current->flags & (PF_KTHREAD|PF_USER_WORKERi)) than to rely on
+> > current->mm being NULL.  That is because some kernel tasks (io_uring
+> > helpers) may have a mm field.
+> > 
+> > Link: https://lore.kernel.org/linux-trace-kernel/20250424163607.GE18306@noisy.programming.kicks-ass.net/
+> > Link: https://lore.kernel.org/all/20250624130744.602c5b5f@batman.local.home/
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> >  kernel/events/callchain.c | 6 +++---
+> >  kernel/events/core.c      | 4 ++--
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> > index cd0e3fc7ed05..5982d18f169b 100644
+> > --- a/kernel/events/callchain.c
+> > +++ b/kernel/events/callchain.c
+> > @@ -246,10 +246,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> >  
+> >  	if (user && !crosstask) {
+> >  		if (!user_mode(regs)) {
+> > -			if  (current->mm)
+> > -				regs = task_pt_regs(current);
+> > -			else
+> > +			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+> >  				regs = NULL;
+> > +			else
+> > +				regs = task_pt_regs(current);
+> >  		}
+> >  
+> >  		if (regs) {
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index bade8e0fced7..f880cec0c980 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -7446,7 +7446,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+> >  	if (user_mode(regs)) {
+> >  		regs_user->abi = perf_reg_abi(current);
+> >  		regs_user->regs = regs;
+> > -	} else if (!(current->flags & PF_KTHREAD)) {
+> > +	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
+> >  		perf_get_regs_user(regs_user, regs);
+> >  	} else {
+> >  		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+> > @@ -8086,7 +8086,7 @@ static u64 perf_virt_to_phys(u64 virt)
+> >  		 * Try IRQ-safe get_user_page_fast_only first.
+> >  		 * If failed, leave phys_addr as 0.
+> >  		 */
+> > -		if (current->mm != NULL) {
+> > +		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {  
 > 
-> Exactly!
-OK, so based on your feedback, I plan to remove this 2-pass algo
-from the series, and simply keep using the precise sum for the OOM
-killer. If people complain about its latency, then we can eventually
-use the approximation provided by the hierarchical counters. But let's
-wait until someone asks for it rather than add this complexity when
-there is no need.
+> Subsequent code uses current->mm. This triggers a crash when running a page
+> table stress test. See below for details. I have seen the crash in 6.12.57
+> and 6.18-rc5.
 
-The hierarchical counters are still useful as they increase the
-accuracy of approximations exported through /proc.
+Hmm, that should not happen. But obvious it is. Can you add this:
 
-How does that sound ?
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 1f6589578703..ff201098e5e5 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -248,6 +248,8 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		if (!user_mode(regs)) {
+ 			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+ 				goto exit_put;
++			if (WARN_ONCE(!current->mm, "Bad flags %x", current->flags))
++				goto exit_put;
+ 			regs = task_pt_regs(current);
+ 		}
+ 
 
-Thanks,
+I'd like to see what current->flags are when ->mm is NULL.
 
-Mathieu
+Thanks!
 
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+-- Steve
