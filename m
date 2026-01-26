@@ -1,144 +1,97 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8250A2DF151
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 21:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769464720; cv=pass; b=fTE7w181tm5z5fZCYVoc6H204z40YZ/HoOIDZFRd7891VluCIbdpNRH+KyMdxx/KAMqB5/YpFVZmi6Le3KkOGLY7B0jNwH+TCyZZliOcgf2TOourVy+mo8UNrDnYGYhX778vcz/r5enimFuZHC+HleGK1Rgi8ceKVDNl5kLQuXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769464720; c=relaxed/simple;
-	bh=OgZZYPJNUqsBKrLMQHY/AFEIWgBtulsGVYqrQth1ClE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oe7bSaicZIQ+Aml6zulwjNqSawH8xNPfO9pTVcGLhRB4K93jsb7UdwOmV/KuQxPnbdFAS+xSTbkkBp9V2zShPPJTo9X1Vx5YBWJpdlFEYUuVCmp2maS20bFopkla4IGoj0yo7oGivuj6zFlOkPUdPMJNDyn7dIhafXdaEtHmZ7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=otxH/UMT; arc=pass smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57C523F42D;
+	Mon, 26 Jan 2026 23:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769469173; cv=none; b=pzb8Pim46Q/pPBo5MSzQ3Vimz/MRvnuEKpisAqqCvIRevLO1W7hcTlOCgunMVxdOsG3CdKym+h/9KU1PuumuWLxc1k/e/F+lP5IvTkLjwHTZtON2F/p0kHF8VKG65dQGhOuvUgge+eKnD64TImod36dVsqc34gE0g2MSX5O7VQM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769469173; c=relaxed/simple;
+	bh=mQXwCuGIROQD6rXZM8amVwlvI+IZR5slrw7/8WPVRw8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=GPJz4DMelW/IhotqPyk6oClKDiwc1YrrtZRAKZ4cyifwt2QAg8zJJtKVRyXrZYeAVBfB9KLODTYRAN/Q2vpmKGvmu3TBIyrTx3mFW0m7oOhVukHeL0jwCmkxeRpPoNC2JvLkl3K6G/i2CfI+nzqVlKdJOMSsnsr2x1DBA+9Sjx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8pisTiO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="otxH/UMT"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43591b55727so4782229f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 13:58:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769464717; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MVK53/wtKEf0TdfUVk/YXKRD6LZL17OE31ALbzx9gL4XsO2ITTzaMt2rBEirTIar92
-         9c6MAXC/83neHNhB9daCM9i2+QhyqS8yH40xh4boAsm7xcCCb2HwV9AGph/JT9mn+jdf
-         2N4m8zSdMpp7KuFdzvrUhjbQDEjX7AL3BUMpBaB+QJnMK9JacHLViWzL6ES6A48sMa4/
-         UlcNak1uz6hFCFNK/gA7xkpiayVIvMn1F4/Se9oN4vk/LBldRSqxu/VHOXQJELu7Sjf8
-         HrYc2Q2FfO8GZlgrdLaxlIxCoiTJ+8v3mxn4G9PNianJvSXTlSa7zvzocA43vOG6uBTQ
-         6FaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=OgZZYPJNUqsBKrLMQHY/AFEIWgBtulsGVYqrQth1ClE=;
-        fh=nkAQrJwYD9HubbmsEMA3b6RfjPEEFr8O+V3EAvQ8sS8=;
-        b=Djuy93ztWlv/lczvz17nzK7xvudChxsPNw9pMuQeV9Vb2eNTPH76WUabC8qswGbG/Y
-         QoxCsb4Dr1yQj2dzxOAHDCRjXMmxQPNI8nKpe2ZxVORbXqOHj9n6cDnv3aE5mcWXBVnJ
-         YyRlmrYBLAZMo3jJh/CifQK9BiCGHrc8UfdYFIDwsXhfUM2vUUINwlbviad3k4AyTl0f
-         W1LM8xFMyEcrZMoRwsilfl5IYfunZiovXMoEENnJuiKV3zApYeHqVc09XlvxjjiVvhfO
-         qnoJoWnDuxDlySNJxGkfNVaIpvsefXvOVFdCoxfEtiz8RHWftT6A4/NLAgA8EK8MPuEf
-         qTNw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769464717; x=1770069517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OgZZYPJNUqsBKrLMQHY/AFEIWgBtulsGVYqrQth1ClE=;
-        b=otxH/UMT30aGfMwZYtOcUxLxdxipfP3nwdGqZi9KhhumVUDXdWN9dSfAOnvdno04sl
-         wVdw0gWmhkUKXI6/UO6jm/NPAQ67XYgID/gxTvFjVfjpsNdZ3AbuwXQaqxzjpnUo/2ZA
-         nGqPIECU6BpL64SL0WE10FfANbF8+SRbTJIc1p5pSTjisvMSFyin562J9QRsqV1l4Zuw
-         s4D8NTHIXL47BE1DYwbVWRnvkA7clLBGAWHW+nsVUxzxI3b1Cm5DKU9OePtV/PiZrptH
-         O2GkiV+NkLLsiMvUaWNu7jGlpvzhOhZuel2a/nGzAU9L5R3om/0d7HQPnZoB73mGtnCr
-         QWGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769464717; x=1770069517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OgZZYPJNUqsBKrLMQHY/AFEIWgBtulsGVYqrQth1ClE=;
-        b=S1VK0G7LDriFXuWBkQ5+tk0goBvsX+8YmY7wHYlq/TjJFb5InxfpDPIv8NpU7S55BN
-         1jVzjApl3oynWrayLAk0hM1G5s+x8e8NhrEJCQWWHba1oPlpH3LFCzls0jUbYqMrQbXg
-         zvMZFbPleogUcT2YLjnbGUGeaLcz7ftG+y3NO1vZYxeA3U1BcNQ0gkpPXf7aJLZ/TyjA
-         EExPYSqyMoo+aJVf0iqvcoPyTlzfP3MJl7WyVjNe2mIcIiX4HbUvfyelHanzFurnNxdY
-         OhN4ViC1SvjJkIMbpyq5WFh7JZdwROl5GAcNUgPphkntuKsG0ojGqyKUSBmW2NJ1+mKB
-         iv0A==
-X-Forwarded-Encrypted: i=1; AJvYcCW69uMtX1o3o2T4fqqTMDGMx/oev/qYmwyoECWrIn8NLWtcjJudHeiZgBtMjUv3WNxXoc4KTHW2VRQgBUQMOrSlfZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6JZXVkmTD6QlRnpEjlKrkgf2LUGea15zjeqwDw9WWKNlNBSKp
-	RK5T2IaNDlEVEOvdErldl68TqV8VMjNOL5kDAAAiPbyMlTVj3xA38QCw8oFfWlYjYs8OVM1Jmu3
-	cyILGxq5gLfO8YgMdlSZp2dMYPmKoWxZG1PS/h4wT
-X-Gm-Gg: AZuq6aIqHh6LF3DPxPURTKTyLIyXSY1IhPwq+VFy2t5RECvgubXRAzmo9e0qQzCeuDX
-	+a7l6i2Hrqr4zTxvU/W8zwcySi3ydNRsdZK4U+UG0aGeFqzmDPuL5sADOO6XsRoVwt+2XykFSz7
-	pCRT479pnfkbVP17OOEaHl30bTkCDo8rBWu9blaevTCImbd9pZjufxX5qT2ILtjUnzI6PYspMWl
-	OO4pf5LbmJDASdQrBEYbkMQl4q6cFGLtNYsPcudCH1wc667Yd0Tn698QWL2/nC9GEk0Z2ijhP3D
-	xQk+Aiut0SA1EfJ+d70O+Fcmag==
-X-Received: by 2002:a05:6000:2905:b0:435:9223:bfda with SMTP id
- ffacd0b85a97d-435ca147759mr8332178f8f.21.1769464716802; Mon, 26 Jan 2026
- 13:58:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8pisTiO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C0DC116C6;
+	Mon, 26 Jan 2026 23:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769469172;
+	bh=mQXwCuGIROQD6rXZM8amVwlvI+IZR5slrw7/8WPVRw8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=l8pisTiO7IyqKjWkwLCkKRAdADpf0uz94ZIgfwQUMiE0ZNO4j9NA+8aOW4Prc4nR9
+	 NhFpoizNBYthaLfF3nAZjQJo6RTj72JBkcV+GqtlJTuFptEgoUi56j0wLV3NSU361e
+	 jo9jb28oLUJxaB9fZN1ocn97bgG4KStKDN6XFKqrGzYO5tPOZNAr+3W9SUM7aYZUGt
+	 N7XQjtw49vP1DX4ISv7w7KcI2NS42sEchDPyq1rJ/ALim5MCycbzIStrQB8p5WhEpO
+	 DTipuh+kaIHBnHuF38fM8MNdTCZDUJOBSCKKl3ExyMFRilSnbOsrpp+Oac41pbJBOc
+	 xRFtbhe1cHe0A==
+Received: from rostedt by gandalf with local (Exim 4.99.1)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vkVlQ-00000000Bzm-0cZK;
+	Mon, 26 Jan 2026 18:12:56 -0500
+Message-ID: <20260126231145.728172709@kernel.org>
+User-Agent: quilt/0.68
+Date: Mon, 26 Jan 2026 18:11:45 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH v6 0/3] tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260107-jump-label-rust-maintainers-v1-1-702b03482f2e@google.com>
- <CANiq72nV0Z_UjdAwT=41TjjfmKnT6WL4hVNcxg_QCe7TAEYK_Q@mail.gmail.com>
- <20260112100006.7db6d31d@gandalf.local.home> <aWUO59edshSRit-Y@google.com>
- <20260112115408.48ed4d35@gandalf.local.home> <aXddnjiHCX-XS5S9@google.com> <20260126213748.GR171111@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260126213748.GR171111@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 26 Jan 2026 22:58:24 +0100
-X-Gm-Features: AZwV_QihZvcwiBl1p-Lov7buKmEkVHfq8VKsqtX0qbF8wCZDMWiYhzhA-vv8XL0
-Message-ID: <CAH5fLggpBodWYv2EQy5sgg5eSp9=7PM9ZqXcKaTuozNKN1eGGg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add Rust files to STATIC BRANCH/CALL and TRACING
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 26, 2026 at 10:37=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Mon, Jan 26, 2026 at 12:27:10PM +0000, Alice Ryhl wrote:
-> > On Mon, Jan 12, 2026 at 11:54:08AM -0500, Steven Rostedt wrote:
-> > > On Mon, 12 Jan 2026 15:10:31 +0000
-> > > Alice Ryhl <aliceryhl@google.com> wrote:
-> > >
-> > > > > And have the M of the other sections be R here?
-> > > >
-> > > > Sure, we can do that.
-> > > >
-> > > > Are you still willing to pick up the patches? I think that is simpl=
-er in
-> > > > case there are any series that touch both the C and Rust parts. (Su=
-ch as
-> > > > the initial tracepoint series did.)
-> > >
-> > > Yes. So I guess you can still add me with a 'M:'. But I wanted a sepa=
-rate
-> > > section so that all the Rust expertise is still included.
-> >
-> > What about the STATIC BRANCH/CALL subsystem? Should I also leave you or
-> > someone else as 'M:' there? It's unclear to me who usually picks up
-> > patches for STATIC BRANCH/CALL when they are not a dependency to a patc=
-h
-> > for somewhere else.
->
-> I think that'd be me -- I typically do the static branch/call bits.
 
-Ah, thanks for the clarification.
+The current use of guard(preempt_notrace)() within __DECLARE_TRACE()
+to protect invocation of __DO_TRACE_CALL() means that BPF programs
+attached to tracepoints are non-preemptible.  This is unhelpful in
+real-time systems, whose users apparently wish to use BPF while also
+achieving low latencies.
 
-Are you ok with using the approach Steven suggested for STATIC
-BRANCH/CALL subsystem too? That is, add a [RUST] entry below the
-current one, list you and me as M:, and anyone else in the main entry
-as R:, and patches land through the same tree as where they would have
-landed if they were a C patch.
+Change the protection of tracepoints to use fast_srcu() instead.
+This will allow the callbacks to be able to be preempted. This also
+means that the callbacks themselves need to be able to handle this
+new found preemption ability.
 
-I'm open to whichever setup you prefer, but I think it'd be nice to
-get these files into MAINTAINERS somewhere.
+For perf, add a guard(preempt) inside its handler too keep the old behavior
+of perf events being called with preemption disabled.
 
-Alice
+For BPF, add a migrate_disable() to its handler. Actually, just replace
+the rcu_read_lock() with rcu_read_lock_dont_migrate() and make it
+cover more of the BPF callback handler.
+
+[ I would have sent this out earlier, but had a death in the family
+  which cause everything to be postponed ]
+
+Changes since v5: https://patch.msgid.link/20260108220550.2f6638f3@fedora
+
+- Add separate patch for perf to call preempt_disable()
+
+- Add patch that has bpf call migrate_disable() directly.
+
+- Just change from preempt_disable() to srcu_fast() always
+  Do not do anything different for PREEMPT_RT.
+  Now that BPF disables migration directly, do not have tracepoints
+  disable migration in its code.
+
+Steven Rostedt (3):
+      tracing: perf: Have perf tracepoint callbacks always disable preemption
+      bpf: Have __bpf_trace_run() use rcu_read_lock_dont_migrate()
+      tracing: Guard __DECLARE_TRACE() use of __DO_TRACE_CALL() with SRCU-fast
+
+----
+ include/linux/tracepoint.h   |  9 +++++----
+ include/trace/perf.h         |  4 ++--
+ include/trace/trace_events.h |  4 ++--
+ kernel/trace/bpf_trace.c     |  5 ++---
+ kernel/tracepoint.c          | 18 ++++++++++++++----
+ 5 files changed, 25 insertions(+), 15 deletions(-)
