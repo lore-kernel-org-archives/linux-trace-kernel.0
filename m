@@ -1,179 +1,161 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABE234C98C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 17:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C3C1D435F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 17:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769448571; cv=none; b=DqZEJEUA80ddp6NBX/yotr2BsRK4x11PigBDjl6djm5fERFaLvB+zUcr1G363mxmpdc1k9cXLfG0louVb+y+yaarHT+xLRb93pV2f/TdinMV/PW7ivk7y6lVRL9G3ez43Ifmm/cRhWYwVw5wpdUUO3l4n70+m/1wVa9rLkUHchs=
+	t=1769449631; cv=none; b=ahzsLn5OPFczQ9AOsqXyeTyBxnUxH9RYSvVtUI/M/a3accCJ4UWVxmompXd79bi1Md7yeREUfUNCJ+UlDoIzm2bwhoRQP9Wzo9EAGOh9ThfftQGoiUHYTtz5KOYGGiF8/Prx5vjQuvYvVVd4h4cyxRxuKxQ7aF/EVQGQb+s6OE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769448571; c=relaxed/simple;
-	bh=b9otfwPO/QWyBt4niwtGfGXz1WCDPLmmsC/I6QYBPkA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fxx2f3CNc75ZD4jfgoayOilVqFiCzR+r+PDKhn/iRdHseDKntHgX/hsKtPGSUGo4iJzvFK2tCtMgjk0E2cJEtqjmphW+YPknUf63ipBFqG3rQON5oDWo2X/+8DWeEm77lvGbn5sbvSF0G9LyfAamrW+BFXWrQ9/fX53uPw8xuNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+tj8Qsp; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1769449631; c=relaxed/simple;
+	bh=SxiigcO5jULVZQb+1TTV1IfnLgHH67BQCQAXlPCmZV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcJcik0ZgXBSNqolQ9W0rRFtS7pMkOe/h0eiMf75l/hr/xPdM+o80DMrxMNJ0jBFpprnaAaOTb51QO5o75BwwhukskDH3bEOg8LGlscf3HBBNCmboqmaDMNTqH/+yXREqeNekAj3OBpoKbYxZmNjB3Krw6rDYt6K+wdAT05TeEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=INOgFblc; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+tj8Qsp"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-82318b640beso1710014b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 09:29:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="INOgFblc"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-4801c1ad878so53376435e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Jan 2026 09:47:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769448570; x=1770053370; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxcil9kziVi0UiAXso3TgZFyUXSquwsekaO3e8uWgWc=;
-        b=G+tj8QspzR3WDb8UnmKhLpKopixQdzdhBtfOzT4nRmDIcwyr3S6gMAp5sb6ewJenYQ
-         q/O0CSOSZCZ8NIh6cO4NyuuPQG4DHiPBRGYv/arN2cNR96jVqKiSEwMUzyBeO72FEY7m
-         sxdKJL78ODuJIvadjPqxpn15AonRrWVD5tak3oqGws8lXx7+ujzsYyNw9EmRcG0SE52A
-         67d1R/z+VWdJLet2ChpOR0oPvj7kQfiMYN1KhcHj7OiY/l5sibCZg6TSD0SaKVOfeLID
-         p8OfaZnnT9MRWBKKUhHu/tkPi2YySEENgNMh0pZ0du8x8D0ur7NZKP4GTT6IYsPgcjAB
-         +vLw==
+        d=suse.com; s=google; t=1769449628; x=1770054428; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mb/leG6Ch5DsFFPtx2vrqbxxpTr3aeU3kEJMHwQ4pjU=;
+        b=INOgFblcWXjeH2dHKVybFbRSezcR7FNBmpFFUh3Rz9jBMPwl9weKbhvTQFfPzRBGCa
+         3oUVakKJ65ScTyOP/FhHSGTGyCz1AQfTFDXZlmak6kIvZ2tR+vYD04nKMzBPgisytc9M
+         qS/aj8abAsWHw4rMKYhUJbaFbIb/kJFOK8VteyQDJr8hEccOMbcBKTx+E8LqeAnTY7Cz
+         aqFnBh9OESJMDQoETVhBGaaFOksJaqIFBzoGI8+uB/VyFX8oE7ytyYhwmrNAEfUYnag1
+         D1+E8keeAWg5zFiOISn0JPC6o2BcoV9uH2V1T5OEKdnoVSkgNClSx7v2Z/kXvqyPBnS+
+         kggA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769448570; x=1770053370;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1769449628; x=1770054428;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bxcil9kziVi0UiAXso3TgZFyUXSquwsekaO3e8uWgWc=;
-        b=BxVRhIq5nWjBAjhjYyb2sO8EIWBOJkwMtEKJi1G6WVtqLKtMmSh9lOGeY/ZT3yD/dO
-         MXNCxjsIoP/VScr3cX/qMFZevpcxzBEXyo+UKNzxUuKOnmWKLuAbWik/tNAnttTfIs9o
-         KSEwhR7YmkVZAUM0aftKsSyj0B0vzyWr89XHnQxWtRch5/XeA0DRRBM7v78IEnecSMpH
-         g5Z8jOqozmFQN4Ik4tc6sTvAAyTNStyCIqu6V/zMb244y7GgfEi40MBj6mB6MFnnWnzn
-         QUdQ4MsIJ9zCjC2FMErvinBrtLNYn69dPqD+Is9fxdUrHueFoUWljBnijOBOxBe6aEr9
-         hJ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXifCv6fc2x+/GQEecn0SmrUtApRsrdoeVC7zYkMWZEyJ5JiSIknyQ6gGrr5yQUqOJ+47sbPhEXGtWbNf0FN3gXElw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6Ll2TZrJGHyfulBL+Po2I4Rf8Q92+50AHIoMkBXfGao4sdujh
-	4k4kck2o6i5zJmPq+4AjTuot8kjtoaGyxqn3Qka3j+0vdYcTAjo083ix
-X-Gm-Gg: AZuq6aL89+duTMoB0OTzoeZKTJf7dqCtUHMKigVIpITvYKGHqoB1p3RlKLLKvU8aNJS
-	M6BAtIR9JzwUr0VchIJmmPWj/o9lNnemOHvIhIY/uuuBPapf6sOKFh1B6T5ncIoJO3qBgPC2lSn
-	oUg9AFuzDBqC/1TFiGAw6R1xV+difDgcfEAzAFtazl1OEkxvp7/A+olVXLLDXbNw109PzTVMSXa
-	Ht5Wi/I1nPSBdKYEBGFT4GDWzZK670b4UTZlx52BBJspZvVnzfhn+PbtsH9jD2uBeiNGFRU1Iu5
-	zJID1TKvNoRizXDGHXilbMuE/1pyqMMJ4jKWtGp06k2pd5wo7KM82+5+EXeG5YueIq++U9TGwDI
-	YOXm9DG1S39lq3eShT/URfxbdb9zQQXlQErf9HfiHXITpjywz/jjWq9YwrWZw2RiqrKRqGZLn4+
-	iEkhN/jxVyyAql+Wm/lcuLLDdNM6QxUcLINsl/GzwQYSu237XhDN61biXOf/iW
-X-Received: by 2002:a05:6a00:218d:b0:7b9:4e34:621b with SMTP id d2e1a72fcca58-823411dba02mr5090654b3a.12.1769448569676;
-        Mon, 26 Jan 2026 09:29:29 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318662dd9sm9739777b3a.19.2026.01.26.09.29.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jan 2026 09:29:28 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <8c612fbd-2f23-486c-9f6b-8bf4d0c23705@roeck-us.net>
-Date: Mon, 26 Jan 2026 09:29:27 -0800
+        bh=Mb/leG6Ch5DsFFPtx2vrqbxxpTr3aeU3kEJMHwQ4pjU=;
+        b=Kfeao+qshHGvDqIDudJL/R4buA9hXPCteNwQ+aK0XLiHdWeags+dQZ1VFF5mofa+ct
+         PPG7wvIN3LY96DUC6jswrAfhBt326AG4suexUauiENYSsXFaPI4xWSRJdp4d3vBTpL6i
+         yoCM21g9LwJ7Cpw5DjR+9mbMDY0tT9ql77E/QRwWWbtCpDLAQyZmsnqQvdNYn/+EP3Zg
+         qw3lui8B9mkh/wA0GJu07sbrJc2w/Ltw+HczdhK/7ynSpLd21MacaRcmjUy3QFpsHLlC
+         rCSCc5g7bl4VL3TsEniXw4Qu9akLFOFy1I/V8N+gEavucqZfaZ7Dfghc4y9GG/mhab9e
+         1s2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWTJ7ddCD2teZNWBKB2MPVyEqpMVGMWyKbHFgybspx51FpuUhKe5pdUWiIAhRIOKE6AsrGL/i9X+TvJp+Xnf0QRPoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6UyJ/gbtFTmHYXb34vf12vR8yB75QWFXxsJmBTQbVJ9bVKerV
+	yqnn5Z7ACrv7QL3EtKt+t6aWQJLMiuew3OzntWhEvtD/XTwrC13rNqL4FJsSSyLX6lk=
+X-Gm-Gg: AZuq6aJeuPQn9qcb3gmuKt1F4auUJ4t69PDuSeEkDdoyPFf4Vrx4RTrI6Y85UNTIyPB
+	r4Xh+2p3kN6ZS6JeTcI0i3lNW4+zS9rzxDiFvRg74bBKUjEUAlr6yDJQXZFxIoGMzv0/M/iDonX
+	rUVm2p3RCCaYmCv1lYCPqbKW6yPjDT0rWiIJwqTOA4rX658ZrUM1PqKxQNsRAJvkAl6tKipsqI/
+	HJWkqsKOBFKoGHCEac5UaoJ58KM9eUYVkkuDZFzl01YkMgxyhkrn/iteHg1hIUPhfCEeemEhldI
+	l2G6cZh32ljTBoiDPlei1MkSTZNAzyh9ZiROB+JX5y5+EUtk7/sCFnzSvwvEcjwAdRjDKV49rw7
+	e71EPWEleNDk0qvDuRO1zl7Hm8l5ux6r+uQJhGPdV3OZJ7ShBTewSD1YvYCmUc0TRAfJlYkcFsO
+	tuDGUENble5U4LRm7gMhI2WBLH
+X-Received: by 2002:a05:600c:8b11:b0:47e:e2ec:9960 with SMTP id 5b1f17b1804b1-4805d06cdadmr105139335e9.35.1769449627682;
+        Mon, 26 Jan 2026 09:47:07 -0800 (PST)
+Received: from localhost (109-81-26-156.rct.o2.cz. [109.81.26.156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48066bee000sm3831515e9.4.2026.01.26.09.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jan 2026 09:47:07 -0800 (PST)
+Date: Mon, 26 Jan 2026 18:47:06 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: Re: [PATCH v16 3/3] mm: Reduce latency of OOM killer task selection
+ with 2-pass algorithm
+Message-ID: <aXeommbTq_KNpUZa@tiehlicka>
+References: <20260114145915.49926-1-mathieu.desnoyers@efficios.com>
+ <20260114145915.49926-4-mathieu.desnoyers@efficios.com>
+ <aWfNMKCoEp2LuA2v@tiehlicka>
+ <a46b298b-baa3-4998-8715-0568b5b186e6@efficios.com>
+ <aWpfbSJe5vREzzyd@tiehlicka>
+ <0079bc61-5655-4677-a421-1a61f4c52d59@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH 3/5] perf: Use current->flags &
- PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner <tglx@linutronix.de>
-References: <20250820180338.701352023@kernel.org>
- <20250820180428.592367294@kernel.org>
- <0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
- <20260126120553.2fa79048@gandalf.local.home>
- <20260126121803.4a90c959@gandalf.local.home>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAmgrMyQFCSbODQkACgkQyx8mb86fmYGcWRAA
- oRwrk7V8fULqnGGpBIjp7pvR187Yzx+lhMGUHuM5H56TFEqeVwCMLWB2x1YRolYbY4MEFlQg
- VUFcfeW0OknSr1s6wtrtQm0gdkolM8OcCL9ptTHOg1mmXa4YpW8QJiL0AVtbpE9BroeWGl9v
- 2TGILPm9mVp+GmMQgkNeCS7Jonq5f5pDUGumAMguWzMFEg+Imt9wr2YA7aGen7KPSqJeQPpj
- onPKhu7O/KJKkuC50ylxizHzmGx+IUSmOZxN950pZUFvVZH9CwhAAl+NYUtcF5ry/uSYG2U7
- DCvpzqOryJRemKN63qt1bjF6cltsXwxjKOw6CvdjJYA3n6xCWLuJ6yk6CAy1Ukh545NhgBAs
- rGGVkl6TUBi0ixL3EF3RWLa9IMDcHN32r7OBhw6vbul8HqyTFZWY2ksTvlTl+qG3zV6AJuzT
- WdXmbcKN+TdhO5XlxVlbZoCm7ViBj1+PvIFQZCnLAhqSd/DJlhaq8fFXx1dCUPgQDcD+wo65
- qulV/NijfU8bzFfEPgYP/3LP+BSAyFs33y/mdP8kbMxSCjnLEhimQMrSSo/To1Gxp5C97fw5
- 3m1CaMILGKCmfI1B8iA8zd8ib7t1Rg0qCwcAnvsM36SkrID32GfFbv873bNskJCHAISK3Xkz
- qo7IYZmjk/IJGbsiGzxUhvicwkgKE9r7a1rOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAmgrMyQFCSbODQkACgkQyx8mb86fmYHlgg/9
- H5JeDmB4jsreE9Bn621wZk7NMzxy9STxiVKSh8Mq4pb+IDu1RU2iLyetCY1TiJlcxnE362kj
- njrfAdqyPteHM+LU59NtEbGwrfcXdQoh4XdMuPA5ADetPLma3YiRa3VsVkLwpnR7ilgwQw6u
- dycEaOxQ7LUXCs0JaGVVP25Z2hMkHBwx6BlW6EZLNgzGI2rswSZ7SKcsBd1IRHVf0miwIFYy
- j/UEfAFNW+tbtKPNn3xZTLs3quQN7GdYLh+J0XxITpBZaFOpwEKV+VS36pSLnNl0T5wm0E/y
- scPJ0OVY7ly5Vm1nnoH4licaU5Y1nSkFR/j2douI5P7Cj687WuNMC6CcFd6j72kRfxklOqXw
- zvy+2NEcXyziiLXp84130yxAKXfluax9sZhhrhKT6VrD45S6N3HxJpXQ/RY/EX35neH2/F7B
- RgSloce2+zWfpELyS1qRkCUTt1tlGV2p+y2BPfXzrHn2vxvbhEn1QpQ6t+85FKN8YEhJEygJ
- F0WaMvQMNrk9UAUziVcUkLU52NS9SXqpVg8vgrO0JKx97IXFPcNh0DWsSj/0Y8HO/RDkGXYn
- FDMj7fZSPKyPQPmEHg+W/KzxSSfdgWIHF2QaQ0b2q1wOSec4Rti52ohmNSY+KNIW/zODhugJ
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20260126121803.4a90c959@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0079bc61-5655-4677-a421-1a61f4c52d59@efficios.com>
 
-On 1/26/26 09:18, Steven Rostedt wrote:
-> On Mon, 26 Jan 2026 12:05:53 -0500
-> Steven Rostedt <rostedt@kernel.org> wrote:
+On Mon 26-01-26 11:39:33, Mathieu Desnoyers wrote:
+> On 2026-01-16 16:55, Michal Hocko wrote:
+> > On Wed 14-01-26 14:36:44, Mathieu Desnoyers wrote:
+> > > On 2026-01-14 12:06, Michal Hocko wrote:
+> > > > On Wed 14-01-26 09:59:15, Mathieu Desnoyers wrote:
+> > [...]
+> > Thanks to those clarifications
+> > > > My overall impression is that the implementation is really involved and
+> > > > at this moment I do not really see a big benefit of all the complexity.
+> > > 
+> > > Note that we can get the proc ABI RSS accuracy improvements with the
+> > > previous 2 patches without this 2-pass algo. Do you see more value in
+> > > the RSS accuracy improvements than in the oom killer latency reduction ?
+> > 
+> > Yes, TBH I do not see oom latency as a big problem. As already mention
+> > this is a slow path and we are not talking about a huge latency anyway.
+> > proc numbers are much more sensitive to latency as they are regularly
+> > read by user space tools and accuracy for those matters as well (being
+> > off by 100s MB or GBs is simply making those numbers completely bogus).
 > 
->> I guess we need to also test for !current->mm because the flags set for an
->> exiting task is done when we can still do callchains. Thus, the only way to
->> know if it is safe to do a callchain when a task is exiting is via task->mm
->> and not task->flags :-/
+> It makes sense.
 > 
-> Can you test this patch?
+> > > > It would help to explicitly mention what is the the overall imprecision
+> > > > of the oom victim selection with the new data structure (maybe this is
+> > > > good enough[*]). What if we go with exact precision with the new data
+> > > > structure comparing to the original pcp counters.
+> > > 
+> > > Do you mean comparing using approximate sums with the new data
+> > > structure (which has a bounded accuracy of O(nr_cpus*log(nr_cpus)))
+> > > compared to the old data structure which had an inaccuracy of
+> > > O(nr_cpus^2) ? So if the inaccuracy provided by the new data structure
+> > > is good enough for OOM task selection, we could go from precise sum
+> > > back to an approximation and just use that with the new data
+> > > structure.
+> > 
+> > Exactly!
+> OK, so based on your feedback, I plan to remove this 2-pass algo
+> from the series, and simply keep using the precise sum for the OOM
+> killer. If people complain about its latency, then we can eventually
+> use the approximation provided by the hierarchical counters. But let's
+> wait until someone asks for it rather than add this complexity when
+> there is no need.
 > 
-
-Sure, though we had dropped the offending patch from the LTS backport, so that
-will take a bit.
-
-Guenter
-
-> -- Steve
+> The hierarchical counters are still useful as they increase the
+> accuracy of approximations exported through /proc.
 > 
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 1f6589578703..c82d61d73bd8 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -246,7 +246,14 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->   
->   	if (user && !crosstask) {
->   		if (!user_mode(regs)) {
-> -			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-> +			/*
-> +			 * Testing current->mm is not enough as some kernel threads
-> +			 * may have one set. But testing the flags is not enough
-> +			 * either as this can be called after a user task
-> +			 * frees its mm just before it exits.
-> +			 */
-> +			if (!current->mm ||
-> +			    (current->flags & (PF_KTHREAD | PF_USER_WORKER)))
->   				goto exit_put;
->   			regs = task_pt_regs(current);
->   		}
+> How does that sound ?
 
+Works for me.
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
