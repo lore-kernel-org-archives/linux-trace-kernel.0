@@ -1,169 +1,209 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651CB149C6F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 08:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BCF3321BD
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 09:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769503808; cv=none; b=h3P2P6xEAPSUbE/ArX2Kw+DY+yntdEg19MXP4owJagzX8G9gs3xOLdx8lZlCY+xx+XRaNQuAWkj081BMUeDV2wTI+5OJ3DINO6HFX34GdtDfv696p1PfqzWqQtVnkfa/oZEePdPEWd07dueZQaqjRLnEqf5CgI17302l0xOfnag=
+	t=1769505055; cv=none; b=j89BrPaBKHL+SVW+lCqfm+sngQ8witFwcB7b35L1mRy2HWsuoBxgSZBZktaQv1bSdAeyBA3YmJlB/EYN2X5+3njWHivGvqseP95onWxjGJyq3CfJ9MEWI2moY25qid2MVDR6YF4K6O+JU9wgSm95qHVtjd/r2Z8CVYvpJiIcrDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769503808; c=relaxed/simple;
-	bh=kjFMOAd5J0NbqCwdkrCct/LwI2JFboDNzbWwSmVRWJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jWJyFi2DvLrgv97a5tDMmlvfKC3uyD3qZeL7Yld7IEn9HyFKJDO77sVHjTSMc1JvTnTnTV6fxhIP/TUPH8VsWIa8SuW6jTVEzQ0IB6dBUROB3fGMmGNTAB8UpSCTpxXj84JbN+xOz48WnQuU6MlkFRH5GNzntbmKduFuPfr7224=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GVaNyhUg; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1769505055; c=relaxed/simple;
+	bh=nprMtoBitz0qgu7CW1diLpb1nj2p8+ocsVeD4MsMVJg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=ALhdlJRVQQ80YQvq22uNfKdVuOPlL3ztv/J4e79jyGQba+yrhBNNgJfLmKa9UTgFLnb+NsDvXdfEOUHyxNkXE4sVpWGZ4zmGU6HKWNUSqQU/EZ7eqkqxuXP8PVGmknIlaYcBzoKL30uNh6yXVhqaxb3yrefJaPiUKbPpelCW8rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AMEGqepf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GVaNyhUg"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R7Hl1O001272;
-	Tue, 27 Jan 2026 08:49:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=bEj5aM+lZzWk0bTrp
-	aGGzCGp/h1Ysv+ULdG/aMqq8co=; b=GVaNyhUg26N0yGmjhYbAV604soJjVS276
-	PEjer5gkHbSZwo2jswfrF6mhIV8W7Uy9O5oh67RJzkgOSmcvKYTRy7Z1ZRBZsHrm
-	J7TRussmZ9Z23gcqZdw1irk8b0JFCEcAzDeVfVlyPsDiprGfbRlminmDko44BpeG
-	i9hemdn7DO7gCZVg1POAdTM0TfIPeK97dAhDAiZEEOESVFwHDqujjP83oEUFIBSO
-	+ECYk2ueWbfqmwL8tvZfr7/r/9gFaEnnE4Eh3D4wa+rmlRvtjlPq6H85b/ZasKU0
-	xiEhKyWffs6QqETyxYojh/YCOqcaHizcl6pcvOQESQ8WCHFehJLXA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvmgfturj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 08:49:42 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60R3vTZD023625;
-	Tue, 27 Jan 2026 08:49:41 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwamjqspd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 08:49:41 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60R8nbhN52232618
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Jan 2026 08:49:37 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9488520040;
-	Tue, 27 Jan 2026 08:49:37 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 15AB020043;
-	Tue, 27 Jan 2026 08:49:35 +0000 (GMT)
-Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.in.ibm.com (unknown [9.78.106.105])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 Jan 2026 08:49:34 +0000 (GMT)
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Naveen N. Rao" <naveen@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, llvm@lists.linux.dev,
-        Maryam Moghadas <maryammo@ca.ibm.com>
-Subject: [PATCH v2 3/3] powerpc64/ftrace: workaround clang recording GEP in __patchable_function_entries
-Date: Tue, 27 Jan 2026 14:19:26 +0530
-Message-ID: <20260127084926.34497-4-hbathini@linux.ibm.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260127084926.34497-1-hbathini@linux.ibm.com>
-References: <20260127084926.34497-1-hbathini@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMEGqepf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769505052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nprMtoBitz0qgu7CW1diLpb1nj2p8+ocsVeD4MsMVJg=;
+	b=AMEGqepfeu6MzsDIjF1DYrXFlUe06Kc6PFBMgrS7m3OG07V0lgz3LxGPs85bsCv6NKdNvx
+	ueVq4zYagpiGPWsz3jbpDcYDtClB7IVx/YMmz3N1ncza17Dm9gSFzrGfo6Tik3ZO4bzYFd
+	lrMeFH6nRe9leFFQrXecO1Hxu/xJuqs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-688-yFcGU-TcPrqU1PRVSWWGrw-1; Tue, 27 Jan 2026 04:10:51 -0500
+X-MC-Unique: yFcGU-TcPrqU1PRVSWWGrw-1
+X-Mimecast-MFC-AGG-ID: yFcGU-TcPrqU1PRVSWWGrw_1769505050
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4801e9e7159so43847645e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 01:10:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769505050; x=1770109850;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nprMtoBitz0qgu7CW1diLpb1nj2p8+ocsVeD4MsMVJg=;
+        b=JiM3WHcBec64UUMcaBaVxSi4EnGGysa/AqYEEu0UtGGjfVIUPHB9vJ1dOkifpSQNEq
+         YCuXF7iRTHLB2Ldr8jTSHQYcpct05vuEHIGGuHXyWVk2b5uJSbv3C8RcofN9uPYWKT3j
+         PMZV5pzEkDBH+SdsZtPRYtfTvs8wtVRlBARVJvCTTBJMFs06PAOjbUp/hmOCJuZPVjop
+         uem0bGuOBFXLmmelefIGfDEIfA+jLfwEbYRKv1U/9VF8TGHskqNQJJ10/HOgo/UhGMt3
+         VbJwtvfdhs29KVlD0rmFWfuQAgb42zIVAVcNs7XVWVPQOp/1vM6ScfEOHAQmliR607Vz
+         fesg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+5/IoFv+J3As0sbQ4ijPnXkXMmdL2i1VcV6PlcCWyrVFT7kaaDI9JTLtbnvhOWBq2+emIUPPXlua7SmUiINnfcQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOJ3Y2TQB0FDMxXEhGvGUCKF3Qgf/6IL8oRGk53R2fPYxyLVgt
+	+EzmRy9zk+eESbfHnEAfxkOGQDsTQBJ30JqWOZJ+NRaZ1Nq5w8E5PysIGGXTNTSkux0R+4mtEch
+	20X4EjeOryLmF52N81qUqOQ15EekbxinEc1a3p8IDgxnNEMo93632/T0OAZMn3YdYy78J9bMMsA
+	==
+X-Gm-Gg: AZuq6aKVNDxYqxD3MzWNZnusKvlCY5TyU1YOG99m+ZkTgDaVzd+tAwZZesEGHnkDuU4
+	XCTwnX9ZXG8dfNBw7Q5yBGKPSy7RWd8d+vFUr4ojrovAVen6ZqR8HxPIKyfpUf63L7QztkF+4BU
+	sFzOJ1VPIYfrSmHu+de5OzCmcZqSJlxPoQsBd2xvfdDcNX6XsbhibwfiVpXvSZJ05ECttBmsd/u
+	x2046BYUBgiDq4VRwFLjgMXPoB5fRzBoGoTvwA2UXF/5GzNskwokY6NFPCB9DpI7dHL2xEdFfx5
+	DL8cL2bjW7oRhwDZH7qbZD1kFMtSWyjqietkkLc8dou0/EJXtBlGROJT3HHX7vpKIGhqsyT3ZJo
+	3rdgH
+X-Received: by 2002:a05:600c:190a:b0:480:69b6:dfed with SMTP id 5b1f17b1804b1-48069c6993amr13622455e9.24.1769505049893;
+        Tue, 27 Jan 2026 01:10:49 -0800 (PST)
+X-Received: by 2002:a05:600c:190a:b0:480:69b6:dfed with SMTP id 5b1f17b1804b1-48069c6993amr13622075e9.24.1769505049474;
+        Tue, 27 Jan 2026 01:10:49 -0800 (PST)
+Received: from [127.0.0.1] ([176.33.57.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804db63817sm129522665e9.3.2026.01.27.01.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Jan 2026 01:10:48 -0800 (PST)
+Date: Tue, 27 Jan 2026 09:10:46 +0000
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Clark Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org, Juri Lelli <jlelli@redhat.com>
+Message-ID: <8883042e-49b4-4cba-b0f8-d12e4cfa3d6c@redhat.com>
+In-Reply-To: <20260122155500.362683-10-gmonaco@redhat.com>
+References: <20260122155500.362683-1-gmonaco@redhat.com> <20260122155500.362683-10-gmonaco@redhat.com>
+Subject: Re: [PATCH v5 09/15] sched: Add task enqueue/dequeue trace points
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Z4vh3XRA c=1 sm=1 tr=0 ts=69787c26 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=NEAV23lmAAAA:8 a=VnNF1IyMAAAA:8
- a=uKwTeKIhWMlc50DrV6sA:9
-X-Proofpoint-GUID: XjJsHACuOfQ2kOJ4PdFC9o8rVXYy91vQ
-X-Proofpoint-ORIG-GUID: XjJsHACuOfQ2kOJ4PdFC9o8rVXYy91vQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDA3MSBTYWx0ZWRfXzmDc5a26G4Mc
- 47oy6Yrwkn8GtWf0J+FveLWe0ocrIFNm7DbFmSTvbbJzwh9npFskr+3EXi5KBuRfKJJfNEqzC6N
- 45wDN9mjibC+AGPsLauvdRkjaZlOzP+IGUVQPJPFpkt5xZ8WVjQCYV/B63LRO+5kQhetEtf5l80
- mtE3PrsJGTfjSn98tQektnzePdRUp3YEjH750p1tL66vNTF+xHcyRHiQgzmRHh4IuAdjO0ZgW7B
- +Cu8ORwxShXW85NDyq2vKmtZ+tEAKOCFTotJx8EPbrcihA/0WAn9wJsMT1D1yFxVofpRLoD3RQQ
- P52FQ8yt+4OYYqbkgV5tDuVhyspSxNucSc4yUHwGvq6jwYt92bazzSmRDLMlh4CI/S8Sw+eBiTo
- 62MhSueie0BQrTVRQ5VIrAUq7l5B79iBh7+3LPkgni/I2xU8xFvbR5/kvejKZefyw79gzB316x/
- Sd6cuWzwrbaOwCuegKQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-27_01,2026-01-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 phishscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2601150000 definitions=main-2601270071
+X-Correlation-ID: <8883042e-49b4-4cba-b0f8-d12e4cfa3d6c@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 6KDNg6EiF8KCVOuLRHqzUZEHIdVFXXoTkO5FpC3paxc_1769505050
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Support for -fpatchable-function-entry on ppc64le was added in Clang
-with [1]. However, when no prefix NOPs are specified - as is the case
-with CONFIG_PPC_FTRACE_OUT_OF_LINE - the first NOP is emitted at LEP,
-but Clang records the Global Entry Point (GEP) unlike GCC which does
-record the Local Entry Point (LEP). Issue [2] has been raised to align
-Clang's behavior with GCC. As a temporary workaround to ensure ftrace
-initialization works as expected with Clang, derive the LEP using
-ppc_function_entry() for kernel symbols and by looking for the below
-module GEP sequence for module addresses, until [2] is resolved:
+2026-01-22T15:56:08Z Gabriele Monaco <gmonaco@redhat.com>:
 
-	ld	r2, -8(r12)
-	add	r2, r2, r12
+> From: Nam Cao <namcao@linutronix.de>
+>
+> Add trace points into enqueue_task() and dequeue_task().
+>
 
-[1] https://github.com/llvm/llvm-project/pull/151569
-[2] https://github.com/llvm/llvm-project/issues/163706
+Peter,
 
-Cc: Maryam Moghadas <maryammo@ca.ibm.com>
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
+can I have your Ack on this?
 
-* No changes since v1.
+(Apologies for the spam, I sent it as HTML by mistake)
 
+Thanks,
+Gabriele
 
- arch/powerpc/kernel/trace/ftrace.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
-index 841d077e2825..1b2f293e7dcb 100644
---- a/arch/powerpc/kernel/trace/ftrace.c
-+++ b/arch/powerpc/kernel/trace/ftrace.c
-@@ -37,11 +37,29 @@ unsigned long ftrace_call_adjust(unsigned long addr)
- 	if (addr >= (unsigned long)__exittext_begin && addr < (unsigned long)__exittext_end)
- 		return 0;
- 
--	if (IS_ENABLED(CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY) &&
--	    !IS_ENABLED(CONFIG_PPC_FTRACE_OUT_OF_LINE)) {
--		addr += MCOUNT_INSN_SIZE;
--		if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-+	if (IS_ENABLED(CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY)) {
-+		if (!IS_ENABLED(CONFIG_PPC_FTRACE_OUT_OF_LINE)) {
- 			addr += MCOUNT_INSN_SIZE;
-+			if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-+				addr += MCOUNT_INSN_SIZE;
-+		} else if (IS_ENABLED(CONFIG_CC_IS_CLANG) && IS_ENABLED(CONFIG_PPC64)) {
-+			/*
-+			 * addr points to global entry point though the NOP was emitted at local
-+			 * entry point due to https://github.com/llvm/llvm-project/issues/163706
-+			 * Handle that here with ppc_function_entry() for kernel symbols while
-+			 * adjusting module addresses in the else case, by looking for the below
-+			 * module global entry point sequence:
-+			 *	ld    r2, -8(r12)
-+			 *	add   r2, r2, r12
-+			 */
-+			if (is_kernel_text(addr) || is_kernel_inittext(addr))
-+				addr = ppc_function_entry((void *)addr);
-+			else if ((ppc_inst_val(ppc_inst_read((u32 *)addr)) ==
-+				  PPC_RAW_LD(_R2, _R12, -8)) &&
-+				 (ppc_inst_val(ppc_inst_read((u32 *)(addr+4))) ==
-+				  PPC_RAW_ADD(_R2, _R2, _R12)))
-+				addr += 8;
-+		}
- 	}
- 
- 	return addr;
--- 
-2.52.0
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>
+> Notes:
+> =C2=A0=C2=A0=C2=A0 V5:
+> =C2=A0=C2=A0=C2=A0 * Do not fire enqueue tracepoint for delayed enqueues
+>
+> include/trace/events/sched.h | 13 +++++++++++++
+> kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 10 +++++++++-
+> kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 2 ++
+> 3 files changed, 24 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 366b2e8ec40c..f4e1d3554e3e 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -912,6 +912,19 @@ DECLARE_TRACE(sched_dl_server_stop,
+> =C2=A0=C2=A0=C2=A0 TP_PROTO(struct sched_dl_entity *dl_se, int cpu),
+> =C2=A0=C2=A0=C2=A0 TP_ARGS(dl_se, cpu));
+>
+> +/*
+> + * The two trace points below may not work as expected for fair tasks du=
+e
+> + * to delayed dequeue. See:
+> + * https://lore.kernel.org/lkml/179674c6-f82a-4718-ace2-67b5e672fdee@amd=
+.com/
+> + */
+> +DECLARE_TRACE(sched_enqueue,
+> +=C2=A0=C2=A0 TP_PROTO(struct task_struct *tsk, int cpu),
+> +=C2=A0=C2=A0 TP_ARGS(tsk, cpu));
+> +
+> +DECLARE_TRACE(sched_dequeue,
+> +=C2=A0=C2=A0 TP_PROTO(struct task_struct *tsk, int cpu),
+> +=C2=A0=C2=A0 TP_ARGS(tsk, cpu));
+> +
+> #endif /* _TRACE_SCHED_H */
+>
+> /* This part must be outside protection */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index f6293fa02fb7..c885d7885172 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2087,6 +2087,9 @@ unsigned long get_wchan(struct task_struct *p)
+>
+> void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
+> {
+> +=C2=A0=C2=A0 if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_D=
+ELAYED))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 trace_sched_enqueue_tp(p, rq->cpu);
+> +
+> =C2=A0=C2=A0=C2=A0 if (!(flags & ENQUEUE_NOCLOCK))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 update_rq_clock(rq);
+>
+> @@ -2114,6 +2117,8 @@ void enqueue_task(struct rq *rq, struct task_struct=
+ *p, int flags)
+> =C2=A0 */
+> inline bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+> {
+> +=C2=A0=C2=A0 int ret;
+> +
+> =C2=A0=C2=A0=C2=A0 if (sched_core_enabled(rq))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched_core_dequeue(rq, p, flag=
+s);
+>
+> @@ -2131,7 +2136,10 @@ inline bool dequeue_task(struct rq *rq, struct tas=
+k_struct *p, int flags)
+> =C2=A0=C2=A0=C2=A0=C2=A0 */
+> =C2=A0=C2=A0=C2=A0 uclamp_rq_dec(rq, p);
+> =C2=A0=C2=A0=C2=A0 rq->queue_mask |=3D p->sched_class->queue_mask;
+> -=C2=A0=C2=A0 return p->sched_class->dequeue_task(rq, p, flags);
+> +=C2=A0=C2=A0 ret =3D p->sched_class->dequeue_task(rq, p, flags);
+> +=C2=A0=C2=A0 if (trace_sched_dequeue_tp_enabled() && !(flags & DEQUEUE_S=
+LEEP))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 trace_sched_dequeue_tp(p, rq->cpu);
+> +=C2=A0=C2=A0 return ret;
+> }
+>
+> void activate_task(struct rq *rq, struct task_struct *p, int flags)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index e885a935b716..8465472b40fa 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2918,6 +2918,8 @@ static inline void sub_nr_running(struct rq *rq, un=
+signed count)
+>
+> static inline void __block_task(struct rq *rq, struct task_struct *p)
+> {
+> +=C2=A0=C2=A0 trace_sched_dequeue_tp(p, rq->cpu);
+> +
+> =C2=A0=C2=A0=C2=A0 if (p->sched_contributes_to_load)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rq->nr_uninterruptible++;
+>
+> --
+> 2.52.0
 
