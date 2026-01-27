@@ -1,128 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0954726299;
-	Mon, 26 Jan 2026 23:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACED199E94;
+	Tue, 27 Jan 2026 01:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769469464; cv=none; b=fx0cpQK96+8yt4VoTlXoiaEqtMDXQA+4xHUFkZjpFZr7sNwiPldCjCk4eJOd7ZNiZh7ImwN3sgiWrC5XNdzz4Mtyuo+kFv9dgxxeb5PuzclXybulS8J87OnWxJnkOlLfB3MtnxV9hof3eWaVSQNZUgws/NICcKfWHaBfsidro4M=
+	t=1769476829; cv=none; b=o1HTIMfx3C8CCGzUrvaLILPZkTv+qqL0ZP7/LpqjPJmC0qMKnG9nDQQvJCk2kVo0uPjtTSlWxRSg6gjh6b9XBRiAfFqc0vDebh82hQDDUrYWp55K9HztcXUm6hZzH7DsLgnov7KyzT+xszjQXJTjAfiNmgJq+VXRty+DEaKfA9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769469464; c=relaxed/simple;
-	bh=OHgwUz6kt0jreyzbsYSEC+eZwbtZzEQ6/3xsqckDofA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=S1YceM0mXBgImlmT9/1aspkb/WwW5QS82ru27iFJH1W4Mtw94F4RrTLPiMM9EUCFwET+Nsx4ki1s9smb+d22Mvive9m/pVCn36lnBMBZTdkCPHvYpNOcUfh33htKLCy35HQtE2/fgnT7pTVxG7kuxzipgkiwcdiXwZ+GKjZsQrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8B85F5BA5F;
-	Mon, 26 Jan 2026 23:17:41 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id A85CF17;
-	Mon, 26 Jan 2026 23:17:39 +0000 (UTC)
-Date: Mon, 26 Jan 2026 18:17:42 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] tracing: Documentation: Update histogram-design.rst for
- fn() handling
-Message-ID: <20260126181742.03e8f0d5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769476829; c=relaxed/simple;
+	bh=8mfetCrZP74D2sqDqt7GC12sKjnAQMeRGv4/KWaUjw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VgS+X6oRpraDqS82C2bNEyFz2jzYUPT1R62vnkuT8EOwGBYfS+zS/I7NbN5tTbEDWMMIzBWMlpdChpWvUJ8q1GXRcsN3exDDJqVQVgWLXfxF7Jz2/4jOtuy0eee9jtagNlDK0ssshFMWJ9N+2b7ijKcotKwIWneQ5+C+yLt5XNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 58592c8efb1e11f0b0f03b4cfa9209d1-20260127
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF
+	CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
+	ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:ed83315c-d473-40ae-b85c-320bd3b34dab,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:ed83315c-d473-40ae-b85c-320bd3b34dab,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:583654df13fc3f53443175fa62d85539,BulkI
+	D:260127092020IZI2QH0M,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 58592c8efb1e11f0b0f03b4cfa9209d1-20260127
+X-User: tianyaxiong@kylinos.cn
+Received: from localhost.localdomain [(175.2.158.168)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 632687073; Tue, 27 Jan 2026 09:20:19 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: rostedt@goodmis.org,
+	axboe@kernel.dk,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v3 0/3] Tracing: Accelerate Kernel Boot by Asynchronizing
+Date: Tue, 27 Jan 2026 09:20:16 +0800
+Message-Id: <20260127012016.76713-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A85CF17
-X-Stat-Signature: 8t9wjh8dxr1sw1z11m5jzkrxcjarct6k
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+B1XCaJxT/79dYhDSwlX18aHz2z+RY/uc=
-X-HE-Tag: 1769469459-797448
-X-HE-Meta: U2FsdGVkX1/c5G6axt8CDHfNm9KrXCqe75e1PJAh9ceS1GRRhZvk8CIg2G8p22TQyHWvuROMrwYajrFH6/KNh2J66ekc6Pqdk4Q0yM6rV9apt3Q4b2xA9pZ8Ebhr6SwY/kSw5/vwfF+6V/6zm3If0H47IupaWvCNyh6ZEo2Go35SI2VJO+YA7y8F1VTJ1T2wzQmkIiRC6LIjyM1NxEspNHlUtPpdgy+nZ1fcT16je8NMmlRe6JIAw3VMz3TRpaTrigKYta6BQuRqrzz9tW+G4wYHAoqV6U8iyldgo7GLLpVyYER0tvWVGHSH6xr1nEVNXb0Gey0ajm2Ff6uacfssJtJuLGTEvtI2qfqXYvs0YZUNljnvnnAG8lx9AjWwgb5s
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On my ARM64 platform, I observed that certain tracing module
+initializations run for up to 200ms—for example, init_kprobe_trace().
+Analysis reveals the root cause: the execution flow eval_map_work_func()
+→trace_event_update_with_eval_map()→trace_event_update_all()
+is highly time-consuming. Although this flow is placed in eval_map_wq
+for asynchronous execution, it holds the trace_event_sem lock, causing
+other modules to be blocked either directly or indirectly.
 
-The histogram documentation describes the old method of the histogram
-triggers using the fn() field of the histogram field structure to process
-the field. But due to Spectre mitigation, the function pointer to handle
-the fields at runtime caused a noticeable overhead. It was converted over
-to a fn_num and hist_fn_call() is now used to call the specific functions
-for the fields via a switch statement based on the field's fn_num value.
+To resolve this issue, I rename `eval_map_wq` and make it global and moved
+other initialization functions under the tracing subsystem that are
+related to this lock to run asynchronously on this workqueue. After this
+optimization, boot time is reduced by approximately 200ms.
 
-Update the documentation to reflect this change.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/trace/histogram-design.rst | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Changes in v2:
+- Rename eval_map_wq to trace_init_wq.
+Changes in v3:
+- Opt PATCH 1/3 commit
 
-diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-index ae71b5bf97c6..e92f56ebd0b5 100644
---- a/Documentation/trace/histogram-design.rst
-+++ b/Documentation/trace/histogram-design.rst
-@@ -69,7 +69,8 @@ So in this histogram, there's a separate bucket for each pid, and each
- bucket contains a value for that bucket, counting the number of times
- sched_waking was called for that pid.
- 
--Each histogram is represented by a hist_data struct.
-+Each histogram is represented by a hist_data struct
-+(struct hist_trigger_data).
- 
- To keep track of each key and value field in the histogram, hist_data
- keeps an array of these fields named fields[].  The fields[] array is
-@@ -82,7 +83,7 @@ value or not, which the above histogram does not.
- 
- Each struct hist_field contains a pointer to the ftrace_event_field
- from the event's trace_event_file along with various bits related to
--that such as the size, offset, type, and a hist_field_fn_t function,
-+that such as the size, offset, type, and a hist field function,
- which is used to grab the field's data from the ftrace event buffer
- (in most cases - some hist_fields such as hitcount don't directly map
- to an event field in the trace buffer - in these cases the function
-@@ -241,28 +242,33 @@ it, event_hist_trigger() is called.  event_hist_trigger() first deals
- with the key: for each subkey in the key (in the above example, there
- is just one subkey corresponding to pid), the hist_field that
- represents that subkey is retrieved from hist_data.fields[] and the
--hist_field_fn_t fn() associated with that field, along with the
-+hist field function associated with that field, along with the
- field's size and offset, is used to grab that subkey's data from the
- current trace record.
- 
-+Note, the hist field function use to be a function pointer in the
-+hist_field stucture. Due to spectre mitigation, it was converted into
-+a fn_num and hist_fn_call() is used to call the associated hist field
-+function that corresponds to the fn_num of the hist_field structure.
-+
- Once the complete key has been retrieved, it's used to look that key
- up in the tracing_map.  If there's no tracing_map_elt associated with
- that key, an empty one is claimed and inserted in the map for the new
- key.  In either case, the tracing_map_elt associated with that key is
- returned.
- 
--Once a tracing_map_elt available, hist_trigger_elt_update() is called.
-+Once a tracing_map_elt is available, hist_trigger_elt_update() is called.
- As the name implies, this updates the element, which basically means
- updating the element's fields.  There's a tracing_map_field associated
- with each key and value in the histogram, and each of these correspond
- to the key and value hist_fields created when the histogram was
- created.  hist_trigger_elt_update() goes through each value hist_field
--and, as for the keys, uses the hist_field's fn() and size and offset
-+and, as for the keys, uses the hist_field's function and size and offset
- to grab the field's value from the current trace record.  Once it has
- that value, it simply adds that value to that field's
- continually-updated tracing_map_field.sum member.  Some hist_field
--fn()s, such as for the hitcount, don't actually grab anything from the
--trace record (the hitcount fn() just increments the counter sum by 1),
-+functions, such as for the hitcount, don't actually grab anything from the
-+trace record (the hitcount function just increments the counter sum by 1),
- but the idea is the same.
- 
- Once all the values have been updated, hist_trigger_elt_update() is
+Yaxiong Tian (3):
+  tracing: Rename `eval_map_wq` and allow other parts of tracing use it
+  tracing/kprobes: Make setup_boot_kprobe_events() asynchronous
+  blktrace: Make init_blk_tracer() asynchronous
+
+ kernel/trace/blktrace.c     | 23 ++++++++++++++++++++++-
+ kernel/trace/trace.c        | 18 +++++++++---------
+ kernel/trace/trace.h        |  2 ++
+ kernel/trace/trace_kprobe.c | 14 +++++++++++++-
+ 4 files changed, 46 insertions(+), 11 deletions(-)
+
 -- 
-2.51.0
+2.25.1
 
