@@ -1,47 +1,38 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C187A34EF1B;
-	Tue, 27 Jan 2026 15:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D269735D60B;
+	Tue, 27 Jan 2026 15:27:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769527362; cv=none; b=dxtDZYOmM9BXQAxPGpG8L9UG+clD6C1xWRjVlQyxHIjnDx0WoyP1T3Vwu3RCzEDo2HDOKviRscv8mGqqBTaBrjOHuSh8yk/kGjXEdekys/FCzdgsDuDuYrHk7h+O8eSxhy/a8mMVrF0a/Y7InkwhUqW+DkZrLDPCjpZTbp5Pbig=
+	t=1769527671; cv=none; b=FHHbiSC0qKsZGgYGkqhKB9lj0VySt53oIyajCZ45ZFcdbeEJr2fm1tXiPBdB7Nx0vEQPVvU27p16sTI8mPIjKXfhDaPUqk3JJj7ypQOG45XrN4ywLzPileYGsEJibsii+bdRgtNr5jF9HD3OB4d0xML2vK8a5NVYfwC7dfcqDbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769527362; c=relaxed/simple;
-	bh=Hou3k/YcDUMSmtvqCulcR2nRe7AtIjNjZF4uNZFK+O0=;
+	s=arc-20240116; t=1769527671; c=relaxed/simple;
+	bh=Dj14eSLFEAqtkPYJPBfeRPH3HVklFyctdqJlRkXnykg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g4b0bBN60YmeKbd78SLq5OGqFSMR+k+OmvxNK7Q6GwdEwpPRVSMH4+IcnPQBazfyKi4LcW9sJBGns0XYWqEnOpT4YUaytZgtuNlQ3YjyBAIfj5CgkbqNs6BkYlkyIAcOhQh35/O1b9wODfjj1pDKpEPpO94B9P1LL23WD0WxNdk=
+	 MIME-Version:Content-Type; b=EKKqxSUKgX1Smecfm1C1IjXW+cTR2akbATjiufZHyZmsnj5jhtX45lD4BsjB5Rek4ugm9OB4W+XbMvaZhqO3EZvQRC9T30ZKysiuKk6rkcR760rLdKiP35XXI6cxey12zq9nYQjigKzBIv7TS5K4JzoQrbE/2y8nuzoyvuddofE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id D832814012A;
-	Tue, 27 Jan 2026 15:22:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 56F3D2D;
-	Tue, 27 Jan 2026 15:22:29 +0000 (UTC)
-Date: Tue, 27 Jan 2026 10:22:34 -0500
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 3CCEDB6976;
+	Tue, 27 Jan 2026 15:27:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id ED7982000F;
+	Tue, 27 Jan 2026 15:27:45 +0000 (UTC)
+Date: Tue, 27 Jan 2026 10:27:51 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RESEND][PATCH 3/5] perf: Use current->flags &
- PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
-Message-ID: <20260127102234.755d8c4e@gandalf.local.home>
-In-Reply-To: <27f9a957-67c7-4c88-b320-0f8725e9b03d@roeck-us.net>
-References: <20250820180338.701352023@kernel.org>
-	<20250820180428.592367294@kernel.org>
-	<0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net>
-	<20260126120553.2fa79048@gandalf.local.home>
-	<20260126121803.4a90c959@gandalf.local.home>
-	<27f9a957-67c7-4c88-b320-0f8725e9b03d@roeck-us.net>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard
+ Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: add Rust files to STATIC BRANCH/CALL
+ and TRACING
+Message-ID: <20260127102751.2adddb78@gandalf.local.home>
+In-Reply-To: <20260127083543.GU171111@noisy.programming.kicks-ass.net>
+References: <20260127-jump-label-rust-maintainers-v2-1-11b7c30b11d9@google.com>
+	<20260127083543.GU171111@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,88 +42,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 56F3D2D
-X-Stat-Signature: y3dht6s46cac557phezgp57ms64ubspr
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: ED7982000F
+X-Stat-Signature: dtr5wem6ywbgb6oq37pwdqhok84xnjok
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+sMSEd3/nbnTD7cCLRgruhuMiDCGUh7no=
-X-HE-Tag: 1769527349-467222
-X-HE-Meta: U2FsdGVkX19wi/5GZpUyP+BSQqWhDYL1T8dLa8uCE/dr9JD+jG8FrH4NY/oBVpREvELdR+pwpbkOCwYRHXdEsBbcLLLL9JK6ggA3qt7XtISl0TjDmR/QlsXYbUxXpqHpZ+WRaUIejWaeYKdeT8f4404wgwewi04i8n099PiYGuo0ZH82lI5Y0zVTUGe38P7B8cfeSBrQiqp26M++DmKtmzzYHPJ2gfuxQi2nUMcQZJVMe/fYkQ1AjiVDKIs2U7PQoLkecNqnRhVxiAOUQdf62aGZdGeHJQMT//TmszS9OELshDiZw/ATy+pzUestxrsyOo6dnF+OkmV/UUcWXzlogFWrVT+ObvGS31OFUkKvspcvpw+IqhhhTif/XJRC5AljdNfzuHPgrzcrZFC23q7tK43hBlsegpo3u+C1UNw12QVVdhlWK97glND0jPaGku7QbRCcnS2oBR+ELzp3G9ogeA==
+X-Session-ID: U2FsdGVkX1+5UmyLrVsY/t2e5fVfgyXkeZRgoSPiXEw=
+X-HE-Tag: 1769527665-839052
+X-HE-Meta: U2FsdGVkX1+EE09NCzMO+wrlpauhC+lUweIqlUdF4nuMH9yW4/bO6cLH8dDd/Cj3GXm1n7ce7/yNyeKFKixW9PiRpcKO5WRD1xXcGnnE28lfLa8hFt9S2J58p11KPWHdS3QBbMTqmI3J+6o0nqJmZU4FlHpkdS9cnuB5g2nN/8Eewq4D/ZG/IRI0hprlYaBr+zJSaiMmbuKf1Sot9fwRHbiZviWgSG4lx/wrls/Ihdak5/8m9EX/Xv6gneA3vIvMe5Ju1E/4xvnUvyXbFpuapmYZC6FjxOuwNeU8eIoIRpTMKaih6PuhVb10D2xM7JdmkbKNwH6pcx6YwiYaoaWoNqCP7+Gpf4d/EnYhMdxuAkfPbhfwalc4S3TESwfXbHy4JANzbMnmqT4JUqLmK2UEoA==
 
-On Mon, 26 Jan 2026 17:32:35 -0800
-Guenter Roeck <linux@roeck-us.net> wrote:
+On Tue, 27 Jan 2026 09:35:43 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> Still crashing, though not as often and with a slightly different backtrace.
-> I added the backtrace to the bug report @ Google.
+> On Tue, Jan 27, 2026 at 08:30:01AM +0000, Alice Ryhl wrote:
+> > I realized that these files were never listed in MAINTAINERS when they
+> > were added in commit ad37bcd965fd ("rust: add tracepoint support").
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>  
+> 
+> Works for me; Steve were you taking this or should I?
+> 
+> In case Steve wants to route this:
+> 
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-I figured there would be other locations. A while ago I had a patch to wrap
-the checks in a "is_user_thread()" helper function[1], but Ingo had issues
-with it. It seems now it's biting us in the butt and let's see if it would
-help now. I modified it slightly.
+I can add it to my tree.
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250425204313.616425861@goodmis.org/
-
-If the below fixes it, I'll resend it, but now as a real bug fix.
+Thanks!
 
 -- Steve
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index da0133524d08..5f00b5ed0f3b 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1776,6 +1776,11 @@ static __always_inline bool is_percpu_thread(void)
- 		(current->nr_cpus_allowed  == 1);
- }
- 
-+static __always_inline bool is_user_task(struct task_struct *task)
-+{
-+	return task->mm && !(task->flags & (PF_KTHREAD | PF_USER_WORKER));
-+}
-+
- /* Per-process atomic flags. */
- #define PFA_NO_NEW_PRIVS		0	/* May not gain new privileges. */
- #define PFA_SPREAD_PAGE			1	/* Spread page cache over cpuset */
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 1f6589578703..9d24b6e0c91f 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -246,7 +246,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 
- 	if (user && !crosstask) {
- 		if (!user_mode(regs)) {
--			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-+			if (!is_user_task(current))
- 				goto exit_put;
- 			regs = task_pt_regs(current);
- 		}
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a0fa488bce84..8cca80094624 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7460,7 +7460,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
- 		regs_user->regs = regs;
--	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
-+	} else if (is_user_task(current)) {
- 		perf_get_regs_user(regs_user, regs);
- 	} else {
- 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
-@@ -8100,7 +8100,7 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe get_user_page_fast_only first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
-+		if (is_user_task(current)) {
- 			struct page *p;
- 
- 			pagefault_disable();
-@@ -8215,7 +8215,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- {
- 	bool kernel = !event->attr.exclude_callchain_kernel;
- 	bool user   = !event->attr.exclude_callchain_user &&
--		!(current->flags & (PF_KTHREAD | PF_USER_WORKER));
-+		is_user_task(current);
- 	/* Disallow cross-task user callchains. */
- 	bool crosstask = event->ctx->task && event->ctx->task != current;
- 	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
