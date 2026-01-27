@@ -1,203 +1,94 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FE31CAA68;
-	Tue, 27 Jan 2026 12:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769515520; cv=pass; b=E52NUePbemiQEnCv8O4rwgn0TOS9+UfHl7218y+qLThojLTZpwuZMKlxhZ1b3Np1L62F0ck7nj9XJVkMJGc8pQXx9GM3rsvk2r7ljTZX8l142tbmBOK0TjIZ6nHCAiZManjXXdz6zbqXpb+vWpX+7lT58kLXhmJFt5d5lE7i6oo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769515520; c=relaxed/simple;
-	bh=gjpsAVrLFLn/ss6XSGzdQaSgkaMs5epCB+WRN5bMyvQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=G0J3gOKSdkvCuNbE1K0e0H8wjHlWGP2rdds57VS4iMNeTHHeLMLoiqliYX38+shDvLjnedt7AOPBUwNHmc3+L4qeXWMjsRiihf6HUzFIgxcArqWP98kINx3kWUj9ozaGyKVAD+B5W8In+hPK5aGxiNbyJtCEv2Kj/ac2wq3EZxI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=cK2AEMYX; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="cK2AEMYX"
-ARC-Seal: i=1; a=rsa-sha256; t=1769515508; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VxQ+2p318SvV1Cd5z3HIRr8jUi5wUMbcDsUi3BKcTcNENORANSY05wIPZhEkYMbvJ6DKhNZaDLKuqGPQK9SmgiFPxbUZibUxZlXYgCyL9zXr/BsJ1Btwb6KhDXEdFIL6KUQbuqa6nC2jggNyJdzAZ6CyyUpsgkfBvFy38sYEvFk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1769515508; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2i50/OElbdVUVGR3fITaTkJTxabogHfd1vXgzQrqXRQ=; 
-	b=P599rkF57/2OaMvqavUwtusNyb+VzJakRG+xiyKlvTP0f3RDmMxu5foKbrYLZlGbziiYndGWSqHl4A742ov50hh+OsVCMtMME/mLABMnlJ9G5qX90XvmwnPxMueebc+lf6i82hzENbT8fuSkNvUgRybV3wecdLKH0U01Mp6EDrE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769515508;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=2i50/OElbdVUVGR3fITaTkJTxabogHfd1vXgzQrqXRQ=;
-	b=cK2AEMYXy6Wn1YRAIvm65LnoTvI0q/7wx7hihECrbgKo47hpLhO0Ba5xHCzpDFKj
-	Yk7+1bcdtPv5oj3UqEM44uUk5dQAM2YRMlJx5ao19aCfIpC67n2aJlhipGjIZvoBUuq
-	OVqvPatBgeTHXgigPxWX58kqS+eR99t6I/xJb34Q=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1769515505474648.5210275858253; Tue, 27 Jan 2026 04:05:05 -0800 (PST)
-Date: Tue, 27 Jan 2026 20:05:05 +0800
-From: Li Chen <me@linux.beauty>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: "Zhang Yi" <yi.zhang@huaweicloud.com>, "Theodore Ts'o" <tytso@mit.edu>,
-	"Andreas Dilger" <adilger.kernel@dilger.ca>,
-	"Masami Hiramatsu" <mhiramat@kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-	"linux-ext4" <linux-ext4@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>
-Message-ID: <19bff57d732.675dda83304172.1851572061101730667@linux.beauty>
-In-Reply-To: <20260123125737.2b6ddbbe@gandalf.local.home>
-References: <20260120112538.132774-1-me@linux.beauty>
-	<20260120112538.132774-7-me@linux.beauty> <20260123125737.2b6ddbbe@gandalf.local.home>
-Subject: Re: [RFC v4 6/7] ext4: fast commit: add lock_updates tracepoint
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25172347C6;
+	Tue, 27 Jan 2026 14:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769524447; cv=none; b=Gy2y37vx59HBkhWTGei94g47WSR3L0eWK07dqR35sIc+G58kPGZL1LeuLJw9zXCtao8fsre+yU6Vu/FNjQy1xoxz85WVGBtKvA3q9UHwVRwuhp0HkhweCkz1Vw2+1aH73sgUCK765qScfAkEZXFu51iRyjWvoJ1Pm+K37/a43vI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769524447; c=relaxed/simple;
+	bh=jVm9kVspMw/JDfTeT5ktoNDS6VSyf9NT73Jj3vTP1+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yb9lVXfkyExjX1cxjnGMO738NHfLsXP3ztGJ2gvENWuID/d14LTkTJhlAuqy5OSfNJMQ+lBEscpgUo4dAUpFd1HOxeyJYpI1yD7e6MF2NAQOaZ66OA5iR+avayvRXonzbVK4kazFIZ1vMndB7nVgSYW2K8aF+E5+W+0qZuVtGoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 3EE1214017B;
+	Tue, 27 Jan 2026 14:33:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 550826000D;
+	Tue, 27 Jan 2026 14:33:56 +0000 (UTC)
+Date: Tue, 27 Jan 2026 09:34:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: sunliming@linux.dev
+Cc: ostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, sunliming
+ <sunliming@kylinos.cn>
+Subject: Re: [PATCH] tracing: kprobe-event: Return directly when trace
+ kprobes is empty
+Message-ID: <20260127093401.2c2aaf18@gandalf.local.home>
+In-Reply-To: <20260127020137.90205-1-sunliming@linux.dev>
+References: <20260127020137.90205-1-sunliming@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 550826000D
+X-Stat-Signature: u7um1ju47wjs3kat893q4tpro44gjfq6
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/xwLJng+qgr05KBD58k4iHHWgMv0Yu5+k=
+X-HE-Tag: 1769524436-668206
+X-HE-Meta: U2FsdGVkX1/w7IdpycVn+KsSZwX5Odhq6JGuP2Knon7z1oS6KvOVOSWCkBpOhfYYXfzemRETKiIOGwDs4vrG9SDTUbu0AFpl8WVm7Rod5F/zRV3spofhiua6jw9mvTS2V3zY9U0jaQbgq+nS5XK2i5C0zIA9CydxR3fegvdrVZPUKlwHqsW/zXlKIa0b3XdaXQKnaImYpIuIo2Q4/emjCD8v21lGglmiAstxdlb0fzmA6oAHgedM+d9uBGqowbFN9haKiaGs4zkgSimoSAUgM83hRiFXJPVzMs96hc8saibN8qkpAwypRR9fSOdznepvg0T1U/fJa42sGPEO29MrTU6iBUyRgnBh2xpzB1F624NNHI3UzrykSxJwvujSR7Jm
 
-Hi Steven,
+On Tue, 27 Jan 2026 10:01:37 +0800
+sunliming@linux.dev wrote:
 
- > On Tue, 20 Jan 2026 19:25:35 +0800
- > Li Chen <me@linux.beauty> wrote:
- >=20
- > > Commit-time fast commit snapshots run under jbd2_journal_lock_updates(=
-),
- > > so it is useful to quantify the time spent with updates locked and to
- > > understand why snapshotting can fail.
- > >=20
- > > Add a new tracepoint, ext4_fc_lock_updates, reporting the time spent i=
-n
- > > the updates-locked window along with the number of snapshotted inodes
- > > and ranges. Record the first snapshot failure reason in a stable snap_=
-err
- > > field for tooling.
- > >=20
- > > Signed-off-by: Li Chen <me@linux.beauty>
- > > ---
- > >  fs/ext4/fast_commit.c       | 86 ++++++++++++++++++++++++++++++------=
--
- > >  include/trace/events/ext4.h | 33 ++++++++++++++
- > >  2 files changed, 104 insertions(+), 15 deletions(-)
- > >=20
- > > diff --git a/fs/ext4/fast_commit.c b/fs/ext4/fast_commit.c
- > > index d1eefee60912..d266eb2a4219 100644
- > > --- a/fs/ext4/fast_commit.c
- > > +++ b/fs/ext4/fast_commit.c
- > > @@ -193,6 +193,27 @@ static struct kmem_cache *ext4_fc_range_cachep;
- > >  #define EXT4_FC_SNAPSHOT_MAX_INODES    1024
- > >  #define EXT4_FC_SNAPSHOT_MAX_RANGES    2048
- > > =20
- > > +/*
- > > + * Snapshot failure reasons for ext4_fc_lock_updates tracepoint.
- > > + * Keep these stable for tooling.
- > > + */
- > > +enum ext4_fc_snap_err {
- > > +    EXT4_FC_SNAP_ERR_NONE =3D 0,
- > > +    EXT4_FC_SNAP_ERR_ES_MISS,
- > > +    EXT4_FC_SNAP_ERR_ES_DELAYED,
- > > +    EXT4_FC_SNAP_ERR_ES_OTHER,
- > > +    EXT4_FC_SNAP_ERR_INODES_CAP,
- > > +    EXT4_FC_SNAP_ERR_RANGES_CAP,
- > > +    EXT4_FC_SNAP_ERR_NOMEM,
- > > +    EXT4_FC_SNAP_ERR_INODE_LOC,
- > > +};
- > > +
- > > +static inline void ext4_fc_set_snap_err(int *snap_err, int err)
- > > +{
- > > +    if (snap_err && *snap_err =3D=3D EXT4_FC_SNAP_ERR_NONE)
- > > +        *snap_err =3D err;
- > > +}
- > > +
- >=20
- >=20
- >=20
- > > diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
- > > index fd76d14c2776..a1493971821d 100644
- > > --- a/include/trace/events/ext4.h
- > > +++ b/include/trace/events/ext4.h
- > > @@ -2812,6 +2812,39 @@ TRACE_EVENT(ext4_fc_commit_stop,
- > >            __entry->num_fc_ineligible, __entry->nblks_agg, __entry->ti=
-d)
- > >  );
- > > =20
- >=20
- > Why not make the snap_err into a human readable format?
- >=20
- > #define TRACE_SNAP_ERR        \
- >     EM(NONE)        \
- >     EM(ES_MISS)        \
- >     EM(ES_DELAYED)        \
- >     EM(ES_OTHER)        \
- >     EM(INODES_CAP)        \
- >     EM(RANGES_CAP)        \
- >     EM(NOMEM)        \
- >     EMe(INODE_LOC)        \
- >=20
- > #undef EM
- > #undef EMe
- >=20
- > #define EM(a)    TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
- > #define EMe(a)    TRACE_DEFINE_ENUM(EXT4_FC_SNAP_ERR_##a);
- >=20
- > TRACE_SNAP_ERR
- >=20
- > #undef EM
- > #undef EMe
- >=20
- > #define EM(a)    { EXT4_FC_SNAP_ERR_##a, #a },
- > #define EM(a)    { EXT4_FC_SNAP_ERR_##a, #a }
- >=20
- >=20
- > > +TRACE_EVENT(ext4_fc_lock_updates,
- > > +        TP_PROTO(struct super_block *sb, tid_t commit_tid, u64 locked=
-_ns,
- > > +             unsigned int nr_inodes, unsigned int nr_ranges, int err,
- > > +             int snap_err),
- > > +
- > > +    TP_ARGS(sb, commit_tid, locked_ns, nr_inodes, nr_ranges, err, sna=
-p_err),
- > > +
- > > +    TP_STRUCT__entry(/* entry */
- > > +        __field(dev_t, dev)
- > > +        __field(tid_t, tid)
- > > +        __field(u64, locked_ns)
- > > +        __field(unsigned int, nr_inodes)
- > > +        __field(unsigned int, nr_ranges)
- > > +        __field(int, err)
- > > +        __field(int, snap_err)
- > > +    ),
- > > +
- > > +    TP_fast_assign(/* assign */
- > > +        __entry->dev =3D sb->s_dev;
- > > +        __entry->tid =3D commit_tid;
- > > +        __entry->locked_ns =3D locked_ns;
- > > +        __entry->nr_inodes =3D nr_inodes;
- > > +        __entry->nr_ranges =3D nr_ranges;
- > > +        __entry->err =3D err;
- > > +        __entry->snap_err =3D snap_err;
- > > +    ),
- > > +
- > > +    TP_printk("dev %d,%d tid %u locked_ns %llu nr_inodes %u nr_ranges=
- %u err %d snap_err %d",
- > > +          MAJOR(__entry->dev), MINOR(__entry->dev), __entry->tid,
- > > +          __entry->locked_ns, __entry->nr_inodes, __entry->nr_ranges,
- > > +          __entry->err, __entry->snap_err)
- >=20
- > And instead of having the raw value of __entry->snap_err, use:
- >=20
- >         __entry->err, __print_symbolic(__entry->snap_err, TRACE_SNAP_ERR=
-))
+> From: sunliming <sunliming@kylinos.cn>
+> 
+> In enable_boot_kprobe_events(), it returns directly when trace kprobes is
+> empty, thereby reducing the function's execution time. This function may
+> otherwise wait for the event_mutex lock for tens of milliseconds on certain
+> machines, which is unnecessary when trace kprobes is empty.
+> 
+> Signed-off-by: sunliming <sunliming@kylinos.cn>
 
-Good point. I'll switch snap_err to __print_symbolic() in v5.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Regards,
-Li=E2=80=8B
+Thanks,
+
+-- Steve
+
+> ---
+>  kernel/trace/trace_kprobe.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 9953506370a5..95f2c42603d5 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -82,6 +82,7 @@ static struct trace_kprobe *to_trace_kprobe(struct dyn_event *ev)
+>  #define for_each_trace_kprobe(pos, dpos)	\
+>  	for_each_dyn_event(dpos)		\
+>  		if (is_trace_kprobe(dpos) && (pos = to_trace_kprobe(dpos)))
+> +#define trace_kprobe_list_empty() list_empty(&dyn_event_list)
+>  
+>  static nokprobe_inline bool trace_kprobe_is_return(struct trace_kprobe *tk)
+>  {
+> @@ -1982,6 +1983,9 @@ static __init void enable_boot_kprobe_events(void)
+>  	struct trace_kprobe *tk;
+>  	struct dyn_event *pos;
+>  
+> +	if (trace_kprobe_list_empty())
+> +		return;
+> +
+>  	guard(mutex)(&event_mutex);
+>  	for_each_trace_kprobe(tk, pos) {
+>  		list_for_each_entry(file, &tr->events, list)
 
