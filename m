@@ -1,90 +1,143 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D615C2C0F7C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 08:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5F128C006
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 08:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769503457; cv=none; b=E0R59N+u+wDRrixkUcVzZ5l/XsfaOcX+v+7Prl4eQugsZWV3mB203KUSS+uwJrT3l2ekzqwQspiNcAPU5THnU/IZAg6ny+yY4qmaBEH+M2JMBEmbMStXcRQM7YO6VPrZL0GcHApTuVjLCy4n/9Isbtu9Pn9o0UggVmO6fSGYp8U=
+	t=1769503797; cv=none; b=lNWjs9NlqHtx0wZp4rzdoGKGbqKlHDWNK9QjqaoSpkWnt5sLsc3BaeXWYi4TsKO6ymoAWyNvL3y8yK5wFM9bbELP8GFZalgEw3FT3p1i/odULFZxH8Q43n8amI4DG79o7SERQNA/wAJ0h+A4gzAAINz06RN1AIkvZHQxdj5unQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769503457; c=relaxed/simple;
-	bh=3MJ2ii/ye0pMb2Bh2DBm54/4dM3YA6Zg5p8ode956TE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZUedrKUwCiQwpUCnGZjgHQ/7DvQ9TpZZqHZVP4zSUouQQ/Tt/QA6aSxK6OBxnDimUUJjuTE7QrODq1WA49QCYkrRfZdQLfvfUFrmTv3bxS/g1SjvTvbuShht1FrkZ2p6lERXWeLYvQwI9gQEEGgd1Vv9zBzBP+yvYSKiUrjfbG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J3cVbeAd; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1769503797; c=relaxed/simple;
+	bh=X6oRe9RzYf5l4u6U5OWAuQIm2MFiawq5ZZgmXrtEelk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O+fb/eSDt9n3mKale9r6j0pZIhbNN4Kvw/Y3T+GZ6odq3ADL/Rvkn4OMcJRF9fKf2O8bLN4kDuUYzVReLo0YfwWrv7Pcd4RdT9KDLLftNUWVWIC4emMsKskgmta9KzYP9YJPjKLgF8kes2YjCbMTgQcevidzv9xmtlXorqvyIOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q0ZVcIYS; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J3cVbeAd"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4779ecc3cc8so45825565e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 00:44:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769503453; x=1770108253; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAXyvcgq4gapK4XzgbxiTztA7SACwP1oODA1FepPFTs=;
-        b=J3cVbeAdx91LVRkSQ915QVQsZOuytIo0TSSSyHL587WhgEjXJ9eVSnarn7ocpAUR/b
-         N2zC8T8XRK8QvzLXry/ebzdetorcHNh4sOxfrFHk52LJ0o+L9m2bwo0jJoI4V9/9Axz7
-         OzrGJ8gWwvb1r+jvBAdbegw7lw4eRKdgqCqTkUsJdYrIBaC7LjlhD7r1hv2tb+Ckdfue
-         B37huXFZ9Hrth5fhvxhe5DM2MOpHpo+Y8UGBDHuYHovQ48PHF1QldZBPxGuAzGw2ELXn
-         oFMjNuTLupGsxyFfFy9+mh96I2LI//0et2ZHyCIwMlk2v7nHPRnAdyZHvJaLk7lY5rel
-         2GqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769503453; x=1770108253;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAXyvcgq4gapK4XzgbxiTztA7SACwP1oODA1FepPFTs=;
-        b=dYWueLVlFRrvJEf+Dk0XSFedFe8egTshiXqlFkmTQBV2smRPdMGkoWsbtQtpyOXt3B
-         d680G+Qh5n+32HXA4lhHvaeMSMxTYzfC+ipbBEBjc95dtUX0FBmGh63ZWmDbzz2Ua1kA
-         0pNvS04LjagdgHZaEnF8uj1WVdWdj/qO8LAz6p805xSPgtkFZozI1lfBSpWTLhUSuH/z
-         Gl8So2xdYc/Wzt2RdN/L7zsk5B0qDE0Dcmzx0Es78TANX8N0JG5yeqbhpDzvEH3Jil4U
-         xkVyw9V3C9deg2pWthU0n+xyHQlTqFxORVpoISqQuhGeftKhRTUiTtFTGrzSv8UkYYXC
-         BbLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXP/i6UTuRuCseWP6mXds2/EzbuwJ4ZHchdvuNJC/zo344OucHkiUuRdaB9fNR+mJl/YTVRf7evQ7psdZ5DEkW1P1Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjKxc5ADYtvAePXMMIZRUzl8+HG5fpQETRXuefvKn8XB8WoEyX
-	b7xFhsD+S9o5g/OhJTfaf2O3Lts07OCJfIyKLS1dssL/on0CO6v2pRUEeBjXFzyzIG4qL8GeDDd
-	vcksYevDrGuBzKG1TZg==
-X-Received: from wmbei16.prod.google.com ([2002:a05:600c:3f10:b0:47e:dc0c:276f])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1994:b0:477:9986:5e6b with SMTP id 5b1f17b1804b1-48069c78895mr11471285e9.28.1769503453365;
- Tue, 27 Jan 2026 00:44:13 -0800 (PST)
-Date: Tue, 27 Jan 2026 08:44:12 +0000
-In-Reply-To: <20260127083543.GU171111@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q0ZVcIYS"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R802Ot001509;
+	Tue, 27 Jan 2026 08:49:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=DDHhLXaDEFCJFS1Je
+	zriYb1CLJlOz5e6EELlx4UELic=; b=Q0ZVcIYSUu1hVRSIUyotEMJ3wyJOzaB+G
+	G5qZjeUgnAXd9obIUkoyNLBopn6xup629JKNjqrYJveL7J0xl2+J7r1QGxlbXN9T
+	n9LwypAAkB9gmXlDQndMzWkyumm2ebrXBf/skoY57Cy2xdi8lVuvp4Z/Pht3Pc/p
+	/Ok+HGyTNffwGnsiPMqa7TwBPqiFLbl4Eu5340Ho9uXKOv77ZawI2iTO2cBjJKmJ
+	oJWGxsU3hK9ZKAa56+0nSp+t/ReK3SCErVJNE4MVzVHqhuxZydjB6Qbmn1upYGyn
+	2RUYHtfdmmSX2v2ApGs7v3NZzLALCJLMniAdLLod38dB1n/gMPQ9w==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrtca08-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Jan 2026 08:49:37 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60R3F1ne026333;
+	Tue, 27 Jan 2026 08:49:36 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9wk7whw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Jan 2026 08:49:35 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60R8nV1C56426806
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Jan 2026 08:49:31 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6D312004D;
+	Tue, 27 Jan 2026 08:49:31 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A09AF20043;
+	Tue, 27 Jan 2026 08:49:29 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.in.ibm.com (unknown [9.78.106.105])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 Jan 2026 08:49:29 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, llvm@lists.linux.dev,
+        Maryam Moghadas <maryammo@ca.ibm.com>
+Subject: [PATCH v2 1/3] powerpc64: make clang cross-build friendly
+Date: Tue, 27 Jan 2026 14:19:24 +0530
+Message-ID: <20260127084926.34497-2-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260127084926.34497-1-hbathini@linux.ibm.com>
+References: <20260127084926.34497-1-hbathini@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260127-jump-label-rust-maintainers-v2-1-11b7c30b11d9@google.com>
- <20260127083543.GU171111@noisy.programming.kicks-ass.net>
-Message-ID: <aXh63MOsTulaQc4E@google.com>
-Subject: Re: [PATCH v2] MAINTAINERS: add Rust files to STATIC BRANCH/CALL and TRACING
-From: Alice Ryhl <aliceryhl@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oPYrBd_Pzi4XlxD8NY6SZPti61D8Jj67
+X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=69787c21 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=G_DWyleSnc-e0WChyngA:9
+X-Proofpoint-ORIG-GUID: oPYrBd_Pzi4XlxD8NY6SZPti61D8Jj67
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDA3MSBTYWx0ZWRfX/8rGKwvJBA3R
+ Ipc79uG3sHu+qVTLgjm3vAFl/uGIkMDnGPXsIYpIe3+Nr3wfY8q97X4RuzUET+ru40OotcHiqQ+
+ Olw/WIEMpGm45uk5NQ5GrnK34htExPXjoDpP1OTAxuPoWP9VqK3OqYJ60Ba08xFp/pPNoJSxdbZ
+ NHpBT9MM7Mmc7ufEMF5W6blUO3e409MjHtLPdHqNiJXP8bl7x6hd8nBkJcMVFrQFl9w0c5IlPrI
+ ykWSAe/e7CZdSNgg7InYL8RMNAshA5CpERFtqYsIiCncf8mlg4c6qA69L1ADYNY7XXvFpTXsUZr
+ HHh+9tXiiiEGL8CJ8Y4z+YtnY6pwBx9G4rOnxqBbMDaYJGW+pD769dxKKjSTqTbDYmLELgfCOy8
+ J33sF5qYLQAh6OxdiRCCiWQbMq6mtUOOA7lTmyhUQv/0AxYkpzK8cjrvHxx5kc6rmjfbArbuno6
+ u1YsXSYk1z9kYaeZA5Q==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-27_01,2026-01-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ phishscore=0 adultscore=0 impostorscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
+ definitions=main-2601270071
 
-On Tue, Jan 27, 2026 at 09:35:43AM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 27, 2026 at 08:30:01AM +0000, Alice Ryhl wrote:
-> > I realized that these files were never listed in MAINTAINERS when they
-> > were added in commit ad37bcd965fd ("rust: add tracepoint support").
-> > 
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> 
-> Works for me; Steve were you taking this or should I?
-> 
-> In case Steve wants to route this:
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+ARCH_USING_PATCHABLE_FUNCTION_ENTRY depends on toolchain support for
+-fpatchable-function-entry option. The current script that checks
+for this support only handles GCC. Rename the script and extend it
+to detect support for -fpatchable-function-entry with Clang as well,
+allowing clean cross-compilation with Clang toolchains.
 
-Thanks Peter!
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
 
-By the way, in case you didn't see it, there is a patch for the STATIC
-BRANCH/CALL side:
-https://lore.kernel.org/all/20260105-define-rust-helper-v2-9-51da5f454a67@google.com/
+* Changes in v2:
+  - Use $(CLANG_FLAGS) instead of manually checking CC_IS_CLANG
 
-Alice
+
+ arch/powerpc/Kconfig                                          | 4 ++--
+ ...e-function-entry.sh => check-fpatchable-function-entry.sh} | 0
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+ rename arch/powerpc/tools/{gcc-check-fpatchable-function-entry.sh => check-fpatchable-function-entry.sh} (100%)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index b8d36a261009..dcb9894e2004 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -571,8 +571,8 @@ config ARCH_USING_PATCHABLE_FUNCTION_ENTRY
+ 	depends on FUNCTION_TRACER && (PPC32 || PPC64_ELF_ABI_V2)
+ 	depends on $(cc-option,-fpatchable-function-entry=2)
+ 	def_bool y if PPC32
+-	def_bool $(success,$(srctree)/arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh $(CC) -mlittle-endian) if PPC64 && CPU_LITTLE_ENDIAN
+-	def_bool $(success,$(srctree)/arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh $(CC) -mbig-endian) if PPC64 && CPU_BIG_ENDIAN
++	def_bool $(success,$(srctree)/arch/powerpc/tools/check-fpatchable-function-entry.sh $(CC) $(CLANG_FLAGS) -mlittle-endian) if PPC64 && CPU_LITTLE_ENDIAN
++	def_bool $(success,$(srctree)/arch/powerpc/tools/check-fpatchable-function-entry.sh $(CC) -mbig-endian) if PPC64 && CPU_BIG_ENDIAN
+ 
+ config PPC_FTRACE_OUT_OF_LINE
+ 	def_bool PPC64 && ARCH_USING_PATCHABLE_FUNCTION_ENTRY
+diff --git a/arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh b/arch/powerpc/tools/check-fpatchable-function-entry.sh
+similarity index 100%
+rename from arch/powerpc/tools/gcc-check-fpatchable-function-entry.sh
+rename to arch/powerpc/tools/check-fpatchable-function-entry.sh
+-- 
+2.52.0
+
