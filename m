@@ -1,147 +1,149 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D400728727D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 08:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769502413; cv=pass; b=RyNxk9tQfXcOEWbqoT2/dvzHUBQkaxt+K+RZLBZoB6xIMcY46S4ZAj7gFH3d6MxQBoiQ2Cwfm6sB69RS5wFfLUuVZZ7NulqXeEP+T5E8W87tH+uz9iHpQ6ghdeU4VYA0BYJmnU3DR0aERGsneJGevmAQaKOtdl90PATW7glHBoI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769502413; c=relaxed/simple;
-	bh=Sl4m3dvsEO0VkRuYOaBX3ctrGwJsczeT19nXFnORUlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kuf+EQ79jmfBEHFE7a8FgQcKs5/lP8xiiYm2YkFoiiGh36klRFnEc4m33ayU3KY0edEC9LQ7lzcPUcLJ14zt1EaeFZJtIPs1FcdBQw+dEfCtN37Nqpz4yWg8gyQcri5qae8LjmnJnB1fwCan1ItluYYU+W9yEV3TGEqV07YMb0M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GVuwfh5r; arc=pass smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D8929BDA2
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 08:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769502626; cv=none; b=MILo/mWCDYsxXfThLqQM/td4pNCGR+D1f+SYTBGkNC4kIXvARZT1dSFBvxZKJZpE7eQ0T8AxRuv5CKXZnIAgTs9ytVqZo4QHtt47ZxPwN63A+JtH6Yh+v7FhzVSb2tL1xaC6TmVqvM286JLO625VDP3eBmgoBz5u1G3nAjEaMxw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769502626; c=relaxed/simple;
+	bh=hwBaBoD9OSacw4NnzL4jIYitbGlgLVKwETo1gtKVJMY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M4TPbbQ4RetIx/IHzRFKhG+8yFDVRUbZLOoA3acbziuBmOk7UFfPg7ZTasT+hz8ooGprYSU/61y5Y6fU56dabNgQx48BSs/RmTlfE62efPruW4mMqXwOoj6t/1+XXHK4EgqJuFy10sKSCtrtuurJRyATPrntsruIPLN5xZww+7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0sa3Y7m3; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVuwfh5r"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47ee937ecf2so45536575e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 00:26:51 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769502410; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fm9fUVnc4nCDg/ZeVxvLps268Mva+JHBiNax8dJdmYKSSj6pMrJWmxDhCYgjMYRPkb
-         i4zbf4YEhMTBsZkjqKb1WdO5KMcEqWmgJgZrR9tQJjl9rzoZZ8jhloLWDuclsVUsgmlD
-         K1RaIEyaln9HZ3BGONMPtGoGY3CtrRyeQ1fcNPYdEOs4+tLO1+z3oMp1sjO7MJ4pWavt
-         XzO8xQtzSTN/Lh1+pStviQ9fYFRdFEjEDlnGQOxqNYkhOMsj+lLsKhhWRJbTS1g1VIaF
-         y+XswlJQ00mVVCoqldMmSFGtUE8zSj6SI3KrtzILjQzyItj4hvpL6mFY861RHToyL8hw
-         ABNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Sl4m3dvsEO0VkRuYOaBX3ctrGwJsczeT19nXFnORUlQ=;
-        fh=+9wk9lfzXwEnXkQ9toho3Wo0vsN8le1TV6qCH9lCRTQ=;
-        b=ik22cJUf/busAuepAwPnWD1OF3vz/qSZ7TAy4vHaGde37VNu+b2En/9i+6wMsQ+ir1
-         eQb2dFSJ+LJ4zz5CWIaD9BpiHOoaLlg8PSrI7HxgoRctMnXJq18ZhWFMSAje5zd8SFYP
-         GNU3+0/rBgP0ILe9FqiIayV1U74v5a0sQV5MMcMNQiJdx6kTRA3In5/bO9S3G8qtfseo
-         QiBK4Yfl8SRLgx7HLrg/E9zHbZsZjevlGQi3ZMZQwVZUAOXF8ME6sh+GQBqIH/3NoamC
-         LD8aFvSiS/HY3P9IGrKRbV4cTfFky0ciWGH68NkUilQ+SRMrBPycylrq7Bx1rTJA0qdg
-         1kqA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0sa3Y7m3"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47edc79ff28so33670355e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jan 2026 00:30:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769502410; x=1770107210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sl4m3dvsEO0VkRuYOaBX3ctrGwJsczeT19nXFnORUlQ=;
-        b=GVuwfh5rWga+r5e5wK/1qktVK+ue7X8olp1Ttsoz26VeLWpoO30ciFco/ODArl30Or
-         /oyhAXKbwvCJbg3hsfCuoKclaF6URIW9qbytzI2avZTRPt0Ycb3TmfRCybNzAvfd5Bjx
-         udVyigaJ3QgG/fGLgz3yv9NhioFkNB8gNRgqVXv++GSHUYBxqcM6tygQanC6ywEe31zo
-         eTV49ytpH+hRytMYCnxgGURH1JkNKHJQNHi87AnGTiAvrnjn5AzUwKA5vCvYNTlvREWE
-         9saBApihjYg5bMBq7ji18Z7zhYmcub4GuaAuqghW9YCIp//Qw7DjSWW7kJdVKm99153Q
-         O8ZA==
+        d=google.com; s=20230601; t=1769502623; x=1770107423; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/QInygNzsk4saCgmIsdJYB7YPnJtRMIU+9UtY5fzvQw=;
+        b=0sa3Y7m3HNGsr7fkVSDpnkJNBj4lh52Ggl2RpEHmdnL/RWRjiLD34qNxbzfCdUPc1f
+         jnRs0FfB6QvBsztXJWZT0oFjfctCJQYF/Qq8/Gs53lE0oWRq4DTuqHNVZx2uFapqOVuo
+         DSoPVlGWPZYBFcEmLpHqqT8Ogr7FmVcqicxDKGtr2FKQ3rq53t92ZnIR8jGQSIaPrKmt
+         4BECzhox9+Vrwb0VcadUGTCpRnl05LTp6bFoICe+0TPUAiSwFEgxXW8OYeK8j5JgDfIh
+         hbUO4jqCDr+bCs4HEm+yMQqwGHfw/Sw+R3IYjUq7DkMGXOjVVFoM445HcprCYIOMYGYj
+         dW8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769502410; x=1770107210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Sl4m3dvsEO0VkRuYOaBX3ctrGwJsczeT19nXFnORUlQ=;
-        b=F+RhFKd3ssczMq5MHSLigOmWloS/Ouz8/0eCeqszYwRZEhyWdFtoGPGhfZi3lkICjz
-         ci0j52/vem3GrOyX8LevQW2w4DBk7xCvaQ44b7Cfr3HYJ4hCV35Or7D2ecEeGYmn/8kQ
-         dSwYAXTnGLVuxDl1pR+j5wr6eooVZ2vodyH2oUrspr1MBeEyPcigWsrREidU2JzuKk/l
-         1nvldyp63XEIjN9zFYoObUTqFV7TonRyF7y3s4N9Qu6e7OJPE9/WYa234I8XNnT6Q9J0
-         3BvUmHO7BiUgLOw5mjd1Dw9ElGjaopPNtmMTrs31e3Y830QMN2RLTcyc5B1u3jWPnC0P
-         RcEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdn0scy7JAbnU2WoVbMQjbZSVGTiEA8fXj7rToL4ROBIIch0RfNozJpcneHpdSLRrEFtynrpVl72nHd6jVIfhlSSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyph3InwlhsbmAOXZT52bAUFDH8Q6KtqX5IMyBfSviewBui9Nb3
-	cQBoIb6sMLT4WNheW2tcS5TbTER8o6SbiemTJb4LskGuY3B5qlJ2p/zkY8olSCjRe8vFrWxwga4
-	Ik918k49RYK8ogSOq3OCyq2+0Nsbx+DBmD3F4/9AJ
-X-Gm-Gg: AZuq6aKEC7DgdIyhvB38PG0dK0RZ7ku8y7F6Ya4n8J5G5b32csT/BS5Omib7sms4LnI
-	YiWvwjzEmY2EHek0kdzWRMCiP+LOAzq0qt3OSM8L5sX69bP4RksJAJrDnnzzrpeuRSQf7DZcrrK
-	i5hjw9ILF2BJR4h6zq6FxqyztoANHJEz6eELX3vmjrTHO2L1U1Bryoob10njzKnCNnoL3Gtelt5
-	DVctoSmCSWQIsF6xGcjji5PgInD7GNxZ8Lx8teIXD0b7vyN7nkGLQA2kxdXvH9DTeZGPNcbqclX
-	MLjduSfBHmxdqh1ma7UWnHQVpPxFkv6WJjWprLt4HO3Yrdv93CD+ErcIKg==
-X-Received: by 2002:a05:600c:4e4f:b0:477:a71c:d200 with SMTP id
- 5b1f17b1804b1-48069e70621mr10255735e9.11.1769502410131; Tue, 27 Jan 2026
- 00:26:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1769502623; x=1770107423;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/QInygNzsk4saCgmIsdJYB7YPnJtRMIU+9UtY5fzvQw=;
+        b=rfDTyXJAR05ezmDEgoZCVmbBnkkQqwfeAWqqAquhAiV9BEZwx9J6EMS45fxcdB46gk
+         4fipeQzDlxAqodTcQAIjSDF1jG4t7iI33XkNoTlDKJlh3azN+PYzD2+E1ztYt4+x+8V9
+         /blzUlisl50YJe9tuj2wYuk+qlg9Xfi99hlpa0Xx4KSmYxcf5G8Ifv2Xx/R32rWPtHJf
+         xiL2Ou9JzdLqjHXTxndzt2hzjJ2L+eyTe1zP3+HwLjKcHXBQioDlrKXZGGiJqnPPBYiO
+         PUWgEul0QImgxDmfr1LGqKUbdEH7EY3eMTtMonihnhvpM0WwBshhrTg6zLti5A4O9Dnj
+         LbIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEqpQSf9dE5xGJsJLGdHj3oVjebm2rlCZpmOHQExCbMelDqOWHlFdqfXKDwyP5Zz6eMchTMGqMs9tmUa7N5+t5TIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHPc9qcPv8hjhSmmXuBIp6XxGfnbmsu2DprkLWr9rQkKoHcJuV
+	5M8ueb/isy4kg7DODbsM8PJOxPvVyIDVOa6ddzFIMvfleH0qp4sQwmfWEiUB0w79qQPXUjyNbHa
+	AV/hWZu3bVC6SCcri1Q==
+X-Received: from wmo16.prod.google.com ([2002:a05:600c:2310:b0:477:9654:b44c])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b24:b0:480:4c20:6a06 with SMTP id 5b1f17b1804b1-48069c486a7mr11321405e9.17.1769502622747;
+ Tue, 27 Jan 2026 00:30:22 -0800 (PST)
+Date: Tue, 27 Jan 2026 08:30:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260107-jump-label-rust-maintainers-v1-1-702b03482f2e@google.com>
- <CANiq72nV0Z_UjdAwT=41TjjfmKnT6WL4hVNcxg_QCe7TAEYK_Q@mail.gmail.com>
- <20260112100006.7db6d31d@gandalf.local.home> <aWUO59edshSRit-Y@google.com>
- <20260112115408.48ed4d35@gandalf.local.home> <aXddnjiHCX-XS5S9@google.com>
- <20260126213748.GR171111@noisy.programming.kicks-ass.net> <CAH5fLggpBodWYv2EQy5sgg5eSp9=7PM9ZqXcKaTuozNKN1eGGg@mail.gmail.com>
- <20260127082401.GS171111@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260127082401.GS171111@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAIh3eGkC/42NSw6CQBAFr0J6bZueljjiynsYFnwaaAMMmQGiI
+ dzdkRO4eIt6i6oNgniVAPdkAy+rBnVjBD4lUHXF2ApqHRmY+EqGLL6WYcK+KKVHv4QZh0LHOU5
+ 8QGMppSxjsXUJ0TB5afR92J955E7D7PzniK3m9/7nXQ0atMQlXdIbNyyP1rm2l3PlBsj3ff8CB qg0OscAAAA=
+X-Change-Id: 20260107-jump-label-rust-maintainers-17040992e7db
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2119; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=hwBaBoD9OSacw4NnzL4jIYitbGlgLVKwETo1gtKVJMY=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBpeHeWER77Zri73/W6N/5KgdP27HFRlfQCAO16s
+ zvIVuK/Gj+JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaXh3lgAKCRAEWL7uWMY5
+ RmNfEACK/KILBMeokBf3bUhZoyAQxazhasStI0fs4LHhWp87r++jsgfqmVhaQmrs3rR9wjz4ZNV
+ kn3Ww2ivOrm+i7sHtgRVgsNqALiVrQ+XX/Zqbo5ftGFsvBhYKHDaHuVAn+hva8mD3dvnVl4u8p4
+ gXX36HcKmbxYoRqZsM3Y9+yFDQMaCElJ8vQPmW+CTD/6QDMn6gMJ2Vo3uwmeLtg91kGC2UfjucG
+ 3o4U+YfUIZmds4701Cs43jb+ccqcuFhYq4+UHJfI8rOgJ4WuGDSxD+9kfaWp4lD1rvZy1L4adlj
+ PNm5OPg1pcPsOzuW1YZCkmRqUQ+1MVVXUGSjziNBryyAbHoU3w5F+oKrFkQ3Ik4u5929Nxlfyuo
+ gAHV7KFkWucVU+ku7Cnww7QM01tuC2Wxeq11yntS6w7of6jaugCHxEXKSXK8k1KCdYeov7rtmo0
+ OqeV8B9COkcglj28oHd60djn0qI8MH7mCopVBTobsFdWrvpg6RQC9SeeSuWy8TPfr7TXOAifvpP
+ m3uDU1LFNIMM2atvSbFX4Nu1UXFOjighhGJ9MrURq5/ANeOo6bOkLGtKmuVlIEHrMrkpz4Sp7lC
+ umC7jQMgcGMYR0P8PLalR5EE50hG2FdEzW9xZlPnuJWm7loTkKiiOaRb2RYtBIEelG7gfXkfciy AzAKVkEy1dCxWgQ==
+X-Mailer: b4 0.14.2
+Message-ID: <20260127-jump-label-rust-maintainers-v2-1-11b7c30b11d9@google.com>
+Subject: [PATCH v2] MAINTAINERS: add Rust files to STATIC BRANCH/CALL and TRACING
 From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 27 Jan 2026 09:26:38 +0100
-X-Gm-Features: AZwV_QgANvHt6Lqy5OOiiQfMqFktPFZ9UjT4gMNqlsOKZAwYLRP9FTi1Hmw-t5o
-Message-ID: <CAH5fLgiA3Cat1g69O04mnd08bwzxnVKjgV8mABTRoK2G87S4Tg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add Rust files to STATIC BRANCH/CALL and TRACING
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+To: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
 	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jan 27, 2026 at 9:24=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Mon, Jan 26, 2026 at 10:58:24PM +0100, Alice Ryhl wrote:
->
-> > > > What about the STATIC BRANCH/CALL subsystem? Should I also leave yo=
-u or
-> > > > someone else as 'M:' there? It's unclear to me who usually picks up
-> > > > patches for STATIC BRANCH/CALL when they are not a dependency to a =
-patch
-> > > > for somewhere else.
-> > >
-> > > I think that'd be me -- I typically do the static branch/call bits.
-> >
-> > Ah, thanks for the clarification.
-> >
-> > Are you ok with using the approach Steven suggested for STATIC
-> > BRANCH/CALL subsystem too? That is, add a [RUST] entry below the
-> > current one, list you and me as M:, and anyone else in the main entry
-> > as R:, and patches land through the same tree as where they would have
-> > landed if they were a C patch.
-> >
-> > I'm open to whichever setup you prefer, but I think it'd be nice to
-> > get these files into MAINTAINERS somewhere.
->
-> Yeah, I suppose that'll work. That [RUST] entry seems to be the
-> predominant style in MAINTAINERS.
->
-> My only concern is that most of the [RUST] entries don't actually
-> include the F entries for the !rust part, which means that if the C bits
-> change the Rust people aren't notified.
->
-> So I would suggest having all F duplicated from the main entry and then
-> add the rust files. Or, like we did with ATOMIC, just add you as M to
-> the main entry, along with a few rust files.
+I realized that these files were never listed in MAINTAINERS when they
+were added in commit ad37bcd965fd ("rust: add tracepoint support").
 
-Ok, that makes sense to me as well. Let's do that. Sending v2 now ...
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Based on v6.19-rc1.
+---
+Changes in v2:
+- Adjust MAINTAINERS entries as per discussion on v1.
+- Link to v1: https://lore.kernel.org/r/20260107-jump-label-rust-maintainers-v1-1-702b03482f2e@google.com
+---
+ MAINTAINERS | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> Some day I might actually learn enough to not see it as line noise :/
->
-> See 2387fb2a9b84 ("rust: sync: Add basic atomic operation mapping framewo=
-rk")
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b11839cba9de1e9e43f63787578edd8c429ca39..d1bc1bd7584896c78e517f80194d5de6828298cf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25006,6 +25006,7 @@ STATIC BRANCH/CALL
+ M:	Peter Zijlstra <peterz@infradead.org>
+ M:	Josh Poimboeuf <jpoimboe@kernel.org>
+ M:	Jason Baron <jbaron@akamai.com>
++M:	Alice Ryhl <aliceryhl@google.com>
+ R:	Steven Rostedt <rostedt@goodmis.org>
+ R:	Ard Biesheuvel <ardb@kernel.org>
+ S:	Supported
+@@ -25017,6 +25018,9 @@ F:	include/linux/jump_label*.h
+ F:	include/linux/static_call*.h
+ F:	kernel/jump_label.c
+ F:	kernel/static_call*.c
++F:	rust/helpers/jump_label.c
++F:	rust/kernel/generated_arch_static_branch_asm.rs.S
++F:	rust/kernel/jump_label.rs
+ 
+ STI AUDIO (ASoC) DRIVERS
+ M:	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+@@ -26474,6 +26478,17 @@ F:	scripts/tracing/
+ F:	scripts/tracepoint-update.c
+ F:	tools/testing/selftests/ftrace/
+ 
++TRACING [RUST]
++M:	Alice Ryhl <aliceryhl@google.com>
++M:	Steven Rostedt <rostedt@goodmis.org>
++R:	Masami Hiramatsu <mhiramat@kernel.org>
++R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++L:	linux-trace-kernel@vger.kernel.org
++L:	rust-for-linux@vger.kernel.org
++S:	Maintained
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
++F:	rust/kernel/tracepoint.rs
++
+ TRACING MMIO ACCESSES (MMIOTRACE)
+ M:	Steven Rostedt <rostedt@goodmis.org>
+ M:	Masami Hiramatsu <mhiramat@kernel.org>
+
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20260107-jump-label-rust-maintainers-17040992e7db
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
