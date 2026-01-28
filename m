@@ -1,120 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55447284689;
-	Wed, 28 Jan 2026 22:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F6934106D;
+	Wed, 28 Jan 2026 22:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769639372; cv=none; b=srvNUv60M6nUe9lSb6MyKLqgavjDy+48VAbvhrpHI4Ej5cInlCbaQjBLQJyXtkZ/K57cMdXtrxRpWy9iguyRfajIwk1bVeHEekDZusQvUcbe8Tqj/0Dyan1yHpKUNtOKwPYodrU6On2iaVv+vWyt4jmlDOKyN8d9uDYr7KGM2qU=
+	t=1769639644; cv=none; b=OAeCrLH9bUpE3CYgSi6/5z+kPMr2m1DevZ6MPf9c8uTKY8JgW/nJlthk3ldrQCgccRVR3KJZD4uJfRruhPGyKXCO6e30VUPlIBtyGSa4rp52842BuL+n8vR/I9IzZLgzm1KUzqBkaNvHEZzMweRZNnnEMjq5Px49ppmotoaX4wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769639372; c=relaxed/simple;
-	bh=a0Ddc1sM8tlaUXYOPYAnFNHQc1jvPGEdsW9X+42V578=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EUAVWmgOBKM8sFxkPNYahzWSgutv0PZn/FFwRciPfNQGI4etKwtSMW+gphcQe3BA1o/c69TYQsF+IFLhdIHQuhUM+sA6zuAK1izmGfhN6GfbV7AQCts4n5Zzfi53s5PnAgXFwbbEekY+JDuwvs7IFotEDpQTwLjzJmoqSeDmW2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJyx5ETe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769639644; c=relaxed/simple;
+	bh=rLGrE+MaErxQW3OluWWITCG7Jv6qU44Pywclqiz3Ero=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Cvl6jvgcdVk8e51SqQ1ClP+nPzxeo31hS8UogwWIxATKksot22JAiVZrgpJ+5Ki3lNfwJHppvDPJZwulfol+iacD9FD0OX++HpkHHc+e6PSbkQit2I9yy8Xpy60b9YsRUihXK1uHsgDwepEmLr6Z4qRJoD0XFmp+NkwmOrwFHGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iq8isnPJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJyx5ETe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE12CC4CEF1;
-	Wed, 28 Jan 2026 22:29:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iq8isnPJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F27C4CEF1;
+	Wed, 28 Jan 2026 22:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769639372;
-	bh=a0Ddc1sM8tlaUXYOPYAnFNHQc1jvPGEdsW9X+42V578=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SJyx5ETeeFXIxljN9Qea1B15cBU8SVVXXIgRbVrSN8RYjlmz3AsJtHksRpsq2/l/9
-	 wXETTKIpwrHDCDTMLmcAHuNPj2ai/z0XUZFCurH8/aMUwhPj+jeK1nd/iteefYsNnP
-	 NKKxn3lw7S06muMLmmBnMTzWEI5We/FZXnhDKpz8D+UyQlWYinllyxSGH6wb1hTS0D
-	 S7LOiZL++0aRDRJ/4EXK4GXEfzHw5IfW2urOGVxWoI5kAOFcWWYh2XcKDyxcpGE39Z
-	 fZOyZwQlXEhalzhJA+5k+7dJZdk9WhK8Pl9ini9Vu3vahXYAvRK1jC0gsG/Qo1AF3N
-	 oUVSIpSiYDGHA==
-Date: Thu, 29 Jan 2026 07:29:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Andrii
- Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- kernel-team@meta.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: fix incorrect lockdep condition in
- filter_chain()
-Message-Id: <20260129072928.da41ab0a2e71da86dd4cd4b8@kernel.org>
-In-Reply-To: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
-References: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1769639644;
+	bh=rLGrE+MaErxQW3OluWWITCG7Jv6qU44Pywclqiz3Ero=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Iq8isnPJeEQ9FlyLr5jVlx950KuIxAnpFnDgawomVe2ycqr2ZE884i3shii0qfYXY
+	 hwsuipY51sk2UPQk4nfoMuN3HCagh8ust0fZ1Yxhsncj7ZFqjv7nUbWOo1xsSqO0Bk
+	 mSjJdpvIXLdNJL1Zn5DMux8dU06FBa+rAA6XLJy3+fK+IHQgr1MnJPwamgEM6obtt2
+	 4/YjJNRpowPFfiPttKuEEFbKnSBNURNcWRjWIc+oErWxDVqefH07rHJHpYmPhvZOCO
+	 N5n0U1M2Zwq5xAC9o2jK4WR26VJhlohZ++EtnhtlhufH7w2/ZaRBw0B30yVctxaiFy
+	 G+cst5ly1Hw4A==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.18] tracing: Avoid possible signed 64-bit truncation
+Date: Wed, 28 Jan 2026 17:33:16 -0500
+Message-ID: <20260128223332.2806589-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260128223332.2806589-1-sashal@kernel.org>
+References: <20260128223332.2806589-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.18.7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Jan 2026 10:16:11 -0800
-Breno Leitao <leitao@debian.org> wrote:
+From: Ian Rogers <irogers@google.com>
 
-> The list_for_each_entry_rcu() in filter_chain() uses
-> rcu_read_lock_trace_held() as the lockdep condition, but the function
-> holds consumer_rwsem, not the RCU trace lock.
-> 
-> This gives me the following output when running with some locking debug
-> option enabled:
-> 
->   kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
->     filter_chain
->     register_for_each_vma
->     uprobe_unregister_nosync
->     __probe_event_disable
-> 
-> Remove the incorrect lockdep condition since the rwsem provides
-> sufficient protection for the list traversal.
-> 
+[ Upstream commit 00f13e28a9c3acd40f0551cde7e9d2d1a41585bf ]
 
-Looks good to me.
+64-bit truncation to 32-bit can result in the sign of the truncated
+value changing. The cmp_mod_entry is used in bsearch and so the
+truncation could result in an invalid search order. This would only
+happen were the addresses more than 2GB apart and so unlikely, but
+let's fix the potentially broken compare anyway.
 
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://patch.msgid.link/20260108002625.333331-1-irogers@google.com
+Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-Thanks,
+LLM Generated explanations, may be completely bogus:
 
-> Cc: stable@vger.kernel.org
-> Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> Changes in v2:
-> - updated the "fixes" tag (Oleg)
-> - Link to v1: https://patch.msgid.link/20260128-uprobe_rcu-v1-1-d41316763799@debian.org
-> ---
->  kernel/events/uprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index d546d32390a81..726d13b375f3d 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
->  	bool ret = false;
->  
->  	down_read(&uprobe->consumer_rwsem);
-> -	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-> +	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
->  		ret = consumer_filter(uc, mm);
->  		if (ret)
->  			break;
-> 
-> ---
-> base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
-> change-id: 20260128-uprobe_rcu-e21867ab4c1b
-> 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
-> 
+The original buggy code was introduced in v6.15 and later. It's only
+present in 6.15+ kernels.
 
+### 8. SUMMARY OF ANALYSIS
 
+**The Bug:**
+- The `cmp_mod_entry()` function uses subtraction of two `unsigned long`
+  values and returns the result as `int`
+- On 64-bit systems, if addresses differ by more than 2^31 (~2GB), the
+  truncation from 64-bit to 32-bit can flip the sign
+- This would cause `bsearch()` to make wrong decisions about search
+  direction
+- Result: potentially incorrect module address lookups in trace data
+
+**The Fix:**
+- Replaces arithmetic subtraction with simple comparisons
+- Returns -1, 0, or 1 directly based on comparisons
+- No overflow or truncation possible with the new code
+- Logic is more readable and provably correct
+
+**Stable Criteria Evaluation:**
+1. ✅ **Obviously correct and tested**: Simple logic, reviewed by
+   maintainers
+2. ✅ **Fixes a real bug**: Yes, a potential comparator correctness bug
+3. ⚠️ **Important issue**: Moderate - unlikely to trigger (requires >2GB
+   address separation) but could cause incorrect trace output
+4. ✅ **Small and contained**: Only changes one function body (~6 lines)
+5. ✅ **No new features**: Pure bug fix
+6. ✅ **Applies cleanly**: Should apply to 6.15+ kernels where this code
+   exists
+
+**Risk Assessment:**
+- Very low risk - the change is small and the new logic is simpler
+- The original code has a provable bug (integer overflow on truncation)
+- The new code has no such issues
+
+**Concerns:**
+- The code only exists in 6.15+ kernels (introduced March 2025)
+- The bug is "unlikely" per the author (requires addresses >2GB apart)
+- No known real-world reports of this actually causing issues
+
+### DECISION
+
+This is a valid bug fix that:
+- Fixes a real (though unlikely to trigger) bug in the comparator
+  function
+- Is very small and self-contained
+- Has been reviewed and acked by the tracing maintainers
+- Has near-zero regression risk
+- Applies to 6.15+ kernels only
+
+The fix is surgical, obviously correct, and addresses a potential
+correctness issue. While the bug is unlikely to trigger in practice
+(addresses must be >2GB apart), it could cause silent data corruption in
+trace output when it does trigger. The fix is trivial and risk-free.
+
+**YES**
+
+ kernel/trace/trace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 142e3b737f0bc..907923d5f8bbb 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6061,10 +6061,10 @@ static int cmp_mod_entry(const void *key, const void *pivot)
+ 	unsigned long addr = (unsigned long)key;
+ 	const struct trace_mod_entry *ent = pivot;
+ 
+-	if (addr >= ent[0].mod_addr && addr < ent[1].mod_addr)
+-		return 0;
+-	else
+-		return addr - ent->mod_addr;
++	if (addr < ent[0].mod_addr)
++		return -1;
++
++	return addr >= ent[1].mod_addr;
+ }
+ 
+ /**
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.51.0
+
