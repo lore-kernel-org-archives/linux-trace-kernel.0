@@ -1,131 +1,95 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113622737E0;
-	Wed, 28 Jan 2026 18:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A3845038;
+	Wed, 28 Jan 2026 20:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769626590; cv=none; b=FmY0UDCWd9dSW8Q4i/1QAGMm8E5SXLrLYPE0B1i4d5WNMJlfCHb2y3R96SBFWe9sqZ4iGKUPuDNfnjU76YppgnGovGY1l8js+1SufDaYQMbF688cCv5hCe0Eg27fXwqRujbN2MQNNsCuL8lX2ELVvTvwyFvK0Xc05kpM0CCwLRQ=
+	t=1769630424; cv=none; b=NBzXZ7wwaOjRARJcfwhTWqjlk0snIIpJv7GigfOt/717lxfZGMB99WQ+3fVKjDgYuFU4ihI78uDORL/WsjTHawk40qy+o8BFvKnLUaN38fPXxo/4WKPF5/BCB766co4Wu6C20EUx2qhLjwoIKTV+a8yqg0VC53oBmGIHvxTzuIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769626590; c=relaxed/simple;
-	bh=JQ6oAOMrOWrgsxXhHdDHSefRhwRr44NnCHveM5HrUtY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c4C6Hm6MjJ0MrjB0moMCAZ7Ir+JpWc/DhKT7nnkcT0keN4iJVpvp3JSRUQSq1eoS2m11hYbsEe0vVz018nnJTmWbhzmq9jzAs3HvbOj5qDE/efUEMEQYUZllHh5f96Yy9uMP1jbuZNlfPeb32Cbe+uRgO+it4S5XMYLYShZGIKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=GJGkJQYm; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1769630424; c=relaxed/simple;
+	bh=AFqUHU1rA8CNlD68xMlcxHEwkgyEguVM4+WYNpslnL8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=c86b0l3A71SPwozvTHW9DZyIOvDfi3TOHI5HMprz+qxkkSFOd7bf42CLIAXjsspSnpsjZQAT1ejYKL6K0NP0MY1G9qYyMfDHmRixYPDYlsFHbqNofge+9+tw4DTLy8MPTknCpVoHUkWatSl3KMlMH14SqzDJ1giYo67a+euww8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLrJOdVK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="GJGkJQYm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=gQch948IyA92V6h0BzqtNv/cqMWX5k0kFZ5KJwnzom4=; b=GJGkJQYmfGdEWblFdVo1dSx3js
-	JimX3mckTI69QcFWJsK3YOizzVgE05r4EvllQFNWP2QY+8nuWX89m2Vd1RyKBajkYrGCQUujVPcFT
-	DcbpxCaRbqMtm6/m3zBtIuDF5NivczHcxg3F7KeDX1M1P5BpObHOLNyJHBgbzln5CpKo/SRtInlS8
-	WFVPPNv1h7T+PmHJGOSoh3kz7aBTdWTcke7fWhDx27h3VYUfR566zHX8wcMuDDvItzflSl9GqZjxn
-	MgLY2KWPqQTu+sUzFok1yAcGhDW6G9NeCV5ebX8B0mD7pQ3L6gTTfmzGAQkNC1TTEkr7VopEif1sj
-	scKLFLBA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vlAi4-000NHU-05; Wed, 28 Jan 2026 18:56:13 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 28 Jan 2026 10:16:11 -0800
-Subject: [PATCH v2] uprobes: fix incorrect lockdep condition in
- filter_chain()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLrJOdVK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F4CC4CEF1;
+	Wed, 28 Jan 2026 20:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769630424;
+	bh=AFqUHU1rA8CNlD68xMlcxHEwkgyEguVM4+WYNpslnL8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=eLrJOdVKSNhQQAqknu9fmSA4t/SDXSgyskjpSQ1kgFsE466LlQcCnWqO6b+tM9ByL
+	 jbzEr9x/wTQS4L5RTRcVlpURKY/Bu63yGyqvMBO03kYLK5h2gBb+VkdsaYeOa/5HSa
+	 tKVHqK0n6M3ng59L+cla/LClZLSFaPlOWaqpbfXc3tETjwlWKh5UY5l0CYpn847816
+	 m7V3W1px8rOS/EprUfFNDGkb3GB6iguv2y9ELNFm96lauF4QICcLUdxMlaYocL9O9T
+	 5zN2znGEWNlTT4TbV7yeeml8SaOz2iN8/EbIgKV0weS96u5EXgbkagh17slo8IR5DT
+	 3WXX7ZI/OnSQQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 8BCB539EF96A;
+	Wed, 28 Jan 2026 20:00:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
-X-B4-Tracking: v=1; b=H4sIAGtSemkC/23NywqDMBCF4VcJszbFiRIvK9+jSDFxqtOFkYlKi
- /juRbvt8sDPd3aIJEwRarWD0MaRwwS1MokCP3bTQJp7qBWY1NgUTanXWYKjh/hVk8HSFp3LPTp
- IFMxCT35f2L397bi6F/nlFM5i5LgE+VxvG57dX3hDjbrPMUNb2KyoqqYnx910CzJAexzHF/aA7
- g63AAAA
-X-Change-ID: 20260128-uprobe_rcu-e21867ab4c1b
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
- stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-f4305
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1757; i=leitao@debian.org;
- h=from:subject:message-id; bh=JQ6oAOMrOWrgsxXhHdDHSefRhwRr44NnCHveM5HrUtY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpelvHWMWjX6l5l5feVpQ3ElIS/APObRyOLPum7
- y++fBZELCCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaXpbxwAKCRA1o5Of/Hh3
- bVboD/9SvqYw73jXei3fdACOZqB9zgjK25WzACp/I0D+Ybu9luAFdziZxivizmp9P+nNMxn6bsx
- 1Iqil8ZHPAvsUqJ2JrQKLr/9rmBbcma2h7AXMSMhcjPCLMrUy/+YeOKRKvW2LDWIX0v+VAzJJCh
- krEXEP2r76NqVnv5jTOY/ljDcr4o2DQARnONbmN4a8AokDL6WQXJFiAHJuzzo4Lxb2sVMJYSShV
- ueDS2sLjhuCZYzjzOURNkzLKT//glryvYluC6SROIPZPBTZpGGxKhOBqyBuY1dKyX/HMDdnHu7Z
- +p/IQ3rNYbFEft8qad0U352Nf+WpJy5naltKZP793UVHvZeA9ND4j1mp9jp9djHfwEmecQbdkIa
- gY9takeUnZKMKTtJ2gfLQL/vH6FtlpSEq4GWiBnwqddaBmLx1TZI9xy1VCvjdNu6FsHA9Gemgme
- u4DSx+PzmQipC5qcom2PyHfjfjQqxMURCXeM/gOl34X8kQAFiTH8zKpwoyUcUBLgr2DrDCuYezZ
- Agq5jC8zOixFFD+5qfcsqPUJAo/wjWgA4kAiMUGem8lz3MaFjTrEBi5vLSBR+odf7V0Zry/2q4a
- Hhk8J7Yg++6kcJ01JbxSOQywyYXif7OXMNWNx4WF2O6EKI/H+3EbD6EOWtTi1LLc9+FtmilIgJY
- MWZqdUnT2+PnK/A==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv6 bpf-next 0/9] ftrace,bpf: Use single direct ops for bpf
+ trampolines
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176963041735.2209200.7611804745942755088.git-patchwork-notify@kernel.org>
+Date: Wed, 28 Jan 2026 20:00:17 +0000
+References: <20251230145010.103439-1-jolsa@kernel.org>
+In-Reply-To: <20251230145010.103439-1-jolsa@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: rostedt@kernel.org, revest@google.com, mark.rutland@arm.com,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ menglong8.dong@gmail.com, song@kernel.org
 
-The list_for_each_entry_rcu() in filter_chain() uses
-rcu_read_lock_trace_held() as the lockdep condition, but the function
-holds consumer_rwsem, not the RCU trace lock.
+Hello:
 
-This gives me the following output when running with some locking debug
-option enabled:
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
-    filter_chain
-    register_for_each_vma
-    uprobe_unregister_nosync
-    __probe_event_disable
+On Tue, 30 Dec 2025 15:50:01 +0100 you wrote:
+> hi,
+> while poking the multi-tracing interface I ended up with just one ftrace_ops
+> object to attach all trampolines.
+> 
+> This change allows to use less direct API calls during the attachment changes
+> in the future code, so in effect speeding up the attachment.
+> 
+> [...]
 
-Remove the incorrect lockdep condition since the rwsem provides
-sufficient protection for the list traversal.
+Here is the summary with links:
+  - [PATCHv6,bpf-next,1/9] ftrace,bpf: Remove FTRACE_OPS_FL_JMP ftrace_ops flag
+    https://git.kernel.org/bpf/bpf-next/c/4be42c922201
+  - [PATCHv6,bpf-next,2/9] ftrace: Make alloc_and_copy_ftrace_hash direct friendly
+    https://git.kernel.org/bpf/bpf-next/c/676bfeae7bd5
+  - [PATCHv6,bpf-next,3/9] ftrace: Export some of hash related functions
+    https://git.kernel.org/bpf/bpf-next/c/0e860d07c29d
+  - [PATCHv6,bpf-next,4/9] ftrace: Add update_ftrace_direct_add function
+    https://git.kernel.org/bpf/bpf-next/c/05dc5e9c1fe1
+  - [PATCHv6,bpf-next,5/9] ftrace: Add update_ftrace_direct_del function
+    https://git.kernel.org/bpf/bpf-next/c/8d2c1233f371
+  - [PATCHv6,bpf-next,6/9] ftrace: Add update_ftrace_direct_mod function
+    https://git.kernel.org/bpf/bpf-next/c/e93672f770d7
+  - [PATCHv6,bpf-next,7/9] bpf: Add trampoline ip hash table
+    https://git.kernel.org/bpf/bpf-next/c/7d0452497c29
+  - [PATCHv6,bpf-next,8/9] ftrace: Factor ftrace_ops ops_func interface
+    https://git.kernel.org/bpf/bpf-next/c/956747efd82a
+  - [PATCHv6,bpf-next,9/9] bpf,x86: Use single ftrace_ops for direct calls
+    https://git.kernel.org/bpf/bpf-next/c/424f6a361096
 
-Cc: stable@vger.kernel.org
-Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changes in v2:
-- updated the "fixes" tag (Oleg)
-- Link to v1: https://patch.msgid.link/20260128-uprobe_rcu-v1-1-d41316763799@debian.org
----
- kernel/events/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d546d32390a81..726d13b375f3d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-+	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-
----
-base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
-change-id: 20260128-uprobe_rcu-e21867ab4c1b
-
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
 
