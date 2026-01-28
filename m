@@ -1,184 +1,110 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD372BE644;
-	Wed, 28 Jan 2026 08:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99744502A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 09:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769589558; cv=none; b=OeIneUUPb0ZgveFcKS4GrsrfQbZkK9OgRumuM8MGYivkgLSy9nwC8SPipjUBpttCrBG0IeJ78Oj7GniCkAwUoeh+33WfeDayRS8Y3vM9t4rlfBTH4awakV80tirHM7mfhtAqRRvLt7mkbSV5OnS6smZGhVLM2+zB0TX7LABpmLQ=
+	t=1769591740; cv=none; b=AYO7l7JSe14YBZhbBllW1/k4YYp392QsKzPm3czA2dkqz7mBkhgU9Jns7st7rcoeAReRZd/J2jr5KO7tgo9MwJMVA3SCh92Lfyk8cxjwD7EuSR8YEHNo6SpNjUEYh3ivfxHDcPYu2ax6Pb4WWsg91iiG9D8j0SjLvoZTFHdqqN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769589558; c=relaxed/simple;
-	bh=jyDIBgd2dVoTOoNBEgP2eQ8ROxB5IpkQMTnov8i8hAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KK51PlAsUt27v3AwYjwm4pQAbbPljpvYuDrOPbHP4vso9S8hRoyMq4zg6NQCqZ7YGYG8VOSmLHu7pYSGrjBiYBNs/MxQLjyIsvJIo92Y5YueGXavepXyFI+mETTipt+xuaD46dZolEm6I2xYIinqE2Sw9p+/LkJI86K65j2BAbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: cfd1b43cfc2411f0b0f03b4cfa9209d1-20260128
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:0c86a15a-a7bb-45b4-a610-52085b897074,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:2f617db6a462fa1cb07923e6f2d777b4,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	52,EDM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: cfd1b43cfc2411f0b0f03b4cfa9209d1-20260128
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1474635869; Wed, 28 Jan 2026 16:39:08 +0800
-Message-ID: <5044e453-4fd8-4530-a793-292adc2888ac@kylinos.cn>
-Date: Wed, 28 Jan 2026 16:39:05 +0800
+	s=arc-20240116; t=1769591740; c=relaxed/simple;
+	bh=LfaBtJpSWCF5kA4CdK+iSTrFtU8Ddk4D4KH57CT9f/A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MJlavlIP9FYsgcwHHnUNjrJVUPlpdVbJM9qaksKq7hJxXUy+juAXpxm5Q42FTLbqeKZdjlNztM2eAvuBb9Xao1w2rfA7uUFnflD4uQ7xFB7yh8aWv78SOrDVNLCsATWtBCSqqykbcAsqa+L0/yNRo3CDg/ELr4DtIkWsMTkMYHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sZH+W6n; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sZH+W6n"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4803b4e3b9eso53633305e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 01:15:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769591737; x=1770196537; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrjnjrWJRJ/MpDqQmBtQDJOql1m90JNXl6Q6zdTxfG8=;
+        b=4sZH+W6nbqOE7yyIEUhfpdr3XmOK06qUCq2A+ULWc0YxqzwlMr1asECRW4RTmhCC4Q
+         XuE3AKdIqCNd+rgF3GMvivBQ8O+s3bujYAWdxWPgHGUeoHnxGF3JE/fSb9cQe8zLAwdF
+         utTofSqf91WQJSRyb3MSQOcx8s4UN8rUi+3EYe46rVVqIluBvn474vCROpXAzT2dwXV4
+         6GqgOx88ssfwpsdBjk58y4YwX1dGj1qDQN6SggkKKoowAMtYqlWVzwV/zbZqMdrvEp2I
+         BqNj13GxNXsxYkzNb+u5mz7bNiY26pMYnbSJIHaXXp45Jd4DnoxHcGnT9b9cmST6bE0Y
+         ZDyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769591737; x=1770196537;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrjnjrWJRJ/MpDqQmBtQDJOql1m90JNXl6Q6zdTxfG8=;
+        b=Gn+5e5yC40icwYBnmRR6hclQwJX9p6ir1C1mXJOUOTRDn5zbF8jQd3soyaoR8cDyeR
+         t+6Z+bpgB0Op5TTOSUIGLNasGBmNAXl/e5g/MCU6S+LM8qmUujG72M+Dfeh8+WTvJDpM
+         TH+XHiL0a1+Z251bJ3fpJz5xvoD9nF94Njwc7JiJPJhqjsX3nbi6qcFyKFZS1fbRtZn3
+         yMxDgWbKKgfRLL+V/WSNcOBS2R2Bofqm2AYKJPRVVa5GY8gRG1ep2Nv8crHl8pI1WV4t
+         u1WeEosznKSQ/C/XZFEa9yfjAeqLvUrdGP8Nup0MTpiWfcuDNwK0oI0tGOXO7jVXh1VE
+         tlmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr1YyPGtcwb9lQg9XZeQufmFaVBfRNoMe2CYVrp79HfwencBEm0dEVcS47TIBI4kEsCSKhj+lR5sAsrrtnCHKCy5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySYrgqr7PJr5jjc/N+38YhsVao2ZxMF7ZM6i8nA1uDleyyAdKd
+	YQCb0F5FA9sPIHtQPn4G2wKgALfTvnRbzzRXEavgcaGaG3MXZWxR1KYV/f8ochm7Mz0rWGpQV4b
+	rvMj7AgCwAyQ3/SVPwQ==
+X-Received: from wmby17.prod.google.com ([2002:a05:600c:c051:b0:480:6b43:8a18])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3113:b0:47e:dc64:f1c6 with SMTP id 5b1f17b1804b1-48069c3fb40mr58701215e9.6.1769591737025;
+ Wed, 28 Jan 2026 01:15:37 -0800 (PST)
+Date: Wed, 28 Jan 2026 09:15:36 +0000
+In-Reply-To: <aXkEiC1sGOGfDuzI@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] tracing/kprobes: Make setup_boot_kprobe_events()
- asynchronous
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, axboe@kernel.dk, mathieu.desnoyers@efficios.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260127012016.76713-1-tianyaxiong@kylinos.cn>
- <20260127012312.84659-1-tianyaxiong@kylinos.cn>
- <20260128134936.539782c2112073e55e7a0304@kernel.org>
- <6ab04276-8897-4d5e-a86c-e656cf1f6f91@kylinos.cn>
- <20260128165302.1c67c6fc1c54525247d7f553@kernel.org>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20260128165302.1c67c6fc1c54525247d7f553@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20251203-binder-trace1-v1-0-22d3ffddb44e@google.com>
+ <20251203-binder-trace1-v1-2-22d3ffddb44e@google.com> <aXkEiC1sGOGfDuzI@google.com>
+Message-ID: <aXnTuHQgbEFHIrhw@google.com>
+Subject: Re: [PATCH 2/2] rust_binder: add binder_transaction tracepoint
+From: Alice Ryhl <aliceryhl@google.com>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, "Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Martijn Coenen <maco@android.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Christian Brauner <brauner@kernel.org>, Suren Baghdasaryan <surenb@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
+On Tue, Jan 27, 2026 at 06:31:36PM +0000, Carlos Llamas wrote:
+> On Wed, Dec 03, 2025 at 02:48:09PM +0000, Alice Ryhl wrote:
+> > This patch adds the binder_transaction tracepoint to Rust Binder. This
+> > was chosen as the next tracepoint to add as it is the most complex
+> > tracepoint. (And it's also an important tracepoint known to perfetto.)
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> 
+> This approach seems to work well considering the limitations. I wonder
+> though if it would be more practical to simply pass the individual
+> primitive values used by TP_prinkt() from the start? I suppose the
+> downside would be the extra overhead with the tracepoints disabled.
+> However, this might be neglectable and the solution much simpler?
 
-在 2026/1/28 15:53, Masami Hiramatsu (Google) 写道:
-> On Wed, 28 Jan 2026 15:24:15 +0800
-> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
->
->> 在 2026/1/28 12:49, Masami Hiramatsu (Google) 写道:
->>> On Tue, 27 Jan 2026 09:23:12 +0800
->>> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
->>>
->>>> During kernel boot, the setup_boot_kprobe_events() function causes
->>>> significant delays, increasing overall startup time.
->>>>
->>>> The root cause is a lock contention chain: its child function
->>>> enable_boot_kprobe_events() requires the event_mutex, which is
->>>> already held by early_event_add_tracer(). early_event_add_tracer()
->>>> itself is blocked waiting for the trace_event_sem  read-write lock,
->>>> which is held for an extended period by trace_event_update_all().
->>>>
->>>> To resolve this, we have moved the execution of
->>>> setup_boot_kprobe_events() to the trace_init_wq  workqueue, allowing
->>>> it to run asynchronously.
->>>>
->>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>> ---
->>>>    kernel/trace/trace_kprobe.c | 14 +++++++++++++-
->>>>    1 file changed, 13 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
->>>> index 9953506370a5..4c6621f02696 100644
->>>> --- a/kernel/trace/trace_kprobe.c
->>>> +++ b/kernel/trace/trace_kprobe.c
->>>> @@ -2031,6 +2031,13 @@ static __init int init_kprobe_trace_early(void)
->>>>    }
->>>>    core_initcall(init_kprobe_trace_early);
->>>>    
->>>> +static struct work_struct kprobe_trace_work __initdata;
->>>> +
->>>> +static void __init kprobe_trace_works_func(struct work_struct *work)
->>>> +{
->>>> +	setup_boot_kprobe_events();
->>>> +}
->>>> +
->>>>    /* Make a tracefs interface for controlling probe points */
->>>>    static __init int init_kprobe_trace(void)
->>>>    {
->>>> @@ -2048,7 +2055,12 @@ static __init int init_kprobe_trace(void)
->>>>    	trace_create_file("kprobe_profile", TRACE_MODE_READ,
->>>>    			  NULL, NULL, &kprobe_profile_ops);
->>>>    
->>>> -	setup_boot_kprobe_events();
->>>> +	if (trace_init_wq) {
->>>> +		INIT_WORK(&kprobe_trace_work, kprobe_trace_works_func);
->>>> +		queue_work(trace_init_wq, &kprobe_trace_work);
->>> Hmm, this queue_work is not required if kprobe_boot_events_buf[] is
->>> empty. We should check it because most of the time we don't need it.
->> Yes, I will improve it in the next version.
->>> Also, deferring initialization makes it indeterminate when this
->>> tracing will begin.
->> Indeed, While most scenarios don't need boot-time tracing, and users
->> prioritize boot speed, we must balance the need for deterministic traces
->> with faster startup.
-> I just wonder why don't you define kprobe events after boot (e.g.
-> from init script) instead of kernel cmdline. Using cmdline means
-> it will be used for tracing kernel boot.
->
-> - tracing kernel boot -> use kernel cmdline (synchronous)
-> - tracing user boot -> use tracefs (asynchronous)
-I was actually working on a boot optimization task when I found that my 
-machine was getting blocked on trace-related operations.
->
->>> For kprobe event use case, I think setup_boot_kprobe_events() should
->>> check the kprobe_boot_events_buf is empty at first. But I think Yaxiong
->>> use case happens when you are using kprobe events via cmdline, is that
->>> correct?
->> The issue was identified without enabling kprobe events via the cmdline.
-> Interesting. So is it fixed by another patch [1]?
->
-> [1] https://lore.kernel.org/all/20260127053848.108473-1-sunliming@linux.dev/
->
-Yes, specifically looking at trace_kprobe in isolation, that issue is 
-indeed resolved. However, the process still ends up blocking the 
-initialization of blktrace later on.
->> The core finding is that asynchronous initialization can drastically cut
->> boot time under different workloads. As blocking occurs elsewhere in the
->> tracing infrastructure beyond just kprobe events, adopting async is a
->> broadly applicable strategy for boot time optimization.
-> Yes, but it is also possible to set it up from user space, because that
-> user process can work asynchronously.
-> We can make the ftrace initialization async to accelerate boot time, but
-> that means it is not useful for tracing kernel boot.
->
->>> I think introducing "async" cmdline option is more preferable.
->> Agreed, this works. Users focused on boot speed over early-boot tracing
->> can opt for this parameter to gain a startup performance boost.
-> Yeah, that is an option. Anyway, basically, users have another option to
-> setup ftrace after boot user space asynchronously. That is my
-> recommendation for such use case.
-Yes, that's what I normally do.
->
->>> BTW, I found that the kprobe events from kernel cmdline will be made
->>> after boot-time tracing from bootconfig. Maybe it should be run this
->>> earlier timing too.
->> Yes. Additionally, this optimization does not conflict with the current
->> patch series at all.
->>
->> I'll submit the updated patch for the next version promptly.
-> OK.
->
-> Thank you,
->
->>> Thank you,
->>>
->>>
->>>> +	} else {
->>>> +		setup_boot_kprobe_events();
->>>> +	}
->>>>    
->>>>    	return 0;
->>>>    }
->>>> -- 
->>>> 2.25.1
->>>>
->
+I decided to go down this road because the same kinds of helpers would
+be useful for vendor hooks.
+
+> > +static inline rust_binder_node rust_binder_transaction_target_node(rust_binder_transaction t)
+> > +{
+> > +	void *p = *(void **) (t + RUST_BINDER_LAYOUT.t.target_node);
+> > +
+> > +	if (p)
+> > +		p = p + RUST_BINDER_LAYOUT.n.arc_offset;
+> > +	return NULL;
+> 
+> It looks like this should have 'return p' right? Sorry for the late
+> review this has been picked up so we might need a fixes for this.
+
+Fix sent:
+https://lore.kernel.org/r/20260128-binder-fix-target-node-null-v1-1-78d198ef55a5@google.com
+
+No idea how this happened. Thanks.
+
+Alice
