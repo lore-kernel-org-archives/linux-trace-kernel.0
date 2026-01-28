@@ -1,134 +1,108 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E1234FF59;
-	Wed, 28 Jan 2026 12:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5968F35EDC1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 13:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769604975; cv=none; b=fFSDbLa6lF61EaiK9o959gRv8uNJd7m42VhidtssBZ3bSVoRg5jm++kbkscvypEf6GlFF7cHi5+MXJpVJTrHQiR0XC5DpkkKMl64+BKqVG95junSJkv5o7unSG/jlsFk1wMTntn8fGTpwbN/3FROuRkezC1dzdCyuOJzmRz3mWU=
+	t=1769608267; cv=none; b=V/7hZ+1Esk+5GOGDZiwBGJvuOSyhOqccRul9AkDAGl9Gxu041021taqWUO5mL7idJYDVaeJz61ZgTtG6fSGyVwk8mMJAbssHQERHkT1wj5yUMxMAICOXxhp0pL2v46TwYkXpZXUbCGjqTYs206gkQ8u1+QY53pevcR/IwJ6a9n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769604975; c=relaxed/simple;
-	bh=9IJ4CsI3azrt2akw/y/viNEErdy5VYNOL4a3Nwm3XmY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tvXc8xtCjhSHy3xEir52ccNpt3yrSWAvbpxis3a1eOtH/gW9IzWt05tJJr44tHVt8+KmAVbd1X4jm4qSF7G+tnwNXbG+sVJQ5dPDckBOt43YtXEJRGdw+v56IGvmV/oUztiGyZrT+usTV/vMr/4rS+PvDD7ddcI//qUxIV+dx3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b64d3e4afc4811f0b0f03b4cfa9209d1-20260128
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
-	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF
-	CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:92eb13ed-6a87-41e9-ad00-44c723de46b5,IP:10,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-20
-X-CID-INFO: VERSION:1.3.6,REQID:92eb13ed-6a87-41e9-ad00-44c723de46b5,IP:10,URL
-	:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-20
-X-CID-META: VersionHash:a9d874c,CLOUDID:3c76fa077e3e311b2dc2ad8b2ae08010,BulkI
-	D:2601282056087V6MGO1B,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
-	0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b64d3e4afc4811f0b0f03b4cfa9209d1-20260128
-X-User: tianyaxiong@kylinos.cn
-Received: from localhost.localdomain [(175.2.149.138)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1998762990; Wed, 28 Jan 2026 20:56:07 +0800
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-To: mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	axboe@kernel.dk,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous when trace_async_init set
-Date: Wed, 28 Jan 2026 20:55:54 +0800
-Message-Id: <20260128125554.1717261-1-tianyaxiong@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260128125117.1704853-1-tianyaxiong@kylinos.cn>
-References: <20260128125117.1704853-1-tianyaxiong@kylinos.cn>
+	s=arc-20240116; t=1769608267; c=relaxed/simple;
+	bh=1KlpPwn83e+LajM42ZpDpgBNVKsBxMbyCrQG0f9ReSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkavMD6tj8x6K8pru+T1+QmDN9CKCr37TKc7mZcBIDSSxU17rI9GIpZAFJYWJNURTkwP0Zb9PYIR8RwKLoLeuh/NWP2SJXnUmJ8RiNpJGaepmRdQyWezmsCsLc+SEBijY9pZGIBwZCGSk3Xbld4wCAtHFKH+E0OKZAhUf0cp47Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CEkgvZ8d; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CEkgvZ8d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769608265;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6sm7I4MbFbi1h1/VGos4meITNXWHUCDkuO2ezjqcp5c=;
+	b=CEkgvZ8d9ZiRSiewsL5YKOTrSd5Vadl3qulkRGXFkkutOqikZTwJm4ln7m5l0lc/N5dLJk
+	YjWVO8WxbF37keCA9dh06FYyjk23MQE+fyM4MpIKSA2OaPitBtBDnY7Vb0fgMZJEUlmLJO
+	wv9lLn02+VGRGyw3+N2fukqfmKidfs8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-442-duDDmRzgMiGz_2u1MmKs3A-1; Wed,
+ 28 Jan 2026 08:51:00 -0500
+X-MC-Unique: duDDmRzgMiGz_2u1MmKs3A-1
+X-Mimecast-MFC-AGG-ID: duDDmRzgMiGz_2u1MmKs3A_1769608258
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 559CD1955D84;
+	Wed, 28 Jan 2026 13:50:57 +0000 (UTC)
+Received: from fedora (unknown [10.45.224.8])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 44D1A19560B2;
+	Wed, 28 Jan 2026 13:50:49 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 28 Jan 2026 14:50:56 +0100 (CET)
+Date: Wed, 28 Jan 2026 14:50:48 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] uprobes: fix incorrect lockdep condition in
+ filter_chain()
+Message-ID: <aXoUOEhDfncEkC-f@redhat.com>
+References: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-The init_blk_tracer() function causes significant boot delay as it
-waits for the trace_event_sem lock held by trace_event_update_all().
-Specifically, its child function register_trace_event() requires
-this lock, which is occupied for an extended period during boot.
+On 01/28, Breno Leitao wrote:
+>
+> The list_for_each_entry_rcu() in filter_chain() uses
+> rcu_read_lock_trace_held() as the lockdep condition, but the function
+> holds consumer_rwsem, not the RCU trace lock.
+> 
+> This gives me the following output when running with some locking debug
+> option enabled:
+> 
+>   kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
+>     filter_chain
+>     register_for_each_vma
+>     uprobe_unregister_nosync
+>     __probe_event_disable
+>
+> Remove the incorrect lockdep condition since the rwsem provides
+> sufficient protection for the list traversal.
 
-To resolve this, when the trace_async_init parameter is enabled, the
-execution of primary init_blk_tracer() is moved to the trace_init_wq
-workqueue, allowing it to run asynchronously. and prevent blocking
-the main boot thread.
+I hope Andrii will recheck, but looks obviously correct to me.
 
-Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
----
- kernel/trace/blktrace.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+> Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for better performance")
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d031c8d80be4..56c7270ec447 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1832,7 +1832,9 @@ static struct trace_event trace_blk_event = {
- 	.funcs		= &trace_blk_event_funcs,
- };
- 
--static int __init init_blk_tracer(void)
-+static struct work_struct blktrace_works __initdata;
-+
-+static int __init __init_blk_tracer(void)
- {
- 	if (!register_trace_event(&trace_blk_event)) {
- 		pr_warn("Warning: could not register block events\n");
-@@ -1852,6 +1854,25 @@ static int __init init_blk_tracer(void)
- 	return 0;
- }
- 
-+static void __init blktrace_works_func(struct work_struct *work)
-+{
-+	__init_blk_tracer();
-+}
-+
-+static int __init init_blk_tracer(void)
-+{
-+	int ret = 0;
-+
-+	if (trace_init_wq && trace_async_init) {
-+		INIT_WORK(&blktrace_works, blktrace_works_func);
-+		queue_work(trace_init_wq, &blktrace_works);
-+	} else {
-+		ret = __init_blk_tracer();
-+	}
-+
-+	return ret;
-+}
-+
- device_initcall(init_blk_tracer);
- 
- static int blk_trace_remove_queue(struct request_queue *q)
--- 
-2.25.1
+This commit just change the __list_check_rcu() condition...
+
+Perhaps
+Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
+
+makes more sense?
+
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
