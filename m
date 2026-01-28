@@ -1,363 +1,267 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABEF313552
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 16:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769618328; cv=none; b=sQTnkIXVlrmXP9MN9zGIy/EDIkuB6Dssb72C3CN+4MWXFa+B6NsckO2xSP0VjJSuEV7x8El50KoaE1rmwH6ODwg7hHr4r+lM6aKHe41g6nJC/rEF/tVIH521CZv3Q8kn/2JTXOhJux57ISe6WU4+JAC+opajjRzJUWZ9zCLExz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769618328; c=relaxed/simple;
-	bh=oYpywg6wSKKfqKMO9drAZK+XQSP+GwNWRgfyOXjs4ME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o/wlChCHcPux075ZYO9htzz53KQTmiCnHNZ1tOeowDSJWCbbMeG2L8Fn+bVR/au81TBKVdSfyUUbyj9RgJtheiP2ZoJQhwSaDOfNYQadOsuUouJxy2aOSJLa4pylqLlaC11Xy3hLyxf26aVq9c2AA1QYTCr+WgNdIh1ebvZBrlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ARRu21ty; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A2E322B6F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769620030; cv=pass; b=bMo9EBn1GKXn+17ZdcArC+RXij/20gFPfjp3Pfs6ZAS5hhu0yLzAG16yhaocLNmtlxMfkFNf9lwjPwpNV5x97dlUwYM7bb0J4CLIcObev02FBOibCtfKaYzHrGJU8n1YDZFGEwRr8etjHe1EfoBTdRShjYWbiVBV0/nyFlsAXpY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769620030; c=relaxed/simple;
+	bh=gWij/TH8QPr+IwLvH0/2/fUh1RCAU2KJ3dVcD1USFIU=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzc1w4wrrzCKzru4zsgGgBUX1nAeet1PiTowzRYdQ3XlrjCW56M/AScTsIwOgywopSr7zT1A/lSWf4GIoIJwckm2HFAJrK6xsF178GIt7ywh2YoMbNqsWsM8g0E191/xm+dUwRJx0TNUa7ds5x/EKzujgAtVPJoMp5PFjhpZSBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JS6heE0f; arc=pass smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ARRu21ty"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769618325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vvwUtKzwHdNf28qH621RfDijiiFJTykMerMvhScCt2E=;
-	b=ARRu21tyqu5DOTFbFXrvmWpky3yzHdNxZtAJLJJmXMF60E84wCF7PsyJnDHIf3tDKocwpm
-	ISSjSVEJNYr0j96GuO0DwFv1NYlgY3T7AvHiS+q1/YerdRHxt6bd2unABLJZio8eJsN9Jl
-	OX943DxrOmMEIfb/pP1slBxkAYqPduU=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-155-ph3CW09vNRe8XrX8HLSOIQ-1; Wed, 28 Jan 2026 11:38:44 -0500
-X-MC-Unique: ph3CW09vNRe8XrX8HLSOIQ-1
-X-Mimecast-MFC-AGG-ID: ph3CW09vNRe8XrX8HLSOIQ_1769618324
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-4088136faccso12058092fac.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 08:38:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JS6heE0f"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-56373f07265so35234e0c.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 09:07:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769620026; cv=none;
+        d=google.com; s=arc-20240605;
+        b=coRaCLjdz5HwhcI4Jnlp2sH7dOgc/MiInK6BKgUdFhZ5+ZmpAvVxuESiyQ8ywkgM4h
+         UptS3iByrnz/pa88BRzU+mDrD6/++sbuwtsBRZwALpkNXpGFBFs8z/jAyx5O+ZQFU572
+         wxZjIB6dCowN5xgttC9xInubP6SvQIlcHzp+97rZRzVdgoJGe4SAUeQzuKBTxD2MsJRc
+         yFLCeW2MarzrBwqe3OC5ewRz0V4AzDodhzyPPH/9NZm7S2v7byEdGDlEWaOJuU0zedMl
+         VUutJegf9GscP41nd2aCNshV3xz1B3BfLW78THOGQPnJGwYU3rsnNmsB489xJpjSi3XA
+         I6Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:dkim-signature;
+        bh=hQ2ByvmYGALpHjwu0udZOzYr4BMUegwRg7Tc5bSaMn8=;
+        fh=6KANILxn6MFlyVkx5h/tYKgW24xxIByqZ9FmF3krErI=;
+        b=jhm53Pvkv3dA8IOAiYCYi8+xuXKabyisYTpsDtB8pi/aL22/6SdPWkr/PQZ0Jpvx4k
+         rWI+AYLcBlmcgN4f/Dh/S7nnf2oDOC5yCVqEVzG2HmSicFjyevlaLIjddtdy4SswhYkB
+         HMKLQXo6CHhum0xt46LuQkc7dA5fkef/Z8wezGl/dBqTMNC81GkwldZjPoDH55Nttr1E
+         z/1JvMgbS34opjy6fYLpifCjvpX19+yxEmgsSGnTrq3cyPRnZVSyEC1/Y8m7KTXq9oU+
+         /xx1cbV1n857GjwLfK+mO4VQZ+dq5BvzJivRbA/oT0qw6FM1y4QqKQcuyt9rJCuKlf6o
+         9VQw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769620026; x=1770224826; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hQ2ByvmYGALpHjwu0udZOzYr4BMUegwRg7Tc5bSaMn8=;
+        b=JS6heE0f4DJMjmBufL78cbbgFc3tXStJhNFZSB7w4D9RdPaRft+59kETp8NXqy5eUt
+         yyFGbrPcnCIu3T8hdoXRzuOcfjZkVPjeFrWbcvcFDog9qna8n7ZOYof0xtFYSrPFoTXn
+         E57qAMjQVF/kXr6sC18641QtVgsvERg7ITeS7cJEoCvRUbyfuyONLK5OEtiU/w5Z4/ji
+         q5HHLFaqIXmT7ti9vqgri4WtDeIor8DY1O1Vb2NJ8rLb8RYbfhTAo1n4Y3g8gDMxQ1m3
+         BU/xtpMdz0FfsuubtAJHCoPo+wFYo5VJ/FUR8l0E+RAot+qNqZKUOUEZni16PEhrbaYS
+         EcAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769618324; x=1770223124;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vvwUtKzwHdNf28qH621RfDijiiFJTykMerMvhScCt2E=;
-        b=BqdWjyxNKmuHR2wJBe3OkkHCt1l8VY36OBdDQn/WaXOAsvM+bWKTSMTozPkCO6atQK
-         UaSWhyScRkElojWD8RJdTb0ee1Lj0okpsuWCc4xk2AkXKuLX7zAVPlTEKJKDH92pgn4i
-         ts08ePNW1Xz3jnLEsOnllpx6aWIdCAg61jB22PduEOUh8YdYhtT6hvW/lDNV66NCOlbN
-         biD36O+OOpi4lZr9KW5leXKEVO2RORaoORidrgq1Al6683hjUvQZByPzdRVOw1NcBgfV
-         DkWBNIE/YEo1aPhoqk4Y9YCqVCr6RfCU/N16qP89GY3AhYehQ/yhiFBUfRFcnYvb0rm0
-         YAbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZJKQN2IvOjzUONhszurI+Z3xf6WczD826dr7h3oC1jsglXIbhx7IubLSYF5GldOhtIxLLJjIPcWVIYsZgiYXKcfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdYh8lqHnl8wD6kQbP7wGeexD9hXdgPbYXUMpzicRvbwJCzaWq
-	qiCmDv3genEuskQ94kMicPq7vE9Yk4QmUVfHwuCHxu5SB+Lpn1YdTgrz1sZuSFVv3linuFbh2YV
-	eIM4vNjmuJUtMWxgOY+/98mbrvkhrbJ6uRq093ux5vfR5DGyojSF1HUWhoIqN00otHXrUKGFjgg
-	==
-X-Gm-Gg: AZuq6aI3dLPD6TMWbbTC7dqYoUGWx5wP82oWyY/8YHRdJjxNkS/brfp69GwGEotGVsK
-	VSIak4NMS3Qe5CqLAiJ0VbAYniek/a85luNNrRQUrN2aGtZ44R7wlzuMxDNStLjN5EJBX9oZ1BM
-	XyVLUaCYFavOUWrndydtdLJj7/w0XlaYBgz1TxsaFlor+vs+SkAdM68uv/TcympkysedvQMMpJS
-	Cm/ZP6LTxfixHDRe+CzOOgl4HyLxBxo08/4EODzGEWHukfsWG5ZxL2jRyqulEq+FRlW1uXQUwid
-	Tq8i5OpXpZMCL9u/ju1s1rPqAqx0iIgGqgIsmu5urLqRcflCfgBEK0Un34l7CA8c2bO300jumTl
-	goLkO3nira9qlyoBoWQ==
-X-Received: by 2002:a05:6870:6f03:b0:3ec:3aa1:84d2 with SMTP id 586e51a60fabf-4093fc716demr3763764fac.11.1769618322522;
-        Wed, 28 Jan 2026 08:38:42 -0800 (PST)
-X-Received: by 2002:a05:6870:6f03:b0:3ec:3aa1:84d2 with SMTP id 586e51a60fabf-4093fc716demr3763682fac.11.1769618320931;
-        Wed, 28 Jan 2026 08:38:40 -0800 (PST)
-Received: from ?IPV6:2601:282:1c83:9aa0::56cf? ([2601:282:1c83:9aa0::56cf])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-409570f63b4sm2077985fac.3.2026.01.28.08.38.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jan 2026 08:38:40 -0800 (PST)
-Message-ID: <b824f131-3e51-422c-9e98-044b0a2928a6@redhat.com>
-Date: Wed, 28 Jan 2026 09:38:37 -0700
+        d=1e100.net; s=20230601; t=1769620026; x=1770224826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hQ2ByvmYGALpHjwu0udZOzYr4BMUegwRg7Tc5bSaMn8=;
+        b=A+bW3t510y3/cNtpmYdIo6OR2V/KEzY3i7bBRSTKhjfIVAt8vC89Ut6ifR+lw3QnWF
+         bW+EYpQ9X30Z76/OtBRj4GfNBaKmGaWEwGAkZl2cX0hxp4inGQdUYTzxmes/U8nty+U2
+         WCh/1iq4dTtcqLLxxZJg0C85DGrBNDRpXDhyrOQvGSv0JuYdhGUQ1mz+e+xw/5n3rRFZ
+         w9hm1junXAMyD/Z9Yt8AJKiN1Sw5thxbeBPRC3aq7fSUWcz545OZBOSEQgbkDKqMmDPe
+         yiKPJyV4SbOkc8DUsqV4eBjqBU682+98y4Lp3DUMRVgi29MJwLsv+AO3v1PaS5eRHavG
+         QMCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyPdSwVxwcVSM+IfP/UCox7o1PAUgSEnTqWMrUuSzLu+CgpTYqVP5CssRumHg6Rx8Q0NfGabf7B5JniCfxmWutl/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyjxGIKxBcZ3WW3WVjr7+6GrpcNeQ0C5FuKel7FkAE4N8UVEtG
+	Gywxh9s/xYQ/Zoh95FAchyHl1P5gVvRz2prYO9yAri1JG7Rk7gOLLFzfClBtn4WnVFJCGBwT5EJ
+	ooskwXunW6kjFJNOQyP8C8W/RJzzGnNHfOQjlGxwO
+X-Gm-Gg: AZuq6aK6NyG25UKx4sWdOiB9RIdMRDIICArqkA+F2QVI2yYfRHTGANTNsEqvDdMQ0pf
+	h87Cb6I0zfAQeJaCjtnyVKqFGrDEHHD5atwkAHtgoj2CjDz6iz3ZA8VxMqt036PxNvpWcdo+D3Q
+	KZ7fMP8sEJ5FTZZGCKmmbnNRKxLDXGFsoNspQeVOukfCFIyycP5Wtj8RtbDfc4+YXJttrKmbAjN
+	C2G6eJ3bxLBOpYlqgQ39vuh2awTFvd2zmdUKkamwp7U/g1dBg0ylS8Tv6HQEvp+q3EG6G2gdkuk
+	0tJNGOw0ZW6eS6qIqWu2ef1rtevidtjxAsZe
+X-Received: by 2002:a05:6122:ca5:b0:54a:992c:815e with SMTP id
+ 71dfb90a1353d-56679502f80mr1751301e0c.8.1769620025275; Wed, 28 Jan 2026
+ 09:07:05 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 28 Jan 2026 09:07:04 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 28 Jan 2026 09:07:04 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <ab3f297e-44d5-4f42-aa17-f2e7c135580e@linux.intel.com>
+References: <cover.1760731772.git.ackerleytng@google.com> <638600e19c6e23959bad60cf61582f387dff6445.1760731772.git.ackerleytng@google.com>
+ <ab3f297e-44d5-4f42-aa17-f2e7c135580e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v14 03/16] introduce collapse_single_pmd to
- unify khugepaged and madvise_collapse
-To: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- akpm@linux-foundation.org
-Cc: david@kernel.org, lorenzo.stoakes@oracle.com, ziy@nvidia.com,
- baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
- lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
- jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org,
- willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, zokeefe@google.com, rientjes@google.com,
- rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
- David Hildenbrand <david@redhat.com>, shivankg@amd.com
-References: <20260122192841.128719-1-npache@redhat.com>
- <20260122192841.128719-4-npache@redhat.com>
-From: Nico Pache <npache@redhat.com>
-In-Reply-To: <20260122192841.128719-4-npache@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fyid1eqwfgD9mzfwCMMVFYrga5E0SDk60V4pBV61ue8_1769618324
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, en-ZM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Wed, 28 Jan 2026 09:07:04 -0800
+X-Gm-Features: AZwV_QhaOE_wJlLL_hX7tpT0otF_GVqIj23tN-vGGdhqYGAPjKuSGPxvod54AXo
+Message-ID: <CAEvNRgEo2UZ63uv0F7Pv8VfeJipyu82b=Rgiz2gnttdRu9aEPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 01/37] KVM: guest_memfd: Introduce per-gmem
+ attributes, use to guard user mappings
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
+	bp@alien8.de, brauner@kernel.org, chao.p.peng@intel.com, 
+	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@intel.com, 
+	dave.hansen@linux.intel.com, david@redhat.com, dmatlack@google.com, 
+	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, 
+	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
+	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, 
+	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+Binbin Wu <binbin.wu@linux.intel.com> writes:
 
-could you please apply the following fixup to avoid potentially using a stale
-VMA in the new writeback-retry logic for madvise collapse.
+> On 10/18/2025 4:11 AM, Ackerley Tng wrote:
+> [...]
+>>
+>> +static int kvm_gmem_init_inode(struct inode *inode, loff_t size, u64 fl=
+ags)
+>> +{
+>> +	struct gmem_inode *gi =3D GMEM_I(inode);
+>> +	MA_STATE(mas, &gi->attributes, 0, (size >> PAGE_SHIFT) - 1);
+>> +	u64 attrs;
+>> +	int r;
+>> +
+>> +	inode->i_op =3D &kvm_gmem_iops;
+>> +	inode->i_mapping->a_ops =3D &kvm_gmem_aops;
+>> +	inode->i_mode |=3D S_IFREG;
+>> +	inode->i_size =3D size;
+>> +	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
+>> +	mapping_set_inaccessible(inode->i_mapping);
+>> +	/* Unmovable mappings are supposed to be marked unevictable as well. *=
+/
+> AS_UNMOVABLE has been removed and got merged into AS_INACCESSIBLE, not su=
+re if
+> it's better to use "Inaccessible" instead of "Unmovable"
+>
 
-Thank you!
--- Nico
+Thanks, will update comment as follows:
 
-----8<----
-commit a9ac3b1bfa926dd707ac3a785583f8d7a0579578
-Author: Nico Pache <npache@redhat.com>
-Date:   Fri Jan 23 16:32:42 2026 -0700
+	/*
+	 * guest_memfd memory is not migratable or swappable - set
+         * inaccessible to gate off both.
+	 */
+	mapping_set_inaccessible(inode->i_mapping);
+	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
 
-    madvise writeback retry logic fix
+>> +	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+>> +
+>> +	gi->flags =3D flags;
+>> +
+>> +	mt_set_external_lock(&gi->attributes,
+>> +			     &inode->i_mapping->invalidate_lock);
+>> +
+>> +	/*
+>> +	 * Store default attributes for the entire gmem instance. Ensuring eve=
+ry
+>> +	 * index is represented in the maple tree at all times simplifies the
+>> +	 * conversion and merging logic.
+>> +	 */
+>> +	attrs =3D gi->flags & GUEST_MEMFD_FLAG_INIT_SHARED ? 0 : KVM_MEMORY_AT=
+TRIBUTE_PRIVATE;
+>> +
+>> +	/*
+>> +	 * Acquire the invalidation lock purely to make lockdep happy. There
+>> +	 * should be no races at this time since the inode hasn't yet been ful=
+ly
+>> +	 * created.
+>> +	 */
+>> +	filemap_invalidate_lock(inode->i_mapping);
+>> +	r =3D mas_store_gfp(&mas, xa_mk_value(attrs), GFP_KERNEL);
+>> +	filemap_invalidate_unlock(inode->i_mapping);
+>> +
+>> +	return r;
+>> +}
+>> +
+> [...]
+>> @@ -925,13 +986,39 @@ static struct inode *kvm_gmem_alloc_inode(struct s=
+uper_block *sb)
+>>
+>>   	mpol_shared_policy_init(&gi->policy, NULL);
+>>
+>> +	/*
+>> +	 * Memory attributes are protected the filemap invalidation lock, but
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0^
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 protected by
 
-    Signed-off-by: Nico Pache <npache@redhat.com>
+Thanks!
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 59e5a5588d85..2b054f7d9753 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2418,6 +2418,14 @@ static enum scan_result collapse_single_pmd(unsigned long
-addr,
- 	mmap_read_unlock(mm);
- 	*mmap_locked = false;
- 	result = collapse_scan_file(mm, addr, file, pgoff, cc);
-+
-+	if (!cc->is_khugepaged && result == SCAN_PAGE_DIRTY_OR_WRITEBACK &&
-+	    mapping_can_writeback(file->f_mapping)) {
-+		const loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
-+		const loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
-+
-+		filemap_write_and_wait_range(file->f_mapping, lstart, lend);
-+	}
- 	fput(file);
+>> +	 * the lock structure isn't available at this time.  Immediately mark
+>> +	 * maple tree as using external locking so that accessing the tree
+>> +	 * before its fully initialized results in NULL pointer dereferences
+>> +	 * and not more subtle bugs.
+>> +	 */
+>> +	mt_init_flags(&gi->attributes, MT_FLAGS_LOCK_EXTERN);
+>> +
+>>   	gi->flags =3D 0;
+>>   	return &gi->vfs_inode;
+>>   }
+>>
+>>   static void kvm_gmem_destroy_inode(struct inode *inode)
+>>   {
+>> -	mpol_free_shared_policy(&GMEM_I(inode)->policy);
+>> +	struct gmem_inode *gi =3D GMEM_I(inode);
+>> +
+>> +	mpol_free_shared_policy(&gi->policy);
+>> +
+>> +	/*
+>> +	 * Note!  Checking for an empty tree is functionally necessary to avoi=
+d
+>> +	 * explosions if the tree hasn't been initialized, i.e. if the inode i=
+s
+>
+> It makes sense to skip __mt_destroy() when mtree is empty.
+> But what explosions it could trigger if mtree is empty?
+> It seems __mt_destroy() can handle the case if the external lock is not s=
+et.
+>
+>
 
- 	if (result != SCAN_PTE_MAPPED_HUGEPAGE)
-@@ -2840,19 +2848,8 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned
-long start,
- 			*lock_dropped = true;
+Hope this updated comment clarify the explosion:
 
- 		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb) {
--			struct file *file = get_file(vma->vm_file);
--			pgoff_t pgoff = linear_page_index(vma, addr);
--
--			if (mapping_can_writeback(file->f_mapping)) {
--				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
--				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
--
--				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
--				triggered_wb = true;
--				fput(file);
--				goto retry;
--			}
--			fput(file);
-+			triggered_wb = true;
-+			goto retry;
- 		}
+	/*
+	 * Note!  Checking for an empty tree is functionally necessary
+	 * to avoid explosions if the tree hasn't been fully
+	 * initialized, i.e. if the inode is being destroyed before
+	 * guest_memfd can set the external lock, lockdep would find
+	 * that the tree's internal ma_lock was not held.
+	 */
 
- 		switch (result) {
---
-2.52.0
-
-On 1/22/26 12:28 PM, Nico Pache wrote:
-> The khugepaged daemon and madvise_collapse have two different
-> implementations that do almost the same thing.
-> 
-> Create collapse_single_pmd to increase code reuse and create an entry
-> point to these two users.
-> 
-> Refactor madvise_collapse and collapse_scan_mm_slot to use the new
-> collapse_single_pmd function. This introduces a minor behavioral change
-> that is most likely an undiscovered bug. The current implementation of
-> khugepaged tests collapse_test_exit_or_disable before calling
-> collapse_pte_mapped_thp, but we weren't doing it in the madvise_collapse
-> case. By unifying these two callers madvise_collapse now also performs
-> this check. We also modify the return value to be SCAN_ANY_PROCESS which
-> properly indicates that this process is no longer valid to operate on.
-> 
-> We also guard the khugepaged_pages_collapsed variable to ensure its only
-> incremented for khugepaged.
-> 
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 106 +++++++++++++++++++++++++++---------------------
->  1 file changed, 60 insertions(+), 46 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index fefcbdca4510..59e5a5588d85 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -2394,6 +2394,54 @@ static enum scan_result collapse_scan_file(struct mm_struct *mm, unsigned long a
->  	return result;
->  }
->  
-> +/*
-> + * Try to collapse a single PMD starting at a PMD aligned addr, and return
-> + * the results.
-> + */
-> +static enum scan_result collapse_single_pmd(unsigned long addr,
-> +		struct vm_area_struct *vma, bool *mmap_locked,
-> +		struct collapse_control *cc)
-> +{
-> +	struct mm_struct *mm = vma->vm_mm;
-> +	enum scan_result result;
-> +	struct file *file;
-> +	pgoff_t pgoff;
-> +
-> +	if (vma_is_anonymous(vma)) {
-> +		result = collapse_scan_pmd(mm, vma, addr, mmap_locked, cc);
-> +		goto end;
-> +	}
-> +
-> +	file = get_file(vma->vm_file);
-> +	pgoff = linear_page_index(vma, addr);
-> +
-> +	mmap_read_unlock(mm);
-> +	*mmap_locked = false;
-> +	result = collapse_scan_file(mm, addr, file, pgoff, cc);
-> +	fput(file);
-> +
-> +	if (result != SCAN_PTE_MAPPED_HUGEPAGE)
-> +		goto end;
-> +
-> +	mmap_read_lock(mm);
-> +	*mmap_locked = true;
-> +	if (collapse_test_exit_or_disable(mm)) {
-> +		mmap_read_unlock(mm);
-> +		*mmap_locked = false;
-> +		return SCAN_ANY_PROCESS;
-> +	}
-> +	result = try_collapse_pte_mapped_thp(mm, addr, !cc->is_khugepaged);
-> +	if (result == SCAN_PMD_MAPPED)
-> +		result = SCAN_SUCCEED;
-> +	mmap_read_unlock(mm);
-> +	*mmap_locked = false;
-> +
-> +end:
-> +	if (cc->is_khugepaged && result == SCAN_SUCCEED)
-> +		++khugepaged_pages_collapsed;
-> +	return result;
-> +}
-> +
->  static unsigned int collapse_scan_mm_slot(unsigned int pages, enum scan_result *result,
->  					    struct collapse_control *cc)
->  	__releases(&khugepaged_mm_lock)
-> @@ -2466,34 +2514,9 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, enum scan_result *
->  			VM_BUG_ON(khugepaged_scan.address < hstart ||
->  				  khugepaged_scan.address + HPAGE_PMD_SIZE >
->  				  hend);
-> -			if (!vma_is_anonymous(vma)) {
-> -				struct file *file = get_file(vma->vm_file);
-> -				pgoff_t pgoff = linear_page_index(vma,
-> -						khugepaged_scan.address);
-> -
-> -				mmap_read_unlock(mm);
-> -				mmap_locked = false;
-> -				*result = collapse_scan_file(mm,
-> -					khugepaged_scan.address, file, pgoff, cc);
-> -				fput(file);
-> -				if (*result == SCAN_PTE_MAPPED_HUGEPAGE) {
-> -					mmap_read_lock(mm);
-> -					if (collapse_test_exit_or_disable(mm))
-> -						goto breakouterloop;
-> -					*result = try_collapse_pte_mapped_thp(mm,
-> -						khugepaged_scan.address, false);
-> -					if (*result == SCAN_PMD_MAPPED)
-> -						*result = SCAN_SUCCEED;
-> -					mmap_read_unlock(mm);
-> -				}
-> -			} else {
-> -				*result = collapse_scan_pmd(mm, vma,
-> -					khugepaged_scan.address, &mmap_locked, cc);
-> -			}
-> -
-> -			if (*result == SCAN_SUCCEED)
-> -				++khugepaged_pages_collapsed;
->  
-> +			*result = collapse_single_pmd(khugepaged_scan.address,
-> +						      vma, &mmap_locked, cc);
->  			/* move to next address */
->  			khugepaged_scan.address += HPAGE_PMD_SIZE;
->  			progress += HPAGE_PMD_NR;
-> @@ -2799,6 +2822,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->  			cond_resched();
->  			mmap_read_lock(mm);
->  			mmap_locked = true;
-> +			*lock_dropped = true;
->  			result = hugepage_vma_revalidate(mm, addr, false, &vma,
->  							 cc);
->  			if (result  != SCAN_SUCCEED) {
-> @@ -2809,17 +2833,17 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->  			hend = min(hend, vma->vm_end & HPAGE_PMD_MASK);
->  		}
->  		mmap_assert_locked(mm);
-> -		if (!vma_is_anonymous(vma)) {
-> -			struct file *file = get_file(vma->vm_file);
-> -			pgoff_t pgoff = linear_page_index(vma, addr);
->  
-> -			mmap_read_unlock(mm);
-> -			mmap_locked = false;
-> +		result = collapse_single_pmd(addr, vma, &mmap_locked, cc);
-> +
-> +		if (!mmap_locked)
->  			*lock_dropped = true;
-> -			result = collapse_scan_file(mm, addr, file, pgoff, cc);
->  
-> -			if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
-> -			    mapping_can_writeback(file->f_mapping)) {
-> +		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb) {
-> +			struct file *file = get_file(vma->vm_file);
-> +			pgoff_t pgoff = linear_page_index(vma, addr);
-> +
-> +			if (mapping_can_writeback(file->f_mapping)) {
->  				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
->  				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
->  
-> @@ -2829,26 +2853,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->  				goto retry;
->  			}
->  			fput(file);
-> -		} else {
-> -			result = collapse_scan_pmd(mm, vma, addr, &mmap_locked, cc);
->  		}
-> -		if (!mmap_locked)
-> -			*lock_dropped = true;
->  
-> -handle_result:
->  		switch (result) {
->  		case SCAN_SUCCEED:
->  		case SCAN_PMD_MAPPED:
->  			++thps;
->  			break;
-> -		case SCAN_PTE_MAPPED_HUGEPAGE:
-> -			BUG_ON(mmap_locked);
-> -			mmap_read_lock(mm);
-> -			result = try_collapse_pte_mapped_thp(mm, addr, true);
-> -			mmap_read_unlock(mm);
-> -			goto handle_result;
->  		/* Whitelisted set of results where continuing OK */
->  		case SCAN_NO_PTE_TABLE:
-> +		case SCAN_PTE_MAPPED_HUGEPAGE:
->  		case SCAN_PTE_NON_PRESENT:
->  		case SCAN_PTE_UFFD_WP:
->  		case SCAN_LACK_REFERENCED_PAGE:
-
+>> +	 * being destroyed before guest_memfd can set the external lock.
+>> +	 */
+>> +	if (!mtree_empty(&gi->attributes)) {
+>> +		/*
+>> +		 * Acquire the invalidation lock purely to make lockdep happy,
+>> +		 * the inode is unreachable at this point.
+>> +		 */
+>> +		filemap_invalidate_lock(inode->i_mapping);
+>> +		__mt_destroy(&gi->attributes);
+>> +		filemap_invalidate_unlock(inode->i_mapping);
+>> +	}
+>>   }
+>>
+>>   static void kvm_gmem_free_inode(struct inode *inode)
+>> --
+>> 2.51.0.858.gf9c4a03a3a-goog
