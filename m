@@ -1,230 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9754132C31B;
-	Wed, 28 Jan 2026 08:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD372BE644;
+	Wed, 28 Jan 2026 08:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769588430; cv=none; b=jZ6A/+jsk1zNBxnq+uVhohsYkcWytr43KGitl9PnzYTW5XyPtVHEWigwDybqdxDLg00NH2wMmCnWnwNbGJ09HLd4d4svtPrVSut7tlHw/3yYE7iSpykjS7xeo148Isq80ly7tEQbQECQGilawf5Za8ypHeQo/6i0iLMgsGf7KNE=
+	t=1769589558; cv=none; b=OeIneUUPb0ZgveFcKS4GrsrfQbZkK9OgRumuM8MGYivkgLSy9nwC8SPipjUBpttCrBG0IeJ78Oj7GniCkAwUoeh+33WfeDayRS8Y3vM9t4rlfBTH4awakV80tirHM7mfhtAqRRvLt7mkbSV5OnS6smZGhVLM2+zB0TX7LABpmLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769588430; c=relaxed/simple;
-	bh=MBayRkE85SAbpVFB1EuS8EgofcZvP6cEmVao2tnio4I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dv0XV1v9R8xlYimUdixiYbS2fuCWFEj4KWsjQMhcUsCjiNLtN111xrVGG9WWl+e4SWcWNhREXOe+IcAoKXx6VYUB7qCX80oiyi1zQycizQPKQZWnlEbwvLdxWUbKfhTp/9qVBR+J07tIT3eqHtlDDuyvtmEkaSHgqlBLBN8JAP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWqD4VP8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWqD4VP8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F58C4CEF1;
-	Wed, 28 Jan 2026 08:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769588429;
-	bh=MBayRkE85SAbpVFB1EuS8EgofcZvP6cEmVao2tnio4I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HWqD4VP8WuPZ/3WZr2YZu7RpDxTKg3DZrAXkPCbiCSwKzxci+pqpwPVAIl8kYV1XU
-	 cVE6t/xISPNodbKzWuL+czO6/Trri4Wh2Jvg0fyLamHAPEjUIxCz0NAbxbRP1ID3c/
-	 4U9MGIqHc/N9DreSubOYTc4lQXdydhTCGRTCF5m6/Tt95u9WJQTuQdUIUYpDmZ9mEE
-	 VMIskLnLyh6ZToSuQmMcfxBVJix+rLhPTNo92xAwbjLG+UZ1CEjS3t031Z2XQcDbf0
-	 AX0qIHK0RB9H1Ejz1e9oMUTL1s67xLkDbW2pfJELrNUkltEENM6FOrWHKAiYrF8UBQ
-	 BjzJKfFE4bAqg==
-Date: Wed, 28 Jan 2026 17:20:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Have hist_debug show what function a field
- uses
-Message-Id: <20260128172027.0299a917e2a1e1c01b541b9b@kernel.org>
-In-Reply-To: <20260122203822.58df4d80@gandalf.local.home>
-References: <20260122203822.58df4d80@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769589558; c=relaxed/simple;
+	bh=jyDIBgd2dVoTOoNBEgP2eQ8ROxB5IpkQMTnov8i8hAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KK51PlAsUt27v3AwYjwm4pQAbbPljpvYuDrOPbHP4vso9S8hRoyMq4zg6NQCqZ7YGYG8VOSmLHu7pYSGrjBiYBNs/MxQLjyIsvJIo92Y5YueGXavepXyFI+mETTipt+xuaD46dZolEm6I2xYIinqE2Sw9p+/LkJI86K65j2BAbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: cfd1b43cfc2411f0b0f03b4cfa9209d1-20260128
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:0c86a15a-a7bb-45b4-a610-52085b897074,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:2f617db6a462fa1cb07923e6f2d777b4,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
+	52,EDM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: cfd1b43cfc2411f0b0f03b4cfa9209d1-20260128
+X-User: tianyaxiong@kylinos.cn
+Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1474635869; Wed, 28 Jan 2026 16:39:08 +0800
+Message-ID: <5044e453-4fd8-4530-a793-292adc2888ac@kylinos.cn>
+Date: Wed, 28 Jan 2026 16:39:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Thu, 22 Jan 2026 20:38:22 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When CONFIG_HIST_TRIGGERS_DEBUG is enabled, each trace event has a
-> "hist_debug" file that explains the histogram internal data. This is very
-> useful for debugging histograms.
-> 
-> One bit of data that was missing from this file was what function a
-> histogram field uses to process its data. The hist_field structure now has
-> a fn_num that is used by a switch statement in hist_fn_call() to call a
-> function directly (to avoid spectre mitigations).
-> 
-> Instead of displaying that number, create a string array that maps to the
-> histogram function enums so that the function for a field may be
-> displayed:
-> 
->  ~# cat /sys/kernel/tracing/events/sched/sched_switch/hist_debug
-> [..]
-> hist_data: 0000000043d62762
-> 
->   n_vals: 2
->   n_keys: 1
->   n_fields: 3
-> 
->   val fields:
-> 
->     hist_data->fields[0]:
->       flags:
->         VAL: HIST_FIELD_FL_HITCOUNT
->       type: u64
->       size: 8
->       is_signed: 0
->       function: hist_field_counter()
-> 
->     hist_data->fields[1]:
->       flags:
->         HIST_FIELD_FL_VAR
->       var.name: __arg_3921_2
->       var.idx (into tracing_map_elt.vars[]): 0
->       type: unsigned long[]
->       size: 128
->       is_signed: 0
->       function: hist_field_nop()
-> 
->   key fields:
-> 
->     hist_data->fields[2]:
->       flags:
->         HIST_FIELD_FL_KEY
->       ftrace_event_field name: prev_pid
->       type: pid_t
->       size: 8
->       is_signed: 1
->       function: hist_field_s32()
-> 
-> The "function:" field above is added.
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] tracing/kprobes: Make setup_boot_kprobe_events()
+ asynchronous
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, axboe@kernel.dk, mathieu.desnoyers@efficios.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260127012016.76713-1-tianyaxiong@kylinos.cn>
+ <20260127012312.84659-1-tianyaxiong@kylinos.cn>
+ <20260128134936.539782c2112073e55e7a0304@kernel.org>
+ <6ab04276-8897-4d5e-a86c-e656cf1f6f91@kylinos.cn>
+ <20260128165302.1c67c6fc1c54525247d7f553@kernel.org>
+Content-Language: en-US
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+In-Reply-To: <20260128165302.1c67c6fc1c54525247d7f553@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_events_hist.c | 75 +++++++++++++++++++-------------
->  1 file changed, 44 insertions(+), 31 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 4a7f945e368d..24441b30a1a4 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -105,38 +105,44 @@ enum field_op_id {
->  	FIELD_OP_MULT,
->  };
->  
-> +#define FIELD_FUNCS					\
-> +	C(NOP,			"nop"),			\
-> +	C(VAR_REF,		"var_ref"),		\
-> +	C(COUNTER,		"counter"),		\
-> +	C(CONST,		"const"),		\
-> +	C(LOG2,			"log2"),		\
-> +	C(BUCKET,		"bucket"),		\
-> +	C(TIMESTAMP,		"timestamp"),		\
-> +	C(CPU,			"cpu"),			\
-> +	C(COMM,			"comm"),		\
-> +	C(STRING,		"string"),		\
-> +	C(DYNSTRING,		"dynstring"),		\
-> +	C(RELDYNSTRING,		"reldynstring"),	\
-> +	C(PSTRING,		"pstring"),		\
-> +	C(S64,			"s64"),			\
-> +	C(U64,			"u64"),			\
-> +	C(S32,			"s32"),			\
-> +	C(U32,			"u32"),			\
-> +	C(S16,			"s16"),			\
-> +	C(U16,			"u16"),			\
-> +	C(S8,			"s8"),			\
-> +	C(U8,			"u8"),			\
-> +	C(UMINUS,		"uminus"),		\
-> +	C(MINUS,		"minus"),		\
-> +	C(PLUS,			"plus"),		\
-> +	C(DIV,			"div"),			\
-> +	C(MULT,			"mult"),		\
-> +	C(DIV_POWER2,		"div_power2"),		\
-> +	C(DIV_NOT_POWER2,	"div_not_power2"),	\
-> +	C(DIV_MULT_SHIFT,	"div_mult_shift"),	\
-> +	C(EXECNAME,		"execname"),		\
-> +	C(STACK,		"stack"),
-> +
-> +#undef C
-> +#define C(a, b)		HIST_FIELD_FN_##a
-> +
->  enum hist_field_fn {
-> -	HIST_FIELD_FN_NOP,
-> -	HIST_FIELD_FN_VAR_REF,
-> -	HIST_FIELD_FN_COUNTER,
-> -	HIST_FIELD_FN_CONST,
-> -	HIST_FIELD_FN_LOG2,
-> -	HIST_FIELD_FN_BUCKET,
-> -	HIST_FIELD_FN_TIMESTAMP,
-> -	HIST_FIELD_FN_CPU,
-> -	HIST_FIELD_FN_COMM,
-> -	HIST_FIELD_FN_STRING,
-> -	HIST_FIELD_FN_DYNSTRING,
-> -	HIST_FIELD_FN_RELDYNSTRING,
-> -	HIST_FIELD_FN_PSTRING,
-> -	HIST_FIELD_FN_S64,
-> -	HIST_FIELD_FN_U64,
-> -	HIST_FIELD_FN_S32,
-> -	HIST_FIELD_FN_U32,
-> -	HIST_FIELD_FN_S16,
-> -	HIST_FIELD_FN_U16,
-> -	HIST_FIELD_FN_S8,
-> -	HIST_FIELD_FN_U8,
-> -	HIST_FIELD_FN_UMINUS,
-> -	HIST_FIELD_FN_MINUS,
-> -	HIST_FIELD_FN_PLUS,
-> -	HIST_FIELD_FN_DIV,
-> -	HIST_FIELD_FN_MULT,
-> -	HIST_FIELD_FN_DIV_POWER2,
-> -	HIST_FIELD_FN_DIV_NOT_POWER2,
-> -	HIST_FIELD_FN_DIV_MULT_SHIFT,
-> -	HIST_FIELD_FN_EXECNAME,
-> -	HIST_FIELD_FN_STACK,
-> +	FIELD_FUNCS
->  };
->  
->  /*
-> @@ -5845,6 +5851,12 @@ const struct file_operations event_hist_fops = {
->  };
->  
->  #ifdef CONFIG_HIST_TRIGGERS_DEBUG
-> +
-> +#undef C
-> +#define C(a, b)		b
-> +
-> +static const char * const field_funcs[] = { FIELD_FUNCS };
-> +
->  static void hist_field_debug_show_flags(struct seq_file *m,
->  					unsigned long flags)
->  {
-> @@ -5909,6 +5921,7 @@ static int hist_field_debug_show(struct seq_file *m,
->  	seq_printf(m, "      type: %s\n", field->type);
->  	seq_printf(m, "      size: %u\n", field->size);
->  	seq_printf(m, "      is_signed: %u\n", field->is_signed);
-> +	seq_printf(m, "      function: hist_field_%s()\n", field_funcs[field->fn_num]);
->  
->  	return 0;
->  }
-> -- 
-> 2.51.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+在 2026/1/28 15:53, Masami Hiramatsu (Google) 写道:
+> On Wed, 28 Jan 2026 15:24:15 +0800
+> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
+>
+>> 在 2026/1/28 12:49, Masami Hiramatsu (Google) 写道:
+>>> On Tue, 27 Jan 2026 09:23:12 +0800
+>>> Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
+>>>
+>>>> During kernel boot, the setup_boot_kprobe_events() function causes
+>>>> significant delays, increasing overall startup time.
+>>>>
+>>>> The root cause is a lock contention chain: its child function
+>>>> enable_boot_kprobe_events() requires the event_mutex, which is
+>>>> already held by early_event_add_tracer(). early_event_add_tracer()
+>>>> itself is blocked waiting for the trace_event_sem  read-write lock,
+>>>> which is held for an extended period by trace_event_update_all().
+>>>>
+>>>> To resolve this, we have moved the execution of
+>>>> setup_boot_kprobe_events() to the trace_init_wq  workqueue, allowing
+>>>> it to run asynchronously.
+>>>>
+>>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>>> ---
+>>>>    kernel/trace/trace_kprobe.c | 14 +++++++++++++-
+>>>>    1 file changed, 13 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+>>>> index 9953506370a5..4c6621f02696 100644
+>>>> --- a/kernel/trace/trace_kprobe.c
+>>>> +++ b/kernel/trace/trace_kprobe.c
+>>>> @@ -2031,6 +2031,13 @@ static __init int init_kprobe_trace_early(void)
+>>>>    }
+>>>>    core_initcall(init_kprobe_trace_early);
+>>>>    
+>>>> +static struct work_struct kprobe_trace_work __initdata;
+>>>> +
+>>>> +static void __init kprobe_trace_works_func(struct work_struct *work)
+>>>> +{
+>>>> +	setup_boot_kprobe_events();
+>>>> +}
+>>>> +
+>>>>    /* Make a tracefs interface for controlling probe points */
+>>>>    static __init int init_kprobe_trace(void)
+>>>>    {
+>>>> @@ -2048,7 +2055,12 @@ static __init int init_kprobe_trace(void)
+>>>>    	trace_create_file("kprobe_profile", TRACE_MODE_READ,
+>>>>    			  NULL, NULL, &kprobe_profile_ops);
+>>>>    
+>>>> -	setup_boot_kprobe_events();
+>>>> +	if (trace_init_wq) {
+>>>> +		INIT_WORK(&kprobe_trace_work, kprobe_trace_works_func);
+>>>> +		queue_work(trace_init_wq, &kprobe_trace_work);
+>>> Hmm, this queue_work is not required if kprobe_boot_events_buf[] is
+>>> empty. We should check it because most of the time we don't need it.
+>> Yes, I will improve it in the next version.
+>>> Also, deferring initialization makes it indeterminate when this
+>>> tracing will begin.
+>> Indeed, While most scenarios don't need boot-time tracing, and users
+>> prioritize boot speed, we must balance the need for deterministic traces
+>> with faster startup.
+> I just wonder why don't you define kprobe events after boot (e.g.
+> from init script) instead of kernel cmdline. Using cmdline means
+> it will be used for tracing kernel boot.
+>
+> - tracing kernel boot -> use kernel cmdline (synchronous)
+> - tracing user boot -> use tracefs (asynchronous)
+I was actually working on a boot optimization task when I found that my 
+machine was getting blocked on trace-related operations.
+>
+>>> For kprobe event use case, I think setup_boot_kprobe_events() should
+>>> check the kprobe_boot_events_buf is empty at first. But I think Yaxiong
+>>> use case happens when you are using kprobe events via cmdline, is that
+>>> correct?
+>> The issue was identified without enabling kprobe events via the cmdline.
+> Interesting. So is it fixed by another patch [1]?
+>
+> [1] https://lore.kernel.org/all/20260127053848.108473-1-sunliming@linux.dev/
+>
+Yes, specifically looking at trace_kprobe in isolation, that issue is 
+indeed resolved. However, the process still ends up blocking the 
+initialization of blktrace later on.
+>> The core finding is that asynchronous initialization can drastically cut
+>> boot time under different workloads. As blocking occurs elsewhere in the
+>> tracing infrastructure beyond just kprobe events, adopting async is a
+>> broadly applicable strategy for boot time optimization.
+> Yes, but it is also possible to set it up from user space, because that
+> user process can work asynchronously.
+> We can make the ftrace initialization async to accelerate boot time, but
+> that means it is not useful for tracing kernel boot.
+>
+>>> I think introducing "async" cmdline option is more preferable.
+>> Agreed, this works. Users focused on boot speed over early-boot tracing
+>> can opt for this parameter to gain a startup performance boost.
+> Yeah, that is an option. Anyway, basically, users have another option to
+> setup ftrace after boot user space asynchronously. That is my
+> recommendation for such use case.
+Yes, that's what I normally do.
+>
+>>> BTW, I found that the kprobe events from kernel cmdline will be made
+>>> after boot-time tracing from bootconfig. Maybe it should be run this
+>>> earlier timing too.
+>> Yes. Additionally, this optimization does not conflict with the current
+>> patch series at all.
+>>
+>> I'll submit the updated patch for the next version promptly.
+> OK.
+>
+> Thank you,
+>
+>>> Thank you,
+>>>
+>>>
+>>>> +	} else {
+>>>> +		setup_boot_kprobe_events();
+>>>> +	}
+>>>>    
+>>>>    	return 0;
+>>>>    }
+>>>> -- 
+>>>> 2.25.1
+>>>>
+>
