@@ -1,198 +1,120 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B332F5A22
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 21:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769636874; cv=pass; b=PouiTIepRyeIKTThhxFDIlb6Qogvmi48yMOeQHMF7rnoHNY2J4Vh81xyGtDmgJDb1pum0TBW/qHWbTMcZimP4ZWj5DBOX9y90M6vOydK/0mA3IfqtMyEfs7rjv3tuvGBjcjTX8eBlnY/uaJI7uOJNehoITqAepFv2+1u8/c+PHk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769636874; c=relaxed/simple;
-	bh=YC36ImuZe9JdqUv+pVkMpluokr4Llii9CFTV9lQL1NI=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ws/SDkoa1ZNAe6hK0/NuxIUajgXX5Mox3u1+yYq9oLMXXiW91GwCAW/hIQ5xiibJulPBMBz4iEVOMiMN1c1D+tII614OJuRPIG2Xopy4NUWtHv/VuSyjVu+RaFxeR9MyUin4Urgbvp2uLgJogU87pOpUWSi3AIQ2ovW4j+l2ul4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x4/lfl4R; arc=pass smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55447284689;
+	Wed, 28 Jan 2026 22:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769639372; cv=none; b=srvNUv60M6nUe9lSb6MyKLqgavjDy+48VAbvhrpHI4Ej5cInlCbaQjBLQJyXtkZ/K57cMdXtrxRpWy9iguyRfajIwk1bVeHEekDZusQvUcbe8Tqj/0Dyan1yHpKUNtOKwPYodrU6On2iaVv+vWyt4jmlDOKyN8d9uDYr7KGM2qU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769639372; c=relaxed/simple;
+	bh=a0Ddc1sM8tlaUXYOPYAnFNHQc1jvPGEdsW9X+42V578=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EUAVWmgOBKM8sFxkPNYahzWSgutv0PZn/FFwRciPfNQGI4etKwtSMW+gphcQe3BA1o/c69TYQsF+IFLhdIHQuhUM+sA6zuAK1izmGfhN6GfbV7AQCts4n5Zzfi53s5PnAgXFwbbEekY+JDuwvs7IFotEDpQTwLjzJmoqSeDmW2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJyx5ETe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x4/lfl4R"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-566390e7db3so228061e0c.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 13:47:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769636872; cv=none;
-        d=google.com; s=arc-20240605;
-        b=j6cBaV8Z8ag0HqPaLoMZEsmWkXz1+iKiZL4FfP8+Gx4vktHDJLBDYU7KOD8ROFqL/U
-         p2nv9DraZgJCHY7QYSldnLL5S/4l/Y613EXHkrLuAQENM9c+yYBNzKCgzhz46N3AnirK
-         9t6GzWgH4fcsAHEYyL5tV8KePVyoQDopFrM2YsofcdiuLlE26ILFn3NHkDBIkGV2uJPd
-         0SkhT2PcQMa0zU2XiUX9nZbvrGJFbxo3hRKzhC4AWSXWRjHZDtjMOol4EhiIKShfnvvt
-         x/8jJAorgdx257qTgqal582XppMTQa8H+6FPxIbkNTJYivQsfEiSSIXeUXuz8iVCb7JB
-         rk6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:dkim-signature;
-        bh=8KRtsUWTPrRQfD/St3Ag63nt0POKWslcjlDyzaxfyec=;
-        fh=m7rFAu6KdMVdPNKfvRPFbPuyAahe6QguVI0K/wvp+lk=;
-        b=D24p/z2gut3BnY2e+lMoVZlEonaWqfiPiuoNCqjPPkIxiOCdJ2m8Qmud0AO/X/I+eT
-         PrFgMo2ruWhPVuEeUFgnRHT+EKuJbMnIgtdqSiZYuf582MLnlmIW67TkHBTEDIyQ7vwT
-         dI9tmlP4+z9XW2nO8VMgRvq4Cq1OHnGbw147iGgAHUejwIwENnT0rRqHCykXctc4HUGB
-         kH7+9eM9M4/j3+m6Tt5YAbUIOmsGeyR90Udv7zHSjmx8cBLHSZ5gqO53h3EFQEs35Vh7
-         aPNCIgRHly6FbCQwGDMLCmtY1Dm5VuX4KuuxD+NgjHuRK/PtZeKhxCOkXEBvfG/sSFaP
-         QPNg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769636872; x=1770241672; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8KRtsUWTPrRQfD/St3Ag63nt0POKWslcjlDyzaxfyec=;
-        b=x4/lfl4RC4R6AZIvM1WTIKqANtJTykk9eIGt6qOukMOE1QRTKe0Nd4Kufq4/kTBDvg
-         O4gLZ1kkXS5Wi30V8TZbW4QI2U7WSmlwAyOQseQ0Kk86PWxdg+SbVc3mEsim2I63sEvG
-         auosx2itHw4eTN+FT8gJmnxpeIRAt/VFWkDpCj2LWJtWlU7MoxlQCFH8mZdrCaD5JeMn
-         Eri6ZQ+0pAdOorAluQAH/B4RRioCPqJ6ECaJ0QKnEW0i5Oi8aieYvFzIVSLRMFe+CQHE
-         UXxnGatvUwlrhNlh9IwMSkTcDBMYXAFS38Ys5DU1A4L/wOz5EVnX2gsj+2vKxJXrZFW5
-         CbbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769636872; x=1770241672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8KRtsUWTPrRQfD/St3Ag63nt0POKWslcjlDyzaxfyec=;
-        b=RpZEthxiv6yJN040mQ27ZL5sWEn0guqiJwoG9IoPOpaf8wF7sWSWlzPYUMs0L1VEJt
-         1d6C5lrRDC7CMA40cEP//XKfxaETLpyYQdy9NtHradPSFWdiWyS6mCxB0lfhLn8R+1lz
-         ASrELoBSM+aBOBE3reZhY2Ff6XAnq92bAFbmrWrUNTFgHs2zfiJhmwfWSBpbFFY1iNKH
-         1KY5hxEErFfTPDoqKcyrnp9JUJvOpuF9Bv0mzPMFDeEXWXPT01MdFAuP2m/Aw26L+sOi
-         RnDEeZxfuNofHYA+g9h9Papw+yBoBesTIpSM9XAc3D0fbfOweezwmFcMbyuKWIjdCiSf
-         iQIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlHgA3D0CvSiM4grLuvsGzrtz7z8HwHi0zR6Pwx4625/qRVv7VkGizW0FlCeTGbkd6WZEJFuDwSy12Ht4wRshK+4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ff29qfnaBeP5gZPbBogUgKjvrAjrqtOPXgUATOdqn3l5C5ME
-	HPaBDG0I3l3542+zQUHrZXnd9Hy59W6diMqUeqqFfQe9ETmc8H1thbHclihoEjwc58kXTpR9Opx
-	VMGcCQjmeKOa7/fshD4aVwHONVdq25HC0lpR83ecn
-X-Gm-Gg: AZuq6aKJMzp5IS17HXJZLN59gFjkZA0mOpu2PvlVKuBH0GXEmG/P3PoX5qkjFtzX3ik
-	eZGruQ+4LxPl3NmF458++cKrDyd8W/GvWOAmd77+PCndj6Bs/ytKAssOuufSU62+TxyE+98T7Ih
-	6DAlJhPTeBJEFdXb28OXwW29/wu2ccs63s5iJ2areF7xFhRj6DqaGjeGIZcFtkooMNsUIQqWEl+
-	irprkGJR3QcyukFbvSDELEnKwy7D74sLBaBENIJhicOcOVh5aGAE/dfAZtRCYTo48QJwh9OctPa
-	fcSuV3tVZ8ApsMRZ3iTlSRI0FA==
-X-Received: by 2002:a05:6102:144b:20b0:5f7:24e9:ece2 with SMTP id
- ada2fe7eead31-5f724e9edc6mr2295689137.28.1769636871290; Wed, 28 Jan 2026
- 13:47:51 -0800 (PST)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 28 Jan 2026 13:47:50 -0800
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 28 Jan 2026 13:47:50 -0800
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
-References: <cover.1760731772.git.ackerleytng@google.com> <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJyx5ETe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE12CC4CEF1;
+	Wed, 28 Jan 2026 22:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769639372;
+	bh=a0Ddc1sM8tlaUXYOPYAnFNHQc1jvPGEdsW9X+42V578=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SJyx5ETeeFXIxljN9Qea1B15cBU8SVVXXIgRbVrSN8RYjlmz3AsJtHksRpsq2/l/9
+	 wXETTKIpwrHDCDTMLmcAHuNPj2ai/z0XUZFCurH8/aMUwhPj+jeK1nd/iteefYsNnP
+	 NKKxn3lw7S06muMLmmBnMTzWEI5We/FZXnhDKpz8D+UyQlWYinllyxSGH6wb1hTS0D
+	 S7LOiZL++0aRDRJ/4EXK4GXEfzHw5IfW2urOGVxWoI5kAOFcWWYh2XcKDyxcpGE39Z
+	 fZOyZwQlXEhalzhJA+5k+7dJZdk9WhK8Pl9ini9Vu3vahXYAvRK1jC0gsG/Qo1AF3N
+	 oUVSIpSiYDGHA==
+Date: Thu, 29 Jan 2026 07:29:28 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Andrii
+ Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: fix incorrect lockdep condition in
+ filter_chain()
+Message-Id: <20260129072928.da41ab0a2e71da86dd4cd4b8@kernel.org>
+In-Reply-To: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
+References: <20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Wed, 28 Jan 2026 13:47:50 -0800
-X-Gm-Features: AZwV_QgPf8aOvxqDX4gr94R7SzOt27JuvroRVjSaL4ACWGO_5lJuitif3BKdULg
-Message-ID: <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-To: Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Cc: akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, 
-	mail@maciej.szmigiero.name, maobibo@loongson.cn, 
-	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org, 
-	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, mingo@redhat.com, 
-	mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
-	peterx@redhat.com, pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, 
-	qperret@google.com, richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, 
-	rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shakeel.butt@linux.dev, shuah@kernel.org, 
-	steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com, 
-	tabba@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, wyihan@google.com, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Alexey Kardashevskiy <aik@amd.com> writes:
+On Wed, 28 Jan 2026 10:16:11 -0800
+Breno Leitao <leitao@debian.org> wrote:
 
->
-> [...snip...]
->
->
+> The list_for_each_entry_rcu() in filter_chain() uses
+> rcu_read_lock_trace_held() as the lockdep condition, but the function
+> holds consumer_rwsem, not the RCU trace lock.
+> 
+> This gives me the following output when running with some locking debug
+> option enabled:
+> 
+>   kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
+>     filter_chain
+>     register_for_each_vma
+>     uprobe_unregister_nosync
+>     __probe_event_disable
+> 
+> Remove the incorrect lockdep condition since the rwsem provides
+> sufficient protection for the list traversal.
+> 
 
-Thanks for bringing this up!
+Looks good to me.
 
-> I am trying to make it work with TEE-IO where fd of VFIO MMIO is a dmabuf=
- fd while the rest (guest RAM) is gmemfd. The above suggests that if there =
-is gmemfd - then the memory attributes are handled by gmemfd which is... ex=
-pected?
->
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I think this is not expected.
+Thanks,
 
-IIUC MMIO guest physical addresses don't have an associated memslot, but
-if you managed to get to that line in kvm_gmem_get_memory_attributes(),
-then there is an associated memslot (slot !=3D NULL)?
+> Cc: stable@vger.kernel.org
+> Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> Changes in v2:
+> - updated the "fixes" tag (Oleg)
+> - Link to v1: https://patch.msgid.link/20260128-uprobe_rcu-v1-1-d41316763799@debian.org
+> ---
+>  kernel/events/uprobes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index d546d32390a81..726d13b375f3d 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+>  	bool ret = false;
+>  
+>  	down_read(&uprobe->consumer_rwsem);
+> -	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
+> +	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
+>  		ret = consumer_filter(uc, mm);
+>  		if (ret)
+>  			break;
+> 
+> ---
+> base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
+> change-id: 20260128-uprobe_rcu-e21867ab4c1b
+> 
+> Best regards,
+> --  
+> Breno Leitao <leitao@debian.org>
+> 
 
-Either way, guest_memfd shouldn't store attributes for guest physical
-addresses that don't belong to some guest_memfd memslot.
 
-I think we need a broader discussion for this on where to store memory
-attributes for MMIO addresses.
-
-I think we should at least have line of sight to storing memory
-attributes for MMIO addresses, in case we want to design something else,
-since we're putting vm_memory_attributes on a deprecation path with this
-series.
-
-Sean, what do you think?
-
-Alexey, shall we discuss this at either the upcoming PUCK or guest_memfd
-biweekly session?
-
-> The problem at hand is that kvm_mmu_faultin_pfn() fails at "if (fault->is=
-_private !=3D kvm_mem_is_private(kvm, fault->gfn))" and marking MMIO as pri=
-vate using kvm_vm_ioctl_set_mem_attributes() does not work as kvm_gmem_get_=
-memory_attributes() fails on dmabuf fds.
->
-> I worked around this like below but wonder what is the proper way? Thanks=
-,
->
->
-> @@ -768,13 +768,13 @@ unsigned long kvm_gmem_get_memory_attributes(struct=
- kvm *kvm, gfn_t gfn)
->   	 */
->   	if (!slot)
->   		return 0;
->
->   	CLASS(gmem_get_file, file)(slot);
->   	if (!file)
-> -		return false;
-> +		return kvm_get_vm_memory_attributes(kvm, gfn);
->
->   	/*
->   	 * Don't take the filemap invalidation lock, as temporarily acquiring
->   	 * that lock wouldn't provide any meaningful protection.  The caller
->   	 * _must_ protect consumption of private vs. shared by checking
->   	 * mmu_invalidate_retry_gfn() under mmu_lock.
->
->
->
-> --
-> Alexey
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
