@@ -1,146 +1,363 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E298308F05
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 15:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABEF313552
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 16:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769615309; cv=none; b=hCUgvtIllbLJzy4Lx31XIPxBWqoVjggZMdqEVxbKrpef6JBBMvj0GyWSNEfTBUBclIshBag5tCiYq/FlDhiC5pZB130DMD4nkAUoCqZiWlcf4kMltmmHbNxew1DKbfkTlPT408FuJIun8mEOsSf54vbcBN/foesXuzYWWa1GYag=
+	t=1769618328; cv=none; b=sQTnkIXVlrmXP9MN9zGIy/EDIkuB6Dssb72C3CN+4MWXFa+B6NsckO2xSP0VjJSuEV7x8El50KoaE1rmwH6ODwg7hHr4r+lM6aKHe41g6nJC/rEF/tVIH521CZv3Q8kn/2JTXOhJux57ISe6WU4+JAC+opajjRzJUWZ9zCLExz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769615309; c=relaxed/simple;
-	bh=CA4ugjQ1IEjW+6kqAc+hYZuO43p3F42A6CJda++BPeU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b9FTTG9jCp57ifgHxfZqdhTn+f3/KRMDRlnqy7v5Ophd3snmldBJsjr4lERRl2LYosaPoKK6jchrLib/RhOCRN+yOnDmwDOavUqiux90/xfEi8AToWOL1gL1hzRVICAwH1jsb5NqFIy7knA0B8PgW+BanF4zA296rxZUY5yxc7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=VnTUrWNK; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1769618328; c=relaxed/simple;
+	bh=oYpywg6wSKKfqKMO9drAZK+XQSP+GwNWRgfyOXjs4ME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o/wlChCHcPux075ZYO9htzz53KQTmiCnHNZ1tOeowDSJWCbbMeG2L8Fn+bVR/au81TBKVdSfyUUbyj9RgJtheiP2ZoJQhwSaDOfNYQadOsuUouJxy2aOSJLa4pylqLlaC11Xy3hLyxf26aVq9c2AA1QYTCr+WgNdIh1ebvZBrlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ARRu21ty; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="VnTUrWNK"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-47edffe5540so81680765e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 07:48:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1769615306; x=1770220106; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=S3QlHqlhG5snnD54r/ty/Upcu15CQJsVNvjmcANqrMA=;
-        b=VnTUrWNK+u4mdmf8BxqANcric5lPEz10y4sWg+SlmsNWzPgPziMSM2tOfexqLCFksf
-         BTYfAF+lyYgAcC0vmNMo+6zzXQ3cZBTNH3uoUi9dyCqyMKb3l8EYZQyA8wKPj/QTATMj
-         fdYN9ehwBAcPadKbGHqS66WWAz6ALY8dRpPOzngdaCqyVoNDrWQdd8RRtInDYF2B1GuM
-         0J/p2ga4NuJniavwwGQA5ttZiSChx1gdu3N5+J/Cq67xvr1kb2JJq4y3z1wvZc9YFaB5
-         /9eHvth5D+RpdREO6IVDX65JDqYxNykWcWSX04VhSlchKLuKak6Hv6GVwEcMFCLxnN5w
-         C8tQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ARRu21ty"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769618325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vvwUtKzwHdNf28qH621RfDijiiFJTykMerMvhScCt2E=;
+	b=ARRu21tyqu5DOTFbFXrvmWpky3yzHdNxZtAJLJJmXMF60E84wCF7PsyJnDHIf3tDKocwpm
+	ISSjSVEJNYr0j96GuO0DwFv1NYlgY3T7AvHiS+q1/YerdRHxt6bd2unABLJZio8eJsN9Jl
+	OX943DxrOmMEIfb/pP1slBxkAYqPduU=
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
+ [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-155-ph3CW09vNRe8XrX8HLSOIQ-1; Wed, 28 Jan 2026 11:38:44 -0500
+X-MC-Unique: ph3CW09vNRe8XrX8HLSOIQ-1
+X-Mimecast-MFC-AGG-ID: ph3CW09vNRe8XrX8HLSOIQ_1769618324
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-4088136faccso12058092fac.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 08:38:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769615306; x=1770220106;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S3QlHqlhG5snnD54r/ty/Upcu15CQJsVNvjmcANqrMA=;
-        b=lsLxXCs+Hm+FiZJZlEMFCTq4WTSF7OWzl8PFDr+wUbndBYWxJ2+NCEEWOrfvmnYlx1
-         T+f6s2qPT0u3XZUDdZa6sl+GL2/BIwiXe25P5QyBzp4UKNwY4CnYbfOKMa/waxzL9x9s
-         ORgymb08XHLbpwHVqF8zyWKt6TpmC+Q5NLzLNppss0eIFCrQjrodS4ZLcOvqIc2F5pz3
-         g36t4IJwj1fc6f76DWleXv1Bih8b8gmJUowpSWY6cDHlh+MiLnYGlyb2fDsrpmWOk4QT
-         mfsItkFCxAFwetaHtu37jyivdTAT6Y+qWpcys10cwlgU9+lua8MVagE+AzFk8svLYEbB
-         NUWA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3WKFffeFUKVlE3dsHmTjg6wGDGzFwYSRc9dF1G23fMAnuli6mTj20oofk4ZB34Zi5lu1kVX/k0wdgOKkkDxdvhz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhCGkF+MEreNVGEKCC4LUh5jbWmS2g3Ftx6PKmosdlNZ8Moze3
-	mj2+l+HMHbNUKUlB6fLHx1QEO/oEWK2/tjgmInsedcDR9asC+GOvD/OjZybxAVz09S7sXeIUGYw
-	FNvUt
-X-Gm-Gg: AZuq6aKnMVlyMS8Ta4bpWuQzkEf+cwEQ1vsPLKihbh3RNsUDxKng/4bY+oMPlluD4ft
-	EzMJqRdNlPPTjwcBAssLvEAXY7XQ31Xv646AXkdDkzTr7o/RHHxqN5cwtnTXOJs8vIfBRER59hW
-	PT8XR8oQTvVnBAKLxIMxQqwCggzu0PYuwmwhxFtz4Hb3Yl3uU9xcEIC6lqttBHARtEtj9zx0JZ3
-	bCnhhTzvBTyJVT10QMIgTXtqBkXRmi/QFKAHiGVTRwalcxJLnsNTdz6CcwP2dUazD7xI4i9dkpX
-	JFmW4lOB7835p6USpbRSubdu+ZdwPo+KEkWBy9Ad9F0F4veGcJhNCr3zimM9bsLH9al43f401Xu
-	rpMnLdRuymPm+MWCXNdRwVl7+HOflaHCUUOYh9+nTTz/mvUrFgDpZWFRiZwpHrzXFVpTCbqHVnm
-	HQ/DUmZkMYmClyRr0EKtrUhWvGUd0xE6f/hmKaBhpfJgFkEv2g+mYcDIKFXCa39LDBpGa9vCKaa
-	TJA5a6IXyuPxSHJDvAP05HIOvilHssJSMC+kw8YHkeRH3T0o4qQwvTM+y5KFU+qlsnoiS0b
-X-Received: by 2002:a05:600c:4592:b0:477:1af2:f40a with SMTP id 5b1f17b1804b1-48069c5b97cmr75909105e9.17.1769615305735;
-        Wed, 28 Jan 2026 07:48:25 -0800 (PST)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4806e2bd243sm2394135e9.11.2026.01.28.07.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 07:48:25 -0800 (PST)
-From: Daniel Thompson <daniel@riscstar.com>
-Date: Wed, 28 Jan 2026 15:48:01 +0000
-Subject: [PATCH v2] iommu: Fix NULL pointer deref when io_page_fault
- tracepoint fires
+        d=1e100.net; s=20230601; t=1769618324; x=1770223124;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vvwUtKzwHdNf28qH621RfDijiiFJTykMerMvhScCt2E=;
+        b=BqdWjyxNKmuHR2wJBe3OkkHCt1l8VY36OBdDQn/WaXOAsvM+bWKTSMTozPkCO6atQK
+         UaSWhyScRkElojWD8RJdTb0ee1Lj0okpsuWCc4xk2AkXKuLX7zAVPlTEKJKDH92pgn4i
+         ts08ePNW1Xz3jnLEsOnllpx6aWIdCAg61jB22PduEOUh8YdYhtT6hvW/lDNV66NCOlbN
+         biD36O+OOpi4lZr9KW5leXKEVO2RORaoORidrgq1Al6683hjUvQZByPzdRVOw1NcBgfV
+         DkWBNIE/YEo1aPhoqk4Y9YCqVCr6RfCU/N16qP89GY3AhYehQ/yhiFBUfRFcnYvb0rm0
+         YAbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZJKQN2IvOjzUONhszurI+Z3xf6WczD826dr7h3oC1jsglXIbhx7IubLSYF5GldOhtIxLLJjIPcWVIYsZgiYXKcfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdYh8lqHnl8wD6kQbP7wGeexD9hXdgPbYXUMpzicRvbwJCzaWq
+	qiCmDv3genEuskQ94kMicPq7vE9Yk4QmUVfHwuCHxu5SB+Lpn1YdTgrz1sZuSFVv3linuFbh2YV
+	eIM4vNjmuJUtMWxgOY+/98mbrvkhrbJ6uRq093ux5vfR5DGyojSF1HUWhoIqN00otHXrUKGFjgg
+	==
+X-Gm-Gg: AZuq6aI3dLPD6TMWbbTC7dqYoUGWx5wP82oWyY/8YHRdJjxNkS/brfp69GwGEotGVsK
+	VSIak4NMS3Qe5CqLAiJ0VbAYniek/a85luNNrRQUrN2aGtZ44R7wlzuMxDNStLjN5EJBX9oZ1BM
+	XyVLUaCYFavOUWrndydtdLJj7/w0XlaYBgz1TxsaFlor+vs+SkAdM68uv/TcympkysedvQMMpJS
+	Cm/ZP6LTxfixHDRe+CzOOgl4HyLxBxo08/4EODzGEWHukfsWG5ZxL2jRyqulEq+FRlW1uXQUwid
+	Tq8i5OpXpZMCL9u/ju1s1rPqAqx0iIgGqgIsmu5urLqRcflCfgBEK0Un34l7CA8c2bO300jumTl
+	goLkO3nira9qlyoBoWQ==
+X-Received: by 2002:a05:6870:6f03:b0:3ec:3aa1:84d2 with SMTP id 586e51a60fabf-4093fc716demr3763764fac.11.1769618322522;
+        Wed, 28 Jan 2026 08:38:42 -0800 (PST)
+X-Received: by 2002:a05:6870:6f03:b0:3ec:3aa1:84d2 with SMTP id 586e51a60fabf-4093fc716demr3763682fac.11.1769618320931;
+        Wed, 28 Jan 2026 08:38:40 -0800 (PST)
+Received: from ?IPV6:2601:282:1c83:9aa0::56cf? ([2601:282:1c83:9aa0::56cf])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-409570f63b4sm2077985fac.3.2026.01.28.08.38.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jan 2026 08:38:40 -0800 (PST)
+Message-ID: <b824f131-3e51-422c-9e98-044b0a2928a6@redhat.com>
+Date: Wed, 28 Jan 2026 09:38:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-unstable v14 03/16] introduce collapse_single_pmd to
+ unify khugepaged and madvise_collapse
+To: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ akpm@linux-foundation.org
+Cc: david@kernel.org, lorenzo.stoakes@oracle.com, ziy@nvidia.com,
+ baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+ lance.yang@linux.dev, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
+ jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org,
+ willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kas@kernel.org, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, zokeefe@google.com, rientjes@google.com,
+ rdunlap@infradead.org, hughd@google.com, richard.weiyang@gmail.com,
+ David Hildenbrand <david@redhat.com>, shivankg@amd.com
+References: <20260122192841.128719-1-npache@redhat.com>
+ <20260122192841.128719-4-npache@redhat.com>
+From: Nico Pache <npache@redhat.com>
+In-Reply-To: <20260122192841.128719-4-npache@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: fyid1eqwfgD9mzfwCMMVFYrga5E0SDk60V4pBV61ue8_1769618324
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, en-ZM
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260128-iommu-io_page_fault_null_fix-v2-1-de047be6dd3a@riscstar.com>
-X-B4-Tracking: v=1; b=H4sIALAvemkC/42NQQ6CMBBFr0JmbQ0dsSIr72FIU+oAkwAlLRAN6
- d2tnMDNT95bvL9DIM8UoMp28LRxYDclwFMGtjdTR4JfiQFzVLmUSrAbxzWtnk1HujXrsOhpHQb
- d8lu0pWwKKptrgRdIidlT0kf+WSfuOSzOf463Tf7sn+FNCimUxdwiKbyXt4fnYMNi/Nm6EeoY4
- xdRcdl9ywAAAA==
-X-Change-ID: 20260116-iommu-io_page_fault_null_fix-f81b4e8b5423
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- linux-arm-kernel@lists.infradead.org, Daniel Thompson <daniel@riscstar.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1758; i=daniel@riscstar.com;
- h=from:subject:message-id; bh=CA4ugjQ1IEjW+6kqAc+hYZuO43p3F42A6CJda++BPeU=;
- b=owEBbQKS/ZANAwAKAXzjJV0594ihAcsmYgBpei+7xn8ZZiBl8xCqnIgD+Ld8t+5lgqTfxVf8h
- b0Z17Jume6JAjMEAAEKAB0WIQQvNUFTUPeVarpwrPB84yVdOfeIoQUCaXovuwAKCRB84yVdOfeI
- oUZND/9RY6F29ijnSmDBq/dwsNlREV122MJyeYlx4yZcygd8sC8B9fW7nagoG+zm9asqd6Q/ziS
- Qbqy8zqxoSs7BdtyvqAfKJkfGw5eyGxI9XTwVUqB/yskBEM2JsNzWrNID9Wm3DK0ciLG9mSwiyO
- EJu1ql1Fnfc/oPvMFs/xIvweP1qM2RT0ka5n58k9tSBdrkMcc7AtURdHuMzAjMqRJQEgDAp3gB2
- 0In2j5f3rmL6xSCcsnpMzKdfbO7hAhQREgqhVVhZZh6evXyCIjySls7oKz4Z/bFqgsahNWHJn2i
- qZY2ck6xR/AssS7XW9MgR622bTQukQwqRhBcuVTkf47jGUr2Jygbh5uBs1l+JnjQRi+mU2gJ3L0
- TNO6/iym13M0gYr/4lsOKlfGWHI+2UWnvN2+ZHJdnbzZ9eRN1c55JjWm7d3NoM1wC4kFQGKNfau
- lFoKbRRWK9V19X2k5nSH0wWBMHC+YL5dX8nTN6LDprE6bRQO0dsT/G1aI4RX0te4gA+6Uw1je2z
- 6RBWq6/GTYwms8r/AmRNf8BYnf5CT/rJlD9zlT6J39JyKVilRh5CbaCGDJSv1lTwPluB7mZABlJ
- a7zaK5FMnNesIsc7YwPA/LndTRCDl5A/Ads59baINuKBjxYB6aOJexklSQmdAG/FZ+gPB5t7pC+
- jD/6TD1uwuuG7uw==
-X-Developer-Key: i=daniel@riscstar.com; a=openpgp;
- fpr=E38BE19861669213F6E2661AA8A4E3BC5B7B28BE
 
-The arm-smmu driver is unable to allocate the blame for a page fault to
-a specific device so it calls report_iommu_fault() with the dev argument
-set to NULL. Normally this doesn't cause anything catastrophic but on a
-system with the io_page_fault tracepoint enabled this results in a NULL
-pointer deref (resulting in a fairly spectacular crash on the hardware
-I'm currently working on).
+Hi Andrew,
 
-Fix this by adding logic to the tracepoint to safely propagate NULL.
+could you please apply the following fixup to avoid potentially using a stale
+VMA in the new writeback-retry logic for madvise collapse.
 
-Fixes: f8f934c180f6 ("iommu/arm-smmu: Add support for driver IOMMU fault handlers")
-Signed-off-by: Daniel Thompson <daniel@riscstar.com>
----
-Changes in v2:
-- Add a Fixes:. It points to the earliest point I can find where it becomes
-  possible for the tracepoint to be triggered with dev set to NULL.
-- Link to v1: https://lore.kernel.org/r/20260116-iommu-io_page_fault_null_fix-v1-1-6c20c2e62987@riscstar.com
----
- include/trace/events/iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you!
+-- Nico
 
-diff --git a/include/trace/events/iommu.h b/include/trace/events/iommu.h
-index 373007e567cb827458a729b8200bbcc1b7d76912..1315193f13b8812ad4e29e6b0c0c66ca806ce08d 100644
---- a/include/trace/events/iommu.h
-+++ b/include/trace/events/iommu.h
-@@ -131,8 +131,8 @@ DECLARE_EVENT_CLASS(iommu_error,
- 	TP_ARGS(dev, iova, flags),
- 
- 	TP_STRUCT__entry(
--		__string(device, dev_name(dev))
--		__string(driver, dev_driver_string(dev))
-+		__string(device, dev ? dev_name(dev) : NULL)
-+		__string(driver, dev ? dev_driver_string(dev) : NULL)
- 		__field(u64, iova)
- 		__field(int, flags)
- 	),
+----8<----
+commit a9ac3b1bfa926dd707ac3a785583f8d7a0579578
+Author: Nico Pache <npache@redhat.com>
+Date:   Fri Jan 23 16:32:42 2026 -0700
 
----
-base-commit: 0f61b1860cc3f52aef9036d7235ed1f017632193
-change-id: 20260116-iommu-io_page_fault_null_fix-f81b4e8b5423
+    madvise writeback retry logic fix
 
-Best regards,
--- 
-Daniel Thompson <daniel@riscstar.com>
+    Signed-off-by: Nico Pache <npache@redhat.com>
+
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 59e5a5588d85..2b054f7d9753 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -2418,6 +2418,14 @@ static enum scan_result collapse_single_pmd(unsigned long
+addr,
+ 	mmap_read_unlock(mm);
+ 	*mmap_locked = false;
+ 	result = collapse_scan_file(mm, addr, file, pgoff, cc);
++
++	if (!cc->is_khugepaged && result == SCAN_PAGE_DIRTY_OR_WRITEBACK &&
++	    mapping_can_writeback(file->f_mapping)) {
++		const loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
++		const loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
++
++		filemap_write_and_wait_range(file->f_mapping, lstart, lend);
++	}
+ 	fput(file);
+
+ 	if (result != SCAN_PTE_MAPPED_HUGEPAGE)
+@@ -2840,19 +2848,8 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned
+long start,
+ 			*lock_dropped = true;
+
+ 		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb) {
+-			struct file *file = get_file(vma->vm_file);
+-			pgoff_t pgoff = linear_page_index(vma, addr);
+-
+-			if (mapping_can_writeback(file->f_mapping)) {
+-				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+-				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+-
+-				filemap_write_and_wait_range(file->f_mapping, lstart, lend);
+-				triggered_wb = true;
+-				fput(file);
+-				goto retry;
+-			}
+-			fput(file);
++			triggered_wb = true;
++			goto retry;
+ 		}
+
+ 		switch (result) {
+--
+2.52.0
+
+On 1/22/26 12:28 PM, Nico Pache wrote:
+> The khugepaged daemon and madvise_collapse have two different
+> implementations that do almost the same thing.
+> 
+> Create collapse_single_pmd to increase code reuse and create an entry
+> point to these two users.
+> 
+> Refactor madvise_collapse and collapse_scan_mm_slot to use the new
+> collapse_single_pmd function. This introduces a minor behavioral change
+> that is most likely an undiscovered bug. The current implementation of
+> khugepaged tests collapse_test_exit_or_disable before calling
+> collapse_pte_mapped_thp, but we weren't doing it in the madvise_collapse
+> case. By unifying these two callers madvise_collapse now also performs
+> this check. We also modify the return value to be SCAN_ANY_PROCESS which
+> properly indicates that this process is no longer valid to operate on.
+> 
+> We also guard the khugepaged_pages_collapsed variable to ensure its only
+> incremented for khugepaged.
+> 
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 106 +++++++++++++++++++++++++++---------------------
+>  1 file changed, 60 insertions(+), 46 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index fefcbdca4510..59e5a5588d85 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -2394,6 +2394,54 @@ static enum scan_result collapse_scan_file(struct mm_struct *mm, unsigned long a
+>  	return result;
+>  }
+>  
+> +/*
+> + * Try to collapse a single PMD starting at a PMD aligned addr, and return
+> + * the results.
+> + */
+> +static enum scan_result collapse_single_pmd(unsigned long addr,
+> +		struct vm_area_struct *vma, bool *mmap_locked,
+> +		struct collapse_control *cc)
+> +{
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	enum scan_result result;
+> +	struct file *file;
+> +	pgoff_t pgoff;
+> +
+> +	if (vma_is_anonymous(vma)) {
+> +		result = collapse_scan_pmd(mm, vma, addr, mmap_locked, cc);
+> +		goto end;
+> +	}
+> +
+> +	file = get_file(vma->vm_file);
+> +	pgoff = linear_page_index(vma, addr);
+> +
+> +	mmap_read_unlock(mm);
+> +	*mmap_locked = false;
+> +	result = collapse_scan_file(mm, addr, file, pgoff, cc);
+> +	fput(file);
+> +
+> +	if (result != SCAN_PTE_MAPPED_HUGEPAGE)
+> +		goto end;
+> +
+> +	mmap_read_lock(mm);
+> +	*mmap_locked = true;
+> +	if (collapse_test_exit_or_disable(mm)) {
+> +		mmap_read_unlock(mm);
+> +		*mmap_locked = false;
+> +		return SCAN_ANY_PROCESS;
+> +	}
+> +	result = try_collapse_pte_mapped_thp(mm, addr, !cc->is_khugepaged);
+> +	if (result == SCAN_PMD_MAPPED)
+> +		result = SCAN_SUCCEED;
+> +	mmap_read_unlock(mm);
+> +	*mmap_locked = false;
+> +
+> +end:
+> +	if (cc->is_khugepaged && result == SCAN_SUCCEED)
+> +		++khugepaged_pages_collapsed;
+> +	return result;
+> +}
+> +
+>  static unsigned int collapse_scan_mm_slot(unsigned int pages, enum scan_result *result,
+>  					    struct collapse_control *cc)
+>  	__releases(&khugepaged_mm_lock)
+> @@ -2466,34 +2514,9 @@ static unsigned int collapse_scan_mm_slot(unsigned int pages, enum scan_result *
+>  			VM_BUG_ON(khugepaged_scan.address < hstart ||
+>  				  khugepaged_scan.address + HPAGE_PMD_SIZE >
+>  				  hend);
+> -			if (!vma_is_anonymous(vma)) {
+> -				struct file *file = get_file(vma->vm_file);
+> -				pgoff_t pgoff = linear_page_index(vma,
+> -						khugepaged_scan.address);
+> -
+> -				mmap_read_unlock(mm);
+> -				mmap_locked = false;
+> -				*result = collapse_scan_file(mm,
+> -					khugepaged_scan.address, file, pgoff, cc);
+> -				fput(file);
+> -				if (*result == SCAN_PTE_MAPPED_HUGEPAGE) {
+> -					mmap_read_lock(mm);
+> -					if (collapse_test_exit_or_disable(mm))
+> -						goto breakouterloop;
+> -					*result = try_collapse_pte_mapped_thp(mm,
+> -						khugepaged_scan.address, false);
+> -					if (*result == SCAN_PMD_MAPPED)
+> -						*result = SCAN_SUCCEED;
+> -					mmap_read_unlock(mm);
+> -				}
+> -			} else {
+> -				*result = collapse_scan_pmd(mm, vma,
+> -					khugepaged_scan.address, &mmap_locked, cc);
+> -			}
+> -
+> -			if (*result == SCAN_SUCCEED)
+> -				++khugepaged_pages_collapsed;
+>  
+> +			*result = collapse_single_pmd(khugepaged_scan.address,
+> +						      vma, &mmap_locked, cc);
+>  			/* move to next address */
+>  			khugepaged_scan.address += HPAGE_PMD_SIZE;
+>  			progress += HPAGE_PMD_NR;
+> @@ -2799,6 +2822,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  			cond_resched();
+>  			mmap_read_lock(mm);
+>  			mmap_locked = true;
+> +			*lock_dropped = true;
+>  			result = hugepage_vma_revalidate(mm, addr, false, &vma,
+>  							 cc);
+>  			if (result  != SCAN_SUCCEED) {
+> @@ -2809,17 +2833,17 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  			hend = min(hend, vma->vm_end & HPAGE_PMD_MASK);
+>  		}
+>  		mmap_assert_locked(mm);
+> -		if (!vma_is_anonymous(vma)) {
+> -			struct file *file = get_file(vma->vm_file);
+> -			pgoff_t pgoff = linear_page_index(vma, addr);
+>  
+> -			mmap_read_unlock(mm);
+> -			mmap_locked = false;
+> +		result = collapse_single_pmd(addr, vma, &mmap_locked, cc);
+> +
+> +		if (!mmap_locked)
+>  			*lock_dropped = true;
+> -			result = collapse_scan_file(mm, addr, file, pgoff, cc);
+>  
+> -			if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb &&
+> -			    mapping_can_writeback(file->f_mapping)) {
+> +		if (result == SCAN_PAGE_DIRTY_OR_WRITEBACK && !triggered_wb) {
+> +			struct file *file = get_file(vma->vm_file);
+> +			pgoff_t pgoff = linear_page_index(vma, addr);
+> +
+> +			if (mapping_can_writeback(file->f_mapping)) {
+>  				loff_t lstart = (loff_t)pgoff << PAGE_SHIFT;
+>  				loff_t lend = lstart + HPAGE_PMD_SIZE - 1;
+>  
+> @@ -2829,26 +2853,16 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
+>  				goto retry;
+>  			}
+>  			fput(file);
+> -		} else {
+> -			result = collapse_scan_pmd(mm, vma, addr, &mmap_locked, cc);
+>  		}
+> -		if (!mmap_locked)
+> -			*lock_dropped = true;
+>  
+> -handle_result:
+>  		switch (result) {
+>  		case SCAN_SUCCEED:
+>  		case SCAN_PMD_MAPPED:
+>  			++thps;
+>  			break;
+> -		case SCAN_PTE_MAPPED_HUGEPAGE:
+> -			BUG_ON(mmap_locked);
+> -			mmap_read_lock(mm);
+> -			result = try_collapse_pte_mapped_thp(mm, addr, true);
+> -			mmap_read_unlock(mm);
+> -			goto handle_result;
+>  		/* Whitelisted set of results where continuing OK */
+>  		case SCAN_NO_PTE_TABLE:
+> +		case SCAN_PTE_MAPPED_HUGEPAGE:
+>  		case SCAN_PTE_NON_PRESENT:
+>  		case SCAN_PTE_UFFD_WP:
+>  		case SCAN_LACK_REFERENCED_PAGE:
 
