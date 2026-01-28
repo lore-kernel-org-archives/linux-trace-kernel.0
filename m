@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35202BE03D;
-	Wed, 28 Jan 2026 23:38:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C2E21D5AA;
+	Wed, 28 Jan 2026 23:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769643500; cv=none; b=K+T1JGO622KhCnSG4pXkV5nwTCJnriDMrYUhD+TzNxyU2KDKyc4DSPF6ihiAZaHxMVNB1mL2vexXY0DwdW8iHMIHibRZxYXwYDC9E2tvElHSyNMd7hpl0PlPxd2Hn7XboiXFJIXdc+rOxap0sGovhlN5sDTnNsWfcoGSyj8fhyw=
+	t=1769644081; cv=none; b=ZHvh3FxhuxwBtsBfHjjn+Sa4kLIrAbaDjwzHeTF4vqltQtO5j+r1VnfgDpFV3jXgV/WZTGCFYdmUyo77s/GkEfxgRr8M3DhFbWH4ZYeTjLv7tCUptXOE+ZNjceGqUb4PHZV7YlxIfEhUIqO3xZWT5vGN24JkH89Z5HOemx+JwFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769643500; c=relaxed/simple;
-	bh=F0SGT1zA7nJrKcds9k2gzkJL1tql6F1LMQ2X/R9SLXU=;
+	s=arc-20240116; t=1769644081; c=relaxed/simple;
+	bh=4lTzb1cGm0Rqm2NAED9WEiaw4VLHfjKCmvY4w7uumTk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TkHGM5aiyCg/YwMZfYh158+Hl4AYaCYos4jXrIbNsaobwwLnp5nGb/g9ku6d98wtrEnfDtnDalQmr/Vlt1x9+og8tulgOu+gz4YMsNWvu/3LPBlABlI/uuTuEc/XN9fJQVWejpArtbPAmSkTLI1leW5CozkgTq2AL3lZM90cHBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5Z8pkQs; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ElQ0u+Z9QYfgDq/QbQbbD2+TSOZ5I4hiykiv+VW7dhx3jcAW008oWCgAKTsrdSGstFHlpVExqFQA1OYhlwpMOjkJjKf6iWbfUPLbLfkYfbke4GZJ7MbbEiqyryhMii+PY7XfyvjBFxWb0tkdalawxuqdGplc/YUNhuAV7fSVZBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbqRC2KN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5Z8pkQs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D22C4CEF1;
-	Wed, 28 Jan 2026 23:38:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbqRC2KN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10F5C4CEF1;
+	Wed, 28 Jan 2026 23:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769643500;
-	bh=F0SGT1zA7nJrKcds9k2gzkJL1tql6F1LMQ2X/R9SLXU=;
+	s=k20201202; t=1769644081;
+	bh=4lTzb1cGm0Rqm2NAED9WEiaw4VLHfjKCmvY4w7uumTk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u5Z8pkQsCsASHBAWQsH9T1G5ZcaqbryygrnEcq1600aasgTUAnDh3GNvGpgJ0D9lv
-	 xPa4jgCIpnpMBjCBuYljQSCb60qJCO9igRU8Hp/RKs6EkVei4Fc+8AKOle+vuQPysG
-	 FWSJ/pvJC62A1eD8OrsjajN7ic4SgGkD/mWkderuV0tsgEuL9xwUPS7oFw9Ad+w3Vc
-	 t0v9qojp+LNw+AkWJskfFTGxq+uNrg1X8mhv4VeYCk9Ea0zUrphX5DFqvLBMDRdOyS
-	 OOHfmQ2upHuEMDALuFfFT+J2swjVrLdqNxZpYA3UqiWc/fnrZTNHOXbLxp+v4jrLMp
-	 yP/X61KGrVeKQ==
-Date: Thu, 29 Jan 2026 08:38:17 +0900
+	b=qbqRC2KN6PLi/sjXyu1GoPfmoA6Ncn8qy6jeQ0Lo3H74lpqSomeA5KixPDRS23Etc
+	 H3G3Bo1KEWonAqSVoCfY/5S+dsMh9bNEfP1a60Af8vNr5GYzOQba1ddqJZn4ART9w7
+	 5qaJs2T1jTcjdS3NydjS7I5LNhd+MMmyk1J33mySHP69kwhSCd7VE97h+gTm1SUr4O
+	 pR/4lPlXRfY0gCDEg7cBpooi1/EKrSKeIBMLGr0oJaIsJQBI8Z0OmzW1QitgqKh9+2
+	 eCLSzGva+LgsixCmiZDpW0LgSAuwb5GY8udJhl/F674QiFdSCu3Z8jd6i8ODx7gY2b
+	 tX3nOAKZ8d2GA==
+Date: Thu, 29 Jan 2026 08:47:57 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yaxiong Tian <tianyaxiong@kylinos.cn>
-Cc: rostedt@goodmis.org, axboe@kernel.dk, mathieu.desnoyers@efficios.com,
- corbet@lwn.net, skhan@linuxfoundation.org,
- linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Tracing: Accelerate Kernel Boot by
- Asynchronizing
-Message-Id: <20260129083817.d26c61da3cf274bf37e1b2a0@kernel.org>
-In-Reply-To: <20260128125117.1704853-1-tianyaxiong@kylinos.cn>
-References: <20260128125117.1704853-1-tianyaxiong@kylinos.cn>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] ring-buffer: Add helper functions for allocations
+Message-Id: <20260129084757.7e3747d0429d8231c26faa7b@kernel.org>
+In-Reply-To: <20251125121153.35c07461@gandalf.local.home>
+References: <20251125121153.35c07461@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,90 +44,237 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 28 Jan 2026 20:51:17 +0800
-Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
+On Tue, 25 Nov 2025 12:11:53 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On my ARM64 platform, I observed that certain tracing module
-> initializations run for up to 200ms—for example, init_kprobe_trace().
-> Analysis reveals the root cause: the execution flow eval_map_work_func()
-> →trace_event_update_with_eval_map()→trace_event_update_all()
-> is highly time-consuming. Although this flow is placed in eval_map_wq
-> for asynchronous execution, it holds the trace_event_sem lock, causing
-> other modules to be blocked either directly or indirectly. Also in
-> init_blk_tracer(), this functions require trace_event_sem device_initcall.
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> To resolve this issue, I rename `eval_map_wq` and make it global and moved
-> other initialization functions under the tracing subsystem that are
-> related to this lock to run asynchronously on this workqueue. After this
-> optimization, boot time is reduced by approximately 200ms.
+> The allocation of the per CPU buffer descriptor, the buffer page
+> descriptors and the buffer page data itself can be pretty ugly:
 > 
-> Given that asynchronous initialization makes it indeterminate when tracing
-> will begin, we introduce the trace_async_init kernel parameter.Asynchronous
-> behavior is enabled only when this parameter is explicitly provided.
+>   kzalloc_node(ALIGN(sizeof(struct buffer_page), cache_line_size()),
+>                GFP_KERNEL, cpu_to_node(cpu));
 > 
-> Based on my analysis and testing, I've identified that only these two
-> locations significantly impact timing. Other initcall_* functions do not
-> exhibit relevant lock contention.
+> And the data pages:
 > 
-> A brief summary of the test results is as follows:
-> Before this PATCHS:
-> [    0.224933] calling  init_kprobe_trace+0x0/0xe0 @ 1
-> [    0.455016] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 230080 usecs
+>   page = alloc_pages_node(cpu_to_node(cpu),
+>                           GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO, order);
+>   if (!page)
+> 	return NULL;
+>   bpage->page = page_address(page);
+>   rb_init_page(bpage->page);
 > 
-> Only opt setup_boot_kprobe_events() can see:
-> [    0.258609] calling  init_blk_tracer+0x0/0x68 @ 1
-> [    0.454991] initcall init_blk_tracer+0x0/0x68 returned 0 after 196377 usecs
+> Add helper functions to make the code easier to read.
 > 
-> After this PATCHS:
-> [    0.224940] calling  init_kprobe_trace+0x0/0xe0 @ 1
-> [    0.224946] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 3 usecs
-> skip --------
-> [    0.264835] calling  init_blk_tracer+0x0/0x68 @ 1
-> [    0.264841] initcall init_blk_tracer+0x0/0x68 returned 0 after 2 usecs
+> This does make all allocations of the data page (bpage->page) allocated
+> with the __GFP_RETRY_MAYFAIL flag (and not just the bulk allocator). Which
+> is actually better, as allocating the data page for the ring buffer tracing
+> should try hard but not trigger the OOM killer.
+> 
+> Link: https://lore.kernel.org/all/CAHk-=wjMMSAaqTjBSfYenfuzE1bMjLj+2DLtLWJuGt07UGCH_Q@mail.gmail.com/
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-OK, this series looks good to me.
+Looks good to me.
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-for this series.
+Thanks,
 
-Thank you,
-
-
-> 
 > ---
-> Changes in v2:
-> - Rename eval_map_wq to trace_init_wq.
-> Changes in v3:
-> - Opt PATCH 1/3 commit
-> Changes in v4:
-> - add trace_async_init boot parameter in patch2
-> - add init_kprobe_trace's skip logic in patch3
-> - add Suggested-by tag 
-> - Other synchronous optimizations related to trace_async_init
+> Changes since v1: https://patch.msgid.link/20251124140906.71a2abf6@gandalf.local.home
 > 
-> Yaxiong Tian (5):
->   tracing: Rename `eval_map_wq` and allow other parts of tracing use it
->   tracing: add trace_async_init boot parameter
->   tracing/kprobes: Skip setup_boot_kprobe_events() when no cmdline event
->   tracing/kprobes: Make setup_boot_kprobe_events() asynchronous when
->     trace_async_init set
->   blktrace: Make init_blk_tracer() asynchronous when trace_async_init
->     set
+> - Removed set but unused variables (kernel test robot)
 > 
->  .../admin-guide/kernel-parameters.txt         |  8 ++++++
->  kernel/trace/blktrace.c                       | 23 +++++++++++++++-
->  kernel/trace/trace.c                          | 27 ++++++++++++-------
->  kernel/trace/trace.h                          |  2 ++
->  kernel/trace/trace_kprobe.c                   | 18 ++++++++++++-
->  5 files changed, 67 insertions(+), 11 deletions(-)
+>  kernel/trace/ring_buffer.c | 97 +++++++++++++++++++++-----------------
+>  1 file changed, 53 insertions(+), 44 deletions(-)
 > 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 1244d2c5c384..6295443b0944 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -401,6 +401,41 @@ static void free_buffer_page(struct buffer_page *bpage)
+>  	kfree(bpage);
+>  }
+>  
+> +/*
+> + * For best performance, allocate cpu buffer data cache line sized
+> + * and per CPU.
+> + */
+> +#define alloc_cpu_buffer(cpu) (struct ring_buffer_per_cpu *)		\
+> +	kzalloc_node(ALIGN(sizeof(struct ring_buffer_per_cpu),		\
+> +			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu));
+> +
+> +#define alloc_cpu_page(cpu) (struct buffer_page *)			\
+> +	kzalloc_node(ALIGN(sizeof(struct buffer_page),			\
+> +			   cache_line_size()), GFP_KERNEL, cpu_to_node(cpu));
+> +
+> +static struct buffer_data_page *alloc_cpu_data(int cpu, int order)
+> +{
+> +	struct buffer_data_page *dpage;
+> +	struct page *page;
+> +	gfp_t mflags;
+> +
+> +	/*
+> +	 * __GFP_RETRY_MAYFAIL flag makes sure that the allocation fails
+> +	 * gracefully without invoking oom-killer and the system is not
+> +	 * destabilized.
+> +	 */
+> +	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO;
+> +
+> +	page = alloc_pages_node(cpu_to_node(cpu), mflags, order);
+> +	if (!page)
+> +		return NULL;
+> +
+> +	dpage = page_address(page);
+> +	rb_init_page(dpage);
+> +
+> +	return dpage;
+> +}
+> +
+>  /*
+>   * We need to fit the time_stamp delta into 27 bits.
+>   */
+> @@ -2204,7 +2239,6 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  	struct ring_buffer_cpu_meta *meta = NULL;
+>  	struct buffer_page *bpage, *tmp;
+>  	bool user_thread = current->mm != NULL;
+> -	gfp_t mflags;
+>  	long i;
+>  
+>  	/*
+> @@ -2218,13 +2252,6 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  	if (i < nr_pages)
+>  		return -ENOMEM;
+>  
+> -	/*
+> -	 * __GFP_RETRY_MAYFAIL flag makes sure that the allocation fails
+> -	 * gracefully without invoking oom-killer and the system is not
+> -	 * destabilized.
+> -	 */
+> -	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL;
+> -
+>  	/*
+>  	 * If a user thread allocates too much, and si_mem_available()
+>  	 * reports there's enough memory, even though there is not.
+> @@ -2241,10 +2268,8 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
+>  
+>  	for (i = 0; i < nr_pages; i++) {
+> -		struct page *page;
+>  
+> -		bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+> -				    mflags, cpu_to_node(cpu_buffer->cpu));
+> +		bpage = alloc_cpu_page(cpu_buffer->cpu);
+>  		if (!bpage)
+>  			goto free_pages;
+>  
+> @@ -2267,13 +2292,10 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  			bpage->range = 1;
+>  			bpage->id = i + 1;
+>  		} else {
+> -			page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
+> -						mflags | __GFP_COMP | __GFP_ZERO,
+> -						cpu_buffer->buffer->subbuf_order);
+> -			if (!page)
+> +			int order = cpu_buffer->buffer->subbuf_order;
+> +			bpage->page = alloc_cpu_data(cpu_buffer->cpu, order);
+> +			if (!bpage->page)
+>  				goto free_pages;
+> -			bpage->page = page_address(page);
+> -			rb_init_page(bpage->page);
+>  		}
+>  		bpage->order = cpu_buffer->buffer->subbuf_order;
+>  
+> @@ -2324,14 +2346,12 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  static struct ring_buffer_per_cpu *
+>  rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  {
+> -	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) = NULL;
+> +	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) =
+> +		alloc_cpu_buffer(cpu);
+>  	struct ring_buffer_cpu_meta *meta;
+>  	struct buffer_page *bpage;
+> -	struct page *page;
+>  	int ret;
+>  
+> -	cpu_buffer = kzalloc_node(ALIGN(sizeof(*cpu_buffer), cache_line_size()),
+> -				  GFP_KERNEL, cpu_to_node(cpu));
+>  	if (!cpu_buffer)
+>  		return NULL;
+>  
+> @@ -2347,8 +2367,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
+>  	mutex_init(&cpu_buffer->mapping_lock);
+>  
+> -	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+> -			    GFP_KERNEL, cpu_to_node(cpu));
+> +	bpage = alloc_cpu_page(cpu);
+>  	if (!bpage)
+>  		return NULL;
+>  
+> @@ -2370,13 +2389,10 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  			rb_meta_buffer_update(cpu_buffer, bpage);
+>  		bpage->range = 1;
+>  	} else {
+> -		page = alloc_pages_node(cpu_to_node(cpu),
+> -					GFP_KERNEL | __GFP_COMP | __GFP_ZERO,
+> -					cpu_buffer->buffer->subbuf_order);
+> -		if (!page)
+> +		int order = cpu_buffer->buffer->subbuf_order;
+> +		bpage->page = alloc_cpu_data(cpu, order);
+> +		if (!bpage->page)
+>  			goto fail_free_reader;
+> -		bpage->page = page_address(page);
+> -		rb_init_page(bpage->page);
+>  	}
+>  
+>  	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
+> @@ -6464,7 +6480,6 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+>  	struct buffer_data_read_page *bpage = NULL;
+>  	unsigned long flags;
+> -	struct page *page;
+>  
+>  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  		return ERR_PTR(-ENODEV);
+> @@ -6486,22 +6501,16 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+>  	arch_spin_unlock(&cpu_buffer->lock);
+>  	local_irq_restore(flags);
+>  
+> -	if (bpage->data)
+> -		goto out;
+> -
+> -	page = alloc_pages_node(cpu_to_node(cpu),
+> -				GFP_KERNEL | __GFP_NORETRY | __GFP_COMP | __GFP_ZERO,
+> -				cpu_buffer->buffer->subbuf_order);
+> -	if (!page) {
+> -		kfree(bpage);
+> -		return ERR_PTR(-ENOMEM);
+> +	if (bpage->data) {
+> +		rb_init_page(bpage->data);
+> +	} else {
+> +		bpage->data = alloc_cpu_data(cpu, cpu_buffer->buffer->subbuf_order);
+> +		if (!bpage->data) {
+> +			kfree(bpage);
+> +			return ERR_PTR(-ENOMEM);
+> +		}
+>  	}
+>  
+> -	bpage->data = page_address(page);
+> -
+> - out:
+> -	rb_init_page(bpage->data);
+> -
+>  	return bpage;
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
 > -- 
-> 2.25.1
-> 
+> 2.51.0
 > 
 
 
