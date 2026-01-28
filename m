@@ -1,105 +1,88 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27EA2236E0;
-	Wed, 28 Jan 2026 17:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1F37107A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 18:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769622708; cv=none; b=DyivKoKRrhxSnOI/1feGyF7Au8UCSdWoV9/kZzZvaURlAkZd5JiJ7WkV0nX62g/Cio/rCHRXq2CmyoL0x1Tam0DFm+6dLmbpX6459WdzyR6HAuVULn7GYEjlBJq0LtVpv8CnxR7o+AMicOFkY/OWGZsCGjM0YmxvvBskDHC24w4=
+	t=1769623541; cv=none; b=oNgqKvyuYx5d+jhEPyJbOdyLmD2EC+eurJ/F6hAq+sI6W7OIdk8UC8fpEqgDBgJdO47aIUYpQo0pxxiz+XkfsSWl4csyDDJbNNrhRbmnXf/xnbvCPHVoAqMnmrzJgKainBK9AYNZay+ehyhac3A992hZNXB7dWEfLtI6F7ogAo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769622708; c=relaxed/simple;
-	bh=+rYuf6Lay3x+qEaQsOQJ9d/USniOnx4rlOR2MYCt/VI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EyHXw5vzyJT1gHjhsqVs71rsC9lx5LzgBwE70enOB4Y5EGyYUbmQzpr7SBltgA/zotgA7g0CI6BPqQGx26+Z2HbUXsUvOBQmgWxUB6mD2L4sd0dCCB4Bmgj63Floj1R/rFODtkLGvHvCrAoqCVR/UDrm3iTkOM58PmMxlYUn6ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=MxKeGCaa; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1769623541; c=relaxed/simple;
+	bh=Z5Y0ypxvByBYwjX882uJ7Vj1LBD1G57O7acbyz/bNg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Izqk8HwqAgNTKWJmTPqjxSYdq/qMYZ3wL+0zGmMZT03tfjmO67Nz8is0CDfh65CuAklmwxheg7eaFx1zGLqyoG7h8n5hfefAgDNPXD3n/EoP1XCK6j0xgc0uVWxijHRrz8HajrzKR7tHG+8uoX5Z1QgECC4txrdgwSsIBicODqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=l4Y2sqLn; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="MxKeGCaa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=eysL419MsOX4yxh3/KQkr+tqqB1Z0JyydTzYujMR0AE=; b=MxKeGCaaqzeZ5hVRojbBat+tG2
-	3eT9qwlTd1BoGUbbAHaH8hG++McYPoF16V2kZc0DldsKeEOYjSZ2QONTcskMGtpHrCxHb52x6b0My
-	7VE/XeiJmzJCM0ogPdxqBeLwq7XrMl3DFRwjXVxLtesHQFMQfQiwoDCiUod5OtymxFHLiVr3gr4m8
-	mZpEPwyagPwfSFwzWYCxUrcLQdSCUaN0KTeqjCJzI5/dbI/kfpt2Lak5LRRd9d2JAL9I0vvzgoO42
-	lmCk9dZiHG1Kw8nH/KgdUnzGA4t19qoDO2JYo/WlZym+j2m3ucysGm8YnTMJOF3NlvEJv278vbblf
-	hLWbCNxQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vl9hP-000L4H-6G; Wed, 28 Jan 2026 17:51:27 +0000
-Date: Wed, 28 Jan 2026 09:51:20 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
-Subject: Re: [PATCH] uprobes: fix incorrect lockdep condition in
- filter_chain()
-Message-ID: <aXpMhBIc6qBd5poV@gmail.com>
-References: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
- <aXoUOEhDfncEkC-f@redhat.com>
- <CAEf4BzYJJiUdQTjDgr_uVSQ+uBhYWKki0vjS5VffTzbST1uS2g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="l4Y2sqLn"
+Received: from trampoline.thunk.org (pool-173-48-123-50.bstnma.fios.verizon.net [173.48.123.50])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 60SI5INC028707
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Jan 2026 13:05:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1769623520; bh=HUdpk//KLYaWaJDXR2jsgdTu6WM7NU4I0jkVARXteCU=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=l4Y2sqLnyzXR/XvAoq2mHPf2OB/BmVMC9zbxiRw37VFkQOn8KWNSfRi4p6LSf/pOy
+	 T2KJmlwKvI9wGd8459ss3gaqG2kk04Xr9BstsmY1ECfbCnucWKdReWHgf9djZ8/dh3
+	 2i7T6g3UwD0MV+hxKz8/CRfjm6cCa7MKuzW6oP3d1MgSyFYde4rPUfhjQLgJIe68en
+	 d+unHmp9yRT1K7JzEDbB2/RUPCWZWs3th2DOmThQtXBPk2XNiuUY5mhdq6Kf25mAZB
+	 oUph5YIsADi86gXPYebNLlnBtV18sog7dUT1A2gb+9eIPnMXIVJO4n2WWbrIFqBAnE
+	 yxlvn8ZCHy22g==
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 1AE772E00DF; Wed, 28 Jan 2026 13:05:16 -0500 (EST)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Andreas Dilger <adilger.kernel@dilger.ca>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Li Chen <me@linux.beauty>
+Cc: "Theodore Ts'o" <tytso@mit.edu>
+Subject: Re: [RFC 0/5] ext4: mark more ops fast-commit ineligible
+Date: Wed, 28 Jan 2026 13:05:05 -0500
+Message-ID: <176962347636.1138505.14797940787687720541.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251211115146.897420-1-me@linux.beauty>
+References: <20251211115146.897420-1-me@linux.beauty>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYJJiUdQTjDgr_uVSQ+uBhYWKki0vjS5VffTzbST1uS2g@mail.gmail.com>
-X-Debian-User: leitao
 
-On Wed, Jan 28, 2026 at 09:23:45AM -0800, Andrii Nakryiko wrote:
-> On Wed, Jan 28, 2026 at 5:51 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 01/28, Breno Leitao wrote:
-> > >
-> > > The list_for_each_entry_rcu() in filter_chain() uses
-> > > rcu_read_lock_trace_held() as the lockdep condition, but the function
-> > > holds consumer_rwsem, not the RCU trace lock.
-> > >
-> > > This gives me the following output when running with some locking debug
-> > > option enabled:
-> > >
-> > >   kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
-> > >     filter_chain
-> > >     register_for_each_vma
-> > >     uprobe_unregister_nosync
-> > >     __probe_event_disable
-> > >
-> > > Remove the incorrect lockdep condition since the rwsem provides
-> > > sufficient protection for the list traversal.
-> >
-> > I hope Andrii will recheck, but looks obviously correct to me.
-> 
-> yeah, I did, and it also looks obviously correct to me, I didn't need
-> to use rcu flavor there in the first place, I think.
-> 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> 
-> >
-> > > Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for better performance")
-> >
-> > This commit just change the __list_check_rcu() condition...
-> >
-> > Perhaps
-> > Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-> >
-> 
-> yep, this one is the earliest change adding unnecessary rcu flavor of
-> list_for_each_entry
 
-Ack. I will respin with the correct "fixes" tag.
+On Thu, 11 Dec 2025 19:51:37 +0800, Li Chen wrote:
+> ext4 fast commit only logs operations with replay support. This series
+> marks a few more operations as fast-commit ineligible and accounts
+> them via fc_info so behaviour under fast commit is easier to reason
+> about.
+> 
+> Testing was done in a QEMU guest on loopback ext4 filesystems created
+> with -O fast_commit[/,verity] by exercising each operation and checking
+> /proc/fs/ext4/*/fc_info for the corresponding ineligible reason and
+> ineligible commit counters. Detailed steps are in each commit's message.
+> 
+> [...]
 
---breno
+Applied, thanks!
+
+[1/5] ext4: mark inode format migration fast-commit ineligible
+      commit: 87e79fa122bc9a6576f1690ee264fcbd77d3ab58
+[2/5] ext4: mark fs-verity enable fast-commit ineligible
+      commit: 16d43b9748c655b36a675cc55789f40fd827e9b1
+[3/5] ext4: mark move extents fast-commit ineligible
+      commit: 690558921d9f9388c6bc83610451d8cb393e4d88
+[4/5] ext4: mark group add fast-commit ineligible
+      commit: 89b4336fd5ec78f51f9d3a1d100f3ffa3228e604
+[5/5] ext4: mark group extend fast-commit ineligible
+      commit: 1f8dd813a1c771b13c303f73d876164bc9b327cc
+
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
