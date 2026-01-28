@@ -1,123 +1,141 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD3D34DB7B;
-	Wed, 28 Jan 2026 09:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C37C1DE2AD;
+	Wed, 28 Jan 2026 12:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769594369; cv=none; b=HTEGSn4x1plFhJCFKFDJdepzRGIf0d/Ve8QuEyXNGZogOF0OEZaKPa0DqiK+lfVpnsfxWVOmhbKsbslGHNbh7rEfFiMxMuOvUHaiX38p1oUP8ErYkoS3m5ow82CxnmnDDkIQRpowXq/JfR4MvYwDJ9Zo2bOXGo9khGgcLHNlPvk=
+	t=1769604705; cv=none; b=XWmVzUxxaxrd8mJdl0YOJrMAZn1C3zG53oJ7skt0GyTLgsSwc8Xn96kVlLFbLAfUIPrP/ICTHrKgolpF8mXDPt5y50THckmxdlt2lxbuOCIl16Gt0CMDDnRKTtfiC4qNxFiiBHpqCcopnHiB+xn0yi0SAVScmkSYm40PPKweAJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769594369; c=relaxed/simple;
-	bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jv6o6EPJPVs/rMk+YFU8CtEnKmg4Bk2YCKc1IcX3qTuVaH4QFsbFWxeUdaf/z9zQAtrir6ui7mIl+NNzj3ZOBeaBhf4cN22tLk8j2mdqCwFdfLCUl/UtFMbYJy3E452jjvFeO5KkeG00E88g/i52C0B2x+nlCNdVMuZGn5xnX6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=goawlMG4; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="goawlMG4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=1nO7a828YUpcLhY+o95VylGAfy5FWZlAkk3njZ1MCEI=; b=goawlMG45qxczHtuUUTkTzGoaT
-	wmeTAzlZtiTXbPJQlnrBWCd8rz9ceTMyEdB4hkQKOJfKLG9kQNC/g1VaUsWyInVvmkeRD2ceRN2pN
-	rzuPs8zKQEESQMXgs0Uomkrmt55ReFcMixnSKApXeFBGJb5hX0kOrULEdq0YVHPxF/32X88xInQLv
-	ozlFD+Af/GaJ3LTsbHC3SayEw2TWdVcwIRbPOix39Ycs71LRPduOkUd2S+EK7wlHwP7UfPmUOQxGJ
-	VeyojMfgMl7KJH4y3OLke39jnAe9UArBlQqs/hj8wQJYobnI48vRvw9/4vPaD4ifsZL6ToGvoKs2h
-	ib31C5Eg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vl2KC-0005Fc-JM; Wed, 28 Jan 2026 09:59:00 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 28 Jan 2026 01:58:38 -0800
-Subject: [PATCH] uprobes: fix incorrect lockdep condition in filter_chain()
+	s=arc-20240116; t=1769604705; c=relaxed/simple;
+	bh=VfeSfNy9tmSOGhyx/aNm4BRVYjFdieR57cjNXNADOAQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jI8Z29v15dCqNO8leFVNLHdMJDS20pGu9/j0BmD3OEEDTfGhxEGSFJtqgBAqFgXBprkYLFxkSht4I91dQ6D7rgXDBw7/vDkdcFnSG27lFpZVrntWDbIexeKXMmQkNrR/ksFp0gjtCY9efILxiU32N4YOSAuTlh1Mv/TRhL52pJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1251b942fc4811f0b0f03b4cfa9209d1-20260128
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF
+	CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
+	ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:a70827dc-b6c5-4361-bdbe-a8f4e1ad788a,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:a70827dc-b6c5-4361-bdbe-a8f4e1ad788a,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:ae0ae57303552be8df558628df9162d0,BulkI
+	D:260128205135MNOENJBZ,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 1251b942fc4811f0b0f03b4cfa9209d1-20260128
+X-User: tianyaxiong@kylinos.cn
+Received: from localhost.localdomain [(175.2.149.138)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1134550984; Wed, 28 Jan 2026 20:51:32 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	axboe@kernel.dk,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v4 0/5] Tracing: Accelerate Kernel Boot by Asynchronizing
+Date: Wed, 28 Jan 2026 20:51:17 +0800
+Message-Id: <20260128125117.1704853-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
-X-B4-Tracking: v=1; b=H4sIAM3deWkC/yXMQQqDMBAF0KsMf23AhKKSq5RSTBx1XKhMGimId
- xd1+TZvR2IVTvC0Q3mTJMsMT7YgxLGdBzbSwRNc6arSusbkVZfAX43ZsLNNVbfhFW1AQViVe/n
- f2fvzOOUwcfxdA47jBL/kjupuAAAA
-X-Change-ID: 20260128-uprobe_rcu-e21867ab4c1b
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
- stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-f4305
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1516; i=leitao@debian.org;
- h=from:subject:message-id; bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBped3eu5M3fbHiVCjgixTSGNxB1xtTmYxjWM1FB
- DXMve5svYCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaXnd3gAKCRA1o5Of/Hh3
- bX5HEACaYpnFCKsGemw7IqE6IiSiUz7qQKBRkinhy/JCZIMdrL8RWTBXM6Kr1qjODZDgwgnLV9L
- YqWBavrscM5AGEvcGc8JUg8x81UuMdHEfHvE2pYY+Ufqy9XYfknj7XbAxQxmZOW3sbYYQKbWslt
- LyaToEZndlXC6HkegyAw7SCMP8NUInPdu8v5BcYK8rB4ZgvDiFKIsoM5B9ErluHufnvCQuYgg1Y
- PpKuK2mXP2B9jIfaQZfDTpxMSVqps7JL65Ek2Sr3iKBadj9cP8Jvwl0qolBkg+tHNObg/5q3Huy
- psQGfX6Xn1BypxCr6b+cQMFyA0mB5OHllXs7OqZBP5ljoAMfnkjEOHsIxrkTphPOd/Va0fALa5h
- ppaxOJVzIDv9Wq//0oQqqDuzBPJaGKi1C+3g4qzum9jhOBpH15Di9IOsx2l4xP6ACvkP6nNIJpg
- tCoakdwC3T+x5FyLK2gL23m4v2IXGjyQjY6DdOB3UJkUboZVRVQ985g2Mq8mgkGfsmFss9CH4Ey
- gjchBe+bLP/e+Nqwi1i87teZiBs3ALVCkE3gYb3xIt5HKgfYgn5ZEjbW1ENfE6T1hTIdSNMkFf/
- ZAC1lZ2bKkoFODPDy1S4Nwss3djhl7kADncosu59GojxPQdu0DM+aNYDLZYgXx3DaerqdPEzeJ3
- esiqqRXZBrR6s5w==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The list_for_each_entry_rcu() in filter_chain() uses
-rcu_read_lock_trace_held() as the lockdep condition, but the function
-holds consumer_rwsem, not the RCU trace lock.
+On my ARM64 platform, I observed that certain tracing module
+initializations run for up to 200ms—for example, init_kprobe_trace().
+Analysis reveals the root cause: the execution flow eval_map_work_func()
+→trace_event_update_with_eval_map()→trace_event_update_all()
+is highly time-consuming. Although this flow is placed in eval_map_wq
+for asynchronous execution, it holds the trace_event_sem lock, causing
+other modules to be blocked either directly or indirectly. Also in
+init_blk_tracer(), this functions require trace_event_sem device_initcall.
 
-This gives me the following output when running with some locking debug
-option enabled:
+To resolve this issue, I rename `eval_map_wq` and make it global and moved
+other initialization functions under the tracing subsystem that are
+related to this lock to run asynchronously on this workqueue. After this
+optimization, boot time is reduced by approximately 200ms.
 
-  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
-    filter_chain
-    register_for_each_vma
-    uprobe_unregister_nosync
-    __probe_event_disable
+Given that asynchronous initialization makes it indeterminate when tracing
+will begin, we introduce the trace_async_init kernel parameter.Asynchronous
+behavior is enabled only when this parameter is explicitly provided.
 
-Remove the incorrect lockdep condition since the rwsem provides
-sufficient protection for the list traversal.
+Based on my analysis and testing, I've identified that only these two
+locations significantly impact timing. Other initcall_* functions do not
+exhibit relevant lock contention.
 
-Cc: stable@vger.kernel.org
-Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for better performance")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- kernel/events/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+A brief summary of the test results is as follows:
+Before this PATCHS:
+[    0.224933] calling  init_kprobe_trace+0x0/0xe0 @ 1
+[    0.455016] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 230080 usecs
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d546d32390a81..726d13b375f3d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-+	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
+Only opt setup_boot_kprobe_events() can see:
+[    0.258609] calling  init_blk_tracer+0x0/0x68 @ 1
+[    0.454991] initcall init_blk_tracer+0x0/0x68 returned 0 after 196377 usecs
+
+After this PATCHS:
+[    0.224940] calling  init_kprobe_trace+0x0/0xe0 @ 1
+[    0.224946] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 3 usecs
+skip --------
+[    0.264835] calling  init_blk_tracer+0x0/0x68 @ 1
+[    0.264841] initcall init_blk_tracer+0x0/0x68 returned 0 after 2 usecs
 
 ---
-base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
-change-id: 20260128-uprobe_rcu-e21867ab4c1b
+Changes in v2:
+- Rename eval_map_wq to trace_init_wq.
+Changes in v3:
+- Opt PATCH 1/3 commit
+Changes in v4:
+- add trace_async_init boot parameter in patch2
+- add init_kprobe_trace's skip logic in patch3
+- add Suggested-by tag 
+- Other synchronous optimizations related to trace_async_init
 
-Best regards,
---  
-Breno Leitao <leitao@debian.org>
+Yaxiong Tian (5):
+  tracing: Rename `eval_map_wq` and allow other parts of tracing use it
+  tracing: add trace_async_init boot parameter
+  tracing/kprobes: Skip setup_boot_kprobe_events() when no cmdline event
+  tracing/kprobes: Make setup_boot_kprobe_events() asynchronous when
+    trace_async_init set
+  blktrace: Make init_blk_tracer() asynchronous when trace_async_init
+    set
+
+ .../admin-guide/kernel-parameters.txt         |  8 ++++++
+ kernel/trace/blktrace.c                       | 23 +++++++++++++++-
+ kernel/trace/trace.c                          | 27 ++++++++++++-------
+ kernel/trace/trace.h                          |  2 ++
+ kernel/trace/trace_kprobe.c                   | 18 ++++++++++++-
+ 5 files changed, 67 insertions(+), 11 deletions(-)
+
+-- 
+2.25.1
 
