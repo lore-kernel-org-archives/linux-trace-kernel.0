@@ -1,130 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ADA2264A8;
-	Wed, 28 Jan 2026 04:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89639330329;
+	Wed, 28 Jan 2026 06:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769575779; cv=none; b=CsZ0Ig0TJNRuMkyFqm7KnkDayHPpP2iBAU/6cOqWyZrGoSO+Y5KhxxoMJbRv/2cGkR9XOSDeRDcY4b7EwMNkqQOZEAeWRIgmih4NljzFhSnLyfgERlvzH4DidfXgQOmao7UVW2CqFroq8dF2XiGQTynZtINmPb+RpP/uGYG336E=
+	t=1769581526; cv=none; b=mnGL2YMQ59stbcX2TBxnqSyTZGholRkTkXDvHWPqdld4j9IV74RuL8okXlKrpsWiO3JRbZhpdd0aynFB7kw2kz3gj8EbbgUUrarDeGoPDayMYgxJ/+WUWESBw28olEhazX2sPK1lEXBiPlCoHikBJXn34ISfKP6oQlrmg06GUU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769575779; c=relaxed/simple;
-	bh=umvKSX/52KFvcK5MHhG0AKEwZqp2cQ4avhWh2heNEbY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YKHYhu8ACvPo5kjHG4DkdDoVjZcyq4/9rTqTPd3cpwufufojdLOP6wv2oV+WndYw0j+uEo/pj8hLU0wu9VnIi0fnoW2mOFi9W3bxgD2U2P1zJWE4ny4wnsik723F4xQHTHIetstiJUxKXjzA9Z8a8Sx0cTrqyqZhe8a+HWbbXDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0lKhTh2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769581526; c=relaxed/simple;
+	bh=nXdSwy9AGwJMyOtc/GKNk4T/xBWKTNua99/y0kXdMHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uwy0kPDLU9veUdj2OiHrb99c+LnGOD/Z6vHkOZ+my9UkaO7+/OQaB+wHyVdeDplwfVnPXlqVMux8AxR0misZy1MxB2DejdznVmSu+qHfeCHB2/By5x97LfJTRVvLE/E3mDhs63xAm+MALsq6dVBVCMwb/n1OvCDQ+qgCH2vUIc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Kyt7smC6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0lKhTh2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0FAC4CEF1;
-	Wed, 28 Jan 2026 04:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769575779;
-	bh=umvKSX/52KFvcK5MHhG0AKEwZqp2cQ4avhWh2heNEbY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B0lKhTh2fBTFrbFQfkBWAhdNbPv3OAFg8tZd7cUPRHPbMgsEVLAVe6sdk9CeeLvmZ
-	 SpjBlV5ok89NVLuCmw1KeusKTit1bQThc42K2xA67VjAsbP0F5d/nBAirKSqrqB927
-	 LKDxmzy4EH7Qu1mD24Oe6fdmSOAwqc+KX0H1umEojUQG2xyvC7U0cYl08xf6CxUAgz
-	 9AbA0SFh5vpGPB8fw4sN/1tWMFlted+1hI4crCt2LpP6BnuhXwBuZzKSgBDEL8AbY1
-	 XtK72PenfJhMvXpvOy7GUJAcNtPZHXnNhSfrwJyAuek4lT1wFmUSn0AeT8dBoWuD+Z
-	 yTRFgmN78Zp7w==
-Date: Wed, 28 Jan 2026 13:49:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yaxiong Tian <tianyaxiong@kylinos.cn>
-Cc: rostedt@goodmis.org, axboe@kernel.dk, mathieu.desnoyers@efficios.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] tracing/kprobes: Make setup_boot_kprobe_events()
- asynchronous
-Message-Id: <20260128134936.539782c2112073e55e7a0304@kernel.org>
-In-Reply-To: <20260127012312.84659-1-tianyaxiong@kylinos.cn>
-References: <20260127012016.76713-1-tianyaxiong@kylinos.cn>
-	<20260127012312.84659-1-tianyaxiong@kylinos.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kyt7smC6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=lfzAOZ3CzzI72wMDP00Lg6x9DZ2Xj9Ui/7qIFZATc5A=; b=Kyt7smC6gJgfk/yR8ONNfj9X97
+	+QfP9w+EW/imXXiRPGORzQx5vj9qE9KW6h4NNmFFGOgeo+h6Mz0W/VSRdA/IAmh9uW/L1+fO9Ywd7
+	SSLthIjpQPo9LTpG0t5aEgQmt8vq1yXy58ej4T1PErKCgMeq3y70YSRYbFnb7wil8ctHfF7BqrkmM
+	oKkgZQKLcgBCmTT4oFxZdzYLyolgCddDa7pvF3sRURtSZ/JO7yLzOsUC2tu6d6lYbX8VBXxQ2C/FA
+	3qnNVmHO2ecRXFPxzUvt2A1NUHVswkYSsyzcf6iaLmh0maSLHsRfKhY2tFj6DsSFh0D0X09Y4P1Ek
+	BYFsKL/g==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vkyzS-0000000FXMd-2WiK;
+	Wed, 28 Jan 2026 06:25:22 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: trace_mmap.h: fix a kernel-doc warning
+Date: Tue, 27 Jan 2026 22:25:22 -0800
+Message-ID: <20260128062522.403456-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 27 Jan 2026 09:23:12 +0800
-Yaxiong Tian <tianyaxiong@kylinos.cn> wrote:
+Add a description of struct reader to resolve a kernel-doc warning:
 
-> During kernel boot, the setup_boot_kprobe_events() function causes
-> significant delays, increasing overall startup time.
-> 
-> The root cause is a lock contention chain: its child function
-> enable_boot_kprobe_events() requires the event_mutex, which is
-> already held by early_event_add_tracer(). early_event_add_tracer()
-> itself is blocked waiting for the trace_event_sem  read-write lock,
-> which is held for an extended period by trace_event_update_all().
-> 
-> To resolve this, we have moved the execution of
-> setup_boot_kprobe_events() to the trace_init_wq  workqueue, allowing
-> it to run asynchronously.
-> 
-> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> ---
->  kernel/trace/trace_kprobe.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 9953506370a5..4c6621f02696 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -2031,6 +2031,13 @@ static __init int init_kprobe_trace_early(void)
->  }
->  core_initcall(init_kprobe_trace_early);
->  
-> +static struct work_struct kprobe_trace_work __initdata;
-> +
-> +static void __init kprobe_trace_works_func(struct work_struct *work)
-> +{
-> +	setup_boot_kprobe_events();
-> +}
-> +
->  /* Make a tracefs interface for controlling probe points */
->  static __init int init_kprobe_trace(void)
->  {
-> @@ -2048,7 +2055,12 @@ static __init int init_kprobe_trace(void)
->  	trace_create_file("kprobe_profile", TRACE_MODE_READ,
->  			  NULL, NULL, &kprobe_profile_ops);
->  
-> -	setup_boot_kprobe_events();
-> +	if (trace_init_wq) {
-> +		INIT_WORK(&kprobe_trace_work, kprobe_trace_works_func);
-> +		queue_work(trace_init_wq, &kprobe_trace_work);
+Warning: include/uapi/linux/trace_mmap.h:43 struct member 'reader' not described in 'trace_buffer_meta'
 
-Hmm, this queue_work is not required if kprobe_boot_events_buf[] is
-empty. We should check it because most of the time we don't need it.
-Also, deferring initialization makes it indeterminate when this
-tracing will begin.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
 
-For kprobe event use case, I think setup_boot_kprobe_events() should
-check the kprobe_boot_events_buf is empty at first. But I think Yaxiong
-use case happens when you are using kprobe events via cmdline, is that
-correct?
+ include/uapi/linux/trace_mmap.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-I think introducing "async" cmdline option is more preferable.
-
-BTW, I found that the kprobe events from kernel cmdline will be made
-after boot-time tracing from bootconfig. Maybe it should be run this
-earlier timing too.
-
-Thank you,
-
-
-> +	} else {
-> +		setup_boot_kprobe_events();
-> +	}
->  
->  	return 0;
->  }
-> -- 
-> 2.25.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--- linux-next-20260126.orig/include/uapi/linux/trace_mmap.h
++++ linux-next-20260126/include/uapi/linux/trace_mmap.h
+@@ -13,6 +13,7 @@
+  * @reader.lost_events:	Number of events lost at the time of the reader swap.
+  * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
+  * @reader.read:	Number of bytes read on the reader subbuf.
++ * @reader:		The reader composite info structure
+  * @flags:		Placeholder for now, 0 until new features are supported.
+  * @entries:		Number of entries in the ring-buffer.
+  * @overrun:		Number of entries lost in the ring-buffer.
