@@ -1,151 +1,144 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFA93242CF
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93F636F403
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769621040; cv=pass; b=cv7dk9gyCmZmUAvMMyHCcEkitrH+Bl734pPcI1vpBO0T6sCirlUKeAw5tZcN2SYcb3N95KnpjT6WDrNHACKgVqTnSGiLdHvK7wdb38CwIMmjNf/DUxErTRTCNZj4Lat7osACMjbB1CbIlXJxljJKYFitUdfQQkiVoDIB511bIYE=
+	t=1769622650; cv=pass; b=bsq1zFowY9fYkvYo3ac8L9WKWLcqFMENjS/e1mu3smv1j4ZLVTL3/RePUDIXA9fIW0PbEQA3Y8KIzXCQnUBhwnnPlUlW3MQ8DdZduUMKvLBuCRTMGtunFQt7Tj1S5hWpiBi04XzaGE1H8TykKljNAlOq0OAu/3kfB49E2OfKQE0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769621040; c=relaxed/simple;
-	bh=kizkZuvdxw6uKJdz5CGeib2vOGGoPb1DUKZR/ygQBzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a+NBlMNPEk2QeoeOOy85JaIGAih/2MBUUKAu62zHBYDQn3UAy4RS/SioD47WIFh2BYimzcgaRjzolNS26RPXU/JwVspOOeDZeq4IJ5b3jH2/frhYwhpCwLKn+LPoHdO3t9eDy7Aujd1Ia51OWY0Vlu9HKlMprVEVN8rngn92JMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLRINZ9Z; arc=pass smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1769622650; c=relaxed/simple;
+	bh=CNqWkOyueD1v7WuaKUDdc+x4jRQ5s6ulmoL4RqUerEM=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uDn5tv+6NurGcqU1EOqvYb7QTSZTlN7/3JrLOQIWsDYqF2tQEi9X1PYKUCEZIBv8bnO717L2SkkNqdX8RGqIE/lnWCaJ8y/NuwbKNbDIatkhAZ8cbTKh9dTNliBUmTYrN+REw/z7+VbM90K0Wfsil+tz/1UaJVjHSdg9pp+jB4w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bHT6jDVr; arc=pass smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLRINZ9Z"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso23525a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 09:23:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769621039; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bHT6jDVr"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5f53505f012so107172137.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 09:50:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769622648; cv=none;
         d=google.com; s=arc-20240605;
-        b=O1UaXIa0IhgnnTmhjGipJ2PSdDxGIzxHKh9e5woPO7Yq6uUp/RqCSqDxT/j/mHbKrj
-         BoPu5yCJ0/GLp6hgldHaV2LBdFriXtMROxUqxNYH9l/AM2BVDCFe42Bi5wZRFH3N2pZz
-         hmM4qLN++umVWexm3aS0TfHvD/rVMWuFTTcMtgUoXs+FalTkLkiiKrZOdcI3PqrlIweJ
-         3p+m8kJxL1YI5D24b679+9hGq3hx0FgDG/HZedNbltpNQftNzonvc976zupvOQ47ajt+
-         /FESXQ6qs4xYbg8S+2xeuHBiS6EeVnJIF46UseVMX6RKU2kxPfgvZqAnxupOCU8BtXEG
-         pA7w==
+        b=DboIVv5eecDSpIEI3+CvWE+X4xZWRQXnowRtZaXvySKGhw45ld4aBn4Rfk80lHlAH2
+         Arb/JKf2I6TMwhWTlZ/ApfndxOlAVPcXafIrer5g8Ky6DNSqhbySAi6jaFF56zu0Fw7y
+         uACJ6Uj18K74aHx2QmFWb4FfbTnV3c6KAdFuTYH1hJLDdnE7KO1wtEBGKe6gTakvkZW+
+         mvWVpdiNCPyOtHzi+78dbUl7jCtqtZocUe4sdpnBXfSgGBksaiGcjxZkFjmybhIr1vmi
+         Fghd+oLzCAi8c/n4E5qw6zJcpn3ILwo5jJ5Fx3K0ErUOx3E5mOuI07cQIAXgl5WaEX5+
+         sHcQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=HyWyPzTGB/cOBYn0NBzbfLp7xlXZid+2WFTQZJ9u/mY=;
-        fh=L0SxfzCi2z2N7sU6TX6Tl4eJua3+hfYI2XvtRw70BEE=;
-        b=DUj7KJJIidnzt+3eFexS2oZ7aFY02pnSd9ISszC39mShyDN1fQIjoKdzxfolDPl84U
-         YRssWh0T3M9f75KTvPWD4uaDQOenLHxjNZ5vGw4vB4P8MRNLmhlQ0EZqv/oas1eNl6kz
-         uP/lOBOcQNBAilgDJ0CVEpAKg6qMSPR4LxpcxiwMoL/HEy1tJNjWzSkb9jArGNhBzdjH
-         fwHeXDAHkv2Img6r2dGdFJ0hcw/84D2ueH1O0BatC8sbZpnfcXQ64aaAOd05PzaKEYYk
-         Ov929KFPocWPXlaimwYMt6YuL55YAgXc2mxvACXNOJFXes9SzhYEm7HAv73xphWJGKGR
-         PaJQ==;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=CNqWkOyueD1v7WuaKUDdc+x4jRQ5s6ulmoL4RqUerEM=;
+        fh=4FDdFQVcj1VhL5umQ6W8EDtxKxIv03DD+61gLpFR0ec=;
+        b=EXTGzzF3nsH61bgRmRbSWm+t6QPssN4tQCYDw+HhKfry9timVCeIldg2VHrcKPbs6A
+         CamuG35QF0sI0q3YwfRHk7oC40CWGRi/9jhpysqP0adStVHAGreKGenbpZZ9Q2lfEgek
+         /4cxFP98j87PwNyXoYMnC0VlNz2Kq5FtF8H+GaNhcwtPGX8DHYEjH7MV8Fh290tqSITi
+         XQhtB57sJ+jJDqhecB6XimNEy93dawPxlirtEH5VSdkMaWTsELpUduXXvqgwHxGhhPfm
+         4ZgAZg+KeMxsIMe/D86wfyfi+Ac1tzvOZshuEVsf0KQKe/jgNyOqqduYxHNHntZF9i5j
+         gMGw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769621039; x=1770225839; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HyWyPzTGB/cOBYn0NBzbfLp7xlXZid+2WFTQZJ9u/mY=;
-        b=RLRINZ9Z2mdC15RRQfK11I3dIYlKrJQt++jxEjPb5IUjwEYbqGwXI9TdsrC7Os1JLi
-         zee3W3QMflyxCOu4sX4hcppUhInbgwXpQRjqbQy/QbsBTKJ1+oEAA6IldwpwN6qXZNfM
-         aqPsoyMOTzd2LCGriFaZukmwgRRBLOlLWbtK5Uk4aWuxaipK9C7HTTGM1O6jLEcVzu2P
-         a5UsxiFeCNBSVvYP5GkFcYIGQIFuGBKMsF+i4JBi/abCd9ZCRYmTODfFHUZ3Cq9SSMk+
-         Y976E+Zzcp74NphQd/ssDhWrhz/IRAWOR78SwW0a7A6fvm+2jX8gFInJ+0rmCPkv5q3+
-         RRwg==
+        d=google.com; s=20230601; t=1769622648; x=1770227448; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNqWkOyueD1v7WuaKUDdc+x4jRQ5s6ulmoL4RqUerEM=;
+        b=bHT6jDVrWJ3mgE3zOdEbPbOXVylCYhJBKidSCHid9ahabufnkQjUDopdWEfUqt8bcF
+         lg0R+SYljdK33OM6QbmD4IhWOpcBNORKLrkG/r3rwpBjibP+7XSbTyhpPWf/Fn5tZoXG
+         8iXgSC9hofYXikgaLaloBdRIqBSk7PoXv8JMfHLccDyPyNZL1MmlvTj9jVtKoXD1qDdr
+         wGJ+WPgGFHT1cBh2DDqw7vc9Y6e98IyTzsVBo90UqQBLxExjeR3YeBxx4KvuntNjJPy/
+         oooOPZS5Ffb5yQ3ok1gMnfZO5miSxDmK11nKDNg0N79NN8NPBkqtA39yLQ4KYC7ZycF7
+         5tOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769621039; x=1770225839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HyWyPzTGB/cOBYn0NBzbfLp7xlXZid+2WFTQZJ9u/mY=;
-        b=I9bzEQxbiz7bWNNh3ObfSP0HOqkz3I/wrzEgD8cA02mx/6PlCaRhYHZS/ouzGXCrAp
-         VyLi7pJZg9Ygm5nTDQw67x5aMwCnC8p7XUzMNk0KcxAi+rIqWH9RyFhY3iyG/OJnk6Pi
-         q6MnJd8qaQDxn0efVZpv0e1l0cvpLXkU1tUud5r+4rvra7baOBjfnX4WEOXqJEp4r+9T
-         GV7ONpbeQVgVsSHSMEWXgZZxtzGnoUKK1XjNvn9cUsLrhjKm55XXQBm9KoGbe5Yzl06Z
-         2vOwj5zPyLgX2lR3R5XC8EANG8VYqiGnEvkLP+y1keT1t8PXoGJ30RdxBjBalOB2WiJw
-         fkdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ4/DnNz/tGb7r67VYTtwccxzxtNY1RzRyexNoqQOPX7CugtiVZOWbBva9Il5pV2cd/j/iijGURfo4ZTUCQCj8z3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBsxAchPUqOWDPhkxwEkM3AAfHS5KC2v5cpW0dfxAqmYaCfXgh
-	/gVGEbsn1dtOoEdbIAa2VMmj7OuSXUZpcUEtE6NkfzOxTnCgxSZt3Ui2YYgQ2S9Nend5/Ar2XIf
-	zxyihC0n17IA0c4cds9wvRKG8d9sDrVU=
-X-Gm-Gg: AZuq6aJTTABJ/TSChUd92BfyFSBj2HJ8vjz2ttwBbwbrZOlkhonVB2/XLuT1rjE3vL2
-	vmxManQ8otsdtSl0bJKQkt7fZKJDwP75QN0HUH6w04DsvcKKZT34eIyIJDQH16ry/d+zPJa0Ro3
-	182temdC2B8EPFYzDgsVpZ2MDS8kYV59dbkVJPULyN+5B1lNDyw+B+0wQmoWsZR7Q3h9KpRNP9X
-	uxP1cldO9x9RE4jS0ys5wc8taiJq8GD/C9bv7FGSfjYa+9sH945OeizIeFPAzEwBhJJIgM0Guig
-	HWCA0AT/fCg=
-X-Received: by 2002:a17:902:e5c9:b0:2a0:d6d5:b342 with SMTP id
- d9443c01a7336-2a870dcbe7amr57082335ad.37.1769621038802; Wed, 28 Jan 2026
- 09:23:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1769622648; x=1770227448;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CNqWkOyueD1v7WuaKUDdc+x4jRQ5s6ulmoL4RqUerEM=;
+        b=G/8o7Mk5keCA0fgeCW8bEqW2gjLRA2IfH9y4+rddKbCmR4YoVJcnNHiE0dfmKQgcTC
+         D8WVQBpNT7EoknzZ8pf/AEppUR8YX1FxKC1WYs44ueCe9ybccEQBTxp/rqZAUVXBzlTY
+         R6PrsRFies328smhO7QRa/329YmJGEQAzRzYcniY/d7TUQkB8ohaxLdq+OcNB0hV4MaY
+         Wb0zEiAYeemnWBYwaKDK5kkvz8sEkS7y7Za0cu/SST2I5pjjqnkusFEEE6LesDYRIPmL
+         AxLrIyCQ28urBCLy7sRHhaE5dpfjXhojJ+FnyxOcEQiwYqzs1RS58bb1MyOaDNpTc/QK
+         Ywxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUe8QkYE0W2qnDUuGRmEmQ9riESJNLkX0wXn7BFhkm4YbOIhY+2v7o85KsLw1bJoCs95zxKFVz8UyXNudhOLmtfMNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk1DA1ips5IkZagBa3itS5CTTTnBz+DcVJtkqCF6go4dm+gO2I
+	K55JYw1/XhqSEaxQx90O1arJYb3P5ljRwnAUw+8orUAVthG+1AbHbaf2csAvomDiyddjJGB+dXd
+	rSHOmCFwk7aGtxV7zVNWlrB7g1vRhqg9vxIOAI4th
+X-Gm-Gg: AZuq6aIOrmbJjDEmZI84NN6UcqU1MDrm1z4YU012Zo4Shcwl7g5rg0tuWxFOOrz3kCn
+	nGBkgIfrRIc2qcTiuHcIV0a6kCHZkaAUZm5IkLFbDm3eNCqSbmnpQcFZrSLSWEZfXpkD6IhxThi
+	VhVKO4HRJStzchEHrpiBcn53dRFGGWZju18PCvsXqOIVKxrkFZObBlW2ntkYv4k/Rfan2GgkD0W
+	GT8TBa5YxV07QA8YRMRiR65zW+fNii00nmQLq+PwOTAGm9onxB0IsFG8HsCISzYgOkeOEh78diz
+	JNO6DJma8mGSm/U+nPqtP8BByg==
+X-Received: by 2002:a05:6102:390c:b0:5db:e2c2:81a1 with SMTP id
+ ada2fe7eead31-5f723765badmr2717805137.14.1769622647325; Wed, 28 Jan 2026
+ 09:50:47 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 28 Jan 2026 09:50:46 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 28 Jan 2026 09:50:46 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <aW3kOgKL7TjpW4AT@yzhao56-desk.sh.intel.com>
+References: <cover.1760731772.git.ackerleytng@google.com> <638600e19c6e23959bad60cf61582f387dff6445.1760731772.git.ackerleytng@google.com>
+ <aW3kOgKL7TjpW4AT@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org> <aXoUOEhDfncEkC-f@redhat.com>
-In-Reply-To: <aXoUOEhDfncEkC-f@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 28 Jan 2026 09:23:45 -0800
-X-Gm-Features: AZwV_Qj6rb3WoP_Y9fiHuFQxMtZyQOzI2dFswDQeqWIoSEtuJcdiEz7owWd2EyE
-Message-ID: <CAEf4BzYJJiUdQTjDgr_uVSQ+uBhYWKki0vjS5VffTzbST1uS2g@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: fix incorrect lockdep condition in filter_chain()
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Breno Leitao <leitao@debian.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	kernel-team@meta.com, stable@vger.kernel.org
+Date: Wed, 28 Jan 2026 09:50:46 -0800
+X-Gm-Features: AZwV_QifG6FXcq-qNYCcE_MoQgt6DAo9uPq6fzN3xKHneI_AD0mm_Yxu6BjCe84
+Message-ID: <CAEvNRgEjo5idG7OtMqHt+kCRCQnWjzWzQN7nwNGDExwmf4fyvA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 01/37] KVM: guest_memfd: Introduce per-gmem
+ attributes, use to guard user mappings
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: cgroups@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
+	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, 
+	chao.p.peng@intel.com, chenhuacai@kernel.org, corbet@lwn.net, 
+	dave.hansen@intel.com, dave.hansen@linux.intel.com, david@redhat.com, 
+	dmatlack@google.com, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	haibo1.xu@intel.com, hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com, 
+	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
+	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, 
+	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
+	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
+	zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 28, 2026 at 5:51=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 01/28, Breno Leitao wrote:
-> >
-> > The list_for_each_entry_rcu() in filter_chain() uses
-> > rcu_read_lock_trace_held() as the lockdep condition, but the function
-> > holds consumer_rwsem, not the RCU trace lock.
-> >
-> > This gives me the following output when running with some locking debug
-> > option enabled:
-> >
-> >   kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section=
-!!
-> >     filter_chain
-> >     register_for_each_vma
-> >     uprobe_unregister_nosync
-> >     __probe_event_disable
-> >
-> > Remove the incorrect lockdep condition since the rwsem provides
-> > sufficient protection for the list traversal.
->
-> I hope Andrii will recheck, but looks obviously correct to me.
-
-yeah, I did, and it also looks obviously correct to me, I didn't need
-to use rcu flavor there in the first place, I think.
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
 >
-> > Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for be=
-tter performance")
+> [...snip...]
 >
-> This commit just change the __list_check_rcu() condition...
 >
-> Perhaps
-> Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly =
-under SRCU protection")
+> So, it's possible for kvm_mem_is_private() to access invalid mtree data and hit
+> the WARN_ON_ONCE() in kvm_gmem_get_attributes().
+>
+> I reported a similar error in [*].
+>
+> [*] https://lore.kernel.org/all/aIwD5kGbMibV7ksk@yzhao56-desk.sh.intel.com
 >
 
-yep, this one is the earliest change adding unnecessary rcu flavor of
-list_for_each_entry
-
-
-> makes more sense?
->
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
->
+Will add locking in the next revision. Thanks!
