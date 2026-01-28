@@ -1,110 +1,123 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99744502A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 09:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD3D34DB7B;
+	Wed, 28 Jan 2026 09:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769591740; cv=none; b=AYO7l7JSe14YBZhbBllW1/k4YYp392QsKzPm3czA2dkqz7mBkhgU9Jns7st7rcoeAReRZd/J2jr5KO7tgo9MwJMVA3SCh92Lfyk8cxjwD7EuSR8YEHNo6SpNjUEYh3ivfxHDcPYu2ax6Pb4WWsg91iiG9D8j0SjLvoZTFHdqqN0=
+	t=1769594369; cv=none; b=HTEGSn4x1plFhJCFKFDJdepzRGIf0d/Ve8QuEyXNGZogOF0OEZaKPa0DqiK+lfVpnsfxWVOmhbKsbslGHNbh7rEfFiMxMuOvUHaiX38p1oUP8ErYkoS3m5ow82CxnmnDDkIQRpowXq/JfR4MvYwDJ9Zo2bOXGo9khGgcLHNlPvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769591740; c=relaxed/simple;
-	bh=LfaBtJpSWCF5kA4CdK+iSTrFtU8Ddk4D4KH57CT9f/A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MJlavlIP9FYsgcwHHnUNjrJVUPlpdVbJM9qaksKq7hJxXUy+juAXpxm5Q42FTLbqeKZdjlNztM2eAvuBb9Xao1w2rfA7uUFnflD4uQ7xFB7yh8aWv78SOrDVNLCsATWtBCSqqykbcAsqa+L0/yNRo3CDg/ELr4DtIkWsMTkMYHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sZH+W6n; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1769594369; c=relaxed/simple;
+	bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jv6o6EPJPVs/rMk+YFU8CtEnKmg4Bk2YCKc1IcX3qTuVaH4QFsbFWxeUdaf/z9zQAtrir6ui7mIl+NNzj3ZOBeaBhf4cN22tLk8j2mdqCwFdfLCUl/UtFMbYJy3E452jjvFeO5KkeG00E88g/i52C0B2x+nlCNdVMuZGn5xnX6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=goawlMG4; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sZH+W6n"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4803b4e3b9eso53633305e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 01:15:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769591737; x=1770196537; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zrjnjrWJRJ/MpDqQmBtQDJOql1m90JNXl6Q6zdTxfG8=;
-        b=4sZH+W6nbqOE7yyIEUhfpdr3XmOK06qUCq2A+ULWc0YxqzwlMr1asECRW4RTmhCC4Q
-         XuE3AKdIqCNd+rgF3GMvivBQ8O+s3bujYAWdxWPgHGUeoHnxGF3JE/fSb9cQe8zLAwdF
-         utTofSqf91WQJSRyb3MSQOcx8s4UN8rUi+3EYe46rVVqIluBvn474vCROpXAzT2dwXV4
-         6GqgOx88ssfwpsdBjk58y4YwX1dGj1qDQN6SggkKKoowAMtYqlWVzwV/zbZqMdrvEp2I
-         BqNj13GxNXsxYkzNb+u5mz7bNiY26pMYnbSJIHaXXp45Jd4DnoxHcGnT9b9cmST6bE0Y
-         ZDyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769591737; x=1770196537;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zrjnjrWJRJ/MpDqQmBtQDJOql1m90JNXl6Q6zdTxfG8=;
-        b=Gn+5e5yC40icwYBnmRR6hclQwJX9p6ir1C1mXJOUOTRDn5zbF8jQd3soyaoR8cDyeR
-         t+6Z+bpgB0Op5TTOSUIGLNasGBmNAXl/e5g/MCU6S+LM8qmUujG72M+Dfeh8+WTvJDpM
-         TH+XHiL0a1+Z251bJ3fpJz5xvoD9nF94Njwc7JiJPJhqjsX3nbi6qcFyKFZS1fbRtZn3
-         yMxDgWbKKgfRLL+V/WSNcOBS2R2Bofqm2AYKJPRVVa5GY8gRG1ep2Nv8crHl8pI1WV4t
-         u1WeEosznKSQ/C/XZFEa9yfjAeqLvUrdGP8Nup0MTpiWfcuDNwK0oI0tGOXO7jVXh1VE
-         tlmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr1YyPGtcwb9lQg9XZeQufmFaVBfRNoMe2CYVrp79HfwencBEm0dEVcS47TIBI4kEsCSKhj+lR5sAsrrtnCHKCy5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySYrgqr7PJr5jjc/N+38YhsVao2ZxMF7ZM6i8nA1uDleyyAdKd
-	YQCb0F5FA9sPIHtQPn4G2wKgALfTvnRbzzRXEavgcaGaG3MXZWxR1KYV/f8ochm7Mz0rWGpQV4b
-	rvMj7AgCwAyQ3/SVPwQ==
-X-Received: from wmby17.prod.google.com ([2002:a05:600c:c051:b0:480:6b43:8a18])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3113:b0:47e:dc64:f1c6 with SMTP id 5b1f17b1804b1-48069c3fb40mr58701215e9.6.1769591737025;
- Wed, 28 Jan 2026 01:15:37 -0800 (PST)
-Date: Wed, 28 Jan 2026 09:15:36 +0000
-In-Reply-To: <aXkEiC1sGOGfDuzI@google.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="goawlMG4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=1nO7a828YUpcLhY+o95VylGAfy5FWZlAkk3njZ1MCEI=; b=goawlMG45qxczHtuUUTkTzGoaT
+	wmeTAzlZtiTXbPJQlnrBWCd8rz9ceTMyEdB4hkQKOJfKLG9kQNC/g1VaUsWyInVvmkeRD2ceRN2pN
+	rzuPs8zKQEESQMXgs0Uomkrmt55ReFcMixnSKApXeFBGJb5hX0kOrULEdq0YVHPxF/32X88xInQLv
+	ozlFD+Af/GaJ3LTsbHC3SayEw2TWdVcwIRbPOix39Ycs71LRPduOkUd2S+EK7wlHwP7UfPmUOQxGJ
+	VeyojMfgMl7KJH4y3OLke39jnAe9UArBlQqs/hj8wQJYobnI48vRvw9/4vPaD4ifsZL6ToGvoKs2h
+	ib31C5Eg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vl2KC-0005Fc-JM; Wed, 28 Jan 2026 09:59:00 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 28 Jan 2026 01:58:38 -0800
+Subject: [PATCH] uprobes: fix incorrect lockdep condition in filter_chain()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251203-binder-trace1-v1-0-22d3ffddb44e@google.com>
- <20251203-binder-trace1-v1-2-22d3ffddb44e@google.com> <aXkEiC1sGOGfDuzI@google.com>
-Message-ID: <aXnTuHQgbEFHIrhw@google.com>
-Subject: Re: [PATCH 2/2] rust_binder: add binder_transaction tracepoint
-From: Alice Ryhl <aliceryhl@google.com>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, "Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
-	Martijn Coenen <maco@android.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Christian Brauner <brauner@kernel.org>, Suren Baghdasaryan <surenb@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260128-uprobe_rcu-v1-1-d41316763799@debian.org>
+X-B4-Tracking: v=1; b=H4sIAM3deWkC/yXMQQqDMBAF0KsMf23AhKKSq5RSTBx1XKhMGimId
+ xd1+TZvR2IVTvC0Q3mTJMsMT7YgxLGdBzbSwRNc6arSusbkVZfAX43ZsLNNVbfhFW1AQViVe/n
+ f2fvzOOUwcfxdA47jBL/kjupuAAAA
+X-Change-ID: 20260128-uprobe_rcu-e21867ab4c1b
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
+ stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-f4305
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1516; i=leitao@debian.org;
+ h=from:subject:message-id; bh=UHbJI7QHhCf6/qLiCs9zoyOI0n9rgQsghe0accS1jGE=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBped3eu5M3fbHiVCjgixTSGNxB1xtTmYxjWM1FB
+ DXMve5svYCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaXnd3gAKCRA1o5Of/Hh3
+ bX5HEACaYpnFCKsGemw7IqE6IiSiUz7qQKBRkinhy/JCZIMdrL8RWTBXM6Kr1qjODZDgwgnLV9L
+ YqWBavrscM5AGEvcGc8JUg8x81UuMdHEfHvE2pYY+Ufqy9XYfknj7XbAxQxmZOW3sbYYQKbWslt
+ LyaToEZndlXC6HkegyAw7SCMP8NUInPdu8v5BcYK8rB4ZgvDiFKIsoM5B9ErluHufnvCQuYgg1Y
+ PpKuK2mXP2B9jIfaQZfDTpxMSVqps7JL65Ek2Sr3iKBadj9cP8Jvwl0qolBkg+tHNObg/5q3Huy
+ psQGfX6Xn1BypxCr6b+cQMFyA0mB5OHllXs7OqZBP5ljoAMfnkjEOHsIxrkTphPOd/Va0fALa5h
+ ppaxOJVzIDv9Wq//0oQqqDuzBPJaGKi1C+3g4qzum9jhOBpH15Di9IOsx2l4xP6ACvkP6nNIJpg
+ tCoakdwC3T+x5FyLK2gL23m4v2IXGjyQjY6DdOB3UJkUboZVRVQ985g2Mq8mgkGfsmFss9CH4Ey
+ gjchBe+bLP/e+Nqwi1i87teZiBs3ALVCkE3gYb3xIt5HKgfYgn5ZEjbW1ENfE6T1hTIdSNMkFf/
+ ZAC1lZ2bKkoFODPDy1S4Nwss3djhl7kADncosu59GojxPQdu0DM+aNYDLZYgXx3DaerqdPEzeJ3
+ esiqqRXZBrR6s5w==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On Tue, Jan 27, 2026 at 06:31:36PM +0000, Carlos Llamas wrote:
-> On Wed, Dec 03, 2025 at 02:48:09PM +0000, Alice Ryhl wrote:
-> > This patch adds the binder_transaction tracepoint to Rust Binder. This
-> > was chosen as the next tracepoint to add as it is the most complex
-> > tracepoint. (And it's also an important tracepoint known to perfetto.)
-> > 
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> 
-> This approach seems to work well considering the limitations. I wonder
-> though if it would be more practical to simply pass the individual
-> primitive values used by TP_prinkt() from the start? I suppose the
-> downside would be the extra overhead with the tracepoints disabled.
-> However, this might be neglectable and the solution much simpler?
+The list_for_each_entry_rcu() in filter_chain() uses
+rcu_read_lock_trace_held() as the lockdep condition, but the function
+holds consumer_rwsem, not the RCU trace lock.
 
-I decided to go down this road because the same kinds of helpers would
-be useful for vendor hooks.
+This gives me the following output when running with some locking debug
+option enabled:
 
-> > +static inline rust_binder_node rust_binder_transaction_target_node(rust_binder_transaction t)
-> > +{
-> > +	void *p = *(void **) (t + RUST_BINDER_LAYOUT.t.target_node);
-> > +
-> > +	if (p)
-> > +		p = p + RUST_BINDER_LAYOUT.n.arc_offset;
-> > +	return NULL;
-> 
-> It looks like this should have 'return p' right? Sorry for the late
-> review this has been picked up so we might need a fixes for this.
+  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
+    filter_chain
+    register_for_each_vma
+    uprobe_unregister_nosync
+    __probe_event_disable
 
-Fix sent:
-https://lore.kernel.org/r/20260128-binder-fix-target-node-null-v1-1-78d198ef55a5@google.com
+Remove the incorrect lockdep condition since the rwsem provides
+sufficient protection for the list traversal.
 
-No idea how this happened. Thanks.
+Cc: stable@vger.kernel.org
+Fixes: 87195a1ee332a ("uprobes: switch to RCU Tasks Trace flavor for better performance")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alice
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index d546d32390a81..726d13b375f3d 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+ 	bool ret = false;
+ 
+ 	down_read(&uprobe->consumer_rwsem);
+-	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
++	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
+ 		ret = consumer_filter(uc, mm);
+ 		if (ret)
+ 			break;
+
+---
+base-commit: 1f97d9dcf53649c41c33227b345a36902cbb08ad
+change-id: 20260128-uprobe_rcu-e21867ab4c1b
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
