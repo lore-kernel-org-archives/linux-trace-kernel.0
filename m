@@ -1,187 +1,158 @@
-Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E051B2874F5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 14:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FCD3191C0;
+	Thu, 29 Jan 2026 15:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769697382; cv=none; b=XaE5VBx8X0HX/8sBndJGvtkSPQxA8N1r+IgzbZvP1WmPdFPxdD6XQvFJcNVQV2c9W4nJxfISEXKNGsFWdHe7DT5NMJCVfATEUGUUcm83obBxnGqoSArb9WVI+fyW5WTkicyxjCGJkDRy0kCx91Br4AEjUNVHIaaI3E97QReNXCg=
+	t=1769700506; cv=none; b=pDyGOkBGfiRcbh8jm21k3ygBgVehqo38+MJ9kBTDBZ+qMaDfVlThXEY0RxKTFQwT+2JE/4BK7WR40jm+BuVDNxDJ3hmZJidL5N+T9aPZTFfu13/SFDzoxWL5f+Mt5A6bgSf2uEG5abtI5HQ9KAet6TP1UfTmcQ9uqZOli6Uvh/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769697382; c=relaxed/simple;
-	bh=ANQwl8weniEr3yhzdlhVQGQZ449UNTL3DKFoQ/EudaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYFfufPS0NzSKTdCP5J2mmTf04QLpzA6J0pDiBqb02HTWm5xIuTx96UG/CWRK4ePIIeAQNAFMmTceBtPc8VjtbTV5EVsh3SO+EXlOf1OhzYczS0l5uzQtPVBMcqI7KXZwublnaHPRxjRHX7SAdMB4EbjDVeIbHe4zU7FH+aoWuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZxwqYsgc; arc=none smtp.client-ip=209.85.208.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZxwqYsgc"
-Received: by mail-lj1-f193.google.com with SMTP id 38308e7fff4ca-385cfc572f1so10488091fa.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 06:36:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769697379; x=1770302179; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GCBf85o7m+LpjtZO2vby61ve+5QD+ZPBxgo311Kvx5c=;
-        b=ZxwqYsgcsRDpg8P+2CkVnKIa97Uuw8sHfUjPyK68xS1ikxzYlgpEErT5jowzRYVqFV
-         bOnW3UrliNORNnOSTzYOkB0XBdj4BDSCFDd1KJQimcesEZkaU4luEzsncxgxUJBzly37
-         G8iOaMW8VaoAi/DQNkj/FNgz9cP8/ueEsIbrzXdXzGO9dhO6LVH7eW2iPMIEs7tX3EJg
-         4IPh5xmLvIYUEbrIZ0oPl45abJRk2h/k70ogrQ5+H2/3/eH9qTG4jztKc0eC96oKtrWT
-         AdT9SZUC3336ycSg+WnHuwhoqwvYtgnwxDbbem+CiWZe+UyzfzoM64QgdcjZfDatX8cx
-         4JZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769697379; x=1770302179;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GCBf85o7m+LpjtZO2vby61ve+5QD+ZPBxgo311Kvx5c=;
-        b=mliJ9uB6MG/L03wNmJW+WzY5qKmwRneM7mffxU6KrUEq/zzAQgYVM+WHtR3TyVNSm6
-         8GUCPwMdBR/XDR47NktEAYfm+u4ee1pOj1ereBB2zA4lpeU1Y3t+rn2o/WG6ajC/iyPm
-         jcmohleLvwEkWZuobl2/BfrANyQv+SQGszdhR5D3pQujBMyJM6UbeYgk3ErcAUcz6tG0
-         UdUeRiYKUBQY+9SppRm0OCjIOFjAJqQ4qAZ66/eMqqCc5eATAoY90Ct8yzW/Yxxm3UhT
-         UsXFwGseUIjZnfxAGd/Dp6/uzLlI1JoP1bVTzwj6hKwh3sR88TxN71yZSwv0PT6wCjwm
-         J8BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5zsaISFQwMWfSQxnhKtLxiZb6QZLg5R3hCxTRyJxLhElmCDqjS1Co84hAgHg6wHYyXdkkRbHF0xY8M6hhjGMZh3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNkZBAxEC0J5VNf3wQKP0AZr4qG8PMbkgmoWkx0evBv7rE5v82
-	W66gyRXdufY6L4s7Xq1ZM9FaTs/V1x5/F+s7X40l2z6f0WtBRHOe8tetXjXU61t/6w==
-X-Gm-Gg: AZuq6aJL0p6vSSy2GJT9k6cqfl61PSbzcTBLKekW3sIV10XGmIZxmmBMa/LMWSRqmBZ
-	+FdNKkHsK0yY+CdWZSCVedwOv7AuZkoHu+QLTS12HIW4rNwCkm6Q8HBZHF8k4KBA/T0jSE+QatB
-	NId8x30+AM9j2+RpGyMeEHeEk3bIqSBc3dCbQ/1rF9ee+Edk3Fr6GmlStn0xEEcBTlorAndcpO2
-	6fJykNMl1QwXeCOVNzEsBpL3GqggPNe0f1h8+5YDZh5Lm/9bbCzg2yO0GryvwEv2pcXtoqy2+Wx
-	frtSPB8X0A6QQCw6nkFppcQeBUozTFNcr92xLG6z827BXGCkhwHVd47NapyntoNz3IwMLUU64v6
-	NfSjd+fFQizOKoHZO5XaeNkw+OlqVWXhc63A8UAV+wFGqhNZRs870HnByV+APdNFrMjeFQQBEX4
-	HDCW1Pagr1lLYnUZbJLBlgWNiVVVKDK3h517CbJHOGZHw/xQ==
-X-Received: by 2002:a05:6512:10c1:b0:59d:f4b8:c3ac with SMTP id 2adb3069b0e04-59e0401702cmr4088944e87.18.1769697378667;
-        Thu, 29 Jan 2026 06:36:18 -0800 (PST)
-Received: from google.com (133.23.88.34.bc.googleusercontent.com. [34.88.23.133])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e074bbe0bsm1156180e87.83.2026.01.29.06.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 06:36:17 -0800 (PST)
-Date: Thu, 29 Jan 2026 14:36:14 +0000
-From: Quentin Perret <qperret@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@intel.com, 
-	dave.hansen@linux.intel.com, david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, jarkko@kernel.org, 
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
-	rppt@kernel.org, shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-Message-ID: <od4dx6snqsl2qiocgf3jxm4dndxhrlvsfr22eveuno6nskgfdj@mxsywvku2jk5>
-References: <cover.1760731772.git.ackerleytng@google.com>
- <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
- <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
- <aXqx3_eE0rNh6nP0@google.com>
- <20260129011618.GA2307128@ziepe.ca>
- <i22yykvttpc2e4expluuzucczqnetdnpee2wx2fzqwg7cnt45x@ovx7e7hok5iz>
- <20260129134245.GD2307128@ziepe.ca>
+	s=arc-20240116; t=1769700506; c=relaxed/simple;
+	bh=jIUz84h8NpknCoCKer98gGhkUtY4yP88mwSL06t66Ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I5EjUyzYng2XUNOPkGoy6O9waoaX2YZCLUlNXWkdJ84ua4iAf8CF6eDORZ6MLFkZWOr+TLzvdenvflHugoyfCNIDxeeGmWR6TaB0q/1OAjVUjSNp3zwJH+Rsf1qhDL2jSxRLka0rgh3brEZJUqeTdeifX1Ys1M6E4tBKe3L1N68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 828881401DE;
+	Thu, 29 Jan 2026 15:28:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id B6EF020012;
+	Thu, 29 Jan 2026 15:28:09 +0000 (UTC)
+Date: Thu, 29 Jan 2026 10:28:21 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Guenter
+ Roeck <linux@roeck-us.net>, Ian Rogers <irogers@google.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] perf: sched: Fix perf crash with new is_user_task() helper
+Message-ID: <20260129102821.46484722@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260129134245.GD2307128@ziepe.ca>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B6EF020012
+X-Stat-Signature: 6f4xe3n3sy64h8j83wxap6838jfyi1xk
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18s5DsNJarFzjHYIZlHVcllmYy6uaey7uo=
+X-HE-Tag: 1769700489-570781
+X-HE-Meta: U2FsdGVkX197N4Z4jt36RlEyw64DYuzOwg4kfEGQnpA7/FAnG9ifXyTmhmsPPnMO6MJqRBnuo+UEoprIP02XtpzGvEQlmbeTXbUsmdBISZ6OHh09mMAGp4RN0ouGGO0PBaEdT/LjgPDCdn2nWXqMxtJLKwDJ3pSIXQ8zYA5D5ROjIIb/R/VpGIx9W8UTJZt+WHPacFZv+UKcKvpM4wqQGKyaqCpLuzAYak3+Us3/fxgNNMo0ZnVzWxg6J1RU26s8wix8Y1wXAmmzDCwyc6fCJNNvWM02jIeMqZLizgGkBKA5ivevpgrp88W5Ar9Xled7h9k0GtiIqzBm0wOoiXRkWriEXsNXhGvevu0xXUb7iuhGgEpWiXGsbrh/o7xIZquQCE55G53aCR9w5WFRqzbMdwJrnqJrgZ+t7vhMtC20YwRFsST1Es/Wvn8GM38lreY1SLt8Bli7ECn+vVFkQCflpA==
 
-On Thursday 29 Jan 2026 at 09:42:45 (-0400), Jason Gunthorpe wrote:
-> On Thu, Jan 29, 2026 at 11:10:12AM +0000, Quentin Perret wrote:
-> 
-> > A not-fully-thought-through-and-possibly-ridiculous idea that crossed
-> > my mind some time ago was to make KVM itself a proper dmabuf
-> > importer. 
-> 
-> AFAIK this is already the plan. Since Intel cannot tolerate having the
-> private MMIO mapped into a VMA *at all* there is no other choice.
-> 
-> Since Intel has to build it it I figured everyone would want to use it
-> because it is probably going to be much faster than reading VMAs.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Ack.
+In order to do a user space stacktrace the current task needs to be a user
+task that has executed in user space. It use to be possible to test if a
+task is a user task or not by simply checking the task_struct mm field. If
+it was non NULL, it was a user task and if not it was a kernel task.
 
-> Especially in the modern world of MMIO BARs in the 512GB range.
-> 
-> > You'd essentially see a guest as a 'device' (probably with an
-> > actual struct dev representing it), and the stage-2 MMU in front of it
-> > as its IOMMU. That could potentially allow KVM to implement dma_map_ops
-> > for that guest 'device' by mapping/unmapping pages into its stage-2 and
-> > such. 
-> 
-> The plan isn't something so wild..
+But things have changed over time, and some kernel tasks now have their
+own mm field.
 
-I'll take that as a compliment ;-)
+An idea was made to instead test PF_KTHREAD and two functions were used to
+wrap this check in case it became more complex to test if a task was a
+user task or not[1]. But this was rejected and the C code simply checked
+the PF_KTHREAD directly.
 
-Not dying on that hill, but it didn't feel _that_ horrible after
-thinking about it for a little while. From the host's PoV, a guest is
-just another thing that can address memory, which has its own address
-space and a page-table that we control in front. If you squint hard
-enough it doesn't look _that_ different from a device from that angle.
-Oh well.
+It was later found that not all kernel threads set PF_KTHREAD. The io-uring
+helpers instead set PF_USER_WORKER and this needed to be added as well.
 
-> https://github.com/jgunthorpe/linux/commits/dmabuf_map_type/
-> 
-> The "Physical Address List" mapping type will let KVM just get a
-> normal phys_addr_t list and do its normal stuff with it. No need for
-> hacky DMA API things.
+But checking the flags is still not enough. There's a very small window
+when a task exits that it frees its mm field and it is set back to NULL.
+If perf were to trigger at this moment, the flags test would say its a
+user space task but when perf would read the mm field it would crash with
+at NULL pointer dereference.
 
-Thanks, I'll read up.
+Now there are flags that can be used to test if a task is exiting, but
+they are set in areas that perf may still want to profile the user space
+task (to see where it exited). The only real test is to check both the
+flags and the mm field.
 
-> Probably what will be hard for KVM is that it gets the entire 512GB in
-> one shot and will have to chop it up to install the whole thing into
-> the PTE sizes available in the S2. I don't think it even has logic
-> like that right now??
+Instead of making this modification in every location, create a new
+is_user_task() helper function that does all the tests needed to know if
+it is safe to read the user space memory or not.
 
-The closest thing I can think of is the KVM_PRE_FAULT_MEMORY stuff in
-the KVM API that forces it to fault in an arbitrarily range of guest
-IPA space. There should at least be bits of infrastructure that can be
-re-used for that I guess.
+[1] https://lore.kernel.org/all/20250425204120.639530125@goodmis.org/
 
-> > It gets really funny when a CoCo guest decides to share back a subset of
-> > that dmabuf with the host, and I'm still wrapping my head around how
-> > we'd make that work, but at this point I'm ready to be told how all the
-> > above already doesn't work and that I should go back to the peanut
-> > gallery :-)
-> 
-> Oh, I don't actually know how that ends up working but I suppose it
-> could be meaningfully done :\
+Cc: stable@vger.kernel.org
+Fixes: 90942f9fac05 ("perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/all/0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/sched.h     | 5 +++++
+ kernel/events/callchain.c | 2 +-
+ kernel/events/core.c      | 6 +++---
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-For mobile/pKVM we'll want to use dmabufs for more than just passing
-MMIO to guests FWIW, it'll likely be used for memory in certain cases
-too. There are examples in the KVM Forum talk I linked in the previous
-email, but being able to feed guests with dmabuf-backed memory regions
-is very helpful. That's useful to e.g. get physically contiguous memory
-allocated from a CMA-backed dmabuf heap on systems that don't tolerate
-scattered private memory well for example (either for functional or
-performance reasons). I certainly wish we could ignore this type of
-hardware, but we don't have that luxury sadly.
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index d395f2810fac..f29ebeeac970 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1776,6 +1776,11 @@ static __always_inline bool is_percpu_thread(void)
+ 		(current->nr_cpus_allowed  == 1);
+ }
+ 
++static __always_inline bool is_user_task(struct task_struct *task)
++{
++	return task->mm && !(task->flags & (PF_KTHREAD | PF_USER_WORKER));
++}
++
+ /* Per-process atomic flags. */
+ #define PFA_NO_NEW_PRIVS		0	/* May not gain new privileges. */
+ #define PFA_SPREAD_PAGE			1	/* Spread page cache over cpuset */
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index b9c7e00725d6..636ffa5e5364 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -246,7 +246,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 
+ 	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+-			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
++			if (!is_user_task(current))
+ 				goto exit_put;
+ 			regs = task_pt_regs(current);
+ 		}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index da013b9a595f..1a06adebd2f2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7745,7 +7745,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++	} else if (is_user_task(current)) {
+ 		perf_get_regs_user(regs_user, regs);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+@@ -8383,7 +8383,7 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe get_user_page_fast_only first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
++		if (is_user_task(current)) {
+ 			struct page *p;
+ 
+ 			pagefault_disable();
+@@ -8498,7 +8498,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ {
+ 	bool kernel = !event->attr.exclude_callchain_kernel;
+ 	bool user   = !event->attr.exclude_callchain_user &&
+-		!(current->flags & (PF_KTHREAD | PF_USER_WORKER));
++		is_user_task(current);
+ 	/* Disallow cross-task user callchains. */
+ 	bool crosstask = event->ctx->task && event->ctx->task != current;
+ 	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
+-- 
+2.51.0
 
-In cases like that, we certainly expect that the guest will be sharing
-back parts of memory it's been given (at least a swiotlb bounce buffer
-so it can do virtio etc), and that may very well be in the middle of a
-dmabuf-backed memslot. In fact the guest has no clue what is backing
-it's memory region, so we can't really expect it _not_ to do that :/
