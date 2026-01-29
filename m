@@ -1,39 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7159C2DEA6B;
-	Thu, 29 Jan 2026 00:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED2C309EE6;
+	Thu, 29 Jan 2026 00:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769647840; cv=none; b=YkN33KBTNbLlVmQW9Tl6UQZq7WPdj1uaPRjYX1e0DnFJSQuJq3s6zaLERntamLi310+0YMHJlIRO7qoX8GvrkymwNCHkZcBIhBsISvTbUmFy541lOXdtt44anRK4OPbuRJc5jLLaiwSOmfVki4RnpxOr1wR9xf7Ayng2kE1Qcuo=
+	t=1769648356; cv=none; b=lrq2zmWTG+FeEb39/td0s+dU9dd9n78+M//PmOZ1VxHusIz3s8jjhyG6XZ7L69BSRxcc+oFDziZiysu1rShxqDm5uUSJaYyQ0e/HkqX9x6LvAey1zgNQtpTIO8L64VMANQ1PUtTaQSOv63gOKcKAeokKbxMtNJDj9On3UCD39o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769647840; c=relaxed/simple;
-	bh=CJRMCzrnLuyYZ++FHBMD9+P3uHEYuJe/NBsshsqugWE=;
+	s=arc-20240116; t=1769648356; c=relaxed/simple;
+	bh=EusqMmX+WMv9jskb/QERDU7dXJeN+LErgGuNr2NmLI8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=choJ4CuqVVjPWw6RMoLlBXawX9Ift0zNkx2hBqLp99u6hSpDvb6iewNmOwjSmkg+XoNqRm+p7h5xa4cnBeqRqytNzedAJIzMouOtEBiCt2WZfZ4TGFtYmzS8XCpXZLobGGcFOc/KmCQRYiqARYYjI+UGHf6EXBtFC9IkM1y/pgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=fS5HsMO8ZuRrS3wtd5WD38G6knOvX+PA4spsR6t9zdR3+fc6Pz98JpOmukaAu8mXvwy15MkxoF1zh6XRRYernSze8ttqUa/snBs0L8JrxdNfLaXIcWOoUVPsKxbQ4v0dJ/o6Vv74+Y6a/ymB+jZ9ruwtVL9uUySwDJqnWdVSNzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id AA5911B14CA;
-	Thu, 29 Jan 2026 00:50:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 6730020012;
-	Thu, 29 Jan 2026 00:50:33 +0000 (UTC)
-Date: Wed, 28 Jan 2026 19:50:43 -0500
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id B25255A20D;
+	Thu, 29 Jan 2026 00:59:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id AF2B180011;
+	Thu, 29 Jan 2026 00:59:10 +0000 (UTC)
+Date: Wed, 28 Jan 2026 19:59:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Mahe Tardy <mahe.tardy@gmail.com>, Peter Zijlstra
- <peterz@infradead.org>, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org, Yonghong Song
- <yhs@fb.com>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko
- <andrii@kernel.org>
-Subject: Re: [PATCHv2 bpf-next 2/6] x86/fgraph,bpf: Switch kprobe_multi
- program stack unwind to hw_regs path
-Message-ID: <20260128195043.4ac5187f@gandalf.local.home>
-In-Reply-To: <20260126211837.472802-3-jolsa@kernel.org>
-References: <20260126211837.472802-1-jolsa@kernel.org>
-	<20260126211837.472802-3-jolsa@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org, Ian Rogers
+ <irogers@google.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.18] tracing: Avoid possible signed 64-bit
+ truncation
+Message-ID: <20260128195920.0fd14c6a@gandalf.local.home>
+In-Reply-To: <20260128223332.2806589-18-sashal@kernel.org>
+References: <20260128223332.2806589-1-sashal@kernel.org>
+	<20260128223332.2806589-18-sashal@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,103 +41,95 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 6730020012
-X-Stat-Signature: eesqx6cdcebfafgrm9fgoeonfdcso36w
-X-Rspamd-Server: rspamout08
+X-Stat-Signature: si16st6e8t3sqak3ah666q3x7pbnw1tr
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: AF2B180011
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/R9v32MNDW0xNNrvfM5B0fBvffkSOfThI=
-X-HE-Tag: 1769647833-345789
-X-HE-Meta: U2FsdGVkX18u271zeS/+bFkUd6P07QbScJLBXEvsxw6yIueB4cIP4Gp1ueHntkHj5r3kZZych1+9LvUk2hp19a3DKF9wyesv/OzlrrOVYgRTiHfRCjDU+u+K0ZYXeszkIw2qU04VAVmdeCi7wc2ssuEvrh/XSlLg40adgz7hbYfq+7MU0d7JrnnqSP056VaLT2/ESJHKxH9C1haEveUKMPLgGVO5+j4W3pHOdQ9Bo7NineLDzvrh/8Qcu8jcvp0Rpj3byJDkfcOwE+ldvJeyGV0VUUdU7WUJ9h8y7SLHammcB4qMkCBabIB+YA25EcuPfBSAjQentsvdA59H8Zk5HGYhRwppnTelEp1/+jVIZQrK/stNgMls3FFBJUHN21EQC8wSMgQi0ImBU6HAPzsHAKNA5A4NlaVWa0Y5gJ8xB/M=
+X-Session-ID: U2FsdGVkX19ke6BWJDhdg7mXD2/OF7XmCreCC5xhkrg=
+X-HE-Tag: 1769648350-390775
+X-HE-Meta: U2FsdGVkX18fRXYKIT0R68RwKdAAHx7j5ZZEZV+Mb+i5rqd1rpK6EW2ks5bpah48+ty4Af15AH3feBx4wxrbKxwLuFd1bmb5a9CdJBPSURQE0Te2R+PnUPiM2qq+USrrtSCuKDlRCJDFBBU7llXzpnE9F3MhsnJYNLrrRUtzL9Pm1oFaNTeuy1nkjsiLdWBbkTQLlUqUBqK6uCIbOb7rNCDMRD6/9Np1ugE+PDwdoK+ZhR6VhmogfEstlSoRX0I2pLqdfa5k0c6jhHN5MiqeFx1+uaafjfZmgmYfOWN+fhX+T8w9qjbnc1dQrn70Znd4qMKwmoEKjUoAnlscCeB4reQjHZnqRQHVVVkIJXNiqgjgBy9sX3SowXJNXTjLIwAD
 
-On Mon, 26 Jan 2026 22:18:33 +0100
-Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, 28 Jan 2026 17:33:16 -0500
+Sasha Levin <sashal@kernel.org> wrote:
 
-> Mahe reported missing function from stack trace on top of kprobe
-> multi program. The missing function is the very first one in the
-> stacktrace, the one that the bpf program is attached to.
+> LLM Generated explanations, may be completely bogus:
 >=20
->   # bpftrace -e 'kprobe:__x64_sys_newuname* { print(kstack)}'
->   Attaching 1 probe...
->=20
->         do_syscall_64+134
->         entry_SYSCALL_64_after_hwframe+118
->=20
->   ('*' is used for kprobe_multi attachment)
->=20
-> The reason is that the previous change (the Fixes commit) fixed
-> stack unwind for tracepoint, but removed attached function address
-> from the stack trace on top of kprobe multi programs, which I also
-> overlooked in the related test (check following patch).
->=20
-> The tracepoint and kprobe_multi have different stack setup, but use
-> same unwind path. I think it's better to keep the previous change,
-> which fixed tracepoint unwind and instead change the kprobe multi
-> unwind as explained below.
->=20
-> The bpf program stack unwind calls perf_callchain_kernel for kernel
-> portion and it follows two unwind paths based on X86_EFLAGS_FIXED
-> bit in pt_regs.flags.
->=20
-> When the bit set we unwind from stack represented by pt_regs argument,
-> otherwise we unwind currently executed stack up to 'first_frame'
-> boundary.
->=20
-> The 'first_frame' value is taken from regs.rsp value, but ftrace_caller
-> and ftrace_regs_caller (ftrace trampoline) functions set the regs.rsp
-> to the previous stack frame, so we skip the attached function entry.
->=20
-> If we switch kprobe_multi unwind to use the X86_EFLAGS_FIXED bit,
-> we set the start of the unwind to the attached function address.
-> As another benefit we also cut extra unwind cycles needed to reach
-> the 'first_frame' boundary.
->=20
-> The speedup can be measured with trigger bench for kprobe_multi
-> program and stacktrace support.
->=20
-> - trigger bench with stacktrace on current code:
->=20
->         kprobe-multi   :     0.810 =C2=B1 0.001M/s
->         kretprobe-multi:     0.808 =C2=B1 0.001M/s
->=20
-> - and with the fix:
->=20
->         kprobe-multi   :     1.264 =C2=B1 0.001M/s
->         kretprobe-multi:     1.401 =C2=B1 0.002M/s
->=20
-> With the fix, the entry probe stacktrace:
->=20
->   # bpftrace -e 'kprobe:__x64_sys_newuname* { print(kstack)}'
->   Attaching 1 probe...
->=20
->         __x64_sys_newuname+9
->         do_syscall_64+134
->         entry_SYSCALL_64_after_hwframe+118
->=20
-> The return probe skips the attached function, because it's no longer
-> on the stack at the point of the unwind and this way is the same how
-> standard kretprobe works.
->=20
->   # bpftrace -e 'kretprobe:__x64_sys_newuname* { print(kstack)}'
->   Attaching 1 probe...
->=20
->         do_syscall_64+134
->         entry_SYSCALL_64_after_hwframe+118
->=20
-> Fixes: 6d08340d1e35 ("Revert "perf/x86: Always store regs->ip in perf_cal=
-lchain_kernel()"")
-> Reported-by: Mahe Tardy <mahe.tardy@gmail.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/include/asm/ftrace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index b08c95872eed..c56e1e63b893 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
+> The original buggy code was introduced in v6.15 and later. It's only
+> present in 6.15+ kernels.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Interesting self discussion from the LLM.
 
-(it passed all my tests too)
+>=20
+> ### 8. SUMMARY OF ANALYSIS
+>=20
+> **The Bug:**
+> - The `cmp_mod_entry()` function uses subtraction of two `unsigned long`
+>   values and returns the result as `int`
+> - On 64-bit systems, if addresses differ by more than 2^31 (~2GB), the
+>   truncation from 64-bit to 32-bit can flip the sign
+> - This would cause `bsearch()` to make wrong decisions about search
+>   direction
+> - Result: potentially incorrect module address lookups in trace data
+>=20
+> **The Fix:**
+> - Replaces arithmetic subtraction with simple comparisons
+> - Returns -1, 0, or 1 directly based on comparisons
+> - No overflow or truncation possible with the new code
+> - Logic is more readable and provably correct
+>=20
+> **Stable Criteria Evaluation:**
+> 1. =E2=9C=85 **Obviously correct and tested**: Simple logic, reviewed by
+>    maintainers
+> 2. =E2=9C=85 **Fixes a real bug**: Yes, a potential comparator correctnes=
+s bug
+> 3. =E2=9A=A0=EF=B8=8F **Important issue**: Moderate - unlikely to trigger=
+ (requires >2GB
+>    address separation) but could cause incorrect trace output
+
+I purposely didn't add Cc: stable because there's basically no chance of
+two modules being more than 2GB apart.
+
+> 4. =E2=9C=85 **Small and contained**: Only changes one function body (~6 =
+lines)
+> 5. =E2=9C=85 **No new features**: Pure bug fix
+> 6. =E2=9C=85 **Applies cleanly**: Should apply to 6.15+ kernels where thi=
+s code
+>    exists
+>=20
+> **Risk Assessment:**
+> - Very low risk - the change is small and the new logic is simpler
+> - The original code has a provable bug (integer overflow on truncation)
+> - The new code has no such issues
+>=20
+> **Concerns:**
+> - The code only exists in 6.15+ kernels (introduced March 2025)
+> - The bug is "unlikely" per the author (requires addresses >2GB apart)
+> - No known real-world reports of this actually causing issues
+>=20
+> ### DECISION
+>=20
+> This is a valid bug fix that:
+> - Fixes a real (though unlikely to trigger) bug in the comparator
+>   function
+> - Is very small and self-contained
+> - Has been reviewed and acked by the tracing maintainers
+> - Has near-zero regression risk
+> - Applies to 6.15+ kernels only
+>=20
+> The fix is surgical, obviously correct, and addresses a potential
+> correctness issue. While the bug is unlikely to trigger in practice
+> (addresses must be >2GB apart), it could cause silent data corruption in
+> trace output when it does trigger. The fix is trivial and risk-free.
+>=20
+> **YES**
+
+But I see the bot considered the same thing, but because of the risk factor
+it decided to take it.
+
+I have no issue with backporting it (I did label it a "fix"). I was
+actually wondering if the bot would notice likeliness of it not happening.
+It did, but decided to take it for "correctness" reasons vs risk factor.
+
+Nice,
 
 -- Steve
