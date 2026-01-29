@@ -1,244 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10D47E105;
-	Thu, 29 Jan 2026 15:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F123234403F;
+	Thu, 29 Jan 2026 16:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769701709; cv=none; b=ltqvyQSw9MQj4txhxW49cmXcS+NOmd2Y3FV5x1tBrZmds2IPveSj0SqbyOqxc6gN2f3R3r3v8vBcVC9E/EPFW5W2SssXk+9xxepcmfVMoDw71m/AnAN9F7kCu/TPcZw9xPiRFRokcdCZp5J/BISQd4YcUrU3DGBK/JM0Wu3IruM=
+	t=1769704490; cv=none; b=HEy1zg6mm7cyj/sKTuN78z1L7HP1f6O8LuwiOMsFfjazLM1OG/4fTXQ/wXT3t3exEoEU6IcAcqfU3UF55eiqYgmSvhCvWmO3Lar9887n1QGBM4WykUkMq66KgoryIk6qC3DJCwrZq1J8jqyDQ+4oApX3a2XzaLZrwOD7DP3iaUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769701709; c=relaxed/simple;
-	bh=3sJW9TlizmtRbou/TpxJBFy3blNGRHzOkG2oH2g4P4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TF+LSxKZmz4T87WkBYgcNE5sMT+lJzdll6tSDaioue9q80vE8bxR3Z/CuuLyp635nERvESk3BCLJOzyAhpJxbrt7iO9OiJqb+hGUGyouyIh2cdxofQPi1GwKam7MX9lB7gqBKYoeGOhY0D2umL2TQB0cdMdurYVTRAygN1AniBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgXeaLxQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgXeaLxQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA433C4CEF7;
-	Thu, 29 Jan 2026 15:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769701709;
-	bh=3sJW9TlizmtRbou/TpxJBFy3blNGRHzOkG2oH2g4P4E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IgXeaLxQLQ5M+4wNfa0xLaQN8eb7yeewoPL0uAJ4wWFE//3iBzWA6qWFfbd3CHhZF
-	 TJt532OzdmRmqL8FVcQ3kTHwiMIvcKfPnORYRtebJkRWLGghGxAhprc1KppyqwoyDH
-	 vaVXDC6Fq7tEaAuFja7l3tnIj3h7Yby3+aMkvCRyI1kYwZP6q9DDKqYWIlyQY4wyHB
-	 5iyf5DUpr+QsP6jMv5zKT9QQsrNu5uF5iEzQ1Aa0+CA4Mka/h0duqXOLA1be/SaSO+
-	 GMec+XLx+YxKLN17OTLR72YkLYOSSNzY5mFpC/8moj+7gw1wW0i8saUpN9byHA1IQ9
-	 gwCXAJ0CcEnIw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4] kprobes: Use dedicated kthread for kprobe optimizer
-Date: Fri, 30 Jan 2026 00:48:23 +0900
-Message-ID: <176970170302.114949.5175231591310436910.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1769704490; c=relaxed/simple;
+	bh=217Vj2blvTPfGP7/OkYRcp+XnxGSsxvzWWwu+6Txca0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lp9SxTilQJHibc/ylRMtQJ5S4GpSZnSmm610GTqxyVwA7E16RVOvlZvpWx3Ut6PiNnmakg7vsL37Cqoj0sVQpvmRkKDnpMSREHTd2z+soK6UaW5Ynzhz0H9rIHrdF/lOINkrFhDp8dp/R1Zu1FaF6REZFafk5E5ltDvVlud2PNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 423591A023A;
+	Thu, 29 Jan 2026 16:34:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id C464A2000D;
+	Thu, 29 Jan 2026 16:34:40 +0000 (UTC)
+Date: Thu, 29 Jan 2026 11:34:52 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 14/30] tracing: Add a trace remote module for
+ testing
+Message-ID: <20260129113452.190d4d79@gandalf.local.home>
+In-Reply-To: <20260126104419.1649811-15-vdonnefort@google.com>
+References: <20260126104419.1649811-1-vdonnefort@google.com>
+	<20260126104419.1649811-15-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4tom6osz9gk1nhda1dzgtdp7p96fbuiw
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: C464A2000D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/a+lc9Olbj8FpxYo0Mp5Ylas9xx3xZcTc=
+X-HE-Tag: 1769704480-893928
+X-HE-Meta: U2FsdGVkX18dLCxZERBXmsSnTHc5UPwrkXX13Ws3zkTLaDeMkhnHCasYaI+Sr7OfeoIfJg6HaL+GXQSIRPrgee/ppnYTHOMGsF+4/o+HSxUs66/wi+KtzK1ewXbHsX9bBs2dwl4hZz4XBnkFcMjWDtU+5554hrEVsVGXB80izeoRE4V4YCNmj8mhj2TTxh0P4endb8Wx8qLHcg4lClo4dI5DZGdscWODASEPnrcVD0ZOPbhJsAzv7WLHH9ZpkSNxFD+Ht74oI4OTwc1OBU2hBn+/5qt+DXoOn1MAJWq2vZbHYzVjg+QO6QwBar5kO9jBz5TOTi3IEKi/GygYU3hf0bYIZxRpAEXw
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 26 Jan 2026 10:44:03 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Instead of using generic workqueue, use a dedicated kthread for optimizing
-kprobes, because it can wait (sleep) for a long time inside the process
-by synchronize_rcu_task(). This means other works can be stopped until it
-finishes.
+> diff --git a/kernel/trace/remote_test.c b/kernel/trace/remote_test.c
+> new file mode 100644
+> index 000000000000..059127489c99
+> --- /dev/null
+> +++ b/kernel/trace/remote_test.c
+> @@ -0,0 +1,259 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 - Google LLC
+> + * Author: Vincent Donnefort <vdonnefort@google.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/simple_ring_buffer.h>
+> +#include <linux/trace_remote.h>
+> +#include <linux/tracefs.h>
+> +#include <linux/types.h>
+> +
+> +#define REMOTE_EVENT_INCLUDE_FILE kernel/trace/remote_test_events.h
+> +#include <trace/define_remote_events.h>
+> +
+> +static DEFINE_PER_CPU(struct simple_rb_per_cpu *, simple_rbs);
+> +static struct trace_buffer_desc *remote_test_buffer_desc;
+> +
+> +/*
+> + * The trace_remote lock already serializes accesses from the trace_remote_callbacks.
+> + * However write_event can still race with load/unload.
+> + */
+> +static DEFINE_MUTEX(simple_rbs_lock);
+> +
+> +static int remote_test_load_simple_rb(int cpu, struct ring_buffer_desc *rb_desc)
+> +{
+> +	struct simple_rb_per_cpu *cpu_buffer;
+> +	struct simple_buffer_page *bpages;
+> +	int ret = -ENOMEM;
+> +
+> +	cpu_buffer = kmalloc(sizeof(*cpu_buffer), GFP_KERNEL);
+> +	if (!cpu_buffer)
+> +		return ret;
+> +
+> +	bpages = kmalloc_array(rb_desc->nr_page_va, sizeof(*bpages), GFP_KERNEL);
+> +	if (!bpages)
+> +		goto err_free_cpu_buffer;
+> +
+> +	ret = simple_ring_buffer_init(cpu_buffer, bpages, rb_desc);
+> +	if (ret)
+> +		goto err_free_bpages;
+> +
+> +	scoped_guard(mutex, &simple_rbs_lock)
+> +		*per_cpu_ptr(&simple_rbs, cpu) = cpu_buffer;
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v4:
-  - Update onto probes/for-next.(fix a conflict)
- Changes in v3:
-  - Wait events in interruptible state for avoiding hung_task.
- Changes in v2:
-  - Make the kthread unfreezable same as workqueue.
-  - Add kthread_should_stop() check right before calling optimizer too.
-  - Initialize optimizer_state to OPTIMIZER_ST_IDLE instead of 0.
----
- kernel/kprobes.c |  106 ++++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 86 insertions(+), 20 deletions(-)
+Should there be some kind of check before blindly assigning the cpu_buffer?
+If not, what is the mutex protecting from?
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 1bd84d3b4817..e2cd01cf5968 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -32,6 +32,7 @@
- #include <linux/debugfs.h>
- #include <linux/sysctl.h>
- #include <linux/kdebug.h>
-+#include <linux/kthread.h>
- #include <linux/memory.h>
- #include <linux/ftrace.h>
- #include <linux/cpu.h>
-@@ -40,6 +41,7 @@
- #include <linux/perf_event.h>
- #include <linux/execmem.h>
- #include <linux/cleanup.h>
-+#include <linux/wait.h>
- 
- #include <asm/sections.h>
- #include <asm/cacheflush.h>
-@@ -514,9 +516,18 @@ static LIST_HEAD(optimizing_list);
- static LIST_HEAD(unoptimizing_list);
- static LIST_HEAD(freeing_list);
- 
--static void kprobe_optimizer(struct work_struct *work);
--static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
- static void optimize_kprobe(struct kprobe *p);
-+static struct task_struct *kprobe_optimizer_task;
-+static wait_queue_head_t kprobe_optimizer_wait;
-+static atomic_t optimizer_state;
-+enum {
-+	OPTIMIZER_ST_IDLE = 0,
-+	OPTIMIZER_ST_KICKED = 1,
-+	OPTIMIZER_ST_FLUSHING = 2,
-+};
-+
-+static DECLARE_COMPLETION(optimizer_completion);
-+
- #define OPTIMIZE_DELAY 5
- 
- /*
-@@ -609,14 +620,10 @@ static void do_free_cleaned_kprobes(void)
- 	}
- }
- 
--/* Start optimizer after OPTIMIZE_DELAY passed */
--static void kick_kprobe_optimizer(void)
--{
--	schedule_delayed_work(&optimizing_work, OPTIMIZE_DELAY);
--}
-+static void kick_kprobe_optimizer(void);
- 
- /* Kprobe jump optimizer */
--static void kprobe_optimizer(struct work_struct *work)
-+static void kprobe_optimizer(void)
- {
- 	guard(mutex)(&kprobe_mutex);
- 
-@@ -647,9 +654,53 @@ static void kprobe_optimizer(struct work_struct *work)
- 		do_free_cleaned_kprobes();
- 	}
- 
--	/* Step 5: Kick optimizer again if needed */
-+	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
-+	if (completion_done(&optimizer_completion))
-+		complete(&optimizer_completion);
-+
- 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
--		kick_kprobe_optimizer();
-+		kick_kprobe_optimizer();	/*normal kick*/
-+}
-+
-+static int kprobe_optimizer_thread(void *data)
-+{
-+	while (!kthread_should_stop()) {
-+		/* To avoid hung_task, wait in interruptible state. */
-+		wait_event_interruptible(kprobe_optimizer_wait,
-+			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
-+			   kthread_should_stop());
-+
-+		if (kthread_should_stop())
-+			break;
-+
-+		/*
-+		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
-+		 * This wait can be interrupted by a flush request.
-+		 */
-+		if (atomic_read(&optimizer_state) == 1)
-+			wait_event_interruptible_timeout(
-+				kprobe_optimizer_wait,
-+				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
-+				kthread_should_stop(),
-+				OPTIMIZE_DELAY);
-+
-+		if (kthread_should_stop())
-+			break;
-+
-+		atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
-+
-+		kprobe_optimizer();
-+	}
-+	return 0;
-+}
-+
-+/* Start optimizer after OPTIMIZE_DELAY passed */
-+static void kick_kprobe_optimizer(void)
-+{
-+	lockdep_assert_held(&kprobe_mutex);
-+	if (atomic_cmpxchg(&optimizer_state,
-+		OPTIMIZER_ST_IDLE, OPTIMIZER_ST_KICKED) == OPTIMIZER_ST_IDLE)
-+		wake_up(&kprobe_optimizer_wait);
- }
- 
- static void wait_for_kprobe_optimizer_locked(void)
-@@ -657,13 +708,17 @@ static void wait_for_kprobe_optimizer_locked(void)
- 	lockdep_assert_held(&kprobe_mutex);
- 
- 	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
--		mutex_unlock(&kprobe_mutex);
--
--		/* This will also make 'optimizing_work' execute immmediately */
--		flush_delayed_work(&optimizing_work);
--		/* 'optimizing_work' might not have been queued yet, relax */
--		cpu_relax();
-+		init_completion(&optimizer_completion);
-+		/*
-+		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
-+		 * idle. If it's already kicked, it will see the state change.
-+		 */
-+		if (atomic_xchg_acquire(&optimizer_state,
-+			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
-+			wake_up(&kprobe_optimizer_wait);
- 
-+		mutex_unlock(&kprobe_mutex);
-+		wait_for_completion(&optimizer_completion);
- 		mutex_lock(&kprobe_mutex);
- 	}
- }
-@@ -1016,8 +1071,21 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
- 	}
- }
- 
-+static void __init init_optprobe(void)
-+{
-+#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
-+	/* Init 'kprobe_optinsn_slots' for allocation */
-+	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
-+#endif
-+
-+	init_waitqueue_head(&kprobe_optimizer_wait);
-+	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
-+	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
-+					    "kprobe-optimizer");
-+}
- #else /* !CONFIG_OPTPROBES */
- 
-+#define init_optprobe()				do {} while (0)
- #define optimize_kprobe(p)			do {} while (0)
- #define unoptimize_kprobe(p, f)			do {} while (0)
- #define kill_optimized_kprobe(p)		do {} while (0)
-@@ -2700,10 +2768,8 @@ static int __init init_kprobes(void)
- 	/* By default, kprobes are armed */
- 	kprobes_all_disarmed = false;
- 
--#if defined(CONFIG_OPTPROBES) && defined(__ARCH_WANT_KPROBES_INSN_SLOT)
--	/* Init 'kprobe_optinsn_slots' for allocation */
--	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
--#endif
-+	/* Initialize the optimization infrastructure */
-+	init_optprobe();
- 
- 	err = arch_init_kprobes();
- 	if (!err)
 
+> +
+> +	return 0;
+> +
+> +err_free_bpages:
+> +	kfree(bpages);
+> +
+> +err_free_cpu_buffer:
+> +	kfree(cpu_buffer);
+> +
+> +	return ret;
+> +}
+> +
+> +static void remote_test_unload_simple_rb(int cpu)
+> +{
+> +	struct simple_rb_per_cpu *cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
+> +	struct simple_buffer_page *bpages;
+> +
+> +	if (!cpu_buffer)
+> +		return;
+> +
+> +	guard(mutex)(&simple_rbs_lock);
+> +
+> +	bpages = cpu_buffer->bpages;
+> +	simple_ring_buffer_unload(cpu_buffer);
+> +	kfree(bpages);
+> +	kfree(cpu_buffer);
+> +	*per_cpu_ptr(&simple_rbs, cpu) = NULL;
+> +}
+> +
+> +static struct trace_buffer_desc *remote_test_load(unsigned long size, void *unused)
+> +{
+> +	struct ring_buffer_desc *rb_desc;
+> +	struct trace_buffer_desc *desc;
+> +	size_t desc_size;
+> +	int cpu, ret;
+> +
+> +	if (WARN_ON(remote_test_buffer_desc))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	desc_size = trace_buffer_desc_size(size, num_possible_cpus());
+> +	if (desc_size == SIZE_MAX) {
+> +		ret = -E2BIG;
+> +		goto err_unlock_cpus;
+> +	}
+> +
+> +	desc = kmalloc(desc_size, GFP_KERNEL);
+> +	if (!desc) {
+> +		ret = -ENOMEM;
+> +		goto err_unlock_cpus;
+> +	}
+> +
+> +	ret = trace_remote_alloc_buffer(desc, desc_size, size, cpu_possible_mask);
+> +	if (ret)
+> +		goto err_free_desc;
+> +
+> +	for_each_ring_buffer_desc(rb_desc, cpu, desc) {
+> +		ret = remote_test_load_simple_rb(rb_desc->cpu, rb_desc);
+> +		if (ret)
+> +			goto err;
+> +	}
+> +
+> +	remote_test_buffer_desc = desc;
+> +
+> +	return remote_test_buffer_desc;
+> +
+> +err:
+> +	for_each_ring_buffer_desc(rb_desc, cpu, remote_test_buffer_desc)
+> +		remote_test_unload_simple_rb(rb_desc->cpu);
+> +	trace_remote_free_buffer(remote_test_buffer_desc);
+> +
+> +err_free_desc:
+> +	kfree(desc);
+> +
+> +err_unlock_cpus:
+
+Where was the cpus_read lock taken?
+
+> +	cpus_read_unlock();
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void remote_test_unload(struct trace_buffer_desc *desc, void *unused)
+> +{
+> +	struct ring_buffer_desc *rb_desc;
+> +	int cpu;
+> +
+> +	if (WARN_ON(desc != remote_test_buffer_desc))
+> +		return;
+> +
+> +	for_each_ring_buffer_desc(rb_desc, cpu, desc)
+> +		remote_test_unload_simple_rb(rb_desc->cpu);
+> +
+> +	remote_test_buffer_desc = NULL;
+> +	trace_remote_free_buffer(desc);
+> +	kfree(desc);
+> +}
+> +
+> +static int remote_test_enable_tracing(bool enable, void *unused)
+> +{
+> +	struct ring_buffer_desc *rb_desc;
+> +	int cpu;
+> +
+> +	if (!remote_test_buffer_desc)
+> +		return -ENODEV;
+> +
+> +	for_each_ring_buffer_desc(rb_desc, cpu, remote_test_buffer_desc)
+> +		WARN_ON(simple_ring_buffer_enable_tracing(*per_cpu_ptr(&simple_rbs, rb_desc->cpu),
+> +							  enable));
+> +	return 0;
+> +}
+> +
+> +static int remote_test_swap_reader_page(unsigned int cpu, void *unused)
+> +{
+> +	struct simple_rb_per_cpu *cpu_buffer;
+> +
+> +	if (cpu >= NR_CPUS)
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
+> +	if (!cpu_buffer)
+> +		return -EINVAL;
+> +
+> +	return simple_ring_buffer_swap_reader_page(cpu_buffer);
+> +}
+> +
+> +static int remote_test_reset(unsigned int cpu, void *unused)
+> +{
+> +	struct simple_rb_per_cpu *cpu_buffer;
+> +
+> +	if (cpu >= NR_CPUS)
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
+> +	if (!cpu_buffer)
+> +		return -EINVAL;
+> +
+> +	return simple_ring_buffer_reset(cpu_buffer);
+> +}
+> +
+> +static int remote_test_enable_event(unsigned short id, bool enable, void *unused)
+> +{
+> +	if (id != REMOTE_TEST_EVENT_ID)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Let's just use the struct remote_event enabled field that is turned on and off by
+> +	 * trace_remote. This is a bit racy but good enough for a simple test module.
+> +	 */
+> +	return 0;
+> +}
+> +
+> +static ssize_t
+> +write_event_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *pos)
+> +{
+> +	struct remote_event_format_selftest *evt_test;
+> +	struct simple_rb_per_cpu *cpu_buffer;
+> +	unsigned long val;
+> +	int ret;
+> +
+> +	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&simple_rbs_lock);
+> +
+> +	if (!remote_event_selftest.enabled)
+> +		return -ENODEV;
+> +
+
+You want a guard(preempt)(); here...
+
+> +	cpu_buffer = *this_cpu_ptr(&simple_rbs);
+
+Otherwise this triggers:
+
+ BUG: using smp_processor_id() in preemptible [00000000] code: bash/1096
+ caller is write_event_write+0xe0/0x230 [remote_test]
+
+-- Steve
+
+> +	if (!cpu_buffer)
+> +		return -ENODEV;
+> +
+> +	evt_test = simple_ring_buffer_reserve(cpu_buffer,
+> +					      sizeof(struct remote_event_format_selftest),
+> +					      trace_clock_global());
+> +	if (!evt_test)
+> +		return -ENODEV;
+> +
+> +	evt_test->hdr.id = REMOTE_TEST_EVENT_ID;
+> +	evt_test->id = val;
+> +
+> +	simple_ring_buffer_commit(cpu_buffer);
+> +
+> +	return cnt;
+> +}
+> +
