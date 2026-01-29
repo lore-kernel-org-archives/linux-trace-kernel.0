@@ -1,182 +1,77 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6BE199FB0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 01:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67C323E356;
+	Thu, 29 Jan 2026 01:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769648611; cv=none; b=mz6Pz7DLC4SmEBTB4rnIAmVWm4S+aIN99sJ9GPaiRj7BrQVTzJk8ZN46tYWvgpiJ74miapTQamDdETDPwvTqTUCehJCHcH8kysZQB+V9nCkGuW53Co9OaldF++uYxVJcoEnTyeMWn4BE2io3LdWt+7ZYf4IP8KttwZ5cqfGPYIM=
+	t=1769649137; cv=none; b=r7oy6JW9v0ALY/tpZ6tc9Flnjh2Dn5iHjUMYm2b8oGycg/Ufk/6TZs0FWL4C1yA0qYfagNfFTW4OZJTVU9zqmN9c9+WeHb5ZhT7eXfWrbbwihv/2bkU15oXderau8/qREJU8bKE/ec53KkrnSisrBuK9st9Y0KmnVDCF5qwapzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769648611; c=relaxed/simple;
-	bh=LycvwrEt9FiYCojoBJvkidjYu1wB89lVriZlQuiRjLU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jO35ShUQC6/gHgC6Tc1z2cHaEUqcRP7EVflBESgAgOgOn2i6IHZiBEhpr7FyYQFd5v4UftrMVYS+TLR6AslqhZwW45Zzih6NKLApjMrUFteRaUaHa7v9v2tclI3ksCjiY7tRVzLK+vfoodxUuqHSPVDer/o1oJH5R50SQnJXmzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SxM9HG+X; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1769649137; c=relaxed/simple;
+	bh=0v3PR7rb0+eEOgBRoxlGoVj3VwtxmYZaaaJ1KHtQC9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KtHS30BFGtvgpRgO95DcmPbzkKBgtAB2V6wLVyB23m2pxBRbusnCbPb+Dh86yZoNkzmpM2eEhTTIVx7SkaTcpoz4GqbaTBZsQCT3IyZIYdqIo3MnsPApyE0zzV+soIqLyUI3GlgGHbOjWxQrxtsHm7bburNtkNRCA9c2NRa6IIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hiR7xDsq; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SxM9HG+X"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2a863be8508so4479845ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:03:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769648609; x=1770253409; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=19yGyDu7FA79ZAJBhihksbqQH2oSVrmD3QatKOHHT0Q=;
-        b=SxM9HG+XCbluVUI9hhaJPoAGO9A4weGXrDN1WkEGXQkijuxtuAjaNEYFx+SLCqf0Vc
-         DKo+wzbFJwA6yw7xBSyJwqQpAsDR6yb7FZU74TcmQYFFTPOeEhgrhdR6MUWIFp7qAG3f
-         jS6sEPMQU+UK3viVxx6z7fZ+5qAIL8KBye4cTl21BAAmPZKUYXNqeHrwxKvvRjD3dSBb
-         wBk8pa2mDMfo9JnWph33h5v8eIxV9BJIuCrP+bVCeNYlC4GG3+fX4/NgZnKzBPhJJpGu
-         2J5KSfLSi5sExTVcHHRzagEuMknn+FWrhRQKbztN3EF1NO9VCtOojet9vcwtssGjZ0mv
-         B/Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769648609; x=1770253409;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=19yGyDu7FA79ZAJBhihksbqQH2oSVrmD3QatKOHHT0Q=;
-        b=WxOciiIxllHNOAPEMCV7mgTTGeg5LT0UR0pOTqs22ABJvctoLoUkxDkwVRgGDvhwkF
-         Maeq8nDoCqOyw1M483jasb41rHhZYfXUXOtp0k6D/qhHteeTyrThqe+U6Xy/ZAUtOtwK
-         iLfqF72tDXc00763Xns0HUSpPWyy8K2lyoXpIK1FcuG4WRAv8UJZWQ+2+LOUivAWXR+4
-         /ADVQMiPaZvHVSUODhbI8VFFOSbxzUkf7N10HxCa4RkkpFMI1bGJ3bzARkvvKczhrhMO
-         vwqHAGHhbEC7u5GDMM1EfyuBi9HNzILKYXaYEcZFjnUf6f0ZO57+6rt4v7liB5YusnXj
-         PlqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXq6HLdtqJl7cHNoq+9Wm2F6a7K80ZCMygEw5qyYVuoDN0RZjWExguiZinYqNiMbZG4yZbz5U0EnC4fHHf2M2YiWJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7mhMXcC9uOxVaQWp50q32Badh2smBib+R/jR78SkyK+hvaRlI
-	Fe/Q/GUqTykODhDtCpr1tGJHDw2CAKaICHDOG0kVgD9l1+HfFoarfyviGCkQnNGLsgXUTxNxMxr
-	PDh/K1Q==
-X-Received: from plbky6.prod.google.com ([2002:a17:902:f986:b0:2a0:84dc:a82f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cf:b0:2a7:dd37:6e20
- with SMTP id d9443c01a7336-2a870e34d04mr70308785ad.30.1769648609015; Wed, 28
- Jan 2026 17:03:29 -0800 (PST)
-Date: Wed, 28 Jan 2026 17:03:27 -0800
-In-Reply-To: <20260129003753.GZ1641016@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hiR7xDsq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=PjevQMszua+7INec/b9PESykoQNyHqA/RallFFGPqJM=; b=hiR7xDsq++XxRCnbfdX+j/zA0a
+	PDC42acUCBuX94+1d8CQbP877uYhCBvNf9VXuHEmS0yBCQdmP+hJT9G5ZRFZDi4qrIpCWNxPKbQyx
+	W/3H5xj+9fRkwEvZLqKD+fLDGvWsexoXoOZgZ2YYJ14XbP0SIzKrKuL4mtFb6NMg+VmbVylLri3K3
+	YNKiE5k1UJG3mkdt1V7S4ouN/gv5E9ckvJuzhL7f19CjHtCDCVvu/Y81HcwMA/0PRuMRXGJ4SdZVk
+	vSpBRspteR9bwdscVmTzWMjhnWH7IrbRHJmNSrX8WEl5Me+DyvyKkCjTOztv3aWpWGUI5EeWDY0FE
+	MwIo8c6A==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vlGZx-0000000H21T-16VU;
+	Thu, 29 Jan 2026 01:12:13 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing: trace_mmap.h: fix a kernel-doc warning
+Date: Wed, 28 Jan 2026 17:12:12 -0800
+Message-ID: <20260129011212.616311-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1760731772.git.ackerleytng@google.com> <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com> <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
-Message-ID: <aXqx3_eE0rNh6nP0@google.com>
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-From: Sean Christopherson <seanjc@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Ackerley Tng <ackerleytng@google.com>, Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com, 
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de, 
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com, 
-	keirf@google.com, kent.overstreet@linux.dev, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, qperret@google.com, 
-	richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org, 
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, wyihan@google.com, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 28, 2026, Jason Gunthorpe wrote:
-> On Wed, Jan 28, 2026 at 01:47:50PM -0800, Ackerley Tng wrote:
-> > Alexey Kardashevskiy <aik@amd.com> writes:
-> > 
-> > >
-> > > [...snip...]
-> > >
-> > >
-> > 
-> > Thanks for bringing this up!
-> > 
-> > > I am trying to make it work with TEE-IO where fd of VFIO MMIO is a dmabuf
-> > > fd while the rest (guest RAM) is gmemfd. The above suggests that if there
-> > > is gmemfd - then the memory attributes are handled by gmemfd which is...
-> > > expected?
-> > >
-> > 
-> > I think this is not expected.
-> > 
-> > IIUC MMIO guest physical addresses don't have an associated memslot, but
-> > if you managed to get to that line in kvm_gmem_get_memory_attributes(),
-> > then there is an associated memslot (slot != NULL)?
-> 
-> I think they should have a memslot, shouldn't they? I imagine creating
-> a memslot from a FD and the FD can be memfd, guestmemfd, dmabuf, etc,
-> etc ?
+Add a description of struct reader to resolve a kernel-doc warning:
 
-Yeah, there are two flavors of MMIO for KVM guests.  Emulated MMIO, which is
-what Ackerley is thinking of, and "host" MMIO (for lack of a better term), which
-is what I assume "fd of VFIO MMIO" is referring to.
+Warning: include/uapi/linux/trace_mmap.h:43 struct member 'reader' not described in 'trace_buffer_meta'
 
-Emulated MMIO does NOT have memslots[*].  There are some wrinkles and technical
-exceptions, e.g. read-only memslots for emulating option ROMs, but by and large,
-lack of a memslot means Emulated MMIO.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+v2: move @reader ahead of its struct members (Steven)
 
-Host MMIO isn't something KVM really cares about, in the sense that, for the most
-part, it's "just another memslot".  KVM x86 does need to identify host MMIO for
-vendor specific reasons, e.g. to ensure UC memory stays UC when using EPT (MTRRs
-are ignored), to create shared mappings when SME is enabled, and to mitigate the
-lovely MMIO Stale Data vulnerability.
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
 
-But those Host MMIO edge cases are almost entirely contained to make_spte() (see
-the kvm_is_mmio_pfn() calls).  And so the vast, vast majority of "MMIO" code in
-KVM is dealing with Emulated MMIO, and when most people talk about MMIO in KVM,
-they're also talking about Emulated MMIO.
+ include/uapi/linux/trace_mmap.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-> > Either way, guest_memfd shouldn't store attributes for guest physical
-> > addresses that don't belong to some guest_memfd memslot.
-> > 
-> > I think we need a broader discussion for this on where to store memory
-> > attributes for MMIO addresses.
-> > 
-> > I think we should at least have line of sight to storing memory
-> > attributes for MMIO addresses, in case we want to design something else,
-> > since we're putting vm_memory_attributes on a deprecation path with this
-> > series.
-> 
-> I don't know where you want to store them in KVM long term, but they
-> need to come from the dmabuf itself (probably via a struct
-> p2pdma_provider) and currently it is OK to assume all DMABUFs are
-> uncachable MMIO that is safe for the VM to convert into "write
-> combining" (eg Normal-NC on ARM)
-
-+1.  For guest_memfd, we initially defined per-VM memory attributes to track
-private vs. shared.  But as Ackerley noted, we are in the process of deprecating
-that support, e.g. by making it incompatible with various guest_memfd features,
-in favor of having each guest_memfd instance track the state of a given page.
-
-The original guest_memfd design was that it would _only_ hold private pages, and
-so tracking private vs. shared in guest_memfd didn't make any sense.  As we've
-pivoted to in-place conversion, tracking private vs. shared in the guest_memfd
-has basically become mandatory.  We could maaaaaybe make it work with per-VM
-attributes, but it would be insanely complex.
-
-For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
-is all or nothing, and can never change, then the only entity that can track that
-info is the owner of the dmabuf.  And even if the private vs. shared attributes
-are constant, tracking it external to KVM makes sense, because then the provider
-can simply hardcode %true/%false.
-
-As for _how_ to do that, no matter where the attributes are stored, we're going
-to have to teach KVM to play nice with a non-guest_memfd provider of private
-memory.
+--- linux-next-20260128.orig/include/uapi/linux/trace_mmap.h
++++ linux-next-20260128/include/uapi/linux/trace_mmap.h
+@@ -10,6 +10,7 @@
+  * @meta_struct_len:	Size of this structure.
+  * @subbuf_size:	Size of each sub-buffer.
+  * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
++ * @reader:		The reader composite info structure
+  * @reader.lost_events:	Number of events lost at the time of the reader swap.
+  * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
+  * @reader.read:	Number of bytes read on the reader subbuf.
