@@ -1,142 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E354749C;
-	Thu, 29 Jan 2026 00:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431B9223708;
+	Thu, 29 Jan 2026 00:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769645635; cv=none; b=Ybqo7CYRnc2ogA7Ro5OZ7EDTQP3lQUdJJ7KTa4f0W8p+uJzMcWmB4bnIAP3bGj2BVWTEtxb3jKAdD/D2IqIPRdH90g+Q99wBZV/N5LZw+eB0MMyx6UZC6tK3hU1EV6LQxQJ6JhUpluq/PxLAw/hbuT1r/NdBVbGywkSSOemiWxs=
+	t=1769646350; cv=none; b=A57KwtZmLAC0REqJXL2hO/lVXJfsNBovGVExDtCR0rj5J0gw57mVmzzdnlrMGWMjC8dVayjFleULAzSH86eIQZLwrHTk89GlOZFUcFVx0Gb8oqeOBit+HYQ38HVR/X5gPRu/pHwPuavJIoHsSpgjnW8vW/t18GccP2SekAoT3Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769645635; c=relaxed/simple;
-	bh=QMY5VhDr13qrK5klyZc+O0AvB6eLS0h6Y2IbLGJESHQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bdlcTxi6AxLMmqOmWrQCmzAIVnII+jUMJ7W9VmPWcIKW6CI8CwLlSNu491+AFpvHykS8iqoYbXZcMbo0DUzMSYTvK/M0REvSR0/jeX4FUotToW18KEbgR7VgIXHNr5+PrroAwDwWNb7+9ybuCBEOd8nsRurUZ09GqtGn60dTRt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COlU+WAX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COlU+WAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2620AC4CEF1;
-	Thu, 29 Jan 2026 00:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769645634;
-	bh=QMY5VhDr13qrK5klyZc+O0AvB6eLS0h6Y2IbLGJESHQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=COlU+WAXp1Bq6C7gDzAJ53zNC99nQGKd04z1Od5Z3g2nC1XVRT2R22B4Y3dL4ydfV
-	 NwG7RZHdNjEJaShoggNHurkzFnIYcIRg14RO0ENNFhnJL2vfBlgOi2eKIzy4gDzJYE
-	 SU6vtBUrap9ZqEoY//PRWc7azTLSDxhvyeLipqUFGTxUTBHInUVcYYJHvaf44y8yfH
-	 iKcIo3feDWIywDDwJTFt1qiQXDQTCoEmSVTgjABNzh8a0LZ4kckJ6e5SD7YLrdi+y4
-	 OzXWPL60C7NMiPWgaFahJrl4q+bAFNok1/yP6hmX5Mr9Bqybqvqgqn5RBrMhDBRXNh
-	 dt1PmNEFdxBeQ==
-Date: Thu, 29 Jan 2026 09:13:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: bot+bpf-ci@kernel.org
-Cc: liujing.root@gmail.com, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, liujing40@xiaomi.com,
- martin.lau@kernel.org, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH 2/2] bpf: Implement kretprobe fallback for kprobe multi
- link
-Message-Id: <20260129091346.0744de91bb053b24ba679438@kernel.org>
-In-Reply-To: <4ee5b08b6cebfc87b552a0fde1f09fd5a2c190813760aa7e68f1e6d060f15ccd@mail.kernel.org>
-References: <20251218130629.365398-3-liujing40@xiaomi.com>
-	<4ee5b08b6cebfc87b552a0fde1f09fd5a2c190813760aa7e68f1e6d060f15ccd@mail.kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769646350; c=relaxed/simple;
+	bh=++mYl3+DulIKwpn8TgsEifPRO5SuGgRy1stcR7ty5BM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Defh0MXDTcOcjepZumEfKCpRIw5BQWHg8C/5yP/MjYp08iKUHW6s0fopqTG81JZtoD6gj3T1DT6AygLs5OT2bZdCRU/y3+Ji8kbaVV4QzL+5DR47oOsh+1d8bP6R+yJ3BKoFfttLRkfntgTuGHVqJ/Vf6Q6yKE2Ydz1k/NJulyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 7892F8993C;
+	Thu, 29 Jan 2026 00:25:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D35942000D;
+	Thu, 29 Jan 2026 00:25:42 +0000 (UTC)
+Date: Wed, 28 Jan 2026 19:25:52 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 01/30] ring-buffer: Add page statistics to the
+ meta-page
+Message-ID: <20260128192552.4412c237@gandalf.local.home>
+In-Reply-To: <20260126104419.1649811-2-vdonnefort@google.com>
+References: <20260126104419.1649811-1-vdonnefort@google.com>
+	<20260126104419.1649811-2-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: fudyp3u68omqjtrjwctued9i7d45kszb
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: D35942000D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+Vb56e76rRVvcfu17HINZb47lehiLr1pU=
+X-HE-Tag: 1769646342-895400
+X-HE-Meta: U2FsdGVkX19JBi9xRS5aP0vJ4+vPJDTT+uwueSCUhMwDCfiNNtLUx0bg5BBggBzmvytIjc8pmbfeH+eXko+zuvQTqD/UhiZjiYg0MKYwG8BQz4h1hoUPtmt0HzUOAC/wetsqCfSLgImrTwJx7/XNIvnFL2W94oyAvRXPxhLUyEBf0DaSauYlljdMuwPHe+wRBfDnWhuSOD5bLH6Kzr9okdLX84HcYFbc3Vs+pc296UnuxWy8uBXbITlhn7Q1TK9cwMEKNOuGg56yT5hjXE6cZQpr1B+b0SRSougPBIM4DE05oUY8u6vlJR6/L0iiWNWi9ZDSB3wa+0l5JJ6nCHCEBBMvbISQ3iHM2x1YRHbKArVhkcvDD6bnlvxcfiUXvw/rNZH7wA65EQMTNVRBVBuDcQ==
 
-On Thu, 18 Dec 2025 13:33:31 +0000 (UTC)
-bot+bpf-ci@kernel.org wrote:
+On Mon, 26 Jan 2026 10:43:50 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 1fd07c10378f..426a1c627508 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
+> Add two fields pages_touched and pages_lost to the ring-buffer
+> meta-page. Those fields are useful to get the number of used pages in
+> the ring-buffer.
 > 
-> [ ... ]
-> 
-> > +int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
-> > +{
-> > +	struct bpf_kprobe_multi_link *link = NULL;
-> > +	struct bpf_link_primer link_primer;
-> > +	struct bpf_kprobe *kprobes = NULL;
-> > +	u32 flags, cnt;
-> > +	u64 __user *ucookies;
-> > +	unsigned long __user *uaddrs;
-> > +	unsigned long __user *usyms;
-> > +	int err, i;
-> 
-> [ ... ]
-> 
-> > +	for (i = 0; i < cnt; i++) {
-> > +		unsigned long addr;
-> > +
-> > +		if (uaddrs) {
-> > +			if (__get_user(addr, uaddrs + i)) {
-> > +				err = -EFAULT;
-> > +				goto error;
-> > +			}
-> > +		} else {
-> > +			unsigned long __user usymbol;
-> > +			char buf[KSYM_NAME_LEN];
-> > +
-> > +			if (__get_user(usymbol, usyms + i)) {
-> > +				err = -EFAULT;
-> > +				goto error;
-> > +			}
-> > +			err = strncpy_from_user(buf, (const char __user *) usymbol, KSYM_NAME_LEN);
-> > +			if (err == KSYM_NAME_LEN)
-> > +				err = -E2BIG;
-> > +			if (err < 0)
-> > +				goto error;
-> > +
-> > +			addr = kallsyms_lookup_name(buf);
-> > +			if (!addr)
-> > +				goto error;
-> 
-> When kallsyms_lookup_name() returns 0 (symbol not found), is err being set
-> to an error code before jumping to the error label? It looks like err will
-> still hold the positive return value from strncpy_from_user() (the string
-> length), which would be returned to the caller as a success indication.
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Good catch. It should set err = -ENOENT.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Thanks,
-
-> 
-> The error label at the end of the function does:
-> 
->     error:
->         kvfree(kprobes);
->         kfree(link);
->         return err;
-> 
-> This could cause the syscall to return a positive value to userspace instead
-> of an error, and also leak a prog reference since link_create() only calls
-> bpf_prog_put() when ret < 0.
-> 
-> > +		}
-> > +		if (prog->kprobe_override && !within_error_injection_list(addr)) {
-> > +			err = -EINVAL;
-> > +			goto error;
-> > +		}
-> 
-> [ ... ]
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/20338242683
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
