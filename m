@@ -1,424 +1,368 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0BA199FBA;
-	Thu, 29 Jan 2026 04:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEB01D6AA;
+	Thu, 29 Jan 2026 06:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769660655; cv=none; b=WVHsq/aTQjH7HnSGksKBelCHvR6iYm7WBGoQt+COADVDkwbH4qjp3XD9Uxit0l/f1TzhvhyTd84LPZyRYPS4/dmqTOjwZa6VeBJ4q3daTMEtufzb/B95sSn4/x4sQgXfTOhL10aykJyIH2na+BZlqZ1uUj9HyeUtq5tnQB6tkP8=
+	t=1769669187; cv=none; b=ed3nqCKcjSpK+80Nv168ZF8DXh5Q5Ev6JbvCDV2vsrptBZhcAJf/s3nFb6lmrfNgWMhVIQfO9HZ/boy8b3eL1Bxmg1NeCO+qtuDQ88Qs9Z4kX8bxx7gpswVwTKUDX6Qs6A74XOSmlnOKc+5PyUpNPNbOM0HD5fj0bsxC2j17Z4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769660655; c=relaxed/simple;
-	bh=t9xnxpQK9RLSI5mJrEEcX/s/HlA2IQ0v/xE6C33zm04=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LW6jHpbYKZOu+QURM3bAZuj9swtliOIZOHvwL/JJBopY65XE/AQN02Qx4jXQISPYpeldaj3JKKQGElZmbKF6z+zbShDJagljEQS/1fJ0n3aBcVZ5+dvBoWMgxyAZ/4u0eD9FYsPpCmxqIAyQjKna0bGtRh9VieK+Yw5WO/VcyDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2uXLMWn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2uXLMWn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972ABC116D0;
-	Thu, 29 Jan 2026 04:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769660654;
-	bh=t9xnxpQK9RLSI5mJrEEcX/s/HlA2IQ0v/xE6C33zm04=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D2uXLMWnmVVYhhfIvx5vzJnnoEp7BhFv5nqLOWrcsn/1dy3tw73eFHNNFlseDJVnf
-	 CQsAJC2e0f9LpaAXH/F2P0drZfTwvQqKE9F/GuHMNTwJbLSlppSqHpmChCmHQk+L/S
-	 GsUvTugytATMcnpSl5nEZJi6ulWD6cUVpGFpk+iK4PV4ncHKYoc4HhS8L9WO61/oxW
-	 YC7cifwRfRIYKEKWda4pmwcqnZuViHFR2XAfwf8ME/pP8gvXHd/O6wmSo/U9ckImKn
-	 bIuzwD2RzisLaek4ivaZKkHNfVI9whSkSjHRRxpGfCuuZApSgBQQsUtnacfr8k40bC
-	 rYsPOoch7BA1Q==
-Date: Thu, 29 Jan 2026 13:24:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
-Cc: rostedt@goodmis.org, corbet@lwn.net, shuah@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 v5 2/3] tracing/fprobe: Support comma-separated
- symbols and :entry/:exit
-Message-Id: <20260129132412.babdf9a72e72f0d8b6273510@kernel.org>
-In-Reply-To: <20260118011815.56516-3-seokwoo.chung130@gmail.com>
-References: <20260118011815.56516-1-seokwoo.chung130@gmail.com>
-	<20260118011815.56516-3-seokwoo.chung130@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769669187; c=relaxed/simple;
+	bh=coRVbfW6qjqsxjzXhvVrkWEmpeehWw5xhDCivtP/ZqQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gsYMbEB/+fsi+4Q99gafyGlmUl/W6GsZ57R1mRiank1W4hVoP9WlDIBD+TSqxkmE6MZFJBOTebNzaBSPjYKN5hQ11VmKleu9FBRoqLD6fBYfCJSAnJUXV+xuP1QE1AbA8NJ/06qfoUnW1fWr0niSxtYeuqjNIJ7E8VQ3iNMVvZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4f1qQv1M4JzYQtlb;
+	Thu, 29 Jan 2026 14:45:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B329840590;
+	Thu, 29 Jan 2026 14:46:21 +0800 (CST)
+Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
+	by APP4 (Coremail) with SMTP id gCh0CgAHs_M1Antp1b0GFg--.25582S2;
+	Thu, 29 Jan 2026 14:46:21 +0800 (CST)
+From: Chen Ridong <chenridong@huaweicloud.com>
+To: tj@kernel.org,
+	hannes@cmpxchg.org,
+	mkoutny@suse.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	inwardvessel@gmail.com,
+	shakeel.butt@linux.dev
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	lujialin4@huawei.com,
+	chenridong@huaweicloud.com
+Subject: [PATCH -next] cgroup: increase maximum subsystem count from 16 to 32
+Date: Thu, 29 Jan 2026 06:31:33 +0000
+Message-Id: <20260129063133.209874-1-chenridong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHs_M1Antp1b0GFg--.25582S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3trWfGF1xAr4fWw1UAw4fKrg_yoWkJr1rpF
+	nrCr17K3yFyFW5CF4Iya4j9F1fWw4kXw4UGrWDG34ftry7Jr13XFn29Fy8XFy8ZF97Kw13
+	Ar4Yyryjkr18tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On Sat, 17 Jan 2026 20:18:14 -0500
-"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com> wrote:
+From: Chen Ridong <chenridong@huawei.com>
 
-> - Update DEFINE_FREE to use standard __free()
-> - Extend fprobe to support multiple symbols per event. Add parsing logic for
->   lists, ! exclusions, and explicit suffixes. Update tracefs/README to reflect
->   the new syntax
-> 
-> Signed-off-by: Seokwoo Chung (Ryan) <seokwoo.chung130@gmail.com>
-> ---
->  kernel/trace/trace.c        |   3 +-
->  kernel/trace/trace_fprobe.c | 209 +++++++++++++++++++++++++++---------
->  2 files changed, 163 insertions(+), 49 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index baec63134ab6..10cdcc7b194e 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5578,7 +5578,8 @@ static const char readme_msg[] =
->  	"\t           r[maxactive][:[<group>/][<event>]] <place> [<args>]\n"
->  #endif
->  #ifdef CONFIG_FPROBE_EVENTS
-> -	"\t           f[:[<group>/][<event>]] <func-name>[%return] [<args>]\n"
-> +	"\t           f[:[<group>/][<event>]] <func-name>[:entry|:exit] [<args>]\n"
-> +	"\t		(single symbols still accept %return)\n"
->  	"\t           t[:[<group>/][<event>]] <tracepoint> [<args>]\n"
->  #endif
->  #ifdef CONFIG_HIST_TRIGGERS
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 262c0556e4af..5a2a41eea603 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -187,11 +187,14 @@ DEFINE_FREE(tuser_put, struct tracepoint_user *,
->   */
->  struct trace_fprobe {
->  	struct dyn_event	devent;
-> +	char			*filter;
->  	struct fprobe		fp;
-> +	bool			list_mode;
-> +	char			*nofilter;
->  	const char		*symbol;
-> +	struct trace_probe	tp;
->  	bool			tprobe;
->  	struct tracepoint_user	*tuser;
-> -	struct trace_probe	tp;
->  };
->  
->  static bool is_trace_fprobe(struct dyn_event *ev)
-> @@ -559,6 +562,8 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
->  		trace_probe_cleanup(&tf->tp);
->  		if (tf->tuser)
->  			tracepoint_user_put(tf->tuser);
-> +		kfree(tf->filter);
-> +		kfree(tf->nofilter);
->  		kfree(tf->symbol);
->  		kfree(tf);
->  	}
-> @@ -838,7 +843,12 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
->  	if (trace_fprobe_is_tracepoint(tf))
->  		return __regsiter_tracepoint_fprobe(tf);
->  
-> -	/* TODO: handle filter, nofilter or symbol list */
-> +	/* Registration path:
-> +	 * - list_mode: pass filter/nofilter
-> +	 * - single: pass symbol only (legacy)
-> +	 */
-> +	if (tf->list_mode)
-> +		return register_fprobe(&tf->fp, tf->filter, tf->nofilter);
->  	return register_fprobe(&tf->fp, tf->symbol, NULL);
->  }
->  
-> @@ -1154,60 +1164,119 @@ static struct notifier_block tprobe_event_module_nb = {
->  };
->  #endif /* CONFIG_MODULES */
->  
-> -static int parse_symbol_and_return(int argc, const char *argv[],
-> -				   char **symbol, bool *is_return,
-> -				   bool is_tracepoint)
-> +static bool has_wildcard(const char *s)
->  {
-> -	char *tmp = strchr(argv[1], '%');
-> -	int i;
-> +	return s && (strchr(s, '*') || strchr(s, '?'));
-> +}
->  
-> -	if (tmp) {
-> -		int len = tmp - argv[1];
-> +static int parse_fprobe_spec(const char *in, bool is_tracepoint,
-> +		char **base, bool *is_return, bool *list_mode,
-> +		char **filter, char **nofilter)
-> +{
-> +	char *work __free(kfree) = NULL;
-> +	char *b __free(kfree) = NULL;
-> +	char *f __free(kfree) = NULL;
-> +	char *nf __free(kfree) = NULL;
-> +	bool legacy_ret = false;
-> +	bool list = false;
-> +	const char *p;
-> +	int ret = 0;
->  
-> -		if (!is_tracepoint && !strcmp(tmp, "%return")) {
-> -			*is_return = true;
-> -		} else {
-> -			trace_probe_log_err(len, BAD_ADDR_SUFFIX);
-> -			return -EINVAL;
-> -		}
-> -		*symbol = kmemdup_nul(argv[1], len, GFP_KERNEL);
-> -	} else
-> -		*symbol = kstrdup(argv[1], GFP_KERNEL);
-> -	if (!*symbol)
-> -		return -ENOMEM;
-> +	if (!in || !base || !is_return || !list_mode || !filter || !nofilter)
-> +		return -EINVAL;
->  
-> -	if (*is_return)
-> -		return 0;
-> +	*base = NULL; *filter = NULL; *nofilter = NULL;
-> +	*is_return = false; *list_mode = false;
->  
->  	if (is_tracepoint) {
-> -		tmp = *symbol;
-> -		while (*tmp && (isalnum(*tmp) || *tmp == '_'))
-> -			tmp++;
-> -		if (*tmp) {
-> -			/* find a wrong character. */
-> -			trace_probe_log_err(tmp - *symbol, BAD_TP_NAME);
-> -			kfree(*symbol);
-> -			*symbol = NULL;
-> +		if (strchr(in, ',') || strchr(in, ':'))
->  			return -EINVAL;
-> -		}
-> +		if (strstr(in, "%return"))
-> +			return -EINVAL;
+The current cgroup subsystem limit of 16 is insufficient, as the number of
+subsystems has already reached this maximum. Attempting to add new
+subsystems beyond this limit results in boot failures.
 
-These checks look redundant. because below ensures there is no
-',', '/' and '%'.
+This patch increases the maximum number of supported cgroup subsystems from
+16 to 32, providing adequate headroom for future subsystem additions.
 
-> +		for (p = in; *p; p++)
-> +			if (!isalnum(*p) && *p != '_')
-> +				return -EINVAL;
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ include/linux/cgroup-defs.h     |  8 +++---
+ include/trace/events/cgroup.h   |  2 +-
+ kernel/cgroup/cgroup-internal.h |  8 +++---
+ kernel/cgroup/cgroup-v1.c       | 12 ++++-----
+ kernel/cgroup/cgroup.c          | 46 ++++++++++++++++-----------------
+ kernel/cgroup/debug.c           |  2 +-
+ 6 files changed, 39 insertions(+), 39 deletions(-)
 
-Please report parse error via trace_probe_log_err() function so that
-user can check what was wrong via tracefs/error_log file. E.g.
-
-	trace_probe_log_err(p - in, BAD_TP_NAME);
-
-
-> +		b = kstrdup(in, GFP_KERNEL);
-> +		if (!b)
-> +			return -ENOMEM;
-
-Note: ENOMEM does not need to report via error_log.
-
-> +		*base = no_free_ptr(b);
-> +		return 0;
->  	}
->  
-> -	/* If there is $retval, this should be a return fprobe. */
-> -	for (i = 2; i < argc; i++) {
-> -		tmp = strstr(argv[i], "$retval");
-> -		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
-> -			if (is_tracepoint) {
-> -				trace_probe_log_set_index(i);
-> -				trace_probe_log_err(tmp - argv[i], RETVAL_ON_PROBE);
-> -				kfree(*symbol);
-> -				*symbol = NULL;
-> +	work = kstrdup(in, GFP_KERNEL);
-> +	if (!work)
-> +		return -ENOMEM;
-> +
-> +	p = strstr(work, "%return");
-> +	if (p && p[7] == '\0') {
-> +		*is_return = true;
-> +		legacy_ret = true;
-> +		*(char *)p = '\0';
-> +	} else {
-> +		/*
-> +		 * If "symbol:entry" or "symbol:exit" is given, it is new
-> +		 * style probe.
-> +		 */
-> +		p = strrchr(work, ':');
-> +		if (p) {
-> +			if (!strcmp(p, ":exit")) {
-> +				*is_return = true;
-> +				*(char *)p = '\0';
-> +			} else if (!strcmp(p, ":entry")) {
-> +				*(char *)p = '\0';
-> +			} else {
->  				return -EINVAL;
->  			}
-> -			*is_return = true;
-> -			break;
->  		}
->  	}
-> -	return 0;
-> +
-> +	list = !!strchr(work, ',');
-> +	
-> +	if (list && legacy_ret) {
-> +		return -EINVAL;
-> +	}
-
-You don't need braces for the above block.
-
-> +
-> +	if (legacy_ret)
-> +		*is_return = true;
-> +
-> +	b = kstrdup(work, GFP_KERNEL);
-> +	if (!b)
-> +		return -ENOMEM;
-> +
-> +	if (list) {
-
-Could you make this block as an independent function?
-
-> +		char *tmp = b, *tok;
-> +		size_t fsz, nfsz;
-> +
-> +		fsz = nfsz = strlen(b) + 1;
-> +
-> +		f = kzalloc(fsz, GFP_KERNEL);
-> +		nf = kzalloc(nfsz, GFP_KERNEL);
-> +		if (!f || !nf)
-> +			return -ENOMEM;
-> +
-> +		while ((tok = strsep(&tmp, ",")) != NULL) {
-> +			char *dst;
-> +			bool neg = (*tok == '!');
-> +
-> +			if (*tok == '\0') {
-> +				trace_probe_log_err(tmp - b - 1, BAD_TP_NAME);
-> +				return -EINVAL;
-
-You missed close brace '}' here. And that makes the build failure.
-Can you fix it and run all tests under tools/testing/selftests/ftrace/
-with your change?
-
-Thank you,
-
-
-> +
-> +			if (neg)
-> +				tok++;
-> +			dst = neg ? nf : f;
-> +			if (dst[0] != '\0')
-> +				strcat(dst, ",");
-> +			strcat(dst, tok);
-> +		}
-> +		*list_mode = true;
-> +	}
-> +
-> +	*base = no_free_ptr(b);
-> +	*filter = no_free_ptr(f);
-> +	*nofilter = no_free_ptr(nf);
-> +
-> +	return ret;
->  }
->  
->  static int trace_fprobe_create_internal(int argc, const char *argv[],
-> @@ -1241,6 +1310,8 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
->  	struct module *mod __free(module_put) = NULL;
->  	const char **new_argv __free(kfree) = NULL;
-> +	char *parsed_nofilter __free(kfree) = NULL;
-> +	char *parsed_filter __free(kfree) = NULL;
->  	char *symbol __free(kfree) = NULL;
->  	char *ebuf __free(kfree) = NULL;
->  	char *gbuf __free(kfree) = NULL;
-> @@ -1249,6 +1320,7 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	char *dbuf __free(kfree) = NULL;
->  	int i, new_argc = 0, ret = 0;
->  	bool is_tracepoint = false;
-> +	bool list_mode = false;
->  	bool is_return = false;
->  
->  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
-> @@ -1270,11 +1342,26 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  
->  	trace_probe_log_set_index(1);
->  
-> -	/* a symbol(or tracepoint) must be specified */
-> -	ret = parse_symbol_and_return(argc, argv, &symbol, &is_return, is_tracepoint);
-> +	/* Parse spec early (single vs list, suffix, base symbol) */
-> +	ret = parse_fprobe_spec(argv[1], is_tracepoint, &symbol, &is_return,
-> +			&list_mode, &parsed_filter, &parsed_nofilter);
->  	if (ret < 0)
->  		return -EINVAL;
->  
-> +	for (i = 2; i < argc; i++) {
-> +		char *tmp = strstr(argv[i], "$retval");
-> +
-> +		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
-> +			if (is_tracepoint) {
-> +				trace_probe_log_set_index(i);
-> +				trace_probe_log_err(tmp - argv[i], RETVAL_ON_PROBE);
-> +				return -EINVAL;
-> +			}
-> +			is_return = true;
-> +			break;
-> +		}
-> +	}
-> +
->  	trace_probe_log_set_index(0);
->  	if (event) {
->  		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
-> @@ -1287,6 +1374,15 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	}
->  
->  	if (!event) {
-> +		/*
-> +		 * Event name rules:
-> +		 * - For list/wildcard: require explicit [GROUP/]EVENT
-> +		 * - For single literal: autogenerate symbol__entry/symbol__exit
-> +		 */
-> +		if (list_mode || has_wildcard(symbol)) {
-> +			trace_probe_log_err(0, NO_GROUP_NAME);
-> +			return -EINVAL;
-> +		}
->  		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
->  		if (!ebuf)
->  			return -ENOMEM;
-> @@ -1322,7 +1418,8 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  							NULL, NULL, NULL, sbuf);
->  		}
->  	}
-> -	if (!ctx->funcname)
-> +
-> +	if (!list_mode && !has_wildcard(symbol) && !is_tracepoint)
->  		ctx->funcname = symbol;
->  
->  	abuf = kmalloc(MAX_BTF_ARGS_LEN, GFP_KERNEL);
-> @@ -1356,6 +1453,21 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  		return ret;
->  	}
->  
-> +	/* carry list parsing result into tf */
-> +	if (!is_tracepoint) {
-> +		tf->list_mode = list_mode;
-> +		if (parsed_filter) {
-> +			tf->filter = kstrdup(parsed_filter, GFP_KERNEL);
-> +			if (!tf->filter)
-> +				return -ENOMEM;
-> +		}
-> +		if (parsed_nofilter) {
-> +			tf->nofilter = kstrdup(parsed_nofilter, GFP_KERNEL);
-> +			if (!tf->nofilter)
-> +				return -ENOMEM;
-> +		}
-> +	}
-> +
->  	/* parse arguments */
->  	for (i = 0; i < argc; i++) {
->  		trace_probe_log_set_index(i + 2);
-> @@ -1442,8 +1554,9 @@ static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
->  	seq_printf(m, ":%s/%s", trace_probe_group_name(&tf->tp),
->  				trace_probe_name(&tf->tp));
->  
-> -	seq_printf(m, " %s%s", trace_fprobe_symbol(tf),
-> -			       trace_fprobe_is_return(tf) ? "%return" : "");
-> +	seq_printf(m, " %s", trace_fprobe_symbol(tf));
-> +	if (!trace_fprobe_is_tracepoint(tf) && trace_fprobe_is_return(tf))
-> +		seq_puts(m, ":exit");
->  
->  	for (i = 0; i < tf->tp.nr_args; i++)
->  		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
-> -- 
-> 2.43.0
-> 
-
-
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index f7cc60de0058..bb92f5c169ca 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -535,10 +535,10 @@ struct cgroup {
+ 	 * one which may have more subsystems enabled.  Controller knobs
+ 	 * are made available iff it's enabled in ->subtree_control.
+ 	 */
+-	u16 subtree_control;
+-	u16 subtree_ss_mask;
+-	u16 old_subtree_control;
+-	u16 old_subtree_ss_mask;
++	u32 subtree_control;
++	u32 subtree_ss_mask;
++	u32 old_subtree_control;
++	u32 old_subtree_ss_mask;
+ 
+ 	/* Private pointers for each registered subsystem */
+ 	struct cgroup_subsys_state __rcu *subsys[CGROUP_SUBSYS_COUNT];
+diff --git a/include/trace/events/cgroup.h b/include/trace/events/cgroup.h
+index ba9229af9a34..b736da06340a 100644
+--- a/include/trace/events/cgroup.h
++++ b/include/trace/events/cgroup.h
+@@ -16,7 +16,7 @@ DECLARE_EVENT_CLASS(cgroup_root,
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	int,		root			)
+-		__field(	u16,		ss_mask			)
++		__field(	u32,		ss_mask			)
+ 		__string(	name,		root->name		)
+ 	),
+ 
+diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
+index 22051b4f1ccb..3bfe37693d68 100644
+--- a/kernel/cgroup/cgroup-internal.h
++++ b/kernel/cgroup/cgroup-internal.h
+@@ -52,7 +52,7 @@ struct cgroup_fs_context {
+ 	bool		cpuset_clone_children;
+ 	bool		none;			/* User explicitly requested empty subsystem */
+ 	bool		all_ss;			/* Seen 'all' option */
+-	u16		subsys_mask;		/* Selected subsystems */
++	u32		subsys_mask;		/* Selected subsystems */
+ 	char		*name;			/* Hierarchy name */
+ 	char		*release_agent;		/* Path for release notifications */
+ };
+@@ -146,7 +146,7 @@ struct cgroup_mgctx {
+ 	struct cgroup_taskset	tset;
+ 
+ 	/* subsystems affected by migration */
+-	u16			ss_mask;
++	u32			ss_mask;
+ };
+ 
+ #define CGROUP_TASKSET_INIT(tset)						\
+@@ -235,8 +235,8 @@ int cgroup_path_ns_locked(struct cgroup *cgrp, char *buf, size_t buflen,
+ void cgroup_favor_dynmods(struct cgroup_root *root, bool favor);
+ void cgroup_free_root(struct cgroup_root *root);
+ void init_cgroup_root(struct cgroup_fs_context *ctx);
+-int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask);
+-int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask);
++int cgroup_setup_root(struct cgroup_root *root, u32 ss_mask);
++int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask);
+ int cgroup_do_get_tree(struct fs_context *fc);
+ 
+ int cgroup_migrate_vet_dst(struct cgroup *dst_cgrp);
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index a9e029b570c8..724950c4b690 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -28,7 +28,7 @@
+ #define CGROUP_PIDLIST_DESTROY_DELAY	HZ
+ 
+ /* Controllers blocked by the commandline in v1 */
+-static u16 cgroup_no_v1_mask;
++static u32 cgroup_no_v1_mask;
+ 
+ /* disable named v1 mounts */
+ static bool cgroup_no_v1_named;
+@@ -1037,13 +1037,13 @@ int cgroup1_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ static int check_cgroupfs_options(struct fs_context *fc)
+ {
+ 	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
+-	u16 mask = U16_MAX;
+-	u16 enabled = 0;
++	u32 mask = U32_MAX;
++	u32 enabled = 0;
+ 	struct cgroup_subsys *ss;
+ 	int i;
+ 
+ #ifdef CONFIG_CPUSETS
+-	mask = ~((u16)1 << cpuset_cgrp_id);
++	mask = ~((u32)1 << cpuset_cgrp_id);
+ #endif
+ 	for_each_subsys(ss, i)
+ 		if (cgroup_ssid_enabled(i) && !cgroup1_ssid_disabled(i) &&
+@@ -1095,7 +1095,7 @@ int cgroup1_reconfigure(struct fs_context *fc)
+ 	struct kernfs_root *kf_root = kernfs_root_from_sb(fc->root->d_sb);
+ 	struct cgroup_root *root = cgroup_root_from_kf(kf_root);
+ 	int ret = 0;
+-	u16 added_mask, removed_mask;
++	u32 added_mask, removed_mask;
+ 
+ 	cgroup_lock_and_drain_offline(&cgrp_dfl_root.cgrp);
+ 
+@@ -1343,7 +1343,7 @@ static int __init cgroup_no_v1(char *str)
+ 			continue;
+ 
+ 		if (!strcmp(token, "all")) {
+-			cgroup_no_v1_mask = U16_MAX;
++			cgroup_no_v1_mask = U32_MAX;
+ 			continue;
+ 		}
+ 
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 94788bd1fdf0..8af4351536cf 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -203,13 +203,13 @@ EXPORT_SYMBOL_GPL(cgrp_dfl_root);
+ bool cgrp_dfl_visible;
+ 
+ /* some controllers are not supported in the default hierarchy */
+-static u16 cgrp_dfl_inhibit_ss_mask;
++static u32 cgrp_dfl_inhibit_ss_mask;
+ 
+ /* some controllers are implicitly enabled on the default hierarchy */
+-static u16 cgrp_dfl_implicit_ss_mask;
++static u32 cgrp_dfl_implicit_ss_mask;
+ 
+ /* some controllers can be threaded on the default hierarchy */
+-static u16 cgrp_dfl_threaded_ss_mask;
++static u32 cgrp_dfl_threaded_ss_mask;
+ 
+ /* The list of hierarchy roots */
+ LIST_HEAD(cgroup_roots);
+@@ -231,10 +231,10 @@ static u64 css_serial_nr_next = 1;
+  * These bitmasks identify subsystems with specific features to avoid
+  * having to do iterative checks repeatedly.
+  */
+-static u16 have_fork_callback __read_mostly;
+-static u16 have_exit_callback __read_mostly;
+-static u16 have_release_callback __read_mostly;
+-static u16 have_canfork_callback __read_mostly;
++static u32 have_fork_callback __read_mostly;
++static u32 have_exit_callback __read_mostly;
++static u32 have_release_callback __read_mostly;
++static u32 have_canfork_callback __read_mostly;
+ 
+ static bool have_favordynmods __ro_after_init = IS_ENABLED(CONFIG_CGROUP_FAVOR_DYNMODS);
+ 
+@@ -472,13 +472,13 @@ static bool cgroup_is_valid_domain(struct cgroup *cgrp)
+ }
+ 
+ /* subsystems visibly enabled on a cgroup */
+-static u16 cgroup_control(struct cgroup *cgrp)
++static u32 cgroup_control(struct cgroup *cgrp)
+ {
+ 	struct cgroup *parent = cgroup_parent(cgrp);
+-	u16 root_ss_mask = cgrp->root->subsys_mask;
++	u32 root_ss_mask = cgrp->root->subsys_mask;
+ 
+ 	if (parent) {
+-		u16 ss_mask = parent->subtree_control;
++		u32 ss_mask = parent->subtree_control;
+ 
+ 		/* threaded cgroups can only have threaded controllers */
+ 		if (cgroup_is_threaded(cgrp))
+@@ -493,12 +493,12 @@ static u16 cgroup_control(struct cgroup *cgrp)
+ }
+ 
+ /* subsystems enabled on a cgroup */
+-static u16 cgroup_ss_mask(struct cgroup *cgrp)
++static u32 cgroup_ss_mask(struct cgroup *cgrp)
+ {
+ 	struct cgroup *parent = cgroup_parent(cgrp);
+ 
+ 	if (parent) {
+-		u16 ss_mask = parent->subtree_ss_mask;
++		u32 ss_mask = parent->subtree_ss_mask;
+ 
+ 		/* threaded cgroups can only have threaded controllers */
+ 		if (cgroup_is_threaded(cgrp))
+@@ -1633,9 +1633,9 @@ static umode_t cgroup_file_mode(const struct cftype *cft)
+  * This function calculates which subsystems need to be enabled if
+  * @subtree_control is to be applied while restricted to @this_ss_mask.
+  */
+-static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
++static u32 cgroup_calc_subtree_ss_mask(u32 subtree_control, u32 this_ss_mask)
+ {
+-	u16 cur_ss_mask = subtree_control;
++	u32 cur_ss_mask = subtree_control;
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+@@ -1644,7 +1644,7 @@ static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
+ 	cur_ss_mask |= cgrp_dfl_implicit_ss_mask;
+ 
+ 	while (true) {
+-		u16 new_ss_mask = cur_ss_mask;
++		u32 new_ss_mask = cur_ss_mask;
+ 
+ 		do_each_subsys_mask(ss, ssid, cur_ss_mask) {
+ 			new_ss_mask |= ss->depends_on;
+@@ -1848,12 +1848,12 @@ static int css_populate_dir(struct cgroup_subsys_state *css)
+ 	return ret;
+ }
+ 
+-int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
++int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask)
+ {
+ 	struct cgroup *dcgrp = &dst_root->cgrp;
+ 	struct cgroup_subsys *ss;
+ 	int ssid, ret;
+-	u16 dfl_disable_ss_mask = 0;
++	u32 dfl_disable_ss_mask = 0;
+ 
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+@@ -2149,7 +2149,7 @@ void init_cgroup_root(struct cgroup_fs_context *ctx)
+ 		set_bit(CGRP_CPUSET_CLONE_CHILDREN, &root->cgrp.flags);
+ }
+ 
+-int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
++int cgroup_setup_root(struct cgroup_root *root, u32 ss_mask)
+ {
+ 	LIST_HEAD(tmp_links);
+ 	struct cgroup *root_cgrp = &root->cgrp;
+@@ -3131,7 +3131,7 @@ void cgroup_procs_write_finish(struct task_struct *task,
+ 	put_task_struct(task);
+ }
+ 
+-static void cgroup_print_ss_mask(struct seq_file *seq, u16 ss_mask)
++static void cgroup_print_ss_mask(struct seq_file *seq, u32 ss_mask)
+ {
+ 	struct cgroup_subsys *ss;
+ 	bool printed = false;
+@@ -3496,9 +3496,9 @@ static void cgroup_finalize_control(struct cgroup *cgrp, int ret)
+ 	cgroup_apply_control_disable(cgrp);
+ }
+ 
+-static int cgroup_vet_subtree_control_enable(struct cgroup *cgrp, u16 enable)
++static int cgroup_vet_subtree_control_enable(struct cgroup *cgrp, u32 enable)
+ {
+-	u16 domain_enable = enable & ~cgrp_dfl_threaded_ss_mask;
++	u32 domain_enable = enable & ~cgrp_dfl_threaded_ss_mask;
+ 
+ 	/* if nothing is getting enabled, nothing to worry about */
+ 	if (!enable)
+@@ -3541,7 +3541,7 @@ static ssize_t cgroup_subtree_control_write(struct kernfs_open_file *of,
+ 					    char *buf, size_t nbytes,
+ 					    loff_t off)
+ {
+-	u16 enable = 0, disable = 0;
++	u32 enable = 0, disable = 0;
+ 	struct cgroup *cgrp, *child;
+ 	struct cgroup_subsys *ss;
+ 	char *tok;
+@@ -6347,7 +6347,7 @@ int __init cgroup_init(void)
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+-	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
++	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 32);
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup1_base_files));
+diff --git a/kernel/cgroup/debug.c b/kernel/cgroup/debug.c
+index c1623d03137d..e5c7c56a0b68 100644
+--- a/kernel/cgroup/debug.c
++++ b/kernel/cgroup/debug.c
+@@ -230,7 +230,7 @@ static int cgroup_subsys_states_read(struct seq_file *seq, void *v)
+ }
+ 
+ static void cgroup_masks_read_one(struct seq_file *seq, const char *name,
+-				  u16 mask)
++				  u32 mask)
+ {
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
