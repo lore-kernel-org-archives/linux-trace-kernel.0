@@ -1,178 +1,173 @@
-Received: from mail-lf1-f65.google.com (mail-lf1-f65.google.com [209.85.167.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEF33859EE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 11:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8C33803C6;
+	Thu, 29 Jan 2026 11:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769685020; cv=none; b=MEWTreY9Dkecnhvru+QhpiXpGI7S8hkqZzNXrJjdf79cT2b/W5EtnJ7VDctdrT5sWqG4JsvgSbrZr4WxkotD+O4ekqNQw6YDo9DtBg0faZuU1+FwW5zEXvDA3avkICvvTN4aU208rzuQLIkbecZ609Eaq4kPSpYCJ6uA33vhc4k=
+	t=1769686100; cv=none; b=cv6IDNR+Hi2i8gKoCaW7WC/rcPFVdhWxJZ+hOBhMcHSF1NxS52iaR3KNm0iRQ9psHObToEWel/AM+kDWERYu+B9a+I/ulDLdA4+j+K4LZnZnctSgzCCr8tM93IZhIXGQzCdsnjSWTk0d/FKHzDK8KMjoyOvszK6KjOkI6wtj6cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769685020; c=relaxed/simple;
-	bh=kRUBBMAYJVrvzKRxdllg3UUuYrBU5zUZBBbF/HzxRas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ECt/5UwxaqTixIfekqacKb64w0RdP30MJxYwkT+WW1ZZqo3v5pp4ax9/fOKHA32zuAUVyeBxpfEkbcaH5DPgKqAHRpQ5U5u1Vj6Lz33iMCAV/D3WuTeyfNoIF+Gim6fEfoEtR2eYlr2d3LYe5FpaLSou59YvWJQpHArFYcDfQd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0QAyUCoN; arc=none smtp.client-ip=209.85.167.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1769686100; c=relaxed/simple;
+	bh=9MJJArQoNvsP/VKdnm0R8HeQt9h4EA3Z6uLBIgq+Jus=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BFmETJ7VY6rfQfGKMLQLUtN8Kho4o0GNmGC8J93mOgjEZlqflnRyH7NSq9OdyRCaCtOJHroQAwYEeLybVhE/hsxrloWo2pd+tbUe4Q9yVohB7+7bL8dsH3nWGiehKVZZqhm0u+wuAsrGzpnlJCdPjVCcldl+RHrI9YpvxO2IbXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fmHPfMHj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0QAyUCoN"
-Received: by mail-lf1-f65.google.com with SMTP id 2adb3069b0e04-59b76844f89so766631e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 03:10:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769685016; x=1770289816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=apF++zvcLgqSdwOs1FYPc9MkjitG47zUTTeeoONSIrw=;
-        b=0QAyUCoNUvu9FPzFTcrMMg02JXXHJsg7+uJSdWJOR8RLJ+euKam1jutj9n7x4xgdv8
-         12BcQ6LvHu89TNjOQaQXlEFVryGl5LOD5FcOAXXrsPrt8qbhD35DATI+LqF9utlWl+KC
-         CvF8nJk3S56bi32Aol4MXgn+fYDMjKx4HmErRrzXRiBMetQvUgxtbF9XzXNo+9/JdSyy
-         853J/IgxfA1vsyKPVKC00VepN7OMEZZiIuMg5kfKnQd2/IJB+4u96fXysq9I2DscSbXV
-         H5ihJRkHPgGf9Jz3uWynbooOUucteDQHtFzfjhgxhziAd4RycrMutUbiZtYDSBgqiCNL
-         Hsig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769685016; x=1770289816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=apF++zvcLgqSdwOs1FYPc9MkjitG47zUTTeeoONSIrw=;
-        b=S+45xdTv2zy9G2wrtQ+vgg6Q7Q9S+y7eSDWoKC/ieH/RCrvQLAxb9dKWZwAIj4GiqX
-         tMEMWPaK5sITnSfPlnV6tbk/8LLggxSJphVLDxVll1Drsr/HT12aA+p7SQHEDp9514GQ
-         Bb/giy8U//CCUiYliQayeER12qrcEQqrCk6eZbU5XZU/JTe1Lat7UgUlzSPgnbNoPemS
-         OoVBUxE1Omx2Vnaii6r76fe8Zu91+phshvYubJnneQQ6saSfSMquUdi3lj1LIBCVM0k0
-         N3fhHWUZ+/CHHwxJnznmneIhPodQMvTx9XUm2b+7oA13jvNlpvBSfCkI4IqcCHgEvvzA
-         KbQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOjIyl9IaHUdfxWo6QmJB4oG6rmbnxAQXgj17Z5A0WTYnHLQaV5wrkjyq9DUvZ5dw3+ls7VCYstWf1jV6GeJ0/0+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJlzTfSLvESuJXa9wJuL87uSh2rni8Ph9pb+nWQEWe7ECSbBmH
-	8KD6Ld7rVYZ79u61Tbc+NE8KRzrZWnqrK/og1m26rDmykLUfR0Iqh7F82sgwRCXrXg==
-X-Gm-Gg: AZuq6aKwPUYE2l45+jHDA0lR7R6jFSt3stW05dt4WxY5gDC0B4rAie/VzpQhHgovSya
-	YVSOq1MJDqe54kGASPuP6LrVSdmzlzLps3ZG03soWQd1RPdSjgG76CnHRYX7AUPNq0VdExvRuqv
-	kJppN/zlyMIcP+8PUckiEpaM7F9d/jBjqNgOy3CppDHPHkFm80wEyEl+LlImwIboIXn9wwuS50R
-	fh8SBqi1qn16c8pFeX7Trb6ATEg1eYgFIoRn3BqvG0zAFVCpPQP0u9B5FQv47q8ozoJP88SLnxs
-	wQ6l2NHYA+EVADM3fgwxO2J3HAxFUzQjLJwV7s+3jNgZJ6t787DZIz8jgLryCrg75vEBo/Tu7i0
-	ncyUbL43+2mANYkMPoqPJEOjCRBNs4gdQtPBGVlCwg+40D2VdL8y4q5T+TN6rTb78XDn8vK0TrC
-	ewaXrYZ9FPAtbtEoRikjAR5PX+RV4waSRB1qZwFQmbpQ82UQ==
-X-Received: by 2002:a05:6512:3c86:b0:59e:133b:f76f with SMTP id 2adb3069b0e04-59e133bf83fmr81660e87.23.1769685015739;
-        Thu, 29 Jan 2026 03:10:15 -0800 (PST)
-Received: from google.com (133.23.88.34.bc.googleusercontent.com. [34.88.23.133])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e074814a1sm1097806e87.15.2026.01.29.03.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 03:10:15 -0800 (PST)
-Date: Thu, 29 Jan 2026 11:10:12 +0000
-From: Quentin Perret <qperret@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	binbin.wu@linux.intel.com, bp@alien8.de, brauner@kernel.org, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@intel.com, 
-	dave.hansen@linux.intel.com, david@redhat.com, dmatlack@google.com, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com, hannes@cmpxchg.org, 
-	hch@infradead.org, hpa@zytor.com, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, jarkko@kernel.org, 
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com, 
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au, muchun.song@linux.dev, 
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, rostedt@goodmis.org, roypat@amazon.co.uk, 
-	rppt@kernel.org, shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-Message-ID: <i22yykvttpc2e4expluuzucczqnetdnpee2wx2fzqwg7cnt45x@ovx7e7hok5iz>
-References: <cover.1760731772.git.ackerleytng@google.com>
- <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
- <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
- <aXqx3_eE0rNh6nP0@google.com>
- <20260129011618.GA2307128@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fmHPfMHj"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60SLbET0024602;
+	Thu, 29 Jan 2026 11:27:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=IkzHqjw7Quv/1lQEk
+	BGMQK/7nNo0dijsdSsDrvkxEas=; b=fmHPfMHjzAT53C7zpLE1I6TSkIT/9/Z6v
+	CN/PBInQD01CMavvjZ/Y4wAdjNKWToJTCZUBgxlQC8/iED0DSXzyDtcZ/4k4MF+c
+	raMluOuvRdf7fHyyH8dBWDIB6xyh8DC70jsQTLFkxKkqe3n79b1jvyh41z5hgGUh
+	fYlzNaHA13xoZaMXIOlAf/ZrLqCggQ3IF9juaiETPEHk4IgqO2z2DAuZuXGxOnM9
+	elkbr4fE0eVbLqIdDxencVznvGK/xE5DM6rxB5wGraX0lyGP4EpTxDCz0Ge77LWe
+	WjhDppluicQ36nuQqm+uEWIA5OxSzs6RAK0L3+dEabGRK/JXe5c6g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrtr7wb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Jan 2026 11:27:35 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60TBRYYd025755;
+	Thu, 29 Jan 2026 11:27:34 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrtr7w2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Jan 2026 11:27:34 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60T8SfCs018394;
+	Thu, 29 Jan 2026 11:27:33 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb421777-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Jan 2026 11:27:32 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60TBRTOx27001316
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 Jan 2026 11:27:29 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1BFA620043;
+	Thu, 29 Jan 2026 11:27:29 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7850720063;
+	Thu, 29 Jan 2026 11:27:28 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 29 Jan 2026 11:27:28 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        Steven Rostedt <rostedt@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH v6 1/6] x86/vdso: Fix DWARF generation for getrandom()
+Date: Thu, 29 Jan 2026 12:27:21 +0100
+Message-ID: <20260129112726.892340-2-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260129112726.892340-1-jremus@linux.ibm.com>
+References: <20260129112726.892340-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260129011618.GA2307128@ziepe.ca>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 5P16niUu5fnM_03ZbV24Md8SiiyC6Ndj
+X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=697b4427 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8
+ a=VnNF1IyMAAAA:8 a=rsc5PF6bQGhcUx5MhlsA:9 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: -gEHCNz9_kSMTT1AgYGNNuOuZqwKSrMp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI5MDA3NiBTYWx0ZWRfXzFMmW3i8oKoP
+ ife3f0NiGzr8EAlHvpVxAh4fbgqeizX5KArUmRVt1ai4yW4+0sus5vEcaCCZAX9ycVCXXvclEtn
+ 0hliKLvcXi5zivMf56FH4Ke7kfuYBn83NbIyopX7ZFsi3WitAZWH8mmOWZXHnmm7Hh4cZ2BINj6
+ Vdh7NJXx4a7MprUSEG9USzMlCrKj9/lhBoouzQ9CcUbYmysqZleqs7WI+BwnFMgyY15qoX7oPqD
+ I+WHKtoV6Z5DwM8hMYMPVSgFkhUZPOQXU8oSyY9b5Zzz09AvEQKw+ozmch70GU5tw8S7nv7Kk4R
+ wJaSEr8s0OBlPVWWLHdXmuukfQHs9JGicDhgd7SMvuVEBZwf5EYkDQG+N96e7BZsKvlX/tPeG96
+ JM/WxWM9F6CEKy1M2d+J/bFstQ8/Y8R3veUXzr7vvDeSz7kjgG3L2GIpByEdW5nl5g0r5oBjR4f
+ 4ILCyoRGelB551zGyBw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-29_02,2026-01-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ phishscore=0 adultscore=0 impostorscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
+ definitions=main-2601290076
 
-Hi all,
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-On Wednesday 28 Jan 2026 at 21:16:18 (-0400), Jason Gunthorpe wrote:
-> On Wed, Jan 28, 2026 at 05:03:27PM -0800, Sean Christopherson wrote:
-> 
-> > For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
-> > is all or nothing, and can never change, then the only entity that can track that
-> > info is the owner of the dmabuf.  And even if the private vs. shared attributes
-> > are constant, tracking it external to KVM makes sense, because then the provider
-> > can simply hardcode %true/%false.
-> 
-> Oh my I had not given that bit any thought. My remarks were just about
-> normal non-CC systems.
-> 
-> So MMIO starts out shared, and then converts to private when the guest
-> triggers it. It is not all or nothing, there are permanent shared
-> holes in the MMIO ranges too.
-> 
-> Beyond that I don't know what people are thinking.
-> 
-> Clearly VFIO has to revoke and disable the DMABUF once any of it
-> becomes private. VFIO will somehow have to know when it changes modes
-> from the TSM subsystem.
-> 
-> I guess we could have a special channel for KVM to learn the
-> shared/private page by page from VFIO as some kind of "aware of CC"
-> importer.
+Add CFI annotations to the VDSO implementation of getrandom() so it will
+have valid DWARF unwinding metadata.
 
-Slightly out of my depth, but I figured I should jump in this discussion
-nonetheless; turns out dmabuf vs CoCo is a hot topic for pKVM[*], so
-please bear with me :)
+Fixes: 33385150ac45 ("x86: vdso: Wire up getrandom() vDSO implementation")
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/x86/entry/vdso/vgetrandom-chacha.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-It occurred to me that lazily faulting a dmabuf page by page into a
-guest isn't particularly useful, because the entire dmabuf is 'paged in'
-by construction on the host side (regardless of whether that dmabuf is
-backed by memory or MMIO). There is a weird edge case where a memslot
-may not cover an entire dmabuf, but perhaps we could simply say 'don't
-do that'. Faulting-in the entire dmabuf in one go on the first guest
-access would be good for performance, but it doesn't really solve any of
-the problems you've listed above.
+diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
+index bcba5639b8ee..cc82da9216fb 100644
+--- a/arch/x86/entry/vdso/vgetrandom-chacha.S
++++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
+@@ -4,7 +4,7 @@
+  */
+ 
+ #include <linux/linkage.h>
+-#include <asm/frame.h>
++#include <asm/dwarf2.h>
+ 
+ .section	.rodata, "a"
+ .align 16
+@@ -22,7 +22,7 @@ CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
+  *	rcx: number of 64-byte blocks to write to output
+  */
+ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+-
++	CFI_STARTPROC
+ .set	output,		%rdi
+ .set	key,		%rsi
+ .set	counter,	%rdx
+@@ -175,4 +175,5 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+ 	pxor		temp,temp
+ 
+ 	ret
++	CFI_ENDPROC
+ SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+-- 
+2.51.0
 
-A not-fully-thought-through-and-possibly-ridiculous idea that crossed
-my mind some time ago was to make KVM itself a proper dmabuf
-importer. You'd essentially see a guest as a 'device' (probably with an
-actual struct dev representing it), and the stage-2 MMU in front of it
-as its IOMMU. That could potentially allow KVM to implement dma_map_ops
-for that guest 'device' by mapping/unmapping pages into its stage-2 and
-such. And in order to get KVM to import a dmabuf, host userspace would
-have to pass a dmabuf fd to SET_USER_MEMORY_REGION2, a which point KVM
-could check properties about the dmabuf before proceeding with the
-import. We could set different expectations about the properties we
-want for CoCo vs non-CoCo guests at that level (and yes this could
-include having KVM use a special channel with the exporter to check
-that).
-
-That has the nice benefit of having a clear KVM-level API to transition
-an entire dmabuf fd to 'private' in one go in the CoCo case. And in the
-non-CoCo case, we avoid the unnecessary lazy faulting of the dmabuf.
-
-It gets really funny when a CoCo guest decides to share back a subset of
-that dmabuf with the host, and I'm still wrapping my head around how
-we'd make that work, but at this point I'm ready to be told how all the
-above already doesn't work and that I should go back to the peanut
-gallery :-)
-
-Cheers,
-Quentin
-
-[*] https://www.youtube.com/watch?v=zaBxoyRepzA&list=PLW3ep1uCIRfxwmllXTOA2txfDWN6vUOHp&index=35
