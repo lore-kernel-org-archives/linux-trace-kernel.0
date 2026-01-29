@@ -1,25 +1,25 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34E03502AE;
-	Thu, 29 Jan 2026 17:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15253353EC3;
+	Thu, 29 Jan 2026 17:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769708008; cv=none; b=fu6gdclUUrTxfEQixX3/eqLBFDnDJ8OC6zk5j2sCSD7ghtqvqGThH46+CDdwvpmZElRSc8dOSIz/miaiDPLFMQt1C5z0yw8jLiJOwYz9FL6WvpnCeauoeXPVvP9oEHioQp2spQ7kg4xVUKg7RWr8yKQcY+xrHcRkRljV+O3tRiU=
+	t=1769708254; cv=none; b=SyRAMES/cXdw9dGf6xMT4OCrQqeszOpJkr/BSt7i7AGO7VsAvwWh/qahFjOnf7duB+mcYmuBXFmxWiBPyFqo4IH3/FIsGz4DoYvdW3qpBEDtdRAwpSOw4iO6Nf5uEbk31JYmZNfFXdS668lC6jlVUGKwObIH00Fpbdo8jFOhpyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769708008; c=relaxed/simple;
-	bh=auwU+QBgHhgH17KufQIhJdeBeH5zMEuEcX0YOFiVem4=;
+	s=arc-20240116; t=1769708254; c=relaxed/simple;
+	bh=4eeDZYqedG6a//apNfRq8r2MY+Q3O5UivFyaO8WY8pk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VacmiWKjWKC6CDpdVIrbQB2np5KZbDDqRJoi7a92tqrfFphkL8x5zQgmZu69o/LgXLM/vZr5QqTqogktK8wNu44d5H1H9WcFKOeNCmU5TuW+vYQ1ak3Zrpo1dOS6VWOblfINu/C47RdokGoJhY1hwzDO3Wfn0+Jl6c6lX/SYm2M=
+	 MIME-Version:Content-Type; b=fIZcsHMPo/TVb1y23R4I4PcWjNlaEYnyUazqkgMSxEIWblgBLkhGtlysK2/tBU7yIA8/kSf8L1lRBa/EETw8NJ2d5J8ovDQhify4HHEzcwLO9ukZ9axu9W4mElG7AJpHV3tkY6i9GIA8C8BAfzKsbkzwOmWH2gSIfCsiMkJzx5E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 59957C1143;
-	Thu, 29 Jan 2026 17:33:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id F05996000F;
-	Thu, 29 Jan 2026 17:33:20 +0000 (UTC)
-Date: Thu, 29 Jan 2026 12:33:33 -0500
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id AE01A139C2F;
+	Thu, 29 Jan 2026 17:37:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 5AA6F20023;
+	Thu, 29 Jan 2026 17:37:27 +0000 (UTC)
+Date: Thu, 29 Jan 2026 12:37:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -29,12 +29,10 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  jstultz@google.com, qperret@google.com, will@kernel.org,
  aneesh.kumar@kernel.org, kernel-team@android.com,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 18/30] tracing: Check for undefined symbols in
- simple_ring_buffer
-Message-ID: <20260129123333.0fd202f7@gandalf.local.home>
-In-Reply-To: <20260126104419.1649811-19-vdonnefort@google.com>
+Subject: Re: [PATCH v10 00/30] Tracefs support for pKVM
+Message-ID: <20260129123739.3c00155b@gandalf.local.home>
+In-Reply-To: <20260126104419.1649811-1-vdonnefort@google.com>
 References: <20260126104419.1649811-1-vdonnefort@google.com>
-	<20260126104419.1649811-19-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,51 +42,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F05996000F
-X-Stat-Signature: o9j95uhm9j8efrdgmk8y4j5fexwz3idk
-X-Rspamd-Server: rspamout08
+X-Stat-Signature: i3e386p3enc1g8khetg7zqh98gwfm6e5
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 5AA6F20023
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX195dtwkrQT53/vFwD6QG82Q6vcucrU+d38=
-X-HE-Tag: 1769708000-307468
-X-HE-Meta: U2FsdGVkX19dFv0bDGXtajpi9gIAkPXXQ9oDOgmRZBRmxlm8Acxyn18GR3Tmtn0vFh7pabfVByLquAgT+uc4JK6bX73G6GCsvAfGS/gwxwBPOQwg6efHDhZIshRrRudtF8Xkv2LniQiLQTNbanq+fHp3VZd8QtR6DSmd5EmzSb8wqlmsgTyiAcKYhgYLZNDAnf4o0rTenTpSqSV7S5hpSr61etGLq4AFNJD4ZoZUiV7t6YI9WKzH8HoC1PkBaEGlsGQM3Af/ScefsG0V+PKoACC8OlNF28zt5PU+WI+eYBfmHl04QVXgXv0CwYzQUXBXNcLm1kx15d7gLGdHZ7Fqf+DFp1BnPS4UCFrag7mOKL33yhs3WV8KE65DQ2o+fHjeIgRKEs2YaSNcsWEqhPkJdQ==
+X-Session-ID: U2FsdGVkX185SGLFWxWIIlWNPuU6R/rO9OX07ZYyhBY=
+X-HE-Tag: 1769708247-604006
+X-HE-Meta: U2FsdGVkX198IRJKBSNSZOodhqNxXkheSfTthyLQw7U19dwAdwvMwpStvYWEa4sQ8Yvve+aOpKxKCVCiuCa2tjJahjSjiQ8QCncyJ4OPNR8ui/MoeIz16e93DG1M8yodziKTBffwGLWLWlqCkyvZqe4m2P7tXhHMaPH871jux+BHugFnpaCMcj1dsFqjDHJ42WhPZFSey+iKvbBWKbLFnf9f4thildlYt7Gu9oH50rV3mRjkiDuebl12UfMQER311199ZIhINQcMOMVBqjq3jia+IfaUndGgTtHcyW7+apjJflVQOLLCq8pxYnN9Ju5VaPmzs5sso7DYmlF3/Pq437jzz5utuaCa
 
-On Mon, 26 Jan 2026 10:44:07 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+Hi Vincent,
 
-> The simple_ring_buffer implementation must remain simple enough to be
-> used by the pKVM hypervisor. Prevent the object build if unresolved
-> symbols are found.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+I finished my review. I replied to every patch (before the KVM ones) and
+either made comments or added a Reviewed-by tag.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+When you send the next version, if you don't modify one of the patches I
+replied with a RB tag, add the tag to the patch and it will let me know I
+don't need to look at it again.
+
+You can use b4 or download the series from here[1] and it will automatically
+add the tags for you. Just create a new branch and apply the download via
+git am and work from there.
+
+Thanks,
 
 -- Steve
 
-> 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 9e86c43bf320..9f675d5d27c7 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -131,4 +131,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
->  obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
->  obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
->  
-> +#
-> +# simple_ring_buffer is used by the pKVM hypervisor which does not have access
-> +# to all kernel symbols. Fail the build if forbidden symbols are found.
-> +#
-> +UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
-> +UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
-> +UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
-> +
-> +quiet_cmd_check_undefined = NM      $<
-> +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
-> +
-> +$(obj)/%.o.checked: $(obj)/%.o FORCE
-> +	$(call if_changed,check_undefined)
-> +
-> +always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
-> +
->  libftrace-y := ftrace.o
-
+[1] https://patchwork.kernel.org/series/1047043/mbox/
