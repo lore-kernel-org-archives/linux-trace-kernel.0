@@ -1,63 +1,63 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07AE35DCED
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 21:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322B2366815
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 21:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769722764; cv=none; b=Vupq5hW1OTFEGcDdVgN9XvVziyQp0iMTVN0QmY1sLa6u6CyTN9L3ZAtmlJC8+bgms1lXalizmTfz/T+Yob7/KSsdQdgPLUoi++VvJnescEeiYAOaMsoeDOtOzRjH2rF0UN9KPgp33gM7O4ues8+za2q0wgNGwM0qQSln+wFlpfs=
+	t=1769723422; cv=none; b=WYDYVk7WVkn+PZtDDmSLewTYY0RPrUpbQ4lG3lBnV/H0EuR2rksMQNQppSzyiC8SyMpKWNVIe2c4TPqVWf35pMvBp5QWmuUdn3sk1BGPs6Qu0/JtNQQVIGrxtOHTpny3pE29HqEyJKpn9dbigAPM7gduhY/e8okkZqlLyi7f7fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769722764; c=relaxed/simple;
-	bh=FTzxGJtugdKjao+qMiaidJcp9/vBaAtySKq8E304Ljg=;
+	s=arc-20240116; t=1769723422; c=relaxed/simple;
+	bh=QJB1a5gNqpH6jrHMpEyj+87Z5mH93GBioJQvzPUVeY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rXEjruj1r/ySloCrG/q8UW3XIyATBZ8lYK0WBb2itbdC86AA5oh20wNPjrfkL2mKLoqMD1HTHKOkKfXLujdd4MWZqpXVVI0QyZs78yYZ2fPkz1o64ysDxgFBS9eGo+/QNhdigoDP2L3pLEn7sI4MojVOpZwpvDRgD+SeycOiTSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CB74BPw6; arc=none smtp.client-ip=209.85.128.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=q7KdQ2boLxYqFpItOEA8IVmLccyYErvxshhtY7anWheVaw91sY955u6t6iOR72KGKACLKJq6ioaVflXgGxM7qttEu7jdmk8cbwrvlS7EKvAqic6H4ym9EpBotLgSZtnqwvQQTXAaoyp1V9w7Hw/wg18LBt/yh856scyc1UVW7kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tl8XwLGA; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CB74BPw6"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4801bc32725so10946715e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 13:39:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tl8XwLGA"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-432da746749so932772f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 13:50:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769722761; x=1770327561; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1769723419; x=1770328219; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+w81DyXUE0b55CwrLCwC7XYX50M/2QX/b1Gp0d2KP4=;
-        b=CB74BPw6ypQkLynPD23eT612MXDhr8xgoni31jppeH9Fl6A99Q7h1X+Cz6+ycDVOa4
-         zFJkzZqWsyPgitFqqWsQHzjxbnADrANODjP8IhKS+ihg8V+T42/oCUsSw651uY6YXwt9
-         CpRdSMxP/mMVDQ0l4ZtLnYeu3K+M7nJu3Bx4x2Dha2O94LtmDyFGUhmqkj4+Ew4pzRHB
-         36DKD5jrBZrY66epU+Q14O6yt+6xZ+FPs3CpgNCAE0vsdxvYv758TDLXVi4W07fpRfU6
-         TWacr656wcs8iFWAiz3uDI1N/vTvlaX5KcDchoRindsl3KFZ9h2LEY+fqK7alZE+0Pis
-         TfFQ==
+        bh=c+SMixISY32I4TNkZ6inO6uSY2SNlSvt1Krp91cY5JE=;
+        b=tl8XwLGA2yOS0+Fj4a7RqFBo3cgZsJ+34uicDRzKZZDaSC4c/WbZOfIz0TPzjq9nq6
+         FR+3tgmboOH/0i+kdzVxi2Q/bRa0R22EmsRUThg2GbOkq8y1/YjrL7G8bMwMMvKQ0X3E
+         oBoNdJJlb90xUEJGUgi7ycTrBxqfZiSGTfoBhTk4ns12FvWGDY4AJchx+bICr63aKtbC
+         NZAkw0Vt9Mjc+tBOsHisQrid19nzR9UpinG58vJNGx7I4LFytznmIylwNhCChyAeYVpV
+         icQQ8hmqRbxtLbk573EThl2rqQXJhWkj5JoTMQKyNQd1cxUuSVpCSnYz+bgWqLpP81Rm
+         80sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769722761; x=1770327561;
+        d=1e100.net; s=20230601; t=1769723419; x=1770328219;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D+w81DyXUE0b55CwrLCwC7XYX50M/2QX/b1Gp0d2KP4=;
-        b=qIOXF5TnMjXJb62R+c5i1CMI3fj14gLZenyyLOzMsvHI4j+CLwKWvAeRNgajTiCL0Y
-         stxjJ2FS2E1KbwDBZvJqjYyVUayOTCJCemo5CCB14b+Ive6aattZN2m6m8LEykrC0YUz
-         IfqyY70JxoLaXqe3KljifQcqatLLjqbBAZTzEhZFos9vCfu7akeqRHrLZOczQEXM1uAT
-         41URfDcobMkYQeQ1pF8qEb8wSs+sBsr/s4DA0xRY8lZIeUDnRM9JIa+ZXtGSS07ZPecK
-         xSFr6hJe7NGnvn2KH2t9SGVnU9jFsshN8nT80AEagFIs+zSs4oJ1BxfG/6KyJuVnuKJ3
-         9dkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqrZflXyEnzoIvZE0L9Mh1L64WAbBg9kzluJE9Ft66O3fanlZm1n2XOlMUwYvJzu6tcvlP5pMms0xpWQIV213RkxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIF5CH1O/K2t/ihRN4kFwkR6oG84AK25tR10wtSzr+ssVnLTzC
-	/AizBOsEs4roehLXEMDEESkQForKIQildYeeV18yqjiw2c9YIZDS2+EHpqEcFJnuYg==
-X-Gm-Gg: AZuq6aJiHgzm/f6NNZm0BrA7w2T4gYOTnBJRaMfhsEXj5dGZtkpbXza2mcL3B5h+hPP
-	IJcPb5z80EeCjeBZE2tXU7Icoov8HyB3UkWIQhnsf7xTMJcy5WNMnhRtqWSeUPao53qNCOa/LiD
-	CAyKUBrw4DVKEuNZZsLNBwV1ZIOBhoEyeAb55jbY8o52DQfBsygKGoxMzKcnI1eD40WEYm6Tw0v
-	BPK4r9OC1CHx1cVLeUgWX3Jwi6k7XV7GQL5sTcMV8tm68P/cKOkyh5NwFnWL/lEJrjGpHXmZxlX
-	8OBga8dLNuRhwzCdL0Z9ZPr6oFDE9it5dmliI+cqlIubH/pTnj1BHuUhCkqUJbhZAJ253N/EDSY
-	EKAqgLNSaLvQ+vmKkasSYunu7JcBuVZnFTRUJE5iTEit2KIo34d2Vq5fKlKxnUKvDeW56CJhELT
-	upNtFX1HBEUsth15IVP2f/I2CqN8ClRZVy8iaIlTBH3H9FqzyBuQ==
-X-Received: by 2002:a05:6000:40c8:b0:431:104:6dc2 with SMTP id ffacd0b85a97d-435f3a674f5mr1361562f8f.8.1769722760913;
-        Thu, 29 Jan 2026 13:39:20 -0800 (PST)
+        bh=c+SMixISY32I4TNkZ6inO6uSY2SNlSvt1Krp91cY5JE=;
+        b=giBN8sz1u7OT5pnhVztlh1jB0xvM8vMZvUuuZ2p+KcfbfOCYTFyNZjgmzFRQDRQx7Q
+         dQPK0kRuUl9OSo4hnQdQg0lpjXGr/l8RfIN7m6y92CFd/h1VnBzrpdRK0nKBgZ58PHVM
+         jAa8T24qqIQ0pUDYeal/YYJioSZ01hk9nCPjHMuYhZxrFVrK3321W2AgWmqcy4mhEo6p
+         A6sukNKsTwC6aXlWr6u1yNkwiliZ0zpKp5Ou/KlKR+7JaZfTbJNDGXgJPWnKGOWoh20W
+         Qi2g2sNBzthIAP70s4mSC1/dPJFdBZZFGsXbuRpBAS24n/h2BdRfhHPTdw/wikeVGinP
+         NVGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgdCVkHDBPD5QvZNZFSsR2/iMZYs7BE1hoGbUcknQoqDqkST/57KMO1xuijaqkBB4gwl8+uZGkJ5OJfIZBYpV0va4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFOPWYUjoYY6fiPnp/w8FhnLxNCC1+dT8fypLxs4sHh33Ly8T7
+	k2gEew4PeK0LnBD5so/BPuNnlqLhY1kz4WqAyodjjV6cGjUVYtvnErM+BYK1zt3+Xw==
+X-Gm-Gg: AZuq6aKBi5gWf/b/ZoW1rk//rlAzyg9K1IcIeRLd4svdj15I/D8juxBntRiYCS60lN8
+	ylB+rQws//n9BHr0EggN2HLXSd4RlaFyGrN79krR0aQATC+eDr7wGYTkeZ1Ufh+z1IzgJj8/2M4
+	YhmTrhdxPiI9bTXyTl37StmmyiwN1Dxp7ks3WVynAXs4sB6W3QsE4Zq8AjRusLphyMC+lC19W8Y
+	YwsGIIks9lHPxROiLv7QA0CF/k/1ARkDy6hYMup2lfm7++qTL7Io26mozWXiKuFiTd301wpKkFK
+	o7RA++C8CUH5sqCxKmRhhZ+3KLnLtzcsZkCLDe5zr2TZYlN/rqxjboOYsWC//zaXQhQbZ1VgumT
+	AfeXXEBDXQkHBdSCJ97EmApc82iBN+TyGErbVt/jgvlv0RFewfO6qgHGOy0NU/pDRO7XBOzh8GL
+	gSQPstMAnCM7McGzSMOiSIa6KOj+2QxSvx83TD64wmrPl05Y/Rvg==
+X-Received: by 2002:a05:6000:26ca:b0:435:e3c6:554d with SMTP id ffacd0b85a97d-435f3abb4e6mr1226168f8f.52.1769723419386;
+        Thu, 29 Jan 2026 13:50:19 -0800 (PST)
 Received: from google.com (44.145.34.34.bc.googleusercontent.com. [34.34.145.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e10edf62sm18781379f8f.13.2026.01.29.13.39.20
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1322f40sm16938883f8f.34.2026.01.29.13.50.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 13:39:20 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:39:17 +0000
+        Thu, 29 Jan 2026 13:50:19 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:50:16 +0000
 From: Vincent Donnefort <vdonnefort@google.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -67,11 +67,11 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
 	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
 	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
 	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 05/30] tracing: Introduce trace remotes
-Message-ID: <aXvThRcUhuBreMPv@google.com>
+Subject: Re: [PATCH v10 14/30] tracing: Add a trace remote module for testing
+Message-ID: <aXvWGDEx6kMQWyoe@google.com>
 References: <20260126104419.1649811-1-vdonnefort@google.com>
- <20260126104419.1649811-6-vdonnefort@google.com>
- <20260128153725.56e801c0@gandalf.local.home>
+ <20260126104419.1649811-15-vdonnefort@google.com>
+ <20260129113452.190d4d79@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,14 +80,27 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260128153725.56e801c0@gandalf.local.home>
+In-Reply-To: <20260129113452.190d4d79@gandalf.local.home>
+
+> 
+> Where was the cpus_read lock taken?
+
+I am pretty sure that's leftover of when I was reading some CPU mask :-(
+
+> 
+> > +	cpus_read_unlock();
+> > +
+> > +	return ERR_PTR(ret);
+> > +}
+> > +
 
 [...]
 
-> > +static ssize_t buffer_size_kb_write(struct file *filp, const char __user *ubuf, size_t cnt,
-> > +				    loff_t *ppos)
+> > +static ssize_t
+> > +write_event_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *pos)
 > > +{
-> > +	struct trace_remote *remote = filp->private_data;
+> > +	struct remote_event_format_selftest *evt_test;
+> > +	struct simple_rb_per_cpu *cpu_buffer;
 > > +	unsigned long val;
 > > +	int ret;
 > > +
@@ -95,37 +108,42 @@ In-Reply-To: <20260128153725.56e801c0@gandalf.local.home>
 > > +	if (ret)
 > > +		return ret;
 > > +
-> > +	/* KiB to Bytes */
-> > +	if (!val || check_shl_overflow(val, 10, &val))
-> > +		return -EINVAL;
+> > +	guard(mutex)(&simple_rbs_lock);
 > > +
-> > +	guard(mutex)(&remote->lock);
+> > +	if (!remote_event_selftest.enabled)
+> > +		return -ENODEV;
 > > +
-> > +	remote->trace_buffer_size = val;
 > 
-> Should this be allowed to change when it is already loaded?
-
-It would only be effective on the next unload/load. 
-
-But now thinking more about it, this is probably not clear to a user and
-returning -EBUSY when loaded might be a better solution?
-
+> You want a guard(preempt)(); here...
+> 
+> > +	cpu_buffer = *this_cpu_ptr(&simple_rbs);
+> 
+> Otherwise this triggers:
+> 
+>  BUG: using smp_processor_id() in preemptible [00000000] code: bash/1096
+>  caller is write_event_write+0xe0/0x230 [remote_test]
 > 
 > -- Steve
+
+Ha, of course! And also for a per-CPU ring-buffer, that is way better to make
+sure we actually do all the writing from the same CPU even though in that case
+the simple_rbs_lock protect us.
+
 > 
+> > +	if (!cpu_buffer)
+> > +		return -ENODEV;
+> > +
+> > +	evt_test = simple_ring_buffer_reserve(cpu_buffer,
+> > +					      sizeof(struct remote_event_format_selftest),
+> > +					      trace_clock_global());
+> > +	if (!evt_test)
+> > +		return -ENODEV;
+> > +
+> > +	evt_test->hdr.id = REMOTE_TEST_EVENT_ID;
+> > +	evt_test->id = val;
+> > +
+> > +	simple_ring_buffer_commit(cpu_buffer);
 > > +
 > > +	return cnt;
 > > +}
 > > +
-> > +static int buffer_size_kb_show(struct seq_file *s, void *unused)
-> > +{
-> > +	struct trace_remote *remote = s->private;
-> > +
-> > +	seq_printf(s, "%lu (%s)\n", remote->trace_buffer_size >> 10,
-> > +		   trace_remote_loaded(remote) ? "loaded" : "unloaded");
-> > +
-> > +	return 0;
-> > +}
-> > +DEFINE_SHOW_STORE_ATTRIBUTE(buffer_size_kb);
-> > +
-> 
