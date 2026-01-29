@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B57A2EA15C;
-	Thu, 29 Jan 2026 17:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34E03502AE;
+	Thu, 29 Jan 2026 17:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769707292; cv=none; b=sS5FPrrMDjp+4e941YPkbzeJy2l+JPHPi/J1FFnlzqPXWOwD/O6S8OTidTuMAhw3niYyROCmkL4lesvwuzYkuXXLs32CIP3NtY2Mntvu731x2b5gzbuCKp+e25Y1Pqy+IV0wZj5LjjX0kaYLH8GFc9DGeucNs9JWQyLERd2dk1s=
+	t=1769708008; cv=none; b=fu6gdclUUrTxfEQixX3/eqLBFDnDJ8OC6zk5j2sCSD7ghtqvqGThH46+CDdwvpmZElRSc8dOSIz/miaiDPLFMQt1C5z0yw8jLiJOwYz9FL6WvpnCeauoeXPVvP9oEHioQp2spQ7kg4xVUKg7RWr8yKQcY+xrHcRkRljV+O3tRiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769707292; c=relaxed/simple;
-	bh=EGbH5tooJcr5/+8CHBlXgDb5QAFjgZqs3a028FAhAn4=;
+	s=arc-20240116; t=1769708008; c=relaxed/simple;
+	bh=auwU+QBgHhgH17KufQIhJdeBeH5zMEuEcX0YOFiVem4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XmqvK6o+2mSichOmspVEycyOJPLK5WbTntf82MvcawxYHYhwB+GLrVnaxwAzZl2mKoXCWy+MLVyyHcbQVy+6ak/V8R+J8/OO7UztgPbeoCE0eEnAUZmGBEi/STzq5UrTzlOP9fq+8nrH6ck3x3HaPrUm6jPZVHDtIYvFuNd3iDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=VacmiWKjWKC6CDpdVIrbQB2np5KZbDDqRJoi7a92tqrfFphkL8x5zQgmZu69o/LgXLM/vZr5QqTqogktK8wNu44d5H1H9WcFKOeNCmU5TuW+vYQ1ak3Zrpo1dOS6VWOblfINu/C47RdokGoJhY1hwzDO3Wfn0+Jl6c6lX/SYm2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 3A3D61BCF2;
-	Thu, 29 Jan 2026 17:21:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 943DA2000E;
-	Thu, 29 Jan 2026 17:21:24 +0000 (UTC)
-Date: Thu, 29 Jan 2026 12:21:36 -0500
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 59957C1143;
+	Thu, 29 Jan 2026 17:33:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id F05996000F;
+	Thu, 29 Jan 2026 17:33:20 +0000 (UTC)
+Date: Thu, 29 Jan 2026 12:33:33 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -29,12 +29,12 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  jstultz@google.com, qperret@google.com, will@kernel.org,
  aneesh.kumar@kernel.org, kernel-team@android.com,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 17/30] tracing: load/unload page callbacks for
+Subject: Re: [PATCH v10 18/30] tracing: Check for undefined symbols in
  simple_ring_buffer
-Message-ID: <20260129122136.69873587@gandalf.local.home>
-In-Reply-To: <20260126104419.1649811-18-vdonnefort@google.com>
+Message-ID: <20260129123333.0fd202f7@gandalf.local.home>
+In-Reply-To: <20260126104419.1649811-19-vdonnefort@google.com>
 References: <20260126104419.1649811-1-vdonnefort@google.com>
-	<20260126104419.1649811-18-vdonnefort@google.com>
+	<20260126104419.1649811-19-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,48 +44,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: jtfheu8shqoipi9u5yzt3fkgzru6j7dw
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 943DA2000E
+X-Rspamd-Queue-Id: F05996000F
+X-Stat-Signature: o9j95uhm9j8efrdgmk8y4j5fexwz3idk
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+P5mzFd4ZWUvDj9SmD6phcMvBMATTT8U8=
-X-HE-Tag: 1769707284-904358
-X-HE-Meta: U2FsdGVkX1/oZ8BY+DTHEu7zvzBJzXR5GM/i1Uvhm0/GmhlbTOg04hWfxm7niWNweDUchAXGe3ZhEeezDlxl79OtF6b3lHBrpu5STLNTc2w6s1ILrFX8De22XyjnNCZ/4Dc1J5+aV6iKd0M6OEXA9Y0wsbGw/MfCfhwyuzcR2ilW687CSNKk9fY9uVhYx3NLMJJIBYgLGDW6G5mVk5CAPkBlVKq0E/pMnY87yUFzDj48l1Rcu10wsuV2ZAN+HRYdPTYLLOjYVRdDXEp7fpr4Ulx1vkR+WpnIUA/Ctd5bb1h51HmM2GhYFt1WntUckszQJ7ReqfKeRmylxjapYjyYNvYNkJ9HvDBW
+X-Session-ID: U2FsdGVkX195dtwkrQT53/vFwD6QG82Q6vcucrU+d38=
+X-HE-Tag: 1769708000-307468
+X-HE-Meta: U2FsdGVkX19dFv0bDGXtajpi9gIAkPXXQ9oDOgmRZBRmxlm8Acxyn18GR3Tmtn0vFh7pabfVByLquAgT+uc4JK6bX73G6GCsvAfGS/gwxwBPOQwg6efHDhZIshRrRudtF8Xkv2LniQiLQTNbanq+fHp3VZd8QtR6DSmd5EmzSb8wqlmsgTyiAcKYhgYLZNDAnf4o0rTenTpSqSV7S5hpSr61etGLq4AFNJD4ZoZUiV7t6YI9WKzH8HoC1PkBaEGlsGQM3Af/ScefsG0V+PKoACC8OlNF28zt5PU+WI+eYBfmHl04QVXgXv0CwYzQUXBXNcLm1kx15d7gLGdHZ7Fqf+DFp1BnPS4UCFrag7mOKL33yhs3WV8KE65DQ2o+fHjeIgRKEs2YaSNcsWEqhPkJdQ==
 
-On Mon, 26 Jan 2026 10:44:06 +0000
+On Mon, 26 Jan 2026 10:44:07 +0000
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> Add load/unload callback used for each admitted page in the ring-buffer.
-> This will be later useful for the pKVM hypervisor which uses a different
-> VA space and need to dynamically map/unmap the ring-buffer pages.
+> The simple_ring_buffer implementation must remain simple enough to be
+> used by the pKVM hypervisor. Prevent the object build if unresolved
+> symbols are found.
 > 
 > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/include/linux/simple_ring_buffer.h b/include/linux/simple_ring_buffer.h
-> index f324df2f875b..ecd0e988c699 100644
-> --- a/include/linux/simple_ring_buffer.h
-> +++ b/include/linux/simple_ring_buffer.h
-> @@ -110,4 +110,11 @@ int simple_ring_buffer_reset(struct simple_rb_per_cpu *cpu_buffer);
->   */
->  int simple_ring_buffer_swap_reader_page(struct simple_rb_per_cpu *cpu_buffer);
->  
-> +int __simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer,
-> +			      struct simple_buffer_page *bpages,
-> +			      const struct ring_buffer_desc *desc,
-> +			      void *(*load_page)(unsigned long va),
-> +			      void (*unload_page)(void *va));
-> +void __simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer,
-> +				 void (*unload_page)(void *));
 
-Underscored functions are for internally used functions and I rather not
-have them for generic use (in include/linux).
-
-Perhaps rename them as:
-
- int simple_ring_buffer_init_va()
- void simple_ring_buffer_init_va()
-
-Or maybe "_mm()" would be better?
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
+
+> 
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index 9e86c43bf320..9f675d5d27c7 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -131,4 +131,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+>  obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
+>  obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+>  
+> +#
+> +# simple_ring_buffer is used by the pKVM hypervisor which does not have access
+> +# to all kernel symbols. Fail the build if forbidden symbols are found.
+> +#
+> +UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> +UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> +UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> +
+> +quiet_cmd_check_undefined = NM      $<
+> +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
+> +
+> +$(obj)/%.o.checked: $(obj)/%.o FORCE
+> +	$(call if_changed,check_undefined)
+> +
+> +always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
+> +
+>  libftrace-y := ftrace.o
 
