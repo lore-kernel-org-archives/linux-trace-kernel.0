@@ -1,160 +1,107 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6BD34EF0D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 01:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B6C2D8796
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 01:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769649383; cv=none; b=O2nNp+c+rco2f3jy/e1SnWSKJnGJCXFUThZa5uDO+mB+wklOBQvQyRAnoNnrnlhAmdPEW0f9zHT0Zg0Xhi5qtWJlP6aSxHchUlPpvztdq0qu+4RVbJdDO5nvuSbFbABzGUEu/n+uWe5U5VltJCIZlLe3G7ZvJgenP8WufWHode4=
+	t=1769650800; cv=none; b=uG1sCel1l+sFwkj8JaYwGnqki5FU7Q6x16c8t1Dm9iSHPe2qFIwZgR83me19M2L3GbqQunWFylZBR97O0U/4dMjFLysRVXSLDVe7SZs4Ho+ei2vxCSX2G+GHgisH5KWRnjZnx9c0FsC9Odq2mD2uANDW23nO8kNuOdrW0oiXxzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769649383; c=relaxed/simple;
-	bh=nHJ7z1F0QJ+ff3YYPLezHicV71ohVDGuIQUyQzSTkzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NbnrojcSQMMWolc5G4jDX6UwcJ14ondqRD/gGaNiCFRKeSSIM/vtdg67s8GXYBHYN3lRhWeHEOpjUZ8sevOoM0ENHn9VagrhdI8ttHVYHlk4mWZiiJuOP5N0jPqHKokouUQNt3tyKcfXG2gjupAp1nqwO/r9Wc4OWl1PI03dxpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=JimtEvw/; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1769650800; c=relaxed/simple;
+	bh=PIY2zPHq0fleeRuh9/qEGhr8gKEt4uj/ZM9Yu37ZEqU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=avIp0UQyMRzCfnG95fvkKkfgQMIIUnvmoMrBxWNEd4DFPFO9nYum7Zc3tv1Rhq/nE0cvnJzmKKUkLlXbetjlPtDVVJ3se5P2VRe2gG/i/iLrHlOkWtp3mOGPVgVk1qWEEUWEZt5sMPk6PPU4v8E59UP5LXWPHAWNicpWmkibb8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LB/jIbgY; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JimtEvw/"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8c6a7638f42so62568085a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:16:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LB/jIbgY"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-81dab89f286so205021b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 17:39:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1769649380; x=1770254180; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WReYS7VDfIh+dvxdrk0biwhaBbpxlirvLLAI4b8c7GA=;
-        b=JimtEvw/M9s1zQiNQoK5XBOJVKAPBC0ZPH+Ww+nhg7HM120zXzPPDFQ66dxw3qVIkh
-         41KFAv5+ldYueku3BLZMrAHudLNNK/pjzR325IvCVYgAjfezrdFp+Ypjnmcs8Z2WWpms
-         Hnkz7ru3rUgn6MmQTBlVKZp0y6quJVwOYGhjcKcvZIbHB6f3VZF4HrJ7ENAeKE+2Ukuy
-         zFMq8IZPJX1HkYQk1TQQorMGWwZZ6+bCDV3o+M0HD2kYBy6jefimyqAQy7F5U5BqRVtD
-         kUo6mdW+EKWp7Wa5NI1ztftQRXc17I8/6KEDYfze9hhVxHgoa/rcyB0qcWZAHLRDjYK9
-         vixQ==
+        d=gmail.com; s=20230601; t=1769650799; x=1770255599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AnF83VZVrWn5nKxVe8Zbs5dye1QD59WU965BQVkcA4c=;
+        b=LB/jIbgYdm15ro267nXGqzp+TJ/DLBk2S39O4dKYVGalzUIeobTgURg4MO+nXi4+LP
+         C2QMc1CNYi3v9Vd9K+5NV9zrp9TriyTavn99Vbbo9I7Q9+l/Za06UwqXsfVNnZC1xHmy
+         cCP2S4Ra6oZuj7nMSEZ/dxXLpoBOMw2bT2CrU/vGNo9Xx5HZ2ZFbbz6jY+J2rBo74s6H
+         8uKTiPbfEiIQiyWUjmh1pk8HooLq54S1sfk8mvLv4BiR9QIF2si7c4MoD8i9tBLRiv6b
+         l7b2sxy4cLQrYhY76R07yKeYrT7/h1jUrLRq+Mq4tldT82otyvU07b2suRMh9ogcUjgh
+         Qbag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769649380; x=1770254180;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WReYS7VDfIh+dvxdrk0biwhaBbpxlirvLLAI4b8c7GA=;
-        b=KgmuxqYVn5OmX5RSMO5kZNUamf91EyCEVKYWB5/o5OcF66YFlgJSCPynlGO9nsyE0J
-         4H/k9X7i7VqcNmCN6GZ/HYcXlAbsWEnqkfB6dqjuSNk17yWitQ2AcpTRK2FP1h3MNpoW
-         0+XoMPGIT+wZRv0c4K/pf+pT3mWUW2GSYf4lpnI9oIgsf6WlV9dEBJvukT+AQpwjxqHp
-         6V7xn5gXR2Crkq7KGKYsdB4wh+ZFKotxkojxoOmoSpHi+OdCp7V06JGtU5LO4XBu7zBL
-         zOixyvKlfeuOlys46FW3nT/ZXw13nBhcUSM0HM9+C3a4ErQFe3AnP5do1yTdoQkrble7
-         01UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUNLR6qcyBF9O+ifXeKSFwcvEgoddwtHCi3mX+bd1xEBB4FaHJ9jxwrtjs4Mq/CJMUgFUZHzD8E6Tflkj18HtkGok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHpwvbst4S66lK9skTrWMG7Az9MC6ofou1E3E+UWZktmEFT/x1
-	PZjXjlzdNM9CslLoEWU2x8K7LAIZsv3mlFIsnROVJEcQ/rvdhsxhVSW7k4RLkxgMPZ4=
-X-Gm-Gg: AZuq6aJtYurTNzd5podm1L23iXun3j0l049z62uRXo+ZWuRuRLM1Mj1/41bHfqgYsGL
-	6r5EevmdpZ+7Phvh6146mVdoxU5zYj0Jx/qPLrSfmQjSNQEPZSmAQXTrOkxTek0Lm4JyRPgTrgO
-	0kDaVhGUfIg8cnGvtjlMwCCNUp0HJhzWy+y8ienFzX3E2YL5TttiCpC2mNmNk9zz0yrIEtBjwhG
-	iJ7wQpG02PIJRtvN8VU9kdZxM+QocJke+YfSixVmHTnfYta9sOCRah9at7YDsSHHnQv8EAQe60k
-	m9svFdak399aKnMyoNj5PuuhZyRTqKMerRLHff3MCYoxxw8ezf85FocRKtgDX6FIpxd58ueAEwY
-	oADogoN2bSnhpkeCQ3La0mxtBK0/f0xXkHxDUlz/YEhUj4Rhj3dn/mdqblRIEBfajzOVRQG5KAW
-	VVQCgv5Vv+m4drIh396+fzz0ML/Dq3wimEftRGTdHaXqcmSrBczesfy/16ITQmxmTwQo8=
-X-Received: by 2002:a05:620a:d88:b0:8c5:2ce6:dca with SMTP id af79cd13be357-8c70b841159mr939733985a.6.1769649380018;
-        Wed, 28 Jan 2026 17:16:20 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d2ab04sm283038485a.25.2026.01.28.17.16.19
+        d=1e100.net; s=20230601; t=1769650799; x=1770255599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AnF83VZVrWn5nKxVe8Zbs5dye1QD59WU965BQVkcA4c=;
+        b=uFFqsyqQLPKWz3t3gDbSvAVP5vFy1RU10IDdyIXEkDuxAL2idUWj8AkV9JACMPMB8x
+         DoBWZFRwxXC+QEs1sH6ox8ipcV+OaNipydzHgZl4LvJYVJN8BBG+OVGp8AS3C+zB4Yr8
+         m8X3L6Qew8tlCojA1bPT/Oiy0kBkoosQIYFNJZ9sxpK4j13SAztYGqR5jJbykiePkj+K
+         Tlj5hchEIi0KNiIRRZbBq3s2NA5fRPKoQHTcUr2/U6GKXKaZqvvypkhNIViRQ9IQz/Cl
+         Eg2VYAYPMTK+r/rtycbzsmlnokvFCEU7KFIXPTseSXHSlbPzR6o7MIJtq4gGi92EnFzT
+         MIjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXX5ayRqg/K+F62e3Nji/XGncWUupvT4QEyDbzhvGOgjpEIK8b2p4xA80AkU9T/m27Ix8RQUJt163wlVu+gsNfSEKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwklmjLZdRSgn+SsYW6sga1yHnb8ifx04G3zFzABu8LvdZ8Wuvb
+	sJvbbHpLxRLgdJFkO/yVE5NUpWY4UappYRfOWoPwokhG50UKddnk0Ull
+X-Gm-Gg: AZuq6aKnYkI1P7WTzx1sakEHXyU489DxanAXacfk7Dv2iFTxzv8zfiLEfKHXQiZt26i
+	b7Y4Qg4Oqwkv7AVpf8d3w8hR3Hs3oKN78U+PO+FSoMa610DQgu6KzLHwHxqEtJ1H8v7aHS5L4aJ
+	Nj8zoKRw84njZk/fKSS8GyRefbLJ33dijy5S6UweabcYyfpmdxGKy5rUQS4hKbN7m+91klipXzr
+	3oBRNG5aA4Bk5TN2+Dex7Ru50a7i/HhRwmKAp/Bn+E8FQ5ORntzvUZXe3mCpXzunA+YwTN4ZCSo
+	Kom3shzJWlR5ZFQz2zYN7uvd1EVd2ayU+mQaWWCymq1+fQvVwcXr6EgJktGaSO8c0eiqyL/9CvW
+	FKehple6E5QxFLDGcR1Uxju0p5uUGgtiNcgffcO8B1qr29QJ8C58K/X8EbPwILng+v6leinSQPq
+	Y6d9+Hty+v+f0Yee3fysuPbQB+WglzIAeypxMLXp8=
+X-Received: by 2002:a05:6a21:398e:b0:38d:ebdc:353f with SMTP id adf61e73a8af0-38ec658053fmr6637861637.68.1769650798585;
+        Wed, 28 Jan 2026 17:39:58 -0800 (PST)
+Received: from russ.ust.hk (wf121-083.ust.hk. [175.159.121.83])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b5d92a9sm33280595ad.69.2026.01.28.17.39.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 17:16:19 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vlGdu-00000009gKo-3mMh;
-	Wed, 28 Jan 2026 21:16:18 -0400
-Date: Wed, 28 Jan 2026 21:16:18 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>,
-	Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
-	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
-	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
-	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
-	keirf@google.com, kent.overstreet@linux.dev,
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
-	mail@maciej.szmigiero.name, maobibo@loongson.cn,
-	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
-	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
-	qperret@google.com, richard.weiyang@gmail.com,
-	rick.p.edgecombe@intel.com, rientjes@google.com,
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
-	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-Message-ID: <20260129011618.GA2307128@ziepe.ca>
-References: <cover.1760731772.git.ackerleytng@google.com>
- <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
- <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
- <aXqx3_eE0rNh6nP0@google.com>
+        Wed, 28 Jan 2026 17:39:58 -0800 (PST)
+From: Haoyang LIU <tttturtleruss@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: tttturtleruss@gmail.com,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] tracing: Fix indentation of return statement in print_trace_fmt()
+Date: Thu, 29 Jan 2026 09:39:54 +0800
+Message-Id: <20260129013954.5325-1-tttturtleruss@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXqx3_eE0rNh6nP0@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 28, 2026 at 05:03:27PM -0800, Sean Christopherson wrote:
+The return statement inside the nested if block in print_trace_fmt()
+is not properly indented, making the code structure unclear. This was
+flagged by smatch as a warning.
 
-> For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
-> is all or nothing, and can never change, then the only entity that can track that
-> info is the owner of the dmabuf.  And even if the private vs. shared attributes
-> are constant, tracking it external to KVM makes sense, because then the provider
-> can simply hardcode %true/%false.
+Add proper indentation to the return statement to match the kernel
+coding style and improve readability.
 
-Oh my I had not given that bit any thought. My remarks were just about
-normal non-CC systems.
+Signed-off-by: Haoyang LIU <tttturtleruss@gmail.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So MMIO starts out shared, and then converts to private when the guest
-triggers it. It is not all or nothing, there are permanent shared
-holes in the MMIO ranges too.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8bd4ec08fb36..bf0ce2aac177 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4286,7 +4286,7 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ 			/* ftrace and system call events are still OK */
+ 			if ((event->type > __TRACE_LAST_TYPE) &&
+ 			    !is_syscall_event(event))
+-			return print_event_fields(iter, event);
++				return print_event_fields(iter, event);
+ 		}
+ 		return event->funcs->trace(iter, sym_flags, event);
+ 	}
+-- 
+2.25.1
 
-Beyond that I don't know what people are thinking.
-
-Clearly VFIO has to revoke and disable the DMABUF once any of it
-becomes private. VFIO will somehow have to know when it changes modes
-from the TSM subsystem.
-
-I guess we could have a special channel for KVM to learn the
-shared/private page by page from VFIO as some kind of "aware of CC"
-importer.
-
-I suppose AMD needs to mangle the RMP when it changes, and KVM has to
-do that.
-
-I forget what ARM does, but I seem to recall there is a call to create
-a vPCI function and that is what stuffs the S2? So maybe KVM isn't
-even involved? (IIRC people were talking that something else would
-call the vPCI function but I haven't seen patches)
-
-No idea what x86 does beyond it has to unmap all the MMIO otherwise
-the machine crashes :P
-
-Oh man, what a horrible mess to even contemplate. I'm going to bed.
-
-Jason
