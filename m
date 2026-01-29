@@ -1,25 +1,25 @@
 Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A79C3168E8;
-	Thu, 29 Jan 2026 17:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C623304BDA;
+	Thu, 29 Jan 2026 17:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769706320; cv=none; b=hVm/PvLFJQ+mWTzuM8uUbVSW1acwC2HmUHZ5gN9gN7RAIcWTk8X8PZ36D6NLm7CFGoQnFUTsLFmGsBfduuhlprqtzVKfxW0K6ZAiVMMfxJBeEDR9e1vXlvR9HzYAopU2Ek4v6FZQUP9T13pqOuGoNUioojlgk6P+LlFfMAByDhE=
+	t=1769706985; cv=none; b=IKMGgUgSC1i6GSMlgejmjmBkEWIi2UpZSEFSvqwHoWWEhVthdmOKVXNx4nAIexb44H1efw64jjH0K8HbsNnuQKjbdRr92f+/ap7xdzLNCk7QcEJAeSYPRrblFLUtl7eRllIv7ru9ZgJOR0jvBz/71FmaSdSkTSf5z846+1xPzNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769706320; c=relaxed/simple;
-	bh=4ZVWEeoRYiyQeROefWmDzEV1Ldxeg+QgF2VlnxTOXPE=;
+	s=arc-20240116; t=1769706985; c=relaxed/simple;
+	bh=DIkei0jGJGVjvv+44OMHHbjC1UWjNUL77TpE3HQ3Xao=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ufu3yzqCVlWAHSCg5GTzecUUN8l9o8BFZWGaVyQ91a4qTeitPFhWrn40Rc5bkdDvXyoS/IHWCuxe1vssdaTuBALlwg/3CfabeBwnbsBLGsIpm7mQtadDkVx85cgemHvUJet7DlF2DKwpy2rAEp5+5d4tfeqK9rS9AKPd65/4v7Y=
+	 MIME-Version:Content-Type; b=WBPU09OSxkQ+QOxj/QjLTyWEj310WM23GCzp1xMnOO1Dk0jweAMnmExr1fvQucnNmfqOXKoaZvcVa4Yg9aUp55j1n8KLYJceSjd2hyb2vOSSErcKzxFVlQn7CE5ErjfPoUCScimIHTZJgx+N8nZuAGF6C99pzCc4drhQwLNfZPg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2F91C160201;
-	Thu, 29 Jan 2026 17:05:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 3B01F60015;
-	Thu, 29 Jan 2026 17:05:11 +0000 (UTC)
-Date: Thu, 29 Jan 2026 12:05:23 -0500
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 8751014021A;
+	Thu, 29 Jan 2026 17:16:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 102F12000F;
+	Thu, 29 Jan 2026 17:16:17 +0000 (UTC)
+Date: Thu, 29 Jan 2026 12:16:29 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
@@ -28,13 +28,12 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  jstultz@google.com, qperret@google.com, will@kernel.org,
  aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v10 15/30] tracing: selftests: Add trace remote tests
-Message-ID: <20260129120523.6f710ff2@gandalf.local.home>
-In-Reply-To: <20260126104419.1649811-16-vdonnefort@google.com>
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 16/30] Documentation: tracing: Add tracing remotes
+Message-ID: <20260129121629.25d2c0e7@gandalf.local.home>
+In-Reply-To: <20260126104419.1649811-17-vdonnefort@google.com>
 References: <20260126104419.1649811-1-vdonnefort@google.com>
-	<20260126104419.1649811-16-vdonnefort@google.com>
+	<20260126104419.1649811-17-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,153 +43,125 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: txaufewkoqfauzwkqo47d1diq43oa8q6
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 3B01F60015
+X-Stat-Signature: ep3s1nwcwmudotqgrz3cu4m49n43768g
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 102F12000F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18BLc+YPC0Jad8q2qNeGSamiSkist3+hCI=
-X-HE-Tag: 1769706311-773773
-X-HE-Meta: U2FsdGVkX18Gk3kh6frTDRcDF0tQBXJ5dAmTOR263lq+mjgXcTAeLPXIei7FJ5BLztwLyBZ/hXl6282qf0MCx78WPvPe6Vd4hZ3PIYWs6aqPUk1zQHysAjLvy4PWfu9AeXLPj38m+I10sjlarN3a00PXUnFHJQX9Q5MOyImib//LQL1kI1ciw/GzqcOaBk2/HzpZTDnPxlrZDG7PqfRupWk7RJJOnqpfIpvAYNheYH44ACfHOpDFCvHEcSneqDvufOY14MT9W85629RcnJB2zXRvyjpWX8pd2/sGCkiPOBZ95Fpdlj71kk3Dw7E0oTWaWmKgQWyBEGEXGb1i0qEJModXvjth6QWh
+X-Session-ID: U2FsdGVkX19OPa/5QA9e3E6X19QE/d51EwPPz+it7TM=
+X-HE-Tag: 1769706977-932958
+X-HE-Meta: U2FsdGVkX19rPg+Qy8EyT28SApcghYzFdXkz9xvvD7CIbLz103mrT0yJNlOT43RNRaEB2ftg2o3Hy8+zeKfP59e+pxkTjKhBEkbvmdiL0/zaEd/WdFLM/gHZ9TRg/VXh6GmRt8MorrTZ6XTgzcldknrru07NbUwrHldiCv1GmxdLF+yKGZ2O5HwAFb8yHROm+rW/lZCOKjHHxojmSSdpMRdbjDX028QzVSjaOaaQMqJNl0y0UU/rm2lH/b/hR8feFYVOuQJogjWvygcnbvO56WzyMOUHR88rALpeqM4wWwSYi0UbvTsrM3hs+19n6p88zHkpOjuaC8a2jkKmmdenESn4aSk7CDWL3F+GP+Qr8WowJILBub2zV9kEYBd8JRE5
 
-On Mon, 26 Jan 2026 10:44:04 +0000
+On Mon, 26 Jan 2026 10:44:05 +0000
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
+> Add documentation about the newly introduced tracing remotes framework.
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+> index b4a429dc4f7a..d77ffb7e2d08 100644
+> --- a/Documentation/trace/index.rst
+> +++ b/Documentation/trace/index.rst
+> @@ -90,6 +90,17 @@ interactions.
+>     user_events
+>     uprobetracer
+>  
+> +Remote Tracing
+> +--------------
+> +
+> +This section covers the framework to read compatible ring-buffers, written by
+> +entities outside of the kernel (most likely firmware or hypervisor)
+> +
+> +.. toctree::
+> +   :maxdepth: 1
+> +
+> +   remotes
+> +
+>  Additional Resources
+>  --------------------
+>  
+> diff --git a/Documentation/trace/remotes.rst b/Documentation/trace/remotes.rst
+> new file mode 100644
+> index 000000000000..e7fb3ee96c30
 > --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/remotes/trace.tc
-> @@ -0,0 +1,127 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Test trace remote non-consuming read
-> +# requires: remotes/test
+> +++ b/Documentation/trace/remotes.rst
+> @@ -0,0 +1,59 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +. $TEST_DIR/remotes/functions
+> +===============
+> +Tracing Remotes
+> +===============
 > +
-> +test_trace()
-> +{
-> +	echo 0 > tracing_on
-> +    assert_unloaded
+> +:Author: Vincent Donnefort <vdonnefort@google.com>
 > +
-> +    echo 7 > buffer_size_kb
-> +    echo 1 > tracing_on
-> +    assert_loaded
-> +
-> +    # Simple test: Emit few events and try to read them
-> +    for i in $(seq 1 8); do
-> +        echo $i > write_event
-> +    done
-> +
-> +    check_trace 1 8 trace
-> +
-> +    #
-> +    # Test interaction with consuming read
-> +    #
-> +
-> +    cat trace_pipe > /dev/null &
-> +    pid=$!
-> +
-> +    sleep 1
-> +    kill $pid
-> +
-> +    test $(wc -l < trace) -eq 0
-> +
-> +    for i in $(seq 16 32); do
-> +        echo $i > write_event
-> +    done
-> +
-> +    check_trace 16 32 trace
-> +
-> +    #
-> +    # Test interaction with reset
-> +    #
-> +
-> +    echo 0 > trace
-> +
-> +    test $(wc -l < trace) -eq 0
-> +
-> +    for i in $(seq 1 8); do
-> +        echo $i > write_event
-> +    done
-> +
-> +    check_trace 1 8 trace
-> +
-> +    #
-> +    # Test interaction with lost events
-> +    #
-> +
-> +    # Ensure the writer is not on the reader page by reloading the buffer
-> +    echo 0 > tracing_on
-> +    echo 0 > trace
-> +    assert_unloaded
-> +    echo 1 > tracing_on
-> +    assert_loaded
-> +
-> +    # Ensure ring-buffer overflow by emitting events from the same CPU
-> +    for cpu in $(get_cpu_ids); do
-> +        break
-> +    done
-> +
-> +    events_per_page=$(($(get_page_size) / $(get_selftest_event_size))) # Approx: does not take TS into account
-> +    nr_events=$(($events_per_page * 2))
-> +    for i in $(seq 1 $nr_events); do
-> +        taskset -c $cpu echo $i > write_event
-> +    done
-> +
-> +    id=$(sed -n -e '1s/\[[0-9]*\]\s*[0-9]*.[0-9]*: [a-z]* id=\([0-9]*\)/\1/p' trace)
-> +    test $id -ne 1
-> +
-> +    check_trace $id $nr_events trace
-> +
-> +    #
-> +    # Test per-CPU interface
-> +    #
-> +    echo 0 > trace
-> +
-> +    for cpu in $(get_cpu_ids) ; do
-> +        taskset -c $cpu echo $cpu > write_event
-> +    done
-> +
-> +    for cpu in $(get_cpu_ids); do
-> +        cd per_cpu/cpu$cpu/
-> +
-> +        check_trace $cpu $cpu trace
-> +
-> +        cd - > /dev/null
-> +    done
-> +
-> +    #
-> +    # Test with hotplug
-> +    #
-> +
-> +    [ "$(get_cpu_ids | wc -l)" -ge 2 ] || return 0
-> +
-> +    echo 0 > trace
-> +
-> +    for cpu in $(get_cpu_ids); do
-> +        echo 0 > /sys/devices/system/cpu/cpu$cpu/online
+> +Overview
+> +========
 
-Note, my test VM doesn't have cpu0/online, so this needs to test for the
-existence of these files:
+Probably should start off with the rationale for remotes. Perhaps start
+with something like:
 
- ./ftracetest: 105: /work/git/linux.git/tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc: cannot create /sys/devices/system/cpu/cpu0/online: Permission denied
+  Firmware and pkvm hypervisors are black boxes to the kernel. Having a way
+  to see what they are doing can be useful to debug both. This is where
+  remote tracing buffers come in. A remote tracing buffer is a ring buffer
+  executed by the firmware or hypervisor into memory that is memory mapped
+  to the host kernel. This is similar to how user space memory maps the
+  kernel ring buffer but in this case the kernel is acting like user space
+  and the firmware or hypervisor is the "kernel" side. With a trace remote
+  ring buffer, the firmware and hypervisor can record events for which the
+  host kernel can see and expose to user space.
+
+But we can expand on this later. The above should be the minimum added to
+allow people to understand why this is being created.
 
 -- Steve
 
+> +A trace remote relies on ring-buffer remotes to read and control compatible
+> +tracing buffers, written by entity such as firmware or hypervisor.
+> +
+> +Once registered, a tracefs instance will appear for this remote in the Tracefs
+> +directory **remotes/**. This remote can be read and controlled using the same
+> +files as regular Tracefs instances such as **trace_pipe**, **tracing_on** or
+> +**trace**.
+> +
+> +Register a remote
+> +=================
+> +A remote must provide a set of callbacks `struct trace_remote_callbacks` whom
+> +description can be found below. Those callbacks allows Tracefs to enable and
+> +disable tracing and events, to load and unload a tracing buffer (a set of
+> +ring-buffers) and to swap a reader page with the head page, which enables
+> +consuming reading.
+> +
+> +.. kernel-doc:: include/linux/trace_remote.h
+> +
+> +Declare a remote event
+> +======================
+> +Macros are provided to ease the declaration of remote events, in a similar
+> +fashion to in-kernel events. A declaration must provide an ID, a description of
+> +the event arguments and how to print the event:
+> +
+> +.. code-block:: c
+> +
+> +	REMOTE_EVENT(foo, EVENT_FOO_ID,
+> +		RE_STRUCT(
+> +			re_field(u64, bar)
+> +		),
+> +		RE_PRINTK("bar=%lld", __entry->bar)
+> +	);
+> +
+> +Then those events must be declared in a C file with the following:
+> +
+> +.. code-block:: c
+> +
+> +	#define REMOTE_EVENT_INCLUDE_FILE foo_events.h
+> +	#include <trace/define_remote_events.h>
+> +
+> +This will provide a `struct remote_event remote_event_foo` that can be given to
+> +`trace_remote_register`.
+> +
+> +Simple ring-buffer
+> +==================
+> +A simple implementation for a ring-buffer writer can be found in
+> +kernel/trace/simple_ring_buffer.c.
+> +
+> +.. kernel-doc:: include/linux/simple_ring_buffer.h
 
-> +        break
-> +    done
-> +
-> +    for i in $(seq 1 8); do
-> +        echo $i > write_event
-> +    done
-> +
-> +    check_trace 1 8 trace
-> +
-> +    echo 1 > /sys/devices/system/cpu/cpu$cpu/online
-> +}
-> +
-> +if [ -z "$SOURCE_REMOTE_TEST" ]; then
-> +    set -e
-> +
-> +    setup_remote_test
-> +    test_trace
-> +fi
