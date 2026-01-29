@@ -1,98 +1,105 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A20352C40;
-	Thu, 29 Jan 2026 20:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E276D3590DF
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 21:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769718591; cv=none; b=XN0k2F58OtB4eiXLowUxgSElypi7XpT7ix0lrQqUBnr0btuKHQTZ3TtdxLHkEZNCDZFmHjXRS4PXkx4jLgG28gOU585q48PGrCQRmxWQ0cCHmAH2GZUa9bj8TJrsuqc3SVnOOcgSl+Pj5Rad1yJNFK0CGpJL1epRo3tFfT4jPmo=
+	t=1769722493; cv=none; b=C+QR39o1VCmVWq4mlSFeh4lBnW+Zq88OZofSwIchbKSDgNHNn9wGGENHvD72GKOFRjkXpYMUmk1u3I6ZSQ4XMztiNPs7M/NQrWnCrDat+mS2elVjsNB8Qg9qYkrQirqihvYpNfhTRx83vh5rgsZ9D3GMqbNG7pe/ysrcw6C5xoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769718591; c=relaxed/simple;
-	bh=4qJbSptnmcF43KW9k9yEejbJpKYWg/JMhClRakopTQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eVbQnHKsI7LckCPf6PmIgKcwbnlolyeSjyJQ/9ykYJvnyjFQ8sdYh12x+Nypdh2TKKidVdZZfwAluqg+tQakHaYQ3KyG9RfUlaqWryMcyjiQdl5AEW4+AJmYkhfsP5ruCphkxWJ5wkQzSdPE9wtroHTkI04SLZa7ldIfiCUtg1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 4B0141A02E0;
-	Thu, 29 Jan 2026 20:29:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 0C50320010;
-	Thu, 29 Jan 2026 20:29:45 +0000 (UTC)
-Date: Thu, 29 Jan 2026 15:29:58 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Yaxiong Tian <tianyaxiong@kylinos.cn>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, corbet@lwn.net, skhan@linuxfoundation.org,
- linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous
- when trace_async_init set
-Message-ID: <20260129152958.05c1ca46@gandalf.local.home>
-In-Reply-To: <56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
-References: <20260128194104.30051be1@gandalf.local.home>
-	<56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769722493; c=relaxed/simple;
+	bh=gNib5OzDxnus3NMxZ0EBqOkqUXY/IHxRC7kvLGUhqaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CT6KBAIYRWKtQLdRJGHpX0hu3pECN5lwCzVevWS4V/zOzQCM0exgNU6QQEB0L4iLvWdebX89vTF9rOSN4h6GZlWvMwRvgLzuCbFHxi0Gmg534nukueww+K9l8P+l9wg0XtQjxu3Wj8+CYh1XRT+vWztIk73oUjKlbQ6K64qYV6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qALQxNT2; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qALQxNT2"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-47ee0291921so13135685e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 13:34:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769722490; x=1770327290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuuFLD2E0Oz9BYdeyyjQ2aqYMkX3G7CJ//5VT0Rpgo4=;
+        b=qALQxNT2/THQzZiHWguoVSYD4a6pmW3ZgGf17dbtk9rb8Ifxzy9rsN/9Q0nlDXCN7j
+         OAfw6EPd+xwHq315z8aB/8kHmOG6yBND8U3cPxVayRPVqMaXOWXtGskg8v1DyC4+FZlk
+         56rz0/zqJswFJqsjXM+/dP/3CTOYVJEnZYxnZJlcZkTALGeV3M0r+oxAoSKI32JDdrRU
+         vsdIFA3WIEwd/lKGI3/6wX4pjNd4iElkgKOqqR9S3d99b+gM57hntbDsuhrvzxgcei/C
+         f3ah8VZYXnKPNr/PKyr9Y+Ls+jRI078OcV1TIvVPs5rTffInYU2HvoU4rGlciVnWdTRe
+         pj3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769722490; x=1770327290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fuuFLD2E0Oz9BYdeyyjQ2aqYMkX3G7CJ//5VT0Rpgo4=;
+        b=qZ7qyTnoW3w8SZuM8/CNgpHaQJktFp6o3M94WIlnm+MHSjAVu8fGKiRpKsaA26UIKp
+         Iw+U93wKOQ2hO1kUh6Ped6pB+cJ0yc6+8HJ72AsdZTAm+w0o3qPzmoKJYVSLQu3moz4B
+         scJ6gWtPWyjnRitabUMvo/dLYPVm4Eb1ZOhZZg4WjdHTk1ignkGpXSZ8QytrhHB+dkVx
+         OjgvHef0aJQ8TSMxngAyY7xXUMknVSXy5rekBDP+0mnEhetY4fjlDLnpQkUEEaPg/o5+
+         LpPUxdiX6mOndDlKthaRlip/5rEIjXkyOTOMqVbezlwE8ysXPk+22dZjabz+IjCtXZS7
+         n/mw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/idC+ErfFjX73NGawEpjiuu+4r4drlehQq6MRLtf/9c+VemM4ZGT6w5TtqcuVeyN9Q/KeBGU7L5d5ed8QSp2roIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZmlZghk0MBWRFzS/PFZiSVE9vCMt40+x/8unOsShTf/OhCEdC
+	Teew0IVDn9gEZFsaWrG9Xk7QA4b7wPgvt8GctaRCCPE6b9GvDUHUQ+eLM2sL67XMwQ==
+X-Gm-Gg: AZuq6aK7ih1MirV5ujz8enNHBgLcY5ErX2M1ck2h6X4i48EqFrrQjGJrtpItQf3TrGM
+	mK4FlU9Bx4LcIXjCQE7Y+NPnh2CXoQlKkP42IW+XgHBbZVAzR4NH2Z4j20NTZLJDhP8BNfUzVKV
+	IfBgOvLrNFv945I32n2WacyyCNTWlNEjHkzrT3wqz7NpJU5TsrUTUpCvfNQ+Sdhr2+jvCheH+Gr
+	yZjQRv7Sx4mzYPJ6+Pago9cs0b1daVla8DbaNoUGhixvM9x9lOSZD5i3lPtkd/3098u7xWS+j6P
+	8IKuBoneoBZvlEYdZipeudsBQqVnK1jCpWwW//H4IH8XjnWKyqmquamqiQ7nDdjiCSUm6/JJrxh
+	AdWA9+xREgFq1r6oIgXx6v5bXlYGkrZEtvUbhph6CQcPjOzQ0YlbXjhSr6/RkEQSdTphb4Ngw7F
+	AP03txcDLiHz1ZOV/onoZZrxlFiYGZEJlplpHPJ3SVGfJeSu/x/A==
+X-Received: by 2002:a05:600c:310f:b0:477:7ae0:cd6e with SMTP id 5b1f17b1804b1-482db493e6bmr6275085e9.5.1769722490186;
+        Thu, 29 Jan 2026 13:34:50 -0800 (PST)
+Received: from google.com (44.145.34.34.bc.googleusercontent.com. [34.34.145.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4806cdd78d3sm156950105e9.1.2026.01.29.13.34.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jan 2026 13:34:49 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:34:46 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+	kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 00/30] Tracefs support for pKVM
+Message-ID: <aXvSdljSYlartF1S@google.com>
+References: <20260126104419.1649811-1-vdonnefort@google.com>
+ <20260129123739.3c00155b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 0C50320010
-X-Stat-Signature: b33d9fd4ichz7wyqqzjufmukuixmzmni
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19qkA0wJOpiwjiiKOANYpARcGxp1NJrOCw=
-X-HE-Tag: 1769718585-900540
-X-HE-Meta: U2FsdGVkX18NrxCl9h9TMLWr6AHyg4XoMaI4xsFj/zTKMfdNpCY1eMAjTIojzsFqilHKPXu6nzLw3efnC1YKbyCN8QRwd7HBONn2XrNuIGa3NsH7cf2+l3Ziq9pPI7riuNsWui6B1bqIpmRWlIqRcJWv29+PD2M9Y1aqpTdAvqVxryvIDcF7FKrJGnZEkDcs1IyUewHfMtBdQdOYmVPRiuF3vOUyabAzzUs8XtRwdK86jtCKk8yTofnohI/3LizIi+3Wpx7izDMU+bIvo1Pbu5teogmir4QLXasV7gnUrVCLqKToescXf9eAiIBXwi9TTkvTH8DDVqrn2nqar9F0PAToSB1aHyOtE17gIk8IgE8svr1vatd5f2FxSEKZzPoT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260129123739.3c00155b@gandalf.local.home>
 
-On Wed, 28 Jan 2026 19:25:46 -0700
-Jens Axboe <axboe@kernel.dk> wrote:
+On Thu, Jan 29, 2026 at 12:37:39PM -0500, Steven Rostedt wrote:
+> Hi Vincent,
+> 
+> I finished my review. I replied to every patch (before the KVM ones) and
+> either made comments or added a Reviewed-by tag.
 
-> On Jan 28, 2026, at 5:40=E2=80=AFPM, Steven Rostedt <rostedt@goodmis.org>=
- wrote:
-> >=20
-> > =EF=BB=BF
-> > Jens,
-> >=20
-> > Can you give me an acked-by on this patch and I can take the series thr=
-ough
-> > my tree. =20
->=20
-> On phone, hope this works:
->=20
-> Acked-by: Jens Axboe <axboe@kernel.dk>
+Thanks a lot! I will try to send an update tomorrow.
 
-Thanks!
-
->=20
-> > Or perhaps this doesn't even need to test the trace_async_init flag and=
- can
-> > always do the work queue? Does blk_trace ever do tracing at boot up? Th=
-at
-> > is, before user space starts? =20
->=20
-> Not via the traditonal way of running blktrace.
-
-Masami and Yaxiong,
-
-I've been thinking about this more and I'm not sure we need the
-trace_async_init kernel parameter at all. As blktrace should only be
-enabled by user space, it can always use the work queue.
-
-For kprobes, if someone is adding a kprobe on the kernel command line, then
-they are already specifying that tracing is more important.
-
-Patch 3 already keeps kprobes from being an issue with contention of the
-tracing locks, so I don't think it ever needs to use the work queue.
-
-Wouldn't it just be better to remove the trace_async_init and make blktrace
-always use the work queue and kprobes never do it (but exit out early if
-there were no kprobes registered)?
-
-That is, remove patch 2 and 4 and make this patch always use the work queue.
-
--- Steve
+> 
+> When you send the next version, if you don't modify one of the patches I
+> replied with a RB tag, add the tag to the patch and it will let me know I
+> don't need to look at it again.
+> 
+> You can use b4 or download the series from here[1] and it will automatically
+> add the tags for you. Just create a new branch and apply the download via
+> git am and work from there.
+> 
+> Thanks,
+> 
+> -- Steve
+> 
+> [1] https://patchwork.kernel.org/series/1047043/mbox/
