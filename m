@@ -1,158 +1,244 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FCD3191C0;
-	Thu, 29 Jan 2026 15:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10D47E105;
+	Thu, 29 Jan 2026 15:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769700506; cv=none; b=pDyGOkBGfiRcbh8jm21k3ygBgVehqo38+MJ9kBTDBZ+qMaDfVlThXEY0RxKTFQwT+2JE/4BK7WR40jm+BuVDNxDJ3hmZJidL5N+T9aPZTFfu13/SFDzoxWL5f+Mt5A6bgSf2uEG5abtI5HQ9KAet6TP1UfTmcQ9uqZOli6Uvh/4=
+	t=1769701709; cv=none; b=ltqvyQSw9MQj4txhxW49cmXcS+NOmd2Y3FV5x1tBrZmds2IPveSj0SqbyOqxc6gN2f3R3r3v8vBcVC9E/EPFW5W2SssXk+9xxepcmfVMoDw71m/AnAN9F7kCu/TPcZw9xPiRFRokcdCZp5J/BISQd4YcUrU3DGBK/JM0Wu3IruM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769700506; c=relaxed/simple;
-	bh=jIUz84h8NpknCoCKer98gGhkUtY4yP88mwSL06t66Ik=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I5EjUyzYng2XUNOPkGoy6O9waoaX2YZCLUlNXWkdJ84ua4iAf8CF6eDORZ6MLFkZWOr+TLzvdenvflHugoyfCNIDxeeGmWR6TaB0q/1OAjVUjSNp3zwJH+Rsf1qhDL2jSxRLka0rgh3brEZJUqeTdeifX1Ys1M6E4tBKe3L1N68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 828881401DE;
-	Thu, 29 Jan 2026 15:28:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id B6EF020012;
-	Thu, 29 Jan 2026 15:28:09 +0000 (UTC)
-Date: Thu, 29 Jan 2026 10:28:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Guenter
- Roeck <linux@roeck-us.net>, Ian Rogers <irogers@google.com>, Juri Lelli
- <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] perf: sched: Fix perf crash with new is_user_task() helper
-Message-ID: <20260129102821.46484722@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769701709; c=relaxed/simple;
+	bh=3sJW9TlizmtRbou/TpxJBFy3blNGRHzOkG2oH2g4P4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TF+LSxKZmz4T87WkBYgcNE5sMT+lJzdll6tSDaioue9q80vE8bxR3Z/CuuLyp635nERvESk3BCLJOzyAhpJxbrt7iO9OiJqb+hGUGyouyIh2cdxofQPi1GwKam7MX9lB7gqBKYoeGOhY0D2umL2TQB0cdMdurYVTRAygN1AniBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgXeaLxQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgXeaLxQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA433C4CEF7;
+	Thu, 29 Jan 2026 15:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769701709;
+	bh=3sJW9TlizmtRbou/TpxJBFy3blNGRHzOkG2oH2g4P4E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IgXeaLxQLQ5M+4wNfa0xLaQN8eb7yeewoPL0uAJ4wWFE//3iBzWA6qWFfbd3CHhZF
+	 TJt532OzdmRmqL8FVcQ3kTHwiMIvcKfPnORYRtebJkRWLGghGxAhprc1KppyqwoyDH
+	 vaVXDC6Fq7tEaAuFja7l3tnIj3h7Yby3+aMkvCRyI1kYwZP6q9DDKqYWIlyQY4wyHB
+	 5iyf5DUpr+QsP6jMv5zKT9QQsrNu5uF5iEzQ1Aa0+CA4Mka/h0duqXOLA1be/SaSO+
+	 GMec+XLx+YxKLN17OTLR72YkLYOSSNzY5mFpC/8moj+7gw1wW0i8saUpN9byHA1IQ9
+	 gwCXAJ0CcEnIw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4] kprobes: Use dedicated kthread for kprobe optimizer
+Date: Fri, 30 Jan 2026 00:48:23 +0900
+Message-ID: <176970170302.114949.5175231591310436910.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B6EF020012
-X-Stat-Signature: 6f4xe3n3sy64h8j83wxap6838jfyi1xk
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18s5DsNJarFzjHYIZlHVcllmYy6uaey7uo=
-X-HE-Tag: 1769700489-570781
-X-HE-Meta: U2FsdGVkX197N4Z4jt36RlEyw64DYuzOwg4kfEGQnpA7/FAnG9ifXyTmhmsPPnMO6MJqRBnuo+UEoprIP02XtpzGvEQlmbeTXbUsmdBISZ6OHh09mMAGp4RN0ouGGO0PBaEdT/LjgPDCdn2nWXqMxtJLKwDJ3pSIXQ8zYA5D5ROjIIb/R/VpGIx9W8UTJZt+WHPacFZv+UKcKvpM4wqQGKyaqCpLuzAYak3+Us3/fxgNNMo0ZnVzWxg6J1RU26s8wix8Y1wXAmmzDCwyc6fCJNNvWM02jIeMqZLizgGkBKA5ivevpgrp88W5Ar9Xled7h9k0GtiIqzBm0wOoiXRkWriEXsNXhGvevu0xXUb7iuhGgEpWiXGsbrh/o7xIZquQCE55G53aCR9w5WFRqzbMdwJrnqJrgZ+t7vhMtC20YwRFsST1Es/Wvn8GM38lreY1SLt8Bli7ECn+vVFkQCflpA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In order to do a user space stacktrace the current task needs to be a user
-task that has executed in user space. It use to be possible to test if a
-task is a user task or not by simply checking the task_struct mm field. If
-it was non NULL, it was a user task and if not it was a kernel task.
+Instead of using generic workqueue, use a dedicated kthread for optimizing
+kprobes, because it can wait (sleep) for a long time inside the process
+by synchronize_rcu_task(). This means other works can be stopped until it
+finishes.
 
-But things have changed over time, and some kernel tasks now have their
-own mm field.
-
-An idea was made to instead test PF_KTHREAD and two functions were used to
-wrap this check in case it became more complex to test if a task was a
-user task or not[1]. But this was rejected and the C code simply checked
-the PF_KTHREAD directly.
-
-It was later found that not all kernel threads set PF_KTHREAD. The io-uring
-helpers instead set PF_USER_WORKER and this needed to be added as well.
-
-But checking the flags is still not enough. There's a very small window
-when a task exits that it frees its mm field and it is set back to NULL.
-If perf were to trigger at this moment, the flags test would say its a
-user space task but when perf would read the mm field it would crash with
-at NULL pointer dereference.
-
-Now there are flags that can be used to test if a task is exiting, but
-they are set in areas that perf may still want to profile the user space
-task (to see where it exited). The only real test is to check both the
-flags and the mm field.
-
-Instead of making this modification in every location, create a new
-is_user_task() helper function that does all the tests needed to know if
-it is safe to read the user space memory or not.
-
-[1] https://lore.kernel.org/all/20250425204120.639530125@goodmis.org/
-
-Cc: stable@vger.kernel.org
-Fixes: 90942f9fac05 ("perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Closes: https://lore.kernel.org/all/0d877e6f-41a7-4724-875d-0b0a27b8a545@roeck-us.net/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/sched.h     | 5 +++++
- kernel/events/callchain.c | 2 +-
- kernel/events/core.c      | 6 +++---
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ Changes in v4:
+  - Update onto probes/for-next.(fix a conflict)
+ Changes in v3:
+  - Wait events in interruptible state for avoiding hung_task.
+ Changes in v2:
+  - Make the kthread unfreezable same as workqueue.
+  - Add kthread_should_stop() check right before calling optimizer too.
+  - Initialize optimizer_state to OPTIMIZER_ST_IDLE instead of 0.
+---
+ kernel/kprobes.c |  106 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 86 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index d395f2810fac..f29ebeeac970 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1776,6 +1776,11 @@ static __always_inline bool is_percpu_thread(void)
- 		(current->nr_cpus_allowed  == 1);
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 1bd84d3b4817..e2cd01cf5968 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -32,6 +32,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/sysctl.h>
+ #include <linux/kdebug.h>
++#include <linux/kthread.h>
+ #include <linux/memory.h>
+ #include <linux/ftrace.h>
+ #include <linux/cpu.h>
+@@ -40,6 +41,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/execmem.h>
+ #include <linux/cleanup.h>
++#include <linux/wait.h>
+ 
+ #include <asm/sections.h>
+ #include <asm/cacheflush.h>
+@@ -514,9 +516,18 @@ static LIST_HEAD(optimizing_list);
+ static LIST_HEAD(unoptimizing_list);
+ static LIST_HEAD(freeing_list);
+ 
+-static void kprobe_optimizer(struct work_struct *work);
+-static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
+ static void optimize_kprobe(struct kprobe *p);
++static struct task_struct *kprobe_optimizer_task;
++static wait_queue_head_t kprobe_optimizer_wait;
++static atomic_t optimizer_state;
++enum {
++	OPTIMIZER_ST_IDLE = 0,
++	OPTIMIZER_ST_KICKED = 1,
++	OPTIMIZER_ST_FLUSHING = 2,
++};
++
++static DECLARE_COMPLETION(optimizer_completion);
++
+ #define OPTIMIZE_DELAY 5
+ 
+ /*
+@@ -609,14 +620,10 @@ static void do_free_cleaned_kprobes(void)
+ 	}
  }
  
-+static __always_inline bool is_user_task(struct task_struct *task)
-+{
-+	return task->mm && !(task->flags & (PF_KTHREAD | PF_USER_WORKER));
+-/* Start optimizer after OPTIMIZE_DELAY passed */
+-static void kick_kprobe_optimizer(void)
+-{
+-	schedule_delayed_work(&optimizing_work, OPTIMIZE_DELAY);
+-}
++static void kick_kprobe_optimizer(void);
+ 
+ /* Kprobe jump optimizer */
+-static void kprobe_optimizer(struct work_struct *work)
++static void kprobe_optimizer(void)
+ {
+ 	guard(mutex)(&kprobe_mutex);
+ 
+@@ -647,9 +654,53 @@ static void kprobe_optimizer(struct work_struct *work)
+ 		do_free_cleaned_kprobes();
+ 	}
+ 
+-	/* Step 5: Kick optimizer again if needed */
++	/* Step 5: Kick optimizer again if needed. But if there is a flush requested, */
++	if (completion_done(&optimizer_completion))
++		complete(&optimizer_completion);
++
+ 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+-		kick_kprobe_optimizer();
++		kick_kprobe_optimizer();	/*normal kick*/
 +}
 +
- /* Per-process atomic flags. */
- #define PFA_NO_NEW_PRIVS		0	/* May not gain new privileges. */
- #define PFA_SPREAD_PAGE			1	/* Spread page cache over cpuset */
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index b9c7e00725d6..636ffa5e5364 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -246,7 +246,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
++static int kprobe_optimizer_thread(void *data)
++{
++	while (!kthread_should_stop()) {
++		/* To avoid hung_task, wait in interruptible state. */
++		wait_event_interruptible(kprobe_optimizer_wait,
++			   atomic_read(&optimizer_state) != OPTIMIZER_ST_IDLE ||
++			   kthread_should_stop());
++
++		if (kthread_should_stop())
++			break;
++
++		/*
++		 * If it was a normal kick, wait for OPTIMIZE_DELAY.
++		 * This wait can be interrupted by a flush request.
++		 */
++		if (atomic_read(&optimizer_state) == 1)
++			wait_event_interruptible_timeout(
++				kprobe_optimizer_wait,
++				atomic_read(&optimizer_state) == OPTIMIZER_ST_FLUSHING ||
++				kthread_should_stop(),
++				OPTIMIZE_DELAY);
++
++		if (kthread_should_stop())
++			break;
++
++		atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
++
++		kprobe_optimizer();
++	}
++	return 0;
++}
++
++/* Start optimizer after OPTIMIZE_DELAY passed */
++static void kick_kprobe_optimizer(void)
++{
++	lockdep_assert_held(&kprobe_mutex);
++	if (atomic_cmpxchg(&optimizer_state,
++		OPTIMIZER_ST_IDLE, OPTIMIZER_ST_KICKED) == OPTIMIZER_ST_IDLE)
++		wake_up(&kprobe_optimizer_wait);
+ }
  
- 	if (user && !crosstask) {
- 		if (!user_mode(regs)) {
--			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-+			if (!is_user_task(current))
- 				goto exit_put;
- 			regs = task_pt_regs(current);
- 		}
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index da013b9a595f..1a06adebd2f2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7745,7 +7745,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
- 		regs_user->regs = regs;
--	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
-+	} else if (is_user_task(current)) {
- 		perf_get_regs_user(regs_user, regs);
- 	} else {
- 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
-@@ -8383,7 +8383,7 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe get_user_page_fast_only first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
-+		if (is_user_task(current)) {
- 			struct page *p;
+ static void wait_for_kprobe_optimizer_locked(void)
+@@ -657,13 +708,17 @@ static void wait_for_kprobe_optimizer_locked(void)
+ 	lockdep_assert_held(&kprobe_mutex);
  
- 			pagefault_disable();
-@@ -8498,7 +8498,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- {
- 	bool kernel = !event->attr.exclude_callchain_kernel;
- 	bool user   = !event->attr.exclude_callchain_user &&
--		!(current->flags & (PF_KTHREAD | PF_USER_WORKER));
-+		is_user_task(current);
- 	/* Disallow cross-task user callchains. */
- 	bool crosstask = event->ctx->task && event->ctx->task != current;
- 	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
--- 
-2.51.0
+ 	while (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list)) {
+-		mutex_unlock(&kprobe_mutex);
+-
+-		/* This will also make 'optimizing_work' execute immmediately */
+-		flush_delayed_work(&optimizing_work);
+-		/* 'optimizing_work' might not have been queued yet, relax */
+-		cpu_relax();
++		init_completion(&optimizer_completion);
++		/*
++		 * Set state to OPTIMIZER_ST_FLUSHING and wake up the thread if it's
++		 * idle. If it's already kicked, it will see the state change.
++		 */
++		if (atomic_xchg_acquire(&optimizer_state,
++			OPTIMIZER_ST_FLUSHING) != OPTIMIZER_ST_FLUSHING)
++			wake_up(&kprobe_optimizer_wait);
+ 
++		mutex_unlock(&kprobe_mutex);
++		wait_for_completion(&optimizer_completion);
+ 		mutex_lock(&kprobe_mutex);
+ 	}
+ }
+@@ -1016,8 +1071,21 @@ static void __disarm_kprobe(struct kprobe *p, bool reopt)
+ 	}
+ }
+ 
++static void __init init_optprobe(void)
++{
++#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
++	/* Init 'kprobe_optinsn_slots' for allocation */
++	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
++#endif
++
++	init_waitqueue_head(&kprobe_optimizer_wait);
++	atomic_set(&optimizer_state, OPTIMIZER_ST_IDLE);
++	kprobe_optimizer_task = kthread_run(kprobe_optimizer_thread, NULL,
++					    "kprobe-optimizer");
++}
+ #else /* !CONFIG_OPTPROBES */
+ 
++#define init_optprobe()				do {} while (0)
+ #define optimize_kprobe(p)			do {} while (0)
+ #define unoptimize_kprobe(p, f)			do {} while (0)
+ #define kill_optimized_kprobe(p)		do {} while (0)
+@@ -2700,10 +2768,8 @@ static int __init init_kprobes(void)
+ 	/* By default, kprobes are armed */
+ 	kprobes_all_disarmed = false;
+ 
+-#if defined(CONFIG_OPTPROBES) && defined(__ARCH_WANT_KPROBES_INSN_SLOT)
+-	/* Init 'kprobe_optinsn_slots' for allocation */
+-	kprobe_optinsn_slots.insn_size = MAX_OPTINSN_SIZE;
+-#endif
++	/* Initialize the optimization infrastructure */
++	init_optprobe();
+ 
+ 	err = arch_init_kprobes();
+ 	if (!err)
 
