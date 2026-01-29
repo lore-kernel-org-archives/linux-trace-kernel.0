@@ -1,133 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014EE1D5147;
-	Thu, 29 Jan 2026 00:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5B244687
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Jan 2026 00:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769646914; cv=none; b=gOdbwVmYT447Hsj8qJbQkx19/WMc5A99iR83AA7Z3HfAW/DwE2C7as1re75y8KyLgVEYoth1P0aWaQeKvcWG7GMw59ait2nNGgOIEpBnqDEZUSBDQPS5MmxHiIL9dNQlxiZwUMi2Rw2YzpYaJZLZ89esg+SP+PDzBLrooSIFqG4=
+	t=1769647078; cv=none; b=ld7GHzsxcyHFj2i2SKPu6QhuaKVLt42jYLW1eTe5oPzJuJ60Yr0gYZMkc1nKwBbtpe+QjwYpw+4Q281tTw/YjdYoNRSagQC3jwnlbK3Lj177g5rh/9nEifiZ7so6apG972/z+XSdxRBlrq+t4iibfKqCCHFgzjbobeAwohlSZKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769646914; c=relaxed/simple;
-	bh=qq+oA5AHnndX9GCK+w43dKQmGLdT9h8BF5gnKPc2xHo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fdkEF/2GjjxoAPgxSl4R/pYCuW630gQXBnJxIWqbs+kk+d2w4fRK3Ti3JdcpaWMQ2VzAbS5icycOd2N1hmsRRyyzj4KUmyYGLytlco4ycC+RoMGVWytDnEVt3j6kSRG2MXO/P2bGUGbwUxRnyvk/jirw3M4Hsv6n1RxrAcP8LFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpZ85zI0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769647078; c=relaxed/simple;
+	bh=tXNj0V0FG3jDHp0sl6ptuF//zDhb0DbdK89SgU01AH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaU3JNLIe3dWx6ToHTfW8gbKIJQ5AUks60DpF8Qgn1isaY+7fTGGBxOoGiwPr06DS9fcsTKSgYTA/BfQxUfN0pnHmtD7sn/mZcsnLlCnGBpF21cQscxbom8ooOh+ByMi9IgfghFisT3a7SPl0iBC0vYa8BAxvOtAXppmlH7h3rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=k3z974Mo; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpZ85zI0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD925C4CEF1;
-	Thu, 29 Jan 2026 00:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769646913;
-	bh=qq+oA5AHnndX9GCK+w43dKQmGLdT9h8BF5gnKPc2xHo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WpZ85zI0J+mPkfQp5EDeRjORjeNqrXZQ0y1At/OJfbDHqWqKzutM4mHeFRLobnREi
-	 353a6vSt0u4uNoB3UHP36Axf0YmiAR+F77Cot9BTSsqcskFisCOCJsdT0x2/KrktcO
-	 +0Dlm4BRADqGk+Ag1rlzzyxPp80IBbioyDgPoQTmHLWOFLOpTGX7sCC3gP4HKqQtKX
-	 jSiqBwhnWxlXelSJiLRS+cRrvgrV/ATJi96KYhC/0YdvFrje4kOh4fyOjvHrF+86WZ
-	 D/o/QO4d0wuVewt32B0c+makvEYCOtu9m9EVP+IRwxl3d8vKuwQX7ta2M2DTUSpYvW
-	 p509cVCv6ujtA==
-Date: Thu, 29 Jan 2026 09:35:08 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Seokwoo Chung <seokwoo.chung130@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
- corbet@lwn.net, shuah@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 v5 1/3] docs: tracing/fprobe: Document list filters
- and :entry/:exit
-Message-Id: <20260129093508.5064b3782a40811cbcd8cb7b@kernel.org>
-In-Reply-To: <wqpijkdwziafpuci6js5mtfzro46bre4z7une547crcdzrlm67@kd4fgea5m6ov>
-References: <20260118011815.56516-1-seokwoo.chung130@gmail.com>
-	<20260118011815.56516-2-seokwoo.chung130@gmail.com>
-	<20260120155340.2dac7fab@gandalf.local.home>
-	<wqpijkdwziafpuci6js5mtfzro46bre4z7une547crcdzrlm67@kd4fgea5m6ov>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="k3z974Mo"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8c7146b0854so51156485a.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Jan 2026 16:37:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1769647075; x=1770251875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1OWzBPKnyrz01i64zQ4S/hZaAIPcGy0JKcdMQLZXMgA=;
+        b=k3z974MoBekrskW+4yDuSvtzoUeR4tzTJU2yvyD4rQigVuBdm4BzN3Xg8Zzela1ij1
+         PtIBJOHG+48zicSasaJj88LsAp9Idss6arEvECeDPDvI1+/bGMecOxg2xZIYwnFVlh0e
+         N0DvTFOVBrdLgm2SKMS+gRiwkBiRJcJWUntisKKjBYWClnHFRtNhDwWc+rSNwr+1UjqW
+         hx681JKT5lyNNWCAUjt1BcDoxqd1Xi1LEySTm+fAhUY0zEB5n4V31HSnaVxU+vLpaw6P
+         OslVl70bntspz23oY0Aox/yOyL0R7Sg8jXzzls2Zxn0sc+rXC4pcAybAV0qWKdtqzTn8
+         u/Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769647075; x=1770251875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1OWzBPKnyrz01i64zQ4S/hZaAIPcGy0JKcdMQLZXMgA=;
+        b=Swpd8PBdydUvNX7vt6lfldt7dSlI4RcScyBaeJh4c8/hcjNeG8ZEaxHiB4fyjLXaXQ
+         WqOWCeealXk5MQmwrHwrUinzFK1msxgGIpmwwmFsWnBb9Xun41SjGys2qS6FC6LSVkOA
+         aAeJAHN6KD5gwaCu9WgNougxERw2rDc5iWi76cNSbbRoC/0iSFv3MjQ5NavOBccWLrsg
+         ovCXd1aidXjrq/GmDiwuanwhC5zhc2OlfGwPeKS8B+wB5FKg6Z2qEhhqwKN6IMxDJFP3
+         goXDmPtVccm/RU9YEEIqzPpeRgAZTy0au6I4rB+S9qWF7+OP3CKnQvwKkyNrauo2v/aI
+         qW3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWa12ccATvJHfwm+fxNgr3GE+MPQDiAm+IZOcMHb5IqaJ7jb1iST0vrrw1ceHjRce8vREflF08ElEhWkBtntvp/ioc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx4TGL5FTkbqrO8MuuBZY1HaizhSDZIo759es0eXIlje8x2FqA
+	E0LgAXbEk7rTHa2Rhc0dUJQMScAI9wj3xMXdxi/tl+gjDlUrYwkads2gzpYNOHMrniQ=
+X-Gm-Gg: AZuq6aKXanrOahUhrvov+1Z1tmUDQEvUSFSj9jIG6Ekk/ChAvUTXFJmo8Qndz1rkWDR
+	limdpEuM0yx6od+Ik5sr3pfpKa+3jqGoXWGZcNmuXG8aAbqJ3zYZA+9pn/92gs/nI0Y9LN1rY5w
+	z9abHfWYHviq902keG2nYuhdF3UuXfbKjRdw17aqQW5ONtgLbHD0+nbsn65uJ/zSKA8WNtwDzu7
+	7cQl5OnVA3GA9Edk2G97MRvaHiYpPBgwbl4K2rHWgIbINW/sSVcT7Pr2Z0SC/YOG4wsWyk0w3pt
+	FBG43+qdcW2tKyRGMa8cXf6qdOA6JYLFJmYuVQ/Fn2YA+1Xs1y8tccj46BJVr3LKpmseZl5+Bnv
+	xdq+Wh76xE6mD3S1m5dit1+yXekd205JPli8RfUSEoZj+2/cxqQV6puxpoua0zeug6NnxyNjJrQ
+	rA6cA6n/PjEjIB3Y2RpyeDJuhcnonKPJi2t4beXoJvjmu9E/2Chsp6bjM/4ff9tYcW6Jo=
+X-Received: by 2002:ae9:c202:0:b0:8c7:126e:e901 with SMTP id af79cd13be357-8c7126eeb1amr465687985a.22.1769647074488;
+        Wed, 28 Jan 2026 16:37:54 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c711d29aa2sm294243485a.35.2026.01.28.16.37.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jan 2026 16:37:53 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vlG2j-00000009g5p-04Lm;
+	Wed, 28 Jan 2026 20:37:53 -0400
+Date: Wed, 28 Jan 2026 20:37:53 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
+	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
+	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
+	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
+	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
+	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
+	keirf@google.com, kent.overstreet@linux.dev,
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+	mail@maciej.szmigiero.name, maobibo@loongson.cn,
+	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
+	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
+	qperret@google.com, richard.weiyang@gmail.com,
+	rick.p.edgecombe@intel.com, rientjes@google.com,
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
+	seanjc@google.com, shakeel.butt@linux.dev, shuah@kernel.org,
+	steven.price@arm.com, steven.sistare@oracle.com,
+	suzuki.poulose@arm.com, tabba@google.com, tglx@linutronix.de,
+	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz,
+	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com,
+	will@kernel.org, willy@infradead.org, wyihan@google.com,
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com,
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
+ kvm_get_memory_attributes() to per-gmem attributes
+Message-ID: <20260129003753.GZ1641016@ziepe.ca>
+References: <cover.1760731772.git.ackerleytng@google.com>
+ <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
+ <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
+ <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
 
-Hi Ryan,
-
-On Sun, 25 Jan 2026 15:23:17 -0500
-Seokwoo Chung <seokwoo.chung130@gmail.com> wrote:
-
-> On Tue, Jan 20, 2026 at 03:53:40PM -0500, Steven Rostedt wrote:
-> > On Sat, 17 Jan 2026 20:18:13 -0500
-> > "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com> wrote:
-> > 
-> > > Update fprobe event documentation to describe comma-separated symbol lists,
-> > > exclusions, and explicit suffixes.
-> > 
-> > Usually, the documentation updates comes *after* the changes.
-> > 
-> > -- Steve
-> > 
-> Thanks for the comment. As you noticed, I sent another patch since I forgot to
-> put log. That said, please let me know if you want me to continue on this
-> series. My apologies on the ordering. I noted after Masami mentioned but I
-> misordered when sending. Thank you.
-
-Sorry for replying so late,
-Can you fix the kernel test robot's error? I think it is almost done.
-
-Thank you,
-
+On Wed, Jan 28, 2026 at 01:47:50PM -0800, Ackerley Tng wrote:
+> Alexey Kardashevskiy <aik@amd.com> writes:
 > 
-> Best regards,
-> Ryan Chung
-> > > 
-> > > Signed-off-by: Seokwoo Chung (Ryan) <seokwoo.chung130@gmail.com>
-> > > ---
-> > >  Documentation/trace/fprobetrace.rst | 17 ++++++++++++++---
-> > >  1 file changed, 14 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-> > > index b4c2ca3d02c1..bbcfd57f0005 100644
-> > > --- a/Documentation/trace/fprobetrace.rst
-> > > +++ b/Documentation/trace/fprobetrace.rst
-> > > @@ -25,14 +25,18 @@ Synopsis of fprobe-events
-> > >  -------------------------
-> > >  ::
-> > >  
-> > > -  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
-> > > -  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
-> > > +  f[:[GRP1/][EVENT1]] SYM[%return] [FETCHARGS]		    : Single function
-> > > +  f[:[GRP1/][EVENT1]] SYM[,[!]SYM[,...]][:entry|:exit] [FETCHARGS] :Multiple
-> > > +  function
-> > >    t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
-> > >  
-> > >   GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
-> > >   GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
-> > >   EVENT1         : Event name for fprobe. If omitted, the event name is
-> > > -                  "SYM__entry" or "SYM__exit".
-> > > +		  - For a single literal symbol, the event name is
-> > > +		    "SYM__entry" or "SYM__exit".
-> > > +		  - For a *list or any wildcard*, an explicit [GRP1/][EVENT1] is
-> > > +		    required; otherwise the parser rejects it.
-> > >   EVENT2         : Event name for tprobe. If omitted, the event name is
-> > >                    the same as "TRACEPOINT", but if the "TRACEPOINT" starts
-> > >                    with a digit character, "_TRACEPOINT" is used.
-> > > @@ -40,6 +44,13 @@ Synopsis of fprobe-events
-> > >                    can be probed simultaneously, or 0 for the default value
-> > >                    as defined in Documentation/trace/fprobe.rst
-> > >  
-> > > + SYM		: Function name or comma-separated list of symbols.
-> > > +		  - SYM prefixed with "!" are exclusions.
-> > > +		  - ":entry" suffix means it probes entry of given symbols
-> > > +		    (default)
-> > > +		  - ":exit" suffix means it probes exit of given symbols.
-> > > +		  - "%return" suffix means it probes exit of SYM (single
-> > > +		    symbol).
-> > >   FETCHARGS      : Arguments. Each probe can have up to 128 args.
-> > >    ARG           : Fetch "ARG" function argument using BTF (only for function
-> > >                    entry or tracepoint.) (\*1)
-> > 
+> >
+> > [...snip...]
+> >
+> >
+> 
+> Thanks for bringing this up!
+> 
+> > I am trying to make it work with TEE-IO where fd of VFIO MMIO is a dmabuf fd while the rest (guest RAM) is gmemfd. The above suggests that if there is gmemfd - then the memory attributes are handled by gmemfd which is... expected?
+> >
+> 
+> I think this is not expected.
+> 
+> IIUC MMIO guest physical addresses don't have an associated memslot, but
+> if you managed to get to that line in kvm_gmem_get_memory_attributes(),
+> then there is an associated memslot (slot != NULL)?
 
+I think they should have a memslot, shouldn't they? I imagine creating
+a memslot from a FD and the FD can be memfd, guestmemfd, dmabuf, etc,
+etc ?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Either way, guest_memfd shouldn't store attributes for guest physical
+> addresses that don't belong to some guest_memfd memslot.
+> 
+> I think we need a broader discussion for this on where to store memory
+> attributes for MMIO addresses.
+> 
+> I think we should at least have line of sight to storing memory
+> attributes for MMIO addresses, in case we want to design something else,
+> since we're putting vm_memory_attributes on a deprecation path with this
+> series.
+
+I don't know where you want to store them in KVM long term, but they
+need to come from the dmabuf itself (probably via a struct
+p2pdma_provider) and currently it is OK to assume all DMABUFs are
+uncachable MMIO that is safe for the VM to convert into "write
+combining" (eg Normal-NC on ARM)
+
+Jason
+
