@@ -1,95 +1,129 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884373659F0;
-	Fri, 30 Jan 2026 04:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD381FD4;
+	Fri, 30 Jan 2026 04:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769746233; cv=none; b=ShHUH+k1OhGiU6q+6iZ/3o8keYLbItZelnh6MdG/sWB07SN+JjTgIEOCu1pok7KxMVmfFsKCe7Ufv4GpXuknuDGZ9XLpC4RDOPCfqLkD6QhLyYC3wOMSIe7TibkUQuKOjviJF7gKgPsQFEJsRG/vkCZX3BECR1FsaCm/ze5glMk=
+	t=1769748110; cv=none; b=bKYS4+Bg9iO88jW7mDVcayDyBkoCR3uTZ1IOSQ1PJEhMzx1j6Mywhi43Sd851Ttlp/fSEEDJTBBiU4BQmH96H5r+cSVmwNcQcHemuF9R/9zIW5WPrKtJoFn2nNu2nV8LQYgXHDJ7SP5KGa6l+9+7vE41O+D9wYL7ciDtgCWF0Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769746233; c=relaxed/simple;
-	bh=WcqOXi51SLaCHI8JsAHkKOX3stPsziuTNF7QsGKhIeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s6u/3B8CApKb1ds3ypA4cgb67HXREVPp2dxroZjz74WzwEzuPdHkYSxb0gRIjNLzvopcrnOnw/5bpsYf0tBkkpUzqclXIY6HJOvs3Vg+/Ai/SHZKeM9QXqCXqy6Gejhu+1dUPOoxqFVOdTgRCc3a6dbocjKf5g+njHoMhKoXB7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 9947ebfcfd9111f0b0f03b4cfa9209d1-20260130
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:9be15533-7bc8-4271-9ddf-f7e04d5300a2,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:d7c5fa5842f10626ae13cb4617c6ad9a,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 9947ebfcfd9111f0b0f03b4cfa9209d1-20260130
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 460452061; Fri, 30 Jan 2026 12:10:23 +0800
-Message-ID: <9f3a26b1-0bcc-47d9-b3ca-645b24a800bd@kylinos.cn>
-Date: Fri, 30 Jan 2026 12:10:20 +0800
+	s=arc-20240116; t=1769748110; c=relaxed/simple;
+	bh=AP1L/GpqQOUMoiBRHtaHAxcoeCKObBcbQsHi/ZPQzxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mASpSmd/kPS6abZyXAhsOVudEzIU33kBdJRcnW8HYKnmzu22XIfSj/byWdtHVy6tXJ477UQvSI1ZaUy7OF28xJ3+KU4/4r/KwH6gD3E2f8oaXIyeMNv69TITwyrEfJ3aPAnzUNcwqCZYFREXkoE5mHLIgG19TIyZGTldKU8159Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1lGh0+D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1lGh0+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E70CC116C6;
+	Fri, 30 Jan 2026 04:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769748110;
+	bh=AP1L/GpqQOUMoiBRHtaHAxcoeCKObBcbQsHi/ZPQzxU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u1lGh0+Dpm9xM0Qwg/qsh7k89I1wp0YRBB/4fATbvyYSObzyuq62fK5iznTSz4ECl
+	 OCMq6/b9MCAO/6eFIkUjn/k1Db+Ni9E1/FC2VG7CVv5JTxZI8nVGWXv4ai6ZIWvo6f
+	 +D80rye9W3KNVFiuwYj5rn7ReARXfthpbYyIjIpTBaBnQDnu3MDt1pFnjJKrfhu6wA
+	 DdaA2LFHCfnInJROuw00N45HaK+C9ChCuNmEdGQamzyUj7ft2ILi2BDpPS4tpIqK7N
+	 hut8PkhWqndwmgBZF3wy+Nw1zGr1DVbArZZpI4zigPSWIBZk99M4wKv8CHclADreEk
+	 b9QL/LweHcV8g==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Julius Werner <jwerner@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] bootconfig: Fix to terminate value search if it hits a newline
+Date: Fri, 30 Jan 2026 13:41:45 +0900
+Message-ID: <176974810577.124104.16012554973099890517.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous when
- trace_async_init set
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jens Axboe <axboe@kernel.dk>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, corbet@lwn.net, skhan@linuxfoundation.org,
- linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20260128194104.30051be1@gandalf.local.home>
- <56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
- <20260129152958.05c1ca46@gandalf.local.home>
- <bb29a10c-6130-4040-8521-0b5375c017ef@kylinos.cn>
- <a61e6bc0-58d1-46f0-8a4f-17f02503fe17@kylinos.cn>
- <20260129222608.7000bffd@robin> <20260129223116.489a01fd@robin>
- <20260129224520.7f043338@robin>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20260129224520.7f043338@robin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-在 2026/1/30 11:45, Steven Rostedt 写道:
-> On Thu, 29 Jan 2026 22:31:16 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
->> I added the below patch and have this result:
->>
->>     kworker/u33:1-79      [002] .....     1.840855: trace_event_update_all: Start syncing
->>         swapper/0-1       [005] .....     6.045742: trace_eval_sync: sync maps
->>     kworker/u33:1-79      [002] .....    12.289296: trace_event_update_all: Finish syncing
->>         swapper/0-1       [005] .....    12.289387: trace_eval_sync: sync maps complete
->>
->> Which shows that the final initcall waited for the work queue to complete:
-> Switching to printk() gives me the same results:
->
-> # dmesg |grep sync
-> [    1.117856] Start syncing
-> [    4.498360] sync maps
-> [   11.173304] Finish syncing
-> [   11.175660] sync maps complete
->
-> -- Steve
+Fix bootconfig to terminate the value search if it hits a newline
+even if it is empty.
 
-Sorry, yes, no problem. I confirmed that init_blk_tracer() is running 
-properly (when executed sequentially) — if there were an issue, it would 
-have already gotten stuck in a lock. It seems like this might be related 
-to the print buffer. I’ll look into this issue myself.
+When we pass a bootconfig with an empty value terminated by the
+newline, like below::
 
+  foo =
+  bar = value
 
-Back to this topic — I don’t object to that proposal.
-I think each has its own advantages. Let’s see what others think.
+Current bootconfig interprets it as a single entry::
+
+  foo = "bar = value";
+
+However, the Documentation/admin-guide/bootconfig.rst said that
+
+  The value has to be terminated by semi-colon (``;``) or newline (``\n``).
+
+Thus, it should be interpreted as::
+
+  foo = "";
+  bar = "value";
+
+Note that if the line has a comment, it still keep searching the
+value to the next line::
+
+  foo = # comment
+  value
+
+This is interpreted as `foo = "value"`.
+This also updates the test script so that it can check the above cases.
+
+Fixes: 76db5a27a827 ("bootconfig: Add Extra Boot Config support")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/bootconfig/test-bootconfig.sh |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 81f29c29f47b..94b55ec32444 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -563,7 +563,7 @@ static int __init __xbc_parse_value(char **__v, char **__n)
+ 	char *p, *v = *__v;
+ 	int c, quotes = 0;
+ 
+-	v = skip_spaces(v);
++	v = skip_spaces_until_newline(v);
+ 	while (*v == '#') {
+ 		v = skip_comment(v);
+ 		v = skip_spaces(v);
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 7594659af1e1..0873883182b0 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -171,6 +171,24 @@ $BOOTCONF $INITRD > $OUTFILE
+ xfail grep -q 'val[[:space:]]' $OUTFILE
+ xpass grep -q 'val2[[:space:]]' $OUTFILE
+ 
++echo "Empty value with ="
++cat > $TEMPCONF << EOF
++foo =
++bar
++EOF
++$BOOTCONF $TEMPCONF > $OUTFILE
++xfail grep 'foo[[:space:]]=[[:space:]]"bar"' $OUTFILE
++xpass grep 'foo[[:space:]]=[[:space:]]"";' $OUTFILE
++
++echo "Continue value after comment"
++cat > $TEMPCONF << EOF
++foo = # comment
++bar
++EOF
++$BOOTCONF $TEMPCONF > $OUTFILE
++xpass grep 'foo[[:space:]]=[[:space:]]"bar"' $OUTFILE
++xfail grep 'foo[[:space:]]=[[:space:]]"";' $OUTFILE
++
+ echo "=== expected failure cases ==="
+ for i in samples/bad-* ; do
+   xfail $BOOTCONF -a $i $INITRD
+
