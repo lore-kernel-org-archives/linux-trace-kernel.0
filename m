@@ -1,91 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.kolabnow.com (mx.kolabnow.com [212.103.80.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD20327210;
-	Fri, 30 Jan 2026 09:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8CF30B527;
+	Fri, 30 Jan 2026 09:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.103.80.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769763699; cv=none; b=TNGC61qRQMO1eFADrvdEiljO68WEC+G8ml9KukXCdY0VGUInk+KeFsaY4XZy2VHFjE/h+jrQXLJYaDT7JBF5bnbfAHjxzZ+AoplWiUz50ICkHzY2Ofypo77TFkUyxUnn0kjLnDaZVA3ot8igtJWRg/HgVdk4rfS506Sdq9hPFjw=
+	t=1769764761; cv=none; b=t19uPJjDhDAdGkWc/xBBuBg8l0FeVnkT6jK9Olg+xVHGpy3E1SXGqQUzzHN8MGN/zaTyhP84pOSdAy9r3qsIaqzLiTgpDhFXEHU+k1dfbZe+6kiJFVYT7yTo3JdsB/sw6kr8Y3ECNQuLdulUs/Wy5xo3vNSZmk/AGwfMqyoHGxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769763699; c=relaxed/simple;
-	bh=95H/wIESXikiwhcfcLOr67klTQ/qhrjEzacoy+OO0yc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Xziw9d0gw+CWIowlVwz8P4NoxGifXvEo6jpI2Q+sBiXMWaYxlE71y7T/v5V3RO1ys8PH9gqygq4Fbl6nXkCPoKQ5pCt0blm9W1sPgBabfF6eoyyL3c5Ev1vR05v53aqBJzDJPHr5YUQcw8MZSUTQ4Fo08FZ5dus01zeYBtr/JqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCWDMECu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769764761; c=relaxed/simple;
+	bh=iLX4y0rPHJDmXXxwQt4fRkJd2Se+iOij7bRTSePc8SA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B0vdKoOaob7s7zsusSBSSApzQmM7wi6WPVRs+xGrzEmMymETeoE/PaJ2to25vs714UmC1stcyz0BZiGy/9WNFDELhd5CU1Pl894B0gMnWsPJ8EW6eXiRG27muBSb1xVCznaiLR85fLb/Ghn4ctGrD6wYQnqyC1eh8rcRWpPGAAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com; spf=pass smtp.mailfrom=mykolab.com; dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b=qnpXbEpn; arc=none smtp.client-ip=212.103.80.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mykolab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCWDMECu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4058AC116D0;
-	Fri, 30 Jan 2026 09:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769763698;
-	bh=95H/wIESXikiwhcfcLOr67klTQ/qhrjEzacoy+OO0yc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UCWDMECuUWqixoMk3hOfTbD7m9P9i5e/EIoQ9Tb8pvDcneGT4tTfP2soi4KTl2eLY
-	 E5a/kdggZeTkMiDrWTnFpbLH/bxPQgJHph8Xwt+1eXR6rWzunnK6PHAN5Rc8iKrP9B
-	 /7OnE+W/TZsbIoxh1Mlewzd67Wj5wV5DMfhlXYx71XvZV2azM1xI4uwfp/61uXNvsP
-	 6s3MT19R0qpUoJMoFoTDhBjUNxXrQ747IIfF86I3kXIKdISsRY77cP2BIPISEpk0JJ
-	 /B28Vzf/U8+Dlnc5AXgB0PMb+kXIyCHhGJFl3PKai8g15Is6kcxseWeKctLDwGnt45
-	 p0gNiea/owCwg==
-Date: Fri, 30 Jan 2026 18:01:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] tracing: Make the backup instance non-reusable
-Message-Id: <20260130180135.7dd5b3731bf242d8d5e907c7@kernel.org>
-In-Reply-To: <20260129145333.002815e1@gandalf.local.home>
-References: <176955897718.2786091.11948759407196200082.stgit@mhiramat.tok.corp.google.com>
-	<176955899639.2786091.8716448298561300937.stgit@mhiramat.tok.corp.google.com>
-	<20260129145333.002815e1@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b="qnpXbEpn"
+Received: from localhost (unknown [127.0.0.1])
+	by mx.kolabnow.com (Postfix) with ESMTP id 267083004C6F;
+	Fri, 30 Jan 2026 10:12:35 +0100 (CET)
+Authentication-Results: ext-mx-out013.mykolab.com (amavis); dkim=pass
+ reason="pass (just generated, assumed good)" header.d=mykolab.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mykolab.com; h=
+	content-transfer-encoding:mime-version:message-id:date:date
+	:subject:subject:from:from:received:received:received; s=dkim2;
+	 t=1769764354; x=1771578755; bh=ROaqE4xBbu8kLCe9Fgw62V84+APwwmK/
+	IZVuGt4P9Iw=; b=qnpXbEpnZrbAA/kYxFz6Xm0n91+VRtTR7S/50d8hOlbuVQKi
+	oKbaMG+MpmZaMuzfy16hv1KbTk6sPp0fKwvDXhYVPhaJ96EnmasXEEdtC5/Ujrmj
+	Iq9jESPtXVH0coXzXsu1z/oFy6y7WgFSZS4Ts9k2Nd7Jkzc+gReVYbKoxuSMst7m
+	73txNc6iYcWVjQPt8oXjxTRsQGwkJ0VzY1vNm2ccDRWNCTmg2cvx3fOeLHGr7XUJ
+	pXwl+falTxEs0OPGV3zQ7eRTDmyOzOKDO21EWUx3FqKRW+BoEiWr0wXPptR4knj3
+	srCqdsn/UPXo0O0Oe5YgldKGn2e+kxdmiSCO0Q==
+X-Virus-Scanned: amavis at mykolab.com
+X-Spam-Flag: NO
+X-Spam-Score: 0.001
+X-Spam-Level:
+Received: from mx.kolabnow.com ([127.0.0.1])
+ by localhost (ext-mx-out013.mykolab.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id e6u4yQDVEHdQ; Fri, 30 Jan 2026 10:12:34 +0100 (CET)
+Received: from int-mx009.mykolab.com (unknown [10.9.13.9])
+	by mx.kolabnow.com (Postfix) with ESMTPS id 4697930011B6;
+	Fri, 30 Jan 2026 10:12:21 +0100 (CET)
+Received: from ext-subm010.mykolab.com (unknown [10.9.6.10])
+	by int-mx009.mykolab.com (Postfix) with ESMTPS id AB73A2093AC8;
+	Fri, 30 Jan 2026 10:12:21 +0100 (CET)
+From: Colin Lord <clord@mykolab.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Colin Lord <clord@mykolab.com>
+Subject: [PATCH] trace/hwlat: prevent false sharing in get_sample()
+Date: Fri, 30 Jan 2026 01:09:06 -0800
+Message-ID: <20260130090906.24108-1-clord@mykolab.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 Jan 2026 14:53:33 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The get_sample() function in the hwlat tracer assumes the caller holds
+hwlat_data.lock, but this is not actually happening. The result is
+unprotected data access to hwlat_data, and in per-cpu mode can result in
+false sharing. The false sharing can cause false positive latency
+events, since the sample_width member is involved and gets read as part
+of the main latency detection loop.
 
-> On Wed, 28 Jan 2026 09:09:56 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > @@ -9388,12 +9405,16 @@ static void
-> >  tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
-> >  {
-> >  	struct dentry *d_percpu = tracing_dentry_percpu(tr, cpu);
-> > +	umode_t writable_mode = TRACE_MODE_WRITE;
-> >  	struct dentry *d_cpu;
-> >  	char cpu_dir[30]; /* 30 characters should be more than enough */
-> >  
-> >  	if (!d_percpu)
-> >  		return;
-> >  
-> > +	if (trace_array_is_readonly(tr))
-> > +		writable_mode = TRACE_MODE_READ;
-> 
-> Hmm, writable_mode is set but not used?
+Lock before accessing hwlat_data members, and prevent false sharing by
+pulling sample_width into a local variable.
 
-Oops, good catch! I missed to update it.
+One system this was tested on was a dual socket server with 32 CPUs on
+each numa node. With settings of 1us threshold, 1000us width, and
+2000us window, this change reduced the number of latency events from
+500 per second down to approximately 1 event per minute. Some machines
+tested did not exhibit measurable latency from the false sharing.
 
-Thanks!
+Signed-off-by: Colin Lord <clord@mykolab.com>
+---
+Hello, while debugging some poor hwlat results on a server I found this
+false sharing. I've tested the patch on multiple servers with many of
+the configs suggested by the patch submission checklist. A notable
+exception is I wasn't able to test with an SMP disabled build as
+multiple tags, including unmodified v6.18, were unable to finish booting
+with my config/hardware, however it did compile successfully. My
+understanding is that SMP is on its way to being required so I didn't
+spend more time on it, but I can do so if it's important. Thanks for
+your time and any feedback!
 
-> 
-> Looks like you missed an update.
-> 
-> -- Steve
-> 
-> > +
-> >  	snprintf(cpu_dir, 30, "cpu%ld", cpu);
-> >  	d_cpu = tracefs_create_dir(cpu_dir, d_percpu);
-> >  	if (!d_cpu) {
-> > @@ -9616,7 +9637,6 @@ struct dentry *trace_create_file(const char *name,
-> >  	return ret;
-> >  }
+ kernel/trace/trace_hwlat.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 2f7b94e98317..1a4b1409226b 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -193,8 +193,7 @@ void trace_hwlat_callback(bool enter)
+  * get_sample - sample the CPU TSC and look for likely hardware latencies
+  *
+  * Used to repeatedly capture the CPU TSC (or similar), looking for potential
+- * hardware-induced latency. Called with interrupts disabled and with
+- * hwlat_data.lock held.
++ * hardware-induced latency. Disables interrupts during measurement.
+  */
+ static int get_sample(void)
+ {
+@@ -204,6 +203,7 @@ static int get_sample(void)
+ 	time_type start, t1, t2, last_t2;
+ 	s64 diff, outer_diff, total, last_total = 0;
+ 	u64 sample = 0;
++	u64 sample_width;
+ 	u64 thresh = tracing_thresh;
+ 	u64 outer_sample = 0;
+ 	int ret = -1;
+@@ -211,6 +211,12 @@ static int get_sample(void)
+ 
+ 	do_div(thresh, NSEC_PER_USEC); /* modifies interval value */
+ 
++	mutex_lock(&hwlat_data.lock);
++	sample_width = hwlat_data.sample_width;
++	mutex_unlock(&hwlat_data.lock);
++
++	local_irq_disable();
++
+ 	kdata->nmi_total_ts = 0;
+ 	kdata->nmi_count = 0;
+ 	/* Make sure NMIs see this first */
+@@ -267,12 +273,14 @@ static int get_sample(void)
+ 		if (diff > sample)
+ 			sample = diff; /* only want highest value */
+ 
+-	} while (total <= hwlat_data.sample_width);
++	} while (total <= sample_width);
+ 
+ 	barrier(); /* finish the above in the view for NMIs */
+ 	trace_hwlat_callback_enabled = false;
+ 	barrier(); /* Make sure nmi_total_ts is no longer updated */
+ 
++	local_irq_enable();
++
+ 	ret = 0;
+ 
+ 	/* If we exceed the threshold value, we have found a hardware latency */
+@@ -285,8 +293,11 @@ static int get_sample(void)
+ 		if (kdata->nmi_total_ts)
+ 			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
+ 
++		mutex_lock(&hwlat_data.lock);
+ 		hwlat_data.count++;
+ 		s.seqnum = hwlat_data.count;
++		mutex_unlock(&hwlat_data.lock);
++
+ 		s.duration = sample;
+ 		s.outer_duration = outer_sample;
+ 		s.nmi_total_ts = kdata->nmi_total_ts;
+@@ -303,7 +314,10 @@ static int get_sample(void)
+ 		}
+ 	}
+ 
++	return ret;
++
+ out:
++	local_irq_enable();
+ 	return ret;
+ }
+ 
+@@ -361,9 +375,7 @@ static int kthread_fn(void *data)
+ 		if (hwlat_data.thread_mode == MODE_ROUND_ROBIN)
+ 			move_to_next_cpu();
+ 
+-		local_irq_disable();
+ 		get_sample();
+-		local_irq_enable();
+ 
+ 		mutex_lock(&hwlat_data.lock);
+ 		interval = hwlat_data.sample_window - hwlat_data.sample_width;
 
+base-commit: 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.51.2
+
