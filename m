@@ -1,117 +1,134 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC652AEE4;
-	Fri, 30 Jan 2026 09:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D0E35C195
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Jan 2026 10:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769767188; cv=none; b=dEildheSDZrhYpapiAj28az97p/PGTbhk2Yvq2+jkBz8pD/lv+jPT8S1OzSUSYMWWGYRQpjtjGvU7x5n6zkY9tOP96KFTSzwV7chuNlSTfLCjUgL4SL7084wiLd+pH6pH+rmFffLxr6FQt7oecgAQdWZUws2L+W8A4YHWAxliVs=
+	t=1769768544; cv=none; b=HpGzz4vKoofWd5Vgry3CHCc0wwW7hs2kioO7vyPeD6Ztrw02BBuj1if102vCwjXejJZX+5SnF37Ygn66JvThxm74GeAhlf9JtN5ycBe/RU5Dd40x4iaU4SO3yFAEruDTxRlAkEHgqFBhscKjsL4euDYwgaEWCcuISTpwovaEVJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769767188; c=relaxed/simple;
-	bh=YGvYE1yGye3usboBMJz4T9DZAbf9vHqZQFDtQ12YWBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ub3DotEGzgukp1CO6xKo4LlaKydhRGOcWSqPJIfKoEAKgNk3D9aEgNgUjzeBitQV82eeFFBJflaoID3o9fY2MX4DkNWijy1ubkKSsKuUwaRA7BY/CHGSd4vh3i86UB9VNHXvi664pSxfTfPdBY6qmDSWGNz3Mh6QhiK21zqh0Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5f5152c2fdc211f0b0f03b4cfa9209d1-20260130
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:dacac5f0-8548-4193-b280-e887edce23e6,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:f477d8c7c696d8a04fbea3d8093fce5b,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 5f5152c2fdc211f0b0f03b4cfa9209d1-20260130
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1982855113; Fri, 30 Jan 2026 17:59:31 +0800
-Message-ID: <63d5e338-3ba4-4def-926f-a32490c6fea9@kylinos.cn>
-Date: Fri, 30 Jan 2026 17:59:28 +0800
+	s=arc-20240116; t=1769768544; c=relaxed/simple;
+	bh=2C6M3tSHSfSWufF6RUJ85n9Nm2/4nxP6ALy7z2Z7v60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5IKKc4GPb3qBYZ3s6O3JE22QzQHOY0a+nk/IdeCa/Taq715qJhlP/mvfpkjsG46MPirBvJPp2mxKV5AJ5guP+TjF11T6SbpjAKqv18YuvAX6z4AQ0OZCtNDyY6xXjTRCtw5lOyA5HM86pY7mOidb+pVUhToUrOnXe5FrsMKI/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Gr4vNUXs; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Gr4vNUXs"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so1687905f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Jan 2026 02:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1769768541; x=1770373341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2C6M3tSHSfSWufF6RUJ85n9Nm2/4nxP6ALy7z2Z7v60=;
+        b=Gr4vNUXsb+lf9QOsJ/Jmn80Hn5LmaoTN4KXvT/eB6ITDJP9Cyl10UhjEBzpLlviyPN
+         FVp1RfJrue+IQrZBzw5uHmcXSopGtOqTyr3qyGJYOFAZlwL5etPl9Ck0rID4s8nk1YYf
+         /nxVD385g3RGfbDRyPIaH35cXtQyEM1o8TfFTWS3qqjHS7v54+Mh2d1Sr9Hb5x+me5KC
+         QgCQlljImlhPGjXJ4vV2sZVHpTJqE44QFQLAZshjYx915X3Hm96avnlH2KfCuM3wnwkf
+         dXr+U90HHDJnKA4rHxFmMAdwicM+H1UKf23HsiD+6ZrxCVSdfSv1KXz2sySuFrYgdmwa
+         xgAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769768541; x=1770373341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2C6M3tSHSfSWufF6RUJ85n9Nm2/4nxP6ALy7z2Z7v60=;
+        b=ttizL9DzUGnM5strhtfW+eUceTUPG/rzRP58yZ77Nj2ei4WA7RPgbVzmHXTnGkZ/7t
+         EYN7+12Dcu7edPdcX9k1NIPVAPGuAy9DnH14pbYsXjVgGyTM3GCszUZ/YyJVFWJbdiWL
+         ltRDSY5tTiFDSTS40aTIz/mdUNNNg2JeZfJohMWgAfzpEJ7mMDmaKFhgL/p7GmtIUzzs
+         XqCp03cxFukkqGnPKnQQ30LEz+ubsHa1VC8vnrFhFcqvScwtz0s4OcS0ceN4d0KeckLo
+         Dj37lMI89tcjypQi+TQbzGIb8fJ5/Q4osD9OIYYcOy77WIeRyiNVu5h0rypPort58MTl
+         QOLA==
+X-Forwarded-Encrypted: i=1; AJvYcCX63rvsBhEkhIl9eiyCq6vO3FG9GpgRFBQw4bRweUM7xrsVCZ0ygZdcnQdZCOleb8uwFjeMmzDJ7Mla4Ja2z/kfZ0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFfmHmYReVst6SzXHuq8GX9jUa6i/bpM4ohqAfpeBSPybqb8BL
+	m2+lBiBwFT5sZ/gjNihTfhlIyQlyOsZo3woGOxBbKfHA1u+OL+V4Xs9U4rLKRwoMM8I=
+X-Gm-Gg: AZuq6aIRu8OFSc5uA/Zmij5AvFqrUN/+psADhLMdFsCs/S9ZxYkpIBtgdQ+iliHsdD5
+	u6sUF8/oGFrkwbe6GLWA/3CRvSytNQFC8bJ9a9lF7Yio3aigqsyWAwbWmh8JUc6//aBp1ly6g05
+	jKOBbs2lKoMkllSXh+Xmge6RwyhcI61Vy4yrNpj2NfD4/r3woRDmgSeDtKZW/X1ODWVrgObr/d/
+	s3tTGtqwqSGtusm1/rntdOXh06mNf20QHgKin2d3246R5qaCCIsRyndFexntyFmvlY7Uha2nqPz
+	i1toGOVecq8GEYvT90jyqJZ2Eo077vzEFJ6NjoRDR/K62KYWtoRRIhByx3KxfYeuC14ZZMkUhhP
+	0Di0lfqHUT12M1RzE7gv2wupxTz5c3UTkjIOLOikri7bXx53fEVPXCwWIo7Ch3Jxlo32JQI0ykV
+	RYnJIrtgrvwwwEVK+YEOjuth+7Okl2C1o=
+X-Received: by 2002:a05:6000:2305:b0:432:da3b:5949 with SMTP id ffacd0b85a97d-435f3a72ae9mr3679398f8f.21.1769768540911;
+        Fri, 30 Jan 2026 02:22:20 -0800 (PST)
+Received: from blackdock.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1354d43sm22606824f8f.43.2026.01.30.02.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jan 2026 02:22:20 -0800 (PST)
+Date: Fri, 30 Jan 2026 11:22:18 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, inwardvessel@gmail.com, 
+	shakeel.butt@linux.dev, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lujialin4@huawei.com
+Subject: Re: [PATCH -next] cgroup: increase maximum subsystem count from 16
+ to 32
+Message-ID: <stsf73lnkx2luuak3a7oi3q4l5axosrxogi2lncw4dkndnc2ge@3tioqa6ww5q7>
+References: <20260129063133.209874-1-chenridong@huaweicloud.com>
+ <asryf3kk6c337l33faqpeznk7d4a3rxblzmqrawxffq7sfbaf7@5yfzzdroltjq>
+ <3a12eb16-3a91-4278-9dfd-6c6f424e7f9f@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous when
- trace_async_init set
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Jens Axboe <axboe@kernel.dk>
-Cc: Jens Axboe <axboe@kernel.dk>, mathieu.desnoyers@efficios.com,
- corbet@lwn.net, skhan@linuxfoundation.org,
- linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20260128194104.30051be1@gandalf.local.home>
- <56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
- <20260129152958.05c1ca46@gandalf.local.home>
- <20260130183022.add316050dd9638e6d71a469@kernel.org>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20260130183022.add316050dd9638e6d71a469@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zispwon7xf4glpk3"
+Content-Disposition: inline
+In-Reply-To: <3a12eb16-3a91-4278-9dfd-6c6f424e7f9f@huaweicloud.com>
 
 
-在 2026/1/30 17:30, Masami Hiramatsu (Google) 写道:
-> On Thu, 29 Jan 2026 15:29:58 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
->> On Wed, 28 Jan 2026 19:25:46 -0700
->> Jens Axboe <axboe@kernel.dk> wrote:
->>
->>> On Jan 28, 2026, at 5:40 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
->>>> ﻿
->>>> Jens,
->>>>
->>>> Can you give me an acked-by on this patch and I can take the series through
->>>> my tree.
->>> On phone, hope this works:
->>>
->>> Acked-by: Jens Axboe <axboe@kernel.dk>
->> Thanks!
->>
->>>> Or perhaps this doesn't even need to test the trace_async_init flag and can
->>>> always do the work queue? Does blk_trace ever do tracing at boot up? That
->>>> is, before user space starts?
->>> Not via the traditonal way of running blktrace.
->> Masami and Yaxiong,
->>
->> I've been thinking about this more and I'm not sure we need the
->> trace_async_init kernel parameter at all. As blktrace should only be
->> enabled by user space, it can always use the work queue.
->>
->> For kprobes, if someone is adding a kprobe on the kernel command line, then
->> they are already specifying that tracing is more important.
->>
->> Patch 3 already keeps kprobes from being an issue with contention of the
->> tracing locks, so I don't think it ever needs to use the work queue.
->>
->> Wouldn't it just be better to remove the trace_async_init and make blktrace
->> always use the work queue and kprobes never do it (but exit out early if
->> there were no kprobes registered)?
-> Yeah, for kprobes event case, that sounds good to me. I think [3/5] is
-> enough to speed it up if user does not define kprobe events on cmdline.
->
-> Thank you,
+--zispwon7xf4glpk3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH -next] cgroup: increase maximum subsystem count from 16
+ to 32
+MIME-Version: 1.0
 
-Agreed.
+On Thu, Jan 29, 2026 at 05:51:33PM +0800, Chen Ridong <chenridong@huaweiclo=
+ud.com> wrote:
+> We compiled with 'make allmodconfig'.
 
-Hi Jens：
+A-ha.
 
-  what do you think about this proposal (making blktrace always use the 
-work queue)?
+> The BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16) macro worked correctly.
 
->
->> That is, remove patch 2 and 4 and make this patch always use the work queue.
->>
->> -- Steve
->
+Good.
+
+> Can I propose increasing the maximum number now? If we switch certain con=
+figs to
+> default N and then a new subsystem is added later, the default configurat=
+ion may
+> work fine, but it will become a problem under allmodconfig =E2=80=94 whic=
+h some users
+> actually rely on.
+>=20
+> Besides, this shouldn't be a major change, right?
+
+I'd like there to be gradual move away from legacy controllers code
+captured in config defaults.
+Could you adjust the commit message to stress out the allmodconfig tests?
+
+The change is OK technically.
+
+Thanks,
+Michal
+
+--zispwon7xf4glpk3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJEEABYKADkWIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaXyGSxsUgAAAAAAEAA5t
+YW51MiwyLjUrMS4xMSwyLDIACgkQfj0C55Tb+Ai/3gD+Pqinek9yDHfUrKo9Kffa
+e6XIsBNZyHtXPceaa55CI3gA/0dRtNVhHx0+A1IfBm3aDf/gT/fX1P09yTJj8Mt/
+8Y4E
+=Tf8X
+-----END PGP SIGNATURE-----
+
+--zispwon7xf4glpk3--
