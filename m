@@ -1,38 +1,34 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AC430BF68;
-	Fri, 30 Jan 2026 14:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD27D1EA7DB;
+	Fri, 30 Jan 2026 14:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769783244; cv=none; b=qwFNao6bo15QSlpkGEwCvDSt4Am1pjBPyLAQx7Ba2nAgq+XwGuVNS+iRu1upPVBBRbz5N569YSp578Bs8Eqn55W+hRoWMM9rkKbLLFK6XucoHlDHgGbkERe/VOEFK3rkvp/qrZEaGn8C8Jgi2F++AP1Itc3x/hlolhJ0x4M8/os=
+	t=1769784801; cv=none; b=jk9cxmcV86rdAM2ueEdbO3YZrfPqCzvQEXzobtK0We1sR4a3qIalL+6VnJqbn87t8vN3evy5xdwJF/IERK4zrRSM2J4qB8KutdMHFXDVGFP5rEdh1RltDL4s0zF0Q+IAqNZJLjcVGCx0dEGa4EQBolCBDoPtAqma94ugXroXk+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769783244; c=relaxed/simple;
-	bh=qNDLmub+dZcNCz3k8/30xXTErfOyg7WGZKIWBRVxCZo=;
+	s=arc-20240116; t=1769784801; c=relaxed/simple;
+	bh=PrW73Thnw+qE1jXAaZqhYs8XkFFD7CxWfNDvGbk40Wg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V3VmToq+82y5H2vreS/TyK5LVQnxvWXUB0zTKEcos7akHbQuGMdxUh2x9KSKzmCsvHdOdZaC1wGzLPd4DzG5zpCYNM2nWPAvgrp3g37ZsR/+aPxfjkNnm3kL7Jz5p1BDoarE9v0J935s7z9MLWAG97Bl0c33YCWvgNaHT/JSjaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=lXu3DvE6IX+WmgiWcscv4kph3tBlzT5XqoEkLrdw7UritjZASQp3afUDb2VQkNL9EiiH2UoLlfgLRJXsFMlGn6xSujbTfCKd6brd/Ka9AVOvf9LgE9TE3abb4SRjcqUaYkXmZQYvThPY0okIHIRutKBsI+3oLKSmimJhQ/sq85c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 341EB1606F1;
-	Fri, 30 Jan 2026 14:27:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 86D8617;
-	Fri, 30 Jan 2026 14:27:19 +0000 (UTC)
-Date: Fri, 30 Jan 2026 09:27:34 -0500
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6612959F6B;
+	Fri, 30 Jan 2026 14:53:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id A8E5B20011;
+	Fri, 30 Jan 2026 14:53:16 +0000 (UTC)
+Date: Fri, 30 Jan 2026 09:53:31 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] tracing/Documentation: Add a section about
- backup instance
-Message-ID: <20260130092734.57060f0a@gandalf.local.home>
-In-Reply-To: <20260130092329.23ee13f9@gandalf.local.home>
-References: <176955897718.2786091.11948759407196200082.stgit@mhiramat.tok.corp.google.com>
-	<176955901173.2786091.7719483008240216705.stgit@mhiramat.tok.corp.google.com>
-	<20260129151900.44b6182c@gandalf.local.home>
-	<20260130222449.bc25b973597721b6a22e4f6d@kernel.org>
-	<20260130092329.23ee13f9@gandalf.local.home>
+Cc: linux-trace-kernel@vger.kernel.org, Julius Werner <jwerner@google.com>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bootconfig: Fix to terminate value search if it hits a
+ newline
+Message-ID: <20260130095331.5c9f754e@gandalf.local.home>
+In-Reply-To: <176974810577.124104.16012554973099890517.stgit@devnote2>
+References: <176974810577.124104.16012554973099890517.stgit@devnote2>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,22 +38,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 86D8617
-X-Stat-Signature: y3kf73izrydcb1u1sphj51uipu4uxcdc
-X-Rspamd-Server: rspamout05
+X-Stat-Signature: 9u3dzepyxsefh5umazitmgyoc6p8tejg
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: A8E5B20011
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+sZdkXBIelWUd8oBNLHOqYXtspuGLdi9Y=
-X-HE-Tag: 1769783239-985882
-X-HE-Meta: U2FsdGVkX19QWsXrkREE1Fu+qG4HxyqSzHRBSOlS7sDpNcNSgZKa4M9p1S5CNDbzvovr+keRAkHUZw4BzjxlLHnnEbfmKIysgL+xAs9DAR7+nVOd7Oibu9tLGGAQi8KojD0rTxzLHmHPkVX7/x/SH+N2CFhyzjvCf+IrlGl55QTZu+Xs9IHnfLO1q1c/2FiECfGUUtKbkVLWrupGKUFLWT9VMlM7L/0KFlrazafLdFFY1NTV4CA2+1pKvw4qsJaKCtu8sujMZ2nwheSN8aM7lF0N6f3TDWmKWOXmRv22zIY3J2W5UHF+Imiweihb8/YAmAYN1KufKgrvl658mRmDAbnKFgLQS2HqI5MeoeHeLN/qiX+U0wZF+iWwKpSIahzumC3AUPwdoC86Zcvoca0Zyg==
+X-Session-ID: U2FsdGVkX1/IrkJImjsq4myRYOO2Lzhcgad4T02fUNA=
+X-HE-Tag: 1769784796-95478
+X-HE-Meta: U2FsdGVkX1+0NelTB7KQDxqW3Q5Uel3wrMCngjG8WVAKUOJDGkt9RNApy2kqOY92VIa6rsr6l0eEDO1KbXXtp9ViaJgUJZdTK2Ldg3FZHjRLp7+mjAQE2d7e8WRrGZ8r+iyUJpZNBMoIisrkbRXYY3hrfTezIXN0/BSDyc4PD9f0NVL5V/X4iUAeIMvmzXZoQ87VX7mBJWOeCgP1DyjGDDoTSTmtxG4QFDGLV11y5YErbnI/FPhLHKcDz4G6AIYC4mQ8HPSrnakQ49Qg0GpPA8LYwb27Ydsm3BqNNvDFW9ztVozHAzTUSx590l5UP6dIi2RV5+v+bLFYulRytjof6gbUb15zC6TQbzziFHPyT2NiNvADmmQSSX5PDWApRdm1EhIqJI5PjY3LZj6ELB1c3GpUXtf0LuAj+5KJzRU+ciw67BI50vW8PA==
 
-On Fri, 30 Jan 2026 09:23:29 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 30 Jan 2026 13:41:45 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Nope ;-)  In this case, leaving out the "the" is appropriate. Now you would
-> need article if it was: the "boot_map" instance
+> Note that if the line has a comment, it still keep searching the
+> value to the next line::
+> 
+>   foo = # comment
+>   value
 
-  "need the article"
+Hmm, so the above is the same as: foo = "value";
 
-God, I can't even get it right :-p
+But what is:
+
+    foo = value # comment
+    bar
+
+ ?
+
+Would that be foo = value bar;
+
+Or simply an error. Or would both be an error?
+
+OK, this isn't related to the patch, but as comment processing was brought
+to my attention, I'm wondering how it works for the above.
+
+> 
+> This is interpreted as `foo = "value"`.
+> This also updates the test script so that it can check the above cases.
+> 
+> Fixes: 76db5a27a827 ("bootconfig: Add Extra Boot Config support")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  tools/bootconfig/test-bootconfig.sh |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+
+As for the patch itself:
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
