@@ -1,122 +1,199 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E40331219;
-	Fri, 30 Jan 2026 01:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EFE1E2614;
+	Fri, 30 Jan 2026 01:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769736937; cv=none; b=ahqf2dbAqVZCvwNI3Ll2fI4rfnQkP7WmqeF7RzhV8nJhfiyh0nMNthxjQGxUcILE5NjiBX4qeu9RcE0rEchB4EVABv2JTYdbeBGV6F9Fr7Ek4uNJ7PYMT+pS7/zK0X9/YU3xfXJfA2Q8zfk2w/xGvCEnczocRA9IjNiq5o8e/Ts=
+	t=1769738312; cv=none; b=Xpvxh0ondrtxcQlLaCaMbFoHYbT7HVuyniXIUd9CuOqU28s0fIzJnfvYH97Jy6yY0Wm4EOt7urFzB2s6xX5ZRlR0Ac59GloamyoddEY9tKa/0Uqf7ZWOMPLyYGsb8dkz0FWmB0M/CE09+FH7UaUMgKt2DTRyDutcZ7YDvm0lRlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769736937; c=relaxed/simple;
-	bh=M4lJFzbs3sThhnPMjseUYFhfXfOwZwYWbo2v43gZ2KQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdIeRddPN8rAh53l9DbOpKoT+jTumXVqI78E9fFIE6ff5SScnechCvxzsYHRtdnLDHws4SSyrHoMC0mMi6OireztVuG8XmGJQugytoxtT7KtEW+muzXlbGl8KnRrGX4r9X3eLAANGDmqt2dwwrM9aH9KG4MkkVtQKkLqYuM8ZVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: f5ae0a5efd7b11f0b0f03b4cfa9209d1-20260130
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:3571bded-f79e-41b7-a556-1d538611884a,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:5b7095bc802a393161668d2dd3a31971,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: f5ae0a5efd7b11f0b0f03b4cfa9209d1-20260130
-X-User: tianyaxiong@kylinos.cn
-Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 269246397; Fri, 30 Jan 2026 09:35:29 +0800
-Message-ID: <bb29a10c-6130-4040-8521-0b5375c017ef@kylinos.cn>
-Date: Fri, 30 Jan 2026 09:35:26 +0800
+	s=arc-20240116; t=1769738312; c=relaxed/simple;
+	bh=n+oLXOiFN9Vzn9pxqe6s87T2TsVR0Azx1ziuMsyo/GM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q1GWXbm3zbF9SQhHPDTYTMgjxxDBYhGng+TPJ0cQxdsRqU2nfVnScdPbk1rAWBaxDcebRatDz2x/b1vMj9C1F4orvGjjqeKGXx2eywRYKOjKeP+15/GFdqruWmC0eQ1AcLTRMBPFs+YSnDA2NE070OV9XAhilMgNYYGugyxS/O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EqQ+3Tuu; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EqQ+3Tuu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=td
+	QcrZHMfAKkMOxd1rFwHv+NsGCD+caqYJKH7tX5TBc=; b=EqQ+3TuuFITvuKLbNw
+	JagzuRsvXvERp8H5Bw8xAPWNXTgP5ZBuvdkerEfmiVeiazxVS80FTi7QAtY6Xlvy
+	g2PxEtFwR+NdadrhRjUCYIVGyuQUn69UhvdTpwZw8kZkagOy6Fb9jh8s5N28pDDA
+	oRF49K92eaBQd3v7uDOQmHLcQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3ybcVEHxpZC7oIA--.23746S2;
+	Fri, 30 Jan 2026 09:57:42 +0800 (CST)
+From: "jempty.liang" <imntjempty@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"jempty.liang" <imntjempty@163.com>
+Subject: [PATCH] tracing: Fix duration calculation bug (rettime - calltime) on ARM architecture
+Date: Fri, 30 Jan 2026 01:57:40 +0000
+Message-Id: <20260130015740.212343-1-imntjempty@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous when
- trace_async_init set
-To: Steven Rostedt <rostedt@goodmis.org>, Jens Axboe <axboe@kernel.dk>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
- skhan@linuxfoundation.org, linux-trace-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20260128194104.30051be1@gandalf.local.home>
- <56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
- <20260129152958.05c1ca46@gandalf.local.home>
-Content-Language: en-US
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-In-Reply-To: <20260129152958.05c1ca46@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3ybcVEHxpZC7oIA--.23746S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GFW7uw4UJr4DJF17CFy7Awb_yoW7Wr18pa
+	yfKa98Kr4kJrWYkryI9rs5Gr45XryxG34UJF47C34YyF97tr1avry7Xrn5XFyrt34kC34a
+	vay0vrW5Cr45uwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRsF4ZUUUUU=
+X-CM-SenderInfo: hlpq3yxhps35i6rwjhhfrp/xtbC9xaCg2l8EBZghAAA3X
 
+This issue is reproducible on the QEMU vexpress-a9 platform with the
+following steps:
 
-在 2026/1/30 04:29, Steven Rostedt 写道:
-> On Wed, 28 Jan 2026 19:25:46 -0700
-> Jens Axboe <axboe@kernel.dk> wrote:
->
->> On Jan 28, 2026, at 5:40 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
->>> ﻿
->>> Jens,
->>>
->>> Can you give me an acked-by on this patch and I can take the series through
->>> my tree.
->> On phone, hope this works:
->>
->> Acked-by: Jens Axboe <axboe@kernel.dk>
-> Thanks!
->
->>> Or perhaps this doesn't even need to test the trace_async_init flag and can
->>> always do the work queue? Does blk_trace ever do tracing at boot up? That
->>> is, before user space starts?
->> Not via the traditonal way of running blktrace.
-> Masami and Yaxiong,
->
-> I've been thinking about this more and I'm not sure we need the
-> trace_async_init kernel parameter at all. As blktrace should only be
-> enabled by user space, it can always use the work queue.
->
-> For kprobes, if someone is adding a kprobe on the kernel command line, then
-> they are already specifying that tracing is more important.
->
-> Patch 3 already keeps kprobes from being an issue with contention of the
-> tracing locks, so I don't think it ever needs to use the work queue.
->
-> Wouldn't it just be better to remove the trace_async_init and make blktrace
-> always use the work queue and kprobes never do it (but exit out early if
-> there were no kprobes registered)?
->
-> That is, remove patch 2 and 4 and make this patch always use the work queue.
+Step 1: Launch the QEMU vexpress-a9 VM
 
-Yesterday, I was curious about|trace_event_update_all()|, so I 
-added|pr_err(xx)|prints within the function's loop. I discovered that 
-these prints appeared as late as 14 seconds later (printing is 
-time-consuming), by which time the desktop had already been up for quite 
-a while. However,|trace_eval_sync()|had already finished running at 0.6 
-seconds.
+~# qemu-system-arm -M vexpress-a9 -smp 1 -m 256 -kernel zImage -dtb \
+	vexpress-v2p-ca9.dtb -drive file=rootfs.ext2,if=sd,format=raw \
+	-append "console=ttyAMA0,115200 rootwait" -net nic,model=lan9118 \
+	-net user -serial stdio
 
-This implies that I originally 
-thought|trace_eval_sync()|'s|destroy_workqueue()|would wait for all 
-tasks to complete, but it seems that might not be the case. From this, 
-if the above conclusion is true, then strictly speaking, tasks 
-using|queue_work(xx)|cannot be guaranteed to finish before the init 
-process executes. If it's necessary to strictly ensure initialization 
-completes before user space starts, 
-using|async_synchronize_full()|or|async_synchronize_full_domain()|would 
-be better in such scenarios.
+Step 2: Capture and view the trace with trace-cmd
 
-Of course, the situation described above is an extreme case. I don't 
-oppose this approach; I only hope to make the startup faster for 
-ordinary users who don’t use trace, while minimizing the impact on 
-others as much as possible.
+~# trace-cmd record -p function_graph -g do_open_execat \
+	--max-graph-depth 1 dd if=/dev/zero of=/tmp/1.bin \
+	bs=1M count=1
+~# trace-cmd report
 
->
-> -- Steve
+Step 3: Observed behavior
+
+Before:
+
+dd-89 ... 5.764026: funcgraph_entry:   $ 2757369004 us |  do_open_execat()
+dd-89 ... 5.765222: funcgraph_entry:   $ 2034790547 us |  do_open_execat();
+
+After:
+
+dd-91 ... 891.945577: funcgraph_entry:   ! 185.542 us |  do_open_execat();
+dd-91 ... 891.946840: funcgraph_entry:   + 98.625 us  |  do_open_execat();
+
+Signed-off-by: jempty.liang <imntjempty@163.com>
+---
+ include/linux/ftrace.h               |  2 ++
+ kernel/trace/trace_entries.h         |  8 ++++----
+ kernel/trace/trace_functions_graph.c | 19 +++++++++----------
+ 3 files changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index a3a8989e3268..52727a342273 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1191,6 +1191,8 @@ struct ftrace_graph_ret {
+ 	int depth;
+ 	/* Number of functions that overran the depth limit for current task */
+ 	unsigned int overrun;
++	unsigned long long calltime;
++	unsigned long long rettime;
+ } __packed;
+ 
+ struct fgraph_ops;
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index f6a8d29c0d76..362a757e65a2 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -127,8 +127,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 		__field_packed(	unsigned long,	ret,		retval	)
+ 		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_packed(unsigned long long,	ret,	calltime)
++		__field_packed(unsigned long long,	ret,	rettime)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u retval: %lx",
+@@ -149,8 +149,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 		__field_packed(	unsigned long,	ret,		func	)
+ 		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_packed(unsigned long long,	ret,	calltime)
++		__field_packed(unsigned long long,	ret,	rettime)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u",
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 1de6f1573621..5798aeb31f05 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -317,6 +317,8 @@ __trace_graph_function(struct trace_array *tr,
+ 	struct ftrace_graph_ret ret = {
+ 		.func     = ip,
+ 		.depth    = 0,
++		.calltime = time,
++		.rettime = time,
+ 	};
+ 
+ 	__trace_graph_entry(tr, &ent, trace_ctx);
+@@ -346,8 +348,8 @@ void __trace_graph_return(struct trace_array *tr,
+ 		return;
+ 	entry	= ring_buffer_event_data(event);
+ 	entry->ret				= *trace;
+-	entry->calltime				= calltime;
+-	entry->rettime				= rettime;
++	entry->ret.calltime				= calltime;
++	entry->ret.rettime				= rettime;
+ 	trace_buffer_unlock_commit_nostack(buffer, event);
+ }
+ 
+@@ -372,10 +374,9 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 	struct trace_array *tr = gops->private;
+ 	struct fgraph_times *ftimes;
+ 	unsigned int trace_ctx;
+-	u64 calltime, rettime;
+ 	int size;
+ 
+-	rettime = trace_clock_local();
++	trace->rettime = trace_clock_local();
+ 
+ 	ftrace_graph_addr_finish(gops, trace);
+ 
+@@ -390,10 +391,10 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 
+ 	handle_nosleeptime(tr, trace, ftimes, size);
+ 
+-	calltime = ftimes->calltime;
++	trace->calltime = ftimes->calltime;
+ 
+ 	trace_ctx = tracing_gen_ctx();
+-	__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
++	__trace_graph_return(tr, trace, trace_ctx, trace->calltime, trace->rettime);
+ }
+ 
+ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
+@@ -956,7 +957,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 
+ 	graph_ret = &ret_entry->ret;
+ 	call = &entry->graph_ent;
+-	duration = ret_entry->rettime - ret_entry->calltime;
++	duration = graph_ret->rettime - graph_ret->calltime;
+ 
+ 	if (data) {
+ 		struct fgraph_cpu_data *cpu_data;
+@@ -1280,9 +1281,7 @@ print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
+ 		   u32 flags)
+ {
+ 	struct ftrace_graph_ret *trace = &retentry->ret;
+-	u64 calltime = retentry->calltime;
+-	u64 rettime = retentry->rettime;
+-	unsigned long long duration = rettime - calltime;
++	unsigned long long duration = trace->rettime - trace->calltime;
+ 	struct fgraph_data *data = iter->private;
+ 	struct trace_array *tr = iter->tr;
+ 	unsigned long func;
+-- 
+2.25.1
+
