@@ -1,379 +1,186 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383FB285073;
-	Sat, 31 Jan 2026 03:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58755325723;
+	Sat, 31 Jan 2026 10:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769829604; cv=none; b=ptznP25KsEH64bFUhPadZ7yugZubPWYE21NJUQqPnsO0Rr9vUlBcz0pZQcXMoFtReNVLkOv18L1Bn6m2CNktG4q1iHKgbGMjBxMk6oAP7H6LZ45G7UK4SqHw63X9KQ8Bsp5ciLosqmCns2VCzGGKTL/mOW3MJCIpTWTusHXVAAk=
+	t=1769854339; cv=none; b=kOvmFKF/qYxMFgjtKmV18YNEf4nLhd4948R/nhz/hruzt+t1AmVXSBJFz4G3raqzEWjCtB1GNIZG7Wn45YLd0CYq4lgoAgouBLknsq528QNLph+jvcyk44WkzMwYBMAz5EC0XNlslrd649tdejfkk8qIPGhH8dIxKBOEHJ/xWdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769829604; c=relaxed/simple;
-	bh=9PZnEZXXmh2yGqz5R6UhGQ+JSoncG562QrTlOaSQOu8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dgEopoJ8oM4mjY13TDTiOOBfeTnb3PqkAh0VdkqalwdEL+t5TOr7304h+Xr08sPUsqyome6CyewUiOEa1AO0/FWryXyrFNQhBwIofYTMCfkaOplvoYstH7gx6Yi3pMTg/WlkxTMUaGOl3FVmnmQUBvHBu4bwt+Edd0gaLTEfNpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4f2ylm6BGpzYQtk5;
-	Sat, 31 Jan 2026 11:19:16 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 845F440577;
-	Sat, 31 Jan 2026 11:19:58 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP4 (Coremail) with SMTP id gCh0CgB32PjWdH1prIflFg--.17344S2;
-	Sat, 31 Jan 2026 11:19:58 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: tj@kernel.org,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	inwardvessel@gmail.com,
-	longman@redhat.com,
-	shakeel.butt@linux.dev,
-	chenridong@huawei.com
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	lujialin4@huawei.com,
-	chenridong@huaweicloud.com
-Subject: [PATCH -next v2] cgroup: increase maximum subsystem count from 16 to 32
-Date: Sat, 31 Jan 2026 03:05:09 +0000
-Message-Id: <20260131030509.317315-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1769854339; c=relaxed/simple;
+	bh=006xMVRfHRX8pHPqFC2lXYr0pWdMLC/HrS4woGky47w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=qKEc7kqHz+bW1DS2UNchwwJMqyM9L2ytBE3AYd2xaH+sA/BUOpyJy43qb8viABR0HNoeZDUMNBd5ldDxFKupCkrMS1gz9jUVZJyLxMCi2zYigZH+46HUSfKNMy0MX6WKGyCEUc0SOokfAUqW0smpDEoAb56JhRoHPMYBvUcDGDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FZiMioZ/; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FZiMioZ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=006xMVRfHRX8pHPqFC2lXYr0pWdMLC/HrS4woGky47w=; b=F
+	ZiMioZ/ss7RsWo9pW/Btf3U9P5SMxFjSU/ZZuOw0tOGZFiDSBDWLSEBaz0sCphQr
+	PleAa8Qin7G+gmUaNs1vEDLBVOIZJ//8IgMbinyZ6jowylxfahsBYKY9HeImMOTz
+	/788P97EkVC+mU6dnh6oG47OR6u7rAQRW+S4TUBnU8=
+Received: from imntjempty$163.com ( [27.42.96.65] ) by
+ ajax-webmail-wmsvr-40-106 (Coremail) ; Sat, 31 Jan 2026 18:11:35 +0800
+ (CST)
+Date: Sat, 31 Jan 2026 18:11:35 +0800 (CST)
+From: "jempty.liang" <imntjempty@163.com>
+To: "Steven Rostedt" <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] tracing: Fix duration calculation bug (rettime -
+ calltime) on ARM architecture
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
+ 20251222(83accb85) Copyright (c) 2002-2026 www.mailtech.cn 163com
+In-Reply-To: <20260130155548.0673f1f3@gandalf.local.home>
+References: <20260130015740.212343-1-imntjempty@163.com>
+ <20260130155548.0673f1f3@gandalf.local.home>
+X-NTES-SC: AL_Qu2dC/Seu0oi4yWcbOkfmU0Ug+s2UMOwvPkh3YdSPpF8jCDp1DglWFBCOXjZ6/2pDiGRjQSsVjdDw8l4fKNpXKQNv9lCLIt8DxdSPq1WtLWSsQ==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB32PjWdH1prIflFg--.17344S2
-X-Coremail-Antispam: 1UD129KBjvJXoWfJr15Ww4fCw48Xr4DKr4xtFb_yoWkWr4rpF
-	nrCr17K3yFyFW5CF4Iya409F1fWws5Xw4UGrWDG34ftry7tr13XFn29Fy8XFy8ZF97Kw13
-	Ar4Yyryjkr18tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Message-ID: <586de639.2489.19c13895e08.Coremail.imntjempty@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:aigvCgD3_1pX1X1p5H1iAA--.15067W
+X-CM-SenderInfo: hlpq3yxhps35i6rwjhhfrp/xtbC9xdERWl91VdX-wAA3f
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-From: Chen Ridong <chenridong@huawei.com>
-
-The current cgroup subsystem limit of 16 is insufficient, as the number of
-existing subsystems has already reached this limit. When adding a new
-subsystem that is not yet in the mainline kernel, building with
-`make allmodconfig` requires first bypassing the
-`BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16)` restriction to allow compilation
-to succeed. However, the kernel still fails to boot afterward.
-
-This patch increases the maximum number of supported cgroup subsystems from
-16 to 32, providing enough room for future subsystem additions.
-
-Signed-off-by: Chen Ridong <chenridong@huawei.com>
-Acked-by: Waiman Long <longman@redhat.com>
-Tested-by: JP Kobryn <inwardvessel@gmail.com>
-Acked-by: JP Kobryn <inwardvessel@gmail.com>
----
-
-V2: update commit memssge.
-
- include/linux/cgroup-defs.h     |  8 +++---
- include/trace/events/cgroup.h   |  2 +-
- kernel/cgroup/cgroup-internal.h |  8 +++---
- kernel/cgroup/cgroup-v1.c       | 12 ++++-----
- kernel/cgroup/cgroup.c          | 46 ++++++++++++++++-----------------
- kernel/cgroup/debug.c           |  2 +-
- 6 files changed, 39 insertions(+), 39 deletions(-)
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index f7cc60de0058..bb92f5c169ca 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -535,10 +535,10 @@ struct cgroup {
- 	 * one which may have more subsystems enabled.  Controller knobs
- 	 * are made available iff it's enabled in ->subtree_control.
- 	 */
--	u16 subtree_control;
--	u16 subtree_ss_mask;
--	u16 old_subtree_control;
--	u16 old_subtree_ss_mask;
-+	u32 subtree_control;
-+	u32 subtree_ss_mask;
-+	u32 old_subtree_control;
-+	u32 old_subtree_ss_mask;
- 
- 	/* Private pointers for each registered subsystem */
- 	struct cgroup_subsys_state __rcu *subsys[CGROUP_SUBSYS_COUNT];
-diff --git a/include/trace/events/cgroup.h b/include/trace/events/cgroup.h
-index ba9229af9a34..b736da06340a 100644
---- a/include/trace/events/cgroup.h
-+++ b/include/trace/events/cgroup.h
-@@ -16,7 +16,7 @@ DECLARE_EVENT_CLASS(cgroup_root,
- 
- 	TP_STRUCT__entry(
- 		__field(	int,		root			)
--		__field(	u16,		ss_mask			)
-+		__field(	u32,		ss_mask			)
- 		__string(	name,		root->name		)
- 	),
- 
-diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
-index 22051b4f1ccb..3bfe37693d68 100644
---- a/kernel/cgroup/cgroup-internal.h
-+++ b/kernel/cgroup/cgroup-internal.h
-@@ -52,7 +52,7 @@ struct cgroup_fs_context {
- 	bool		cpuset_clone_children;
- 	bool		none;			/* User explicitly requested empty subsystem */
- 	bool		all_ss;			/* Seen 'all' option */
--	u16		subsys_mask;		/* Selected subsystems */
-+	u32		subsys_mask;		/* Selected subsystems */
- 	char		*name;			/* Hierarchy name */
- 	char		*release_agent;		/* Path for release notifications */
- };
-@@ -146,7 +146,7 @@ struct cgroup_mgctx {
- 	struct cgroup_taskset	tset;
- 
- 	/* subsystems affected by migration */
--	u16			ss_mask;
-+	u32			ss_mask;
- };
- 
- #define CGROUP_TASKSET_INIT(tset)						\
-@@ -235,8 +235,8 @@ int cgroup_path_ns_locked(struct cgroup *cgrp, char *buf, size_t buflen,
- void cgroup_favor_dynmods(struct cgroup_root *root, bool favor);
- void cgroup_free_root(struct cgroup_root *root);
- void init_cgroup_root(struct cgroup_fs_context *ctx);
--int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask);
--int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask);
-+int cgroup_setup_root(struct cgroup_root *root, u32 ss_mask);
-+int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask);
- int cgroup_do_get_tree(struct fs_context *fc);
- 
- int cgroup_migrate_vet_dst(struct cgroup *dst_cgrp);
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index a9e029b570c8..724950c4b690 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -28,7 +28,7 @@
- #define CGROUP_PIDLIST_DESTROY_DELAY	HZ
- 
- /* Controllers blocked by the commandline in v1 */
--static u16 cgroup_no_v1_mask;
-+static u32 cgroup_no_v1_mask;
- 
- /* disable named v1 mounts */
- static bool cgroup_no_v1_named;
-@@ -1037,13 +1037,13 @@ int cgroup1_parse_param(struct fs_context *fc, struct fs_parameter *param)
- static int check_cgroupfs_options(struct fs_context *fc)
- {
- 	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
--	u16 mask = U16_MAX;
--	u16 enabled = 0;
-+	u32 mask = U32_MAX;
-+	u32 enabled = 0;
- 	struct cgroup_subsys *ss;
- 	int i;
- 
- #ifdef CONFIG_CPUSETS
--	mask = ~((u16)1 << cpuset_cgrp_id);
-+	mask = ~((u32)1 << cpuset_cgrp_id);
- #endif
- 	for_each_subsys(ss, i)
- 		if (cgroup_ssid_enabled(i) && !cgroup1_ssid_disabled(i) &&
-@@ -1095,7 +1095,7 @@ int cgroup1_reconfigure(struct fs_context *fc)
- 	struct kernfs_root *kf_root = kernfs_root_from_sb(fc->root->d_sb);
- 	struct cgroup_root *root = cgroup_root_from_kf(kf_root);
- 	int ret = 0;
--	u16 added_mask, removed_mask;
-+	u32 added_mask, removed_mask;
- 
- 	cgroup_lock_and_drain_offline(&cgrp_dfl_root.cgrp);
- 
-@@ -1343,7 +1343,7 @@ static int __init cgroup_no_v1(char *str)
- 			continue;
- 
- 		if (!strcmp(token, "all")) {
--			cgroup_no_v1_mask = U16_MAX;
-+			cgroup_no_v1_mask = U32_MAX;
- 			continue;
- 		}
- 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 94788bd1fdf0..8af4351536cf 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -203,13 +203,13 @@ EXPORT_SYMBOL_GPL(cgrp_dfl_root);
- bool cgrp_dfl_visible;
- 
- /* some controllers are not supported in the default hierarchy */
--static u16 cgrp_dfl_inhibit_ss_mask;
-+static u32 cgrp_dfl_inhibit_ss_mask;
- 
- /* some controllers are implicitly enabled on the default hierarchy */
--static u16 cgrp_dfl_implicit_ss_mask;
-+static u32 cgrp_dfl_implicit_ss_mask;
- 
- /* some controllers can be threaded on the default hierarchy */
--static u16 cgrp_dfl_threaded_ss_mask;
-+static u32 cgrp_dfl_threaded_ss_mask;
- 
- /* The list of hierarchy roots */
- LIST_HEAD(cgroup_roots);
-@@ -231,10 +231,10 @@ static u64 css_serial_nr_next = 1;
-  * These bitmasks identify subsystems with specific features to avoid
-  * having to do iterative checks repeatedly.
-  */
--static u16 have_fork_callback __read_mostly;
--static u16 have_exit_callback __read_mostly;
--static u16 have_release_callback __read_mostly;
--static u16 have_canfork_callback __read_mostly;
-+static u32 have_fork_callback __read_mostly;
-+static u32 have_exit_callback __read_mostly;
-+static u32 have_release_callback __read_mostly;
-+static u32 have_canfork_callback __read_mostly;
- 
- static bool have_favordynmods __ro_after_init = IS_ENABLED(CONFIG_CGROUP_FAVOR_DYNMODS);
- 
-@@ -472,13 +472,13 @@ static bool cgroup_is_valid_domain(struct cgroup *cgrp)
- }
- 
- /* subsystems visibly enabled on a cgroup */
--static u16 cgroup_control(struct cgroup *cgrp)
-+static u32 cgroup_control(struct cgroup *cgrp)
- {
- 	struct cgroup *parent = cgroup_parent(cgrp);
--	u16 root_ss_mask = cgrp->root->subsys_mask;
-+	u32 root_ss_mask = cgrp->root->subsys_mask;
- 
- 	if (parent) {
--		u16 ss_mask = parent->subtree_control;
-+		u32 ss_mask = parent->subtree_control;
- 
- 		/* threaded cgroups can only have threaded controllers */
- 		if (cgroup_is_threaded(cgrp))
-@@ -493,12 +493,12 @@ static u16 cgroup_control(struct cgroup *cgrp)
- }
- 
- /* subsystems enabled on a cgroup */
--static u16 cgroup_ss_mask(struct cgroup *cgrp)
-+static u32 cgroup_ss_mask(struct cgroup *cgrp)
- {
- 	struct cgroup *parent = cgroup_parent(cgrp);
- 
- 	if (parent) {
--		u16 ss_mask = parent->subtree_ss_mask;
-+		u32 ss_mask = parent->subtree_ss_mask;
- 
- 		/* threaded cgroups can only have threaded controllers */
- 		if (cgroup_is_threaded(cgrp))
-@@ -1633,9 +1633,9 @@ static umode_t cgroup_file_mode(const struct cftype *cft)
-  * This function calculates which subsystems need to be enabled if
-  * @subtree_control is to be applied while restricted to @this_ss_mask.
-  */
--static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
-+static u32 cgroup_calc_subtree_ss_mask(u32 subtree_control, u32 this_ss_mask)
- {
--	u16 cur_ss_mask = subtree_control;
-+	u32 cur_ss_mask = subtree_control;
- 	struct cgroup_subsys *ss;
- 	int ssid;
- 
-@@ -1644,7 +1644,7 @@ static u16 cgroup_calc_subtree_ss_mask(u16 subtree_control, u16 this_ss_mask)
- 	cur_ss_mask |= cgrp_dfl_implicit_ss_mask;
- 
- 	while (true) {
--		u16 new_ss_mask = cur_ss_mask;
-+		u32 new_ss_mask = cur_ss_mask;
- 
- 		do_each_subsys_mask(ss, ssid, cur_ss_mask) {
- 			new_ss_mask |= ss->depends_on;
-@@ -1848,12 +1848,12 @@ static int css_populate_dir(struct cgroup_subsys_state *css)
- 	return ret;
- }
- 
--int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
-+int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask)
- {
- 	struct cgroup *dcgrp = &dst_root->cgrp;
- 	struct cgroup_subsys *ss;
- 	int ssid, ret;
--	u16 dfl_disable_ss_mask = 0;
-+	u32 dfl_disable_ss_mask = 0;
- 
- 	lockdep_assert_held(&cgroup_mutex);
- 
-@@ -2149,7 +2149,7 @@ void init_cgroup_root(struct cgroup_fs_context *ctx)
- 		set_bit(CGRP_CPUSET_CLONE_CHILDREN, &root->cgrp.flags);
- }
- 
--int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
-+int cgroup_setup_root(struct cgroup_root *root, u32 ss_mask)
- {
- 	LIST_HEAD(tmp_links);
- 	struct cgroup *root_cgrp = &root->cgrp;
-@@ -3131,7 +3131,7 @@ void cgroup_procs_write_finish(struct task_struct *task,
- 	put_task_struct(task);
- }
- 
--static void cgroup_print_ss_mask(struct seq_file *seq, u16 ss_mask)
-+static void cgroup_print_ss_mask(struct seq_file *seq, u32 ss_mask)
- {
- 	struct cgroup_subsys *ss;
- 	bool printed = false;
-@@ -3496,9 +3496,9 @@ static void cgroup_finalize_control(struct cgroup *cgrp, int ret)
- 	cgroup_apply_control_disable(cgrp);
- }
- 
--static int cgroup_vet_subtree_control_enable(struct cgroup *cgrp, u16 enable)
-+static int cgroup_vet_subtree_control_enable(struct cgroup *cgrp, u32 enable)
- {
--	u16 domain_enable = enable & ~cgrp_dfl_threaded_ss_mask;
-+	u32 domain_enable = enable & ~cgrp_dfl_threaded_ss_mask;
- 
- 	/* if nothing is getting enabled, nothing to worry about */
- 	if (!enable)
-@@ -3541,7 +3541,7 @@ static ssize_t cgroup_subtree_control_write(struct kernfs_open_file *of,
- 					    char *buf, size_t nbytes,
- 					    loff_t off)
- {
--	u16 enable = 0, disable = 0;
-+	u32 enable = 0, disable = 0;
- 	struct cgroup *cgrp, *child;
- 	struct cgroup_subsys *ss;
- 	char *tok;
-@@ -6347,7 +6347,7 @@ int __init cgroup_init(void)
- 	struct cgroup_subsys *ss;
- 	int ssid;
- 
--	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
-+	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 32);
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup1_base_files));
-diff --git a/kernel/cgroup/debug.c b/kernel/cgroup/debug.c
-index 81ea38dd6f9d..a5490097fe52 100644
---- a/kernel/cgroup/debug.c
-+++ b/kernel/cgroup/debug.c
-@@ -230,7 +230,7 @@ static int cgroup_subsys_states_read(struct seq_file *seq, void *v)
- }
- 
- static void cgroup_masks_read_one(struct seq_file *seq, const char *name,
--				  u16 mask)
-+				  u32 mask)
- {
- 	struct cgroup_subsys *ss;
- 	int ssid;
--- 
-2.34.1
-
+SGksIHN0ZXZ2ZW4KVGhhbmtzIGZvciB5b3VyIHJlcGx5LApBdCAyMDI2LTAxLTMxIDA0OjU1OjQ4
+LCAiU3RldmVuIFJvc3RlZHQiIDxyb3N0ZWR0QGdvb2RtaXMub3JnPiB3cm90ZToKPk9uIEZyaSwg
+MzAgSmFuIDIwMjYgMDE6NTc6NDAgKzAwMDAKPiJqZW1wdHkubGlhbmciIDxpbW50amVtcHR5QDE2
+My5jb20+IHdyb3RlOgo+Cj4+IFRoaXMgaXNzdWUgaXMgcmVwcm9kdWNpYmxlIG9uIHRoZSBRRU1V
+IHZleHByZXNzLWE5IHBsYXRmb3JtIHdpdGggdGhlCj4+IGZvbGxvd2luZyBzdGVwczoKPj4gCj4+
+IFN0ZXAgMTogTGF1bmNoIHRoZSBRRU1VIHZleHByZXNzLWE5IFZNCj4KPkhvdyBpcyB0aGlzIHVu
+aXF1ZSB0byBhcm0/IEknbSBub3QgYWJsZSB0byBkdXBsaWNhdGUgdGhpcyBvbiB4ODYsIGJ1dCB0
+aGUKPmNvZGUgaGVyZSBpcyBhbGwgZ2VuZXJpYyBjb2RlLiBXaGF0J3MgZGlmZmVyZW50Pwo+Cllv
+dSdyZSByaWdodCwgdGhpcyBidWcgaXMgb25seSByZXByb2R1Y2libGUgb24gQVJNLgo+PiAKPj4g
+fiMgcWVtdS1zeXN0ZW0tYXJtIC1NIHZleHByZXNzLWE5IC1zbXAgMSAtbSAyNTYgLWtlcm5lbCB6
+SW1hZ2UgLWR0YiBcCj4+IAl2ZXhwcmVzcy12MnAtY2E5LmR0YiAtZHJpdmUgZmlsZT1yb290ZnMu
+ZXh0MixpZj1zZCxmb3JtYXQ9cmF3IFwKPj4gCS1hcHBlbmQgImNvbnNvbGU9dHR5QU1BMCwxMTUy
+MDAgcm9vdHdhaXQiIC1uZXQgbmljLG1vZGVsPWxhbjkxMTggXAo+PiAJLW5ldCB1c2VyIC1zZXJp
+YWwgc3RkaW8KPj4gCj4+IFN0ZXAgMjogQ2FwdHVyZSBhbmQgdmlldyB0aGUgdHJhY2Ugd2l0aCB0
+cmFjZS1jbWQKPj4gCj4+IH4jIHRyYWNlLWNtZCByZWNvcmQgLXAgZnVuY3Rpb25fZ3JhcGggLWcg
+ZG9fb3Blbl9leGVjYXQgXAo+PiAJLS1tYXgtZ3JhcGgtZGVwdGggMSBkZCBpZj0vZGV2L3plcm8g
+b2Y9L3RtcC8xLmJpbiBcCj4+IAlicz0xTSBjb3VudD0xCj4+IH4jIHRyYWNlLWNtZCByZXBvcnQK
+Pgo+Tm90ZSwgeW91IGFyZSB1c2luZyB0cmFjZS1jbWQgdGhhdCByZWNvcmRzIHRoZSByYXcgZGF0
+YSBkaXJlY3RseSB0aHVzIHNvbWUKPm9mIHRoZSB1cGRhdGVzIHRvIHRoZSBwcmludHMgYmVsb3cg
+d291bGRuJ3QgYWZmZWN0IHRoaXMuCj4KPj4gCj4+IFN0ZXAgMzogT2JzZXJ2ZWQgYmVoYXZpb3IK
+Pj4gCj4+IEJlZm9yZToKPj4gCj4+IGRkLTg5IC4uLiA1Ljc2NDAyNjogZnVuY2dyYXBoX2VudHJ5
+OiAgICQgMjc1NzM2OTAwNCB1cyB8ICBkb19vcGVuX2V4ZWNhdCgpCj4+IGRkLTg5IC4uLiA1Ljc2
+NTIyMjogZnVuY2dyYXBoX2VudHJ5OiAgICQgMjAzNDc5MDU0NyB1cyB8ICBkb19vcGVuX2V4ZWNh
+dCgpOwo+PiAKPj4gQWZ0ZXI6Cj4+IAo+PiBkZC05MSAuLi4gODkxLjk0NTU3NzogZnVuY2dyYXBo
+X2VudHJ5OiAgICEgMTg1LjU0MiB1cyB8ICBkb19vcGVuX2V4ZWNhdCgpOwo+PiBkZC05MSAuLi4g
+ODkxLjk0Njg0MDogZnVuY2dyYXBoX2VudHJ5OiAgICsgOTguNjI1IHVzICB8ICBkb19vcGVuX2V4
+ZWNhdCgpOwo+Cj5Zb3Ugc2hvdyB3aGF0IHRoZSB3cm9uZyBvdXRwdXQgaXMgYW5kIHRoZSBjb3Jy
+ZWN0IG91dHB1dCwgYnV0IHlvdSBkb24ndAo+bWVudGlvbiB3aGF0IHdhcyB0aGUgYnVnIGFuZCBo
+b3cgdGhpcyBmaXhlcyBpdC4gRnJvbSB0aGUgY2hhbmdlIGxvZywgaXQKPmxvb2tzIGxpa2UgeW91
+IGp1c3QgdHJpZWQgc29tZXRoaW5nIGFuZCBpdCB3b3JrZWQsIGJ1dCBkbyBub3Qga25vdyB3aHkg
+aXQKPndvcmtlZC4KPgo+SSdkIGxpa2UgdG8ga25vdyB3aGF0IHRoZSBidWcgd2FzIGFuZCBob3cg
+dGhpcyBmaXhlcyBpdC4gSXQncyBub3Qgb2J2aW91cy4KPgpCZWZvcmUgdGhlIHBhdGNoLCBkb19v
+cGVuX2V4ZWNhdCBoYWQgYW4gYWJub3JtYWwgZXhlY3V0aW9uIGR1cmF0aW9uCm9mIDI3NTczNjkw
+MDQgdXMgKG92ZXIgMSBzZWNvbmQpOyB0aGUgcGF0Y2ggcmVzb2x2ZXMgdGhpcyBhbmQgcmVzdG9y
+ZXMgdGhlCmZ1bmN0aW9uIHRvIGEgbm9ybWFsIGR1cmF0aW9uIHJhbmdlLgo+PiAKPj4gU2lnbmVk
+LW9mZi1ieTogamVtcHR5LmxpYW5nIDxpbW50amVtcHR5QDE2My5jb20+Cj4+IC0tLQo+PiAgaW5j
+bHVkZS9saW51eC9mdHJhY2UuaCAgICAgICAgICAgICAgIHwgIDIgKysKPj4gIGtlcm5lbC90cmFj
+ZS90cmFjZV9lbnRyaWVzLmggICAgICAgICB8ICA4ICsrKystLS0tCj4+ICBrZXJuZWwvdHJhY2Uv
+dHJhY2VfZnVuY3Rpb25zX2dyYXBoLmMgfCAxOSArKysrKysrKystLS0tLS0tLS0tCj4+ICAzIGZp
+bGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQo+PiAKPj4gZGlm
+ZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZnRyYWNlLmggYi9pbmNsdWRlL2xpbnV4L2Z0cmFjZS5o
+Cj4+IGluZGV4IGEzYTg5ODllMzI2OC4uNTI3MjdhMzQyMjczIDEwMDY0NAo+PiAtLS0gYS9pbmNs
+dWRlL2xpbnV4L2Z0cmFjZS5oCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvZnRyYWNlLmgKPj4gQEAg
+LTExOTEsNiArMTE5MSw4IEBAIHN0cnVjdCBmdHJhY2VfZ3JhcGhfcmV0IHsKPj4gIAlpbnQgZGVw
+dGg7Cj4+ICAJLyogTnVtYmVyIG9mIGZ1bmN0aW9ucyB0aGF0IG92ZXJyYW4gdGhlIGRlcHRoIGxp
+bWl0IGZvciBjdXJyZW50IHRhc2sgKi8KPj4gIAl1bnNpZ25lZCBpbnQgb3ZlcnJ1bjsKPj4gKwl1
+bnNpZ25lZCBsb25nIGxvbmcgY2FsbHRpbWU7Cj4+ICsJdW5zaWduZWQgbG9uZyBsb25nIHJldHRp
+bWU7Cj4+ICB9IF9fcGFja2VkOwo+PiAgCj4+ICBzdHJ1Y3QgZmdyYXBoX29wczsKPj4gZGlmZiAt
+LWdpdCBhL2tlcm5lbC90cmFjZS90cmFjZV9lbnRyaWVzLmggYi9rZXJuZWwvdHJhY2UvdHJhY2Vf
+ZW50cmllcy5oCj4+IGluZGV4IGY2YThkMjljMGQ3Ni4uMzYyYTc1N2U2NWEyIDEwMDY0NAo+PiAt
+LS0gYS9rZXJuZWwvdHJhY2UvdHJhY2VfZW50cmllcy5oCj4+ICsrKyBiL2tlcm5lbC90cmFjZS90
+cmFjZV9lbnRyaWVzLmgKPj4gQEAgLTEyNyw4ICsxMjcsOCBAQCBGVFJBQ0VfRU5UUllfUEFDS0VE
+KGZ1bmNncmFwaF9leGl0LCBmdHJhY2VfZ3JhcGhfcmV0X2VudHJ5LAo+PiAgCQlfX2ZpZWxkX3Bh
+Y2tlZCgJdW5zaWduZWQgbG9uZywJcmV0LAkJcmV0dmFsCSkKPj4gIAkJX19maWVsZF9wYWNrZWQo
+CXVuc2lnbmVkIGludCwJcmV0LAkJZGVwdGgJKQo+PiAgCQlfX2ZpZWxkX3BhY2tlZCgJdW5zaWdu
+ZWQgaW50LAlyZXQsCQlvdmVycnVuCSkKPj4gLQkJX19maWVsZCh1bnNpZ25lZCBsb25nIGxvbmcs
+CWNhbGx0aW1lCQkpCj4+IC0JCV9fZmllbGQodW5zaWduZWQgbG9uZyBsb25nLAlyZXR0aW1lCQkJ
+KQo+PiArCQlfX2ZpZWxkX3BhY2tlZCh1bnNpZ25lZCBsb25nIGxvbmcsCXJldCwJY2FsbHRpbWUp
+Cj4+ICsJCV9fZmllbGRfcGFja2VkKHVuc2lnbmVkIGxvbmcgbG9uZywJcmV0LAlyZXR0aW1lKQo+
+PiAgCSksCj4+ICAKPj4gIAlGX3ByaW50aygiPC0tICVwcyAoJXUpIChzdGFydDogJWxseCAgZW5k
+OiAlbGx4KSBvdmVyOiAldSByZXR2YWw6ICVseCIsCj4+IEBAIC0xNDksOCArMTQ5LDggQEAgRlRS
+QUNFX0VOVFJZX1BBQ0tFRChmdW5jZ3JhcGhfZXhpdCwgZnRyYWNlX2dyYXBoX3JldF9lbnRyeSwK
+Pj4gIAkJX19maWVsZF9wYWNrZWQoCXVuc2lnbmVkIGxvbmcsCXJldCwJCWZ1bmMJKQo+PiAgCQlf
+X2ZpZWxkX3BhY2tlZCgJdW5zaWduZWQgaW50LAlyZXQsCQlkZXB0aAkpCj4+ICAJCV9fZmllbGRf
+cGFja2VkKAl1bnNpZ25lZCBpbnQsCXJldCwJCW92ZXJydW4JKQo+PiAtCQlfX2ZpZWxkKHVuc2ln
+bmVkIGxvbmcgbG9uZywJY2FsbHRpbWUJCSkKPj4gLQkJX19maWVsZCh1bnNpZ25lZCBsb25nIGxv
+bmcsCXJldHRpbWUJCQkpCj4+ICsJCV9fZmllbGRfcGFja2VkKHVuc2lnbmVkIGxvbmcgbG9uZywJ
+cmV0LAljYWxsdGltZSkKPj4gKwkJX19maWVsZF9wYWNrZWQodW5zaWduZWQgbG9uZyBsb25nLAly
+ZXQsCXJldHRpbWUpCj4+ICAJKSwKPj4gIAo+PiAgCUZfcHJpbnRrKCI8LS0gJXBzICgldSkgKHN0
+YXJ0OiAlbGx4ICBlbmQ6ICVsbHgpIG92ZXI6ICV1IiwKPj4gZGlmZiAtLWdpdCBhL2tlcm5lbC90
+cmFjZS90cmFjZV9mdW5jdGlvbnNfZ3JhcGguYyBiL2tlcm5lbC90cmFjZS90cmFjZV9mdW5jdGlv
+bnNfZ3JhcGguYwo+PiBpbmRleCAxZGU2ZjE1NzM2MjEuLjU3OThhZWIzMWYwNSAxMDA2NDQKPj4g
+LS0tIGEva2VybmVsL3RyYWNlL3RyYWNlX2Z1bmN0aW9uc19ncmFwaC5jCj4+ICsrKyBiL2tlcm5l
+bC90cmFjZS90cmFjZV9mdW5jdGlvbnNfZ3JhcGguYwo+PiBAQCAtMzE3LDYgKzMxNyw4IEBAIF9f
+dHJhY2VfZ3JhcGhfZnVuY3Rpb24oc3RydWN0IHRyYWNlX2FycmF5ICp0ciwKPj4gIAlzdHJ1Y3Qg
+ZnRyYWNlX2dyYXBoX3JldCByZXQgPSB7Cj4+ICAJCS5mdW5jICAgICA9IGlwLAo+PiAgCQkuZGVw
+dGggICAgPSAwLAo+PiArCQkuY2FsbHRpbWUgPSB0aW1lLAo+PiArCQkucmV0dGltZSA9IHRpbWUs
+Cj4KPklmIHlvdSBhc3NpZ24gaGVyZSwgdGhlbiB5b3Ugc2hvdWxkIGNoYW5nZSB0aGUgbGluZSBi
+ZWxvdyB0aGlzIGNvZGUuCj4KPj4gIAl9Owo+PiAgCj4+ICAJX190cmFjZV9ncmFwaF9lbnRyeSh0
+ciwgJmVudCwgdHJhY2VfY3R4KTsKPgo+VGhlIG5leHQgbGluZSBpcyB0aGlzOgo+Cj4JX190cmFj
+ZV9ncmFwaF9yZXR1cm4odHIsICZyZXQsIHRyYWNlX2N0eCwgdGltZSwgdGltZSk7Cj4KPldoZXJl
+IHRoYXQgZnVuY3Rpb24gaGFzOgo+Cj4JZW50cnktPnJldAkJCQk9ICp0cmFjZTsKPgllbnRyeS0+
+cmV0LmNhbGx0aW1lCQkJCT0gY2FsbHRpbWU7Cj4JZW50cnktPnJldC5yZXR0aW1lCQkJCT0gcmV0
+dGltZTsKPgo+VGhhdCBpcywgcmV0IGlzIGFzc2lnbmVkICIqdHJhY2UiIHdoaWNoIGluY2x1ZGVz
+IHRoZSBjYWxsdGltZSBhbmQgcmV0dGltZSwKPmFuZCBub3cgaXQncyBkb2luZyBtb3JlIHdvcmsg
+dG8gb3ZlcnJpZGUgaXQgd2l0aCB0aGUgY3VycmVudCBkYXRhPwo+ClRoYW5rcyBmb3IgdGhlIHRo
+b3JvdWdoIHJldmlldyDigJQgdGhpcyBpcyBhIGdvb2QgcG9pbnQsIEknbGwgbG9vayBpbnRvIHRo
+aXMKwqBhbmQgYWRqdXN0IGFjY29yZGluZ2x5Lgo+PiBAQCAtMzQ2LDggKzM0OCw4IEBAIHZvaWQg
+X190cmFjZV9ncmFwaF9yZXR1cm4oc3RydWN0IHRyYWNlX2FycmF5ICp0ciwKPj4gIAkJcmV0dXJu
+Owo+PiAgCWVudHJ5CT0gcmluZ19idWZmZXJfZXZlbnRfZGF0YShldmVudCk7Cj4+ICAJZW50cnkt
+PnJldAkJCQk9ICp0cmFjZTsKPj4gLQllbnRyeS0+Y2FsbHRpbWUJCQkJPSBjYWxsdGltZTsKPj4g
+LQllbnRyeS0+cmV0dGltZQkJCQk9IHJldHRpbWU7Cj4+ICsJZW50cnktPnJldC5jYWxsdGltZQkJ
+CQk9IGNhbGx0aW1lOwo+PiArCWVudHJ5LT5yZXQucmV0dGltZQkJCQk9IHJldHRpbWU7Cj4+ICAJ
+dHJhY2VfYnVmZmVyX3VubG9ja19jb21taXRfbm9zdGFjayhidWZmZXIsIGV2ZW50KTsKPj4gIH0K
+Pj4gIAo+PiBAQCAtMzcyLDEwICszNzQsOSBAQCB2b2lkIHRyYWNlX2dyYXBoX3JldHVybihzdHJ1
+Y3QgZnRyYWNlX2dyYXBoX3JldCAqdHJhY2UsCj4+ICAJc3RydWN0IHRyYWNlX2FycmF5ICp0ciA9
+IGdvcHMtPnByaXZhdGU7Cj4+ICAJc3RydWN0IGZncmFwaF90aW1lcyAqZnRpbWVzOwo+PiAgCXVu
+c2lnbmVkIGludCB0cmFjZV9jdHg7Cj4+IC0JdTY0IGNhbGx0aW1lLCByZXR0aW1lOwo+PiAgCWlu
+dCBzaXplOwo+PiAgCj4+IC0JcmV0dGltZSA9IHRyYWNlX2Nsb2NrX2xvY2FsKCk7Cj4+ICsJdHJh
+Y2UtPnJldHRpbWUgPSB0cmFjZV9jbG9ja19sb2NhbCgpOwo+PiAgCj4+ICAJZnRyYWNlX2dyYXBo
+X2FkZHJfZmluaXNoKGdvcHMsIHRyYWNlKTsKPj4gIAo+PiBAQCAtMzkwLDEwICszOTEsMTAgQEAg
+dm9pZCB0cmFjZV9ncmFwaF9yZXR1cm4oc3RydWN0IGZ0cmFjZV9ncmFwaF9yZXQgKnRyYWNlLAo+
+PiAgCj4+ICAJaGFuZGxlX25vc2xlZXB0aW1lKHRyLCB0cmFjZSwgZnRpbWVzLCBzaXplKTsKPj4g
+IAo+PiAtCWNhbGx0aW1lID0gZnRpbWVzLT5jYWxsdGltZTsKPj4gKwl0cmFjZS0+Y2FsbHRpbWUg
+PSBmdGltZXMtPmNhbGx0aW1lOwo+PiAgCj4+ICAJdHJhY2VfY3R4ID0gdHJhY2luZ19nZW5fY3R4
+KCk7Cj4+IC0JX190cmFjZV9ncmFwaF9yZXR1cm4odHIsIHRyYWNlLCB0cmFjZV9jdHgsIGNhbGx0
+aW1lLCByZXR0aW1lKTsKPj4gKwlfX3RyYWNlX2dyYXBoX3JldHVybih0ciwgdHJhY2UsIHRyYWNl
+X2N0eCwgdHJhY2UtPmNhbGx0aW1lLCB0cmFjZS0+cmV0dGltZSk7Cj4KPkFuZCBoZXJlIGFnYWlu
+LCB0aGUgcGFzc2VkIGluIGNhbGx0aW1lIGFuZCByZXR0aW1lIGlzIGp1c3QgYmVpbmcKPm92ZXJ3
+cml0dGVuLgo+Cj4KVGhhbmtzIGZvciByZXZpZXdpbmchIFdpbGwgYWRkcmVzcyB0aGlzIHBvaW50
+Lgo+PiAgfQo+PiAgCj4+ICBzdGF0aWMgdm9pZCB0cmFjZV9ncmFwaF90aHJlc2hfcmV0dXJuKHN0
+cnVjdCBmdHJhY2VfZ3JhcGhfcmV0ICp0cmFjZSwKPj4gQEAgLTk1Niw3ICs5NTcsNyBAQCBwcmlu
+dF9ncmFwaF9lbnRyeV9sZWFmKHN0cnVjdCB0cmFjZV9pdGVyYXRvciAqaXRlciwKPj4gIAo+PiAg
+CWdyYXBoX3JldCA9ICZyZXRfZW50cnktPnJldDsKPj4gIAljYWxsID0gJmVudHJ5LT5ncmFwaF9l
+bnQ7Cj4+IC0JZHVyYXRpb24gPSByZXRfZW50cnktPnJldHRpbWUgLSByZXRfZW50cnktPmNhbGx0
+aW1lOwo+PiArCWR1cmF0aW9uID0gZ3JhcGhfcmV0LT5yZXR0aW1lIC0gZ3JhcGhfcmV0LT5jYWxs
+dGltZTsKPj4gIAo+PiAgCWlmIChkYXRhKSB7Cj4+ICAJCXN0cnVjdCBmZ3JhcGhfY3B1X2RhdGEg
+KmNwdV9kYXRhOwo+PiBAQCAtMTI4MCw5ICsxMjgxLDcgQEAgcHJpbnRfZ3JhcGhfcmV0dXJuKHN0
+cnVjdCBmdHJhY2VfZ3JhcGhfcmV0X2VudHJ5ICpyZXRlbnRyeSwgc3RydWN0IHRyYWNlX3NlcSAq
+cywKPj4gIAkJICAgdTMyIGZsYWdzKQo+PiAgewo+PiAgCXN0cnVjdCBmdHJhY2VfZ3JhcGhfcmV0
+ICp0cmFjZSA9ICZyZXRlbnRyeS0+cmV0Owo+PiAtCXU2NCBjYWxsdGltZSA9IHJldGVudHJ5LT5j
+YWxsdGltZTsKPj4gLQl1NjQgcmV0dGltZSA9IHJldGVudHJ5LT5yZXR0aW1lOwo+PiAtCXVuc2ln
+bmVkIGxvbmcgbG9uZyBkdXJhdGlvbiA9IHJldHRpbWUgLSBjYWxsdGltZTsKPj4gKwl1bnNpZ25l
+ZCBsb25nIGxvbmcgZHVyYXRpb24gPSB0cmFjZS0+cmV0dGltZSAtIHRyYWNlLT5jYWxsdGltZTsK
+Pj4gIAlzdHJ1Y3QgZmdyYXBoX2RhdGEgKmRhdGEgPSBpdGVyLT5wcml2YXRlOwo+PiAgCXN0cnVj
+dCB0cmFjZV9hcnJheSAqdHIgPSBpdGVyLT50cjsKPj4gIAl1bnNpZ25lZCBsb25nIGZ1bmM7Cj4K
+Pk5vdyBtb3ZpbmcgcmV0dGltZSBhbmQgY2FsbHRpbWUgaW50byBmdHJhY2VfZ3JhcGhfcmV0IG1h
+eSBiZSBhIG5pY2UKPmNsZWFudXAsIGJ1dCB5b3UgYXJlIHNheWluZyB0aGlzIGlzIGEgZml4LiBX
+aGF0IHdhcyB0aGUgYnVnLCBhbmQgd2hhdCBkaWQKPnRoaXMgZml4Pwo+ClRoYW5rcyBmb3IgcmV2
+aWV3aW5nISBXaWxsIGFkZHJlc3MgdGhpcyBwb2ludC4KPi0tIFN0ZXZlCgoKCgoKCgoKCgoK
