@@ -1,103 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CEF2DB7AD;
-	Sat, 31 Jan 2026 02:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48303382F0;
+	Sat, 31 Jan 2026 03:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769825997; cv=none; b=t1hWDB/DecxFFFYjbFvhGFm8j2YjCwHBJC/mBLkegALrYC9GidOsqVoCt114MIONy1gHnvf1PQf2F+BaRUYl1mkxEH3UZ5jfroFIb33EXUM9lGFaIdbpoSg6GG0Ktt4DBLuc2hmPUTfkXky8OzrN0hCxd8jGTOAI/QpNDlaP3V0=
+	t=1769828413; cv=none; b=nIK6RH/tn1Uq2twd5+mW/or5S8kBOjimjqEa4uWDQgXfCHJUSlZ4BGtok59IoRrI2/FrIcynqMruT2AjmHInc8yale1VhQxBIX39ptePv0jBQCmPOAT3sOGM4lwhcnylEWC2dtH/NoNvOuIqDX2kTm3qKRuTcH1S9N5FXiiTHI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769825997; c=relaxed/simple;
-	bh=FzypzMsIx1auhhmIROFgxVR1ihamkqARKK/IIYyo8dA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mnKuZIZL6GX4JFCWRu0RH/rKO20naT18chtt4SlpEKeOR3F8aJmDehg9FH5i/5pJ5BrrHQX5FPm2AL+39U22VgdOuPQS3wkoi9pNpzZBJNl/grfFwVyU0qSzUyAACosc0/zdYUx9NQtHOtKZ/XLXXvNCDDap7ZREwZ3JSBaothw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+DZ0SQG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+DZ0SQG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBF6C4CEF7;
-	Sat, 31 Jan 2026 02:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769825996;
-	bh=FzypzMsIx1auhhmIROFgxVR1ihamkqARKK/IIYyo8dA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=S+DZ0SQGNPlnq8EoobLfFuFmI594SWd3HvJHtbLxTXFTTFn08JCjPG4uQ1hg8COcI
-	 YnEhb/XqY63+OoNmxdzy8xGoLfwpsFpaKQDZAUBphTu+SJgx5Pzh3c2RAG4OB0v28T
-	 Dx0zGIrSE1uLCQ4fcz6n57he2BapzGzQKrAmPCq7cK8dirXpbvp1yKntrmVvfPRC00
-	 Pwta2nCOO82Ie8y0BT5zic4hsQyXwyFC+hXgMrlzW5uilpkezFGBJyqQ9sq9x50MtT
-	 FROx4YstCQtyEaWqTAhB9lJA4OE48XTdTd7AZD6N1tnTULTsbnFA6Q7hBYpSyv6p8x
-	 Hwf37pCuU546g==
-Date: Sat, 31 Jan 2026 11:19:51 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Julius Werner <jwerner@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bootconfig: Fix to terminate value search if it hits a
- newline
-Message-Id: <20260131111951.99058146c69f2a729f7be643@kernel.org>
-In-Reply-To: <CAODwPW90ALuMy6kFPqQSj_vN7krRz6cpksAUm2WHJNYwRNxHnA@mail.gmail.com>
-References: <176974810577.124104.16012554973099890517.stgit@devnote2>
-	<20260130095331.5c9f754e@gandalf.local.home>
-	<CAODwPW90ALuMy6kFPqQSj_vN7krRz6cpksAUm2WHJNYwRNxHnA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1769828413; c=relaxed/simple;
+	bh=y+Cab3dQhVHz0xBzECojs2MRdDDVGQOQmnQpaYSYSMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FjyohP8TCmupQeMp3zWhY/mWkdju2TcowMt6spXw/XO9rHpvp9W4jFpPeKjDm32N6f3+ANXr+RaHG6ZoMk7bsFcQy04y7YZHrK+Y70ma6ksFLyS25qTDs608FJwO8NW2ECLze3yIsFZQ14Z59g0Yl0C9U/cns/JSAYl0T+keWW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4f2yKL33PXzKHMP6;
+	Sat, 31 Jan 2026 10:59:50 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id DF03940574;
+	Sat, 31 Jan 2026 11:00:06 +0800 (CST)
+Received: from [10.67.111.176] (unknown [10.67.111.176])
+	by APP4 (Coremail) with SMTP id gCh0CgCXQvM2cH1pd+DjFg--.14099S2;
+	Sat, 31 Jan 2026 11:00:06 +0800 (CST)
+Message-ID: <1f31d8d2-811d-4dff-b036-2eb201f623ba@huaweicloud.com>
+Date: Sat, 31 Jan 2026 11:00:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] cgroup: increase maximum subsystem count from 16 to
+ 32
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, inwardvessel@gmail.com,
+ shakeel.butt@linux.dev, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ lujialin4@huawei.com
+References: <20260129063133.209874-1-chenridong@huaweicloud.com>
+ <asryf3kk6c337l33faqpeznk7d4a3rxblzmqrawxffq7sfbaf7@5yfzzdroltjq>
+ <3a12eb16-3a91-4278-9dfd-6c6f424e7f9f@huaweicloud.com>
+ <stsf73lnkx2luuak3a7oi3q4l5axosrxogi2lncw4dkndnc2ge@3tioqa6ww5q7>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <stsf73lnkx2luuak3a7oi3q4l5axosrxogi2lncw4dkndnc2ge@3tioqa6ww5q7>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXQvM2cH1pd+DjFg--.14099S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw4rXw1UGF48Zr4UXF15CFg_yoW3trc_Wr
+	Z0yr1kCr15AFyIkwsFvF4rCrWqyay8Kry3A3ykWr47ZryavrnxJw1kCFy5ZF47G3WIkrn7
+	urn5ZanFv3sF9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
+	mii3UUUUU==
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On Fri, 30 Jan 2026 15:26:46 -0800
-Julius Werner <jwerner@google.com> wrote:
 
-> > > Note that if the line has a comment, it still keep searching the
-> > > value to the next line::
-> > >
-> > >   foo = # comment
-> > >   value
+
+On 2026/1/30 18:22, Michal Koutný wrote:
+> On Thu, Jan 29, 2026 at 05:51:33PM +0800, Chen Ridong <chenridong@huaweicloud.com> wrote:
+>> We compiled with 'make allmodconfig'.
 > 
-> This seems inconsistent to me tbh. I think someone could reasonably
-> write a bootconfig like this:
+> A-ha.
 > 
-> foo =                  # We leave foo empty here because <reason>
-> bar = value
+>> The BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16) macro worked correctly.
 > 
-> and expect it to work. There's nothing in the documentation that
-> suggests empty values would behave differently if there is a comment
-> behind them.
-
-But we already accept that example in the tree.
-
-  tools/bootconfig/samples/good-array-space-comment.bconf
-
-So it is hard to change this syntax. But without comment, the
-document defines the value is terminated with a newline. Thus
-it needs to be fixed.
-
-
+> Good.
 > 
-> Also, I believe your patch might inadvertently break this case (which
-> I think(?) is supposed to work):
+>> Can I propose increasing the maximum number now? If we switch certain configs to
+>> default N and then a new subsystem is added later, the default configuration may
+>> work fine, but it will become a problem under allmodconfig — which some users
+>> actually rely on.
+>>
+>> Besides, this shouldn't be a major change, right?
 > 
-> foo = first array value,
->       second array value,
->       third array value
-
-Oops, good catch! I should add this as a good sample.
-
+> I'd like there to be gradual move away from legacy controllers code
+> captured in config defaults.
+> Could you adjust the commit message to stress out the allmodconfig tests?
 > 
-> Because __xbc_parse_value() returns from the first value with `&next`
-> pointing at the newline behind the comma, and that is passed to the
-> next iteration of __xbc_parse_value() which will now no longer skip
-> it. I think an already started array may need to be treated as a
-> special case here and you may want to add another
-> skip_spaces()/skip_comment() to the loop in xbc_parse_array().
 
-OK, let me fix it.
-
-Thanks,
+Sure, will update.
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best regards,
+Ridong
+
