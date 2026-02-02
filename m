@@ -1,174 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5305335B65F;
-	Mon,  2 Feb 2026 11:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579F222339;
+	Mon,  2 Feb 2026 12:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770032279; cv=none; b=BkajBlvzJO6sG2Jg/N6RCpH5ZcvH3JtxKrmuNbVZXUZeiNO26gr9mpm4haJ1eDlcjfOUpoAJop2vVxa0xm4ZsE0Af16h3FsNTLF6NcY/4aV7ONGJhyyzl1j3nEHMPDQpc0mUwWBPmbvuYtk9MumHf8gMnKZUqMezjX+3+vmf5DE=
+	t=1770035686; cv=none; b=U9hagsBMtxi6v5OUTk7f1XOGGPuuUqQSjfaYAQpUjhThsojMxbzOg6WD8zKq2LLgieQBg4garCkVkvANJJJYicbPGiGQPcQycFGteYphGoa0qeCfBg3JF2WNk3W+I0/Mn9TXzDPlQPle9vywwY42elvCojFVIRf/vMJQ5HewT/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770032279; c=relaxed/simple;
-	bh=TKz7qTP0/EiuHq2SIlglxK0Tfbv/QcbY1UIjbaxDKxw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pVgXhsPRC5pyUD5ANOoRBfjQKmCvBWvl86Fn0zC6HtbeHgB0cDNMynNXqpXp0b+y/wvVOn78Xh/ubeo0W9ueEF351U/cYGq2gx69GTLLgSGGrxWTmkpPSGbm4pfwHBQqOCMIW1u0QOKB3wFr7QmYLuiURFzCFWTmEPyoXF4COeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvmFM71g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770035686; c=relaxed/simple;
+	bh=E23pU3vsSWjapsCWOZd/WRio2KJFZKBL0ZCvs0U6mBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KI4qPhW+JUltYLc6ZdeVuzXqXyWMpX8Vkut8Q/wVNefh561ii4guaHA1q10Hrk3oV4JVngRIUYhNKXtwJvgiN31ln4eFWYLHrINTsxBPMxRjAG/exyzzuZHA3YAfzSa0UJOqJksY+aPHJMaf8nnXUtpKpRGQIKrjwjRZC3Z21u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Z9p79N2q; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvmFM71g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F18C116C6;
-	Mon,  2 Feb 2026 11:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770032279;
-	bh=TKz7qTP0/EiuHq2SIlglxK0Tfbv/QcbY1UIjbaxDKxw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=hvmFM71go+VvtmYdRIDkOYgctd6tw8TyecIMm7rjADxMMjFWAly3dzXeiLoduqJ47
-	 GfBqzHfwZe1SANOPGFSN/E3jsES/GyEJoAQo9AtKMT9C98Mx30Q/m+PHvNq4NvZGgO
-	 OmI1S7YTWHBnvnhm3EwyYIuz0s6uW5tIH3WddJt97mQFodywycWqjwqKq73K/32EYR
-	 i3yqZ/i+WgTNw4HmVPnanwTtvNp00dXBSfmtMravMpmthMF7nj8Oo4Y7MEMDGf+Nhj
-	 Am79kZGxqfa5vfDd3w9yqfeXwzsuH6NcOwVz6ExBpdgAP+AL3Zo3Dzsz4W4mp0lJMm
-	 rqDMyLirW92Wg==
-Message-ID: <a193e4e17df0b557ac033b4b0a00f95d2ed693e5.camel@kernel.org>
-Subject: Re: [PATCH] tracing: remove __printf() attribute on
- __ftrace_vbprintk()
-From: Jeff Layton <jlayton@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Simon Horman <horms@kernel.org>,
- Anna Schumaker <anna.schumaker@oracle.com>,  Chuck Lever
- <chuck.lever@oracle.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mathieu Desnoyers	
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>,
- Yury Norov	 <ynorov@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Date: Mon, 02 Feb 2026 06:37:56 -0500
-In-Reply-To: <20260202095834.1328352-1-arnd@kernel.org>
-References: <20260202095834.1328352-1-arnd@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Z9p79N2q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ec
+	fu5/QuVUt+HUlbrzRAgqPUz7xhyGrm9jNTG/wE9g0=; b=Z9p79N2qo45bb0IKVF
+	vGKU9pClqUDGSEqCgqjFRQQHWBVoU3t7N8F1h6K0L3GcY2luI8gepMF+YtTIeWQm
+	BJjjCn4OMen9uLpbVgxrX+lKp58fTIisHN8ptHXzqT6qI62t3eE9lHkdBxuvUZwk
+	bpMQcbOwxYTJZW8QupOnUFpHA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDnso2nmYBphEY7Jw--.30663S2;
+	Mon, 02 Feb 2026 20:33:44 +0800 (CST)
+From: "jempty.liang" <imntjempty@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"jempty.liang" <imntjempty@163.com>
+Subject: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset for 32-bit ARM
+Date: Mon,  2 Feb 2026 12:33:42 +0000
+Message-Id: <20260202123342.2544795-1-imntjempty@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnso2nmYBphEY7Jw--.30663S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JFykWry3uF48XFW8Kw1fXrb_yoWfWF47pa
+	yftas5Kr4kJrW5KFyI9rs5Gr4fJryxJ347tFy7C34ayF9rtr1avry7Jr95Xa4rt34kC34a
+	vayjvrW5Cr4Y9wUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRsF4ZUUUUU=
+X-CM-SenderInfo: hlpq3yxhps35i6rwjhhfrp/xtbC2wgLDGmAmagyjAAA3y
 
-On Mon, 2026-02-02 at 10:58 +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The sunrpc change to use trace_printk() for debugging caused
-> a new warning for every instance of dprintk() in some configurations,
-> when -Wformat-security is enabled:
->=20
-> fs/nfs/getroot.c: In function 'nfs_get_root':
-> fs/nfs/getroot.c:90:17: error: format not a string literal and no format =
-arguments [-Werror=3Dformat-security]
->    90 |                 nfs_errorf(fc, "NFS: Couldn't getattr on root");
->=20
-> I've been slowly chipping away at those warnings over time with the
-> intention of enabling them by default in the future. While I could not
-> figure out why this only happens for this one instance, I see that the
-> __trace_bprintk() function is always called with a local variable as
-> the format string, rather than a literal.
->=20
-> Remove the __printf(2,3) annotation on this function, as this is can
-> only be validated for literals. The format strings still get checked
-> because the underlying literal keeps getting passed into __trace_printk()
-> in the "else" branch, which is not taken but still evaluated for
-> compile-time warnings.
->=20
-> Fixes: ec7d8e68ef0e ("sunrpc: add a Kconfig option to redirect dfprintk()=
- output to trace buffer")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/trace_printk.h | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/include/linux/trace_printk.h b/include/linux/trace_printk.h
-> index bb5874097f24..2670ec7f4262 100644
-> --- a/include/linux/trace_printk.h
-> +++ b/include/linux/trace_printk.h
-> @@ -107,7 +107,6 @@ do {									\
->  		__trace_printk(_THIS_IP_, fmt, ##args);			\
->  } while (0)
-> =20
-> -extern __printf(2, 3)
->  int __trace_bprintk(unsigned long ip, const char *fmt, ...);
-> =20
->  extern __printf(2, 3)
+Commit <66611c0475709607f398e2a5d691b1fc72fe9dfc>
+    (fgraph: Remove calltime and rettime from generic)
+incorrectly modified the offset values for calltime and rettime fields
+in the funcgraph_exit traceevent on 32-bit ARM, which are used to parse
+the corresponding values fromtrace rawdata. The actual memory offset of
+calltime is 20 (not 24), and rettime is 28 (not 32) for the 
+funcgraph_exit event.
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+Before the fix,the funcgraph_exit format was:
+
+~# cat /sys/kernel/tracing/events/ftrace/funcgraph_exit/format
+
+name: funcgraph_exit
+ID: 10
+format:
+    ...
+    field:unsigned long long calltime; offset:24; size:8; signed:0;
+    field:unsigned long long rettime; offset:32; size:8; signed:0;
+
+After the fix, the correct funcgraph_exit format is:
+
+name: funcgraph_exit
+ID: 10
+format:
+    ...
+    field:unsigned long long calltime; offset:20; size:8; signed:0;
+    field:unsigned long long rettime; offset:28; size:8; signed:0;
+
+Signed-off-by: jempty.liang <imntjempty@163.com>
+---
+ include/linux/ftrace.h               |  2 ++
+ kernel/trace/trace.h                 |  3 +--
+ kernel/trace/trace_entries.h         |  8 +++----
+ kernel/trace/trace_functions_graph.c | 31 +++++++++++++---------------
+ kernel/trace/trace_irqsoff.c         |  5 +++--
+ kernel/trace/trace_sched_wakeup.c    |  6 ++++--
+ 6 files changed, 28 insertions(+), 27 deletions(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index a3a8989e3268..52727a342273 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1191,6 +1191,8 @@ struct ftrace_graph_ret {
+ 	int depth;
+ 	/* Number of functions that overran the depth limit for current task */
+ 	unsigned int overrun;
++	unsigned long long calltime;
++	unsigned long long rettime;
+ } __packed;
+ 
+ struct fgraph_ops;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 69e7defba6c6..18c8a0b1ecd5 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -968,8 +968,7 @@ extern int __trace_graph_retaddr_entry(struct trace_array *tr,
+ 				struct ftrace_regs *fregs);
+ extern void __trace_graph_return(struct trace_array *tr,
+ 				 struct ftrace_graph_ret *trace,
+-				 unsigned int trace_ctx,
+-				 u64 calltime, u64 rettime);
++				 unsigned int trace_ctx);
+ 
+ extern void init_array_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
+ extern int allocate_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index f6a8d29c0d76..362a757e65a2 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -127,8 +127,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 		__field_packed(	unsigned long,	ret,		retval	)
+ 		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_packed(unsigned long long,	ret,	calltime)
++		__field_packed(unsigned long long,	ret,	rettime)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u retval: %lx",
+@@ -149,8 +149,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 		__field_packed(	unsigned long,	ret,		func	)
+ 		__field_packed(	unsigned int,	ret,		depth	)
+ 		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_packed(unsigned long long,	ret,	calltime)
++		__field_packed(unsigned long long,	ret,	rettime)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u",
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 1de6f1573621..0d2266ec67a4 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -317,10 +317,12 @@ __trace_graph_function(struct trace_array *tr,
+ 	struct ftrace_graph_ret ret = {
+ 		.func     = ip,
+ 		.depth    = 0,
++		.calltime = time,
++		.rettime = time,
+ 	};
+ 
+ 	__trace_graph_entry(tr, &ent, trace_ctx);
+-	__trace_graph_return(tr, &ret, trace_ctx, time, time);
++	__trace_graph_return(tr, &ret, trace_ctx);
+ }
+ 
+ void
+@@ -333,8 +335,7 @@ trace_graph_function(struct trace_array *tr,
+ 
+ void __trace_graph_return(struct trace_array *tr,
+ 			  struct ftrace_graph_ret *trace,
+-			  unsigned int trace_ctx,
+-			  u64 calltime, u64 rettime)
++			  unsigned int trace_ctx)
+ {
+ 	struct ring_buffer_event *event;
+ 	struct trace_buffer *buffer = tr->array_buffer.buffer;
+@@ -346,8 +347,6 @@ void __trace_graph_return(struct trace_array *tr,
+ 		return;
+ 	entry	= ring_buffer_event_data(event);
+ 	entry->ret				= *trace;
+-	entry->calltime				= calltime;
+-	entry->rettime				= rettime;
+ 	trace_buffer_unlock_commit_nostack(buffer, event);
+ }
+ 
+@@ -372,10 +371,9 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 	struct trace_array *tr = gops->private;
+ 	struct fgraph_times *ftimes;
+ 	unsigned int trace_ctx;
+-	u64 calltime, rettime;
+ 	int size;
+ 
+-	rettime = trace_clock_local();
++	trace->rettime = trace_clock_local();
+ 
+ 	ftrace_graph_addr_finish(gops, trace);
+ 
+@@ -390,10 +388,10 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 
+ 	handle_nosleeptime(tr, trace, ftimes, size);
+ 
+-	calltime = ftimes->calltime;
++	trace->calltime = ftimes->calltime;
+ 
+ 	trace_ctx = tracing_gen_ctx();
+-	__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
++	__trace_graph_return(tr, trace, trace_ctx);
+ }
+ 
+ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
+@@ -418,8 +416,10 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
+ 	tr = gops->private;
+ 	handle_nosleeptime(tr, trace, ftimes, size);
+ 
++	trace->calltime = ftimes->calltime;
++
+ 	if (tracing_thresh &&
+-	    (trace_clock_local() - ftimes->calltime < tracing_thresh))
++	    (trace->rettime - ftimes->calltime < tracing_thresh))
+ 		return;
+ 	else
+ 		trace_graph_return(trace, gops, fregs);
+@@ -956,7 +956,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+ 
+ 	graph_ret = &ret_entry->ret;
+ 	call = &entry->graph_ent;
+-	duration = ret_entry->rettime - ret_entry->calltime;
++	duration = graph_ret->rettime - graph_ret->calltime;
+ 
+ 	if (data) {
+ 		struct fgraph_cpu_data *cpu_data;
+@@ -1275,14 +1275,11 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
+ }
+ 
+ static enum print_line_t
+-print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
++print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
+ 		   struct trace_entry *ent, struct trace_iterator *iter,
+ 		   u32 flags)
+ {
+-	struct ftrace_graph_ret *trace = &retentry->ret;
+-	u64 calltime = retentry->calltime;
+-	u64 rettime = retentry->rettime;
+-	unsigned long long duration = rettime - calltime;
++	unsigned long long duration = trace->rettime - trace->calltime;
+ 	struct fgraph_data *data = iter->private;
+ 	struct trace_array *tr = iter->tr;
+ 	unsigned long func;
+@@ -1482,7 +1479,7 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
+ 	case TRACE_GRAPH_RET: {
+ 		struct ftrace_graph_ret_entry *field;
+ 		trace_assign_type(field, entry);
+-		return print_graph_return(field, s, entry, iter, flags);
++		return print_graph_return(&field->ret, s, entry, iter, flags);
+ 	}
+ 	case TRACE_STACK:
+ 	case TRACE_FN:
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index 17673905907c..946be462a211 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -229,11 +229,12 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
+ 	if (!func_prolog_dec(tr, &data, &flags))
+ 		return;
+ 
+-	rettime = trace_clock_local();
++	trace->rettime = trace_clock_local();
+ 	calltime = fgraph_retrieve_data(gops->idx, &size);
+ 	if (calltime) {
++		trace->calltime = *calltime;
+ 		trace_ctx = tracing_gen_ctx_flags(flags);
+-		__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
++		__trace_graph_return(tr, trace, trace_ctx);
+ 	}
+ 	local_dec(&data->disabled);
+ }
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index 8faa73d3bba1..3bcfd1bf60ad 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -164,11 +164,13 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
+ 	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
+ 		return;
+ 
+-	rettime = trace_clock_local();
++	trace->rettime = trace_clock_local();
+ 
+ 	calltime = fgraph_retrieve_data(gops->idx, &size);
+-	if (calltime)
++	if (calltime) {
++		trace->calltime = *calltime;
+ 		__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
++	}
+ 
+ 	local_dec(&data->disabled);
+ 	preempt_enable_notrace();
+-- 
+2.25.1
+
