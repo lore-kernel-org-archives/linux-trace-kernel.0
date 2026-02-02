@@ -1,36 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43C1E7C03;
-	Mon,  2 Feb 2026 16:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED1A37D113;
+	Mon,  2 Feb 2026 16:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770048488; cv=none; b=EhAwy9WLJRy1Fkg46eFR7XqlhVB8FuDkT7YT0bPjC2Kf4IzgUcCsLL+rsONRGf5N5sjpLVSqHHgsQ2grbfZb7+HzXOAw3Btnnn/9QDs5ZNmK19O+M8420mUiwuaD4u2UwHrJBlQtqBJw60agW6tL+Pk5d5dtmjuemBENalOBoG4=
+	t=1770048754; cv=none; b=CBnB5t9qeEkKw8jGz+UVoPTXAd/cm35MlgdmfGra3SN3PYEOlUa7qSj+Uzp0a1+UUsrKgeQ3LoLVxTqPlmmIdYDWHhSRndgxHiu3KkXKqU/O9sQ1S3g8g/5LuhLfwxcdukaFQuioXDb5HMWekETKfigcoHB9zf05R+3OLk819sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770048488; c=relaxed/simple;
-	bh=GUX+HIvqwqX3bKfQhQZ6LilQ4o+ym7h9zBxYvV9yP48=;
+	s=arc-20240116; t=1770048754; c=relaxed/simple;
+	bh=S/sdD1LU6BPJSO9apEv7Z0jcJ4/re2NIBdpHU4l3CGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VH3qJK1+hJVZetpSTChd/KZ27RzyN9S7RaW18zg0beVRKVGKNTBXAXQlAGqGzuP0zb6v3+D/m3oGfbDniL4KjT6HpeTW4map1ybM2rt+i2yQa2REP5qNsfZwV9GpcOSKuF1kieJaebg5SD+kiuqEiytzDzGoXbJ6qeKc1ofBoFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=NUxkJGecSeYyXs4eWOdlgCqNbEy8YrIhmnzbnGS1K/ZV8+koL0dJzHvMq7PHmZDRQaMnX6nq93RH49fteeA2OWLSU2pPOJa7IzNTkV64epTHKUKhMFwnrSI4oR38+EYinW0rCJtL0py+OPJTsufmzZQPtG8fDFkq9f5YB7SJ2OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id B2CB4C0F37;
-	Mon,  2 Feb 2026 16:08:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id BA41E20029;
-	Mon,  2 Feb 2026 16:08:03 +0000 (UTC)
-Date: Mon, 2 Feb 2026 11:08:28 -0500
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id DAD14B6DE8;
+	Mon,  2 Feb 2026 16:12:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D6D3E2000D;
+	Mon,  2 Feb 2026 16:12:23 +0000 (UTC)
+Date: Mon, 2 Feb 2026 11:12:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "jempty.liang" <imntjempty@163.com>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+To: Donglin Peng <dolinux.peng@gmail.com>
+Cc: ast@kernel.org, mhiramat@kernel.org, andrii.nakryiko@gmail.com,
+ linux-kernel@vger.kernel.org, Donglin Peng <pengdonglin@xiaomi.com>,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
- for 32-bit ARM
-Message-ID: <20260202110828.440c8d44@gandalf.local.home>
-In-Reply-To: <20260202103804.40cbaa27@gandalf.local.home>
-References: <20260202123342.2544795-1-imntjempty@163.com>
-	<20260202103804.40cbaa27@gandalf.local.home>
+Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
+ via BTF
+Message-ID: <20260202111249.649ac338@gandalf.local.home>
+In-Reply-To: <20260202111548.3555306-3-dolinux.peng@gmail.com>
+References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
+	<20260202111548.3555306-3-dolinux.peng@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,44 +40,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 9m1tuea6uxqc1ieft5cyswi4rkhom71z
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: BA41E20029
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: D6D3E2000D
+X-Stat-Signature: 9o6kf1qwyytgk8m1nwdxbf4u6ees7h4i
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/1joY0cdyqd1+K1BUXn5x+NFAwEZ5RbSc=
-X-HE-Tag: 1770048483-105100
-X-HE-Meta: U2FsdGVkX1+cu1JbGkEUvItcjEaKIKYhkfCgRMl4EbundQFPM0dnTxsRMRSfrhYvhgM95D6eFuWmqpDhc0AQ0rT7m2OHoHyVmXIDeuCykqIUwpetGWer15k97v06LFSJlc40qMWQi6LIvvOOZcf9EJ8oCFbRr3go0VBCTsSTDhe58fbxqnQc8YkIIQ8I3FCAAx7IB03iQB9TATsVO4VPekxmNlbQGdIMls1tjGgyRqX+vCgmKosBLg19eLzwndHyouZ0nwSU4C2FIoADZjYZbkE6rw0GvMJFbntD5360CxuvvCUfgXnKKyopcECgfvIE2+lpAGUPWAuXO+QZOtOBiwYDW8QRrkkPDXQDIhvaP1PVw8cAauCCJtv6YRjSGVXj
+X-Session-ID: U2FsdGVkX19bJfcwbzvO8pG6DXOErSPkM9W7b3QU8fw=
+X-HE-Tag: 1770048743-319643
+X-HE-Meta: U2FsdGVkX186nfa8DJ30UUx9eW9kwwgvqQ5WqJkN79GuqtwQg4RnUCQuLRq4hRZYJIQkzUULZ61E0y4jMAk0X9og4nE7zx9lVK5Fq/nv0SksZEPhdr2HDbEWK6xNVBiThh1ik+/PNrag3DeAY0ATM8sbCDmnsU+nTVO/8UD7VUgUTYkmmlNbr9PYayHgRHr5a2aarPdA9ip48Cg9vrJPlI3v4EUeKQbLp4V3zaOGA+anElNovY4DdJh9sX0vkqVnNpAm6kbB3VtlnCwyik2FgQfSFrTOTUrpjIjYwRk1URcnYQYK0poy/8vdODkvEMo2Z6jnPMq8EHSiMBkCHiUhUfA8omQOIu6r
 
-On Mon, 2 Feb 2026 10:38:04 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon,  2 Feb 2026 19:15:48 +0800
+Donglin Peng <dolinux.peng@gmail.com> wrote:
 
-> Can you try this patch to see if it fixes the issue for you?
+> @@ -754,6 +755,14 @@ void print_function_args(struct trace_seq *s, unsigned long *args,
+>  			break;
+>  		case BTF_KIND_ENUM:
+>  			trace_seq_printf(s, "%ld", arg);
+> +			for_each_enum(i, t, enump) {
+> +				if (arg == enump->val) {
+> +					trace_seq_printf(s, " [%s]",
+> +							 btf_name_by_offset(btf,
+> +							 enump->name_off));
+> +					break;
+> +				}
+> +			}
+>  			break;
 
-Ignore that patch, try this one instead. This was fixed for trace_events a
-while ago, but the same fix wasn't done for ftrace events.
+I have to ask; how big is that enum list?
+
+Do we really want to do a linear search for every enum we come across?
+
+What we could do is for the first time we hit an enum, create an array of
+enums, sort them, and do a binary search from then on. This could be saved
+in the tracing code itself (in kernel/trace/trace_btf.c), if BPF doesn't
+care about it.
 
 -- Steve
-
-diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
-index 1698fc22afa0..5b96ac750049 100644
---- a/kernel/trace/trace_export.c
-+++ b/kernel/trace/trace_export.c
-@@ -14,6 +14,9 @@
- 
- #include "trace_output.h"
- 
-+/* The alignment of a type when in a structure */
-+#define ALIGN_STRUCTFIELD(type) ((int)(__alignof__(struct {type b;})))
-+
- /* Stub function for events with triggers */
- static int ftrace_event_register(struct trace_event_call *call,
- 				 enum trace_reg type, void *data)
-@@ -88,7 +91,7 @@ static void __always_unused ____ftrace_check_##name(void)		\
- #undef __field_ext
- #define __field_ext(_type, _item, _filter_type) {			\
- 	.type = #_type, .name = #_item,					\
--	.size = sizeof(_type), .align = __alignof__(_type),		\
-+	.size = sizeof(_type), .align = ALIGN_STRUCTFIELD(_type),	\
- 	is_signed_type(_type), .filter_type = _filter_type },
- 
- 
