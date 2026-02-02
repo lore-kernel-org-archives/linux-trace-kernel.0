@@ -1,80 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5AE37BE92;
-	Mon,  2 Feb 2026 16:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43C1E7C03;
+	Mon,  2 Feb 2026 16:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770048008; cv=none; b=F816Em2K4CT5FM/4CnQAI20+GutZRuDPepMQyeg/xXuH2Sm8d/nGIpF4D/SnepewLk+YSH6lQ/O0Pey39KRBfh5ryQXggLehToKHsTbN0aOcJrJoP7m3jsPiWTHgBM4gyid9fwEciv6ctoL8HPCSqDR63xRSurOejiA0VtkPTHw=
+	t=1770048488; cv=none; b=EhAwy9WLJRy1Fkg46eFR7XqlhVB8FuDkT7YT0bPjC2Kf4IzgUcCsLL+rsONRGf5N5sjpLVSqHHgsQ2grbfZb7+HzXOAw3Btnnn/9QDs5ZNmK19O+M8420mUiwuaD4u2UwHrJBlQtqBJw60agW6tL+Pk5d5dtmjuemBENalOBoG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770048008; c=relaxed/simple;
-	bh=n7OHGGC6M10XZ+8EdSzqRv5SyRrmKWSGn9ITj/6THhU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Gfn6icLzUG2pKWFgzVWY6d42la3SdRjq0wVAmZaXWNDvjRbk5q9ESHFHhRNoWTL/Yv/heP8r//f8Vo6dVie7jBK4LT+xkZbCFJBXUPBjuNkTt/veIuij37bcRnFIsTNKyY/VlXahvbK9BuNnlcbR6zF+x19OH6juJnL5KuLe/aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqz1supF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqz1supF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24422C116C6;
-	Mon,  2 Feb 2026 16:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770048008;
-	bh=n7OHGGC6M10XZ+8EdSzqRv5SyRrmKWSGn9ITj/6THhU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nqz1supFJ92wF94gxdkj6dWeNQ6N9tt0BcwFO9nO+yjCDzgbaFyTr4ycwe2S75Bt6
-	 NjBqeUvkEilr7ucf0QRqwMdk+LZiXeiqy2jK5P5+3nz7URamEMtCpV79ZmnVAJ4DwI
-	 lMSYStIbSjfM7r8JIrsLCPrlefZ7130ukzMHuKi7/f4XHwYKcl+MW/C+yzw1OxiNcS
-	 lHuBiJW4Im1T3OMqpRXLYrU8YDaMGGa2YOx9nIAbtsRI8/AHhcx4aFuYg8IIWYAc7r
-	 SXtkuZp85pkKvh3xckkLMN1JZJWFO4W43fQpBTv6Gc8FsHSJKb2sxu+xCOy1GOpVs2
-	 NEZRLpYtSEU7g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 53E54381197A;
-	Mon,  2 Feb 2026 16:00:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1770048488; c=relaxed/simple;
+	bh=GUX+HIvqwqX3bKfQhQZ6LilQ4o+ym7h9zBxYvV9yP48=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VH3qJK1+hJVZetpSTChd/KZ27RzyN9S7RaW18zg0beVRKVGKNTBXAXQlAGqGzuP0zb6v3+D/m3oGfbDniL4KjT6HpeTW4map1ybM2rt+i2yQa2REP5qNsfZwV9GpcOSKuF1kieJaebg5SD+kiuqEiytzDzGoXbJ6qeKc1ofBoFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id B2CB4C0F37;
+	Mon,  2 Feb 2026 16:08:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id BA41E20029;
+	Mon,  2 Feb 2026 16:08:03 +0000 (UTC)
+Date: Mon, 2 Feb 2026 11:08:28 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "jempty.liang" <imntjempty@163.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
+ for 32-bit ARM
+Message-ID: <20260202110828.440c8d44@gandalf.local.home>
+In-Reply-To: <20260202103804.40cbaa27@gandalf.local.home>
+References: <20260202123342.2544795-1-imntjempty@163.com>
+	<20260202103804.40cbaa27@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] ftrace: Fix direct_functions leak in
- update_ftrace_direct_del
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177004800488.692604.16316475775904494017.git-patchwork-notify@kernel.org>
-Date: Mon, 02 Feb 2026 16:00:04 +0000
-References: <20260202075849.1684369-1-jolsa@kernel.org>
-In-Reply-To: <20260202075849.1684369-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: rostedt@kernel.org, ast@kernel.org, alexei.starovoitov@gmail.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- menglong8.dong@gmail.com, song@kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 9m1tuea6uxqc1ieft5cyswi4rkhom71z
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: BA41E20029
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/1joY0cdyqd1+K1BUXn5x+NFAwEZ5RbSc=
+X-HE-Tag: 1770048483-105100
+X-HE-Meta: U2FsdGVkX1+cu1JbGkEUvItcjEaKIKYhkfCgRMl4EbundQFPM0dnTxsRMRSfrhYvhgM95D6eFuWmqpDhc0AQ0rT7m2OHoHyVmXIDeuCykqIUwpetGWer15k97v06LFSJlc40qMWQi6LIvvOOZcf9EJ8oCFbRr3go0VBCTsSTDhe58fbxqnQc8YkIIQ8I3FCAAx7IB03iQB9TATsVO4VPekxmNlbQGdIMls1tjGgyRqX+vCgmKosBLg19eLzwndHyouZ0nwSU4C2FIoADZjYZbkE6rw0GvMJFbntD5360CxuvvCUfgXnKKyopcECgfvIE2+lpAGUPWAuXO+QZOtOBiwYDW8QRrkkPDXQDIhvaP1PVw8cAauCCJtv6YRjSGVXj
 
-Hello:
+On Mon, 2 Feb 2026 10:38:04 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+> Can you try this patch to see if it fixes the issue for you?
 
-On Mon,  2 Feb 2026 08:58:49 +0100 you wrote:
-> Alexei reported memory leak in update_ftrace_direct_del.
-> We miss cleanup of the replaced direct_functions in the
-> success path in update_ftrace_direct_del, adding that.
-> 
-> Fixes: 8d2c1233f371 ("ftrace: Add update_ftrace_direct_del function")
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Closes: https://lore.kernel.org/bpf/aX_BxG5EJTJdCMT9@krava/T/#m7c13f5a95f862ed7ab78e905fbb678d635306a0c
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> [...]
+Ignore that patch, try this one instead. This was fixed for trace_events a
+while ago, but the same fix wasn't done for ftrace events.
 
-Here is the summary with links:
-  - [bpf-next] ftrace: Fix direct_functions leak in update_ftrace_direct_del
-    https://git.kernel.org/bpf/bpf-next/c/6b95cc562de2
+-- Steve
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+index 1698fc22afa0..5b96ac750049 100644
+--- a/kernel/trace/trace_export.c
++++ b/kernel/trace/trace_export.c
+@@ -14,6 +14,9 @@
+ 
+ #include "trace_output.h"
+ 
++/* The alignment of a type when in a structure */
++#define ALIGN_STRUCTFIELD(type) ((int)(__alignof__(struct {type b;})))
++
+ /* Stub function for events with triggers */
+ static int ftrace_event_register(struct trace_event_call *call,
+ 				 enum trace_reg type, void *data)
+@@ -88,7 +91,7 @@ static void __always_unused ____ftrace_check_##name(void)		\
+ #undef __field_ext
+ #define __field_ext(_type, _item, _filter_type) {			\
+ 	.type = #_type, .name = #_item,					\
+-	.size = sizeof(_type), .align = __alignof__(_type),		\
++	.size = sizeof(_type), .align = ALIGN_STRUCTFIELD(_type),	\
+ 	is_signed_type(_type), .filter_type = _filter_type },
+ 
+ 
