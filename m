@@ -1,162 +1,120 @@
-Received: from mx.kolabnow.com (mx.kolabnow.com [212.103.80.153])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD1721FF4C;
-	Mon,  2 Feb 2026 02:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.103.80.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EF73EBF3D;
+	Mon,  2 Feb 2026 03:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770001193; cv=none; b=XIBVRAYoNqWXwWDbLTqQw8ZE4dp3/Rrqb66b+n7Zb9SO1+VRgPAvNdrBEZ6bNPCkseNFbSfwHuaWdQ9kFi6uJvIldgo0oWzuxT5xn1d/DwDO82tQWuS454Ka/rnKfmzCv73NgwIkFZTYWKH58YxkoJmgQLsquIlE8+kMdXh0Yes=
+	t=1770003413; cv=none; b=iYXRDMnR9meqzHefMiKNyrHOHhc8OP/zD+it7DijXuqIvV6+Q8uRNNwXbVEJXxLxYz98cqygeFxkxmH6CLC+XAGOdbbCbBLWm1UbBAkCHRIyaw0xdGzFCuHHLdJxjuUIc7YcvFdVvNxKpFxq3TIDZvS41lC7iuXMXxDm7prOp30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770001193; c=relaxed/simple;
-	bh=hdx1xEeI7N48WsxyAwajkyI2Sjasvb03Zdmp0eCVGdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WzsLcwLl6JB2ik44lxGJdmXCqOOsHxAhMen3zBgA7R1GYzcNGqcZZtI0k4n/gcERcticODp8lotJz76aYTJEyTYMiirq2O15zyfEI42phmbBFEks/REZ6yhmG+yOCwe9HEscJNIrLv40EqhHo+iOSEv7ChamF7UHuwV6fKC4+s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com; spf=pass smtp.mailfrom=mykolab.com; dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b=b5YT0vZ/; arc=none smtp.client-ip=212.103.80.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mykolab.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b="b5YT0vZ/"
-Received: from localhost (unknown [127.0.0.1])
-	by mx.kolabnow.com (Postfix) with ESMTP id 53DCB20B2772;
-	Mon,  2 Feb 2026 03:59:41 +0100 (CET)
-Authentication-Results: ext-mx-out011.mykolab.com (amavis); dkim=pass
- reason="pass (just generated, assumed good)" header.d=mykolab.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mykolab.com; h=
-	content-transfer-encoding:mime-version:message-id:date:date
-	:subject:subject:from:from:received:received:received; s=dkim2;
-	 t=1770001181; x=1771815582; bh=r+XepG8X/3S71IOhnrQeLWuKEtfEL9kK
-	l5dypeRT4Fg=; b=b5YT0vZ/XrPZGVwHlMK84WUBoivtGOjbV+FAg/kHMGqN+MVy
-	Gqa3FBs+XtTd/Yl0HmZzJ1pyC2vU/jChbfybOVCxGamD+fknccBpr/yPJGnHgCUY
-	B33CPRD0XSpxQV31O0sCAb+rlwKU64XwupE9HWy6m0W7Ki30PrOvbg9/UldWzKgW
-	S38r31aqjTn1AglMNdCz/gexc4hvbiYne/PA1S9Ob5J29kZp55hFv1cwArSTkpjL
-	50sqsjCH23CxfNXPVl3YW53qO9eulvbVUXl9Hj6cgfLGln5waKCvjPY+QU0W8B/+
-	6cG4e3ilyLn7jPORERYovATqUPTX63Ru0194SQ==
-X-Virus-Scanned: amavis at mykolab.com
-X-Spam-Flag: NO
-X-Spam-Score: 0
-X-Spam-Level:
-Received: from mx.kolabnow.com ([127.0.0.1])
- by localhost (ext-mx-out011.mykolab.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id ipJA5AqUonMh; Mon,  2 Feb 2026 03:59:41 +0100 (CET)
-Received: from int-mx009.mykolab.com (unknown [10.9.13.9])
-	by mx.kolabnow.com (Postfix) with ESMTPS id 7CE5E20B275C;
-	Mon,  2 Feb 2026 03:59:39 +0100 (CET)
-Received: from ext-subm010.mykolab.com (unknown [10.9.6.10])
-	by int-mx009.mykolab.com (Postfix) with ESMTPS id 250E320C19A5;
-	Mon,  2 Feb 2026 03:59:39 +0100 (CET)
-From: Colin Lord <clord@mykolab.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Colin Lord <clord@mykolab.com>
-Subject: [PATCH v2] trace/hwlat: prevent false sharing in get_sample()
-Date: Sun,  1 Feb 2026 18:58:38 -0800
-Message-ID: <20260202025838.32057-1-clord@mykolab.com>
+	s=arc-20240116; t=1770003413; c=relaxed/simple;
+	bh=sa0ZTje5cCKG9BYgwI82GPOPyRH6hQgIOZP79ycjiTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xkpzd7k0cqsh9i4YNN3h+uF9Ladjru+2aewpqfd073zVXqpxctei6wYZ+4JF0YzDiYn0tUUjCchfqeGiFj9bMjQbj9ZZXYz5rHmx6KGpoup0JOVDu1C8p+h0vbGZuL5RwgvCpiB1wR4BVILbB2yTlJ+mYg7xGk+LLDp6H5S9PLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 65db17a4ffe811f0b0f03b4cfa9209d1-20260202
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:f190fc87-00d9-4362-82cf-66f16955bade,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:a14d4cab7e9cf8a581fba014ede1612d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
+	52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 65db17a4ffe811f0b0f03b4cfa9209d1-20260202
+X-User: tianyaxiong@kylinos.cn
+Received: from [10.42.13.21] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1191676911; Mon, 02 Feb 2026 11:36:45 +0800
+Message-ID: <277638df-1812-46fd-b9ad-893495f5c5a6@kylinos.cn>
+Date: Mon, 2 Feb 2026 11:36:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] blktrace: Make init_blk_tracer() asynchronous when
+ trace_async_init set
+To: Steven Rostedt <rostedt@goodmis.org>, Jens Axboe <axboe@kernel.dk>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ skhan@linuxfoundation.org, linux-trace-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20260128194104.30051be1@gandalf.local.home>
+ <56C8934E-3D17-4467-93E6-D813770BF577@kernel.dk>
+ <20260129152958.05c1ca46@gandalf.local.home>
+Content-Language: en-US
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+In-Reply-To: <20260129152958.05c1ca46@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The get_sample() function in the hwlat tracer assumes the caller holds
-hwlat_data.lock, but this is not actually happening. The result is
-unprotected data access to hwlat_data, and in per-cpu mode can result in
-false sharing. The false sharing can cause false positive latency
-events, since the sample_width member is involved and gets read as part
-of the main latency detection loop.
 
-Convert hwlat_data.count to atomic64_t so it can be safely accessed
-without locking, and prevent false sharing by pulling sample_width into
-a local variable.
+在 2026/1/30 04:29, Steven Rostedt 写道:
+> On Wed, 28 Jan 2026 19:25:46 -0700
+> Jens Axboe <axboe@kernel.dk> wrote:
+>
+>> On Jan 28, 2026, at 5:40 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+>>> ﻿
+>>> Jens,
+>>>
+>>> Can you give me an acked-by on this patch and I can take the series through
+>>> my tree.
+>> On phone, hope this works:
+>>
+>> Acked-by: Jens Axboe <axboe@kernel.dk>
+> Thanks!
+>
+>>> Or perhaps this doesn't even need to test the trace_async_init flag and can
+>>> always do the work queue? Does blk_trace ever do tracing at boot up? That
+>>> is, before user space starts?
+>> Not via the traditonal way of running blktrace.
+> Masami and Yaxiong,
+>
+> I've been thinking about this more and I'm not sure we need the
+> trace_async_init kernel parameter at all. As blktrace should only be
+> enabled by user space, it can always use the work queue.
 
-One system this was tested on was a dual socket server with 32 CPUs on
-each numa node. With settings of 1us threshold, 1000us width, and
-2000us window, this change reduced the number of latency events from
-500 per second down to approximately 1 event per minute. Some machines
-tested did not exhibit measurable latency from the false sharing.
+Hi Steven and Jens:
 
-Signed-off-by: Colin Lord <clord@mykolab.com>
----
-Changes in v2:
-- convert hwlat_data.count to atomic64_t
-- leave irqs_disabled block where it originally was, outside of
-  get_sample()
+I've been thinking about this further. If we need to consider the 
+possibility of non-traditional blktrace usage during the boot phase, 
+could we perhaps use a grub parameter like 'ftrace=blk' to handle this? 
+More specifically, we could check this through 
+the|default_bootup_tracer|mechanism.
 
-Thanks for the v1 review Steve, have updated and retested.
++bool __init trace_check_need_bootup_tracer(struct tracer *type)
++{
++       if (!default_bootup_tracer)
++               return false;
++
++       if (strncmp(default_bootup_tracer, type->name, MAX_TRACER_SIZE))
++               return false;
++       else
++               return true;
++}
++
 
-cheers,
-Colin
-
- kernel/trace/trace_hwlat.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index 2f7b94e98317..3fe274b84f1c 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -102,9 +102,9 @@ struct hwlat_sample {
- /* keep the global state somewhere. */
- static struct hwlat_data {
- 
--	struct mutex lock;		/* protect changes */
-+	struct mutex	lock;		/* protect changes */
- 
--	u64	count;			/* total since reset */
-+	atomic64_t	count;		/* total since reset */
- 
- 	u64	sample_window;		/* total sampling window (on+off) */
- 	u64	sample_width;		/* active sampling portion of window */
-@@ -193,8 +193,7 @@ void trace_hwlat_callback(bool enter)
-  * get_sample - sample the CPU TSC and look for likely hardware latencies
-  *
-  * Used to repeatedly capture the CPU TSC (or similar), looking for potential
-- * hardware-induced latency. Called with interrupts disabled and with
-- * hwlat_data.lock held.
-+ * hardware-induced latency. Called with interrupts disabled.
-  */
- static int get_sample(void)
- {
-@@ -204,6 +203,7 @@ static int get_sample(void)
- 	time_type start, t1, t2, last_t2;
- 	s64 diff, outer_diff, total, last_total = 0;
- 	u64 sample = 0;
-+	u64 sample_width = READ_ONCE(hwlat_data.sample_width);
- 	u64 thresh = tracing_thresh;
- 	u64 outer_sample = 0;
- 	int ret = -1;
-@@ -267,7 +267,7 @@ static int get_sample(void)
- 		if (diff > sample)
- 			sample = diff; /* only want highest value */
- 
--	} while (total <= hwlat_data.sample_width);
-+	} while (total <= sample_width);
- 
- 	barrier(); /* finish the above in the view for NMIs */
- 	trace_hwlat_callback_enabled = false;
-@@ -285,8 +285,7 @@ static int get_sample(void)
- 		if (kdata->nmi_total_ts)
- 			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
- 
--		hwlat_data.count++;
--		s.seqnum = hwlat_data.count;
-+		s.seqnum = atomic64_inc_return(&hwlat_data.count);
- 		s.duration = sample;
- 		s.outer_duration = outer_sample;
- 		s.nmi_total_ts = kdata->nmi_total_ts;
-@@ -832,7 +831,7 @@ static int hwlat_tracer_init(struct trace_array *tr)
- 
- 	hwlat_trace = tr;
- 
--	hwlat_data.count = 0;
-+	atomic64_set(&hwlat_data.count, 0);
- 	tr->max_latency = 0;
- 	save_tracing_thresh = tracing_thresh;
- 
-
-base-commit: 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7
--- 
-2.51.2
-
+>
+> For kprobes, if someone is adding a kprobe on the kernel command line, then
+> they are already specifying that tracing is more important.
+>
+> Patch 3 already keeps kprobes from being an issue with contention of the
+> tracing locks, so I don't think it ever needs to use the work queue.
+>
+> Wouldn't it just be better to remove the trace_async_init and make blktrace
+> always use the work queue and kprobes never do it (but exit out early if
+> there were no kprobes registered)?
+>
+> That is, remove patch 2 and 4 and make this patch always use the work queue.
+>
+> -- Steve
