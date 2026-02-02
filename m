@@ -1,80 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E19A35971B;
-	Mon,  2 Feb 2026 17:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864BC38945D;
+	Mon,  2 Feb 2026 17:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770055049; cv=none; b=pvOalp4sB5IvpeCFam4EVVfGQI02Zb0HWQeRBSkZmleDgRd+yeEgECbl13yE/H1f2y0mLhZoOV5jXWvULAbgZSnOQsc6rPOPqUeXd4eFXUlW5+UnhRbKaQy4/tU5lLGLAXEwu3+pbwcSUJ5VHYLbw2s5vtjlzlbMpnFbGowIVK0=
+	t=1770055181; cv=none; b=Hb0Z76BzAY9X1NARe6uplN5NwJtlR6A9CzWHt3Nmz0tKdDv5fzIHJzSJLC4w57zXRrvAdGc0mN8dh4a3XEzhZR9v9YCK9ktZWjcW7mIi4TBLU6wO32+Pu5zx3nx4VJAS2xaZDbU3dKFHkRISYLfkGviwJlNUYGPPnUwD7j6scu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770055049; c=relaxed/simple;
-	bh=hsNNUFe85/XZuDIL1kmw/ezOBdW8qhOfrtTgsd02jRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ioDDYMrvy0iT/Pgmzh3mLO8fTDu6aN/FpmTorZt+mWQpl6HatIGY9zhG0IjmIsvMxUY7km3yf7lIQBp/LKTwrplA5tMXglA65byQDy267skLMnWAoNwB93/0OXFeTSvEq4CjuAcVdYL0AtUJFIGHr3q5TVlarNl7PL9QUI0eieU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZO5p1MEE; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZO5p1MEE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770055047; x=1801591047;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hsNNUFe85/XZuDIL1kmw/ezOBdW8qhOfrtTgsd02jRg=;
-  b=ZO5p1MEEvLNLHRj+uuLJdftF6mw33LmfDt0T6bGkDpcdSb7o7PU2Bm0T
-   totnbJURSi+sm5IRooSJzkHAGToxuwbWYBE829qvNnRRk7PZAXwYI8LR/
-   sGfGhT1xzUc+tZRuDfGyWiAW9ZB2SWiu9wNWk/I+z5X+yQO8u/NHH/cHP
-   b/rO9cV9TbCIWKzh81yleBI805KOjDgNRzzOnF9JkgfBi8al6LdTtC0Ts
-   KDzLC6Qkj2S5/B858mLho6PZRcYpQZp9hq6z/PGM5kt16V4EngACTB8ku
-   TEPkRCZC8NkNtyhVXXdJASmjN6IdXTGH43KPIF4sWl8KTQEfS9hmufxy+
-   g==;
-X-CSE-ConnectionGUID: 2ajuw9p1QJSIEAFFjM5Qvw==
-X-CSE-MsgGUID: WBliUdX/TfiIEss8WzWCNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="70422101"
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="70422101"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 09:57:27 -0800
-X-CSE-ConnectionGUID: q6PXXN2zQw+vTS8/2wI50g==
-X-CSE-MsgGUID: 7rpmEPx0QbK0JTBWIJJRQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,269,1763452800"; 
-   d="scan'208";a="214067612"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.13])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 09:57:23 -0800
-Date: Mon, 2 Feb 2026 19:57:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1770055181; c=relaxed/simple;
+	bh=UplLe8vdSE1RGE2jttDPSJx2P29TJXbCmcXucSXUS/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M/Pp4eowy+Qy0LO8/phDqsyTl5qf7bEwf2VTO7BgRCJwT19H8T/0c7D6QCR01GXEqGPEYIfJpa5uD7TQtMq6x/eA7/Ud+aBa2wUsuIm6AysMJq3Xk2FxJowBq1Jn23BW2vUjf2iieYkNacyIUpfseu+R1YCYyYjaLO1wVUMR7HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 5D0DA13A08D;
+	Mon,  2 Feb 2026 17:59:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 3E1D420025;
+	Mon,  2 Feb 2026 17:59:34 +0000 (UTC)
+Date: Mon, 2 Feb 2026 12:59:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Arnd Bergmann <arnd@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Simon Horman <horms@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Chuck Lever <chuck.lever@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Yury Norov <ynorov@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Simon Horman <horms@kernel.org>,
+ Jeff Layton <jlayton@kernel.org>, Anna Schumaker
+ <anna.schumaker@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, Arnd
+ Bergmann <arnd@arndb.de>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+ Yury Norov <ynorov@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: remove __printf() attribute on
  __ftrace_vbprintk()
-Message-ID: <aYDlgZSKRWqtH6Oa@smile.fi.intel.com>
+Message-ID: <20260202125959.49ce289f@gandalf.local.home>
+In-Reply-To: <20260202095834.1328352-1-arnd@kernel.org>
 References: <20260202095834.1328352-1-arnd@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260202095834.1328352-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3E1D420025
+X-Stat-Signature: dompomngpjn5xqfza3c6tnise6x4ad5o
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18UVFuNctC5jvMsSWfQBuFUD9tkvJuR2GQ=
+X-HE-Tag: 1770055174-634833
+X-HE-Meta: U2FsdGVkX197nBmnTWLcQ4TORyAlhsubvM0JQy5kbMtq96uuAQ5Hw8C7B0JbrF/Phazg3unfy3QtYT9j9LrAmeDULDYFBZrxJZn7j6UfwSlfqGyUpB4Wi/980TfWLD79Pr3ULFg/sTUtqPpDTbjh9WdYQBnJXIVzVqPd5mJUPpekLOPDqJzZf8+mcI1Sd2nCtP0H3yDgnb4Sl26uKHCfwk6a4tACzHr9bQZU+v9BzuqsMynv1z4cHVwGZkh82zO3SCQMJL+d+vUuuBtjWzoQXA37QgWjbOCXyeAGOM6RRL0qSHBsAKeIbb3lBVvW2WvLOhb7nrrIxwxly3UrSRJvlayoIMqXNIzKaOohxXtlP4kAIznpaW470POIb1mEvX7bdMuGrPoDfqtcdSVfrpt0iQ==
 
-On Mon, Feb 02, 2026 at 10:58:27AM +0100, Arnd Bergmann wrote:
+On Mon,  2 Feb 2026 10:58:27 +0100
+Arnd Bergmann <arnd@kernel.org> wrote:
 
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
 > The sunrpc change to use trace_printk() for debugging caused
 > a new warning for every instance of dprintk() in some configurations,
 > when -Wformat-security is enabled:
@@ -94,12 +77,28 @@ On Mon, Feb 02, 2026 at 10:58:27AM +0100, Arnd Bergmann wrote:
 > because the underlying literal keeps getting passed into __trace_printk()
 > in the "else" branch, which is not taken but still evaluated for
 > compile-time warnings.
+> 
+> Fixes: ec7d8e68ef0e ("sunrpc: add a Kconfig option to redirect dfprintk() output to trace buffer")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Yeah, it was discussed in the past that binary printf() should not be annotated
-as we have BPF code that doesn't compile (with the default WERROR=y).
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
+-- Steve
 
+> ---
+>  include/linux/trace_printk.h | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/include/linux/trace_printk.h b/include/linux/trace_printk.h
+> index bb5874097f24..2670ec7f4262 100644
+> --- a/include/linux/trace_printk.h
+> +++ b/include/linux/trace_printk.h
+> @@ -107,7 +107,6 @@ do {									\
+>  		__trace_printk(_THIS_IP_, fmt, ##args);			\
+>  } while (0)
+>  
+> -extern __printf(2, 3)
+>  int __trace_bprintk(unsigned long ip, const char *fmt, ...);
+>  
+>  extern __printf(2, 3)
 
