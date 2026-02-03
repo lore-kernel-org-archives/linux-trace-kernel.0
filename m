@@ -1,169 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2712BDC16;
-	Tue,  3 Feb 2026 02:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC1921D5BC;
+	Tue,  3 Feb 2026 04:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770085912; cv=none; b=tJutlNFHOZN4TomNsSnTUZ2aWC0lb88KGjr6FHu241aCx2+40yCfx8m2WhG0VUTXbB3HcjuTednomfne6TEq7SCk2fFlj5eE/jxzTjzwJ8pmL/CiwoEAMjrDnjBtv38vZiaNLroeFbhptmUiSpA1szQy4yTeR1KcdYuCaRl6Iq0=
+	t=1770091605; cv=none; b=laMxYQl8igq7RpEhXz6RvgBwyegHj3wyWEgbzj96s661Q8eYRFZRJ9pjBSYXJJgY0F0lRkkXmAEeb6Efsirokol81SGRGZP2/+GDwZNX2RN8p8vXOkJnLQ3W2Phasnl487e1a+ekRrGIphavNeEIiZO9Ol3dL0egwzhAPq/rwVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770085912; c=relaxed/simple;
-	bh=O+nYy5tZTS5nGbiW/bOFLVTSYy3UHSU8BFNWdmqBh0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ak7/cdjGxquajybtD5tFDsp3/4Qx7Xdq4ezr406DuGNM44EQmuJ7oBhQMRDATwaGdpwgQEIyCAnKq2xgBRHw/d1hWLxtD7XZqUkfgYb0VzUtpGLskZgCXbqM0+tcdTVI0h0QVE7zWqCRImVH4Mw/BK56FmnlbjQQrTnX4FF0mzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=egMzwR+L; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1770091605; c=relaxed/simple;
+	bh=1Fusn8F3ZQ41oFOiUxvQbehOpvikJ/VqiSSVTS8Ut0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDiNCadY8cs8aSu7ub2W0AA4+uzfwNJvE/TRwq90ZSiWLUSZQpu7BrUTcx15K1fCSEKw3Sq+WVBxsHsGBSXaJGvd+QviD5k1IQso1lkvzAN6BgHcb0BAkBQ0xDUUcDgG89uIL7Vg6R+z9D3pS9+pcqiJblKuAG6W9SgdnfdjQFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCkf8082; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="egMzwR+L"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 612Fl1g83386990;
-	Tue, 3 Feb 2026 02:31:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Eo/PIKYomjnKCQ1rpvBvw5Af2hkuVsEaK7Wwmunp8EQ=; b=egMzwR+L3+GFcgRo
-	nogQlu8FROavcoXbIl4tkaTgJWnj0xUpMUpoQgFuGtEqa0WYg204cWp6xJDTyrXI
-	iq8ipEe03lyicix4edCQo5VMGINXSPnSKFJI2lQhe2XcIETVZGytDBflNhx8t3eK
-	8vIxoS+X2GxYe12uacyqejLSmNcTYsJZ2f32hi0SA0qPXJRXTbSAbo6cfE58cLr8
-	AVqQ0X3qiSeRLddhDX8/Ddv/DUgvN9tzgTkwGcV8d5sGeSAjqLj7cdEi3XgMJ7E/
-	qZh0lzfGT4Y+/99EJFM1/vMqxnt0/gRiOlMAPj6geuKuuBbFhGeEMzyg6U5n2KlC
-	IRlovw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c2xvbsq2x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Feb 2026 02:31:27 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 6132VQDJ024983
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Feb 2026 02:31:26 GMT
-Received: from [10.233.71.148] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 2 Feb
- 2026 18:31:23 -0800
-Message-ID: <7b02f748-7442-4272-b3b5-0dfff7c15e33@quicinc.com>
-Date: Tue, 3 Feb 2026 10:31:21 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCkf8082"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770091604; x=1801627604;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1Fusn8F3ZQ41oFOiUxvQbehOpvikJ/VqiSSVTS8Ut0Y=;
+  b=JCkf8082iVQqNuCRhybnOU8rb0qO/ug7QV8s65rT3R8IsGbWmG6pr/AR
+   SfkJfaHryHBXpIDIpxP6aIEi7dcGSOABNNTmX7318YFTug7dS3rDOzHEk
+   JDETL+h6LFD6F09P9wUfXMxtlbAqq6/qPAYyiMeibqclK241kKY0t9gTv
+   1QfJCNNSskjroHy5mTvcLfggfYGQ2B7R8qtycaxofh2FdKRRQ1TuR9sol
+   uvJArwjqXJeg2XzE7zE6H/uOT1xjDdIG4qenPuP9xKHvz53s9m/0gr04V
+   vOZS7wteLQ7PKB9ZvnoZ3lGHeWGhYm7WMhDpcRo1f9WFz9cr3c2wZK0pA
+   g==;
+X-CSE-ConnectionGUID: WHIc80lJQUylPYg9X0XSVg==
+X-CSE-MsgGUID: NUcH5f5QQ8qDzd/BK8Ak5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="70274054"
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="70274054"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 20:06:44 -0800
+X-CSE-ConnectionGUID: XjR/6+SgS82PCkDq72YJ+g==
+X-CSE-MsgGUID: HI82SjdYRGquSLqqWQAa3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="209166509"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 02 Feb 2026 20:06:42 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vn7gV-00000000gEC-2cSa;
+	Tue, 03 Feb 2026 04:06:39 +0000
+Date: Tue, 3 Feb 2026 12:06:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: "jempty.liang" <imntjempty@163.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"jempty.liang" <imntjempty@163.com>
+Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
+ for 32-bit ARM
+Message-ID: <202602031142.uHVfwxw3-lkp@intel.com>
+References: <20260202123342.2544795-1-imntjempty@163.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] stm: class: Add MIPI OST protocol support
-To: Randy Dunlap <rdunlap@infradead.org>,
-        Yingchao Deng
-	<yingchao.deng@oss.qualcomm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        "Tingwei
- Zhang" <tingwei.zhang@oss.qualcomm.com>,
-        Yuanfang Zhang
-	<yuanfang.zhang@oss.qualcomm.com>,
-        Jinlong Mao <jinlong.mao@oss.qualcomm.com>
-References: <20260129-p_ost-v5-1-2b14fff39428@oss.qualcomm.com>
- <0ed08d07-5736-4874-9a0f-0f848e8419b6@infradead.org>
- <9ed4124e-a6f4-4994-a80e-860a1123c8ba@infradead.org>
-Content-Language: en-US
-From: "Yingchao Deng (Consultant)" <quic_yingdeng@quicinc.com>
-In-Reply-To: <9ed4124e-a6f4-4994-a80e-860a1123c8ba@infradead.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Ecqp3wLW9ERCAqOi3rlXPti9PPDEb91N
-X-Proofpoint-ORIG-GUID: Ecqp3wLW9ERCAqOi3rlXPti9PPDEb91N
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjAzMDAxOCBTYWx0ZWRfXzZdShie3Qx32
- ex/NTsH+bXvnaLc8rZkaPRqyfbD0bOZcgTRwW68VTv75p7my61flx+yvta3v67jHUTpPJ5AGOR8
- oOJxNbrZdBgz8M7dd1IMWnbfWPoa++9cYNlHHCSy22oemwnxY3jmh5EVMUODdHvtrW8EpNM1R2b
- ly99C8BmDFSDeRjjQkJ8eBT0v7oFk7Ky43S4CztCEqKtq+rnSOjJ2LuLZF897aObKmBNEqce55n
- fKElaefn4QbxvdAlqGuXlHhCpyVpfh/+XbZbAoKka3O2qGRuK3P/HX5d8Yp4JkrZ7WjydPCFDRa
- NBdLITKN6WiBfo6Aj+oDxbXaWikN0nxeDP5mV+3NmBJ5tHPlr52osw/o0tiVvKBJhpGn7Aju3LP
- oFHCMWeh5h/8ER3OaBzYM+ghsGmov7DHeEi+8utiuUUgZPv/8jctOmXMC9N8UmEQqTDea6LL4uM
- YYA/ZoewygapLrJcTuQ==
-X-Authority-Analysis: v=2.4 cv=AurjHe9P c=1 sm=1 tr=0 ts=69815dff cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Dims_e6JDq1Cz65YlcUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-03_01,2026-02-02_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 spamscore=0 suspectscore=0 phishscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602030018
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260202123342.2544795-1-imntjempty@163.com>
+
+Hi jempty.liang,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.19-rc8 next-20260202]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/jempty-liang/tracing-Fix-funcgraph_exit-calltime-rettime-offset-for-32-bit-ARM/20260202-203926
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20260202123342.2544795-1-imntjempty%40163.com
+patch subject: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset for 32-bit ARM
+config: x86_64-buildonly-randconfig-004-20260203 (https://download.01.org/0day-ci/archive/20260203/202602031142.uHVfwxw3-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260203/202602031142.uHVfwxw3-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602031142.uHVfwxw3-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/trace_irqsoff.c: In function 'irqsoff_graph_return':
+>> kernel/trace/trace_irqsoff.c:224:13: warning: unused variable 'rettime' [-Wunused-variable]
+     224 |         u64 rettime;
+         |             ^~~~~~~
 
 
-On 1/30/2026 2:38 AM, Randy Dunlap wrote:
->
-> On 1/29/26 10:31 AM, Randy Dunlap wrote:
->> diff --git a/Documentation/trace/p_ost.rst b/Documentation/trace/p_ost.rst
->> new file mode 100644
->> index 000000000000..df93b889eb4c
->> --- /dev/null
->> +++ b/Documentation/trace/p_ost.rst
->> @@ -0,0 +1,36 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +===================
->> +MIPI OST over STP
->> +===================
->> +
->> +The OST(Open System Trace) driver is used with STM class devices to
->     The OST (Open System Trace) driver
->
->> +generate standardized trace stream. Trace sources can be identified
->> +by different entity ids.
->> +
->> +CONFIG_STM_PROTO_OST is for p_ost driver enablement. Once this config
->> +is enabled, you can select the p_ost protocol by command below:
->> +
->> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy
->> +
->> +The policy name format is extended like this:
->> +    <device_name>:<protocol_name>.<policy_name>
->> +
->> +With coresight-stm device, it will be look like "stm0:p_ost.policy".
->     With {a | the} coresight-stm device,
->
->> +
->> +With MIPI OST protocol driver, the attributes for each protocol node is:
->     With the MIPI OST protocol driver,                                   are:
->
->> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
->> +# ls /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
->> +channels  entity    masters
->> +
->> +The entity here is the set the entity that p_ost supports. Currently
->                     is the set of {entities | features} that p_ost supports. Currently
->
->> +p_ost supports ftrace, console and diag entity.
->                                             entities.
->
->> +
->> +Set entity:
->> +# echo 'ftrace' > /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity
->> +
->> +Get available and currently selected (shown in square brackets) entity that p_ost supports:
->> +# cat /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity
->> +[ftrace] console diag
->> +
->> +See Documentation/ABI/testing/configfs-stp-policy-p_ost for more details.
+vim +/rettime +224 kernel/trace/trace_irqsoff.c
 
-Thanks, will update.
+62b915f1060996 Jiri Olsa                 2010-04-02  214  
+37238abe3cb47b Steven Rostedt (VMware    2024-06-03  215) static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
+2ca8c112c9676e Masami Hiramatsu (Google  2024-12-26  216) 				 struct fgraph_ops *gops,
+2ca8c112c9676e Masami Hiramatsu (Google  2024-12-26  217) 				 struct ftrace_regs *fregs)
+62b915f1060996 Jiri Olsa                 2010-04-02  218  {
+62b915f1060996 Jiri Olsa                 2010-04-02  219  	struct trace_array *tr = irqsoff_trace;
+62b915f1060996 Jiri Olsa                 2010-04-02  220  	struct trace_array_cpu *data;
+62b915f1060996 Jiri Olsa                 2010-04-02  221  	unsigned long flags;
+36590c50b2d072 Sebastian Andrzej Siewior 2021-01-25  222  	unsigned int trace_ctx;
+a485ea9e3ef31a Steven Rostedt            2025-01-13  223  	u64 *calltime;
+66611c04757096 Steven Rostedt            2025-01-21 @224  	u64 rettime;
+a485ea9e3ef31a Steven Rostedt            2025-01-13  225  	int size;
+62b915f1060996 Jiri Olsa                 2010-04-02  226  
+12117f3307b63f Steven Rostedt (VMware    2024-06-03  227) 	ftrace_graph_addr_finish(gops, trace);
+5cf99a0f3161bc Steven Rostedt (VMware    2018-11-29  228) 
+5e6d2b9cfa3a6e Steven Rostedt            2010-10-05  229  	if (!func_prolog_dec(tr, &data, &flags))
+62b915f1060996 Jiri Olsa                 2010-04-02  230  		return;
+62b915f1060996 Jiri Olsa                 2010-04-02  231  
+77a67833e830fd jempty.liang              2026-02-02  232  	trace->rettime = trace_clock_local();
+a485ea9e3ef31a Steven Rostedt            2025-01-13  233  	calltime = fgraph_retrieve_data(gops->idx, &size);
+c834a97962c708 Steven Rostedt            2025-10-08  234  	if (calltime) {
+77a67833e830fd jempty.liang              2026-02-02  235  		trace->calltime = *calltime;
+36590c50b2d072 Sebastian Andrzej Siewior 2021-01-25  236  		trace_ctx = tracing_gen_ctx_flags(flags);
+77a67833e830fd jempty.liang              2026-02-02  237  		__trace_graph_return(tr, trace, trace_ctx);
+c834a97962c708 Steven Rostedt            2025-10-08  238  	}
+90633c34c36d0c Steven Rostedt            2025-05-05  239  	local_dec(&data->disabled);
+62b915f1060996 Jiri Olsa                 2010-04-02  240  }
+62b915f1060996 Jiri Olsa                 2010-04-02  241  
 
-Yingchao
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
