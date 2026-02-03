@@ -1,209 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3B0369975;
-	Tue,  3 Feb 2026 18:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770144158; cv=none; b=PIm4SbeFFNcjz9uIujvRj6JLR/5aFuYAvznZfWqYRIHI/YjV4sNOTw5XosoYWSZe1nbdBnug3Ts7hJJtc9cm/cS9khq811ww4TjRks4Xpplal1coEAuJW3Glx2aNNJzctj+sTAWQx6zJFxEAaWoe62eq06e8o0G+tQ8+GjjEm1I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770144158; c=relaxed/simple;
-	bh=HM6tx49mQFYNN3BJrY7JymUJOIj1QZLSl3xG5TZkxjE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GQSK1wiRLrhs5cu0DlsUhQzWfmMvsswEQl6VyuJq6Egi9uBnwb40VtI5aRBF0jFKBXUdlvtJKZM2GML7tvbvrOqq3J8obNxos8f/wKL20PPnA5Avn3xT6W9xl9q9sosSCGvy+eF3KuZ1ORG1M2JSwmO7ZXI3zc7AIbVgIdfJ160=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mew6J3r5; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01432D5C7A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Feb 2026 23:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770160639; cv=pass; b=fy65Am5Xg6oY+lYErTYCcTsu2oFuOTh4Bkds5tdHfibjGJ2o2oNoY0H9hkjAqB7Sqfn0715yYOjfZM135qlIRMQt/65twQCkqwAXT9cMbUjC2KsqBaLQmeeA98DOjkMvGktFP2Pr8F0r+G0Dvysf2g6xPtKPmu4PydrkzxTe588=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770160639; c=relaxed/simple;
+	bh=oGLAAx0oDXJySJ6SACiBMMlBs8l/0/aMYhTmfuLrNXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XmpLB1pbSqlantpVBI/eZD1+9cCcIgJNib6xcVLIpmgCW+TfpwKIbLYJc9S+aem0kDTs/uJBG//shNz2c5sTLv2xwp9iY3MPoLdikUoF2cKhaj3rqHoxbQuZv43ouF0EwBF2yUg6bs/7NYS2A5Otadk1mV+ETI7DyWjHKGVQN5I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIWkkqDy; arc=pass smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mew6J3r5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1EBC116D0;
-	Tue,  3 Feb 2026 18:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770144158;
-	bh=HM6tx49mQFYNN3BJrY7JymUJOIj1QZLSl3xG5TZkxjE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Mew6J3r5jyvK7HdgZtS0kuPHktfvkaTNo4YL+rCYOn9f8mNRB4B2qAywYm7oABLif
-	 PVi5j1xRj/R6hjccUwfqSU1U77cm3Nzk7H56zoCxLFkz9zb3+NN0FynbAjqzk5+gjA
-	 YoAaVSk84HS2tJGAbDfzAQjtWofcc4AMzvHNzQ9Mn3HtEx1dul6JYJ5nJTGrWNyKFV
-	 anjv5U3qG/hqUu43E3Z2+EmWFBbCIkVfZdR70flvJfqMFfHQbOwG2nPeWH+Yi6vsB3
-	 +HY3JwQ2UlMPgllN+HDKQhovliBwXMTdTt3N74XRLK2B9bUjhmnMc4dpLNrjj1EQy5
-	 mFYyRnX4tEZgQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 03 Feb 2026 19:41:20 +0100
-Subject: [PATCH net-next 04/15] trace: mptcp: add mptcp_rcvbuf_grow
- tracepoint
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIWkkqDy"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4806ce0f97bso52227525e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Feb 2026 15:17:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770160636; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GLz5asfV5A+V8fjc69w8eaaXhC1fZ9RYmBHw2wBQV8qDPKhn0jRdmXHu5i1P2XpCiF
+         g3PRjzBxHwnSN4WuPCn0EhjShlF/XUy3w2wP0NY0eTLePc1ClLxlIOwgxtxZ6vpvuNKH
+         uiLPHUbICVfMkwohthpGl7I2Ryb7ceEQ1zCH5osCI1MYpwSRVpW72mdhpNlYpdYzV6IH
+         bPca4a4Ns4xdFv+NLRO/6MC4IeedGECnNbk0QgvOOcLxY4FYOKOhbdUvPz6k3jaUnabK
+         dh1xngtD2AJZXnapY/oAbSI9KDTTyqyimjRzCNwAQMna+2s+EMpVfpUMavrWxT6FLzFL
+         jVAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=qCzknF2XLFkMn/b7FrJtBsuU+TTC6yCt38+P4qpWFOk=;
+        fh=4L7Op6h3tJf44xyzKLt1r/WC8mjqrzCJaA25Ao/ehxo=;
+        b=dQwit0ls7tIL4JFNxRAuWF2xsZVyHUz9UA5zruBfyPjN9rxWeaeDNIvznehg9wE2K1
+         C3USFmJZt0McHcGtY7miAqGdxrX+7dIC8XYVt1Xm2U6bO8VGgWcMR3MOLo/mBjprXWHy
+         2tN+0ItsKko0Gwx7mXfz12RnWmcPUpnaIIepSaw5a+3zHbbmuahUGJFlS/3smQ53XqHc
+         ONz3vglmkewNycF/8zAMP04Fco35Dfrpt1JBXl+MXpnOiM8pwfQT8R2MyXKfANg2BhLc
+         194oOcFxiL6JO3tjbbwKD4E0PLCk3XWoytFkqu2AZR/BjgXKqKhXY0VGeKhoMoV0A5/E
+         +J8Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770160636; x=1770765436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qCzknF2XLFkMn/b7FrJtBsuU+TTC6yCt38+P4qpWFOk=;
+        b=PIWkkqDyCA1HVf849aOk6fpfssZMWbI6aRfHCT2+4Zg7Xv6XNZqzNEo0vWT+pXG8iE
+         rwKzeQldc65jH1utn2dGiRszSNUi0pMy+EUz7jFhau+1KAZjxwb8RumKvZa2MxTcw0eC
+         I7TB+z6m/d63cNzAUPzQIEb32iAaM9gQSVKD9L0rKOBM0B9hhQiuogwF4GlasQGa7186
+         MrNQU2t9s+gCZtDMUPjOzbosbQZgwtmFhcYwdbKBhAMUzoSpYpXHby1gOu89B8JgOlpi
+         +yfa7g3/ZbL8Mx/IlhVJh3/0N01LtAYvUisGM7gk2hiVDh34JfVmbh0t0kadW5pbnncS
+         EExw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770160636; x=1770765436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qCzknF2XLFkMn/b7FrJtBsuU+TTC6yCt38+P4qpWFOk=;
+        b=vV6STi4IL3Mm4xbW5n7bz8jHFsJqCKt7A27HlMvAPy2bRWG92t9mIqolGpWyU3UKby
+         3nB/VZAJSbjNsr9V1ysJ5LO3XqTsh3A96xOKAbP9ihwDiPK9K7F8eZb4jbTP+r+yu0XV
+         hbFbJB2A/kFg1l6RIQijtJlxhXoGdYu4ZUGu0wt0/d9STitlf0ALUIaJQl916M/J6i2K
+         sppiEhpWljvlLp1KvLW5tsl7A/8G8HwwZogfE0GmRTKxatNRImRU6V1DvTuRyTwEdh7n
+         wiYnosk2D1ofgnpzaY8Z/RQ7yOWKZdcWSTrTeUZJDjq0OH3ZzzSaPHGxAny/+DrVAshP
+         BKjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWN61R2JWY4SscHevHKfiPcrvSkSnKCEzqatLxqID3rMl/Nc9w7j6BFkum9FhSxl46R4ss80ldcCn4aD4kFPEUCMFA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKRPk1xdgaJLhbWXaMX3Vxrzck11HIfzo67WbnQkLjM4sY7n3t
+	ivGkMaMR7x3TXz/KCukJ588tXVU89N1PvhlK6DRMa2CDkx5QJgYtdqa+i+mQ8V6eoC2EcDK+k7h
+	XwfXzE+yKqiDwFNQtEhTKvsjVy78b/lw=
+X-Gm-Gg: AZuq6aIPJQkkEbL5J2H7yoxamPjFnTjIlAYz1fEyKQDDNl6TzZSbC4HSSXwY6W0ZKZV
+	FdOIK2bbjhljHNRr9+zbzgQ4sUJOEX5rMiNAADHNZurTbICar1vwk3SaS5RTBb/9DPdiiFPZXEu
+	PA+P7iJWgweekYyGHPVtMhVHC7AhvONwcfoyiQGHuxLqp8kqqW+0gbD7IMw11eonUw1tsb6eHhr
+	Kb9tquavFwBTxBGaOclP5wUrcYXsyvNW8QWFMAi/K2ZG9nJGaxsc1qB4/lOAtWo8xIweQEIwFGj
+	IOIBxIljl3JighJKJrutfLfcGsa2XEkPkm085FDusCinUNeobPg7HtghAbcJPas+QWZDmNyL1GG
+	jTYrkQecas03m9Q==
+X-Received: by 2002:a05:600c:468b:b0:479:3a86:dc1c with SMTP id
+ 5b1f17b1804b1-4830e99c72emr15368615e9.36.1770160636123; Tue, 03 Feb 2026
+ 15:17:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260203-net-next-mptcp-misc-feat-6-20-v1-4-31ec8bfc56d1@kernel.org>
-References: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
-In-Reply-To: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4576; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=al0vruxgsUcB97tITLFQA6dVrIrIYa07fGVe6g3vT3U=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbHDuaD53aPVFzk/zFG+9Ft8ZuCjs1IY0t8eVWPUFla
- 2XfFVd2dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkJ46RYcP5tWppNkpy9cab
- GHPnyJ9ni5ztE194LMqsemaf/JvP5xkZVoZo+SSyyvcksN9mKN2bkWkjd5dbe0VsVPtZWT6N/3c
- 4AQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20260203093819.2105105-1-jolsa@kernel.org>
+In-Reply-To: <20260203093819.2105105-1-jolsa@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 3 Feb 2026 15:17:05 -0800
+X-Gm-Features: AZwV_QiKtrXKdO5AhQ0I4_nizbg2ietswcwGbOy_bfzFE5Gd80HiFm4U4YWqCsw
+Message-ID: <CAADnVQ+EU_f4LVDQkqkB0Q+QYMBH5ynXU3+rGZA2XCGmYMcFqg@mail.gmail.com>
+Subject: Re: [RFC bpf-next 00/12] bpf: tracing_multi link
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Martin KaFai Lau <kafai@fb.com>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Tue, Feb 3, 2026 at 1:38=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> hi,
+> as an option to Meglong's change [1] I'm sending proposal for tracing_mul=
+ti
+> link that does not add static trampoline but attaches program to all need=
+ed
+> trampolines.
+>
+> This approach keeps the same performance but has some drawbacks:
+>
+>  - when attaching 20k functions we allocate and attach 20k trampolines
+>  - during attachment we hold each trampoline mutex, so for above
+>    20k functions we will hold 20k mutexes during the attachment,
+>    should be very prone to deadlock, but haven't hit it yet
 
-Similar to tcp, provide a new tracepoint to better understand
-mptcp_rcv_space_adjust() behavior, which presents many artifacts.
+If you check that it's sorted and always take them in the same order
+then there will be no deadlock.
+Or just grab one global mutex first and then grab trampolines mutexes
+next in any order. The global one will serialize this attach operation.
 
-Note that the used format string is so long that I preferred
-wrap it, contrary to guidance for quoted strings.
+> It looks the trampoline allocations/generation might not be big a problem
+> and I'll try to find a solution for holding that many mutexes. If there's
+> no better solution I think having one read/write mutex for tracing multi
+> link attach/detach should work.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/trace/events/mptcp.h | 80 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.c         |  3 ++
- 2 files changed, 83 insertions(+)
+If you mean to have one global mutex as I proposed above then I don't see
+a downside. It only serializes multiple libbpf calls.
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 085b749cdd97..269d949b2025 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -5,7 +5,13 @@
- #if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
- #define _TRACE_MPTCP_H
- 
-+#include <linux/ipv6.h>
-+#include <linux/tcp.h>
- #include <linux/tracepoint.h>
-+#include <net/ipv6.h>
-+#include <net/tcp.h>
-+#include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- #define show_mapping_status(status)					\
- 	__print_symbolic(status,					\
-@@ -178,6 +184,80 @@ TRACE_EVENT(subflow_check_data_avail,
- 		  __entry->skb)
- );
- 
-+#include <trace/events/net_probe_common.h>
-+
-+TRACE_EVENT(mptcp_rcvbuf_grow,
-+
-+	TP_PROTO(struct sock *sk, int time),
-+
-+	TP_ARGS(sk, time),
-+
-+	TP_STRUCT__entry(
-+		__field(int, time)
-+		__field(__u32, rtt_us)
-+		__field(__u32, copied)
-+		__field(__u32, inq)
-+		__field(__u32, space)
-+		__field(__u32, ooo_space)
-+		__field(__u32, rcvbuf)
-+		__field(__u32, rcv_wnd)
-+		__field(__u8, scaling_ratio)
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+		__array(__u8, saddr, 4)
-+		__array(__u8, daddr, 4)
-+		__array(__u8, saddr_v6, 16)
-+		__array(__u8, daddr_v6, 16)
-+		__field(const void *, skaddr)
-+	),
-+
-+	TP_fast_assign(
-+		struct mptcp_sock *msk = mptcp_sk(sk);
-+		struct inet_sock *inet = inet_sk(sk);
-+		bool ofo_empty;
-+		__be32 *p32;
-+
-+		__entry->time = time;
-+		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
-+		__entry->copied = msk->rcvq_space.copied;
-+		__entry->inq = mptcp_inq_hint(sk);
-+		__entry->space = msk->rcvq_space.space;
-+		ofo_empty = RB_EMPTY_ROOT(&msk->out_of_order_queue);
-+		__entry->ooo_space = ofo_empty ? 0 :
-+				     MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq -
-+				     msk->ack_seq;
-+
-+		__entry->rcvbuf = sk->sk_rcvbuf;
-+		__entry->rcv_wnd = atomic64_read(&msk->rcv_wnd_sent) -
-+				   msk->ack_seq;
-+		__entry->scaling_ratio = msk->scaling_ratio;
-+		__entry->sport = ntohs(inet->inet_sport);
-+		__entry->dport = ntohs(inet->inet_dport);
-+		__entry->family = sk->sk_family;
-+
-+		p32 = (__be32 *)__entry->saddr;
-+		*p32 = inet->inet_saddr;
-+
-+		p32 = (__be32 *)__entry->daddr;
-+		*p32 = inet->inet_daddr;
-+
-+		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
-+			       sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->skaddr = sk;
-+	),
-+
-+	TP_printk("time=%u rtt_us=%u copied=%u inq=%u space=%u ooo=%u scaling_ratio=%u "
-+		  "rcvbuf=%u rcv_wnd=%u family=%d sport=%hu dport=%hu saddr=%pI4 "
-+		  "daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c skaddr=%p",
-+		  __entry->time, __entry->rtt_us, __entry->copied,
-+		  __entry->inq, __entry->space, __entry->ooo_space,
-+		  __entry->scaling_ratio, __entry->rcvbuf, __entry->rcv_wnd,
-+		  __entry->family, __entry->sport, __entry->dport,
-+		  __entry->saddr, __entry->daddr, __entry->saddr_v6,
-+		  __entry->daddr_v6, __entry->skaddr)
-+);
- #endif /* _TRACE_MPTCP_H */
- 
- /* This part must be outside protection */
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 514272179714..197ee169c0bc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -28,6 +28,8 @@
- #include "protocol.h"
- #include "mib.h"
- 
-+static unsigned int mptcp_inq_hint(const struct sock *sk);
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/mptcp.h>
- 
-@@ -2133,6 +2135,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
- 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
- 		goto new_measure;
- 
-+	trace_mptcp_rcvbuf_grow(sk, time);
- 	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
- 		/* Make subflows follow along.  If we do not do this, we
- 		 * get drops at subflow level if skbs can't be moved to
-
--- 
-2.51.0
-
+overall makes sense to me.
