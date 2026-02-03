@@ -1,174 +1,214 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155373C1961
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Feb 2026 16:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770134462; cv=pass; b=TIr+k+WLA/0qYC87Znvi+5mUugHzp6sGQJz/BdMYMMYhsX//tPiFun1rxk5Tvd8UhaE4LT5Mi8Ah15d5q04su1NIZGU+Kw0Ist71kRv0UpZMfPSADs0S2QTH99dxy/6nhkk5iPt+Yaqg7xMElFfTrEHpfh3v/u2DJJJvd8ous0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770134462; c=relaxed/simple;
-	bh=deO57hxzyS5UzkvPh4r4kvjZmU6hULG6xhnk9q4NzV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KGq/dcqAbCxBmRBG21vHM1SWIdu6EKOF82aKVFA4N/YdUBAPgf7sDBFZWSsWSOt+9IMVO33q367K/u+Y6sOnY9C2kDjdTT+bkiV0xN9iqRmJ7a1EljYaYlL4/yMXtK9qoRf2YIgmEGwIt89wcWanINus6kqJ+ChvdgloOJrzWPk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJ8ZUjAh; arc=pass smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ8ZUjAh"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-47ee0291921so55699935e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Feb 2026 08:01:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770134459; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KJ8NHjeX/X7UCosRsSPqXV2QNYVichBIuQNQky29ieaptK5ZxGvqfDUaK0tPUW1RfI
-         rexQg0zoxPfW1ffveVYnAS2Bd3AnKboqki9cttJMq6aCMhD2rhyDXLtKpdGVR8quc5oQ
-         wiGIEn1NkR8gx10HjfeuUfy2huRtvXk24+vpOFkVNzhIgRKzI/gJF1MrSX/6mnYsBgjt
-         +vsE2m+VwJ83d/snhfIDqf/V135Le4904a/8TK27/R7d4kx2rNBAJQBQPXP+xVp0doDS
-         J3hXpp8nxICIfF7Ipi87DMqzJPCyCwJ2/JpN+Aueay1KpQAbEg7oqJLXY7tsD/JiBsyD
-         Oz5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
-        fh=8yYZnn4ZZsJLsFWps0UE0SG+ZtNpUFqQ7ed1VA36wsY=;
-        b=SbNh4hX1SmrsiYOYVWMbVL4Ycm9dcbfnUOep3O5oG4ub1aDThqPByu9k8a+5Ln/+4W
-         hWKmKtk/2QqZfSstfyNGA7fzswAjpB+78gMukWT44ZCn+hwWEDr7LyHBB1dEE2YsHD6i
-         6DDIkjpNCeKQUFMVtya8U7Lraq4mcDS/oZTA+4Sg7TIpzqnwuQGlhmLWdPw1LOMiujHH
-         GmVQz1hW1vpUNbzLzfzbXT8ozmNqGPEZRnbnQroe0ooZacew/xQ8VFX5MS4yQgJta8m3
-         SG4N4kbMakGPj2UBywm4OTJ5vRufEIoPAqMWbl61tDe3FInrdDMeXhrTSj5D6b/coB3Q
-         zvog==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770134459; x=1770739259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
-        b=nJ8ZUjAhc6eyDne25zx7/5W93JUZhndR2w7dRdvcwKJ20B2SZTtJsT3anhwAUAJY1Y
-         GKHyuGWhVkkxs8vO6/apwmn7lgHC4dAPihLNgQ+vC8RxF4OKpqDoS47K0MgWtwSfw6G6
-         7Lzn38y3HWegvH1M696KA1i5NKKW54nfXOE4JErIC+dwESBKMbkN+7QlAARvXe3UwjTv
-         aZJh668ldT7M9WNPL/PHnk77HGZyj3WbRgYtZP6DUuLD1pNkjOeBwxUajylodKmpMdsD
-         33K7msICw5VnXr9rbYEr2pbPyXXqb+kgH94YAsLC2dxLJLfSB+xOC9xlDz85E/uy0TIi
-         NIVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770134459; x=1770739259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
-        b=vPxdSXj0KqUIULQnimxGm63SebXpZ2wl7C8/I1EEqFtNJgPkIb5g1VI4Apisd/WpjL
-         pcDOThnYBkIWrPVLjCoPrrA4KST39S6QjCGCa2TU2WPZ9VOXlhigRbNP5WDfQ9dp8JMr
-         q6w2leCYPQlL9Ar52YKqgprayMWgsurvi7Tz6BsVLdqZ/mrMLVJxQO0ZWQY30UmqE74j
-         aZoEEncinODtO6eC7PFcjwuUmRKLOaaEO1+9+BI+H4DFGgDovrA6Z670RbC1LeNt97/O
-         s+Id4FrFkUTlYdeNYGS561cOXsRGC4/jX04cC8V0pUWyNXqQmh23SI0kDXtzrbB3Wx8z
-         SJhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqFNpE9+eE10Dy9M3ufCxIZET7G/xGZKxtOfRDdSRXKXffUGFi8K/sO5yAT8ivNoCPGg14jBV/0Out2USx47l9xaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5qLXN0YOlqSF6sgIVG7y9J0zWxjfeFGB0FNehRBx+dhHlbCYy
-	eVTNzNvqGem4vuMaHILoa8n4eJsQbPrkve1hiOoFMkjywHY8fDJSw5C0ssBZ5/sgDKc+yWtDf4q
-	+G1KHtApeqBV24odW2zmzHOqp8VsqIes=
-X-Gm-Gg: AZuq6aJosSVNvnhY0dUTIEU9ySIU5ncVg09tBaCLFtDZ5xCYgRPAqs8zwdsyazg0tpF
-	G/QQsMlPNEg1otYSr6/4X4Mv+gQB7UonYPJMoTnixcsIghyEj3Utmk/0NjCra03X0p9tAhDHqmj
-	I3wTQ4BLVsiDrQ3ajjBcJGijc6j1L/UYdKhxsM/gXvoO3d3rDWXqdw+zAj21CwOKNnZZMhrkaVc
-	KiIqpvlJEDLwE40DBXIrhowV6YO6GGw/4cN8+aGpCrIMDtbQ2Uav/aplOXZzYAmfYqH7IvZ3iYg
-	HYUL/xtN2BNz1Q9tzLusV+uT0Sh0SoX6ytXn/KOA1eO4H2mOfInVsuf8QdKKnt5yC7oabA==
-X-Received: by 2002:a05:600c:34d5:b0:47a:81b7:9a20 with SMTP id
- 5b1f17b1804b1-4830e930f67mr1621525e9.9.1770134459065; Tue, 03 Feb 2026
- 08:00:59 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1363D331C;
+	Tue,  3 Feb 2026 16:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770135620; cv=none; b=M7GZkZ0E/Cm34luuvDPaWAZ9KuU32Rv22fAvpJ2U+8Yi8fLP1+fGXC7kmxq1RE8MFe332Uzv6HQosdNiNW12hZVTDu4YpB4Hmsyfycjanl3NYFy7LRdxCJQ+hxtH6sGFRrtgq8LxBGQsi25uTWBV35vxrNnjEgauH71myl/jAGU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770135620; c=relaxed/simple;
+	bh=yuL+6Sbc5lFx0zb3DLHZHkwLxr6ZnwQXx5POgp0/D9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FAJkEP2FN1LgQp/Ipi8OlErz/lOlffmSZqFPfRxesT+tEvhWgOUX951NDWyy+XZHlBmJMnNMKE9+jECXAQCH8v/T55wo5iXpnSyCuab2ZaIZIltGpY+BVgrbCNojMgjmE7o55AZbt3t/N/fP/QxpjgW9SLZmklcIH6LHI1Gw4cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id C8A751402FA;
+	Tue,  3 Feb 2026 16:20:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id DB86B20;
+	Tue,  3 Feb 2026 16:20:14 +0000 (UTC)
+Date: Tue, 3 Feb 2026 11:20:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "jempty.liang" <imntjempty@163.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
+ for 32-bit ARM
+Message-ID: <20260203112040.01bbb8e9@gandalf.local.home>
+In-Reply-To: <20260203093018.66c3b3b2@gandalf.local.home>
+References: <20260202123342.2544795-1-imntjempty@163.com>
+	<20260202103804.40cbaa27@gandalf.local.home>
+	<20260202110828.440c8d44@gandalf.local.home>
+	<19eab264.7fae.19c22f5d17c.Coremail.imntjempty@163.com>
+	<20260203093018.66c3b3b2@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
- <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
- <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
- <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com> <20260203101707.52965eb0@gandalf.local.home>
-In-Reply-To: <20260203101707.52965eb0@gandalf.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 3 Feb 2026 08:00:45 -0800
-X-Gm-Features: AZwV_Qgsf-FoXB1pc5mel06UTxL9uWyAFVjyhN8Kz0H72J6ymSV25GKNwS9ieHQ
-Message-ID: <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
- via BTF
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Donglin Peng <dolinux.peng@gmail.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: DB86B20
+X-Stat-Signature: u7ksmy8hpunseeauwg7mznw7rwwahtz7
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/bH0oIrJ+5Jbm7qNfFx4SfGQeE09BBnEc=
+X-HE-Tag: 1770135614-998761
+X-HE-Meta: U2FsdGVkX18etqHfERoXlH9Cguv2VeO2Wj12MUlcHPuNcrVLbvgQ0Q5NCPRp6/DaLlMh2fsQo9GqVwIGHtqg4IicgxPNdzmLUbdsqZqq8BocEcrbnkwN505JNK0V5sXQZjyEvZp/E4wiCudZ4k2cpU2nn0UwY16pzwFiZK1uGtfhXRW7OIcoliXFLm6UZ3QD5UNiuu1rJ7/pscvgevp98SaXsEiQShsz5Iah8vaFZ1xMjebmhPpbiMSxVpMcEwWkc0RbmCOFt21GH077Gb2YC78FPwVJAH5qxEM1z92wyorIG4QAeMp0wj/vm48W7ouYgeUfTSpMEBJUB0aoO1ZfpOHwQ7IpoIJZwmMMj+MZQKrPeNl5CIjzriWnkMfHGnQk
 
-On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 3 Feb 2026 21:50:47 +0800
-> Donglin Peng <dolinux.peng@gmail.com> wrote:
->
-> > Testing revealed that sorting within resolve_btfids introduces issues w=
-ith
-> > btf__dedup. Therefore, I plan to move the sorting logic directly into
-> > btf__add_enum_value and btf__add_enum64_value in libbpf, which are
-> > invoked by pahole. However, it means that we need a newer pahole
-> > version.
->
-> Sorting isn't a requirement just something I wanted to bring up. If it's
-> too complex and doesn't achieve much benefit then let's not do it.
->
-> My worry is because "cat trace" takes quite a long time just reading the
-> BTF arguments. I'm worried it will just get worse with enums as well.
->
-> I have trace-cmd reading BTF now (just haven't officially released it) an=
-d
-> doing an extract and reading the trace.dat file is much faster than readi=
-ng
-> the trace file with arguments. I'll need to implement the enum logic too =
-in
-> libtraceevent.
+On Tue, 3 Feb 2026 09:30:18 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-If you mean to do pretty printing of the trace in user space then +1 from m=
-e.
+> > On the 32-bit ARM platform, when _type is unsigned long long, the resulting align value is 8 instead of the expected 4.  
+> > >     
+> 
+> Are you saying this still doesn't work?
+> 
+> That would be an issue because then it would have the same bugs with
+> generic trace events which uses the same solution.
 
-I don't like sorting enums either in resolve_btfid, pahole or kernel.
-Sorted BTF by name was ok, since it doesn't change original semantics.
-While sorting enums by value gets us to the grey zone where
-the sequence of enum names in vmlinux.h becomes different than in dwarf.
+OK, so talking with others that know more about arm32 than I do, it can
+indeed still produce an 8 byte alignment.
 
-Also id->name mapping in general is not precise.
-There is no requirement for enums to be unique.
-Just grabbing the first one:
-ATA_PIO0 =3D 1,
-ATA_PIO1 =3D 3,
-ATA_PIO2 =3D 7,
-ATA_UDMA0 =3D 1,
-ATA_UDMA1 =3D 3,
-ATA_UDMA2 =3D 7,
-ATA_ID_CYLS =3D 1,
-ATA_ID_HEADS =3D 3,
-SCR_ERROR =3D 1,
-SCR_CONTROL =3D 2,
-SCR_ACTIVE =3D 3,
+Anyway, I still want to fix it properly. Does this patch work for you?
 
-All these names are part of the same enum type.
-Which one to print? First one?
+-- Steve
 
-another example:
-enum {
-        BPF_LOCAL_STORAGE_GET_F_CREATE =3D 1,
-        BPF_SK_STORAGE_GET_F_CREATE =3D 1,
-};
-
-and another:
-enum {
-        BPF_SKB_TSTAMP_UNSPEC =3D 0,
-        BPF_SKB_TSTAMP_DELIVERY_MONO =3D 1,
-        BPF_SKB_CLOCK_REALTIME =3D 0,
-        BPF_SKB_CLOCK_MONOTONIC =3D 1,
-        BPF_SKB_CLOCK_TAI =3D 2,
-};
-
-I'd rather not print any and keep it integer only.
-
-pw-bot: cr
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b6d42fe06115..c11edec5d8f5 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -68,14 +68,17 @@ enum trace_type {
+ #undef __field_fn
+ #define __field_fn(type, item)		type	item;
+ 
++#undef __field_packed
++#define __field_packed(type, item)	type	item;
++
+ #undef __field_struct
+ #define __field_struct(type, item)	__field(type, item)
+ 
+ #undef __field_desc
+ #define __field_desc(type, container, item)
+ 
+-#undef __field_packed
+-#define __field_packed(type, container, item)
++#undef __field_desc_packed
++#define __field_desc_packed(type, container, item)
+ 
+ #undef __array
+ #define __array(type, item, size)	type	item[size];
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index f6a8d29c0d76..54417468fdeb 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -79,8 +79,8 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
+ 
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+-		__field_packed(	unsigned long,	graph_ent,	func		)
+-		__field_packed(	unsigned long,	graph_ent,	depth		)
++		__field_desc_packed(unsigned long,	graph_ent,	func	)
++		__field_desc_packed(unsigned long,	graph_ent,	depth	)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
+@@ -96,9 +96,9 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
+ 
+ 	F_STRUCT(
+ 		__field_struct(	struct fgraph_retaddr_ent,	graph_rent	)
+-		__field_packed(	unsigned long,	graph_rent.ent,	func		)
+-		__field_packed(	unsigned long,	graph_rent.ent,	depth		)
+-		__field_packed(	unsigned long,	graph_rent,	retaddr		)
++		__field_desc_packed(	unsigned long,	graph_rent.ent,	func	)
++		__field_desc_packed(	unsigned long,	graph_rent.ent,	depth	)
++		__field_desc_packed(	unsigned long,	graph_rent,	retaddr	)
+ 		__dynamic_array(unsigned long,	args				)
+ 	),
+ 
+@@ -123,12 +123,12 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ret,	ret	)
+-		__field_packed(	unsigned long,	ret,		func	)
+-		__field_packed(	unsigned long,	ret,		retval	)
+-		__field_packed(	unsigned int,	ret,		depth	)
+-		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_desc_packed(	unsigned long,	ret,	func	)
++		__field_desc_packed(	unsigned long,	ret,	retval	)
++		__field_desc_packed(	unsigned int,	ret,	depth	)
++		__field_desc_packed(	unsigned int,	ret,	overrun	)
++		__field_packed(unsigned long long,	calltime)
++		__field_packed(unsigned long long,	rettime	)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u retval: %lx",
+@@ -146,11 +146,11 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+ 
+ 	F_STRUCT(
+ 		__field_struct(	struct ftrace_graph_ret,	ret	)
+-		__field_packed(	unsigned long,	ret,		func	)
+-		__field_packed(	unsigned int,	ret,		depth	)
+-		__field_packed(	unsigned int,	ret,		overrun	)
+-		__field(unsigned long long,	calltime		)
+-		__field(unsigned long long,	rettime			)
++		__field_desc_packed(	unsigned long,	ret,	func	)
++		__field_desc_packed(	unsigned int,	ret,	depth	)
++		__field_desc_packed(	unsigned int,	ret,	overrun	)
++		__field_packed(unsigned long long,	calltime	)
++		__field_packed(unsigned long long,	rettime		)
+ 	),
+ 
+ 	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u",
+diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+index 1698fc22afa0..32a42ef31855 100644
+--- a/kernel/trace/trace_export.c
++++ b/kernel/trace/trace_export.c
+@@ -42,11 +42,14 @@ static int ftrace_event_register(struct trace_event_call *call,
+ #undef __field_fn
+ #define __field_fn(type, item)				type item;
+ 
++#undef __field_packed
++#define __field_packed(type, item)			type item;
++
+ #undef __field_desc
+ #define __field_desc(type, container, item)		type item;
+ 
+-#undef __field_packed
+-#define __field_packed(type, container, item)		type item;
++#undef __field_desc_packed
++#define __field_desc_packed(type, container, item)	type item;
+ 
+ #undef __array
+ #define __array(type, item, size)			type item[size];
+@@ -104,11 +107,14 @@ static void __always_unused ____ftrace_check_##name(void)		\
+ #undef __field_fn
+ #define __field_fn(_type, _item) __field_ext(_type, _item, FILTER_TRACE_FN)
+ 
++#undef __field_packed
++#define __field_packed(_type, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
++
+ #undef __field_desc
+ #define __field_desc(_type, _container, _item) __field_ext(_type, _item, FILTER_OTHER)
+ 
+-#undef __field_packed
+-#define __field_packed(_type, _container, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
++#undef __field_desc_packed
++#define __field_desc_packed(_type, _container, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
+ 
+ #undef __array
+ #define __array(_type, _item, _len) {					\
+@@ -146,11 +152,14 @@ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
+ #undef __field_fn
+ #define __field_fn(type, item)
+ 
++#undef __field_packed
++#define __field_packed(type, item)
++
+ #undef __field_desc
+ #define __field_desc(type, container, item)
+ 
+-#undef __field_packed
+-#define __field_packed(type, container, item)
++#undef __field_desc_packed
++#define __field_desc_packed(type, container, item)
+ 
+ #undef __array
+ #define __array(type, item, len)
