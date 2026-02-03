@@ -1,180 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588D0241665;
-	Tue,  3 Feb 2026 10:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC5823183F;
+	Tue,  3 Feb 2026 10:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770113644; cv=none; b=S78FlBtynkho2eOOnCCfyMtAHjWDyUqrPMtRBvKAF4V+Fp/QOwDFBHUQcWFln0/Pfps5yAxW6JgcqF5ulX6zaZHQxA2NtInx8oYucYIE2AoFurU5ZPPMMFX2qaZMkdSW2F1mv6UA6g0ty3SDkTYvLJ6BLLgEXSr4q5U2g1xDKSE=
+	t=1770113729; cv=none; b=XqWlP+Gx8IK4tVkZo0NrmJEiXFqfAVEjAoWZBbG6u9FBPi9dTLrpn/LFr4+FRvY28Vbn5vwCO54n/VIxOribdfNb/a6PTLeTy8joPsYncOHD5n9yimBW9X9bEidpk2+SrARHphkrP03S7sN3C+38Oki2E5c/qNoYuU5rJt2C1T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770113644; c=relaxed/simple;
-	bh=a95bCYVZNHnwNGshFP5zAsHsBfRps5vXxmAS+fYJJNM=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=EnIXeKQHqMsrspXK/4bqdyYF/rI7QdQlEPxsMNXKWouEfUurULs8yaQFaEt3a0sbfysVdVxRxxpcWtZOs+QeTdxpzIFR/PWs1TKv5KHV0csakg75pD3nmNZ7RaMpxv86JbWqcLNr74uoK+uKWtZEEDLaCjuOfCJQLs9lU6mWhrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ega2Z0tM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770113729; c=relaxed/simple;
+	bh=ltTqItvs5DEbQAayR00+PqL/+NRtgJq6ixieEinQSY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q5jjG2QEVNkNXRP2RTfrK1GMOiUYH6UPKgEbwKpBdLGeZyIapCP4xIUdjduYYCelC1/8WjH3KNQMilVzd2sxP9LXQ2iMElxruLRgEvQq6IqpmH4FPc8DmCQ31z/Gd3mxq8IqLIGIX2TTULSA5lfMctxJNBPC4HBqUqSuVoQi/Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHfJCxHU; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ega2Z0tM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C110EC116D0;
-	Tue,  3 Feb 2026 10:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770113644;
-	bh=a95bCYVZNHnwNGshFP5zAsHsBfRps5vXxmAS+fYJJNM=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=Ega2Z0tMvl6HkCOgIJvbVDmIywM0T6AW0owaUXk/JiHxTGjWS77p1FGZcAXNN6lyA
-	 c5jXP/MFDWkZ7mQQs6KLsfRLMEafl+8/D3vL3rk5WuFqxDWT85F+VtWg6hjxPIAeME
-	 pRXxXjdpoLxFfcUnM92ua6QIIrIeaE/jt2De6iWxVziqwDnsdoqvOcIQwIXPZXZTWN
-	 gvMKNbyuPK+K38+OudKChnnp3Lm7yl6eSnszB247V+1IocUNzCZL/WtS4O80U8/jCg
-	 YKAUTFjoRjJAEV5nTVRS+Baiwt3Tc0A9RKNhRBe36qhuq9kC1eP6pNiAC+cLWA+Q8b
-	 lWV0NJopYPMDw==
-Content-Type: multipart/mixed; boundary="===============1783507459544833468=="
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHfJCxHU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770113728; x=1801649728;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ltTqItvs5DEbQAayR00+PqL/+NRtgJq6ixieEinQSY4=;
+  b=WHfJCxHU6+m/HKsG1GEUHnC7LYEAoVlCp5pDuHNDURLYdoEDYFbRORys
+   Lk4D7f7h02Orrykg+0t+tdqw6ZDWUlqyALFWmthEf98FPXaS0PGAQBtwm
+   QgjKlOvAaqcH35dSuq9S9Za8hua/CidmhLAnv34VmjsDGLRHy3R6uWSvY
+   c6YMNE8Le7rCnOAbslhhonhRo5jiZ7H17FnEfMCleDQ+iVn4X1jZH6A5O
+   xRcF5tFZxKA5PklK5l89LpJq4MuTnFWaCO5jLhV90cjGpkqYi/GLgYZmA
+   rd1cFOH+ZyF1x+tHM4dFEJpBLyNtmrBZofZhwQVPcScqg/lICl94yNpww
+   w==;
+X-CSE-ConnectionGUID: Q43I6yY3TF6pmKIhbq1+8Q==
+X-CSE-MsgGUID: ou9M2qUoRwCLUcxP0tEM4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="96738240"
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="96738240"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 02:15:26 -0800
+X-CSE-ConnectionGUID: QSwRDmD1RvONYQUf1EbLaA==
+X-CSE-MsgGUID: +XVLnH3CSfiSKxpDX9/BtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="209093662"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa010.jf.intel.com with ESMTP; 03 Feb 2026 02:15:05 -0800
+Date: Tue, 3 Feb 2026 17:56:37 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Ackerley Tng <ackerleytng@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
+	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
+	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
+	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
+	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
+	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
+	keirf@google.com, kent.overstreet@linux.dev,
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+	mail@maciej.szmigiero.name, maobibo@loongson.cn,
+	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
+	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
+	qperret@google.com, richard.weiyang@gmail.com,
+	rick.p.edgecombe@intel.com, rientjes@google.com,
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
+	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
+	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
+ kvm_get_memory_attributes() to per-gmem attributes
+Message-ID: <aYHGVQTF6RUs7r3g@yilunxu-OptiPlex-7050>
+References: <cover.1760731772.git.ackerleytng@google.com>
+ <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
+ <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
+ <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
+ <20260129003753.GZ1641016@ziepe.ca>
+ <aXqx3_eE0rNh6nP0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <9c8e4f31ee1d79f8ae145ec1c4d388f0829a77f1a75e8ec80e1d4bcf00bde751@mail.kernel.org>
-In-Reply-To: <20260203093819.2105105-10-jolsa@kernel.org>
-References: <20260203093819.2105105-10-jolsa@kernel.org>
-Subject: Re: [RFC bpf-next 09/12] libbpf: Add support to create tracing multi link
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Tue,  3 Feb 2026 10:14:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXqx3_eE0rNh6nP0@google.com>
 
---===============1783507459544833468==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+> +1.  For guest_memfd, we initially defined per-VM memory attributes to track
+> private vs. shared.  But as Ackerley noted, we are in the process of deprecating
+> that support, e.g. by making it incompatible with various guest_memfd features,
+> in favor of having each guest_memfd instance track the state of a given page.
+> 
+> The original guest_memfd design was that it would _only_ hold private pages, and
+> so tracking private vs. shared in guest_memfd didn't make any sense.  As we've
+> pivoted to in-place conversion, tracking private vs. shared in the guest_memfd
+> has basically become mandatory.  We could maaaaaybe make it work with per-VM
+> attributes, but it would be insanely complex.
+> 
+> For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
+> is all or nothing, and can never change, then the only entity that can track that
+> info is the owner of the dmabuf.  And even if the private vs. shared attributes
+> are constant, tracking it external to KVM makes sense, because then the provider
+> can simply hardcode %true/%false.  
 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 0c8bf0b5c..a16243300 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
+For CoCo-VM and Tee-IO, I'm wondering if host or KVM has to maintain
+the private/shared attribute for "assigned MMIO". I'm not naming them
+"host MMIO" cause unlike RAM host never needs to access them, either in
+private manner or shared manner.
 
-[ ... ]
+Traditionally, host maps these MMIOs only because KVM needs HVA->HPA
+mapping to find pfn and setup KVM MMU. Now we have FD based approach so
+with dmabuf fd, host no longer needs mapping. Does that give confidence
+that KVM only needs to setup MMU for this type of MMIO as private/shared
+according to guest's intension (which is fault->is_private)?
 
-> +struct bpf_link *
-> +bpf_program__attach_tracing_multi(const struct bpf_program *prog, const char *pattern,
-> +				  const struct bpf_tracing_multi_opts *opts)
-> +{
-> +	LIBBPF_OPTS(bpf_link_create_opts, lopts);
-> +	__u32 *btf_ids, cnt, *free_ids = NULL;
-> +	int prog_fd, link_fd, err;
-> +	struct bpf_link *link;
-> +
-> +	btf_ids = OPTS_GET(opts, btf_ids, false);
-> +	cnt = OPTS_GET(opts, cnt, false);
-> +
-> +	if (!pattern && !btf_ids && !cnt)
-> +		return libbpf_err_ptr(-EINVAL);
-> +	if (pattern && (btf_ids || cnt))
-> +		return libbpf_err_ptr(-EINVAL);
-> +
-> +	if (pattern) {
-> +		err = bpf_object__load_vmlinux_btf(prog->obj, true);
-> +		if (err)
-> +			return libbpf_err_ptr(err);
-> +
-> +		cnt = btf__find_by_glob_kind(prog->obj->btf_vmlinux, BTF_KIND_FUNC,
-> +					     pattern, NULL, &btf_ids);
-> +		if (cnt <= 0)
-> +			return libbpf_err_ptr(-EINVAL);
-> +		free_ids = btf_ids;
-> +	}
-> +
-> +	lopts.tracing_multi.btf_ids = btf_ids;
-> +	lopts.tracing_multi.btf_ids_cnt = cnt;
-> +
-> +	link = calloc(1, sizeof(*link));
-> +	if (!link)
-> +		return libbpf_err_ptr(-ENOMEM);
+We don't need to track private/shared in VFIO MMIO dmabuf, only to keep
+them unmappable.
 
-If calloc fails here and pattern was provided, btf__find_by_glob_kind() will
-have allocated btf_ids (tracked by free_ids). Does this leak free_ids? The
-error label below frees it properly, but this return bypasses that path.
-
-Something like:
-
-    if (!link) {
-        free(free_ids);
-        return libbpf_err_ptr(-ENOMEM);
-    }
-
-or using goto error would fix this.
-
-> +	link->detach = &bpf_link__detach_fd;
-> +
-> +	prog_fd = bpf_program__fd(prog);
-> +	link_fd = bpf_link_create(prog_fd, 0, prog->expected_attach_type, &lopts);
-> +	if (link_fd < 0) {
-> +		err = -errno;
-> +		pr_warn("prog '%s': failed to attach: %s\n", prog->name, errstr(err));
-> +		goto error;
-> +	}
-> +	link->fd = link_fd;
-> +	free(free_ids);
-> +	return link;
-> +error:
-> +	free(link);
-> +	free(free_ids);
-> +	return libbpf_err_ptr(err);
-> +}
-> +
-> +static int attach_tracing_multi(const struct bpf_program *prog, long cookie, struct bpf_link **link)
-> +{
-> +	const char *spec;
-> +	char *pattern;
-> +	bool is_fexit;
-> +	int n;
-> +
-> +	/* no auto-attach for SEC("fentry.multi") and SEC("fexit.multi") */
-> +	if (strcmp(prog->sec_name, "fentry.multi") == 0 ||
-> +	    strcmp(prog->sec_name, "fexit.multi") == 0)
-> +		return 0;
-> +
-> +	is_fexit = str_has_pfx(prog->sec_name, "fexit.multi/");
-> +	if (is_fexit)
-> +		spec = prog->sec_name + sizeof("fexit.multi/") - 1;
-> +	else
-> +		spec = prog->sec_name + sizeof("fentry.multi/") - 1;
-> +
-> +	n = sscanf(spec, "%m[a-zA-Z0-9_.*?]", &pattern);
-> +	if (n < 1) {
-> +		pr_warn("tracing multi pattern is invalid: %s\n", pattern);
-
-When sscanf fails to match (n < 1), pattern is never assigned because %m only
-allocates on successful match. Should this print spec instead of the
-uninitialized pattern? Compare with attach_kprobe_multi() which uses:
-
-    pr_warn("kprobe multi pattern is invalid: %s\n", spec);
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	*link = bpf_program__attach_tracing_multi(prog, pattern, NULL);
-> +	return libbpf_get_error(*link);
-
-Is pattern being leaked here? sscanf with %m allocates the string, but there
-is no free(pattern) before returning. Compare with attach_kprobe_multi():
-
-    *link = bpf_program__attach_kprobe_multi_opts(prog, pattern, &opts);
-    free(pattern);
-    return libbpf_get_error(*link);
-
-> +}
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21625440628
-
-AI-authorship-score: low
-AI-authorship-explanation: The commit contains typical human copy-paste errors (forgetting to add free(), using wrong variable in error message) and a minor grammatical mistake, suggesting human authorship.
-issues-found: 3
-issue-severity-score: medium
-issue-severity-explanation: Memory leaks on every use of fentry.multi/fexit.multi auto-attach and potential undefined behavior from using uninitialized variable in error path.
-
---===============1783507459544833468==--
+> 
+> As for _how_ to do that, no matter where the attributes are stored, we're going
+> to have to teach KVM to play nice with a non-guest_memfd provider of private
+> memory.
+> 
