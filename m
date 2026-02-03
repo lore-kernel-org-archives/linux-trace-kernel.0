@@ -1,151 +1,116 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B468D22B594;
-	Tue,  3 Feb 2026 16:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CACC257452;
+	Tue,  3 Feb 2026 17:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770137902; cv=none; b=rw16og2QGqtNObAuLjmcJeRlmD28eImNFMPsT9qXtCnbiQHpOKOrFaednKyjdD59+ItFy3mSdE4NP1EzjfYEq2UzGaQ8u9mu93mJDRdoSStyPPfzkD5VDcdxSVt4eHHpu1C9WPQMDZOsuinybi8a2XFMemuMUoVzJo2gDEfAjGw=
+	t=1770139072; cv=none; b=X6682sP9Y1Tru9V588Cf3Dukeg7H9/zehVKcgJI2sMKf5tOtH5NYm1BhqIqJoNOOJjizf5yLYZjoyp4w3znrMMAr+eZVnxGtv8BR1RGfMB+qeaB8wmP8twMog+ypKy938nTrD7Ziq7dEhPdyr0AeDhdM1EmeOboa0V2w4cESS4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770137902; c=relaxed/simple;
-	bh=0289L1PKuryyzydZQqQllWWbPQlbVc0Tfg05QbiN3Vw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=oU04TesBr+xSX+RaCRdVi3PmqVqjMnsb8Q9XZ7sZcIB7ckHxSnib+5RCkyGXVMUQ7CgZ57Io1vdq/miHlDd2EycjsgSoZ9gtMf/nNVfodd7NM/1UBMtJZr67be5RBoWQXb53GDwwl2yVIHqzVBiboXcCAZE0UTvekZAYFfyGT9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=p1jc44bv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=O3cYmRx+; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1770139072; c=relaxed/simple;
+	bh=v0lDm9YgstKw6NIqXo1gHAVbHj1ebjoVADNi9DqILIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6zoj7UFa9G425Fq742P/dpYqGgeDeZqcUqASbq7QstUfrbtkesamZyyHZT7oXhShPozUaCqKch7qfYQ6j4OlmmnQ/VOEj2x+0g9S0iTlAhYe8ctjBlDp0uVvH2m22bXZth2E27ncTydR6ctrR32zhZpjey+bWAoOYH1+4ZCgkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gesjHoji; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="p1jc44bv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O3cYmRx+"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id E7FC1EC057A;
-	Tue,  3 Feb 2026 11:58:18 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Tue, 03 Feb 2026 11:58:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1770137898;
-	 x=1770224298; bh=upK8X81jOmhOmWtnSD+fQ2W7IUu9DJYR+8J/jtItzcY=; b=
-	p1jc44bvGbvfiVfDrPZJbCHsbtZqdsAoZ+JKSHukCwDaupbg6gqF95MJAbDD5oXy
-	gnEzi+4Y2iQjDrr1GbKfMDWggCkitZntk2HMO7tMv52z2rk23YVKqf7VPfljjrIc
-	15GEyi8oi/xTeXtYHRxBEfTk/Bpe0tXvBxpj1xGPilKN6/8C0HhiWKkkGhqv3chF
-	MfCmutWKgyoOuDZ1GFCzaFxALmo1bgRtyuZIVwBm9m3A87/gKF7ASgMDWl2c1+IM
-	pfRgVsB3p1N7j4DjaW9IFF2eP6vB963F91QlwTZQPEyWInpPmIYKx3q2G/29rbj7
-	BVouWf+FBBVDNsMhouHPmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770137898; x=
-	1770224298; bh=upK8X81jOmhOmWtnSD+fQ2W7IUu9DJYR+8J/jtItzcY=; b=O
-	3cYmRx+goII2x37EtO/k2G27c2smmEHUHLE98+vFoemrme6dfYQ5onhqQNjKW+ZY
-	RUsRsD5nhTcfHwrWAB/SOlC2lMzJlBPZHElEyr5Wlfo/GJmSZgRLF8eOEeMWcmwE
-	KRXEhPcB3/eD++cGb7cFwSg6tZTWm8L1ZoMUudDdoiqtWRfurAjBl0jApHWcHgtc
-	CVxh/l+bT+gDlcX6lZOODSda18sJvjkc16KJ2U9rJwSJuIe3Ef7jGWh8aqViW4s1
-	TH+GYo/0bzH2Z3+AsAPyF3hFpuOORDqgOsvisMgwuzxc3YaZbMocsJPWRjES+Nno
-	cYBoPiONrENhBu3yJLcZA==
-X-ME-Sender: <xms:KimCaQc2rpPJ71dDcwRH0GGWMvDNVdpLECd667QSY6PJQMZYJSQY8w>
-    <xme:KimCadAeuiEV-loxHxKvKF896UnQMIJeQVvkbNzR76HR1gohwecZKe7MLEh26EvFJ
-    ttCkwT3QHT-w016iceFjc_HjqqyX3nBlkW51XZ6tyBq20zdoyqWkcs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukedtheelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehmrghthhhivghurdguvghsnhhohigvrhhssegvfhhfihgtihhosh
-    drtghomhdprhgtphhtthhopehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohep
-    rghlvgigvghirdhsthgrrhhovhhoihhtohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehjohhhnhdrfhgrshht
-    rggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopehmvghmgihorhesghhmrghilh
-    drtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghp
-    thhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrghtthgsoh
-    gsrhhofihskhhisehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:KimCaS5sVgVt91B7P4f3ntTgpGl6UgYZcjGBWk7ggCgHwmYD5NnAWA>
-    <xmx:KimCaXcKd09fDD6CymT-D6fz66TJWFyWPkwbAY5219GD31f_LEVypw>
-    <xmx:KimCaRf7xG4Q5ZyJHp79Sm46ufBzSLBfjgnkC3wI5p2SaCRYJJvzYg>
-    <xmx:KimCaUGG-pCYiHa_WKJozfE0ViSFUPG5aBD9NYPg0J3qHrescFQq7w>
-    <xmx:KimCaYs8M-eXjzSUxQOExV68IoVNqYSeUYrHkBhqHCLSRAO1VFYkN51x>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 48370700065; Tue,  3 Feb 2026 11:58:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gesjHoji"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770139071; x=1801675071;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v0lDm9YgstKw6NIqXo1gHAVbHj1ebjoVADNi9DqILIA=;
+  b=gesjHojijbZWQeZak5LT1E6TZIMNchNGFlOlACAnxxGgqDu0YFfX6VuW
+   WLwKrdjChxHaQKjH6i8ToCC9G3MFGQqoSKelVn7gwPKSSvGd+5WMIdXk7
+   DRMhazmP3HkqGTlVECo6VE4BqCsnxIQkVS0CQFf5JWC2JVN0OTKCCZBGl
+   HH+vDie9lM1cuKvZXLl1DJREppjxXIPdSRcVv/tVmlhv9l4+Hb1RyAzgH
+   7/v6b/K5e5/Kk79TaRFEabi7AHE8q5ZMtRYnVHamw+Mw0Myr22tBCwZ1L
+   qPmJte8Uy8DSxC5BsvWOANjwLAHc4s45Qa0EJtXJ47QpUiR+zSexLBZys
+   g==;
+X-CSE-ConnectionGUID: OBIuGBHNTIG2Ris1Nx3upQ==
+X-CSE-MsgGUID: PeMzfY64QXeafaWlNifrFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71221764"
+X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
+   d="scan'208";a="71221764"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 09:17:48 -0800
+X-CSE-ConnectionGUID: eFiBkPDwTYek2C7bzla/Yg==
+X-CSE-MsgGUID: ifUYzvaAT5KqOvbUgYsovw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,271,1763452800"; 
+   d="scan'208";a="240590627"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 09:17:44 -0800
+Date: Tue, 3 Feb 2026 19:17:41 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Simon Horman <horms@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	Chuck Lever <chuck.lever@oracle.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yury Norov <ynorov@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: remove __printf() attribute on
+ __ftrace_vbprintk()
+Message-ID: <aYIttabs_YsTiibd@smile.fi.intel.com>
+References: <20260202095834.1328352-1-arnd@kernel.org>
+ <202602032036.FQK7gJvV-lkp@intel.com>
+ <aYINAPJS9zXlUGCw@smile.fi.intel.com>
+ <d777a8f0-41ab-48f8-93db-268f493ac656@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ATnu9ZDQUFrg
-Date: Tue, 03 Feb 2026 17:57:58 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Song Liu" <song@kernel.org>,
- "KP Singh" <kpsingh@kernel.org>, "Matt Bobrowski" <mattbobrowski@google.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Martin KaFai Lau" <martin.lau@linux.dev>,
- "Eduard Zingerman" <eddyz87@gmail.com>,
- "Yonghong Song" <yonghong.song@linux.dev>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Mykyta Yatsenko" <yatsenko@meta.com>,
- "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Message-Id: <5f9c89fe-df1d-4eb4-b724-08f8d90fcc59@app.fastmail.com>
-In-Reply-To: 
- <CAADnVQ+14yum8okMmjuqF5m5DafWo1fY1EuPj-QU_ykYbQ01uw@mail.gmail.com>
-References: <20260203162746.2337002-1-arnd@kernel.org>
- <CAADnVQ+14yum8okMmjuqF5m5DafWo1fY1EuPj-QU_ykYbQ01uw@mail.gmail.com>
-Subject: Re: [PATCH] bpf: add missing __printf attributes
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d777a8f0-41ab-48f8-93db-268f493ac656@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Feb 3, 2026, at 17:34, Alexei Starovoitov wrote:
-> On Tue, Feb 3, 2026 at 8:27=E2=80=AFAM Arnd Bergmann <arnd@kernel.org>=
- wrote:
->>
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> Some internal functions in bpf produce a warning when -Wsuggest-attri=
-bute=3Dformat
->> is passed to the compiler, e.g. in 'make W=3D1':
->>
->> kernel/trace/bpf_trace.c: In function '____bpf_trace_printk':
->> kernel/trace/bpf_trace.c:377:9: error: function '____bpf_trace_printk=
-' might be a candidate for 'gnu_printf' format attribute [-Werror=3Dsugg=
-est-attribute=3Dformat]
->>   377 |         ret =3D bstr_printf(data.buf, MAX_BPRINTF_BUF, fmt, d=
-ata.bin_args);
->>       |         ^~~
->>
->> The attribute here is useless since there are no callers from C code,
->> but it helps to shut up the output anyway so we can eventually turn
->> the warning option on by default.
->>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> This was discussed and it's incorrect.
+On Tue, Feb 03, 2026 at 04:56:03PM +0100, Arnd Bergmann wrote:
+> On Tue, Feb 3, 2026, at 15:58, Andy Shevchenko wrote:
+> > On Tue, Feb 03, 2026 at 08:12:57PM +0800, kernel test robot wrote:
+> >
+> >> kernel test robot noticed the following build warnings:
+> >
+> > Yeah, you need to go for the full stack of these calls and mark the 
+> > bottom one with __diag() to avoid these warnings. That's my understanding
+> > and what BPF people required. Chasing this one-by-one would produce
+> > unneeded churn.
+> 
+> From what I can tell, I can just move the printf attribute
+> to the __ftrace_vbprintk() definition to make this bit work.
 
-Do you have a reference to why it's incorrect?  It seems harmless
-and gives me a clean kernel build in combination with a handful
-of other fixes after enabling the option by default, but I assume
-I'm missing something,
+Ah, that's cool!
 
-> Commit 7bf819aa992f ("vsnprintf: Mark binary printing functions with
-> __printf() attribute") should be reverted instead.
+...
 
-Reverting that one would appear to introduce warnings elsewhere,
-so that would not be a complete fix either.
+> There are unrelated warnings for BPF that I managed to
+> shut up the same way, doing
 
-      Arnd
+BPF rejected such an approach, see lore discussions in the past
+(patches from me). Here some pointers (but not all of them):
+
+20251208141618.2805983-1-andriy.shevchenko@linux.intel.com
+202512090407.VxRO6xAS-lkp@intel.com
+20251210131234.3185985-1-andriy.shevchenko@linux.intel.com
+20251216122514.7ee70d5f@canb.auug.org.au
+20251215202430.c35c2d29c4f9ff614d2ab534@linux-foundation.org
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
