@@ -1,239 +1,169 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DF61509AB
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Feb 2026 02:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770085067; cv=pass; b=LpUVmLOJF2yAP4LXl7gwTfdDec9wzNtXE5foqtcBqLtzj+M8OXzqBvXqrzcNlDZPOCxSLHk6JMdHX13Ayo+6Uf6gHzbhOXw0Deqg1sldJTYWl8l/I22O9n5xY9ei5lRJIavgtVGhAdRGdh+tZrf1ei913Cfo+M5PFZ/NvwpRSwQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770085067; c=relaxed/simple;
-	bh=0aHZWfo0g8Og4zuEPpiBCEr+AtqIm/VJHbD6dySichM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dxQCH9wsvyOWBziyur3PBHz3sjj0+T7pgrxf4XmvMsC/QNPTJBVCmNyOf1H4d5Z/LP6VwIeeNB5KV1JyfBN16hOIIQHNy0qus2APrMWrdRzEHq1Qyaa4XJa6fp4yVzUcRKXO/icTBnVz8kLsbKRXUQ3zLQ45oFj3XOLhhaYAtAo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaLxvLoj; arc=pass smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2712BDC16;
+	Tue,  3 Feb 2026 02:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770085912; cv=none; b=tJutlNFHOZN4TomNsSnTUZ2aWC0lb88KGjr6FHu241aCx2+40yCfx8m2WhG0VUTXbB3HcjuTednomfne6TEq7SCk2fFlj5eE/jxzTjzwJ8pmL/CiwoEAMjrDnjBtv38vZiaNLroeFbhptmUiSpA1szQy4yTeR1KcdYuCaRl6Iq0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770085912; c=relaxed/simple;
+	bh=O+nYy5tZTS5nGbiW/bOFLVTSYy3UHSU8BFNWdmqBh0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ak7/cdjGxquajybtD5tFDsp3/4Qx7Xdq4ezr406DuGNM44EQmuJ7oBhQMRDATwaGdpwgQEIyCAnKq2xgBRHw/d1hWLxtD7XZqUkfgYb0VzUtpGLskZgCXbqM0+tcdTVI0h0QVE7zWqCRImVH4Mw/BK56FmnlbjQQrTnX4FF0mzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=egMzwR+L; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaLxvLoj"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-64c893f3a94so551755a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Feb 2026 18:17:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770085063; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kOU0bTRGdUpYGeenAcT5h/GFWx/hwwjMZ/z1wuA3NEa4SW+X0n03s73aOLzNFywB2O
-         huaoM5eeP88m9dRr0ug8udp4mDtbi4Kvd/ceBPxNBYic4MIq8iFPnmY1hhEi0qeHJ4R7
-         uS1U3RmI1TjHXKl3J4WpilAW9itCPaiMqazjZ8cJej4A3RanUdvUySdASCqyvBBTYHVe
-         GNq0A7t5Quaipp7qF7aS0wehmZ3BrFuoQov9mSZ6rpB0b21FEgYbKPF1oSIEqgBuSuOT
-         ghBzIeUwKqFUhy71z8NGYz5HvjuOCLbmt4S3wgorwWeqqzNwg5+IVE7V0mygvQnTAuEe
-         6R9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6uaT/Dnt90LJerfn/1tIbPNraFr6X+CwcSu7kkviOhw=;
-        fh=7/JdqyP70hotVj1/0u6rypaRSayuRrZqnijhkbS1yq4=;
-        b=UbPeuxDo2kzxuSne68SPTXXdIQoKWvUZHo1YaJmRCVBxNI146StTEEPxiMZZqrPaPh
-         k6U1+edm9tLgQzm6DYyRTL/a801shQGST49D6oRfBFG+ozVBsVHy3Z205cAg7lCQVtz9
-         kaf8pQJG4W8V21I1BaU5+1heVkBY5SSTfZGHCXA60UyosltpyT1YrP4RMkcBBXN41Uiz
-         vk8b4ydIeRbm+/6nIaqTz1yKNQfJGeh1KOy7mAfgyGDb9TSpXRgRY8ItgdeIzwOITIeL
-         Ufy5Ws2ovDmtT3+rWKcWhl33wBEav/uTeMxM5r52ICvqlevu9hKAoqobHoiuNuObWPM5
-         zbmQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770085063; x=1770689863; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6uaT/Dnt90LJerfn/1tIbPNraFr6X+CwcSu7kkviOhw=;
-        b=TaLxvLojrNUPUSjeByHjP3mM0MKVHjwkKNup6Gvcv+1sVd8I21231SVfYW1inU2pxr
-         9g+4wBNPQJ9U4cFaibQWUIzwuBzPdCegFH/Ed1wCfBWde+EBRXwBQ2+cAvatxW3CZFUZ
-         fcie4Dl6TFlK0KGqunz25imSQkyHbUb2O48+Jz+hMi9UCD6jc949upAzJyfnKpc5fHcH
-         2nRsv6PTipmxZPAb4nzuVMHXNIcl9fFzyQ3tbFYRmHZ5iZvIgfPrYiLSp6XI5Ly6AcSn
-         6zShFw8YfmIagdbEl2Ui6AKZxhGl0vnEDBREHKQifr1eq1bltqg4nmeTj7Hu6mH0i6nY
-         eUTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770085063; x=1770689863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6uaT/Dnt90LJerfn/1tIbPNraFr6X+CwcSu7kkviOhw=;
-        b=qbtqHebLmG6J/9UyuMWgy9nYZAEwu3tXaABMoIxcUQmL2q//bF+0oTC3VPrGMZhA6M
-         o3/3RNrBaJet+F5bqUdUfjPsQJV1PMwvZrxNlLpxvbIISv29L7cIYw4F3JEwIHKsaP4U
-         WiDJzpHruZTWdATSbC+EUDl0lRYYucr6O736//rVVCQswJZ+t1rUkmnl5VzItg5k8wVX
-         e1Y1Dzta1moKousFasg/pCz95jE5KLasIj6cmVsOaIiMZnwysUF0O2yiALemys51EE7e
-         sWFb6YBC9UBp5ZLQkDcq0nhDSu0u2j+Ul9bKEus5k9uGp1b1i7s31FVXS5FUNCHrcx38
-         65ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVVTM9Z8aN0adGTKl2VLqhb5qJdwpmUATh/87fHjW6HrYqvEfPYW9VfyUHfUUSZbi+u9jsHybrASWJL8R0FXD2VTys=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy5g0uxyiuyBcP884YD1c6TPM5TMU5gvUU/K1YkfC42HR8FYLf
-	wjwoR12G3DNVXOGpd4BSs4DvNHTlmdPrjNEAVotrwQmNAe0tHe4JG5gBVfRXjG2X6i2CC9xOI1M
-	nqclG33B+0jty9uzUPHN6IBZeXnP/lri4+8UEnCoOhw==
-X-Gm-Gg: AZuq6aLUdsqBNlPVz2A5JBEiZA+O7BCfCK5lKH/3AeY9vtSly54ON6bpYP7A0Xcz7SV
-	0neV/TD1JzlF2e77CgXg2WcNlyd+0+576b++avO59ifSpiTLiKzbYRpIV+EKUFZNDP7oe0e1f93
-	kaqWHBL22EYQy0lZgjT9mFRDCbOtslLYmgxCyyPQuekJJ6b+LYI+eGIzyM2AA2BhPSpI10OcUHQ
-	7DoouhgeM7ZLcqFYaPqjsoypQqbZWlIbizwg14HFe9QoMu8L7cQQGhRS9jp4t5vyDeIeGzY
-X-Received: by 2002:a17:907:6d2a:b0:b87:8c1:1ea8 with SMTP id
- a640c23a62f3a-b8e83785d38mr84520666b.7.1770085063088; Mon, 02 Feb 2026
- 18:17:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="egMzwR+L"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 612Fl1g83386990;
+	Tue, 3 Feb 2026 02:31:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Eo/PIKYomjnKCQ1rpvBvw5Af2hkuVsEaK7Wwmunp8EQ=; b=egMzwR+L3+GFcgRo
+	nogQlu8FROavcoXbIl4tkaTgJWnj0xUpMUpoQgFuGtEqa0WYg204cWp6xJDTyrXI
+	iq8ipEe03lyicix4edCQo5VMGINXSPnSKFJI2lQhe2XcIETVZGytDBflNhx8t3eK
+	8vIxoS+X2GxYe12uacyqejLSmNcTYsJZ2f32hi0SA0qPXJRXTbSAbo6cfE58cLr8
+	AVqQ0X3qiSeRLddhDX8/Ddv/DUgvN9tzgTkwGcV8d5sGeSAjqLj7cdEi3XgMJ7E/
+	qZh0lzfGT4Y+/99EJFM1/vMqxnt0/gRiOlMAPj6geuKuuBbFhGeEMzyg6U5n2KlC
+	IRlovw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c2xvbsq2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Feb 2026 02:31:27 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 6132VQDJ024983
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 3 Feb 2026 02:31:26 GMT
+Received: from [10.233.71.148] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 2 Feb
+ 2026 18:31:23 -0800
+Message-ID: <7b02f748-7442-4272-b3b5-0dfff7c15e33@quicinc.com>
+Date: Tue, 3 Feb 2026 10:31:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
- <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
-In-Reply-To: <20260202111249.649ac338@gandalf.local.home>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Tue, 3 Feb 2026 10:17:32 +0800
-X-Gm-Features: AZwV_QjVhxAkDUeoi87fgoO8dzlsZayJQ2dkC8DKgwmrKxzVinvN3jKgGEYGEZI
-Message-ID: <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
- via BTF
-To: Steven Rostedt <rostedt@goodmis.org>, andrii.nakryiko@gmail.com
-Cc: ast@kernel.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	Donglin Peng <pengdonglin@xiaomi.com>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] stm: class: Add MIPI OST protocol support
+To: Randy Dunlap <rdunlap@infradead.org>,
+        Yingchao Deng
+	<yingchao.deng@oss.qualcomm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Tingwei
+ Zhang" <tingwei.zhang@oss.qualcomm.com>,
+        Yuanfang Zhang
+	<yuanfang.zhang@oss.qualcomm.com>,
+        Jinlong Mao <jinlong.mao@oss.qualcomm.com>
+References: <20260129-p_ost-v5-1-2b14fff39428@oss.qualcomm.com>
+ <0ed08d07-5736-4874-9a0f-0f848e8419b6@infradead.org>
+ <9ed4124e-a6f4-4994-a80e-860a1123c8ba@infradead.org>
+Content-Language: en-US
+From: "Yingchao Deng (Consultant)" <quic_yingdeng@quicinc.com>
+In-Reply-To: <9ed4124e-a6f4-4994-a80e-860a1123c8ba@infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Ecqp3wLW9ERCAqOi3rlXPti9PPDEb91N
+X-Proofpoint-ORIG-GUID: Ecqp3wLW9ERCAqOi3rlXPti9PPDEb91N
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjAzMDAxOCBTYWx0ZWRfXzZdShie3Qx32
+ ex/NTsH+bXvnaLc8rZkaPRqyfbD0bOZcgTRwW68VTv75p7my61flx+yvta3v67jHUTpPJ5AGOR8
+ oOJxNbrZdBgz8M7dd1IMWnbfWPoa++9cYNlHHCSy22oemwnxY3jmh5EVMUODdHvtrW8EpNM1R2b
+ ly99C8BmDFSDeRjjQkJ8eBT0v7oFk7Ky43S4CztCEqKtq+rnSOjJ2LuLZF897aObKmBNEqce55n
+ fKElaefn4QbxvdAlqGuXlHhCpyVpfh/+XbZbAoKka3O2qGRuK3P/HX5d8Yp4JkrZ7WjydPCFDRa
+ NBdLITKN6WiBfo6Aj+oDxbXaWikN0nxeDP5mV+3NmBJ5tHPlr52osw/o0tiVvKBJhpGn7Aju3LP
+ oFHCMWeh5h/8ER3OaBzYM+ghsGmov7DHeEi+8utiuUUgZPv/8jctOmXMC9N8UmEQqTDea6LL4uM
+ YYA/ZoewygapLrJcTuQ==
+X-Authority-Analysis: v=2.4 cv=AurjHe9P c=1 sm=1 tr=0 ts=69815dff cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=Dims_e6JDq1Cz65YlcUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-03_01,2026-02-02_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 spamscore=0 suspectscore=0 phishscore=0 adultscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602030018
 
-On Tue, Feb 3, 2026 at 12:12=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
+
+On 1/30/2026 2:38 AM, Randy Dunlap wrote:
 >
-> On Mon,  2 Feb 2026 19:15:48 +0800
-> Donglin Peng <dolinux.peng@gmail.com> wrote:
+> On 1/29/26 10:31 AM, Randy Dunlap wrote:
+>> diff --git a/Documentation/trace/p_ost.rst b/Documentation/trace/p_ost.rst
+>> new file mode 100644
+>> index 000000000000..df93b889eb4c
+>> --- /dev/null
+>> +++ b/Documentation/trace/p_ost.rst
+>> @@ -0,0 +1,36 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +===================
+>> +MIPI OST over STP
+>> +===================
+>> +
+>> +The OST(Open System Trace) driver is used with STM class devices to
+>     The OST (Open System Trace) driver
 >
-> > @@ -754,6 +755,14 @@ void print_function_args(struct trace_seq *s, unsi=
-gned long *args,
-> >                       break;
-> >               case BTF_KIND_ENUM:
-> >                       trace_seq_printf(s, "%ld", arg);
-> > +                     for_each_enum(i, t, enump) {
-> > +                             if (arg =3D=3D enump->val) {
-> > +                                     trace_seq_printf(s, " [%s]",
-> > +                                                      btf_name_by_offs=
-et(btf,
-> > +                                                      enump->name_off)=
-);
-> > +                                     break;
-> > +                             }
-> > +                     }
-> >                       break;
+>> +generate standardized trace stream. Trace sources can be identified
+>> +by different entity ids.
+>> +
+>> +CONFIG_STM_PROTO_OST is for p_ost driver enablement. Once this config
+>> +is enabled, you can select the p_ost protocol by command below:
+>> +
+>> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy
+>> +
+>> +The policy name format is extended like this:
+>> +    <device_name>:<protocol_name>.<policy_name>
+>> +
+>> +With coresight-stm device, it will be look like "stm0:p_ost.policy".
+>     With {a | the} coresight-stm device,
 >
-> I have to ask; how big is that enum list?
-
-Based on local vmlinux analysis (6.18 kernel):
-- 78% enums have vlen =E2=89=A4 10
-- 95% enums have vlen =E2=89=A4 50
-- Max observed vlen: 349 (extremely rare case)
-
-$ bpftool btf dump file x86_64/vmlinux | grep "^\[" | grep ENUM | grep
--v "(anon)" | awk -F '[ =3D]' '{
-    for(i=3D1; i<=3DNF; i++) {
-        if ($i =3D=3D "vlen") {
-            count[$(i+1)]++
-        }
-    }
-}
-END {
-    for (vlen in count) {
-        print "vlen=3D" vlen ": " count[vlen] " times"
-    }
-}' | sort -k 2 -n
-vlen=3D104: 1 times
-vlen=3D114: 1 times
-vlen=3D116: 1 times
-vlen=3D129: 1 times
-vlen=3D146: 1 times
-vlen=3D167: 1 times
-vlen=3D181: 1 times
-vlen=3D183: 1 times
-vlen=3D201: 1 times
-vlen=3D213: 1 times
-vlen=3D33: 1 times
-vlen=3D349: 1 times
-vlen=3D42: 1 times
-vlen=3D45: 1 times
-vlen=3D48: 1 times
-vlen=3D50: 1 times
-vlen=3D54: 1 times
-vlen=3D55: 1 times
-vlen=3D56: 1 times
-vlen=3D59: 1 times
-vlen=3D60: 1 times
-vlen=3D61: 1 times
-vlen=3D64: 1 times
-vlen=3D68: 1 times
-vlen=3D71: 1 times
-vlen=3D74: 1 times
-vlen=3D83: 1 times
-vlen=3D85: 1 times
-vlen=3D87: 1 times
-vlen=3D122: 2 times
-vlen=3D38: 2 times
-vlen=3D39: 2 times
-vlen=3D43: 2 times
-vlen=3D44: 2 times
-vlen=3D49: 2 times
-vlen=3D52: 2 times
-vlen=3D58: 2 times
-vlen=3D73: 2 times
-vlen=3D79: 2 times
-vlen=3D35: 3 times
-vlen=3D41: 3 times
-vlen=3D46: 3 times
-vlen=3D25: 4 times
-vlen=3D27: 4 times
-vlen=3D28: 4 times
-vlen=3D29: 4 times
-vlen=3D34: 4 times
-vlen=3D37: 4 times
-vlen=3D40: 4 times
-vlen=3D19: 5 times
-vlen=3D30: 5 times
-vlen=3D20: 6 times
-vlen=3D22: 6 times
-vlen=3D24: 6 times
-vlen=3D16: 8 times
-vlen=3D23: 8 times
-vlen=3D26: 8 times
-vlen=3D31: 8 times
-vlen=3D32: 8 times
-vlen=3D17: 11 times
-vlen=3D18: 12 times
-vlen=3D21: 12 times
-vlen=3D15: 13 times
-vlen=3D14: 21 times
-vlen=3D12: 25 times
-vlen=3D13: 25 times
-vlen=3D10: 34 times
-vlen=3D11: 35 times
-vlen=3D1: 58 times
-vlen=3D8: 70 times
-vlen=3D9: 74 times
-vlen=3D7: 102 times
-vlen=3D6: 108 times
-vlen=3D5: 170 times
-vlen=3D2: 193 times
-vlen=3D4: 250 times
-vlen=3D3: 333 times
-
+>> +
+>> +With MIPI OST protocol driver, the attributes for each protocol node is:
+>     With the MIPI OST protocol driver,                                   are:
 >
-> Do we really want to do a linear search for every enum we come across?
-
-I think linear search is efficient for typical enum value lists (vlen < 10)=
-, I
-also support using binary search where feasible.
-
+>> +# mkdir /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
+>> +# ls /sys/kernel/config/stp-policy/stm0:p_ost.policy/default
+>> +channels  entity    masters
+>> +
+>> +The entity here is the set the entity that p_ost supports. Currently
+>                     is the set of {entities | features} that p_ost supports. Currently
 >
-> What we could do is for the first time we hit an enum, create an array of
-> enums, sort them, and do a binary search from then on. This could be save=
-d
-> in the tracing code itself (in kernel/trace/trace_btf.c), if BPF doesn't
-> care about it.
-
-I think this approach adds unnecessary complexity. Instead, we could
-leverage btf2btf during the resolve_btfids phase to proactively sort the
-btf_enum entries of enum-type btf_type by their value, enabling efficient
-binary search lookups.
-
+>> +p_ost supports ftrace, console and diag entity.
+>                                             entities.
 >
-> -- Steve
+>> +
+>> +Set entity:
+>> +# echo 'ftrace' > /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity
+>> +
+>> +Get available and currently selected (shown in square brackets) entity that p_ost supports:
+>> +# cat /sys/kernel/config/stp-policy/stm0:p_ost.policy/default/entity
+>> +[ftrace] console diag
+>> +
+>> +See Documentation/ABI/testing/configfs-stp-policy-p_ost for more details.
+
+Thanks, will update.
+
+Yingchao
+
