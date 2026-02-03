@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7630B2F7ACA;
-	Tue,  3 Feb 2026 18:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3B0369975;
+	Tue,  3 Feb 2026 18:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770144148; cv=none; b=kOf+8Hr21Jpu6Yadka4x0Pdu3drlpZqU/6Fo41TkkJiyhMKgeC2v+JLBW/HInk5mJSGYj+ypHtE6UXlSm+2Vxpg86D8Y1QJ2vfunxg+pTnT3jzAffdBts3zY9+0O4AhLKwptpQhmvXMvK0tjQTQK2zgvU99k8wiRp1/1ZLfPvWI=
+	t=1770144158; cv=none; b=PIm4SbeFFNcjz9uIujvRj6JLR/5aFuYAvznZfWqYRIHI/YjV4sNOTw5XosoYWSZe1nbdBnug3Ts7hJJtc9cm/cS9khq811ww4TjRks4Xpplal1coEAuJW3Glx2aNNJzctj+sTAWQx6zJFxEAaWoe62eq06e8o0G+tQ8+GjjEm1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770144148; c=relaxed/simple;
-	bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u2qLhfI9HJLOgBZ31D9f/t1yo5LlwVRhbCR98auk+I4T54mAgr5w6YT8gNWHZyaAvnZf/S+oplj+TjCDioYwLW8yi6zaUevO90aoCP8GWIDJaQ0m91yu9j8Rnpkwn8d7NWSDZ9oDJ+IcmP2EqN6sOtx+rI2WWr51fsqQSNZFnvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiZJ35sP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770144158; c=relaxed/simple;
+	bh=HM6tx49mQFYNN3BJrY7JymUJOIj1QZLSl3xG5TZkxjE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GQSK1wiRLrhs5cu0DlsUhQzWfmMvsswEQl6VyuJq6Egi9uBnwb40VtI5aRBF0jFKBXUdlvtJKZM2GML7tvbvrOqq3J8obNxos8f/wKL20PPnA5Avn3xT6W9xl9q9sosSCGvy+eF3KuZ1ORG1M2JSwmO7ZXI3zc7AIbVgIdfJ160=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mew6J3r5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiZJ35sP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08EB7C19425;
-	Tue,  3 Feb 2026 18:42:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mew6J3r5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1EBC116D0;
+	Tue,  3 Feb 2026 18:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770144148;
-	bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=tiZJ35sP0M7IuI9LonWVl2o0SvN79IdtumFLpGZnlqZCEI7NXgdz11zLhC293ptU+
-	 StHwcR3tUAyCuDTLlM0xSJZFaYK+dYbcYip2VqCCjrsfhinabJ6fTAelAPemxxjm6C
-	 gWg7Vh5Ge8vlj0mXnknrEoqWsyoAWqico2g2MlBqc9HYQOC2i5dqHssUlnvzq/k+GP
-	 SybrfYmsPXYYqs+B39P5/Lfdu1sAJ4l569lQF5JXOowdfifzo8EsNaeyd1gpIeQg1C
-	 WKmALzfh1m8wfULj3noJIbJ1rsHSinpSuR62GbxZSmSchZamNUW7X/TwjVFzsvz9IK
-	 sOmIuGSp74KLg==
+	s=k20201202; t=1770144158;
+	bh=HM6tx49mQFYNN3BJrY7JymUJOIj1QZLSl3xG5TZkxjE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Mew6J3r5jyvK7HdgZtS0kuPHktfvkaTNo4YL+rCYOn9f8mNRB4B2qAywYm7oABLif
+	 PVi5j1xRj/R6hjccUwfqSU1U77cm3Nzk7H56zoCxLFkz9zb3+NN0FynbAjqzk5+gjA
+	 YoAaVSk84HS2tJGAbDfzAQjtWofcc4AMzvHNzQ9Mn3HtEx1dul6JYJ5nJTGrWNyKFV
+	 anjv5U3qG/hqUu43E3Z2+EmWFBbCIkVfZdR70flvJfqMFfHQbOwG2nPeWH+Yi6vsB3
+	 +HY3JwQ2UlMPgllN+HDKQhovliBwXMTdTt3N74XRLK2B9bUjhmnMc4dpLNrjj1EQy5
+	 mFYyRnX4tEZgQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net-next 00/15] mptcp: misc. features for v6.20/7.0
-Date: Tue, 03 Feb 2026 19:41:16 +0100
-Message-Id: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
+Date: Tue, 03 Feb 2026 19:41:20 +0100
+Subject: [PATCH net-next 04/15] trace: mptcp: add mptcp_rcvbuf_grow
+ tracepoint
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,10 +38,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAExBgmkC/zWMQQqAIBAAvxJ7bkEtpPpKdFDbag+ZqEQQ/T0JO
- sxhDjM3JIpMCYbqhkgnJz58EVlX4DbjV0Kei4MSSgupOvSUC1fGPWQXcOfkcCGTUaMSKMj22sr
- GutZAeYRIC1/ff4Q/hel5Xo9H2dx5AAAA
-X-Change-ID: 20260128-net-next-mptcp-misc-feat-6-20-0eb96b13bc4a
+Message-Id: <20260203-net-next-mptcp-misc-feat-6-20-v1-4-31ec8bfc56d1@kernel.org>
+References: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
+In-Reply-To: <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
 To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -51,92 +51,159 @@ Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
  Steven Rostedt <rostedt@goodmis.org>, 
  Masami Hiramatsu <mhiramat@kernel.org>, 
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org, 
- David Laight <david.laight.linux@gmail.com>, Gang Yan <yangang@kylinos.cn>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Geliang Tang <geliang@kernel.org>
+ linux-trace-kernel@vger.kernel.org
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3082; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=wRIpaO20lQckRnYerb9WukDrN5roa3A/MNA4U+4guRg=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbHNuemLbz3WC2nPS2bfbHc8fsbTx7V3RwW7Sx1H1m9
- au5vvRvRykLgxgXg6yYIot0W2T+zOdVvCVefhYwc1iZQIYwcHEKwETmpjP8T9nAoLJzu+vmzPS+
- q0vPbzfjsfE6uu30hLf6/fsCd86eNo2RoXHhPqPSx95fb74/Umqy9IfSpj8BL13NPQ9OvmB96M2
- SFGYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4576; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=al0vruxgsUcB97tITLFQA6dVrIrIYa07fGVe6g3vT3U=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDKbHDuaD53aPVFzk/zFG+9Ft8ZuCjs1IY0t8eVWPUFla
+ 2XfFVd2dZSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEwkJ46RYcP5tWppNkpy9cab
+ GHPnyJ9ni5ztE194LMqsemaf/JvP5xkZVoZo+SSyyvcksN9mKN2bkWkjd5dbe0VsVPtZWT6N/3c
+ 4AQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This series contains a few independent new features, and small fixes for
-net-next:
+From: Paolo Abeni <pabeni@redhat.com>
 
- - Patches 1-2: two small fixes linked to the MPTCP receive buffer that
-   are not urgent, requiring code that has been recently changed, and is
-   needed for the next patch. Because we are at the end of the cycle, it
-   seems easier to send them to net-next, instead of dealing with
-   conflicts between net and net-next.
+Similar to tcp, provide a new tracepoint to better understand
+mptcp_rcv_space_adjust() behavior, which presents many artifacts.
 
- - Patch 3: a refactoring to simplify the code around MPTCP DRS.
+Note that the used format string is so long that I preferred
+wrap it, contrary to guidance for quoted strings.
 
- - Patch 4: a new trace event for MPTCP to help debugging receive buffer
-   auto-tuning issues.
-
- - Patch 5: align internal MPTCP PM structure with NL specs, just to
-   manipulate the same thing.
-
- - Patch 6: convert some min_t(int, ...) to min(): cleaner, and to avoid
-   future warnings.
-
- - Patch 7: prepare future extensions replacing sk_write_space().
-
- - Patch 8: sort all #include in MPTCP Diag tool in the selftests to
-   prevent future potential conflicts and ease the reading.
-
- - Patches 9-11: improve the MPTCP Join selftest by waiting for an event
-   instead of a "random" sleep.
-
- - Patches 12-14: some small cleanups in the selftests, seen while
-   working on the previous patches.
-
- - Patch 15: avoid marking subtests as skipped while still validating
-   most checks when executing the last MPTCP selftests on older kernels.
-
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-David Laight (1):
-      mptcp: Change some dubious min_t(int, ...) to min()
-
-Geliang Tang (1):
-      mptcp: allow overridden write_space to be invoked
-
-Matthieu Baerts (NGI0) (9):
-      mptcp: pm: align endpoint flags size with the NL specs
-      selftests: mptcp: diag: sort all #include
-      selftests: mptcp: join: wait for estab event instead of MPJ
-      selftests: mptcp: join: fix wait_mpj helper
-      selftests: mptcp: join: userspace: wait for new events
-      selftests: mptcp: join chk_stale_nr: avoid dup stats
-      selftests: mptcp: join: avoid declaring i if not used
-      selftests: mptcp: connect cleanup TFO setup
-      selftests: mptcp: join: no SKIP mark for group checks
-
-Paolo Abeni (4):
-      mptcp: do not account for OoO in mptcp_rcvbuf_grow()
-      mptcp: fix receive space timestamp initialization
-      mptcp: consolidate rcv space init
-      trace: mptcp: add mptcp_rcvbuf_grow tracepoint
-
- include/trace/events/mptcp.h                      |  80 ++++++++++++++++
- net/mptcp/protocol.c                              |  56 ++++++-----
- net/mptcp/protocol.h                              |  12 ++-
- net/mptcp/subflow.c                               |   2 -
- tools/testing/selftests/net/mptcp/mptcp_connect.c |  17 ++--
- tools/testing/selftests/net/mptcp/mptcp_diag.c    |  29 +++---
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 107 +++++++++++-----------
- 7 files changed, 189 insertions(+), 114 deletions(-)
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
 ---
-base-commit: fae1c659d7bd5640012be21b5b5d6490b83c0df8
-change-id: 20260128-net-next-mptcp-misc-feat-6-20-0eb96b13bc4a
+ include/trace/events/mptcp.h | 80 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.c         |  3 ++
+ 2 files changed, 83 insertions(+)
 
-Best regards,
+diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+index 085b749cdd97..269d949b2025 100644
+--- a/include/trace/events/mptcp.h
++++ b/include/trace/events/mptcp.h
+@@ -5,7 +5,13 @@
+ #if !defined(_TRACE_MPTCP_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_MPTCP_H
+ 
++#include <linux/ipv6.h>
++#include <linux/tcp.h>
+ #include <linux/tracepoint.h>
++#include <net/ipv6.h>
++#include <net/tcp.h>
++#include <linux/sock_diag.h>
++#include <net/rstreason.h>
+ 
+ #define show_mapping_status(status)					\
+ 	__print_symbolic(status,					\
+@@ -178,6 +184,80 @@ TRACE_EVENT(subflow_check_data_avail,
+ 		  __entry->skb)
+ );
+ 
++#include <trace/events/net_probe_common.h>
++
++TRACE_EVENT(mptcp_rcvbuf_grow,
++
++	TP_PROTO(struct sock *sk, int time),
++
++	TP_ARGS(sk, time),
++
++	TP_STRUCT__entry(
++		__field(int, time)
++		__field(__u32, rtt_us)
++		__field(__u32, copied)
++		__field(__u32, inq)
++		__field(__u32, space)
++		__field(__u32, ooo_space)
++		__field(__u32, rcvbuf)
++		__field(__u32, rcv_wnd)
++		__field(__u8, scaling_ratio)
++		__field(__u16, sport)
++		__field(__u16, dport)
++		__field(__u16, family)
++		__array(__u8, saddr, 4)
++		__array(__u8, daddr, 4)
++		__array(__u8, saddr_v6, 16)
++		__array(__u8, daddr_v6, 16)
++		__field(const void *, skaddr)
++	),
++
++	TP_fast_assign(
++		struct mptcp_sock *msk = mptcp_sk(sk);
++		struct inet_sock *inet = inet_sk(sk);
++		bool ofo_empty;
++		__be32 *p32;
++
++		__entry->time = time;
++		__entry->rtt_us = msk->rcvq_space.rtt_us >> 3;
++		__entry->copied = msk->rcvq_space.copied;
++		__entry->inq = mptcp_inq_hint(sk);
++		__entry->space = msk->rcvq_space.space;
++		ofo_empty = RB_EMPTY_ROOT(&msk->out_of_order_queue);
++		__entry->ooo_space = ofo_empty ? 0 :
++				     MPTCP_SKB_CB(msk->ooo_last_skb)->end_seq -
++				     msk->ack_seq;
++
++		__entry->rcvbuf = sk->sk_rcvbuf;
++		__entry->rcv_wnd = atomic64_read(&msk->rcv_wnd_sent) -
++				   msk->ack_seq;
++		__entry->scaling_ratio = msk->scaling_ratio;
++		__entry->sport = ntohs(inet->inet_sport);
++		__entry->dport = ntohs(inet->inet_dport);
++		__entry->family = sk->sk_family;
++
++		p32 = (__be32 *)__entry->saddr;
++		*p32 = inet->inet_saddr;
++
++		p32 = (__be32 *)__entry->daddr;
++		*p32 = inet->inet_daddr;
++
++		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
++			       sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->skaddr = sk;
++	),
++
++	TP_printk("time=%u rtt_us=%u copied=%u inq=%u space=%u ooo=%u scaling_ratio=%u "
++		  "rcvbuf=%u rcv_wnd=%u family=%d sport=%hu dport=%hu saddr=%pI4 "
++		  "daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c skaddr=%p",
++		  __entry->time, __entry->rtt_us, __entry->copied,
++		  __entry->inq, __entry->space, __entry->ooo_space,
++		  __entry->scaling_ratio, __entry->rcvbuf, __entry->rcv_wnd,
++		  __entry->family, __entry->sport, __entry->dport,
++		  __entry->saddr, __entry->daddr, __entry->saddr_v6,
++		  __entry->daddr_v6, __entry->skaddr)
++);
+ #endif /* _TRACE_MPTCP_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 514272179714..197ee169c0bc 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -28,6 +28,8 @@
+ #include "protocol.h"
+ #include "mib.h"
+ 
++static unsigned int mptcp_inq_hint(const struct sock *sk);
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mptcp.h>
+ 
+@@ -2133,6 +2135,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 	if (msk->rcvq_space.copied <= msk->rcvq_space.space)
+ 		goto new_measure;
+ 
++	trace_mptcp_rcvbuf_grow(sk, time);
+ 	if (mptcp_rcvbuf_grow(sk, msk->rcvq_space.copied)) {
+ 		/* Make subflows follow along.  If we do not do this, we
+ 		 * get drops at subflow level if skbs can't be moved to
+
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.51.0
 
