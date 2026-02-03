@@ -1,151 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041C63921C0;
-	Tue,  3 Feb 2026 07:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F4B30B521;
+	Tue,  3 Feb 2026 09:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770103130; cv=none; b=nLIPpWZGdZX+ig6u7byvvD+Zz2KGtwGtq4Xzl88LvDLJBKU+br0DmAL1nDsJJc4XO/+Leo9soB4iZC37CqvL1hNHIbquAgqKXMWKXa2Yw3TqG+pw4AGHhJFymrsf1XVFpmwh1KBdQqXmuaDOJ1jY9b77EaXCUrqr/IoosrHda68=
+	t=1770111511; cv=none; b=Dl44wsxLt37qn3vGCXyMeYTEx8Xcb18SRY6bm5Ar+4o/hY8wbIU0pQaJ/bIp41qOTXvyBjWghDXSoZzwlSEVsmAblLXofnN0oZL00/aB5ZUFpB9KkjtxOxQQvwqSJ0i//TP6AQu2GijgdjGHSGXuJNmY0NKF6LIXYwAWnvzjU8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770103130; c=relaxed/simple;
-	bh=UmmKzKP//jYEA/x8V2rp0gOc9GyRn2+bHkgmmo/vYC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f01vgNk7QmhVzIGZxZnarXrMaHCvD270lXLwjqnkFMeIBEKdpU+ZcBfyLkKz4NlY7AGfR5qvc8DqH/b5+azNHzYV+6kUvLbg6ul8GjmjcEk8yPZ8gThPLcqK+F7P27phS7+b2dkMMvJ6EK0ntpywOwjNPq0n+YwqwJyF3EmOzoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kCSaEfV/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770111511; c=relaxed/simple;
+	bh=KvflHZ9Jm1u7tKYWl5t14lcchR2ayzYTXIz/R0RGwXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MP9Ilq6p1O0/XmmAywTnSySnwq7lWTeivYURS6HCdA1QR59bvWpQv1UbhJlMLs76f6uSE7SLy9kiiftGvBw3N6dgkz5nXOuHXeCSNmqzBWuXuxn0rMUzIw/MXSgcGTWWOFHZ0gGRPNw/zdL6N5/teEOZvWmGW0mSTCmS50ROv2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJCg0kv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kCSaEfV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770103129; x=1801639129;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UmmKzKP//jYEA/x8V2rp0gOc9GyRn2+bHkgmmo/vYC8=;
-  b=kCSaEfV/j28PX/GaGByA7fYNJO5oVJ7KklgOx4pmK/ITP9w42fVYLczG
-   r4ta10ISfFfNMNzvIbgshggT8h7JiJW7bGwVJpjokrcXVFNs6iyV/BCT+
-   KasboZsKj2VUvopbIXDex+7oC7rfcyJ5eDscPt5+fK3WpbC17ztU9kyQh
-   gUbCvQn+nUCjMVOG/uZd18OIz/OL+YZ28lL75+Fge8AkPhjNdZBlYUFaR
-   pdhVEVSJbp9KGN6gdZhXS4yjgAzkMVa4C5P4Yt3D45IjSbS4omX254yyT
-   pqth3HXRZgs5yJngIDkepcybPQUEJCBZzxB8YW78JU3NgiFodbEMAm03q
-   g==;
-X-CSE-ConnectionGUID: +aQZl2XDQO+66b69SOraMQ==
-X-CSE-MsgGUID: OSGx9Z/eTpuKVgkeYdXg8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="88843102"
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="88843102"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 23:18:48 -0800
-X-CSE-ConnectionGUID: mc78C21bQ0my3OB333vq+Q==
-X-CSE-MsgGUID: 27fDqFC4Q2OOWsViLU5agQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="209205152"
-Received: from igk-lkp-server01.igk.intel.com (HELO afc5bfd7f602) ([10.211.93.152])
-  by fmviesa007.fm.intel.com with ESMTP; 02 Feb 2026 23:18:46 -0800
-Received: from kbuild by afc5bfd7f602 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vnAgO-000000003Kb-0HCn;
-	Tue, 03 Feb 2026 07:18:44 +0000
-Date: Tue, 3 Feb 2026 08:18:23 +0100
-From: kernel test robot <lkp@intel.com>
-To: "jempty.liang" <imntjempty@163.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJCg0kv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4323C19422;
+	Tue,  3 Feb 2026 09:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770111511;
+	bh=KvflHZ9Jm1u7tKYWl5t14lcchR2ayzYTXIz/R0RGwXQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oJCg0kv5VVnTFmPh7g0ZOeYfHpHjI+5wjazB6lO+6tELA/STGS470IAmu3xQIQ2nU
+	 71E4GF57O4SApvNAGN4+YW2uXGiDViD5ntwsCql+zM2RLEYBlci8gzJsb+Vsj3q2Cg
+	 X4zq707M2AoHuaO9KRDL2HoIJMqsyaWQ+jUlw09uFClVf3LQWy+88ujjIqJEaPL/54
+	 UCx4GhAWso4oTNsfE9FgUNGpLKkDil1W2G+WWh4RHSZ/nDkMUTrQckSFbXmuvXamb8
+	 H6X1wW0H18R3QS7kjtUagxKF9zOA0oJ0ffFIVaHn13oW7LgHvRbdUPSEP+zC0LCvTL
+	 dS66xh//W/5/w==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	"jempty.liang" <imntjempty@163.com>
-Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
- for 32-bit ARM
-Message-ID: <202602030843.MZJLItcH-lkp@intel.com>
-References: <20260202123342.2544795-1-imntjempty@163.com>
+	Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@kernel.org>
+Subject: [RFC bpf-next 00/12] bpf: tracing_multi link
+Date: Tue,  3 Feb 2026 10:38:07 +0100
+Message-ID: <20260203093819.2105105-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260202123342.2544795-1-imntjempty@163.com>
+Content-Transfer-Encoding: 8bit
 
-Hi jempty.liang,
+hi,
+as an option to Meglong's change [1] I'm sending proposal for tracing_multi
+link that does not add static trampoline but attaches program to all needed
+trampolines.
 
-kernel test robot noticed the following build errors:
+This approach keeps the same performance but has some drawbacks:
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on next-20260202]
-[cannot apply to linus/master v6.16-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ - when attaching 20k functions we allocate and attach 20k trampolines
+ - during attachment we hold each trampoline mutex, so for above
+   20k functions we will hold 20k mutexes during the attachment,
+   should be very prone to deadlock, but haven't hit it yet
 
-url:    https://github.com/intel-lab-lkp/linux/commits/jempty-liang/tracing-Fix-funcgraph_exit-calltime-rettime-offset-for-32-bit-ARM/20260202-203926
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260202123342.2544795-1-imntjempty%40163.com
-patch subject: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset for 32-bit ARM
-config: i386-allnoconfig-bpf (https://download.01.org/0day-ci/archive/20260203/202602030843.MZJLItcH-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260203/202602030843.MZJLItcH-lkp@intel.com/reproduce)
+I was hoping we'd find some common solution, but it looks like it's either
+static trampoline with performance penalty or having troubles described
+above but keeping the current trampoline performance.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602030843.MZJLItcH-lkp@intel.com/
+It looks the trampoline allocations/generation might not be big a problem
+and I'll try to find a solution for holding that many mutexes. If there's
+no better solution I think having one read/write mutex for tracing multi
+link attach/detach should work.
 
-All error/warnings (new ones prefixed by >>):
+We'd like to use trampolines instead of kprobes for the performance gains,
+so naturally we want to keep the same performance even when it's attached
+through tracing multi link.
 
->> kernel/trace/trace_irqsoff.c:224:6: warning: unused variable 'rettime' [-Wunused-variable]
-     224 |         u64 rettime;
-         |             ^~~~~~~
-   1 warning generated.
---
->> kernel/trace/trace_sched_wakeup.c:172:46: error: too many arguments to function call, expected 3, have 5
-     172 |                 __trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
-         |                 ~~~~~~~~~~~~~~~~~~~~                       ^~~~~~~~~~~~~~~~~~
-   kernel/trace/trace.h:969:13: note: '__trace_graph_return' declared here
-     969 | extern void __trace_graph_return(struct trace_array *tr,
-         |             ^                    ~~~~~~~~~~~~~~~~~~~~~~~
-     970 |                                  struct ftrace_graph_ret *trace,
-         |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     971 |                                  unsigned int trace_ctx);
-         |                                  ~~~~~~~~~~~~~~~~~~~~~~
-   1 error generated.
+thoughts? thanks,
+jirka
 
 
-vim +172 kernel/trace/trace_sched_wakeup.c
+[1] https://lore.kernel.org/bpf/20250703121521.1874196-1-dongml2@chinatelecom.cn/
+---
+Jiri Olsa (12):
+      ftrace: Add ftrace_hash_count function
+      bpf: Add struct bpf_trampoline_ops object
+      bpf: Add struct bpf_struct_ops_tramp_link object
+      bpf: Add struct bpf_tramp_node object
+      bpf: Add multi tracing attach types
+      bpf: Add bpf_trampoline_multi_attach/detach functions
+      bpf: Add support to create tracing multi link
+      libbpf: Add btf__find_by_glob_kind function
+      libbpf: Add support to create tracing multi link
+      selftests/bpf: Add fentry tracing multi func test
+      selftests/bpf: Add fentry intersected tracing multi func test
+      selftests/bpf: Add tracing multi benchmark test
 
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  150  
-37238abe3cb47b Steven Rostedt (VMware    2024-06-03  151) static void wakeup_graph_return(struct ftrace_graph_ret *trace,
-2ca8c112c9676e Masami Hiramatsu (Google  2024-12-26  152) 				struct fgraph_ops *gops,
-2ca8c112c9676e Masami Hiramatsu (Google  2024-12-26  153) 				struct ftrace_regs *fregs)
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  154  {
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  155  	struct trace_array *tr = wakeup_trace;
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  156  	struct trace_array_cpu *data;
-36590c50b2d072 Sebastian Andrzej Siewior 2021-01-25  157  	unsigned int trace_ctx;
-a485ea9e3ef31a Steven Rostedt            2025-01-13  158  	u64 *calltime;
-66611c04757096 Steven Rostedt            2025-01-21  159  	u64 rettime;
-a485ea9e3ef31a Steven Rostedt            2025-01-13  160  	int size;
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  161  
-12117f3307b63f Steven Rostedt (VMware    2024-06-03  162) 	ftrace_graph_addr_finish(gops, trace);
-5cf99a0f3161bc Steven Rostedt (VMware    2018-11-29  163) 
-36590c50b2d072 Sebastian Andrzej Siewior 2021-01-25  164  	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  165  		return;
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  166  
-77a67833e830fd jempty.liang              2026-02-02  167  	trace->rettime = trace_clock_local();
-66611c04757096 Steven Rostedt            2025-01-21  168  
-a485ea9e3ef31a Steven Rostedt            2025-01-13  169  	calltime = fgraph_retrieve_data(gops->idx, &size);
-77a67833e830fd jempty.liang              2026-02-02  170  	if (calltime) {
-77a67833e830fd jempty.liang              2026-02-02  171  		trace->calltime = *calltime;
-66611c04757096 Steven Rostedt            2025-01-21 @172  		__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
-77a67833e830fd jempty.liang              2026-02-02  173  	}
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  174  
-4f7bf54b07e5ac Steven Rostedt            2025-10-08  175  	local_dec(&data->disabled);
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  176  	preempt_enable_notrace();
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  177  	return;
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  178  }
-7495a5beaa22f1 Jiri Olsa                 2010-09-23  179  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ arch/arm64/net/bpf_jit_comp.c                            |  58 +++++++--------
+ arch/s390/net/bpf_jit_comp.c                             |  42 +++++------
+ arch/x86/net/bpf_jit_comp.c                              |  54 +++++++-------
+ include/linux/bpf.h                                      |  74 +++++++++++++------
+ include/linux/ftrace.h                                   |   1 +
+ include/linux/trace_events.h                             |   6 ++
+ include/uapi/linux/bpf.h                                 |   7 ++
+ kernel/bpf/bpf_struct_ops.c                              |  39 +++++-----
+ kernel/bpf/syscall.c                                     |  62 +++++++++++-----
+ kernel/bpf/trampoline.c                                  | 340 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+ kernel/bpf/verifier.c                                    |   8 ++-
+ kernel/trace/bpf_trace.c                                 | 105 +++++++++++++++++++++++++++
+ kernel/trace/ftrace.c                                    |  14 ++--
+ net/bpf/bpf_dummy_struct_ops.c                           |  23 +++---
+ net/bpf/test_run.c                                       |   2 +
+ tools/include/uapi/linux/bpf.h                           |   7 ++
+ tools/lib/bpf/bpf.c                                      |   7 ++
+ tools/lib/bpf/bpf.h                                      |   4 ++
+ tools/lib/bpf/btf.c                                      |  41 +++++++++++
+ tools/lib/bpf/btf.h                                      |   3 +
+ tools/lib/bpf/libbpf.c                                   |  87 +++++++++++++++++++++++
+ tools/lib/bpf/libbpf.h                                   |  14 ++++
+ tools/lib/bpf/libbpf.map                                 |   1 +
+ tools/testing/selftests/bpf/Makefile                     |   3 +-
+ tools/testing/selftests/bpf/prog_tests/tracing_multi.c   | 363 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_check.c  | 132 ++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/tracing_multi_fentry.c |  39 ++++++++++
+ 27 files changed, 1319 insertions(+), 217 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_check.c
+ create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_fentry.c
