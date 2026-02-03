@@ -1,81 +1,82 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412D399003;
-	Tue,  3 Feb 2026 10:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DE039E17E;
+	Tue,  3 Feb 2026 10:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770113099; cv=none; b=tkJI6HdrL5US82kJswJ4NivzV7omW8RNmeZ2yLzXMMvAaPzQRs1f6U1971PwKiNV5fc2OvuI1ks0Eriot8v8jrctJpSTG3zC2jtzA4evblwZk3P7dC6XiJPLVmfMIxX9qPJY6JvIFuVi/VIwbgThvxFhMIdlMziK8rEPB6bVpFc=
+	t=1770113634; cv=none; b=jYLJdmL+QrKH7NVtEL1lSJRGj1iyj5q4GVrRs2RiLeHyxSRGPTBEK+DbzRRHGyevCho5QgImhWaywUz4JnzvVQ7oSVyxHjVzECeLhi8xWgm+A0KIZ6ugiWJW9Ri69dWbNy2yLiPZmdvmkF05BhXpZxyIcCHr9kPRsR3/oPNMjUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770113099; c=relaxed/simple;
-	bh=4f5wvDrXhqZ9KEW3p7RxALJv6cCBMmLoWQ37Cmb2RLY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=FLZTJnDB5rDXRT4Unf7sZiaR4J5bvyR6LQwhFx4i5YOLa/jHK4+WQLSi4SPhVXInG6Nj8tZXsC/lh0GWQpzx1N9I4b5OFUk8y84ASIFR2ma+czcS7wUF5ow/HPzWONaIC+4+NCQW6Wf7+0m3DBQxUTKSJYoDy3q0dGoNRkvHkXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fI+BeFWQ; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1770113634; c=relaxed/simple;
+	bh=62+dKi/sGs0cWaY6sK1LDp3kcrF+2c/L50jRccikQd4=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=QUkwjmhC4VEp6hoaJyazOEX4jNPpYl++DPOpwCjCA5r20IutUCDzEMIQXBIZrq7qDw6nMJiLpvC+V+n3VERYQBso/gz+7h/lOaXUz5PuLBgjg9Ccz/CXdPVZv/zU87vnH+e+Ghz53B/eI9O56nEtChnrqPkHQ+Rxd74lVPFfdQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpGozJRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fI+BeFWQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=4f5wvDrXhqZ9KEW3p7RxALJv6cCBMmLoWQ37Cmb2RLY=; b=f
-	I+BeFWQoxmasS/3ah/0iGVxPDDl4hAk+eprqoaUNkZkD08u4OhKONDfcA58HE93F
-	y/tqEjCW7nrAV1u191fgQNpVKXQzeREKOZkTYl/sgut0tRqGHa73+GRct3J9kS0P
-	R3Lf1VlAjOkCG9Oh5m4q+1l9Z14LAv9prqYpQY8tjI=
-Received: from imntjempty$163.com ( [183.47.95.209] ) by
- ajax-webmail-wmsvr-40-144 (Coremail) ; Tue, 3 Feb 2026 18:04:21 +0800 (CST)
-Date: Tue, 3 Feb 2026 18:04:21 +0800 (CST)
-From: "jempty.liang" <imntjempty@163.com>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
- for 32-bit ARM
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
- 20251222(83accb85) Copyright (c) 2002-2026 www.mailtech.cn 163com
-In-Reply-To: <20260202110828.440c8d44@gandalf.local.home>
-References: <20260202123342.2544795-1-imntjempty@163.com>
- <20260202103804.40cbaa27@gandalf.local.home>
- <20260202110828.440c8d44@gandalf.local.home>
-X-NTES-SC: AL_Qu2cAv2avEgt5yKbZ+kZn08Ug+s6W8u4vfUi34UbSuccuz/16jA/Y1xiPXvV+t+zIiuesieLSTNuwPt/VKizvo2q603Wja0Zd9LaB49J
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpGozJRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4C23C19422;
+	Tue,  3 Feb 2026 10:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770113634;
+	bh=62+dKi/sGs0cWaY6sK1LDp3kcrF+2c/L50jRccikQd4=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=JpGozJRa66xyWaJpviqL5l56CTE1Jj6aanmgF18rfosyJvN+oNTiRId2PXSufUPxT
+	 ufaQ0cTi2m3Va/YvJGl1ISsUjhsaZK0t60V31FCG1qvNiGWgyXQM2ccMaMX6pFl3BQ
+	 tEz66PrngEgem+EKoh7vGNik84AtWW9FlzA56vYycaOgmvsYSwC5ZKpdAn6DsyTALl
+	 rM9IAGEuwnEJIFn2OWyg8duPtn94P4d6MRx8G8qeJXczsmFxCpazaX18ZO3RamfQO7
+	 dV2pv5GL3UPmTnvapZKSdrlRo41I6xJUG9CdYCTK2q/oStCJxW0eCr2zIDe55GwPlo
+	 dDVhnjmUHvZ+w==
+Content-Type: multipart/mixed; boundary="===============6018976010174444517=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <19eab264.7fae.19c22f5d17c.Coremail.imntjempty@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:kCgvCgAHQNgmyIFpbdtjAA--.20672W
-X-CM-SenderInfo: hlpq3yxhps35i6rwjhhfrp/xtbC+Ab19mmByCb0VAAA3b
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Message-Id: <9df0acf7860b7e4a90b3e93e2d6924e9bad35fe307bef0bf9b50f8afb5cccacc@mail.kernel.org>
+In-Reply-To: <20260203093819.2105105-6-jolsa@kernel.org>
+References: <20260203093819.2105105-6-jolsa@kernel.org>
+Subject: Re: [RFC bpf-next 05/12] bpf: Add multi tracing attach types
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
+Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Tue,  3 Feb 2026 10:13:53 +0000 (UTC)
 
-QXQgMjAyNi0wMi0wMyAwMDowODoyOCwgIlN0ZXZlbiBSb3N0ZWR0IiA8cm9zdGVkdEBnb29kbWlz
-Lm9yZz4gd3JvdGU6Cj5PbiBNb24sIDIgRmViIDIwMjYgMTA6Mzg6MDQgLTA1MDAKPlN0ZXZlbiBS
-b3N0ZWR0IDxyb3N0ZWR0QGdvb2RtaXMub3JnPiB3cm90ZToKPgo+PiBDYW4geW91IHRyeSB0aGlz
-IHBhdGNoIHRvIHNlZSBpZiBpdCBmaXhlcyB0aGUgaXNzdWUgZm9yIHlvdT8KPgo+SWdub3JlIHRo
-YXQgcGF0Y2gsIHRyeSB0aGlzIG9uZSBpbnN0ZWFkLiBUaGlzIHdhcyBmaXhlZCBmb3IgdHJhY2Vf
-ZXZlbnRzIGEKPndoaWxlIGFnbywgYnV0IHRoZSBzYW1lIGZpeCB3YXNuJ3QgZG9uZSBmb3IgZnRy
-YWNlIGV2ZW50cy4KPgo+LS0gU3RldmUKPgo+ZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFj
-ZV9leHBvcnQuYyBiL2tlcm5lbC90cmFjZS90cmFjZV9leHBvcnQuYwo+aW5kZXggMTY5OGZjMjJh
-ZmEwLi41Yjk2YWM3NTAwNDkgMTAwNjQ0Cj4tLS0gYS9rZXJuZWwvdHJhY2UvdHJhY2VfZXhwb3J0
-LmMKPisrKyBiL2tlcm5lbC90cmFjZS90cmFjZV9leHBvcnQuYwo+QEAgLTE0LDYgKzE0LDkgQEAK
-PiAKPiAjaW5jbHVkZSAidHJhY2Vfb3V0cHV0LmgiCj4gCj4rLyogVGhlIGFsaWdubWVudCBvZiBh
-IHR5cGUgd2hlbiBpbiBhIHN0cnVjdHVyZSAqLwo+KyNkZWZpbmUgQUxJR05fU1RSVUNURklFTEQo
-dHlwZSkgKChpbnQpKF9fYWxpZ25vZl9fKHN0cnVjdCB7dHlwZSBiO30pKSkKPisKPiAvKiBTdHVi
-IGZ1bmN0aW9uIGZvciBldmVudHMgd2l0aCB0cmlnZ2VycyAqLwo+IHN0YXRpYyBpbnQgZnRyYWNl
-X2V2ZW50X3JlZ2lzdGVyKHN0cnVjdCB0cmFjZV9ldmVudF9jYWxsICpjYWxsLAo+IAkJCQkgZW51
-bSB0cmFjZV9yZWcgdHlwZSwgdm9pZCAqZGF0YSkKPkBAIC04OCw3ICs5MSw3IEBAIHN0YXRpYyB2
-b2lkIF9fYWx3YXlzX3VudXNlZCBfX19fZnRyYWNlX2NoZWNrXyMjbmFtZSh2b2lkKQkJXAo+ICN1
-bmRlZiBfX2ZpZWxkX2V4dAo+ICNkZWZpbmUgX19maWVsZF9leHQoX3R5cGUsIF9pdGVtLCBfZmls
-dGVyX3R5cGUpIHsJCQlcCj4gCS50eXBlID0gI190eXBlLCAubmFtZSA9ICNfaXRlbSwJCQkJCVwK
-Pi0JLnNpemUgPSBzaXplb2YoX3R5cGUpLCAuYWxpZ24gPSBfX2FsaWdub2ZfXyhfdHlwZSksCQlc
-Cj4rCS5zaXplID0gc2l6ZW9mKF90eXBlKSwgLmFsaWduID0gQUxJR05fU1RSVUNURklFTEQoX3R5
-cGUpLAlcCj4gCWlzX3NpZ25lZF90eXBlKF90eXBlKSwgLmZpbHRlcl90eXBlID0gX2ZpbHRlcl90
-eXBlIH0sCj4gCk9uIHRoZSAzMi1iaXQgQVJNIHBsYXRmb3JtLCB3aGVuIF90eXBlIGlzIHVuc2ln
-bmVkIGxvbmcgbG9uZywgdGhlIHJlc3VsdGluZyBhbGlnbiB2YWx1ZSBpcyA4IGluc3RlYWQgb2Yg
-dGhlIGV4cGVjdGVkIDQuCj4gCg==
+--===============6018976010174444517==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 6b62b6d57..fb52ba2f7 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+
+[ ... ]
+
+> @@ -25069,7 +25074,8 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+>  		return 0;
+>  	} else if (prog->expected_attach_type == BPF_TRACE_ITER) {
+>  		return bpf_iter_prog_supported(prog);
+> -	}
+> +	} else if (is_tracing_multi(prog->expected_attach_type))
+> +		return prog->type == BPF_PROG_TYPE_TRACING ? 0 : -EINVAL;
+
+This isn't a bug, but should this branch have braces for consistency with the
+preceding branches in the same if/else chain? The BPF_TRACE_RAW_TP and
+BPF_TRACE_ITER branches both use braces.
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21625440628
+
+AI-authorship-score: low
+AI-authorship-explanation: The commit message contains natural colloquial language and personal attribution typical of human kernel developers, and the code follows established BPF patterns with typical human oversights in style consistency.
+issues-found: 1
+issue-severity-score: low
+issue-severity-explanation: Minor coding style inconsistency with missing braces in an else-if branch that does not affect functionality.
+
+--===============6018976010174444517==--
