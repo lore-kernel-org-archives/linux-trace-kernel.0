@@ -1,139 +1,132 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC5823183F;
-	Tue,  3 Feb 2026 10:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9244821B9FD;
+	Tue,  3 Feb 2026 10:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770113729; cv=none; b=XqWlP+Gx8IK4tVkZo0NrmJEiXFqfAVEjAoWZBbG6u9FBPi9dTLrpn/LFr4+FRvY28Vbn5vwCO54n/VIxOribdfNb/a6PTLeTy8joPsYncOHD5n9yimBW9X9bEidpk2+SrARHphkrP03S7sN3C+38Oki2E5c/qNoYuU5rJt2C1T0=
+	t=1770114381; cv=none; b=ShnTmf+2VT07aUIxsmgich0MMwhY++MieJGHeotSo00mgkzDhZpgX8n0MVE6VqRBc+FW2HY/WzQRjcw7GNKb1OW/yUfV45OWuTwSSX0sZln47oG5bJx1a6e9nc9Jr+zFQ+9jU9irQUDBSUzK3BtCcOfnCFxgcDYJ1PQ2z1jiuqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770113729; c=relaxed/simple;
-	bh=ltTqItvs5DEbQAayR00+PqL/+NRtgJq6ixieEinQSY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q5jjG2QEVNkNXRP2RTfrK1GMOiUYH6UPKgEbwKpBdLGeZyIapCP4xIUdjduYYCelC1/8WjH3KNQMilVzd2sxP9LXQ2iMElxruLRgEvQq6IqpmH4FPc8DmCQ31z/Gd3mxq8IqLIGIX2TTULSA5lfMctxJNBPC4HBqUqSuVoQi/Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHfJCxHU; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1770114381; c=relaxed/simple;
+	bh=QYSyRyz/KNe8g75+aUGgAZFcRWSJp4MQIT2Dpm2e+gI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PkD8bl6ZFezXaMrKOLp06gnNMjmUWV7bzXsWwy6IebGUwUDbCnkYFeZWXoIjhU0ItxfZ5Fh8zefSoxodNfZ9vsIU7O80ccViyR+LAjCJwlRQAKm2K6avMM9grl+40YC8GrMGeKkm9B0tgFJIkAcGBeGzlRjD9MqI85l9op8Yqb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XhUoFJy7; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHfJCxHU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XhUoFJy7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770113728; x=1801649728;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ltTqItvs5DEbQAayR00+PqL/+NRtgJq6ixieEinQSY4=;
-  b=WHfJCxHU6+m/HKsG1GEUHnC7LYEAoVlCp5pDuHNDURLYdoEDYFbRORys
-   Lk4D7f7h02Orrykg+0t+tdqw6ZDWUlqyALFWmthEf98FPXaS0PGAQBtwm
-   QgjKlOvAaqcH35dSuq9S9Za8hua/CidmhLAnv34VmjsDGLRHy3R6uWSvY
-   c6YMNE8Le7rCnOAbslhhonhRo5jiZ7H17FnEfMCleDQ+iVn4X1jZH6A5O
-   xRcF5tFZxKA5PklK5l89LpJq4MuTnFWaCO5jLhV90cjGpkqYi/GLgYZmA
-   rd1cFOH+ZyF1x+tHM4dFEJpBLyNtmrBZofZhwQVPcScqg/lICl94yNpww
+  t=1770114380; x=1801650380;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=QYSyRyz/KNe8g75+aUGgAZFcRWSJp4MQIT2Dpm2e+gI=;
+  b=XhUoFJy7ye8+Bf7WEx3Xe2eLG9jNocHjC2NPxdjhN6Xw5n43aBOk3/0H
+   xK8/O28D+B4bY/mzaUltEvnzU9RdkacOZ7lr24fSDXkbIiucG1HenZC+Z
+   rwZnx27SN23PJodQDgS8Rl++v5QitRZx+jf69VYXxZ4xkof51T4VLLcxg
+   Xyd5eVCWLvAW2lv7xqWnU/tTAiu+ZIGNDMX3Dz5tNCL4O2wNpFq5De0F1
+   Jj9UfMpjcUT+MdssFuFuCl8FjJaD5+LNYkfcqElTwDqsN7eqSd9iMlCUj
+   slU6cxMeMO4u9ACN0P9VyBE9kDeRPIYu5DMURfQknHW3u9p+4KPveerK3
    w==;
-X-CSE-ConnectionGUID: Q43I6yY3TF6pmKIhbq1+8Q==
-X-CSE-MsgGUID: ou9M2qUoRwCLUcxP0tEM4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="96738240"
+X-CSE-ConnectionGUID: eGkL/5rLSeG8aWyfugBgDQ==
+X-CSE-MsgGUID: 7BuMd9P5TZSrfpXpD93ryw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="96738952"
 X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="96738240"
+   d="scan'208";a="96738952"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 02:15:26 -0800
-X-CSE-ConnectionGUID: QSwRDmD1RvONYQUf1EbLaA==
-X-CSE-MsgGUID: +XVLnH3CSfiSKxpDX9/BtA==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 02:26:19 -0800
+X-CSE-ConnectionGUID: j3nOvX5aTQuQ/KI4ctPsjA==
+X-CSE-MsgGUID: pP1ZD7WQRkuPTRRCkx9Kgw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="209093662"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa010.jf.intel.com with ESMTP; 03 Feb 2026 02:15:05 -0800
-Date: Tue, 3 Feb 2026 17:56:37 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Ackerley Tng <ackerleytng@google.com>,
-	Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
-	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
-	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
-	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
-	keirf@google.com, kent.overstreet@linux.dev,
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
-	mail@maciej.szmigiero.name, maobibo@loongson.cn,
-	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
-	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
-	qperret@google.com, richard.weiyang@gmail.com,
-	rick.p.edgecombe@intel.com, rientjes@google.com,
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
-	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-Message-ID: <aYHGVQTF6RUs7r3g@yilunxu-OptiPlex-7050>
-References: <cover.1760731772.git.ackerleytng@google.com>
- <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
- <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
- <aXqx3_eE0rNh6nP0@google.com>
+   d="scan'208";a="209097557"
+Received: from black.igk.intel.com (HELO black) ([10.91.253.5])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 02:26:15 -0800
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: "Yingchao Deng (Consultant)" <quic_yingdeng@quicinc.com>, Yingchao Deng
+ <yingchao.deng@oss.qualcomm.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tingwei
+ Zhang <tingwei.zhang@oss.qualcomm.com>, Yuanfang Zhang
+ <yuanfang.zhang@oss.qualcomm.com>, Jinlong Mao
+ <jinlong.mao@oss.qualcomm.com>, alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v5] stm: class: Add MIPI OST protocol support
+In-Reply-To: <dac5b6f0-5d0d-4dcd-b615-cdf9b81f4bf6@quicinc.com>
+References: <20260129-p_ost-v5-1-2b14fff39428@oss.qualcomm.com>
+ <83qzr7a0tm.fsf@black.igk.intel.com>
+ <dac5b6f0-5d0d-4dcd-b615-cdf9b81f4bf6@quicinc.com>
+Date: Tue, 03 Feb 2026 11:26:13 +0100
+Message-ID: <83ldha9l8a.fsf@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXqx3_eE0rNh6nP0@google.com>
+Content-Type: text/plain
 
-> +1.  For guest_memfd, we initially defined per-VM memory attributes to track
-> private vs. shared.  But as Ackerley noted, we are in the process of deprecating
-> that support, e.g. by making it incompatible with various guest_memfd features,
-> in favor of having each guest_memfd instance track the state of a given page.
-> 
-> The original guest_memfd design was that it would _only_ hold private pages, and
-> so tracking private vs. shared in guest_memfd didn't make any sense.  As we've
-> pivoted to in-place conversion, tracking private vs. shared in the guest_memfd
-> has basically become mandatory.  We could maaaaaybe make it work with per-VM
-> attributes, but it would be insanely complex.
-> 
-> For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
-> is all or nothing, and can never change, then the only entity that can track that
-> info is the owner of the dmabuf.  And even if the private vs. shared attributes
-> are constant, tracking it external to KVM makes sense, because then the provider
-> can simply hardcode %true/%false.  
+"Yingchao Deng (Consultant)" <quic_yingdeng@quicinc.com> writes:
 
-For CoCo-VM and Tee-IO, I'm wondering if host or KVM has to maintain
-the private/shared attribute for "assigned MMIO". I'm not naming them
-"host MMIO" cause unlike RAM host never needs to access them, either in
-private manner or shared manner.
+> On 1/30/2026 5:48 PM, Alexander Shishkin wrote:
+>> Yingchao Deng<yingchao.deng@oss.qualcomm.com> writes:
+>>
+>>> +	for (i = 1; i < ARRAY_SIZE(str_ost_entity_type); i++) {
+>>> +		if (i == pn->entity_type)
+>>> +			sz += sysfs_emit_at(page, sz, "[%s] ", str_ost_entity_type[i]);
+>>> +		else
+>>> +			sz += sysfs_emit_at(page, sz, "%s ", str_ost_entity_type[i]);
+>>> +	}
+>> Greg hates this. Documentation [0] says "preferably": "Attributes should
+>> be ASCII text files, preferably with only one value per file.", but
+>> somebody will get yelled at if this gets spotted, and since it's
+>> probably going to be me, let's maybe not do this.
+> Using two sysfs nodes, entity_available (listing supported options)
+> and entity (the current value), is this acceptable?
 
-Traditionally, host maps these MMIOs only because KVM needs HVA->HPA
-mapping to find pfn and setup KVM MMU. Now we have FD based approach so
-with dmabuf fd, host no longer needs mapping. Does that give confidence
-that KVM only needs to setup MMU for this type of MMIO as private/shared
-according to guest's intension (which is fault->is_private)?
+My apologies, I didn't see that this was a configfs attribute (as it
+should be).
 
-We don't need to track private/shared in VFIO MMIO dmabuf, only to keep
-them unmappable.
+Having said that, these ost types are almost enum stm_source_type. The
+console is missing, but there is already a console source, so adding it
+to the enum and the making the console source driver type that makes
+sense. And once you have that, you'll get the entity type in your
+ost_write() method via the @source parameter. Then, you'll only need a
+tiny lookup table that maps enum stm_source_type to OST_ENTITY_* and use
+that in the encoded packet.
 
-> 
-> As for _how_ to do that, no matter where the attributes are stored, we're going
-> to have to teach KVM to play nice with a non-guest_memfd provider of private
-> memory.
-> 
+This leaves the question of OST_ENTITY_TYPE_NONE and
+OST_ENTITY_TYPE_DIAG. They are both unclear to me. OST_ENTITY_TYPE_NONE
+basically means "no type, reject write", meaning that type 0 in an OST
+packet is invalid, which seems weird and wasteful, is that what the
+protocol spec says?
+
+OST_ENTITY_TYPE_DIAG is also not explained; since we're already in the
+tracing territory, "diag" may mean anything at all. From its value being
+at the upper end of the 8-bit spectrum, I'm guessing it either something
+very specialized or something very generic. Can it be a catch-all for
+STM_USER (which is a catch-all)? Alternatively, you could propagate the
+matched policy node's name to the pdrv->write() and in ost_write() check
+if it's "diag" to select this type. strncmp() in pdrv->write() is not
+ideal, though.
+
+Either way, no extra attribute needed.
+
+Because,
+
+# mkdir diag ftrace console
+# echo diag > diag/entity
+# echo ftrace > ftrace/entity
+# echo console > console/entity
+
+is really a hat on a hat.
+
+Would something like this work for you?
+
+Thanks,
+--
+Alex
