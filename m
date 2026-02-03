@@ -1,223 +1,174 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E76D267714;
-	Tue,  3 Feb 2026 15:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770134198; cv=none; b=SEyglkEs0ri0VlPr+gXhbHuH/ArYI7tqzCiB6/sQZ7XrROdNRIZ1QV00yM5lMryksNCoGwQhSd1/c5akFkfqRn1yt9DROpOMcjato0xQJbrqTEwkWUyA8bxjVfQLdwS6dvSq4LnMcsGO0+SfYu9FOJ/FXnzBljbEuW+Z3kh8MI4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770134198; c=relaxed/simple;
-	bh=5VQb6XurkFIcrW15lovmU7utC3GXjrZZ5DPn4PqCkYg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=U0Gm44qjX6A0yDpeG8koHCPKNAkjW7bkIS8fYJtKEq1B3eamdHOdTmAFp0zEa41PPaRT6cYZyWuE6WDCCY+RJ9M0x4m5nUian5/ALSTHIWLq2gg3puom8ZjBm9KIMvuN2i3qOEnESfPHxNspYK6y8cXrYya1KRswJwhnjNn2R4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ZkigJbUQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OJWb7E3d; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155373C1961
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Feb 2026 16:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770134462; cv=pass; b=TIr+k+WLA/0qYC87Znvi+5mUugHzp6sGQJz/BdMYMMYhsX//tPiFun1rxk5Tvd8UhaE4LT5Mi8Ah15d5q04su1NIZGU+Kw0Ist71kRv0UpZMfPSADs0S2QTH99dxy/6nhkk5iPt+Yaqg7xMElFfTrEHpfh3v/u2DJJJvd8ous0c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770134462; c=relaxed/simple;
+	bh=deO57hxzyS5UzkvPh4r4kvjZmU6hULG6xhnk9q4NzV4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KGq/dcqAbCxBmRBG21vHM1SWIdu6EKOF82aKVFA4N/YdUBAPgf7sDBFZWSsWSOt+9IMVO33q367K/u+Y6sOnY9C2kDjdTT+bkiV0xN9iqRmJ7a1EljYaYlL4/yMXtK9qoRf2YIgmEGwIt89wcWanINus6kqJ+ChvdgloOJrzWPk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJ8ZUjAh; arc=pass smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ZkigJbUQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OJWb7E3d"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D18621400059;
-	Tue,  3 Feb 2026 10:56:34 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Tue, 03 Feb 2026 10:56:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1770134194;
-	 x=1770220594; bh=wVp/m1Quz3BoFMxHOwcVsiCA1igA849JUDKjUESuUCI=; b=
-	ZkigJbUQi4lP2PCPoPAYTUKlHopRZ0YwnspaEMVQfBCMEXpsJN6be9HBLUK/Jwh7
-	8u+NDDjFVJ+GXyzCTtK/hGgtPwjK4uEajv0Q5aT4Co+Ox7IANF2kHag3h1TNqJOm
-	/v4RZsFVY9peFJqNzmmlCDmch9lSVrIzXOZbakfcrSUlyPlpmr70aM3zaldLRoEx
-	56pMN76Xrx444kUFJRayqLz6lxKn9wHzo4lsB8ulEtPi6cQ5kpe9QCq1gUJQdAeK
-	LoWq5NBJBcy0Q2H0y0vBBUEjT9VcsV77pEtlA7nfQ1nNfugw6itdpPMhgHvu6Xy8
-	xlwplA4lvT/QlROZ4pBl5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770134194; x=
-	1770220594; bh=wVp/m1Quz3BoFMxHOwcVsiCA1igA849JUDKjUESuUCI=; b=O
-	JWb7E3dwDuBQ6Oh/fanhwytDwxYiKR6r11AqTNLy5OhVBQErVkwFgzGKxHoYe2zz
-	o82K2wG+06gOsBmKY5NRYuJb/QcCasNW7D8HB7O9GJwMh9JqUOV7c0UDorJHc/Bp
-	+s+GQZjAiyyTe381spHXRC230fQFfb7ygWGWB56kYKaZa83Y/s12J99EpOSyLvIb
-	Ms+FV7rq/hMTZNGatMKQ0CAqUKjXl3tDQPgKUcFl7UhAgtExCLOyr/FT3Dj6xpt8
-	MAaHIYx0laH8z+16bCyFLtgKuxKsKLjbjBVcd4gKYvktYBmWrZH8I21dTaWjBN37
-	FEaLhh8wF8UX0Kpq+AP9A==
-X-ME-Sender: <xms:sRqCacLh9m__M0jBZiOdRimC0QMyHgO-yiWLQtGf2NDfb1PeCbs8tA>
-    <xme:sRqCaW8_WbGQ84P6d5sjzJTC6BJj3famktU7GmylHEjP_EqWG4E9HONeIjar5f-OE
-    1Xl2lsmlqtSa63V8FVF2Kz1TyO3FCZTGHqBgOHh4kiU-jyzbDXHy_kI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukedtgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehmrghthhhivghurdguvghsnhhohigvrhhssegvfhhfihgtihhosh
-    drtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghp
-    thhtoheprhguuhhnlhgrphesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlkh
-    hpsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjlhgrhi
-    htohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhmsehkvhgrtghkrdhorhhg
-X-ME-Proxy: <xmx:sRqCaVgDVOeKcF55yIUFru0feO85XZRvRZP4d41NA7qVljXYrdsOtA>
-    <xmx:sRqCae5TuNvu4rKojfZVpIOMUJTk5vD4mfPC3nY5AjGkG8YH6W0J5A>
-    <xmx:sRqCadrYlx_rFWW6OA7wAk2Fyl10hAAqlWbEDD36CXpDQCZqJTyj4g>
-    <xmx:sRqCabh_drFWdOszV0LArB7FQ_8FWUiHo3g4y2ha-bxOY6CGFQ26LA>
-    <xmx:shqCac_5xk_bEmfYmm4PuL4Xl8VeV31qK2nsZXYcEAo1LfxXpEKFPBI5>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 772E5700065; Tue,  3 Feb 2026 10:56:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ8ZUjAh"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-47ee0291921so55699935e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Feb 2026 08:01:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770134459; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KJ8NHjeX/X7UCosRsSPqXV2QNYVichBIuQNQky29ieaptK5ZxGvqfDUaK0tPUW1RfI
+         rexQg0zoxPfW1ffveVYnAS2Bd3AnKboqki9cttJMq6aCMhD2rhyDXLtKpdGVR8quc5oQ
+         wiGIEn1NkR8gx10HjfeuUfy2huRtvXk24+vpOFkVNzhIgRKzI/gJF1MrSX/6mnYsBgjt
+         +vsE2m+VwJ83d/snhfIDqf/V135Le4904a/8TK27/R7d4kx2rNBAJQBQPXP+xVp0doDS
+         J3hXpp8nxICIfF7Ipi87DMqzJPCyCwJ2/JpN+Aueay1KpQAbEg7oqJLXY7tsD/JiBsyD
+         Oz5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
+        fh=8yYZnn4ZZsJLsFWps0UE0SG+ZtNpUFqQ7ed1VA36wsY=;
+        b=SbNh4hX1SmrsiYOYVWMbVL4Ycm9dcbfnUOep3O5oG4ub1aDThqPByu9k8a+5Ln/+4W
+         hWKmKtk/2QqZfSstfyNGA7fzswAjpB+78gMukWT44ZCn+hwWEDr7LyHBB1dEE2YsHD6i
+         6DDIkjpNCeKQUFMVtya8U7Lraq4mcDS/oZTA+4Sg7TIpzqnwuQGlhmLWdPw1LOMiujHH
+         GmVQz1hW1vpUNbzLzfzbXT8ozmNqGPEZRnbnQroe0ooZacew/xQ8VFX5MS4yQgJta8m3
+         SG4N4kbMakGPj2UBywm4OTJ5vRufEIoPAqMWbl61tDe3FInrdDMeXhrTSj5D6b/coB3Q
+         zvog==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770134459; x=1770739259; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
+        b=nJ8ZUjAhc6eyDne25zx7/5W93JUZhndR2w7dRdvcwKJ20B2SZTtJsT3anhwAUAJY1Y
+         GKHyuGWhVkkxs8vO6/apwmn7lgHC4dAPihLNgQ+vC8RxF4OKpqDoS47K0MgWtwSfw6G6
+         7Lzn38y3HWegvH1M696KA1i5NKKW54nfXOE4JErIC+dwESBKMbkN+7QlAARvXe3UwjTv
+         aZJh668ldT7M9WNPL/PHnk77HGZyj3WbRgYtZP6DUuLD1pNkjOeBwxUajylodKmpMdsD
+         33K7msICw5VnXr9rbYEr2pbPyXXqb+kgH94YAsLC2dxLJLfSB+xOC9xlDz85E/uy0TIi
+         NIVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770134459; x=1770739259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=A0rdFZkSZwICcKcvSlfIIEDfERHEMj/nUefLkALNSBg=;
+        b=vPxdSXj0KqUIULQnimxGm63SebXpZ2wl7C8/I1EEqFtNJgPkIb5g1VI4Apisd/WpjL
+         pcDOThnYBkIWrPVLjCoPrrA4KST39S6QjCGCa2TU2WPZ9VOXlhigRbNP5WDfQ9dp8JMr
+         q6w2leCYPQlL9Ar52YKqgprayMWgsurvi7Tz6BsVLdqZ/mrMLVJxQO0ZWQY30UmqE74j
+         aZoEEncinODtO6eC7PFcjwuUmRKLOaaEO1+9+BI+H4DFGgDovrA6Z670RbC1LeNt97/O
+         s+Id4FrFkUTlYdeNYGS561cOXsRGC4/jX04cC8V0pUWyNXqQmh23SI0kDXtzrbB3Wx8z
+         SJhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqFNpE9+eE10Dy9M3ufCxIZET7G/xGZKxtOfRDdSRXKXffUGFi8K/sO5yAT8ivNoCPGg14jBV/0Out2USx47l9xaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5qLXN0YOlqSF6sgIVG7y9J0zWxjfeFGB0FNehRBx+dhHlbCYy
+	eVTNzNvqGem4vuMaHILoa8n4eJsQbPrkve1hiOoFMkjywHY8fDJSw5C0ssBZ5/sgDKc+yWtDf4q
+	+G1KHtApeqBV24odW2zmzHOqp8VsqIes=
+X-Gm-Gg: AZuq6aJosSVNvnhY0dUTIEU9ySIU5ncVg09tBaCLFtDZ5xCYgRPAqs8zwdsyazg0tpF
+	G/QQsMlPNEg1otYSr6/4X4Mv+gQB7UonYPJMoTnixcsIghyEj3Utmk/0NjCra03X0p9tAhDHqmj
+	I3wTQ4BLVsiDrQ3ajjBcJGijc6j1L/UYdKhxsM/gXvoO3d3rDWXqdw+zAj21CwOKNnZZMhrkaVc
+	KiIqpvlJEDLwE40DBXIrhowV6YO6GGw/4cN8+aGpCrIMDtbQ2Uav/aplOXZzYAmfYqH7IvZ3iYg
+	HYUL/xtN2BNz1Q9tzLusV+uT0Sh0SoX6ytXn/KOA1eO4H2mOfInVsuf8QdKKnt5yC7oabA==
+X-Received: by 2002:a05:600c:34d5:b0:47a:81b7:9a20 with SMTP id
+ 5b1f17b1804b1-4830e930f67mr1621525e9.9.1770134459065; Tue, 03 Feb 2026
+ 08:00:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ATW73pPHePWN
-Date: Tue, 03 Feb 2026 16:56:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "kernel test robot" <lkp@intel.com>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Simon Horman" <horms@kernel.org>,
- "Jeff Layton" <jlayton@kernel.org>,
- "Anna Schumaker" <anna.schumaker@oracle.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Linux Memory Management List" <linux-mm@kvack.org>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Yury Norov" <ynorov@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Message-Id: <d777a8f0-41ab-48f8-93db-268f493ac656@app.fastmail.com>
-In-Reply-To: <aYINAPJS9zXlUGCw@smile.fi.intel.com>
-References: <20260202095834.1328352-1-arnd@kernel.org>
- <202602032036.FQK7gJvV-lkp@intel.com> <aYINAPJS9zXlUGCw@smile.fi.intel.com>
-Subject: Re: [PATCH] tracing: remove __printf() attribute on __ftrace_vbprintk()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
+ <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
+ <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
+ <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com> <20260203101707.52965eb0@gandalf.local.home>
+In-Reply-To: <20260203101707.52965eb0@gandalf.local.home>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 3 Feb 2026 08:00:45 -0800
+X-Gm-Features: AZwV_Qgsf-FoXB1pc5mel06UTxL9uWyAFVjyhN8Kz0H72J6ymSV25GKNwS9ieHQ
+Message-ID: <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
+ via BTF
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Donglin Peng <dolinux.peng@gmail.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 3, 2026, at 15:58, Andy Shevchenko wrote:
-> On Tue, Feb 03, 2026 at 08:12:57PM +0800, kernel test robot wrote:
+On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
->> kernel test robot noticed the following build warnings:
+> On Tue, 3 Feb 2026 21:50:47 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
 >
-> Yeah, you need to go for the full stack of these calls and mark the 
-> bottom one with __diag() to avoid these warnings. That's my understanding
-> and what BPF people required. Chasing this one-by-one would produce
-> unneeded churn.
+> > Testing revealed that sorting within resolve_btfids introduces issues w=
+ith
+> > btf__dedup. Therefore, I plan to move the sorting logic directly into
+> > btf__add_enum_value and btf__add_enum64_value in libbpf, which are
+> > invoked by pahole. However, it means that we need a newer pahole
+> > version.
+>
+> Sorting isn't a requirement just something I wanted to bring up. If it's
+> too complex and doesn't achieve much benefit then let's not do it.
+>
+> My worry is because "cat trace" takes quite a long time just reading the
+> BTF arguments. I'm worried it will just get worse with enums as well.
+>
+> I have trace-cmd reading BTF now (just haven't officially released it) an=
+d
+> doing an extract and reading the trace.dat file is much faster than readi=
+ng
+> the trace file with arguments. I'll need to implement the enum logic too =
+in
+> libtraceevent.
 
-From what I can tell, I can just move the printf attribute
-to the __ftrace_vbprintk() definition to make this bit work.
-I'll send an updated patch:
+If you mean to do pretty printing of the trace in user space then +1 from m=
+e.
 
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -197,6 +197,7 @@ struct notifier_block module_trace_bprintk_format_nb = {
-        .notifier_call = module_trace_bprintk_format_notify,
- };
- 
-+__printf(2, 3)
- int __trace_bprintk(unsigned long ip, const char *fmt, ...)
- {
-        int ret;
+I don't like sorting enums either in resolve_btfid, pahole or kernel.
+Sorted BTF by name was ok, since it doesn't change original semantics.
+While sorting enums by value gets us to the grey zone where
+the sequence of enum names in vmlinux.h becomes different than in dwarf.
 
-There are unrelated warnings for BPF that I managed to
-shut up the same way, doing
+Also id->name mapping in general is not precise.
+There is no requirement for enums to be unique.
+Just grabbing the first one:
+ATA_PIO0 =3D 1,
+ATA_PIO1 =3D 3,
+ATA_PIO2 =3D 7,
+ATA_UDMA0 =3D 1,
+ATA_UDMA1 =3D 3,
+ATA_UDMA2 =3D 7,
+ATA_ID_CYLS =3D 1,
+ATA_ID_HEADS =3D 3,
+SCR_ERROR =3D 1,
+SCR_CONTROL =3D 2,
+SCR_ACTIVE =3D 3,
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index b54ec0e945aa..45d026fc4e8a 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -1046,6 +1046,7 @@ int bpf_bprintf_prepare(const char *fmt, u32 fmt_size, const u64 *raw_args,
-        return err;
- }
- 
-+__printf(3, 0)
- BPF_CALL_5(bpf_snprintf, char *, str, u32, str_size, char *, fmt,
-           const void *, args, u32, data_len)
- {
-diff --git a/kernel/bpf/stream.c b/kernel/bpf/stream.c
-index 24730df55e69..816fd7fba3d2 100644
---- a/kernel/bpf/stream.c
-+++ b/kernel/bpf/stream.c
-@@ -212,6 +212,7 @@ __bpf_kfunc_start_defs();
-  * Avoid using enum bpf_stream_id so that kfunc users don't have to pull in the
-  * enum in headers.
-  */
-+__printf(2, 0)
- __bpf_kfunc int bpf_stream_vprintk(int stream_id, const char *fmt__str, const void *args,
-                                   u32 len__sz, struct bpf_prog_aux *aux)
- {
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index eadaef8592a3..2d3de71ab86a 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -359,6 +359,7 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
- #define MAX_TRACE_PRINTK_VARARGS       3
- #define BPF_TRACE_PRINTK_SIZE          1024
- 
-+__printf(1, 0)
- BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
-           u64, arg2, u64, arg3)
- {
-@@ -412,6 +413,7 @@ const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
-        return &bpf_trace_printk_proto;
- }
- 
-+__printf(1, 0)
- BPF_CALL_4(bpf_trace_vprintk, char *, fmt, u32, fmt_size, const void *, args,
-           u32, data_len)
- {
-@@ -455,6 +457,7 @@ const struct bpf_func_proto *bpf_get_trace_vprintk_proto(void)
-        return &bpf_trace_vprintk_proto;
- }
- 
-+__printf(2, 0)
- BPF_CALL_5(bpf_seq_printf, struct seq_file *, m, char *, fmt, u32, fmt_size,
-           const void *, args, u32, data_len)
- {
+All these names are part of the same enum type.
+Which one to print? First one?
 
-Since those functions have no callers, the annotation on the
-print functions does nothing.
+another example:
+enum {
+        BPF_LOCAL_STORAGE_GET_F_CREATE =3D 1,
+        BPF_SK_STORAGE_GET_F_CREATE =3D 1,
+};
 
-With those added, and a couple of drivers fixed to use the
-correct printf attributes, the only remaining one I see is
-in samples/trace_events/trace-events-sample.h:
+and another:
+enum {
+        BPF_SKB_TSTAMP_UNSPEC =3D 0,
+        BPF_SKB_TSTAMP_DELIVERY_MONO =3D 1,
+        BPF_SKB_CLOCK_REALTIME =3D 0,
+        BPF_SKB_CLOCK_MONOTONIC =3D 1,
+        BPF_SKB_CLOCK_TAI =3D 2,
+};
 
-In file included from /home/arnd/arm-soc/include/trace/define_trace.h:132,
-                 from /home/arnd/arm-soc/samples/trace_events/trace-events-sample.h:640,
-                 from /home/arnd/arm-soc/samples/trace_events/trace-events-sample.c:12:
-/home/arnd/arm-soc/samples/trace_events/./trace-events-sample.h: In function 'trace_event_get_offsets_foo_bar':
-/home/arnd/arm-soc/include/trace/stages/stage5_get_offsets.h:33:31: error: function 'trace_event_get_offsets_foo_bar' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
-   33 |         { (void)sizeof(struct _test_no_array_##item *); }
-      |                               ^~~~~~~~~~~~~~~
-/home/arnd/arm-soc/include/trace/trace_events.h:285:9: note: in definition of macro 'DECLARE_EVENT_CLASS'
-  285 |         tstruct;                                                        \
-      |         ^~~~~~~
-/home/arnd/arm-soc/include/trace/trace_events.h:43:30: note: in expansion of macro 'PARAMS'
-   43 |                              PARAMS(tstruct),                  \
-      |                              ^~~~~~
-/home/arnd/arm-soc/samples/trace_events/./trace-events-sample.h:291:1: note: in expansion of macro 'TRACE_EVENT'
-  291 | TRACE_EVENT(foo_bar,
-      | ^~~~~~~~~~~
-/home/arnd/arm-soc/samples/trace_events/./trace-events-sample.h:299:9: note: in expansion of macro 'TP_STRUCT__entry'
-  299 |         TP_STRUCT__entry(
-      |         ^~~~~~~~~~~~~~~~
-/home/arnd/arm-soc/samples/trace_events/./trace-events-sample.h:301:17: note: in expansion of macro '__field'
-  301 |                 __field(        int,    bar                     )
-      |                 ^~~~~~~
-/home/arnd/arm-soc/samples/trace_events/./trace-events-sample.h: In function 'do_trace_event_raw_event_foo_bar':
+I'd rather not print any and keep it integer only.
 
-I don't think this is related, but I also don't see an obvious
-workaround other than forcing the warning off around that
-definition.
-
-       Arnd
+pw-bot: cr
