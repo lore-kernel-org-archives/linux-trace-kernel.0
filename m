@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C941B343
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A441C2E1
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770216753; cv=none; b=lIktSn/9MM+XP6ZHoLtDW6Chi8bEDvvpK3uqDFJz+CmEcxMxGncsgBG8PYGGj3xzE4FerRg7WDdU909wnZmL5pMaOT/SnireAcYRhyWBg9tKJ/FWuLWGAMjDNG+WN0DlF4tNTsWOikSF6AJVFd57UXC+mS9GDNuMkk7ebuqa8ug=
+	t=1770216774; cv=none; b=h6G7D3ruxR1Ck3UHvQR5B9O5dZxYh5OaobCJ08HH4G9i+rFufHHcfKnsIRjjifviHMdmhHHdsar2U62Su/e8JuDlZ/gAUc2SII6NBvZkIzJKcHMm9VeqyHaXF9FgNAm5mwinzmZmC91w6eBmZsmiZqbVDKLVApfHi1HR1ClRm2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770216753; c=relaxed/simple;
-	bh=8BhQ94pNwocXkF1J4tZldasmJvF2BbjLKCc6e/4bvNw=;
+	s=arc-20240116; t=1770216774; c=relaxed/simple;
+	bh=RzD5D5fXRBq5Dbj8AC1pdHSI8YInCViioqXr/ESnnCs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=MVwH1BpoAX9rZa3NY+yr2bR0kbRPaXCnOQcvxYy2+PGLoFP3t9y9ZQ217dhpqorJyTW+96BxwaD1LR7xdJ2AXkG5ULz+UTljnxbyOS8bafcRNG+f1faaFC+JIIb33BoFRqz2TmFaZLB0RXV+clfXzOEMJtOfd7qS48Fkudus/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RTzZw1Ar; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=SVk2i0u4QVPiMLSNSZQqDnnty71hv99uYW3QnKylQiB9ggthCXpsaiVpEabfYer1RzoZ4UCTCDc3eZJO4NUT2Or2P/S7lpUdGVSpdSGW2rUZOdDa7tzXdjRhDocUICPevwfP4QTaX25hPd+h2YErF7GtufvyMAgGGlAOrkrefUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MJbVmhas; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTzZw1Ar"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MJbVmhas"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770216752;
+	s=mimecast20190719; t=1770216773;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+88c6tIz2dzJRW/pA5eB0yGHhQNthhVkp195CIWpCkE=;
-	b=RTzZw1ArFq6dFWQ5lsxIW3VvNIVdNTiq/fUSv5dhbSSIC8J/FnuKKZ8BQTuJeuWWI/YuGa
-	LWXklSbSevCMI27fUgy0MW/l/H/RjWKzo3guU0khrMgBpUo1vEjhcTHJwqxQirAqt/5a97
-	P1FWt2YiZ5RfcRjkdbwDRXqE57cxjtA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=xXfGMOmVzPizwSIz/3wbC9ez+h/caatHyVW51rPHiK4=;
+	b=MJbVmhasTip3KFHO67Cga0S/4TnYKivR/GXzNSCw9EOMJqCSKtc2QEfypbnoGyyhgzGk+L
+	yvIQi46nKQcxyCsgKkUhn7y3b2hSe2VfpjcGwJ0LzGmVVxAbW+ysZTlaotY9+5UJd/RBzS
+	DraRPTrz1M5TzDRVKlmsW62aJ5s78mM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-ff8tcclGOF2TwCCfPqda6w-1; Wed,
- 04 Feb 2026 09:52:29 -0500
-X-MC-Unique: ff8tcclGOF2TwCCfPqda6w-1
-X-Mimecast-MFC-AGG-ID: ff8tcclGOF2TwCCfPqda6w_1770216748
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-1jQGqCavO2-etlYfztdLiA-1; Wed,
+ 04 Feb 2026 09:52:50 -0500
+X-MC-Unique: 1jQGqCavO2-etlYfztdLiA-1
+X-Mimecast-MFC-AGG-ID: 1jQGqCavO2-etlYfztdLiA_1770216769
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E4DE1956052;
-	Wed,  4 Feb 2026 14:52:28 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F14F3180047F;
+	Wed,  4 Feb 2026 14:52:48 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.88.140])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BBC2D30001A5;
-	Wed,  4 Feb 2026 14:52:25 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 79CD330001A5;
+	Wed,  4 Feb 2026 14:52:46 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -49,9 +49,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 08/20] rv/rvgen: fix PEP 8 whitespace violations
-Date: Wed,  4 Feb 2026 11:42:34 -0300
-Message-ID: <20260204144914.104028-9-wander@redhat.com>
+Subject: [PATCH v2 09/20] rv/rvgen: fix DOT file validation logic error
+Date: Wed,  4 Feb 2026 11:42:35 -0300
+Message-ID: <20260204144914.104028-10-wander@redhat.com>
 In-Reply-To: <20260204144914.104028-1-wander@redhat.com>
 References: <20260204144914.104028-1-wander@redhat.com>
 Precedence: bulk
@@ -61,117 +61,46 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: wtP_Hx1ynksE2x1cfH6k7QIEx-BrFflv4LPCuBhlY_0_1770216748
+X-Mimecast-MFC-PROC-ID: XTqOrGY3F_6BGNR55dY5Sql2GRA3sq-IdFn2e-T4RIo_1770216769
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Fix whitespace violations throughout the rvgen codebase to comply
-with PEP 8 style guidelines. The changes address missing whitespace
-after commas, around operators, and in collection literals that
-were flagged by pycodestyle.
+Fix incorrect boolean logic in automata DOT file format validation
+that allowed malformed files to pass undetected. The previous
+implementation used a logical AND operator where OR was required,
+causing the validation to only reject files when both the first
+token was not "digraph" AND the second token was not
+"state_automaton". This meant a file starting with "digraph" but
+having an incorrect second token would incorrectly pass validation.
 
-The fixes include adding whitespace after commas in string replace
-chains and function arguments, adding whitespace around arithmetic
-operators, removing extra whitespace in list comprehensions, and
-fixing dictionary literal spacing. These changes improve code
-readability and consistency with Python coding standards.
+The corrected logic properly rejects DOT files where either the
+first token is not "digraph" or the second token is not
+"state_automaton", ensuring that only properly formatted automaton
+definition files are accepted for processing. Without this fix,
+invalid DOT files could cause downstream parsing failures or
+generate incorrect C code for runtime verification monitors.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Reviewed-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/rvgen/automata.py  | 12 ++++++------
- tools/verification/rvgen/rvgen/dot2c.py     |  2 +-
- tools/verification/rvgen/rvgen/dot2k.py     |  4 ++--
- tools/verification/rvgen/rvgen/generator.py |  2 +-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ tools/verification/rvgen/rvgen/automata.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
-index 0d7cbd0c634a9..deb1f09556c3c 100644
+index deb1f09556c3c..38035d59cdd51 100644
 --- a/tools/verification/rvgen/rvgen/automata.py
 +++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -95,7 +95,7 @@ class Automata:
-             raw_state = line[-1]
+@@ -59,7 +59,7 @@ class Automata:
+         # checking the first line:
+         line = dot_lines[cursor].split()
  
-             #  "enabled_fired"}; -> enabled_fired
--            state = raw_state.replace('"', '').replace('};', '').replace(',','_')
-+            state = raw_state.replace('"', '').replace('};', '').replace(',', '_')
-             if state[0:7] == "__init_":
-                 initial_state = state[7:]
-             else:
-@@ -132,7 +132,7 @@ class Automata:
-             #  ------------ event is here ------------^^^^^
-             if self.__dot_lines[cursor].split()[1] == "->":
-                 line = self.__dot_lines[cursor].split()
--                event = line[-2].replace('"','')
-+                event = line[-2].replace('"', '')
- 
-                 # when a transition has more than one labels, they are like this
-                 # "local_irq_enable\nhw_local_irq_enable_n"
-@@ -162,7 +162,7 @@ class Automata:
-             nr_state += 1
- 
-         # declare the matrix....
--        matrix = [[ self.invalid_state_str for x in range(nr_event)] for y in range(nr_state)]
-+        matrix = [[self.invalid_state_str for x in range(nr_event)] for y in range(nr_state)]
- 
-         # and we are back! Let's fill the matrix
-         cursor = self.__get_cursor_begin_events()
-@@ -170,9 +170,9 @@ class Automata:
-         while self.__dot_lines[cursor].lstrip()[0] == '"':
-             if self.__dot_lines[cursor].split()[1] == "->":
-                 line = self.__dot_lines[cursor].split()
--                origin_state = line[0].replace('"','').replace(',','_')
--                dest_state = line[2].replace('"','').replace(',','_')
--                possible_events = line[-2].replace('"','').replace("\\n", " ")
-+                origin_state = line[0].replace('"', '').replace(',', '_')
-+                dest_state = line[2].replace('"', '').replace(',', '_')
-+                possible_events = line[-2].replace('"', '').replace("\\n", " ")
-                 for event in possible_events.split():
-                     matrix[states_dict[origin_state]][events_dict[event]] = dest_state
+-        if (line[0] != "digraph") and (line[1] != "state_automaton"):
++        if (line[0] != "digraph") or (line[1] != "state_automaton"):
+             raise AutomataError(f"Not a valid .dot format: {self.__dot_path}")
+         else:
              cursor += 1
-diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index b3a49779d4cc5..6ab519b03789c 100644
---- a/tools/verification/rvgen/rvgen/dot2c.py
-+++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -137,7 +137,7 @@ class Dot2c(Automata):
-                     line += f"\t\t\t{next_state}"
-                 else:
-                     line += f"{next_state:>{maxlen}}"
--                if y != nr_events-1:
-+                if y != nr_events - 1:
-                     line += ",\n" if linetoolong else ", "
-                 else:
-                     line += ",\n\t\t}," if linetoolong else " },"
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
-index c70a9812abbf6..4bf0db52e6264 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -111,8 +111,8 @@ class dot2k(Monitor, Dot2c):
-         tp_args = tp_args_event if tp_type == "event" else tp_args_error
-         if self.monitor_type == "per_task":
-             tp_args.insert(0, tp_args_id)
--        tp_proto_c = ", ".join([a+b for a,b in tp_args])
--        tp_args_c = ", ".join([b for a,b in tp_args])
-+        tp_proto_c = ", ".join([a + b for a, b in tp_args])
-+        tp_args_c = ", ".join([b for a, b in tp_args])
-         buff.append(f"	     TP_PROTO({tp_proto_c}),")
-         buff.append(f"	     TP_ARGS({tp_args_c})")
-         return '\n'.join(buff)
-diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
-index a3fbb1ac74916..31c454329e8e1 100644
---- a/tools/verification/rvgen/rvgen/generator.py
-+++ b/tools/verification/rvgen/rvgen/generator.py
-@@ -228,7 +228,7 @@ obj-$(CONFIG_RV_MON_{name_up}) += monitors/{name}/{name}.o
- 
- 
- class Monitor(RVGenerator):
--    monitor_types = { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
-+    monitor_types = {"global": 1, "per_cpu": 2, "per_task": 3}
- 
-     def __init__(self, extra_params={}):
-         super().__init__(extra_params)
 -- 
 2.52.0
 
