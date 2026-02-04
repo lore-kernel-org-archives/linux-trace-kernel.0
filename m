@@ -1,165 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD22C34F257;
-	Wed,  4 Feb 2026 05:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63A2394475;
+	Wed,  4 Feb 2026 08:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770181334; cv=none; b=k3TQ0TNzvgQrVpSj4S38IBt/s5qC9I5rxmxCSHEQonZwUGRO1BWSU9cbmwC6u0ihNGUBnzSCDzYOgF2d5WBanvyyQxAzrkMVrf1Ry31ujrnR9GNEgBFrA6uGHF/otaXMVtJ2koJtDalS5y3+XZTLN2WNLWQcTPNNOHaqPICc2Ws=
+	t=1770194023; cv=none; b=hqbwD+TxmmpjkPLSOzGpid+BY3GGUIimUQUouPutbXF7gdh15WUKcL2xzuTQsp5bDe5hRvy3J4TFp9w5gQ/koJJMzbyMzFmT5npmMYAqg5ETNO2BBqBjCTwYucMgTIX9ZFsLOO7Zjor6aUYOuTYuovP+eLA17Zkn7YSbIURQ11g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770181334; c=relaxed/simple;
-	bh=BssClzJli42sqwnuhq7EEp2oGu8Z3L8cVPtpreDMGtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EMEmgBok5BMinqtA/PK1ZNMeHYkK8Sr4VkRzbcwu5FbfjJfB3TqfGIQBSXrtm83sgH1GzCCzprpVcNX6ZdynrNTSUlV6QlKdpn03MZEAWOjbv2Dtr6GNYawHQx0JeN0ZEoQkPvZCik3JrfdJ6oBYKi3vuHWaggjHx5SSE0p9PfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVgo4JZw; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770194023; c=relaxed/simple;
+	bh=g5tU7LNoFZ8/BpjXzJnw1QqYyUGqiFxzBRvQFBtBt2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DUx7DxuGK2o3KvS7+b3Qtsu/yYeAgoQAifV3XOu9C6IQAPzlVM2tJ1v4eR20ci8fuWA+aBDC/fTOqMFrGphRaxDM5WUyPSFQodg0wzdSjB9o6guacXmNuVTMIbBE8MYwMDYnNJuXajtXV8bxqR8HWv9xF2Us+JvmB7FVSCHfZ1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mv28jtHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVgo4JZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770181334; x=1801717334;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BssClzJli42sqwnuhq7EEp2oGu8Z3L8cVPtpreDMGtc=;
-  b=mVgo4JZwFyU56rcObsmZRQVRlWYJGQiWb+dOGnrZg0ONCbgf/rPeTBj9
-   vb6UtP4JjGW6BVXQTbZjqbu2WjN3SLNHNVqVsfktj5ARuulkbNHADqtKV
-   VLzBbmXUiB+fMFjjEsEwNX9KTJ5RQMJIQ7FLOLChdXKUSxTHgCMqMVeaK
-   Bm6smQqgLZuxg7WaRyPSiq2Jjjjl/wp3rimW8Ke4ml/IVqGbfJtM4IEGJ
-   ok7coKSNpIgSELHUK3JsyzH6tgLu/UGWUG0nBGlxoAs29M5ltAsaDlpXb
-   cvKz6GdMfLqToH41rZD8OFkuWddRIIZt9RkBFo+SUxq6W4zM2yB1zUFBP
-   w==;
-X-CSE-ConnectionGUID: l/PZ6WedTyueOgh/uO1g1w==
-X-CSE-MsgGUID: 4rWHnChQRHGPOjkfHOmxdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71086376"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="71086376"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 21:02:13 -0800
-X-CSE-ConnectionGUID: r6WIlB3hRYOB1WMvBCSX1g==
-X-CSE-MsgGUID: 4L+xrWR+RMKF3IcyS644EA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="240739427"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa002.jf.intel.com with ESMTP; 03 Feb 2026 21:01:47 -0800
-Date: Wed, 4 Feb 2026 12:43:16 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Ackerley Tng <ackerleytng@google.com>,
-	Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
-	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
-	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
-	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
-	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
-	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
-	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
-	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
-	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
-	keirf@google.com, kent.overstreet@linux.dev,
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
-	mail@maciej.szmigiero.name, maobibo@loongson.cn,
-	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
-	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
-	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
-	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
-	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
-	qperret@google.com, richard.weiyang@gmail.com,
-	rick.p.edgecombe@intel.com, rientjes@google.com,
-	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
-	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
-	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
- kvm_get_memory_attributes() to per-gmem attributes
-Message-ID: <aYLOZIZU0nwk+0UN@yilunxu-OptiPlex-7050>
-References: <cover.1760731772.git.ackerleytng@google.com>
- <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
- <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
- <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
- <20260129003753.GZ1641016@ziepe.ca>
- <aXqx3_eE0rNh6nP0@google.com>
- <aYHGVQTF6RUs7r3g@yilunxu-OptiPlex-7050>
- <20260203181618.GY2328995@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mv28jtHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B74CC4CEF7;
+	Wed,  4 Feb 2026 08:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770194023;
+	bh=g5tU7LNoFZ8/BpjXzJnw1QqYyUGqiFxzBRvQFBtBt2A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mv28jtHV8dKzUVsrIJfKladV3vM3pES6tcy1cpaNcVT1CZmXiplBPv7Zy+xMMqMev
+	 CjbRZP0D9Wy/EloTURsp8tDoXJvEvDR1+Kj6DmaQ+9vHwZDvd7srHDcHTya9zDJndR
+	 3kdgGwjHuJDSBmURH+4hMkNwUmyEhU5vm6Llgwl/5U3mEWBqyl+lRu7x1AubIS8pEe
+	 NyAcFGRzb6Hza66zaZSs0CkBH50Rg3RjjwebFp87leiuqHALNc4aEfgtz/ZA0+6YaT
+	 3TvHXxp4VOSVxyF5Tpg2iu2NY5nsdY/meuW/k9sBw1jZMVKkkiXXJwbtdDBm+oxlV/
+	 gaE0vag2aqMQw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Julius Werner <jwerner@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] bootconfig: Handle an empty value
+Date: Wed,  4 Feb 2026 17:33:38 +0900
+Message-ID: <177019401833.80694.554894321526842218.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260203181618.GY2328995@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 03, 2026 at 02:16:18PM -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 03, 2026 at 05:56:37PM +0800, Xu Yilun wrote:
-> > > +1.  For guest_memfd, we initially defined per-VM memory attributes to track
-> > > private vs. shared.  But as Ackerley noted, we are in the process of deprecating
-> > > that support, e.g. by making it incompatible with various guest_memfd features,
-> > > in favor of having each guest_memfd instance track the state of a given page.
-> > > 
-> > > The original guest_memfd design was that it would _only_ hold private pages, and
-> > > so tracking private vs. shared in guest_memfd didn't make any sense.  As we've
-> > > pivoted to in-place conversion, tracking private vs. shared in the guest_memfd
-> > > has basically become mandatory.  We could maaaaaybe make it work with per-VM
-> > > attributes, but it would be insanely complex.
-> > > 
-> > > For a dmabuf fd, the story is the same as guest_memfd.  Unless private vs. shared
-> > > is all or nothing, and can never change, then the only entity that can track that
-> > > info is the owner of the dmabuf.  And even if the private vs. shared attributes
-> > > are constant, tracking it external to KVM makes sense, because then the provider
-> > > can simply hardcode %true/%false.  
-> > 
-> > For CoCo-VM and Tee-IO, I'm wondering if host or KVM has to maintain
-> > the private/shared attribute for "assigned MMIO". I'm not naming them
-> > "host MMIO" cause unlike RAM host never needs to access them, either in
-> > private manner or shared manner.
-> > 
-> > Traditionally, host maps these MMIOs only because KVM needs HVA->HPA
-> > mapping to find pfn and setup KVM MMU.
-> 
-> This is not actually completely true, the host mapping still ends up
-> being used by KVM if it happens to trap and emulate a MMIO touching
-> instruction.
-> 
-> It really shouldn't do this, but there is a whole set of complex
-> machinery in KVM and qemu to handle this case.
-> 
-> For example if the MSI-X window is not properly aligned then you have
-> some MMIO that is trapped and must be reflected to real HW.
+This is the 2nd version of the update of the bootconfig parser to
+make it handle an empty value which is terminated by a newline or
+a comment. The previous version is here:
 
-In this case, the affected pages are not assigned MMIOs and KVM won't
-import them. Mapping them is just OK.
 
-> 
-> So the sharable parts of the BAR should still end up being mmaped into
-> userspace, I think.
+In this version I decided to make this change as an update instead
+of a fix, since this can change the syntax rule which has been
+accepted. In the previous change, it does not handle the array
+correctly. This version fixes it[1/2].
 
-This does mean we can't make VFIO totally unmappable. But VFIO can still
-try to create unmappable dmabufs for assigned MMIO regions, fail dmabuf
-creation or fail mmap() based on the addresses.
+Also, I added another patch to improve the test[2/2]. Previously
+it just check the parse error, but it did not check whether the
+good examples are formatted as it is expected. New test compares
+the output so that we can ensure it is parsed as expected.
 
-> 
-> Which means we need VFIO to know what they are, and hopefully it is
-> just static based on the TDISP reports..
+Thank you,
 
-I don't think VMM need to check TDISP report. The only special thing is
-the MSI-X mixed pages which can be figured out by standard PCI
-discovery.
+---
 
-Seems this doesn't impact the idea that KVM needs no implication of
-Private/Shared from VFIO, as long as VFIO keeps exported dmabufs
-unmapped.
+Masami Hiramatsu (Google) (2):
+      bootconfig: Terminate value search if it hits a newline
+      bootconfig: Check the parsed output of the good examples
+
+
+ .../samples/exp-good-array-space-comment.bconf     |    1 +
+ .../samples/exp-good-comment-after-value.bconf     |    1 +
+ .../bootconfig/samples/exp-good-mixed-append.bconf |    2 ++
+ tools/bootconfig/samples/exp-good-mixed-kv1.bconf  |    2 ++
+ tools/bootconfig/samples/exp-good-mixed-kv2.bconf  |    2 ++
+ tools/bootconfig/samples/exp-good-mixed-kv3.bconf  |    5 +++++
+ .../samples/exp-good-mixed-override.bconf          |    2 ++
+ tools/bootconfig/samples/exp-good-override.bconf   |    4 ++++
+ tools/bootconfig/samples/exp-good-printables.bconf |    2 ++
+ tools/bootconfig/samples/exp-good-simple.bconf     |    8 ++++++++
+ tools/bootconfig/samples/exp-good-single.bconf     |    3 +++
+ .../samples/exp-good-space-after-value.bconf       |    1 +
+ tools/bootconfig/samples/exp-good-tree.bconf       |    8 ++++++++
+ .../samples/good-array-space-comment.bconf         |    3 +--
+ tools/bootconfig/test-bootconfig.sh                |    3 +++
+ 15 files changed, 45 insertions(+), 2 deletions(-)
+ create mode 100644 tools/bootconfig/samples/exp-good-array-space-comment.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-comment-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-mixed-append.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv1.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv2.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv3.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-mixed-override.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-override.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-printables.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-simple.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-single.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-space-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/exp-good-tree.bconf
+
+--
+Masami Hiramatsu (Google) <mhiramat@google.com>
