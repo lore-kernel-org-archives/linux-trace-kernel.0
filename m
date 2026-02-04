@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63A2394475;
-	Wed,  4 Feb 2026 08:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05A53939C6;
+	Wed,  4 Feb 2026 08:33:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770194023; cv=none; b=hqbwD+TxmmpjkPLSOzGpid+BY3GGUIimUQUouPutbXF7gdh15WUKcL2xzuTQsp5bDe5hRvy3J4TFp9w5gQ/koJJMzbyMzFmT5npmMYAqg5ETNO2BBqBjCTwYucMgTIX9ZFsLOO7Zjor6aUYOuTYuovP+eLA17Zkn7YSbIURQ11g=
+	t=1770194033; cv=none; b=S81TG7Sa+ErgMuH7enRDcr0JSujWy70PCyWNipYw3m+JpSaoj3awpqUH+tWQ+2CtAlAoi9JbQbeRgbLyQKyxNfR+43Q+DNteCO55WX7uJ3CqmxAtutJtmIi2Y6jdgvD0gBcsPRpBHiA7rSAWIxO9d76v2nHSVKd92Dv8jOOdn3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770194023; c=relaxed/simple;
-	bh=g5tU7LNoFZ8/BpjXzJnw1QqYyUGqiFxzBRvQFBtBt2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DUx7DxuGK2o3KvS7+b3Qtsu/yYeAgoQAifV3XOu9C6IQAPzlVM2tJ1v4eR20ci8fuWA+aBDC/fTOqMFrGphRaxDM5WUyPSFQodg0wzdSjB9o6guacXmNuVTMIbBE8MYwMDYnNJuXajtXV8bxqR8HWv9xF2Us+JvmB7FVSCHfZ1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mv28jtHV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770194033; c=relaxed/simple;
+	bh=1cOkDbKMpYsYNHXVAbpVY0vQllsEmE1khMNUWtLPUtA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fGUaTisZ2R/7FsB+Ex5brB789OqSroXthHMoVg1Lt/CzleRDRMZOnguZ7qbINVVi5xefr9cmUkXPBXViSabZ18cHUzGBBCoGWwTSyukpGLB4G/Pip4CSi0p//9NyM0lQoAsM4GHjWi6+nHOiRHZSb8vRF5Xs8fhRDWU0k94DyNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/ZldSk3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mv28jtHV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B74CC4CEF7;
-	Wed,  4 Feb 2026 08:33:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/ZldSk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD3CC4CEF7;
+	Wed,  4 Feb 2026 08:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770194023;
-	bh=g5tU7LNoFZ8/BpjXzJnw1QqYyUGqiFxzBRvQFBtBt2A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mv28jtHV8dKzUVsrIJfKladV3vM3pES6tcy1cpaNcVT1CZmXiplBPv7Zy+xMMqMev
-	 CjbRZP0D9Wy/EloTURsp8tDoXJvEvDR1+Kj6DmaQ+9vHwZDvd7srHDcHTya9zDJndR
-	 3kdgGwjHuJDSBmURH+4hMkNwUmyEhU5vm6Llgwl/5U3mEWBqyl+lRu7x1AubIS8pEe
-	 NyAcFGRzb6Hza66zaZSs0CkBH50Rg3RjjwebFp87leiuqHALNc4aEfgtz/ZA0+6YaT
-	 3TvHXxp4VOSVxyF5Tpg2iu2NY5nsdY/meuW/k9sBw1jZMVKkkiXXJwbtdDBm+oxlV/
-	 gaE0vag2aqMQw==
+	s=k20201202; t=1770194032;
+	bh=1cOkDbKMpYsYNHXVAbpVY0vQllsEmE1khMNUWtLPUtA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=f/ZldSk3Wme+1rcbjVWQ9g7Eu5VAefM/fD/TryuiCnaTWmIEbNhdeW46RTl7Dzdrz
+	 UolqtMN6dR2/JY75Qj7ci9U2lwFGUvSTGBExGBcpGm7sYOWa4o9dfBLiiZQYxTHiiE
+	 3im3nTvH/YDY8/hkEBw/uQ1Q2IJth8r/sqtBMlsL2EPt/Kpq4gvGXHpSxYXj3KkjGI
+	 EZAYdlRFOxP161OjFHnbLJ78OfKE2NdTA+xkLqjtqrJTHzydiP0vl0r7yCCOXh/Y6X
+	 qHMaJWMtQImphJLEGab/0xMQPYJbPcEloKCz/dJzcnS6CF4I8Oxo+sV2+yU5YDfCop
+	 Fa23aeeuPBaaQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Julius Werner <jwerner@google.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/2] bootconfig: Handle an empty value
-Date: Wed,  4 Feb 2026 17:33:38 +0900
-Message-ID: <177019401833.80694.554894321526842218.stgit@devnote2>
+Subject: [PATCH v2 1/2] bootconfig: Terminate value search if it hits a newline
+Date: Wed,  4 Feb 2026 17:33:48 +0900
+Message-ID: <177019402883.80694.10977484286951965499.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <177019401833.80694.554894321526842218.stgit@devnote2>
+References: <177019401833.80694.554894321526842218.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,59 +48,171 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-This is the 2nd version of the update of the bootconfig parser to
-make it handle an empty value which is terminated by a newline or
-a comment. The previous version is here:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Terminate the value search for a key if it hits a newline and make
+the value empty.
 
-In this version I decided to make this change as an update instead
-of a fix, since this can change the syntax rule which has been
-accepted. In the previous change, it does not handle the array
-correctly. This version fixes it[1/2].
+When we pass a bootconfig with an empty value terminated by the
+newline, like below::
 
-Also, I added another patch to improve the test[2/2]. Previously
-it just check the parse error, but it did not check whether the
-good examples are formatted as it is expected. New test compares
-the output so that we can ensure it is parsed as expected.
+  foo =
+  bar = value
 
-Thank you,
+Current bootconfig interprets it as a single entry::
 
+  foo = "bar = value";
+
+The Documentation/admin-guide/bootconfig.rst defines the value
+itself is terminated by newline:
+
+  The value has to be terminated by semi-colon (``;``) or newline (``\n``).
+
+but it does not define when the value search is terminated.
+This changes the behavior to more line-oriented, so that it can
+clear how it is working.
+
+- The value search of key-value pair will be terminated by a comment
+  or newline.
+- The value search of an array will continue beyond comments and
+  newlines.
+
+Thus, with this update, the above example is interpreted as::
+
+  foo = "";
+  bar = "value";
+
+And the below example will cause a syntax error because "bar" is expected
+as a key but it has ','.
+
+  foo =
+    bar, buz
+
+According to this change, one wrong example config is updated.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-
-Masami Hiramatsu (Google) (2):
-      bootconfig: Terminate value search if it hits a newline
-      bootconfig: Check the parsed output of the good examples
-
-
- .../samples/exp-good-array-space-comment.bconf     |    1 +
- .../samples/exp-good-comment-after-value.bconf     |    1 +
- .../bootconfig/samples/exp-good-mixed-append.bconf |    2 ++
- tools/bootconfig/samples/exp-good-mixed-kv1.bconf  |    2 ++
- tools/bootconfig/samples/exp-good-mixed-kv2.bconf  |    2 ++
- tools/bootconfig/samples/exp-good-mixed-kv3.bconf  |    5 +++++
- .../samples/exp-good-mixed-override.bconf          |    2 ++
- tools/bootconfig/samples/exp-good-override.bconf   |    4 ++++
- tools/bootconfig/samples/exp-good-printables.bconf |    2 ++
- tools/bootconfig/samples/exp-good-simple.bconf     |    8 ++++++++
- tools/bootconfig/samples/exp-good-single.bconf     |    3 +++
- .../samples/exp-good-space-after-value.bconf       |    1 +
- tools/bootconfig/samples/exp-good-tree.bconf       |    8 ++++++++
+ Changes in v2:
+  - Fix to handle multi-line array case correctly.
+  - Make this as a spec update, not fix.
+---
  .../samples/good-array-space-comment.bconf         |    3 +--
- tools/bootconfig/test-bootconfig.sh                |    3 +++
- 15 files changed, 45 insertions(+), 2 deletions(-)
- create mode 100644 tools/bootconfig/samples/exp-good-array-space-comment.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-comment-after-value.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-mixed-append.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv1.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv2.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-mixed-kv3.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-mixed-override.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-override.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-printables.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-simple.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-single.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-space-after-value.bconf
- create mode 100644 tools/bootconfig/samples/exp-good-tree.bconf
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---
-Masami Hiramatsu (Google) <mhiramat@google.com>
+diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+index 7a86042c9b6d..843b24b8de88 100644
+--- a/Documentation/admin-guide/bootconfig.rst
++++ b/Documentation/admin-guide/bootconfig.rst
+@@ -20,18 +20,26 @@ Config File Syntax
+ 
+ The boot config syntax is a simple structured key-value. Each key consists
+ of dot-connected-words, and key and value are connected by ``=``. The value
+-has to be terminated by semi-colon (``;``) or newline (``\n``).
+-For array value, array entries are separated by comma (``,``). ::
+-
+-  KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+-
+-Unlike the kernel command line syntax, spaces are OK around the comma and ``=``.
++string has to be terminated by the following delimiters described below.
+ 
+ Each key word must contain only alphabets, numbers, dash (``-``) or underscore
+ (``_``). And each value only contains printable characters or spaces except
+ for delimiters such as semi-colon (``;``), new-line (``\n``), comma (``,``),
+ hash (``#``) and closing brace (``}``).
+ 
++If the ``=`` is followed by whitespace up to one of these delimiters, the
++key is assigned an empty value.
++
++For arrays, the array values are comma (``,``) separated, and comments and
++line breaks with newline (``\n``) are allowed between array values for
++readability. Thus the first entry of the array must be the same line of the
++key.::
++
++  KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
++
++Unlike the kernel command line syntax, white spaces (including tabs) are
++ignored around the comma and ``=``.
++
+ If you want to use those delimiters in a value, you can use either double-
+ quotes (``"VALUE"``) or single-quotes (``'VALUE'``) to quote it. Note that
+ you can not escape these quotes.
+@@ -138,8 +146,8 @@ This is parsed as below::
+  foo = value
+  bar = 1, 2, 3
+ 
+-Note that you can not put a comment between value and delimiter(``,`` or
+-``;``). This means following config has a syntax error ::
++Note that you can NOT put a comment or a newline between value and delimiter
++(``,`` or ``;``). This means following config has a syntax error ::
+ 
+  key = 1 # comment
+        ,2
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 81f29c29f47b..c210fb8b1e85 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -557,17 +557,13 @@ static int __init __xbc_close_brace(char *p)
+ /*
+  * Return delimiter or error, no node added. As same as lib/cmdline.c,
+  * you can use " around spaces, but can't escape " for value.
++ * *@__v must point real value string. (not including spaces before value.)
+  */
+ static int __init __xbc_parse_value(char **__v, char **__n)
+ {
+ 	char *p, *v = *__v;
+ 	int c, quotes = 0;
+ 
+-	v = skip_spaces(v);
+-	while (*v == '#') {
+-		v = skip_comment(v);
+-		v = skip_spaces(v);
+-	}
+ 	if (*v == '"' || *v == '\'') {
+ 		quotes = *v;
+ 		v++;
+@@ -617,6 +613,13 @@ static int __init xbc_parse_array(char **__v)
+ 		last_parent = xbc_node_get_child(last_parent);
+ 
+ 	do {
++		/* Search the next array value beyond comments and empty lines */
++		next = skip_spaces(*__v);
++		while (*next == '#') {
++			next = skip_comment(next);
++			next = skip_spaces(next);
++		}
++		*__v = next;
+ 		c = __xbc_parse_value(__v, &next);
+ 		if (c < 0)
+ 			return c;
+@@ -701,9 +704,17 @@ static int __init xbc_parse_kv(char **k, char *v, int op)
+ 	if (ret)
+ 		return ret;
+ 
+-	c = __xbc_parse_value(&v, &next);
+-	if (c < 0)
+-		return c;
++	v = skip_spaces_until_newline(v);
++	/* If there is a comment, this has an mpty value. */
++	if (*v == '#') {
++		next = skip_comment(v);
++		*v = '\0';
++		c = '\n';
++	} else {
++		c = __xbc_parse_value(&v, &next);
++		if (c < 0)
++			return c;
++	}
+ 
+ 	child = xbc_node_get_child(last_parent);
+ 	if (child && xbc_node_is_value(child)) {
+diff --git a/tools/bootconfig/samples/good-array-space-comment.bconf b/tools/bootconfig/samples/good-array-space-comment.bconf
+index 45b938dc0695..416fa2ed4109 100644
+--- a/tools/bootconfig/samples/good-array-space-comment.bconf
++++ b/tools/bootconfig/samples/good-array-space-comment.bconf
+@@ -1,4 +1,3 @@
+-key =	# comment
+-	"value1",	  # comment1
++key = "value1",	  # comment1
+ 	"value2"	 , # comment2
+ 	"value3"
+
