@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30D13D413D
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA5841B352
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770216837; cv=none; b=ocyMnnq0LISSqWwks2OZQv5pWV/sVrrvh4OwMUbfeNcuWyR1vvIMfhYOIJD+X8/xmyZgfd3/MU2xyaI7BJ/yLPY7mO4crkvqAQ1Wb01bjMZOF5uJJAceHZI9cEMS+Ug09swVGEhsF1Y6YETEiRudSTLTZRjEsYXjPJjBR5XtmXI=
+	t=1770216856; cv=none; b=Hc8VpZeC5srXy/DwL7e8/Ubn1KFViUYQsfZsI1fiwuitdFRNvWmeEuwDp3oOIjaVJSop3nfUm7MRq6PvVJDJO37Qvvf36ggiCh6eKO0IFyFKyA6FZWzWqypdZzZZiF468prYfjbFyoaX7bxdIkMQTnPocffZUNbsTDRTxZK6gfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770216837; c=relaxed/simple;
-	bh=EysKJO4+ELV1hMapeX9UIZZoaG0H7kYvuW0kN70JqXs=;
+	s=arc-20240116; t=1770216856; c=relaxed/simple;
+	bh=/Gpqv79U2S00zo9a7zY7AaE+cnW02/ouX1T7f4+Ng34=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=DkkVQrMPToMIpI829Utj30SefK5bFrS5BQbYPWzyufSf4W7a+sjldnd7ck3XEI1YJO/O2zyapZU8BDaOcu5trxQXvi1Kw4ivJ+JPJAqeAWVPkRYS/gi407zWxxap+FkQemzkXWMja6K1bMwCyYOwuu3l/gzreVRMoWfkXZ5Nm+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gdo81D/S; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=Pvpc6bXyQEVihCk/aa1qUrD63uWeIwiifQiISeUZCVYL3AQur2IiI/cj6F2gXWeKwQtzY2vUxYtke9TIVFvx0jOAakmr1ID8dndyRxBgxL6UcFB57c3m/zC6j6EMD8pT2fvUVd1bpg60U+smiD6bB0u6aXg939gTfa8aIKnxSrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HiloeZon; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdo81D/S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HiloeZon"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770216836;
+	s=mimecast20190719; t=1770216855;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A2SDTlZuasG2/vXuJ8H6Rgrikxs2PCC3Qj6tExL/nIo=;
-	b=gdo81D/SaghpI2bFhtJxhFUyrdEIYh4fn/Vaeq1NSOpZnFDOTM6pwdQ7Hk4Ji4EYmUFcG6
-	0uCw+aXiwKQIBPSpsjQmeDbMC8TP2fDOW2M6TxzVWVJaaKImdU6BEFoP7MB0aifzLP5TrX
-	aYQOT1xFrCMys/xSmrCc2bCfY5u0Xjg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=4sKMhVxePK4zfkjpLf50eQqIDuXbhhCmqVw0kSawiaE=;
+	b=HiloeZonLpbtsZ4SQw0jD5t8Ez9SKgfJ7CkPM5k6AlWndYNPVfqCA2+//7by6Jn1a5gmCM
+	w1WwOXmG/l0xWJ8oif4X4J2l9i2C1lCuV3rRUfdCZS7RsNmF2/g/1/LfLdRtRKVuMCxMzx
+	Urdp9cn8zANMFYAwJgAOx/ddD8BjcpM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-Y_-aiDdpPgWWlIH4tc230w-1; Wed,
- 04 Feb 2026 09:53:51 -0500
-X-MC-Unique: Y_-aiDdpPgWWlIH4tc230w-1
-X-Mimecast-MFC-AGG-ID: Y_-aiDdpPgWWlIH4tc230w_1770216830
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-ItxIA8W1OjaJs37lndZHLQ-1; Wed,
+ 04 Feb 2026 09:54:12 -0500
+X-MC-Unique: ItxIA8W1OjaJs37lndZHLQ-1
+X-Mimecast-MFC-AGG-ID: ItxIA8W1OjaJs37lndZHLQ_1770216851
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A600B18001D1;
-	Wed,  4 Feb 2026 14:53:50 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D1B21956052;
+	Wed,  4 Feb 2026 14:54:11 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.88.140])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 26CD130001A5;
-	Wed,  4 Feb 2026 14:53:47 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7CD3730001BC;
+	Wed,  4 Feb 2026 14:54:08 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -49,9 +49,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 12/20] rv/rvgen: remove unused sys import from dot2c
-Date: Wed,  4 Feb 2026 11:42:38 -0300
-Message-ID: <20260204144914.104028-13-wander@redhat.com>
+Subject: [PATCH v2 13/20] rv/rvgen: remove unused __get_main_name method
+Date: Wed,  4 Feb 2026 11:42:39 -0300
+Message-ID: <20260204144914.104028-14-wander@redhat.com>
 In-Reply-To: <20260204144914.104028-1-wander@redhat.com>
 References: <20260204144914.104028-1-wander@redhat.com>
 Precedence: bulk
@@ -61,36 +61,38 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: 4ahD1If9ViJ_3QBjxZ-bxg2uWeFD2JZRZ7Mez7vQo1k_1770216830
+X-Mimecast-MFC-PROC-ID: 3mm9imG2xaqtwWOs329HEo_Gmrub-mlhxVsbb1dVn-0_1770216851
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The sys module was imported in the dot2c frontend script but never
-used. This import was likely left over from earlier development or
-copied from a template that required sys for exit handling.
-
-Remove the unused import to clean up the code and satisfy linters
-that flag unused imports as errors.
+The __get_main_name() method in the generator module is never called
+from anywhere in the codebase. Remove this dead code to improve
+maintainability.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/dot2c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/verification/rvgen/rvgen/generator.py | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/verification/rvgen/dot2c b/tools/verification/rvgen/dot2c
-index bf0c67c5b66c8..1012becc7fab6 100644
---- a/tools/verification/rvgen/dot2c
-+++ b/tools/verification/rvgen/dot2c
-@@ -16,7 +16,6 @@
- if __name__ == '__main__':
-     from rvgen import dot2c
-     import argparse
--    import sys
+diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
+index 31c454329e8e1..ef6c9150f50c6 100644
+--- a/tools/verification/rvgen/rvgen/generator.py
++++ b/tools/verification/rvgen/rvgen/generator.py
+@@ -205,12 +205,6 @@ obj-$(CONFIG_RV_MON_{name_up}) += monitors/{name}/{name}.o
+             path = os.path.join(self.rv_dir, "monitors", path)
+         self.__write_file(path, content)
  
-     parser = argparse.ArgumentParser(description='dot2c: converts a .dot file into a C structure')
-     parser.add_argument('dot_file',  help='The dot file to be converted')
+-    def __get_main_name(self):
+-        path = f"{self.name}/main.c"
+-        if not os.path.exists(path):
+-            return "main.c"
+-        return "__main.c"
+-
+     def print_files(self):
+         main_c = self.fill_main_c()
+ 
 -- 
 2.52.0
 
