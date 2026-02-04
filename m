@@ -1,168 +1,137 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB9521D3F2;
-	Wed,  4 Feb 2026 01:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D76C5C613;
+	Wed,  4 Feb 2026 01:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770168097; cv=none; b=YBM+G3lurVDWV+VQNSEwg6RiWb7IiaP3jg2suoGdXIFLek1ioYc4qYxw0vVWJeiE8DUIZdPZr5BC78T1qx66AsOOygrXM4Kk9O0dqET0I9WeMqEYwkbUbrmg2Dse/sWw8tIZivyMOJEA3EuaBvoIt1I7D84eZ8eVUtbsjHJXaj4=
+	t=1770169876; cv=none; b=owoOpX5ryVQr6cHQ6Vj4w8QUlPLBJV5hXgMRkswQSFoYq9G+RJSWgqzFjiIhUDpTrbVJ3hxql6grszBiN2i/Q8d0HXpMxJiP1mfUzbtFCaxq6G577Qh0BJ0rDfFOjmEbpb13iMconBEQpwAL1InpmQn1oafEHofgzkzgO4toJOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770168097; c=relaxed/simple;
-	bh=Qqdjq9YyxP2NP1gGkmX+dJqqDupAGyOfrXUIPeIpwRc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=VmSUj0hPm7hMf8eee24UJFCbDoxHs6eiRupqRW2YH1GHsRpEG/ny+WR76+v9wOphmvRiGijAsW8oQw79AtLRheuStuzC1FH9a7zQqdhvG95e27UKszJ4u3v2rZ0bqY7M1uIlfZ0vlbs7lqphg97pAsQJxucU06dFmzJ3vNB7PGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SmlzFcQG; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SmlzFcQG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=Qqdjq9YyxP2NP1gGkmX+dJqqDupAGyOfrXUIPeIpwRc=; b=S
-	mlzFcQGbUiqZBTYICyFR4eJMHpWZizhgILqbRk7lHA5tN/bs7V3GhM1uaSShTMje
-	i78Pm7b0Xr5DSE0XGrhdfArrK0kLTlMTAyzQxuvraypwnKoNegclHwXV7M7HPQjW
-	Lc+Jickf4Nz/zqfMra1hzq/ZY/L4de9cBg7eMeTDxQ=
-Received: from imntjempty$163.com ( [183.47.95.209] ) by
- ajax-webmail-wmsvr-40-118 (Coremail) ; Wed, 4 Feb 2026 09:21:09 +0800 (CST)
-Date: Wed, 4 Feb 2026 09:21:09 +0800 (CST)
-From: "jempty.liang" <imntjempty@163.com>
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Fix funcgraph_exit calltime/rettime offset
- for 32-bit ARM
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
- 20251222(83accb85) Copyright (c) 2002-2026 www.mailtech.cn 163com
-In-Reply-To: <20260203112040.01bbb8e9@gandalf.local.home>
-References: <20260202123342.2544795-1-imntjempty@163.com>
- <20260202103804.40cbaa27@gandalf.local.home>
- <20260202110828.440c8d44@gandalf.local.home>
- <19eab264.7fae.19c22f5d17c.Coremail.imntjempty@163.com>
- <20260203093018.66c3b3b2@gandalf.local.home>
- <20260203112040.01bbb8e9@gandalf.local.home>
-X-NTES-SC: AL_Qu2cAv2dt0gt7yOeYekZn08Ug+s6W8u4vfUi34UbV+Ugpz3//CYwelxqP0n/9t2KFBiwtxmwaAJ+4et0bKvaD3A9HoxznHHAASjJEexs
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1770169876; c=relaxed/simple;
+	bh=54nwdJRmftDSGK0lCm3lrX2k3J78MlTyT329CzMp2Ds=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YTFKi/Z25ohml/rlRbH8B2xOsWDtwoRP9xMSjZ4J2EQv9ujLdsV9y6plbfcpnRgzm4xQIrifRHMK6CYB7VBlUNPgAgGKdAPReYQcKYsSiehbBLih9+5b+lXG+wPNkLrTyon6WcqwnxVLQQ2EHC+lyfdpgTdvnp8zADFDfzF8W5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f8a8e19a016b11f1b0f03b4cfa9209d1-20260204
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF
+	CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:24f3f15d-5d49-433d-801c-db0ec77c720a,IP:10,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:0
+X-CID-INFO: VERSION:1.3.6,REQID:24f3f15d-5d49-433d-801c-db0ec77c720a,IP:10,URL
+	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:2ebec4dce1fb8c1c7111b5ccc247beaa,BulkI
+	D:260204095108O8I9T427,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:
+	nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,B
+	RE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: f8a8e19a016b11f1b0f03b4cfa9209d1-20260204
+X-User: tianyaxiong@kylinos.cn
+Received: from localhost.localdomain [(175.2.200.196)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 851231154; Wed, 04 Feb 2026 09:51:07 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: axboe@kernel.dk,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v5 0/3] Tracing: Accelerate Kernel Boot by Asynchronizing
+Date: Wed,  4 Feb 2026 09:51:03 +0800
+Message-Id: <20260204015103.155025-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1fedc997.d0b.19c263d2cfc.Coremail.imntjempty@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:digvCgD3X0AFn4JpSLhlAA--.21864W
-X-CM-SenderInfo: hlpq3yxhps35i6rwjhhfrp/xtbC+AXj5GmCnwVuUAAA31
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 
-QXQgMjAyNi0wMi0wNCAwMDoyMDo0MCwgIlN0ZXZlbiBSb3N0ZWR0IiA8cm9zdGVkdEBnb29kbWlz
-Lm9yZz4gd3JvdGU6Cj5PbiBUdWUsIDMgRmViIDIwMjYgMDk6MzA6MTggLTA1MDAKPlN0ZXZlbiBS
-b3N0ZWR0IDxyb3N0ZWR0QGdvb2RtaXMub3JnPiB3cm90ZToKPgo+PiA+IE9uIHRoZSAzMi1iaXQg
-QVJNIHBsYXRmb3JtLCB3aGVuIF90eXBlIGlzIHVuc2lnbmVkIGxvbmcgbG9uZywgdGhlIHJlc3Vs
-dGluZyBhbGlnbiB2YWx1ZSBpcyA4IGluc3RlYWQgb2YgdGhlIGV4cGVjdGVkIDQuICAKPj4gPiA+
-ICAgICAKPj4gCj4+IEFyZSB5b3Ugc2F5aW5nIHRoaXMgc3RpbGwgZG9lc24ndCB3b3JrPwo+PiAK
-Pj4gVGhhdCB3b3VsZCBiZSBhbiBpc3N1ZSBiZWNhdXNlIHRoZW4gaXQgd291bGQgaGF2ZSB0aGUg
-c2FtZSBidWdzIHdpdGgKPj4gZ2VuZXJpYyB0cmFjZSBldmVudHMgd2hpY2ggdXNlcyB0aGUgc2Ft
-ZSBzb2x1dGlvbi4KPgo+T0ssIHNvIHRhbGtpbmcgd2l0aCBvdGhlcnMgdGhhdCBrbm93IG1vcmUg
-YWJvdXQgYXJtMzIgdGhhbiBJIGRvLCBpdCBjYW4KPmluZGVlZCBzdGlsbCBwcm9kdWNlIGFuIDgg
-Ynl0ZSBhbGlnbm1lbnQuCj4KPkFueXdheSwgSSBzdGlsbCB3YW50IHRvIGZpeCBpdCBwcm9wZXJs
-eS4gRG9lcyB0aGlzIHBhdGNoIHdvcmsgZm9yIHlvdT8KPgo+LS0gU3RldmUKClllcywgSSd2ZSB2
-ZXJpZmllZCBpdCBhbmQgdGhpcyBwYXRjaCB3b3JrcyBjb3JyZWN0bHkgb24gdGhlIDMyLWJpdCBB
-Uk0gcGxhdGZvcm0uCgo+Cj5kaWZmIC0tZ2l0IGEva2VybmVsL3RyYWNlL3RyYWNlLmggYi9rZXJu
-ZWwvdHJhY2UvdHJhY2UuaAo+aW5kZXggYjZkNDJmZTA2MTE1Li5jMTFlZGVjNWQ4ZjUgMTAwNjQ0
-Cj4tLS0gYS9rZXJuZWwvdHJhY2UvdHJhY2UuaAo+KysrIGIva2VybmVsL3RyYWNlL3RyYWNlLmgK
-PkBAIC02OCwxNCArNjgsMTcgQEAgZW51bSB0cmFjZV90eXBlIHsKPiAjdW5kZWYgX19maWVsZF9m
-bgo+ICNkZWZpbmUgX19maWVsZF9mbih0eXBlLCBpdGVtKQkJdHlwZQlpdGVtOwo+IAo+KyN1bmRl
-ZiBfX2ZpZWxkX3BhY2tlZAo+KyNkZWZpbmUgX19maWVsZF9wYWNrZWQodHlwZSwgaXRlbSkJdHlw
-ZQlpdGVtOwo+Kwo+ICN1bmRlZiBfX2ZpZWxkX3N0cnVjdAo+ICNkZWZpbmUgX19maWVsZF9zdHJ1
-Y3QodHlwZSwgaXRlbSkJX19maWVsZCh0eXBlLCBpdGVtKQo+IAo+ICN1bmRlZiBfX2ZpZWxkX2Rl
-c2MKPiAjZGVmaW5lIF9fZmllbGRfZGVzYyh0eXBlLCBjb250YWluZXIsIGl0ZW0pCj4gCj4tI3Vu
-ZGVmIF9fZmllbGRfcGFja2VkCj4tI2RlZmluZSBfX2ZpZWxkX3BhY2tlZCh0eXBlLCBjb250YWlu
-ZXIsIGl0ZW0pCj4rI3VuZGVmIF9fZmllbGRfZGVzY19wYWNrZWQKPisjZGVmaW5lIF9fZmllbGRf
-ZGVzY19wYWNrZWQodHlwZSwgY29udGFpbmVyLCBpdGVtKQo+IAo+ICN1bmRlZiBfX2FycmF5Cj4g
-I2RlZmluZSBfX2FycmF5KHR5cGUsIGl0ZW0sIHNpemUpCXR5cGUJaXRlbVtzaXplXTsKPmRpZmYg
-LS1naXQgYS9rZXJuZWwvdHJhY2UvdHJhY2VfZW50cmllcy5oIGIva2VybmVsL3RyYWNlL3RyYWNl
-X2VudHJpZXMuaAo+aW5kZXggZjZhOGQyOWMwZDc2Li41NDQxNzQ2OGZkZWIgMTAwNjQ0Cj4tLS0g
-YS9rZXJuZWwvdHJhY2UvdHJhY2VfZW50cmllcy5oCj4rKysgYi9rZXJuZWwvdHJhY2UvdHJhY2Vf
-ZW50cmllcy5oCj5AQCAtNzksOCArNzksOCBAQCBGVFJBQ0VfRU5UUlkoZnVuY2dyYXBoX2VudHJ5
-LCBmdHJhY2VfZ3JhcGhfZW50X2VudHJ5LAo+IAo+IAlGX1NUUlVDVCgKPiAJCV9fZmllbGRfc3Ry
-dWN0KAlzdHJ1Y3QgZnRyYWNlX2dyYXBoX2VudCwJZ3JhcGhfZW50CSkKPi0JCV9fZmllbGRfcGFj
-a2VkKAl1bnNpZ25lZCBsb25nLAlncmFwaF9lbnQsCWZ1bmMJCSkKPi0JCV9fZmllbGRfcGFja2Vk
-KAl1bnNpZ25lZCBsb25nLAlncmFwaF9lbnQsCWRlcHRoCQkpCj4rCQlfX2ZpZWxkX2Rlc2NfcGFj
-a2VkKHVuc2lnbmVkIGxvbmcsCWdyYXBoX2VudCwJZnVuYwkpCj4rCQlfX2ZpZWxkX2Rlc2NfcGFj
-a2VkKHVuc2lnbmVkIGxvbmcsCWdyYXBoX2VudCwJZGVwdGgJKQo+IAkJX19keW5hbWljX2FycmF5
-KHVuc2lnbmVkIGxvbmcsCWFyZ3MJCQkJKQo+IAkpLAo+IAo+QEAgLTk2LDkgKzk2LDkgQEAgRlRS
-QUNFX0VOVFJZX1BBQ0tFRChmZ3JhcGhfcmV0YWRkcl9lbnRyeSwgZmdyYXBoX3JldGFkZHJfZW50
-X2VudHJ5LAo+IAo+IAlGX1NUUlVDVCgKPiAJCV9fZmllbGRfc3RydWN0KAlzdHJ1Y3QgZmdyYXBo
-X3JldGFkZHJfZW50LAlncmFwaF9yZW50CSkKPi0JCV9fZmllbGRfcGFja2VkKAl1bnNpZ25lZCBs
-b25nLAlncmFwaF9yZW50LmVudCwJZnVuYwkJKQo+LQkJX19maWVsZF9wYWNrZWQoCXVuc2lnbmVk
-IGxvbmcsCWdyYXBoX3JlbnQuZW50LAlkZXB0aAkJKQo+LQkJX19maWVsZF9wYWNrZWQoCXVuc2ln
-bmVkIGxvbmcsCWdyYXBoX3JlbnQsCXJldGFkZHIJCSkKPisJCV9fZmllbGRfZGVzY19wYWNrZWQo
-CXVuc2lnbmVkIGxvbmcsCWdyYXBoX3JlbnQuZW50LAlmdW5jCSkKPisJCV9fZmllbGRfZGVzY19w
-YWNrZWQoCXVuc2lnbmVkIGxvbmcsCWdyYXBoX3JlbnQuZW50LAlkZXB0aAkpCj4rCQlfX2ZpZWxk
-X2Rlc2NfcGFja2VkKAl1bnNpZ25lZCBsb25nLAlncmFwaF9yZW50LAlyZXRhZGRyCSkKPiAJCV9f
-ZHluYW1pY19hcnJheSh1bnNpZ25lZCBsb25nLAlhcmdzCQkJCSkKPiAJKSwKPiAKPkBAIC0xMjMs
-MTIgKzEyMywxMiBAQCBGVFJBQ0VfRU5UUllfUEFDS0VEKGZ1bmNncmFwaF9leGl0LCBmdHJhY2Vf
-Z3JhcGhfcmV0X2VudHJ5LAo+IAo+IAlGX1NUUlVDVCgKPiAJCV9fZmllbGRfc3RydWN0KAlzdHJ1
-Y3QgZnRyYWNlX2dyYXBoX3JldCwJcmV0CSkKPi0JCV9fZmllbGRfcGFja2VkKAl1bnNpZ25lZCBs
-b25nLAlyZXQsCQlmdW5jCSkKPi0JCV9fZmllbGRfcGFja2VkKAl1bnNpZ25lZCBsb25nLAlyZXQs
-CQlyZXR2YWwJKQo+LQkJX19maWVsZF9wYWNrZWQoCXVuc2lnbmVkIGludCwJcmV0LAkJZGVwdGgJ
-KQo+LQkJX19maWVsZF9wYWNrZWQoCXVuc2lnbmVkIGludCwJcmV0LAkJb3ZlcnJ1bgkpCj4tCQlf
-X2ZpZWxkKHVuc2lnbmVkIGxvbmcgbG9uZywJY2FsbHRpbWUJCSkKPi0JCV9fZmllbGQodW5zaWdu
-ZWQgbG9uZyBsb25nLAlyZXR0aW1lCQkJKQo+KwkJX19maWVsZF9kZXNjX3BhY2tlZCgJdW5zaWdu
-ZWQgbG9uZywJcmV0LAlmdW5jCSkKPisJCV9fZmllbGRfZGVzY19wYWNrZWQoCXVuc2lnbmVkIGxv
-bmcsCXJldCwJcmV0dmFsCSkKPisJCV9fZmllbGRfZGVzY19wYWNrZWQoCXVuc2lnbmVkIGludCwJ
-cmV0LAlkZXB0aAkpCj4rCQlfX2ZpZWxkX2Rlc2NfcGFja2VkKAl1bnNpZ25lZCBpbnQsCXJldCwJ
-b3ZlcnJ1bgkpCj4rCQlfX2ZpZWxkX3BhY2tlZCh1bnNpZ25lZCBsb25nIGxvbmcsCWNhbGx0aW1l
-KQo+KwkJX19maWVsZF9wYWNrZWQodW5zaWduZWQgbG9uZyBsb25nLAlyZXR0aW1lCSkKPiAJKSwK
-PiAKPiAJRl9wcmludGsoIjwtLSAlcHMgKCV1KSAoc3RhcnQ6ICVsbHggIGVuZDogJWxseCkgb3Zl
-cjogJXUgcmV0dmFsOiAlbHgiLAo+QEAgLTE0NiwxMSArMTQ2LDExIEBAIEZUUkFDRV9FTlRSWV9Q
-QUNLRUQoZnVuY2dyYXBoX2V4aXQsIGZ0cmFjZV9ncmFwaF9yZXRfZW50cnksCj4gCj4gCUZfU1RS
-VUNUKAo+IAkJX19maWVsZF9zdHJ1Y3QoCXN0cnVjdCBmdHJhY2VfZ3JhcGhfcmV0LAlyZXQJKQo+
-LQkJX19maWVsZF9wYWNrZWQoCXVuc2lnbmVkIGxvbmcsCXJldCwJCWZ1bmMJKQo+LQkJX19maWVs
-ZF9wYWNrZWQoCXVuc2lnbmVkIGludCwJcmV0LAkJZGVwdGgJKQo+LQkJX19maWVsZF9wYWNrZWQo
-CXVuc2lnbmVkIGludCwJcmV0LAkJb3ZlcnJ1bgkpCj4tCQlfX2ZpZWxkKHVuc2lnbmVkIGxvbmcg
-bG9uZywJY2FsbHRpbWUJCSkKPi0JCV9fZmllbGQodW5zaWduZWQgbG9uZyBsb25nLAlyZXR0aW1l
-CQkJKQo+KwkJX19maWVsZF9kZXNjX3BhY2tlZCgJdW5zaWduZWQgbG9uZywJcmV0LAlmdW5jCSkK
-PisJCV9fZmllbGRfZGVzY19wYWNrZWQoCXVuc2lnbmVkIGludCwJcmV0LAlkZXB0aAkpCj4rCQlf
-X2ZpZWxkX2Rlc2NfcGFja2VkKAl1bnNpZ25lZCBpbnQsCXJldCwJb3ZlcnJ1bgkpCj4rCQlfX2Zp
-ZWxkX3BhY2tlZCh1bnNpZ25lZCBsb25nIGxvbmcsCWNhbGx0aW1lCSkKPisJCV9fZmllbGRfcGFj
-a2VkKHVuc2lnbmVkIGxvbmcgbG9uZywJcmV0dGltZQkJKQo+IAkpLAo+IAo+IAlGX3ByaW50aygi
-PC0tICVwcyAoJXUpIChzdGFydDogJWxseCAgZW5kOiAlbGx4KSBvdmVyOiAldSIsCj5kaWZmIC0t
-Z2l0IGEva2VybmVsL3RyYWNlL3RyYWNlX2V4cG9ydC5jIGIva2VybmVsL3RyYWNlL3RyYWNlX2V4
-cG9ydC5jCj5pbmRleCAxNjk4ZmMyMmFmYTAuLjMyYTQyZWYzMTg1NSAxMDA2NDQKPi0tLSBhL2tl
-cm5lbC90cmFjZS90cmFjZV9leHBvcnQuYwo+KysrIGIva2VybmVsL3RyYWNlL3RyYWNlX2V4cG9y
-dC5jCj5AQCAtNDIsMTEgKzQyLDE0IEBAIHN0YXRpYyBpbnQgZnRyYWNlX2V2ZW50X3JlZ2lzdGVy
-KHN0cnVjdCB0cmFjZV9ldmVudF9jYWxsICpjYWxsLAo+ICN1bmRlZiBfX2ZpZWxkX2ZuCj4gI2Rl
-ZmluZSBfX2ZpZWxkX2ZuKHR5cGUsIGl0ZW0pCQkJCXR5cGUgaXRlbTsKPiAKPisjdW5kZWYgX19m
-aWVsZF9wYWNrZWQKPisjZGVmaW5lIF9fZmllbGRfcGFja2VkKHR5cGUsIGl0ZW0pCQkJdHlwZSBp
-dGVtOwo+Kwo+ICN1bmRlZiBfX2ZpZWxkX2Rlc2MKPiAjZGVmaW5lIF9fZmllbGRfZGVzYyh0eXBl
-LCBjb250YWluZXIsIGl0ZW0pCQl0eXBlIGl0ZW07Cj4gCj4tI3VuZGVmIF9fZmllbGRfcGFja2Vk
-Cj4tI2RlZmluZSBfX2ZpZWxkX3BhY2tlZCh0eXBlLCBjb250YWluZXIsIGl0ZW0pCQl0eXBlIGl0
-ZW07Cj4rI3VuZGVmIF9fZmllbGRfZGVzY19wYWNrZWQKPisjZGVmaW5lIF9fZmllbGRfZGVzY19w
-YWNrZWQodHlwZSwgY29udGFpbmVyLCBpdGVtKQl0eXBlIGl0ZW07Cj4gCj4gI3VuZGVmIF9fYXJy
-YXkKPiAjZGVmaW5lIF9fYXJyYXkodHlwZSwgaXRlbSwgc2l6ZSkJCQl0eXBlIGl0ZW1bc2l6ZV07
-Cj5AQCAtMTA0LDExICsxMDcsMTQgQEAgc3RhdGljIHZvaWQgX19hbHdheXNfdW51c2VkIF9fX19m
-dHJhY2VfY2hlY2tfIyNuYW1lKHZvaWQpCQlcCj4gI3VuZGVmIF9fZmllbGRfZm4KPiAjZGVmaW5l
-IF9fZmllbGRfZm4oX3R5cGUsIF9pdGVtKSBfX2ZpZWxkX2V4dChfdHlwZSwgX2l0ZW0sIEZJTFRF
-Ul9UUkFDRV9GTikKPiAKPisjdW5kZWYgX19maWVsZF9wYWNrZWQKPisjZGVmaW5lIF9fZmllbGRf
-cGFja2VkKF90eXBlLCBfaXRlbSkgX19maWVsZF9leHRfcGFja2VkKF90eXBlLCBfaXRlbSwgRklM
-VEVSX09USEVSKQo+Kwo+ICN1bmRlZiBfX2ZpZWxkX2Rlc2MKPiAjZGVmaW5lIF9fZmllbGRfZGVz
-YyhfdHlwZSwgX2NvbnRhaW5lciwgX2l0ZW0pIF9fZmllbGRfZXh0KF90eXBlLCBfaXRlbSwgRklM
-VEVSX09USEVSKQo+IAo+LSN1bmRlZiBfX2ZpZWxkX3BhY2tlZAo+LSNkZWZpbmUgX19maWVsZF9w
-YWNrZWQoX3R5cGUsIF9jb250YWluZXIsIF9pdGVtKSBfX2ZpZWxkX2V4dF9wYWNrZWQoX3R5cGUs
-IF9pdGVtLCBGSUxURVJfT1RIRVIpCj4rI3VuZGVmIF9fZmllbGRfZGVzY19wYWNrZWQKPisjZGVm
-aW5lIF9fZmllbGRfZGVzY19wYWNrZWQoX3R5cGUsIF9jb250YWluZXIsIF9pdGVtKSBfX2ZpZWxk
-X2V4dF9wYWNrZWQoX3R5cGUsIF9pdGVtLCBGSUxURVJfT1RIRVIpCj4gCj4gI3VuZGVmIF9fYXJy
-YXkKPiAjZGVmaW5lIF9fYXJyYXkoX3R5cGUsIF9pdGVtLCBfbGVuKSB7CQkJCQlcCj5AQCAtMTQ2
-LDExICsxNTIsMTQgQEAgc3RhdGljIHN0cnVjdCB0cmFjZV9ldmVudF9maWVsZHMgZnRyYWNlX2V2
-ZW50X2ZpZWxkc18jI25hbWVbXSA9IHsJXAo+ICN1bmRlZiBfX2ZpZWxkX2ZuCj4gI2RlZmluZSBf
-X2ZpZWxkX2ZuKHR5cGUsIGl0ZW0pCj4gCj4rI3VuZGVmIF9fZmllbGRfcGFja2VkCj4rI2RlZmlu
-ZSBfX2ZpZWxkX3BhY2tlZCh0eXBlLCBpdGVtKQo+Kwo+ICN1bmRlZiBfX2ZpZWxkX2Rlc2MKPiAj
-ZGVmaW5lIF9fZmllbGRfZGVzYyh0eXBlLCBjb250YWluZXIsIGl0ZW0pCj4gCj4tI3VuZGVmIF9f
-ZmllbGRfcGFja2VkCj4tI2RlZmluZSBfX2ZpZWxkX3BhY2tlZCh0eXBlLCBjb250YWluZXIsIGl0
-ZW0pCj4rI3VuZGVmIF9fZmllbGRfZGVzY19wYWNrZWQKPisjZGVmaW5lIF9fZmllbGRfZGVzY19w
-YWNrZWQodHlwZSwgY29udGFpbmVyLCBpdGVtKQo+IAo+ICN1bmRlZiBfX2FycmF5Cj4gI2RlZmlu
-ZSBfX2FycmF5KHR5cGUsIGl0ZW0sIGxlbikK
+On my ARM64 platform, I observed that certain tracing module
+initializations run for up to 200ms—for example, init_kprobe_trace().
+Analysis reveals the root cause: the execution flow eval_map_work_func()
+→trace_event_update_with_eval_map()→trace_event_update_all()
+is highly time-consuming. Although this flow is placed in eval_map_wq
+for asynchronous execution, it holds the trace_event_sem lock, causing
+other modules to be blocked either directly or indirectly. Also in
+init_blk_tracer(), this functions require trace_event_sem device_initcall.
+
+To resolve this issue, I rename `eval_map_wq` and make it global and moved
+init_blk_tracer that are related to this lock to run asynchronously on this
+workqueue. Also check for kprobe_event= grub parameter; if not provided,
+init_kprobe_trace() returns directly. After optimization, boot time is
+reduced by approximately 200ms.
+
+
+Based on my analysis and testing, I've identified that only these two
+locations significantly impact timing. Other initcall_* functions do not
+exhibit relevant lock contention.
+
+A brief summary of the test results is as follows:
+Before this PATCHS:
+[    0.224933] calling  init_kprobe_trace+0x0/0xe0 @ 1
+[    0.455016] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 230080 usecs
+
+Only opt setup_boot_kprobe_events() can see:
+[    0.258609] calling  init_blk_tracer+0x0/0x68 @ 1
+[    0.454991] initcall init_blk_tracer+0x0/0x68 returned 0 after 196377 usecs
+
+After this PATCHS:
+[    0.224940] calling  init_kprobe_trace+0x0/0xe0 @ 1
+[    0.224946] initcall init_kprobe_trace+0x0/0xe0 returned 0 after 3 usecs
+skip --------
+[    0.264835] calling  init_blk_tracer+0x0/0x68 @ 1
+[    0.264841] initcall init_blk_tracer+0x0/0x68 returned 0 after 2 usecs
+
+---
+Changes in v2:
+- Rename eval_map_wq to trace_init_wq.
+Changes in v3:
+- Opt PATCH 1/3 commit
+Changes in v4:
+- add trace_async_init boot parameter in patch2
+- add init_kprobe_trace's skip logic in patch3
+- add Suggested-by tag 
+- Other synchronous optimizations related to trace_async_init
+https://lore.kernel.org/all/20260128125117.1704853-1-tianyaxiong@kylinos.cn/
+Changes in v5:
+- remove trace_async_init boot parameter (patch2 v4)
+- remove make  Make setup_boot_kprobe_events() asynchronous (patch4 v4)
+- Adjusted the patch sequence.
+
+
+Yaxiong Tian (3):
+  tracing: Rename `eval_map_wq` and allow other parts of tracing use it
+  blktrace: Make init_blk_tracer() asynchronous
+  tracing/kprobes: Skip setup_boot_kprobe_events() when no cmdline event
+
+ kernel/trace/blktrace.c     | 23 ++++++++++++++++++++++-
+ kernel/trace/trace.c        | 18 +++++++++---------
+ kernel/trace/trace.h        |  1 +
+ kernel/trace/trace_kprobe.c |  4 ++++
+ 4 files changed, 36 insertions(+), 10 deletions(-)
+
+-- 
+2.25.1
+
