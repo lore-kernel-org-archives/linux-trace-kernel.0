@@ -1,187 +1,177 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFC227F749
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770216745; cv=pass; b=UeA4IwUSh6ocvwIYJg1U+hEOPmMBZwuEG8SH8/dcuSq0kaEp1Pv9W5go44cNXGL+zTsGAPTw0/nvZ1tHzw4qrWx/g83xZb5+pNSotqjS6X9yy5g9bKWYj1PJTR0FZGjjNAS2S1Bh5F/jBPRwtds3SSzKoppVbuSc1mnr3Qc99eQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770216745; c=relaxed/simple;
-	bh=vAPrTpVvtjDoYqyCk5qlFEtzMqAPTstr/NkSMREnjU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qiu0au5pF38ZBfP5WWAWyyxLSh02wXVB6NL8mc8GoD44MpmMKn9gh8UPVNWtQozVrh3MHpivN/xpRGoTe9+vDiWCuc6qTxvp42OKuBjODC7Z8ib7tUBFBPCcIS3N+L/Nf63fSQ1z32gKqB5zHVBCxHfMkkMWbNUFOHUU+aoz5wA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmmCkk8i; arc=pass smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C941B343
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 14:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770216753; cv=none; b=lIktSn/9MM+XP6ZHoLtDW6Chi8bEDvvpK3uqDFJz+CmEcxMxGncsgBG8PYGGj3xzE4FerRg7WDdU909wnZmL5pMaOT/SnireAcYRhyWBg9tKJ/FWuLWGAMjDNG+WN0DlF4tNTsWOikSF6AJVFd57UXC+mS9GDNuMkk7ebuqa8ug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770216753; c=relaxed/simple;
+	bh=8BhQ94pNwocXkF1J4tZldasmJvF2BbjLKCc6e/4bvNw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=MVwH1BpoAX9rZa3NY+yr2bR0kbRPaXCnOQcvxYy2+PGLoFP3t9y9ZQ217dhpqorJyTW+96BxwaD1LR7xdJ2AXkG5ULz+UTljnxbyOS8bafcRNG+f1faaFC+JIIb33BoFRqz2TmFaZLB0RXV+clfXzOEMJtOfd7qS48Fkudus/xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RTzZw1Ar; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmmCkk8i"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b8838339fc6so206279966b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 06:52:24 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770216743; cv=none;
-        d=google.com; s=arc-20240605;
-        b=W1wiJwSkUCTBYKmlhnHKCONeblno99zgAbDDdV0cmY6mfuSzvx97yS+AlXQRH4Ojnf
-         yt7yBvQwSuQgplc8pHwzo2qiTJOMs2tYkroN/eeJTGgnz/BFd3QnIzh2nN6VSXiBpXuv
-         Zbakx7COal+6+L7OKc+xqhCRsAii8pKLplNY8ailbZODXDFJy6X0DNiRkyg2wOqxja42
-         lSvlGle3ukosl1ruR/TjakFHzqCrK4hpOAouoWnknyVgzvknGkBJ39qKk/2O5Syn9HY7
-         bHjVYokH2wftRVauFGe7TVFzPaO3EP56wfvand5cqV3nVZwiiRZNR3cw2nG4FiLUqJ32
-         uxIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=7ae/2zsLX1SITkee1l+dAFeZHbUj9ZwEYK3HL0LzMcs=;
-        fh=GU45HfFaWEXzwMmCJkZS0KKdcFbguLYYPKnB75tQWVM=;
-        b=ljvuGHYifipmU+PTdCjZHtPIcbQIVwUZjbdVXRGr59xywnWLg0LPdT7xsKhz6z9LXy
-         0HUV/YTqqsHCdzS+4DUeSO+YTTUM55pPEoG8ac6y9tT98JpJwCl9tWr7G47Fpep/Vx96
-         omaedcHVYs5UXk+3Qq0alHZAElliG/2LRNii0Ig8H9egp33qYU92QsAQdkzJr2WadPUR
-         Ly+VeltpBXvF4+jjIZGFlYLV6RXlm1nrSCEwAVGh1T+WgYo4+qdjaBoTRQM1SP7c6fza
-         +kMAyrxurovkyLBrOaNbVhE8a8MhsfdMmC1lskQn0FN3SfSjui7Twuw/DIDxiSmtBycb
-         3clA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770216743; x=1770821543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ae/2zsLX1SITkee1l+dAFeZHbUj9ZwEYK3HL0LzMcs=;
-        b=KmmCkk8ilN7MwW1HOtn3JeITxCIHDlsKvKcop8WAgvKvXkoISiw8AP1tLRIaaNeRjs
-         7wfS2KxGF4XskI56h18aOdcohK9j5toE3kP3VPzDUDodap4CdfYWQDdxPaIIQJ0YvzIt
-         QO9nS6fk/QDd3tWDVIY9R3Uz45GrT49RwHL9V92o81SPiifhjuCiFdhgYGXvbMkL2aCt
-         qwTM6D4ONkquVtHlGryMOldmsiZcBZOfA8dWfwYWhfbhfbYRoGRxIPR2UK0UEb+EtNmZ
-         UYJcyANj8/0ZoQFR5pJlrF+e5oLG/51ZoFfZYZD/ekiOHRH2aX+SORfVUhaNQ09wveLt
-         iR0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770216743; x=1770821543;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7ae/2zsLX1SITkee1l+dAFeZHbUj9ZwEYK3HL0LzMcs=;
-        b=niP3Ip1kyDUs6IFwmZuNIzmRGOTaiqFpXcFDfo8aHexN0dyRExpHIP4NoSp7XQ58tc
-         KLWcCGB8y3lUaltDAz2pYekV2PoXhf9PgYxNCGmKNsC1QCuqacAEE3Es8sRCO4k0y8FT
-         8eAoo3bFKTkChZZhnUTmEkokfsKI27w/hk8tiPnYlp6DSUq5mqMA34VpJitqJiKYAsdD
-         VWh0xbfyiwM8LApjlMfCNyfi3LYHucI8Hk4SAyQkUKn3H2n1zEO8VHRbNuERr9qfMxFy
-         ED7U8itPdGzakq8hZ2zYlNwKP/m/5cue3/cRfKX786NSUta7joxGozdLjaQVTnejdLpl
-         kyhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDmwJaN/Mj2sXJVb5Q1x+yglxESdTav1ebxAYsrvQs/WJo8t9/ANMjLLXgseRDETH9U+5fVl17dMws2zmO/Kn2NME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ+AQC/lUA/lQDKxUTOTCNZ0zOqWXBGzKEKqFytlCB3rte51ZB
-	H1AfRPdcCeLD26sEsjQLTJZhfmgbFOA19kUSFfV/tb1Tpw2TN9m5DihJnVZXtBYdIAZnu38KFKH
-	IFskGUsnJp4Ds59Xf/Go8W5P856+Ra3Q=
-X-Gm-Gg: AZuq6aKf7+hPDSEbAz7wyshJG8trRAEfctcHyVJ9CQ/UYtQWvTk1Od7R5olMoYIpg5w
-	5inbfsFo3/Ir0o7HuoODtG1GY5VBc1vRZrEQAoHX6H3b9kN+B+I8RcqtOJ3F6z7OmCeKwLyNZ/P
-	mMxHFCYIiNA96OCZ8eU3mjTIW1ADZvrra7w/6WKmWdhbqalrNKwxqTrF9Bvlm7XSwlmVkkUDW0n
-	BgVCjmdpzZfboZLmApXEVsyPC7nvikYFIsri5g5GKsQYxZOYGxha5Pv5WL4o7GVnSV6JqDf
-X-Received: by 2002:a17:907:72d2:b0:b80:40ea:1d65 with SMTP id
- a640c23a62f3a-b8e9fb81038mr249447766b.31.1770216742630; Wed, 04 Feb 2026
- 06:52:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTzZw1Ar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1770216752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+88c6tIz2dzJRW/pA5eB0yGHhQNthhVkp195CIWpCkE=;
+	b=RTzZw1ArFq6dFWQ5lsxIW3VvNIVdNTiq/fUSv5dhbSSIC8J/FnuKKZ8BQTuJeuWWI/YuGa
+	LWXklSbSevCMI27fUgy0MW/l/H/RjWKzo3guU0khrMgBpUo1vEjhcTHJwqxQirAqt/5a97
+	P1FWt2YiZ5RfcRjkdbwDRXqE57cxjtA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-ff8tcclGOF2TwCCfPqda6w-1; Wed,
+ 04 Feb 2026 09:52:29 -0500
+X-MC-Unique: ff8tcclGOF2TwCCfPqda6w-1
+X-Mimecast-MFC-AGG-ID: ff8tcclGOF2TwCCfPqda6w_1770216748
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E4DE1956052;
+	Wed,  4 Feb 2026 14:52:28 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.88.140])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BBC2D30001A5;
+	Wed,  4 Feb 2026 14:52:25 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Wander Lairson Costa <wander@redhat.com>,
+	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 08/20] rv/rvgen: fix PEP 8 whitespace violations
+Date: Wed,  4 Feb 2026 11:42:34 -0300
+Message-ID: <20260204144914.104028-9-wander@redhat.com>
+In-Reply-To: <20260204144914.104028-1-wander@redhat.com>
+References: <20260204144914.104028-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
- <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
- <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
- <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com>
- <20260203101707.52965eb0@gandalf.local.home> <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
-In-Reply-To: <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Wed, 4 Feb 2026 22:52:11 +0800
-X-Gm-Features: AZwV_QhyUAnBXEaRMJ8cNNq58o_SXW6uwD6sX0x2qOdpKoR92KuetEKRu2ZVyQ8
-Message-ID: <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
- via BTF
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: wtP_Hx1ynksE2x1cfH6k7QIEx-BrFflv4LPCuBhlY_0_1770216748
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Wed, Feb 4, 2026 at 12:00=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
-> >
-> > On Tue, 3 Feb 2026 21:50:47 +0800
-> > Donglin Peng <dolinux.peng@gmail.com> wrote:
-> >
-> > > Testing revealed that sorting within resolve_btfids introduces issues=
- with
-> > > btf__dedup. Therefore, I plan to move the sorting logic directly into
-> > > btf__add_enum_value and btf__add_enum64_value in libbpf, which are
-> > > invoked by pahole. However, it means that we need a newer pahole
-> > > version.
-> >
-> > Sorting isn't a requirement just something I wanted to bring up. If it'=
-s
-> > too complex and doesn't achieve much benefit then let's not do it.
-> >
-> > My worry is because "cat trace" takes quite a long time just reading th=
-e
-> > BTF arguments. I'm worried it will just get worse with enums as well.
-> >
-> > I have trace-cmd reading BTF now (just haven't officially released it) =
-and
-> > doing an extract and reading the trace.dat file is much faster than rea=
-ding
-> > the trace file with arguments. I'll need to implement the enum logic to=
-o in
-> > libtraceevent.
->
-> If you mean to do pretty printing of the trace in user space then +1 from=
- me.
->
-> I don't like sorting enums either in resolve_btfid, pahole or kernel.
-> Sorted BTF by name was ok, since it doesn't change original semantics.
-> While sorting enums by value gets us to the grey zone where
-> the sequence of enum names in vmlinux.h becomes different than in dwarf.
+Fix whitespace violations throughout the rvgen codebase to comply
+with PEP 8 style guidelines. The changes address missing whitespace
+after commas, around operators, and in collection literals that
+were flagged by pycodestyle.
 
-Thanks, I agreed.
+The fixes include adding whitespace after commas in string replace
+chains and function arguments, adding whitespace around arithmetic
+operators, removing extra whitespace in list comprehensions, and
+fixing dictionary literal spacing. These changes improve code
+readability and consistency with Python coding standards.
 
->
-> Also id->name mapping in general is not precise.
-> There is no requirement for enums to be unique.
-> Just grabbing the first one:
-> ATA_PIO0 =3D 1,
-> ATA_PIO1 =3D 3,
-> ATA_PIO2 =3D 7,
-> ATA_UDMA0 =3D 1,
-> ATA_UDMA1 =3D 3,
-> ATA_UDMA2 =3D 7,
-> ATA_ID_CYLS =3D 1,
-> ATA_ID_HEADS =3D 3,
-> SCR_ERROR =3D 1,
-> SCR_CONTROL =3D 2,
-> SCR_ACTIVE =3D 3,
->
-> All these names are part of the same enum type.
-> Which one to print? First one?
+Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+---
+ tools/verification/rvgen/rvgen/automata.py  | 12 ++++++------
+ tools/verification/rvgen/rvgen/dot2c.py     |  2 +-
+ tools/verification/rvgen/rvgen/dot2k.py     |  4 ++--
+ tools/verification/rvgen/rvgen/generator.py |  2 +-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-I think these cases are not very common and printing the first
-one would be helpful enough, and we can add documentation
-notes in ftrace to guide users.
+diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
+index 0d7cbd0c634a9..deb1f09556c3c 100644
+--- a/tools/verification/rvgen/rvgen/automata.py
++++ b/tools/verification/rvgen/rvgen/automata.py
+@@ -95,7 +95,7 @@ class Automata:
+             raw_state = line[-1]
+ 
+             #  "enabled_fired"}; -> enabled_fired
+-            state = raw_state.replace('"', '').replace('};', '').replace(',','_')
++            state = raw_state.replace('"', '').replace('};', '').replace(',', '_')
+             if state[0:7] == "__init_":
+                 initial_state = state[7:]
+             else:
+@@ -132,7 +132,7 @@ class Automata:
+             #  ------------ event is here ------------^^^^^
+             if self.__dot_lines[cursor].split()[1] == "->":
+                 line = self.__dot_lines[cursor].split()
+-                event = line[-2].replace('"','')
++                event = line[-2].replace('"', '')
+ 
+                 # when a transition has more than one labels, they are like this
+                 # "local_irq_enable\nhw_local_irq_enable_n"
+@@ -162,7 +162,7 @@ class Automata:
+             nr_state += 1
+ 
+         # declare the matrix....
+-        matrix = [[ self.invalid_state_str for x in range(nr_event)] for y in range(nr_state)]
++        matrix = [[self.invalid_state_str for x in range(nr_event)] for y in range(nr_state)]
+ 
+         # and we are back! Let's fill the matrix
+         cursor = self.__get_cursor_begin_events()
+@@ -170,9 +170,9 @@ class Automata:
+         while self.__dot_lines[cursor].lstrip()[0] == '"':
+             if self.__dot_lines[cursor].split()[1] == "->":
+                 line = self.__dot_lines[cursor].split()
+-                origin_state = line[0].replace('"','').replace(',','_')
+-                dest_state = line[2].replace('"','').replace(',','_')
+-                possible_events = line[-2].replace('"','').replace("\\n", " ")
++                origin_state = line[0].replace('"', '').replace(',', '_')
++                dest_state = line[2].replace('"', '').replace(',', '_')
++                possible_events = line[-2].replace('"', '').replace("\\n", " ")
+                 for event in possible_events.split():
+                     matrix[states_dict[origin_state]][events_dict[event]] = dest_state
+             cursor += 1
+diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
+index b3a49779d4cc5..6ab519b03789c 100644
+--- a/tools/verification/rvgen/rvgen/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -137,7 +137,7 @@ class Dot2c(Automata):
+                     line += f"\t\t\t{next_state}"
+                 else:
+                     line += f"{next_state:>{maxlen}}"
+-                if y != nr_events-1:
++                if y != nr_events - 1:
+                     line += ",\n" if linetoolong else ", "
+                 else:
+                     line += ",\n\t\t}," if linetoolong else " },"
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
+index c70a9812abbf6..4bf0db52e6264 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -111,8 +111,8 @@ class dot2k(Monitor, Dot2c):
+         tp_args = tp_args_event if tp_type == "event" else tp_args_error
+         if self.monitor_type == "per_task":
+             tp_args.insert(0, tp_args_id)
+-        tp_proto_c = ", ".join([a+b for a,b in tp_args])
+-        tp_args_c = ", ".join([b for a,b in tp_args])
++        tp_proto_c = ", ".join([a + b for a, b in tp_args])
++        tp_args_c = ", ".join([b for a, b in tp_args])
+         buff.append(f"	     TP_PROTO({tp_proto_c}),")
+         buff.append(f"	     TP_ARGS({tp_args_c})")
+         return '\n'.join(buff)
+diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
+index a3fbb1ac74916..31c454329e8e1 100644
+--- a/tools/verification/rvgen/rvgen/generator.py
++++ b/tools/verification/rvgen/rvgen/generator.py
+@@ -228,7 +228,7 @@ obj-$(CONFIG_RV_MON_{name_up}) += monitors/{name}/{name}.o
+ 
+ 
+ class Monitor(RVGenerator):
+-    monitor_types = { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
++    monitor_types = {"global": 1, "per_cpu": 2, "per_task": 3}
+ 
+     def __init__(self, extra_params={}):
+         super().__init__(extra_params)
+-- 
+2.52.0
 
->
-> another example:
-> enum {
->         BPF_LOCAL_STORAGE_GET_F_CREATE =3D 1,
->         BPF_SK_STORAGE_GET_F_CREATE =3D 1,
-> };
->
-> and another:
-> enum {
->         BPF_SKB_TSTAMP_UNSPEC =3D 0,
->         BPF_SKB_TSTAMP_DELIVERY_MONO =3D 1,
->         BPF_SKB_CLOCK_REALTIME =3D 0,
->         BPF_SKB_CLOCK_MONOTONIC =3D 1,
->         BPF_SKB_CLOCK_TAI =3D 2,
-> };
->
-> I'd rather not print any and keep it integer only.
->
-> pw-bot: cr
