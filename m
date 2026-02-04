@@ -1,103 +1,66 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1D82566F7;
-	Wed,  4 Feb 2026 01:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E612749CF
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 02:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770170056; cv=none; b=gy87XTR8G7nXkrQ2wLfunX2JgmViwCrCg9urbna0d5U1qrBXrr0H7SL7nYwytvb64LEEUd5yPE+MRFvnqQFPkl3rgR7/ai7Q43nbtspj1FVWEfOO/pgr00Q6szlUN8KH0s0e/xqrVE5oxB/pginNY6M3E2hOBoWwnd6uGD3L5t4=
+	t=1770171657; cv=none; b=iTbFmdBBEOQeY+sl58dvG+VSJUEhkewevVKOux+xLYlgqo2UxoGWcy72YpS+LOMTgYPkTNax1H9B7rywTZmc91JlVvhT0ZtRvdhfSwf95/px+otOPvvyic5jyepmiA0NrUKhFdgr98B+ngNXZE8NGk5auYRe01q89eZYHFv5a3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770170056; c=relaxed/simple;
-	bh=nvx0pzDMUCUQRnDLUIB4oTe85CB/B2famYO/awEkHsQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZGQ96FKzH2lwhsjgZl3w4AXz99J8kCNptQRzGAqyjFNo8pY1DVyRODuLGX1DPPtIjBkhW530yMD0kau8f1lCCe9yG2fRaQWHT+g6L7vedGpiPfr6CFT0SJS1t6iDD+s6Nrr5bZDOgXqN+E3as1C1H9pLni5hOVmbYQOa+B+m04o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 6312c92e016c11f1b0f03b4cfa9209d1-20260204
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
-	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD_SPF
-	CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
-	ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:093277ee-298b-4bae-bcee-417e6fd0f7fb,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:093277ee-298b-4bae-bcee-417e6fd0f7fb,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:0097b561cca95778e6a6bcdc1fce4b27,BulkI
-	D:2601282055117T6T78JL,BulkQuantity:2,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:41,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0
-	,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 6312c92e016c11f1b0f03b4cfa9209d1-20260204
-X-User: tianyaxiong@kylinos.cn
-Received: from localhost.localdomain [(175.2.200.196)] by mailgw.kylinos.cn
-	(envelope-from <tianyaxiong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 447492575; Wed, 04 Feb 2026 09:54:05 +0800
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-To: axboe@kernel.dk,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v5 3/3] tracing/kprobes: Skip setup_boot_kprobe_events() when no cmdline event
-Date: Wed,  4 Feb 2026 09:54:01 +0800
-Message-Id: <20260204015401.163748-1-tianyaxiong@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260204015103.155025-1-tianyaxiong@kylinos.cn>
-References: <20260204015103.155025-1-tianyaxiong@kylinos.cn>
+	s=arc-20240116; t=1770171657; c=relaxed/simple;
+	bh=O8heI5Nogc6vWjzTGjyj/YdzwgHPxl9kt7RAabw7pKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h3yUJoIdr3sD1qjEax5GdQ2IhW4tBHMo/U9s6S1Ot6ptCQWxJobx9TFZLbLn+WdLSLmbguMPesrmwQ5aNcszHY3qwmM4QwrsA0s3poqcbQqbBktuV3APBTqepCB4E9UbJQqS1TukyK8WgXPkeg6Vc0hH4CwEkYGLK0qWGPqcmV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pT0QZMN1; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pT0QZMN1"
+Message-ID: <3015991d-2e9b-4bf4-9c17-26e00b5d5926@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770171644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dLuGikwdkVKzxyLyIG9nEjwNvRtmY4mW49/acC8aAhY=;
+	b=pT0QZMN1Hxfu4g4L+SSvYdf9s3VJdB8g4PfsYMvBbl91/ufwe2DoU7RM5o7G88Xs29OQIG
+	16j4hTloNcghaeJqrDOihcv0V6pg+kkdK13UY2ahdtVuSS7dIKyTRgcxWGZuIQI4nhXrH5
+	EjNY+9NS0XvDFXgzRIQ2Qqoxsfpjz9s=
+Date: Wed, 4 Feb 2026 10:20:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [RFC bpf-next 05/12] bpf: Add multi tracing attach types
+Content-Language: en-US
+To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
+References: <20260203093819.2105105-1-jolsa@kernel.org>
+ <20260203093819.2105105-6-jolsa@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <20260203093819.2105105-6-jolsa@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-When the 'kprobe_event=' kernel command-line parameter is not provided,
-there is no need to execute setup_boot_kprobe_events().
 
-This change optimizes the initialization function init_kprobe_trace()
-by skipping unnecessary work and effectively prevents potential blocking
-that could arise from contention on the event_mutex lock in subsequent
-operations.
 
-Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
----
- kernel/trace/trace_kprobe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 3/2/26 17:38, Jiri Olsa wrote:
+> Adding new attach type to identify multi tracing attachment:
+>   BPF_TRACE_FENTRY_MULTI
+>   BPF_TRACE_FEXIT_MULTI
+> 
+At this point, should we also introduce BPF_TRACE_FSESSION_MULTI
+alongside BPF_TRACE_FENTRY_MULTI and BPF_TRACE_FEXIT_MULTI?
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 9953506370a5..89d2740f7bb5 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -2048,6 +2048,10 @@ static __init int init_kprobe_trace(void)
- 	trace_create_file("kprobe_profile", TRACE_MODE_READ,
- 			  NULL, NULL, &kprobe_profile_ops);
- 
-+	/* If no 'kprobe_event=' cmd is provided, return directly. */
-+	if (kprobe_boot_events_buf[0] == '\0')
-+		return 0;
-+
- 	setup_boot_kprobe_events();
- 
- 	return 0;
--- 
-2.25.1
+Thanks,
+Leon
 
