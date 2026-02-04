@@ -1,93 +1,93 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C7348898
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 19:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3022367B5
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 19:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770231670; cv=pass; b=JmWKxwoJFuFTy1blurxid7mSEz4q9+g7fwUEJgwPp0NqUqHsoQfCHIQ7Ezp8cvxGocB8nMkUf6fjMBT1ssatmK5Y8u53hs9BiUv2Dn369EI0RNNTFrKV9c3aY2Cp4bL978fPzB/WyCH4k+8sfnZ8CtsdV6kOLPZe9ttSZUsD3/c=
+	t=1770231862; cv=pass; b=JvkmqFJBT8hoH1bMoV+MGHssJTCB4o57fH7ro9jHideFB17iu0JHJ2Y9I/G6cAw+yz72jksN1110ndC4wcSIwpqkKWxYVWr0hXJwEGlf+65P2WKEj5azdvmkabb68Vhhq7/+SJpVCFGLxunvjo3UcT3wd78w32q3+sex4PiZzCM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770231670; c=relaxed/simple;
-	bh=BGi0Yq7FGB09vO++UvrSVTmi8x/nIgPrGYAF2sfkBe0=;
+	s=arc-20240116; t=1770231862; c=relaxed/simple;
+	bh=Dc0nYxw/rN5N5J7dVW80Z++yUTLJFp4B0UMOXuMTVHo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hw7+xOCm7OAl+h8ti+zCbEXDdzDGY+jlu/jnDBfGi4t8tK8Y8zH/PaBgSHPJzec3hn5/21FzXe4d5QRVQDMRQWvoGpqay5jNqiM4FkoNXkDFakVjdxBQQ+dH5MVEbq6yWI3K+ywl5/gfNvtf9IoM1IH+GTC9Xs+AWxBvL8LtfNA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GF0W7ty5; arc=pass smtp.client-ip=209.85.215.179
+	 To:Cc:Content-Type; b=QsZPNziFDdqxbLsnjHT8nqHDsesm/CJEwPL+qojHZNBFPplJszjpo7o6QFMjCEwSw6M2X3QwT8FjCWwpIsQkPjOcCxbm+rWg1xnPWkgJJjyXhKbQzgFjA0cm/X82FuIVgvMftvQTUnSASGafiboBW6o2lVmtyvIztd+sChVctgQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqF8g+8T; arc=pass smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GF0W7ty5"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c6788f3db37so15814a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 11:01:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770231670; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqF8g+8T"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35334ea1f98so17070a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 11:04:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770231862; cv=none;
         d=google.com; s=arc-20240605;
-        b=CXuvzzw2KKH1iqsCCwNm/J+46ywbZMTzS1JI+Csn5yu9/SH0/wh/Aj0Bq2jLsZsLwu
-         nxx0rA4B4DSTDjvhOWHbrKrg5EpyrB4jvXUCocjlA0CxoQGmrOtTpQ/sYMSnozmLh2Xj
-         9ONjlwnEkjA3fVoqY0c1XHVA6RBLLFrHs6kRM25l7A26GL+3aIVLuY11rhr9yZpF6mbB
-         Q367e/mrgMdonKP+HmhdBcYKsqZlXMOAtBRPZjM5uj4xo4KPulKvtCGZ8pmmZ9NsN6qX
-         y0MwtokOwERgLbOm7BxTjgmwGC7J+zfynh3Q+p571UHcPL13Iobmk5ivRJZ67iL2dDVi
-         e0Zg==
+        b=CsSY4FNrBtsJwthQImkM09aWL8gwt0FYgb87SV72y9oO7jfoJ7b7M1r4mRvR0QQSdg
+         I1VVHB3ljdnQ5ZWB3QseDHuMqO4+PCvrI2oE9Pz1cg2XJfPfP7mIPuFRaHFvZB7YpAyW
+         xh2PXn9w1J5nLo9El2ySK1m39RK8xQslA87hl+2dDOtrRWuqOp4e9mvu08xLJO/ITW9C
+         p/E2bFSitwaPrDfLLl1Qx2sdHb+NmVFPEnakAoZQ/bC+JDHSkd4wu5R9VAOKh0IjAk++
+         v0VSGo8Dw41r+m6IxB3YQEaf347SypPv6Gr5T/nSuiscYSnErSjzy6T2zK8uzl9rGEtR
+         OiUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=C2BK5Aa7hHHjWrICfccw38JR+McJYiRKZW3QJ3JFoIw=;
-        fh=XaLcpZhM6aIjdfgkKv64AR1oALT3EHsRUFUg0sg6LTA=;
-        b=WivA3XxKihBPj0iOwOqVb2lL8X2C8WLlSrcR80C54GQO8CppcqYs+fmkIb0o3kBZGB
-         ee/GutRYOEXb1PwpFgLMHq/0XT6c0RnRLxFiqDZGzLitsZQCzewoGHX31Rp/JCifndPt
-         2mtUl1J8KFHEApKx90O460vu/wmC9z+FDnh76yqqnTELlHrUfVy6VPuom/hSiQ2/wcPi
-         SJC483s7raZODk5w0wV6MyqbDA5fH7K4sm/H2YjEVCcmCJOPdQpQZnyf+/40wDfh2M0s
-         AMDZ8UmWe5qchAvxMV9dPGTU+td7GEoQByxdG8LcfKct0VF6wZNC/dK7BOSCo89LoNBT
-         engA==;
+        bh=2Fd4Wltq4DRRCvRywlrd5PjkgyLi05+SN7qlk8MFKlo=;
+        fh=cPAkIcgmi9ZARsKNFxfR+aDSOWb0paa+rPGvyvDU5aE=;
+        b=JbWUTpGYK9Q3vjIINPl7tOBTd/XOS0xlUeEjVHK3p7VDK5X+z0p8nJNJHjtr60qX79
+         h/FITWVt4Uctxr/nvej99ntEh3ahY7qE7lmO5kfzGyOgUH3BtRCDQlbP7ffqDGw20g0Q
+         Of54rOTJQg3y1LFsk9UKftIn0ojltrVi1Qbu7UyDJLZJAI1EN0A3QF2B/eoy5b/MnrVf
+         NFkTJzZL6mprNhx6rDyMP1brVrVB4aaBBsq5G01i4hVJJtq2aLi/FRnw2OfPQQ+oVk7q
+         f02sCZrtq9o6A6xSvy3RyrgUeEt/la2R3Z6nzmqdaY4dUwXN89jrq87cvMxxL6gx5GZy
+         ETnQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770231670; x=1770836470; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770231862; x=1770836662; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C2BK5Aa7hHHjWrICfccw38JR+McJYiRKZW3QJ3JFoIw=;
-        b=GF0W7ty53tGUSX3xvqY7OrknceEj6N1sh9+b9mxpYnLQ3/rFZcXngKhL+PC6QA4Cdc
-         Qjz1+AX+vMqE4S/Z2KZwpGNW9E+fJ6j7PJPMdoL+D9goww8tvtjGLr7FRUnrX/fwX/Q+
-         7MZH92RHeZhemBYtguCKfVo6RxjYbulDbRJE42DuTwkOdfzi/wVXUCrxq0lF1d+sp+dh
-         OVVFb4SiVu0G402myHV0voAYicG2uJ8t/GxKyGxS9B4DmmbW6rbXHdi8OvgfM5wj40Ry
-         40FRfks0xzbx9RnvBtevkysz3MOb20xg92PtiO3Xx6cFtbxTfbRxD6R6cA4DJeX56DVx
-         JT1w==
+        bh=2Fd4Wltq4DRRCvRywlrd5PjkgyLi05+SN7qlk8MFKlo=;
+        b=ZqF8g+8T/zUsvF7DFuqBB8YrzWweYrP+KtBhv3adMvxWxJM2tlBMrBtv9FMY4pjIlR
+         3KpfoX0WWKyEN2eD8bidQ+jAxPcb8cYsc9n8r2m/Q8S19TDmv9PYCCPi1cvamCO8RzKv
+         7UfkTrK+YpEZ1qTjcT4gTVbDQdVaO5m/d78aUm+N6d/EiRzWXBMqnlxAmf88SMcLBa6j
+         aFIrcub9f3kXXY0YpWraJyFVce/vyeavOUOP2cvysap6lUYjHoquUAlHR6VBjqo7hZSp
+         7CQJw8YEby4k6WwdFrMsalHiZTw0M46pHxU3Qpn3pOY9U94BKC7ZJ9VvTouP5irIBnJK
+         21lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770231670; x=1770836470;
+        d=1e100.net; s=20230601; t=1770231862; x=1770836662;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=C2BK5Aa7hHHjWrICfccw38JR+McJYiRKZW3QJ3JFoIw=;
-        b=XNYepR+Ud+3ExW13/bXebB9QqrCCMTpKDSj5lYWGyGKVnzvT1vph5ARyomVAob9ZAg
-         GLRISBlIy9rFsmbuoXOffiGmH9w2NBz60sp4ZwcnwQfQuXDNn4PXAoAqSVFyn1tlym7y
-         PEk65B+7XYj748HQhojeag2VmGTKeUGHOO59rj6cYRkJ8zm1YmhkkEPEyFY629Gdp3Yw
-         dh4u1O5OAVTUqQAh0I2KJOwbRapOq0qjSKSLikIdlK6wQZIR3ML9LhqbXuR/nd9YjAXO
-         ZIaMJoJyELhZLCvDIxoLHzejMZIaDSMAz20gA0Pd87FiIRExkTqEDBGLzFpKXiGHuGj5
-         I+WA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbA6O9wpPW3JhIbA4pbK/IxsvUHlrs/mgJBTVxB/qKpC4P5Ut4LSFOXS2a3bvjBoVml6CNfr69WbxXeokDa+4A75g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylWsTMf/ixjnQytgJ/aMhfLTkaTm0GIK+SKmCWBziMRC+RkEBv
-	QyU73vVJVx22GW3VBaeO9R0oBLwlDed+AIsh6L5AkBOaqYMBB1S0bSBrd33hJhJawIhNM5qZpqP
-	LYst842AHdpujcLXtVgUgLVt1u5rbZA8=
-X-Gm-Gg: AZuq6aK0LfQ2irGD8p8JPWyJfgpQnx5Db/12UM2bjlH2dr0k2DKHctcBqj8C9IyehPH
-	yDGwb89dmEfpGj/rYt9DW1TeuIrl4XwZvzpYgy4otn9IAeBAXciniHTY2f+vKGVNQuA7617L1De
-	LD+pcPDQ8HmMxOPnMsNamKQoi8CAerjHY9Mb3Wx0h+JtLxOXqL0VlW51yRLxYCCPOtns2QzMp8C
-	3zV3B8vBrfipGjqihQP3R1inMBoTX3qNfemQi8YD6oIvvXbDdcYop43JLxXhZMvYixpl8GLMXch
-	OP8cPyDqidY=
-X-Received: by 2002:a17:90b:4b8a:b0:341:2150:4856 with SMTP id
- 98e67ed59e1d1-354871a9754mr3802441a91.17.1770231669749; Wed, 04 Feb 2026
- 11:01:09 -0800 (PST)
+        bh=2Fd4Wltq4DRRCvRywlrd5PjkgyLi05+SN7qlk8MFKlo=;
+        b=PlBPa+lFKshQBMtblDUpOOlnZJQ0/Tsexj7ANjGBk5z3TXTzQmxsQ8OrblY7C2k0br
+         hHB9G7vXjKlCfeoQbiaizHUoaDX9S2WABJQEL0rKNw4qQJjyXc+vxdtdnX/EPHg0h7aS
+         GsyFCHZ0Um1kzKJDWe3Xuh4SwfkKUIGPVl96mCZajc012A1s0OFTTB5isSvj4Y6FbFO0
+         cSp5m7ttKhgYuOH7twTxzcxtq+pyOPpKQp6ra1SxcUs0mr2GgSRzJFNGvBep6oyfAhJ5
+         3FhVWhHlhThc5PcQFq3+nRHqpkCY3F1Az2UDsv5GCRIaDGeOR7jdH6o5I4/swhaWNHh5
+         eWIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKNlbJncEtgvz+JCXmiCFYG5NxA0sQcmlkxO5P7b//OH9IoZMvgG5BNDMa54FcCwJLbFn7/O74p0IzX7rE2g0LyHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6Te3E7vvadzLf4jfTocaTcGOFJHZPy6D+k+l6SohZDYYSgm4n
+	aUhWt55ZNnIQlxq3abN4X4O1W32MqAZl3nzb83l6Z0zALWraL/HLxLNnvkYLjk8PjlGDfmzYRrz
+	s8aH0/Qgf759HYDPeABIMOltKbAjR9MU=
+X-Gm-Gg: AZuq6aLHFS0RsK8lxQ7WJny8elg3xpNJxkU66a/c8PZAJV/KZqmHn9MlJbBrNVqBS4I
+	beN05vWtG0h68YbuXgbajWkfkd3S1vXMqLXzOdHaNPcQ3ll8fYAV+5TE1BlxmKOauEUJfw2m273
+	c4Lkn92ZYSc7d5FZsAtLUseD66EU8YLvTvGEKtwOAEQ/GUCRvCpFFPk1zDJ5NtnZgdrTJGcHZTO
+	lJUgGDibqodywYBgpCPIXNT7zzfHxGiR7/AcawYrVAGMBQKMNucL4mcJSq0oohQG/BuPPMNtmah
+	purZNKj82XY=
+X-Received: by 2002:a17:90b:1a89:b0:341:8ad7:5f7a with SMTP id
+ 98e67ed59e1d1-354871951d6mr3910487a91.18.1770231861526; Wed, 04 Feb 2026
+ 11:04:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260203093819.2105105-1-jolsa@kernel.org> <20260203093819.2105105-5-jolsa@kernel.org>
-In-Reply-To: <20260203093819.2105105-5-jolsa@kernel.org>
+References: <20260203093819.2105105-1-jolsa@kernel.org> <20260203093819.2105105-9-jolsa@kernel.org>
+In-Reply-To: <20260203093819.2105105-9-jolsa@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 4 Feb 2026 11:00:57 -0800
-X-Gm-Features: AZwV_QiCLzPwkIuJ-8jnTLe2OoaWDrr2vUS4Xps7rzpcaANa-ajJlfEoQJps2IM
-Message-ID: <CAEf4BzYWxmg7YO_ewENt1rr4R1YT=iL0fc5yJqanfQZJk6u1nQ@mail.gmail.com>
-Subject: Re: [RFC bpf-next 04/12] bpf: Add struct bpf_tramp_node object
+Date: Wed, 4 Feb 2026 11:04:09 -0800
+X-Gm-Features: AZwV_QjTmRdFGEvb_WAqWPfjTYqkItrykLxxHEkIbtsV4rnebavgSBjlfpmxBwY
+Message-ID: <CAEf4BzY7zZmEqFq577NiG2wh0aU0_og1_RjVSURjaqTOnTc-Bw@mail.gmail.com>
+Subject: Re: [RFC bpf-next 08/12] libbpf: Add btf__find_by_glob_kind function
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
@@ -99,66 +99,107 @@ Content-Transfer-Encoding: quoted-printable
 
 On Tue, Feb 3, 2026 at 1:39=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> Adding struct bpf_tramp_node to decouple the link out of the trampoline
-> attachment info.
+> Adding btf__find_by_glob_kind function that returns array of
+> BTF ids that match given kind and allow/deny patterns.
 >
-> At the moment the object for attaching bpf program to the trampoline is
-> 'struct bpf_tramp_link':
+> int btf__find_by_glob_kind(const struct btf *btf, __u32 kind,
+>                            const char *allow_pattern,
+>                            const char *deny_pattern,
+>                            __u32 **__ids);
 >
->   struct bpf_tramp_link {
->        struct bpf_link link;
->        struct hlist_node tramp_hlist;
->        u64 cookie;
->   }
+> The __ids array is allocated and needs to be manually freed.
 >
-> The link holds the bpf_prog pointer and forces one link - one program
-> binding logic. In following changes we want to attach program to multiple
-> trampolines but have just one bpf_link object.
->
-> Splitting struct bpf_tramp_link into:
->
->   struct bpf_tramp_link {
->        struct bpf_link link;
->        struct bpf_tramp_node node;
->   };
->
->   struct bpf_tramp_node {
->        struct hlist_node tramp_hlist;
->        struct bpf_prog *prog;
->        u64 cookie;
->   };
-
-I'm a bit confused here. For singular fentry/fexit attachment we have
-one trampoline and one program, right? For multi-fentry, we have
-multiple trampoline, but still one program pointer, no? So why put a
-prog pointer into tramp_node?.. You do want cookie in tramp_node, yes,
-but not the program. Because then there is also a question what is
-bpf_link's prog pointing to?...
-
-
->
-> where 'struct bpf_tramp_link' defines standard single trampoline link,
-> and 'struct bpf_tramp_node' is the attachment trampoline object. This
-> will allow us to define link for multiple trampolines, like:
->
->   struct bpf_tracing_multi_link {
->        struct bpf_link link;
->        ...
->        int nodes_cnt;
->        struct bpf_tracing_multi_node nodes[] __counted_by(nodes_cnt);
->   };
+> The pattern check is done by glob_match function.
 >
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  arch/arm64/net/bpf_jit_comp.c  |  58 +++++++++----------
->  arch/s390/net/bpf_jit_comp.c   |  42 +++++++-------
->  arch/x86/net/bpf_jit_comp.c    |  54 ++++++++---------
->  include/linux/bpf.h            |  47 ++++++++-------
->  kernel/bpf/bpf_struct_ops.c    |  24 ++++----
->  kernel/bpf/syscall.c           |  25 ++++----
->  kernel/bpf/trampoline.c        | 102 ++++++++++++++++-----------------
->  net/bpf/bpf_dummy_struct_ops.c |  11 ++--
->  8 files changed, 185 insertions(+), 178 deletions(-)
+>  tools/lib/bpf/btf.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  tools/lib/bpf/btf.h |  3 +++
+>  2 files changed, 44 insertions(+)
 >
+> diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
+> index 83fe79ffcb8f..64502b3ef38a 100644
+> --- a/tools/lib/bpf/btf.c
+> +++ b/tools/lib/bpf/btf.c
+> @@ -1010,6 +1010,47 @@ __s32 btf__find_by_name_kind(const struct btf *btf=
+, const char *type_name,
+>         return btf_find_by_name_kind(btf, 1, type_name, kind);
+>  }
+>
+> +int btf__find_by_glob_kind(const struct btf *btf, __u32 kind,
+> +                          const char *allow_pattern, const char *deny_pa=
+ttern,
+> +                          __u32 **__ids)
+> +{
+> +       __u32 i, nr_types =3D btf__type_cnt(btf);
+> +       int cnt =3D 0, alloc =3D 0;
+> +       __u32 *ids =3D NULL;
+> +
+> +       for (i =3D 1; i < nr_types; i++) {
+> +               const struct btf_type *t =3D btf__type_by_id(btf, i);
+> +               const char *name;
+> +               __u32 *p;
+> +
+> +               if (btf_kind(t) !=3D kind)
+> +                       continue;
+> +               name =3D btf__name_by_offset(btf, t->name_off);
+> +               if (!name)
+> +                       continue;
+> +
+> +               if (deny_pattern && glob_match(name, deny_pattern))
+> +                       continue;
+> +               if (allow_pattern && !glob_match(name, allow_pattern))
+> +                       continue;
+> +
+> +               if (cnt =3D=3D alloc) {
+> +                       alloc =3D max(16, alloc * 3 / 2);
+> +                       p =3D libbpf_reallocarray(ids, alloc, sizeof(__u3=
+2));
+> +                       if (!p) {
+> +                               free(ids);
+> +                               return -ENOMEM;
+> +                       }
+> +                       ids =3D p;
+> +               }
+> +               ids[cnt] =3D i;
+> +               cnt++;
+> +       }
+> +
+> +       *__ids =3D ids;
+> +       return cnt;
+> +}
+> +
+>  static bool btf_is_modifiable(const struct btf *btf)
+>  {
+>         return (void *)btf->hdr !=3D btf->raw_data;
+> diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> index b30008c267c0..d7b47bb0ba99 100644
+> --- a/tools/lib/bpf/btf.h
+> +++ b/tools/lib/bpf/btf.h
+> @@ -661,6 +661,9 @@ static inline struct btf_decl_tag *btf_decl_tag(const=
+ struct btf_type *t)
+>         return (struct btf_decl_tag *)(t + 1);
+>  }
+>
+> +int btf__find_by_glob_kind(const struct btf *btf, __u32 kind,
+> +                          const char *allow_pattern, const char *deny_pa=
+ttern,
+> +                          __u32 **__ids);
 
-[...]
+
+as AI pointed out, this should be an internal helper, no? Let's also
+not use double underscore pattern here,
+"collect_btf_ids_by_glob_kind()" perhaps?
+
+Also, you don't seem to be using deny_pattern, where you planning to?
+
+Also, are there functions that we'll have BTF for, but they won't be
+attachable? What if I do SEC("fentry.multi/*")? Will it attach or fail
+to attach some functions (and thus fail the overall attachment)?
+
+>  #ifdef __cplusplus
+>  } /* extern "C" */
+>  #endif
+> --
+> 2.52.0
+>
