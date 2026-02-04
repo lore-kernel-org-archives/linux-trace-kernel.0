@@ -1,93 +1,93 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FAC37F0FB;
-	Wed,  4 Feb 2026 19:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770233002; cv=none; b=jiAhs46X977SzSVethphKGT/owl6sPS8Yda4VUfb69ox3R5gPjHxfxGEk4P/drIjoJ2VMbJlHdkD96DDlRxOHhysR8FbYJvkmZP9+FoLcBsZE1PDNizumFO6x2RrOeLuAT2mRCpXiun0t8s34jN9HSa9m46LHsCcj3k3pebuNQI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770233002; c=relaxed/simple;
-	bh=UBfvN2wafXe3z5mU+W2ksqJgq3QpOjCjvpI7nSd8XcE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=Sia1B7RuCphGuxYbgA+Ts7veMUfNfmMnnGrBflJeRdv8iGw6sDBjeYS3Tpwp4xlZUANG87TygyEVTOFztSgD4CmUri4QYEU1vD/KJ+IfUC2Aoh9cgJB+Mh/EHx27C82QaxlSuyL/RoFFGPASUQ4hnyZMLF3fza4OR18m7u8z2j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id AA10757CFA;
-	Wed,  4 Feb 2026 19:23:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id B213B80019;
-	Wed,  4 Feb 2026 19:23:18 +0000 (UTC)
-Date: Wed, 4 Feb 2026 14:23:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
- "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [ANNOUNCE] libtraceevent 1.9 released!
-Message-ID: <20260204142350.518f5e8c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1F02BEFED
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Feb 2026 19:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770233133; cv=pass; b=IEDyql8oRXmAa2QtKScDPfZ33TI1xQAnhRZanPBf8X+a6Np4O9spj4b+yoR1NTQynvcafBSFbGmX/iLM/wOOBddR1NZRLNe5Rl2Ogg4KLABcLqZPCGLrVx7aerxutgebHpIkb90fK7GhPf1jz3uGSttIs/PoRTF+Rbb2p+SSsEo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770233133; c=relaxed/simple;
+	bh=nhyvLQ+Bk0bui58qEVDPyIISYlNiBeaFY239O0EUQIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RVKjjjvlNrh+HhRqxjvmzFzlIkZe3kx7PfuAvGyIogGoliOTENt/KG5DBOM/NAMzOgAwZHOaXJsh7FI6pgyn8KkLRAZuj5Bqut28aWO5app7hFY6qTluS+WJj1S7V/Z9KkoRqlcu5P2xJtBmTHZ8sxZ2xlsY5nRErhyzQlPHbRw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c/kWkhaM; arc=pass smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c/kWkhaM"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-5014b5d8551so55651cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 11:25:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770233132; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IG4HV4o5FDBqJwoj0W931z5zx5TeumGqNvREApHwVyiptAs3sY3f7AXnxoKZuzVUDg
+         lZGfbkUiWasUONmVTzFHu+BXrE9AO6aTpBX6Et1AfFAi5FxWhTiBq9xFI9gDUYyMXnLn
+         mVYlsPTNKWwmEATJ4v+8Jkk4cUlKDUftO8hPqBmyPrFA2QeZzmDxJ2N4puX3nDbiYv72
+         00pdKMBPi0M0c4ePo8V8uv2aEP178071tqviCWfhftnb5QNz8jW/7qzmtaczRWZMy7bb
+         hk1TOrBJVj9/zd0rfLz5npwqhIjigTElLEKfqZ3mjT9OvV8R140edUDKqX7Xm77dRAvu
+         8teQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=nhyvLQ+Bk0bui58qEVDPyIISYlNiBeaFY239O0EUQIg=;
+        fh=E8BZXfWwmniMCkQXf8UjDlqsB1jNVz8J/rRR2T1BqFA=;
+        b=HpWfeshma+mqlKqu39S43+aZ+P1U+RPR/pwYwX9bPT7+jRmku++FWSxZo0AmP5I6iq
+         +nCtCDMbKjNBkjUXl69WS1xas6hAh7fW9hMp8BOy6t2LB6mgWlNGPyJ0zNpfrS+ObwCn
+         aKxyBJ1w5efruDaDJIauStrYdpJj+bTS+wqz9rD8ywFnCFHVxgpE4r2nSXapDnhR0FjQ
+         ZqW3Pd0XR3SWPziBm1hGcWJsy04bYGiJpUXh4+3BD6J06/LPmVZC5mUcq950aCGO4jbj
+         Pa1sDhLsGt3uGmFWs4+cIe9aotF1eftqrL3Q/+8/VyUBkCtedRMC912p3PcFk34TyWFD
+         iIMw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1770233132; x=1770837932; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nhyvLQ+Bk0bui58qEVDPyIISYlNiBeaFY239O0EUQIg=;
+        b=c/kWkhaMFCWueD9B76TjimG4hPcb7kzIe2ZHOlATaPBNBfqTOBKod8agR/A31FKC/D
+         Pq8WjJ/EPx/D+vnHXHCmxmnpLR8j5mcuacnzdf4KkH7qxCk/riQ6ifpFW8lK6vp9P2DK
+         ux2GpLXoTmvoQtnqa8EPVd59ZRLl17ygdTTvE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770233132; x=1770837932;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nhyvLQ+Bk0bui58qEVDPyIISYlNiBeaFY239O0EUQIg=;
+        b=hAtn3PmvqdBXdrUo0tzDf7wcOXn3hZ5f59bu+fN6kpuJmdvo4R6qx+Kz/ygyag3jSb
+         Fp2zQ3Hm9oCTkZlapUFrtzSRyYS10jMrWJRIDPDO3WJgv6m1sv01NH5KeXMg1U3uZneO
+         BWHpngxsnGrW+URQBxpsRGTQMqEUjN/83ZzVXd6vFHsNcJunSFIkFyDchWUXlp570TSN
+         xpr5LmqRCq/PIii0OrtudpdRCg7hYKjfgVw5YPT2/YWHvalMOBZboAJ+uuw3vXsH/7Ts
+         Okoi8ag5EGH+H0G5noFoEBwSMrNlQCk+NYFDXt1KQSBgpNfZVUW0m0o4JkUASqShvFOm
+         mZTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJyqo8jaLktnuSHeTxymiOAhrBq41qXS73R53nMyT05ToIAvgJ9fJckUTy1O02Yd5Z7Vrz9HPbVT9olrVCL3IYHLM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnitbOsJdVekpk0y51KU93MG7juMvS3tsqYH3HII5wDrcfxE9x
+	vEDcQDsuoQz4lAHhSGt/E78R9nGZeEcdWw5LDH0xro+SWt4aILkjGmh0m1KPKgpKc4KdyFG+wIy
+	rXQJhN/+0weQwzZuy22aYSHZLEf/OPdYOh9UlZ/7URsVqW/78SEJ9KQ==
+X-Gm-Gg: AZuq6aI+9lHkNFiT2LhM3jHZ5WKSKMon/u6aa8FZy0I1FXRG3JnJJeYwplZiwjfv8ny
+	kC0RfxetRYFnU7TLabOyri51JJ8jKSaM2RYA8BqWXPIZcmilsj4UZdtu8lh7EwqIRiuMGeF1f9t
+	N/iFlKRUS5wDIAWKkvO4K3AFqJ9gSMayQzfE/ICEIr2lGP2U3cbfEllPfX+5BT1ztnI+qtxSFZD
+	pjLmCcsS+2ckStDQQ5NfeVUnmxbnb2izJmSWPyuvF2IOm0Hj15wche1OnqQsKhoUQu8sbo=
+X-Received: by 2002:ac8:58cc:0:b0:4ed:ff77:1a85 with SMTP id
+ d75a77b69052e-5062b25de71mr1131741cf.17.1770233132046; Wed, 04 Feb 2026
+ 11:25:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B213B80019
-X-Stat-Signature: 97sutsbq9kotwfmxpjgxf1uytbhgbkus
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19D9Z7Puu5T04dJhqsf23A4hGMO8BPhj2A=
-X-HE-Tag: 1770232998-577224
-X-HE-Meta: U2FsdGVkX1+LAN9nNJJaR4iAV5vqgU5FFCv4z4xB3/Q2nAGqaQKXygpwPnk9+YI6gmlGDNXTfj2fP8O7HyTSHxPitJE4mAbZgEbQ1AXm3Z3cWWJTTIHi9zIasUHCTOS+5ftW1Pm7Fg07Lm17SI9OzvKkRdG2BE141Gxh4Bh60pll6ESLanKFPeLGAeaZwzY/EMBaRqEdMri0FSJQ3AVCHnATYZTZXFEfUrPvc9pD+liaxBC7pklWqFoh0iODzrYCj3pyWuSUp6ef9dG0L7SskolqIRZpW88fODkqDx7MuWbhVyoYcluD0EDjo+aSdL3/
+References: <177019401833.80694.554894321526842218.stgit@devnote2> <177019402883.80694.10977484286951965499.stgit@devnote2>
+In-Reply-To: <177019402883.80694.10977484286951965499.stgit@devnote2>
+From: Julius Werner <jwerner@chromium.org>
+Date: Wed, 4 Feb 2026 11:25:19 -0800
+X-Gm-Features: AZwV_Qg7k1iCDHhT_3WfDmzMlrEEx46unN3gO45HX3hLUsndnV_6n1i0hDIE9UM
+Message-ID: <CAODwPW9sCyFS85RHangjZ=0aY8d8Og8A0FGycP_uQ_wcCaYJuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] bootconfig: Terminate value search if it hits a newline
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-libtraceevent: 1.9.0
+Reviewed-by: Julius Werner <jwerner@chromium.org>
 
-Changes since 1.8.6:
-
- New APIs:
-
-  Addition of loading the BTF file (/sys/kernel/btf/vmlinux) into the tep
-  handle to allow it to parse function parameters:
-
-        cat-33501 [005] ..... 136155.767950: function:             __x64_sys_execve(regs=0xffffc9000e3eff58)
-        cat-33501 [005] ..... 136155.767951: function:                getname_flags(filename=0x7ffe7d33f3d0, flags=0)
-        cat-33501 [005] ..... 136155.767951: function:                getname_flags.part.0(7ffe7d33f3d0, 0, 0, 0, 0, 0)
-        cat-33501 [005] ..... 136155.767951: function:                   kmem_cache_alloc_noprof(s=0xffff8881001d3800, gfpflags=0xcc0)
-        cat-33501 [005] ..... 136155.767951: function:                      fs_reclaim_acquire(gfp_mask=0xcc0)
-        cat-33501 [005] ..... 136155.767952: function:                      fs_reclaim_release(gfp_mask=0xcc0)
-
-  tep_load_btf() - loads the raw BTF file and parses it.
-
-  tep_btf_print_args() - parses the arguments of a given function with the
-                         given parameters.
-
-  tep_btf_list_args() - list the arguments of a given function to produce
-                        its prototype.
-
- - Add API for persistent ring buffer processing:
-
-  tep_parse_last_boot_info() - Reads and parses the last_boot_info file of a
-                        persistent ring buffer from a previous boot. This
-                        has the information to convert the addresses of
-                        functions from the previous boot to the addresses of
-                        the corresponding function of the current boot.
-
-  tep_load_modules() - If last_boot_info is loaded, then /proc/modules
-                       should also be loaded to compare where the addresses
-                       of the modules were loaded in the last boot (found in
-                       the last_boot_info) to where they are loaded in the
-                       current boot. This is used to convert the addresses
-                       of module functions from the last boot to the address
-                       of their corresponding function in the current boot.
-
-   The above functions are used to be able to convert the addresses of the
-   functions from the previous boot to their corresponding functions of the
-   current boot that the kallsyms came from. (see tep_parse_kallsyms())
-
- Updates:
-
- - Handle __get_stacktrace() in the print-fmt field that synthetic events
-   can add when they have a stacktrace field.
-
+Thank you!
