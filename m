@@ -1,101 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947023B8D45
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 12:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4839FD4
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 13:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770294584; cv=none; b=NWU+n4GEOlzKtNuKFU/CZhQ9nH/6nd7KVXgS6RqN7N8xnaj8y4i58QFloQFhA+qAH5/8C5aNG8iuGrDdLLE5IvCwvC98jzGoRNiY07fhEBct+9ZVoAdLNdezNn8Yxhmzp0wpdCwWLOZnTR0aUisaYXhI+v/2FPHSmcCyZ6o60/E=
+	t=1770299160; cv=none; b=mkabA79F2SQuXfULDxMFcJ2OEG+woCM4eeEQYBBY8iBTHk1AomkqzUL2T169GiB1EJOc3Bl6ogxp5rZKf0jq2w6hchUwcclyK7pN1+Bc0ku2cIfGdqvOabFsK4NC+n2pvcoQOeN7FvRNwvXvQfcfR3JX85hIYMlhZBo8vx11xh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770294584; c=relaxed/simple;
-	bh=SmGwsreFC875e2XkP97W/boxhAVimJd+kAYCDyQkBOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=RBt933frh0AJ8+7b0Dwos+e54Hjw516hMU9NIpdMhdLY6ErhAXYNmQ6wbjUnfZu8mpAH4+F4zyqzysegs9Pj9IV1ADGN3DzPqZifnBNeNSG4N31tLV5W7UxUaZBbcK7O16p6ElwBKlDwQXie52PUnDldPeukKhn84CDbJkT8frI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ln5Jah7R; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1770299160; c=relaxed/simple;
+	bh=zntokVry81Mkk3OI0HoMyp2+zaPjjBCi0jfPMCHWqZg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kewwldDMhGTu5tB/tgD6uCi4uify9HDcu2Bd14kHUDoJ3JmtCwxArp5zbtg359MXC4cZFvggOPmk1bMseRR3Mbmvzl5aXM7Xsh5YY822CAzYoHLcsfB3gpfuOTp39WItP8ai0BwiUMRE+Ngntl3Vb/ZdYoAyZPMTrXIvG482wwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bk+49ZGL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ln5Jah7R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770294583;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SmGwsreFC875e2XkP97W/boxhAVimJd+kAYCDyQkBOE=;
-	b=Ln5Jah7R4AcYDYRr/vvwWEOY1vXM9L67CfwltrLkKBEQ3LMqr3+hkSmZoyiy4VNJxoWcKc
-	zNFT7+3u7FpmsG4xag1w+Dbi4lfZ4RXjdcn+zZXPXERLkF98NkiF74W/fqTpuRZiBY3t+j
-	KIE7J1xCVkByiM580N4h2i6QWBq1zro=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-1-HKa2yFP1ChMu5ZPDHAUg-1; Thu,
- 05 Feb 2026 07:29:40 -0500
-X-MC-Unique: 1-HKa2yFP1ChMu5ZPDHAUg-1
-X-Mimecast-MFC-AGG-ID: 1-HKa2yFP1ChMu5ZPDHAUg_1770294578
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F127E1800473;
-	Thu,  5 Feb 2026 12:29:37 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.8])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B9532300DDA1;
-	Thu,  5 Feb 2026 12:29:31 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  5 Feb 2026 13:29:37 +0100 (CET)
-Date: Thu, 5 Feb 2026 13:29:30 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Carlos =?iso-8859-1?Q?L=F3pez?= <clopez@suse.de>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"open list:UPROBES" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] uprobes: replace deprecated kmap_atomic() with
- kmap_local_page()
-Message-ID: <aYSNKqr2rmO7dHBm@redhat.com>
-References: <20260205105725.298340-1-clopez@suse.de>
- <20260205111208.GK232055@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk+49ZGL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-480142406b3so8077935e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 05:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770299159; x=1770903959; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSe3DP+UKMA69sAOGcKJ9mzaLMcIBDtArPSidVC84FE=;
+        b=Bk+49ZGLKHTgkFl2QDWCyWIuR5hjTfD/7J1/uqxl6AWiUu85+FZeEOc+BJJo+iBLmg
+         +Z30KcZ03q/+CDTalS/vb2LlddsREhQkfKaKkO8CZs5g30iy38znfaT8JMc9uRRNUuaJ
+         JiNTCrPfj+0ci8vSJvQrU3wxtLXPdS1YZ5TUoCyZtvPjUMcv+RRzHdcdOEhXr1q6dJnm
+         dWgos2of80T7ehiCIqT5QIawYyp4363QcZelkIq8XeIitGblChpnkzYtLTknnUrmx0fh
+         lseeeVrUQ/HA7+6IX+Ikrm2CCfUm9oC2MHU7ZgmeJtEl3OYTIKjV3KyvndCuZsruw7Xp
+         7wdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770299159; x=1770903959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lSe3DP+UKMA69sAOGcKJ9mzaLMcIBDtArPSidVC84FE=;
+        b=HDdlcF4vtF1epHRuBJb7Sp+4qY+2S5cvoz1/+JYYSfp6QOT5N7yTz1Q3WmPCVpFGdu
+         ztZri7lgVbOSUZdlHOjM0+xlNf5Wv1rKNBvvLJRX6edFnwZzx1Nr3Z11abebDKlm29YK
+         Gs+7dT6m2LczPOLDhxV6cM+izPqYoSbRGPdhnfBRnD2d3qrdr9Q4MojQULj2G3b0rxDt
+         zXyzvg/2QvQvXXEzTfDc4PL4LiNtnzHE+0j9k7meVSkbD8g5HGJqKXg28JeG9OwR25kG
+         /jtJ6RWqUT9NBEnN/H3euQmDLM0RDy7ddNYplF05R3K1fZsWOf6AKnwdvlewdBohtnHT
+         cddw==
+X-Forwarded-Encrypted: i=1; AJvYcCULWOiuxJ+dm9hhciQDL+R+ku0Ep3ENUJ/KfaxC6korm520lMZ5NtjAiS7Qr6M9D+7zuJuELL4kevXJa3WG4fYr12M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7mWcpHoFz1DYWCvyErkjNoaXv0eRUfW9GhmniOy9D1cJ7w/e5
+	ctahEGS/4tFN2ImGtmpf6KrYSpkBuAWutYjAsG3BFanGnUhuYxsIcbGt
+X-Gm-Gg: AZuq6aL4lbJTrCL0VmYjiffIeQ1lb8Whb8ou4FmgoL55t4PDA5hE4Wxe+SbNOpY9ZFZ
+	OoBSC4BYnbPCoGKcwM/3Eib5AIl2paEmB6fPyEhLSBIDhsniizXuS/Je/ofaqyIwfqIUu30fkE2
+	NfLZaWa1xewn1VEAkWJIfuMDbJVMNcoSLS9hkPf6VYPIGMgQjHszA9qAwcLg50MZWXRktCjLnQQ
+	39jgipMcSLU/rSHfr/6HaNqv2uD42s3trxiiffa4WhChsRX/B0RXhSi3F2tfc1TEBGJOpUot4xU
+	fIAbJWCmWvYkLIXQ+Hvq6e4hBFg1dN4JVEY7DP636RAVGCy5Ce5yXxe+U0MyV7G9aufrnqIfVQy
+	DCRjVsRp8h/BboMgVfDAXL4TQGxc+LMYz9HMPjDaIQw4kIJRgBrmFNT1Ur89C
+X-Received: by 2002:a05:600c:1f08:b0:477:b642:9dc9 with SMTP id 5b1f17b1804b1-4830e993164mr89199165e9.28.1770299157801;
+        Thu, 05 Feb 2026 05:45:57 -0800 (PST)
+Received: from krava ([2a02:8308:a00c:e200::b44f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48317d3f007sm87930895e9.9.2026.02.05.05.45.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Feb 2026 05:45:57 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 5 Feb 2026 14:45:55 +0100
+To: Menglong Dong <menglong.dong@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC bpf-next 06/12] bpf: Add bpf_trampoline_multi_attach/detach
+ functions
+Message-ID: <aYSfEy8Zf8bCs4-j@krava>
+References: <20260203093819.2105105-1-jolsa@kernel.org>
+ <20260203093819.2105105-7-jolsa@kernel.org>
+ <1945516.tdWV9SEqCh@7940hx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260205111208.GK232055@noisy.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: 34xV5FntWL8iE3rcWRNGc2pMm3VK62xaepug1AC9iQ0_1770294578
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1945516.tdWV9SEqCh@7940hx>
 
-On 02/05, Peter Zijlstra wrote:
->
-> On Thu, Feb 05, 2026 at 11:57:25AM +0100, Carlos López wrote:
-> > kmap_atomic() has been deprecated for a few years, and kmap_local_page()
-> > should be used instead, so replace it. Since the uprobes code relied on
-> > kmap_atomic() disabling page faults to access user pages, add the
-> > required calls to keep the existing behavior.
->
-> Are those pagefault_disable()s really needed here, or is this just
-> cargo-culting?
+On Thu, Feb 05, 2026 at 05:16:49PM +0800, Menglong Dong wrote:
+> On 2026/2/3 17:38 Jiri Olsa <jolsa@kernel.org> write:
+> > Adding bpf_trampoline_multi_attach/detach functions that allows
+> > to attach/detach multi tracing trampoline.
+> > 
+> > The attachment is defined with bpf_program and array of BTF ids
+> > of functions to attach the bpf program to.
+> > 
+> [...]
+> > @@ -367,7 +367,11 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
+> >  	head = &trampoline_ip_table[hash_64(tr->ip, TRAMPOLINE_HASH_BITS)];
+> >  	hlist_add_head(&tr->hlist_ip, head);
+> >  	refcount_set(&tr->refcnt, 1);
+> > +#ifdef CONFIG_LOCKDEP
+> > +	mutex_init_with_key(&tr->mutex, &__lockdep_no_track__);
+> > +#else
+> >  	mutex_init(&tr->mutex);
+> > +#endif
+> >  	for (i = 0; i < BPF_TRAMP_MAX; i++)
+> >  		INIT_HLIST_HEAD(&tr->progs_hlist[i]);
+> >  out:
+> > @@ -1400,6 +1404,188 @@ int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
+> >  	return -ENOTSUPP;
+> >  }
+> >  
+> > +#if defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS) && defined(CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS)
+> 
+> Hi, Jiri. It's great to see your tracing_multi link finally. It looks great ;)
 
-No, I think there are not needed.
+heya, thanks ;-)
 
-And the (already in tip) patches from Keke do not add pagefault_disable().
+> 
+> After analyzing a little deeper on the SINGLE_FTRACE_DIRECT_OPS, I
+> understand why it is only supported on x86_64 for now. It seems that
+> it's a little hard to implement it in the other arch, as we need to
+> restructure the implement of ftrace direct call.
+> 
+> So do we need some more ftrace API here to make the tracing multi-link
+> independent from SINGLE_FTRACE_DIRECT_OPS? Otherwise, we can only
+> use it on x86_64.
 
-is_trap_at_addr() does pagefault_disable() because it is called with
-mm->mmap_lock held.
+I tried to describe it in commit [2] changelog:
 
-Oleg.
+    At the moment we can enable this only on x86 arch, because arm relies
+    on ftrace_ops object representing just single trampoline image (stored
+    in ftrace_ops::direct_call). Archs that do not support this will continue
+    to use *_ftrace_direct api.
 
+> 
+> Have you ever tried to implement the SINGLE_FTRACE_DIRECT_OPS on arm64?
+> The direct call on arm64 is so complex, and I didn't work it out :/
+
+yes, it seems to be difficult atm, Mark commented on that in [1],
+I don't know arm that good to be of much help in here, cc-ing Mark
+
+jirka
+
+
+[1] https://lore.kernel.org/bpf/aIyNOd18TRLu8EpY@J2N7QTR9R3/
+[2] 424f6a361096 ("bpf,x86: Use single ftrace_ops for direct calls")
+
+> 
+> Thanks!
+> Menglong Dong
+> 
+> > +
+> > +struct fentry_multi_data {
+> > +	struct ftrace_hash *unreg;
+> > +	struct ftrace_hash *modify;
+> > +	struct ftrace_hash *reg;
+> > +};
+> > +
+> [...]
+> > 
+> > 
+> > 
+> 
+> 
+> 
+> 
