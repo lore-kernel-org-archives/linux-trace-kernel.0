@@ -1,83 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A352121CFEF
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 06:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40303542D4
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 07:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770274263; cv=none; b=NYkdyBI4fc+wmX2g1cdOlBAE603JyUp6PowUcAWov/oRS2D/mvfIMHcldEApzs5aDCt2/HxL0J4SmaCTvtjbOedxUvLrfxJzwSrlXOnpdz4xEzKTPT35xypOJ7bEPVmMvBY1MaxeW62mu4RrUO1tWy9GJnkIznjhF3kTAVXprDk=
+	t=1770275004; cv=none; b=sNgmuABsJZ4w+Iq5IBxwrb74oZb7Pea+JEt1Nz2XJapIp0RZufJruzgQu33NhhXb2BQ2mPW1b1DNkMOQHmIuPZBLs0FBxM97DfGMaX4q3aZcZFvXCx9fQSJCJkNWv1v0PxLlJkxzPwHVw+53a9VB1BCNhBPEuhKiYWIJjv5E/y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770274263; c=relaxed/simple;
-	bh=7U5+RdB0JTAtRoTB8Cpx47BQtyru0yTkeByKdchm0Hc=;
+	s=arc-20240116; t=1770275004; c=relaxed/simple;
+	bh=1jvmF+JFbYJ1iZcqtkpCUpVHGgSD2QYjzGFCeSm2dn0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FqeiKDS8tE1C/uem4+vZrx2fGSoCSsohUfI8hL+Q57Z2KQ37eURhztam+s4FNWbf5FeqJAojLt/QcXSyJ7ayCRRfzG/atygFapX8WXJG1zflltbevG58DeGVgRCmHauVGLq/IbTFFMhk/N8Y3pYyYq/u2h1jNqED3wVDYhsC5Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nm/cR9LC; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=iBX8a+oqZrZqvWPmeqLKzgl32ctmyivZ422n4EQ0MDrLbmLnH/CuXbt/K4+NAAu0+EavkKPJAlZ5EugxAQ/uw41hujeC6SPBPeGgPed1WpwsoonUPoqgJDjeQW9IUrEnYjlWviVjtl9zYQvqOPtOeipOiczhE34ktTAnhHvn0nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R7+GBaMi; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nm/cR9LC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R7+GBaMi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770274261;
+	s=mimecast20190719; t=1770275003;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7U5+RdB0JTAtRoTB8Cpx47BQtyru0yTkeByKdchm0Hc=;
-	b=Nm/cR9LCFi9yS2pQpeFwxgfgeeaq8QiZONEEZshPtQonrpHnRnK7HPMvKYWH2fby0XfpGJ
-	41kMrArwVWGoYVQ0M2tq3tCTywFkynTE/9vdbIeZzNAvDZLS3oVGjlkkDvFMBpLDJc6C7M
-	AKMy2E1aza4H4xiCeqEQOOKm0E1CGd8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yKvHEfuOwc6AejWVpv1J8eYwloGKKUnIzQiWQBw1sS8=;
+	b=R7+GBaMiMXlnLEgtWN6jD5z3fr3aALxxzN8xJC9d1M8G8FX1rZAFANj9DWmWz4qsy9Aj50
+	jZtVo8pPRtVbYI3or6owa9fgH+pCJsSM8IUUR+CrcEkGyTUu6+HMiyqtSbVLFLpPkuwhx7
+	mflHODluCGptd/dRugJkLxqksJkwcts=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-180-_xB7BKtxPO-PwgGHBU38cQ-1; Thu, 05 Feb 2026 01:51:00 -0500
-X-MC-Unique: _xB7BKtxPO-PwgGHBU38cQ-1
-X-Mimecast-MFC-AGG-ID: _xB7BKtxPO-PwgGHBU38cQ_1770274259
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4804157a3c9so7708635e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 22:51:00 -0800 (PST)
+ us-mta-625-Nh5Mt9BEMOu7VY_JKyotTQ-1; Thu, 05 Feb 2026 02:03:20 -0500
+X-MC-Unique: Nh5Mt9BEMOu7VY_JKyotTQ-1
+X-Mimecast-MFC-AGG-ID: Nh5Mt9BEMOu7VY_JKyotTQ_1770274999
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-430fe16b481so410015f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 23:03:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770274259; x=1770879059;
+        d=1e100.net; s=20230601; t=1770274999; x=1770879799;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7U5+RdB0JTAtRoTB8Cpx47BQtyru0yTkeByKdchm0Hc=;
-        b=d/A9iyMLm4q5inPepwQ6h/zfFdntU1FrqyxhTfO+zHbiOC9OjT949BrMKwUHG6jAKd
-         iY3rxDLNu29/x53mW2Fqn+lv8bh3Wv8lpCOwDo8chxjogvv7wJm7TtqG/nW7opAiyfm7
-         JWCejGycSUlHHIrXzsZZYQNV7JfKMinCFNGKu6H/HfWGDag0n5E5hGqAsrtaB+7U1jcY
-         XZoQycK3mpqSo4UBuHpVkcKPn83Wlxi0+Y+qpKuIM+whDx8bZWA3vrtNMFw3sRGaUw5s
-         cL2D5mUBUsHQuYeP4rDVk/iZO/jBMPJOtWtfyFmJ5F0k884QdWxWFfuStwWahHTkBRB3
-         WGlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXC+t+eh+U8sAISVKLA76dpENzIMeeyb7MgFTM74qp8q9wuksAf1FJ+EpHUFv2HvIdMTX9BaC+GaJyzGozyuSvHJK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWJW3lcy2wduLN2d3PKsZobedhskqH4kjREYesC/hY75sKLDwi
-	UQpQBH1pV6eloibqx2XEl/kg38yFonntikdKhJaR2kZfnGCEQNi9IfJHrY9zLYOoDNLWM+8cAfl
-	tnyYmvi1Rtl/CfjRlwNN1WS8b5MmBgkcCYMD0rgQ0CVGX/B2aG8+m9YYoGmb9tev3675S11dhIl
-	IpwqLYFkCv
-X-Gm-Gg: AZuq6aJjANV30z58bGRVVurJZv1PfuSUU+vOcO8qkx4a684xbwfAb77F1/SZ5BCiaVe
-	oyAlU5H6ePMIoX+udm81i5K2v29XppnTedJq/jGcVWLN+/WttGHS1uttl+abSWwWipfnruoN7Ki
-	fDCYEwnE34LwgGTHnMTP93NjazgbPYZ45YUuIyh8zeZ0i75s5Yh8NxrxPQJ/gTnOyxp8HQkECrV
-	ae0JmcBJxWmP4agChWAGF1vdmWSGUmyQGEuzRdYb4Ha55JNNjBdmh7AnHDbeBakXbVbzq3HuIEC
-	d3Z1PBME15t7Atp6AqTNNx0Wnvrc4x2uTy1Xubih6f7f04uUXPQsGdvvWzstWOMBcSChPXyHVFQ
-	8P7f/y16rAhtVX+64OKbM5ehtc1sp909XRlqnWl71O2iacFMi4cytSl5SpTi68795/nSFflKwhZ
-	UO+QZo0K34
-X-Received: by 2002:a05:600c:608a:b0:480:1d16:2538 with SMTP id 5b1f17b1804b1-4830e96fa2dmr75804315e9.23.1770274259167;
-        Wed, 04 Feb 2026 22:50:59 -0800 (PST)
-X-Received: by 2002:a05:600c:608a:b0:480:1d16:2538 with SMTP id 5b1f17b1804b1-4830e96fa2dmr75804115e9.23.1770274258710;
-        Wed, 04 Feb 2026 22:50:58 -0800 (PST)
+        bh=yKvHEfuOwc6AejWVpv1J8eYwloGKKUnIzQiWQBw1sS8=;
+        b=j2rDuI+BbLAA6Np2bRAXE/YUvUVf4SHmPS+GQ2GCmFAyZ5376R5LztQrZxumvPg6BU
+         4+YABbkFf4wq1veksSQysrxJ5cmKWdWyd/p8win2LzCAUryl6efMoy4mXGqrnagpMZmo
+         7h8XuxahXMmEnBYQr9rSxy5rHUql1VrAowoZ3j8qgw2OcJWPaaBIQ3gUoT4xPt9sRVyf
+         TiK2030bfAexbpR3XgngCsyLgl+Oa0mDXAMqZT9oQ26/QR/tj2drRoL62brKVxIcTq6k
+         ruXHV8A66sYN72An3wJ0O+VAAucgWmprdOe9tqdLTSckuZvtawUA8AaSxOejM9jZPPzB
+         ISgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTNvHmqVkJWM0fkUtJwPIuPwK/w8s3u2b9v4SlpeqMF5a/ql0ACjCUwxDQNpZTTC4DhfoMYGlkiBsSWpFvZ/o1mt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE9SONSvxseAzyjN3aibA4iQt0Y4SSMa7t1hu1aaMxcE2p8GMp
+	cnSPGRTBRy05eeIyApvRx0aDG0tUCXFs3xQGQddCIgFJgVuJ+2B5bYuS87mKCMu2lxbr3hl3M8M
+	nOBuxoWg0UPDChK8P8zmC+yitxNRS28ARrZshyE1ZvEJ7myZ7uAFiufljE7NSApMED6ZazVFH5+
+	sdQ/rL4cGL
+X-Gm-Gg: AZuq6aJ6vb1lML90sVbhNwoSJNhd9+49qYCh6sOHTOKDxr1uVxvzIN7YlNscnY6izet
+	AMiNWGL2zlHxqfs742YUQ2YyWwUcacQjAcaTY5mgltmUmRmsITGD+mNnMR/aVjZb/VUlH9M7XKR
+	/bE6lajD2E30+F8l+AUiRNtsbGDkFApz0C/fBZcFEZvqYi3yHziksK+OOsy5Z5OUmsv9zoKOD+G
+	0+UyriQR7sW8BUdD4q6IjEJKTFasOzHNIy1Ng8h0Rlinz577e26xW45gMO+P1H5ZbEQ113vS45R
+	yE0nQlEN2fCeFKcb9c9hnhUYSDI8IzH0wPfkcE4E3uopkiurrDFLVxArsTOBFA2OOGOW2zECyRH
+	yO6QRnKXkNAbexiODvMguQVZd5kV8VsF4Hm0s8j2QDbh+Imb3co1o8eF1DFfZ4f/c4EsEyD9X6b
+	HX0/Rqm4w7
+X-Received: by 2002:a05:6000:24c9:b0:42f:b9c6:c894 with SMTP id ffacd0b85a97d-4361805dd58mr8929357f8f.52.1770274998835;
+        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
+X-Received: by 2002:a05:6000:24c9:b0:42f:b9c6:c894 with SMTP id ffacd0b85a97d-4361805dd58mr8929316f8f.52.1770274998426;
+        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48317d7a924sm50380965e9.10.2026.02.04.22.50.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43617e25e8csm10480333f8f.1.2026.02.04.23.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Feb 2026 22:50:58 -0800 (PST)
-Message-ID: <3552738a6de5a56e1eb5d985dfc1b414dd1a67d5.camel@redhat.com>
-Subject: Re: [PATCH v2 01/20] rv/rvgen: introduce AutomataError exception
- class
+        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
+Message-ID: <90102c96156337943a5319ab25991f95f9f07cf5.camel@redhat.com>
+Subject: Re: [PATCH v2 07/20] rv/rvgen: fix typos in automata and generator
+ docstring and comments
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>, Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, "open list:RUNTIME VERIFICATION
- (RV)" <linux-trace-kernel@vger.kernel.org>, open list
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
+ "open list:RUNTIME VERIFICATION (RV)"	
+ <linux-trace-kernel@vger.kernel.org>, open list
  <linux-kernel@vger.kernel.org>
-Date: Thu, 05 Feb 2026 07:50:57 +0100
-In-Reply-To: <20260204144914.104028-2-wander@redhat.com>
+Date: Thu, 05 Feb 2026 08:03:16 +0100
+In-Reply-To: <20260204144914.104028-8-wander@redhat.com>
 References: <20260204144914.104028-1-wander@redhat.com>
-	 <20260204144914.104028-2-wander@redhat.com>
+	 <20260204144914.104028-8-wander@redhat.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -95,134 +96,114 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4Ucu_pIUyO4bKKg9r8EkCBe5XxJZwU7aYvR_Wu7MbeI_1770274259
+X-Mimecast-MFC-PROC-ID: VzZ-9N3ODcOPANdKo5daBZL7k_O9JoDJ5fPjp67v5Q8_1770274999
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 
-T24gV2VkLCAyMDI2LTAyLTA0IGF0IDExOjQyIC0wMzAwLCBXYW5kZXIgTGFpcnNvbiBDb3N0YSB3
-cm90ZToKPiBSZXBsYWNlIHRoZSBnZW5lcmljIGV4Y2VwdCBFeGNlcHRpb24gYmxvY2sgd2l0aCBh
-IGN1c3RvbSBBdXRvbWF0YUVycm9yCj4gY2xhc3MgdGhhdCBpbmhlcml0cyBmcm9tIEV4Y2VwdGlv
-bi4gVGhpcyBwcm92aWRlcyBtb3JlIHByZWNpc2UgZXhjZXB0aW9uCj4gaGFuZGxpbmcgZm9yIGF1
-dG9tYXRhIHBhcnNpbmcgYW5kIHZhbGlkYXRpb24gZXJyb3JzIHdoaWxlIGF2b2lkaW5nCj4gb3Zl
-cmx5IGJyb2FkIGV4Y2VwdGlvbiBjYXRjaGVzIHRoYXQgY291bGQgbWFzayBwcm9ncmFtbWluZyBl
-cnJvcnMgbGlrZQo+IFN5bnRheEVycm9yIG9yIFR5cGVFcnJvci4KPiAKPiBUaGUgQXV0b21hdGFF
-cnJvciBjbGFzcyBpcyByYWlzZWQgd2hlbiBET1QgZmlsZSBwcm9jZXNzaW5nIGZhaWxzIGR1ZSB0
-bwo+IGludmFsaWQgZm9ybWF0LCBJL08gZXJyb3JzLCBvciBtYWxmb3JtZWQgYXV0b21hdG9uIGRl
-ZmluaXRpb25zLiBUaGUKPiBtYWluIGVudHJ5IHBvaW50IGNhdGNoZXMgdGhpcyBzcGVjaWZpYyBl
-eGNlcHRpb24gYW5kIHByb3ZpZGVzIGEKPiB1c2VyLWZyaWVuZGx5IGVycm9yIG1lc3NhZ2UgdG8g
-c3RkZXJyIGJlZm9yZSBleGl0aW5nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFdhbmRlciBMYWlyc29u
-IENvc3RhIDx3YW5kZXJAcmVkaGF0LmNvbT4KCkxvb2tzIHZlcnkgZ29vZCwgdGhhbmtzLgpOb3cg
-SSB3b25kZXIgdGhvdWdoIHdoeSBpcyBMVEwgbm90IGluY2x1ZGVkIGluIHRoZSBjaGFuZ2UuIGx0
-bDJiYS5weSByYWlzZXMgYQpmZXcgVmFsdWVFcnJvciB0aGF0IHNob3VsZCBwcm9iYWJseSBiZSB0
-cmVhdGVkIGp1c3QgbGlrZSB0aGVzZSBBdXRvbWF0YUVycm9yLgpZb3UgY291bGQgZWl0aGVyIGNy
-ZWF0ZSBhIG5ldyBleGNlcHRpb24gY2xhc3Mgb3Igc2hhcmUgdGhlIHNhbWUgZm9yIGFsbCBtb2Rl
-bAplcnJvcnMgKERBIGFuZCBMVEwpLgoKV2hhdCBkbyB5b3UgdGhpbms/CgpUaGFua3MsCkdhYnJp
-ZWxlCgo+IC0tLQo+IMKgdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL19fbWFpbl9fLnB5wqDCoMKg
-wqDCoMKgwqAgfMKgIDkgKysrKysrLS0tCj4gwqB0b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZn
-ZW4vYXV0b21hdGEucHnCoCB8IDE3ICsrKysrKysrKysrKy0tLS0tCj4gwqB0b29scy92ZXJpZmlj
-YXRpb24vcnZnZW4vcnZnZW4vZG90MmMucHnCoMKgwqDCoCB8wqAgNCArKy0tCj4gwqB0b29scy92
-ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZ2VuZXJhdG9yLnB5IHzCoCA3ICsrLS0tLS0KPiDCoDQg
-ZmlsZXMgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pCj4gCj4gZGlm
-ZiAtLWdpdCBhL3Rvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9fX21haW5fXy5weQo+IGIvdG9vbHMv
-dmVyaWZpY2F0aW9uL3J2Z2VuL19fbWFpbl9fLnB5Cj4gaW5kZXggZmE2ZmMxZjRkZTJmNy4uM2Jk
-NDM4Zjg0NzZlZCAxMDA2NDQKPiAtLS0gYS90b29scy92ZXJpZmljYXRpb24vcnZnZW4vX19tYWlu
-X18ucHkKPiArKysgYi90b29scy92ZXJpZmljYXRpb24vcnZnZW4vX19tYWluX18ucHkKPiBAQCAt
-OCwxMSArOCwxNSBAQAo+IMKgIyBGb3IgZnVydGhlciBpbmZvcm1hdGlvbiwgc2VlOgo+IMKgI8Kg
-wqAgRG9jdW1lbnRhdGlvbi90cmFjZS9ydi9kYV9tb25pdG9yX3N5bnRoZXNpcy5yc3QKPiDCoAo+
-ICtmcm9tIHN5cyBpbXBvcnQgc3RkZXJyCj4gKwo+ICsKPiDCoGlmIF9fbmFtZV9fID09ICdfX21h
-aW5fXyc6Cj4gwqDCoMKgwqAgZnJvbSBydmdlbi5kb3QyayBpbXBvcnQgZG90MmsKPiDCoMKgwqDC
-oCBmcm9tIHJ2Z2VuLmdlbmVyYXRvciBpbXBvcnQgTW9uaXRvcgo+IMKgwqDCoMKgIGZyb20gcnZn
-ZW4uY29udGFpbmVyIGltcG9ydCBDb250YWluZXIKPiDCoMKgwqDCoCBmcm9tIHJ2Z2VuLmx0bDJr
-IGltcG9ydCBsdGwyawo+ICvCoMKgwqAgZnJvbSBydmdlbi5hdXRvbWF0YSBpbXBvcnQgQXV0b21h
-dGFFcnJvcgo+IMKgwqDCoMKgIGltcG9ydCBhcmdwYXJzZQo+IMKgwqDCoMKgIGltcG9ydCBzeXMK
-PiDCoAo+IEBAIC01MSw5ICs1NSw4IEBAIGlmIF9fbmFtZV9fID09ICdfX21haW5fXyc6Cj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3lzLmV4aXQoMSkKPiDCoMKgwqDCoMKgwqDC
-oMKgIGVsc2U6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1vbml0b3IgPSBDb250YWluZXIo
-dmFycyhwYXJhbXMpKQo+IC3CoMKgwqAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgo+IC3CoMKgwqDC
-oMKgwqDCoCBwcmludCgnRXJyb3I6ICcrIHN0cihlKSkKPiAtwqDCoMKgwqDCoMKgwqAgcHJpbnQo
-IlNvcnJ5IDogOi0oIikKPiArwqDCoMKgIGV4Y2VwdCBBdXRvbWF0YUVycm9yIGFzIGU6Cj4gK8Kg
-wqDCoMKgwqDCoMKgIHByaW50KGYiVGhlcmUgd2FzIGFuIGVycm9yIHByb2Nlc3Npbmcge3BhcmFt
-cy5zcGVjfToge2V9IiwKPiBmaWxlPXN5cy5zdGRlcnIpCj4gwqDCoMKgwqDCoMKgwqDCoCBzeXMu
-ZXhpdCgxKQo+IMKgCj4gwqDCoMKgwqAgcHJpbnQoIldyaXRpbmcgdGhlIG1vbml0b3IgaW50byB0
-aGUgZGlyZWN0b3J5ICVzIiAlIG1vbml0b3IubmFtZSkKPiBkaWZmIC0tZ2l0IGEvdG9vbHMvdmVy
-aWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2F1dG9tYXRhLnB5Cj4gYi90b29scy92ZXJpZmljYXRpb24v
-cnZnZW4vcnZnZW4vYXV0b21hdGEucHkKPiBpbmRleCAzZjA2YWVmOGQ0ZmRjLi42ZWNkNWNjZDhm
-M2QzIDEwMDY0NAo+IC0tLSBhL3Rvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9hdXRvbWF0
-YS5weQo+ICsrKyBiL3Rvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9hdXRvbWF0YS5weQo+
-IEBAIC0xMCw2ICsxMCwxMyBAQAo+IMKgCj4gwqBpbXBvcnQgbnRwYXRoCj4gwqAKPiArY2xhc3Mg
-QXV0b21hdGFFcnJvcihFeGNlcHRpb24pOgo+ICvCoMKgwqAgIiIiRXhjZXB0aW9uIHJhaXNlZCBm
-b3IgZXJyb3JzIGluIGF1dG9tYXRhIHBhcnNpbmcgYW5kIHZhbGlkYXRpb24uCj4gKwo+ICvCoMKg
-wqAgUmFpc2VkIHdoZW4gRE9UIGZpbGUgcHJvY2Vzc2luZyBmYWlscyBkdWUgdG8gaW52YWxpZCBm
-b3JtYXQsIEkvTyBlcnJvcnMsCj4gK8KgwqDCoCBvciBtYWxmb3JtZWQgYXV0b21hdG9uIGRlZmlu
-aXRpb25zLgo+ICvCoMKgwqAgIiIiCj4gKwo+IMKgY2xhc3MgQXV0b21hdGE6Cj4gwqDCoMKgwqAg
-IiIiQXV0b21hdGEgY2xhc3M6IFJlYWRzIGEgZG90IGZpbGUgYW5kIHBhcnQgaXQgYXMgYW4gYXV0
-b21hdGEuCj4gwqAKPiBAQCAtMzIsMTEgKzM5LDExIEBAIGNsYXNzIEF1dG9tYXRhOgo+IMKgwqDC
-oMKgwqDCoMKgwqAgYmFzZW5hbWUgPSBudHBhdGguYmFzZW5hbWUoc2VsZi5fX2RvdF9wYXRoKQo+
-IMKgwqDCoMKgwqDCoMKgwqAgaWYgbm90IGJhc2VuYW1lLmVuZHN3aXRoKCIuZG90IikgYW5kIG5v
-dCBiYXNlbmFtZS5lbmRzd2l0aCgiLmd2Iik6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBy
-aW50KCJub3QgYSBkb3QgZmlsZSIpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFpc2UgRXhj
-ZXB0aW9uKCJub3QgYSBkb3QgZmlsZTogJXMiICUgc2VsZi5fX2RvdF9wYXRoKQo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHJhaXNlIEF1dG9tYXRhRXJyb3IoIm5vdCBhIGRvdCBmaWxlOiAlcyIg
-JSBzZWxmLl9fZG90X3BhdGgpCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgIG1vZGVsX25hbWUgPSBu
-dHBhdGguc3BsaXRleHQoYmFzZW5hbWUpWzBdCj4gwqDCoMKgwqDCoMKgwqDCoCBpZiBtb2RlbF9u
-YW1lLl9fbGVuX18oKSA9PSAwOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIEV4Y2Vw
-dGlvbigibm90IGEgZG90IGZpbGU6ICVzIiAlIHNlbGYuX19kb3RfcGF0aCkKPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0YUVycm9yKCJub3QgYSBkb3QgZmlsZTogJXMiICUg
-c2VsZi5fX2RvdF9wYXRoKQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gbW9kZWxfbmFt
-ZQo+IMKgCj4gQEAgLTQ1LDggKzUyLDggQEAgY2xhc3MgQXV0b21hdGE6Cj4gwqDCoMKgwqDCoMKg
-wqDCoCBkb3RfbGluZXMgPSBbXQo+IMKgwqDCoMKgwqDCoMKgwqAgdHJ5Ogo+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBkb3RfZmlsZSA9IG9wZW4oc2VsZi5fX2RvdF9wYXRoKQo+IC3CoMKgwqDC
-oMKgwqDCoCBleGNlcHQ6Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmFpc2UgRXhjZXB0aW9u
-KCJDYW5ub3Qgb3BlbiB0aGUgZmlsZTogJXMiICUgc2VsZi5fX2RvdF9wYXRoKQo+ICvCoMKgwqDC
-oMKgwqDCoCBleGNlcHQgT1NFcnJvciBhcyBleGM6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-cmFpc2UgQXV0b21hdGFFcnJvcihmIkNhbm5vdCBvcGVuIHRoZSBmaWxlOiB7c2VsZi5fX2RvdF9w
-YXRofSIpCj4gZnJvbSBleGMKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqAgZG90X2xpbmVzID0gZG90
-X2ZpbGUucmVhZCgpLnNwbGl0bGluZXMoKQo+IMKgwqDCoMKgwqDCoMKgwqAgZG90X2ZpbGUuY2xv
-c2UoKQo+IEBAIC01NSw3ICs2Miw3IEBAIGNsYXNzIEF1dG9tYXRhOgo+IMKgwqDCoMKgwqDCoMKg
-wqAgbGluZSA9IGRvdF9saW5lc1tjdXJzb3JdLnNwbGl0KCkKPiDCoAo+IMKgwqDCoMKgwqDCoMKg
-wqAgaWYgKGxpbmVbMF0gIT0gImRpZ3JhcGgiKSBhbmQgKGxpbmVbMV0gIT0gInN0YXRlX2F1dG9t
-YXRvbiIpOgo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJhaXNlIEV4Y2VwdGlvbigiTm90IGEg
-dmFsaWQgLmRvdCBmb3JtYXQ6ICVzIiAlIHNlbGYuX19kb3RfcGF0aCkKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0YUVycm9yKCJOb3QgYSB2YWxpZCAuZG90IGZvcm1hdDog
-JXMiICUKPiBzZWxmLl9fZG90X3BhdGgpCj4gwqDCoMKgwqDCoMKgwqDCoCBlbHNlOgo+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBjdXJzb3IgKz0gMQo+IMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJu
-IGRvdF9saW5lcwo+IGRpZmYgLS1naXQgYS90b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4v
-ZG90MmMucHkKPiBiL3Rvb2xzL3ZlcmlmaWNhdGlvbi9ydmdlbi9ydmdlbi9kb3QyYy5weQo+IGlu
-ZGV4IDA2YTI2YmYxNWE3ZTkuLjc0MTQ3YWUyOTQyZjkgMTAwNjQ0Cj4gLS0tIGEvdG9vbHMvdmVy
-aWZpY2F0aW9uL3J2Z2VuL3J2Z2VuL2RvdDJjLnB5Cj4gKysrIGIvdG9vbHMvdmVyaWZpY2F0aW9u
-L3J2Z2VuL3J2Z2VuL2RvdDJjLnB5Cj4gQEAgLTEzLDcgKzEzLDcgQEAKPiDCoCMgRm9yIGZ1cnRo
-ZXIgaW5mb3JtYXRpb24sIHNlZToKPiDCoCPCoMKgIERvY3VtZW50YXRpb24vdHJhY2UvcnYvZGV0
-ZXJtaW5pc3RpY19hdXRvbWF0YS5yc3QKPiDCoAo+IC1mcm9tIC5hdXRvbWF0YSBpbXBvcnQgQXV0
-b21hdGEKPiArZnJvbSAuYXV0b21hdGEgaW1wb3J0IEF1dG9tYXRhLCBBdXRvbWF0YUVycm9yCj4g
-wqAKPiDCoGNsYXNzIERvdDJjKEF1dG9tYXRhKToKPiDCoMKgwqDCoCBlbnVtX3N1ZmZpeCA9ICIi
-Cj4gQEAgLTcxLDcgKzcxLDcgQEAgY2xhc3MgRG90MmMoQXV0b21hdGEpOgo+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBtaW5fdHlwZSA9ICJ1bnNpZ25lZCBpbnQiCj4gwqAKPiDCoMKgwqDCoMKg
-wqDCoMKgIGlmIHNlbGYuc3RhdGVzLl9fbGVuX18oKSA+IDEwMDAwMDA6Cj4gLcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgcmFpc2UgRXhjZXB0aW9uKCJUb28gbWFueSBzdGF0ZXM6ICVkIiAlIHNlbGYu
-c3RhdGVzLl9fbGVuX18oKSkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYWlzZSBBdXRvbWF0
-YUVycm9yKCJUb28gbWFueSBzdGF0ZXM6ICVkIiAlCj4gc2VsZi5zdGF0ZXMuX19sZW5fXygpKQo+
-IMKgCj4gwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gbWluX3R5cGUKPiDCoAo+IGRpZmYgLS1naXQg
-YS90b29scy92ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZ2VuZXJhdG9yLnB5Cj4gYi90b29scy92
-ZXJpZmljYXRpb24vcnZnZW4vcnZnZW4vZ2VuZXJhdG9yLnB5Cj4gaW5kZXggMzQ0MTM4NWMxMTc3
-MC4uYTdiZWU2YjFlYTcwYyAxMDA2NDQKPiAtLS0gYS90b29scy92ZXJpZmljYXRpb24vcnZnZW4v
-cnZnZW4vZ2VuZXJhdG9yLnB5Cj4gKysrIGIvdG9vbHMvdmVyaWZpY2F0aW9uL3J2Z2VuL3J2Z2Vu
-L2dlbmVyYXRvci5weQo+IEBAIC01MSwxMCArNTEsNyBAQCBjbGFzcyBSVkdlbmVyYXRvcjoKPiDC
-oMKgwqDCoMKgwqDCoMKgIHJhaXNlIEZpbGVOb3RGb3VuZEVycm9yKCJDb3VsZCBub3QgZmluZCB0
-aGUgcnYgZGlyZWN0b3J5LCBkbyB5b3UgaGF2ZQo+IHRoZSBrZXJuZWwgc291cmNlIGluc3RhbGxl
-ZD8iKQo+IMKgCj4gwqDCoMKgwqAgZGVmIF9yZWFkX2ZpbGUoc2VsZiwgcGF0aCk6Cj4gLcKgwqDC
-oMKgwqDCoMKgIHRyeToKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmZCA9IG9wZW4ocGF0aCwg
-J3InKQo+IC3CoMKgwqDCoMKgwqDCoCBleGNlcHQgT1NFcnJvcjoKPiAtwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCByYWlzZSBFeGNlcHRpb24oIkNhbm5vdCBvcGVuIHRoZSBmaWxlOiAlcyIgJSBwYXRo
-KQo+ICvCoMKgwqDCoMKgwqDCoCBmZCA9IG9wZW4ocGF0aCwgJ3InKQo+IMKgCj4gwqDCoMKgwqDC
-oMKgwqDCoCBjb250ZW50ID0gZmQucmVhZCgpCj4gwqAKPiBAQCAtNjUsNyArNjIsNyBAQCBjbGFz
-cyBSVkdlbmVyYXRvcjoKPiDCoMKgwqDCoMKgwqDCoMKgIHRyeToKPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgcGF0aCA9IG9zLnBhdGguam9pbihzZWxmLmFic190ZW1wbGF0ZV9kaXIsIGZpbGUp
-Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBzZWxmLl9yZWFkX2ZpbGUocGF0aCkK
-PiAtwqDCoMKgwqDCoMKgwqAgZXhjZXB0IEV4Y2VwdGlvbjoKPiArwqDCoMKgwqDCoMKgwqAgZXhj
-ZXB0IE9TRXJyb3I6Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICMgU3BlY2lmaWMgdGVtcGxh
-dGUgZmlsZSBub3QgZm91bmQuIFRyeSB0aGUgZ2VuZXJpYyB0ZW1wbGF0ZSBmaWxlCj4gaW4gdGhl
-IHRlbXBsYXRlLwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjIGRpcmVjdG9yeSwgd2hpY2gg
-aXMgb25lIGxldmVsIHVwCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBhdGggPSBvcy5wYXRo
-LmpvaW4oc2VsZi5hYnNfdGVtcGxhdGVfZGlyLCAiLi4iLCBmaWxlKQo=
+On Wed, 2026-02-04 at 11:42 -0300, Wander Lairson Costa wrote:
+> Fix two typos in the Automata class documentation that have been
+> present since the initial implementation. Fix the class
+> docstring: "part it" instead of "parses it". Additionally, a
+> comment describing transition labels contained the misspelling
+> "lables" instead of "labels".
+>=20
+> Fix a typo in the comment describing the insertion of the initial
+> state into the states list: "bein og" should be "beginning of".
+>=20
+> Fix typo in the module docstring: "Abtract" should be "Abstract".
+>=20
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+
+
+While you're at it there are a few singular/plural inconsistencies, see bel=
+ow.
+
+Other than that it looks good, thanks!
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+
+> ---
+> =C2=A0tools/verification/rvgen/rvgen/automata.py=C2=A0 | 6 +++---
+> =C2=A0tools/verification/rvgen/rvgen/generator.py | 2 +-
+> =C2=A02 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/tools/verification/rvgen/rvgen/automata.py
+> b/tools/verification/rvgen/rvgen/automata.py
+> index 1feb5f0c0bc3e..0d7cbd0c634a9 100644
+> --- a/tools/verification/rvgen/rvgen/automata.py
+> +++ b/tools/verification/rvgen/rvgen/automata.py
+> @@ -18,7 +18,7 @@ class AutomataError(Exception):
+> =C2=A0=C2=A0=C2=A0=C2=A0 """
+> =C2=A0
+> =C2=A0class Automata:
+> -=C2=A0=C2=A0=C2=A0 """Automata class: Reads a dot file and part it as an=
+ automata.
+> +=C2=A0=C2=A0=C2=A0 """Automata class: Reads a dot file and parses it as =
+an automata.
+> =C2=A0
+
+Automata is plural, the singular is automaton (you can keep the class name
+unchanged):=20
+
++    """Automata class: Reads a dot file and parses it as an automaton.
+
+> =C2=A0=C2=A0=C2=A0=C2=A0 Attributes:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_file: A dot file wit=
+h an state_automaton definition.
+> @@ -113,7 +113,7 @@ class Automata:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states =3D sorted(set(st=
+ates))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.remove(initial_st=
+ate)
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Insert the initial state at=
+ the bein og the states
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Insert the initial state at=
+ the beginning of the states
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.insert(0, initial=
+_state)
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not has_final_states:
+> @@ -134,7 +134,7 @@ class Automata:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 line =3D self.__dot_lines[cursor].split()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 event =3D line[-2].replace('"','')
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 # when a transition has more than one lables, they are l=
+ike
+> this
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 # when a transition has more than one labels, they are l=
+ike
+> this
+
+This should be "more than one label" as singular.
+
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # "local_irq_enable\nhw_local_irq_enable_n"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 # so split them.
+> =C2=A0
+> diff --git a/tools/verification/rvgen/rvgen/generator.py
+> b/tools/verification/rvgen/rvgen/generator.py
+> index ee75e111feef1..a3fbb1ac74916 100644
+> --- a/tools/verification/rvgen/rvgen/generator.py
+> +++ b/tools/verification/rvgen/rvgen/generator.py
+> @@ -3,7 +3,7 @@
+> =C2=A0#
+> =C2=A0# Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira
+> <bristot@kernel.org>
+> =C2=A0#
+> -# Abtract class for generating kernel runtime verification monitors from
+> specification file
+> +# Abstract class for generating kernel runtime verification monitors fro=
+m
+> specification file
+> =C2=A0
+> =C2=A0import platform
+> =C2=A0import os
 
