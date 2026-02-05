@@ -1,114 +1,102 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27271E5201;
-	Thu,  5 Feb 2026 00:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB9E1E5B73;
+	Thu,  5 Feb 2026 00:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770252052; cv=none; b=GFPxoAxEI+q+uy08Dq9/OX3OqzgcQW2MRqNjSnYpp10yRrq7iX/QvAIzamssULTB73c1ofFaggGSvdyGOCYtiJxHYrYWJWGzSN5/j17K/Z7ypk7/yGY5b6OE5A97Vdcv290a4Imso50URJMXj0cHRgsq17K/R1cB3+Q3xYFE8BM=
+	t=1770252106; cv=none; b=M/iJUqeQLnsyimtwR3eSzwrlwx/QrME1DV4qgS2AD07UV1R3MOVdOysnQNPBMv4T1zJKzir38inLq4ac0M0u+FcKAxBz5iHeYwA7uFRl2xjJLEA+FroWIl0dnTpnuLCLvoQ3AdU9ng3/oefAaLSsb8laBR00ifcszKVi7WHSUZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770252052; c=relaxed/simple;
-	bh=wPUAR+6nSzzfP/xggrMdPNlqyAZmcFoiQcB1OKYZTsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Iv+i9OI9PBI+LtSfjvl2HjUDcQXj+1u/STUX42idvieMXZQ6gyr/rHKT8yT02C1MQSe+WX4btgFVwR7GrDXZbD0nTKLzT+g/pjQLYKZ+C49eXdFlxr7J+Jx73gDYAKFCO+IqRvVMpLrXo1Ckb0nY6WzJ6Mgx9TCdDytb+WaCIik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 80681B8666;
-	Thu,  5 Feb 2026 00:40:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id B5FAE8000E;
-	Thu,  5 Feb 2026 00:40:41 +0000 (UTC)
-Date: Wed, 4 Feb 2026 19:40:40 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- aneesh.kumar@kernel.org, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 09/30] tracing: Add events to trace remotes
-Message-ID: <20260204194040.30aff151@robin>
-In-Reply-To: <20260131132848.254084-10-vdonnefort@google.com>
-References: <20260131132848.254084-1-vdonnefort@google.com>
-	<20260131132848.254084-10-vdonnefort@google.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1770252106; c=relaxed/simple;
+	bh=DMCvHTI0uyxPtxa7wxhSQbpFIJEwc7TcZ7IjVTFXies=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=eZsCRMY0Xxu3id5+jNXgczatwagPmbV+Zmrm/PRLy1RRY13Ty9RojFXBcX82fhJvomTyJJY6mriK+I86yt/8ETi1Hmdq7NrB2/fj0Cz3oPPTCOeb8fNq8yjPlLXEiLKwIffmBtFGTKvgV4qQu1a4je4EgL5ZVkpYh2ilrfjtsmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwcayHPq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwcayHPq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AABBC16AAE;
+	Thu,  5 Feb 2026 00:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770252106;
+	bh=DMCvHTI0uyxPtxa7wxhSQbpFIJEwc7TcZ7IjVTFXies=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jwcayHPqxiYyaJ9zohReptyj5GvHVz7JFfhwWCFqWkymFAbBzUrgC0B02WjWaiR31
+	 0yG3u/G4Hpj6ydhtZm0Cyl4FOkFTCAap4SBtDWYl++GS7UFEW2EfnIO4XwflrnOCLL
+	 MqsEwM+pTb/S6S2OcrlJdg5vHE8D0pJ8/qjvIDcwOsdCpU0amjpSXAwh7sMXKwysNu
+	 +CeyADMGx9nmE2jut2KWaWScEK4M3bxInXYz3/lN/JkWn5+RODjaAoM1x4UePE3RqF
+	 cATf5khpY4hyhFvLee8TWO9+UOK+evtXkJsq5evc+me2tBOz4x1WrcmdjZ/6JCd4KD
+	 cPQIbnb60MYAg==
+Date: Thu, 5 Feb 2026 09:41:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] tracing: Remove backup instance after read all
+Message-Id: <20260205094142.03d87e2d482649cb51355017@kernel.org>
+In-Reply-To: <176991653525.4025429.12655335935351822711.stgit@mhiramat.tok.corp.google.com>
+References: <176991653525.4025429.12655335935351822711.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: B5FAE8000E
-X-Stat-Signature: gs59tekaskcuwcy645fm8izpg3hrje74
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+nXosfAYo2fUF2Ivd/Xmy2vCcs9gSfwy0=
-X-HE-Tag: 1770252041-244299
-X-HE-Meta: U2FsdGVkX1/iA16V/WxPX1xn7eUAz8YuJnJRROkLvYFXycB4HpiSKeqNps6QKewK7Rc+mpitAlABvyauscnWVU+eG7yKgtT9esslqC5i0qdwFo4jzvfl8p22J+uRmdu2Uiz1iGD1Rf9WsmoLBklMsEJnEI95aVbJHpLdztEXRb/3czaENG33tIaapl1OOv6yha4zRdA7b7QPzEPTg29wT2e7A869w8J20fUHdbDbHa7+LhFgfFaPGpzwSHvzTQk/Gf/OaAm7Ig+mXuKUJEJNh/1AdkrMaeEhTn5LKg5Wr1yh5FKQguAs48myZBRjeNdR5U3sxsPYIyowNtoS3YU3ZlYU6Cv2JRgSYEJ4w/boDlMJlYO8vwRPFx6BaJ1nHw1U7eh1+OkluPHn43ftIPOHFQ==
 
-On Sat, 31 Jan 2026 13:28:27 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+Hi Steve,
 
-> @@ -487,16 +494,19 @@ __peek_event(struct trace_remote_iterator *iter, int cpu, u64 *ts, unsigned long
->  static bool trace_remote_iter_read_event(struct trace_remote_iterator *iter)
->  {
->  	struct trace_buffer *trace_buffer = iter->remote->trace_buffer;
-> +	struct ring_buffer_event *rb_evt;
->  	int cpu = iter->cpu;
->  
->  	if (cpu != RING_BUFFER_ALL_CPUS) {
->  		if (ring_buffer_empty_cpu(trace_buffer, cpu))
->  			return false;
->  
-> -		if (!__peek_event(iter, cpu, &iter->ts, &iter->lost_events))
-> +		rb_evt = __peek_event(iter, cpu, &iter->ts, &iter->lost_events);
-> +		if (!rb_evt)
->  			return false;
->  
->  		iter->evt_cpu = cpu;
-> +		iter->evt = (struct remote_event_hdr *)ring_buffer_event_data(rb_evt);
+Can you review this series?
 
-BTW, you don't need to typecast the return of ring_buffer_event_data()
-as that returns a void pointer.
+On Sun,  1 Feb 2026 12:28:55 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
->  		return true;
->  	}
->  
-> @@ -508,7 +518,8 @@ static bool trace_remote_iter_read_event(struct trace_remote_iterator *iter)
->  		if (ring_buffer_empty_cpu(trace_buffer, cpu))
->  			continue;
->  
-> -		if (!__peek_event(iter, cpu, &ts, &lost_events))
-> +		rb_evt = __peek_event(iter, cpu, &ts, &lost_events);
-> +		if (!rb_evt)
->  			continue;
->  
->  		if (ts >= iter->ts)
-> @@ -516,6 +527,7 @@ static bool trace_remote_iter_read_event(struct trace_remote_iterator *iter)
->  
->  		iter->ts = ts;
->  		iter->evt_cpu = cpu;
-> +		iter->evt = (struct remote_event_hdr *)ring_buffer_event_data(rb_evt);
-
-ditto.
-
->  		iter->lost_events = lost_events;
->  	}
->  
-
-Other than that...
-
-Review-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
+> Hi,
+> 
+> Here is the v6 of the series to improve backup instances of
+> the persistent ring buffer. The previous version is here:
+> 
+> https://lore.kernel.org/all/176955897718.2786091.11948759407196200082.stgit@mhiramat.tok.corp.google.com/
+> 
+> This version cleanup code and fix typo, according to Steve's
+> comments. Also fix to init autoremove_wq only when the readonly
+> instance has been made. A major UI change is that the tracing_on
+> file is also removed from readonly instance.
+> 
+> Since backup instances are a kind of snapshot of the persistent
+> ring buffer, it should be readonly. And if it is readonly
+> there is no reason to keep it after reading all data via trace_pipe
+> because the data has been consumed. But user should be able to remove
+> the readonly instance by rmdir or truncating `trace` file.
+> 
+> Thus, [2/4] makes backup instances readonly (not able to write any
+> events, cleanup trace, change buffer size). Also, [3/4] removes the
+> backup instance after consuming all data via trace_pipe.
+> With this improvements, even if we makes a backup instance (using
+> the same amount of memory of the persistent ring buffer), it will
+> be removed after reading the data automatically.
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (4):
+>       tracing: Reset last_boot_info if ring buffer is reset
+>       tracing: Make the backup instance non-reusable
+>       tracing: Remove the backup instance automatically after read
+>       tracing/Documentation: Add a section about backup instance
+> 
+> 
+>  Documentation/trace/debugging.rst |   19 ++++
+>  kernel/trace/trace.c              |  162 ++++++++++++++++++++++++++++++-------
+>  kernel/trace/trace.h              |   13 +++
+>  kernel/trace/trace_boot.c         |    5 +
+>  kernel/trace/trace_events.c       |   76 ++++++++++-------
+>  5 files changed, 209 insertions(+), 66 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
-> @@ -536,8 +548,11 @@ static void trace_remote_iter_move(struct trace_remote_iterator *iter)
->  	}
->  }
->  
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
