@@ -1,167 +1,135 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4839FD4
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 13:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E54286D55
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 13:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770299160; cv=none; b=mkabA79F2SQuXfULDxMFcJ2OEG+woCM4eeEQYBBY8iBTHk1AomkqzUL2T169GiB1EJOc3Bl6ogxp5rZKf0jq2w6hchUwcclyK7pN1+Bc0ku2cIfGdqvOabFsK4NC+n2pvcoQOeN7FvRNwvXvQfcfR3JX85hIYMlhZBo8vx11xh4=
+	t=1770299928; cv=none; b=VwdKVaZOnM5nj4jqLVTAOe7tvJJ45RliwtQNqNMtIMAUUoFwDl8zCXPlmAl8qaENCngt8vEkD1R707vK2LxtiY50RC//wtknANFLRUAOyArO+RBtIIdFqNEaEJ8ov0XImTjEwv4QM3GdklyMPLoUSR5/aDUX5ICMZPeYxC0T26M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770299160; c=relaxed/simple;
-	bh=zntokVry81Mkk3OI0HoMyp2+zaPjjBCi0jfPMCHWqZg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kewwldDMhGTu5tB/tgD6uCi4uify9HDcu2Bd14kHUDoJ3JmtCwxArp5zbtg359MXC4cZFvggOPmk1bMseRR3Mbmvzl5aXM7Xsh5YY822CAzYoHLcsfB3gpfuOTp39WItP8ai0BwiUMRE+Ngntl3Vb/ZdYoAyZPMTrXIvG482wwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bk+49ZGL; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1770299928; c=relaxed/simple;
+	bh=E4HFJMThakiyZ3PNDQdEq1HCxaDForK49Da5ZoVfT3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iJeWiMjGCjhVqAxxBm90+QFi9GPz1WXwxBm0DFz5FVB7pIQYCpfhdZpb+iTAe21BWEzM4cEHdRwX+kn0i75JJHn3nBLJPmK5FAJIgcsdZOsCIvKIKKmN5uzRn4i3eR4K0IFb6F5exmWIGAH8/kkl688OqxOg/1Dt4kq1Hu1DlRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CWKingNP; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bk+49ZGL"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-480142406b3so8077935e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 05:46:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWKingNP"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8c533228383so50455485a.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 05:58:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770299159; x=1770903959; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSe3DP+UKMA69sAOGcKJ9mzaLMcIBDtArPSidVC84FE=;
-        b=Bk+49ZGLKHTgkFl2QDWCyWIuR5hjTfD/7J1/uqxl6AWiUu85+FZeEOc+BJJo+iBLmg
-         +Z30KcZ03q/+CDTalS/vb2LlddsREhQkfKaKkO8CZs5g30iy38znfaT8JMc9uRRNUuaJ
-         JiNTCrPfj+0ci8vSJvQrU3wxtLXPdS1YZ5TUoCyZtvPjUMcv+RRzHdcdOEhXr1q6dJnm
-         dWgos2of80T7ehiCIqT5QIawYyp4363QcZelkIq8XeIitGblChpnkzYtLTknnUrmx0fh
-         lseeeVrUQ/HA7+6IX+Ikrm2CCfUm9oC2MHU7ZgmeJtEl3OYTIKjV3KyvndCuZsruw7Xp
-         7wdg==
+        d=gmail.com; s=20230601; t=1770299927; x=1770904727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rSpavQGrbW9Sk1NhHLCmCOMh7WCFB8hsxDAgv+wU+rk=;
+        b=CWKingNP+Qtnyr8iyFrjElg98FlHwRcI9yu3xSF+kPA0jJ2v2uePllJVV2VyCrVidW
+         SM04oyW7ifsuu36YDEocnlUj7vMW1HVnFuicYtIGViWdUbVVrfPkqnxx2+FZgtxXi326
+         QHtB3wYgNcF1AtaE9Dk8aCGvk/9/td6BkLhdvXpFtcu5SZrKZ2gHEuP+w3eY0pAunieh
+         0guo31hDLF9gJ/KmvrTRMjqrBvUi7G+Z1l+FpfzGv1fazeqBcF5xBwr8g2euiRP++vmx
+         0T49yOwkXNkdiDRXQKElWcauFsGqQHJSW5EC+tH3UfMGF+OiTfFUi8YXqNOLZT4GJbVg
+         239g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770299159; x=1770903959;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lSe3DP+UKMA69sAOGcKJ9mzaLMcIBDtArPSidVC84FE=;
-        b=HDdlcF4vtF1epHRuBJb7Sp+4qY+2S5cvoz1/+JYYSfp6QOT5N7yTz1Q3WmPCVpFGdu
-         ztZri7lgVbOSUZdlHOjM0+xlNf5Wv1rKNBvvLJRX6edFnwZzx1Nr3Z11abebDKlm29YK
-         Gs+7dT6m2LczPOLDhxV6cM+izPqYoSbRGPdhnfBRnD2d3qrdr9Q4MojQULj2G3b0rxDt
-         zXyzvg/2QvQvXXEzTfDc4PL4LiNtnzHE+0j9k7meVSkbD8g5HGJqKXg28JeG9OwR25kG
-         /jtJ6RWqUT9NBEnN/H3euQmDLM0RDy7ddNYplF05R3K1fZsWOf6AKnwdvlewdBohtnHT
-         cddw==
-X-Forwarded-Encrypted: i=1; AJvYcCULWOiuxJ+dm9hhciQDL+R+ku0Ep3ENUJ/KfaxC6korm520lMZ5NtjAiS7Qr6M9D+7zuJuELL4kevXJa3WG4fYr12M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7mWcpHoFz1DYWCvyErkjNoaXv0eRUfW9GhmniOy9D1cJ7w/e5
-	ctahEGS/4tFN2ImGtmpf6KrYSpkBuAWutYjAsG3BFanGnUhuYxsIcbGt
-X-Gm-Gg: AZuq6aL4lbJTrCL0VmYjiffIeQ1lb8Whb8ou4FmgoL55t4PDA5hE4Wxe+SbNOpY9ZFZ
-	OoBSC4BYnbPCoGKcwM/3Eib5AIl2paEmB6fPyEhLSBIDhsniizXuS/Je/ofaqyIwfqIUu30fkE2
-	NfLZaWa1xewn1VEAkWJIfuMDbJVMNcoSLS9hkPf6VYPIGMgQjHszA9qAwcLg50MZWXRktCjLnQQ
-	39jgipMcSLU/rSHfr/6HaNqv2uD42s3trxiiffa4WhChsRX/B0RXhSi3F2tfc1TEBGJOpUot4xU
-	fIAbJWCmWvYkLIXQ+Hvq6e4hBFg1dN4JVEY7DP636RAVGCy5Ce5yXxe+U0MyV7G9aufrnqIfVQy
-	DCRjVsRp8h/BboMgVfDAXL4TQGxc+LMYz9HMPjDaIQw4kIJRgBrmFNT1Ur89C
-X-Received: by 2002:a05:600c:1f08:b0:477:b642:9dc9 with SMTP id 5b1f17b1804b1-4830e993164mr89199165e9.28.1770299157801;
-        Thu, 05 Feb 2026 05:45:57 -0800 (PST)
-Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48317d3f007sm87930895e9.9.2026.02.05.05.45.56
+        d=1e100.net; s=20230601; t=1770299927; x=1770904727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rSpavQGrbW9Sk1NhHLCmCOMh7WCFB8hsxDAgv+wU+rk=;
+        b=SVmZPwQDtsMFgneCsJ05zn0phkgtJX9WiIzDqcIcyKovPWrajG1HVE58eqNNCqVofn
+         IWs2/HAuSQVapZqb7XsXGoPuEsjWJc95UEwua+EgHiiOV4YDA9WgKu0q9jkyCbdMqDfI
+         2VGEHDwzKcH4K//v+2pTRE/tisfr0h6lJSXfRg5XJoFjVDuETrjCL6/wsoWHP6WxMfkn
+         DsmwGcgC400wlKpxq6ar9tbMven05hhh9Q+kVLp3z49IWc86ex9J7J+s8nKKoAyzEiVc
+         bZ2dX3JD6MWtYhJU83Y8AVTTT+UFUczF19QevNiMxwwlg4tdquM775MFoCwFoOQsBD7R
+         jifA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtL+2rB/PbsIuWENHO1IIDKnGxxHGGS6rj4S8jkCH13X3EQvkwmcTNAu1a6BUOV3nK3av9RLBbH6h1QOTnYF6iUxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv8CyZvSA4S2vMXujizgYNzEr2UqWYfuzCoN/TbvPkrFDt+TlS
+	9t5K4xy6+Ro/aXEAA0+m8t2OokWtR/a1/41+dDwdbTwmVm1i9yHnww/I
+X-Gm-Gg: AZuq6aIHHIs/rOYzfDT66Ej+t6We5jqAIp9TGhHvm6M+4B9cyX7m2Cqii6xq56CW5i8
+	Hqu2FimVmjfuvlRhtCgEcfZ2OdnwbxoszDzRCAmRMG/NzbBXI9BCFwCYgwNK+leyyJ7BHmMUU4g
+	2K90J3tf4NIS1/V1tNBjbWuyBxiYUDkbaMZtB/KT9Hkni9vAoZvY/I67eigudOKoNcwtUImiRYZ
+	klvY2GJ8qqg36D+U5KoticPBhLSOQ+izTTaDlGtUH2PLDJ7XEgxe3ZBH7UgycQc5vWDqOu2dRAK
+	Di59EJENZvCFTjrETmo5CKbWdJthhHInfFkEoPU92FSmey+K1CaVwiz0hzgh4/4NOOrtNMzAG+o
+	sPEVPsWx9QxIOMim+tzgSSR7aktS3eOJNG/RbT5zz0OvEWdV3IGMB1N3m9Gci1MWK5HesTC9FmW
+	va/WIKULJ/LH2FKitJwELZx8CsQM6MZZtm5NyHvoP8s1GOUPddhAJhARllEk6EcWUqE8sq7XA7l
+	w1MyioD3g==
+X-Received: by 2002:a05:620a:4146:b0:80e:3af7:7a0c with SMTP id af79cd13be357-8ca2f9bb02emr906508885a.43.1770299926871;
+        Thu, 05 Feb 2026 05:58:46 -0800 (PST)
+Received: from pc.mynetworksettings.com ([2600:4041:4491:2000:87a6:ecbb:44f:b3c1])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ca2fd40f9asm404975985a.41.2026.02.05.05.58.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 05:45:57 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 5 Feb 2026 14:45:55 +0100
-To: Menglong Dong <menglong.dong@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	Menglong Dong <menglong8.dong@gmail.com>,
-	Steven Rostedt <rostedt@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC bpf-next 06/12] bpf: Add bpf_trampoline_multi_attach/detach
- functions
-Message-ID: <aYSfEy8Zf8bCs4-j@krava>
-References: <20260203093819.2105105-1-jolsa@kernel.org>
- <20260203093819.2105105-7-jolsa@kernel.org>
- <1945516.tdWV9SEqCh@7940hx>
+        Thu, 05 Feb 2026 05:58:46 -0800 (PST)
+From: "Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	corbet@lwn.net,
+	shuah@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"Seokwoo Chung (Ryan)" <seokwoo.chung130@gmail.com>
+Subject: [PATCH v6 0/4] tracing/fprobe: Support comma-separated symbol lists and :entry/:exit suffixes
+Date: Thu,  5 Feb 2026 08:58:38 -0500
+Message-ID: <20260205135842.20517-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1945516.tdWV9SEqCh@7940hx>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 05, 2026 at 05:16:49PM +0800, Menglong Dong wrote:
-> On 2026/2/3 17:38 Jiri Olsa <jolsa@kernel.org> write:
-> > Adding bpf_trampoline_multi_attach/detach functions that allows
-> > to attach/detach multi tracing trampoline.
-> > 
-> > The attachment is defined with bpf_program and array of BTF ids
-> > of functions to attach the bpf program to.
-> > 
-> [...]
-> > @@ -367,7 +367,11 @@ static struct bpf_trampoline *bpf_trampoline_lookup(u64 key, unsigned long ip)
-> >  	head = &trampoline_ip_table[hash_64(tr->ip, TRAMPOLINE_HASH_BITS)];
-> >  	hlist_add_head(&tr->hlist_ip, head);
-> >  	refcount_set(&tr->refcnt, 1);
-> > +#ifdef CONFIG_LOCKDEP
-> > +	mutex_init_with_key(&tr->mutex, &__lockdep_no_track__);
-> > +#else
-> >  	mutex_init(&tr->mutex);
-> > +#endif
-> >  	for (i = 0; i < BPF_TRAMP_MAX; i++)
-> >  		INIT_HLIST_HEAD(&tr->progs_hlist[i]);
-> >  out:
-> > @@ -1400,6 +1404,188 @@ int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
-> >  	return -ENOTSUPP;
-> >  }
-> >  
-> > +#if defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS) && defined(CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS)
-> 
-> Hi, Jiri. It's great to see your tracing_multi link finally. It looks great ;)
+Extend the fprobe event interface to accept comma-separated symbol lists
+with ! exclusion prefix, and :entry/:exit suffixes as an alternative to
+%return.  Single-symbol probes retain full backward compatibility with
+%return.
 
-heya, thanks ;-)
+Example usage:
+  f:mygroup/myevent vfs_read,!vfs_write,vfs_open:entry
+  f:mygroup/myexit  vfs_read,vfs_open:exit
 
-> 
-> After analyzing a little deeper on the SINGLE_FTRACE_DIRECT_OPS, I
-> understand why it is only supported on x86_64 for now. It seems that
-> it's a little hard to implement it in the other arch, as we need to
-> restructure the implement of ftrace direct call.
-> 
-> So do we need some more ftrace API here to make the tracing multi-link
-> independent from SINGLE_FTRACE_DIRECT_OPS? Otherwise, we can only
-> use it on x86_64.
+Changes since v5:
+  - Fix missing closing brace in the empty-token check that caused a
+    build error.
+  - Remove redundant strchr/strstr checks for tracepoint validation;
+    the character validation loop already rejects ',', ':', and '%'.
+  - Add trace_probe_log_err() to the tracepoint character validation
+    loop so users see what went wrong in tracefs/error_log (reviewer
+    feedback from Masami Hiramatsu).
+  - Remove unnecessary braces around single-statement if per kernel
+    coding style (reviewer feedback).
+  - Extract list parsing into parse_fprobe_list() to keep
+    parse_fprobe_spec() focused (reviewer feedback).
+  - New patch 2/4: add glob_match_comma_list() in kernel/trace/fprobe.c
+    so register_fprobe() correctly handles comma-separated filter
+    strings.  Without this, enabling a list-mode fprobe event failed
+    with "Could not enable event" because glob_match() does not
+    understand commas.
+  - Reorder: documentation patch now comes after all code changes.
+  - Updated selftest commit message to note that existing tests
+    (add_remove_fprobe.tc, fprobe_syntax_errors.tc,
+    add_remove_fprobe_repeat.tc) report UNSUPPORTED because their
+    "requires" lines still check for the old %return syntax in README.
+    Their requires lines need updating in a follow-up patch.
 
-I tried to describe it in commit [2] changelog:
+Tested in QEMU/KVM but I am not too confident if I configured correctly and
+would like to ask for further testing. 
 
-    At the moment we can enable this only on x86 arch, because arm relies
-    on ftrace_ops object representing just single trampoline image (stored
-    in ftrace_ops::direct_call). Archs that do not support this will continue
-    to use *_ftrace_direct api.
+Seokwoo Chung (Ryan) (4):
+  tracing/fprobe: Support comma-separated symbols and :entry/:exit
+  fprobe: Support comma-separated filters in register_fprobe()
+  docs: tracing/fprobe: Document list filters and :entry/:exit
+  selftests/ftrace: Add accept cases for fprobe list syntax
 
-> 
-> Have you ever tried to implement the SINGLE_FTRACE_DIRECT_OPS on arm64?
-> The direct call on arm64 is so complex, and I didn't work it out :/
+ Documentation/trace/fprobetrace.rst           |  17 +-
+ kernel/trace/fprobe.c                         |  30 ++-
+ kernel/trace/trace.c                          |   3 +-
+ kernel/trace/trace_fprobe.c                   | 219 ++++++++++++++----
+ .../ftrace/test.d/dynevent/fprobe_list.tc     |  92 ++++++++
+ 5 files changed, 308 insertions(+), 53 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_list.tc
 
-yes, it seems to be difficult atm, Mark commented on that in [1],
-I don't know arm that good to be of much help in here, cc-ing Mark
+-- 
+2.43.0
 
-jirka
-
-
-[1] https://lore.kernel.org/bpf/aIyNOd18TRLu8EpY@J2N7QTR9R3/
-[2] 424f6a361096 ("bpf,x86: Use single ftrace_ops for direct calls")
-
-> 
-> Thanks!
-> Menglong Dong
-> 
-> > +
-> > +struct fentry_multi_data {
-> > +	struct ftrace_hash *unreg;
-> > +	struct ftrace_hash *modify;
-> > +	struct ftrace_hash *reg;
-> > +};
-> > +
-> [...]
-> > 
-> > 
-> > 
-> 
-> 
-> 
-> 
