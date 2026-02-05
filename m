@@ -1,81 +1,79 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B6F3382E9
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 08:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A78A3A4F2D
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 08:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770281728; cv=none; b=fUgH5EvSnPb1rY5s/NIcKjmUBvHsfOwKmu8ndmjdahaTpl8uTJgRYeJiWoCAA9Cuqc20lI4DPPOEzpY28EAoPWe4zDHYwND0n1cpa+Q9yEl7ygap0obXpJRQf7/qtCkVNZaS+ampLtHp2K24JiJXdSUVjQR3GwPXuBoHbp5Bu+s=
+	t=1770281830; cv=none; b=Mq12JfJxlSZhNNFlpGGYl+kADxGHiRV6lHtwYi2iHV0aGIkJVTTp5v3M5bPQy+bHhUQ1OymgriB9j0GDhQmX+0Q9Tif3MfdPoecsRR5ei1V9Spp7dBSX5r2qD1RnkXmgetdozLqSHgKGeM2mrJNedURBXM2xlkb2dojlvCTCaBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770281728; c=relaxed/simple;
-	bh=iehgMQ3zsDAYXru/qpskT6SNNaQ5ZNTsgJtsfacd6dE=;
+	s=arc-20240116; t=1770281830; c=relaxed/simple;
+	bh=u3YVewofoTs7GpAKFvpySY9gBfbVDItYWKHBYajT0Pg=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uP3rg71qmkE2t+cmS1wbamHmu4Tlk+QPSBmH9JuJtrTOUYKtQDJGe2EmKe7mQKq0CnhAqvxvcqQUYfqrD6wC2slBFkrZEs8Ltt+Bs3B+WGmL3k20vGlC1oBXZsXF4zocf4m873wwCW9KKJbgkEftcQ0ro04WW2bU5JXdHZ9o1W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWWty+Ej; arc=none smtp.client-ip=209.85.128.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+OpUI2uTNGulcMXSsdEHSFiGEeXIyA1otKGXwt74x18LZZBAJyfU0GWVuS9MqmIiPc/bhN7bWwmOJvOMvIl85maklC9NDhKxwDBR2Iec8OlE7TXeaxvFhuvi2N94oAKIfhcnnJodhQZxEnz1WkqG1/rj0tkxJo3ffwBbqWjrjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bASPffIX; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWWty+Ej"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-480706554beso6772965e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 00:55:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bASPffIX"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-47ee2715254so4063665e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 00:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770281727; x=1770886527; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770281828; x=1770886628; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=oaHpNHjAg7f2Vs7GUsD+kiDBNGhY/HDODAQ8z+oYh5o=;
-        b=KWWty+EjNHqRmakTVfB4UnEsaA8oyYdY4UGwYPaKnRD+Upc2nrm0PbHudDAKhPXLJz
-         RMFkkLgV0SX+XGWXY01WTFK91kAdlRcxLmXH/VdHjIkv1Ly6XEfO5qOwUL1o7b6cEvFT
-         kOfSRmreyUZjrRoh9vU3EI7MjFZTMhDpm3+8TluvkOG67oq3gNpvbsbPOV1l7mBDls8+
-         rcZRMOX3UmtSmCBCxVesmvqx/WxL8A9UsKiZ4gk7JgNuZ+bQtDptEKOaORHRg9HStnyF
-         zoG5vfL7jxYBpGBjT745I0GVnuYawpnqHCc+vSapZuridmVkrQi9qDN+LYtNilGxe+lF
-         UuDw==
+        bh=ryMAdOmf8+odSiELZLyHpyLcixKiXOuIhnOxERebJjw=;
+        b=bASPffIXf3hQjFnU/fYAzL9zTuevNi+h7ipeG2b6XmigMwYyHcgySu8W+fkux7C1lV
+         y8skzKBM9H+BwQce1mimaDzEx5m/TZH2whelgdD6VqoECCp0GgkdwMGLJt2vgwIpJRNC
+         JotZZPO+W1p5IH2PRFubcvuIudXRPszSBVmWqdIAnAc2wZ6q95TWF6Sj/f7ID2S71VSY
+         lCnEive8hcQxX7ReaMR9X0KbPBshV61wxcQVrHSB5nGH0xAeqGZq9gb9kOMgj2uh2vdb
+         c0OH+2TRjg7YOWK8m17Iw6NhESsl7vk0U65/VTonnqZy7gTQhJEIc70xOpfhDRJU1siN
+         Hj+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770281727; x=1770886527;
+        d=1e100.net; s=20230601; t=1770281828; x=1770886628;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oaHpNHjAg7f2Vs7GUsD+kiDBNGhY/HDODAQ8z+oYh5o=;
-        b=L6XPoLQN5EjP4UcLJlD0lhe3HKICyIbxdW/vVE+9hUfNDihrM+WRubr2CBzN0L3/nR
-         E7Gu+/bcYu7Y64v8kwUXHlVBeTATSjhxpk5ZpeO2GAtl8KojAo5mbQiSxameyrlQAdHV
-         ZjHn79Icj5dmKIHGKKha6PZykGa77X9YvGHSHI2mgP089SbzFJJcfslXJmybO4mVGbTc
-         L4BCgM4kAqWcNmVPQW5K/umR3kX8kBWOA8qiX91eBPuId71hRpnu4H9knYFJMuCZMudY
-         CXSkvgXckxEKqIejB0nPk7jsl8rg+0LnZMVmli8/juPGK1yTh4GUBspD7raWhnKG7qAg
-         s1xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmXoole8cKZufyBuJsD6GoD+9crXOnVJ9S2aNIL4lGiMvAsD+N2xb3SNce3wq2jNt6IKJjn3To92c8hC6oRNXFfp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6m9V3rOWsA6mpp2ch0RmXY8/y53zSsY4bkRFYPbz9MIJcT58N
-	DIi6o56XOg1BGGIcl7XtS1Yr5N/0c3JJ1bhHKFt/MYMJkAshIBKK0wWU
-X-Gm-Gg: AZuq6aKQIP7ilFi8TSWsKVVRS9EGU5+/k/9lBP/sZwjOSQ9T5BCE7fyoK8rcTDF/QMT
-	60Gnc8e0n8clsBasM8o5rr8w+WUEAbYK7a6bLJNAuulRRoCQof7/uQETAnihvgZOwxq4971w7oD
-	0rQshJRtvaLOzkBg2c7NGC8788AZenDm+YapissU9VP0eIL+RkANT9znPx6RR+GgvGRzM5TfiWf
-	ZrcmqyvFJ1pqhCw0J5zwRQU8hqftVWkCXGLARXgELL+hyQdkN5/21+l338hoKeUkNjzYWqkMdj9
-	ew1pjd2w+KvnMKfeI1AnQKsx5gy/MavFO4F8KC7ixwEfVPda9Yj9ufU0hUwjFq8OcKbLm6iJtB8
-	ISjWdv6n/u6SaBGUih0P8WT6n0R2COL4hKdilyuxCxn008xS6YMO92DZd+liS
-X-Received: by 2002:a05:600c:34c4:b0:47a:975b:e3e6 with SMTP id 5b1f17b1804b1-4830e96fa56mr74341405e9.18.1770281726711;
-        Thu, 05 Feb 2026 00:55:26 -0800 (PST)
+        bh=ryMAdOmf8+odSiELZLyHpyLcixKiXOuIhnOxERebJjw=;
+        b=ILQzWEaBKwnGNpRu2fjLlzBfhPuZQjP6qnESwnSRekm5m4Lj+uJEKkx2Das2PnmMqG
+         ukzoRhx9kq9u23CL41MzOgVtvb2ThbNqWJqV+Kcu1/6IH+PjCdfy5w90gdfiBuJ8qncl
+         9xMFWvb0X3EGl+UMqyVZPu1fa/o89HSw58iKLs6cXzGP8WqfdVV01SkEQVUM37aJryW2
+         47WTV/HlP3V9o7qJ7jlTilZgfCNvyBUGbiE2yOwJw9ioPGaa70Rd9x1yjZea/kwB9aD4
+         V/FMhaSisamvbaaf2CmR3pMMdkk1H3Jh8We1fJpay+LJAWGu0fdQoHUdBsmfo12zh0cV
+         RvpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGcjKxLUUIEyNE3Ym8Po5AT+lTuAZpatY7Z/T23OsjDjPM/X1PlndpsKFg+hBEuS7YKjYixWmVH9lhoqkkSYQQby0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSNXk0KaWwvCro/kjvGHiMdvulrElB5NdjG0QZ0Xni7f8PBTyh
+	8+jK47WSYPJU0HbE/t3OQIe1xxYMn+5trrBq79fyVZwvBJNvZDZExvB0
+X-Gm-Gg: AZuq6aIfdxEhFwaa4/60bXhjJZP/hA6B1RsSq+hGX1m9FJkhY6QO7ZP11myHLh9DRgG
+	uFpxW0e/zdabV9CnEsulhWTqV3e8X0IQ8M4OgGwEIq4I4zoJsIYKzpOZAbIOdNSMfhKubVjTwMV
+	sVM90RC9SxDXcJEXbngjoMe6zJ3QOoBD8LeRgHzWBXJpCRiOXym2XxekxxsdXwA1QT0m6SsoZVL
+	+B8f9jxeb2rFs+nh/Qg5gAmILgblzz/sd2LSlVGoI1WxGMFZTUenT6itDbRLpkm3hCgm8ZVjDwN
+	dfrB67rgKdQTvtYtdzaq8uxkkKfFAuZkjSR94L/7jsR3fT1b+DWFlmPcU7t0k3IgIatR77FWgE/
+	zKABoZ1dtv5V7QPH2dtAMTCqvSVHFikG4nFz/o62SlmQ2we4Jm8gFmXwNCjk6
+X-Received: by 2002:a05:600c:4684:b0:480:6fbc:695f with SMTP id 5b1f17b1804b1-4830e9a5491mr78359435e9.32.1770281827570;
+        Thu, 05 Feb 2026 00:57:07 -0800 (PST)
 Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48317d57009sm37521425e9.14.2026.02.05.00.55.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48317d835f0sm40786655e9.14.2026.02.05.00.57.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 00:55:26 -0800 (PST)
+        Thu, 05 Feb 2026 00:57:07 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 5 Feb 2026 09:55:24 +0100
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+Date: Thu, 5 Feb 2026 09:57:05 +0100
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Martin KaFai Lau <kafai@fb.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
 	Eduard Zingerman <eddyz87@gmail.com>,
 	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	Menglong Dong <menglong8.dong@gmail.com>,
 	Steven Rostedt <rostedt@kernel.org>
-Subject: Re: [RFC bpf-next 00/12] bpf: tracing_multi link
-Message-ID: <aYRa_CDL1RqIR_8S@krava>
+Subject: Re: [RFC bpf-next 04/12] bpf: Add struct bpf_tramp_node object
+Message-ID: <aYRbYY8f_wWoiZhk@krava>
 References: <20260203093819.2105105-1-jolsa@kernel.org>
- <CAADnVQ+EU_f4LVDQkqkB0Q+QYMBH5ynXU3+rGZA2XCGmYMcFqg@mail.gmail.com>
- <aYM9YUl6xf9I2x4c@krava>
- <CAADnVQJPbnVEDYAAy4mUP7NmsGkUmeV9B73V+Bc=LYb8r8Zrow@mail.gmail.com>
+ <20260203093819.2105105-5-jolsa@kernel.org>
+ <CAEf4BzYWxmg7YO_ewENt1rr4R1YT=iL0fc5yJqanfQZJk6u1nQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -85,87 +83,101 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJPbnVEDYAAy4mUP7NmsGkUmeV9B73V+Bc=LYb8r8Zrow@mail.gmail.com>
+In-Reply-To: <CAEf4BzYWxmg7YO_ewENt1rr4R1YT=iL0fc5yJqanfQZJk6u1nQ@mail.gmail.com>
 
-On Wed, Feb 04, 2026 at 08:06:50AM -0800, Alexei Starovoitov wrote:
-> On Wed, Feb 4, 2026 at 4:36 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Feb 04, 2026 at 11:00:57AM -0800, Andrii Nakryiko wrote:
+> On Tue, Feb 3, 2026 at 1:39 AM Jiri Olsa <jolsa@kernel.org> wrote:
 > >
-> > On Tue, Feb 03, 2026 at 03:17:05PM -0800, Alexei Starovoitov wrote:
-> > > On Tue, Feb 3, 2026 at 1:38 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > hi,
-> > > > as an option to Meglong's change [1] I'm sending proposal for tracing_multi
-> > > > link that does not add static trampoline but attaches program to all needed
-> > > > trampolines.
-> > > >
-> > > > This approach keeps the same performance but has some drawbacks:
-> > > >
-> > > >  - when attaching 20k functions we allocate and attach 20k trampolines
-> > > >  - during attachment we hold each trampoline mutex, so for above
-> > > >    20k functions we will hold 20k mutexes during the attachment,
-> > > >    should be very prone to deadlock, but haven't hit it yet
-> > >
-> > > If you check that it's sorted and always take them in the same order
-> > > then there will be no deadlock.
-> > > Or just grab one global mutex first and then grab trampolines mutexes
-> > > next in any order. The global one will serialize this attach operation.
-> > >
-> > > > It looks the trampoline allocations/generation might not be big a problem
-> > > > and I'll try to find a solution for holding that many mutexes. If there's
-> > > > no better solution I think having one read/write mutex for tracing multi
-> > > > link attach/detach should work.
-> > >
-> > > If you mean to have one global mutex as I proposed above then I don't see
-> > > a downside. It only serializes multiple libbpf calls.
+> > Adding struct bpf_tramp_node to decouple the link out of the trampoline
+> > attachment info.
 > >
-> > we also need to serialize it with standard single trampoline attach,
-> > because the direct ftrace update is now done under trampoline->mutex:
+> > At the moment the object for attaching bpf program to the trampoline is
+> > 'struct bpf_tramp_link':
 > >
-> >   bpf_trampoline_link_prog(tr)
-> >   {
-> >     mutex_lock(&tr->mutex);
-> >     ...
-> >     update_ftrace_direct_*
-> >     ...
-> >     mutex_unlock(&tr->mutex);
+> >   struct bpf_tramp_link {
+> >        struct bpf_link link;
+> >        struct hlist_node tramp_hlist;
+> >        u64 cookie;
 > >   }
 > >
-> > for tracing_multi we would link the program first (with tr->mutex)
-> > and do the bulk ftrace update later (without tr->mutex)
+> > The link holds the bpf_prog pointer and forces one link - one program
+> > binding logic. In following changes we want to attach program to multiple
+> > trampolines but have just one bpf_link object.
 > >
-> >   {
-> >     for each involved trampoline:
-> >       bpf_trampoline_link_prog
+> > Splitting struct bpf_tramp_link into:
 > >
-> >     --> and here we could race with some other thread doing single
-> >         trampoline attach
+> >   struct bpf_tramp_link {
+> >        struct bpf_link link;
+> >        struct bpf_tramp_node node;
+> >   };
 > >
-> >     update_ftrace_direct_*
-> >   }
-> >
-> > note the current version locks all tr->mutex instances all the way
-> > through the update_ftrace_direct_* update
-> >
-> > I think we could use global rwsem and take read lock on single
-> > trampoline attach path and write lock on tracing_multi attach,
-> >
-> > I thought we could take direct_mutex early, but that would mean
-> > different order with trampoline mutex than we already have in
-> > single attach path
+> >   struct bpf_tramp_node {
+> >        struct hlist_node tramp_hlist;
+> >        struct bpf_prog *prog;
+> >        u64 cookie;
+> >   };
 > 
-> I feel we're talking past each other.
-> I meant:
-> 
-> For multi:
-> 1. take some global mutex
-> 2. take N tramp mutexes in any order
-> 
-> For single:
-> 1. take that 1 specific tramp mutex.
+> I'm a bit confused here. For singular fentry/fexit attachment we have
+> one trampoline and one program, right? For multi-fentry, we have
+> multiple trampoline, but still one program pointer, no? So why put a
+> prog pointer into tramp_node?.. You do want cookie in tramp_node, yes,
+> but not the program.
 
-ah ok, I understand, it's to prevent the lockup but keep holding all
-the trampolines locks.. the rwsem I mentioned was for the 'fix', where
-we do not take all the trampolines locks
+yes, but both links:
+  - single link 'struct bpf_tramp_link'
+  - multi link  'struct bpf_tracing_multi_link'
 
-thanks,
+are using same code to attach that code needs to have a hlist_node to
+link the program to the trampoline and be able to reach the bpf_prog
+(like in invoke_bpf_prog)
+
+current code is passing whole bpf_tramp_link object so it has access
+to both, but multi link needs to keep link to each trampoline (nodes
+below):
+
+struct bpf_tracing_multi_link {
+       struct bpf_link link;
+       enum bpf_attach_type attach_type;
+       int nodes_cnt;
+       struct bpf_tracing_multi_node nodes[] __counted_by(nodes_cnt);
+};
+
+and we can't get get from &nodes[x] to bpf_tracing_multi_link.link.prog
+
+it's bit redundant, but not sure what else we can do
+
+> Because then there is also a question what is
+> bpf_link's prog pointing to?...
+
+bpf_link.prog is still keeping the prog, I don't think we can remove that
+
 jirka
+
+> 
+> 
+> >
+> > where 'struct bpf_tramp_link' defines standard single trampoline link,
+> > and 'struct bpf_tramp_node' is the attachment trampoline object. This
+> > will allow us to define link for multiple trampolines, like:
+> >
+> >   struct bpf_tracing_multi_link {
+> >        struct bpf_link link;
+> >        ...
+> >        int nodes_cnt;
+> >        struct bpf_tracing_multi_node nodes[] __counted_by(nodes_cnt);
+> >   };
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  arch/arm64/net/bpf_jit_comp.c  |  58 +++++++++----------
+> >  arch/s390/net/bpf_jit_comp.c   |  42 +++++++-------
+> >  arch/x86/net/bpf_jit_comp.c    |  54 ++++++++---------
+> >  include/linux/bpf.h            |  47 ++++++++-------
+> >  kernel/bpf/bpf_struct_ops.c    |  24 ++++----
+> >  kernel/bpf/syscall.c           |  25 ++++----
+> >  kernel/bpf/trampoline.c        | 102 ++++++++++++++++-----------------
+> >  net/bpf/bpf_dummy_struct_ops.c |  11 ++--
+> >  8 files changed, 185 insertions(+), 178 deletions(-)
+> >
+> 
+> [...]
