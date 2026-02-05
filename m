@@ -1,202 +1,183 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28C542B736
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 15:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802A242B750
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 15:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770306933; cv=pass; b=LGCpW670xrZknh5zok2PU2+S0pTIBWqBC31U0Q7t36yoGKfc57jZBgkWI/xnR1rDv5iUOgic5x/dhP/zVhwFDauLIhj0A3zydBWW2wYBGPDgnfh0OPWLSbCayjs5uEk1EU7vgWEQcSFOtvw6Qy/yQbnclzK9LGgb+x5a3xfDz5s=
+	t=1770306977; cv=pass; b=I47issZBnorreRnVsB60AGaQTaADGTfMmepmqnOC+LwMws690HBpjtJ22WCN+lNc1c/B+9W8w8CR+8vfu0PqAsvw1PkNywuJnPXIJXOP2uj4V2n2HA/6O1sgFdGdWUD4rgU0fDB1cz6lAaawPS/IhbpxapGTJ7wwhdkxR+yg8f4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770306933; c=relaxed/simple;
-	bh=ikZuoZwFDu6wsRXMDSCtLv45mAIw9IwBWA66ewbZQ8s=;
+	s=arc-20240116; t=1770306977; c=relaxed/simple;
+	bh=b4akzjXyB7HtuQ+xQvw9DogbnCKf/L3PB1vqHiBOiXI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e69zfa7ao3iKLttnAh1bz9e4A2jM5GLXiY7TMugIdTldP1yLdlnq1n3PnFFmdGM16I6dM3k9M5h274sC2JQEC3QR6DGn9nK5UHJQ8jidP7U3lkeL0pmKO/3ohJVsh+9/IQpb0tD0p7EI2/lXUo293SXG6k3j2L4yg1TRgQWGqBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cg8VkZZZ; arc=pass smtp.client-ip=209.85.221.45
+	 To:Cc:Content-Type; b=qEIqOg0m460SLOKV4Fta4tWMEPa9Jdm23tw4YZmoXFUOoXs+DI1OIK7aj8gmpCF8KUT7pU565tExSC+phthfQ3PGKmB3J4jOekdD3JzE7450lyDb3+4GfShrgbXTfwiQWQWAuHxdoUuT7dupiT+NW9ej3g2FMa6b1i3SCziNyS0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1dKpPbb; arc=pass smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cg8VkZZZ"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-432da746749so749884f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 07:55:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770306931; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1dKpPbb"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so939781f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 07:56:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770306976; cv=none;
         d=google.com; s=arc-20240605;
-        b=Hb9fpf1Hx8i8bmksJ7fY8jf2ztwdgehXunKAHXgvJOqntsokxv3H3RBmpo+uG/JLFd
-         PQJsvfdL2nYTM0EW1rwJ//mTQ8ee9SOPRVFOjR/2axSYP57E7KI3dYbvOHJT0Hwutgri
-         ajAIP9YlFp6ppAueu/TMGW+nao+U/WsL3HtjtdFsvfTr5jbFsNOoLy0pM4YESkuHjgfY
-         dIUIg6kySTwDm+fNGAiAhCKX9NGYcKidJAGJvZDwzZsX7oNlM6RxpMtyHhRx6aj6n9Wq
-         hG5gyROdd0ehh5XXn4QpTFyuXU4hteRPWC76cwwYBWpzT2EJs0F9AGdrJX10hXc70fcT
-         HC+w==
+        b=WZu5pzTyDr6YJJ2hDlvUGWlSeEjoCzbWdH4LLM4HXZ4cJsfjqBaWaGfr5+De54SMvV
+         IG4faiM4R7f6J0hZHkys5OdoOJ/AawjRBHBTGFfcmAGt48IMS4yO8LPoPuPwGJkc0OM8
+         4VlMquqOYn2Xj4/8ISXB3+Y2qY9x0y9LOUtsCQu69tJznIb9sGy/doxReGhHhIF+8xmW
+         x0F0SFMh3Ka+PxPDhZfJF/JPFYWJJOjSKA4OpfddKw6tAvPqj9Mb99E8MqdHkZsz1cq0
+         1Yp0alUnqiUR0tM+FQdHgEctdw870kYuvntxv/NZXQyiDjpDak7FB7bqzK2v8qHLooTG
+         Cg4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Td5+tdEPVS1cr2PW4mwhRLoRhiYDMTcwTL8PbM8B30E=;
-        fh=td3250EDVp7Os+z0vxDOfklfUexidKEnNbmSCUsqfLc=;
-        b=jgCldvTkkpFIwwW3EplcLHktjb6pBbyGACwxhRCpjqI/rDLveQONt4V8bT5fvPP7Sa
-         mqPB3H7fvd2c1nA75ONxO/S6sIDm3a0FsIzqQuCOpz4mSlyuz/b5FEggB1rdYiequHEF
-         VWNesK1qQDQpHH7NzYW7SMLp0G2ShegCoFAqiII2jWxjTotE0qLT+Crxo7w4HqmY1deL
-         1LBeyTdl/tPymf6ifgkMJ5uA9Xl/v6ilRAJgmZXrB/Ub6qCMdbZAGrliper0CcBJMWsg
-         m8QsLIoo3xaeoKrqPFyLh6kRt5URYmDQFkKqCnV6weg7DEi8yW6qWVj5S2EFKbEafWqu
-         X0+g==;
+        bh=b4akzjXyB7HtuQ+xQvw9DogbnCKf/L3PB1vqHiBOiXI=;
+        fh=xy9YYCQVSVLL7LxYWF3VFyJ0BwUebRn7Rs99phUoSgA=;
+        b=Wq9IiWfqBoPqPDwdOV0mgVRtBxZyhIsGdvrG8+tMHE48pffD3dCHqeDG8vPpz5RoYH
+         wGPtOlOBvqUCg1XeP2yvEF6rcqdGmOeOwIrv/TnAcOD0THkEfqaz/0NJdHcDSArD+feX
+         29BS2Wlrplto/+iGa75N0OzlqczBaBWaQuUvxNi8NLCBJ0EIjr7eVQxqNFWfNs1hUnYC
+         2o8YF+6gGveQ+lMaiWWR/NmZ/UO8iIXRRfbMw5a/UCerexjdXtMUOmjbvcIYX4JJJajz
+         SDn/MEMHeJU3AF5dfMFTlz5xjsxM8L/v2nGEBYX/jwyfvEKwXiuNVUuX6cWgUqkk9JNr
+         iOMQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770306931; x=1770911731; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770306976; x=1770911776; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Td5+tdEPVS1cr2PW4mwhRLoRhiYDMTcwTL8PbM8B30E=;
-        b=Cg8VkZZZ8KKR5i5RLrYiB7h5RVRwxjwuyMBSb+Uisu5vhTkgyDBAFapaia9X+kSg2i
-         uPrG0o0Smf4oXwlInRE4T4KngEYQy9G3Wf7qNj8hs5MaxyjrVU2iOjv11t1aWhoqhm4s
-         76CVf9aUFUzSecqzVWM6VO3ax46vziBQvbJzB/zGwxZV6TupLJ8SqR+Rx32ogr+6JfsN
-         4Np5ECYV2DLMlfBopK9+e0bJyxMJkESN8Imcx9anlCRzwQtfJEjqx2YNE4j65GhQkLlm
-         VPDeFXYLCC712tKT2rLwuHUayCFUG6pb3O34ot/mwN6QXCbDCO+cDmLIptjRlxlQbWSu
-         jvmw==
+        bh=b4akzjXyB7HtuQ+xQvw9DogbnCKf/L3PB1vqHiBOiXI=;
+        b=e1dKpPbbuYZ4qRc9IZBQbEBh/NLfIRwGTLQvagt1u6U+6piLSFDf2upy6zjr0Q2Flk
+         MRAP66k+nquUtvOe4Wqzt2eo0sh5ZM1MtvjuPbi2ACLhLLJ8we9nABLj7C6Mh89kReIj
+         pN+9fN34zQAOStgxSQjyhAyE/V91L8nqP/7fboBJ/8LZVhJBK4PI4SNW4K46L3/d8ACD
+         S40lPjlgeohCAct3ywMtuem6d80loW5XKf6aPJsHT2py7C8LufyA++gA7Tecmh5I9nCr
+         CsY3wGpEAID9VRMTuKpWEWKnEylhOD6eRyivlSvtZo02Tk6zhczaahqaz29Ei1Sa+lwg
+         ccSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770306931; x=1770911731;
+        d=1e100.net; s=20230601; t=1770306976; x=1770911776;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Td5+tdEPVS1cr2PW4mwhRLoRhiYDMTcwTL8PbM8B30E=;
-        b=abpL36QvNz921jn35B+QL4CCJxxiTH/fjBGtSD4i/rBoytWsInyCn5ISh1mD86Fg4v
-         fC6Y21LpAOagG/e5NI0IO42T3o02sphfogTsMkCHbxC2p/4pdmtz1Ar50kZbH+TVOq24
-         1/dPSLRIwJV9aPs0n7ItxtcDYxZEzWfQmf99IBf+EzWkK7qCQKTdiG0xp1Q33huWh2hH
-         p4GqsQ3gVCDH7Q11ivT7Tu3p1AgPqQ5fS9qXJSj1MMAqDavOe+aO2YR4QypZ+I6t8AME
-         rJGbRFb7CJZva1S+LC9NjAAdcwhCoLAqs37/fmDFOr41IQ1ReE7Jb4vOTZxsA4WC3osj
-         Grkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoVPJtOpZvsljP1J1bz7ZYAP2Y2FeIeXuZqHIjZm7HvJ5fst5Cm3+cHosezVk+WaJluL4IuTvy0q/faw3VSDDB4aQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTStolvOOIjdGKNuVF4m9gMmYLhc6pvOdd3DNMTXJGflLAJrNe
-	h5PohOu3lktK2JLK+Z4IqQTaVjzYfKiJTTEC2NdXrEx5/JVOjSJx/VQO8ej99hJYHHmYjTlEIFm
-	zAqiLYRiK2c8Gwjby65zEgxYmLde+Qag=
-X-Gm-Gg: AZuq6aJmbrUkvVFKNyt8gE74s6zkebJMs4jrFLrsnR7LeL2khXtR6dPEScuawzdjrTE
-	Zxxwb6CX1nhC7kg7xS9rpm69oeBJjnSF5U3wtsgb2QBI/mdMajT3gLWphmmIPWzci+4GfHc2+Xa
-	8pyOxJke+Bm9STXjk1N6qb4qdcPnAh0Qz3K8u0QSWMxly87pV+vGrr5ykmdbxpM9egfmHN9X7Il
-	cT8yE8qeb/uO//2qETFvKQBjI1TUgm7PM+gtGGATqfhPKdN/itAgCrnJhhsBcaXd61d/4HJ6I1q
-	q6Ey3hE4lDPbL/7+WrQfrLTITGyqrseJ8svYWKKQzvHuDFlnv6gCk2u32tTUa1khFLFvU5qu
-X-Received: by 2002:a5d:5d0d:0:b0:435:e3bd:5838 with SMTP id
- ffacd0b85a97d-43617e3c9bemr9065339f8f.25.1770306930875; Thu, 05 Feb 2026
- 07:55:30 -0800 (PST)
+        bh=b4akzjXyB7HtuQ+xQvw9DogbnCKf/L3PB1vqHiBOiXI=;
+        b=Rd2DaVA9xuu94i42mmARXIvgIeKUuMAkQ0W4+iiP437DCxSn1Btm3R8jdatcgLP1G9
+         ByVOrATJi34MFToTtqZQ/rbIr3Sr8teIlX12xlrN1jhMVxsGoEbnAHLlcIj6ZJtDaiSd
+         cKo5m7Mod/do+9Yw2ksb9mP19PSxPa8pVs7vLdvAZkV/T00UW7vMym7fw/MmJ2jnV8py
+         pmzStOMSOeCgLLIPrkm8lhY6udoQvYjM3V+n/ROQ62j1b1nXSsYXHuPJgxK+vJxzceox
+         utTpAx59NgPOSGDtkjixoePTja6BM7HPK2QB+8BimuJrLLWzBKATJO7XhxRaBINBf2Ir
+         Z3DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUapAi4RN15FvZaBYwFs5z0jxPGjhKUnlgh9+rVki5lRx79XSKkdnVDVJ58ObGkCipy2morDeMB3y6IB53gVF1AZw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDtySDzchOV+kk4kwzxRgAAY3vetIJf71P4GBCCQefe0cF5X8W
+	C32BZP2PvaEVUMfQNhEmFANStnlv8forDBX19ZEQ//h5b4YOdO9BSefVgIh/QNDn67vAPyp1dbv
+	HO7at4QwXT2RUeL4qyVG0wgf5MKEP2SI=
+X-Gm-Gg: AZuq6aIA6fVygRKTAtuA/6JTMarDd9flw5GbMy/P09MNrPI8Oar7xn7NlW+eeyVCQQs
+	YWO+O+o8T1sMK+LKNm0aCei2PWKKuywEaneIfamHKlHjRKwY5liGs/EUniUwR2lXAriK4IaphEq
+	NpbQwwngZMod6o/F9sKrwgtE5jluxbIuhaX4aSxnI1DPBIPfwcBvWjMN+0rWPnfvLJqlqgamWZ0
+	mlv/fz+0S8a/ls2KFuKQ2CP5ItUBzQ9o3HPE7I6HHxEV9IuPjhqoP8utAnhCH6dHXluKomPNacI
+	K7iZJvqd19bwL36F+uPM97MShr2Y08H4YH5VZYV9QyR4BWKjdY5B6Og1RCbrzz1BI5095Nxi
+X-Received: by 2002:a05:6000:2207:b0:431:3a5:d9c1 with SMTP id
+ ffacd0b85a97d-4361805500amr9966917f8f.30.1770306975650; Thu, 05 Feb 2026
+ 07:56:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260203093819.2105105-1-jolsa@kernel.org> <CAADnVQ+EU_f4LVDQkqkB0Q+QYMBH5ynXU3+rGZA2XCGmYMcFqg@mail.gmail.com>
- <aYM9YUl6xf9I2x4c@krava> <CAADnVQJPbnVEDYAAy4mUP7NmsGkUmeV9B73V+Bc=LYb8r8Zrow@mail.gmail.com>
- <aYRa_CDL1RqIR_8S@krava>
-In-Reply-To: <aYRa_CDL1RqIR_8S@krava>
+References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
+ <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
+ <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
+ <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com>
+ <20260203101707.52965eb0@gandalf.local.home> <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
+ <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com> <CAErzpmvtJwB7nTD5EFHP9SxPxH-rc3NuJp5xLGSTB7YPbUX8YA@mail.gmail.com>
+In-Reply-To: <CAErzpmvtJwB7nTD5EFHP9SxPxH-rc3NuJp5xLGSTB7YPbUX8YA@mail.gmail.com>
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 5 Feb 2026 07:55:19 -0800
-X-Gm-Features: AZwV_QipOgBLes70nSxscZOrEJXWlHyMrHEfcwSShz27Cvyr7P8AKnGRdBjQF7A
-Message-ID: <CAADnVQLJJn=bSDvQrjNyyeNdLOZABKDjjR_3j6DG3pgbsJ+JXA@mail.gmail.com>
-Subject: Re: [RFC bpf-next 00/12] bpf: tracing_multi link
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Martin KaFai Lau <kafai@fb.com>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
+Date: Thu, 5 Feb 2026 07:56:04 -0800
+X-Gm-Features: AZwV_QihuuP3z2J76lmeYSQjSgbNK5taZrRT9R4w6RLFqNKBj9OV5WRgklhng0I
+Message-ID: <CAADnVQJgM0W3aQVGi5_35xWc=D7Ruzt1xV0REM+RnnvtooeC5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
+ via BTF
+To: Donglin Peng <dolinux.peng@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 5, 2026 at 12:55=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
+On Thu, Feb 5, 2026 at 1:21=E2=80=AFAM Donglin Peng <dolinux.peng@gmail.com=
+> wrote:
 >
-> On Wed, Feb 04, 2026 at 08:06:50AM -0800, Alexei Starovoitov wrote:
-> > On Wed, Feb 4, 2026 at 4:36=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
-rote:
-> > >
-> > > On Tue, Feb 03, 2026 at 03:17:05PM -0800, Alexei Starovoitov wrote:
-> > > > On Tue, Feb 3, 2026 at 1:38=E2=80=AFAM Jiri Olsa <jolsa@kernel.org>=
- wrote:
-> > > > >
-> > > > > hi,
-> > > > > as an option to Meglong's change [1] I'm sending proposal for tra=
-cing_multi
-> > > > > link that does not add static trampoline but attaches program to =
-all needed
-> > > > > trampolines.
-> > > > >
-> > > > > This approach keeps the same performance but has some drawbacks:
-> > > > >
-> > > > >  - when attaching 20k functions we allocate and attach 20k trampo=
-lines
-> > > > >  - during attachment we hold each trampoline mutex, so for above
-> > > > >    20k functions we will hold 20k mutexes during the attachment,
-> > > > >    should be very prone to deadlock, but haven't hit it yet
-> > > >
-> > > > If you check that it's sorted and always take them in the same orde=
-r
-> > > > then there will be no deadlock.
-> > > > Or just grab one global mutex first and then grab trampolines mutex=
-es
-> > > > next in any order. The global one will serialize this attach operat=
-ion.
-> > > >
-> > > > > It looks the trampoline allocations/generation might not be big a=
- problem
-> > > > > and I'll try to find a solution for holding that many mutexes. If=
- there's
-> > > > > no better solution I think having one read/write mutex for tracin=
-g multi
-> > > > > link attach/detach should work.
-> > > >
-> > > > If you mean to have one global mutex as I proposed above then I don=
-'t see
-> > > > a downside. It only serializes multiple libbpf calls.
-> > >
-> > > we also need to serialize it with standard single trampoline attach,
-> > > because the direct ftrace update is now done under trampoline->mutex:
-> > >
-> > >   bpf_trampoline_link_prog(tr)
-> > >   {
-> > >     mutex_lock(&tr->mutex);
-> > >     ...
-> > >     update_ftrace_direct_*
-> > >     ...
-> > >     mutex_unlock(&tr->mutex);
-> > >   }
-> > >
-> > > for tracing_multi we would link the program first (with tr->mutex)
-> > > and do the bulk ftrace update later (without tr->mutex)
-> > >
-> > >   {
-> > >     for each involved trampoline:
-> > >       bpf_trampoline_link_prog
-> > >
-> > >     --> and here we could race with some other thread doing single
-> > >         trampoline attach
-> > >
-> > >     update_ftrace_direct_*
-> > >   }
-> > >
-> > > note the current version locks all tr->mutex instances all the way
-> > > through the update_ftrace_direct_* update
-> > >
-> > > I think we could use global rwsem and take read lock on single
-> > > trampoline attach path and write lock on tracing_multi attach,
-> > >
-> > > I thought we could take direct_mutex early, but that would mean
-> > > different order with trampoline mutex than we already have in
-> > > single attach path
+> On Wed, Feb 4, 2026 at 10:52=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.=
+com> wrote:
 > >
-> > I feel we're talking past each other.
-> > I meant:
+> > On Wed, Feb 4, 2026 at 12:00=E2=80=AFAM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@goodmi=
+s.org> wrote:
+> > > >
+> > > > On Tue, 3 Feb 2026 21:50:47 +0800
+> > > > Donglin Peng <dolinux.peng@gmail.com> wrote:
+> > > >
+> > > > > Testing revealed that sorting within resolve_btfids introduces is=
+sues with
+> > > > > btf__dedup. Therefore, I plan to move the sorting logic directly =
+into
+> > > > > btf__add_enum_value and btf__add_enum64_value in libbpf, which ar=
+e
+> > > > > invoked by pahole. However, it means that we need a newer pahole
+> > > > > version.
+> > > >
+> > > > Sorting isn't a requirement just something I wanted to bring up. If=
+ it's
+> > > > too complex and doesn't achieve much benefit then let's not do it.
+> > > >
+> > > > My worry is because "cat trace" takes quite a long time just readin=
+g the
+> > > > BTF arguments. I'm worried it will just get worse with enums as wel=
+l.
+> > > >
+> > > > I have trace-cmd reading BTF now (just haven't officially released =
+it) and
+> > > > doing an extract and reading the trace.dat file is much faster than=
+ reading
+> > > > the trace file with arguments. I'll need to implement the enum logi=
+c too in
+> > > > libtraceevent.
+> > >
+> > > If you mean to do pretty printing of the trace in user space then +1 =
+from me.
+> > >
+> > > I don't like sorting enums either in resolve_btfid, pahole or kernel.
+> > > Sorted BTF by name was ok, since it doesn't change original semantics=
+.
+> > > While sorting enums by value gets us to the grey zone where
+> > > the sequence of enum names in vmlinux.h becomes different than in dwa=
+rf.
 > >
-> > For multi:
-> > 1. take some global mutex
-> > 2. take N tramp mutexes in any order
+> > Thanks, I agreed.
 > >
-> > For single:
-> > 1. take that 1 specific tramp mutex.
+> > >
+> > > Also id->name mapping in general is not precise.
+> > > There is no requirement for enums to be unique.
+> > > Just grabbing the first one:
+> > > ATA_PIO0 =3D 1,
+> > > ATA_PIO1 =3D 3,
+> > > ATA_PIO2 =3D 7,
+> > > ATA_UDMA0 =3D 1,
+> > > ATA_UDMA1 =3D 3,
+> > > ATA_UDMA2 =3D 7,
+> > > ATA_ID_CYLS =3D 1,
+> > > ATA_ID_HEADS =3D 3,
+> > > SCR_ERROR =3D 1,
+> > > SCR_CONTROL =3D 2,
+> > > SCR_ACTIVE =3D 3,
+> > >
+> > > All these names are part of the same enum type.
+> > > Which one to print? First one?
 >
-> ah ok, I understand, it's to prevent the lockup but keep holding all
-> the trampolines locks.. the rwsem I mentioned was for the 'fix', where
-> we do not take all the trampolines locks
+> Another option is to print all matching entries, incurring increased
+> overhead and extended trace log length. However, I prefer printing
+> the first matching entry, though it might be inaccurate in rare cases.
 
-I don't understand how rwsem would help.
-All the operations on trampoline are protected by mutex.
-Switching to rw makes sense only if we can designate certain
-operations as "read" and others as "write" and number of "reads"
-dominate. This won't be the case with multi-fentry.
-And we still need to take all of them as "write" to update trampoline.
+I disagree. It's not rare.
+I wouldn't print anything. Let user space deal with it.
