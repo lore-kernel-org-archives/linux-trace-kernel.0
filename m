@@ -1,198 +1,201 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EF5392C5B
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 09:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770283284; cv=pass; b=enn6LBZ/zp1kTo4hNAgTR9T8cGJYLzkFMnGcrdb1mR0o+rciAoZgQC6kSipji3d89T/x8ZAPnfOeAgn+BOWA6leUrldUfVow3WV6xdxkVuvf5gt2fFkevLllW5iqZZqp1kstSv24i+SArKVEikRf2FUTYTa4eMiEDR1mBfsPKWk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770283284; c=relaxed/simple;
-	bh=H9TJNHkisUEr4z39rBi90p8f80JBCtp4uFnDx2T9EUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nOQhlCu+TaKVQVn8iR/XJXgtJwTe7EnAopB5QTCSxvEFgZ4zDJKqLehJfg2s/XtIyGWxANwgHDhvDxNuaKY7v2Mt3VZ3liuPjYyy0oQHMzHXZiVdoxMjuY9P+27uPOmHwDOXL8nQI6JSDUQ6Jn5o88qljV5JSytr5cmrBvY/6kQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLFi+UPk; arc=pass smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4195F3A7F5D
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 10:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770289113; cv=none; b=OWYkUjnyIzGIwleUz4l2OL+cPQjf3tRGmvr29dKLr9MmB9Ig5zS68aGQnzKzp1NNbYMYmn1QcoiG4f/rs/aEZXUmq8DuZVDna010GG5ViLdy1ODwIan2VJlEXG4X6pU1DUnW4MKawloKXP+ZAoEqEDwbg6f+Jx/zZaok9AxrbGE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770289113; c=relaxed/simple;
+	bh=573tJg47wVhIcULvX5ZwSjIgw9jvNX+FISFCDQXxSQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eHvV1y31ec2REt7blZLX7XmJiHE5Raew3izbX0gxC1FPijKyf4rXabcNctfwEvRzTonzGwL/mruOnVXQwJZtkJTuKhUNkZQWsD0Cwiqpu5vij82dC1qygo7sSdf9EwXwT1thKmaRfXszEPz39+3uNjFoC5yyNo1d20v0Jq0OdGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jl4cZyeg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6okSlGZ7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jl4cZyeg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6okSlGZ7; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLFi+UPk"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b885e8c6727so166656766b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 01:21:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770283282; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hLQos74dMXWQESkb/lOm9UEmSU2Rmp7Y95yfnDdGkh6khfEcxE5nYMP+udv0iir4am
-         9spInq1/xDADvAPoFx5/aij2ioR8zYw9kOD9d/QBYU/qqXyh8gKGQsDthYUFFJPU5A3p
-         qFJaA8Nqh7IqArNbNuD5f50o/+pWpJF9bXfqK76+qG+Ae/ILB1JAuo8caFulM3CLlrdc
-         RylmZzH/i4sP3N4uq7Th2nE7lVGbbDVbHPJzi5gm2PzbMgDU87L+WIO9w6k/i5/crKl+
-         TQGV3F1RhyrvPB0e1RKFqxd3bTM1dGNQGGOHG6EwA4w6MVcpPskT9e4bNznsT07x/513
-         tnDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=IalgGCN2Gqp+8rAz+6lD8MM8rro1ne0RtIUJXyB5u2c=;
-        fh=2GfWII+2/GW77I5YqiKHR+W3AGh0v5ZHUhnYlhNy75U=;
-        b=WXIHZm4/+pec0T3QqxDqLR4iDNGgvmaPbMhxXrMqOfWB6olGUdoEARArDQWLUBhPki
-         f5KIOi+2hxqHxJJ0tRHOBxYY2DO7gp2xIbmucBGRVJxzt7JnUYQ2nJfu8vOfqS0GHrHs
-         bJah7lOC9wjH22+RfA3YXS0yNIZRfOqAlMcmSngZlXfkn+yyvmmfThZOBOQyQsTdEi80
-         b857nC/ypx5YvsiWPKTqLuVBKySYiTwH2HrQS4qC2r8BSAbNw2GLY7VxpAW9GFNZZFcP
-         ykc6685CdssfW2dWXViYzKt8XSwnMyqv/TqtNpYOBPrPWf+DYULUvOBsMqJoYarX4GHl
-         IvkA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770283282; x=1770888082; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IalgGCN2Gqp+8rAz+6lD8MM8rro1ne0RtIUJXyB5u2c=;
-        b=aLFi+UPkU/J1L8MI4XywYY6RUA673hLsPtAsH7MkE6SIEIMe2fMjl2oTdhb0SyNEh/
-         TPI+KGVRxKBHeU7isX9hSVdCXOds5aV+MkOJ4zfSl2E1Nxi1riy9Bg6eANse7IIQMxx9
-         3M6/OpXHy8erDw3isR4Tp18f5FI1fR06teutGpuQGmXQyojcU93udewR0XVh2/eiRP2H
-         odvMUONSBcbbjH4q/3dsMOWUPQ4ZQE2cbROjms0F9isuFSoe0CxUC+jrVdH0LMkhvUpK
-         P6tCXmj+SrTc10OnUNPoFYjPql4y/3fPJl5aL0+62G9HycwRMbSSWhbJUm6UbYVsl4xm
-         z+0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770283282; x=1770888082;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IalgGCN2Gqp+8rAz+6lD8MM8rro1ne0RtIUJXyB5u2c=;
-        b=bjBMYVLBww+d/NRmnBGhA4DThQxAbJG4g694Tw7dyMy0TvSDiFApRshJUXLGDR7eR3
-         aSq+SD+Zg68v9LCV35WwAxemXUo+Axb3upbG6ULThwfUtHWruwJ+zMJlst1UY5wA6zFe
-         z1Bs/p99XO02pN/qxNFdsjFRwPbJviALt/NplQ6KfIVi3auHYmn+i4+XFep5pj096iLP
-         Dp2cbotKQp/5MWyHGLt2Yb7qCk5ngq9dyDdI8c+m0SBO/0PWveljNnogc/oC5LLHUEw9
-         a+ORw5KOKUdnVjGPfFlOYcfTU6TPox7hRe/tz7UVq1zgcOdlv+DGZoJIQqeVkICcTm5C
-         2aFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTR+xSaMZvJllPmCYoIZ5UE/IL67PxcQu4VDgl+UOxo1vR+oyl7mhrnSwC66flw41YHn3VHXI9OHdHfUDoXp0jzsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxedYWSCdz56EuLLGCV77YnXE7PAemxpksCvAusuvAmMogtNWvC
-	Rbv4Ozslpn8HCG/gHFvgw23F9QOqTPRxp+duRBMEecDa4R7ZazjA2VRzXKz77GcfIQOvFcFwHbZ
-	//gs3KzszDDFUQiz7fuKDGUS/UYA/SGo=
-X-Gm-Gg: AZuq6aLspTEHlZ81z2I4ivj93x/5/0mdhqmJmrVeq2ub9hL5RfTCd7KJxtk98MPO+n6
-	dMz1cShzDpOz6OHKDQWrYLfm+ejMQnYyj6qzaW2GQT+GAWWWFfNiCPzE9XFV/VhxnO0BDJwVrAe
-	PETD9e6m4kPMqrYTW9mfuiIcL6OJITW5wlQip5Si689NUuTCllpDRMH7u/rg+LEo32hUdJ7/pSu
-	8IEIROZ3PSf3uIYrRSgVaQ3tAj+UURD5imSAZeCiaB99T/wv5efh/31QR9z93iZjeUg2cqK
-X-Received: by 2002:a17:907:94c2:b0:b88:3877:d922 with SMTP id
- a640c23a62f3a-b8ebaebf0b0mr159376266b.10.1770283281676; Thu, 05 Feb 2026
- 01:21:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jl4cZyeg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6okSlGZ7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jl4cZyeg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6okSlGZ7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B73295BD8E;
+	Thu,  5 Feb 2026 10:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1770289105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gPIduljmZXCIWAQ9DidbUQdmBn0Lyb8HiV/il4JNxcQ=;
+	b=jl4cZyegDIFWiWUKUmCdDJPC+w/xh1bd9LmsPv0WonczlxM/7IUGa+uaDJLSeOBV5/G6Z/
+	Sv8zmlB8TklsXl0sq/IjtGnwFUaoDBqYt5mngHjB7htg284uZR3AT2MuDi9t0Ogezaqnsv
+	EX2wHvEi48e3ga/MrkiqEAHUeuSgKlA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1770289105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gPIduljmZXCIWAQ9DidbUQdmBn0Lyb8HiV/il4JNxcQ=;
+	b=6okSlGZ7NhjUaRHG8x6X1WyjTBvlw0hWEi6ZLnHguA6iXzZA4RTqt2m/QRvckl7QYaiSQ/
+	Xw/qDPq/KFOkh2CA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=jl4cZyeg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6okSlGZ7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1770289105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gPIduljmZXCIWAQ9DidbUQdmBn0Lyb8HiV/il4JNxcQ=;
+	b=jl4cZyegDIFWiWUKUmCdDJPC+w/xh1bd9LmsPv0WonczlxM/7IUGa+uaDJLSeOBV5/G6Z/
+	Sv8zmlB8TklsXl0sq/IjtGnwFUaoDBqYt5mngHjB7htg284uZR3AT2MuDi9t0Ogezaqnsv
+	EX2wHvEi48e3ga/MrkiqEAHUeuSgKlA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1770289105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gPIduljmZXCIWAQ9DidbUQdmBn0Lyb8HiV/il4JNxcQ=;
+	b=6okSlGZ7NhjUaRHG8x6X1WyjTBvlw0hWEi6ZLnHguA6iXzZA4RTqt2m/QRvckl7QYaiSQ/
+	Xw/qDPq/KFOkh2CA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D234F3EA63;
+	Thu,  5 Feb 2026 10:58:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id l0aXMNB3hGmRJQAAD6G6ig
+	(envelope-from <clopez@suse.de>); Thu, 05 Feb 2026 10:58:24 +0000
+From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-kernel@vger.kernel.org (open list:UPROBES)
+Subject: [PATCH] uprobes: replace deprecated kmap_atomic() with kmap_local_page()
+Date: Thu,  5 Feb 2026 11:57:25 +0100
+Message-ID: <20260205105725.298340-1-clopez@suse.de>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
- <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
- <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
- <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com>
- <20260203101707.52965eb0@gandalf.local.home> <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
- <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com>
-In-Reply-To: <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Thu, 5 Feb 2026 17:21:09 +0800
-X-Gm-Features: AZwV_QgyCP5qHv6wmrjDl43TBmC7uiqpMqCxslLuXWGhiI-yrqFKJcJ-V81-X70
-Message-ID: <CAErzpmvtJwB7nTD5EFHP9SxPxH-rc3NuJp5xLGSTB7YPbUX8YA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
- via BTF
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -3.51
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: B73295BD8E
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
 
-On Wed, Feb 4, 2026 at 10:52=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.co=
-m> wrote:
->
-> On Wed, Feb 4, 2026 at 12:00=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
-> > >
-> > > On Tue, 3 Feb 2026 21:50:47 +0800
-> > > Donglin Peng <dolinux.peng@gmail.com> wrote:
-> > >
-> > > > Testing revealed that sorting within resolve_btfids introduces issu=
-es with
-> > > > btf__dedup. Therefore, I plan to move the sorting logic directly in=
-to
-> > > > btf__add_enum_value and btf__add_enum64_value in libbpf, which are
-> > > > invoked by pahole. However, it means that we need a newer pahole
-> > > > version.
-> > >
-> > > Sorting isn't a requirement just something I wanted to bring up. If i=
-t's
-> > > too complex and doesn't achieve much benefit then let's not do it.
-> > >
-> > > My worry is because "cat trace" takes quite a long time just reading =
-the
-> > > BTF arguments. I'm worried it will just get worse with enums as well.
-> > >
-> > > I have trace-cmd reading BTF now (just haven't officially released it=
-) and
-> > > doing an extract and reading the trace.dat file is much faster than r=
-eading
-> > > the trace file with arguments. I'll need to implement the enum logic =
-too in
-> > > libtraceevent.
-> >
-> > If you mean to do pretty printing of the trace in user space then +1 fr=
-om me.
-> >
-> > I don't like sorting enums either in resolve_btfid, pahole or kernel.
-> > Sorted BTF by name was ok, since it doesn't change original semantics.
-> > While sorting enums by value gets us to the grey zone where
-> > the sequence of enum names in vmlinux.h becomes different than in dwarf=
-.
->
-> Thanks, I agreed.
->
-> >
-> > Also id->name mapping in general is not precise.
-> > There is no requirement for enums to be unique.
-> > Just grabbing the first one:
-> > ATA_PIO0 =3D 1,
-> > ATA_PIO1 =3D 3,
-> > ATA_PIO2 =3D 7,
-> > ATA_UDMA0 =3D 1,
-> > ATA_UDMA1 =3D 3,
-> > ATA_UDMA2 =3D 7,
-> > ATA_ID_CYLS =3D 1,
-> > ATA_ID_HEADS =3D 3,
-> > SCR_ERROR =3D 1,
-> > SCR_CONTROL =3D 2,
-> > SCR_ACTIVE =3D 3,
-> >
-> > All these names are part of the same enum type.
-> > Which one to print? First one?
+kmap_atomic() has been deprecated for a few years, and kmap_local_page()
+should be used instead, so replace it. Since the uprobes code relied on
+kmap_atomic() disabling page faults to access user pages, add the
+required calls to keep the existing behavior.
 
-Another option is to print all matching entries, incurring increased
-overhead and extended trace log length. However, I prefer printing
-the first matching entry, though it might be inaccurate in rare cases.
+Signed-off-by: Carlos López <clopez@suse.de>
+---
+ kernel/events/uprobes.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
->
-> I think these cases are not very common and printing the first
-> one would be helpful enough, and we can add documentation
-> notes in ftrace to guide users.
->
-> >
-> > another example:
-> > enum {
-> >         BPF_LOCAL_STORAGE_GET_F_CREATE =3D 1,
-> >         BPF_SK_STORAGE_GET_F_CREATE =3D 1,
-> > };
-> >
-> > and another:
-> > enum {
-> >         BPF_SKB_TSTAMP_UNSPEC =3D 0,
-> >         BPF_SKB_TSTAMP_DELIVERY_MONO =3D 1,
-> >         BPF_SKB_CLOCK_REALTIME =3D 0,
-> >         BPF_SKB_CLOCK_MONOTONIC =3D 1,
-> >         BPF_SKB_CLOCK_TAI =3D 2,
-> > };
-> >
-> > I'd rather not print any and keep it integer only.
-> >
-> > pw-bot: cr
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index d546d32390a8..38898435acfe 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -179,16 +179,24 @@ bool __weak is_trap_insn(uprobe_opcode_t *insn)
+ 
+ void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
+ {
+-	void *kaddr = kmap_atomic(page);
++	void *kaddr = kmap_local_page(page);
++
++	pagefault_disable();
+ 	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
+-	kunmap_atomic(kaddr);
++	pagefault_enable();
++
++	kunmap_local(kaddr);
+ }
+ 
+ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
+ {
+-	void *kaddr = kmap_atomic(page);
++	void *kaddr = kmap_local_page(page);
++
++	pagefault_disable();
+ 	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
+-	kunmap_atomic(kaddr);
++	pagefault_enable();
++
++	kunmap_local(kaddr);
+ }
+ 
+ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *insn,
+@@ -323,9 +331,10 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+ 		return ret == 0 ? -EBUSY : ret;
+ 	}
+ 
+-	kaddr = kmap_atomic(page);
++	kaddr = kmap_local_page(page);
+ 	ptr = kaddr + (vaddr & ~PAGE_MASK);
+ 
++	pagefault_disable();
+ 	if (unlikely(*ptr + d < 0)) {
+ 		pr_warn("ref_ctr going negative. vaddr: 0x%lx, "
+ 			"curr val: %d, delta: %d\n", vaddr, *ptr, d);
+@@ -336,7 +345,8 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+ 	*ptr += d;
+ 	ret = 0;
+ out:
+-	kunmap_atomic(kaddr);
++	pagefault_enable();
++	kunmap_local(kaddr);
+ 	put_page(page);
+ 	return ret;
+ }
+
+base-commit: f14faaf3a1fb3b9e4cf2e56269711fb85fba9458
+-- 
+2.51.0
+
