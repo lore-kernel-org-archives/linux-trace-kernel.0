@@ -1,128 +1,112 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2455A125D0;
-	Thu,  5 Feb 2026 02:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4276D1FDE01;
+	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770257852; cv=none; b=UsIXA14CaShlCvVi7gZ9V/Y+LQklP1RnrviVSlrtbrRGtJfjrZFLflwRSwVNCd9pd7muS1v02P+CgP/EXXrm5RSZPgEYF3Rlnnm5tNibun3kfaCNJJmWgVOi5q/+HwgtRzGcpLY4XG717VBA2XguwHZ7/drhU4SJkvNCNmU3bOc=
+	t=1770259826; cv=none; b=WGlhtBYU6gzFAXHkFs+9wsLKeK1+fFFL3RXf2VYScgQbowqohwSVzkptTRfZJqa0RUaATW/BcCzkNST9dfHCrVwp3CRpI+bSCyBD5ZtmlBuDgAzNoeOYpweY5aymI5gqXELmr4esZZhR+o6s3P67PPDSR7tG/S2QkNfAxTr6igI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770257852; c=relaxed/simple;
-	bh=zeahERPlSxSgVl9SJ4NWyVkSn3rX+et8OGBtAY6iN8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b5XCi3AHEy3Mwf/7B2itLDZ0ZpyTwxwaMDgjXtFgLPuZLllM6YZph8uI3KtyDNrpPkAeY1K7ey/VDleo6X5QME6c+lS4bpcp33q82mmJjTPSC7zkBxEjRwJItdWbo3duPICEZSxjI1VYxVqDt4a5Yd5o6Ls14hmZY79ngT11w2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 9B352140124;
-	Thu,  5 Feb 2026 02:17:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id E19866000A;
-	Thu,  5 Feb 2026 02:17:22 +0000 (UTC)
-Date: Wed, 4 Feb 2026 21:17:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] tracing: Make the backup instance non-reusable
-Message-ID: <20260204211721.74e501f0@robin>
-In-Reply-To: <176991655479.4025429.105619035638065215.stgit@mhiramat.tok.corp.google.com>
-References: <176991653525.4025429.12655335935351822711.stgit@mhiramat.tok.corp.google.com>
-	<176991655479.4025429.105619035638065215.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1770259826; c=relaxed/simple;
+	bh=gEsHVpsl/uccpoAAATd0oIOnvhSELF8QeFYFxJSgi/0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=XuWDH5cBScoaeBPQg6IfILgtDott+wsxsTt5Dei173I6UElC8+l63fgk1HwMOYdrx0qq4FbJ7MCD/Kq1C0d7uHjIBUDy2WLKfJrUaKKMK3e0q5XKkKqQzVWSg7F4K0e+QhpBumVNY7SkOTCGNtBhywGxGdLcz5wdic2XQuwMB28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jzp5j7ic; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jzp5j7ic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9C4C4CEF7;
+	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770259825;
+	bh=gEsHVpsl/uccpoAAATd0oIOnvhSELF8QeFYFxJSgi/0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Jzp5j7icXMg0GCWM/CtFH9fWTmWOkwDJIt7TqjxfPgoMrcwT9OfiS678uuzo6zcC4
+	 U1yQdmGsQ7rE4HRdQMo0Vwk0EyAonVwHogGxCxnJmmepahXoZy8r2xhOoXOinu+VAi
+	 WtS51tgz2fKYct1yhXgggHvrgxvQ9kfs8GoBwy0bLPKFB8MnYk32Kk9+FOzUloPLQ9
+	 zdJ/yYyCr8k/DU3qZ4PRd8bTQ77X+C2TPTaTjrSDgDJdxjX2DLcFEChddQ6hp4YtCA
+	 kmYrk0WjqhC/Flq7gxoDJivzSlS5wFHTwO+vsqTrhDSf+Z158orNiWlY5IuvaFWGGL
+	 5mOygrjpGwk2A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0B2AA3808200;
+	Thu,  5 Feb 2026 02:50:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: y1hsu6t5eanye8djkn55a4dwho6uc4ux
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: E19866000A
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18std86Jtd2B+/gy1VN3ZY7xSTzvgJHMXE=
-X-HE-Tag: 1770257842-387631
-X-HE-Meta: U2FsdGVkX1+wFD9tri8xeDxvSNOjam4BeCVP7nkeVCQp/NNMDqnx1Ktl9ZlXUfPNnjcuxbvmohLduwez+wi8pc8TMvI7NdF/AzfOVvJp4P8gV1wgdZxH2UNaDSYqtL6DampxIndT8Sn89wRuZt2wV/wtU4OHiwz5ViLmghiIF1VGvPatJauYQLc1zvmYEUV+XfU+y1VBns9qO3/i+1MmKmNT9vBhotDhcT6fgmoBmFi6oydv73EiZhzy9r4wIML2VMA+6yCR020nBEWMEvtCNWBExvbA31/9OqGp0mfymyg/XXZPM4g0L4sXQ4jcPvYU9wLP4LY6gU/xzl50AIwV5S7xIBqfMTCT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/15] mptcp: misc. features for v6.20/7.0
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177025982383.136386.13338094196936067289.git-patchwork-notify@kernel.org>
+Date: Thu, 05 Feb 2026 02:50:23 +0000
+References: 
+ <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
+In-Reply-To: 
+ <20260203-net-next-mptcp-misc-feat-6-20-v1-0-31ec8bfc56d1@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ shuah@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+ yangang@kylinos.cn, thomas.weissschuh@linutronix.de
 
-On Sun,  1 Feb 2026 12:29:15 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hello:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since there is no reason to reuse the backup instance, make it
-> readonly (but erasable).
-> Note that only backup instances are readonly, because
-> other trace instances will be empty unless it is writable.
-> Only backup instances have copy entries from the original.
-> 
-> With this change, most of the trace control files are removed
-> from the backup instance, including eventfs enable/filter etc.
-> 
->  # find /sys/kernel/tracing/instances/backup/events/ | wc -l
->  4093
->  # find /sys/kernel/tracing/instances/boot_map/events/ | wc -l
->  9573
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v6:
->    - Remove tracing_on file from readonly instances.
->    - Remove unused writable_mode from tracing_init_tracefs_percpu().
->    - Cleanup init_tracer_tracefs() and create_event_toplevel_files().
->    - Remove TRACE_MODE_WRITE_MASK.
->    - Add TRACE_ARRAY_FL_RDONLY.
->  Changes in v5:
->    - Rebased on the latest for-next (and hide show_event_filters/triggers
->      if the instance is readonly.
->  Changes in v4:
->   - Make trace data erasable. (not reusable)
->  Changes in v3:
->   - Resuse the beginning part of event_entries for readonly files.
->   - Remove readonly file_operations and checking readonly flag in
->     each write operation.
->  Changes in v2:
->   - Use readonly file_operations to prohibit writing instead of
->     checking flags in write() callbacks.
->   - Remove writable files from eventfs.
-> ---
->  kernel/trace/trace.c        |   94 +++++++++++++++++++++++++++++--------------
->  kernel/trace/trace.h        |    7 +++
->  kernel/trace/trace_boot.c   |    5 +-
->  kernel/trace/trace_events.c |   76 ++++++++++++++++++++---------------
->  4 files changed, 117 insertions(+), 65 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5c3e4a554143..b0efcf1e0809 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5052,6 +5052,11 @@ static ssize_t
->  tracing_write_stub(struct file *filp, const char __user *ubuf,
->  		   size_t count, loff_t *ppos)
->  {
-> +	struct trace_array *tr = file_inode(filp)->i_private;
-> +
-> +	if (trace_array_is_readonly(tr))
-> +		return -EPERM;
-> +
->  	return count;
->  }
->  
-> @@ -5152,6 +5157,9 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
->  	cpumask_var_t tracing_cpumask_new;
->  	int err;
->  
-> +	if (trace_array_is_readonly(tr))
-> +		return -EPERM;
-> +
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Shouldn't these checks be done in the open function? Doing it now is
-too late, as -EPERM on a write is confusing when the open for write
-succeeds.
+On Tue, 03 Feb 2026 19:41:16 +0100 you wrote:
+> This series contains a few independent new features, and small fixes for
+> net-next:
+> 
+>  - Patches 1-2: two small fixes linked to the MPTCP receive buffer that
+>    are not urgent, requiring code that has been recently changed, and is
+>    needed for the next patch. Because we are at the end of the cycle, it
+>    seems easier to send them to net-next, instead of dealing with
+>    conflicts between net and net-next.
+> 
+> [...]
 
--- Steve
+Here is the summary with links:
+  - [net-next,01/15] mptcp: do not account for OoO in mptcp_rcvbuf_grow()
+    https://git.kernel.org/netdev/net-next/c/6b329393502e
+  - [net-next,02/15] mptcp: fix receive space timestamp initialization
+    https://git.kernel.org/netdev/net-next/c/70274765fef5
+  - [net-next,03/15] mptcp: consolidate rcv space init
+    https://git.kernel.org/netdev/net-next/c/5c4dcc52c68a
+  - [net-next,04/15] trace: mptcp: add mptcp_rcvbuf_grow tracepoint
+    https://git.kernel.org/netdev/net-next/c/2002286e68c9
+  - [net-next,05/15] mptcp: pm: align endpoint flags size with the NL specs
+    https://git.kernel.org/netdev/net-next/c/d7e712b66f9b
+  - [net-next,06/15] mptcp: Change some dubious min_t(int, ...) to min()
+    https://git.kernel.org/netdev/net-next/c/b582090005d5
+  - [net-next,07/15] mptcp: allow overridden write_space to be invoked
+    (no matching commit)
+  - [net-next,08/15] selftests: mptcp: diag: sort all #include
+    https://git.kernel.org/netdev/net-next/c/f7f4e8e9448c
+  - [net-next,09/15] selftests: mptcp: join: wait for estab event instead of MPJ
+    https://git.kernel.org/netdev/net-next/c/32207bed0547
+  - [net-next,10/15] selftests: mptcp: join: fix wait_mpj helper
+    https://git.kernel.org/netdev/net-next/c/ab8b64ca3af3
+  - [net-next,11/15] selftests: mptcp: join: userspace: wait for new events
+    https://git.kernel.org/netdev/net-next/c/62c0774f0f18
+  - [net-next,12/15] selftests: mptcp: join chk_stale_nr: avoid dup stats
+    https://git.kernel.org/netdev/net-next/c/91453a62e5ec
+  - [net-next,13/15] selftests: mptcp: join: avoid declaring i if not used
+    https://git.kernel.org/netdev/net-next/c/79d5069cfbec
+  - [net-next,14/15] selftests: mptcp: connect cleanup TFO setup
+    https://git.kernel.org/netdev/net-next/c/ae68da495ae9
+  - [net-next,15/15] selftests: mptcp: join: no SKIP mark for group checks
+    https://git.kernel.org/netdev/net-next/c/4dca8d0030c7
 
->  	if (count == 0 || count > KMALLOC_MAX_SIZE)
->  		return -EINVAL;
->  
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
