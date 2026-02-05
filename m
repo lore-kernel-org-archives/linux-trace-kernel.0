@@ -1,282 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31AE45C0B;
-	Thu,  5 Feb 2026 00:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AAB23815B;
+	Thu,  5 Feb 2026 01:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770252551; cv=none; b=OmHP8IrK6AlOEHq38yV+IkC7MSU89PJfT6JWg42F+oiE1G2QDWeOvdICJqGGBjG1Ldb6O7ixaLiQtBawFgt/PhScVXv/5mOfc2yCkutSY+QtqolyNjQwLQFTV+iyA94mC2mmVJUd3FRQSJfn9hf3ZklQLqpCyn0MLGhzHeWNYOY=
+	t=1770253625; cv=none; b=HvqOCj5zSOlqNm7OR/Rrd8+Fks4Y1P5h+i7TTKlsaYS8KgRnFPX6pqav/rkV+ygptz/ixbaq5uvRxZ1GmwRetrrY4tN1vuBxpak4886F3mlQvuUP8YwaswS4lM/jZL1fdT2bYVeHzbCmkY15jxo6Bs10WA9/6aXZT+lIeE6JAQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770252551; c=relaxed/simple;
-	bh=f4DxYSCFK47ZZbbZ+11ZpPYwGbj7gm1yM2VT06/yQnE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CKfwxpghnzxkoOdRd3/XLAJ6LJU4/e4Do/nJnNG0XnplYpl6/Dh34n3OmerMn89cLssoV8HgtoxXwJLRib/yW9fLjUrbppK+jZl6RCTzNcDAqVlQdN3BYIpujkF/B8DGwyzcxeNl3OCIpaRb6xLaUG9SOH1YZ12JJxx5/BroGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfdONPiQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfdONPiQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A418C4CEF7;
-	Thu,  5 Feb 2026 00:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770252551;
-	bh=f4DxYSCFK47ZZbbZ+11ZpPYwGbj7gm1yM2VT06/yQnE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AfdONPiQbCjTXrEYW48kcg6iUt/tqKUpC36XpE+vZo0yja/7QT/ZCNTRS7sIrGgW8
-	 Knn7bGo404L7Hpxgjb8EaCoVfmCxKhGHCg+/BZUgMDRqcbL1qaxYATn8nzsjznW72w
-	 aMvqd7ojZmISDhqX0b8FO3HlgxUH5lnVcX47JIQdVbpGZFRS68Gk0GQM+rEbnWEzlR
-	 kZuUQmfKQEAKPOTqK69wy3ZruZSV8fmlJaNNTQ8HAjAviJTuTJLXRxA9zQF0QW5+3u
-	 8mSsYaYYd3spErMZcCxu++wqUY5wmbd9p9/xnBIfw76o1foNhuamcpyJQhtw0RwPP5
-	 ovgMbx58K6A0Q==
-Date: Thu, 5 Feb 2026 09:49:06 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, "jempty.liang" <imntjempty@163.com>
-Subject: Re: [PATCH v2] tracing: Fix ftrace event field alignments
-Message-Id: <20260205094906.d0146fa92b5a8060d65a7055@kernel.org>
-In-Reply-To: <20260204113628.53faec78@gandalf.local.home>
-References: <20260204113628.53faec78@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1770253625; c=relaxed/simple;
+	bh=TuDIHbYtqfCVp3tcoiYuDmB0SSJ7RZ3HPU/BB0uYQ/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z7u4lBiqkru+gAiaS7E0wpr1u2HhGaShCI547b6ByUXaAfeVTL+V+t3d66SBcBkIQ2uACkEvOfrQc4d50HkVQIDhlz0G6pjnTcMtA7KkWvCRneJ7543AOUfMUqHPv4hPLCsLoUHBoYEiX8YrmiExs0zVCEeVBxJCvGS4Tg4eIZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 66120587F8;
+	Thu,  5 Feb 2026 01:07:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id DFED820028;
+	Thu,  5 Feb 2026 01:06:58 +0000 (UTC)
+Date: Wed, 4 Feb 2026 20:06:57 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 13/30] tracing: Introduce simple_ring_buffer
+Message-ID: <20260204200657.17b3cdf7@robin>
+In-Reply-To: <20260131132848.254084-14-vdonnefort@google.com>
+References: <20260131132848.254084-1-vdonnefort@google.com>
+	<20260131132848.254084-14-vdonnefort@google.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: DFED820028
+X-Stat-Signature: 5qob6dma66gy78hnjtp6k5iesqm3q9jf
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+4FRyj2vp7Nvy6LqntMnnAcizFJFW9tug=
+X-HE-Tag: 1770253618-87722
+X-HE-Meta: U2FsdGVkX18EsP4u1JFWAo2oi/hgYNjRb6eNiUDejPAqeQ5fvKQvhuZztF8lVOpYQitvRWwCRWEudkXElSXUkWuD9+pm67E9sxtUrNfmXuucWwh8j3IPpRTiRb/DoBglMGZZfVPTwWALYS2R9W1MMhSOW5+EpYy6oQYpOU6qMFyy2aOevgLdN+S0fpLG8LMaIuGJlCdqYKPWwFsJGjFxzocrD8cXuXyflbyYL5X+YSV3UD78TaLYuQiNEFjnIYx5lIgIwiQWJfZuReSxzaredv6xEG933m/GGclTn1WlAoFre4T6L7MzWG+qwJjMXSjmVFqS5UAGsqQ4q0b98zcTgZozHAUXUmXLPzdmVcBdRoeHrazg/cnJt73JJkLgyQvoHMChnrlXjBAcwj1Nat0mXw==
 
-On Wed, 4 Feb 2026 11:36:28 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, 31 Jan 2026 13:28:31 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
+\
+> +/**
+> + * simple_ring_buffer_swap_reader_page - Swap ring-buffer head with the reader
+> + *
+> + * This function enables consuming reading. It ensures the current head page will not be overwritten
+> + * and can be safely read.
+> + *
+> + * @cpu_buffer: A simple_rb_per_cpu
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The fields of ftrace specific events (events used to save ftrace internal
-> events like function traces and trace_printk) are generated similarly to
-> how normal trace event fields are generated. That is, the fields are added
-> to a trace_events_fields array that saves the name, offset, size,
-> alignment and signness of the field. It is used to produce the output in
-> the format file in tracefs so that tooling knows how to parse the binary
-> data of the trace events.
-> 
-> The issue is that some of the ftrace event structures are packed. The
-> function graph exit event structures are one of them. The 64 bit calltime
-> and rettime fields end up 4 byte aligned, but the algorithm to show to
-> userspace shows them as 8 byte aligned.
-> 
-> The macros that create the ftrace events has one for embedded structure
-> fields. There's two macros for theses fields:
-> 
->   __field_desc() and __field_packed()
-> 
-> The difference of the latter macro is that it treats the field as packed.
-> 
-> Rename that field to __field_desc_packed() and create replace the
-> __field_packed() to be a normal field that is packed and have the calltime
-> and rettime use those.
-> 
-> This showed up on 32bit architectures for function graph time fields. It
-> had:
-> 
->  ~# cat /sys/kernel/tracing/events/ftrace/funcgraph_exit/format
-> [..]
->         field:unsigned long func;       offset:8;       size:4; signed:0;
->         field:unsigned int depth;       offset:12;      size:4; signed:0;
->         field:unsigned int overrun;     offset:16;      size:4; signed:0;
->         field:unsigned long long calltime;      offset:24;      size:8; signed:0;
->         field:unsigned long long rettime;       offset:32;      size:8; signed:0;
-> 
-> Notice that overrun is at offset 16 with size 4, where in the structure
-> calltime is at offset 20 (16 + 4), but it shows the offset at 24. That's
-> because it used the alignment of unsigned long long when used as a
-> declaration and not as a member of a structure where it would be aligned
-> by word size (in this case 4).
-> 
-> By using the proper structure alignment, the format has it at the correct
-> offset:
-> 
->  ~# cat /sys/kernel/tracing/events/ftrace/funcgraph_exit/format
-> [..]
->         field:unsigned long func;       offset:8;       size:4; signed:0;
->         field:unsigned int depth;       offset:12;      size:4; signed:0;
->         field:unsigned int overrun;     offset:16;      size:4; signed:0;
->         field:unsigned long long calltime;      offset:20;      size:8; signed:0;
->         field:unsigned long long rettime;       offset:28;      size:8; signed:0;
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 04ae87a52074e ("ftrace: Rework event_create_dir()")
-> Reported-by: "jempty.liang" <imntjempty@163.com>
-> Closes: https://lore.kernel.org/all/20260130015740.212343-1-imntjempty@163.com/
-> Closes: https://lore.kernel.org/all/20260202123342.2544795-1-imntjempty@163.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+And if you're going to do kerneldoc, you need to do it correctly ;-)
 
-Looks good to me.
+You put the description before the parameters.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> ---
-> Changes since v1: https://patch.msgid.link/20260202113024.61d5c1fd@gandalf.local.home
-> 
-> - Instead of using an alignment for structures, create a new macro
->   called __field_desc_packed() to use for packed structure fields
->   and have __field_packed() be used for normal packed fields.
-> 
->  kernel/trace/trace.h         |  7 +++++--
->  kernel/trace/trace_entries.h | 32 ++++++++++++++++----------------
->  kernel/trace/trace_export.c  | 21 +++++++++++++++------
->  3 files changed, 36 insertions(+), 24 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index b6d42fe06115..c11edec5d8f5 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -68,14 +68,17 @@ enum trace_type {
->  #undef __field_fn
->  #define __field_fn(type, item)		type	item;
->  
-> +#undef __field_packed
-> +#define __field_packed(type, item)	type	item;
+> + *
+> + * Returns 0 on success, -ENODEV if @cpu_buffer was unloaded or -EBUSY if we failed to catch the
+> + * head page.
+> + */
+> +int simple_ring_buffer_swap_reader_page(struct simple_rb_per_cpu *cpu_buffer)
+> +{
+> +	struct simple_buffer_page *last, *head, *reader;
+> +	unsigned long overrun;
+> +	int retry = 8;
+> +	int ret;
 > +
->  #undef __field_struct
->  #define __field_struct(type, item)	__field(type, item)
->  
->  #undef __field_desc
->  #define __field_desc(type, container, item)
->  
-> -#undef __field_packed
-> -#define __field_packed(type, container, item)
-> +#undef __field_desc_packed
-> +#define __field_desc_packed(type, container, item)
->  
->  #undef __array
->  #define __array(type, item, size)	type	item[size];
-> diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-> index f6a8d29c0d76..54417468fdeb 100644
-> --- a/kernel/trace/trace_entries.h
-> +++ b/kernel/trace/trace_entries.h
-> @@ -79,8 +79,8 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
->  
->  	F_STRUCT(
->  		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
-> -		__field_packed(	unsigned long,	graph_ent,	func		)
-> -		__field_packed(	unsigned long,	graph_ent,	depth		)
-> +		__field_desc_packed(unsigned long,	graph_ent,	func	)
-> +		__field_desc_packed(unsigned long,	graph_ent,	depth	)
->  		__dynamic_array(unsigned long,	args				)
->  	),
->  
-> @@ -96,9 +96,9 @@ FTRACE_ENTRY_PACKED(fgraph_retaddr_entry, fgraph_retaddr_ent_entry,
->  
->  	F_STRUCT(
->  		__field_struct(	struct fgraph_retaddr_ent,	graph_rent	)
-> -		__field_packed(	unsigned long,	graph_rent.ent,	func		)
-> -		__field_packed(	unsigned long,	graph_rent.ent,	depth		)
-> -		__field_packed(	unsigned long,	graph_rent,	retaddr		)
-> +		__field_desc_packed(	unsigned long,	graph_rent.ent,	func	)
-> +		__field_desc_packed(	unsigned long,	graph_rent.ent,	depth	)
-> +		__field_desc_packed(	unsigned long,	graph_rent,	retaddr	)
->  		__dynamic_array(unsigned long,	args				)
->  	),
->  
-> @@ -123,12 +123,12 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
->  
->  	F_STRUCT(
->  		__field_struct(	struct ftrace_graph_ret,	ret	)
-> -		__field_packed(	unsigned long,	ret,		func	)
-> -		__field_packed(	unsigned long,	ret,		retval	)
-> -		__field_packed(	unsigned int,	ret,		depth	)
-> -		__field_packed(	unsigned int,	ret,		overrun	)
-> -		__field(unsigned long long,	calltime		)
-> -		__field(unsigned long long,	rettime			)
-> +		__field_desc_packed(	unsigned long,	ret,	func	)
-> +		__field_desc_packed(	unsigned long,	ret,	retval	)
-> +		__field_desc_packed(	unsigned int,	ret,	depth	)
-> +		__field_desc_packed(	unsigned int,	ret,	overrun	)
-> +		__field_packed(unsigned long long,	calltime)
-> +		__field_packed(unsigned long long,	rettime	)
->  	),
->  
->  	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u retval: %lx",
-> @@ -146,11 +146,11 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
->  
->  	F_STRUCT(
->  		__field_struct(	struct ftrace_graph_ret,	ret	)
-> -		__field_packed(	unsigned long,	ret,		func	)
-> -		__field_packed(	unsigned int,	ret,		depth	)
-> -		__field_packed(	unsigned int,	ret,		overrun	)
-> -		__field(unsigned long long,	calltime		)
-> -		__field(unsigned long long,	rettime			)
-> +		__field_desc_packed(	unsigned long,	ret,	func	)
-> +		__field_desc_packed(	unsigned int,	ret,	depth	)
-> +		__field_desc_packed(	unsigned int,	ret,	overrun	)
-> +		__field_packed(unsigned long long,	calltime	)
-> +		__field_packed(unsigned long long,	rettime		)
->  	),
->  
->  	F_printk("<-- %ps (%u) (start: %llx  end: %llx) over: %u",
-> diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
-> index 1698fc22afa0..32a42ef31855 100644
-> --- a/kernel/trace/trace_export.c
-> +++ b/kernel/trace/trace_export.c
-> @@ -42,11 +42,14 @@ static int ftrace_event_register(struct trace_event_call *call,
->  #undef __field_fn
->  #define __field_fn(type, item)				type item;
->  
-> +#undef __field_packed
-> +#define __field_packed(type, item)			type item;
+> +	if (!simple_rb_loaded(cpu_buffer))
+> +		return -ENODEV;
 > +
->  #undef __field_desc
->  #define __field_desc(type, container, item)		type item;
->  
-> -#undef __field_packed
-> -#define __field_packed(type, container, item)		type item;
-> +#undef __field_desc_packed
-> +#define __field_desc_packed(type, container, item)	type item;
->  
->  #undef __array
->  #define __array(type, item, size)			type item[size];
-> @@ -104,11 +107,14 @@ static void __always_unused ____ftrace_check_##name(void)		\
->  #undef __field_fn
->  #define __field_fn(_type, _item) __field_ext(_type, _item, FILTER_TRACE_FN)
->  
-> +#undef __field_packed
-> +#define __field_packed(_type, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
+> +	reader = cpu_buffer->reader_page;
 > +
->  #undef __field_desc
->  #define __field_desc(_type, _container, _item) __field_ext(_type, _item, FILTER_OTHER)
->  
-> -#undef __field_packed
-> -#define __field_packed(_type, _container, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
-> +#undef __field_desc_packed
-> +#define __field_desc_packed(_type, _container, _item) __field_ext_packed(_type, _item, FILTER_OTHER)
->  
->  #undef __array
->  #define __array(_type, _item, _len) {					\
-> @@ -146,11 +152,14 @@ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
->  #undef __field_fn
->  #define __field_fn(type, item)
->  
-> +#undef __field_packed
-> +#define __field_packed(type, item)
+> +	do {
+> +		/* Run after the writer to find the head */
+> +		ret = simple_rb_find_head(cpu_buffer);
+> +		if (ret)
+> +			return ret;
 > +
->  #undef __field_desc
->  #define __field_desc(type, container, item)
->  
-> -#undef __field_packed
-> -#define __field_packed(type, container, item)
-> +#undef __field_desc_packed
-> +#define __field_desc_packed(type, container, item)
->  
->  #undef __array
->  #define __array(type, item, len)
-> -- 
-> 2.51.0
-> 
-> 
+> +		head = cpu_buffer->head_page;
+> +
+> +		/* Connect the reader page around the header page */
+> +		reader->link.next = head->link.next;
+> +		reader->link.prev = head->link.prev;
+> +
+> +		/* The last page before the head */
+> +		last = simple_bpage_from_link(head->link.prev);
+> +
+> +		/* The reader page points to the new header page */
+> +		simple_bpage_set_head_link(reader);
+> +
+> +		overrun = cpu_buffer->meta->overrun;
+> +	} while (!simple_bpage_unset_head_link(last, reader, SIMPLE_RB_LINK_NORMAL) && retry--);
+> +
+> +	if (!retry)
+> +		return -EINVAL;
+> +
+> +	cpu_buffer->head_page = simple_bpage_from_link(reader->link.next);
+> +	cpu_buffer->head_page->link.prev = &reader->link;
+> +	cpu_buffer->reader_page = head;
+> +	cpu_buffer->meta->reader.lost_events = overrun - cpu_buffer->last_overrun;
+> +	cpu_buffer->meta->reader.id = cpu_buffer->reader_page->id;
+> +	cpu_buffer->last_overrun = overrun;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(simple_ring_buffer_swap_reader_page);
+> +
+> +static struct simple_buffer_page *simple_rb_move_tail(struct simple_rb_per_cpu *cpu_buffer)
+> +{
+> +	struct simple_buffer_page *tail, *new_tail;
+> +
+> +	tail = cpu_buffer->tail_page;
+> +	new_tail = simple_bpage_next_page(tail);
+> +
+> +	if (simple_bpage_unset_head_link(tail, new_tail, SIMPLE_RB_LINK_HEAD_MOVING)) {
+> +		/*
+> +		 * Oh no! we've caught the head. There is none anymore and
+> +		 * swap_reader will spin until we set the new one. Overrun must
+> +		 * be written first, to make sure we report the correct number
+> +		 * of lost events.
+> +		 */
+> +		simple_rb_meta_inc(cpu_buffer->meta->overrun, new_tail->entries);
+> +		simple_rb_meta_inc(cpu_buffer->meta->pages_lost, 1);
+> +
+> +		simple_bpage_set_head_link(new_tail);
+> +		simple_bpage_set_normal_link(tail);
+> +	}
+> +
+> +	simple_bpage_reset(new_tail);
+> +	cpu_buffer->tail_page = new_tail;
+> +
+> +	simple_rb_meta_inc(cpu_buffer->meta->pages_touched, 1);
+> +
+> +	return new_tail;
+> +}
+> +
+> +static unsigned long rb_event_size(unsigned long length)
+> +{
+> +	struct ring_buffer_event *event;
+> +
+> +	return length + RB_EVNT_HDR_SIZE + sizeof(event->array[0]);
+> +}
+> +
+> +static struct ring_buffer_event *
+> +rb_event_add_ts_extend(struct ring_buffer_event *event, u64 delta)
+> +{
+> +	event->type_len = RINGBUF_TYPE_TIME_EXTEND;
+> +	event->time_delta = delta & TS_MASK;
+> +	event->array[0] = delta >> TS_SHIFT;
+> +
+> +	return (struct ring_buffer_event *)((unsigned long)event + 8);
+> +}
+> +
+> +static struct ring_buffer_event *
+> +simple_rb_reserve_next(struct simple_rb_per_cpu *cpu_buffer, unsigned long length, u64 timestamp)
+> +{
+> +	unsigned long ts_ext_size = 0, event_size = rb_event_size(length);
+> +	struct simple_buffer_page *tail = cpu_buffer->tail_page;
+> +	struct ring_buffer_event *event;
+> +	u32 write, prev_write;
+> +	u64 time_delta;
+> +
+> +	time_delta = timestamp - cpu_buffer->write_stamp;
+> +
+> +	if (test_time_stamp(time_delta))
+> +		ts_ext_size = 8;
+> +
+> +	prev_write = tail->write;
+> +	write = prev_write + event_size + ts_ext_size;
+> +
+> +	if (unlikely(write > (PAGE_SIZE - BUF_PAGE_HDR_SIZE)))
+> +		tail = simple_rb_move_tail(cpu_buffer);
+> +
+> +	if (!tail->entries) {
+> +		tail->page->time_stamp = timestamp;
+> +		time_delta = 0;
+> +		ts_ext_size = 0;
+> +		write = event_size;
+> +		prev_write = 0;
+> +	}
+> +
+> +	tail->write = write;
+> +	tail->entries++;
+> +
+> +	cpu_buffer->write_stamp = timestamp;
+> +
+> +	event = (struct ring_buffer_event *)(tail->page->data + prev_write);
+> +	if (ts_ext_size) {
+> +		event = rb_event_add_ts_extend(event, time_delta);
+> +		time_delta = 0;
+> +	}
+> +
+> +	event->type_len = 0;
+> +	event->time_delta = time_delta;
+> +	event->array[0] = event_size - RB_EVNT_HDR_SIZE;
+> +
+> +	return event;
+> +}
+> +
+> +/**
+> + * simple_ring_buffer_reserve - Reserve an entry in @cpu_buffer
+> + *
 
+And you don't leave a space between the one line description and the
+arguments.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> + * @cpu_buffer:	A simple_rb_per_cpu
+> + * @length:	Size of the entry in bytes
+> + * @timestamp:	Timestamp of the entry
+> + *
+> + * Returns the address of the entry where to write data or NULL
+> + */
+> +void *simple_ring_buffer_reserve(struct simple_rb_per_cpu *cpu_buffer, unsigned long length,
+> +				 u64 timestamp)
+> +{
+> +	struct ring_buffer_event *rb_event;
+> +
+> +	if (cmpxchg(&cpu_buffer->status, SIMPLE_RB_READY, SIMPLE_RB_WRITING) != SIMPLE_RB_READY)
+> +		return NULL;
+> +
+> +	rb_event = simple_rb_reserve_next(cpu_buffer, length, timestamp);
+> +
+> +	return &rb_event->array[1];
+> +}
+> +EXPORT_SYMBOL_GPL(simple_ring_buffer_reserve);
+> +
+
+Other than that:
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
