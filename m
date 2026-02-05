@@ -1,138 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B242D3A86
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 20:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770322377; cv=none; b=Grf4tzDftPGN9C9z2fDZkbe5lUcyOHiEVZIkh7wwS442SzOOXUF00jYA+c2w0n3N0m9IotOtYzTVRWGS6R9xMclfgG1ej5XSK094Np/TceHCJut8LuUKUMIYbs7qcKYakZJ2DB5MPvOfGl8aEExNBAoAV5lcVnIHfP60+NHkZfM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770322377; c=relaxed/simple;
-	bh=zaSr4rE/b4mSN8VSFCqwSqU06aPztKzd318tvbOjbgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=hT//G+jSdUfjOoVnPhGD31QiOWxosanU4FNxkf+XlxPXEgM/XolVZOGyrKW6DzqWxh6bpe16GteD/1ZubTDLIppvnTilDW4VE0A76/uaW3+mulwT5r4oupFDibNEQv5i26vvpWxbflHl7pfgKtidOus3ieF29SE8n/IJeT9piyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ABP+bVAf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869B331A5E
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 22:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770330471; cv=pass; b=F3tJBu3y1RsrDzE1mnpI1NoSX+uzH517hPzk1CflEaOFIKiiHzdpnO+2X64jgmBR4vPtkF/HxPxgJ4EHyYteZvHiGd29gnbA899ex3NUZTygrh9saCG9ekxiyyHWlvJwgGOFkyCMamVpjH1AUrrJAM2wb2pnaey2+kL0Byrs830=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770330471; c=relaxed/simple;
+	bh=wT63vSp5kCeLsH/iyRnGKz4w1Whcg5hYPhhenR/aQuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E161/DtBKugS4yRl1Gw/KQpKgLyIPbKd4LPYGR3ilRAFYmmERK6Hx+CSrDi+p8Rid7AkWNz/suJTADhgD/3crw4S44IXSKWx5N0KYHGWg1uXk+vhqHFdhku/MCDddfwJadeGLq40PFWm44Py8YMEgtJcfRrdC/hc97Bs+FHwg0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6QXUV85; arc=pass smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABP+bVAf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770322376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y+WX1j6Y6/swuH4pxbow/FdPp1yCIK87zFtS4D5BRnw=;
-	b=ABP+bVAfX/RDxDGg/272uazvB/VFQ4ZIOh3TQlIsUBNi/VwDazQU7oM+97MQC7HrQDjsKc
-	8uFVUYNKV4IHJrV+v6bI1078tf7hY2nwHpZReDDQ9uQRwLnpcdZ1d0fJpAEFwQp3H31Nx7
-	mdkoWJzVvQbtlRKgu6tN7MBMTLM9GeE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-496-_3AuwUYLPWukmM2zWzfxqA-1; Thu,
- 05 Feb 2026 15:12:53 -0500
-X-MC-Unique: _3AuwUYLPWukmM2zWzfxqA-1
-X-Mimecast-MFC-AGG-ID: _3AuwUYLPWukmM2zWzfxqA_1770322367
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D5901800630;
-	Thu,  5 Feb 2026 20:12:47 +0000 (UTC)
-Received: from fedora (unknown [10.22.64.136])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DDAD8300DDA5;
-	Thu,  5 Feb 2026 20:12:44 +0000 (UTC)
-Date: Thu, 5 Feb 2026 17:12:43 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
-	"open list:RUNTIME VERIFICATION (RV)" <linux-trace-kernel@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 20/20] rv/rvgen: add missing return type annotations
-Message-ID: <aYT4I9shfAZOkpal@fedora>
-References: <20260204144914.104028-1-wander@redhat.com>
- <20260204144914.104028-21-wander@redhat.com>
- <1edfc4451310645ffe89a60e461682eb49ff6006.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6QXUV85"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-354a18c48b5so1257932a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 14:27:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770330470; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JS/ErKBhii6D7hwLa0OPQj8vOSU2+GSd4usQCJqb1/sSmy21Ru89j0JPna/BEEYiqz
+         F6uL+SiPMzCPYFBBtBcHzbHVPDr3cQEzC6FmXZ7Upue5Ukh8uHX4GOPR3y5F7m/CR5IQ
+         fiY7O40fJd7WcbHR5gPhApI9MPHv4F9fVM5+p3RJcX/DQtbFZJVZ2nElElkHurrrARnm
+         7Q02isbGTQx62/miK7xKTuGCktFGZz81LJjBF/Nc6KloU2jKZirxefdXVSlh6q03MbX5
+         OXu6Pec5tQGb12/cU5Htd3mwV6bhtPob0TPqy1FeHkCxS3snzTiWgWDtj9D5vUot2JMn
+         P2Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=cQT746w59LutbmQ8NQLgOwJeCXLUJTo5+ZvjfzU2gRc=;
+        fh=UoSSShFtArKZJ/eBfrZhVwFNBjBgIy9xPf62XJdi5U8=;
+        b=Ib7ShFzMP5Ecrn6wLtqfRbvW6eDAWm+aBUYymLj4hPQ65TQjw4RUGHFkrzWXFil4QA
+         +Wn9PFoGzwxnkS2G4mowVgteQNF90bhCgpqhp87R4TFUWuyxVqnyCBRx99xW82k4CtCk
+         V1j9qwiXg7oQbO40MrZBa5t1MdepTiXOumn51kjm1AwNtxNTD4axRQoTsI4AjY0QD/8E
+         QDa4fb6UrjuJlDDSJlu5/KpadfXCV8ov+UkMEoeeqVaXcexeNd2IANRksCXRxxePJnyM
+         GpD4t9NgNlCi7eP9m9YpIwdNUkHeHSEEsTz62qJ01HHKafm/eREgQyHI+TXfR+ipv76T
+         ajNg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770330470; x=1770935270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cQT746w59LutbmQ8NQLgOwJeCXLUJTo5+ZvjfzU2gRc=;
+        b=i6QXUV85tw1L3ZjyL92mBDjXuxY/ajTyNKF2mWIY04u6iPeXDGy9vCNMlRQcsWeY1j
+         kx8O7atbc5qjDAO3Ckzb415dsmWxqxDD7Z8wOHG1Eo8Xa4SKo22CKkMPgrlmlAPclv0w
+         qWBcl7qUuRjQNS4aynbJsko5hL4vnsAGyQmneOxpj7pVleixAOq6AF896e8ve3cF7SmM
+         FxMc8FM34DTA17mRN5fOBA1MO5d5NRbycfVnhRxDo9FKPpY+L/9YLpeDuUSlfvRue99a
+         +dMKIlJmyaKEpKL0oe0NxSM86tjgIvQAWUI/Hv+OBs/RjhHMHuZeP1Pckh5UTT/ErAhy
+         /J0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770330470; x=1770935270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cQT746w59LutbmQ8NQLgOwJeCXLUJTo5+ZvjfzU2gRc=;
+        b=pEBi4q6AXTelyUWnmRhsx/pCM7k2dtK/W571khOdKQ+BpYqEYozeXCchM17gnjq/LJ
+         AHMQ+6kmd81+SbwghiV0b/1w2u5gTNTWDJxvgJjnvTpi/PaChi9u59xV+ecbTT0EIk3B
+         GfORYuywjWPgJPZBBTTTpGbkuB2bb2DmcsDStOsdEn7j6RuQ1ZhOa1iQvJImGmPw0PIF
+         lsskTDlR4CLyRrvQmey/2NCEax/NEbgc3DXJK4zKh8OwLsHwgQVyLDbDaAH27ad4mg0I
+         MUYF1WLAY9oaeqGd0k9rGeEcFKVB6mmpyL0wc3bgV0qAknMBVfGOrdty4cvwyRHaVHRq
+         whgA==
+X-Forwarded-Encrypted: i=1; AJvYcCW32xMIqU1SoEWmSp7YZIXiJXGQLFkXa2z93MCj06NO1KOaF+4PWYYr9wrw6xgtgE1qG0O7iuUaOUylZdVXQ36YyOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8Azn8I/1I+App3Y71CgCz7TwGqSVyRkJCe0LkDtQsCn3TI1OW
+	W6rtA2BtWZpYQ2QcxL65NFFBKwvHs0e+dnSJUnMRodJRcM3ue6TdwUSZK7+67GUdiCfy61MiLPv
+	AphK8nxWOoyS4WARNOlD+jBMfii+WXCw=
+X-Gm-Gg: AZuq6aL5pcC2Cyt4tEFmgIp1MA/fqGsq02829DC9NHw71d/kF/nukcmov59Cj7WXYZv
+	xkunSVoE0nRIX/9NmFgQSuWCJNk2yJ2qVfDMA/pnLtK1s4L3Leg+WIhDqFuLpzLCcmz/jWzsyld
+	8yDk40OYa99b7VI+YwnqpMi0hjk2eMTFnHQLsljvqVMLDqkDypJ6Raou+r42b1V8BLo+sVwA8C6
+	r8u8nxHseHKSR6AJ5Pok1F3nAVcWHMt8ND77bu8uzzB4SV8vMrpakWP8dNrtRdrGu5kc4angtJt
+	iFjTiYDOt0TzhxPejzVJuA==
+X-Received: by 2002:a17:90b:224e:b0:353:883:affc with SMTP id
+ 98e67ed59e1d1-354b3c8a795mr448234a91.18.1770330470396; Thu, 05 Feb 2026
+ 14:27:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1edfc4451310645ffe89a60e461682eb49ff6006.camel@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: FA7-YVaTFmrJoI2ufKR52jZDgeUgRV8rw2Onib4Pt_Y_1770322367
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20260203093819.2105105-1-jolsa@kernel.org> <20260203093819.2105105-5-jolsa@kernel.org>
+ <CAEf4BzYWxmg7YO_ewENt1rr4R1YT=iL0fc5yJqanfQZJk6u1nQ@mail.gmail.com> <aYRbYY8f_wWoiZhk@krava>
+In-Reply-To: <aYRbYY8f_wWoiZhk@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 5 Feb 2026 14:27:38 -0800
+X-Gm-Features: AZwV_Qi0sNoP5otEpg1sqvr1nRA_s5ZwaLJsMTxo-ZEf-4gsK5EHmi7JfFu50Y4
+Message-ID: <CAEf4BzY=vqpnjrDNtLVvC3_nU5=Z7iROU_He=xbkEJDuGCoqug@mail.gmail.com>
+Subject: Re: [RFC bpf-next 04/12] bpf: Add struct bpf_tramp_node object
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, Menglong Dong <menglong8.dong@gmail.com>, 
+	Steven Rostedt <rostedt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 05, 2026 at 08:24:40AM +0100, Gabriele Monaco wrote:
-> On Wed, 2026-02-04 at 11:42 -0300, Wander Lairson Costa wrote:
-> > Add missing `-> str` return type annotations to code generation
-> > methods in RVGenerator. These methods return strings, and the missing
-> > hints caused errors with static analysis tools.
-> > 
-> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-> > ---
-> >  tools/verification/rvgen/rvgen/generator.py | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/tools/verification/rvgen/rvgen/generator.py
-> > b/tools/verification/rvgen/rvgen/generator.py
-> > index ef6c9150f50c6..4b984869a7b3d 100644
-> > --- a/tools/verification/rvgen/rvgen/generator.py
-> > +++ b/tools/verification/rvgen/rvgen/generator.py
-> > @@ -73,13 +73,13 @@ class RVGenerator:
-> >              return f"#include <monitors/{self.parent}/{self.parent}.h>\n"
-> >          return ""
-> >  
-> > -    def fill_tracepoint_handlers_skel(self):
-> > +    def fill_tracepoint_handlers_skel(self) -> str:
-> >          return "NotImplemented"
-> 
-> Those are the ones that will raise an exception in a later iteration of this,
-> right? I wonder if we really need to touch them now.
-> Anyway I'm fine with this if it pleases your tools, thanks.
+On Thu, Feb 5, 2026 at 12:57=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Wed, Feb 04, 2026 at 11:00:57AM -0800, Andrii Nakryiko wrote:
+> > On Tue, Feb 3, 2026 at 1:39=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wro=
+te:
+> > >
+> > > Adding struct bpf_tramp_node to decouple the link out of the trampoli=
+ne
+> > > attachment info.
+> > >
+> > > At the moment the object for attaching bpf program to the trampoline =
+is
+> > > 'struct bpf_tramp_link':
+> > >
+> > >   struct bpf_tramp_link {
+> > >        struct bpf_link link;
+> > >        struct hlist_node tramp_hlist;
+> > >        u64 cookie;
+> > >   }
+> > >
+> > > The link holds the bpf_prog pointer and forces one link - one program
+> > > binding logic. In following changes we want to attach program to mult=
+iple
+> > > trampolines but have just one bpf_link object.
+> > >
+> > > Splitting struct bpf_tramp_link into:
+> > >
+> > >   struct bpf_tramp_link {
+> > >        struct bpf_link link;
+> > >        struct bpf_tramp_node node;
+> > >   };
+> > >
+> > >   struct bpf_tramp_node {
+> > >        struct hlist_node tramp_hlist;
+> > >        struct bpf_prog *prog;
+> > >        u64 cookie;
+> > >   };
+> >
+> > I'm a bit confused here. For singular fentry/fexit attachment we have
+> > one trampoline and one program, right? For multi-fentry, we have
+> > multiple trampoline, but still one program pointer, no? So why put a
+> > prog pointer into tramp_node?.. You do want cookie in tramp_node, yes,
+> > but not the program.
+>
+> yes, but both links:
+>   - single link 'struct bpf_tramp_link'
+>   - multi link  'struct bpf_tracing_multi_link'
+>
+> are using same code to attach that code needs to have a hlist_node to
+> link the program to the trampoline and be able to reach the bpf_prog
+> (like in invoke_bpf_prog)
+>
+> current code is passing whole bpf_tramp_link object so it has access
+> to both, but multi link needs to keep link to each trampoline (nodes
+> below):
+>
+> struct bpf_tracing_multi_link {
+>        struct bpf_link link;
+>        enum bpf_attach_type attach_type;
+>        int nodes_cnt;
+>        struct bpf_tracing_multi_node nodes[] __counted_by(nodes_cnt);
+> };
+>
+> and we can't get get from &nodes[x] to bpf_tracing_multi_link.link.prog
+>
+> it's bit redundant, but not sure what else we can do
 
-I was uncertain if I should send now or postpone it, to be fair.
+invoke_bpf_prog() specifically doesn't have to get prog pointer from
+bpf_tramp_link, it can be passed prog as a separate argument and then
+bpf_tramp_node  with cookie separately as well. I haven't looked at
+all other code, but I suspect we can refactor it to accept prog
+explicitly and the relevant parts (node+cookie) separately.
 
-> 
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-> 
-> >  
-> > -    def fill_tracepoint_attach_probe(self):
-> > +    def fill_tracepoint_attach_probe(self) -> str:
-> >          return "NotImplemented"
-> >  
-> > -    def fill_tracepoint_detach_helper(self):
-> > +    def fill_tracepoint_detach_helper(self) -> str:
-> >          return "NotImplemented"
-> >  
-> >      def fill_main_c(self):
-> > @@ -100,19 +100,19 @@ class RVGenerator:
-> >  
-> >          return main_c
-> >  
-> > -    def fill_model_h(self):
-> > +    def fill_model_h(self) -> str:
-> >          return "NotImplemented"
-> >  
-> > -    def fill_monitor_class_type(self):
-> > +    def fill_monitor_class_type(self) -> str:
-> >          return "NotImplemented"
-> >  
-> > -    def fill_monitor_class(self):
-> > +    def fill_monitor_class(self) -> str:
-> >          return "NotImplemented"
-> >  
-> > -    def fill_tracepoint_args_skel(self, tp_type):
-> > +    def fill_tracepoint_args_skel(self, tp_type) -> str:
-> >          return "NotImplemented"
-> >  
-> > -    def fill_monitor_deps(self):
-> > +    def fill_monitor_deps(self) -> str:
-> >          buff = []
-> >          buff.append("	# XXX: add dependencies if there")
-> >          if self.parent:
-> 
+Just at the conceptual level, we have single prog and multiple places
+to patch (trampolines), so we shouldn't be co-locating in the same
+data structure. It feels like a complete hack to duplicate prog just
+to make some internal code access it.
 
+>
+> > Because then there is also a question what is
+> > bpf_link's prog pointing to?...
+>
+> bpf_link.prog is still keeping the prog, I don't think we can remove that
+>
+> jirka
+>
+> >
+> >
+> > >
+> > > where 'struct bpf_tramp_link' defines standard single trampoline link=
+,
+> > > and 'struct bpf_tramp_node' is the attachment trampoline object. This
+> > > will allow us to define link for multiple trampolines, like:
+> > >
+> > >   struct bpf_tracing_multi_link {
+> > >        struct bpf_link link;
+> > >        ...
+> > >        int nodes_cnt;
+> > >        struct bpf_tracing_multi_node nodes[] __counted_by(nodes_cnt);
+> > >   };
+> > >
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  arch/arm64/net/bpf_jit_comp.c  |  58 +++++++++----------
+> > >  arch/s390/net/bpf_jit_comp.c   |  42 +++++++-------
+> > >  arch/x86/net/bpf_jit_comp.c    |  54 ++++++++---------
+> > >  include/linux/bpf.h            |  47 ++++++++-------
+> > >  kernel/bpf/bpf_struct_ops.c    |  24 ++++----
+> > >  kernel/bpf/syscall.c           |  25 ++++----
+> > >  kernel/bpf/trampoline.c        | 102 ++++++++++++++++---------------=
+--
+> > >  net/bpf/bpf_dummy_struct_ops.c |  11 ++--
+> > >  8 files changed, 185 insertions(+), 178 deletions(-)
+> > >
+> >
+> > [...]
