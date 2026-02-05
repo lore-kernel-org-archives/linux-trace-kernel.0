@@ -1,234 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15023A7F40
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 12:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947023B8D45
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 12:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770293339; cv=none; b=nGGnIveG/xAjKj8VdJF7CG5eJ4CfaCsGf/URQKpUymKFn6Kj0HDOtOBSdu0cG6ENf1iUhpgZMxjRrovK4BkpSYTC7ACK5Eaq5ZGD05lrC1gEvy7QgatlbXIgpXV4wtR1TbWvu/Ja2u6vRHHGxZU7w/9xRGoYcRnnHpxnGzY/ltU=
+	t=1770294584; cv=none; b=NWU+n4GEOlzKtNuKFU/CZhQ9nH/6nd7KVXgS6RqN7N8xnaj8y4i58QFloQFhA+qAH5/8C5aNG8iuGrDdLLE5IvCwvC98jzGoRNiY07fhEBct+9ZVoAdLNdezNn8Yxhmzp0wpdCwWLOZnTR0aUisaYXhI+v/2FPHSmcCyZ6o60/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770293339; c=relaxed/simple;
-	bh=lF+ifxsI9p1x7q6u88VjzIf4sGXCH1orLW5RIRRZ7nw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X943alSnuk+N7uk22fQt5Vz5IAxMSZLqyLc8NwaLu1sXXRFXvD31O/g+Tv+/z7nTKH/ztJwXamhKfL4lvbS1aS0FsFJBBy2n6FrGmOYNwLpBK298bh2XVUSjPY398SWFPU83zZttsJWGQp88r0Xb2qrozg/BDAJCIJ+mGchqqfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e1amls6t; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1770294584; c=relaxed/simple;
+	bh=SmGwsreFC875e2XkP97W/boxhAVimJd+kAYCDyQkBOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=RBt933frh0AJ8+7b0Dwos+e54Hjw516hMU9NIpdMhdLY6ErhAXYNmQ6wbjUnfZu8mpAH4+F4zyqzysegs9Pj9IV1ADGN3DzPqZifnBNeNSG4N31tLV5W7UxUaZBbcK7O16p6ElwBKlDwQXie52PUnDldPeukKhn84CDbJkT8frI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ln5Jah7R; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1amls6t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ln5Jah7R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770293337;
+	s=mimecast20190719; t=1770294583;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lF+ifxsI9p1x7q6u88VjzIf4sGXCH1orLW5RIRRZ7nw=;
-	b=e1amls6tfsUp39+CNrXrXeJm0BrF/TuyZ0UJGZlI8+0QI7CTStyjhbq8t6H9jr2YNBUcVA
-	GASNoq2Xj/PSluEG8Fkw0zsiH7gBIa9qE0KTwnFzRAwaYX/Vg05v8khujqlmtwgDrJyQhu
-	P2D5WLnmkTBhQnNrfVDO7TUSvrO0sTE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-424-0OwPfRN-PX-OYHXiflVS4g-1; Thu, 05 Feb 2026 07:08:44 -0500
-X-MC-Unique: 0OwPfRN-PX-OYHXiflVS4g-1
-X-Mimecast-MFC-AGG-ID: 0OwPfRN-PX-OYHXiflVS4g_1770293324
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-435a11575ecso861187f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 04:08:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770293323; x=1770898123;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lF+ifxsI9p1x7q6u88VjzIf4sGXCH1orLW5RIRRZ7nw=;
-        b=IDPVthCKNELPcmEuEFqJXcWhD8I62GQYgJsJRJCRIP7m8x+6HsS/+iIHff6TKYMoYd
-         VnCUBTeyUYCQW5Ss1fD7QA3+MeWH3mcdXlZSlWKRFNfuGkDU+lvJ+75achG6hpOhfB5g
-         U9U3ToJsHkuBMOUx9qtGZZd9b8WjDMH5qAPmbYfnnqXLPTk82zbpyZv5kfKNnzOhvIUw
-         LcyNAgCJfBWA36mFhaOlvT6MxjjQhgjUzettf3LTmJxGnKs15Fd3I58hGjU7NCGoAhfL
-         3zTYFZK21E9W+eE2PztjsmwZkqCxNrSryEBlL5vvsQVP9QNjS5ju+BgkPDrPFeWrsMLU
-         wFQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSR4YzUB8kDg2K94jR939+f8Jhg9c4oV9PqMAGQtEpwlQtHBcSAKlm3OOCIGef/M2rYhFL63Lz1Esr2Nyn4xQ9FM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEI4rQ5PJuDKimFvLR5ZlkQRgi50ETQ1RRy9ANt7aAUAlrA65Z
-	r/mca7Wc5KtuYQc7rJgfrqSVYOdNG6JqZYuFJCR6TDRp2ZXKUFZNk/YfJYG6Ht22wovfCEBbxTB
-	TMGL+USALSbVyz3u+C0G/ut6NoDFjou+CN7ikRDbaMjxmWwbHcnx/PX2uCnuNKY99SEqL7i8bew
-	==
-X-Gm-Gg: AZuq6aIUxpDpP77YZW1wheJMcTnN8G5ifO41C6TtHUcE1iQwvjV4l2fR9PQ4uRt3ril
-	QJrWFG7CXXtcO46XIoQ6QuwwFqmRMofiNC+4D44RY0E06kCp/qOYH0iGhCL8LBGVM/XOL7M3dRf
-	FEIzl9Mm0m2Je9yff7vcCToaVRnVt/0G0Uto3EVyGchkZBfRHz8et3Brs6tp/JiCdIb+9tcWsnS
-	xcvwMv0DDvcprJ4PX/NP9n8JASduRLkRK240LkXpb1Tvmr+4gQN8ilrmChCle1NpUOdFlocsWIb
-	/QuDTrFP7XCppGzochQ9ppqta60h92REDoezSGpjEnN2o7BWT2QTp9m+eNLqjoWiYD98H4C4fK9
-	EgG87OjOHk8OmmxRtDmJzI41a9CiCc4+Qpdc2Ggy7OY1tHTN1xhWP78J0pOYNWR6KPLOo6YUF3a
-	ilbWJ230Ve
-X-Received: by 2002:a05:6000:40c8:b0:430:ff8b:fdc2 with SMTP id ffacd0b85a97d-4361805fc02mr9780058f8f.60.1770293323504;
-        Thu, 05 Feb 2026 04:08:43 -0800 (PST)
-X-Received: by 2002:a05:6000:40c8:b0:430:ff8b:fdc2 with SMTP id ffacd0b85a97d-4361805fc02mr9780022f8f.60.1770293323075;
-        Thu, 05 Feb 2026 04:08:43 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43617e3a546sm15995841f8f.17.2026.02.05.04.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 04:08:42 -0800 (PST)
-Message-ID: <ff532aaa9f97f474c21417401654bba73e30c988.camel@redhat.com>
-Subject: Re: [PATCH v2 01/20] rv/rvgen: introduce AutomataError exception
- class
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- "open list:RUNTIME VERIFICATION (RV)"	
- <linux-trace-kernel@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Date: Thu, 05 Feb 2026 13:08:41 +0100
-In-Reply-To: <20260204144914.104028-2-wander@redhat.com>
-References: <20260204144914.104028-1-wander@redhat.com>
-	 <20260204144914.104028-2-wander@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	 in-reply-to:in-reply-to:references:references;
+	bh=SmGwsreFC875e2XkP97W/boxhAVimJd+kAYCDyQkBOE=;
+	b=Ln5Jah7R4AcYDYRr/vvwWEOY1vXM9L67CfwltrLkKBEQ3LMqr3+hkSmZoyiy4VNJxoWcKc
+	zNFT7+3u7FpmsG4xag1w+Dbi4lfZ4RXjdcn+zZXPXERLkF98NkiF74W/fqTpuRZiBY3t+j
+	KIE7J1xCVkByiM580N4h2i6QWBq1zro=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-537-1-HKa2yFP1ChMu5ZPDHAUg-1; Thu,
+ 05 Feb 2026 07:29:40 -0500
+X-MC-Unique: 1-HKa2yFP1ChMu5ZPDHAUg-1
+X-Mimecast-MFC-AGG-ID: 1-HKa2yFP1ChMu5ZPDHAUg_1770294578
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F127E1800473;
+	Thu,  5 Feb 2026 12:29:37 +0000 (UTC)
+Received: from fedora (unknown [10.45.224.8])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B9532300DDA1;
+	Thu,  5 Feb 2026 12:29:31 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  5 Feb 2026 13:29:37 +0100 (CET)
+Date: Thu, 5 Feb 2026 13:29:30 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Carlos =?iso-8859-1?Q?L=F3pez?= <clopez@suse.de>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"open list:UPROBES" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uprobes: replace deprecated kmap_atomic() with
+ kmap_local_page()
+Message-ID: <aYSNKqr2rmO7dHBm@redhat.com>
+References: <20260205105725.298340-1-clopez@suse.de>
+ <20260205111208.GK232055@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oKJGEEX9ubHIx6-GKm8BiQSfsdxqKihdlyO7jgOvwEI_1770293324
+In-Reply-To: <20260205111208.GK232055@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: 34xV5FntWL8iE3rcWRNGc2pMm3VK62xaepug1AC9iQ0_1770294578
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-02-04 at 11:42 -0300, Wander Lairson Costa wrote:
-> Replace the generic except Exception block with a custom AutomataError
-> class that inherits from Exception. This provides more precise exception
-> handling for automata parsing and validation errors while avoiding
-> overly broad exception catches that could mask programming errors like
-> SyntaxError or TypeError.
->=20
-> The AutomataError class is raised when DOT file processing fails due to
-> invalid format, I/O errors, or malformed automaton definitions. The
-> main entry point catches this specific exception and provides a
-> user-friendly error message to stderr before exiting.
->=20
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-[...]
-> ---
-> @@ -45,8 +52,8 @@ class Automata:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_lines =3D []
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-dot_file =3D open(self.__dot_path)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- Exception("Cannot open the file: %s" % self.__dot_path)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError as exc:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- AutomataError(f"Cannot open the file: {self.__dot_path}")
-> from exc
->=20
+On 02/05, Peter Zijlstra wrote:
+>
+> On Thu, Feb 05, 2026 at 11:57:25AM +0100, Carlos López wrote:
+> > kmap_atomic() has been deprecated for a few years, and kmap_local_page()
+> > should be used instead, so replace it. Since the uprobes code relied on
+> > kmap_atomic() disabling page faults to access user pages, add the
+> > required calls to keep the existing behavior.
+>
+> Are those pagefault_disable()s really needed here, or is this just
+> cargo-culting?
 
-You probably don't want to mask all OSError in main.py and allow only this =
-one.
-I think it's alright to=C2=A0keep a simpler message for wrong model file (a=
-lso LTL!),
-while throwing a splat in other cases (e.g. missing templates).
+No, I think there are not needed.
 
-But wouldn't it be better to show the error message of the OSError? 99% of =
-the
-time it's going to be ENOENT, but could also be some EPERM or who knows wha=
-t.
-I'm fine keeping AutomataError here but would at least propagate the error
-message.
+And the (already in tip) patches from Keke do not add pagefault_disable().
 
-Or keep it simple and catch all OSError as well, this one included.
+is_trap_at_addr() does pagefault_disable() because it is called with
+mm->mmap_lock held.
 
-Thanks,
-Gabriele
-
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_lines =3D dot_file.r=
-ead().splitlines()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_file.close()
-> @@ -55,7 +62,7 @@ class Automata:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 line =3D dot_lines[curso=
-r].split()
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (line[0] !=3D "digrap=
-h") and (line[1] !=3D "state_automaton"):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- Exception("Not a valid .dot format: %s" % self.__dot_path)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- AutomataError("Not a valid .dot format: %s" %
-> self.__dot_path)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-cursor +=3D 1
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return dot_lines
-> diff --git a/tools/verification/rvgen/rvgen/dot2c.py
-> b/tools/verification/rvgen/rvgen/dot2c.py
-> index 06a26bf15a7e9..74147ae2942f9 100644
-> --- a/tools/verification/rvgen/rvgen/dot2c.py
-> +++ b/tools/verification/rvgen/rvgen/dot2c.py
-> @@ -13,7 +13,7 @@
-> =C2=A0# For further information, see:
-> =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
-> =C2=A0
-> -from .automata import Automata
-> +from .automata import Automata, AutomataError
-> =C2=A0
-> =C2=A0class Dot2c(Automata):
-> =C2=A0=C2=A0=C2=A0=C2=A0 enum_suffix =3D ""
-> @@ -71,7 +71,7 @@ class Dot2c(Automata):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-min_type =3D "unsigned int"
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if self.states.__len__()=
- > 1000000:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- Exception("Too many states: %d" % self.states.__len__())
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- AutomataError("Too many states: %d" %
-> self.states.__len__())
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return min_type
-> =C2=A0
-> diff --git a/tools/verification/rvgen/rvgen/generator.py
-> b/tools/verification/rvgen/rvgen/generator.py
-> index 3441385c11770..a7bee6b1ea70c 100644
-> --- a/tools/verification/rvgen/rvgen/generator.py
-> +++ b/tools/verification/rvgen/rvgen/generator.py
-> @@ -51,10 +51,7 @@ class RVGenerator:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise FileNotFoundError(=
-"Could not find the rv directory, do you have
-> the kernel source installed?")
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 def _read_file(self, path):
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fd =
-=3D open(path, 'r')
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise=
- Exception("Cannot open the file: %s" % path)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fd =3D open(path, 'r')
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 content =3D fd.read()
-> =C2=A0
-> @@ -65,7 +62,7 @@ class RVGenerator:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-path =3D os.path.join(self.abs_template_dir, file)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-return self._read_file(path)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except Exception:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 except OSError:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-# Specific template file not found. Try the generic template file
-> in the template/
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-# directory, which is one level up
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-path =3D os.path.join(self.abs_template_dir, "..", file)
+Oleg.
 
