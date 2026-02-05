@@ -1,209 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40303542D4
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Feb 2026 07:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DC0334C04;
+	Thu,  5 Feb 2026 07:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770275004; cv=none; b=sNgmuABsJZ4w+Iq5IBxwrb74oZb7Pea+JEt1Nz2XJapIp0RZufJruzgQu33NhhXb2BQ2mPW1b1DNkMOQHmIuPZBLs0FBxM97DfGMaX4q3aZcZFvXCx9fQSJCJkNWv1v0PxLlJkxzPwHVw+53a9VB1BCNhBPEuhKiYWIJjv5E/y4=
+	t=1770276227; cv=none; b=QESX9Gs4wQm0n+jSf9nBu0BfImtexKF7Rh7rc2fVlYJ9pgU6dNQ/Gp7miFIN3lvXH7HDeUudRnP8qY0UaRSPQ1gNjsmiw93HzIjtLr6mLfIX5YfK0mQZDaPDjzPudYr/IHwRkZ16wIwjYjjUVcPh/KkxP6INlTyB0pMVUxTbqSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770275004; c=relaxed/simple;
-	bh=1jvmF+JFbYJ1iZcqtkpCUpVHGgSD2QYjzGFCeSm2dn0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iBX8a+oqZrZqvWPmeqLKzgl32ctmyivZ422n4EQ0MDrLbmLnH/CuXbt/K4+NAAu0+EavkKPJAlZ5EugxAQ/uw41hujeC6SPBPeGgPed1WpwsoonUPoqgJDjeQW9IUrEnYjlWviVjtl9zYQvqOPtOeipOiczhE34ktTAnhHvn0nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R7+GBaMi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1770276227; c=relaxed/simple;
+	bh=FgmZNaT1AJdOs3lof3+rnMI62Gul05tMmOYxnVyfbkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GP424HfNlp/tDTUgBHk19t/qxLuNZWZthNvecfytWPYxaFNTjtR6sbPbLR67K+MRMuzOqfqv64CALZmOz8Ro7yGDEVs9gsphsTrTib0I7yH+yPWBNYS6nt3nOCxl1JVF5a0HbsIFxMs7bfkkJN3tbvtAtKCP84DYxO35jFxCabU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agCF42zA; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R7+GBaMi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770275003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yKvHEfuOwc6AejWVpv1J8eYwloGKKUnIzQiWQBw1sS8=;
-	b=R7+GBaMiMXlnLEgtWN6jD5z3fr3aALxxzN8xJC9d1M8G8FX1rZAFANj9DWmWz4qsy9Aj50
-	jZtVo8pPRtVbYI3or6owa9fgH+pCJsSM8IUUR+CrcEkGyTUu6+HMiyqtSbVLFLpPkuwhx7
-	mflHODluCGptd/dRugJkLxqksJkwcts=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-Nh5Mt9BEMOu7VY_JKyotTQ-1; Thu, 05 Feb 2026 02:03:20 -0500
-X-MC-Unique: Nh5Mt9BEMOu7VY_JKyotTQ-1
-X-Mimecast-MFC-AGG-ID: Nh5Mt9BEMOu7VY_JKyotTQ_1770274999
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-430fe16b481so410015f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Feb 2026 23:03:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770274999; x=1770879799;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKvHEfuOwc6AejWVpv1J8eYwloGKKUnIzQiWQBw1sS8=;
-        b=j2rDuI+BbLAA6Np2bRAXE/YUvUVf4SHmPS+GQ2GCmFAyZ5376R5LztQrZxumvPg6BU
-         4+YABbkFf4wq1veksSQysrxJ5cmKWdWyd/p8win2LzCAUryl6efMoy4mXGqrnagpMZmo
-         7h8XuxahXMmEnBYQr9rSxy5rHUql1VrAowoZ3j8qgw2OcJWPaaBIQ3gUoT4xPt9sRVyf
-         TiK2030bfAexbpR3XgngCsyLgl+Oa0mDXAMqZT9oQ26/QR/tj2drRoL62brKVxIcTq6k
-         ruXHV8A66sYN72An3wJ0O+VAAucgWmprdOe9tqdLTSckuZvtawUA8AaSxOejM9jZPPzB
-         ISgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTNvHmqVkJWM0fkUtJwPIuPwK/w8s3u2b9v4SlpeqMF5a/ql0ACjCUwxDQNpZTTC4DhfoMYGlkiBsSWpFvZ/o1mt0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE9SONSvxseAzyjN3aibA4iQt0Y4SSMa7t1hu1aaMxcE2p8GMp
-	cnSPGRTBRy05eeIyApvRx0aDG0tUCXFs3xQGQddCIgFJgVuJ+2B5bYuS87mKCMu2lxbr3hl3M8M
-	nOBuxoWg0UPDChK8P8zmC+yitxNRS28ARrZshyE1ZvEJ7myZ7uAFiufljE7NSApMED6ZazVFH5+
-	sdQ/rL4cGL
-X-Gm-Gg: AZuq6aJ6vb1lML90sVbhNwoSJNhd9+49qYCh6sOHTOKDxr1uVxvzIN7YlNscnY6izet
-	AMiNWGL2zlHxqfs742YUQ2YyWwUcacQjAcaTY5mgltmUmRmsITGD+mNnMR/aVjZb/VUlH9M7XKR
-	/bE6lajD2E30+F8l+AUiRNtsbGDkFApz0C/fBZcFEZvqYi3yHziksK+OOsy5Z5OUmsv9zoKOD+G
-	0+UyriQR7sW8BUdD4q6IjEJKTFasOzHNIy1Ng8h0Rlinz577e26xW45gMO+P1H5ZbEQ113vS45R
-	yE0nQlEN2fCeFKcb9c9hnhUYSDI8IzH0wPfkcE4E3uopkiurrDFLVxArsTOBFA2OOGOW2zECyRH
-	yO6QRnKXkNAbexiODvMguQVZd5kV8VsF4Hm0s8j2QDbh+Imb3co1o8eF1DFfZ4f/c4EsEyD9X6b
-	HX0/Rqm4w7
-X-Received: by 2002:a05:6000:24c9:b0:42f:b9c6:c894 with SMTP id ffacd0b85a97d-4361805dd58mr8929357f8f.52.1770274998835;
-        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
-X-Received: by 2002:a05:6000:24c9:b0:42f:b9c6:c894 with SMTP id ffacd0b85a97d-4361805dd58mr8929316f8f.52.1770274998426;
-        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43617e25e8csm10480333f8f.1.2026.02.04.23.03.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Feb 2026 23:03:18 -0800 (PST)
-Message-ID: <90102c96156337943a5319ab25991f95f9f07cf5.camel@redhat.com>
-Subject: Re: [PATCH v2 07/20] rv/rvgen: fix typos in automata and generator
- docstring and comments
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>, 
- "open list:RUNTIME VERIFICATION (RV)"	
- <linux-trace-kernel@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Date: Thu, 05 Feb 2026 08:03:16 +0100
-In-Reply-To: <20260204144914.104028-8-wander@redhat.com>
-References: <20260204144914.104028-1-wander@redhat.com>
-	 <20260204144914.104028-8-wander@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agCF42zA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770276227; x=1801812227;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FgmZNaT1AJdOs3lof3+rnMI62Gul05tMmOYxnVyfbkM=;
+  b=agCF42zAxuBVhVQS8q2VvWYrlrkCT2ODu1cM10v8ui1sFGAjRUkxbNR6
+   rnhFQaTT0mrhYPT59/WMkhR14DuNtxVGgHKLHtP5Eaqr1oZm/XZtyM/J1
+   6NsyzpV6WhKKCPxbEW1Fgx399k2t0kP1ebX+BOPEwpoFTKi3dSWr+xSQ7
+   dlx3QdbplY4XPr8nBhlISDcxVt/BohwMEwIQwYdeD9FuBGUZeqghZgdBs
+   zFnBjM7BjGxUtFHHglP/nr0xGUKM68xtGKao1KBE08j68SxhMnw6UrH3u
+   zS6Frw3kKkKjm73pEQVOTdp/Q4LhAJLLxhz+7ZGcJTRL7nOvUBYyNFm1W
+   g==;
+X-CSE-ConnectionGUID: n81A8imZTBikNvPrxWRJ7Q==
+X-CSE-MsgGUID: ToEhKqrwTDWDAOks9art2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="75322708"
+X-IronPort-AV: E=Sophos;i="6.21,274,1763452800"; 
+   d="scan'208";a="75322708"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 23:23:44 -0800
+X-CSE-ConnectionGUID: w4M3nSSLQ/mBj1j0Il6KlQ==
+X-CSE-MsgGUID: NkzCqGaoSdu69QFLY8HZpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,274,1763452800"; 
+   d="scan'208";a="214913923"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 04 Feb 2026 23:23:21 -0800
+Date: Thu, 5 Feb 2026 15:04:48 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Ackerley Tng <ackerleytng@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>, cgroups@vger.kernel.org,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	akpm@linux-foundation.org, binbin.wu@linux.intel.com, bp@alien8.de,
+	brauner@kernel.org, chao.p.peng@intel.com, chenhuacai@kernel.org,
+	corbet@lwn.net, dave.hansen@intel.com, dave.hansen@linux.intel.com,
+	david@redhat.com, dmatlack@google.com, erdemaktas@google.com,
+	fan.du@intel.com, fvdl@google.com, haibo1.xu@intel.com,
+	hannes@cmpxchg.org, hch@infradead.org, hpa@zytor.com,
+	hughd@google.com, ira.weiny@intel.com, isaku.yamahata@intel.com,
+	jack@suse.cz, james.morse@arm.com, jarkko@kernel.org,
+	jgowans@amazon.com, jhubbard@nvidia.com, jroedel@suse.de,
+	jthoughton@google.com, jun.miao@intel.com, kai.huang@intel.com,
+	keirf@google.com, kent.overstreet@linux.dev,
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+	mail@maciej.szmigiero.name, maobibo@loongson.cn,
+	mathieu.desnoyers@efficios.com, maz@kernel.org, mhiramat@kernel.org,
+	mhocko@kernel.org, mic@digikod.net, michael.roth@amd.com,
+	mingo@redhat.com, mlevitsk@redhat.com, mpe@ellerman.id.au,
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
+	paul.walmsley@sifive.com, pbonzini@redhat.com, peterx@redhat.com,
+	pgonda@google.com, prsampat@amd.com, pvorel@suse.cz,
+	qperret@google.com, richard.weiyang@gmail.com,
+	rick.p.edgecombe@intel.com, rientjes@google.com,
+	rostedt@goodmis.org, roypat@amazon.co.uk, rppt@kernel.org,
+	shakeel.butt@linux.dev, shuah@kernel.org, steven.price@arm.com,
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com,
+	tglx@linutronix.de, thomas.lendacky@amd.com, vannapurve@google.com,
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com,
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org,
+	wyihan@google.com, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Subject: Re: [RFC PATCH v1 05/37] KVM: guest_memfd: Wire up
+ kvm_get_memory_attributes() to per-gmem attributes
+Message-ID: <aYRBEJSan8eoT8xw@yilunxu-OptiPlex-7050>
+References: <cover.1760731772.git.ackerleytng@google.com>
+ <071a3c6603809186e914fe5fed939edee4e11988.1760731772.git.ackerleytng@google.com>
+ <07836b1d-d0d8-40f2-8f7b-7805beca31d0@amd.com>
+ <CAEvNRgEuez=JbArRf2SApLAL0usv5-Q6q=nBPOFMHrHGaKAtMw@mail.gmail.com>
+ <20260129003753.GZ1641016@ziepe.ca>
+ <aXqx3_eE0rNh6nP0@google.com>
+ <aYHGVQTF6RUs7r3g@yilunxu-OptiPlex-7050>
+ <20260203181618.GY2328995@ziepe.ca>
+ <aYLOZIZU0nwk+0UN@yilunxu-OptiPlex-7050>
+ <20260204124715.GA2328995@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: VzZ-9N3ODcOPANdKo5daBZL7k_O9JoDJ5fPjp67v5Q8_1770274999
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260204124715.GA2328995@ziepe.ca>
 
-On Wed, 2026-02-04 at 11:42 -0300, Wander Lairson Costa wrote:
-> Fix two typos in the Automata class documentation that have been
-> present since the initial implementation. Fix the class
-> docstring: "part it" instead of "parses it". Additionally, a
-> comment describing transition labels contained the misspelling
-> "lables" instead of "labels".
->=20
-> Fix a typo in the comment describing the insertion of the initial
-> state into the states list: "bein og" should be "beginning of".
->=20
-> Fix typo in the module docstring: "Abtract" should be "Abstract".
->=20
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+On Wed, Feb 04, 2026 at 08:47:15AM -0400, Jason Gunthorpe wrote:
+> On Wed, Feb 04, 2026 at 12:43:16PM +0800, Xu Yilun wrote:
+> > > Which means we need VFIO to know what they are, and hopefully it is
+> > > just static based on the TDISP reports..
+> > 
+> > I don't think VMM need to check TDISP report. The only special thing is
+> > the MSI-X mixed pages which can be figured out by standard PCI
+> > discovery.
+> 
+> Either that or follow along with the guests's choices on
+> shared/private.
+> 
+> We can't let VFIO mmap a private MMIO page, so it has to know which
+> pages are private at any moment, and it can't guess.
 
+No we could only let VFIO mmap MMIO pages that need emulation (like this
+MSI-X mixed page). MMIOs in such page cannot be assigned to guest so no
+way to convert to private.
 
-While you're at it there are a few singular/plural inconsistencies, see bel=
-ow.
+We don't allow VFIO mmap all asigned MMIO pages, no matter they will be
+private or shared. They are assigned to guest, so host don't touch them.
+Does that make sense?
 
-Other than that it looks good, thanks!
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-
-> ---
-> =C2=A0tools/verification/rvgen/rvgen/automata.py=C2=A0 | 6 +++---
-> =C2=A0tools/verification/rvgen/rvgen/generator.py | 2 +-
-> =C2=A02 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/tools/verification/rvgen/rvgen/automata.py
-> b/tools/verification/rvgen/rvgen/automata.py
-> index 1feb5f0c0bc3e..0d7cbd0c634a9 100644
-> --- a/tools/verification/rvgen/rvgen/automata.py
-> +++ b/tools/verification/rvgen/rvgen/automata.py
-> @@ -18,7 +18,7 @@ class AutomataError(Exception):
-> =C2=A0=C2=A0=C2=A0=C2=A0 """
-> =C2=A0
-> =C2=A0class Automata:
-> -=C2=A0=C2=A0=C2=A0 """Automata class: Reads a dot file and part it as an=
- automata.
-> +=C2=A0=C2=A0=C2=A0 """Automata class: Reads a dot file and parses it as =
-an automata.
-> =C2=A0
-
-Automata is plural, the singular is automaton (you can keep the class name
-unchanged):=20
-
-+    """Automata class: Reads a dot file and parses it as an automaton.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0 Attributes:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dot_file: A dot file wit=
-h an state_automaton definition.
-> @@ -113,7 +113,7 @@ class Automata:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states =3D sorted(set(st=
-ates))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.remove(initial_st=
-ate)
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Insert the initial state at=
- the bein og the states
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 # Insert the initial state at=
- the beginning of the states
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 states.insert(0, initial=
-_state)
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not has_final_states:
-> @@ -134,7 +134,7 @@ class Automata:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 line =3D self.__dot_lines[cursor].split()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 event =3D line[-2].replace('"','')
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 # when a transition has more than one lables, they are l=
-ike
-> this
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 # when a transition has more than one labels, they are l=
-ike
-> this
-
-This should be "more than one label" as singular.
-
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # "local_irq_enable\nhw_local_irq_enable_n"
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 # so split them.
-> =C2=A0
-> diff --git a/tools/verification/rvgen/rvgen/generator.py
-> b/tools/verification/rvgen/rvgen/generator.py
-> index ee75e111feef1..a3fbb1ac74916 100644
-> --- a/tools/verification/rvgen/rvgen/generator.py
-> +++ b/tools/verification/rvgen/rvgen/generator.py
-> @@ -3,7 +3,7 @@
-> =C2=A0#
-> =C2=A0# Copyright (C) 2019-2022 Red Hat, Inc. Daniel Bristot de Oliveira
-> <bristot@kernel.org>
-> =C2=A0#
-> -# Abtract class for generating kernel runtime verification monitors from
-> specification file
-> +# Abstract class for generating kernel runtime verification monitors fro=
-m
-> specification file
-> =C2=A0
-> =C2=A0import platform
-> =C2=A0import os
-
+> 
+> Jason
