@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843DD33A9F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EC333ADB4;
 	Fri,  6 Feb 2026 19:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770407937; cv=none; b=nzzRCrJ3f5F0CMTUFpozNmJy3zYTNKjxmfOdc2TF6dOgW+JoHGGuX2YYOHmwpGlot+qk/pBgAvt0CgRpxRJTtkW+ZrKVX200BB1sfdIXekqDsnVN4owV+lEvI88M+3CdTdKVysGehK1pQe5UMG+C/M9qNu94nOnlpEtg9nHdDIA=
+	t=1770407937; cv=none; b=FwAzrXfRKog/S14gHfDYxrffKoNJn8RGXO2O08Yvn7LCkw0JiK1IEFqXrm35hpdpUt+PXQzjgF3cnbiNGnhwdR8B7OLSbJCNX5YS7fTmSqpXKaLb6M4BqhZrLquJ/CPbjSE5ekpQyLrSYdyHOx0/+2rL7zHp/fb8e5FXm3V0sks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770407937; c=relaxed/simple;
-	bh=dTLbo3RCDZzbjTHdEQUNHZ7jQ+T8xshgGjebdPECQ7U=;
+	bh=ZUcEKZAtlFAIbpjaZX6mY8OMNPSAtHWZIBIZL+GAaZc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=TmhY4qAb6i1qurnkW/Ni1cWJCB6M9dpzCL5ydSqLvC2EHRoUJlRYiCe5a0eN+Avfm7CMgPGht1fCtTaVJ9SKdHy7EKvANjnWwJMYU9Ad6IR5FzxxqqmQR855lKYkI7gy7a7CokGDhBMGBx72KG28swT3Olmxice9bhiCKorRy00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9A+cEww; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=ClsIy6wr85yysydqz/GzgpsjWT+XGNwqBsYGrxPA2WLsjiU3a+M5+TqZK+NWTMgTWzFv9SARjQl1CMEU5womNCNMDbWIzrZCPzAsCTsq+2VN8vrXMpolQlJAmr/+pI97mwYKPs2XMF1JoZqArK09Mhfkfp4NAytFZVebR7RiV74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYQHsmu7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9A+cEww"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435DEC116C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYQHsmu7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98377C19422;
 	Fri,  6 Feb 2026 19:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770407937;
-	bh=dTLbo3RCDZzbjTHdEQUNHZ7jQ+T8xshgGjebdPECQ7U=;
+	bh=ZUcEKZAtlFAIbpjaZX6mY8OMNPSAtHWZIBIZL+GAaZc=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=e9A+cEww6NZ5TWEIC/Mgf90PbqD3Wzb54vwE4ZUNUHL6FOy08s3+eC3uf0Ice1Zop
-	 T2Sd1enYWxl9dOBN+VV067wX0LDTSI3PXvpITSKVro872F/cP5/QTqJImX/HBjfJm9
-	 h7I4ji8iH1nDJg0MAphFD0vJhDTmASS3BkCUjZ+J59Qai21g+fHUOl9wDwxeW3RTun
-	 RdBlDV+Nnf2pJaNHPaSpBcPPL795yVP+Ti5XI0xxx6K+TdwU+DbGG/M+GMEbEaARrO
-	 kuPxHX8MwBe/kV6vASKEeGW6AlUea0yShJKJQtItHRoQIshcR5RynxucbVST6V4ukD
-	 tWZqVV75kkvOg==
+	b=MYQHsmu7EaLuBPy6H8cnXjX8FepyGTq+eKCdkafHDW1DH9CBZ5k/PNabcFsbENRuw
+	 osDxYfsyHH32NjrLGKDVHx8UjtylPtLCIIha5VJWfkJnXxtJPbOfhId3XqEx8NwxDc
+	 OgeF0gsxAsISTRFx3jZm8aanKn9OoMFi64IAR5rbseQ1y/uTzXhnMv9u+e84NFokXH
+	 4sfoO9VstRYzQ8RyIFxFgK+DuCb6WnxrsxSM8pWUuGWW6whJ100Qo+gnYAE0ojwXfb
+	 0sgcaG3Kz+JfFczj2hPL8cfOmsn86N1eFz2kyk84MSxUkKx5giA7S/FYx06YBq07fA
+	 PjgMSW1MLJ2/w==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1voRzM-0000000A6qE-1oHg;
+	id 1voRzM-0000000A6rE-3Bum;
 	Fri, 06 Feb 2026 14:59:36 -0500
-Message-ID: <20260206195936.285697009@kernel.org>
+Message-ID: <20260206195936.617080218@kernel.org>
 User-Agent: quilt/0.68
-Date: Fri, 06 Feb 2026 14:37:50 -0500
+Date: Fri, 06 Feb 2026 14:37:52 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,8 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 09/12] tracing: Move trace_printk functions out of trace.c and into
- trace_printk.c
+Subject: [PATCH 11/12] tracing: Move tracing_set_filter_buffering() into trace_events_hist.c
 References: <20260206193741.767171392@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,929 +52,90 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The file trace.c has become a catchall for most things tracing. Start
-making it smaller by breaking out various aspects into their own files.
-
-Move the functions associated to the trace_printk operations out of trace.c and
-into trace_printk.c.
+The function tracing_set_filter_buffering() is only used in
+trace_events_hist.c. Move it to that file and make it static.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c        | 431 ------------------------------------
- kernel/trace/trace.h        |   1 +
- kernel/trace/trace_printk.c | 431 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 432 insertions(+), 431 deletions(-)
+ kernel/trace/trace.c             | 20 --------------------
+ kernel/trace/trace.h             |  1 -
+ kernel/trace/trace_events_hist.c | 20 ++++++++++++++++++++
+ 3 files changed, 20 insertions(+), 21 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 3b7fa2699301..f62bbe7d093f 100644
+index 6a0cea7e63b0..5bc22d966834 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -539,17 +539,6 @@ struct trace_array *printk_trace = &global_trace;
- /* List of trace_arrays interested in the top level trace_marker */
- static LIST_HEAD(marker_copies);
- 
--static __always_inline bool printk_binsafe(struct trace_array *tr)
--{
--	/*
--	 * The binary format of traceprintk can cause a crash if used
--	 * by a buffer from another boot. Force the use of the
--	 * non binary version of trace_printk if the trace_printk
--	 * buffer is a boot mapped ring buffer.
--	 */
--	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
--}
--
- static void update_printk_trace(struct trace_array *tr)
- {
- 	if (printk_trace == tr)
-@@ -1059,108 +1048,6 @@ void tracing_on(void)
- }
- EXPORT_SYMBOL_GPL(tracing_on);
- 
--int __trace_array_puts(struct trace_array *tr, unsigned long ip,
--		       const char *str, int size)
--{
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct print_entry *entry;
--	unsigned int trace_ctx;
--	int alloc;
--
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	if (unlikely(tracing_selftest_running &&
--		     (tr->flags & TRACE_ARRAY_FL_GLOBAL)))
--		return 0;
--
--	if (unlikely(tracing_disabled))
--		return 0;
--
--	alloc = sizeof(*entry) + size + 2; /* possible \n added */
--
--	trace_ctx = tracing_gen_ctx();
--	buffer = tr->array_buffer.buffer;
--	guard(ring_buffer_nest)(buffer);
--	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
--					    trace_ctx);
--	if (!event)
--		return 0;
--
--	entry = ring_buffer_event_data(event);
--	entry->ip = ip;
--
--	memcpy(&entry->buf, str, size);
--
--	/* Add a newline if necessary */
--	if (entry->buf[size - 1] != '\n') {
--		entry->buf[size] = '\n';
--		entry->buf[size + 1] = '\0';
--	} else
--		entry->buf[size] = '\0';
--
--	__buffer_unlock_commit(buffer, event);
--	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
--	return size;
--}
--EXPORT_SYMBOL_GPL(__trace_array_puts);
--
--/**
-- * __trace_puts - write a constant string into the trace buffer.
-- * @ip:	   The address of the caller
-- * @str:   The constant string to write
-- * @size:  The size of the string.
-- */
--int __trace_puts(unsigned long ip, const char *str, int size)
--{
--	return __trace_array_puts(printk_trace, ip, str, size);
--}
--EXPORT_SYMBOL_GPL(__trace_puts);
--
--/**
-- * __trace_bputs - write the pointer to a constant string into trace buffer
-- * @ip:	   The address of the caller
-- * @str:   The constant string to write to the buffer to
-- */
--int __trace_bputs(unsigned long ip, const char *str)
--{
--	struct trace_array *tr = READ_ONCE(printk_trace);
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct bputs_entry *entry;
--	unsigned int trace_ctx;
--	int size = sizeof(struct bputs_entry);
--
--	if (!printk_binsafe(tr))
--		return __trace_puts(ip, str, strlen(str));
--
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	if (unlikely(tracing_selftest_running || tracing_disabled))
--		return 0;
--
--	trace_ctx = tracing_gen_ctx();
--	buffer = tr->array_buffer.buffer;
--
--	guard(ring_buffer_nest)(buffer);
--	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
--					    trace_ctx);
--	if (!event)
--		return 0;
--
--	entry = ring_buffer_event_data(event);
--	entry->ip			= ip;
--	entry->str			= str;
--
--	__buffer_unlock_commit(buffer, event);
--	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
--
--	return 1;
--}
--EXPORT_SYMBOL_GPL(__trace_bputs);
--
- #ifdef CONFIG_TRACER_SNAPSHOT
- static void tracing_snapshot_instance_cond(struct trace_array *tr,
- 					   void *cond_data)
-@@ -3161,324 +3048,6 @@ void trace_last_func_repeats(struct trace_array *tr,
- 	__buffer_unlock_commit(buffer, event);
+@@ -7134,26 +7134,6 @@ u64 tracing_event_time_stamp(struct trace_buffer *buffer, struct ring_buffer_eve
+ 	return ring_buffer_event_time_stamp(buffer, rbe);
  }
  
--/* created for use with alloc_percpu */
--struct trace_buffer_struct {
--	int nesting;
--	char buffer[4][TRACE_BUF_SIZE];
--};
--
--static struct trace_buffer_struct __percpu *trace_percpu_buffer;
--
 -/*
-- * This allows for lockless recording.  If we're nested too deeply, then
-- * this returns NULL.
+- * Set or disable using the per CPU trace_buffer_event when possible.
 - */
--static char *get_trace_buf(void)
+-int tracing_set_filter_buffering(struct trace_array *tr, bool set)
 -{
--	struct trace_buffer_struct *buffer = this_cpu_ptr(trace_percpu_buffer);
+-	guard(mutex)(&trace_types_lock);
 -
--	if (!trace_percpu_buffer || buffer->nesting >= 4)
--		return NULL;
--
--	buffer->nesting++;
--
--	/* Interrupts must see nesting incremented before we use the buffer */
--	barrier();
--	return &buffer->buffer[buffer->nesting - 1][0];
--}
--
--static void put_trace_buf(void)
--{
--	/* Don't let the decrement of nesting leak before this */
--	barrier();
--	this_cpu_dec(trace_percpu_buffer->nesting);
--}
--
--static int alloc_percpu_trace_buffer(void)
--{
--	struct trace_buffer_struct __percpu *buffers;
--
--	if (trace_percpu_buffer)
+-	if (set && tr->no_filter_buffering_ref++)
 -		return 0;
 -
--	buffers = alloc_percpu(struct trace_buffer_struct);
--	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
--		return -ENOMEM;
+-	if (!set) {
+-		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref))
+-			return -EINVAL;
 -
--	trace_percpu_buffer = buffers;
+-		--tr->no_filter_buffering_ref;
+-	}
+-
 -	return 0;
 -}
 -
--static int buffers_allocated;
--
--void trace_printk_init_buffers(void)
--{
--	if (buffers_allocated)
--		return;
--
--	if (alloc_percpu_trace_buffer())
--		return;
--
--	/* trace_printk() is for debug use only. Don't use it in production. */
--
--	pr_warn("\n");
--	pr_warn("**********************************************************\n");
--	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** trace_printk() being used. Allocating extra memory.  **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** This means that this is a DEBUG kernel and it is     **\n");
--	pr_warn("** unsafe for production use.                           **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** If you see this message and you are not debugging    **\n");
--	pr_warn("** the kernel, report this immediately to your vendor!  **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
--	pr_warn("**********************************************************\n");
--
--	/* Expand the buffers to set size */
--	if (tracing_update_buffers(NULL) < 0)
--		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
--	else
--		buffers_allocated = 1;
--
--	/*
--	 * trace_printk_init_buffers() can be called by modules.
--	 * If that happens, then we need to start cmdline recording
--	 * directly here.
--	 */
--	if (system_state == SYSTEM_RUNNING)
--		tracing_start_cmdline_record();
--}
--EXPORT_SYMBOL_GPL(trace_printk_init_buffers);
--
--void trace_printk_start_comm(void)
--{
--	/* Start tracing comms if trace printk is set */
--	if (!buffers_allocated)
--		return;
--	tracing_start_cmdline_record();
--}
--
--static void trace_printk_start_stop_comm(int enabled)
--{
--	if (!buffers_allocated)
--		return;
--
--	if (enabled)
--		tracing_start_cmdline_record();
--	else
--		tracing_stop_cmdline_record();
--}
--
--/**
-- * trace_vbprintk - write binary msg to tracing buffer
-- * @ip:    The address of the caller
-- * @fmt:   The string format to write to the buffer
-- * @args:  Arguments for @fmt
-- */
--int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
--{
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct trace_array *tr = READ_ONCE(printk_trace);
--	struct bprint_entry *entry;
--	unsigned int trace_ctx;
--	char *tbuffer;
--	int len = 0, size;
--
--	if (!printk_binsafe(tr))
--		return trace_vprintk(ip, fmt, args);
--
--	if (unlikely(tracing_selftest_running || tracing_disabled))
--		return 0;
--
--	/* Don't pollute graph traces with trace_vprintk internals */
--	pause_graph_tracing();
--
--	trace_ctx = tracing_gen_ctx();
--	guard(preempt_notrace)();
--
--	tbuffer = get_trace_buf();
--	if (!tbuffer) {
--		len = 0;
--		goto out_nobuffer;
--	}
--
--	len = vbin_printf((u32 *)tbuffer, TRACE_BUF_SIZE/sizeof(int), fmt, args);
--
--	if (len > TRACE_BUF_SIZE/sizeof(int) || len < 0)
--		goto out_put;
--
--	size = sizeof(*entry) + sizeof(u32) * len;
--	buffer = tr->array_buffer.buffer;
--	scoped_guard(ring_buffer_nest, buffer) {
--		event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
--						    trace_ctx);
--		if (!event)
--			goto out_put;
--		entry = ring_buffer_event_data(event);
--		entry->ip			= ip;
--		entry->fmt			= fmt;
--
--		memcpy(entry->buf, tbuffer, sizeof(u32) * len);
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
--	}
--out_put:
--	put_trace_buf();
--
--out_nobuffer:
--	unpause_graph_tracing();
--
--	return len;
--}
--EXPORT_SYMBOL_GPL(trace_vbprintk);
--
--static __printf(3, 0)
--int __trace_array_vprintk(struct trace_buffer *buffer,
--			  unsigned long ip, const char *fmt, va_list args)
--{
--	struct ring_buffer_event *event;
--	int len = 0, size;
--	struct print_entry *entry;
--	unsigned int trace_ctx;
--	char *tbuffer;
--
--	if (unlikely(tracing_disabled))
--		return 0;
--
--	/* Don't pollute graph traces with trace_vprintk internals */
--	pause_graph_tracing();
--
--	trace_ctx = tracing_gen_ctx();
--	guard(preempt_notrace)();
--
--
--	tbuffer = get_trace_buf();
--	if (!tbuffer) {
--		len = 0;
--		goto out_nobuffer;
--	}
--
--	len = vscnprintf(tbuffer, TRACE_BUF_SIZE, fmt, args);
--
--	size = sizeof(*entry) + len + 1;
--	scoped_guard(ring_buffer_nest, buffer) {
--		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
--						    trace_ctx);
--		if (!event)
--			goto out;
--		entry = ring_buffer_event_data(event);
--		entry->ip = ip;
--
--		memcpy(&entry->buf, tbuffer, len + 1);
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
--	}
--out:
--	put_trace_buf();
--
--out_nobuffer:
--	unpause_graph_tracing();
--
--	return len;
--}
--
--int trace_array_vprintk(struct trace_array *tr,
--			unsigned long ip, const char *fmt, va_list args)
--{
--	if (tracing_selftest_running && (tr->flags & TRACE_ARRAY_FL_GLOBAL))
--		return 0;
--
--	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
--}
--
--/**
-- * trace_array_printk - Print a message to a specific instance
-- * @tr: The instance trace_array descriptor
-- * @ip: The instruction pointer that this is called from.
-- * @fmt: The format to print (printf format)
-- *
-- * If a subsystem sets up its own instance, they have the right to
-- * printk strings into their tracing instance buffer using this
-- * function. Note, this function will not write into the top level
-- * buffer (use trace_printk() for that), as writing into the top level
-- * buffer should only have events that can be individually disabled.
-- * trace_printk() is only used for debugging a kernel, and should not
-- * be ever incorporated in normal use.
-- *
-- * trace_array_printk() can be used, as it will not add noise to the
-- * top level tracing buffer.
-- *
-- * Note, trace_array_init_printk() must be called on @tr before this
-- * can be used.
-- */
--int trace_array_printk(struct trace_array *tr,
--		       unsigned long ip, const char *fmt, ...)
--{
--	int ret;
--	va_list ap;
--
--	if (!tr)
--		return -ENOENT;
--
--	/* This is only allowed for created instances */
--	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
--		return 0;
--
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	va_start(ap, fmt);
--	ret = trace_array_vprintk(tr, ip, fmt, ap);
--	va_end(ap);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(trace_array_printk);
--
--/**
-- * trace_array_init_printk - Initialize buffers for trace_array_printk()
-- * @tr: The trace array to initialize the buffers for
-- *
-- * As trace_array_printk() only writes into instances, they are OK to
-- * have in the kernel (unlike trace_printk()). This needs to be called
-- * before trace_array_printk() can be used on a trace_array.
-- */
--int trace_array_init_printk(struct trace_array *tr)
--{
--	if (!tr)
--		return -ENOENT;
--
--	/* This is only allowed for created instances */
--	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
--		return -EINVAL;
--
--	return alloc_percpu_trace_buffer();
--}
--EXPORT_SYMBOL_GPL(trace_array_init_printk);
--
--int trace_array_printk_buf(struct trace_buffer *buffer,
--			   unsigned long ip, const char *fmt, ...)
--{
--	int ret;
--	va_list ap;
--
--	if (!(printk_trace->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	va_start(ap, fmt);
--	ret = __trace_array_vprintk(buffer, ip, fmt, ap);
--	va_end(ap);
--	return ret;
--}
--
--int trace_vprintk(unsigned long ip, const char *fmt, va_list args)
--{
--	return trace_array_vprintk(printk_trace, ip, fmt, args);
--}
--EXPORT_SYMBOL_GPL(trace_vprintk);
--
- static void trace_iterator_increment(struct trace_iterator *iter)
- {
- 	struct ring_buffer_iter *buf_iter = trace_buffer_iter(iter, iter->cpu);
+ struct ftrace_buffer_info {
+ 	struct trace_iterator	iter;
+ 	void			*spare;
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 73a2ab195114..f85c94f2e2d9 100644
+index f85c94f2e2d9..374b7c392f0a 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -2135,6 +2135,7 @@ extern const char *__stop___tracepoint_str[];
+@@ -480,7 +480,6 @@ extern struct trace_array *trace_array_find(const char *instance);
+ extern struct trace_array *trace_array_find_get(const char *instance);
  
- void trace_printk_control(bool enabled);
- void trace_printk_start_comm(void);
-+void trace_printk_start_stop_comm(int enabled);
- int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set);
- int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled);
+ extern u64 tracing_event_time_stamp(struct trace_buffer *buffer, struct ring_buffer_event *rbe);
+-extern int tracing_set_filter_buffering(struct trace_array *tr, bool set);
+ extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
  
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 29f6e95439b6..c9cb74a33b3c 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -376,6 +376,437 @@ static const struct file_operations ftrace_formats_fops = {
- 	.release = seq_release,
- };
+ extern bool trace_clock_in_ns(struct trace_array *tr);
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 0fc641461be5..e6f449f53afc 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6531,6 +6531,26 @@ static bool existing_hist_update_only(char *glob,
+ 	return updated;
+ }
  
-+static __always_inline bool printk_binsafe(struct trace_array *tr)
-+{
-+	/*
-+	 * The binary format of traceprintk can cause a crash if used
-+	 * by a buffer from another boot. Force the use of the
-+	 * non binary version of trace_printk if the trace_printk
-+	 * buffer is a boot mapped ring buffer.
-+	 */
-+	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
-+}
-+
-+int __trace_array_puts(struct trace_array *tr, unsigned long ip,
-+		       const char *str, int size)
-+{
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct print_entry *entry;
-+	unsigned int trace_ctx;
-+	int alloc;
-+
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	if (unlikely(tracing_selftest_running &&
-+		     (tr->flags & TRACE_ARRAY_FL_GLOBAL)))
-+		return 0;
-+
-+	if (unlikely(tracing_disabled))
-+		return 0;
-+
-+	alloc = sizeof(*entry) + size + 2; /* possible \n added */
-+
-+	trace_ctx = tracing_gen_ctx();
-+	buffer = tr->array_buffer.buffer;
-+	guard(ring_buffer_nest)(buffer);
-+	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
-+					    trace_ctx);
-+	if (!event)
-+		return 0;
-+
-+	entry = ring_buffer_event_data(event);
-+	entry->ip = ip;
-+
-+	memcpy(&entry->buf, str, size);
-+
-+	/* Add a newline if necessary */
-+	if (entry->buf[size - 1] != '\n') {
-+		entry->buf[size] = '\n';
-+		entry->buf[size + 1] = '\0';
-+	} else
-+		entry->buf[size] = '\0';
-+
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
-+	return size;
-+}
-+EXPORT_SYMBOL_GPL(__trace_array_puts);
-+
-+/**
-+ * __trace_puts - write a constant string into the trace buffer.
-+ * @ip:	   The address of the caller
-+ * @str:   The constant string to write
-+ * @size:  The size of the string.
-+ */
-+int __trace_puts(unsigned long ip, const char *str, int size)
-+{
-+	return __trace_array_puts(printk_trace, ip, str, size);
-+}
-+EXPORT_SYMBOL_GPL(__trace_puts);
-+
-+/**
-+ * __trace_bputs - write the pointer to a constant string into trace buffer
-+ * @ip:	   The address of the caller
-+ * @str:   The constant string to write to the buffer to
-+ */
-+int __trace_bputs(unsigned long ip, const char *str)
-+{
-+	struct trace_array *tr = READ_ONCE(printk_trace);
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct bputs_entry *entry;
-+	unsigned int trace_ctx;
-+	int size = sizeof(struct bputs_entry);
-+
-+	if (!printk_binsafe(tr))
-+		return __trace_puts(ip, str, strlen(str));
-+
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	if (unlikely(tracing_selftest_running || tracing_disabled))
-+		return 0;
-+
-+	trace_ctx = tracing_gen_ctx();
-+	buffer = tr->array_buffer.buffer;
-+
-+	guard(ring_buffer_nest)(buffer);
-+	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
-+					    trace_ctx);
-+	if (!event)
-+		return 0;
-+
-+	entry = ring_buffer_event_data(event);
-+	entry->ip			= ip;
-+	entry->str			= str;
-+
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
-+
-+	return 1;
-+}
-+EXPORT_SYMBOL_GPL(__trace_bputs);
-+
-+/* created for use with alloc_percpu */
-+struct trace_buffer_struct {
-+	int nesting;
-+	char buffer[4][TRACE_BUF_SIZE];
-+};
-+
-+static struct trace_buffer_struct __percpu *trace_percpu_buffer;
-+
 +/*
-+ * This allows for lockless recording.  If we're nested too deeply, then
-+ * this returns NULL.
++ * Set or disable using the per CPU trace_buffer_event when possible.
 + */
-+static char *get_trace_buf(void)
++static int tracing_set_filter_buffering(struct trace_array *tr, bool set)
 +{
-+	struct trace_buffer_struct *buffer = this_cpu_ptr(trace_percpu_buffer);
++	guard(mutex)(&trace_types_lock);
 +
-+	if (!trace_percpu_buffer || buffer->nesting >= 4)
-+		return NULL;
-+
-+	buffer->nesting++;
-+
-+	/* Interrupts must see nesting incremented before we use the buffer */
-+	barrier();
-+	return &buffer->buffer[buffer->nesting - 1][0];
-+}
-+
-+static void put_trace_buf(void)
-+{
-+	/* Don't let the decrement of nesting leak before this */
-+	barrier();
-+	this_cpu_dec(trace_percpu_buffer->nesting);
-+}
-+
-+static int alloc_percpu_trace_buffer(void)
-+{
-+	struct trace_buffer_struct __percpu *buffers;
-+
-+	if (trace_percpu_buffer)
++	if (set && tr->no_filter_buffering_ref++)
 +		return 0;
 +
-+	buffers = alloc_percpu(struct trace_buffer_struct);
-+	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
-+		return -ENOMEM;
++	if (!set) {
++		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref))
++			return -EINVAL;
 +
-+	trace_percpu_buffer = buffers;
++		--tr->no_filter_buffering_ref;
++	}
++
 +	return 0;
 +}
 +
-+static int buffers_allocated;
-+
-+void trace_printk_init_buffers(void)
-+{
-+	if (buffers_allocated)
-+		return;
-+
-+	if (alloc_percpu_trace_buffer())
-+		return;
-+
-+	/* trace_printk() is for debug use only. Don't use it in production. */
-+
-+	pr_warn("\n");
-+	pr_warn("**********************************************************\n");
-+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** trace_printk() being used. Allocating extra memory.  **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** This means that this is a DEBUG kernel and it is     **\n");
-+	pr_warn("** unsafe for production use.                           **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** If you see this message and you are not debugging    **\n");
-+	pr_warn("** the kernel, report this immediately to your vendor!  **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-+	pr_warn("**********************************************************\n");
-+
-+	/* Expand the buffers to set size */
-+	if (tracing_update_buffers(NULL) < 0)
-+		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
-+	else
-+		buffers_allocated = 1;
-+
-+	/*
-+	 * trace_printk_init_buffers() can be called by modules.
-+	 * If that happens, then we need to start cmdline recording
-+	 * directly here.
-+	 */
-+	if (system_state == SYSTEM_RUNNING)
-+		tracing_start_cmdline_record();
-+}
-+EXPORT_SYMBOL_GPL(trace_printk_init_buffers);
-+
-+void trace_printk_start_comm(void)
-+{
-+	/* Start tracing comms if trace printk is set */
-+	if (!buffers_allocated)
-+		return;
-+	tracing_start_cmdline_record();
-+}
-+
-+void trace_printk_start_stop_comm(int enabled)
-+{
-+	if (!buffers_allocated)
-+		return;
-+
-+	if (enabled)
-+		tracing_start_cmdline_record();
-+	else
-+		tracing_stop_cmdline_record();
-+}
-+
-+/**
-+ * trace_vbprintk - write binary msg to tracing buffer
-+ * @ip:    The address of the caller
-+ * @fmt:   The string format to write to the buffer
-+ * @args:  Arguments for @fmt
-+ */
-+int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
-+{
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct trace_array *tr = READ_ONCE(printk_trace);
-+	struct bprint_entry *entry;
-+	unsigned int trace_ctx;
-+	char *tbuffer;
-+	int len = 0, size;
-+
-+	if (!printk_binsafe(tr))
-+		return trace_vprintk(ip, fmt, args);
-+
-+	if (unlikely(tracing_selftest_running || tracing_disabled))
-+		return 0;
-+
-+	/* Don't pollute graph traces with trace_vprintk internals */
-+	pause_graph_tracing();
-+
-+	trace_ctx = tracing_gen_ctx();
-+	guard(preempt_notrace)();
-+
-+	tbuffer = get_trace_buf();
-+	if (!tbuffer) {
-+		len = 0;
-+		goto out_nobuffer;
-+	}
-+
-+	len = vbin_printf((u32 *)tbuffer, TRACE_BUF_SIZE/sizeof(int), fmt, args);
-+
-+	if (len > TRACE_BUF_SIZE/sizeof(int) || len < 0)
-+		goto out_put;
-+
-+	size = sizeof(*entry) + sizeof(u32) * len;
-+	buffer = tr->array_buffer.buffer;
-+	scoped_guard(ring_buffer_nest, buffer) {
-+		event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
-+						    trace_ctx);
-+		if (!event)
-+			goto out_put;
-+		entry = ring_buffer_event_data(event);
-+		entry->ip			= ip;
-+		entry->fmt			= fmt;
-+
-+		memcpy(entry->buf, tbuffer, sizeof(u32) * len);
-+		__buffer_unlock_commit(buffer, event);
-+		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
-+	}
-+out_put:
-+	put_trace_buf();
-+
-+out_nobuffer:
-+	unpause_graph_tracing();
-+
-+	return len;
-+}
-+EXPORT_SYMBOL_GPL(trace_vbprintk);
-+
-+static __printf(3, 0)
-+int __trace_array_vprintk(struct trace_buffer *buffer,
-+			  unsigned long ip, const char *fmt, va_list args)
-+{
-+	struct ring_buffer_event *event;
-+	int len = 0, size;
-+	struct print_entry *entry;
-+	unsigned int trace_ctx;
-+	char *tbuffer;
-+
-+	if (unlikely(tracing_disabled))
-+		return 0;
-+
-+	/* Don't pollute graph traces with trace_vprintk internals */
-+	pause_graph_tracing();
-+
-+	trace_ctx = tracing_gen_ctx();
-+	guard(preempt_notrace)();
-+
-+
-+	tbuffer = get_trace_buf();
-+	if (!tbuffer) {
-+		len = 0;
-+		goto out_nobuffer;
-+	}
-+
-+	len = vscnprintf(tbuffer, TRACE_BUF_SIZE, fmt, args);
-+
-+	size = sizeof(*entry) + len + 1;
-+	scoped_guard(ring_buffer_nest, buffer) {
-+		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
-+						    trace_ctx);
-+		if (!event)
-+			goto out;
-+		entry = ring_buffer_event_data(event);
-+		entry->ip = ip;
-+
-+		memcpy(&entry->buf, tbuffer, len + 1);
-+		__buffer_unlock_commit(buffer, event);
-+		ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
-+	}
-+out:
-+	put_trace_buf();
-+
-+out_nobuffer:
-+	unpause_graph_tracing();
-+
-+	return len;
-+}
-+
-+int trace_array_vprintk(struct trace_array *tr,
-+			unsigned long ip, const char *fmt, va_list args)
-+{
-+	if (tracing_selftest_running && (tr->flags & TRACE_ARRAY_FL_GLOBAL))
-+		return 0;
-+
-+	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
-+}
-+
-+/**
-+ * trace_array_printk - Print a message to a specific instance
-+ * @tr: The instance trace_array descriptor
-+ * @ip: The instruction pointer that this is called from.
-+ * @fmt: The format to print (printf format)
-+ *
-+ * If a subsystem sets up its own instance, they have the right to
-+ * printk strings into their tracing instance buffer using this
-+ * function. Note, this function will not write into the top level
-+ * buffer (use trace_printk() for that), as writing into the top level
-+ * buffer should only have events that can be individually disabled.
-+ * trace_printk() is only used for debugging a kernel, and should not
-+ * be ever incorporated in normal use.
-+ *
-+ * trace_array_printk() can be used, as it will not add noise to the
-+ * top level tracing buffer.
-+ *
-+ * Note, trace_array_init_printk() must be called on @tr before this
-+ * can be used.
-+ */
-+int trace_array_printk(struct trace_array *tr,
-+		       unsigned long ip, const char *fmt, ...)
-+{
-+	int ret;
-+	va_list ap;
-+
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
-+		return 0;
-+
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	va_start(ap, fmt);
-+	ret = trace_array_vprintk(tr, ip, fmt, ap);
-+	va_end(ap);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(trace_array_printk);
-+
-+/**
-+ * trace_array_init_printk - Initialize buffers for trace_array_printk()
-+ * @tr: The trace array to initialize the buffers for
-+ *
-+ * As trace_array_printk() only writes into instances, they are OK to
-+ * have in the kernel (unlike trace_printk()). This needs to be called
-+ * before trace_array_printk() can be used on a trace_array.
-+ */
-+int trace_array_init_printk(struct trace_array *tr)
-+{
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
-+		return -EINVAL;
-+
-+	return alloc_percpu_trace_buffer();
-+}
-+EXPORT_SYMBOL_GPL(trace_array_init_printk);
-+
-+int trace_array_printk_buf(struct trace_buffer *buffer,
-+			   unsigned long ip, const char *fmt, ...)
-+{
-+	int ret;
-+	va_list ap;
-+
-+	if (!(printk_trace->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	va_start(ap, fmt);
-+	ret = __trace_array_vprintk(buffer, ip, fmt, ap);
-+	va_end(ap);
-+	return ret;
-+}
-+
-+int trace_vprintk(unsigned long ip, const char *fmt, va_list args)
-+{
-+	return trace_array_vprintk(printk_trace, ip, fmt, args);
-+}
-+EXPORT_SYMBOL_GPL(trace_vprintk);
-+
- static __init int init_trace_printk_function_export(void)
- {
- 	int ret;
+ static int hist_register_trigger(char *glob,
+ 				 struct event_trigger_data *data,
+ 				 struct trace_event_file *file)
 -- 
 2.51.0
 
