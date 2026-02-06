@@ -1,208 +1,177 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4C52773C1;
-	Fri,  6 Feb 2026 15:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414D2278E5D;
+	Fri,  6 Feb 2026 15:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770390337; cv=none; b=tqQQKkj8v9buRhUNJYc0MiolMan2k3X7jrvGCXNoh3EnoS2q6J478TNo2Q68IC38GAJnfvl3Z/4i0dgh5GXzeW5/+yxPeoro0Kc5bPcdAh6A/nrh0QzhsMlpqohYy+VwbJeX/HdiijA774A8cqNyVsBZSPEudr9zR0sYeoXaa2E=
+	t=1770390796; cv=none; b=nBbeY6UkQ0YE920TO1kLHBZeM8n/3pFQA4KbsYzmK9KtB2ytcIvorgl9tPVjcSzTuVzIxfX1WANXtu3/BblS8+Fe9T+3pLcWqIj1qv5DvRGrPySOqn1KhHpF5eXTepTHH9A0/5NT49jNueGT3+25JFw702s+JvG5Mz/vNv8+ar4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770390337; c=relaxed/simple;
-	bh=kXhMEm/r43JQvzQR27AZQaknOuXzbKUJKXMj+QuKSns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=umPk+Sr0aAppP1jZM547R4xdTmmROrEyDLtHAVd69XFTJm6RoJChrSUCSvd4K99KmOmZq9IfYNNvxX8wImnwJgh2v3RhCGaaHe+egNnHCIft7yvePK6TbhZxDcgnj4a+4fM0sVKCW//uY5JnFY3IEcuoFiwe95rnUR9jW4+Xgi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=m0DmBTo1; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m0DmBTo1"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 616CIWC3025645;
-	Fri, 6 Feb 2026 15:04:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/+NUvF
-	/1T7B6GCJR8b+rLpDCIKJcl6xd780xFLtfmXI=; b=m0DmBTo1W5nv4yaxXixnbz
-	FGA5S3DXkdp1bBcl2hHC+7LYI5aZGbS/EaipLdif3b50+7C14Akx4I5lq8W+mjSi
-	ImaF+BgmlSswRcEvr7bNE8p1fJTvwBZlZrRZpEVQquExDd+YYPpZx5wUGgo6FcrN
-	Z6JI/jUUMA8N7Fvuqd7EYsXaW+W3h15/JeRIwclBY4lF26vJKfTuJ1qwJQnqHevx
-	A5Lc0V6PnCw/j4a0XuQVSzEo5FSKMSrIvbXexf5Q74/D/g7Pemylo0AH/x3tbRU6
-	ROsDMecWHyC/7oN9xqTm62K994BZcV0IbpioEwMDiRHHaNjmzyu4BOsp1qRj41Gw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c19dtm1ep-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Feb 2026 15:04:52 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 616F3411011832;
-	Fri, 6 Feb 2026 15:04:51 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c19dtm1eh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Feb 2026 15:04:51 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 616DpKje027348;
-	Fri, 6 Feb 2026 15:04:50 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4c1xs1pb67-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Feb 2026 15:04:50 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 616F4kgx50332134
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Feb 2026 15:04:47 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CFC0820043;
-	Fri,  6 Feb 2026 15:04:46 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC09820040;
-	Fri,  6 Feb 2026 15:04:44 +0000 (GMT)
-Received: from [9.111.140.182] (unknown [9.111.140.182])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  6 Feb 2026 15:04:44 +0000 (GMT)
-Message-ID: <a8274e59-4e7d-47ce-83dc-cfea5c61a45f@linux.ibm.com>
-Date: Fri, 6 Feb 2026 16:04:44 +0100
+	s=arc-20240116; t=1770390796; c=relaxed/simple;
+	bh=IEmyfAfum+l2fgo3tmNMTXIwB/AC8KXfpEYwZlJ1I4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OJ9uoSNDXM2UFYK9oHxHAYSNY/u+6BvaDEZ1DVRXEQGHWrTCeMsYx2mjPViXMLUGOriG0PLk2uQwKVPBOZMjnu7aQqroXKVqBk6KTAp6VrdZs8+K391pWwZY5eL2XXeJ3RfbZuUpcm0cpw+Eqc25obrcFf3j3lar51AO8rK28Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id D39841B1E7D;
+	Fri,  6 Feb 2026 15:13:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 1AB8330;
+	Fri,  6 Feb 2026 15:13:13 +0000 (UTC)
+Date: Fri, 6 Feb 2026 10:13:51 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Have all triggers expect a file parameter
+Message-ID: <20260206101351.609d8906@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] x86/vdso: Use CFI macros in
- __vdso_sgx_enter_enclave()
-To: Josh Poimboeuf <jpoimboe@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        Steven Rostedt <rostedt@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
-        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
-        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Michal Hocko
- <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>
-References: <20260203171958.1522030-1-jremus@linux.ibm.com>
- <20260203171958.1522030-6-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260203171958.1522030-6-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDEwNyBTYWx0ZWRfX74+yGx2tRSMH
- WC5yeiqpYSi0SmiON4O+jYZFhZvj8KbYVCx9Zv5CyH/+pm413HJArNIA559F7TOig3PQWjyluKC
- uRxJsh5Qf4ScNPiJTBRqcS8reZbuwv0Pstpl8nNmbWZoPkY13IY3l96Lu6QfvhWHD6nxKhR0qb+
- kVSzQSEyp8GaHT8Sb6Lvt8Vl1UTOjfK+vsuDm4knZhdaOoHITf7VwJauq3yvEhl2va+JHKWCw6v
- eK4QqLOkqmkhfdCPwE2WzuQDLyXtVLPpHiCo2/WyWDq3yT71yE3KoeI8bFuGJr2JQYtd9geJr+U
- EIGQwEI2Eam+RtBWYE+V0ewE7VfdX/tF6NTrmDOq0s19f/F/Bq1bHVeWcvE1crhX0IBEVVM96+K
- XaPNyxxmPxnYdOgfjZTos7puGHKgjvuHJIrkOWaV3boQ/RENa17dkpaIZuuOX6BAUJgx1ONOlbX
- 719YUAKJ27s+muWUTmg==
-X-Proofpoint-GUID: XPd4wWwQGmuRjZnZjoB4arIOKbc4d9iw
-X-Proofpoint-ORIG-GUID: GmdViZUO-3EVxYkMXdbQPRaVORisp6Lg
-X-Authority-Analysis: v=2.4 cv=LesxKzfi c=1 sm=1 tr=0 ts=69860314 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=meVymXHHAAAA:8 a=ynVLL-t7yow9N31yAb4A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-06_04,2026-02-05_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015
- adultscore=0 suspectscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2601150000 definitions=main-2602060107
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 1AB8330
+X-Stat-Signature: je3mtnrs5a4tm969fa43h54w7b5csqnf
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/uvTxWSBOEmUwiPtHu2qjMXOsA96ufkZw=
+X-HE-Tag: 1770390793-681309
+X-HE-Meta: U2FsdGVkX1/uCYyZ1t6qVH7Y2ZAS20tqMRobOZ5U1ChoU1wE9Bsg/RqQ7KERYCJf0OIdKLgyiVEKIUNVYMDo0jH8eP3UbMwQEFjFCAb32c/TwqSD1rSV0EysKBP3CVJkEmuTL23P2CNuxpjqgAWAg2yZzq9Hh4xX1U2Vxd7CIKWTt6ozb3cFQ76uTKR2sB1iQpbnz6kFhAAr8o3hd2H4cQPos/74heJAMeTNXd3Z0rEkUYQ9Ep5jzeY5+L6J0Tj6HGMa1e0UtFwfsfhbcZrXc0KFjdzlSWRswyZsuC8JLXQlBZZ/AlyrkF4IvukficY2KREOUHa4qZ20KR7uiJEWHInWCjN0QvtaCdBvrlEBryLDvGnnU30xeXu7I5wW3Er/
 
-On 2/3/2026 6:19 PM, Jens Remus wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Use the CFI macros instead of the raw .cfi_* directives to be consistent
-> with the rest of the VDSO asm.  It's also easier on the eyes.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
-> ---
->  arch/x86/entry/vdso/vdso64/vsgx.S | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/entry/vdso/vdso64/vsgx.S b/arch/x86/entry/vdso/vdso64/vsgx.S
-> index c0342238c976..8d7b8eb45c50 100644
-> --- a/arch/x86/entry/vdso/vdso64/vsgx.S
-> +++ b/arch/x86/entry/vdso/vdso64/vsgx.S
-> @@ -24,13 +24,14 @@
->  .section .text, "ax"
->  
->  SYM_FUNC_START(__vdso_sgx_enter_enclave)
-> +	SYM_F_ALIGN
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Somehow I missed Steven's v6 and any of it's review feedback, where Josh
-noticed that this added SYM_F_ALIGN somehow creeped in and should be
-dropped:
-https://lore.kernel.org/all/amh7fzsjx4p5nowy3b3j6blkty5ojqf7jawtlslexwzdbxrhc3@zersgacmcnai/
+When the triggers were first created, they may not have had a file
+parameter passed to them and things needed to be done generically.
 
->  	push	%rbp
-> -	.cfi_adjust_cfa_offset	8
-> -	.cfi_rel_offset		%rbp, 0
-> +	CFI_ADJUST_CFA_OFFSET	8
-> +	CFI_REL_OFFSET		%rbp, 0
->  	mov	%rsp, %rbp
-> -	.cfi_def_cfa_register	%rbp
-> +	CFI_DEF_CFA_REGISTER	%rbp
->  	push	%rbx
-> -	.cfi_rel_offset		%rbx, -8
-> +	CFI_REL_OFFSET		%rbx, -8
->  
->  	mov	%ecx, %eax
->  .Lenter_enclave:
-> @@ -77,13 +78,11 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
->  .Lout:
->  	pop	%rbx
->  	leave
-> -	.cfi_def_cfa		%rsp, 8
-> +	CFI_DEF_CFA		%rsp, 8
->  	RET
->  
-> -	/* The out-of-line code runs with the pre-leave stack frame. */
-> -	.cfi_def_cfa		%rbp, 16
-> -
->  .Linvalid_input:
-> +	CFI_DEF_CFA		%rbp, 16
->  	mov	$(-EINVAL), %eax
->  	jmp	.Lout
->  
+But today, all triggers have a file parameter passed to them. Remove the
+generic code and add a "if (WARN_ON_ONCE(!file))" to each trigger.
 
-Regards,
-Jens
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_trigger.c | 62 +++++++++++------------------
+ 1 file changed, 24 insertions(+), 38 deletions(-)
+
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 06b75bcfc7b8..7fa26327c9c7 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1347,18 +1347,13 @@ traceon_trigger(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file) {
+-		if (tracer_tracing_is_on(file->tr))
+-			return;
+-
+-		tracer_tracing_on(file->tr);
++	if (WARN_ON_ONCE(!file))
+ 		return;
+-	}
+ 
+-	if (tracing_is_on())
++	if (tracer_tracing_is_on(file->tr))
+ 		return;
+ 
+-	tracing_on();
++	tracer_tracing_on(file->tr);
+ }
+ 
+ static bool
+@@ -1368,13 +1363,11 @@ traceon_count_func(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file) {
+-		if (tracer_tracing_is_on(file->tr))
+-			return false;
+-	} else {
+-		if (tracing_is_on())
+-			return false;
+-	}
++	if (WARN_ON_ONCE(!file))
++		return false;
++
++	if (tracer_tracing_is_on(file->tr))
++		return false;
+ 
+ 	if (!data->count)
+ 		return false;
+@@ -1392,18 +1385,13 @@ traceoff_trigger(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file) {
+-		if (!tracer_tracing_is_on(file->tr))
+-			return;
+-
+-		tracer_tracing_off(file->tr);
++	if (WARN_ON_ONCE(!file))
+ 		return;
+-	}
+ 
+-	if (!tracing_is_on())
++	if (!tracer_tracing_is_on(file->tr))
+ 		return;
+ 
+-	tracing_off();
++	tracer_tracing_off(file->tr);
+ }
+ 
+ static bool
+@@ -1413,13 +1401,11 @@ traceoff_count_func(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file) {
+-		if (!tracer_tracing_is_on(file->tr))
+-			return false;
+-	} else {
+-		if (!tracing_is_on())
+-			return false;
+-	}
++	if (WARN_ON_ONCE(!file))
++		return false;
++
++	if (!tracer_tracing_is_on(file->tr))
++		return false;
+ 
+ 	if (!data->count)
+ 		return false;
+@@ -1481,10 +1467,10 @@ snapshot_trigger(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file)
+-		tracing_snapshot_instance(file->tr);
+-	else
+-		tracing_snapshot();
++	if (WARN_ON_ONCE(!file))
++		return;
++
++	tracing_snapshot_instance(file->tr);
+ }
+ 
+ static int
+@@ -1570,10 +1556,10 @@ stacktrace_trigger(struct event_trigger_data *data,
+ {
+ 	struct trace_event_file *file = data->private_data;
+ 
+-	if (file)
+-		__trace_stack(file->tr, tracing_gen_ctx_dec(), STACK_SKIP);
+-	else
+-		trace_dump_stack(STACK_SKIP);
++	if (WARN_ON_ONCE(!file))
++		return;
++
++	__trace_stack(file->tr, tracing_gen_ctx_dec(), STACK_SKIP);
+ }
+ 
+ static int
 -- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+2.51.0
 
