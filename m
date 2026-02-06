@@ -1,197 +1,241 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.kolabnow.com (mx.kolabnow.com [212.103.80.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18B7337690
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Feb 2026 04:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770351006; cv=pass; b=EO6reGc+zSoVjAWy9eGsRpzraCAzpirGP6j6D+c4xteYl+LhkYjkR9RAsAc7HDGS3rUmn5c5uYIES57ZJ3hiS6qa8zMNMixp7PAgowyManXpUk/xAf/n6OS1A3p+NrYpZi17e6+2ESDpGHQ43FGSusVGjGrOf7zf/jw0/eFytB8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770351006; c=relaxed/simple;
-	bh=iYpwTYkFbebeWOXjdGzbXWMLC1RCQ0MzEk69HOZm/4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xs2TGqIIxzDxNjpC5AMzYb33weAupBEZz2tW9Vmwl8UImrEUhOPwe2R7nwS5fGQWVsTcHrZSaKK9e3TOVBVGvlCedhkllFq410CxvboIw8mUDgNOpn5L+ym1lBrOBU7my7CCLzJXSN7zJo6SyHfTbptkIY16sK+JxqSr66RwH2o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpWKB0Uu; arc=pass smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2058329E7D;
+	Fri,  6 Feb 2026 08:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.103.80.153
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770365407; cv=none; b=A8uFuG3BUv4xtI1VWB9QgMHf2+NlU0WiyTM7DgSYPFWNcuab/Tv3vEAtLjkM1gvNo8HOEFmIZiPHlfuRPdSdReOT+Fe7l+lH3cRu17lHKbWWLfaTpTC/6r6Se8UPBcZPtRlH+suBp/6tGezTIU2meDuxIgOzKXwWTy1fGr4H+eo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770365407; c=relaxed/simple;
+	bh=Vr1k5ZKtRvRXCRphTDX7Rlz/Z9dNVEm5co+uHiOQcFM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=VX8i3cdjKkWnWgWSQWQvP2kt31T8JqnRGH4bdyb41VNCKq2oFHjdqwmd3i9Cw+ntsbFqFy1kASsWWFnS6Z17i5OxZd/N0vUDKFnibJqfgSeSky9mWDiMbu8Cz4WjdAvUgRq2UfDerg/CehF84p7Af3CsDZJJVf7YWe3qnkY8Zac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com; spf=pass smtp.mailfrom=mykolab.com; dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b=KZzbtTUf; arc=none smtp.client-ip=212.103.80.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mykolab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mykolab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpWKB0Uu"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b8710c9cddbso26858566b.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Feb 2026 20:10:05 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770351004; cv=none;
-        d=google.com; s=arc-20240605;
-        b=IIKb1Ho3zKYBC4I2sw5z6hPXuyaBg7F6Qz0jHRS6RVtep5QJ0tfNmFP5qQmik4vHCH
-         /krHqfHEeMF9XXC9E2JyokStc/WBn4CwDU/sMaceBBwr4htMo08767qaeCBMqYVT7gKY
-         geNTJ234rPsFvuzad9DjrDey19edo1CX3Di7bdo8jhV6XHwnMf4aBEiQF4C+nZYfa0yN
-         4WDhjoveTi+zc59uBVP6PTAuVUW5YtFL6g6aSImSZEQnFD6CzS/z/cvk5BDVqPBSlsDa
-         xjZqFYJHOG8NZ4m8TZ415XSJ5omv8/6RkUWe6zGDKnn+rZRxajvfJg2wgO1Ozu08p/eo
-         sp9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=iYpwTYkFbebeWOXjdGzbXWMLC1RCQ0MzEk69HOZm/4g=;
-        fh=kgkazf9JAY1rSbCuPjixOvQViIbJgmucrV5u7MAL98A=;
-        b=O3Y3ydv8+5P4fFYw6224pDwNgAdCs89asM2CPaHR8tTMHiqRe6/Dg9gZX3Q8WjnEiK
-         4OKAi4ptjF+hON1JDdZrayvUH1prLoT2sdS3qkSzLWuBbeQHyn5+SvSO8amJbJeV9S0K
-         ivyznwQ7G1CKhBVS5QNKDORAzyH4etgpSE5XjUiAYSjxoaA9ILwJ3o+SEMaMH8zSz6p3
-         zCmNPAQAOspLeKNOu3RogDlUtrpR9bMWj9FsshPdO2X2UVeACV+ITtLRUUVCoXTwhdCi
-         RbOFS8n0J47sJ91rGa4WkMqn9/DlY3fUrNtuiQpRiQKeDOOr9t8uUiXSqlQGzs34Znji
-         WqzQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770351004; x=1770955804; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iYpwTYkFbebeWOXjdGzbXWMLC1RCQ0MzEk69HOZm/4g=;
-        b=WpWKB0UusxXul9U9xdQlw3wzAufITslB9IHz3SPSXreh04kXuATvUtpbmQqfa5qCan
-         /A9oupjusRYO8aP2jNxP3NaWQcQOkUADDlz6xFsRcJ6J+Nis77R0641aFTJj0JOsdsQa
-         /cg1Wlh1iTq7LCcffxjgxnG4WK7mH0Anu7p7P4fSRKOwwG2n9MLvE8D8DWmXYlSX7uVn
-         CufFJe+8aeJYAnLmJEcIx7d5ZwGSt4s7wh38U1jdiNPIihcpU/kzaNE4yrrn0XTJ50uj
-         Dn48xaE0+0X6h9/0+Kpu97i7sXnX0iG8i/11hF6cdn2Jw5pEPbuQzXCWV4RvbsP+6CeL
-         BknA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770351004; x=1770955804;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iYpwTYkFbebeWOXjdGzbXWMLC1RCQ0MzEk69HOZm/4g=;
-        b=F9Qvv5FtH7OSN2vwClHvGJfyEX3Qty3w5aNWnQrUKXuTOkgYVOgX4dgX0aZg7tlmTX
-         2AB9DY+6ox7TCT6rFiQ4CyQE2nwntGNbgA1gSwiQqROuAHkHQcY8gmA2yQzc04+IWxt+
-         uYw/nHALsHLa9bsQYr1ggintxbeuTKiASnhBzq8HDFgZx8y+PLlCPJMGR0/ffDmeIvAl
-         73/+hcvWOoStjg1zvWZARCmtSyE/Q/rXNolX0XB5me9MV/tVuUJwHoC6Rqazh0DyffcY
-         IRnPO79tOZkeHkq8ZXFnSV+wfzro+tHzMYKZdumLB2VSn9gRaMgfboqwACDFueKXt1QJ
-         VVSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdatqD8kBt1t4ap5tLv/CX2wCfhD9TmpWoJuOnIJmKmxtp7Gi3kSEG0NNup/oLg7MdQjhVpIQNt32O2PyT5aQJduM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxyCS1BSiIsFECSIHkefUhwnU8MaICpbuYWvKDIF4SEaUCN+i+
-	YyF3XvPIz1FRGkqlJhc1Q28kHD5fOiF28Et2DA1mcLzStgWmevkmHQG+CEyYSNICD2XHxkNQHIV
-	PS4k1ZD9vrQ0HHcAB5VDLOdS5EaJdNOc=
-X-Gm-Gg: AZuq6aKpBPrWdSEaAYi8edqBVmhJOa3svBtzBA+KUHmjOXiXc9cpZL81EMGVp7NsKQl
-	mYsW1MoLYgrZcZpm50R56L9obbzpTkjW7SnM52NKR0HdNnFPZP7Y+7BvZgAt2SLEOg1HHo1jyOc
-	9ssBbsXTOUttU14bQ4KOvGQfGL5nZbFVYhhnYqc8YifrPsOYsNoY5WwuZfUkFAgslTQH5gl7l+X
-	wBG+g/i0AktUevMsVnkrKGeq7jJYQ7Wod+ZJAvFxeWtY/Jgk7uJEITDridyJxCiuMpSnat1
-X-Received: by 2002:a17:907:6091:b0:b88:5385:59d7 with SMTP id
- a640c23a62f3a-b8edf14caafmr70992166b.4.1770351003846; Thu, 05 Feb 2026
- 20:10:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mykolab.com header.i=@mykolab.com header.b="KZzbtTUf"
+Received: from localhost (unknown [127.0.0.1])
+	by mx.kolabnow.com (Postfix) with ESMTP id 7B22320A9E9C;
+	Fri,  6 Feb 2026 09:09:54 +0100 (CET)
+Authentication-Results: ext-mx-out011.mykolab.com (amavis); dkim=pass
+ reason="pass (just generated, assumed good)" header.d=mykolab.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mykolab.com; h=
+	in-reply-to:references:from:from:subject:subject:message-id:date
+	:date:content-type:content-type:content-transfer-encoding
+	:mime-version:received:received:received; s=dkim2; t=1770365394;
+	 x=1772179795; bh=BEL3z6cZ5fUyoW2ed6AuenQqUUIZ10uxHuhSYkPasbM=; b=
+	KZzbtTUfJ6ocUkNYgS3gsXH3rIzzjAY6WOkBbdfrfvtWPkV1ES92wYgA+34IbZfa
+	v16S3LIDj/K+yp76s8M91UBb4wc1yCFGWok3lkciiyeZfTSmyxUx26HcPfrFcgJ6
+	4IdOQZbYDMdBHkEk8ezMbj0j7TuSZHfWgNm47lN60F5VT1kEvkaiVwpdskTKJU//
+	541m6GQYIf6ePYF6fhoHSwfDO6M3FXluEJAzlmoUQimBOlMzKRSR6Rhoe+FRkaot
+	09hrBybrAu+n2KTFbYYdpsW7iYuXs9wT3MQkJaOO3G22oIqwd/ogZ72md/ZKTgh7
+	mvjqGTdWRY1z7jntl2a0kQ==
+X-Virus-Scanned: amavis at mykolab.com
+X-Spam-Flag: NO
+X-Spam-Score: 0
+X-Spam-Level:
+Received: from mx.kolabnow.com ([127.0.0.1])
+ by localhost (ext-mx-out011.mykolab.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id DfZ4jvE6wBGd; Fri,  6 Feb 2026 09:09:54 +0100 (CET)
+Received: from int-mx009.mykolab.com (unknown [10.9.13.9])
+	by mx.kolabnow.com (Postfix) with ESMTPS id F205020B2751;
+	Fri,  6 Feb 2026 09:09:52 +0100 (CET)
+Received: from ext-subm010.mykolab.com (unknown [10.9.6.10])
+	by int-mx009.mykolab.com (Postfix) with ESMTPS id 94D8D20C284A;
+	Fri,  6 Feb 2026 09:09:52 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
- <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
- <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
- <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com>
- <20260203101707.52965eb0@gandalf.local.home> <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
- <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com>
- <CAErzpmvtJwB7nTD5EFHP9SxPxH-rc3NuJp5xLGSTB7YPbUX8YA@mail.gmail.com> <CAADnVQJgM0W3aQVGi5_35xWc=D7Ruzt1xV0REM+RnnvtooeC5w@mail.gmail.com>
-In-Reply-To: <CAADnVQJgM0W3aQVGi5_35xWc=D7Ruzt1xV0REM+RnnvtooeC5w@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Fri, 6 Feb 2026 12:09:52 +0800
-X-Gm-Features: AZwV_QiHtOYxxPJvq-D2Vb8pnfHmY5SKlgGaNk_QBcR7mOob47oiA5NF3J8engI
-Message-ID: <CAErzpmsC0qHL41KoRTxQ2-Xy=t74NnOZQxrv8VMFRSt3eoFrRA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
- via BTF
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Donglin Peng <pengdonglin@xiaomi.com>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 06 Feb 2026 00:09:49 -0800
+Message-Id: <DG7Q5K72T7AZ.2TGDSMRADSUD9@mykolab.com>
+To: "Steven Rostedt" <rostedt@goodmis.org>, "Colin Lord" <clord@mykolab.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2] trace/hwlat: prevent false sharing in get_sample()
+From: "Colin Lord" <clord@mykolab.com>
+References: <20260202025838.32057-1-clord@mykolab.com>
+ <20260205094722.6d21d8b0@gandalf.local.home>
+In-Reply-To: <20260205094722.6d21d8b0@gandalf.local.home>
 
-On Thu, Feb 5, 2026 at 11:56=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On Thu Feb 5, 2026 at 6:47 AM PST, Steven Rostedt wrote:
+> On Sun,  1 Feb 2026 18:58:38 -0800
+> Colin Lord <clord@mykolab.com> wrote:
 >
-> On Thu, Feb 5, 2026 at 1:21=E2=80=AFAM Donglin Peng <dolinux.peng@gmail.c=
-om> wrote:
-> >
-> > On Wed, Feb 4, 2026 at 10:52=E2=80=AFPM Donglin Peng <dolinux.peng@gmai=
-l.com> wrote:
-> > >
-> > > On Wed, Feb 4, 2026 at 12:00=E2=80=AFAM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > >
-> > > > On Tue, Feb 3, 2026 at 7:16=E2=80=AFAM Steven Rostedt <rostedt@good=
-mis.org> wrote:
-> > > > >
-> > > > > On Tue, 3 Feb 2026 21:50:47 +0800
-> > > > > Donglin Peng <dolinux.peng@gmail.com> wrote:
-> > > > >
-> > > > > > Testing revealed that sorting within resolve_btfids introduces =
-issues with
-> > > > > > btf__dedup. Therefore, I plan to move the sorting logic directl=
-y into
-> > > > > > btf__add_enum_value and btf__add_enum64_value in libbpf, which =
-are
-> > > > > > invoked by pahole. However, it means that we need a newer pahol=
-e
-> > > > > > version.
-> > > > >
-> > > > > Sorting isn't a requirement just something I wanted to bring up. =
-If it's
-> > > > > too complex and doesn't achieve much benefit then let's not do it=
-.
-> > > > >
-> > > > > My worry is because "cat trace" takes quite a long time just read=
-ing the
-> > > > > BTF arguments. I'm worried it will just get worse with enums as w=
-ell.
-> > > > >
-> > > > > I have trace-cmd reading BTF now (just haven't officially release=
-d it) and
-> > > > > doing an extract and reading the trace.dat file is much faster th=
-an reading
-> > > > > the trace file with arguments. I'll need to implement the enum lo=
-gic too in
-> > > > > libtraceevent.
-> > > >
-> > > > If you mean to do pretty printing of the trace in user space then +=
-1 from me.
-> > > >
-> > > > I don't like sorting enums either in resolve_btfid, pahole or kerne=
-l.
-> > > > Sorted BTF by name was ok, since it doesn't change original semanti=
-cs.
-> > > > While sorting enums by value gets us to the grey zone where
-> > > > the sequence of enum names in vmlinux.h becomes different than in d=
-warf.
-> > >
-> > > Thanks, I agreed.
-> > >
-> > > >
-> > > > Also id->name mapping in general is not precise.
-> > > > There is no requirement for enums to be unique.
-> > > > Just grabbing the first one:
-> > > > ATA_PIO0 =3D 1,
-> > > > ATA_PIO1 =3D 3,
-> > > > ATA_PIO2 =3D 7,
-> > > > ATA_UDMA0 =3D 1,
-> > > > ATA_UDMA1 =3D 3,
-> > > > ATA_UDMA2 =3D 7,
-> > > > ATA_ID_CYLS =3D 1,
-> > > > ATA_ID_HEADS =3D 3,
-> > > > SCR_ERROR =3D 1,
-> > > > SCR_CONTROL =3D 2,
-> > > > SCR_ACTIVE =3D 3,
-> > > >
-> > > > All these names are part of the same enum type.
-> > > > Which one to print? First one?
-> >
-> > Another option is to print all matching entries, incurring increased
-> > overhead and extended trace log length. However, I prefer printing
-> > the first matching entry, though it might be inaccurate in rare cases.
+> I was about to send this as part of my fixes, but taking a closer look at
+> it, I have more questions.
 >
-> I disagree. It's not rare.
-> I wouldn't print anything. Let user space deal with it.
+>> The get_sample() function in the hwlat tracer assumes the caller holds
+>> hwlat_data.lock, but this is not actually happening. The result is
+>> unprotected data access to hwlat_data, and in per-cpu mode can result in
+>> false sharing. The false sharing can cause false positive latency
+>
+> BTW, what exactly  do you mean by "false sharing"?
+>
 
-Okay, I will implement this in libtraceevent first. By the way, would the f=
-irst
-patch [1] introducing the for_each_enumand for_each_enum64 helper
-macros be acceptable?
+>> events, since the sample_width member is involved and gets read as part
+>> of the main latency detection loop.
+>
+> I'm trying to figure out why the change in sample_width would cause any
+> issue.
+>
 
-[1] https://lore.kernel.org/lkml/20260202111548.3555306-2-dolinux.peng@gmai=
-l.com/
+You described it below, but yes, by false sharing I am referring to
+cache latencies that occur when reading sample_width. In this case, it's
+primarily due to hwlat_data.count getting modified. Since count and
+sample_width are just 8B apart from each other, they'll often share a
+cache line, so one thread incrementing count due to a latency event
+causes all other running threads to fetch the updated cache line when
+reading sample_width.
+
+On most systems I tested, this doesn't cause high enough latency to show
+up, but I guess the system mentioned in the commit message has a slow
+interconnect between the two sockets. Combined with large numbers of
+threads, a single latency event would cause a cascade of cache related
+latencies.
+
+Another test I did to verify this is what was happening on that system
+was setting tracing_cpumask to only contain CPUs on the same socket. If
+I ran 32 threads on the same socket, there were far fewer latency events
+compared to running 16 on one socket + 16 on the other (same number of
+total threads just different distribution).
+
+>>=20
+>> Convert hwlat_data.count to atomic64_t so it can be safely accessed
+>> without locking, and prevent false sharing by pulling sample_width into
+>> a local variable.
+>
+> The above still makes sense, but this only effects the seqnum, which may
+> show either duplicate or skipped numbers. But shouldn't affect any of the
+> other data.
+>
+
+Yes, the modifications made in this commit to hwlat_data.count do not
+affect the latency. The change is related to the rest of the commit in
+the sense that it is addressing the incorrect assumption that
+hwlat_data.lock is held during get_sample(), but it would also make
+sense to put the hwlat_data.count changes in a separate commit. I could
+split it up if you'd prefer that.
+
+For what it's worth, I did also see many cases of duplicate/skipped
+sequence numbers on the machine that was affected by this latency issue,
+but I wasn't sure how detailed I should make my commit message.
+
+>>=20
+>> One system this was tested on was a dual socket server with 32 CPUs on
+>> each numa node. With settings of 1us threshold, 1000us width, and
+>> 2000us window, this change reduced the number of latency events from
+>> 500 per second down to approximately 1 event per minute. Some machines
+>> tested did not exhibit measurable latency from the false sharing.
+>
+> Is this because the read of hwlat_data.sample_width is a global variable
+> and could possibly be causing a cache hit latency that shows up on large
+> machines?
+>
+> Is that what you mean by "false sharing"?
+>
+> Oh, and subjects for the tracing subsystem should start with a capital, a=
+nd
+> should be something like:
+>
+>   tracing: Fix get_sample() in hwlat from ...
+
+Got it, I can make that adjustment and resend. Would you also like me to
+modify the commit message with any of the above clarifications?
+
+thanks,
+Colin
+
+> -- Steve
+>
+>
+>>=20
+>> Signed-off-by: Colin Lord <clord@mykolab.com>
+>> ---
+>> Changes in v2:
+>> - convert hwlat_data.count to atomic64_t
+>> - leave irqs_disabled block where it originally was, outside of
+>>   get_sample()
+>>=20
+>> Thanks for the v1 review Steve, have updated and retested.
+>>=20
+>> cheers,
+>> Colin
+>>=20
+>>  kernel/trace/trace_hwlat.c | 15 +++++++--------
+>>  1 file changed, 7 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+>> index 2f7b94e98317..3fe274b84f1c 100644
+>> --- a/kernel/trace/trace_hwlat.c
+>> +++ b/kernel/trace/trace_hwlat.c
+>> @@ -102,9 +102,9 @@ struct hwlat_sample {
+>>  /* keep the global state somewhere. */
+>>  static struct hwlat_data {
+>> =20
+>> -	struct mutex lock;		/* protect changes */
+>> +	struct mutex	lock;		/* protect changes */
+>> =20
+>> -	u64	count;			/* total since reset */
+>> +	atomic64_t	count;		/* total since reset */
+>> =20
+>>  	u64	sample_window;		/* total sampling window (on+off) */
+>>  	u64	sample_width;		/* active sampling portion of window */
+>> @@ -193,8 +193,7 @@ void trace_hwlat_callback(bool enter)
+>>   * get_sample - sample the CPU TSC and look for likely hardware latenci=
+es
+>>   *
+>>   * Used to repeatedly capture the CPU TSC (or similar), looking for pot=
+ential
+>> - * hardware-induced latency. Called with interrupts disabled and with
+>> - * hwlat_data.lock held.
+>> + * hardware-induced latency. Called with interrupts disabled.
+>>   */
+>>  static int get_sample(void)
+>>  {
+>> @@ -204,6 +203,7 @@ static int get_sample(void)
+>>  	time_type start, t1, t2, last_t2;
+>>  	s64 diff, outer_diff, total, last_total =3D 0;
+>>  	u64 sample =3D 0;
+>> +	u64 sample_width =3D READ_ONCE(hwlat_data.sample_width);
+>>  	u64 thresh =3D tracing_thresh;
+>>  	u64 outer_sample =3D 0;
+>>  	int ret =3D -1;
+>> @@ -267,7 +267,7 @@ static int get_sample(void)
+>>  		if (diff > sample)
+>>  			sample =3D diff; /* only want highest value */
+>> =20
+>> -	} while (total <=3D hwlat_data.sample_width);
+>> +	} while (total <=3D sample_width);
+>> =20
+>>  	barrier(); /* finish the above in the view for NMIs */
+>>  	trace_hwlat_callback_enabled =3D false;
+>> @@ -285,8 +285,7 @@ static int get_sample(void)
+>>  		if (kdata->nmi_total_ts)
+>>  			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
+>> =20
+>> -		hwlat_data.count++;
+>> -		s.seqnum =3D hwlat_data.count;
+>> +		s.seqnum =3D atomic64_inc_return(&hwlat_data.count);
+>>  		s.duration =3D sample;
+>>  		s.outer_duration =3D outer_sample;
+>>  		s.nmi_total_ts =3D kdata->nmi_total_ts;
+>> @@ -832,7 +831,7 @@ static int hwlat_tracer_init(struct trace_array *tr)
+>> =20
+>>  	hwlat_trace =3D tr;
+>> =20
+>> -	hwlat_data.count =3D 0;
+>> +	atomic64_set(&hwlat_data.count, 0);
+>>  	tr->max_latency =3D 0;
+>>  	save_tracing_thresh =3D tracing_thresh;
+>> =20
+>>=20
+>> base-commit: 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7
+
