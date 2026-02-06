@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777C632AAAE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02A53376A0;
 	Fri,  6 Feb 2026 19:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770407936; cv=none; b=mmR9eHpTxLXniqwpQYW+sPsGMyYaBL3HdJjBB9Ff8QP2OKbCRR9NLyilnnLw+t0xJPkLAjBJ8K00KmHrdMKkb/cWA3+V+ZeVz/pE7VD1aDgN76GcbXPVLiQdCJe6jqqDzaxOUuugePyp322hpbclzea3kSLCbQWYyjiMK1Zs9V0=
+	t=1770407936; cv=none; b=CMc5OPgnMdJImH0hldCFPAlvktZxgLL/kJcXtOYWXwPlckqXgH2rPFxQEYYVoByfLYAD9yQEOFeRZrxco9gxUkb7CmnoPzUiCcltoUrl/q5aVhZX3++OX/XfUM9vfWuH51AU14yEE13sUBjfBNShQg889JMaUwgm3BihCUp0ORQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770407936; c=relaxed/simple;
-	bh=hc6PrYVuC/Wg7y0SBTDSMwFVfst74rco+Jjkpoa75B8=;
+	bh=AE+4adVyJFCbyi7b/Eh27pv6ER2+eOGn0BxhQCPrptw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=GHsWzhqV6y+92RDkKsh7yy1+pBapBdrRqGmwEbEfSzNOlbOh/BrlNrQ6cYsiXq0EzMZsEOSatXSQ570Na55xKFvBKV43Qpi+FBd5ZwhQarvcfUcZjoX21KCb5XOLj5+l3ElMRMR7q5ow/UcEKG3svYf2Fg8bcKU9aHJu6g6CzS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nf1ybEIy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=rfzAg0Xg4Jq+dWpttPnOAWe6UqTD1ACFHmn/NsnzrkSIotc34ktep9bGj49YWSyptSRgxCL/xAVxl3l71jOCsaoi6RygMoxZCnSwnPA9EIM2iUULoBEG6kfVHhkkGVRiUT007aG+w8/ky8/1y+ztIBqojQCbaced0brGMA8XX5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFpecw1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf1ybEIy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558A9C2BC87;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFpecw1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD22C19425;
 	Fri,  6 Feb 2026 19:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770407936;
-	bh=hc6PrYVuC/Wg7y0SBTDSMwFVfst74rco+Jjkpoa75B8=;
+	bh=AE+4adVyJFCbyi7b/Eh27pv6ER2+eOGn0BxhQCPrptw=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=nf1ybEIyyxUzuUwoIrdbgZuv6Xo0HSvILPv9cc1jDgg+qPnVgiuZaMcEfaJsv5C4J
-	 YKp6cgeiNoBkr4r9X6Zen0bE1ZHPJjj41JRQDBjq8wFYKasXuHAv0nziykfxdZFKHH
-	 /8pRd9bVIFH8U6RtxeabTD0S7h9KmjpIoJyXKWtskw8xgjrBXq4cYcuCb1whxGxkhE
-	 syT5z5KGleteIVyC6lr88Oq1lx7MZrmmoizec9vSGiq7oaR9xNAhnO3o/rA9P5apqY
-	 lbmZHYNcrRHV1WPYSdlX2+O0X5KDRdkKIAYUzOD1dLlPb9DO1EsA7Aqj6PSjipreqY
-	 xEtwZe3F+EaQw==
+	b=UFpecw1Fy+N2l9nsd+GXJABUA+UmAUky97AYtBBXsEyIAbSDiRSJg9EnQgb6u2WQB
+	 OCyl0lxOzttvrFQx1I0a1Hq6E2/hK2SYBytU4bWAPrxpTfK5y3mRx2lKjM/v3D98TG
+	 PxbGzrVgLxglbJoF6m5R0/CGU34hhOwHEk/gJwwrKKt3K26HZGM6UmQODXRAlaGTIX
+	 FoMYoYcrhuURqWZRppXWWz5fRJi8zEZu6kBrNapWE3GxQOHyYO/P7g0tC0PDANS4IX
+	 SC+i9V2jVJGPFz80CzeCXeLbi57Kvc1KOv/BT28JiMwbZx/dqyKHQWiTRjdl3bl8hg
+	 IlrDgdM8WSf/Q==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1voRzL-0000000A6nG-1poz;
+	id 1voRzL-0000000A6nk-2Y9o;
 	Fri, 06 Feb 2026 14:59:35 -0500
-Message-ID: <20260206195935.293094674@kernel.org>
+Message-ID: <20260206195935.463072570@kernel.org>
 User-Agent: quilt/0.68
-Date: Fri, 06 Feb 2026 14:37:44 -0500
+Date: Fri, 06 Feb 2026 14:37:45 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 03/12] tracing: Move __trace_buffer_{un}lock_*() functions to trace.h
+Subject: [PATCH 04/12] tracing: Move ftrace_trace_stack() out of trace.c and into trace.h
 References: <20260206193741.767171392@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,131 +55,129 @@ From: Steven Rostedt <rostedt@goodmis.org>
 The file trace.c has become a catchall for most things tracing. Start
 making it smaller by breaking out various aspects into their own files.
 
-Move the __always_inline functions __trace_buffer_lock_reserve(),
-__trace_buffer_unlock_commit() and trace_event_setup() into trace.h.
-
-The trace.c file will be split up and these functions will be used in more
-than one of these files. As they are already __always_inline they can
-easily be moved into the trace.h header file.
+Make ftrace_trace_stack() into a static inline that tests if stack tracing
+is enabled and if so to call __ftrace_trace_stack() to do the stack trace.
+This keeps the test inlined in the fast paths and only does the function
+call if stack tracing is enabled.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 42 ------------------------------------------
- kernel/trace/trace.h | 41 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 42 deletions(-)
+ kernel/trace/trace.c | 45 ++++----------------------------------------
+ kernel/trace/trace.h | 31 ++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 41 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dafcdd31570b..42b7ad09b5d9 100644
+index 42b7ad09b5d9..061c154c0618 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -1058,30 +1058,6 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
+@@ -1032,32 +1032,6 @@ static inline void trace_access_lock_init(void)
  
  #endif
  
--static __always_inline void
--trace_event_setup(struct ring_buffer_event *event,
--		  int type, unsigned int trace_ctx)
--{
--	struct trace_entry *ent = ring_buffer_event_data(event);
+-#ifdef CONFIG_STACKTRACE
+-static void __ftrace_trace_stack(struct trace_array *tr,
+-				 struct trace_buffer *buffer,
+-				 unsigned int trace_ctx,
+-				 int skip, struct pt_regs *regs);
+-static inline void ftrace_trace_stack(struct trace_array *tr,
+-				      struct trace_buffer *buffer,
+-				      unsigned int trace_ctx,
+-				      int skip, struct pt_regs *regs);
 -
--	tracing_generic_entry_update(ent, type, trace_ctx);
+-#else
+-static inline void __ftrace_trace_stack(struct trace_array *tr,
+-					struct trace_buffer *buffer,
+-					unsigned int trace_ctx,
+-					int skip, struct pt_regs *regs)
+-{
+-}
+-static inline void ftrace_trace_stack(struct trace_array *tr,
+-				      struct trace_buffer *buffer,
+-				      unsigned long trace_ctx,
+-				      int skip, struct pt_regs *regs)
+-{
 -}
 -
--static __always_inline struct ring_buffer_event *
--__trace_buffer_lock_reserve(struct trace_buffer *buffer,
--			  int type,
--			  unsigned long len,
--			  unsigned int trace_ctx)
--{
--	struct ring_buffer_event *event;
--
--	event = ring_buffer_lock_reserve(buffer, len);
--	if (event != NULL)
--		trace_event_setup(event, type, trace_ctx);
--
--	return event;
--}
+-#endif
 -
  void tracer_tracing_on(struct trace_array *tr)
  {
  	if (tr->array_buffer.buffer)
-@@ -1109,24 +1085,6 @@ void tracing_on(void)
- }
- EXPORT_SYMBOL_GPL(tracing_on);
+@@ -2966,10 +2940,10 @@ struct ftrace_stacks {
+ static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
+ static DEFINE_PER_CPU(int, ftrace_stack_reserve);
  
--
--static __always_inline void
--__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
+-static void __ftrace_trace_stack(struct trace_array *tr,
+-				 struct trace_buffer *buffer,
+-				 unsigned int trace_ctx,
+-				 int skip, struct pt_regs *regs)
++void __ftrace_trace_stack(struct trace_array *tr,
++			  struct trace_buffer *buffer,
++			  unsigned int trace_ctx,
++			  int skip, struct pt_regs *regs)
+ {
+ 	struct ring_buffer_event *event;
+ 	unsigned int size, nr_entries;
+@@ -3052,17 +3026,6 @@ static void __ftrace_trace_stack(struct trace_array *tr,
+ 	trace_clear_recursion(bit);
+ }
+ 
+-static inline void ftrace_trace_stack(struct trace_array *tr,
+-				      struct trace_buffer *buffer,
+-				      unsigned int trace_ctx,
+-				      int skip, struct pt_regs *regs)
 -{
--	__this_cpu_write(trace_taskinfo_save, true);
+-	if (!(tr->trace_flags & TRACE_ITER(STACKTRACE)))
+-		return;
 -
--	/* If this is the temp buffer, we need to commit fully */
--	if (this_cpu_read(trace_buffered_event) == event) {
--		/* Length is in event->array[0] */
--		ring_buffer_write(buffer, event->array[0], &event->array[1]);
--		/* Release the temp buffer */
--		this_cpu_dec(trace_buffered_event_cnt);
--		/* ring_buffer_unlock_commit() enables preemption */
--		preempt_enable_notrace();
--	} else
--		ring_buffer_unlock_commit(buffer);
+-	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, regs);
 -}
 -
- int __trace_array_puts(struct trace_array *tr, unsigned long ip,
- 		       const char *str, int size)
+ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
+ 		   int skip)
  {
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index ccfaa9b4d2bf..d22d761f8ebd 100644
+index d22d761f8ebd..63260595ac8f 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -1572,6 +1572,47 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
- 			    const char __user *ptr, size_t size,
- 			    trace_user_buf_copy copy_func, void *data);
+@@ -2283,6 +2283,37 @@ static inline void sanitize_event_name(char *name)
+ 			*name = '_';
+ }
  
-+static __always_inline void
-+trace_event_setup(struct ring_buffer_event *event,
-+		  int type, unsigned int trace_ctx)
++#ifdef CONFIG_STACKTRACE
++void __ftrace_trace_stack(struct trace_array *tr,
++			  struct trace_buffer *buffer,
++			  unsigned int trace_ctx,
++			  int skip, struct pt_regs *regs);
++
++static __always_inline void ftrace_trace_stack(struct trace_array *tr,
++					       struct trace_buffer *buffer,
++					       unsigned int trace_ctx,
++					       int skip, struct pt_regs *regs)
 +{
-+	struct trace_entry *ent = ring_buffer_event_data(event);
++	if (!(tr->trace_flags & TRACE_ITER(STACKTRACE)))
++		return;
 +
-+	tracing_generic_entry_update(ent, type, trace_ctx);
++	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, regs);
 +}
-+
-+static __always_inline struct ring_buffer_event *
-+__trace_buffer_lock_reserve(struct trace_buffer *buffer,
-+			  int type,
-+			  unsigned long len,
-+			  unsigned int trace_ctx)
++#else
++static inline void __ftrace_trace_stack(struct trace_array *tr,
++					struct trace_buffer *buffer,
++					unsigned int trace_ctx,
++					int skip, struct pt_regs *regs)
 +{
-+	struct ring_buffer_event *event;
-+
-+	event = ring_buffer_lock_reserve(buffer, len);
-+	if (event != NULL)
-+		trace_event_setup(event, type, trace_ctx);
-+
-+	return event;
 +}
-+
-+static __always_inline void
-+__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
++static inline void ftrace_trace_stack(struct trace_array *tr,
++				      struct trace_buffer *buffer,
++				      unsigned long trace_ctx,
++				      int skip, struct pt_regs *regs)
 +{
-+	__this_cpu_write(trace_taskinfo_save, true);
-+
-+	/* If this is the temp buffer, we need to commit fully */
-+	if (this_cpu_read(trace_buffered_event) == event) {
-+		/* Length is in event->array[0] */
-+		ring_buffer_write(buffer, event->array[0], &event->array[1]);
-+		/* Release the temp buffer */
-+		this_cpu_dec(trace_buffered_event_cnt);
-+		/* ring_buffer_unlock_commit() enables preemption */
-+		preempt_enable_notrace();
-+	} else
-+		ring_buffer_unlock_commit(buffer);
 +}
++#endif
 +
- static inline void
- __trace_event_discard_commit(struct trace_buffer *buffer,
- 			     struct ring_buffer_event *event)
+ /*
+  * This is a generic way to read and write a u64 value from a file in tracefs.
+  *
 -- 
 2.51.0
 
