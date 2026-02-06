@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1546A33A01E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260C633A6F7;
 	Fri,  6 Feb 2026 19:58:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770407937; cv=none; b=lsjggLYrJpaHmzPoM08zAW0jabV+Z81gkS7RmcKZyYwCf5CeO7zGEeiznllVDVMLFXH7l/8bOL8+8oHSD/qgMpiKFWFrhVzLu2rGoDzl6FAVRhxLeVjk+g1G+A+6R1xf3b54u1QNU7lBWnvIXijxfaSTq9xlXMXHcOCNQ1ZSqgw=
+	t=1770407937; cv=none; b=TQ1BPaPfy2oq6Z/RUTrEIKL87a2sew520vipc/EDWKcFpwesX1PHiasDJGEOXTuZZHsX3CB9EyQRswodPT1RjiqKCM8pAhtyI5AgImXE24ttRELjiCHPdxAARW+4WholiGg21u6STd00S41aVP8Qni//y/nAv/ZOvejJ6BjCTro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770407937; c=relaxed/simple;
-	bh=SYZ1Rq8DSyU94U+FTXKwm9x7vluarbRusnyLeVZ0CUY=;
+	bh=ay4wjzfNs4Vg2jkQLNy4bi/QQ7cVserI/t7ElR3WQy4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=LisjGLNbsw9/Wdo7slthkP8oWZbfIErpXrezrAPUacCvynWxfGLRvDtqVad/fRoRWLN1bCXAdf8Cu/kVzNo/U+5Sx8Zdq/H2yu31q4trvpIjzfzeP4Iosoyv/0LD4G2yjOClskrX6ZhUgN+baQUeH77aXA8oPuuv3z4q+I6GS6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1T1D5vh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=MGRDENR9WiAFcQ/B0LBtmBZv0rde7Y1SKO2rnQ/SY24knLXcUQiN69zsnV+OslTZfKGPItqRsTouO3AFlBcRgUT7dX/x6D6w6KCgPOISy+BBf7h07DjWci+7jtPs02l24pz9qI/dVDHqB9+WvrdZ+6JxU2LH730INQSCJs6/Ggg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyQYJURD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1T1D5vh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A7DC2BCB3;
-	Fri,  6 Feb 2026 19:58:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyQYJURD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BF3C19425;
+	Fri,  6 Feb 2026 19:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770407936;
-	bh=SYZ1Rq8DSyU94U+FTXKwm9x7vluarbRusnyLeVZ0CUY=;
+	s=k20201202; t=1770407937;
+	bh=ay4wjzfNs4Vg2jkQLNy4bi/QQ7cVserI/t7ElR3WQy4=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=q1T1D5vh0Rv65qzVNnYrU9hbK4faB8CHLdRlemizd6XrVCWwRorCR8BaeOC06PWoY
-	 3lrVSwv5F/VHc5VPIKO0PTdma6X2yxuOUmdO2hsNR8KU6QNAZdyHDruxgCL3KwmvaY
-	 mReUaovtbUkh/Ujzy2MGOc8wDyDhXMAjmmkio0Jz22z50FqBu9zxRbf0OvF864oc26
-	 2QINTkkHB87DMgNXBWhDSzftyoibfy8bAbtwWt+DXd4GXWwm2pnlyeapChAX39fQMF
-	 Hvh0RJSPal7RBf3uYDtcrkN0vBKi7zQBJp2Bzl4ABwa338L5GDu0D505RZJA98Xgr4
-	 WJQ8qfNfarD7A==
+	b=kyQYJURDPGmAyX3E5TvR2pDNjJEVmmwLTb5i/EfjpkoRIVnJENveQKWUzAO9p1eB6
+	 hRPDS4Q0/sj8VAe2PuvQvX18SSTT01odu8kyQCoyiaIn3w/sjOkYh+vpwwgAUixwfc
+	 QEyZt2rj4yepSyr1VTAl/zNyTSIs33czonuetrqn9KIxDsI0zp4KJiipL7ly5B2F3e
+	 YWc8w6EpeHgf3RD0MLqHf3WphkCO27NvgiPazU5h4r8iSjP3wQpXz/fHwZYeFprked
+	 YNkrYxCSkM951QZV0ryboM0PqqgcEPlvdvxQ+MdLumVJ9baD5te2k6zpT2rdLW755R
+	 3qIC1pOEoTi0A==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1voRzM-0000000A6pC-0Pgu;
+	id 1voRzM-0000000A6ph-17Em;
 	Fri, 06 Feb 2026 14:59:36 -0500
-Message-ID: <20260206195935.952012814@kernel.org>
+Message-ID: <20260206195936.118522327@kernel.org>
 User-Agent: quilt/0.68
-Date: Fri, 06 Feb 2026 14:37:48 -0500
+Date: Fri, 06 Feb 2026 14:37:49 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,8 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 07/12] tracing: Have trace_printk functions use flags instead of using
- global_trace
+Subject: [PATCH 08/12] tracing: Use system_state in trace_printk_init_buffers()
 References: <20260206193741.767171392@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,60 +52,40 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The trace.c file has become a dumping ground for all tracing code and has
-become quite large. In order to move the trace_printk functions out of it
-these functions can not access global_trace directly, as that is something
-that needs to stay static in trace.c.
+The function trace_printk_init_buffers() is used to expand tha
+trace_printk buffers when trace_printk() is used within the kernel or in
+modules. On kernel boot up, it holds off from starting the sched switch
+cmdline recorder, but will start it immediately when it is added by a
+module.
 
-Instead of testing the trace_array tr pointer to &global_trace, test the
-tr->flags to see if TRACE_ARRAY_FL_GLOBAL set.
+Currently it uses a trick to see if the global_trace buffer has been
+allocated or not to know if it was called by module load or not. But this
+is more of a hack, and can not be used when this code is moved out of
+trace.c. Instead simply look at the system_state and if it is running then
+it is know that it could only be called by module load.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a68948ac8bf9..db36d4aebc15 100644
+index db36d4aebc15..3b7fa2699301 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -1071,7 +1071,8 @@ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
- 	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
- 		return 0;
- 
--	if (unlikely(tracing_selftest_running && tr == &global_trace))
-+	if (unlikely(tracing_selftest_running &&
-+		     (tr->flags & TRACE_ARRAY_FL_GLOBAL)))
- 		return 0;
- 
- 	if (unlikely(tracing_disabled))
-@@ -3388,7 +3389,7 @@ int __trace_array_vprintk(struct trace_buffer *buffer,
- int trace_array_vprintk(struct trace_array *tr,
- 			unsigned long ip, const char *fmt, va_list args)
- {
--	if (tracing_selftest_running && tr == &global_trace)
-+	if (tracing_selftest_running && (tr->flags & TRACE_ARRAY_FL_GLOBAL))
- 		return 0;
- 
- 	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
-@@ -3424,7 +3425,7 @@ int trace_array_printk(struct trace_array *tr,
- 		return -ENOENT;
- 
- 	/* This is only allowed for created instances */
--	if (tr == &global_trace)
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
- 		return 0;
- 
- 	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-@@ -3451,7 +3452,7 @@ int trace_array_init_printk(struct trace_array *tr)
- 		return -ENOENT;
- 
- 	/* This is only allowed for created instances */
--	if (tr == &global_trace)
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
- 		return -EINVAL;
- 
- 	return alloc_percpu_trace_buffer();
+@@ -3245,10 +3245,9 @@ void trace_printk_init_buffers(void)
+ 	/*
+ 	 * trace_printk_init_buffers() can be called by modules.
+ 	 * If that happens, then we need to start cmdline recording
+-	 * directly here. If the global_trace.buffer is already
+-	 * allocated here, then this was called by module code.
++	 * directly here.
+ 	 */
+-	if (global_trace.array_buffer.buffer)
++	if (system_state == SYSTEM_RUNNING)
+ 		tracing_start_cmdline_record();
+ }
+ EXPORT_SYMBOL_GPL(trace_printk_init_buffers);
 -- 
 2.51.0
 
