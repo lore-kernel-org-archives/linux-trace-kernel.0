@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707312848B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777C632AAAE;
 	Fri,  6 Feb 2026 19:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770407936; cv=none; b=N3zf0DcU1drFcnOamNoSKc/YRaRdfaifyRkivB6Cp7HtVF3NGLwa6Z2JsjLao1VH/bEEPqEzSfg1kIlKefbj6Pyrm9orKdX9Seugp2+bjhtok9Kkq3MXWEtvdkTe284KmJ+3PDqWmS/xLj7kL1LvwA4MBbEU87YnZx2/8z97b9c=
+	t=1770407936; cv=none; b=mmR9eHpTxLXniqwpQYW+sPsGMyYaBL3HdJjBB9Ff8QP2OKbCRR9NLyilnnLw+t0xJPkLAjBJ8K00KmHrdMKkb/cWA3+V+ZeVz/pE7VD1aDgN76GcbXPVLiQdCJe6jqqDzaxOUuugePyp322hpbclzea3kSLCbQWYyjiMK1Zs9V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770407936; c=relaxed/simple;
-	bh=gc3vlVl9zWzfzqzsNtyK2LNgYikkI/ztgXn4fvwCRAk=;
+	bh=hc6PrYVuC/Wg7y0SBTDSMwFVfst74rco+Jjkpoa75B8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=hDwh6vsEDrinfET+EyjmIDK3io2y3GFXtL6mambAxcChqVubdKTgqUdB7oNAMWeJ8g+lj1p2q5INVf6mRNnv2PW0iRTrRQ6i4oYqAsgf6EoM9P1ff5QP3n49GtwekfzZ0k7mIoSFkyYIuR6EywkMFHcWJHag9CcwmcxDn/yuUCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZLb4LkZf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=GHsWzhqV6y+92RDkKsh7yy1+pBapBdrRqGmwEbEfSzNOlbOh/BrlNrQ6cYsiXq0EzMZsEOSatXSQ570Na55xKFvBKV43Qpi+FBd5ZwhQarvcfUcZjoX21KCb5XOLj5+l3ElMRMR7q5ow/UcEKG3svYf2Fg8bcKU9aHJu6g6CzS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nf1ybEIy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLb4LkZf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25BB7C19422;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nf1ybEIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558A9C2BC87;
 	Fri,  6 Feb 2026 19:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770407936;
-	bh=gc3vlVl9zWzfzqzsNtyK2LNgYikkI/ztgXn4fvwCRAk=;
+	bh=hc6PrYVuC/Wg7y0SBTDSMwFVfst74rco+Jjkpoa75B8=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=ZLb4LkZfqAbjrVD5poj0HirUZUWTMgB+yrccRj6buOIzZl5C5cOk462UUI1E/O76q
-	 CyTn+ETa36kC3e8/rxklCeC/DOzkTm4FQPbftgl+J2J6s66se3ddmkEGBKvsqzTVE+
-	 ftRlOreH+GJ4YMnv2XifhhXISm/0utz4ppLZKsNcnrZ3meNMPNUtCgysGvu1GQC5N8
-	 i16F6ksnqIJokNsRIE9M3cwqwRvRNDsOu3WprEb9anw4HQd55vIob6g+MPys77QzKx
-	 3CuhW8dyUKGjBKNDltpe6E01oyRFhDDsIwzTqUW7Rd/TkELS6Ac5p1hmpjlMiXMT3J
-	 q+HSwj1kw1kZA==
+	b=nf1ybEIyyxUzuUwoIrdbgZuv6Xo0HSvILPv9cc1jDgg+qPnVgiuZaMcEfaJsv5C4J
+	 YKp6cgeiNoBkr4r9X6Zen0bE1ZHPJjj41JRQDBjq8wFYKasXuHAv0nziykfxdZFKHH
+	 /8pRd9bVIFH8U6RtxeabTD0S7h9KmjpIoJyXKWtskw8xgjrBXq4cYcuCb1whxGxkhE
+	 syT5z5KGleteIVyC6lr88Oq1lx7MZrmmoizec9vSGiq7oaR9xNAhnO3o/rA9P5apqY
+	 lbmZHYNcrRHV1WPYSdlX2+O0X5KDRdkKIAYUzOD1dLlPb9DO1EsA7Aqj6PSjipreqY
+	 xEtwZe3F+EaQw==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1voRzL-0000000A6mm-18IP;
+	id 1voRzL-0000000A6nG-1poz;
 	Fri, 06 Feb 2026 14:59:35 -0500
-Message-ID: <20260206195935.127453448@kernel.org>
+Message-ID: <20260206195935.293094674@kernel.org>
 User-Agent: quilt/0.68
-Date: Fri, 06 Feb 2026 14:37:43 -0500
+Date: Fri, 06 Feb 2026 14:37:44 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,8 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 02/12] tracing: Make tracing_selftest_running global to the tracing
- subsystem
+Subject: [PATCH 03/12] tracing: Move __trace_buffer_{un}lock_*() functions to trace.h
 References: <20260206193741.767171392@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -56,56 +55,131 @@ From: Steven Rostedt <rostedt@goodmis.org>
 The file trace.c has become a catchall for most things tracing. Start
 making it smaller by breaking out various aspects into their own files.
 
-Make the variable tracing_selftest_running global so that it can be used
-by other files in the tracing subsystem and trace.c can be split up.
+Move the __always_inline functions __trace_buffer_lock_reserve(),
+__trace_buffer_unlock_commit() and trace_event_setup() into trace.h.
+
+The trace.c file will be split up and these functions will be used in more
+than one of these files. As they are already __always_inline they can
+easily be moved into the trace.h header file.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 3 +--
- kernel/trace/trace.h | 2 ++
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 42 ------------------------------------------
+ kernel/trace/trace.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 42 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 45972d089061..dafcdd31570b 100644
+index dafcdd31570b..42b7ad09b5d9 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -67,7 +67,7 @@
-  * insertions into the ring-buffer such as trace_printk could occurred
-  * at the same time, giving false positive or negative results.
-  */
--static bool __read_mostly tracing_selftest_running;
-+bool __read_mostly tracing_selftest_running;
+@@ -1058,30 +1058,6 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
  
- /*
-  * If boot-time tracing including tracers/events via kernel cmdline
-@@ -83,7 +83,6 @@ void __init disable_tracing_selftest(const char *reason)
- 	}
- }
- #else
--#define tracing_selftest_running	0
- #define tracing_selftest_disabled	0
  #endif
  
+-static __always_inline void
+-trace_event_setup(struct ring_buffer_event *event,
+-		  int type, unsigned int trace_ctx)
+-{
+-	struct trace_entry *ent = ring_buffer_event_data(event);
+-
+-	tracing_generic_entry_update(ent, type, trace_ctx);
+-}
+-
+-static __always_inline struct ring_buffer_event *
+-__trace_buffer_lock_reserve(struct trace_buffer *buffer,
+-			  int type,
+-			  unsigned long len,
+-			  unsigned int trace_ctx)
+-{
+-	struct ring_buffer_event *event;
+-
+-	event = ring_buffer_lock_reserve(buffer, len);
+-	if (event != NULL)
+-		trace_event_setup(event, type, trace_ctx);
+-
+-	return event;
+-}
+-
+ void tracer_tracing_on(struct trace_array *tr)
+ {
+ 	if (tr->array_buffer.buffer)
+@@ -1109,24 +1085,6 @@ void tracing_on(void)
+ }
+ EXPORT_SYMBOL_GPL(tracing_on);
+ 
+-
+-static __always_inline void
+-__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
+-{
+-	__this_cpu_write(trace_taskinfo_save, true);
+-
+-	/* If this is the temp buffer, we need to commit fully */
+-	if (this_cpu_read(trace_buffered_event) == event) {
+-		/* Length is in event->array[0] */
+-		ring_buffer_write(buffer, event->array[0], &event->array[1]);
+-		/* Release the temp buffer */
+-		this_cpu_dec(trace_buffered_event_cnt);
+-		/* ring_buffer_unlock_commit() enables preemption */
+-		preempt_enable_notrace();
+-	} else
+-		ring_buffer_unlock_commit(buffer);
+-}
+-
+ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
+ 		       const char *str, int size)
+ {
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index fda87c9f84bc..ccfaa9b4d2bf 100644
+index ccfaa9b4d2bf..d22d761f8ebd 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -867,6 +867,7 @@ extern int trace_selftest_startup_nop(struct tracer *trace,
- 					 struct trace_array *tr);
- extern int trace_selftest_startup_branch(struct tracer *trace,
- 					 struct trace_array *tr);
-+extern bool __read_mostly tracing_selftest_running;
- /*
-  * Tracer data references selftest functions that only occur
-  * on boot up. These can be __init functions. Thus, when selftests
-@@ -879,6 +880,7 @@ static inline void __init disable_tracing_selftest(const char *reason)
- }
- /* Tracers are seldom changed. Optimize when selftests are disabled. */
- #define __tracer_data		__read_mostly
-+#define tracing_selftest_running	0
- #endif /* CONFIG_FTRACE_STARTUP_TEST */
+@@ -1572,6 +1572,47 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 			    const char __user *ptr, size_t size,
+ 			    trace_user_buf_copy copy_func, void *data);
  
- extern void *head_page(struct trace_array_cpu *data);
++static __always_inline void
++trace_event_setup(struct ring_buffer_event *event,
++		  int type, unsigned int trace_ctx)
++{
++	struct trace_entry *ent = ring_buffer_event_data(event);
++
++	tracing_generic_entry_update(ent, type, trace_ctx);
++}
++
++static __always_inline struct ring_buffer_event *
++__trace_buffer_lock_reserve(struct trace_buffer *buffer,
++			  int type,
++			  unsigned long len,
++			  unsigned int trace_ctx)
++{
++	struct ring_buffer_event *event;
++
++	event = ring_buffer_lock_reserve(buffer, len);
++	if (event != NULL)
++		trace_event_setup(event, type, trace_ctx);
++
++	return event;
++}
++
++static __always_inline void
++__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
++{
++	__this_cpu_write(trace_taskinfo_save, true);
++
++	/* If this is the temp buffer, we need to commit fully */
++	if (this_cpu_read(trace_buffered_event) == event) {
++		/* Length is in event->array[0] */
++		ring_buffer_write(buffer, event->array[0], &event->array[1]);
++		/* Release the temp buffer */
++		this_cpu_dec(trace_buffered_event_cnt);
++		/* ring_buffer_unlock_commit() enables preemption */
++		preempt_enable_notrace();
++	} else
++		ring_buffer_unlock_commit(buffer);
++}
++
+ static inline void
+ __trace_event_discard_commit(struct trace_buffer *buffer,
+ 			     struct ring_buffer_event *event)
 -- 
 2.51.0
 
