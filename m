@@ -1,31 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA8E14A8B;
-	Sat,  7 Feb 2026 04:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DC725F798;
+	Sat,  7 Feb 2026 14:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770437061; cv=none; b=Kb/0KsLdX4069Rc6WHyDcyonbCxeZHQstX2TPWHYMU4NTqa6PkIYKNQFQQ4kWq7Gc05w/ddbn/IvpKDMPmvjXlIk3D+/Kh3ZFhkAzp2JZpBTocjosMh0qdksFNmIE0+z2IyM7UF0IOuvsuiv3HdklrRgqnh7rTGMQQGwQrg5Gow=
+	t=1770476183; cv=none; b=ddaNFuARul4c68nvxyguJUfBfNAdQrnTOfIyeGn9xFwjDR03bXC75Mge/SOABKUdwpw8CVFaPBOGks1QAoMgANyw/GaN0kH3U68f4skmIVGkVqYxYgIShYbEpY5iTgHWshDhz5UaEVcycNmagoxxa2CfOl+K1l09Pitk/As+rl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770437061; c=relaxed/simple;
-	bh=c/rBNCzJkfNFIGfWuWZ8dEeSaFONcPzxPQcb2+HrKo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AhH/uYLfmwmnSWuT3Py9CYrAMkqqiKtmNBnQX7IOLR2jfBXPoi9FBCRf2nrTMvdn0JcNvrg5JVx/Ob1C6C50QY0ZUnRklvEPdebmE8HEGR4ZgCUB28L56gdAtYAFPjpqnzX+CDw7Y9TP9iaI2gzD+NfkLkoKlQE7pggzPx9KQ5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	s=arc-20240116; t=1770476183; c=relaxed/simple;
+	bh=Y6ZIj0/DCGFVsn5z6/DwxJnkTncBodEWiZC4H/XclQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oGirr78/X6YSSf//n7TNITu6RrjiNnbqJPPpIgu8H7aueyOiav6xRxSBBIpomrmeW7uWfjDiFNxoL+HnJFOzx9ycf1ijL3Lp2zU1l4I/mRBGS9IN4MbDxNLsUurZHhTjw8t07KApFbW3CPY77W30UdeoT2Koq1LIc0MobtrQVyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id F3E0058A1F;
-	Sat,  7 Feb 2026 04:04:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 62E2820028;
-	Sat,  7 Feb 2026 04:04:12 +0000 (UTC)
-Date: Fri, 6 Feb 2026 23:04:10 -0500
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1705E13ABCD;
+	Sat,  7 Feb 2026 14:56:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 15F3680009;
+	Sat,  7 Feb 2026 14:56:14 +0000 (UTC)
+Date: Sat, 7 Feb 2026 09:56:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Clean up use of trace_create_maxlat_file()
-Message-ID: <20260206230410.4ed96e9f@robin>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 00/12] tracing: Clean up trace.c and move some code into
+ other files
+Message-ID: <20260207095612.6a1b2452@robin>
+In-Reply-To: <20260206193741.767171392@kernel.org>
+References: <20260206193741.767171392@kernel.org>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,87 +39,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 62E2820028
-X-Stat-Signature: qkhtkwqf9fsczo9npi5rafrwjxf799s4
+X-Rspamd-Queue-Id: 15F3680009
+X-Stat-Signature: 7pehzm5qsz4ek5h11umdz7xiygk8bmg8
+X-Rspamd-Server: rspamout08
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19b3U7bj8SAg4Eq+Dqa57EDAVyXP15wboo=
-X-HE-Tag: 1770437052-734699
-X-HE-Meta: U2FsdGVkX19cicQd/ZFCAvtcm2YBRnbEYowheJ590kgpuPmx5JPCPZUKVBBNKhGjTqh7UI335SJASRElpYRwRLw7WBjLbMPWI0Sax1Hdqlr1YD8PZ5y7yWPvss8ba3dswrSfX2q2DbHOYXdlBvWH1Cq9nLXGkCS1rSKFl7hzBvoIf8eDuNvTDI7kQvj0SkDKghk5AgRpf1Sf8BWyPG+Ko42Xb1p0nR/rBOcVYLz6ewEw/bi62KIua+0y8MZc40hdOFI8PAbs4PF9Fva8yGvSNiwsEqpyNQlyN5F+nCQxM2yB8DC+aAeaGpGQvyIJ1TeSK2lQyMgXYcStYuYh3udO8LDi8p66UgkLDJQ9SE8dJCGCjX2iUdyZnKXUnTzZXjNMrOHvrHbQHflQoCxeussuRvdA4GFoa434Z5YwdpCm6fW8J/RUfm8DoQPbRSWMGcJFAv60G8NAkqlu2wXi43pUYw==
+X-Session-ID: U2FsdGVkX1/CFK29JvnKGCdXS/ai3lUScY4m+6Letww=
+X-HE-Tag: 1770476174-290528
+X-HE-Meta: U2FsdGVkX19jXAxzRGbKlM9i52D0CHsGccLWlyX+AYN6tDaJM+w/i62iKFWk1fYcCpKh4KFBvG1DLCqjre+jknyU2YcEuwSzcGnRhRRU8RtPuuZ2ysgU90TdWQ6VBs0KkUPct5l2SFuSsXWlcxHo+hS7ppVtBpQJo1UKPnOmTBNhSGKnEw0o+53OLiX/09n46ECFvcZY4d+tvdDFYOpHjCuhX84uXurHKR6LaiVx14hheBS14W+QTBB7/HufMkox22ZQOxZQBFmg5VOFGHtKT4Pgng1AAzVvJVdh1A/1jwVohCiUqpNBVXVcPhodrR8XM4JM6kXLYUt4LOmL+6SJQTt7LUJa772X
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 06 Feb 2026 14:37:41 -0500
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-In trace.c, the function trace_create_maxlat_file() is defined behind the
- #ifdef CONFIG_TRACER_MAX_TRACE block. The #else part defines it as:
+> I have done basic testing with this code, but it hasn't gone through
+> my full test suite. I'll start that now. Those tests test various config
+> options which may catch something I missed.
 
- #define trace_create_maxlat_file(tr, d_tracer)				\
-	trace_create_file("tracing_max_latency", TRACE_MODE_WRITE,	\
-			  d_tracer, tr, &tracing_max_lat_fops)
+After running it through my main tests it did find several issues with
+the last patch. I do want most of this to get into the next merge
+window, so I'm going to drop the last patch and see if the rest have no
+issues. This is just a clean up and moving code around. It shouldn't be
+too risky. The last patch required getting all the functions from being
+static to global and with the right configs, so that's a bit too
+complex for this late in the game.
 
-But the one place that it it used has:
+-- Steve
 
- #ifdef CONFIG_TRACER_MAX_TRACE
-	trace_create_maxlat_file(tr, d_tracer);
- #endif
-
-Which is pointless.
-
-Define trace_create_maxlat_file() when CONFIG_TRACER_MAX_TRACE is not
-defined as:
-
- static inline void trace_create_maxlat_file(struct trace_array *tr,
-				     struct dentry *d_tracer) { }
-
-And remove the #ifdef's from the code.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://patch.msgid.link/20260206121242.6cb1934d@gandalf.local.home
-
-- Fix stub function missing from !CONFIG_TRACER_MAX_TRACE
-
- kernel/trace/trace.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6815df23e5a3..b59c237f463c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1969,11 +1969,8 @@ void latency_fsnotify(struct trace_array *tr)
- }
- 
- #else /* !LATENCY_FS_NOTIFY */
--
--#define trace_create_maxlat_file(tr, d_tracer)				\
--	trace_create_file("tracing_max_latency", TRACE_MODE_WRITE,	\
--			  d_tracer, tr, &tracing_max_lat_fops)
--
-+static inline void trace_create_maxlat_file(struct trace_array *tr,
-+					    struct dentry *d_tracer) { }
- #endif
- 
- /*
-@@ -2109,7 +2106,9 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
- 	__update_max_tr(tr, tsk, cpu);
- 	arch_spin_unlock(&tr->max_lock);
- }
--
-+#else
-+static inline void trace_create_maxlat_file(struct trace_array *tr,
-+					    struct dentry *d_tracer) { }
- #endif /* CONFIG_TRACER_MAX_TRACE */
- 
- struct pipe_wait {
-@@ -10684,9 +10683,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 
- 	create_trace_options_dir(tr);
- 
--#ifdef CONFIG_TRACER_MAX_TRACE
- 	trace_create_maxlat_file(tr, d_tracer);
--#endif
- 
- 	if (ftrace_create_function_files(tr, d_tracer))
- 		MEM_FAIL(1, "Could not allocate function filter files");
--- 
-2.51.0
+> 
+> 
+> Steven Rostedt (12):
+>       tracing: Make tracing_disabled global for tracing system
+>       tracing: Make tracing_selftest_running global to the tracing subsystem
+>       tracing: Move __trace_buffer_{un}lock_*() functions to trace.h
+>       tracing: Move ftrace_trace_stack() out of trace.c and into trace.h
+>       tracing: Make printk_trace global for tracing system
+>       tracing: Make tracing_update_buffers() take NULL for global_trace
+>       tracing: Have trace_printk functions use flags instead of using global_trace
+>       tracing: Use system_state in trace_printk_init_buffers()
+>       tracing: Move trace_printk functions out of trace.c and into trace_printk.c
+>       tracing: Move pid filtering into trace_pid.c
+>       tracing: Move tracing_set_filter_buffering() into trace_events_hist.c
+>       tracing: Move snapshot code out of trace.c and into trace_snapshot.c
 
