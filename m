@@ -1,193 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8EA18FC97;
-	Sat,  7 Feb 2026 01:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA8E14A8B;
+	Sat,  7 Feb 2026 04:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770426987; cv=none; b=GJI2Zi/dHJ+tyEF4X4D/nhl80H+nSj2ZYsWqi2pM4QyykHsWeo05f5RZNdJzlItWlhLk3YL/NYsGgyg3ff+zl59+7q2IVQFypdE2wCGoQojdk3HnVkKC+TEsZbsJLep9zBv+Fzeq7qfh12v9xKDU1u7jzFTtxRFgyZDk1JsDEv8=
+	t=1770437061; cv=none; b=Kb/0KsLdX4069Rc6WHyDcyonbCxeZHQstX2TPWHYMU4NTqa6PkIYKNQFQQ4kWq7Gc05w/ddbn/IvpKDMPmvjXlIk3D+/Kh3ZFhkAzp2JZpBTocjosMh0qdksFNmIE0+z2IyM7UF0IOuvsuiv3HdklrRgqnh7rTGMQQGwQrg5Gow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770426987; c=relaxed/simple;
-	bh=2DPpUKfUaFkU+JgLYcp/JGkcpGTHiGmPy8sIqy12fFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjGXwk/X/n7jQzk9oZyR9ky4mvTa0RYJ/2QjFsO7c7EHt3Zqdm7KxRcj60UscfsUF0oulJ1zVy0kFanaE5JtXP3SHvPhwSrKCFERACU7VH5rwEKR8QIQXOR0Iad6aDkU4KofhPp+Xfkgt+QZkJDDE6x7GNPpPykbo1+Cee6CAwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKNrslKd; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKNrslKd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770426987; x=1801962987;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2DPpUKfUaFkU+JgLYcp/JGkcpGTHiGmPy8sIqy12fFw=;
-  b=mKNrslKd93V2QBKA/AdcYRDvsiDFSBYH54/zlke2aN2weWUFFeya2E9e
-   ZiHapwKrFz+NOJCgo7rF/1gKc28I+4i/IUEs0lRneprDw70GyNilhvgA8
-   U09Hriteei+oPkr45ypplI9QHejsYdpxRKTc/xWj/6OVlJ54QehuEDCdK
-   rUPPXAz//XFtibKdbzfw43AyMySk9jk0D+EMtcfRtjm3PR/bD5RY/lUTO
-   Ce7DzqV98PYmv4atdej0VVyq14qHW+YeqjUYlhb0buMv96K/Q30gTmizL
-   biqnlUezCYdGqBVg9T8lG0cF0ZddM5fWOTVDZd91gp3RbJCKtU3F99fZ9
-   Q==;
-X-CSE-ConnectionGUID: w4Pejc6ASs2qFHnyelbdVQ==
-X-CSE-MsgGUID: fSwG0PewTzO7kChSx770Rg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="75488189"
-X-IronPort-AV: E=Sophos;i="6.21,277,1763452800"; 
-   d="scan'208";a="75488189"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 17:16:26 -0800
-X-CSE-ConnectionGUID: 4qbCfSMPQQOoZJUPoraCgg==
-X-CSE-MsgGUID: dqjkrlzkSiSgQ37rq8lG3Q==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 06 Feb 2026 17:16:24 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1voWvu-00000000lJE-1uRN;
-	Sat, 07 Feb 2026 01:16:22 +0000
-Date: Sat, 7 Feb 2026 09:15:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Clean up use of trace_create_maxlat_file()
-Message-ID: <202602070942.sq5fv24P-lkp@intel.com>
-References: <20260206121242.6cb1934d@gandalf.local.home>
+	s=arc-20240116; t=1770437061; c=relaxed/simple;
+	bh=c/rBNCzJkfNFIGfWuWZ8dEeSaFONcPzxPQcb2+HrKo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AhH/uYLfmwmnSWuT3Py9CYrAMkqqiKtmNBnQX7IOLR2jfBXPoi9FBCRf2nrTMvdn0JcNvrg5JVx/Ob1C6C50QY0ZUnRklvEPdebmE8HEGR4ZgCUB28L56gdAtYAFPjpqnzX+CDw7Y9TP9iaI2gzD+NfkLkoKlQE7pggzPx9KQ5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id F3E0058A1F;
+	Sat,  7 Feb 2026 04:04:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 62E2820028;
+	Sat,  7 Feb 2026 04:04:12 +0000 (UTC)
+Date: Fri, 6 Feb 2026 23:04:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracing: Clean up use of trace_create_maxlat_file()
+Message-ID: <20260206230410.4ed96e9f@robin>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260206121242.6cb1934d@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 62E2820028
+X-Stat-Signature: qkhtkwqf9fsczo9npi5rafrwjxf799s4
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19b3U7bj8SAg4Eq+Dqa57EDAVyXP15wboo=
+X-HE-Tag: 1770437052-734699
+X-HE-Meta: U2FsdGVkX19cicQd/ZFCAvtcm2YBRnbEYowheJ590kgpuPmx5JPCPZUKVBBNKhGjTqh7UI335SJASRElpYRwRLw7WBjLbMPWI0Sax1Hdqlr1YD8PZ5y7yWPvss8ba3dswrSfX2q2DbHOYXdlBvWH1Cq9nLXGkCS1rSKFl7hzBvoIf8eDuNvTDI7kQvj0SkDKghk5AgRpf1Sf8BWyPG+Ko42Xb1p0nR/rBOcVYLz6ewEw/bi62KIua+0y8MZc40hdOFI8PAbs4PF9Fva8yGvSNiwsEqpyNQlyN5F+nCQxM2yB8DC+aAeaGpGQvyIJ1TeSK2lQyMgXYcStYuYh3udO8LDi8p66UgkLDJQ9SE8dJCGCjX2iUdyZnKXUnTzZXjNMrOHvrHbQHflQoCxeussuRvdA4GFoa434Z5YwdpCm6fW8J/RUfm8DoQPbRSWMGcJFAv60G8NAkqlu2wXi43pUYw==
 
-Hi Steven,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-kernel test robot noticed the following build errors:
+In trace.c, the function trace_create_maxlat_file() is defined behind the
+ #ifdef CONFIG_TRACER_MAX_TRACE block. The #else part defines it as:
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.19-rc8 next-20260205]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ #define trace_create_maxlat_file(tr, d_tracer)				\
+	trace_create_file("tracing_max_latency", TRACE_MODE_WRITE,	\
+			  d_tracer, tr, &tracing_max_lat_fops)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Clean-up-use-of-trace_create_maxlat_file/20260207-011515
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260206121242.6cb1934d%40gandalf.local.home
-patch subject: [PATCH] tracing: Clean up use of trace_create_maxlat_file()
-config: arm-randconfig-001-20260207 (https://download.01.org/0day-ci/archive/20260207/202602070942.sq5fv24P-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260207/202602070942.sq5fv24P-lkp@intel.com/reproduce)
+But the one place that it it used has:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602070942.sq5fv24P-lkp@intel.com/
+ #ifdef CONFIG_TRACER_MAX_TRACE
+	trace_create_maxlat_file(tr, d_tracer);
+ #endif
 
-All errors (new ones prefixed by >>):
+Which is pointless.
 
-   kernel/trace/trace.c: In function 'init_tracer_tracefs':
->> kernel/trace/trace.c:10685:2: error: implicit declaration of function 'trace_create_maxlat_file'; did you mean 'trace_create_eval_file'? [-Werror=implicit-function-declaration]
-   10685 |  trace_create_maxlat_file(tr, d_tracer);
-         |  ^~~~~~~~~~~~~~~~~~~~~~~~
-         |  trace_create_eval_file
-   cc1: some warnings being treated as errors
+Define trace_create_maxlat_file() when CONFIG_TRACER_MAX_TRACE is not
+defined as:
 
+ static inline void trace_create_maxlat_file(struct trace_array *tr,
+				     struct dentry *d_tracer) { }
 
-vim +10685 kernel/trace/trace.c
+And remove the #ifdef's from the code.
 
-277ba04461c274 Steven Rostedt              2012-08-03  10622  
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10623  static void
-8434dc9340cd2e Steven Rostedt (Red Hat     2015-01-20  10624) init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10625  {
-121aaee7b0a826 Steven Rostedt (Red Hat     2013-03-05  10626) 	int cpu;
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10627  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10628) 	trace_create_file("available_tracers", TRACE_MODE_READ, d_tracer,
-607e2ea167e56d Steven Rostedt (Red Hat     2013-11-06  10629) 			tr, &show_traces_fops);
-607e2ea167e56d Steven Rostedt (Red Hat     2013-11-06  10630) 
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10631) 	trace_create_file("current_tracer", TRACE_MODE_WRITE, d_tracer,
-607e2ea167e56d Steven Rostedt (Red Hat     2013-11-06  10632) 			tr, &set_tracer_fops);
-607e2ea167e56d Steven Rostedt (Red Hat     2013-11-06  10633) 
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10634) 	trace_create_file("tracing_cpumask", TRACE_MODE_WRITE, d_tracer,
-ccfe9e42e45123 Alexander Z Lam             2013-08-08  10635  			  tr, &tracing_cpumask_fops);
-ccfe9e42e45123 Alexander Z Lam             2013-08-08  10636  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10637) 	trace_create_file("trace_options", TRACE_MODE_WRITE, d_tracer,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10638  			  tr, &tracing_iter_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10639  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10640) 	trace_create_file("trace", TRACE_MODE_WRITE, d_tracer,
-6484c71cbc1706 Oleg Nesterov               2013-07-23  10641  			  tr, &tracing_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10642  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10643) 	trace_create_file("trace_pipe", TRACE_MODE_READ, d_tracer,
-15544209cb0b53 Oleg Nesterov               2013-07-23  10644  			  tr, &tracing_pipe_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10645  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10646) 	trace_create_file("buffer_size_kb", TRACE_MODE_WRITE, d_tracer,
-0bc392ee46d0fd Oleg Nesterov               2013-07-23  10647  			  tr, &tracing_entries_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10648  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10649) 	trace_create_file("buffer_total_size_kb", TRACE_MODE_READ, d_tracer,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10650  			  tr, &tracing_total_entries_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10651  
-238ae93d699d59 Wang YanQing                2013-05-26  10652  	trace_create_file("free_buffer", 0200, d_tracer,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10653  			  tr, &tracing_free_buffer_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10654  
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10655  	trace_create_file("trace_marker", 0220, d_tracer,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10656  			  tr, &tracing_mark_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10657  
-5790b1fb3d672d Steven Rostedt (Google      2023-10-04  10658) 	tr->trace_marker_file = __find_event_file(tr, "ftrace", "print");
-3dd8095368475a Steven Rostedt (VMware      2018-05-09  10659) 
-fa32e8557b470f Steven Rostedt              2016-07-06  10660  	trace_create_file("trace_marker_raw", 0220, d_tracer,
-fa32e8557b470f Steven Rostedt              2016-07-06  10661  			  tr, &tracing_mark_raw_fops);
-fa32e8557b470f Steven Rostedt              2016-07-06  10662  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10663) 	trace_create_file("trace_clock", TRACE_MODE_WRITE, d_tracer, tr,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10664  			  &trace_clock_fops);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10665  
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10666) 	trace_create_file("tracing_on", TRACE_MODE_WRITE, d_tracer,
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10667  			  tr, &rb_simple_fops);
-ce9bae55972b22 Steven Rostedt (Red Hat     2013-03-05  10668) 
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10669) 	trace_create_file("timestamp_mode", TRACE_MODE_READ, d_tracer, tr,
-2c1ea60b195da6 Tom Zanussi                 2018-01-15  10670  			  &trace_time_stamp_mode_fops);
-2c1ea60b195da6 Tom Zanussi                 2018-01-15  10671  
-a7b1d74e872a42 Steven Rostedt (VMware      2018-11-29  10672) 	tr->buffer_percent = 50;
-03329f99397810 Steven Rostedt (VMware      2018-11-29  10673) 
-4f94559f40ad06 Ondrej Mosnacek             2023-05-03  10674  	trace_create_file("buffer_percent", TRACE_MODE_WRITE, d_tracer,
-03329f99397810 Steven Rostedt (VMware      2018-11-29  10675) 			tr, &buffer_percent_fops);
-03329f99397810 Steven Rostedt (VMware      2018-11-29  10676) 
-2f84b39f484766 Steven Rostedt (Google      2023-12-19  10677) 	trace_create_file("buffer_subbuf_size_kb", TRACE_MODE_WRITE, d_tracer,
-2f84b39f484766 Steven Rostedt (Google      2023-12-19  10678) 			  tr, &buffer_subbuf_size_fops);
-2808e31ec12e5f Tzvetomir Stoyanov (VMware  2023-12-19  10679) 
-299ea67e6a2b3d Steven Rostedt              2025-10-28  10680  	trace_create_file("syscall_user_buf_size", TRACE_MODE_WRITE, d_tracer,
-299ea67e6a2b3d Steven Rostedt              2025-10-28  10681  			 tr, &tracing_syscall_buf_fops);
-299ea67e6a2b3d Steven Rostedt              2025-10-28  10682  
-16270145ce6b90 Steven Rostedt (Red Hat     2015-09-30  10683) 	create_trace_options_dir(tr);
-16270145ce6b90 Steven Rostedt (Red Hat     2015-09-30  10684) 
-91edde2e6ae1dd Viktor Rosendahl (BMW       2019-10-09 @10685) 	trace_create_maxlat_file(tr, d_tracer);
-6d9b3fa5e7f663 Steven Rostedt (Red Hat     2014-01-14  10686) 
-591dffdade9f07 Steven Rostedt (Red Hat     2014-01-10  10687) 	if (ftrace_create_function_files(tr, d_tracer))
-24589e3a20876d Steven Rostedt (VMware      2020-01-25  10688) 		MEM_FAIL(1, "Could not allocate function filter files");
-591dffdade9f07 Steven Rostedt (Red Hat     2014-01-10  10689) 
-7a1d1e4b9639ff Steven Rostedt (Google      2024-06-12  10690) 	if (tr->range_addr_start) {
-7a1d1e4b9639ff Steven Rostedt (Google      2024-06-12  10691) 		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
-7a1d1e4b9639ff Steven Rostedt (Google      2024-06-12  10692) 				  tr, &last_boot_fops);
-ce9bae55972b22 Steven Rostedt (Red Hat     2013-03-05  10693) #ifdef CONFIG_TRACER_SNAPSHOT
-7a1d1e4b9639ff Steven Rostedt (Google      2024-06-12  10694) 	} else {
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10695) 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
-6484c71cbc1706 Oleg Nesterov               2013-07-23  10696  				  tr, &snapshot_fops);
-ce9bae55972b22 Steven Rostedt (Red Hat     2013-03-05  10697) #endif
-6d02eefecc5e38 Steven Rostedt              2024-07-19  10698  	}
-121aaee7b0a826 Steven Rostedt (Red Hat     2013-03-05  10699) 
-21ccc9cd721162 Steven Rostedt (VMware      2021-08-18  10700) 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
-8a062902be725f Tom Zanussi                 2019-03-31  10701  			  tr, &tracing_err_log_fops);
-8a062902be725f Tom Zanussi                 2019-03-31  10702  
-121aaee7b0a826 Steven Rostedt (Red Hat     2013-03-05  10703) 	for_each_tracing_cpu(cpu)
-8434dc9340cd2e Steven Rostedt (Red Hat     2015-01-20  10704) 		tracing_init_tracefs_percpu(tr, cpu);
-121aaee7b0a826 Steven Rostedt (Red Hat     2013-03-05  10705) 
-345ddcc882d889 Steven Rostedt (Red Hat     2016-04-22  10706) 	ftrace_init_tracefs(tr, d_tracer);
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10707  }
-2b6080f28c7cc3 Steven Rostedt              2012-05-11  10708  
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://patch.msgid.link/20260206121242.6cb1934d@gandalf.local.home
 
+- Fix stub function missing from !CONFIG_TRACER_MAX_TRACE
+
+ kernel/trace/trace.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6815df23e5a3..b59c237f463c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1969,11 +1969,8 @@ void latency_fsnotify(struct trace_array *tr)
+ }
+ 
+ #else /* !LATENCY_FS_NOTIFY */
+-
+-#define trace_create_maxlat_file(tr, d_tracer)				\
+-	trace_create_file("tracing_max_latency", TRACE_MODE_WRITE,	\
+-			  d_tracer, tr, &tracing_max_lat_fops)
+-
++static inline void trace_create_maxlat_file(struct trace_array *tr,
++					    struct dentry *d_tracer) { }
+ #endif
+ 
+ /*
+@@ -2109,7 +2106,9 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 	__update_max_tr(tr, tsk, cpu);
+ 	arch_spin_unlock(&tr->max_lock);
+ }
+-
++#else
++static inline void trace_create_maxlat_file(struct trace_array *tr,
++					    struct dentry *d_tracer) { }
+ #endif /* CONFIG_TRACER_MAX_TRACE */
+ 
+ struct pipe_wait {
+@@ -10684,9 +10683,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 
+ 	create_trace_options_dir(tr);
+ 
+-#ifdef CONFIG_TRACER_MAX_TRACE
+ 	trace_create_maxlat_file(tr, d_tracer);
+-#endif
+ 
+ 	if (ftrace_create_function_files(tr, d_tracer))
+ 		MEM_FAIL(1, "Could not allocate function filter files");
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.51.0
+
