@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F096D2C11D1;
-	Sun,  8 Feb 2026 03:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D64B2C3259;
+	Sun,  8 Feb 2026 03:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770521047; cv=none; b=uYXq89k5cYFu5uRLDaO5ax+ExhiJAtK1Yn9ZbtnyROFOUYRGn8IvoD7BDoMnYSgJvG9wHNnFQvw6jpFeOx2JYrP8bNzm2gHU8DB4V10syHYcDt3GSWmhKBpM08bsXCuth3YidH7Vsito1i6B/J476/GcmTmua3bNb6ZYYUfgdxc=
+	t=1770521047; cv=none; b=UoC0PY9MxW2YA/iFvIwvG/Uyan2i+bDZROa4p76FkXlfJX/X6m0pdCfl50oydCzWlleTiitMX8Ri9ghDccxEucNmMpLt5NY1y4q2IONNjJwwDtlFnPVdUhO5l+Tcn+K8nrmWBZnuvoLQmp1IOflce7SSbo6cpXFgx5C57ZYaQt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770521047; c=relaxed/simple;
-	bh=ofZYtIuKZZzoDoktKHjlNYL9T3iTkdESp5qanyFNzIM=;
+	bh=3Xwg0vZ1urflHR8mszNbLj+Cni7vlXl8An6HdvjgI7c=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=d6Nd0fOIF9pi3CnK9IE1af2cN0dpLtzgQWzsXepfbaIOP6AlglyP5lbG8uMItK1ZFF9CO6bWL8NNnik+mEEP6kTCGygv1IDhAEagGHHC71voVdbhi6c3F32f7omfbg4pR6wBlan/I+6AdnXkwxvGY6zIe1qZZdvOPfjN+I2gPvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aE57g/Uv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=cuB/IY0GNX1ktxwxet5/YXsE9ZL7Kr6CjryHHkkCZbTMdg4q6nJXCnPtWLoYoMoSgPNWIy7dQOPVuSp3WivQHFxpEe8IuX1sneE7qNrIfJsCDrHBp9QYVD835anJf2aoZw30YYoCom0x/7NE43h4ZDJWFwiFk0/SUU0JszA/pIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzGwptbS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aE57g/Uv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF069C4CEF7;
-	Sun,  8 Feb 2026 03:24:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzGwptbS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF95C2BCB5;
+	Sun,  8 Feb 2026 03:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770521046;
-	bh=ofZYtIuKZZzoDoktKHjlNYL9T3iTkdESp5qanyFNzIM=;
+	s=k20201202; t=1770521047;
+	bh=3Xwg0vZ1urflHR8mszNbLj+Cni7vlXl8An6HdvjgI7c=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=aE57g/UvywN9NEb3lOuiaZAKvI5p/ut5r7rzvcNLabTLlKagL4t2QoNIynVKNCn+T
-	 uXBIgUFnU9HHb1Y6dvnus393za5kupzoTLN5KUlNxcCP/nz4v3/h358NpgCzUk/OyQ
-	 BMtOi5UHCDueCji9eDu//DBAjpCNDKLHFFGUWED4HWdUX6dmp3/EbZyFqlCSaSGBdq
-	 LZoF8RiPgydV27TbnOtuJODOCGQqzU5VYyq1PIjeCaZp9Ph5N2pmrm6IgtW4HD5DmI
-	 p9pDpHZTFDvTA3IKL1/q1Xf+vkpyquDGTE6dlArKkY9YQzZcRsxBH4jHTZOQyxz9Sw
-	 MvGoR+gOFaUrQ==
+	b=lzGwptbS7WXnnGwBMxSsDz3Ih++eoFbR+Dia6q2KmRUeapqO8FvzNEq5fF0n/rpSp
+	 7baq3bYnVb1EBBuXuoN8CHLwtMas7ikHPDDSl8RDf2aKpBOrDmOV10OCQl99C7g1Nq
+	 Y7tbW8Qo4vXUaeEebF1pjT21+bKDdcoyfC4v+hHTTBN9pab3JQUJ/xIXDWXjwvwkZU
+	 lRX9BLoyjic6gXRjGUrB9flz3Rit5pTPV2t3XvB0ed89BxXk0blRZIG682wDeTVVCr
+	 9SOAgs4+rY6GGheSkA/AABqBD4e0qekTIrdKSkBN+1UZ36NVy6knFGnAesvQrNj0TF
+	 WiTefVmnmjTfA==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1vovPm-0000000AOdC-1Feg;
+	id 1vovPm-0000000AOdg-1yJe;
 	Sat, 07 Feb 2026 22:24:50 -0500
-Message-ID: <20260208032450.144525891@kernel.org>
+Message-ID: <20260208032450.318864210@kernel.org>
 User-Agent: quilt/0.68
-Date: Sat, 07 Feb 2026 22:24:22 -0500
+Date: Sat, 07 Feb 2026 22:24:23 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 05/10] tracing: Make printk_trace global for tracing system
+Subject: [PATCH v2 06/10] tracing: Make tracing_update_buffers() take NULL for global_trace
 References: <20260208032417.262341179@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,43 +52,44 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The printk_trace is used to determine which trace_array trace_printk()
-writes to. By making it a global variable among the tracing subsystem it
-will allow the trace_printk functions to be moved out of trace.c and still
-have direct access to that variable.
+The trace.c file has become a dumping ground for all tracing code and has
+become quite large. In order to move the trace_printk functions out of it
+these functions can not access global_trace directly, as that is something
+that needs to stay static in trace.c.
+
+Have tracing_update_buffers() take NULL for its trace_array to denote it
+should work on the global_trace top level trace_array allows that function
+to be used outside of trace.c and still update the global_trace
+trace_array.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 2 +-
- kernel/trace/trace.h | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a515b5241391..4a73822e2603 100644
+index 4a73822e2603..601b6f622391 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -534,7 +534,7 @@ static struct trace_array global_trace = {
- 	.trace_flags = TRACE_DEFAULT_FLAGS,
- };
+@@ -3234,7 +3234,7 @@ void trace_printk_init_buffers(void)
+ 	pr_warn("**********************************************************\n");
  
--static struct trace_array *printk_trace = &global_trace;
-+struct trace_array *printk_trace = &global_trace;
+ 	/* Expand the buffers to set size */
+-	if (tracing_update_buffers(&global_trace) < 0)
++	if (tracing_update_buffers(NULL) < 0)
+ 		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
+ 	else
+ 		buffers_allocated = 1;
+@@ -6186,6 +6186,9 @@ int tracing_update_buffers(struct trace_array *tr)
+ {
+ 	int ret = 0;
  
- /* List of trace_arrays interested in the top level trace_marker */
- static LIST_HEAD(marker_copies);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 605ee23f3262..921e4daa2825 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -482,6 +482,8 @@ extern bool trace_clock_in_ns(struct trace_array *tr);
- 
- extern unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr);
- 
-+extern struct trace_array *printk_trace;
++	if (!tr)
++		tr = &global_trace;
 +
- /*
-  * The global tracer (top) should be the first trace array added,
-  * but we check the flag anyway.
+ 	guard(mutex)(&trace_types_lock);
+ 
+ 	update_last_data(tr);
 -- 
 2.51.0
 
