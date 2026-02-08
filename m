@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88252D5957;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E175B2D640D;
 	Sun,  8 Feb 2026 03:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770521047; cv=none; b=qEAwGEOv7Ljc5ixHFFK98TtLe7H5e3gwpp/7CzmaeWPcAcfKk0zwTxs8xnpA+wq1hGoUWZzJB/Wq0ubdvjlj7bfqvaWjA7K+P/nPcD9EBli3kQv1G94VW7Hx+xwq2vXQz69qU1mGhj5Y49wmU4+l/aKJN1mUJ+RZ+JE/PQtXaMo=
+	t=1770521048; cv=none; b=SkgfdPr5dK/vFWv6Jn+nq15OQBOsXi5m3PJF55H+GJrBvYpkok6iWsQjiq3RuYCsn2Mpl+lMpuvw3mN/cURBImB/zA1zu0enmMcgXckiR2/6WSCcb6BDM2iwNVFfCn3zgNr8iPL3aWehi/3phnCCDuZOb6g1VDcsZaS2u/nlhDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770521047; c=relaxed/simple;
-	bh=XDF2El33lw0RRIstOCa+Rte3svvG1kIhOVxkHOJNvSU=;
+	s=arc-20240116; t=1770521048; c=relaxed/simple;
+	bh=ZoivyDaiiE9fgmWWluM+fGCmlmzO4kaZmV3OI1IQj5c=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IDurEDTOouGNqMZTPGBukpK0Q1vjbIkSIoS00rP4uh4SdAAK21OGKiR8fSAjgk3SGB5i7yuLz8AsY7XDQKatNBSOc8N7/DkCvp8MfzFWWFHwTp7OnUW7Bk5SkG0HrMYrO5xyEmTM4enxZYZD5nYHXqh7znRMSQqBGeyZUEpbsWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1y1UKxf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=a49VR9E31+57fGe8HaqTWGqzk9sNriLjVTSeDSJU5PhDq1V/RiKdyYucD1Sp0HfYmZcvfySQ4eJJX/eYBTlYBp43DfSrEanhG70uSLnkTYDOv8DZtpVnkYndsIgbUbGKYaspb5dqJ4nr4JSQ0cXCpqLg9x7YCnb1QOR3JTQb7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrgROwLL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1y1UKxf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B49C116C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrgROwLL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EBDC4AF09;
 	Sun,  8 Feb 2026 03:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770521047;
-	bh=XDF2El33lw0RRIstOCa+Rte3svvG1kIhOVxkHOJNvSU=;
+	bh=ZoivyDaiiE9fgmWWluM+fGCmlmzO4kaZmV3OI1IQj5c=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=j1y1UKxfPAoNbs0zP1dctlBC6C7tVvkrwMx8ga9FM5cgNoRqQkVcle0BWrBCJkjf8
-	 5wqE6pJ2pa4xcHRAm9svpkyoISxXcOCAYuT+tGgCYu2QjC0H5Ztz9e7zf1DCZwT8XN
-	 n3H3GCivuHAHykkX4g/20HC0O/MXHuTcZJOlcpD3gIiaCts3tBRWhTpNuWrqeOcnZX
-	 GnTOjtCtpRy3CY8BNiM40Cz3aBQP2aWAL9oWeOkVdDq5HucED5uxExLjDFWZVDh4ip
-	 n/ZX0/hGW/rKLWUVb/aXZbMbT7U/KyDdM+2zt0o8LQFwTfSvIbPl6JTzDibhhPotRh
-	 ahcU2V32mYwqQ==
+	b=BrgROwLLQmUSlbk7ODBQ26qxpWXnFC1pC8e72ZNmXJZQeXdQSFB8DqYJ3Sx2XDcPN
+	 H0b4U7W4MAaffW8MDVxmbRpjWJ7GcDwfoDubWJME0SojBXnOeDJAG8KgqXRJA8AiNL
+	 HyeVjO3c2bu+MbyiNZpgEPhqF7DfYPxVtk+4CPK5a0ToWcRDDZ18uV8nD7fE8NHbUY
+	 n5eX5ty0fhhYYCaLzF84F3QjU1dnXgA+Fw9/AhhKUuBBFG523Fqx8OJHwGIhoh9z0N
+	 aQLnC8YvB9f4HXq+zfZ/TrgF8xTUdqkvdF6j24Ma0BIdAY9+mKpO8pVq2Mt0T7AB/i
+	 0S8UbWKfTvm/w==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1vovPm-0000000AOfB-46Ns;
-	Sat, 07 Feb 2026 22:24:50 -0500
-Message-ID: <20260208032450.828744197@kernel.org>
+	id 1vovPn-0000000AOfh-0Yy6;
+	Sat, 07 Feb 2026 22:24:51 -0500
+Message-ID: <20260208032450.998330662@kernel.org>
 User-Agent: quilt/0.68
-Date: Sat, 07 Feb 2026 22:24:26 -0500
+Date: Sat, 07 Feb 2026 22:24:27 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,8 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 09/10] tracing: Move trace_printk functions out of trace.c and into
- trace_printk.c
+Subject: [PATCH v2 10/10] tracing: Move pid filtering into trace_pid.c
 References: <20260208032417.262341179@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,929 +52,536 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The file trace.c has become a catchall for most things tracing. Start
-making it smaller by breaking out various aspects into their own files.
-
-Move the functions associated to the trace_printk operations out of trace.c and
-into trace_printk.c.
+The trace.c file was a dumping ground for most tracing code. Start
+organizing it better by moving various functions out into their own files.
+Move the PID filtering functions from trace.c into its own trace_pid.c
+file.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c        | 431 ------------------------------------
- kernel/trace/trace.h        |   1 +
- kernel/trace/trace_printk.c | 431 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 432 insertions(+), 431 deletions(-)
+ kernel/trace/Makefile    |   1 +
+ kernel/trace/trace.c     | 242 --------------------------------------
+ kernel/trace/trace_pid.c | 246 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 247 insertions(+), 242 deletions(-)
+ create mode 100644 kernel/trace/trace_pid.c
 
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index fc5dcc888e13..04096c21d06b 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -68,6 +68,7 @@ obj-$(CONFIG_TRACING) += trace_output.o
+ obj-$(CONFIG_TRACING) += trace_seq.o
+ obj-$(CONFIG_TRACING) += trace_stat.o
+ obj-$(CONFIG_TRACING) += trace_printk.o
++obj-$(CONFIG_TRACING) += trace_pid.o
+ obj-$(CONFIG_TRACING) += 	pid_list.o
+ obj-$(CONFIG_TRACING_MAP) += tracing_map.o
+ obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4066c33674e7..5812b830c1fa 100644
+index 5812b830c1fa..551a452befa0 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -539,17 +539,6 @@ struct trace_array *printk_trace = &global_trace;
- /* List of trace_arrays interested in the top level trace_marker */
- static LIST_HEAD(marker_copies);
+@@ -637,248 +637,6 @@ int tracing_check_open_get_tr(struct trace_array *tr)
+ 	return 0;
+ }
  
--static __always_inline bool printk_binsafe(struct trace_array *tr)
+-/**
+- * trace_find_filtered_pid - check if a pid exists in a filtered_pid list
+- * @filtered_pids: The list of pids to check
+- * @search_pid: The PID to find in @filtered_pids
+- *
+- * Returns true if @search_pid is found in @filtered_pids, and false otherwise.
+- */
+-bool
+-trace_find_filtered_pid(struct trace_pid_list *filtered_pids, pid_t search_pid)
+-{
+-	return trace_pid_list_is_set(filtered_pids, search_pid);
+-}
+-
+-/**
+- * trace_ignore_this_task - should a task be ignored for tracing
+- * @filtered_pids: The list of pids to check
+- * @filtered_no_pids: The list of pids not to be traced
+- * @task: The task that should be ignored if not filtered
+- *
+- * Checks if @task should be traced or not from @filtered_pids.
+- * Returns true if @task should *NOT* be traced.
+- * Returns false if @task should be traced.
+- */
+-bool
+-trace_ignore_this_task(struct trace_pid_list *filtered_pids,
+-		       struct trace_pid_list *filtered_no_pids,
+-		       struct task_struct *task)
 -{
 -	/*
--	 * The binary format of traceprintk can cause a crash if used
--	 * by a buffer from another boot. Force the use of the
--	 * non binary version of trace_printk if the trace_printk
--	 * buffer is a boot mapped ring buffer.
+-	 * If filtered_no_pids is not empty, and the task's pid is listed
+-	 * in filtered_no_pids, then return true.
+-	 * Otherwise, if filtered_pids is empty, that means we can
+-	 * trace all tasks. If it has content, then only trace pids
+-	 * within filtered_pids.
 -	 */
--	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
+-
+-	return (filtered_pids &&
+-		!trace_find_filtered_pid(filtered_pids, task->pid)) ||
+-		(filtered_no_pids &&
+-		 trace_find_filtered_pid(filtered_no_pids, task->pid));
 -}
--
- static void update_printk_trace(struct trace_array *tr)
- {
- 	if (printk_trace == tr)
-@@ -1059,108 +1048,6 @@ void tracing_on(void)
- }
- EXPORT_SYMBOL_GPL(tracing_on);
- 
--int __trace_array_puts(struct trace_array *tr, unsigned long ip,
--		       const char *str, int size)
--{
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct print_entry *entry;
--	unsigned int trace_ctx;
--	int alloc;
--
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	if (unlikely(tracing_selftest_running &&
--		     (tr->flags & TRACE_ARRAY_FL_GLOBAL)))
--		return 0;
--
--	if (unlikely(tracing_disabled))
--		return 0;
--
--	alloc = sizeof(*entry) + size + 2; /* possible \n added */
--
--	trace_ctx = tracing_gen_ctx();
--	buffer = tr->array_buffer.buffer;
--	guard(ring_buffer_nest)(buffer);
--	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
--					    trace_ctx);
--	if (!event)
--		return 0;
--
--	entry = ring_buffer_event_data(event);
--	entry->ip = ip;
--
--	memcpy(&entry->buf, str, size);
--
--	/* Add a newline if necessary */
--	if (entry->buf[size - 1] != '\n') {
--		entry->buf[size] = '\n';
--		entry->buf[size + 1] = '\0';
--	} else
--		entry->buf[size] = '\0';
--
--	__buffer_unlock_commit(buffer, event);
--	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
--	return size;
--}
--EXPORT_SYMBOL_GPL(__trace_array_puts);
 -
 -/**
-- * __trace_puts - write a constant string into the trace buffer.
-- * @ip:	   The address of the caller
-- * @str:   The constant string to write
-- * @size:  The size of the string.
+- * trace_filter_add_remove_task - Add or remove a task from a pid_list
+- * @pid_list: The list to modify
+- * @self: The current task for fork or NULL for exit
+- * @task: The task to add or remove
+- *
+- * If adding a task, if @self is defined, the task is only added if @self
+- * is also included in @pid_list. This happens on fork and tasks should
+- * only be added when the parent is listed. If @self is NULL, then the
+- * @task pid will be removed from the list, which would happen on exit
+- * of a task.
 - */
--int __trace_puts(unsigned long ip, const char *str, int size)
+-void trace_filter_add_remove_task(struct trace_pid_list *pid_list,
+-				  struct task_struct *self,
+-				  struct task_struct *task)
 -{
--	return __trace_array_puts(printk_trace, ip, str, size);
+-	if (!pid_list)
+-		return;
+-
+-	/* For forks, we only add if the forking task is listed */
+-	if (self) {
+-		if (!trace_find_filtered_pid(pid_list, self->pid))
+-			return;
+-	}
+-
+-	/* "self" is set for forks, and NULL for exits */
+-	if (self)
+-		trace_pid_list_set(pid_list, task->pid);
+-	else
+-		trace_pid_list_clear(pid_list, task->pid);
 -}
--EXPORT_SYMBOL_GPL(__trace_puts);
 -
 -/**
-- * __trace_bputs - write the pointer to a constant string into trace buffer
-- * @ip:	   The address of the caller
-- * @str:   The constant string to write to the buffer to
+- * trace_pid_next - Used for seq_file to get to the next pid of a pid_list
+- * @pid_list: The pid list to show
+- * @v: The last pid that was shown (+1 the actual pid to let zero be displayed)
+- * @pos: The position of the file
+- *
+- * This is used by the seq_file "next" operation to iterate the pids
+- * listed in a trace_pid_list structure.
+- *
+- * Returns the pid+1 as we want to display pid of zero, but NULL would
+- * stop the iteration.
 - */
--int __trace_bputs(unsigned long ip, const char *str)
+-void *trace_pid_next(struct trace_pid_list *pid_list, void *v, loff_t *pos)
 -{
--	struct trace_array *tr = READ_ONCE(printk_trace);
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct bputs_entry *entry;
--	unsigned int trace_ctx;
--	int size = sizeof(struct bputs_entry);
+-	long pid = (unsigned long)v;
+-	unsigned int next;
 -
--	if (!printk_binsafe(tr))
--		return __trace_puts(ip, str, strlen(str));
+-	(*pos)++;
 -
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	if (unlikely(tracing_selftest_running || tracing_disabled))
--		return 0;
--
--	trace_ctx = tracing_gen_ctx();
--	buffer = tr->array_buffer.buffer;
--
--	guard(ring_buffer_nest)(buffer);
--	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
--					    trace_ctx);
--	if (!event)
--		return 0;
--
--	entry = ring_buffer_event_data(event);
--	entry->ip			= ip;
--	entry->str			= str;
--
--	__buffer_unlock_commit(buffer, event);
--	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
--
--	return 1;
--}
--EXPORT_SYMBOL_GPL(__trace_bputs);
--
- #ifdef CONFIG_TRACER_SNAPSHOT
- static void tracing_snapshot_instance_cond(struct trace_array *tr,
- 					   void *cond_data)
-@@ -3159,324 +3046,6 @@ void trace_last_func_repeats(struct trace_array *tr,
- 	__buffer_unlock_commit(buffer, event);
- }
- 
--/* created for use with alloc_percpu */
--struct trace_buffer_struct {
--	int nesting;
--	char buffer[4][TRACE_BUF_SIZE];
--};
--
--static struct trace_buffer_struct __percpu *trace_percpu_buffer;
--
--/*
-- * This allows for lockless recording.  If we're nested too deeply, then
-- * this returns NULL.
-- */
--static char *get_trace_buf(void)
--{
--	struct trace_buffer_struct *buffer = this_cpu_ptr(trace_percpu_buffer);
--
--	if (!trace_percpu_buffer || buffer->nesting >= 4)
+-	/* pid already is +1 of the actual previous bit */
+-	if (trace_pid_list_next(pid_list, pid, &next) < 0)
 -		return NULL;
 -
--	buffer->nesting++;
+-	pid = next;
 -
--	/* Interrupts must see nesting incremented before we use the buffer */
--	barrier();
--	return &buffer->buffer[buffer->nesting - 1][0];
+-	/* Return pid + 1 to allow zero to be represented */
+-	return (void *)(pid + 1);
 -}
 -
--static void put_trace_buf(void)
+-/**
+- * trace_pid_start - Used for seq_file to start reading pid lists
+- * @pid_list: The pid list to show
+- * @pos: The position of the file
+- *
+- * This is used by seq_file "start" operation to start the iteration
+- * of listing pids.
+- *
+- * Returns the pid+1 as we want to display pid of zero, but NULL would
+- * stop the iteration.
+- */
+-void *trace_pid_start(struct trace_pid_list *pid_list, loff_t *pos)
 -{
--	/* Don't let the decrement of nesting leak before this */
--	barrier();
--	this_cpu_dec(trace_percpu_buffer->nesting);
+-	unsigned long pid;
+-	unsigned int first;
+-	loff_t l = 0;
+-
+-	if (trace_pid_list_first(pid_list, &first) < 0)
+-		return NULL;
+-
+-	pid = first;
+-
+-	/* Return pid + 1 so that zero can be the exit value */
+-	for (pid++; pid && l < *pos;
+-	     pid = (unsigned long)trace_pid_next(pid_list, (void *)pid, &l))
+-		;
+-	return (void *)pid;
 -}
 -
--static int alloc_percpu_trace_buffer(void)
+-/**
+- * trace_pid_show - show the current pid in seq_file processing
+- * @m: The seq_file structure to write into
+- * @v: A void pointer of the pid (+1) value to display
+- *
+- * Can be directly used by seq_file operations to display the current
+- * pid value.
+- */
+-int trace_pid_show(struct seq_file *m, void *v)
 -{
--	struct trace_buffer_struct __percpu *buffers;
+-	unsigned long pid = (unsigned long)v - 1;
 -
--	if (trace_percpu_buffer)
--		return 0;
--
--	buffers = alloc_percpu(struct trace_buffer_struct);
--	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
--		return -ENOMEM;
--
--	trace_percpu_buffer = buffers;
+-	seq_printf(m, "%lu\n", pid);
 -	return 0;
 -}
 -
--static int buffers_allocated;
+-/* 128 should be much more than enough */
+-#define PID_BUF_SIZE		127
 -
--void trace_printk_init_buffers(void)
+-int trace_pid_write(struct trace_pid_list *filtered_pids,
+-		    struct trace_pid_list **new_pid_list,
+-		    const char __user *ubuf, size_t cnt)
 -{
--	if (buffers_allocated)
--		return;
+-	struct trace_pid_list *pid_list;
+-	struct trace_parser parser;
+-	unsigned long val;
+-	int nr_pids = 0;
+-	ssize_t read = 0;
+-	ssize_t ret;
+-	loff_t pos;
+-	pid_t pid;
 -
--	if (alloc_percpu_trace_buffer())
--		return;
--
--	/* trace_printk() is for debug use only. Don't use it in production. */
--
--	pr_warn("\n");
--	pr_warn("**********************************************************\n");
--	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** trace_printk() being used. Allocating extra memory.  **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** This means that this is a DEBUG kernel and it is     **\n");
--	pr_warn("** unsafe for production use.                           **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("** If you see this message and you are not debugging    **\n");
--	pr_warn("** the kernel, report this immediately to your vendor!  **\n");
--	pr_warn("**                                                      **\n");
--	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
--	pr_warn("**********************************************************\n");
--
--	/* Expand the buffers to set size */
--	if (tracing_update_buffers(NULL) < 0)
--		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
--	else
--		buffers_allocated = 1;
+-	if (trace_parser_get_init(&parser, PID_BUF_SIZE + 1))
+-		return -ENOMEM;
 -
 -	/*
--	 * trace_printk_init_buffers() can be called by modules.
--	 * If that happens, then we need to start cmdline recording
--	 * directly here.
+-	 * Always recreate a new array. The write is an all or nothing
+-	 * operation. Always create a new array when adding new pids by
+-	 * the user. If the operation fails, then the current list is
+-	 * not modified.
 -	 */
--	if (system_state == SYSTEM_RUNNING)
--		tracing_start_cmdline_record();
--}
--EXPORT_SYMBOL_GPL(trace_printk_init_buffers);
--
--void trace_printk_start_comm(void)
--{
--	/* Start tracing comms if trace printk is set */
--	if (!buffers_allocated)
--		return;
--	tracing_start_cmdline_record();
--}
--
--static void trace_printk_start_stop_comm(int enabled)
--{
--	if (!buffers_allocated)
--		return;
--
--	if (enabled)
--		tracing_start_cmdline_record();
--	else
--		tracing_stop_cmdline_record();
--}
--
--/**
-- * trace_vbprintk - write binary msg to tracing buffer
-- * @ip:    The address of the caller
-- * @fmt:   The string format to write to the buffer
-- * @args:  Arguments for @fmt
-- */
--int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
--{
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct trace_array *tr = READ_ONCE(printk_trace);
--	struct bprint_entry *entry;
--	unsigned int trace_ctx;
--	char *tbuffer;
--	int len = 0, size;
--
--	if (!printk_binsafe(tr))
--		return trace_vprintk(ip, fmt, args);
--
--	if (unlikely(tracing_selftest_running || tracing_disabled))
--		return 0;
--
--	/* Don't pollute graph traces with trace_vprintk internals */
--	pause_graph_tracing();
--
--	trace_ctx = tracing_gen_ctx();
--	guard(preempt_notrace)();
--
--	tbuffer = get_trace_buf();
--	if (!tbuffer) {
--		len = 0;
--		goto out_nobuffer;
+-	pid_list = trace_pid_list_alloc();
+-	if (!pid_list) {
+-		trace_parser_put(&parser);
+-		return -ENOMEM;
 -	}
 -
--	len = vbin_printf((u32 *)tbuffer, TRACE_BUF_SIZE/sizeof(int), fmt, args);
+-	if (filtered_pids) {
+-		/* copy the current bits to the new max */
+-		ret = trace_pid_list_first(filtered_pids, &pid);
+-		while (!ret) {
+-			ret = trace_pid_list_set(pid_list, pid);
+-			if (ret < 0)
+-				goto out;
 -
--	if (len > TRACE_BUF_SIZE/sizeof(int) || len < 0)
--		goto out_put;
--
--	size = sizeof(*entry) + sizeof(u32) * len;
--	buffer = tr->array_buffer.buffer;
--	scoped_guard(ring_buffer_nest, buffer) {
--		event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
--						    trace_ctx);
--		if (!event)
--			goto out_put;
--		entry = ring_buffer_event_data(event);
--		entry->ip			= ip;
--		entry->fmt			= fmt;
--
--		memcpy(entry->buf, tbuffer, sizeof(u32) * len);
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
--	}
--out_put:
--	put_trace_buf();
--
--out_nobuffer:
--	unpause_graph_tracing();
--
--	return len;
--}
--EXPORT_SYMBOL_GPL(trace_vbprintk);
--
--static __printf(3, 0)
--int __trace_array_vprintk(struct trace_buffer *buffer,
--			  unsigned long ip, const char *fmt, va_list args)
--{
--	struct ring_buffer_event *event;
--	int len = 0, size;
--	struct print_entry *entry;
--	unsigned int trace_ctx;
--	char *tbuffer;
--
--	if (unlikely(tracing_disabled))
--		return 0;
--
--	/* Don't pollute graph traces with trace_vprintk internals */
--	pause_graph_tracing();
--
--	trace_ctx = tracing_gen_ctx();
--	guard(preempt_notrace)();
--
--
--	tbuffer = get_trace_buf();
--	if (!tbuffer) {
--		len = 0;
--		goto out_nobuffer;
+-			ret = trace_pid_list_next(filtered_pids, pid + 1, &pid);
+-			nr_pids++;
+-		}
 -	}
 -
--	len = vscnprintf(tbuffer, TRACE_BUF_SIZE, fmt, args);
+-	ret = 0;
+-	while (cnt > 0) {
 -
--	size = sizeof(*entry) + len + 1;
--	scoped_guard(ring_buffer_nest, buffer) {
--		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
--						    trace_ctx);
--		if (!event)
--			goto out;
--		entry = ring_buffer_event_data(event);
--		entry->ip = ip;
+-		pos = 0;
 -
--		memcpy(&entry->buf, tbuffer, len + 1);
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
+-		ret = trace_get_user(&parser, ubuf, cnt, &pos);
+-		if (ret < 0)
+-			break;
+-
+-		read += ret;
+-		ubuf += ret;
+-		cnt -= ret;
+-
+-		if (!trace_parser_loaded(&parser))
+-			break;
+-
+-		ret = -EINVAL;
+-		if (kstrtoul(parser.buffer, 0, &val))
+-			break;
+-
+-		pid = (pid_t)val;
+-
+-		if (trace_pid_list_set(pid_list, pid) < 0) {
+-			ret = -1;
+-			break;
+-		}
+-		nr_pids++;
+-
+-		trace_parser_clear(&parser);
+-		ret = 0;
 -	}
--out:
--	put_trace_buf();
+- out:
+-	trace_parser_put(&parser);
 -
--out_nobuffer:
--	unpause_graph_tracing();
+-	if (ret < 0) {
+-		trace_pid_list_free(pid_list);
+-		return ret;
+-	}
 -
--	return len;
+-	if (!nr_pids) {
+-		/* Cleared the list of pids */
+-		trace_pid_list_free(pid_list);
+-		pid_list = NULL;
+-	}
+-
+-	*new_pid_list = pid_list;
+-
+-	return read;
 -}
 -
--int trace_array_vprintk(struct trace_array *tr,
--			unsigned long ip, const char *fmt, va_list args)
--{
--	if (tracing_selftest_running && (tr->flags & TRACE_ARRAY_FL_GLOBAL))
--		return 0;
--
--	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
--}
--
--/**
-- * trace_array_printk - Print a message to a specific instance
-- * @tr: The instance trace_array descriptor
-- * @ip: The instruction pointer that this is called from.
-- * @fmt: The format to print (printf format)
-- *
-- * If a subsystem sets up its own instance, they have the right to
-- * printk strings into their tracing instance buffer using this
-- * function. Note, this function will not write into the top level
-- * buffer (use trace_printk() for that), as writing into the top level
-- * buffer should only have events that can be individually disabled.
-- * trace_printk() is only used for debugging a kernel, and should not
-- * be ever incorporated in normal use.
-- *
-- * trace_array_printk() can be used, as it will not add noise to the
-- * top level tracing buffer.
-- *
-- * Note, trace_array_init_printk() must be called on @tr before this
-- * can be used.
-- */
--int trace_array_printk(struct trace_array *tr,
--		       unsigned long ip, const char *fmt, ...)
--{
--	int ret;
--	va_list ap;
--
--	if (!tr)
--		return -ENOENT;
--
--	/* This is only allowed for created instances */
--	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
--		return 0;
--
--	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	va_start(ap, fmt);
--	ret = trace_array_vprintk(tr, ip, fmt, ap);
--	va_end(ap);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(trace_array_printk);
--
--/**
-- * trace_array_init_printk - Initialize buffers for trace_array_printk()
-- * @tr: The trace array to initialize the buffers for
-- *
-- * As trace_array_printk() only writes into instances, they are OK to
-- * have in the kernel (unlike trace_printk()). This needs to be called
-- * before trace_array_printk() can be used on a trace_array.
-- */
--int trace_array_init_printk(struct trace_array *tr)
--{
--	if (!tr)
--		return -ENOENT;
--
--	/* This is only allowed for created instances */
--	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
--		return -EINVAL;
--
--	return alloc_percpu_trace_buffer();
--}
--EXPORT_SYMBOL_GPL(trace_array_init_printk);
--
--int trace_array_printk_buf(struct trace_buffer *buffer,
--			   unsigned long ip, const char *fmt, ...)
--{
--	int ret;
--	va_list ap;
--
--	if (!(printk_trace->trace_flags & TRACE_ITER(PRINTK)))
--		return 0;
--
--	va_start(ap, fmt);
--	ret = __trace_array_vprintk(buffer, ip, fmt, ap);
--	va_end(ap);
--	return ret;
--}
--
--int trace_vprintk(unsigned long ip, const char *fmt, va_list args)
--{
--	return trace_array_vprintk(printk_trace, ip, fmt, args);
--}
--EXPORT_SYMBOL_GPL(trace_vprintk);
--
- static void trace_iterator_increment(struct trace_iterator *iter)
+ static u64 buffer_ftrace_now(struct array_buffer *buf, int cpu)
  {
- 	struct ring_buffer_iter *buf_iter = trace_buffer_iter(iter, iter->cpu);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 921e4daa2825..6b0fedf2f532 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -2131,6 +2131,7 @@ extern const char *__stop___tracepoint_str[];
- 
- void trace_printk_control(bool enabled);
- void trace_printk_start_comm(void);
-+void trace_printk_start_stop_comm(int enabled);
- int trace_keep_overwrite(struct tracer *tracer, u64 mask, int set);
- int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled);
- 
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index 29f6e95439b6..c9cb74a33b3c 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -376,6 +376,437 @@ static const struct file_operations ftrace_formats_fops = {
- 	.release = seq_release,
- };
- 
-+static __always_inline bool printk_binsafe(struct trace_array *tr)
+ 	u64 ts;
+diff --git a/kernel/trace/trace_pid.c b/kernel/trace/trace_pid.c
+new file mode 100644
+index 000000000000..7127c8de4174
+--- /dev/null
++++ b/kernel/trace/trace_pid.c
+@@ -0,0 +1,246 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include "trace.h"
++
++/**
++ * trace_find_filtered_pid - check if a pid exists in a filtered_pid list
++ * @filtered_pids: The list of pids to check
++ * @search_pid: The PID to find in @filtered_pids
++ *
++ * Returns true if @search_pid is found in @filtered_pids, and false otherwise.
++ */
++bool
++trace_find_filtered_pid(struct trace_pid_list *filtered_pids, pid_t search_pid)
++{
++	return trace_pid_list_is_set(filtered_pids, search_pid);
++}
++
++/**
++ * trace_ignore_this_task - should a task be ignored for tracing
++ * @filtered_pids: The list of pids to check
++ * @filtered_no_pids: The list of pids not to be traced
++ * @task: The task that should be ignored if not filtered
++ *
++ * Checks if @task should be traced or not from @filtered_pids.
++ * Returns true if @task should *NOT* be traced.
++ * Returns false if @task should be traced.
++ */
++bool
++trace_ignore_this_task(struct trace_pid_list *filtered_pids,
++		       struct trace_pid_list *filtered_no_pids,
++		       struct task_struct *task)
 +{
 +	/*
-+	 * The binary format of traceprintk can cause a crash if used
-+	 * by a buffer from another boot. Force the use of the
-+	 * non binary version of trace_printk if the trace_printk
-+	 * buffer is a boot mapped ring buffer.
++	 * If filtered_no_pids is not empty, and the task's pid is listed
++	 * in filtered_no_pids, then return true.
++	 * Otherwise, if filtered_pids is empty, that means we can
++	 * trace all tasks. If it has content, then only trace pids
++	 * within filtered_pids.
 +	 */
-+	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
++
++	return (filtered_pids &&
++		!trace_find_filtered_pid(filtered_pids, task->pid)) ||
++		(filtered_no_pids &&
++		 trace_find_filtered_pid(filtered_no_pids, task->pid));
 +}
-+
-+int __trace_array_puts(struct trace_array *tr, unsigned long ip,
-+		       const char *str, int size)
-+{
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct print_entry *entry;
-+	unsigned int trace_ctx;
-+	int alloc;
-+
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	if (unlikely(tracing_selftest_running &&
-+		     (tr->flags & TRACE_ARRAY_FL_GLOBAL)))
-+		return 0;
-+
-+	if (unlikely(tracing_disabled))
-+		return 0;
-+
-+	alloc = sizeof(*entry) + size + 2; /* possible \n added */
-+
-+	trace_ctx = tracing_gen_ctx();
-+	buffer = tr->array_buffer.buffer;
-+	guard(ring_buffer_nest)(buffer);
-+	event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, alloc,
-+					    trace_ctx);
-+	if (!event)
-+		return 0;
-+
-+	entry = ring_buffer_event_data(event);
-+	entry->ip = ip;
-+
-+	memcpy(&entry->buf, str, size);
-+
-+	/* Add a newline if necessary */
-+	if (entry->buf[size - 1] != '\n') {
-+		entry->buf[size] = '\n';
-+		entry->buf[size + 1] = '\0';
-+	} else
-+		entry->buf[size] = '\0';
-+
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
-+	return size;
-+}
-+EXPORT_SYMBOL_GPL(__trace_array_puts);
 +
 +/**
-+ * __trace_puts - write a constant string into the trace buffer.
-+ * @ip:	   The address of the caller
-+ * @str:   The constant string to write
-+ * @size:  The size of the string.
++ * trace_filter_add_remove_task - Add or remove a task from a pid_list
++ * @pid_list: The list to modify
++ * @self: The current task for fork or NULL for exit
++ * @task: The task to add or remove
++ *
++ * If adding a task, if @self is defined, the task is only added if @self
++ * is also included in @pid_list. This happens on fork and tasks should
++ * only be added when the parent is listed. If @self is NULL, then the
++ * @task pid will be removed from the list, which would happen on exit
++ * of a task.
 + */
-+int __trace_puts(unsigned long ip, const char *str, int size)
++void trace_filter_add_remove_task(struct trace_pid_list *pid_list,
++				  struct task_struct *self,
++				  struct task_struct *task)
 +{
-+	return __trace_array_puts(printk_trace, ip, str, size);
++	if (!pid_list)
++		return;
++
++	/* For forks, we only add if the forking task is listed */
++	if (self) {
++		if (!trace_find_filtered_pid(pid_list, self->pid))
++			return;
++	}
++
++	/* "self" is set for forks, and NULL for exits */
++	if (self)
++		trace_pid_list_set(pid_list, task->pid);
++	else
++		trace_pid_list_clear(pid_list, task->pid);
 +}
-+EXPORT_SYMBOL_GPL(__trace_puts);
 +
 +/**
-+ * __trace_bputs - write the pointer to a constant string into trace buffer
-+ * @ip:	   The address of the caller
-+ * @str:   The constant string to write to the buffer to
++ * trace_pid_next - Used for seq_file to get to the next pid of a pid_list
++ * @pid_list: The pid list to show
++ * @v: The last pid that was shown (+1 the actual pid to let zero be displayed)
++ * @pos: The position of the file
++ *
++ * This is used by the seq_file "next" operation to iterate the pids
++ * listed in a trace_pid_list structure.
++ *
++ * Returns the pid+1 as we want to display pid of zero, but NULL would
++ * stop the iteration.
 + */
-+int __trace_bputs(unsigned long ip, const char *str)
++void *trace_pid_next(struct trace_pid_list *pid_list, void *v, loff_t *pos)
 +{
-+	struct trace_array *tr = READ_ONCE(printk_trace);
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct bputs_entry *entry;
-+	unsigned int trace_ctx;
-+	int size = sizeof(struct bputs_entry);
++	long pid = (unsigned long)v;
++	unsigned int next;
 +
-+	if (!printk_binsafe(tr))
-+		return __trace_puts(ip, str, strlen(str));
++	(*pos)++;
 +
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	if (unlikely(tracing_selftest_running || tracing_disabled))
-+		return 0;
-+
-+	trace_ctx = tracing_gen_ctx();
-+	buffer = tr->array_buffer.buffer;
-+
-+	guard(ring_buffer_nest)(buffer);
-+	event = __trace_buffer_lock_reserve(buffer, TRACE_BPUTS, size,
-+					    trace_ctx);
-+	if (!event)
-+		return 0;
-+
-+	entry = ring_buffer_event_data(event);
-+	entry->ip			= ip;
-+	entry->str			= str;
-+
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(tr, buffer, trace_ctx, 4, NULL);
-+
-+	return 1;
-+}
-+EXPORT_SYMBOL_GPL(__trace_bputs);
-+
-+/* created for use with alloc_percpu */
-+struct trace_buffer_struct {
-+	int nesting;
-+	char buffer[4][TRACE_BUF_SIZE];
-+};
-+
-+static struct trace_buffer_struct __percpu *trace_percpu_buffer;
-+
-+/*
-+ * This allows for lockless recording.  If we're nested too deeply, then
-+ * this returns NULL.
-+ */
-+static char *get_trace_buf(void)
-+{
-+	struct trace_buffer_struct *buffer = this_cpu_ptr(trace_percpu_buffer);
-+
-+	if (!trace_percpu_buffer || buffer->nesting >= 4)
++	/* pid already is +1 of the actual previous bit */
++	if (trace_pid_list_next(pid_list, pid, &next) < 0)
 +		return NULL;
 +
-+	buffer->nesting++;
++	pid = next;
 +
-+	/* Interrupts must see nesting incremented before we use the buffer */
-+	barrier();
-+	return &buffer->buffer[buffer->nesting - 1][0];
++	/* Return pid + 1 to allow zero to be represented */
++	return (void *)(pid + 1);
 +}
 +
-+static void put_trace_buf(void)
++/**
++ * trace_pid_start - Used for seq_file to start reading pid lists
++ * @pid_list: The pid list to show
++ * @pos: The position of the file
++ *
++ * This is used by seq_file "start" operation to start the iteration
++ * of listing pids.
++ *
++ * Returns the pid+1 as we want to display pid of zero, but NULL would
++ * stop the iteration.
++ */
++void *trace_pid_start(struct trace_pid_list *pid_list, loff_t *pos)
 +{
-+	/* Don't let the decrement of nesting leak before this */
-+	barrier();
-+	this_cpu_dec(trace_percpu_buffer->nesting);
++	unsigned long pid;
++	unsigned int first;
++	loff_t l = 0;
++
++	if (trace_pid_list_first(pid_list, &first) < 0)
++		return NULL;
++
++	pid = first;
++
++	/* Return pid + 1 so that zero can be the exit value */
++	for (pid++; pid && l < *pos;
++	     pid = (unsigned long)trace_pid_next(pid_list, (void *)pid, &l))
++		;
++	return (void *)pid;
 +}
 +
-+static int alloc_percpu_trace_buffer(void)
++/**
++ * trace_pid_show - show the current pid in seq_file processing
++ * @m: The seq_file structure to write into
++ * @v: A void pointer of the pid (+1) value to display
++ *
++ * Can be directly used by seq_file operations to display the current
++ * pid value.
++ */
++int trace_pid_show(struct seq_file *m, void *v)
 +{
-+	struct trace_buffer_struct __percpu *buffers;
++	unsigned long pid = (unsigned long)v - 1;
 +
-+	if (trace_percpu_buffer)
-+		return 0;
-+
-+	buffers = alloc_percpu(struct trace_buffer_struct);
-+	if (MEM_FAIL(!buffers, "Could not allocate percpu trace_printk buffer"))
-+		return -ENOMEM;
-+
-+	trace_percpu_buffer = buffers;
++	seq_printf(m, "%lu\n", pid);
 +	return 0;
 +}
 +
-+static int buffers_allocated;
++/* 128 should be much more than enough */
++#define PID_BUF_SIZE		127
 +
-+void trace_printk_init_buffers(void)
++int trace_pid_write(struct trace_pid_list *filtered_pids,
++		    struct trace_pid_list **new_pid_list,
++		    const char __user *ubuf, size_t cnt)
 +{
-+	if (buffers_allocated)
-+		return;
++	struct trace_pid_list *pid_list;
++	struct trace_parser parser;
++	unsigned long val;
++	int nr_pids = 0;
++	ssize_t read = 0;
++	ssize_t ret;
++	loff_t pos;
++	pid_t pid;
 +
-+	if (alloc_percpu_trace_buffer())
-+		return;
-+
-+	/* trace_printk() is for debug use only. Don't use it in production. */
-+
-+	pr_warn("\n");
-+	pr_warn("**********************************************************\n");
-+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** trace_printk() being used. Allocating extra memory.  **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** This means that this is a DEBUG kernel and it is     **\n");
-+	pr_warn("** unsafe for production use.                           **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("** If you see this message and you are not debugging    **\n");
-+	pr_warn("** the kernel, report this immediately to your vendor!  **\n");
-+	pr_warn("**                                                      **\n");
-+	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-+	pr_warn("**********************************************************\n");
-+
-+	/* Expand the buffers to set size */
-+	if (tracing_update_buffers(NULL) < 0)
-+		pr_err("Failed to expand tracing buffers for trace_printk() calls\n");
-+	else
-+		buffers_allocated = 1;
++	if (trace_parser_get_init(&parser, PID_BUF_SIZE + 1))
++		return -ENOMEM;
 +
 +	/*
-+	 * trace_printk_init_buffers() can be called by modules.
-+	 * If that happens, then we need to start cmdline recording
-+	 * directly here.
++	 * Always recreate a new array. The write is an all or nothing
++	 * operation. Always create a new array when adding new pids by
++	 * the user. If the operation fails, then the current list is
++	 * not modified.
 +	 */
-+	if (system_state == SYSTEM_RUNNING)
-+		tracing_start_cmdline_record();
-+}
-+EXPORT_SYMBOL_GPL(trace_printk_init_buffers);
-+
-+void trace_printk_start_comm(void)
-+{
-+	/* Start tracing comms if trace printk is set */
-+	if (!buffers_allocated)
-+		return;
-+	tracing_start_cmdline_record();
-+}
-+
-+void trace_printk_start_stop_comm(int enabled)
-+{
-+	if (!buffers_allocated)
-+		return;
-+
-+	if (enabled)
-+		tracing_start_cmdline_record();
-+	else
-+		tracing_stop_cmdline_record();
-+}
-+
-+/**
-+ * trace_vbprintk - write binary msg to tracing buffer
-+ * @ip:    The address of the caller
-+ * @fmt:   The string format to write to the buffer
-+ * @args:  Arguments for @fmt
-+ */
-+int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
-+{
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct trace_array *tr = READ_ONCE(printk_trace);
-+	struct bprint_entry *entry;
-+	unsigned int trace_ctx;
-+	char *tbuffer;
-+	int len = 0, size;
-+
-+	if (!printk_binsafe(tr))
-+		return trace_vprintk(ip, fmt, args);
-+
-+	if (unlikely(tracing_selftest_running || tracing_disabled))
-+		return 0;
-+
-+	/* Don't pollute graph traces with trace_vprintk internals */
-+	pause_graph_tracing();
-+
-+	trace_ctx = tracing_gen_ctx();
-+	guard(preempt_notrace)();
-+
-+	tbuffer = get_trace_buf();
-+	if (!tbuffer) {
-+		len = 0;
-+		goto out_nobuffer;
++	pid_list = trace_pid_list_alloc();
++	if (!pid_list) {
++		trace_parser_put(&parser);
++		return -ENOMEM;
 +	}
 +
-+	len = vbin_printf((u32 *)tbuffer, TRACE_BUF_SIZE/sizeof(int), fmt, args);
++	if (filtered_pids) {
++		/* copy the current bits to the new max */
++		ret = trace_pid_list_first(filtered_pids, &pid);
++		while (!ret) {
++			ret = trace_pid_list_set(pid_list, pid);
++			if (ret < 0)
++				goto out;
 +
-+	if (len > TRACE_BUF_SIZE/sizeof(int) || len < 0)
-+		goto out_put;
-+
-+	size = sizeof(*entry) + sizeof(u32) * len;
-+	buffer = tr->array_buffer.buffer;
-+	scoped_guard(ring_buffer_nest, buffer) {
-+		event = __trace_buffer_lock_reserve(buffer, TRACE_BPRINT, size,
-+						    trace_ctx);
-+		if (!event)
-+			goto out_put;
-+		entry = ring_buffer_event_data(event);
-+		entry->ip			= ip;
-+		entry->fmt			= fmt;
-+
-+		memcpy(entry->buf, tbuffer, sizeof(u32) * len);
-+		__buffer_unlock_commit(buffer, event);
-+		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
-+	}
-+out_put:
-+	put_trace_buf();
-+
-+out_nobuffer:
-+	unpause_graph_tracing();
-+
-+	return len;
-+}
-+EXPORT_SYMBOL_GPL(trace_vbprintk);
-+
-+static __printf(3, 0)
-+int __trace_array_vprintk(struct trace_buffer *buffer,
-+			  unsigned long ip, const char *fmt, va_list args)
-+{
-+	struct ring_buffer_event *event;
-+	int len = 0, size;
-+	struct print_entry *entry;
-+	unsigned int trace_ctx;
-+	char *tbuffer;
-+
-+	if (unlikely(tracing_disabled))
-+		return 0;
-+
-+	/* Don't pollute graph traces with trace_vprintk internals */
-+	pause_graph_tracing();
-+
-+	trace_ctx = tracing_gen_ctx();
-+	guard(preempt_notrace)();
-+
-+
-+	tbuffer = get_trace_buf();
-+	if (!tbuffer) {
-+		len = 0;
-+		goto out_nobuffer;
++			ret = trace_pid_list_next(filtered_pids, pid + 1, &pid);
++			nr_pids++;
++		}
 +	}
 +
-+	len = vscnprintf(tbuffer, TRACE_BUF_SIZE, fmt, args);
++	ret = 0;
++	while (cnt > 0) {
 +
-+	size = sizeof(*entry) + len + 1;
-+	scoped_guard(ring_buffer_nest, buffer) {
-+		event = __trace_buffer_lock_reserve(buffer, TRACE_PRINT, size,
-+						    trace_ctx);
-+		if (!event)
-+			goto out;
-+		entry = ring_buffer_event_data(event);
-+		entry->ip = ip;
++		pos = 0;
 +
-+		memcpy(&entry->buf, tbuffer, len + 1);
-+		__buffer_unlock_commit(buffer, event);
-+		ftrace_trace_stack(printk_trace, buffer, trace_ctx, 6, NULL);
++		ret = trace_get_user(&parser, ubuf, cnt, &pos);
++		if (ret < 0)
++			break;
++
++		read += ret;
++		ubuf += ret;
++		cnt -= ret;
++
++		if (!trace_parser_loaded(&parser))
++			break;
++
++		ret = -EINVAL;
++		if (kstrtoul(parser.buffer, 0, &val))
++			break;
++
++		pid = (pid_t)val;
++
++		if (trace_pid_list_set(pid_list, pid) < 0) {
++			ret = -1;
++			break;
++		}
++		nr_pids++;
++
++		trace_parser_clear(&parser);
++		ret = 0;
 +	}
-+out:
-+	put_trace_buf();
++ out:
++	trace_parser_put(&parser);
 +
-+out_nobuffer:
-+	unpause_graph_tracing();
++	if (ret < 0) {
++		trace_pid_list_free(pid_list);
++		return ret;
++	}
 +
-+	return len;
++	if (!nr_pids) {
++		/* Cleared the list of pids */
++		trace_pid_list_free(pid_list);
++		pid_list = NULL;
++	}
++
++	*new_pid_list = pid_list;
++
++	return read;
 +}
 +
-+int trace_array_vprintk(struct trace_array *tr,
-+			unsigned long ip, const char *fmt, va_list args)
-+{
-+	if (tracing_selftest_running && (tr->flags & TRACE_ARRAY_FL_GLOBAL))
-+		return 0;
-+
-+	return __trace_array_vprintk(tr->array_buffer.buffer, ip, fmt, args);
-+}
-+
-+/**
-+ * trace_array_printk - Print a message to a specific instance
-+ * @tr: The instance trace_array descriptor
-+ * @ip: The instruction pointer that this is called from.
-+ * @fmt: The format to print (printf format)
-+ *
-+ * If a subsystem sets up its own instance, they have the right to
-+ * printk strings into their tracing instance buffer using this
-+ * function. Note, this function will not write into the top level
-+ * buffer (use trace_printk() for that), as writing into the top level
-+ * buffer should only have events that can be individually disabled.
-+ * trace_printk() is only used for debugging a kernel, and should not
-+ * be ever incorporated in normal use.
-+ *
-+ * trace_array_printk() can be used, as it will not add noise to the
-+ * top level tracing buffer.
-+ *
-+ * Note, trace_array_init_printk() must be called on @tr before this
-+ * can be used.
-+ */
-+int trace_array_printk(struct trace_array *tr,
-+		       unsigned long ip, const char *fmt, ...)
-+{
-+	int ret;
-+	va_list ap;
-+
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
-+		return 0;
-+
-+	if (!(tr->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	va_start(ap, fmt);
-+	ret = trace_array_vprintk(tr, ip, fmt, ap);
-+	va_end(ap);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(trace_array_printk);
-+
-+/**
-+ * trace_array_init_printk - Initialize buffers for trace_array_printk()
-+ * @tr: The trace array to initialize the buffers for
-+ *
-+ * As trace_array_printk() only writes into instances, they are OK to
-+ * have in the kernel (unlike trace_printk()). This needs to be called
-+ * before trace_array_printk() can be used on a trace_array.
-+ */
-+int trace_array_init_printk(struct trace_array *tr)
-+{
-+	if (!tr)
-+		return -ENOENT;
-+
-+	/* This is only allowed for created instances */
-+	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
-+		return -EINVAL;
-+
-+	return alloc_percpu_trace_buffer();
-+}
-+EXPORT_SYMBOL_GPL(trace_array_init_printk);
-+
-+int trace_array_printk_buf(struct trace_buffer *buffer,
-+			   unsigned long ip, const char *fmt, ...)
-+{
-+	int ret;
-+	va_list ap;
-+
-+	if (!(printk_trace->trace_flags & TRACE_ITER(PRINTK)))
-+		return 0;
-+
-+	va_start(ap, fmt);
-+	ret = __trace_array_vprintk(buffer, ip, fmt, ap);
-+	va_end(ap);
-+	return ret;
-+}
-+
-+int trace_vprintk(unsigned long ip, const char *fmt, va_list args)
-+{
-+	return trace_array_vprintk(printk_trace, ip, fmt, args);
-+}
-+EXPORT_SYMBOL_GPL(trace_vprintk);
-+
- static __init int init_trace_printk_function_export(void)
- {
- 	int ret;
 -- 
 2.51.0
 
