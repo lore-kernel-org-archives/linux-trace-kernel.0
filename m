@@ -1,238 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AAB33D50B;
-	Sun,  8 Feb 2026 12:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770553509; cv=none; b=AdQdAa4uR319SmEEDrDOG91qzYRwU8wL8i6eXhmbF9TQMSo7ATv7Mma6/ZuuiB/53AVAR2Atb95CDj5XZOjktOgASuG9Gc39buopCSpcCLsOgno5hLNXAgvaa0npl7jmhcI2XOVKefbpPgFVkM1IFPVVFtEwwccHKFctI8dq/lw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770553509; c=relaxed/simple;
-	bh=gk1oGazk55BHT1trMoRZGs0Oa8wwkioPvJiNM12KYKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=um3HOBF/jPXUaKRYps/j0z7881pmEVys8E7rNKkKhWAMMtc0bqDyG8WMnsXhXvezAHZoZs2NILR8DroHHAdqfvjAZPgH3gj95zSNlqDXETlzGcuOg31mLrvn5tqc52KguuuEhURNHfcM3p+Cu4ZOxDwwO/CBH5AeX31Y2OdYV+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m+dHSqs0; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDB62749E0
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Feb 2026 13:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770556072; cv=pass; b=VY3HiUVqPOqXHZboekj+U104IA5yQMiFH9A+v2YOAiXGyFa1vRuUHDj7FPO72F3HPPmwVYVGccQ6Xg8V5IUud4xTh/eXRQrFJjrOdQYd3zWn8wJd0JBEAcfQqRxQbCRxe+jl9N2xeoJcObRv+e1uvS4g76FItzSPFfwDUG01YtY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770556072; c=relaxed/simple;
+	bh=1Lh2M9MV6l1zfYMfYfAA4oRMXUg/S1a/HJ99t2BQ6ag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qwRAtYDrIafyYy6DQFj6r1uRhs92KVzleLW88S1UHaKvmcvlJt10Ea4MduIp8plki6itcd2kNKdDtEO5v8jdFARUaVbTTG+DgDlZXYf270l+qMI0SK9CTNiOdUUxvFtkmkaFiyvmUXDUzWui+TlyvLj5zTx7acC7e902nBSI0rc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJIvfzS6; arc=pass smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m+dHSqs0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770553509; x=1802089509;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gk1oGazk55BHT1trMoRZGs0Oa8wwkioPvJiNM12KYKg=;
-  b=m+dHSqs0oHl05i+wKSe95cmPkFwct39VaFbu1BtTP2ALdYrzdjd49Zjh
-   2hHJLnTXQav0SwXkGGhG0PeQPFKcwpUb1oyhhL4MT+mKoOWjTFu6AidCP
-   sSKJMtk8hmtXvLy9hb+sVMYFupKwyqrP00jXTkc9zKqe2XE/jUFbA7B62
-   64S3EiDzyeKJQMecp0fVGl+9M2NB/8adwmIrFv8Bydz7r0o1W+Iy6WTKR
-   zKFUxRXouLCQC9te76DxZYev5S1q9qYGBL7XqLYG0uT/vgW5OZceiJNjW
-   4E70mONsaIGazO2Ch5KGFUa3z3yZg1UrpZifUGENQ4kzl9GAAyjVXvbRV
-   A==;
-X-CSE-ConnectionGUID: mWqwd6x5Qvuljpl9pFjjtw==
-X-CSE-MsgGUID: eRicbZcZQ+Cw3l3Xnbg+UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11694"; a="97147102"
-X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
-   d="scan'208";a="97147102"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 04:25:09 -0800
-X-CSE-ConnectionGUID: MXcdS3X2RnqXagpeYMVKcg==
-X-CSE-MsgGUID: Z4yAAamLRkOrP14lWiFygA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
-   d="scan'208";a="241592774"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 08 Feb 2026 04:25:05 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vp3qZ-00000000mBQ-05gV;
-	Sun, 08 Feb 2026 12:25:03 +0000
-Date: Sun, 8 Feb 2026 20:24:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 2/3] tracing: Add tracer_uses_snapshot() helper to
- remove #ifdefs
-Message-ID: <202602082013.PnPZCdsA-lkp@intel.com>
-References: <20260208040221.900653834@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJIvfzS6"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b8845cb580bso338454666b.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Feb 2026 05:07:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770556070; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KEplYHZAGE3bjtXEFIH8GpdOxZTBc+glf8olSshZbeFVOaCBMb4iIepV5c9gCnL9FU
+         QgYOHK21fKHGzMDoUZrJslrS8SZOV5cuQPe37QNf7PlBT5o8sk5dsGh3u4BTfXK72I3W
+         hYNyq+2ZUu3ob1+UqXeLSE8NoQUlv4cgnKkUk1q3eWMB0d4DuVhLRdKSQzKnARWoEruq
+         Isk/e41hRB2z7wDan3wWsbRX8DecAcxwdi+CIrxvUW69BDH0H+guCnkbChARjOAJBZ3l
+         CEtLV1ZMTL7bAyO4zUFa+SutnYXiuitL4uvvXXzakzUd3BCynDIMoRrXrL/nlbwMzDWc
+         9Lbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Lpk7186utWa07lVburlY6Omhhb1I4wGPFXBY93Ojxf0=;
+        fh=eki7zyCjDPvr0cEBTrv/oBXDYTbwFdpKE5nZp+NXdWY=;
+        b=auRnJ1aSCOx8uyub69nwJAxyWHRopMz6Z62LGOUR8Me+YT2QOSVjEi/K7PcG6G4JQf
+         CvJuwhdTStxWXKJ+6rtjvI9xtJ6rN1DpLVbS6QuKdWsgegXslZEBEe/xUXPC8rSbk04W
+         Lreh0dNEWH4yeEqokKrACLgARRrDB197qnAU/Id9VVvyOThcs8iUOrEhRWWcAQKaxbjo
+         FNrIxGJ6nxKFrcNggFX0Ke5sw+GSw3Ivs5t7Nlfu9z46t8q+Qxt6vOB56v0X6h1s9JLP
+         Z8C5MZSZebB1d2eRWFwecoizInatWfP0wRd9yntHLu3RvmlQ488YR/Fa2KzvkFA6AlJJ
+         p1Hg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770556070; x=1771160870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lpk7186utWa07lVburlY6Omhhb1I4wGPFXBY93Ojxf0=;
+        b=ZJIvfzS6tDKInHr/TstleNlPkHi5Yd3HGom2HjRlJjjYg57ZQENTi1evIcdp0JMbeo
+         dEfn2+ZEx99jGKohLUOZ6+SobQSNDY/IDotrpYR/NP5Fvi1CJlNRVi5Se4mQD6jX7TSz
+         xWb9/6OKtAVUngiiYhBVDnJk3bGzen8hgBcyPwFapcAJHUuF461TmZ5je2K15Sm8jEvl
+         3DxUErY8jQtxxI3yOI4Rhm666411MNqJgOiXmSjqokBf9F2YGe8w9nPA0lhpNHdv/4M/
+         3Br65pOz7homXmRiCNJsE5Sw8C3cyUNvM+NkIsZpeZe/p2UY9v/E/pzaXWU1zr/naGWb
+         6f7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770556070; x=1771160870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Lpk7186utWa07lVburlY6Omhhb1I4wGPFXBY93Ojxf0=;
+        b=STYtOv6KJJlvfjcry+TBKf4KHVcK+2e8FdHfimsVeWFpkBybNu40DohCV98srrLfCd
+         l7eOHL80HwxSoSMzb2dNOhTOd7aPsh3V1MvU0AiPSZsPFQZw0jgRqNpiOjrOxqxa+D+4
+         ztV7iP82ZSAjPXzKSL50tG2wu4h/clW8TxAP4cIHbc3oIOx7UBWw7P9xMipNIEpOjzpo
+         czj4qFeZO5YHsMZvMN6f8Zz837RjOuK0viaYhhLyM6zhOCiBSwfiNjtvmr480qlU7vQE
+         K+kg13UQ7D8hhn2GK1H0TTthfAMsr7kYhrsBawSN9TGOq+8ztOxYzv09dt7zVzaE/ov2
+         nneQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLMWh3PNDfaxKmYm2thuhbK7DCSUHxGSBRf/bVRkDdyJkeSLPcx5XB9fX/afuurzsa34+SKx6q9PYa6ad0OD0Qmyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxN0nwGZmAa+vCTjD9W7u7me7x+jurZa6HYkFUYMbzHCJg1WYU
+	geB2sxLT7uzNd+sb+6Ep7FsveMhu0voMElCATb6P0dbYXF6xMu5XOEKuPKGw1cS4ZrsnG4KPswD
+	ySTJ1C4Vkza5gecerDpGKAy+aXmu6evzZLa2eTKI=
+X-Gm-Gg: AZuq6aJdQFmSS1UvKOSwm02IIzpaM2Ar46hrCjiprZiyuQDLvdnHjU0V1o5eLwYkNtS
+	zGO8Tcwh8opqrSZvapC76YTSdXDf2fbY1cOwB5p8xzxVcz1YoF8p+EfkRF2iCyIbLXrj2tUpvTM
+	mpIE7MBnoYaFUFu0npTcG+xdg6EQORt3WDxHgopuzt8YSGxjBLpSIWCPS0Nl8Du1rIzzOx7zd3I
+	v7Rd6sayAx6/4Lq0lL9sFGWrT9ReVDQHT33tb9u2ZhHsDnCh96Cs+VQaNtgvoxAj3V8av1gwg7V
+	UbvsvFI=
+X-Received: by 2002:a17:907:2da6:b0:b87:117f:b6f9 with SMTP id
+ a640c23a62f3a-b8edf174430mr469352266b.8.1770556069578; Sun, 08 Feb 2026
+ 05:07:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260208040221.900653834@kernel.org>
+References: <20260202111548.3555306-1-dolinux.peng@gmail.com>
+ <20260202111548.3555306-3-dolinux.peng@gmail.com> <20260202111249.649ac338@gandalf.local.home>
+ <CAErzpmuFQqT3+7cSjq4HrYj0Bp_qjagJSh313_ePJxs+0QjVFA@mail.gmail.com>
+ <CAErzpmvgR7QgUTkcEfYstci9wNfGZBksczbkMv5w0ijoUcsBwg@mail.gmail.com>
+ <20260203101707.52965eb0@gandalf.local.home> <CAADnVQKXMzTsbrD8j0spJETXL77x=r30fEiPQLCiNr=XWtgB+Q@mail.gmail.com>
+ <CAErzpmu9mNXTOw-WwkSGEdvmJY2VjyUbGWZD=5s6kXNRE_YkJQ@mail.gmail.com> <20260205130459.0ff532f3@robin>
+In-Reply-To: <20260205130459.0ff532f3@robin>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Sun, 8 Feb 2026 21:07:37 +0800
+X-Gm-Features: AZwV_Qhtrwbg9jnGoduBNEr6Oncp7yRGU_wrKqlI5ZNeTdjeTOHhCmBD0TzKe2Y
+Message-ID: <CAErzpmsajhJ45TkPx_TPwAPwN1fxO0cNYFTKFgLaosiPMo9wew@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tracing: resolve enum names for function arguments
+ via BTF
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Donglin Peng <pengdonglin@xiaomi.com>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+On Fri, Feb 6, 2026 at 2:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed, 4 Feb 2026 22:52:11 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
+>
+> > > > I have trace-cmd reading BTF now (just haven't officially released =
+it) and
+> > > > doing an extract and reading the trace.dat file is much faster than=
+ reading
+> > > > the trace file with arguments. I'll need to implement the enum logi=
+c too in
+> > > > libtraceevent.
+> > >
+> > > If you mean to do pretty printing of the trace in user space then +1 =
+from me.
+> > >
+> > > I don't like sorting enums either in resolve_btfid, pahole or kernel.
+> > > Sorted BTF by name was ok, since it doesn't change original semantics=
+.
+> > > While sorting enums by value gets us to the grey zone where
+> > > the sequence of enum names in vmlinux.h becomes different than in dwa=
+rf.
+> >
+> > Thanks, I agreed.
+>
+> BTW, I just officially released trace-cmd v3.4 (where you can see whats
+> new in that release here[1]).
+>
+> The biggest change is that it saves the BTF file in the trace.dat file
+> and parses it on the report (it requires libtraceevent v1.9):
+>
+>  ~# trace-cmd record -p function_graph -O funcgraph-args -g do_sys_openat=
+2
+>  [..]
+>  ~# trace-cmd report
+>        trace-cmd-50935 [002] ...1.  3490.518138: funcgraph_entry:        =
+           |  do_sys_openat2(dfd=3D4294967196, filename=3D0x557bb9e3ee10, h=
+ow=3D0xffff88815220fea8) {
+>        trace-cmd-50935 [002] ...1.  3490.518141: funcgraph_entry:        =
+           |    getname_flags(filename=3D0x557bb9e3ee10, flags=3D0) {
+>        trace-cmd-50935 [002] ...1.  3490.518142: funcgraph_entry:        =
+           |      getname_flags.part.0(filename=3D0x557bb9e3ee10, flags=3D0=
+) {
+>        trace-cmd-50935 [002] ...1.  3490.518143: funcgraph_entry:        =
+           |        kmem_cache_alloc_noprof(s=3D0xffff888106c7e000, gfpflag=
+s=3D0xcc0) {
+>        trace-cmd-50935 [002] ...1.  3490.518145: funcgraph_entry:        =
+           |          stack_trace_save(store=3D0xffff88815220fac8, size=3D0=
+x40, skipnr=3D0x0) {
+>        trace-cmd-50935 [002] ...1.  3490.518147: funcgraph_entry:        =
+           |            arch_stack_walk(consume_entry=3D0xffffffff94d9dfe0,=
+ cookie=3D0xffff88815220fa58, task=3D0xffff88812d4c3580, regs=3D0x0) {
+>        trace-cmd-50935 [002] ...1.  3490.518148: funcgraph_entry:        =
+           |              __unwind_start(state=3D0xffff88815220f988, task=
+=3D0xffff88812d4c3580, regs=3D0x0, first_frame=3D0xffff88815220fa28) {
+>        trace-cmd-50935 [002] ...1.  3490.518149: funcgraph_entry:        =
+1.518 us   |                get_stack_info(stack=3D0xffff88815220f938, task=
+=3D0xffff88812d4c3580, info=3D0xffff88815220f988, visit_mask=3D0xffff888152=
+20f9a8); (ret=3D0x0)
+>        trace-cmd-50935 [002] ...1.  3490.518152: funcgraph_entry:        =
+           |                unwind_next_frame(state=3D0xffff88815220f988) {
+>        trace-cmd-50935 [002] ...1.  3490.518153: funcgraph_entry:        =
+0.951 us   |                  __rcu_read_lock(); (ret=3D0xffff88812d4c3580)
 
-kernel test robot noticed the following build errors:
+Hi Steve,
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.19-rc8 next-20260205]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I noticed that trace-cmd 3.4 introduced a new feature:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Rename-trace_array-field-max_buffer-to-snapshot_buffer/20260208-120355
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20260208040221.900653834%40kernel.org
-patch subject: [PATCH v2 2/3] tracing: Add tracer_uses_snapshot() helper to remove #ifdefs
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260208/202602082013.PnPZCdsA-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260208/202602082013.PnPZCdsA-lkp@intel.com/reproduce)
+- Add support for showing parent functions in function graph
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602082013.PnPZCdsA-lkp@intel.com/
+  If the "funcgraph-retaddr" option is set during function graph tracing,
+  the parent functions will now be displayed:
 
-All errors (new ones prefixed by >>):
+  preempt_count_add(val=3D65536); /* <-irq_enter_rcu */ (ret=3D0x10001)
 
->> kernel/trace/trace.c:6337:13: error: no member named 'cond_snapshot' in 'struct trace_array'
-    6337 |                 ret = tr->cond_snapshot ? -EBUSY : 0;
-         |                       ~~  ^
-   kernel/trace/trace.c:6366:2: error: use of undeclared identifier 'had_max_tr'
-    6366 |         had_max_tr = tracer_uses_snapshot(tr->current_trace);
-         |         ^
-   kernel/trace/trace.c:6372:6: error: use of undeclared identifier 'had_max_tr'
-    6372 |         if (had_max_tr && !tracer_uses_snapshot(trace)) {
-         |             ^
-   kernel/trace/trace.c:6385:7: error: use of undeclared identifier 'had_max_tr'
-    6385 |         if (!had_max_tr && tracer_uses_snapshot(trace)) {
-         |              ^
-   kernel/trace/trace.c:9795:23: warning: shift count is negative [-Wshift-count-negative]
-    9795 |                     !((1ULL << i) & TOP_LEVEL_TRACE_FLAGS)) {
-         |                                     ^~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace.c:523:9: note: expanded from macro 'TOP_LEVEL_TRACE_FLAGS'
-     523 |                TRACE_ITER(PROF_TEXT_OFFSET) | FPROFILE_DEFAULT_FLAGS)
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace.h:1452:42: note: expanded from macro 'TRACE_ITER'
-    1452 |         (TRACE_ITER_##flag##_BIT < 0 ? 0 : 1ULL << (TRACE_ITER_##flag##_BIT))
-         |                                                 ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning and 4 errors generated.
+However, it currently only prints the caller's entry point. I suggest
+enhancing this to include the **offset within the caller** as well. This
+would allow tools like `faddr2line` to locate the exact call site accuratel=
+y.
 
+I implemented a tool named FuncGraph[1] to convert function_graph
+ftrace output into an interactive HTML file. It leverages fastfaddr2line
+to map return addresses (e.g., __sys_bpf+0x51/0x500) to their
+corresponding call sites, such as: __sys_bpfat kernel/bpf/syscall.c:6115.
 
-vim +6337 kernel/trace/trace.c
+What do you think?
 
-ef9188bcc6ca1d Mark-PK Tsai             2022-04-26  6300  
-9c5b9d3d65e485 Masami Hiramatsu         2020-01-11  6301  int tracing_set_tracer(struct trace_array *tr, const char *buf)
-09d23a1d8a82e8 Steven Rostedt (Red Hat  2015-02-03  6302) {
-428add559b6923 Steven Rostedt           2025-11-11  6303  	struct tracer *trace = NULL;
-428add559b6923 Steven Rostedt           2025-11-11  6304  	struct tracers *t;
-12883efb670c28 Steven Rostedt (Red Hat  2013-03-05  6305) #ifdef CONFIG_TRACER_MAX_TRACE
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6306  	bool had_max_tr;
-12883efb670c28 Steven Rostedt (Red Hat  2013-03-05  6307) #endif
-d33b10c0c73adc Steven Rostedt           2024-12-24  6308  	int ret;
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6309  
-d33b10c0c73adc Steven Rostedt           2024-12-24  6310  	guard(mutex)(&trace_types_lock);
-1027fcb206a0fb Steven Rostedt           2009-03-12  6311  
-7a1d1e4b9639ff Steven Rostedt (Google   2024-06-12  6312) 	update_last_data(tr);
-7a1d1e4b9639ff Steven Rostedt (Google   2024-06-12  6313) 
-a1f157c7a3bb34 Zheng Yejian             2023-09-06  6314  	if (!tr->ring_buffer_expanded) {
-2b6080f28c7cc3 Steven Rostedt           2012-05-11  6315  		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
-438ced1720b584 Vaibhav Nagarnaik        2012-02-02  6316  						RING_BUFFER_ALL_CPUS);
-73c5162aa362a5 Steven Rostedt           2009-03-11  6317  		if (ret < 0)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6318  			return ret;
-73c5162aa362a5 Steven Rostedt           2009-03-11  6319  		ret = 0;
-73c5162aa362a5 Steven Rostedt           2009-03-11  6320  	}
-73c5162aa362a5 Steven Rostedt           2009-03-11  6321  
-428add559b6923 Steven Rostedt           2025-11-11  6322  	list_for_each_entry(t, &tr->tracers, list) {
-428add559b6923 Steven Rostedt           2025-11-11  6323  		if (strcmp(t->tracer->name, buf) == 0) {
-428add559b6923 Steven Rostedt           2025-11-11  6324  			trace = t->tracer;
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6325  			break;
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6326  		}
-428add559b6923 Steven Rostedt           2025-11-11  6327  	}
-428add559b6923 Steven Rostedt           2025-11-11  6328  	if (!trace)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6329  		return -EINVAL;
-d33b10c0c73adc Steven Rostedt           2024-12-24  6330  
-428add559b6923 Steven Rostedt           2025-11-11  6331  	if (trace == tr->current_trace)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6332  		return 0;
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6333  
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6334  	if (tracer_uses_snapshot(trace)) {
-c0a581d7126c0b Waiman Long              2022-09-22  6335  		local_irq_disable();
-a35873a0993b4d Tom Zanussi              2019-02-13  6336  		arch_spin_lock(&tr->max_lock);
-22bec11a569983 Steven Rostedt           2025-01-06 @6337  		ret = tr->cond_snapshot ? -EBUSY : 0;
-a35873a0993b4d Tom Zanussi              2019-02-13  6338  		arch_spin_unlock(&tr->max_lock);
-c0a581d7126c0b Waiman Long              2022-09-22  6339  		local_irq_enable();
-a35873a0993b4d Tom Zanussi              2019-02-13  6340  		if (ret)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6341  			return ret;
-a35873a0993b4d Tom Zanussi              2019-02-13  6342  	}
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6343  
-c7b3ae0bd2ca65 Ziqian SUN (Zamir        2017-09-11  6344) 	/* Some tracers won't work on kernel command line */
-428add559b6923 Steven Rostedt           2025-11-11  6345  	if (system_state < SYSTEM_RUNNING && trace->noboot) {
-c7b3ae0bd2ca65 Ziqian SUN (Zamir        2017-09-11  6346) 		pr_warn("Tracer '%s' is not allowed on command line, ignored\n",
-428add559b6923 Steven Rostedt           2025-11-11  6347  			trace->name);
-d1e27ee9c6f21c Steven Rostedt           2024-12-19  6348  		return -EINVAL;
-c7b3ae0bd2ca65 Ziqian SUN (Zamir        2017-09-11  6349) 	}
-c7b3ae0bd2ca65 Ziqian SUN (Zamir        2017-09-11  6350) 
-607e2ea167e56d Steven Rostedt (Red Hat  2013-11-06  6351) 	/* Some tracers are only allowed for the top level buffer */
-428add559b6923 Steven Rostedt           2025-11-11  6352  	if (!trace_ok_for_array(trace, tr))
-d33b10c0c73adc Steven Rostedt           2024-12-24  6353  		return -EINVAL;
-607e2ea167e56d Steven Rostedt (Red Hat  2013-11-06  6354) 
-cf6ab6d9143b15 Steven Rostedt (Red Hat  2014-12-15  6355) 	/* If trace pipe files are being read, we can't change the tracer */
-d33b10c0c73adc Steven Rostedt           2024-12-24  6356  	if (tr->trace_ref)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6357  		return -EBUSY;
-cf6ab6d9143b15 Steven Rostedt (Red Hat  2014-12-15  6358) 
-9f029e83e968e5 Steven Rostedt           2008-11-12  6359  	trace_branch_disable();
-613f04a0f51e6e Steven Rostedt (Red Hat  2013-03-14  6360) 
-50512ab576e1ce Steven Rostedt (Red Hat  2014-01-14  6361) 	tr->current_trace->enabled--;
-613f04a0f51e6e Steven Rostedt (Red Hat  2013-03-14  6362) 
-2b6080f28c7cc3 Steven Rostedt           2012-05-11  6363  	if (tr->current_trace->reset)
-2b6080f28c7cc3 Steven Rostedt           2012-05-11  6364  		tr->current_trace->reset(tr);
-613f04a0f51e6e Steven Rostedt (Red Hat  2013-03-14  6365) 
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6366  	had_max_tr = tracer_uses_snapshot(tr->current_trace);
-a541a9559bb0a8 Steven Rostedt (Google   2022-10-05  6367) 
-7440172974e85b Paul E. McKenney         2018-11-06  6368  	/* Current trace needs to be nop_trace before synchronize_rcu */
-2b6080f28c7cc3 Steven Rostedt           2012-05-11  6369  	tr->current_trace = &nop_trace;
-428add559b6923 Steven Rostedt           2025-11-11  6370  	tr->current_trace_flags = nop_trace.flags;
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6371  
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6372  	if (had_max_tr && !tracer_uses_snapshot(trace)) {
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6373  		/*
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6374  		 * We need to make sure that the update_max_tr sees that
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6375  		 * current_trace changed to nop_trace to keep it from
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6376  		 * swapping the buffers after we resize it.
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6377  		 * The update_max_tr is called from interrupts disabled
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6378  		 * so a synchronized_sched() is sufficient.
-34600f0e9c33c9 Steven Rostedt           2013-01-22  6379  		 */
-7440172974e85b Paul E. McKenney         2018-11-06  6380  		synchronize_rcu();
-3209cff4490bee Steven Rostedt (Red Hat  2013-03-12  6381) 		free_snapshot(tr);
-180e4e390978af Vincent Donnefort        2024-02-20  6382  		tracing_disarm_snapshot(tr);
-ef710e100c1068 KOSAKI Motohiro          2010-07-01  6383  	}
-12883efb670c28 Steven Rostedt (Red Hat  2013-03-05  6384) 
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6385  	if (!had_max_tr && tracer_uses_snapshot(trace)) {
-180e4e390978af Vincent Donnefort        2024-02-20  6386  		ret = tracing_arm_snapshot_locked(tr);
-180e4e390978af Vincent Donnefort        2024-02-20  6387  		if (ret)
-d33b10c0c73adc Steven Rostedt           2024-12-24  6388  			return ret;
-ef710e100c1068 KOSAKI Motohiro          2010-07-01  6389  	}
-577b785f55168d Steven Rostedt           2009-02-26  6390  
-428add559b6923 Steven Rostedt           2025-11-11  6391  	tr->current_trace_flags = t->flags ? : t->tracer->flags;
-428add559b6923 Steven Rostedt           2025-11-11  6392  
-428add559b6923 Steven Rostedt           2025-11-11  6393  	if (trace->init) {
-428add559b6923 Steven Rostedt           2025-11-11  6394  		ret = tracer_init(trace, tr);
-180e4e390978af Vincent Donnefort        2024-02-20  6395  		if (ret) {
-b1e5d74d04bbcf Steven Rostedt           2026-02-07  6396  			if (tracer_uses_snapshot(trace))
-180e4e390978af Vincent Donnefort        2024-02-20  6397  				tracing_disarm_snapshot(tr);
-428add559b6923 Steven Rostedt           2025-11-11  6398  			tr->current_trace_flags = nop_trace.flags;
-d33b10c0c73adc Steven Rostedt           2024-12-24  6399  			return ret;
-1c80025a49855b Frederic Weisbecker      2008-11-16  6400  		}
-180e4e390978af Vincent Donnefort        2024-02-20  6401  	}
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6402  
-428add559b6923 Steven Rostedt           2025-11-11  6403  	tr->current_trace = trace;
-50512ab576e1ce Steven Rostedt (Red Hat  2014-01-14  6404) 	tr->current_trace->enabled++;
-9f029e83e968e5 Steven Rostedt           2008-11-12  6405  	trace_branch_enable(tr);
-bc0c38d139ec7f Steven Rostedt           2008-05-12  6406  
-d33b10c0c73adc Steven Rostedt           2024-12-24  6407  	return 0;
-d9e540762f5cdd Peter Zijlstra           2008-11-01  6408  }
-d9e540762f5cdd Peter Zijlstra           2008-11-01  6409  
+Thanks,
+Donglin
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[1] https://github.com/pengdonglin137/FuncGraph
+
+>
+> -- Steve
+>
+>
+>
+> [1] https://git.kernel.org/pub/scm/utils/trace-cmd/trace-cmd.git/tag/?h=
+=3Dtrace-cmd-v3.4
