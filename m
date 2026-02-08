@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8512741C0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB94F293C4E;
 	Sun,  8 Feb 2026 03:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770521046; cv=none; b=f7/sdTy+qtCvv/vxjxpHmOTPlks5lNVOY5ZtWSpplhT0B6ZeneuF8U5n83R291gM/BwVyRwXfyPCO3ckAh1rBsbmJ2XIBcBdE6Bw2xrIEly7m/1GxF/46y075yIMXaPck7tAcV4RVANKiSAGrhnYnin5+HclN0QKsafFT5QgMe4=
+	t=1770521046; cv=none; b=suzgKSH4PDCizj6Y/nmg2PWDSX0C/1Om4IirMpLwWv8wj67NdJ2y/s22gADkP8bQEkKGymPKcmfjJGNfjIRKRm6GFfRB1FZeg1ASYazqUTNbWr0zbfuIiB2eYBF+fHMHqdcFTC4wPLoBQdVngE6SNjXOjcnGgx9p8lgukUkP3ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770521046; c=relaxed/simple;
-	bh=P2+u/vNHwEzn7ODM4Pi1LxTEHDnekqxDaeXdxpmwQ2o=;
+	bh=Ss/0hHnK8DPO0iCJwrIIKNzPNkD50min9pGCh2rRKFc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Kg2Tqx7mi5pHIFjzzDWf9UCeqNriCgpmIdcjanGaUAbUCpB+/x3MkgJoNcZ9A2JGirzAoJfruNgS3qDbMN+AmYUkzKqfqQyLVuL2yym7P9/1TkKlP9IdLPiovjupWYIxhJHxkH8cBk101qxXm4nmyukXIRdWgPSpQPHq0vX4hxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+VwhFqK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=izkTqeBnyY/qKn/v1kLDXwQkFBrZZNYbn4284U3eAFPZOc78T897QGk0/PwM0HzglB/RsoiMZwCGn8O9Y1jerR9y5vkR6VNpZVztYO366l5gJgSJayP6Qc7QUpAakIsVd8RKTIDSzp20r1u4sheYzCt/jD8rjvhze2mqjafBv0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJpV1PcN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+VwhFqK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE06C19424;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJpV1PcN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991B6C2BC9E;
 	Sun,  8 Feb 2026 03:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770521046;
-	bh=P2+u/vNHwEzn7ODM4Pi1LxTEHDnekqxDaeXdxpmwQ2o=;
+	bh=Ss/0hHnK8DPO0iCJwrIIKNzPNkD50min9pGCh2rRKFc=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=W+VwhFqKigWepw8h0hZv0Vs/oeE/5YfMO3/Z4Tj8St94mstZxfsZnvyNHB+Hsc1P9
-	 yIMNp1Zx7w+PmbipRPYLLuJw8fJM56hHeoVRiaE/l2cvWblLnL5iKDWVCan70GcKf3
-	 W8TrKKdZSCoXfuOixqpbRzv+Vx1C0gcnrh0FiCRvizxnW4qRaF5AQv9PxFBJgd9lqM
-	 3hHrOV3rAHY6Ie8WviTdHwy6k/unAKQEm46xNaPjFmxmSaxE0LqqvGQ6ihLFEhDI76
-	 OsP7CZrJOv1c3kNjvjO7w8FakdF72CYgA49xg4vDohgWuzJaC1Utj2zXHZ7rdgawuK
-	 JfvgTiy/ppJng==
+	b=QJpV1PcNp7cJZ7SKHk+kw3T7AUcxzikb5uVfE6buEUUs1yL7C4Hr+2bcGBaCIhihV
+	 OPKN22zKd9ugsp5ZSIwdXN/O/LE9ClpbMhnoyrA4ELGcpCVvuHljmw9WXidrmoCJbd
+	 fANaUGkKTE7K/06DI/A7E6JKL+CtVoLkKvfuAKRBgUwixwOPSUo/EXBp2+kM/eb/oK
+	 R+LGeulE7Hm5WcII51QxC2LXQKa4W1kpq2R3TTrhANHcYuPel3adI+hE4uvWPEoz1z
+	 0VmRwOxH085BUQaWExw5j9qjyUufLJ+WgKOTxluP5BdZOYKCB02ndsAKLQ+JhZEO3s
+	 8Zpnr0zi+aVhQ==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1vovPl-0000000AObG-2dnE;
+	id 1vovPl-0000000AOcE-415G;
 	Sat, 07 Feb 2026 22:24:49 -0500
-Message-ID: <20260208032449.483690153@kernel.org>
+Message-ID: <20260208032449.813550600@kernel.org>
 User-Agent: quilt/0.68
-Date: Sat, 07 Feb 2026 22:24:18 -0500
+Date: Sat, 07 Feb 2026 22:24:20 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 01/10] tracing: Make tracing_disabled global for tracing system
+Subject: [PATCH v2 03/10] tracing: Move __trace_buffer_{un}lock_*() functions to trace.h
 References: <20260208032417.262341179@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,130 +52,134 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The tracing_disabled variable is set to one on boot up to prevent some
-parts of tracing to access the tracing infrastructure before it is set up.
-It also can be set after boot if an anomaly is discovered.
+The file trace.c has become a catchall for most things tracing. Start
+making it smaller by breaking out various aspects into their own files.
 
-It is currently a static variable in trace.c and can be accessed via a
-function call trace_is_disabled(). There's really no reason to use a
-function call as the tracing subsystem should be able to access it
-directly.
+Move the __always_inline functions __trace_buffer_lock_reserve(),
+__trace_buffer_unlock_commit() and trace_event_setup() into trace.h.
 
-By making the variable accessed directly, code can be moved out of trace.c
-without adding overhead of a function call to see if tracing is disabled
-or not.
-
-Make tracing_disabled global and remove the tracing_is_disabled() helper
-function. Also add some "unlikely()"s around tracing_disabled where it's
-checked in hot paths.
+The trace.c file will be split up and these functions will be used in more
+than one of these files. As they are already __always_inline they can
+easily be moved into the trace.h header file.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c        | 13 ++++---------
- kernel/trace/trace.h        |  3 ++-
- kernel/trace/trace_events.c |  2 +-
- kernel/trace/trace_kprobe.c |  2 +-
- 4 files changed, 8 insertions(+), 12 deletions(-)
+ kernel/trace/trace.c | 42 ------------------------------------------
+ kernel/trace/trace.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 42 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d02c4004c718..1ff40c88e75c 100644
+index f040ee4fe101..55cd0c774886 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -114,7 +114,7 @@ DEFINE_PER_CPU(bool, trace_taskinfo_save);
-  * of the tracer is successful. But that is the only place that sets
-  * this back to zero.
-  */
--static int tracing_disabled = 1;
-+int tracing_disabled = 1;
+@@ -1058,30 +1058,6 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
  
- cpumask_var_t __read_mostly	tracing_buffer_mask;
+ #endif
  
-@@ -3423,7 +3423,7 @@ int __trace_array_vprintk(struct trace_buffer *buffer,
- 	unsigned int trace_ctx;
- 	char *tbuffer;
- 
--	if (tracing_disabled)
-+	if (unlikely(tracing_disabled))
- 		return 0;
- 
- 	/* Don't pollute graph traces with trace_vprintk internals */
-@@ -4765,11 +4765,6 @@ int tracing_open_generic(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
--bool tracing_is_disabled(void)
+-static __always_inline void
+-trace_event_setup(struct ring_buffer_event *event,
+-		  int type, unsigned int trace_ctx)
 -{
--	return (tracing_disabled) ? true: false;
+-	struct trace_entry *ent = ring_buffer_event_data(event);
+-
+-	tracing_generic_entry_update(ent, type, trace_ctx);
 -}
 -
- /*
-  * Open and update trace_array ref count.
-  * Must have the current trace_array passed to it.
-@@ -7609,7 +7604,7 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	unsigned long ip;
- 	char *buf;
+-static __always_inline struct ring_buffer_event *
+-__trace_buffer_lock_reserve(struct trace_buffer *buffer,
+-			  int type,
+-			  unsigned long len,
+-			  unsigned int trace_ctx)
+-{
+-	struct ring_buffer_event *event;
+-
+-	event = ring_buffer_lock_reserve(buffer, len);
+-	if (event != NULL)
+-		trace_event_setup(event, type, trace_ctx);
+-
+-	return event;
+-}
+-
+ void tracer_tracing_on(struct trace_array *tr)
+ {
+ 	if (tr->array_buffer.buffer)
+@@ -1109,24 +1085,6 @@ void tracing_on(void)
+ }
+ EXPORT_SYMBOL_GPL(tracing_on);
  
--	if (tracing_disabled)
-+	if (unlikely(tracing_disabled))
- 		return -EINVAL;
- 
- 	if (!(tr->trace_flags & TRACE_ITER(MARKERS)))
-@@ -7689,7 +7684,7 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	ssize_t written = -ENODEV;
- 	char *buf;
- 
--	if (tracing_disabled)
-+	if (unlikely(tracing_disabled))
- 		return -EINVAL;
- 
- 	if (!(tr->trace_flags & TRACE_ITER(MARKERS)))
+-
+-static __always_inline void
+-__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
+-{
+-	__this_cpu_write(trace_taskinfo_save, true);
+-
+-	/* If this is the temp buffer, we need to commit fully */
+-	if (this_cpu_read(trace_buffered_event) == event) {
+-		/* Length is in event->array[0] */
+-		ring_buffer_write(buffer, event->array[0], &event->array[1]);
+-		/* Release the temp buffer */
+-		this_cpu_dec(trace_buffered_event_cnt);
+-		/* ring_buffer_unlock_commit() enables preemption */
+-		preempt_enable_notrace();
+-	} else
+-		ring_buffer_unlock_commit(buffer);
+-}
+-
+ int __trace_array_puts(struct trace_array *tr, unsigned long ip,
+ 		       const char *str, int size)
+ {
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 31fb137e1c66..433705bef480 100644
+index 19cffc7b5852..c2beabe96952 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -657,6 +657,8 @@ trace_buffer_iter(struct trace_iterator *iter, int cpu)
- 	return iter->buffer_iter ? iter->buffer_iter[cpu] : NULL;
- }
+@@ -1568,6 +1568,47 @@ char *trace_user_fault_read(struct trace_user_buf_info *tinfo,
+ 			    const char __user *ptr, size_t size,
+ 			    trace_user_buf_copy copy_func, void *data);
  
-+extern int tracing_disabled;
++static __always_inline void
++trace_event_setup(struct ring_buffer_event *event,
++		  int type, unsigned int trace_ctx)
++{
++	struct trace_entry *ent = ring_buffer_event_data(event);
 +
- int tracer_init(struct tracer *t, struct trace_array *tr);
- int tracing_is_enabled(void);
- void tracing_reset_online_cpus(struct array_buffer *buf);
-@@ -668,7 +670,6 @@ int tracing_release_generic_tr(struct inode *inode, struct file *file);
- int tracing_open_file_tr(struct inode *inode, struct file *filp);
- int tracing_release_file_tr(struct inode *inode, struct file *filp);
- int tracing_single_release_file_tr(struct inode *inode, struct file *filp);
--bool tracing_is_disabled(void);
- bool tracer_tracing_is_on(struct trace_array *tr);
- void tracer_tracing_on(struct trace_array *tr);
- void tracer_tracing_off(struct trace_array *tr);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index af6d1fe5cab7..61fe01dce7a6 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2268,7 +2268,7 @@ static int subsystem_open(struct inode *inode, struct file *filp)
- 	struct event_subsystem *system = NULL;
- 	int ret;
- 
--	if (tracing_is_disabled())
-+	if (unlikely(tracing_disabled))
- 		return -ENODEV;
- 
- 	/* Make sure the system still exists */
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 89d2740f7bb5..061658518605 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -2083,7 +2083,7 @@ static __init int kprobe_trace_self_tests_init(void)
- 	struct trace_kprobe *tk;
- 	struct trace_event_file *file;
- 
--	if (tracing_is_disabled())
-+	if (unlikely(tracing_disabled))
- 		return -ENODEV;
- 
- 	if (tracing_selftest_disabled)
++	tracing_generic_entry_update(ent, type, trace_ctx);
++}
++
++static __always_inline struct ring_buffer_event *
++__trace_buffer_lock_reserve(struct trace_buffer *buffer,
++			  int type,
++			  unsigned long len,
++			  unsigned int trace_ctx)
++{
++	struct ring_buffer_event *event;
++
++	event = ring_buffer_lock_reserve(buffer, len);
++	if (event != NULL)
++		trace_event_setup(event, type, trace_ctx);
++
++	return event;
++}
++
++static __always_inline void
++__buffer_unlock_commit(struct trace_buffer *buffer, struct ring_buffer_event *event)
++{
++	__this_cpu_write(trace_taskinfo_save, true);
++
++	/* If this is the temp buffer, we need to commit fully */
++	if (this_cpu_read(trace_buffered_event) == event) {
++		/* Length is in event->array[0] */
++		ring_buffer_write(buffer, event->array[0], &event->array[1]);
++		/* Release the temp buffer */
++		this_cpu_dec(trace_buffered_event_cnt);
++		/* ring_buffer_unlock_commit() enables preemption */
++		preempt_enable_notrace();
++	} else
++		ring_buffer_unlock_commit(buffer);
++}
++
+ static inline void
+ __trace_event_discard_commit(struct trace_buffer *buffer,
+ 			     struct ring_buffer_event *event)
 -- 
 2.51.0
 
