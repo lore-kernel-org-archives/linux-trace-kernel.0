@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5F714A8B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6B526461F;
 	Sun,  8 Feb 2026 04:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770523298; cv=none; b=hbPbk3JCdd9PQsgCVgapChw840ixRE2ZxEGhZtpQNQk7THtvv+YrrG6iO9L41ugIhK7ZZ+AnK+qwehYLnzfhNMDrVcpOsp3vg9kTBQtgxfFxVjeO7WSBYh6pm2R47x3/utZkpdOtmhEf2AjqyJmI9+P+7oXmBZobHG5HfClesMs=
+	t=1770523298; cv=none; b=I16E8Jfl/GS7YRbtiPOxtmeHHxPGLWmlOy30rdZl2CtYKzkOm/pgKTO1nYdfoZ1yB0QTS0XiaaOYzU79+EPHCzgt8+uOs4C8nvTwqE1aFFNj8wMGzzwa9DmjOr4lydNbx7PvYmJvxWl4+zKP4lGISxn2dqZ7Ax0Qh3BFsrKv83M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770523298; c=relaxed/simple;
-	bh=ql2zJ7yH3Gkyvmwm8Jiyo5Y6GG/xDqRKqc5E/FpVFqE=;
+	bh=wxJ1fEWXAGH3RY7qXy6g8rkEWdBuR1wBkjnxihRGi+o=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HRA4QGSvYua825WuMBpU1XE5bFk2XDp19DHB9R/93fxqtkzEnQt0K6NGV/lpkKbXlDLK1HHCbIHbPe0chHITifD+DI94UJKkKv7hf7PydGTcMq9ap6g7Q37B8EmAlFhYWzngW9YNHeiXHwDXyQPfT2qV3meBSuwJtquLGoWZmvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2mCf0ME; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=U1S/DZSEBBxf8Jt2E4l3WxSn3VjUDt6hKp+AU7MujwqUjQYrDe3Q1rKOZlbM31+5F8G8NcBtturZxhdCnHdSHPW2Q/YSm+ImDG+hclQqC65JvXDSxRfdRshgYx3MzhWtD0nH8JbmhNMBi64UCRgEDHvjIKYpakWMSgxEEkNsrdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RpZP8pio; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2mCf0ME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8912AC2BC86;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RpZP8pio"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E27C16AAE;
 	Sun,  8 Feb 2026 04:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770523298;
-	bh=ql2zJ7yH3Gkyvmwm8Jiyo5Y6GG/xDqRKqc5E/FpVFqE=;
+	bh=wxJ1fEWXAGH3RY7qXy6g8rkEWdBuR1wBkjnxihRGi+o=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=r2mCf0MEdfc4Yi8rVCEl2PyoZvv1E+C6fprjXl//H1DOqRmKBEl+W0drRhmHDA+Um
-	 GIAeheOK9TasexKRuraNeUasDACRO0DH9ZokwP2jjTSeisGYNooIgfoU443lTZlmPm
-	 rhjgGlW+/VPGz8B/7NlPSVgW2XM0NMRzcyLRLKxLmLtP4WQtHDQ/4ozQjc9SJ537JV
-	 UBTN3Jj9P+XVYc5y+S5wS8mU8DJ7C+Ar6Z6IumagGOX0Bju0ze5KzS1t/O6LB3EKL+
-	 HKwgfNtdiBk+8bV/+2yqrTP1XdvI6ikyR3mPLG3HembBTlEsthPReyIfZ53z/FoWdL
-	 FkL9PoZfzbIzQ==
+	b=RpZP8piof8IFYxmW+cGrdI3OFDlr623gj04ImvT9GOuKMrC1bDwrmqLrRuYcqWf2C
+	 +Jk1zsUbu1i2g4/iBiJxBuRgsd2IsTnqf0Uckf7ssbhaunjwAvXqdWVpMJbgMh0mXk
+	 S6e1JpjOWcLm1ztKYW5xPknLCcTWuGtn25WYq/UenXBIK6P5Nihqv7mbCZxYutYU4v
+	 DmeWtmHOX3lQgEE5K8sytSOw71sx8oArf+WpOVi1MgdIQIbp1K5+7TBvN3WGZORjDU
+	 9lYAIGeXafz/uHEV6uUoujUk7zAOILoVJUS6WcWKlatbdLBJVfzv/OfrbWiiyd6YGA
+	 SBEXpm4qz48tA==
 Received: from rostedt by gandalf with local (Exim 4.99.1)
 	(envelope-from <rostedt@kernel.org>)
-	id 1vow06-0000000AOy2-0CdK;
-	Sat, 07 Feb 2026 23:02:22 -0500
-Message-ID: <20260208040221.900653834@kernel.org>
+	id 1vow05-0000000AOxY-3hAb;
+	Sat, 07 Feb 2026 23:02:21 -0500
+Message-ID: <20260208040221.731421427@kernel.org>
 User-Agent: quilt/0.68
-Date: Sat, 07 Feb 2026 23:01:58 -0500
+Date: Sat, 07 Feb 2026 23:01:57 -0500
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 2/3] tracing: Add tracer_uses_snapshot() helper to remove #ifdefs
+Subject: [PATCH v2 1/3] tracing: Rename trace_array field max_buffer to snapshot_buffer
 References: <20260208040156.005531619@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,230 +52,377 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Instead of having #ifdef CONFIG_TRACER_MAX_TRACE around every access to
-the struct tracer's use_max_tr field, add a helper function for that
-access and if CONFIG_TRACER_MAX_TRACE is not configured it just returns
-false.
+When tracing was first added, there were latency tracers that would take a
+snapshot of the current trace when a new max latency was hit. This
+snapshot buffer was called "max_buffer". Since then, a snapshot feature
+was added that allowed user space or event triggers to trigger a snapshot
+of the current buffer using the same max_buffer of the trace_array.
+
+As this snapshot buffer now has a more generic use case, calling it
+"max_buffer" is confusing. Rename it to snapshot_buffer.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 52 +++++++++++++++-----------------------------
- kernel/trace/trace.h | 12 ++++++++++
- 2 files changed, 29 insertions(+), 35 deletions(-)
+ kernel/trace/trace.c          | 72 +++++++++++++++++------------------
+ kernel/trace/trace.h          | 13 ++++---
+ kernel/trace/trace_selftest.c | 10 ++---
+ 3 files changed, 48 insertions(+), 47 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 98524d0656bf..9fbb124e87dc 100644
+index 551a452befa0..98524d0656bf 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -810,7 +810,6 @@ EXPORT_SYMBOL_GPL(tracing_on);
- static void tracing_snapshot_instance_cond(struct trace_array *tr,
- 					   void *cond_data)
- {
--	struct tracer *tracer = tr->current_trace;
- 	unsigned long flags;
+@@ -934,12 +934,12 @@ int tracing_alloc_snapshot_instance(struct trace_array *tr)
  
- 	if (in_nmi()) {
-@@ -827,7 +826,7 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+ 		/* Make the snapshot buffer have the same order as main buffer */
+ 		order = ring_buffer_subbuf_order_get(tr->array_buffer.buffer);
+-		ret = ring_buffer_subbuf_order_set(tr->max_buffer.buffer, order);
++		ret = ring_buffer_subbuf_order_set(tr->snapshot_buffer.buffer, order);
+ 		if (ret < 0)
+ 			return ret;
+ 
+ 		/* allocate spare buffer */
+-		ret = resize_buffer_duplicate_size(&tr->max_buffer,
++		ret = resize_buffer_duplicate_size(&tr->snapshot_buffer,
+ 				   &tr->array_buffer, RING_BUFFER_ALL_CPUS);
+ 		if (ret < 0)
+ 			return ret;
+@@ -957,10 +957,10 @@ static void free_snapshot(struct trace_array *tr)
+ 	 * The max_tr ring buffer has some state (e.g. ring->clock) and
+ 	 * we want preserve it.
+ 	 */
+-	ring_buffer_subbuf_order_set(tr->max_buffer.buffer, 0);
+-	ring_buffer_resize(tr->max_buffer.buffer, 1, RING_BUFFER_ALL_CPUS);
+-	set_buffer_entries(&tr->max_buffer, 1);
+-	tracing_reset_online_cpus(&tr->max_buffer);
++	ring_buffer_subbuf_order_set(tr->snapshot_buffer.buffer, 0);
++	ring_buffer_resize(tr->snapshot_buffer.buffer, 1, RING_BUFFER_ALL_CPUS);
++	set_buffer_entries(&tr->snapshot_buffer, 1);
++	tracing_reset_online_cpus(&tr->snapshot_buffer);
+ 	tr->allocated_snapshot = false;
+ }
+ 
+@@ -1556,7 +1556,7 @@ static void
+ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ {
+ 	struct array_buffer *trace_buf = &tr->array_buffer;
+-	struct array_buffer *max_buf = &tr->max_buffer;
++	struct array_buffer *max_buf = &tr->snapshot_buffer;
+ 	struct trace_array_cpu *data = per_cpu_ptr(trace_buf->data, cpu);
+ 	struct trace_array_cpu *max_data = per_cpu_ptr(max_buf->data, cpu);
+ 
+@@ -1616,9 +1616,9 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
+ 
+ 	/* Inherit the recordable setting from array_buffer */
+ 	if (ring_buffer_record_is_set_on(tr->array_buffer.buffer))
+-		ring_buffer_record_on(tr->max_buffer.buffer);
++		ring_buffer_record_on(tr->snapshot_buffer.buffer);
+ 	else
+-		ring_buffer_record_off(tr->max_buffer.buffer);
++		ring_buffer_record_off(tr->snapshot_buffer.buffer);
+ 
+ #ifdef CONFIG_TRACER_SNAPSHOT
+ 	if (tr->cond_snapshot && !tr->cond_snapshot->update(tr, cond_data)) {
+@@ -1626,7 +1626,7 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
+ 		return;
+ 	}
+ #endif
+-	swap(tr->array_buffer.buffer, tr->max_buffer.buffer);
++	swap(tr->array_buffer.buffer, tr->snapshot_buffer.buffer);
+ 
+ 	__update_max_tr(tr, tsk, cpu);
+ 
+@@ -1661,7 +1661,7 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 
+ 	arch_spin_lock(&tr->max_lock);
+ 
+-	ret = ring_buffer_swap_cpu(tr->max_buffer.buffer, tr->array_buffer.buffer, cpu);
++	ret = ring_buffer_swap_cpu(tr->snapshot_buffer.buffer, tr->array_buffer.buffer, cpu);
+ 
+ 	if (ret == -EBUSY) {
+ 		/*
+@@ -1671,7 +1671,7 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 		 * and flag that it failed.
+ 		 * Another reason is resize is in progress.
+ 		 */
+-		trace_array_printk_buf(tr->max_buffer.buffer, _THIS_IP_,
++		trace_array_printk_buf(tr->snapshot_buffer.buffer, _THIS_IP_,
+ 			"Failed to swap buffers due to commit or resize in progress\n");
  	}
  
- 	/* Note, snapshot can not be used when the tracer uses it */
--	if (tracer->use_max_tr) {
-+	if (tracer_uses_snapshot(tr->current_trace)) {
- 		trace_array_puts(tr, "*** LATENCY TRACER ACTIVE ***\n");
- 		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
- 		return;
-@@ -1076,7 +1075,7 @@ int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data,
- 
- 	guard(mutex)(&trace_types_lock);
- 
--	if (tr->current_trace->use_max_tr)
-+	if (tracer_uses_snapshot(tr->current_trace))
- 		return -EBUSY;
- 
- 	/*
-@@ -1787,7 +1786,7 @@ static int run_tracer_selftest(struct tracer *type)
- 	tr->current_trace_flags = type->flags ? : type->default_flags;
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
--	if (type->use_max_tr) {
-+	if (tracer_uses_snapshot(type)) {
+@@ -1722,7 +1722,7 @@ static int wait_on_pipe(struct trace_iterator *iter, int full)
+ 	 * to happen, this would now be the main buffer.
+ 	 */
+ 	if (iter->snapshot)
+-		iter->array_buffer = &iter->tr->max_buffer;
++		iter->array_buffer = &iter->tr->snapshot_buffer;
+ #endif
+ 	return ret;
+ }
+@@ -1790,7 +1790,7 @@ static int run_tracer_selftest(struct tracer *type)
+ 	if (type->use_max_tr) {
  		/* If we expanded the buffers, make sure the max is expanded too */
  		if (tr->ring_buffer_expanded)
- 			ring_buffer_resize(tr->snapshot_buffer.buffer, trace_buf_size,
-@@ -1812,7 +1811,7 @@ static int run_tracer_selftest(struct tracer *type)
+-			ring_buffer_resize(tr->max_buffer.buffer, trace_buf_size,
++			ring_buffer_resize(tr->snapshot_buffer.buffer, trace_buf_size,
+ 					   RING_BUFFER_ALL_CPUS);
+ 		tr->allocated_snapshot = true;
+ 	}
+@@ -1817,7 +1817,7 @@ static int run_tracer_selftest(struct tracer *type)
+ 
+ 		/* Shrink the max buffer again */
+ 		if (tr->ring_buffer_expanded)
+-			ring_buffer_resize(tr->max_buffer.buffer, 1,
++			ring_buffer_resize(tr->snapshot_buffer.buffer, 1,
+ 					   RING_BUFFER_ALL_CPUS);
+ 	}
+ #endif
+@@ -2060,7 +2060,7 @@ void tracing_reset_all_online_cpus_unlocked(void)
+ 		tr->clear_trace = false;
+ 		tracing_reset_online_cpus(&tr->array_buffer);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-		tracing_reset_online_cpus(&tr->max_buffer);
++		tracing_reset_online_cpus(&tr->snapshot_buffer);
+ #endif
+ 	}
+ }
+@@ -2100,7 +2100,7 @@ static void tracing_start_tr(struct trace_array *tr)
+ 		ring_buffer_record_enable(buffer);
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-	buffer = tr->max_buffer.buffer;
++	buffer = tr->snapshot_buffer.buffer;
+ 	if (buffer)
+ 		ring_buffer_record_enable(buffer);
+ #endif
+@@ -2136,7 +2136,7 @@ static void tracing_stop_tr(struct trace_array *tr)
+ 		ring_buffer_record_disable(buffer);
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-	buffer = tr->max_buffer.buffer;
++	buffer = tr->snapshot_buffer.buffer;
+ 	if (buffer)
+ 		ring_buffer_record_disable(buffer);
+ #endif
+@@ -3943,7 +3943,7 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	/* Currently only the top directory has a snapshot */
+ 	if (tr->current_trace->print_max || snapshot)
+-		iter->array_buffer = &tr->max_buffer;
++		iter->array_buffer = &tr->snapshot_buffer;
+ 	else
+ #endif
+ 		iter->array_buffer = &tr->array_buffer;
+@@ -4146,7 +4146,7 @@ static int tracing_open(struct inode *inode, struct file *file)
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 		if (tr->current_trace->print_max)
+-			trace_buf = &tr->max_buffer;
++			trace_buf = &tr->snapshot_buffer;
+ #endif
+ 
+ 		if (cpu == RING_BUFFER_ALL_CPUS)
+@@ -4359,14 +4359,14 @@ int tracing_set_cpumask(struct trace_array *tr,
+ 				!cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+ 			ring_buffer_record_disable_cpu(tr->array_buffer.buffer, cpu);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-			ring_buffer_record_disable_cpu(tr->max_buffer.buffer, cpu);
++			ring_buffer_record_disable_cpu(tr->snapshot_buffer.buffer, cpu);
+ #endif
+ 		}
+ 		if (!cpumask_test_cpu(cpu, tr->tracing_cpumask) &&
+ 				cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+ 			ring_buffer_record_enable_cpu(tr->array_buffer.buffer, cpu);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-			ring_buffer_record_enable_cpu(tr->max_buffer.buffer, cpu);
++			ring_buffer_record_enable_cpu(tr->snapshot_buffer.buffer, cpu);
+ #endif
+ 		}
+ 	}
+@@ -4576,7 +4576,7 @@ int set_tracer_flag(struct trace_array *tr, u64 mask, int enabled)
+ 	case TRACE_ITER(OVERWRITE):
+ 		ring_buffer_change_overwrite(tr->array_buffer.buffer, enabled);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-		ring_buffer_change_overwrite(tr->max_buffer.buffer, enabled);
++		ring_buffer_change_overwrite(tr->snapshot_buffer.buffer, enabled);
+ #endif
+ 		break;
+ 
+@@ -5294,7 +5294,7 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
+ 	if (!tr->allocated_snapshot)
+ 		goto out;
+ 
+-	ret = ring_buffer_resize(tr->max_buffer.buffer, size, cpu);
++	ret = ring_buffer_resize(tr->snapshot_buffer.buffer, size, cpu);
+ 	if (ret < 0) {
+ 		int r = resize_buffer_duplicate_size(&tr->array_buffer,
+ 						     &tr->array_buffer, cpu);
+@@ -5319,7 +5319,7 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
+ 		goto out_start;
+ 	}
+ 
+-	update_buffer_entries(&tr->max_buffer, cpu);
++	update_buffer_entries(&tr->snapshot_buffer, cpu);
+ 
+  out:
+ #endif /* CONFIG_TRACER_MAX_TRACE */
+@@ -7036,9 +7036,9 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
  	tracing_reset_online_cpus(&tr->array_buffer);
  
  #ifdef CONFIG_TRACER_MAX_TRACE
--	if (type->use_max_tr) {
-+	if (tracer_uses_snapshot(type)) {
- 		tr->allocated_snapshot = false;
+-	if (tr->max_buffer.buffer)
+-		ring_buffer_set_clock(tr->max_buffer.buffer, trace_clocks[i].func);
+-	tracing_reset_online_cpus(&tr->max_buffer);
++	if (tr->snapshot_buffer.buffer)
++		ring_buffer_set_clock(tr->snapshot_buffer.buffer, trace_clocks[i].func);
++	tracing_reset_online_cpus(&tr->snapshot_buffer);
+ #endif
  
- 		/* Shrink the max buffer again */
-@@ -3240,10 +3239,8 @@ static void *s_start(struct seq_file *m, loff_t *pos)
+ 	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
+@@ -7170,7 +7170,7 @@ static int tracing_snapshot_open(struct inode *inode, struct file *file)
+ 		ret = 0;
+ 
+ 		iter->tr = tr;
+-		iter->array_buffer = &tr->max_buffer;
++		iter->array_buffer = &tr->snapshot_buffer;
+ 		iter->cpu_file = tracing_get_cpu(inode);
+ 		m->private = iter;
+ 		file->private_data = m;
+@@ -7233,7 +7233,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 			return -EINVAL;
+ #endif
+ 		if (tr->allocated_snapshot)
+-			ret = resize_buffer_duplicate_size(&tr->max_buffer,
++			ret = resize_buffer_duplicate_size(&tr->snapshot_buffer,
+ 					&tr->array_buffer, iter->cpu_file);
+ 
+ 		ret = tracing_arm_snapshot_locked(tr);
+@@ -7254,9 +7254,9 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	default:
+ 		if (tr->allocated_snapshot) {
+ 			if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
+-				tracing_reset_online_cpus(&tr->max_buffer);
++				tracing_reset_online_cpus(&tr->snapshot_buffer);
+ 			else
+-				tracing_reset_cpu(&tr->max_buffer, iter->cpu_file);
++				tracing_reset_cpu(&tr->snapshot_buffer, iter->cpu_file);
+ 		}
+ 		break;
  	}
- 	mutex_unlock(&trace_types_lock);
+@@ -7312,7 +7312,7 @@ static int snapshot_raw_open(struct inode *inode, struct file *filp)
+ 	}
  
--#ifdef CONFIG_TRACER_MAX_TRACE
--	if (iter->snapshot && iter->trace->use_max_tr)
-+	if (iter->snapshot && tracer_uses_snapshot(iter->trace))
- 		return ERR_PTR(-EBUSY);
--#endif
+ 	info->iter.snapshot = true;
+-	info->iter.array_buffer = &info->iter.tr->max_buffer;
++	info->iter.array_buffer = &info->iter.tr->snapshot_buffer;
  
- 	if (*pos != iter->pos) {
- 		iter->ent = NULL;
-@@ -3282,10 +3279,8 @@ static void s_stop(struct seq_file *m, void *p)
- {
- 	struct trace_iterator *iter = m->private;
+ 	return ret;
+ }
+@@ -9195,7 +9195,7 @@ buffer_subbuf_size_write(struct file *filp, const char __user *ubuf,
+ 	if (!tr->allocated_snapshot)
+ 		goto out_max;
  
--#ifdef CONFIG_TRACER_MAX_TRACE
--	if (iter->snapshot && iter->trace->use_max_tr)
-+	if (iter->snapshot && tracer_uses_snapshot(iter->trace))
- 		return;
--#endif
+-	ret = ring_buffer_subbuf_order_set(tr->max_buffer.buffer, order);
++	ret = ring_buffer_subbuf_order_set(tr->snapshot_buffer.buffer, order);
+ 	if (ret) {
+ 		/* Put back the old order */
+ 		cnt = ring_buffer_subbuf_order_set(tr->array_buffer.buffer, old_order);
+@@ -9416,7 +9416,7 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
+ 	if (tr->range_addr_start)
+ 		return 0;
  
- 	trace_access_unlock(iter->cpu_file);
- 	trace_event_read_unlock();
-@@ -4177,11 +4172,9 @@ static int tracing_open(struct inode *inode, struct file *file)
- static bool
- trace_ok_for_array(struct tracer *t, struct trace_array *tr)
- {
--#ifdef CONFIG_TRACER_SNAPSHOT
- 	/* arrays with mapped buffer range do not have snapshots */
--	if (tr->range_addr_start && t->use_max_tr)
-+	if (tr->range_addr_start && tracer_uses_snapshot(t))
- 		return false;
--#endif
- 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
+-	ret = allocate_trace_buffer(tr, &tr->max_buffer,
++	ret = allocate_trace_buffer(tr, &tr->snapshot_buffer,
+ 				    allocate_snapshot ? size : 1);
+ 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
+ 		free_trace_buffer(&tr->array_buffer);
+@@ -9439,7 +9439,7 @@ static void free_trace_buffers(struct trace_array *tr)
+ 	kfree(tr->module_delta);
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-	free_trace_buffer(&tr->max_buffer);
++	free_trace_buffer(&tr->snapshot_buffer);
+ #endif
  }
  
-@@ -5579,8 +5572,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 	if (trace == tr->current_trace)
- 		return 0;
- 
--#ifdef CONFIG_TRACER_SNAPSHOT
--	if (trace->use_max_tr) {
-+	if (tracer_uses_snapshot(trace)) {
- 		local_irq_disable();
- 		arch_spin_lock(&tr->max_lock);
- 		ret = tr->cond_snapshot ? -EBUSY : 0;
-@@ -5589,7 +5581,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 		if (ret)
- 			return ret;
- 	}
--#endif
-+
- 	/* Some tracers won't work on kernel command line */
- 	if (system_state < SYSTEM_RUNNING && trace->noboot) {
- 		pr_warn("Tracer '%s' is not allowed on command line, ignored\n",
-@@ -5612,14 +5604,13 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 	if (tr->current_trace->reset)
- 		tr->current_trace->reset(tr);
- 
--#ifdef CONFIG_TRACER_MAX_TRACE
--	had_max_tr = tr->current_trace->use_max_tr;
-+	had_max_tr = tracer_uses_snapshot(tr->current_trace);
- 
- 	/* Current trace needs to be nop_trace before synchronize_rcu */
- 	tr->current_trace = &nop_trace;
- 	tr->current_trace_flags = nop_trace.flags;
- 
--	if (had_max_tr && !trace->use_max_tr) {
-+	if (had_max_tr && !tracer_uses_snapshot(trace)) {
- 		/*
- 		 * We need to make sure that the update_max_tr sees that
- 		 * current_trace changed to nop_trace to keep it from
-@@ -5632,24 +5623,19 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 		tracing_disarm_snapshot(tr);
- 	}
- 
--	if (!had_max_tr && trace->use_max_tr) {
-+	if (!had_max_tr && tracer_uses_snapshot(trace)) {
- 		ret = tracing_arm_snapshot_locked(tr);
- 		if (ret)
- 			return ret;
- 	}
--#else
--	tr->current_trace = &nop_trace;
--#endif
- 
- 	tr->current_trace_flags = t->flags ? : t->tracer->flags;
- 
- 	if (trace->init) {
- 		ret = tracer_init(trace, tr);
- 		if (ret) {
--#ifdef CONFIG_TRACER_MAX_TRACE
--			if (trace->use_max_tr)
-+			if (tracer_uses_snapshot(trace))
- 				tracing_disarm_snapshot(tr);
--#endif
- 			tr->current_trace_flags = nop_trace.flags;
- 			return ret;
- 		}
-@@ -7207,7 +7193,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 
- 	guard(mutex)(&trace_types_lock);
- 
--	if (tr->current_trace->use_max_tr)
-+	if (tracer_uses_snapshot(tr->current_trace))
- 		return -EBUSY;
- 
- 	local_irq_disable();
-@@ -7306,7 +7292,7 @@ static int snapshot_raw_open(struct inode *inode, struct file *filp)
- 
- 	info = filp->private_data;
- 
--	if (info->iter.trace->use_max_tr) {
-+	if (tracer_uses_snapshot(info->iter.trace)) {
- 		tracing_buffers_release(inode, filp);
- 		return -EBUSY;
- 	}
-@@ -7862,10 +7848,8 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
- 	if (!count)
- 		return 0;
- 
--#ifdef CONFIG_TRACER_MAX_TRACE
--	if (iter->snapshot && iter->tr->current_trace->use_max_tr)
-+	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
- 		return -EBUSY;
--#endif
- 
- 	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
- 
-@@ -8049,10 +8033,8 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	int entries, i;
- 	ssize_t ret = 0;
- 
--#ifdef CONFIG_TRACER_MAX_TRACE
--	if (iter->snapshot && iter->tr->current_trace->use_max_tr)
-+	if (iter->snapshot && tracer_uses_snapshot(iter->tr->current_trace))
- 		return -EBUSY;
--#endif
- 
- 	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
- 	if (*ppos & (page_size - 1))
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b50383aa8e50..ebb47abc0ee7 100644
+index 6b0fedf2f532..b50383aa8e50 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -817,6 +817,18 @@ static inline void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
- }
- #endif /* CONFIG_STACKTRACE */
+@@ -331,17 +331,18 @@ struct trace_array {
+ 	struct array_buffer	array_buffer;
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	/*
+-	 * The max_buffer is used to snapshot the trace when a maximum
++	 * The snapshot_buffer is used to snapshot the trace when a maximum
+ 	 * latency is reached, or when the user initiates a snapshot.
+ 	 * Some tracers will use this to store a maximum trace while
+ 	 * it continues examining live traces.
+ 	 *
+-	 * The buffers for the max_buffer are set up the same as the array_buffer
+-	 * When a snapshot is taken, the buffer of the max_buffer is swapped
+-	 * with the buffer of the array_buffer and the buffers are reset for
+-	 * the array_buffer so the tracing can continue.
++	 * The buffers for the snapshot_buffer are set up the same as the
++	 * array_buffer. When a snapshot is taken, the buffer of the
++	 * snapshot_buffer is swapped with the buffer of the array_buffer
++	 * and the buffers are reset for the array_buffer so the tracing can
++	 * continue.
+ 	 */
+-	struct array_buffer	max_buffer;
++	struct array_buffer	snapshot_buffer;
+ 	bool			allocated_snapshot;
+ 	spinlock_t		snapshot_trigger_lock;
+ 	unsigned int		snapshot;
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index d88c44f1dfa5..be53fe6fee6a 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -1225,7 +1225,7 @@ trace_selftest_startup_irqsoff(struct tracer *trace, struct trace_array *tr)
+ 	/* check both trace buffers */
+ 	ret = trace_test_buffer(&tr->array_buffer, NULL);
+ 	if (!ret)
+-		ret = trace_test_buffer(&tr->max_buffer, &count);
++		ret = trace_test_buffer(&tr->snapshot_buffer, &count);
+ 	trace->reset(tr);
+ 	tracing_start();
  
-+#ifdef CONFIG_TRACER_MAX_TRACE
-+static inline bool tracer_uses_snapshot(struct tracer *tracer)
-+{
-+	return tracer->use_max_tr;
-+}
-+#else
-+static inline bool tracer_uses_snapshot(struct tracer *tracer)
-+{
-+	return false;
-+}
-+#endif
-+
- void trace_last_func_repeats(struct trace_array *tr,
- 			     struct trace_func_repeats *last_info,
- 			     unsigned int trace_ctx);
+@@ -1287,7 +1287,7 @@ trace_selftest_startup_preemptoff(struct tracer *trace, struct trace_array *tr)
+ 	/* check both trace buffers */
+ 	ret = trace_test_buffer(&tr->array_buffer, NULL);
+ 	if (!ret)
+-		ret = trace_test_buffer(&tr->max_buffer, &count);
++		ret = trace_test_buffer(&tr->snapshot_buffer, &count);
+ 	trace->reset(tr);
+ 	tracing_start();
+ 
+@@ -1355,7 +1355,7 @@ trace_selftest_startup_preemptirqsoff(struct tracer *trace, struct trace_array *
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = trace_test_buffer(&tr->max_buffer, &count);
++	ret = trace_test_buffer(&tr->snapshot_buffer, &count);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1385,7 +1385,7 @@ trace_selftest_startup_preemptirqsoff(struct tracer *trace, struct trace_array *
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = trace_test_buffer(&tr->max_buffer, &count);
++	ret = trace_test_buffer(&tr->snapshot_buffer, &count);
+ 
+ 	if (!ret && !count) {
+ 		printk(KERN_CONT ".. no entries found ..");
+@@ -1513,7 +1513,7 @@ trace_selftest_startup_wakeup(struct tracer *trace, struct trace_array *tr)
+ 	/* check both trace buffers */
+ 	ret = trace_test_buffer(&tr->array_buffer, NULL);
+ 	if (!ret)
+-		ret = trace_test_buffer(&tr->max_buffer, &count);
++		ret = trace_test_buffer(&tr->snapshot_buffer, &count);
+ 
+ 
+ 	trace->reset(tr);
 -- 
 2.51.0
 
