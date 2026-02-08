@@ -1,64 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FEE2D8797;
-	Sun,  8 Feb 2026 11:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AAB33D50B;
+	Sun,  8 Feb 2026 12:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770549787; cv=none; b=K5VWJuUdRONb2n12Bovw65N5LiLzKJzMjMaA0MERyNx4MRf1pYJuh7qq0qucjGPZd2XdCRxRLtn0ZusgTUdRiDq/lxZ9+mpcMPR7grgMiz1DITo1v6VZzNGfL80AXKXjPmwTEtX/QHcSSuNQiCqbkzsCneUAXY0mHW9RY5QXFwQ=
+	t=1770553509; cv=none; b=AdQdAa4uR319SmEEDrDOG91qzYRwU8wL8i6eXhmbF9TQMSo7ATv7Mma6/ZuuiB/53AVAR2Atb95CDj5XZOjktOgASuG9Gc39buopCSpcCLsOgno5hLNXAgvaa0npl7jmhcI2XOVKefbpPgFVkM1IFPVVFtEwwccHKFctI8dq/lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770549787; c=relaxed/simple;
-	bh=O1rI3X9boePrVvMy/+nxfcRsdeHQ46PH/jbTU906mF0=;
+	s=arc-20240116; t=1770553509; c=relaxed/simple;
+	bh=gk1oGazk55BHT1trMoRZGs0Oa8wwkioPvJiNM12KYKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv+RUE3zpHdp99vinHYWp4o+nUIn1wrLiyG6MPvpRdwRJq0Fe2AIqbJhmQ4XB3UAooD1zapXx0i/CTvMYQDRbhHOLIqP0ppRGQ1dOz0UlUdSD0QuywTs/fe0nLxAxC9FOSnGn5T3IDjzl7k2/MFeN5Fkky7B3wfR3VplEG5xjhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdu5pNcY; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=um3HOBF/jPXUaKRYps/j0z7881pmEVys8E7rNKkKhWAMMtc0bqDyG8WMnsXhXvezAHZoZs2NILR8DroHHAdqfvjAZPgH3gj95zSNlqDXETlzGcuOg31mLrvn5tqc52KguuuEhURNHfcM3p+Cu4ZOxDwwO/CBH5AeX31Y2OdYV+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m+dHSqs0; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdu5pNcY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m+dHSqs0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770549788; x=1802085788;
+  t=1770553509; x=1802089509;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=O1rI3X9boePrVvMy/+nxfcRsdeHQ46PH/jbTU906mF0=;
-  b=mdu5pNcYQTdn5EFRM5oFtU02nR2maRexBmhxREcpI7N4Rofj+RSL9P56
-   X39iu2FMGm3LQbFBviG2C76KSo+zeEZ4qqmj7kBztzEpo0nweC1+VuRbP
-   MFGyCXW0Xq83FCfES0RX1lfd6fpTL+f9sKIVSjmTy8asOn9UNIKAWVPEd
-   zwuYgoZtwjbDUxHtYJmOn+RDJI1NdDv90uBNrySb2/QesCQ4yXlm+6Ssw
-   g8EkfT10CN5Lqw/7wkckPiBLS23h51Uh4Ose458nAPCZcSFv7fxHMHhbs
-   bvI6RXmyRWcev+fEbhera1hwErTK/LyFnbqEWKyFFNDhTI/8qJqYNtfNa
-   g==;
-X-CSE-ConnectionGUID: t9zIKEoERKaNQSNJB+Krsg==
-X-CSE-MsgGUID: C14Lakc5RiO8Gxv3N1a5tA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11694"; a="82007993"
+  bh=gk1oGazk55BHT1trMoRZGs0Oa8wwkioPvJiNM12KYKg=;
+  b=m+dHSqs0oHl05i+wKSe95cmPkFwct39VaFbu1BtTP2ALdYrzdjd49Zjh
+   2hHJLnTXQav0SwXkGGhG0PeQPFKcwpUb1oyhhL4MT+mKoOWjTFu6AidCP
+   sSKJMtk8hmtXvLy9hb+sVMYFupKwyqrP00jXTkc9zKqe2XE/jUFbA7B62
+   64S3EiDzyeKJQMecp0fVGl+9M2NB/8adwmIrFv8Bydz7r0o1W+Iy6WTKR
+   zKFUxRXouLCQC9te76DxZYev5S1q9qYGBL7XqLYG0uT/vgW5OZceiJNjW
+   4E70mONsaIGazO2Ch5KGFUa3z3yZg1UrpZifUGENQ4kzl9GAAyjVXvbRV
+   A==;
+X-CSE-ConnectionGUID: mWqwd6x5Qvuljpl9pFjjtw==
+X-CSE-MsgGUID: eRicbZcZQ+Cw3l3Xnbg+UA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11694"; a="97147102"
 X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
-   d="scan'208";a="82007993"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 03:23:07 -0800
-X-CSE-ConnectionGUID: OeBIcGBORzGRfonZZ/1xsQ==
-X-CSE-MsgGUID: 4hZfSrrfR92/MWxw2hVu0g==
+   d="scan'208";a="97147102"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2026 04:25:09 -0800
+X-CSE-ConnectionGUID: MXcdS3X2RnqXagpeYMVKcg==
+X-CSE-MsgGUID: Z4yAAamLRkOrP14lWiFygA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,280,1763452800"; 
-   d="scan'208";a="210619705"
+   d="scan'208";a="241592774"
 Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 08 Feb 2026 03:23:04 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 08 Feb 2026 04:25:05 -0800
 Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vp2sX-00000000m9s-3Ci3;
-	Sun, 08 Feb 2026 11:23:01 +0000
-Date: Sun, 8 Feb 2026 19:22:35 +0800
+	id 1vp3qZ-00000000mBQ-05gV;
+	Sun, 08 Feb 2026 12:25:03 +0000
+Date: Sun, 8 Feb 2026 20:24:58 +0800
 From: kernel test robot <lkp@intel.com>
 To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Linux Memory Management List <linux-mm@kvack.org>
 Subject: Re: [PATCH v2 2/3] tracing: Add tracer_uses_snapshot() helper to
  remove #ifdefs
-Message-ID: <202602081945.dguj4FF6-lkp@intel.com>
+Message-ID: <202602082013.PnPZCdsA-lkp@intel.com>
 References: <20260208040221.900653834@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -84,25 +85,39 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Re
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
 patch link:    https://lore.kernel.org/r/20260208040221.900653834%40kernel.org
 patch subject: [PATCH v2 2/3] tracing: Add tracer_uses_snapshot() helper to remove #ifdefs
-config: sh-defconfig (https://download.01.org/0day-ci/archive/20260208/202602081945.dguj4FF6-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260208/202602081945.dguj4FF6-lkp@intel.com/reproduce)
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260208/202602082013.PnPZCdsA-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260208/202602082013.PnPZCdsA-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602081945.dguj4FF6-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602082013.PnPZCdsA-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   kernel/trace/trace.c: In function 'tracing_set_tracer':
->> kernel/trace/trace.c:6337:25: error: 'struct trace_array' has no member named 'cond_snapshot'
+>> kernel/trace/trace.c:6337:13: error: no member named 'cond_snapshot' in 'struct trace_array'
     6337 |                 ret = tr->cond_snapshot ? -EBUSY : 0;
-         |                         ^~
-   kernel/trace/trace.c:6366:9: error: 'had_max_tr' undeclared (first use in this function)
+         |                       ~~  ^
+   kernel/trace/trace.c:6366:2: error: use of undeclared identifier 'had_max_tr'
     6366 |         had_max_tr = tracer_uses_snapshot(tr->current_trace);
-         |         ^~~~~~~~~~
-   kernel/trace/trace.c:6366:9: note: each undeclared identifier is reported only once for each function it appears in
+         |         ^
+   kernel/trace/trace.c:6372:6: error: use of undeclared identifier 'had_max_tr'
+    6372 |         if (had_max_tr && !tracer_uses_snapshot(trace)) {
+         |             ^
+   kernel/trace/trace.c:6385:7: error: use of undeclared identifier 'had_max_tr'
+    6385 |         if (!had_max_tr && tracer_uses_snapshot(trace)) {
+         |              ^
+   kernel/trace/trace.c:9795:23: warning: shift count is negative [-Wshift-count-negative]
+    9795 |                     !((1ULL << i) & TOP_LEVEL_TRACE_FLAGS)) {
+         |                                     ^~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.c:523:9: note: expanded from macro 'TOP_LEVEL_TRACE_FLAGS'
+     523 |                TRACE_ITER(PROF_TEXT_OFFSET) | FPROFILE_DEFAULT_FLAGS)
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace.h:1452:42: note: expanded from macro 'TRACE_ITER'
+    1452 |         (TRACE_ITER_##flag##_BIT < 0 ? 0 : 1ULL << (TRACE_ITER_##flag##_BIT))
+         |                                                 ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning and 4 errors generated.
 
 
 vim +6337 kernel/trace/trace.c
