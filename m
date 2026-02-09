@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A999D363C5F;
-	Mon,  9 Feb 2026 09:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3FD3644CA;
+	Mon,  9 Feb 2026 09:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770629134; cv=none; b=CqE136vuISATU7Kxs9Te9ikDCSeb0uXtHY7K4OJ8SfxWPD2JYxu7SnfFqFpXpqAaQnjuTKFz7KEmztYTOiBU0AQNyUyEjPS7dEnEMLjtpplXSgY+BeOYAVT1z6BtuQclpePPFdz6nhMETCRB4cN6xyGZsjqsgC8Fh5WOoHAut+Y=
+	t=1770629142; cv=none; b=QAmImHmZgxYy/f+ECBFZvz8VfrL5M7bRybQBExt8Mrd6mgVMc1lI1XPgKlmEzpD01b71Nq0fbrAWPuoN3oasgKN4VJkLyBYMy+X5TQpKTY15FDS9UsVr2dbfoW9SjZt4dmm7/W3Q6TGewYuoBBFc+iLud+7VEvRIhXvcCOnVtFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770629134; c=relaxed/simple;
-	bh=V/+j7kQfNuspu+Q5e0iTMIHqcYsXeUFZ+qYU0M2iJGQ=;
+	s=arc-20240116; t=1770629142; c=relaxed/simple;
+	bh=WT+kkHHnPuKxVyBjAgiXFE/mpaEiAyfQZKD3tFtz+jA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KZUFsDOa4mrmMuGbvF6YxxCqZU/i/jowextVh0sEwbFyNWoSuMOeQyCc5yNrCGHIvtnN0L4lUUuUX4DSExK/WIcGiISUddYFtbkJ8kyqGMApsT3r5+D2IRywrn9hU/8vV3I3HUm0qraoxotUlbsnAWfdGYvZKCVl6y630fS499w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKsv4lHq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dP4ABYtuiuHQ9TlbjMEpBgikWLEU7JpvCeI502egw6Sp3fTtyNunR+fiBMcWC1j9KY7I+icvjuYy4slAYZSt8XUbe86tNf46/8tZCNHWuHjw1osP1wPkm6yIHmoeoyy1qJb8AnMpxWcwmlsM5lMJ8BjWOsbHiXuGAxaIsMBdJsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=co7APW4k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKsv4lHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FCB6C2BC86;
-	Mon,  9 Feb 2026 09:25:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="co7APW4k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451C8C116C6;
+	Mon,  9 Feb 2026 09:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770629134;
-	bh=V/+j7kQfNuspu+Q5e0iTMIHqcYsXeUFZ+qYU0M2iJGQ=;
+	s=k20201202; t=1770629142;
+	bh=WT+kkHHnPuKxVyBjAgiXFE/mpaEiAyfQZKD3tFtz+jA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EKsv4lHqhWxYHfQxsoPN2WTwixVhj63rnpYwDui9oX1oe3UqdakkXaU0Oee5+xN7G
-	 p0qJvE2ev3zfO0dMEtrN8qf6WQDx5eYbGG+BqkZJXDiqIuRH+b4tUTRLfB1ntCxvxC
-	 E9mPFfvCnTblnkXWL4LorDVCOqKstxoKdH0amhLwFr6YXf2fct2HaiGL1ugHpPwjkF
-	 bh6QJ2rdNf347yEH7y10xetucDFcj+o1uCaCM1fplNG/oEiuRejhEqdNR1GnO5DM77
-	 6qgc76DWT6HLsql4uQz30DbyBzz1ZinFKcWsjqa49HByPteudyRPUuDjdiDSbzWsry
-	 Q2wI/GfQ/sBYw==
+	b=co7APW4kdXoWM2iBJt10PNYDce8g5SN2zYM59Y/hCLaq4+72u/CIEdt43kpHYhxWt
+	 VPxue0tt8vcQKGWMKWAojpHXPXkQXa7+3mCqK9OlFJeVdNKSNXX3pZyAKUENjLe0d6
+	 Yen/qUQmkSVzkzaEp9BHeJA/2kf8luP/3GpZctfqsz2ZS6GFUuqTdDU5qenWNNkRe5
+	 WQaDUhG1cQM5r8PS/N2MVWspxMAjyQRi2UCv02mRJWE4MsGjN6GYYd+9IfTzvnn8m7
+	 z15s7BD/ElqcrseYA7HvZr8MTOTcWqcik6TWjg8pnVYkyEB0sUYQQieq5ZyEcV4a7L
+	 obPhdbR3cqgbg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 1/4] tracing: Reset last_boot_info if ring buffer is reset
-Date: Mon,  9 Feb 2026 18:25:32 +0900
-Message-ID:  <177062913185.1230888.10201577470513915058.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v7 2/4] tracing: Make the backup instance non-reusable
+Date: Mon,  9 Feb 2026 18:25:39 +0900
+Message-ID:  <177062913957.1230888.3369251024459864526.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
 In-Reply-To:  <177062912135.1230888.17419570791737357433.stgit@mhiramat.tok.corp.google.com>
 References:  <177062912135.1230888.17419570791737357433.stgit@mhiramat.tok.corp.google.com>
@@ -50,60 +50,450 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Commit 32dc0042528d ("tracing: Reset last-boot buffers when reading
-out all cpu buffers") resets the last_boot_info when user read out
-all data via trace_pipe* files. But it is not reset when user
-resets the buffer from other files. (e.g. write `trace` file)
+Since there is no reason to reuse the backup instance, make it
+readonly (but erasable).
+Note that only backup instances are readonly, because
+other trace instances will be empty unless it is writable.
+Only backup instances have copy entries from the original.
 
-Reset it when the corresponding ring buffer is reset too.
+With this change, most of the trace control files are removed
+from the backup instance, including eventfs enable/filter etc.
 
-Fixes: 32dc0042528d ("tracing: Reset last-boot buffers when reading out all cpu buffers")
+ # find /sys/kernel/tracing/instances/backup/events/ | wc -l
+ 4093
+ # find /sys/kernel/tracing/instances/boot_map/events/ | wc -l
+ 9573
+
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v7:
- - Remove unneeded update_last_data_if_empty() call from
-   tracing_snapshot_write() because snapshot is disabled on
-   persistent instances.
+ Changes in v7:
+   - Return -EACCES instead of -EPERM.
+ Changes in v6:
+   - Remove tracing_on file from readonly instances.
+   - Remove unused writable_mode from tracing_init_tracefs_percpu().
+   - Cleanup init_tracer_tracefs() and create_event_toplevel_files().
+   - Remove TRACE_MODE_WRITE_MASK.
+   - Add TRACE_ARRAY_FL_RDONLY.
+ Changes in v5:
+   - Rebased on the latest for-next (and hide show_event_filters/triggers
+     if the instance is readonly.
+ Changes in v4:
+  - Make trace data erasable. (not reusable)
+ Changes in v3:
+  - Resuse the beginning part of event_entries for readonly files.
+  - Remove readonly file_operations and checking readonly flag in
+    each write operation.
+ Changes in v2:
+  - Use readonly file_operations to prohibit writing instead of
+    checking flags in write() callbacks.
+  - Remove writable files from eventfs.
 ---
- kernel/trace/trace.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/trace.c        |   94 +++++++++++++++++++++++++++++--------------
+ kernel/trace/trace.h        |    7 +++
+ kernel/trace/trace_boot.c   |    5 +-
+ kernel/trace/trace_events.c |   76 ++++++++++++++++++++---------------
+ 4 files changed, 117 insertions(+), 65 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 845b8a165daf..9e1cff78a1ca 100644
+index 9e1cff78a1ca..eee1f283c5f4 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -4127,6 +4127,8 @@ static int tracing_single_release_tr(struct inode *inode, struct file *file)
- 	return single_release(inode, file);
+@@ -4286,6 +4286,11 @@ static ssize_t
+ tracing_write_stub(struct file *filp, const char __user *ubuf,
+ 		   size_t count, loff_t *ppos)
+ {
++	struct trace_array *tr = file_inode(filp)->i_private;
++
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	return count;
  }
  
-+static bool update_last_data_if_empty(struct trace_array *tr);
+@@ -4386,6 +4391,9 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
+ 	cpumask_var_t tracing_cpumask_new;
+ 	int err;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
 +
- static int tracing_open(struct inode *inode, struct file *file)
+ 	if (count == 0 || count > KMALLOC_MAX_SIZE)
+ 		return -EINVAL;
+ 
+@@ -5665,6 +5673,9 @@ tracing_set_trace_write(struct file *filp, const char __user *ubuf,
+ 	size_t ret;
+ 	int err;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	ret = cnt;
+ 
+ 	if (cnt > MAX_TRACER_SIZE)
+@@ -6299,6 +6310,9 @@ tracing_entries_write(struct file *filp, const char __user *ubuf,
+ 	unsigned long val;
+ 	int ret;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+ 	if (ret)
+ 		return ret;
+@@ -7053,6 +7067,9 @@ static ssize_t tracing_clock_write(struct file *filp, const char __user *ubuf,
+ 	const char *clockstr;
+ 	int ret;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	if (cnt >= sizeof(buf))
+ 		return -EINVAL;
+ 
+@@ -9050,6 +9067,9 @@ rb_simple_write(struct file *filp, const char __user *ubuf,
+ 	unsigned long val;
+ 	int ret;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+ 	if (ret)
+ 		return ret;
+@@ -9156,6 +9176,9 @@ buffer_subbuf_size_write(struct file *filp, const char __user *ubuf,
+ 	int pages;
+ 	int ret;
+ 
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+ 	if (ret)
+ 		return ret;
+@@ -9836,17 +9859,22 @@ static __init void create_trace_instances(struct dentry *d_tracer)
+ static void
+ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
  {
- 	struct trace_array *tr = inode->i_private;
-@@ -4151,6 +4153,8 @@ static int tracing_open(struct inode *inode, struct file *file)
- 			tracing_reset_online_cpus(trace_buf);
- 		else
- 			tracing_reset_cpu(trace_buf, cpu);
++	umode_t writable_mode = TRACE_MODE_WRITE;
+ 	int cpu;
+ 
++	if (trace_array_is_readonly(tr))
++		writable_mode = TRACE_MODE_READ;
 +
-+		update_last_data_if_empty(tr);
+ 	trace_create_file("available_tracers", TRACE_MODE_READ, d_tracer,
+-			tr, &show_traces_fops);
++			  tr, &show_traces_fops);
+ 
+-	trace_create_file("current_tracer", TRACE_MODE_WRITE, d_tracer,
+-			tr, &set_tracer_fops);
++	trace_create_file("current_tracer", writable_mode, d_tracer,
++			  tr, &set_tracer_fops);
+ 
+-	trace_create_file("tracing_cpumask", TRACE_MODE_WRITE, d_tracer,
++	trace_create_file("tracing_cpumask", writable_mode, d_tracer,
+ 			  tr, &tracing_cpumask_fops);
+ 
++	/* Options are used for changing print-format even for readonly instance. */
+ 	trace_create_file("trace_options", TRACE_MODE_WRITE, d_tracer,
+ 			  tr, &tracing_iter_fops);
+ 
+@@ -9856,12 +9884,36 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	trace_create_file("trace_pipe", TRACE_MODE_READ, d_tracer,
+ 			  tr, &tracing_pipe_fops);
+ 
+-	trace_create_file("buffer_size_kb", TRACE_MODE_WRITE, d_tracer,
++	trace_create_file("buffer_size_kb", writable_mode, d_tracer,
+ 			  tr, &tracing_entries_fops);
+ 
+ 	trace_create_file("buffer_total_size_kb", TRACE_MODE_READ, d_tracer,
+ 			  tr, &tracing_total_entries_fops);
+ 
++	trace_create_file("trace_clock", writable_mode, d_tracer, tr,
++			  &trace_clock_fops);
++
++	trace_create_file("timestamp_mode", TRACE_MODE_READ, d_tracer, tr,
++			  &trace_time_stamp_mode_fops);
++
++	tr->buffer_percent = 50;
++
++	trace_create_file("buffer_subbuf_size_kb", writable_mode, d_tracer,
++			  tr, &buffer_subbuf_size_fops);
++
++	create_trace_options_dir(tr);
++
++	if (tr->range_addr_start)
++		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
++				  tr, &last_boot_fops);
++
++	for_each_tracing_cpu(cpu)
++		tracing_init_tracefs_percpu(tr, cpu);
++
++	/* Read-only instance has above files only. */
++	if (trace_array_is_readonly(tr))
++		return;
++
+ 	trace_create_file("free_buffer", 0200, d_tracer,
+ 			  tr, &tracing_free_buffer_fops);
+ 
+@@ -9873,49 +9925,29 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	trace_create_file("trace_marker_raw", 0220, d_tracer,
+ 			  tr, &tracing_mark_raw_fops);
+ 
+-	trace_create_file("trace_clock", TRACE_MODE_WRITE, d_tracer, tr,
+-			  &trace_clock_fops);
+-
+-	trace_create_file("tracing_on", TRACE_MODE_WRITE, d_tracer,
+-			  tr, &rb_simple_fops);
+-
+-	trace_create_file("timestamp_mode", TRACE_MODE_READ, d_tracer, tr,
+-			  &trace_time_stamp_mode_fops);
+-
+-	tr->buffer_percent = 50;
+-
+ 	trace_create_file("buffer_percent", TRACE_MODE_WRITE, d_tracer,
+-			tr, &buffer_percent_fops);
+-
+-	trace_create_file("buffer_subbuf_size_kb", TRACE_MODE_WRITE, d_tracer,
+-			  tr, &buffer_subbuf_size_fops);
++			  tr, &buffer_percent_fops);
+ 
+ 	trace_create_file("syscall_user_buf_size", TRACE_MODE_WRITE, d_tracer,
+-			 tr, &tracing_syscall_buf_fops);
++			  tr, &tracing_syscall_buf_fops);
+ 
+-	create_trace_options_dir(tr);
++	trace_create_file("tracing_on", TRACE_MODE_WRITE, d_tracer,
++			  tr, &rb_simple_fops);
+ 
+ 	trace_create_maxlat_file(tr, d_tracer);
+ 
+ 	if (ftrace_create_function_files(tr, d_tracer))
+ 		MEM_FAIL(1, "Could not allocate function filter files");
+ 
+-	if (tr->range_addr_start) {
+-		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
+-				  tr, &last_boot_fops);
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	} else {
++	if (!tr->range_addr_start)
+ 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
+ 				  tr, &snapshot_fops);
+ #endif
+-	}
+ 
+ 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
+ 			  tr, &tracing_err_log_fops);
+ 
+-	for_each_tracing_cpu(cpu)
+-		tracing_init_tracefs_percpu(tr, cpu);
+-
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
+@@ -10742,7 +10774,7 @@ __init static void enable_instances(void)
+ 		 * Backup buffers can be freed but need vfree().
+ 		 */
+ 		if (backup)
+-			tr->flags |= TRACE_ARRAY_FL_VMALLOC;
++			tr->flags |= TRACE_ARRAY_FL_VMALLOC | TRACE_ARRAY_FL_RDONLY;
+ 
+ 		if (start || backup) {
+ 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 649fdd20fc91..393be92768f1 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -459,6 +459,7 @@ enum {
+ 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
+ 	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
+ 	TRACE_ARRAY_FL_VMALLOC		= BIT(5),
++	TRACE_ARRAY_FL_RDONLY		= BIT(6),
+ };
+ 
+ #ifdef CONFIG_MODULES
+@@ -488,6 +489,12 @@ extern unsigned long trace_adjust_address(struct trace_array *tr, unsigned long
+ 
+ extern struct trace_array *printk_trace;
+ 
++static inline bool trace_array_is_readonly(struct trace_array *tr)
++{
++	/* backup instance is read only. */
++	return tr->flags & TRACE_ARRAY_FL_RDONLY;
++}
++
+ /*
+  * The global tracer (top) should be the first trace array added,
+  * but we check the flag anyway.
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index dbe29b4c6a7a..2ca2541c8a58 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -61,7 +61,8 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
+ 		v = memparse(p, NULL);
+ 		if (v < PAGE_SIZE)
+ 			pr_err("Buffer size is too small: %s\n", p);
+-		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
++		if (trace_array_is_readonly(tr) ||
++		    tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
+ 			pr_err("Failed to resize trace buffer to %s\n", p);
  	}
  
- 	if (file->f_mode & FMODE_READ) {
-@@ -5215,6 +5219,7 @@ tracing_set_trace_read(struct file *filp, char __user *ubuf,
- int tracer_init(struct tracer *t, struct trace_array *tr)
+@@ -597,7 +598,7 @@ trace_boot_enable_tracer(struct trace_array *tr, struct xbc_node *node)
+ 
+ 	p = xbc_node_find_value(node, "tracer", NULL);
+ 	if (p && *p != '\0') {
+-		if (tracing_set_tracer(tr, p) < 0)
++		if (trace_array_is_readonly(tr) || tracing_set_tracer(tr, p) < 0)
+ 			pr_err("Failed to set given tracer: %s\n", p);
+ 	}
+ 
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 61fe01dce7a6..b493cbdf0ea0 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1396,6 +1396,9 @@ static int __ftrace_set_clr_event(struct trace_array *tr, const char *match,
  {
- 	tracing_reset_online_cpus(&tr->array_buffer);
-+	update_last_data_if_empty(tr);
- 	return t->init(tr);
- }
+ 	int ret;
  
-@@ -7028,6 +7033,7 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
- 		ring_buffer_set_clock(tr->snapshot_buffer.buffer, trace_clocks[i].func);
- 	tracing_reset_online_cpus(&tr->snapshot_buffer);
- #endif
-+	update_last_data_if_empty(tr);
++	if (trace_array_is_readonly(tr))
++		return -EACCES;
++
+ 	mutex_lock(&event_mutex);
+ 	ret = __ftrace_set_clr_event_nolock(tr, match, sub, event, set, mod);
+ 	mutex_unlock(&event_mutex);
+@@ -2968,8 +2971,8 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
+ 	} else
+ 		__get_system(system);
  
- 	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
- 		struct trace_scratch *tscratch = tr->scratch;
+-	/* ftrace only has directories no files */
+-	if (strcmp(name, "ftrace") == 0)
++	/* ftrace only has directories no files, readonly instance too. */
++	if (strcmp(name, "ftrace") == 0 || trace_array_is_readonly(tr))
+ 		nr_entries = 0;
+ 	else
+ 		nr_entries = ARRAY_SIZE(system_entries);
+@@ -3134,28 +3137,30 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 	int ret;
+ 	static struct eventfs_entry event_entries[] = {
+ 		{
+-			.name		= "enable",
++			.name		= "format",
+ 			.callback	= event_callback,
+-			.release	= event_release,
+ 		},
++#ifdef CONFIG_PERF_EVENTS
+ 		{
+-			.name		= "filter",
++			.name		= "id",
+ 			.callback	= event_callback,
+ 		},
++#endif
++#define NR_RO_EVENT_ENTRIES	(1 + IS_ENABLED(CONFIG_PERF_EVENTS))
++/* Readonly files must be above this line and counted by NR_RO_EVENT_ENTRIES. */
+ 		{
+-			.name		= "trigger",
++			.name		= "enable",
+ 			.callback	= event_callback,
++			.release	= event_release,
+ 		},
+ 		{
+-			.name		= "format",
++			.name		= "filter",
+ 			.callback	= event_callback,
+ 		},
+-#ifdef CONFIG_PERF_EVENTS
+ 		{
+-			.name		= "id",
++			.name		= "trigger",
+ 			.callback	= event_callback,
+ 		},
+-#endif
+ #ifdef CONFIG_HIST_TRIGGERS
+ 		{
+ 			.name		= "hist",
+@@ -3188,7 +3193,10 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 	if (!e_events)
+ 		return -ENOMEM;
+ 
+-	nr_entries = ARRAY_SIZE(event_entries);
++	if (trace_array_is_readonly(tr))
++		nr_entries = NR_RO_EVENT_ENTRIES;
++	else
++		nr_entries = ARRAY_SIZE(event_entries);
+ 
+ 	name = trace_event_name(call);
+ 	ei = eventfs_create_dir(name, e_events, event_entries, nr_entries, file);
+@@ -4527,31 +4535,44 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
+ 	int nr_entries;
+ 	static struct eventfs_entry events_entries[] = {
+ 		{
+-			.name		= "enable",
++			.name		= "header_page",
+ 			.callback	= events_callback,
+ 		},
+ 		{
+-			.name		= "header_page",
++			.name		= "header_event",
+ 			.callback	= events_callback,
+ 		},
++#define NR_RO_TOP_ENTRIES	2
++/* Readonly files must be above this line and counted by NR_RO_TOP_ENTRIES. */
+ 		{
+-			.name		= "header_event",
++			.name		= "enable",
+ 			.callback	= events_callback,
+ 		},
+ 	};
+ 
+-	entry = trace_create_file("set_event", TRACE_MODE_WRITE, parent,
+-				  tr, &ftrace_set_event_fops);
+-	if (!entry)
+-		return -ENOMEM;
++	if (!trace_array_is_readonly(tr)) {
++		entry = trace_create_file("set_event", TRACE_MODE_WRITE, parent,
++					tr, &ftrace_set_event_fops);
++		if (!entry)
++			return -ENOMEM;
+ 
+-	trace_create_file("show_event_filters", TRACE_MODE_READ, parent, tr,
+-			  &ftrace_show_event_filters_fops);
++		/* There are not as crucial, just warn if they are not created */
++		trace_create_file("show_event_filters", TRACE_MODE_READ, parent, tr,
++				&ftrace_show_event_filters_fops);
+ 
+-	trace_create_file("show_event_triggers", TRACE_MODE_READ, parent, tr,
+-			  &ftrace_show_event_triggers_fops);
++		trace_create_file("show_event_triggers", TRACE_MODE_READ, parent, tr,
++				&ftrace_show_event_triggers_fops);
+ 
+-	nr_entries = ARRAY_SIZE(events_entries);
++		trace_create_file("set_event_pid", TRACE_MODE_WRITE, parent,
++				tr, &ftrace_set_event_pid_fops);
++
++		trace_create_file("set_event_notrace_pid",
++				TRACE_MODE_WRITE, parent, tr,
++				&ftrace_set_event_notrace_pid_fops);
++		nr_entries = ARRAY_SIZE(events_entries);
++	} else {
++		nr_entries = NR_RO_TOP_ENTRIES;
++	}
+ 
+ 	e_events = eventfs_create_events_dir("events", parent, events_entries,
+ 					     nr_entries, tr);
+@@ -4560,15 +4581,6 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
+ 		return -ENOMEM;
+ 	}
+ 
+-	/* There are not as crucial, just warn if they are not created */
+-
+-	trace_create_file("set_event_pid", TRACE_MODE_WRITE, parent,
+-			  tr, &ftrace_set_event_pid_fops);
+-
+-	trace_create_file("set_event_notrace_pid",
+-			  TRACE_MODE_WRITE, parent, tr,
+-			  &ftrace_set_event_notrace_pid_fops);
+-
+ 	tr->event_dir = e_events;
+ 
+ 	return 0;
 
