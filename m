@@ -1,60 +1,39 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6575937A496;
-	Mon,  9 Feb 2026 17:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A294B26ED48;
+	Mon,  9 Feb 2026 19:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770656944; cv=none; b=GZifzR58HYlQmmU66nbrxILAOJQLG6y99AML7vXsNyOctudtuHXPx6WI5bDocqdIHML4hN42bBnSP4ma/m9il9s+eypxj4pDs28fOHGSjDl5ewBguiR4UMshIaqVDSf4GO0PwGJE4MPE5k6Z7SvGva/8RZ/q9wh2tuHqNbBWAN4=
+	t=1770664574; cv=none; b=PKEj3lZT1sOYl+0NvJsD7dSj8qW/W79EmHAW+/azk5PFAXii8amYjiNLP6aeTyhV4Z51+F/3t7xhLjwxS/q+Hk7zMx4+STg+6HdtYOs3Ric+ivxgTs40R8/v5la37rTDJ0Y3G3AX4aUXTwZG1jf6aFL+txFRgcAuRxO/s31d4G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770656944; c=relaxed/simple;
-	bh=NWWjlOH7B83pojJkHPF6piAg0Lbl4e/7rtUPf576tcE=;
+	s=arc-20240116; t=1770664574; c=relaxed/simple;
+	bh=K84LMYSwPhj85e7p7HD8CMLWkcmCZVvN1rA19YO+YOw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oY8pkMYoLBRPGm/YnBMiRoWGSLe7MRaN1QjcShIPI8xqjXvLV1L1JKl0Ra6FXMHIydnWcm8YSHU8gWLQ2KWDA2W3gJU/wKmGUbt8623YVZEuYhe72WtCdFJRcrXGQdSICsuuc4nFoo1msj4ckY0987rlp6UJjhQpZoKjdM2DcaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cYSdSNGQ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=Uq/oCAIVcQpvO6F+bIrWGxcqSFYe7xl7dBC4R8bWWYVNhHyHvRx1X7hqdNFohcuXVJaAFxBxmimYmhVK4WAEupj2lwdoAadKK3aWszMAKWi8FmvWIN4HM63Qwtyn30R1Wq2VE2O+hrUKznOfVoZIZ1NKZTdrSw5+aPz1DFa0ksA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=fail (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=iPd00tHw reason="signature verification failed"; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cYSdSNGQ"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 619GkPnV501539;
-	Mon, 9 Feb 2026 17:08:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=V+SiWg
-	duwxees+zomWnRSsdKtq4DlrLkGTFXFHvdFGk=; b=cYSdSNGQSnFMx3NRwDFmIz
-	TvgrvbcYdQvO8LbcyVdkAjIKYmlTWgeRJrXrYetV96mnVqZEqwviN7JV2gMSxcWO
-	9I5IeI0TRVCyALVlHFJWWP5b7pZA0ahRIJROr2v4c2IlRLr4jp5mfN5L735zL1Ef
-	9JKUaxeYnwP5Ijor/LBj/HZD6uILhDYVdzoNbLu+Sz7gX24UTY5AlmVnCk0f3lgl
-	nx/8HkuDboBycUJ1Gx7Sb6jlbSPbLalJQP2N7rdSB6avBeCrz8q0n536Xk85/Gg6
-	q0S31jhvnIYdV5cfjH9Dbrzu3x6bgJXJc7aqa0kYSx79NwI7WfB+VcfGRj6ncUaA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696w0buq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Feb 2026 17:08:07 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 619DWTH9001499;
-	Mon, 9 Feb 2026 17:08:06 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4c6gqmx29g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Feb 2026 17:08:06 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 619H82Zo25494140
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Feb 2026 17:08:02 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EFE6420043;
-	Mon,  9 Feb 2026 17:08:01 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6553820040;
-	Mon,  9 Feb 2026 17:08:00 +0000 (GMT)
-Received: from [9.111.207.126] (unknown [9.111.207.126])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  9 Feb 2026 17:08:00 +0000 (GMT)
-Message-ID: <113e4e4d-8b7a-437d-a3a2-de74acc9ecaa@linux.ibm.com>
-Date: Mon, 9 Feb 2026 18:07:59 +0100
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iPd00tHw"
+Received: from [172.27.2.41] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 619JE36v2934652
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 9 Feb 2026 11:14:18 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 619JE36v2934652
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026012301; t=1770664463;
+	bh=pIyV62SWjV0SKyjGknYDYzfBqyYNpDlb53BKVk3jI10=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iPd00tHw1jd3dEOTaiXmF3ei63floLH1KlJ9NcceCfS7Irgbtsq1kJWJWR/Ws1wSO
+	 dxmQur9xlMilqnU2Nf75lUielVCCnq8y1WPMJlWg9Z9m4NPXYlnIOKjmk90TqyAVWt
+	 WEtv508aS+ox+SRIPrFJWTiFqYiZ2LdDJ3tM5IMknKj7G4lYx4oCTmq3gSHdI2vW3v
+	 J1L7aibbo0NPOrXwGJZ26pULK5COAnIiRZK39Ya1u4HxVgQa7Q5reMHGhCC4/pOjU7
+	 QpJaJprS7T1nobbmkUs/3fAUEo9YRPiUsM3N6R78c9K0S8x96V6q0mPrfs/ZtjKmfH
+	 BDNnlP7Bz/8eA==
+Message-ID: <b074b10e-6b3e-4c69-a986-6b2eb665e535@zytor.com>
+Date: Mon, 9 Feb 2026 11:13:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,20 +41,21 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 00/18] unwind_deferred: Implement sframe handling
-To: Steven Rostedt <rostedt@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+Subject: Re: [PATCH v8 6/6] x86/vdso: Enable sframe generation in VDSO
+To: Jens Remus <jremus@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org,
         Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
         "Jose E. Marchesi" <jemarch@gnu.org>,
         Beau Belgrave <beaub@linux.microsoft.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -84,81 +64,174 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
         Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        David Hildenbrand <david@kernel.org>,
         "Liam R. Howlett" <Liam.Howlett@oracle.com>,
         Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
         Michal Hocko
  <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
         Suren Baghdasaryan <surenb@google.com>,
         Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20260127150554.2760964-1-jremus@linux.ibm.com>
- <aYTgwoyRl8kxQShT@google.com> <20260205135411.5fb22df2@gandalf.local.home>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260205135411.5fb22df2@gandalf.local.home>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+References: <20260206193642.1580787-1-jremus@linux.ibm.com>
+ <20260206193642.1580787-7-jremus@linux.ibm.com>
+ <4304d18a-f647-4709-9f29-43d9995cc24e@zytor.com>
+ <22bc8f74-1943-4ceb-bc6b-ea404ba013d9@linux.ibm.com>
+Content-Language: en-US, sv-SE
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <22bc8f74-1943-4ceb-bc6b-ea404ba013d9@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=YeCwJgRf c=1 sm=1 tr=0 ts=698a1478 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=1wei54M0JlXa_cUNk-YA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 6pOW16P1XhSQuI3JJirwxxHhVPPpl8Nt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA5MDE0MSBTYWx0ZWRfXyPk1TShJpjFg
- TRcEnZRgpTGTU6Gwj8TdWCJ3KO4QSZO01sZ3yCvl8pqdm3wyIxLYmUiMdtdy9p5YWSW34PwFfr/
- cVKshdKgZpu3sjpoF2+UHdlwdcIZSEY4bs8UZ2FTjswVBBikq+mvJXupgPi1dsdSrWm9tq469eN
- xvgsN3MRJwzWfd5lfkZeeMK+GQOg/m/FBIH4MewmaEcyFuFZ61fOCWMEuS9WXxnTqodYhRNncZ7
- WGmjiBiLu+dU4WiSl1nbTbo2YN4ZGuGWOCFVaXs+lkpEnuUo8tKKqyrHhgrhoiQBrynMFL7Ib1J
- ubA2JtF+UH6CwKeCbWUUWI2rXFa4c+ceaNJZV8h71qWMrHPtoz+mXQGj/FVDbszn2KIjdJW46Qd
- is5TOuqlE1/xaTnbuM7vcqNMwQLKP8AIdXZJw6r7GDoogA6eSKJ9Wok0CL4HdZXC96l7zkjdtR/
- Ih8Qs7LVYW1HAnzx2qQ==
-X-Proofpoint-ORIG-GUID: O1UEHkJ3Y0btRd8FNQdSrr18n7ct04xA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-09_01,2026-02-09_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602090141
+Content-Transfer-Encoding: 7bit
 
-On 2/5/2026 7:54 PM, Steven Rostedt wrote:
-> On Thu, 5 Feb 2026 10:26:10 -0800
-> Namhyung Kim <namhyung@kernel.org> wrote:
-> 
->>> Namhyung Kim's related perf tools deferred callchain support can be used
->>> for testing ("perf record --call-graph fp,defer" and "perf report/script").  
+On 2026-02-09 08:45, Jens Remus wrote:
+> On 2/7/2026 12:08 AM, H. Peter Anvin wrote:
+>> On 2026-02-06 11:36, Jens Remus wrote:
+>>> From: Josh Poimboeuf <jpoimboe@kernel.org>
+>>>
+>>> Enable sframe generation in the VDSO library so kernel and user space
+>>> can unwind through it.
+>>>
+>>> SFrame isn't supported for x32 or x86-32.  Discard .sframe sections for
+>>> those VDSOs.
+>>>
+>>> [ Jens Remus: Add support for SFrame V3.  Prevent GNU_SFRAME program
+>>> table entry to empty .sframe section. ]
+>>>
 >>
->> Is it possible for users to choose the unwinder - frame pointer or
->> SFrame at runtime?  I feel like the option should be
->> "--call-graph sframe,defer" or just "--call-graph sframe" if it always
->> uses deferred unwinding.
+>> This will not break the x86-32 build if the assembler encounters .sframe?
 > 
-> Currently no, and I'm not sure we want that do we? The idea is to use the
-> best option that is available. Why use frame pointers if sframe is
-> available and it's being called with defer?
+> I cannot follow.  Assembler option --gsframe-3 is only specified in
+> vdso64/Makefile if CONFIG_AS_SFRAME3, which affects the x86-64 and x32
+> VDSOs.  The latter as the x32 VDSO is built from x86-64 objects
+> converted to x86-32 objects using the X32 build step.  Assembler
+> directive ".cfi_sections .sframe" is no longer used in dwarf2.h, which
+> affected the x86-32 VDSO if cross build on x86-64 (so that
+> CONFIG_AS_SFRAME3=y).
 > 
-> If there's no defer, then sframes are not available, so it defaults to the
-> best option available (which will likely be frame pointers).
+> The reason to discard .sframe in the common VDSO linker script if
+> !KEEP_SFRAME is to remove it from x32 VDSO (built from x86-64 objects
+> having .sframe).  It should also prevent linker errors from linkers that
+> do not support R_X86_64_PC64 in x32 mode, such as the meanwhile fixed
+> GNU linker:
+> https://www.sourceware.org/bugzilla/show_bug.cgi?id=33807
+> 
 
-Maybe it would make sense not to "overload" the perf record option
-"--call-graph fp,defer" and use it for all deferred unwinding methods.
+OK, the linker not handing R_X86_64_PC64 is probably a good enough reason to
+discard .sframe.
 
-What about "--call-graph defer", "--call-graph any,defer", or
-"--call-graph *,defer"?
+The x32 ABI and object format is explicitly intended to be as close to the
+x86-64 as possible; it even uses the same architectural identifier. That's
+pretty much the reason we don't even bother recompiling the objects in the
+first place; the 64-bit objects can simply be downconverted from ELF64 to
+ELF32. This also means that the compiler doesn't need to support x32, although
+objcopy and ld does.
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
+This also means the DWARF data is the one generated for 64 bits.
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+This works because the following is true for all vdso entrypoints:
+	- No vdso entry point access pointers or explicit "long"s *in memory*.
+	  (The latter formally violates POSIX for struct timespec, but that
+	   was a deliberate decision imposed by Linus at the time the x32 API
+	   was defined: "no 32-bit time_t in a new ABI.")
+	- No vdso entry point calls system calls that do, either.
+	- No vdso entry point takes a *signed* long as an argument.
+	- No vdso entry point calls system calls that differ in behavior
+	  between x86-64 and x32, making it OK to call the 64-bit system call
+	  from an x32 process.
+
+"unsigned long" and pointers *can* be safely passed in argument registers
+(because the architecture will zero-extend those registers), and in addition
+"signed long" *can* be safely passed as returns.
+
+If ANY of the constraints above were ever violated, OR the binary format would
+start diverging to the point that objcopy can't properly convert it, then we
+would need to start compiling the x32 binaries separately.
+
+
+> The following works and indeed looks nicer with #if KEEP_SFRAME.  Will
+> wait for further feedback on whether or not to discard .sframe in x32
+> VDSO before sending a v9.
+
+I think ld tripping over a bug justifies dropping .sframe at this point. *Make
+sure* to document that in the checkin, and add a comment to vdso32.lds.S that
+that is the motivation, so that if x32 gains support for .sframe in the future
+(which should be simple enough, since the formats are so similar) we don't get
+stuck in some kind of cargo cult programming problem.
+
+It also will avoid issues on the off chance .sframe ends up being defined
+differently for x32 for some reason, perhaps for consistency with other 32-bit
+platforms.
+
+
+Include the version of binutils which fixed the problem in your comments.
+
+
+	-hpa
+
+
+
+> diff --git a/arch/x86/entry/vdso/common/vdso-layout.lds.S b/arch/x86/entry/vdso/common/vdso-layout.lds.S
+> @@ -60,7 +60,7 @@ SECTIONS
+>  		*(.eh_frame.*)
+>  	}					:text
+>  
+> -#ifdef KEEP_SFRAME
+> +#if KEEP_SFRAME
+>  	.sframe		: {
+>  		KEEP (*(.sframe))
+>  		*(.sframe.*)
+> @@ -87,7 +87,7 @@ SECTIONS
+>  		*(.discard)
+>  		*(.discard.*)
+>  		*(__bug_table)
+> -#ifndef KEEP_SFRAME
+> +#if !KEEP_SFRAME
+>  		*(.sframe)
+>  		*(.sframe.*)
+>  #endif
+> @@ -116,7 +116,7 @@ PHDRS
+>  	dynamic		PT_DYNAMIC	PF_R;
+>  	note		PT_NOTE		PF_R;
+>  	eh_frame_hdr	PT_GNU_EH_FRAME PF_R;
+> -#ifdef KEEP_SFRAME
+> +#if KEEP_SFRAME
+>  	sframe		PT_GNU_SFRAME	PF_R;
+>  #endif
+>  	gnu_stack	PT_GNU_STACK	PF_RW;
+> diff --git a/arch/x86/entry/vdso/vdso32/vdso32.lds.S b/arch/x86/entry/vdso/vdso32/vdso32.lds.S
+> @@ -10,6 +10,7 @@
+>  #include <asm/page.h>
+>  
+>  #define BUILD_VDSO32
+> +#define KEEP_SFRAME	false
+>  
+>  #include "common/vdso-layout.lds.S"
+>  
+> diff --git a/arch/x86/entry/vdso/vdso64/vdso64.lds.S b/arch/x86/entry/vdso/vdso64/vdso64.lds.S
+> @@ -8,10 +8,7 @@
+>   */
+>  
+>  #define BUILD_VDSO64
+> -
+> -#ifdef CONFIG_AS_SFRAME
+> -# define KEEP_SFRAME
+> -#endif
+> +#define KEEP_SFRAME	(CONFIG_AS_SFRAME)
+
+This needs to be IS_ENABLED(CONFIG_AS_SFRAME). Otherwise you get either "y" or
+"CONFIG_AS_SFRAME", neither of which are what you want.
+
+>  #include "common/vdso-layout.lds.S"
+>  
+> diff --git a/arch/x86/entry/vdso/vdso64/vdsox32.lds.S b/arch/x86/entry/vdso/vdso64/vdsox32.lds.S
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #define BUILD_VDSOX32
+> +#define KEEP_SFRAME	false
+
+Is "false" supported by all appropriate cpp versions? "0" is probably a safer
+choice, and matches the IS_ENABLED() output anyway.
+
+	-hpa
 
