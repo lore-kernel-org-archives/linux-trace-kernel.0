@@ -1,91 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663472FDC52;
-	Mon,  9 Feb 2026 09:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209BD246762;
+	Mon,  9 Feb 2026 09:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770629157; cv=none; b=NSxIZCjkocHg8aK1cW9YJ0499arUvjEOwnfta55Zieo1+qDHxem3frd+7BE3Yu7rwiy1T9lPFbbAdGVbPZx0ORDsseBxXzhbv6OC2qcWmzU2wHDMQxeQLyxkk00s3lL3klV21VR2G59mXlIhzBR6aDUolN96TdEaNHmQH4O3eyU=
+	t=1770629481; cv=none; b=mpKFD89CWpCO27YYrHoz1/UhXXuQYVGkBxcjFi4j8z6OVGk5mHeJwER8Zs571qGCdYEprGJWh8sgbaS+VNL37F62YH0ZTuRABkf+8ywyp89MOom/vZ+NBGERSqnaOXW39C3J01cJPH8UpbXEu0ZK8p+GsO5ZkPh+YEdi+SsNjF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770629157; c=relaxed/simple;
-	bh=S5HUOKOwvhSR3nZmMfKa96wdR+Qt2kEIy+bpCsLdFdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JpGAPSRW5vmqhCUV3A3RKlRwpzP/rtUa5UXaa4m317HNVaVyhFC+m6dxN6n/wFzSQ/9BSy2N4SImZSY2WopWvD8XDTIy6z7tN2FounSavtXqa+PXI3EWzcPW0VzDHfSMnoYrmdoXxAlJ3MBM+ULiQDgCQgGTFq86dfEQdipBubw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdQSaEFb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdQSaEFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91F9EC116C6;
-	Mon,  9 Feb 2026 09:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770629157;
-	bh=S5HUOKOwvhSR3nZmMfKa96wdR+Qt2kEIy+bpCsLdFdo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sdQSaEFb+0dEUeFrZGmHwNUNrgCRSJANRUZEn6hf5K027gQVqIgReSJxi2DlHU7/m
-	 SV2S8KGKy0z9OQ6tNIngYcHLaOVY52BoqnQ8bymI4B6FPB27uZ2pAMhmmCmNXLdQrH
-	 vdJQ6wU4EFK8xtbAm69vYffxqimpb3BhtFkUwHerC3ig2YJqYO37HfZY+oBWLWWI6n
-	 hkmLeH079lsXIFGq8a07hA9RPEha2LTFuECDolZQJzjDG4as+jj9NTxpEcfM8wlVrZ
-	 uAwRI5XFH0v11cG78tBNWWfWsRLXKC/RJ9QHf7LYfAnoDH94r76ubBA9k4R6dtvJ4M
-	 nnD22GKWheRxg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	s=arc-20240116; t=1770629481; c=relaxed/simple;
+	bh=dWPIyAinjJJgLyRH3NRk8yFrvm44VyykuKnYZ554Ovw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sv0N+vaQrwj8F9fWqotSZt+XCQA1zLU/d7vEuyyD/PqC3CmwCc7A0Z1fPN8ci4t9Bc/swRq1ZOC2x8sLJRxJTBPgha7XLLe46MLw9qrr/rlnkSYNgZr6mwuhR0FrIEdhfpcwCu+I4hhX+UEZaj9+N4UCGkWOzzzG53P+H9cTO/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4f8fYm1mpszYQtnh;
+	Mon,  9 Feb 2026 17:30:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 83B9A4058A;
+	Mon,  9 Feb 2026 17:31:17 +0800 (CST)
+Received: from huawei.com (unknown [7.197.88.80])
+	by APP1 (Coremail) with SMTP id cCh0CgCHPuRZqYlp5UrVGg--.57503S2;
+	Mon, 09 Feb 2026 17:31:17 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@elte.hu>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@ghostprotocols.net>,
+	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 4/4] tracing/Documentation: Add a section about backup instance
-Date: Mon,  9 Feb 2026 18:25:55 +0900
-Message-ID:  <177062915493.1230888.7689297490214883376.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-In-Reply-To:  <177062912135.1230888.17419570791737357433.stgit@mhiramat.tok.corp.google.com>
-References:  <177062912135.1230888.17419570791737357433.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH] tracing: Fix soft lockup when lseeking trace file
+Date: Mon,  9 Feb 2026 17:31:01 +0800
+Message-Id: <20260209093101.1623454-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCHPuRZqYlp5UrVGg--.57503S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AryxAFWDJF1DXw1DZry7ZFb_yoW8Gw1rpF
+	Za9FZxGr4UGF4jyFWF9F4xWryavwnFg347KF9rGw4FvFyDJr15ursFgF1Yg3y5ur9Yy34a
+	vFWYv34UWwnrZFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
+	UUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+A soft lockup may occur when accessing trace file via lseek while
+tracing is active and a large offset is provided. The call trace
+is shown below:
 
-Add a section about backup instance to the debugging.rst.
+watchdog: BUG: soft lockup - CPU#3 stuck for 26s! [poc:141]
+CPU: 3 UID: 0 PID: 141 Comm: poc Not tainted 6.19.0 #1 PREEMPT(none)
+Call Trace:
+  ring_buffer_iter_peek
+  peek_next_entry
+  __find_next_entry
+  trace_find_next_entry_inc
+  s_next
+  traverse.part.0
+  seq_lseek
+  tracing_lseek
+  __x64_sys_lseek
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The root cause is that the lseek implementation for trace files
+is based on seq_lseek, which contains a loop that repeatedly calls
+show() and next() functions until the position reaches the target
+offset. Since no scheduling point is set within this loop, a large
+offset can cause the CPU to be stuck in the loop for an extended
+period, triggering the soft lockup detector.
+
+Fixed by adding cond_resched() in s_next().
+
+Fixes: bc0c38d139ec ("ftrace: latency tracer infrastructure")
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
-  Changes in v6:
-   - Fix typos.
----
- Documentation/trace/debugging.rst |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ kernel/trace/trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
-index 4d88c346fc38..15857951b506 100644
---- a/Documentation/trace/debugging.rst
-+++ b/Documentation/trace/debugging.rst
-@@ -159,3 +159,22 @@ If setting it from the kernel command line, it is recommended to also
- disable tracing with the "traceoff" flag, and enable tracing after boot up.
- Otherwise the trace from the most recent boot will be mixed with the trace
- from the previous boot, and may make it confusing to read.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8bd4ec08fb36..3afe148ef683 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3928,6 +3928,8 @@ static void *s_next(struct seq_file *m, void *v, loff_t *pos)
+ 
+ 	iter->pos = *pos;
+ 
++	cond_resched();
 +
-+Using a backup instance for keeping previous boot data
-+------------------------------------------------------
-+
-+It is also possible to record trace data at system boot time by specifying
-+events with the persistent ring buffer, but in this case the data before the
-+reboot will be lost before it can be read. This problem can be solved by a
-+backup instance. From the kernel command line::
-+
-+  reserve_mem=12M:4096:trace trace_instance=boot_map@trace,sched,irq trace_instance=backup=boot_map
-+
-+On boot up, the previous data in the "boot_map" is copied to the "backup"
-+instance, and the "sched:*" and "irq:*" events for the current boot are traced
-+in the "boot_map". Thus the user can read the previous boot data from the "backup"
-+instance without stopping the trace.
-+
-+Note that this "backup" instance is readonly, and will be removed automatically
-+if you clear the trace data or read out all trace data from the "trace_pipe"
-+or the "trace_pipe_raw" files.
-\ No newline at end of file
+ 	return ent;
+ }
+ 
+-- 
+2.34.1
 
