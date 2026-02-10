@@ -1,261 +1,108 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277882AE78
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Feb 2026 15:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6472EC09B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Feb 2026 15:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770737578; cv=none; b=YA55JTAW+kSdXskz/czGr7EGsCnojLgTV6l3DDw4iQcNb1SGmnmeCvyMAuJz5tHFsdug9T/QkW5ZXbIcZ2Agcqs0Zsye/iHqsWQxwXWKhi16eohaXcwbi2Uq/ahScidiYaLV6vCpMxXNXae+hhWHDr7muRUEt+XpjWp5mIy6u4k=
+	t=1770737951; cv=none; b=tdmquB/trmrQEa6LDESCcExCdk0w4MA1vKdFY1AaLSHLGQgJlbsBa6sHio+P6LpoZfExyHfpwP+jIQ4TAX/F2lFP2bc2RgYVk1YmtBmJvMiDTty71edtdbJGjzR+zp37SH675dp/MJHwWP3t+hDeGv01ahI6kuDjVCUofG9dacs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770737578; c=relaxed/simple;
-	bh=+zGChlcQec4XugPYdTxIPOQXVVtEsJsEdmxWCqrDT3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQhPsmf7bhwn7mFOgeH5Ef1EzmkObT6qujgRa/4VG64KkUonvzxZAJpU1my8BCCtOvExxxXseX4pSp5qsRd47QcaDnDS+8riEU0O8MhglMIE0OkPxWw/sYv8SMxtLke0KV4Va1VA9m6HPQWbtnFXhgjtCXVkJd75gZSEZvKTuaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=abs25RIM; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1770737951; c=relaxed/simple;
+	bh=CbDTDq8IiPhqMJ3H/nKyYlg7mfNAlGOPDEH1nMBSPcY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cj6cjsGbwI+Liaky5ayj3YaIGySsangfZYSO7frQzcnpxE7LLHHNfWaI4c4WfOMj+RzwtNCD3E32/OjBWT0/GZj1grkdr+UibstTGcJGR7GR4cI9HJE/W4MUc/0m0ciKV4J2tuawkpKPVaTiQQ6ox7ulPfKHszkW/5bUTpqfBaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HItzFTpY; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abs25RIM"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4362507f0bcso3558649f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Feb 2026 07:32:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HItzFTpY"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-823c56765fdso545179b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Feb 2026 07:39:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770737575; x=1771342375; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EUhq8bUSDIK8bU/Cf62PUQLvFL3hrikVLXNMzuDuSOI=;
-        b=abs25RIMGDXDzasPRWSVOkmbtJ81t86ySxJ/vdJDQ0ZkYwNrRtPA42nKU8numIhikS
-         iMyJvIpAnxOSIph1QVMNIa4Kpnugob98Q9o0xfd8UI7v1NK9+kUIzw3DxufI6rs6Kpu9
-         t8p9LLFwmM+KDYCWQ1V0JbIkcLv+IsuXo6Lx8Iu8fFN1xmnB3nHVXEroHqofLg5dj3CU
-         UIMflTPk8u9Rq8/z5crBsHq6/CigSN0Tx+32P+KcnrNCfplKNpZMQzsHK9Dh/HrKID7y
-         t86PCsdh01yNygRo3l/gHjPzZIQqfOVf/awYoLmnfWdtv5Yh8ifjShV1ztkY3nz3GZDM
-         17pw==
+        d=gmail.com; s=20230601; t=1770737948; x=1771342748; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DBkYum8SYSh4Va9P3EMS/6EJPSJtNBojrua2eI9xgyg=;
+        b=HItzFTpYKFn3JDqRbGXE3oylPcFxHi6eDxtwdoRg/08EvudWeI+RJy+QzDeZtjp4ea
+         WYOlPiqqbu2CxBXknzBxyvwbDUcPht4mDk6sraDIFfJWcFQG2xWiG9r0HcORJCfHWWUX
+         +QNsfvsSwUpd9a2I/DH/YqgRmxVLOJj/nrWakEVHMbtngtEOUuYntqNrCGN1v6j7h82f
+         9uJuDlCWrGWF0P6wbe8fJZTTaH/9PeakJUviu8z4cT+b3XFpskji7xzDmXIj/Jn2HMMJ
+         MMfB9rfMb84qEM6i2wwKgbvta251lNrZMfI7hePHlTiSoyI0iq3uBHRVnBch+SR2hEzY
+         d/vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770737575; x=1771342375;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EUhq8bUSDIK8bU/Cf62PUQLvFL3hrikVLXNMzuDuSOI=;
-        b=g/6TMYcI00zhBor1jDN5trG/7qR7X5DTkK9U/6f8XPFMkitv5bzWFdTPXw/qTp2l2A
-         pf7Ad7i6m6+JSKXojtAviL940KevFBENrXu/qwuO9vNMC6Qq6FYSUuuRsaZomxmmNMSD
-         lA59BVA3zOPi9XHgyLR4YMv2zvNv304zM96fwXvi2lfjBv6r4pcGPMNvADKsWj9jce0M
-         hiWEZHfrwP1srXBFV6DEFjm5hLzXnkhJYQZYHHSMKgu693sA8XRueIK9IuZJblMqz0iN
-         cZkAFGKtH8CKI6v5mgwrCJmd6qfn2UHh1FlPygq3enWhcdAmJMSteI3lAhig/+RrRTe3
-         g4Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYKWpzWbhPSbKu2gq+NapKPSoR8KvcCq+cn82FoYcolv1UjQqhGzBNY4t9jRDPz9uixbAp1u0z+fFpyFVdmvfph24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWEZ/8pQzNNbvbNKvm0+HxZIZB00Qvb/BSUUmLZPLBcJbYQyoq
-	akZG/hpwnkYJ64wGPRaa2yj3vVoSypYcCOwWLYJZKSX6Rm+YD2s9e5/LE4Faj30d6KnM226iYkv
-	fsmr+mw==
-X-Gm-Gg: AZuq6aJdl+ERDAYRL86xHfnorsfu+AWpq525cMPGphjqtEP6S6NR5l8k2lB5K4eNkAe
-	8qlHJ4rdvJcOm6HPApRGfXPAMSSMkQeLvfODm9LUsP++vFV5qPoK28P4wo8Wr/gR9sv7dmXL+cO
-	AQw66/WLDJCANpwB2cHrmr/8Rm6k29CxWwyzVP8x6W4+7a/C+dRGZxKM4IbqLymTGvQRhFtiEkl
-	ROMschq3GzSax3DYtKoHHmT4SRf6cak2EkoTN643F4tnM6KUCQ/egOyfZwpjzdezet/okVFDhUH
-	ouKHHaoM8oS9G2MSl60kiCoz5BbgcU9hBA7IqWCdsxYx9XMC1VElMMvZmWydKFzALw+8JnfAXig
-	STHCMeRlGWY6+SWsjoFQt1OOCasYzzkznVEszR2Bb5SfhhRyYhKzQIcsLx9Vayw4F6GvhaA5BzE
-	I4A+gpPEpifzhOrFdJ06AoPf2g89iAOhpI1IDztYkVKwolGjc/e6SK/Ajzu47BinmHbbw=
-X-Received: by 2002:a05:6000:24c3:b0:436:e875:7911 with SMTP id ffacd0b85a97d-43779e3bab1mr4635624f8f.4.1770737575096;
-        Tue, 10 Feb 2026 07:32:55 -0800 (PST)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4376686130csm21600376f8f.1.2026.02.10.07.32.53
+        d=1e100.net; s=20230601; t=1770737948; x=1771342748;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DBkYum8SYSh4Va9P3EMS/6EJPSJtNBojrua2eI9xgyg=;
+        b=jeYxDwbQCQH3ZS2QTAqaFO/R3Xop0jgcpEooaKH53f2ouObjOCp0Z5J+oESkixRIyJ
+         F6jGEVF8hAjnvbmfnoJhBEq6wqUCyvaHgjZwSUpv5LXLqHCaI0P82BPi2LU9E9/5Cu11
+         VYBmsxmXE+7k1n05DyliYBuZxScnzzXa8XGlb4ipStnTJ6hoinNwNaLVbymbCFB3VDOj
+         3lkvSwErM/vlv0mq5LOM3ifKpih8v1NjciEgXwXCvVaKX8Uh2eq/dfh79iEAxtzMZIYq
+         bizaSwv1GAnXvrCO7CLgOy7gaLFrWJANigiJgKc7GTWGekLbswrG1O7SwP1QbmWsuhtU
+         Xmww==
+X-Forwarded-Encrypted: i=1; AJvYcCWLP8twwEf6Z+uUQwfCKtJLcuXGyEFYtDySEI8M4AHn4kS7gtFTftQ4D31+WdEpfPc9dGyd+CatEppqafdflPAfIrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHcJFkzPi/JfQju7F4kFL2PG6uu6Wm3b1n46YB4q9KJUcOmmXO
+	QaorLyg4MWIrdEP4LX/JM0E4S70tpmdWYjYT6TwFUpUR6XouDt0vb7VA
+X-Gm-Gg: AZuq6aJLnVxU1KWK4b9v5tCDDBtBV5hEUMkFf+MPtRQR2ALbH5p+gCfvM2w1xBngibl
+	jLXiSrpb0cwpwBSIT3gv2SP+P/rT7EfDrpeAIPKc08BNA2eRVzqDODqLibnFqWF58fHZn+tvWzC
+	7+h3Atk5vn36nqzSOcnKXogBTvWANCFGZOQJOxtedpYNuHrRE86EITV0Q5d3CKWcqK/OKnsV/Rn
+	3KyNtr4YYq5KRcCsxubWmeOqrcL2RnoZNeC15WFOS905hBkqzj/detj7v4mfH8/lfeoTlCWDOn1
+	fv8tQzQOnzblFqwTy9HLiBPVKZT817fF13CGODwKY5ajr7fPn6FJR2ftiwotxPoi9faEdUE14Tm
+	DZaico7SkJHg14KA6QmKbAUHh20DD8+ZPGeYzV7xUJWvl5Oy5KcSiYCMIHqIjNU2RYK0mbCK8lT
+	0e0wmlkvhMJkM+l8plLKVa7LIrOqg6pIdLrn2+LKcx
+X-Received: by 2002:a05:6a00:348d:b0:81b:d5d9:a83a with SMTP id d2e1a72fcca58-824417a9d64mr14705784b3a.61.1770737947982;
+        Tue, 10 Feb 2026 07:39:07 -0800 (PST)
+Received: from russ.ust.hk (wf121-083.ust.hk. [175.159.121.83])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-824418a8139sm13376290b3a.46.2026.02.10.07.39.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Feb 2026 07:32:54 -0800 (PST)
-Date: Tue, 10 Feb 2026 15:32:50 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
-	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
-	qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
-	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 07/30] tracing: Add non-consuming read to trace
- remotes
-Message-ID: <aYtPoil91IX7u_9f@google.com>
-References: <20260131132848.254084-1-vdonnefort@google.com>
- <20260131132848.254084-8-vdonnefort@google.com>
- <20260204185208.646a6d26@gandalf.local.home>
+        Tue, 10 Feb 2026 07:39:07 -0800 (PST)
+From: Haoyang LIU <tttturtleruss@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: tttturtleruss@gmail.com,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] tracing: Fix indentation of return statement in print_trace_fmt()
+Date: Tue, 10 Feb 2026 23:39:02 +0800
+Message-Id: <20260210153903.8041-1-tttturtleruss@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260204185208.646a6d26@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 04, 2026 at 06:52:08PM -0500, Steven Rostedt wrote:
-> On Sat, 31 Jan 2026 13:28:25 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > -static struct trace_remote_iterator *trace_remote_iter(struct trace_remote *remote, int cpu)
-> > +static void __free_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
-> > +{
-> > +	if (!iter->rb_iter)
-> > +		return;
-> 
-> Hmm, can't iter->rb_iter be NULL when iter->rb_iters[] is used?
+The return statement inside the nested if block in print_trace_fmt()
+is not properly indented, making the code structure unclear. This was
+flagged by smatch as a warning.
 
-Arg yes, I missed that when I removed the union. And actually I don't think this
-can be called with iter->rb_iter or iter->rb_iter NULL anymore.
+Add proper indentation to the return statement to match the kernel
+coding style and improve readability.
 
-> 
-> > +
-> > +	if (cpu != RING_BUFFER_ALL_CPUS) {
-> > +		ring_buffer_read_finish(iter->rb_iter);
-> > +		return;
-> > +	}
-> > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		if (iter->rb_iters[cpu])
-> > +			ring_buffer_read_finish(iter->rb_iters[cpu]);
-> > +	}
-> > +
-> > +	kfree(iter->rb_iters);
-> > +}
-> > +
-> > +static int __alloc_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
-> > +{
-> > +	if (cpu != RING_BUFFER_ALL_CPUS) {
-> > +		iter->rb_iter = ring_buffer_read_start(iter->remote->trace_buffer, cpu, GFP_KERNEL);
-> > +
-> > +		return iter->rb_iter ? 0 : -ENOMEM;
-> > +	}
-> > +
-> > +	iter->rb_iters = kcalloc(nr_cpu_ids, sizeof(*iter->rb_iters), GFP_KERNEL);
-> > +	if (!iter->rb_iters)
-> > +		return -ENOMEM;
-> > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		iter->rb_iters[cpu] = ring_buffer_read_start(iter->remote->trace_buffer, cpu,
-> > +							     GFP_KERNEL);
-> > +		if (!iter->rb_iters[cpu]) {
-> > +			__free_ring_buffer_iter(iter, RING_BUFFER_ALL_CPUS);
-> 
-> For instance, we call __free_ring_buffer_iter() here, but I don't see
-> iter->rb_iter being set.
-> 
-> -- Steve
-> 
-> 
-> > +			return -ENOMEM;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
+Signed-off-by: Haoyang LIU <tttturtleruss@gmail.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[...]
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8bd4ec08fb36..bf0ce2aac177 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4286,7 +4286,7 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ 			/* ftrace and system call events are still OK */
+ 			if ((event->type > __TRACE_LAST_TYPE) &&
+ 			    !is_syscall_event(event))
+-			return print_event_fields(iter, event);
++				return print_event_fields(iter, event);
+ 		}
+ 		return event->funcs->trace(iter, sym_flags, event);
+ 	}
+-- 
+2.25.1
 
-> > +static void *trace_next(struct seq_file *m, void *v, loff_t *pos)
-> > +{
-> > +	struct trace_remote_iterator *iter = m->private;
-> > +
-> > +	++*pos;
-> > +
-> > +	if (!iter || !trace_remote_iter_read_event(iter))
-> > +		return NULL;
-> > +
-> > +	trace_remote_iter_move(iter);
-> > +	iter->pos++;
-> > +
-> > +	return iter;
-> > +}
-> > +
-> > +static void *trace_start(struct seq_file *m, loff_t *pos)
-> > +{
-> > +	struct trace_remote_iterator *iter = m->private;
-> > +	loff_t i;
-> > +
-> 
-> FYI, this is where you take locks for iteration of files.
-> 
-> > +	if (!iter)
-> > +		return NULL;
-> > +
-> > +	if (!*pos) {
-> > +		iter->pos = -1;
-> > +		return trace_next(m, NULL, &i);
-> > +	}
-> > +
-> > +	i = iter->pos;
-> > +	while (i < *pos) {
-> > +		iter = trace_next(m, NULL, &i);
-> > +		if (!iter)
-> > +			return NULL;
-> > +	}
-> > +
-> > +	return iter;
-> > +}
-> > +
-> > +static int trace_show(struct seq_file *m, void *v)
-> > +{
-> > +	struct trace_remote_iterator *iter = v;
-> > +
-> > +	trace_seq_init(&iter->seq);
-> > +
-> > +	if (trace_remote_iter_print_event(iter)) {
-> > +		seq_printf(m, "[EVENT %d PRINT TOO BIG]\n", iter->evt->id);
-> > +		return 0;
-> > +	}
-> > +
-> > +	return trace_print_seq(m, &iter->seq);
-> > +}
-> > +
-> > +static void trace_stop(struct seq_file *s, void *v) { }
-> 
-> And stop is where you release the locks.
-> 
-> > +
-> > +static const struct seq_operations trace_sops = {
-> > +	.start		= trace_start,
-> > +	.next		= trace_next,
-> > +	.show		= trace_show,
-> > +	.stop		= trace_stop,
-> > +};
-> > +
-> > +static int trace_open(struct inode *inode, struct file *filp)
-> > +{
-> > +	struct trace_remote *remote = inode->i_private;
-> > +	struct trace_remote_iterator *iter = NULL;
-> > +	int cpu = tracing_get_cpu(inode);
-> > +	int ret;
-> > +
-> > +	if (!(filp->f_mode & FMODE_READ))
-> > +		return 0;
-> > +
-> > +	guard(mutex)(&remote->lock);
-> > +
-> > +	iter = trace_remote_iter(remote, cpu, TRI_NONCONSUMING);
-> > +	if (IS_ERR(iter))
-> > +		return PTR_ERR(iter);
-> 
-> So if iter is bad we exit out here.
-> 
-> > +
-> > +	ret = seq_open(filp, &trace_sops);
-> > +	if (ret) {
-> > +		trace_remote_iter_free(iter);
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (iter)
-> 
-> Why test if iter exists here?
-
-We only test IS_ERR. iter will be NULL if the buffer isn't loaded and the
-userspace output would be empty. But anyway if I move the locking into
-start/stop this line will go away!
-
-> 
-> > +		trace_remote_iter_read_start(iter);
-> 
-> But still, the above grabs locks in the open, where it can return to user
-> space while still holding the locks? That's a no-no.
-> 
-> You can use the seq file start and stop for locking.
-> 
-> -- Steve
->
-[...]
