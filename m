@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB834253C;
-	Tue, 10 Feb 2026 09:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF4620C463;
+	Tue, 10 Feb 2026 09:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770717257; cv=none; b=nRWrnaSYNQtU1T4VUnMlm/qJ3yutvg7gcNW3cXXz2f79ADUjbzUR3eTg0VhMlFhuNJVOxDkeXFJsn24EA96e6i/jKhIlMwUG1cxt0guGdDPqwGtnA+Sv+Drk8kSQbg/H7olwLPhnaXUR4tFr4AxDJlKwT+TCkeVQ3Msart5UM+U=
+	t=1770717265; cv=none; b=fk7NuHNXjZU+DxWM6rGgNiVEffXtCtM+cB91js4ndE/g5AJiFsH6eQnoeZXMxIZfU7oEB4VRjrY9uQWXRWqa750zrcuASAIdXroHNAAwpyDKy8Ls4h88Tq8Pl1i/lAafJfndu6wjkRPgfGaTcFfuDMbA8axim8Hr1XKbZWgsnpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770717257; c=relaxed/simple;
-	bh=F/LKCWFo88ew4oyZzRTInRnAbUm9ChGZiHCOXADEEXk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dUxw6U7UxmIecAUWqtahbmE7uB4I+T7RGZ21w7QRIM7j/UVS4nNlor8MrjgSZr0jRNIvypzFcVwNQEdRfkkaqCxAkv25NPJqpT4dwP7Rs6C7q8OlwTFzg9PZnLCkI0e6QjTWb2PTiswdSKcvD3jcaW+u2nVYG3pWxHRoBDd9CRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aryfLk3C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770717265; c=relaxed/simple;
+	bh=H5OQ2Gpu86hVunVJINYHrefqniEWtsXdV3w6gqszbc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r+VpSpmSfevS3bziA54fnubQvL2UY2Bz/qTQvFKndr7e9cmP0GiyHE5g6fZP4woUXjuYRt8mVw0FXQwnIqld0h3BOcnikx3j+zEc4itPnff4A33Yp+kfubJCDRQ6utryWlR/vUxb/kXtzVsXgZz2wlXYeQntlPqyvegfbzvCbEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZ7bPtZ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aryfLk3C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE74CC116C6;
-	Tue, 10 Feb 2026 09:54:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZ7bPtZ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B21C19423;
+	Tue, 10 Feb 2026 09:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770717257;
-	bh=F/LKCWFo88ew4oyZzRTInRnAbUm9ChGZiHCOXADEEXk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aryfLk3C8Q1oDnXgwabgfVC4o/WdgLK9/Hxt5CHV/1oNkOjFP/acC5h9llLx/dfvx
-	 TkK/QkqErnSiul5/JpaE59uOya1UEQdK6cfvx+4mWpj8jBm0D2lMjeulVHwcQfzWqx
-	 mV00BfMul2RzxBeTclFjEb9p8f4DCCHH8Xkvcxn2rCo6q3JrLJTYE6acOyi6A9psFO
-	 mN7miDdMJuiSex1q8qxGBy1Geof/LUQvoxGruOGRGVU6M7DMkNM0p64lte+P7+v/tl
-	 F0F8qZTjsTeJUsoJzTlaiJzTG44kbvnuEKJgU4ToG5NV72XehAzGJLmBH7pcBLMSv/
-	 QUZ1XbAufxDBw==
+	s=k20201202; t=1770717265;
+	bh=H5OQ2Gpu86hVunVJINYHrefqniEWtsXdV3w6gqszbc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lZ7bPtZ2bL6zPSIJsr9aCDm4mcqcZ2A9wRmSJgZ6Qb23Ru5DtFxLFGFA2XJwZktSf
+	 p6+KLbMy7VF/fT8ZmLDKiBHNW0GN0bCpMx9ALzZq/t6U76E0NobcRtmSrgPZR/EmSM
+	 gXvdaC9IQ0iCeKGJcTaKFgFOiNAVQ3NjV7BOcPnbnOHS4By4aF/IKGU1DJGKjv/q4u
+	 Tyff9AtUCheI0SOww/dSuwD8GulKBPVe2+kpJFGOIex3CVFFDI6cV1BEGTYq5UZFHH
+	 IM8PPo0qCTjn2bXK9XKg+D7U9pApCCW9unhTsHPEkxUfmHiTQvqDOrGDeAbShE0kQX
+	 WQ4/IBDqHcjRw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Shuah Khan <shuah@kernel.org>,
@@ -34,10 +35,12 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/2] selftests/tracing: Fix to make --logdir option work again
-Date: Tue, 10 Feb 2026 18:54:12 +0900
-Message-ID:  <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH 2/2] selftests/tracing: Fix to check awk supports non POSIX strtonum()
+Date: Tue, 10 Feb 2026 18:54:22 +0900
+Message-ID:  <177071726229.2369897.11506524546451139051.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
+In-Reply-To:  <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
+References:  <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,61 +53,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since commit a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to
-use with RV") moved the default LOG_DIR setting after --logdir option
-parser, it overwrites the user given LOG_DIR.
-This fixes it to check the --logdir option parameter when setting new
-default LOG_DIR with a new TOP_DIR.
+Check the awk command supports non POSIX strtonum() function in
+the trace_marker_raw test case.
 
-Fixes: a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to use with RV")
+Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- tools/testing/selftests/ftrace/ftracetest |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../ftrace/test.d/00basic/trace_marker_raw.tc      |    2 ++
+ tools/testing/selftests/ftrace/test.d/functions    |    4 ++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 3230bd54dba8..0a56bf209f6c 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -130,8 +130,7 @@ parse_opts() { # opts
-       shift 1
-     ;;
-     --logdir|-l)
--      LOG_DIR=$2
--      LINK_PTR=
-+      USER_LOG_DIR=$2
-       shift 2
-     ;;
-     --rv)
-@@ -199,6 +198,7 @@ fi
- TOP_DIR=`absdir $0`
- TEST_DIR=$TOP_DIR/test.d
- TEST_CASES=`find_testcases $TEST_DIR`
-+USER_LOG_DIR=
- KEEP_LOG=0
- KTAP=0
- DEBUG=0
-@@ -210,12 +210,18 @@ RV_TEST=0
- # Parse command-line options
- parse_opts $*
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+index a2c42e13f614..8e905d4fe6dd 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+@@ -4,6 +4,8 @@
+ # requires: trace_marker_raw
+ # flags: instance
  
-+[ $DEBUG -ne 0 ] && set -x
++check_awk_strtonum || exit_unresolved
 +
-+# TOP_DIR can be changed for rv. Setting log directory.
- LOG_TOP_DIR=$TOP_DIR/logs
- LOG_DATE=`date +%Y%m%d-%H%M%S`
--LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
--LINK_PTR=$LOG_TOP_DIR/latest
--
--[ $DEBUG -ne 0 ] && set -x
-+if [ -n "$USER_LOG_DIR" ]; then
-+  LOG_DIR=$USER_LOG_DIR
-+  LINK_PTR=
-+else
-+  LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
-+  LINK_PTR=$LOG_TOP_DIR/latest
-+fi
+ is_little_endian() {
+ 	if lscpu | grep -q 'Little Endian'; then
+ 		echo 1;
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index e8e718139294..41325f387ee7 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -173,6 +173,10 @@ check_requires() { # Check required files and tracers
+     done
+ }
  
- if [ $RV_TEST -ne 0 ]; then
- 	TRACING_DIR=$TRACING_DIR/rv
++check_awk_strtonum() { # strtonum is GNU awk extension
++    awk 'BEGIN{strtonum("0x1")}'
++}
++
+ LOCALHOST=127.0.0.1
+ 
+ yield() {
 
