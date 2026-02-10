@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385252DCC08;
-	Tue, 10 Feb 2026 08:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB834253C;
+	Tue, 10 Feb 2026 09:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770713057; cv=none; b=H2B7WGt+5u9QnyCA78JUV6Hf9U8hhq8uU5qpev/pLcPUZq6ujVz7Lbt/hFaRHCKKa+rkY1sFB9bA0QW5H6QXolF8suNEyA05RBWgFqqiO462zxMxRIaSVbJ/valHkdqm1yMLx2r9Dn0r0sqUNANz3fnT5sICKnJWTI8fRZ7fe30=
+	t=1770717257; cv=none; b=nRWrnaSYNQtU1T4VUnMlm/qJ3yutvg7gcNW3cXXz2f79ADUjbzUR3eTg0VhMlFhuNJVOxDkeXFJsn24EA96e6i/jKhIlMwUG1cxt0guGdDPqwGtnA+Sv+Drk8kSQbg/H7olwLPhnaXUR4tFr4AxDJlKwT+TCkeVQ3Msart5UM+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770713057; c=relaxed/simple;
-	bh=S5HUOKOwvhSR3nZmMfKa96wdR+Qt2kEIy+bpCsLdFdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=illPF2al4QvTqceU+69n7O+kuD6AkjcOKVo7AwlMdegHYQWN9TirU59X5rM9x2mpBbvvr6f5Vb/KYoh2sO8G6gzc52yF2NkUXyDCZJ4PmrdEcWdjMsvZhu+tyH0d+YnbR/YGxijToTfxsMJyaESneT+h5oCXysslnahrZRrTBaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLsX7Ahp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770717257; c=relaxed/simple;
+	bh=F/LKCWFo88ew4oyZzRTInRnAbUm9ChGZiHCOXADEEXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dUxw6U7UxmIecAUWqtahbmE7uB4I+T7RGZ21w7QRIM7j/UVS4nNlor8MrjgSZr0jRNIvypzFcVwNQEdRfkkaqCxAkv25NPJqpT4dwP7Rs6C7q8OlwTFzg9PZnLCkI0e6QjTWb2PTiswdSKcvD3jcaW+u2nVYG3pWxHRoBDd9CRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aryfLk3C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLsX7Ahp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194F2C116C6;
-	Tue, 10 Feb 2026 08:44:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aryfLk3C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE74CC116C6;
+	Tue, 10 Feb 2026 09:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770713056;
-	bh=S5HUOKOwvhSR3nZmMfKa96wdR+Qt2kEIy+bpCsLdFdo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iLsX7AhpJndJgeaK8VFX34vK6SUep9cV422qvD6auL/9ZoYwHl4ofXhqRsKoKtY8X
-	 4oqEaZrjspd2IJyWMvLLV8UxE8W23ldpgxldPvG9vU5CTBV/CmZpL7QjeU6tzdhDHH
-	 FyN5XhUWkeFCq79VM3R0nyyJDzoe+PWmsjui1Jnf5uybY4vA/MMVLBJrRoM9CToCL2
-	 OXd3wzh8K5/nIra0adefymBGvkDRVusCpHknhE/FFjbZ/L1oSpCiYo+JBlK2Xml5KL
-	 Ggsa1FRqBkRobGHTlJZw3nP129qH+ZvKjRMUs+Vl76y5e7xd7RYqbsk4XSfy5lZGQQ
-	 8hf2ORD0bv1fA==
+	s=k20201202; t=1770717257;
+	bh=F/LKCWFo88ew4oyZzRTInRnAbUm9ChGZiHCOXADEEXk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aryfLk3C8Q1oDnXgwabgfVC4o/WdgLK9/Hxt5CHV/1oNkOjFP/acC5h9llLx/dfvx
+	 TkK/QkqErnSiul5/JpaE59uOya1UEQdK6cfvx+4mWpj8jBm0D2lMjeulVHwcQfzWqx
+	 mV00BfMul2RzxBeTclFjEb9p8f4DCCHH8Xkvcxn2rCo6q3JrLJTYE6acOyi6A9psFO
+	 mN7miDdMJuiSex1q8qxGBy1Geof/LUQvoxGruOGRGVU6M7DMkNM0p64lte+P7+v/tl
+	 F0F8qZTjsTeJUsoJzTlaiJzTG44kbvnuEKJgU4ToG5NV72XehAzGJLmBH7pcBLMSv/
+	 QUZ1XbAufxDBw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v8 6/6] tracing/Documentation: Add a section about backup instance
-Date: Tue, 10 Feb 2026 17:44:14 +0900
-Message-ID:  <177071305440.2293046.5538536293035707901.stgit@mhiramat.tok.corp.google.com>
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 1/2] selftests/tracing: Fix to make --logdir option work again
+Date: Tue, 10 Feb 2026 18:54:12 +0900
+Message-ID:  <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
-In-Reply-To:  <177071300558.2293046.12057922262682243630.stgit@mhiramat.tok.corp.google.com>
-References:  <177071300558.2293046.12057922262682243630.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,42 +50,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add a section about backup instance to the debugging.rst.
+Since commit a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to
+use with RV") moved the default LOG_DIR setting after --logdir option
+parser, it overwrites the user given LOG_DIR.
+This fixes it to check the --logdir option parameter when setting new
+default LOG_DIR with a new TOP_DIR.
 
+Fixes: a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to use with RV")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-  Changes in v6:
-   - Fix typos.
----
- Documentation/trace/debugging.rst |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ tools/testing/selftests/ftrace/ftracetest |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
-index 4d88c346fc38..15857951b506 100644
---- a/Documentation/trace/debugging.rst
-+++ b/Documentation/trace/debugging.rst
-@@ -159,3 +159,22 @@ If setting it from the kernel command line, it is recommended to also
- disable tracing with the "traceoff" flag, and enable tracing after boot up.
- Otherwise the trace from the most recent boot will be mixed with the trace
- from the previous boot, and may make it confusing to read.
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 3230bd54dba8..0a56bf209f6c 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -130,8 +130,7 @@ parse_opts() { # opts
+       shift 1
+     ;;
+     --logdir|-l)
+-      LOG_DIR=$2
+-      LINK_PTR=
++      USER_LOG_DIR=$2
+       shift 2
+     ;;
+     --rv)
+@@ -199,6 +198,7 @@ fi
+ TOP_DIR=`absdir $0`
+ TEST_DIR=$TOP_DIR/test.d
+ TEST_CASES=`find_testcases $TEST_DIR`
++USER_LOG_DIR=
+ KEEP_LOG=0
+ KTAP=0
+ DEBUG=0
+@@ -210,12 +210,18 @@ RV_TEST=0
+ # Parse command-line options
+ parse_opts $*
+ 
++[ $DEBUG -ne 0 ] && set -x
 +
-+Using a backup instance for keeping previous boot data
-+------------------------------------------------------
-+
-+It is also possible to record trace data at system boot time by specifying
-+events with the persistent ring buffer, but in this case the data before the
-+reboot will be lost before it can be read. This problem can be solved by a
-+backup instance. From the kernel command line::
-+
-+  reserve_mem=12M:4096:trace trace_instance=boot_map@trace,sched,irq trace_instance=backup=boot_map
-+
-+On boot up, the previous data in the "boot_map" is copied to the "backup"
-+instance, and the "sched:*" and "irq:*" events for the current boot are traced
-+in the "boot_map". Thus the user can read the previous boot data from the "backup"
-+instance without stopping the trace.
-+
-+Note that this "backup" instance is readonly, and will be removed automatically
-+if you clear the trace data or read out all trace data from the "trace_pipe"
-+or the "trace_pipe_raw" files.
-\ No newline at end of file
++# TOP_DIR can be changed for rv. Setting log directory.
+ LOG_TOP_DIR=$TOP_DIR/logs
+ LOG_DATE=`date +%Y%m%d-%H%M%S`
+-LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
+-LINK_PTR=$LOG_TOP_DIR/latest
+-
+-[ $DEBUG -ne 0 ] && set -x
++if [ -n "$USER_LOG_DIR" ]; then
++  LOG_DIR=$USER_LOG_DIR
++  LINK_PTR=
++else
++  LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
++  LINK_PTR=$LOG_TOP_DIR/latest
++fi
+ 
+ if [ $RV_TEST -ne 0 ]; then
+ 	TRACING_DIR=$TRACING_DIR/rv
 
