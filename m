@@ -1,159 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C9B30C60D;
-	Wed, 11 Feb 2026 15:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99BD310635;
+	Wed, 11 Feb 2026 15:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770824435; cv=none; b=VGoSN+eCeQDiX60yZDZBBuUUBa4HBIONCgeJTdo8+SJ4hUpRgc2JKE4CCm/kvuOBEKKZyRcKlelIiilpjisIvwdj3YtjNyEjs5miXPIT+swFvtOabftwzlAViiEN+cSuWDbl0otXWIRkB+M0A0i2u7tzU6XJr9lmmSOiP2f8Ccw=
+	t=1770824593; cv=none; b=BMdc0lKGQIQXK1SqQotAB3tlc14g2cg0s3GpCpM3ru6VoJpUaO/s+wqt1GsWDXbHNJYZvgxbYxYW8aUAAkampqSO1Byzhoxht9eq45TuYN9AcBPDp3vQkqC8Vmr3Va9nJwuoKp/iaYlJ+FQw7QbXxCrwalWVkddYCaPdQnhrzuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770824435; c=relaxed/simple;
-	bh=4XK13jjYLred8II2iFJoWFOdf1Y9k6sr2e/uAGf5JAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vGdylnsmVFuMrwpBJu6KLac3gm7rhsm+MpvIzDXB0ofWsjslHrmH9LjhXv7+4CBTblLe9Vb/t6fTHU0eZzspvb/QqSROUMMKdarw9h+aunpyStrox9I50uaRMUfcfNufnIQZ0MeCLlczVbrJzeKl2bkydnjjYhHIlX/F2j24sNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osf1+son; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osf1+son"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E6D8C4CEF7;
-	Wed, 11 Feb 2026 15:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770824435;
-	bh=4XK13jjYLred8II2iFJoWFOdf1Y9k6sr2e/uAGf5JAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Osf1+sonyielfcfujsc2iqg2UF+lVBoIHnyPSvXNLhEj+wiJlUY7u3mDE0d93zCzE
-	 zBpVIqAZfadRZsH27h80LwM9BD0DSwj5cnui9xvD9fUafzn7f0owQ9Uq1ji2Owlwpo
-	 Z4s8PcmJBy8StkHpDAil94og0/4FRu5S+tbUBlzhwRuWJxa79omP4GgLLrh+kRBlYH
-	 0oU2c8wRD5ooc9cUjEyj4ly0fTzufA5SbP4ZpE4vLJxNYiGci+frhgviGdMTK5BCa8
-	 Huv/5f4XXc6H66h5N4v3lOaLSO49WYhSRPqQD61EimKM8C6aQodJSCEI2ajsqeGca8
-	 M7AnWKSbXHOIg==
-Date: Wed, 11 Feb 2026 21:10:26 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 0/3] PCI Controller event and LTSSM tracepoint support
-Message-ID: <u3es7h4mgzdqfhvpl52s3x4vcisrpazcm4qb6x7lu4srmagxpn@hca2begqypeu>
-References: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
- <9e06e69c-d10a-1f21-cbf7-204319549612@rock-chips.com>
+	s=arc-20240116; t=1770824593; c=relaxed/simple;
+	bh=hjoUfjg2kZj9zcc/yk0LK/Beyw8CiklGI8cf8jEXipo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lYJ0uykFliju9bGPbR2qtP1ipP4jDJWvovTPAlzffCyso/CIciWJfhCZBoWTaabifO5FXhw3ejbzBtLWuDyMwM32UBd0HnHx7BOd/FOQe6hMbCIfD7VP4MaWfiO2G6OP82WuzcRvwbYgL7MntR6I2q/I8aS/ivJVi6il0zRMhMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 46EDCC1C70;
+	Wed, 11 Feb 2026 15:43:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id D745B20028;
+	Wed, 11 Feb 2026 15:42:58 +0000 (UTC)
+Date: Wed, 11 Feb 2026 10:42:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/4] tracing: Make the backup instance non-reusable
+Message-ID: <20260211104244.193953be@fedora>
+In-Reply-To: <20260210141415.01a6907dcb558866e1abb994@kernel.org>
+References: <176991653525.4025429.12655335935351822711.stgit@mhiramat.tok.corp.google.com>
+	<176991655479.4025429.105619035638065215.stgit@mhiramat.tok.corp.google.com>
+	<20260204211721.74e501f0@robin>
+	<20260209180844.c582bdbb6a4a5b737db7a0a7@kernel.org>
+	<20260209184247.4c6daccd@fedora>
+	<20260210141415.01a6907dcb558866e1abb994@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e06e69c-d10a-1f21-cbf7-204319549612@rock-chips.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nd7nnjxrjtp31xc3dg8kbumg4qkdwtkh
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: D745B20028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19AJcOeGgPUl1wsGwSKhDoRC4g8+vzURqg=
+X-HE-Tag: 1770824578-29122
+X-HE-Meta: U2FsdGVkX1970ZbLz8Y8rU7gDSddcDYvrVE08VCEYZzXEBQwKp6ptkvhWoGwMpXWpN0ExOSeOywspmk9/3EH+N9oSJWgBZWDmjkvPCZ3GFpqvb+DE5Ge7sHN2Am1n72qbfArzsiDkh4JhmohwbMVWrZcFSCQB4kzwj5ZcDPIoqs3gw5425uJC3YNVKioT6fyw/EHt15j8OLWBgcd51OGr4+I/aCJxeyJGLiDA9MGBpi9VRrYSBA9KFlno/bAWvsBXWEtRqVQD8RRb/D1g1jaJyrEaCgAmTpQ7yeaP7VvgmQ9KlASl8lwODPrb2GmSD/wv4Djp9VQ66omHZXQCFIDqw3XsqQAqjlo
 
-On Wed, Feb 11, 2026 at 09:13:50PM +0800, Shawn Lin wrote:
-> 在 2026/01/22 星期四 10:02, Shawn Lin 写道:
-> > This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
-> > which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
-> > Bytes FIFO for recording LTSSM transition.
-> > 
+On Tue, 10 Feb 2026 14:14:15 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> Hmm, OK. Now I found how sysfs handles it.
 > 
-> Gentle ping...
+> 	/*
+> 	 * For regular files, if the opener has CAP_DAC_OVERRIDE, open(2)
+> 	 * succeeds regardless of the RW permissions.  sysfs had an extra
+> 	 * layer of enforcement where open(2) fails with -EACCES regardless
+> 	 * of CAP_DAC_OVERRIDE if the permission doesn't have the
+> 	 * respective read or write access at all (none of S_IRUGO or
+> 	 * S_IWUGO) or the respective operation isn't implemented.  The
+> 	 * following flag enables that behavior.
+> 	 */
+> 	KERNFS_ROOT_EXTRA_OPEN_PERM_CHECK	= 0x0002,
+> 
+> So for the similar reason, I will make tracefs to check the permission
+> even if CAP_DAC_OVERRIDE is set. (But this check should be done in general,
+> instead of each open() operation)
 > 
 
-Merge window is open now, so we can't accept any patches until -rc1. And I'm
-also waiting for an Ack from Steven for the tracing part.
+I don't believe this is the same. This is about an instance being truly
+read only. The instance is special, not the files. Note, permissions can
+be changed by root too. After applying your patches, I did the following:
 
-- Mani
+~# cd /sys/kernel/tracing/instances/backup/
+~# ls -l current_tracer
+-r--r----- 1 root root 0 Feb 11 10:29 current_tracer
 
-> > Testing
-> > =========
-> > 
-> > This series was tested on RK3588/RK3588s EVB1 with NVMe SSD connected to PCIe3 and PCIe2
-> > root ports.
-> > 
-> > echo 1 > /sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
-> > cat /sys/kernel/debug/tracing/trace_pipe
-> > 
-> >   # tracer: nop
-> >   #
-> >   # entries-in-buffer/entries-written: 64/64   #P:8
-> >   #
-> >   #                                _-----=> irqs-off/BH-disabled
-> >   #                               / _----=> need-resched
-> >   #                              | / _---=> hardirq/softirq
-> >   #                              || / _--=> preempt-depth
-> >   #                              ||| / _-=> migrate-disable
-> >   #                              |||| /     delay
-> >   #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> >   #              | |         |   |||||     |         |
-> >        kworker/0:0-9       [000] .....     5.600194: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600198: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_WAIT rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600199: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600201: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_ACTIVE rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600202: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_CONFIG rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600204: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_START rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600206: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_ACEPT rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600207: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_WAI rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600208: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_ACEPT rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600210: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_COMPLETE rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600212: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_IDLE rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600213: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 2.5 GT/s
-> >        kworker/0:0-9       [000] .....     5.600214: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600216: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600217: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_SPEED rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600218: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600220: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ1 rate: Unknown
-> >        kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600222: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ3 rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600224: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600225: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600226: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600227: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600228: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600229: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600231: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600232: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600233: pcie_ltssm_state_transition: dev: a40000000.pcie state: L123_SEND_EIDLE rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600234: pcie_ltssm_state_transition: dev: a40000000.pcie state: L1_IDLE rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600236: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600237: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600238: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
-> >        kworker/0:0-9       [000] .....     5.600239: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
-> > 
-> > 
-> > Changes in v4:
-> > - use TRACE_EVENT_FN to notify when to start and stop the tracepoint,
-> >    and export pci_ltssm_tp_enabled() for host drivers to use
-> > - skip trace if pci_ltssm_tp_enabled() is false.(Steven)
-> > - wrap into 80 columns(Bjorn)
-> > 
-> > Changes in v3:
-> > - add TRACE_DEFINE_ENUM for all enums(Steven Rostedt)
-> > - Add toctree entry in Documentation/trace/index.rst(Bagas Sanjaya)
-> > - fix mismatch section underline length(Bagas Sanjaya)
-> > - Make example snippets in code block(Bagas Sanjaya)
-> > - warp context into 80 columns and fix the file name(Bjorn)
-> > - reorder variables(Mani)
-> > - rename loop to i; rename en to enable(Mani)
-> > - use FIELD_GET(Mani)
-> > - add comment about how the FIFO works(Mani)
-> > 
-> > Changes in v2:
-> > - use tracepoint
-> > 
-> > Shawn Lin (3):
-> >    PCI: trace: Add PCI controller LTSSM transition tracepoint
-> >    Documentation: tracing: Add PCI controller event documentation
-> >    PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
-> > 
-> >   Documentation/trace/events-pci-controller.rst |  42 ++++++++++
-> >   Documentation/trace/index.rst                 |   1 +
-> >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 111 ++++++++++++++++++++++++++
-> >   drivers/pci/trace.c                           |  20 +++++
-> >   include/linux/pci.h                           |   4 +
-> >   include/trace/events/pci_controller.h         |  57 +++++++++++++
-> >   6 files changed, 235 insertions(+)
-> >   create mode 100644 Documentation/trace/events-pci-controller.rst
-> >   create mode 100644 include/trace/events/pci_controller.h
-> > 
+~# cat current_tracer 
+nop
 
--- 
-மணிவண்ணன் சதாசிவம்
+~# cat trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 0/0   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+
+~# chmod 664 current_tracer
+~# ls -l current_tracer
+-rw-rw-r-- 1 root root 0 Feb 11 10:29 current_tracer
+
+~# echo function > current_tracer
+~# cat current_tracer 
+function
+
+~# cat trace
+# tracer: function
+#
+# entries-in-buffer/entries-written: 1750306/2076556   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+            bash-1056    [001] .....   231.448852: mutex_unlock <-tracing_set_tracer
+          <idle>-0       [002] ...1.   231.448853: arch_cpu_idle_exit <-do_idle
+##### CPU 7 buffer started ####
+          <idle>-0       [007] ...1.   231.448853: arch_cpu_idle_exit <-do_idle
+            bash-1056    [001] .....   231.448854: __mutex_unlock_slowpath <-tracing_set_tracer
+          <idle>-0       [002] d..1.   231.448855: arch_cpu_idle_enter <-do_idle
+          <idle>-0       [007] d..1.   231.448855: arch_cpu_idle_enter <-do_idle
+          <idle>-0       [007] d..1.   231.448855: tsc_verify_tsc_adjust <-arch_cpu_idle_enter
+          <idle>-0       [002] d..1.   231.448855: tsc_verify_tsc_adjust <-arch_cpu_idle_enter
+            bash-1056    [001] d....   231.448856: fpregs_assert_state_consistent <-arch_exit_to_user_mode_prepare
+          <idle>-0       [007] d..1.   231.448856: local_touch_nmi <-do_idle
+          <idle>-0       [002] d..1.   231.448856: local_touch_nmi <-do_idle
+            bash-1056    [001] d....   231.448856: switch_fpu_return <-arch_exit_to_user_mode_prepare
+          <idle>-0       [007] d..1.   231.448856: rcu_nocb_flush_deferred_wakeup <-do_idle
+          <idle>-0       [002] d..1.   231.448856: rcu_nocb_flush_deferred_wakeup <-do_idle
+          <idle>-0       [007] d..1.   231.448857: cpuidle_get_cpu_driver <-do_idle
+          <idle>-0       [002] d..1.   231.448857: cpuidle_get_cpu_driver <-do_idle
+          <idle>-0       [007] d..1.   231.448857: cpuidle_not_available <-do_idle
+[..]
+
+Not too read only!
+
+I change permissions all the time for tracefs files, so I don't want
+that changed.
+
+This is not the same as sysfs. Let's keep it simple. Have all the open
+callers that can do writes return error -EACCES if a file allows writes
+and is open for write, but is part of the read only instance.
+
+-- Steve
+ 
