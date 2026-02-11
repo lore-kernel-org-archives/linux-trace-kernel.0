@@ -1,105 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27C12EC0A1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Feb 2026 11:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD982BCF43;
+	Wed, 11 Feb 2026 14:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770808570; cv=none; b=iMQxmnwOOuF5PH16bFBvEGz453Qyd5j5RQQViQFn4HtwqXcokbdCKEKqiRoM7sB6jbiG5qz8fMQcZs6iUGtKyVe4MgDmSLKyjroxJ95K9QeEek5sK3F4ItwQl8nyzsIwR5WvRa6zFpXDfaaV+Z7fpCyawE1uR26avUQ+SWu6+PM=
+	t=1770819259; cv=none; b=GNqFonqjTZO0gQNbcYjquDv8EW/Ux25zhZAR5kMPXIyLRUe2MRb1NCsBZYMfdNfDvpIZ5Tp+tL57lpJdwn5kRFMKqsD1rp8RdcXJ6oufL/VKvDyVmeZY0iHmWdG0pMW6wR4eAsEJIesupVd+Fp/RaHKHc8iBsiDL9qWeolFUoik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770808570; c=relaxed/simple;
-	bh=jkBtG/j8ZN/4okd84k0jEU3hNy0M3wj/2JyT74HxgkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RZGKI8f5Cz5vuyd8R47Sh/avapqVoVZvNUSqV4DTZACodP7r4HJas+HswAZ635df09LsTm4lp1M9OQiWb2FtPf3tUQQn/Fa3ZFDz1g5JEpO0vD/0xT7lWXeKcebkw/A1dLEWLe065B8fpxhu/VBGo347JOoxwP3Kj//TxQzybcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eUfGaCtt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1770819259; c=relaxed/simple;
+	bh=SDVEHIVGeJRga/cenvkjR0/NXUnkcS502IutEhhhYro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rO6+Qv6PW/Bnu0MqbQ3KvSH/RVF3TGe4khlWumQQA8dqAoGUTbuSbzdVcZ8bgAVZYcRvpsesoTQDJHIkdUUrwQxWuRpiulnrqGQ3ZRJy9vj9V6X0U3OrR8EkIIEEYq5x9buLcecWDpWVe1BEUCskK80473VkGbhniNS3W3WWdKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OtHCEJS9; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUfGaCtt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770808568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jkBtG/j8ZN/4okd84k0jEU3hNy0M3wj/2JyT74HxgkE=;
-	b=eUfGaCttYmhV7mnvTUpFcr7HjnLqPzKkI2VQGhkGwnoE6F1pjhocvzQqzi/SbDqx3Ok9nP
-	lAgvXi/Ca4Bt32MDi50FZqv7efOIqGmg3o4DwUxt+F8psl3HbgIy5JHjrLEuWUuTZDie2z
-	UIxzOHPIObitZwznTc8bJ2oOra+CNKA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434-rZZOBgd0Olu1ene_zGXRAw-1; Wed, 11 Feb 2026 06:16:07 -0500
-X-MC-Unique: rZZOBgd0Olu1ene_zGXRAw-1
-X-Mimecast-MFC-AGG-ID: rZZOBgd0Olu1ene_zGXRAw_1770808566
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8db7f340b3so257964566b.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Feb 2026 03:16:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770808566; x=1771413366;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jkBtG/j8ZN/4okd84k0jEU3hNy0M3wj/2JyT74HxgkE=;
-        b=n5SAYJZ9MB2zRoipijAqnT7+HVl5yOQr1xaWg9DHWozDrVWR1/rS3R+bBxWViMaSuW
-         SwPkcKIEP6JR4oEwb2l+YGosMgIZMXUigj8bkzXUDs13Vjjj7Vgl5tuEemhE6A2TfBSi
-         DL929vzxPQQyvXiDXenuFbXY9hEI3lfugRrYnGXVqnoaXlCUIGY6bhW9kBfIf0VgyFAV
-         mroWrR+xIs1EeB6/PI78Vz4zKocIHQs5xHWyaGfUJ2DdsqVtqvf7XCEb7QO6DG5KHFIw
-         bYyH0TJH5D6/bFWWU3xssmJDppdFGRqhHETGY2wAA2qF82L/sidR0MQeZh9hmrdZuMmS
-         6WQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWraQrzR8URsQgs3vIQ4NxlK96k4IJI0P8Sb4h+Wm5uTprpMAMJG2tJYW13/oR1YU/MrAsef/ZX1R8rwZyyaCjiHeg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzhQzEIEtgVSs24l+gEIZP7uxuXt6gXdSf5UzfzW/q2vJ2fVP7
-	q9JF35/pgtFYwZ57yGBDlhsTammObkPPjRw/cElvhQvaAW9oWn+SahpPCz953dU6YDxq4yuBFxg
-	zEk5QwQfwzjhKGmDmSyHehIf8ehxcN/uOXI7dkKURqwZSrexpa6RoUJxSDj3EzjGG2xpDKynHCL
-	9jUk+Lrh41lLzezKGimdBzFSPU73/spI5z1HQnDR9aLxYVgb9u
-X-Gm-Gg: AZuq6aJVAgbAnrog4+kwlC/TNrjcGMSYb9KsEQglvXxAEWDaRAnzTzv9Kbll+kSHPoq
-	zrZ0wHtbboUNXFVfyCmqX9uhe+jQirt6A6NAvs7SGiA0nx5iJfdFWqWdYM7G4Q56joCSlJ2eUyP
-	TzNcPZFi60gVbq25eQxh3AA2GFWVpAxhfN6VU6elDovLFtPZyaP+c4OF9QdLPxR42IyFFQwINvB
-	RRR
-X-Received: by 2002:a17:907:3c8e:b0:b8e:a126:66c2 with SMTP id a640c23a62f3a-b8edf38e6ecmr1063988466b.45.1770808565967;
-        Wed, 11 Feb 2026 03:16:05 -0800 (PST)
-X-Received: by 2002:a17:907:3c8e:b0:b8e:a126:66c2 with SMTP id
- a640c23a62f3a-b8edf38e6ecmr1063987166b.45.1770808565588; Wed, 11 Feb 2026
- 03:16:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OtHCEJS9"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61ANslr2470140;
+	Wed, 11 Feb 2026 14:14:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=qiH+5t/dirTrzjD9Z
+	dtQxW3Rb7kBj9PpVkHn0IEvdoQ=; b=OtHCEJS9FYwWQwev3XdeyV80sYiX60gha
+	1o/sM9KcwYWvyQ8bAD3QYfkFgHibOqhVyYfH1+YFimppjc0nl6BEpUnydRmJfHxI
+	Vha+nJjpbJM6+kswkEvy4AJUmYLP0/PKZpboICxCFaGP8mRmpUSIRS0ScOn4SOpH
+	hDdwG9eLauie4j1MHHe0dPE74SstV5E+7OEBKOYhLhe9BagCycw7qERpzBAqCzV6
+	zIDGYgr/W0AsSPK/Cnf+ScRCjBtq9o/Y917pFiH0OWOuTdU7O9V6EQafh7UHn48E
+	JlkKfJuWyHolj8NAvKTN05URL7lLlk/2zM010EhPPpa74Z+/1hiVA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696wy141-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Feb 2026 14:14:06 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61BCt5Jh002567;
+	Wed, 11 Feb 2026 14:14:05 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4c6fqsp93s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Feb 2026 14:14:05 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61BEE2Wm44171750
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Feb 2026 14:14:02 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E128920040;
+	Wed, 11 Feb 2026 14:14:01 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DA172004B;
+	Wed, 11 Feb 2026 14:14:01 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Feb 2026 14:14:01 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        Steven Rostedt <rostedt@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH v9 5/6] x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
+Date: Wed, 11 Feb 2026 15:13:56 +0100
+Message-ID: <20260211141357.271402-6-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260211141357.271402-1-jremus@linux.ibm.com>
+References: <20260211141357.271402-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260209092436.2899888-1-costa.shul@redhat.com>
- <20260209092436.2899888-2-costa.shul@redhat.com> <aYxhtrJ8cw7SNOJy@fedora>
-In-Reply-To: <aYxhtrJ8cw7SNOJy@fedora>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 11 Feb 2026 12:15:54 +0100
-X-Gm-Features: AZwV_QjrgosTOG9OQk2nFpenxiJARU16IxGo0YBJgtdrPcEO2NsfIFEDJSnp6AU
-Message-ID: <CAP4=nvQp4J_PRbbNNxy6FErcgFF4Qmn3ty0N2HcDSQG5isLiKA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] tools/rtla: Consolidate nr_cpus usage across all tools
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Crystal Wood <crwood@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: rSzuBeg9WerPLCryxnzxHOCamWsFNGbKdibiM49CW2Q_1770808566
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=WZYBqkhX c=1 sm=1 tr=0 ts=698c8eae cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=oGMlB6cnAAAA:8
+ a=VnNF1IyMAAAA:8 a=zHpKlsP_3zAlDdbrjxAA:9 a=2JgSa4NbpEOStq-L5dxp:22
+ a=NdAtdrkLVvyUPsUoGJp4:22
+X-Proofpoint-GUID: yaSfy3Y2S2nZC2d5EupOPnVwvtL2ZOYD
+X-Proofpoint-ORIG-GUID: yaSfy3Y2S2nZC2d5EupOPnVwvtL2ZOYD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjExMDEwNyBTYWx0ZWRfXz+3TUP9I9FB+
+ mSytwbvWbAr+l1482s09TggHikYA11hlHEPTZ28cxfVt1dMz+e9/xafBI7kDDlISioSELkRqu4F
+ 1FwknobKOFUOTb3ATrvFXKJmwfhDlJvFov8pdAS/ly829RO5yuHQOPhjqoUgQ/Rh/YPIyFv9C6W
+ 8cDf50a/gYSS305gKbsKALv+bBShmyNaR5BwYrSUjbiYWqoc9mWF1SDEXMIjIl3MWeLMTqy2Lr1
+ JiitKqxcf1WsPkzx/ZI4+nW1DawkoEJ77691qtszjQR2c265uQIWKyAC4uxg2P3XJBbnPwMSfLp
+ ZnWVyFaTqWrHLD8n/dGIOidxfDLXseJxZrNN+9zSbXIMjZyxwKhZjhmdYZDuM2xm5A5zkdb/y+f
+ JV8OdxMLywBFiXS9sUfmyfUQuETHAurUCPmdYsOjvX6Ubg12vcDl5bs7LuyurdqoI5mJsmomBF4
+ SIQdDgNwM97883w0aUQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-11_01,2026-02-11_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 phishscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602110107
 
-st 11. 2. 2026 v 12:03 odes=C3=ADlatel Wander Lairson Costa
-<wander@redhat.com> napsal:
-> > `#pragma once` in timerlat_u.h is needed for pre-C23 compilers to avoid
-> > redefinition errors.
->
-> Isn't it necessary for C23 compilers?
->
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-C23 allowed struct redefinition [1] to enable template-like macros. As
-a side effect, including timerlat_u.h twice does not break anything,
-in C23 only. But the Linux kernel supports building with lower
-standards of C, so it has to work there, too.
+Use the CFI macros instead of the raw .cfi_* directives to be consistent
+with the rest of the VDSO asm.  It's also easier on the eyes.
 
-Tomas
+No functional changes.
 
-[1] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3003.pdf
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/x86/entry/vdso/vdso64/vsgx.S | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/entry/vdso/vdso64/vsgx.S b/arch/x86/entry/vdso/vdso64/vsgx.S
+index c0342238c976..76efbeb1e287 100644
+--- a/arch/x86/entry/vdso/vdso64/vsgx.S
++++ b/arch/x86/entry/vdso/vdso64/vsgx.S
+@@ -25,12 +25,12 @@
+ 
+ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+ 	push	%rbp
+-	.cfi_adjust_cfa_offset	8
+-	.cfi_rel_offset		%rbp, 0
++	CFI_ADJUST_CFA_OFFSET	8
++	CFI_REL_OFFSET		%rbp, 0
+ 	mov	%rsp, %rbp
+-	.cfi_def_cfa_register	%rbp
++	CFI_DEF_CFA_REGISTER	%rbp
+ 	push	%rbx
+-	.cfi_rel_offset		%rbx, -8
++	CFI_REL_OFFSET		%rbx, -8
+ 
+ 	mov	%ecx, %eax
+ .Lenter_enclave:
+@@ -77,13 +77,11 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+ .Lout:
+ 	pop	%rbx
+ 	leave
+-	.cfi_def_cfa		%rsp, 8
++	CFI_DEF_CFA		%rsp, 8
+ 	RET
+ 
+-	/* The out-of-line code runs with the pre-leave stack frame. */
+-	.cfi_def_cfa		%rbp, 16
+-
+ .Linvalid_input:
++	CFI_DEF_CFA		%rbp, 16
+ 	mov	$(-EINVAL), %eax
+ 	jmp	.Lout
+ 
+-- 
+2.51.0
 
