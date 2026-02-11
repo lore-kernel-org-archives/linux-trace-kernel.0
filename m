@@ -1,68 +1,227 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FB73EBF21;
-	Wed, 11 Feb 2026 15:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A522126C;
+	Wed, 11 Feb 2026 16:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770824805; cv=none; b=uuybO5ryuWO0QPPJbiE7ht9nQz3dXjsvOduRoUh+YrgRTORDBMOP3e5HkLV7eGV4XRghirnWr7ybAzCasKpfNlSw7DXQmXqlvZV7bu9Iy9XwOAU2q+3PHq7cMuQcEG2acDIjhvqPx9qD0K+lcIB+lS+3G1LaLC/WHQwCdZWMHCo=
+	t=1770826592; cv=none; b=u0/1pBWn5tpd7dkTR/svLJjUfGxdjyR+SAsLSb8z+0CXGqrCdYbn8OiHKRdVTqj1xbKFSUZS7disap9H7QtaHtXZ09edWxAfrr4oXcQX0qrvJdhDv8OMx0Xy+1MNfeIAm6YmvuhUzw/rGqN6Tqs0FlFu2csZdg7IQejOZ2ANQXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770824805; c=relaxed/simple;
-	bh=dKESkE1M6rTLiT+PlXRL45TY8rMKra3nAeIwKvBJzGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lj4NoAoOXLfuF/0uyepsnNfIQKNfzm3LGjb/+QX0Jm+msgt7grJBEmgybRDLwaU/zdaGrFNibS0LNQGNcC8iqvB2/PJAqV85PRVmPVA6uXdNnPH8nyH8cQM2bSDAb9sknrVto419h+lt58t4daOvIGyuBhRJfba+atOZRN7eL7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 4A48DB8C1F;
-	Wed, 11 Feb 2026 15:46:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id B773F6000C;
-	Wed, 11 Feb 2026 15:46:36 +0000 (UTC)
-Date: Wed, 11 Feb 2026 10:46:23 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 3/6] tracefs: Check file permission even if user has
- CAP_DAC_OVERRIDE
-Message-ID: <20260211104623.73fd4fc3@fedora>
-In-Reply-To: <177071303130.2293046.2400906233143699263.stgit@mhiramat.tok.corp.google.com>
-References: <177071300558.2293046.12057922262682243630.stgit@mhiramat.tok.corp.google.com>
-	<177071303130.2293046.2400906233143699263.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1770826592; c=relaxed/simple;
+	bh=q1UlNaZap//5TZEpoogjLCyNIhLbE9JiHMD1mVPI9TA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QKtINYQPiCGkAFh42JNM/Qyvn9tS8z/SPdre8ZHL1ECEosETH4WOfVyTaaN6FLvJFUvn8Akkok1kxNsUH1roogVjaEArhGx1CRBdbNDVD4nlDFQ8aJ05vfZbfQX9WrKuf2CU6a8T1tGNJL0lpdTw5lx9BOYB+wXAYMIZHN5ZK/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i+NG86ra; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i+NG86ra"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61BEnOYm455148;
+	Wed, 11 Feb 2026 16:15:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=umi07j
+	peP2Tr6jMEZnWWMP6LArkgwK0Dnoab54QNTbQ=; b=i+NG86raRz50IPD6K0xZ1h
+	NENwJmYfaqqhgbCXaKX+jJYlxALR7AtD4u2bZzxrRSJsvs7MxIWgPMkFtBjYDZyk
+	FW+3a/vlerAcWWsE4hLgQ/4GK54Ti6zIce3ekIGzQzdEPVDpUWdjikyF0hKNBrzt
+	XiWDnjZQgzTJT0hdLBgrUDNNsYRh00XAKn45NGL2mKGqYD4Z8XQRM8pI3rhdJYbE
+	Ffvbb8JvHjvMvXW2rH24Q2q1a6lOo9oTSL9Vacnfg91Cm+kyA/qRo65e9KXfdqpy
+	e7ud9ET/rFn9cS2lKP+vW5l9tKFNyNFVEF6TX1iS6MdZNAy1xshNsijnUrh390lQ
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696uj3h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Feb 2026 16:15:47 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61BE6KrV001499;
+	Wed, 11 Feb 2026 16:15:45 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4c6gqn6gqb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Feb 2026 16:15:45 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61BGFf7t52625716
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Feb 2026 16:15:41 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD14920043;
+	Wed, 11 Feb 2026 16:15:41 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E89D20040;
+	Wed, 11 Feb 2026 16:15:41 +0000 (GMT)
+Received: from [9.52.200.149] (unknown [9.52.200.149])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Feb 2026 16:15:41 +0000 (GMT)
+Message-ID: <29c760a9-7dbf-4fe7-ad78-44c95bc00c4f@linux.ibm.com>
+Date: Wed, 11 Feb 2026 17:15:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B773F6000C
-X-Stat-Signature: tp51wtqoxeoo1wye4kw1js676ksnr1oa
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX194WRGCmGXHtynF2kmfJfYlAVog6Zt/4vw=
-X-HE-Tag: 1770824796-744664
-X-HE-Meta: U2FsdGVkX19VB/dUNqghVOMwDR4Th4JS8KacZ6ihidFrfOHHv0ylsrxRAfViwblzxrRco20tLSdMrEanIEbnjEk9F1kGhzRyFL0jzwRYYupu2DA8zyMYnljOEwOxK+/QruirJ4z92okuMGKUthqmWGx+dN8uzHevKIy1yn06Ycb9c07nrtmavbPbUoCGRmijUIr3xqL99FhUUecOaVlz2PG3cPtxvav7fApm6d3Sj0JJrbvBGlhZYOygTZPMB+SNzgveB45I0M55Vx7+Q5uE+eRIiIUxD3m8ygXPcdPFdBQGRIeXFaDC39IRoi2+rkpx4R1dfhWTK2tIh7dHjaj6paG0jjkvQBnpBjAwM9o9QaI+uOysNfoNeg==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 00/18] unwind_deferred: Implement sframe handling
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        Steven Rostedt <rostedt@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Michal Hocko
+ <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20260127150554.2760964-1-jremus@linux.ibm.com>
+ <CADBMgpyHw_kgb+Fc+h+Z3ytwMBwDG9B=yai=7g4UWP6AErE77w@mail.gmail.com>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <CADBMgpyHw_kgb+Fc+h+Z3ytwMBwDG9B=yai=7g4UWP6AErE77w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=KZnfcAYD c=1 sm=1 tr=0 ts=698cab33 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
+ a=CCpqsmhAAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=6YJJy05I97Y9SfkmSYwA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=ul9cdbp4aOFLsgKbc677:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjExMDEyMiBTYWx0ZWRfX/I6pD2K4TFEy
+ Ztk8SRCKRSzVUREMPCRJPBuULx1AE9K15Jei1Yw8pkzWe0xVpmAJ7bww5rxSyAL6biaNkaGFSCG
+ COP+d5VXrxgD75hp3lbA2s6p3+geiZ3cLHUrCmSUoNxBTRf75XhWbwZ9/U3TLzfQu/vZXkqmyAj
+ CKlrNna/pG7N76+vvV9MAgDZdme6jBMnyIxJoulJ9Ox4ahQIdi2/PP9pgnPZ9ZExIU60ZxUBCJ8
+ aVcHwwhuu+JnHYkC2337ZQ1PzyiP7spbcoDUiSMPqS7IBSWejA3b4h1MZOIhk+/HeaW0BgAgGx6
+ AffB3ACJicsOvCYVjhxPXu4mY6gMyyvMXrYcBcY99Hwvy8nPA21uxMq23Z+fM6ByRTMO3Pt9CrZ
+ 3/gVJtId9yGdahi5mrd8N2eKe7CBFwW/YBVAySVsH4AdUTxL07YoDuMUrMxCB/4uqBVCztJwiUR
+ xTW7BgPeNUarLir2zAQ==
+X-Proofpoint-ORIG-GUID: 4l_lO-46vS7Iysb2OZJZw1RAe6BrHG2z
+X-Proofpoint-GUID: TFUcd-LP_fOH215WDHCHEKfbKeHlNYfN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-11_02,2026-02-11_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602110122
 
-On Tue, 10 Feb 2026 17:43:51 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On 2/11/2026 2:47 AM, Dylan Hatch wrote:
+> On Tue, Jan 27, 2026 at 7:06 AM Jens Remus <jremus@linux.ibm.com> wrote:
+>>
+>> This is the implementation of parsing the SFrame V3 stack trace information
+>> from an .sframe section in an ELF file.  It's a continuation of Josh's and
+>> Steve's work that can be found here:
+>>
+>>    https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
+>>    https://lore.kernel.org/all/20250827201548.448472904@kernel.org/
+>>
+>> Currently the only way to get a user space stack trace from a stack
+>> walk (and not just copying large amount of user stack into the kernel
+>> ring buffer) is to use frame pointers. This has a few issues. The biggest
+>> one is that compiling frame pointers into every application and library
+>> has been shown to cause performance overhead.
+>>
+>> Another issue is that the format of the frames may not always be consistent
+>> between different compilers and some architectures (s390) has no defined
+>> format to do a reliable stack walk. The only way to perform user space
+>> profiling on these architectures is to copy the user stack into the kernel
+>> buffer.
+>>
+>> SFrame [1] is now supported in binutils (x86-64, ARM64, and s390). There is
+>> discussions going on about supporting SFrame in LLVM. SFrame acts more like
+>> ORC, and lives in the ELF executable file as its own section. Like ORC it
+>> has two tables where the first table is sorted by instruction pointers (IP)
+>> and using the current IP and finding it's entry in the first table, it will
+>> take you to the second table which will tell you where the return address
+>> of the current function is located and then you can use that address to
+>> look it up in the first table to find the return address of that function,
+>> and so on. This performs a user space stack walk.
+>>
+>> Now because the .sframe section lives in the ELF file it needs to be faulted
+>> into memory when it is used. This means that walking the user space stack
+>> requires being in a faultable context. As profilers like perf request a stack
+>> trace in interrupt or NMI context, it cannot do the walking when it is
+>> requested. Instead it must be deferred until it is safe to fault in user
+>> space. One place this is known to be safe is when the task is about to return
+>> back to user space.
+>>
+>> This series makes the deferred unwind user code implement SFrame format V3
+>> and enables it on x86-64.
+>>
+>> [1]: https://sourceware.org/binutils/wiki/sframe
+>>
+>>
+>> This series applies on top of the tip perf/core branch:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
+>>
+>> The to be stack-traced user space programs (and libraries) need to be
+>> built with the recent SFrame stack trace information format V3, as
+>> generated by the upcoming binutils 2.46 with assembler option --gsframe.
+>> It can be built from source from the binutils-2_46-branch branch:
+>>
+>>   git://sourceware.org/git/binutils-gdb.git  binutils-2_46-branch
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Do you by chance have this work uploaded in a public branch somewhere?
+> I'd like to get a new version of the SFrame for reliable stacktrace on
+> arm64 patch series [1] working for SFrame V3, ideally with the SFrame
+> library in your patch series here.
 > 
-> Strictly checking the file read/write permission even if the owner has
-> CAP_DAC_OVERRIDE on tracefs as same as sysfs.
-> Tracefs is a pseudo filesystem, just like sysfs, so any file that the
-> system defines as unwritable should actually be unwritable by anyone.
+> https://lore.kernel.org/lkml/20250904223850.884188-1-dylanbhatch@google.com/
+No, I don't.  Following is how you can easily get to tip:perf/core with
+this work applied using b4:
 
-This is getting too complex and still doesn't work. As I said in my
-other email, simply check for the trace_array being readonly on opens()
-and return -EACCES if it is and was opened for write or read-write.
+$ git checkout -b sframe v6.18
+$ git pull --no-rebase git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core # pre-req for [PATCH v13 00/18] unwind_deferred: Implement sframe handling
+$ b4 shazam -T 20260127150554.2760964-1-jremus@linux.ibm.com # [PATCH v13 00/18] unwind_deferred: Implement sframe handling
 
-With this still not working this late in the game, it will need to wait
-until the next merge window. I'll take the first two patches of this
-series now though.
+Following is how you can get to a tervolds:master with all of the latest
+sframe related series on top using b4:
 
--- Steve
+$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master:sframe
+$ git checkout sframe
+$ b4 shazam -T 20260127150554.2760964-1-jremus@linux.ibm.com # [PATCH v13 00/18] unwind_deferred: Implement sframe handling
+$ git am -3 # resolve "unwind_user/sframe: Store .sframe section data in per-mm maple tree"
+$ git am -3 # partially resolve "unwind_user/sframe: Add prctl() interface for registering .sframe sections"
+$ git mergetool # manually resolve prctl.h and kernel/sys.c conflicts; bump PR_ADD_SFRAME and PR_REMOVE_SFRAME; each case must end with break;
+$ git am --continue
+$ b4 shazam -T 20260211141357.271402-1-jremus@linux.ibm.com # optional [PATCH v9 0/6] x86/vdso: VDSO updates and fixes for sframes
+$ b4 shazam -T 20260127151926.2805123-1-jremus@linux.ibm.com # optional [PATCH v4 00/12] s390: SFrame user space unwinding
+$ git am -3 # partially resolve "s390/vdso: Enable SFrame V3 generation in vDSO"
+$ git mergetool # manually resolve arch/s390/kernel/vdso/Makefile conflict
+$ git am --continue
+$ git am -3 # resolve "s390/ptrace: Convert function macros to inline functions"
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
