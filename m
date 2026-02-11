@@ -1,153 +1,147 @@
-Received: from mail-m3269.qiye.163.com (mail-m3269.qiye.163.com [220.197.32.69])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805222C11CD;
-	Wed, 11 Feb 2026 14:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330A92BDC1C;
+	Wed, 11 Feb 2026 15:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770820193; cv=none; b=Cct7W76XWrpWyEKirNBZo9aRheecl8+4Vj8+8bigwsVOg8WwdzLaTwmcRlj40zTITUqK+Rw5lQi+m7EAE/mCLQLwk+BB2pV9FpWsjjOIU+XA85KQ0pFsKTNpVInp4NobT+d5ssxYQ/hqinDFIKFPa0sA0JH0gM9piD7lTYE0DZA=
+	t=1770823411; cv=none; b=LIKnNJuX7Km5t0J587WC6q9mrUKIU62sU0WxK0Iem18lBhVDOIjj3/tg6LQmCf6u4LcHHxm0SmbugN68yLIPWukoR313ly1X8xmulDyL2sdv2Hq6bG54r/pezeALiKBY/yLb3NDAWO8hQcb6TSt0CARsfKTvtfeOMhZzMQMzkCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770820193; c=relaxed/simple;
-	bh=ebQPio9qXpyIkIpTjwKBzvWCx52EmSX59ZF3ys+6H1w=;
-	h=Cc:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hLbFFRkbCuNb0i7bZ0hMETFxz01WwVyt0fzLD60TeFhoZQtnlkYNktCFZ77tknclcBgdmIazZ6JY3YQr7EqtEFMnCuHbmQLR37p78gMeZ1Nd3FWMMJ7O5lUFE6haIFWwsuomG4UIwJArv0dgL0wOGidqtYS1NLw5UQp2/fMoh9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Nz3YWhDZ; arc=none smtp.client-ip=220.197.32.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1770823411; c=relaxed/simple;
+	bh=8GKR5up6VqUGWg79EckUAlM++p8psGHHDeQJZ7gMZRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RnC9OPh3GZ2CADZa/ud7boTcHJy4CMKTwzJVPppt7xsXJM4SEqt8QZCpLhPoMek8GcpsXt/F0TYFDMaqiuIvWK9WllJTt8DTTDDOCPAj1bzhJM6Pcq6YNFAUJB+aFMqnea5NVJfpiHYYgXRVFFZNcer4WLuK7sT0wQiCnIrYAio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=GCLbBzEz; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Nz3YWhDZ"
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 33dfe5d17;
-	Wed, 11 Feb 2026 21:13:52 +0800 (GMT+08:00)
-Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 0/3] PCI Controller event and LTSSM tracepoint support
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <9e06e69c-d10a-1f21-cbf7-204319549612@rock-chips.com>
-Date: Wed, 11 Feb 2026 21:13:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="GCLbBzEz"
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 6FB4BB2584;
+	Wed, 11 Feb 2026 15:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1770823402;
+	bh=f7pIPpettLlSQoHWOm1p7EtiixS7ksKzCY9xzpT+daI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GCLbBzEzvvGcC4OQoQw1NLDJPOjkUC9s49rkNbr3+0EBeQ/ebAoZISWZYAH26SABB
+	 zNgugPQOVRqWsGvT2sCt0sPPbgBF2aDPBgr01xMqS6Uh+tQbaiPKT67mNAQfDjt5I8
+	 kIlZIYZbLAZM/q6GyZeSwLgnIcp+EujkPX5YdpEo=
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	kernel-team@meta.com,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH 1/4] mm: introduce zone lock wrappers
+Date: Wed, 11 Feb 2026 15:22:13 +0000
+Message-ID: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1770821420.git.d@ilvokhin.com>
+References: <cover.1770821420.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9c4cd6343f09cckunm214ede4110c896
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUIfT1YdHRlOTE1PS0kaHU5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=Nz3YWhDZm0LmR1of8XMDaWu+kLjneRk8YY4evasBfpH4icvK+sR+yeTRbZ+U+4vK6Wj1TY5aIqPAsEA/NqflH6k2azbWKsLScTq+LECC+KPqin3M+b/pni4W6+hSNIkT/zBFC5Fx04iYKD1wrgqmYOX87DOoxjsXIKwuy/ZQIbk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=Q3+gv+s4ouicFuyqVv3c4xE+kWTdo3QY3eezy0POmeY=;
-	h=date:mime-version:subject:message-id:from;
 
-在 2026/01/22 星期四 10:02, Shawn Lin 写道:
-> This patch-set adds new pci controller event and LTSSM tracepoint used by host drivers
-> which provide LTSSM trace functionality. The first user is pcie-dw-rockchip with a 256
-> Bytes FIFO for recording LTSSM transition.
-> 
+Add thin wrappers around zone lock acquire/release operations. This
+prepares the code for future tracepoint instrumentation without
+modifying individual call sites.
 
-Gentle ping...
+Centralizing zone lock operations behind wrappers allows future
+instrumentation or debugging hooks to be added without touching
+all users.
 
-> Testing
-> =========
-> 
-> This series was tested on RK3588/RK3588s EVB1 with NVMe SSD connected to PCIe3 and PCIe2
-> root ports.
-> 
-> echo 1 > /sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
-> cat /sys/kernel/debug/tracing/trace_pipe
-> 
->   # tracer: nop
->   #
->   # entries-in-buffer/entries-written: 64/64   #P:8
->   #
->   #                                _-----=> irqs-off/BH-disabled
->   #                               / _----=> need-resched
->   #                              | / _---=> hardirq/softirq
->   #                              || / _--=> preempt-depth
->   #                              ||| / _-=> migrate-disable
->   #                              |||| /     delay
->   #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->   #              | |         |   |||||     |         |
->        kworker/0:0-9       [000] .....     5.600194: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
->        kworker/0:0-9       [000] .....     5.600198: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_WAIT rate: Unknown
->        kworker/0:0-9       [000] .....     5.600199: pcie_ltssm_state_transition: dev: a40000000.pcie state: DETECT_ACT rate: Unknown
->        kworker/0:0-9       [000] .....     5.600201: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_ACTIVE rate: Unknown
->        kworker/0:0-9       [000] .....     5.600202: pcie_ltssm_state_transition: dev: a40000000.pcie state: POLL_CONFIG rate: Unknown
->        kworker/0:0-9       [000] .....     5.600204: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_START rate: Unknown
->        kworker/0:0-9       [000] .....     5.600206: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LINKWD_ACEPT rate: Unknown
->        kworker/0:0-9       [000] .....     5.600207: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_WAI rate: Unknown
->        kworker/0:0-9       [000] .....     5.600208: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_LANENUM_ACEPT rate: Unknown
->        kworker/0:0-9       [000] .....     5.600210: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_COMPLETE rate: Unknown
->        kworker/0:0-9       [000] .....     5.600212: pcie_ltssm_state_transition: dev: a40000000.pcie state: CFG_IDLE rate: Unknown
->        kworker/0:0-9       [000] .....     5.600213: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 2.5 GT/s
->        kworker/0:0-9       [000] .....     5.600214: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
->        kworker/0:0-9       [000] .....     5.600216: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: Unknown
->        kworker/0:0-9       [000] .....     5.600217: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_SPEED rate: Unknown
->        kworker/0:0-9       [000] .....     5.600218: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: Unknown
->        kworker/0:0-9       [000] .....     5.600220: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ1 rate: Unknown
->        kworker/0:0-9       [000] .....     5.600221: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ2 rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600222: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_EQ3 rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600224: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600225: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600226: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600227: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600228: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600229: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600231: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600232: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600233: pcie_ltssm_state_transition: dev: a40000000.pcie state: L123_SEND_EIDLE rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600234: pcie_ltssm_state_transition: dev: a40000000.pcie state: L1_IDLE rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600236: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_LOCK rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600237: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_RCVRCFG rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600238: pcie_ltssm_state_transition: dev: a40000000.pcie state: RCVRY_IDLE rate: 8.0 GT/s
->        kworker/0:0-9       [000] .....     5.600239: pcie_ltssm_state_transition: dev: a40000000.pcie state: L0 rate: 8.0 GT/s
-> 
-> 
-> Changes in v4:
-> - use TRACE_EVENT_FN to notify when to start and stop the tracepoint,
->    and export pci_ltssm_tp_enabled() for host drivers to use
-> - skip trace if pci_ltssm_tp_enabled() is false.(Steven)
-> - wrap into 80 columns(Bjorn)
-> 
-> Changes in v3:
-> - add TRACE_DEFINE_ENUM for all enums(Steven Rostedt)
-> - Add toctree entry in Documentation/trace/index.rst(Bagas Sanjaya)
-> - fix mismatch section underline length(Bagas Sanjaya)
-> - Make example snippets in code block(Bagas Sanjaya)
-> - warp context into 80 columns and fix the file name(Bjorn)
-> - reorder variables(Mani)
-> - rename loop to i; rename en to enable(Mani)
-> - use FIELD_GET(Mani)
-> - add comment about how the FIFO works(Mani)
-> 
-> Changes in v2:
-> - use tracepoint
-> 
-> Shawn Lin (3):
->    PCI: trace: Add PCI controller LTSSM transition tracepoint
->    Documentation: tracing: Add PCI controller event documentation
->    PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
-> 
->   Documentation/trace/events-pci-controller.rst |  42 ++++++++++
->   Documentation/trace/index.rst                 |   1 +
->   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 111 ++++++++++++++++++++++++++
->   drivers/pci/trace.c                           |  20 +++++
->   include/linux/pci.h                           |   4 +
->   include/trace/events/pci_controller.h         |  57 +++++++++++++
->   6 files changed, 235 insertions(+)
->   create mode 100644 Documentation/trace/events-pci-controller.rst
->   create mode 100644 include/trace/events/pci_controller.h
-> 
+No functional change intended. The wrappers are introduced in
+preparation for subsequent patches and are not yet used.
+
+Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+---
+ MAINTAINERS               |  1 +
+ include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+ create mode 100644 include/linux/zone_lock.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b4088f7290be..680c9ae02d7e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
+ F:	include/linux/ptdump.h
+ F:	include/linux/vmpressure.h
+ F:	include/linux/vmstat.h
++F:	include/linux/zone_lock.h
+ F:	kernel/fork.c
+ F:	mm/Kconfig
+ F:	mm/debug.c
+diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+new file mode 100644
+index 000000000000..c531e26280e6
+--- /dev/null
++++ b/include/linux/zone_lock.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_ZONE_LOCK_H
++#define _LINUX_ZONE_LOCK_H
++
++#include <linux/mmzone.h>
++#include <linux/spinlock.h>
++
++static inline void zone_lock_init(struct zone *zone)
++{
++	spin_lock_init(&zone->lock);
++}
++
++#define zone_lock_irqsave(zone, flags)				\
++do {								\
++	spin_lock_irqsave(&(zone)->lock, flags);		\
++} while (0)
++
++#define zone_trylock_irqsave(zone, flags)			\
++({								\
++	spin_trylock_irqsave(&(zone)->lock, flags);		\
++})
++
++static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
++{
++	spin_unlock_irqrestore(&zone->lock, flags);
++}
++
++static inline void zone_lock_irq(struct zone *zone)
++{
++	spin_lock_irq(&zone->lock);
++}
++
++static inline void zone_unlock_irq(struct zone *zone)
++{
++	spin_unlock_irq(&zone->lock);
++}
++
++#endif /* _LINUX_ZONE_LOCK_H */
+-- 
+2.47.3
+
