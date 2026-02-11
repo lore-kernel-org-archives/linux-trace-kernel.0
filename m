@@ -1,172 +1,368 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3756434F256
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Feb 2026 08:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8AD23643F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Feb 2026 11:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770797816; cv=none; b=hPc6L8doDSVMtxT2GOYCHAyEsO2v83f6Hq/kgeHOYxPHZ8GEGJ2wuP6bF6tPbkw7m+1zyEX/efRzzglg2AaZmRpw9kWrG7og2L/SNNQ5l7+eeYRSc5Rkzj8uLyzERztkO54d93hzVJUtRI9qr24okfCm3DfKhezim09PLnklprw=
+	t=1770807795; cv=none; b=XqiTcd1BJ29+S9pS4tOHGhmjfuwrUWhXQe1q7fOlD1d/2tetsjJPWC74WClrL57+Ir0H+otrGWEHgPCWQivc6u1zPvFgk6iG8WIgOLHxQNMo5bgXloqcnIgZrf/xlMcpNjjgmITV6Sz9e7fMjstkYlqtP43+uWXtRP+40EqwSpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770797816; c=relaxed/simple;
-	bh=NiHEKNGKnSGeH3FyeVbc6gUW1/MQxMwwkjnhJPIxE+k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IAin2YrP54au9sYJSZ7TXXUGQqp7GL5TbKgTi6+0kb9TlG6VdzlhAz/6QlMyU/AEBFi3Dd/ecMpRLgVIsqRlIV4ivteWvVgjoJ3Xd/t0uPyV2kFv6GYVJTtgaWKGqRHBdPMLs9JaZB3Z19ZW54Ez25wxsIB6WhBfmLrLLz9BtWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b+bIBJpy; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1770807795; c=relaxed/simple;
+	bh=mk/tFu2xb3TJ7XbF+LsRTR3t68f9Cb2gfi/rVMi3hgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=UqvndGnMiaGEakOI0xE1tT6AdPnDIZnaIK9ZeF1kdrx30/DWWhr6pHUR9Z6rOwQlA7H/OtE1Q0ncAy9Loj3SmYv9nQZPL2oZJLgXELsPwIxzDHqjdh6WylyKw7x3Otme2RHHM82/lbPcey3k/7g4AFbHn6gt9kuSDuNqG4irPI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXz+8frb; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+bIBJpy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXz+8frb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770797813;
+	s=mimecast20190719; t=1770807793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NiHEKNGKnSGeH3FyeVbc6gUW1/MQxMwwkjnhJPIxE+k=;
-	b=b+bIBJpyugtV0258GpsJ/hxnqwuM4eqtZNYQ/2Rb+M4ArAW5xHW3G5A/a15+fCNsOo6NVy
-	//njf9jtztBqdB6UMdBF4zbr2uOQnzYhkkdfompVf2EHdiovAQ5N3PrKGk4Fkz6HSMfMg+
-	+NDIg2DiGIVdmX2uU1c+VdTyuUo72yo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-fGoAwk9zPjapdhN5zbFWdw-1; Wed, 11 Feb 2026 03:16:52 -0500
-X-MC-Unique: fGoAwk9zPjapdhN5zbFWdw-1
-X-Mimecast-MFC-AGG-ID: fGoAwk9zPjapdhN5zbFWdw_1770797811
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4806fce5ab1so35721765e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Feb 2026 00:16:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770797811; x=1771402611;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2SX4sleE5xgzwOzs5l1BotG3ooT9aeHoVAoWb2ZNeBo=;
-        b=TQ2HMnf5vw89+VASgbvuWfzDn5vBxPQEhWATLioMJEqLKOP0qZ4CLYAUsNGUV41bHy
-         k5qcXkATQgGGUYIzasYMVxYbcz4FsorwBkfX/o8LQWBAGpgtcoL4NQrIgsurLO575/LX
-         lSha2/w+6QxcqTSulzFLwAwc4a5mSwb3PP2cQR5oQTr+qmdrLLMxjRC9XUKbsmAq6b/i
-         VIxCB1W66hHXidIoIE/k/48smdCwEySBM5ll9wdwPp8UUPUSQX09ynvYW16jAmOYC9CU
-         faKpgusdxIaCsQ07r+IjspiAZx+MPOxqwfgAJvMJdj+SUHQNXfnTkSmKnZ7S+7d9SKMY
-         ijvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGXLrrjQLA51H/5mJ6iv+r77ncFHErAk2lqs53CXNSmHu3WVlwQnnOs1mdJIbiVVmFt401jyPH/rKJps4Pf+2k3Lw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGdzhMPBHBTYXugoefJEXSEQj8476BEPx0UfF9hl1ZILB/JdRN
-	X8i842ya9qA9QDUjKph6xe319tp3hRZ92AakO9jCWEuEZek5UnsgWg+a6Js84YUcJJ7qaQiqdWo
-	7eX50Yn0JIPZtnYoSspz2GRABXS2PIwdSHYSvdG/d5K8u2zyhxuMCAXHCtuX/d4sHZSMHTTSEr+
-	mElzBpinjr
-X-Gm-Gg: AZuq6aIlBxUhlZOW2iIZonZ9OX96BMLSvoMm19+bXkZ+uu4NgIdMMxxCUG7EpST+E+B
-	Ci02aM9PNYHZ9vmM7M8WpYdMRLKKCTfAOkRLSVnSRm0qMDIxgeFtR6eqzBlKCjdAejERi6vyhRD
-	8bQGKyLSI2BefcDpIpRvILvbb8DWekzQtdkx0E+H37rOZozFfG1LDv/3r7sjQ8yuxdWHC3c9YIp
-	tkfiBe2UCPZjnU8+5OnyGg2tOPGi5Hqa3FW6wZynEI2ynVLKZDJ8/NfAur/s5n5Adw7IALMIBOC
-	b5MaRe4SzW4LJbzRqWKuS51CKOv62ge/mKZxypg5XYO7/dYVge3zYnxrQU5z5y4BkO3GNrsdIGd
-	ndp6W1eTNh81cmqkt4ZiS6EgLfto93/7fnKX3o37wTcFUmNNpdfGkj8AIZ7buTQCacGwZ7rnhhF
-	L0n5WH+60q5iQHmsIa2DxG
-X-Received: by 2002:a05:600c:a00f:b0:475:dcbb:7903 with SMTP id 5b1f17b1804b1-4835b90c8f2mr19871405e9.9.1770797810760;
-        Wed, 11 Feb 2026 00:16:50 -0800 (PST)
-X-Received: by 2002:a05:600c:a00f:b0:475:dcbb:7903 with SMTP id 5b1f17b1804b1-4835b90c8f2mr19871115e9.9.1770797810288;
-        Wed, 11 Feb 2026 00:16:50 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (185-132-178-103.hosted-by-worldstream.net. [185.132.178.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4835d9895b1sm24073995e9.1.2026.02.11.00.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 00:16:49 -0800 (PST)
-Message-ID: <ada4f1dc5ca34d8adf3d68396080e6d2e5e834eb.camel@redhat.com>
-Subject: Re: [PATCH 1/2] selftests/tracing: Fix to make --logdir option work
- again
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Steven Rostedt
-	 <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Date: Wed, 11 Feb 2026 09:16:48 +0100
-In-Reply-To: <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
-References: <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43)
+	 in-reply-to:in-reply-to:references:references;
+	bh=97YY0+mUrinSZBPdrWpZVZPTzLm6/d/OwSRk4/dZKTI=;
+	b=cXz+8frbJ9ym7OEoXtp6xkI3Z8D92cJftp5t/Al5gd3e2hQuAZPGHCGnM7yZqRTXcqkNH4
+	FZwnvMbQLTxIqKy+LK3WE16OKzDsuPnHI8I8+h/N9jNxzvFcklQlOPuaYMDQWzs0T+uXYh
+	cxJD36RWX5YYlQX0Au1y3Hnjs0muLy4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-8UP_9t1sMmK_sM-2KGuhiw-1; Wed,
+ 11 Feb 2026 06:03:10 -0500
+X-MC-Unique: 8UP_9t1sMmK_sM-2KGuhiw-1
+X-Mimecast-MFC-AGG-ID: 8UP_9t1sMmK_sM-2KGuhiw_1770807787
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0697A18005B0;
+	Wed, 11 Feb 2026 11:03:07 +0000 (UTC)
+Received: from fedora (unknown [10.22.88.75])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5EB4730001A8;
+	Wed, 11 Feb 2026 11:03:01 +0000 (UTC)
+Date: Wed, 11 Feb 2026 08:03:00 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, John Kacur <jkacur@redhat.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] tools/rtla: Consolidate nr_cpus usage across all
+ tools
+Message-ID: <aYxhtrJ8cw7SNOJy@fedora>
+References: <20260209092436.2899888-1-costa.shul@redhat.com>
+ <20260209092436.2899888-2-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: xiR0g432Zq_lZ90POuuWAvMa8ObDS1VP7Wb76rta2Ac_1770797811
+In-Reply-To: <20260209092436.2899888-2-costa.shul@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: ni7sHX62jAV3q0THY3JiVA-VLSfMn1G42NJ7wDea6-E_1770807787
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 2026-02-10 at 18:54 +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> Since commit a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to
-> use with RV") moved the default LOG_DIR setting after --logdir option
-> parser, it overwrites the user given LOG_DIR.
-> This fixes it to check the --logdir option parameter when setting new
-> default LOG_DIR with a new TOP_DIR.
->=20
-> Fixes: a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to use with =
-RV")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, Feb 09, 2026 at 11:24:33AM +0200, Costa Shulyupin wrote:
+> sysconf(_SC_NPROCESSORS_CONF) (via get_nprocs_conf) reflects
+> cpu_possible_mask, which is fixed at boot time, so querying it
+> repeatedly is unnecessary.
+> 
+> Replace multiple calls to sysconf(_SC_NPROCESSORS_CONF) with a single
+> global nr_cpus variable initialized once at startup.
+> 
+> `#pragma once` in timerlat_u.h is needed for pre-C23 compilers to avoid
+> redefinition errors.
+
+Isn't it necessary for C23 compilers?
+
+> 
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 > ---
-
-Thanks for catching this! I should have tested all the options..
-The fix works fine on my side.
-
-Tested-by: Gabriele Monaco <gmonaco@redhat.com>
-
-> =C2=A0tools/testing/selftests/ftrace/ftracetest |=C2=A0=C2=A0 18 ++++++++=
-++++------
-> =C2=A01 file changed, 12 insertions(+), 6 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/ftrace/ftracetest
-> b/tools/testing/selftests/ftrace/ftracetest
-> index 3230bd54dba8..0a56bf209f6c 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-> @@ -130,8 +130,7 @@ parse_opts() { # opts
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift 1
-> =C2=A0=C2=A0=C2=A0=C2=A0 ;;
-> =C2=A0=C2=A0=C2=A0=C2=A0 --logdir|-l)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LOG_DIR=3D$2
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LINK_PTR=3D
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 USER_LOG_DIR=3D$2
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift 2
-> =C2=A0=C2=A0=C2=A0=C2=A0 ;;
-> =C2=A0=C2=A0=C2=A0=C2=A0 --rv)
-> @@ -199,6 +198,7 @@ fi
-> =C2=A0TOP_DIR=3D`absdir $0`
-> =C2=A0TEST_DIR=3D$TOP_DIR/test.d
-> =C2=A0TEST_CASES=3D`find_testcases $TEST_DIR`
-> +USER_LOG_DIR=3D
-> =C2=A0KEEP_LOG=3D0
-> =C2=A0KTAP=3D0
-> =C2=A0DEBUG=3D0
-> @@ -210,12 +210,18 @@ RV_TEST=3D0
-> =C2=A0# Parse command-line options
-> =C2=A0parse_opts $*
-> =C2=A0
-> +[ $DEBUG -ne 0 ] && set -x
+>  tools/tracing/rtla/src/common.c        |  7 +++++--
+>  tools/tracing/rtla/src/common.h        |  2 ++
+>  tools/tracing/rtla/src/osnoise_hist.c  |  3 ---
+>  tools/tracing/rtla/src/osnoise_top.c   |  7 -------
+>  tools/tracing/rtla/src/timerlat.c      |  5 +----
+>  tools/tracing/rtla/src/timerlat_aa.c   |  1 -
+>  tools/tracing/rtla/src/timerlat_hist.c |  3 ---
+>  tools/tracing/rtla/src/timerlat_top.c  |  7 -------
+>  tools/tracing/rtla/src/timerlat_u.c    |  3 +--
+>  tools/tracing/rtla/src/timerlat_u.h    |  1 +
+>  tools/tracing/rtla/src/utils.c         | 10 +---------
+>  11 files changed, 11 insertions(+), 38 deletions(-)
+> 
+> diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+> index ceff76a62a30..e4cf30a65e82 100644
+> --- a/tools/tracing/rtla/src/common.c
+> +++ b/tools/tracing/rtla/src/common.c
+> @@ -5,12 +5,14 @@
+>  #include <signal.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> -#include <unistd.h>
+>  #include <getopt.h>
+> +#include <sys/sysinfo.h>
 > +
-> +# TOP_DIR can be changed for rv. Setting log directory.
-> =C2=A0LOG_TOP_DIR=3D$TOP_DIR/logs
-> =C2=A0LOG_DATE=3D`date +%Y%m%d-%H%M%S`
-> -LOG_DIR=3D$LOG_TOP_DIR/$LOG_DATE/
-> -LINK_PTR=3D$LOG_TOP_DIR/latest
+>  #include "common.h"
+>  
+>  struct trace_instance *trace_inst;
+>  volatile int stop_tracing;
+> +int nr_cpus;
+>  
+>  static void stop_trace(int sig)
+>  {
+> @@ -135,7 +137,7 @@ common_apply_config(struct osnoise_tool *tool, struct common_params *params)
+>  	}
+>  
+>  	if (!params->cpus) {
+> -		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
+> +		for (i = 0; i < nr_cpus; i++)
+>  			CPU_SET(i, &params->monitored_cpus);
+>  	}
+>  
+> @@ -183,6 +185,7 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
+>  	bool stopped;
+>  	int retval;
+>  
+> +	nr_cpus = get_nprocs_conf();
+>  	params = ops->parse_args(argc, argv);
+>  	if (!params)
+>  		exit(1);
+> diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
+> index 7602c5593ef5..32f9c1351209 100644
+> --- a/tools/tracing/rtla/src/common.h
+> +++ b/tools/tracing/rtla/src/common.h
+> @@ -107,6 +107,8 @@ struct common_params {
+>  	struct timerlat_u_params user;
+>  };
+>  
+> +extern int nr_cpus;
+> +
+>  #define for_each_monitored_cpu(cpu, nr_cpus, common) \
+>  	for (cpu = 0; cpu < nr_cpus; cpu++) \
+>  		if (!(common)->cpus || CPU_ISSET(cpu, &(common)->monitored_cpus))
+> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+> index 9d70ea34807f..03ebff34fff4 100644
+> --- a/tools/tracing/rtla/src/osnoise_hist.c
+> +++ b/tools/tracing/rtla/src/osnoise_hist.c
+> @@ -647,9 +647,6 @@ static struct osnoise_tool
+>  *osnoise_init_hist(struct common_params *params)
+>  {
+>  	struct osnoise_tool *tool;
+> -	int nr_cpus;
 > -
-> -[ $DEBUG -ne 0 ] && set -x
-> +if [ -n "$USER_LOG_DIR" ]; then
-> +=C2=A0 LOG_DIR=3D$USER_LOG_DIR
-> +=C2=A0 LINK_PTR=3D
-> +else
-> +=C2=A0 LOG_DIR=3D$LOG_TOP_DIR/$LOG_DATE/
-> +=C2=A0 LINK_PTR=3D$LOG_TOP_DIR/latest
-> +fi
-> =C2=A0
-> =C2=A0if [ $RV_TEST -ne 0 ]; then
-> =C2=A0=09TRACING_DIR=3D$TRACING_DIR/rv
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  
+>  	tool = osnoise_init_tool("osnoise_hist");
+>  	if (!tool)
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+> index d54d47947fb4..7dcd2e318205 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> @@ -232,12 +232,8 @@ osnoise_print_stats(struct osnoise_tool *top)
+>  {
+>  	struct osnoise_params *params = to_osnoise_params(top->params);
+>  	struct trace_instance *trace = &top->trace;
+> -	static int nr_cpus = -1;
+>  	int i;
+>  
+> -	if (nr_cpus == -1)
+> -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> -
+>  	if (!params->common.quiet)
+>  		clear_terminal(trace->seq);
+>  
+> @@ -495,9 +491,6 @@ osnoise_top_apply_config(struct osnoise_tool *tool)
+>  struct osnoise_tool *osnoise_init_top(struct common_params *params)
+>  {
+>  	struct osnoise_tool *tool;
+> -	int nr_cpus;
+> -
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  
+>  	tool = osnoise_init_tool("osnoise_top");
+>  	if (!tool)
+> diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
+> index 8f8811f7a13b..69856f677fce 100644
+> --- a/tools/tracing/rtla/src/timerlat.c
+> +++ b/tools/tracing/rtla/src/timerlat.c
+> @@ -99,7 +99,7 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
+>  int timerlat_enable(struct osnoise_tool *tool)
+>  {
+>  	struct timerlat_params *params = to_timerlat_params(tool->params);
+> -	int retval, nr_cpus, i;
+> +	int retval, i;
+>  
+>  	if (params->dma_latency >= 0) {
+>  		dma_latency_fd = set_cpu_dma_latency(params->dma_latency);
+> @@ -115,8 +115,6 @@ int timerlat_enable(struct osnoise_tool *tool)
+>  			return -1;
+>  		}
+>  
+> -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> -
+>  		for_each_monitored_cpu(i, nr_cpus, &params->common) {
+>  			if (save_cpu_idle_disable_state(i) < 0) {
+>  				err_msg("Could not save cpu idle state.\n");
+> @@ -214,7 +212,6 @@ void timerlat_analyze(struct osnoise_tool *tool, bool stopped)
+>  void timerlat_free(struct osnoise_tool *tool)
+>  {
+>  	struct timerlat_params *params = to_timerlat_params(tool->params);
+> -	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  	int i;
+>  
+>  	timerlat_aa_destroy();
+> diff --git a/tools/tracing/rtla/src/timerlat_aa.c b/tools/tracing/rtla/src/timerlat_aa.c
+> index 31e66ea2b144..5766d58709eb 100644
+> --- a/tools/tracing/rtla/src/timerlat_aa.c
+> +++ b/tools/tracing/rtla/src/timerlat_aa.c
+> @@ -1022,7 +1022,6 @@ void timerlat_aa_destroy(void)
+>   */
+>  int timerlat_aa_init(struct osnoise_tool *tool, int dump_tasks)
+>  {
+> -	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  	struct timerlat_aa_context *taa_ctx;
+>  	int retval;
+>  
+> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+> index 4e8c38a61197..841118ed84f2 100644
+> --- a/tools/tracing/rtla/src/timerlat_hist.c
+> +++ b/tools/tracing/rtla/src/timerlat_hist.c
+> @@ -1031,9 +1031,6 @@ static struct osnoise_tool
+>  *timerlat_init_hist(struct common_params *params)
+>  {
+>  	struct osnoise_tool *tool;
+> -	int nr_cpus;
+> -
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  
+>  	tool = osnoise_init_tool("timerlat_hist");
+>  	if (!tool)
+> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+> index 284b74773c2b..3e395ce4fa9f 100644
+> --- a/tools/tracing/rtla/src/timerlat_top.c
+> +++ b/tools/tracing/rtla/src/timerlat_top.c
+> @@ -442,15 +442,11 @@ timerlat_print_stats(struct osnoise_tool *top)
+>  	struct timerlat_params *params = to_timerlat_params(top->params);
+>  	struct trace_instance *trace = &top->trace;
+>  	struct timerlat_top_cpu summary;
+> -	static int nr_cpus = -1;
+>  	int i;
+>  
+>  	if (params->common.aa_only)
+>  		return;
+>  
+> -	if (nr_cpus == -1)
+> -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> -
+>  	if (!params->common.quiet)
+>  		clear_terminal(trace->seq);
+>  
+> @@ -781,9 +777,6 @@ static struct osnoise_tool
+>  *timerlat_init_top(struct common_params *params)
+>  {
+>  	struct osnoise_tool *top;
+> -	int nr_cpus;
+> -
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  
+>  	top = osnoise_init_tool("timerlat_top");
+>  	if (!top)
+> diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
+> index ce68e39d25fd..a569fe7f93aa 100644
+> --- a/tools/tracing/rtla/src/timerlat_u.c
+> +++ b/tools/tracing/rtla/src/timerlat_u.c
+> @@ -16,7 +16,7 @@
+>  #include <sys/wait.h>
+>  #include <sys/prctl.h>
+>  
+> -#include "utils.h"
+> +#include "common.h"
+>  #include "timerlat_u.h"
+>  
+>  /*
+> @@ -131,7 +131,6 @@ static int timerlat_u_send_kill(pid_t *procs, int nr_cpus)
+>   */
+>  void *timerlat_u_dispatcher(void *data)
+>  {
+> -	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  	struct timerlat_u_params *params = data;
+>  	char proc_name[128];
+>  	int procs_count = 0;
+> diff --git a/tools/tracing/rtla/src/timerlat_u.h b/tools/tracing/rtla/src/timerlat_u.h
+> index 661511908957..a692331bd1c7 100644
+> --- a/tools/tracing/rtla/src/timerlat_u.h
+> +++ b/tools/tracing/rtla/src/timerlat_u.h
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#pragma once
+>  /*
+>   * Copyright (C) 2023 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+> index 0da3b2470c31..8cd1b374b035 100644
+> --- a/tools/tracing/rtla/src/utils.c
+> +++ b/tools/tracing/rtla/src/utils.c
+> @@ -19,7 +19,7 @@
+>  #include <stdio.h>
+>  #include <limits.h>
+>  
+> -#include "utils.h"
+> +#include "common.h"
+>  
+>  #define MAX_MSG_LENGTH	1024
+>  int config_debug;
+> @@ -119,14 +119,11 @@ int parse_cpu_set(char *cpu_list, cpu_set_t *set)
+>  {
+>  	const char *p;
+>  	int end_cpu;
+> -	int nr_cpus;
+>  	int cpu;
+>  	int i;
+>  
+>  	CPU_ZERO(set);
+>  
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> -
+>  	for (p = cpu_list; *p; ) {
+>  		cpu = atoi(p);
+>  		if (cpu < 0 || (!cpu && *p != '0') || cpu >= nr_cpus)
+> @@ -559,7 +556,6 @@ int save_cpu_idle_disable_state(unsigned int cpu)
+>  	unsigned int nr_states;
+>  	unsigned int state;
+>  	int disabled;
+> -	int nr_cpus;
+>  
+>  	nr_states = cpuidle_state_count(cpu);
+>  
+> @@ -567,7 +563,6 @@ int save_cpu_idle_disable_state(unsigned int cpu)
+>  		return 0;
+>  
+>  	if (saved_cpu_idle_disable_state == NULL) {
+> -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+>  		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
+>  		if (!saved_cpu_idle_disable_state)
+>  			return -1;
+> @@ -644,13 +639,10 @@ int restore_cpu_idle_disable_state(unsigned int cpu)
+>  void free_cpu_idle_disable_states(void)
+>  {
+>  	int cpu;
+> -	int nr_cpus;
+>  
+>  	if (!saved_cpu_idle_disable_state)
+>  		return;
+>  
+> -	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> -
+>  	for (cpu = 0; cpu < nr_cpus; cpu++) {
+>  		free(saved_cpu_idle_disable_state[cpu]);
+>  		saved_cpu_idle_disable_state[cpu] = NULL;
+> -- 
+> 2.52.0
+> 
 
