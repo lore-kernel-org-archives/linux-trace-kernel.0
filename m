@@ -1,32 +1,31 @@
 Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330A92BDC1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3302A274B3B;
 	Wed, 11 Feb 2026 15:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770823411; cv=none; b=LIKnNJuX7Km5t0J587WC6q9mrUKIU62sU0WxK0Iem18lBhVDOIjj3/tg6LQmCf6u4LcHHxm0SmbugN68yLIPWukoR313ly1X8xmulDyL2sdv2Hq6bG54r/pezeALiKBY/yLb3NDAWO8hQcb6TSt0CARsfKTvtfeOMhZzMQMzkCw=
+	t=1770823411; cv=none; b=EZ9II8XMTngJeVDwA4kuWMaoSgm6OIkTaPSPyMnP3pD5j+u7dJvm7opETjp3miUQFKKoZe/SpzWiA/5L/rE5dDbWk08gn6RKKMitTD2FEwXB8f64885Q1gLkKm1BfEQDSbDD+UcC7kRTvDpkW5+uGv47nTMdkn3tb7YPsBoQECY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770823411; c=relaxed/simple;
-	bh=8GKR5up6VqUGWg79EckUAlM++p8psGHHDeQJZ7gMZRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RnC9OPh3GZ2CADZa/ud7boTcHJy4CMKTwzJVPppt7xsXJM4SEqt8QZCpLhPoMek8GcpsXt/F0TYFDMaqiuIvWK9WllJTt8DTTDDOCPAj1bzhJM6Pcq6YNFAUJB+aFMqnea5NVJfpiHYYgXRVFFZNcer4WLuK7sT0wQiCnIrYAio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=GCLbBzEz; arc=none smtp.client-ip=178.62.254.231
+	bh=O5SQXm86WLRQMXNxIXrWZQtR28sx0vdPeTvmiHUgBMw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SSB3h6J1XJtrjYGtq3MNq5JbVPn4bPnoop67E55GwkBBQMO2Wnsimc/5fH8eZ7sFHQUNCU57Ts0xAmg0cs23YW/IaioivVBobAlSDqrWPlqiQE0nkyyosj7MlmUC2lHVxCbZL61NFHwuE6fqg6EIGOkZQJtaid+VIWtGsfTPGCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=Bz3OY9Oi; arc=none smtp.client-ip=178.62.254.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="GCLbBzEz"
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="Bz3OY9Oi"
 Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
 	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 6FB4BB2584;
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 0B0EEB2583;
 	Wed, 11 Feb 2026 15:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
 	s=mail; t=1770823402;
-	bh=f7pIPpettLlSQoHWOm1p7EtiixS7ksKzCY9xzpT+daI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GCLbBzEzvvGcC4OQoQw1NLDJPOjkUC9s49rkNbr3+0EBeQ/ebAoZISWZYAH26SABB
-	 zNgugPQOVRqWsGvT2sCt0sPPbgBF2aDPBgr01xMqS6Uh+tQbaiPKT67mNAQfDjt5I8
-	 kIlZIYZbLAZM/q6GyZeSwLgnIcp+EujkPX5YdpEo=
+	bh=WDbtQj7bSQAlHwvUW/twErw6BWjpEQCq4GiuByWk9GA=;
+	h=From:To:Cc:Subject:Date;
+	b=Bz3OY9Oio9m17o64qJae1ZUjvKKUkogsk4a0w3FDLc+FAg1vHv3ipl+nVYPOU1jYa
+	 h8aIqj7Fkf+/IVSINuT+7UgC8S5zIW3xcjUWn9vAd0lRBqXUsusUT9G68QxYm9uCJt
+	 MgCDATl4xkLuQ6gqHsjiLrqWg/B/UfjaV9ATTz/E=
 From: Dmitry Ilvokhin <d@ilvokhin.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -54,12 +53,10 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	kernel-team@meta.com,
 	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH 1/4] mm: introduce zone lock wrappers
-Date: Wed, 11 Feb 2026 15:22:13 +0000
-Message-ID: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+Subject: [PATCH 0/4] mm: zone lock tracepoint instrumentation
+Date: Wed, 11 Feb 2026 15:22:12 +0000
+Message-ID: <cover.1770821420.git.d@ilvokhin.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1770821420.git.d@ilvokhin.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,80 +65,73 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add thin wrappers around zone lock acquire/release operations. This
-prepares the code for future tracepoint instrumentation without
-modifying individual call sites.
+Zone lock contention can significantly impact allocation and
+reclaim latency, as it is a central synchronization point in
+the page allocator and reclaim paths. Improved visibility into
+its behavior is therefore important for diagnosing performance
+issues in memory-intensive workloads.
 
-Centralizing zone lock operations behind wrappers allows future
-instrumentation or debugging hooks to be added without touching
-all users.
+On some production workloads at Meta, we have observed noticeable
+zone lock contention. Deeper analysis of lock holders and waiters
+is currently difficult with existing instrumentation.
 
-No functional change intended. The wrappers are introduced in
-preparation for subsequent patches and are not yet used.
+While generic lock contention_begin/contention_end tracepoints
+cover the slow path, they do not provide sufficient visibility
+into lock hold times. In particular, the lack of a release-side
+event makes it difficult to identify long lock holders and
+correlate them with waiters. As a result, distinguishing between
+short bursts of contention and pathological long hold times
+requires additional instrumentation.
 
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- MAINTAINERS               |  1 +
- include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+This patch series adds dedicated tracepoint instrumentation to
+zone lock, following the existing mmap_lock tracing model.
+
+The goal is to enable detailed holder/waiter analysis and lock
+hold time measurements without affecting the fast path when
+tracing is disabled.
+
+The series is structured as follows:
+
+  1. Introduce zone lock wrappers.
+  2. Mechanically convert zone lock users to the wrappers.
+  3. Convert compaction to use the wrappers (requires minor
+     restructuring of compact_lock_irqsave()).
+  4. Add zone lock tracepoints.
+
+The tracepoints are added via lightweight inline helpers in the
+wrappers. When tracing is disabled, the fast path remains
+unchanged.
+
+The compaction changes required abstracting compact_lock_irqsave() away from
+raw spinlock_t. I chose a small tagged struct to handle both zone and LRU
+locks uniformly. If there is a preferred alternative (e.g. splitting helpers
+or using a different abstraction), I would appreciate feedback.
+
+Dmitry Ilvokhin (4):
+  mm: introduce zone lock wrappers
+  mm: convert zone lock users to wrappers
+  mm: convert compaction to zone lock wrappers
+  mm: add tracepoints for zone lock
+
+ MAINTAINERS                      |   3 +
+ include/linux/zone_lock.h        | 100 ++++++++++++++++++++++++++++
+ include/trace/events/zone_lock.h |  64 ++++++++++++++++++
+ mm/Makefile                      |   2 +-
+ mm/compaction.c                  | 108 +++++++++++++++++++++++++------
+ mm/memory_hotplug.c              |   9 +--
+ mm/mm_init.c                     |   3 +-
+ mm/page_alloc.c                  |  73 ++++++++++-----------
+ mm/page_isolation.c              |  19 +++---
+ mm/page_reporting.c              |  13 ++--
+ mm/show_mem.c                    |   5 +-
+ mm/vmscan.c                      |   5 +-
+ mm/vmstat.c                      |   9 +--
+ mm/zone_lock.c                   |  31 +++++++++
+ 14 files changed, 360 insertions(+), 84 deletions(-)
  create mode 100644 include/linux/zone_lock.h
+ create mode 100644 include/trace/events/zone_lock.h
+ create mode 100644 mm/zone_lock.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b4088f7290be..680c9ae02d7e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
- F:	include/linux/ptdump.h
- F:	include/linux/vmpressure.h
- F:	include/linux/vmstat.h
-+F:	include/linux/zone_lock.h
- F:	kernel/fork.c
- F:	mm/Kconfig
- F:	mm/debug.c
-diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-new file mode 100644
-index 000000000000..c531e26280e6
---- /dev/null
-+++ b/include/linux/zone_lock.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_ZONE_LOCK_H
-+#define _LINUX_ZONE_LOCK_H
-+
-+#include <linux/mmzone.h>
-+#include <linux/spinlock.h>
-+
-+static inline void zone_lock_init(struct zone *zone)
-+{
-+	spin_lock_init(&zone->lock);
-+}
-+
-+#define zone_lock_irqsave(zone, flags)				\
-+do {								\
-+	spin_lock_irqsave(&(zone)->lock, flags);		\
-+} while (0)
-+
-+#define zone_trylock_irqsave(zone, flags)			\
-+({								\
-+	spin_trylock_irqsave(&(zone)->lock, flags);		\
-+})
-+
-+static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
-+{
-+	spin_unlock_irqrestore(&zone->lock, flags);
-+}
-+
-+static inline void zone_lock_irq(struct zone *zone)
-+{
-+	spin_lock_irq(&zone->lock);
-+}
-+
-+static inline void zone_unlock_irq(struct zone *zone)
-+{
-+	spin_unlock_irq(&zone->lock);
-+}
-+
-+#endif /* _LINUX_ZONE_LOCK_H */
 -- 
 2.47.3
 
