@@ -1,32 +1,32 @@
 Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0680B2D73A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0409928003A;
 	Wed, 11 Feb 2026 15:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770823412; cv=none; b=i9+NfgvaR685z/5lbLP+JL98M4V2SIHOPBpuAPNfh8Fes1Wjn64Una3fpzqLd/UAKO+wRKSwtfxTCRzjw0hM1aFJ4Vvz/WrvgZDAxq9NlqK1vx5/A9abJJK7MaRskX+ZVmqVOr42+1oZSvulxB62My4xRcLDjm2M+uqFTT/43As=
+	t=1770823412; cv=none; b=sdmW/zWdPd+sKcRcYZnptpq16alB1D+Qrd7sB83TNWHM7QOPnvUoUBexwYFZVkPmuryX9iATn8nF54H0n8G01m5xxa7Eet5fd1wI2sMqq+HQAd1cB3VZjltJ4Rnw+ccsCRdzC6y4nocwujJoyRDZeUA6OoJOybpmBqnmPKArENc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770823412; c=relaxed/simple;
-	bh=t/R0LT705DW3Vi3PTqmS6RvKg+OPDRdlDwze+TeM3Bo=;
+	bh=Wg+tozHMNvvqYzCeEMnnMMz2oiyvzq2d+LAvxIuEgpw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pOGhxqy7CEmWEYWPHQRBbGul7GlyDzUHXEoUDLWwOrc8IxdIk+e24q4Hm08AmECKY5yCBRncY9vcUo7l2hRhFVRFzDifvlKXYTYhYDh6YqDuFDOgBIIc/wm6tGJf5WIn95rNdKcLIsaw/I86CY8Tgbh0ugcCyBasLsCRNGNhUWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=wx6om+dw; arc=none smtp.client-ip=178.62.254.231
+	 MIME-Version; b=uxZ1gtG1+msDSm3yuY/ACtgR2cpqA/99sLF7gWv0kv4PYDiTh6F+C+jJEC04mN7xkj4gyvPzZpJBn0IDL2lybgZPEQyjcycCvgn6Lx+y6LXL+VB5HnEMolOFGL2o5LlAS/0xCC/QZhgHcqVkvyUVmZb99FX7qsBpf2cIMhrD3Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=EnNKT7M3; arc=none smtp.client-ip=178.62.254.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="wx6om+dw"
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="EnNKT7M3"
 Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
 	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 4B54EB258E;
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id B6507B2591;
 	Wed, 11 Feb 2026 15:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1770823403;
-	bh=piddMgk1JYD7fpCEJF5CHqiXyLYyeHfb+Th2n1GKhHM=;
+	s=mail; t=1770823404;
+	bh=WI9HzWB33RHOS7x2iM4is6SHnBj+us5QajX97yLBu8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=wx6om+dwpVOpcy47oGY15lz8YsL2U1kRYlPk5reCKHou4LGoZ9iItRPGL6CkHwusl
-	 0BzxzVp0Ywtog+xhHlPPHn6QKIVegA343/0YUqAqefp2iOykkwe4ny0PsoFxRb2YOz
-	 7kzpkg4q6nyLawSG1Mtrp19yC9ZUiI52GmkAp3qw=
+	b=EnNKT7M3TS3ryf7KVT447cgDcaIceytqYXzKU1+bD221uVnfKF5m7bpAMnXDRHx79
+	 7pvy+2IjemivNf4Iu5+zUFr0aAZ1nDn2Yx8vgl6Ew9riIW67mirzm3v/bMBLk1fhh0
+	 1nqXinwuEJ6IksxPU61gSyVI39gCQxtp+yEpEsF0=
 From: Dmitry Ilvokhin <d@ilvokhin.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -54,9 +54,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	kernel-team@meta.com,
 	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH 3/4] mm: convert compaction to zone lock wrappers
-Date: Wed, 11 Feb 2026 15:22:15 +0000
-Message-ID: <3462b7fd26123c69ccdd121a894da14bbfafdd9d.1770821420.git.d@ilvokhin.com>
+Subject: [PATCH 4/4] mm: add tracepoints for zone lock
+Date: Wed, 11 Feb 2026 15:22:16 +0000
+Message-ID: <1d2a7778aeee03abf8a11528ce8d4926ca78e9b4.1770821420.git.d@ilvokhin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1770821420.git.d@ilvokhin.com>
 References: <cover.1770821420.git.d@ilvokhin.com>
@@ -68,233 +68,268 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Compaction uses compact_lock_irqsave(), which currently operates
-on a raw spinlock_t pointer so that it can be used for both
-zone->lock and lru_lock. Since zone lock operations are now wrapped,
-compact_lock_irqsave() can no longer operate directly on a spinlock_t
-when the lock belongs to a zone.
+Add tracepoint instrumentation to zone lock acquire/release operations
+via the previously introduced wrappers.
 
-Introduce struct compact_lock to abstract the underlying lock type. The
-structure carries a lock type enum and a union holding either a zone
-pointer or a raw spinlock_t pointer, and dispatches to the appropriate
-lock/unlock helper.
+The implementation follows the mmap_lock tracepoint pattern: a
+lightweight inline helper checks whether the tracepoint is enabled and
+calls into an out-of-line helper when tracing is active. When
+CONFIG_TRACING is disabled, helpers compile to empty inline stubs.
 
-No functional change intended.
+The fast path is unaffected when tracing is disabled.
 
 Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 ---
- mm/compaction.c | 108 +++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 89 insertions(+), 19 deletions(-)
+ MAINTAINERS                      |  2 +
+ include/linux/zone_lock.h        | 64 +++++++++++++++++++++++++++++++-
+ include/trace/events/zone_lock.h | 64 ++++++++++++++++++++++++++++++++
+ mm/Makefile                      |  2 +-
+ mm/zone_lock.c                   | 31 ++++++++++++++++
+ 5 files changed, 161 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/zone_lock.h
+ create mode 100644 mm/zone_lock.c
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 1e8f8eca318c..1b000d2b95b2 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -24,6 +24,7 @@
- #include <linux/page_owner.h>
- #include <linux/psi.h>
- #include <linux/cpuset.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 680c9ae02d7e..711ffa15f4c3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16499,6 +16499,7 @@ F:	include/linux/ptdump.h
+ F:	include/linux/vmpressure.h
+ F:	include/linux/vmstat.h
+ F:	include/linux/zone_lock.h
++F:	include/trace/events/zone_lock.h
+ F:	kernel/fork.c
+ F:	mm/Kconfig
+ F:	mm/debug.c
+@@ -16518,6 +16519,7 @@ F:	mm/sparse.c
+ F:	mm/util.c
+ F:	mm/vmpressure.c
+ F:	mm/vmstat.c
++F:	mm/zone_lock.c
+ N:	include/linux/page[-_]*
+ 
+ MEMORY MANAGEMENT - EXECMEM
+diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+index c531e26280e6..cea41dd56324 100644
+--- a/include/linux/zone_lock.h
++++ b/include/linux/zone_lock.h
+@@ -4,6 +4,53 @@
+ 
+ #include <linux/mmzone.h>
+ #include <linux/spinlock.h>
++#include <linux/tracepoint-defs.h>
++
++DECLARE_TRACEPOINT(zone_lock_start_locking);
++DECLARE_TRACEPOINT(zone_lock_acquire_returned);
++DECLARE_TRACEPOINT(zone_lock_released);
++
++#ifdef CONFIG_TRACING
++
++void __zone_lock_do_trace_start_locking(struct zone *zone);
++void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success);
++void __zone_lock_do_trace_released(struct zone *zone);
++
++static inline void __zone_lock_trace_start_locking(struct zone *zone)
++{
++	if (tracepoint_enabled(zone_lock_start_locking))
++		__zone_lock_do_trace_start_locking(zone);
++}
++
++static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
++						      bool success)
++{
++	if (tracepoint_enabled(zone_lock_acquire_returned))
++		__zone_lock_do_trace_acquire_returned(zone, success);
++}
++
++static inline void __zone_lock_trace_released(struct zone *zone)
++{
++	if (tracepoint_enabled(zone_lock_released))
++		__zone_lock_do_trace_released(zone);
++}
++
++#else /* !CONFIG_TRACING */
++
++static inline void __zone_lock_trace_start_locking(struct zone *zone)
++{
++}
++
++static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
++						      bool success)
++{
++}
++
++static inline void __zone_lock_trace_released(struct zone *zone)
++{
++}
++
++#endif /* CONFIG_TRACING */
+ 
+ static inline void zone_lock_init(struct zone *zone)
+ {
+@@ -12,26 +59,41 @@ static inline void zone_lock_init(struct zone *zone)
+ 
+ #define zone_lock_irqsave(zone, flags)				\
+ do {								\
++	bool success = true;					\
++								\
++	__zone_lock_trace_start_locking(zone);			\
+ 	spin_lock_irqsave(&(zone)->lock, flags);		\
++	__zone_lock_trace_acquire_returned(zone, success);	\
+ } while (0)
+ 
+ #define zone_trylock_irqsave(zone, flags)			\
+ ({								\
+-	spin_trylock_irqsave(&(zone)->lock, flags);		\
++	bool success;						\
++								\
++	__zone_lock_trace_start_locking(zone);			\
++	success = spin_trylock_irqsave(&(zone)->lock, flags);	\
++	__zone_lock_trace_acquire_returned(zone, success);	\
++	success;						\
+ })
+ 
+ static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
+ {
++	__zone_lock_trace_released(zone);
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+ }
+ 
+ static inline void zone_lock_irq(struct zone *zone)
+ {
++	bool success = true;
++
++	__zone_lock_trace_start_locking(zone);
+ 	spin_lock_irq(&zone->lock);
++	__zone_lock_trace_acquire_returned(zone, success);
+ }
+ 
+ static inline void zone_unlock_irq(struct zone *zone)
+ {
++	__zone_lock_trace_released(zone);
+ 	spin_unlock_irq(&zone->lock);
+ }
+ 
+diff --git a/include/trace/events/zone_lock.h b/include/trace/events/zone_lock.h
+new file mode 100644
+index 000000000000..3df82a8c0160
+--- /dev/null
++++ b/include/trace/events/zone_lock.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM zone_lock
++
++#if !defined(_TRACE_ZONE_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ZONE_LOCK_H
++
++#include <linux/tracepoint.h>
++#include <linux/types.h>
++
++struct zone;
++
++DECLARE_EVENT_CLASS(zone_lock,
++
++	TP_PROTO(struct zone *zone),
++
++	TP_ARGS(zone),
++
++	TP_STRUCT__entry(
++		__field(struct zone *, zone)
++	),
++
++	TP_fast_assign(
++		__entry->zone = zone;
++	),
++
++	TP_printk("zone=%p", __entry->zone)
++);
++
++#define DEFINE_ZONE_LOCK_EVENT(name)			\
++	DEFINE_EVENT(zone_lock, name,			\
++		TP_PROTO(struct zone *zone),		\
++		TP_ARGS(zone))
++
++DEFINE_ZONE_LOCK_EVENT(zone_lock_start_locking);
++DEFINE_ZONE_LOCK_EVENT(zone_lock_released);
++
++TRACE_EVENT(zone_lock_acquire_returned,
++
++	TP_PROTO(struct zone *zone, bool success),
++
++	TP_ARGS(zone, success),
++
++	TP_STRUCT__entry(
++		__field(struct zone *, zone)
++		__field(bool, success)
++	),
++
++	TP_fast_assign(
++		__entry->zone = zone;
++		__entry->success = success;
++	),
++
++	TP_printk(
++		"zone=%p success=%s",
++		__entry->zone,
++		__entry->success ? "true" : "false"
++	)
++);
++
++#endif /* _TRACE_ZONE_LOCK_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/mm/Makefile b/mm/Makefile
+index 0d85b10dbdde..fd891710c696 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -55,7 +55,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+ 			   mm_init.o percpu.o slab_common.o \
+ 			   compaction.o show_mem.o \
+ 			   interval_tree.o list_lru.o workingset.o \
+-			   debug.o gup.o mmap_lock.o vma_init.o $(mmu-y)
++			   debug.o gup.o mmap_lock.o zone_lock.o vma_init.o $(mmu-y)
+ 
+ # Give 'page_alloc' its own module-parameter namespace
+ page-alloc-y := page_alloc.o
+diff --git a/mm/zone_lock.c b/mm/zone_lock.c
+new file mode 100644
+index 000000000000..f647fd2aca48
+--- /dev/null
++++ b/mm/zone_lock.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++#define CREATE_TRACE_POINTS
++#include <trace/events/zone_lock.h>
++
 +#include <linux/zone_lock.h>
- #include "internal.h"
- 
- #ifdef CONFIG_COMPACTION
-@@ -493,6 +494,65 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
- }
- #endif /* CONFIG_COMPACTION */
- 
-+enum compact_lock_type {
-+	COMPACT_LOCK_ZONE,
-+	COMPACT_LOCK_RAW_SPINLOCK,
-+};
 +
-+struct compact_lock {
-+	enum compact_lock_type type;
-+	union {
-+		struct zone *zone;
-+		spinlock_t *lock; /* Reference to lru lock */
-+	};
-+};
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_start_locking);
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_acquire_returned);
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_released);
 +
-+static bool compact_do_zone_trylock_irqsave(struct zone *zone,
-+					    unsigned long *flags)
++#ifdef CONFIG_TRACING
++
++void __zone_lock_do_trace_start_locking(struct zone *zone)
 +{
-+	return zone_trylock_irqsave(zone, *flags);
++	trace_zone_lock_start_locking(zone);
 +}
++EXPORT_SYMBOL(__zone_lock_do_trace_start_locking);
 +
-+static bool compact_do_raw_trylock_irqsave(spinlock_t *lock,
-+					   unsigned long *flags)
++void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success)
 +{
-+	return spin_trylock_irqsave(lock, *flags);
++	trace_zone_lock_acquire_returned(zone, success);
 +}
++EXPORT_SYMBOL(__zone_lock_do_trace_acquire_returned);
 +
-+static bool compact_do_trylock_irqsave(struct compact_lock lock,
-+				       unsigned long *flags)
++void __zone_lock_do_trace_released(struct zone *zone)
 +{
-+	if (lock.type == COMPACT_LOCK_ZONE)
-+		return compact_do_zone_trylock_irqsave(lock.zone, flags);
-+
-+	return compact_do_raw_trylock_irqsave(lock.lock, flags);
++	trace_zone_lock_released(zone);
 +}
++EXPORT_SYMBOL(__zone_lock_do_trace_released);
 +
-+static void compact_do_zone_lock_irqsave(struct zone *zone,
-+					 unsigned long *flags)
-+__acquires(zone->lock)
-+{
-+	zone_lock_irqsave(zone, *flags);
-+}
-+
-+static void compact_do_raw_lock_irqsave(spinlock_t *lock,
-+					unsigned long *flags)
-+__acquires(lock)
-+{
-+	spin_lock_irqsave(lock, *flags);
-+}
-+
-+static void compact_do_lock_irqsave(struct compact_lock lock,
-+				    unsigned long *flags)
-+{
-+	if (lock.type == COMPACT_LOCK_ZONE) {
-+		compact_do_zone_lock_irqsave(lock.zone, flags);
-+		return;
-+	}
-+
-+	return compact_do_raw_lock_irqsave(lock.lock, flags);
-+}
-+
- /*
-  * Compaction requires the taking of some coarse locks that are potentially
-  * very heavily contended. For async compaction, trylock and record if the
-@@ -502,19 +562,19 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
-  *
-  * Always returns true which makes it easier to track lock state in callers.
-  */
--static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
--						struct compact_control *cc)
--	__acquires(lock)
-+static bool compact_lock_irqsave(struct compact_lock lock,
-+				 unsigned long *flags,
-+				 struct compact_control *cc)
- {
- 	/* Track if the lock is contended in async mode */
- 	if (cc->mode == MIGRATE_ASYNC && !cc->contended) {
--		if (spin_trylock_irqsave(lock, *flags))
-+		if (compact_do_trylock_irqsave(lock, flags))
- 			return true;
- 
- 		cc->contended = true;
- 	}
- 
--	spin_lock_irqsave(lock, *flags);
-+	compact_do_lock_irqsave(lock, flags);
- 	return true;
- }
- 
-@@ -530,11 +590,13 @@ static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
-  * Returns true if compaction should abort due to fatal signal pending.
-  * Returns false when compaction can continue.
-  */
--static bool compact_unlock_should_abort(spinlock_t *lock,
--		unsigned long flags, bool *locked, struct compact_control *cc)
-+static bool compact_unlock_should_abort(struct zone *zone,
-+					unsigned long flags,
-+					bool *locked,
-+					struct compact_control *cc)
- {
- 	if (*locked) {
--		spin_unlock_irqrestore(lock, flags);
-+		zone_unlock_irqrestore(zone, flags);
- 		*locked = false;
- 	}
- 
-@@ -582,9 +644,8 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 		 * contention, to give chance to IRQs. Abort if fatal signal
- 		 * pending.
- 		 */
--		if (!(blockpfn % COMPACT_CLUSTER_MAX)
--		    && compact_unlock_should_abort(&cc->zone->lock, flags,
--								&locked, cc))
-+		if (!(blockpfn % COMPACT_CLUSTER_MAX) &&
-+		    compact_unlock_should_abort(cc->zone, flags, &locked, cc))
- 			break;
- 
- 		nr_scanned++;
-@@ -613,8 +674,12 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 
- 		/* If we already hold the lock, we can skip some rechecking. */
- 		if (!locked) {
--			locked = compact_lock_irqsave(&cc->zone->lock,
--								&flags, cc);
-+			struct compact_lock zol = {
-+				.type = COMPACT_LOCK_ZONE,
-+				.zone = cc->zone,
-+			};
-+
-+			locked = compact_lock_irqsave(zol, &flags, cc);
- 
- 			/* Recheck this is a buddy page under lock */
- 			if (!PageBuddy(page))
-@@ -649,7 +714,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	}
- 
- 	if (locked)
--		spin_unlock_irqrestore(&cc->zone->lock, flags);
-+		zone_unlock_irqrestore(cc->zone, flags);
- 
- 	/*
- 	 * Be careful to not go outside of the pageblock.
-@@ -1157,10 +1222,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 
- 		/* If we already hold the lock, we can skip some rechecking */
- 		if (lruvec != locked) {
-+			struct compact_lock zol = {
-+				.type = COMPACT_LOCK_RAW_SPINLOCK,
-+				.lock = &lruvec->lru_lock,
-+			};
-+
- 			if (locked)
- 				unlock_page_lruvec_irqrestore(locked, flags);
- 
--			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
-+			compact_lock_irqsave(zol, &flags, cc);
- 			locked = lruvec;
- 
- 			lruvec_memcg_debug(lruvec, folio);
-@@ -1555,7 +1625,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 		if (!area->nr_free)
- 			continue;
- 
--		spin_lock_irqsave(&cc->zone->lock, flags);
-+		zone_lock_irqsave(cc->zone, flags);
- 		freelist = &area->free_list[MIGRATE_MOVABLE];
- 		list_for_each_entry_reverse(freepage, freelist, buddy_list) {
- 			unsigned long pfn;
-@@ -1614,7 +1684,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 			}
- 		}
- 
--		spin_unlock_irqrestore(&cc->zone->lock, flags);
-+		zone_unlock_irqrestore(cc->zone, flags);
- 
- 		/* Skip fast search if enough freepages isolated */
- 		if (cc->nr_freepages >= cc->nr_migratepages)
-@@ -1988,7 +2058,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
- 		if (!area->nr_free)
- 			continue;
- 
--		spin_lock_irqsave(&cc->zone->lock, flags);
-+		zone_lock_irqsave(cc->zone, flags);
- 		freelist = &area->free_list[MIGRATE_MOVABLE];
- 		list_for_each_entry(freepage, freelist, buddy_list) {
- 			unsigned long free_pfn;
-@@ -2021,7 +2091,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
- 				break;
- 			}
- 		}
--		spin_unlock_irqrestore(&cc->zone->lock, flags);
-+		zone_unlock_irqrestore(cc->zone, flags);
- 	}
- 
- 	cc->total_migrate_scanned += nr_scanned;
++#endif /* CONFIG_TRACING */
 -- 
 2.47.3
 
