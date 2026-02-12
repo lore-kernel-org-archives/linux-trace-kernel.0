@@ -1,173 +1,148 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E3B35FF69;
-	Thu, 12 Feb 2026 16:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39263EBF1B;
+	Thu, 12 Feb 2026 23:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770913457; cv=none; b=VNBs9QEsGIB2Kk4Ff2bjHAfYprKMYaXVvC89KL3RC2J0rDvKsEZ8uDNlVZrzaVdU4kPlToZX2ljyk2hwlApIpOtvMmHQbGpD+iKs3mwXPmThd8lkMSdZonAZ7RRz0E04HJTvgeXubPK5fAgxvpcCBAX+Da0VCNfUak4eMpZdlX4=
+	t=1770939466; cv=none; b=P99Pnk8GJERNS503tfX1L4yO04RAbhJMDVbjVjbY8g+hjxK6fuLEQe4/2xQ6Sfta6LkPrFisuHzcPqo58szjnC61JZFrxdEiodrd6QIUNRBHY6X0RfOXKWIOUnAdr57fFaPNoYNR5NR8bFPayJFa2fpufMkK49/lfgn/94qTtIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770913457; c=relaxed/simple;
-	bh=EgY6rRozA0nftZszqOZUvhTiePvvlTkScGicAmL6ngk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nB4ZVN8tRvR1s4pU53BrY+qihpcexWQV2uk4Y+L8Sf7tIFfGLlNmIHFJnp+jA7dyojuXF3GhEB8WFh/oDTpLKfcsaFhcDaBo/93RFT35tTeuelxelfKOK1OWKHDdfoWgocBZIxoFQTnRrZV4Lj91OEFyC87bAw+wjT2abOQ53s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I/El3T4P; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1770939466; c=relaxed/simple;
+	bh=5FR7zvKaQGSCNel317XRj279LDz3pxa1RLC1Q1Z2tTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CIh+QC99OZQ38E5veBNFOXD97hZNKEQ19c836RX1hCYXn8pZPZKtNAhQPyO4fc4eZep5+K3BJ+TYdOXGpvcHPUgs3YcIGUNgqMN+wqUUT/1stq26wGbfQtx9/OCGHoE5c8I46J47PzDrjLghtb3rWp2UuGuZnAJl98paxcZ8M+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ys8gxeoK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I/El3T4P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1770913453;
-	bh=EgY6rRozA0nftZszqOZUvhTiePvvlTkScGicAmL6ngk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I/El3T4P0xovkgMTWcwcUXRdgkb5x/Jtnuc437sudcJIWdnjlnXYE41volTkySBfe
-	 g7jQRcLsGl/6alBEVCexl9s9fNPtON5QVNL73QcPbYHGdDtI2xmR/0NTAl9fXhJD97
-	 qFgkabxP+3rZGcrSj/VLHSKhIhAq7nLVYZzkjHJ1vCw1IqG+/MV1hueucPtyb6z0Ib
-	 6JJCp4vP4H9d182O5pN+LiOzLutxAzCRJr2Iv2W1tiEb3dXrCcmuYPMCgXKDOukGs9
-	 CiNst9RRZQqTFC8aF46h8zMFj8HeWJ7xWZO/9c9oit/M9SXY9Hz5RaDDX0zYuBPuZD
-	 0q/HX4jCb7KJw==
-Received: from trenzalore (modemcable014.2-22-96.mc.videotron.ca [96.22.2.14])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A672017E0A49;
-	Thu, 12 Feb 2026 17:24:10 +0100 (CET)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Yunke Cao <yunkec@google.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Pavan Bobba <opensource206@gmail.com>,
-	James Cowgill <james.cowgill@blaize.com>,
-	Ma Ke <make24@iscas.ac.cn>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH 11/11] media: hantro: Add fdinfo callback
-Date: Thu, 12 Feb 2026 11:23:28 -0500
-Message-ID: <20260212162328.192217-12-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260212162328.192217-1-detlev.casanova@collabora.com>
-References: <20260212162328.192217-1-detlev.casanova@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ys8gxeoK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5FBC4CEF7;
+	Thu, 12 Feb 2026 23:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770939466;
+	bh=5FR7zvKaQGSCNel317XRj279LDz3pxa1RLC1Q1Z2tTk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ys8gxeoK+qJ6p8wiu6RMIRgIs7yh+OF3q16wXRPcCrTbxn7eFo0GxgF4zKCKZj35n
+	 j/kb8I3/Hiy2KAH7+LSuiagbJ60yummJ6xYuEnNT2X+v1MWx1JRj4LM0rrOBPw/0c7
+	 d3BO6L+c8SC2BJsTvPOiJd2k56UQre4P8mTpf1laR2g1UrzPui01qm1ctvnekPYhZz
+	 XGdfaGVZP3COMhAaHmBqNoRlTuS6RIXueca1c4ndakjCZrM/UbgjResYq4gNldMdwd
+	 Atdo1ywl0ji07hgkbW8HxkTLOoCR0s+N4RTG7l8qyXJ4fE28+1mrtiLObk//ULo3B+
+	 k+ly/YiXiEsXQ==
+Message-ID: <790ac7f1-c971-4607-bf44-3a77d2600179@kernel.org>
+Date: Fri, 13 Feb 2026 08:37:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4] blktrace: log dropped REQ_OP_ZONE_XXX events ver1
+To: Chaitanya Kulkarni <kch@nvidia.com>, axboe@kernel.dk
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-block@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20260211204752.23061-1-kch@nvidia.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20260211204752.23061-1-kch@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The fdinfo shows the number of buffers in each queue and the total amount
-of video buffer memory.
+On 2/12/26 05:47, Chaitanya Kulkarni wrote:
+> Add informational messages during blktrace setup when version 1 tools
+> are used on kernels with CONFIG_BLK_DEV_ZONED enabled. This alerts users
+> that REQ_OP_ZONE_* events will be dropped and suggests upgrading to
+> blktrace tools version 2 or later.
+> 
+> The warning is printed once during trace setup to inform users about
+> the limitation without spamming the logs during tracing operations.
+> Version 2 blktrace tools properly handle zone management operations
+> (zone reset, zone open, zone close, zone finish, zone append) that
+> were added for zoned block devices.
+> 
+> * With old blktrace tool and this patch :-
+> 
+> blktests (master) # ./check blktrace/
+> blktrace/001 (blktrace zone management command tracing)      [passed]
+>     runtime  3.706s  ...  3.735s
+> blktrace/002 (blktrace ftrace corruption with sysfs trace)   [passed]
+>     runtime  0.479s  ...  0.456s
+> blktests (master) # dmesg  -c
+> [ 9455.610899] null_blk: disk nullb0 created
+> [ 9455.610916] null_blk: module loaded
+> [ 9455.634103] run blktests blktrace/001 at 2026-02-02 15:02:23
+> [ 9455.651710] null_blk: nullb1: using native zone append
+> [ 9455.662852] null_blk: disk nullb1 created
+> *[ 9455.714998] blktrace: nullb1: blktrace events for zone operations will be dropped*
+> *[ 9455.715065] blktrace: use blktrace tools version >= 2 to track zone operations*
+> [ 9459.480181] null_blk: disk nullb0 created
+> [ 9459.480199] null_blk: module loaded
+> [ 9459.514464] run blktests blktrace/002 at 2026-02-02 15:02:27
+> [ 9459.541772] null_blk: disk nullb1 created
+> blktests (master) #
+> 
+> * With new blktrace tools and this patch :-
+> 
+> blktests (master) # ./check blktrace/
+> blktrace/001 (blktrace zone management command tracing)      [passed]
+>     runtime  3.735s  ...  3.734s
+> blktrace/002 (blktrace ftrace corruption with sysfs trace)   [passed]
+>     runtime  0.456s  ...  0.496s
+> blktests (master) # dmesg  -c
+> [ 9490.395572] null_blk: disk nullb0 created
+> [ 9490.395591] null_blk: module loaded
+> [ 9490.419467] run blktests blktrace/001 at 2026-02-02 15:02:58
+> [ 9490.436416] null_blk: nullb1: using native zone append
+> [ 9490.447806] null_blk: disk nullb1 created
+> [ 9494.262176] null_blk: disk nullb0 created
+> [ 9494.262195] null_blk: module loaded
+> [ 9494.296653] run blktests blktrace/002 at 2026-02-02 15:03:02
+> [ 9494.322261] null_blk: disk nullb1 created
+> blktests (master) #
+> 
+> This helps users understand why zone operation traces may be missing
+> when using older blktrace tool versions with modern kernels that
+> support REQ_OP_ZONE_XXX in blktrace.
+> 
+> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+> ---
+> 
+> V3->V4:-
+> 
+> Replace REQ_OP_ZONE_XXX with "zone operations". (Damien, Jens)
+> 
+> ---
+>  kernel/trace/blktrace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index d031c8d80be4..04b41c698127 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -741,6 +741,12 @@ static void blk_trace_setup_finalize(struct request_queue *q,
+>  	 * to underscores for this to work as expected
+>  	 */
+>  	strreplace(buts->name, '/', '_');
+> +	if (version == 1 && IS_ENABLED(CONFIG_BLK_DEV_ZONED)) {
+> +		pr_info("%s: blktrace events for zone operations will be dropped\n",
+> +			name);
+> +		pr_info("use blktrace tools version >= 2 to track zone operations\n");
 
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
----
- drivers/media/platform/verisilicon/hantro.h      |  1 +
- drivers/media/platform/verisilicon/hantro_drv.c  | 15 +++++++++++++++
- drivers/media/platform/verisilicon/hantro_v4l2.c | 10 +++++++++-
- 3 files changed, 25 insertions(+), 1 deletion(-)
+Since this message is split, please keep the same format for the second line. I.e.:
 
-diff --git a/drivers/media/platform/verisilicon/hantro.h b/drivers/media/platform/verisilicon/hantro.h
-index d5cddc783688..9e9fc0658586 100644
---- a/drivers/media/platform/verisilicon/hantro.h
-+++ b/drivers/media/platform/verisilicon/hantro.h
-@@ -268,6 +268,7 @@ struct hantro_ctx {
- 	const struct hantro_codec_ops *codec_ops;
- 	struct hantro_postproc_ctx postproc;
- 	bool need_postproc;
-+	u64 stats_buf_memory;
- 
- 	/* Specific for particular codec modes. */
- 	union {
-diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/media/platform/verisilicon/hantro_drv.c
-index 8dd26ca32459..86d316a8a3e8 100644
---- a/drivers/media/platform/verisilicon/hantro_drv.c
-+++ b/drivers/media/platform/verisilicon/hantro_drv.c
-@@ -17,6 +17,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/videodev2.h>
- #include <linux/workqueue.h>
-@@ -711,6 +712,19 @@ static int hantro_release(struct file *filp)
- 	return 0;
- }
- 
-+static void hantro_show_fdinfo(struct seq_file *m, struct file *filp)
-+{
-+	struct hantro_ctx *ctx =
-+		container_of(filp->private_data, struct hantro_ctx, fh);
-+
-+	struct vb2_queue *src_q = v4l2_m2m_get_src_vq(ctx->fh.m2m_ctx);
-+	struct vb2_queue *dst_q = v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx);
-+
-+	seq_printf(m, "src-queued-count: %04u\n", src_q->queued_count);
-+	seq_printf(m, "dst-queued-count: %04u\n", dst_q->queued_count);
-+	seq_printf(m, "buf-size: %llu\n", ctx->stats_buf_memory);
-+}
-+
- static const struct v4l2_file_operations hantro_fops = {
- 	.owner = THIS_MODULE,
- 	.open = hantro_open,
-@@ -718,6 +732,7 @@ static const struct v4l2_file_operations hantro_fops = {
- 	.poll = v4l2_m2m_fop_poll,
- 	.unlocked_ioctl = video_ioctl2,
- 	.mmap = v4l2_m2m_fop_mmap,
-+	.show_fdinfo = hantro_show_fdinfo,
- };
- 
- static const struct of_device_id of_hantro_match[] = {
-diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
-index fcf3bd9bcda2..6d129613ea3d 100644
---- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-+++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-@@ -820,18 +820,26 @@ hantro_queue_setup(struct vb2_queue *vq, unsigned int *num_buffers,
- 		return -EINVAL;
- 	}
- 
-+	ctx->stats_buf_memory = 0;
-+
- 	if (*num_planes) {
- 		if (*num_planes != pixfmt->num_planes)
- 			return -EINVAL;
--		for (i = 0; i < pixfmt->num_planes; ++i)
-+		for (i = 0; i < pixfmt->num_planes; ++i) {
- 			if (sizes[i] < pixfmt->plane_fmt[i].sizeimage)
- 				return -EINVAL;
-+			ctx->stats_buf_memory += pixfmt->plane_fmt[i].sizeimage;
-+		}
-+
-+		ctx->stats_buf_memory *= *num_buffers;
-+
- 		return 0;
- 	}
- 
- 	*num_planes = pixfmt->num_planes;
- 	for (i = 0; i < pixfmt->num_planes; ++i)
- 		sizes[i] = pixfmt->plane_fmt[i].sizeimage;
-+
- 	return 0;
- }
- 
+pr_info("%s: use blktrace tools version >= 2 to track zone operations\n",
+	name);
+
+That will avoid incomprehensible interleaved output of if multiple traces are
+started together.
+
+> +
+> +	}
+>  
+>  	bt->version = version;
+>  	bt->act_mask = buts->act_mask;
+
+
 -- 
-2.53.0
-
+Damien Le Moal
+Western Digital Research
