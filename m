@@ -1,140 +1,149 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BF2208994;
-	Thu, 12 Feb 2026 08:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596822F3609;
+	Thu, 12 Feb 2026 16:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770886011; cv=none; b=Vmf13vuMVezoWtzrFgkklklNKHvJeXIoLtkLsi9zYzxSvf/pINTvwPlevkFbDV0xphopZW1mmQRqdk/nauGMvhZN1LypepHoEQA/9O8YFJ5zq8ke8mCU+HXPZ4oVgRWrAaDxU6PWHLLInfPqtRUJq5s5mxpI9zTmSaDPWDoe4mA=
+	t=1770913418; cv=none; b=dthqXigDAtOo+pOw0Prnb2PHxRXLNuY6PhWZsEHTld+FFwdtjC+wsSqF5O1EUBfVizP/roJND52o3m6bG9xF4w0LjyWTNTwLGtdFx/CpV9nSews6Y8FzKrclvBt6PA8xNDMsYk+NtJ00uh2CydrVn9rF8yPqUd0VrsDbKCALOpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770886011; c=relaxed/simple;
-	bh=QGVvDpteXDBSPk+P+Kz+jz8nA4ve4p/UAsuGJDj3KLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=avU1prTbTw4fKtvt30RnRoB50r8vCEL6vdkKlBH9QDrKJLmASZXKXIDVXIzXWk2KSIXNLTm+yu33Lv9SPjTdbeMXeB62e7IiIDSblKEEpUPm76E6asfFGTuI/kOfW+7HNO7ed+XZb5Fwgxqd+zOg8OPs7fmsojj6w0e5fcrGYm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ptFQ/0Pw; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1770913418; c=relaxed/simple;
+	bh=vKHba+1je6XUmekM9HNLXtq/mx/vqDtmehn8UfltiBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RTRoK6o023mC6YmD/oXpU32Ln0+IRZ6Hbg7iPMeBTIsxS1Z/uw9xZT/uiXl5NkPgEuFdOtO0/BZioreKBaibFPX3rzrKEn/QqQziz5Z8OxaizpQf4mKxeqOMH9tnTElT5189uxj43EEjddIdeISb4BsXeogBn+KVyajVjtOTJ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BV6L1RM7; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ptFQ/0Pw"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61BLYcDo3251931;
-	Thu, 12 Feb 2026 08:46:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=yrxxGi
-	lDMwdKecEC6njTMZ6elyG5VacJkYCjOMznoJ4=; b=ptFQ/0Pwu2t1UMJZCUvgWj
-	jijiyxv8OKfRzFZ9uxlWmTopVEiNCQ24Sr05PObasS34/2QbNuzNJ0WG30j0zAVU
-	zooyi+h4IVuR/5QfcrSPygGEUSI/+lyl3IIx6PC2BVoZvMiwfsZFF81ugIhPXTYJ
-	Z4KmZa28vIHptUTcr8RRgVw+idye6VSf3c7M2I9+d6TthO72j8bVD/ZfNM5j8ZQX
-	x+bLJKT6tA28V+2gjmaTMlPyzLjuKxUPE38B4DGbBGYye4o9HrCGh4o0jAjxmnPB
-	5VY2ltCOKyVRxjBYCGbfZ/ymOefQJ5Bg+5w/jOc2JlWjkjJV+SFRPGIa8ygER7Lw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696x2m1n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Feb 2026 08:46:12 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61C4ZFsE019251;
-	Thu, 12 Feb 2026 08:46:11 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4c6hxk9ecd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 12 Feb 2026 08:46:11 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61C8kBwX30343890
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Feb 2026 08:46:11 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E696558058;
-	Thu, 12 Feb 2026 08:46:10 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD34058057;
-	Thu, 12 Feb 2026 08:46:04 +0000 (GMT)
-Received: from [9.109.198.221] (unknown [9.109.198.221])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 12 Feb 2026 08:46:04 +0000 (GMT)
-Message-ID: <88a12e1c-05b6-44de-806e-06a8e2ff7c0a@linux.ibm.com>
-Date: Thu, 12 Feb 2026 14:16:02 +0530
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BV6L1RM7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1770913415;
+	bh=vKHba+1je6XUmekM9HNLXtq/mx/vqDtmehn8UfltiBQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BV6L1RM7tudUID6t9OgTGsWiwr2lskE7NWHxi4W6Lr6n2nSvM4wVO4E9CYC132khh
+	 ARFAh1JU/HM3Nz6eXUPe+9/PE5n6NeDpRVpWiR1XCNJoA22t+/c1AiCLNTVZv6TvDq
+	 Yo6kqhtRdOzeDmJb++jYN+e9Hnw03YumVzdL3kSA8zlAeVv8Fx2C9fvq+8mzcDRN9c
+	 4KXiOIcxy1h3GkgJFyhXGKBGVKEqrOIxjANCL/wK4Mqv1lEZI+FIwa9BJHbcVn/eHI
+	 71DLd9qVpeNng3sCRbONSgBhL2GcId/ixi6DGWNHt+VsdHV7wWmkOMJaAzi03sppug
+	 WuNobTvOZOjXw==
+Received: from trenzalore (modemcable014.2-22-96.mc.videotron.ca [96.22.2.14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 285EA17E0E6A;
+	Thu, 12 Feb 2026 17:23:32 +0100 (CET)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Yunke Cao <yunkec@google.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Pavan Bobba <opensource206@gmail.com>,
+	James Cowgill <james.cowgill@blaize.com>,
+	Ma Ke <make24@iscas.ac.cn>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: [PATCH 00/11] v4l2: Add tracing for stateless codecs
+Date: Thu, 12 Feb 2026 11:23:17 -0500
+Message-ID: <20260212162328.192217-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during
- debugfs creation
-To: Yu Kuai <yukuai@fnnas.com>, Jens Axboe <axboe@kernel.dk>,
-        ming.lei@redhat.com, hch@lst.de, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Yi Zhang <yi.zhang@redhat.com>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260212080135.1673063-1-yukuai@fnnas.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20260212080135.1673063-1-yukuai@fnnas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=WZYBqkhX c=1 sm=1 tr=0 ts=698d9354 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=Ehe4v0DnxFvcZGR6RwMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: tws8dfR-xQ1APSIwtfGH58Wd5tW-sV6e
-X-Proofpoint-ORIG-GUID: tws8dfR-xQ1APSIwtfGH58Wd5tW-sV6e
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEyMDA2MCBTYWx0ZWRfXwFWDSSGQ0KwY
- QGMWnMr0BWba2MugJVDt3dOhMDuZQ8zihMvJZm016CrD3nQlon9o8X0CxlXw8uXlKfnZoT0ExEK
- xMRjEx0K8YgsPnzsbQg3F/jYvgXN0bL2Q+Y3uSwX1XC3R4HBRujZGkO0LKvAxa4s1e5c7hC8Adp
- KRSXLy9NK61y/tJ5CurZcwbLaXKZbzoSfEut4xj22Wrf3kKrHHyn7V1buDbjzI6/tq6LRX+k2MR
- +XfiKrhEYuxbNfXof4Iq/3BwjKVD35XlbqeuiFCpgg5+iF0a42yfoQnaXgH8KG4bEBeXif0YShc
- 7X6VAduefbm4d8Vz6gztYj1XJSzYCnNwkiRkWy+7ByMVzV3Owd1gFZG+/AlQd3IvBC+6USfh4aC
- TP3WGRotVkyh71tDIJFR1iTtF29WCVh1Bff4zsYDKuc0VDdc5s6g6TekMtdxYDkAWcH9ui3xAi0
- iCqh8eBPgbQPLlfZkXw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-12_02,2026-02-11_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1011 phishscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602120060
+Content-Transfer-Encoding: 8bit
 
+Hi !
 
+This patchset aims to improve codec event tracing in v4l2.
 
-On 2/12/26 1:31 PM, Yu Kuai wrote:
-> Creating debugfs entries can trigger fs reclaim, which can enter back
-> into the block layer request_queue. This can cause deadlock if the
-> queue is frozen.
-> 
-> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
-> to detect this condition, but it was racy since the queue can be frozen
-> from another context at any time.
-> 
-> Introduce blk_debugfs_mutex_lock()/blk_debugfs_mutex_unlock() helpers
-> that combine the debugfs_mutex with memalloc_noio_save()/restore() to
-> prevent fs reclaim from triggering block I/O. Replace all raw
-> debugfs_mutex lock/unlock pairs with these helpers.
+The traces added in visl by Daniel Almeida are moved to the global trace
+events and slightly reworked to be printed in a more consistent format.
 
-It looks like there are still a few places where ->debugfs_mutex is
-taken but the code paths do not enter fs-reclaim. For those cases,
-it may not be necessary to wrap the critical section in a NOIO context.
+To each trace are also added a tgid and fd fields, helping userspace track
+different decoding sessions (contexts) based on the given file descriptor
+used by the given process id.
 
-Perhaps it would make sense to provide two separate helper APIs: one
-that acquires ->debugfs_mutex and also saves/restores the NOIO context
-(using memalloc_noio_save()/restore()), and another that simply acquires
-and releases ->debugfs_mutex without entering NOIO. Callers could then 
-choose the appropriate helper depending on whether the code path may
-trigger fs-reclaim. 
+Also for better tracking, stream on and stream off events are added as
+well as HW run and HW done events to track decoder core usage.
 
-For reference, 
-blk_mq_freeze_queue()/blk_mq_unfreeze_queue() vs
-blk_mq_freeze_queue_nomemsave()/blk_mq_unfreeze_queue_nomemrestore()
+Finally, add a show_fdinfo callback on video device files, allowing drivers
+to expose usage information.
+Currently only used for frame buffer memory usage.
 
-Thanks,
---Nilay
+The main focus is to be able to generate perfetto traces to show VPU usage,
+a perfetto producer using this can be found at [1].
+
+[1]: https://gitlab.collabora.com/detlev/hantro-perf/-/tree/hantro-improved-info
+
+Detlev Casanova (11):
+  media: Move visl traces to v4l2-core
+  media: Reformat v4l2-requests trace event printk
+  media: Add tgid and fd fields in v4l2_fh struct
+  media: Add tgid and fd to the v4l2-requests trace fields
+  media: Add missing types to v4l2_ctrl_ptr
+  media: Trace the stateless controls when set in v4l2-ctrls-core.c
+  media: Add stream on/off traces and run them in the ioctl
+  media: Add HW run/done trace events
+  media: hantro: Add v4l2_hw run/done traces
+  media: v4l2: Add callback for show_fdinfo
+  media: hantro: Add fdinfo callback
+
+ drivers/media/platform/verisilicon/hantro.h   |    2 +
+ .../media/platform/verisilicon/hantro_drv.c   |   25 +
+ .../media/platform/verisilicon/hantro_v4l2.c  |   10 +-
+ .../verisilicon/rockchip_vpu981_regs.h        |    1 +
+ .../platform/verisilicon/rockchip_vpu_hw.c    |    4 +
+ drivers/media/test-drivers/visl/Makefile      |    2 +-
+ drivers/media/test-drivers/visl/visl-dec.c    |   76 -
+ .../media/test-drivers/visl/visl-trace-av1.h  |  314 ---
+ .../media/test-drivers/visl/visl-trace-fwht.h |   66 -
+ .../media/test-drivers/visl/visl-trace-h264.h |  349 ----
+ .../media/test-drivers/visl/visl-trace-hevc.h |  464 -----
+ .../test-drivers/visl/visl-trace-mpeg2.h      |   99 -
+ .../test-drivers/visl/visl-trace-points.c     |   11 -
+ .../media/test-drivers/visl/visl-trace-vp8.h  |  156 --
+ .../media/test-drivers/visl/visl-trace-vp9.h  |  292 ---
+ drivers/media/v4l2-core/v4l2-ctrls-api.c      |   10 +
+ drivers/media/v4l2-core/v4l2-ctrls-core.c     |  114 +
+ drivers/media/v4l2-core/v4l2-dev.c            |   10 +
+ drivers/media/v4l2-core/v4l2-fh.c             |    1 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   37 +-
+ drivers/media/v4l2-core/v4l2-trace.c          |   48 +
+ include/media/v4l2-ctrls.h                    |   19 +
+ include/media/v4l2-dev.h                      |    1 +
+ include/media/v4l2-fh.h                       |    4 +
+ include/trace/events/v4l2.h                   |   58 +
+ include/trace/events/v4l2_requests.h          | 1836 +++++++++++++++++
+ 26 files changed, 2178 insertions(+), 1831 deletions(-)
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-av1.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-fwht.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-h264.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-hevc.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-mpeg2.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-points.c
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-vp8.h
+ delete mode 100644 drivers/media/test-drivers/visl/visl-trace-vp9.h
+ create mode 100644 include/trace/events/v4l2_requests.h
+
+-- 
+2.53.0
+
