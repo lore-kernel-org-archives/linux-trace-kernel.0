@@ -1,66 +1,60 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0BF25782A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Feb 2026 08:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BF2208994;
+	Thu, 12 Feb 2026 08:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770884125; cv=none; b=Sro7XbVE7TrQWpajzsqS4Pns/He31kHz450Ze0RwYajvS0kVTHdhm/hnNhxEhCZZPqLp7yh5ipI7wlIJaPAq1RJWzq5AgmfBe1wJzcjNjmM7TOMahRKR2Dwv4Ftn8qEMxUVaMM8fo/oRzuC5WXL+GH3HNStq1bUevIOpckCftUA=
+	t=1770886011; cv=none; b=Vmf13vuMVezoWtzrFgkklklNKHvJeXIoLtkLsi9zYzxSvf/pINTvwPlevkFbDV0xphopZW1mmQRqdk/nauGMvhZN1LypepHoEQA/9O8YFJ5zq8ke8mCU+HXPZ4oVgRWrAaDxU6PWHLLInfPqtRUJq5s5mxpI9zTmSaDPWDoe4mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770884125; c=relaxed/simple;
-	bh=G/xfy/Yw3aSBRYTcvSDLwFcvGpbEkfNZDAFwDFdzOso=;
+	s=arc-20240116; t=1770886011; c=relaxed/simple;
+	bh=QGVvDpteXDBSPk+P+Kz+jz8nA4ve4p/UAsuGJDj3KLk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BQ0BRG+Ae2NWvB7bKSWPb0o3GgOo9yVWI5RMk0wSX+wdWgzOGyaxjBMr+LI3RE6KVpijfiPlXVAGiHx4j3u2PFs+BWr/OAOMYN2tgeINjzJMJIpWY6t1Ndxffa6O7ifD0epx5SRhk9LvCvu4+9aHmnO1ewf8lVb3NntXXVmlPPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ocl8kg8r; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=avU1prTbTw4fKtvt30RnRoB50r8vCEL6vdkKlBH9QDrKJLmASZXKXIDVXIzXWk2KSIXNLTm+yu33Lv9SPjTdbeMXeB62e7IiIDSblKEEpUPm76E6asfFGTuI/kOfW+7HNO7ed+XZb5Fwgxqd+zOg8OPs7fmsojj6w0e5fcrGYm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ptFQ/0Pw; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ocl8kg8r"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-436263e31abso5564086f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Feb 2026 00:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1770884123; x=1771488923; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dYTcCQQ+ktTucF6pos13F1p1yELwstagH4PhEGEuB/8=;
-        b=Ocl8kg8rMc8Ymyd4LT+Tq+A5q0Gnn8LIl/T+C/8Nd3K7AcLH5f0lWkuOOjZvuVQFnT
-         tqlPDWCWE5pn4b0DQB7RQm1dkdq66KkghTRdn+bkMzKaeEVh/lhT9+KXIMtS4NGzG9QG
-         Ht+F9DH5xTtjPUGij0JNh5VdUEPz7eG5VW/X+JqXfnoftTmWIqSWuijjdVzBLr3zqSBp
-         K3CnmBCDDMmQm9nSf0TQIryvQktKMyhe3tA6Exi6bV5y07TCIeUrbXiiflZtjCzfkUOB
-         Caaf2aYd9fw2mRoV918+TUPRlE9SyBJt3RRaUI3ua+ZA1lCGAROIUeK9HNIZQRjNjvMH
-         S6YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770884123; x=1771488923;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dYTcCQQ+ktTucF6pos13F1p1yELwstagH4PhEGEuB/8=;
-        b=cKvF5yYdfni/fc4dN8aiRqVGflrL+w3xrnu3zbFDo/p+0pFkT6CmPNVJrnDfV5dFkS
-         VzFz6lL6580v2h7Qt7Klmg00okLnhy/ZVlc4rv1+1G6NwljBulrnWo+BnDW4oUzW38df
-         j/+kAk3HtJEXu0qg//eBVWMRMczCtRbEap7eg/zLnBKfUvnRDNquhhDmgnjh39mZM1+/
-         rY01E0Wo4ci23RJs/3XoaAG8gZvZg5eGWTFwQ+i848MXu+/4ID9yq+6FxqJj5i4WscX4
-         QtdEIof5DFJYTkbXxF1yxZblZ6XRa32p2fxBZ+7HpKN5bZDpmEqKW50gu8XeqTkhqOJg
-         bAHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWK18CfYi/tm8J0PPFLVxup8NCIUFjAKTQusJfRNDKBi96NFPqs9rS35FTuXEI+SlTlqCcekwFEpphZdt1WObXEC2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSwt3Em9hw9QOFcaLbkolcp28y6GrFYKtGcjhmu12qSZWDQ/PP
-	7UuvWAUUYN9lYuTKL5yvjN4PrBU7Gu9AQP23fA+L/Jp5GK3/H6wA/NgOcJQW3kntdEE=
-X-Gm-Gg: AZuq6aLdfMLbp5NawWmuClwzdVEMhdbLp7ryppIq0XlqANuyFi53CFxnGTKgHqNuhiz
-	WHS2Zs+4Cv+qAx+5FGc3lUEACNpEfv71L2JNrBkB7YLkhUj38Lz0M4fZzSkKnRn2ys2oP3GYvRc
-	PCx5lSfRMLJ5CoisjuXlTAci5XldNmf2Vz6vvepyrVl4QOXIBYnQ614RmrCY4z545Tq88LD8aH3
-	IsATACSwUDeQ3+jBfOsuNr4mzQD9wnzyIC6sDMeFTla42ppQUiBX6OBJoOo0Tqh6O7UVzQ35Viv
-	9HL9wzaAnEcjONItEhfNrVmDLar8TU5IkwZXzb3VpYLD/wiJA/X9ihE37TyebJyVTBZvFLL5xvx
-	2GjwdJDm3F9hXe7OkovrP7AStpxbvMfpU4obtoKpsbMbA1WK0iLWNneuD7bIKhqVFmHveJLjXW1
-	P/BYxRbCNq5B5mHlDbaO3ic7nq2pLB/b43JHHLo0UF99a0
-X-Received: by 2002:a05:6000:2212:b0:437:707e:9f59 with SMTP id ffacd0b85a97d-4378acd8e25mr3695732f8f.12.1770884122736;
-        Thu, 12 Feb 2026 00:15:22 -0800 (PST)
-Received: from [10.100.51.209] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783e38e26sm9858669f8f.26.2026.02.12.00.15.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Feb 2026 00:15:22 -0800 (PST)
-Message-ID: <71ebc4fb-6992-4a15-93e3-43390f2216d7@suse.com>
-Date: Thu, 12 Feb 2026 09:15:21 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ptFQ/0Pw"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61BLYcDo3251931;
+	Thu, 12 Feb 2026 08:46:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=yrxxGi
+	lDMwdKecEC6njTMZ6elyG5VacJkYCjOMznoJ4=; b=ptFQ/0Pwu2t1UMJZCUvgWj
+	jijiyxv8OKfRzFZ9uxlWmTopVEiNCQ24Sr05PObasS34/2QbNuzNJ0WG30j0zAVU
+	zooyi+h4IVuR/5QfcrSPygGEUSI/+lyl3IIx6PC2BVoZvMiwfsZFF81ugIhPXTYJ
+	Z4KmZa28vIHptUTcr8RRgVw+idye6VSf3c7M2I9+d6TthO72j8bVD/ZfNM5j8ZQX
+	x+bLJKT6tA28V+2gjmaTMlPyzLjuKxUPE38B4DGbBGYye4o9HrCGh4o0jAjxmnPB
+	5VY2ltCOKyVRxjBYCGbfZ/ymOefQJ5Bg+5w/jOc2JlWjkjJV+SFRPGIa8ygER7Lw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696x2m1n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Feb 2026 08:46:12 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61C4ZFsE019251;
+	Thu, 12 Feb 2026 08:46:11 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4c6hxk9ecd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Feb 2026 08:46:11 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61C8kBwX30343890
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Feb 2026 08:46:11 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E696558058;
+	Thu, 12 Feb 2026 08:46:10 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DD34058057;
+	Thu, 12 Feb 2026 08:46:04 +0000 (GMT)
+Received: from [9.109.198.221] (unknown [9.109.198.221])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 12 Feb 2026 08:46:04 +0000 (GMT)
+Message-ID: <88a12e1c-05b6-44de-806e-06a8e2ff7c0a@linux.ibm.com>
+Date: Thu, 12 Feb 2026 14:16:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,53 +62,79 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] tracing: Fix checking of freed trace_event_file for
- id files
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20260210113427.1068932-1-petr.pavlu@suse.com>
- <20260210113427.1068932-3-petr.pavlu@suse.com>
- <20260211113752.54bf37e9@fedora>
+Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during
+ debugfs creation
+To: Yu Kuai <yukuai@fnnas.com>, Jens Axboe <axboe@kernel.dk>,
+        ming.lei@redhat.com, hch@lst.de, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Yi Zhang <yi.zhang@redhat.com>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260212080135.1673063-1-yukuai@fnnas.com>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260211113752.54bf37e9@fedora>
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <20260212080135.1673063-1-yukuai@fnnas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=WZYBqkhX c=1 sm=1 tr=0 ts=698d9354 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=Ehe4v0DnxFvcZGR6RwMA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: tws8dfR-xQ1APSIwtfGH58Wd5tW-sV6e
+X-Proofpoint-ORIG-GUID: tws8dfR-xQ1APSIwtfGH58Wd5tW-sV6e
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEyMDA2MCBTYWx0ZWRfXwFWDSSGQ0KwY
+ QGMWnMr0BWba2MugJVDt3dOhMDuZQ8zihMvJZm016CrD3nQlon9o8X0CxlXw8uXlKfnZoT0ExEK
+ xMRjEx0K8YgsPnzsbQg3F/jYvgXN0bL2Q+Y3uSwX1XC3R4HBRujZGkO0LKvAxa4s1e5c7hC8Adp
+ KRSXLy9NK61y/tJ5CurZcwbLaXKZbzoSfEut4xj22Wrf3kKrHHyn7V1buDbjzI6/tq6LRX+k2MR
+ +XfiKrhEYuxbNfXof4Iq/3BwjKVD35XlbqeuiFCpgg5+iF0a42yfoQnaXgH8KG4bEBeXif0YShc
+ 7X6VAduefbm4d8Vz6gztYj1XJSzYCnNwkiRkWy+7ByMVzV3Owd1gFZG+/AlQd3IvBC+6USfh4aC
+ TP3WGRotVkyh71tDIJFR1iTtF29WCVh1Bff4zsYDKuc0VDdc5s6g6TekMtdxYDkAWcH9ui3xAi0
+ iCqh8eBPgbQPLlfZkXw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-12_02,2026-02-11_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1011 phishscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602120060
 
-On 2/11/26 5:37 PM, Steven Rostedt wrote:
-> On Tue, 10 Feb 2026 12:28:17 +0100
-> Petr Pavlu <petr.pavlu@suse.com> wrote:
+
+
+On 2/12/26 1:31 PM, Yu Kuai wrote:
+> Creating debugfs entries can trigger fs reclaim, which can enter back
+> into the block layer request_queue. This can cause deadlock if the
+> queue is frozen.
 > 
->> The code for reading an event id currently uses file->f_inode->i_private to
->> store the value of trace_event_file->event_call->event.type, unlike all
->> other event files which use it to store a pointer to the associated
->> trace_event_file data. The event_id_read() function retrieves this id value
->> from i_private and checks if it is non-0/NULL to determine whether the
->> event is still valid. This approach worked in the past when
->> remove_event_file_dir() would set i_private to NULL for all files in an
->> event directory upon removal. However, with the introduction of eventfs,
->> i_private is assigned when an eventfs inode is allocated and remains set
+> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
+> to detect this condition, but it was racy since the queue can be frozen
+> from another context at any time.
 > 
->> throughout its lifetime. As a result, event_id_read() may fail to detect
->> that an event is being removed.
-> 
-> Who cares? It's just an id. If the event is being removed, there's
-> nothing wrong with still returning its id. The code currently is very
-> simple, I don't want to make it complex for something nobody cares
-> about.
+> Introduce blk_debugfs_mutex_lock()/blk_debugfs_mutex_unlock() helpers
+> that combine the debugfs_mutex with memalloc_noio_save()/restore() to
+> prevent fs reclaim from triggering block I/O. Replace all raw
+> debugfs_mutex lock/unlock pairs with these helpers.
 
-I think one could argue that handling all event files in the same way is
-less complex. It would also allow for a minor simplification where
-event_callback() would no longer need to modify the data pointer and
-eventfs then wouldn't need to pass it down to lookup_file() because it
-could always use the default ei->data.
+It looks like there are still a few places where ->debugfs_mutex is
+taken but the code paths do not enter fs-reclaim. For those cases,
+it may not be necessary to wrap the critical section in a NOIO context.
 
-However, this is all minor and I can see your point of view. I'll drop
-this patch.
+Perhaps it would make sense to provide two separate helper APIs: one
+that acquires ->debugfs_mutex and also saves/restores the NOIO context
+(using memalloc_noio_save()/restore()), and another that simply acquires
+and releases ->debugfs_mutex without entering NOIO. Callers could then 
+choose the appropriate helper depending on whether the code path may
+trigger fs-reclaim. 
 
--- 
+For reference, 
+blk_mq_freeze_queue()/blk_mq_unfreeze_queue() vs
+blk_mq_freeze_queue_nomemsave()/blk_mq_unfreeze_queue_nomemrestore()
+
 Thanks,
-Petr
+--Nilay
