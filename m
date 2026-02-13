@@ -1,119 +1,90 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C952E401;
-	Fri, 13 Feb 2026 06:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0CC277CB8;
+	Fri, 13 Feb 2026 10:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770964468; cv=none; b=if3fQxUpwuc0jFkIRNfOUHxQknRKAvB/1zFad1UPKJGTgMlGjQnhcrQX1wD3gmzW3IcobGwg1sat+WcahDLH59F6xz1+Nx3TDZopaB+WPUS1lTP4mcJwZ8KkP0f27TfqmWViZreTOm1Yj47banvi4MtnFAaHCPIBpQ5MG3CJ9d4=
+	t=1770976914; cv=none; b=kGbYMmkb2pZkN4C/YwoosQoXHzJ65Eq+BNY3mnSZNH0mOJkoIlD4eIrHi+oIkCNUAIhsowQ5LkN4bgNUwoyqR6+tsE049tkvHMpIiqxf4BUXdf8Rg3cha9oTQTjxhwyjy5dTA8BZDkuaTdhfy3/dggGbwVLwrJQtCMbwHnojwJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770964468; c=relaxed/simple;
-	bh=Gu8f5/nmIEvZPVXBJiQdrc4ebHhH64bLw4Ly8YvTn1s=;
-	h=Message-ID:In-Reply-To:References:Date:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=paVJPkONmlYzYXPVoze2atamaYwIUYL/Np5kXMbQADcHg8hH5lrBSLl7ClCOk9NHBDFgIgMuJt0Klpwwc7qA0g3SPXOf3eLzoAS4s3gSkRtB3L/bps5syU+qTAMQ+ZYg56LeE+g3OhMt7YYlyGuZYl9eW5GQPdUcN1kzf49aYGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4fC2Sv6PlLz7QYRD;
-	Fri, 13 Feb 2026 14:34:23 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 61D6YGm7062599;
-	Fri, 13 Feb 2026 14:34:16 +0800 (+08)
-	(envelope-from hu.shengming@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Fri, 13 Feb 2026 14:34:18 +0800 (CST)
-X-Zmail-TransId: 2afc698ec5ea0a8-2dbe8
-X-Mailer: Zmail v1.0
-Message-ID: <20260213143418061eqd7pIV5hJNyCoLCZtJ6R@zte.com.cn>
-In-Reply-To: <20260212224752.4311a58d@fedora>
-References: 202602131034245558BcmEI95X7Sr39QGM8YLl@zte.com.cn,20260212224752.4311a58d@fedora
-Date: Fri, 13 Feb 2026 14:34:18 +0800 (CST)
+	s=arc-20240116; t=1770976914; c=relaxed/simple;
+	bh=rr92s6ZCEgflz+1Ww9CQ/JtQLS9bsoxT2827kjWlWZ4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fPojUdJ+tqnhb/nQJoL9p42maYEM1dKgs1XDdNzQKiE/lvk9kOK5MpdxipHRroafkOK/rnHaZXkUt9+nTgKtQaT0uq3Bnb09LsZ1yEaacvSnV5L88OUtSu3H9l61CoFj1UzF17PjBLFP4Sq5PznG3NpeYF3NQfPPg4XfZ8eIg3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=M5w6xUVh; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="M5w6xUVh"
+DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
+	t=1770976897; h=from:subject:to:date:message-id;
+	bh=rr92s6ZCEgflz+1Ww9CQ/JtQLS9bsoxT2827kjWlWZ4=;
+	b=M5w6xUVhvSET5yMsM/WJDIcNuLVQyE25Y/KqRcA0BLIRhuCSMhA/pZ7hz7j5cX0BH7Nvh2jE1HQ
+	W21pjudqjHyOSNyWwWOGzdJrenbKAXVFIeChaGjuou9LxKqoiN2MNejU+H5THigr2Y0hytXPMnp9J
+	mUnCdTRt6VmCEzVL+WTlnRxqQx2n4P46KCTN2fRc69X2YxXAja6KczIZ+tWcIb0mLQGdsn0lWIG/q
+	F+Q0y92VJWdtYSF4DaUY/xTmJkYwYPlhT2MZA24uuY6qdOXeIC14yQM3qtsJXuK6hkNv5i9jQzceN
+	neJSxvU9tZmm23VzNS9yIgDSpdDG7dXYzsAA==
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "open list:TRACING"
+	<linux-kernel@vger.kernel.org>, "open list:TRACING"
+	<linux-trace-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, "kernel
+ test robot" <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] ring-buffer: Fix possible dereference of uninitialized pointer
+Date: Fri, 13 Feb 2026 13:01:30 +0300
+Message-ID: <20260213100130.2013839-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <hu.shengming@zte.com.cn>
-To: <rostedt@goodmis.org>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhang.run@zte.com.cn>,
-        <yang.tao172@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gZnVuY3Rpb25fZ3JhcGg6IHJlc3RvcmUgZGlyZWN0IG1vZGUgd2hlbiBjYWxsYmFja3MgZHJvcCB0byBvbmU=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 61D6YGm7062599
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.133 unknown Fri, 13 Feb 2026 14:34:23 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 698EC5EF.000/4fC2Sv6PlLz7QYRD
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-04.aladdin.ru (192.168.1.104) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-> On Fri, 13 Feb 2026 10:34:24 +0800 (CST)
-> <hu.shengming@zte.com.cn> wrote:
-> 
-> > From: Shengming Hu <hu.shengming@zte.com.cn>
-> > 
-> > When registering a second fgraph callback, direct path is disabled
-> > and array loop is used instead.
-> > When ftrace_graph_active falls back to one, we try to re-enable direct
-> > mode via ftrace_graph_enable_direct(true, ...).
-> > But ftrace_graph_enable_direct() incorrectly disables the static key
-> > rather than enabling it.
-> > This leaves fgraph_do_direct permanently off after first multi-callback
-> > transition, so direct fast mode is never restored.
-> 
-> Good catch!
-> 
-> > 
-> > Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
-> > Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
-> > ---
-> > kernel/trace/fgraph.c | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> > index cc48d16be43e..4df766c690f9 100644
-> > --- a/kernel/trace/fgraph.c
-> > +++ b/kernel/trace/fgraph.c
-> > @@ -1303,7 +1303,7 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
-> > static_call_update(fgraph_func, func);
-> > static_call_update(fgraph_retfunc, retfunc);
-> > if (enable_branch)
-> > -       static_branch_disable(&fgraph_do_direct);
-> > +       static_branch_enable(&fgraph_do_direct);
-> > }
-> 
-> Your email client killed your patch. it has huge white-space damage.
-> But because it's such a trivial change, I'll fix it up for you. But
-> next time please make sure your email client doesn't corrupt your
-> patches.
-> 
-> Thanks,
-> 
-> -- Steve
+There is a pointer head_page in rb_meta_validate_events() which is not
+initialized at the beginning of a function. This pointer can be dereferenced
+if there is a failure during reader page validation. In this case the control
+is passed to "invalid" label where the pointer is dereferenced in a loop.
 
-Hi Steve,
-I’ve identified the cause of the email formatting issue and have resent the patch. 
-https://lore.kernel.org/linux-trace-kernel/20260213142932519cuWSpEXeS4-UnCvNXnK2P@zte.com.cn/T/#u
+To fix the issue initialize orig_head and head_page before calling
+rb_validate_buffer.
 
-Thank you very much for the reminder.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
---
-With Best Regards,
-Shengming
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202406130130.JtTGRf7W-lkp@intel.com/
+Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ kernel/trace/ring_buffer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> > 
-> > static void ftrace_graph_disable_direct(bool disable_branch)
-> > --
-> > 2.25.1
->
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 630221b00838..ad08430347b0 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1918,6 +1918,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	if (!meta || !meta->head_buffer)
+ 		return;
+ 
++	orig_head = head_page = cpu_buffer->head_page;
++
+ 	/* Do the reader page first */
+ 	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
+ 	if (ret < 0) {
+@@ -1928,7 +1930,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+-	orig_head = head_page = cpu_buffer->head_page;
+ 	ts = head_page->page->time_stamp;
+ 
+ 	/*
+-- 
+2.34.1
+
