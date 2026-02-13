@@ -1,105 +1,88 @@
-Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E029CE9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 05:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EEE61FCE;
+	Fri, 13 Feb 2026 06:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770961217; cv=none; b=REDkk5w4qFBYYMmYSpOjOIf3EAlI2MeXqLihhx0B19+gNcSjzDONk6Z1vdmB893VJLZXlFzTYAlzdb9YYLUwX7zM/NACIu2Hk6xNu28dm3i1f2vwqwVk0iEv93nRp4sth9QDWyQtXQTFg5CqY7DwIF2Ye1XNEnDtgkCvgFbd54w=
+	t=1770964185; cv=none; b=RZfv2pUHr+q/kTBBKJD03uDNzIGbksFezDBPOIshXS2Mh/9+BmcfRsNXk1QwCoPHysq8AHE57bbOW3moMVpfyBQqlZO2SG0I7Amip0+VcgQCMpiJWpzsz1sP90qrTuFkD0MuNrg5qkCzkl97HFkgA/Y0W+2aLjQdjx3/Zut3Iek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770961217; c=relaxed/simple;
-	bh=+6lsmNm9wphqJ24y8FQPYzZCLpAxsG55lgs1zXhsbm4=;
-	h=To:Subject:Mime-Version:References:Cc:Message-Id:In-Reply-To:
-	 Content-Type:From:Date; b=nyqqKWgdYAwnIYqCtIc9Er6HO+paQF3+S7k1TvRJmb4Il+VcUbHTlMziO8cFJGPZ4fjTkznMVWEbakeynEwl9GvP0b5AYQxUgr84WAz+0twKZLGGAY9V4ZR01Hri6iuIQ+gXPX9S702slbJBHXviHNMfdS5FlV2leTAK4wTEtMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=ZS4LpFHw; arc=none smtp.client-ip=118.26.132.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="ZS4LpFHw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1770961203;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=+6lsmNm9wphqJ24y8FQPYzZCLpAxsG55lgs1zXhsbm4=;
- b=ZS4LpFHwroAqFIlbJGjBgR3llpP+yjrqNSmCOq+jepj+yCyLzmC9L8DESZ1QC7Da71xH2m
- Q/JS6fZPu80FT+eXq7P9vTmkpKzFVPvd2znA+hJpBVj7m/G9aeI2+cxHXh6IGKOthxI9wB
- XCntRxu63sY1nHnvCQ2LZ8XlXIIgA21MTHN8yzqzfSJMBAzl9xqYoiW+gtk5PkrYeV70DN
- VglZYPHta1EXhZBPVoCO5xmwm0fvzXG4PTWdjQIOpSZVRwTnIcuXgX2IHkeNr+hqeX6UWx
- Xeo4uBzkqD9erwMowC7OZ3YIWZfKk1jPK/XChQdKd+edulpbu1qNn/JPCuisjQ==
-Reply-To: yukuai@fnnas.com
-To: "Ming Lei" <ming.lei@redhat.com>
-Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during debugfs creation
+	s=arc-20240116; t=1770964185; c=relaxed/simple;
+	bh=c45EfB/jmLxOw9eh9sgRT7FxDDFwlqHFfn8hQWGR4o4=;
+	h=Message-ID:Date:Mime-Version:From:To:Cc:Subject:Content-Type; b=oaBBHDaaEPOtkV/HNYXrVMepurGORerxuKvtcW4oiS/D8a4r8PXXCcQYwtWUJbrEUd7NKQIiAKxLSzYB4jKLZcdR2211FLRAt232ZcNHDK/yP0rNwqEu26XEPsxAkIsU03U2vS3vPTeiwgEi0UhhQI4SPNMndMksNHaOHEA+qe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4fC2MT44yHz8Xs72;
+	Fri, 13 Feb 2026 14:29:41 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 61D6TUq7016651;
+	Fri, 13 Feb 2026 14:29:30 +0800 (+08)
+	(envelope-from hu.shengming@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Fri, 13 Feb 2026 14:29:32 +0800 (CST)
+X-Zmail-TransId: 2afc698ec4cc600-28146
+X-Mailer: Zmail v1.0
+Message-ID: <20260213142932519cuWSpEXeS4-UnCvNXnK2P@zte.com.cn>
+Date: Fri, 13 Feb 2026 14:29:32 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Received: from [192.168.1.104] ([39.182.0.132]) by smtp.feishu.cn with ESMTPS; Fri, 13 Feb 2026 13:40:00 +0800
-References: <20260212080135.1673063-1-yukuai@fnnas.com> <aY6sDstii_R_zOfs@fedora>
-Cc: "Jens Axboe" <axboe@kernel.dk>, <nilay@linux.ibm.com>, <hch@lst.de>, 
-	"Steven Rostedt" <rostedt@goodmis.org>, 
-	"Masami Hiramatsu" <mhiramat@kernel.org>, 
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, 
-	"Yi Zhang" <yi.zhang@redhat.com>, 
-	"Shinichiro Kawasaki" <shinichiro.kawasaki@wdc.com>, 
-	"Keith Busch" <kbusch@kernel.org>, "Sagi Grimberg" <sagi@grimberg.me>, 
-	<linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>, 
-	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<yukuai@fnnas.com>
-Content-Transfer-Encoding: quoted-printable
-X-Original-From: Yu Kuai <yukuai@fnnas.com>
-Message-Id: <5c47b46d-1aa7-4ce6-baa8-97f8a3ecc327@fnnas.com>
-In-Reply-To: <aY6sDstii_R_zOfs@fedora>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-From: "Yu Kuai" <yukuai@fnnas.com>
-Date: Fri, 13 Feb 2026 13:39:58 +0800
-User-Agent: Mozilla Thunderbird
-X-Lms-Return-Path: <lba+2698eb931+566ba2+vger.kernel.org+yukuai@fnnas.com>
+From: <hu.shengming@zte.com.cn>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
+Cc: <mark.rutland@arm.com>, <mathieu.desnoyers@efficios.com>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <zhang.run@zte.com.cn>, <yang.tao172@zte.com.cn>,
+        <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIFJFU0VORF0gZnVuY3Rpb25fZ3JhcGg6IHJlc3RvcmUgZGlyZWN0IG1vZGUgd2hlbiBjYWxsYmFja3MgZHJvcCB0byBvbmU=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 61D6TUq7016651
+X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
+X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Fri, 13 Feb 2026 14:29:41 +0800
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 698EC4D5.001/4fC2MT44yHz8Xs72
 
-Hi,
+From: Shengming Hu <hu.shengming@zte.com.cn>
 
-=E5=9C=A8 2026/2/13 12:43, Ming Lei =E5=86=99=E9=81=93:
-> On Thu, Feb 12, 2026 at 04:01:35PM +0800, Yu Kuai wrote:
->> Creating debugfs entries can trigger fs reclaim, which can enter back
->> into the block layer request_queue. This can cause deadlock if the
->> queue is frozen.
->>
->> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
->> to detect this condition, but it was racy since the queue can be frozen
->> from another context at any time.
-> debugfs lock doesn't depend on queue freeze, so the implied deadlock isn'=
-t
-> obvious.
->
-> Can you explain a bit why freeze from another context may cause dead lock=
-?
+When registering a second fgraph callback, direct path is disabled
+and array loop is used instead.
+When ftrace_graph_active falls back to one, we try to re-enable direct
+mode via ftrace_graph_enable_direct(true, ...).
+But ftrace_graph_enable_direct() incorrectly disables the static key
+rather than enabling it.
+This leaves fgraph_do_direct permanently off after first multi-callback
+transition, so direct fast mode is never restored.
 
-It's probably fine to freeze from another context concurrently, I mean the
-checking will cause the false warning like:
+Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
+Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
+---
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Re: [bug report] WARNING: block/blk-mq-debugfs.c:620 at=20
-debugfs_create_files.isra.0+0x54/0x60, CPU#220: kworker/u1036:7/70421 -=20
-Shinichiro Kawasaki <https://lore.kernel.org/all/aYWQR7CtYdk3K39g@shinmob/>
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index cc48d16be43e..4df766c690f9 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1303,7 +1303,7 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
+ 	static_call_update(fgraph_func, func);
+ 	static_call_update(fgraph_retfunc, retfunc);
+ 	if (enable_branch)
+-		static_branch_disable(&fgraph_do_direct);
++		static_branch_enable(&fgraph_do_direct);
+ }
 
-So checking itself is racy and should be removed, meanwhile there are two o=
-ptions:
-
-1) use noio for debugfs creation;
-2) move debugfs creation out of queue frozen from nvme target;
-
-BTW, I added the blk_queue_enter/exit() protection for 2 because I think it=
-'s
-safe, and can prevent deadlock if there are any implied deadlock related to
-queue frozen.
-
->
->
-> Thanks,
-> Ming
->
->
---=20
-Thansk,
-Kuai
+ static void ftrace_graph_disable_direct(bool disable_branch)
+--
+2.25.1
