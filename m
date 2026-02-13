@@ -1,70 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FE835B122
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 11:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465A347BDC
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 11:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770983593; cv=none; b=DdC3hcLmQMThmfyK5ymOs5/lmIbXEUmBhR4gUoMy4YfginURahbhUmDpR6NwQPRfOntKcbUCJ5ITTPOtyvVW7KSNeCV9XySmRNlCfCCYczbxoBEhMr6GVi7H7cgPptxyTmK03qCRnuIsDpGllHOyFbw7ZG1GTN4xjaqHMyfM1ks=
+	t=1770983597; cv=none; b=DUoCXRVScS9k2F5S9SpmfjGaS+SsQ6m9nbmt50sKq4r/XkATB5+hDF7vnU0y/DI8tRvyew126Pt69V7SHNRruMBtgBqHIoW8LgdUDqLmemZ48FqJJHi5sqL/orKiIGJ1yj2v1LuqKojoPcKy1MMTNKtDiAGrlY1imps+VZPgymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770983593; c=relaxed/simple;
-	bh=jXM6h73fi/T1NI6sc5NlsOcr2JeACiIlmwKPddXhEyc=;
+	s=arc-20240116; t=1770983597; c=relaxed/simple;
+	bh=2ZVTZcJEQvp9j4d2P5a9LlD36iiY34YfpFu/m0+lLq4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=rwEDxySA3Tz/Y4INsD++jlMD87XhRNWlQdTjvPQcxOtKNeuiIJjMSHYOS9gIyGC6R8cPAdv8ytMfP3KkUj95OwQOGlb6o0sMIpGGyisCMA8KyOpRvhyLjr4EX7YhJJW5SGazDRGrnvzgDBAZ4Q3rkgO3u6IPWzGJRh3cXFIlAQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hjwTqbhj; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=jwXDxYDQ1bVJXgQ1EWravpeFIV7Psleqtc8hhnMR4658MLIk6zQECAi0LuCSqXil/Y9NhdDWdTil82/ZPLFPBHvZXiUo0eEEkst2Gxg02IBa8xs0cKCo6lLXmJBzeizruu8gXvYNUX6bIQkeQbDYKRtG0tXFTvtMF1jMhWLh4nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BDn8hjtX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjwTqbhj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDn8hjtX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770983591;
+	s=mimecast20190719; t=1770983594;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vrzntSVggQfVgXA1EfIrnMrsyGocXfN5hLyeRmwcLd0=;
-	b=hjwTqbhjmhQuDvKmx1Et2N1DCp0P43sNzm17mcvauxqxBrIQtdZB2+4IWZZiAvK2vuatVO
-	oRHpHTdY03t6H/4HkPxDVKY3MNg+D6McXOKQrQ2Mp96vrhCzKV1BaKNHgtaOD7yy8ibzj9
-	8qrfJQjZPEanrbjvSeCTf/gUUcagl6I=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WBIaDmc/b8KhOmbhsBz+ARqnHRu5Sb2xsdw5j1dfy9I=;
+	b=BDn8hjtXDlqF4bAyVgwlMUgI2FXuERbKJ6KK8Mn/CB+x4CkdmH7Mi+ZS0By6WstYm4Nqnh
+	gjHOGAAu1b70OCnaMxoXGY8uE0GvmhEog5W4GThlTvhMM+JGasljI2sfExuqAUYxxi5tA6
+	Z8PsVNwCVXeQhU4NgFRy2nxDDB5zwVI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-42-VtqeWm5zPriCVD5dF_AnBA-1; Fri, 13 Feb 2026 06:53:10 -0500
-X-MC-Unique: VtqeWm5zPriCVD5dF_AnBA-1
-X-Mimecast-MFC-AGG-ID: VtqeWm5zPriCVD5dF_AnBA_1770983589
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4836abfc742so5731035e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 03:53:09 -0800 (PST)
+ us-mta-146-YH1dYcTWOIK2mJ61uLKFrA-1; Fri, 13 Feb 2026 06:53:13 -0500
+X-MC-Unique: YH1dYcTWOIK2mJ61uLKFrA-1
+X-Mimecast-MFC-AGG-ID: YH1dYcTWOIK2mJ61uLKFrA_1770983592
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47edf8ba319so10956155e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 03:53:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770983589; x=1771588389;
+        d=1e100.net; s=20230601; t=1770983592; x=1771588392;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=vrzntSVggQfVgXA1EfIrnMrsyGocXfN5hLyeRmwcLd0=;
-        b=dVJBwuGEP2d5WLHwKWK/dwfUlHRUSMhlRazvh/Aon8BWDpfOl0/jmDuCauzVqOfM/C
-         0GyIL1eDjc7unITXXPIp2PbTZ+Ag/obi5/hJrhDp5dMO4hn8MhzZB2uQYMo9lzaYIBT2
-         vtvyz3pcAec4vMW2JzE/r/9/Bxp5drOEW3IUIosG2WmKOJu5NsmReB1Jgv6qHetcK/4g
-         U/OXrXIIMBfhZQMTrc4gMEDqaN7uz3ZURH8OYPDyRKQ956rgI3RzA1GxfGJARTaSQadK
-         /FBqsnLgFrFHzK6wOkqCcn6xtptFjt6vEstXt1xua5yoKCTdTPEXsnkE13xZ4KmMVqML
-         9emg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3kEZ30d5KqxK+ndcLYwv3EzPeNBunbA9dXYxye6uQiFZqQNJPoaQtmdgkBoDjRJkV5B5ho6mAyGy5epu/9ssVIjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYZBhpKQ2xOeHj1QLyrTfHXVx4BazlsSgF4tznj6uLrlWx4T42
-	BJA9MqUXzJ1UcycYKec21oOcIO654sSgbrVjAaqLIM/BtBlbfEEm/0tv8D8NRHQsNdAzwdH7dUC
-	Y1JlY2vf23i5lJvPkvvLPpMFeZoaXdFRy9/2x0P2SHQjsRLgwDVH3hbC88Uk+IZ2YOasKFMub8A
+        bh=WBIaDmc/b8KhOmbhsBz+ARqnHRu5Sb2xsdw5j1dfy9I=;
+        b=N55g3PUFFMQt1BQ1TdS5xxaX+tIcwYQJeUJkqexJHBAYZu76zQXqP0rpslvb2XjKMm
+         ASpYTZpSbeAx/28I9GEH68AoTZcB18FH0pTK6LTMYDeKL3mUcj9rMbrOW5AaiB089ZAu
+         2XSokwQ9L6OCdL296bv+UHGHldJy3WH3aqfI0CWYSZbvCBi1r5vwEYzpT9zySmjbcRfv
+         jQhdCi7h+mIei9NU+eZnqKnYuoSOvtnVAmGteLz9o2DPtqb/KWTvMYhom/BJCLCBHq21
+         FaVBPHnTi54Ls7jGcR81p2Xd8dK+CF5nWekDCPmSxuO3rbcE/3g0wA5rS96H6aGRoSJX
+         evJg==
+X-Forwarded-Encrypted: i=1; AJvYcCU50B5Nhut19L7RpoXK58ljcbg7PseM/p+xMB7Cf1S/qTmzzzVW+91N8jwcVxocODzZyiDU9iq0f0eagK4nXnzjxZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/fVkCxjyWdFSrKf+LTTwTChMMNJJ/AD/sberCLSqG+ptXiMfd
+	3yVj9B+kenAaFsW1CSQ8lMLQRkVsqR8Jm9AZX70MdbTaOSls6rbZal0XyrzOv+c04sSX2bsbkB3
+	TM7FtTKGgKpLBZmmiwLAfVOn39Dnm+DVrWMlOAN2zHRyS1CfPYqnffUc3qu0lb7EHNYWSy1BNTA
 	==
-X-Gm-Gg: AZuq6aKPWZY8eqQGJWTXoTBNsBiS5FCekOaaJk/oWNScP1flNbvLtf4inGsGQYp8wJd
-	qI1AYKgEHbk9dmDhoRlooYhvgwRymH6JsbGe4A4dDEa30BwZb/htSuAN9FybvLEsy9QoUX5QfDq
-	aodzaU/9e0j4Dk6u269Fwb3z4KCiEBR58AlyrgxNcPD37WPij7pQO3gX4ys1aHOE0JfOLtFhe/l
-	0QTUUHWCxA/+ApoRqy27AkCWrhD/xg8PrDyLTPW09VAGkPTWFr6VqVrqGMda3f6lJhG41dcPL9F
-	WpTUQzi1iIZRX3W2VSfMv60IxiH9sPpvyGhdFXE04s2OxrY2Zv1f6pSsx3APCoyNnw++ySwZ+HH
-	hpSvlMYRaUJffqiJmyiFTkXJJtvJBP6Go/R0=
-X-Received: by 2002:a05:600c:45cc:b0:47a:814c:eea1 with SMTP id 5b1f17b1804b1-48373a6c1f8mr21763895e9.35.1770983588504;
-        Fri, 13 Feb 2026 03:53:08 -0800 (PST)
-X-Received: by 2002:a05:600c:45cc:b0:47a:814c:eea1 with SMTP id 5b1f17b1804b1-48373a6c1f8mr21763435e9.35.1770983588037;
-        Fri, 13 Feb 2026 03:53:08 -0800 (PST)
+X-Gm-Gg: AZuq6aIv6EGQQM3O9wxF9AYaMUMdmHs9sc8CMTTAVKwzGaPumvRshHJl03BFqLJojSq
+	CY3onTE/2U12U1Iigv/KPaF+YTWpvboSBbuKLKNZgs/KdzLTs2AoQG3aPY3+QYU07NjMLyag9qx
+	tGM7TJ9vCGPJuAB6NaRCqTRNZ8ih+lUxUMGv6ukMCy9flURYAcV0lXRzzD2Mmr+Js97rX6zTEau
+	uEOEllXi69GHm7xBtdCAQx0df4IoVnZzfIMXi6DIZZR5H+Y/ui6lgaVfQZgU3g8yswIVYUbK17Q
+	dOAqJfld6bK5a965ztDVFvPymrhKoTGP5aHP/guxSI9o5ZSHEKLTU3SvYP/2aSQrKx73qVHbvQb
+	4AmDRgvav5/HQoWZ+6LjB140XbkoljAsaPIA=
+X-Received: by 2002:a05:600c:1d89:b0:480:3bba:1ca9 with SMTP id 5b1f17b1804b1-48373a083c8mr27812985e9.4.1770983591682;
+        Fri, 13 Feb 2026 03:53:11 -0800 (PST)
+X-Received: by 2002:a05:600c:1d89:b0:480:3bba:1ca9 with SMTP id 5b1f17b1804b1-48373a083c8mr27812615e9.4.1770983591263;
+        Fri, 13 Feb 2026 03:53:11 -0800 (PST)
 Received: from costa-tp.bos2.lab ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d835f6bsm234671275e9.14.2026.02.13.03.53.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d835f6bsm234671275e9.14.2026.02.13.03.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Feb 2026 03:53:07 -0800 (PST)
+        Fri, 13 Feb 2026 03:53:10 -0800 (PST)
 From: Costa Shulyupin <costa.shul@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
@@ -77,9 +77,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [PATCH v3 4/5] tools/rtla: Remove unneeded nr_cpus from for_each_monitored_cpu
-Date: Fri, 13 Feb 2026 13:52:33 +0200
-Message-ID: <20260213115234.430232-5-costa.shul@redhat.com>
+Subject: [PATCH v3 5/5] tools/rtla: Remove unneeded cpus parameter from timerlat BPF functions
+Date: Fri, 13 Feb 2026 13:52:34 +0200
+Message-ID: <20260213115234.430232-6-costa.shul@redhat.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260213115234.430232-1-costa.shul@redhat.com>
 References: <20260213115234.430232-1-costa.shul@redhat.com>
@@ -90,231 +90,119 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XEXrhHXtXRkft4GPjhMahU_FXRDJO5uRsqAEp1q6-3I_1770983589
+X-Mimecast-MFC-PROC-ID: 4KoeAOtQe_9wrfS8s0AjB3-zjAxCKpR-lkckQVAaT8g_1770983592
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-nr_cpus does not change at runtime, so passing it through the macro
-argument is unnecessary.
+nr_cpus is a global variable available throughout the codebase, so
+passing it as a function parameter is unnecessary.
 
-Remove the argument and use the global nr_cpus instead.
+Remove the cpus parameter from timerlat_bpf_get_hist_value() and
+get_value(), using the global nr_cpus directly.
 
 Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- tools/tracing/rtla/src/common.h        |  2 +-
- tools/tracing/rtla/src/osnoise_hist.c  | 15 +++++++--------
- tools/tracing/rtla/src/osnoise_top.c   |  2 +-
- tools/tracing/rtla/src/timerlat.c      |  4 ++--
- tools/tracing/rtla/src/timerlat_hist.c | 16 ++++++++--------
- tools/tracing/rtla/src/timerlat_top.c  |  2 +-
- 6 files changed, 20 insertions(+), 21 deletions(-)
+ tools/tracing/rtla/src/timerlat_bpf.c  | 16 +++++++---------
+ tools/tracing/rtla/src/timerlat_bpf.h  |  6 ++----
+ tools/tracing/rtla/src/timerlat_hist.c |  2 +-
+ 3 files changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 32f9c1351209..28d258d6d178 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -109,7 +109,7 @@ struct common_params {
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+index 8d5c3a095e41..dd3cf71d74e5 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.c
++++ b/tools/tracing/rtla/src/timerlat_bpf.c
+@@ -147,24 +147,23 @@ static int get_value(struct bpf_map *map_irq,
+ 		     int key,
+ 		     long long *value_irq,
+ 		     long long *value_thread,
+-		     long long *value_user,
+-		     int cpus)
++		     long long *value_user)
+ {
+ 	int err;
  
- extern int nr_cpus;
+ 	err = bpf_map__lookup_elem(map_irq, &key,
+ 				   sizeof(unsigned int), value_irq,
+-				   sizeof(long long) * cpus, 0);
++				   sizeof(long long) * nr_cpus, 0);
+ 	if (err)
+ 		return err;
+ 	err = bpf_map__lookup_elem(map_thread, &key,
+ 				   sizeof(unsigned int), value_thread,
+-				   sizeof(long long) * cpus, 0);
++				   sizeof(long long) * nr_cpus, 0);
+ 	if (err)
+ 		return err;
+ 	err = bpf_map__lookup_elem(map_user, &key,
+ 				   sizeof(unsigned int), value_user,
+-				   sizeof(long long) * cpus, 0);
++				   sizeof(long long) * nr_cpus, 0);
+ 	if (err)
+ 		return err;
+ 	return 0;
+@@ -176,13 +175,12 @@ static int get_value(struct bpf_map *map_irq,
+ int timerlat_bpf_get_hist_value(int key,
+ 				long long *value_irq,
+ 				long long *value_thread,
+-				long long *value_user,
+-				int cpus)
++				long long *value_user)
+ {
+ 	return get_value(bpf->maps.hist_irq,
+ 			 bpf->maps.hist_thread,
+ 			 bpf->maps.hist_user,
+-			 key, value_irq, value_thread, value_user, cpus);
++			 key, value_irq, value_thread, value_user);
+ }
  
--#define for_each_monitored_cpu(cpu, nr_cpus, common) \
-+#define for_each_monitored_cpu(cpu, common) \
- 	for (cpu = 0; cpu < nr_cpus; cpu++) \
- 		if (!(common)->cpus || CPU_ISSET(cpu, &(common)->monitored_cpus))
+ /*
+@@ -196,7 +194,7 @@ int timerlat_bpf_get_summary_value(enum summary_field key,
+ 	return get_value(bpf->maps.summary_irq,
+ 			 bpf->maps.summary_thread,
+ 			 bpf->maps.summary_user,
+-			 key, value_irq, value_thread, value_user, nr_cpus);
++			 key, value_irq, value_thread, value_user);
+ }
  
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 90291504a1aa..e8f07108d39a 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -244,7 +244,7 @@ static void osnoise_hist_header(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(s, "Index");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -273,8 +273,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "count:");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
--
-+	for_each_monitored_cpu(cpu, &params->common) {
- 		if (!data->hist[cpu].count)
- 			continue;
- 
-@@ -285,7 +284,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "min:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -298,7 +297,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -314,7 +313,7 @@ osnoise_print_summary(struct osnoise_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "max:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-@@ -349,7 +348,7 @@ osnoise_print_stats(struct osnoise_tool *tool)
- 			trace_seq_printf(trace->seq, "%-6d",
- 					 bucket * data->bucket_size);
- 
--		for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+		for_each_monitored_cpu(cpu, &params->common) {
- 
- 			if (!data->hist[cpu].count)
- 				continue;
-@@ -385,7 +384,7 @@ osnoise_print_stats(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "over: ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].count)
- 			continue;
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 6fb3e72d74f2..ab5db35f21ae 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -236,7 +236,7 @@ osnoise_print_stats(struct osnoise_tool *top)
- 
- 	osnoise_top_header(top);
- 
--	for_each_monitored_cpu(i, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(i, &params->common) {
- 		osnoise_top_print(top, i);
- 	}
- 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index 69856f677fce..ec14abd45fff 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -115,7 +115,7 @@ int timerlat_enable(struct osnoise_tool *tool)
- 			return -1;
- 		}
- 
--		for_each_monitored_cpu(i, nr_cpus, &params->common) {
-+		for_each_monitored_cpu(i, &params->common) {
- 			if (save_cpu_idle_disable_state(i) < 0) {
- 				err_msg("Could not save cpu idle state.\n");
- 				return -1;
-@@ -218,7 +218,7 @@ void timerlat_free(struct osnoise_tool *tool)
- 	if (dma_latency_fd >= 0)
- 		close(dma_latency_fd);
- 	if (params->deepest_idle_state >= -1) {
--		for_each_monitored_cpu(i, nr_cpus, &params->common) {
-+		for_each_monitored_cpu(i, &params->common) {
- 			restore_cpu_idle_disable_state(i);
- 		}
- 	}
+ /*
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+index f4a5476f2abb..531c9ef16f51 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.h
++++ b/tools/tracing/rtla/src/timerlat_bpf.h
+@@ -23,8 +23,7 @@ int timerlat_bpf_restart_tracing(void);
+ int timerlat_bpf_get_hist_value(int key,
+ 				long long *value_irq,
+ 				long long *value_thread,
+-				long long *value_user,
+-				int cpus);
++				long long *value_user);
+ int timerlat_bpf_get_summary_value(enum summary_field key,
+ 				   long long *value_irq,
+ 				   long long *value_thread,
+@@ -44,8 +43,7 @@ static inline int timerlat_bpf_restart_tracing(void) { return -1; };
+ static inline int timerlat_bpf_get_hist_value(int key,
+ 					      long long *value_irq,
+ 					      long long *value_thread,
+-					      long long *value_user,
+-					      int cpus)
++					      long long *value_user)
+ {
+ 	return -1;
+ }
 diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 4bf1489cad23..db66312ec966 100644
+index db66312ec966..1c4702948532 100644
 --- a/tools/tracing/rtla/src/timerlat_hist.c
 +++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -298,7 +298,7 @@ static void timerlat_hist_header(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(s, "Index");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -350,7 +350,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "count:");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -372,7 +372,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "min:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -400,7 +400,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -428,7 +428,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "max:  ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -473,7 +473,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 	sum.min_thread = ~0;
- 	sum.min_user = ~0;
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-@@ -620,7 +620,7 @@ timerlat_print_stats(struct osnoise_tool *tool)
- 			trace_seq_printf(trace->seq, "%-6d",
- 					 bucket * data->bucket_size);
- 
--		for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+		for_each_monitored_cpu(cpu, &params->common) {
- 
- 			if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 				continue;
-@@ -658,7 +658,7 @@ timerlat_print_stats(struct osnoise_tool *tool)
- 	if (!params->common.hist.no_index)
- 		trace_seq_printf(trace->seq, "over: ");
- 
--	for_each_monitored_cpu(cpu, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(cpu, &params->common) {
- 
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 4eb820fe1f21..ed3d3d1c8956 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -446,7 +446,7 @@ timerlat_print_stats(struct osnoise_tool *top)
- 
- 	timerlat_top_header(params, top);
- 
--	for_each_monitored_cpu(i, nr_cpus, &params->common) {
-+	for_each_monitored_cpu(i, &params->common) {
- 		timerlat_top_print(top, i);
- 		timerlat_top_update_sum(top, i, &summary);
- 	}
+@@ -209,7 +209,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
+ 	/* Pull histogram */
+ 	for (i = 0; i < data->entries; i++) {
+ 		err = timerlat_bpf_get_hist_value(i, value_irq, value_thread,
+-						  value_user, nr_cpus);
++						  value_user);
+ 		if (err)
+ 			return err;
+ 		for (j = 0; j < nr_cpus; j++) {
 -- 
 2.52.0
 
