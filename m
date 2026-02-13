@@ -1,90 +1,132 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0CC277CB8;
-	Fri, 13 Feb 2026 10:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C35189BB6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 11:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770976914; cv=none; b=kGbYMmkb2pZkN4C/YwoosQoXHzJ65Eq+BNY3mnSZNH0mOJkoIlD4eIrHi+oIkCNUAIhsowQ5LkN4bgNUwoyqR6+tsE049tkvHMpIiqxf4BUXdf8Rg3cha9oTQTjxhwyjy5dTA8BZDkuaTdhfy3/dggGbwVLwrJQtCMbwHnojwJ0=
+	t=1770983578; cv=none; b=M4V6PrkD+bgSFOnw8oJpesQvbzY4P+Es2u2qxNvO1Sszgb5IeHTEDhhAbVp4bfS9RWPGtPUmvr8pWdVtg5JB6U5ViW5pdtGvDyfgVFfmxruUPkoUZ+0hIUSrTBYItan0ABfeneL6VcQadMIZhLS772vfjwrCg47tq9+TUlKLkTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770976914; c=relaxed/simple;
-	bh=rr92s6ZCEgflz+1Ww9CQ/JtQLS9bsoxT2827kjWlWZ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fPojUdJ+tqnhb/nQJoL9p42maYEM1dKgs1XDdNzQKiE/lvk9kOK5MpdxipHRroafkOK/rnHaZXkUt9+nTgKtQaT0uq3Bnb09LsZ1yEaacvSnV5L88OUtSu3H9l61CoFj1UzF17PjBLFP4Sq5PznG3NpeYF3NQfPPg4XfZ8eIg3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b=M5w6xUVh; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+	s=arc-20240116; t=1770983578; c=relaxed/simple;
+	bh=M+d3eeyRJDp8lq2b1FuTLoytddjo6EdJUp8ehWym4iU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=BEVc9utuzRHS/fvqoJf/PFwe9+SyKt1+lEwlVEMmBzyA8YcTZldPSh7sski48qlOPsAiHX/lx26LsfERm2vE+7I4gEnhR7noSOsD1waK8SsRfWSUVhn2ksPpkABScXPVksEz7G/ZAZRYUnKbxCIlrCEvYCo8LIZNbeiEJXMPdbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PWVDuFmk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aladdin.ru header.i=@aladdin.ru header.b="M5w6xUVh"
-DKIM-Signature: v=1; a=rsa-sha256; d=aladdin.ru; s=mail; c=simple/simple;
-	t=1770976897; h=from:subject:to:date:message-id;
-	bh=rr92s6ZCEgflz+1Ww9CQ/JtQLS9bsoxT2827kjWlWZ4=;
-	b=M5w6xUVhvSET5yMsM/WJDIcNuLVQyE25Y/KqRcA0BLIRhuCSMhA/pZ7hz7j5cX0BH7Nvh2jE1HQ
-	W21pjudqjHyOSNyWwWOGzdJrenbKAXVFIeChaGjuou9LxKqoiN2MNejU+H5THigr2Y0hytXPMnp9J
-	mUnCdTRt6VmCEzVL+WTlnRxqQx2n4P46KCTN2fRc69X2YxXAja6KczIZ+tWcIb0mLQGdsn0lWIG/q
-	F+Q0y92VJWdtYSF4DaUY/xTmJkYwYPlhT2MZA24uuY6qdOXeIC14yQM3qtsJXuK6hkNv5i9jQzceN
-	neJSxvU9tZmm23VzNS9yIgDSpdDG7dXYzsAA==
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "open list:TRACING"
-	<linux-kernel@vger.kernel.org>, "open list:TRACING"
-	<linux-trace-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, "kernel
- test robot" <lkp@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH] ring-buffer: Fix possible dereference of uninitialized pointer
-Date: Fri, 13 Feb 2026 13:01:30 +0300
-Message-ID: <20260213100130.2013839-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PWVDuFmk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1770983576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bABqLmZYMF+yAdDTmCHTcvVEVd1c5O5Y+vXfK82IHSY=;
+	b=PWVDuFmky7J13yGDCVTCobo7DOXn6o3fUmnCcPmVScGYtG4xm+/P2JbJ0a32iyPCjouDV1
+	eE+AKKy0qPsIcJTFAbQ6kliQsG9U4LHQIW+PJbrXOVG8wOINET6sFGRG71QmR649s6z0iQ
+	QvxpnJR6pjC3d1RKUfLF+S7dbzIq3V0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-356--LLC3F__Pwu_4MYVt0boTw-1; Fri, 13 Feb 2026 06:52:55 -0500
+X-MC-Unique: -LLC3F__Pwu_4MYVt0boTw-1
+X-Mimecast-MFC-AGG-ID: -LLC3F__Pwu_4MYVt0boTw_1770983574
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-483129eb5ccso12276475e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 03:52:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770983574; x=1771588374;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bABqLmZYMF+yAdDTmCHTcvVEVd1c5O5Y+vXfK82IHSY=;
+        b=RF3Tvg31gnH0mizOhMlMrf4mIVnnSm3sNU9msMOWrSunWIk8M6izgk0GksiF55SI/d
+         5DmMjjdbenO2ZKmlA/Wv++vM6ZKO85ZDQaQj0Jttcmeb8b9OK2NtOHKSrtjqqZnwVHhQ
+         80Yp6FCC1kVC38gQh86ctpYwcs3TRIjKXTbW5bZ9VSZiO4S1/OqYNYJsDJokWP5fHmxG
+         ElrSo0Ne9faT4ojVh1GcqC+3YuTEjls/4l0vZZ9gomRcYohZuk26+cg9cIKHzBdtdCH2
+         G3LGd1a+3zZD2Ic3kQT1Y71sy3/Gvyvtd3evqX5JmISBr/GuWGKNObiYnqV0tu0RtXvb
+         MMTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUksACo/QiCJUg1ttVy5cLnpok4WG+2HuvmUzxgNhw4xbhqIgPfMrQIoUuFboj5Nmjyv0W6/8ubvCjUG6X1YpjILPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOnw0yMMwMBRQDXJ6xtMHFJNjRdoc039n2coafAMGYl63Xy01j
+	hCYwPd1Maj6zzaFO5X9Wasgu7Cg1gfY5n0sxVIVnOrZ0UF9pDfH1d728Q/6RWjgYSIJv4E7Gjp4
+	ZI4m7afE8WxJEmzSxD5PhNS1q4wl9iOME+pkELnnERxLP9UIz5htlk8KM8Yk5J85gY7NuU9u3vw
+	==
+X-Gm-Gg: AZuq6aICRzqAvgVgcYeMjZzvF/1dxHLjE6eaQ/9PzwmOe6Qpxenagt1gFiAYVmLD7/K
+	pkgPGddHbCN7/FZwztGtfmr3yoKExNp4c7RhSHuUHtF0yjwco4+8kSlFVgQgsz6woiL3FmEc3gd
+	GPuClRz9UqIIZQDd6lywa5c4LmCHX5VFg+8RbZKCRFIZtqy+liX0ovySeHwxYEwW81SYMkEg4l6
+	3BLAQfXiTuPvgDWHK7XlTvnbspkD6BI8jthHOIb4LcaiBW4vCC14fHlNdBbO7v1xnz8qwjsC7dD
+	kaVy0UB3RztkDHrjS/9O/3uRSj2wWVBNSC+NjPkS+c0enatEjy1spmfyXE/wCeOgr0HFeEbDjrf
+	UoPJJnmm/DcI9trUR6YirmY7YA7Nryujs130=
+X-Received: by 2002:a05:600c:4685:b0:483:361b:deff with SMTP id 5b1f17b1804b1-48373a25cadmr23354095e9.14.1770983573994;
+        Fri, 13 Feb 2026 03:52:53 -0800 (PST)
+X-Received: by 2002:a05:600c:4685:b0:483:361b:deff with SMTP id 5b1f17b1804b1-48373a25cadmr23353745e9.14.1770983573553;
+        Fri, 13 Feb 2026 03:52:53 -0800 (PST)
+Received: from costa-tp.bos2.lab ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d835f6bsm234671275e9.14.2026.02.13.03.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Feb 2026 03:52:53 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	John Kacur <jkacur@redhat.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v3 0/5] tools/rtla: Consolidate nr_cpus usage
+Date: Fri, 13 Feb 2026 13:52:29 +0200
+Message-ID: <20260213115234.430232-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OWcoIy28VWjl8kYR-SfTlYg6EWy3LgpYrXJArCvPjLU_1770983574
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-04.aladdin.ru (192.168.1.104) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-There is a pointer head_page in rb_meta_validate_events() which is not
-initialized at the beginning of a function. This pointer can be dereferenced
-if there is a failure during reader page validation. In this case the control
-is passed to "invalid" label where the pointer is dereferenced in a loop.
+sysconf(_SC_NPROCESSORS_CONF) (via get_nprocs_conf) reflects
+cpu_possible_mask, which is fixed at boot time, so querying it
+repeatedly is unnecessary.
 
-To fix the issue initialize orig_head and head_page before calling
-rb_validate_buffer.
+Replace multiple calls to sysconf(_SC_NPROCESSORS_CONF) with a single
+global nr_cpus variable initialized once at startup.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+V3:
+- Remove unneeded cpus parameter from timerlat BPF functions as
+  requested by Wander Costa.
+v2:
+- Add `#pragma once` in timerlat_u.h to avoid redefinition errors with
+  pre-C23 compilers.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/202406130130.JtTGRf7W-lkp@intel.com/
-Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- kernel/trace/ring_buffer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Costa Shulyupin (5):
+  tools/rtla: Consolidate nr_cpus usage across all tools
+  tools/rtla: Remove unneeded nr_cpus arguments
+  tools/rtla: Remove unneeded nr_cpus members
+  tools/rtla: Remove unneeded nr_cpus from for_each_monitored_cpu
+  tools/rtla: Remove unneeded cpus parameter from timerlat BPF functions
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 630221b00838..ad08430347b0 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1918,6 +1918,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	if (!meta || !meta->head_buffer)
- 		return;
- 
-+	orig_head = head_page = cpu_buffer->head_page;
-+
- 	/* Do the reader page first */
- 	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
- 	if (ret < 0) {
-@@ -1928,7 +1930,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
- 	local_set(&cpu_buffer->reader_page->entries, ret);
- 
--	orig_head = head_page = cpu_buffer->head_page;
- 	ts = head_page->page->time_stamp;
- 
- 	/*
+ tools/tracing/rtla/src/common.c        |  7 ++-
+ tools/tracing/rtla/src/common.h        |  4 +-
+ tools/tracing/rtla/src/osnoise_hist.c  | 26 +++++------
+ tools/tracing/rtla/src/osnoise_top.c   | 16 ++-----
+ tools/tracing/rtla/src/timerlat.c      |  9 ++--
+ tools/tracing/rtla/src/timerlat_aa.c   | 11 ++---
+ tools/tracing/rtla/src/timerlat_bpf.c  | 19 ++++----
+ tools/tracing/rtla/src/timerlat_bpf.h  | 12 ++---
+ tools/tracing/rtla/src/timerlat_hist.c | 62 +++++++++++---------------
+ tools/tracing/rtla/src/timerlat_top.c  | 47 +++++++------------
+ tools/tracing/rtla/src/timerlat_u.c    |  9 ++--
+ tools/tracing/rtla/src/timerlat_u.h    |  1 +
+ tools/tracing/rtla/src/utils.c         | 10 +----
+ 13 files changed, 88 insertions(+), 145 deletions(-)
+
 -- 
-2.34.1
+2.52.0
 
