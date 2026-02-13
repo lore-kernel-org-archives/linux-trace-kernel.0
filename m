@@ -1,70 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44342350D48
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 11:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389C429CE9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 11:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770983585; cv=none; b=cfM93ojq6TpO8R1esJ12YEKm/2Bh3EVgzjIg3FyUrV6j7qjJNOcq0YfBJbQ7ZVHOTHJiWK+x+6a7kzmPMVIYvKRzBcwqoBoP19QLPmiU4Qqm5uXHf3biYjiiw5nj3SRUZ8gmOfpAhW6JyGrMM6hnpiZmRfkG8Gvrj3WOt2GWkPU=
+	t=1770983586; cv=none; b=H8ZYilaVOmKYm52iDHZlSLusaq3OuEcPV/cRfP7o1LAtU6mE+StsAlX8QTMkDgCJOPqnTjPYbVB5NtxES7T1zLxkOUc2aWcZP3QJsx72j0aS4uetOG7EBkSbacHBTn6Ek7hDedaqzE6sAmP4P+2YL7RZZCObmxASa19xK1MJjJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770983585; c=relaxed/simple;
-	bh=TS3My54+1+wB3igxyJXqNn57tpPk9g2oanX93lMf9nc=;
+	s=arc-20240116; t=1770983586; c=relaxed/simple;
+	bh=0GS+sGsKXEzx+jNnjrXhGcR2pmtCanW/2A8zyqvNC+o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=deSVzYnBORnW/OMUcI1sBCooa++A2XEJFH297xTtWfMvkuIbq5uW6SphTjQeguNYGUIy48IsKfbpW0pO+v+Cmnuh0f6kFqP4kYdXmG66wTf0jxF/v5r8zTKm8NdBxshhiTJDvQo3MyHORcwrZjpP2elx/Y9kruOYoYbHI8O1iQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QlundT2P; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=tBG58OyqSrnJJ9Yq1bvaS2iqlILayMuMQrHwQtQXyxSqu2KCA/N8M4NKd0uZqg7OGnboyQGQqJ1NDZADWNr6ttp23W2kbaaYd1ycZKcXZ7RSHztVAc/NZIjcezeB1MUJt2qn/sUTNAvrak3Qf5CdQkGm2ASaMjS7B64pAbqEoZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7Yp7WrN; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QlundT2P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7Yp7WrN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770983583;
+	s=mimecast20190719; t=1770983584;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=st11ylo4z/SO3tLN7S2b9c++GEqcWdO6dyVW8k4qC0Q=;
-	b=QlundT2PCqTjOCCTeFMDrUarIvZ6kZPSPjhBuadpBUfrH3bK9bqRyPgyt2SwJXL+UG5bTK
-	9iTu1oRNTp+in0b9qSbTUovPRdNXBvn1R4z6AnKMx1EGrz3KC3vwrmmDZPy7Pq26CTqYCi
-	vsxfGvaqjzc5upVhkF9rYKZlFE5VudI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=brymhXOpcI8ZGOoB0rH9K+9PTJHbZxRRnQAyHzspC9M=;
+	b=a7Yp7WrNxatI7j31mFyeGSv4yt5wJ3kEGLFQwhA/bd/8YZyMt70iKIgZKzv3gR2WYUysOe
+	FZPO70WJiksAJdMzZ67Qnxz9RW4lD2V5riqMV1LWvtCFtn3rUIPgCg1+X6sB0/tQqH5k2A
+	QxX2TgrXUGmDFEpd4oISmbvNoH432zg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-Qzhbd5DYPsijzgC52W121w-1; Fri, 13 Feb 2026 06:53:00 -0500
-X-MC-Unique: Qzhbd5DYPsijzgC52W121w-1
-X-Mimecast-MFC-AGG-ID: Qzhbd5DYPsijzgC52W121w_1770983579
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-483786a09b1so4951775e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 03:53:00 -0800 (PST)
+ us-mta-444-N3TbTaYPOzinK9lkgnTG5Q-1; Fri, 13 Feb 2026 06:53:03 -0500
+X-MC-Unique: N3TbTaYPOzinK9lkgnTG5Q-1
+X-Mimecast-MFC-AGG-ID: N3TbTaYPOzinK9lkgnTG5Q_1770983582
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-483786a09b1so4956975e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 03:53:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770983579; x=1771588379;
+        d=1e100.net; s=20230601; t=1770983582; x=1771588382;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=st11ylo4z/SO3tLN7S2b9c++GEqcWdO6dyVW8k4qC0Q=;
-        b=ejxaWWQjFwM578IglWp0HoFHGLg1bGplwSfGYVz8/SzRNyM632t6LTM1oSdX6MBplE
-         ZTdl8gkhv/k1IC0shksMw+8+PeCLsfI9KoXEE++4RPQp39+lX/uWynr9LG4Ma3CA+/zk
-         /YKHAjsBB/Uu0DUZG9kQ7eL/37t8pGbjofIjIczxQtQNItXSR7mtPCjFmK96p12Ta0vv
-         o2b4wp5zqsL5aeitfR+R5EY1ZuQembl6MX5XZR2irAVz3j/WTtHg7jr8Bm+KznpB4XhZ
-         k6O/w9AEPC5jUi3zuE1V0PcHSSBcs6166gyEcptiEXckLWEP4U3h0ucdygADaCc5N0Lu
-         TmYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG5lL4tFzmg7e6LiS9sUZggoP/or50XK1ll/IuEoq0Le1RhVs+hz/7r5tkCRYhQ/2o6WFguIqmc/W+FY/yP3yEemg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlEPEHhE0BJwIWX2xJC2RxUHUckY7udJiPK9xb71jQGYh+lg7m
-	uhhDVbIXyVgoQIdWOMPxJMCX2EBQkR2LG4HcEbifCMjxA6caJO11nN+JUtOohVv3qwZvyWECv4K
-	3XtfTvp6yMBuJiw++fTEdopsikP/QBoHNS8A1IF84QKrwmPaqxVhEDpIx7f5I/nc4ZmFnhHUjJw
+        bh=brymhXOpcI8ZGOoB0rH9K+9PTJHbZxRRnQAyHzspC9M=;
+        b=bA8kEmfvyDbNx0o8Rd/10dCg1qVmYXPDbhfYj2qp/0R4wAObmWONjEqka8ZiHhCLJB
+         xw7yHB1qjDdGMrDur977aXCFynOIsAAIOttqH6aPJDJY+6RIC4OiId86bsTVVgKtpWwc
+         BFoMoh8FY1ZoJgBtK7rLreLhCq0VdDiC0LCYv1+xaz+6te5bNToM5JKO6yHcjCsgI08B
+         SiCKi6O5y0/anAhxcQVH+OQygxwaH5ZujBiKZ4I9/MwRPCA0dCbfa6HMZbaiyGzF1vOM
+         /x1+4CZEJ/F44dY4EF//SELHh+k6x4ppXAjX14mSfT13UC5yZwjetwiWV267L2FlWq+f
+         2C2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVNfD5qk7OzvSImon5CpOhyslXyjTE1xupea37LJuPntSvJH3NNzM9EbLZ2gnNnbMwtr8tS5jvsFZ9f38+GYRb0Jtw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWE75MG5xemtg7cFJL/LK7D9bwJH7CMY9Ma+uqUhGucKIuMbT2
+	OekGnjTbf4AAccaetxQ7pUTg345Q7+EIsBzomdKw5ToWcVntBAGzIsMC74Y4h9JTqhytxSTvMNX
+	YOKTcdU501NMDVwXkkNI2M0PaYyEOQWzacP9eoE5mu24gwmStWjL3E8gpoeg40mKtQzE1eSvJUA
 	==
-X-Gm-Gg: AZuq6aL/8IBgmys7UBce/ByKRbbCFknwZXJqnmj3YEq4Yi9Ir7YBMCc+9rP0q1XD+Ni
-	uTpuHgaq6OP34tkc4ckmWIvyDB9D543v4kMAyIu27WTIrxgJP4lms5kvyCKkMreGrNCohxAJl2g
-	XPpxps5P8dSnrZkR3fRhx7xYqZVOtmGTLCMoDJV00F3eOYapyVVKr1u5lcbMLU19ekW8s/ebk5W
-	ai6ErDPrKOLvc3QH1me0SyE3/qLtYX1jemxTeVDH5GxJ8svUXeRcC9w3aQEEmkzWzNJfp8fZtr0
-	mnYpZZ7/X48Xf9W/+peCrOSgRYPXTMKwjOHc+5kDFAdsocliGeYyUwG3Qub/h9i/roBbGlBnX4z
-	8v+/gycXUoS4kOb7LaBQ4n3ToPGgHatCgLAg=
-X-Received: by 2002:a05:600c:5020:b0:46e:761b:e7ff with SMTP id 5b1f17b1804b1-48373a71d7fmr24271525e9.28.1770983578955;
-        Fri, 13 Feb 2026 03:52:58 -0800 (PST)
-X-Received: by 2002:a05:600c:5020:b0:46e:761b:e7ff with SMTP id 5b1f17b1804b1-48373a71d7fmr24271255e9.28.1770983578460;
-        Fri, 13 Feb 2026 03:52:58 -0800 (PST)
+X-Gm-Gg: AZuq6aIOeAVEALf66xdfodRiFYPBzOk5E1G8ZTthGRGQjI6nzYJlpPdg7PJ5fP7uY/7
+	veD4XPVE74nGzpLcI9GoumMyqSyyVHgE0OTEy6yg9gpHfOrhO3XsxQevq8huzD60XPvMTxw6O9X
+	uAoyOt5rDVtswJBaFkn4Caw3UUBOupPo2YkG2ySrP0Aial/Q9cFnWCQEOJ9p+mDhvzOL1HyC/xb
+	JhoQrrGu5Y+Hau7QAxjWlNcE2n8PHhYFBgk8MB5kYc8ifI+fUs2mN7QT369A7DJ7UIqAgOp+46z
+	bg0DZI395zgNeHjycoDxybblHHlF0z/yXKrclCvhxmungCYRyQxF/AgGlYH1ZWsMRvb1IIqbWG8
+	sln/ZxxfHXpftjh0conoc9KKu+ys8TXV2yq4=
+X-Received: by 2002:a05:600c:5296:b0:482:eec4:74c with SMTP id 5b1f17b1804b1-48373a5d771mr22090225e9.22.1770983581817;
+        Fri, 13 Feb 2026 03:53:01 -0800 (PST)
+X-Received: by 2002:a05:600c:5296:b0:482:eec4:74c with SMTP id 5b1f17b1804b1-48373a5d771mr22089795e9.22.1770983581338;
+        Fri, 13 Feb 2026 03:53:01 -0800 (PST)
 Received: from costa-tp.bos2.lab ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d835f6bsm234671275e9.14.2026.02.13.03.52.57
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d835f6bsm234671275e9.14.2026.02.13.03.52.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Feb 2026 03:52:58 -0800 (PST)
+        Fri, 13 Feb 2026 03:53:00 -0800 (PST)
 From: Costa Shulyupin <costa.shul@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>,
@@ -77,9 +77,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: [PATCH v3 1/5] tools/rtla: Consolidate nr_cpus usage across all tools
-Date: Fri, 13 Feb 2026 13:52:30 +0200
-Message-ID: <20260213115234.430232-2-costa.shul@redhat.com>
+Subject: [PATCH v3 2/5] tools/rtla: Remove unneeded nr_cpus arguments
+Date: Fri, 13 Feb 2026 13:52:31 +0200
+Message-ID: <20260213115234.430232-3-costa.shul@redhat.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260213115234.430232-1-costa.shul@redhat.com>
 References: <20260213115234.430232-1-costa.shul@redhat.com>
@@ -90,302 +90,290 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Ywu_tbcUvsskMVNJz070_gUtFHchjZ4azaJAa9otPbE_1770983579
+X-Mimecast-MFC-PROC-ID: OFmLx2k2606cot09Up0yorUJRh4OCLiwqMxLwKaGnQQ_1770983582
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-sysconf(_SC_NPROCESSORS_CONF) (via get_nprocs_conf) reflects
-cpu_possible_mask, which is fixed at boot time, so querying it
-repeatedly is unnecessary.
+nr_cpus does not change at runtime, so passing it through function
+arguments is unnecessary.
 
-Replace multiple calls to sysconf(_SC_NPROCESSORS_CONF) with a single
-global nr_cpus variable initialized once at startup.
-
-`#pragma once` in timerlat_u.h is needed for pre-C23 compilers to avoid
-redefinition errors.
+Use the global nr_cpus instead of propagating it via parameters.
 
 Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- tools/tracing/rtla/src/common.c        |  7 +++++--
- tools/tracing/rtla/src/common.h        |  2 ++
- tools/tracing/rtla/src/osnoise_hist.c  |  3 ---
- tools/tracing/rtla/src/osnoise_top.c   |  7 -------
- tools/tracing/rtla/src/timerlat.c      |  5 +----
- tools/tracing/rtla/src/timerlat_aa.c   |  1 -
- tools/tracing/rtla/src/timerlat_hist.c |  3 ---
- tools/tracing/rtla/src/timerlat_top.c  |  7 -------
- tools/tracing/rtla/src/timerlat_u.c    |  3 +--
- tools/tracing/rtla/src/timerlat_u.h    |  1 +
- tools/tracing/rtla/src/utils.c         | 10 +---------
- 11 files changed, 11 insertions(+), 38 deletions(-)
+ tools/tracing/rtla/src/osnoise_hist.c  |  4 ++--
+ tools/tracing/rtla/src/osnoise_top.c   |  4 ++--
+ tools/tracing/rtla/src/timerlat_bpf.c  |  5 ++---
+ tools/tracing/rtla/src/timerlat_bpf.h  |  6 ++----
+ tools/tracing/rtla/src/timerlat_hist.c | 19 +++++++------------
+ tools/tracing/rtla/src/timerlat_top.c  | 19 +++++++------------
+ tools/tracing/rtla/src/timerlat_u.c    |  6 +++---
+ 7 files changed, 25 insertions(+), 38 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index ceff76a62a30..e4cf30a65e82 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -5,12 +5,14 @@
- #include <signal.h>
- #include <stdlib.h>
- #include <string.h>
--#include <unistd.h>
- #include <getopt.h>
-+#include <sys/sysinfo.h>
-+
- #include "common.h"
- 
- struct trace_instance *trace_inst;
- volatile int stop_tracing;
-+int nr_cpus;
- 
- static void stop_trace(int sig)
- {
-@@ -135,7 +137,7 @@ common_apply_config(struct osnoise_tool *tool, struct common_params *params)
- 	}
- 
- 	if (!params->cpus) {
--		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
-+		for (i = 0; i < nr_cpus; i++)
- 			CPU_SET(i, &params->monitored_cpus);
- 	}
- 
-@@ -183,6 +185,7 @@ int run_tool(struct tool_ops *ops, int argc, char *argv[])
- 	bool stopped;
- 	int retval;
- 
-+	nr_cpus = get_nprocs_conf();
- 	params = ops->parse_args(argc, argv);
- 	if (!params)
- 		exit(1);
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index 7602c5593ef5..32f9c1351209 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -107,6 +107,8 @@ struct common_params {
- 	struct timerlat_u_params user;
- };
- 
-+extern int nr_cpus;
-+
- #define for_each_monitored_cpu(cpu, nr_cpus, common) \
- 	for (cpu = 0; cpu < nr_cpus; cpu++) \
- 		if (!(common)->cpus || CPU_ISSET(cpu, &(common)->monitored_cpus))
 diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 9d70ea34807f..03ebff34fff4 100644
+index 03ebff34fff4..d83ee047a5f5 100644
 --- a/tools/tracing/rtla/src/osnoise_hist.c
 +++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -647,9 +647,6 @@ static struct osnoise_tool
- *osnoise_init_hist(struct common_params *params)
+@@ -62,7 +62,7 @@ static void osnoise_free_hist_tool(struct osnoise_tool *tool)
+  * osnoise_alloc_histogram - alloc runtime data
+  */
+ static struct osnoise_hist_data
+-*osnoise_alloc_histogram(int nr_cpus, int entries, int bucket_size)
++*osnoise_alloc_histogram(int entries, int bucket_size)
  {
- 	struct osnoise_tool *tool;
--	int nr_cpus;
--
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 
- 	tool = osnoise_init_tool("osnoise_hist");
+ 	struct osnoise_hist_data *data;
+ 	int cpu;
+@@ -652,7 +652,7 @@ static struct osnoise_tool
  	if (!tool)
+ 		return NULL;
+ 
+-	tool->data = osnoise_alloc_histogram(nr_cpus, params->hist.entries,
++	tool->data = osnoise_alloc_histogram(params->hist.entries,
+ 					     params->hist.bucket_size);
+ 	if (!tool->data)
+ 		goto out_err;
 diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index d54d47947fb4..7dcd2e318205 100644
+index 7dcd2e318205..73b3ac0dd43b 100644
 --- a/tools/tracing/rtla/src/osnoise_top.c
 +++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -232,12 +232,8 @@ osnoise_print_stats(struct osnoise_tool *top)
- {
- 	struct osnoise_params *params = to_osnoise_params(top->params);
- 	struct trace_instance *trace = &top->trace;
--	static int nr_cpus = -1;
- 	int i;
- 
--	if (nr_cpus == -1)
--		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
--
- 	if (!params->common.quiet)
- 		clear_terminal(trace->seq);
- 
-@@ -495,9 +491,6 @@ osnoise_top_apply_config(struct osnoise_tool *tool)
- struct osnoise_tool *osnoise_init_top(struct common_params *params)
- {
- 	struct osnoise_tool *tool;
--	int nr_cpus;
--
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 
- 	tool = osnoise_init_tool("osnoise_top");
- 	if (!tool)
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index 8f8811f7a13b..69856f677fce 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -99,7 +99,7 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- int timerlat_enable(struct osnoise_tool *tool)
- {
- 	struct timerlat_params *params = to_timerlat_params(tool->params);
--	int retval, nr_cpus, i;
-+	int retval, i;
- 
- 	if (params->dma_latency >= 0) {
- 		dma_latency_fd = set_cpu_dma_latency(params->dma_latency);
-@@ -115,8 +115,6 @@ int timerlat_enable(struct osnoise_tool *tool)
- 			return -1;
- 		}
- 
--		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
--
- 		for_each_monitored_cpu(i, nr_cpus, &params->common) {
- 			if (save_cpu_idle_disable_state(i) < 0) {
- 				err_msg("Could not save cpu idle state.\n");
-@@ -214,7 +212,6 @@ void timerlat_analyze(struct osnoise_tool *tool, bool stopped)
- void timerlat_free(struct osnoise_tool *tool)
- {
- 	struct timerlat_params *params = to_timerlat_params(tool->params);
--	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 	int i;
- 
- 	timerlat_aa_destroy();
-diff --git a/tools/tracing/rtla/src/timerlat_aa.c b/tools/tracing/rtla/src/timerlat_aa.c
-index 31e66ea2b144..5766d58709eb 100644
---- a/tools/tracing/rtla/src/timerlat_aa.c
-+++ b/tools/tracing/rtla/src/timerlat_aa.c
-@@ -1022,7 +1022,6 @@ void timerlat_aa_destroy(void)
+@@ -51,7 +51,7 @@ static void osnoise_free_top_tool(struct osnoise_tool *tool)
+ /*
+  * osnoise_alloc_histogram - alloc runtime data
   */
- int timerlat_aa_init(struct osnoise_tool *tool, int dump_tasks)
+-static struct osnoise_top_data *osnoise_alloc_top(int nr_cpus)
++static struct osnoise_top_data *osnoise_alloc_top(void)
  {
--	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 	struct timerlat_aa_context *taa_ctx;
- 	int retval;
+ 	struct osnoise_top_data *data;
  
+@@ -496,7 +496,7 @@ struct osnoise_tool *osnoise_init_top(struct common_params *params)
+ 	if (!tool)
+ 		return NULL;
+ 
+-	tool->data = osnoise_alloc_top(nr_cpus);
++	tool->data = osnoise_alloc_top();
+ 	if (!tool->data) {
+ 		osnoise_destroy_tool(tool);
+ 		return NULL;
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+index 05adf18303df..8d5c3a095e41 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.c
++++ b/tools/tracing/rtla/src/timerlat_bpf.c
+@@ -191,13 +191,12 @@ int timerlat_bpf_get_hist_value(int key,
+ int timerlat_bpf_get_summary_value(enum summary_field key,
+ 				   long long *value_irq,
+ 				   long long *value_thread,
+-				   long long *value_user,
+-				   int cpus)
++				   long long *value_user)
+ {
+ 	return get_value(bpf->maps.summary_irq,
+ 			 bpf->maps.summary_thread,
+ 			 bpf->maps.summary_user,
+-			 key, value_irq, value_thread, value_user, cpus);
++			 key, value_irq, value_thread, value_user, nr_cpus);
+ }
+ 
+ /*
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.h b/tools/tracing/rtla/src/timerlat_bpf.h
+index 169abeaf4363..f4a5476f2abb 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.h
++++ b/tools/tracing/rtla/src/timerlat_bpf.h
+@@ -28,8 +28,7 @@ int timerlat_bpf_get_hist_value(int key,
+ int timerlat_bpf_get_summary_value(enum summary_field key,
+ 				   long long *value_irq,
+ 				   long long *value_thread,
+-				   long long *value_user,
+-				   int cpus);
++				   long long *value_user);
+ int timerlat_load_bpf_action_program(const char *program_path);
+ static inline int have_libbpf_support(void) { return 1; }
+ #else
+@@ -53,8 +52,7 @@ static inline int timerlat_bpf_get_hist_value(int key,
+ static inline int timerlat_bpf_get_summary_value(enum summary_field key,
+ 						 long long *value_irq,
+ 						 long long *value_thread,
+-						 long long *value_user,
+-						 int cpus)
++						 long long *value_user)
+ {
+ 	return -1;
+ }
 diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 4e8c38a61197..841118ed84f2 100644
+index 841118ed84f2..dee5fbf622c3 100644
 --- a/tools/tracing/rtla/src/timerlat_hist.c
 +++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -1031,9 +1031,6 @@ static struct osnoise_tool
- *timerlat_init_hist(struct common_params *params)
+@@ -83,7 +83,7 @@ static void timerlat_free_histogram_tool(struct osnoise_tool *tool)
+  * timerlat_alloc_histogram - alloc runtime data
+  */
+ static struct timerlat_hist_data
+-*timerlat_alloc_histogram(int nr_cpus, int entries, int bucket_size)
++*timerlat_alloc_histogram(int entries, int bucket_size)
  {
- 	struct osnoise_tool *tool;
--	int nr_cpus;
--
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+ 	struct timerlat_hist_data *data;
+ 	int cpu;
+@@ -223,8 +223,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
  
- 	tool = osnoise_init_tool("timerlat_hist");
+ 	/* Pull summary */
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_COUNT,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -234,8 +233,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_MIN,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -245,8 +243,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_MAX,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -256,8 +253,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_SUM,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -267,8 +263,7 @@ static int timerlat_hist_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_OVERFLOW,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -1036,7 +1031,7 @@ static struct osnoise_tool
  	if (!tool)
+ 		return NULL;
+ 
+-	tool->data = timerlat_alloc_histogram(nr_cpus, params->hist.entries,
++	tool->data = timerlat_alloc_histogram(params->hist.entries,
+ 					      params->hist.bucket_size);
+ 	if (!tool->data)
+ 		goto out_err;
 diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 284b74773c2b..3e395ce4fa9f 100644
+index 3e395ce4fa9f..25b4d81b4fe0 100644
 --- a/tools/tracing/rtla/src/timerlat_top.c
 +++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -442,15 +442,11 @@ timerlat_print_stats(struct osnoise_tool *top)
- 	struct timerlat_params *params = to_timerlat_params(top->params);
- 	struct trace_instance *trace = &top->trace;
- 	struct timerlat_top_cpu summary;
--	static int nr_cpus = -1;
- 	int i;
- 
- 	if (params->common.aa_only)
- 		return;
- 
--	if (nr_cpus == -1)
--		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
--
- 	if (!params->common.quiet)
- 		clear_terminal(trace->seq);
- 
-@@ -781,9 +777,6 @@ static struct osnoise_tool
- *timerlat_init_top(struct common_params *params)
+@@ -62,7 +62,7 @@ static void timerlat_free_top_tool(struct osnoise_tool *tool)
+ /*
+  * timerlat_alloc_histogram - alloc runtime data
+  */
+-static struct timerlat_top_data *timerlat_alloc_top(int nr_cpus)
++static struct timerlat_top_data *timerlat_alloc_top(void)
  {
- 	struct osnoise_tool *top;
--	int nr_cpus;
--
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+ 	struct timerlat_top_data *data;
+ 	int cpu;
+@@ -196,8 +196,7 @@ static int timerlat_top_bpf_pull_data(struct osnoise_tool *tool)
  
- 	top = osnoise_init_tool("timerlat_top");
+ 	/* Pull summary */
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_CURRENT,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -207,8 +206,7 @@ static int timerlat_top_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_COUNT,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -218,8 +216,7 @@ static int timerlat_top_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_MIN,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -229,8 +226,7 @@ static int timerlat_top_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_MAX,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -240,8 +236,7 @@ static int timerlat_top_bpf_pull_data(struct osnoise_tool *tool)
+ 	}
+ 
+ 	err = timerlat_bpf_get_summary_value(SUMMARY_SUM,
+-					     value_irq, value_thread, value_user,
+-					     data->nr_cpus);
++					     value_irq, value_thread, value_user);
+ 	if (err)
+ 		return err;
+ 	for (i = 0; i < data->nr_cpus; i++) {
+@@ -782,7 +777,7 @@ static struct osnoise_tool
  	if (!top)
+ 		return NULL;
+ 
+-	top->data = timerlat_alloc_top(nr_cpus);
++	top->data = timerlat_alloc_top();
+ 	if (!top->data)
+ 		goto out_err;
+ 
 diff --git a/tools/tracing/rtla/src/timerlat_u.c b/tools/tracing/rtla/src/timerlat_u.c
-index ce68e39d25fd..a569fe7f93aa 100644
+index a569fe7f93aa..03b4e68e8b1e 100644
 --- a/tools/tracing/rtla/src/timerlat_u.c
 +++ b/tools/tracing/rtla/src/timerlat_u.c
-@@ -16,7 +16,7 @@
- #include <sys/wait.h>
- #include <sys/prctl.h>
- 
--#include "utils.h"
-+#include "common.h"
- #include "timerlat_u.h"
- 
- /*
-@@ -131,7 +131,6 @@ static int timerlat_u_send_kill(pid_t *procs, int nr_cpus)
+@@ -99,7 +99,7 @@ static int timerlat_u_main(int cpu, struct timerlat_u_params *params)
+  *
+  * Return the number of processes that received the kill.
   */
- void *timerlat_u_dispatcher(void *data)
+-static int timerlat_u_send_kill(pid_t *procs, int nr_cpus)
++static int timerlat_u_send_kill(pid_t *procs)
  {
--	int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 	struct timerlat_u_params *params = data;
- 	char proc_name[128];
- 	int procs_count = 0;
-diff --git a/tools/tracing/rtla/src/timerlat_u.h b/tools/tracing/rtla/src/timerlat_u.h
-index 661511908957..a692331bd1c7 100644
---- a/tools/tracing/rtla/src/timerlat_u.h
-+++ b/tools/tracing/rtla/src/timerlat_u.h
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#pragma once
- /*
-  * Copyright (C) 2023 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
-  */
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 0da3b2470c31..8cd1b374b035 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -19,7 +19,7 @@
- #include <stdio.h>
- #include <limits.h>
+ 	int killed = 0;
+ 	int i, retval;
+@@ -169,7 +169,7 @@ void *timerlat_u_dispatcher(void *data)
  
--#include "utils.h"
-+#include "common.h"
+ 		/* parent */
+ 		if (pid == -1) {
+-			timerlat_u_send_kill(procs, nr_cpus);
++			timerlat_u_send_kill(procs);
+ 			debug_msg("Failed to create child processes");
+ 			pthread_exit(&retval);
+ 		}
+@@ -196,7 +196,7 @@ void *timerlat_u_dispatcher(void *data)
+ 		sleep(1);
+ 	}
  
- #define MAX_MSG_LENGTH	1024
- int config_debug;
-@@ -119,14 +119,11 @@ int parse_cpu_set(char *cpu_list, cpu_set_t *set)
- {
- 	const char *p;
- 	int end_cpu;
--	int nr_cpus;
- 	int cpu;
- 	int i;
+-	timerlat_u_send_kill(procs, nr_cpus);
++	timerlat_u_send_kill(procs);
  
- 	CPU_ZERO(set);
- 
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
--
- 	for (p = cpu_list; *p; ) {
- 		cpu = atoi(p);
- 		if (cpu < 0 || (!cpu && *p != '0') || cpu >= nr_cpus)
-@@ -559,7 +556,6 @@ int save_cpu_idle_disable_state(unsigned int cpu)
- 	unsigned int nr_states;
- 	unsigned int state;
- 	int disabled;
--	int nr_cpus;
- 
- 	nr_states = cpuidle_state_count(cpu);
- 
-@@ -567,7 +563,6 @@ int save_cpu_idle_disable_state(unsigned int cpu)
- 		return 0;
- 
- 	if (saved_cpu_idle_disable_state == NULL) {
--		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
- 		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
- 		if (!saved_cpu_idle_disable_state)
- 			return -1;
-@@ -644,13 +639,10 @@ int restore_cpu_idle_disable_state(unsigned int cpu)
- void free_cpu_idle_disable_states(void)
- {
- 	int cpu;
--	int nr_cpus;
- 
- 	if (!saved_cpu_idle_disable_state)
- 		return;
- 
--	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
--
- 	for (cpu = 0; cpu < nr_cpus; cpu++) {
- 		free(saved_cpu_idle_disable_state[cpu]);
- 		saved_cpu_idle_disable_state[cpu] = NULL;
+ 	while (procs_count) {
+ 		pid = waitpid(-1, &wstatus, 0);
 -- 
 2.52.0
 
