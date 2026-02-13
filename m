@@ -1,100 +1,104 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-36.ptr.blmpb.com (sg-1-36.ptr.blmpb.com [118.26.132.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1068DC8CE;
-	Fri, 13 Feb 2026 03:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8125782D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 04:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770954484; cv=none; b=WuLXy87wQnAf7QyVIODxjKbmSIR/3Ngd84SAFIjoqiQ6Zb19BueXbnL5zp01zLpAfzHh3JGPPJMfamg84I1XOaUjB5UqByOU2PIV2r2OO+K2mkl8vS91ZiG2jwUzJIsmktnsluy+FOYIbSQ+8pGdtYtaoU9jnAJouCvrUREauFc=
+	t=1770955705; cv=none; b=gYfW+dsFVwxxeO3am1HiLxwL7S+rWjfsVyeHdkPtk5wPe7n0p5BcGWtqJTVnsFvvbWpUqM4/LKWPP4sj58Oz6ZvbOTwqxuV2CgP7qBJmkh8gQ/9e/Ca2qJjJQ83S1YR5LTYjukfBAmD8q3khyLxJI8mTwK7rqW/U+6sdKO2xp6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770954484; c=relaxed/simple;
-	bh=WHWxj//L5p3gpQ0AbIU3rkAsV7uuvfbM7UrT+2sqpJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Iurepv6Sn5MW7eCFJGKRdE/Jl6mYOpTZhvsQNHI/rk1WBcT7cQb4z/C6NJ60TfQxRR7/05ZlwECxId4gBDzAJxK9o4WTV2l1k2bRjSECGbW3Zu/PfgqazQTcpuvNC4WBWDfCbwmAz9eK5GM+yZ9f9jcMz3gCZiOlfUhdiH9gWZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9F1961C2DD;
-	Fri, 13 Feb 2026 03:47:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 7361C1B;
-	Fri, 13 Feb 2026 03:47:53 +0000 (UTC)
-Date: Thu, 12 Feb 2026 22:47:52 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: <hu.shengming@zte.com.cn>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <zhang.run@zte.com.cn>,
- <yang.tao172@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: Re: [PATCH] function_graph: restore direct mode when callbacks drop
- to one
-Message-ID: <20260212224752.4311a58d@fedora>
-In-Reply-To: <202602131034245558BcmEI95X7Sr39QGM8YLl@zte.com.cn>
-References: <202602131034245558BcmEI95X7Sr39QGM8YLl@zte.com.cn>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1770955705; c=relaxed/simple;
+	bh=vnI2EwY0aYjtueepJB2owejzWOQGYSlo3u7P0AqTyQM=;
+	h=To:Cc:Subject:References:From:Message-Id:In-Reply-To:Content-Type:
+	 Date:Mime-Version; b=IlAjNnxH4luYhUEBZYeJguAyMIyoAg+TWbJ9/B5fOQudvsrzfNfkqTI+PjIAuQcdI+hfqsaMup0aJ6SZzvNHuPDKsR7WGrpYXXLu4zxDIKaJR48YYETPJ+3PLzniuQgiI10Fm4Wpf5P6wtRlsDPK9t29pBpU40ANfZYgJEGxzjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=IpqfGXDb; arc=none smtp.client-ip=118.26.132.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="IpqfGXDb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1770955691;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=vnI2EwY0aYjtueepJB2owejzWOQGYSlo3u7P0AqTyQM=;
+ b=IpqfGXDbA+XaHCYs+nvIoenLCVxVyhXJbGPR/SaVzGfucK5lcQXwNgBLfgmtM6hjA0WkVG
+ 7JQeI9k+Jcb4gXn4BKVdy9Wzq0/Kl3u4X9g5MUFf2gDzh0Hq/NPHbtevaWsHJ/qOhugiNZ
+ IK4si996dTC/guK37CCoNemDZjboyU2S44WJ5uH/DMAn5eHiSepTaPJlKuCmpnDfEtZyZy
+ 5VmRrtgRuePicf/TUqyE45PDYiz+GOO9tD69chYdwWYrj5VBTXScGrzLVk9ICGfnPIa07U
+ iwbDYXquqHP9myerxVStLCTS6NtQIZG1HRWCuW50t30X6H2UMyoqpAmq9HDang==
+User-Agent: Mozilla Thunderbird
+To: "Nilay Shroff" <nilay@linux.ibm.com>, "Jens Axboe" <axboe@kernel.dk>, 
+	<ming.lei@redhat.com>, <hch@lst.de>, 
+	"Steven Rostedt" <rostedt@goodmis.org>, 
+	"Masami Hiramatsu" <mhiramat@kernel.org>
+Cc: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, 
+	"Yi Zhang" <yi.zhang@redhat.com>, 
+	"Shinichiro Kawasaki" <shinichiro.kawasaki@wdc.com>, 
+	"Keith Busch" <kbusch@kernel.org>, "Sagi Grimberg" <sagi@grimberg.me>, 
+	<linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>, 
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<yukuai@fnnas.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during debugfs creation
+References: <20260212080135.1673063-1-yukuai@fnnas.com> <88a12e1c-05b6-44de-806e-06a8e2ff7c0a@linux.ibm.com>
+Content-Language: en-US
+From: "Yu Kuai" <yukuai@fnnas.com>
+Message-Id: <f3653533-4af9-4bcc-886d-7fb7b7015034@fnnas.com>
+Received: from [192.168.1.104] ([39.182.0.132]) by smtp.feishu.cn with ESMTPS; Fri, 13 Feb 2026 12:08:08 +0800
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+In-Reply-To: <88a12e1c-05b6-44de-806e-06a8e2ff7c0a@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+X-Lms-Return-Path: <lba+2698ea3a9+f61e99+vger.kernel.org+yukuai@fnnas.com>
+Reply-To: yukuai@fnnas.com
+Date: Fri, 13 Feb 2026 12:08:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1cik83txb8kzrhz61dn3xrqhxx7xt5bk
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 7361C1B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/H0XycFxaxJQNv2U1GRDLZcGzFvT4kW2c=
-X-HE-Tag: 1770954473-375750
-X-HE-Meta: U2FsdGVkX1+o/1s6tj7+Uz0XMCm9mQjPcsDPDTEgPENAZoH5e5Uo1WLVO8L4BC+qbKHcy8ybFfpQdlba4/H0k72J/BUXjM/S3423d/7Nl45IqHuovRXQYQqsYu74zxOqzIoW4Z48yuYX8BV3QPz4j+UVeNT7HiAtDkfsk1IeiGkSvS976uz0Mx34fDr4oPRr73CsYE4VFrioiSF/Xh/yH14r1gKToO4hn4fmvMuh1vrfSdsWY+KjfD3h/tvYgDUJYJC2vOlThxRBrR6ZN8326Ir4cVeUeCFnzYi6P0XPcT4AktcElR+rLxycO9TVhBxcClSZf2dfvJp/4TjGnW1z2bNEwYEenlgTXeOBaS/+Gi7ZyGOyZxHo+0aTIq4TkL5I
+Mime-Version: 1.0
 
-On Fri, 13 Feb 2026 10:34:24 +0800 (CST)
-<hu.shengming@zte.com.cn> wrote:
+Hi
 
-> From: Shengming Hu <hu.shengming@zte.com.cn>
-> 
-> When registering a second fgraph callback, direct path is disabled
-> and array loop is used instead.
-> When ftrace_graph_active falls back to one, we try to re-enable direct
-> mode via ftrace_graph_enable_direct(true, ...).
-> But ftrace_graph_enable_direct() incorrectly disables the static key
-> rather than enabling it.
-> This leaves fgraph_do_direct permanently off after first multi-callback
-> transition, so direct fast mode is never restored.
+=E5=9C=A8 2026/2/12 16:46, Nilay Shroff =E5=86=99=E9=81=93:
+>
+> On 2/12/26 1:31 PM, Yu Kuai wrote:
+>> Creating debugfs entries can trigger fs reclaim, which can enter back
+>> into the block layer request_queue. This can cause deadlock if the
+>> queue is frozen.
+>>
+>> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
+>> to detect this condition, but it was racy since the queue can be frozen
+>> from another context at any time.
+>>
+>> Introduce blk_debugfs_mutex_lock()/blk_debugfs_mutex_unlock() helpers
+>> that combine the debugfs_mutex with memalloc_noio_save()/restore() to
+>> prevent fs reclaim from triggering block I/O. Replace all raw
+>> debugfs_mutex lock/unlock pairs with these helpers.
+> It looks like there are still a few places where ->debugfs_mutex is
+> taken but the code paths do not enter fs-reclaim. For those cases,
+> it may not be necessary to wrap the critical section in a NOIO context.
 
-Good catch!
+I agree it's not necessary, however I also feel it doesn't matter.
 
-> 
-> Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
-> Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
-> ---
-> kernel/trace/fgraph.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index cc48d16be43e..4df766c690f9 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -1303,7 +1303,7 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
-> static_call_update(fgraph_func, func);
-> static_call_update(fgraph_retfunc, retfunc);
-> if (enable_branch)
-> -       static_branch_disable(&fgraph_do_direct);
-> +       static_branch_enable(&fgraph_do_direct);
-> }
+>
+> Perhaps it would make sense to provide two separate helper APIs: one
+> that acquires ->debugfs_mutex and also saves/restores the NOIO context
+> (using memalloc_noio_save()/restore()), and another that simply acquires
+> and releases ->debugfs_mutex without entering NOIO. Callers could then
+> choose the appropriate helper depending on whether the code path may
+> trigger fs-reclaim.
 
-Your email client killed your patch. it has huge white-space damage.
-But because it's such a trivial change, I'll fix it up for you. But
-next time please make sure your email client doesn't corrupt your
-patches.
+I don't have preference here, I can do this in the next version.
 
-Thanks,
+>
+> For reference,
+> blk_mq_freeze_queue()/blk_mq_unfreeze_queue() vs
+> blk_mq_freeze_queue_nomemsave()/blk_mq_unfreeze_queue_nomemrestore()
+>
+> Thanks,
+> --Nilay
 
--- Steve
-
-
-> 
-> static void ftrace_graph_disable_direct(bool disable_branch)
-> --
-> 2.25.1
-
+--=20
+Thansk,
+Kuai
