@@ -1,90 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E039423EAB8
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 04:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E029CE9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 05:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770957862; cv=none; b=NiZ+DpfLAyz2EJdIuE294zPTXC2iGP2k4e3105Oie3gWid45cTHmDBSQ7+/yvIZ/NnVEi+eUE+BSujq4tpGvsXLrGnXwv4b39Rts0k4GZuOMBVeUEFntUaeyHml/Ayg3STTDH6KGCdgqYd63WDR+NuvSl1PaVpl9CLoFa6293lE=
+	t=1770961217; cv=none; b=REDkk5w4qFBYYMmYSpOjOIf3EAlI2MeXqLihhx0B19+gNcSjzDONk6Z1vdmB893VJLZXlFzTYAlzdb9YYLUwX7zM/NACIu2Hk6xNu28dm3i1f2vwqwVk0iEv93nRp4sth9QDWyQtXQTFg5CqY7DwIF2Ye1XNEnDtgkCvgFbd54w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770957862; c=relaxed/simple;
-	bh=XRtF0h5DT1NCBrYb1bkU5MRmyDnjb63fIpwUrC6Pf0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=AIloh/nFBsqgkrdlXG1vr46ldZHGYRHxOrn1er0vNQ7CSKsBEkqc8aeiPAHh+5VPtfyoUFyeE6+Z5MszNPt+KPTl9acMxSwbsQUO6dKrPUJIAEp0WGR3zx33Gr6FoKm7wQ/ZK4hxvRaeCo6Gdp931R9yJAlDn8sAPAVyHUR21zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aEAD2Wgo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1770961217; c=relaxed/simple;
+	bh=+6lsmNm9wphqJ24y8FQPYzZCLpAxsG55lgs1zXhsbm4=;
+	h=To:Subject:Mime-Version:References:Cc:Message-Id:In-Reply-To:
+	 Content-Type:From:Date; b=nyqqKWgdYAwnIYqCtIc9Er6HO+paQF3+S7k1TvRJmb4Il+VcUbHTlMziO8cFJGPZ4fjTkznMVWEbakeynEwl9GvP0b5AYQxUgr84WAz+0twKZLGGAY9V4ZR01Hri6iuIQ+gXPX9S702slbJBHXviHNMfdS5FlV2leTAK4wTEtMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=none smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=ZS4LpFHw; arc=none smtp.client-ip=118.26.132.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEAD2Wgo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770957859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=guGtY1JCXFXTjV1h91oQJKpMb6fkAzkGxE/Lmcv0SFQ=;
-	b=aEAD2WgoGXq4OqFkhFWNDUwhCaptgXetsOXJtcGtWD+pjGOYmqCCXlRqyebfXaUaQQQQjb
-	Dg6TFPW3pfA2u/I8odjiTzezC65M4Sdfq2L345Kx6R2MWminQ0Kn4dAKTK3JiX83yiakgn
-	C6lPByy2wGmGtLjANic5iHXjm6utzFE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-50-RPHmPoipPfONhgWznoVn8A-1; Thu,
- 12 Feb 2026 23:44:16 -0500
-X-MC-Unique: RPHmPoipPfONhgWznoVn8A-1
-X-Mimecast-MFC-AGG-ID: RPHmPoipPfONhgWznoVn8A_1770957854
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 344A61955D4D;
-	Fri, 13 Feb 2026 04:44:13 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.140])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E333E18003F5;
-	Fri, 13 Feb 2026 04:44:03 +0000 (UTC)
-Date: Fri, 13 Feb 2026 12:43:58 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yu Kuai <yukuai@fnnas.com>
-Cc: Jens Axboe <axboe@kernel.dk>, nilay@linux.ibm.com, hch@lst.de,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Yi Zhang <yi.zhang@redhat.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during
- debugfs creation
-Message-ID: <aY6sDstii_R_zOfs@fedora>
-References: <20260212080135.1673063-1-yukuai@fnnas.com>
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="ZS4LpFHw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1770961203;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=+6lsmNm9wphqJ24y8FQPYzZCLpAxsG55lgs1zXhsbm4=;
+ b=ZS4LpFHwroAqFIlbJGjBgR3llpP+yjrqNSmCOq+jepj+yCyLzmC9L8DESZ1QC7Da71xH2m
+ Q/JS6fZPu80FT+eXq7P9vTmkpKzFVPvd2znA+hJpBVj7m/G9aeI2+cxHXh6IGKOthxI9wB
+ XCntRxu63sY1nHnvCQ2LZ8XlXIIgA21MTHN8yzqzfSJMBAzl9xqYoiW+gtk5PkrYeV70DN
+ VglZYPHta1EXhZBPVoCO5xmwm0fvzXG4PTWdjQIOpSZVRwTnIcuXgX2IHkeNr+hqeX6UWx
+ Xeo4uBzkqD9erwMowC7OZ3YIWZfKk1jPK/XChQdKd+edulpbu1qNn/JPCuisjQ==
+Reply-To: yukuai@fnnas.com
+To: "Ming Lei" <ming.lei@redhat.com>
+Subject: Re: [PATCH] blk-mq: use NOIO context to prevent deadlock during debugfs creation
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20260212080135.1673063-1-yukuai@fnnas.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: ieyO5mQO3sb4szPvj--PP8bJqTnKCCkalLEfsJkANfY_1770957854
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Received: from [192.168.1.104] ([39.182.0.132]) by smtp.feishu.cn with ESMTPS; Fri, 13 Feb 2026 13:40:00 +0800
+References: <20260212080135.1673063-1-yukuai@fnnas.com> <aY6sDstii_R_zOfs@fedora>
+Cc: "Jens Axboe" <axboe@kernel.dk>, <nilay@linux.ibm.com>, <hch@lst.de>, 
+	"Steven Rostedt" <rostedt@goodmis.org>, 
+	"Masami Hiramatsu" <mhiramat@kernel.org>, 
+	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, 
+	"Yi Zhang" <yi.zhang@redhat.com>, 
+	"Shinichiro Kawasaki" <shinichiro.kawasaki@wdc.com>, 
+	"Keith Busch" <kbusch@kernel.org>, "Sagi Grimberg" <sagi@grimberg.me>, 
+	<linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>, 
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<yukuai@fnnas.com>
+Content-Transfer-Encoding: quoted-printable
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+Message-Id: <5c47b46d-1aa7-4ce6-baa8-97f8a3ecc327@fnnas.com>
+In-Reply-To: <aY6sDstii_R_zOfs@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+From: "Yu Kuai" <yukuai@fnnas.com>
+Date: Fri, 13 Feb 2026 13:39:58 +0800
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+2698eb931+566ba2+vger.kernel.org+yukuai@fnnas.com>
 
-On Thu, Feb 12, 2026 at 04:01:35PM +0800, Yu Kuai wrote:
-> Creating debugfs entries can trigger fs reclaim, which can enter back
-> into the block layer request_queue. This can cause deadlock if the
-> queue is frozen.
-> 
-> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
-> to detect this condition, but it was racy since the queue can be frozen
-> from another context at any time.
+Hi,
 
-debugfs lock doesn't depend on queue freeze, so the implied deadlock isn't
-obvious.
+=E5=9C=A8 2026/2/13 12:43, Ming Lei =E5=86=99=E9=81=93:
+> On Thu, Feb 12, 2026 at 04:01:35PM +0800, Yu Kuai wrote:
+>> Creating debugfs entries can trigger fs reclaim, which can enter back
+>> into the block layer request_queue. This can cause deadlock if the
+>> queue is frozen.
+>>
+>> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
+>> to detect this condition, but it was racy since the queue can be frozen
+>> from another context at any time.
+> debugfs lock doesn't depend on queue freeze, so the implied deadlock isn'=
+t
+> obvious.
+>
+> Can you explain a bit why freeze from another context may cause dead lock=
+?
 
-Can you explain a bit why freeze from another context may cause dead lock?
+It's probably fine to freeze from another context concurrently, I mean the
+checking will cause the false warning like:
 
+Re: [bug report] WARNING: block/blk-mq-debugfs.c:620 at=20
+debugfs_create_files.isra.0+0x54/0x60, CPU#220: kworker/u1036:7/70421 -=20
+Shinichiro Kawasaki <https://lore.kernel.org/all/aYWQR7CtYdk3K39g@shinmob/>
 
-Thanks, 
-Ming
+So checking itself is racy and should be removed, meanwhile there are two o=
+ptions:
 
+1) use noio for debugfs creation;
+2) move debugfs creation out of queue frozen from nvme target;
+
+BTW, I added the blk_queue_enter/exit() protection for 2 because I think it=
+'s
+safe, and can prevent deadlock if there are any implied deadlock related to
+queue frozen.
+
+>
+>
+> Thanks,
+> Ming
+>
+>
+--=20
+Thansk,
+Kuai
