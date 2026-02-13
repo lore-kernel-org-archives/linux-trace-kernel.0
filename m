@@ -1,112 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EC635FF62
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 13:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A19AC3EBF34
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Feb 2026 18:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770990872; cv=none; b=aQiBQqBVCEL0CnX0pVAo52F70SX0yP/6K2kWQkBKdPtaThUxCO7eSxLjIZ0brrsEqcl6y0htm44xepW5IfG9Tuy6MBe7UNpYltb0ZX24nq4CIIFI2SPJ/fXrMQc+zh4NdwCaw5F5SJgbDRay75J/p0FYg32Ibn/C3YvgsP/ExTU=
+	t=1771006550; cv=none; b=Ki5yPDMum/fuG8HPgu6QHOk2hlr5y9r7yE+ABEuN5ZZ5gOScMW8MPwag10QqA3pXGTlhojGr8lDok6bClO0G60MCkSsvzphEsz8qMPAWG/vvAAyGdknzC3Pfv/5YY0A4cvwlQbrJCPHmIeN4d5xxsJqtZlf0h9/DxhX0vOqjL1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770990872; c=relaxed/simple;
-	bh=YVfBYevuqTRuy8/kJe3rMnJo0MTaHBWxIX5jfNV0TNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=T7DclgmCqiwgPMazWgw5zOYd3yfUVBX+4B1mk09Hc5kY958aYeB6zT9sCB47ey7u7xrlyTKMM2hubWXlWt/nnc39k97oQYuf2J/mKywT/mkCgM6O2ULuFGtlS0YrvksOBahTkArzmZsITmK/fCpWCaVqOm68oWNFFtX4Q1TAfzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AJH/MiEr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1771006550; c=relaxed/simple;
+	bh=L2bagtrtmzQw8y9GCSxcHg3Xp0dc/LHji/0yjtyF2g8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=X8/JihlbMkErmsNXxmTAvVYXoeB2HWGvCj/+5k7/e6W+BPKy3CZ1c45immW0AuckVnmOwAob0x+UoeHxL5Z//oUh1lx57864sJBahRIC5O8BeSCuB+7jyVYtBmDSLRW7yKC+2uPrVOxIn1vi1HJIf+Xilu/AJVxY3KY9B6VXaZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eujRomCG; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AJH/MiEr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1770990870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLljjLmcTsDj+jqLCEduc4jVEoNW8uK3HCG44ehIZc0=;
-	b=AJH/MiErNSBDPBr02QsKSrwgNwoFF1Z9GEb79m4IuV3pJdOMYOJPXhFjblxze1h5JhBk/L
-	Hno879vOQvY2bFjmTlmGHOg+PtdY10q1XX3nYJo38nsihTd9W9sn4JiaOo1pFmxTVMwYp6
-	8tmArHph9SDWmtWBl2sVcIlx0NlOadY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-8EnlqqiwOZ29zwr_IGPhXw-1; Fri,
- 13 Feb 2026 08:54:27 -0500
-X-MC-Unique: 8EnlqqiwOZ29zwr_IGPhXw-1
-X-Mimecast-MFC-AGG-ID: 8EnlqqiwOZ29zwr_IGPhXw_1770990866
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A284B19560B7;
-	Fri, 13 Feb 2026 13:54:25 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.65.46])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AFAE518003F5;
-	Fri, 13 Feb 2026 13:54:20 +0000 (UTC)
-Date: Fri, 13 Feb 2026 10:54:18 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Crystal Wood <crwood@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, John Kacur <jkacur@redhat.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] tools/rtla: Consolidate nr_cpus usage
-Message-ID: <aY8qCUe8twZiTM8y@wcosta-thinkpadt14gen4.rmtbr.csb>
-References: <20260213115234.430232-1-costa.shul@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eujRomCG"
+Received: from LAPTOP-U3CCR7C6.lan (unknown [40.65.108.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A2BDD20B7165;
+	Fri, 13 Feb 2026 10:15:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A2BDD20B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1771006548;
+	bh=eIWSUeA5jrXy2GEYqMyI4qiE4CqcAnCn+rGFRu1MjD8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eujRomCGGvJ10SwXSjJwRAaEgWNw39PibhIQW9VyxbG7nZJCXPZ3+JdL1cNSj+3My
+	 N7ZVwTIZ0XVs4s6ce+TRgjwEvlNXchGJWpsoj+ct5eOUNj1O8NQayLbxHTUo7MWLhw
+	 JM+aZKZp0Q7+ofMKoNIEdhAYNG3tOIbxMOV/yXtM=
+From: Thomas Ballasi <tballasi@linux.microsoft.com>
+To: tballasi@linux.microsoft.com
+Cc: akpm@linux-foundation.org,
+	axelrasmussen@google.com,
+	david@kernel.org,
+	hannes@cmpxchg.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mhiramat@kernel.org,
+	mhocko@kernel.org,
+	rostedt@goodmis.org,
+	shakeel.butt@linux.dev,
+	weixugc@google.com,
+	yuanchu@google.com,
+	zhengqi.arch@bytedance.com
+Subject: [PATCH v6 0/3] mm: vmscan: add PID and cgroup ID to vmscan tracepoints
+Date: Fri, 13 Feb 2026 10:15:34 -0800
+Message-Id: <20260213181537.54350-1-tballasi@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260122182510.2126-1-tballasi@linux.microsoft.com>
+References: <20260122182510.2126-1-tballasi@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260213115234.430232-1-costa.shul@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: lF-N-tSEGVuemvqpnqhKgfd6JNBQd83zbqgcNoTMuvo_1770990866
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 13, 2026 at 01:52:29PM +0200, Costa Shulyupin wrote:
-> sysconf(_SC_NPROCESSORS_CONF) (via get_nprocs_conf) reflects
-> cpu_possible_mask, which is fixed at boot time, so querying it
-> repeatedly is unnecessary.
-> 
-> Replace multiple calls to sysconf(_SC_NPROCESSORS_CONF) with a single
-> global nr_cpus variable initialized once at startup.
+Changes in v6:
+- Updated Steven's patch with sign-off
+- Passed memcg pointers as arguments in tracepoints instead of memcg_id
 
+Link to v5:
+https://lore.kernel.org/linux-trace-kernel/20260122182510.2126-1-tballasi@linux.microsoft.com/
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
 
-> 
-> V3:
-> - Remove unneeded cpus parameter from timerlat BPF functions as
->   requested by Wander Costa.
-> v2:
-> - Add `#pragma once` in timerlat_u.h to avoid redefinition errors with
->   pre-C23 compilers.
-> 
-> Costa Shulyupin (5):
->   tools/rtla: Consolidate nr_cpus usage across all tools
->   tools/rtla: Remove unneeded nr_cpus arguments
->   tools/rtla: Remove unneeded nr_cpus members
->   tools/rtla: Remove unneeded nr_cpus from for_each_monitored_cpu
->   tools/rtla: Remove unneeded cpus parameter from timerlat BPF functions
-> 
->  tools/tracing/rtla/src/common.c        |  7 ++-
->  tools/tracing/rtla/src/common.h        |  4 +-
->  tools/tracing/rtla/src/osnoise_hist.c  | 26 +++++------
->  tools/tracing/rtla/src/osnoise_top.c   | 16 ++-----
->  tools/tracing/rtla/src/timerlat.c      |  9 ++--
->  tools/tracing/rtla/src/timerlat_aa.c   | 11 ++---
->  tools/tracing/rtla/src/timerlat_bpf.c  | 19 ++++----
->  tools/tracing/rtla/src/timerlat_bpf.h  | 12 ++---
->  tools/tracing/rtla/src/timerlat_hist.c | 62 +++++++++++---------------
->  tools/tracing/rtla/src/timerlat_top.c  | 47 +++++++------------
->  tools/tracing/rtla/src/timerlat_u.c    |  9 ++--
->  tools/tracing/rtla/src/timerlat_u.h    |  1 +
->  tools/tracing/rtla/src/utils.c         | 10 +----
->  13 files changed, 88 insertions(+), 145 deletions(-)
-> 
-> -- 
-> 2.52.0
-> 
+Steven Rostedt (1):
+  tracing: Add __event_in_*irq() helpers
+
+Thomas Ballasi (2):
+  mm: vmscan: add cgroup IDs to vmscan tracepoints
+  mm: vmscan: add PIDs to vmscan tracepoints
+
+ include/trace/events/vmscan.h              | 104 +++++++++++++--------
+ include/trace/stages/stage3_trace_output.h |   8 ++
+ include/trace/stages/stage7_class_define.h |  19 ++++
+ mm/shrinker.c                              |   6 +-
+ mm/vmscan.c                                |  17 ++--
+ 5 files changed, 106 insertions(+), 48 deletions(-)
+
+-- 
+2.33.8
 
