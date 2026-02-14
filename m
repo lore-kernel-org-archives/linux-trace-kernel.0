@@ -1,96 +1,96 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48EF1D5ABA
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 19:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F002FFDFC
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 20:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771098555; cv=pass; b=YPVJ54CxXdA7YWzTykv3RtJAMY6v2eS9JY8Mq/Y44XZCqfC3ED4FwpNTYIHCK4/yuC6oa/bBvp+2QbpQwi/HjajdfbfjnLEqhY1qmwYPhxVebpbhrOBQ/PEO+fWAtGUV0zlzoR1XiEPBM6HEp/hORtbq5BfF5DsKbLx6bAzbqOc=
+	t=1771099796; cv=pass; b=YzvBWDhn757itvsVkK/MT0X5p15pz2pY1ydn7so3QTcGFWEnjSaJrMgIo9Qe7bNAAvp8ClYkASG3C1y7udutAp5x8r9QZHDDnQgk/C3R7rIMSbnkjS1L9b15A0tVU3tl9cqBpeM63Qf889C+Z91pPr/xy0p2sXk+pnGiKNvXOPI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771098555; c=relaxed/simple;
-	bh=GC+jahyn08TEzaCyFw4EljLb34TFRdxXPLg0f+cKCG0=;
+	s=arc-20240116; t=1771099796; c=relaxed/simple;
+	bh=FufzZ4uU/iS1q/sxK46E3rWJ6kguU0PcbAexdJqkwRY=;
 	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uwIFaPqUZsjb13Tw03r2/6NYmjug0mRbBEX+lbcpELbrotyggZHQR+Tse9OaWRELScqRTMYxgCjC2DTli2XL21nV/PZi/FJNrK9gbCyS02CaXSNYVSqwI80OaQTM5Fo0h8CHdpHgQ2AParqtKGbAui9mffYOXQ7VROyEK+up6eY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v+nF1ENU; arc=pass smtp.client-ip=209.85.222.52
+	 To:Cc:Content-Type; b=GwEi0Ma5YHbOCQKshrWXAXGqw3Hm0uf5ZTZoli0cR1HO68Ek/AWt0I0zjHn3RthANO4UUWSs/nSqCda1pKLjzpYXfgdPSbhezUE8PliEFLevdEWcQSBTIqNwUsWX/zEhGcbJPJbiqRuLa2MxX4z6Ksh3hQMMRi3ENj93uXlJzwU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c69O+6Wi; arc=pass smtp.client-ip=209.85.222.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v+nF1ENU"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-948bfb6b6bcso568634241.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 11:49:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771098553; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c69O+6Wi"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-948ccec7c89so562708241.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 12:09:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771099790; cv=none;
         d=google.com; s=arc-20240605;
-        b=h4V9arYZ+pT1E+asNuULd6DRlLi5SrmEGM3lxx4GgIoA5y4Zw0Yfmfqw4W1UbgVD+h
-         1Uo44rWrR9p8B07Lyh5+80m2CZzk9dykrsK5QBVVqE3/7NNzQpnwcEN3g0VEhL8uplyX
-         8A8DjpNSLAYUiG2HB3fi/7ZXtvZOQu8ELh1YIIME/VURq3YAcEjBVMqGao/q0E4clMMN
-         Z3stWq+0qwkkHqgol3EhHHzv+aS4WkLp7CCogFKEmj/+4/iehkMYq5u3F/K1ocinnc4H
-         d2gWdR0m6wBq6Z5SLRB0rZYdHEaDRf/UaMjEKV6DTCZ3B/bFd1A4IXiwFKBWyEMA0Jro
-         TH9Q==
+        b=IexBNRp/3bpfAy79iplRS5TE9HDEoE912U0V+6FzCzOS8uXRDSr5xr+E7O11Uv32/Z
+         TTQZh4y+WC5TlzPd5KfEYLbBdkTtkG7T/CEVHXJESg/c6Es2cko01XmC0h9M5w7WONej
+         MogYUYE80m+N+4OMerIdDqy6rbtpqnD0XwT1C6L9BfsPnmLc/LM7CDJC6PEg0ilLdYP+
+         ZyyZHns/HCHgpe7H1YvC2MVXcrz+F0BWv0n8XwZpq7Ne5XYB+aPJRCRQx4sfvSN940Ey
+         chr4dS0nC2S+MAlc7z5WQXp5Mn5b/9i0rvow7SMrt8w3clvys+Y+2KZR2IA2RQGTVs7D
+         G48Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:dkim-signature;
-        bh=ZtvRpN/RyTbUwVvDF0717LJmDHhTx67+ZJt2k7G+yEQ=;
-        fh=l/47HFpHb1ijV8+rlh+CP+kzivCHcu+E48ZtOysIK0c=;
-        b=PUHaXQH0kIPZUcuOMJSbvEiXNJEiUxkRGF+Tb0YUODxjMpsKhv7njK+FscRJFvdhPY
-         ueh4yk8D+sTpJn7EV6tln2Dlc+3K/DLQs5MZ+cIVxT0MbOTurXlODYt15UogYs9gHfE2
-         XX76TAqBLXdq1n7YKo9GWASmZCXHFFHPN/3dgW65H+U0SQ3wf2ihbKvEKVJqwXhkiM2w
-         yb3eDMVDCF29PuVmR9IBuMhpQ4SU4ZMmgUx8H+XIQEXLL56KUpX/fTsAefMbAS1dvY6g
-         pilBGkQpvrZcNYF43DwflFNDXCdQADJUmi6zCayHvpURiSZ9WY09iXGMC+lO0bscRUVV
-         ojrQ==;
+        bh=1jQpoSMsRYyXQLWbsh+LVZl2/hfELtMQa6Z0sSC+Mns=;
+        fh=7C1BrgUAVt9TO+DFUsi1ZYmPFhZEdxAs/KSh4BvVxY0=;
+        b=B5aGWDSa3s2fHs7naKlzaDh5tZAeAfkiT4Bcy0agpXH7ghSeBibJorRhiNjXE+qUB4
+         9VsR59liBrsFbkrQjBgsfrWmzv2m/NhRrHcNMV1AUJLS8tpZEZeH7Gok1yd4QqD5dRfa
+         lCFcrSEwFSC5mayQFf35M0Rt8nN0bVqV8u5DSQX9XoHvNteO4xmLqHnhD+ulCKHqzew5
+         X4tsqKtbNN7dAB7PqJDhogCPETtGtDwX8eR2VJI+hTMmnT1zRokWd5joa3eTtgBdGGUp
+         z6g635P3gSLYqxtpLM+wgQ2wjDk+/BOV+sQeSSGY3yc5Y3UPeeIKdEYotB7K33B8X+bt
+         /JsQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771098553; x=1771703353; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771099790; x=1771704590; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZtvRpN/RyTbUwVvDF0717LJmDHhTx67+ZJt2k7G+yEQ=;
-        b=v+nF1ENUr21oPwBbnMwcXIhFYefKeTMhJR5EjCm1w3ircYOhwF3dMGDWR9JqHc1sAg
-         YSSLd1Vh59Mcl5syECgCb8eJtD3k4h5qx+z65ix07/+ciARNcqOvAswEKGVAP31HoUSY
-         vhyaG8DAGDWDE3PrKdHcQ6jm4AXEe23Vixzuv3eBxCOU0y0jOX1LmLTZb3c8yEU+9tkg
-         yew9JK7XTeFJ65CpkoPt92hPal7tgfprKTCP7vN8VcVMJj2y0UfwBtQqGjTwnVF1bCli
-         l3qyEE4Byo2zm8QYwJ10pCHEHT7OTcI0jia9IpcNJzrKlC79HNBpat1PgTLTrnS8n9iq
-         CBlw==
+        bh=1jQpoSMsRYyXQLWbsh+LVZl2/hfELtMQa6Z0sSC+Mns=;
+        b=c69O+6WiC3D+oJAldcWVy75tWL6Mk44q+MqO47KVEoV5FFmTtNXa4HHKYQqvin5C0B
+         YITY0Zl4Bb5dk1Gb9Kg9IItF5V2q+I3ljh6fFxT5z0WH9zR+vRHKKN3qQ5bVMIuFHFGb
+         0TsCMeSIZFZo4sHTNKuukgp1yl8svj9AJOZL1+oHO9iz/hXfeBpRR6ZU1tyinaySe8Rm
+         BSBo+26xTip+Prhs0Pk3m0K42AXyNb2CR0yAYWZ9XPOFpad36EKw8re+wODVR2/MYgri
+         /stt/vgWae1KJydSMTz0LmxIfYnsmdcbtBnCjaNIh5TGSM3apBbwoTtbMQByIKvO1/LO
+         Iz0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771098553; x=1771703353;
+        d=1e100.net; s=20230601; t=1771099790; x=1771704590;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZtvRpN/RyTbUwVvDF0717LJmDHhTx67+ZJt2k7G+yEQ=;
-        b=dfNwJEepOLYxtlsjIPt9agHPqx1QU3HulwNINzwaDcNiu+Wrlzys18OUtgXcljaiZL
-         DWw4nPjJeH+22LXnsVtS6X+QEfMNJBhfy1M0AsXYRLN3no+Rh13hrE7MyOuNnIK7aQNG
-         JaJnDpgj8tk1ORpjVplyz4WDGMC/SQXomps35C57RI8HuPCNsmbwgG3Nl5QVFylxPMcG
-         yJh9QN7fBhbf6G+mD/VybUPIoLgWtPmEeWXv8l1/pCFHDA0fGX4oxV6leTdfaML6UTnf
-         1g+kBfByjOyHlBX3OaGbHC8qr7d4n9KmzUAr+hUp1q27CizLg+4HBBxkTEhvXqHhp90j
-         kxHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDjKaV111ZJYFRwvReBNE9hNJgY1whIloRjOjJM6lNwrnJr5AfqhEnmdLLk1xjDcd0hjOjICU2SnZ2vzClG1QjQiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9X6kSz8LNSXqH8Atj/l5spFMB6CHCXn7+Fz1rIpLBmP/bIB2E
-	3i2XjFEeJD9/3vy7XvpEFb3JTk7Txk5nDAqd3STJWRWWGwCH8Wb+Sg4NWEFjf36/aJdKTHc2R7f
-	d7Lj1fu3y2zzhUYrXcJCGHp8t1O/th/7q3olcnvO+
-X-Gm-Gg: AZuq6aL+kAWUMvCIfnbBDXQcfr/01JEm3oijjCARNA5NYIDpJvwEbU8nWpJj8sNybcW
-	AUWGJ1i+NvyidLTPpYl8o2OUeEW97IZKEfA13e2iwF7hKqcMvO3XEj+iXsENbSsYDrTOxuDp825
-	WBHQpprXVSaglcZN3ezZH4pcxrrbzivVlDa1NcAjxBgqN+QLgIuDmzv+UzyL7d0ZY5aoUS3vg7r
-	+unTzzY6lH1muMQfiSUgq3pEP9YxKhBd2dEq9DBQfrZ38x040io+SHMZ0n9Z3MmpjhyAuSMmWq8
-	D2DdF3wOGTlPzflAvBydx4gvNjhMbERnRhseEJa6pkoMOaweXfJJ
-X-Received: by 2002:a67:e997:0:b0:5f1:72a7:f879 with SMTP id
- ada2fe7eead31-5fe16ee32cbmr1706405137.28.1771098552104; Sat, 14 Feb 2026
- 11:49:12 -0800 (PST)
+        bh=1jQpoSMsRYyXQLWbsh+LVZl2/hfELtMQa6Z0sSC+Mns=;
+        b=R4FhQNAsKT4cFBiEmj6U0Un5qdJJIcpA1EVq3LKZEhLrcLa93jQJOtoize6iTEsa59
+         LugIj18pvoPOMdZDKuQeeueuPtOvmetiafV6XQWbFD6+zgAgUH+fHJIsybh24OxH7YDR
+         m/KdUyWK/e1S2F2tdV4KWYL4J5janNP2+2HwTYsr44ZcCrfV3djy3gFVdXqMcnhLVnc7
+         p93mXuXQ4/+vzn5DsEabnkLFUlXKxC6ZO7Deh379p7Z4f6ZIgwL6I5sCCb1DxhBgy225
+         nSYhQm+vn/DKk5f11eXbxKyuCNlGdkCeT/ekICfnmFRF0tXwVuSYWWpRgEJgZPwmhRiQ
+         Zd7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUKchPBukqc8H8l/YOAsUlFBeUh1J/81OBmQy2fLOpwk8H4vnyqBLAywz+fh/WwQrErxnzEkPdy5p+vlv9F+Jzd0BM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZX6+1LQ6qSos8E+9Uj/7FqHcVcjICB8vctQSFsupfmDFEMH5K
+	+LugyWWBg/eKh34h8WpPots+xWG1HxfjHo4kXo1xs5DKQMuGzjI+ugmPdxZns8h+UvNiXNs2Dz4
+	QM97XuGcAotMsNqZBZLmAPeKOrQn6RwaHwqsHebkw
+X-Gm-Gg: AZuq6aIuKaOhs0eBSxEF86LrBPAXE7DSqr3xeKDYurkBH0zaqFFt2GG+RZAL772xfk7
+	NsSMSgS5gRq1YKwQ55JzFUMhH+ryqpO5uVnQInmUA+U8jMSxzhgUs3fUfFFWxHEoJPWJ5P/tIKo
+	Ty9xHwj8BfdC5AM/ST7c9NmxJPE+7ZMdMcRvaPRDsUuyGL/FPk5Q0uZ+3HzSc6hOMm46ms7SmgH
+	5reIIMetkksmAxC51lXCmbESEA3TjF1jFdRiWbbl/TDCr4QLAb7TIV61KbI1R++U+vag4FwdoCY
+	S5+11pC58iYlEyWwZ0uBGUlBrb8Dy7pITqVQpOa3cA==
+X-Received: by 2002:a05:6102:358d:b0:5f1:4fc3:855d with SMTP id
+ ada2fe7eead31-5fe16f7123cmr2125991137.38.1771099789089; Sat, 14 Feb 2026
+ 12:09:49 -0800 (PST)
 Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 14 Feb 2026 11:49:10 -0800
+ HTTPREST; Sat, 14 Feb 2026 12:09:48 -0800
 Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 14 Feb 2026 11:49:10 -0800
+ HTTPREST; Sat, 14 Feb 2026 12:09:48 -0800
 From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <995398ca18fcb192444799a520cab5ea8e43df7b.1770071243.git.ackerleytng@google.com>
-References: <cover.1770071243.git.ackerleytng@google.com> <995398ca18fcb192444799a520cab5ea8e43df7b.1770071243.git.ackerleytng@google.com>
+In-Reply-To: <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
+References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 14 Feb 2026 11:49:10 -0800
-X-Gm-Features: AaiRm51Rsn2OYZ_XKS4QmK9tZorCQvqfnTm3HcOw4Q6pQqac2ibQJ7lRc1m0N7c
-Message-ID: <CAEvNRgHcxjkE8OPVxYqdCs+HvbaYqhNPW1mnocoKOoy5d6FoZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 33/37] KVM: selftests: Make TEST_EXPECT_SIGBUS thread-safe
+Date: Sat, 14 Feb 2026 12:09:48 -0800
+X-Gm-Features: AaiRm50-4IHejrw9QDCNjWRongMJUvF1-Uwjne7RAjYwOg9FxNIKczofN5-jceI
+Message-ID: <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
 To: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, x86@kernel.org
@@ -112,154 +112,151 @@ Content-Type: text/plain; charset="UTF-8"
 
 Ackerley Tng <ackerleytng@google.com> writes:
 
-> The TEST_EXPECT_SIGBUS macro is not thread-safe as it uses a global
-> sigjmp_buf and installs a global SIGBUS signal handler. If multiple threads
-> execute the macro concurrently, they will race on installing the signal
-> handler and stomp on other threads' jump buffers, leading to incorrect test
-> behavior.
 >
-> Make TEST_EXPECT_SIGBUS thread-safe with the following changes:
+> [...snip...]
 >
-> Share the KVM tests' global signal handler. sigaction() applies to all
-> threads; without sharing a global signal handler, one thread may have
-> removed the signal handler that another thread added, hence leading to
-> unexpected signals.
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 23ec0b0c3e22..26e80745c8b4 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -117,7 +117,7 @@ description:
+>        x86 includes both i386 and x86_64.
 >
-> The alternative of layering signal handlers was considered, but calling
-> sigaction() within TEST_EXPECT_SIGBUS() necessarily creates a race. To
-> avoid adding new setup and teardown routines to do sigaction() and keep
-> usage of TEST_EXPECT_SIGBUS() simple, share the KVM tests' global signal
-> handler.
+>    Type:
+> -      system, vm, or vcpu.
+> +      system, vm, vcpu or guest_memfd.
 >
-> Opportunistically rename report_unexpected_signal to
-> catchall_signal_handler.
+>    Parameters:
+>        what parameters are accepted by the ioctl.
+> @@ -6523,11 +6523,22 @@ the capability to be present.
+>  ---------------------------------
 >
-> To continue to only expect SIGBUS within specific regions of code, use a
-> thread-specific variable, expecting_sigbus, to replace installing and
-> removing signal handlers.
+>  :Capability: KVM_CAP_MEMORY_ATTRIBUTES2
+> -:Architectures: x86
+> -:Type: vm ioctl
+> +:Architectures: all
+> +:Type: vm, guest_memfd ioctl
+>  :Parameters: struct kvm_memory_attributes2 (in/out)
+>  :Returns: 0 on success, <0 on error
 >
-> Make the execution environment for the thread, sigjmp_buf, a
-> thread-specific variable.
->
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> ---
->  .../testing/selftests/kvm/include/test_util.h | 29 +++++++++----------
->  tools/testing/selftests/kvm/lib/kvm_util.c    | 18 ++++++++----
->  tools/testing/selftests/kvm/lib/test_util.c   |  7 -----
->  3 files changed, 26 insertions(+), 28 deletions(-)
->
-> diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-> index 2871a4292847..0e4e6f7dab8f 100644
-> --- a/tools/testing/selftests/kvm/include/test_util.h
-> +++ b/tools/testing/selftests/kvm/include/test_util.h
-> @@ -80,22 +80,19 @@ do {									\
->  	__builtin_unreachable(); \
->  } while (0)
->
-> -extern sigjmp_buf expect_sigbus_jmpbuf;
-> -void expect_sigbus_handler(int signum);
-> -
-> -#define TEST_EXPECT_SIGBUS(action)						\
-> -do {										\
-> -	struct sigaction sa_old, sa_new = {					\
-> -		.sa_handler = expect_sigbus_handler,				\
-> -	};									\
-> -										\
-> -	sigaction(SIGBUS, &sa_new, &sa_old);					\
-> -	if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {				\
-> -		action;								\
-> -		TEST_FAIL("'%s' should have triggered SIGBUS", #action);	\
-> -	}									\
-> -	sigaction(SIGBUS, &sa_old, NULL);					\
-> -} while (0)
-> +extern __thread sigjmp_buf expect_sigbus_jmpbuf;
-> +extern __thread bool expecting_sigbus;
+> +Errors:
 > +
-> +#define TEST_EXPECT_SIGBUS(action)                                     \
-> +	do {                                                           \
-> +		expecting_sigbus = true;			       \
-> +		if (sigsetjmp(expect_sigbus_jmpbuf, 1) == 0) {         \
-> +			action;                                        \
-> +			TEST_FAIL("'%s' should have triggered SIGBUS", \
-> +				  #action);                            \
-> +		}                                                      \
-> +		expecting_sigbus = false;			       \
-> +	} while (0)
->
->  size_t parse_size(const char *size);
->
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index aec7b24418ab..18ced8bdde36 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -2314,13 +2314,20 @@ __weak void kvm_selftest_arch_init(void)
->  {
->  }
->
-> -static void report_unexpected_signal(int signum)
-> +__thread sigjmp_buf expect_sigbus_jmpbuf;
-> +__thread bool expecting_sigbus;
+> +  ========== ===============================================================
+> +  EINVAL     The specified `offset` or `size` were invalid (e.g. not
+> +             page aligned, causes an overflow, or size is zero).
+> +  EFAULT     The parameter address was invalid.
+> +  EAGAIN     Some page within requested range had unexpected refcounts. The
+> +             offset of the page will be returned in `error_offset`.
+> +  ENOMEM     Ran out of memory trying to track private/shared state
+> +  ========== ===============================================================
 > +
-> +static void catchall_signal_handler(int signum)
->  {
-> +	switch (signum) {
-> +	case SIGBUS: {
-> +		if (expecting_sigbus)
-
-
-Transferring/summarizing an internal comment from Sean upstream:
-
-This assumes that tests are indeed using the catchall_signal_handler as
-the global signal handler.
-
-In the next revision, I will make TEST_EXPECT_SIGBUS() assert that the
-default signal handler is installed, so that developers get a clear,
-explicit failure if/when something goes wrong.
-
-> +			siglongjmp(expect_sigbus_jmpbuf, 1);
+>  KVM_SET_MEMORY_ATTRIBUTES2 is an extension to
+>  KVM_SET_MEMORY_ATTRIBUTES that supports returning (writing) values to
+>  userspace.  The original (pre-extension) fields are shared with
+> @@ -6538,15 +6549,42 @@ Attribute values are shared with KVM_SET_MEMORY_ATTRIBUTES.
+>  ::
+>
+>    struct kvm_memory_attributes2 {
+> -	__u64 address;
+> +	/* in */
+> +	union {
+> +		__u64 address;
+> +		__u64 offset;
+> +	};
+>  	__u64 size;
+>  	__u64 attributes;
+>  	__u64 flags;
+> -	__u64 reserved[12];
+> +	/* out */
+> +	__u64 error_offset;
+> +	__u64 reserved[11];
+>    };
+>
+>    #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+>
+> +Set attributes for a range of offsets within a guest_memfd to
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE to limit the specified guest_memfd backed
+> +memory range for guest_use. Even if KVM_CAP_GUEST_MEMFD_MMAP is
+> +supported, after a successful call to set
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE, the requested range will not be mappable
+> +into host userspace and will only be mappable by the guest.
 > +
-> +		TEST_FAIL("Unexpected SIGBUS (%d)\n", signum);
-> +	}
->  #define KVM_CASE_SIGNUM(sig)					\
->  	case sig: TEST_FAIL("Unexpected " #sig " (%d)\n", signum)
-> -
-> -	switch (signum) {
-> -	KVM_CASE_SIGNUM(SIGBUS);
->  	KVM_CASE_SIGNUM(SIGSEGV);
->  	KVM_CASE_SIGNUM(SIGILL);
->  	KVM_CASE_SIGNUM(SIGFPE);
-> @@ -2332,12 +2339,13 @@ static void report_unexpected_signal(int signum)
->  void __attribute((constructor)) kvm_selftest_init(void)
->  {
->  	struct sigaction sig_sa = {
-> -		.sa_handler = report_unexpected_signal,
-> +		.sa_handler = catchall_signal_handler,
->  	};
+> +To allow the range to be mappable into host userspace again, call
+> +KVM_SET_MEMORY_ATTRIBUTES2 on the guest_memfd again with
+> +KVM_MEMORY_ATTRIBUTE_PRIVATE unset.
+> +
+> +If this ioctl returns -EAGAIN, the offset of the page with unexpected
+> +refcounts will be returned in `error_offset`. This can occur if there
+> +are transient refcounts on the pages, taken by other parts of the
+> +kernel.
+> +
+> +Userspace is expected to figure out how to remove all known refcounts
+> +on the shared pages, such as refcounts taken by get_user_pages(), and
+> +try the ioctl again. A possible source of these long term refcounts is
+> +if the guest_memfd memory was pinned in IOMMU page tables.
+> +
+>  See also: :ref: `KVM_SET_MEMORY_ATTRIBUTES`.
 >
->  	/* Tell stdout not to buffer its content. */
->  	setbuf(stdout, NULL);
+
+Transferring/re-summarizing an internal comment from Sean upstream here!
+We can also follow up on this topic at the next guest_memfd biweekly.
+
+
+Before this lands, Sean wants, at the very minimum, an in-principle
+agreement on guest_memfd behavior with respect to whether or not memory
+should be preserved on conversion.
+
+Sean is against deferring whether to preserve memory to the underlying
+hardware because that is letting (effectively) micro-architectural
+behavior to define KVM's ABI. KVM's uAPI cannot let behavior be
+undefined, or be based on vendor, and maybe even on firmware version.
+
+Sean says that all decisions that affect guest data must be made by
+userspace. The architecture can restrict what is possible, e.g. neither
+SNP nor TDX currently support "generic" in-place conversion, but whether
+or not data is to be preserved must be an explicit request from
+userspace. If preserving data is impossible, then KVM needs to reject
+the request.
+
+(Vendor specific ioctls are out-of-scope, SNP and TDX cases were brought
+up purely to highlight that there's nothing that fundamentally prevents
+preserving data on conversion.)
+
+I suggested a few uAPI options for configuring content preservation on
+conversion:
+
+1. guest_memfd creation time flag like
+   GUEST_MEMFD_FLAG_PRESERVE_CONTENTS. This can be valid only if the
+   kernel and vendor support content preservation
+
+This was rejected because we should not assume all current and future
+use cases will want the same content preservation config for a given
+guest_memfd.
+
+2. KConfig: automatically select to preserve contents if the
+   architecture supports content preservation
+
+This was rejected because it's not a decision explicitly made by
+userspace.
+
+3. KVM module param to configure content preservation.
+
+This was rejected because the configuration may not generalize across
+all VMs on the same host.
+
+4. guest_memfd ioctl flag
+   SET_MEMORY_ATTRIBUTES2_FLAG_PRESERVE_CONTENTS. -EINVAL if kernel and
+   vendor don't support content preservation
+
+Specifying a flag to choose whether content should be preserved at
+conversion-time is the current best suggestion.
+
+What does the rest of the community think of a conversion ioctl flag to
+choose whether to preserve memory contents on conversion?
+
+Fuad, I think you also made a related comment on an earlier internal
+version we were working on. What do you/pKVM think?
+
 >
-> +	expecting_sigbus = false;
->  	sigaction(SIGBUS, &sig_sa, NULL);
->  	sigaction(SIGSEGV, &sig_sa, NULL);
->  	sigaction(SIGILL, &sig_sa, NULL);
-> diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-> index 8a1848586a85..03eb99af9b8d 100644
-> --- a/tools/testing/selftests/kvm/lib/test_util.c
-> +++ b/tools/testing/selftests/kvm/lib/test_util.c
-> @@ -18,13 +18,6 @@
+> [...snip...]
 >
->  #include "test_util.h"
->
-> -sigjmp_buf expect_sigbus_jmpbuf;
-> -
-> -void __attribute__((used)) expect_sigbus_handler(int signum)
-> -{
-> -	siglongjmp(expect_sigbus_jmpbuf, 1);
-> -}
-> -
->  /*
->   * Random number generator that is usable from guest code. This is the
->   * Park-Miller LCG using standard constants.
-> --
-> 2.53.0.rc1.225.gd81095ad13-goog
