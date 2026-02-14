@@ -1,416 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FB822B8B6;
-	Sat, 14 Feb 2026 05:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771047836; cv=none; b=tEHt65kMYuKe43ild8gUmXwekl5MyugnvgwpWDA2HvWCOPzR1Lj/thAMR0yLh4RDGOjwXWxHMqWzWe1zdoBF7zwE7Eq7wqrg+wa+zJuqn9+C0vEo1QOh89I9jGGsCmEoOUBelzTF77k+gQT9PYLvS1wljzpONEyZMxU9ZbgmSK0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771047836; c=relaxed/simple;
-	bh=ja9OOkiIhWDZhe9SOGK7yCpnqXBqO+ww5brNWvQuaXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KPQA9IhWQ13R5XcUPhitiKQM90Of5eTFdVTgAFnMy0HujMtNKr7Kbj+GETopbqzNElMqHeopMTMRJuWiZom5fBag6x1soF+man57umTVjOW/CzLrrgD32Lh+5vuU9BBQQoOdW26qAr0hgNInKTJJVjH7Kzp7tLPS90AGsoh66MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 132E9C19421;
-	Sat, 14 Feb 2026 05:43:52 +0000 (UTC)
-From: Yu Kuai <yukuai@fnnas.com>
-To: axboe@kernel.dk,
-	nilay@linux.ibm.com,
-	ming.lei@redhat.com,
-	hch@lst.de
-Cc: yi.zhang@redhat.com,
-	shinichiro.kawasaki@wdc.com,
-	kbusch@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] blk-mq: use NOIO context to prevent deadlock during debugfs creation
-Date: Sat, 14 Feb 2026 13:43:50 +0800
-Message-ID: <20260214054350.2322436-1-yukuai@fnnas.com>
-X-Mailer: git-send-email 2.51.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0823F2D879E
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 10:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771065398; cv=pass; b=ATUWKN2gxCH0ayVDGnhV6s5mmxQ9dxQX+Qr8MheoYsdn4eMAhWJFXrD3im5BG0VgDcw+P7YOIzfQM5ePMAxRz/yI6FUX8vLOHPYT4aO1MIgdThSFmqdfQld9vIxQCtJm9ocrhgs2iZDnxtabLk1zzm+qmMYyoJAsgFmoiZUwKHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771065398; c=relaxed/simple;
+	bh=FXWt2KlXw9K3juFQMdPCT90DnaKOObpRwNUaZCuLXjI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qP2sCelpz+KZw3AttpcdurGdpqSnJ5nnkYzV3uD9rrMK59TlkPN45YB52fPy/o4eA/hC2pNBSiJYcKNBHdzhYx23kYCnWU9AjbK+5wHW2iSkK0NZVTL9qavAa8l37RT0kBgDaNchPQzuklasjtEq7vzeKr97WLFl8ZBxi11iO0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BoHbFmvg; arc=pass smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BoHbFmvg"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b8f86167d39so213926966b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Feb 2026 02:36:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771065395; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UbMXgGnYi12+NJJTLe7NZWj4V+FWpQRg93hBd718BK82cDF4DvRsAKmp9NBclE9PKD
+         4lQhRo3ezGNiPV6/iWmOxKDfovHV58wxLdO82Jd3ROqruVlcT2UODrMXLLwq3hPdDO1o
+         +0I09RuM+B9/kyrvbF20OaulvmQJdsbEZheS1HL4oWhdKI06REIkUs9LigZtBeGr/7gk
+         3pErL10oro6jwUI9rexNJKmhFZ/mSV8xthB/HQhjVi7kE/UaXS9ETJh8JrPdiUbJGl3u
+         bfkH1yvo9qgIKf5l+Fsbgt+OILzvuIJV+WC0Aky5TyvZZcTYNQSfYQMI0Z4ZHXPA6YUI
+         mdZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=1Z4WHQEPm2glVNHw11Am4OtEmlynF8EuuHMLw+oWeig=;
+        fh=SFXLy/7slB7FgjAKTKbiPnrwv4J+btEVNHTUE9tyX6s=;
+        b=ARYE2t7FJ8OdZRv61Jkn+V0R/jxrtwSxicFHxCtchuKS5VU9FZ16mj5qN5g4Hdw8U2
+         hsLkbc5tJrGh6RkasoFFhio9aSs6USoJnqdwaXnfQoGAAqoYxWwSe0jWU4oZCdkf/9Uj
+         U3LzxfVwz/E32lXGGolWSk28BiCwN6d9hKH3kHGJwO49rkU8LT3F6/6AYll/dY/8pZb1
+         bvlg7/Tttq2BNOAH74xZB0oNEno3Vv2zjv5EIdVlc0UNWEU7QnVxtgVvBQDxlM0mP6dk
+         vXWKXpiayh2xylB2hw1ySDP3KvNlssEGtEQ6bRM+h24wYuT+K452jIOAw4nB/iiFwhBh
+         0ltg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771065395; x=1771670195; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Z4WHQEPm2glVNHw11Am4OtEmlynF8EuuHMLw+oWeig=;
+        b=BoHbFmvg/8ZP4k2cHbYYQu2xcSeUq2/sEz0ZZFQrwayT7Piz+cwpclhF6ffbv/IloN
+         vQ/UOyBAgNMNtjw5Bor/TrDUoqsQtQABYN5VLax54kQFnVABgkvCwYH73FH9WerMEeTY
+         Nluo0SyiCD5XngIi14bzrMb+tIJCySNHiYUN437FekeKBHKIaGIdZqcE5iCWcprm7F5Y
+         B6dWqOyDJpzAs98160hzbiULpBsXXUM4Q8IIjGLoW89iPZwCfSx/1qg2yNbZnuohU1wv
+         5vBvr/uvZ1cdPDy/mNp2rgIdicd13ktP8C3G1Zxc7bPYKRHriVm542lINMQBFC333kmL
+         YvkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771065395; x=1771670195;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Z4WHQEPm2glVNHw11Am4OtEmlynF8EuuHMLw+oWeig=;
+        b=u7D5y9lXJo2flLF0u4l11WXLopYsHr/pj+hqmVVolL/RqkyxaCRz9lcLAVBnMz/gus
+         ChZW7GTpk3eSD3U1v4ewmy9S+chGMGq2/qLu7qrPNS65mUO/OoIk11P1030XKyiYNbv2
+         U3DplRnB1bG7VRmrb64MKZj8KjfntG/Ve549f1gSGiT+sUeU9KWTaqBtGj90TJv0xX5t
+         y53GxADObR3d3sgekv22cWFIxs3AOuNJNb29Vmje8UHlSDSf02Xa0WvvGF2fPKGgxeZj
+         yurQWZFU2kyuGXWqbKf7aHOMf5H6nXo4T6vTiXhLvPCVUk1YcDnf0KnY8hYhltGxRAxR
+         +5Zw==
+X-Gm-Message-State: AOJu0YyFBdzsWeKPGcsBU3u3HuL4eASvDJX/DFIO+clqi8Ro6eg1BtEM
+	RICDHqAeDNqu+naEEMh3dtnVk36hA4EC5nBrcd0jUvyeCfIZWRTaBHkeDYFEjhWplU4yvSeiGfm
+	thPcP6KvE7Y683n5zYTdq2pgwqQfty3nAyucaREc=
+X-Gm-Gg: AZuq6aIkasiCV3+nPewEmkNLKQt4iOfEAK+rukRabYJEt4xGI2DPwVgaZpLqZ5tWMAL
+	MVnEBA51sJqcVnHpW0VoW5ah2Kj1K7qH8i1xdyCYgO27d9VCzMLgDs28nYV8RhPq/ssV8tB1IG1
+	EjuXKFAF+2thNR+T2VldIYpieah7hVzRlC3rQ1s0ghlgroyG6q9/5VAER7D5L32jai3tLRgQFzT
+	vwxHKI4qtTkCMdxkXPy0UPb/c06nfybIYwMB9P2kyrjcWUsNNulU1RwHMJ9jpG4WqEmQhkw8rw5
+	L2dZXK96
+X-Received: by 2002:a17:906:4fc4:b0:b8e:8874:8386 with SMTP id
+ a640c23a62f3a-b8fb4176496mr225541366b.10.1771065395125; Sat, 14 Feb 2026
+ 02:36:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Sat, 14 Feb 2026 18:36:24 +0800
+X-Gm-Features: AZwV_QiPaFqJUfLi2vqWSeiP4M57Cnsoehss8VZIVYg17sd5GfmN7WpCu2mUPXA
+Message-ID: <CAErzpmtMrHWQVAQx=jiq_sWo=+c_JOUoQmPafo-fq+Q3qi+BBw@mail.gmail.com>
+Subject: Enhancing Conditional Filtering for Function Graph Tracer
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Creating debugfs entries can trigger fs reclaim, which can enter back
-into the block layer request_queue. This can cause deadlock if the
-queue is frozen.
+Hi Steve and Masami,
 
-Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
-to detect this condition, but it was racy since the queue can be frozen
-from another context at any time.
+I recently had an idea while using the function graph tracer.
+Currently, it supports basic
+filtering via set_ftrace_pid(PID-based) and
+set_graph_function(function name-based).
+However, this filtering mechanism feels somewhat limited. Given that
+we already have
+features like funcgraph-args, I wonder if we could enhance filtering by all=
+owing
+conditional tracking based on function parameters =E2=80=94 similar to how
+trace events support
+filters/triggers.
 
-Introduce blk_debugfs_lock()/blk_debugfs_unlock() helpers that combine
-the debugfs_mutex with memalloc_noio_save()/restore() to prevent fs
-reclaim from triggering block I/O. Also add blk_debugfs_lock_nomemsave()
-and blk_debugfs_unlock_nomemrestore() variants for callers that don't
-need NOIO protection (e.g., debugfs removal or read-only operations).
+To simplify implementation, I propose extending a new trigger type
+(e.g., "funcgraph").
+In ftrace_graph_ignore_func, we could look up the corresponding trace_fprob=
+e and
+trace_event_file based on trace->func, then decide whether to trace
+the function using
+a helper like the following:
 
-Replace all raw debugfs_mutex lock/unlock pairs with these helpers,
-using the _nomemsave/_nomemrestore variants where appropriate.
+static bool ftrace_graph_filter(struct trace_fprobe *tf, struct
+ftrace_regs *fregs,
+                               struct trace_event_file *trace_file)
+{
+    struct fentry_trace_entry_head *entry;
+    struct trace_event_buffer fbuffer;
+    struct event_trigger_data *data;
+    int dsize;
 
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Closes: https://lore.kernel.org/all/CAHj4cs9gNKEYAPagD9JADfO5UH+OiCr4P7OO2wjpfOYeM-RV=A@mail.gmail.com/
-Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Closes: https://lore.kernel.org/all/aYWQR7CtYdk3K39g@shinmob/
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Yu Kuai <yukuai@fnnas.com>
----
- block/blk-mq-debugfs.c  | 10 +++-------
- block/blk-mq-sched.c    |  9 +++++----
- block/blk-sysfs.c       |  9 +++++----
- block/blk-wbt.c         | 10 ++++++----
- block/blk.h             | 31 +++++++++++++++++++++++++++++++
- kernel/trace/blktrace.c | 38 +++++++++++++++++++++-----------------
- 6 files changed, 71 insertions(+), 36 deletions(-)
+    dsize =3D __get_data_size(&tf->tp, fregs, NULL);
+    entry =3D trace_event_buffer_reserve(&fbuffer, trace_file,
+                                       sizeof(*entry) + tf->tp.size + dsize=
+);
+    if (!entry)
+        return false;
 
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index faeaa1fc86a7..28167c9baa55 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -613,11 +613,6 @@ static void debugfs_create_files(struct request_queue *q, struct dentry *parent,
- 				 const struct blk_mq_debugfs_attr *attr)
- {
- 	lockdep_assert_held(&q->debugfs_mutex);
--	/*
--	 * Creating new debugfs entries with queue freezed has the risk of
--	 * deadlock.
--	 */
--	WARN_ON_ONCE(q->mq_freeze_depth != 0);
- 	/*
- 	 * debugfs_mutex should not be nested under other locks that can be
- 	 * grabbed while queue is frozen.
-@@ -693,12 +688,13 @@ void blk_mq_debugfs_unregister_hctx(struct blk_mq_hw_ctx *hctx)
- void blk_mq_debugfs_register_hctxs(struct request_queue *q)
- {
- 	struct blk_mq_hw_ctx *hctx;
-+	unsigned int memflags;
- 	unsigned long i;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	queue_for_each_hw_ctx(q, hctx, i)
- 		blk_mq_debugfs_register_hctx(q, hctx);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- }
- 
- void blk_mq_debugfs_unregister_hctxs(struct request_queue *q)
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index e26898128a7e..97c3c8f45a9b 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -390,13 +390,14 @@ static void blk_mq_sched_tags_teardown(struct request_queue *q, unsigned int fla
- void blk_mq_sched_reg_debugfs(struct request_queue *q)
- {
- 	struct blk_mq_hw_ctx *hctx;
-+	unsigned int memflags;
- 	unsigned long i;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	blk_mq_debugfs_register_sched(q);
- 	queue_for_each_hw_ctx(q, hctx, i)
- 		blk_mq_debugfs_register_sched_hctx(q, hctx);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- }
- 
- void blk_mq_sched_unreg_debugfs(struct request_queue *q)
-@@ -404,11 +405,11 @@ void blk_mq_sched_unreg_debugfs(struct request_queue *q)
- 	struct blk_mq_hw_ctx *hctx;
- 	unsigned long i;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	blk_debugfs_lock_nomemsave(q);
- 	queue_for_each_hw_ctx(q, hctx, i)
- 		blk_mq_debugfs_unregister_sched_hctx(hctx);
- 	blk_mq_debugfs_unregister_sched(q);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock_nomemrestore(q);
- }
- 
- void blk_mq_free_sched_tags(struct elevator_tags *et,
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 003aa684e854..f3b1968c80ce 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -892,13 +892,13 @@ static void blk_debugfs_remove(struct gendisk *disk)
- {
- 	struct request_queue *q = disk->queue;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	blk_debugfs_lock_nomemsave(q);
- 	blk_trace_shutdown(q);
- 	debugfs_remove_recursive(q->debugfs_dir);
- 	q->debugfs_dir = NULL;
- 	q->sched_debugfs_dir = NULL;
- 	q->rqos_debugfs_dir = NULL;
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock_nomemrestore(q);
- }
- 
- /**
-@@ -908,6 +908,7 @@ static void blk_debugfs_remove(struct gendisk *disk)
- int blk_register_queue(struct gendisk *disk)
- {
- 	struct request_queue *q = disk->queue;
-+	unsigned int memflags;
- 	int ret;
- 
- 	ret = kobject_add(&disk->queue_kobj, &disk_to_dev(disk)->kobj, "queue");
-@@ -921,11 +922,11 @@ int blk_register_queue(struct gendisk *disk)
- 	}
- 	mutex_lock(&q->sysfs_lock);
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	q->debugfs_dir = debugfs_create_dir(disk->disk_name, blk_debugfs_root);
- 	if (queue_is_mq(q))
- 		blk_mq_debugfs_register(q);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- 
- 	ret = disk_register_independent_access_ranges(disk);
- 	if (ret)
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 1415f2bf8611..6dba71e87387 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -776,6 +776,7 @@ void wbt_init_enable_default(struct gendisk *disk)
- {
- 	struct request_queue *q = disk->queue;
- 	struct rq_wb *rwb;
-+	unsigned int memflags;
- 
- 	if (!__wbt_enable_default(disk))
- 		return;
-@@ -789,9 +790,9 @@ void wbt_init_enable_default(struct gendisk *disk)
- 		return;
- 	}
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	blk_mq_debugfs_register_rq_qos(q);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- }
- 
- static u64 wbt_default_latency_nsec(struct request_queue *q)
-@@ -1015,9 +1016,10 @@ int wbt_set_lat(struct gendisk *disk, s64 val)
- 	blk_mq_unquiesce_queue(q);
- out:
- 	blk_mq_unfreeze_queue(q, memflags);
--	mutex_lock(&q->debugfs_mutex);
-+
-+	memflags = blk_debugfs_lock(q);
- 	blk_mq_debugfs_register_rq_qos(q);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- 
- 	return ret;
- }
-diff --git a/block/blk.h b/block/blk.h
-index 401d19ed08a6..68cef70e84e6 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -740,4 +740,35 @@ static inline void blk_unfreeze_release_lock(struct request_queue *q)
- }
- #endif
- 
-+/*
-+ * debugfs directory and file creation can trigger fs reclaim, which can enter
-+ * back into the block layer request_queue. This can cause deadlock if the
-+ * queue is frozen. Use NOIO context together with debugfs_mutex to prevent fs
-+ * reclaim from triggering block I/O.
-+ */
-+static inline void blk_debugfs_lock_nomemsave(struct request_queue *q)
-+{
-+	mutex_lock(&q->debugfs_mutex);
-+}
-+
-+static inline void blk_debugfs_unlock_nomemrestore(struct request_queue *q)
-+{
-+	mutex_unlock(&q->debugfs_mutex);
-+}
-+
-+static inline unsigned int __must_check blk_debugfs_lock(struct request_queue *q)
-+{
-+	unsigned int memflags = memalloc_noio_save();
-+
-+	blk_debugfs_lock_nomemsave(q);
-+	return memflags;
-+}
-+
-+static inline void blk_debugfs_unlock(struct request_queue *q,
-+				      unsigned int memflags)
-+{
-+	blk_debugfs_unlock_nomemrestore(q);
-+	memalloc_noio_restore(memflags);
-+}
-+
- #endif /* BLK_INTERNAL_H */
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index c4db5c2e7103..a3d8a68f8683 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -559,9 +559,9 @@ int blk_trace_remove(struct request_queue *q)
- {
- 	int ret;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	blk_debugfs_lock_nomemsave(q);
- 	ret = __blk_trace_remove(q);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock_nomemrestore(q);
- 
- 	return ret;
- }
-@@ -767,6 +767,7 @@ int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	struct blk_user_trace_setup2 buts2;
- 	struct blk_user_trace_setup buts;
- 	struct blk_trace *bt;
-+	unsigned int memflags;
- 	int ret;
- 
- 	ret = copy_from_user(&buts, arg, sizeof(buts));
-@@ -785,16 +786,16 @@ int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 		.pid = buts.pid,
- 	};
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	bt = blk_trace_setup_prepare(q, name, dev, buts.buf_size, buts.buf_nr,
- 				     bdev);
- 	if (IS_ERR(bt)) {
--		mutex_unlock(&q->debugfs_mutex);
-+		blk_debugfs_unlock(q, memflags);
- 		return PTR_ERR(bt);
- 	}
- 	blk_trace_setup_finalize(q, name, 1, bt, &buts2);
- 	strscpy(buts.name, buts2.name, BLKTRACE_BDEV_SIZE);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- 
- 	if (copy_to_user(arg, &buts, sizeof(buts))) {
- 		blk_trace_remove(q);
-@@ -809,6 +810,7 @@ static int blk_trace_setup2(struct request_queue *q, char *name, dev_t dev,
- {
- 	struct blk_user_trace_setup2 buts2;
- 	struct blk_trace *bt;
-+	unsigned int memflags;
- 
- 	if (copy_from_user(&buts2, arg, sizeof(buts2)))
- 		return -EFAULT;
-@@ -819,15 +821,15 @@ static int blk_trace_setup2(struct request_queue *q, char *name, dev_t dev,
- 	if (buts2.flags != 0)
- 		return -EINVAL;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	bt = blk_trace_setup_prepare(q, name, dev, buts2.buf_size, buts2.buf_nr,
- 				     bdev);
- 	if (IS_ERR(bt)) {
--		mutex_unlock(&q->debugfs_mutex);
-+		blk_debugfs_unlock(q, memflags);
- 		return PTR_ERR(bt);
- 	}
- 	blk_trace_setup_finalize(q, name, 2, bt, &buts2);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- 
- 	if (copy_to_user(arg, &buts2, sizeof(buts2))) {
- 		blk_trace_remove(q);
-@@ -844,6 +846,7 @@ static int compat_blk_trace_setup(struct request_queue *q, char *name,
- 	struct blk_user_trace_setup2 buts2;
- 	struct compat_blk_user_trace_setup cbuts;
- 	struct blk_trace *bt;
-+	unsigned int memflags;
- 
- 	if (copy_from_user(&cbuts, arg, sizeof(cbuts)))
- 		return -EFAULT;
-@@ -860,15 +863,15 @@ static int compat_blk_trace_setup(struct request_queue *q, char *name,
- 		.pid = cbuts.pid,
- 	};
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 	bt = blk_trace_setup_prepare(q, name, dev, buts2.buf_size, buts2.buf_nr,
- 				     bdev);
- 	if (IS_ERR(bt)) {
--		mutex_unlock(&q->debugfs_mutex);
-+		blk_debugfs_unlock(q, memflags);
- 		return PTR_ERR(bt);
- 	}
- 	blk_trace_setup_finalize(q, name, 1, bt, &buts2);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- 
- 	if (copy_to_user(arg, &buts2.name, ARRAY_SIZE(buts2.name))) {
- 		blk_trace_remove(q);
-@@ -898,9 +901,9 @@ int blk_trace_startstop(struct request_queue *q, int start)
- {
- 	int ret;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	blk_debugfs_lock_nomemsave(q);
- 	ret = __blk_trace_startstop(q, start);
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock_nomemrestore(q);
- 
- 	return ret;
- }
-@@ -2020,7 +2023,7 @@ static ssize_t sysfs_blk_trace_attr_show(struct device *dev,
- 	struct blk_trace *bt;
- 	ssize_t ret = -ENXIO;
- 
--	mutex_lock(&q->debugfs_mutex);
-+	blk_debugfs_lock_nomemsave(q);
- 
- 	bt = rcu_dereference_protected(q->blk_trace,
- 				       lockdep_is_held(&q->debugfs_mutex));
-@@ -2041,7 +2044,7 @@ static ssize_t sysfs_blk_trace_attr_show(struct device *dev,
- 		ret = sprintf(buf, "%llu\n", bt->end_lba);
- 
- out_unlock_bdev:
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock_nomemrestore(q);
- 	return ret;
- }
- 
-@@ -2052,6 +2055,7 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	struct block_device *bdev = dev_to_bdev(dev);
- 	struct request_queue *q = bdev_get_queue(bdev);
- 	struct blk_trace *bt;
-+	unsigned int memflags;
- 	u64 value;
- 	ssize_t ret = -EINVAL;
- 
-@@ -2071,7 +2075,7 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 			goto out;
- 	}
- 
--	mutex_lock(&q->debugfs_mutex);
-+	memflags = blk_debugfs_lock(q);
- 
- 	bt = rcu_dereference_protected(q->blk_trace,
- 				       lockdep_is_held(&q->debugfs_mutex));
-@@ -2106,7 +2110,7 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	}
- 
- out_unlock_bdev:
--	mutex_unlock(&q->debugfs_mutex);
-+	blk_debugfs_unlock(q, memflags);
- out:
- 	return ret ? ret : count;
- }
--- 
-2.51.0
+    entry =3D ring_buffer_event_data(fbuffer.event);
+    store_trace_args(&entry[1], &tf->tp, fregs, NULL, sizeof(*entry), dsize=
+);
 
+    list_for_each_entry_rcu(data, &trace_file->triggers, list) {
+        if (data->cmd_ops->trigger_type =3D=3D TRIGGER_TYPE_FUNCGRAPH) {
+            struct event_filter *filter =3D rcu_dereference_sched(data->fil=
+ter);
+            if (filter && filter_match_preds(filter, entry))
+                return true; // Allow tracing
+        }
+    }
+    return false; // Skip tracing
+}
+
+Does this approach make sense? Any suggestions or concerns?
+
+Thanks,
+Donglin
