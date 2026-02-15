@@ -1,128 +1,303 @@
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A8421638D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Feb 2026 14:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8F3EBF02;
+	Sun, 15 Feb 2026 15:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771165044; cv=none; b=tpPt1Msa0QvdxOnp6P52clhFbyPAhCqgqoTAg9JkEwlcxX8/vLhPcG92s9UxSjmR0BgiHauRzqEv3hhJF3NWux7Ce7sycciZwL57v689irD96SAE35nKqqs6QB7SbZvKoL0EFxdRuRymoGU5j6GHZAqf8kgo3r3NyQuy5M7n24M=
+	t=1771167823; cv=none; b=m4+x4JMVNFJ55J4ZmrbxXSlZ/5nqPNA5TfP+3Q0u2NodylSO66kKwMKf8D525x67tnl18ylOd4rH3awGbJQzLs+eqHtYvZGKI9LSWVSiYHOYFIM9zBvCbXEBbr73gb/psJaKgsPS6vEXLrkWAXFyD0cQ0bnNMKWN/69/HmtDZAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771165044; c=relaxed/simple;
-	bh=ZBLB7jFPV8OZ7V3p93BOQLk28F7cz08wYQ94FSvB4ss=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=GCoCqy4s9y5E7miI82GOjLTK9iXM3y6Ei226Gk2AbgBhgqST56JKXRX6vWY2Dvb1sTzkqjJsr+PaEVsunjh6I5/7s5yxlybl/zjPQ0wR3v8mRXcBNU1m7oYt3ZYJ11KXv/6iCpzTRMSTt5oSNwAMR6QCDOguF0ELbfF+ULS6Y/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-7d18fa0728aso21502056a34.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Feb 2026 06:17:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771165042; x=1771769842;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KFQ0suPqLa7s93qRuDqntHlf05CVVhmbHVLlG5/KLUU=;
-        b=SsI37duA8q3DfWKg9hyYj+uPBYBEUW0H0qVsNYL0ATo3CpdOg0+1sVdbZo16Aq9u6G
-         4+6AvqfwJHbIFe1SdS4F/YrCszuF6NasqV56oy+mvy+mnZ3ulOE9H8lE4/DKcHqZdZyl
-         Noo98SyRP45rljUYLBPhK4YfiRgWzObs7lwW9nYZQrGsP0cDhBthcB+D48Az47DhXQYp
-         /Mq7pMzzmkoC0gRJTTgMATnFRHfiPBVkyonI2arcd8kbDqLb6ep/65z2NX65kBRt8KaT
-         xKxgBgjnn3cKpUpn1dZ1elBHTzdqFYSjLIYDek43A8/LzE5/FgV+X3GyZJoHygxR3NRM
-         Ijdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgOliy5OHg2w7Og7ct+NVRjoWoHA+pITk+h5ug2FZO92b8HTUqvMfvT+xycTCdZ7TDg4omPhHy7dGy0FH4UtyAih0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7JO5XUY/sElGFzVgvgN8F1E57sluxQc6oeukttfDZ/6BmNTde
-	lKXUe/kVYkMHt4zCC1olQDlVbrsAxK4Sl/ONjpHqPRCEWTTbDfHbYUUxKyySZNfUe0v6KFohzxn
-	Bh+XWmgDiZROat5Yd6iE6x7dOonVYsZt0gOf/VoBGy3V1mxa7EoPwBkPZqW4=
+	s=arc-20240116; t=1771167823; c=relaxed/simple;
+	bh=CgOewkKnli+2mA0CTW36L4EEgHvgmDxVWvqOtfxl6KA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uAhpBkgIWX3V2PK8N06vidT9GjrJgDb4LXuTOIdt7z2o+sD19g+TcHYT14fAN5yQmxAwKzfAyJmzly726opv/xryjCHV2hEtgq67p/CXNMmys34j3aqmy2Su1qZ2FSQbd8BB4r54LVBoI3UNcbEj8v++w/aRYYGFmlXdvOQLGzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh8sEdnH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh8sEdnH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5CAC19422;
+	Sun, 15 Feb 2026 15:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771167822;
+	bh=CgOewkKnli+2mA0CTW36L4EEgHvgmDxVWvqOtfxl6KA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oh8sEdnHnTe/4YTfR/VmxVj7Oku90Kwic+Y47iQr333AG7FSE5c/9onhOGKDtC+a8
+	 1OF7ajmVAKTTsOcxxmPmG3e2obohdJWK3QGE78K6qPN6hCaPEs5uPa8+3YEx8In7QW
+	 kqWwXZlvFayCtcslJJQXF2BC7CSEWQ7CJAf7Qv7E/JOPgTV+GHwV3kcrBF3kKC/Vfw
+	 NtmWWhizN392VTfcHG6ltbNi/Dy+MBzPOyYYbfZ+5C4sAPC6ggiF4PwfXxbnwbothq
+	 ZER0XMbP0DnIVbl3b9YaIxVDCYDw4tNkxo/L1V5vUv8kucRoXt0l8fd0AAZw9BQe4R
+	 cpn6RZixKc47w==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Colin Lord <clord@mykolab.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.19-5.15] tracing: Fix false sharing in hwlat get_sample()
+Date: Sun, 15 Feb 2026 10:03:23 -0500
+Message-ID: <20260215150333.2150455-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260215150333.2150455-1-sashal@kernel.org>
+References: <20260215150333.2150455-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:1623:b0:659:9a49:8f9a with SMTP id
- 006d021491bc7-6785989e4abmr2824842eaf.19.1771165042168; Sun, 15 Feb 2026
- 06:17:22 -0800 (PST)
-Date: Sun, 15 Feb 2026 06:17:22 -0800
-In-Reply-To: <691367ae.a70a0220.22f260.0141.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6991d572.050a0220.2757fb.0031.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_startstop
-From: syzbot <syzbot+774863666ef5b025c9d0@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.19
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+From: Colin Lord <clord@mykolab.com>
 
-HEAD commit:    635c467cc14e Add linux-next specific files for 20260213
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d8ec02580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f09eec269f9f4746
-dashboard link: https://syzkaller.appspot.com/bug?extid=774863666ef5b025c9d0
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cc2ffa580000
+[ Upstream commit f743435f988cb0cf1f521035aee857851b25e06d ]
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/24870d51cbd0/disk-635c467c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/49283c738806/vmlinux-635c467c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8c5f9d1da977/bzImage-635c467c.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/b01c09978893/mount_0.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=163e915a580000)
+The get_sample() function in the hwlat tracer assumes the caller holds
+hwlat_data.lock, but this is not actually happening. The result is
+unprotected data access to hwlat_data, and in per-cpu mode can result in
+false sharing which may show up as false positive latency events.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+774863666ef5b025c9d0@syzkaller.appspotmail.com
+The specific case of false sharing observed was primarily between
+hwlat_data.sample_width and hwlat_data.count. These are separated by
+just 8B and are therefore likely to share a cache line. When one thread
+modifies count, the cache line is in a modified state so when other
+threads read sample_width in the main latency detection loop, they fetch
+the modified cache line. On some systems, the fetch itself may be slow
+enough to count as a latency event, which could set up a self
+reinforcing cycle of latency events as each event increments count which
+then causes more latency events, continuing the cycle.
 
-INFO: task syz.3.20:6102 blocked for more than 143 seconds.
-      Not tainted syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.3.20        state:D stack:28368 pid:6102  tgid:6087  ppid:5957   task_flags:0x400040 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5295 [inline]
- __schedule+0x1585/0x5340 kernel/sched/core.c:6907
- __schedule_loop kernel/sched/core.c:6989 [inline]
- schedule+0x164/0x360 kernel/sched/core.c:7004
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7061
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0x7fe/0x1300 kernel/locking/mutex.c:776
- blk_trace_startstop+0x8f/0x610 kernel/trace/blktrace.c:901
- blk_trace_ioctl+0x315/0x740 kernel/trace/blktrace.c:947
- blkdev_common_ioctl+0x13a7/0x3250 block/ioctl.c:724
- blkdev_ioctl+0x528/0x740 block/ioctl.c:798
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:597 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:583
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f530c39bf79
-RSP: 002b:00007f530d2e4028 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f530c616180 RCX: 00007f530c39bf79
-RDX: 0000000000000000 RSI: 0000000000001275 RDI: 0000000000000007
-RBP: 00007f530c4327e0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f530c616218 R14: 00007f530c616180 R15: 00007ffdd027c568
- </TASK>
-INFO: task syz.2.19:6109 blocked for more than 150 seconds.
-      Not tainted syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.2.19        state:D stack:26720 pid:6109  tgid:6091  ppid:5955   task_flags:0x400140 flags:0x00080002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5295 [inline]
- __schedule+0x1585/0x5340 kernel/sched/core.c:6907
- __schedule_loop kernel/sched/core.c:6989 [inline]
- schedule+0x164/0x360 kernel/sched/core.c:7004
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:7061
- __mutex_lock_common kernel/locking/mutex.c:692 [inline]
- __mutex_lock+0x7fe/0x1300 kernel/locking/mutex.c:776
- relay_open+0x3b8/0x920 kernel/relay.c:516
- blk_trace_setup_prepare+0x425/0x5a0 kernel/trace/blktrace.c:716
- blk_trace_setup+0x2c0/0x430 kernel/trace/blktrace.c:789
- blk_trace_ioctl+0x380/0x740 kernel/trace/blktrace.c:935
+The other result of the unprotected data access is that hwlat_data.count
+can end up with duplicate or missed values, which was observed on some
+systems in testing.
 
+Convert hwlat_data.count to atomic64_t so it can be safely modified
+without locking, and prevent false sharing by pulling sample_width into
+a local variable.
 
+One system this was tested on was a dual socket server with 32 CPUs on
+each numa node. With settings of 1us threshold, 1000us width, and
+2000us window, this change reduced the number of latency events from
+500 per second down to approximately 1 event per minute. Some machines
+tested did not exhibit measurable latency from the false sharing.
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://patch.msgid.link/20260210074810.6328-1-clord@mykolab.com
+Signed-off-by: Colin Lord <clord@mykolab.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+
+LLM Generated explanations, may be completely bogus:
+
+## Analysis of the Commit
+
+### 1. Commit Message Analysis
+
+The commit message is very detailed and clearly describes:
+- **The bug**: `get_sample()` assumes `hwlat_data.lock` is held, but
+  it's not actually held. This leads to unprotected data access and
+  false sharing in per-cpu mode.
+- **The specific false sharing**: `hwlat_data.sample_width` and
+  `hwlat_data.count` are 8 bytes apart, likely sharing a cache line.
+  When one thread modifies `count`, other threads reading `sample_width`
+  in the latency detection loop fetch the modified cache line, causing
+  measurable latency.
+- **The self-reinforcing cycle**: The latency from cache line fetch
+  triggers a latency event, which increments `count`, which causes more
+  cache line invalidation, which causes more latency events — a vicious
+  cycle.
+- **The data race**: `hwlat_data.count` can end up with duplicate or
+  missed values due to unprotected concurrent access.
+- **Concrete test results**: On a dual-socket 32-CPUs-per-node server,
+  latency events dropped from 500/sec to ~1/min.
+
+Keywords: "false sharing", "false positive latency events", "unprotected
+data access", "duplicate or missed values."
+
+### 2. Code Change Analysis
+
+The changes are minimal and surgical:
+
+1. **`hwlat_data.count` converted from `u64` to `atomic64_t`**: This
+   fixes a real data race where multiple threads could concurrently
+   increment `count` without synchronization, leading to lost updates
+   (duplicate/missed values). The `atomic64_inc_return()` replaces
+   `hwlat_data.count++; s.seqnum = hwlat_data.count;` with a single
+   atomic operation.
+
+2. **`sample_width` pulled into a local variable with `READ_ONCE()`**:
+   `u64 sample_width = READ_ONCE(hwlat_data.sample_width);` is used
+   instead of reading `hwlat_data.sample_width` in the hot loop (`do {
+   ... } while (total <= sample_width)`). This:
+   - Prevents the CPU from repeatedly fetching a cache line that may be
+     bouncing between cores
+   - Eliminates the false sharing between `sample_width` and `count`
+   - Uses `READ_ONCE()` for proper load semantics
+
+3. **Init path updated**: `hwlat_data.count = 0` →
+   `atomic64_set(&hwlat_data.count, 0)` — consistent with the type
+   change.
+
+4. **Comment fix**: Removes the incorrect claim that `get_sample()` is
+   "called with hwlat_data.lock held."
+
+### 3. Bug Classification
+
+This commit fixes **multiple real bugs**:
+
+1. **Data race on `hwlat_data.count`**: Concurrent unsynchronized access
+   to a shared counter. This is a real correctness bug — sequence
+   numbers can be duplicated or skipped.
+
+2. **False sharing causing false positive latency detection**: The hwlat
+   tracer is producing bogus results (500 events/sec vs 1/min). This is
+   a **functional correctness bug** — the tracer is reporting phantom
+   hardware latency that doesn't exist. Users relying on hwlat tracer
+   results would be misled.
+
+3. **Self-reinforcing feedback loop**: The false sharing creates a
+   pathological cycle that makes the tracer practically unusable on some
+   multi-socket systems.
+
+### 4. Scope and Risk Assessment
+
+- **Lines changed**: ~15 lines of actual code changes across 4 hunks in
+  a single file
+- **Files touched**: 1 (`kernel/trace/trace_hwlat.c`)
+- **Risk**: Very low. The changes are:
+  - Converting a counter to atomic (well-understood primitive)
+  - Caching a value in a local variable (safe, the value doesn't need to
+    be re-read)
+  - Using `READ_ONCE()` (standard kernel pattern)
+- **Subsystem**: Tracing — self-contained, well-maintained by Steven
+  Rostedt
+- **Could it break something?**: Extremely unlikely. The atomic64
+  operations are well-tested primitives, and caching sample_width is
+  semantically equivalent (the width doesn't change during a sample).
+
+### 5. User Impact
+
+- **Who is affected**: Anyone using the hwlat tracer in per-cpu mode on
+  multi-socket systems
+- **Severity**: The tracer produces wildly incorrect results (500x false
+  positives) on affected systems
+- **Real-world impact**: Users trying to validate hardware latency
+  characteristics for real-time workloads would get completely
+  misleading data
+- **The data race on count**: Could cause sequence number issues that
+  affect trace analysis tooling
+
+### 6. Stability Indicators
+
+- **Signed-off by Steven Rostedt** (tracing subsystem maintainer) — high
+  confidence
+- **Concrete test data** provided showing dramatic improvement
+- **Link to mailing list** discussion provided
+- The fix uses standard kernel primitives (atomic64_t, READ_ONCE) —
+  well-understood patterns
+
+### 7. Dependency Check
+
+- No dependencies on other commits
+- `atomic64_t` and `READ_ONCE()` are available in all stable kernel
+  versions
+- The hwlat tracer exists in all recent stable trees (introduced in
+  v4.9)
+
+### Stable Kernel Rules Assessment
+
+1. **Obviously correct and tested**: Yes — tested on real hardware with
+   measurable improvement
+2. **Fixes a real bug**: Yes — data race + false sharing causing
+   incorrect tracer output
+3. **Important issue**: Yes — tracer producing 500x false positive
+   latency events, plus data race on counter
+4. **Small and contained**: Yes — ~15 lines in one file
+5. **No new features**: Correct — this is a pure bug fix
+6. **Applies cleanly**: Should apply cleanly to recent stable trees
+
+### Risk vs Benefit
+
+- **Risk**: Near zero — atomic counter and local variable caching are
+  trivially safe changes
+- **Benefit**: High — fixes a data race and makes the hwlat tracer
+  produce correct results on multi-socket systems
+
+**YES**
+
+ kernel/trace/trace_hwlat.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 2f7b94e98317c..3fe274b84f1c2 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -102,9 +102,9 @@ struct hwlat_sample {
+ /* keep the global state somewhere. */
+ static struct hwlat_data {
+ 
+-	struct mutex lock;		/* protect changes */
++	struct mutex	lock;		/* protect changes */
+ 
+-	u64	count;			/* total since reset */
++	atomic64_t	count;		/* total since reset */
+ 
+ 	u64	sample_window;		/* total sampling window (on+off) */
+ 	u64	sample_width;		/* active sampling portion of window */
+@@ -193,8 +193,7 @@ void trace_hwlat_callback(bool enter)
+  * get_sample - sample the CPU TSC and look for likely hardware latencies
+  *
+  * Used to repeatedly capture the CPU TSC (or similar), looking for potential
+- * hardware-induced latency. Called with interrupts disabled and with
+- * hwlat_data.lock held.
++ * hardware-induced latency. Called with interrupts disabled.
+  */
+ static int get_sample(void)
+ {
+@@ -204,6 +203,7 @@ static int get_sample(void)
+ 	time_type start, t1, t2, last_t2;
+ 	s64 diff, outer_diff, total, last_total = 0;
+ 	u64 sample = 0;
++	u64 sample_width = READ_ONCE(hwlat_data.sample_width);
+ 	u64 thresh = tracing_thresh;
+ 	u64 outer_sample = 0;
+ 	int ret = -1;
+@@ -267,7 +267,7 @@ static int get_sample(void)
+ 		if (diff > sample)
+ 			sample = diff; /* only want highest value */
+ 
+-	} while (total <= hwlat_data.sample_width);
++	} while (total <= sample_width);
+ 
+ 	barrier(); /* finish the above in the view for NMIs */
+ 	trace_hwlat_callback_enabled = false;
+@@ -285,8 +285,7 @@ static int get_sample(void)
+ 		if (kdata->nmi_total_ts)
+ 			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
+ 
+-		hwlat_data.count++;
+-		s.seqnum = hwlat_data.count;
++		s.seqnum = atomic64_inc_return(&hwlat_data.count);
+ 		s.duration = sample;
+ 		s.outer_duration = outer_sample;
+ 		s.nmi_total_ts = kdata->nmi_total_ts;
+@@ -832,7 +831,7 @@ static int hwlat_tracer_init(struct trace_array *tr)
+ 
+ 	hwlat_trace = tr;
+ 
+-	hwlat_data.count = 0;
++	atomic64_set(&hwlat_data.count, 0);
+ 	tr->max_latency = 0;
+ 	save_tracing_thresh = tracing_thresh;
+ 
+-- 
+2.51.0
+
