@@ -1,124 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F42E571
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Feb 2026 13:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81BFE571;
+	Sun, 15 Feb 2026 13:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771161182; cv=none; b=vFQauoaybDd/QsKZQIWTsNszHlOXuC4yRRjRcTAO/I1k9cle7DHSk2xSK8cZp3NAFM0JrxSiGcKnyto8u9beAo3hwUL6ov07IZzGf4OV6ZOAuVXdKvKEScmd8SB3PqMrud57lSPQmu/kA1h2BiO/WH4IyuezJwZ5y0Mlwl87spI=
+	t=1771162534; cv=none; b=aIe3jLTHdNs+FEIxXPkyBoHTyKS4H9c6pvFKxw2ion53yjtraUnKtSmZifmcPau7bP+WPpZFYT2Yrrpzns8yDWkzMMJFXOo4iWtKLv26FfaohIoQcl4qgBGK0syWTUjKjMU+KE5mLjkQdKYWKWsK5rWAFqTDP/B6pazculluunA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771161182; c=relaxed/simple;
-	bh=tt7bxtfArP/l+PAgE09PHLMdbFWOizBIi5oEMs3SJJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=tv/LqtK3Ab4y2QXY6ZFSYM7UWJQSg7o27f86O5pKvDGb5oZ0bPIWk1IFvdo5oQEsntmgbfOts3Va7sKaExOtRzn0brl7ElkzkxXbmczmAxQeTFlzWaEUqzHLkG3fO0FwQRlQ6bt0Q2xN/4dykyWb6Ck4960w/mAx5fbUT5l9qFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ii5kFSJ0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1771162534; c=relaxed/simple;
+	bh=YMd0NY2Cp+cVSvRtKxKI0RGhsN7DwjSYuuBq+Aawt/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LMAUbv9m6LQEZw8uzri14ji0aB6tbMoBndQop8T4XiGbWyzRBwu1QLVfz3siFLT9VEWhItCDhmkKPSQFDGAQI0sAu4UjU5bdEPyeDGHa+BgYuuXvJ2cQtTQxKzSPnL19/0cZVMOWw4DS1zdEovfY75cGAkU0Tlj91rBHSsmcX40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EegWYlza; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ii5kFSJ0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771161179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hh0PgHLJOA2hn/hqzD3P6Oh9Wnz9BFXmuLgfZVc7phE=;
-	b=ii5kFSJ0mccAl4GV4WuiWVqxyERZSuYM66gD6mdBigAmVby86t9bwt0n6GmwySpjQzl/Qr
-	bKX8iEFzzpETWQwOy+OaSpFGmWOXxJMHu6kNjwRw0CgqPCiZSRqqva5/cdY9s00kuVc6NW
-	FEFO3cCerIU80EjNh1yAbtpI6qg1QkA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360-Ri_alb6-NE-Ow_WTXhcNPA-1; Sun, 15 Feb 2026 08:12:58 -0500
-X-MC-Unique: Ri_alb6-NE-Ow_WTXhcNPA-1
-X-Mimecast-MFC-AGG-ID: Ri_alb6-NE-Ow_WTXhcNPA_1771161177
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-482d8e6e13aso16125065e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Feb 2026 05:12:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771161177; x=1771765977;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hh0PgHLJOA2hn/hqzD3P6Oh9Wnz9BFXmuLgfZVc7phE=;
-        b=KBJ9VjS7KCXn59mmNx2Z9BgG28zdd/AL86+GJfgsy9dfDpondOAgiTSMMUQBFyNNXr
-         VeIo1g6t2/qVHnePMyz0SShVIWjBSpA/iUdan5jKcSWTL5eWE2R6kab7W8t6n4eNtclV
-         FOUEnrC5m1vrsfyzpKNNxxGfbkvyYhkivPVQTQXkbll4XemiXpfPbPOWhVBD+leMGd3k
-         EPImmDpze/Q+Jv7oqVQ+0vCEeC2k++8Uwr2fbkQV1iE7sKDB2M735Kj3RMSmZRPmHYNZ
-         okzS/c+LZPd2DfkLG1JmI+F5Pvm0KMjGxKc9j7uR0bZPOv4na1GVaP8WTVmLT0DdT7JM
-         RzDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6N9MUcTl09mu8g7PgiqwYwU+Vl14qMWeFeNkypFlQpj47zVQDirmIhT+InKYi2vvL8PFMEGpVw2Amu76GCkyu49U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOlZkfD22jVbWvEmaXB1QAndSdvCs8rrrlrxHKDAOp2gnnj8Nw
-	1WMdiXvaJfSmNrh1fzr5x0QM7JgimZX3SS+G5aqEtniCqKNoXQ8Md2eBFvn368x/scxDmNL72Sn
-	5MD3OiyXEhbgkVriaXS6inisgsRuc3T17+FrBFKnqRn+6OXXt1I1O3effpqRCXWJmwiAnIFmeug
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EegWYlza"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61F1oENf1317217;
+	Sun, 15 Feb 2026 13:35:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=AusRQa
+	maEuCGJfZFYlSYYG+pqqCFjK0ilKgB9/4tSoU=; b=EegWYlzaLbMcSNU+i/qSpY
+	ERmCigghc3yCRFUtso0zrtEyfVhZaCxIGGPK4u6klfdt5cXWlC8r5FhzxayuR2nd
+	h4RS/4Sndxk8bJB6Jq4aBy0XGiEmcaK+uNhctb0rABdZIJgT96YkC0S+46zaqxL/
+	Ba8dhnRCRCEBLti6BRRN4+A/DA7VMG0nvgbom6DAHTMjNdhPwBrKET/olglo9BeO
+	P2H/V7TTD8tVofpNp2gfYMsKwYEelM46aYCKKPPsY/+2EU4SWakN4rvHoc1B7XKc
+	me5hIhTGpbr95kaWiTYGZ66mwS5nuoX8YbOeDGMLDXvVK0MGyYE4kmwgdmneas6A
 	==
-X-Gm-Gg: AZuq6aLPGTfbWJ0B4aAzrlmaWaKkf673Y+045AA9/eZkQMyV9QJHwUIyPJlz5eJ2zKK
-	wFJfOg/1Qi+/vsHDigEnPIvRmt7jF6RA3GwxNefOfADANZ4S8szNpMfBlCKBB5ECdlts4GOLA0a
-	x9XwCDSUmOJncEZPoFsMKcjtyPqlDGZ6xMM/mCY4EHieLyhPiuWrMGZU2dS9CCezBu4QkPS4Ex/
-	K+HV1ItZW6cGnGu7BcsZhHA/HnS1HWxYFtAW91L4E3zhEXw5+v5CTPj8tfX/M43yEQwAwpJjvHd
-	E/CjaBU3ozPEFmf/T8RP8iHoZmHv+RTSzDsi8iWwfq/oHsuUwYu/4LUKRSLW3h3F9DQyUI7D3I8
-	DM0exrKW0p9Q/naUtuEZTw0YjwWYmrZ85TZ/txQ==
-X-Received: by 2002:a05:600c:4688:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-48373a37a1dmr111168425e9.19.1771161176938;
-        Sun, 15 Feb 2026 05:12:56 -0800 (PST)
-X-Received: by 2002:a05:600c:4688:b0:47f:f952:d207 with SMTP id 5b1f17b1804b1-48373a37a1dmr111168135e9.19.1771161176500;
-        Sun, 15 Feb 2026 05:12:56 -0800 (PST)
-Received: from costa-tp.redhat.com ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4835d92267bsm515148295e9.0.2026.02.15.05.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Feb 2026 05:12:56 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Costa Shulyupin <costa.shul@redhat.com>
-Subject: [PATCH v1] Documentation/rtla: Add hwnoise to main page
-Date: Sun, 15 Feb 2026 15:12:48 +0200
-Message-ID: <20260215131249.33437-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.53.0
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4caj6uc0tq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Feb 2026 13:35:02 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61FCOQIo025024;
+	Sun, 15 Feb 2026 13:35:01 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cb3rxhxhh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Feb 2026 13:35:01 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61FDZ0sv66978052
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 15 Feb 2026 13:35:01 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 993055805B;
+	Sun, 15 Feb 2026 13:35:00 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D39BE58059;
+	Sun, 15 Feb 2026 13:34:53 +0000 (GMT)
+Received: from [9.111.50.199] (unknown [9.111.50.199])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 15 Feb 2026 13:34:53 +0000 (GMT)
+Message-ID: <fd2f4aab-27db-4a01-8b25-762466634c1e@linux.ibm.com>
+Date: Sun, 15 Feb 2026 19:04:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 8S5ccwRkVSq9EoNtGPQ1mKNmEB_kVvx_T5X16ykrgiU_1771161177
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] blk-mq: use NOIO context to prevent deadlock during
+ debugfs creation
+To: Yu Kuai <yukuai@fnnas.com>, axboe@kernel.dk, ming.lei@redhat.com,
+        hch@lst.de
+Cc: yi.zhang@redhat.com, shinichiro.kawasaki@wdc.com, kbusch@kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20260214054350.2322436-1-yukuai@fnnas.com>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <20260214054350.2322436-1-yukuai@fnnas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E+/AZKdl c=1 sm=1 tr=0 ts=6991cb87 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=JF9118EUAAAA:8 a=tJLSzyRPAAAA:8
+ a=VnNF1IyMAAAA:8 a=IYyPFNahz8ouDM3NFjgA:9 a=QEXdDO2ut3YA:10
+ a=xVlTc564ipvMDusKsbsT:22 a=H0xsmVfZzgdqH4_HIfU3:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE1MDEwOCBTYWx0ZWRfX7sP2HGckZMqt
+ DemqwAQ27FNN0xM2/BeMZxYRJuDj6ugENnAsalyMkL/3tC/qrRNJSKaxoRD3oE6f5ApI1JZ69xw
+ sdPojGmMw4773YWXE8xtgOn5/Kudud9uMBEHq7COiHxhNClBGqJlhB/bFcvW/6r/CxHk1bTHuwK
+ CMr1Hz9mylgmVgeqYHiO0IydUk72hKrBS0/S7cYaQe/EWWgx2eS3T8TYwRpQcQ/5XFOOa7DmoER
+ 5YRGooThRKohhX0lD2Mw3Y+u22DRt/Qeo1S/CUhcbYHN7N3zVIVLTwsXnJ8OyDtwTHaGpvFCvpv
+ +QBlTo7Y2akn7mSBppP9y17XjMmN+RQ2UzyuWO3JjPuLKqlY15huwkGLFA0DyIdHXgBL2UGgalm
+ vCGnk0wCFket3X1dStsnBvV1iVlV4ulDf0g663RbKlv8AGiMfnz//vw6FX6KusiTy+O5S0khvtv
+ 4tVN24ezxsX2eOEFiBQ==
+X-Proofpoint-ORIG-GUID: MPP4kn1W_IYiNqbji8zmbKoKXO3BGuGB
+X-Proofpoint-GUID: MPP4kn1W_IYiNqbji8zmbKoKXO3BGuGB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-15_04,2026-02-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 phishscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602150108
 
-Add hwnoise to the command list and SEE ALSO section.  The command list
-is ordered from low level to high level.
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- Documentation/tools/rtla/rtla.rst | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/tools/rtla/rtla.rst b/Documentation/tools/rtla/rtla.rst
-index 2a5fb7004ad4..6df1296b8cc1 100644
---- a/Documentation/tools/rtla/rtla.rst
-+++ b/Documentation/tools/rtla/rtla.rst
-@@ -21,6 +21,10 @@ results.
- 
- COMMANDS
- ========
-+**hwnoise**
-+
-+        Detect and quantify hardware-related noise.
-+
- **osnoise**
- 
-         Gives information about the operating system noise (osnoise).
-@@ -39,7 +43,7 @@ For other options, see the man page for the corresponding command.
- 
- SEE ALSO
- ========
--**rtla-osnoise**\(1), **rtla-timerlat**\(1)
-+**rtla-hwnoise**\(1), **rtla-osnoise**\(1), **rtla-timerlat**\(1)
- 
- AUTHOR
- ======
--- 
-2.53.0
+On 2/14/26 11:13 AM, Yu Kuai wrote:
+> Creating debugfs entries can trigger fs reclaim, which can enter back
+> into the block layer request_queue. This can cause deadlock if the
+> queue is frozen.
+> 
+> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
+> to detect this condition, but it was racy since the queue can be frozen
+> from another context at any time.
+> 
+> Introduce blk_debugfs_lock()/blk_debugfs_unlock() helpers that combine
+> the debugfs_mutex with memalloc_noio_save()/restore() to prevent fs
+> reclaim from triggering block I/O. Also add blk_debugfs_lock_nomemsave()
+> and blk_debugfs_unlock_nomemrestore() variants for callers that don't
+> need NOIO protection (e.g., debugfs removal or read-only operations).
+> 
+> Replace all raw debugfs_mutex lock/unlock pairs with these helpers,
+> using the _nomemsave/_nomemrestore variants where appropriate.
+> 
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/all/CAHj4cs9gNKEYAPagD9JADfO5UH+OiCr4P7OO2wjpfOYeM-RV=A@mail.gmail.com/
+> Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Closes: https://lore.kernel.org/all/aYWQR7CtYdk3K39g@shinmob/
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 
+Looks good to me:
+Reviewed-by: Nilay Shroff <nilay@linux.ibm.com>
