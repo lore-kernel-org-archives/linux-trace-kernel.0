@@ -1,177 +1,109 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B162DAFCA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 17:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00812DE70B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 18:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771262838; cv=none; b=Aiq5s+E4f9anMMilxIrtAsXJby4UydFfJZvyvipMeKjsnGs9sCP/sijAaMG2i6rP7ItnA4mxh95Umwxnz7JZXaNraHO6SEYmlgKh+0JLCYWDeWcIT0AzwoKzLorrT/WqPws30nlEAF0VmOhDxdKU5Jatoe2/8rd2Hm83CaZ4LpE=
+	t=1771266493; cv=none; b=g4as7bKX6Xa8aGfAmd0y8DB+mJO7NvzDphcmAi/KsXtADoKkGiCUC/CwejcStVMEt+WHCJA+YzlMtDDXaXEbqDpSHQKDgGEtiRB9WJgbPHxeuYx/z1RxezcRrL6pR0VNzjLYLtiCUd3zWjkGH7s86TtirzDAfDo4yYaHdNpNCvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771262838; c=relaxed/simple;
-	bh=ekHiVyjqiaGWoE6RXaxfHJcPuigOMr+k1bVFfn5BEgw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AumuUWyU1sfe6u2Xpl986yr/5+Sp5ewC1TRFxLcHNAUSC/knNyQoBbQR6JgmfU5VDORiNlgYPSr5acRxJ2qRKrxA40cyxt7pVd6gz2xt/wVJSky1xJd0NmrhYTIiKDPMikY5TC1SA9qo2r8mtdjfxE2kiyutrj0wCajlVPiHBeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp5D+yBI; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771266493; c=relaxed/simple;
+	bh=DXdW2sVJpUEGRsnsDNt3IDY65YC/KG+dJKnnrkCN2No=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiXO0QjudiZp+kEyED+kGKcHY/xcMqklr5TkkvD1Us02k8f8dj05/OtdXMkeeoH6F8IDocdxEtOj71cIvcRf5Np1Jx9lB6C36dkMD2UIgNET2+muJ1gVT9275YMKwd3zfQUlFmJrDQNruOOozSwny1LIoCG4W2BhJjwg4BatvBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Vzot2n/f; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp5D+yBI"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-59dd54b1073so3865647e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 09:27:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Vzot2n/f"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2ad21f437eeso15468735ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 10:28:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771262834; x=1771867634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f3LfzZMm5dzBOXfXpr+wyEgw8UjxM0o7eUchqH58TlY=;
-        b=Wp5D+yBIgHVQSCantxJItfvS01Dm28smNHlZKImim+JvaSI7Nqs9Bes+gnnhesSjUx
-         c/Grto65zCAb4Zr50arCvUiquIbCEdeeT5oTl6MsJQCiR0XpwigG+iR76MXJ7A+zDP8a
-         6/7hatSVC61dPAmYI3R707I2ChvFrpMg+ubTNZYpQedA0i+3KOfyUV019CpiYh6LmvM5
-         H48hxMUKwbynbSZZlu8g+CrSpvLMjex341HEjtR1XvFqMHD0Ci0qIi8AqViOZG8fU4N3
-         iWR3Lz98M9Tc9Dp/qEJz4ySV/1JLEn+oJn3RmwGI8HcTST9y6YgRMZ/1+xd3b5A8RkPv
-         3R+g==
+        d=purestorage.com; s=google2022; t=1771266490; x=1771871290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N1Yj1yhuptOSylTDyOUs8iyxlJcujGeDn2NjJk0xsTM=;
+        b=Vzot2n/f3TKjMdB3hfeRySQcM9ZlEKJ5PMVQqz4/D6yE+pt4EFNWrV7PN9g1WsGFSz
+         Yha/xxkHF8k1LxjgLJJLiIgOVCrkKqrIygapjAO39Jgso9o3Zt7eCxm6ZRS37dEPHLQm
+         wwpajlsr8iLr4arXLXbT+/mR2oL4d0X2w3FwB7Nht5zPVEO6dunOSGZsFgZU+MJ61vVa
+         7izyhQVb3iOqXV3oiwa/7OOItjuG1z+c0VueZFdBDN6YedTJi5NvCrQrS0Tx+8tHslrZ
+         H7BPCR+0n6Fr+UCdYBrG09+CbaqdpmCLQbbXngZ+/IGT/32/xkfkP/jSo5+8Z23FdvRS
+         GLwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771262834; x=1771867634;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f3LfzZMm5dzBOXfXpr+wyEgw8UjxM0o7eUchqH58TlY=;
-        b=hIZfoLFwad21rqYslV7fLPbqZyGo2vKHO8i8iYVPTLaAel6m1vx3mmy+kE7plSeIsN
-         RVhUhQLPYTYXJ/T5jpYVezcEBXk41BwhUSqLa3mxLh34lhDHqbJG3OnQ4TVT8osC3Pba
-         Z9kbCnIUL2PYOE0ZiUnRUSU3Z9/mmfzim7QDYRq+l3bnUbuELd9+COyxEvZLDLFWVata
-         TknbWkXc+aQ2myg2OO9Y7taEJsS3yg95mnXfioKfwHRA4wcij1IzMdUuKW4V7mCkrB2l
-         qOfGpKQ2497nlDHclgP8Qt2j0jWetH8thWj0r3n209PdcLGUM9MLZMDQUFAvKrjIcp2Q
-         VNkA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/9WWC8nlxSZX+Q+nBQqmDH4cEKzdTwlnn9ZjxZFzCOmSkmAYATWew5vOtTjK+BqfubyB40dWX+fsOZP+HSDI6pR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7uJOxTPAK/QvE7JuLTKMNpwpxWidKL33Rsd3nVYXqk/w6tqzr
-	EwvvF2T7nd2V2/kxEhojKaXU6AoKpao2xzhQl5JkhnPvf8OnXHTCn7RH
-X-Gm-Gg: AZuq6aKXbPMeE9FAFV0LU+p30v7xpMWcEDGh7If4PY9Pto7EWNjvbMZqMPfPQdzjYjq
-	mhlY96yCs1TN/gFRKltrjh0FBarxPYYQoAZhtOTdXbVLKNgZdq+/pQQl7qM9NMJuIPNnCM4g3k5
-	zAMAvHQorIkSMzrJO7aivPHfvVurAaTFk2X3nq60ZLNSNzPdZWa4oibhTvYWj39nDUOJfJQPLME
-	6vxXDrZvi0dOP5rviWuw3a0Z02s7t9UBxu2bWO0Rlgm5Nui55x+TMcGil+35MdsvyCMpt6nFwg3
-	vyKYUC9dN76TXQO2Gt3fEm2MzCqdCm0pUqFwzdzP9gGrzZ0oQxPf05TZPGMOpstyH6LcQAapblH
-	tNdRjId20ZmOtHBlCsTZZYfrZYySqRYb8TEkqWGITRSSkPhsw0Ubmmnn4Bhc5p4lA4zdVPwQVqZ
-	BighVgGDK+oJB3dctt4mpHdcGk38avMMRj1ga2LpZF4AQ8
-X-Received: by 2002:a05:6512:224d:b0:59d:e7b1:419e with SMTP id 2adb3069b0e04-59f6d34cf47mr2685656e87.11.1771262833724;
-        Mon, 16 Feb 2026 09:27:13 -0800 (PST)
-Received: from localhost ([188.234.148.119])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e5f5b062asm3322901e87.73.2026.02.16.09.27.11
+        d=1e100.net; s=20230601; t=1771266490; x=1771871290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N1Yj1yhuptOSylTDyOUs8iyxlJcujGeDn2NjJk0xsTM=;
+        b=ry7kfcqeG6YflCO61mY9XYUwqNTWWyCohbdUYMFljkcGh0Jsy4r2TcYWX0YlYYAd+Q
+         0B1zGZqmoFHMeJR5Lvx4phWz0cU6LyEjy6BfmU8cb5mdFr90R3PiwQ6HhwBAbkvuewx0
+         eXT9LpfBTbGFniHkNDsZcVX1jSv5bhyLzFGRT1/eDAxG870c+yBW1yatsJZ9dgCdimpz
+         IXpWP/zasktxSYOxOSTOO8aWn1CmuTzLlxzvT1ojIKHDf12h3HWh+zcF4uD007cd+Hf8
+         QmX3QPTuD27Y/l04AhQ2Pvxgi86sPg5lxPlqafBN5A0AjtO5jX2ai1t8VxijfFxnPm6w
+         2+yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSueiGwYpOdrqdUh5U/TH18VbKl+TWjewqPow55C/AnP7hbNmzBuhRCPhO9oSYOyzyJrW7ld2w2wuqHht1O+J/sbU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlG2RnP6DRR7LGC++g55sbg6ZVSbHkn125EAJVzCNZw/ykYWFV
+	QQQl3BR4LK0EBjA+9Lir72M/bB4OnZWKLS5F4Nc6bbqQyUy/XMN1bEuT0XSnOo63DVQ=
+X-Gm-Gg: AZuq6aIZSvmPh2ge+iggrqY+7/4N9y0NlAapKliA3xDZVvxs3R5SQICSUv4xJDBpCyE
+	LMj2v+B71sB944DDpI5E2hhCHFAkMW/dGT91uRF2ImY0gsvL4n5g1azmT3bFoiyzCSTQi9w5QeI
+	mgOHSu8oBgywo7h6BqFDt/HPCTotzNB6QvMzAdwBCaw0DcLDGf4/+BrbWm5yzfXDAc09E/j5F1u
+	esBI9eenqQzJt3RC1PsfzGyXKI25GRzopIgSn2um8OeoDfCDIephvcUkZhlbgZlhY8e+Bc3pduv
+	R7ffBw7cpaR8kAFiClx6AWDR/g/FnhhlK8yCS1d0qHqcsYXYRJDsUOKguCMVYbvm+jZZNemJlck
+	osHaj4T5y/98aMNz9XLPEk84qoWKR4TbX3RyheQOfPuUmfV1sM/B2aMSZzH7kk5eav33YemRBEk
+	dfkMPFf+HDYM6Jj2LithmBQ+bUAdEDYyv7otfROg==
+X-Received: by 2002:a17:902:d50a:b0:2a9:ebae:f3f6 with SMTP id d9443c01a7336-2ac97593413mr94716045ad.20.1771266490130;
+        Mon, 16 Feb 2026 10:28:10 -0800 (PST)
+Received: from medusa.lab.kspace.sh ([2601:640:8202:6fb0::68dd])
+        by smtp.googlemail.com with UTF8SMTPSA id d9443c01a7336-2ad1a9d5df0sm74851785ad.58.2026.02.16.10.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Feb 2026 09:27:11 -0800 (PST)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Gabriele Monaco <gmonaco@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Subject: [PATCH v3] rv: Fix multiple definition of __pcpu_unique_da_mon_this
-Date: Mon, 16 Feb 2026 22:27:07 +0500
-Message-ID: <20260216172707.1441516-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        Mon, 16 Feb 2026 10:28:09 -0800 (PST)
+Date: Mon, 16 Feb 2026 10:28:08 -0800
+From: Mohamed Khalfella <mkhalfella@purestorage.com>
+To: Yu Kuai <yukuai@fnnas.com>
+Cc: axboe@kernel.dk, nilay@linux.ibm.com, ming.lei@redhat.com, hch@lst.de,
+	yi.zhang@redhat.com, shinichiro.kawasaki@wdc.com, kbusch@kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] blk-mq: use NOIO context to prevent deadlock during
+ debugfs creation
+Message-ID: <20260216182808.GA1799879-mkhalfella@purestorage.com>
+References: <20260214054350.2322436-1-yukuai@fnnas.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260214054350.2322436-1-yukuai@fnnas.com>
 
-The refactoring in commit 30984ccf31b7 ("rv: Refactor da_monitor to
-minimise macros") replaced per-monitor unique variable names
-(da_mon_##name) with a fixed name (da_mon_this).
+On Sat 2026-02-14 13:43:50 +0800, Yu Kuai wrote:
+> Creating debugfs entries can trigger fs reclaim, which can enter back
+> into the block layer request_queue. This can cause deadlock if the
+> queue is frozen.
+> 
+> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
+> to detect this condition, but it was racy since the queue can be frozen
+> from another context at any time.
+> 
+> Introduce blk_debugfs_lock()/blk_debugfs_unlock() helpers that combine
+> the debugfs_mutex with memalloc_noio_save()/restore() to prevent fs
+> reclaim from triggering block I/O. Also add blk_debugfs_lock_nomemsave()
+> and blk_debugfs_unlock_nomemrestore() variants for callers that don't
+> need NOIO protection (e.g., debugfs removal or read-only operations).
+> 
+> Replace all raw debugfs_mutex lock/unlock pairs with these helpers,
+> using the _nomemsave/_nomemrestore variants where appropriate.
+> 
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Closes: https://lore.kernel.org/all/CAHj4cs9gNKEYAPagD9JADfO5UH+OiCr4P7OO2wjpfOYeM-RV=A@mail.gmail.com/
+> Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Closes: https://lore.kernel.org/all/aYWQR7CtYdk3K39g@shinmob/
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Yu Kuai <yukuai@fnnas.com>
 
-While this works for 'static' variables (each translation unit gets its
-own copy), DEFINE_PER_CPU internally generates a non-static dummy
-variable __pcpu_unique_<n> for each per-cpu definition. The requirement
-for this variable to be unique although static exists for modules on
-specific architectures (alpha) and if the kernel is built with
-CONFIG_DEBUG_FORCE_WEAK_PER_CPU (e.g. Fedora's debug kernel).
+Maybe added Fixes: 65d466b62984 ("blk-mq-debugfs: warn about possible deadlock")?
 
-When multiple per-cpu monitors (e.g. sco and sts) are built-in
-simultaneously, they all produce the same __pcpu_unique_da_mon_this
-symbol, causing a link error:
-
-  ld: kernel/trace/rv/monitors/sts/sts.o: multiple definition of
-      `__pcpu_unique_da_mon_this';
-      kernel/trace/rv/monitors/sco/sco.o: first defined here
-
-Fix this by introducing a DA_MON_NAME macro that expands to a
-per-monitor unique name (da_mon_<MONITOR_NAME>) via the existing
-CONCATENATE helper. This restores the uniqueness that was present
-before the refactoring.
-
-Fixes: 30984ccf31b7 ("rv: Refactor da_monitor to minimise macros")
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
----
-Changes since v1: https://lore.kernel.org/all/20260216074727.47292-1-mikhail.v.gavrilov@gmail.com/
-- Updated commit message with details on when __pcpu_unique_ uniqueness
-  is required (alpha modules, CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
-- Added code comment above DA_MON_NAME explaining the rationale
-
- include/rv/da_monitor.h | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index db11d41bb438..7511f5464c48 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -20,6 +20,12 @@
- #include <linux/bug.h>
- #include <linux/sched.h>
- 
-+/*
-+ * Per-cpu variables require a unique name although static in some
-+ * configurations (e.g. CONFIG_DEBUG_FORCE_WEAK_PER_CPU or alpha modules).
-+ */
-+#define DA_MON_NAME CONCATENATE(da_mon_, MONITOR_NAME)
-+
- static struct rv_monitor rv_this;
- 
- static void react(enum states curr_state, enum events event)
-@@ -183,14 +189,14 @@ static inline bool da_event(struct da_monitor *da_mon, struct task_struct *tsk,
- /*
-  * global monitor (a single variable)
-  */
--static struct da_monitor da_mon_this;
-+static struct da_monitor DA_MON_NAME;
- 
- /*
-  * da_get_monitor - return the global monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return &da_mon_this;
-+	return &DA_MON_NAME;
- }
- 
- /*
-@@ -223,14 +229,14 @@ static inline void da_monitor_destroy(void) { }
- /*
-  * per-cpu monitor variables
-  */
--static DEFINE_PER_CPU(struct da_monitor, da_mon_this);
-+static DEFINE_PER_CPU(struct da_monitor, DA_MON_NAME);
- 
- /*
-  * da_get_monitor - return current CPU monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return this_cpu_ptr(&da_mon_this);
-+	return this_cpu_ptr(&DA_MON_NAME);
- }
- 
- /*
-@@ -242,7 +248,7 @@ static void da_monitor_reset_all(void)
- 	int cpu;
- 
- 	for_each_cpu(cpu, cpu_online_mask) {
--		da_mon = per_cpu_ptr(&da_mon_this, cpu);
-+		da_mon = per_cpu_ptr(&DA_MON_NAME, cpu);
- 		da_monitor_reset(da_mon);
- 	}
- }
--- 
-2.53.0
-
+Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
