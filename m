@@ -1,176 +1,90 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE6723A9B3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 09:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73E713AA2F;
+	Mon, 16 Feb 2026 09:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771232510; cv=none; b=mxYQqzRwMEp0Ga9sCrtZ7n8ox6cuHyo7C4ZjquGnRfA9QpnvT45kwoxIal83DOsW7MknVl8HDZwrUOl588PStVWGcEhXXakX0U+cReA85OLTfNPyawAj/WAL8yj/qwV073HCD3PJ6+B19JfpU7WNPtUnu9WTmKLEMpbHzY+NBDU=
+	t=1771234219; cv=none; b=hpY3N0J1/Gqzjj+BMxgXv3DiiMboKiAP5vKDzezxLL8KuuE4jZpPsF3ACs1Sm2+195WZvh/Vurjn5xH9GHlvF1wqt9dEVNEgyN8NnzyFktJtlJJVUYZ0SlJQS9RkbP4Mz8KTiM1xNFLx0i+P8lSwoEngnKmifXUoDd+bTFaNQII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771232510; c=relaxed/simple;
-	bh=JkPMAavzwLTFq8prvcAV3K72XwnVPZLy6KPEo0Issqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HUvlEMRp/WnWny7p3j/QZk84wdt/AszMUMFBsdszrKQsF4zNtjjn2NZ+9LLOSOLsVTVqTkp73OCFMWpq6BwzIQrg3dpOFQVphx9P/Z2or6SvJ3szSiPemxn1csJEySHm+WZb+2tATe61QVgXGm9A9K/s7VXr5D619OMSPvn6uCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GaDvnxHP; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771234219; c=relaxed/simple;
+	bh=On3wEf0+yn7vkojIv4yWSrS26SXQspZCTu8heTQRUD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nmW+hFUrzwdu4TwUHmB4ldIDZ93e76tX+jvPSofKTF9Q/VcPu31Nj4uX0Yzn6QekYSCs8O9cLlp6gVXNArbI2dzr7N7j5v3oeRvMKp/KqpBes++xSitQNG954X6bSMWl0JDqpeiVWA5lDW5PXxS5Ah7dNFiIL5vLQwsMrDfmwzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3TjRsc4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaDvnxHP"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-59e6c181402so3684998e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 01:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771232508; x=1771837308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RwldnQ5cJQ78NY64Pq9I1WXhiqI+ltEK3WKmy0FwY+4=;
-        b=GaDvnxHPtavHerKwQ142m5wazvlFvAr797kt8QXX7ApPd2aQ+7U0hVW4KeWM8no7Ya
-         QYNVHsWKHcBfXZPi+WXTulIwdWzhR1LYxn5AyHoZPJEmAKvF9jFjjLBsR/0271NrOmZi
-         kq1kmmCILpeAjuQ4OuRunO7oLJZGxEaBZH0JTywVV3bNwc2La3hTZOnDyxW+1SQ7w6hS
-         1l1IuvfGd4L5hm20vcs3KFE2ELJOLN7kCEEyAyrdfcNagFJmB9UEVekAQGIwpUGpeHOV
-         2XC8sjrQHz4qyQV57F+SPNrQeD8xZoV3rT3vWGOVzGDsDvUxV3EdIvsBAectjIIbVV9b
-         ygOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771232508; x=1771837308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RwldnQ5cJQ78NY64Pq9I1WXhiqI+ltEK3WKmy0FwY+4=;
-        b=MmMAGZacrD2u5UByqireubpvmu/gag5kFbfS3jmUMOtxhMptXKQnrv6az22lf/z6KR
-         PPF56o10PqG5JjI5y9zj1gamBLQCtPI+TE5+U3DIxncUx9/GrwImbAqJ78ycAysSwJPv
-         PrQIwqBxgwCI6gOJRVpWJmaY6ahe1ZWORmC2wZd3pfFw5YD0gPImju7oS6LXarCudHru
-         L827AKN8Hu/vRhP1jbEB1MsJokzD99vViuvsOkcVa2odj0fcKJndwcW+GIG9mLpAP9bJ
-         gfezT/UoSyyODmzcXixSYJ9gGi06OshmY3uhtKihWY0S57+x2pc4ayXs+E2c/ABNNgx4
-         4xUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXV7qQgv4iuDZm+Ic2Sy1jtt1xWqhd1gM2WYkVNh6tOouB4XFmRDQ1QsFODph1CD3EuIhmV4LrI/pctt02Tk3z/9lk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSaQSCX84UZy1vLFhFseaiSy9mF6HdOP7dtBJutvaKFE5Xpeam
-	wWK+g3tEmfKjuiW6opLaKCd+BJk3A5052N/klRjFyTMRN2i0c6J5hyDw
-X-Gm-Gg: AZuq6aJKn9pPmxtRbMtEOxXcKdX/RQExbP79hFmo/pZaSZaxdefgkN+PZdQYpHjuy6N
-	zdauJLdSnyfgtWOf7y0B3uk2e09gOpULDdbOR6mJkddDOUIQ0jLUWaxSLNyDWtKwm3LiSKKnKSv
-	SdSkR1KglxrtMk560p1YyheK5PI226KiL29xCT1uRoopP4qzUQtifRwsh1IICjO7EgnpcIjY4Cb
-	KAle4308sBzxOL8Dd6PWQhhFLCOEztZYqr9nKKnMoMAYEr1TkAiqOssbY0aGGQb7pe4vfkiVDp7
-	tjnMDCQwD6thFK59QsczNH0DKjz6rQ0QVAhOLGvd9kXtktAAZ2Q40lVJNF6eEe4n5h03RSmRuNX
-	HeEwwu8akXZsIoAZwVMIbS75h3523rWrJcO1M28yBLR3BIyJC2gwtUl4MaqdckabxcTN07m8wYu
-	GViTzBKd8PU+lgKj/8G6SSnUIe2QcPcYeRkg==
-X-Received: by 2002:a05:6512:1113:b0:59f:70ea:29eb with SMTP id 2adb3069b0e04-59f70ea2b81mr1424942e87.26.1771232507336;
-        Mon, 16 Feb 2026 01:01:47 -0800 (PST)
-Received: from localhost ([188.234.148.119])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e5f56fe99sm3141647e87.36.2026.02.16.01.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Feb 2026 01:01:46 -0800 (PST)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Gabriele Monaco <gmonaco@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3TjRsc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1ADEC116C6;
+	Mon, 16 Feb 2026 09:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771234219;
+	bh=On3wEf0+yn7vkojIv4yWSrS26SXQspZCTu8heTQRUD0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H3TjRsc4L3l4HZjeu0D7Py+oyVwZrDbW3qHOAsTzIMr6So3wi1ojvp5oTza4EmT62
+	 dNnaFsiSjyX/qtzYdRCRUJ2lCtM8nSy5CZUMpjiIHcTvaDXFOqWtrX3reUMSwHhuBi
+	 epueCJZRA4zQcB4CZKwCNR4HaOoK/nsdafI8n5IxmkN90OZ5G5J6uxatUyIfqJUxBJ
+	 2EjTvdQFszKgKXUVWPIaybDMe7yyonZh8ddX7556FGwTPBBfbnnKki0GCaImkellZ3
+	 2mGYsJ2E5Zqg6STXd2NVxTRP+OH58G7bLaGYhaWsPBJZB2/oGxVuoGXHu8E4GPvwnV
+	 0lr9GmJzaL8Kg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Subject: [PATCH v2] rv: Fix multiple definition of __pcpu_unique_da_mon_this
-Date: Mon, 16 Feb 2026 14:01:41 +0500
-Message-ID: <20260216090141.757726-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <628790bb5ee45c8968550a54388862f020d014ff.camel@redhat.com>
-References: <628790bb5ee45c8968550a54388862f020d014ff.camel@redhat.com>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: ring-buffer: Fix to check event length before using
+Date: Mon, 16 Feb 2026 18:30:15 +0900
+Message-ID: <177123421541.142205.9414352170164678966.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The refactoring in commit 30984ccf31b7 ("rv: Refactor da_monitor to
-minimise macros") replaced per-monitor unique variable names
-(da_mon_##name) with a fixed name (da_mon_this).
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-While this works for 'static' variables (each translation unit gets its
-own copy), DEFINE_PER_CPU internally generates a non-static dummy
-variable __pcpu_unique_<n> for each per-cpu definition. The requirement
-for this variable to be unique although static exists for modules on
-specific architectures (alpha) and if the kernel is built with
-CONFIG_DEBUG_FORCE_WEAK_PER_CPU (e.g. Fedora's debug kernel).
+Check the event length before adding it for accessing next index in
+rb_read_data_buffer(). Since this function is used for validating
+possibly broken ring buffers, the length of the event could be broken.
+In that case, the new event (e + len) can point a wrong address.
+To avoid invalid memory access at boot, check whether the length of
+each event is in the possible range before using it.
 
-When multiple per-cpu monitors (e.g. sco and sts) are built-in
-simultaneously, they all produce the same __pcpu_unique_da_mon_this
-symbol, causing a link error:
-
-  ld: kernel/trace/rv/monitors/sts/sts.o: multiple definition of
-      `__pcpu_unique_da_mon_this';
-      kernel/trace/rv/monitors/sco/sco.o: first defined here
-
-Fix this by introducing a DA_MON_NAME macro that expands to a
-per-monitor unique name (da_mon_<MONITOR_NAME>) via the existing
-CONCATENATE helper. This restores the uniqueness that was present
-before the refactoring.
-
-Fixes: 30984ccf31b7 ("rv: Refactor da_monitor to minimise macros")
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/rv/da_monitor.h | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ kernel/trace/ring_buffer.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index db11d41bb438..7511f5464c48 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -20,6 +20,12 @@
- #include <linux/bug.h>
- #include <linux/sched.h>
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 630221b00838..1ef17d6fd824 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1848,6 +1848,7 @@ static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu
+ 	struct ring_buffer_event *event;
+ 	u64 ts, delta;
+ 	int events = 0;
++	int len;
+ 	int e;
  
-+/*
-+ * Per-cpu variables require a unique name although static in some
-+ * configurations (e.g. CONFIG_DEBUG_FORCE_WEAK_PER_CPU or alpha modules).
-+ */
-+#define DA_MON_NAME CONCATENATE(da_mon_, MONITOR_NAME)
-+
- static struct rv_monitor rv_this;
+ 	*delta_ptr = 0;
+@@ -1855,9 +1856,12 @@ static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu
  
- static void react(enum states curr_state, enum events event)
-@@ -183,14 +189,14 @@ static inline bool da_event(struct da_monitor *da_mon, struct task_struct *tsk,
- /*
-  * global monitor (a single variable)
-  */
--static struct da_monitor da_mon_this;
-+static struct da_monitor DA_MON_NAME;
+ 	ts = dpage->time_stamp;
  
- /*
-  * da_get_monitor - return the global monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return &da_mon_this;
-+	return &DA_MON_NAME;
- }
+-	for (e = 0; e < tail; e += rb_event_length(event)) {
++	for (e = 0; e < tail; e += len) {
  
- /*
-@@ -223,14 +229,14 @@ static inline void da_monitor_destroy(void) { }
- /*
-  * per-cpu monitor variables
-  */
--static DEFINE_PER_CPU(struct da_monitor, da_mon_this);
-+static DEFINE_PER_CPU(struct da_monitor, DA_MON_NAME);
+ 		event = (struct ring_buffer_event *)(dpage->data + e);
++		len = rb_event_length(event);
++		if (len <= 0 || len > tail - e)
++			return -1;
  
- /*
-  * da_get_monitor - return current CPU monitor address
-  */
- static struct da_monitor *da_get_monitor(void)
- {
--	return this_cpu_ptr(&da_mon_this);
-+	return this_cpu_ptr(&DA_MON_NAME);
- }
+ 		switch (event->type_len) {
  
- /*
-@@ -242,7 +248,7 @@ static void da_monitor_reset_all(void)
- 	int cpu;
- 
- 	for_each_cpu(cpu, cpu_online_mask) {
--		da_mon = per_cpu_ptr(&da_mon_this, cpu);
-+		da_mon = per_cpu_ptr(&DA_MON_NAME, cpu);
- 		da_monitor_reset(da_mon);
- 	}
- }
--- 
-2.53.0
 
