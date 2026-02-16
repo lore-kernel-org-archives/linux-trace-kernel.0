@@ -1,90 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73E713AA2F;
-	Mon, 16 Feb 2026 09:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA2A2E62B3
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 13:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771234219; cv=none; b=hpY3N0J1/Gqzjj+BMxgXv3DiiMboKiAP5vKDzezxLL8KuuE4jZpPsF3ACs1Sm2+195WZvh/Vurjn5xH9GHlvF1wqt9dEVNEgyN8NnzyFktJtlJJVUYZ0SlJQS9RkbP4Mz8KTiM1xNFLx0i+P8lSwoEngnKmifXUoDd+bTFaNQII=
+	t=1771249392; cv=none; b=J6ch3u11iy1IeJz5kTKlPd9TpO+70e6Hp7qHz/R6YZaxnfxNV/WPqqrhkqGfXRCd8tuyDpCGbz6jbLmL+mxUasHVU4ky3WOzJxp93NPtXM2UFo0WUqvSD5tApA66xgIMikuD111/bXui2mjBJd1IxeeI+GiSb0UZ64mWtWclpCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771234219; c=relaxed/simple;
-	bh=On3wEf0+yn7vkojIv4yWSrS26SXQspZCTu8heTQRUD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nmW+hFUrzwdu4TwUHmB4ldIDZ93e76tX+jvPSofKTF9Q/VcPu31Nj4uX0Yzn6QekYSCs8O9cLlp6gVXNArbI2dzr7N7j5v3oeRvMKp/KqpBes++xSitQNG954X6bSMWl0JDqpeiVWA5lDW5PXxS5Ah7dNFiIL5vLQwsMrDfmwzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3TjRsc4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771249392; c=relaxed/simple;
+	bh=6LFDVuA/OHDoi2ew3Yc8wiYv2QuvPmtPY+dggEg3SkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bpGWlz9FmMT2Lx3drEngcJiUU4pUE/OSuxEvCpB+wVVYdqG7/mchYdh6n83DxytAZDgNDFddvUyI+UiUpxqZWQp+F8/+ilfs7lypCxUkbeNXCT5XQZFn460OlrKQSVGby9/Wv7ZORlCYsbEShVFh3v2AOcSw+5exoz4NbVcV2p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gfExkZ7u; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3TjRsc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1ADEC116C6;
-	Mon, 16 Feb 2026 09:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771234219;
-	bh=On3wEf0+yn7vkojIv4yWSrS26SXQspZCTu8heTQRUD0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H3TjRsc4L3l4HZjeu0D7Py+oyVwZrDbW3qHOAsTzIMr6So3wi1ojvp5oTza4EmT62
-	 dNnaFsiSjyX/qtzYdRCRUJ2lCtM8nSy5CZUMpjiIHcTvaDXFOqWtrX3reUMSwHhuBi
-	 epueCJZRA4zQcB4CZKwCNR4HaOoK/nsdafI8n5IxmkN90OZ5G5J6uxatUyIfqJUxBJ
-	 2EjTvdQFszKgKXUVWPIaybDMe7yyonZh8ddX7556FGwTPBBfbnnKki0GCaImkellZ3
-	 2mGYsJ2E5Zqg6STXd2NVxTRP+OH58G7bLaGYhaWsPBJZB2/oGxVuoGXHu8E4GPvwnV
-	 0lr9GmJzaL8Kg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gfExkZ7u"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-483770e0b25so26599585e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 05:43:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1771249389; x=1771854189; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KscRVRXxkytRt9vX8fO/qS5kgHQyf359sOu4xxSiI7s=;
+        b=gfExkZ7u8G5hJcve3qrrt8XlKYPQ9NYe8VzQahMyzQmC+jDHP7KGjrEQfll/yZKBXI
+         VqXLKaQ8lpfa/+NHSIscDCNegmuF3z/8yw2Dmvoq8gnR8JKttwNWcoGZC0doru4/qgXh
+         i7PvN1R918uL7HoKEu/eXdMJoGKgGTesTB7uAd0sg09XMqukQFZrhQ03Bq1pVNYxSO0g
+         G2PWmPSsoRsJLAnOLuhu1TV2WriP/Su9ROyKfE3dxaZKoWpcYxFhXJMms3Jzv+/I0ZHp
+         p8wWibn8PzwQQn+XwIdvAJ5DrqyWsqBG4aiQV/zZx6rPTSgmISIywTDwYjhwDlew19dg
+         q0eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771249389; x=1771854189;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KscRVRXxkytRt9vX8fO/qS5kgHQyf359sOu4xxSiI7s=;
+        b=lWLYYZxpvqVY5fsDf0d5Lee+BuNLvDpKd9gzr1dCVWAQAe4BwJYxjKYYDaubTlspYq
+         6B57PQf7P20eZ08myWkzCoGuKTaqpF84BZTa1bs0T4CIq7nmMf9+Qib4r8LByWU/f1ho
+         aP41PgZDLsvj1h4VCpPJoCi7fgotY0x1shc2xk/p9RFXTs3+dwOzgJLM2//6HYbDvAOc
+         +8o3OSlruUBNLRGLwHQv+ZqjBRHYWyhneGneZloHDyoGDGKmZedStwInDUhsWXFUxsni
+         m8IkD3rzHS1b/pqstrBZm8nnbsi55sO7mu95eJoQfe4NEKfrOudml/ofEZzYzaHbTFh2
+         38Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+pO+09/gzqzAkH3+Gf5iFL2Sy4aDSCQDCYjpDCEeKk45vI9vN6/0tgSBdFb8AIz7AQaLl9CjT8TNwwxMZmTEivo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm75V84iCYU4360b+wzv9QPTE8+pyrrpUzY2bWKFjZkJJcQmLE
+	MKgSqPRsx8oyjGozv6J+h/aAe2K1uVajXGxQpFsZkaBMcU+yLhNof1Rn/KUqsd5vxoE=
+X-Gm-Gg: AZuq6aILbou9E6atZLgLRBOjUrFZEtEYVAp64RypY9n5vk6yu5/+6W/PNi4Hbpyffbe
+	A0YmoOSrtY3oNwh9BuKGUC5wiIGse5N4tH681rGOqgR1zvw+jB7QM+uEqlwUVLQU70GNAcwlkPI
+	YWGV4H3ghaiagVjVKTSaox33uDCCn9IxPAAeJ3uEBNaRAslZKJmzjSGbbxDq1JbhlKxcXx0s0Ga
+	cMdEYx6TuBlbD8WH3hWZAF9FZXSe6MQrKPchijPEvnqNq3AIVtnaY6fgox0jSAmFHj1MGixQ0qp
+	tWYFgwB7UWZCviioPOAhB9xc/8V7wsJSkVtdsKbxYxyGZnz73cYAKpEQGN+3A75/mqZON4GHgJ6
+	90nFeI0fgthjveJqVI7vPv5VXLMdP+hnSOmJwZG/FbqPxgZfY0ELNc7eX/F9gdk6sRSsFofewlv
+	LnoXI0zjoSUeR91r2M90iKoAJXXa0KP8+myycK+pT/
+X-Received: by 2002:a05:600c:8b4c:b0:480:5678:1fdd with SMTP id 5b1f17b1804b1-4837105240amr182277585e9.12.1771249389110;
+        Mon, 16 Feb 2026 05:43:09 -0800 (PST)
+Received: from zovi.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796a6ba57sm22103738f8f.15.2026.02.16.05.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Feb 2026 05:43:08 -0800 (PST)
+From: Petr Pavlu <petr.pavlu@suse.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: ring-buffer: Fix to check event length before using
-Date: Mon, 16 Feb 2026 18:30:15 +0900
-Message-ID: <177123421541.142205.9414352170164678966.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	linux-trace-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH v2 0/4] Clean up access to trace_event_file from a file struct
+Date: Mon, 16 Feb 2026 14:41:56 +0100
+Message-ID: <20260216134247.1311631-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This series includes several patches related to accessing
+trace_event_file from a file struct. The first patch is a fix for an
+edge case, the remaining patches are minor cleanups.
 
-Check the event length before adding it for accessing next index in
-rb_read_data_buffer(). Since this function is used for validating
-possibly broken ring buffers, the length of the event could be broken.
-In that case, the new event (e + len) can point a wrong address.
-To avoid invalid memory access at boot, check whether the length of
-each event is in the possible range before using it.
+Changes since v1 [1]:
+* Fix a compilation error when CONFIG_HIST_TRIGGERS is not set.
+* Drop a patch that references the trace_event_file data in
+  event_file_data() and keep the simpler implementation of storing the
+  id in i_private.
+* Inline event_file_data() into event_id_read() to enable adding
+  additional checks to the former.
 
-Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/ring_buffer.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Petr Pavlu (4):
+  tracing: Fix checking of freed trace_event_file for hist files
+  tracing: Remove unnecessary check for EVENT_FILE_FL_FREED
+  tracing: Clean up access to trace_event_file from a file pointer
+  tracing: Free up file->private_data for use by individual events
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 630221b00838..1ef17d6fd824 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1848,6 +1848,7 @@ static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu
- 	struct ring_buffer_event *event;
- 	u64 ts, delta;
- 	int events = 0;
-+	int len;
- 	int e;
- 
- 	*delta_ptr = 0;
-@@ -1855,9 +1856,12 @@ static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu
- 
- 	ts = dpage->time_stamp;
- 
--	for (e = 0; e < tail; e += rb_event_length(event)) {
-+	for (e = 0; e < tail; e += len) {
- 
- 		event = (struct ring_buffer_event *)(dpage->data + e);
-+		len = rb_event_length(event);
-+		if (len <= 0 || len > tail - e)
-+			return -1;
- 
- 		switch (event->type_len) {
- 
+ include/linux/trace_events.h     |  5 +++++
+ kernel/trace/trace.c             |  2 --
+ kernel/trace/trace.h             | 17 +++++++++++------
+ kernel/trace/trace_events.c      | 17 ++++++++---------
+ kernel/trace/trace_events_hist.c |  8 ++------
+ 5 files changed, 26 insertions(+), 23 deletions(-)
+
+
+base-commit: cee73b1e840c154f64ace682cb477c1ae2e29cc4
+-- 
+2.52.0
 
