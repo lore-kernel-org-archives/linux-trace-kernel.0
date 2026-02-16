@@ -1,54 +1,73 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F413C2C08A1
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 16:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B162DAFCA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 17:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771258414; cv=none; b=haWj0PSkQ0e/BIMt98W12n1NvKVUNIgWx03QyAOrqIEMpf0jipGGIgRW9j6XDV6+xTKl5iCE/wJ5XkTngHaLqTLbV17huuDNO64XvXqT5gt9GCqJA8odblGvn0qf1qjnKum0zs2jrJV9egL24OO3nuaO/2e1RYHA+Src9c0eg2U=
+	t=1771262838; cv=none; b=Aiq5s+E4f9anMMilxIrtAsXJby4UydFfJZvyvipMeKjsnGs9sCP/sijAaMG2i6rP7ItnA4mxh95Umwxnz7JZXaNraHO6SEYmlgKh+0JLCYWDeWcIT0AzwoKzLorrT/WqPws30nlEAF0VmOhDxdKU5Jatoe2/8rd2Hm83CaZ4LpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771258414; c=relaxed/simple;
-	bh=qc7/hUJjUzJlnkRhkCNiAFDT455mPOzjJ2hcG7qZ/cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BoZ5OPdxP+xHcbn+ovGG+/0L9kgbI12/rBc7GZNd9sGl6S5iepkT/p2bC2J5w9JQvoFN5yDoefjavkOvUoQyfC6pjACwKAnOVMzapnPbcDYkQrTTGwcW6SZ5+E/JColqr1DiOp49fpXYN0WtRUQG9h3BkdIiYFv682lGVtMyaB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c8XLrnX1; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1771262838; c=relaxed/simple;
+	bh=ekHiVyjqiaGWoE6RXaxfHJcPuigOMr+k1bVFfn5BEgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AumuUWyU1sfe6u2Xpl986yr/5+Sp5ewC1TRFxLcHNAUSC/knNyQoBbQR6JgmfU5VDORiNlgYPSr5acRxJ2qRKrxA40cyxt7pVd6gz2xt/wVJSky1xJd0NmrhYTIiKDPMikY5TC1SA9qo2r8mtdjfxE2kiyutrj0wCajlVPiHBeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp5D+yBI; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c8XLrnX1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1771258410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yEJ5XvR25sXoqOGNkg3EARgXM9Vsv7j5sELin0pzSgk=;
-	b=c8XLrnX12RT3ltlhocYhfvfPUctuYDZKleznOrVR3zi9mOSYePzGZRsxPNmGk6J/FUD3ME
-	ZxEmQfr9BExV+vYE5W5cv/Ix/VhWA2BpWQP1DBxZweQqzFInCyW1HtDzt67O5149Px4gho
-	wObQ+K2SdLr6UpeJefyD4jzhGWZVPMs=
-From: Usama Arif <usama.arif@linux.dev>
-To: Thomas Ballasi <tballasi@linux.microsoft.com>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	akpm@linux-foundation.org,
-	axelrasmussen@google.com,
-	david@kernel.org,
-	hannes@cmpxchg.org,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp5D+yBI"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-59dd54b1073so3865647e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 09:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771262834; x=1771867634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f3LfzZMm5dzBOXfXpr+wyEgw8UjxM0o7eUchqH58TlY=;
+        b=Wp5D+yBIgHVQSCantxJItfvS01Dm28smNHlZKImim+JvaSI7Nqs9Bes+gnnhesSjUx
+         c/Grto65zCAb4Zr50arCvUiquIbCEdeeT5oTl6MsJQCiR0XpwigG+iR76MXJ7A+zDP8a
+         6/7hatSVC61dPAmYI3R707I2ChvFrpMg+ubTNZYpQedA0i+3KOfyUV019CpiYh6LmvM5
+         H48hxMUKwbynbSZZlu8g+CrSpvLMjex341HEjtR1XvFqMHD0Ci0qIi8AqViOZG8fU4N3
+         iWR3Lz98M9Tc9Dp/qEJz4ySV/1JLEn+oJn3RmwGI8HcTST9y6YgRMZ/1+xd3b5A8RkPv
+         3R+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771262834; x=1771867634;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f3LfzZMm5dzBOXfXpr+wyEgw8UjxM0o7eUchqH58TlY=;
+        b=hIZfoLFwad21rqYslV7fLPbqZyGo2vKHO8i8iYVPTLaAel6m1vx3mmy+kE7plSeIsN
+         RVhUhQLPYTYXJ/T5jpYVezcEBXk41BwhUSqLa3mxLh34lhDHqbJG3OnQ4TVT8osC3Pba
+         Z9kbCnIUL2PYOE0ZiUnRUSU3Z9/mmfzim7QDYRq+l3bnUbuELd9+COyxEvZLDLFWVata
+         TknbWkXc+aQ2myg2OO9Y7taEJsS3yg95mnXfioKfwHRA4wcij1IzMdUuKW4V7mCkrB2l
+         qOfGpKQ2497nlDHclgP8Qt2j0jWetH8thWj0r3n209PdcLGUM9MLZMDQUFAvKrjIcp2Q
+         VNkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/9WWC8nlxSZX+Q+nBQqmDH4cEKzdTwlnn9ZjxZFzCOmSkmAYATWew5vOtTjK+BqfubyB40dWX+fsOZP+HSDI6pR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7uJOxTPAK/QvE7JuLTKMNpwpxWidKL33Rsd3nVYXqk/w6tqzr
+	EwvvF2T7nd2V2/kxEhojKaXU6AoKpao2xzhQl5JkhnPvf8OnXHTCn7RH
+X-Gm-Gg: AZuq6aKXbPMeE9FAFV0LU+p30v7xpMWcEDGh7If4PY9Pto7EWNjvbMZqMPfPQdzjYjq
+	mhlY96yCs1TN/gFRKltrjh0FBarxPYYQoAZhtOTdXbVLKNgZdq+/pQQl7qM9NMJuIPNnCM4g3k5
+	zAMAvHQorIkSMzrJO7aivPHfvVurAaTFk2X3nq60ZLNSNzPdZWa4oibhTvYWj39nDUOJfJQPLME
+	6vxXDrZvi0dOP5rviWuw3a0Z02s7t9UBxu2bWO0Rlgm5Nui55x+TMcGil+35MdsvyCMpt6nFwg3
+	vyKYUC9dN76TXQO2Gt3fEm2MzCqdCm0pUqFwzdzP9gGrzZ0oQxPf05TZPGMOpstyH6LcQAapblH
+	tNdRjId20ZmOtHBlCsTZZYfrZYySqRYb8TEkqWGITRSSkPhsw0Ubmmnn4Bhc5p4lA4zdVPwQVqZ
+	BighVgGDK+oJB3dctt4mpHdcGk38avMMRj1ga2LpZF4AQ8
+X-Received: by 2002:a05:6512:224d:b0:59d:e7b1:419e with SMTP id 2adb3069b0e04-59f6d34cf47mr2685656e87.11.1771262833724;
+        Mon, 16 Feb 2026 09:27:13 -0800 (PST)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e5f5b062asm3322901e87.73.2026.02.16.09.27.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Feb 2026 09:27:11 -0800 (PST)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Gabriele Monaco <gmonaco@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org,
-	lorenzo.stoakes@oracle.com,
-	mhiramat@kernel.org,
-	mhocko@kernel.org,
-	rostedt@goodmis.org,
-	shakeel.butt@linux.dev,
-	weixugc@google.com,
-	yuanchu@google.com,
-	zhengqi.arch@bytedance.com
-Subject: Re: [PATCH v6 1/3] tracing: Add __event_in_*irq() helpers
-Date: Mon, 16 Feb 2026 08:13:21 -0800
-Message-ID: <20260216161323.4098568-1-usama.arif@linux.dev>
-In-Reply-To: <20260213181537.54350-2-tballasi@linux.microsoft.com>
-References: 
+	linux-kernel@vger.kernel.org,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: [PATCH v3] rv: Fix multiple definition of __pcpu_unique_da_mon_this
+Date: Mon, 16 Feb 2026 22:27:07 +0500
+Message-ID: <20260216172707.1441516-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,25 +75,103 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On Fri, 13 Feb 2026 10:15:35 -0800 Thomas Ballasi <tballasi@linux.microsoft.com> wrote:
+The refactoring in commit 30984ccf31b7 ("rv: Refactor da_monitor to
+minimise macros") replaced per-monitor unique variable names
+(da_mon_##name) with a fixed name (da_mon_this).
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Some trace events want to expose in their output if they were triggered in
-> an interrupt or softirq context. Instead of recording this in the event
-> structure itself, as this information is stored in the flags portion of
-> the event header, add helper macros that can be used in the print format:
-> 
->   TP_printk("val=%d %s", __entry->val, __entry_in_irq() ? "(in-irq)" : "")
+While this works for 'static' variables (each translation unit gets its
+own copy), DEFINE_PER_CPU internally generates a non-static dummy
+variable __pcpu_unique_<n> for each per-cpu definition. The requirement
+for this variable to be unique although static exists for modules on
+specific architectures (alpha) and if the kernel is built with
+CONFIG_DEBUG_FORCE_WEAK_PER_CPU (e.g. Fedora's debug kernel).
 
-Should this read __event_in_irq() and not __entry_in_irq()?
+When multiple per-cpu monitors (e.g. sco and sts) are built-in
+simultaneously, they all produce the same __pcpu_unique_da_mon_this
+symbol, causing a link error:
 
-> 
-> This will output "(in-irq)" for the event in the trace data if the event
-> was triggered in hard or soft interrupt context.
-> 
-> Link: https://lore.kernel.org/all/20251229132942.31a2b583@gandalf.local.home/
-> 
+  ld: kernel/trace/rv/monitors/sts/sts.o: multiple definition of
+      `__pcpu_unique_da_mon_this';
+      kernel/trace/rv/monitors/sco/sco.o: first defined here
+
+Fix this by introducing a DA_MON_NAME macro that expands to a
+per-monitor unique name (da_mon_<MONITOR_NAME>) via the existing
+CONCATENATE helper. This restores the uniqueness that was present
+before the refactoring.
+
+Fixes: 30984ccf31b7 ("rv: Refactor da_monitor to minimise macros")
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+---
+Changes since v1: https://lore.kernel.org/all/20260216074727.47292-1-mikhail.v.gavrilov@gmail.com/
+- Updated commit message with details on when __pcpu_unique_ uniqueness
+  is required (alpha modules, CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
+- Added code comment above DA_MON_NAME explaining the rationale
+
+ include/rv/da_monitor.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index db11d41bb438..7511f5464c48 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -20,6 +20,12 @@
+ #include <linux/bug.h>
+ #include <linux/sched.h>
+ 
++/*
++ * Per-cpu variables require a unique name although static in some
++ * configurations (e.g. CONFIG_DEBUG_FORCE_WEAK_PER_CPU or alpha modules).
++ */
++#define DA_MON_NAME CONCATENATE(da_mon_, MONITOR_NAME)
++
+ static struct rv_monitor rv_this;
+ 
+ static void react(enum states curr_state, enum events event)
+@@ -183,14 +189,14 @@ static inline bool da_event(struct da_monitor *da_mon, struct task_struct *tsk,
+ /*
+  * global monitor (a single variable)
+  */
+-static struct da_monitor da_mon_this;
++static struct da_monitor DA_MON_NAME;
+ 
+ /*
+  * da_get_monitor - return the global monitor address
+  */
+ static struct da_monitor *da_get_monitor(void)
+ {
+-	return &da_mon_this;
++	return &DA_MON_NAME;
+ }
+ 
+ /*
+@@ -223,14 +229,14 @@ static inline void da_monitor_destroy(void) { }
+ /*
+  * per-cpu monitor variables
+  */
+-static DEFINE_PER_CPU(struct da_monitor, da_mon_this);
++static DEFINE_PER_CPU(struct da_monitor, DA_MON_NAME);
+ 
+ /*
+  * da_get_monitor - return current CPU monitor address
+  */
+ static struct da_monitor *da_get_monitor(void)
+ {
+-	return this_cpu_ptr(&da_mon_this);
++	return this_cpu_ptr(&DA_MON_NAME);
+ }
+ 
+ /*
+@@ -242,7 +248,7 @@ static void da_monitor_reset_all(void)
+ 	int cpu;
+ 
+ 	for_each_cpu(cpu, cpu_online_mask) {
+-		da_mon = per_cpu_ptr(&da_mon_this, cpu);
++		da_mon = per_cpu_ptr(&DA_MON_NAME, cpu);
+ 		da_monitor_reset(da_mon);
+ 	}
+ }
+-- 
+2.53.0
 
