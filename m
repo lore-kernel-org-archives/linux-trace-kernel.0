@@ -1,80 +1,79 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7874238C03
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 03:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCB925D1E9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 03:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771297797; cv=pass; b=S6SYdhLHatS6Qmu6lCAtlLO2dNB6gOL6uazdND4zWpnlCSOo2mwxg/+dxLQuI3Maj6YAxjpFk1UPAcY8YR8uhYpeJB8jdwGlTI1+c38BIBVf9Ei5Mof87B+uMBsZf3JXdaVDEZZa0EEUow0eK60/ChAuvJt7V36VvwoqCHgKqxM=
+	t=1771297804; cv=pass; b=lBFrlv+YHTxw2960B5qruuNE5cNMeREs0kWV+6yF4sQy2Ntc/BHPAMoxclaRDK26sCA6rFvNbwVWxqEGfa/yarYnuCFn3So6pzlv73aQjupvUKpAXOdDblE89BylF/C6qk9kO2yK72JPWe7o4Bsx8jfnMQqYZ+oOvfiofdui8wg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771297797; c=relaxed/simple;
-	bh=WNJ7CArScZ/+Vc2sAVn4A+RrE6Rft2bUxLR+tPKvz+A=;
+	s=arc-20240116; t=1771297804; c=relaxed/simple;
+	bh=ofPs2sqR/7hFSXuz8Pb2PYyB7YnqTqlvrNO3he9vatU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oyHz3mUflCtxNuq9WBMLueb34wq3VXld+2grYqGmn2sDHy1smXi+eP68/n3xfGFl54x4Nk7sBWNxrzDk/uyRbyaOAATaYQ6yTiiLirT7jx1DQGz8VbWEoBR+0udDnihOo0fDQB+ojdF5AL/GQRMdtVLGRF6JhVVsAeq/tA7dwDE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XtX//paM; arc=pass smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=JoVNeqrZ+AhUqEhyVQDu8O/8GL7nXI4x9572eb5y1Uy/ZJj0kJkwrCYmAQZvkWqyLUkeSd6Y9o4KiuYtcsbOMW+5nYvL/T7HocqY6wxB+i8edNLeNq2+AHZcRgJTlJPyDfqgy4AmfYO8xhckEjaKtg9eHYdm6ai8jiZXQrRhgwg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GqwrfUNn; arc=pass smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtX//paM"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65bfc858561so2711205a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 19:09:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771297794; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqwrfUNn"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-65815ec51d3so6145308a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Feb 2026 19:10:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771297801; cv=none;
         d=google.com; s=arc-20240605;
-        b=liP3cPbERJ32NydhFxquo53qaJ0LjCFhc2MjJlC8doZo8lyC0QdR6/uj4Etoz1vrPL
-         8NR1cTVDbyhp0/QyX4Zxd9sANN48FccnTDeUULmqvT+4oBoo9lfT3VEePYpvshXFuIFX
-         KhSzPzIu74RlI9R1W8pbKjZt/zIA819MoOLgXcB15Sc8Yn1ADBebiEIpcoByDzIZStV+
-         pU6pg5/GSHhsr/yNUCTM/a1I+ibo8HhV/6qUM9DMi+naWrM0tzxb9r4va6qnQtEb7tCB
-         1Nx9UxsFGdENWCwIPDnJYWB0wqTzhElw1OD3wUUk2YUfu8PT2qYWyjqUyadH8VJiYN0W
-         DbKg==
+        b=A+ERTljWEeiMM7e4tQLV0MowQjYgZQyC+Ot/ZAbeOGZAwEcn8R6s2NAxswgbqFLDcd
+         AZ0wjAY92c946bVvCCHyTEQGL8kGem1rDzudEhKYEDMhI/jWXAS1TvKs8Z2qKXFif+Az
+         TTTYdN5+6lwqOhIN7S691k2mv83dNj3diNFQ7PZpEGe5AffR7cNPpiHiwg/JSOgFfoxq
+         oIZJTo7fP4jt0GClaPU9JTzwGvsDuvqIsir+eKxIKOMmq0eq9qey5w0/rcbAYpT1gCV+
+         CNLmcjbvxxXBXRi3FKmXoHD5jJ9lIiYX80K69+wmtrMuCpPuTcwkszWJ8RiW5Mmv3xQG
+         eeCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=AtABjezky6jspX54oKQuWBarwSsaWGJQ+140qN8QzQQ=;
-        fh=mUYO/DvgIStqDUgmHtD6VqZ6DQ9ZQz28yqzkQIYrqGU=;
-        b=AC/uS4F39wCP+Co+xkVCHOF56nekPP+dslrJwwn6vI14Ml6OP5JenA35HqnMh5iPgi
-         bUHT+ur5NhSh5DYCL5aXv3fOVokkR43mCjTxWuXCHPxciHusKfMaLt79pIcRfA0o9zvb
-         5NPSyyjSu1rajCsLv2qnEYRu7WlIlfiNPXBaPK6+b8A87/yXDQODqV+H2MV9O15CJD2w
-         mTHLCf25tN9vO2J2Q7w6tBPWlpQdpD1vU80SBQmG6Na5QZcO3tklLemp/EXe4pTmgc7J
-         lsr4QmN3inwm6bt0wfJFNerQTKYEzTwhvQRsu2k2lDbbfku/DEf6N/ltxwCmTfH3iDDu
-         MayA==;
+        bh=iVeS1RzWbIrQEXUvoiGlAynfQkUjpWHptVhp2OcNuKw=;
+        fh=SFXLy/7slB7FgjAKTKbiPnrwv4J+btEVNHTUE9tyX6s=;
+        b=jPExAb+jMpxPFoY4LM0AcZyxQPjrKJoNZxpql4w3JM2cYbwnT1JLrF//voXON9byq3
+         84FwHG66NsyjY9dHOKNMq7oav4moPybZnGRpKz+2kyKVMINTMRi9Z5nV2UQaeDmWvtIS
+         P/AunZ3p+3tLOJp3eq1JM55KWuFdNAKhpg7FzXWgIWr0xQROGAo57sXDYv0YZVlJBJUz
+         AHKlUaExihg00dNcR1Ud3ezju+l4cqVmL7xkARxsF79ek6WN0tJ+Gf2nMIWX2HYx6W4/
+         KEPZqYItMeiFqo4oqmoWmVM2EwNsVKyBlAxKjmJCwJPexWsrxU5bk62K0xlqX1wWnSDa
+         sEpA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771297794; x=1771902594; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1771297801; x=1771902601; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AtABjezky6jspX54oKQuWBarwSsaWGJQ+140qN8QzQQ=;
-        b=XtX//paM8awkoxcrn3X/bNUL5sXOe/mwl7oMfWVIvf0sDegP6Dny8TeQ/Gw5trKZ+x
-         O1xU73mRjjm7pDbAyTX3ifxA0yLSdnIMVt9KZXMXCrTH2ZD2WL6T2rlKMcLVjYcnj848
-         Jk0wAlgR2K02qtdMfqddLACLWQi0rtt5vLj3zHHk/ZKZyUbsZGl0umGaOu0nf+DX+vPH
-         SRWGIQk5O4T5AbPH5+j3jSDWRATxHWMx2nzreUSwPnLTEaGsPz1I2WK9bFy0FRLCbW/j
-         20CFkmccXmin+91X05R5SiSoOrbUTOkylk0ydwqfxmgFl4Xl1Y0zu3osq0MKp1oZGkFb
-         CAsw==
+        bh=iVeS1RzWbIrQEXUvoiGlAynfQkUjpWHptVhp2OcNuKw=;
+        b=GqwrfUNn/EMjm7EBLBVbsb38DtRmBhmaTwjH6pZWNaRELoIZDCr/iXUlwO25X2jSwO
+         nhvxlzLDtwIYfJeZPNDQ4LGeV43it7pJyScxqOHfk+BDbSSzGD84TlRmo1W47XfJTo+x
+         VYEtBy6V9sSdXTQM8X/gRK+BW6UjwO20/HNuZ1m/oZN1/soC2TKEmEl45iyu/W/kxH+5
+         QBqm8QJLnht4RiOE0ty7Yu+q/FG0/GI+GFGZDoknGdg4Gcnla8EAQiWEhv9xiuAMvN0t
+         t9VULSYTmSwajzX6MTWmv2JlFKaBMjP2aBfYvZqTrQGFzd2rCLBUy/G93W4k3sAM2JkB
+         D5Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771297794; x=1771902594;
+        d=1e100.net; s=20230601; t=1771297801; x=1771902601;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AtABjezky6jspX54oKQuWBarwSsaWGJQ+140qN8QzQQ=;
-        b=eqNX+/wk9C61x95zf2ZaGZqqb5cdw7lasfD2qSjoXKbwTbajjT/IqA6pk9lMJXBEFT
-         bS1EUWndCyDv+tFpeKBjmoJBb293lqiRqetPZd+4VNRvw3FUPaHlOT2/a9GnCsJ3Z6EJ
-         qCjrmdgv6mPSk5lmYsgC5ycEgz46v05V4QU/mda3Mrro2tHvHsIh2LeWY7v2IvUTYcDP
-         /jwcRqq1Cawzl8VhRQueQsjLAr0su4ikSuv88sOLI07POLFjOsieCraSYuByLWFrrbLv
-         kJHqTrGWwLP1iEOr4XQDTUaVO6W0WLXW627eHkCgNKrIZ9OshNWPCjp54vwzPJscrmZx
-         A1TA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHSk41KqTZYV/Ra7Ovqn3x6XO8d2nRKKfAzGL1ae38Fjq39z3s1vMSxVfT2kxHW0ZJecha6dMGImTb6QwMd8A+olU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKJFb5OoMvMIhNeauZDQrGHkqtQuiXLyQkWQJxk9uIEfgyVrEc
-	6xf9MvpSwZMPlLbW9EnPYL00Aw3hQmm4ICZqItWI2r1diON4i7c+9+yuge0ew/O9k36KQhJ1CKb
-	jZB5Jo58MAQhu4S0y82JvgV54Tbo9cMA=
-X-Gm-Gg: AZuq6aJXvI8e8FI5VV88Es+zinvJliGiwgerxaMOQbXRbHMOtCH8YtzMk8aSL8SS1kQ
-	sZfo1XN/FgUdu3F2FzUCHJOrDO0TYY1yX4UT/dNI0kBNOZ5areDWcdU2/+dVUUN7WRvzRoAEoci
-	2h/yRc5LAEcp0fCvB2Rx7Uz21B8MYaVryYVXRY7iBKD5LfutBlAios0TG30/wz8oX13bjzSKvPT
-	SyoyGTkV8snDt8Ct/iq9KkIeciZB9/G5Kp+VFflgMeNfE3m9fSLxqqDqlYfLZUjoTj4JzbTDUEP
-	0gKn8wbr
-X-Received: by 2002:a05:6402:34cd:b0:658:cbf0:6a08 with SMTP id
- 4fb4d7f45d1cf-65bc7881b3emr4943695a12.17.1771297793968; Mon, 16 Feb 2026
- 19:09:53 -0800 (PST)
+        bh=iVeS1RzWbIrQEXUvoiGlAynfQkUjpWHptVhp2OcNuKw=;
+        b=WHm7g76OW+kttjTdRt7MgEKeM07rfcefnTGpaEnU7uHCRCIGmSKJZLFsYyJvuzSF08
+         acR8xZrg1XwjSeShrwdvKJsLckzYdrPbIumPnsO54HuKgRLjMVOrNYltTkxw9zdrxnZl
+         coWQg+1rlxkgKexd6/4+o+O3AvVBJ9C4/ex+ht3yqNXXAskros4rhzhWwTD0JpG0qhgl
+         HBehDVy3+5anto0P15vpkFePm0MwstUbT5nD8v0Vn2HZxdTZbrfTeAKb1lcQaMtM/416
+         jHP9aB6ZJRZnD2njRJ6C98O8arrxYAeUo43ovSesEAULSZeUMtraetOLbz7yZT90bZqM
+         EBTw==
+X-Gm-Message-State: AOJu0YyTciWO2oDQaD2F2i19pHKWK9XCmjMRpitAX6Osmb8M0+9nRWys
+	Znq0vQBmLSSsmUdOZ4zqaR8QqslBtRNmzOJa1lU+qEKCI5ukjrl7S6i1UxlhkBk0RPDsy+FH9Wu
+	9WasnQNB5rQ2NaQRWpS4oEwu3CDBtSK8=
+X-Gm-Gg: AZuq6aIsiOmYf53HFCRlODQwXjq/lQlge651a6X29TtfeY+vDxmjaW0iFIJVCMU58XU
+	mux9As8moFj4siFOLz4KcrfwCub7LoYv9fFTPKFt9qm1LnUWkfnpbTdJLSO8+VeEwH+1j5XIhpU
+	PocbVJH/xR7BFu1Mk1QKUpMUFW59m7GQnCx3BYT9NCvHicvRe0oZ15THFIlUPO5my9Cotgg6hJ6
+	DhfM2oWMCrHtNvdnPZ9ZjM/RGpdDDO5cpPE20IMBa4GAGVmvL8OT9WNKF/HSq6u+uQUCA5VmFhP
+	iAPhGijUHilbZ6kPOfI=
+X-Received: by 2002:a05:6402:5188:b0:64d:3b22:a5c2 with SMTP id
+ 4fb4d7f45d1cf-65bc7a80278mr4801989a12.25.1771297801216; Mon, 16 Feb 2026
+ 19:10:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,84 +81,27 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CAErzpmtMrHWQVAQx=jiq_sWo=+c_JOUoQmPafo-fq+Q3qi+BBw@mail.gmail.com>
- <20260216162716.dc8ec2f3f2fe409b6c11e491@kernel.org>
-In-Reply-To: <20260216162716.dc8ec2f3f2fe409b6c11e491@kernel.org>
+ <20260216100935.645ea614@gandalf.local.home>
+In-Reply-To: <20260216100935.645ea614@gandalf.local.home>
 From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Tue, 17 Feb 2026 11:09:42 +0800
-X-Gm-Features: AaiRm52eNhFxUnDc-5IFjB_-kEm0gFZANns-vh_sOX7__Is6ulViyUIBoOfK0JI
-Message-ID: <CAErzpmtXmc_ibbVHXh_k91CJyq52KJ-N4m5fwjw=QVKcSdEdkw@mail.gmail.com>
+Date: Tue, 17 Feb 2026 11:09:50 +0800
+X-Gm-Features: AaiRm50Qgnq07VEQRvnHb6bNZ0CQFbIYHHaMWNzoRqZ0rSkmR22MjGt03FSzRTA
+Message-ID: <CAErzpmuP4cwHwykGYryCnLuBhBUUgUduWW-gcziGMFXr-G_h9w@mail.gmail.com>
 Subject: Re: Enhancing Conditional Filtering for Function Graph Tracer
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 16, 2026 at 3:27=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
+On Mon, Feb 16, 2026 at 11:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
 >
 > On Sat, 14 Feb 2026 18:36:24 +0800
 > Donglin Peng <dolinux.peng@gmail.com> wrote:
 >
-> > Hi Steve and Masami,
-> >
-> > I recently had an idea while using the function graph tracer.
-> > Currently, it supports basic
-> > filtering via set_ftrace_pid(PID-based) and
-> > set_graph_function(function name-based).
-> > However, this filtering mechanism feels somewhat limited. Given that
-> > we already have
-> > features like funcgraph-args, I wonder if we could enhance filtering by=
- allowing
-> > conditional tracking based on function parameters =E2=80=94 similar to =
-how
-> > trace events support
-> > filters/triggers.
->
-> Agreed. I think it is a good idea.
->
-> >
 > > To simplify implementation, I propose extending a new trigger type
 > > (e.g., "funcgraph").
->
-> OK, and I think the question is what do we want to filter. As you know,
-> the kernel function call-graph is a very context depending. I think we
-> may be better to start with specifying the pid filter via the tringger
-> instead of enabling/disabling it on all cpus.
->
-> echo "funcgraph:setpid:common_pid" >> events/fprobes/func_foo/trigger
->
-> Then, we can also specify a specific task's pid too via sched_switch
-> events etc. Also we can add "clearpid". Maybe we also need a special
-> PID (e.g. -1) for trace no process instead of using tracing_on.
-
-Thanks, I'm uncertain if modifying triggers is the right approach. My initi=
-al
-thought was to extend the functionality of set_graph_function for more
-granular control, similar to how trace events handle filters. For example,
-consider the function
-
-vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *=
-pos):
-
-1. Enable tracing when countmeets a threshold (e.g., =E2=89=A54KB):
-
-echo 'vfs_write if count >=3D 4096' > set_graph_function
-
-2. Filter by PID and CPU:
-
-echo 'vfs_write if pid =3D=3D 3456 && cpu =3D=3D 4' > set_graph_function
-
-This usage is somewhat similar to the filter/trigger nodes in trace events,
-and it targets function entry tracepoints. I'm considering whether we could
-base this on trace_fprobe, as it might align more closely with the existing
-filter node functionality. I'm unsure which approach is more appropriate.
-Do you have any recommendations?
-
->
-> Thank you,
->
 > > In ftrace_graph_ignore_func, we could look up the corresponding trace_f=
 probe and
 > > trace_event_file based on trace->func, then decide whether to trace
@@ -199,10 +141,56 @@ size);
 > > }
 > >
 > > Does this approach make sense? Any suggestions or concerns?
-> >
-> > Thanks,
-> > Donglin
 >
+> My biggest concern is with performance. You want to run this against all
+> functions being traced?
 >
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> How is this different than just using fprobes?
+
+Thanks, my initial thought was to extend the functionality of set_graph_fun=
+ction
+for more granular tracing control. For instance, consider the function:
+
+vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *=
+pos):
+
+1. Enable tracing when count exceeds a threshold (e.g., 4KB):
+
+echo 'vfs_write if count >=3D 4096' > set_graph_function
+
+2. Filter by PID and CPU:
+
+echo 'vfs_write if pid =3D=3D 3456 && cpu =3D=3D 4' > set_graph_function
+
+To implement this, we would need data structures like trace_probe,
+trace_event_call, and trace_event_file. Reusing trace_fprobe might
+reduce redundant implementation, however, it's unclear whether this
+approach is feasible without introducing unforeseen complexities.
+
+To minimize performance overhead, an intermediate data structure
+could be introduced when writing to set_graph_function. For example:
+
+struct funcgraph_data {
+    unsigned long entry_ip;            // Entry address of vfs_write
+    struct trace_event_file *file;     // Associated trace event file
+};
+
+This structure would be added to a hash table (funcgraph_hash). At the
+entry point of each instrumented function, the execution flow would
+proceed as follows:
+
+ftrace_graph_func
+ =E2=86=92 function_graph_enter_regs
+      =E2=86=92 trace_graph_entry_args
+           =E2=86=92 graph_entry
+               =E2=86=92 ftrace_graph_ignore_fun
+                   =E2=86=92 ftrace_graph_filter(struct ftrace_graph_ent *t=
+race)
+
+Within ftrace_graph_filter, the hash table funcgraph_hash is first queried
+using trace->func. If a matching funcgraph_data is found,
+ftrace_graph_filter is subsequently invoked with funcgraph_data->file
+to apply the filter logic.
+
+>
+> -- Steve
