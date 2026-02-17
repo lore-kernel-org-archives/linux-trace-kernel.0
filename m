@@ -1,107 +1,163 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F3B36B045
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 15:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A477A36E48B;
+	Tue, 17 Feb 2026 16:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771342666; cv=none; b=b2mYjEYUmosg1ow1DOiOOnpzllzIFD8ABybU7WAjz40V/KYbNUaBgUVZ68y7/lq235yXFkqEZ62mxHovS15HdmzaACCg2XNsEh7DqeSK1P1KNq33b7IW+oMhYqWCMEB6Z7iBP5gAhhoxpV0EMty9SBEDI6UfLU0LRf/HnXs5Z6M=
+	t=1771345034; cv=none; b=d025baDUt0thTsA51xgOL4laWWGTeyHO+rhTzbDXdn5RB/yQIubpN6xosJpDLLYEeKQ+xn6ltcohOH2tznr03PLnC+aaxla/bDdLM4N5N5j5HEHg48HrQydAdyROCtzh6/Zi7nQT94vV4gxenEWBzaR0g8VGMPA7O8Yg/CpB6+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771342666; c=relaxed/simple;
-	bh=6xJwD16IDJRZDQYHif+SFrdSoYC07tw5lE7UhNAkGMc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UO+FSIZkedrdzAQvhYF4pMhR3L7dSP8R0ATd0AXLx7d6pl8HomgKIS8BwhWyT6tTVNX78mc2o0K1SdAEwYm2IvxBpm08+l733DQcSY7YNnRwNBAVIbsZpdQ2PmghHG1Pg8jU5KALDDwDPBuJXjawgA5L0s44dRmAxLmlxW8MtBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zJpJ9j6H; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1771345034; c=relaxed/simple;
+	bh=9xtudly2mJ1u2vHo7FyxKYLIqDgx5hdFyDtsYcMtw7w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JkLMmZ6TOsWBzQCXKdLY+d1PRj4WL+hpR58mJb9MMkwI1RXW6KbB/gSjXz8uidD683ymns09yQLsKlx/qYTFFboWksYzGo/JWkU7hmXtsViRnJCDXJCA5N+bYtOY0Vud7q3+3ru2WHGfJTP/S8C2+0r7CTfVXjG7dbXsSwVy/VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=uiYw6nyk; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zJpJ9j6H"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-45f04f1348cso2882623b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 07:37:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1771342664; x=1771947464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tci0PLQEn0PJVJPz0FvG5ueLsMUUWMKAN2gZo/UYijU=;
-        b=zJpJ9j6HJy20ywEe08SaAGe4bm5FHVmn5ZIjpAMUVV4ZyUTht6SW/BI9nEzJd7ic77
-         DitBg64hL0VnoNcE63zoRPpnzJ3vIKwUDu9BLrSA4PT/4nZ6zzjosc2VHC+Bz0FNbNQ6
-         xtITuN5bVza+HjW6o9XrHhK7Ao7ugGGo+9Tfx8GHCtipHYTW+1OT5rX4R/RAcPB1kJ3V
-         1HQD04fpUmwCJv3kUB8D7CyNCxKNz0+Ly1+p9RyJgjuc95HlpVX+jH3wzWCvTXJz5tpR
-         TIA/u13Vhau3XzKXSMiG6zmnL2hKD9iEvdy5W1aZjPSrecaXTnmjtSzEna2iLxiI/pWf
-         k0XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771342664; x=1771947464;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tci0PLQEn0PJVJPz0FvG5ueLsMUUWMKAN2gZo/UYijU=;
-        b=V1knTV1HGsDDoARl+Q85DbmXrJmSWYtTRKSqBm6hdC78IPD7NEx+kyRRrTxhvvW5NF
-         GH5AmD8PSf0maDYz5bCsLILi+P4sEqnTRmPCH098xcKSA8s+ZWMia6NsT/OlHsvwAGA3
-         PlQ86nORB98EhmE/ldWi6YWJNQP9InnKAbXiAhSBg0DjQ9FVEJiVSO0npyvkh3X3safi
-         8RCTFBrpuzPsmF56PwzwnOmU00eLwqO9ILh1tAk59pBh1jW8yiQoefbndj5i4p0MoDSc
-         rSApMzuil6RkgE54JfRu7FUlr0IGUUWIdn05kzNd7FzA8CLcZ40TGl+Ty860ZisU9Ztv
-         rAhA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6osfIkpNr0QvAGZWWHp7/gAXq50+ZzBHiJszuZ/kA9UOZZGiHKCzsMOh4Zl5Rfbzf+GVWlb2HNYm1UB48DXna0e4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgUpRqGKO1at89id8WdLeTbOuz3c/Yhqwndv3yOkqLoWMxQvx5
-	Fn+QmGoD/8vA6KIP4M5ouoSl2j9yxOwQUPO4i3Gn87a/tp/Zad2iXStpM/zzq98bXjs=
-X-Gm-Gg: AZuq6aLRd6lKu8QnIcqzRrJADbQSilfHykSoV2bvQ2zKvYs3J45OK0duH62z1pSLCKy
-	n3Kb7A1aUukkW7byTO1nFm9wvp+cUKX0/v6I7Yleaj7iBt1BEOuhAFxsNxwsjt+NWGKIfbPXA4s
-	GbACkM3nidxaxKGyLh2VjYDMhf16EwN4uaJXC2eWz68gqqrISKjjmQ6sIf8ghum6AT8Czgg7T0/
-	J1RVWw2dmFwERa9rjNTOe9BCe2ro+94Fz4sRhTmYqfSGszp74Xitu5fyXlmleyqcKl+afLd3gqn
-	xyiMp1LgqrtyBmjHkly5MxD64kOQnsfUXKN/+uigN/HS9BovPHwLgNHNCR/6H6ZF+iYT6/+2pUO
-	T0OBvs0zYqXR0q3S9dZ5NV3jCjMlo2aKMMMiC+/P4zhlmahM46tLFsq2fUVkqAvq6UOkzyxWejq
-	BV7xye1IJcbzZmFqLcTirMC53V1PysYJif1C8/Wb5vpaBRKCTpkx8tHWlcxfDKrTwfnTO6bG3YN
-	NjS
-X-Received: by 2002:a05:6808:2445:b0:450:5e3a:6f1a with SMTP id 5614622812f47-463b3f655e2mr6138488b6e.20.1771342663817;
-        Tue, 17 Feb 2026 07:37:43 -0800 (PST)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-40f18df8a64sm9718229fac.14.2026.02.17.07.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Feb 2026 07:37:43 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: nilay@linux.ibm.com, ming.lei@redhat.com, hch@lst.de, 
- Yu Kuai <yukuai@fnnas.com>
-Cc: yi.zhang@redhat.com, shinichiro.kawasaki@wdc.com, kbusch@kernel.org, 
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20260214054350.2322436-1-yukuai@fnnas.com>
-References: <20260214054350.2322436-1-yukuai@fnnas.com>
-Subject: Re: [PATCH v2] blk-mq: use NOIO context to prevent deadlock during
- debugfs creation
-Message-Id: <177134266269.373694.2745476582847973429.b4-ty@kernel.dk>
-Date: Tue, 17 Feb 2026 08:37:42 -0700
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="uiYw6nyk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+	s=smtpout1; t=1771344616;
+	bh=7oSA143xwhlpR+YOhY78eAKWPWQQBvPwfH3/iKdQHP0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uiYw6nykBEOTbBd3NOKpiB9QphOhW+vwiQiTPXqz4H8uGpnsbjc+Fq0w8CK2gpp+w
+	 GZvzUdguuC4ODm1aNGDOjtOes6HF7kk+Pbus/xn2lJHwHXjCibwYJaXU9w/7/BmXed
+	 5KxiI0Z6Pu/eByLlsFeEaOZZAHGAnKGyI0ZAs4VxDPKzydNJyb9aiOR6pftCCZD8tY
+	 qv6l7x0uo70/Eh+AB0p8AOjxIxZyBFDhm8NdZ+mclPMp40JETVmaUF5HI8ZnkbP3of
+	 3ZacZfK1ILpW8adMk6795otJmIk5CmdSSEPF0MOAjAnNydDAE25J+dKkIxwwj5eouP
+	 5NgWTC5HqaQ4w==
+Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:1cd8:5cbf:5001:d5b1])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4fFl3X13D5zFT9;
+	Tue, 17 Feb 2026 11:10:16 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	SeongJae Park <sj@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <liam.howlett@oracle.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [PATCH v17 0/3] Improve proc RSS accuracy
+Date: Tue, 17 Feb 2026 11:10:03 -0500
+Message-Id: <20260217161006.1105611-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+Content-Transfer-Encoding: 8bit
 
+This series introduces the hierarchical tree counter (hpcc) to increase
+accuracy of approximated RSS counters exposed through proc interfaces.
 
-On Sat, 14 Feb 2026 13:43:50 +0800, Yu Kuai wrote:
-> Creating debugfs entries can trigger fs reclaim, which can enter back
-> into the block layer request_queue. This can cause deadlock if the
-> queue is frozen.
-> 
-> Previously, a WARN_ON_ONCE check was used in debugfs_create_files()
-> to detect this condition, but it was racy since the queue can be frozen
-> from another context at any time.
-> 
-> [...]
+With a test program hopping across CPUs doing frequent mmap/munmap
+operations, the upstream implementation approximation reaches a 1GB
+delta from the precise value after a few minutes, compared to a 80MB
+delta with the hierarchical counter. The hierarchical counter provides a
+guaranteed maximum approximation inaccuracy of 192MB on that hardware
+topology.
 
-Applied, thanks!
+This series is based on
+commit 0f2acd3148e0 Merge tag 'm68knommu-for-v7.0' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
 
-[1/1] blk-mq: use NOIO context to prevent deadlock during debugfs creation
-      (no commit info)
+The main changes since v16:
+- Dropped OOM killer 2-pass task selection algorithm.
+- Introduce Kunit tests.
+- Only perform atomic increments of intermediate tree nodes when
+  bits which are significant for carry propagation are being changed.
 
-Best regards,
+Andrew, this is meant to target 7.1 after the 7.0 merge window closes.
+
+Thanks,
+
+Mathieu
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <liam.howlett@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>
+
+Mathieu Desnoyers (3):
+  lib: Introduce hierarchical per-cpu counters
+  lib: Test hierarchical per-cpu counters
+  mm: Improve RSS counter approximation accuracy for proc interfaces
+
+ .../core-api/percpu-counter-tree.rst          |  75 ++
+ include/linux/mm.h                            |  19 +-
+ include/linux/mm_types.h                      |  54 +-
+ include/linux/percpu_counter_tree.h           | 367 ++++++++++
+ include/trace/events/kmem.h                   |   2 +-
+ init/main.c                                   |   2 +
+ kernel/fork.c                                 |  22 +-
+ lib/Kconfig                                   |  12 +
+ lib/Makefile                                  |   1 +
+ lib/percpu_counter_tree.c                     | 690 ++++++++++++++++++
+ lib/tests/Makefile                            |   2 +
+ lib/tests/percpu_counter_tree_kunit.c         | 351 +++++++++
+ 12 files changed, 1567 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/core-api/percpu-counter-tree.rst
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
+ create mode 100644 lib/tests/percpu_counter_tree_kunit.c
+
 -- 
-Jens Axboe
-
-
-
+2.39.5
