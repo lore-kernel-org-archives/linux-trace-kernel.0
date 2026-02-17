@@ -1,110 +1,90 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4396313525
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 22:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267CE2C158D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 23:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771366011; cv=none; b=R4YIEQuOVXI4K5VQXjo1tgOWdX/lzDz3hIFXbKVFAcmCGTrJ/zN09MTeDKZAe07aH3d9lzbnmk3iGZHxaxCrUigrzOlCKefd5J0B/36E7vVCh+D1O6fQ0oMQMPxkh2HNlyGSGc9tX/naEW27/44s+amqEN8J+uJGiAA/D/9Jzmc=
+	t=1771369502; cv=none; b=u3xl6rCqiniGCDHTMymQ6GeW73b+QCL85tUd5RMYlCvfVKDjsajk3KcXc7WefnSpnADSNmjSuWIXad3UIx5O9Ic+4b772D4vPoCJQsRlYWDhkLI6w0xOYmbkE1Mu8tH0Dgzk+gz/XJZ2ri3XoJjrda610lmLg5MVHTxqj/X0U4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771366011; c=relaxed/simple;
-	bh=GM3vbopTlK82YTDhjQ6dx/5d8/FZmxV1xH8VtYP250g=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BAnvWKbuWfJrduEuvYnzqCSdZyxLqkxbuqcZaGvMnPn+NGHM13Gxt9ocXFmnS1ZQTKgASiZvPJgJPpAQJFMOBLKOYUay9WLtbjy6saShYuw9u4+fpWKvj/Lvs6/j1Tmgj+dkhmGTu/SNJoFQ2/eaIgEGKk3kyabergOO9K3n5R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cwjdrql/; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771369502; c=relaxed/simple;
+	bh=Nb9uO6XAB2riMcSXkiGPR3StBCYmptBJJoYo8dSh3k4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ORmbOsapxtsn/sAznVrqOfeocUkktW6B6cKBIBp0N8Kwtgsb3qnaIXnS1FnLv0SD7ISy23yVVQ/cZ3R6iXHrpXRfa4yxn36dFXfZV9ugQaajwS77pvHc6D3FM1Ptxvcov6+aKaQksMj8YOvn+zx7bPvYcy3WTImycfyovxMUl/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FWiOH1KI; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cwjdrql/"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-48375f10628so27848395e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 14:06:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWiOH1KI"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-35620e2faf0so3832331a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Feb 2026 15:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771366008; x=1771970808; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=95TVX6sRJ3klPmBqzqAdvLFABEaQa3ayeFUm17/kMe8=;
-        b=Cwjdrql/PGqiITfjQ6yxvoWS9MrKFj+/FjF4KNMCitpSqW/2upIq8B8NfXiRPgntZn
-         6rlYPfU6OR0dbi6/ORIgLJWgFjo1n5RPLon55mD9Ak7/+9+VBt9ON4uk/ftD+EU0ZA6u
-         VhDRVBN3g8UQ6hGC/5dbuc607AN1EkVt2hJA1KB+Gc1GhHa81ZbtvxXxPCg8yaD72Xo9
-         DIYY+hS1r04LR8l+cKobll0rtsKfwPIHPuaaeqK2Ds+QUmHvI1hRXPd3sJ9hFLbq2aNz
-         juFIkux7KuXonuFjv1+FMOzu9U3Iz8iMujATkkk3caDuMSk17GygNCI6mWIApvTIbEqd
-         fj9Q==
+        d=google.com; s=20230601; t=1771369500; x=1771974300; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nb9uO6XAB2riMcSXkiGPR3StBCYmptBJJoYo8dSh3k4=;
+        b=FWiOH1KIv/HDNKDK2kDyZ7eTMCtCghzcmD587SyjpT0XwzYQNMFW0uRyVQSo/E5Ohb
+         EjnZfIkgMiOCqyl5rbFPcvyjMs0w/XKVDY/+9jFMhXlsYgcnxFoU/FmNzo810+EE/AuE
+         9ppIJiGgLlDUDFRu/Yr1e4NiJ/cMfMPxnJiliHIf6ZeMCQcYdJrvWicOjS9rn2HsrLyz
+         Dpcp+yoLV65pEptfykKB3/857KdYbMsVvaHvpvMZs5GOe1vHXyFzxEV2ynLXhQk89X9h
+         PDW0V3Ha6PrnLflhd9dD0jJuOAvxAEuB6L7r6h+hyrFGp9JuA1FzslIKF8P73vL85sUX
+         aJrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771366008; x=1771970808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=95TVX6sRJ3klPmBqzqAdvLFABEaQa3ayeFUm17/kMe8=;
-        b=gj2rMnozOddfiwBdrrOvHWokAXQbaZXLBvzvgi1w9+3F8uG76QEQU0GWSRHMLPy4iX
-         tp5xe0LQGV9qF9XWqLgzUpU2H66riL0VJlAf0wJqMqqnOxhlShCOcjTq08OUmBQSZQ2D
-         ugUO/+PZSNMi0SvaQtSwWkKZ8sopJdaH7mKplXJXvUAut4SMpIYz4FgRWEuqBzCBUmUL
-         Xridd898L9b3Xoxcf61APBWE+0V/08TygIzZ95krJ7kjmR2Qr5ccCUnILPCrxmzVO6Cy
-         zw1Lb2M09Fs1QlBEPjsCHDZJLbK+piz0O4tQci6L0Ri82MRi7j5SOo85Jq+6fzFDk6x5
-         6X/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtXHYSzjbmnFYl9FmeJQa20PHau2xPZSxPfmQC7IU2MDarMhNfUpjChLlSYe98mIKWz7fZLlA66eT47Ko8zD1bDGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzmqv9gvHf+AyBZO9e/yiv6FEtF0ZQ6oOGIDQ4RGuwmOmSAUOJ
-	6Dh7pD3fF7pqhRA9x1H2P9aQwXMBUkUffVNu7JpgCIoXEbwu7thVgG7t
-X-Gm-Gg: AZuq6aJd/VQRc9xbrq6cpzHPc7mSv8XJyyoeysR7EYrnvee5Rn0BM9d0gjDEsnSOR/Y
-	wXQyJcOLoAPceoacUGcztVk7v3e4Z9xYyrbeqDOEQzembU1lFVPRB6IAyWNcNX0OEJmtaeYWkDF
-	GWxhBIX0MejWZCRyPNAV0rdjaIKal01JSx1AuItVfnfDtWQ3W/mQFcmlNCv1CbDEfkMlxiWAR2a
-	pqtvfaBFkLbOEM3z1J2GFkIhT0HYHf6TD4x8RBk8I1whf+mGdD0EWavxl36B+X06KgV+uNCoq1n
-	Ic0gw2AbMZ6IbrJZkNS47NT80PQHp/iDNMUNmOU0ijdvJruGdrayob7zQ5Ouhir+VZX5XBw5utI
-	AvlsilBzq+9jTLJxBF03D5lcA1OQUtzBprPEHYTEE1gxDSDPu2P3e7I6cejdJ+9FCW3sHf3MKAW
-	FkadZUrchmrFq77QzwGPJv4C/peXWuB5db
-X-Received: by 2002:a05:600c:1549:b0:480:3ad0:93bf with SMTP id 5b1f17b1804b1-48398adc614mr119005e9.24.1771366007937;
-        Tue, 17 Feb 2026 14:06:47 -0800 (PST)
-Received: from krava (37-188-249-12.red.o2.cz. [37.188.249.12])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4836aa0847asm596556105e9.3.2026.02.17.14.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Feb 2026 14:06:47 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 17 Feb 2026 23:06:37 +0100
-To: bot+bpf-ci@kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
-	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
-	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [RFC bpf-next 12/12] selftests/bpf: Add tracing multi benchmark
- test
-Message-ID: <aZTmbRPKvjqyeI7M@krava>
-References: <20260203093819.2105105-13-jolsa@kernel.org>
- <9de646e4e4d2fda0d4f0543b422439f7c1fcc121d4db2e38a28bf3a454b96d98@mail.kernel.org>
+        d=1e100.net; s=20230601; t=1771369500; x=1771974300;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nb9uO6XAB2riMcSXkiGPR3StBCYmptBJJoYo8dSh3k4=;
+        b=nogCsrXvyfu0AWBRPSBr4XQnFsdVHHmltnqAiB7VyIP/JhvYfC89rVY1xtw5KOBE0g
+         SZCq5vaS+wFkvGJ1FsL5+CNFrF/WKGqmRkTvPr/uhpTIIchTmzigANjwfrPZA3pfVb9S
+         zKhFEVbRiciCzJ00MVp2WEfR2urVWEZqlQnMEGTk4yXINiqa38EQOk5ysJdIVTA9jFV2
+         xfZbco5TDbisjbf9Qohz3dm0y/YY4xLJcA0oVI8Dij/tTiK1HFASlaPA3S82GOxjWYiM
+         flAz8Ke1+ZrOTg8hX/qYWdpDDmFz8YcSOykiczNZbdAwETj3jYYPolrRAbxFQjpUKnzV
+         J49g==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2zEFbDpl4lxpSKg3V1rPxYcXnQwlpsn0e91DjOuV3tyK5stxnGKawUZVpbc1KsjJ2eZJEaRfJb10U/b2xMbLNlA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsQsc6LuLlJtkbeD/NSsebSvHtYYmoIJodhBHzG+IJkEjBlvFT
+	bQ6EjkvlfSfq589WPU0/oCXT2UMg+u5kQD+phKou9zgnZTepjbcyhWEfGYT+GsHXAljzkcQqyAn
+	VLVnnhw==
+X-Received: from pjpt8.prod.google.com ([2002:a17:90a:a188:b0:34b:fe89:512c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c90:b0:34a:b8e0:dd64
+ with SMTP id 98e67ed59e1d1-356aaa9bb34mr11781376a91.1.1771369500107; Tue, 17
+ Feb 2026 15:05:00 -0800 (PST)
+Date: Tue, 17 Feb 2026 15:04:58 -0800
+In-Reply-To: <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9de646e4e4d2fda0d4f0543b422439f7c1fcc121d4db2e38a28bf3a454b96d98@mail.kernel.org>
+Mime-Version: 1.0
+References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
+ <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
+Message-ID: <aZT0GmwJ-pm93ojg@google.com>
+Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, aik@amd.com, 
+	andrew.jones@linux.dev, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chao.p.peng@linux.intel.com, 
+	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	david@kernel.org, hpa@zytor.com, ira.weiny@intel.com, jgg@nvidia.com, 
+	jmattson@google.com, jroedel@suse.de, jthoughton@google.com, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	pbonzini@redhat.com, prsampat@amd.com, qperret@google.com, 
+	ricarkol@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, shivankg@amd.com, shuah@kernel.org, steven.price@arm.com, 
+	tabba@google.com, tglx@linutronix.de, vannapurve@google.com, vbabka@suse.cz, 
+	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Feb 03, 2026 at 10:13:57AM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> > index 3ccf0d4ed..575454e31 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
-> > @@ -6,6 +6,9 @@
-> >  #include <bpf/btf.h>
-> >  #include <linux/btf.h>
-> >  #include <search.h>
-> > +#include <bpf/btf.h>
-> > +#include <linux/btf.h>
-> > +#include <search.h>
-> 
-> These three includes are duplicates of the lines immediately above them.
-> Were they added by mistake?
-> 
-> [ ... ]
-> 
-> > +	t = btf__type_by_id(btf, proto->type);
-> > +        while (t && btf_type_is_modifier(t))
-> > +		t = btf__type_by_id(btf, t->type);
-> 
-> The while line uses spaces for indentation instead of a tab.
+On Sat, Feb 14, 2026, Ackerley Tng wrote:
+> Sean is against deferring whether to preserve memory to the underlying
+> hardware because that is letting (effectively) micro-architectural
+> behavior to define KVM's ABI. KVM's uAPI cannot let behavior be
+> undefined, or be based on vendor, and maybe even on firmware version.
 
-yes, will fix, thnx
-
-jirka
+Concretely, we'll end up with a giant mess if TDX and/or SNP adds support for
+preserving contents on conversion.
