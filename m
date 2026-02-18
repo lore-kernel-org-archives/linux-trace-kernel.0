@@ -1,79 +1,205 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3522116E0;
-	Wed, 18 Feb 2026 15:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0726819D8A8;
+	Wed, 18 Feb 2026 15:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771428789; cv=none; b=aKBsxAsT2QlJO8oG/VbAa1uApF+rPNxV5KE6cPyjVfI4S6Sw1l+7kgsI6oAUjDAJEzdo+fhY0u/zc3kzzUqo+z5TyS/Zu2LeyhLhaIENRY+j5/IqA6Qw05TlCVms41CYszD2FNwCxOK8WoyxUpuNj6Bq2DI+Km4wecgUkiylcMg=
+	t=1771429367; cv=none; b=hjAHSbRfwHcL40U11JMtho7TvVTkWOmkuY2WNFGB1dNOWhfClf0yB4A7eajTxHjwwj2+LDyIAxrpP49t5aMg9TQvXMwb1MlMTgIb1oF3p0upKyju+1aXloKR/aEWA7eaezAJBvZGY+RMoCb2y7x34BjxU7Y2movyy8mMHc0p8N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771428789; c=relaxed/simple;
-	bh=M7xKMl0LhvVG1nadriIHcjEBeJzbZ6ZWMTqr4CSeaLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=glET8vD9iNpyU9R3kGO3Fk4PndGQAQey+61/xOpRn1CVBi/+i4RRcv3mYQmHSSj20WUps63KzQJgREjc3foeutGscITgago/Xletea8qwIrrFnlQPXT5aTABbd5NqiiG/ysxWQ6s/R3AhCugNvo+aRg41rMjf9Q3kv9n8p0KRCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iSUxjPwE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iSUxjPwE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=trAx6nnQ45IUid9unJVJ8G0EUg+oFCF06T1BqiyBkjI=; b=iSUxjPwEP2bSY1KV2Xyyn9trNE
-	tSqzfqK27NqbvY4c1aaaxbwNHTSXzLp/IVmYr0/pZDcLGKfM0F/l3gHuYYvLd3t6CEjg9iP8+Z4O3
-	iSTxOQ2nSrEDsjv17PNg2S1ZdEfHJAoGClNylN45Dvd/L7w+8/Yz/z2nESBvzMyMb3vc+V6jMP88w
-	Ype8AC2Sg9G2zseqBN6rZZ6eqx3YGiIsW8ePMKm1pDJdHESD79YKIRgDpufDsOIzw/+xAh1bomKat
-	7YwyZCtluq54Gcws2LiHTlS42QpabWoR3gp/751EfdrLFKJpWL1wuVGyv4bzg6iGXJ269+On9i/r+
-	2D+UOhyw==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vsjXh-00000006DHw-2WFH;
-	Wed, 18 Feb 2026 15:32:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4E656300B40; Wed, 18 Feb 2026 16:32:44 +0100 (CET)
-Date: Wed, 18 Feb 2026 16:32:44 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Elly I. Esparza" <ellyesparza8@gmail.com>,
-	linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
-Message-ID: <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
-References: <20260218144735.24307-1-ellyesparza8@gmail.com>
- <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
+	s=arc-20240116; t=1771429367; c=relaxed/simple;
+	bh=uiOYwDP2SLEpKOgOUb7OgINKyg6MBDe+KOwvdTofFTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nWPZKKb//8UOuCvB14/rZf5MWPj+Ngu+VcZ23bLsrRPMPXM7wnWlVexOJPb0jnUaHarGEAiHxyhSDo3WVnp4NzE7OyILg5CadJzwCvRsSPou97DeGxFXXuseQK/4E4XFUAaQBLyqMWwTi0IQCJW5wFG/nQXqprJNQFw8c6aHhWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id B21BD564D6;
+	Wed, 18 Feb 2026 15:42:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 18E4E20028;
+	Wed, 18 Feb 2026 15:42:43 +0000 (UTC)
+Date: Wed, 18 Feb 2026 10:42:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] fgraph: Do not call handlers direct when not using
+ ftrace_ops
+Message-ID: <20260218104244.5f14dade@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: mffmbke1kma7wfnnsu75kxommx7q484r
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 18E4E20028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/z+AJ1utPLULIvgCzV7JiAjIyX6WmqWeA=
+X-HE-Tag: 1771429363-463030
+X-HE-Meta: U2FsdGVkX181AnkQKZNyPJOpatB7FiqH/+wtb8WNe6VfayGpR6j7qcIME0rGPLPM+qV3wYpclj7CXOTiaahi3JT1xkmgveOh95PfZegCNjMUHENdldKzOn0j1+kRaWkGwbmY3nB6lvz4mrriVhzgcnCszgzCL8Ia2QNT/ytmSlU8iUrfVZfv1Sa8sdEpEeulnAGDYbP9XPaQhjySYfspQlSETJhr7JnU83MjY8yT+ZZOHScn3dSDLTlu02F4HbVQdbOR1EwDLP78dw0+FGO8g6oR3erEjkuvDW0v/sYS9s++13LDcsFIN3lGjjbYF7YuYV/nciccIAKQP2+rQP/b6Gs4vmVNvSjseXJrdGrmf855LPfnV6yLcvG0OMJUDo5g
 
-On Wed, Feb 18, 2026 at 07:18:25AM -0800, Dave Hansen wrote:
-> ... adding kprobes folks and Kees to cc
-> 
-> On 2/18/26 06:47, Elly I. Esparza wrote:
-> > Kprobes can be used by rootkits to find the address of x64_sys_call(),
-> > x32_sys_call() and ia32_sys_call(). This in turn allows for the rootkits
-> > to find an specific syscall handler and hook it.
-> > 
-> > Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
-> > blacklist.
-> I'm an occasional, but not super regular kprobes user. Is this going to
-> hurt folks who are legitimately probing the syscall dispatch functions?
-> 
-> I'm a bit worried that the rootkits will just move on to something else
-> and this will become a never ending game of whack-a-mole where half the
-> kernel needs NOKPROBE_SYMBOL(). ;)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-So I really think this should be noinstr; pretty much all the code here
-is noinstr already, so why not include the syscall dispatch.
+The function graph tracer was modified to us the ftrace_ops of the
+function tracer. This simplified the code as well as allowed more features
+of the function graph tracer.
 
-Better still, noinstr ensures the spectre-v1 mitigation actually works.
+Not all architectures were converted over as it required the
+implementation of HAVE_DYNAMIC_FTRACE_WITH_ARGS to implement. For those
+architectures, it still did it the old way where the function graph tracer
+handle was called by the function tracer trampoline. The handler then had
+to check the hash to see if the registered handlers wanted to be called by
+that function or not.
+
+In order to speed up the function graph tracer that used ftrace_ops, if
+only one callback was registered with function graph, it would call its
+function directly via a static call.
+
+Now, if the architecture does not support the use of using ftrace_ops and
+still has the ftrace function trampoline calling the function graph
+handler, then by doing a direct call it removes the check against the
+handler's hash (list of functions it wants callbacks to), and it may call
+that handler for functions that the handler did not request calls for.
+
+On 32bit x86, which does not support the ftrace_ops use with function
+graph tracer, it shows the issue:
+
+ ~# trace-cmd start -p function -l schedule
+ ~# trace-cmd show
+ # tracer: function_graph
+ #
+ # CPU  DURATION                  FUNCTION CALLS
+ # |     |   |                     |   |   |   |
+  2) * 11898.94 us |  schedule();
+  3) # 1783.041 us |  schedule();
+  1)               |  schedule() {
+  ------------------------------------------
+  1)   bash-8369    =>  kworker-7669
+  ------------------------------------------
+  1)               |        schedule() {
+  ------------------------------------------
+  1)  kworker-7669  =>   bash-8369
+  ------------------------------------------
+  1) + 97.004 us   |  }
+  1)               |  schedule() {
+ [..]
+
+Now by starting the function tracer is another instance:
+
+ ~# trace-cmd start -B foo -p function
+
+This causes the function graph tracer to trace all functions (because the
+function trace calls the function graph tracer for each on, and the
+function graph trace is doing a direct call):
+
+ ~# trace-cmd show
+ # tracer: function_graph
+ #
+ # CPU  DURATION                  FUNCTION CALLS
+ # |     |   |                     |   |   |   |
+  1)   1.669 us    |          } /* preempt_count_sub */
+  1) + 10.443 us   |        } /* _raw_spin_unlock_irqrestore */
+  1)               |        tick_program_event() {
+  1)               |          clockevents_program_event() {
+  1)   1.044 us    |            ktime_get();
+  1)   6.481 us    |            lapic_next_event();
+  1) + 10.114 us   |          }
+  1) + 11.790 us   |        }
+  1) ! 181.223 us  |      } /* hrtimer_interrupt */
+  1) ! 184.624 us  |    } /* __sysvec_apic_timer_interrupt */
+  1)               |    irq_exit_rcu() {
+  1)   0.678 us    |      preempt_count_sub();
+
+When it should still only be tracing the schedule() function.
+
+To fix this, add a macro FGRAPH_NO_DIRECT to be set to 0 when the
+architecture does not support function graph use of ftrace_ops, and set to
+1 otherwise. Then use this macro to know to allow function graph tracer to
+call the handlers directly or not.
+
+Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ftrace.h | 13 ++++++++++---
+ kernel/trace/fgraph.c  | 12 +++++++++++-
+ 2 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 1a4d36fc9085..c242fe49af4c 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1092,10 +1092,17 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ #ifndef ftrace_graph_func
+-#define ftrace_graph_func ftrace_stub
+-#define FTRACE_OPS_GRAPH_STUB FTRACE_OPS_FL_STUB
++# define ftrace_graph_func ftrace_stub
++# define FTRACE_OPS_GRAPH_STUB FTRACE_OPS_FL_STUB
++/*
++ * The function graph is called every time the function tracer is called.
++ * It must always test the ops hash and cannot just directly call
++ * the handler.
++ */
++# define FGRAPH_NO_DIRECT	1
+ #else
+-#define FTRACE_OPS_GRAPH_STUB 0
++# define FTRACE_OPS_GRAPH_STUB	0
++# define FGRAPH_NO_DIRECT	0
+ #endif
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 4df766c690f9..40d373d65f9b 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -539,7 +539,11 @@ static struct fgraph_ops fgraph_stub = {
+ static struct fgraph_ops *fgraph_direct_gops = &fgraph_stub;
+ DEFINE_STATIC_CALL(fgraph_func, ftrace_graph_entry_stub);
+ DEFINE_STATIC_CALL(fgraph_retfunc, ftrace_graph_ret_stub);
++#if FGRAPH_NO_DIRECT
++static DEFINE_STATIC_KEY_FALSE(fgraph_do_direct);
++#else
+ static DEFINE_STATIC_KEY_TRUE(fgraph_do_direct);
++#endif
+ 
+ /**
+  * ftrace_graph_stop - set to permanently disable function graph tracing
+@@ -843,7 +847,7 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+ 	bitmap = get_bitmap_bits(current, offset);
+ 
+ #ifdef CONFIG_HAVE_STATIC_CALL
+-	if (static_branch_likely(&fgraph_do_direct)) {
++	if (!FGRAPH_NO_DIRECT && static_branch_likely(&fgraph_do_direct)) {
+ 		if (test_bit(fgraph_direct_gops->idx, &bitmap))
+ 			static_call(fgraph_retfunc)(&trace, fgraph_direct_gops, fregs);
+ 	} else
+@@ -1285,6 +1289,9 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
+ 	trace_func_graph_ret_t retfunc = NULL;
+ 	int i;
+ 
++	if (FGRAPH_NO_DIRECT)
++		return;
++
+ 	if (gops) {
+ 		func = gops->entryfunc;
+ 		retfunc = gops->retfunc;
+@@ -1308,6 +1315,9 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
+ 
+ static void ftrace_graph_disable_direct(bool disable_branch)
+ {
++	if (FGRAPH_NO_DIRECT)
++		return;
++
+ 	if (disable_branch)
+ 		static_branch_disable(&fgraph_do_direct);
+ 	static_call_update(fgraph_func, ftrace_graph_entry_stub);
+-- 
+2.51.0
+
