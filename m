@@ -1,147 +1,97 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3392F12DB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Feb 2026 16:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771433913; cv=pass; b=sG197enURUdpQTKlKfwlUXlwQmYKSBLUEVNltUTDw6MRiP+i6HST8o7dAZBreX8rqekuj1y9YvsaLyKMoovTJ/IsLvDUjcV6cWh3xFke97NEFflgNAkBnshFMLuFdDNRY6r7zgMUNRoIusm27N76a4+B68D4vVcirJmIhner3DI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771433913; c=relaxed/simple;
-	bh=jajZKfDSGu49VB3lIo9/IdQJEo9/rlHOlV9X28L1Z24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PeHNTIBsQsLSocUt+n+mfcG/7Y5+YVL2FWUw7KlkE/tlJsJ7hSKiN3Rp61isMNcamFFyOGXe/6FlSEe8kSSuGcydVCCVQ/vJK/wJD2mnubQtdUfPgq/uYYQzep40advEybw6oAl/vYBlALMdrtI3e1+0LIWt5BOUUspACJokl1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mBHzJcni; arc=pass smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7221134405F;
+	Wed, 18 Feb 2026 19:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771443781; cv=none; b=ZEjeSE9Nj5rkVOmT6Jo19N+PJsL4GoS6CTcOUjm+n1hmYZi/0yV3VmDtgQGYHk3h+/lpVav5U9WB6kz/cqe+DPCn98vunCjXnvL4SFSGF6aUlV6mHC02h7ZDIXjb2F5xRxd9hz85FvILQUwWKqiFKq45alkoiib8/PAF6CkpnSw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771443781; c=relaxed/simple;
+	bh=csnvR2a4vAxtNCf3C3hPz6BT32bYG1rCNxKWAcOoTD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=FoM+5T/Of07IPM6M09dp2oJ99V606DdwrjQ89NvELLbOtKB/xogn6scrNrWBeNtXINjr0SfHv8Oo/yMZl3JW6J51s3L//cV6TJ/1OQNwQcDbrVr73SEzsAQTaLVqI4WfSvm8Ck32OgxI+iEG4Y5qdxlcGioakznV9gN7bI6fevo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dBGKc86l; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBHzJcni"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b8f86167d39so15373766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Feb 2026 08:58:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771433911; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gU8iSIZQjUmg+v1gPKeAXAAAdlHJmuhTX89eHwL01zsUehXSjj1MYS/PAloxfvqA0U
-         iRNSf98MB5IyH7RD5Xw2xSIDLfSieqKfi4K7hf5IFE+vJEmujUkFcAjNAWreQQrSXshm
-         4f3NT2Il+YxvhWJVRA8UayylBWqZyOMQDFsWdpXru9KcygcDdV46SdGvi80CMa5g24f6
-         VHpF/3wggG7qNcg2qS+BqplDZ3Sh3DKcBTqAvARGC/9gzGo1HSjS5Qr19B36A+pO5SeU
-         zyTgkRRSnzQgP5L2R5U+JYNE/qU68UJ8whSHc7+6EaHYOC7zHTTnVGo/zOvqtQYMK+62
-         EY6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jajZKfDSGu49VB3lIo9/IdQJEo9/rlHOlV9X28L1Z24=;
-        fh=oHO61crPImOh+YFngcg/rFOVZhoxqMNCCQPivmrq5wI=;
-        b=Mr48Z+/NW2c7ze1/Jdl6zLTqOlrjqqEYb1UmRwBzesUB/XchjUiBj7J0uA9qaftCdM
-         0/KTAjfrCTeaoufgCxSdkLIiYcorDQVi6Drvv3CJszyC7l8p7NGkKxGAn/6M2V19FvnH
-         2bcyd8jC08O55/N+3gyB9wz+ApyDRmQEyFaUvy2Wj/u+zOWqQ2Cab10fOQJSXtij9zLo
-         21K1zmYu4vZ74L84k/qK+X2tnQol9sErjxuBVPnUeWBfcBkGt+OL6Bk72b0v0HCxe3mI
-         tCAmmv4741LaeCu4tuuNhKoV0n68le9Y+G1fhnAmVHf8pKqMbPL6K5PLkaNkmANInGFp
-         qELg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771433911; x=1772038711; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jajZKfDSGu49VB3lIo9/IdQJEo9/rlHOlV9X28L1Z24=;
-        b=mBHzJcnipNPZEeo/VSFxUIbYF3kCTKwz6OBmRmsWRHp6tC6PD6J/jJ8zeCP679+010
-         QNpX4BccpLTT6/2faxiN+tkuI7plX8en8qH1vKJFXbCRIkaZ6ddqFKjBPapS36ZY4Z+S
-         FePo8X9Gh+YVfdp6QkJl0+Nky6f9i1xoY4TDGEmuAj/ClOMXuIqpiQ8OTVhs0TVROEph
-         lQqT+bidu/UaKBzys35o2YxCA2QBdYWZAw9VMf4/hA2YGeao7D2eRpK0+57mnhljvZ32
-         xHXysq4Z9FTTTSVGDVuIa3k2KrAji6OKdS7eqAHv2lPQPudtZ3bkTTInrdJYsOxRsbdR
-         0I7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771433911; x=1772038711;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jajZKfDSGu49VB3lIo9/IdQJEo9/rlHOlV9X28L1Z24=;
-        b=FkPv336J3HEgrouQDVU3tt8F827MnHWoA/hL3SN6jJIEEFK8QJwjceU0QfAgMVhwZr
-         sP7x9QvXn177f16KSghzZ+v6P0lzSjbFS2XI0Esqfu/qm1yCXy1p8J2NlYDI8EbtVYnT
-         3VVdMBB8Y1Xp8nuP+NAgfijr54xAfKd78Bj703JhKPE55gWpdmY8nzf6OUCe+6pl5NlD
-         VG/ct3YSi6yQJpFrXDht5YSd2vBGNjO3GBiHqYmZohZfY5fmn0iTLROKGiHOGAnyNBKO
-         lfgH8JZuyCRwyc0sshtEAwLqnTIdUJ0eh2ZLAxbciVBBe2jddZBLQzds152UG6epKKlY
-         wPLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrbFT1uf48YiJDOPGE5811BlxvYCetu6fAZdEi2Xwgk+GMJjRYOauNSnJcg/JetR1OrEhgme2c+IlBUI7R1AVYliI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr8wUPNPLqaGneHuF3kVIKuhDZ0NxKXr+9PwtiDYW26wCjZUdT
-	uZQUPyjII6G8hHWRf6tTvyaCC6etZRENzuf7gvOMfjftsffO1GhX49+Z3Nnlqx2RaKj8tdoulZl
-	yV+UwpXLu3zsYs7FywVuQU4IW7POPmyQ=
-X-Gm-Gg: AZuq6aIrcj8qhu3d2ZnH5UydfPmeLD4cRRCP/h2u7u15hy6xtoyuWOuZWLn8ACuOqmW
-	vNLUUfQ6Hg7KhMWPv15/4yMr7bnft/K9YoK03eaBeZx579O2X4iYiPLRJwZzr83XIpGFyX0HMMv
-	KS7p+6MP9ROSapDD8osnhipC7mo47tiwOgAyDSAjhD2iRierkVhPrL4yB8JmL0HyuWWC+iuh2Lx
-	oOyTJikihvpuy47PY+walyI6Mft09ZXgaj6762VGZdHWYzIcuU13eE9IaKFhpwRLqrqZI7EnnJ3
-	EDxbAXfrgcNmR2mAeuE=
-X-Received: by 2002:a17:906:dc93:b0:b77:1b05:a081 with SMTP id
- a640c23a62f3a-b903db5accfmr156343166b.27.1771433910831; Wed, 18 Feb 2026
- 08:58:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dBGKc86l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:Cc:
+	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID
+	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+	Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+	:List-Post:List-Owner:List-Archive;
+	bh=H1oe80lyaA/AIBDbfZcCJugSSWCnfK2krWyRBbB4+Lw=; b=dBGKc86lecVCOrHtoTtGKwgFd9
+	gZjta3QL+Au2wOnIrhuSyEohGMMz7olYNc7mwGzLayoChBnXFJseDGg/K6R16bRENK5mizhkOVGBu
+	k4lxvZnGhGQyC2bVMFvVDqBbMXICSXL5y7HlVMjpyvJLvin2vW+2vxvzarAgv66m1SoAPYqwnv4Qx
+	2K0yVZCuycX6LGrO75+XVvXHT6YL2PBtfaZ0WREAQt38N0BsPVVUeFoPKqcDZ5Bo5mR3vY2mM4XdJ
+	WEtn1MNL4Fy3ssBWDWcNlmCpmIzVr7kgECh5ZTsT9VFR78DWbu+G2IWgzQkstSXU7PvYevprmv2iQ
+	hKrZq2fg==;
+Received: from [177.45.213.208] (helo=[192.168.1.53])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1vsnRk-002BhK-RW; Wed, 18 Feb 2026 20:42:53 +0100
+Message-ID: <e3a5b0dd-4119-2b92-a70f-89c3e91a2533@igalia.com>
+Date: Wed, 18 Feb 2026 16:42:48 -0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260218144735.24307-1-ellyesparza8@gmail.com>
- <0c5396b5-f084-4ade-adc9-029037031eea@intel.com> <20260218105204.3af7251e@gandalf.local.home>
-In-Reply-To: <20260218105204.3af7251e@gandalf.local.home>
-From: ellyndra <ellyesparza8@gmail.com>
-Date: Wed, 18 Feb 2026 13:58:18 -0300
-X-Gm-Features: AaiRm51mjRF9l01xwRQ62hqpcDrYqWkyoW9316OzxNot5sR8KAeO4o9_E6I-62E
-Message-ID: <CAJchtERmtk5BVFABRs7ytadY5KThFMDbtFUXE_pQYkEK9fxAjQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org, luto@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] pstore: fix ftrace dump, when ECC is enabled
+Content-Language: en-US
+To: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+References: <20260215185156.317394-1-andrej.skvortzov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+ linux-trace-kernel@vger.kernel.org
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20260215185156.317394-1-andrej.skvortzov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 18, 2026 at 12:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Wed, 18 Feb 2026 07:18:25 -0800
-> Dave Hansen <dave.hansen@intel.com> wrote:
->
-> > ... adding kprobes folks and Kees to cc
-> >
-> > On 2/18/26 06:47, Elly I. Esparza wrote:
-> > > Kprobes can be used by rootkits to find the address of x64_sys_call()=
-,
-> > > x32_sys_call() and ia32_sys_call(). This in turn allows for the rootk=
-its
-> > > to find an specific syscall handler and hook it.
-> > >
-> > > Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
-> > > blacklist.
-> > I'm an occasional, but not super regular kprobes user. Is this going to
-> > hurt folks who are legitimately probing the syscall dispatch functions?
-> >
-> > I'm a bit worried that the rootkits will just move on to something else
-> > and this will become a never ending game of whack-a-mole where half the
-> > kernel needs NOKPROBE_SYMBOL(). ;)
->
-> Honesty, if you are worried about this, just run LOCKDOWN on tracing, and
-> prevent *ALL* kprobes. Because yes, there's a 1000 ways to get this
-> information once you have kprobes enabled and have root access. This patc=
-h
-> is hurting legitimate debugging of running systems more than it is limiti=
-ng
-> rootkits from hacking the kernel.
->
-> In other words, this is causing more harm than good.
->
-> Because, I do hook these functions a lot, and this will definitely put a
-> cramp into my debugging of running systems if this gets applied.
->
-> noinstr has already hurt debugging NO_HZ_FULL to track when userspace goe=
-s
-> into the kernel. Because now it's much more difficult to trace the latenc=
-y
-> the kernel causes a task.
->
-> -- Steve
+On 15/02/2026 15:51, Andrey Skvortsov wrote:
+> total_size is sum of record->size and record->ecc_notice_size (ECC: No
+> errors detected). When ECC is not used, then there is no problem.
+> When ECC is enabled, then ftrace dump is decoded incorrectly after
+> restart.
+> 
+> First this affects starting offset calculation, that breaks
+> reading of all ftrace records.
+> 
+>   CPU:66 ts:51646260179894273 3818ffff80008002  fe00ffff800080f0  0x3818ffff80008002 <- 0xfe00ffff800080f0
+>   CPU:66 ts:56589664458375169 3818ffff80008002  ff02ffff800080f0  0x3818ffff80008002 <- 0xff02ffff800080f0
+>   CPU:67 ts:13194139533313 afe4ffff80008002  1ffff800080f0  0xafe4ffff80008002 <- 0x1ffff800080f0
+>   CPU:67 ts:13194139533313 b7d0ffff80008001  100ffff80008002  0xb7d0ffff80008001 <- 0x100ffff80008002
+>   CPU:67 ts:51646260179894273 8de0ffff80008001  202ffff80008002  0x8de0ffff80008001 <- 0x202ffff80008002
+> 
+> Second ECC notice message is printed like ftrace record and as a
+> result couple of last records are completely wrong.
+> 
+> For example, when the starting offset is fixed:
+> 
+>  CPU:0 ts:113 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
+>  CPU:0 ts:114 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
+>  CPU:100 ts:28259048229270629 6f4e203a4343450a  2073726f72726520  0x6f4e203a4343450a <- 0x2073726f72726520
+> 
+> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 
-Fair, thanks for the quick responses.
+
+Thanks for noticing that!
+
+I've managed to reproduce it here and your patch indeed fixes the issue
+- I've tested on 6.19 with ramoops.
+
+Feel free to add my:
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+
+Cheers,
+
+
+Guilherme
