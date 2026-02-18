@@ -1,159 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFCB318EF3;
-	Wed, 18 Feb 2026 10:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B905233064C;
+	Wed, 18 Feb 2026 15:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771409686; cv=none; b=e+QqP/IAw4Iv0m2KjISeGBB98Js2NPkiFNB9SGjJgX+cGB1AV1hyMVlklTBT1igqZ6FhV0cVWE3YsvWKWIpVLIdkdxl/FoefYXcWXwNIoWQrj8KjwHGnNBJ15jira80gjZtEA1LCgBQsrV3EcSqYDFWSbRyeEofeKhH15dTJYRI=
+	t=1771427908; cv=none; b=TSf+ncioDjk9fZ1KDSp0mo1C7fxW7PxaXTxzDJEG0mhmfstLkPUI7wbVqyDqEhosanBtF5iUaAQbIIJJIjJFuOr9jRZ4hsB3bGhSeTstSmkOgS2+dicLp219LIr68QediCK+XN7xbZVbATdLYIj8nyrOTnRoFUotsbgHX3g9pVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771409686; c=relaxed/simple;
-	bh=zEPxgTozeXwayd3dN/+UCEPOsTsIXSSTPsBPi1Uh0R0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cfw+9b7ilxwcJdj30DlMJLH6ZCo07WQOgQfWCGvy8M7rgR3qeiBQcFQO+yutGhd33cZ93CKN9Y9XaRs39mZ0mVHa/s/sVHUHee5E1M1ha6VsZkID464+KNQa0BpbkiUl5NHEGkuPvAg6psgUIJVLbuzcncz4HdIRfueOoX2mM7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noK4Q9BP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771427908; c=relaxed/simple;
+	bh=HttL/I0rYBr3R1UOpPJoyYRCk+toMZmme7purgQbyAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jeREwaMyiGhWn/FYa6OpCiOK18rcIwhDxzYolf8UQUiXeiNHKzJ1Wn4MCiWNMrn+0LYXozDIyVu5AOk5+iSCnTBrT/4ES4gvhEJN+amS6ApVLGMfTyNmWO5bJiFTRlQWs1qUcFy8Wu9DlH6hDpV9Kn+M+m/wvDf2xneX5ocm4/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PqSlkqj7; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noK4Q9BP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 157D6C19421;
-	Wed, 18 Feb 2026 10:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771409685;
-	bh=zEPxgTozeXwayd3dN/+UCEPOsTsIXSSTPsBPi1Uh0R0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=noK4Q9BPNaMRoNjE7sAvQ5BRvbF7j0k7xhzphPwEbVMLP9j3l/qN0nb/xb6cXfx4A
-	 Ehw4oCc26O3WTyXRRbo1lliaMg5adIZNpXOX/yi8DgWETqyhb1GkkDrUMu37KXYhhF
-	 dobYyL6BZH2WYsZ9SOap4PZgDNOGJ0mXuAhBHxLYCTUA6hyqYvdno2rfDcaVNMC56D
-	 U3jVRwkRZuzO7ACL0AM+Nd1pPfo1XXcyW9bvThdJ8iucmMv3XHYhf97I53e+hmFSi+
-	 2+yqIXWZhLQv6FrOQDskiamRnvAFN2RvXeJNftCU0jzX07pQTHx8QAjF0sYCVYnyr0
-	 JXqS5TLngffxA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] ring-buffer: Record invalid buffer event
-Date: Wed, 18 Feb 2026 19:14:43 +0900
-Message-ID:  <177140968338.1537493.3298484599734677165.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
-In-Reply-To:  <177140965047.1537493.15501794841217306382.stgit@mhiramat.tok.corp.google.com>
-References:  <177140965047.1537493.15501794841217306382.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PqSlkqj7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771427906; x=1802963906;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=HttL/I0rYBr3R1UOpPJoyYRCk+toMZmme7purgQbyAg=;
+  b=PqSlkqj76BTqw/XX8yoIpxRt3nVJeLoR9qIAgmhWZFGVO4/xYDZyxuZd
+   802q5yPgNGHWBMB/ZiyzWB6TvPJyoUIO2OvkbbnzviMV5hD2+T4lB/Igs
+   cFSQIyBnDNLTnLRxoDQydgc9X0/Y4q8X+PUeVbEadf8tzQSXcns7u9VuI
+   RKJCuS8koI8aT1GMYoks0orkCcFa/KP3FmEZWJ/Ad7qXsm+xkMRtWjFXP
+   tYgozyyJ0KPlPKJnYOuYNmiEePouHNKF/Ta8Lo8bNLIpmICB+yrMQTaiq
+   WwfSojQyVohfcqKNnt2Afjdn1GsWkvu74TwvoeQfijpq7wQwLSAnqvZ3g
+   g==;
+X-CSE-ConnectionGUID: ftTqregNSrW56jR63M5IYw==
+X-CSE-MsgGUID: HpgpTOhhR9CMY6ocFGDGBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="60083247"
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="60083247"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:18:26 -0800
+X-CSE-ConnectionGUID: 042y9mrDQDeudDMzOrI2rg==
+X-CSE-MsgGUID: uwbGiIu7TFuuQS5Oi3hBIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="212306582"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.189]) ([10.125.109.189])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:18:25 -0800
+Message-ID: <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
+Date: Wed, 18 Feb 2026 07:18:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
+To: "Elly I. Esparza" <ellyesparza8@gmail.com>, linux-kernel@vger.kernel.org,
+ luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ Kees Cook <kees@kernel.org>
+References: <20260218144735.24307-1-ellyesparza8@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260218144735.24307-1-ellyesparza8@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+... adding kprobes folks and Kees to cc
 
-Record an invalid buffer event on the invalidated sub buffer
-so that user can notice how much data is skipped.
+On 2/18/26 06:47, Elly I. Esparza wrote:
+> Kprobes can be used by rootkits to find the address of x64_sys_call(),
+> x32_sys_call() and ia32_sys_call(). This in turn allows for the rootkits
+> to find an specific syscall handler and hook it.
+> 
+> Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
+> blacklist.
+I'm an occasional, but not super regular kprobes user. Is this going to
+hurt folks who are legitimately probing the syscall dispatch functions?
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/ring_buffer.c   |   43 ++++++++++++++++++++++++++++++++++++------
- kernel/trace/trace.h         |    1 +
- kernel/trace/trace_entries.h |   15 +++++++++++++++
- 3 files changed, 53 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0ae2a5ad8c3e..98df5a67de26 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1911,6 +1911,38 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
- 	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
- }
- 
-+/* Inject invalid_buffer event */
-+static void rb_record_invalid_buffer(struct buffer_page *buffer,
-+				     long commit_bytes, long entries,
-+				     int buffer_index)
-+{
-+	struct buffer_data_page *dpage = buffer->page;
-+	struct invalid_subbuf_entry *entry;
-+	struct ring_buffer_event *event;
-+	long length;
-+
-+	length = DIV_ROUND_UP(sizeof(*entry), RB_ALIGNMENT);
-+
-+	/*
-+	 * Instead of ring_buffer_lock_reserve(), directly allocate it on
-+	 * the first entry of specific buffer_page.
-+	 */
-+	event = (struct ring_buffer_event *)&dpage->data[0];
-+	event->type_len = length;
-+	event->time_delta = 0;
-+
-+	trace_event_setup(event, TRACE_INVALID_BUF, 0);
-+
-+	entry = ring_buffer_event_data(event);
-+	entry->lost_bytes = commit_bytes;
-+	entry->lost_entries = entries;
-+	entry->buffer_index = buffer_index;
-+
-+	/* This buffer_page has only one event. */
-+	local_set(&buffer->entries, 1);
-+	local_set(&buffer->page->commit, rb_event_data_length(event));
-+}
-+
- /* If the meta data has been validated, now validate the events */
- static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -2043,12 +2075,11 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
- 		if (ret < 0) {
--			pr_info("Ring buffer meta [%d] invalid buffer page\n",
--				cpu_buffer->cpu);
--			/* Instead of invalidate whole ring buffer, just clear this subbuffer. */
--			local_set(&head_page->entries, 0);
--			local_set(&head_page->page->commit, 0);
--			/* TODO: commit an event to mark this is broken. */
-+			/* Discard invalid buffer and record it. */
-+			rb_record_invalid_buffer(head_page,
-+				local_read(&head_page->page->commit),
-+				local_read(&head_page->entries),
-+				rb_meta_subbuf_idx(meta, head_page->page));
- 		} else {
- 			/* If the buffer has content, update pages_touched */
- 			if (ret)
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 7894bf55743c..667834edb5b9 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -57,6 +57,7 @@ enum trace_type {
- 	TRACE_TIMERLAT,
- 	TRACE_RAW_DATA,
- 	TRACE_FUNC_REPEATS,
-+	TRACE_INVALID_BUF,
- 
- 	__TRACE_LAST_TYPE,
- };
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index f6a8d29c0d76..df39fc245ab4 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -457,3 +457,18 @@ FTRACE_ENTRY(timerlat, timerlat_entry,
- 		 __entry->context,
- 		 __entry->timer_latency)
- );
-+
-+FTRACE_ENTRY(invalid_subbuf, invalid_subbuf_entry,
-+	TRACE_INVALID_BUF,
-+
-+	F_STRUCT(
-+		__field(	long,			lost_bytes	)
-+		__field(	long,			lost_entries	)
-+		__field(	int,			buffer_index	)
-+	),
-+
-+	F_printk("lost_bytes:%ld\tlost_entries:%ld\tbuffer_index:%d\n",
-+		 __entry->lost_bytes,
-+		 __entry->lost_entries,
-+		 __entry->buffer_index)
-+);
-
+I'm a bit worried that the rootkits will just move on to something else
+and this will become a never ending game of whack-a-mole where half the
+kernel needs NOKPROBE_SYMBOL(). ;)
