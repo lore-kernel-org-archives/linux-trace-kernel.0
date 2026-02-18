@@ -1,126 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B905233064C;
-	Wed, 18 Feb 2026 15:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3522116E0;
+	Wed, 18 Feb 2026 15:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771427908; cv=none; b=TSf+ncioDjk9fZ1KDSp0mo1C7fxW7PxaXTxzDJEG0mhmfstLkPUI7wbVqyDqEhosanBtF5iUaAQbIIJJIjJFuOr9jRZ4hsB3bGhSeTstSmkOgS2+dicLp219LIr68QediCK+XN7xbZVbATdLYIj8nyrOTnRoFUotsbgHX3g9pVo=
+	t=1771428789; cv=none; b=aKBsxAsT2QlJO8oG/VbAa1uApF+rPNxV5KE6cPyjVfI4S6Sw1l+7kgsI6oAUjDAJEzdo+fhY0u/zc3kzzUqo+z5TyS/Zu2LeyhLhaIENRY+j5/IqA6Qw05TlCVms41CYszD2FNwCxOK8WoyxUpuNj6Bq2DI+Km4wecgUkiylcMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771427908; c=relaxed/simple;
-	bh=HttL/I0rYBr3R1UOpPJoyYRCk+toMZmme7purgQbyAg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jeREwaMyiGhWn/FYa6OpCiOK18rcIwhDxzYolf8UQUiXeiNHKzJ1Wn4MCiWNMrn+0LYXozDIyVu5AOk5+iSCnTBrT/4ES4gvhEJN+amS6ApVLGMfTyNmWO5bJiFTRlQWs1qUcFy8Wu9DlH6hDpV9Kn+M+m/wvDf2xneX5ocm4/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PqSlkqj7; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771428789; c=relaxed/simple;
+	bh=M7xKMl0LhvVG1nadriIHcjEBeJzbZ6ZWMTqr4CSeaLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glET8vD9iNpyU9R3kGO3Fk4PndGQAQey+61/xOpRn1CVBi/+i4RRcv3mYQmHSSj20WUps63KzQJgREjc3foeutGscITgago/Xletea8qwIrrFnlQPXT5aTABbd5NqiiG/ysxWQ6s/R3AhCugNvo+aRg41rMjf9Q3kv9n8p0KRCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iSUxjPwE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PqSlkqj7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771427906; x=1802963906;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=HttL/I0rYBr3R1UOpPJoyYRCk+toMZmme7purgQbyAg=;
-  b=PqSlkqj76BTqw/XX8yoIpxRt3nVJeLoR9qIAgmhWZFGVO4/xYDZyxuZd
-   802q5yPgNGHWBMB/ZiyzWB6TvPJyoUIO2OvkbbnzviMV5hD2+T4lB/Igs
-   cFSQIyBnDNLTnLRxoDQydgc9X0/Y4q8X+PUeVbEadf8tzQSXcns7u9VuI
-   RKJCuS8koI8aT1GMYoks0orkCcFa/KP3FmEZWJ/Ad7qXsm+xkMRtWjFXP
-   tYgozyyJ0KPlPKJnYOuYNmiEePouHNKF/Ta8Lo8bNLIpmICB+yrMQTaiq
-   WwfSojQyVohfcqKNnt2Afjdn1GsWkvu74TwvoeQfijpq7wQwLSAnqvZ3g
-   g==;
-X-CSE-ConnectionGUID: ftTqregNSrW56jR63M5IYw==
-X-CSE-MsgGUID: HpgpTOhhR9CMY6ocFGDGBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="60083247"
-X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="60083247"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:18:26 -0800
-X-CSE-ConnectionGUID: 042y9mrDQDeudDMzOrI2rg==
-X-CSE-MsgGUID: uwbGiIu7TFuuQS5Oi3hBIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="212306582"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.189]) ([10.125.109.189])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 07:18:25 -0800
-Message-ID: <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
-Date: Wed, 18 Feb 2026 07:18:25 -0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iSUxjPwE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=trAx6nnQ45IUid9unJVJ8G0EUg+oFCF06T1BqiyBkjI=; b=iSUxjPwEP2bSY1KV2Xyyn9trNE
+	tSqzfqK27NqbvY4c1aaaxbwNHTSXzLp/IVmYr0/pZDcLGKfM0F/l3gHuYYvLd3t6CEjg9iP8+Z4O3
+	iSTxOQ2nSrEDsjv17PNg2S1ZdEfHJAoGClNylN45Dvd/L7w+8/Yz/z2nESBvzMyMb3vc+V6jMP88w
+	Ype8AC2Sg9G2zseqBN6rZZ6eqx3YGiIsW8ePMKm1pDJdHESD79YKIRgDpufDsOIzw/+xAh1bomKat
+	7YwyZCtluq54Gcws2LiHTlS42QpabWoR3gp/751EfdrLFKJpWL1wuVGyv4bzg6iGXJ269+On9i/r+
+	2D+UOhyw==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vsjXh-00000006DHw-2WFH;
+	Wed, 18 Feb 2026 15:32:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4E656300B40; Wed, 18 Feb 2026 16:32:44 +0100 (CET)
+Date: Wed, 18 Feb 2026 16:32:44 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Elly I. Esparza" <ellyesparza8@gmail.com>,
+	linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
+Message-ID: <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
+References: <20260218144735.24307-1-ellyesparza8@gmail.com>
+ <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
-To: "Elly I. Esparza" <ellyesparza8@gmail.com>, linux-kernel@vger.kernel.org,
- luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- Kees Cook <kees@kernel.org>
-References: <20260218144735.24307-1-ellyesparza8@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260218144735.24307-1-ellyesparza8@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
 
-... adding kprobes folks and Kees to cc
-
-On 2/18/26 06:47, Elly I. Esparza wrote:
-> Kprobes can be used by rootkits to find the address of x64_sys_call(),
-> x32_sys_call() and ia32_sys_call(). This in turn allows for the rootkits
-> to find an specific syscall handler and hook it.
+On Wed, Feb 18, 2026 at 07:18:25AM -0800, Dave Hansen wrote:
+> ... adding kprobes folks and Kees to cc
 > 
-> Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
-> blacklist.
-I'm an occasional, but not super regular kprobes user. Is this going to
-hurt folks who are legitimately probing the syscall dispatch functions?
+> On 2/18/26 06:47, Elly I. Esparza wrote:
+> > Kprobes can be used by rootkits to find the address of x64_sys_call(),
+> > x32_sys_call() and ia32_sys_call(). This in turn allows for the rootkits
+> > to find an specific syscall handler and hook it.
+> > 
+> > Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
+> > blacklist.
+> I'm an occasional, but not super regular kprobes user. Is this going to
+> hurt folks who are legitimately probing the syscall dispatch functions?
+> 
+> I'm a bit worried that the rootkits will just move on to something else
+> and this will become a never ending game of whack-a-mole where half the
+> kernel needs NOKPROBE_SYMBOL(). ;)
 
-I'm a bit worried that the rootkits will just move on to something else
-and this will become a never ending game of whack-a-mole where half the
-kernel needs NOKPROBE_SYMBOL(). ;)
+So I really think this should be noinstr; pretty much all the code here
+is noinstr already, so why not include the syscall dispatch.
+
+Better still, noinstr ensures the spectre-v1 mitigation actually works.
