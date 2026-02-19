@@ -1,119 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0573EBF16;
-	Thu, 19 Feb 2026 19:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEA29B79B;
+	Thu, 19 Feb 2026 21:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771528284; cv=none; b=JgJwUvsYx9Y9zmkhUOh8UPV/Rdz9hIz2wZcLfjdJSJbhjQNpezpM1BS/byxEHdD8GCVNpF3FilEvzIbdruckFWE3CBw64yWyiiXPJP+yZ4Zb4OUytR/xCopcechB/9+1V5UdqmT4bV3r9CiN3u20JLt5/IFFA3ebBKqNLMDtsW8=
+	t=1771537976; cv=none; b=dU9KFcRMglQv2L1nEgd+WLJ0KJfk/bLI4U5GgpxNYinSO32dXbz25xDNU8stGYHSIp762/wati63iVNxMjIOiiqjwEdmyc0mX4xQz60e2Ron84IDFijI5O0axCOMBM6uu+l836l/LKHxZAsf7OjBRwQRMmsFCeuAoKA4LgIogZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771528284; c=relaxed/simple;
-	bh=9p0DfwiEGsHS8N8lLhDzityaVkttEOvhog9ekktjRc0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JGRQQksXbMgqxY+8C1PyeQR36p4BaAemHwydXkxMgBRu99r3dyVedr70DH0TbS+T3jbM5MpC7jAD4PgyqUmcw4c/v0fp4WZumdLVJBQx+58KGxuIdNn5K2axknk4jTdxfY5XZtxtt6ilOo1ipWHU2+hz0nptiHl3iiNlZD7wxRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLZa/tdX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771537976; c=relaxed/simple;
+	bh=MK/lDGoEFmPcqX59Eh54A6hLN1qPbws3ioviUnAqI0k=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=YY8Be6nvjINu15gJggaKptVyTSKqi/C7rsPTmjPYGto+c06jcsc7wkqySTfqDoYwUVgYuUnbM6ofHAjUVVWaLN8Hqph2TdYT11mmf34puXQzSPRpuFZxzP1ShIPLXKWmmJqsG1UgNC3qbCUVPfh3CRkqJzT3k9ryodp1jkPkguQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QPZljZ3G; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLZa/tdX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29BFC4CEF7;
-	Thu, 19 Feb 2026 19:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771528284;
-	bh=9p0DfwiEGsHS8N8lLhDzityaVkttEOvhog9ekktjRc0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iLZa/tdXSjtY+IhPqpxbOkvU6uy46FeFU74mPUys5QXzxKsoXkOBfNqr48ShSG0w5
-	 /+Ofhedr1cNJ3oFPoDQUmLpoBxP000NdDP6CrN2xt66ZkExL19bY+933OZayflXn+Y
-	 XS2zN8HFCLAqCH/GlmDwm8hS68m5rmsneq+/jlvbwZkuqI1R3uYxjkQF622aaYZr57
-	 YGhylOf1FRe2j3Ehl82WXL6jd4zKN0cDpIwTmlBUWLXoA64zYwfSnRMPpegBICFnHJ
-	 aiJBmIoG3ISn88YHnQLEitUwHJLQ075DETetkxXmN+FUellgKGfKY2ze2NxKsvgyLx
-	 iXaTWxw7wKdYA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vt9Qo-0000000CFY6-0SoG;
-	Thu, 19 Feb 2026 19:11:22 +0000
-Date: Thu, 19 Feb 2026 19:11:21 +0000
-Message-ID: <87cy20eeg6.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/30] Tracefs support for pKVM
-In-Reply-To: <20260219130220.063c8db3@gandalf.local.home>
-References: <20260219150307.14538-1-vdonnefort@google.com>
-	<20260219130220.063c8db3@gandalf.local.home>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QPZljZ3G"
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 61JLpje2507224
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 19 Feb 2026 13:51:45 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 61JLpje2507224
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026012301; t=1771537906;
+	bh=MK/lDGoEFmPcqX59Eh54A6hLN1qPbws3ioviUnAqI0k=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=QPZljZ3GXv3+FCZ5/BN16BstYGCS0+tGKTC4/2UdFbJKj3IkESFuhSiGJRBpc3Xyd
+	 ACySosGDDdg619fNzYUJE5/iIU0VVIiI4BbxO3s3OUyVDS72uY0LEm9OlvHlID2T3x
+	 YRzT9iLHMC0FMk9GpNi0jKQf7qxvS4dOwb6YQff84b2SQrOvslGdthj0fyDRXgVg6a
+	 YM4rZgTahX/zEeqx31rRbClTwRiJBn2obvgYma3E2qmLx8kkQt+JqeQN/AtYzHZuNA
+	 OBCPYF1RTD0rpmIsxgM2Q3GXwB1t2tuK1S3qDl59grQAJ9l2el2jHV5xQF+cqcErR2
+	 lqStBN4GwjyRA==
+Date: Thu, 19 Feb 2026 13:51:39 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@intel.com>
+CC: "Elly I. Esparza" <ellyesparza8@gmail.com>, linux-kernel@vger.kernel.org,
+        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        Naveen N Rao <naveen@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
+References: <20260218144735.24307-1-ellyesparza8@gmail.com> <0c5396b5-f084-4ade-adc9-029037031eea@intel.com> <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
+Message-ID: <218072EF-9D35-4D5F-8379-3B195B06A697@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Feb 2026 18:02:20 +0000,
-Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> On Thu, 19 Feb 2026 15:02:37 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > The growing set of features supported by the hypervisor in protected
-> > mode necessitates debugging and profiling tools. Tracefs is the
-> > ideal candidate for this task:
-> > 
-> >   * It is simple to use and to script.
-> > 
-> >   * It is supported by various tools, from the trace-cmd CLI to the
-> >     Android web-based perfetto.
-> > 
-> >   * The ring-buffer, where are stored trace events consists of linked
-> >     pages, making it an ideal structure for sharing between kernel and
-> >     hypervisor.
-> > 
-> > This series first introduces a new generic way of creating remote events and
-> > remote buffers. Then it adds support to the pKVM hypervisor.
-> > 
-> 
-> So I finished my review of all the tracing patches, but I just realized
-> that there's likely going to be some major conflicts with changes in the
-> tracing tree that's going to happen against this series.
-> 
-> To solve that, after -rc2 comes out, I'll apply the tracing portion of this
-> series to a branch in my tree directly on top of -rc2 and I will then use
-> that to base my changes for the next merge window.
-> 
-> Then the arm/kvm folks could start with that branch and add the arm/KVM
-> portion of this series on top of it. This will prevent major merge
-> conflicts in linux-next.
-> 
-> Does that sound OK?
+On February 18, 2026 7:32:44 AM PST, Peter Zijlstra <peterz@infradead=2Eorg=
+> wrote:
+>On Wed, Feb 18, 2026 at 07:18:25AM -0800, Dave Hansen wrote:
+>> =2E=2E=2E adding kprobes folks and Kees to cc
+>>=20
+>> On 2/18/26 06:47, Elly I=2E Esparza wrote:
+>> > Kprobes can be used by rootkits to find the address of x64_sys_call()=
+,
+>> > x32_sys_call() and ia32_sys_call()=2E This in turn allows for the roo=
+tkits
+>> > to find an specific syscall handler and hook it=2E
+>> >=20
+>> > Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
+>> > blacklist=2E
+>> I'm an occasional, but not super regular kprobes user=2E Is this going =
+to
+>> hurt folks who are legitimately probing the syscall dispatch functions?
+>>=20
+>> I'm a bit worried that the rootkits will just move on to something else
+>> and this will become a never ending game of whack-a-mole where half the
+>> kernel needs NOKPROBE_SYMBOL()=2E ;)
+>
+>So I really think this should be noinstr; pretty much all the code here
+>is noinstr already, so why not include the syscall dispatch=2E
+>
+>Better still, noinstr ensures the spectre-v1 mitigation actually works=2E
 
-That works. Just send us a link to the branch after -rc2 and we'll get
-that sorted.
-
-Thanks,
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+Yes, and merging the x64 and x32 dispatches into one function actually ena=
+bles a lot of code sharing=2E
