@@ -1,88 +1,147 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEA29B79B;
-	Thu, 19 Feb 2026 21:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6F32EAB6B
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 23:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771537976; cv=none; b=dU9KFcRMglQv2L1nEgd+WLJ0KJfk/bLI4U5GgpxNYinSO32dXbz25xDNU8stGYHSIp762/wati63iVNxMjIOiiqjwEdmyc0mX4xQz60e2Ron84IDFijI5O0axCOMBM6uu+l836l/LKHxZAsf7OjBRwQRMmsFCeuAoKA4LgIogZ8=
+	t=1771544238; cv=none; b=VJ74JDMAc7mqT39W/fVoYtjWjUqOiY1BXrYjAFdji/RytGUw2n0vKLMJhfGfsHEnoibIwa/558dLhac8QOMFDMPMiLt/L7VtCwYFVfGDLYQBFiOBADYNkg8NnFgb0glVRjPVNLjE2lQUy2kEK2fRMjWEjIwK+moPrrEnmJnPhjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771537976; c=relaxed/simple;
-	bh=MK/lDGoEFmPcqX59Eh54A6hLN1qPbws3ioviUnAqI0k=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=YY8Be6nvjINu15gJggaKptVyTSKqi/C7rsPTmjPYGto+c06jcsc7wkqySTfqDoYwUVgYuUnbM6ofHAjUVVWaLN8Hqph2TdYT11mmf34puXQzSPRpuFZxzP1ShIPLXKWmmJqsG1UgNC3qbCUVPfh3CRkqJzT3k9ryodp1jkPkguQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QPZljZ3G; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1771544238; c=relaxed/simple;
+	bh=9H/CK9eBVT/+AVbQ22bGCIRSfnchLRGOnFXwVOBU8cA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=e5LaKiPykfI3yKNmnadsLJdD/J6Saj1hHCQkLaeWXOmQB+NUYpm3bkYRuGS5Zybs7W2X2xzLMAfWdyi8IQ99xM/eMKUC1swK8i3UOmtLDJC6E4xdr2lWsP8VKFhzPtHyCycx1V/XFx77UdaAk2ECzm7DNfXcUXpQ3qfCOKlFSwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WQxvcA94; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QPZljZ3G"
-Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 61JLpje2507224
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 19 Feb 2026 13:51:45 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 61JLpje2507224
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026012301; t=1771537906;
-	bh=MK/lDGoEFmPcqX59Eh54A6hLN1qPbws3ioviUnAqI0k=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=QPZljZ3GXv3+FCZ5/BN16BstYGCS0+tGKTC4/2UdFbJKj3IkESFuhSiGJRBpc3Xyd
-	 ACySosGDDdg619fNzYUJE5/iIU0VVIiI4BbxO3s3OUyVDS72uY0LEm9OlvHlID2T3x
-	 YRzT9iLHMC0FMk9GpNi0jKQf7qxvS4dOwb6YQff84b2SQrOvslGdthj0fyDRXgVg6a
-	 YM4rZgTahX/zEeqx31rRbClTwRiJBn2obvgYma3E2qmLx8kkQt+JqeQN/AtYzHZuNA
-	 OBCPYF1RTD0rpmIsxgM2Q3GXwB1t2tuK1S3qDl59grQAJ9l2el2jHV5xQF+cqcErR2
-	 lqStBN4GwjyRA==
-Date: Thu, 19 Feb 2026 13:51:39 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@intel.com>
-CC: "Elly I. Esparza" <ellyesparza8@gmail.com>, linux-kernel@vger.kernel.org,
-        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org,
-        Naveen N Rao <naveen@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
-References: <20260218144735.24307-1-ellyesparza8@gmail.com> <0c5396b5-f084-4ade-adc9-029037031eea@intel.com> <20260218153244.GG1282955@noisy.programming.kicks-ass.net>
-Message-ID: <218072EF-9D35-4D5F-8379-3B195B06A697@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WQxvcA94"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ba8013a9e3so1678498eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771544234; x=1772149034; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fMf1qxcGK6Wxv/U+V8Of3DjwHpI1qGbRPjrj7xoTTd8=;
+        b=WQxvcA94E4zT+6G8yCf0Rb87VMBLPcx9fTGAeihx63siW8n2Lvs2JTneISdUlNrqvP
+         gGgJC8Hig8T/iPHdEtpLpIXIDyswM1ddv7bf63zyH/72iZs0VK0lsS7EIXeD6usv5SZo
+         tYYbdCmS3exXiHvrXqL51jmB4efcuSE784OLBIMCLzAO8OUQqx+X1Y+T6WgjJFg0dtia
+         7NMSsXHTg57jvvUDiaEjLB/fpGYj460I2pOykj9ZVMz2fKYrIwOWVB2YakTAmj0Z6cja
+         Y7G8RqWwzLi/tv9jUOaSfaZSNa3c2n0yOBG30M7s2r0kRVYewQrYe6LYMDXIuu0VC+cX
+         VdLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771544234; x=1772149034;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fMf1qxcGK6Wxv/U+V8Of3DjwHpI1qGbRPjrj7xoTTd8=;
+        b=g5aRge0CNP1kkOLenVGUvTLb0CCgfs/6PiMnmzVxv1h4LDSDs+4C/w++2Vxg+eeOYO
+         44UOHO4dl2V6AbCLdaIhgSd4RA/vGVV/5goalhvjp2HB3K1czNMerGSXc3Ro1njOMQDC
+         eL5M+YmX6IkD42+8u/1FE1vCbP4tvoH016N9OVeb/hgfILOWwjzD4MsybYhtHYz0N87a
+         dj2W+X2s46v9e3t+0I6waA1IYL92L0oz6TV6g6SU+twZ4UKP8boMt5c4K40LRryx6mqv
+         axX2h7JmERh3x95BW9nxH3X/QwZJTwZT7+p/iSbzVKXV5ekpdf8ueuNqjxih0Uwr83zF
+         S3hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLGDKV7le8023vGTaf5YGQrANrrXURrUZdYsghU8wi5EHJCn3YOhnd5n8Cj/HmIZ8MFZ2SzbQKbSNoHGb20F0u3Uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSEXznxl0YBE3f2AZXAjSDeKXYcOf7FyvN12ez1071uk2+HLWX
+	JqZ4b4cznZ7k/c/YcuXKdNqiF63wkpXQQIaGmUYI3fzcsTjkQL+r5Te9BX1IHeJE62KPXhaB0xa
+	kVGGeEvQpOSG+EDwHFE9SfhXuIQ==
+X-Received: from dybic28.prod.google.com ([2002:a05:7300:c71c:b0:2ba:8e16:e465])
+ (user=kaleshsingh job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:693c:3108:b0:2ba:6854:8d4d with SMTP id 5a478bee46e88-2bd501701e4mr3357396eec.20.1771544233484;
+ Thu, 19 Feb 2026 15:37:13 -0800 (PST)
+Date: Thu, 19 Feb 2026 15:36:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.371.g1d285c8824-goog
+Message-ID: <20260219233708.1971199-1-kaleshsingh@google.com>
+Subject: [PATCH] mm/tracing: rss_stat: Ensure curr is false from kthread context
+From: Kalesh Singh <kaleshsingh@google.com>
+To: akpm@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org
+Cc: kernel-team@android.com, android-mm@google.com, 
+	Kalesh Singh <kaleshsingh@google.com>, "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Minchan Kim <minchan@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, Martin Liu <liumartin@google.com>, 
+	David Rientjes <rientjes@google.com>, Zi Yan <ziy@nvidia.com>, 
+	Wander Lairson Costa <wander@redhat.com>, Petr Mladek <pmladek@suse.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On February 18, 2026 7:32:44 AM PST, Peter Zijlstra <peterz@infradead=2Eorg=
-> wrote:
->On Wed, Feb 18, 2026 at 07:18:25AM -0800, Dave Hansen wrote:
->> =2E=2E=2E adding kprobes folks and Kees to cc
->>=20
->> On 2/18/26 06:47, Elly I=2E Esparza wrote:
->> > Kprobes can be used by rootkits to find the address of x64_sys_call()=
-,
->> > x32_sys_call() and ia32_sys_call()=2E This in turn allows for the roo=
-tkits
->> > to find an specific syscall handler and hook it=2E
->> >=20
->> > Add x64_sys_call(), x32_sys_call() and ia32_sys_call() to the kprobes
->> > blacklist=2E
->> I'm an occasional, but not super regular kprobes user=2E Is this going =
-to
->> hurt folks who are legitimately probing the syscall dispatch functions?
->>=20
->> I'm a bit worried that the rootkits will just move on to something else
->> and this will become a never ending game of whack-a-mole where half the
->> kernel needs NOKPROBE_SYMBOL()=2E ;)
->
->So I really think this should be noinstr; pretty much all the code here
->is noinstr already, so why not include the syscall dispatch=2E
->
->Better still, noinstr ensures the spectre-v1 mitigation actually works=2E
+The rss_stat trace event allows userspace tools, like Perfetto [1],
+to inspect per-process RSS metric changes over time.
 
-Yes, and merging the x64 and x32 dispatches into one function actually ena=
-bles a lot of code sharing=2E
+The curr field was introduced to rss_stat in commit e4dcad204d3a
+("rss_stat: add support to detect RSS updates of external mm").
+It's intent is to  indicate whether the RSS update is for the
+mm_struct of the current execution context; and is set to false
+when operating on a remote mm_struct (e.g., via kswapd or a
+direct reclaimer).
+
+However, an issue arises when a kernel thread temporarily adopts
+a user process's mm_struct. Kernel threads do not have their own
+mm_struct and normally have current->mm set to NULL. To operate
+on user memory, they can "borrow" a memory context using
+kthread_use_mm(), which sets current->mm to the user process's mm.
+
+This can be observed, for example, in the USB Function Filesystem
+(FFS) driver. The ffs_user_copy_worker() handles AIO completions
+and uses kthread_use_mm() to copy data to a user-space buffer.
+If a page fault occurs during this copy, the fault handler executes
+in the kthread's context.
+
+At this point, current is the kthread, but current->mm points to the
+user process's mm. Since the rss_stat event (from the page fault)
+is for that same mm, the condition current->mm == mm becomes true,
+causing curr to be incorrectly set to true when the trace event is
+emitted.
+
+This is misleading because it suggests the mm belongs to the kthread,
+confusing userspace tools that track per-process RSS changes and
+corrupting their mm_id-to-process association.
+
+Fix this by ensuring curr is always false when the trace event is
+emitted from a kthread context by checking for the PF_KTHREAD flag.
+
+[1] https://perfetto.dev/
+
+Fixes: e4dcad204d3a ("rss_stat: add support to detect RSS updates of external mm")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+---
+ include/trace/events/kmem.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index 7f93e754da5c..cd7920c81f85 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -440,7 +440,13 @@ TRACE_EVENT(rss_stat,
+ 
+ 	TP_fast_assign(
+ 		__entry->mm_id = mm_ptr_to_hash(mm);
+-		__entry->curr = !!(current->mm == mm);
++		/*
++		 * curr is true if the mm matches the current task's mm_struct.
++		 * Since kthreads (PF_KTHREAD) have no mm_struct of their own
++		 * but can borrow one via kthread_use_mm(), we must filter them
++		 * out to avoid incorrectly attributing the RSS update to them.
++		 */
++		__entry->curr = current->mm == mm && !(current->flags & PF_KTHREAD);
+ 		__entry->member = member;
+ 		__entry->size = (percpu_counter_sum_positive(&mm->rss_stat[member])
+ 							    << PAGE_SHIFT);
+
+base-commit: 8bf22c33e7a172fbc72464f4cc484d23a6b412ba
+-- 
+2.53.0.371.g1d285c8824-goog
+
