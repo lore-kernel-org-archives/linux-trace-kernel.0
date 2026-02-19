@@ -1,54 +1,54 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5BE34CFC2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA434CFDD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771513441; cv=none; b=keK6EYIof4GCoAYvZ3DB33ZTnUDIIljYEy1W/95EYN2PNDFVzFficH2ufDij86IxcAteQY705ystcfLSypDyglvV3wVgUfTNTwPBxSSa9/T17sRwysXpfnJzM0IemVi0RxesxpOO94PnwCzJxwdIzcNbUnH1OFo6EmsMO4c0dYU=
+	t=1771513443; cv=none; b=dfX6LdzbSVgLr1x5W+9boYcfcw/pBh+JRM+It/pWbsypUAD4xToAcGF4KEjW8iN5byMnYYrVZA47vYdMYJsDVXoA4RJTiWny3h0yNStlPYVzwjlrTaFijLrmQCU7aC3R6n8F5+rELMKluFSOZGpsgFBUDRsKguzp/9MrX0AmImU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771513441; c=relaxed/simple;
-	bh=59QK1IwEV466xydh4Q7mh9+JaDPhTy37zORcu48/k1U=;
+	s=arc-20240116; t=1771513443; c=relaxed/simple;
+	bh=nC5Ozd5peuX3ykhnKdo5Pz3W6ePP4RFYtKgnnVuRb/s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bYbxmoWvz74kVx0d1wf44hTI93w3L1XNzQfhGFmb9ssW/hGPSt/EeU4cBhtNHUTn/sHb2pAwUk/fc1X5sGixuZT2KyQd1kkxGgAf0gmA5B/S1GCeWYmaV7XbsVoTkauaeoDum+w0iD5txJux/iMlctAhGasnRW3w0RWj/FWO4CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RHzq6dQa; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=flFNzEW/8XhHV/oK4a70F3c7QazSHXAR5Ws/FHFxZnw6fh1T9O/S8AKx1u86Lj1rCHQIYVB7npRenNWe5fS2AGXDqThndNWZTk8sp6ARmJkkSVTYrLOMBcODZiJ/QAaBXNvfQ0tmsScm1tb8RPSpQ+Abz4vOhb7jqGe3XIOJWkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uZx0QzyX; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RHzq6dQa"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-43964455342so279984f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 07:04:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uZx0QzyX"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4837b9913c9so9022135e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 07:04:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771513439; x=1772118239; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771513440; x=1772118240; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6jAHB+s4HI+rlHZ3mnIB6UI4woeuqj9h766h+D/K5JA=;
-        b=RHzq6dQaLPJnF54G27OVk6vURA6bqlzXup9XS5/c5x7AsAhDvan7rjy5Cf6dGHDUeW
-         fslXE2SfNhmslZOaPbb7v/VJx3f1jgPANOlwzB+8jn7fPibed6r+GYVZbiPOc3Kf/+st
-         X60xAZEfL8Lc2CE2HJoxHJp1A7wY8ceSV5gg+Q6MPqIyVMQiatvjm9V8Qwv45oDKrTxl
-         r6ims1aGvNWR8Ax3e+n4La6JXB/yh5Kc1TGgQrwYTIK3umxc6x4RDqeCnT00NhyUc+VL
-         TnoVO8QmC0U7KPNeYa+CwjHy3eWftqVSo5IQmsDqnqsAsUk7ZmjIMHRmWzJJjaaZIG0Y
-         Y4UQ==
+        bh=B8HAfsDbzjcEm8omLFyotBep6HDlIYV4sfcPciyFXCw=;
+        b=uZx0QzyX4Hbg6s3etEtNSELD3DNj3e54ytP7V4uuu1aJlNYSqsf40ZoGMSGTrEo508
+         YTII67dxCjrN7eRbgZipXbxsjszjrJghzwyVK96CuLdRoxjEdtR6vYOfinzMyuIubifR
+         WSV1jbi7TLDxwH/I2u1ouSBenWRdlDogoC2JrCYil94XQa7RIvRuwDhanHV/e3LcLwTU
+         7BdZbSnQr8XOl0dRXsOsPG4khxLw+Ow2pfZW8Sb621rf5/EJYYve/uzKOsUULnFIFgPz
+         sgQmtXfSKqmb+kG031gdVWWCkPVLqixXF1baLwS+mLc9KVRxUvbQUljmKOQ50hk9oYwK
+         qQ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771513439; x=1772118239;
+        d=1e100.net; s=20230601; t=1771513440; x=1772118240;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6jAHB+s4HI+rlHZ3mnIB6UI4woeuqj9h766h+D/K5JA=;
-        b=b/okBVCkKXfn3qN2DlxrJiG/JR2uPqXjLfE4Lgicc9pRkqlX30fduv45CBT6xS78Ue
-         KemWBqdU+IqJl4pRZk45Pn1X7DHdtAbht3G7BuKTg0/Zk1OZIHY1w7rV5wPwxuuJ9rS9
-         rQQcRhsiAErKJENA1okNbJWrM1uUsm7Zc+5qGnMDNRzsO9J/ZkH0E3S0BDUAupQ2FL7R
-         5xWjGprYu/V1KbK2yZGLrd++FdF1OhhYF3odjSLaA+XQWPiAPg0MS9Dnl2d/StTN8rcN
-         6wP0kSG3TFdASJk1s3PRyRMhva3RfFLay+ha5ffedWiC3UahjY1RcRU30MBlITWplY51
-         81BA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3hXGGmFkpAJph8IljB+Dzzh2/kW9CIN8XT3R5EZhopHkHHvGtqQl6/grivEiUzIuzIA6PmJ4rKF167BFDvNeAUlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr32mD0XARM4tfQ151mJnrmouqDqslJLnKttYOHecjxyiF0XXZ
-	POKZ+ety9zsgXVHpykD5Loid9DYlOzHLLC9L/R3wYqIFpi2S80cXRJPuP8ctzWH6d/gOxBTfaEg
-	in6NWg2NnWOH5M0uKvTBByw==
-X-Received: from wmbdr17.prod.google.com ([2002:a05:600c:6091:b0:480:4a03:7b73])
+        bh=B8HAfsDbzjcEm8omLFyotBep6HDlIYV4sfcPciyFXCw=;
+        b=D4ywPGSAAHc46Wkgn4pDxxkq+RXjnWUpTyRZaWuZ1JKP/0d+mti6Arq5wYk5q8InQV
+         eYDMC6X39xZLWCPedGwxu9q3X+78up4LBkpt4ZK+cOC4W7SW9uYTUANZtBl6+AVKA2TS
+         l5Kj0bv4Gk9gB/2Qf74T5NKgTZO8hwxZalm5cD9DV6Vp1zLc+nud85VZsLfaxZNOeDXI
+         giuUmmiNBp4eSwSpcR5pfYXseZPXICZ3OTWr0kZJ8mUuB/SllupEG1sxREbCzypIDi0u
+         yaTwNymUy+gaQMdFmxUVfzquyVVeT77sdmMCUrWmLGRJDhqjLfth95UT7As96xYqBgpX
+         w4DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYZB9wlgyFEbMuTJRL/4gh13lVaruKAEKlJKq5O/LKH1DDfKVcrZYSPNBMF+RuXnHUGFkHPEdznnMP7fQ2jvL6fTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0ghcN9eySZXWUbuTrUBia5BQGLjgtTssvcDRTDUNeuusU3l/4
+	NUjw4N9jUQMtNYa6Bd11KpC7ODooNupaL91ZRGJUN9VrU20JQ83WnhhQHne0K/IPN75oNLZscUs
+	UYSNi+Rr7ybZs2CVyvkd3aA==
+X-Received: from wmjq15.prod.google.com ([2002:a7b:ce8f:0:b0:480:4a03:7b63])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:6d55:b0:483:722c:a3d1 with SMTP id 5b1f17b1804b1-483a00b0a8dmr29071135e9.16.1771513438181;
- Thu, 19 Feb 2026 07:03:58 -0800 (PST)
-Date: Thu, 19 Feb 2026 15:03:06 +0000
+ 2002:a05:600c:3485:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4839e669135mr40605035e9.30.1771513439603;
+ Thu, 19 Feb 2026 07:03:59 -0800 (PST)
+Date: Thu, 19 Feb 2026 15:03:07 +0000
 In-Reply-To: <20260219150307.14538-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260219150307.14538-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.335.g19a08e0c02-goog
-Message-ID: <20260219150307.14538-30-vdonnefort@google.com>
-Subject: [PATCH v12 29/30] KVM: arm64: Add selftest event support to nVHE/pKVM hyp
+Message-ID: <20260219150307.14538-31-vdonnefort@google.com>
+Subject: [PATCH v12 30/30] tracing: selftests: Add hypervisor trace remote tests
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -67,107 +67,103 @@ To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
 Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
 	jstultz@google.com, qperret@google.com, will@kernel.org, 
 	aneesh.kumar@kernel.org, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a selftest event that can be triggered from a `write_event` tracefs
-file. This intends to be used by trace remote selftests.
+Run the trace remote selftests with the trace remote 'hypervisor', This
+trace remote is most likely created when the arm64 KVM nVHE/pKVM
+hypervisor is in use.
 
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kselftest@vger.kernel.org
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-index 47d250436f8c..c8eb992d3ac8 100644
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -96,6 +96,7 @@ enum __kvm_host_smccc_func {
- 	__KVM_HOST_SMCCC_FUNC___tracing_update_clock,
- 	__KVM_HOST_SMCCC_FUNC___tracing_reset,
- 	__KVM_HOST_SMCCC_FUNC___tracing_enable_event,
-+	__KVM_HOST_SMCCC_FUNC___tracing_write_event,
- };
- 
- #define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
-diff --git a/arch/arm64/include/asm/kvm_hypevents.h b/arch/arm64/include/asm/kvm_hypevents.h
-index 221a1dacb2f0..743c49bd878f 100644
---- a/arch/arm64/include/asm/kvm_hypevents.h
-+++ b/arch/arm64/include/asm/kvm_hypevents.h
-@@ -46,4 +46,15 @@ HYP_EVENT(hyp_exit,
- 	),
- 	HE_PRINTK("reason=%s vcpu=%d", __hyp_enter_exit_reason_str(__entry->reason), __entry->vcpu)
- );
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
+new file mode 100644
+index 000000000000..64bf859d6406
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor trace buffer size
++# requires: remotes/hypervisor/write_event
 +
-+HYP_EVENT(selftest,
-+	HE_PROTO(u64 id),
-+	HE_STRUCT(
-+		he_field(u64, id)
-+	),
-+	HE_ASSIGN(
-+		__entry->id = id;
-+	),
-+	RE_PRINTK("id=%llu", __entry->id)
-+);
- #endif
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index 547d63679022..eff9cb208627 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -643,6 +643,13 @@ static void handle___tracing_enable_event(struct kvm_cpu_context *host_ctxt)
- 	cpu_reg(host_ctxt, 1) = __tracing_enable_event(id, enable);
- }
- 
-+static void handle___tracing_write_event(struct kvm_cpu_context *host_ctxt)
-+{
-+	DECLARE_REG(u64, id, host_ctxt, 1);
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/buffer_size.tc
 +
-+	trace_selftest(id);
-+}
++set -e
++setup_remote "hypervisor"
++test_buffer_size
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
+new file mode 100644
+index 000000000000..7fe3b09b34e3
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor trace buffer reset
++# requires: remotes/hypervisor/write_event
 +
- typedef void (*hcall_t)(struct kvm_cpu_context *);
- 
- #define HANDLE_FUNC(x)	[__KVM_HOST_SMCCC_FUNC_##x] = (hcall_t)handle_##x
-@@ -691,6 +698,7 @@ static const hcall_t host_hcall[] = {
- 	HANDLE_FUNC(__tracing_update_clock),
- 	HANDLE_FUNC(__tracing_reset),
- 	HANDLE_FUNC(__tracing_enable_event),
-+	HANDLE_FUNC(__tracing_write_event),
- };
- 
- static void handle_host_hcall(struct kvm_cpu_context *host_ctxt)
-diff --git a/arch/arm64/kvm/hyp_trace.c b/arch/arm64/kvm/hyp_trace.c
-index 1ad6a55ba95c..c1e28f6581ab 100644
---- a/arch/arm64/kvm/hyp_trace.c
-+++ b/arch/arm64/kvm/hyp_trace.c
-@@ -348,8 +348,30 @@ static int hyp_trace_clock_show(struct seq_file *m, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(hyp_trace_clock);
- 
-+static ssize_t hyp_trace_write_event_write(struct file *f, const char __user *ubuf,
-+					   size_t cnt, loff_t *pos)
-+{
-+	unsigned long val;
-+	int ret;
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/reset.tc
 +
-+	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
-+	if (ret)
-+		return ret;
++set -e
++setup_remote "hypervisor"
++test_reset
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
+new file mode 100644
+index 000000000000..b937c19ca7f9
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor non-consuming trace read
++# requires: remotes/hypervisor/write_event
 +
-+	kvm_call_hyp_nvhe(__tracing_write_event, val);
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/trace.tc
 +
-+	return cnt;
-+}
++set -e
++setup_remote "hypervisor"
++test_trace
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
+new file mode 100644
+index 000000000000..66aa1b76c147
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor consuming trace read
++# requires: remotes/hypervisor/write_event
 +
-+static const struct file_operations hyp_trace_write_event_fops = {
-+	.write	= hyp_trace_write_event_write,
-+};
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/trace_pipe.tc
 +
- static int hyp_trace_init_tracefs(struct dentry *d, void *priv)
- {
-+	if (!tracefs_create_file("write_event", 0200, d, NULL, &hyp_trace_write_event_fops))
-+		return -ENOMEM;
++set -e
++setup_remote "hypervisor"
++test_trace_pipe
+diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
+new file mode 100644
+index 000000000000..1dafde3414ab
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
+@@ -0,0 +1,11 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test hypervisor trace buffer unloading
++# requires: remotes/hypervisor/write_event
 +
- 	return tracefs_create_file("trace_clock", 0440, d, NULL, &hyp_trace_clock_fops) ?
- 		0 : -ENOMEM;
- }
++SOURCE_REMOTE_TEST=1
++. $TEST_DIR/remotes/unloading.tc
++
++set -e
++setup_remote "hypervisor"
++test_unloading
 -- 
 2.53.0.335.g19a08e0c02-goog
 
