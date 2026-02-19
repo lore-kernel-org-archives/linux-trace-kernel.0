@@ -1,97 +1,119 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7221134405F;
-	Wed, 18 Feb 2026 19:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7248F3EBF0B;
+	Thu, 19 Feb 2026 00:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771443781; cv=none; b=ZEjeSE9Nj5rkVOmT6Jo19N+PJsL4GoS6CTcOUjm+n1hmYZi/0yV3VmDtgQGYHk3h+/lpVav5U9WB6kz/cqe+DPCn98vunCjXnvL4SFSGF6aUlV6mHC02h7ZDIXjb2F5xRxd9hz85FvILQUwWKqiFKq45alkoiib8/PAF6CkpnSw=
+	t=1771459290; cv=none; b=cfVAOHYqHOU8j1tRG3OaSvfTzc5rqO00JfBhSK+5sYZquQJa/UF1pU3FE77LXT73uDimz5VlYeiuGw51JlRaVwmfLh9vu/iQ12flqXpYOwKuW7xLAs/AchHYBMcpHOROneNl0WeXGRP+yDVLh6NGCYkc4v/es+l8RXS9rcS4yec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771443781; c=relaxed/simple;
-	bh=csnvR2a4vAxtNCf3C3hPz6BT32bYG1rCNxKWAcOoTD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=FoM+5T/Of07IPM6M09dp2oJ99V606DdwrjQ89NvELLbOtKB/xogn6scrNrWBeNtXINjr0SfHv8Oo/yMZl3JW6J51s3L//cV6TJ/1OQNwQcDbrVr73SEzsAQTaLVqI4WfSvm8Ck32OgxI+iEG4Y5qdxlcGioakznV9gN7bI6fevo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dBGKc86l; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1771459290; c=relaxed/simple;
+	bh=D2On1+s9j5rpeapyAuVz23wXdjgYyjUQ0iLQaiIEpAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Drhqao9jZbPTtPNrhG9wm+yU6af+3yJaLP15lmCqca+etbA7myCfjLV8jGonM76eK6b7om2FN9MewqcspSKRrpe41z1kx/5SQoTojyXf3xfFU1z2M532NKhl7Z5OVm07Iw0xug8Re1xaR2T/T8cIHUQrsKRdRQ2iYFrUCFQ0gf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPIwJx5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dBGKc86l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:Cc:
-	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID
-	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-	Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-	:List-Post:List-Owner:List-Archive;
-	bh=H1oe80lyaA/AIBDbfZcCJugSSWCnfK2krWyRBbB4+Lw=; b=dBGKc86lecVCOrHtoTtGKwgFd9
-	gZjta3QL+Au2wOnIrhuSyEohGMMz7olYNc7mwGzLayoChBnXFJseDGg/K6R16bRENK5mizhkOVGBu
-	k4lxvZnGhGQyC2bVMFvVDqBbMXICSXL5y7HlVMjpyvJLvin2vW+2vxvzarAgv66m1SoAPYqwnv4Qx
-	2K0yVZCuycX6LGrO75+XVvXHT6YL2PBtfaZ0WREAQt38N0BsPVVUeFoPKqcDZ5Bo5mR3vY2mM4XdJ
-	WEtn1MNL4Fy3ssBWDWcNlmCpmIzVr7kgECh5ZTsT9VFR78DWbu+G2IWgzQkstSXU7PvYevprmv2iQ
-	hKrZq2fg==;
-Received: from [177.45.213.208] (helo=[192.168.1.53])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1vsnRk-002BhK-RW; Wed, 18 Feb 2026 20:42:53 +0100
-Message-ID: <e3a5b0dd-4119-2b92-a70f-89c3e91a2533@igalia.com>
-Date: Wed, 18 Feb 2026 16:42:48 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPIwJx5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFC7C116D0;
+	Thu, 19 Feb 2026 00:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771459290;
+	bh=D2On1+s9j5rpeapyAuVz23wXdjgYyjUQ0iLQaiIEpAA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KPIwJx5cRBkId7ntWT7zVE9T/rJFZemS/1BRPaJvMM1NA2d4QDiKZeEbkd4y0CZw4
+	 6uYAki6XQyeBHr8WGD+JG2mcjaek74K3fl7LS2o2AGU9qNsu1s8/vNscBceaNkY/m7
+	 tEGC45opS7MkElZXfuZIWUdTLV9d3/obYZT9FadMbsD+wivg6HUDqxbv9RM8Sgvqtj
+	 Iikc+LV9hqeVvJYro6wcAfWK7LwnZkmKyDOSW+ca/TkRope/vVUA0D2qnvN/xCMHqy
+	 /PtZA7/DdPNcJ9N5hhB6LEEzQbd91UyQg6v7HhTAQGNP/MLnssKIp6C92zO/uheD4b
+	 EGPx0/93eBbtw==
+Date: Wed, 18 Feb 2026 19:01:33 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] tracing: Fix checking of freed trace_event_file
+ for hist files
+Message-ID: <20260218190133.7ec4846f@gandalf.local.home>
+In-Reply-To: <20260217102957.7702081d@gandalf.local.home>
+References: <20260216134247.1311631-1-petr.pavlu@suse.com>
+	<20260216134247.1311631-2-petr.pavlu@suse.com>
+	<20260217102957.7702081d@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] pstore: fix ftrace dump, when ECC is enabled
-Content-Language: en-US
-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-References: <20260215185156.317394-1-andrej.skvortzov@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
- linux-trace-kernel@vger.kernel.org
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20260215185156.317394-1-andrej.skvortzov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 15/02/2026 15:51, Andrey Skvortsov wrote:
-> total_size is sum of record->size and record->ecc_notice_size (ECC: No
-> errors detected). When ECC is not used, then there is no problem.
-> When ECC is enabled, then ftrace dump is decoded incorrectly after
-> restart.
+On Tue, 17 Feb 2026 10:29:57 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Mon, 16 Feb 2026 14:41:57 +0100
+> Petr Pavlu <petr.pavlu@suse.com> wrote:
 > 
-> First this affects starting offset calculation, that breaks
-> reading of all ftrace records.
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> > index 3690221ba3d8..f925034e402d 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -683,6 +683,11 @@ static inline void hist_poll_wakeup(void)
+> >  
+> >  #define hist_poll_wait(file, wait)	\
+> >  	poll_wait(file, &hist_poll_wq, wait)
+> > +
+> > +#else
+> > +static inline void hist_poll_wakeup(void)
+> > +{
+> > +}
+> >  #endif
+> >  
+> >  #define __TRACE_EVENT_FLAGS(name, value)				\
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 137b4d9bb116..e8ed6ba155cf 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -1295,6 +1295,9 @@ static void remove_event_file_dir(struct trace_event_file *file)
+> >  	free_event_filter(file->filter);
+> >  	file->flags |= EVENT_FILE_FL_FREED;
+> >  	event_file_put(file);
+> > +
+> > +	/* Wake up hist poll waiters to notice the EVENT_FILE_FL_FREED flag. */
+> > +	hist_poll_wakeup();
+> >  }
+> >  
+> >  /*
+> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> > index c97bb2fda5c0..744c2aa3d668 100644
+> > --- a/kernel/trace/trace_events_hist.c
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -5778,7 +5778,7 @@ static __poll_t event_hist_poll(struct file *file, struct poll_table_struct *wai
+> >  
+> >  	guard(mutex)(&event_mutex);
+> >  
+> > -	event_file = event_file_data(file);
+> > +	event_file = event_file_file(file);
+> >  	if (!event_file)
+> >  		return EPOLLERR;
+> >  
+> > @@ -5816,7 +5816,7 @@ static int event_hist_open(struct inode *inode, struct file *file)
+> >  
+> >  	guard(mutex)(&event_mutex);
+> >  
+> > -	event_file = event_file_data(file);
+> > +	event_file = event_file_file(file);
+> >  	if (!event_file) {
+> >  		ret = -ENODEV;
+> >  		goto err;
+> > --   
 > 
->   CPU:66 ts:51646260179894273 3818ffff80008002  fe00ffff800080f0  0x3818ffff80008002 <- 0xfe00ffff800080f0
->   CPU:66 ts:56589664458375169 3818ffff80008002  ff02ffff800080f0  0x3818ffff80008002 <- 0xff02ffff800080f0
->   CPU:67 ts:13194139533313 afe4ffff80008002  1ffff800080f0  0xafe4ffff80008002 <- 0x1ffff800080f0
->   CPU:67 ts:13194139533313 b7d0ffff80008001  100ffff80008002  0xb7d0ffff80008001 <- 0x100ffff80008002
->   CPU:67 ts:51646260179894273 8de0ffff80008001  202ffff80008002  0x8de0ffff80008001 <- 0x202ffff80008002
+> This should be broken into two different patches. One for the
+> hist_poll_wakeup() fix, the other to use event_file_file().
 > 
-> Second ECC notice message is printed like ftrace record and as a
-> result couple of last records are completely wrong.
-> 
-> For example, when the starting offset is fixed:
-> 
->  CPU:0 ts:113 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
->  CPU:0 ts:114 ffffffc00879bd04  ffffffc0080dc08c  cpuidle_enter <- do_idle+0x20c/0x290
->  CPU:100 ts:28259048229270629 6f4e203a4343450a  2073726f72726520  0x6f4e203a4343450a <- 0x2073726f72726520
-> 
-> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+> -- Steve
 
+Replying with my kernel.org account in case this email ended up in your spam folder.
 
-Thanks for noticing that!
-
-I've managed to reproduce it here and your patch indeed fixes the issue
-- I've tested on 6.19 with ramoops.
-
-Feel free to add my:
-Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-
-Cheers,
-
-
-Guilherme
+-- Steve
