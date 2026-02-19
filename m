@@ -1,169 +1,117 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA434CFDD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C4B340285
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 16:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771513443; cv=none; b=dfX6LdzbSVgLr1x5W+9boYcfcw/pBh+JRM+It/pWbsypUAD4xToAcGF4KEjW8iN5byMnYYrVZA47vYdMYJsDVXoA4RJTiWny3h0yNStlPYVzwjlrTaFijLrmQCU7aC3R6n8F5+rELMKluFSOZGpsgFBUDRsKguzp/9MrX0AmImU=
+	t=1771518465; cv=none; b=bes1e8ae47mpiTiNhouqgUhhJRw6ilNUMoK7n1QqMb7jg0z702rTmDcWququhMlRetJpV4goh4vr+AWKYrxLVvMV5MrTXPUjhgLAiEY2nNszRqvOq8yK2r/316fcn1pWgvWNBUYqrXJsm84PLtIKkWzOkYE6PX4Yt1tSmq4AIn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771513443; c=relaxed/simple;
-	bh=nC5Ozd5peuX3ykhnKdo5Pz3W6ePP4RFYtKgnnVuRb/s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=flFNzEW/8XhHV/oK4a70F3c7QazSHXAR5Ws/FHFxZnw6fh1T9O/S8AKx1u86Lj1rCHQIYVB7npRenNWe5fS2AGXDqThndNWZTk8sp6ARmJkkSVTYrLOMBcODZiJ/QAaBXNvfQ0tmsScm1tb8RPSpQ+Abz4vOhb7jqGe3XIOJWkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uZx0QzyX; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1771518465; c=relaxed/simple;
+	bh=X88iXnAJXjPGgHPOFT637gekqsG1R9MYy6SqcieCyfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DQe/mbTyU/n2N5a0urtqIp0Z+ORMv2Q5D6QvPhHsA+FuGK/t7DD5CWyhBylQtio621UghuazigisZ31/PIi6qSbfvvyX2kpUNQ9dksdiuQ2EpvDeeakTrMxM9g51iYCK9vhK7qKqzjRFRYG9bq/KIGSiEyvJhv3HlocMxbE9bHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=baad5W8u; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uZx0QzyX"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4837b9913c9so9022135e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 07:04:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="baad5W8u"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4836e3288cdso8101355e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 08:27:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771513440; x=1772118240; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8HAfsDbzjcEm8omLFyotBep6HDlIYV4sfcPciyFXCw=;
-        b=uZx0QzyX4Hbg6s3etEtNSELD3DNj3e54ytP7V4uuu1aJlNYSqsf40ZoGMSGTrEo508
-         YTII67dxCjrN7eRbgZipXbxsjszjrJghzwyVK96CuLdRoxjEdtR6vYOfinzMyuIubifR
-         WSV1jbi7TLDxwH/I2u1ouSBenWRdlDogoC2JrCYil94XQa7RIvRuwDhanHV/e3LcLwTU
-         7BdZbSnQr8XOl0dRXsOsPG4khxLw+Ow2pfZW8Sb621rf5/EJYYve/uzKOsUULnFIFgPz
-         sgQmtXfSKqmb+kG031gdVWWCkPVLqixXF1baLwS+mLc9KVRxUvbQUljmKOQ50hk9oYwK
-         qQ/g==
+        d=suse.com; s=google; t=1771518463; x=1772123263; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F+wYNkk6D8F5vKMzQAxnBF6GWz9VDw68N2DkIugXpnc=;
+        b=baad5W8u30N+SvSETJuBFCZfgIOWQfZ30o8FZt8yqveiP4YAniWcI6AaamAmsWkWlK
+         q8arXPBGcBSmzK1VXHq96Ugo/LSaYDRr9RVCxq4ne2pPBTmVlVwXuMs8Z4f/h0DmWE68
+         SrhzxSTlpOwpVFzZoI5akOggytkKBosRz9Bved+tkD3mXsiSCvVcu22Dxbrtr54V2xu5
+         qOjC4OCfHUmxGf3yQNEHLmIYGEWipPrx4EekBminNRk6dS4J+uzOKVusUT3IZWLbPRRc
+         /QkodEYSQynq6HeAQdggiyU3BHjfm57YAyerjzS5Hs6MplBM6kAx1bxVFNFNeUkuiEMR
+         5vJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771513440; x=1772118240;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8HAfsDbzjcEm8omLFyotBep6HDlIYV4sfcPciyFXCw=;
-        b=D4ywPGSAAHc46Wkgn4pDxxkq+RXjnWUpTyRZaWuZ1JKP/0d+mti6Arq5wYk5q8InQV
-         eYDMC6X39xZLWCPedGwxu9q3X+78up4LBkpt4ZK+cOC4W7SW9uYTUANZtBl6+AVKA2TS
-         l5Kj0bv4Gk9gB/2Qf74T5NKgTZO8hwxZalm5cD9DV6Vp1zLc+nud85VZsLfaxZNOeDXI
-         giuUmmiNBp4eSwSpcR5pfYXseZPXICZ3OTWr0kZJ8mUuB/SllupEG1sxREbCzypIDi0u
-         yaTwNymUy+gaQMdFmxUVfzquyVVeT77sdmMCUrWmLGRJDhqjLfth95UT7As96xYqBgpX
-         w4DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYZB9wlgyFEbMuTJRL/4gh13lVaruKAEKlJKq5O/LKH1DDfKVcrZYSPNBMF+RuXnHUGFkHPEdznnMP7fQ2jvL6fTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ghcN9eySZXWUbuTrUBia5BQGLjgtTssvcDRTDUNeuusU3l/4
-	NUjw4N9jUQMtNYa6Bd11KpC7ODooNupaL91ZRGJUN9VrU20JQ83WnhhQHne0K/IPN75oNLZscUs
-	UYSNi+Rr7ybZs2CVyvkd3aA==
-X-Received: from wmjq15.prod.google.com ([2002:a7b:ce8f:0:b0:480:4a03:7b63])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3485:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4839e669135mr40605035e9.30.1771513439603;
- Thu, 19 Feb 2026 07:03:59 -0800 (PST)
-Date: Thu, 19 Feb 2026 15:03:07 +0000
-In-Reply-To: <20260219150307.14538-1-vdonnefort@google.com>
+        d=1e100.net; s=20230601; t=1771518463; x=1772123263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F+wYNkk6D8F5vKMzQAxnBF6GWz9VDw68N2DkIugXpnc=;
+        b=ZbdlynTcLGQSfXMfeNa+2zW4cGMSUy9u4WKIXbzh+18gfukmQ5ANXecWEO4RzIbIPm
+         PTQ3sB5cse2LQIEl+VKijeDGtdo4h5o8CqHbxGsLy74rBIbGIDjuettkaYGdAUXaqYJ2
+         g+Lb7lDMlMUoo39aTDHFBxEd+2r+f8XgJkyYQZwpejDabNtaBZ2qfEh7mzFCj62DHA7q
+         zGTVnKWa5bD+k08r+4Vyuo3Aaus5hOz4spksXqO4k0mj+DSRJTYsGdx0c22iAI+Nx1xo
+         qaoILJi9rOWdwnm3kZ7xq8X0R0qAZVXaSePEuChZ9+Qup1ivQcTMcsGIDxCHoqp3cXeg
+         yv3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlmQS04BMAFrpQbGUsRhKzTF2z119FSHSlTAnogICeS0UimGY+ad1GhZJAtyBaDMuR4GE4X5UZbEB3Np/dG8ctKtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYtAOEV68WL8jxwQOlhJD308/7ShLHmlk0/Bm40EyWRnn2CY8o
+	feoTXnCNbiliB5AFBvPtUKHeUDDjCo7Y7Fc21gEuXnZwHb72q2v+1hvXdRWBS/5vBLI=
+X-Gm-Gg: AZuq6aLFzfp7vntO7dx3nRfUT1gXxg3cBrjlUaATfKluUL+yMsKy2O+KkPFUpoDTAfu
+	BKJBUxQgerpS4DchuOf09sbIcVy6Jsk8HGNfiap/yER8L7YHfXyaC5oP4BoUpENugAM0Of/2CVA
+	F6+tW3f1tifinbT3le4C67g44bzTbMSv/L24A/6PjGbByPYFLXYQy24hAfZn0rOyV9c9BdLU15h
+	uSaFia0rXsXe9LCLxl5leQ8CvV1pFGUL8xfO+BNDG9RsOojlLdkJTyvwltb0IlccLj0nXz7BoQR
+	/DSL2HsWTcmjvUR37Ze3ZFFmEZ+o/mFIDP3kXO8Hhq4F9LtMs1FPv9bxcGv4Yry48oQ0nfEo/p1
+	XZuseP1yk+eLqmnLy2jz37k2Rncj796KjsBVOyAQFq/bgdZVeoxtYAa3B4FZIBPamr2PMPKpnee
+	537bBLrq4asVYmEVG4DantHFeIaYhHWJScwMsxbfFG
+X-Received: by 2002:a7b:cc8e:0:b0:47e:e452:ec12 with SMTP id 5b1f17b1804b1-483a00aa58emr27233765e9.15.1771518462656;
+        Thu, 19 Feb 2026 08:27:42 -0800 (PST)
+Received: from zovi.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8075sm47324631f8f.29.2026.02.19.08.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Feb 2026 08:27:42 -0800 (PST)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH v3 0/5] Clean up access to trace_event_file from a file struct
+Date: Thu, 19 Feb 2026 17:27:00 +0100
+Message-ID: <20260219162737.314231-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260219150307.14538-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.53.0.335.g19a08e0c02-goog
-Message-ID: <20260219150307.14538-31-vdonnefort@google.com>
-Subject: [PATCH v12 30/30] tracing: selftests: Add hypervisor trace remote tests
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	jstultz@google.com, qperret@google.com, will@kernel.org, 
-	aneesh.kumar@kernel.org, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Run the trace remote selftests with the trace remote 'hypervisor', This
-trace remote is most likely created when the arm64 KVM nVHE/pKVM
-hypervisor is in use.
+This series includes several patches related to accessing
+trace_event_file from a file struct. The first two patches are fixes for
+edge cases, the remaining patches are minor cleanups.
 
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Changes since v2 [1]:
+* Split the first patch related to hist event files into two: one that
+  corrects the trace_event_file access method and another that ensures
+  pollers are woken up when the watched event is removed.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
-new file mode 100644
-index 000000000000..64bf859d6406
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace buffer size
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/buffer_size.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_buffer_size
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
-new file mode 100644
-index 000000000000..7fe3b09b34e3
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace buffer reset
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/reset.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_reset
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
-new file mode 100644
-index 000000000000..b937c19ca7f9
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor non-consuming trace read
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/trace.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
-new file mode 100644
-index 000000000000..66aa1b76c147
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor consuming trace read
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/trace_pipe.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_trace_pipe
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
-new file mode 100644
-index 000000000000..1dafde3414ab
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace buffer unloading
-+# requires: remotes/hypervisor/write_event
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/unloading.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_unloading
+Changes since v1 [2]:
+* Fix a compilation error when CONFIG_HIST_TRIGGERS is not set.
+* Drop a patch that references the trace_event_file data in
+  event_file_data() and keep the simpler implementation of storing the
+  id in i_private.
+* Inline event_file_data() into event_id_read() to enable adding
+  additional checks to the former.
+
+[1] https://lore.kernel.org/linux-trace-kernel/20260216134247.1311631-1-petr.pavlu@suse.com/
+[2] https://lore.kernel.org/linux-trace-kernel/20260210113427.1068932-1-petr.pavlu@suse.com/
+
+Petr Pavlu (5):
+  tracing: Fix checking of freed trace_event_file for hist files
+  tracing: Wake up poll waiters for hist files when removing an event
+  tracing: Remove unnecessary check for EVENT_FILE_FL_FREED
+  tracing: Clean up access to trace_event_file from a file pointer
+  tracing: Free up file->private_data for use by individual events
+
+ include/linux/trace_events.h     |  5 +++++
+ kernel/trace/trace.c             |  2 --
+ kernel/trace/trace.h             | 17 +++++++++++------
+ kernel/trace/trace_events.c      | 17 ++++++++---------
+ kernel/trace/trace_events_hist.c |  8 ++------
+ 5 files changed, 26 insertions(+), 23 deletions(-)
+
+
+base-commit: 2b7a25df823dc7d8f56f8ce7c2d2dac391cea9c2
 -- 
-2.53.0.335.g19a08e0c02-goog
+2.53.0
 
