@@ -1,54 +1,54 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781F5346FB6
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7388C3446D8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 15:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771513430; cv=none; b=Jhg8PIDMPQHSE/+pAA7hexVt7fdeU3hr6AI1O9lU7vUwlEZBDAb96IEEK+0q2iYx23IX8ogUtvYi0IMPnyNbDUM4lBWADoE9PojHU5If8Zwp2Tf9UVjXvC9XaXiah3YcYogiGxDjTN/TSaM+2UGdHH9eDm8Kc+Eh6OFUIctepKA=
+	t=1771513430; cv=none; b=t48ia7L2AOePp29wQ7ijhKPswNgN958Ke/IbOPkrnrxdWRRnvTpGddn//SfXckYXgTKm2Vxp/xXTfj7vwbOzVwDz9wd+jHGIVemsJZHN1t58/NjB/j+wqVGQVh2xSiNOdzI4I6NVId17HG13syB2nlhp9Pl2r6X+YIcI/4ZMih4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1771513430; c=relaxed/simple;
-	bh=7EE95rx0LrgIT4QyX6117YMbNjqFfAiq5/cDJlqfniQ=;
+	bh=YN0wy6xAljYaB8BEJlRUCEBXEfBuSP6aisvhLc0WpOo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ArIdT77dqtvKIpjPpirt769RiLirTuL/zngOjRpvQ7Bbtf5usabPPCYoAmNJdmE10U9lSstb5005qnxsQbEkxfIjROH8hnpn1Zhcd/dpU5ra7LvcAIJ6Gk2DMllfNxZPmL0NMzGe39f+2hPGk2IiugEUNX5OemHfsDaKJ5VuQj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pM/ACyqz; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=fOEYwVi3j2ZXs5fOEQ4fwJOL8LjV0RZf5TGOGYSjonDpkphGgJBhfh2hmLCjHN+maq+tic7ILgyzON/COuGFWl3jeRabTHW9Z/VIreYpEiHE0aFdGYlup1OW5hTQ9lnIh4XnLG3Q5t7ZV6qTi59KThDHeRY5W6Ds5/JY5ep2460=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T0selSk8; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pM/ACyqz"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-48079ae1001so7399695e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 07:03:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T0selSk8"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-48378df3469so9810625e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 07:03:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771513420; x=1772118220; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1771513428; x=1772118228; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wD6LPWf1rq+248KhxWwP0GcpeSFjPhgsN1twvSzFVPg=;
-        b=pM/ACyqzmsFxsZRHzlR1+Rj8B1sa8Pra5aDb4Sn7QYbBOn9nHohNFHeFUqf1R6sD1o
-         AJdsxs6gDm6R+MvJjEEMKCwFIBO7AmXM+D80qGFw1Y0hM3hdPDAObt1/YdPYHvqHBCCR
-         p+ZT0uXomG66i9rmfyKSdPy+Bi+2AwvO7g9baHABuJbchln4LGYLhZHUJUSPsonnlkug
-         UOalDy1YzBsow5Tqs6MXDmX8A3lGT9J+89tklq/RUcD4PCkDVXVf+qPJMHlKcvrYtram
-         3YGaR0HEma3IivVGw2ABAhw314cucIC61WITm2d7Gplm51zfT5LKKUwhMc7aKPzgjQuc
-         vsWw==
+        bh=oQnpLilO0aV7WO3HSwcQrAojYlDH2g+u5UVGrmlG8EY=;
+        b=T0selSk8BDepn3vvnhQuMDipKs47SRTEWB7K/iKLC10sEu8KQ4iPnVnglos/j7IBIR
+         8LCmhIY1liqBCZy4ZRTU6CXhD0L/bUOGNyy95RAlXUSRw9FNYjRBZyB6PTFAdBRrB+vP
+         7IZ5u4l2hD8AICXJm1ILOZqYjfVaPu5/4uRJ/O093n/odPZl9VazfJSx4RNynD3AgVkU
+         ggpamEfZJZG5HKULnP/ohFbpUwmbGvJDPLZ9inECsOR2MemMv0OvB08Cdl463Yovnsgu
+         jKq5YD9OvGs0XyWia8Md3mMRUzJem5yp004I2TbP+0HkSfC9RZH4ZhxvdBxMHh3w7JQY
+         /zuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771513420; x=1772118220;
+        d=1e100.net; s=20230601; t=1771513428; x=1772118228;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wD6LPWf1rq+248KhxWwP0GcpeSFjPhgsN1twvSzFVPg=;
-        b=ktSykm0LSksqfIBBIJM18L12mdckMe6fsxEXYupagXIQH0g9ZMUfgVH46H73G1gQEY
-         m5rJ+X2LdSXwrWFk/oBNSMwgfy7dqd66rlZsSC2RXNVnBRc/4QfayimC+AjjQuOJjcTx
-         RVPrTZPY9NMAoRJFaxwd7kiyLWSKrQzEnevrxbgDulWfZQmaFRuTUiVceYQj4SnkBAv3
-         88Tw480pZ1PmaO7+2rg/6I85noJI5QvJUvBYyfyLFRN2TWrrU7ehl3CsFvU23/mlw34L
-         19Fl25JZ/JlSqpQancNyOxBiJSnHl75HcnPyNDT51Y78fUMwkFZlBkPpBKBhimhfMTDA
-         3MKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwiih1HQL+cyku671Fz/xt7UOglhTKgrJ2Osh5HCNWusOpmMfHwxkyE0C/vDTiVjgx2ItZ1z51l5h6ipll+eqV1iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdtIWtJ4GBVsWxEYt+PMYurCODYe3n130BzHEb0Jm0Z9HQSQnk
-	0tjmxq1Vb8hiKhIpTMv+yKt2VPU+ffVrBLyU/8NIyU5eXGL8ecMuzJ324eGHhwXVr6pkhRXwIWt
-	jtWG4esjqkeT2clYFg6AUtQ==
-X-Received: from wmxb5-n2.prod.google.com ([2002:a05:600d:8445:20b0:483:43dc:999f])
+        bh=oQnpLilO0aV7WO3HSwcQrAojYlDH2g+u5UVGrmlG8EY=;
+        b=UR0a1Hk+C1fuSRIoo11weyZnS4kGVD4C9plu1Vv5G38sqSwGz47Nwca2C2eVK9IgID
+         dbU/4EFlwpb+FcPUl4GNsP0p3IXGTgQijVet8cSPgPdY0N1iIzMi6fJCtqyXmaOP328a
+         P6nBNh4qfNY7L1lasS032Jnb9jzkKkpi46kMi+17hFM/gaWDbIzKux8l0gWJBPJmUpud
+         co4wKRcXafutLBI0lxnmY2HIBvDzRWELzzrmbRziQxpUAFohSGY9fAy49BT+K1O0rMsj
+         +gzV0FWt36kfElknCGbaB2drjsgKRtqIxAqSnXijIDd4p0+JPKAlxe9sCV+rn332jQG9
+         3mTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVP7k17zvFxSiiUojp+FaJP4nT9JcYSyZgNPIqbu2AMrx70mfXB4cTD2BoCp49mky9rmhtBB4aTegzCrk+O2z2YtLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyM72gl5ssyQFMZXL+bIP12KcNxg2mUQIijHy9GJWfhEwDcIOx
+	ilc1R7aX3zHJXwnpukw8zQuOa+ktqUt50sPVV0t/n3Q97xCJ7TLT8Eo1AShoO4TPcz46ii8swOF
+	roOyi18ufGAunHMHqgI0X5Q==
+X-Received: from wmga7.prod.google.com ([2002:a05:600c:2d47:b0:480:69a4:844d])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4443:b0:47e:e952:86c9 with SMTP id 5b1f17b1804b1-48379b318bamr268163575e9.0.1771513419651;
- Thu, 19 Feb 2026 07:03:39 -0800 (PST)
-Date: Thu, 19 Feb 2026 15:02:55 +0000
+ 2002:a05:600c:c114:b0:47e:e97e:11aa with SMTP id 5b1f17b1804b1-4839fe8e843mr32525065e9.4.1771513427675;
+ Thu, 19 Feb 2026 07:03:47 -0800 (PST)
+Date: Thu, 19 Feb 2026 15:02:58 +0000
 In-Reply-To: <20260219150307.14538-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260219150307.14538-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.335.g19a08e0c02-goog
-Message-ID: <20260219150307.14538-19-vdonnefort@google.com>
-Subject: [PATCH v12 18/30] tracing: Check for undefined symbols in simple_ring_buffer
+Message-ID: <20260219150307.14538-22-vdonnefort@google.com>
+Subject: [PATCH v12 21/30] KVM: arm64: Initialise hyp_nr_cpus for nVHE hyp
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -70,38 +70,127 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The simple_ring_buffer implementation must remain simple enough to be
-used by the pKVM hypervisor. Prevent the object build if unresolved
-symbols are found.
+Knowing the number of CPUs is necessary for determining the boundaries
+of per-cpu variables, which will be used for upcoming hypervisor
+tracing. hyp_nr_cpus which stores this value, is only initialised for
+the pKVM hypervisor. Make it accessible for the nVHE hypervisor as well.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+With the kernel now responsible for initialising hyp_nr_cpus, the
+nr_cpus parameter is no longer needed in __pkvm_init.
+
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index d106beca8d7f..3182e1bc1cf7 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -132,4 +132,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
- obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
- obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index 76ce2b94bd97..4bf63025061e 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -129,8 +129,7 @@ void __noreturn __hyp_do_panic(struct kvm_cpu_context *host_ctxt, u64 spsr,
+ #ifdef __KVM_NVHE_HYPERVISOR__
+ void __pkvm_init_switch_pgd(phys_addr_t pgd, unsigned long sp,
+ 		void (*fn)(void));
+-int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long nr_cpus,
+-		unsigned long *per_cpu_base, u32 hyp_va_bits);
++int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long *per_cpu_base, u32 hyp_va_bits);
+ void __noreturn __host_enter(struct kvm_cpu_context *host_ctxt);
+ #endif
  
-+#
-+# simple_ring_buffer is used by the pKVM hypervisor which does not have access
-+# to all kernel symbols. Fail the build if forbidden symbols are found.
-+#
-+UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
-+UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
-+UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+@@ -147,5 +146,6 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
+ extern unsigned long kvm_nvhe_sym(__icache_flags);
+ extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
+ extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
++extern unsigned long kvm_nvhe_sym(hyp_nr_cpus);
+ 
+ #endif /* __ARM64_KVM_HYP_H__ */
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 94d5b0b99fd1..6f9f3e8356b6 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -35,6 +35,7 @@
+ #include <asm/kvm_arm.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_emulate.h>
++#include <asm/kvm_hyp.h>
+ #include <asm/kvm_mmu.h>
+ #include <asm/kvm_nested.h>
+ #include <asm/kvm_pkvm.h>
+@@ -2466,7 +2467,7 @@ static int __init do_pkvm_init(u32 hyp_va_bits)
+ 	preempt_disable();
+ 	cpu_hyp_init_context();
+ 	ret = kvm_call_hyp_nvhe(__pkvm_init, hyp_mem_base, hyp_mem_size,
+-				num_possible_cpus(), kern_hyp_va(per_cpu_base),
++				kern_hyp_va(per_cpu_base),
+ 				hyp_va_bits);
+ 	cpu_hyp_init_features();
+ 
+@@ -2675,6 +2676,8 @@ static int __init init_hyp_mode(void)
+ 		kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu] = (unsigned long)page_addr;
+ 	}
+ 
++	kvm_nvhe_sym(hyp_nr_cpus) = num_possible_cpus();
 +
-+quiet_cmd_check_undefined = NM      $<
-+      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
-+
-+$(obj)/%.o.checked: $(obj)/%.o FORCE
-+	$(call if_changed,check_undefined)
-+
-+always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
-+
- libftrace-y := ftrace.o
+ 	/*
+ 	 * Map the Hyp-code called directly from the host
+ 	 */
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+index 5f9d56754e39..f8a7b8c04c49 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+@@ -30,8 +30,6 @@ enum pkvm_component_id {
+ 	PKVM_ID_FFA,
+ };
+ 
+-extern unsigned long hyp_nr_cpus;
+-
+ int __pkvm_prot_finalize(void);
+ int __pkvm_host_share_hyp(u64 pfn);
+ int __pkvm_host_unshare_hyp(u64 pfn);
+diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+index e7790097db93..8ae3c348ed81 100644
+--- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
++++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+@@ -486,17 +486,15 @@ static void handle___pkvm_init(struct kvm_cpu_context *host_ctxt)
+ {
+ 	DECLARE_REG(phys_addr_t, phys, host_ctxt, 1);
+ 	DECLARE_REG(unsigned long, size, host_ctxt, 2);
+-	DECLARE_REG(unsigned long, nr_cpus, host_ctxt, 3);
+-	DECLARE_REG(unsigned long *, per_cpu_base, host_ctxt, 4);
+-	DECLARE_REG(u32, hyp_va_bits, host_ctxt, 5);
++	DECLARE_REG(unsigned long *, per_cpu_base, host_ctxt, 3);
++	DECLARE_REG(u32, hyp_va_bits, host_ctxt, 4);
+ 
+ 	/*
+ 	 * __pkvm_init() will return only if an error occurred, otherwise it
+ 	 * will tail-call in __pkvm_init_finalise() which will have to deal
+ 	 * with the host context directly.
+ 	 */
+-	cpu_reg(host_ctxt, 1) = __pkvm_init(phys, size, nr_cpus, per_cpu_base,
+-					    hyp_va_bits);
++	cpu_reg(host_ctxt, 1) = __pkvm_init(phys, size, per_cpu_base, hyp_va_bits);
+ }
+ 
+ static void handle___pkvm_cpu_set_vector(struct kvm_cpu_context *host_ctxt)
+diff --git a/arch/arm64/kvm/hyp/nvhe/setup.c b/arch/arm64/kvm/hyp/nvhe/setup.c
+index 90bd014e952f..d8e5b563fd3d 100644
+--- a/arch/arm64/kvm/hyp/nvhe/setup.c
++++ b/arch/arm64/kvm/hyp/nvhe/setup.c
+@@ -341,8 +341,7 @@ void __noreturn __pkvm_init_finalise(void)
+ 	__host_enter(host_ctxt);
+ }
+ 
+-int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long nr_cpus,
+-		unsigned long *per_cpu_base, u32 hyp_va_bits)
++int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long *per_cpu_base, u32 hyp_va_bits)
+ {
+ 	struct kvm_nvhe_init_params *params;
+ 	void *virt = hyp_phys_to_virt(phys);
+@@ -355,7 +354,6 @@ int __pkvm_init(phys_addr_t phys, unsigned long size, unsigned long nr_cpus,
+ 		return -EINVAL;
+ 
+ 	hyp_spin_lock_init(&pkvm_pgd_lock);
+-	hyp_nr_cpus = nr_cpus;
+ 
+ 	ret = divide_memory_pool(virt, size);
+ 	if (ret)
 -- 
 2.53.0.335.g19a08e0c02-goog
 
