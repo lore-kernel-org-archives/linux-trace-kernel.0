@@ -1,64 +1,63 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6E34A771
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 16:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AADE34CFAE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 16:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771518466; cv=none; b=SDR6YVB1TCEQMnzL4YfSEjtAARY62WmSnQC666xdD09ytGwY0UO67nOjPi8qiO1YrqNtCzdEubl32QzkOAZs0IRTc49lOPKkvuZYo+ToOFyIDqTOJQb8MZad+HIl6PjqeuaZe3BealyznNB9Xy5cyhWXSeqqtrb6vF+kZyBRehM=
+	t=1771518467; cv=none; b=myZyupO/pSjSUYLAwSpaRaBIC5qdAfBN13AT9m4HyEH1Ric0XIAIbV7UJ2Vb1dF7VzxoGdLyq2IQoIq9NG5tCLoazVHGd4O04JmULQsuChm3qx8VrNWMFLBjPXhEuRATAa/rC09ijIaVpVgkCCwidGUG4AVK8E+htFj9LP7wYsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771518466; c=relaxed/simple;
-	bh=qGEgzEowAKOYqoLetjY4uyHAcod3FdEe26Azz1HZSBE=;
+	s=arc-20240116; t=1771518467; c=relaxed/simple;
+	bh=KgrBTXu77Iye3UmYdwe000SXgI76QMvrcd1NFmgU4Jc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CZiZnTA1L45kUftRVLbaFS4rnVUIDV0HiAURqA/IxW+ncyWpi8w8ZElDi+lDW7oivlcLOeHqfXMceL/Rjrbh3z6sasZlQgzaRS899z287mpM1u8Ocr5JI/cms1/2FrL9jXPdrw0ZcG8NAb+k7gJYcKW0svHQ3qnvgCK0oubk7w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZxQ2VCEz; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=EOQlb6fp5UWrc9nwpy+nOtzcGKFmk0mPS1E/Gvq92RW1ZbPb5syBzvdaaeNg6sP8uWZzYa15f5oYY+A8PbEukc7DbEmqhzbQ/2UJWrbMp+CkYpjAnWPowmyJ9EHjUlTYFY0dYTY4+DRXi2dBxG1ASGB5Ph73v2dwoBgFPjflJDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZbsMiIu/; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZxQ2VCEz"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4834826e5a0so12414775e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 08:27:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZbsMiIu/"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43591b55727so1142702f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 08:27:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1771518463; x=1772123263; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1771518465; x=1772123265; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AFctbIz6tiPHsqiezPeCZfcnyQYkHL5Q+XsVl6eb4Bs=;
-        b=ZxQ2VCEzPl+eIbryTLnHFQq6GocvmnTLQFcPF4jCHzW0T7USx6z7fVuPiftsUId1y7
-         sLf8KpVfJMUIFIY37TlJD+sfZ3mPfpBDRwAuBayc6JEEJ3Mz8hW1sLFXjfQRonLBUTwm
-         /fOzf36UdUWBTrb9G7Cg4Y0q0qul5Rr8/ELjt800Rwz7EgPSVp/RV60MWqb7x08sr2Xo
-         0R87vWYTkBvi1hr/diWtgztpwKznMnRw5oP7bNQk9AoYQeWuNwFkgNGTaeJYGOhUNbiQ
-         aq3aA0nfD2kWr9S6NBpbJyjzViSas7w5vb0JeNgHv3aLDNpbNPWxFUt+ZiFKeY7Xrluh
-         R4nQ==
+        bh=BI5owf5Lg6dz1A8TLbDN4r7HFJ4qL66b0FlE66FGWHI=;
+        b=ZbsMiIu/8IYCOmc2ulT3xxkzJlFnzbhPm/HeYo89WUtmAnYKmhDwUs8PVpfc1vLlNX
+         /MLbDcg/vh36GcuPUtE89+og3gRYwhpvBWT+oRaqKShBnC33lvWStP/MFOmEm2c9DZ0Z
+         N+rBZmk4MWC2Rq10aDKIHZJGf4bpgdkcFkkOuCUy4exOqyi8+8O1aSNpjANrIyKZZxKa
+         tF4c7CZ/8aIzLGqV1Fre5mBkVTDsmy4p/Yj13O0ud4FIepaU8PjoenqTEuUg9pOk2omd
+         9Pa0vNdXJ3LgwHd3segq5PAxl4Wd7wjPg9pS+8vqUtcMzmHKT18i/b02XWMyGccCuscw
+         HPxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771518463; x=1772123263;
+        d=1e100.net; s=20230601; t=1771518465; x=1772123265;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AFctbIz6tiPHsqiezPeCZfcnyQYkHL5Q+XsVl6eb4Bs=;
-        b=G4g6Eu1HkgVExuLuQ6otqyxo1CN18bGc3Uvy87Ya08HpeRzYBVPtyxYf53lQrJt2Ti
-         h0q91fYUz05gszVj+7flNVFZYpI2GVZh1tAVxpiJy8wT4O73Kak2AXQfyS9HB0NQsCwM
-         pPdwKCDlQMhLuuOsHxcTOBQCDlim72WhKCI0skfqVJfvuPGRXXbz+KNDaF/5CfX/ZbYH
-         EPr5E7kAhCDpqVthQMopdLLRV7pRoSnrFNXU3it0xXW4VEtcSS/6Mu+jv609eB/3ajnN
-         TFGRJ4Bih+826cRsW0SSkuuAzmq0PnYTqBWig6actarXRj/ahjUtiiPjICYbIGcSTOEw
-         AhRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdns5TbbJERC2WXRHOIQy7VYpUHcCZar72sSY2qsmzLRaFRV3bAKT+6ZuBKEtR+jcB/sYlrGAoAjbT2D6A7tnJ1+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDCM6L+XhcsMAZcLPy059El+l0jTqBJ4gd6EygjWSRjAiL75/n
-	MezzZZzuj4L3rlwj6EexkQEDrTXrYpz7/iGKbkRnH82KD5lEYbXEolJ3LmTMwQJhGAVpXdGAsg1
-	8Artp
-X-Gm-Gg: AZuq6aKNHlscfjurBnQZYa5LARojDkyyWcafhZNcKH26H80wNkX0f22y4y5laNRR4k8
-	3yNDQOZhooWIhF9fLE6KSU3mbuGlZ3afXmhtBPbh0AVvRNADa8MOdmteTNMJtGzmtfBZLmCQRPI
-	J3a02hJeATqkTWRgrk1iogjdcrfHAQjDjryhrcIVzbmcqWKr3dsZjjVP9YaZnZPZSMHVqzLHrXA
-	+TLlNWMtzJwzuZ9o0giucE/o8AlXh0rlofDmS/j3Psi8u8u+LYEOuyhQPEOujCSnwF9Cm5/t2Bv
-	IWiQeBxEI3a5X5Dgy1Uby3hEsfNHYmvW/pLBeyKBv8h7jSZKPuEAlbugb1RxQc0eFrj4bTq93bn
-	2b5sN+qf6NisTnqfkRIc/xJVBOpLLXVerCGLNcSh8yC22rhLkIWbbDkpDihRPLAg9/CcR+4Tsqk
-	GysZTeqK8SIScxhpQ2O1tZccprsLsIteLWBj01yQJP
-X-Received: by 2002:a05:600c:4f92:b0:482:eec4:76d with SMTP id 5b1f17b1804b1-48398b5e0d0mr103863385e9.17.1771518463404;
-        Thu, 19 Feb 2026 08:27:43 -0800 (PST)
+        bh=BI5owf5Lg6dz1A8TLbDN4r7HFJ4qL66b0FlE66FGWHI=;
+        b=CJQi1q/R+Wlzlkz8kjy7JF2D3kRjzEx1yBrtP2pSyX51APM1DL9Y2GtVRSPk/EdrnN
+         qoQyomJzwNxYm3siMunnSmQSkvjaohx+vJWLxM03CzjDeGaGszlCn1qYsP9SWS21zA8Y
+         PkYve/iEtjk0EbcjFeglX9HHrbTmKgoEQifr6RFpSnPudK3FDwKc7KXBEsttmz6Sk73M
+         tgNgZ56nz3uSidDk6/BCiEt3bjfh8zBYfR7gw94JFr42bDJR9fqDvr3h9sYXOsV9t2M3
+         uvSS6qEa1KnK0RjDuBb2xNnF7wp0UriYIYMWmqB/zSmiW9FXrmE2qcjGK0OmNnLfhb5/
+         44XA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCgM2TOqEsinuOQm9hSvRtIzbteR+HXcWFMCfHBZ7mIXm0FEZRFXOJ1DQlZ+AQyI3dZ0lhHcNcYtsPqmp0triJq3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvXbOzlAFBlc0IjLImDx4MQIkh5Rp+Mnrx9RG3lYIsx6wQS+L5
+	5eexCQrf8jMfQLfgMXektBlChtUv7zzoCn1cnVGWkxLiEHVOR9S/Zgok/ZSVcH/6oAI=
+X-Gm-Gg: AZuq6aLyu6I4mjzJJa7hUQrPLeS57zMwZ7ife6i+XQLKR/V2H6bYIPTF9mzv8FhZctm
+	ikQR186TT9Q+izh9fdqiGBgxo5XZWB/+ILtefRJPwCDQuyquYxiQBITDQPsWot9iLwiIru5qlT6
+	JmB+tsdYybY1O02H7jAzVrYL+Y8AIxfWK4yil36M0K6qbIZfKYxxsUNM8FsmNuC3xFX2WBQGCC7
+	Qr9a6cwa2cgbkD1cme76TlO8MiT/PDkbBqQAebAq8oy/rU0FEmZkE7ABjh9hJSyAe9eUO5yB20s
+	ypCvGmUHYMZpqkOjhKDDVTo7ZsJUdUoLRCTwEptnGGR3hXbTXelSXnTxdZJaamlHNoBnDtHrQg0
+	qr8DcMQdWzyscOwiJqPOGl6gAlQdAQBXTSpLlRxnO5pC/UNFdih0NMJsnVzH6SdHaREpaK2cV+u
+	oP7qdbtmJa0+bItubXwVbb6tilZvpqbqv7czOg8hMW
+X-Received: by 2002:a05:6000:2001:b0:435:96ec:679e with SMTP id ffacd0b85a97d-4379db61cccmr34207692f8f.23.1771518464634;
+        Thu, 19 Feb 2026 08:27:44 -0800 (PST)
 Received: from zovi.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8075sm47324631f8f.29.2026.02.19.08.27.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8075sm47324631f8f.29.2026.02.19.08.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Feb 2026 08:27:43 -0800 (PST)
+        Thu, 19 Feb 2026 08:27:44 -0800 (PST)
 From: Petr Pavlu <petr.pavlu@suse.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -67,9 +66,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH v3 1/5] tracing: Fix checking of freed trace_event_file for hist files
-Date: Thu, 19 Feb 2026 17:27:01 +0100
-Message-ID: <20260219162737.314231-2-petr.pavlu@suse.com>
+Subject: [PATCH v3 3/5] tracing: Remove unnecessary check for EVENT_FILE_FL_FREED
+Date: Thu, 19 Feb 2026 17:27:03 +0100
+Message-ID: <20260219162737.314231-4-petr.pavlu@suse.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260219162737.314231-1-petr.pavlu@suse.com>
 References: <20260219162737.314231-1-petr.pavlu@suse.com>
@@ -81,48 +80,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The event_hist_open() and event_hist_poll() functions currently retrieve
-a trace_event_file pointer from a file struct by invoking
-event_file_data(), which simply returns file->f_inode->i_private. The
-functions then check if the pointer is NULL to determine whether the event
-is still valid. This approach is flawed because i_private is assigned when
-an eventfs inode is allocated and remains set throughout its lifetime.
-Instead, the code should call event_file_file(), which checks for
-EVENT_FILE_FL_FREED. Using the incorrect access function may result in the
-code potentially opening a hist file for an event that is being removed or
-becoming stuck while polling on this file.
+The event_filter_write() function calls event_file_file() to retrieve
+a trace_event_file associated with a given file struct. If a non-NULL
+pointer is returned, the function then checks whether the trace_event_file
+instance has the EVENT_FILE_FL_FREED flag set. This check is redundant
+because event_file_file() already performs this validation and returns NULL
+if the flag is set. The err value is also already initialized to -ENODEV.
 
-Correct the access method to event_file_file() in both functions.
+Remove the unnecessary check for EVENT_FILE_FL_FREED in
+event_filter_write().
 
-Fixes: 1bd13edbbed6 ("tracing/hist: Add poll(POLLIN) support on hist file")
 Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index e6f449f53afc..768df987419e 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5784,7 +5784,7 @@ static __poll_t event_hist_poll(struct file *file, struct poll_table_struct *wai
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index b659653dc03a..90915e1286da 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2245,12 +2245,8 @@ event_filter_write(struct file *filp, const char __user *ubuf, size_t cnt,
  
- 	guard(mutex)(&event_mutex);
+ 	mutex_lock(&event_mutex);
+ 	file = event_file_file(filp);
+-	if (file) {
+-		if (file->flags & EVENT_FILE_FL_FREED)
+-			err = -ENODEV;
+-		else
+-			err = apply_event_filter(file, buf);
+-	}
++	if (file)
++		err = apply_event_filter(file, buf);
+ 	mutex_unlock(&event_mutex);
  
--	event_file = event_file_data(file);
-+	event_file = event_file_file(file);
- 	if (!event_file)
- 		return EPOLLERR;
- 
-@@ -5822,7 +5822,7 @@ static int event_hist_open(struct inode *inode, struct file *file)
- 
- 	guard(mutex)(&event_mutex);
- 
--	event_file = event_file_data(file);
-+	event_file = event_file_file(file);
- 	if (!event_file) {
- 		ret = -ENODEV;
- 		goto err;
+ 	kfree(buf);
 -- 
 2.53.0
 
