@@ -1,68 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706102E6CA8;
-	Thu, 19 Feb 2026 18:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0573EBF16;
+	Thu, 19 Feb 2026 19:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771526703; cv=none; b=TB1QvRbdvaG8uIIcCd4Zcu9CD38a+5Sv2LV7Axq9OfrnLPHFt5dHfZVZur6TBtISCJikq8eIKM2LCdbxTqECi9UpEmuD6NTPW8InYIYjQFCGrwNgBJm7lw9rM8cof9dQMaiWH+Npy2L3h5+r2b5jcqUuGcxEDTrMHlYapzF93W8=
+	t=1771528284; cv=none; b=JgJwUvsYx9Y9zmkhUOh8UPV/Rdz9hIz2wZcLfjdJSJbhjQNpezpM1BS/byxEHdD8GCVNpF3FilEvzIbdruckFWE3CBw64yWyiiXPJP+yZ4Zb4OUytR/xCopcechB/9+1V5UdqmT4bV3r9CiN3u20JLt5/IFFA3ebBKqNLMDtsW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771526703; c=relaxed/simple;
-	bh=1R8lbLSCOatiPuEN/qf0w4tw6ht2YTutQWzQMSFN9gU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqwv/MVFNC5LWcYtGQO5nHnxtR6/OgTjdsz7ecRL8jHDw1vrdjuI2L+drjA6C6RF0xpdZzoh/dqFz3YIXCeVd2DUWElfmWqh+lp/apeBG9KkuLpEEMRSeQh9fy0xBczHai4bMA0wtsRQzcngUe95IoErrDNPlFRC3QAPfn+XU8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExjfXhuF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771528284; c=relaxed/simple;
+	bh=9p0DfwiEGsHS8N8lLhDzityaVkttEOvhog9ekktjRc0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JGRQQksXbMgqxY+8C1PyeQR36p4BaAemHwydXkxMgBRu99r3dyVedr70DH0TbS+T3jbM5MpC7jAD4PgyqUmcw4c/v0fp4WZumdLVJBQx+58KGxuIdNn5K2axknk4jTdxfY5XZtxtt6ilOo1ipWHU2+hz0nptiHl3iiNlZD7wxRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLZa/tdX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExjfXhuF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC3E5C2BCB0;
-	Thu, 19 Feb 2026 18:45:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLZa/tdX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29BFC4CEF7;
+	Thu, 19 Feb 2026 19:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771526703;
-	bh=1R8lbLSCOatiPuEN/qf0w4tw6ht2YTutQWzQMSFN9gU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ExjfXhuFWoHI7QM2AfW+f+YRaTO7Wr+j1OM1uMSeoqWNj8gY0r4xnWCaS7ZU0sxCG
-	 zRbDxldW8ji1Ay1gZeGpAdNcPCOgy2uaXbSANC8PObncTo+xg3awAq+f+6Q85hu4Yi
-	 wNJiNg8AHKMIkBWDnCgzHXnCViwJu6s56aXJzTBqVp18gFZHh/vkExfWTcc0uE45r/
-	 h91cXYfEpjbgYvzKcqLVBVeVgbHw6krZvM7ycZ2/HQmeutkrAo9NBTe3Seop1Nt0ea
-	 oqU7PnoDQqlMIryTUGpB/eMdZD7dQWOVnlVTLKULs80xgNOHF+8NQm9lMWAQF3wv2U
-	 hbc7kazo9F9bw==
-Date: Thu, 19 Feb 2026 10:45:02 -0800
-From: Kees Cook <kees@kernel.org>
+	s=k20201202; t=1771528284;
+	bh=9p0DfwiEGsHS8N8lLhDzityaVkttEOvhog9ekktjRc0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iLZa/tdXSjtY+IhPqpxbOkvU6uy46FeFU74mPUys5QXzxKsoXkOBfNqr48ShSG0w5
+	 /+Ofhedr1cNJ3oFPoDQUmLpoBxP000NdDP6CrN2xt66ZkExL19bY+933OZayflXn+Y
+	 XS2zN8HFCLAqCH/GlmDwm8hS68m5rmsneq+/jlvbwZkuqI1R3uYxjkQF622aaYZr57
+	 YGhylOf1FRe2j3Ehl82WXL6jd4zKN0cDpIwTmlBUWLXoA64zYwfSnRMPpegBICFnHJ
+	 aiJBmIoG3ISn88YHnQLEitUwHJLQ075DETetkxXmN+FUellgKGfKY2ze2NxKsvgyLx
+	 iXaTWxw7wKdYA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vt9Qo-0000000CFY6-0SoG;
+	Thu, 19 Feb 2026 19:11:22 +0000
+Date: Thu, 19 Feb 2026 19:11:21 +0000
+Message-ID: <87cy20eeg6.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	"Elly I. Esparza" <ellyesparza8@gmail.com>,
-	linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
-Message-ID: <202602191041.4CB9C4AAFD@keescook>
-References: <20260218144735.24307-1-ellyesparza8@gmail.com>
- <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
- <20260218105204.3af7251e@gandalf.local.home>
+Cc: Vincent Donnefort <vdonnefort@google.com>,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 00/30] Tracefs support for pKVM
+In-Reply-To: <20260219130220.063c8db3@gandalf.local.home>
+References: <20260219150307.14538-1-vdonnefort@google.com>
+	<20260219130220.063c8db3@gandalf.local.home>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260218105204.3af7251e@gandalf.local.home>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 18, 2026 at 10:52:04AM -0500, Steven Rostedt wrote:
-> Honesty, if you are worried about this, just run LOCKDOWN on tracing, and
-> prevent *ALL* kprobes. Because yes, there's a 1000 ways to get this
-> information once you have kprobes enabled and have root access. This patch
-> is hurting legitimate debugging of running systems more than it is limiting
-> rootkits from hacking the kernel.
+On Thu, 19 Feb 2026 18:02:20 +0000,
+Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> On Thu, 19 Feb 2026 15:02:37 +0000
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > The growing set of features supported by the hypervisor in protected
+> > mode necessitates debugging and profiling tools. Tracefs is the
+> > ideal candidate for this task:
+> > 
+> >   * It is simple to use and to script.
+> > 
+> >   * It is supported by various tools, from the trace-cmd CLI to the
+> >     Android web-based perfetto.
+> > 
+> >   * The ring-buffer, where are stored trace events consists of linked
+> >     pages, making it an ideal structure for sharing between kernel and
+> >     hypervisor.
+> > 
+> > This series first introduces a new generic way of creating remote events and
+> > remote buffers. Then it adds support to the pKVM hypervisor.
+> > 
+> 
+> So I finished my review of all the tracing patches, but I just realized
+> that there's likely going to be some major conflicts with changes in the
+> tracing tree that's going to happen against this series.
+> 
+> To solve that, after -rc2 comes out, I'll apply the tracing portion of this
+> series to a branch in my tree directly on top of -rc2 and I will then use
+> that to base my changes for the next merge window.
+> 
+> Then the arm/kvm folks could start with that branch and add the arm/KVM
+> portion of this series on top of it. This will prevent major merge
+> conflicts in linux-next.
+> 
+> Does that sound OK?
 
-Yeah, I agree. If kprobes is available, there is a lot of harm an
-attacker can already do. If a bright line between root/ring-0 is
-desired, a system needs to be configured to be using lockdown or similar
-things to turn off the interfaces that let root write to kernel state.
+That works. Just send us a link to the branch after -rc2 and we'll get
+that sorted.
+
+Thanks,
+
+	M.
 
 -- 
-Kees Cook
+Jazz isn't dead. It just smells funny.
