@@ -1,63 +1,63 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B5834B437
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 16:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6AC34CFBA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 16:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771518468; cv=none; b=JdO4/Mf/Yhm0PTaRc1AMJ2vMmebPdY3uHciM+zHoUtQkUyELv/5IhZf/MUwKhoWl7nJZAoaj6UvOpF96OgJN4L/yBtCO7iTlWTP1W00NO6uQ985h9CLzkTeR0/sddcpPjbyMvw+tTQiqEk6R/42Gwsis9gT4dq/UnFMbNZ0Ne4I=
+	t=1771518468; cv=none; b=WvEFqIC2PDf9qf82fIKvvg3VvTS/Bnb4c8mutb/lXBY/BJ8iTq4LPZKAGkAkWHJtgxJSb/6oDA2QvRDfqz0AQvmRUg5c1LFefuSugVlr/pFSBU8cbR8u5g5tecNuYL090dDNEAO8V86/19VsGtu6hngdYBJFOAgHpXutWFbxxkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1771518468; c=relaxed/simple;
-	bh=oz+04hEQM4d1rwxHpRDrO4zzKJ7Z7kOfi68mc4rkKH4=;
+	bh=3aIPneSbFeQu4MdSA2qZGQY/yDCy+AZLupTPmFmOaUk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o22ioHPgy5SXIPHosU2tyDtainDG6xYFPJCdp2fuAFhwUfSYjdfzTxa+Mpgp/0VF/8GWshFmFmpug7EKDwNkokwQvw+S1oxUdFtz64lVg1/B0fouLggPpQmn/FwglGMPjoep3HvbGNjzeyrDxIroWXi5qFIbKlRyCh2XdX4L80o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=B/Jv8VL/; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=psBdvrBbexFqPdp0GjAeyt2fk7JF26RzS9sc3qNXH/1cpPOxPz4FDi5lx0rXIsRL2IkRKkbd3CEN3PaYbSK2JtSBEKRG/5Fu3o6lxDY2DpoKLHTEZzTk6TVJqScG6dpSeOH4P4NGXbEHLw6mZsAwmMth03bj6/iqpK8OnDLKjE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D6SzTEh9; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="B/Jv8VL/"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-436356740e6so1274253f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 08:27:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D6SzTEh9"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4359a16a400so1040675f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Feb 2026 08:27:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1771518464; x=1772123264; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1771518465; x=1772123265; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D3kvNkKdoYfEDJexUIfvxiiZkFHsP2vDeB3pQYKUtGQ=;
-        b=B/Jv8VL/HRvLxYIh43pm/Rt3euxp/y2j7Xatvd8U2OKcwAg9RKBasONpq+8Vc/FK6s
-         ZPDCu1KAho46njkvU6zc2D6xHR5+fFhSonoeP3MmFbVd1OGKbPVQMxmgKA2oEOmu48ZH
-         48VDh1nIDYW1EEcroEYtIFH38dB/SpulkLWG77+oJJw48LGy5Kl7SLtfgB0d59CnqnKR
-         z/9rRwoWcsKPjs8YV7yeIFiQLuEGZtJSbrBrYeV8mWGd98Zmjzpw854mteUGchWosPz8
-         2SwtYxq3Mfi7wwfpavKxXZYiiNxqim9WGOFRWlaIK1uX7+j/bRaNyFeCt0R+vLwUEUCM
-         QiLw==
+        bh=t8pmqafAMo/XejBQW7PotvCqT3/aAFA10KU7IAZ4oDE=;
+        b=D6SzTEh9p337AcddKGb2SDqBg+OyuMU95ATEYHUSIX6x7tzZ9tUKLf6jaSx1Y68LJi
+         db4FdChaPPyw7VHggEJvySO/qGyfhlCMEYjNLnUvf9R4EIjhuXARqI4GeYF9N5IRqspP
+         vfYwp3AW42yEIUnYx33CLEbrDpu3OFnmR996ZchSsxn0J4TohHIbW/2AbMySzDDrAF6F
+         iuevlurSivuH1kU0GphtcBLkVGYxKxjFeJmG/1HrK8v/dDj597ZRHY1te3Q4nHI5FAFd
+         oYgUQ7VJYtED9u+v1Rh/bG+8ttlpNaErgsQW7Nms3MsMiNJcc0PnVCb+plpQVoNa4/EG
+         ckkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771518464; x=1772123264;
+        d=1e100.net; s=20230601; t=1771518465; x=1772123265;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=D3kvNkKdoYfEDJexUIfvxiiZkFHsP2vDeB3pQYKUtGQ=;
-        b=j4I4qgsNRtYkIQVQakBvcYFYbz+99moQKjjIUr9CfZBZO62CQoAFQ6Z7qsstEe0Hdx
-         9Sq8gwDjV80YwFoIFvMrp3YXYXIIpPC46xezwZ2GKHWnXX9Xunqw+APk/Jk+7C7f9u+W
-         BbG0TDS+tTGRLb8QCx84LECrnpZkVh40moqHMZrYSF+aghAZ0hM8i3bkqjpuWGyQDYK/
-         NgQelBb/OPlcwZiOQY3dbTxQdDDFVtoSqtl9JRuXcHWcpo3foSmnFLU4Dc5gr8P1zo1Q
-         sx3VqddLDi9A+BwWAe6dmd+X4vS0GW/0AceYyOFm+qM7qQARhmLoI9ikbir6XnvMcq+1
-         R4Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCViTxU20Gpkal5zyS0M0LjgkPH1k1DvAl+pkvvZUbboVl76JdQr4KXKdIAkFO2Okaua5UZ9mISmfxrABx98t0LB5SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhDkxmsKJ0qP8KOroffkg2OQMvv665QZV4MmF48VsVvpqYyMpM
-	sOA+EIcTciz8vVP//fHn0SPx57GkCM/8xL6DtuW9+hdLdg/XlWpB4AJAk3+s9Ai6yo8=
-X-Gm-Gg: AZuq6aK2e2clnfQ7yPPweMKKxV4M8wwqcqftsZwYsep5ecFPVC+HAbSXZN8ImY87CA+
-	hjcaq/tQ3dgUlNHj2RjruAc+mnQeabz/kYExu0CjKKf4ynvFz9K2yw24o0BiEL6es9Beg8x5utv
-	NgeUDXrzWhHdJpnW/iO6ffJXN3lKi1H4+UGmDOgYB9kU7SL98WKlbKO94CvFKHshAv+iEzlNSLF
-	1tAQLR4k2DU0Md951qvg/YwgNZ+ismcjvF4ueKDf3Gqsti4+wtIajqXCQGPYl7Qkw2MkK77DUx6
-	Y0vATbMsvPB40LWpsqFWIEaMjDLPrZLZ6jwDExEs8d8G/zxhdFMfn9h/gwzrvHjHRMj6lHqrcDk
-	T9eBMF2XnqWXb+IWnWrXzhOtaVQ7mNq3lxI9+Ba3Hu9CCt5KqQzZY70PbgnSJri8UWjjxftOZol
-	THjRP2sBqa374zFyvpMKFBk6gKWKi0gEUDsCtbKWM1LHEsMZZe/VQ=
-X-Received: by 2002:a05:6000:2f87:b0:435:a136:b8a2 with SMTP id ffacd0b85a97d-4379db7017cmr35432454f8f.28.1771518464029;
-        Thu, 19 Feb 2026 08:27:44 -0800 (PST)
+        bh=t8pmqafAMo/XejBQW7PotvCqT3/aAFA10KU7IAZ4oDE=;
+        b=KjKmh/jV6PB+FWWuQUnGnnAWkufWncGjTyVtT8Bs0rNB950PWKq79QbnqQUYKxYL5U
+         UKVK6GLeoGvkQvnemK1psMobiC/jtfvas2Lh89WMctzwwN2cG/bXLteHxkiUF5QuJ/yH
+         kZD87ClywOgwFYtT47DVcOrmbiRjGykTi3+WDGLlu+nQwdyQ3X33iCMArHReWQXWxbjp
+         EfVl3bJm+LxWxlQTMXsH+AAmoBVieHvnKAeJSEW87jZx8hjVUb2GOUkIyaOYximA+aAv
+         R9hYXZhOg/CzSZdrJZVqwjiewyzRZOn8N3kchIrEhBNhE5Uj2SJz+MwRBzgPpMqBEu0T
+         1zQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtu5RuT/RgsimD0MDzSIdf4cUMitT16fvgphyRfRXBJaL22UC34POpvAyYJSPPjWYKYyJq7NFdVHOJIcR8XMxYsXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFfwHE0dmIfljRtxGfX3YrBFvaRC4F/DkxgFf3PSAMmsr8X9+/
+	XJz/oDposKz3H6zV5TBcpOWpeAU8JKeLWdIHUnMAO4MviEgG8Bsr+wREpkdJrHNlAZI=
+X-Gm-Gg: AZuq6aJu48YmXcyHnSEqBG4csc+inXnxUM5hHXJtAck6zNBgl52jpM/e12/oduqP+EI
+	++9E4+/9iFC7O5jxoJeyZrvpgvmvfPK2vc5VAVaePowPy3a9irSCI6FXsE2Ecm0NPK+v8SNb1Aw
+	pMgZfnntpwMBlobeYYoK4Ujw3U+FH3rGhMg+BlCCGbFYLeMeqouo1wMxIy9h9SZ3opWKlILMO+n
+	hCIDBC6tvqtw6VkqfWybWsnASMaH4jA/vF4Ei4Ale8t2teahLkhMdTUaUwW6YOvGUS3JnGIPZkA
+	Y93gpq9a4aXique78HdPYyvkSyK18KtPzuolyf04XiqIkUr0AsVNPRFhD0GgAoYqPjEQv2i76HI
+	vIhCn4X9xh/nq+RhugLrCKmNcR8MWJCaqXCEhQ4E7xZd3JaKyJzcsdtLsW565Wq9/Xk4yWbUSjb
+	7U8+iow55sW+OashFcd7HR8+8eAHajbncA+pqy7ji/Eo3tazNYcss=
+X-Received: by 2002:a5d:588c:0:b0:436:3536:f698 with SMTP id ffacd0b85a97d-43958e4052fmr10504746f8f.30.1771518465266;
+        Thu, 19 Feb 2026 08:27:45 -0800 (PST)
 Received: from zovi.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8075sm47324631f8f.29.2026.02.19.08.27.43
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac8075sm47324631f8f.29.2026.02.19.08.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Feb 2026 08:27:43 -0800 (PST)
+        Thu, 19 Feb 2026 08:27:44 -0800 (PST)
 From: Petr Pavlu <petr.pavlu@suse.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -66,9 +66,9 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH v3 2/5] tracing: Wake up poll waiters for hist files when removing an event
-Date: Thu, 19 Feb 2026 17:27:02 +0100
-Message-ID: <20260219162737.314231-3-petr.pavlu@suse.com>
+Subject: [PATCH v3 4/5] tracing: Clean up access to trace_event_file from a file pointer
+Date: Thu, 19 Feb 2026 17:27:04 +0100
+Message-ID: <20260219162737.314231-5-petr.pavlu@suse.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260219162737.314231-1-petr.pavlu@suse.com>
 References: <20260219162737.314231-1-petr.pavlu@suse.com>
@@ -80,56 +80,98 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The event_hist_poll() function attempts to verify whether an event file is
-being removed, but this check may not occur or could be unnecessarily
-delayed. This happens because hist_poll_wakeup() is currently invoked only
-from event_hist_trigger() when a hist command is triggered. If the event
-file is being removed, no associated hist command will be triggered and a
-waiter will be woken up only after an unrelated hist command is triggered.
+The tracing code provides two functions event_file_file() and
+event_file_data() to obtain a trace_event_file pointer from a file struct.
+The primary method to use is event_file_file(), as it checks for the
+EVENT_FILE_FL_FREED flag to determine whether the event is being removed.
+The second function event_file_data() is an optimization for retrieving the
+same data when the event_mutex is still held.
 
-Fix the issue by adding a call to hist_poll_wakeup() in
-remove_event_file_dir() after setting the EVENT_FILE_FL_FREED flag. This
-ensures that a task polling on a hist file is woken up and receives
-EPOLLERR.
+In the past, when removing an event directory in remove_event_file_dir(),
+the code set i_private to NULL for all event files and readers were
+expected to check for this state to recognize that the event is being
+removed. In the case of event_id_read(), the value was read using
+event_file_data() without acquiring the event_mutex. This required
+event_file_data() to use READ_ONCE() when retrieving the i_private data.
 
-Fixes: 1bd13edbbed6 ("tracing/hist: Add poll(POLLIN) support on hist file")
+With the introduction of eventfs, i_private is assigned when an eventfs
+inode is allocated and remains set throughout its lifetime.
+
+Remove the now unnecessary READ_ONCE() access to i_private in both
+event_file_file() and event_file_data(). Inline the access to i_private in
+remove_event_file_dir(), which allows event_file_data() to handle i_private
+solely as a trace_event_file pointer. Add a check in event_file_data() to
+ensure that the event_mutex is held and that file->flags doesn't have the
+EVENT_FILE_FL_FREED flag set. Finally, move event_file_data() immediately
+after event_file_code() since the latter provides a comment explaining how
+both functions should be used together.
+
 Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/trace_events.h | 5 +++++
- kernel/trace/trace_events.c  | 3 +++
- 2 files changed, 8 insertions(+)
+ kernel/trace/trace.h        | 17 +++++++++++------
+ kernel/trace/trace_events.c |  6 +++---
+ 2 files changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 0a2b8229b999..37eb2f0f3dd8 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -683,6 +683,11 @@ static inline void hist_poll_wakeup(void)
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b8f3804586a0..7db78a62f786 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1802,11 +1802,6 @@ extern struct trace_event_file *find_event_file(struct trace_array *tr,
+ 						const char *system,
+ 						const char *event);
  
- #define hist_poll_wait(file, wait)	\
- 	poll_wait(file, &hist_poll_wq, wait)
-+
-+#else
-+static inline void hist_poll_wakeup(void)
-+{
-+}
- #endif
+-static inline void *event_file_data(struct file *filp)
+-{
+-	return READ_ONCE(file_inode(filp)->i_private);
+-}
+-
+ extern struct mutex event_mutex;
+ extern struct list_head ftrace_events;
  
- #define __TRACE_EVENT_FLAGS(name, value)				\
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 61fe01dce7a6..b659653dc03a 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1311,6 +1311,9 @@ static void remove_event_file_dir(struct trace_event_file *file)
- 	free_event_filter(file->filter);
- 	file->flags |= EVENT_FILE_FL_FREED;
- 	event_file_put(file);
-+
-+	/* Wake up hist poll waiters to notice the EVENT_FILE_FL_FREED flag. */
-+	hist_poll_wakeup();
+@@ -1827,12 +1822,22 @@ static inline struct trace_event_file *event_file_file(struct file *filp)
+ 	struct trace_event_file *file;
+ 
+ 	lockdep_assert_held(&event_mutex);
+-	file = READ_ONCE(file_inode(filp)->i_private);
++	file = file_inode(filp)->i_private;
+ 	if (!file || file->flags & EVENT_FILE_FL_FREED)
+ 		return NULL;
+ 	return file;
  }
  
- /*
++static inline void *event_file_data(struct file *filp)
++{
++	struct trace_event_file *file;
++
++	lockdep_assert_held(&event_mutex);
++	file = file_inode(filp)->i_private;
++	WARN_ON(!file || file->flags & EVENT_FILE_FL_FREED);
++	return file;
++}
++
+ extern const struct file_operations event_trigger_fops;
+ extern const struct file_operations event_hist_fops;
+ extern const struct file_operations event_hist_debug_fops;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 90915e1286da..c52135cd9265 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2182,12 +2182,12 @@ static int trace_format_open(struct inode *inode, struct file *file)
+ static ssize_t
+ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ {
+-	int id = (long)event_file_data(filp);
++	/* id is directly in i_private and available for inode's lifetime. */
++	int id = (long)file_inode(filp)->i_private;
+ 	char buf[32];
+ 	int len;
+ 
+-	if (unlikely(!id))
+-		return -ENODEV;
++	WARN_ON(!id);
+ 
+ 	len = sprintf(buf, "%d\n", id);
+ 
 -- 
 2.53.0
 
