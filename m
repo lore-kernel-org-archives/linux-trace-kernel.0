@@ -1,92 +1,52 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB79341041
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Feb 2026 11:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6704C2EC09B;
+	Fri, 20 Feb 2026 17:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771585673; cv=none; b=ejBgD6nLNqal/z5YpLKKcGhCrxo3r60TWjRScV00mvWiJX8AjjYxm1y9Lffds3HaM8zwhhKQPrOsdMTA8jL8s6qiCnzXlfst1jKlWbdMWDQdmerdKnO4JGVwYhUoXeht0eUi2GR/2k+vGS1eH/5kmkyH5X0aAYm4cJVgariMgfA=
+	t=1771607086; cv=none; b=Q9FrzA17nRe65aT9lT/RqftL2zioOGkI5eHSNMiM1/3bRBjuIY+ushOiSxhlCYl2XXtJa0wcpmFfG95TVbORIp4ot5ihal0VzoGaAl06HZf5g+X8DKOSoJAjFgoPdMFbHmKk1smEtNNGolwXitVrkEbd5MFsUOhsTLkESqNGJv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771585673; c=relaxed/simple;
-	bh=DvaPHgn8GiaYqwL6gmdPaOYFgACCW2voqQxyErFHcUA=;
+	s=arc-20240116; t=1771607086; c=relaxed/simple;
+	bh=fPMSEQeRlabZXSXcAU+bNMwumrJJylOCCKGBc35KfdY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rlZvvYFNv9kgnKlrs40HlOAaZKTGccZM1eYal/J7bUaSgwBzsCuXcEIgpDeu1ulCdwGDFD1erZmjwj4LrDESndhqH/YSwL8iL9qZLeEWYA3jcnnaxKw3x4k9+Z7TqevoMXBH68ewsAjNi+oisjku77CuiVAWmvECh2kObGpEYEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KG1fILvH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=S5nqOlUo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mX6Zn0tY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pv0E1s3J; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfYLT0/5vdoMgPend1dU0H6XlbNcNI8wAFXQ0/gwMwcGdS6dabDjGwxxuQAANm9/Qfnqq6NIn3Nsud/80CR+htsbEgkg4WVCn/NKmLYkiRm004Mfej0+gWDD8p4qdDfAXgoyPZClQGR3H7UvorqJv1MXwI6bwYejJw9zM56nUro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LNYkIvr2; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KG1fILvH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="S5nqOlUo";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mX6Zn0tY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pv0E1s3J"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B1ECF3E6D8;
-	Fri, 20 Feb 2026 11:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1771585669; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TLv+hA5hd7MVtuLJRJZBuqjxVwO8h8t75XfQY9oDWAo=;
-	b=KG1fILvHZvhZuKFnwQga7mSrv7B5/ivr5bdAke6Hh049E9a81GFjDaw4SPBKqpsfJp4+Ze
-	fd6EMaeBlh/rjFyZoOOOt9LksTeVQKSMN8ADGspachfdZp2K8OEQAMwP15fao/XXeTcD9b
-	NdYKQZ44NdgV/jkVqO8ziJqaBhpp5yQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1771585669;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TLv+hA5hd7MVtuLJRJZBuqjxVwO8h8t75XfQY9oDWAo=;
-	b=S5nqOlUoY59dooEbrnRQXHpR+eQcDHuF7gej0JWBPdJxI4dbEQqWFsFF3xzvQgNvmWnEWh
-	9N2sjew5O/vpWyAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1771585668; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TLv+hA5hd7MVtuLJRJZBuqjxVwO8h8t75XfQY9oDWAo=;
-	b=mX6Zn0tYmj5iBTFHvzo0OzGHKBPS/iRUbzlfiDY4dy6bY19c2wyJbX+/ZwEafzRIbf9ZAc
-	UC/ZiG6GiclDyV8bK7QsNHBv+qur+qPVbx06IdSTn1/KWflI3nyPJhvlUwCSOOVf34699u
-	PjZtIVinbzA4Rg8ZL1CCg6LWBth32GY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1771585668;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TLv+hA5hd7MVtuLJRJZBuqjxVwO8h8t75XfQY9oDWAo=;
-	b=pv0E1s3Jd5NzINhqD7MZPs8hO4hfhXVGbuvqilxIeepAEbK6GeG5Dp9W0vVJ9QhpWbhIBM
-	ENRuA6MTmsbYEjBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 250843EA65;
-	Fri, 20 Feb 2026 11:07:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jaKzBYNAmGmERQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 20 Feb 2026 11:07:47 +0000
-Date: Fri, 20 Feb 2026 11:07:45 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: Kalesh Singh <kaleshsingh@google.com>
-Cc: akpm@linux-foundation.org, rostedt@goodmis.org, joel@joelfernandes.org, 
-	kernel-team@android.com, android-mm@google.com, 
-	"David Hildenbrand (Arm)" <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Minchan Kim <minchan@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jann Horn <jannh@google.com>, Martin Liu <liumartin@google.com>, 
-	David Rientjes <rientjes@google.com>, Zi Yan <ziy@nvidia.com>, 
-	Wander Lairson Costa <wander@redhat.com>, Petr Mladek <pmladek@suse.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/tracing: rss_stat: Ensure curr is false from kthread
- context
-Message-ID: <6wljnbdh2tvi5egjd462hel7zkxvxedqgeqbjsdpoibc5n2j43@fsjneenogr3y>
-References: <20260219233708.1971199-1-kaleshsingh@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LNYkIvr2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4W61n1XEDT9k+Bz5EhUjcYVj0InlaTnDho/KTMya+T4=; b=LNYkIvr28sSHyabHgz5wgxNTlX
+	l+ezrNFpuo75asPcM9XIfqgb8NJISN83HQSvBfkEmMgcex5f+2spBd/IlUYtFlR08bDzTyufUfnVI
+	otCyegSHwc3IfH7vPu/fr4qAhQkfr3q/HSrbbRxL7nZ2GZrDw+0MlyCEMdmaeMsHorqtQQGBpURvD
+	o5wMyb0tcRrDx98etjHI/bQCF581J34hA8RG4k2sLP/roVYZmImZlgxCo1FWJ0NtETJJ2Ywz5Zm0i
+	3N+wxzIgGZpBWr+iJ5v96YuoPEMQ5Zxj1/Kg2UloGRivkzpMa9e7Hw5agyQAUpbq69Xu5clCD2bQv
+	w+IubXBA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vtTvj-0000000FLYJ-1uUl;
+	Fri, 20 Feb 2026 17:04:39 +0000
+Date: Fri, 20 Feb 2026 09:04:39 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"Elly I. Esparza" <ellyesparza8@gmail.com>,
+	linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86: Prevent syscall hooking
+Message-ID: <aZiUJ--WJygUU6QP@infradead.org>
+References: <20260218144735.24307-1-ellyesparza8@gmail.com>
+ <0c5396b5-f084-4ade-adc9-029037031eea@intel.com>
+ <20260218105204.3af7251e@gandalf.local.home>
+ <202602191041.4CB9C4AAFD@keescook>
+ <20260220114540.fbee78a9a8b8097ec729451c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -95,83 +55,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260219233708.1971199-1-kaleshsingh@google.com>
-X-Spamd-Result: default: False [-7.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,linux-foundation.org:email]
-X-Spam-Flag: NO
-X-Spam-Score: -7.80
-X-Spam-Level: 
+In-Reply-To: <20260220114540.fbee78a9a8b8097ec729451c@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Feb 19, 2026 at 03:36:56PM -0800, Kalesh Singh wrote:
-> The rss_stat trace event allows userspace tools, like Perfetto [1],
-> to inspect per-process RSS metric changes over time.
+On Fri, Feb 20, 2026 at 11:45:40AM +0900, Masami Hiramatsu wrote:
+> On Thu, 19 Feb 2026 10:45:02 -0800
+> Kees Cook <kees@kernel.org> wrote:
 > 
-> The curr field was introduced to rss_stat in commit e4dcad204d3a
-> ("rss_stat: add support to detect RSS updates of external mm").
-> It's intent is to  indicate whether the RSS update is for the
-> mm_struct of the current execution context; and is set to false
-> when operating on a remote mm_struct (e.g., via kswapd or a
-> direct reclaimer).
+> > On Wed, Feb 18, 2026 at 10:52:04AM -0500, Steven Rostedt wrote:
+> > > Honesty, if you are worried about this, just run LOCKDOWN on tracing, and
+> > > prevent *ALL* kprobes. Because yes, there's a 1000 ways to get this
+> > > information once you have kprobes enabled and have root access. This patch
+> > > is hurting legitimate debugging of running systems more than it is limiting
+> > > rootkits from hacking the kernel.
+> > 
+> > Yeah, I agree. If kprobes is available, there is a lot of harm an
+> > attacker can already do. If a bright line between root/ring-0 is
+> > desired, a system needs to be configured to be using lockdown or similar
+> > things to turn off the interfaces that let root write to kernel state.
 > 
-> However, an issue arises when a kernel thread temporarily adopts
-> a user process's mm_struct. Kernel threads do not have their own
-> mm_struct and normally have current->mm set to NULL. To operate
-> on user memory, they can "borrow" a memory context using
-> kthread_use_mm(), which sets current->mm to the user process's mm.
-> 
-> This can be observed, for example, in the USB Function Filesystem
-> (FFS) driver. The ffs_user_copy_worker() handles AIO completions
-> and uses kthread_use_mm() to copy data to a user-space buffer.
-> If a page fault occurs during this copy, the fault handler executes
-> in the kthread's context.
-> 
-> At this point, current is the kthread, but current->mm points to the
-> user process's mm. Since the rss_stat event (from the page fault)
-> is for that same mm, the condition current->mm == mm becomes true,
-> causing curr to be incorrectly set to true when the trace event is
-> emitted.
-> 
-> This is misleading because it suggests the mm belongs to the kthread,
-> confusing userspace tools that track per-process RSS changes and
-> corrupting their mm_id-to-process association.
-> 
-> Fix this by ensuring curr is always false when the trace event is
-> emitted from a kthread context by checking for the PF_KTHREAD flag.
-> 
-> [1] https://perfetto.dev/
-> 
-> Fixes: e4dcad204d3a ("rss_stat: add support to detect RSS updates of external mm")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: "David Hildenbrand (Arm)" <david@kernel.org>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+> Agreed. The blacklist (or blocklist) of kprobes is designed for preventing
+> nesting software breakpoint handling, not for security.
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+It still can be useful.  As mention in the other thread, we just need
+to make it clear.  I.e. add something like "noprobe_for_security".
+And if we really, really care it could be conditional on a config
+option.
 
-Looks cromulent, thanks :)
-
--- 
-Pedro
