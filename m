@@ -1,402 +1,539 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010003.outbound.protection.outlook.com [52.101.201.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5922231A7E1;
-	Fri, 20 Feb 2026 19:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771614613; cv=fail; b=oWErsUBt2OCAM/c6bj5Js69j/wqnp/6n/z0rT9Fm5sX3/ZOSzZRuttOucsYB68rOLyV89a+5z2dxafurMrkASdYKBP2LEvrGLOvBnKELEwpyjEnvjUh9wwvuWMdCW+ZMgY21KyTTyjUZI26i/WXLzLmDnWl0T8OPNT9fRGOScLE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771614613; c=relaxed/simple;
-	bh=hLtRCvoNKXGxPZCK+FsM36euA6YWH96h4kdNZfNavFA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=AA7c+ZAF7lYwMnwjOq/YAjxuAcCW1A4alXLeJrDzNm1Uzeckv1vKV6R8FLuybtj4Kb0C8C9iZv1TmB9ORIMw9SduwGcHj71zpbNlFfvJnE4uKVbKPB0j7Vb8EHW+aWHF9Nt5LoLFtyIJ0v7VQix2PqcB+2Bob81hWsehHQQvLAw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zgRiBSkP; arc=fail smtp.client-ip=52.101.201.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E352F3C02;
+	Fri, 20 Feb 2026 19:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771617155; cv=none; b=IaVDIZS2W9CzHV6v02Q5LcVqPSWERD/MT39n8UYUgCr7Y2HYgn59Yk1hkzXkGypPcsZrcBjy8RxYEL8QynVItYptn1fMsmwGJm5DfpAsEm2n1cqdKvv+etIwgzDMUfFQXwC9mY7qAW0ckXUWlufNT5NL1dStF6c/KtnIYESKgko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771617155; c=relaxed/simple;
+	bh=23o8CqJ8ODasoJutAvjLjTJPhV1jeFXXA0iqiZPmAIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZBGBfKwfMinYebtsPHdllNSFVd1an6m2llS+IkjHzAxEZ+HuuoFa9Ssi+n66/S27EZcQQ8IpqZ2UTshZ43i8PGqAcxLvmLKs+A2nuuRGZAj7K0bxyCHBOmCh3Im/Hd3KeUEWA5rYiqVWmH412sKBHkOTjTMUEpIKjdnf8WnYkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iDyQ5an6; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zgRiBSkP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C+p0C1Pfhp0ma+g0Tkmn0sWGmcQV0BG5xYp8LqMuXJ/IskD5YLH3mhxsfpYzE0MEPtavUuZe2XK8ngbLl9MYeVMNypUAE3g8//KzqknjIBFk/zpwtNFJFAjYsatREl0USMcVadfgMnPHXSTK4SF79mpVeTBlj+jyZy5o20WfC1JT1JEHPYqRg/KoeD+8YpEU7078heYjnsZORRWhrhaZHQoT5/vNj1lRRlNIxmXNVvC7MFGzGZJItXA1Q0fhC8TJ6yZoBy9F85W3gOurPykHCTXnMqKv9UCENULVjlW/J6lxCxxleZ4sfN3X83us7kp7iCvJc59H68YFRHrya9iqdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=04gaNMWQBuHiKHl2ClYwVAqWs211MC0Ytv3ZGWMIDys=;
- b=nXKiXLxLokZsBDYSSriXGFTRTOe2rTJl1xgNsPyNKMORE4o6rnC1t8wBaZzS8SJSHQC7KBP++QBLdhzdgHT3N8iBTWYlJSaXg9XBlWm9n63RzYHzaYKP7MNqjCPa6E9uTdQLtosr1+fCgtD5eqd0yeoGGsH7j/O9bGGfW9eLfYG3NouIY9jOpguGgqi5GOgALK9hthn65P0XTjalC66Tyu+TQTUQhTCaeg+8RxL6pdHA4G4T80imZKjy34B1AYckDk/2iZ6ol7JD+Ooh3uJ1qwi628iou/ukhKH4hxPUSdTH8VGmpuAZoa+I0ZodTxF76nc3PJEvl5CR2JPXb/YF/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ilvokhin.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=04gaNMWQBuHiKHl2ClYwVAqWs211MC0Ytv3ZGWMIDys=;
- b=zgRiBSkPZ1pmC+742aaFXwtOwY159iDRqu1dEoPeLg4RV3HQD7GdKQ/u97AQSQkQthc1jmLQBnNJ8TFiU6TOBl7QvHAHyAA0XEN01MnzbSEJmv2hVQJ46UWOtYlzpU5qmQvAKBse2Cl6IMo5LZJX3rHG0VmF8Qr7ycjUKlDTJ2Q=
-Received: from PH2PEPF00003851.namprd17.prod.outlook.com (2603:10b6:518:1::76)
- by DS5PPFFF21E27DC.namprd12.prod.outlook.com (2603:10b6:f:fc00::66b) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9611.15; Fri, 20 Feb
- 2026 19:10:07 +0000
-Received: from SJ1PEPF000023D9.namprd21.prod.outlook.com
- (2a01:111:f403:c902::13) by PH2PEPF00003851.outlook.office365.com
- (2603:1036:903:48::3) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.16 via Frontend Transport; Fri,
- 20 Feb 2026 19:10:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF000023D9.mail.protection.outlook.com (10.167.244.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.0 via Frontend Transport; Fri, 20 Feb 2026 19:10:07 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 13:10:06 -0600
-Received: from [10.236.185.70] (10.180.168.240) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 20 Feb
- 2026 11:10:05 -0800
-Message-ID: <74fc1f28-b77e-4b9c-b208-51babae9d18e@amd.com>
-Date: Fri, 20 Feb 2026 13:10:05 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iDyQ5an6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771617153; x=1803153153;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=23o8CqJ8ODasoJutAvjLjTJPhV1jeFXXA0iqiZPmAIo=;
+  b=iDyQ5an6EN5nTNjKicTqir+BcR4gAugS6stQ15n2MVfdpp8R+agd5WRI
+   z9aC0YZWL6ATOMcU59KEO6vAGbT6HCqjmMdx3U/fgT34Lp+CAQkpvtQEb
+   Rr1KRTlk/Va45BgY5NHEPFk9gIO++yVcBd8cnUux21xLB7H2mAbFXamyY
+   8q6y3KVDAP5j/Z0SlTWRFtYp+2PJpeA/H4fNG7KND9U21+Qjj644rOFVT
+   IzZ61Iwd5ILG/utnOXvPCHrhQmDsM9ojf2zT8ShczyOMms3uOJupLN9FO
+   ZgyTxg3cm2jiuUsVbUTGLzg0Frac9D/7eIWJVeaBhhvwbL78PuOHfzseB
+   w==;
+X-CSE-ConnectionGUID: KELgAbAGT6eh6ZK49amdgg==
+X-CSE-MsgGUID: 2lq+OyNaT42H2dH7YANz8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11707"; a="72758286"
+X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
+   d="scan'208";a="72758286"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 11:52:33 -0800
+X-CSE-ConnectionGUID: +lxI5bWMTQC93fBi2z/MDg==
+X-CSE-MsgGUID: HUbxi2mUSMKRlBdSzHFk9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,302,1763452800"; 
+   d="scan'208";a="219450350"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 20 Feb 2026 11:52:29 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vtWY6-000000014Rg-2G3i;
+	Fri, 20 Feb 2026 19:52:26 +0000
+Date: Sat, 21 Feb 2026 03:52:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH bpf-next 04/17] bpf: Add struct bpf_tramp_node object
+Message-ID: <202602210330.ukNZdClO-lkp@intel.com>
+References: <20260220100649.628307-5-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH 3/4] mm: convert compaction to zone lock wrappers
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<kernel-team@meta.com>, Andrew Morton <akpm@linux-foundation.org>, "David
- Hildenbrand" <david@kernel.org>, Lorenzo Stoakes
-	<lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	"Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, Brendan Jackman
-	<jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan
-	<ziy@nvidia.com>, Oscar Salvador <osalvador@suse.de>, Qi Zheng
-	<zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, "Axel
- Rasmussen" <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, "Wei
- Xu" <weixugc@google.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <3462b7fd26123c69ccdd121a894da14bbfafdd9d.1770821420.git.d@ilvokhin.com>
-Content-Language: en-US
-In-Reply-To: <3462b7fd26123c69ccdd121a894da14bbfafdd9d.1770821420.git.d@ilvokhin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb09.amd.com
- (10.181.42.218)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D9:EE_|DS5PPFFF21E27DC:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e61f732-4893-40c9-f6b4-08de70b3a922
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|30052699003|82310400026|36860700013|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qjl0MWVPVUdweS8rQVhpNTgvcTljNFkwb1JnbktHV2Z1U0ZERHNKZG92bjZ5?=
- =?utf-8?B?ekU4K1ZIQVpDak9TUTNJWHlGZXJzY1RtcXdqTVpVZUhGdjFaRkVUUnFEQ0dl?=
- =?utf-8?B?Z29UZzdCWDJmNzZUdVZhcjFPa0VqOEF3VU9lUGRPajkzWHE1R01Hckd3T3dx?=
- =?utf-8?B?UXFsN0hTbWRRclRlZ2U5QzFOcTN6Q01EZk8wdURjcE5KdTZ2bFF6ZmxXcllu?=
- =?utf-8?B?STRFRnVMTkgzZWt0Q3hrZUozaG15cTl3YkErWmFSZDAwalBMbktLd1laYXg3?=
- =?utf-8?B?YitUYndaVisrUDY3MW1OdDNGSzdjbzBvYjl1Rmc4cTBSSzB1dFlpV0UwUUNG?=
- =?utf-8?B?Y3cvL0NiZGxTT2tmVWVicGEwOVZRQk5RMExOVnM3azk4NzU4RnVmVjVRTEw3?=
- =?utf-8?B?UHRsQUhsbUlrT1A1TStkNTlqQTVnV2YzR2N2OUJYUWR3RWFsTnJpRDNYa0VW?=
- =?utf-8?B?dHRNWkgzSmQvb0sxbnJmYmQ2dlE4d1dFbldrMWE0cnZQQlBFTndJQVlBVTh2?=
- =?utf-8?B?ZHRTRUlBek5YTU9LTy9qa0ZoZFlReXdCRjhRV20vUTlmby84YnB5UUZuWkZM?=
- =?utf-8?B?UXBvQjVNWDdQRkpuRUZsRkN6bEE3bFgvdzV1Njh5ejByazQ3Rk5LRnZLK2dS?=
- =?utf-8?B?OFBEMjBUVi9aSG4wdlJjQUkzSzcrZm5IbEFQY1FjWHh4WGNYanp3YWUrR0JS?=
- =?utf-8?B?aWpHZVNYczU4OFJCc2t0R2tSYW40c00rMVZwWkVLMW5XSTczL3JHdVZUZ2ZY?=
- =?utf-8?B?QmtYL21XVDVhQTRFSVpYbUk4TWNza2IzczhGS1p2aVBrdUYxd0JzMXlRMlZW?=
- =?utf-8?B?ckpIM1VVa1N1RTZlemV2aytkazFndjY5d3RvVU1acUIrQUE3V1JxYzRTRkw4?=
- =?utf-8?B?TEU2cE5iZUhZT3ZFS3pySHN0MjRmaDExbWxTdHhjWGpTQ1JoWjM0SEJkQkpl?=
- =?utf-8?B?R1Q5SFU1QnFPcUdVa3paWHYvd2Z3WkVhQVZ5djluMDhFaWxrS3kxcG9kdHVS?=
- =?utf-8?B?TEhBQUZmbzVKQUF1cjlIMWYrV0VRWENSeXZodmFPdzdWREk1TzNENk5CazMx?=
- =?utf-8?B?bWJyZFFiSmxacVUrbXRhM2FySmdqRDNsenVZN1JYT0pxMzRSaWtIWUI0VTFZ?=
- =?utf-8?B?b09XalVzU2RSVHo5NzZ5Z0RQdVZxd2JqQlI0OHdzclBiYlJFVHloLzJIcmVG?=
- =?utf-8?B?ZDFaNGRTaWtiaUdSS2tuTUZ0U0h6czJEYVZDeHJnMmRWbGhZNXUyeElCWmRs?=
- =?utf-8?B?aTBtZVpDR0JiRTBtNlRCVEtNN1dYWnVkb0lZMlNwU054NFQycU5lNHdYd1lE?=
- =?utf-8?B?MjZlTDk3MmM0aERMTk5lZDFrNS9XY3VrWkRxVjlNUHFNZ3Qxb0E4M3EvWmZ2?=
- =?utf-8?B?M0hvOC9VQ0w0MlRvdW5VN0JnMXo1b3NUVGUvZC9XbDQyTjdjYWdqeTdzSlVi?=
- =?utf-8?B?WEZOYUFqR0dsT1RSSXJsUzZ6RzNiM2hGcjYzTk9BZ2Z0ZEdsTGNQVjJhUnBs?=
- =?utf-8?B?YkdoSTRIeGFVSEhUVkV6Q3Avb244OG5ucXBpMWl4TjZUNmorcE92cExqenQr?=
- =?utf-8?B?RVlZSlVEME5hVEphdGJVbml5cFE4ME0xeUJRY041UHdTV2ZIanRKcGExZ291?=
- =?utf-8?B?UVpvMWxVMlhxU1ZYYjVpYjVNcTZBR2VJUm5rZ1dNSm5UMnhvYXNORFljUFc0?=
- =?utf-8?B?NFczc0JDSWhDSmViaTZNUitvQXh6VlV0VWhnUjZvVmZPWEY0dGY5NnlRdFhs?=
- =?utf-8?B?VzBkT2pKdzlDejQwYmxQZzdWbmlMOG5SWENCMzh3TEMzU2NBZmtMakpmY2kv?=
- =?utf-8?B?aDZDb3pOWDN3ZzBVR3lxNHhFZjYvcFRHOVoyMWNlTWNlMEY0YmRvcGZ0dXJH?=
- =?utf-8?B?RVcrdENOcmM1Ylp2c3djY1UrUy80QzArZnJIbDB0SGt1VDRBNkNIQTY4clB5?=
- =?utf-8?B?VnUyVkdrM1lwSnBYSnJnSGRLNTFCeVl1MTdPeXBsUkFzWVFTYlFkczkvOTUr?=
- =?utf-8?B?L3NpSnJMRE1YSjhESmZjSmJ0ZGxMWTgvUi9OY3RIeXRCN3IrUUdZaWZIREZ3?=
- =?utf-8?B?M1Zkc3d4S2lKOVBsWEkwTVd3YW4rTnZmMmZ1cWNUMWJWNEduYTdBS083VERa?=
- =?utf-8?B?K3RhYWhkSGg2aVJZd1FCcGRVeXg1Tzk5UVFUaXlCbmhaSjlzayt6V0d5OER1?=
- =?utf-8?B?WHdJNHlkWXoxcVRnN01kTGZ1OUpCMVlSWFVBckNOTWFLcVZKKzB2eUx6VTZi?=
- =?utf-8?B?R0gvRHNsYUJUTmk2MGp2NHRpWlNnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(30052699003)(82310400026)(36860700013)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	CdETpvuae9MsLoiISeMTrLS+2N+IXfSHkw+dS//XJ4FPtP3tXTKVltKMHU4c1k218KHGyLMf0ydQO0J8/0pnq8wBBUwhrSnnHPJux0/jpnyTnP5SiRmGkSFYSdGpfmyaym4mYmwjyOFCNlLHdnGyZOBYoqRViekwRzN+WE9Qrb+4a2uEokRAnM902gq3IGWbUTCQWRoSxFdknSGkzM3T7v7dV3WEqiE2098lM2FhQ7YNE+I6bHSEKtQTJYLfDSKTR8bDd+OT7JYfrUEcf9Q0+BYdUErZHre5xK/Gb8D5CtWqdPWTdd1xm5hOKudPoAIft4WWDs9sY0LXJ36NG97Qz4QhJ6w0yf/aJNiZwoG9AWwmphHD1a0MgQ2GUPG1GE/xcuVKkXniFeubYsYj2l9X1+F6hDHRxgrrJa3O+QAkkEJbgP3NQw028kyiTYv2SOLt
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2026 19:10:07.1180
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e61f732-4893-40c9-f6b4-08de70b3a922
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D9.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFFF21E27DC
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260220100649.628307-5-jolsa@kernel.org>
 
-On 2/11/2026 9:22 AM, Dmitry Ilvokhin wrote:
-> Compaction uses compact_lock_irqsave(), which currently operates
-> on a raw spinlock_t pointer so that it can be used for both
-> zone->lock and lru_lock. Since zone lock operations are now wrapped,
-> compact_lock_irqsave() can no longer operate directly on a spinlock_t
-> when the lock belongs to a zone.
-> 
-> Introduce struct compact_lock to abstract the underlying lock type. The
-> structure carries a lock type enum and a union holding either a zone
-> pointer or a raw spinlock_t pointer, and dispatches to the appropriate
-> lock/unlock helper.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  mm/compaction.c | 108 +++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 89 insertions(+), 19 deletions(-)
-> 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 1e8f8eca318c..1b000d2b95b2 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -24,6 +24,7 @@
->  #include <linux/page_owner.h>
->  #include <linux/psi.h>
->  #include <linux/cpuset.h>
-> +#include <linux/zone_lock.h>
->  #include "internal.h"
->  
->  #ifdef CONFIG_COMPACTION
-> @@ -493,6 +494,65 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
->  }
->  #endif /* CONFIG_COMPACTION */
->  
-> +enum compact_lock_type {
-> +	COMPACT_LOCK_ZONE,
-> +	COMPACT_LOCK_RAW_SPINLOCK,
-> +};
-> +
-> +struct compact_lock {
-> +	enum compact_lock_type type;
-> +	union {
-> +		struct zone *zone;
-> +		spinlock_t *lock; /* Reference to lru lock */
-> +	};
-> +};
-> +
-> +static bool compact_do_zone_trylock_irqsave(struct zone *zone,
-> +					    unsigned long *flags)
-> +{
-> +	return zone_trylock_irqsave(zone, *flags);
-> +}
-> +
-> +static bool compact_do_raw_trylock_irqsave(spinlock_t *lock,
-> +					   unsigned long *flags)
-> +{
-> +	return spin_trylock_irqsave(lock, *flags);
-> +}
-> +
-> +static bool compact_do_trylock_irqsave(struct compact_lock lock,
-> +				       unsigned long *flags)
-> +{
-> +	if (lock.type == COMPACT_LOCK_ZONE)
-> +		return compact_do_zone_trylock_irqsave(lock.zone, flags);
-> +
-> +	return compact_do_raw_trylock_irqsave(lock.lock, flags);
-> +}
+Hi Jiri,
 
-Nit: You could remove the helpers above and just do the calls directly in this function, though
-it would remove the parity with the compact helpers. compact_do_lock_irqsave() helpers can stay
-since they have the __acquires() annotations.
-> +
-> +static void compact_do_zone_lock_irqsave(struct zone *zone,
-> +					 unsigned long *flags)
-> +__acquires(zone->lock)
-> +{
-> +	zone_lock_irqsave(zone, *flags);
-> +}
-> +
-> +static void compact_do_raw_lock_irqsave(spinlock_t *lock,
-> +					unsigned long *flags)
-> +__acquires(lock)
-> +{
-> +	spin_lock_irqsave(lock, *flags);
-> +}
-> +
-> +static void compact_do_lock_irqsave(struct compact_lock lock,
-> +				    unsigned long *flags)
-> +{
-> +	if (lock.type == COMPACT_LOCK_ZONE) {
-> +		compact_do_zone_lock_irqsave(lock.zone, flags);
-> +		return;
-> +	}
-> +
-> +	return compact_do_raw_lock_irqsave(lock.lock, flags);
+kernel test robot noticed the following build errors:
 
-You don't need the return statement here (and you shouldn't be returning a value at all).
+[auto build test ERROR on bpf-next/master]
 
-It may be cleaner to just do an if-else statement here instead.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiri-Olsa/ftrace-Add-ftrace_hash_count-function/20260220-181324
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20260220100649.628307-5-jolsa%40kernel.org
+patch subject: [PATCH bpf-next 04/17] bpf: Add struct bpf_tramp_node object
+config: riscv-allyesconfig (https://download.01.org/0day-ci/archive/20260221/202602210330.ukNZdClO-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260221/202602210330.ukNZdClO-lkp@intel.com/reproduce)
 
-> +}
-> +
->  /*
->   * Compaction requires the taking of some coarse locks that are potentially
->   * very heavily contended. For async compaction, trylock and record if the
-> @@ -502,19 +562,19 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
->   *
->   * Always returns true which makes it easier to track lock state in callers.
->   */
-> -static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
-> -						struct compact_control *cc)
-> -	__acquires(lock)
-> +static bool compact_lock_irqsave(struct compact_lock lock,
-> +				 unsigned long *flags,
-> +				 struct compact_control *cc)
->  {
->  	/* Track if the lock is contended in async mode */
->  	if (cc->mode == MIGRATE_ASYNC && !cc->contended) {
-> -		if (spin_trylock_irqsave(lock, *flags))
-> +		if (compact_do_trylock_irqsave(lock, flags))
->  			return true;
->  
->  		cc->contended = true;
->  	}
->  
-> -	spin_lock_irqsave(lock, *flags);
-> +	compact_do_lock_irqsave(lock, flags);
->  	return true;
->  }
->  
-> @@ -530,11 +590,13 @@ static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
->   * Returns true if compaction should abort due to fatal signal pending.
->   * Returns false when compaction can continue.
->   */
-> -static bool compact_unlock_should_abort(spinlock_t *lock,
-> -		unsigned long flags, bool *locked, struct compact_control *cc)
-> +static bool compact_unlock_should_abort(struct zone *zone,
-> +					unsigned long flags,
-> +					bool *locked,
-> +					struct compact_control *cc)
->  {
->  	if (*locked) {
-> -		spin_unlock_irqrestore(lock, flags);
-> +		zone_unlock_irqrestore(zone, flags);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602210330.ukNZdClO-lkp@intel.com/
 
-I would move this (and other wrapper changes below that don't use compact_*) to the last patch. I understand you
-didn't change it due to location but I would argue it isn't really relevant to what's being added in this patch
-and fits better in the last.
+All errors (new ones prefixed by >>):
 
->  		*locked = false;
->  	}
->  
-> @@ -582,9 +644,8 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  		 * contention, to give chance to IRQs. Abort if fatal signal
->  		 * pending.
->  		 */
-> -		if (!(blockpfn % COMPACT_CLUSTER_MAX)
-> -		    && compact_unlock_should_abort(&cc->zone->lock, flags,
-> -								&locked, cc))
-> +		if (!(blockpfn % COMPACT_CLUSTER_MAX) &&
-> +		    compact_unlock_should_abort(cc->zone, flags, &locked, cc))
->  			break;
->  
->  		nr_scanned++;
-> @@ -613,8 +674,12 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  
->  		/* If we already hold the lock, we can skip some rechecking. */
->  		if (!locked) {
-> -			locked = compact_lock_irqsave(&cc->zone->lock,
-> -								&flags, cc);
-> +			struct compact_lock zol = {
-> +				.type = COMPACT_LOCK_ZONE,
-> +				.zone = cc->zone,
-> +			};
-> +
-> +			locked = compact_lock_irqsave(zol, &flags, cc);
->  
->  			/* Recheck this is a buddy page under lock */
->  			if (!PageBuddy(page))
-> @@ -649,7 +714,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
->  	}
->  
->  	if (locked)
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  
->  	/*
->  	 * Be careful to not go outside of the pageblock.
-> @@ -1157,10 +1222,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  
->  		/* If we already hold the lock, we can skip some rechecking */
->  		if (lruvec != locked) {
-> +			struct compact_lock zol = {
-> +				.type = COMPACT_LOCK_RAW_SPINLOCK,
-> +				.lock = &lruvec->lru_lock,
-> +			};
-> +
->  			if (locked)
->  				unlock_page_lruvec_irqrestore(locked, flags);
->  
-> -			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
-> +			compact_lock_irqsave(zol, &flags, cc);
->  			locked = lruvec;
->  
->  			lruvec_memcg_debug(lruvec, folio);
-> @@ -1555,7 +1625,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
->  		if (!area->nr_free)
->  			continue;
->  
-> -		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		zone_lock_irqsave(cc->zone, flags);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry_reverse(freepage, freelist, buddy_list) {
->  			unsigned long pfn;
-> @@ -1614,7 +1684,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
->  			}
->  		}
->  
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  
->  		/* Skip fast search if enough freepages isolated */
->  		if (cc->nr_freepages >= cc->nr_migratepages)
-> @@ -1988,7 +2058,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->  		if (!area->nr_free)
->  			continue;
->  
-> -		spin_lock_irqsave(&cc->zone->lock, flags);
-> +		zone_lock_irqsave(cc->zone, flags);
->  		freelist = &area->free_list[MIGRATE_MOVABLE];
->  		list_for_each_entry(freepage, freelist, buddy_list) {
->  			unsigned long free_pfn;
-> @@ -2021,7 +2091,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->  				break;
->  			}
->  		}
-> -		spin_unlock_irqrestore(&cc->zone->lock, flags);
-> +		zone_unlock_irqrestore(cc->zone, flags);
->  	}
->  
->  	cc->total_migrate_scanned += nr_scanned;
+   arch/riscv/net/bpf_jit_comp64.c:944:9: error: no member named 'cookie' in 'struct bpf_tramp_link'
+           if (l->cookie)
+               ~  ^
+   arch/riscv/net/bpf_jit_comp64.c:945:67: error: no member named 'cookie' in 'struct bpf_tramp_link'
+                   emit_store_stack_imm64(RV_REG_T1, -run_ctx_off + cookie_off, l->cookie, ctx);
+                                                                                ~  ^
+   arch/riscv/net/bpf_jit_comp64.c:999:30: warning: declaration of 'struct bpf_tramp_links' will not be visible outside of this function [-Wvisibility]
+   static int invoke_bpf(struct bpf_tramp_links *tl, int args_off, int retval_off,
+                                ^
+   arch/riscv/net/bpf_jit_comp64.c:1005:20: error: incomplete definition of type 'struct bpf_tramp_links'
+           for (i = 0; i < tl->nr_links; i++) {
+                           ~~^
+   arch/riscv/net/bpf_jit_comp64.c:999:30: note: forward declaration of 'struct bpf_tramp_links'
+   static int invoke_bpf(struct bpf_tramp_links *tl, int args_off, int retval_off,
+                                ^
+   arch/riscv/net/bpf_jit_comp64.c:1008:39: error: incomplete definition of type 'struct bpf_tramp_links'
+                   if (bpf_prog_calls_session_cookie(tl->links[i])) {
+                                                     ~~^
+   arch/riscv/net/bpf_jit_comp64.c:999:30: note: forward declaration of 'struct bpf_tramp_links'
+   static int invoke_bpf(struct bpf_tramp_links *tl, int args_off, int retval_off,
+                                ^
+   arch/riscv/net/bpf_jit_comp64.c:1014:27: error: incomplete definition of type 'struct bpf_tramp_links'
+                   err = invoke_bpf_prog(tl->links[i], args_off, retval_off, run_ctx_off,
+                                         ~~^
+   arch/riscv/net/bpf_jit_comp64.c:999:30: note: forward declaration of 'struct bpf_tramp_links'
+   static int invoke_bpf(struct bpf_tramp_links *tl, int args_off, int retval_off,
+                                ^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: warning: declaration of 'struct bpf_tramp_links' will not be visible outside of this function [-Wvisibility]
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1033:42: error: subscript of pointer to incomplete type 'struct bpf_tramp_links'
+           struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
+                                             ~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1034:41: error: subscript of pointer to incomplete type 'struct bpf_tramp_links'
+           struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
+                                            ~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1035:44: error: subscript of pointer to incomplete type 'struct bpf_tramp_links'
+           struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
+                                               ~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+>> arch/riscv/net/bpf_jit_comp64.c:1118:39: error: incompatible pointer types passing 'struct bpf_tramp_links *' to parameter of type 'struct bpf_tramp_nodes *' [-Werror,-Wincompatible-pointer-types]
+           cookie_cnt = bpf_fsession_cookie_cnt(tlinks);
+                                                ^~~~~~
+   include/linux/bpf.h:2207:67: note: passing argument to parameter 'nodes' here
+   static inline int bpf_fsession_cookie_cnt(struct bpf_tramp_nodes *nodes)
+                                                                     ^
+   arch/riscv/net/bpf_jit_comp64.c:1175:23: error: incompatible pointer types passing 'struct bpf_tramp_links *' to parameter of type 'struct bpf_tramp_nodes *' [-Werror,-Wincompatible-pointer-types]
+           if (bpf_fsession_cnt(tlinks)) {
+                                ^~~~~~
+   include/linux/bpf.h:2189:60: note: passing argument to parameter 'nodes' here
+   static inline int bpf_fsession_cnt(struct bpf_tramp_nodes *nodes)
+                                                              ^
+   arch/riscv/net/bpf_jit_comp64.c:1190:12: error: incomplete definition of type 'struct bpf_tramp_links'
+           if (fentry->nr_links) {
+               ~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1191:20: error: incompatible pointer types passing 'struct bpf_tramp_links *' to parameter of type 'struct bpf_tramp_links *' [-Werror,-Wincompatible-pointer-types]
+                   ret = invoke_bpf(fentry, args_off, retval_off, run_ctx_off, func_meta_off,
+                                    ^~~~~~
+   arch/riscv/net/bpf_jit_comp64.c:999:47: note: passing argument to parameter 'tl' here
+   static int invoke_bpf(struct bpf_tramp_links *tl, int args_off, int retval_off,
+                                                 ^
+   arch/riscv/net/bpf_jit_comp64.c:1197:14: error: incomplete definition of type 'struct bpf_tramp_links'
+           if (fmod_ret->nr_links) {
+               ~~~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1198:34: error: incomplete definition of type 'struct bpf_tramp_links'
+                   branches_off = kcalloc(fmod_ret->nr_links, sizeof(int), GFP_KERNEL);
+                                          ~~~~~~~~^
+   include/linux/slab.h:1154:48: note: expanded from macro 'kcalloc'
+   #define kcalloc(n, size, flags)         kmalloc_array(n, size, (flags) | __GFP_ZERO)
+                                                         ^
+   include/linux/slab.h:1115:63: note: expanded from macro 'kmalloc_array'
+   #define kmalloc_array(...)                      alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
+                                                                                    ^~~~~~~~~~~
+   include/linux/alloc_tag.h:265:31: note: expanded from macro 'alloc_hooks'
+           alloc_hooks_tag(&_alloc_tag, _do_alloc);                        \
+                                        ^~~~~~~~~
+   include/linux/alloc_tag.h:251:9: note: expanded from macro 'alloc_hooks_tag'
+           typeof(_do_alloc) _res;                                         \
+                  ^~~~~~~~~
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1198:34: error: incomplete definition of type 'struct bpf_tramp_links'
+                   branches_off = kcalloc(fmod_ret->nr_links, sizeof(int), GFP_KERNEL);
+                                          ~~~~~~~~^
+   include/linux/slab.h:1154:48: note: expanded from macro 'kcalloc'
+   #define kcalloc(n, size, flags)         kmalloc_array(n, size, (flags) | __GFP_ZERO)
+                                                         ^
+   include/linux/slab.h:1115:63: note: expanded from macro 'kmalloc_array'
+   #define kmalloc_array(...)                      alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
+                                                                                    ^~~~~~~~~~~
+   include/linux/alloc_tag.h:265:31: note: expanded from macro 'alloc_hooks'
+           alloc_hooks_tag(&_alloc_tag, _do_alloc);                        \
+                                        ^~~~~~~~~
+   include/linux/alloc_tag.h:255:10: note: expanded from macro 'alloc_hooks_tag'
+                   _res = _do_alloc;                                       \
+                          ^~~~~~~~~
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1198:34: error: incomplete definition of type 'struct bpf_tramp_links'
+                   branches_off = kcalloc(fmod_ret->nr_links, sizeof(int), GFP_KERNEL);
+                                          ~~~~~~~~^
+   include/linux/slab.h:1154:48: note: expanded from macro 'kcalloc'
+   #define kcalloc(n, size, flags)         kmalloc_array(n, size, (flags) | __GFP_ZERO)
+                                                         ^
+   include/linux/slab.h:1115:63: note: expanded from macro 'kmalloc_array'
+   #define kmalloc_array(...)                      alloc_hooks(kmalloc_array_noprof(__VA_ARGS__))
+                                                                                    ^~~~~~~~~~~
+   include/linux/alloc_tag.h:265:31: note: expanded from macro 'alloc_hooks'
+           alloc_hooks_tag(&_alloc_tag, _do_alloc);                        \
+                                        ^~~~~~~~~
+   include/linux/alloc_tag.h:258:10: note: expanded from macro 'alloc_hooks_tag'
+                   _res = _do_alloc;                                       \
+                          ^~~~~~~~~
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1204:27: error: incomplete definition of type 'struct bpf_tramp_links'
+                   for (i = 0; i < fmod_ret->nr_links; i++) {
+                                   ~~~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1205:34: error: incomplete definition of type 'struct bpf_tramp_links'
+                           ret = invoke_bpf_prog(fmod_ret->links[i], args_off, retval_off,
+                                                 ~~~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
+                                                   ^
+   arch/riscv/net/bpf_jit_comp64.c:1233:40: error: incomplete definition of type 'struct bpf_tramp_links'
+           for (i = 0; ctx->insns && i < fmod_ret->nr_links; i++) {
+                                         ~~~~~~~~^
+   arch/riscv/net/bpf_jit_comp64.c:1024:14: note: forward declaration of 'struct bpf_tramp_links'
+                                            struct bpf_tramp_links *tlinks,
 
+
+vim +1118 arch/riscv/net/bpf_jit_comp64.c
+
+35b3515be0ecb9 Menglong Dong  2026-02-08  1021  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1022  static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im,
+49b5e77ae3e214 Pu Lehui       2023-02-15  1023  					 const struct btf_func_model *m,
+49b5e77ae3e214 Pu Lehui       2023-02-15  1024  					 struct bpf_tramp_links *tlinks,
+49b5e77ae3e214 Pu Lehui       2023-02-15  1025  					 void *func_addr, u32 flags,
+49b5e77ae3e214 Pu Lehui       2023-02-15  1026  					 struct rv_jit_context *ctx)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1027  {
+49b5e77ae3e214 Pu Lehui       2023-02-15  1028  	int i, ret, offset;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1029  	int *branches_off = NULL;
+6801b0aef79db4 Pu Lehui       2024-07-02  1030  	int stack_size = 0, nr_arg_slots = 0;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1031  	int retval_off, args_off, func_meta_off, ip_off, run_ctx_off, sreg_off, stk_arg_off;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1032  	int cookie_off, cookie_cnt;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1033  	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
+49b5e77ae3e214 Pu Lehui       2023-02-15  1034  	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
+49b5e77ae3e214 Pu Lehui       2023-02-15  1035  	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
+1732ebc4a26181 Pu Lehui       2024-01-23  1036  	bool is_struct_ops = flags & BPF_TRAMP_F_INDIRECT;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1037  	void *orig_call = func_addr;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1038  	bool save_ret;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1039  	u64 func_meta;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1040  	u32 insn;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1041  
+25ad10658dc106 Pu Lehui       2023-07-21  1042  	/* Two types of generated trampoline stack layout:
+25ad10658dc106 Pu Lehui       2023-07-21  1043  	 *
+25ad10658dc106 Pu Lehui       2023-07-21  1044  	 * 1. trampoline called from function entry
+25ad10658dc106 Pu Lehui       2023-07-21  1045  	 * --------------------------------------
+25ad10658dc106 Pu Lehui       2023-07-21  1046  	 * FP + 8	    [ RA to parent func	] return address to parent
+25ad10658dc106 Pu Lehui       2023-07-21  1047  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1048  	 * FP + 0	    [ FP of parent func ] frame pointer of parent
+25ad10658dc106 Pu Lehui       2023-07-21  1049  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1050  	 * FP - 8           [ T0 to traced func ] return address of traced
+25ad10658dc106 Pu Lehui       2023-07-21  1051  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1052  	 * FP - 16	    [ FP of traced func ] frame pointer of traced
+25ad10658dc106 Pu Lehui       2023-07-21  1053  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1054  	 * --------------------------------------
+49b5e77ae3e214 Pu Lehui       2023-02-15  1055  	 *
+25ad10658dc106 Pu Lehui       2023-07-21  1056  	 * 2. trampoline called directly
+25ad10658dc106 Pu Lehui       2023-07-21  1057  	 * --------------------------------------
+25ad10658dc106 Pu Lehui       2023-07-21  1058  	 * FP - 8	    [ RA to caller func ] return address to caller
+49b5e77ae3e214 Pu Lehui       2023-02-15  1059  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1060  	 * FP - 16	    [ FP of caller func	] frame pointer of caller
+49b5e77ae3e214 Pu Lehui       2023-02-15  1061  	 *					  function
+25ad10658dc106 Pu Lehui       2023-07-21  1062  	 * --------------------------------------
+49b5e77ae3e214 Pu Lehui       2023-02-15  1063  	 *
+49b5e77ae3e214 Pu Lehui       2023-02-15  1064  	 * FP - retval_off  [ return value      ] BPF_TRAMP_F_CALL_ORIG or
+49b5e77ae3e214 Pu Lehui       2023-02-15  1065  	 *					  BPF_TRAMP_F_RET_FENTRY_RET
+49b5e77ae3e214 Pu Lehui       2023-02-15  1066  	 *                  [ argN              ]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1067  	 *                  [ ...               ]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1068  	 * FP - args_off    [ arg1              ]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1069  	 *
+35b3515be0ecb9 Menglong Dong  2026-02-08  1070  	 * FP - func_meta_off [ regs count, etc ]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1071  	 *
+49b5e77ae3e214 Pu Lehui       2023-02-15  1072  	 * FP - ip_off      [ traced func	] BPF_TRAMP_F_IP_ARG
+49b5e77ae3e214 Pu Lehui       2023-02-15  1073  	 *
+35b3515be0ecb9 Menglong Dong  2026-02-08  1074  	 *                  [ stack cookie N    ]
+35b3515be0ecb9 Menglong Dong  2026-02-08  1075  	 *                  [ ...               ]
+35b3515be0ecb9 Menglong Dong  2026-02-08  1076  	 * FP - cookie_off  [ stack cookie 1    ]
+35b3515be0ecb9 Menglong Dong  2026-02-08  1077  	 *
+49b5e77ae3e214 Pu Lehui       2023-02-15  1078  	 * FP - run_ctx_off [ bpf_tramp_run_ctx ]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1079  	 *
+49b5e77ae3e214 Pu Lehui       2023-02-15  1080  	 * FP - sreg_off    [ callee saved reg	]
+49b5e77ae3e214 Pu Lehui       2023-02-15  1081  	 *
+49b5e77ae3e214 Pu Lehui       2023-02-15  1082  	 *		    [ pads              ] pads for 16 bytes alignment
+6801b0aef79db4 Pu Lehui       2024-07-02  1083  	 *
+6801b0aef79db4 Pu Lehui       2024-07-02  1084  	 *		    [ stack_argN        ]
+6801b0aef79db4 Pu Lehui       2024-07-02  1085  	 *		    [ ...               ]
+6801b0aef79db4 Pu Lehui       2024-07-02  1086  	 * FP - stk_arg_off [ stack_arg1        ] BPF_TRAMP_F_CALL_ORIG
+49b5e77ae3e214 Pu Lehui       2023-02-15  1087  	 */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1088  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1089  	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
+49b5e77ae3e214 Pu Lehui       2023-02-15  1090  		return -ENOTSUPP;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1091  
+6801b0aef79db4 Pu Lehui       2024-07-02  1092  	if (m->nr_args > MAX_BPF_FUNC_ARGS)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1093  		return -ENOTSUPP;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1094  
+6801b0aef79db4 Pu Lehui       2024-07-02  1095  	for (i = 0; i < m->nr_args; i++)
+6801b0aef79db4 Pu Lehui       2024-07-02  1096  		nr_arg_slots += round_up(m->arg_size[i], 8) / 8;
+6801b0aef79db4 Pu Lehui       2024-07-02  1097  
+25ad10658dc106 Pu Lehui       2023-07-21  1098  	/* room of trampoline frame to store return address and frame pointer */
+25ad10658dc106 Pu Lehui       2023-07-21  1099  	stack_size += 16;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1100  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1101  	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
+d0bf7cd5df1846 Chenghao Duan  2025-09-22  1102  	if (save_ret)
+7112cd26e606c7 Björn Töpel    2023-10-04  1103  		stack_size += 16; /* Save both A5 (BPF R0) and A0 */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1104  	retval_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1105  
+6801b0aef79db4 Pu Lehui       2024-07-02  1106  	stack_size += nr_arg_slots * 8;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1107  	args_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1108  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1109  	/* function metadata, such as regs count */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1110  	stack_size += 8;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1111  	func_meta_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1112  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1113  	if (flags & BPF_TRAMP_F_IP_ARG) {
+49b5e77ae3e214 Pu Lehui       2023-02-15  1114  		stack_size += 8;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1115  		ip_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1116  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1117  
+35b3515be0ecb9 Menglong Dong  2026-02-08 @1118  	cookie_cnt = bpf_fsession_cookie_cnt(tlinks);
+35b3515be0ecb9 Menglong Dong  2026-02-08  1119  	/* room for session cookies */
+35b3515be0ecb9 Menglong Dong  2026-02-08  1120  	stack_size += cookie_cnt * 8;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1121  	cookie_off = stack_size;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1122  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1123  	stack_size += round_up(sizeof(struct bpf_tramp_run_ctx), 8);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1124  	run_ctx_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1125  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1126  	stack_size += 8;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1127  	sreg_off = stack_size;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1128  
+a5912c37faf723 Puranjay Mohan 2024-07-08  1129  	if ((flags & BPF_TRAMP_F_CALL_ORIG) && (nr_arg_slots - RV_MAX_REG_ARGS > 0))
+6801b0aef79db4 Pu Lehui       2024-07-02  1130  		stack_size += (nr_arg_slots - RV_MAX_REG_ARGS) * 8;
+6801b0aef79db4 Pu Lehui       2024-07-02  1131  
+e944fc8152744a Xiao Wang      2024-05-23  1132  	stack_size = round_up(stack_size, STACK_ALIGN);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1133  
+6801b0aef79db4 Pu Lehui       2024-07-02  1134  	/* room for args on stack must be at the top of stack */
+6801b0aef79db4 Pu Lehui       2024-07-02  1135  	stk_arg_off = stack_size;
+6801b0aef79db4 Pu Lehui       2024-07-02  1136  
+1732ebc4a26181 Pu Lehui       2024-01-23  1137  	if (!is_struct_ops) {
+25ad10658dc106 Pu Lehui       2023-07-21  1138  		/* For the trampoline called from function entry,
+25ad10658dc106 Pu Lehui       2023-07-21  1139  		 * the frame of traced function and the frame of
+25ad10658dc106 Pu Lehui       2023-07-21  1140  		 * trampoline need to be considered.
+25ad10658dc106 Pu Lehui       2023-07-21  1141  		 */
+25ad10658dc106 Pu Lehui       2023-07-21  1142  		emit_addi(RV_REG_SP, RV_REG_SP, -16, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1143  		emit_sd(RV_REG_SP, 8, RV_REG_RA, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1144  		emit_sd(RV_REG_SP, 0, RV_REG_FP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1145  		emit_addi(RV_REG_FP, RV_REG_SP, 16, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1146  
+25ad10658dc106 Pu Lehui       2023-07-21  1147  		emit_addi(RV_REG_SP, RV_REG_SP, -stack_size, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1148  		emit_sd(RV_REG_SP, stack_size - 8, RV_REG_T0, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1149  		emit_sd(RV_REG_SP, stack_size - 16, RV_REG_FP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1150  		emit_addi(RV_REG_FP, RV_REG_SP, stack_size, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1151  	} else {
+e63985ecd22681 Puranjay Mohan 2024-03-03  1152  		/* emit kcfi hash */
+e63985ecd22681 Puranjay Mohan 2024-03-03  1153  		emit_kcfi(cfi_get_func_hash(func_addr), ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1154  		/* For the trampoline called directly, just handle
+25ad10658dc106 Pu Lehui       2023-07-21  1155  		 * the frame of trampoline.
+25ad10658dc106 Pu Lehui       2023-07-21  1156  		 */
+25ad10658dc106 Pu Lehui       2023-07-21  1157  		emit_addi(RV_REG_SP, RV_REG_SP, -stack_size, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1158  		emit_sd(RV_REG_SP, stack_size - 8, RV_REG_RA, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1159  		emit_sd(RV_REG_SP, stack_size - 16, RV_REG_FP, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1160  		emit_addi(RV_REG_FP, RV_REG_SP, stack_size, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1161  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1162  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1163  	/* callee saved register S1 to pass start time */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1164  	emit_sd(RV_REG_FP, -sreg_off, RV_REG_S1, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1165  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1166  	/* store ip address of the traced function */
+93fd420d71beed Menglong Dong  2026-02-08  1167  	if (flags & BPF_TRAMP_F_IP_ARG)
+93fd420d71beed Menglong Dong  2026-02-08  1168  		emit_store_stack_imm64(RV_REG_T1, -ip_off, (u64)func_addr, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1169  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1170  	func_meta = nr_arg_slots;
+35b3515be0ecb9 Menglong Dong  2026-02-08  1171  	emit_store_stack_imm64(RV_REG_T1, -func_meta_off, func_meta, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1172  
+6801b0aef79db4 Pu Lehui       2024-07-02  1173  	store_args(nr_arg_slots, args_off, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1174  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1175  	if (bpf_fsession_cnt(tlinks)) {
+35b3515be0ecb9 Menglong Dong  2026-02-08  1176  		/* clear all session cookies' value */
+35b3515be0ecb9 Menglong Dong  2026-02-08  1177  		for (i = 0; i < cookie_cnt; i++)
+35b3515be0ecb9 Menglong Dong  2026-02-08  1178  			emit_sd(RV_REG_FP, -cookie_off + 8 * i, RV_REG_ZERO, ctx);
+35b3515be0ecb9 Menglong Dong  2026-02-08  1179  		/* clear return value to make sure fentry always get 0 */
+35b3515be0ecb9 Menglong Dong  2026-02-08  1180  		emit_sd(RV_REG_FP, -retval_off, RV_REG_ZERO, ctx);
+35b3515be0ecb9 Menglong Dong  2026-02-08  1181  	}
+35b3515be0ecb9 Menglong Dong  2026-02-08  1182  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1183  	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+9f1e16fb1fc982 Pu Lehui       2024-06-22  1184  		emit_imm(RV_REG_A0, ctx->insns ? (const s64)im : RV_MAX_COUNT_IMM, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1185  		ret = emit_call((const u64)__bpf_tramp_enter, true, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1186  		if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1187  			return ret;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1188  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1189  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1190  	if (fentry->nr_links) {
+35b3515be0ecb9 Menglong Dong  2026-02-08  1191  		ret = invoke_bpf(fentry, args_off, retval_off, run_ctx_off, func_meta_off,
+35b3515be0ecb9 Menglong Dong  2026-02-08  1192  				 flags & BPF_TRAMP_F_RET_FENTRY_RET, func_meta, cookie_off, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1193  		if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1194  			return ret;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1195  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1196  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1197  	if (fmod_ret->nr_links) {
+49b5e77ae3e214 Pu Lehui       2023-02-15  1198  		branches_off = kcalloc(fmod_ret->nr_links, sizeof(int), GFP_KERNEL);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1199  		if (!branches_off)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1200  			return -ENOMEM;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1201  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1202  		/* cleanup to avoid garbage return value confusion */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1203  		emit_sd(RV_REG_FP, -retval_off, RV_REG_ZERO, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1204  		for (i = 0; i < fmod_ret->nr_links; i++) {
+49b5e77ae3e214 Pu Lehui       2023-02-15  1205  			ret = invoke_bpf_prog(fmod_ret->links[i], args_off, retval_off,
+49b5e77ae3e214 Pu Lehui       2023-02-15  1206  					      run_ctx_off, true, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1207  			if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1208  				goto out;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1209  			emit_ld(RV_REG_T1, -retval_off, RV_REG_FP, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1210  			branches_off[i] = ctx->ninsns;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1211  			/* nop reserved for conditional jump */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1212  			emit(rv_nop(), ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1213  		}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1214  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1215  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1216  	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+8f3e00af8e52c0 Menglong Dong  2025-12-19  1217  		/* skip to actual body of traced function */
+8f3e00af8e52c0 Menglong Dong  2025-12-19  1218  		orig_call += RV_FENTRY_NINSNS * 4;
+6801b0aef79db4 Pu Lehui       2024-07-02  1219  		restore_args(min_t(int, nr_arg_slots, RV_MAX_REG_ARGS), args_off, ctx);
+6801b0aef79db4 Pu Lehui       2024-07-02  1220  		restore_stack_args(nr_arg_slots - RV_MAX_REG_ARGS, args_off, stk_arg_off, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1221  		ret = emit_call((const u64)orig_call, true, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1222  		if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1223  			goto out;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1224  		emit_sd(RV_REG_FP, -retval_off, RV_REG_A0, ctx);
+7112cd26e606c7 Björn Töpel    2023-10-04  1225  		emit_sd(RV_REG_FP, -(retval_off - 8), regmap[BPF_REG_0], ctx);
+2382a405c581ae Pu Lehui       2024-06-22  1226  		im->ip_after_call = ctx->ro_insns + ctx->ninsns;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1227  		/* 2 nops reserved for auipc+jalr pair */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1228  		emit(rv_nop(), ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1229  		emit(rv_nop(), ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1230  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1231  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1232  	/* update branches saved in invoke_bpf_mod_ret with bnez */
+49b5e77ae3e214 Pu Lehui       2023-02-15  1233  	for (i = 0; ctx->insns && i < fmod_ret->nr_links; i++) {
+49b5e77ae3e214 Pu Lehui       2023-02-15  1234  		offset = ninsns_rvoff(ctx->ninsns - branches_off[i]);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1235  		insn = rv_bne(RV_REG_T1, RV_REG_ZERO, offset >> 1);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1236  		*(u32 *)(ctx->insns + branches_off[i]) = insn;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1237  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1238  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1239  	/* set "is_return" flag for fsession */
+35b3515be0ecb9 Menglong Dong  2026-02-08  1240  	func_meta |= (1ULL << BPF_TRAMP_IS_RETURN_SHIFT);
+35b3515be0ecb9 Menglong Dong  2026-02-08  1241  	if (bpf_fsession_cnt(tlinks))
+35b3515be0ecb9 Menglong Dong  2026-02-08  1242  		emit_store_stack_imm64(RV_REG_T1, -func_meta_off, func_meta, ctx);
+35b3515be0ecb9 Menglong Dong  2026-02-08  1243  
+35b3515be0ecb9 Menglong Dong  2026-02-08  1244  	if (fexit->nr_links) {
+35b3515be0ecb9 Menglong Dong  2026-02-08  1245  		ret = invoke_bpf(fexit, args_off, retval_off, run_ctx_off, func_meta_off,
+35b3515be0ecb9 Menglong Dong  2026-02-08  1246  				 false, func_meta, cookie_off, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1247  		if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1248  			goto out;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1249  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1250  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1251  	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+2382a405c581ae Pu Lehui       2024-06-22  1252  		im->ip_epilogue = ctx->ro_insns + ctx->ninsns;
+9f1e16fb1fc982 Pu Lehui       2024-06-22  1253  		emit_imm(RV_REG_A0, ctx->insns ? (const s64)im : RV_MAX_COUNT_IMM, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1254  		ret = emit_call((const u64)__bpf_tramp_exit, true, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1255  		if (ret)
+49b5e77ae3e214 Pu Lehui       2023-02-15  1256  			goto out;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1257  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1258  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1259  	if (flags & BPF_TRAMP_F_RESTORE_REGS)
+6801b0aef79db4 Pu Lehui       2024-07-02  1260  		restore_args(min_t(int, nr_arg_slots, RV_MAX_REG_ARGS), args_off, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1261  
+7112cd26e606c7 Björn Töpel    2023-10-04  1262  	if (save_ret) {
+7112cd26e606c7 Björn Töpel    2023-10-04  1263  		emit_ld(regmap[BPF_REG_0], -(retval_off - 8), RV_REG_FP, ctx);
+fd2e08128944a7 Hengqi Chen    2025-09-08  1264  		if (is_struct_ops) {
+fd2e08128944a7 Hengqi Chen    2025-09-08  1265  			ret = sign_extend(RV_REG_A0, regmap[BPF_REG_0], m->ret_size,
+fd2e08128944a7 Hengqi Chen    2025-09-08  1266  					  m->ret_flags & BTF_FMODEL_SIGNED_ARG, ctx);
+fd2e08128944a7 Hengqi Chen    2025-09-08  1267  			if (ret)
+fd2e08128944a7 Hengqi Chen    2025-09-08  1268  				goto out;
+fd2e08128944a7 Hengqi Chen    2025-09-08  1269  		} else {
+fd2e08128944a7 Hengqi Chen    2025-09-08  1270  			emit_ld(RV_REG_A0, -retval_off, RV_REG_FP, ctx);
+fd2e08128944a7 Hengqi Chen    2025-09-08  1271  		}
+7112cd26e606c7 Björn Töpel    2023-10-04  1272  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1273  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1274  	emit_ld(RV_REG_S1, -sreg_off, RV_REG_FP, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1275  
+1732ebc4a26181 Pu Lehui       2024-01-23  1276  	if (!is_struct_ops) {
+25ad10658dc106 Pu Lehui       2023-07-21  1277  		/* trampoline called from function entry */
+25ad10658dc106 Pu Lehui       2023-07-21  1278  		emit_ld(RV_REG_T0, stack_size - 8, RV_REG_SP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1279  		emit_ld(RV_REG_FP, stack_size - 16, RV_REG_SP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1280  		emit_addi(RV_REG_SP, RV_REG_SP, stack_size, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1281  
+25ad10658dc106 Pu Lehui       2023-07-21  1282  		emit_ld(RV_REG_RA, 8, RV_REG_SP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1283  		emit_ld(RV_REG_FP, 0, RV_REG_SP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1284  		emit_addi(RV_REG_SP, RV_REG_SP, 16, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1285  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1286  		if (flags & BPF_TRAMP_F_SKIP_FRAME)
+25ad10658dc106 Pu Lehui       2023-07-21  1287  			/* return to parent function */
+25ad10658dc106 Pu Lehui       2023-07-21  1288  			emit_jalr(RV_REG_ZERO, RV_REG_RA, 0, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1289  		else
+25ad10658dc106 Pu Lehui       2023-07-21  1290  			/* return to traced function */
+25ad10658dc106 Pu Lehui       2023-07-21  1291  			emit_jalr(RV_REG_ZERO, RV_REG_T0, 0, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1292  	} else {
+25ad10658dc106 Pu Lehui       2023-07-21  1293  		/* trampoline called directly */
+25ad10658dc106 Pu Lehui       2023-07-21  1294  		emit_ld(RV_REG_RA, stack_size - 8, RV_REG_SP, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1295  		emit_ld(RV_REG_FP, stack_size - 16, RV_REG_SP, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1296  		emit_addi(RV_REG_SP, RV_REG_SP, stack_size, ctx);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1297  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1298  		emit_jalr(RV_REG_ZERO, RV_REG_RA, 0, ctx);
+25ad10658dc106 Pu Lehui       2023-07-21  1299  	}
+49b5e77ae3e214 Pu Lehui       2023-02-15  1300  
+49b5e77ae3e214 Pu Lehui       2023-02-15  1301  	ret = ctx->ninsns;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1302  out:
+49b5e77ae3e214 Pu Lehui       2023-02-15  1303  	kfree(branches_off);
+49b5e77ae3e214 Pu Lehui       2023-02-15  1304  	return ret;
+49b5e77ae3e214 Pu Lehui       2023-02-15  1305  }
+49b5e77ae3e214 Pu Lehui       2023-02-15  1306  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
