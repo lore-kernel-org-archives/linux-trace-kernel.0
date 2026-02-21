@@ -1,44 +1,38 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E02B3EBF25;
-	Sat, 21 Feb 2026 03:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14D82264D3;
+	Sat, 21 Feb 2026 03:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771644625; cv=none; b=Z6Og26VIftB6gxjPiaMgislh1TkO2r/vKK7Q2pLehLHnmDkWXCkCaWMZoUS3Votkb/Az9cB1vbuSmTtTEsqokeDWKYSsBTAHSsrN/nB3ly0cMRWcxA2JX+JeZedWBqd0rMYvcR34FuFh89j35iO06o64FNYwInJCmgCCCD7rtt4=
+	t=1771644803; cv=none; b=QLL4/VQwBM+Ik6A+YukL3nGKbowzuzer9OkizyyJePWkIHUz5EsRy10Y3o5VJBi6hjU9KPzLJOrTbJSzutggALsGWEG7oKj/YnGgNgD4MpUPMeo9Rjw13soQOqXuUEnWogC8YO17uzcGcoj4qwO+hapGsXFT5mhvAaWZn6gRp4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771644625; c=relaxed/simple;
-	bh=6UBxq5et4hM01Q0Qa+MVMVTHldhV6OSOtvhdw7sMW2k=;
+	s=arc-20240116; t=1771644803; c=relaxed/simple;
+	bh=qxFRjHjdvICMbUDSmKNdsW34v1XIvHUXQxsCkOxUrjA=;
 	h=Message-ID:In-Reply-To:References:Date:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=JgQ3FECay8DtjnHypXRsyXRuNYQjtykhmmr8LZQU13sNvoMzMZ7CIzTgJOEfSrLrYtZ/ZGnHVRIiSZt6zhYRlkO5MJWBVUhHjW+1XW4f3LkXizfuAkXHvw9oleeE5XwPjbLG6zPLWIwuvujE1w6BxloPznWthlkyeyhLmtyKuTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+	 Subject:Content-Type; b=okelpv4fMTQH1BxPvHW5IMl5MVXzGqAKm2qcy2bkzrT7hd26MEVGB7i2C2Mfe6n6DjHVlR/Ii3eFukwhJzVyg1MwhOf8Kc1ov5YPaygfjMmZL0Cytkn7yQhH2rBGFfknDRbIa1Tr6EsmwBk3UPI+ZKBRED2TXgb+n5qtI9b7QAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4fHt0s170dz5BNS0;
-	Sat, 21 Feb 2026 11:30:21 +0800 (CST)
 Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4fHt0f1v1fz4xPS1;
-	Sat, 21 Feb 2026 11:30:10 +0800 (CST)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4fHt4F2Z6dz4xPRx;
+	Sat, 21 Feb 2026 11:33:17 +0800 (CST)
 Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 61L3U6V2070251;
-	Sat, 21 Feb 2026 11:30:06 +0800 (+08)
+	by mse-fl1.zte.com.cn with SMTP id 61L3XE9V070971;
+	Sat, 21 Feb 2026 11:33:14 +0800 (+08)
 	(envelope-from hu.shengming@zte.com.cn)
-Received: from mapi (xaxapp04[null])
+Received: from mapi (xaxapp05[null])
 	by mapi (Zmail) with MAPI id mid32;
-	Sat, 21 Feb 2026 11:30:07 +0800 (CST)
-X-Zmail-TransId: 2afb699926bfe61-e5df4
+	Sat, 21 Feb 2026 11:33:14 +0800 (CST)
+X-Zmail-TransId: 2afc6999277a718-e66aa
 X-Mailer: Zmail v1.0
-Message-ID: <20260221113007819YgrZsMGABff4Rc-O_fZxL@zte.com.cn>
+Message-ID: <20260221113314048jE4VRwIyZEALiYByGK0My@zte.com.cn>
 In-Reply-To: <202602211116123227p4Je6QELxr2byqvy9kTE@zte.com.cn>
 References: 202602211116123227p4Je6QELxr2byqvy9kTE@zte.com.cn
-Date: Sat, 21 Feb 2026 11:30:07 +0800 (CST)
+Date: Sat, 21 Feb 2026 11:33:14 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,59 +45,72 @@ Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
         <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
         <linux-trace-kernel@vger.kernel.org>, <zhang.run@zte.com.cn>,
         <yang.tao172@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIDEvMl0gZmdyYXBoOiBmaXggdGhyZXNoX3JldHVybiBjbGVhciBwZXItdGFzayBub3RyYWNl?=
+Subject: =?UTF-8?B?W1BBVENIIDIvMl0gZmdyYXBoOiBmaXggdGhyZXNoX3JldHVybiBub3NsZWVwdGltZSBkb3VibGUtYWRqdXN0?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 61L3U6V2070251
+X-MAIL:mse-fl1.zte.com.cn 61L3XE9V070971
 X-TLS: YES
 X-SPF-DOMAIN: zte.com.cn
 X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
 X-SPF: None
-X-SOURCE-IP: 192.168.251.13 unknown Sat, 21 Feb 2026 11:30:21 +0800
+X-SOURCE-IP: 10.5.228.132 unknown Sat, 21 Feb 2026 11:33:17 +0800
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 699926CD.000/4fHt0s170dz5BNS0
+X-Fangmail-MID-QID: 6999277D.000/4fHt4F2Z6dz4xPRx
 
 From: Shengming Hu <hu.shengming@zte.com.cn>
 
-When tracing_thresh is enabled, function graph tracing uses
-trace_graph_thresh_return() as the return handler. Unlike
-trace_graph_return(), it did not clear the per-task
-TRACE_GRAPH_NOTRACE flag set by the entry handler for
-set_graph_notrace addresses. This could leave the task
-permanently in "notrace" state and effectively disable
-function graph tracing for that task.
+trace_graph_thresh_return() called handle_nosleeptime() and then
+delegated to trace_graph_return(), which calls
+handle_nosleeptime() again. When sleep-time accounting is
+disabled this double-adjusts calltime and can produce bogus
+durations (including underflow).
 
-Mirror trace_graph_return()'s per-task notrace handling by
-clearing TRACE_GRAPH_NOTRACE and returning early when set.
+Fix this by computing rettime once, applying
+handle_nosleeptime() only once, using the adjusted calltime
+for threshold comparison, and writing the return event
+directly via __trace_graph_return() when the threshold is met.
 
-Fixes: b84214890a9bc ("function_graph: Move graph notrace bit to
-shadow stack global var")
+Fixes: 3c9880f3ab52b ("ftrace: Use a running sleeptime instead of
+saving on shadow stack")
 Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
 ---
- kernel/trace/trace_functions_graph.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/trace/trace_functions_graph.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 1de6f1573..cbe43680c 100644
+index cbe43680c..b9c81fbd9 100644
 --- a/kernel/trace/trace_functions_graph.c
 +++ b/kernel/trace/trace_functions_graph.c
-@@ -400,14 +400,15 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 				      struct fgraph_ops *gops,
- 				      struct ftrace_regs *fregs)
- {
-+	unsigned long *task_var = fgraph_get_task_var(gops);
+@@ -403,8 +403,12 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
+ 	unsigned long *task_var = fgraph_get_task_var(gops);
  	struct fgraph_times *ftimes;
  	struct trace_array *tr;
++	unsigned int trace_ctx;
++	u64 calltime, rettime;
  	int size;
 
++	rettime = trace_clock_local();
++
  	ftrace_graph_addr_finish(gops, trace);
 
--	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
--		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-+	if (*task_var & TRACE_GRAPH_NOTRACE) {
-+		*task_var &= ~TRACE_GRAPH_NOTRACE;
- 		return;
- 	}
+ 	if (*task_var & TRACE_GRAPH_NOTRACE) {
+@@ -419,11 +423,13 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
+ 	tr = gops->private;
+ 	handle_nosleeptime(tr, trace, ftimes, size);
 
+-	if (tracing_thresh &&
+-	    (trace_clock_local() - ftimes->calltime < tracing_thresh))
++	calltime = ftimes->calltime;
++
++	if (tracing_thresh && (rettime - calltime < tracing_thresh))
+ 		return;
+-	else
+-		trace_graph_return(trace, gops, fregs);
++
++	trace_ctx = tracing_gen_ctx();
++	__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
+ }
+
+ static struct fgraph_ops funcgraph_ops = {
 -- 
 2.25.1
