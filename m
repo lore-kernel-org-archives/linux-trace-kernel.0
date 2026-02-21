@@ -1,282 +1,215 @@
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994971F8691
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Feb 2026 04:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB561E5B68;
+	Sat, 21 Feb 2026 12:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771649193; cv=none; b=kQXT8+2AC5NYpsNXtDZllut8b5/JMBlYcYwLFx9WGybZruFvO2mVVXzlWCb0povBI9exz8dpEGyRhYcI27k5a1bwndNlHuIYvlgaV55CdH0c5IqJxj38F4dFlO6tFLWmcOc52ptoS9SLVaOOnc+m9UOgDzs+3y7eGt6/MvJRH8E=
+	t=1771676131; cv=none; b=u3/jkZa+hno7dVWDSurR9XS7YWNi75r9yIJ+5F3ynb3pL+SsruGQtP5e7idf0j1fl0xfxz+lPKtEnQZtHLWdiNi6sPPpIwI/Sx9ya425Ux9S+DoQaE6hsG8jcpMzGS7K31zzE0fBO3SPYYZxrrxEK9YkogbQUqcXXxztgvmL0So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771649193; c=relaxed/simple;
-	bh=ssuOyEm8kssd6zKlD3i/WG3jhaegku3w80wyEghM+Uo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rQMhUFIsnZKnIPw8YkGY56b2lTUIrN7EHuBXwMLNH+GUinaPmRz2CVMqxjNm6w+/Ye8xnvcwXNeKIUcVh+SFOxVDC+jOfr5PQRAx3y5WsYI7ZVB0AqtjSTMKChwxKae+EWdmGYhLjiN5/QunK19/yPLBDnzDoflXFcu2VjHj4lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.167.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-463967f3573so10344381b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Feb 2026 20:46:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771649190; x=1772253990;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/UwG/ZLc5IdkNTEknjM/TIZ2h8y1xCA74ycYTIjZGL0=;
-        b=VbmrOLpRdJ8Tm8ZtkyixOpBCyPWr7YDV6qK0gTZiU/XbQwFq2Bu0lCQF01L6NS4dZa
-         Qe7Em6XBcXc6y5sqTNmJTHhRGTcG/SzCF73m+DM1pNBXQUgbHQavkbGVvfiS3oTVbrTy
-         U6vfxhxVGH8DMxYmIuYLRyRs1i01TJPkBtmtk+ODHabwTOOmG5xj7I1XGuSxGEXMxfBu
-         FJ4F2VadTkY+MxtRNTSCo8tP3U/gsx3K9Y8rgq/52iZZmWpwSD1ZZZb11EvEzrPxWKcd
-         jyAYGijBDHuDYUw66Z5q1WkeqEE8Nq32V1ulAgfQ1Um8MLKuxmvtTWf+n+88V5FzDQ12
-         nUxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvrQCTMSU+Xq12Q6fGakj5pB4C1I6VGkf3eCC0K1AlrGMV55WyiHG6js6W1HgCQbrlJ0/8b6NRZlg4UBcIHWMTPpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqWzKO0Baz5s3u4pEuJC1OZ1LQNKphFAtL0/zzl125XKIhje7M
-	9mVsUaUEif46EGD92dUOrEKIu1zxnqsevEV9EscMAnkcitMZHvdZUief06onsMo6YsR6NkwYmtp
-	4tLb2Fw2jbUdsGxd4uCTZfCrEYwpNakGvCjU9orACoqx32qG4i6WyUgVkxhg=
+	s=arc-20240116; t=1771676131; c=relaxed/simple;
+	bh=QcS6puq4igmgHdAhDZWFh4gN//JGx3gAUs7ZFvn1Ylw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FOv9p1rTWwuaXSHDjJTukR6o5ssnG+H13gwfMhMO5L7IuljsCjvUPCH7HftoTNYo66IELlNNRPzy0vzWKLYLC1wmdBzo0uBbNC9qjm9XNlUupDSN/gIxxRbZi4Ad81CdqcrDzEHuIASyHFWL1MCDLUjMyRXDgKBhiO9q17FhG20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otS4DkZ3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otS4DkZ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA48C4CEF7;
+	Sat, 21 Feb 2026 12:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771676130;
+	bh=QcS6puq4igmgHdAhDZWFh4gN//JGx3gAUs7ZFvn1Ylw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=otS4DkZ3T1lrkcZCubDtFSIlQJkV9ilR1uERlWOyUoa5ZAmP0IxkBLS4tDDaOZLhv
+	 +GgghefVmzRAGZHKQTljftoNgU+ehlVXWnTu+lO51v1FAbkV3bFQwqqNQzglhFxeaY
+	 X+VqODzkAbufqYww38qs715St2k4L/oLbWEGxLPQHj7Jf+CrImEMsK/G4PxMQtY/a/
+	 1D9C9+Wj9Xg18RGVj2YcLfGk6kfLISg1cJQY11E1bYRS36YcqKgqedhFWgE47dPszl
+	 84WT47zL7JxMa6eVjvLidS4X/s23b+QiRbWfVSux2p5jq+ouwV79zZi+klAcFKTaVh
+	 /ID0Uowl05z4A==
+Date: Sat, 21 Feb 2026 12:15:23 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Andy Chiu <andybnac@gmail.com>
+Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
+	palmer@dabbelt.com, Puranjay Mohan <puranjay12@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Mark Rutland <mark.rutland@arm.com>, paul.walmsley@sifive.com,
+	greentime.hu@sifive.com, nick.hu@sifive.com, nylon.chen@sifive.com,
+	eric.lin@sifive.com, vicent.chen@sifive.com, zong.li@sifive.com,
+	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
+	olivia.chu@sifive.com, c2232430@gmail.com, arnd@arndb.de,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+	llvm@lists.linux.dev, pjw@kernel.org
+Subject: Re: [PATCH v4 10/12] riscv: Implement
+ HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+Message-ID: <20260221-repeal-emphatic-ddc2e9b94208@spud>
+References: <20250407180838.42877-1-andybnac@gmail.com>
+ <20250407180838.42877-10-andybnac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:1ca6:b0:677:18e5:e5ac with SMTP id
- 006d021491bc7-679c4278b92mr1054429eaf.18.1771649190323; Fri, 20 Feb 2026
- 20:46:30 -0800 (PST)
-Date: Fri, 20 Feb 2026 20:46:30 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <699938a6.a70a0220.2c38d7.0150.GAE@google.com>
-Subject: [syzbot] [trace?] [bpf?] KASAN: slab-use-after-free Read in
- bpf_trace_run2 (3)
-From: syzbot <syzbot+59701a78e84b0bccfe1b@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    8bf22c33e7a1 Merge tag 'net-7.0-rc1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c8c73a580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=65722f41f7edc17e
-dashboard link: https://syzkaller.appspot.com/bug?extid=59701a78e84b0bccfe1b
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141f7ffa580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-8bf22c33.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ee3f5bf71c12/vmlinux-8bf22c33.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ef5b82c2d846/bzImage-8bf22c33.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+59701a78e84b0bccfe1b@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
-BUG: KASAN: slab-use-after-free in bpf_trace_run2+0xb1/0x840 kernel/trace/bpf_trace.c:2129
-Read of size 8 at addr ffff888053465b18 by task syz-executor/5307
-
-CPU: 0 UID: 0 PID: 5307 Comm: syz-executor Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xba/0x230 mm/kasan/report.c:482
- kasan_report+0x117/0x150 mm/kasan/report.c:595
- __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
- bpf_trace_run2+0xb1/0x840 kernel/trace/bpf_trace.c:2129
- __traceiter_kfree+0x2e/0x50 include/trace/events/kmem.h:97
- __do_trace_kfree include/trace/events/kmem.h:97 [inline]
- trace_kfree include/trace/events/kmem.h:97 [inline]
- kfree+0x5b2/0x630 mm/slub.c:6428
- futex_hash_free+0x65/0xb0 kernel/futex/core.c:1736
- __mmput+0x38d/0x430 kernel/fork.c:1185
- exit_mm+0x168/0x220 kernel/exit.c:581
- do_exit+0x62e/0x2320 kernel/exit.c:959
- do_group_exit+0x21b/0x2d0 kernel/exit.c:1112
- get_signal+0x1284/0x1330 kernel/signal.c:3034
- arch_do_signal_or_restart+0xbc/0x830 arch/x86/kernel/signal.c:337
- __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
- exit_to_user_mode_loop+0x86/0x480 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:325 [inline]
- do_syscall_64+0x32d/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc4bbd57817
-Code: Unable to access opcode bytes at 0x7fc4bbd577ed.
-RSP: 002b:00007ffe1f8e8350 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
-RAX: 00000000000000b0 RBX: 0000555576290500 RCX: 00007fc4bbd57817
-RDX: 00000000000000b0 RSI: 00007fc4b863ff50 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 00000000000000b0
-R13: 00005555762a51c0 R14: 00007ffe1f8e88f0 R15: 00007fc4b863ff50
- </TASK>
-
-Allocated by task 6102:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
- kasan_kmalloc include/linux/kasan.h:263 [inline]
- __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5339
- kmalloc_noprof include/linux/slab.h:962 [inline]
- kzalloc_noprof include/linux/slab.h:1204 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6271
- __do_sys_bpf kernel/bpf/syscall.c:6342 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6340 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6340
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 1100:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
- poison_slab_object mm/kasan/common.c:253 [inline]
- __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
- kasan_slab_free include/linux/kasan.h:235 [inline]
- slab_free_hook mm/slub.c:2687 [inline]
- slab_free mm/slub.c:6124 [inline]
- kfree+0x1c1/0x630 mm/slub.c:6442
- rcu_do_batch kernel/rcu/tree.c:2617 [inline]
- rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
- handle_softirqs+0x22a/0x870 kernel/softirq.c:622
- do_softirq+0x76/0xd0 kernel/softirq.c:523
- __local_bh_enable_ip+0xf8/0x130 kernel/softirq.c:450
- spin_unlock_bh include/linux/spinlock.h:395 [inline]
- batadv_iv_ogm_queue_add+0x73e/0xd30 net/batman-adv/bat_iv_ogm.c:668
- batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:841 [inline]
- batadv_iv_ogm_schedule+0x874/0xf50 net/batman-adv/bat_iv_ogm.c:873
- batadv_iv_send_outstanding_bat_ogm_packet+0x6c8/0x7e0 net/batman-adv/bat_iv_ogm.c:1709
- process_one_work kernel/workqueue.c:3275 [inline]
- process_scheduled_works+0xb02/0x1830 kernel/workqueue.c:3358
- worker_thread+0xa50/0xfc0 kernel/workqueue.c:3439
- kthread+0x388/0x470 kernel/kthread.c:467
- ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
- kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
- __call_rcu_common kernel/rcu/tree.c:3131 [inline]
- call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
- bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
- bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
- __fput+0x44f/0xa70 fs/file_table.c:469
- task_work_run+0x1d9/0x270 kernel/task_work.c:233
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
- exit_to_user_mode_loop+0xed/0x480 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:325 [inline]
- do_syscall_64+0x32d/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888053465b00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 24 bytes inside of
- freed 192-byte region [ffff888053465b00, ffff888053465bc0)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x53465
-flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000000 ffff88801a8413c0 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5436, tgid 5436 (syz-executor), ts 104947827691, free_ts 103695571452
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
- prep_new_page mm/page_alloc.c:1897 [inline]
- get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
- __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
- alloc_slab_page mm/slub.c:3255 [inline]
- allocate_slab+0x77/0x660 mm/slub.c:3444
- new_slab mm/slub.c:3502 [inline]
- refill_objects+0x331/0x3c0 mm/slub.c:7134
- refill_sheaf mm/slub.c:2804 [inline]
- __pcs_replace_empty_main+0x2b9/0x620 mm/slub.c:4578
- alloc_from_pcs mm/slub.c:4681 [inline]
- slab_alloc_node mm/slub.c:4815 [inline]
- __do_kmalloc_node mm/slub.c:5218 [inline]
- __kmalloc_node_track_caller_noprof+0x572/0x7b0 mm/slub.c:5327
- kmemdup_noprof+0x2b/0x70 mm/util.c:138
- kmemdup_noprof include/linux/fortify-string.h:763 [inline]
- neigh_parms_alloc+0x87/0x510 net/core/neighbour.c:1772
- ipv6_add_dev+0x40d/0x13a0 net/ipv6/addrconf.c:403
- addrconf_notify+0x771/0x1050 net/ipv6/addrconf.c:3655
- notifier_call_chain+0x1be/0x400 kernel/notifier.c:85
- call_netdevice_notifiers_extack net/core/dev.c:2287 [inline]
- call_netdevice_notifiers net/core/dev.c:2301 [inline]
- register_netdevice+0x173a/0x1cf0 net/core/dev.c:11451
- ip6gre_newlink_common+0x403/0x5b0 net/ipv6/ip6_gre.c:1965
- ip6gre_newlink+0x228/0x350 net/ipv6/ip6_gre.c:1998
- rtnl_newlink_create+0x329/0xb70 net/core/rtnetlink.c:3840
-page last free pid 5378 tgid 5378 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1433 [inline]
- __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
- vfree+0x25a/0x400 mm/vmalloc.c:3479
- kcov_put kernel/kcov.c:442 [inline]
- kcov_close+0x28/0x50 kernel/kcov.c:543
- __fput+0x44f/0xa70 fs/file_table.c:469
- task_work_run+0x1d9/0x270 kernel/task_work.c:233
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x69b/0x2320 kernel/exit.c:971
- do_group_exit+0x21b/0x2d0 kernel/exit.c:1112
- get_signal+0x1284/0x1330 kernel/signal.c:3034
- arch_do_signal_or_restart+0xbc/0x830 arch/x86/kernel/signal.c:337
- __exit_to_user_mode_loop kernel/entry/common.c:64 [inline]
- exit_to_user_mode_loop+0x86/0x480 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:325 [inline]
- do_syscall_64+0x32d/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff888053465a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888053465a80: 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888053465b00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff888053465b80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888053465c00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VpRs8NX3IpFJmH+q"
+Content-Disposition: inline
+In-Reply-To: <20250407180838.42877-10-andybnac@gmail.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--VpRs8NX3IpFJmH+q
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Hey,
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+On Tue, Apr 08, 2025 at 02:08:34AM +0800, Andy Chiu wrote:
+> From: Puranjay Mohan <puranjay12@gmail.com>
+>=20
+> This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V.
+> This allows each ftrace callsite to provide an ftrace_ops to the common
+> ftrace trampoline, allowing each callsite to invoke distinct tracer
+> functions without the need to fall back to list processing or to
+> allocate custom trampolines for each callsite. This significantly speeds
+> up cases where multiple distinct trace functions are used and callsites
+> are mostly traced by a single tracer.
+>=20
+> The idea and most of the implementation is taken from the ARM64's
+> implementation of the same feature. The idea is to place a pointer to
+> the ftrace_ops as a literal at a fixed offset from the function entry
+> point, which can be recovered by the common ftrace trampoline.
+>=20
+> We use -fpatchable-function-entry to reserve 8 bytes above the function
+> entry by emitting 2 4 byte or 4 2 byte  nops depending on the presence of
+> CONFIG_RISCV_ISA_C. These 8 bytes are patched at runtime with a pointer
+> to the associated ftrace_ops for that callsite. Functions are aligned to
+> 8 bytes to make sure that the accesses to this literal are atomic.
+>=20
+> This approach allows for directly invoking ftrace_ops::func even for
+> ftrace_ops which are dynamically-allocated (or part of a module),
+> without going via ftrace_ops_list_func.
+>=20
+> We've benchamrked this with the ftrace_ops sample module on Spacemit K1
+> Jupiter:
+>=20
+> Without this patch:
+>=20
+> baseline (Linux rivos 6.14.0-09584-g7d06015d936c #3 SMP Sat Mar 29
+> +-----------------------+-----------------+----------------------------+
+> |  Number of tracers    | Total time (ns) | Per-call average time      |
+> |-----------------------+-----------------+----------------------------|
+> | Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns) |
+> |----------+------------+-----------------+------------+---------------|
+> |        0 |          0 |        1357958 |          13 |             - |
+> |        0 |          1 |        1302375 |          13 |             - |
+> |        0 |          2 |        1302375 |          13 |             - |
+> |        0 |         10 |        1379084 |          13 |             - |
+> |        0 |        100 |        1302458 |          13 |             - |
+> |        0 |        200 |        1302333 |          13 |             - |
+> |----------+------------+-----------------+------------+---------------|
+> |        1 |          0 |       13677833 |         136 |           123 |
+> |        1 |          1 |       18500916 |         185 |           172 |
+> |        1 |          2 |       22856459 |         228 |           215 |
+> |        1 |         10 |       58824709 |         588 |           575 |
+> |        1 |        100 |      505141584 |        5051 |          5038 |
+> |        1 |        200 |     1580473126 |       15804 |         15791 |
+> |----------+------------+-----------------+------------+---------------|
+> |        1 |          0 |       13561000 |         135 |           122 |
+> |        2 |          0 |       19707292 |         197 |           184 |
+> |       10 |          0 |       67774750 |         677 |           664 |
+> |      100 |          0 |      714123125 |        7141 |          7128 |
+> |      200 |          0 |     1918065668 |       19180 |         19167 |
+> +----------+------------+-----------------+------------+---------------+
+>=20
+> Note: per-call overhead is estimated relative to the baseline case with
+> 0 relevant tracers and 0 irrelevant tracers.
+>=20
+> With this patch:
+>=20
+> v4-rc4 (Linux rivos 6.14.0-09598-gd75747611c93 #4 SMP Sat Mar 29
+> +-----------------------+-----------------+----------------------------+
+> |  Number of tracers    | Total time (ns) | Per-call average time      |
+> |-----------------------+-----------------+----------------------------|
+> | Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns) |
+> |----------+------------+-----------------+------------+---------------|
+> |        0 |          0 |         1459917 |         14 |             - |
+> |        0 |          1 |         1408000 |         14 |             - |
+> |        0 |          2 |         1383792 |         13 |             - |
+> |        0 |         10 |         1430709 |         14 |             - |
+> |        0 |        100 |         1383791 |         13 |             - |
+> |        0 |        200 |         1383750 |         13 |             - |
+> |----------+------------+-----------------+------------+---------------|
+> |        1 |          0 |         5238041 |         52 |            38 |
+> |        1 |          1 |         5228542 |         52 |            38 |
+> |        1 |          2 |         5325917 |         53 |            40 |
+> |        1 |         10 |         5299667 |         52 |            38 |
+> |        1 |        100 |         5245250 |         52 |            39 |
+> |        1 |        200 |         5238459 |         52 |            39 |
+> |----------+------------+-----------------+------------+---------------|
+> |        1 |          0 |         5239083 |         52 |            38 |
+> |        2 |          0 |        19449417 |        194 |           181 |
+> |       10 |          0 |        67718584 |        677 |           663 |
+> |      100 |          0 |       709840708 |       7098 |          7085 |
+> |      200 |          0 |      2203580626 |      22035 |         22022 |
+> +----------+------------+-----------------+------------+---------------+
+>=20
+> Note: per-call overhead is estimated relative to the baseline case with
+> 0 relevant tracers and 0 irrelevant tracers.
+>=20
+> As can be seen from the above:
+>=20
+>  a) Whenever there is a single relevant tracer function associated with a
+>     tracee, the overhead of invoking the tracer is constant, and does not
+>     scale with the number of tracers which are *not* associated with that
+>     tracee.
+>=20
+>  b) The overhead for a single relevant tracer has dropped to ~1/3 of the
+>     overhead prior to this series (from 122ns to 38ns). This is largely
+>     due to permitting calls to dynamically-allocated ftrace_ops without
+>     going through ftrace_ops_list_func.
+>=20
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+>=20
+> [update kconfig, asm, refactor]
+>=20
+> Signed-off-by: Andy Chiu <andybnac@gmail.com>
+> Tested-by: Bj=F6rn T=F6pel <bjorn@rivosinc.com>
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+I bisected a boot failure to this commit [c217157bcd1df ("riscv:
+Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")] yesterday, that appears
+to be affecting all LLVM versions that I currently have installed. From
+some initial testing of Kconfig options, it looks like the issue is
+CFI_CLANG related because when I disable CFI_CLANG things work once
+more. Since this option depends on !CFI_CLANG, but is def_bool y, I
+modified Kconfig to force disable it at all times and tested
+!DYNAMIC_FTRACE_WITH_CALL_OPS && !CFG_CLANG, which did boot.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+I dunno anything about what's going on in this patch, but so little in
+it relates to having DYNAMIC_FTRACE_WITH_CALL_OPS, that I was able to
+figure out that the problem is -fpatchable-function-entry=3D8,4
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+FWIW, if anyone checks out this commit directly, you'll need to
+cherry-pick commit e9d86b8e17e72 ("scripts: Do not strip .rela.dyn
+section"), as the base of the branch that c217157bcd1df is on is
+v6.15-rc3, which is in itself broken in turn by the issue fixed by
+e9d86b8e17e72. Probably not someone anyone will do, but made for an
+awful time trying to figure out what commit was at fault!
 
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+Conor.
+
+--VpRs8NX3IpFJmH+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaZmh1AAKCRB4tDGHoIJi
+0rwXAP4oeUdhTzMux7nYvcl7M5dz42Lb0tOrUvXmlraj1vYELAEA93zTofLfy9sc
+XOj0La1CaishFPd5WhF1Hy4/qnpl6wc=
+=AjmX
+-----END PGP SIGNATURE-----
+
+--VpRs8NX3IpFJmH+q--
