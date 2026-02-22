@@ -1,64 +1,64 @@
 Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6F625A2C9
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85403261B92
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750214; cv=none; b=ZBn2PfVK5a9IUjXMTF6eyeTUyn0mrQo/Z3LO9xSNORo9Le6rfO8CyA0LqBZVi4/wt/Z8zFY388jqXdhnVqj0f95MCcOBxQ3/yNSTA5SFLQfnscICZdPwb5ACUOfphj5AloqHcGlyBBm6rnjzHN9YBBGZ2G1g+QGHeWf4xrBHLgw=
+	t=1771750217; cv=none; b=hDbyRNpSXSYK7RYKdp7KSoxgL8SDxdbCSOwhp7zrgVq34fkQ8DuheoawanQoFLJs6Qnt6x94++irznsJ+T5x/UZI/S+exdjqLyFzRx0jJDygWSda7urmoEe3v5Nxm80bDtVFWaNeUm7FMwjT67ed0umGMZlS6wj5RHPk6mFV/q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750214; c=relaxed/simple;
-	bh=FN4ZcFBXmxL8uNXxIrtPiA8q89iYFsEg9AGsn3itCkk=;
+	s=arc-20240116; t=1771750217; c=relaxed/simple;
+	bh=244yDtSyFVbK83TYYa36HIEQwZx1d31NEEAoZWs7XP4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mlnWo0D33aLOAYZxt8W7B4nmJ+cQbrwQTl4nPuM3wvT6+bIOfvMz9OJ/hL41TQO1wnUKjvCS+g+3Jg2556p9ST0B94FqCqVoraxa1zcZR79YLgt1w488BSXb05t5eXPYTBPJUZSnqR7SuACNlUa7mM1xvHX+Xpi6eXzgsDRnmjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AMgGTcyf; arc=none smtp.client-ip=209.85.160.175
+	 MIME-Version; b=G0uv+QrTOSjFzWwFUh0CmC4on9SJSsyyK8zXhZl9pwFTy+5n4v67daqq3jkn5d6AGrFWZIIEwgEo7BzLDVEetmhaez/AjwUSBcg0ke/sCKFfAGSx51SoRidlF5A0X/pvZFcqu6sX1/vfpdKN/39PFD2Fkko9vX52Ys1mZh+sBeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZSsseRur; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AMgGTcyf"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506cb1b63d0so36184111cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:50:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZSsseRur"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506a1b23c05so43291461cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:50:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750211; x=1772355011; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750214; x=1772355014; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qy4WnBkIkvEh/axNS8gHjhsiSAf6nP1SGd3uu4mb5rI=;
-        b=AMgGTcyfQf9iv055uiUbmo2/DT9ZzIlRdOWsoEXzGa4+dLTnjjAPBqH+bKkLciHrPo
-         MCjf1nrpUeLkvrPoJAQeJZk4JbA5qaWd7LElyh3Hpj1+xiho2eydUOjGL26lEjb2oJ9b
-         tltNFOtLr3Z4mB8k6hJQR4Vo1KoGEqXzqFd1Di39RBotgcEjavbAemGUUeHOXMeT+S7w
-         PXAf43ug6v0b193VQTxW7RzYJxAUDIw6coy7fcC8n0Y+rdccyO+CpMA3sdCNJb1RUJPX
-         WWFwFtv8teBXDON0TOvLtVyWcsUDwcrIj83hYFlM/Eo0aDVp2Ehoc7SigIvBomwHcKTf
-         X0/w==
+        bh=HqXt+gXrz4jwbWr1GpuXze54uGQtZjiwIpwqUhqliWw=;
+        b=ZSsseRurZipjzhbnIpwLXt+nRR66anrop8z0XJHW+ZDaD/Va8PKodL5a/mYWGhnfJ0
+         0TKUBSYJCjdc8wyQiEnTzu2h6694bpTicZ8mzL1agkPMmgQAn2bdtP+gOyd6DklaHvN0
+         Y3ZWl+kmUtJcpuLpuP5iNgoAtBuRd1zXN4tdMIsLuusXHCmRcqr1vJDgNyGhffES1kyj
+         xRiyUWIak4M3jGfwu/jC0TkTkyGoP4oJOeA5m9l3Xt1ZLEo39EO8+j5hFc3RYsJkuV4Z
+         3G6w1rKwsJ5H9CtSSCkBOtHHEIBUAYYBde6lXq86/1TjLJW5lj8SHRf2H/ASgSyy+uOM
+         pr6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750211; x=1772355011;
+        d=1e100.net; s=20230601; t=1771750214; x=1772355014;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Qy4WnBkIkvEh/axNS8gHjhsiSAf6nP1SGd3uu4mb5rI=;
-        b=J0bd7iDguHU/+32DULxNz6wsUM2pH2/USpE+YgqUxqsS7uqXgZqW9nsIrcvwB+7JP2
-         osc4yrd9Pi7wz67wH6lVke4vrHAuBejsT8jT8zhIw+613VxS9a5IReUpMMyf6ZCb3Ew8
-         ktoTBVWrEt3EpZcqRwb3lwOLNyWvhFRaR5MGNhxLT66NPlimJkaknhn/u2ZfLN5TdurW
-         gSnlnD4DJX1P4gFyx6+aHas55D74Iwp3zr8GKnW2lg2J9HH9DkHUs49xfA5XMelFi5B9
-         bVVCLdn8mEBCjekbWJjZ1pYmp9udtxntnbJXRFGuZuUIeDLlKkKpMrprcOEONA8iRbpD
-         k2pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5o6ZbZqRekOd0OA2J7+wP3QC+rODmrJJAuZ8GEfy21QJicVrResMC5+sJw2qO5FKpD39fo4/vWlq5rzoeUcy+OKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGM00hU0+SvXbvBjab/U0ghx3Igi5NDx6lZa9isW53XzeDMvwg
-	XyfiH+8Vr0qGarYljm/hcfM+xbEX96hlSw3eU7qjZnN07pLJ7bm66rPyFs7DUKayf5M=
-X-Gm-Gg: AZuq6aITSI0ahw9dxp+FPIKNrYR8r6nLyoqTFu9vv0GB6K1EUvhs9e4p61ilD1VSCWo
-	5t1FIDB9ajcrgm0XRBfUsBBtFlL9vA04l8KkTa6x6xcaCkMm332RzK6IPwXMQYIg9/Mdb4YtTR9
-	CW/PPwFuMxFOjQD7XDv8HryFvIhbqR6M+3NLa2ghdEUVy4Xzc8lHKZlzV2XDlmmt3SeVsLcRV6y
-	QjN+lBnECO1t/bC3dy/OVPVjtzFTuGHgoZyU4F1eADvz0lrFdRNRfnIF8yqaWWWPfzk75m2Cvie
-	ATxNFWHgVgdnkjl9pNbLrxYkjGQmCiUy9KgPSYZQBcP404sk4pnuXbwIntFvletFeumChtg/61t
-	Oj+Pffn8Xf2DSE8xx/aGe7jX5CF1ih90dmGEq3XX9r5OE4qZFk4mmq8eZ/ztAAmj//1QOVT6GDA
-	qMh8b4S9wokliBqn4zBW2KPzuYdsvrmNLXpAujgyoAIqOBM1hsxMVuhXS57gjwvdXBvsJq8qI9S
-	RbWxgigiCFRxOeWoJtq+M69OQ==
-X-Received: by 2002:a05:622a:1789:b0:4ed:ddd9:1402 with SMTP id d75a77b69052e-5070bbddc75mr66100291cf.24.1771750210655;
-        Sun, 22 Feb 2026 00:50:10 -0800 (PST)
+        bh=HqXt+gXrz4jwbWr1GpuXze54uGQtZjiwIpwqUhqliWw=;
+        b=dmQaWEf7j5C2DdSXja0iqmuQFWpoBRnj+rfLs/uzcJIz11JuE9rD4NjnhQU0DOIGvL
+         vmrrV5vJM/pnPGLS9WZpDo8dc4AFVSdF2fw4Z4IV284qX5DwXPOf5J8eqR2KLBn06maY
+         EvjMl6cLUbTzxyofKv8ZE0JrGGUwvbeYCP/b7xq1WlOBZP5uKpXO107pF/aq1D7Mp8ZN
+         PHDkECyFyCGNYiyg39ejOvw0V+Zm4XCPKMtCEHrhM9yy0t1lkBR9Kc4ZC5oBKAL+gVXs
+         lVZUWrJ6W0QwnEKDHnVqIe24mojTf73MMtZ1EpbjTxU9SEc+moFgQtl+WmlW7splN4Ji
+         ZPVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWl2MzDpy6fJzHSQJCzvBEkRF4172JplkxMDSWmA6zu0NRpQf/LANmhTt86+TIemI225L+c8qQldg2dGRungB8dLMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLUozWx1nOeZ/bPLEYkFc0AnsOdS0f5Dt2cu/VnoGjoz5SnI3w
+	tmGigz86NTuMpTXcmZQ/ZWYAfhYKNuvSTgnFgrZr8DXT34HiegktLZ5I7Ja2fCgs60I=
+X-Gm-Gg: AZuq6aLwFoNVxzc2MGCTVOZj6r3h5xuuQmJBx8YG/oDn3x1J0yl4X4MMM3fLB9Xw3Pu
+	cvMvbELt/hOp1m97yTyaGYtpkhJh1MDbGNo+IqvXNMCoc6kuuHkgD+9k6pmP6jmIzmKLrbN1nLy
+	KUv5w8x+dKQI0FYBzJgrxfqjFPbQvfM7NsXEZvp1b0kDfcwDLgIT4sIbnKVDS64RhHmBc7LXr7F
+	3Qh/A3IG1UpRfQWhYs7984gAi/T3ZbAFTQRJpe4UvRPdk9UM9qjR1Q59B7TOlgZAMbb2nf3XSu/
+	vRgaumZ95J5luAS8ALvrecEGU96rWvc9KXWvPotJGm+n+UKOEax8nWfFTHVhPONQ2c5/tMuvhDm
+	CCZspGc4jSOXs+VNNFtwVxJgG6SOpBDt4743EAsR6dml86t52kla69ab/rGFeGoA9jVWu8liavo
+	bD3CYaaSD3jnqw6UsM0k8Tlo+hDHLUWHp3oEXsqKoA9Pi2mguQndK5qY6DXAmjsmKR44OIATohz
+	SLVhhGTrAENcJ8=
+X-Received: by 2002:ac8:58c3:0:b0:501:4b96:466d with SMTP id d75a77b69052e-5070bc97e29mr62373271cf.50.1771750214354;
+        Sun, 22 Feb 2026 00:50:14 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.50.09
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:50:10 -0800 (PST)
+        Sun, 22 Feb 2026 00:50:14 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 20/27] mm/gup: NP_OPS_LONGTERM_PIN - private node longterm pin support
-Date: Sun, 22 Feb 2026 03:48:35 -0500
-Message-ID: <20260222084842.1824063-21-gourry@gourry.net>
+Subject: [RFC PATCH v4 21/27] mm/memory-failure: add memory_failure callback to node_private_ops
+Date: Sun, 22 Feb 2026 03:48:36 -0500
+Message-ID: <20260222084842.1824063-22-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,111 +148,107 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Private node folios should not be longterm-pinnable by default.
-A pinned folio is frozen in place, no migration, compaction, or
-reclaim, so the service loses control for the duration of the pin.
+Add a void memory_failure notification callback to struct
+node_private_ops so services managing N_MEMORY_PRIVATE nodes notified
+when a page on their node experiences a hardware error.
 
-Some services may depend on hot-unplugability and must disallow
-longterm pinning.  Others (accelerators with shared CPU-device state)
-need pinning to work.
+The callback is notification only -- the kernel always proceeds with
+standard hwpoison handling for online pages.
 
-Add NP_OPS_LONGTERM_PIN flag for services to opt in with. Hook into
-folio_is_longterm_pinnable() in mm.h, which all GUP callers
-out-of-line helper, node_private_allows_longterm_pin(),  called
-only for N_MEMORY_PRIVATE nodes.
-
-Without the flag: folio_is_longterm_pinnable() returns false, migration
-fails (no __GFP_PRIVATE in GFP mask) and pin_user_pages(FOLL_LONGTERM)
-returns -ENOMEM.
-
-With the flag: pin succeeds and the folio stays on the private node.
+The notification hook fires after TestSetPageHWPoison succeeds and
+before get_hwpoison_page giving the service a chance to clean up.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/base/node.c          | 15 +++++++++++++++
- include/linux/mm.h           | 22 ++++++++++++++++++++++
- include/linux/node_private.h |  2 ++
- 3 files changed, 39 insertions(+)
+ include/linux/node_private.h |  6 ++++++
+ mm/internal.h                | 16 ++++++++++++++++
+ mm/memory-failure.c          | 15 +++++++++++++++
+ 3 files changed, 37 insertions(+)
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index da523aca18fa..5d2487fd54f4 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -866,6 +866,21 @@ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
- static DEFINE_MUTEX(node_private_lock);
- static bool node_private_initialized;
- 
-+/**
-+ * node_private_allows_longterm_pin - Check if a private node allows longterm pinning
-+ * @nid: Node identifier
-+ *
-+ * Out-of-line helper for folio_is_longterm_pinnable() since mm.h cannot
-+ * include node_private.h (circular dependency).
-+ *
-+ * Returns true if the node has NP_OPS_LONGTERM_PIN set.
-+ */
-+bool node_private_allows_longterm_pin(int nid)
-+{
-+	return node_private_has_flag(nid, NP_OPS_LONGTERM_PIN);
-+}
-+EXPORT_SYMBOL_GPL(node_private_allows_longterm_pin);
-+
- /**
-  * node_private_register - Register a private node
-  * @nid: Node identifier
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index fb1819ad42c3..9088fd08aeb9 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2192,6 +2192,13 @@ static inline bool is_zero_folio(const struct folio *folio)
- 
- /* MIGRATE_CMA and ZONE_MOVABLE do not allow pin folios */
- #ifdef CONFIG_MIGRATION
-+
-+#ifdef CONFIG_NUMA
-+bool node_private_allows_longterm_pin(int nid);
-+#else
-+static inline bool node_private_allows_longterm_pin(int nid) { return false; }
-+#endif
-+
- static inline bool folio_is_longterm_pinnable(struct folio *folio)
- {
- #ifdef CONFIG_CMA
-@@ -2215,6 +2222,21 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
- 	if (folio_is_fsdax(folio))
- 		return false;
- 
-+	/*
-+	 * Private node folios are not longterm pinnable by default.
-+	 * Services that support pinning opt in via NP_OPS_LONGTERM_PIN.
-+	 * node_private_allows_longterm_pin() is out-of-line because
-+	 * node_private.h includes mm.h (circular dependency).
-+	 *
-+	 * Guarded by CONFIG_NUMA because on !CONFIG_NUMA the single-node
-+	 * node_state() stub returns true for node 0, which would make
-+	 * all folios non-pinnable via the false-returning stub.
-+	 */
-+#ifdef CONFIG_NUMA
-+	if (node_state(folio_nid(folio), N_MEMORY_PRIVATE))
-+		return node_private_allows_longterm_pin(folio_nid(folio));
-+#endif
-+
- 	/* Otherwise, non-movable zone folios can be pinned. */
- 	return !folio_is_zone_movable(folio);
- 
 diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index fe0336773ddb..7a7438fb9eda 100644
+index 7a7438fb9eda..d2669f68ac20 100644
 --- a/include/linux/node_private.h
 +++ b/include/linux/node_private.h
-@@ -144,6 +144,8 @@ struct node_private_ops {
- #define NP_OPS_NUMA_BALANCING		BIT(5)
- /* Allow compaction to run on the node.  Service must start kcompactd. */
- #define NP_OPS_COMPACTION		BIT(6)
-+/* Allow longterm DMA pinning (RDMA, VFIO, etc.) of folios on this node */
-+#define NP_OPS_LONGTERM_PIN		BIT(7)
+@@ -113,6 +113,10 @@ struct node_reclaim_policy {
+  *   watermark_boost lifecycle (kswapd will not clear it).
+  *   If NULL, normal boost policy applies.
+  *
++ * @memory_failure: Notification of hardware error on a page on this node.
++ *   [folio-referenced callback]
++ *   Notification only, kernel always handles the failure.
++ *
+  * @flags: Operation exclusion flags (NP_OPS_* constants).
+  *
+  */
+@@ -127,6 +131,8 @@ struct node_private_ops {
+ 	vm_fault_t (*handle_fault)(struct folio *folio, struct vm_fault *vmf,
+ 				   enum pgtable_level level);
+ 	void (*reclaim_policy)(int nid, struct node_reclaim_policy *policy);
++	void (*memory_failure)(struct folio *folio, unsigned long pfn,
++			       int mf_flags);
+ 	unsigned long flags;
+ };
  
- /* Private node is OOM-eligible: reclaim can run and pages can be demoted here */
- #define NP_OPS_OOM_ELIGIBLE		(NP_OPS_RECLAIM | NP_OPS_DEMOTION)
+diff --git a/mm/internal.h b/mm/internal.h
+index db32cb2d7a29..64467ca774f1 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1608,6 +1608,22 @@ static inline void node_private_reclaim_policy(int nid,
+ }
+ #endif
+ 
++static inline void folio_managed_memory_failure(struct folio *folio,
++						unsigned long pfn,
++						int mf_flags)
++{
++	/* Zone device pages handle memory failure via dev_pagemap_ops */
++	if (folio_is_zone_device(folio))
++		return;
++	if (folio_is_private_node(folio)) {
++		const struct node_private_ops *ops =
++			folio_node_private_ops(folio);
++
++		if (ops && ops->memory_failure)
++			ops->memory_failure(folio, pfn, mf_flags);
++	}
++}
++
+ struct vm_struct *__get_vm_area_node(unsigned long size,
+ 				     unsigned long align, unsigned long shift,
+ 				     unsigned long vm_flags, unsigned long start,
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index c80c2907da33..79c91d44ec1e 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -2379,6 +2379,15 @@ int memory_failure(unsigned long pfn, int flags)
+ 		goto unlock_mutex;
+ 	}
+ 
++	/*
++	 * Notify private-node services about the hardware error so they
++	 * can update internal tracking (e.g., CXL poison lists, stop
++	 * demoting to failing DIMMs).  This is notification only -- the
++	 * kernel proceeds with standard hwpoison handling regardless.
++	 */
++	if (unlikely(page_is_private_managed(p)))
++		folio_managed_memory_failure(page_folio(p), pfn, flags);
++
+ 	/*
+ 	 * We need/can do nothing about count=0 pages.
+ 	 * 1) it's a free page, and therefore in safe hand:
+@@ -2825,6 +2834,12 @@ static int soft_offline_in_use_page(struct page *page)
+ 		return 0;
+ 	}
+ 
++	if (!folio_managed_allows_migrate(folio)) {
++		pr_info("%#lx: cannot migrate private node folio\n", pfn);
++		folio_put(folio);
++		return -EBUSY;
++	}
++
+ 	isolated = isolate_folio_to_list(folio, &pagelist);
+ 
+ 	/*
 -- 
 2.53.0
 
