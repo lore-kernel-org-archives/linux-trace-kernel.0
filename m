@@ -1,64 +1,64 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30248257851
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6F625A2C9
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750209; cv=none; b=qKF/CjDvoyz20LY3MvoH3QdOkQIqvLsYEjtdAPXOI2LJupWh5DGdV5cI4476vJjExrv76jG4/atNCXTLgbzf0mTn21YqWxROAJFD+7nsyFfo3Brj2uiXTk9g9Nz2iZ5lufc1SC92hRSLXJhH60dKQ52M/Xppy8ii3TDvSKwx3Zk=
+	t=1771750214; cv=none; b=ZBn2PfVK5a9IUjXMTF6eyeTUyn0mrQo/Z3LO9xSNORo9Le6rfO8CyA0LqBZVi4/wt/Z8zFY388jqXdhnVqj0f95MCcOBxQ3/yNSTA5SFLQfnscICZdPwb5ACUOfphj5AloqHcGlyBBm6rnjzHN9YBBGZ2G1g+QGHeWf4xrBHLgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750209; c=relaxed/simple;
-	bh=ugHHZgdJqiJXcDB88oSYbue+JadFi16VcX0GKhbfi44=;
+	s=arc-20240116; t=1771750214; c=relaxed/simple;
+	bh=FN4ZcFBXmxL8uNXxIrtPiA8q89iYFsEg9AGsn3itCkk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tj4ls3GasOmk7kKZfxQxBzPgT8Jl/K48+Ycrpo2fpMInoiuJH4jgcO7VHN0balYaNXX7DaXlkmhyZIIRmLSvMf/8npo1esXdoON0QQBsoE+yYCRVjfS0eGZ96SikHA7H2+mv1gHyRiT+znznoc72hF7Mskt2qm2NbnMSYqUPQcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=On3dGfWn; arc=none smtp.client-ip=209.85.219.42
+	 MIME-Version; b=mlnWo0D33aLOAYZxt8W7B4nmJ+cQbrwQTl4nPuM3wvT6+bIOfvMz9OJ/hL41TQO1wnUKjvCS+g+3Jg2556p9ST0B94FqCqVoraxa1zcZR79YLgt1w488BSXb05t5eXPYTBPJUZSnqR7SuACNlUa7mM1xvHX+Xpi6eXzgsDRnmjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AMgGTcyf; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="On3dGfWn"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-896fb37d1f0so61728276d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:50:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AMgGTcyf"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506cb1b63d0so36184111cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:50:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750207; x=1772355007; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750211; x=1772355011; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6FZckDxptwGx8klYMDL0XD8dz9+dfEviXYn1CKFqg9s=;
-        b=On3dGfWnTNN//RWAohKdA4pL2lZMV7MeYMGS62VGhOuMecRzlrq6gWIUBvvjT5HHaT
-         ix0alOvAxYuQ/UF+iHgKCZE1NJ79jby/hFklKqI20yPQKV0JhOMMvBMaZOx6y5VFqasu
-         PpoEFeOQ4c5xjZymZwU32/WzBKtFDimqsUNPxVd+Hzs3PhECgFQfjxBc4ZJ7nJ0j4Tav
-         GAApuP8InCI4mdI9yqeN6yb7hyMt1wufFWCiqqn5Rp/vjRlXJIeLQSU0ZCV50UEqj30o
-         H714Ynl0lEEugwsUlVjrRsqiFuJ8lgwu88JAZR6TsNox+hwHL9BvbHO6/efoXdrXQeu+
-         Huew==
+        bh=Qy4WnBkIkvEh/axNS8gHjhsiSAf6nP1SGd3uu4mb5rI=;
+        b=AMgGTcyfQf9iv055uiUbmo2/DT9ZzIlRdOWsoEXzGa4+dLTnjjAPBqH+bKkLciHrPo
+         MCjf1nrpUeLkvrPoJAQeJZk4JbA5qaWd7LElyh3Hpj1+xiho2eydUOjGL26lEjb2oJ9b
+         tltNFOtLr3Z4mB8k6hJQR4Vo1KoGEqXzqFd1Di39RBotgcEjavbAemGUUeHOXMeT+S7w
+         PXAf43ug6v0b193VQTxW7RzYJxAUDIw6coy7fcC8n0Y+rdccyO+CpMA3sdCNJb1RUJPX
+         WWFwFtv8teBXDON0TOvLtVyWcsUDwcrIj83hYFlM/Eo0aDVp2Ehoc7SigIvBomwHcKTf
+         X0/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750207; x=1772355007;
+        d=1e100.net; s=20230601; t=1771750211; x=1772355011;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6FZckDxptwGx8klYMDL0XD8dz9+dfEviXYn1CKFqg9s=;
-        b=ZosteZVcePbsHwF+FIfMg4hYugASUVCuqM1chF505dG5mTrBjaj4HOOyYl7jq24g5E
-         r2VSi0lDVLS6OVZp3SpGve+O0u9Nh8eeRSXgYqMbBxK/9MQq3dhV95SQ8FqV0oUgBaz+
-         VhGhyKDxUXQ+Z7pgRlku6euZ1y4odI0qCub1TDTBhyYDbhKNrt6yT/HelO0gqFjsezKN
-         V2mGiBxK+yrOKUvgjOBfhmfjXW4YKDXxxw2Mpk5NrHcs4NLl9mBniB/xte6lm9N/H9v2
-         JGr44/PzWOfvbfiJ+S412tcqw1VDXuIMwFiTBnLmj+WuShFCO42zDBQyBH9ijUWD52tg
-         1W2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV3FDU7J2eqebkQfAb3dDZ1PP1NjlBDEKuVFB29giv4ePYkkCIVkpWvtGaK/hlbLfWEbaHYx4xDMENYHds3t+ccTeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcjwDqNcbKS64NCZgMghJA/48WyHEGqzgu7l8q0kuMuX6dhqUJ
-	v3KS8fj0DHGr+x8mh24G7C/Q+XFpUQmx0i5Kkoq9VZwWm0TizNDxqtBmy5lQinrpdFc=
-X-Gm-Gg: AZuq6aL4jsABhaja5ZIwg4d1l84fBSAn4nWFbyv2tDpr868xOfsdjo7wNsObSY3aT/g
-	tsqL5CJhQUiUm81FDncYExSMNcZvF9l4aZrTfNMDMlPFUH4GtnFge0rTi2D2s+t9vqMOtawNifN
-	Jwc6C9M4eTh0CKRoeaVZbaxTb7RyMHR7WXii3vr1tXKpTi6zMewhPYNuapvC4gqAcczpTV2r0sY
-	uZloKKlJowWvqM5CBrsKs7jQIBqsKp8PuhMYldNkVPR1a2x/TDP1773RyazXGUcXjlo4JANCJEn
-	bGcVrzk8R3c+UKQ5lpXI7VYlqBEY3JdlUYuJWaQX14bAGNJ7NDMP/c7k2iBA7UhEVu2rwIQYjps
-	QV65immo49LIHeOA5T7RY6laPWAR8NtTy6QWP/IHkgr1+kDa8sMjLkICyeTClO1RoQjT/KMddmH
-	k7DUaBf4EmkRZNqkHdVwN9Yt0SaJlHLl1NJbHjVn56QJeLqoYHfKjS0YqtUZ+AD8kCKLBolRb1D
-	fd6j/hySmgkbDI=
-X-Received: by 2002:a05:622a:209:b0:4ff:4a7c:da11 with SMTP id d75a77b69052e-5070bba08b0mr86322821cf.11.1771750207039;
-        Sun, 22 Feb 2026 00:50:07 -0800 (PST)
+        bh=Qy4WnBkIkvEh/axNS8gHjhsiSAf6nP1SGd3uu4mb5rI=;
+        b=J0bd7iDguHU/+32DULxNz6wsUM2pH2/USpE+YgqUxqsS7uqXgZqW9nsIrcvwB+7JP2
+         osc4yrd9Pi7wz67wH6lVke4vrHAuBejsT8jT8zhIw+613VxS9a5IReUpMMyf6ZCb3Ew8
+         ktoTBVWrEt3EpZcqRwb3lwOLNyWvhFRaR5MGNhxLT66NPlimJkaknhn/u2ZfLN5TdurW
+         gSnlnD4DJX1P4gFyx6+aHas55D74Iwp3zr8GKnW2lg2J9HH9DkHUs49xfA5XMelFi5B9
+         bVVCLdn8mEBCjekbWJjZ1pYmp9udtxntnbJXRFGuZuUIeDLlKkKpMrprcOEONA8iRbpD
+         k2pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5o6ZbZqRekOd0OA2J7+wP3QC+rODmrJJAuZ8GEfy21QJicVrResMC5+sJw2qO5FKpD39fo4/vWlq5rzoeUcy+OKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGM00hU0+SvXbvBjab/U0ghx3Igi5NDx6lZa9isW53XzeDMvwg
+	XyfiH+8Vr0qGarYljm/hcfM+xbEX96hlSw3eU7qjZnN07pLJ7bm66rPyFs7DUKayf5M=
+X-Gm-Gg: AZuq6aITSI0ahw9dxp+FPIKNrYR8r6nLyoqTFu9vv0GB6K1EUvhs9e4p61ilD1VSCWo
+	5t1FIDB9ajcrgm0XRBfUsBBtFlL9vA04l8KkTa6x6xcaCkMm332RzK6IPwXMQYIg9/Mdb4YtTR9
+	CW/PPwFuMxFOjQD7XDv8HryFvIhbqR6M+3NLa2ghdEUVy4Xzc8lHKZlzV2XDlmmt3SeVsLcRV6y
+	QjN+lBnECO1t/bC3dy/OVPVjtzFTuGHgoZyU4F1eADvz0lrFdRNRfnIF8yqaWWWPfzk75m2Cvie
+	ATxNFWHgVgdnkjl9pNbLrxYkjGQmCiUy9KgPSYZQBcP404sk4pnuXbwIntFvletFeumChtg/61t
+	Oj+Pffn8Xf2DSE8xx/aGe7jX5CF1ih90dmGEq3XX9r5OE4qZFk4mmq8eZ/ztAAmj//1QOVT6GDA
+	qMh8b4S9wokliBqn4zBW2KPzuYdsvrmNLXpAujgyoAIqOBM1hsxMVuhXS57gjwvdXBvsJq8qI9S
+	RbWxgigiCFRxOeWoJtq+M69OQ==
+X-Received: by 2002:a05:622a:1789:b0:4ed:ddd9:1402 with SMTP id d75a77b69052e-5070bbddc75mr66100291cf.24.1771750210655;
+        Sun, 22 Feb 2026 00:50:10 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.50.04
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.50.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:50:06 -0800 (PST)
+        Sun, 22 Feb 2026 00:50:10 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 19/27] mm/compaction: NP_OPS_COMPACTION - private node compaction support
-Date: Sun, 22 Feb 2026 03:48:34 -0500
-Message-ID: <20260222084842.1824063-20-gourry@gourry.net>
+Subject: [RFC PATCH v4 20/27] mm/gup: NP_OPS_LONGTERM_PIN - private node longterm pin support
+Date: Sun, 22 Feb 2026 03:48:35 -0500
+Message-ID: <20260222084842.1824063-21-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,122 +148,111 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Private node zones should not be compacted unless the service explicitly
-opts in - as compaction requires migration and services may have
-PFN-based metadata that needs updating.
+Private node folios should not be longterm-pinnable by default.
+A pinned folio is frozen in place, no migration, compaction, or
+reclaim, so the service loses control for the duration of the pin.
 
-Add a folio_migrate callback which fires from migrate_folio_move() for
-each relocated folio before faults are unblocked.
+Some services may depend on hot-unplugability and must disallow
+longterm pinning.  Others (accelerators with shared CPU-device state)
+need pinning to work.
 
-Add zone_supports_compaction() which returns true for normal zones and
-checks NP_OPS_COMPACTION for N_MEMORY_PRIVATE zones.
+Add NP_OPS_LONGTERM_PIN flag for services to opt in with. Hook into
+folio_is_longterm_pinnable() in mm.h, which all GUP callers
+out-of-line helper, node_private_allows_longterm_pin(),  called
+only for N_MEMORY_PRIVATE nodes.
 
-Filter three direct compaction zone loops:
-  - compaction_zonelist_suitable() (reclaimer eligibility)
-  - try_to_compact_pages()         (direct compaction)
-  - compact_node()                 (proactive/manual compaction)
+Without the flag: folio_is_longterm_pinnable() returns false, migration
+fails (no __GFP_PRIVATE in GFP mask) and pin_user_pages(FOLL_LONGTERM)
+returns -ENOMEM.
 
-kcompactd paths are intentionally unfiltered -- the service is
-responsible for starting kcompactd on its node.
-
-NP_OPS_COMPACTION requires NP_OPS_MIGRATION.
+With the flag: pin succeeds and the folio stays on the private node.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/base/node.c          |  4 ++++
+ drivers/base/node.c          | 15 +++++++++++++++
+ include/linux/mm.h           | 22 ++++++++++++++++++++++
  include/linux/node_private.h |  2 ++
- mm/compaction.c              | 26 ++++++++++++++++++++++++++
- 3 files changed, 32 insertions(+)
+ 3 files changed, 39 insertions(+)
 
 diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 88aaac45e814..da523aca18fa 100644
+index da523aca18fa..5d2487fd54f4 100644
 --- a/drivers/base/node.c
 +++ b/drivers/base/node.c
-@@ -965,6 +965,10 @@ int node_private_set_ops(int nid, const struct node_private_ops *ops)
- 	    !(ops->flags & NP_OPS_MIGRATION))
- 		return -EINVAL;
+@@ -866,6 +866,21 @@ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
+ static DEFINE_MUTEX(node_private_lock);
+ static bool node_private_initialized;
  
-+	if ((ops->flags & NP_OPS_COMPACTION) &&
-+	    !(ops->flags & NP_OPS_MIGRATION))
-+		return -EINVAL;
++/**
++ * node_private_allows_longterm_pin - Check if a private node allows longterm pinning
++ * @nid: Node identifier
++ *
++ * Out-of-line helper for folio_is_longterm_pinnable() since mm.h cannot
++ * include node_private.h (circular dependency).
++ *
++ * Returns true if the node has NP_OPS_LONGTERM_PIN set.
++ */
++bool node_private_allows_longterm_pin(int nid)
++{
++	return node_private_has_flag(nid, NP_OPS_LONGTERM_PIN);
++}
++EXPORT_SYMBOL_GPL(node_private_allows_longterm_pin);
 +
- 	mutex_lock(&node_private_lock);
- 	np = rcu_dereference_protected(NODE_DATA(nid)->node_private,
- 				       lockdep_is_held(&node_private_lock));
+ /**
+  * node_private_register - Register a private node
+  * @nid: Node identifier
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index fb1819ad42c3..9088fd08aeb9 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2192,6 +2192,13 @@ static inline bool is_zero_folio(const struct folio *folio)
+ 
+ /* MIGRATE_CMA and ZONE_MOVABLE do not allow pin folios */
+ #ifdef CONFIG_MIGRATION
++
++#ifdef CONFIG_NUMA
++bool node_private_allows_longterm_pin(int nid);
++#else
++static inline bool node_private_allows_longterm_pin(int nid) { return false; }
++#endif
++
+ static inline bool folio_is_longterm_pinnable(struct folio *folio)
+ {
+ #ifdef CONFIG_CMA
+@@ -2215,6 +2222,21 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
+ 	if (folio_is_fsdax(folio))
+ 		return false;
+ 
++	/*
++	 * Private node folios are not longterm pinnable by default.
++	 * Services that support pinning opt in via NP_OPS_LONGTERM_PIN.
++	 * node_private_allows_longterm_pin() is out-of-line because
++	 * node_private.h includes mm.h (circular dependency).
++	 *
++	 * Guarded by CONFIG_NUMA because on !CONFIG_NUMA the single-node
++	 * node_state() stub returns true for node 0, which would make
++	 * all folios non-pinnable via the false-returning stub.
++	 */
++#ifdef CONFIG_NUMA
++	if (node_state(folio_nid(folio), N_MEMORY_PRIVATE))
++		return node_private_allows_longterm_pin(folio_nid(folio));
++#endif
++
+ 	/* Otherwise, non-movable zone folios can be pinned. */
+ 	return !folio_is_zone_movable(folio);
+ 
 diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index 5ac60db1f044..fe0336773ddb 100644
+index fe0336773ddb..7a7438fb9eda 100644
 --- a/include/linux/node_private.h
 +++ b/include/linux/node_private.h
-@@ -142,6 +142,8 @@ struct node_private_ops {
- #define NP_OPS_RECLAIM			BIT(4)
- /* Allow NUMA balancing to scan and migrate folios on this node */
+@@ -144,6 +144,8 @@ struct node_private_ops {
  #define NP_OPS_NUMA_BALANCING		BIT(5)
-+/* Allow compaction to run on the node.  Service must start kcompactd. */
-+#define NP_OPS_COMPACTION		BIT(6)
+ /* Allow compaction to run on the node.  Service must start kcompactd. */
+ #define NP_OPS_COMPACTION		BIT(6)
++/* Allow longterm DMA pinning (RDMA, VFIO, etc.) of folios on this node */
++#define NP_OPS_LONGTERM_PIN		BIT(7)
  
  /* Private node is OOM-eligible: reclaim can run and pages can be demoted here */
  #define NP_OPS_OOM_ELIGIBLE		(NP_OPS_RECLAIM | NP_OPS_DEMOTION)
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 6a65145b03d8..d8532b957ec6 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -24,9 +24,26 @@
- #include <linux/page_owner.h>
- #include <linux/psi.h>
- #include <linux/cpuset.h>
-+#include <linux/node_private.h>
- #include "internal.h"
- 
- #ifdef CONFIG_COMPACTION
-+
-+/*
-+ * Private node zones require NP_OPS_COMPACTION to opt in.  Normal zones
-+ * always support compaction.
-+ */
-+static inline bool zone_supports_compaction(struct zone *zone)
-+{
-+#ifdef CONFIG_NUMA
-+	if (!node_state(zone_to_nid(zone), N_MEMORY_PRIVATE))
-+		return true;
-+	return zone_private_flags(zone, NP_OPS_COMPACTION);
-+#else
-+	return true;
-+#endif
-+}
-+
- /*
-  * Fragmentation score check interval for proactive compaction purposes.
-  */
-@@ -2443,6 +2460,9 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
- 				ac->highest_zoneidx, ac->nodemask) {
- 		unsigned long available;
- 
-+		if (!zone_supports_compaction(zone))
-+			continue;
-+
- 		/*
- 		 * Do not consider all the reclaimable memory because we do not
- 		 * want to trash just for a single high order allocation which
-@@ -2832,6 +2852,9 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
- 		if (!numa_zone_alloc_allowed(alloc_flags, zone, gfp_mask))
- 			continue;
- 
-+		if (!zone_supports_compaction(zone))
-+			continue;
-+
- 		if (prio > MIN_COMPACT_PRIORITY
- 					&& compaction_deferred(zone, order)) {
- 			rc = max_t(enum compact_result, COMPACT_DEFERRED, rc);
-@@ -2906,6 +2929,9 @@ static int compact_node(pg_data_t *pgdat, bool proactive)
- 		if (!populated_zone(zone))
- 			continue;
- 
-+		if (!zone_supports_compaction(zone))
-+			continue;
-+
- 		if (fatal_signal_pending(current))
- 			return -EINTR;
- 
 -- 
 2.53.0
 
