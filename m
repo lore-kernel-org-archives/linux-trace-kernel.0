@@ -1,75 +1,75 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2853E192D97
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 14:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22F7192D97
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 14:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771770931; cv=none; b=FqZZTzaQ4JrCNj+T0kE8n80oYKmqJMRX3tnQ6gUYvWRMYsKBb2tvNyg7oGJHd2NYtWZLcZLBOsOW/L2lc24QOVfZfDcssQOcDH4mnjo0KnSzhqvbb6AH0r4R78vYyQKBdYUZCqJ6lHDIDyFa+QxlLZX46Y/AAjEkMZSwx/+S3/o=
+	t=1771770968; cv=none; b=XkeVF4ABkTj25/tfIm5CghtPAS/pk+Tv4MvXkmkNqdlHowxd2kBs1wqXW4j5gqpdGEKQ8pg48oC3kQmhi7ycfsThsAH7ei2ze1AIQwNp5iz3Po/s0Y/NaAbB7LQkQ6AJ0NulVSTrWmsQmmAzXCoi9X44seirgm4pMKgIUi1sEkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771770931; c=relaxed/simple;
-	bh=7cdWsvVouZdci2tuBuZCRf9vT20zQ4iz3OMRvwePt+Y=;
+	s=arc-20240116; t=1771770968; c=relaxed/simple;
+	bh=Lh7zHtti+UFwjZSPSdzF1eFbtEdNKhAcoT8uv6ypMQ8=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F8YWl9WUdraMjJh4wMsz5gJns/oSVL7VP5Qo95AloXWxYbuCuaOUUHKnYglM4RCAvX08E66eZx7/tWpPcQMf62/iUB/ltxiH1TP6KBM4Ww87SdQ+l6pwQOJBBv4qAijH84ho0d3PqKYCBRUZ1B9Md0w5RM7lkgAjs63sa3awrWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WA8PhoiT; arc=none smtp.client-ip=209.85.128.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=ElNKERjqkf+mozXc9dGn76GNhjMsPM4XYwlpFozngxLW0F99gSlB008YZwgnuS0KEMHMMevKmS67rOwxGNUN0sm5i4dgnW2I574HOUVMd/NKCIsub60erjZzy0gAlePN3yn3jzlLlzBg8M2hJKSexAh8F/yzWC+nD3cVuojYji4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa8GutYr; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WA8PhoiT"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso25882565e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 06:35:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa8GutYr"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4806cc07ce7so31856615e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 06:36:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771770928; x=1772375728; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1771770965; x=1772375765; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mKOt9R7P3WfV391G39qPHz/kg+9iqxJyHBFj36QYW+c=;
-        b=WA8PhoiT596c5BWEuvo9ReTJWfi7t6MEKxx3zZEtjBskc0ckgqOdx7umGf1EZRUROW
-         /EeoUqejihr2vTM0iud2uWFpkqKEMzKjijJgaVb+j0kyk8DHD+SEe64B5f5lYq893qeV
-         pPyBckAeTl0yzLaCMcfDeR9gqCSPUQwyxCt4PsedoPJYMk8eGKDpPR8cWkS+h1QuQLMb
-         QkuhKVXM2p6drNootLWo8iA06BKDDBS2vNgcEm4eaaBpvLLYQRYgfGETGXu4mCoqywQS
-         u5FCstORS6zEqYE48m2qVCusUFP5HKh/9P28gwKX2HqONrUMmNpqYAMUfhaI29/cUH/5
-         /PWg==
+        bh=2HZ6whw5IMPhwktEDQwrczvE7RIG7O7dxlSCf6ECZ8U=;
+        b=Sa8GutYrmDchdFKB+OZBz0E1rwNNApqAk4PqTQfNZildGsATPY72fbILOWAA2bYqNC
+         hJFIYFIlvwCgIDf7tM8ekOp9t3tZWviXhS1kB3Kys/T6jZk0jbxHBjOXm4R+0ukqo9KA
+         wEXqw9MzSHsVvIuXINekHMDF/zPHAeK0R3dJ3BrOzUCm2yRe8FMcyFPgWa1DZU5RHDpw
+         QzlvS1RPqw8DyrDRFmLvJ7JhP83xYAefawhkNjjfEJiqmGCa1UkUV4/B7hYu8+AV/qT9
+         p9U36456mMRGtKXvDfBjVx0Hfce82mkJGtqxz+vMnJgyQ28yPgA6ahm9Sdq6vDeE50B7
+         J6eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771770928; x=1772375728;
+        d=1e100.net; s=20230601; t=1771770965; x=1772375765;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mKOt9R7P3WfV391G39qPHz/kg+9iqxJyHBFj36QYW+c=;
-        b=gCI4n5YNXK+vdvNfAQjWpfhK6nReKR8v3fqdEvxbtzdcdyJLjNtaazeTPf+p3bG2ch
-         txILAelnoX+oEvY0whueltXnLGvMSoPcGRLXFS/fHste/Z2ZzR0GkrWrMemVDPwZE5iB
-         9NrhgZFOXht/pEVyFPIetTqv7XJ07pHTSr0XnQGFBMmFo8cR/NknnVONSKVX4Ex/dvYA
-         sVYPPORogf6jtcVGUox1WN3zdKX4DZcM5GsCFLmldBeR50v4BqoPbIQnbSCKNVv57M5U
-         CZ0F+xKI6H8JOrY0/QRKhZaLpL4uC5guv5N2r3YVRkXA/oHvaTT+2Fss/plfO+UeTJIY
-         G15g==
-X-Forwarded-Encrypted: i=1; AJvYcCXw9nIozuz01I17y7k836BtiUTMtQzSZDN5mB4MQzKMSiC5xF1wSbdYUJkhOP5WP5R4cKLS+75Ni8QXK0vcb855qyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQUUD+RjaZt27pLanT46o5HLh3Yiq6YvdYQL2mWqSpBPGDd4Bc
-	EpdUgX1daXvT3A8YxXmlnZYL/1xGcz2hylipr6h+BVZ97k2J3u5OzFe5
-X-Gm-Gg: AZuq6aLAZjAbRL3iBZyIoC+n0tBowVQehZb761iDLrBdPuObNiah8rkU+vgQUiYHx0V
-	rf4kVvH6vdMny37NxvVkgOL9TkDQEubWqnvN/jrrd7N4uZStgZ2zrT0s9Umoj7dGGjNWflrEQxH
-	EZYZxFo8YH4rC0pDGkrk6ie4ah4OOoIi4AknCQOY9yYfxX1v5w54Uz0wpB+qO4UgUplCudNHPyV
-	C9aUyyvyeujWFIb5yqeJlh/Sy8UFjIxQynH0coJv80vIQuS0EUGh15kZcEzmHYhP2139/aVxLgw
-	dwtjkCSK0Cq4dW4bW5b2+S/F5hQhhe3NsxKfpP6bVDc2jJYjTObJEAMqW5YwCZXlqufe3wYELP6
-	b1NTD+DsGUw8SRSl2HlynF2VYpEQCli6fEMimgJduQipm1iP0x0QIrM+FqUZvOusWXhobJ8KT
-X-Received: by 2002:a05:600c:8b02:b0:477:7ab8:aba with SMTP id 5b1f17b1804b1-483a95aa31dmr91911095e9.1.1771770928501;
-        Sun, 22 Feb 2026 06:35:28 -0800 (PST)
+        bh=2HZ6whw5IMPhwktEDQwrczvE7RIG7O7dxlSCf6ECZ8U=;
+        b=f0Wr8V3znVggkZX74GxcNfAWLJc1T0BJtpYxMgs6OAiTxf3RuyJg1bCCY7WEVcHGLL
+         aiQ2pigjyWybgeCfSv7t+Qiy2DiKnJ81XiTNuCX376buSW1KY4Iepmo+sFCuJX9/n2tg
+         u1BT4tzKwJJaz04aM+TdHDBlqlpww0GnTZ7/P8xUXC+1eKvl3GItYe4HQ+JYmYMboT00
+         Aq7Qq+2DD1B6qdk2XX4Cu8e21owcfuXT32xm5tBbseA9L/Pg8mz6dOmEDWqNqzFh/wHj
+         0UUYxSYE6qv+SVws5mldqMaOUuIQgsbv58+cDAoeLaks7FNXQ4JD2NvMNeih3P22i4/L
+         KcmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1nO9HVTsLhc6Iix3u7DYlV1Q4/K5V5me7apUEB6j6by5pEGfexv+FR8DpMef1SUSG5CYVO4tQR+4vJ3kCSMUoEUE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmI6dfw+3MgV4uSgLgltf6MUPlWNqNTukWJPrhq0dtuVJXDUCe
+	N+HL9Y5YM8PrMG3fcp6IPXuXcvna1iN16s4hLa3Q5Sg2+Jg6uqLvnV+H
+X-Gm-Gg: AZuq6aJE+BAshcsyMaPj236EJ7OI1F2cduImUwn6U+ouq2/gbpAHJepLF0gobm8DJOp
+	0024kB5iIP1vN9lECCnOsyVa/+r4RJzzqm8xLTWgQu1VM1ll/F3E+vSlvd1Xrmh+4WnKdLptK8I
+	q3NVL/2LXdgfgAs03CPB49R9IrLkKQn8GP5HTltwqTSNom+4tXqp3awNt170ywDwSlp3el1yXnz
+	5ekNSJt7iNUL4iqN4MIlODDzHC04QFSjmgNuHI8D5g5oiPAlErfpy3z2EFocJ0zTgJjNi0lCuoN
+	FHqguaqMdwPzIpUnc6eAc8LjB07H+jhye46uYZt7ae4vzbkv5QtMJden/B/obVxEdTVkdXoXdhv
+	/41btgxmxwMkL89I9/tS+1WWlXzVLITkY3Rww5ZLRK7d4ThU7QN2QTlyzokaENPQgFEpK2mZG
+X-Received: by 2002:a05:600c:8b0a:b0:483:7f27:cdc5 with SMTP id 5b1f17b1804b1-483a9603c12mr95344775e9.31.1771770964732;
+        Sun, 22 Feb 2026 06:36:04 -0800 (PST)
 Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d3ff1csm11408066f8f.20.2026.02.22.06.35.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a9cb3de5sm133442465e9.12.2026.02.22.06.36.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 06:35:28 -0800 (PST)
+        Sun, 22 Feb 2026 06:36:04 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 22 Feb 2026 15:35:26 +0100
+Date: Sun, 22 Feb 2026 15:36:02 +0100
 To: bot+bpf-ci@kernel.org
 Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
 	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
 	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
 	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH bpf-next 10/17] bpf: Add support for tracing_multi link
- session
-Message-ID: <aZsULjQcIO-PModZ@krava>
-References: <20260220100649.628307-11-jolsa@kernel.org>
- <0520af2c467a82b82aa3014b7e721f95bfde9e91324bb2e183b099e5a37bbc3e@mail.kernel.org>
+Subject: Re: [PATCH bpf-next 11/17] libbpf: Add support to create tracing
+ multi link
+Message-ID: <aZsUUq3spbAY4RWn@krava>
+References: <20260220100649.628307-12-jolsa@kernel.org>
+ <56ab264977d669e52dc1cbb2fa6224443cae58e723b4757ea59d21fd160f1b9f@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -78,79 +78,136 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0520af2c467a82b82aa3014b7e721f95bfde9e91324bb2e183b099e5a37bbc3e@mail.kernel.org>
+In-Reply-To: <56ab264977d669e52dc1cbb2fa6224443cae58e723b4757ea59d21fd160f1b9f@mail.kernel.org>
 
-On Fri, Feb 20, 2026 at 10:57:56AM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index 5892dca20b7e..1cd6c1457bd3 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -3611,6 +3611,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
-> >  		if (prog->expected_attach_type != BPF_TRACE_FENTRY &&
-> >  		    prog->expected_attach_type != BPF_TRACE_FEXIT &&
-> >  		    prog->expected_attach_type != BPF_TRACE_FSESSION &&
-> > +		    prog->expected_attach_type != BPF_TRACE_FSESSION_MULTI &&
-> >  		    prog->expected_attach_type != BPF_TRACE_FENTRY_MULTI &&
-> >  		    prog->expected_attach_type != BPF_TRACE_FEXIT_MULTI &&
-> >  		    prog->expected_attach_type != BPF_MODIFY_RETURN) {
+On Fri, Feb 20, 2026 at 10:57:53AM +0000, bot+bpf-ci@kernel.org wrote:
+> > The provided <pattern> is used as 'pattern' argument in
+> > bpf_program__attach_kprobe_multi_opts function.
 > 
-> BPF_TRACE_FSESSION_MULTI is now accepted here, which means
-> a program with this type can enter bpf_tracing_prog_attach()
-> via BPF_RAW_TRACEPOINT_OPEN:
-> 
-> bpf_raw_tracepoint_open()
->   bpf_raw_tp_link_attach()       /* name == NULL */
->     bpf_tracing_prog_attach()    /* BPF_TRACE_FSESSION_MULTI */
-> 
-> Further down in bpf_tracing_prog_attach(), the fexit node
-> initialization only checks for BPF_TRACE_FSESSION:
-> 
-> kernel/bpf/syscall.c:bpf_tracing_prog_attach() {
->     ...
->     if (prog->expected_attach_type == BPF_TRACE_FSESSION) {
->         link->fexit.link = &link->link.link;
->         link->fexit.cookie = bpf_cookie;
->     }
->     ...
-> }
-> 
-> So for BPF_TRACE_FSESSION_MULTI, link->fexit.link stays NULL
-> (from kzalloc). When __bpf_trampoline_link_prog() later calls
-> fsession_exit(), it returns &link->fexit with a NULL link
-> field. This node gets added to the trampoline FEXIT list, and
-> bpf_trampoline_get_progs() then dereferences it:
-> 
-> kernel/bpf/trampoline.c:bpf_trampoline_get_progs() {
->     ...
->     hlist_for_each_entry(node, &tr->progs_hlist[kind], tramp_hlist) {
->         *ip_arg |= node->link->prog->call_get_func_ip;
->                    ^^^^^^^^^^
->     ...
-> }
-> 
-> Would it make sense to either add BPF_TRACE_FSESSION_MULTI to
-> the fexit initialization, or reject this type in
-> bpf_tracing_prog_attach() since it should only be used through
-> bpf_tracing_multi_attach()?
+> This isn't a bug, but the commit message references
+> bpf_program__attach_kprobe_multi_opts when the code actually calls
+> bpf_program__attach_tracing_multi. Looks like a leftover from
+> the kprobe_multi code this was modeled after.
 
-yes, I think we need to reject or MULTI types in bpf_raw_tracepoint_open,
-it's allowed to attach only through new multi_link attach api,
+copy&paste error :-\ thnx
 
-good catch, thnx
+> 
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> 
+> [ ... ]
+> 
+> > +struct bpf_link *
+> > +bpf_program__attach_tracing_multi(const struct bpf_program *prog, const char *pattern,
+> > +				  const struct bpf_tracing_multi_opts *opts)
+> > +{
+> > +	LIBBPF_OPTS(bpf_link_create_opts, lopts);
+> > +	__u32 *ids, cnt, *free_ids = NULL;
+> 
+> cnt is declared as __u32 here, but collect_btf_func_ids_by_glob()
+> returns int. When that function returns a negative error such as
+> -ENOMEM, the value wraps to a large unsigned number.
 
+yes, will fix
+
+> 
+> > +	__u64 *cookies;
+> > +	int prog_fd, link_fd, err;
+> > +	struct bpf_link *link;
+> 
+> [ ... ]
+> 
+> > +	if (pattern) {
+> > +		err = bpf_object__load_vmlinux_btf(prog->obj, true);
+> > +		if (err)
+> > +			return libbpf_err_ptr(err);
+> > +
+> > +		cnt = collect_btf_func_ids_by_glob(prog->obj->btf_vmlinux, pattern, &ids);
+> > +		if (cnt < 0)
+> > +			return libbpf_err_ptr(cnt);
+> 
+> Since cnt is __u32, this comparison is always false. On an allocation
+> failure inside collect_btf_func_ids_by_glob(), the error is silently
+> ignored. That function also does free(*ids) before returning -ENOMEM,
+> so ids becomes a dangling pointer. The code then continues with a
+> freed ids pointer and a garbage cnt, and eventually double-frees ids
+> through the error label via free_ids.
+> 
+> Should cnt be declared as int instead of __u32?
+
+it should, will fix
+
+> 
+> > +		if (cnt == 0)
+> > +			return libbpf_err_ptr(-EINVAL);
+> > +		free_ids = ids;
+> > +	}
+> 
+> [ ... ]
+> 
+> > +error:
+> > +	free(link);
+> > +	free(free_ids);
+> > +	return libbpf_err_ptr(err);
+> > +}
+> > +
+> > +static int attach_tracing_multi(const struct bpf_program *prog, long cookie, struct bpf_link **link)
+> > +{
+> > +	bool is_fexit, is_fsession;
+> > +	const char *spec;
+> > +	char *pattern;
+> > +	int n;
+> > +
+> > +	/* Do not allow auto attach if there's no function pattern. */
+> > +	if (strcmp(prog->sec_name, "fentry.multi") == 0 ||
+> > +	    strcmp(prog->sec_name, "fexit.multi") == 0 ||
+> > +	    strcmp(prog->sec_name, "fsession.multi") == 0 ||
+> > +	    strcmp(prog->sec_name, "fentry.multi.s") == 0 ||
+> > +	    strcmp(prog->sec_name, "fexit.multi.s") == 0 ||
+> > +	    strcmp(prog->sec_name, "fsession.multi.s") == 0)
+> > +		return 0;
+> > +
+> > +	is_fexit = str_has_pfx(prog->sec_name, "fexit.multi/");
+> > +	is_fsession = str_has_pfx(prog->sec_name, "fsession.multi/");
+> > +
+> > +	if (is_fsession)
+> > +		spec = prog->sec_name + sizeof("fsession.multi/") - 1;
+> > +	else if (is_fexit)
+> > +		spec = prog->sec_name + sizeof("fexit.multi/") - 1;
+> > +	else
+> > +		spec = prog->sec_name + sizeof("fentry.multi/") - 1;
+> 
+> The sleepable variants with patterns don't seem to be handled here.
+> For a section name like "fentry.multi.s/my_func", none of the
+> str_has_pfx checks match because "fexit.multi/" and "fsession.multi/"
+> are not prefixes of "fentry.multi.s/..." (the character at position
+> 11 or 14 is '.' not '/').
+> 
+> The else branch then computes spec using sizeof("fentry.multi/") - 1
+> which gives an offset of 13, pointing into "s/my_func" instead of
+> "my_func". The sscanf then extracts "s" as the pattern, and the
+> program attaches to any function matching the glob "s" rather than
+> "my_func".
+> 
+> Similarly for "fexit.multi.s/X" and "fsession.multi.s/X", the
+> offsets are wrong and produce either error returns or incorrect
+> patterns.
+> 
+> The SEC_DEF entries register all six sleepable variants, and
+> sec_def_matches() correctly distinguishes "fentry.multi.s+" from
+> "fentry.multi+" using the '/' separator check, so the matching
+> works but the pattern extraction here does not.
+> 
+> Would it work to also check for the ".s/" variants, for example:
+> 
+>     is_fexit = str_has_pfx(prog->sec_name, "fexit.multi/") ||
+>                str_has_pfx(prog->sec_name, "fexit.multi.s/");
+> 
+> with the corresponding sizeof adjustments for the spec offset?
+
+yes, I mentioned in the cover letter that I did not add tests for
+sleepable functions attachments.. I should have ;-) will fix
+
+thanks,
 jirka
-
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22220470181
-> 
-> AI-authorship-score: low
-> AI-authorship-explanation: Code follows established kernel BPF patterns for adding new attach types, written by a well-known BPF maintainer with terse, practical commit message style.
-> issues-found: 1
-> issue-severity-score: high
-> issue-severity-explanation: NULL pointer dereference reachable from BPF_RAW_TRACEPOINT_OPEN syscall when BPF_TRACE_FSESSION_MULTI enters bpf_tracing_prog_attach without fexit initialization, leading to kernel crash.
-
