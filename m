@@ -1,213 +1,180 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22F7192D97
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 14:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7FE19C542;
+	Sun, 22 Feb 2026 15:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771770968; cv=none; b=XkeVF4ABkTj25/tfIm5CghtPAS/pk+Tv4MvXkmkNqdlHowxd2kBs1wqXW4j5gqpdGEKQ8pg48oC3kQmhi7ycfsThsAH7ei2ze1AIQwNp5iz3Po/s0Y/NaAbB7LQkQ6AJ0NulVSTrWmsQmmAzXCoi9X44seirgm4pMKgIUi1sEkU=
+	t=1771774001; cv=none; b=CHNcNOt5ITJDdT+QJCx8iVLYtOL47NM/9lMAVvENwYgBT/dB1vvXiDDXWQtppibxD5FADM2lZ2Z9MCQO2S8PeSL+EQT43SaB5qzkXXRnkReTrRlr3ijVzoV0FAa9fZahFxo1TuEcyF7iIUJBKQGdVXuqkqX9jqJnGlXwN/6VqJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771770968; c=relaxed/simple;
-	bh=Lh7zHtti+UFwjZSPSdzF1eFbtEdNKhAcoT8uv6ypMQ8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElNKERjqkf+mozXc9dGn76GNhjMsPM4XYwlpFozngxLW0F99gSlB008YZwgnuS0KEMHMMevKmS67rOwxGNUN0sm5i4dgnW2I574HOUVMd/NKCIsub60erjZzy0gAlePN3yn3jzlLlzBg8M2hJKSexAh8F/yzWC+nD3cVuojYji4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sa8GutYr; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771774001; c=relaxed/simple;
+	bh=WZHqKZ7RHO9FGDtLNE9eTusosEENC9JH1jqIRs2bwUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LONvvea4HNGSS+31lPmT6rxMfNFKIuYAGgxogcLnuRzHiGLyOceYJ0+ukL2P5fti7KqyvmKucICGuyUnCwodxuIONCp4cYGpDJiOGFMn4F05w0VXrNSfg9+jVkOKetIys9INJwPbNsDkGtiRAITfXllyvCZDyU0E32SDgJj/2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOAVHYQH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa8GutYr"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4806cc07ce7so31856615e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 06:36:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771770965; x=1772375765; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2HZ6whw5IMPhwktEDQwrczvE7RIG7O7dxlSCf6ECZ8U=;
-        b=Sa8GutYrmDchdFKB+OZBz0E1rwNNApqAk4PqTQfNZildGsATPY72fbILOWAA2bYqNC
-         hJFIYFIlvwCgIDf7tM8ekOp9t3tZWviXhS1kB3Kys/T6jZk0jbxHBjOXm4R+0ukqo9KA
-         wEXqw9MzSHsVvIuXINekHMDF/zPHAeK0R3dJ3BrOzUCm2yRe8FMcyFPgWa1DZU5RHDpw
-         QzlvS1RPqw8DyrDRFmLvJ7JhP83xYAefawhkNjjfEJiqmGCa1UkUV4/B7hYu8+AV/qT9
-         p9U36456mMRGtKXvDfBjVx0Hfce82mkJGtqxz+vMnJgyQ28yPgA6ahm9Sdq6vDeE50B7
-         J6eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771770965; x=1772375765;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2HZ6whw5IMPhwktEDQwrczvE7RIG7O7dxlSCf6ECZ8U=;
-        b=f0Wr8V3znVggkZX74GxcNfAWLJc1T0BJtpYxMgs6OAiTxf3RuyJg1bCCY7WEVcHGLL
-         aiQ2pigjyWybgeCfSv7t+Qiy2DiKnJ81XiTNuCX376buSW1KY4Iepmo+sFCuJX9/n2tg
-         u1BT4tzKwJJaz04aM+TdHDBlqlpww0GnTZ7/P8xUXC+1eKvl3GItYe4HQ+JYmYMboT00
-         Aq7Qq+2DD1B6qdk2XX4Cu8e21owcfuXT32xm5tBbseA9L/Pg8mz6dOmEDWqNqzFh/wHj
-         0UUYxSYE6qv+SVws5mldqMaOUuIQgsbv58+cDAoeLaks7FNXQ4JD2NvMNeih3P22i4/L
-         KcmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1nO9HVTsLhc6Iix3u7DYlV1Q4/K5V5me7apUEB6j6by5pEGfexv+FR8DpMef1SUSG5CYVO4tQR+4vJ3kCSMUoEUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmI6dfw+3MgV4uSgLgltf6MUPlWNqNTukWJPrhq0dtuVJXDUCe
-	N+HL9Y5YM8PrMG3fcp6IPXuXcvna1iN16s4hLa3Q5Sg2+Jg6uqLvnV+H
-X-Gm-Gg: AZuq6aJE+BAshcsyMaPj236EJ7OI1F2cduImUwn6U+ouq2/gbpAHJepLF0gobm8DJOp
-	0024kB5iIP1vN9lECCnOsyVa/+r4RJzzqm8xLTWgQu1VM1ll/F3E+vSlvd1Xrmh+4WnKdLptK8I
-	q3NVL/2LXdgfgAs03CPB49R9IrLkKQn8GP5HTltwqTSNom+4tXqp3awNt170ywDwSlp3el1yXnz
-	5ekNSJt7iNUL4iqN4MIlODDzHC04QFSjmgNuHI8D5g5oiPAlErfpy3z2EFocJ0zTgJjNi0lCuoN
-	FHqguaqMdwPzIpUnc6eAc8LjB07H+jhye46uYZt7ae4vzbkv5QtMJden/B/obVxEdTVkdXoXdhv
-	/41btgxmxwMkL89I9/tS+1WWlXzVLITkY3Rww5ZLRK7d4ThU7QN2QTlyzokaENPQgFEpK2mZG
-X-Received: by 2002:a05:600c:8b0a:b0:483:7f27:cdc5 with SMTP id 5b1f17b1804b1-483a9603c12mr95344775e9.31.1771770964732;
-        Sun, 22 Feb 2026 06:36:04 -0800 (PST)
-Received: from krava ([2a02:8308:a00c:e200::b44f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a9cb3de5sm133442465e9.12.2026.02.22.06.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 06:36:04 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 22 Feb 2026 15:36:02 +0100
-To: bot+bpf-ci@kernel.org
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
-	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
-	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCH bpf-next 11/17] libbpf: Add support to create tracing
- multi link
-Message-ID: <aZsUUq3spbAY4RWn@krava>
-References: <20260220100649.628307-12-jolsa@kernel.org>
- <56ab264977d669e52dc1cbb2fa6224443cae58e723b4757ea59d21fd160f1b9f@mail.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOAVHYQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E07C116D0;
+	Sun, 22 Feb 2026 15:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771774000;
+	bh=WZHqKZ7RHO9FGDtLNE9eTusosEENC9JH1jqIRs2bwUo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FOAVHYQHYYkTdHL6rTzMh7gNolEM4asR6tPB1+GPgpGwXgq3xV8ygqv84cFa9H2Yi
+	 llwMs4XNGXby/j8qZdyBJXgfAs6V2139MYveFNo/KdE+YONLnR3+yLb4mtQJpHVJjN
+	 dWJmUKmwByXXRhcnz777ukC2X2dD49KG+nU8wRsYz1isW2/6gFsPRw8odcEkt1UfFU
+	 2wEhTDUndD39ATIw+z94ggpyebC/eTX/4sBZEKCr436JMLPYUCmKzVh8zvOTZiynSV
+	 uGiKoZ36vFrty35QIh9/lno18wxd9ksvRUaV2AHEF/r0iPwLMG3jru+K+Gex7Gz2kx
+	 OGCQ1NLj2cmag==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: stable@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 6.12.y] tracing: Fix to clear fprobe after unregister_fprobe() when module unloading
+Date: Mon, 23 Feb 2026 00:26:36 +0900
+Message-ID: <177177399650.99709.12415733322341955461.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56ab264977d669e52dc1cbb2fa6224443cae58e723b4757ea59d21fd160f1b9f@mail.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 20, 2026 at 10:57:53AM +0000, bot+bpf-ci@kernel.org wrote:
-> > The provided <pattern> is used as 'pattern' argument in
-> > bpf_program__attach_kprobe_multi_opts function.
-> 
-> This isn't a bug, but the commit message references
-> bpf_program__attach_kprobe_multi_opts when the code actually calls
-> bpf_program__attach_tracing_multi. Looks like a leftover from
-> the kprobe_multi code this was modeled after.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-copy&paste error :-\ thnx
+Clear fprobe after unregister_fprobe() for preventing double
+unregistering fprobe.
 
-> 
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> 
-> [ ... ]
-> 
-> > +struct bpf_link *
-> > +bpf_program__attach_tracing_multi(const struct bpf_program *prog, const char *pattern,
-> > +				  const struct bpf_tracing_multi_opts *opts)
-> > +{
-> > +	LIBBPF_OPTS(bpf_link_create_opts, lopts);
-> > +	__u32 *ids, cnt, *free_ids = NULL;
-> 
-> cnt is declared as __u32 here, but collect_btf_func_ids_by_glob()
-> returns int. When that function returns a negative error such as
-> -ENOMEM, the value wraps to a large unsigned number.
+Without this fix, test.d/dynevent/add_remove_tprobe_module.tc test
+case of ftracetest caused a kernel panic as below on 6.12.y.
 
-yes, will fix
+This is only happens on 6.12.y because this bug was introduced by
+commit 5ba4f58ec2de ("tracing: tprobe-events: Fix to clean up tprobe
+correctly when module unload"). This fix expects that the new fprobe
+implementation based on fgraph, but on 6.12.y, fprobe is still using
+ftrace.
 
-> 
-> > +	__u64 *cookies;
-> > +	int prog_fd, link_fd, err;
-> > +	struct bpf_link *link;
-> 
-> [ ... ]
-> 
-> > +	if (pattern) {
-> > +		err = bpf_object__load_vmlinux_btf(prog->obj, true);
-> > +		if (err)
-> > +			return libbpf_err_ptr(err);
-> > +
-> > +		cnt = collect_btf_func_ids_by_glob(prog->obj->btf_vmlinux, pattern, &ids);
-> > +		if (cnt < 0)
-> > +			return libbpf_err_ptr(cnt);
-> 
-> Since cnt is __u32, this comparison is always false. On an allocation
-> failure inside collect_btf_func_ids_by_glob(), the error is silently
-> ignored. That function also does free(*ids) before returning -ENOMEM,
-> so ids becomes a dangling pointer. The code then continues with a
-> freed ids pointer and a garbage cnt, and eventually double-frees ids
-> through the error label via free_ids.
-> 
-> Should cnt be declared as int instead of __u32?
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 156 at kernel/trace/ftrace.c:378 __unregister_ftrace_function+0x154/0x170
+ Modules linked in: [last unloaded: trace_events_sample]
+ CPU: 0 UID: 0 PID: 156 Comm: ftracetest Not tainted 6.12.74 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ RIP: 0010:__unregister_ftrace_function+0x154/0x170
+ Code: 85 30 ff ff ff c6 05 fd d5 85 01 01 48 c7 c7 eb 8e 14 82 be 39 01 00 00 48 c7 c2 dd bd 1c 82 e8 52 12 93 00 e9 0c ff ff ff 90 <0f> 0b 90 b8 f0 ff ff ff 5b e9 be 8b 95 00 cc 66 66 66 66 2e 0f 1f
+ RSP: 0018:ffffc900005c3b48 EFLAGS: 00010246
+ RAX: 0000000000000000 RBX: ffff8880054ba818 RCX: 7a7d3ccd1e752c00
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff8880054ba818
+ RBP: 0000000000000000 R08: 000000000000017b R09: 0000000000000000
+ R10: 0000000000000002 R11: 0000000000000000 R12: ffff8880048216d0
+ R13: ffff8880052f7850 R14: ffff8880054ba818 R15: ffffffff8124e160
+ FS:  000000002de743c0(0000) GS:ffff88807d800000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000000002de8b898 CR3: 0000000005b3a000 CR4: 00000000000006b0
+ Call Trace:
+  <TASK>
+  ftrace_shutdown+0x25/0x260
+  ? __pfx_dyn_event_open+0x10/0x10
+  unregister_ftrace_function+0x2a/0x140
+  ? __pfx_dyn_event_open+0x10/0x10
+  unregister_fprobe+0x57/0x90
+  trace_fprobe_release+0x56/0x150
+  dyn_event_open+0x99/0xe0
+  do_dentry_open+0x14a/0x3e0
+  vfs_open+0x2c/0xe0
+  path_openat+0xca5/0xf10
+  ? __lock_acquire+0xd38/0x2af0
+  ? __create_object+0x36/0x100
+  ? __create_object+0x36/0x100
+  do_filp_open+0xb5/0x160
+  do_sys_openat2+0x7f/0xd0
+  __x64_sys_openat+0x81/0xa0
+  do_syscall_64+0xec/0x1d0
+  ? exc_page_fault+0x92/0x110
+  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ RIP: 0033:0x4aa9cb
+ Code: 25 00 00 41 00 3d 00 00 41 00 74 4b 64 8b 04 25 18 00 00 00 85 c0 75 67 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 91 00 00 00 48 8b 54 24 28 64 48 2b 14 25
+ RSP: 002b:00007ffce30daf50 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+ RAX: ffffffffffffffda RBX: 000000002de79bd0 RCX: 00000000004aa9cb
+ RDX: 0000000000000241 RSI: 000000002deb08f0 RDI: 00000000ffffff9c
+ RBP: 000000002deb08f0 R08: 0000000000000000 R09: 0000000000000000
+ R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000241
+ R13: 000000002deb08f0 R14: 00007ffce30db3f8 R15: 0000000000000000
+  </TASK>
+ irq event stamp: 147361
+ hardirqs last  enabled at (147373): [<ffffffff81128511>] __console_unlock+0x81/0xd0
+ hardirqs last disabled at (147386): [<ffffffff811284f6>] __console_unlock+0x66/0xd0
+ softirqs last  enabled at (146866): [<ffffffff8109a74f>] handle_softirqs+0x34f/0x3b0
+ softirqs last disabled at (146861): [<ffffffff8109a956>] __irq_exit_rcu+0x66/0xd0
+ ---[ end trace 0000000000000000 ]---
+ BUG: kernel NULL pointer dereference, address: 000000000000002e
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 8000000005af0067 P4D 8000000005af0067 PUD 55d7067 PMD 0
+ Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+ CPU: 0 UID: 0 PID: 156 Comm: ftracetest Tainted: G        W          6.12.74 #1
+ Tainted: [W]=WARN
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ RIP: 0010:trace_fprobe_release+0x78/0x150
+ Code: 4c 89 f7 e8 ba e2 ff ff ba f0 01 00 00 4c 89 f7 31 f6 e8 9b 64 8d 00 48 8b bb 10 02 00 00 48 85 ff 74 21 4c 8d b3 10 02 00 00 <48> 8b 77 30 31 d2 e8 8d cf f8 ff 49 c7 06 00 00 00 00 49 c7 46 08
+ RSP: 0018:ffffc900005c3be8 EFLAGS: 00010282
+ RAX: ffff8880054ba818 RBX: ffff8880054ba800 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: 0000000000000000 RDI: fffffffffffffffe
+ RBP: 00000000fffffff0 R08: 000000000000017b R09: 0000000000000000
+ R10: ffff8880054ba818 R11: 0000000000000000 R12: ffff8880048216d0
+ R13: ffff8880052f7850 R14: ffff8880054baa10 R15: ffffffff8124e160
+ FS:  000000002de743c0(0000) GS:ffff88807d800000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000000000000002e CR3: 0000000005b3a000 CR4: 00000000000006b0
+ Call Trace:
+  <TASK>
+  dyn_event_open+0x99/0xe0
+  do_dentry_open+0x14a/0x3e0
+  vfs_open+0x2c/0xe0
+  path_openat+0xca5/0xf10
+  ? __lock_acquire+0xd38/0x2af0
+  ? __create_object+0x36/0x100
+  ? __create_object+0x36/0x100
+  do_filp_open+0xb5/0x160
+  do_sys_openat2+0x7f/0xd0
+  __x64_sys_openat+0x81/0xa0
+  do_syscall_64+0xec/0x1d0
+  ? exc_page_fault+0x92/0x110
+  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ RIP: 0033:0x4aa9cb
+ Code: 25 00 00 41 00 3d 00 00 41 00 74 4b 64 8b 04 25 18 00 00 00 85 c0 75 67 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 91 00 00 00 48 8b 54 24 28 64 48 2b 14 25
+ RSP: 002b:00007ffce30daf50 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+ RAX: ffffffffffffffda RBX: 000000002de79bd0 RCX: 00000000004aa9cb
+ RDX: 0000000000000241 RSI: 000000002deb08f0 RDI: 00000000ffffff9c
+ RBP: 000000002deb08f0 R08: 0000000000000000 R09: 0000000000000000
+ R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000241
+ R13: 000000002deb08f0 R14: 00007ffce30db3f8 R15: 0000000000000000
+  </TASK>
+ Modules linked in: [last unloaded: trace_events_sample]
+ CR2: 000000000000002e
+ ---[ end trace 0000000000000000 ]---
 
-it should, will fix
+Fixes: 5ba4f58ec2de ("tracing: tprobe-events: Fix to clean up tprobe correctly when module unload")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace_fprobe.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> > +		if (cnt == 0)
-> > +			return libbpf_err_ptr(-EINVAL);
-> > +		free_ids = ids;
-> > +	}
-> 
-> [ ... ]
-> 
-> > +error:
-> > +	free(link);
-> > +	free(free_ids);
-> > +	return libbpf_err_ptr(err);
-> > +}
-> > +
-> > +static int attach_tracing_multi(const struct bpf_program *prog, long cookie, struct bpf_link **link)
-> > +{
-> > +	bool is_fexit, is_fsession;
-> > +	const char *spec;
-> > +	char *pattern;
-> > +	int n;
-> > +
-> > +	/* Do not allow auto attach if there's no function pattern. */
-> > +	if (strcmp(prog->sec_name, "fentry.multi") == 0 ||
-> > +	    strcmp(prog->sec_name, "fexit.multi") == 0 ||
-> > +	    strcmp(prog->sec_name, "fsession.multi") == 0 ||
-> > +	    strcmp(prog->sec_name, "fentry.multi.s") == 0 ||
-> > +	    strcmp(prog->sec_name, "fexit.multi.s") == 0 ||
-> > +	    strcmp(prog->sec_name, "fsession.multi.s") == 0)
-> > +		return 0;
-> > +
-> > +	is_fexit = str_has_pfx(prog->sec_name, "fexit.multi/");
-> > +	is_fsession = str_has_pfx(prog->sec_name, "fsession.multi/");
-> > +
-> > +	if (is_fsession)
-> > +		spec = prog->sec_name + sizeof("fsession.multi/") - 1;
-> > +	else if (is_fexit)
-> > +		spec = prog->sec_name + sizeof("fexit.multi/") - 1;
-> > +	else
-> > +		spec = prog->sec_name + sizeof("fentry.multi/") - 1;
-> 
-> The sleepable variants with patterns don't seem to be handled here.
-> For a section name like "fentry.multi.s/my_func", none of the
-> str_has_pfx checks match because "fexit.multi/" and "fsession.multi/"
-> are not prefixes of "fentry.multi.s/..." (the character at position
-> 11 or 14 is '.' not '/').
-> 
-> The else branch then computes spec using sizeof("fentry.multi/") - 1
-> which gives an offset of 13, pointing into "s/my_func" instead of
-> "my_func". The sscanf then extracts "s" as the pattern, and the
-> program attaches to any function matching the glob "s" rather than
-> "my_func".
-> 
-> Similarly for "fexit.multi.s/X" and "fsession.multi.s/X", the
-> offsets are wrong and produce either error returns or incorrect
-> patterns.
-> 
-> The SEC_DEF entries register all six sleepable variants, and
-> sec_def_matches() correctly distinguishes "fentry.multi.s+" from
-> "fentry.multi+" using the '/' separator check, so the matching
-> works but the pattern extraction here does not.
-> 
-> Would it work to also check for the ".s/" variants, for example:
-> 
->     is_fexit = str_has_pfx(prog->sec_name, "fexit.multi/") ||
->                str_has_pfx(prog->sec_name, "fexit.multi.s/");
-> 
-> with the corresponding sizeof adjustments for the spec offset?
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 440dbfa6bbfd..2cf5036c825d 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -984,6 +984,7 @@ static int __tracepoint_probe_module_cb(struct notifier_block *self,
+ 			}
+ 		} else if (val == MODULE_STATE_GOING && tp_mod->mod == tf->mod) {
+ 			unregister_fprobe(&tf->fp);
++			memset(&tf->fp, 0, sizeof(tf->fp));
+ 			if (trace_fprobe_is_tracepoint(tf)) {
+ 				tracepoint_probe_unregister(tf->tpoint,
+ 					tf->tpoint->probestub, NULL);
 
-yes, I mentioned in the cover letter that I did not add tests for
-sleepable functions attachments.. I should have ;-) will fix
-
-thanks,
-jirka
