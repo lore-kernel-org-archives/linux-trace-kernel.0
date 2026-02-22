@@ -1,64 +1,64 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24D02192FA
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5DD24DD17
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750198; cv=none; b=objx2AI5CJy9m7iZyMaZKs05KHTzGrYmukF4T+I2XnoVkWPoagD6rC5LRlVwtwWhLeVJ5whDdPgFYT8qLhX1NvFVHJNGUrS3Mvo2fXlDZLJ0ZeQQjNK6LbJA955NLW3Hup9TJ+1hy6q6urJ3PPORAQCFXBoto64CszPymU7Wkj8=
+	t=1771750201; cv=none; b=EJidDuIOR/HnJ2B/kY15vllVRJP9ozbklWZP+a5P85revf5CcvZ9Uboc7LSD+SC9p2sqt+JQ/9onrkiQdd6uQjSEns9ZeFbEthLCGoFGd62ZnrGcKWpVVwcg7kT5XGn1z21Eme0qiRL756wr5drpUfmh3uELsVrz0FTYfAhBiQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750198; c=relaxed/simple;
-	bh=BSG2lMY02dbxdPdlh1TMYKShkj9KPDKN6hRO4sQjJuc=;
+	s=arc-20240116; t=1771750201; c=relaxed/simple;
+	bh=Ouqj4GqJWjwYiY0gNW4BTPlwlgIunnGvFq2E9eGJsIQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nBryeMlpb0b4ceTQIPo1Lw8244KN+oVHyJK0hWMM79o5x/yaqoityYZTWkXL5aXiWkhm0o/5vR0Z8PQtmuTXlAfAJOL9F5/oyEN5uetCBPMj5L/qnuP6Uyl4xK0kXMw/qdmOuBOzCTs0qaSL6i4TkMd2znGJPibrpQa9EE/ZuLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=j0HCcjWJ; arc=none smtp.client-ip=209.85.222.174
+	 MIME-Version; b=JfCCnrqPffR2Wwuz4Lzyy8CD6S5NTi8kxjrwX8/YSX6wiGetTgW06Gmyug90Yjg03vJT4gW+P3jlZlWrmLTaK+niEp9AZEY7YDCHrbxiU4CrOmQ14OzQwM1OOpAq3NfLz0JMlXR01VW2d32RlJRtrIOY0ggyh9KrEwOogd0JAOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=J1AoTa4b; arc=none smtp.client-ip=209.85.160.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="j0HCcjWJ"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8cb3825b0fbso342420885a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:49:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="J1AoTa4b"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-506bad34f51so28262541cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:50:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750196; x=1772354996; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750199; x=1772354999; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=usXNzPjhzvXJyzCooKRQ50P2LfA8iFR+qYeKDTB2vCk=;
-        b=j0HCcjWJOZISGPBdaJTWKobUL1ZspGtgzo2NjlFJYkhorsy6hp9l9dwtKryGDQinmt
-         rR6GQzkTXwZd1VY0hcZrhfzIhdH6ZU5K0PpIERe6leL3x42NwJeTldlQPRIVy8B4rSW/
-         ivBVzM819PRObxVh4FM6Ep/JPxQRICwQu8MUnWoFWYLkG+q3T9WKmYMKuuultftGVgpk
-         AkHfruT42fkVr7wppSRPpXsaeY1fx8w8g3yutelNF0YRt+OpOmORuTqzo2SvHeF+6BKE
-         pechERNs+uwmDBTFJBeb9lqrzgNbd4EmPDRJ4Z7xEXzxlycFWWnDwwgitD/29Lqv1Vk1
-         BOYA==
+        bh=degmio9cxdpzQuRYo2QvBbWquT2Pd1sYOKpzGMoeajE=;
+        b=J1AoTa4bi2IOOhcduUTDkO0dYY6Xs0dyWF3OvN+AGw4ZVzZ71xL3XL9OmUDDclSgPz
+         7WCF0lH93k1EeM+fFxODzmCZr+vccMR+N++msZ3nReP0vucfs+Dw4TEYcqkpoabhEkyO
+         XQ6xWRN2LCujRzo3NwDNufq55dgjuIrXOXe7wM2g6z2A5PXcVWPaDwEWwPAtUwBDfS0h
+         mw7UIY0pXHrMmyskBmhCygN3op0/sVwAjdY8U/ML4kD7aG2uSrg/hqKSBt1uQmx5fhG+
+         LcyctMQsJMv7ywYj1WKRJ7KyucYsTcw1yj+/gUvfqhfPavv37YH/x9QPEwJnerneu2U+
+         yiKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750196; x=1772354996;
+        d=1e100.net; s=20230601; t=1771750199; x=1772354999;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=usXNzPjhzvXJyzCooKRQ50P2LfA8iFR+qYeKDTB2vCk=;
-        b=esVgD1tfFaXfA4svUPDp1uYMyU8RWpq4/1T0aUwPz4PGNVhnwNkWRQUNpPsY/I4zZQ
-         KESumD2oKmrNgg2pHS99eLnv43W7BGX2en6TCwT+taovNHv+BPLfOG+y4NVioPTwsESe
-         lzB2I4APNWQCtHISeqnD3w+AEU/v+il/6aM2oZVcimVsqHI00cXmngDAFNMrDAI4xg1S
-         hm2hoHfJjtXetrYnrc/5+h2koTcmIHU05o9sqFaixPM4DMKTlaD0RpUHtrjtmCzB8x3b
-         a8ZkRTCVSI7gE8yyDQ5Xqo17qJIcYi1xV4TX4zwW/vQEAsVwKemdZDNjEN1LO64ekXWw
-         WlCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTb9FRhmUP6FiHB8dKlUp9spuzIEDR0oG9aTqAqlAE3e6o5KfIMxzZmVCrXiRcZuoHWoCvcy+ACUi14mmzSnlPzI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5uZBKFOkZJuPmZgJscF3vkGOpjeYzAK0NPfzgs2knZptCaWoS
-	UXucrK3/TgHgKjUZjG2k1+t9R6Gxgh8w2N99tE2Fv5UcXuieSCda8iuateYggHP5mLY=
-X-Gm-Gg: AZuq6aK6P/8pwvAj4UBYjRRYcjgbTMTQcj4G1Y8kg1vJhC0CFrc/BpgpB3PELliAMnq
-	10mgQqfKtdpXN/HYzNg/vzCr9/TVkzygYns2yLRa78sfAM+3XG3qERMAi8wzRO51gUHcLc6xU6V
-	MXNNmZSx9Dblcp1Byl4938GN7qch/Jj8RoKTTxxMqE6s90X+Kjus7YEnwc7DIjyaXsOj48JSIvD
-	aaWuZ9jykcoDHLxlCfLhK6/vwH9o7lBSaJMLHpk3OLeGyfL0zNCikVBASkJNhFuFH6j0T3xHA//
-	ryLgqghvpRYUgZZLLUjJ74jLjBVbl6umniVRYYSwANwIEXJNvp0i/MvRxoPDqMsNewKmcOlHS1m
-	vIZW/RDR4pXBGDm8GAe0Hb2zFYenKQwsjsH5L8mtxKBCwP4MW3s50/Yrew0o91w+bVdvOdXfRgM
-	nG4toBeFDJxdloW6Mz/EGOkydmM6SZkVjI9NFV8xf37IyjsE7rjRH1wNAQY3QGb/ReWBO438RIp
-	WXq4iI3JcZe3TA=
-X-Received: by 2002:a05:620a:f0d:b0:8cb:3a1d:79f2 with SMTP id af79cd13be357-8cb8ca9274fmr587644685a.71.1771750195536;
-        Sun, 22 Feb 2026 00:49:55 -0800 (PST)
+        bh=degmio9cxdpzQuRYo2QvBbWquT2Pd1sYOKpzGMoeajE=;
+        b=UFWANvE3uC17Ht2kxAAkr2KxE4DeJ/JHWqqfQFKB5t97BMuNoEOQaGIYCLBx8Yy87b
+         1JbazzVffDzaszvjtPYi8jBBbDJHVBFfWqRf6lIgO81T0NQ4a0mb2BlzNuFJmJX0tQKL
+         dwp1sqlu+qJZjirh5ao01i1BCa0FPbTZjDdo9kk7GNDBRk9+O94wGEh4JgVH7u6nJJJJ
+         sJoKoPsJKFPKD6sXlEZoJ1HJsXdCaGf2Db2hOuDM9Kt32Lyb6Vv0xD/Ty9JARvc7Q4DH
+         4ZM6nScRZGT6swVeOUitpKY+5tnTcfXQ/L/UylMVT9VPvlKsSey4Rm9IGvYXrYiik/ba
+         jYVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVD3jtAi3oEpTjZFpBKXsjAZviej1tsFCOSGW5qy3nBu2wym3E9I302c4Bu7zfwl3xKxqby0aT0ikvVjjxgFkYXwDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfMplOuH0Uxcrt1JP+TlcM6dLHc84j+MjXP+Krr0MQspcZsvWi
+	VyqxncH/83cMpx2JHfZaLCJN+StJd1kS5hNUdigWymNF2ktgi+/h6OmTOi6YTQC7b7g=
+X-Gm-Gg: AZuq6aJJ4ODVa5SNF90Wf6zKBUA6X78tt4GXok/oOuindFWqb7lflEoPpy5noOQ8m0M
+	1dxiS2GG1wv32LB8hicz2b7w5rodac4oLBU67j5mf1A/CGw2h7V5R8syhNLklEXU5zfhls61sqt
+	ljC/9pDbUYzQ3vJ/OzOQHEiNvxJtaW/rnJi0jRm4PGtS38n5CAN+WWDS2pozaS0/7P/5912uXQn
+	ksp+DOxO7VFUH0SedLJ8f4FUkLM/9D91RLF0SngocFo3ZiDjai5++NaLMPH7K7EXbRDVicBu7nt
+	M/b66hQbP3oa811OChQIwFfBW+iZl9jW0omZrihm9wo6isOrtnwYDTTASAmHkgptIyE5EuSfC46
+	1Cf0k87Td6RHsv1ghbDy3t4q2UjudfVMPKnSm7mNScYvdZJ6ME7b9XY6jtzA61zD/1lXyOs/zoe
+	gSM8Z2df3oy6FiLo3Yq2Fq3xGaOPfY+JsE7VXCWdl3dq8vb+qy28x5BmEY6fiBZHc8Sm+RZioO9
+	uFyAVc/n0zJDzI=
+X-Received: by 2002:a05:622a:1307:b0:502:9b85:a609 with SMTP id d75a77b69052e-5070bbf23bamr76760921cf.30.1771750199062;
+        Sun, 22 Feb 2026 00:49:59 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.53
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:49:54 -0800 (PST)
+        Sun, 22 Feb 2026 00:49:58 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 16/27] mm: NP_OPS_RECLAIM - private node reclaim participation
-Date: Sun, 22 Feb 2026 03:48:31 -0500
-Message-ID: <20260222084842.1824063-17-gourry@gourry.net>
+Subject: [RFC PATCH v4 17/27] mm/oom: NP_OPS_OOM_ELIGIBLE - private node OOM participation
+Date: Sun, 22 Feb 2026 03:48:32 -0500
+Message-ID: <20260222084842.1824063-18-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,279 +148,189 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Private node services that drive kswapd via watermark_boost need
-control over the reclaim policy.  There are three problems:
+The OOM killer must know whether killing a task can actually free
+memory such that pressure is reduced.
 
-1) Boosted reclaim suppresses may_swap and may_writepage.  When
-   demotion is not possible, swap is the only evict path, so kswapd
-   cannot make progress and pages are stranded.
+A private node only contributes to relieving pressure if it participates
+in both reclaim and demotion. Without this check, the check, the OOM
+killer may select an undeserving victim.
 
-2) __setup_per_zone_wmarks() unconditionally zeros watermark_boost,
-   killing the service's pressure signal.
+Introduce NP_OPS_OOM_ELIGIBLE and helpers node_oom_eligible() and
+zone_oom_eligible().
 
-3) Not all private nodes want reclaim to touch their pages.
+Replace cpuset_mems_allowed_intersects() in oom_cpuset_eligible()
+with oom_mems_intersect() that iterates N_MEMORY nodes and skips
+ineligible private nodes.
 
-Add a reclaim_policy callback to struct node_private_ops and a
-struct node_reclaim_policy with:
+Update constrained_alloc() to use zone_oom_eligible() for constraint
+detection and node_oom_eligible() to exclude ineligible nodes from
+totalpages accounting.
 
-  - active:             set by the helper when a callback was invoked
-  - may_swap:           allow swap writeback during boosted reclaim
-  - may_writepage:      allow writepage during boosted reclaim
-  - managed_watermarks: service owns watermark_boost lifecycle
-
-We do not allow disabling swap/writepage, as core MM may have
-explicitly enabled them on a non-boosted pass.
-
-We only allow enablign swap/writepage, so that the supression during
-a boost can be overridden.  This allows a device to force evictions
-even when the system otherwise would not percieve pressure.
-
-This is important for a service like compressed RAM, as device capacity
-may differ from reported capacity, and device may want to relieve real
-pressure (poor compression ratio) as opposed to percieved pressure
-(i.e. how many pages are in use).
-
-Add zone_reclaim_allowed() to filter private nodes that have not
-opted into reclaim.
-
-Regular nodes fall through to cpuset_zone_allowed() unchanged.
+Remove cpuset_mems_allowed_intersects() as it has no remaining callers.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/node_private.h | 28 ++++++++++++++++++++++++++++
- mm/internal.h                | 36 ++++++++++++++++++++++++++++++++++++
- mm/page_alloc.c              | 11 ++++++++++-
- mm/vmscan.c                  | 25 +++++++++++++++++++++++--
- 4 files changed, 97 insertions(+), 3 deletions(-)
+ include/linux/cpuset.h       |  9 -------
+ include/linux/node_private.h |  3 +++
+ kernel/cgroup/cpuset.c       | 17 ------------
+ mm/oom_kill.c                | 52 ++++++++++++++++++++++++++++++++----
+ 4 files changed, 50 insertions(+), 31 deletions(-)
 
-diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index 27d6e5d84e61..34be52383255 100644
---- a/include/linux/node_private.h
-+++ b/include/linux/node_private.h
-@@ -14,6 +14,24 @@ struct page;
- struct vm_area_struct;
- struct vm_fault;
- 
-+/**
-+ * struct node_reclaim_policy - Reclaim policy overrides for private nodes
-+ * @active: set by node_private_reclaim_policy() when a callback was invoked
-+ * @may_swap: allow swap writeback during boosted reclaim
-+ * @may_writepage: allow writepage during boosted reclaim
-+ * @managed_watermarks: service owns watermark_boost lifecycle; kswapd must
-+ *                      not clear it after boosted reclaim
-+ *
-+ * Passed to the reclaim_policy callback so each private node service can
-+ * inject its own reclaim policy before kswapd runs boosted reclaim.
-+ */
-+struct node_reclaim_policy {
-+	bool active;
-+	bool may_swap;
-+	bool may_writepage;
-+	bool managed_watermarks;
-+};
-+
- /**
-  * struct node_private_ops - Callbacks for private node services
-  *
-@@ -88,6 +106,13 @@ struct vm_fault;
-  *
-  *   Returns: vm_fault_t result (0, VM_FAULT_RETRY, etc.)
-  *
-+ * @reclaim_policy: Configure reclaim policy for boosted reclaim.
-+ *   [called hodling rcu_read_lock, MUST NOT sleep]
-+ *   Called by kswapd before boosted reclaim to let the service override
-+ *   may_swap / may_writepage.  If provided, the service also owns the
-+ *   watermark_boost lifecycle (kswapd will not clear it).
-+ *   If NULL, normal boost policy applies.
-+ *
-  * @flags: Operation exclusion flags (NP_OPS_* constants).
-  *
-  */
-@@ -101,6 +126,7 @@ struct node_private_ops {
- 	void (*folio_migrate)(struct folio *src, struct folio *dst);
- 	vm_fault_t (*handle_fault)(struct folio *folio, struct vm_fault *vmf,
- 				   enum pgtable_level level);
-+	void (*reclaim_policy)(int nid, struct node_reclaim_policy *policy);
- 	unsigned long flags;
- };
- 
-@@ -112,6 +138,8 @@ struct node_private_ops {
- #define NP_OPS_DEMOTION			BIT(2)
- /* Prevent mprotect/NUMA from upgrading PTEs to writable on this node */
- #define NP_OPS_PROTECT_WRITE		BIT(3)
-+/* Kernel reclaim (kswapd, direct reclaim, OOM) operates on this node */
-+#define NP_OPS_RECLAIM			BIT(4)
- 
- /**
-  * struct node_private - Per-node container for N_MEMORY_PRIVATE nodes
-diff --git a/mm/internal.h b/mm/internal.h
-index ae4ff86e8dc6..db32cb2d7a29 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1572,6 +1572,42 @@ static inline void folio_managed_migrate_notify(struct folio *src,
- 		ops->folio_migrate(src, dst);
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index 7b2f3f6b68a9..53ccfb00b277 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -97,9 +97,6 @@ static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
+ 	return true;
  }
  
-+/**
-+ * node_private_reclaim_policy - invoke the service's reclaim policy callback
-+ * @nid: NUMA node id
-+ * @policy: reclaim policy struct to fill in
-+ *
-+ * Called by kswapd before boosted reclaim.  Zeroes @policy, then if the
-+ * private node service provides a reclaim_policy callback, invokes it
-+ * and sets policy->active to true.
-+ */
-+#ifdef CONFIG_NUMA
-+static inline void node_private_reclaim_policy(int nid,
-+					       struct node_reclaim_policy *policy)
+-extern int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
+-					  const struct task_struct *tsk2);
+-
+ #ifdef CONFIG_CPUSETS_V1
+ #define cpuset_memory_pressure_bump() 				\
+ 	do {							\
+@@ -241,12 +238,6 @@ static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
+ 	return true;
+ }
+ 
+-static inline int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
+-						 const struct task_struct *tsk2)
+-{
+-	return 1;
+-}
+-
+ static inline void cpuset_memory_pressure_bump(void) {}
+ 
+ static inline void cpuset_task_status_allowed(struct seq_file *m,
+diff --git a/include/linux/node_private.h b/include/linux/node_private.h
+index 34be52383255..34d862f09e24 100644
+--- a/include/linux/node_private.h
++++ b/include/linux/node_private.h
+@@ -141,6 +141,9 @@ struct node_private_ops {
+ /* Kernel reclaim (kswapd, direct reclaim, OOM) operates on this node */
+ #define NP_OPS_RECLAIM			BIT(4)
+ 
++/* Private node is OOM-eligible: reclaim can run and pages can be demoted here */
++#define NP_OPS_OOM_ELIGIBLE		(NP_OPS_RECLAIM | NP_OPS_DEMOTION)
++
+ /**
+  * struct node_private - Per-node container for N_MEMORY_PRIVATE nodes
+  *
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 1a597f0c7c6c..29789d544fd5 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -4530,23 +4530,6 @@ int cpuset_mem_spread_node(void)
+ 	return cpuset_spread_node(&current->cpuset_mem_spread_rotor);
+ }
+ 
+-/**
+- * cpuset_mems_allowed_intersects - Does @tsk1's mems_allowed intersect @tsk2's?
+- * @tsk1: pointer to task_struct of some task.
+- * @tsk2: pointer to task_struct of some other task.
+- *
+- * Description: Return true if @tsk1's mems_allowed intersects the
+- * mems_allowed of @tsk2.  Used by the OOM killer to determine if
+- * one of the task's memory usage might impact the memory available
+- * to the other.
+- **/
+-
+-int cpuset_mems_allowed_intersects(const struct task_struct *tsk1,
+-				   const struct task_struct *tsk2)
+-{
+-	return nodes_intersects(tsk1->mems_allowed, tsk2->mems_allowed);
+-}
+-
+ /**
+  * cpuset_print_current_mems_allowed - prints current's cpuset and mems_allowed
+  *
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 5eb11fbba704..cd0d65ccd1e8 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -74,7 +74,45 @@ static inline bool is_memcg_oom(struct oom_control *oc)
+ 	return oc->memcg != NULL;
+ }
+ 
++/* Private nodes are only eligible if they support both reclaim and demotion */
++static inline bool node_oom_eligible(int nid)
 +{
-+	struct node_private *np;
-+
-+	memset(policy, 0, sizeof(*policy));
-+
 +	if (!node_state(nid, N_MEMORY_PRIVATE))
-+		return;
-+
-+	rcu_read_lock();
-+	np = rcu_dereference(NODE_DATA(nid)->node_private);
-+	if (np && np->ops && np->ops->reclaim_policy) {
-+		np->ops->reclaim_policy(nid, policy);
-+		policy->active = true;
-+	}
-+	rcu_read_unlock();
++		return true;
++	return (node_private_flags(nid) & NP_OPS_OOM_ELIGIBLE) ==
++		NP_OPS_OOM_ELIGIBLE;
 +}
-+#else
-+static inline void node_private_reclaim_policy(int nid,
-+					       struct node_reclaim_policy *policy)
-+{
-+	memset(policy, 0, sizeof(*policy));
-+}
-+#endif
 +
- struct vm_struct *__get_vm_area_node(unsigned long size,
- 				     unsigned long align, unsigned long shift,
- 				     unsigned long vm_flags, unsigned long start,
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e272dfdc6b00..9692048ab5fb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -55,6 +55,7 @@
- #include <linux/delayacct.h>
- #include <linux/cacheinfo.h>
- #include <linux/pgalloc_tag.h>
-+#include <linux/node_private.h>
- #include <asm/div64.h>
- #include "internal.h"
- #include "shuffle.h"
-@@ -6437,6 +6438,8 @@ static void __setup_per_zone_wmarks(void)
- 	unsigned long lowmem_pages = 0;
- 	struct zone *zone;
- 	unsigned long flags;
-+	struct node_reclaim_policy rp;
-+	int prev_nid = NUMA_NO_NODE;
- 
- 	/* Calculate total number of !ZONE_HIGHMEM and !ZONE_MOVABLE pages */
- 	for_each_zone(zone) {
-@@ -6446,6 +6449,7 @@ static void __setup_per_zone_wmarks(void)
- 
- 	for_each_zone(zone) {
- 		u64 tmp;
-+		int nid = zone_to_nid(zone);
- 
- 		spin_lock_irqsave(&zone->lock, flags);
- 		tmp = (u64)pages_min * zone_managed_pages(zone);
-@@ -6482,7 +6486,12 @@ static void __setup_per_zone_wmarks(void)
- 			    mult_frac(zone_managed_pages(zone),
- 				      watermark_scale_factor, 10000));
- 
--		zone->watermark_boost = 0;
-+		if (nid != prev_nid) {
-+			node_private_reclaim_policy(nid, &rp);
-+			prev_nid = nid;
-+		}
-+		if (!rp.managed_watermarks)
-+			zone->watermark_boost = 0;
- 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
- 		zone->_watermark[WMARK_HIGH] = low_wmark_pages(zone) + tmp;
- 		zone->_watermark[WMARK_PROMO] = high_wmark_pages(zone) + tmp;
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 0f534428ea88..07de666c1276 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -73,6 +73,13 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/vmscan.h>
- 
-+static inline bool zone_reclaim_allowed(struct zone *zone, gfp_t gfp_mask)
++static inline bool zone_oom_eligible(struct zone *zone, gfp_t gfp_mask)
 +{
-+	if (node_state(zone_to_nid(zone), N_MEMORY_PRIVATE))
-+		return zone_private_flags(zone, NP_OPS_RECLAIM);
++	if (!node_oom_eligible(zone_to_nid(zone)))
++		return false;
 +	return cpuset_zone_allowed(zone, gfp_mask);
 +}
 +
- struct scan_control {
- 	/* How many pages shrink_list() should reclaim */
- 	unsigned long nr_to_reclaim;
-@@ -6274,7 +6281,7 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
- 		 * to global LRU.
- 		 */
- 		if (!cgroup_reclaim(sc)) {
--			if (!cpuset_zone_allowed(zone,
-+			if (!zone_reclaim_allowed(zone,
- 						 GFP_KERNEL | __GFP_HARDWALL))
- 				continue;
- 
-@@ -6992,6 +6999,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 	unsigned long zone_boosts[MAX_NR_ZONES] = { 0, };
- 	bool boosted;
- 	struct zone *zone;
-+	struct node_reclaim_policy policy;
- 	struct scan_control sc = {
- 		.gfp_mask = GFP_KERNEL,
- 		.order = order,
-@@ -7016,6 +7024,9 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ #ifdef CONFIG_NUMA
++/*
++ * Killing a task can only relieve system pressure if freed memory can be
++ * demoted there and reclaim can operate on the node's pages, so we
++ * omit private nodes that aren't eligible.
++ */
++static bool oom_mems_intersect(const struct task_struct *tsk1,
++			       const struct task_struct *tsk2)
++{
++	int nid;
++
++	for_each_node_state(nid, N_MEMORY) {
++		if (!node_isset(nid, tsk1->mems_allowed))
++			continue;
++		if (!node_isset(nid, tsk2->mems_allowed))
++			continue;
++		if (!node_oom_eligible(nid))
++			continue;
++		return true;
++	}
++	return false;
++}
++
+ /**
+  * oom_cpuset_eligible() - check task eligibility for kill
+  * @start: task struct of which task to consider
+@@ -107,9 +145,10 @@ static bool oom_cpuset_eligible(struct task_struct *start,
+ 		} else {
+ 			/*
+ 			 * This is not a mempolicy constrained oom, so only
+-			 * check the mems of tsk's cpuset.
++			 * check the mems of tsk's cpuset, excluding private
++			 * nodes that do not participate in kernel reclaim.
+ 			 */
+-			ret = cpuset_mems_allowed_intersects(current, tsk);
++			ret = oom_mems_intersect(current, tsk);
+ 		}
+ 		if (ret)
+ 			break;
+@@ -291,16 +330,19 @@ static enum oom_constraint constrained_alloc(struct oom_control *oc)
+ 		return CONSTRAINT_MEMORY_POLICY;
  	}
- 	boosted = nr_boost_reclaim;
  
-+	/* Query/cache private node reclaim policy once per balance() */
-+	node_private_reclaim_policy(pgdat->node_id, &policy);
-+
- restart:
- 	set_reclaim_active(pgdat, highest_zoneidx);
- 	sc.priority = DEF_PRIORITY;
-@@ -7083,6 +7094,12 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 		sc.may_writepage = !laptop_mode && !nr_boost_reclaim;
- 		sc.may_swap = !nr_boost_reclaim;
+-	/* Check this allocation failure is caused by cpuset's wall function */
++	/* Check this allocation failure is caused by cpuset or private node constraints */
+ 	for_each_zone_zonelist_nodemask(zone, z, oc->zonelist,
+ 			highest_zoneidx, oc->nodemask)
+-		if (!cpuset_zone_allowed(zone, oc->gfp_mask))
++		if (!zone_oom_eligible(zone, oc->gfp_mask))
+ 			cpuset_limited = true;
  
-+		/* Private nodes may enable swap/writepage when using boost */
-+		if (policy.active) {
-+			sc.may_swap |= policy.may_swap;
-+			sc.may_writepage |= policy.may_writepage;
-+		}
-+
- 		/*
- 		 * Do some background aging, to give pages a chance to be
- 		 * referenced before reclaiming. All pages are rotated
-@@ -7176,6 +7193,10 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
- 			if (!zone_boosts[i])
- 				continue;
- 
-+			/* Some private nodes may own the\ boost lifecycle */
-+			if (policy.managed_watermarks)
+ 	if (cpuset_limited) {
+ 		oc->totalpages = total_swap_pages;
+-		for_each_node_mask(nid, cpuset_current_mems_allowed)
++		for_each_node_mask(nid, cpuset_current_mems_allowed) {
++			if (!node_oom_eligible(nid))
 +				continue;
-+
- 			/* Increments are under the zone lock */
- 			zone = pgdat->node_zones + i;
- 			spin_lock_irqsave(&zone->lock, flags);
-@@ -7406,7 +7427,7 @@ void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, int order,
- 	if (!managed_zone(zone))
- 		return;
- 
--	if (!cpuset_zone_allowed(zone, gfp_flags))
-+	if (!zone_reclaim_allowed(zone, gfp_flags))
- 		return;
- 
- 	pgdat = zone->zone_pgdat;
+ 			oc->totalpages += node_present_pages(nid);
++		}
+ 		return CONSTRAINT_CPUSET;
+ 	}
+ 	return CONSTRAINT_NONE;
 -- 
 2.53.0
 
