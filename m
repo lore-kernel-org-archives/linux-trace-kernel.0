@@ -1,64 +1,64 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FDA20459A
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FEE211A28
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750140; cv=none; b=mL2Y+yjnKbaZx1xEn9eTDBaQ/OA/rOVE/jWcnra/x0svkTEQSXD+lHMZrC+i+hWgfXmC9zJFPOTmVIEXY/3lpZHwoTxokApd0RMIlAvXT0UR2/r95XU6gTjjurJA36iE4UiqDHtlFGa0OUlKvq3FCTQnWYGvq/Zmia9ARypzJwc=
+	t=1771750144; cv=none; b=ulxFfKHjdBRINA+WMsu/xudXaMO0a2uSsHh2YERAtg5hM+GNuZIko7XqQvUvxezh3+YFX4PgLYTfq3cdoRPOBJlSZKKyrgxTkzDOzMZSSc4sjAqSnfDqlAvUxZLdHwdFEmlSEbC8VldOoVYwJH9CYNIZ4/PtCQH4fI2cpCHqPHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750140; c=relaxed/simple;
-	bh=LkVkNq/aKscUFmfu6MV0XClY9PmENDtKMyza4lnpWKk=;
+	s=arc-20240116; t=1771750144; c=relaxed/simple;
+	bh=am2tCajpeHis0FzaYns/D3UH06rPDuGxOYhl4tv1KTA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tyRYnlW98ixbXZP4Vr2IZOc0Lr7v6nhVhWhu0sGmgN5DUCTKbiwBzQen39F5YT7TRddykNOmK4do9ZbPp+y7FFSJ2v8QI0eSYVgjwXfLJ2nfMf+JGbrjfnQunkJAE+ffUcCsCmJMRJBqIUaRmOtXl+rju+NYeJXAaIbzPadhLbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=vUAbBzTT; arc=none smtp.client-ip=209.85.219.46
+	 MIME-Version; b=X6epZBZjc965CMZShWyBTVWChSTHzutx5b2ksfLlcl4ULNgE8V6x0eShkeyN/CRwcS9TDup0O8hn0wAj6c/lP0EzwtClL0m2+VeDb6hlsFwAAog5mVS2NXFLmbLs7yH3OrXLK/jIRy6dGJes2cGEEA00OUYzT8YXhmJoWkrHTLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Q1SzdZhL; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="vUAbBzTT"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-896ff127650so58104386d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:48:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Q1SzdZhL"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-506aa685d62so18935381cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:49:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750136; x=1772354936; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750141; x=1772354941; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TgAF2gtVAnq1fInoChXWKm0rRX8xSwD2e+wYRBZcfuo=;
-        b=vUAbBzTTtfGAG0lU0RlRhT+L3k82CVSCGtZqzIHjnGnt4iGo+e6c7SRCihHRlnu+3+
-         SH5KDlb15wNu1zTH9cGYq2aUmWFDxQHs2nr9TiTfvwdyv+aRkuUZ5RrvXEMOS7GV6426
-         5eKd/jqeoPnoj1LFK1PCLqC+8DxNaCmL13tEfxsXKfuKt9B7kmL+HgkISwMEFq9TenrF
-         coF+rggl5Yrlat8jp+75hCNYC0V6WX5DomE92YkvizIZyfvsHIv+vA1NTLXQJp5kF2hL
-         S63ApMirT8ti6PCdLBetYzG47kh6XCgMVZ+vwEzB8PiTjfNUcqG5/LGO4dq+VnaJUFHp
-         npGA==
+        bh=itvSMpOqGG7PqHHjVhXbDUHp+0Ke3fJUKOX/SDJBBVY=;
+        b=Q1SzdZhLM/ux64o/x4gR0bftweifmuAPme2/H5333YAqN/4bNhA7tY5CMvNfYoyFp/
+         /Ja1+gw7QVg9dY9RkWlir+wDx1rJlkW/Z7Rizsx15I+qY1NOK+vPuOqCg4alKzBscm2o
+         NZUiwRx1NTHsGbmW3CEH4pqn7MQYhFpuzlMXPaGB72VMU/zU0GjTSoamG6HxXzu/MoTp
+         YrepX2cJyIh6fOoy4h4BjCyHqbMbRXCFaTbG01VgScef1g/ncnTSE+ZUBPoPGfZVFNvc
+         zhBMVS7di+R6qQ5LwMGrOMqzX3yLwUEVedTfxdGUiBxR6sMszDM7ST+71mhqDVj+etXB
+         /cjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750136; x=1772354936;
+        d=1e100.net; s=20230601; t=1771750141; x=1772354941;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TgAF2gtVAnq1fInoChXWKm0rRX8xSwD2e+wYRBZcfuo=;
-        b=bC+pxlePjAP36/4WXZv/OqN7TVrnhC53EfCWOwJJPnV3IwKObTgv3HyjnVQH4oWXdk
-         bcOFq57MbpU0898cadNLeIqr2stgUmwJdsmzEmVnCWZuyaPaAq0c64sfuRkgmfXzTcDs
-         uQ6QeCHuHTOFc1PVRxz4bjWe7nGIcZD7E+fbgrC5KftBQQcnXDJsxeV092Y4j/1ySvss
-         UBH4FD40xjOMLFnupT1yCcA0apNs5t1C0btsIYzWWULSnviQF52jRqg6asBz7Gp0CXHQ
-         CR6OzuMVE1NxJDV8Wc8YCxHIEsuzMLYpmdTKvJQVX/4yA56S1j06PCUjnY0L8wtcCWB1
-         5iIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNGCeOpwZumMPDJy1aupTk9yIhdEttyeZZVkxMFX5e3m1op0ethYtchJIIkK4/ALgj+8Yebnq2jsKUC/tOUY0VCd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZgufdUDVzcZAmunzYKpPjpBF6ilu8lyMm9F8A8L8Hc3/gIkcy
-	xdcYHE7Y3J6ZqFslDXv+rKNYW330FV6m0Mt8OjQotN/nclgFe9BRcvkYCcc21Uo8ugM=
-X-Gm-Gg: AZuq6aLB1dL/j2b63frvEL1gHjiyZCR/FurwI7zhGpoyGQBCTSjiUNhVVcBvbYaQie8
-	H2brYHHw05SM7Xz7outeA7BebHoYO37PnFkX38EzVfCDEsJaMM2pdruBWZ4Ex9W0Lodp4o31LnA
-	RCOAm8XJzaS0XS1RVN1kFEF6VedU9b4ffOnf/vEUZqVwA1nFZQWvgOmb8sbb40lcExUD/hMApRl
-	EXikg6jcrFyuqA9usNV/a11mb3eCXe8BA83KNRvpfN4sVBi8fvj3Gw3fXB7zqKUyyOovJZzib2y
-	Vp2x069SMLu8E6WWuscqhZfLHflVjJ9sffS3SA3DrY8ZLO7Dd2lhbK+F6AtfY0wETbjjQNYKwpA
-	IlSKFYBv3CRwmA0hbh+XKbH1BD2bAEmm/mHtQzFhCyo+tprMXe+8fHcXTK+eXOF7hwTLdMDREh/
-	QF/vTSKbfItFy9U2kEOCdinF89dN1RE1d79J8W0+J/tjZjedKbRhDQyW7EBG9Cq/S709RvKjD2t
-	NyLV2tX+9qdzoo=
-X-Received: by 2002:a05:622a:180b:b0:501:49f9:7488 with SMTP id d75a77b69052e-5070bc727d6mr79493791cf.49.1771750136265;
-        Sun, 22 Feb 2026 00:48:56 -0800 (PST)
+        bh=itvSMpOqGG7PqHHjVhXbDUHp+0Ke3fJUKOX/SDJBBVY=;
+        b=dHemf1ybibLK2HtLi7AUzpcVaE1Qboxns74TRC3ftIm1/bh/5WKwU4z9Z2ZlIS4gRH
+         Xo0OA0C42KCXoMrRVTu3W3HsVQfVFasEDguOVsb0AF6CpUC7NFDWVLlkmwAfXLMGT49f
+         uN/XzX4CIC7nX6XFnDMPQH6XFEP9vi3D7fiT5WTg1e/wKXp+kS0KiIONPzf31NvPz62Z
+         t9yNoHiZnYuqcCLGrb/6btipLnIlnp0WpynQLUh3hTdRQFyUZ8F2E2qET3SiWzC14BnN
+         uWtvWcKQ/nFsuoOx1JAWQhn5SdM2VEHn4UpAxvmbdsBDY/JJZUw8+RFFRywqusVxALfW
+         VL2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdHz7vWE7SmdrXO7A9ctV63PrqN5tkcA0FqbkENaWQ3BAZvj3ncvIqD8zi/2tMANu7xLDV7bukRn4CgIj9vj4VYzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySxQ9doicL2SWth9ZeTmZD2v2c9PCmBud/OsMA+uzaF79f8bWa
+	4ytL8VXtgmCEmnx34rWlUEDoE3gh+HxC0OGXiFtNtIFI/MaZd31fgE+4hSqDtNKlggk=
+X-Gm-Gg: AZuq6aKi32EqjsI/E7gDRNA9XzLS7NOg/AKri6osZWyoycn6G90R6g6bVbkV5FXmEZ9
+	7suYTwv4ARaUCuMPVUnZyqtqEV7EUe4IFUrNsMOZgzb1rG9bx/ZnBJOxf04H7In6YnimD+huUmQ
+	GbQFcHGj4Ovi9/mTD4JnP9HYJWV254atR9ZuXOHv/eIkQSuxRlF4WNXNJsWIiC9Unkh6vbTOcn1
+	joSDp/5zGLwat6TZRlLs6EzjnPrAYAjwHjs4u4r8hZVghzpdGL/tU+W7NZSOCVgaeiMJJKD27MF
+	AFSgDStVZBmgjDl7afZck00iV+t+DEptRj1sKO740Kt9/DGkMOA9tHUdXwaARWYvrB8YXu+cbng
+	xemCcLNZ7RSidnLRNngMjNseBHWOdXzHvFYb3GfftZ4L4aEuTS4Xxn7lXjRaTsZyIPuDBfoGa2O
+	ISJfboyGsopuMuIX7/3Cuylagq3gleKVJpFU15qfubFDwlE2Uw7uFSDzlvN45GG/MB/YIh6On6X
+	iRu2ctfQJ+tc1k=
+X-Received: by 2002:a05:622a:1355:b0:4ec:f26f:5aea with SMTP id d75a77b69052e-5070bce327dmr60794421cf.68.1771750140761;
+        Sun, 22 Feb 2026 00:49:00 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.48.53
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:48:55 -0800 (PST)
+        Sun, 22 Feb 2026 00:48:59 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -134,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 01/27] numa: introduce N_MEMORY_PRIVATE node state
-Date: Sun, 22 Feb 2026 03:48:16 -0500
-Message-ID: <20260222084842.1824063-2-gourry@gourry.net>
+Subject: [RFC PATCH v4 02/27] mm,cpuset: gate allocations from N_MEMORY_PRIVATE behind __GFP_PRIVATE
+Date: Sun, 22 Feb 2026 03:48:17 -0500
+Message-ID: <20260222084842.1824063-3-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -148,532 +148,188 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-N_MEMORY nodes are intended to contain general System RAM. Today, some
-device drivers hotplug their memory (marked Specific Purpose or Reserved)
-to get access to mm/ services, but don't intend it for general consumption.
+N_MEMORY_PRIVATE nodes hold device-managed memory that should not be
+used for general allocations. Without a gating mechanism, any allocation
+could land on a private node if it appears in the task's mems_allowed.
 
-Create N_MEMORY_PRIVATE for memory nodes whose memory is not intended for
-general consumption. This state is mutually exclusive with N_MEMORY.
+Introduce __GFP_PRIVATE that explicitly opts in to allocation from
+N_MEMORY_PRIVATE nodes.
 
-Add the node_private infrastructure for N_MEMORY_PRIVATE nodes:
+Add the GFP_PRIVATE compound mask (__GFP_PRIVATE | __GFP_THISNODE)
+for callers that explicitly target private nodes to help prevent
+fallback allocations from DRAM.
 
-  - struct node_private: Per-node container stored in NODE_DATA(nid),
-    holding driver callbacks (ops), owner, and refcount.
+Update cpuset_current_node_allowed() to filter out N_MEMORY_PRIVATE
+nodes unless __GFP_PRIVATE is set.
 
-  - struct node_private_ops: Initial structure with void *reserved
-    placeholder and flags field.  Callbacks will be added by subsequent
-    commits as each consumer is wired up.
+In interrupt context, only N_MEMORY nodes are valid.
 
-  - folio_is_private_node() / page_is_private_node(): check if a
-    folio/page resides on a private node.
-
-  - folio_node_private_ops() / node_private_flags(): retrieve the ops
-    vtable or flags for a folio's node.
-
-  - Registration API: node_private_register()/unregister() for drivers
-    to register callbacks for private nodes. Only one driver callback
-    can be registered per node - attempting to register different ops
-    returns -EBUSY.
-
-  - sysfs attribute exposing N_MEMORY_PRIVATE node state.
-
-Zonelist construction changes for private nodes are deferred to a
-subsequent commit.
+Update cpuset_handle_hotplug() to include N_MEMORY_PRIVATE nodes in
+the effective mems set, allowing cgroup-level control over private
+node access.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/base/node.c          | 197 ++++++++++++++++++++++++++++++++
- include/linux/mmzone.h       |   4 +
- include/linux/node_private.h | 210 +++++++++++++++++++++++++++++++++++
- include/linux/nodemask.h     |   1 +
- 4 files changed, 412 insertions(+)
- create mode 100644 include/linux/node_private.h
+ include/linux/gfp_types.h      | 15 +++++++++++++--
+ include/trace/events/mmflags.h |  4 ++--
+ kernel/cgroup/cpuset.c         | 32 ++++++++++++++++++++++++++++----
+ 3 files changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 00cf4532f121..646dc48a23b5 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -22,6 +22,7 @@
- #include <linux/swap.h>
- #include <linux/slab.h>
- #include <linux/memblock.h>
-+#include <linux/node_private.h>
- 
- static const struct bus_type node_subsys = {
- 	.name = "node",
-@@ -861,6 +862,198 @@ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
- 			   (void *)&nid, register_mem_block_under_node_hotplug);
- 	return;
- }
-+
-+static DEFINE_MUTEX(node_private_lock);
-+static bool node_private_initialized;
-+
-+/**
-+ * node_private_register - Register a private node
-+ * @nid: Node identifier
-+ * @np: The node_private structure (driver-allocated, driver-owned)
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index 3de43b12209e..ac375f9a0fc2 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -33,7 +33,7 @@ enum {
+ 	___GFP_IO_BIT,
+ 	___GFP_FS_BIT,
+ 	___GFP_ZERO_BIT,
+-	___GFP_UNUSED_BIT,	/* 0x200u unused */
++	___GFP_PRIVATE_BIT,
+ 	___GFP_DIRECT_RECLAIM_BIT,
+ 	___GFP_KSWAPD_RECLAIM_BIT,
+ 	___GFP_WRITE_BIT,
+@@ -69,7 +69,7 @@ enum {
+ #define ___GFP_IO		BIT(___GFP_IO_BIT)
+ #define ___GFP_FS		BIT(___GFP_FS_BIT)
+ #define ___GFP_ZERO		BIT(___GFP_ZERO_BIT)
+-/* 0x200u unused */
++#define ___GFP_PRIVATE		BIT(___GFP_PRIVATE_BIT)
+ #define ___GFP_DIRECT_RECLAIM	BIT(___GFP_DIRECT_RECLAIM_BIT)
+ #define ___GFP_KSWAPD_RECLAIM	BIT(___GFP_KSWAPD_RECLAIM_BIT)
+ #define ___GFP_WRITE		BIT(___GFP_WRITE_BIT)
+@@ -139,6 +139,11 @@ enum {
+  * %__GFP_ACCOUNT causes the allocation to be accounted to kmemcg.
+  *
+  * %__GFP_NO_OBJ_EXT causes slab allocation to have no object extension.
 + *
-+ * Register a driver for a private node. Only one driver can register
-+ * per node. If another driver has already registered (with different np),
-+ * -EBUSY is returned. Re-registration with the same np is allowed.
-+ *
-+ * The driver owns the node_private memory and must ensure it remains valid
-+ * until refcount reaches 0 after node_private_unregister().
-+ *
-+ * Returns 0 on success, negative errno on failure.
-+ */
-+int node_private_register(int nid, struct node_private *np)
-+{
-+	struct node_private *existing;
-+	pg_data_t *pgdat;
-+	int ret = 0;
-+
-+	if (!np || !node_possible(nid))
-+		return -EINVAL;
-+
-+	if (!node_private_initialized)
-+		return -ENODEV;
-+
-+	mutex_lock(&node_private_lock);
-+	mem_hotplug_begin();
-+
-+	/* N_MEMORY_PRIVATE and N_MEMORY are mutually exclusive */
-+	if (node_state(nid, N_MEMORY)) {
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+
-+	pgdat = NODE_DATA(nid);
-+	existing = rcu_dereference_protected(pgdat->node_private,
-+					     lockdep_is_held(&node_private_lock));
-+
-+	/* Only one source my register this node */
-+	if (existing) {
-+		if (existing != np) {
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+		goto out;
-+	}
-+
-+	refcount_set(&np->refcount, 1);
-+	init_completion(&np->released);
-+
-+	rcu_assign_pointer(pgdat->node_private, np);
-+	pgdat->private = true;
-+
-+out:
-+	mem_hotplug_done();
-+	mutex_unlock(&node_private_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(node_private_register);
-+
-+/**
-+ * node_private_set_ops - Set service callbacks on a registered private node
-+ * @nid: Node identifier
-+ * @ops: Service callbacks and flags (driver-owned, must outlive registration)
-+ *
-+ * Validates flag dependencies and sets the ops on the node's node_private.
-+ * The node must already be registered via node_private_register().
-+ *
-+ * Returns 0 on success, -EINVAL for invalid flag combinations,
-+ * -ENODEV if no node_private is registered on @nid.
-+ */
-+int node_private_set_ops(int nid, const struct node_private_ops *ops)
-+{
-+	struct node_private *np;
-+	int ret = 0;
-+
-+	if (!ops)
-+		return -EINVAL;
-+
-+	if (!node_possible(nid))
-+		return -EINVAL;
-+
-+	mutex_lock(&node_private_lock);
-+	np = rcu_dereference_protected(NODE_DATA(nid)->node_private,
-+				       lockdep_is_held(&node_private_lock));
-+	if (!np)
-+		ret = -ENODEV;
-+	else
-+		np->ops = ops;
-+	mutex_unlock(&node_private_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(node_private_set_ops);
-+
-+/**
-+ * node_private_clear_ops - Clear service callbacks from a private node
-+ * @nid: Node identifier
-+ * @ops: Expected ops pointer (must match current ops)
-+ *
-+ * Clears the ops only if @ops matches the currently registered ops,
-+ * preventing one service from accidentally clearing another's callbacks.
-+ *
-+ * Returns 0 on success, -ENODEV if no node_private is registered,
-+ * -EINVAL if @ops does not match.
-+ */
-+int node_private_clear_ops(int nid, const struct node_private_ops *ops)
-+{
-+	struct node_private *np;
-+	int ret = 0;
-+
-+	if (!node_possible(nid))
-+		return -EINVAL;
-+
-+	mutex_lock(&node_private_lock);
-+	np = rcu_dereference_protected(NODE_DATA(nid)->node_private,
-+				       lockdep_is_held(&node_private_lock));
-+	if (!np)
-+		ret = -ENODEV;
-+	else if (np->ops != ops)
-+		ret = -EINVAL;
-+	else
-+		np->ops = NULL;
-+	mutex_unlock(&node_private_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(node_private_clear_ops);
-+
-+/**
-+ * node_private_unregister - Unregister a private node
-+ * @nid: Node identifier
-+ *
-+ * Unregister the driver from a private node. Only succeeds if all memory
-+ * has been offlined and the node is no longer N_MEMORY_PRIVATE.
-+ * When successful, drops the refcount to 0 indicating the driver can
-+ * free its context.
-+ *
-+ * N_MEMORY_PRIVATE state is cleared by offline_pages() when the last
-+ * memory is offlined, not by this function.
-+ *
-+ * Return: 0 if unregistered, -EBUSY if N_MEMORY_PRIVATE is still set
-+ * (other memory blocks remain on this node).
-+ */
-+int node_private_unregister(int nid)
-+{
-+	struct node_private *np;
-+	pg_data_t *pgdat;
-+
-+	if (!node_possible(nid))
-+		return 0;
-+
-+	mutex_lock(&node_private_lock);
-+	mem_hotplug_begin();
-+
-+	pgdat = NODE_DATA(nid);
-+	np = rcu_dereference_protected(pgdat->node_private,
-+				       lockdep_is_held(&node_private_lock));
-+	if (!np) {
-+		mem_hotplug_done();
-+		mutex_unlock(&node_private_lock);
-+		return 0;
-+	}
-+
-+	/*
-+	 * Only unregister if all memory is offline and N_MEMORY_PRIVATE is
-+	 * cleared. N_MEMORY_PRIVATE is cleared by offline_pages() when the
-+	 * last memory block is offlined.
-+	 */
-+	if (node_state(nid, N_MEMORY_PRIVATE)) {
-+		mem_hotplug_done();
-+		mutex_unlock(&node_private_lock);
-+		return -EBUSY;
-+	}
-+
-+	rcu_assign_pointer(pgdat->node_private, NULL);
-+	pgdat->private = false;
-+
-+	mem_hotplug_done();
-+	mutex_unlock(&node_private_lock);
-+
-+	synchronize_rcu();
-+
-+	if (!refcount_dec_and_test(&np->refcount))
-+		wait_for_completion(&np->released);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(node_private_unregister);
-+
- #endif /* CONFIG_MEMORY_HOTPLUG */
++ * %__GFP_PRIVATE allows allocation from N_MEMORY_PRIVATE nodes (e.g., compressed
++ * memory, accelerator memory). Without this flag, allocations are restricted
++ * to N_MEMORY nodes only. Used by migration/demotion paths when explicitly
++ * targeting private nodes.
+  */
+ #define __GFP_RECLAIMABLE ((__force gfp_t)___GFP_RECLAIMABLE)
+ #define __GFP_WRITE	((__force gfp_t)___GFP_WRITE)
+@@ -146,6 +151,7 @@ enum {
+ #define __GFP_THISNODE	((__force gfp_t)___GFP_THISNODE)
+ #define __GFP_ACCOUNT	((__force gfp_t)___GFP_ACCOUNT)
+ #define __GFP_NO_OBJ_EXT   ((__force gfp_t)___GFP_NO_OBJ_EXT)
++#define __GFP_PRIVATE	((__force gfp_t)___GFP_PRIVATE)
  
  /**
-@@ -959,6 +1152,7 @@ static struct node_attr node_state_attr[] = {
- 	[N_HIGH_MEMORY] = _NODE_ATTR(has_high_memory, N_HIGH_MEMORY),
- #endif
- 	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
-+	[N_MEMORY_PRIVATE] = _NODE_ATTR(has_private_memory, N_MEMORY_PRIVATE),
- 	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
- 	[N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
- 					   N_GENERIC_INITIATOR),
-@@ -972,6 +1166,7 @@ static struct attribute *node_state_attrs[] = {
- 	&node_state_attr[N_HIGH_MEMORY].attr.attr,
- #endif
- 	&node_state_attr[N_MEMORY].attr.attr,
-+	&node_state_attr[N_MEMORY_PRIVATE].attr.attr,
- 	&node_state_attr[N_CPU].attr.attr,
- 	&node_state_attr[N_GENERIC_INITIATOR].attr.attr,
- 	NULL
-@@ -1007,5 +1202,7 @@ void __init node_dev_init(void)
- 			panic("%s() failed to add node: %d\n", __func__, ret);
- 	}
+  * DOC: Watermark modifiers
+@@ -367,6 +373,10 @@ enum {
+  * available and will not wake kswapd/kcompactd on failure. The _LIGHT
+  * version does not attempt reclaim/compaction at all and is by default used
+  * in page fault path, while the non-light is used by khugepaged.
++ *
++ * %GFP_PRIVATE adds %__GFP_THISNODE by default to prevent any fallback
++ * allocations to other nodes, given that the caller was already attempting
++ * to access driver-managed memory explicitly.
+  */
+ #define GFP_ATOMIC	(__GFP_HIGH|__GFP_KSWAPD_RECLAIM)
+ #define GFP_KERNEL	(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+@@ -382,5 +392,6 @@ enum {
+ #define GFP_TRANSHUGE_LIGHT	((GFP_HIGHUSER_MOVABLE | __GFP_COMP | \
+ 			 __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
+ #define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
++#define GFP_PRIVATE	(__GFP_PRIVATE | __GFP_THISNODE)
  
-+	node_private_initialized = true;
-+
- 	register_memory_blocks_under_nodes();
+ #endif /* __LINUX_GFP_TYPES_H */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index a6e5a44c9b42..f042cd848451 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -37,7 +37,8 @@
+ 	TRACE_GFP_EM(HARDWALL)			\
+ 	TRACE_GFP_EM(THISNODE)			\
+ 	TRACE_GFP_EM(ACCOUNT)			\
+-	TRACE_GFP_EM(ZEROTAGS)
++	TRACE_GFP_EM(ZEROTAGS)			\
++	TRACE_GFP_EM(PRIVATE)
+ 
+ #ifdef CONFIG_KASAN_HW_TAGS
+ # define TRACE_GFP_FLAGS_KASAN			\
+@@ -73,7 +74,6 @@
+ TRACE_GFP_FLAGS
+ 
+ /* Just in case these are ever used */
+-TRACE_DEFINE_ENUM(___GFP_UNUSED_BIT);
+ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 
+ #define gfpflag_string(flag) {(__force unsigned long)flag, #flag}
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 473aa9261e16..1a597f0c7c6c 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -444,21 +444,32 @@ static void guarantee_active_cpus(struct task_struct *tsk,
  }
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index b01cb1e49896..992eb1c5a2c6 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -25,6 +25,8 @@
- #include <linux/zswap.h>
- #include <asm/page.h>
  
-+struct node_private;
+ /*
+- * Return in *pmask the portion of a cpusets's mems_allowed that
++ * Return in *pmask the portion of a cpuset's mems_allowed that
+  * are online, with memory.  If none are online with memory, walk
+  * up the cpuset hierarchy until we find one that does have some
+  * online mems.  The top cpuset always has some mems online.
+  *
+  * One way or another, we guarantee to return some non-empty subset
+- * of node_states[N_MEMORY].
++ * of node_states[N_MEMORY].  N_MEMORY_PRIVATE nodes from the
++ * original cpuset are preserved, but only N_MEMORY nodes are
++ * pulled from ancestors.
+  *
+  * Call with callback_lock or cpuset_mutex held.
+  */
+ static void guarantee_online_mems(struct cpuset *cs, nodemask_t *pmask)
+ {
++	struct cpuset *orig_cs = cs;
++	int nid;
 +
- /* Free memory management - zoned buddy allocator.  */
- #ifndef CONFIG_ARCH_FORCE_MAX_ORDER
- #define MAX_PAGE_ORDER 10
-@@ -1514,6 +1516,8 @@ typedef struct pglist_data {
- 	atomic_long_t		vm_stat[NR_VM_NODE_STAT_ITEMS];
- #ifdef CONFIG_NUMA
- 	struct memory_tier __rcu *memtier;
-+	struct node_private __rcu *node_private;
-+	bool private;
- #endif
- #ifdef CONFIG_MEMORY_FAILURE
- 	struct memory_failure_stats mf_stats;
-diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-new file mode 100644
-index 000000000000..6a70ec39d569
---- /dev/null
-+++ b/include/linux/node_private.h
-@@ -0,0 +1,210 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_NODE_PRIVATE_H
-+#define _LINUX_NODE_PRIVATE_H
+ 	while (!nodes_intersects(cs->effective_mems, node_states[N_MEMORY]))
+ 		cs = parent_cs(cs);
 +
-+#include <linux/completion.h>
-+#include <linux/mm.h>
-+#include <linux/nodemask.h>
-+#include <linux/rcupdate.h>
-+#include <linux/refcount.h>
+ 	nodes_and(*pmask, cs->effective_mems, node_states[N_MEMORY]);
 +
-+struct page;
-+struct vm_area_struct;
-+struct vm_fault;
++	for_each_node_state(nid, N_MEMORY_PRIVATE) {
++		if (node_isset(nid, orig_cs->effective_mems))
++			node_set(nid, *pmask);
++	}
+ }
+ 
+ /**
+@@ -4075,7 +4086,9 @@ static void cpuset_handle_hotplug(void)
+ 
+ 	/* fetch the available cpus/mems and find out which changed how */
+ 	cpumask_copy(&new_cpus, cpu_active_mask);
+-	new_mems = node_states[N_MEMORY];
 +
-+/**
-+ * struct node_private_ops - Callbacks for private node services
++	/* Include N_MEMORY_PRIVATE so cpuset controls access the same way */
++	nodes_or(new_mems, node_states[N_MEMORY], node_states[N_MEMORY_PRIVATE]);
+ 
+ 	/*
+ 	 * If subpartitions_cpus is populated, it is likely that the check
+@@ -4488,10 +4501,21 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+  * __alloc_pages() will include all nodes.  If the slab allocator
+  * is passed an offline node, it will fall back to the local node.
+  * See kmem_cache_alloc_node().
 + *
-+ * Services register these callbacks to intercept MM operations that affect
-+ * their private nodes.
 + *
-+ * Flag bits control which MM subsystems may operate on folios on this node.
-+ *
-+ * The pgdat->node_private pointer is RCU-protected.  Callbacks fall into
-+ * three categories based on their calling context:
-+ *
-+ * Folio-referenced callbacks (RCU released before callback):
-+ *   The caller holds a reference to a folio on the private node, which
-+ *   pins the node's memory online and prevents node_private teardown.
-+ *
-+ * Refcounted callbacks (RCU released before callback):
-+ *   The caller has no folio on the private node (e.g., folios are on a
-+ *   source node being migrated TO this node).  A temporary refcount is
-+ *   taken on node_private under rcu_read_lock to keep the structure (and
-+ *   the service module) alive across the callback.  node_private_unregister
-+ *   waits for all temporary references to drain before returning.
-+ *
-+ * Non-folio callbacks (rcu_read_lock held during callback):
-+ *   No folio reference exists, so rcu_read_lock is held across the
-+ *   callback to prevent node_private from being freed.
-+ *   These callbacks MUST NOT sleep.
-+ *
-+ * @flags: Operation exclusion flags (NP_OPS_* constants).
-+ *
-+ */
-+struct node_private_ops {
-+	unsigned long flags;
-+};
++ * Private nodes aren't eligible for these allocations, so skip them.
++ * guarantee_online_mems guaranttes at least one N_MEMORY node is set.
+  */
+ static int cpuset_spread_node(int *rotor)
+ {
+-	return *rotor = next_node_in(*rotor, current->mems_allowed);
++	int node;
 +
-+/**
-+ * struct node_private - Per-node container for N_MEMORY_PRIVATE nodes
-+ *
-+ * This structure is allocated by the driver and passed to node_private_register().
-+ * The driver owns the memory and must ensure it remains valid until after
-+ * node_private_unregister() returns with the reference count dropped to 0.
-+ *
-+ * @owner: Opaque driver identifier
-+ * @refcount: Reference count (1 = registered; temporary refs for non-folio
-+ *		callbacks that may sleep; 0 = fully released)
-+ * @released: Signaled when refcount drops to 0; unregister waits on this
-+ * @ops: Service callbacks and exclusion flags (NULL until service registers)
-+ */
-+struct node_private {
-+	void *owner;
-+	refcount_t refcount;
-+	struct completion released;
-+	const struct node_private_ops *ops;
-+};
++	do {
++		node = next_node_in(*rotor, current->mems_allowed);
++		*rotor = node;
++	} while (node_state(node, N_MEMORY_PRIVATE));
 +
-+#ifdef CONFIG_NUMA
-+
-+#include <linux/mmzone.h>
-+
-+/**
-+ * folio_is_private_node - Check if folio is on an N_MEMORY_PRIVATE node
-+ * @folio: The folio to check
-+ *
-+ * Returns true if the folio resides on a private node.
-+ */
-+static inline bool folio_is_private_node(struct folio *folio)
-+{
-+	return node_state(folio_nid(folio), N_MEMORY_PRIVATE);
-+}
-+
-+/**
-+ * page_is_private_node - Check if page is on an N_MEMORY_PRIVATE node
-+ * @page: The page to check
-+ *
-+ * Returns true if the page resides on a private node.
-+ */
-+static inline bool page_is_private_node(struct page *page)
-+{
-+	return node_state(page_to_nid(page), N_MEMORY_PRIVATE);
-+}
-+
-+static inline const struct node_private_ops *
-+folio_node_private_ops(struct folio *folio)
-+{
-+	const struct node_private_ops *ops;
-+	struct node_private *np;
-+
-+	rcu_read_lock();
-+	np = rcu_dereference(NODE_DATA(folio_nid(folio))->node_private);
-+	ops = np ? np->ops : NULL;
-+	rcu_read_unlock();
-+
-+	return ops;
-+}
-+
-+static inline unsigned long node_private_flags(int nid)
-+{
-+	struct node_private *np;
-+	unsigned long flags;
-+
-+	rcu_read_lock();
-+	np = rcu_dereference(NODE_DATA(nid)->node_private);
-+	flags = (np && np->ops) ? np->ops->flags : 0;
-+	rcu_read_unlock();
-+
-+	return flags;
-+}
-+
-+static inline bool folio_private_flags(struct folio *f, unsigned long flag)
-+{
-+	return node_private_flags(folio_nid(f)) & flag;
-+}
-+
-+static inline bool node_private_has_flag(int nid, unsigned long flag)
-+{
-+	return node_private_flags(nid) & flag;
-+}
-+
-+static inline bool zone_private_flags(struct zone *z, unsigned long flag)
-+{
-+	return node_private_flags(zone_to_nid(z)) & flag;
-+}
-+
-+#else /* !CONFIG_NUMA */
-+
-+static inline bool folio_is_private_node(struct folio *folio)
-+{
-+	return false;
-+}
-+
-+static inline bool page_is_private_node(struct page *page)
-+{
-+	return false;
-+}
-+
-+static inline const struct node_private_ops *
-+folio_node_private_ops(struct folio *folio)
-+{
-+	return NULL;
-+}
-+
-+static inline unsigned long node_private_flags(int nid)
-+{
-+	return 0;
-+}
-+
-+static inline bool folio_private_flags(struct folio *f, unsigned long flag)
-+{
-+	return false;
-+}
-+
-+static inline bool node_private_has_flag(int nid, unsigned long flag)
-+{
-+	return false;
-+}
-+
-+static inline bool zone_private_flags(struct zone *z, unsigned long flag)
-+{
-+	return false;
-+}
-+
-+#endif /* CONFIG_NUMA */
-+
-+#if defined(CONFIG_NUMA) && defined(CONFIG_MEMORY_HOTPLUG)
-+
-+int node_private_register(int nid, struct node_private *np);
-+int node_private_unregister(int nid);
-+int node_private_set_ops(int nid, const struct node_private_ops *ops);
-+int node_private_clear_ops(int nid, const struct node_private_ops *ops);
-+
-+#else /* !CONFIG_NUMA || !CONFIG_MEMORY_HOTPLUG */
-+
-+static inline int node_private_register(int nid, struct node_private *np)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int node_private_unregister(int nid)
-+{
-+	return 0;
-+}
-+
-+static inline int node_private_set_ops(int nid,
-+				       const struct node_private_ops *ops)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int node_private_clear_ops(int nid,
-+					 const struct node_private_ops *ops)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif /* CONFIG_NUMA && CONFIG_MEMORY_HOTPLUG */
-+
-+#endif /* _LINUX_NODE_PRIVATE_H */
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index bd38648c998d..c9bcfd5a9a06 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -391,6 +391,7 @@ enum node_states {
- 	N_HIGH_MEMORY = N_NORMAL_MEMORY,
- #endif
- 	N_MEMORY,		/* The node has memory(regular, high, movable) */
-+	N_MEMORY_PRIVATE,	/* The node's memory is private */
- 	N_CPU,		/* The node has one or more cpus */
- 	N_GENERIC_INITIATOR,	/* The node has one or more Generic Initiators */
- 	NR_NODE_STATES
++	return node;
+ }
+ 
+ /**
 -- 
 2.53.0
 
