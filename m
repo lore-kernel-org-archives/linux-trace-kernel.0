@@ -1,65 +1,64 @@
 Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247C2367B8
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBA8238C0D
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 08:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771750176; cv=none; b=DmfKZ1kOSdx9D4wfuSkvRk6SSrfO/ygMqHdXfMY7rpfeTRA54cG7w6nGhroq0rXI0swmM/GjwWO7M0jZglXMY1LLmNIhW9ohiwKsul8LZPtwoByKFXOQ72eqkhHcpJ71H4DfxWZZT7PksVzUi/xYw7ytLlX6UgTsHkLKfbI36Ds=
+	t=1771750179; cv=none; b=knM8tb5Pr2VKC1HqTn/QXqOLKd5ShaUl1uqNhVqcUK7Z1BW1sEmJCgercfSMIh7y/XFEY/M7ctFg0mpYiFV2Mvp72WKDKDWETXq7ZNBeSBlgZE+ccHzQIiFphwcyWbvrlIRD3QIOcZVxbmXFy7UCxVO9mqMQPv6wee93Ng2Sh4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771750176; c=relaxed/simple;
-	bh=Aefhw780FZYcBuGz8WT4CBUZ6IdM/Ont/+9yMbNMRvA=;
+	s=arc-20240116; t=1771750179; c=relaxed/simple;
+	bh=iAyfZHGom5QIZEtYKc+A9YZYnBeGnAnI+yMmjM4jWRM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AvenivHZL/Uu2A9TgzTaNN+QYs1zUfR5XWOQNYmnjKBFTEMXCxGT7Yg+7Q75zs0pqwS8WmLnnsZ3OBE1jiu4v4j2mieEBBFoPkbQGJxJpQa941kEDS5Wke/5PxQyMsmedhjeYGUjrSg/hiR0Rl0Jylk4MjDGWMc0BNEsJAFJ5J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aKrpR0OV; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=NQxGTPbcH4CRUBrgRz2eJ96edvCLD6HsKxYqROOYa7jUVpZ9ZaO9OySPBGeiDcvvdbonSavMST8ThRvh6l872HJK0IzKtekjsPY7CDnuasLW++OBZYbJ8ZmEGrRJy6E1nxpb6VcML5ZslSoPZxDDvEkVz10YxXrN+4r5gwz7IAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tEpcv9fO; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aKrpR0OV"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-502a789834fso29522411cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:49:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tEpcv9fO"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-5069df1d711so31419451cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Feb 2026 00:49:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1771750174; x=1772354974; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1771750177; x=1772354977; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CV1BMLJRDB150NHPYMpWTJDZSx7tUpTBtDPGS7yRISs=;
-        b=aKrpR0OVgjBkiQpAx1zP1rp3LyTnn9W4nwnchf95T1xfjihChVGz09JVeAx5MvG+Yn
-         H5sYAO3ht1mGpchtZsW0cuWdmaFoQ+RKV2o43faVH0iDzwWEG4o8P2j33IJD6gJ3M8xe
-         Va9FrBhHBtcOg1BVjjq+Qa6nOKCCL6mKnEssver606gWn2GXKbHt+3DIouktOdLrUe4V
-         wMIOfdOb4MV8/6UH1st6eG6LcS9TDA012H4dC+XlNRD2uZ66VkUH+CScZbFcsBwdB20Y
-         4tvsG7pLPETXPn5h8nOpu0gPwFBvxx8AO0ikzUPMfTkhp7ayNu5kRYbTVt8kLwcCfd0d
-         fbag==
+        bh=/yj+ZkijP1F57uDkd+kIZ1Nriaysy+Ep+EgiXsVeVTU=;
+        b=tEpcv9fOflWF9zTz8xx9zc+QvmOmgDSKhksUu28JiiMoOhgJhFZPIIpGZrRbDupsxr
+         qFuI77QDhrAavMLFK7H6tGZ3EK3yK0P/CKQcLRROPbkN1Z8w1zZynuLjtKAzo8s3L+c7
+         XkinxGHKbKAEd2+JhHynJRSRFR/6paFp3TPZ3nyt9dv0zZvU3m7R4Pg92ChHdD5UC/zh
+         RSY4x5EqIiRbG+hicxDBbqV9y9NuEFkMUVeqryerStAEX8LTIyyBdqj2ACo7d6vfpdSD
+         JlQY8lRgozO+lIAnMof8++Q9tkK80MAV80evhBw6NhQ/DGD2YyutQu2+K97LsVGtg6Vt
+         N8tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771750174; x=1772354974;
+        d=1e100.net; s=20230601; t=1771750177; x=1772354977;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=CV1BMLJRDB150NHPYMpWTJDZSx7tUpTBtDPGS7yRISs=;
-        b=mojLiA2wQSnY3Xdk1QS5ASByhpPOOahFSLsSGBfGFABfq0LvbEwMlH5vPywhxuZgSI
-         e7keHeZHWqmdoWVk1XibjCBlBSu+3ISb80q7ZTfH80sDStMX4mPAqUV8D/FQMNqmg5Qa
-         G7ZqVbcbrbtZKNsMJDif4uZBbp6vF/XKa7Mh583loKy5w8aEHwxidkj7ajLHtQwu1eh8
-         zZraS77jkVFBfxdd6zXAm07BOltq0um+piEG7M+0L30BUTjRUrfgah4B0Cfi2LtrOWy7
-         nR3+2jbAPCmWCX2JT6hdCAkyD2Zk3c/KTraARNm8bxHDwCBrVfsLpAGaze9VXDgJI7ni
-         i0pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXevbuSQdWrRFHQaABt0WCq6kZHF3+ArcAFqaSJKLT1QEdd2NVOEHvz0rxuWiMSjyk2mAZiz5jATNjJP+DXotE3EaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWyH0xCeQ/PUaRCnsXo10wivJRDsCujqP9j/9sSzmrCZoZ5iBa
-	uimKauS25BtFw/BU4H6sPtgSytPMUTm2KofFTN3Dkh+bvIoqbXxAdm94/KWT6ac2TcsZMTHcJkq
-	5Z+33
-X-Gm-Gg: AZuq6aKG/g9W2R4dWD4rsd+/P1+EIayhrtWq4BHNeieB6DVYEHT0vdPB6NlVLuARZxd
-	O0MS1NemFW8KskCo4oNBHOz8Dj/z53yLCXFOhdN5HdY0inZHc+ElinDy3HpOs+DRYdieiHk3WLv
-	Pvr0WnBvos19EjfJt46TLlqYunq4rjZThKTu6Zd9OkK+B7rCgapyMkaQDJGzNHKQh0aLrGzKbog
-	XWFRo9zulIGxMyz5nA3QhxCachjPaNT1ukrNnwN+Jx7xkVKTke5sRXjXj0GGSFt3bEEm4jWTSrq
-	tuWebKTV/1MAhmBK6sTX4VDq/BvqOQj0U8ZGzIErv/cjSAXGFjpnRH7UmNw+oPtRadx+oWny1Xv
-	Vc5naaYVqjn96Qy5QtPy3BGPtD0vbE0P23ZaGFeaIKFp0kDjmQrqvUwm5t55EsbqlQ7MvV3riHp
-	6JzO1my57Zn2xvp6rzIdUW4dY1dxOXuzTKxLo0G6ewNpWWNCH3xR/Zq4golY7MRirlOGGj1E7L5
-	cOdc7mqpZEX5Po=
-X-Received: by 2002:a05:622a:1903:b0:4ff:c884:31ad with SMTP id d75a77b69052e-5070bcb47ebmr73646721cf.53.1771750173883;
-        Sun, 22 Feb 2026 00:49:33 -0800 (PST)
+        bh=/yj+ZkijP1F57uDkd+kIZ1Nriaysy+Ep+EgiXsVeVTU=;
+        b=jChdDYrcoYXOf9iCG3yiBRx/Gi9rhorCZbT7RV2yVpLb9pWhZm9Di4Fczrdy87rVnj
+         UwOHblKEsz38/woJOhZGW32CclwBmhC4hBnrOjuVsHJtCCzONYgjp1t5eauLk4NXYTtL
+         vm82ykDk3Zn3HutzRhNLfyRzL3lkLTQ+nlHxAr2Xm+GV0JVZLurQEM/tyEplIYlFPy3S
+         U6m624+Qc/kDT5rK/KLEo1vSmlPwzvT5aP0jb3hmtte1p/RAkBNkcM69CYRH8/40w1YN
+         lD2tnFBRykGnZU3UMyOklFR00kHWhpAX72q8fcdSr/YedLpFuh/bSRZZ5iXsljAhnItJ
+         d2rg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2KaWb8z5VnXznfTyHxYEgk99X24CYLPEO+vgpT+iphh/Gnmn4gPN575LZ0i8j7g/FgPUO9I9sMrchz8Lq1BGxGPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz45bJhRmVJ+toqYclwuwldBms/T9S1xEms4lMLdi+CtUbl3iiW
+	6oK3UqGZ3rJILbItcVUEHAZ08n0ZyPl6ODM0isUOdiyDv+6ymvj1YHrBJfkX6WGYEEc=
+X-Gm-Gg: AZuq6aI4KvaykiVozxz6fs1hptNng4M0ot1JxASCEdgasjNfKlFDZRXfggqSYsTVLvS
+	+Xyb5QUDG+uPS7Y4PHa0LSKMNsW6u87Ay2maTJeaZ7rzhBO5YAohmXrl3v0bU0gCbPB++ZE5cxb
+	JAeIQ3BIJHxuIivuT2wKIlTd+xBhRP+uK3KIwq49abKmktnPcPojtNy6hEaMVCQnoo8ci7yh/BX
+	EnbfoyJnbV8paYrGSet/aeiB0rHQY2Boqd2md+OqXSO14V6hgKUgCOQib3Bgzc5/kHlQycwdr+v
+	7d+NBA4sPbQDDvTq9XmRrWEDN839jgZ/PgqQfAjul/kH0bi9wqyAQckD+QlG+1+7rSVyqzdhcfj
+	nwVYt+YOruwzjNhZNSWtk8oXgfNtooDHMHDYGZPa3K07pNE+X5J2/mRNFNJ+MJ+y5wPb3NZRM+S
+	htEVL4ygd3NGX6wHqZwgu9Kce6mqr+Gb0pLQoubuuetwGKQISJ9Xw81fAch4Wt8ZqGe+wJlTHHj
+	wJDDvN5g9MEnNU=
+X-Received: by 2002:ac8:5f52:0:b0:4f1:b712:364a with SMTP id d75a77b69052e-5070bc84890mr75076581cf.56.1771750177109;
+        Sun, 22 Feb 2026 00:49:37 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.31
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d53f0fcsm38640631cf.9.2026.02.22.00.49.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Feb 2026 00:49:33 -0800 (PST)
+        Sun, 22 Feb 2026 00:49:36 -0800 (PST)
 From: Gregory Price <gourry@gourry.net>
 To: lsf-pc@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -135,9 +134,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bhe@redhat.com,
 	zhengqi.arch@bytedance.com,
 	terry.bowman@amd.com
-Subject: [RFC PATCH v4 10/27] mm/swap: add free_folio callback for folio release cleanup
-Date: Sun, 22 Feb 2026 03:48:25 -0500
-Message-ID: <20260222084842.1824063-11-gourry@gourry.net>
+Subject: [RFC PATCH v4 11/27] mm/huge_memory.c: add private node folio split notification callback
+Date: Sun, 22 Feb 2026 03:48:26 -0500
+Message-ID: <20260222084842.1824063-12-gourry@gourry.net>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
 References: <20260222084842.1824063-1-gourry@gourry.net>
@@ -149,140 +148,124 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a folio's refcount drops to zero, the service may need to perform
-cleanup before the page returns to the buddy allocator (e.g. zeroing
-pages to scrub stale compressed data / release compression ratio).
+Some private node services may need to update internal metadata when
+a THP folio is split.  ZONE_DEVICE already has a split callback via
+pgmap->ops; private nodes can provide the same capability.
 
-Add folio_managed_on_free() to wrap both zone_device and private node
-semantics for this operation since they are the same.
+Just like zone_device, some private node services may want to know
+about a folio being split.  Add this optional callback to the ops
+struct and add a wrapper for zone_device and private node callback
+dispatch to be consolidated.
 
-One difference between zone_device and private node folios:
-  - private nodes may choose to either take a reference and return true
-    ("handled"), or return false to return it back to the buddy.
-
-  - zone_device returns the page to the buddy (always returns true)
+Wire this into __folio_split() where the zone_device check was made.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/node_private.h |  6 ++++++
- mm/internal.h                | 30 ++++++++++++++++++++++++++++++
- mm/swap.c                    | 21 ++++++++++-----------
- 3 files changed, 46 insertions(+), 11 deletions(-)
+ include/linux/node_private.h | 33 +++++++++++++++++++++++++++++++++
+ mm/huge_memory.c             |  6 ++++--
+ 2 files changed, 37 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index 7687a4cf990c..09ea7c4cb13c 100644
+index 09ea7c4cb13c..f9dd2d25c8a5 100644
 --- a/include/linux/node_private.h
 +++ b/include/linux/node_private.h
-@@ -39,10 +39,16 @@ struct vm_fault;
-  *   callback to prevent node_private from being freed.
-  *   These callbacks MUST NOT sleep.
+@@ -3,6 +3,7 @@
+ #define _LINUX_NODE_PRIVATE_H
+ 
+ #include <linux/completion.h>
++#include <linux/memremap.h>
+ #include <linux/mm.h>
+ #include <linux/nodemask.h>
+ #include <linux/rcupdate.h>
+@@ -44,11 +45,19 @@ struct vm_fault;
+  *   Returns: true if handled (skip return to buddy)
+  *            false if no op (return to buddy)
   *
-+ * @free_folio: Called when a folio refcount drops to 0
-+ *   [folio-referenced callback]
-+ *   Returns: true if handled (skip return to buddy)
-+ *            false if no op (return to buddy)
++ * @folio_split: Notification that a folio on this private node is being split.
++ *    [folio-referenced callback]
++ *     Called from the folio split path via folio_managed_split_cb().
++ *     @folio is the original folio; @new_folio is the newly created folio,
++ *     or NULL when called for the final (original) folio after all sub-folios
++ *     have been split off.
 + *
   * @flags: Operation exclusion flags (NP_OPS_* constants).
   *
   */
  struct node_private_ops {
-+	bool (*free_folio)(struct folio *folio);
+ 	bool (*free_folio)(struct folio *folio);
++	void (*folio_split)(struct folio *folio, struct folio *new_folio);
  	unsigned long flags;
  };
  
-diff --git a/mm/internal.h b/mm/internal.h
-index 97023748e6a9..658da41cdb8e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1412,6 +1412,36 @@ int numa_migrate_check(struct folio *folio, struct vm_fault *vmf,
- void free_zone_device_folio(struct folio *folio);
- int migrate_device_coherent_folio(struct folio *folio);
+@@ -150,6 +159,24 @@ static inline bool zone_private_flags(struct zone *z, unsigned long flag)
+ 	return node_private_flags(zone_to_nid(z)) & flag;
+ }
  
-+/**
-+ * folio_managed_on_free - Notify managed-memory service that folio
-+ *                         refcount reached zero.
-+ * @folio: the folio being freed
-+ *
-+ * Returns true if the folio is fully handled (zone_device -- caller
-+ * must return immediately).  Returns false if the callback ran but
-+ * the folio should continue through the normal free path
-+ * (private_node -- pages go back to buddy).
-+ *
-+ * Returns false for normal folios (no-op).
-+ */
-+static inline bool folio_managed_on_free(struct folio *folio)
++static inline void node_private_split_cb(struct folio *folio,
++					 struct folio *new_folio)
 +{
-+	if (folio_is_zone_device(folio)) {
-+		free_zone_device_folio(folio);
-+		return true;
-+	}
-+	if (folio_is_private_node(folio)) {
-+		const struct node_private_ops *ops =
-+			folio_node_private_ops(folio);
++	const struct node_private_ops *ops = folio_node_private_ops(folio);
 +
-+		if (ops && ops->free_folio) {
-+			if (ops->free_folio(folio))
-+				return true;
-+		}
-+	}
-+	return false;
++	if (ops && ops->folio_split)
++		ops->folio_split(folio, new_folio);
 +}
 +
- struct vm_struct *__get_vm_area_node(unsigned long size,
- 				     unsigned long align, unsigned long shift,
- 				     unsigned long vm_flags, unsigned long start,
-diff --git a/mm/swap.c b/mm/swap.c
-index 2260dcd2775e..dca306e1ae6d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -37,6 +37,7 @@
- #include <linux/page_idle.h>
- #include <linux/local_lock.h>
- #include <linux/buffer_head.h>
-+#include <linux/node_private.h>
- 
- #include "internal.h"
- 
-@@ -96,10 +97,9 @@ static void page_cache_release(struct folio *folio)
- 
- void __folio_put(struct folio *folio)
- {
--	if (unlikely(folio_is_zone_device(folio))) {
--		free_zone_device_folio(folio);
--		return;
--	}
-+	if (unlikely(folio_is_private_managed(folio)))
-+		if (folio_managed_on_free(folio))
-+			return;
- 
- 	if (folio_test_hugetlb(folio)) {
- 		free_huge_folio(folio);
-@@ -961,19 +961,18 @@ void folios_put_refs(struct folio_batch *folios, unsigned int *refs)
- 		if (is_huge_zero_folio(folio))
- 			continue;
- 
--		if (folio_is_zone_device(folio)) {
-+		if (!folio_ref_sub_and_test(folio, nr_refs))
-+			continue;
++static inline void folio_managed_split_cb(struct folio *original_folio,
++					  struct folio *new_folio)
++{
++	if (folio_is_zone_device(original_folio))
++		zone_device_private_split_cb(original_folio, new_folio);
++	else if (folio_is_private_node(original_folio))
++		node_private_split_cb(original_folio, new_folio);
++}
 +
-+		if (unlikely(folio_is_private_managed(folio))) {
- 			if (lruvec) {
- 				unlock_page_lruvec_irqrestore(lruvec, flags);
- 				lruvec = NULL;
- 			}
--			if (folio_ref_sub_and_test(folio, nr_refs))
--				free_zone_device_folio(folio);
--			continue;
-+			if (folio_managed_on_free(folio))
-+				continue;
+ #else /* !CONFIG_NUMA */
+ 
+ static inline bool folio_is_private_node(struct folio *folio)
+@@ -198,6 +225,12 @@ static inline bool zone_private_flags(struct zone *z, unsigned long flag)
+ 	return false;
+ }
+ 
++static inline void folio_managed_split_cb(struct folio *original_folio,
++					  struct folio *new_folio)
++{
++	if (folio_is_zone_device(original_folio))
++		zone_device_private_split_cb(original_folio, new_folio);
++}
+ #endif /* CONFIG_NUMA */
+ 
+ #if defined(CONFIG_NUMA) && defined(CONFIG_MEMORY_HOTPLUG)
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 40cf59301c21..2ecae494291a 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -24,6 +24,7 @@
+ #include <linux/freezer.h>
+ #include <linux/mman.h>
+ #include <linux/memremap.h>
++#include <linux/node_private.h>
+ #include <linux/pagemap.h>
+ #include <linux/debugfs.h>
+ #include <linux/migrate.h>
+@@ -3850,7 +3851,7 @@ static int __folio_freeze_and_split_unmapped(struct folio *folio, unsigned int n
+ 
+ 			next = folio_next(new_folio);
+ 
+-			zone_device_private_split_cb(folio, new_folio);
++			folio_managed_split_cb(folio, new_folio);
+ 
+ 			folio_ref_unfreeze(new_folio,
+ 					   folio_cache_ref_count(new_folio) + 1);
+@@ -3889,7 +3890,8 @@ static int __folio_freeze_and_split_unmapped(struct folio *folio, unsigned int n
+ 			folio_put_refs(new_folio, nr_pages);
  		}
  
--		if (!folio_ref_sub_and_test(folio, nr_refs))
--			continue;
--
- 		/* hugetlb has its own memcg */
- 		if (folio_test_hugetlb(folio)) {
- 			if (lruvec) {
+-		zone_device_private_split_cb(folio, NULL);
++		folio_managed_split_cb(folio, NULL);
++
+ 		/*
+ 		 * Unfreeze @folio only after all page cache entries, which
+ 		 * used to point to it, have been updated with new folios.
 -- 
 2.53.0
 
