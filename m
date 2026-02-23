@@ -1,61 +1,66 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581423AB8D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 19:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799B323E358;
+	Mon, 23 Feb 2026 21:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771875775; cv=none; b=ojU3Cd1Xcqcu8aYjBprdAbwTIJOYyPbdBgihr7ys9pfwaGJ80GH82BhpnE6J5rne2P9GZc7Wv/szpIdAtT4Y8Kkm8JvEsSKUJNfhDVr1RRY41GBNGokQZhilz+WEJiWmdN35V/bN5Vp+6JxSCG7+t4MXMtPgLObhOVZVyDy+Vek=
+	t=1771882451; cv=none; b=i1WJpWf13rpkO/6Fa+HNe1RnEa6FSuXKR4pd4HdawF8MTeRkM8lsd30cmsaJ8pGIjNaAcc2t9H+JEJJsN29lR67JgFrQgzzn1PyF7ACS6LVo/elpE2EIBjPq2AgWnrGpKnyedEcIOZBEzknis2qVLLqQJ74KBg3syHD/E5pHTTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771875775; c=relaxed/simple;
-	bh=rj8ye3UwqLi2W/5uJZjx0RBGN4cNIYRZ2ySzLY+wYB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4lLxUE04sa7WokC+997jrPJt5cWYRlDESkd6E1zTPBu9x5AueeZM9JtRPDTYUcp0fJ3gVEkeG8UweMHhnQfWgi01UuwyCiVyrVyUcaO3u7CulxDm/lzFuUW1kX8/aPLYgULbespZ9awgBGkaokIe0x5y9lZtxwJEKUGHch1ujg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Le2r81F4; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1771882451; c=relaxed/simple;
+	bh=yW66PgtS7TMre9iYZz+uBZ0gFAxpvkrZNFy6mTKxGfQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JQR/5j2ZUn7Wtwqc5vmTWaU+fYONlSJO0uDv0iblth+SbZrOqkddwTZc2bhxvcXuxVKVLqMlvEyp0w9PnChYuNBXWBFiq1w7dtAk52t8pql+k+4XX/SQtsTxoC4+yTa3SQpfVgiFzalHjPTR41CadG9JBZ35IbOJK/3ZYCTz4hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=L157LcRL; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Le2r81F4"
-Date: Mon, 23 Feb 2026 11:42:34 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1771875771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gIQcQDyS3X7z6KDsG0mP+b5KcPKyO7L8eLyBRsu2r4g=;
-	b=Le2r81F4jqCDxDLaiX4FjKljCWmKeW2G0hkga84GeWRE6RC3Q9qhm6lISEmmHcEH5pVyOV
-	fwAzAP8ofyAOMoqAiK5h+Nx0cdE7fFJWsSnoTJGivZDWCKozuZem3JPsM1zw2utclFJ5aE
-	rw/wJ9ewmSyd8dioXnIbBKei5QWpOoo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Thomas Ballasi <tballasi@linux.microsoft.com>
-Cc: akpm@linux-foundation.org, axelrasmussen@google.com, david@kernel.org, 
-	hannes@cmpxchg.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	lorenzo.stoakes@oracle.com, mhiramat@kernel.org, mhocko@kernel.org, rostedt@goodmis.org, 
-	weixugc@google.com, yuanchu@google.com, zhengqi.arch@bytedance.com
-Subject: Re: [PATCH v7 3/3] mm: vmscan: add PIDs to vmscan tracepoints
-Message-ID: <aZys_tvQinYNNpOk@linux.dev>
-References: <20260213181537.54350-1-tballasi@linux.microsoft.com>
- <20260223171544.4750-1-tballasi@linux.microsoft.com>
- <20260223171544.4750-4-tballasi@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="L157LcRL"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net CC52940423
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1771882449; bh=yQ6eEVYkWITfriAUX0GJpHRcPOumgnFsSFkBjRLVNeQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=L157LcRLHL/yOoYo7qeCHINg6d0cRNjzh/h4dIV5WAqpP00qKnRGNjfzT0vn88UcJ
+	 QdEcTW9XqGNaZg5RgamoYBivN+hnAvp5TpFSHUWz955wApnsOJIdELUNunmXO/dIQd
+	 aA2dB79wZ7oDAcoKvPPiJRqHSYxzwFaIJ+m4pQQkJLIIq4wp0h0bNyeTD5dCi5aSBn
+	 6Ptsj9vUWSOhEutknFJPh7fXTgC/1usHZHcLZpqRFDz37nC6WNyBK1TOYHJ6wmVssH
+	 CAdCfxeuEeTNIES/dOYJJSsfeGSw51OlMV0OcrMYza97IBYgSn/jlthphw9NqfcZ9o
+	 QqWbh/ZFsPowA==
+Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id CC52940423;
+	Mon, 23 Feb 2026 21:34:09 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Costa Shulyupin <costa.shul@redhat.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Cc: Costa Shulyupin <costa.shul@redhat.com>
+Subject: Re: [PATCH v1] Documentation/rtla: Add hwnoise to main page
+In-Reply-To: <20260215131249.33437-1-costa.shul@redhat.com>
+References: <20260215131249.33437-1-costa.shul@redhat.com>
+Date: Mon, 23 Feb 2026 14:34:09 -0700
+Message-ID: <87v7fn401a.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260223171544.4750-4-tballasi@linux.microsoft.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Mon, Feb 23, 2026 at 09:15:44AM -0800, Thomas Ballasi wrote:
-> The changes aims at adding additionnal tracepoints variables to help
-> debuggers attribute them to specific processes.
-> 
-> The PID field uses in_task() to reliably detect when we're in process
+Costa Shulyupin <costa.shul@redhat.com> writes:
 
-Where is this in_task() check happening? Also this patch is changing
-tracepoints for memory reclaim which never happens in any context other than
-process context, so we don't need __event_in_irq() checks for these tracepoints.
+> Add hwnoise to the command list and SEE ALSO section.  The command list
+> is ordered from low level to high level.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+> ---
+>  Documentation/tools/rtla/rtla.rst | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
+Applied, thanks.
+
+jon
