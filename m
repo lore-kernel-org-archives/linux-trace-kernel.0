@@ -1,103 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB17930E85B;
-	Mon, 23 Feb 2026 16:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF7830F932
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 16:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771863384; cv=none; b=bZuvWo4aj2DN/Hi0LpbdFiggrneoCbFtdHYUyxUFCkrZpbi90m3JaNhUyUHzvmhTW48kRlokb5mskOcu+hk3IRJESXv/80exoe7otk2wyI9SXjvB5jPM9FVRHtHyiM66ZOX93Evz+eGdHvUrLexe3aQku9pbodXzzLsdEt5LhOI=
+	t=1771863916; cv=none; b=rdPEQSPOtm/alv5d4xoHNjjSKuBtgnKiSCbzOTg+q85JBCiEBtCilxhY4wiBENCCzndy3uzeQe1YCIjdX4pj4USyGPB3AHthJTNhSdy8RMdW1Xt+TDRNYHwSE3RHiJIS4MsTEVqg8KtNucC4AePPu0PLX8tlEoNZoyJqLiF0Qh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771863384; c=relaxed/simple;
-	bh=WuaUaL8kh298Bw59ebc4SOcvk+Y024rsIcZw1sj+q4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UgHuTEs4B26WLOMwhFJDms2sDY7diTQAuCKoJ6HJsyZ5nFU08gi6JgIZdJOoiSQMQw7+VmuqQSBOrsctyq4nkipsJZe0gIxuT/MjiotIVG7BmS/LWjZhyFPPyYzLZd76R9N2xbaQd6f+CItmPdsl7uAa0Lx9l1VVK4Rmk65BWK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nv5eL1RR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771863916; c=relaxed/simple;
+	bh=t1nvoZ75tRcZgPqNGu2NO0oetrJxUv9GolNNvSx98cg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=lmKx3QPeLp0y20vK0ESEI1F/UGfaA8j0ry8FRLFyAcPrUrrkLwMbXNbQCQb/hkuQv7p3Ekoq4D1xglwq5icI0Df4f9f2qiVOKNKul8U/quE8PueVRjxlrBQF1DSKuNirJfFOusJ82MD8savg7JlgMjDQXNVTkuDOg4KJFljQ0Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ieCROVVI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nv5eL1RR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5736C116C6;
-	Mon, 23 Feb 2026 16:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771863384;
-	bh=WuaUaL8kh298Bw59ebc4SOcvk+Y024rsIcZw1sj+q4A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nv5eL1RRP9Lxf9QUjRPcZT3PbLLRfCZ8jl4mSfMMOdxz6dGJAYT7ZqBWaLN+1nNEG
-	 Gsp7DmrIqHIiwG0N3xGYz3ZDJ/i6pnG6fgg04MglfzQ5RzeuwX5yMMKkRhdSdG24EY
-	 SdYd2BEaBHzuaBp3wXY1L8xo9iW3Nq5yKGHPc/GlHF5S9hWuJA5Ykf8JtLBIxgQcZS
-	 qzyn35xC9z+nWUDQSjuYzty2OxN/T7uJNGS3DFKbeztdLvko9mAj0dQYpzVs/6P+P8
-	 AWiceUa617ONIoa0qVfSzmJebjU/3JQKIhFAGF3K/gEbt8Yj3uZiI8COBXSXEjqaAV
-	 YNCeVIeza7zLA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ieCROVVI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771863914;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yWN3oV3+6285tR2wF7SSz5Z/PUFJ9xcxgc6Q2OgcDGY=;
+	b=ieCROVVIp1O9aZHpQqKn+/evwre/6wMQ0/BQApGfoB+TskEo1qWtnjIjsS9glgBRPO2alS
+	7+W3nfYS/h4Ugod0zW8l4a6TP+0oRfN+OuVhPZhVX2c3ahzc6LFD/NPH6vWMYB8W5rjvaX
+	9gyArlhKGr0SRCYkBCeGxmIzbBZ2ZsQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-279-N-pi9YnrNSC0OY5-U64WLw-1; Mon,
+ 23 Feb 2026 11:25:11 -0500
+X-MC-Unique: N-pi9YnrNSC0OY5-U64WLw-1
+X-Mimecast-MFC-AGG-ID: N-pi9YnrNSC0OY5-U64WLw_1771863910
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF22F18002C4;
+	Mon, 23 Feb 2026 16:25:09 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.88.94])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BDC121800370;
+	Mon, 23 Feb 2026 16:25:07 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
-Date: Tue, 24 Feb 2026 01:16:20 +0900
-Message-ID: <177186338032.133407.2212071928206649620.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <177186335195.133407.907308822749006594.stgit@devnote2>
-References: <177186335195.133407.907308822749006594.stgit@devnote2>
-User-Agent: StGit/0.19
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Wander Lairson Costa <wander@redhat.com>,
+	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 00/19] rv/rvgen: Robustness, modernization, and fixes
+Date: Mon, 23 Feb 2026 13:17:43 -0300
+Message-ID: <20260223162407.147003-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: 9ipxIY4QQibeCxLbAzo00rkAqLkhUA2rffe3vSn3gZ8_1771863910
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This patch series introduces fixes and improvements to the RV Generator
+(rvgen) tool in tools/verification. The primary goal is to enhance the
+tool's robustness, maintainability, and correctness by addressing
+several latent bugs, modernizing the Python codebase, and improving its
+overall structure and error handling.
 
-Skip invalid sub-buffers when validating the persistent ring buffer
-instead of discarding the entire ring buffer. Also, mark there are
-missed events on the discarded buffer.
+The changes include fixing logic errors in DOT file validation,
+resolving unbound variable errors that could lead to runtime crashes,
+and improving exception handling by removing dangerous bare except
+clauses. The codebase is updated to use contemporary Python idioms such
+as f-strings and context managers. Additionally, type annotations are
+added to resolve static analysis errors.
 
-If the cache data in memory fails to be synchronized during a reboot,
-the persistent ring buffer may become partially corrupted, but other
-sub-buffers may still contain readable event data. Only discard the
-subbuffersa that ar found to be corrupted.
+Changes in v3:
+- Dropped patch "add missing return type annotations" as per Gabriele
+  Monaco's feedback that annotations on stub methods are not needed at
+  this stage.
+- Expanded AutomataError exception class patch to also replace generic
+  ValueError exceptions in HA and LTL modules, as suggested by Gabriele
+  Monaco.
+- Updated typo fix patch to also correct singular/plural inconsistencies
+  ("automata" to "automaton"), as noted by Gabriele Monaco.
+- Included additional f-string conversion in dot2k.py found by Gabriele
+  Monaco after rebase.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v3:
-  - Record missed data event on commit.
----
- kernel/trace/ring_buffer.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+Changes in v2:
+- Dropped patches related to the @not_implemented decorator and abstract
+  method stubs (v1 patches 9, 18, 19) to address class hierarchy
+  improvements in a separate series.
+- Dropped trivial cleanup patches (boolean simplification, __contains__)
+  as they were already fixed after rebasing from
+  linux-trace/latency/for-next.
+- Merged typo fix patches into a single patch.
+- Changed the fix for the unbound loop variable warning in abbreviate_atoms
+  pyright report.
+- Reworked initial state validation to strictly enforce the presence of
+  an initial state.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1ef718d21796..18b0b33e1dc8 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2058,17 +2058,18 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 		if (ret < 0) {
- 			pr_info("Ring buffer meta [%d] invalid buffer page\n",
- 				cpu_buffer->cpu);
--			goto invalid;
--		}
--
--		/* If the buffer has content, update pages_touched */
--		if (ret)
--			local_inc(&cpu_buffer->pages_touched);
--
--		entries += ret;
--		entry_bytes += rb_page_size(head_page);
--		local_set(&cpu_buffer->head_page->entries, ret);
-+			/* Instead of discard whole ring buffer, discard only this sub-buffer. */
-+			local_set(&head_page->entries, 0);
-+			local_set(&head_page->page->commit, RB_MISSED_EVENTS);
-+		} else {
-+			/* If the buffer has content, update pages_touched */
-+			if (ret)
-+				local_inc(&cpu_buffer->pages_touched);
- 
-+			entries += ret;
-+			entry_bytes += rb_page_size(head_page);
-+			local_set(&cpu_buffer->head_page->entries, ret);
-+		}
- 		if (head_page == cpu_buffer->commit_page)
- 			break;
- 	}
+Wander Lairson Costa (19):
+  rv/rvgen: introduce AutomataError exception class
+  rv/rvgen: remove bare except clauses in generator
+  rv/rvgen: replace % string formatting with f-strings
+  rv/rvgen: replace __len__() calls with len()
+  rv/rvgen: remove unnecessary semicolons
+  rv/rvgen: use context managers for file operations
+  rv/rvgen: fix typos in automata and generator docstring and comments
+  rv/rvgen: fix PEP 8 whitespace violations
+  rv/rvgen: fix DOT file validation logic error
+  rv/rvgen: use class constant for init marker
+  rv/rvgen: refactor automata.py to use iterator-based parsing
+  rv/rvgen: remove unused sys import from dot2c
+  rv/rvgen: remove unused __get_main_name method
+  rv/rvgen: make monitor arguments required in rvgen
+  rv/rvgen: fix isinstance check in Variable.expand()
+  rv/rvgen: extract node marker string to class constant
+  rv/rvgen: enforce presence of initial state
+  rv/rvgen: fix unbound loop variable warning
+  rv/rvgen: fix _fill_states() return type annotation
+
+ tools/verification/rvgen/__main__.py        |  19 +--
+ tools/verification/rvgen/dot2c              |   1 -
+ tools/verification/rvgen/rvgen/automata.py  | 155 ++++++++++++--------
+ tools/verification/rvgen/rvgen/dot2c.py     |  58 ++++----
+ tools/verification/rvgen/rvgen/dot2k.py     |  61 ++++----
+ tools/verification/rvgen/rvgen/generator.py |  91 +++++-------
+ tools/verification/rvgen/rvgen/ltl2ba.py    |  11 +-
+ tools/verification/rvgen/rvgen/ltl2k.py     |  54 ++++---
+ 8 files changed, 237 insertions(+), 213 deletions(-)
+
+-- 
+2.53.0
 
