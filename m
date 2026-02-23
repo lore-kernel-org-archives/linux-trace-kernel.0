@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160B51F09B3;
-	Mon, 23 Feb 2026 16:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FAD2F1FE3;
+	Mon, 23 Feb 2026 16:16:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771863366; cv=none; b=pXN2XHLQGV1SulNSYrM6cLG56qDDo+365GLvZdX9iMxm7RZ7LqYJdW2ZEZSaVhvfgn5k0xF/luhf7EP3h6IApZDWylI01H7J/tBvJyEJ/AfsHsYiTjO17mS8Ykrj+liB6oxdNJr+fyFwMYVaBAZsuicCdheQVmsPb9beAYC+UKE=
+	t=1771863375; cv=none; b=QXuGRarhD3REPbA+xdBx00RyqD5bMwPfypBVSAAhrwIP4klBRwMBSDZ+R2KLDBk6y4YzodjGohsXM3U60psaCHO7McAss0GvqdgvIYXRAzZgiJzhhSxrRjQgJPaYqIlP62fic2dcu7w1MJu3i/QY4FId+UVAQ5wR0rSsAF4rYhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771863366; c=relaxed/simple;
-	bh=J0RAcugJGJlSUKCX3gczkJryfiB4Yx2DGk2Ba3Bf5MM=;
+	s=arc-20240116; t=1771863375; c=relaxed/simple;
+	bh=0pbqO0F3l3QRs4B59lfrQV2R9nevsILl2m+O42Mcm3U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uNva5DEaBgcjIaWy1/5DhuBH92d5RtxVXldITmMMYBqMp6hB9QzK435RT+d8/G26cmwSrBcWkFhGidNR8g/pCszwIIBr9inGQt2WhXRINn1O5dUfmaEew49nElruKRSQW7II60lu8EAgV9KndzyEOE2LisecYA/tH5xMvJIw0dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hN3mI3UV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BzQE3zpyLHsNM+lJMT8vcM7dBTZe31uJKw1mZJS4s7zy7Ln+YI1o+2e2dbALL9tesIjgugCBpNg6CZmOs7sudAAB63svOQ5Bw2UnOOm2DClp1oLelw3Ph1kN25s6c3mHgvsbcvFqYlkp70O+qCnhUaHHRxtd105ud54OQ7SNUVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayRCzYTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hN3mI3UV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A85EC116C6;
-	Mon, 23 Feb 2026 16:16:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayRCzYTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B998C116D0;
+	Mon, 23 Feb 2026 16:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771863365;
-	bh=J0RAcugJGJlSUKCX3gczkJryfiB4Yx2DGk2Ba3Bf5MM=;
+	s=k20201202; t=1771863374;
+	bh=0pbqO0F3l3QRs4B59lfrQV2R9nevsILl2m+O42Mcm3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hN3mI3UVcAg5CL6ZZ8VGgfbaNLnBt3c7FcYBDf7SnH7wGLIwfIkWvWd8Vk6mioLr7
-	 QZ3/t+RSVJjuCU8HGV6zSSH+uj1OKRnXoOlytI4P8YXeQt00N1APtzxpZl67PIlhiK
-	 3jyU3pqTFLK+iaXI13snoS5yS+r0hFxwZs5zLaVDf3diVZV9te98ttmV91RENgQ+oM
-	 MJ8KriOJ1TeQUwe8wWJoBV9pau7LO3ROabi0SkPp4A6R/EpTha291wk3xqUvQnlC9e
-	 7RCPHayIx19ctQ7P2985S82F2szoahow1F5spZK2k6HUePRDVV1X2McNPo7fSlw+Oh
-	 CWvcOKUS9zuqw==
+	b=ayRCzYTlHL3DkZa9lv5+664wmx2agVZNfol8cmPfOpTmF0RSfvIS9ogMyFEW8QFAr
+	 DYY14NsVNKSFfs6mvQZdTt/ryVxtfbFlFTZw/x2ETh9ui7uasgkl1ku42ycHMuUwYm
+	 DzPDC6Sd/bc8AJfrcELUmYBdixddgQPxsdc8bWaqPbK+HJ1+G/sM1/K4xVVYdI4zoA
+	 WC4DQ03dggYPrVy+6MKAc2xCO2SKQmeqL5dQhi40bITuC1Rv3kwOfs/se/AubGsnfN
+	 zQDLl0dqcZ772OjsDTh6lqFfiAvmV89M0oIb+2b91lC/3C1JlGyVbLmtU5H8Mst+0E
+	 e8+jh/J2RlUwg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] ring-buffer: Flush and stop persistent ring buffer on panic
-Date: Tue, 24 Feb 2026 01:16:01 +0900
-Message-ID: <177186336156.133407.6100258199357261509.stgit@devnote2>
+Subject: [PATCH v3 2/3] ring-buffer: Handle RB_MISSED_* flags on commit field correctly
+Date: Tue, 24 Feb 2026 01:16:11 +0900
+Message-ID: <177186337098.133407.17816322157924593847.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <177186335195.133407.907308822749006594.stgit@devnote2>
 References: <177186335195.133407.907308822749006594.stgit@devnote2>
@@ -50,81 +50,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On real hardware, panic and machine reboot may not flush hardware cache
-to memory. This means the persistent ring buffer, which relies on a
-coherent state of memory, may not have its events written to the buffer
-and they may be lost. Moreover, there may be inconsistency with the
-counters which are used for validation of the integrity of the
-persistent ring buffer which may cause all data to be discarded.
+Since the MSBs of rb_data_page::commit are used for storing
+RB_MISSED_EVENTS and RB_MISSED_STORED, we need to mask out those bits
+when it is used for finding the size of data pages.
 
-To avoid this issue, stop recording of the ring buffer on panic and
-flush the cache of the ring buffer's memory.
-
-Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
+Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+Fixes: 5b7be9c709e1 ("ring-buffer: Add test to validate the time stamp deltas")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/ring_buffer.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Changes in v3:
+  - Newly added.
+---
+ kernel/trace/ring_buffer.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1e7a34a31851..84a6459ed494 100644
+index 84a6459ed494..1ef718d21796 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/sched/isolation.h>
- #include <linux/trace_recursion.h>
-+#include <linux/panic_notifier.h>
- #include <linux/trace_events.h>
- #include <linux/ring_buffer.h>
- #include <linux/trace_clock.h>
-@@ -589,6 +590,7 @@ struct trace_buffer {
- 
- 	unsigned long			range_addr_start;
- 	unsigned long			range_addr_end;
-+	struct notifier_block		flush_nb;
- 
- 	struct ring_buffer_meta		*meta;
- 
-@@ -2471,6 +2473,16 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	kfree(cpu_buffer);
+@@ -395,6 +395,18 @@ static __always_inline unsigned int rb_page_commit(struct buffer_page *bpage)
+ 	return local_read(&bpage->page->commit);
  }
  
-+static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
++/* Size is determined by what has been committed */
++static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
 +{
-+	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
-+
-+	ring_buffer_record_disable(buffer);
-+	flush_kernel_vmap_range((void *)buffer->range_addr_start,
-+				buffer->range_addr_end - buffer->range_addr_start);
-+	return NOTIFY_DONE;
++	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
 +}
 +
- static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 int order, unsigned long start,
- 					 unsigned long end,
-@@ -2590,6 +2602,12 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 
- 	mutex_init(&buffer->mutex);
- 
-+	/* Persistent ring buffer needs to flush cache before reboot. */
-+	if (start & end) {
-+		buffer->flush_nb.notifier_call = rb_flush_buffer_cb;
-+		atomic_notifier_chain_register(&panic_notifier_list, &buffer->flush_nb);
-+	}
++static __always_inline unsigned
++rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	return rb_page_commit(cpu_buffer->commit_page);
++}
 +
- 	return_ptr(buffer);
- 
-  fail_free_buffers:
-@@ -2677,6 +2695,9 @@ ring_buffer_free(struct trace_buffer *buffer)
+ static void free_buffer_page(struct buffer_page *bpage)
  {
- 	int cpu;
+ 	/* Range pages are not to be freed */
+@@ -1907,7 +1919,7 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ 	u64 delta;
+ 	int tail;
  
-+	if (buffer->range_addr_start && buffer->range_addr_end)
-+		atomic_notifier_chain_unregister(&panic_notifier_list, &buffer->flush_nb);
-+
- 	cpuhp_state_remove_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
+-	tail = local_read(&dpage->commit);
++	tail = local_read(&dpage->commit) & ~RB_MISSED_MASK;
+ 	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+ }
  
- 	irq_work_sync(&buffer->irq_work.work);
+@@ -1934,7 +1946,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 		goto invalid;
+ 	}
+ 	entries += ret;
+-	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
++	entry_bytes += rb_page_size(cpu_buffer->reader_page);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+ 	ts = head_page->page->time_stamp;
+@@ -2054,7 +2066,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 			local_inc(&cpu_buffer->pages_touched);
+ 
+ 		entries += ret;
+-		entry_bytes += local_read(&head_page->page->commit);
++		entry_bytes += rb_page_size(head_page);
+ 		local_set(&cpu_buffer->head_page->entries, ret);
+ 
+ 		if (head_page == cpu_buffer->commit_page)
+@@ -3257,18 +3269,6 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ 	return NULL;
+ }
+ 
+-/* Size is determined by what has been committed */
+-static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
+-{
+-	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
+-}
+-
+-static __always_inline unsigned
+-rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
+-{
+-	return rb_page_commit(cpu_buffer->commit_page);
+-}
+-
+ static __always_inline unsigned
+ rb_event_index(struct ring_buffer_per_cpu *cpu_buffer, struct ring_buffer_event *event)
+ {
+@@ -4433,7 +4433,7 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	if (tail == CHECK_FULL_PAGE) {
+ 		full = true;
+-		tail = local_read(&bpage->commit);
++		tail = local_read(&bpage->commit) & ~RB_MISSED_MASK;
+ 	} else if (info->add_timestamp &
+ 		   (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE)) {
+ 		/* Ignore events with absolute time stamps */
 
