@@ -1,94 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FF13148D2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 16:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF218450F2;
+	Mon, 23 Feb 2026 16:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771864298; cv=none; b=QjfcoBRHmQR/MrJdMPnc6QLDTBBws269vonCTsRRHqfyNR1WLY2oRbNCqEVoQ0I25S3weqyUf1Uy+ID/YRT0g0sOlo6BNgZZlQbUSK1Lp3ArtyrNw3QxL4AKg2Z6uiyu+5bTWMyX3dru2R8aiw47fsKWXk/GVkM3tnFLfNzhlN4=
+	t=1771865571; cv=none; b=iXKQ3xIoBNnvRhlyD+P0Xi/2gptj42roEIPzZW3db2wAXR5+Vk4EfVYbUpXR+9EKnm2WzUS3TTBu9eyUakOEGyVLI7hBprS9HqoHHMJcFpnDcsFt8oymevFf9i8l5uLSASubdaBM+bNduRCtHJqmvNhL72hxaFC6EYJL5Q4FjD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771864298; c=relaxed/simple;
-	bh=KU9/4VAZzijQArIsaKiYpI841fkcKtb9bMBsovL0JqQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=eH7KLpbuOHne4UdDuZDf4WuYraYjYAHHlcAn2UxjxaPpEqbGwM9/73TgjQKuY9OoIo4jPhZ4GG0DgGOJ9BpdlpgIGn15K1+3ZFL3VarJPxti3QbtRUkA5ioYAhi5nbSx3oHeynjewf9YTfUs8Nc4fjyP0OD4PFDdlYGHoT9YBQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dj7tSP36; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1771865571; c=relaxed/simple;
+	bh=FUHvfu3Jmzp0zHVzdn/Uk4CmJaKwVmAq+zBZx82++80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jQVNKRcI1TMXV1r4/mJglPFi5YCQEDUKFUjj6c0t3HbxuSUAEViexi3I7H54CL6ooZhfw7Q5DSw7JHpR0hdBakRjEsWavyP5+HYpGi8H77ybW4EBppN4vBjOup6/AVaf5e3WyslTKG92oveh1e1UrwxJHDRqCtGSj75dmovYPdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=Ez5r3CS0; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dj7tSP36"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771864296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dI23U9Hdos8EpUNnWdFryDt4BhqGz6vCVqX1QyTKn7I=;
-	b=dj7tSP36/UJx05abCxEhVZE3Q/AAhhJjJRkOcRzcUt3/7crQOTwn3xkOVwPv69K34GbB86
-	nvz/3pCP8EW9bRW/7ON2DS7gH83Nhcy8rezVOM6udVwM8vIeJ+zC5hPvd4Hvrmd1rVssxY
-	c2al6ZPrI9KA0zzb0qtCRJbwlslqLV0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-12TAfljIONCEnDH90iwtBw-1; Mon,
- 23 Feb 2026 11:31:30 -0500
-X-MC-Unique: 12TAfljIONCEnDH90iwtBw-1
-X-Mimecast-MFC-AGG-ID: 12TAfljIONCEnDH90iwtBw_1771864289
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5E321956068;
-	Mon, 23 Feb 2026 16:31:29 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.88.94])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7DB7E1800669;
-	Mon, 23 Feb 2026 16:31:27 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Nam Cao <namcao@linutronix.de>,
-	Wander Lairson Costa <wander@redhat.com>,
-	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 19/19] rv/rvgen: fix _fill_states() return type annotation
-Date: Mon, 23 Feb 2026 13:18:02 -0300
-Message-ID: <20260223162407.147003-20-wander@redhat.com>
-In-Reply-To: <20260223162407.147003-1-wander@redhat.com>
-References: <20260223162407.147003-1-wander@redhat.com>
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="Ez5r3CS0"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 306DCB2B38;
+	Mon, 23 Feb 2026 16:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1771865206;
+	bh=TJU/c2ANGiupnU+sNCDAu4d01p6h+HYD6nV72nQ/8io=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ez5r3CS0SktKVrjI5VhlqUZ/251A3OUIM41kfLezdKCG2T+l+22yDhHSpHd407S1t
+	 eIOzh1MKKab9MJFHEvCVc0pbOEePdKuMGxRWCD+kXVKL8nmM8Zk4iEGuKOcXo61A8S
+	 iPkEJrq7iki2d0E/l7SJ15+1J/j6+hxGHSxWGJHs=
+Date: Mon, 23 Feb 2026 16:46:42 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	kernel-team@meta.com, Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>
+Subject: Re: [PATCH 0/4] mm: zone lock tracepoint instrumentation
+Message-ID: <aZyEctoThn0anlz8@shell.ilvokhin.com>
+References: <cover.1770821420.git.d@ilvokhin.com>
+ <06b2a2b6-d5c8-4522-8e22-10616f887846@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: lM5PRp7rvwWbu0jc1OThVjNZ44eJy1XEtP4Ri5y3LW0_1771864289
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06b2a2b6-d5c8-4522-8e22-10616f887846@amd.com>
 
-The _fill_states() method returns a list of strings, but the type
-annotation incorrectly specified str. Update the annotation to
-list[str] to match the actual return value.
+On Fri, Feb 20, 2026 at 01:09:59PM -0600, Cheatham, Benjamin wrote:
+> On 2/11/2026 9:22 AM, Dmitry Ilvokhin wrote:
+> > Zone lock contention can significantly impact allocation and
+> > reclaim latency, as it is a central synchronization point in
+> > the page allocator and reclaim paths. Improved visibility into
+> > its behavior is therefore important for diagnosing performance
+> > issues in memory-intensive workloads.
+> > 
+> > On some production workloads at Meta, we have observed noticeable
+> > zone lock contention. Deeper analysis of lock holders and waiters
+> > is currently difficult with existing instrumentation.
+> > 
+> > While generic lock contention_begin/contention_end tracepoints
+> > cover the slow path, they do not provide sufficient visibility
+> > into lock hold times. In particular, the lack of a release-side
+> > event makes it difficult to identify long lock holders and
+> > correlate them with waiters. As a result, distinguishing between
+> > short bursts of contention and pathological long hold times
+> > requires additional instrumentation.
+> > 
+> > This patch series adds dedicated tracepoint instrumentation to
+> > zone lock, following the existing mmap_lock tracing model.
+> > 
+> > The goal is to enable detailed holder/waiter analysis and lock
+> > hold time measurements without affecting the fast path when
+> > tracing is disabled.
+> > 
+> > The series is structured as follows:
+> > 
+> >   1. Introduce zone lock wrappers.
+> >   2. Mechanically convert zone lock users to the wrappers.
+> >   3. Convert compaction to use the wrappers (requires minor
+> >      restructuring of compact_lock_irqsave()).
+> >   4. Add zone lock tracepoints.
+> 
+> I think you can improve the flow of this series if reorder as follows:
+> 	1. Introduce zone lock wrappers
+> 	4. Add zone lock tracepoints
+> 	2. Mechanically convert zone lock users to the wrappers
+> 	3. Convert compaction to use the wrappers...
+> 
+> and possibly squash 1 & 4 (though that might be too big of a patch). It's better to introduce the
+> wrappers and their tracepoints together before the reviewer (i.e. me) forgets what was added in
+> patch 1 by the time they get to patch 4.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
----
- tools/verification/rvgen/rvgen/ltl2k.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Ben,
 
-diff --git a/tools/verification/rvgen/rvgen/ltl2k.py b/tools/verification/rvgen/rvgen/ltl2k.py
-index b8ac584fe2504..81fd1f5ea5ea2 100644
---- a/tools/verification/rvgen/rvgen/ltl2k.py
-+++ b/tools/verification/rvgen/rvgen/ltl2k.py
-@@ -75,7 +75,7 @@ class ltl2k(generator.Monitor):
-         if not self.name:
-             self.name = Path(file_path).stem
- 
--    def _fill_states(self) -> str:
-+    def _fill_states(self) -> list[str]:
-         buf = [
-             "enum ltl_buchi_state {",
-         ]
--- 
-2.53.0
+Thanks for the suggestion.
 
+I structured the series intentionally to keep all behavior-preserving
+refactoring separate from the actual instrumentation change.
+
+In particular, I had to split the conversion into two patches to
+separate the purely mechanical changes from the compaction
+restructuring. With the current order, tracepoints addition remains a
+single, atomic functional change on top of a fully converted tree. This
+keeps the instrumentation isolated from the refactoring and with an
+intention to make bisection and review of the behavioral change easier.
+
+Reordering as suggested would mix instrumentation with intermediate
+refactoring states, which I'd prefer to avoid.
+
+I hope this reasoning makes sense, but I'm happy to discuss if there are
+strong objections.
+
+> 
+> Thanks,
+> Ben
