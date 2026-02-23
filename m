@@ -1,166 +1,138 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713F03793C3;
-	Mon, 23 Feb 2026 21:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB7F37B41A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 22:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771883495; cv=none; b=FFPotqKYE33+R27oIMx6GuENlWyPGz311hikrRLHIZrWnvzhUZSKAu8YJ2hCMXYiXWFMiPFAdOMj9lVNxL2FocZyv9dU5c0dJwzPfsBv0xfcD/Hk86IAzyzSDd5eryCI6tasG82crc02rHJQPn9aX41l2oxNQQDuYNkgZ2J5SJM=
+	t=1771886183; cv=none; b=noaUY5WQRpdEgaMPztHxrpchO45Oplv03M+LQzeD2yY+GrPvCX8RJAho7Zhn3mJH0gyHdVoAN74QbEbcwLTJE+ozmyLqKG6PJz6QEw1Yx26X+9bjtMrp8FouuNLBs/+Wc+uYhI3mKdpZSnWeASSrqyUb1jPX+Pdz+qYrQE8/1ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771883495; c=relaxed/simple;
-	bh=LvAdBpDs6vSAN4K4YvZ3iYdFC3e/+5gaMzB3XS9ogbM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PogjeBeh+kApDlB69DfwyhOHVuEzDJvE9MGF4Mzmb8XAAuSwCqs6h5FGFHtxsdK7Addh+9STWQdFjHsK0EPUCg5OxhBps6vkNWztwUrtsp1gpkJq3LRuw21xof1mP7V2XDverL+yVa2B5r4rX8CFO/QJev93W0t8kDf8YGT3aNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=latA5aUs; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1771886183; c=relaxed/simple;
+	bh=c/MpV82BwZq4fsF7sSBWV0E8/a0M5n/zUgz/nHjkPag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqUo1M0vhdyMKwRudCGDd+KcF/XYL3+ewbT5r7MiVW4tnRUcC7GMYCQIguAw4ufjXIDgHjuFrmBiEaXORc6vxvkzmJf+X1C9aP2b44MWfb2SrZy+Qz8/TFhM0SBE3lkt5n1hJ/VxWC+BZDbX0JVB4IV/n7VA3rPyD5BZQCgYFnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w7O1/gGx; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="latA5aUs"
-Received: from pps.filterd (m0354653.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61NJFoot2269294;
-	Mon, 23 Feb 2026 21:51:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	default; bh=G1n7wtz08npFDwHXdRj3gkHg2quclTG+HOfjYrGS+i0=; b=latA
-	5aUszgMCs9KyG17SqTZtT34T02K2bDp0FP7oTZ/9ABzSqesBzVEnNOcg7dFqf/LF
-	zaMJUYnllStIAFuuXV5RDIQSi4QfeANEQahBnuoLjqZGaMwWvva1fVKN22OT9N2w
-	sq+ftMJUIJWNiKFAPh2lfEkWTHhoSsK9lnOzKJ9lnN7SVf+FFioWGGQKhJbh9ZAQ
-	A/8y4/ejR+xLm6qzGhcjEeIhNcqhmA+48dCxZRJ2jPcW9mIkdBLiIO5KHYWyt1jg
-	jTXRxWYwISWkorAbNS/HRl2/eoKcXRPzJI4QtYKub91dLLWgJqkm7tnFHe5LY77S
-	Ncr9kYvoP01MEZQBIA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 4cfqnjf34y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Feb 2026 21:51:18 +0000 (GMT)
-Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 23 Feb 2026 21:51:16 +0000
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-To: <bpf@vger.kernel.org>
-CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-        <jolsa@kernel.org>, <rostedt@goodmis.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-open-source@crowdstrike.com>
-Subject: [RFC PATCH bpf-next 2/3] ftrace: Use kallsyms binary search for single-symbol lookup
-Date: Mon, 23 Feb 2026 16:51:12 -0500
-Message-ID: <20260223215113.924599-3-andrey.grodzovsky@crowdstrike.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260223215113.924599-1-andrey.grodzovsky@crowdstrike.com>
-References: <20260223215113.924599-1-andrey.grodzovsky@crowdstrike.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w7O1/gGx"
+Date: Mon, 23 Feb 2026 14:36:01 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1771886170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDZJJyZ7IybQJkD08lIeKoohpnEfHBOokZpr1hipx2Q=;
+	b=w7O1/gGxpf9KkaRXmd2zY7VV0wWYJo83dYPGj/+G+/IdNRODXsASEMfSMzbf6UqJzTJtXb
+	uKsU3rGDFmM3JSX/ore6gYZl5pl71WTCFXVlR1ykXPUVrp2YAv27KiAG1cKfMRCgwlqUn8
+	iltCqg+uxvPUp31GSbs0/+GFH+eO7js=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 1/4] mm: introduce zone lock wrappers
+Message-ID: <aZzWNM06gNYKDoQW@linux.dev>
+References: <cover.1770821420.git.d@ilvokhin.com>
+ <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH014.crowdstrike.sys (10.100.11.87) To
- 04WPEXCH006.crowdstrike.sys (10.100.11.70)
-X-Disclaimer: USA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjIzMDE5MCBTYWx0ZWRfX/gsPjydiW6XQ
- ZbIcXUywPMauxActOkqPDT8LbuggTqdhk4vHQCNlsPGqZ3fp2TbPIaiFsTqI9eJEX7HlytRl9/f
- lQsv8dtS2KOxz/G+B1nLQubgzbke+TJL98c03rbUeeQws+WL2qFC49ckHlOWvZLPJv0eeL88FhF
- 1IjSvqSaPH5t7/rfcAjU1xN2paBHRklooKJBf6XmmdrbcgIsZkXnzPy/b5Gyuwebes6jZLPAKtC
- RM0ltP8xjypoZU/s0iaf4qRbC1Z23eV1wdA0LfB3ZHU4ufVB/fn22t+fgNzhH3eTBiAetAqfPb9
- 7xYUQO+uEuKiMlNrK/KERJ5ZIs+zu7ZyUMmmooBqiQewM/GpprpES8JY8DI/8RTd5hDqvhgdv+B
- FTZJ0cpJCK2wMGU300uEOpGmy9wRX0ZZxAwSwpOrP4NNSBY24PENBt2wWOxuo3/O46Amzi1rbQb
- dkXFrM85I8OM7TK9fuw==
-X-Proofpoint-ORIG-GUID: 4sJjqqNsDmmqzcXXPstpmJhXErwvL7iN
-X-Authority-Analysis: v=2.4 cv=UoJu9uwB c=1 sm=1 tr=0 ts=699ccbd6 cx=c_pps
- a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
- a=EjBHVkixTFsA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=T2KQ53IYiC3MXPrxx8bB:22 a=GCXdLZfFv8EKBZhKOxZ5:22 a=pl6vuDidAAAA:8
- a=QmtXynS4W5m_fGnND4MA:9
-X-Proofpoint-GUID: 4sJjqqNsDmmqzcXXPstpmJhXErwvL7iN
-X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11710
- signatures=596818
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- adultscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2602230190
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
+X-Migadu-Flow: FLOW_OUT
 
-When ftrace_lookup_symbols() is called with a single symbol (cnt == 1),
-use kallsyms_lookup_name() for O(log N) binary search instead of the
-full linear scan via kallsyms_on_each_symbol().
+On Wed, Feb 11, 2026 at 03:22:13PM +0000, Dmitry Ilvokhin wrote:
+> Add thin wrappers around zone lock acquire/release operations. This
+> prepares the code for future tracepoint instrumentation without
+> modifying individual call sites.
+> 
+> Centralizing zone lock operations behind wrappers allows future
+> instrumentation or debugging hooks to be added without touching
+> all users.
+> 
+> No functional change intended. The wrappers are introduced in
+> preparation for subsequent patches and are not yet used.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> ---
+>  MAINTAINERS               |  1 +
+>  include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 include/linux/zone_lock.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b4088f7290be..680c9ae02d7e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> +F:	include/linux/zone_lock.h
+>  F:	kernel/fork.c
+>  F:	mm/Kconfig
+>  F:	mm/debug.c
+> diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+> new file mode 100644
+> index 000000000000..c531e26280e6
+> --- /dev/null
+> +++ b/include/linux/zone_lock.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_ZONE_LOCK_H
+> +#define _LINUX_ZONE_LOCK_H
+> +
+> +#include <linux/mmzone.h>
+> +#include <linux/spinlock.h>
+> +
+> +static inline void zone_lock_init(struct zone *zone)
+> +{
+> +	spin_lock_init(&zone->lock);
+> +}
+> +
+> +#define zone_lock_irqsave(zone, flags)				\
+> +do {								\
+> +	spin_lock_irqsave(&(zone)->lock, flags);		\
+> +} while (0)
+> +
+> +#define zone_trylock_irqsave(zone, flags)			\
+> +({								\
+> +	spin_trylock_irqsave(&(zone)->lock, flags);		\
+> +})
 
-ftrace_lookup_symbols() was designed for batch resolution of many
-symbols in a single pass.  For large cnt this is efficient: a single
-O(N) walk over all symbols with O(log cnt) binary search into the
-sorted input array.  But for cnt == 1 it still decompresses all ~200K
-kernel symbols only to match one.
+Any reason you used macros for above two and inlined functions for remaining?
 
-kallsyms_lookup_name() uses the sorted kallsyms index and needs only
-~17 decompressions for a single lookup.
-
-This is the common path for kprobe.session with exact function names,
-where libbpf sends one symbol per BPF_LINK_CREATE syscall.
-
-If binary lookup fails (duplicate symbol names where the first match
-is not ftrace-instrumented, or module symbols), the function falls
-through to the existing linear scan path.
-
-Before (cnt=1, 50 kprobe.session programs):
-  Attach: 858 ms  (kallsyms_expand_symbol 25% of CPU)
-
-After:
-  Attach:  52 ms  (16x faster)
-
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
----
- kernel/trace/ftrace.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 827fb9a0bf0d..bfd7670669c2 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -9263,6 +9263,19 @@ static int kallsyms_callback(void *data, const char *name, unsigned long addr)
-  * @addrs array, which needs to be big enough to store at least @cnt
-  * addresses.
-  *
-+ * For a single symbol (cnt == 1), uses kallsyms_lookup_name() which
-+ * performs an O(log N) binary search via the sorted kallsyms index.
-+ * This avoids the full O(N) linear scan over all kernel symbols that
-+ * the multi-symbol path requires.
-+ *
-+ * For multiple symbols, uses a single-pass linear scan via
-+ * kallsyms_on_each_symbol() with binary search into the sorted input
-+ * array.  While individual lookups are O(log N), doing K lookups
-+ * totals O(K * log N) which loses to a single sequential O(N) pass
-+ * at scale due to cache-friendly memory access patterns of the linear
-+ * walk.  Empirical testing shows the linear scan is faster for batch
-+ * lookups even well below 10K symbols.
-+ *
-  * Returns: 0 if all provided symbols are found, -ESRCH otherwise.
-  */
- int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
-@@ -9270,6 +9283,21 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
- 	struct kallsyms_data args;
- 	int found_all;
- 
-+	/* Fast path: single symbol uses O(log N) binary search */
-+	if (cnt == 1) {
-+		addrs[0] = kallsyms_lookup_name(sorted_syms[0]);
-+		if (addrs[0])
-+			addrs[0] = ftrace_location(addrs[0]);
-+		if (addrs[0])
-+			return 0;
-+		/*
-+		 * Binary lookup can fail for duplicate symbol names
-+		 * where the first match is not ftrace-instrumented,
-+		 * or for module symbols.  Retry with linear scan.
-+		 */
-+	}
-+
-+	/* Batch path: single-pass O(N) linear scan */
- 	memset(addrs, 0, sizeof(*addrs) * cnt);
- 	args.addrs = addrs;
- 	args.syms = sorted_syms;
--- 
-2.34.1
-
+> +
+> +static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
+> +{
+> +	spin_unlock_irqrestore(&zone->lock, flags);
+> +}
+> +
+> +static inline void zone_lock_irq(struct zone *zone)
+> +{
+> +	spin_lock_irq(&zone->lock);
+> +}
+> +
+> +static inline void zone_unlock_irq(struct zone *zone)
+> +{
+> +	spin_unlock_irq(&zone->lock);
+> +}
+> +
+> +#endif /* _LINUX_ZONE_LOCK_H */
+> -- 
+> 2.47.3
+> 
