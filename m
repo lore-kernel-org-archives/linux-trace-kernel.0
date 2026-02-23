@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4F330FF29
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 16:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E8E30FC16
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 16:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771863998; cv=none; b=ID93MHKPdD4lLHqn7W7/HV4gQDyOAubK6pNMN5d3h8/OUmjbLG5Qyebleo32xmHhJ50OfnNPdryCkC51nQlM2spVAm67RRLXpQPsQJ4j+7OUPqyGCtxWAChFdcHAwMJpjKNEqHsDeZ1edgpFnBpOzQWARdnyBGjuCouTgaTkCDE=
+	t=1771864019; cv=none; b=DQnL9Nr/AnCXqbTuYhQNl4Qc3O5VaeMS5LYqyHEMPagNIewMkg5ncgOgsrIcqHE+WDpUs/FWkZSa8AlsMjCGzypIRyBu+8T6Jm0H4f4IyVy6S3Ye7Vg7hG+9RbuGazdTUgFwBih0THRkEyg8mA6W9ESmwgD+c5O3h5VVwQi0eh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771863998; c=relaxed/simple;
-	bh=DFgFqsuoyMh37BT1ZXCagkOYOZ/F0IAgde64JQKp6TI=;
+	s=arc-20240116; t=1771864019; c=relaxed/simple;
+	bh=QL2ejv2+3YvAWL5CSkNwYRn11wU4PTBvlTsWRS+pJ9w=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=VDmMOZiIcN8wWYDFAlR0gLrRGU0uHu8uddDuVcVMYThdJZXv0MdlHK2UqmWH5L6wv+zIluL8cBSZd+uRExCksf8jJVxypk4t8PixapkNAv7Xuxqg4DEOYJ4OAYt0p0b8qPnEVRWg5X/Vj9UDdAjqHCj41PUO0OznC/T1qZRXctQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nvu3++yU; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=aRx/NmQylCz0RbCJcNjrzb8kUZg+Y7JrlBxUYpD/mcaJYj2dxe+DRVGAHzJQg3DobWIeVHnbobg9I7Ra36FKIBFfTIN2fTR1AMF1hQcsU68qLelaBCo3ol8TNCgL0kCLd1yiN2vuN6Oy59XrM8SeDdD8taepT7P8J9/VSJoOjEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JfKJ7Vt3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nvu3++yU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JfKJ7Vt3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771863996;
+	s=mimecast20190719; t=1771864016;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o88xK5pKfHpNkibMTGO9a/VFXbqGwcnPn0WqRMK1hGY=;
-	b=Nvu3++yUrcVHBbWgCuFgqq1femVqJCjvzgoTGWSw6O5FDV8F/VUINjxNGDMZHQYHchhis6
-	sYGRwT7SmQOZRxg3aN8Yjb7WvzOSqO0FqQr+ne8zm49Yd2ZNo1DrcargTEqe8uPHEaZRS/
-	+S4YLHZzuT2Qej4IeXNZzlpsM1v8FaM=
+	bh=toYc/KytBJDS3v29J7Ao5zr1crGTZ/8ZX2w/8ex74No=;
+	b=JfKJ7Vt38i6gAVOhp+advKC3r/t07GlvY0pUEjg5464j9Utdw0ZuWDHW9cM0oB6Y9IgEgy
+	iJZcPsHyy16WTrHdu0dDbaBSoGKdFTiXEp1FnVdvX4oSW02AnNm0cwsVHFrXXQFsEB3TxV
+	5cmSnLthnZoZ/oJ0LeRsRmMWDSloaSg=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-ksNtpQg1PqmHonqpRyxbfQ-1; Mon,
- 23 Feb 2026 11:26:32 -0500
-X-MC-Unique: ksNtpQg1PqmHonqpRyxbfQ-1
-X-Mimecast-MFC-AGG-ID: ksNtpQg1PqmHonqpRyxbfQ_1771863991
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-ciXsZJhrOki_xPsqwN-fCA-1; Mon,
+ 23 Feb 2026 11:26:52 -0500
+X-MC-Unique: ciXsZJhrOki_xPsqwN-fCA-1
+X-Mimecast-MFC-AGG-ID: ciXsZJhrOki_xPsqwN-fCA_1771864011
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0FC8C1800615;
-	Mon, 23 Feb 2026 16:26:31 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D59C218003F5;
+	Mon, 23 Feb 2026 16:26:50 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.88.94])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E04321800370;
-	Mon, 23 Feb 2026 16:26:28 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B9BC01800669;
+	Mon, 23 Feb 2026 16:26:48 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
@@ -49,9 +49,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Wander Lairson Costa <wander@redhat.com>,
 	linux-trace-kernel@vger.kernel.org (open list:RUNTIME VERIFICATION (RV)),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 04/19] rv/rvgen: replace __len__() calls with len()
-Date: Mon, 23 Feb 2026 13:17:47 -0300
-Message-ID: <20260223162407.147003-5-wander@redhat.com>
+Subject: [PATCH v3 05/19] rv/rvgen: remove unnecessary semicolons
+Date: Mon, 23 Feb 2026 13:17:48 -0300
+Message-ID: <20260223162407.147003-6-wander@redhat.com>
 In-Reply-To: <20260223162407.147003-1-wander@redhat.com>
 References: <20260223162407.147003-1-wander@redhat.com>
 Precedence: bulk
@@ -61,92 +61,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: XJasngr9x1eqQ03wC9rf_WywdKIhke_7328TyatRdDw_1771863991
+X-Mimecast-MFC-PROC-ID: XvBa1G3FhKhW2xcJS37C961MAKqiR1NS9ajAK993N08_1771864011
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Replace all direct calls to the __len__() dunder method with the
-idiomatic len() built-in function across the rvgen codebase. This
-change eliminates a Python anti-pattern where dunder methods are
-called directly instead of using their corresponding built-in
-functions.
+Remove unnecessary semicolons from Python code in the rvgen tool.
+Python does not require semicolons to terminate statements, and
+their presence goes against PEP 8 style guidelines. These semicolons
+were likely added out of habit from C-style languages.
 
-The changes affect nine instances across two files. In automata.py,
-the empty string check is further improved by using truthiness
-testing instead of explicit length comparison. In dot2c.py, all
-length checks in the get_minimun_type, __get_max_strlen_of_states,
-and get_aut_init_function methods now use the standard len()
-function. Additionally, spacing around keyword arguments has been
-corrected to follow PEP 8 guidelines.
-
-Direct calls to dunder methods like __len__() are discouraged in
-Python because they bypass the language's abstraction layer and
-reduce code readability. Using len() provides the same functionality
-while adhering to Python community standards and making the code more
-familiar to Python developers.
+This cleanup improves consistency with Python coding standards and
+aligns with the recent improvements to remove other Python
+anti-patterns from the codebase.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Reviewed-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rvgen/rvgen/automata.py |  2 +-
- tools/verification/rvgen/rvgen/dot2c.py    | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ tools/verification/rvgen/rvgen/dot2k.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/verification/rvgen/rvgen/automata.py b/tools/verification/rvgen/rvgen/automata.py
-index 4fed58cfa3c6e..4f5681265ee24 100644
---- a/tools/verification/rvgen/rvgen/automata.py
-+++ b/tools/verification/rvgen/rvgen/automata.py
-@@ -82,7 +82,7 @@ class Automata:
-             raise AutomataError(f"not a dot file: {self.__dot_path}")
- 
-         model_name = ntpath.splitext(basename)[0]
--        if model_name.__len__() == 0:
-+        if not model_name:
-             raise AutomataError(f"not a dot file: {self.__dot_path}")
- 
-         return model_name
-diff --git a/tools/verification/rvgen/rvgen/dot2c.py b/tools/verification/rvgen/rvgen/dot2c.py
-index e6a440e1588cd..fa44795adef46 100644
---- a/tools/verification/rvgen/rvgen/dot2c.py
-+++ b/tools/verification/rvgen/rvgen/dot2c.py
-@@ -96,14 +96,14 @@ class Dot2c(Automata):
-     def get_minimun_type(self) -> str:
-         min_type = "unsigned char"
- 
--        if self.states.__len__() > 255:
-+        if len(self.states) > 255:
-             min_type = "unsigned short"
- 
--        if self.states.__len__() > 65535:
-+        if len(self.states) > 65535:
-             min_type = "unsigned int"
- 
--        if self.states.__len__() > 1000000:
--            raise AutomataError(f"Too many states: {self.states.__len__()}")
-+        if len(self.states) > 1000000:
-+            raise AutomataError(f"Too many states: {len(self.states)}")
- 
-         return min_type
- 
-@@ -159,12 +159,12 @@ class Dot2c(Automata):
-         return buff
- 
-     def __get_max_strlen_of_states(self) -> int:
--        max_state_name = max(self.states, key = len).__len__()
--        return max(max_state_name, self.invalid_state_str.__len__())
-+        max_state_name = len(max(self.states, key=len))
-+        return max(max_state_name, len(self.invalid_state_str))
- 
-     def get_aut_init_function(self) -> str:
--        nr_states = self.states.__len__()
--        nr_events = self.events.__len__()
-+        nr_states = len(self.states)
-+        nr_events = len(self.events)
-         buff = []
- 
-         maxlen = self.__get_max_strlen_of_states() + len(self.enum_suffix)
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
+index e26f2b47390ab..47af9f104a829 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -46,14 +46,14 @@ class dot2k(Monitor, Dot2c):
+                 buff.append("\t/* XXX: validate that this event is only valid in the initial state */")
+                 handle = "handle_start_run_event"
+             if self.monitor_type == "per_task":
+-                buff.append("\tstruct task_struct *p = /* XXX: how do I get p? */;");
+-                buff.append(f"\tda_{handle}(p, {event}{self.enum_suffix});");
++                buff.append("\tstruct task_struct *p = /* XXX: how do I get p? */;")
++                buff.append(f"\tda_{handle}(p, {event}{self.enum_suffix});")
+             elif self.monitor_type == "per_obj":
+                 buff.append("\tint id = /* XXX: how do I get the id? */;")
+                 buff.append("\tmonitor_target t = /* XXX: how do I get t? */;")
+                 buff.append(f"\tda_{handle}(id, t, {event}{self.enum_suffix});")
+             else:
+-                buff.append(f"\tda_{handle}({event}{self.enum_suffix});");
++                buff.append(f"\tda_{handle}({event}{self.enum_suffix});")
+             buff.append("}")
+             buff.append("")
+         return '\n'.join(buff)
 -- 
 2.53.0
 
