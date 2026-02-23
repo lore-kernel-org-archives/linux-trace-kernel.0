@@ -1,133 +1,84 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF218450F2;
-	Mon, 23 Feb 2026 16:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA0832ED58
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Feb 2026 17:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771865571; cv=none; b=iXKQ3xIoBNnvRhlyD+P0Xi/2gptj42roEIPzZW3db2wAXR5+Vk4EfVYbUpXR+9EKnm2WzUS3TTBu9eyUakOEGyVLI7hBprS9HqoHHMJcFpnDcsFt8oymevFf9i8l5uLSASubdaBM+bNduRCtHJqmvNhL72hxaFC6EYJL5Q4FjD8=
+	t=1771866950; cv=none; b=i+qBgqjo3eIQ1p7A22CaZHqnJ+ThodxuR8jBREAUcaMVi/3W5p/wfnrUZz4EJQomBrbC3/iRYvC5oD9MwOaqrYCdsDnykhXmZ2oaya1VaqHsMzRRWe1ock1xsjAIccT6gr7cwT5KEbeVBLfWuMZLGZaha45WxiDfOM0vl/st8p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771865571; c=relaxed/simple;
-	bh=FUHvfu3Jmzp0zHVzdn/Uk4CmJaKwVmAq+zBZx82++80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQVNKRcI1TMXV1r4/mJglPFi5YCQEDUKFUjj6c0t3HbxuSUAEViexi3I7H54CL6ooZhfw7Q5DSw7JHpR0hdBakRjEsWavyP5+HYpGi8H77ybW4EBppN4vBjOup6/AVaf5e3WyslTKG92oveh1e1UrwxJHDRqCtGSj75dmovYPdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=Ez5r3CS0; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1771866950; c=relaxed/simple;
+	bh=sTA+/Qj4y4bkMfMX6GKIlRULy+6TsQB5JrA1uMNZwOw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=q3pwwfWmGZUW32uUxdMPbwFQ7/PLbQFsafSmKyfvWleitUMpouG6yuniqbflMno4kGk2jyMB/tnpKkwfWXZpWK/ALeDPeDt8I41cqbUlI64JekxAulUAwsAtL1akZXaJbn2QR+vyaVoOkKJo6QtauG4w9H1CtyDCnXESnDb4FrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G4AnjSCv; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="Ez5r3CS0"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 306DCB2B38;
-	Mon, 23 Feb 2026 16:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1771865206;
-	bh=TJU/c2ANGiupnU+sNCDAu4d01p6h+HYD6nV72nQ/8io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ez5r3CS0SktKVrjI5VhlqUZ/251A3OUIM41kfLezdKCG2T+l+22yDhHSpHd407S1t
-	 eIOzh1MKKab9MJFHEvCVc0pbOEePdKuMGxRWCD+kXVKL8nmM8Zk4iEGuKOcXo61A8S
-	 iPkEJrq7iki2d0E/l7SJ15+1J/j6+hxGHSxWGJHs=
-Date: Mon, 23 Feb 2026 16:46:42 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	kernel-team@meta.com, Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>
-Subject: Re: [PATCH 0/4] mm: zone lock tracepoint instrumentation
-Message-ID: <aZyEctoThn0anlz8@shell.ilvokhin.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <06b2a2b6-d5c8-4522-8e22-10616f887846@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G4AnjSCv"
+Received: from LAPTOP-U3CCR7C6.lan (unknown [20.236.11.185])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5B10220B6F00;
+	Mon, 23 Feb 2026 09:15:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B10220B6F00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1771866948;
+	bh=TEmmWiaUSN6agFOfmjMt3TuPh72lriTqjOKcZSmRRGA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G4AnjSCvhK+QilqO6lHm9BE5gW327yQdZFGR5MnNZjx88Ctx3k9JhpRvpgWk+kSSN
+	 8+WgBm1+sioqh+0+poPZunyr0xgOIDDuvPGs4/rbYleoqdBzXwa9QfcfG1X3bV6nSy
+	 zxSGxUJJHdGB5V03MsBlEzqVMtdrfD8WXgb0wl0I=
+From: Thomas Ballasi <tballasi@linux.microsoft.com>
+To: tballasi@linux.microsoft.com
+Cc: akpm@linux-foundation.org,
+	axelrasmussen@google.com,
+	david@kernel.org,
+	hannes@cmpxchg.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	lorenzo.stoakes@oracle.com,
+	mhiramat@kernel.org,
+	mhocko@kernel.org,
+	rostedt@goodmis.org,
+	shakeel.butt@linux.dev,
+	weixugc@google.com,
+	yuanchu@google.com,
+	zhengqi.arch@bytedance.com
+Subject: [PATCH v7 0/3] mm: vmscan: add PID and cgroup ID to vmscan tracepoints
+Date: Mon, 23 Feb 2026 09:15:41 -0800
+Message-Id: <20260223171544.4750-1-tballasi@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260213181537.54350-1-tballasi@linux.microsoft.com>
+References: <20260213181537.54350-1-tballasi@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06b2a2b6-d5c8-4522-8e22-10616f887846@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 20, 2026 at 01:09:59PM -0600, Cheatham, Benjamin wrote:
-> On 2/11/2026 9:22 AM, Dmitry Ilvokhin wrote:
-> > Zone lock contention can significantly impact allocation and
-> > reclaim latency, as it is a central synchronization point in
-> > the page allocator and reclaim paths. Improved visibility into
-> > its behavior is therefore important for diagnosing performance
-> > issues in memory-intensive workloads.
-> > 
-> > On some production workloads at Meta, we have observed noticeable
-> > zone lock contention. Deeper analysis of lock holders and waiters
-> > is currently difficult with existing instrumentation.
-> > 
-> > While generic lock contention_begin/contention_end tracepoints
-> > cover the slow path, they do not provide sufficient visibility
-> > into lock hold times. In particular, the lack of a release-side
-> > event makes it difficult to identify long lock holders and
-> > correlate them with waiters. As a result, distinguishing between
-> > short bursts of contention and pathological long hold times
-> > requires additional instrumentation.
-> > 
-> > This patch series adds dedicated tracepoint instrumentation to
-> > zone lock, following the existing mmap_lock tracing model.
-> > 
-> > The goal is to enable detailed holder/waiter analysis and lock
-> > hold time measurements without affecting the fast path when
-> > tracing is disabled.
-> > 
-> > The series is structured as follows:
-> > 
-> >   1. Introduce zone lock wrappers.
-> >   2. Mechanically convert zone lock users to the wrappers.
-> >   3. Convert compaction to use the wrappers (requires minor
-> >      restructuring of compact_lock_irqsave()).
-> >   4. Add zone lock tracepoints.
-> 
-> I think you can improve the flow of this series if reorder as follows:
-> 	1. Introduce zone lock wrappers
-> 	4. Add zone lock tracepoints
-> 	2. Mechanically convert zone lock users to the wrappers
-> 	3. Convert compaction to use the wrappers...
-> 
-> and possibly squash 1 & 4 (though that might be too big of a patch). It's better to introduce the
-> wrappers and their tracepoints together before the reviewer (i.e. me) forgets what was added in
-> patch 1 by the time they get to patch 4.
+Changes in v6:
+- Edited __entry_in_irq() to __event_in_irq() in corresponding commit
+  message
+- Restore an entry that was removed inadvertently
 
-Hi Ben,
+Link to v6:
+https://lore.kernel.org/linux-trace-kernel/20260213181537.54350-1-tballasi@linux.microsoft.com/
 
-Thanks for the suggestion.
+Signed-off-by: Thomas Ballasi <tballasi@linux.microsoft.com>
 
-I structured the series intentionally to keep all behavior-preserving
-refactoring separate from the actual instrumentation change.
+Steven Rostedt (1):
+  tracing: Add __event_in_*irq() helpers
 
-In particular, I had to split the conversion into two patches to
-separate the purely mechanical changes from the compaction
-restructuring. With the current order, tracepoints addition remains a
-single, atomic functional change on top of a fully converted tree. This
-keeps the instrumentation isolated from the refactoring and with an
-intention to make bisection and review of the behavioral change easier.
+Thomas Ballasi (2):
+  mm: vmscan: add cgroup IDs to vmscan tracepoints
+  mm: vmscan: add PIDs to vmscan tracepoints
 
-Reordering as suggested would mix instrumentation with intermediate
-refactoring states, which I'd prefer to avoid.
+ include/trace/events/vmscan.h              | 103 +++++++++++++--------
+ include/trace/stages/stage3_trace_output.h |   8 ++
+ include/trace/stages/stage7_class_define.h |  19 ++++
+ mm/shrinker.c                              |   6 +-
+ mm/vmscan.c                                |  17 ++--
+ 5 files changed, 106 insertions(+), 47 deletions(-)
 
-I hope this reasoning makes sense, but I'm happy to discuss if there are
-strong objections.
+-- 
+2.33.8
 
-> 
-> Thanks,
-> Ben
