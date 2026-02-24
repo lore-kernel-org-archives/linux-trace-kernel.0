@@ -1,164 +1,215 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4EE3A0B1D;
-	Tue, 24 Feb 2026 15:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AA54502F;
+	Tue, 24 Feb 2026 15:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771946291; cv=none; b=u1Q6WPTmwza7KRWJ9LMarnhfI0NuoVgNaFYXu/wCtNYuJTi9BIBK5sKl6ZXTMX9lN8978h+gQU3mfLGTLsEZZkAbfTfYoBjLFTvqnvi4YZhSr+TuBS6bGMrzj6kexRPLCH2CQ2cMvy7IOXOPquaBXevd/kIKSygKNF48IgA4/ZE=
+	t=1771946564; cv=none; b=C9zoyJQjsPjdw7poHdy01FI999Xwda7l/pC8yGgIPmqRFsE/ONnFyCu1X2ENB//2LQsAadPIXUkkr3NKJrdqWNMjSdaJC7dQaqOae6Ef9/RnNMoZSwHMOMtz5sHBlp81z/vcvMt8t9kBJi3D98fcfU9OUZjsAOJ90CynvXjHFCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771946291; c=relaxed/simple;
-	bh=ennJiAS/Gf3CMKnffwk705VVkJfkGLYHgNNI9T0rmyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4kVXsHtiGc9+tyU8MBEFqJbhKkOlw3spl2qbUAgsznedxxCQT8v3rx2aLD7tpIfLsrvkd/fy+9yrpDLYLatxtKtsnIwxF5regqaG2mBMk3ApKVSE5828TTJejn2/wbTyq9CFEF3RPqAxxWePkC450ycTCiKyVXni8FsxdjI7q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=TjYFzDnt; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1771946564; c=relaxed/simple;
+	bh=9F21oVqzbvLNHIWD/OjKzGXyzUqKNTyNYw5SNri/3QY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FHV6Q5y+tmdRy0Rgc5OMHv4gMZNy39S5dqDmM2qYUW9dgIjp0jgHNRQO6BJJBGPuUpXWV2feby1UoCM5TFck3703h6UZgoqJP6KfeCWWwFIgXxnL4Wfxt5TarFbzLJDPMjvJPF6hcXGTWZyL++HHLKZcSsAiXqACTgq+ANnSZMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmC4mOkq; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="TjYFzDnt"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 19550B2BA8;
-	Tue, 24 Feb 2026 15:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1771946286;
-	bh=vjbAdZH+HcILdXS95EbQM6Jm5jY1DudQ1+3DHISJ1DA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TjYFzDntZp50UvP3NtII4msWGYbwxHj/LdBYNJDkgknZzO2x7YgnkPEOJk0K2PNZD
-	 NjeKtNqKpmkJN9o2WGX6gfta0wgyn1rfASSQWYb49P3Fzg7dfvrY9LhjwLKUxh451F
-	 h4F06Z6WAEXz5H5HL+NvHHCjU1pdi/cbo+UsgbZw=
-Date: Tue, 24 Feb 2026 15:18:04 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 1/4] mm: introduce zone lock wrappers
-Message-ID: <aZ3BLKzhIIZvkbwL@shell.ilvokhin.com>
-References: <cover.1770821420.git.d@ilvokhin.com>
- <3826dd6dc55a9c5721ec3de85f019764a6cf3222.1770821420.git.d@ilvokhin.com>
- <aZzWNM06gNYKDoQW@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmC4mOkq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771946562; x=1803482562;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9F21oVqzbvLNHIWD/OjKzGXyzUqKNTyNYw5SNri/3QY=;
+  b=DmC4mOkq1agK4oGPNsHlhmzuo8Ds94UBH3/byf14qn7EjKR/Zm8clQOY
+   3M23CCZ1lfWY9WoCqAcr3zZklw/qG+nKOoqpt/fqkL2J9fYYgxIxjgERY
+   C0mjbuQBTrHO1alKoX41sKCiOm49UWmGxc1fo7e1ieAR84ycqDAz/iPnW
+   VuqiV/g95hvfqXIMj1WVg5bvG5HI1642JUhnRr5mErV9GzrkHJrNLEykF
+   0Hlmyvx3f2fJtbj4M8tuNr5CVFkFObmG3hoP95o4w+bA7Y7hb9SELA41c
+   +GkibBdUQsOY6RCQ6ntyqWs1NDA5qL80nuByu1ilCB20NkH9NiXZDcHen
+   A==;
+X-CSE-ConnectionGUID: SiAJepWyTS2Uom366Dk3xQ==
+X-CSE-MsgGUID: W9rtYNY5SY+g94QJ24Zm0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="72839084"
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="72839084"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:22:42 -0800
+X-CSE-ConnectionGUID: xBpYYwWcTnKhslgK8BYInQ==
+X-CSE-MsgGUID: w9D/pvx7Romiu0gepzECYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
+   d="scan'208";a="238928420"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.133])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 07:22:38 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Feb 2026 17:22:35 +0200 (EET)
+To: Shawn Lin <shawn.lin@rock-chips.com>
+cc: Manivannan Sadhasivam <mani@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org, 
+    linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 1/3] PCI: trace: Add PCI controller LTSSM transition
+ tracepoint
+In-Reply-To: <1769047340-113287-2-git-send-email-shawn.lin@rock-chips.com>
+Message-ID: <7d195f03-978a-2d0d-acdf-e583e68377f2@linux.intel.com>
+References: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com> <1769047340-113287-2-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZzWNM06gNYKDoQW@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Feb 23, 2026 at 02:36:01PM -0800, Shakeel Butt wrote:
-> On Wed, Feb 11, 2026 at 03:22:13PM +0000, Dmitry Ilvokhin wrote:
-> > Add thin wrappers around zone lock acquire/release operations. This
-> > prepares the code for future tracepoint instrumentation without
-> > modifying individual call sites.
-> > 
-> > Centralizing zone lock operations behind wrappers allows future
-> > instrumentation or debugging hooks to be added without touching
-> > all users.
-> > 
-> > No functional change intended. The wrappers are introduced in
-> > preparation for subsequent patches and are not yet used.
-> > 
-> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > ---
-> >  MAINTAINERS               |  1 +
-> >  include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 39 insertions(+)
-> >  create mode 100644 include/linux/zone_lock.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index b4088f7290be..680c9ae02d7e 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -16498,6 +16498,7 @@ F:	include/linux/pgtable.h
-> >  F:	include/linux/ptdump.h
-> >  F:	include/linux/vmpressure.h
-> >  F:	include/linux/vmstat.h
-> > +F:	include/linux/zone_lock.h
-> >  F:	kernel/fork.c
-> >  F:	mm/Kconfig
-> >  F:	mm/debug.c
-> > diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-> > new file mode 100644
-> > index 000000000000..c531e26280e6
-> > --- /dev/null
-> > +++ b/include/linux/zone_lock.h
-> > @@ -0,0 +1,38 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _LINUX_ZONE_LOCK_H
-> > +#define _LINUX_ZONE_LOCK_H
-> > +
-> > +#include <linux/mmzone.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +static inline void zone_lock_init(struct zone *zone)
-> > +{
-> > +	spin_lock_init(&zone->lock);
-> > +}
-> > +
-> > +#define zone_lock_irqsave(zone, flags)				\
-> > +do {								\
-> > +	spin_lock_irqsave(&(zone)->lock, flags);		\
-> > +} while (0)
-> > +
-> > +#define zone_trylock_irqsave(zone, flags)			\
-> > +({								\
-> > +	spin_trylock_irqsave(&(zone)->lock, flags);		\
-> > +})
+On Thu, 22 Jan 2026, Shawn Lin wrote:
+
+> Some platforms may provide LTSSM trace functionality, recording historical
+> LTSSM state transition information. This is very useful for debugging, such
+> as when certain devices cannot be recognized or link broken during test.
+> Implement the pci controller tracepoint for recording LTSSM and rate.
 > 
-> Any reason you used macros for above two and inlined functions for remaining?
->
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v4:
+> - use TRACE_EVENT_FN to notify when to start and stop the tracepoint,
+>   and export pci_ltssm_tp_enabled() for host drivers to use
+> 
+> Changes in v3:
+> - add TRACE_DEFINE_ENUM for all enums(Steven Rostedt)
+> 
+> Changes in v2: None
+> 
+>  drivers/pci/trace.c                   | 20 ++++++++++++
+>  include/linux/pci.h                   |  4 +++
+>  include/trace/events/pci_controller.h | 57 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 81 insertions(+)
+>  create mode 100644 include/trace/events/pci_controller.h
+> 
+> diff --git a/drivers/pci/trace.c b/drivers/pci/trace.c
+> index cf11abc..d351a51 100644
+> --- a/drivers/pci/trace.c
+> +++ b/drivers/pci/trace.c
+> @@ -9,3 +9,23 @@
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/pci.h>
+> +#include <trace/events/pci_controller.h>
+> +
+> +static atomic_t pcie_ltssm_tp_enabled = ATOMIC_INIT(0);
+> +
+> +bool pci_ltssm_tp_enabled(void)
+> +{
+> +	return atomic_read(&pcie_ltssm_tp_enabled) > 0;
+> +}
+> +EXPORT_SYMBOL(pci_ltssm_tp_enabled);
+> +
+> +int pci_ltssm_tp_reg(void)
+> +{
+> +	atomic_inc(&pcie_ltssm_tp_enabled);
+> +	return 0;
+> +}
+> +
+> +void pci_ltssm_tp_unreg(void)
+> +{
+> +	atomic_dec(&pcie_ltssm_tp_enabled);
+> +}
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e7cb527..ac25a3e 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2770,6 +2770,10 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_TRACING
+> +bool pci_ltssm_tp_enabled(void);
+> +#endif
+> +
+>  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns);
+>  bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
+>  int pci_for_each_dma_alias(struct pci_dev *pdev,
+> diff --git a/include/trace/events/pci_controller.h b/include/trace/events/pci_controller.h
+> new file mode 100644
+> index 0000000..db4a960
+> --- /dev/null
+> +++ b/include/trace/events/pci_controller.h
+> @@ -0,0 +1,57 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM pci_controller
 
-The reason for using macros in those two cases is that they need to
-modify the flags variable passed by the caller, just like
-spin_lock_irqsave() and spin_trylock_irqsave() do. I followed the same
-convention here.
+I find putting this into "pci_controller" little odd as LTSSM is related 
+to PCIe links/ports. To me looks something that belongs to the existing 
+include/trace/events/pci.h.
 
-If we used normal inline functions instead, we would need to pass a
-pointer to flags, which would change the call sites and diverge from the
-existing *_irqsave() locking pattern.
+> +#if !defined(_TRACE_HW_EVENT_PCI_CONTROLLER_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_HW_EVENT_PCI_CONTROLLER_H
+> +
+> +#include <uapi/linux/pci_regs.h>
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_2_5GT);
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_5_0GT);
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_8_0GT);
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_16_0GT);
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_32_0GT);
+> +TRACE_DEFINE_ENUM(PCIE_SPEED_64_0GT);
+> +TRACE_DEFINE_ENUM(PCI_SPEED_UNKNOWN);
+> +
+> +extern int pci_ltssm_tp_reg(void);
+> +extern void pci_ltssm_tp_unreg(void);
+> +
+> +TRACE_EVENT_FN(pcie_ltssm_state_transition,
+> +	TP_PROTO(const char *dev_name, const char *state, u32 rate),
+> +	TP_ARGS(dev_name, state, rate),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(dev_name, dev_name)
+> +		__string(state, state)
+> +		__field(u32, rate)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(dev_name);
+> +		__assign_str(state);
+> +		__entry->rate = rate;
+> +	),
+> +
+> +	TP_printk("dev: %s state: %s rate: %s",
+> +		__get_str(dev_name), __get_str(state),
+> +		__print_symbolic(__entry->rate,
+> +			{ PCIE_SPEED_2_5GT,  "2.5 GT/s" },
+> +			{ PCIE_SPEED_5_0GT,  "5.0 GT/s" },
+> +			{ PCIE_SPEED_8_0GT,  "8.0 GT/s" },
+> +			{ PCIE_SPEED_16_0GT, "16.0 GT/s" },
+> +			{ PCIE_SPEED_32_0GT, "32.0 GT/s" },
+> +			{ PCIE_SPEED_64_0GT, "64.0 GT/s" },
+> +			{ PCI_SPEED_UNKNOWN, "Unknown" }
 
-There is also a difference between zone_lock_irqsave() and
-zone_trylock_irqsave() implementations: the former is implemented as a
-do { } while (0) macro since it does not return a value, while the
-latter uses a GCC extension in order to return the trylock result. This
-matches spin_lock_* convention as well.
+Why are these done inline instead of using EM/EMe()? Or simply with
+pci_speed_string()?
 
-> > +
-> > +static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
-> > +{
-> > +	spin_unlock_irqrestore(&zone->lock, flags);
-> > +}
-> > +
-> > +static inline void zone_lock_irq(struct zone *zone)
-> > +{
-> > +	spin_lock_irq(&zone->lock);
-> > +}
-> > +
-> > +static inline void zone_unlock_irq(struct zone *zone)
-> > +{
-> > +	spin_unlock_irq(&zone->lock);
-> > +}
-> > +
-> > +#endif /* _LINUX_ZONE_LOCK_H */
-> > -- 
-> > 2.47.3
-> > 
+
+Unrelated to this, sadly I failed to notice Shuai's version of 
+pcie_link_event() did not translate link speeds (my own version used 
+pci_speed_string()).
+
+> +		)
+> +	),
+> +
+> +	pci_ltssm_tp_reg, pci_ltssm_tp_unreg
+> +);
+> +
+> +#endif /* _TRACE_HW_EVENT_PCI_CONTROLLER_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> 
+
+-- 
+ i.
+
