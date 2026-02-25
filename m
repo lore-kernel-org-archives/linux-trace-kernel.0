@@ -1,143 +1,143 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B8B396D2A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 14:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C04396D2A;
+	Wed, 25 Feb 2026 14:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772030614; cv=none; b=r7fY3LmdGEF1pMnq2achMIHgfuv0jNxDd3jAkHj5WDQOu5/JIc3hfCPfIjJPJjYp29OIXZmvBiQORo4FA2CMN2oAaCRFlg7r/o8ADa3sA1IppXRAol5BCDwGQg1BRoOMabCZ+Vm4Pb+jnlsQ5dFGSwpg1fQfD9NpJqazb6i9shk=
+	t=1772030656; cv=none; b=gjD4mxc/yr+npNa30DZEY6MOvfaDSjzujVgR6c6IlW38/Femg48ioHEC2e3LqQfztrSIRpKV44pICEXjlIhn+SiGOUknnJ+KDt/W2dgjhbfvJ+UT0EZpfr68ehr09giAYTbnSwJVuRuvFuce2Gl+dzh5Bg1j8N6EVkoZU67Hvhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772030614; c=relaxed/simple;
-	bh=JHk303on0tH87FgVMmdu//2A2EJ68pOsAbk2jtfSs8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jJkKL6ZxTpeGmpXUieFBAC81YHJtBZp5Rg5TqmD1lR7QAqQ2znXsMqoBB7DZOxOItZwra0r2MSGe0jV+WJptIVI6S2gfjxue5MK8x2Z09PfyMM/6mPusN2Yx/BwsQFt0Sfsad6fvu+lLQgBEksfkzeQufjHeIUtbf3WJuqoQPIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t1djVl/i; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1772030656; c=relaxed/simple;
+	bh=6qKfmHVo0n6GQ+gGZ30QgYaGfhDMQFs8Ct8plpoDBUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eCXmVtrdlKX/aSGXvLw7HxyGDEzn/P3dG/hvGsNphCzoCnwof5kgg0kCK1YQvuEGg2R3jqvxBfHu54hUvWu5aufE9x8nbXKtQfpKBuyFESb7aw+d9oHfmLiwvvqQOCHhau6XlGnh/VKQPbmy/UdaxWRMGI44awBi3kQculMjAAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=dpyHCzsr; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t1djVl/i"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506a3400f30so8545061cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 06:43:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772030612; x=1772635412; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=foY2Y5omQw20sTq6/J6XKrTrTufvDv+fOLstkti1G50=;
-        b=t1djVl/iPQRVN8ydau/gloFLvPYLeBj3NAQsvuTSxKRsGcVR7pvgfrO2YsMihEAT48
-         ey0ZOV9tfblTcVfcxp0ZYCZwczuWC6f1ARjG2e5AyNw6PZWaXTVN7Q78yd3iMQ9od4kv
-         DgIyK/i454jAIPPyAJCu3CT6Q05qxMz076L2GDn8nMeTXUfheiAsDDgqbtT3OkUlgiRR
-         LC/5UMLHmWCmJUHaCeepzNeRD0OD0JgA3BjeVCWDIBOBRShvs/agJyY1xZNeBrye+jih
-         9lyJI6eJ0VW50faAzl5aepCMhFHMXWFW3uXie3yvGX9sO2d7CXrnE2lgfrwRa1XcaVP/
-         HtLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772030612; x=1772635412;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=foY2Y5omQw20sTq6/J6XKrTrTufvDv+fOLstkti1G50=;
-        b=aoejzap9E706aVU2cs6P2YcfyEQJzlr8dfE1A8IOwt+GFWSrhTumsN3rvayv6nJCnK
-         wbmEQNIGDFgYAh7OudZtDest9p2hG7dsM1HlYqV9cpGrm+6p2u2fPH4Xm/Db05ktIzBi
-         cMbRR5DzkSkGB1Jb+AKlFdOGGoezmB6ktYtdcG0gxBxc9FgPNZtsxzx7XUmVl0Bo8lBx
-         Z4qTDZLGJFMnn1l9h0AP9FbtS0HN8/6LDQCtqtdgEwcvjPW3tZdCIFVoMJ/EMnDBU0Bo
-         lB/2487XErCWbDfit/B6tDCSYvLyKtTyZNNEIRGULvka1B5sA9wC72u47jfWtsFN9zqa
-         7dPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ47x56LGJqTb0xPXdiONo75OcHY4El/HtF/t7pyIz1VnYiLr5gr85STgQhlhXzclRnTbGM9Q/K+9iLrVb25K0pks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUzzjaVDyLqc/AFJHwndzo6c/tQrtucGuv73n87Mom+0iDvTnG
-	HWh3Wh+/AcfndwsekCMVOjx/vUZ5KqjEKxtgweyAkAeiK74PQiohuQ08NMV3ZQox0M4=
-X-Gm-Gg: ATEYQzyHJ9za3Ef2PidzdrI4ALfHo36HdgqGs2pDwQ9jhkKiqwv6RsjrIkkcEnBA1MI
-	VSVZsiS25b8XHjEz2wgsJT/o1dHe3paZPBuRk2cOLvzI7e5OlVEhYMakGUZZwFOh4KRK3DOBCYF
-	FqZdsQyNQe1pENwKbEhtA2o50ydISREOuFA2AZDpefda0eAv0Ajpesxz6WKQ0QpWA5Jw3GK16yQ
-	c4bPq3klc3UlcTB3v5YxKrXCMwJ1uOr/b4zlM0v3IWBcHbApXhGDq8vVPo/tYFsojMl8NNp4BKa
-	1nJ56MZ7aqlLWww4HIz/WouKJxfFdx0wXBQbbUZlBVCn+zKK2CO6kON2XsMGJw7I3Kuz6h73xMI
-	FK4/3eGROawWKaUc/TVP5tnbzQGtFlGZZiNawqBZoN6H7W3nuPcTneOKSxTErmqX2yddsy4pYY7
-	pRxxpO5ZZIBQsQnEmJD8iRICfkIUOmU6OeJ0OJq01cFDgBIDQNpfQs7GXwADx6tGVqt8HkYRqOp
-	ajaQwMuFEy4KP/4m5QJ
-X-Received: by 2002:a05:622a:1453:b0:4f1:e79a:1e0 with SMTP id d75a77b69052e-5073659bc05mr41895291cf.20.1772030611934;
-        Wed, 25 Feb 2026 06:43:31 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5070d510a7asm123124661cf.1.2026.02.25.06.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 06:43:31 -0800 (PST)
-Date: Wed, 25 Feb 2026 09:43:27 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aZ8KjxdPS077aFcq@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <b704b05e-3e65-4a73-84c0-21557b0cc38f@amd.com>
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="dpyHCzsr"
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 2B50BB2C25;
+	Wed, 25 Feb 2026 14:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1772030647;
+	bh=QC896ptdoNlPjD8cLAaltMQp2bbytEcY+6oAad9VY0I=;
+	h=From:To:Cc:Subject:Date;
+	b=dpyHCzsrq1PL9pMzfm9Tsig1czhXhFsKwmupRA2E7bQbmPy/1cSxCV/OIXCaW4PXi
+	 fTDIU/dMBx+M8nj+j7clH33eHwebJcm29qlLSUk0a2Re9ASFppNeOcfzNtIKNwacGy
+	 VgqjeQJ773HiexHF6AIc4zVv5xDLKuABUkt/zlmk=
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	kernel-team@meta.com,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH v2 0/4] mm: zone lock tracepoint instrumentation
+Date: Wed, 25 Feb 2026 14:43:02 +0000
+Message-ID: <cover.1772030186.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b704b05e-3e65-4a73-84c0-21557b0cc38f@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 25, 2026 at 12:40:09PM +0000, Alejandro Lucero Palau wrote:
-> 
-> > /* This is my memory. There are many like it, but this one is mine. */
-> > rc = add_private_memory_driver_managed(nid, start, size, name, flags,
-> >                                         online_type, private_context);
-> > 
-> > page = alloc_pages_node(nid, __GFP_PRIVATE, 0);
-> 
-> 
-> Hi Gregory,
-> 
-> 
-> I can see the nid param is just a "preferred nid" with alloc pages. Using
-> __GFP_PRIVATE will restrict the allocation to private nodes but I think the
-> idea here is:
-> 
-> 
-> 1) I own this node
-> 
-> 2) Do not give me memory from another private node but from mine.
-> 
-> 
-> Should not this be ensure somehow?
-> 
+Zone lock contention can significantly impact allocation and
+reclaim latency, as it is a central synchronization point in
+the page allocator and reclaim paths. Improved visibility into
+its behavior is therefore important for diagnosing performance
+issues in memory-intensive workloads.
 
-A right I set up GFP_PRIVATE for this
+On some production workloads at Meta, we have observed noticeable
+zone lock contention. Deeper analysis of lock holders and waiters
+is currently difficult with existing instrumentation.
 
-#define GFP_PRIVATE     (__GFP_PRIVATE | __GFP_THISNODE)
+While generic lock contention_begin/contention_end tracepoints
+cover the slow path, they do not provide sufficient visibility
+into lock hold times. In particular, the lack of a release-side
+event makes it difficult to identify long lock holders and
+correlate them with waiters. As a result, distinguishing between
+short bursts of contention and pathological long hold times
+requires additional instrumentation.
 
-If your service hides the interface to get to this node behind something
-it controls, and it doesn't enable things like reclaim/compaction etc,
-then it's responsible for dealing with an out-of-memory situation.
+This patch series adds dedicated tracepoint instrumentation to
+zone lock, following the existing mmap_lock tracing model.
 
-__THISNODE was insufficient alone to allow isolation since it is used in
-a variety of scenarios around the kernel.  v2 or v3 explored that.
+The goal is to enable detailed holder/waiter analysis and lock
+hold time measurements without affecting the fast path when
+tracing is disabled.
 
-~Gregory
+The series is structured as follows:
+
+  1. Introduce zone lock wrappers.
+  2. Mechanically convert zone lock users to the wrappers.
+  3. Convert compaction to use the wrappers (requires minor
+     restructuring of compact_lock_irqsave()).
+  4. Add zone lock tracepoints.
+
+The tracepoints are added via lightweight inline helpers in the
+wrappers. When tracing is disabled, the fast path remains
+unchanged.
+
+The compaction changes required abstracting compact_lock_irqsave() away from
+raw spinlock_t. I chose a small tagged struct to handle both zone and LRU
+locks uniformly. If there is a preferred alternative (e.g. splitting helpers
+or using a different abstraction), I would appreciate feedback.
+
+Changes in v2:
+
+- Move mecanical changes from mm/compaction.c to different commit.
+- Removed compact_do_zone_trylock() and compact_do_raw_trylock_irqsave().
+
+Dmitry Ilvokhin (4):
+  mm: introduce zone lock wrappers
+  mm: convert zone lock users to wrappers
+  mm: convert compaction to zone lock wrappers
+  mm: add tracepoints for zone lock
+
+ MAINTAINERS                      |   3 +
+ include/linux/zone_lock.h        | 100 +++++++++++++++++++++++++++++++
+ include/trace/events/zone_lock.h |  64 ++++++++++++++++++++
+ mm/Makefile                      |   2 +-
+ mm/compaction.c                  |  96 +++++++++++++++++++++++------
+ mm/memory_hotplug.c              |   9 +--
+ mm/mm_init.c                     |   3 +-
+ mm/page_alloc.c                  |  73 +++++++++++-----------
+ mm/page_isolation.c              |  19 +++---
+ mm/page_reporting.c              |  13 ++--
+ mm/show_mem.c                    |   5 +-
+ mm/vmscan.c                      |   5 +-
+ mm/vmstat.c                      |   9 +--
+ mm/zone_lock.c                   |  31 ++++++++++
+ 14 files changed, 348 insertions(+), 84 deletions(-)
+ create mode 100644 include/linux/zone_lock.h
+ create mode 100644 include/trace/events/zone_lock.h
+ create mode 100644 mm/zone_lock.c
+
+-- 
+2.47.3
+
