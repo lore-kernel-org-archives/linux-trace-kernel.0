@@ -1,63 +1,63 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB8F3B9614
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 13:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BF83BFE23
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 13:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772026475; cv=none; b=LbIfALJ7wxZRMqwk+7dJPl9l9yHQHR0IQtytPqVZzdUtMZ0yo9c3aJzvEhkB62SAkzjJY7c6ZFnOXE+jN1lDSjWlqUznUXO/z7cCuQrsaJJLKGpbhqWxUqT0v4rrENZ22ybKkBQUKcGwfrJv5YPDnONobDXOBxgb6wtwyeH48t0=
+	t=1772026475; cv=none; b=Fba3sNynbYvUgGIuszG7W71WhLlGkFdu5ie53EIVlVXQfrh62P8xiPD5NupL3Tg6oYNh+pwqglW6dHqhFd5uouZ1UH5FYxrrW/iaZlCDVQbPnjFSo9PZhFEhRzKQKOHhFOM1Vt7EHLjiQMaS9Ll1HN4zwrgUH92OPJzzo4su/eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772026475; c=relaxed/simple;
-	bh=r67EuCuSEgnlNDiIhyauM9QDSlOGLxMQaLPlJqQlJh0=;
+	bh=VXRUjw3z3UNIh15gQNFX2CioLYNATxgwvmja7emLh0E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qI+Fp61hOkZIyDHpE4xO9ScyWr6mKXV3ICTVVZodVQhHd/jWRHTxysw4nKoCNDyeXI0SiqsOllO7o6Ij5qZ0e+aZ9oFcqqBbrYrG+8P8fg512gWgc0y/Gg4Zle2TvkzheB3zrc0SqV6tzBsDb5p98arQtWL7VH/CNTzpHv0EbbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=AOZtH26y; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=JiB91JzqytUWKusNZ+m4fD6KDojUamrpHXmtKOn2474taX4V+BL3TcQe6E8jtdPGrM2aZvA5pY24/KLWQurzjGIWGQr5/TNLZ0Y13VT7MiOreu3lSZ/V8E+l+YNPf8sPzjW8Iu12p1y4uzBF61L31S9SWTQPaixm238q2fhNNf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=eGCQTFAW; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="AOZtH26y"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-436e8758b91so4615805f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 05:34:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="eGCQTFAW"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-48379a42f76so51411615e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 05:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1772026472; x=1772631272; darn=vger.kernel.org;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1772026469; x=1772631269; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6/FG3Lqra/1XuudAPK85QKV8ahCltY4VeAIS2Wk1ZgA=;
-        b=AOZtH26yAWQzenMcaat2LyaeVktBl+Jnj+7qC0HivzbZlq83omf8hSwpOq6FT20g3I
-         Wsx6R0ZcIlIDWIUO2smLNtr8eEpHBeYiL0svrDCZkcGogkpnr89jND7jqCxZQV7yHIEu
-         7i1c3k5Sga1q3MXVDIJG2JykJ+pjz9OgDbpWmS5q6Zk3qOPKKhNiPANE7XTNSWfxbIwx
-         LsUgV5BFPftdNHnnq/8jjMhQaSEtnras5bLxBagybHLb5SNih1BlQZl9fipS0xr6fw9L
-         O6DTRPm5tbLxdGTiBIUvjyJkiFR4A0FjaV3iK8WBUMwSWU9P9lye+ufJu23vRjx7XEH+
-         rcew==
+        bh=MBeI8u/imk2Cfczd0e4jTH2zkhq0nWrokQows6+4QoU=;
+        b=eGCQTFAWFDuc1j0MEvaQFN8irBySNBjySrvHjEBA+ptnxu0yc/fZ9e195RGE8DZv1y
+         dJ6FYVzj6qG3r6v9YchmhuD9J5+QOjFvzGQoXxLaEw/Fejo03QxntEdLh9rqVEjx3cfw
+         gg97OnqJ/Yy7WhtSXSNC0+nOsC7HLbVK9w85IJVxv+NKhCMCW1U6Is380k/qIN28/Cgn
+         /LknmR2Epo9DAPPsO1f73mVwdZBOZAs3cT4k1AK1D8axt4FqkHj6InmqdIiEhIwEYGgO
+         pf2tNXtJp27AfBLFQCfET2o6kFCdi9q4LXKnEm0Nn8Dd+WHo/V16WHhu/a2mv4vuSHJf
+         ra4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772026472; x=1772631272;
+        d=1e100.net; s=20230601; t=1772026469; x=1772631269;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6/FG3Lqra/1XuudAPK85QKV8ahCltY4VeAIS2Wk1ZgA=;
-        b=pgl1TgDOScok0nJ26UF4ZzrH6q8Ljt/mF87y/LxwWDsHBEVVN8CZrI1YrjDtPoXjr4
-         sGHzFr9RvuBvlt9WN6t6ccW/bKTP1kJJx6xoBHvOLLk9vpP1NYoXfG2AdQlWx0INIJp6
-         oUJx4V/oz7aL6SGEK8wV/hapODIHQ1/WSAkBPyy6uJMjNw+qqaAjTUNEshcUVOFbHJuR
-         VC9gPqAGsTi3VjJG8c1JNnbu52wN/+lEeW+0OOjaG5uGNj2hqCd8/nb148HCUgEF/m7y
-         Te6AYMcdGf644uoLAiWRQYqohJF/l3kQzkKHPX5OXPPdrUg7zVU2FtLcGtZlIBhZFbkJ
-         jw6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVAHfcDOi7rSaXhP9mQxmnFFfGCbs7EgePFbaqSI3z7eYgOC0SFDDs3QjEDt5jait+4AES54iSpCURH3TDscls5cjg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/SZbeYGSXBUpkDd5IIGW6+ZojS8od+2sOwBJ40nuJc4ng4o/g
-	vyaZBlv/NdIPQwpmPQAovq0zug16OEBvsRI2zyAR+Wv60a8FM7UCsPMRMdRPqP8HTRU=
-X-Gm-Gg: ATEYQzwtpJPeKcr795AkR7d5vZctUzNTp+tlHcMgvdk1QzHqOuXEoMqWekQ+sPIKTSW
-	/z6ytvrspLYeNXBv5L/wSg0I33IgKNWqfnU1zAQEkTfVcdSfVG+UT+lre8eTGUIB3cwuY0BQ9Gj
-	SrRus/mLl6nz3JqX3XuT/BqEQK3hOGVdDhTrvzatW/xQLbPbIChf8T0TtUWGyJkRww7pJYycIbC
-	Ia1xnALvAMjrZwbush6O4Jgx1LIU95J9EhN2mRYzceeEfH8FitsDl/D+RxfxNJBlwjsupgTUBK6
-	1rqJ0CEWtFw3R2CGK7G7q6J5291F51PALU4NcETjFowmGP4oDUFNGuF1DKHM4SWYDEO46bWXTI3
-	6/gEO35lW1Ga1C415/Qr+PxX9V/veVdKSgBG8ef32vnej0zRHMlkX/WZtfmEJx9n9z5RmN4zdPS
-	G6Vl72MNPOD8G8PkfgRuuEeLk+
-X-Received: by 2002:a5d:5d05:0:b0:439:869a:a15 with SMTP id ffacd0b85a97d-439942fbac8mr908648f8f.42.1772026471792;
-        Wed, 25 Feb 2026 05:34:31 -0800 (PST)
+        bh=MBeI8u/imk2Cfczd0e4jTH2zkhq0nWrokQows6+4QoU=;
+        b=qNiNwhZO3xKRQ95IBlenhkKiNNjxbeTDqphaAxL8yOaqK2vMnJQF6/+9PSQY7kHIZ9
+         nYueLVEy5L+ydWMye2ttuHlv1/sgv7y/Z4fiNXLni2NGrhixgqg7WJZIqnWyiDjYuxUE
+         Jrlp16vVYdgoP+A2fxvT+R2CnMQKgFcI1hRTBZbCcFlfVJyDDc2BT9rWUyETPcpzG0z4
+         4hXCoP5XF6CgeWDHd6CdMfDUs5k6Vi0fs1Q7pCHr0SRKwiJeF9/Z9tR0qAM2gk8X80ZN
+         A4Pd+OLTXxhg8lEk9KGQI5UlBnApmht9my90lrd2r/EzJBIlljrPs50j0UPl+QhjzM3p
+         ARyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGNBjUGSg3X9FOFrnN8kYI1xDnM9mYrWJmaxRxUUPZJ5EJOfuz5uY0en8LpI3+WW47FC/v9vsdvqvyv0iqq/eqrxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFqewHyfsE8G1UGOhf7JXquk5Iarh6wYMcT5XwmRjlnOKjyXor
+	Re3icNG8scW9rayxqP9l11MS4Pp7FJJUJ0XJ7MxfdOnC/FOFbnA9M/zaaxBt22GZOmQ=
+X-Gm-Gg: ATEYQzwhXSTvwQvZHrob316a/tgMMj75aa8BEm6wbHnO2tJ83L+g3LVxTnPW0wMCcb4
+	/hgamW6vbUquO3nDTdsqHkR160u1rkK2y9D3vz64LvAkAcTUjYpp2PndqM9bv8DyDJkA7cdAhvB
+	jL5QFWKEIppTjtSyVJAMzrUWBtSTc4V9/BT2SHVYyj9OazQSwQ8u8u/vr30f0sDSz6G9T4OZmei
+	fTY6JxGspSQt0z6uP1FmYNrVrkpgZQnONWjJfgiYlggVMhUYH6Cy5ToragD4bjUEUkoY/il4zxF
+	N7SiYXQfPsgDm5b8s4D4pGKktRAeUXhttyPRYX4/x3walKGPGJ0MbfLKtQB0gnn+T64/p+rCSxj
+	yIgJNcqlrISfOPu7v6F5rnEwQQ74yaRjXDQNx4lHuVm/ZPiO/w7SxqgFVO7VT1R18dcbfZwAL3x
+	a9Sz2MHi6zlBjutA==
+X-Received: by 2002:a05:600c:6815:b0:483:7783:537b with SMTP id 5b1f17b1804b1-483c21a54d7mr7735905e9.24.1772026469189;
+        Wed, 25 Feb 2026 05:34:29 -0800 (PST)
 Received: from localhost ([85.163.81.98])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d401aasm33063361f8f.23.2026.02.25.05.34.31
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bd7031f3sm66106985e9.6.2026.02.25.05.34.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 05:34:31 -0800 (PST)
+        Wed, 25 Feb 2026 05:34:28 -0800 (PST)
 From: Jiri Pirko <jiri@resnulli.us>
 To: netdev@vger.kernel.org
 Cc: davem@davemloft.net,
@@ -85,9 +85,9 @@ Cc: davem@davemloft.net,
 	linux-doc@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 06/10] devlink: add devlink_dev_driver_name() helper and use it in trace events
-Date: Wed, 25 Feb 2026 14:34:18 +0100
-Message-ID: <20260225133422.290965-7-jiri@resnulli.us>
+Subject: [PATCH net-next v2 04/10] devlink: allow to use devlink index as a command handle
+Date: Wed, 25 Feb 2026 14:34:16 +0100
+Message-ID: <20260225133422.290965-5-jiri@resnulli.us>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20260225133422.290965-1-jiri@resnulli.us>
 References: <20260225133422.290965-1-jiri@resnulli.us>
@@ -101,110 +101,1803 @@ Content-Transfer-Encoding: 8bit
 
 From: Jiri Pirko <jiri@nvidia.com>
 
-In preparation to dev-less devlinks, add devlink_dev_driver_name()
-that safely returns the driver name or NULL, and use it in all trace
-events. The trace __string() macro handles NULL via __string_src(),
-recording "(null)".
+Currently devlink instances are addressed bus_name/dev_name tuple.
+Allow the newly introduced DEVLINK_ATTR_INDEX to be used as
+an alternative handle for all devlink commands.
+
+When DEVLINK_ATTR_INDEX is present in the request, use it for a direct
+xarray lookup instead of iterating over all instances comparing
+bus_name/dev_name strings.
 
 Signed-off-by: Jiri Pirko <jiri@nvidia.com>
 ---
-v1->v2:
-- added missing symbol export
----
- include/net/devlink.h          |  1 +
- include/trace/events/devlink.h | 12 ++++++------
- net/devlink/core.c             |  8 ++++++++
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ Documentation/netlink/specs/devlink.yaml |  51 ++++
+ net/devlink/core.c                       |  16 +-
+ net/devlink/devl_internal.h              |   1 +
+ net/devlink/netlink.c                    |  11 +-
+ net/devlink/netlink_gen.c                | 350 ++++++++++++++---------
+ 5 files changed, 286 insertions(+), 143 deletions(-)
 
-diff --git a/include/net/devlink.h b/include/net/devlink.h
-index 0afb0958b910..45dec7067a8e 100644
---- a/include/net/devlink.h
-+++ b/include/net/devlink.h
-@@ -1613,6 +1613,7 @@ struct devlink *priv_to_devlink(void *priv);
- struct device *devlink_to_dev(const struct devlink *devlink);
- const char *devlink_bus_name(const struct devlink *devlink);
- const char *devlink_dev_name(const struct devlink *devlink);
-+const char *devlink_dev_driver_name(const struct devlink *devlink);
+diff --git a/Documentation/netlink/specs/devlink.yaml b/Documentation/netlink/specs/devlink.yaml
+index 1bed67a0eefb..a73a86ec595d 100644
+--- a/Documentation/netlink/specs/devlink.yaml
++++ b/Documentation/netlink/specs/devlink.yaml
+@@ -1310,6 +1310,7 @@ operations:
+           attributes: &dev-id-attrs
+             - bus-name
+             - dev-name
++            - index
+         reply: &get-reply
+           value: 3
+           attributes:
+@@ -1334,6 +1335,7 @@ operations:
+           attributes: &port-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+         reply:
+           value: 7
+@@ -1358,6 +1360,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - port-type
+             - port-function
+@@ -1375,6 +1378,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - port-flavour
+             - port-pci-pf-number
+@@ -1409,6 +1413,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - port-split-count
  
- /* Devlink instance explicit locking */
- void devl_lock(struct devlink *devlink);
-diff --git a/include/trace/events/devlink.h b/include/trace/events/devlink.h
-index 32304ce9ad15..4f8edf77dfbe 100644
---- a/include/trace/events/devlink.h
-+++ b/include/trace/events/devlink.h
-@@ -23,7 +23,7 @@ TRACE_EVENT(devlink_hwmsg,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__field(bool, incoming)
- 		__field(unsigned long, type)
- 		__dynamic_array(u8, buf, len)
-@@ -57,7 +57,7 @@ TRACE_EVENT(devlink_hwerr,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__field(int, err)
- 		__string(msg, msg)
- 		),
-@@ -87,7 +87,7 @@ TRACE_EVENT(devlink_health_report,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__string(reporter_name, reporter_name)
- 		__string(msg, msg)
- 	),
-@@ -118,7 +118,7 @@ TRACE_EVENT(devlink_health_recover_aborted,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__string(reporter_name, reporter_name)
- 		__field(bool, health_state)
- 		__field(u64, time_since_last_recover)
-@@ -152,7 +152,7 @@ TRACE_EVENT(devlink_health_reporter_state_update,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__string(reporter_name, reporter_name)
- 		__field(u8, new_state)
- 	),
-@@ -183,7 +183,7 @@ TRACE_EVENT(devlink_trap_report,
- 	TP_STRUCT__entry(
- 		__string(bus_name, devlink_bus_name(devlink))
- 		__string(dev_name, devlink_dev_name(devlink))
--		__string(driver_name, devlink_to_dev(devlink)->driver->name)
-+		__string(driver_name, devlink_dev_driver_name(devlink))
- 		__string(trap_name, metadata->trap_name)
- 		__string(trap_group_name, metadata->trap_group_name)
- 		__array(char, input_dev_name, IFNAMSIZ)
+@@ -1437,6 +1442,7 @@ operations:
+           attributes: &sb-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - sb-index
+         reply: &sb-get-reply
+           value: 13
+@@ -1459,6 +1465,7 @@ operations:
+           attributes: &sb-pool-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - sb-index
+             - sb-pool-index
+         reply: &sb-pool-get-reply
+@@ -1482,6 +1489,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - sb-index
+             - sb-pool-index
+             - sb-pool-threshold-type
+@@ -1500,6 +1508,7 @@ operations:
+           attributes: &sb-port-pool-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - sb-index
+             - sb-pool-index
+@@ -1524,6 +1533,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - sb-index
+             - sb-pool-index
+@@ -1542,6 +1552,7 @@ operations:
+           attributes: &sb-tc-pool-bind-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - sb-index
+             - sb-pool-type
+@@ -1567,6 +1578,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - sb-index
+             - sb-pool-index
+@@ -1588,6 +1600,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - sb-index
+ 
+     -
+@@ -1603,6 +1616,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - sb-index
+ 
+     -
+@@ -1621,6 +1635,7 @@ operations:
+           attributes: &eswitch-attrs
+             - bus-name
+             - dev-name
++            - index
+             - eswitch-mode
+             - eswitch-inline-mode
+             - eswitch-encap-mode
+@@ -1649,12 +1664,14 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-table-name
+         reply:
+           value: 31
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-tables
+ 
+     -
+@@ -1669,11 +1686,13 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-table-name
+         reply:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-entries
+ 
+     -
+@@ -1688,10 +1707,12 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+         reply:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-headers
+ 
+     -
+@@ -1707,6 +1728,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - dpipe-table-name
+             - dpipe-table-counters-enabled
+ 
+@@ -1723,6 +1745,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - resource-id
+             - resource-size
+ 
+@@ -1738,11 +1761,13 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+         reply:
+           value: 36
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - resource-list
+ 
+     -
+@@ -1758,6 +1783,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - reload-action
+             - reload-limits
+             - netns-pid
+@@ -1767,6 +1793,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - reload-actions-performed
+ 
+     -
+@@ -1781,6 +1808,7 @@ operations:
+           attributes: &param-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - param-name
+         reply: &param-get-reply
+           attributes: *param-id-attrs
+@@ -1802,6 +1830,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - param-name
+             - param-type
+             # param-value-data is missing here as the type is variable
+@@ -1821,6 +1850,7 @@ operations:
+           attributes: &region-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - region-name
+         reply: &region-get-reply
+@@ -1845,6 +1875,7 @@ operations:
+           attributes: &region-snapshot-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - region-name
+             - region-snapshot-id
+@@ -1875,6 +1906,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - region-name
+             - region-snapshot-id
+@@ -1886,6 +1918,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - region-name
+ 
+@@ -1935,6 +1968,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - info-driver-name
+             - info-serial-number
+             - info-version-fixed
+@@ -1956,6 +1990,7 @@ operations:
+           attributes: &health-reporter-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - health-reporter-name
+         reply: &health-reporter-get-reply
+@@ -1978,6 +2013,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - health-reporter-name
+             - health-reporter-graceful-period
+@@ -2048,6 +2084,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - flash-update-file-name
+             - flash-update-component
+             - flash-update-overwrite-mask
+@@ -2065,6 +2102,7 @@ operations:
+           attributes: &trap-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - trap-name
+         reply: &trap-get-reply
+           value: 63
+@@ -2087,6 +2125,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - trap-name
+             - trap-action
+ 
+@@ -2103,6 +2142,7 @@ operations:
+           attributes: &trap-group-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - trap-group-name
+         reply: &trap-group-get-reply
+           value: 67
+@@ -2125,6 +2165,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - trap-group-name
+             - trap-action
+             - trap-policer-id
+@@ -2142,6 +2183,7 @@ operations:
+           attributes: &trap-policer-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - trap-policer-id
+         reply: &trap-policer-get-reply
+           value: 71
+@@ -2164,6 +2206,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - trap-policer-id
+             - trap-policer-rate
+             - trap-policer-burst
+@@ -2194,6 +2237,7 @@ operations:
+           attributes: &rate-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - port-index
+             - rate-node-name
+         reply: &rate-get-reply
+@@ -2217,6 +2261,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - rate-node-name
+             - rate-tx-share
+             - rate-tx-max
+@@ -2238,6 +2283,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - rate-node-name
+             - rate-tx-share
+             - rate-tx-max
+@@ -2259,6 +2305,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - rate-node-name
+ 
+     -
+@@ -2274,6 +2321,7 @@ operations:
+           attributes: &linecard-id-attrs
+             - bus-name
+             - dev-name
++            - index
+             - linecard-index
+         reply: &linecard-get-reply
+           value: 80
+@@ -2296,6 +2344,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - linecard-index
+             - linecard-type
+ 
+@@ -2329,6 +2378,7 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - selftests
+ 
+     -
+@@ -2340,4 +2390,5 @@ operations:
+           attributes:
+             - bus-name
+             - dev-name
++            - index
+             - port-index
 diff --git a/net/devlink/core.c b/net/devlink/core.c
-index 2dd6d45bec18..85ea5856d523 100644
+index 49f856beb8b2..2dd6d45bec18 100644
 --- a/net/devlink/core.c
 +++ b/net/devlink/core.c
-@@ -260,6 +260,14 @@ const char *devlink_dev_name(const struct devlink *devlink)
+@@ -333,13 +333,15 @@ void devlink_put(struct devlink *devlink)
+ 		queue_rcu_work(system_percpu_wq, &devlink->rwork);
  }
- EXPORT_SYMBOL_GPL(devlink_dev_name);
  
-+const char *devlink_dev_driver_name(const struct devlink *devlink)
-+{
-+	struct device *dev = devlink->dev;
-+
-+	return dev ? dev->driver->name : NULL;
-+}
-+EXPORT_SYMBOL_GPL(devlink_dev_driver_name);
-+
- struct net *devlink_net(const struct devlink *devlink)
+-struct devlink *devlinks_xa_find_get(struct net *net, unsigned long *indexp)
++static struct devlink *__devlinks_xa_find_get(struct net *net,
++					      unsigned long *indexp,
++					      unsigned long end)
  {
- 	return read_pnet(&devlink->_net);
+ 	struct devlink *devlink = NULL;
+ 
+ 	rcu_read_lock();
+ retry:
+-	devlink = xa_find(&devlinks, indexp, ULONG_MAX, DEVLINK_REGISTERED);
++	devlink = xa_find(&devlinks, indexp, end, DEVLINK_REGISTERED);
+ 	if (!devlink)
+ 		goto unlock;
+ 
+@@ -358,6 +360,16 @@ struct devlink *devlinks_xa_find_get(struct net *net, unsigned long *indexp)
+ 	goto retry;
+ }
+ 
++struct devlink *devlinks_xa_find_get(struct net *net, unsigned long *indexp)
++{
++	return __devlinks_xa_find_get(net, indexp, ULONG_MAX);
++}
++
++struct devlink *devlinks_xa_lookup_get(struct net *net, unsigned long index)
++{
++	return __devlinks_xa_find_get(net, &index, index);
++}
++
+ /**
+  * devl_register - Register devlink instance
+  * @devlink: devlink
+diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
+index d43819c6b452..67425c5d8cfc 100644
+--- a/net/devlink/devl_internal.h
++++ b/net/devlink/devl_internal.h
+@@ -92,6 +92,7 @@ extern struct genl_family devlink_nl_family;
+ 	for (index = 0; (devlink = devlinks_xa_find_get(net, &index)); index++)
+ 
+ struct devlink *devlinks_xa_find_get(struct net *net, unsigned long *indexp);
++struct devlink *devlinks_xa_lookup_get(struct net *net, unsigned long index);
+ 
+ static inline bool __devl_is_registered(struct devlink *devlink)
+ {
+diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
+index a517d42c7b96..b73cec31089f 100644
+--- a/net/devlink/netlink.c
++++ b/net/devlink/netlink.c
+@@ -186,6 +186,14 @@ devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
+ 	char *busname;
+ 	char *devname;
+ 
++	if (attrs[DEVLINK_ATTR_INDEX]) {
++		index = nla_get_uint(attrs[DEVLINK_ATTR_INDEX]);
++		devlink = devlinks_xa_lookup_get(net, index);
++		if (!devlink)
++			return ERR_PTR(-ENODEV);
++		goto found;
++	}
++
+ 	if (!attrs[DEVLINK_ATTR_BUS_NAME] || !attrs[DEVLINK_ATTR_DEV_NAME])
+ 		return ERR_PTR(-EINVAL);
+ 
+@@ -356,7 +364,8 @@ int devlink_nl_dumpit(struct sk_buff *msg, struct netlink_callback *cb,
+ 	int flags = NLM_F_MULTI;
+ 
+ 	if (attrs &&
+-	    (attrs[DEVLINK_ATTR_BUS_NAME] || attrs[DEVLINK_ATTR_DEV_NAME]))
++	    (attrs[DEVLINK_ATTR_BUS_NAME] || attrs[DEVLINK_ATTR_DEV_NAME] ||
++	     attrs[DEVLINK_ATTR_INDEX]))
+ 		return devlink_nl_inst_single_dumpit(msg, cb, flags, dump_one,
+ 						     attrs);
+ 	else
+diff --git a/net/devlink/netlink_gen.c b/net/devlink/netlink_gen.c
+index f4c61c2b4f22..9812897c5524 100644
+--- a/net/devlink/netlink_gen.c
++++ b/net/devlink/netlink_gen.c
+@@ -56,37 +56,42 @@ const struct nla_policy devlink_dl_selftest_id_nl_policy[DEVLINK_ATTR_SELFTEST_I
+ };
+ 
+ /* DEVLINK_CMD_GET - do */
+-static const struct nla_policy devlink_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_GET - do */
+-static const struct nla_policy devlink_port_get_do_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_port_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_GET - dump */
+-static const struct nla_policy devlink_port_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_port_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_SET - do */
+-static const struct nla_policy devlink_port_set_nl_policy[DEVLINK_ATTR_PORT_FUNCTION + 1] = {
++static const struct nla_policy devlink_port_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_PORT_TYPE] = NLA_POLICY_MAX(NLA_U16, 3),
+ 	[DEVLINK_ATTR_PORT_FUNCTION] = NLA_POLICY_NESTED(devlink_dl_port_function_nl_policy),
+ };
+ 
+ /* DEVLINK_CMD_PORT_NEW - do */
+-static const struct nla_policy devlink_port_new_nl_policy[DEVLINK_ATTR_PORT_PCI_SF_NUMBER + 1] = {
++static const struct nla_policy devlink_port_new_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_PORT_FLAVOUR] = NLA_POLICY_MAX(NLA_U16, 7),
+ 	[DEVLINK_ATTR_PORT_PCI_PF_NUMBER] = { .type = NLA_U16, },
+@@ -95,58 +100,66 @@ static const struct nla_policy devlink_port_new_nl_policy[DEVLINK_ATTR_PORT_PCI_
+ };
+ 
+ /* DEVLINK_CMD_PORT_DEL - do */
+-static const struct nla_policy devlink_port_del_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_port_del_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_SPLIT - do */
+-static const struct nla_policy devlink_port_split_nl_policy[DEVLINK_ATTR_PORT_SPLIT_COUNT + 1] = {
++static const struct nla_policy devlink_port_split_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_PORT_SPLIT_COUNT] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_UNSPLIT - do */
+-static const struct nla_policy devlink_port_unsplit_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_port_unsplit_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_SB_GET - do */
+-static const struct nla_policy devlink_sb_get_do_nl_policy[DEVLINK_ATTR_SB_INDEX + 1] = {
++static const struct nla_policy devlink_sb_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_SB_GET - dump */
+-static const struct nla_policy devlink_sb_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_sb_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_SB_POOL_GET - do */
+-static const struct nla_policy devlink_sb_pool_get_do_nl_policy[DEVLINK_ATTR_SB_POOL_INDEX + 1] = {
++static const struct nla_policy devlink_sb_pool_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_INDEX] = { .type = NLA_U16, },
+ };
+ 
+ /* DEVLINK_CMD_SB_POOL_GET - dump */
+-static const struct nla_policy devlink_sb_pool_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_sb_pool_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_SB_POOL_SET - do */
+-static const struct nla_policy devlink_sb_pool_set_nl_policy[DEVLINK_ATTR_SB_POOL_THRESHOLD_TYPE + 1] = {
++static const struct nla_policy devlink_sb_pool_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_INDEX] = { .type = NLA_U16, },
+ 	[DEVLINK_ATTR_SB_POOL_THRESHOLD_TYPE] = NLA_POLICY_MAX(NLA_U8, 1),
+@@ -154,24 +167,27 @@ static const struct nla_policy devlink_sb_pool_set_nl_policy[DEVLINK_ATTR_SB_POO
+ };
+ 
+ /* DEVLINK_CMD_SB_PORT_POOL_GET - do */
+-static const struct nla_policy devlink_sb_port_pool_get_do_nl_policy[DEVLINK_ATTR_SB_POOL_INDEX + 1] = {
++static const struct nla_policy devlink_sb_port_pool_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_INDEX] = { .type = NLA_U16, },
+ };
+ 
+ /* DEVLINK_CMD_SB_PORT_POOL_GET - dump */
+-static const struct nla_policy devlink_sb_port_pool_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_sb_port_pool_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_SB_PORT_POOL_SET - do */
+-static const struct nla_policy devlink_sb_port_pool_set_nl_policy[DEVLINK_ATTR_SB_THRESHOLD + 1] = {
++static const struct nla_policy devlink_sb_port_pool_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_INDEX] = { .type = NLA_U16, },
+@@ -179,9 +195,10 @@ static const struct nla_policy devlink_sb_port_pool_set_nl_policy[DEVLINK_ATTR_S
+ };
+ 
+ /* DEVLINK_CMD_SB_TC_POOL_BIND_GET - do */
+-static const struct nla_policy devlink_sb_tc_pool_bind_get_do_nl_policy[DEVLINK_ATTR_SB_TC_INDEX + 1] = {
++static const struct nla_policy devlink_sb_tc_pool_bind_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_TYPE] = NLA_POLICY_MAX(NLA_U8, 1),
+@@ -189,15 +206,17 @@ static const struct nla_policy devlink_sb_tc_pool_bind_get_do_nl_policy[DEVLINK_
+ };
+ 
+ /* DEVLINK_CMD_SB_TC_POOL_BIND_GET - dump */
+-static const struct nla_policy devlink_sb_tc_pool_bind_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_sb_tc_pool_bind_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_SB_TC_POOL_BIND_SET - do */
+-static const struct nla_policy devlink_sb_tc_pool_bind_set_nl_policy[DEVLINK_ATTR_SB_TC_INDEX + 1] = {
++static const struct nla_policy devlink_sb_tc_pool_bind_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_SB_POOL_INDEX] = { .type = NLA_U16, },
+@@ -207,80 +226,91 @@ static const struct nla_policy devlink_sb_tc_pool_bind_set_nl_policy[DEVLINK_ATT
+ };
+ 
+ /* DEVLINK_CMD_SB_OCC_SNAPSHOT - do */
+-static const struct nla_policy devlink_sb_occ_snapshot_nl_policy[DEVLINK_ATTR_SB_INDEX + 1] = {
++static const struct nla_policy devlink_sb_occ_snapshot_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_SB_OCC_MAX_CLEAR - do */
+-static const struct nla_policy devlink_sb_occ_max_clear_nl_policy[DEVLINK_ATTR_SB_INDEX + 1] = {
++static const struct nla_policy devlink_sb_occ_max_clear_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SB_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_ESWITCH_GET - do */
+-static const struct nla_policy devlink_eswitch_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_eswitch_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_ESWITCH_SET - do */
+-static const struct nla_policy devlink_eswitch_set_nl_policy[DEVLINK_ATTR_ESWITCH_ENCAP_MODE + 1] = {
++static const struct nla_policy devlink_eswitch_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_ESWITCH_MODE] = NLA_POLICY_MAX(NLA_U16, 2),
+ 	[DEVLINK_ATTR_ESWITCH_INLINE_MODE] = NLA_POLICY_MAX(NLA_U8, 3),
+ 	[DEVLINK_ATTR_ESWITCH_ENCAP_MODE] = NLA_POLICY_MAX(NLA_U8, 1),
+ };
+ 
+ /* DEVLINK_CMD_DPIPE_TABLE_GET - do */
+-static const struct nla_policy devlink_dpipe_table_get_nl_policy[DEVLINK_ATTR_DPIPE_TABLE_NAME + 1] = {
++static const struct nla_policy devlink_dpipe_table_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_DPIPE_TABLE_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_DPIPE_ENTRIES_GET - do */
+-static const struct nla_policy devlink_dpipe_entries_get_nl_policy[DEVLINK_ATTR_DPIPE_TABLE_NAME + 1] = {
++static const struct nla_policy devlink_dpipe_entries_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_DPIPE_TABLE_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_DPIPE_HEADERS_GET - do */
+-static const struct nla_policy devlink_dpipe_headers_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_dpipe_headers_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_DPIPE_TABLE_COUNTERS_SET - do */
+-static const struct nla_policy devlink_dpipe_table_counters_set_nl_policy[DEVLINK_ATTR_DPIPE_TABLE_COUNTERS_ENABLED + 1] = {
++static const struct nla_policy devlink_dpipe_table_counters_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_DPIPE_TABLE_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DPIPE_TABLE_COUNTERS_ENABLED] = { .type = NLA_U8, },
+ };
+ 
+ /* DEVLINK_CMD_RESOURCE_SET - do */
+-static const struct nla_policy devlink_resource_set_nl_policy[DEVLINK_ATTR_RESOURCE_SIZE + 1] = {
++static const struct nla_policy devlink_resource_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_RESOURCE_ID] = { .type = NLA_U64, },
+ 	[DEVLINK_ATTR_RESOURCE_SIZE] = { .type = NLA_U64, },
+ };
+ 
+ /* DEVLINK_CMD_RESOURCE_DUMP - do */
+-static const struct nla_policy devlink_resource_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_resource_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_RELOAD - do */
+-static const struct nla_policy devlink_reload_nl_policy[DEVLINK_ATTR_RELOAD_LIMITS + 1] = {
++static const struct nla_policy devlink_reload_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_RELOAD_ACTION] = NLA_POLICY_RANGE(NLA_U8, 1, 2),
+ 	[DEVLINK_ATTR_RELOAD_LIMITS] = NLA_POLICY_BITFIELD32(6),
+ 	[DEVLINK_ATTR_NETNS_PID] = { .type = NLA_U32, },
+@@ -289,22 +319,25 @@ static const struct nla_policy devlink_reload_nl_policy[DEVLINK_ATTR_RELOAD_LIMI
+ };
+ 
+ /* DEVLINK_CMD_PARAM_GET - do */
+-static const struct nla_policy devlink_param_get_do_nl_policy[DEVLINK_ATTR_PARAM_NAME + 1] = {
++static const struct nla_policy devlink_param_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PARAM_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_PARAM_GET - dump */
+-static const struct nla_policy devlink_param_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_param_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_PARAM_SET - do */
+-static const struct nla_policy devlink_param_set_nl_policy[DEVLINK_ATTR_PARAM_RESET_DEFAULT + 1] = {
++static const struct nla_policy devlink_param_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PARAM_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_PARAM_TYPE] = NLA_POLICY_VALIDATE_FN(NLA_U8, &devlink_attr_param_type_validate),
+ 	[DEVLINK_ATTR_PARAM_VALUE_CMODE] = NLA_POLICY_MAX(NLA_U8, 2),
+@@ -312,41 +345,46 @@ static const struct nla_policy devlink_param_set_nl_policy[DEVLINK_ATTR_PARAM_RE
+ };
+ 
+ /* DEVLINK_CMD_REGION_GET - do */
+-static const struct nla_policy devlink_region_get_do_nl_policy[DEVLINK_ATTR_REGION_NAME + 1] = {
++static const struct nla_policy devlink_region_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_REGION_GET - dump */
+-static const struct nla_policy devlink_region_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_region_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_REGION_NEW - do */
+-static const struct nla_policy devlink_region_new_nl_policy[DEVLINK_ATTR_REGION_SNAPSHOT_ID + 1] = {
++static const struct nla_policy devlink_region_new_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_REGION_SNAPSHOT_ID] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_REGION_DEL - do */
+-static const struct nla_policy devlink_region_del_nl_policy[DEVLINK_ATTR_REGION_SNAPSHOT_ID + 1] = {
++static const struct nla_policy devlink_region_del_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_REGION_SNAPSHOT_ID] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_REGION_READ - dump */
+-static const struct nla_policy devlink_region_read_nl_policy[DEVLINK_ATTR_REGION_DIRECT + 1] = {
++static const struct nla_policy devlink_region_read_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_REGION_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_REGION_SNAPSHOT_ID] = { .type = NLA_U32, },
+@@ -356,44 +394,50 @@ static const struct nla_policy devlink_region_read_nl_policy[DEVLINK_ATTR_REGION
+ };
+ 
+ /* DEVLINK_CMD_PORT_PARAM_GET - do */
+-static const struct nla_policy devlink_port_param_get_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_port_param_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_PORT_PARAM_SET - do */
+-static const struct nla_policy devlink_port_param_set_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_port_param_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_INFO_GET - do */
+-static const struct nla_policy devlink_info_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_info_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_GET - do */
+-static const struct nla_policy devlink_health_reporter_get_do_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_GET - dump */
+-static const struct nla_policy devlink_health_reporter_get_dump_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_health_reporter_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_SET - do */
+-static const struct nla_policy devlink_health_reporter_set_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_BURST_PERIOD + 1] = {
++static const struct nla_policy devlink_health_reporter_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_GRACEFUL_PERIOD] = { .type = NLA_U64, },
+@@ -403,137 +447,155 @@ static const struct nla_policy devlink_health_reporter_set_nl_policy[DEVLINK_ATT
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_RECOVER - do */
+-static const struct nla_policy devlink_health_reporter_recover_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_recover_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_DIAGNOSE - do */
+-static const struct nla_policy devlink_health_reporter_diagnose_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_diagnose_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_DUMP_GET - dump */
+-static const struct nla_policy devlink_health_reporter_dump_get_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_dump_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_DUMP_CLEAR - do */
+-static const struct nla_policy devlink_health_reporter_dump_clear_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_dump_clear_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_FLASH_UPDATE - do */
+-static const struct nla_policy devlink_flash_update_nl_policy[DEVLINK_ATTR_FLASH_UPDATE_OVERWRITE_MASK + 1] = {
++static const struct nla_policy devlink_flash_update_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_FLASH_UPDATE_FILE_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_FLASH_UPDATE_COMPONENT] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_FLASH_UPDATE_OVERWRITE_MASK] = NLA_POLICY_BITFIELD32(3),
+ };
+ 
+ /* DEVLINK_CMD_TRAP_GET - do */
+-static const struct nla_policy devlink_trap_get_do_nl_policy[DEVLINK_ATTR_TRAP_NAME + 1] = {
++static const struct nla_policy devlink_trap_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_GET - dump */
+-static const struct nla_policy devlink_trap_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_trap_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_SET - do */
+-static const struct nla_policy devlink_trap_set_nl_policy[DEVLINK_ATTR_TRAP_ACTION + 1] = {
++static const struct nla_policy devlink_trap_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_TRAP_ACTION] = NLA_POLICY_MAX(NLA_U8, 2),
+ };
+ 
+ /* DEVLINK_CMD_TRAP_GROUP_GET - do */
+-static const struct nla_policy devlink_trap_group_get_do_nl_policy[DEVLINK_ATTR_TRAP_GROUP_NAME + 1] = {
++static const struct nla_policy devlink_trap_group_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_GROUP_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_GROUP_GET - dump */
+-static const struct nla_policy devlink_trap_group_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_trap_group_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_GROUP_SET - do */
+-static const struct nla_policy devlink_trap_group_set_nl_policy[DEVLINK_ATTR_TRAP_POLICER_ID + 1] = {
++static const struct nla_policy devlink_trap_group_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_GROUP_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_TRAP_ACTION] = NLA_POLICY_MAX(NLA_U8, 2),
+ 	[DEVLINK_ATTR_TRAP_POLICER_ID] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_POLICER_GET - do */
+-static const struct nla_policy devlink_trap_policer_get_do_nl_policy[DEVLINK_ATTR_TRAP_POLICER_ID + 1] = {
++static const struct nla_policy devlink_trap_policer_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_POLICER_ID] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_POLICER_GET - dump */
+-static const struct nla_policy devlink_trap_policer_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_trap_policer_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_TRAP_POLICER_SET - do */
+-static const struct nla_policy devlink_trap_policer_set_nl_policy[DEVLINK_ATTR_TRAP_POLICER_BURST + 1] = {
++static const struct nla_policy devlink_trap_policer_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_TRAP_POLICER_ID] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_TRAP_POLICER_RATE] = { .type = NLA_U64, },
+ 	[DEVLINK_ATTR_TRAP_POLICER_BURST] = { .type = NLA_U64, },
+ };
+ 
+ /* DEVLINK_CMD_HEALTH_REPORTER_TEST - do */
+-static const struct nla_policy devlink_health_reporter_test_nl_policy[DEVLINK_ATTR_HEALTH_REPORTER_NAME + 1] = {
++static const struct nla_policy devlink_health_reporter_test_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_HEALTH_REPORTER_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_RATE_GET - do */
+-static const struct nla_policy devlink_rate_get_do_nl_policy[DEVLINK_ATTR_RATE_NODE_NAME + 1] = {
++static const struct nla_policy devlink_rate_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_RATE_NODE_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_RATE_GET - dump */
+-static const struct nla_policy devlink_rate_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_rate_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_RATE_SET - do */
+-static const struct nla_policy devlink_rate_set_nl_policy[DEVLINK_ATTR_RATE_TC_BWS + 1] = {
++static const struct nla_policy devlink_rate_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_RATE_NODE_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_RATE_TX_SHARE] = { .type = NLA_U64, },
+ 	[DEVLINK_ATTR_RATE_TX_MAX] = { .type = NLA_U64, },
+@@ -544,9 +606,10 @@ static const struct nla_policy devlink_rate_set_nl_policy[DEVLINK_ATTR_RATE_TC_B
+ };
+ 
+ /* DEVLINK_CMD_RATE_NEW - do */
+-static const struct nla_policy devlink_rate_new_nl_policy[DEVLINK_ATTR_RATE_TC_BWS + 1] = {
++static const struct nla_policy devlink_rate_new_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_RATE_NODE_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_RATE_TX_SHARE] = { .type = NLA_U64, },
+ 	[DEVLINK_ATTR_RATE_TX_MAX] = { .type = NLA_U64, },
+@@ -557,50 +620,57 @@ static const struct nla_policy devlink_rate_new_nl_policy[DEVLINK_ATTR_RATE_TC_B
+ };
+ 
+ /* DEVLINK_CMD_RATE_DEL - do */
+-static const struct nla_policy devlink_rate_del_nl_policy[DEVLINK_ATTR_RATE_NODE_NAME + 1] = {
++static const struct nla_policy devlink_rate_del_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_RATE_NODE_NAME] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_LINECARD_GET - do */
+-static const struct nla_policy devlink_linecard_get_do_nl_policy[DEVLINK_ATTR_LINECARD_INDEX + 1] = {
++static const struct nla_policy devlink_linecard_get_do_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_LINECARD_INDEX] = { .type = NLA_U32, },
+ };
+ 
+ /* DEVLINK_CMD_LINECARD_GET - dump */
+-static const struct nla_policy devlink_linecard_get_dump_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_linecard_get_dump_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_LINECARD_SET - do */
+-static const struct nla_policy devlink_linecard_set_nl_policy[DEVLINK_ATTR_LINECARD_TYPE + 1] = {
++static const struct nla_policy devlink_linecard_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_LINECARD_INDEX] = { .type = NLA_U32, },
+ 	[DEVLINK_ATTR_LINECARD_TYPE] = { .type = NLA_NUL_STRING, },
+ };
+ 
+ /* DEVLINK_CMD_SELFTESTS_GET - do */
+-static const struct nla_policy devlink_selftests_get_nl_policy[DEVLINK_ATTR_DEV_NAME + 1] = {
++static const struct nla_policy devlink_selftests_get_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ };
+ 
+ /* DEVLINK_CMD_SELFTESTS_RUN - do */
+-static const struct nla_policy devlink_selftests_run_nl_policy[DEVLINK_ATTR_SELFTESTS + 1] = {
++static const struct nla_policy devlink_selftests_run_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_SELFTESTS] = NLA_POLICY_NESTED(devlink_dl_selftest_id_nl_policy),
+ };
+ 
+ /* DEVLINK_CMD_NOTIFY_FILTER_SET - do */
+-static const struct nla_policy devlink_notify_filter_set_nl_policy[DEVLINK_ATTR_PORT_INDEX + 1] = {
++static const struct nla_policy devlink_notify_filter_set_nl_policy[DEVLINK_ATTR_INDEX + 1] = {
+ 	[DEVLINK_ATTR_BUS_NAME] = { .type = NLA_NUL_STRING, },
+ 	[DEVLINK_ATTR_DEV_NAME] = { .type = NLA_NUL_STRING, },
++	[DEVLINK_ATTR_INDEX] = { .type = NLA_UINT, },
+ 	[DEVLINK_ATTR_PORT_INDEX] = { .type = NLA_U32, },
+ };
+ 
+@@ -613,7 +683,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -629,14 +699,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_PORT_GET,
+ 		.dumpit		= devlink_nl_port_get_dumpit,
+ 		.policy		= devlink_port_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -646,7 +716,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_FUNCTION,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -656,7 +726,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_new_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_new_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_PCI_SF_NUMBER,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -666,7 +736,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_del_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_del_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -676,7 +746,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_split_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_split_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_SPLIT_COUNT,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -686,7 +756,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_unsplit_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_unsplit_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -696,14 +766,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_SB_GET,
+ 		.dumpit		= devlink_nl_sb_get_dumpit,
+ 		.policy		= devlink_sb_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -713,14 +783,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_pool_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_pool_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_POOL_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_SB_POOL_GET,
+ 		.dumpit		= devlink_nl_sb_pool_get_dumpit,
+ 		.policy		= devlink_sb_pool_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -730,7 +800,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_pool_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_pool_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_POOL_THRESHOLD_TYPE,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -740,14 +810,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_port_pool_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_port_pool_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_POOL_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_SB_PORT_POOL_GET,
+ 		.dumpit		= devlink_nl_sb_port_pool_get_dumpit,
+ 		.policy		= devlink_sb_port_pool_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -757,7 +827,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_port_pool_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_port_pool_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_THRESHOLD,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -767,14 +837,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_tc_pool_bind_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_tc_pool_bind_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_TC_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_SB_TC_POOL_BIND_GET,
+ 		.dumpit		= devlink_nl_sb_tc_pool_bind_get_dumpit,
+ 		.policy		= devlink_sb_tc_pool_bind_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -784,7 +854,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_tc_pool_bind_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_tc_pool_bind_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_TC_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -794,7 +864,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_occ_snapshot_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_occ_snapshot_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -804,7 +874,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_sb_occ_max_clear_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_sb_occ_max_clear_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SB_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -814,7 +884,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_eswitch_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_eswitch_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -824,7 +894,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_eswitch_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_eswitch_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_ESWITCH_ENCAP_MODE,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -834,7 +904,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_dpipe_table_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_dpipe_table_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DPIPE_TABLE_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -844,7 +914,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_dpipe_entries_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_dpipe_entries_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DPIPE_TABLE_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -854,7 +924,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_dpipe_headers_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_dpipe_headers_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -864,7 +934,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_dpipe_table_counters_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_dpipe_table_counters_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DPIPE_TABLE_COUNTERS_ENABLED,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -874,7 +944,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_resource_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_resource_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RESOURCE_SIZE,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -884,7 +954,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_resource_dump_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_resource_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -894,7 +964,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_reload_doit,
+ 		.post_doit	= devlink_nl_post_doit_dev_lock,
+ 		.policy		= devlink_reload_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RELOAD_LIMITS,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -904,14 +974,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_param_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_param_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PARAM_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_PARAM_GET,
+ 		.dumpit		= devlink_nl_param_get_dumpit,
+ 		.policy		= devlink_param_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -921,7 +991,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_param_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_param_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PARAM_RESET_DEFAULT,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -931,14 +1001,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_region_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_region_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_REGION_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_REGION_GET,
+ 		.dumpit		= devlink_nl_region_get_dumpit,
+ 		.policy		= devlink_region_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -948,7 +1018,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_region_new_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_region_new_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_REGION_SNAPSHOT_ID,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -958,7 +1028,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_region_del_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_region_del_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_REGION_SNAPSHOT_ID,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -966,7 +1036,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.validate	= GENL_DONT_VALIDATE_DUMP_STRICT,
+ 		.dumpit		= devlink_nl_region_read_dumpit,
+ 		.policy		= devlink_region_read_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_REGION_DIRECT,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -976,7 +1046,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_param_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_param_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -992,7 +1062,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_port_param_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_port_param_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1002,7 +1072,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_info_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_info_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1018,14 +1088,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_HEALTH_REPORTER_GET,
+ 		.dumpit		= devlink_nl_health_reporter_get_dumpit,
+ 		.policy		= devlink_health_reporter_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1035,7 +1105,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_BURST_PERIOD,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1045,7 +1115,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_recover_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_recover_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1055,7 +1125,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_diagnose_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_diagnose_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1063,7 +1133,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.validate	= GENL_DONT_VALIDATE_DUMP_STRICT,
+ 		.dumpit		= devlink_nl_health_reporter_dump_get_dumpit,
+ 		.policy		= devlink_health_reporter_dump_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1073,7 +1143,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_dump_clear_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_dump_clear_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1083,7 +1153,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_flash_update_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_flash_update_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_FLASH_UPDATE_OVERWRITE_MASK,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1093,14 +1163,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_TRAP_GET,
+ 		.dumpit		= devlink_nl_trap_get_dumpit,
+ 		.policy		= devlink_trap_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1110,7 +1180,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_ACTION,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1120,14 +1190,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_group_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_group_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_GROUP_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_TRAP_GROUP_GET,
+ 		.dumpit		= devlink_nl_trap_group_get_dumpit,
+ 		.policy		= devlink_trap_group_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1137,7 +1207,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_group_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_group_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_POLICER_ID,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1147,14 +1217,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_policer_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_policer_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_POLICER_ID,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_TRAP_POLICER_GET,
+ 		.dumpit		= devlink_nl_trap_policer_get_dumpit,
+ 		.policy		= devlink_trap_policer_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1164,7 +1234,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_trap_policer_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_trap_policer_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_TRAP_POLICER_BURST,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1174,7 +1244,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_health_reporter_test_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_health_reporter_test_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_HEALTH_REPORTER_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1184,14 +1254,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_rate_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_rate_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RATE_NODE_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_RATE_GET,
+ 		.dumpit		= devlink_nl_rate_get_dumpit,
+ 		.policy		= devlink_rate_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1201,7 +1271,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_rate_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_rate_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RATE_TC_BWS,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1211,7 +1281,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_rate_new_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_rate_new_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RATE_TC_BWS,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1221,7 +1291,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_rate_del_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_rate_del_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_RATE_NODE_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1231,14 +1301,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_linecard_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_linecard_get_do_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_LINECARD_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_LINECARD_GET,
+ 		.dumpit		= devlink_nl_linecard_get_dumpit,
+ 		.policy		= devlink_linecard_get_dump_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DUMP,
+ 	},
+ 	{
+@@ -1248,7 +1318,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_linecard_set_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_linecard_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_LINECARD_TYPE,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1258,7 +1328,7 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_selftests_get_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_selftests_get_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_DEV_NAME,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ 	{
+@@ -1274,14 +1344,14 @@ const struct genl_split_ops devlink_nl_ops[74] = {
+ 		.doit		= devlink_nl_selftests_run_doit,
+ 		.post_doit	= devlink_nl_post_doit,
+ 		.policy		= devlink_selftests_run_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_SELFTESTS,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+ 		.cmd		= DEVLINK_CMD_NOTIFY_FILTER_SET,
+ 		.doit		= devlink_nl_notify_filter_set_doit,
+ 		.policy		= devlink_notify_filter_set_nl_policy,
+-		.maxattr	= DEVLINK_ATTR_PORT_INDEX,
++		.maxattr	= DEVLINK_ATTR_INDEX,
+ 		.flags		= GENL_CMD_CAP_DO,
+ 	},
+ };
 -- 
 2.51.1
 
