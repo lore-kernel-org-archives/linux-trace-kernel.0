@@ -1,60 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF3D38F249
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 09:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EC3329C6D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 09:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772013158; cv=none; b=ksR6Or3Q4foWy10G3PnFaXae1xI1VdheXYtK0ObZowOH7eCvDVCAfePfxmehqrdG18I58OldP9jB2YVZ29L5OHRmPyoWYhoqrtDHIWWbtRWTnDP2hgjLkqBH2XH4Ng+tjYPiV82mx8tZAoyUvRIPmW/eeLMcGM9o18vOd+CdReg=
+	t=1772013166; cv=none; b=JKhcHfFMwp0JvMqx9JsvWKoVESHhyinXkOBhcKABTeHYqMuWS9tVfNpK+ksIBkYyQAjcmn0LnQz1RvJWFhpQOC/luWgpRRTwtkJSjakeiZP3F+lTg4yeWm3JJuv8A+IKjDR6BuJGPIEnFaObtSm96NPsk1guRjimIJnNwvNgZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772013158; c=relaxed/simple;
-	bh=+BNtM9cqks5RwxZ+HvUjev6k5JA9FqBq5v82v3EpIV0=;
+	s=arc-20240116; t=1772013166; c=relaxed/simple;
+	bh=AEBfxdTriy20MJnz8r0xIadoTC2x6K1Gb7ua1iTMxfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=kEnR23xzqBJmTFZwDKA/VrdhljdA0qAh0bXIsi5A0MducBxlYmSLGjW7tMWS9kBEYOxFa51loigbwrgN0p2OaGe4mlMkeHP3kOxzQhxuVqQCl7QNoBf5iHLVLNyiJbJ1Ovz/nlQRcYfFH2FoxH8MAOMrx9VPSzAHMbkQY6NJ3kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OHURSdZr; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=YqBYFYhtzBC0O/w/ovPom7KYl45Qwq/333FzM0XN/dV5IhTaK4We3ayq+0maFBL1x4ywSrjdmiFA4dP9AHZzwUVIcF6foBXQH9e04JavEbno0aeuNzklgl8SLqNG9ODaA9nTmos7ex7H4RciO0hbDIW+Q7XRZGyNxuBJp2xncc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VMkfSU2p; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OHURSdZr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VMkfSU2p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772013155;
+	s=mimecast20190719; t=1772013163;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QbSAGnWv/4e/2vpP8YjNDv3hNfpRji8+tUptdjIeyDc=;
-	b=OHURSdZrOAEkx3SX+zz3ABy+/5iHp6zx2bK3VySIV34Kka0kE03HUWEF4veTT1eCujAtv8
-	+43Ui6uc1kRPcFLs7SoKcz3l88si0LROtCFWOn0O7wOihO4gEUnkcXhYDvbND0VlYMrPmY
-	pSjz8vI9vUuxSC2hNyq2gmOccaaBvdw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=ITObmCO7WU0L25e6SiafZwuNp2N+z1xPs34HwvxwJS4=;
+	b=VMkfSU2p6mVuISg6NQX/Z9VqOJ/de9QPpnfF4wj3sykv3bgzF09U9LnTXmmJFZDKqq7XUz
+	snakjh1sl4d0mIbYCsWEuBpxDreMs/Etbki56hMzXQTMbkrdEe5ejhgkkRG5R/imEkTzNQ
+	EMO4b3k8yLi4n512Mxoqg5x4mx8PjSc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-345-HXKl_W0BOq2cGvzueCAcKg-1; Wed,
- 25 Feb 2026 04:52:31 -0500
-X-MC-Unique: HXKl_W0BOq2cGvzueCAcKg-1
-X-Mimecast-MFC-AGG-ID: HXKl_W0BOq2cGvzueCAcKg_1772013150
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-365-wCzPTpOqMQOwPXtU-NLyzA-1; Wed,
+ 25 Feb 2026 04:52:38 -0500
+X-MC-Unique: wCzPTpOqMQOwPXtU-NLyzA-1
+X-Mimecast-MFC-AGG-ID: wCzPTpOqMQOwPXtU-NLyzA_1772013157
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D1F9D1955E7D;
-	Wed, 25 Feb 2026 09:52:30 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FAFC180A9A4;
+	Wed, 25 Feb 2026 09:52:37 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.34.216])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CA161800674;
-	Wed, 25 Feb 2026 09:52:27 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 26C3F180067A;
+	Wed, 25 Feb 2026 09:52:31 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Juri Lelli <jlelli@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	linux-trace-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>,
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>
-Subject: [PATCH v6 11/16] verification/rvgen: Add support for per-obj monitors
-Date: Wed, 25 Feb 2026 10:51:17 +0100
-Message-ID: <20260225095122.80683-12-gmonaco@redhat.com>
+Subject: [PATCH v6 12/16] sched: Add deadline tracepoints
+Date: Wed, 25 Feb 2026 10:51:18 +0100
+Message-ID: <20260225095122.80683-13-gmonaco@redhat.com>
 In-Reply-To: <20260225095122.80683-1-gmonaco@redhat.com>
 References: <20260225095122.80683-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,106 +68,180 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: qGNYgxQ4APTW6k3NvbpQLWnNyq5fSCWiQ5VfC5wRTSM_1772013150
+X-Mimecast-MFC-PROC-ID: IQPvrmzAtCj5J992kX6H7m87fbSnG91RRKUtjncc0eY_1772013157
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The special per-object monitor type was just introduced in RV, this
-requires the user to define some functions and type specific to the
-object.
+Add the following tracepoints:
 
-Adapt rvgen to add stub definitions for the monitor_target type and
-other modifications required to create per-object monitors.
+* sched_dl_throttle(dl_se, cpu, type):
+    Called when a deadline entity is throttled
+* sched_dl_replenish(dl_se, cpu, type):
+    Called when a deadline entity's runtime is replenished
+* sched_dl_update(dl_se, cpu, type):
+    Called when a deadline entity updates without throttle or replenish
+* sched_dl_server_start(dl_se, cpu, type):
+    Called when a deadline server is started
+* sched_dl_server_stop(dl_se, cpu, type):
+    Called when a deadline server is stopped
 
-Reviewed-by: Nam Cao <namcao@linutronix.de>
+Those tracepoints can be useful to validate the deadline scheduler with
+RV and are not exported to tracefs.
+
+Reviewed-by: Phil Auld <pauld@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
 
 Notes:
     V6:
-    * Use f-strings in newly added code and cleanup
+    * Add dl_se type to differentiate between fair and ext servers
+    * Add event to track dl_update_curr not firing other events
     V3:
-    * Add _is_id_monitor() in dot2k to handle per-obj together with per-task
+    * Rename dl argument to dl_se in tracepoints
 
- tools/verification/rvgen/rvgen/dot2k.py     | 17 +++++++++++++----
- tools/verification/rvgen/rvgen/generator.py |  2 +-
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ include/trace/events/sched.h | 26 ++++++++++++++++++++++++++
+ kernel/sched/core.c          |  4 ++++
+ kernel/sched/deadline.c      | 25 ++++++++++++++++++++++++-
+ 3 files changed, 54 insertions(+), 1 deletion(-)
 
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/rvgen/rvgen/dot2k.py
-index 3cdc8cfb6be5..e7ba68a54c1f 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -27,6 +27,8 @@ class dot2k(Monitor, Dot2c):
-     def fill_monitor_type(self) -> str:
-         buff = [ self.monitor_type.upper() ]
-         buff += self._fill_timer_type()
-+        if self.monitor_type == "per_obj":
-+            buff.append("typedef /* XXX: define the target type */ *monitor_target;")
-         return "\n".join(buff)
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 5844147ec5fd..944d65750a64 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -904,6 +904,32 @@ DECLARE_TRACE(sched_dequeue,
+ 	TP_PROTO(struct task_struct *tsk, int cpu),
+ 	TP_ARGS(tsk, cpu));
  
-     def fill_tracepoint_handlers_skel(self) -> str:
-@@ -45,6 +47,10 @@ class dot2k(Monitor, Dot2c):
-             if self.monitor_type == "per_task":
-                 buff.append("\tstruct task_struct *p = /* XXX: how do I get p? */;");
-                 buff.append("\tda_%s(p, %s%s);" % (handle, event, self.enum_suffix));
-+            elif self.monitor_type == "per_obj":
-+                buff.append("\tint id = /* XXX: how do I get the id? */;")
-+                buff.append("\tmonitor_target t = /* XXX: how do I get t? */;")
-+                buff.append(f"\tda_{handle}(id, t, {event}{self.enum_suffix});")
-             else:
-                 buff.append("\tda_%s(%s%s);" % (handle, event, self.enum_suffix));
-             buff.append("}")
-@@ -92,13 +98,16 @@ class dot2k(Monitor, Dot2c):
- 
-         return '\n'.join(buff)
- 
-+    def _is_id_monitor(self) -> bool:
-+        return self.monitor_type in ("per_task", "per_obj")
++#define DL_OTHER 0
++#define DL_TASK 1
++#define DL_SERVER_FAIR 2
++#define DL_SERVER_EXT 3
 +
-     def fill_monitor_class_type(self) -> str:
--        if self.monitor_type == "per_task":
-+        if self._is_id_monitor():
-             return "DA_MON_EVENTS_ID"
-         return "DA_MON_EVENTS_IMPLICIT"
++DECLARE_TRACE(sched_dl_throttle,
++	TP_PROTO(struct sched_dl_entity *dl_se, int cpu, uint8_t type),
++	TP_ARGS(dl_se, cpu, type));
++
++DECLARE_TRACE(sched_dl_replenish,
++	TP_PROTO(struct sched_dl_entity *dl_se, int cpu, uint8_t type),
++	TP_ARGS(dl_se, cpu, type));
++
++/* Call to update_curr_dl_se not involving throttle or replenish */
++DECLARE_TRACE(sched_dl_update,
++	TP_PROTO(struct sched_dl_entity *dl_se, int cpu, uint8_t type),
++	TP_ARGS(dl_se, cpu, type));
++
++DECLARE_TRACE(sched_dl_server_start,
++	TP_PROTO(struct sched_dl_entity *dl_se, int cpu, uint8_t type),
++	TP_ARGS(dl_se, cpu, type));
++
++DECLARE_TRACE(sched_dl_server_stop,
++	TP_PROTO(struct sched_dl_entity *dl_se, int cpu, uint8_t type),
++	TP_ARGS(dl_se, cpu, type));
++
+ #endif /* _TRACE_SCHED_H */
  
-     def fill_monitor_class(self) -> str:
--        if self.monitor_type == "per_task":
-+        if self._is_id_monitor():
-             return "da_monitor_id"
-         return "da_monitor"
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4ca79ff58fca..b5bb2eb112bf 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -124,6 +124,10 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_enqueue_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dequeue_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_throttle_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_replenish_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_start_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dl_server_stop_tp);
  
-@@ -122,7 +131,7 @@ class dot2k(Monitor, Dot2c):
-                 }
-         tp_args_id = ("int ", "id")
-         tp_args = tp_args_dict[tp_type]
--        if self.monitor_type == "per_task":
-+        if self._is_id_monitor():
-             tp_args.insert(0, tp_args_id)
-         tp_proto_c = ", ".join([a+b for a,b in tp_args])
-         tp_args_c = ", ".join([b for a,b in tp_args])
-@@ -169,7 +178,7 @@ class ha2k(dot2k):
-         self.__parse_constraints()
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index d08b00429323..b8d01f0eda7d 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -115,6 +115,20 @@ static inline bool is_dl_boosted(struct sched_dl_entity *dl_se)
+ }
+ #endif /* !CONFIG_RT_MUTEXES */
  
-     def fill_monitor_class_type(self) -> str:
--        if self.monitor_type == "per_task":
-+        if self._is_id_monitor():
-             return "HA_MON_EVENTS_ID"
-         return "HA_MON_EVENTS_IMPLICIT"
++static inline uint8_t dl_get_type(struct sched_dl_entity *dl_se,
++				       struct rq *rq)
++{
++	if (!dl_server(dl_se))
++		return DL_TASK;
++	if (dl_se == &rq->fair_server)
++		return DL_SERVER_FAIR;
++#ifdef CONFIG_SCHED_CLASS_EXT
++	if (dl_se == &rq->ext_server)
++		return DL_SERVER_EXT;
++#endif
++	return DL_OTHER;
++}
++
+ static inline struct dl_bw *dl_bw_of(int i)
+ {
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
+@@ -733,6 +747,7 @@ static inline void replenish_dl_new_period(struct sched_dl_entity *dl_se,
+ 		dl_se->dl_throttled = 1;
+ 		dl_se->dl_defer_armed = 1;
+ 	}
++	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
+ }
  
-diff --git a/tools/verification/rvgen/rvgen/generator.py b/tools/verification/rvgen/rvgen/generator.py
-index b80af3fd6701..5eac12e110dc 100644
---- a/tools/verification/rvgen/rvgen/generator.py
-+++ b/tools/verification/rvgen/rvgen/generator.py
-@@ -243,7 +243,7 @@ obj-$(CONFIG_RV_MON_%s) += monitors/%s/%s.o
+ /*
+@@ -848,6 +863,8 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
+ 	if (dl_se->dl_throttled)
+ 		dl_se->dl_throttled = 0;
  
++	trace_sched_dl_replenish_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
++
+ 	/*
+ 	 * If this is the replenishment of a deferred reservation,
+ 	 * clear the flag and return.
+@@ -1345,6 +1362,7 @@ static inline void dl_check_constrained_dl(struct sched_dl_entity *dl_se)
+ 	    dl_time_before(rq_clock(rq), dl_next_period(dl_se))) {
+ 		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(dl_se)))
+ 			return;
++		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
+ 		dl_se->dl_throttled = 1;
+ 		if (dl_se->runtime > 0)
+ 			dl_se->runtime = 0;
+@@ -1508,6 +1526,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
  
- class Monitor(RVGenerator):
--    monitor_types = { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
-+    monitor_types = { "global" : 1, "per_cpu" : 2, "per_task" : 3, "per_obj" : 4 }
+ throttle:
+ 	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) {
++		trace_sched_dl_throttle_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
+ 		dl_se->dl_throttled = 1;
  
-     def __init__(self, extra_params={}):
-         super().__init__(extra_params)
+ 		/* If requested, inform the user about runtime overruns. */
+@@ -1532,7 +1551,8 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+ 
+ 		if (!is_leftmost(dl_se, &rq->dl))
+ 			resched_curr(rq);
+-	}
++	} else
++		trace_sched_dl_update_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
+ 
+ 	/*
+ 	 * The dl_server does not account for real-time workload because it
+@@ -1810,6 +1830,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ 	if (WARN_ON_ONCE(!cpu_online(cpu_of(rq))))
+ 		return;
+ 
++	trace_sched_dl_server_start_tp(dl_se, cpu_of(rq), dl_get_type(dl_se, rq));
+ 	dl_se->dl_server_active = 1;
+ 	enqueue_dl_entity(dl_se, ENQUEUE_WAKEUP);
+ 	if (!dl_task(dl_se->rq->curr) || dl_entity_preempt(dl_se, &rq->curr->dl))
+@@ -1821,6 +1842,8 @@ void dl_server_stop(struct sched_dl_entity *dl_se)
+ 	if (!dl_server(dl_se) || !dl_server_active(dl_se))
+ 		return;
+ 
++	trace_sched_dl_server_stop_tp(dl_se, cpu_of(dl_se->rq),
++				      dl_get_type(dl_se, dl_se->rq));
+ 	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
+ 	hrtimer_try_to_cancel(&dl_se->dl_timer);
+ 	dl_se->dl_defer_armed = 0;
 -- 
 2.53.0
 
