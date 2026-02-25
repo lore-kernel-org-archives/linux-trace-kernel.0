@@ -1,64 +1,186 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8C82D060D;
-	Wed, 25 Feb 2026 23:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D7A387378
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 23:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772062351; cv=none; b=G/n2FAZy1skLqglkA1zNfyJOJOUlUIP++NKz5sDS7IGvjNLORioIDXy6VyoKwgTRXmxRrrc/LoNMpViOlzWBSF7NvlhqVFPYWaxDLwco7kJTILH/OJ4yIgTy4uISttK8mNakWbaWH9z5xxf6noVzdcVcLdQYndPJhyOzLv2Zqz8=
+	t=1772063908; cv=none; b=Fy8ZH+BZZbfDAEqEpGwP1KafvrmEt9KocDqM3NrPQOi34PS3OmxQmOWWC8xWZvC8DM0lINTLuw5JbVVxzpLEIo1V9GhJyncHw6ivNRtT1SYt/qO8oJ4mShmYJaHUDmRlPw80XVXHtjO8HueSLve7DNIVcyARPA1NV/L/e6XbspY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772062351; c=relaxed/simple;
-	bh=d2Sq4NGBzPmb+S2rooLZgZkGXPENGLYy3HfkyKexBcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sPRYLkqyNyzbGiIHMB4qjcBXUn/6djxKCCckKLXV7tP/0p60tpmymW/FeYf0OHdTOnF0mcjznwJxmh0vdbHltJleyY2XE5fTCiQGHIOaRpTcHBCKrZ+8JyZZq9HEQb6fWDXDhon67tn1Ld8Pz2tuN+rc/B7heqFR4fHZMurLxCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1F88A13A373;
-	Wed, 25 Feb 2026 23:32:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 574CE2002C;
-	Wed, 25 Feb 2026 23:32:21 +0000 (UTC)
-Date: Wed, 25 Feb 2026 18:32:20 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, jolsa@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-open-source@crowdstrike.com
-Subject: Re: [External] Re: [RFC PATCH bpf-next 2/3] ftrace: Use kallsyms
- binary search for single-symbol lookup
-Message-ID: <20260225183220.7ba404cf@fedora>
-In-Reply-To: <CAOu3gNjdE_GaEEC__L=4v44iMJZt_eBN2Se_FotCDjX0BXwi1w@mail.gmail.com>
-References: <20260223215113.924599-1-andrey.grodzovsky@crowdstrike.com>
-	<20260223215113.924599-3-andrey.grodzovsky@crowdstrike.com>
-	<20260225064723.53bcce3e@fedora>
-	<CAOu3gNjdE_GaEEC__L=4v44iMJZt_eBN2Se_FotCDjX0BXwi1w@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1772063908; c=relaxed/simple;
+	bh=vMJ146Y/EPWV062fRB1P7stJ5n4Sr6xxBlqgn9/6cfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJmbad2PNkehlTLaz3e9a3NpTgluzL1wYHJdvC2fJEvwEW5iT3GzjivdJdlvlemZY2epB5xwGrKTwFKgeGnLSNL4KrG6FPm1rFghnczn+vYg5VuzMKtI4QIhuw9z5h2ipMC4NjrYhJjxYPRDVfJvBsYyPqlROUmQ4hrwfExkZ/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=nAahtgay; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="nAahtgay"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8c6f21c2d81so17823285a.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 15:58:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1772063906; x=1772668706; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QQWBXTWhdLgoq7OluVHAAR5bDFt9biBm7m+9/q6MXhA=;
+        b=nAahtgayF3j+4rUcxkyd6fIXikcye73VtCWiZeC0ncuwR4D/vEldTS5w3azS7Z3oTb
+         9c/jU3SWQUQ1cwHYuB+Pf+/0Qd+m4BhCYOfHTALlbeGNny6FUPINIjDZ1D8h+V1sEEWS
+         RgzFvxo81bKYPB53bWH3LcPPF5Gso/9YhcWu6/JWdPL/WtTv0aFJzxJfTIWaCQcuzwwX
+         SdspqyEryoBLok6sg8n8peZpCXZ9SwWM38pV9rljQojlr0AqkTYSisqwne93XNQHG+8r
+         c+02wstHvUENYLBRDE1bGnV8YWsNSMuOu4/ctDNpAwz3d9YCmNN84eNtgnilFB/WNcO0
+         deLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772063906; x=1772668706;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QQWBXTWhdLgoq7OluVHAAR5bDFt9biBm7m+9/q6MXhA=;
+        b=DtmilJpBHQC62gCUKw/528UB6nRt0OsPYCZEzqBhm2Wpnev0EMNc3mPWJh8pa7S8AO
+         2sBA3GqAWrFiL5Zi7gFCw8IY07ewOX7pSDA/aiLqsduIs9EVcmZDHBgp+GusZmYsflUj
+         zd0eZbPhF3jriPgbY5lZt9jPgNxFAPEiMcHoKKFQiQVBfj4V0w6zb5Ew2wt+LRyjCOPo
+         bPZZf1QFTrXO+ZB9N53PYbBm9MJxQ0sBy506WHotJLXsl7+bvqW5TbIn+iGfiKmqjoOA
+         IYqTd0dtbHTt1rK9xaMBXt5fPmly08Kt8lL55r3jXvfYmtR/6neUUE0yYNG/WKiDXVkq
+         epcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPwGSltQ8qc+h0jJD2VkiQ/Xe1qk9to4F8h0GJ3KBd2Gh/vRkbCN9ZZaXk3AuklsZIl1Kij6y3MVoETIcGuO26xjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5bvwC53ZmU1MpMSgH2duNaCowJhTMB5gRWmbnRwouKNwqWKh8
+	gO7rSBVpHtqmjx8WgilVy86Ufkb1UKhqmkfLYntizmjWpAc+EwLhYwrMLYZWjwwZHyQ=
+X-Gm-Gg: ATEYQzwA7KS1AeLGT8ilGyyBA5g9FmUFluyGr1X7Vn1HlJ8AmHxVT+9vGQouFFSypl2
+	aWvSzQuBvs8fWWgcbrhD3N3LQ+v3hACVn2SyqoonU0RQarS80JNzd2gQG9r18lYfjMNjXj07Zcm
+	G3j9a9eecJ+rKyOSQ/e5TGwaw/BJL1zV/uu0Bi4tBcwq0Pibb8UDznPMwz9rqO7ikD8dFLDWGcN
+	kZB8hbOE5yp/JDOdTXbv1Leo104yL/AaDazHRx/bDI1Um5IYBrUFuOdQ8t3RBq8JwTkhtJ1LmT7
+	+NVLgIHPUU3UGRHeC7TyS5Fom9kM4xSvpxzjglV7tX9T0U4e0dLIFm7JjnCsd1fn2CoJWQFkMJx
+	+iPpmvkPcNYLIOtWlQaHjL0+HX2c7MYNA46cGhneYbsoP558IUnIfCl8rzziWoriSOai3+BhdN1
+	lnexO3XCX390Xh/Uxpto8abGjG97/HlQJGoSBQ0otBGC0BnYTVfK7kveyytzmCZmuUJMYmYwsol
+	/wowJnjDw==
+X-Received: by 2002:a05:622a:314:b0:4ff:8da6:2289 with SMTP id d75a77b69052e-50745f165famr3302881cf.27.1772063905968;
+        Wed, 25 Feb 2026 15:58:25 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50744ab3f52sm5660571cf.22.2026.02.25.15.58.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 15:58:25 -0800 (PST)
+Date: Wed, 25 Feb 2026 18:58:21 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Matthew Brost <matthew.brost@intel.com>
+Cc: Alistair Popple <apopple@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
+	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aZ-MnVVNGG_cOvxE@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
+ <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
+ <aZ92AvAg5boiSVw1@lstrano-desk.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: pqgebqdnkxrxhr11ecpueq3eufk8gtk9
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 574CE2002C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/GuDwwTxAyw3opEMAY0KZt8caCFOlqlsA=
-X-HE-Tag: 1772062341-861289
-X-HE-Meta: U2FsdGVkX199A237is6672N2X1WZNI0KoNmbBe9vc8OdX+syiOBMWxU2E85u0pjXNc0eUqnqmAYRlenVn7ky3O3JLr1X4IlEaSuxmEjszPgwCSftAb9W26UlJra3VaJ0z7aC2Lm4rLy+dfwMgRUqFzVQcyQMEqpDgi3W0SdYwvQ/boc0GEspiEHmfi6roxjcV4teYMGZ7dVMjzc8REmdA1fNyBR0jX+YMerXiNvSKnjgK//cbl20ieanB1SCOkn7mjbS6DH8DNCPxi2C/odRZAH/sphrX1dERhlXzWjw7TPiLrqi5MXuajeznd5R970MGm4eMumyzxP6QwFLtsI80YWSiq82DEhT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aZ92AvAg5boiSVw1@lstrano-desk.jf.intel.com>
 
-On Wed, 25 Feb 2026 10:25:04 -0500
-Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com> wrote:
+On Wed, Feb 25, 2026 at 02:21:54PM -0800, Matthew Brost wrote:
+> On Tue, Feb 24, 2026 at 10:17:38AM -0500, Gregory Price wrote:
+> > 
+> > The idea that drm/ is going to switch to private nodes is outside the
+> > realm of reality, but part of that is because of years of infrastructure
+> > built on the assumption that re-using mm/ is infeasible.
+> 
+> I was about to chime in with essentially the same comment about DRM.
+> Switching over to core-managed MM is a massive shift and is likely
+> infeasible, or so extreme that we’d end up throwing away any the
+> existing driver and starting from scratch. At least for Xe, our MM code
+> is baked into all meaningful components of the driver. It’s also a
+> unified driver that has to work on iGPU, dGPU over PCIe, dGPU over a
+> coherent bus once we get there, devices with GPU pagefaults, and devices
+> without GPU pagefaults. It also has to support both 3D and compute
+> user-space stacks, etc. So requirements of what it needs to support is
+> quite large.
+>
+> IIRC, Christian once mentioned that AMD was exploring using NUMA and
+> udma-buf rather than DRM GEMs for MM on coherent-bus devices. I would
+> think AMDGPU has nearly all the same requirements as Xe, aside from
+> supporting both 3D and compute stacks, since AMDKFD currently handles
+> compute. It might be worth getting Christian’s input on this RFC as he
+> likely has better insight then myself on DRM's future here.
+> 
 
-> Hey Steve, are there any extra steps required on my side to make this go
-> through your tree?
+I also think the usage patterns don't quite match (today).
 
-I see you Cc'd linux-trace-kernel which places it into the tracing
-patchwork. If there's no dependency on any other patch, I can add it to
-my 7.1 queue. That is, after I get some more time to review it a little
-deeper.
+GPUs seem to care very much about specific size allocations, contiguity,
+how users get swapped in/out, how reclaim occurs, specific shutdown
+procedures - etc.
 
--- Steve
+A private node service just wants to be the arbiter of who can access
+the memory, but it may not really care to have extremely deep control
+over the actual management of said memory.
+
+Maybe there is a world where GPUs trend in that direction, but it's
+certainly not where they are today.
+
+But trying to generalize DRM's infrastructure seems bad.  At best we
+end up with two mm/ implementations - not good at all.
+
+
+I do think this fundamentally changes how NUMA gets used by userspace,
+but I think userspace should stop reasoning about nodes for memory
+placement beyond simple cpu-socket-dram mappings </opinion>.
+
+(using mm/mempolicy.c just makes your code less portable by design)
+
+---
+
+As a side note, This infrastructure is not just limited to devices,
+and I probably should have pointed this out in the cover.
+
+We could create service-dedicated memory pools directly from DRAM.
+
+Something I was exploring this week:  Private-CMA
+
+Hack off a chunk of DRAM at boot, hand it to a driver to hotplug as a
+private node in ZONE_NORMAL with MIGRATE_CMA, and add that node as a
+valid demotion target.
+
+You get:
+
+1) A node of general purpose memory full of (reasonably) cold data
+2) Tracked by CMA
+3) The CMA is dedicated to a single service
+4) And the memory can be pinned for DMA
+
+Right now CMA is somewhat of a free-for-all and if you have multiple CMA
+users you can end up in situations where even CMA fragments.
+
+Splitting up users might be nice - but you need some kind of delimiting
+mechanism for that.  A node seems just about right.
+
+~Gregory
+
