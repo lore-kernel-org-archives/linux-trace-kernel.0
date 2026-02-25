@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290962E0B5C;
-	Wed, 25 Feb 2026 20:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106A42C21F2;
+	Wed, 25 Feb 2026 20:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772050374; cv=none; b=ItRbQy4jprItwh0JYotKmYGJhugeP38O02bSHXkuoDGAtn/ebeI0fmTpItg3HnmN5IZpNV8MmU3hhyotxgLrDrBuj/VkakibjY9LQLTBmLuNZkloTkPa2ybzA79EvnNdVavJeP5hwogd7/ZpbTsE/FQUDFoUPfoMqlEumFFJsn8=
+	t=1772050463; cv=none; b=gCse5nD7I3aQMqD9e57kEMB+sD36oU9i6qjhOKyTEmKNX3P+oAQpHGXEFnPzKM9+EZAw2O3aYJ2u51DQjmgwFg8jJx4Qn4IX0viTaLqy6dEVRykXMhEIOBrT0Po3Pez3IH/a+lzlGjPr/cALWEK6lHti0NW6vkqXiw4lCg1Dd6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772050374; c=relaxed/simple;
-	bh=hvDyKIkKV0xKNXKf+f4mVxzCGIFYEMzA/sqURO92W30=;
+	s=arc-20240116; t=1772050463; c=relaxed/simple;
+	bh=ZR89WZo19RbWI5s9dT12x74sNrjCq2xbeHPg2EjiXV4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YOb0pkUPSEzo+BaP4mcEa/rK/DFN8C35DVulPrzY0SuoooY98N1lIz3KeNMQdXMmkwNqolhpaXXgy2hW0J1dNrVApomx2eG6CqBH41BITpP+9guBPETFPz9/zQPlvr2+ctwWQBjDlUSvmOlSWpjce85+12rQrk10XKNSN4tTKME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=vZXOPZ1F; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=rMw15aTXukb8X+eTKL9F+2xeckjz0yL3/1VT9hN3Q4DnFbzZfhbD0uPdiouPtd5WUIK4BgvHpi3EwN9TgIIsigiydaQ/chX1jM0kbkQx+xvkKoAkcUYyCJiZ6gojM9IBxOenWa8qCgJDXXOJ42q7e08zEq337zLL6/lK7Ji+3hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Zclgkkzo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="vZXOPZ1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BCEC116D0;
-	Wed, 25 Feb 2026 20:12:53 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Zclgkkzo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2578C116D0;
+	Wed, 25 Feb 2026 20:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1772050373;
-	bh=hvDyKIkKV0xKNXKf+f4mVxzCGIFYEMzA/sqURO92W30=;
+	s=korg; t=1772050462;
+	bh=ZR89WZo19RbWI5s9dT12x74sNrjCq2xbeHPg2EjiXV4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vZXOPZ1F0hslCdpR1V7LhWv/gVAq66hcZRmtOh8L0xMZCTpYuZhP96kGtG+PXIthU
-	 ZM6TOaD8CYQ8v8jrmSN2C10ygQ+Vc29+ZUVwzbn3eeprcJHSdh0uzI/RtkPKH6erMZ
-	 xv09WEpiHYPEtpqqi/5rOnyYmVcb7IHVcxQrnKTc=
-Date: Wed, 25 Feb 2026 12:12:52 -0800
+	b=Zclgkkzosw4SMxwoKAiGEH/ZbSH9lv41enOItAHjveMmmZUvHmQ8eDLlYUpQ8Dqay
+	 bvcVj8hga4F1yCL5hHRS3huAelb+vI0W117kN4ZVuAI3nnfaA5MvJBqV5S+x3xJTQp
+	 XPjNtQxc2PJjF8J9s365amibB7Wd3e6YgxdtlP50=
+Date: Wed, 25 Feb 2026 12:14:21 -0800
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Dmitry Ilvokhin <d@ilvokhin.com>
 Cc: David Hildenbrand <david@kernel.org>, Lorenzo Stoakes
@@ -39,11 +39,11 @@ Cc: David Hildenbrand <david@kernel.org>, Lorenzo Stoakes
  Xu <weixugc@google.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
  kernel-team@meta.com, Benjamin Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v2 3/4] mm: convert compaction to zone lock wrappers
-Message-Id: <20260225121252.7c6519a857c1a8c56ba5206f@linux-foundation.org>
-In-Reply-To: <9710c3448c6c984164c93d7c6c0283e06ff987bf.1772030186.git.d@ilvokhin.com>
+Subject: Re: [PATCH v2 1/4] mm: introduce zone lock wrappers
+Message-Id: <20260225121421.2eb75a94578af35780978851@linux-foundation.org>
+In-Reply-To: <5bcc39cd3a227944d0fbe75ff86cdac92b38d4ca.1772030186.git.d@ilvokhin.com>
 References: <cover.1772030186.git.d@ilvokhin.com>
-	<9710c3448c6c984164c93d7c6c0283e06ff987bf.1772030186.git.d@ilvokhin.com>
+	<5bcc39cd3a227944d0fbe75ff86cdac92b38d4ca.1772030186.git.d@ilvokhin.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,27 +54,27 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 25 Feb 2026 14:43:05 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+On Wed, 25 Feb 2026 14:43:03 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-> Compaction uses compact_lock_irqsave(), which currently operates
-> on a raw spinlock_t pointer so that it can be used for both
-> zone->lock and lru_lock. Since zone lock operations are now wrapped,
-> compact_lock_irqsave() can no longer operate directly on a spinlock_t
-> when the lock belongs to a zone.
+> Add thin wrappers around zone lock acquire/release operations. This
+> prepares the code for future tracepoint instrumentation without
+> modifying individual call sites.
 > 
-> Introduce struct compact_lock to abstract the underlying lock type. The
-> structure carries a lock type enum and a union holding either a zone
-> pointer or a raw spinlock_t pointer, and dispatches to the appropriate
-> lock/unlock helper.
+> Centralizing zone lock operations behind wrappers allows future
+> instrumentation or debugging hooks to be added without touching
+> all users.
+> 
+> No functional change intended. The wrappers are introduced in
+> preparation for subsequent patches and are not yet used.
+> 
+> ...
+>
+> +static inline void zone_lock_init(struct zone *zone)
+> +{
+> +	spin_lock_init(&zone->lock);
+> +}
 
-It's regrettable that adds overhead - increased .text, increased
-instructions.
-
-Thing is, compact_lock_irqsave() has only two callsites.  One knows
-that it's dealing with the zone lock, the other knows that it's dealing
-with the lruvec lock.
-
-Would it not be simpler and more efficient to copy/paste/edit two
-versions of compact_lock_irqsave()?  A compact_zone_lock_irqsave() and a
-compact_lruvec_lock_irqsave()?
+Please consider renaming zone.lock to something else (_lock would be
+conventional) so that any present and future and out-of-tree
+unconverted code won't compile.
 
