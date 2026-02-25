@@ -1,157 +1,133 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m32124.qiye.163.com (mail-m32124.qiye.163.com [220.197.32.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F3C3A9622
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Feb 2026 17:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771953216; cv=pass; b=J1W2DkBk5+rOsB9T433NbcuLGm0RXJ+vjZVVC6oOaJ48ODCmJyEst9cOQ1oE4h6S72pncugFx1awMsbvO96iFj0CSAAYq2KNPPIntn0N8lqVNnnGgjSpswZg+hCJWPyUVavUkL73IUu0O++1tz12snA1IQWnf3nJKI418Iqkjio=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771953216; c=relaxed/simple;
-	bh=wcOJjAPE0JT0qLCFfyvYa/742HjZQ/jXz0Ob5iB0R+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a0pkdBw5jcqjCAwlgeqsqp1WXuS2LPE6krcgnrRMjw04hGu+KFJjJA9fveOd70598fxRbv5lmuX+3Yv2qaO8Yd7lzQRRXcDckPGfFXWV5+9mPllqaRYzNA0ugNC6CfH1OdsGmpS0GEyR0n5VuPhaC7h6RRqGDhTiJ7zHjtTbwaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6KVlN4q; arc=pass smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AA12BAF7;
+	Wed, 25 Feb 2026 01:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771983037; cv=none; b=J3uTuQxmqO1qDNRN0lHZuWG/uLsvqa4o1G7Cp415os6ZtJkS9V0rIHlEIHqW/++aqkE9mX6gY61ihwRf3L0585ufij2XUMORr89Pfz1Ku40l5d0oNgGKW33IZWpWhMHEyXRI8xHO1f09QtPIvJOgmSJ03JV/aTATz3Y//op+0eE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771983037; c=relaxed/simple;
+	bh=Ug82X9tXIuChRCBmaGWUTNeo2LrKxHM2wDugXAPpDIk=;
+	h=Cc:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sAFwJ+6DmTZchG22X08rgSEqpHqU0xHFc9v76FPkLxPrT/biECWub6Faud98pG0l13a2JNVhL384X9lAEAGs6+atEBaimaLVzwT5XpbLok17z/hpla3VLv5X55PJaBBC8w294i2/lcuwFgHE6ID/copoSUFiwpN/lE/E14B5Wnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=RiMeCrvR; arc=none smtp.client-ip=220.197.32.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6KVlN4q"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-483a233819aso56368255e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Feb 2026 09:13:35 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771953213; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BhlMbmdiw3Acq4Mte6qm1zXgb5hPkeHOsjp70Xbu1mxEXd+kWd0egrooK5hXpNfAhs
-         4XPCiCd8AZ5LE0Z6pSQhZNUzq1t1UlqG0CwiR2GCt71lH0ZIIqs7LIfKjJvqhnc80IkF
-         eQEb2oT9leQ3HDD1KU4WX6HH4GhWTKi04hUvfQ+xq5qJsL9/ihaUbsz2K8fmqIPkxBP7
-         0JgwMPpB8BQ2Va/vlSNSTZtts7K+mf0dYeA6jDumZ/TGWLYgZifOEovAboyQPC8fuvMv
-         LGVgABvhWJF1rmJqcnfaKKOx45MwwTLo45d44vm0R3ipbtMnuz07WaDc+BGaxO2RtrUX
-         KJiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tcnX9HllqX0Hw9TVrxhKywHJCcgvH6KhhpQUtvizeKc=;
-        fh=clrYaGEuT8Hy/hbry4S9tAAgPb0THMRNHmO/c+n706k=;
-        b=jLly8iPz0Q0XVrIzyqoLDn5gnJKXwPuw3H1rZem8KmLbUscxGrMEIPaf9YkgdrI/40
-         lHMyGa2YQs0etH1cdQefQpo844c3hR66LSpks4FTSVoMfGpDAOxKt9rRnh4V4Ae4vb4p
-         iBkC4mpripFH1dwKaE36Pa4QR4hT4sHCbBy9ivNhG0SP+xoibqMiLNicTrqf4JT9XMQY
-         N7WYhQL+deoWcPcaobhIZ+H5AdQW3jyyJfc2AEj9YUTElJpvDjfyp0SE3lC5qayDOT+S
-         qVWcWpsl65KDUbniKj7giBDM1/DaMQJ1X7zdvvpg5MPL4T2IRCR/kNTQdJmR/pLbM3sd
-         b3dg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771953213; x=1772558013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tcnX9HllqX0Hw9TVrxhKywHJCcgvH6KhhpQUtvizeKc=;
-        b=Q6KVlN4qgO22hojXrNegDDbOFfytnULs+EOGeknx1/Yq6QAj6UgeN4J6ICKoKMjQsG
-         qKWJNsL0Bkp8xL7ykgLqEMdL/DygZXJGKox+u14fe5asNhPJetlz2TloXcpI5rJXP1m8
-         ZTwh8QrOtcD6AosldwG03e/CJbgKFsE9cOycS0W9As8UWELv30ZnqAAV9uyOZu6E+BuR
-         /yNmnHb0nBCX+JNLs1jdJ6n0a2HN6ZTHRyPsyP+zsoV+Llq4F5ZLeK8rcuUhIcURe3qe
-         P27yZDBqmuSVzcQESe3mzdtx1I4fguSHhArnWCG6kjWpYs+AVFFoa90yj+gqO/k1mbg7
-         pccA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771953213; x=1772558013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tcnX9HllqX0Hw9TVrxhKywHJCcgvH6KhhpQUtvizeKc=;
-        b=P6VO1gl6ydbiqOG6uGAMB48M5KEp4REzlmqpJcbbB4tYOl9r7ZfjevpOfR54Pv6EUa
-         FYA0rTpio30bg6/q3Dhk2jy+G/gycBoM0Dx6IYS+BCLS5mAk29oLsHi+APTD7dFtB7Bd
-         6luPMLsvLZW+OICI1KD+n/ZDwqNoJggfUYINfwUe8t46BnqqCC8yjT7Vi3dJdZ1eGGR+
-         X5oW8ePQDAiJ5YwVMUtgHjJ6XT5sH37aBCNgJA6SW0ZJp9KrQZfiDgg6RLA9X/H4j846
-         Hy9EsXMZdbD3tLsbNwkmZBhOViOQcx4lkA8Q30rdveFGy7unonkjZWH0HySFASVYkNxi
-         sa5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWyeob08fZrxx9nllX07EtA/Uj34ZkfWxuPrkuew9M6hWRyf0++mXpJYlQmId+Y4gj3fsVXii8HtZYF+zALRmVekw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXiF2am6Cok0fufB9FZPrgxls5a9hb90ILorPEG/K0FG2q0gT4
-	M6bT/uXzJoKUAEuamrzdUUNvFAJ4buWA16CRPSunyKLYj3VZk7jC0EZgTgty/Ff+O+rIqfD/JgK
-	ljZpYWIBFTcRKYCm2FD1DkU7Eqjaq8NY=
-X-Gm-Gg: AZuq6aLlgDbu41+SKTSi4yKqWgm09VE0krsbA/cqKPwX0/lauwArkOcgP/dfyOkakOa
-	H7d67xYXbYR31p69gv0T+Q7SUrUMieKxzzMlbk+fImMutGE8NtLSe5Y5inyQEaMa3p/bPr+DF0Y
-	IkWMA0NNCwsI0aX/SmLR5ixdObRg1ZZXLnOyI06jF1sqcDeEwXZrUQE3VcKxhAadCRLnw0glprw
-	/SBLpJWNF3OhJuJdFhUVBf5caSD5i/+9decss+xvgykm6UJ6EzrY/qjvuy1mkACWh5DIezo630L
-	WTeeakrjEDD2cxSO+8Sui//zL0KLfb49R8/hfQXSW6muxhc9Xkx+ObVgsChrcFQKqwxWbCPp7qp
-	uzZg0Q42n
-X-Received: by 2002:a05:600c:450c:b0:47d:73a4:45a7 with SMTP id
- 5b1f17b1804b1-483a96377b1mr210446775e9.24.1771953213405; Tue, 24 Feb 2026
- 09:13:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="RiMeCrvR"
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34da72a41;
+	Wed, 25 Feb 2026 09:25:19 +0800 (GMT+08:00)
+Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
+ trace support
+To: Steven Rostedt <rostedt@goodmis.org>
+References: <1769047340-113287-1-git-send-email-shawn.lin@rock-chips.com>
+ <1769047340-113287-4-git-send-email-shawn.lin@rock-chips.com>
+ <20260224091115.6e32c38e@fedora> <20260224091601.48a7b3c0@fedora>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <6177ba1f-c89e-486a-fdb5-9344c6551d72@rock-chips.com>
+Date: Wed, 25 Feb 2026 09:25:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260220100649.628307-1-jolsa@kernel.org> <20260220100649.628307-3-jolsa@kernel.org>
- <CAADnVQ+2-DtgWqeKmrbsP0O7Rz2ZkDjkh1kfHDSxF0K8Xs+1ww@mail.gmail.com>
- <aZsT6_3tkli3SPsI@krava> <CAADnVQL_Jpe_7a55HTn5CyYoxWcHahiK3+CDeOeURqZAuf+teA@mail.gmail.com>
- <aZ2ZQnBHPz3UO1wr@krava>
-In-Reply-To: <aZ2ZQnBHPz3UO1wr@krava>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 24 Feb 2026 09:13:22 -0800
-X-Gm-Features: AaiRm53ORMryKT0X5sm_eSd4JXNBTgpQLyAE7ayxMqNU5N8GexDlTXWt0hUxTz0
-Message-ID: <CAADnVQLxOhcULuV-T3KHo29rmGSdmoShA2UqyVwreKacJMtQFQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 02/17] bpf: Use mutex lock pool for bpf trampolines
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Martin KaFai Lau <kafai@fb.com>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260224091601.48a7b3c0@fedora>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9c92668ac109cckunmeceb3770aa21f8
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGklLH1YaTk8aTEoeHx5PTxlWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=RiMeCrvRtgt2dVUqWRNBLAEdv/gUkM8HUNynK7JgMxgcbJgnI6ZKCOOx73UIwBa1xRky8AyaFrhrH9CDX8pr5HST31qHk2zWxCEZGGMYFnnbVr5zTq+YlNDlYdI5XB3g7ro7PPjsgC0GPfHPxC1n9BdiS+07+yxSACr+MNIAboE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=0CtRRU86YFrtubdwShhQPgmlG8739fPgSVh2JLGIN0w=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, Feb 24, 2026 at 4:27=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> nope, the rfc had workaround for lockdep ;-)
->
-> +#ifdef CONFIG_LOCKDEP
-> +       mutex_init_with_key(&tr->mutex, &__lockdep_no_track__);
-> +#else
+Hi Steven,
 
-The only user of lockdep_set_notrack_class() was removed from the tree.
-We shouldn't introduce new special cases.
+在 2026/02/24 星期二 22:16, Steven Rostedt 写道:
+> On Tue, 24 Feb 2026 09:11:15 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>>> +#ifdef CONFIG_TRACING
+>>> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
+>>> +{
+>>> +	struct rockchip_pcie *rockchip = container_of(work,
+>>> +						struct rockchip_pcie,
+>>> +						trace_work.work);
+>>> +	struct dw_pcie *pci = &rockchip->pci;
+>>> +	enum dw_pcie_ltssm state;
+>>> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
+>>> +
+>>> +	if (!pci_ltssm_tp_enabled())
+>>> +		goto skip_trace;
+>>
+>> You can use:
+>>
+>> 	if (!trace_pcie_ltssm_state_transition_enabled())
+>> 		goto skip_trace;
+>>
+>> The above is a static branch. That means when tracing is disabled, it is
+>> basically:
+>>
+>> 	goto skip_trace;
+>>
+>> and when tracing is enabled it is a nop.
 
-> but I overlooked lockdep config for this version
->
-> > MAX_LOCK_DEPTH is indeed 48.
-> >
-> > See fs/configfs/inode.c and default_group_class.
-> > It does:
-> >                         lockdep_set_class(&inode->i_rwsem,
-> >                                           &default_group_class[depth - =
-1]);
-> >
-> > the idea here is that the number of lockdep keys doesn't have
-> > to be equal to the actual number of mutexes.
->
-> I see, thanks for the pointer
->
-> >
-> > I guess we can keep a total of 32 mutexes to avoid making it too fancy.
-> > Please add a comment explaining 32 and why it needs lockdep_key.
->
-> ok
->
-> >
-> > I thought declaring all mutexes as static will avoid the need for the k=
-ey,
-> > but DEFINE_MUTEX doesn't support an array.
-> > So since we need a loop anyway to init mutex and the key,
-> > let's keep kmalloc_array() above. Which is now renamed to kmalloc_objs(=
-)
-> > after 7.0-rc1.
->
-> I don't mind either way, meanwhile I used this version:
->
-> static struct {
->        struct mutex mutex;
->        struct lock_class_key key;
-> } trampoline_locks[TRAMPOLINE_LOCKS_TABLE_SIZE];
->
->        for (i =3D 0; i < TRAMPOLINE_LOCKS_TABLE_SIZE; i++)
->                __mutex_init(&trampoline_locks[i].mutex, "trampoline_lock"=
-, &trampoline_locks[i].key);
+I must admit I borrow it from arch/powerpc/include/asm/trace.h and
+include/trace/events/i2c.h for reference, where the reg and unreg
+just increase and decrease the ref count to indicate if the tp
+should be continued. Sure, the static branch could be used instead,
+even without reg and unreg implementation.
 
-works for me.
+>>
+
+..
+
+>>> +}
+>>> +
+> 
+> Hmm, so basically you only want to call the work when tracing is
+> enabled? That's what I was thinking should be enabled by the reg and
+> unreg functions. That is, the reg should enabled the delayed work, and
+> the unreg should disable it from being called.
+> 
+> This looks like it calls the work regardless of if tracing is enabled
+> or not. Why waste the cycles when tracing is disabled?
+
+I looked into implementing reg and unreg callbacks to directly schedule
+and cancel the delayed work. The challenge is that this tracepoint
+belongs to the shared PCI subsystem trace hierarchy, while the polling
+work itself is per-controller. I haven't found a clean way to register
+per-driver callbacks in this common context.
+
+Creating a separate Rockchip-specific tracepoint via
+tracepoint_probe_register() would detach it from the standard PCIe trace
+event hierarchy, which seems undesirable.
+
+As a practical middle ground, I implement reg and unreg to maintain a
+user count like this v4. All drivers using this tracepoint would then
+rely on the count to gate their work execution, making the delayed work
+essentially a no-op when tracing is disabled.
+
+Alternatively, we could simply revert to the V3 approach and rely
+entirely on the trace_pcie_ltssm_state_transition_enabled() static
+branch check, which would remove the need for reg and unreg altogether.
+
+If you have better suggestions or can point me to a preferred pattern 
+for this, I'd appreciate your advice.
+
+> 
+> -- Steve
+> 
