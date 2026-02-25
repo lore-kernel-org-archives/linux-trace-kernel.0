@@ -1,41 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B283B8BA2;
-	Wed, 25 Feb 2026 13:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0653BFE20
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 13:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772026287; cv=none; b=fsNsm3x1h4XU/ysbG2+15xbLw3ayK39hji3d9f9XJQYfm7nT8y508s4GxaiPIyySV3OgQCuJnkg4mBfdss2NHsCFidc9xR6gVPcpcJJrvdiLvrCqpJ2/3ReQxEEVvhWcOBSTvkGo9REyYlYqiGLelK0NtgYxhBf6ZbUl/DhGsJU=
+	t=1772026470; cv=none; b=oZqUzSbE7roh/V6L3ky/oAdsuP94Ok10gWRXX8GXphKUqk4BoMTG6ZyPIC1h2BruPIi1jbm9XWTmerxMq4bm4C1w83/uh5C4qkTVT5D7HrgDciIbCWqq9HSZw0S82sof1UHDxAGV7uhUuvRLzjx4b2lhQ0VMGlouif0XAmiiiUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772026287; c=relaxed/simple;
-	bh=n+5waH2NbY49uwCLFp9XAa65V3bbTHraBIUAeUheOk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d4PxNIhulbDHdwqs7dF66MNXJn6JLXwyToFu31MtKh42PB5wYzQbTvxJ78HkeGIpy6Ju3d87PvGWLgKdgSqtIGc178Y1voBs84KmhRxuO/dnwboyGkKz5r8C/BsSdM6Knn+I5u2xnrTI3Gh15aWma2uG1YTF99OuwUgUHwLobHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tfh4NRrk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772026470; c=relaxed/simple;
+	bh=zeq1qYaapsId/hMjNxT4XCjJUdeaG/At8G0u37BOTM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MKPeRwF91B3WRJr9mBzc+ebLl6rDCIR5+KmuFXNHfVizRhGulpIuSXgX0V+pFeerdaqbkIeMit3A/tz2AIQIhnmMkX7JtXwcFfgecMdRu8ImydrO7C/JokqO6l+wx+mM/OAeHs8UiUSZxYEIAszjgpjK2SoBIlvXZe3J5XQu7Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=BCZJ2Gcn; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tfh4NRrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 114A8C116D0;
-	Wed, 25 Feb 2026 13:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772026286;
-	bh=n+5waH2NbY49uwCLFp9XAa65V3bbTHraBIUAeUheOk0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Tfh4NRrkHiP3rCMOGnxqshEIDItQhV+e4VJX+gEcdB0t536BJGEmIjB1RSQT0UQV4
-	 c+N6+LkUG5PqCw81eb1lUBd6c6rnAc0VtKog9Csk0jQMjt0VsTDzaxk1iZCXDpYX17
-	 3n+wxEvSdYT9FtremgNI1olkepwgOqdB21OwqYnBQG1NUneY3mwx+unUtOIcoZb+z7
-	 lCCXeXIHACmE6+CdVuhhF5U7uDuchAdfvArUZx3rcyK6VolbklxQqseolJMHasAnN5
-	 Dnwopbt9tA2wd8Raf45EIydF7h7EHzE4nk7uMNGbqvw2L8uPDVfjqVqv0c4GRGCsxu
-	 1fkl47uyR77SQ==
-From: Sasha Levin <sashal@kernel.org>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] tracing: Fix use-after-free race in copy_trace_marker on instance removal
-Date: Wed, 25 Feb 2026 08:31:22 -0500
-Message-ID: <20260225133122.237275-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="BCZJ2Gcn"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-482f454be5bso8610375e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 05:34:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1772026467; x=1772631267; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dX2aUB9g6X7V6jOCUdCUrjVSDVEhvqjbcn21mgNjpkQ=;
+        b=BCZJ2Gcn+JTSYzmoLKmiSQwiWZzeE4loMgsAfJd6CBvU5qPCkCsfEYfBzAPvVBr0Cc
+         42Vu3eBOTPnbeLSYnWf66rTS5ZjI1ahwueEZ5JRvNGke/X1tQYLUW9u1UvtWYiYrxQgo
+         0h1zSAz0sehVcaU7w7gZt9Uxi8fubYmOOhPoS3Mv9EBA7j7HbFY0PMaSBJ2gDijJtovv
+         HjJ7QIX9KxWlUZhGsGgslYu1Nz4OS24n/KzH+2uQv7W0Gr1/9vMoCS4UzvVw79yacrV8
+         Ougsfj46dCeVybaxbwet4iTLmD05+MiQcD0G8ElMjZA4t221nPzWEPyc6ZDv6iyu+ASa
+         xZqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772026467; x=1772631267;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dX2aUB9g6X7V6jOCUdCUrjVSDVEhvqjbcn21mgNjpkQ=;
+        b=v7k/TFk8BNq+KC2SylcFBeqqOrRtI8/lBlwsoWOrrqe8H5ghPLrS5NRMrf44HUI5YQ
+         n40k6D8qXZ93cnvdmBSLV36rHG3evozzsjLekTCKfdLIF8edECr6Fi16fKh6xaMeYpUE
+         7wPuRd7ybKVLWzeQH/VcLtQRSCy9a8C7rkKvoC7GiLHqDE+ZyJscg9qokLBCRhQMX7D4
+         dDRuzqz+1rGdMIrPbVew84n65HuuQe3dEi+uzMguVH2JhpD6gocTgqhIqFGB1jDVqLkG
+         Gfgid8Bg9IANVF9HvnK6nEpsamU40f1KuF99kIjG0xSITNWa5A8mLZb9ey39V9xgyBIU
+         3Jvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRKi4S4wDlwY+Fj1wGD1HmdpuGMHtF4fca706rHcbexS8aUl7U8d0EdzV5xh4i8guTCm1cVDzYWwQw3YLsXu14vCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdb1vl7EhFIBJntEvxwyZrAA7bDCd4I1IG2BH9XYPl3k++Aw88
+	F+7U0qPTg+uBOBkvdT6Ld2hfUCnSULc9wDOgvyS2oyLglS+elbvV586FdJgtzuTRSLE=
+X-Gm-Gg: ATEYQzzQ4jiHwGLbWGpCqC59Wu7JsSNVInXUo1O365sLp1JKiMHFsLVK/vWl45m4ozF
+	ljZv7xF7D/eczpWxbsbS5VRiid0ay6xJBdEha2h+gS9eWzD9VNN7MEZWSDI+L/TWolcIbJ2FD88
+	aEJ85TZrwDp0mQPCNpuwFqU8M/8Vc2Ers5OXL50Jlyy2XMvnFU0uwfw94EfHSFsi+y4M4qSI2P3
+	g+5roUsyqOykPUMAlEtyJwqIHLYmUw7Jafnfs5waKBzS4ifjRm0oye3/7HboWzv/GypN/R597lx
+	cUHdJ4fd5XI6h0IG7XeuAcj8AWvwIcFJ3ZHZZ4WNOo6TcVfG72VlvcONTrZQZFgk5Btvjrvdqnj
+	0ldJnFZT4KkgHhP5bpf7Fodx4Sg4OWQivJB5OMdYiPaZemlDqq0MbF7MuQwWBfSaZdTwkDPOqNi
+	XV6Mpd7RqU3OyXUA==
+X-Received: by 2002:a05:600c:8b56:b0:483:7b99:131d with SMTP id 5b1f17b1804b1-483bd75e26emr68403175e9.16.1772026466481;
+        Wed, 25 Feb 2026 05:34:26 -0800 (PST)
+Received: from localhost ([85.163.81.98])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bd7507adsm80756235e9.9.2026.02.25.05.34.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 05:34:26 -0800 (PST)
+From: Jiri Pirko <jiri@resnulli.us>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	donald.hunter@gmail.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	mbloch@nvidia.com,
+	przemyslaw.kitszel@intel.com,
+	mschmidt@redhat.com,
+	andrew+netdev@lunn.ch,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	chuck.lever@oracle.com,
+	matttbe@kernel.org,
+	cjubran@nvidia.com,
+	daniel.zahka@gmail.com,
+	linux-doc@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 02/10] devlink: store bus_name and dev_name pointers in struct devlink
+Date: Wed, 25 Feb 2026 14:34:14 +0100
+Message-ID: <20260225133422.290965-3-jiri@resnulli.us>
+X-Mailer: git-send-email 2.51.1
+In-Reply-To: <20260225133422.290965-1-jiri@resnulli.us>
+References: <20260225133422.290965-1-jiri@resnulli.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,125 +99,206 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a trace instance with copy_trace_marker enabled is removed,
-__remove_instance() first iterates ZEROED_TRACE_FLAGS (which includes
-COPY_MARKER), calling set_tracer_flag() -> update_marker_trace(tr, 0).
-This removes the instance from the marker_copies RCU list via
-list_del_init() and returns immediately.
+From: Jiri Pirko <jiri@nvidia.com>
 
-The subsequent explicit update_marker_trace(tr, 0) call then finds
-list_empty(&tr->marker_list) is true and returns false, causing
-synchronize_rcu() to be skipped. The ring buffer and trace_array are
-then freed while a concurrent writer in tracing_mark_write() may still
-hold an RCU-protected reference, leading to use-after-free.
+Currently, bus_name and dev_name are obtained from the parent dev
+instance every time they are needed.
 
-  BUG: KASAN: slab-use-after-free in write_marker_to_buffer+0x1e7/0x610 kernel/trace/trace.c:6527
-  Write of size 4054 at addr ffff888103af7058 by task syz.0.277/5019
+In preparation to dev-less devlinks, store bus_name and dev_name
+pointers in struct devlink during devlink_alloc_ns() and use them
+throughout.
 
-  CPU: 3 UID: 0 PID: 5019 Comm: syz.0.277 Tainted: G                 N  7.0.0-rc1-00001-gc5447a46efed #51 PREEMPT(full)
-  Tainted: [N]=TEST
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
-  Call Trace:
-   <TASK>
-   __dump_stack lib/dump_stack.c:94 [inline]
-   dump_stack_lvl+0xba/0x110 lib/dump_stack.c:120
-   print_address_description mm/kasan/report.c:378 [inline]
-   print_report+0x156/0x4d9 mm/kasan/report.c:482
-   kasan_report+0xf6/0x1f0 mm/kasan/report.c:595
-   check_region_inline mm/kasan/generic.c:186 [inline]
-   kasan_check_range+0x125/0x200 mm/kasan/generic.c:200
-   __asan_memcpy+0x3c/0x60 mm/kasan/shadow.c:106
-   write_marker_to_buffer+0x1e7/0x610 kernel/trace/trace.c:6527
-   tracing_mark_write+0x218/0x3f0 kernel/trace/trace.c:6875
-   vfs_write+0x2b7/0x1070 fs/read_write.c:686
-   ksys_write+0x1f8/0x250 fs/read_write.c:740
-   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-   do_syscall_64+0xf3/0x700 arch/x86/entry/syscall_64.c:94
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fdb7eb9df29
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48
-   c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007fdb7fa81008 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  RAX: ffffffffffffffda RBX: 00007fdb7ee15fa0 RCX: 00007fdb7eb9df29
-  RDX: 0000000000001000 RSI: 0000200000000300 RDI: 0000000000000003
-  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-  R13: 00007ffec21bfd06 R14: 00007fdb7fa81ce4 R15: 00007fdb7fa61000
-   </TASK>
-
-  The buggy address belongs to the physical page:
-  page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x103af7
-  flags: 0x200000000000000(node=0|zone=2)
-  raw: 0200000000000000 0000000000000000 dead000000000122 0000000000000000
-  raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
-  page dumped because: kasan: bad access detected
-
-  Memory state around the buggy address:
-   ffff888103af7f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffff888103af7f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffff888103af8000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                     ^
-   ffff888103af8080: fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc
-   ffff888103af8100: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
-
-Fix this by:
-
-1. Removing TRACE_ITER(COPY_MARKER) from ZEROED_TRACE_FLAGS so the flag
-   loop doesn't pre-clear it. The explicit update_marker_trace(tr, 0) +
-   synchronize_rcu() then correctly waits for RCU readers to finish
-   before freeing.
-
-2. Replacing list_del_init() with list_del_rcu() in update_marker_trace()
-   for proper RCU list removal semantics. list_del_init() overwrites
-   entry->next to point to itself, which can cause concurrent RCU readers
-   to loop infinitely. list_del_rcu() preserves entry->next so readers
-   can safely finish their traversal. The duplicate-operation guards are
-   changed from list_empty() to trace_flags bit checks accordingly, since
-   list_del_rcu() does not reinitialize the list head.
-
-Fixes: 7b382efd5e8a ("tracing: Allow the top level trace_marker to write into another instances")
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jiri Pirko <jiri@nvidia.com>
 ---
- kernel/trace/trace.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ include/net/devlink.h          |  2 ++
+ include/trace/events/devlink.h | 24 ++++++++++++------------
+ net/devlink/core.c             | 14 ++++++++++++++
+ net/devlink/devl_internal.h    | 10 ++++++----
+ net/devlink/netlink.c          |  4 ++--
+ net/devlink/port.c             |  4 ++--
+ 6 files changed, 38 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 23de3719f4952..fa413214da764 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -523,8 +523,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index cb839e0435a1..0afb0958b910 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -1611,6 +1611,8 @@ struct devlink_ops {
+ void *devlink_priv(struct devlink *devlink);
+ struct devlink *priv_to_devlink(void *priv);
+ struct device *devlink_to_dev(const struct devlink *devlink);
++const char *devlink_bus_name(const struct devlink *devlink);
++const char *devlink_dev_name(const struct devlink *devlink);
  
- /* trace_flags that are default zero for instances */
- #define ZEROED_TRACE_FLAGS \
--	(TRACE_ITER(EVENT_FORK) | TRACE_ITER(FUNC_FORK) | TRACE_ITER(TRACE_PRINTK) | \
--	 TRACE_ITER(COPY_MARKER))
-+	(TRACE_ITER(EVENT_FORK) | TRACE_ITER(FUNC_FORK) | TRACE_ITER(TRACE_PRINTK))
+ /* Devlink instance explicit locking */
+ void devl_lock(struct devlink *devlink);
+diff --git a/include/trace/events/devlink.h b/include/trace/events/devlink.h
+index f241e204fe6b..32304ce9ad15 100644
+--- a/include/trace/events/devlink.h
++++ b/include/trace/events/devlink.h
+@@ -21,8 +21,8 @@ TRACE_EVENT(devlink_hwmsg,
+ 	TP_ARGS(devlink, incoming, type, buf, len),
  
- /*
-  * The global_trace is the descriptor that holds the top-level tracing
-@@ -555,7 +554,7 @@ static bool update_marker_trace(struct trace_array *tr, int enabled)
- 	lockdep_assert_held(&event_mutex);
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__field(bool, incoming)
+ 		__field(unsigned long, type)
+@@ -55,8 +55,8 @@ TRACE_EVENT(devlink_hwerr,
+ 	TP_ARGS(devlink, err, msg),
  
- 	if (enabled) {
--		if (!list_empty(&tr->marker_list))
-+		if (tr->trace_flags & TRACE_ITER(COPY_MARKER))
- 			return false;
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__field(int, err)
+ 		__string(msg, msg)
+@@ -85,8 +85,8 @@ TRACE_EVENT(devlink_health_report,
+ 	TP_ARGS(devlink, reporter_name, msg),
  
- 		list_add_rcu(&tr->marker_list, &marker_copies);
-@@ -563,10 +562,10 @@ static bool update_marker_trace(struct trace_array *tr, int enabled)
- 		return true;
- 	}
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__string(reporter_name, reporter_name)
+ 		__string(msg, msg)
+@@ -116,8 +116,8 @@ TRACE_EVENT(devlink_health_recover_aborted,
+ 	TP_ARGS(devlink, reporter_name, health_state, time_since_last_recover),
  
--	if (list_empty(&tr->marker_list))
-+	if (!(tr->trace_flags & TRACE_ITER(COPY_MARKER)))
- 		return false;
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__string(reporter_name, reporter_name)
+ 		__field(bool, health_state)
+@@ -150,8 +150,8 @@ TRACE_EVENT(devlink_health_reporter_state_update,
+ 	TP_ARGS(devlink, reporter_name, new_state),
  
--	list_del_init(&tr->marker_list);
-+	list_del_rcu(&tr->marker_list);
- 	tr->trace_flags &= ~TRACE_ITER(COPY_MARKER);
- 	return true;
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__string(reporter_name, reporter_name)
+ 		__field(u8, new_state)
+@@ -181,8 +181,8 @@ TRACE_EVENT(devlink_trap_report,
+ 	TP_ARGS(devlink, skb, metadata),
+ 
+ 	TP_STRUCT__entry(
+-		__string(bus_name, devlink_to_dev(devlink)->bus->name)
+-		__string(dev_name, dev_name(devlink_to_dev(devlink)))
++		__string(bus_name, devlink_bus_name(devlink))
++		__string(dev_name, devlink_dev_name(devlink))
+ 		__string(driver_name, devlink_to_dev(devlink)->driver->name)
+ 		__string(trap_name, metadata->trap_name)
+ 		__string(trap_group_name, metadata->trap_group_name)
+diff --git a/net/devlink/core.c b/net/devlink/core.c
+index da56e2b8afc1..49f856beb8b2 100644
+--- a/net/devlink/core.c
++++ b/net/devlink/core.c
+@@ -248,6 +248,18 @@ struct device *devlink_to_dev(const struct devlink *devlink)
+ }
+ EXPORT_SYMBOL_GPL(devlink_to_dev);
+ 
++const char *devlink_bus_name(const struct devlink *devlink)
++{
++	return devlink->bus_name;
++}
++EXPORT_SYMBOL_GPL(devlink_bus_name);
++
++const char *devlink_dev_name(const struct devlink *devlink)
++{
++	return devlink->dev_name;
++}
++EXPORT_SYMBOL_GPL(devlink_dev_name);
++
+ struct net *devlink_net(const struct devlink *devlink)
+ {
+ 	return read_pnet(&devlink->_net);
+@@ -428,6 +440,8 @@ struct devlink *devlink_alloc_ns(const struct devlink_ops *ops,
+ 		goto err_xa_alloc;
+ 
+ 	devlink->dev = get_device(dev);
++	devlink->bus_name = dev->bus->name;
++	devlink->dev_name = dev_name(dev);
+ 	devlink->ops = ops;
+ 	xa_init_flags(&devlink->ports, XA_FLAGS_ALLOC);
+ 	xa_init_flags(&devlink->params, XA_FLAGS_ALLOC);
+diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
+index 31fa98af418e..d43819c6b452 100644
+--- a/net/devlink/devl_internal.h
++++ b/net/devlink/devl_internal.h
+@@ -32,6 +32,8 @@ struct devlink_dev_stats {
+ 
+ struct devlink {
+ 	u32 index;
++	const char *bus_name;
++	const char *dev_name;
+ 	struct xarray ports;
+ 	struct list_head rate_list;
+ 	struct list_head sb_list;
+@@ -174,9 +176,9 @@ devlink_dump_state(struct netlink_callback *cb)
+ static inline int
+ devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
+ {
+-	if (nla_put_string(msg, DEVLINK_ATTR_BUS_NAME, devlink->dev->bus->name))
++	if (nla_put_string(msg, DEVLINK_ATTR_BUS_NAME, devlink->bus_name))
+ 		return -EMSGSIZE;
+-	if (nla_put_string(msg, DEVLINK_ATTR_DEV_NAME, dev_name(devlink->dev)))
++	if (nla_put_string(msg, DEVLINK_ATTR_DEV_NAME, devlink->dev_name))
+ 		return -EMSGSIZE;
+ 	if (nla_put_uint(msg, DEVLINK_ATTR_INDEX, devlink->index))
+ 		return -EMSGSIZE;
+@@ -211,8 +213,8 @@ static inline void devlink_nl_obj_desc_init(struct devlink_obj_desc *desc,
+ 					    struct devlink *devlink)
+ {
+ 	memset(desc, 0, sizeof(*desc));
+-	desc->bus_name = devlink->dev->bus->name;
+-	desc->dev_name = dev_name(devlink->dev);
++	desc->bus_name = devlink->bus_name;
++	desc->dev_name = devlink->dev_name;
+ }
+ 
+ static inline void devlink_nl_obj_desc_port_set(struct devlink_obj_desc *desc,
+diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
+index 593605c1b1ef..3f73ced2d879 100644
+--- a/net/devlink/netlink.c
++++ b/net/devlink/netlink.c
+@@ -193,8 +193,8 @@ devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
+ 	devname = nla_data(attrs[DEVLINK_ATTR_DEV_NAME]);
+ 
+ 	devlinks_xa_for_each_registered_get(net, index, devlink) {
+-		if (strcmp(devlink->dev->bus->name, busname) == 0 &&
+-		    strcmp(dev_name(devlink->dev), devname) == 0) {
++		if (strcmp(devlink->bus_name, busname) == 0 &&
++		    strcmp(devlink->dev_name, devname) == 0) {
+ 			devl_dev_lock(devlink, dev_lock);
+ 			if (devl_is_registered(devlink))
+ 				return devlink;
+diff --git a/net/devlink/port.c b/net/devlink/port.c
+index 1ff609571ea4..1d4a79c6d4d3 100644
+--- a/net/devlink/port.c
++++ b/net/devlink/port.c
+@@ -220,8 +220,8 @@ size_t devlink_nl_port_handle_size(struct devlink_port *devlink_port)
+ {
+ 	struct devlink *devlink = devlink_port->devlink;
+ 
+-	return nla_total_size(strlen(devlink->dev->bus->name) + 1) /* DEVLINK_ATTR_BUS_NAME */
+-	     + nla_total_size(strlen(dev_name(devlink->dev)) + 1) /* DEVLINK_ATTR_DEV_NAME */
++	return nla_total_size(strlen(devlink->bus_name) + 1) /* DEVLINK_ATTR_BUS_NAME */
++	     + nla_total_size(strlen(devlink->dev_name) + 1) /* DEVLINK_ATTR_DEV_NAME */
+ 	     + nla_total_size(8) /* DEVLINK_ATTR_INDEX */
+ 	     + nla_total_size(4); /* DEVLINK_ATTR_PORT_INDEX */
  }
 -- 
-2.51.0
+2.51.1
 
