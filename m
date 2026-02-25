@@ -1,63 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC31938F254
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 09:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C5B38E5FD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 09:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772013170; cv=none; b=P5tWN+r4NLP5NvedM8KLCaQAeHT7A2eg0bv9sczIiI4t2W00b/PJM1UzouPVGzCX5e6iZzUJMZCeGGkzSQDAs4AnM/TGn1cZyE6tgueH5SqHz3ex5R8EcPbIJUu8brbIqaWJv6q8bfsnDbrErDCHsSJrPIXcvMj7r3hQFSFCtIk=
+	t=1772013177; cv=none; b=VUTuG+nyl8cfvGRdX5FkJWuep3O2HwqgADsFGqwI/Ny3jZ9hog9m5KoxaBUPxhS4A5mw8intXGUS2lnTnrKYRL5hGfnLL1JR53DMypT2yDikN8OmjfOGoppP1vAC/z9ihX6h2nH45AWGne4OD8wtsYgJrLX8ouOB2wYslcDNKb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772013170; c=relaxed/simple;
-	bh=PfR9SdlezVt8tzNcAHMRd097cbreybH7a3p1rBNlBNM=;
+	s=arc-20240116; t=1772013177; c=relaxed/simple;
+	bh=MDrEFgcwxr4RQmTHk+YJ5HbbpzMh6vpOEfDu2mLU91w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=TBAQcc5rl4WbJGenMesDCURiyLYTuk3Sx24cbXheC6HV7sg25yJwVO58NQ4tUDgR5nlDhUO3cO3DiLhRel6Yh7EoiwOIFkPcWtSK+BgG8J31Ssf6bPOEKsCDXPQihoFS0vEIZO4DR2XzfKQhmjRqSWnF+rjQUqcFfnCkPHrk/00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N124WIz8; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=CBGAT/ja+fcG15EtoS885x+pNXyII3bSk2F6Msk43XTyYsiTg8Ukk5f4Nr/awofXWRRCQxuH+7ZTF3e0WAXWlH1n0BFPih3mxw0zNRyqqZVe+n2PJh2C9lJCc4Sh8LoJJmJ9Ft+uZui74ASsdpdmEhidyP+bDlaRcHnwj/ay0bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NzrNeXnV; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N124WIz8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NzrNeXnV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772013167;
+	s=mimecast20190719; t=1772013175;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8V3X5hkE2IlquoPrOEJqRu0ztnuYk/PhzlZd0fakUDc=;
-	b=N124WIz87cALWrEJnPmqON9Ox3w+RXao9/NBc0fNCfp6dzFopIUJ1hGRG6s581I7EJgXPM
-	2lIaSJs0LqG7dzQC/tB6LdwmJmnqWI4Aw4KP2OQeQUE+gGYFpqSC3H5oxNf4uiJHg4sv+x
-	vDSiYV9GS/NTylfqB749bTh4QcGi6bI=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=kO0zoFWYPRbDr8YKYEjZMgyeFmg69CxtJKAzgYm3eLM=;
+	b=NzrNeXnVyFF2UHesOFpwkhLB/DzTmGnbAn4xrc2h2Zck4g7AcAm3Gy3INkEn6HCECxT7a0
+	Xqb+0te1C0//uzZlyBsbQA2eMhddElmEelxrdk8qlyIsPr69QhU5bMgKSX9VehlLkOHelU
+	/wxsiBG4CIzdk/X/Ru4fb6LONbBqkBs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-wWVz5cGgM02OfIz9xUUeLQ-1; Wed,
- 25 Feb 2026 04:52:44 -0500
-X-MC-Unique: wWVz5cGgM02OfIz9xUUeLQ-1
-X-Mimecast-MFC-AGG-ID: wWVz5cGgM02OfIz9xUUeLQ_1772013163
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-ghaZjbg-McKL45C9Q17gmg-1; Wed,
+ 25 Feb 2026 04:52:51 -0500
+X-MC-Unique: ghaZjbg-McKL45C9Q17gmg-1
+X-Mimecast-MFC-AGG-ID: ghaZjbg-McKL45C9Q17gmg_1772013169
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 550F01800378;
-	Wed, 25 Feb 2026 09:52:43 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA8231956088;
+	Wed, 25 Feb 2026 09:52:49 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb (unknown [10.44.34.216])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 622861800370;
-	Wed, 25 Feb 2026 09:52:38 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6F5781800370;
+	Wed, 25 Feb 2026 09:52:44 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>,
+	Andrea Righi <arighi@nvidia.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Juri Lelli <jlelli@redhat.com>,
 	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	sched-ext@lists.linux.dev
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Clark Williams <williams@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v6 13/16] sched/deadline: Move some utility functions to deadline.h
-Date: Wed, 25 Feb 2026 10:51:19 +0100
-Message-ID: <20260225095122.80683-14-gmonaco@redhat.com>
+Subject: [PATCH v6 14/16] sched_ext: Export task_is_scx_enabled() for verification
+Date: Wed, 25 Feb 2026 10:51:20 +0100
+Message-ID: <20260225095122.80683-15-gmonaco@redhat.com>
 In-Reply-To: <20260225095122.80683-1-gmonaco@redhat.com>
 References: <20260225095122.80683-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -67,122 +69,67 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: o_7snaw7q6246gZjB1_5utuF2_ngr28CKtMyYyGzul0_1772013163
+X-Mimecast-MFC-PROC-ID: 8Fy6YYbu5szXzwM2rn-FlwzuC3wIQDVvKpt9juJlvg4_1772013169
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Some utility functions on sched_dl_entity can be useful outside of
-deadline.c , for instance for modelling, without relying on raw
-structure fields.
+When a sched_ext scheduler is loaded, depending on the configuration, it
+can handle also fair tasks, however it isn't trivial to understand if a
+certain task is currently handled by fair or ext outside of scheduler
+code. This can be a problem when writing verification or observability
+tools like RV monitors.
 
-Move functions like dl_task_of and dl_is_implicit to deadline.h to make
-them available outside.
+Export a task_is_scx_enabled() to allow quick classification by using
+the scx state SCX_TASK_ENABLED.
 
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
+ include/linux/sched/ext.h | 2 ++
+ kernel/sched/ext.c        | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
-Notes:
-    V5:
-    * Do not export pi_of to deadline.h
-    * Explicitly inline dl_server()
-
- include/linux/sched/deadline.h | 29 +++++++++++++++++++++++++++++
- kernel/sched/deadline.c        | 28 +---------------------------
- 2 files changed, 30 insertions(+), 27 deletions(-)
-
-diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
-index c40115d4e34d..d25a5dc2c5cb 100644
---- a/include/linux/sched/deadline.h
-+++ b/include/linux/sched/deadline.h
-@@ -37,4 +37,33 @@ extern void dl_clear_root_domain_cpu(int cpu);
- extern u64 dl_cookie;
- extern bool dl_bw_visited(int cpu, u64 cookie);
+diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
+index bcb962d5ee7d..68e5aff95159 100644
+--- a/include/linux/sched/ext.h
++++ b/include/linux/sched/ext.h
+@@ -232,6 +232,7 @@ void print_scx_info(const char *log_lvl, struct task_struct *p);
+ void scx_softlockup(u32 dur_s);
+ bool scx_hardlockup(int cpu);
+ bool scx_rcu_cpu_stall(void);
++bool task_is_scx_enabled(struct task_struct *p);
  
-+extern struct rv_monitor rv_deadline;
-+
-+static inline bool dl_server(struct sched_dl_entity *dl_se)
-+{
-+	return dl_se->dl_server;
-+}
-+
-+static inline struct task_struct *dl_task_of(struct sched_dl_entity *dl_se)
-+{
-+	BUG_ON(dl_server(dl_se));
-+	return container_of(dl_se, struct task_struct, dl);
-+}
-+
-+/*
-+ * Regarding the deadline, a task with implicit deadline has a relative
-+ * deadline == relative period. A task with constrained deadline has a
-+ * relative deadline <= relative period.
-+ *
-+ * We support constrained deadline tasks. However, there are some restrictions
-+ * applied only for tasks which do not have an implicit deadline. See
-+ * update_dl_entity() to know more about such restrictions.
-+ *
-+ * The dl_is_implicit() returns true if the task has an implicit deadline.
-+ */
-+static inline bool dl_is_implicit(struct sched_dl_entity *dl_se)
-+{
-+	return dl_se->dl_deadline == dl_se->dl_period;
-+}
-+
- #endif /* _LINUX_SCHED_DEADLINE_H */
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index b8d01f0eda7d..c340cb8405c3 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -18,6 +18,7 @@
+ #else	/* !CONFIG_SCHED_CLASS_EXT */
  
- #include <linux/cpuset.h>
- #include <linux/sched/clock.h>
-+#include <linux/sched/deadline.h>
- #include <uapi/linux/sched/types.h>
- #include "sched.h"
- #include "pelt.h"
-@@ -57,17 +58,6 @@ static int __init sched_dl_sysctl_init(void)
- late_initcall(sched_dl_sysctl_init);
- #endif /* CONFIG_SYSCTL */
+@@ -240,6 +241,7 @@ static inline void print_scx_info(const char *log_lvl, struct task_struct *p) {}
+ static inline void scx_softlockup(u32 dur_s) {}
+ static inline bool scx_hardlockup(int cpu) { return false; }
+ static inline bool scx_rcu_cpu_stall(void) { return false; }
++static inline bool task_is_scx_enabled(struct task_struct *p) { return false; }
  
--static bool dl_server(struct sched_dl_entity *dl_se)
--{
--	return dl_se->dl_server;
--}
--
--static inline struct task_struct *dl_task_of(struct sched_dl_entity *dl_se)
--{
--	BUG_ON(dl_server(dl_se));
--	return container_of(dl_se, struct task_struct, dl);
--}
--
- static inline struct rq *rq_of_dl_rq(struct dl_rq *dl_rq)
- {
- 	return container_of(dl_rq, struct rq, dl);
-@@ -991,22 +981,6 @@ update_dl_revised_wakeup(struct sched_dl_entity *dl_se, struct rq *rq)
- 	dl_se->runtime = (dl_se->dl_density * laxity) >> BW_SHIFT;
+ #endif	/* CONFIG_SCHED_CLASS_EXT */
+ 
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 62b1f3ac5630..1e48bc3cde15 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -3772,6 +3772,14 @@ bool task_should_scx(int policy)
+ 	return policy == SCHED_EXT;
  }
  
--/*
-- * Regarding the deadline, a task with implicit deadline has a relative
-- * deadline == relative period. A task with constrained deadline has a
-- * relative deadline <= relative period.
-- *
-- * We support constrained deadline tasks. However, there are some restrictions
-- * applied only for tasks which do not have an implicit deadline. See
-- * update_dl_entity() to know more about such restrictions.
-- *
-- * The dl_is_implicit() returns true if the task has an implicit deadline.
-- */
--static inline bool dl_is_implicit(struct sched_dl_entity *dl_se)
--{
--	return dl_se->dl_deadline == dl_se->dl_period;
--}
--
- /*
-  * When a deadline entity is placed in the runqueue, its runtime and deadline
-  * might need to be updated. This is done by a CBS wake up rule. There are two
++/*
++ * Used by verification/observability tools like RV monitors.
++ */
++bool task_is_scx_enabled(struct task_struct *p)
++{
++	return scx_get_task_state(p) == SCX_TASK_ENABLED;
++}
++
+ bool scx_allow_ttwu_queue(const struct task_struct *p)
+ {
+ 	struct scx_sched *sch;
 -- 
 2.53.0
 
