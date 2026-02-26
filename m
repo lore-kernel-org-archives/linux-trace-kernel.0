@@ -1,145 +1,310 @@
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D5C281357
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 04:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.71
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772078805; cv=none; b=NCuQ4KAdjJbfNPmRcK45s9VK+c0TwTsDfM11fB51mfwePjbMYouo3xDELwSWXrvkzhtlNzEnvzeu6hDHLw/VC/h/6IMB+rNo+o9e+JrpsygE18SKF400EY0dmJi9yD3YZEsjjbMiUz1+GE/3OUklISH8F6ZOWT3mwJ4sVO9ytcc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772078805; c=relaxed/simple;
-	bh=7O6weSkC5G2oKb3y1fSj3gZzdqOZl5EWcRMGocctpUE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=E2BJ7zdIa0lFlw0U0/A03RY34FTO/Gpv5zIwnATiQqMena7yBxtRqXlM5+be3V5ZmifwCliu78owzGKKpnwSSliOch575rJwaFIzozvpDeDJsYSDpjJfHtiozY86ixUqVyf0Bp6dkxn0/5I811prxXoh6lcyCAvUjIbT6Hsxans=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-679c54e29f6so3176510eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 20:06:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC2F21FF23
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 04:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772079401; cv=pass; b=r/pFlpzHQmO/iutBcz4m0dT/FRjgE33vThLhGJJ4LmA+k3moYE1ujESZLktEoORBuY80ZfA6yDlVJ6TA7zgFXOQQ2VLjVV2XHAqMDyL/ARbyEBLML33jM1KMSsnAoxBhzP565NaDVRSywpJTmRhHfDC4y+pWNisjkSURV29zn/8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772079401; c=relaxed/simple;
+	bh=PJZLZUnePvIF1G2wVkJ0n1BC25Ib9fyE1tf9iir8QX8=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=maG7nxCCRxeZhA2Tpvd9GWyvl7ha4NFoLRGEWwhUV9O2FiX00w5Dh+KfXaLAxx3uznWnHOvtQ2qah7Qyi3pco7Rc+dFxpn5k3l2rYF4F13PmG87mSh5wIOG7QKJzChFKZDJ35ovyDnl9kPo2Nf5Yb83o7ROoMd6nRNg4IbSVqnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v5VP2MJw; arc=pass smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v5VP2MJw"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-94dd2d71231so118687241.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 20:16:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772079398; cv=none;
+        d=google.com; s=arc-20240605;
+        b=F0HnGG9L79yJzffsQgkreCXwxEHLKytSywhT/PEBja33u1Q86ZYEO/l4vbxLGgqJpZ
+         /1gtvAZQA/l7/1VMqa72s3RXYtWC+cLPLkQ95n4hqoYbZiLVffclS/PuGxoyLUi0gj3D
+         ubKiFWJEvCxq4xGJFa8TgS8ccNk+iAkltMAQvIzrMJKUZOxBz1MnToa8ifxsTnF7inkX
+         2jT8svOlpEW3IbykQHnb7feLef5kzeByh2e+vB9fP+48D9NAGrbCLDKytl0Z+T6tmkmj
+         eRpRLgLOCQ/x6Jj0JWwv+LGFj4xifTug6Cgwnw+++ACWw1E9IRSHC81/+3KNRSA6BCIB
+         c/3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=w3wWy011f6Qtbv9PNCHOJcKFSIhVOg6iWVVieJxCv1k=;
+        fh=QDdDhQm7Sw9c5tbV/BJDKjZannj/3w10uTGIS0Gsn7s=;
+        b=QMY72olSeq4hyRTVLt+aZ3fcYLd72JqCYC8vZHFR0jKx0eNxHZKjf+NPiN5idXz8eO
+         958tpmt2I+msQxyXrLkjWchEc9+OLZgUQs+lGAsdKfPp+JbtIW1Le89tanectVpxysvK
+         5ufy1XhRV0CWBKo4fM/ThGIeCm2eanU+2Hno7g0LbBPDIbUlbFVeZJxQhAG6ie0A8gdn
+         cOx0w2QDtJbrWLjcJaBhvyZey85V+T70SDxaIbhWH29PPewqKwGeQaPaXwYTCXtxbd5s
+         NAV/QKZRvOzJX/cX0zXhpsfH/iGzqRKW03E/H3aZuTB+fln3rz4Scr1scsL6Hn7LEzci
+         tpuw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1772079398; x=1772684198; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w3wWy011f6Qtbv9PNCHOJcKFSIhVOg6iWVVieJxCv1k=;
+        b=v5VP2MJwADk7k+OKsLad3e9dMEcQS7gB30x2noX5tsGEZ5FhSoxWQP6ywuNElkTFSL
+         NpeLRWa47SeFhVn0fdmTo63s5ZIVNBpJKcfoJ6Ty/0frv5QULhwV3U8D2sX91j8X0BU9
+         kKpYbE/EWohwSE2DBGOT3KoIqBqXkJiGEBWxzrN9rZC8newHjPiRSIFvIiW4yTdUrEmx
+         H+8RtMbM7/+VH2TtZ1wWeV5FNBJZA+U2GabXNXgPydf42u1SLeoKJmEARlDM+jKS4hyC
+         25Erks5/0hc9tbiCgqiIosFblOzbwv3Q//80rwGhjRrmbVtCvRZdBl48r44x8SMFqWzB
+         pb+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772078803; x=1772683603;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dy3wY2j/QIgKTNp83IJwqxoTttmThtOYJaKBvc98KNg=;
-        b=JlNcYHi+flAoi/z9Lp12AQTc4RNNOUT953a6VHStVgE6gIH301HotxJRxMjRCQWNhy
-         We3CoEEpkEcBLpTXs6eBVxtXK/pTkrfkQvC4PdV+0uPKTAftl1zTUW3JAotVCkgbov7q
-         dfYQPMigY0RkWvC6UXFJT8bEw/EOnPUNaadgzQ878CQmjJxHm7WoWwoD/v27mbJYxIDi
-         WOHxWeNtvpE7sDHnI0uRqZr9Bg76TVbJlkvsCTl89NTPUeuQSjTK/3J84jaA1GTF8DD0
-         h1FLz2jJxkOXMWSwBC8nbNvM8XFA1Lgi9U1DSSH/2zHDKPitXtzZ10BsQYcysxQEXGjx
-         WQlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkUdzYmLfkfXQvIobVoYularAptkIE8fKTZagMvJbpEbzZ63EYL/Dg0DklmjJw2ABILWi3mQOKWF7K9GeTZHc7sUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxab1EYId0C+Zd384IWgjXXfXkLDTdMs5kuDboBgzfuvG/yJXsI
-	ZsgXZSyohJtDkfEazw9fy6XlZNZk4p8/RgFVkLVezWljEyZBqUOl3hqk8B5LS51rLZWQlKzQCKa
-	uYbyiNzvkyOwOxnRvDeVatL5JTZdyCawqxcORHVJOsHg6Dwv/iqoY22+hfhE=
+        d=1e100.net; s=20230601; t=1772079398; x=1772684198;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w3wWy011f6Qtbv9PNCHOJcKFSIhVOg6iWVVieJxCv1k=;
+        b=ATbxRzyJ7sA7b5frbqLALnBJay6kg1HuiZy+Lxdz3MqI5RQzOEKOGXEyQzCyHRF4Mj
+         CnisFK8o7gbN4sStSKr0ekiRBF+9n+MolyfFAYbirJqPMRm9oIe1SPOoWFlvTz14hF63
+         4zzM85qQezzyyfr9TAjcC5RLZtYMs7bjV+xNMRIsOtMWcHvKPDu5WoGcOVXMSilFcE6v
+         S2De8uctPBsgD5x8BOHuaPhaIAdyWqNwLhCzUL3CgpxWRbO+titkajh3XVrnvO1SIPzC
+         uIk+y1224JLa2IKvnBMUKqp5F4H7v82i0WDySU1CsMA8RxVk5tEbaaKnMrdwAhn5qizy
+         R3Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCWhps2EjI8KfMNid/EofJVRyWZvcik1n84r7R1+OHINrBtQFrqZutUnN2sqhoqGNN8HPEMMy+DwP5HJPqXaFk8oreg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVdJZ6rKDrQj3D4lWlsl7b2ObaB2V1jg12oYJsN3OzPNLBRNCm
+	jQQdq0VL3GTC05RwtZxtDGi8N2563CiWqPI053UvvycgBqqfcgG1QUrzbxX3QnPAupXWGEAso3T
+	qGWb9b/rGQAMQbizrwZPlay7qe87NKTmPVO0GVoy2
+X-Gm-Gg: ATEYQzwgRJHCmv9zniCLqRi5qCdlx2bKl8xVt1FqFCmNE7bIPGGP8tdkS01IqMYobhJ
+	UBm5AVxTBHoD4HRMZZe9v//krPxnxtK90yeSko/pERy7NKhHTv6sJZ4bVFMqxvDOrTJBsrUsa1N
+	wdSPxwlfpNbPQQlRqBCDAuxQDbwuZoIM8gmKr2TzDdNhqyX9TMyhpAiW1/78I/WeRHIJiPzoVhC
+	BVFN9FvJU8dnDlQbJ9TC3V7+mLM99d6KnzxtQFYw1QPmVOviHLVxePmBHIsOmANn0GjwbXZraOJ
+	s5XstE+zA8gTTs9kYNoesetzUjr88K2lXY08vKrk34+0N0nCXtPHswq98+PczDf0jFqRTt0l6st
+	XnlrX
+X-Received: by 2002:a05:6102:32d1:b0:5f5:3d46:e5fb with SMTP id
+ ada2fe7eead31-5feb2e58497mr6645208137.5.1772079397784; Wed, 25 Feb 2026
+ 20:16:37 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Feb 2026 20:16:36 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Feb 2026 20:16:36 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <CA+EHjTxDSW=y=sPRwW70Bz9RVYM3kSCLSbWc_X4v9hz6zj=mcg@mail.gmail.com>
+References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
+ <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
+ <CAEvNRgFBLgvYoR_XTH-LiN1Q00R9u1HGC5URbstLPxYtedS0MA@mail.gmail.com> <CA+EHjTxDSW=y=sPRwW70Bz9RVYM3kSCLSbWc_X4v9hz6zj=mcg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:1611:b0:65c:f9c1:cba0 with SMTP id
- 006d021491bc7-679ef97d1e9mr1255647eaf.37.1772078803608; Wed, 25 Feb 2026
- 20:06:43 -0800 (PST)
-Date: Wed, 25 Feb 2026 20:06:43 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <699fc6d3.a00a0220.21906d.0073.GAE@google.com>
-Subject: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
-From: syzbot <syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
+Date: Wed, 25 Feb 2026 20:16:36 -0800
+X-Gm-Features: AaiRm50U-5gCjd8d4vexak6il7qxXrrUihlkIadyW5OUwMyyjBZ1OgjuY1VDESk
+Message-ID: <CAEvNRgGp598JjouayFhyVKRJnYitNYZ2Ftik0zGyS1HdYaJLKA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
+To: Fuad Tabba <tabba@google.com>
+Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, aik@amd.com, 
+	andrew.jones@linux.dev, binbin.wu@linux.intel.com, bp@alien8.de, 
+	brauner@kernel.org, chao.p.peng@intel.com, chao.p.peng@linux.intel.com, 
+	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	david@kernel.org, hpa@zytor.com, ira.weiny@intel.com, jgg@nvidia.com, 
+	jmattson@google.com, jroedel@suse.de, jthoughton@google.com, 
+	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
+	mhiramat@kernel.org, michael.roth@amd.com, mingo@redhat.com, 
+	mlevitsk@redhat.com, oupton@kernel.org, pankaj.gupta@amd.com, 
+	pbonzini@redhat.com, prsampat@amd.com, qperret@google.com, 
+	ricarkol@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
+	rostedt@goodmis.org, seanjc@google.com, shivankg@amd.com, shuah@kernel.org, 
+	steven.price@arm.com, tglx@linutronix.de, vannapurve@google.com, 
+	vbabka@suse.cz, willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Fuad Tabba <tabba@google.com> writes:
 
-syzbot found the following issue on:
+> Hi Ackerley,
+>
+> Here are my thoughts, at least when it comes to pKVM.
+>
+>
+> On Tue, 24 Feb 2026 at 10:14, Ackerley Tng <ackerleytng@google.com> wrote:
+>>
+>> Ackerley Tng <ackerleytng@google.com> writes:
+>>
+>> > Ackerley Tng <ackerleytng@google.com> writes:
+>> >
+>> >>
+>> >> [...snip...]
+>> >>
+>> > Before this lands, Sean wants, at the very minimum, an in-principle
+>> > agreement on guest_memfd behavior with respect to whether or not memory
+>> > should be preserved on conversion.
+>> >>
+>> >> [...snip...]
+>> >>
+>>
+>> Here's what I've come up with, following up from last guest_memfd
+>> biweekly.
+>>
+>> Every KVM_SET_MEMORY_ATTRIBUTES2 request will be accompanied by an
+>> enum set_memory_attributes_content_policy:
+>>
+>>     enum set_memory_attributes_content_policy {
+>>         SET_MEMORY_ATTRIBUTES_CONTENT_ZERO,
+>>         SET_MEMORY_ATTRIBUTES_CONTENT_READABLE,
+>>         SET_MEMORY_ATTRIBUTES_CONTENT_ENCRYPTED,
+>>     }
+>>
+>> Within guest_memfd's KVM_SET_MEMORY_ATTRIBUTES2 handler, guest_memfd
+>> will make an arch call
+>>
+>>     kvm_gmem_arch_content_policy_supported(kvm, policy, gfn, nr_pages)
+>>
+>> where every arch will get to return some error if the requested policy
+>> is not supported for the given range.
+>
+> This hook provides the validation mechanism pKVM requires.
+>
+>> ZERO is the simplest of the above, it means that after the conversion
+>> the memory will be zeroed for the next reader.
+>>
+>> + TDX and SNP today will support ZERO since the firmware handles
+>>   zeroing.
+>> + pKVM and SW_PROTECTED_VM will apply software zeroing.
+>> + Purpose: having this policy in the API allows userspace to be sure
+>>   that the memory is zeroed after the conversion - there is no need to
+>>   zero again in userspace (addresses concern that Sean pointed out)
+>>
+>> READABLE means that after the conversion, the memory is readable by
+>> userspace (if converting to shared) or readable by the guest (if
+>> converting to private).
+>>
+>> + TDX and SNP (today) can't support this, so return -EOPNOTSUPP
+>> + SW_PROTECTED_VM will support this and do nothing extra on
+>>   conversion, since there is no encryption anyway and all content
+>>   remains readable.
+>> + pKVM will make use of the arch function above.
+>>
+>> Here's where I need input: (David's questions during the call about
+>> the full flow beginning with the guest prompted this).
+>>
+>> Since pKVM doesn't encrypt the memory contents, there must be some way
+>> that pKVM can say no when userspace requests to convert and retain
+>> READABLE contents? I think pKVM's arch function can be used to check
+>> if the guest previously made a conversion request. Fuad, to check that
+>> the guest made a conversion request, what's other parameters are
+>> needed other than gfn and nr_pages?
+>
+> The gfn and nr_pages parameters are enough I think.
+>
+> To clarify how pKVM would use this hook: all memory sharing and
+> unsharing must be initiated by the guest via a hypercall. When the
+> guest issues this hypercall, the pKVM hypervisor (EL2) exits to the
+> host kernel (EL1). The host kernel records the exit reason (share or
+> unshare) along with the specific memory address in the kvm_run
+> structure before exiting to userspace.
+>
+> We do not track this pending conversion state in the hypervisor. If a
+> compromised host kernel wants to lie and corrupt the state, it can
+> crash the system or the guest (which is an accepted DOS risk), but it
+> cannot compromise guest confidentiality because EL2 still strictly
+> enforces Stage-2 permissions. Our primary goal here is to prevent a
+> malicious or buggy userspace VMM from crashing the system.
+>
 
-HEAD commit:    7dff99b35460 Remove WARN_ALL_UNSEEDED_RANDOM kernel config..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14bc2006580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=af6ed0125ed44356
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b5dd2030fe08afdf65d
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11bc4202580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107f155a580000
+Thinking through it again, there's actually no security (in terms of
+CoCo confidentiality) risk here, since the conversion ioctl doesn't
+actually tell the CoCo vendor/platform to encrypt/decrypt or flip
+permissions, it just unmaps the pages as requested.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/45c7b6686727/disk-7dff99b3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/36fcc9cd6296/vmlinux-7dff99b3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fe952fd2745b/bzImage-7dff99b3.xz
+On TDX, if a rogue private to shared conversion request comes in, the
+private pages would get unmapped from the guest, and on the next guest
+access, the guest would access the page as private, so kvm's fault
+handler would think there's a shared/private mismatch and exit with
+KVM_EXIT_MEMORY_FAULT. Userspace now has a zeroed shared page, and the
+guest needs to re-accept the page to continue using it (if it knows what
+to do with a zeroed page). This would be userspace DOS-ing the guest,
+which userspace can do anyway.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
+On pKVM, rephrasing what you said, even if there is a rogue private to
+shared conversion, EL2 still thinks of the page as private. After the
+conversion, the page can be faulted in by the host, but any access will
+be stopped by EL2.
 
-------------[ cut here ]------------
-ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file)
-WARNING: kernel/trace/trace.c:8221 at tracing_buffers_mmap_close kernel/trace/trace.c:8221 [inline], CPU#0: syz.0.17/5983
-WARNING: kernel/trace/trace.c:8221 at tracing_buffers_mmap_close+0xea/0x140 kernel/trace/trace.c:8216, CPU#0: syz.0.17/5983
-Modules linked in:
-CPU: 0 UID: 0 PID: 5983 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2026
-RIP: 0010:tracing_buffers_mmap_close kernel/trace/trace.c:8221 [inline]
-RIP: 0010:tracing_buffers_mmap_close+0xea/0x140 kernel/trace/trace.c:8216
-Code: 08 e8 3a 74 ff ff 31 ff 89 c3 89 c6 e8 2f 50 fb ff 85 db 75 0f e8 76 55 fb ff 48 83 c4 08 5b e9 cc 45 83 09 e8 67 55 fb ff 90 <0f> 0b 90 e8 5e 55 fb ff 48 83 c4 08 5b c3 cc cc cc cc e8 df bd 66
-RSP: 0018:ffffc90003ff7ab8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000ffffffed RCX: ffffffff820ca5c1
-RDX: ffff88802a299e40 RSI: ffffffff820ca5d9 RDI: ffff88802a299e40
-RBP: ffffffff820ca4f0 R08: 0000000000000005 R09: 0000000000000000
-R10: 00000000ffffffed R11: 0000000000000000 R12: ffff88807fc6ecc8
-R13: 0000000000000001 R14: 0000000000000005 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff888124351000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc3f6e17dac CR3: 000000000e598000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- vma_close mm/internal.h:190 [inline]
- remove_vma+0x88/0x160 mm/vma.c:466
- tear_down_vmas+0x2a5/0x600 mm/mmap.c:1264
- exit_mmap+0x469/0xa30 mm/mmap.c:1322
- __mmput+0x12a/0x410 kernel/fork.c:1174
- mmput+0x67/0x80 kernel/fork.c:1197
- exit_mm kernel/exit.c:581 [inline]
- do_exit+0x78a/0x2aa0 kernel/exit.c:959
- do_group_exit+0xd5/0x2a0 kernel/exit.c:1112
- __do_sys_exit_group kernel/exit.c:1123 [inline]
- __se_sys_exit_group kernel/exit.c:1121 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1121
- x64_sys_call+0x102c/0x1530 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x106/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc3f6b9c629
-Code: Unable to access opcode bytes at 0x7fc3f6b9c5ff.
-RSP: 002b:00007ffc852ef4c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc3f6b9c629
-RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: 0000000000000000 R09: 00007fc3f6de53e0
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fc3f6de53e0 R14: 0000000000000003 R15: 00007ffc852ef580
- </TASK>
+David, there's no missing piece in the flow!
 
+> When the VMM subsequently issues the KVM_SET_MEMORY_ATTRIBUTES2 ioctl
+> with the READABLE policy, we will use the
+> kvm_gmem_arch_content_policy_supported() hook in EL1 to validate the
+> ioctl. We will cross-reference the requested gfn and nr_pages against
+> the pending exit reason stored in kvm_run.
+>
+> If the VMM attempts an unsolicited conversion (i.e., there is no
+> matching exit request in kvm_run, or the addresses do not match), our
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Ah I see, so struct kvm_run is not considered "in the hypervisor" since
+it is modifiable by host userspace. Would you be using struct
+memory_fault in struct kvm_run?
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Which vcpu's kvm_run struct would you look up from
+kvm_gmem_arch_content_policy_supported()?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+For this to land, do you still want the gfn and nr_pages parameters?
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Can pKVM just always accept the request, whether the guest requested it
+or not? Thinking about it again,
+kvm_gmem_arch_content_policy_supported() probably shouldn't be used to
+guard solicited vs unsolicited requests anyway (unless you think the
+function's name should be changed?)
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> current plan is to reject the request and return an error. In the
+> future, rather than outright rejecting an unsolicited conversion, we
+> might evolve this to treat it as a host-initiated destructive reclaim,
+> forcing an unshare and zeroing the memory. For the time being,
+> explicit rejection is the simplest and safest path.
+>
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+>> ENCRYPTED means that after the conversion, the memory contents are
+>> retained as-is, with no decryption.
+>>
+>> + TDX and SNP (today) can't support this, so return -EOPNOTSUPP
+>> + pKVM and SW_PROTECTED_VM can do nothing, but doing nothing retains
+>>   READABLE content, not ENCRYPTED content, hence SW_PROTECTED_VM
+>>   should return -EOPNOTSUPP.
+>> + Michael, you mentioned during the call that SNP is planning to
+>>   introduce a policy that retains the ENCRYPTED version for a special
+>>   GHCB call. ENCRYPTED is meant for that use case. Does it work? I'm
+>>   assuming that SNP should only support this policy given some
+>>   conditions, so would the arch call as described above work?
+>> + If this policy is specified on conversion from shared to private,
+>>   always return -EOPNOTSUPP.
+>> + When this first lands, ENCRYPTED will not be a valid option, but I'm
+>>   listing it here so we have line of sight to having this support.
+>>
+>> READABLE and ENCRYPTED defines the state after conversion clearly
+>> (instead of DONT_CARE or similar).
+>>
+>> DESTROY could be another policy, which means that after the
+>> conversion, the memory is unreadable. This is the option to address
+>> what David brought up during the call, for cases where userspace knows
+>> it is going to free the memory already and doesn't care about the
+>> state as long as nobody gets to read it. This will not implemented
+>> when feature first lands, but is presented here just to show how this
+>> can be extended in future.
+>>
+>> Right now, I'm thinking that one of the above policies MUST be
+>> specified (not specifying a policy will result in -EINVAL).
+>>
+>> How does this sound?
+>
+> I don't think that returning -EINVAL is the right thing to do here. If
+> userspace omits the policy, the API should default to
+> SET_MEMORY_ATTRIBUTES_CONTENT_ZERO and proceed with the conversion. I
+> believe that, in Linux APIs in general, omitting an optional behavior
+> flag results in the safest, most standard default action.
+>
 
-If you want to undo deduplication, reply with:
-#syz undup
+Makes sense, I'll default to zeroing then. Thanks!
+
+> Also, returning -EINVAL when no policy is specified makes the policy
+> parameter strictly mandatory. This makes it difficult for userspace's
+> to seamlessly request clean-slate, destructive conversions. Software
+> zeroing ensures deterministic behavior across pKVM, TDX, and SNP,
+> isolating the KVM uAPI from micro-architectural data destruction
+> nuances.
+>
+> Cheers,
+> /fuad
