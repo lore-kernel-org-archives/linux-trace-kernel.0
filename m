@@ -1,204 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F93032E720
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 20:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D91DE8BE;
+	Thu, 26 Feb 2026 21:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772138895; cv=none; b=CLMhAkTmBe9cwrad7heneJYit4JNsBXQfOA6Gt/tTG7RvPhDDtnA9ce5v9q2bhP/IjqftEa493VIlg5wVrEmHkGCciRdlLbpJAatVzCTiMYTA/pc+k+faLWFOq5trZlSLgoXMrnHkfCD6GTcFoDSpWlkF9z3dmZdtBQRmIRVnTI=
+	t=1772139978; cv=none; b=GZxO36JFXC7sEdPDrTGwLkw6SSwZT5hsTdW3a46s7P7H/mM0ZdPHW8x6vgGAYobPVPYiU5s9ftCZBA9qyvdnLOP4dWXy0OSkxde+Ljc1vybuQaXeBvhMrRiiTaPqxZrCJyu3uIZSfdZmpF4PSEU2LidooiOzQQxpsby6IBJAFp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772138895; c=relaxed/simple;
-	bh=pGelGEWoARZEbYWVtNHAIN0oEiqW0sUUQSCnGat00B4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D9NwcQeJI6uk6B56UQVhjmLjKO5pxjyTyCvYuef43B2kR9apAdgfb7vxXlWfnh6XldCbxcXaGghCdkTzEJh65SU/GV0hjYa9w8UxS7822tG0L4oRF2+jmxMxzhsQYdPS3HELQLJNPXYetSBtyA41F03rjNqC0TXwN1Zn7cvhRMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FAPpkHye; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FAPpkHye"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772138893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DBGoyglCoH58OEzLS/UrEve2JlXeuQURn1O9kwrT3LQ=;
-	b=FAPpkHyeOTu03lXk8Qcc931Rj8bvst9PsLdU1FpUGgWBqiTTfL6i1a8aL77m+cAdLIBk7X
-	tO/+gBWl2F8XenYIdO4Vpm3HKZQtfHptSNU5eBvKwJK8eXiA6A3JzpXw9OamFjvoDc5L3P
-	g7uLQ0S8FZCvnhOBJEO9B9pt43SIq4Y=
-Received: from mail-yx1-f72.google.com (mail-yx1-f72.google.com
- [74.125.224.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-sKeCfbjBN76pKU69b51BXg-1; Thu, 26 Feb 2026 15:48:12 -0500
-X-MC-Unique: sKeCfbjBN76pKU69b51BXg-1
-X-Mimecast-MFC-AGG-ID: sKeCfbjBN76pKU69b51BXg_1772138892
-Received: by mail-yx1-f72.google.com with SMTP id 956f58d0204a3-64c9d15b682so1933994d50.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 12:48:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772138892; x=1772743692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DBGoyglCoH58OEzLS/UrEve2JlXeuQURn1O9kwrT3LQ=;
-        b=Bej23DC9cbSBje6bCH1/P2OBK2J4bFQH54CuVJgk/Zr7yVuxWPs0Bq2KcBvd8oKzIT
-         Gmydw5QQjOND770J+QI1MRlQg1MjRdfqmpz3qlpZtxyvUymSJWnhydUJTvbWjNn8Zy7J
-         Q+nXmQyoGowU3aL3sw42WiIajOvGBt1UiQhk5V15NcG7PgDV2n2vzdC7h2/KVdmba7Q3
-         8PeyI6gYtIdefEC0Qx545S1bpN5c0WxHiNZRF9DV6RW/Z2vCvZECNH2XEns8O2Yogc/P
-         oF7jjhc0Dlzu5SUDIFFnNVfdE7l+QNV7W83qjysv4xfKghOHr8atY7zsM9GW2RMzBAR6
-         2xeA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4o8U1AtI1o8fIdnn0pTnXj+h5g7SDzst1F9GzEeuxq8GmmhmQrMuicsGqDgo0fX3DDh3ylfs8rHZFZ6iyW2KWOGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxtZAYqSFro+PJGoTuLtqHOfppr/rZt1/ZqAVPul2YTIc8275E
-	PtpOo+tCnwUVBZjC5EItChN9rxqgm2YKzTn6LEUJKQc2cItKXfs/FZ7ru0b0a7TYGGOy5hUI1Y2
-	YD2+DwgTZ7OUnmsAZNRKSB1G/Ft+Fr7czlZ/hDsChtqhf5+3jHPzFJIGqL5W9JYZxjspDjBwm/I
-	X7+5iop4U2MzZGJDVWiHkFVmjN6Q1/SqtNRPuI6V9V0H0xXdg5
-X-Gm-Gg: ATEYQzxjOMzs3pCj5z1bLHC+JEw0FPKL3Hp1H3mJ7lizBzSi6YzqB9d+glveSWeqI5x
-	nh6XkvGXfSLs1ICGEu/w30LNzDiv78fNsPwFugLFf+BIpz0aK7hUPZevhItnVUoZTdzzjJ5NWIz
-	4SXhxmk99oYnxKHrSFW2/04pleUONhNeCzOVQ1xDehOMd9IgXFB5ipELa3aJx3cOfwXtrxRYH90
-	oAh
-X-Received: by 2002:a53:b3cd:0:b0:64c:21c4:d017 with SMTP id 956f58d0204a3-64cc23040bdmr466104d50.78.1772138891640;
-        Thu, 26 Feb 2026 12:48:11 -0800 (PST)
-X-Received: by 2002:a53:b3cd:0:b0:64c:21c4:d017 with SMTP id
- 956f58d0204a3-64cc23040bdmr466079d50.78.1772138891111; Thu, 26 Feb 2026
- 12:48:11 -0800 (PST)
+	s=arc-20240116; t=1772139978; c=relaxed/simple;
+	bh=bEoBogC1VzaZVt9sFWvD/EyoNIxugjqj7GsKHA+l8e0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=LhEwLIxr9MnpeOM/eRPF6bw/q9aQtW5lvqgYzTKStiYS9M+c/6YwY4oz55DTSJIKXXRWuMLR41WZ9vyURfow0qwZzrOdJ/hMoINPhZxyFQVEAYnuCeYCOTo/PP7J1zo0tRk6s0fY1l0JhdMQTrjgpRae1S1AftOKjY+Oj64D9/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 4443729ABCA;
+	Thu, 26 Feb 2026 22:06:13 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id q-09uAsPH7el; Thu, 26 Feb 2026 22:06:11 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id B7BFC29859E;
+	Thu, 26 Feb 2026 22:06:10 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QvCFCS-3rI0s; Thu, 26 Feb 2026 22:06:09 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 1868E298580;
+	Thu, 26 Feb 2026 22:06:08 +0100 (CET)
+Date: Thu, 26 Feb 2026 22:06:07 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+	mhiramat <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	dan j williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, 
+	Eric Biggers <ebiggers@kernel.org>, tytso <tytso@mit.edu>, 
+	Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, 
+	David Howells <dhowells@redhat.com>, 
+	Paulo Alcantara <pc@manguebit.org>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Trond Myklebust <trondmy@kernel.org>, anna <anna@kernel.org>, 
+	chuck lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Steve French <sfrench@samba.org>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+	Shyam <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, 
+	Alexander Aring <alex.aring@gmail.com>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+	Viacheslav Dubeyko <slava@dubeyko.com>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, 
+	Dominique Martinet <asmadeus@codewreck.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	David Sterba <dsterba@suse.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, raven <raven@themaw.net>, 
+	Luis de Bethencourt <luisbg@kernel.org>, 
+	Salah Triki <salah.triki@gmail.com>, 
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
+	Ilya Dryomov <idryomov@gmail.com>, 
+	Alex Markuze <amarkuze@redhat.com>, Jan Harkes <jaharkes@cs.cmu.edu>, 
+	coda@cs.cmu.edu, Nicolas Pitre <nico@fluxnic.net>, 
+	Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Yangtao Li <frank.li@vivo.com>, 
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, 
+	David Woodhouse <dwmw2@infradead.org>, 
+	Dave Kleikamp <shaggy@kernel.org>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, 
+	Mike Marshall <hubcap@omnibond.com>, 
+	Martin Brandenburg <martin@omnibond.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>, 
+	chengzhihao1 <chengzhihao1@huawei.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, 
+	Naohiro Aota <naohiro.aota@wdc.com>, 
+	Johannes Thumshirn <jth@kernel.org>, 
+	John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, 
+	Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	sumit semwal <sumit.semwal@linaro.org>, 
+	edumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, pabeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, davem <davem@davemloft.net>, 
+	kuba <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	oleg <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	mingo <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, 
+	Martin Schiller <ms@dev.tdt.de>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	nvdimm@lists.linux.dev, fsverity@lists.linux.dev, 
+	linux-mm <linux-mm@kvack.org>, netfs@lists.linux.dev, 
+	linux-ext4 <linux-ext4@vger.kernel.org>, 
+	linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>, 
+	linux-nfs <linux-nfs@vger.kernel.org>, 
+	linux-cifs <linux-cifs@vger.kernel.org>, 
+	samba-technical <samba-technical@lists.samba.org>, 
+	linux-nilfs <linux-nilfs@vger.kernel.org>, 
+	v9fs <v9fs@lists.linux.dev>, 
+	linux-afs <linux-afs@lists.infradead.org>, autofs@vger.kernel.org, 
+	ceph-devel <ceph-devel@vger.kernel.org>, codalist@coda.cs.cmu.edu, 
+	ecryptfs <ecryptfs@vger.kernel.org>, 
+	linux-mtd <linux-mtd@lists.infradead.org>, 
+	jfs-discussion <jfs-discussion@lists.sourceforge.net>, 
+	ntfs3 <ntfs3@lists.linux.dev>, 
+	ocfs2-devel <ocfs2-devel@lists.linux.dev>, 
+	devel <devel@lists.orangefs.org>, 
+	linux-unionfs <linux-unionfs@vger.kernel.org>, 
+	apparmor@lists.ubuntu.com, 
+	LSM <linux-security-module@vger.kernel.org>, 
+	linux-integrity <linux-integrity@vger.kernel.org>, 
+	selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	DRI mailing list <dri-devel@lists.freedesktop.org>, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	netdev <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-fscrypt <linux-fscrypt@vger.kernel.org>, 
+	linux-xfs <linux-xfs@vger.kernel.org>, linux-hams@vger.kernel.org, 
+	linux-x25@vger.kernel.org
+Message-ID: <909001762.1963.1772139967060.JavaMail.zimbra@nod.at>
+In-Reply-To: <20260226-iino-u64-v1-47-ccceff366db9@kernel.org>
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org> <20260226-iino-u64-v1-47-ccceff366db9@kernel.org>
+Subject: Re: [PATCH 47/61] ubifs: update format strings for u64 i_ino
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260226032631.234234-1-npache@redhat.com> <20260226162653.3802758-1-usama.arif@linux.dev>
-In-Reply-To: <20260226162653.3802758-1-usama.arif@linux.dev>
-From: Nico Pache <npache@redhat.com>
-Date: Thu, 26 Feb 2026 13:47:45 -0700
-X-Gm-Features: AaiRm52157O9qaaRKfnMN5AsfoDvaP_wlb8rkPZ8cTI77RXDfAxJaKiPZ96ZOHw
-Message-ID: <CAA1CXcCwXAn8uSidF52o=PBUUY-JwT14U70yxtMuUX=iQqRaPw@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v15 11/13] mm/khugepaged: avoid unnecessary
- mTHP collapse attempts
-To: Usama Arif <usama.arif@linux.dev>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, anshuman.khandual@arm.com, apopple@nvidia.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com, 
-	catalin.marinas@arm.com, cl@gentwo.org, corbet@lwn.net, 
-	dave.hansen@linux.intel.com, david@kernel.org, dev.jain@arm.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com, jack@suse.cz, 
-	jackmanb@google.com, jannh@google.com, jglisse@google.com, 
-	joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
-	mathieu.desnoyers@efficios.com, matthew.brost@intel.com, mhiramat@kernel.org, 
-	mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de, rakie.kim@sk.com, 
-	raquini@redhat.com, rdunlap@infradead.org, richard.weiyang@gmail.com, 
-	rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org, 
-	ryan.roberts@arm.com, shivankg@amd.com, sunnanyong@huawei.com, 
-	surenb@google.com, thomas.hellstrom@linux.intel.com, tiwai@suse.de, 
-	usamaarif642@gmail.com, vbabka@suse.cz, vishal.moola@gmail.com, 
-	wangkefeng.wang@huawei.com, will@kernel.org, willy@infradead.org, 
-	yang@os.amperecomputing.com, ying.huang@linux.alibaba.com, ziy@nvidia.com, 
-	zokeefe@google.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: y7RT6oedm8en74kHe9So5NdRHhw4WnQ2UDpHc4l7KAU_1772138892
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF147 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs: update format strings for u64 i_ino
+Thread-Index: W1YwJFGUiVxHsVs+FtVDAklXBDhaRQ==
 
-On Thu, Feb 26, 2026 at 9:27=E2=80=AFAM Usama Arif <usama.arif@linux.dev> w=
-rote:
->
-> On Wed, 25 Feb 2026 20:26:31 -0700 Nico Pache <npache@redhat.com> wrote:
->
-> > There are cases where, if an attempted collapse fails, all subsequent
-> > orders are guaranteed to also fail. Avoid these collapse attempts by
-> > bailing out early.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  mm/khugepaged.c | 35 ++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 34 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 1c3711ed4513..388d3f2537e2 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -1492,9 +1492,42 @@ static int mthp_collapse(struct mm_struct *mm, u=
-nsigned long address,
-> >                       ret =3D collapse_huge_page(mm, collapse_address, =
-referenced,
-> >                                                unmapped, cc, mmap_locke=
-d,
-> >                                                order);
-> > -                     if (ret =3D=3D SCAN_SUCCEED) {
-> > +
-> > +                     switch (ret) {
-> > +                     /* Cases were we continue to next collapse candid=
-ate */
-> > +                     case SCAN_SUCCEED:
-> >                               collapsed +=3D nr_pte_entries;
-> > +                             fallthrough;
-> > +                     case SCAN_PTE_MAPPED_HUGEPAGE:
-> >                               continue;
-> > +                     /* Cases were lower orders might still succeed */
-> > +                     case SCAN_LACK_REFERENCED_PAGE:
-> > +                     case SCAN_EXCEED_NONE_PTE:
-> > +                     case SCAN_EXCEED_SWAP_PTE:
-> > +                     case SCAN_EXCEED_SHARED_PTE:
-> > +                     case SCAN_PAGE_LOCK:
-> > +                     case SCAN_PAGE_COUNT:
-> > +                     case SCAN_PAGE_LRU:
-> > +                     case SCAN_PAGE_NULL:
-> > +                     case SCAN_DEL_PAGE_LRU:
-> > +                     case SCAN_PTE_NON_PRESENT:
-> > +                     case SCAN_PTE_UFFD_WP:
-> > +                     case SCAN_ALLOC_HUGE_PAGE_FAIL:
-> > +                             goto next_order;
-> > +                     /* Cases were no further collapse is possible */
-> > +                     case SCAN_CGROUP_CHARGE_FAIL:
->
-> The only one that stands out to me is SCAN_CGROUP_CHARGE_FAIL. memcg char=
-ging
-> of higher order folio might fail, but a lower order folio might pass?
-> That said, if the cgroup is that tight, continuing collapse work may not
-> be productive.
->
-> Acked-by: Usama Arif <usama.arif@linux.dev>
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Jeff Layton" <jlayton@kernel.org>
+> Update format strings and local variable types in ubifs for the
+> i_ino type change from unsigned long to u64.
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> fs/ubifs/debug.c   |  8 ++++----
+> fs/ubifs/dir.c     | 28 ++++++++++++++--------------
+> fs/ubifs/file.c    | 28 ++++++++++++++--------------
+> fs/ubifs/journal.c |  6 +++---
+> fs/ubifs/super.c   | 16 ++++++++--------
+> fs/ubifs/tnc.c     |  4 ++--
+> fs/ubifs/xattr.c   | 14 +++++++-------
+> 7 files changed, 52 insertions(+), 52 deletions(-)
 
-Thanks! IIRC, David and I discussed all of these off chain to confirm
-their placement. I had this in the 'next_order' case at some point and
-David recommended it to "fail" for the same reason you state here:
-collapsing or charging large order pages in such a tight cgroup is
-likely unproductive and not worth the effort.
+Acked-by: Richard Weinberger <richard@nod.at>
 
-In contrast, SCAN_ALLOC_HUGE_PAGE_FAIL does not necessarily indicate a
-resource constraint, but it could. We might fail to allocate an N-page
-size due to fragmentation, but we could easily find an (N-1) size. We
-could also have a scenario where a lack of memory causes the failure,
-iterating all the way down, which would be unproductive. However, at
-that point the OOM reaper should be active and the system will already
-be cornered in multiple ways, so it should be ok.
-
-Hopefully that gives some insight into the decisions made here :)
-
-Cheers,
--- Nico
-
->
-> > +                     case SCAN_COPY_MC:
-> > +                     case SCAN_ADDRESS_RANGE:
-> > +                     case SCAN_NO_PTE_TABLE:
-> > +                     case SCAN_ANY_PROCESS:
-> > +                     case SCAN_VMA_NULL:
-> > +                     case SCAN_VMA_CHECK:
-> > +                     case SCAN_SCAN_ABORT:
-> > +                     case SCAN_PAGE_ANON:
-> > +                     case SCAN_PMD_MAPPED:
-> > +                     case SCAN_FAIL:
-> > +                     default:
-> > +                             return collapsed;
-> >                       }
-> >               }
-> >
-> > --
-> > 2.53.0
-> >
-> >
->
-
+Thanks,
+//richard
