@@ -1,32 +1,32 @@
 Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8CB3876BA;
-	Thu, 26 Feb 2026 18:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3D3410D06;
+	Thu, 26 Feb 2026 18:26:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772130419; cv=none; b=cnXy2JuWwgSkPwKZDb7gHt3ZofrHfxEGoy55kihEtFRWL/HliNLEtDe0D2X3Vs7rh04x1PJ9/n+BJHfDyEb0ZYMFNZgrSQSVYJaiz/f67yK2QoerFKBwdEiLyYqalirfrMbcOcex/eUd6bJ8DL3nTPz901Xe5Mj8oAitzYXQWmg=
+	t=1772130421; cv=none; b=iU9WMOeFg+SlcsLKWNb0JxvRhAhR4c4aemUpXVK+1x817g9ngFUEMaZUm7fzOfeK8vngTc7d/iGN4Wl0+AiCw266Zz+bCzfnihnkU2W50ui56vmnAIbwjptFGyjyBq87zxj5xb/tVWa4lafoHTumXoPftIJsbfMCIKk0pwaEgac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772130419; c=relaxed/simple;
-	bh=423FuvyZDcQO91qV7GzD47gLhEmq6wEa5zZ+oKqIc5A=;
+	s=arc-20240116; t=1772130421; c=relaxed/simple;
+	bh=WRxKe8iaXDLl/MtkhuzhWAu4Cv3aOcy3WeYIv8kQXLI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iRQb10vKF7yyaXQu4taOtDqLbVzVOmZCPrZw3QsEAB9cyfqWadpbZhnvQxGjG3IyC6hbn/M1L9NkQJPM29XCAqTZ4jnxJBqkqW4c/+uXOKzVqhnDZG1ynlRgm6rfdujGDL7R/6cgZwmOTiVuNTZB1Ml1HEQ0l6FiasJ4jbFjDOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=vBLYGgPj; arc=none smtp.client-ip=178.62.254.231
+	 MIME-Version; b=gYzzAoaPSsOys0SOpUNqoTxsjxMypiXPHG7WnUBrB+ie717O0sC8Kcgt/fyWJanWfezjEO98/fAbp5p6Z/vv1Hy6sRzvhPl2Vjv8sJYaAtgnUBl+lIbzrd7l0VhHcWyy+JzRyG9Og7PGnOYalsUkJ7kCfPkk7YEICVN3pwa4PxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=HtgDyNSQ; arc=none smtp.client-ip=178.62.254.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="vBLYGgPj"
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="HtgDyNSQ"
 Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
 	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id B544EB2CE6;
-	Thu, 26 Feb 2026 18:26:55 +0000 (UTC)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 21AF8B2CE9;
+	Thu, 26 Feb 2026 18:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
 	s=mail; t=1772130416;
-	bh=VnarcZL6OFxxZW+5dIiPmeVy2i+4K3SDVOOUTXPmso0=;
+	bh=0LKKlLe+YhKO7o329A7m73xvNfBWJnGt18tZ/iyWG2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=vBLYGgPjjaEaDcu21JHBT8fT25PuBvt7zgHb5AY+vWJpqFAonFxYDXRxA6goWwsmO
-	 7CB4emaBe/hJsbx3wCSzCOeOotv3DKRunsC9uMVKTBHFcvk3Bch9O4bqmGoD1D0Cmf
-	 W4pdTWUJksc/DgtdmIuMXuhYH5rZEsNI7SVoykSM=
+	b=HtgDyNSQsc5OOYXt8Lu2WiYyqNLrSkEdLiAWO0FgQdJeGTG/vh2VHprW6CqmKoUzj
+	 DMU76FNUcTKHR1QaJxMFnnpW6R4bxlYUjaRp5/OmHu+ykA5MFvRTsnTDPl164DtAdw
+	 6HZohSwO1xzUmkYAc3QV6RRnpCgvY2XcVAV5piuc=
 From: Dmitry Ilvokhin <d@ilvokhin.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -55,9 +55,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	Benjamin Cheatham <benjamin.cheatham@amd.com>,
 	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH v3 4/5] mm: rename zone->lock to zone->_lock
-Date: Thu, 26 Feb 2026 18:26:21 +0000
-Message-ID: <1221b8e7fa9f5694f3c4e411f01581b5aba9bc63.1772129168.git.d@ilvokhin.com>
+Subject: [PATCH v3 5/5] mm: add tracepoints for zone lock
+Date: Thu, 26 Feb 2026 18:26:22 +0000
+Message-ID: <378089dd269249d3d7981fe10eb8b49ad551d353.1772129168.git.d@ilvokhin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1772129168.git.d@ilvokhin.com>
 References: <cover.1772129168.git.d@ilvokhin.com>
@@ -69,233 +69,268 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This intentionally breaks direct users of zone->lock at compile time so
-all call sites are converted to the zone lock wrappers. Without the
-rename, present and future out-of-tree code could continue using
-spin_lock(&zone->lock) and bypass the wrappers and tracing
-infrastructure.
+Add tracepoint instrumentation to zone lock acquire/release operations
+via the previously introduced wrappers.
 
-No functional change intended.
+The implementation follows the mmap_lock tracepoint pattern: a
+lightweight inline helper checks whether the tracepoint is enabled and
+calls into an out-of-line helper when tracing is active. When
+CONFIG_TRACING is disabled, helpers compile to empty inline stubs.
 
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+The fast path is unaffected when tracing is disabled.
+
 Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 ---
- include/linux/mmzone.h    |  7 +++++--
- include/linux/zone_lock.h | 12 ++++++------
- mm/compaction.c           |  4 ++--
- mm/internal.h             |  2 +-
- mm/page_alloc.c           | 16 ++++++++--------
- mm/page_isolation.c       |  4 ++--
- mm/page_owner.c           |  2 +-
- 7 files changed, 25 insertions(+), 22 deletions(-)
+ MAINTAINERS                      |  2 +
+ include/linux/zone_lock.h        | 64 +++++++++++++++++++++++++++++++-
+ include/trace/events/zone_lock.h | 64 ++++++++++++++++++++++++++++++++
+ mm/Makefile                      |  2 +-
+ mm/zone_lock.c                   | 31 ++++++++++++++++
+ 5 files changed, 161 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/zone_lock.h
+ create mode 100644 mm/zone_lock.c
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 3e51190a55e4..32bca655fce5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1009,8 +1009,11 @@ struct zone {
- 	/* zone flags, see below */
- 	unsigned long		flags;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61e3d1f5bf43..b5aa2bb5d2ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16681,6 +16681,7 @@ F:	include/linux/ptdump.h
+ F:	include/linux/vmpressure.h
+ F:	include/linux/vmstat.h
+ F:	include/linux/zone_lock.h
++F:	include/trace/events/zone_lock.h
+ F:	kernel/fork.c
+ F:	mm/Kconfig
+ F:	mm/debug.c
+@@ -16700,6 +16701,7 @@ F:	mm/sparse.c
+ F:	mm/util.c
+ F:	mm/vmpressure.c
+ F:	mm/vmstat.c
++F:	mm/zone_lock.c
+ N:	include/linux/page[-_]*
  
--	/* Primarily protects free_area */
--	spinlock_t		lock;
-+	/*
-+	 * Primarily protects free_area. Should be accessed via zone_lock_*
-+	 * helpers.
-+	 */
-+	spinlock_t		_lock;
- 
- 	/* Pages to be freed when next trylock succeeds */
- 	struct llist_head	trylock_free_pages;
+ MEMORY MANAGEMENT - EXECMEM
 diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
-index c531e26280e6..5ce1aa38d500 100644
+index 5ce1aa38d500..f32ff0fae266 100644
 --- a/include/linux/zone_lock.h
 +++ b/include/linux/zone_lock.h
-@@ -7,32 +7,32 @@
+@@ -4,6 +4,53 @@
+ 
+ #include <linux/mmzone.h>
+ #include <linux/spinlock.h>
++#include <linux/tracepoint-defs.h>
++
++DECLARE_TRACEPOINT(zone_lock_start_locking);
++DECLARE_TRACEPOINT(zone_lock_acquire_returned);
++DECLARE_TRACEPOINT(zone_lock_released);
++
++#ifdef CONFIG_TRACING
++
++void __zone_lock_do_trace_start_locking(struct zone *zone);
++void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success);
++void __zone_lock_do_trace_released(struct zone *zone);
++
++static inline void __zone_lock_trace_start_locking(struct zone *zone)
++{
++	if (tracepoint_enabled(zone_lock_start_locking))
++		__zone_lock_do_trace_start_locking(zone);
++}
++
++static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
++						      bool success)
++{
++	if (tracepoint_enabled(zone_lock_acquire_returned))
++		__zone_lock_do_trace_acquire_returned(zone, success);
++}
++
++static inline void __zone_lock_trace_released(struct zone *zone)
++{
++	if (tracepoint_enabled(zone_lock_released))
++		__zone_lock_do_trace_released(zone);
++}
++
++#else /* !CONFIG_TRACING */
++
++static inline void __zone_lock_trace_start_locking(struct zone *zone)
++{
++}
++
++static inline void __zone_lock_trace_acquire_returned(struct zone *zone,
++						      bool success)
++{
++}
++
++static inline void __zone_lock_trace_released(struct zone *zone)
++{
++}
++
++#endif /* CONFIG_TRACING */
  
  static inline void zone_lock_init(struct zone *zone)
  {
--	spin_lock_init(&zone->lock);
-+	spin_lock_init(&zone->_lock);
- }
+@@ -12,26 +59,41 @@ static inline void zone_lock_init(struct zone *zone)
  
  #define zone_lock_irqsave(zone, flags)				\
  do {								\
--	spin_lock_irqsave(&(zone)->lock, flags);		\
-+	spin_lock_irqsave(&(zone)->_lock, flags);		\
++	bool success = true;					\
++								\
++	__zone_lock_trace_start_locking(zone);			\
+ 	spin_lock_irqsave(&(zone)->_lock, flags);		\
++	__zone_lock_trace_acquire_returned(zone, success);	\
  } while (0)
  
  #define zone_trylock_irqsave(zone, flags)			\
  ({								\
--	spin_trylock_irqsave(&(zone)->lock, flags);		\
-+	spin_trylock_irqsave(&(zone)->_lock, flags);		\
+-	spin_trylock_irqsave(&(zone)->_lock, flags);		\
++	bool success;						\
++								\
++	__zone_lock_trace_start_locking(zone);			\
++	success = spin_trylock_irqsave(&(zone)->_lock, flags);	\
++	__zone_lock_trace_acquire_returned(zone, success);	\
++	success;						\
  })
  
  static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
  {
--	spin_unlock_irqrestore(&zone->lock, flags);
-+	spin_unlock_irqrestore(&zone->_lock, flags);
++	__zone_lock_trace_released(zone);
+ 	spin_unlock_irqrestore(&zone->_lock, flags);
  }
  
  static inline void zone_lock_irq(struct zone *zone)
  {
--	spin_lock_irq(&zone->lock);
-+	spin_lock_irq(&zone->_lock);
++	bool success = true;
++
++	__zone_lock_trace_start_locking(zone);
+ 	spin_lock_irq(&zone->_lock);
++	__zone_lock_trace_acquire_returned(zone, success);
  }
  
  static inline void zone_unlock_irq(struct zone *zone)
  {
--	spin_unlock_irq(&zone->lock);
-+	spin_unlock_irq(&zone->_lock);
++	__zone_lock_trace_released(zone);
+ 	spin_unlock_irq(&zone->_lock);
  }
  
- #endif /* _LINUX_ZONE_LOCK_H */
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 9f7997e827bd..aed5bf468fd3 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -506,7 +506,7 @@ static bool test_and_set_skip(struct compact_control *cc, struct page *page)
- static bool compact_zone_lock_irqsave(struct zone *zone,
- 				      unsigned long *flags,
- 				      struct compact_control *cc)
--__acquires(&zone->lock)
-+__acquires(&zone->_lock)
- {
- 	/* Track if the lock is contended in async mode */
- 	if (cc->mode == MIGRATE_ASYNC && !cc->contended) {
-@@ -1402,7 +1402,7 @@ static bool suitable_migration_target(struct compact_control *cc,
- 		int order = cc->order > 0 ? cc->order : pageblock_order;
+diff --git a/include/trace/events/zone_lock.h b/include/trace/events/zone_lock.h
+new file mode 100644
+index 000000000000..3df82a8c0160
+--- /dev/null
++++ b/include/trace/events/zone_lock.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM zone_lock
++
++#if !defined(_TRACE_ZONE_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ZONE_LOCK_H
++
++#include <linux/tracepoint.h>
++#include <linux/types.h>
++
++struct zone;
++
++DECLARE_EVENT_CLASS(zone_lock,
++
++	TP_PROTO(struct zone *zone),
++
++	TP_ARGS(zone),
++
++	TP_STRUCT__entry(
++		__field(struct zone *, zone)
++	),
++
++	TP_fast_assign(
++		__entry->zone = zone;
++	),
++
++	TP_printk("zone=%p", __entry->zone)
++);
++
++#define DEFINE_ZONE_LOCK_EVENT(name)			\
++	DEFINE_EVENT(zone_lock, name,			\
++		TP_PROTO(struct zone *zone),		\
++		TP_ARGS(zone))
++
++DEFINE_ZONE_LOCK_EVENT(zone_lock_start_locking);
++DEFINE_ZONE_LOCK_EVENT(zone_lock_released);
++
++TRACE_EVENT(zone_lock_acquire_returned,
++
++	TP_PROTO(struct zone *zone, bool success),
++
++	TP_ARGS(zone, success),
++
++	TP_STRUCT__entry(
++		__field(struct zone *, zone)
++		__field(bool, success)
++	),
++
++	TP_fast_assign(
++		__entry->zone = zone;
++		__entry->success = success;
++	),
++
++	TP_printk(
++		"zone=%p success=%s",
++		__entry->zone,
++		__entry->success ? "true" : "false"
++	)
++);
++
++#endif /* _TRACE_ZONE_LOCK_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/mm/Makefile b/mm/Makefile
+index 8ad2ab08244e..ffd06cf7a04e 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -55,7 +55,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
+ 			   mm_init.o percpu.o slab_common.o \
+ 			   compaction.o show_mem.o \
+ 			   interval_tree.o list_lru.o workingset.o \
+-			   debug.o gup.o mmap_lock.o vma_init.o $(mmu-y)
++			   debug.o gup.o mmap_lock.o zone_lock.o vma_init.o $(mmu-y)
  
- 		/*
--		 * We are checking page_order without zone->lock taken. But
-+		 * We are checking page_order without zone->_lock taken. But
- 		 * the only small danger is that we skip a potentially suitable
- 		 * pageblock, so it's not worth to check order for valid range.
- 		 */
-diff --git a/mm/internal.h b/mm/internal.h
-index cb0af847d7d9..6cb06e21ce15 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -710,7 +710,7 @@ static inline unsigned int buddy_order(struct page *page)
-  * (d) a page and its buddy are in the same zone.
-  *
-  * For recording whether a page is in the buddy system, we set PageBuddy.
-- * Setting, clearing, and testing PageBuddy is serialized by zone->lock.
-+ * Setting, clearing, and testing PageBuddy is serialized by zone->_lock.
-  *
-  * For recording page's order, we use page_private(page).
-  */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c5d13fe9b79f..56ca27a07a62 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -815,7 +815,7 @@ compaction_capture(struct capture_control *capc, struct page *page,
- static inline void account_freepages(struct zone *zone, int nr_pages,
- 				     int migratetype)
- {
--	lockdep_assert_held(&zone->lock);
-+	lockdep_assert_held(&zone->_lock);
- 
- 	if (is_migrate_isolate(migratetype))
- 		return;
-@@ -2473,7 +2473,7 @@ enum rmqueue_mode {
- 
- /*
-  * Do the hard work of removing an element from the buddy allocator.
-- * Call me with the zone->lock already held.
-+ * Call me with the zone->_lock already held.
-  */
- static __always_inline struct page *
- __rmqueue(struct zone *zone, unsigned int order, int migratetype,
-@@ -2501,7 +2501,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
- 	 * fallbacks modes with increasing levels of fragmentation risk.
- 	 *
- 	 * The fallback logic is expensive and rmqueue_bulk() calls in
--	 * a loop with the zone->lock held, meaning the freelists are
-+	 * a loop with the zone->_lock held, meaning the freelists are
- 	 * not subject to any outside changes. Remember in *mode where
- 	 * we found pay dirt, to save us the search on the next call.
- 	 */
-@@ -3203,7 +3203,7 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
- 	struct zone *zone = page_zone(page);
- 
- 	/* zone lock should be held when this function is called */
--	lockdep_assert_held(&zone->lock);
-+	lockdep_assert_held(&zone->_lock);
- 
- 	/* Return isolated page to tail of freelist. */
- 	__free_one_page(page, page_to_pfn(page), zone, order, mt,
-@@ -7086,7 +7086,7 @@ int alloc_contig_frozen_range_noprof(unsigned long start, unsigned long end,
- 	 * pages.  Because of this, we reserve the bigger range and
- 	 * once this is done free the pages we are not interested in.
- 	 *
--	 * We don't have to hold zone->lock here because the pages are
-+	 * We don't have to hold zone->_lock here because the pages are
- 	 * isolated thus they won't get removed from buddy.
- 	 */
- 	outer_start = find_large_buddy(start);
-@@ -7655,7 +7655,7 @@ void accept_page(struct page *page)
- 		return;
- 	}
- 
--	/* Unlocks zone->lock */
-+	/* Unlocks zone->_lock */
- 	__accept_page(zone, &flags, page);
- }
- 
-@@ -7672,7 +7672,7 @@ static bool try_to_accept_memory_one(struct zone *zone)
- 		return false;
- 	}
- 
--	/* Unlocks zone->lock */
-+	/* Unlocks zone->_lock */
- 	__accept_page(zone, &flags, page);
- 
- 	return true;
-@@ -7813,7 +7813,7 @@ struct page *alloc_frozen_pages_nolock_noprof(gfp_t gfp_flags, int nid, unsigned
- 
- 	/*
- 	 * Best effort allocation from percpu free list.
--	 * If it's empty attempt to spin_trylock zone->lock.
-+	 * If it's empty attempt to spin_trylock zone->_lock.
- 	 */
- 	page = get_page_from_freelist(alloc_gfp, order, alloc_flags, &ac);
- 
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 56a272f38b66..78b58dae2015 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -212,7 +212,7 @@ static int set_migratetype_isolate(struct page *page, enum pb_isolate_mode mode,
- 	zone_unlock_irqrestore(zone, flags);
- 	if (mode == PB_ISOLATE_MODE_MEM_OFFLINE) {
- 		/*
--		 * printk() with zone->lock held will likely trigger a
-+		 * printk() with zone->_lock held will likely trigger a
- 		 * lockdep splat, so defer it here.
- 		 */
- 		dump_page(unmovable, "unmovable page");
-@@ -553,7 +553,7 @@ void undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn)
- /*
-  * Test all pages in the range is free(means isolated) or not.
-  * all pages in [start_pfn...end_pfn) must be in the same zone.
-- * zone->lock must be held before call this.
-+ * zone->_lock must be held before call this.
-  *
-  * Returns the last tested pfn.
-  */
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index 8178e0be557f..54a4ba63b14f 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -799,7 +799,7 @@ static void init_pages_in_zone(struct zone *zone)
- 				continue;
- 
- 			/*
--			 * To avoid having to grab zone->lock, be a little
-+			 * To avoid having to grab zone->_lock, be a little
- 			 * careful when reading buddy page order. The only
- 			 * danger is that we skip too much and potentially miss
- 			 * some early allocated pages, which is better than
+ # Give 'page_alloc' its own module-parameter namespace
+ page-alloc-y := page_alloc.o
+diff --git a/mm/zone_lock.c b/mm/zone_lock.c
+new file mode 100644
+index 000000000000..f647fd2aca48
+--- /dev/null
++++ b/mm/zone_lock.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++#define CREATE_TRACE_POINTS
++#include <trace/events/zone_lock.h>
++
++#include <linux/zone_lock.h>
++
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_start_locking);
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_acquire_returned);
++EXPORT_TRACEPOINT_SYMBOL(zone_lock_released);
++
++#ifdef CONFIG_TRACING
++
++void __zone_lock_do_trace_start_locking(struct zone *zone)
++{
++	trace_zone_lock_start_locking(zone);
++}
++EXPORT_SYMBOL(__zone_lock_do_trace_start_locking);
++
++void __zone_lock_do_trace_acquire_returned(struct zone *zone, bool success)
++{
++	trace_zone_lock_acquire_returned(zone, success);
++}
++EXPORT_SYMBOL(__zone_lock_do_trace_acquire_returned);
++
++void __zone_lock_do_trace_released(struct zone *zone)
++{
++	trace_zone_lock_released(zone);
++}
++EXPORT_SYMBOL(__zone_lock_do_trace_released);
++
++#endif /* CONFIG_TRACING */
 -- 
 2.47.3
 
