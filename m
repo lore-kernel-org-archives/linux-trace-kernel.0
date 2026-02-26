@@ -1,117 +1,132 @@
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002EB38B7BD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 06:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801A438E11D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 07:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772087644; cv=none; b=JBM/95k0S6jVSLV9of8vfWsnEttjyI1e/9psoNylvCpU465ykaQ5mSEm+vXj6NI9YaUShIFLx8Vk4WV5wE49eOIcibNNErNwiu2KFiyUE/5uTkmrdHP8dvP0BLg8cHe+QktqrhHhBwMXXANcT5aLFqh1MZtLkGaznS0KqNRZ5as=
+	t=1772089860; cv=none; b=pQYV6yPzj5gTf3q1DX2G6MvicdrLX/B3sC4UJVddhX7FZAo6ahV1gctSoqzx/1vIuCRD/jTm1YqM0oG3I32Nx1bWcHNEO3t6z+GaOndTQ4xa8ti55eHtp54PilXIZeK8j73e+K1YhoKE2AdrxRpUUagha275jeEDr3raJ27y/Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772087644; c=relaxed/simple;
-	bh=AfrOeuiiWhCtJIH2F/Nwt0t+34tj+YFHUD2tEMXMbyA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=sIOghxMOY1fX8SXsbHPg4sT9ST97RPwI1bWOYi9687a8rpR3o0+f6GwCTvDGxkenWHnfZl8glvaeEhRNbhDaauXeBC/yFcz1fd9Z4ZYw4nhRSHNcOlRr15+M266kKR2kOtFGmeH/JA4nusZ6tH74W+7bQiHa+AfVvVUzSIVXT7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-67995e1ecacso13627395eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 22:34:02 -0800 (PST)
+	s=arc-20240116; t=1772089860; c=relaxed/simple;
+	bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WhUnzTkvIF6XdCjwH7mwZTqedfWlP/tuKCq3phmdk6TAvf+QryGQOgHZfsmINtPoErklT9ts6d3+cfc1YCxqZaOXP78xKUHGkR5nC4IFyZ8cFUx6iztSihk2sHcSmcLnRMGvUWXMy+CPBzZ1+l7n8zQ4UpV+kIuDUNrvc4705oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LBsad0Qr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LBsad0Qr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772089858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
+	b=LBsad0QrTlFY7HNwJe/aDUlsWTvIHItb+QeoJYXHpJRkr6DQ1NRZViGM7r8QLN8wckUMUj
+	aLfwuaqrB21fhe8AAuEYlxmpYKYfPf6n3A1DXmTxw1J88bwOKdEv9eQcbWwAJqgTvCra3i
+	nQU71ISWAGJdHKE15qNbeKmRwffsOw0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-NoavtoHyObqM-qs_65xvpg-1; Thu, 26 Feb 2026 02:10:57 -0500
+X-MC-Unique: NoavtoHyObqM-qs_65xvpg-1
+X-Mimecast-MFC-AGG-ID: NoavtoHyObqM-qs_65xvpg_1772089856
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4836c819456so3734595e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 23:10:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772087642; x=1772692442;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1772089856; x=1772694656;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=giGSYQ4Vx7fcq2sN/QOD8haee2uqxwuFuSC1ZnGpANc=;
-        b=nLIvYbJXgc66FRfHvCc4r6TxEAHLWVNKBD3HC02sBN4I4Xm35STCcQ9i0RgTL+wkjv
-         8Qi9ebYx3EIlECkjZp3VcS4T5yv4jVScqlzI2kC4jwHyqTaQcMd4vyyz+lEtipy6ZSSc
-         3UtvsxfPe+1d3ixdgJJioYX5lLITt2zn9RyspOgKEuIPC/oOk9Ojlw3y152O2oZakhjM
-         a13XoxC3npXpOJzUQJfvhgIoL6AkTk+r5reCKy1z8xADdr/Cx8GIeBtxpGiYKeVyEdRn
-         777rtwOGr1504fMDOX1/8vdE9mUuCBUZTlnWO0aRw5gdHmsYh18zYoUiMistW5fz13Zl
-         x9Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyOo19U1aXQzIOS86P/Nu1HGsn3rTijtd1SbladrMPM+IrUTRxmHl838pTZYAiEOeP/QK1eMzYnqE+tJjajpEBPQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxYWfGzJWt2E1U65LdFPpFippCeePeoCkY9sK2x91LnP130pGY
-	dZe9tZCSmQmXC8uWzMLHP5pYJKXdqQyI5K3uESoEqE+mr2NzRqZs5p5BNQa4Vl0JUWeblv0rPkZ
-	FrwN4jaG5Qpnb2M6phZBrN3CbMpm7F07qgLetgoGan7pIVnETiCyXQbPGqPg=
+        bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
+        b=TBaC//765nhlUZTZeCGI+0D2956mJkKihahqnPKyCN2HH1cNLTX+kdcxpXQvvEskOK
+         WH9E01mZOuM3Syiy7sTDnLrORwrhFfKzk/IcIjGf9skzsWm71208LtGRNI0uBhSwAiRf
+         jytFk2DUgWDbap9mJ34X78eV+GnhDFcDmuSiAbvvHp1g/Ogx6vYvTLMKXUUxymKTrT8Y
+         AtGdP2kVE0QYqb2vbwDhBMB1n9bKGZ+Xl0OgGBXm+NBSW/LQREz36eVGDrm2puOmEqpJ
+         8wGeeg5QNZt96hKBa0KSx5f4lmq/07ivX+q16fBAtUNxIRmd8Yhww4o1rQKWaAxFNZBy
+         CvLg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4nWsKRmmy4rcWLJB/seKDWc+GWuHWaOr3afQT6SkVFXfr7MAwZNWGhDdmOOgeIXuu17nqIgDtzPUlRI3NyiPlWpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYTeA3xzeRYxBaF4XT1X9f/2xft+AeJcc0l32DwVnv7YsGwBJj
+	iSItloHzzP/gpEP8lb/vahXBKvoBvPT+3zymttby/ZcWgoxZ7UjNJ6G2AZc86JUURSTyK72LTve
+	DJmw3u1qSIIpwum8pX975LM+9BeV/m7VHz2pQ90qw87PN+UOK2/Q8OoUx8q0emqOHJBMGcR5TRg
+	==
+X-Gm-Gg: ATEYQzwVBT7XzFTs7r9IpExuZI3hthSGs2Fsv9QtNXY2x5ati6PAl+fM3zRFG3/ccs1
+	8E1A1B3fwb1dSWmcZZV2HMZVSI2WMR1+mzBunCs/wX7Ha4da6rmFhizr2GtCUiIrYA6g5cgeVdv
+	+3sPgahn3MorUQ6/LpP/pz77xDmAc+p0NSC9vqJcDhXdOl7ql7DDCbzB8Wjv4V8TWzCL6wXe3pc
+	xqi9sqW1SerRzRfxKWFItMjxnpKfsxIxzHq7KYIImfeQjxn7aiC8DegCY5DCLYp+u1jQd1lPJ+2
+	lqGXgWtvmfbrQWq7S2SwT6cpcvQeWjtTIHWTE/NnZpMKN0bnJrSmuOQXsTRUZSLlnXtMqJbHFg0
+	U9K0tuFg4NlaynqbRuv/+4gZEV0AidVoN5LeESVZ9jHKV13xjIQ2xvuRu0RrXCgathaWiCT34sc
+	pR16d/us0FotuGw4M=
+X-Received: by 2002:a05:600c:1411:b0:483:acd9:bd18 with SMTP id 5b1f17b1804b1-483acd9be44mr200825515e9.1.1772089855783;
+        Wed, 25 Feb 2026 23:10:55 -0800 (PST)
+X-Received: by 2002:a05:600c:1411:b0:483:acd9:bd18 with SMTP id 5b1f17b1804b1-483acd9be44mr200825285e9.1.1772089855392;
+        Wed, 25 Feb 2026 23:10:55 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b770c2sm23532555e9.10.2026.02.25.23.10.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Feb 2026 23:10:54 -0800 (PST)
+Message-ID: <8fbc3ced19fb0c2a2171708073fa51ae308755b5.camel@redhat.com>
+Subject: Re: [PATCH v6 14/16] sched_ext: Export task_is_scx_enabled() for
+ verification
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrea Righi <arighi@nvidia.com>, Joel
+ Fernandes <joelagnelf@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Nam Cao <namcao@linutronix.de>,  Juri Lelli <jlelli@redhat.com>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	sched-ext@lists.linux.dev, Tomas Glozar <tglozar@redhat.com>, Clark
+ Williams	 <williams@redhat.com>, John Kacur <jkacur@redhat.com>, 
+	linux-trace-kernel@vger.kernel.org
+Date: Thu, 26 Feb 2026 08:10:52 +0100
+In-Reply-To: <aZ8snSHWw-U0lVz2@slm.duckdns.org>
+References: <20260225095122.80683-1-gmonaco@redhat.com>
+	 <20260225095122.80683-15-gmonaco@redhat.com>
+	 <aZ8snSHWw-U0lVz2@slm.duckdns.org>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:4b18:b0:66f:2d14:32b7 with SMTP id
- 006d021491bc7-679c4646639mr9493668eaf.9.1772087642057; Wed, 25 Feb 2026
- 22:34:02 -0800 (PST)
-Date: Wed, 25 Feb 2026 22:34:02 -0800
-In-Reply-To: <20260226061625.30751-1-wangqing7171@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <699fe95a.050a0220.2fcbed.0004.GAE@google.com>
-Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
-From: syzbot <syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com, wangqing7171@gmail.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: v1q-Cf236K_sVal9A-By4gAabLHwGmIoq2DirYJjdqQ_1772089856
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, 2026-02-25 at 07:08 -1000, Tejun Heo wrote:
+> On Wed, Feb 25, 2026 at 10:51:20AM +0100, Gabriele Monaco wrote:
+> > When a sched_ext scheduler is loaded, depending on the configuration, i=
+t
+> > can handle also fair tasks, however it isn't trivial to understand if a
+> > certain task is currently handled by fair or ext outside of scheduler
+> > code. This can be a problem when writing verification or observability
+> > tools like RV monitors.
+> >=20
+> > Export a task_is_scx_enabled() to allow quick classification by using
+> > the scx state SCX_TASK_ENABLED.
+>=20
+> This test already exists - task_on_scx(). Please feel free to move that o=
+ut
+> to include/linux/sched/ext.h.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in tracing_buffers_mmap_close
+Mmh, right, thanks for the pointer!
 
-------------[ cut here ]------------
-ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file)
-WARNING: kernel/trace/trace.c:8221 at tracing_buffers_mmap_close kernel/trace/trace.c:8221 [inline], CPU#0: syz.0.17/6401
-WARNING: kernel/trace/trace.c:8221 at tracing_buffers_mmap_close+0xea/0x140 kernel/trace/trace.c:8216, CPU#0: syz.0.17/6401
-Modules linked in:
-CPU: 0 UID: 0 PID: 6401 Comm: syz.0.17 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2026
-RIP: 0010:tracing_buffers_mmap_close kernel/trace/trace.c:8221 [inline]
-RIP: 0010:tracing_buffers_mmap_close+0xea/0x140 kernel/trace/trace.c:8216
-Code: 08 e8 1a 74 ff ff 31 ff 89 c3 89 c6 e8 0f 50 fb ff 85 db 75 0f e8 56 55 fb ff 48 83 c4 08 5b c3 cc cc cc cc e8 47 55 fb ff 90 <0f> 0b 90 e8 3e 55 fb ff 48 83 c4 08 5b e9 54 55 83 09 e8 ff bd 66
-RSP: 0018:ffffc90002f27ab8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000ffffffed RCX: ffffffff820ca621
-RDX: ffff88801efcdac0 RSI: ffffffff820ca639 RDI: ffff88801efcdac0
-RBP: ffffffff820ca550 R08: 0000000000000005 R09: 0000000000000000
-R10: 00000000ffffffed R11: 0000000000000000 R12: ffff888078da3048
-R13: 0000000000000001 R14: 0000000000000005 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff88812434f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4d99a17dac CR3: 000000000e598000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- vma_close mm/internal.h:190 [inline]
- remove_vma+0x88/0x160 mm/vma.c:466
- tear_down_vmas+0x2a5/0x600 mm/mmap.c:1264
- exit_mmap+0x469/0xa30 mm/mmap.c:1322
- __mmput+0x12a/0x410 kernel/fork.c:1174
- mmput+0x67/0x80 kernel/fork.c:1197
- exit_mm kernel/exit.c:581 [inline]
- do_exit+0x78a/0x2aa0 kernel/exit.c:959
- do_group_exit+0xd5/0x2a0 kernel/exit.c:1112
- __do_sys_exit_group kernel/exit.c:1123 [inline]
- __se_sys_exit_group kernel/exit.c:1121 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1121
- x64_sys_call+0x102c/0x1530 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x106/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f4d9979c629
-Code: Unable to access opcode bytes at 0x7f4d9979c5ff.
-RSP: 002b:00007ffea34a0a28 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f4d9979c629
-RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: 0000000000000000 R09: 00007f4d999e53e0
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f4d999e53e0 R14: 0000000000000003 R15: 00007ffea34a0ae0
- </TASK>
+I see task_on_scx() is used in what looks like some sched core hot paths (
+pick_next_task() -> prio_less()), but I presume not inlining it isn't a big
+issue.
 
-
-Tested on:
-
-commit:         f4d0ec0a Merge tag 'erofs-for-7.0-rc2-fixes' of git://..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12efb55a580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=af6ed0125ed44356
-dashboard link: https://syzkaller.appspot.com/bug?extid=3b5dd2030fe08afdf65d
-compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1484c24a580000
+Thanks,
+Gabriele
 
