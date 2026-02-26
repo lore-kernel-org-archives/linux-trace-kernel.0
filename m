@@ -1,53 +1,54 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BFB38BF76;
-	Thu, 26 Feb 2026 08:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A52C39447E;
+	Thu, 26 Feb 2026 08:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772094400; cv=none; b=GoF1DUC6hla+uPhEqdhtesEPDm4NDquXPBmSEgGcVXLp+yx9GIANf4LFgHV9A/4SwuenW2Mk85OXe8aWmuKJbkDmrxvPDku6AnUnkAqwn2ygNBzTvIfNrPiV53mkxO0ZHWyb3w/zhcvMdvawAQiLomEZRg9rHMjieMy82no+xkg=
+	t=1772095253; cv=none; b=TTTCS5wDNQuaC9VX5BKGuDH3vJoOVJeBFh94Rrx/zbP1igfWSqQdZ7Wr83X5zsPacmucU0qr42cIuUTUlskvOnTjh+6vCD174Fe1LsdJS3ocNxHXQ2JGHJy4GT2HuVR6cGIG5+SCrf7GzWYfvu5BSgBxqfiXdcpNmm8RZK0bTv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772094400; c=relaxed/simple;
-	bh=CuI2yNXHozZ33l6jpyWWDZFsLsZN9RIjVXSuGyZRcBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XEjKYmgIRxb5PNnXwIOGFeh4iGEywsGaPX6+dMgN/dxmSqAY+vS0oiR1QAwPzr/m8YiWEQMps6qQBYujB4tFTlUXWQuTBfihxB0Fkcu9qFNl9dKQ2BE5tEhgzA2G5eyXeva2j2Np/7mSldUtTD9aD76jXDvG2KWq2Bwp6A/YsWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ErGTIqCz; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1772095253; c=relaxed/simple;
+	bh=dwrTDGeh95iZKaCEtAc0YWQ6wKjI5cJcO3Vg+xhvHkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S1gi8DWcEBAPgl6/dyw7RipFFdOwKqbSXuLybaRn+GZVl0/lQckuQ1lPVzVmP1LztRVayL9ZCpchJIVyWGCdBHOpYZQ4MlGrL+XKyCam8rrE2BkSwEEUVdJdk32TprIgMQpB+Idb6BgFC8Ux6ni6dIijkrjmO75fqtQPxg1PPC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T5K+2bTN; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ErGTIqCz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=WM
-	jluf9TG1wFE9HBrFIWE9aXj+JL5OmXE4kFqv3zFRw=; b=ErGTIqCzEM/0Qj9WAN
-	tQC5d3FBs9lh8GbRH0LcDpJTOjpuaVKfX3z4js0c9p80Lm4y0WTcwOOVzmpKG9ny
-	0lY2KCwn96XnCmmWKT2YexcVGo7XRkhjbfmIW8bwDdMMZ9PtKCb/u7n11PvfQYQ4
-	CZlkkoXgMu9mh6PohhV3d4NAs=
-Received: from pek-lpg-core5.wrs.com (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wBndakSA6BpaN3nMw--.29763S2;
-	Thu, 26 Feb 2026 16:23:47 +0800 (CST)
-From: Robert Garcia <rob_garcia@163.com>
-To: stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>
-Cc: Marc Dionne <marc.dionne@auristor.com>,
-	Robert Garcia <rob_garcia@163.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T5K+2bTN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772095248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=r6ok+REfdEcAEOyYdN8mpwOjfAi6PmuRiNBeuWg5TUU=;
+	b=T5K+2bTNXbyiZNubyfIgKzDWc7n++7B7nePN71sU4f09J1Z1zIXlbtNc+/wUPPFZr90CyP
+	WGRtf1eL2ccboUEI1sH532tb4YN/k/NZBD/VWOkRmOeKLQR6AWkjAVuuyOzUIdv48y05/E
+	r/+dWZ9KNUA0tglW3MTUw+5KWgo1dkU=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: linux-mm@kvack.org
+Cc: jiayuan.chen@linux.dev,
+	Jiayuan Chen <jiayuan.chen@shopee.com>,
+	syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com,
+	"Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-afs@lists.infradead.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Jan Kara <jack@suse.cz>,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Faith <faith@zellic.io>,
-	Pumpkin Chang <pumpkin@devco.re>,
-	Nir Ohfeld <niro@wiz.io>,
-	Willy Tarreau <w@1wt.eu>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH 6.12.y] rxrpc: Fix recvmsg() unconditional requeue
-Date: Thu, 26 Feb 2026 16:23:46 +0800
-Message-Id: <20260226082346.3200864-1-rob_garcia@163.com>
-X-Mailer: git-send-email 2.34.1
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v1] mm: annotate data race of f_ra.prev_pos
+Date: Thu, 26 Feb 2026 16:40:07 +0800
+Message-ID: <20260226084020.163720-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,114 +56,149 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBndakSA6BpaN3nMw--.29763S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWF4Duw4DWryxKF17Cry7trb_yoWrury8pF
-	n8ArsxZw18Xw1IvFZ3GFy8WF15WFs2gr17Jr1fXasakr1Svw4vqF1jga13ZF15CanrArWU
-	XF1DGw4jyrs8X37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07US9a9UUUUU=
-X-CM-SenderInfo: 5uresw5dufxti6rwjhhfrp/xtbC5hVIs2mgAxW6OwAA3W
+X-Migadu-Flow: FLOW_OUT
 
-From: David Howells <dhowells@redhat.com>
+From: Jiayuan Chen <jiayuan.chen@shopee.com>
 
-[ Upstream commit 2c28769a51deb6022d7fbd499987e237a01dd63a ]
+KCSAN reports a data race when concurrent readers access the same
+struct file:
 
-If rxrpc_recvmsg() fails because MSG_DONTWAIT was specified but the call at
-the front of the recvmsg queue already has its mutex locked, it requeues
-the call - whether or not the call is already queued.  The call may be on
-the queue because MSG_PEEK was also passed and so the call was not dequeued
-or because the I/O thread requeued it.
+  BUG: KCSAN: data-race in filemap_read / filemap_splice_read
 
-The unconditional requeue may then corrupt the recvmsg queue, leading to
-things like UAFs or refcount underruns.
+  write to 0xffff88811a6f8228 of 8 bytes by task 10061 on cpu 0:
+   filemap_splice_read+0x523/0x780 mm/filemap.c:3125
+   ...
 
-Fix this by only requeuing the call if it isn't already on the queue - and
-moving it to the front if it is already queued.  If we don't queue it, we
-have to put the ref we obtained by dequeuing it.
+  write to 0xffff88811a6f8228 of 8 bytes by task 10066 on cpu 1:
+   filemap_read+0x98d/0xa10 mm/filemap.c:2873
+   ...
 
-Also, MSG_PEEK doesn't dequeue the call so shouldn't call
-rxrpc_notify_socket() for the call if we didn't use up all the data on the
-queue, so fix that also.
+Both filemap_read() and filemap_splice_read() update f_ra.prev_pos
+without synchronization. This is a benign race since prev_pos is only
+used as a hint for readahead heuristics in page_cache_sync_ra(), and a
+stale or torn value merely results in a suboptimal readahead decision,
+not a correctness issue.
 
-Fixes: 540b1c48c37a ("rxrpc: Fix deadlock between call creation and sendmsg/recvmsg")
-Reported-by: Faith <faith@zellic.io>
-Reported-by: Pumpkin Chang <pumpkin@devco.re>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Marc Dionne <marc.dionne@auristor.com>
-cc: Nir Ohfeld <niro@wiz.io>
-cc: Willy Tarreau <w@1wt.eu>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: stable@kernel.org
-Link: https://patch.msgid.link/95163.1768428203@warthog.procyon.org.uk
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[Use spin_unlock instead of spin_unlock_irq to maintain context consistency.]
-Signed-off-by: Robert Garcia <rob_garcia@163.com>
+Use WRITE_ONCE/READ_ONCE to annotate all accesses to prev_pos across
+the tree for consistency and silence KCSAN.
+
+Reported-by: syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=6880f676b265dbd42d63
+Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
 ---
- include/trace/events/rxrpc.h |  4 ++++
- net/rxrpc/recvmsg.c          | 19 +++++++++++++++----
- 2 files changed, 19 insertions(+), 4 deletions(-)
+ fs/ext4/dir.c                    | 2 +-
+ fs/ntfs3/fsntfs.c                | 2 +-
+ include/trace/events/readahead.h | 2 +-
+ mm/filemap.c                     | 6 +++---
+ mm/readahead.c                   | 4 ++--
+ mm/shmem.c                       | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index eea3769765ac..c6cae9456698 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -274,6 +274,7 @@
- 	EM(rxrpc_call_put_kernel,		"PUT kernel  ") \
- 	EM(rxrpc_call_put_poke,			"PUT poke    ") \
- 	EM(rxrpc_call_put_recvmsg,		"PUT recvmsg ") \
-+	EM(rxrpc_call_put_recvmsg_peek_nowait,	"PUT peek-nwt") \
- 	EM(rxrpc_call_put_release_sock,		"PUT rls-sock") \
- 	EM(rxrpc_call_put_release_sock_tba,	"PUT rls-sk-a") \
- 	EM(rxrpc_call_put_sendmsg,		"PUT sendmsg ") \
-@@ -291,6 +292,9 @@
- 	EM(rxrpc_call_see_distribute_error,	"SEE dist-err") \
- 	EM(rxrpc_call_see_input,		"SEE input   ") \
- 	EM(rxrpc_call_see_recvmsg,		"SEE recvmsg ") \
-+	EM(rxrpc_call_see_recvmsg_requeue,	"SEE recv-rqu") \
-+	EM(rxrpc_call_see_recvmsg_requeue_first, "SEE recv-rqF") \
-+	EM(rxrpc_call_see_recvmsg_requeue_move,	"SEE recv-rqM") \
- 	EM(rxrpc_call_see_release,		"SEE release ") \
- 	EM(rxrpc_call_see_userid_exists,	"SEE u-exists") \
- 	EM(rxrpc_call_see_waiting_call,		"SEE q-conn  ") \
-diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index e24a44bae9a3..b6e524c065f0 100644
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -430,7 +430,8 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 	if (rxrpc_call_has_failed(call))
- 		goto call_failed;
+diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+index 28b2a3deb954..1ddf7acce5ca 100644
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -200,7 +200,7 @@ static int ext4_readdir(struct file *file, struct dir_context *ctx)
+ 					sb->s_bdev->bd_mapping,
+ 					&file->f_ra, file, index,
+ 					1 << EXT4_SB(sb)->s_min_folio_order);
+-			file->f_ra.prev_pos = (loff_t)index << PAGE_SHIFT;
++			WRITE_ONCE(file->f_ra.prev_pos, (loff_t)index << PAGE_SHIFT);
+ 			bh = ext4_bread(NULL, inode, map.m_lblk, 0);
+ 			if (IS_ERR(bh)) {
+ 				err = PTR_ERR(bh);
+diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
+index 0df2aa81d884..d1232fc03c08 100644
+--- a/fs/ntfs3/fsntfs.c
++++ b/fs/ntfs3/fsntfs.c
+@@ -1239,7 +1239,7 @@ int ntfs_read_run_nb_ra(struct ntfs_sb_info *sbi, const struct runs_tree *run,
+ 			if (!ra_has_index(ra, index)) {
+ 				page_cache_sync_readahead(mapping, ra, NULL,
+ 							  index, 1);
+-				ra->prev_pos = (loff_t)index << PAGE_SHIFT;
++				WRITE_ONCE(ra->prev_pos, (loff_t)index << PAGE_SHIFT);
+ 			}
+ 		}
  
--	if (!skb_queue_empty(&call->recvmsg_queue))
-+	if (!(flags & MSG_PEEK) &&
-+	    !skb_queue_empty(&call->recvmsg_queue))
- 		rxrpc_notify_socket(call);
- 	goto not_yet_complete;
+diff --git a/include/trace/events/readahead.h b/include/trace/events/readahead.h
+index 0997ac5eceab..63d8df6c2983 100644
+--- a/include/trace/events/readahead.h
++++ b/include/trace/events/readahead.h
+@@ -101,7 +101,7 @@ DECLARE_EVENT_CLASS(page_cache_ra_op,
+ 		__entry->async_size = ra->async_size;
+ 		__entry->ra_pages = ra->ra_pages;
+ 		__entry->mmap_miss = ra->mmap_miss;
+-		__entry->prev_pos = ra->prev_pos;
++		__entry->prev_pos = READ_ONCE(ra->prev_pos);
+ 		__entry->req_count = req_count;
+ 	),
  
-@@ -461,11 +462,21 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- error_requeue_call:
- 	if (!(flags & MSG_PEEK)) {
- 		spin_lock(&rx->recvmsg_lock);
--		list_add(&call->recvmsg_link, &rx->recvmsg_q);
--		spin_unlock(&rx->recvmsg_lock);
-+		if (list_empty(&call->recvmsg_link)) {
-+			list_add(&call->recvmsg_link, &rx->recvmsg_q);
-+			rxrpc_see_call(call, rxrpc_call_see_recvmsg_requeue);
-+			spin_unlock(&rx->recvmsg_lock);
-+		} else if (list_is_first(&call->recvmsg_link, &rx->recvmsg_q)) {
-+			spin_unlock(&rx->recvmsg_lock);
-+			rxrpc_put_call(call, rxrpc_call_see_recvmsg_requeue_first);
-+		} else {
-+			list_move(&call->recvmsg_link, &rx->recvmsg_q);
-+			spin_unlock(&rx->recvmsg_lock);
-+			rxrpc_put_call(call, rxrpc_call_see_recvmsg_requeue_move);
-+		}
- 		trace_rxrpc_recvmsg(call_debug_id, rxrpc_recvmsg_requeue, 0);
- 	} else {
--		rxrpc_put_call(call, rxrpc_call_put_recvmsg);
-+		rxrpc_put_call(call, rxrpc_call_put_recvmsg_peek_nowait);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 63f256307fdd..d3e2d4b826b9 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2771,7 +2771,7 @@ ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *iter,
+ 	int i, error = 0;
+ 	bool writably_mapped;
+ 	loff_t isize, end_offset;
+-	loff_t last_pos = ra->prev_pos;
++	loff_t last_pos = READ_ONCE(ra->prev_pos);
+ 
+ 	if (unlikely(iocb->ki_pos < 0))
+ 		return -EINVAL;
+@@ -2870,7 +2870,7 @@ ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *iter,
+ 	} while (iov_iter_count(iter) && iocb->ki_pos < isize && !error);
+ 
+ 	file_accessed(filp);
+-	ra->prev_pos = last_pos;
++	WRITE_ONCE(ra->prev_pos, last_pos);
+ 	return already_read ? already_read : error;
+ }
+ EXPORT_SYMBOL_GPL(filemap_read);
+@@ -3122,7 +3122,7 @@ ssize_t filemap_splice_read(struct file *in, loff_t *ppos,
+ 			len -= n;
+ 			total_spliced += n;
+ 			*ppos += n;
+-			in->f_ra.prev_pos = *ppos;
++			WRITE_ONCE(in->f_ra.prev_pos, *ppos);
+ 			if (pipe_is_full(pipe))
+ 				goto out;
+ 		}
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 7b05082c89ea..de49b35b0329 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -142,7 +142,7 @@ void
+ file_ra_state_init(struct file_ra_state *ra, struct address_space *mapping)
+ {
+ 	ra->ra_pages = inode_to_bdi(mapping->host)->ra_pages;
+-	ra->prev_pos = -1;
++	WRITE_ONCE(ra->prev_pos, -1);
+ }
+ EXPORT_SYMBOL_GPL(file_ra_state_init);
+ 
+@@ -584,7 +584,7 @@ void page_cache_sync_ra(struct readahead_control *ractl,
  	}
- error_no_call:
- 	release_sock(&rx->sk);
+ 
+ 	max_pages = ractl_max_pages(ractl, req_count);
+-	prev_index = (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
++	prev_index = (unsigned long long)READ_ONCE(ra->prev_pos) >> PAGE_SHIFT;
+ 	/*
+ 	 * A start of file, oversized read, or sequential cache miss:
+ 	 * trivial case: (index - prev_index) == 1
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 5e7dcf5bc5d3..03569199baf4 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3642,7 +3642,7 @@ static ssize_t shmem_file_splice_read(struct file *in, loff_t *ppos,
+ 		len -= n;
+ 		total_spliced += n;
+ 		*ppos += n;
+-		in->f_ra.prev_pos = *ppos;
++		WRITE_ONCE(in->f_ra.prev_pos, *ppos);
+ 		if (pipe_is_full(pipe))
+ 			break;
+ 
 -- 
-2.34.1
+2.43.0
 
