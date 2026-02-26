@@ -1,116 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A694279EA
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 18:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8787387591;
+	Thu, 26 Feb 2026 18:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772131158; cv=none; b=qdzX4BgkMjPnjwOJmLSBPk2EeQ2t3ex3o7OBspu97tyexqFZQTbTQPRn2hNc4EdILJRGwrL6Ckv68chDT6goyDqoIiRxwKkJjyyS9FFiHVesxG+QGJpy7m2MaXwEfXZJRL4ITsfPfDKlWx0SubnLOF3aDxLOv5+C0JJ/GaJ+g8s=
+	t=1772131716; cv=none; b=YEDALyTXyTuZ0lcMYkV8BtqYlLlrRI85Kh7+1Es1bAn8GLfjKGKs3mDKeI3/VwUGEdGcgD8K5kWJ2GnKvbuZvsLBn774ZoAzzvoNOP/oz6m1VeUFylT/JqOByArF2/oc2Y3vwtljsH1JH5fv9BOmkXwIcdhDqLHOnYb8rWdL96w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772131158; c=relaxed/simple;
-	bh=WXLJBRwPRH5Tybm6J8jtA40mG8q5sKCMY4FYsNnsoig=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Orh6YSVL+J4sPMIkazUrX051kIrKuD0UXB7jNSjs6QHPMQ0EGI6crtGSs5cv+JscRjvaBKkFdBxZc1JQ0jrqxgI5r8hdrR/6SGiXQ5zBDDFLMgn+nUis3/rAlmZq6itg2LcBZPAdI4PsJqsu7Vd4TMlQ3ArbWrf3Wgcwh4dn1E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FsKt6O16; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772131716; c=relaxed/simple;
+	bh=Dsa4IPWVksq4qQJNj7lZdQ9EJHRm0dzFcpiPCh8Xsy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPAKlc6//ulF6FQ8VdYqMOJUpOhBD971f+V3kZSlJLCXa9eEMw2BAaNhwbOtRHttCxDFAGyvUzJys0XaPNE86HkgWl0oOrrLySfKlTeD9eCH1eHlR3Z2QaWdWS6DRReB5aWED/TAXRiA0S6EXu411QXxMnprZeceY36b9DNiE/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkkqLHA7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FsKt6O16"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772131153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WXLJBRwPRH5Tybm6J8jtA40mG8q5sKCMY4FYsNnsoig=;
-	b=FsKt6O16OT8jZuzBFr5CfwbyJaEDcAIq5vUiNoJqcOFe+yMO2fEqPseAT3JFCI5k1OQ85e
-	231Awx4v9d0NCuFNLVGhN+Z6xxDTBW7HaNv5xxU5M18x81vzl/ciR3SfNU5XiEftWIVE+4
-	T8DssHbvIqemZ8cBHJ7iRlegC5zwlu4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-fU0DZI2wPtiLT0TNB9XIxg-1; Thu, 26 Feb 2026 13:39:12 -0500
-X-MC-Unique: fU0DZI2wPtiLT0TNB9XIxg-1
-X-Mimecast-MFC-AGG-ID: fU0DZI2wPtiLT0TNB9XIxg_1772131151
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48378df3469so7600115e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 10:39:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772131151; x=1772735951;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WXLJBRwPRH5Tybm6J8jtA40mG8q5sKCMY4FYsNnsoig=;
-        b=EVNCeAMwgQwU/dFXWWNKOvfFaG/9dXqdJgpMf5Ez4YJM+wC9mxYmihjyY0aWDiIVwV
-         uCZ9Jjc+peZuxhLKnP2s6DOfi2GCoWC+D3q8XIyKXb2NF/iB2mA6TkA6IVB6S6Z3YHNh
-         Y50gsI8m9+7/a0iAS4SObKOczf3ykBOeFUynIGlhUaYBagonPqK8Qy20+eCLwgTGQDdT
-         RZYoEQwFRzvTvqcalZ1Fcg2dz/enRl7ADdoPGGiNea6Kn0NSrtOWDYnxAM9+OAHtKzji
-         wPTEj0UpWDxjXPP8nnyU0C2NNHqjlVZ9AMQxP+DAKy+3W4FPyXX4K50OrJakAJJzCN17
-         jk1g==
-X-Forwarded-Encrypted: i=1; AJvYcCX53mK0Xg0TUGHyCKp3F33jo1JtUTDGWI/pvbt0SFgMWxwt1JutRXoaeMLu5X377ZLzVsTMJKw0QWLrM2qdE3qdYf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz20gA9NsXmSMe5xus7Uz2bDlbAlV4ui1Z6NMDonbYY8Xq/QbTB
-	PJB0YKQzyG753lmWKrauISJr11qR4Anhqa9ZVoc4belLfQlPGrfa0aREpp9RlML5gm4MfGUOdnw
-	zreiQk2jA7lHmmc/nvdrZLAJfPe/90tCCHE8uPaOIgLuW9lkWanvFePmvboH4kzeEVym3xQGE2A
-	==
-X-Gm-Gg: ATEYQzyhZFZvd5ejywYuroAlT0oBFe/CAfwXVMuW7BULtsTx+WZmwFoqjs9JM41mlBq
-	mvVGATldGomUxyvQoJWV0XW6GqXO6kc36mCAEkavv+hRZXkiCVGDjPT7sVKpIWH8VJSWF1GrPuJ
-	a5H90Q1Vjg2nzO5+meKVmIAe2symx2z+jfH1G6ugtal30EB7JRmXjxryL+3GxW2+64YhCd/AZPw
-	SYmACyPK9WxZyQA+WexGAMHFc1bnXgdzNOM2z4MsddpMVxM3VwYCuYzBD7bBD5PibnIavyFNMAu
-	I07E9WjOJuRqGh2bfsk6BhHcmbFlKDhLdXHfS9onN4jQ8aV/fCKwTsS3OLKzzYkt6bXhdfRCYRy
-	cVJV3t3kBCwgNpvZaVw==
-X-Received: by 2002:a05:600c:3544:b0:47a:8383:f2b2 with SMTP id 5b1f17b1804b1-483c33f3357mr65519325e9.17.1772131150832;
-        Thu, 26 Feb 2026 10:39:10 -0800 (PST)
-X-Received: by 2002:a05:600c:3544:b0:47a:8383:f2b2 with SMTP id 5b1f17b1804b1-483c33f3357mr65518855e9.17.1772131150355;
-        Thu, 26 Feb 2026 10:39:10 -0800 (PST)
-Received: from [127.0.0.1] ([195.174.33.230])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bd702e7bsm181703545e9.5.2026.02.26.10.39.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Feb 2026 10:39:10 -0800 (PST)
-Date: Thu, 26 Feb 2026 18:39:07 +0000
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrea Righi <arighi@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Nam Cao <namcao@linutronix.de>,
-	Juri Lelli <jlelli@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, sched-ext@lists.linux.dev,
-	Tomas Glozar <tglozar@redhat.com>,
-	Clark Williams <williams@redhat.com>, John Kacur <jkacur@redhat.com>,
-	linux-trace-kernel@vger.kernel.org
-Message-ID: <b45f7954-12d1-428f-9702-059c10ddcbea@redhat.com>
-In-Reply-To: <aaCI08IDGXTLvwT8@slm.duckdns.org>
-References: <20260225095122.80683-1-gmonaco@redhat.com> <20260225095122.80683-15-gmonaco@redhat.com> <aZ8snSHWw-U0lVz2@slm.duckdns.org> <8fbc3ced19fb0c2a2171708073fa51ae308755b5.camel@redhat.com> <aaBlJT9Mac9KQpKL@slm.duckdns.org> <f49a6db6f0070350cb2d2b023b5733a3646996f2.camel@redhat.com> <aaBrMr5O4455oU31@slm.duckdns.org> <deb203ab-7564-4bef-b4bf-053c6ec08f27@redhat.com> <aaCI08IDGXTLvwT8@slm.duckdns.org>
-Subject: Re: [PATCH v6 14/16] sched_ext: Export task_is_scx_enabled() for
- verification
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkkqLHA7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772131714; x=1803667714;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dsa4IPWVksq4qQJNj7lZdQ9EJHRm0dzFcpiPCh8Xsy4=;
+  b=PkkqLHA7BH0SCrRa1Jeji++3Re/W6WUZG6fO441815CFrxVi9ZO2FeOT
+   oED1m/XPDvXjc/8csh2peDbsQYIdNE76q7cO8O1rUtKtCE0V0nZ82TjVf
+   UPn+1TbOt9IkBwGS/AQDughRLL8MtxvN3WvBVptQUsvUPt5An2sx8gCiy
+   lTYeEylnedheSf10GSlymKDyiG0qDeorq/RcfWFmCBTbV9+sBAskOaR5M
+   tcBLKGV14lnM/7ig/F0RhXIBbgkAYWl9eMLjDRFG7vsf3m6XxuQXGRiP8
+   4zDCBHwsLUaI12Jo2MRdDYamQ3MnXSWi24AYOJD16Gspgg06t0yXqp/gr
+   g==;
+X-CSE-ConnectionGUID: lMwN+MHOQwGQBxR+FJbTAw==
+X-CSE-MsgGUID: 0SeqxvnvSR6oYwETZxWqgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11713"; a="95821607"
+X-IronPort-AV: E=Sophos;i="6.21,312,1763452800"; 
+   d="scan'208";a="95821607"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2026 10:48:34 -0800
+X-CSE-ConnectionGUID: q7KD1QjmTIGDr6jWxM07qg==
+X-CSE-MsgGUID: 8cQOkpz3TUG+GaugjRhiYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,312,1763452800"; 
+   d="scan'208";a="221659563"
+Received: from lkp-server02.sh.intel.com (HELO a3936d6a266d) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 26 Feb 2026 10:48:33 -0800
+Received: from kbuild by a3936d6a266d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vvgPV-000000009mR-4937;
+	Thu, 26 Feb 2026 18:48:29 +0000
+Date: Fri, 27 Feb 2026 02:48:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] ring-buffer: Flush and stop persistent ring
+ buffer on panic
+Message-ID: <202602270244.3JWhusi4-lkp@intel.com>
+References: <177211311593.419230.2212568977306190482.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Correlation-ID: <b45f7954-12d1-428f-9702-059c10ddcbea@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4zp9zVgOqWNnZZMu7wzfB5k4lSwSvwfQ3-w1dfNL1QU_1772131151
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <177211311593.419230.2212568977306190482.stgit@mhiramat.tok.corp.google.com>
 
-2026-02-26T17:54:35Z Tejun Heo <tj@kernel.org>:
-> So, I don't know how rv works (searched a bit just now) but from kernel's
-> POV, it seems to look mostly like an additional tracing framework, and
-> testing p->sched_class against exported pointer value seems like a good fit
-> for the use case, no? It's not like task_on_scx() or state testing is going
-> to give you a "better" result anyway and it's actually rather confusing to
-> use them outside scheduler proper as these are expected to be used while the
-> task's rq lock is held. I don't think rv wants to (or even can) synchronize
-> against scheduler internals. Using external observability mechanism seems
-> like the better fit here.
+Hi Masami,
 
-Yeah you got a gist of it, essentially RV would be running from the tracepoint contexts, so in this specific scenario it would be synchronised with the scheduler.
+kernel test robot noticed the following build errors:
 
-Grabbing a pointer via kallsyms and comparing that will do exactly the same job, just a bit more "unofficially".
+[auto build test ERROR on linus/master]
+[also build test ERROR on v7.0-rc1 next-20260226]
+[cannot apply to trace/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I can do that if you think such an "official" function won't really be useful. Indeed if that function wouldn't make sense without the rq lock, tracepoints are probably the only valid use case..
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/ring-buffer-Flush-and-stop-persistent-ring-buffer-on-panic/20260226-222418
+base:   linus/master
+patch link:    https://lore.kernel.org/r/177211311593.419230.2212568977306190482.stgit%40mhiramat.tok.corp.google.com
+patch subject: [PATCH v5 1/3] ring-buffer: Flush and stop persistent ring buffer on panic
+config: sparc-randconfig-001-20260227 (https://download.01.org/0day-ci/archive/20260227/202602270244.3JWhusi4-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260227/202602270244.3JWhusi4-lkp@intel.com/reproduce)
 
-Thanks,
-Gabriele
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602270244.3JWhusi4-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   kernel/trace/ring_buffer.c: In function 'rb_flush_buffer_cb':
+>> kernel/trace/ring_buffer.c:2481:9: error: implicit declaration of function 'flush_cache_all'; did you mean 'flush_cache_page'? [-Werror=implicit-function-declaration]
+    2481 |         flush_cache_all();
+         |         ^~~~~~~~~~~~~~~
+         |         flush_cache_page
+   cc1: some warnings being treated as errors
+
+
+vim +2481 kernel/trace/ring_buffer.c
+
+  2475	
+  2476	static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
+  2477	{
+  2478		struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
+  2479	
+  2480		ring_buffer_record_off(buffer);
+> 2481		flush_cache_all();
+  2482		return NOTIFY_DONE;
+  2483	}
+  2484	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
