@@ -1,54 +1,77 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A52C39447E;
-	Thu, 26 Feb 2026 08:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B5339A81C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 09:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772095253; cv=none; b=TTTCS5wDNQuaC9VX5BKGuDH3vJoOVJeBFh94Rrx/zbP1igfWSqQdZ7Wr83X5zsPacmucU0qr42cIuUTUlskvOnTjh+6vCD174Fe1LsdJS3ocNxHXQ2JGHJy4GT2HuVR6cGIG5+SCrf7GzWYfvu5BSgBxqfiXdcpNmm8RZK0bTv8=
+	t=1772097432; cv=none; b=YUzrlf4Htpn/LFn2AXanXHeeCeqC5EQxwMuZC7xlnu3Ulw/T2Vvl57B3Zh/SzFFyFu6BQbeJSWKQ3QtRxl07v+8m9aCoMWQSqO00vq9fuQsxA356qRuJCigYmKKnLcQsf62DBRJyFdYggc55Pr4+d6FaJ9e60RQ0hEJ4u4HUF1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772095253; c=relaxed/simple;
-	bh=dwrTDGeh95iZKaCEtAc0YWQ6wKjI5cJcO3Vg+xhvHkQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S1gi8DWcEBAPgl6/dyw7RipFFdOwKqbSXuLybaRn+GZVl0/lQckuQ1lPVzVmP1LztRVayL9ZCpchJIVyWGCdBHOpYZQ4MlGrL+XKyCam8rrE2BkSwEEUVdJdk32TprIgMQpB+Idb6BgFC8Ux6ni6dIijkrjmO75fqtQPxg1PPC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T5K+2bTN; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772097432; c=relaxed/simple;
+	bh=u4mLjVeY90P9uE8k+OrgrA7HWVbWe0oz8RoRO9olmZk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=f4QKI/zUt2ZQiLaNOqqyEZ707JPyrUOfPbaJUtISwLxPNhusO8YVWdufGAYfafNVQ0lqcK3Feom9/s0hBRCT9iKh5F7X6CzqhrEJL9Y60WNg0nBxU7yOCYe1O8euaz9JJPz/zDeYV4wLn2+JIpcQ6YROoGrMepdyTiVBae4IAVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m7co8Hus; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T5K+2bTN"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772095248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=r6ok+REfdEcAEOyYdN8mpwOjfAi6PmuRiNBeuWg5TUU=;
-	b=T5K+2bTNXbyiZNubyfIgKzDWc7n++7B7nePN71sU4f09J1Z1zIXlbtNc+/wUPPFZr90CyP
-	WGRtf1eL2ccboUEI1sH532tb4YN/k/NZBD/VWOkRmOeKLQR6AWkjAVuuyOzUIdv48y05/E
-	r/+dWZ9KNUA0tglW3MTUw+5KWgo1dkU=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: linux-mm@kvack.org
-Cc: jiayuan.chen@linux.dev,
-	Jiayuan Chen <jiayuan.chen@shopee.com>,
-	syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com,
-	"Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Jan Kara <jack@suse.cz>,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7co8Hus"
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-439857ec679so509122f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 01:17:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772097426; x=1772702226; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AUADCGvGxdCHKYsX5uYRweI3t7gagyhmTu/5nLW20I8=;
+        b=m7co8HusL4pUKoQuNtZe+OTWZmD8rK1gcW34DPcQadJarssSPrjAzVpyV9hnr6Hzlx
+         UnBUt5o5pl1RfIP2e4wvSyLlPYuZRTG60agUDQSJHBv4RXUS5ejRRtbSYjNnWtzFUAr0
+         TI0UGBSLp74il1EMio068H9viDvjsVuXeWwlIJ7cyIlzumsoEXi2e6OOULFSokIFdgUD
+         j6wl+k30rrwyKsBZH6Kb+0/erqwfqGCtdDKrSe3RYcdf0vT6AUVFD5zSinl8BusIMqgU
+         DRAQH5r7RakchA8SB468iCbwKgr/Gcbzy3MfVIChBM3idq7yF58P88Uxxu1/pG96IWlQ
+         VMFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772097426; x=1772702226;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AUADCGvGxdCHKYsX5uYRweI3t7gagyhmTu/5nLW20I8=;
+        b=lmJR5Hgr1AmJxbCNVnb4GncONXqYjXo0p5qihNyP671juwzRsLNUVBNxumWMd/UVuz
+         Bdc3PJyggP+D9lIxQ7yDaQAAHC4wVqA1g02xomHRkkS+1mZzLe4IAodzZH/1unw0NRW5
+         ovMein2FXCY8xnaHVfnn0b9dDhgTWG4qhR7XKxBeW/KeFRyON5DajGrDqSABtZm/LHJ7
+         IGBVzv3GA7hqWpxAJNgMcdIZzKmpe1B4+pZAJGVBBKkJoX3m9hAaPiS5pG28BcbDXNUN
+         4TuP9kvf5egiq7ZSjDH0L7tc3ANJFAVqQEGLWc9gaMcwezH4HG8byl+rkFAw+yzpnWcd
+         lnMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwvlWp5IAI8m2iRjjW8pUKsF5uBbggsj0P+HJMaRGwUGqPub6C3Lij66qVQ8R4c7SVj/587TKr4CGFKhY+OeotOuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5WCpuMqu+s5p0SKIExJquSUrqduuQkEnpKmb9SwgfqvN6roNc
+	eNdNspkH5m2jhiO0RbD8R5yiuonXLqk1qPEf2p7Et6rax/vuRlymI8jK
+X-Gm-Gg: ATEYQzweePWxW/iybdeLkd2ozb3F07LXjYKssGINgdw8akxbqWWk5jsRKEpCU895QzA
+	pGDUQO9Y7Kyy1/EqsGjFLdfq9ccQNjFlBEdHeKhO81FOUQVEV7U5a3EA+TWCh54mAknRQwYi7ed
+	BrjnVbHew0bbUeWo5w0lSpNYj0JZY7a0WwMnXFqkyGdmKUNjN1tW8YmArX5H3LPg2IL3nCDaEKH
+	JucLp0r4dvZzZAV72kulPivkDIu6C/TdUH9NIr/LISvMmMHP5H/6PONxv6IsHBpWx2/8g2EP3QU
+	nQKIyKegP/Qk9x/2BC1hAlk1jqoGmYr3SwO/z/AP7KYwn+lt1mbN6LME/UqIv/4GxAzhIY+f03x
+	u0T5ujkB6EURegNckyqNX/0nr6hUY2udTopKfD+CwHOs5m0YmyF+5N1Nzux7QNoTQHFGkCtDuiJ
+	sNSMdoTejP6SsJriaAlsarjOdY87GmwcYH2MR5GkpAYsJO/JfLDYOmk+S0T2mE
+X-Received: by 2002:a05:6000:1a87:b0:432:5bf9:cf15 with SMTP id ffacd0b85a97d-4399429d1b0mr6054031f8f.5.1772097426294;
+        Thu, 26 Feb 2026 01:17:06 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.215])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43987f3ed03sm20010929f8f.16.2026.02.26.01.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Feb 2026 01:17:05 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v1] mm: annotate data race of f_ra.prev_pos
-Date: Thu, 26 Feb 2026 16:40:07 +0800
-Message-ID: <20260226084020.163720-1-jiayuan.chen@linux.dev>
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
+Date: Thu, 26 Feb 2026 17:16:57 +0800
+Message-Id: <20260226091657.895403-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <699fc6d3.a00a0220.21906d.0073.GAE@google.com>
+References: <699fc6d3.a00a0220.21906d.0073.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,149 +79,80 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Jiayuan Chen <jiayuan.chen@shopee.com>
+#syz test
 
-KCSAN reports a data race when concurrent readers access the same
-struct file:
-
-  BUG: KCSAN: data-race in filemap_read / filemap_splice_read
-
-  write to 0xffff88811a6f8228 of 8 bytes by task 10061 on cpu 0:
-   filemap_splice_read+0x523/0x780 mm/filemap.c:3125
-   ...
-
-  write to 0xffff88811a6f8228 of 8 bytes by task 10066 on cpu 1:
-   filemap_read+0x98d/0xa10 mm/filemap.c:2873
-   ...
-
-Both filemap_read() and filemap_splice_read() update f_ra.prev_pos
-without synchronization. This is a benign race since prev_pos is only
-used as a hint for readahead heuristics in page_cache_sync_ra(), and a
-stale or torn value merely results in a suboptimal readahead decision,
-not a correctness issue.
-
-Use WRITE_ONCE/READ_ONCE to annotate all accesses to prev_pos across
-the tree for consistency and silence KCSAN.
-
-Reported-by: syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=6880f676b265dbd42d63
-Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
----
- fs/ext4/dir.c                    | 2 +-
- fs/ntfs3/fsntfs.c                | 2 +-
- include/trace/events/readahead.h | 2 +-
- mm/filemap.c                     | 6 +++---
- mm/readahead.c                   | 4 ++--
- mm/shmem.c                       | 2 +-
- 6 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-index 28b2a3deb954..1ddf7acce5ca 100644
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -200,7 +200,7 @@ static int ext4_readdir(struct file *file, struct dir_context *ctx)
- 					sb->s_bdev->bd_mapping,
- 					&file->f_ra, file, index,
- 					1 << EXT4_SB(sb)->s_min_folio_order);
--			file->f_ra.prev_pos = (loff_t)index << PAGE_SHIFT;
-+			WRITE_ONCE(file->f_ra.prev_pos, (loff_t)index << PAGE_SHIFT);
- 			bh = ext4_bread(NULL, inode, map.m_lblk, 0);
- 			if (IS_ERR(bh)) {
- 				err = PTR_ERR(bh);
-diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
-index 0df2aa81d884..d1232fc03c08 100644
---- a/fs/ntfs3/fsntfs.c
-+++ b/fs/ntfs3/fsntfs.c
-@@ -1239,7 +1239,7 @@ int ntfs_read_run_nb_ra(struct ntfs_sb_info *sbi, const struct runs_tree *run,
- 			if (!ra_has_index(ra, index)) {
- 				page_cache_sync_readahead(mapping, ra, NULL,
- 							  index, 1);
--				ra->prev_pos = (loff_t)index << PAGE_SHIFT;
-+				WRITE_ONCE(ra->prev_pos, (loff_t)index << PAGE_SHIFT);
- 			}
- 		}
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 876358cfe1b1..07f5127c8255 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -248,6 +248,7 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
  
-diff --git a/include/trace/events/readahead.h b/include/trace/events/readahead.h
-index 0997ac5eceab..63d8df6c2983 100644
---- a/include/trace/events/readahead.h
-+++ b/include/trace/events/readahead.h
-@@ -101,7 +101,7 @@ DECLARE_EVENT_CLASS(page_cache_ra_op,
- 		__entry->async_size = ra->async_size;
- 		__entry->ra_pages = ra->ra_pages;
- 		__entry->mmap_miss = ra->mmap_miss;
--		__entry->prev_pos = ra->prev_pos;
-+		__entry->prev_pos = READ_ONCE(ra->prev_pos);
- 		__entry->req_count = req_count;
- 	),
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 63f256307fdd..d3e2d4b826b9 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2771,7 +2771,7 @@ ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *iter,
- 	int i, error = 0;
- 	bool writably_mapped;
- 	loff_t isize, end_offset;
--	loff_t last_pos = ra->prev_pos;
-+	loff_t last_pos = READ_ONCE(ra->prev_pos);
- 
- 	if (unlikely(iocb->ki_pos < 0))
- 		return -EINVAL;
-@@ -2870,7 +2870,7 @@ ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *iter,
- 	} while (iov_iter_count(iter) && iocb->ki_pos < isize && !error);
- 
- 	file_accessed(filp);
--	ra->prev_pos = last_pos;
-+	WRITE_ONCE(ra->prev_pos, last_pos);
- 	return already_read ? already_read : error;
+ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		    struct vm_area_struct *vma);
++void ring_buffer_map_user_mapped_inc(struct trace_buffer *buffer, int cpu);
+ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
+ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
+ #endif /* _LINUX_RING_BUFFER_H */
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f16f053ef77d..59516b89e612 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7310,6 +7310,30 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(filemap_read);
-@@ -3122,7 +3122,7 @@ ssize_t filemap_splice_read(struct file *in, loff_t *ppos,
- 			len -= n;
- 			total_spliced += n;
- 			*ppos += n;
--			in->f_ra.prev_pos = *ppos;
-+			WRITE_ONCE(in->f_ra.prev_pos, *ppos);
- 			if (pipe_is_full(pipe))
- 				goto out;
- 		}
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 7b05082c89ea..de49b35b0329 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -142,7 +142,7 @@ void
- file_ra_state_init(struct file_ra_state *ra, struct address_space *mapping)
+ 
++/**
++ * ring_buffer_map_user_mapped_inc - Increment user_mapped counter for VMA duplication
++ * @buffer: The ring buffer
++ * @cpu: The CPU of the ring buffer to increment
++ *
++ * This is called when a VMA is duplicated (e.g., on fork()) to increment
++ * the user_mapped counter without remapping pages.
++ */
++void ring_buffer_map_user_mapped_inc(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return;
++
++	cpu_buffer = buffer->buffers[cpu];
++
++	guard(mutex)(&cpu_buffer->mapping_lock);
++
++	if (cpu_buffer->user_mapped)
++		__rb_inc_dec_mapped(cpu_buffer, true);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_map_user_mapped_inc);
++
+ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
  {
- 	ra->ra_pages = inode_to_bdi(mapping->host)->ra_pages;
--	ra->prev_pos = -1;
-+	WRITE_ONCE(ra->prev_pos, -1);
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 23de3719f495..b2ab95ed8d41 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8213,6 +8213,14 @@ static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
+ static inline void put_snapshot_map(struct trace_array *tr) { }
+ #endif
+ 
++static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
++{
++	struct ftrace_buffer_info *info = vma->vm_file->private_data;
++	struct trace_iterator *iter = &info->iter;
++
++	ring_buffer_map_user_mapped_inc(iter->array_buffer->buffer, iter->cpu_file);
++}
++
+ static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+ {
+ 	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+@@ -8232,6 +8240,7 @@ static int tracing_buffers_may_split(struct vm_area_struct *vma, unsigned long a
  }
- EXPORT_SYMBOL_GPL(file_ra_state_init);
  
-@@ -584,7 +584,7 @@ void page_cache_sync_ra(struct readahead_control *ractl,
- 	}
- 
- 	max_pages = ractl_max_pages(ractl, req_count);
--	prev_index = (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
-+	prev_index = (unsigned long long)READ_ONCE(ra->prev_pos) >> PAGE_SHIFT;
- 	/*
- 	 * A start of file, oversized read, or sequential cache miss:
- 	 * trivial case: (index - prev_index) == 1
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 5e7dcf5bc5d3..03569199baf4 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3642,7 +3642,7 @@ static ssize_t shmem_file_splice_read(struct file *in, loff_t *ppos,
- 		len -= n;
- 		total_spliced += n;
- 		*ppos += n;
--		in->f_ra.prev_pos = *ppos;
-+		WRITE_ONCE(in->f_ra.prev_pos, *ppos);
- 		if (pipe_is_full(pipe))
- 			break;
- 
--- 
-2.43.0
-
+ static const struct vm_operations_struct tracing_buffers_vmops = {
++	.open		= tracing_buffers_mmap_open,
+ 	.close		= tracing_buffers_mmap_close,
+ 	.may_split      = tracing_buffers_may_split,
+ };
