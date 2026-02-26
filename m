@@ -1,132 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801A438E11D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 07:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D0B2AE68
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 08:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772089860; cv=none; b=pQYV6yPzj5gTf3q1DX2G6MvicdrLX/B3sC4UJVddhX7FZAo6ahV1gctSoqzx/1vIuCRD/jTm1YqM0oG3I32Nx1bWcHNEO3t6z+GaOndTQ4xa8ti55eHtp54PilXIZeK8j73e+K1YhoKE2AdrxRpUUagha275jeEDr3raJ27y/Ig=
+	t=1772092828; cv=none; b=jBntsGv+aYdRC1mk2Or6GRJseJgHQKycV/s7mfCdNsfNkDGuYdIlEjCtJn2d4Xi91ZNb4pQcPKWKzk07BalzpwkqxpBzueS6E0bvOvZgb+M5faPallDDWUPQpvV38Z0WPH4xEhaYzuyy887hAatJ2Gz14iPDdq3zwEDlggR6Y9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772089860; c=relaxed/simple;
-	bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WhUnzTkvIF6XdCjwH7mwZTqedfWlP/tuKCq3phmdk6TAvf+QryGQOgHZfsmINtPoErklT9ts6d3+cfc1YCxqZaOXP78xKUHGkR5nC4IFyZ8cFUx6iztSihk2sHcSmcLnRMGvUWXMy+CPBzZ1+l7n8zQ4UpV+kIuDUNrvc4705oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LBsad0Qr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772092828; c=relaxed/simple;
+	bh=JFpdlOb/KF/KZ4CkgJfnZGNAnHuMauFGWP0L29YiCDs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dCZ79agOF1fTdQa3gnsSzSL8Vw065NKAVdfm/8W9IWam0pyU242sj90nkNnBHwDBzwcKH1nGEI22Qcqip/1CIB24U0tysTwqHrB0lg5W011rm/yxOl+he9leur2KD+QhKbOaIzR2D2usplUu2rxUQicpyS21u3je/RqgEC7dWO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jRpO4C+A; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LBsad0Qr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772089858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
-	b=LBsad0QrTlFY7HNwJe/aDUlsWTvIHItb+QeoJYXHpJRkr6DQ1NRZViGM7r8QLN8wckUMUj
-	aLfwuaqrB21fhe8AAuEYlxmpYKYfPf6n3A1DXmTxw1J88bwOKdEv9eQcbWwAJqgTvCra3i
-	nQU71ISWAGJdHKE15qNbeKmRwffsOw0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-NoavtoHyObqM-qs_65xvpg-1; Thu, 26 Feb 2026 02:10:57 -0500
-X-MC-Unique: NoavtoHyObqM-qs_65xvpg-1
-X-Mimecast-MFC-AGG-ID: NoavtoHyObqM-qs_65xvpg_1772089856
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4836c819456so3734595e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Feb 2026 23:10:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRpO4C+A"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-4398dd671daso567425f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 00:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772092825; x=1772697625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zokyEb7aHw2V+Pk6mMPVX7opPiBUmjfWHZD2WD3HqsE=;
+        b=jRpO4C+AcgDB0FQQMsdOs8M0a33cWcammxsot8hMauIJxlECe9TCuwn9D8fmwH/KoU
+         JXWRUO675nM0LMBU78LrMPwdPoiDwb4KlqfbOxp3WT4nZXBFLP0lySKNYfgKYs0LPc1j
+         JCn8sphkW92czigPc4pGRCgpd8EYZKVIEM1EemMxHg/xmVbpoI1oACIdlb0IxpbOONCI
+         TP6BNd8vBQeCUXDsH+GlkIOeEcrO94xRVD2BePu24+eFqu2GIFSj0hp4tRQdva/ng/7r
+         3kUzjKp+ZoUW33tTX1Fc6/R72ybtoqAaBWOqqZGG2Fq0V3DAaj1BB6Ga4Mrxaacf8Tb+
+         q14A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772089856; x=1772694656;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=krIXEowH17NJHRuO/jHDILvAfk2uCYZj8/qtCx7rZHc=;
-        b=TBaC//765nhlUZTZeCGI+0D2956mJkKihahqnPKyCN2HH1cNLTX+kdcxpXQvvEskOK
-         WH9E01mZOuM3Syiy7sTDnLrORwrhFfKzk/IcIjGf9skzsWm71208LtGRNI0uBhSwAiRf
-         jytFk2DUgWDbap9mJ34X78eV+GnhDFcDmuSiAbvvHp1g/Ogx6vYvTLMKXUUxymKTrT8Y
-         AtGdP2kVE0QYqb2vbwDhBMB1n9bKGZ+Xl0OgGBXm+NBSW/LQREz36eVGDrm2puOmEqpJ
-         8wGeeg5QNZt96hKBa0KSx5f4lmq/07ivX+q16fBAtUNxIRmd8Yhww4o1rQKWaAxFNZBy
-         CvLg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4nWsKRmmy4rcWLJB/seKDWc+GWuHWaOr3afQT6SkVFXfr7MAwZNWGhDdmOOgeIXuu17nqIgDtzPUlRI3NyiPlWpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYTeA3xzeRYxBaF4XT1X9f/2xft+AeJcc0l32DwVnv7YsGwBJj
-	iSItloHzzP/gpEP8lb/vahXBKvoBvPT+3zymttby/ZcWgoxZ7UjNJ6G2AZc86JUURSTyK72LTve
-	DJmw3u1qSIIpwum8pX975LM+9BeV/m7VHz2pQ90qw87PN+UOK2/Q8OoUx8q0emqOHJBMGcR5TRg
-	==
-X-Gm-Gg: ATEYQzwVBT7XzFTs7r9IpExuZI3hthSGs2Fsv9QtNXY2x5ati6PAl+fM3zRFG3/ccs1
-	8E1A1B3fwb1dSWmcZZV2HMZVSI2WMR1+mzBunCs/wX7Ha4da6rmFhizr2GtCUiIrYA6g5cgeVdv
-	+3sPgahn3MorUQ6/LpP/pz77xDmAc+p0NSC9vqJcDhXdOl7ql7DDCbzB8Wjv4V8TWzCL6wXe3pc
-	xqi9sqW1SerRzRfxKWFItMjxnpKfsxIxzHq7KYIImfeQjxn7aiC8DegCY5DCLYp+u1jQd1lPJ+2
-	lqGXgWtvmfbrQWq7S2SwT6cpcvQeWjtTIHWTE/NnZpMKN0bnJrSmuOQXsTRUZSLlnXtMqJbHFg0
-	U9K0tuFg4NlaynqbRuv/+4gZEV0AidVoN5LeESVZ9jHKV13xjIQ2xvuRu0RrXCgathaWiCT34sc
-	pR16d/us0FotuGw4M=
-X-Received: by 2002:a05:600c:1411:b0:483:acd9:bd18 with SMTP id 5b1f17b1804b1-483acd9be44mr200825515e9.1.1772089855783;
-        Wed, 25 Feb 2026 23:10:55 -0800 (PST)
-X-Received: by 2002:a05:600c:1411:b0:483:acd9:bd18 with SMTP id 5b1f17b1804b1-483acd9be44mr200825285e9.1.1772089855392;
-        Wed, 25 Feb 2026 23:10:55 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b770c2sm23532555e9.10.2026.02.25.23.10.53
+        d=1e100.net; s=20230601; t=1772092825; x=1772697625;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zokyEb7aHw2V+Pk6mMPVX7opPiBUmjfWHZD2WD3HqsE=;
+        b=EB0E9yXhqwWB7Eb0sLplQQ47Z0DTeVFEK9HRW3qnWKGp4N79+AF1nnY0JKhurOvKnb
+         paaPbFZ0eZlgJ+2aNTr87qpcvwTWsVFI9hhEF0ItCIRGRygB3Agln8330tYXSbIssDDU
+         siRw3BJT5dPpRh4kPcncGxm4Wep28vxLFxfGvuGkQmMUZrL5G2iwQuuq3ZmN3nKxVhtT
+         lUdvuii4EUjMIGEw8/ubZtxOFnMAQOkGvVOyAHjB9+Fhmp8iPPJcjChviiBDIPvUCbQo
+         Xb2uyjFQnv4opXqoNLGyiQTDcwsU90d6iZhexZ7qjBaBuAP1qfwPzOvIlmqSEYwXqqfe
+         6bDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfqqkhOb06UAnIqz4Uv+O8Hg7NPWUSiPfttGI0lbbeJ1o8ULXncSM21u9yu3SiX7cR/C7jgsaPqBuKWj+ASIxLLSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVlPZAOAW2HWQ62jo4HUquIla5j9n/avKXUlSIP9uelVKJ+wm8
+	4KIygaWJkKIXKjOOhbA7PU7+6DL/ou6c36WbyQYHUlA5IsHj9aeTlwYK
+X-Gm-Gg: ATEYQzxMXLme0jzR2s44ogV4cccgMlVGlKimpSUQzCLI2+a9Vjq11Vx03b7GkvAHjdC
+	H8GUcsWFfM/PRRRtbnb9ALQsWArBTTV3sVJXyJ3gaY6g7HsVwPqhMg80YPbyOXCNocNgwNynxTP
+	X61BrZK9EdPGNfkmQAHN4Ask5S6PUn0/UKtgFkNj0vZ7xlM1BFPhtu7GHej63vD7BdbTa3nYF9m
+	0DlOqZSmLksnUxavMu16jP0NqGAdxN8AVP+ZZBlsvwteXhdtHLyOUxh3lYFKvV1zSE3JAH7MYaX
+	psb0IDTehA2foImPMUqN8o1q4WrwS2NXsLCXoRwc1NStwhMrUtoo5jYTZULxuTFn8oQmQs2Hiwy
+	aeJv1zQ8b2fIe5Lc62r48ZRDjSnYsCIBpTgajyX4GI/BuwC9L1YEsbsHsOLAh7WI8wmDNVaT/sQ
+	a0TrTdvGKv+vSodydWVv91+uldbHuP9hI0IBoqAeEIHJCRaGOCBQ==
+X-Received: by 2002:a05:6000:2012:b0:437:7589:100c with SMTP id ffacd0b85a97d-43997f4654dmr2357823f8f.58.1772092823040;
+        Thu, 26 Feb 2026 00:00:23 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.215])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d3ff1csm38104086f8f.20.2026.02.26.00.00.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 23:10:54 -0800 (PST)
-Message-ID: <8fbc3ced19fb0c2a2171708073fa51ae308755b5.camel@redhat.com>
-Subject: Re: [PATCH v6 14/16] sched_ext: Export task_is_scx_enabled() for
- verification
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrea Righi <arighi@nvidia.com>, Joel
- Fernandes <joelagnelf@nvidia.com>, Steven Rostedt <rostedt@goodmis.org>,
- Nam Cao <namcao@linutronix.de>,  Juri Lelli <jlelli@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	sched-ext@lists.linux.dev, Tomas Glozar <tglozar@redhat.com>, Clark
- Williams	 <williams@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	linux-trace-kernel@vger.kernel.org
-Date: Thu, 26 Feb 2026 08:10:52 +0100
-In-Reply-To: <aZ8snSHWw-U0lVz2@slm.duckdns.org>
-References: <20260225095122.80683-1-gmonaco@redhat.com>
-	 <20260225095122.80683-15-gmonaco@redhat.com>
-	 <aZ8snSHWw-U0lVz2@slm.duckdns.org>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
+        Thu, 26 Feb 2026 00:00:22 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
+Date: Thu, 26 Feb 2026 16:00:13 +0800
+Message-Id: <20260226080013.270883-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <699fc6d3.a00a0220.21906d.0073.GAE@google.com>
+References: <699fc6d3.a00a0220.21906d.0073.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: v1q-Cf236K_sVal9A-By4gAabLHwGmIoq2DirYJjdqQ_1772089856
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-02-25 at 07:08 -1000, Tejun Heo wrote:
-> On Wed, Feb 25, 2026 at 10:51:20AM +0100, Gabriele Monaco wrote:
-> > When a sched_ext scheduler is loaded, depending on the configuration, i=
-t
-> > can handle also fair tasks, however it isn't trivial to understand if a
-> > certain task is currently handled by fair or ext outside of scheduler
-> > code. This can be a problem when writing verification or observability
-> > tools like RV monitors.
-> >=20
-> > Export a task_is_scx_enabled() to allow quick classification by using
-> > the scx state SCX_TASK_ENABLED.
->=20
-> This test already exists - task_on_scx(). Please feel free to move that o=
-ut
-> to include/linux/sched/ext.h.
+#syz test
 
-Mmh, right, thanks for the pointer!
-
-I see task_on_scx() is used in what looks like some sched core hot paths (
-pick_next_task() -> prio_less()), but I presume not inlining it isn't a big
-issue.
-
-Thanks,
-Gabriele
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 23de3719f495..72b39295a8b0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8213,6 +8213,14 @@ static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
+ static inline void put_snapshot_map(struct trace_array *tr) { }
+ #endif
+ 
++static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
++{
++	struct ftrace_buffer_info *info = vma->vm_file->private_data;
++	struct trace_iterator *iter = &info->iter;
++
++	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file, vma));
++}
++
+ static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+ {
+ 	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+@@ -8232,6 +8240,7 @@ static int tracing_buffers_may_split(struct vm_area_struct *vma, unsigned long a
+ }
+ 
+ static const struct vm_operations_struct tracing_buffers_vmops = {
++	.open		= tracing_buffers_mmap_open,
+ 	.close		= tracing_buffers_mmap_close,
+ 	.may_split      = tracing_buffers_may_split,
+ };
 
