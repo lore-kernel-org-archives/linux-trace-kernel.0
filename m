@@ -1,269 +1,247 @@
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53566361DD5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 14:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784323ECBFF
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 14:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772115023; cv=none; b=e41pT2IbZg3GoYglFrPRx1wQstoIfGAI+NM/+kfFk5Cf9gUFAqVfgzCkq1Fj0f6dslkJ5tY/ewEDXXKQceas8PLN1jC2t5J4p88+Hccszr1xbeBJwO6mSHrdY3PMYFcn50MFvoYBh74hGsjCnXY3z1igDj/eRwVa7uAzDRKhlAs=
+	t=1772116195; cv=none; b=MQXx4rxa5oSC4CK5+CysjTDyMHlDpvYeBbRmBQ0JdCRC/QG2fymYXj6dlol17mkuOZfuV73zkpKzkBwQabaJ3kQc9rwDxoGr+ONzkS19RuCfRuuBPvkGRu46Z21igrK4SjNY9KApbFtA3ISIx2YkwXXU0E1/MBfBdTIcys50bhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772115023; c=relaxed/simple;
-	bh=0Ci/NDRwL0hZFy24g11G4ACUm4juOqiwpJpDlJD36YY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Cg7xVmBZi/0/Xr/VlKsUGYsZZh2visS5ZttgXEEgeBEiDrJp3wNsDWK7ODFYER/IYw3LbT2a/xPG94GksjuKddytgFTFot45HmWsFC0u8Pf+f8DVet0QyZB5+ygmYc5DJB3MgaIfGGf9U5QYdn9asEwPDDZ4sP2fKY4dx2Ja64M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-7d4bd8c44f3so11584189a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 06:10:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772115020; x=1772719820;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vsRdUqfGYw4QvznuJ8XtT8YlKd3WY+H+Dk6gPnN+KAw=;
-        b=P4irLK2Ni+uLg0C6xp/fN79/L0wdq4hxBy6O/1e07i7n1tG/wcSEfHoN9BlU0uLkT+
-         UrW+mhShd98jemSw9bQqm+eAiMns9hbXHR80AKs56RoxBLH/t8Va2mBqeSN6+UlalAvg
-         0FZujOPlhMDgYLVO6n6nqJDIj0oEkAANR6onrPrIU1edNg1c6j/zddz9WR3kMkFci7FQ
-         SLY6W80PIKD6wnUsKiASyaTO82zsZRZO/yfMuQUg8FbtyMmT0tTfePh0WS6+E2kSjtsx
-         4gf7So4MDnT8Q+aN7PiydMEz/VnvE3iyT75GFKkKpQWsAycBJ0duFMifX4IpoEZ8TceN
-         Pw1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXAs8jMOHyDQ5IAgooiXx3w6202j+LSzR6gwO9qb3gQVLV0fwFcqeVZDnyxqsIjAUymoSrv2KZeBZE0+/TI8VSIU7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVTVF8eM+/FHINqF8UikSEKJ409BG9JY9bHc481nKJ18riyjdK
-	IVpyupLKcsRbjwkMS1xIsthmH2Sl+D/sSfjY7B5Zk+1Zck8qjr0rAJVBEEjb07Ogcma3+ReVpfp
-	nMwRehBDiNrBdVDNHfDi2XHHLW0ZkbNnJJIBNXAuW1ANyiyDo2q3UU8PjC4g=
+	s=arc-20240116; t=1772116195; c=relaxed/simple;
+	bh=09Rjq9YUiTCfdOZtaVDiYYUcU1HlVXywZdVoE4L+UrI=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=nLBVe4sXk1nKoE6yv8SAX6MRtKAg8Bm/EcGs9hVStnhxGopguuQ6h5UQZuCRF8f/YIhXZFI7O1YHn++7bkWe+6M5tzD8ocSHJkCGVf01M1nsfT3xmZA1ob7CWgv9VI4CYq699O17SUVE3EkMBF4X4ylGNGMgiZZLSEnrfkK1FhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xptgD2FT; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xptgD2FT"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:2917:b0:663:bd1:3b93 with SMTP id
- 006d021491bc7-679ef965193mr2169185eaf.46.1772115020224; Thu, 26 Feb 2026
- 06:10:20 -0800 (PST)
-Date: Thu, 26 Feb 2026 06:10:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
-Subject: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in
- bpf_trace_run3 (2)
-From: syzbot <syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772116185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AAX4WJ2Ss7mjZl94h6x1hLn056hNxjHN1j/COBhWBBI=;
+	b=xptgD2FTlKgBhNODGcIrRBp5blA/GA2rw0WiznS6TETnPB6o8qUhsVJg7xmMni+6JRIITy
+	GfcBPBhdnXx+9cHUaLcfBCHSLjGA/YNS/kr/PSdgC4DD2iinr47MB0lewbNYLKnnWWgaIm
+	ttz9L60EnqKSXm99wwPsa0f42GEZLTw=
+Date: Thu, 26 Feb 2026 14:29:36 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <655d0b2af1814312929e9e094854dd3ab029d094@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v1] mm: annotate data race of f_ra.prev_pos
+To: "Jan Kara" <jack@suse.cz>
+Cc: linux-mm@kvack.org, "Jiayuan Chen" <jiayuan.chen@shopee.com>,
+ syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com, "Theodore Ts'o"
+ <tytso@mit.edu>, "Andreas Dilger" <adilger.kernel@dilger.ca>, "Konstantin
+ Komarov" <almaz.alexandrovich@paragon-software.com>, "Steven Rostedt"
+ <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Hugh
+ Dickins" <hughd@google.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Jan Kara" <jack@suse.cz>,
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ntfs3@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+In-Reply-To: <2xzc3lp6ehtjwbzip4i5muh4g6oep4l72zh3j6sablfghbvbau@kh7famgorzrh>
+References: <20260226084020.163720-1-jiayuan.chen@linux.dev>
+ <2xzc3lp6ehtjwbzip4i5muh4g6oep4l72zh3j6sablfghbvbau@kh7famgorzrh>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    32a92f8c8932 Convert more 'alloc_obj' cases to default GFP..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10f64152580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2208a171312e89b7
-dashboard link: https://syzkaller.appspot.com/bug?extid=9ea7c90be2b24e189592
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16eaa55a580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-32a92f8c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/78386dbc59f1/vmlinux-32a92f8c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b38bbd9a7831/bzImage-32a92f8c.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
-BUG: KASAN: slab-use-after-free in bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
-Read of size 8 at addr ffff888054ecb718 by task syz-executor/5447
-
-CPU: 0 UID: 0 PID: 5447 Comm: syz-executor Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xba/0x230 mm/kasan/report.c:482
- kasan_report+0x117/0x150 mm/kasan/report.c:595
- __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
- bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
- __bpf_trace_mmap_lock_acquire_returned+0x17e/0x1d0 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x87/0xe0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x1a1/0x210 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:42 [inline]
- mmap_write_lock_killable include/linux/mmap_lock.h:557 [inline]
- dup_mmap+0x23d/0x1d90 mm/mmap.c:1740
- dup_mm kernel/fork.c:1530 [inline]
- copy_mm+0x13b/0x4b0 kernel/fork.c:1582
- copy_process+0x18b6/0x3cf0 kernel/fork.c:2223
- kernel_clone+0x248/0x8e0 kernel/fork.c:2654
- __do_sys_clone kernel/fork.c:2795 [inline]
- __se_sys_clone kernel/fork.c:2779 [inline]
- __x64_sys_clone+0x1b6/0x230 kernel/fork.c:2779
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f392a1c50d2
-Code: 89 e7 e8 b1 8b f7 ff 45 31 c0 31 d2 31 f6 64 48 8b 04 25 10 00 00 00 bf 11 00 20 01 4c 8d 90 d0 02 00 00 b8 38 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 66 89 c5 85 c0 75 3b 64 48 8b 04 25 10 00 00
-RSP: 002b:00007fffdffb7f00 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00007fffdffb7f00 RCX: 00007f392a1c50d2
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000001200011
-RBP: 00007fffdffb808c R08: 0000000000000000 R09: 0000000000000000
-R10: 0000555578a147d0 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000000927c0 R14: 000000000002f577 R15: 00007fffdffb80e0
- </TASK>
-
-Allocated by task 5916:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
- kasan_kmalloc include/linux/kasan.h:263 [inline]
- __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5339
- kmalloc_noprof include/linux/slab.h:962 [inline]
- kzalloc_noprof include/linux/slab.h:1200 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 5447:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
- poison_slab_object mm/kasan/common.c:253 [inline]
- __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
- kasan_slab_free include/linux/kasan.h:235 [inline]
- slab_free_hook mm/slub.c:2687 [inline]
- slab_free mm/slub.c:6124 [inline]
- kfree+0x1c1/0x630 mm/slub.c:6442
- rcu_do_batch kernel/rcu/tree.c:2617 [inline]
- rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
- handle_softirqs+0x22a/0x870 kernel/softirq.c:622
- __do_softirq kernel/softirq.c:656 [inline]
- invoke_softirq kernel/softirq.c:496 [inline]
- __irq_exit_rcu+0x5f/0x150 kernel/softirq.c:723
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:739
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1056 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1056
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:697
-
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
- kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
- __call_rcu_common kernel/rcu/tree.c:3131 [inline]
- call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
- bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
- bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
- __fput+0x44f/0xa70 fs/file_table.c:469
- task_work_run+0x1d9/0x270 kernel/task_work.c:233
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
- exit_to_user_mode_loop+0xed/0x480 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:325 [inline]
- do_syscall_64+0x32d/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888054ecb700
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 24 bytes inside of
- freed 192-byte region [ffff888054ecb700, ffff888054ecb7c0)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888054ecbd00 pfn:0x54ecb
-flags: 0x4fff00000000200(workingset|node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000200 ffff88801a8413c0 ffffea0001629850 ffff888030400288
-raw: ffff888054ecbd00 000000000010000d 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x1d2cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5909, tgid 5909 (syz.4.241), ts 194010998968, free_ts 194010573612
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
- prep_new_page mm/page_alloc.c:1897 [inline]
- get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
- __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
- alloc_slab_page mm/slub.c:3255 [inline]
- allocate_slab+0x77/0x660 mm/slub.c:3444
- new_slab mm/slub.c:3502 [inline]
- refill_objects+0x331/0x3c0 mm/slub.c:7134
- refill_sheaf mm/slub.c:2804 [inline]
- __pcs_replace_empty_main+0x2b9/0x620 mm/slub.c:4578
- alloc_from_pcs mm/slub.c:4681 [inline]
- slab_alloc_node mm/slub.c:4815 [inline]
- __kmalloc_cache_noprof+0x392/0x660 mm/slub.c:5334
- kmalloc_noprof include/linux/slab.h:962 [inline]
- kzalloc_noprof include/linux/slab.h:1200 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5913 tgid 5913 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1433 [inline]
- __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
- vfree+0x25a/0x400 mm/vmalloc.c:3479
- bpf_prog_calc_tag+0x315/0x370 kernel/bpf/core.c:335
- resolve_pseudo_ldimm64+0xbd/0xc90 kernel/bpf/verifier.c:21701
- bpf_check+0x1d83/0x1ce00 kernel/bpf/verifier.c:25958
- bpf_prog_load+0x1484/0x1ae0 kernel/bpf/syscall.c:3089
- __sys_bpf+0x618/0x950 kernel/bpf/syscall.c:6228
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff888054ecb600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888054ecb680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888054ecb700: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff888054ecb780: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888054ecb800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+February 26, 2026 at 21:21, "Jan Kara" <jack@suse.cz mailto:jack@suse.cz?=
+to=3D%22Jan%20Kara%22%20%3Cjack%40suse.cz%3E > wrote:
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+>=20On Thu 26-02-26 16:40:07, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> From: Jiayuan Chen <jiayuan.chen@shopee.com>
+> >=20=20
+>=20>  KCSAN reports a data race when concurrent readers access the same
+> >  struct file:
+> >=20=20
+>=20>  BUG: KCSAN: data-race in filemap_read / filemap_splice_read
+> >=20=20
+>=20>  write to 0xffff88811a6f8228 of 8 bytes by task 10061 on cpu 0:
+> >  filemap_splice_read+0x523/0x780 mm/filemap.c:3125
+> >  ...
+> >=20=20
+>=20>  write to 0xffff88811a6f8228 of 8 bytes by task 10066 on cpu 1:
+> >  filemap_read+0x98d/0xa10 mm/filemap.c:2873
+> >  ...
+> >=20=20
+>=20>  Both filemap_read() and filemap_splice_read() update f_ra.prev_pos
+> >  without synchronization. This is a benign race since prev_pos is onl=
+y
+> >  used as a hint for readahead heuristics in page_cache_sync_ra(), and=
+ a
+> >  stale or torn value merely results in a suboptimal readahead decisio=
+n,
+> >  not a correctness issue.
+> >=20=20
+>=20>  Use WRITE_ONCE/READ_ONCE to annotate all accesses to prev_pos acro=
+ss
+> >  the tree for consistency and silence KCSAN.
+> >=20=20
+>=20>  Reported-by: syzbot+6880f676b265dbd42d63@syzkaller.appspotmail.com
+> >  Link: https://syzkaller.appspot.com/bug?extid=3D6880f676b265dbd42d63
+> >  Signed-off-by: Jiayuan Chen <jiayuan.chen@shopee.com>
+> >=20
+>=20Given this, I think it would be much less intrusive and also more
+> explanatory to just mark prev_pos with __data_racy with appropriate rea=
+son
+> you're mentioning in the changelog.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Thanks for the suggestion. I'm fine either way =E2=80=94 __data_racy is i=
+ndeed
+cleaner and less intrusive for a purely heuristic field like this.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+I'll wait a bit to see if Andrew or other mm folks have a preference
+before resending. Happy to go with whichever approach they prefer.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>  Honza
+>=20
+>=20>=20
+>=20> ---
+> >  fs/ext4/dir.c | 2 +-
+> >  fs/ntfs3/fsntfs.c | 2 +-
+> >  include/trace/events/readahead.h | 2 +-
+> >  mm/filemap.c | 6 +++---
+> >  mm/readahead.c | 4 ++--
+> >  mm/shmem.c | 2 +-
+> >  6 files changed, 9 insertions(+), 9 deletions(-)
+> >=20=20
+>=20>  diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+> >  index 28b2a3deb954..1ddf7acce5ca 100644
+> >  --- a/fs/ext4/dir.c
+> >  +++ b/fs/ext4/dir.c
+> >  @@ -200,7 +200,7 @@ static int ext4_readdir(struct file *file, struc=
+t dir_context *ctx)
+> >  sb->s_bdev->bd_mapping,
+> >  &file->f_ra, file, index,
+> >  1 << EXT4_SB(sb)->s_min_folio_order);
+> >  - file->f_ra.prev_pos =3D (loff_t)index << PAGE_SHIFT;
+> >  + WRITE_ONCE(file->f_ra.prev_pos, (loff_t)index << PAGE_SHIFT);
+> >  bh =3D ext4_bread(NULL, inode, map.m_lblk, 0);
+> >  if (IS_ERR(bh)) {
+> >  err =3D PTR_ERR(bh);
+> >  diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
+> >  index 0df2aa81d884..d1232fc03c08 100644
+> >  --- a/fs/ntfs3/fsntfs.c
+> >  +++ b/fs/ntfs3/fsntfs.c
+> >  @@ -1239,7 +1239,7 @@ int ntfs_read_run_nb_ra(struct ntfs_sb_info *s=
+bi, const struct runs_tree *run,
+> >  if (!ra_has_index(ra, index)) {
+> >  page_cache_sync_readahead(mapping, ra, NULL,
+> >  index, 1);
+> >  - ra->prev_pos =3D (loff_t)index << PAGE_SHIFT;
+> >  + WRITE_ONCE(ra->prev_pos, (loff_t)index << PAGE_SHIFT);
+> >  }
+> >  }
+> >=20=20
+>=20>  diff --git a/include/trace/events/readahead.h b/include/trace/even=
+ts/readahead.h
+> >  index 0997ac5eceab..63d8df6c2983 100644
+> >  --- a/include/trace/events/readahead.h
+> >  +++ b/include/trace/events/readahead.h
+> >  @@ -101,7 +101,7 @@ DECLARE_EVENT_CLASS(page_cache_ra_op,
+> >  __entry->async_size =3D ra->async_size;
+> >  __entry->ra_pages =3D ra->ra_pages;
+> >  __entry->mmap_miss =3D ra->mmap_miss;
+> >  - __entry->prev_pos =3D ra->prev_pos;
+> >  + __entry->prev_pos =3D READ_ONCE(ra->prev_pos);
+> >  __entry->req_count =3D req_count;
+> >  ),
+> >=20=20
+>=20>  diff --git a/mm/filemap.c b/mm/filemap.c
+> >  index 63f256307fdd..d3e2d4b826b9 100644
+> >  --- a/mm/filemap.c
+> >  +++ b/mm/filemap.c
+> >  @@ -2771,7 +2771,7 @@ ssize_t filemap_read(struct kiocb *iocb, struc=
+t iov_iter *iter,
+> >  int i, error =3D 0;
+> >  bool writably_mapped;
+> >  loff_t isize, end_offset;
+> >  - loff_t last_pos =3D ra->prev_pos;
+> >  + loff_t last_pos =3D READ_ONCE(ra->prev_pos);
+> >=20=20
+>=20>  if (unlikely(iocb->ki_pos < 0))
+> >  return -EINVAL;
+> >  @@ -2870,7 +2870,7 @@ ssize_t filemap_read(struct kiocb *iocb, struc=
+t iov_iter *iter,
+> >  } while (iov_iter_count(iter) && iocb->ki_pos < isize && !error);
+> >=20=20
+>=20>  file_accessed(filp);
+> >  - ra->prev_pos =3D last_pos;
+> >  + WRITE_ONCE(ra->prev_pos, last_pos);
+> >  return already_read ? already_read : error;
+> >  }
+> >  EXPORT_SYMBOL_GPL(filemap_read);
+> >  @@ -3122,7 +3122,7 @@ ssize_t filemap_splice_read(struct file *in, l=
+off_t *ppos,
+> >  len -=3D n;
+> >  total_spliced +=3D n;
+> >  *ppos +=3D n;
+> >  - in->f_ra.prev_pos =3D *ppos;
+> >  + WRITE_ONCE(in->f_ra.prev_pos, *ppos);
+> >  if (pipe_is_full(pipe))
+> >  goto out;
+> >  }
+> >  diff --git a/mm/readahead.c b/mm/readahead.c
+> >  index 7b05082c89ea..de49b35b0329 100644
+> >  --- a/mm/readahead.c
+> >  +++ b/mm/readahead.c
+> >  @@ -142,7 +142,7 @@ void
+> >  file_ra_state_init(struct file_ra_state *ra, struct address_space *m=
+apping)
+> >  {
+> >  ra->ra_pages =3D inode_to_bdi(mapping->host)->ra_pages;
+> >  - ra->prev_pos =3D -1;
+> >  + WRITE_ONCE(ra->prev_pos, -1);
+> >  }
+> >  EXPORT_SYMBOL_GPL(file_ra_state_init);
+> >=20=20
+>=20>  @@ -584,7 +584,7 @@ void page_cache_sync_ra(struct readahead_contr=
+ol *ractl,
+> >  }
+> >=20=20
+>=20>  max_pages =3D ractl_max_pages(ractl, req_count);
+> >  - prev_index =3D (unsigned long long)ra->prev_pos >> PAGE_SHIFT;
+> >  + prev_index =3D (unsigned long long)READ_ONCE(ra->prev_pos) >> PAGE=
+_SHIFT;
+> >  /*
+> >  * A start of file, oversized read, or sequential cache miss:
+> >  * trivial case: (index - prev_index) =3D=3D 1
+> >  diff --git a/mm/shmem.c b/mm/shmem.c
+> >  index 5e7dcf5bc5d3..03569199baf4 100644
+> >  --- a/mm/shmem.c
+> >  +++ b/mm/shmem.c
+> >  @@ -3642,7 +3642,7 @@ static ssize_t shmem_file_splice_read(struct f=
+ile *in, loff_t *ppos,
+> >  len -=3D n;
+> >  total_spliced +=3D n;
+> >  *ppos +=3D n;
+> >  - in->f_ra.prev_pos =3D *ppos;
+> >  + WRITE_ONCE(in->f_ra.prev_pos, *ppos);
+> >  if (pipe_is_full(pipe))
+> >  break;
+> >=20=20
+>=20>  --=20
+>=20>  2.43.0
+> >=20
+>=20--=20
+>=20Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+>
