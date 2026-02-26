@@ -1,158 +1,67 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3C13290D0;
-	Thu, 26 Feb 2026 17:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE74F332629;
+	Thu, 26 Feb 2026 17:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772127249; cv=none; b=VEaj5xB/Cafxb2Pp8iSEMa0Rs/1CxpbukIQvfkpFSO9jjU6IdVEkBFJA/PqQnFOSxcAbCzqb3xzhwlDFVv78rg2Cc+nAsikcjpVCYk7QmIPbj2I5nYEHIHTnyYRgG8tFLM76ItLXOnEgiM2MGmik7ImDLI31REyoE6jqs9Fygg0=
+	t=1772127397; cv=none; b=s6xb6Jp3sSjV9K1L/7/NRzKB3CI8y93Qct1WoX5AfBAHUvEf+Hph73Kh4D9wI4Z2r72oTW8ZUPF6pHOYKvI/va8Q1PPkbOblSyRj9k7yCrzIgPEatYBPjuyh6bnRHlkNBZ+NDVAfWl9TXJ4WA6Ajdnjn1TJQmhFR12wFd9JFXww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772127249; c=relaxed/simple;
-	bh=w6rfr62I76P8GyP+eM/54SEaBwKCyQxQYfI0r39jlCE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H1Bj1ZO07R2366BpccawEwpmQ76PVfX9M7roPCFTMvWKhoA//shUJ64k4sghspgb3jyriB/4WPFpsE8aR8GB64i9aVBkkjnu5+9jjPX8XXqv9+wVnS7J+322gd41kNB9VqRPZcDUoXnno3PgOa5ZWH/XUTtZWA1YGEzIxCXEK2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=d9ojlokp; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="d9ojlokp"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61QH1UXA2678715;
-	Thu, 26 Feb 2026 17:33:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	default; bh=lKfUcRLZBYeHAqGGFb2DLXJbbTfTyn7FteL9r80qGNE=; b=d9oj
-	lokpisg1yHzOYMduYi/BxOV3Ym40PL+9SWt6hcfBQ+tzekQygDz8B9RBoAcutMJx
-	O+NGSywZEnI5E0zuYdkm+gZnUx2iL0Kvq050i4Q4mc2kk9sV7WRgYAQwu3H6LZjT
-	KmWg8iMXng4igsMdXGui8iJ1MklCKm4LyZanfjXbhEL4F98EHh+9W7/VQOKSnk98
-	WtrtD7Yu0RuJiFwOr4I51NZaer0pqzDJ+ZYQ1VwwZo8B2BF5sWxb+Zl0oZVsjbgF
-	gEM/OCGL+lnz9izJdLccMvji7zJhib2GSyrEpdIbRi9aOOPCc3erOB8IOs8GkOoZ
-	E0FJ4GNQwSG9uZeIHg==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 4chu8u6xw7-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Feb 2026 17:33:46 +0000 (GMT)
-Received: from LL-DJCZ134.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH006.crowdstrike.sys (10.100.11.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Thu, 26 Feb 2026 17:33:45 +0000
-From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-To: <bpf@vger.kernel.org>, <linux-open-source@crowdstrike.com>
-CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-        <jolsa@kernel.org>, <rostedt@goodmis.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: [RFC PATCH bpf-next v2 2/3] ftrace: Use kallsyms binary search for single-symbol lookup
-Date: Thu, 26 Feb 2026 12:33:41 -0500
-Message-ID: <20260226173342.3565919-3-andrey.grodzovsky@crowdstrike.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260226173342.3565919-1-andrey.grodzovsky@crowdstrike.com>
-References: <20260226173342.3565919-1-andrey.grodzovsky@crowdstrike.com>
+	s=arc-20240116; t=1772127397; c=relaxed/simple;
+	bh=clKjpLwJiQkI3wyvl2Da5W9C455aJyBwL+2RpRZJIko=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xp38ucEkdAtuYddtCjiA5B+hp3cU5DJq6cdkQuBN+8voNXdlTAL4SGdl1ZRsoJ7bMOPbRnbM9STo7A+me/Ra+gEUT/d+trIRjzoeMHc76YLt2Ip4ojleru1mtyIGosyTfr43omn1nQC80Z/QDdc68RzloUxtY8Q/mZ3qdUtasTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id D45DD587D3;
+	Thu, 26 Feb 2026 17:36:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 207DC1B;
+	Thu, 26 Feb 2026 17:36:33 +0000 (UTC)
+Date: Thu, 26 Feb 2026 12:36:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] ring-buffer: Skip invalid sub-buffers when
+ validating persistent ring buffer
+Message-ID: <20260226123655.4d2ca691@gandalf.local.home>
+In-Reply-To: <20260226215833.4ad4f07f2cd06c9ccf5c1afa@kernel.org>
+References: <177191595057.435720.10116014529518464418.stgit@mhiramat.tok.corp.google.com>
+	<177191597760.435720.2484229987964512451.stgit@mhiramat.tok.corp.google.com>
+	<20260226215833.4ad4f07f2cd06c9ccf5c1afa@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH008.crowdstrike.sys (10.100.11.75) To
- 04WPEXCH006.crowdstrike.sys (10.100.11.70)
-X-Disclaimer: USA
-X-Proofpoint-ORIG-GUID: K2zhyJLl5QxQm8JuVUjvhn6_Fc7LmR0Q
-X-Proofpoint-GUID: K2zhyJLl5QxQm8JuVUjvhn6_Fc7LmR0Q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI2MDE1OCBTYWx0ZWRfX9w5e2q/M6jjz
- v+GFVMnIzRcFgOmksIMjQG0oQDAwThdkTInrcliWDDcZyIPFwjafql0KRPL+jgOshP7gQhKo3Ek
- DrJoA9Owv350TSqgR3vWa9VPaqKk9LE6kkDbBNKw1YRbGOqNJ3Z1D8oXR2V5GTSsDC+DMEGS39L
- wsmnIJ7mqVe6XFnB//7UAFvMnEarIrUiQVTUGax5rUI/QiPTXKrTt1QtBvuyIaPnoJaXTVmWsUV
- OM2sSU0k46Q4h8T6OVOD2aP9fE/B+fpSgeGtWxvN6Up/VPcn8Ify8fL0h5OEzUntt2ZD0TcKo+m
- AEe0SaewNeaPOq6eRBJuCyuyOb9j5u9WvpS/X90Bp9kKl8L1Gb27ZqJlyefHjVeUAWT99vfv4gx
- dHuKmGdM7wpboI5kagIH/yTsyP5poQNVwIzhaFQMyUr3y8zo2hD60y2DgglX1sp2qosfElIIG0m
- IPbfMqgjo8r/bDwZd6Q==
-X-Authority-Analysis: v=2.4 cv=P7o3RyAu c=1 sm=1 tr=0 ts=69a083fb cx=c_pps
- a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
- a=EjBHVkixTFsA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=T2KQ53IYiC3MXPrxx8bB:22 a=vDKVRhTs-M86Ea50iKLw:22 a=pl6vuDidAAAA:8
- a=UND7n31CiPwrdizkzM0A:9
-X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11713
- signatures=596818
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2602260158
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 207DC1B
+X-Stat-Signature: gjbshfef4ebzfqx91teg6fu5cde8136q
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+Fn/E2FXi/bBAS8K+U/shLmgUIWYKErqo=
+X-HE-Tag: 1772127393-43070
+X-HE-Meta: U2FsdGVkX1+LKatPv63OdrtOGnLJzqbphUJrUVG1ieBYoI2A7KWxfTDmr/k7f+ifjinY7NjcV6DBwiLxjVk4O1qQf5CGPKV7oDl5Nspcy0HaN4EfT4N8DRtdPILDUB2tORDo1novXqbhGI3bMFl1KbeelptwgAawPFqOcYGqyrjWeEj/fSkf/owx4hNRe0xQ4haEfAY1NGGvq4MFOQTyzBxdi9VVOR7VI9gA2Rp+TwKk/vPBFMIp3keTHGcgbsxrsmTLXv/6/0f64t+H6ZmmaQe/kYh3FJu07/n5bdtN6soCnKOHQmPHnnK1aJo2Qw6cxiL7dk0hZvlk1hVTQqiDTQknlEneFtwE
 
-When ftrace_lookup_symbols() is called with a single symbol (cnt == 1),
-use kallsyms_lookup_name() for O(log N) binary search instead of the
-full linear scan via kallsyms_on_each_symbol().
+On Thu, 26 Feb 2026 21:58:33 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-ftrace_lookup_symbols() was designed for batch resolution of many
-symbols in a single pass.  For large cnt this is efficient: a single
-O(N) walk over all symbols with O(log cnt) binary search into the
-sorted input array.  But for cnt == 1 it still decompresses all ~200K
-kernel symbols only to match one.
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -2058,17 +2058,18 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> >  		if (ret < 0) {
+> >  			pr_info("Ring buffer meta [%d] invalid buffer page\n",
+> >  				cpu_buffer->cpu);  
+> 
+> This pr_info() should be removed too, because multiple pages
+> can be discarded.
 
-kallsyms_lookup_name() uses the sorted kallsyms index and needs only
-~17 decompressions for a single lookup.
+I wouldn't discard it, but instead add a "once" variable, where it shows it
+only once per CPU.
 
-This is the common path for kprobe.session with exact function names,
-where libbpf sends one symbol per BPF_LINK_CREATE syscall.
-
-If binary lookup fails (duplicate symbol names where the first match
-is not ftrace-instrumented, or module symbols), the function falls
-through to the existing linear scan path.
-
-Before (cnt=1, 50 kprobe.session programs):
-  Attach: 858 ms  (kallsyms_expand_symbol 25% of CPU)
-
-After:
-  Attach:  52 ms  (16x faster)
-
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
----
- kernel/trace/ftrace.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 827fb9a0bf0d..cfa0c7ad7cbf 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -9263,6 +9263,15 @@ static int kallsyms_callback(void *data, const char *name, unsigned long addr)
-  * @addrs array, which needs to be big enough to store at least @cnt
-  * addresses.
-  *
-+ * For a single symbol (cnt == 1), uses kallsyms_lookup_name() which
-+ * performs an O(log N) binary search via the sorted kallsyms index.
-+ * This avoids the full O(N) linear scan over all kernel symbols that
-+ * the multi-symbol path requires.
-+ *
-+ * For multiple symbols, uses a single-pass linear scan via
-+ * kallsyms_on_each_symbol() with binary search into the sorted input
-+ * array.
-+ *
-  * Returns: 0 if all provided symbols are found, -ESRCH otherwise.
-  */
- int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
-@@ -9270,6 +9279,19 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
- 	struct kallsyms_data args;
- 	int found_all;
- 
-+	/* Fast path: single symbol uses O(log N) binary search */
-+	if (cnt == 1) {
-+		addrs[0] = kallsyms_lookup_name(sorted_syms[0]);
-+		if (addrs[0] && ftrace_location(addrs[0]))
-+			return 0;
-+		/*
-+		 * Binary lookup can fail for duplicate symbol names
-+		 * where the first match is not ftrace-instrumented,
-+		 * or for module symbols.  Retry with linear scan.
-+		 */
-+	}
-+
-+	/* Batch path: single-pass O(N) linear scan */
- 	memset(addrs, 0, sizeof(*addrs) * cnt);
- 	args.addrs = addrs;
- 	args.syms = sorted_syms;
--- 
-2.34.1
-
+-- Steve
