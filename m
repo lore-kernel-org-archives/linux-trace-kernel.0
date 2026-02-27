@@ -1,184 +1,152 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2CB35A3A6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B787F39E192;
+	Fri, 27 Feb 2026 10:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772186527; cv=none; b=dEMFNUpUxRhPNEnsMb0yC0TVV8pFoh2H7LIXIrIueu+Zxyg4tOrAnoNrkccVg+wlS8ReQAfkgbu/A9peJrQ8YM8VfjkrWYNyeZ6S1g0ZodbKsNLeNzYAnr6ye9d5PJuhppp9d3AcY2IhALBFC0mf+QeX9Cs5EAqyLCSdJGZ0WG4=
+	t=1772186831; cv=none; b=SUPeuNzjIEJ+ipI+jmDhzOgOuadSHRk8GheHfQqt+SC7VKICfATJKOI1xDVuNm5OFRkJdsOV4ojHynZutdizJxpewDBtAZPSYU4Nbt1OoMz3JVLXH/FwoFjS4mrLRPqvogbKOJO6/1VyoVSpHxyqYyXZXIakwmg3Tb+DowJ3Fi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772186527; c=relaxed/simple;
-	bh=2VaJOmkUSU/W/BZJeyRFO41YmjgBSZYWuJmiSwhM65c=;
+	s=arc-20240116; t=1772186831; c=relaxed/simple;
+	bh=Mp1JXSTiLvThOX9+iafDoJIcaXcdqjP2+vG+mtpInGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KIgiM0FPSoCqfmFwjg0H01UHZICkYx9eLV00e5V1rLSdNdOfJJblj+MoOyvNtJiAKvLTVpLWztcuDmYnWSIRRfAxD1Upuq4CfDeCwkSbdOQJsaKNHp4dBy8pScLK9WF0C4Q8BSXDZUeK6PCLV+luhToqWFC4DPIQMBXfWkFsaf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yoi1yU94; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lcg1qTnGtQhxt5quDXzvXc3u59WD5Tvz+9tBRHoXa4RpQIAsuzic/NiSRjbecLsDtE9T9sDc5riyBw/BjfkuNeCd2bX4+EOOT4hcmjryOGDHnNJrL3MoPXzmgorL8VamgIgejZgTIJEyJlPCMciueFLYOpMWKkiUpLgCe35h+Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LELv1nLz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yoi1yU94"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-48378136adcso10924085e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 02:02:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772186524; x=1772791324; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsndPfFBrY0DlP1r/HjD63Wwnr9fz/D+PLW9Y98RIro=;
-        b=yoi1yU94VP9xTCrQZW2CS3lQkvTNBkNwdauTMaqPzNaaBMLnr16ASY4PwxbHctZDZ2
-         ymYrWDBLf9Qh3n2TT2zQOjB3zQUUFQiFxYdBiaKkq8aAhSLvhvoF7qtjXEWz2zKpU+0y
-         VsShLoLuYJOGqv6G5SOsoVTfWJyyZ8YE5jVfBm/glJ8QhiLLmWkL3RX2MFz4QbGac6xk
-         rAiPdj7xHaOUlBkmczlYjXXp678CwNOTm9QzEE5rAs1ry8AJS6akW/jWMEJqUchK7c7c
-         YEwMFVJK1986Z+GRmDMU2VwsQerqkyH0Yr8j35JQj2go0xWrFF5G9yCq6v68TZPpn1gs
-         AVCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772186524; x=1772791324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qsndPfFBrY0DlP1r/HjD63Wwnr9fz/D+PLW9Y98RIro=;
-        b=L8CX/x/c3mqOXWXxvcEaiIh7SYSgJuszCveKSgRUNldLTk59phOv5wl78NWUPtMT9z
-         7ylMV4/YyMa2WYnW60jU30jqpgj5Ka20eWjHLxp7FAu9KGsrSVf/ijP7JLylEmI91zq0
-         BDsdch8SpDz78v8cMyd+ZFrlLVE9xk5gFR9gI8PdiRVL8G1DljGbDywNTOeowsJL7BG3
-         LLkXfMYBtvBDpEd+n7ngZYLuhzQxSRe1nbDJtjTNzlgUkH7UwZMcUKeWiz/c/sa6dkVy
-         vmhtLNaTjApT1qL1+39dU2ZRn2/K3nVXRWuKaH60UxMhZE6f4lZzM6r/Lky1DpesRnN3
-         w1OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWV+Tq+GZWVFo1Z/RXOLjn8zRlSKH52G2NTGtzisjO6tjGeEo4HWsRQ9u7lV7NrmJvfsSIg4+jeaAJmIlwG9q2CW58=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4BFlo9/fvjSPRijOx7Q9i/8B3AcSTTwY+d8HFdUE2rKC8HjUT
-	5Yy78LePFZKmBnWybrPqB2XjFQiJGPo5ngc2VkHMlXIHGtB1pVW1Uuj6xq58IT+row==
-X-Gm-Gg: ATEYQzx8IKAE5Wq6Z0C+MLPGsZiAyKntpsN4fLN3Hm/oavk/I3dTn+g8UIYU0k4d70t
-	Ry0ZSsCaa9osbyGXDe0TQYwCsj881KggMt+6fWn+LpkS/suVtDpzOycm7sY8Xdcvrb3nWM5IZYd
-	Z63BQEdWPUikwe+5vg1oKdRIQ3hgcPTXz8w3lc7WSAaALDuwa9zWhyFmWfTgTGZjCYgDERgID7e
-	g62SyiKdf4xlr8MH7CNqNAS9+vsuBnXsT4AQqDKg98IyygGue4AyIQY7IqeaeNmPwbUuskfFv4H
-	rnDgqxHwnE2FaUulSLNnVxmdulZka5z8tAGeom1WPQrIeipR8ZpY8NHkplv1xNICbCm+K8a30Y6
-	iZVEit8q7rRBK0bgd+YvAdMcRTKzQJ5vbEgqlxp3fzU9UAQng4b311bptZLJaxKYD8HcKOu7uul
-	hVHRtShqJg1KGXBihaJYGlJUNO+riTWUhuayhDZtA69dxZb1ImuGM2JhmuiuoTseNs6gg=
-X-Received: by 2002:a05:600c:46c4:b0:483:7783:537b with SMTP id 5b1f17b1804b1-483c9c0f34cmr31377655e9.24.1772186523881;
-        Fri, 27 Feb 2026 02:02:03 -0800 (PST)
-Received: from google.com (135.91.155.104.bc.googleusercontent.com. [104.155.91.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bd70e6c9sm171777575e9.8.2026.02.27.02.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Feb 2026 02:02:03 -0800 (PST)
-Date: Fri, 27 Feb 2026 10:02:00 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Qing Wang <wangqing7171@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-Subject: Re: [PATCH] tracing: Fix WARN_ON in tracing_buffers_mmap_close
-Message-ID: <aaFrmHzIAkEe7ufy@google.com>
-References: <20260227025842.1085206-1-wangqing7171@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LELv1nLz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC9A2C116C6;
+	Fri, 27 Feb 2026 10:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772186830;
+	bh=Mp1JXSTiLvThOX9+iafDoJIcaXcdqjP2+vG+mtpInGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LELv1nLziJIInpPEfBGwhAV2gMFZg12s7lFE0KxfTQldEo18NluQr9e3C+Zct+lyZ
+	 drhXLzadFmCAbIbeq3bsgUtgfAnwVSB9B/lX0VpyOvlAJ9ihOIftg2vbjxkn/BO8qX
+	 uVjQZAzhR6+W+W0J8fzC9LGfhszCyPHqWUyfeWWQk54n5K8J2+Lq3RSoWH238qvmja
+	 zUj111yecfmSqu9Gzo21TEY0Dy7GefpBTvyuB7b0hFZ8/UWmvbKQ/1AsQMoZt7sN+P
+	 SMQhFN/3rME7rBp2YRNdOAUhubk/iwSO58hKw1S3dlOGtmn8p+ue+G/QetiQW6CaQr
+	 Vs7VZ81sfYPdg==
+Date: Fri, 27 Feb 2026 11:06:39 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>, 
+	"Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Bharath SM <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, 
+	Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, 
+	Salah Triki <salah.triki@gmail.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
+	Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Nicolas Pitre <nico@fluxnic.net>, 
+	Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Yangtao Li <frank.li@vivo.com>, Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, 
+	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
+	Dave Kleikamp <shaggy@kernel.org>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
+	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Anders Larsen <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, 
+	Johannes Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, 
+	ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
+	linux-x25@vger.kernel.org
+Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
+Message-ID: <20260227-herab-wolken-c52d560f40d5@brauner>
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260227025842.1085206-1-wangqing7171@gmail.com>
+In-Reply-To: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
 
-On Fri, Feb 27, 2026 at 10:58:42AM +0800, Qing Wang wrote:
-> When a process forks, the child process copies the parent's VMAs but the
-> user_mapped reference count is not incremented. As a result, when both the
-> parent and child processes exit, tracing_buffers_mmap_close() is called
-> twice. On the second call, user_mapped is already 0, causing the function to
-> return -ENODEV and triggering a WARN_ON.
+On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
+> Christian said [1] to "just do it" when I proposed this, so here we are!
 > 
-> Fix it by incrementing the user_mapped reference count without re-mapping
-> the pages in the VMA's open callback.
+> For historical reasons, the inode->i_ino field is an unsigned long,
+> which means that it's 32 bits on 32 bit architectures. This has caused a
+> number of filesystems to implement hacks to hash a 64-bit identifier
+> into a 32-bit field, and deprives us of a universal identifier field for
+> an inode.
+> 
+> This patchset changes the inode->i_ino field from an unsigned long to a
+> u64. This shouldn't make any material difference on 64-bit hosts, but
+> 32-bit hosts will see struct inode grow by at least 4 bytes. This could
+> have effects on slabcache sizes and field alignment.
+> 
+> The bulk of the changes are to format strings and tracepoints, since the
+> kernel itself doesn't care that much about the i_ino field. The first
+> patch changes some vfs function arguments, so check that one out
+> carefully.
+> 
+> With this change, we may be able to shrink some inode structures. For
+> instance, struct nfs_inode has a fileid field that holds the 64-bit
+> inode number. With this set of changes, that field could be eliminated.
+> I'd rather leave that sort of cleanups for later just to keep this
+> simple.
+> 
+> Much of this set was generated by LLM, but I attributed it to myself
+> since I consider this to be in the "menial tasks" category of LLM usage.
+> 
+> [1]: https://lore.kernel.org/linux-fsdevel/20260219-portrait-winkt-959070cee42f@brauner/
 
-Hum, not sure this is entirely correct. We do set VM_DONTCOPY when creating the
-mapping (see __rb_map_vma). So AFAICT ->open() is not called in this situation (see
-dup_mmap())
+I'm working under the assumption that we have crossed the threshold and
+people send patches they did completely themselves and also patches that
+were done with the help of or almost completely by a tool. You have to
+defend it one way or the other.
 
-> 
-> Fixes: cf9f0f7c4c5bb ("tracing: Allow user-space mapping of the ring-buffer")
-> Reported-by: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3b5dd2030fe08afdf65d
-> Tested-by: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
-> ---
->  include/linux/ring_buffer.h |  1 +
->  kernel/trace/ring_buffer.c  | 21 +++++++++++++++++++++
->  kernel/trace/trace.c        | 13 +++++++++++++
->  3 files changed, 35 insertions(+)
-> 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index 876358cfe1b1..d862fa610270 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -248,6 +248,7 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
->  
->  int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  		    struct vm_area_struct *vma);
-> +void ring_buffer_map_dup(struct trace_buffer *buffer, int cpu);
->  int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
->  int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
->  #endif /* _LINUX_RING_BUFFER_H */
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index f16f053ef77d..17d0ea0cc3e6 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7310,6 +7310,27 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  	return err;
->  }
->  
-> +/*
-> + * This is called when a VMA is duplicated (e.g., on fork()) to increment
-> + * the user_mapped counter without remapping pages.
-> + */
-> +void ring_buffer_map_dup(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +
-> +	if (WARN_ON(!cpumask_test_cpu(cpu, buffer->cpumask)))
-> +		return;
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +
-> +	guard(mutex)(&cpu_buffer->mapping_lock);
-> +
-> +	if (cpu_buffer->user_mapped)
-> +		__rb_inc_dec_mapped(cpu_buffer, true);
-> +	else
-> +		WARN(1, "Unexpected buffer stat, it should be mapped");
-> +}
-> +
->  int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer;
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 23de3719f495..1e7c032a72d2 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -8213,6 +8213,18 @@ static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
->  static inline void put_snapshot_map(struct trace_array *tr) { }
->  #endif
->  
-> +/*
-> + * This is called when a VMA is duplicated (e.g., on fork()) to increment
-> + * the user_mapped counter without remapping pages.
-> + */
-> +static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> +	struct trace_iterator *iter = &info->iter;
-> +
-> +	ring_buffer_map_dup(iter->array_buffer->buffer, iter->cpu_file);
-> +}
-> +
->  static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
->  {
->  	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> @@ -8232,6 +8244,7 @@ static int tracing_buffers_may_split(struct vm_area_struct *vma, unsigned long a
->  }
->  
->  static const struct vm_operations_struct tracing_buffers_vmops = {
-> +	.open		= tracing_buffers_mmap_open,
->  	.close		= tracing_buffers_mmap_close,
->  	.may_split      = tracing_buffers_may_split,
->  };
-> -- 
-> 2.34.1
-> 
+Frankly, as long as you understand what you're doing in general well and
+I know that you are a trusted and thorough developer/maintainer I could
+not care less if you tell me whether or not you did this all on your
+own or with the help of some tool. In my experience, laziness grows with
+experience but so does the amount of ideas. 
+
+So attribute it to yourself or attribute it partially to the tool. I
+personally don't care.
