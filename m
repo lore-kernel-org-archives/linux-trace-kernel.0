@@ -1,78 +1,91 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FC030BF63
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 03:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CEB33A9E7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 03:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772161670; cv=none; b=iEwjcfdzoXzAHY2I3m/sOaMcxKzOptgb6f5BlQAY1blihStU++MXHm0Zn1OXLMhE9DIrgSk4ta4McHpfPGt2oLexzbPy/F0Lg5A75FdYOVWA1jrHDeEPtrFZP+i9vxBcEf/OIg69HZBmn4t0cLNxe/xuJhgDUy71ka+HCKufHAo=
+	t=1772164434; cv=none; b=jx5t2sKuLzO+ggKyZIqVfwP7AisKXFJ5GqhzcJ8IMICyuIKU0OkY8roSTOf+Iz5YhWxE21wAbiOLLg+c4aPq6/0GTN5xSOVhR1ycZ7Jl5L85fAbeD3U9Gecc83phOqO3oDj2Nzvsd9drZBt32N0o7xScBzOnUS86l3VGuqQ8hXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772161670; c=relaxed/simple;
-	bh=UfIO6iEvg4LSZ2tM/9QdtbtzJvPbNDjmpvuy9g9cfYs=;
+	s=arc-20240116; t=1772164434; c=relaxed/simple;
+	bh=zTuuLUaWX2nnbSpNamvQH8sri2HhCf5G7tUFH903TXA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N/jPW7hcWFuuvhhZsusdTJOQgqDwfqEEDnho+gehYSrOD2Jz6gcmzrITtjTUH8DnG6yegbdYlFdRP/VmSi1xWXjTi4NgGH7E893fRI4Xn/nuvcRHQVwiifQUZoRgMd9JspX/bQq+12OXM8gCHNhbgZUp7Gb9tPkJjE8Ph1VCXdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dfKNwL1U; arc=none smtp.client-ip=209.85.128.65
+	 MIME-Version; b=I5Q1EjGGa8BvBHXwwtxuLvbgwZSG8nrNwF0au2Vw9a8/FRD8G8maPuDrLPHY+clBC+eS6DF6fiKwTWbqEExTrqltCcyaPtqA/7e/H9o97MFOH6MJgwaSym+WATkkWDz39E7pzttjvUYhTp2U2ZC7DwjUJ8FHBKB+MmJGYZPvQPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b79cBtnh; arc=none smtp.client-ip=209.85.214.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfKNwL1U"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4836d4c26d3so10262635e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 19:07:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b79cBtnh"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2ab46931cf1so19450725ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 19:53:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772161667; x=1772766467; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772164433; x=1772769233; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cZ15nmfEjKhKNDymehMp1pFL/Nll2gZNYk6Iw5DCQDw=;
-        b=dfKNwL1UdcWV9iDP+xWlWGPnKabIWH7j4q5U7XVz9/tPolfvFTtzTvwtaqW/PwuzHn
-         lX8PK8WzYYHq26muM95vAZoJeXZDXXYZpq4ivKe9wAp4CCOfAdIajqbhmc2N1bXANSJs
-         l7CpOrcjugZibdnJLaKrWcfg0Qh1TeD+Ju7j1oFAaPaz4bEfrpPuTO9r/XaVNZxJUyMN
-         /U/i3gVnUvfwCUef8CcrYgjdcthIAC4aE6wRni+evyRcjekjl94eUrOkcU7nykwzt/zH
-         14A0HtecDU1ys4d3yyoBWXyZ/jf/7y+qYt9rl6jgN0KCV8yZLmkwdb0oLvBMe75pYwGO
-         c1MA==
+        bh=pwdSgM1NQbWP7Rhe378wlcNmZqA7RqveMVNj2ZfOXJQ=;
+        b=b79cBtnhX5DYVf7TRGR0jTubka9G1aJBvGFK86o0gRpavdkPf5JrbuQGcogKxjU3Wg
+         SwePW7ajFrxDrHH05sEsgAICPtydywgxz3ZUJIUAQo78nJhh32C+6CVrPQxxDRa+TKwd
+         so52/1n3KqT6eg7X0roR+mAO0qAOors3jN4nvnpoEcfiHQe7PjyTANqlkgzMey4g21Qa
+         hK3RSkGtExzUA9TdLCKrwpvKQLnhP0to/BU2ELQfE3RocbqkzG19qJOh7+BWao8Gj1Yr
+         3W1BUJXgviT21caFHpehh17NraI+7WgJqnDJ0ew3AohTGRjbHCgEaQ8cZpoubcIa9ZLy
+         zvjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772161667; x=1772766467;
+        d=1e100.net; s=20230601; t=1772164433; x=1772769233;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cZ15nmfEjKhKNDymehMp1pFL/Nll2gZNYk6Iw5DCQDw=;
-        b=ceqBqVJS3oREgHjZNfrWXOGnvhVyAFf8R64YyQ/9CHB4DkS1mSrgj+mK6CuJ0Cl2be
-         ebyngDU9R+EmVnHGO//zNwAmjO45NNDmWwnJzYk5yt9lFoCdF3y/GsPM8s1YfRIYBBoE
-         Vrymk6/DGkJJDj0ClM2Q2WQ6U9uyROJOKhjTRd3tr27IMrBlx8tZLtFdqCQwcbNG2azT
-         jagaON+lD2y5ma/PMTLZ9Ka4NZ2O08dCjG4XWLekDu9gjoIx34KGpOhO9VlmjC2xZhF+
-         mbZjrbP04sqHvx7ob5ZeuFO9/sUT3wH4yuY36p7gNe3wm1nEUC6Yv7BMcx6490Q7P8NJ
-         8cWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFTmlcQH6mD3i0hn2FJwrWGqdwuR7ovXr1d7BLMj0QY05FM539HP85MEIYVfthclgM96w2I1IclGAbnP34GHgscjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl0j6XeSFaWGNLbLZWxqiySfklEs43sjbogLWD84Dv/lFhl99b
-	VbhEu6UZbkTnllAh+4UpKvPqbr8YY+kzhfe9EXhsR8rSUjapstpefiMZ
-X-Gm-Gg: ATEYQzw6AIcy97uYVsWdL5HGSFleN2cFzYxMQuMHjElmz/E5XRimRSnoM9MRdmDFgAj
-	UmICoJQK6cCZqaqlfVfwjP63022KKxETNkbbDhBFLSPrBm+GHdLParjYrh4kipgWZIlze0PZhwa
-	p8rYi24yzgi9wCuHDXD4SCq7seqOx1ZAclNOqp1sDoPL8CuMCnHI+WKeYVoZbB4i7ZnK47RMA+o
-	E7sekmts7EfnRSkfBqc7Ef6HRpUJhc5ZI3kEUww6SLZk3TyQNQMy2jX/Cc5MvXXSBC9qiunxTRo
-	uKSNlAHjJiowsonQwF4Bq6smlgIOPCh00f8BGx/X2d+nde3FiTgwTNqw15lmU0SjmsTvk4luu9U
-	5kVUukhLHb8zJz1oxmKdJRy4dwzXX9FwyqYIoyTj/Pie5aqp315cYrHOdfzYta+jWFe7XgzUZwj
-	qGOqyRhLASnanfw8m0EFC2Ia34EYe0ENimnS09IOgICQ7c9lhpzQ==
-X-Received: by 2002:a05:600c:c490:b0:477:63b5:7148 with SMTP id 5b1f17b1804b1-483c9bb65ffmr14190225e9.6.1772161666981;
-        Thu, 26 Feb 2026 19:07:46 -0800 (PST)
+        bh=pwdSgM1NQbWP7Rhe378wlcNmZqA7RqveMVNj2ZfOXJQ=;
+        b=pIstXdRKj3vFJLFEEvM/iBGv6VI/AKgSwE/tE1rF8M+IhoRn7qtRuAXedRiPGQQp8A
+         YV1YbbOd/6FH9KY2IEjUlInfnqVkPa8L+ItTwezwdRO2+LU3wSw/pWAmulTws9cIWjCR
+         eMvIlvfY1hM3zJkBbuqVliR10+ypkFhK2/J1URbkbYkZyZHNe0X/cOYoPM8p7QteD56M
+         9Nv3UZNSBj2UgJHGYc6DfhP8nM3AKhJ4AImMKAx2BnFYN19D6isp9esomEHTp67556Y0
+         ShDQJpYlSW6DMY5836E0XsIFTo0hgWB7C9vTAhjaJN3GMkpCL99gyfAwBpuPF8tg+W3V
+         7bEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7TGGnJjFQy1N/pgvBAlFkLd61fL3yOjh4eYpnjsUYo+E+kL5XC5bd4FqiYSQqAZ09xF6ny4fxg/CSNWjNIKa3Id0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygH9WLV17eREOIHMk8bUwjCL3ANxXAKEtBiJJ8QioAFE9599s6
+	R+PiJdVwvYX8x5ruY4eXrnV+wCLKPoNB49iF2cQEJPoRtJCNHPO7nY3c
+X-Gm-Gg: ATEYQzzRDUc7vkKKqkTpZky5Uw3GIMRkvSCG6BsLRccsy+XIOc9n0rMdf/4Lqs9UNND
+	lhWcJ9ZviyW7NxW3TpFkWvgNrybLnwP3RmB0K0r1rbtEL8yNP+oSQjY9MNupv12GxOrWuBJfJFr
+	ckRcHTl9bU4Jmo53ApMJdaOINpXaxXKlzB8YfSmL8VaYdflUuZKNjfgjufrsNvtVufuPDgfvfLn
+	JrYUp63oSq1hAVBAVi2tcTHs6tfRfgoZ5NoD5bzRxQ1wpFljKGLHYmbfKOT5urxl0AeDdgxLJce
+	qbJ/UqFZKDmpIjwsSIDIrED+d54+4y82q2ndNPZuxFcoLZvDTpDNNxAzGuIhrXAp5hrA9Pc09pP
+	uVYbG9G3GOOC4JlrLPlDydwFdSoJHZDMcMcz9g6PP4pIi77TFs6Fu4g0Ch8c3hDJMbVTz+NA7Ms
+	eG9bdWahCcRyhByeOBbo5iT6g7l52R8agttHTfYcngbIUmx/dP/w==
+X-Received: by 2002:a17:902:ea08:b0:2aa:e9f0:146c with SMTP id d9443c01a7336-2adf79cd7d5mr56815645ad.29.1772164432629;
+        Thu, 26 Feb 2026 19:53:52 -0800 (PST)
 Received: from lima-ubuntu.hz.ali.com ([47.246.98.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b89c99sm77439065e9.15.2026.02.26.19.07.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb5c3b01sm41487125ad.31.2026.02.26.19.53.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 19:07:46 -0800 (PST)
+        Thu, 26 Feb 2026 19:53:52 -0800 (PST)
 From: Qing Wang <wangqing7171@gmail.com>
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org,
+To: syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
 	mathieu.desnoyers@efficios.com,
+	mattbobrowski@google.com,
 	mhiramat@kernel.org,
-	syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	song@kernel.org,
 	syzkaller-bugs@googlegroups.com,
-	wangqing7171@gmail.com
-Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
-Date: Fri, 27 Feb 2026 11:07:37 +0800
-Message-Id: <20260227030737.1089041-1-wangqing7171@gmail.com>
+	yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in bpf_trace_run3 (2)
+Date: Fri, 27 Feb 2026 11:53:41 +0800
+Message-Id: <20260227035341.1108372-1-wangqing7171@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260226115229.7111b070@gandalf.local.home>
-References: <20260226115229.7111b070@gandalf.local.home>
+In-Reply-To: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
+References: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,45 +94,18 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 27 Feb 2026 at 00:52, Steven Rostedt <rostedt@goodmis.org> wrote:
-> OK, so the issue is that the ring buffer was mapped, then the process that
-> mapped it forked duplicating the mappings. And then on exit (or unmap),
-> the first one to unmap the buffer will cause the ring buffer to think it
-> was fully unmapped causing the next one to unmap to trigger the error.
-> 
-> 
-> > + */
-> > +void ring_buffer_map_user_mapped_inc(struct trace_buffer *buffer, int cpu)
-> 
-> Let's call this ring_buffer_map_dup() to be consistent with ring_buffer_map().
-> 
-> inc would expect a dec, but dup() is more of what it is doing.
-> 
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > +
-> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > +		return;
-> 
-> I wonder if this fails we should warn. As it should never be called unless
-> it was successfully mapped.
-> 
-> > +
-> > +	cpu_buffer = buffer->buffers[cpu];
-> > +
-> > +	guard(mutex)(&cpu_buffer->mapping_lock);
-> > +
-> > +	if (cpu_buffer->user_mapped)
-> > +		__rb_inc_dec_mapped(cpu_buffer, true);
-> 
-> Probably should also warn if user_mapped is not set. Again, this should not
-> ever not be mapped if we get here.
-> 
-> -- Steve
+#syz test
 
-Thanks for your suggestion. I sent a patch [0] and looking forward to your review.
- [0] https://lore.kernel.org/all/20260227025842.1085206-1-wangqing7171@gmail.com/
-
---
-Best regards,
-Qing
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 2d14fb6d0ed0..038bf4436959 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3783,6 +3783,8 @@ static void bpf_raw_tp_link_release(struct bpf_link *link)
+ 
+ 	bpf_probe_unregister(raw_tp->btp, raw_tp);
+ 	bpf_put_raw_tracepoint(raw_tp->btp);
++
++	synchronize_rcu();
+ }
+ 
+ static void bpf_raw_tp_link_dealloc(struct bpf_link *link)
