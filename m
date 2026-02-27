@@ -1,80 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5836E329E6B;
-	Thu, 26 Feb 2026 23:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E1427442;
+	Fri, 27 Feb 2026 00:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772148603; cv=none; b=PBZkpBg4DqqvW841OTVEZduPDySiUwvGntqYCpW7zVVvkKCGjJUHUTc/KRsoMp5qIxkGIt3iDvEU4u1//PE7Xaqz+N3haWSb2D/bgdfdH8+FQOd9GMZ8DvBHtkDFufRHmvurY1xMroPjrnpO92dRIbXuwT3G1a+q5DRaba3CI40=
+	t=1772152302; cv=none; b=qr46hAvJrMozUMFMIEHSe99l28P3PxFmHUsliOvOf/anMD5EIEAMUACTYWGJEP/Ay/50QQUfMF+guxp6FlEUlgwBLQMlyZGOzGZ860U0Qu08wzICptBMagSxjXfW1fNPYLa3NRNGybyQizqfe5b0sp0L9ZlfsnwZh+nbUzY5wIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772148603; c=relaxed/simple;
-	bh=YW0Ly/yjMy7lS7G1Rf1wJwoyOF7BZ6PzzcCplnlXLS0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=K0LMFpcitIH2Yshb85PGUQFM37SMY04igUXSZUnTrGihie9WmHgwnRudAUbglCwvUR5gS4tGdK/qiWZ6vhXCJ8PiUjXIgeq32325I7RNQnchW0NEOb+812Y3pOhXustR5Rg/TiuD1UcCvwvRlYOnOYt+AbYmsPjwIjFkSPdk8Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8+Iugjb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772152302; c=relaxed/simple;
+	bh=wLUycsWy3gvgVrAlquArUpLMruKe7fYZQVQj/k79Xis=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nJ7W2lwZDLLuEO/UPyfdnhM1Z/EE26vTczPdv7GcvfKK2TM8wSUnvCOagbfXh5A2dFvwxaTYA7LKdnf90GsXFutk34pgVxUDqbMsRSpzPgXrqcRwcFSJ09whq8CvT9zWEZZRPPX1pRpEK0E9zv3mOAP9q95geJXsKAqZCvOQ4F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6wDT8Oz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8+Iugjb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70EBCC116C6;
-	Thu, 26 Feb 2026 23:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6wDT8Oz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6BA8C116C6;
+	Fri, 27 Feb 2026 00:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772148602;
-	bh=YW0Ly/yjMy7lS7G1Rf1wJwoyOF7BZ6PzzcCplnlXLS0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d8+Iugjb49qxtDHizRbO56vmKD4x27WZ3wCUYPlCP2xbYRA+e9A4Z8f/mHpRw5Yyr
-	 /OQPizIcyTw/BOE7TfJRBq/W2Wp83kU0jT5F9tzRwV5ge7c8S/aQYjIvXLiuO2RzNn
-	 eTe6hcJ1dBCuxWquqngHhrYD+1q8YjKL2gkMdXakcY8HqBlNAFniwty6rD1bsjtgI4
-	 HBvzc27vikWxalQLYQV2DCJg5AUdGEZXRgiB/0zj6gsrZ2KMpiT77gSoDBvByGdPgt
-	 HhIR0XCCZsOPQZL1RYW3shbgrUL96B3QSNbvQ6eZewtBw6xuGJcMNQhwKJ1jHFw83l
-	 Q/CsADFD8QRgg==
-Date: Fri, 27 Feb 2026 08:29:58 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] ring-buffer: Skip invalid sub-buffers when
- validating persistent ring buffer
-Message-Id: <20260227082958.8046dd1eb3e5f51f9fb77b28@kernel.org>
-In-Reply-To: <20260226123655.4d2ca691@gandalf.local.home>
-References: <177191595057.435720.10116014529518464418.stgit@mhiramat.tok.corp.google.com>
-	<177191597760.435720.2484229987964512451.stgit@mhiramat.tok.corp.google.com>
-	<20260226215833.4ad4f07f2cd06c9ccf5c1afa@kernel.org>
-	<20260226123655.4d2ca691@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1772152302;
+	bh=wLUycsWy3gvgVrAlquArUpLMruKe7fYZQVQj/k79Xis=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=C6wDT8Oz/lWsnUbLFCuR+IuSXz5zQ2VJkvYKpUXXoPZ/z8OhpxaWeRaa5c4TLRAhK
+	 O7HwYD8uJA3dEJRoQwpbdlwcpzKNFy6c6Y2rlnAx1i3MUOhZ/z/wkWiGmwlyEDFNXC
+	 vaDUebAFwFQlcm0XAcavOJXyB7KVONW6Amv1x/VM/BEqfAsScqIXsUOZWvgdkQsNfh
+	 RP9Vd2dE1ZBsotkGgdnOGvBNXFnxclpXgsKE2CpzjdRlrl1S7BjAGJs/sEPG20lVUt
+	 tynzhNe8Wu+Luo8aZjvsWO+8Ja3a+mPaM4kWOeJEWsw64nvk2eyHOUYV+et7xVXzvM
+	 4oAdfOn8IoOBw==
+From: SeongJae Park <sj@kernel.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	kernel-team@meta.com,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v3 1/5] mm: introduce zone lock wrappers
+Date: Thu, 26 Feb 2026 16:31:39 -0800
+Message-ID: <20260227003140.82789-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <5bcc39cd3a227944d0fbe75ff86cdac92b38d4ca.1772129168.git.d@ilvokhin.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Feb 2026 12:36:55 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 26 Feb 2026 18:26:18 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-> On Thu, 26 Feb 2026 21:58:33 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> Add thin wrappers around zone lock acquire/release operations. This
+> prepares the code for future tracepoint instrumentation without
+> modifying individual call sites.
 > 
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c
-> > > @@ -2058,17 +2058,18 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  		if (ret < 0) {
-> > >  			pr_info("Ring buffer meta [%d] invalid buffer page\n",
-> > >  				cpu_buffer->cpu);  
-> > 
-> > This pr_info() should be removed too, because multiple pages
-> > can be discarded.
+> Centralizing zone lock operations behind wrappers allows future
+> instrumentation or debugging hooks to be added without touching
+> all users.
 > 
-> I wouldn't discard it, but instead add a "once" variable, where it shows it
-> only once per CPU.
-
-OK, let me update it. 
-
-Thanks!
-
+> No functional change intended. The wrappers are introduced in
+> preparation for subsequent patches and are not yet used.
 > 
-> -- Steve
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> ---
+>  MAINTAINERS               |  1 +
+>  include/linux/zone_lock.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 include/linux/zone_lock.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 55af015174a5..61e3d1f5bf43 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16680,6 +16680,7 @@ F:	include/linux/pgtable.h
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> +F:	include/linux/zone_lock.h
+>  F:	kernel/fork.c
+>  F:	mm/Kconfig
+>  F:	mm/debug.c
+> diff --git a/include/linux/zone_lock.h b/include/linux/zone_lock.h
+> new file mode 100644
+> index 000000000000..c531e26280e6
+> --- /dev/null
+> +++ b/include/linux/zone_lock.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_ZONE_LOCK_H
+> +#define _LINUX_ZONE_LOCK_H
+> +
+> +#include <linux/mmzone.h>
+> +#include <linux/spinlock.h>
+
+I'm bit worried if I will think this as a file for another general locking, not
+the mm specific one.  I hence think renaming it to more clearly saying the
+fact, say, mmzone_lock.h, might be less confusing.  Or, putting things in
+mmzone.h might also be an option?  What do you think?
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+SJ
+
+[...]
