@@ -1,77 +1,115 @@
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA2A3446B5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 06:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197A36EA83;
+	Fri, 27 Feb 2026 07:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772174104; cv=none; b=d/1xiitEMTjEPvXFX6lNPnIkM934TutDK2gvQJHPXalp48T09XGn8FTyAAS1PU3fkr7OqRMpFkT0PVIKlKgOjGxYuAfTAKxngbgpoP8j1pacqMUDwA1voiP6XBbqHny4E9u9ZuASCeGeEpnZt/90kg2+MRkki/4gwvBPvFNbie0=
+	t=1772178245; cv=none; b=DTNieu8TwSQZfU7glKAk81pFlsg729lZHgXxpRvFoCispF+JHf46usv83BWC4jG0wEz60/ucUSJjAYkNccXAdclhsouTFu4oCDoYKKdtH+I+WLICfpHcRGwnqhKmC2UE8ZRMGU5WT0RAeYJ+ucov7u99LHwmFkMaB4/ujUxI2Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772174104; c=relaxed/simple;
-	bh=QbBr3T2VQUA3HHZ2LwPcLmmPuGaEyaZBuNW4ygJx+IM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jjC8U41BOHRbBLj03IfTItWDEtEM0j5aF9zaExroQEA50H7veilaYgBjmqhxmcbkg2iew/zYQu6GV2BolwuMlVHvEH3zYw897agTkG+o6wDCPFsSV6j+SIoXc8FbPg13XRvoi/wWkog90VK0ZOg27Vw/s5IAa2WYd81QoLc4R9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-7d18e95c658so34555392a34.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 22:35:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772174102; x=1772778902;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXTA2zqOAstIeMEAVIOcvwyKQP9PlV3vwMKXGuZAb4w=;
-        b=NYKslHswoIqB0kMgl0OijVD5RRpnDQCc2ztWY0ncxV9RJCoGA51uH7CBClUE0Y6Msj
-         d5rQjb0hiugNzkODo6sbAHmShf0tLu+ZZWcbTv5LtGnLgwJ5nZnmtQCO98RecJPgRDxL
-         pjln8KSuIIP5gxJvqS9XTXB8EyxGwIH7wq3FiOqNI066nFibYGnYp3At3jFXk8S3HueB
-         Q/cbjlWqNl79iGvo4NIy8c82TTlEdLi0Ut96n7FqwiIcyFTrZQ+ASo3vGL6TRtryRjLn
-         jJccZPmdYH5S8nXQ45Wu71fFSpH9/irlN2wMYryk78c2+MpjCF/zTIwB0knFzp/8CGz/
-         0XqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqnfo2bUrg+zyodY5OlDIf0+tN4U6XCseePNRCzITyrAxDNFeU4ryQbz3zExXKwcaveedqHTdLzS+JNZaU2Qbb8dI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3+d0NyX7mhDF7GW/2eW/VuvJr4C0XEA8BAKSGAJ9IaF9dOYol
-	VRHjHF52m0nr4MVwc9SOoH8YA/vG04l8e9mXWukIe2VCzpQc0s2qTT8Ig/hYUeFXsUDTqw7yODs
-	Ko9vnLe1AZNAk8dke97Ln32jGDMaxdI3QZur4cPx/z+wCUkz6KSqoWl3tEn8=
+	s=arc-20240116; t=1772178245; c=relaxed/simple;
+	bh=7Nxw0eSNeEjIVxbS8tqkJXhH7vZE92ayhWGdRZaFasw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fK5MaoTGrRU4u82BwlPQC/ziGvtfXuxMqG4YDGKCuTVZqBDJloP1CIO3iI8CRpHrksjob7goEGlq/FMPAHo6pdGVNLTCkqCv85z/uhKsT16Wnyy/7XKF3K4stK5pBu1PHYVhZerpwqCtql0shiHCKXVPYluIvypKWzwmbYA3J1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kibvgiyD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kibvgiyD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F499C116C6;
+	Fri, 27 Feb 2026 07:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772178245;
+	bh=7Nxw0eSNeEjIVxbS8tqkJXhH7vZE92ayhWGdRZaFasw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kibvgiyD8Qvj/PPszwdNEaE2mzVHl8iqPMyvQeKiUMVVPI8EAn8EID6Ef3dth4S6j
+	 kTXznodVBqcVUfEKz896bjHkzwxSH5kJWJ3Pv8tA3j/TxOSmcTBBh/l4F0Z2Yo91Gz
+	 jOUxba8AUgwYE/xuINvTr8qvvPbM0vqGKKouUq1ETF11/v1nKWU/h/WK03oGUADCLz
+	 YLb/m4wMkC143LuW7AGvhURqiu2Msk0yKwa8veqH8oGWH56G7EkAKaABLL7ilmA6xL
+	 kbYDNtu0qTEqJQfWYjq+tFZIwTS3FecWWcn8GVV8gtpU/AKpca4f6m6DVBm1iD0QWs
+	 9NayNrNasCXjw==
+Date: Fri, 27 Feb 2026 16:44:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, oe-kbuild-all@lists.linux.dev,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] ring-buffer: Flush and stop persistent ring
+ buffer on panic
+Message-Id: <20260227164402.31a1b987c3fba13d25439a92@kernel.org>
+In-Reply-To: <202602270244.3JWhusi4-lkp@intel.com>
+References: <177211311593.419230.2212568977306190482.stgit@mhiramat.tok.corp.google.com>
+	<202602270244.3JWhusi4-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6820:2293:b0:679:a9:9447 with SMTP id
- 006d021491bc7-679fae16f08mr1309686eaf.27.1772174102529; Thu, 26 Feb 2026
- 22:35:02 -0800 (PST)
-Date: Thu, 26 Feb 2026 22:35:02 -0800
-In-Reply-To: <20260227061759.1126681-1-wangqing7171@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69a13b16.050a0220.305b49.009c.GAE@google.com>
-Subject: Re: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in
- bpf_trace_run3 (2)
-From: syzbot <syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	wangqing7171@gmail.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Fri, 27 Feb 2026 02:48:26 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-lost connection to test machine
+> Hi Masami,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v7.0-rc1 next-20260226]
+> [cannot apply to trace/for-next]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/ring-buffer-Flush-and-stop-persistent-ring-buffer-on-panic/20260226-222418
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/177211311593.419230.2212568977306190482.stgit%40mhiramat.tok.corp.google.com
+> patch subject: [PATCH v5 1/3] ring-buffer: Flush and stop persistent ring buffer on panic
+> config: sparc-randconfig-001-20260227 (https://download.01.org/0day-ci/archive/20260227/202602270244.3JWhusi4-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 11.5.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260227/202602270244.3JWhusi4-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202602270244.3JWhusi4-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    kernel/trace/ring_buffer.c: In function 'rb_flush_buffer_cb':
+> >> kernel/trace/ring_buffer.c:2481:9: error: implicit declaration of function 'flush_cache_all'; did you mean 'flush_cache_page'? [-Werror=implicit-function-declaration]
+>     2481 |         flush_cache_all();
+>          |         ^~~~~~~~~~~~~~~
+>          |         flush_cache_page
+>    cc1: some warnings being treated as errors
+
+I guess this is a miss of the sparc. Anyway, I will add asm/ring_buffer.h
+to define a wrapper macro. At least I need to sync the cache on arm64 but
+flush_cache_all() is a dummy on arm64. I would like to use dcache_clear_pop()
+instead.
+
+Thanks,
+
+> 
+> 
+> vim +2481 kernel/trace/ring_buffer.c
+> 
+>   2475	
+>   2476	static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
+>   2477	{
+>   2478		struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
+>   2479	
+>   2480		ring_buffer_record_off(buffer);
+> > 2481		flush_cache_all();
+>   2482		return NOTIFY_DONE;
+>   2483	}
+>   2484	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
 
-
-Tested on:
-
-commit:         a75cb869 Merge tag 'v7.0-rc1-ksmbd-server-fixes' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12e650ba580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=56150637ffd942dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=9ea7c90be2b24e189592
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1476755a580000
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
