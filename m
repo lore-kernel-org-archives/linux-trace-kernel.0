@@ -1,73 +1,91 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013026.outbound.protection.outlook.com [40.93.196.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C23208D0;
-	Fri, 27 Feb 2026 05:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772168642; cv=fail; b=OQvQCLx+lTDC6xiYQtoLHubEZA/ezhy9ULkdVFtsY5mwdy7YIRt8dKzhKZ08Y5UL8glJmMqYYMiumPlQm5tnS3lK09B3achGal/ZYKK5SrcF8WPZng1Y1UDEudXrVs6kj1XtiG3g13rRCzx9rwZ1yBzzVz9ktoxPL2hpApCyyB4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772168642; c=relaxed/simple;
-	bh=LAWJ7UG2FhTYA7hlJcFJchT6AMfXmTO7kKwojSy/FU8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wg0y029ETNWlwoU7A22aAay0SCq5udzL8xES+3d4646t4sLVN2NIAMibZAGPOlqvVqm865zmfGqbOUMt1+/BbkZHNoZ6aZ6/2uqKyNwngEYEekuQiuok3ML65YE4ijTDV19Hrp3o6TPMSLVHBb0YnLwaWoy7PM/jvzaSvWgjLhs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Qp04hJ/L; arc=fail smtp.client-ip=40.93.196.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCC43603C2
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 06:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772173096; cv=none; b=QQvpy6JjE0ey4fJvEs/ouUIuREIrmxO+QPL7Kvt+TiriX6Y2qErjFagdrW4gQV5P6v/my1f2KqVMfdu4V05kCM6o3efaeQutj0aWXNDn4cKMlxlmsKpUWM8AX76qAgipOiR6VKtzyFw9nFYj7PhbN1C33Qi4Hbl1tFvwfiFndhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772173096; c=relaxed/simple;
+	bh=xtaqGgz0rQ0tjyH/ErNTLu71rauDdX001OKKvtvPx3s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UW38GTAouXL5IzbZ3Thn/EHX34XjdmH+zWGPhBdX9VH1ALHd9QEZeZMkI2qKISXdCEqeCgl9oYUc1g3uoWLi9SygcBLS/1ntDAv17kTrZpYhd5EphDYWsd7TqnyZAh0J4m695XSNxX/QAKULI68aWkrkof6X7EKfrVE8bew2OOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WS8gjwFv; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Qp04hJ/L"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QojpUAh53dtMINMvr4HZQAcmKpB+Ayxtg4JmMux+0B+2W/SnUgPQ1oZoZIDZctXrSOebQKoNUw8pfUJvb6C/tcmYjT3soDmvF2TgrqQnLXmQiUBwFjQ4/HiszFPEncgC/NkuT5ihvyNLyHsJqhdTaCzgKlt+kMBfuxHYG2iY3jVf+fIOR4CZJbmNfJ/4nfRfDyksrkf3B6KrWdN/hQ5sYxPnxneewFIaWQ7rPIbGaKX35A4mSC8wah5R7XPhTZzm4etgoiaacub7B/W9cNcuO0MOr4zRlzN0kKCVqwsLV+/cWNIQSBkPgK+PsNdyyw+aS/rsVx3vXwPgQCcv9cYJZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gVlVqki7ZPxcdf+/duwvAtBBUSmUldyLMr7WypXwsVA=;
- b=fG99Kx9XfFsQkwVxecTeDWxJ/Ma+foZRgF4SS6rr8jjW8jEs0pSrGq0ULXe9ijjBuwDqzWRjteMw790Gog2qUNRz+GwXFbrK/SiBn86tvVeJdvsZsagDUvCNGpbj23b9F9jrgoBkqWenojnC1OGbh3GjibmeomO7PnA2o7nMX4who3hGqn2aQh7O9Ch4YDEs8nxzI/45d5Ousy8tr6NGgmdiUM/iqT1DXsCO2py5YFkWgmbIh1Do5dfHDM4ehBo8mfgnXz0Q7JRBHSd/2/kvhgFsdZj1jkE4PxOp0cHsG/hLLNXpFd6T6SNoGu1Ca0U5aOHOeMVxcbfMm7gZkatNRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.dk smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gVlVqki7ZPxcdf+/duwvAtBBUSmUldyLMr7WypXwsVA=;
- b=Qp04hJ/LtVdNicnI/JfQZ7cdEmfwQuuf2u12gb9WTrgVqEUPKV6q+KbddzXLAWnK/bSjo5fQAPayuysu4Yk6OVwLmR54OZ4QGbWWw12L6FRgrQ76Xh83SatWxRWSUcbBZTV/GvJIdVWNXYYu+9kzlvA9EcOWT8FOPyPKTee9tSA/ttTUv4n74LB/kVGkB6xhTgY3x+uvY2tG3cdvZReq8Sa5WEPMfJXgdhgj7o896BLW3oAv94gfZQR29fleNhK6Z8CV/Gf3NgpYsq+0fF1MY08ditWg3lfOxK8EcSyfMada84vppKmQsKvluxh4q2OCP/hvK/f3rDMBhInK0dlQ3g==
-Received: from MN2PR06CA0029.namprd06.prod.outlook.com (2603:10b6:208:23d::34)
- by SJ2PR12MB8783.namprd12.prod.outlook.com (2603:10b6:a03:4d0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Fri, 27 Feb
- 2026 05:03:55 +0000
-Received: from BL02EPF0001A0FD.namprd03.prod.outlook.com
- (2603:10b6:208:23d:cafe::18) by MN2PR06CA0029.outlook.office365.com
- (2603:10b6:208:23d::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.26 via Frontend Transport; Fri,
- 27 Feb 2026 05:03:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL02EPF0001A0FD.mail.protection.outlook.com (10.167.242.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Fri, 27 Feb 2026 05:03:54 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 26 Feb
- 2026 21:03:15 -0800
-Received: from dev.nvidia.com (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 26 Feb
- 2026 21:03:14 -0800
-From: Chaitanya Kulkarni <kch@nvidia.com>
-To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>
-CC: <shinichiro.kawasaki@wdc.com>, <linux-block@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH] blktrace: fix __this_cpu_read/write in preemptible context
-Date: Thu, 26 Feb 2026 21:03:03 -0800
-Message-ID: <20260227050303.10945-1-kch@nvidia.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WS8gjwFv"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-4327790c4e9so1088208f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 22:18:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772173094; x=1772777894; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9GVtvXm72TcUE0O6MwBEwQ8fveVVC9XHCdQUSyyFzWA=;
+        b=WS8gjwFv+Vbo7UBTYU4CZzL+togzau8fbR1qu68l4wAGuIycbg28JlZe3DtcsMwfdd
+         8hj8+/9JTrgXPPMF0hkJRYThrE5FkdCPmpSLGflb5mWwQWK6p8X7LTjdCJ9m4vkJypOQ
+         MNd96V5UgFRQ018JTeJ6CxIYboywC0v87Yui84p4Fl6WOHEF1J4643IqNxWzxE97e4nV
+         g/ybFjkUoIDH1Jz+4IS3H9YSry1B5i3XZXJ+IaQbg3SNb9Hz/w3wldMU0o4il3e7RGR1
+         EUCkdYlj0Gz9B45TSfURkbXdTiVo/RcQRF0swSKJpFIYLXB1naRG8bh6mUtoL6G2GLnJ
+         lo4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772173094; x=1772777894;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9GVtvXm72TcUE0O6MwBEwQ8fveVVC9XHCdQUSyyFzWA=;
+        b=V2nUZpAeqBhM+pnsKDAa989d81w0btXhgWEf0oI/KnhIflSpn5S0MIj3XZkilqMcCG
+         kCMzqBENDE/Cl8nRfSRYI0LtMDl6VA8cW7C8sD9TadnLw1bSlNu6e6hxVSlkZcGmiKy3
+         m9EJBg3bfpQFXGv4cU4YF1XNP/q2Mg96LdNHfrp+q4SeeIqr55/VQO4oihDl2KpGhgmh
+         6qp7eYQN4w5EOtoeZV8WXkoajYgzvJNzqJ6Szg3+k6GsB2FL6x0zq80EEWoD3PE5Wevq
+         sQ2m2JZUqXAb0da+fDuHTkwyw7tVqYOxvFh5rdtYSesQKjeiy2mPQCGrmLEcpzQXNUqv
+         KL0A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7WAMP/VW5L9ZuwA9X6zwrdzwz+Ndqm/yCzDErGgbGIQF9GnJk6oBROJNMuIsf3sBFWnmRUm2Fdmai7x0rTBDt/ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiTDdxBFYr6qD5PMWWJJpNMuGaYMOFg52/IbSFF61Y4hpP/ILf
+	kdwxvbfi3gezs/NZ3ElsaAUrpOQ0gTxrg7df9OrJ4tQQDDiN606zE0fJ
+X-Gm-Gg: ATEYQzxVhdCp9RAPrGw5p7F2arsQrgJAffa1gUkD/QLTgy8yXD+HyFHvqqLOV+FY09r
+	Zl0EKuOjr0kUA8uRwqYqHjvCBIhg6zrUhXLKFqu3sVRdpf0r+HoCSUU+4HtipyWPEo0DUOWPlQI
+	MvS3xubR0Ro/fD5MbawwOzCrPvyDkOCw+fVFojvDYryPDORjRcO6Q7jc66hak7tUUhdJ3jjFSio
+	dmIlWJV4T7bmohbUVlK2upEGEnt1CXUFYbcI7RpD7Eh4duJ6+rBCw+HJNqRS9K87wrERk2kZorI
+	5m1BEvJuRN4RyI6Adq/DuPhoM1xoHFhm0P0EOFw+wYJ7DL06Ulifdkyn3mGJkhyNDVlTOXtn7dO
+	m2xwxOl7M9WS6HphxoWbTbuerXpqvmnqkWxwGMRjtVTGbio7UewGoCn3yWKU9q7fzWH6W7QkdR2
+	pHN6lHEIz3JIm0V0VMnOulGl/1SaGrG4oeQGdoSGzm739COdCgSA==
+X-Received: by 2002:a05:6000:601:b0:436:1934:d234 with SMTP id ffacd0b85a97d-4399dde5f46mr2389104f8f.3.1772173093487;
+        Thu, 26 Feb 2026 22:18:13 -0800 (PST)
+Received: from lima-ubuntu.hz.ali.com ([47.246.98.215])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c71b498sm4523755f8f.15.2026.02.26.22.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Feb 2026 22:18:12 -0800 (PST)
+From: Qing Wang <wangqing7171@gmail.com>
+To: syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	mattbobrowski@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in bpf_trace_run3 (2)
+Date: Fri, 27 Feb 2026 14:17:59 +0800
+Message-Id: <20260227061759.1126681-1-wangqing7171@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
+References: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,136 +93,19 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FD:EE_|SJ2PR12MB8783:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdcba420-09d6-474c-25db-08de75bd9b6f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	LVix4cwKB98taNhbzbhYLP6Ejzq47TnCysbP97T0jiFUzXtiX3CpIlTU03UM2nwV8fHzDGk0C3G3Y9jHKuc73uUqcXGOe6XltlAZDJYvIR79hMmcI4mocjj8KVrNFK1Zd9t9AKK3nrr8v20rSp+op7e/Nzwu5QduZlYvSbfdz+phSrh0DNOh6G6t9mTcUYmt1XHaJSclpIHGd7PyzmuUam43GMhYlLgtNZarkX/YEOiAog9xLAeak9evYArt76tRvF93EcSfL65GnaM4FtQFj6c2IjskKAtOQsBTiJbuyFpzti7mHdLpIdF77slJGRXIbremw33GTv6tmZSepwkyjdKyngNu2IJsbxApg87gaxJPAwL4kHym7FIa6zc5PKZCxCHtxC5CaCXQK2d41XU+hyfhA0oUucHDqHbQ1jPvWVQ4pgEHRlbl+H835k58GuFJjidzx4IyL8LFKEuyudJN+5i6CCWvR0XCuqc8/SXXpyMAvTLdDArfuuMt6WlbHOGXCENAw8lu7uw+Hu5UG4N1f5dgcknIyMO3fZBBrfAv2Rbp312/8x6E7hPCGvvIUxrStccNe8KqMJYdrNzQdvz2aB1tlmVmsDqEuWFVhMa0DgbQ4PJ0MeO6CyGQLnq1rVdnrdw5zB5QBxhCnUAb3y+4aQ5qKqfEakH3gFdat8YBI17BhvS+nNH46ENZkL0gcOxwV1fh69byqOSWfkRaK51kYSnMJklgeREB6XHmc1P9kcf4lABYpPUKPFC0s2wD7DyYNn+4SO+1fBpWgOc2pz+ifh46nr291Z3DW/pase48JiWu6qjl5cHA43jOaxwoaWkrLEA7Ms8sl/3NwKNzNIcScg==
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	7Ap5KSyMyuvDjyXen/q0SiBJBZDGs6r05vwyecE0y57f4uHcQls0f8uAuHhLWKyNwB8Q5weNnYdvJCTbk2xgg2audWtVRSiqRzVFoLKuss1QdW9KV0XENvdTziguTvjnNXroji7ee2MPr/4t8eGsH5aoQghu7vXcbRLh7HYKegQY6uoXM2rojEESvLdhRanAwQglUSiFTKZ+IZK0foVDFsXLMWhFDJKe3O3Y1o2/bM6PBmUB5XhUzAZRtUMs5CFPYyZvpUMf5rFonj+Q/Md+q0urCRDmezFtCJkg6UHcqEAnC2dLUL6lSraS6xdyRLPYyuMqLvvTZmZDMW6LK5odMr8fO3+3fWIaUUVRHMp3ETYWZvcvDrIwKtRAONrQS7qAPx/k/PwU7LPoGfhzhm8UHcD8POyjpCtqOKbQB0uaq8wUIHtEGkN9Z7a5LnXYg7vj
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 05:03:54.8280
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdcba420-09d6-474c-25db-08de75bd9b6f
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FD.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8783
 
-tracing_record_cmdline() internally uses __this_cpu_read() and
-__this_cpu_write() on the per-CPU variable trace_taskinfo_save, and
-trace_save_cmdline() explicitly asserts preemption is disabled via
-lockdep_assert_preemption_disabled().  These operations are safe only
-when preemption is off, as they were designed to be called from the
-scheduler's context probe_wakeup_sched_switch() / probe_wakeup().
+#syz test
 
-__blk_add_trace() calls tracing_record_cmdline(current) from process
-context where preemption is fully enabled, triggering the following
-splat on using blktests/blktrace/002:
-
-blktrace/002 (blktrace ftrace corruption with sysfs trace)   [failed]
-    runtime  0.367s  ...  0.437s
-    something found in dmesg:
-    [   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
-    [   81.239580] null_blk: disk nullb1 created
-    [   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
-    [   81.362842] caller is tracing_record_cmdline+0x10/0x40
-    [   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
-    [   81.362877] Tainted: [N]=TEST
-    [   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-    [   81.362881] Call Trace:
-    [   81.362884]  <TASK>
-    [   81.362886]  dump_stack_lvl+0x8d/0xb0
-    ...
-    (See '/mnt/sda/blktests/results/nodev/blktrace/002.dmesg' for the entire message)
-
-[   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
-[   81.239580] null_blk: disk nullb1 created
-[   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
-[   81.362842] caller is tracing_record_cmdline+0x10/0x40
-[   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
-[   81.362877] Tainted: [N]=TEST
-[   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-[   81.362881] Call Trace:
-[   81.362884]  <TASK>
-[   81.362886]  dump_stack_lvl+0x8d/0xb0
-[   81.362895]  check_preemption_disabled+0xce/0xe0
-[   81.362902]  tracing_record_cmdline+0x10/0x40
-[   81.362923]  __blk_add_trace+0x307/0x5d0
-[   81.362934]  ? lock_acquire+0xe0/0x300
-[   81.362940]  ? iov_iter_extract_pages+0x101/0xa30
-[   81.362959]  blk_add_trace_bio+0x106/0x1e0
-[   81.362968]  submit_bio_noacct_nocheck+0x24b/0x3a0
-[   81.362979]  ? lockdep_init_map_type+0x58/0x260
-[   81.362988]  submit_bio_wait+0x56/0x90
-[   81.363009]  __blkdev_direct_IO_simple+0x16c/0x250
-[   81.363026]  ? __pfx_submit_bio_wait_endio+0x10/0x10
-[   81.363038]  ? rcu_read_lock_any_held+0x73/0xa0
-[   81.363051]  blkdev_read_iter+0xc1/0x140
-[   81.363059]  vfs_read+0x20b/0x330
-[   81.363083]  ksys_read+0x67/0xe0
-[   81.363090]  do_syscall_64+0xbf/0xf00
-[   81.363102]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   81.363106] RIP: 0033:0x7f281906029d
-[   81.363111] Code: 31 c0 e9 c6 fe ff ff 50 48 8d 3d 66 63 0a 00 e8 59 ff 01 00 66 0f 1f 84 00 00 00 00 00 80 3d 41 33 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 48 83 ec
-[   81.363113] RSP: 002b:00007ffca127dd48 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[   81.363120] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f281906029d
-[   81.363122] RDX: 0000000000001000 RSI: 0000559f8bfae000 RDI: 0000000000000000
-[   81.363123] RBP: 0000000000001000 R08: 0000002863a10a81 R09: 00007f281915f000
-[   81.363124] R10: 00007f2818f77b60 R11: 0000000000000246 R12: 0000559f8bfae000
-[   81.363126] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000000000a
-[   81.363142]  </TASK>
-
-The same BUG fires from blk_add_trace_plug(), blk_add_trace_unplug(),
-and blk_add_trace_rq() paths as well.
-
-Fix by wrapping the tracing_record_cmdline() call with
-preempt_disable()/preempt_enable().  This is a best-effort "record
-the comm string for this PID" operation and briefly disabling
-preemption around it is both should be safe.
-
-With this patch now blktests for blktrace pass :-
-
-blktests (master) # ./check blktrace
-blktrace/001 (blktrace zone management command tracing)      [passed]
-    runtime  3.652s  ...  3.649s
-blktrace/002 (blktrace ftrace corruption with sysfs trace)   [passed]
-    runtime  0.437s  ...  0.389s
-blktests (master) #
-
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
----
- kernel/trace/blktrace.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 3b7c102a6eb3..488552036583 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -383,7 +383,9 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 	cpu = raw_smp_processor_id();
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 2d14fb6d0ed0..f7a0116c7e46 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3783,6 +3783,8 @@ static void bpf_raw_tp_link_release(struct bpf_link *link)
  
- 	if (blk_tracer) {
-+		preempt_disable_notrace();
- 		tracing_record_cmdline(current);
-+		preempt_enable_notrace();
+ 	bpf_probe_unregister(raw_tp->btp, raw_tp);
+ 	bpf_put_raw_tracepoint(raw_tp->btp);
++
++	tracepoint_synchronize_unregister();
+ }
  
- 		buffer = blk_tr->array_buffer.buffer;
- 		trace_ctx = tracing_gen_ctx_flags(0);
--- 
-2.39.5
-
+ static void bpf_raw_tp_link_dealloc(struct bpf_link *link)
