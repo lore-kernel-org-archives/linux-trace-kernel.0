@@ -1,91 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B036C272803;
-	Fri, 27 Feb 2026 00:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F39286425;
+	Fri, 27 Feb 2026 00:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772153367; cv=none; b=IGdecCOOQQypEDcvxEHFaO/QPaQcHb9T8VfUInajThfAYzb483hU6JhT04P76PifCGAxinlGRgnPqHzLH+mbDWkNEYcP3vKE6twtfdxUO5rP00zF2RLPQu5ER9Wn+b2ovbmEbd25RRSUlj0e6QCl3TxrAG7f8QiN30QdcArA+yM=
+	t=1772153629; cv=none; b=IZ3wMeJlWDFlaVo4zW+fPH9jeue9SRU5W+b7EkxU/AvMPHVduwZHNq5Jo9hrt+4CCehesdv4oLa9dNZF2hdDskoI0K6itpnMe2M//HrPqmNHw6gJWat0f0AHafpzMA7DA8a6d0z7icCG4Sh9po1lpXcuj0nlJcspQc24g3bpZyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772153367; c=relaxed/simple;
-	bh=0ei8WZJE2FrdZHn/eCwJkCgGu/fralSeuheP3WYhs8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KgQkbAZNUmjm8Sd54mhGxb4EM2wgvSJlyoIFDjLFDZyTE51EzGukLQTqJPQOpx3iw6QUatLnuqWGwpxmQXcVh18WwuEGQs7Zju6zgZk0pitmpxbyEVA3pbr/Ydy34gxhyB86APD5nVPRbc8TnfmSGzjg3OBcjkBcRMzgIgsendw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW5VLMc4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW5VLMc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905B0C116C6;
-	Fri, 27 Feb 2026 00:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772153367;
-	bh=0ei8WZJE2FrdZHn/eCwJkCgGu/fralSeuheP3WYhs8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dW5VLMc41+6wsYn1fqjBm5Z2dUQzsrLIbMzBUCUJdNzLWkt+tAliZNJIqTJnGoZiw
-	 YZcBpJQwV0umiTacTFuaTGPnJpiWNkDjtQ67O0D4xvd2HmOIoQ383C1NJZg6x0hTWl
-	 m9zMc8BqIYuIqA+2QC7M6Z7mAWWV0MIHAGQmg4fIDG/AFlCe8SM4+pyGsHQSuTmmOK
-	 WSZzOC+Ss3jHGxwo98vclmX6SceFPgJdF2AiwULvTinadsNnKEqAtfzrcN1Iu6oWZR
-	 VR1I//fmXR0l3+taU9//5+KG33gAyIHnLuySx+efG/BhDRB+2aE05s7mh14xOdHFi4
-	 JrOhqSjrBIMMA==
-From: SeongJae Park <sj@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	kernel-team@meta.com,
-	Benjamin Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v3 4/5] mm: rename zone->lock to zone->_lock
-Date: Thu, 26 Feb 2026 16:49:23 -0800
-Message-ID: <20260227004924.83661-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <1221b8e7fa9f5694f3c4e411f01581b5aba9bc63.1772129168.git.d@ilvokhin.com>
-References: 
+	s=arc-20240116; t=1772153629; c=relaxed/simple;
+	bh=CmjyhHBzOamf/TIiZ2ARCfteNT7y9VF5jQJbX1dDiAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h39PdfdRtIgvGW+DqihpFVnArwhvQcZnKpNnAqnaEykYU+1WuWvqsAgHiBzfKnWDetk11MV6juwvifh7Hkiiyl/L+v7NkHh4/ptLYV/12SFA+ofW1Q0Is8E7/C7IajbgmqHGcCtwf/W+kox+X9xh5G9Se+wGC/k70RKoK7KK99Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 20A57C1AE8;
+	Fri, 27 Feb 2026 00:53:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 8D64A20029;
+	Fri, 27 Feb 2026 00:53:32 +0000 (UTC)
+Date: Thu, 26 Feb 2026 19:53:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Lorenzo
+ Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
+ <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Oscar Salvador
+ <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt
+ <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ kernel-team@meta.com, Benjamin Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v3 1/5] mm: introduce zone lock wrappers
+Message-ID: <20260226195355.611ec7f3@gandalf.local.home>
+In-Reply-To: <20260227003856.83271-1-sj@kernel.org>
+References: <5bcc39cd3a227944d0fbe75ff86cdac92b38d4ca.1772129168.git.d@ilvokhin.com>
+	<20260227003856.83271-1-sj@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 66drfiy9dmwciebf5j7fsqroxmzzedms
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 8D64A20029
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/LiC0YloSSM44sJymQ/qyPpNpQ64AKLbM=
+X-HE-Tag: 1772153612-227748
+X-HE-Meta: U2FsdGVkX185+mqfSVIc5V+IJg7SmsD8GX4C+AsrLlqGF+GiNx5rp1FR/ah3UYg0ySZaaCC0lC3y4ZOj3GwZRvNDd+jiQ+voXh7q637prwfNUghpmjrfcHBWXH6pj6Zt7HFY086MjXDaLq1BJi+TnWMBNHvNvRTA9iVOHt8dQv0WkMKuXibT3ArN/tDWSD2XbgpIFNTuvbTxOSkHHvRTcd1M1eAaFfIZkTnOnpay0V5xotmMG540AfPniTrLHh5j267JzPYt69h1lEqRPTCS1/ZVFW+450aGnIu92ayUHLLi6Ptre+idC7HVL6gk/4lcHKe1coJSNmTZb815erS9aFI+OZAhIfA9
 
-On Thu, 26 Feb 2026 18:26:21 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+On Thu, 26 Feb 2026 16:38:55 -0800
+SeongJae Park <sj@kernel.org> wrote:
 
-> This intentionally breaks direct users of zone->lock at compile time so
-> all call sites are converted to the zone lock wrappers. Without the
-> rename, present and future out-of-tree code could continue using
-> spin_lock(&zone->lock) and bypass the wrappers and tracing
-> infrastructure.
+> checkpatch.pl complains as below.  Should be ok to ignore, but, may better to
+> kindly make it silence?
 > 
-> No functional change intended.
+>     WARNING: Single statement macros should not use a do {} while (0) loop
+
+Hmm, why is this an issue?
+
+>     #116: FILE: include/linux/zone_lock.h:13:
+>     +#define zone_lock_irqsave(zone, flags)                         \
+>     +do {                                                           \
+>     +       spin_lock_irqsave(&(zone)->lock, flags);                \
+>     +} while (0)
 > 
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 
-Acked-by: SeongJae Park <sj@kernel.org>
+I know this is checkpatch and not you complaining about it, but I really
+think it's a useless complaint. I can see it better as a do { } while (0)
+because it is creating a "function" like feature but can't be inline due to
+flags.
 
+This is one of the reasons I still never use checkpatch.pl :-(
 
-Thanks,
-SJ
-
-[...]
+-- Steve
