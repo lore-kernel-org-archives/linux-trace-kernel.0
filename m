@@ -1,74 +1,78 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132652FFDCA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 02:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FC030BF63
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 03:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772161135; cv=none; b=JuXj99QnrK+4hy3/g/6IQwL1cKEMbIwh8y6Rs0dBB1EjQ5l0nKSrt2IUDDk/WctkT1XpUpAtABGIuGmb/04LIlBO3STFvbk44Pz8NeXaoMlPW0AF/hRWOoLcm3oQEfjGW/9AV3yUU5m+am8nklCN7Sq5A0LedQzWSokFKb4m0pM=
+	t=1772161670; cv=none; b=iEwjcfdzoXzAHY2I3m/sOaMcxKzOptgb6f5BlQAY1blihStU++MXHm0Zn1OXLMhE9DIrgSk4ta4McHpfPGt2oLexzbPy/F0Lg5A75FdYOVWA1jrHDeEPtrFZP+i9vxBcEf/OIg69HZBmn4t0cLNxe/xuJhgDUy71ka+HCKufHAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772161135; c=relaxed/simple;
-	bh=YFj7yhjrtadWncMpo5/biqn5I1v6dyWQJz0v5w89S08=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XyEhD2TFQlTqcDBbwkjLq4lOSF503EBsfmPHfVoTT8dWVQgP/nnmM/Yc2BHM8ZU3Ubx6aQnrfU+XuN7u7mYNhJQQvvPMTZXsfqHU35T9U1m/1Psm0vkSIQqJ35fnm5Pz1aS/PQN7TVT8YL79DshtA+RRI3BIQWlyfOJ+JNpB2aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9NdEDiu; arc=none smtp.client-ip=209.85.221.68
+	s=arc-20240116; t=1772161670; c=relaxed/simple;
+	bh=UfIO6iEvg4LSZ2tM/9QdtbtzJvPbNDjmpvuy9g9cfYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=N/jPW7hcWFuuvhhZsusdTJOQgqDwfqEEDnho+gehYSrOD2Jz6gcmzrITtjTUH8DnG6yegbdYlFdRP/VmSi1xWXjTi4NgGH7E893fRI4Xn/nuvcRHQVwiifQUZoRgMd9JspX/bQq+12OXM8gCHNhbgZUp7Gb9tPkJjE8Ph1VCXdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dfKNwL1U; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9NdEDiu"
-Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-43991cc3155so1503006f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 18:58:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfKNwL1U"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4836d4c26d3so10262635e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Feb 2026 19:07:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772161132; x=1772765932; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vprqqt0LKIo00nWNx3ZKXI+4xqRRuBJ55PJ2vhVXiRQ=;
-        b=E9NdEDiuNc2pklVypBf9+ItwCF3A5tDQv4+RyXiUT24DGLLZ3Vt5xuBNYnjCdMzeQK
-         SHBz/UdAeoFqpxziquQUCYAqnIWSZJMdKNamEjCZ0lTq4+xg1IeWaVPpc5csxJaePaP4
-         ZKyTwWCzc6DtbsRdgcYPMiTDsmCMWBFt0IJnHStDror+XxUZ3QZCc1cRWtwXEaoTLEz+
-         FQM+Zs/p4DLi04iLNzwQVcAXxK1TL1cCFEDDN6Mq4oRRlE8TuNgvEq6RZGyWjZi1AuQG
-         oAPL4aXtSMHxEvrG012tnvJ88Xs27nKcYsNtgLSPQeiQc/wX9bnC0DCD8V6Uf975g1GJ
-         hgYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772161132; x=1772765932;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1772161667; x=1772766467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vprqqt0LKIo00nWNx3ZKXI+4xqRRuBJ55PJ2vhVXiRQ=;
-        b=FOmJ3t24XvAU2zdBTiuAH/z1XS+8gWaBVblg6akdBjra73VV1caC+gu12jPi49RsSe
-         VwMsgNy0X31Y/dH/vc4taxOkQWw5lu9mcgIfGU9GzvxApzOppsenV08117sgGZsdf+6r
-         FLD1jwsMaOu/ZkVR4cJP7qdWyn/QtDt71dn6vfJ6JJJ1FiYpw+i1A/84Dgfqz21yauCl
-         W7Ew8SlB5HMQ0NQxh5GZ7LMjPJ5YISEzV1tzdjX1ThzUmXmSv2858QdG5MpJyPWHY2cQ
-         /eK+wqEN8hoCZIxXkrpYnRof8pRgv597pXIh58SqOnkrrCgQzwG78QIJWZswXF2gEukl
-         QiyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMWVGs/CEx7Q//6NlCM7GZ/u5RLqk1q2D3Vm+TO4w/7Hb3lw7pX3ExQAOnt9lqq93PDXX0GD2aXS9oDnpxrkpomRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySVmBwJBQg/cJ2N68LEdZLZXgFmxEX5ilhdpsTPFI28YMQQOcU
-	pK6EGz6b7d+sZ+giLa0CDp0+VlCmr4mNsH5LN9awm2Yr4bfmSEVNy+Bl
-X-Gm-Gg: ATEYQzxCXOIYYOt8PDe2RaQ6pR4dOLC0g7MDPVVs19UkaEw+7bnZ7mkCXTH0vxVgFyG
-	GeRBfNPNXHwoo1p1QFw6g/+qPawi7fGx47Ot0BBxgXkVrlOj1M3KqpR+ImToJSNju0YwkC3XxPn
-	5NgYE4GY1MbEF3ITyhhBcc2B0UQCOVHGwaI7Adsv1V2TufoXL+Z7UgeNVH5t88Pzcj2Lhh8EJ8P
-	icOIepFEqpx6ZpPdh9wujQDJQGaq7CzLA3cjtS6Gww/TitANUbeUrkb5r3zITV7gVjFBqpoHItT
-	Jn2ibYRAf2Q57paWRKrJJq+zcJP6r+FxVOt9MdnIMp5wRWObkDxxh4yo7PlrWQPmLL6jmIIyh9P
-	7Ow7Ai8M0Xit91oXCdCK17kzTXOag9aKt2F/iDyMLEaz5dR6pJY7uk19tGd4ezUJ6EUnt3pNH2w
-	Z6bTnb9c/U2IyCR8WDNvEfInZ38XZy/NgiSlJoOXIzL1+z41uzxw==
-X-Received: by 2002:a05:6000:290f:b0:439:98b8:6470 with SMTP id ffacd0b85a97d-4399de25af8mr1513898f8f.49.1772161132119;
-        Thu, 26 Feb 2026 18:58:52 -0800 (PST)
+        bh=cZ15nmfEjKhKNDymehMp1pFL/Nll2gZNYk6Iw5DCQDw=;
+        b=dfKNwL1UdcWV9iDP+xWlWGPnKabIWH7j4q5U7XVz9/tPolfvFTtzTvwtaqW/PwuzHn
+         lX8PK8WzYYHq26muM95vAZoJeXZDXXYZpq4ivKe9wAp4CCOfAdIajqbhmc2N1bXANSJs
+         l7CpOrcjugZibdnJLaKrWcfg0Qh1TeD+Ju7j1oFAaPaz4bEfrpPuTO9r/XaVNZxJUyMN
+         /U/i3gVnUvfwCUef8CcrYgjdcthIAC4aE6wRni+evyRcjekjl94eUrOkcU7nykwzt/zH
+         14A0HtecDU1ys4d3yyoBWXyZ/jf/7y+qYt9rl6jgN0KCV8yZLmkwdb0oLvBMe75pYwGO
+         c1MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772161667; x=1772766467;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cZ15nmfEjKhKNDymehMp1pFL/Nll2gZNYk6Iw5DCQDw=;
+        b=ceqBqVJS3oREgHjZNfrWXOGnvhVyAFf8R64YyQ/9CHB4DkS1mSrgj+mK6CuJ0Cl2be
+         ebyngDU9R+EmVnHGO//zNwAmjO45NNDmWwnJzYk5yt9lFoCdF3y/GsPM8s1YfRIYBBoE
+         Vrymk6/DGkJJDj0ClM2Q2WQ6U9uyROJOKhjTRd3tr27IMrBlx8tZLtFdqCQwcbNG2azT
+         jagaON+lD2y5ma/PMTLZ9Ka4NZ2O08dCjG4XWLekDu9gjoIx34KGpOhO9VlmjC2xZhF+
+         mbZjrbP04sqHvx7ob5ZeuFO9/sUT3wH4yuY36p7gNe3wm1nEUC6Yv7BMcx6490Q7P8NJ
+         8cWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFTmlcQH6mD3i0hn2FJwrWGqdwuR7ovXr1d7BLMj0QY05FM539HP85MEIYVfthclgM96w2I1IclGAbnP34GHgscjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl0j6XeSFaWGNLbLZWxqiySfklEs43sjbogLWD84Dv/lFhl99b
+	VbhEu6UZbkTnllAh+4UpKvPqbr8YY+kzhfe9EXhsR8rSUjapstpefiMZ
+X-Gm-Gg: ATEYQzw6AIcy97uYVsWdL5HGSFleN2cFzYxMQuMHjElmz/E5XRimRSnoM9MRdmDFgAj
+	UmICoJQK6cCZqaqlfVfwjP63022KKxETNkbbDhBFLSPrBm+GHdLParjYrh4kipgWZIlze0PZhwa
+	p8rYi24yzgi9wCuHDXD4SCq7seqOx1ZAclNOqp1sDoPL8CuMCnHI+WKeYVoZbB4i7ZnK47RMA+o
+	E7sekmts7EfnRSkfBqc7Ef6HRpUJhc5ZI3kEUww6SLZk3TyQNQMy2jX/Cc5MvXXSBC9qiunxTRo
+	uKSNlAHjJiowsonQwF4Bq6smlgIOPCh00f8BGx/X2d+nde3FiTgwTNqw15lmU0SjmsTvk4luu9U
+	5kVUukhLHb8zJz1oxmKdJRy4dwzXX9FwyqYIoyTj/Pie5aqp315cYrHOdfzYta+jWFe7XgzUZwj
+	qGOqyRhLASnanfw8m0EFC2Ia34EYe0ENimnS09IOgICQ7c9lhpzQ==
+X-Received: by 2002:a05:600c:c490:b0:477:63b5:7148 with SMTP id 5b1f17b1804b1-483c9bb65ffmr14190225e9.6.1772161666981;
+        Thu, 26 Feb 2026 19:07:46 -0800 (PST)
 Received: from lima-ubuntu.hz.ali.com ([47.246.98.215])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c76b40esm3083180f8f.36.2026.02.26.18.58.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b89c99sm77439065e9.15.2026.02.26.19.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 18:58:51 -0800 (PST)
+        Thu, 26 Feb 2026 19:07:46 -0800 (PST)
 From: Qing Wang <wangqing7171@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Qing Wang <wangqing7171@gmail.com>,
-	Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-Subject: [PATCH] tracing: Fix WARN_ON in tracing_buffers_mmap_close
-Date: Fri, 27 Feb 2026 10:58:42 +0800
-Message-Id: <20260227025842.1085206-1-wangqing7171@gmail.com>
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com,
+	wangqing7171@gmail.com
+Subject: Re: [syzbot] [trace?] WARNING in tracing_buffers_mmap_close (3)
+Date: Fri, 27 Feb 2026 11:07:37 +0800
+Message-Id: <20260227030737.1089041-1-wangqing7171@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260226115229.7111b070@gandalf.local.home>
+References: <20260226115229.7111b070@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,101 +81,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a process forks, the child process copies the parent's VMAs but the
-user_mapped reference count is not incremented. As a result, when both the
-parent and child processes exit, tracing_buffers_mmap_close() is called
-twice. On the second call, user_mapped is already 0, causing the function to
-return -ENODEV and triggering a WARN_ON.
+On Fri, 27 Feb 2026 at 00:52, Steven Rostedt <rostedt@goodmis.org> wrote:
+> OK, so the issue is that the ring buffer was mapped, then the process that
+> mapped it forked duplicating the mappings. And then on exit (or unmap),
+> the first one to unmap the buffer will cause the ring buffer to think it
+> was fully unmapped causing the next one to unmap to trigger the error.
+> 
+> 
+> > + */
+> > +void ring_buffer_map_user_mapped_inc(struct trace_buffer *buffer, int cpu)
+> 
+> Let's call this ring_buffer_map_dup() to be consistent with ring_buffer_map().
+> 
+> inc would expect a dec, but dup() is more of what it is doing.
+> 
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > +		return;
+> 
+> I wonder if this fails we should warn. As it should never be called unless
+> it was successfully mapped.
+> 
+> > +
+> > +	cpu_buffer = buffer->buffers[cpu];
+> > +
+> > +	guard(mutex)(&cpu_buffer->mapping_lock);
+> > +
+> > +	if (cpu_buffer->user_mapped)
+> > +		__rb_inc_dec_mapped(cpu_buffer, true);
+> 
+> Probably should also warn if user_mapped is not set. Again, this should not
+> ever not be mapped if we get here.
+> 
+> -- Steve
 
-Fix it by incrementing the user_mapped reference count without re-mapping
-the pages in the VMA's open callback.
+Thanks for your suggestion. I sent a patch [0] and looking forward to your review.
+ [0] https://lore.kernel.org/all/20260227025842.1085206-1-wangqing7171@gmail.com/
 
-Fixes: cf9f0f7c4c5bb ("tracing: Allow user-space mapping of the ring-buffer")
-Reported-by: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=3b5dd2030fe08afdf65d
-Tested-by: syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com
-Signed-off-by: Qing Wang <wangqing7171@gmail.com>
----
- include/linux/ring_buffer.h |  1 +
- kernel/trace/ring_buffer.c  | 21 +++++++++++++++++++++
- kernel/trace/trace.c        | 13 +++++++++++++
- 3 files changed, 35 insertions(+)
-
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 876358cfe1b1..d862fa610270 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -248,6 +248,7 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
- 
- int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 		    struct vm_area_struct *vma);
-+void ring_buffer_map_dup(struct trace_buffer *buffer, int cpu);
- int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
- int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
- #endif /* _LINUX_RING_BUFFER_H */
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index f16f053ef77d..17d0ea0cc3e6 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7310,6 +7310,27 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 	return err;
- }
- 
-+/*
-+ * This is called when a VMA is duplicated (e.g., on fork()) to increment
-+ * the user_mapped counter without remapping pages.
-+ */
-+void ring_buffer_map_dup(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+
-+	if (WARN_ON(!cpumask_test_cpu(cpu, buffer->cpumask)))
-+		return;
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+
-+	guard(mutex)(&cpu_buffer->mapping_lock);
-+
-+	if (cpu_buffer->user_mapped)
-+		__rb_inc_dec_mapped(cpu_buffer, true);
-+	else
-+		WARN(1, "Unexpected buffer stat, it should be mapped");
-+}
-+
- int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 23de3719f495..1e7c032a72d2 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8213,6 +8213,18 @@ static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
- static inline void put_snapshot_map(struct trace_array *tr) { }
- #endif
- 
-+/*
-+ * This is called when a VMA is duplicated (e.g., on fork()) to increment
-+ * the user_mapped counter without remapping pages.
-+ */
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_map_dup(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
- {
- 	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-@@ -8232,6 +8244,7 @@ static int tracing_buffers_may_split(struct vm_area_struct *vma, unsigned long a
- }
- 
- static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
- 	.close		= tracing_buffers_mmap_close,
- 	.may_split      = tracing_buffers_may_split,
- };
--- 
-2.34.1
-
+--
+Best regards,
+Qing
