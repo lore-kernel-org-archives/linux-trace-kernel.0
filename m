@@ -1,225 +1,221 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D1234B425
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 17:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A4C46BF;
+	Fri, 27 Feb 2026 17:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772212099; cv=none; b=KRxW8WFheBC1ReOk0zWp5/YNBGBsvM+HJU8uz/2PoBeggaPm3gbfABdK1dEip+i1+E5PXqAbrU6i23DY4EBrnqAyNY2X0sqYxrnhbDj7XqFBYDh4Wq+wuWE5vBg6xU0Xqn3D2hU7VGPIZ2ZcA1qkatxqNvkrnh87YObKm4TSD1w=
+	t=1772212757; cv=none; b=DbknlFPw9Gv29SYfa8ZbE/KxPLJxH8uFcxnJUWv9RH9S9FRKOXtSr7leUtsvcoX4iq6yuhFkPIN5WnJB8DwEqHBiQa6XKFzD/xyiuO+G5+VMH5kHXBj0BL/Ru4K3qU1IxtNiBznlv4MCNQ5fY7XBsT1yfxu9R50jlxeNRJHL3iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772212099; c=relaxed/simple;
-	bh=ZV8ItIHfWRaPrh6dHZ9ViYTfVoWeaAst/x6uOU5WHJU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoVwY7rRJbohs2KwB1ofC/Dkur0iddcfjaXtH480K1Ht6nV79wzxKNsoDlCnnGn3K8xfH8MD971IR5uHu6kkO1fqrin6YjxdAIQMDI1+3IlmVf975a3olwaC9rgNWn+q/3zyh9TDKKPJipysvRrTrqW6+MHnwkVk1SZbjRhAk+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pn8FVyJq; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772212757; c=relaxed/simple;
+	bh=9Hmf5kY8YWnQ1E7H340nV4l2uV2/0yd8vERohTamu7g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d6VhamOwFNmVLp0CmxTTnMG57TLfl9S5E5/B2JQEmSwS/AzP3AxpU0YhTLPRmfCShZnxFauHYjlFoKBknKWyz+2Nq3R7M9JdNReGaP3tJBUICQCO0U++K5ua+FYKv0ZXvWpuI+h8NZ7WWm+ls+xsnoKwWplx5ujhH3jbaiU7ShE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3h9wEAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn8FVyJq"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-4376de3f128so1583173f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 09:08:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772212097; x=1772816897; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=be9G3Ajs4Fq6jFDsmzCxnr1IbQpwR2eVW71VEsdeV+g=;
-        b=Pn8FVyJqvLqEhzwIVvy3XQzV84d+8qyt5jtGC+KMuvhOcnRkb3vA5EC2mIKDWuuTHn
-         CaWMldLra3Xhcsi20VUaR5UBghTlc2ayTJAZiY+XG1Q551T7x4YUJkHMbCXVF5WsY4ka
-         yyf/RPla6939gRA3XAplztuWDli/0ELzCOG5BpJ9HPS0L8UhSd9cMg1m5ykOjKrwM27H
-         1DwKvZiGmGcaIa+NDI7FpWXBBJ8axzcLkw/Dcy78z573w8FPW/fSTSPyY55iu0W7UMV+
-         tskor4I8MPahpFnYGbMMMoHsZoowTe4f5niOCVnGW/8Amw0Io9UrPehRznJvOgbA/oEf
-         3ybw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772212097; x=1772816897;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=be9G3Ajs4Fq6jFDsmzCxnr1IbQpwR2eVW71VEsdeV+g=;
-        b=Y/DTUG0vx4mto16ZkU5NoN6BW6KjjUFoq/HHrDi8hr8dGaflhxESJrXp0DPzqOvljJ
-         97AUHB80bg5Tp6QLBwrq8MSrJ/WyNQlcfqkmKUQI8Hp7mq3/gkzXid1j44KEcXTu84uq
-         8GFGqp79EWtQNVD9Urmyp34apg8NcW3Ren+lnrPciRY00ImFdk0+sYdDWUydZIdps++0
-         e4tVezJKOjHwARtBmMPb07N24i0YO5bmRvnGmNN5mkskFB+qx12nTE98V68h3TBnBKAL
-         BYoifo3+rrc6QTxEzm2dART7FdFjRZDSvuZKhYPrECEkvLnLki4E/N96SGJik7dzy4tc
-         tgdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1pL1Vjh8Z/H9oXQrmA5VyBIAp20S/HiTqaz7Y7e9p4LdOFa70+TofptuMCJ+5VwOMAiNOyyt7plgbAUJ5OzR3P0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww8U+gykUkOlVYXN7NckA8YRt+r0SqqdT9yEgdHtEvUKRy2W6Y
-	mucSbXcc+iDF+29qxE0Nm2FOMnzRvq+NKcgn0wUU6v5OQdg8fyFIyMKi0Z35Hj8J
-X-Gm-Gg: ATEYQzzlVxgo2Uwm/4WVqXtJ8QbkaxvC8UaTVUK+U7BE1yXCcd/oivOQYBYyQKVF3Fy
-	A5cTImFYNz+nO8KiqyP4FZgbuQCzwzR8mVWGFnIMmz21KUyv9iW6lZVMrP3eQ/HNZab83vUaPhK
-	7rDAQ5PvMbzpYkJNeCN6xSMqMC2RVvDYQkrS35cQqecJcoR9UFETeQd4XFETj+X5eNjM//Q8qc3
-	S+77SGU71sPWQ8JkFPXDOKNVSeSvRax4Icv32KoAHDR2GFj60Zkaw3TKZ8QG/gqUapqld3NuNFr
-	oMRCuJG4U/IEjy4vFj7+a+h/N2Rjuvsg0//04LK+18V1eIF5ZDYjiDszBFy/3QCQrgyR+Zsoej6
-	aR7eqzBS1Mr3gVUqGLu10lH5vdzCJxZHvMxKVRw+d6KLh4aETsao0D8V8ZUGb7BeNK6838RS9cF
-	gYCTJAaLq8+JQQgTO7Z9o2Qz/IALY=
-X-Received: by 2002:a05:6000:3111:b0:439:8a4f:524f with SMTP id ffacd0b85a97d-4399ddebb52mr6406062f8f.13.1772212096537;
-        Fri, 27 Feb 2026 09:08:16 -0800 (PST)
-Received: from krava ([2a00:102a:5009:b4a6:a10f:2f8b:3309:3fcd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c76b40esm7664588f8f.36.2026.02.27.09.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Feb 2026 09:08:16 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 27 Feb 2026 18:08:13 +0100
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-open-source@crowdstrike.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next v2 1/3] libbpf: Optimize kprobe.session
- attachment for exact function names
-Message-ID: <aaHPfR_cOwKIm-lU@krava>
-References: <20260226173342.3565919-1-andrey.grodzovsky@crowdstrike.com>
- <20260226173342.3565919-2-andrey.grodzovsky@crowdstrike.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3h9wEAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDBFC116C6;
+	Fri, 27 Feb 2026 17:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772212756;
+	bh=9Hmf5kY8YWnQ1E7H340nV4l2uV2/0yd8vERohTamu7g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=U3h9wEAnA4jdOFdHtUlDJHH8RA37wTgdzMio3JTprgvFZncKOF1Y9bC588tgzosoO
+	 I3zi4F+PWUveDMo9C2x/IXighlDyvN1dDbfbkoNeEuOpsd8g8ikAvEdDJWJkVEkTKR
+	 33cge3FKI8KoskHXtQRcy4n72Nf226qDkiqE55Ck8EczyfA2ppenIbdwy6kk9gn2+8
+	 wrVv1JAr9Wa2QDkrJ0O9YuE5evAkKvxtHpzIFmDGHGCDIvT5o2ZLGWF3kk0YP1TpID
+	 zG1I/R0E6cqPfGKFx2kEmBBYt9VLZy6xqxjG5ly2fMrN8gQnYDoY1zDoAnFhgIWI4Z
+	 qy+iMn8iaN9FQ==
+Message-ID: <4a462d40899698586c110add96ce3fab6ddac30b.camel@kernel.org>
+Subject: Re: [PATCH 00/61] vfs: change inode->i_ino from unsigned long to u64
+From: Jeff Layton <jlayton@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner	
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Dan Williams
+ <dan.j.williams@intel.com>, Eric Biggers	 <ebiggers@kernel.org>, "Theodore
+ Y. Ts'o" <tytso@mit.edu>, Muchun Song	 <muchun.song@linux.dev>, Oscar
+ Salvador <osalvador@suse.de>, David Hildenbrand	 <david@kernel.org>, David
+ Howells <dhowells@redhat.com>, Paulo Alcantara	 <pc@manguebit.org>, Andreas
+ Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>, Jaegeuk Kim
+ <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
+ <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
+ <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
+ Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
+ <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+ Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
+ <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
+ Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
+ <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
+ <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
+ Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
+ "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
+ <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
+ <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
+ Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
+ Christoph Hellwig	 <hch@infradead.org>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>,  Yangtao Li <frank.li@vivo.com>, Mikulas
+ Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse	
+ <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp	
+ <shaggy@kernel.org>, Konstantin Komarov	
+ <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
+ <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
+ Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
+ E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
+ Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
+ Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
+ <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
+ Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
+ Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
+ Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
+ Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, "Darrick
+ J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev, 
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, 
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+ autofs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net, 
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+ devel@lists.orangefs.org, 	linux-unionfs@vger.kernel.org,
+ apparmor@lists.ubuntu.com, 	linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, 	selinux@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, 	dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org, 	linaro-mm-sig@lists.linaro.org,
+ netdev@vger.kernel.org, 	linux-perf-users@vger.kernel.org,
+ linux-fscrypt@vger.kernel.org, 	linux-xfs@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-x25@vger.kernel.org
+Date: Fri, 27 Feb 2026 12:19:02 -0500
+In-Reply-To: <aaB5lgKd8FOIizPg@casper.infradead.org>
+References: <20260226-iino-u64-v1-0-ccceff366db9@kernel.org>
+	 <aaB5lgKd8FOIizPg@casper.infradead.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260226173342.3565919-2-andrey.grodzovsky@crowdstrike.com>
 
-On Thu, Feb 26, 2026 at 12:33:40PM -0500, Andrey Grodzovsky wrote:
-> Implement dual-path optimization in attach_kprobe_session():
-> - Fast path: Use syms[] array for exact function names
->   (no kallsyms parsing)
-> - Slow path: Use pattern matching with kallsyms only for
->   wildcards
-> 
-> This avoids expensive kallsyms file parsing (~150ms) when function names
-> are specified exactly, improving attachment time 50x (~3-5ms).
-> 
-> Error code normalization: The fast path returns ESRCH from kernel's
-> ftrace_lookup_symbols(), while slow path returns ENOENT from userspace
-> kallsyms parsing. Convert ESRCH to ENOENT in fast path to maintain API
-> consistency - both paths now return identical error codes for "symbol
-> not found".
-> 
-> Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-> ---
->  tools/lib/bpf/libbpf.c | 34 ++++++++++++++++++++++++++++------
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 0be7017800fe..0ba8aa2c5fd2 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -12042,6 +12042,20 @@ bpf_program__attach_kprobe_multi_opts(const struct bpf_program *prog,
->  		return libbpf_err_ptr(-EINVAL);
->  
->  	if (pattern) {
-> +		/*
-> +		 * Exact function name (no wildcards): bypass kallsyms parsing
-> +		 * and pass the symbol directly to the kernel via syms[] array.
-> +		 * The kernel's ftrace_lookup_symbols() resolves it efficiently.
-> +		 */
-> +		if (!strpbrk(pattern, "*?")) {
-> +			const char *sym = pattern;
-> +
-> +			syms = &sym;
+On Thu, 2026-02-26 at 16:49 +0000, Matthew Wilcox wrote:
+> On Thu, Feb 26, 2026 at 10:55:02AM -0500, Jeff Layton wrote:
+> > The bulk of the changes are to format strings and tracepoints, since th=
+e
+> > kernel itself doesn't care that much about the i_ino field. The first
+> > patch changes some vfs function arguments, so check that one out
+> > carefully.
+>=20
+> Why are the format strings all done as separate patches?  Don't we get
+> bisection hazards by splitting it apart this way?
 
-why not use pattern ndirectly?
+Circling back to this...
 
-> +			cnt = 1;
-> +			pattern = NULL;
+I have a v2 series (~107 patches) that I'm testing now that does this
+more bisectably with the typedef and macro scaffolding that Mathieu
+suggested. I'll probably send it early next week.
 
-not sure why we need this
-
-> +			goto attach;
-> +		}
-
-I wonder we could just another if path and avoid the goto, like:
-
-
--	if (pattern) {
-+	/*
-+	 * Exact function name (no wildcards): bypass kallsyms parsing
-+	 * and pass the symbol directly to the kernel via syms[] array.
-+	 * The kernel's ftrace_lookup_symbols() resolves it efficiently.
-+	 */
-+	if (pattern && !strpbrk(pattern, "*?")) {
-+		syms = &pattern;
-+		cnt = 1;
-+	} else if (pattern) {
- 		if (has_available_filter_functions_addrs())
- 			err = libbpf_available_kprobes_parse(&res);
-
-
-wdyt?
-
-> +
->  		if (has_available_filter_functions_addrs())
->  			err = libbpf_available_kprobes_parse(&res);
->  		else
-> @@ -12060,6 +12074,7 @@ bpf_program__attach_kprobe_multi_opts(const struct bpf_program *prog,
->  		cnt = res.cnt;
->  	}
->  
-> +attach:
->  	retprobe = OPTS_GET(opts, retprobe, false);
->  	session  = OPTS_GET(opts, session, false);
->  
-> @@ -12067,7 +12082,6 @@ bpf_program__attach_kprobe_multi_opts(const struct bpf_program *prog,
->  		return libbpf_err_ptr(-EINVAL);
->  
->  	attach_type = session ? BPF_TRACE_KPROBE_SESSION : BPF_TRACE_KPROBE_MULTI;
-> -
-
-not needed
-
->  	lopts.kprobe_multi.syms = syms;
->  	lopts.kprobe_multi.addrs = addrs;
->  	lopts.kprobe_multi.cookies = cookies;
-> @@ -12084,6 +12098,14 @@ bpf_program__attach_kprobe_multi_opts(const struct bpf_program *prog,
->  	link_fd = bpf_link_create(prog_fd, 0, attach_type, &lopts);
->  	if (link_fd < 0) {
->  		err = -errno;
-> +		/*
-> +		 * Normalize error code: when exact name bypasses kallsyms
-> +		 * parsing, kernel returns ESRCH from ftrace_lookup_symbols().
-> +		 * Convert to ENOENT for API consistency with the pattern
-> +		 * matching path which returns ENOENT from userspace.
-> +		 */
-> +		if (err == -ESRCH)
-> +			err = -ENOENT;
->  		pr_warn("prog '%s': failed to attach: %s\n",
->  			prog->name, errstr(err));
->  		goto error;
-> @@ -12192,7 +12214,7 @@ static int attach_kprobe_session(const struct bpf_program *prog, long cookie,
->  {
->  	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts, .session = true);
->  	const char *spec;
-> -	char *pattern;
-> +	char *func_name;
-
-I don't think we need the change, it's jus for the different pr_warn
-below right? let's keep pattern
-
-thanks,
-jirka
-
->  	int n;
->  
->  	*link = NULL;
-> @@ -12202,14 +12224,14 @@ static int attach_kprobe_session(const struct bpf_program *prog, long cookie,
->  		return 0;
->  
->  	spec = prog->sec_name + sizeof("kprobe.session/") - 1;
-> -	n = sscanf(spec, "%m[a-zA-Z0-9_.*?]", &pattern);
-> +	n = sscanf(spec, "%m[a-zA-Z0-9_.*?]", &func_name);
->  	if (n < 1) {
-> -		pr_warn("kprobe session pattern is invalid: %s\n", spec);
-> +		pr_warn("kprobe session function name is invalid: %s\n", spec);
->  		return -EINVAL;
->  	}
->  
-> -	*link = bpf_program__attach_kprobe_multi_opts(prog, pattern, &opts);
-> -	free(pattern);
-> +	*link = bpf_program__attach_kprobe_multi_opts(prog, func_name, &opts);
-> +	free(func_name);
->  	return *link ? 0 : -errno;
->  }
->  
-> -- 
-> 2.34.1
-> 
+I had done it this way originally since I figured it was best to break
+this up by subsystem. Should I continue with this series as a set of
+patches broken up this way, or is it preferable to combine the pile of
+format changes into fewer patches?
+--=20
+Jeff Layton <jlayton@kernel.org>
