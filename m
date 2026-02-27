@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB01A08DB;
-	Fri, 27 Feb 2026 00:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E66642049;
+	Fri, 27 Feb 2026 00:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772152738; cv=none; b=EaGzuXUuKuJ8GmPhG4KOzZ/I5tEgz0AJWJa8PD7k5dhUW2sjdeo954zTxlCsAxfboew5qW/JrihrA5JfP6/ekt68DPVobv8j0IDNzMkDR+9ZMR2sXlDA07lxrwb9hntyXbAz1nb5lwT3XqK0eWN1cNqfJux48+msVzRttKpF5Iw=
+	t=1772152805; cv=none; b=cukESF8veAKY9C+pNwb6KOpiUv/83mFEdCh/eNqX/OrNDw82KUVO+rJFLPV2GWGPC3KI3kyT6Pap9DN3M3JinY1JNDDUz+fD1sPISLpgM+Do+JiXGl/GtqoOS3J49bYEG5ZP9CeTocq3dOD00nELLc6fNTUFIyd638TWmjWQSJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772152738; c=relaxed/simple;
-	bh=+zLLB70CAty+NdETlp4hLlKF20g9qfS3WT0A330lBlY=;
+	s=arc-20240116; t=1772152805; c=relaxed/simple;
+	bh=hRvAW4fgqzOEWM3gO/AL01HeScXOia9ctRQdg/T/bOc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bqN9qNRTRbN9VXde1Faa4YgeSl3PAJfXgaOFXa/a58BYC+tMnRg/ZfGmKyZkVBhgoRPsmEM4tU/K7EKNG8qfeVEMq4gm90l+gaoaVSqCzBuy645zrDi7WlxxOyy+CKDwtXKpdLxl5lKmvpJnXx2nq5JJaewmUYE9tk1ZgIauGIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldWMfqkG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tSTnqqNefabugjTHY6sRkvmtmYKy/uVujJVjlZ5bwLAzGg42PGnPFeM5gAK4rHMxKNsAfIzK8/HT7+BJ3+UQOj5FyDNN/ehKGBb+SYuGv5E1OCJsW4ttsKiUpALj/vpkY1TLT0g9x1mMoFHd2b2uE7oZ2oW2j7XbMb+ftZVBqEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2Uukdgz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldWMfqkG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610C6C116C6;
-	Fri, 27 Feb 2026 00:38:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2Uukdgz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F80C116C6;
+	Fri, 27 Feb 2026 00:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772152738;
-	bh=+zLLB70CAty+NdETlp4hLlKF20g9qfS3WT0A330lBlY=;
+	s=k20201202; t=1772152804;
+	bh=hRvAW4fgqzOEWM3gO/AL01HeScXOia9ctRQdg/T/bOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ldWMfqkG9pksWV2DpVwALltLFNKX6kPDCKJYXDlvhpFSpcb/KGrwW2ZGbCqdU/KC6
-	 1UHlKZ8lac4iujmDTjndN0zlJ3cQSA98jQZoUtrMbNQOzkpiNRMtmJA+8YZY5LINn2
-	 PAN1K+BA4CkZH8vnH01jHbuH/9pkXekDuek9QKdDNocl5yT9iTunq6bGtgzy8uGHPY
-	 4ene5f81tWwTdyqJnboEV9c9TdFff8XZ5ToEXlAJg0EjeUX2Wc9+Txm9qtO8zQIb7X
-	 P6LkIPvANC/fgLSUMD//akSJDsWHCo/uk5hRwTlUHQZbRSsNr1l1QSHz1LNafpDpiP
-	 fXCdY0nuQv4nw==
+	b=p2UukdgzdNb2Xp0zz3250PoXnYD5K6v9ICRhumcmxuGPPYyM3MA17u2VzdL4f971k
+	 cxFlTMlg75pEGzkec4d2gZ4ZumB7YQMIaznIo6mt489g8vEef6sGYrmCfi9BeNTyxb
+	 TNAT4cupkOZ4pB+cXwx4Agr5k5foIC2yAvpoJLptF1UL8biDJvsn/yVpl2CZV5pCWr
+	 EylrCu4w7Z8/PgrrW1WqMSx6vRSPvtkUKGq907eQlp68IzZaLLqWx8LVg+js856IFm
+	 3zuExyBfBc1qttW9P/m0dQEKTm5c1VSagjraZ+Qigl+MDOJSnEEJeSC9aYXp33X7tG
+	 nkKHXvkUpYIyQ==
 From: SeongJae Park <sj@kernel.org>
 To: Dmitry Ilvokhin <d@ilvokhin.com>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -55,11 +55,11 @@ Cc: SeongJae Park <sj@kernel.org>,
 	linux-cxl@vger.kernel.org,
 	kernel-team@meta.com,
 	Benjamin Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v3 1/5] mm: introduce zone lock wrappers
-Date: Thu, 26 Feb 2026 16:38:55 -0800
-Message-ID: <20260227003856.83271-1-sj@kernel.org>
+Subject: Re: [PATCH v3 2/5] mm: convert zone lock users to wrappers
+Date: Thu, 26 Feb 2026 16:40:02 -0800
+Message-ID: <20260227004002.83379-1-sj@kernel.org>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <5bcc39cd3a227944d0fbe75ff86cdac92b38d4ca.1772129168.git.d@ilvokhin.com>
+In-Reply-To: <e5324d64361f86d930d940a5b49235f7996efe53.1772129168.git.d@ilvokhin.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -69,55 +69,22 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I should sent this together with the previous reply, but I forgot as usual,
-sorry.
+On Thu, 26 Feb 2026 18:26:19 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-On Thu, 26 Feb 2026 18:26:18 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
-
-> Add thin wrappers around zone lock acquire/release operations. This
-> prepares the code for future tracepoint instrumentation without
-> modifying individual call sites.
+> Replace direct zone lock acquire/release operations with the
+> newly introduced wrappers.
 > 
-> Centralizing zone lock operations behind wrappers allows future
-> instrumentation or debugging hooks to be added without touching
-> all users.
+> The changes are purely mechanical substitutions. No functional change
+> intended. Locking semantics and ordering remain unchanged.
 > 
-> No functional change intended. The wrappers are introduced in
-> preparation for subsequent patches and are not yet used.
+> The compaction path is left unchanged for now and will be
+> handled separately in the following patch due to additional
+> non-trivial modifications.
 > 
 > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
-[...]
-> --- /dev/null
-> +++ b/include/linux/zone_lock.h
-> @@ -0,0 +1,38 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_ZONE_LOCK_H
-> +#define _LINUX_ZONE_LOCK_H
-> +
-> +#include <linux/mmzone.h>
-> +#include <linux/spinlock.h>
-> +
-> +static inline void zone_lock_init(struct zone *zone)
-> +{
-> +	spin_lock_init(&zone->lock);
-> +}
-> +
-> +#define zone_lock_irqsave(zone, flags)				\
-> +do {								\
-> +	spin_lock_irqsave(&(zone)->lock, flags);		\
-> +} while (0)
 
-checkpatch.pl complains as below.  Should be ok to ignore, but, may better to
-kindly make it silence?
-
-    WARNING: Single statement macros should not use a do {} while (0) loop
-    #116: FILE: include/linux/zone_lock.h:13:
-    +#define zone_lock_irqsave(zone, flags)                         \
-    +do {                                                           \
-    +       spin_lock_irqsave(&(zone)->lock, flags);                \
-    +} while (0)
+Reviewed-by: SeongJae Park <sj@kernel.org>
 
 
 Thanks,
