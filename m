@@ -1,90 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D642428494;
-	Fri, 27 Feb 2026 21:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E697223EA90
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Feb 2026 22:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772227639; cv=none; b=RxumHYwNDc5y1lAwLLsdJxND6WYoTOgEW7Dekw9vbjJRqNk3me9ya8vDciHPSi6KOVHFO8uDCgoq5TdLSLXxZPJ0JYr71jRIIPAev3Hp7TyWp94yWspe4ZbvhtjGItYV0PMUk0bfRQzfzq7tncf4+UC/SmjtU4us9Vm35IIzmUI=
+	t=1772229679; cv=none; b=u821mBTvpOxR9ZibVO7mNcXAfvDh27qa1+FsIOFvnKSbrBVcoVpIOl8JTnCe3peVKFd01uquxfrZY2xFV3Fyj1syOjUfhExa+OUmmIDxZ+Xr6Nvqrp8zaeiaMS5zSwlM47LjRLMdxDAf1/BDJdC215IaeFvFd/QKy6QBxzM1GcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772227639; c=relaxed/simple;
-	bh=WDjPZKs4MqgqqUaiQyuXBaE6TTaaT0C+D7IxDQoFPjE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=u87RKJjZkuZdm61XTfdxLD+cE469kQcMKM8WLI/z53hSUAQ4O/ky+qJHvtmiuBnpgOzJF49mZSrW2jbku2uv5kxfT8x+I5lBV6mGPhZ3TExD120TokdD9pUTFizDJaYFW4yz+Cs9EK7lJWiMbkRJBCCAkzaZ4a2/A0e6pg9+FiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h13cm9u2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772229679; c=relaxed/simple;
+	bh=e79SBH+Z0ZmZ8dVPue78jP+m6mUiUq/O7xxAkiXEz1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dFIjI2z0vzKY21QuaWvNUvwsOgqOeQtGDG+iIA6wm/DJCYBN5cNM3AjGviqtWkG40PWcguc87bbYNkgL2Rh0xY4K7Bq/EwuCdg2ycsv+gWS0CghE8vsPPex7fJT/5X5xbLh6xaf+4HbDMJHCVBYHN972xXipkS6wphNThoBAUsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c+V4B1d0; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h13cm9u2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FAAC116C6;
-	Fri, 27 Feb 2026 21:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1772227638;
-	bh=WDjPZKs4MqgqqUaiQyuXBaE6TTaaT0C+D7IxDQoFPjE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h13cm9u2Haz3r+0D/dv7uzmEiEhrbak0bfbOKms+/VF9CK1wFmohzV7Oc2f4ltVpX
-	 VkDYOqGRahVOKkttbyX/W2TGuCe698IMvn/RjFUtJJFvyy9pwrEKCg3RkvJ4XXZUy/
-	 8iSqa17sXW/GLsZzyuVqRAoCPzeW0Obx7rikUoW0=
-Date: Fri, 27 Feb 2026 13:27:17 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
- <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu
- <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- christian.koenig@amd.com, Shakeel Butt <shakeel.butt@linux.dev>, SeongJae
- Park <sj@kernel.org>, Michal Hocko <mhocko@suse.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett"
- <liam.howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Christian Brauner <brauner@kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, Miaohe
- Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, Yu Zhao
- <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, Mateusz
- Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>, Baolin
- Wang <baolin.wang@linux.alibaba.com>, Aboorva Devarajan
- <aboorvad@linux.ibm.com>
-Subject: Re: [PATCH v18 0/3] Improve proc RSS accuracy
-Message-Id: <20260227132717.c811f04b63a332f88e354e08@linux-foundation.org>
-In-Reply-To: <20260227153730.1556542-1-mathieu.desnoyers@efficios.com>
-References: <20260227153730.1556542-1-mathieu.desnoyers@efficios.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c+V4B1d0"
+Message-ID: <dc7fb8ff-def1-4d9f-8025-c7da49a1a902@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772229665;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O9aosDff01A5vG7FDiqPHENUMGy/wtA//17/ZG5YGhg=;
+	b=c+V4B1d0bRhUee5RVhRza7qcTgCdboHyBXwyNo2hkneRIhKF/oaExd6XSOlcCh/r/4HGRk
+	84/lOBuFhSyF0rZonV88EFU3Vk7flqEvUj73SR1tvYu1+RA3mYMOBBdMctEAqVTNxGatGm
+	CRt1RI+pMj5YUCHFPIeGUpupjsIt0vI=
+Date: Fri, 27 Feb 2026 14:00:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Subject: Re: [PATCHv6 bpf-next 9/9] bpf,x86: Use single ftrace_ops for direct
+ calls
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@kernel.org>, Florent Revest <revest@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>
+References: <20251230145010.103439-1-jolsa@kernel.org>
+ <20251230145010.103439-10-jolsa@kernel.org>
+ <1b58ffb2-92ae-433a-ba46-95294d6edea2@linux.dev> <aaIAoBZGkP7RQrvc@krava>
+ <aaILlSuEgaYDq41r@krava>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <aaILlSuEgaYDq41r@krava>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 27 Feb 2026 10:37:27 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-
-> This series introduces the hierarchical tree counter (hpcc) to increase
-> accuracy of approximated RSS counters exposed through proc interfaces.
+On 2/27/26 1:24 PM, Jiri Olsa wrote:
+> On Fri, Feb 27, 2026 at 09:37:52PM +0100, Jiri Olsa wrote:
+>> [...]
+>>
+>>>
+>>>     With CONFIG_HAVE_SINGLE_FTRACE_DIRECT_OPS ftrace_replace_code()
+>>>     operates on all call sites in the shared ops. Then if a concurrent
+>>>     ftrace user (like kprobe) modifies a call site in between
+>>>     ftrace_replace_code's verify pass and its patch pass, then ftrace_bug
+>>>     fires and sets ftrace_disabled to 1.
+>>
+>> hum, I'd think that's all under ftrace_lock/direct_mutex,
+>> but we might be missing some paths
+>>
 > 
-> With a test program hopping across CPUs doing frequent mmap/munmap
-> operations, the upstream implementation approximation reaches a 1GB
-> delta from the precise value after a few minutes, compared to a 80MB
-> delta with the hierarchical counter. The hierarchical counter provides a
-> guaranteed maximum approximation inaccuracy of 192MB on that hardware
-> topology.
+> could you please try with change below? I can no longer trigger the bug with it
+
+Can confirm that the bug doesn't trigger with this change.
+At least by the reproducer test.
+
+Tested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+
+Thanks!
+
 > 
-> This series is based on tag v7.0-rc1.
+> thanks,
+> jirka
 > 
-> The main changes since v17:
-> - Fix patch series bissectability.
-> - Export GPL symbols for kunit tests.
-> - Improve kunit tests coverage.
-> - Fix kunit tests wait queue head reinit bug.
-> - Fix an out-of-bound on bootup on configurations where nr_cpu_ids is
->   close to NR_CPUS.
-
-Updated, thanks.
-
-> Andrew, this series targets 7.1.
-
-Some review would be useful.  Can you think of someone we could ask to
-undertake this?
+> 
+> ---
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 827fb9a0bf0d..e333749a5896 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6404,7 +6404,9 @@ int update_ftrace_direct_add(struct ftrace_ops *ops, struct ftrace_hash *hash)
+>  			new_filter_hash = old_filter_hash;
+>  		}
+>  	} else {
+> +		mutex_lock(&ftrace_lock);
+>  		err = ftrace_update_ops(ops, new_filter_hash, EMPTY_HASH);
+> +		mutex_unlock(&ftrace_lock);
+>  		/*
+>  		 * new_filter_hash is dup-ed, so we need to release it anyway,
+>  		 * old_filter_hash either stays on error or is already released
+> @@ -6530,7 +6532,9 @@ int update_ftrace_direct_del(struct ftrace_ops *ops, struct ftrace_hash *hash)
+>  			ops->func_hash->filter_hash = NULL;
+>  		}
+>  	} else {
+> +		mutex_lock(&ftrace_lock);
+>  		err = ftrace_update_ops(ops, new_filter_hash, EMPTY_HASH);
+> +		mutex_unlock(&ftrace_lock);
+>  		/*
+>  		 * new_filter_hash is dup-ed, so we need to release it anyway,
+>  		 * old_filter_hash either stays on error or is already released
 
