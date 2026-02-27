@@ -1,122 +1,93 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5EF345CC2;
-	Fri, 27 Feb 2026 19:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0F0313285;
+	Fri, 27 Feb 2026 20:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772221595; cv=none; b=bTLW6KRVchUb/owENI508ZzDSNixTVm8nVrBE+tGQwsI6xwlloJRKqG9EXHVGNAkB3GdDrE01p16eLn+9Fc8SDQhjP0BrA2WvI9yOr1yeS5y37DTVTdNrY7YmaeaFfbaiCUemNQSEODQQHPWTyzOrbKgr0YFci8uaSp2GGPQaaM=
+	t=1772223350; cv=none; b=K4HUtLxKI6exzvQ3ZW9ZH61jd+VkVLND+G06PljMpLKTML5l8v/KOGfcRu/Du21dwM7n5X9Qd9sHYaTL4xGQBYbXIOasFuBpbWJMladF4JmYG1DCVUF8ahuLMLrsJ9c0E8VlB1h1A/ZUoD929EZtDqsC0QqVBCrPbM1x5iAy0wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772221595; c=relaxed/simple;
-	bh=1mW6fCCYax2pZUF4fOui+HvcEWd5EgKWpV9o0G1W9MU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I2cSFMrn4C/1KGk2DDSc5RAmxDvVcIDVmv4usrSxTh5ZGGzKXcfkE+MV+fy8ajNGViloG4Kj/N0QtX2rPkWxTAweYz31iTBCMtD0TJh6UCQn/bsupNYlwbofBwQrlh8rVuP5WOe5eTAaYP5bLeufxvt/zzZ7PAPXCTL46Nuit2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id A64C8C2DB3;
-	Fri, 27 Feb 2026 19:46:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 73BB720016;
-	Fri, 27 Feb 2026 19:46:24 +0000 (UTC)
-Date: Fri, 27 Feb 2026 14:46:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
- <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike
- Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal
- Hocko <mhocko@suse.com>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu
- Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Len Brown <lenb@kernel.org>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Oscar
- Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, "linux-cxl@vger.kernel.orgkernel-team"@meta.com
-Subject: Re: [PATCH v4 5/5] mm: add tracepoints for zone lock
-Message-ID: <20260227144649.3dbff742@gandalf.local.home>
-In-Reply-To: <ae145fe890f028409f727b4921904b547346fa0b.1772206930.git.d@ilvokhin.com>
-References: <cover.1772206930.git.d@ilvokhin.com>
-	<ae145fe890f028409f727b4921904b547346fa0b.1772206930.git.d@ilvokhin.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772223350; c=relaxed/simple;
+	bh=b7ZZdAgAIqWzIEOFXroT0v2OFLk0n+ycadHEhHcQOPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oR/b53o4DUNMld5+EmEYO2SQqfRMZcVkZSuWnrgmAfF6GIKW+jdGVnoBJGzb0s4DeCaHrre0nxXPo+7vhcQWua3XFCymXEeXbEqsHdgXhsRuBavA5CHCO3ILj8HKPJ9RYh9k/p1Aotofo1sKQ0ndf1rr4dUjWYVZZN24NIZPKSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=R3S5KzNQ; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="R3S5KzNQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XYHL3Oxll3MKy5Rbj1rpKl8FC9rHX17TK7N8fb0L25M=; b=R3S5KzNQaexuN0cGETgbT1Ku7s
+	XNWR1JnEeECm47qfydfO/3R+Wa25A64ea6nFu2pCABbRe49nKp36escUdqNHiiiZ/MUqgZvm8u7e0
+	YUN77mni6wBury4euVO4rCf41HlmN+kJdTBXNx5tM8ysbXHznGXlG+RaEu29B2IN7kiwmebOr8TQ/
+	R0fcV3cFmbJyiV8dzTvp9zzxjDYfOrvXRxKhuI2nYbvjWd98eW0LdiLCwnNylO+0g1vsZSYaVNOZr
+	Vsz0IPONKOHzCt9BftCbOZMzYUwscYjOXReyH9NzwerGYGm2l3rcfzBXg0gpXqjII8toDDEqwOjwl
+	L0SDft5g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1vw4I4-00000009R5t-1LJ3;
+	Fri, 27 Feb 2026 20:18:24 +0000
+Date: Fri, 27 Feb 2026 20:18:24 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: AnishMulay <anishm7030@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracefs: Simplify get_dname() with kmemdup_nul()
+Message-ID: <20260227201824.GE3836593@ZenIV>
+References: <20260227194453.213095-1-anishm7030@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 73BB720016
-X-Stat-Signature: 75z95ye3rzrmfdo81wu9y48dgd3xrfx4
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/tqfZb3BP+WqZirC6uLCguAOnl9bJ5e/E=
-X-HE-Tag: 1772221584-850844
-X-HE-Meta: U2FsdGVkX1+Ubmu8sp2dODz5b7SCRkSYEMDCN5v+Sc8RVUFnTWMyKXGqiKeiHhzkb2b1Dt/LC4TG2ySWIbTgjCHFE48LoFDsaEiICe/p8YN2/aPzcJqnY4OY5teYzActk2juaAd+qIppoE/NFDJjLbtNhjOKa04i3NUWuE7O7t9k7DBa3wPcVD/96J/S3S56BDlMtAEH2ZhsHViBS0zvjZ2m5MGhBwQ/3htcYvpQ5Camj+HNfnlj7k03cLgqGqiR5pfViHhEEPD4H0s2EEStIofDRZ+V41gzV4ABYYm5Qzx6r4lMEZFm+F36k0XQZ2gkUYizcUfjlEX3hLaZVHTupY1zOu+4rwAQlFtkxnG72c+Z0v97kHyhCGdUcY3IPgqS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227194453.213095-1-anishm7030@gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, 27 Feb 2026 16:00:27 +0000
-Dmitry Ilvokhin <d@ilvokhin.com> wrote:
-
->  static inline void zone_lock_init(struct zone *zone)
+On Fri, Feb 27, 2026 at 02:44:53PM -0500, AnishMulay wrote:
+> index d9d8932a7b9c9..86ba8dc25aaef 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -96,17 +96,7 @@ static struct tracefs_dir_ops {
+>  
+>  static char *get_dname(struct dentry *dentry)
 >  {
-> @@ -12,26 +59,41 @@ static inline void zone_lock_init(struct zone *zone)
->  
->  #define zone_lock_irqsave(zone, flags)				\
->  do {								\
-> +	bool success = true;					\
-> +								\
-> +	__zone_lock_trace_start_locking(zone);			\
->  	spin_lock_irqsave(&(zone)->_lock, flags);		\
-> +	__zone_lock_trace_acquire_returned(zone, success);	\
-
-Why the "success" variable and not just:
-
-	__zone_lock_trace_acquire_returned(zone, true);
-
- ?
-
-
->  } while (0)
->  
->  #define zone_trylock_irqsave(zone, flags)			\
->  ({								\
-> -	spin_trylock_irqsave(&(zone)->_lock, flags);		\
-> +	bool success;						\
-> +								\
-> +	__zone_lock_trace_start_locking(zone);			\
-> +	success = spin_trylock_irqsave(&(zone)->_lock, flags);	\
-> +	__zone_lock_trace_acquire_returned(zone, success);	\
-> +	success;						\
->  })
->  
->  static inline void zone_unlock_irqrestore(struct zone *zone, unsigned long flags)
->  {
-> +	__zone_lock_trace_released(zone);
->  	spin_unlock_irqrestore(&zone->_lock, flags);
+> -	const char *dname;
+> -	char *name;
+> -	int len = dentry->d_name.len;
+> -
+> -	dname = dentry->d_name.name;
+> -	name = kmalloc(len + 1, GFP_KERNEL);
+> -	if (!name)
+> -		return NULL;
+> -	memcpy(name, dname, len);
+> -	name[len] = 0;
+> -	return name;
+> +	return kmemdup_nul(dentry->d_name.name, dentry->d_name.len, GFP_KERNEL);
 >  }
->  
->  static inline void zone_lock_irq(struct zone *zone)
->  {
-> +	bool success = true;
-> +
-> +	__zone_lock_trace_start_locking(zone);
->  	spin_lock_irq(&zone->_lock);
-> +	__zone_lock_trace_acquire_returned(zone, success);
 
-Same here.
+Why not have the callers use {take,release}_dentry_name_snapshot()
+instead of doing any allocations at all?
 
->  }
->  
->  static inline void zone_unlock_irq(struct zone *zone)
->  {
-> +	__zone_lock_trace_released(zone);
->  	spin_unlock_irq(&zone->_lock);
->  }
->
+I mean,
+static struct dentry *tracefs_syscall_mkdir(struct mnt_idmap *idmap,
+                                            struct inode *inode, struct dentry *dentry,
+                                            umode_t mode)
+{
+        struct tracefs_inode *ti;
+        struct name_snapshot s;
+        int ret;
+ 
+        take_dentry_name_snapshot(&s, dentry);
+	...
+        ret = tracefs_ops.mkdir(s.name.name);
+	release_dentry_name_snapshot(&s);
+	...
+}
 
--- Steve
-
+and similar on the rmdir side.  Then remove get_dname()...
