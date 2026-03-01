@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05E413B58A;
-	Sun,  1 Mar 2026 01:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0821EDA0F;
+	Sun,  1 Mar 2026 01:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329185; cv=none; b=ibNB4WlfvUVVLz5kSO1NkrhVtgFJwr72xJVZkVeeT/an5wfocC4t9mvwNHcA2Pdfhn1eM8CFc3C/wryykCeipirIDGCbcqMphVrep/aXIZjsYmdRxv4VMcYGiV1WFSSFFKfoaIuR2ZywPcPmC2DsgXGM5HIf9aZeBlkvC7SiJlU=
+	t=1772329331; cv=none; b=VAjl8Gk9SvW0cHw6DMOVPv/lAfdGHkR4wcGPWF4PB6uACvUtPHLTV2mdbNzK120A4gq0Yn0IFm9KeCUiJb5yLxF6sFveo7DtmQh69DLls6N6uDG3Ot6t9rsydDQfWGshPSaj18PmuFC/0JeLdm/9T4qXSDGAqnvB+FM68i8M2zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329185; c=relaxed/simple;
-	bh=VH48fcp+2oB3iYUNX93PtT5RmBaiJMwnznEnFOsguu0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mCXTA4CMrvz+WYFkeu6uacPhKoUUlmaijWyB+gU+NDxFaEXwxChnqol3b+RVqej5zDgdkcgfZ5cRRANSL6BdOwJnFFOrc3XzZSlSyHGe3LPm4LtxubEkp4Gz/TzNHVZyp+e5Jqnb3cP/sKwXOIqc5bs4CHLEAWwFzwxRRx6oUcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dz/0gLdl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329331; c=relaxed/simple;
+	bh=fLzM30E74D7MGmnjca8Gm90YSXJPlYYuJQ8NvOfiE7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sZatmO2d3TGdToxUnZJfHdPwA4GPEO7oANOMm6eWI2ZMtOcDjbVTHuS+fFjVqgDHufo3f2QwyYiZ60dG/bPmMOf/9v39YJWVqQz+AXrulbSnQOclTy86CvqPWaFbGxgRA9OS2D2AV4wksHX2uaQVW/HTU/2AKxavN3rysdoiEek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mL1Yl+XN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dz/0gLdl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4339C19421;
-	Sun,  1 Mar 2026 01:39:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mL1Yl+XN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28572C19421;
+	Sun,  1 Mar 2026 01:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329185;
-	bh=VH48fcp+2oB3iYUNX93PtT5RmBaiJMwnznEnFOsguu0=;
+	s=k20201202; t=1772329330;
+	bh=fLzM30E74D7MGmnjca8Gm90YSXJPlYYuJQ8NvOfiE7I=;
 	h=From:To:Cc:Subject:Date:From;
-	b=dz/0gLdl9o3Yc4RL0W+oVvq+vwtveE9xjiXLEKMnmdT8QqEsKKQeH8oZkocJm0xBy
-	 i7YxIqPigIEbam48sfx0jIf97sIGGQJ/A3SCPJWcO7Xv0PbbONIjxq9hngHdHLfMx1
-	 FRa3gaD+zv+mioU8XBySY5hOuG1tqgP2aeaGXteoU3jy0EMkiwc1yysNaTW2dtx3Fb
-	 PbUI+iys7s5j3bFG56P1dYvavkRqW1hHI5F9GC9cUn4s1UucN34ElI0jf00Thfc1uX
-	 M+QZx17JmOG4CGg9wscJgvhTAylMr2ssWeJh4D/+w1sQ08GspVFz60skDhE+gQbeZ/
-	 KsbVQvl0zXCwg==
+	b=mL1Yl+XNpThYGI/iGwnmVY7FtntYPIY5M/7K2uuEpGPVG7jfs9ElReFoh9+ZrkOpX
+	 wnaEmFqFCfV8VOHqvqvmY1V4LuY7YMNAWW3rBPp+7hMqys9FivVgpBYtqqfmWgU3f+
+	 +sXSqOw8c9MPpXea9p0HiQX39jXm9BYTxUCVg3XnMeVCssWUtT2y6flm7LPhTZFb2g
+	 85KxxG1D1v3wvgZKjYxE2zEC16W4podNGcn1W4hVsAbql2Y7Xdp4u/XTEUIXo+KuIe
+	 xoAs/Z19L/+douKyhMYEDUXKPN8E83fMQss5qGgOCBSr5bI2z/MQpIhWTVhDVNWRAl
+	 Pzg7fZQMCSfOA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	petr.pavlu@suse.com
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <zanussi@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: FAILED: Patch "tracing: Wake up poll waiters for hist files when removing an event" failed to apply to 6.6-stable tree
-Date: Sat, 28 Feb 2026 20:39:43 -0500
-Message-ID: <20260301013943.1700798-1-sashal@kernel.org>
+	oleg@redhat.com
+Cc: Paulo Andrade <pandrade@redhat.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:42:08 -0500
+Message-ID: <20260301014209.1703943-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,7 +46,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 6.6-stable tree.
+The patch below does not apply to the 6.1-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
@@ -57,67 +56,133 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 9678e53179aa7e907360f5b5b275769008a69b80 Mon Sep 17 00:00:00 2001
-From: Petr Pavlu <petr.pavlu@suse.com>
-Date: Thu, 19 Feb 2026 17:27:02 +0100
-Subject: [PATCH] tracing: Wake up poll waiters for hist files when removing an
- event
+From d55c571e4333fac71826e8db3b9753fadfbead6a Mon Sep 17 00:00:00 2001
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Sun, 11 Jan 2026 16:00:37 +0100
+Subject: [PATCH] x86/uprobes: Fix XOL allocation failure for 32-bit tasks
 
-The event_hist_poll() function attempts to verify whether an event file is
-being removed, but this check may not occur or could be unnecessarily
-delayed. This happens because hist_poll_wakeup() is currently invoked only
-from event_hist_trigger() when a hist command is triggered. If the event
-file is being removed, no associated hist command will be triggered and a
-waiter will be woken up only after an unrelated hist command is triggered.
+This script
 
-Fix the issue by adding a call to hist_poll_wakeup() in
-remove_event_file_dir() after setting the EVENT_FILE_FL_FREED flag. This
-ensures that a task polling on a hist file is woken up and receives
-EPOLLERR.
+	#!/usr/bin/bash
 
+	echo 0 > /proc/sys/kernel/randomize_va_space
+
+	echo 'void main(void) {}' > TEST.c
+
+	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
+	gcc -m32 -fcf-protection=branch TEST.c -o test
+
+	bpftrace -e 'uprobe:./test:main {}' -c ./test
+
+"hangs", the probed ./test task enters an endless loop.
+
+The problem is that with randomize_va_space == 0
+get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
+just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
+by the stack vma.
+
+arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
+in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
+vm_unmapped_area() happily returns the high address > TASK_SIZE and then
+get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
+check.
+
+handle_swbp() doesn't report this failure (probably it should) and silently
+restarts the probed insn. Endless loop.
+
+I think that the right fix should change the x86 get_unmapped_area() paths
+to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
+CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
+because ->orig_ax = -1.
+
+But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
+the probed task is 32-bit to make in_ia32_syscall() true.
+
+Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
+Reported-by: Paulo Andrade <pandrade@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
 Cc: stable@vger.kernel.org
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Link: https://patch.msgid.link/20260219162737.314231-3-petr.pavlu@suse.com
-Fixes: 1bd13edbbed6 ("tracing/hist: Add poll(POLLIN) support on hist file")
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
 ---
- include/linux/trace_events.h | 5 +++++
- kernel/trace/trace_events.c  | 3 +++
- 2 files changed, 8 insertions(+)
+ arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
+ include/linux/uprobes.h   |  1 +
+ kernel/events/uprobes.c   | 10 +++++++---
+ 3 files changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 0a2b8229b999c..37eb2f0f3dd8e 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -683,6 +683,11 @@ static inline void hist_poll_wakeup(void)
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 7be8e361ca55b..619dddf54424e 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -1823,3 +1823,27 @@ bool is_uprobe_at_func_entry(struct pt_regs *regs)
  
- #define hist_poll_wait(file, wait)	\
- 	poll_wait(file, &hist_poll_wq, wait)
-+
-+#else
-+static inline void hist_poll_wakeup(void)
-+{
-+}
- #endif
- 
- #define __TRACE_EVENT_FLAGS(name, value)				\
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 61fe01dce7a6f..b659653dc03ac 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1311,6 +1311,9 @@ static void remove_event_file_dir(struct trace_event_file *file)
- 	free_event_filter(file->filter);
- 	file->flags |= EVENT_FILE_FL_FREED;
- 	event_file_put(file);
-+
-+	/* Wake up hist poll waiters to notice the EVENT_FILE_FL_FREED flag. */
-+	hist_poll_wakeup();
+ 	return false;
  }
++
++#ifdef CONFIG_IA32_EMULATION
++unsigned long arch_uprobe_get_xol_area(void)
++{
++	struct thread_info *ti = current_thread_info();
++	unsigned long vaddr;
++
++	/*
++	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
++	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
++	 * vm_unmapped_area_info.high_limit.
++	 *
++	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
++	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
++	 * (falsely) returns true because ->orig_ax == -1.
++	 */
++	if (test_thread_flag(TIF_ADDR32))
++		ti->status |= TS_COMPAT;
++	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
++	ti->status &= ~TS_COMPAT;
++
++	return vaddr;
++}
++#endif
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index ee3d36eda45dd..f548fea2adec8 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
+ extern void arch_uprobe_init_state(struct mm_struct *mm);
+ extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
+ extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
++extern unsigned long arch_uprobe_get_xol_area(void);
+ #else /* !CONFIG_UPROBES */
+ struct uprobes_state {
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index a7d7d83ca1d78..dfbce021fb027 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
+ 	.mremap = xol_mremap,
+ };
  
- /*
++unsigned long __weak arch_uprobe_get_xol_area(void)
++{
++	/* Try to map as high as possible, this is only a hint. */
++	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
++}
++
+ /* Slot allocation for XOL */
+ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ {
+@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 	}
+ 
+ 	if (!area->vaddr) {
+-		/* Try to map as high as possible, this is only a hint. */
+-		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
+-						PAGE_SIZE, 0, 0);
++		area->vaddr = arch_uprobe_get_xol_area();
+ 		if (IS_ERR_VALUE(area->vaddr)) {
+ 			ret = area->vaddr;
+ 			goto fail;
 -- 
 2.51.0
 
