@@ -1,38 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC33285C84;
-	Sun,  1 Mar 2026 01:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35F525228C;
+	Sun,  1 Mar 2026 01:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772328508; cv=none; b=p9mNHd77T8cYlXfANnjxD5RFvasSbcZcf+HghnQ9TF+sATm/nRBVLO2lbUwcFGTVsdabZ09UhgaDVLlyJo8CMOssY3xwM1nqZYsmW+aX92djbtRlnQql1BTwF8jXGo37VN640ZUc2C0tPYGOVoTYYbOnWdJHf8GJCXclwd8C3UU=
+	t=1772328579; cv=none; b=gFtIqyugV/IoxRABXeAw1ffLiABhfYjf3oM4KBCIUkfVVv+FN3/n74tOJ2TNUDyXB5C9+PPdAWPxkRLOtQP7HthWAU7Csa6jOWLtWMwOAXSuxprukHmMwawO9qOO5wIUQQBpR4ZD3Fu7V50W6qeBWiqk0ipt/oeRtpbGGx8zx4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772328508; c=relaxed/simple;
-	bh=6BTI1UVeG4tQYlx39XQkCdSzxjetyFCbjbmNcM2R6Yw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ah6CdAyfvP5MiDgaAI4RanJ0mepZ4YluwRJ05k0XAEWsorgbfCRXNdl2Wlmh+iKseS2U37ESpBNXiZU7+orscuE85heo7gqnPVXWCPLxgf+L4/Z6grPenjmzoAi+xMZiltf/R4Dq+9ey+jA1daT+o2fkM6qaE15WOGIvzRB+VHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHHXZi4+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328579; c=relaxed/simple;
+	bh=PuUBMvIxAzwGqm7TaFduO5+FkiVH/Mb5aHjNDYNMxMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HdJkRqOczqRQtIE5L8JMFfqu7pMGpWE5ZJ6gYZ2WIsRoR6RJj3jGWAZJUpBzUhnp2yCB4ysmQN5zXav5ob3LOgmnKC14XqFFpDMbNvtcPwakPavsWHVVeFaZ43RXCt2SQ/wh4gnfUHCegtRs5pJTccTVoE2388XhoyI5CMp4/3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A49+uHsa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHHXZi4+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A6DC19421;
-	Sun,  1 Mar 2026 01:28:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A49+uHsa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5CEC19421;
+	Sun,  1 Mar 2026 01:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328508;
-	bh=6BTI1UVeG4tQYlx39XQkCdSzxjetyFCbjbmNcM2R6Yw=;
+	s=k20201202; t=1772328579;
+	bh=PuUBMvIxAzwGqm7TaFduO5+FkiVH/Mb5aHjNDYNMxMM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=YHHXZi4+7jM42pSi5k6kVn8YsDK1iPG+EHENWiN+JsSNcDrhXGgWpdVmqjHtcwcgQ
-	 zFH3b04UyIx1PBpODgnH0tBr1okX92nB3t7f7pyJyCkUjWB/i27kUxvGVGmhzKvlB3
-	 eQ8+ocKOIGuI3CNqw9BsVRizcSsxnJWIj4mcGZ66BOU3ofhqMhvMW4JWWyKaDtOV13
-	 xdUS9qDPT+O7VkjBVuNeNPzXSztdtPnCbMf/365qjT6jk1HTyQHwVKmFGSOHvXq8qx
-	 QxTxCWRIkdL7jKP8fA78EHPShTweDLXg61HZoailB8fuRXqyAKMwv+qJRHoKIafdiT
-	 IVLz7cFjoFATw==
+	b=A49+uHsa1pnjU9CEFHkO3YMKGlfpnanEktfzmN5UVJze3s65JPP1rprsPzlhPGbTA
+	 x+36cGOGREBQJLJTB0S7WxLrmVP0yWBIIhAPaZGUoqvW5v5u0pJ11p3jdT8FT+nIHy
+	 hDaYa7VA8xYNW8XNrta6we7CYBV38ZG3t5uAMxIwkN0BbksqZqhGYttD88yE+mEEM3
+	 OgVLynjOmV/V+KUEHAArE9r09iBXttzsfSv/+AfgU2afwHv739lfEB+4aJocRUt68R
+	 +BvguCzySx0WqB/xybEIVvhE158BgZUJ6xe3Hgtey7owSOcRRHdlZ/EoS8pVJN9M04
+	 X7iZnWFWBcNIA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	hu.shengming@zte.com.cn
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	rostedt@goodmis.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	linux-trace-kernel@vger.kernel.org
-Subject: FAILED: Patch "function_graph: Restore direct mode when callbacks drop to one" failed to apply to 6.12-stable tree
-Date: Sat, 28 Feb 2026 20:28:26 -0500
-Message-ID: <20260301012827.1686191-1-sashal@kernel.org>
+Subject: FAILED: Patch "fgraph: Do not call handlers direct when not using ftrace_ops" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:29:37 -0500
+Message-ID: <20260301012938.1687441-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,42 +56,170 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 53b2fae90ff01fede6520ca744ed5e8e366497ba Mon Sep 17 00:00:00 2001
-From: Shengming Hu <hu.shengming@zte.com.cn>
-Date: Fri, 13 Feb 2026 14:29:32 +0800
-Subject: [PATCH] function_graph: Restore direct mode when callbacks drop to
- one
+From f4ff9f646a4d373f9e895c2f0073305da288bc0a Mon Sep 17 00:00:00 2001
+From: Steven Rostedt <rostedt@goodmis.org>
+Date: Wed, 18 Feb 2026 10:42:44 -0500
+Subject: [PATCH] fgraph: Do not call handlers direct when not using ftrace_ops
 
-When registering a second fgraph callback, direct path is disabled and
-array loop is used instead.  When ftrace_graph_active falls back to one,
-we try to re-enable direct mode via ftrace_graph_enable_direct(true, ...).
-But ftrace_graph_enable_direct() incorrectly disables the static key
-rather than enabling it.  This leaves fgraph_do_direct permanently off
-after first multi-callback transition, so direct fast mode is never
-restored.
+The function graph tracer was modified to us the ftrace_ops of the
+function tracer. This simplified the code as well as allowed more features
+of the function graph tracer.
+
+Not all architectures were converted over as it required the
+implementation of HAVE_DYNAMIC_FTRACE_WITH_ARGS to implement. For those
+architectures, it still did it the old way where the function graph tracer
+handle was called by the function tracer trampoline. The handler then had
+to check the hash to see if the registered handlers wanted to be called by
+that function or not.
+
+In order to speed up the function graph tracer that used ftrace_ops, if
+only one callback was registered with function graph, it would call its
+function directly via a static call.
+
+Now, if the architecture does not support the use of using ftrace_ops and
+still has the ftrace function trampoline calling the function graph
+handler, then by doing a direct call it removes the check against the
+handler's hash (list of functions it wants callbacks to), and it may call
+that handler for functions that the handler did not request calls for.
+
+On 32bit x86, which does not support the ftrace_ops use with function
+graph tracer, it shows the issue:
+
+ ~# trace-cmd start -p function -l schedule
+ ~# trace-cmd show
+ # tracer: function_graph
+ #
+ # CPU  DURATION                  FUNCTION CALLS
+ # |     |   |                     |   |   |   |
+  2) * 11898.94 us |  schedule();
+  3) # 1783.041 us |  schedule();
+  1)               |  schedule() {
+  ------------------------------------------
+  1)   bash-8369    =>  kworker-7669
+  ------------------------------------------
+  1)               |        schedule() {
+  ------------------------------------------
+  1)  kworker-7669  =>   bash-8369
+  ------------------------------------------
+  1) + 97.004 us   |  }
+  1)               |  schedule() {
+ [..]
+
+Now by starting the function tracer is another instance:
+
+ ~# trace-cmd start -B foo -p function
+
+This causes the function graph tracer to trace all functions (because the
+function trace calls the function graph tracer for each on, and the
+function graph trace is doing a direct call):
+
+ ~# trace-cmd show
+ # tracer: function_graph
+ #
+ # CPU  DURATION                  FUNCTION CALLS
+ # |     |   |                     |   |   |   |
+  1)   1.669 us    |          } /* preempt_count_sub */
+  1) + 10.443 us   |        } /* _raw_spin_unlock_irqrestore */
+  1)               |        tick_program_event() {
+  1)               |          clockevents_program_event() {
+  1)   1.044 us    |            ktime_get();
+  1)   6.481 us    |            lapic_next_event();
+  1) + 10.114 us   |          }
+  1) + 11.790 us   |        }
+  1) ! 181.223 us  |      } /* hrtimer_interrupt */
+  1) ! 184.624 us  |    } /* __sysvec_apic_timer_interrupt */
+  1)               |    irq_exit_rcu() {
+  1)   0.678 us    |      preempt_count_sub();
+
+When it should still only be tracing the schedule() function.
+
+To fix this, add a macro FGRAPH_NO_DIRECT to be set to 0 when the
+architecture does not support function graph use of ftrace_ops, and set to
+1 otherwise. Then use this macro to know to allow function graph tracer to
+call the handlers directly or not.
 
 Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/20260213142932519cuWSpEXeS4-UnCvNXnK2P@zte.com.cn
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Link: https://patch.msgid.link/20260218104244.5f14dade@gandalf.local.home
 Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
-Signed-off-by: Shengming Hu <hu.shengming@zte.com.cn>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/ftrace.h | 13 ++++++++++---
+ kernel/trace/fgraph.c  | 12 +++++++++++-
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 1a4d36fc90852..c242fe49af4c9 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1092,10 +1092,17 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ #ifndef ftrace_graph_func
+-#define ftrace_graph_func ftrace_stub
+-#define FTRACE_OPS_GRAPH_STUB FTRACE_OPS_FL_STUB
++# define ftrace_graph_func ftrace_stub
++# define FTRACE_OPS_GRAPH_STUB FTRACE_OPS_FL_STUB
++/*
++ * The function graph is called every time the function tracer is called.
++ * It must always test the ops hash and cannot just directly call
++ * the handler.
++ */
++# define FGRAPH_NO_DIRECT	1
+ #else
+-#define FTRACE_OPS_GRAPH_STUB 0
++# define FTRACE_OPS_GRAPH_STUB	0
++# define FGRAPH_NO_DIRECT	0
+ #endif
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
 diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index cc48d16be43e0..4df766c690f92 100644
+index 4df766c690f92..40d373d65f9b9 100644
 --- a/kernel/trace/fgraph.c
 +++ b/kernel/trace/fgraph.c
-@@ -1303,7 +1303,7 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
- 	static_call_update(fgraph_func, func);
- 	static_call_update(fgraph_retfunc, retfunc);
- 	if (enable_branch)
--		static_branch_disable(&fgraph_do_direct);
-+		static_branch_enable(&fgraph_do_direct);
- }
+@@ -539,7 +539,11 @@ static struct fgraph_ops fgraph_stub = {
+ static struct fgraph_ops *fgraph_direct_gops = &fgraph_stub;
+ DEFINE_STATIC_CALL(fgraph_func, ftrace_graph_entry_stub);
+ DEFINE_STATIC_CALL(fgraph_retfunc, ftrace_graph_ret_stub);
++#if FGRAPH_NO_DIRECT
++static DEFINE_STATIC_KEY_FALSE(fgraph_do_direct);
++#else
+ static DEFINE_STATIC_KEY_TRUE(fgraph_do_direct);
++#endif
+ 
+ /**
+  * ftrace_graph_stop - set to permanently disable function graph tracing
+@@ -843,7 +847,7 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+ 	bitmap = get_bitmap_bits(current, offset);
+ 
+ #ifdef CONFIG_HAVE_STATIC_CALL
+-	if (static_branch_likely(&fgraph_do_direct)) {
++	if (!FGRAPH_NO_DIRECT && static_branch_likely(&fgraph_do_direct)) {
+ 		if (test_bit(fgraph_direct_gops->idx, &bitmap))
+ 			static_call(fgraph_retfunc)(&trace, fgraph_direct_gops, fregs);
+ 	} else
+@@ -1285,6 +1289,9 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
+ 	trace_func_graph_ret_t retfunc = NULL;
+ 	int i;
+ 
++	if (FGRAPH_NO_DIRECT)
++		return;
++
+ 	if (gops) {
+ 		func = gops->entryfunc;
+ 		retfunc = gops->retfunc;
+@@ -1308,6 +1315,9 @@ static void ftrace_graph_enable_direct(bool enable_branch, struct fgraph_ops *go
  
  static void ftrace_graph_disable_direct(bool disable_branch)
+ {
++	if (FGRAPH_NO_DIRECT)
++		return;
++
+ 	if (disable_branch)
+ 		static_branch_disable(&fgraph_do_direct);
+ 	static_call_update(fgraph_func, ftrace_graph_entry_stub);
 -- 
 2.51.0
 
