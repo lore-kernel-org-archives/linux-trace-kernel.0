@@ -1,191 +1,264 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36182594B9;
-	Sun,  1 Mar 2026 02:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3719531D39A
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  1 Mar 2026 07:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330429; cv=none; b=CJOFH252wbAgvijOjTmp6EDhn1oWXaHd21kgSHiWqwObm4XRu6KuxMdj+RK+8iIJkd6/ok/DXVkiHnWTxbVvGPECO5HZCw/kcZXxSUi4m8bj6TBObPjpVJjZGwS6El03zKmTxbs9GhIJ8vwVyduqsnZR1hLda8/WV9hkl+3mP3Q=
+	t=1772348848; cv=none; b=ZZqqePTEWjgDmYZ+953SV4kZxUQNlvPvKMWW86lbvrdgQBygHRzMsfmP7p9yQ8dPhz//1fQabQGAgsnBV1F5384TCGfDtPYUVlrz2E66AYerddCzsjzFQ/+2A9Q+I3blefDvz/5LH+7gABT3R+04/nuTxG6wqwkUrPpsTBTi5hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330429; c=relaxed/simple;
-	bh=EM/+eXkhFpdMH7ZjWil7ar8XHtzsy4Rsb1aMjtX+oR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XxiT5L9Ri2qMkIoXxakw3K67CDc5/XErO6wYxRyyWMEbYrlrPElPmP6Dp1W+6fkZscwGV+Z2P9J+a37Bmj/reyKqg2sq8fMvDae/gOAKPHbIRg+ZZme/kEbR88LmncZ/sX59DKnxHJBT4XVMhxb0FWkYI5JCitMcGTZLycDlf5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0fNB6wW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0fNB6wW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CC1C19421;
-	Sun,  1 Mar 2026 02:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330428;
-	bh=EM/+eXkhFpdMH7ZjWil7ar8XHtzsy4Rsb1aMjtX+oR4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=W0fNB6wWqKkChxyc48j9+MEbflzXg/f66XM7oBUqB7w63lRw+DO6uwnG/YvJeXcro
-	 DLYmM5GA8ewumGAQzEZNWCXVf0WRACXcwVA1BVgLEot8Nkrty9Ejg3WZe6NgdmmAgn
-	 YuhLEeVz/uABdvWIR+KEtuTz30pFJPd/xLGK2xOkfBVu3X1MKzHNkxhffv2U3c+h0t
-	 87bqwoo6maawsoz9oh46Zw83RqLfFQdxhi9GxncRJAb3jUJ2IifRA8ShsAcCyR4vhB
-	 6IsLkUFDhJdMRvRp26X1aavc22jUCMxJgc3x06UHJ9LoHA5Ii0grK/I3bzi3U8hQD5
-	 zL/RdDORoSPmw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	oleg@redhat.com
-Cc: Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: FAILED: Patch "x86/uprobes: Fix XOL allocation failure for 32-bit tasks" failed to apply to 5.10-stable tree
-Date: Sat, 28 Feb 2026 21:00:26 -0500
-Message-ID: <20260301020027.1726538-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1772348848; c=relaxed/simple;
+	bh=rtiETl5j/tc4+eyiC7IBJZh3/9vuyR3g+HBQj64OwDM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=akrhJqc1hrSv5TKF4Ry0Iz8wEDdRnfBzSVTP90XQWtOxZ1BzDDxzwAkNy+n4ULRULMIIb72KC0XYXFZ8KGUAEghF3VqgtOy0SYD9ZdxKvjoPGlooVhqBAEMHwZ1mGfXz+1sQc5HCPiyjnwB5KUrF3IrAa1/UJPlchaWlKQZclFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-66b612efb4aso56138953eaf.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Feb 2026 23:07:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772348845; x=1772953645;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CViUGzShKLBCRdFqM97ye0pCjuA4F/xHAJaymo5lCs8=;
+        b=Z6aVt8KSbsSYZxSTGSUIrWkcXqyYSmE+SJa8sAOFT9ivTEbnWp6/BGOCRzOSvXc91K
+         8XyVCRAQaIN0YHjPPTFWLXPoX3zopwxEfaufJiUGyzcyqAHI8SOzRr9FEbCRZL9RflWR
+         r80eLi6yTN1rNR0Y6XMaFD9N8GhPkjoe5Czx/4P/IeJGBiyhCNfAU6mfgC3ga6AzFWgC
+         3/XbJBX1nrUxElmFPSs+3oZFZiuECUXvOGyIjLSLFb62KUOHY3UtOzvQsBGwJBO3JgwB
+         ET3OoftqUgulwCbNGfQCxMtHfgQX1+m1wlwiLfdpfkSEjJP91zyjZEAeEDyYT3zX+BiM
+         EWZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUl18RSjBW3LqWqLKoj7ABTCv9507EGsv0g+EqFliMQy7Xnkj4Kcd6BlfytKe7QNKjUg/2NDlbIeVbCXn47LhGqPcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsZ960BW4BdcXyB3m9aqBvmLIoYwd5gKYTi9hiw//RuJ+Xg/eF
+	rwVcBxg3inF3Y2EysGs1G5PA6iY+SU/XrO+zHTdFYNUc20A+VuK5j3ROsbCR8sLn9oj+OrEfDms
+	6EvGnH8okJVlL6GlQdNxeiGRjDOdvXwSE0I4Lq5bBZoV7JVkJ/3mxjbmk2gI=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6820:f04:b0:679:c7d0:d4fe with SMTP id
+ 006d021491bc7-679f2335127mr7967355eaf.36.1772348845249; Sat, 28 Feb 2026
+ 23:07:25 -0800 (PST)
+Date: Sat, 28 Feb 2026 23:07:25 -0800
+In-Reply-To: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69a3e5ad.050a0220.3a55be.0056.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in
+ bpf_trace_run3 (2)
+From: syzbot <syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
+	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	wangqing7171@gmail.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-The patch below does not apply to the 5.10-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+syzbot has found a reproducer for the following issue on:
 
-Thanks,
-Sasha
+HEAD commit:    2f9339c052bd Merge tag 'spi-fix-v7.0-rc1' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1610e3e6580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=56150637ffd942dd
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ea7c90be2b24e189592
+compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b12d5a580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153ce006580000
 
------------------- original commit in Linus's tree ------------------
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-2f9339c0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/03f5cd2356a3/vmlinux-2f9339c0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fd9f61ab139e/bzImage-2f9339c0.xz
 
-From d55c571e4333fac71826e8db3b9753fadfbead6a Mon Sep 17 00:00:00 2001
-From: Oleg Nesterov <oleg@redhat.com>
-Date: Sun, 11 Jan 2026 16:00:37 +0100
-Subject: [PATCH] x86/uprobes: Fix XOL allocation failure for 32-bit tasks
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com
 
-This script
+==================================================================
+BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
+BUG: KASAN: slab-use-after-free in bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
+Read of size 8 at addr ffff88803828ab18 by task dhcpcd-run-hook/5487
 
-	#!/usr/bin/bash
+CPU: 0 UID: 0 PID: 5487 Comm: dhcpcd-run-hook Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0xba/0x230 mm/kasan/report.c:482
+ kasan_report+0x117/0x150 mm/kasan/report.c:595
+ __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
+ bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
+ __traceiter_kmem_cache_free+0x38/0x60 include/trace/events/kmem.h:117
+ __do_trace_kmem_cache_free include/trace/events/kmem.h:117 [inline]
+ trace_kmem_cache_free include/trace/events/kmem.h:117 [inline]
+ kmem_cache_free+0x5ac/0x630 mm/slub.c:6272
+ anon_vma_chain_free mm/rmap.c:147 [inline]
+ unlink_anon_vmas+0x69d/0x730 mm/rmap.c:532
+ free_pgtables+0x836/0xb70 mm/memory.c:427
+ exit_mmap+0x490/0xa10 mm/mmap.c:1314
+ __mmput+0x118/0x430 kernel/fork.c:1174
+ exec_mmap+0x3b4/0x440 fs/exec.c:893
+ begin_new_exec+0x134a/0x24a0 fs/exec.c:1148
+ load_elf_binary+0xa47/0x2980 fs/binfmt_elf.c:1010
+ search_binary_handler fs/exec.c:1664 [inline]
+ exec_binprm fs/exec.c:1696 [inline]
+ bprm_execve+0x93d/0x1460 fs/exec.c:1748
+ do_execveat_common+0x50d/0x690 fs/exec.c:1846
+ __do_sys_execve fs/exec.c:1930 [inline]
+ __se_sys_execve fs/exec.c:1924 [inline]
+ __x64_sys_execve+0x97/0xc0 fs/exec.c:1924
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4dd469a107
+Code: Unable to access opcode bytes at 0x7f4dd469a0dd.
+RSP: 002b:00007ffed1452c68 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+RAX: ffffffffffffffda RBX: 000055b1f84170c8 RCX: 00007f4dd469a107
+RDX: 000055b1f84170e8 RSI: 000055b1f84170c8 RDI: 000055b1f8417170
+RBP: 000055b1f8417170 R08: 00007ffed1456ea4 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 000055b1f84170e8
+R13: 00007f4dd485fe8b R14: 000055b1f84170e8 R15: 0000000000000000
+ </TASK>
 
-	echo 0 > /proc/sys/kernel/randomize_va_space
+Allocated by task 5486:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
+ poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
+ kasan_kmalloc include/linux/kasan.h:263 [inline]
+ __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5358
+ kmalloc_noprof include/linux/slab.h:950 [inline]
+ kzalloc_noprof include/linux/slab.h:1188 [inline]
+ bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
+ bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
+ __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
+ __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-	echo 'void main(void) {}' > TEST.c
+Freed by task 15:
+ kasan_save_stack mm/kasan/common.c:57 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
+ poison_slab_object mm/kasan/common.c:253 [inline]
+ __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
+ kasan_slab_free include/linux/kasan.h:235 [inline]
+ slab_free_hook mm/slub.c:2692 [inline]
+ slab_free mm/slub.c:6143 [inline]
+ kfree+0x1c1/0x630 mm/slub.c:6461
+ rcu_do_batch kernel/rcu/tree.c:2617 [inline]
+ rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
+ handle_softirqs+0x22a/0x870 kernel/softirq.c:622
+ run_ksoftirqd+0x36/0x60 kernel/softirq.c:1063
+ smpboot_thread_fn+0x541/0xa50 kernel/smpboot.c:160
+ kthread+0x388/0x470 kernel/kthread.c:467
+ ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
+ __call_rcu_common kernel/rcu/tree.c:3131 [inline]
+ call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
+ bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
+ bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
+ __fput+0x44f/0xa70 fs/file_table.c:469
+ task_work_run+0x1d9/0x270 kernel/task_work.c:233
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x69b/0x2320 kernel/exit.c:971
+ do_group_exit+0x21b/0x2d0 kernel/exit.c:1112
+ __do_sys_exit_group kernel/exit.c:1123 [inline]
+ __se_sys_exit_group kernel/exit.c:1121 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1121
+ x64_sys_call+0x221a/0x2240 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
+The buggy address belongs to the object at ffff88803828ab00
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 24 bytes inside of
+ freed 192-byte region [ffff88803828ab00, ffff88803828abc0)
 
-"hangs", the probed ./test task enters an endless loop.
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88803828a100 pfn:0x3828a
+flags: 0x4fff00000000200(workingset|node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000200 ffff88801ac413c0 ffff888030400288 ffffea0000e19390
+raw: ffff88803828a100 000000080010000e 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2c00(GFP_NOIO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 22245651735, free_ts 22245107019
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
+ prep_new_page mm/page_alloc.c:1897 [inline]
+ get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
+ __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
+ alloc_slab_page mm/slub.c:3269 [inline]
+ allocate_slab+0x77/0x660 mm/slub.c:3458
+ new_slab mm/slub.c:3516 [inline]
+ refill_objects+0x331/0x3c0 mm/slub.c:7153
+ refill_sheaf mm/slub.c:2818 [inline]
+ __pcs_replace_empty_main+0x2b9/0x620 mm/slub.c:4592
+ alloc_from_pcs mm/slub.c:4695 [inline]
+ slab_alloc_node mm/slub.c:4829 [inline]
+ __do_kmalloc_node mm/slub.c:5237 [inline]
+ __kmalloc_noprof+0x474/0x760 mm/slub.c:5250
+ kmalloc_noprof include/linux/slab.h:954 [inline]
+ usb_alloc_urb+0x46/0x150 drivers/usb/core/urb.c:75
+ usb_internal_control_msg drivers/usb/core/message.c:96 [inline]
+ usb_control_msg+0x118/0x3e0 drivers/usb/core/message.c:154
+ usb_control_msg_send drivers/usb/core/message.c:214 [inline]
+ usb_set_configuration+0x127a/0x2110 drivers/usb/core/message.c:2149
+ usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
+ usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x267/0xaf0 drivers/base/dd.c:661
+ __driver_probe_device+0x18c/0x320 drivers/base/dd.c:803
+ driver_probe_device+0x4f/0x240 drivers/base/dd.c:833
+ __device_attach_driver+0x2d4/0x4c0 drivers/base/dd.c:961
+page last free pid 30 tgid 30 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ __free_pages_prepare mm/page_alloc.c:1433 [inline]
+ __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
+ __kasan_populate_vmalloc_do mm/kasan/shadow.c:393 [inline]
+ __kasan_populate_vmalloc+0x1b2/0x1d0 mm/kasan/shadow.c:424
+ kasan_populate_vmalloc include/linux/kasan.h:580 [inline]
+ alloc_vmap_area+0xd73/0x14b0 mm/vmalloc.c:2129
+ __get_vm_area_node+0x1f8/0x300 mm/vmalloc.c:3232
+ __vmalloc_node_range_noprof+0x372/0x1730 mm/vmalloc.c:4024
+ __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
+ alloc_thread_stack_node kernel/fork.c:355 [inline]
+ dup_task_struct+0x228/0x9a0 kernel/fork.c:924
+ copy_process+0x508/0x3cf0 kernel/fork.c:2050
+ kernel_clone+0x248/0x8e0 kernel/fork.c:2654
+ user_mode_thread+0x110/0x180 kernel/fork.c:2730
+ call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
+ process_one_work kernel/workqueue.c:3275 [inline]
+ process_scheduled_works+0xb02/0x1830 kernel/workqueue.c:3358
+ worker_thread+0xa50/0xfc0 kernel/workqueue.c:3439
+ kthread+0x388/0x470 kernel/kthread.c:467
+ ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
+Memory state around the buggy address:
+ ffff88803828aa00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803828aa80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff88803828ab00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff88803828ab80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff88803828ac00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
 
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
 ---
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 7be8e361ca55b..619dddf54424e 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1823,3 +1823,27 @@ bool is_uprobe_at_func_entry(struct pt_regs *regs)
- 
- 	return false;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index ee3d36eda45dd..f548fea2adec8 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
- extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index a7d7d83ca1d78..dfbce021fb027 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
- 	.mremap = xol_mremap,
- };
- 
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
--- 
-2.51.0
-
-
-
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
