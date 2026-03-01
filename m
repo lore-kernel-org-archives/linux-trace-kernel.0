@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD5A2D73B9;
-	Sun,  1 Mar 2026 01:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131AE13B58A;
+	Sun,  1 Mar 2026 01:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329103; cv=none; b=lxgLrl7WS9CRrZxOcwFw+nA1MU4E2enoRuRx3bM3osJpG7P0efK/n+v7YX3vbgPinTZktpmV2DkO87X+a72NqIVLxNsBeFtfb4WXsA5dpHBU6lFv0pTlr/KvzorgOgB2wBtnG93ii7BU0lUQmmMHqsttYFqD9d+9y9OUADt9Bz8=
+	t=1772329183; cv=none; b=ghW75sD5pofFu5Ze8ZoWdYVKRAJ6RbvgTWrk5Iy0l+62wguNbim82ydLt6Nx2suDrJgjZSh5KpKD8AW43ir8Ochku4LXYzK3rAlmkDgxGb95Y2vOVkxUdB4t4PHeyUS4NX9jxmyBOGXfH6PqvqPb3p/tOKba9joDblnjoB+KfnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329103; c=relaxed/simple;
-	bh=O/3DcdvvN7+KnCHbqZ3OAkyMMySeF3Ri6rNVMol3vvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QFuClWNMf6Em0YaSC8xtLrEDA3V0ePoQcJTKGeIBY2QIWU8QHHXmJ9h6OdXPhxJQp/86zeav9UZbd2/vj7Hti9NzLJENEMCKAbg+RcWty8NYNCh0+BO5VoK+vtgY0EaLsYYg9h1PUuYvarmXqCe4RU8iUmVyyUPG6xJsdd+/Beo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNbFDsEA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329183; c=relaxed/simple;
+	bh=3kSihd35pZHX5DwFWjx2xeQjCYzLLzdi5QrSnFGLl5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XIea63U/PK7GJPqoryD5DmgPL3hpjNACWlGAT2Xq9Dqg4Tp1LoupYuUgHfYWCi7kBxE2KtIPxWdjExVU+bkzd8kdTpKYOib1xmvfI6ZcnQggX7fqXhZABifgg3ZPd26+57JNC505sDHP/wUF4BHwLUwWk4zwELdelz1UX6n7T7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RujayL3a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNbFDsEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02845C19421;
-	Sun,  1 Mar 2026 01:38:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RujayL3a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26593C19421;
+	Sun,  1 Mar 2026 01:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329103;
-	bh=O/3DcdvvN7+KnCHbqZ3OAkyMMySeF3Ri6rNVMol3vvQ=;
+	s=k20201202; t=1772329182;
+	bh=3kSihd35pZHX5DwFWjx2xeQjCYzLLzdi5QrSnFGLl5I=;
 	h=From:To:Cc:Subject:Date:From;
-	b=tNbFDsEAXekkV1kn1Qkf8IO1zK0iejiDV7DerAarcJ+rjNGMu+MEPnl7W0GQ2X9Vz
-	 6TBfLbxIdHs8pQgd6XhR84yUlJNg1v5vjKYAFDEyYfG+IvPjjfRIBimLds+TRTY2jD
-	 mMwfuyCTR8QIBkfS7k37I5srYyOAnfFjVj4Emvide4P19dlySUmP1WE0VMp2hppBDo
-	 EJYvtnxeD0EZqsV+p7kGMHRHMq1UMi+NYaypmMzVceYRzH54hl8tDDSMrocFMwzeps
-	 8UGMgJxetig5DUNOQSz1HnynK+DCT6JruvRyPmDbWM74EDyyIn/bviS2pjwFlPwjlr
-	 91gnjoML0oREQ==
+	b=RujayL3aT2WuJW0b3TaIkH4MVJ9iH7OeNOdKFJzopkimZPjNDKSn/vHZTPRmdphvF
+	 jMZ2rzEubzRPiUvYo/2AQHs9swQ4kA9snUaeuTlxhQEs5+XrWPnZciHLV31qeDsbNi
+	 4iaLpY9oP1GJe9q6pq/hPomCH0+BA+j3t/f+6APA9cyjSBfRLXY3WWCoWfqifXYLGo
+	 zUNMZ4M1N5jcTV9QlsdOjGd39g3XaXji2bnV71jVSlPEQS7keGYI+nxzDJV+EEZlB7
+	 11pFciv9v8LBoJajijiyYsBwkWaxLdiWZQ1bnbX/92EeZVf10z+kAJlNhhmP9UBv8g
+	 yIYx0pMtHSCYg==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	mhiramat@kernel.org
+	petr.pavlu@suse.com
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
 	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: FAILED: Patch "tracing: Fix to set write permission to per-cpu buffer_size_kb" failed to apply to 6.6-stable tree
-Date: Sat, 28 Feb 2026 20:38:21 -0500
-Message-ID: <20260301013821.1698769-1-sashal@kernel.org>
+Subject: FAILED: Patch "tracing: Fix checking of freed trace_event_file for hist files" failed to apply to 6.6-stable tree
+Date: Sat, 28 Feb 2026 20:39:40 -0500
+Message-ID: <20260301013941.1700747-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,39 +57,59 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From f844282deed7481cf2f813933229261e27306551 Mon Sep 17 00:00:00 2001
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Date: Tue, 10 Feb 2026 17:43:36 +0900
-Subject: [PATCH] tracing: Fix to set write permission to per-cpu
- buffer_size_kb
+From f0a0da1f907e8488826d91c465f7967a56a95aca Mon Sep 17 00:00:00 2001
+From: Petr Pavlu <petr.pavlu@suse.com>
+Date: Thu, 19 Feb 2026 17:27:01 +0100
+Subject: [PATCH] tracing: Fix checking of freed trace_event_file for hist
+ files
 
-Since the per-cpu buffer_size_kb file is writable for changing
-per-cpu ring buffer size, the file should have the write access
-permission.
+The event_hist_open() and event_hist_poll() functions currently retrieve
+a trace_event_file pointer from a file struct by invoking
+event_file_data(), which simply returns file->f_inode->i_private. The
+functions then check if the pointer is NULL to determine whether the event
+is still valid. This approach is flawed because i_private is assigned when
+an eventfs inode is allocated and remains set throughout its lifetime.
+Instead, the code should call event_file_file(), which checks for
+EVENT_FILE_FL_FREED. Using the incorrect access function may result in the
+code potentially opening a hist file for an event that is being removed or
+becoming stuck while polling on this file.
+
+Correct the access method to event_file_file() in both functions.
 
 Cc: stable@vger.kernel.org
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://patch.msgid.link/177071301597.2293046.11683339475076917920.stgit@mhiramat.tok.corp.google.com
-Fixes: 21ccc9cd7211 ("tracing: Disable "other" permission bits in the tracefs files")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Link: https://patch.msgid.link/20260219162737.314231-2-petr.pavlu@suse.com
+Fixes: 1bd13edbbed6 ("tracing/hist: Add poll(POLLIN) support on hist file")
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 845b8a165daf3..fd470675809b3 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8613,7 +8613,7 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 	trace_create_cpu_file("stats", TRACE_MODE_READ, d_cpu,
- 				tr, cpu, &tracing_stats_fops);
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index e6f449f53afcc..768df987419e3 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5784,7 +5784,7 @@ static __poll_t event_hist_poll(struct file *file, struct poll_table_struct *wai
  
--	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
-+	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_WRITE, d_cpu,
- 				tr, cpu, &tracing_entries_fops);
+ 	guard(mutex)(&event_mutex);
  
- 	if (tr->range_addr_start)
+-	event_file = event_file_data(file);
++	event_file = event_file_file(file);
+ 	if (!event_file)
+ 		return EPOLLERR;
+ 
+@@ -5822,7 +5822,7 @@ static int event_hist_open(struct inode *inode, struct file *file)
+ 
+ 	guard(mutex)(&event_mutex);
+ 
+-	event_file = event_file_data(file);
++	event_file = event_file_file(file);
+ 	if (!event_file) {
+ 		ret = -ENODEV;
+ 		goto err;
 -- 
 2.51.0
 
