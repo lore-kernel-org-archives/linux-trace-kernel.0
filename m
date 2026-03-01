@@ -1,42 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91D6274B42;
-	Sun,  1 Mar 2026 01:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AB072631;
+	Sun,  1 Mar 2026 01:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772328312; cv=none; b=ig0AeiqyIc1XJ8FRANFhrOBry267mtz3N2/LB9AqlgvEFDCB178trRHfmzPaxZcRg2rwrdbXRKz+0mzSrdbNYbdXT8SiTWwURbfuFnSafvaQAgDszbgY944kvMSk+pvZNfi8uJVejTpKEkKgOR/PRebTeGQh1JdLBYI1K7JapDY=
+	t=1772328485; cv=none; b=Tfq42jBjns3XuQB1HYxDtaOQ4LOOzUG1iDL0+xZpTpL4w8qhtoME7aKoArhbcXKhpzeBBGMW54F+F1wS4WwVSFFzwIlZVChIDPh4sXHVE8rOchOLkOX/d8j1YhF60e96TnLBE6bs3XZ2fBgdBZzLnijHzmFdV8EPonpB94PiWj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772328312; c=relaxed/simple;
-	bh=/s/gefyzZLKHFfruEbLzqn0cvHKqDCWeFmV76HoXI6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dlH0LPmC7AO+pG9ykCwvlmNVOAc2whdGTRgO+99kvUupx6lcmN+3h4TKodnljX6P0tixBEMBsA1qRkWxMmEtt/96cVw5LY9Z4M93JZUhkTbzdNkud12llqkt6RTY0aokDn9skmhgtM/NWDZUe1BjOFL7CyOvl/weBgZcNBKYHZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+C+6E5S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328485; c=relaxed/simple;
+	bh=WTOUF83UYU2jVYOgULKxRPuaJ8uBlQIoaUgFlqkIA0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TE+0vLe84dwUiww9fFaHfMBWsKwxZmA7K0eTOsy0kevCnbZKOeuLUKTdEwPt+nGhzLMei2jUVsQYs3lEUBk/rEp7isdzMoCquEgrA1foTaQy5OYyKHbkZidoC/XXA+dwrL478JOoQ/qo0ZJEAf97Tyh6q/Bjoc21gzCWCTAdYlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIvz4n48; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+C+6E5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44C5C2BC86;
-	Sun,  1 Mar 2026 01:25:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIvz4n48"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85439C19421;
+	Sun,  1 Mar 2026 01:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328312;
-	bh=/s/gefyzZLKHFfruEbLzqn0cvHKqDCWeFmV76HoXI6g=;
+	s=k20201202; t=1772328485;
+	bh=WTOUF83UYU2jVYOgULKxRPuaJ8uBlQIoaUgFlqkIA0o=;
 	h=From:To:Cc:Subject:Date:From;
-	b=p+C+6E5SddsvVwuoyOnlpsoin9qOrPnl0tjUGkMQ0plfjPAWP3KmK6eaD25FrX5Ut
-	 R6K9GAtQuDuvV+3PfEZu8VA7F67Go4TP76weZEKZvg7vRc9aa53T1BJlhC+Yy4xudk
-	 vQXS9/MT7lN0CS97IOcR65EY3p5RN185IxQBb7R7iBqhNmFwBTsvBIYGJdFKibY1jO
-	 YE9fWFyIofPomMge+utGWuLmOJGQNtEnovsVhZPR1qWOSQmKGcS1CFvolCCfxVTdN4
-	 NMcrl9gJtHjmvJWWfhFTM8K0e5kQy5cyyx5fYWP2fUgAEWbZxQPFvkTaNMGjR3T15T
-	 s+PlvZGjH65FQ==
+	b=hIvz4n48NCDP9J1Sp+BrvN0T4Kf9p9g6kMNxjtPeU5jSMZAQDOqVEU9bvGLu+jRDt
+	 DofBbKhI7Ifx7dd324BBxi8ncWEjd16OBXgqEowIxpyY7rykxO9TzTUnA15pECfK9h
+	 Wk0Mqb1CjS+L2Y8cIxQBsCvcPMEwtT6XjVm+5k8bWM9RQuurCg8ULdLF0WacSIA6eA
+	 TY3BfA3dX5g2dXVgHsj7IpT4yD+DjfkD/T9+KZTo1EhgJ1y/4YIoXlKY3d1B/QsT3x
+	 L56ZQYoR60LzWATsoIN0OCZML7EMOlkbD+ovmTYpHycCp+LX40hvkMiNlvu3L+fHcW
+	 vKhB2/ct5lHdA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	leitao@debian.org
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: FAILED: Patch "uprobes: Fix incorrect lockdep condition in filter_chain()" failed to apply to 6.12-stable tree
-Date: Sat, 28 Feb 2026 20:25:10 -0500
-Message-ID: <20260301012510.1682217-1-sashal@kernel.org>
+Subject: FAILED: Patch "tracing: Fix to set write permission to per-cpu buffer_size_kb" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:28:02 -0500
+Message-ID: <20260301012803.1685713-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,52 +55,39 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From a56a38fd9196fc89401e498d70b7aa9c9679fa6e Mon Sep 17 00:00:00 2001
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 28 Jan 2026 10:16:11 -0800
-Subject: [PATCH] uprobes: Fix incorrect lockdep condition in filter_chain()
+From f844282deed7481cf2f813933229261e27306551 Mon Sep 17 00:00:00 2001
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Date: Tue, 10 Feb 2026 17:43:36 +0900
+Subject: [PATCH] tracing: Fix to set write permission to per-cpu
+ buffer_size_kb
 
-The list_for_each_entry_rcu() in filter_chain() uses
-rcu_read_lock_trace_held() as the lockdep condition, but the function
-holds consumer_rwsem, not the RCU trace lock.
+Since the per-cpu buffer_size_kb file is writable for changing
+per-cpu ring buffer size, the file should have the write access
+permission.
 
-This gives me the following output when running with some locking debug
-option enabled:
-
-  kernel/events/uprobes.c:1141 RCU-list traversed in non-reader section!!
-    filter_chain
-    register_for_each_vma
-    uprobe_unregister_nosync
-    __probe_event_disable
-
-Remove the incorrect lockdep condition since the rwsem provides
-sufficient protection for the list traversal.
-
-Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/20260128-uprobe_rcu-v2-1-994ea6d32730@debian.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://patch.msgid.link/177071301597.2293046.11683339475076917920.stgit@mhiramat.tok.corp.google.com
+Fixes: 21ccc9cd7211 ("tracing: Disable "other" permission bits in the tracefs files")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/events/uprobes.c | 2 +-
+ kernel/trace/trace.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index dfbce021fb027..424ef2235b07e 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1138,7 +1138,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 845b8a165daf3..fd470675809b3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8613,7 +8613,7 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
+ 	trace_create_cpu_file("stats", TRACE_MODE_READ, d_cpu,
+ 				tr, cpu, &tracing_stats_fops);
  
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-+	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
+-	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
++	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_WRITE, d_cpu,
+ 				tr, cpu, &tracing_entries_fops);
+ 
+ 	if (tr->range_addr_start)
 -- 
 2.51.0
 
