@@ -1,234 +1,1374 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011067.outbound.protection.outlook.com [40.93.194.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8CE430B85;
-	Mon,  2 Mar 2026 00:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15D114B08A
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 03:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772410955; cv=fail; b=UD/l/yNWbEisl1qrz09PEAxCVNM9/EjbSxtn13JL3mnt2jg/MR2WgXuiXiZvn5/P+rKkr7X5WXdh/xTVdtRdEsW/+8b9gzhWpwp9+3bIFYddjf1xPnv4E9aTABQo47rDvrBwYXh2vM59nQvRQ23TwRacmy/Bf82gHnS8DbROY7o=
+	t=1772423150; cv=pass; b=XZNweCHB98BuBQqGMNrVoLUnIkfE4exhOZj9/JenwE5D8OZbKZkprLBzxDsoGHPv/lUiFtD0soNJpZ3SP6Je6BrkCg4CqJAoHu8ykeHXTgHOeLf3woDWpzwblKb+Ly+tzMWcEPfcnMAXH5jdx6CT4w/GhyKB6tNh6xsPv6BF0/M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772410955; c=relaxed/simple;
-	bh=3tkq0dvtYacqOktXDK+sJ37izSWKyHWjchKxn9PefCQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DusFlprXvZzhnDOkxDMFXUuk/rTMRKbkmH2inAWc3HKpuUezFVwwinoqsST1jGoV8KXsuVBFmExaxQGUJ+tIeb3OEKGqgtmTOX/NI+czfd92M55cugwPNz6gM7WiqgOHGYIn7tbLMvo9uBUA2M76hdp8y4r3QHHMy6AvlHsqTiQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oERD3D6Q; arc=fail smtp.client-ip=40.93.194.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1772423150; c=relaxed/simple;
+	bh=4AyRc4IpeUNF8GzsFfL6Lp6JWmcptz+qHNUk8q5+LAQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QMS1jE2mXSZW1hqvYnCvQIw1I6jqwEFXwoYsl992gF5NdZLoZjlekuOoGvHGMcqjIt3MyZn5LgTOfio/QYAX5+X41nRi76a8+ZhMxvsHsCALKhHINbDcDLQAxhI5oobKM5mJCL6WRs3HMfvxUlkDoOTpq5D2nC4i8uPR1j3Zw+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJcQMZyF; arc=pass smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oERD3D6Q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u80WAO+TseLuveyAETHvb6Me/gKXSeEi0dQ7+RTzPkr1CwGVPCrG9RH8xug8xfnfsHxqPhk9CPEtx0LeZmBvZHToCssUYiUrZ5lerP2fN6j5wLh74Ogwozznhi4LpMjZD9PELXdYJkPBG4/LQKKBTPhIdaChsFzZERGdVgaPm0b+deFILH6maXuk+P3eCljt0tkmndGi0bZ/c38nZahKiZo/B8HwaZVCS3UnGtJyKcEaDG34fcDmqKJIQOjsHG5p7ZxiOvFUMCeWrR1qYtq0dujktnpy84VzIl65EhtHTnovh8I5WW/ChN/LclITC3+BEHqPdaTZtSeeuq4fEy39kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uY991wE8LibZu/ZtTLsnt+XmIPxjmbnxYbEYw1It0KY=;
- b=GCkBHXKaV3Z8KK2RY9xSt8tZOxfW+sRyXgMtdeKhgoZ1dK+3Qq1ViAl6mboSQkGDSQEox86exe8tg6GZt+yctWiW4vPX0FMwX3OnAMHD9levV7Rq+rUlte82d3ec7aZtxeNOFUlCmma5bzveVNsps7hgNrMHdq34nuQIDbtN2wl0BW9uvarvYezXGtqbC0fOocm1nB4QI6ECIh3S4IAyzDmufvy9+DgZmo2s5K9PjgOZG0OTzmRTwiv5Q13i3pq8IImu3C8tlCFINlppec4Bj4zV8vZderRWY/YwBrYgERsqWKrEPwAuXrVRvoVN6ojn+dLUcHK22qsBRYiDZqHYng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.dk smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uY991wE8LibZu/ZtTLsnt+XmIPxjmbnxYbEYw1It0KY=;
- b=oERD3D6QQccipG5QeQXsecUGL+bOo2iKYYvHVfdAQ9J4PdS6Jf95yGVoyBz4eTabOI/594yJehYTccvEMjbtLO75bd7k7MQucvKY1udyPG6h8zR8gQQSm9R1lzGjdHcej4qasfUfFojXdRZ84Ynp3zlmKWLKGsrwu2bAxP8bFHVr4vm17k0eEU5fCi2NQtnD1EG0fsan7WAwPCkkMlIFXuifiXFFi4uuvZ2FKj4xRMhIGyK2HCxhMhx6zgT9enKFWDLmM/tnNnQwgEjEWiH+1yEIHUBpj+JtHGXBFv36OQUIWaPUBVrOJ8/gN6rWwiyBhd0S8qxqyivGtx/jzChOvQ==
-Received: from BN9PR03CA0800.namprd03.prod.outlook.com (2603:10b6:408:13f::25)
- by CH8PR12MB9790.namprd12.prod.outlook.com (2603:10b6:610:274::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
- 2026 00:22:29 +0000
-Received: from BN1PEPF00004688.namprd05.prod.outlook.com
- (2603:10b6:408:13f:cafe::17) by BN9PR03CA0800.outlook.office365.com
- (2603:10b6:408:13f::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.19 via Frontend Transport; Mon,
- 2 Mar 2026 00:22:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN1PEPF00004688.mail.protection.outlook.com (10.167.243.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Mon, 2 Mar 2026 00:22:29 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 1 Mar
- 2026 16:22:14 -0800
-Received: from dev.nvidia.com (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 1 Mar
- 2026 16:22:14 -0800
-From: Chaitanya Kulkarni <kch@nvidia.com>
-To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>
-CC: <shinichiro.kawasaki@wdc.com>, <linux-block@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH V2] blktrace: fix __this_cpu_read/write in preemptible context
-Date: Sun, 1 Mar 2026 16:22:07 -0800
-Message-ID: <20260302002207.12165-1-kch@nvidia.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJcQMZyF"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-38a01c80c34so32910081fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 01 Mar 2026 19:45:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772423145; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CuYKFXOmYvj3jQNrlO+h+jjZAuFcz30+h79EHWUJNMRmdJ8vgMcvSzUuDO7cO52o2J
+         89pe6skIMVgp7Xb80HPEhMLLME2hvRpu4jZy+9yXaecZ07QoUpFM5L46Lj7QKPWg07sK
+         g2rUS2Z/6k6m4AF7huJoMpJVZHaPka+v/xlw2JOOzGFU6mnYI4CYTStPH3BcSOsQdRDC
+         FuwBwVtmzgiKpCv6aYogKiaWcHcvpLB284gv4t5MmLURX9ewXmuDRT90liL3ZWuY4cfj
+         Ov3ZAIc68faqARPm5C6T4z+HpjVniiE1QTYrn2JcxpKpgL920ThjhWydy2k+esS4nGa7
+         UqzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=FnxI/w4AUUz3FhGTb8nTGiG016OlV55t6OkO/Q4UVeI=;
+        fh=BjjKJIEsyWWMIFICf+xb3n3/x/hkKhYkmR1fAPmAiCY=;
+        b=h2ucdvrEhV6Gv/JgIOuk/gQmL4XI+UboGpAkoIhMFRHBLdAF76S/2SGhF4rEdb9bwj
+         cOk7KOCzy+yaZA5JeRxIoeLiABdTsTpKNChnIlAqsSAUd7qLx5m4TTh/LW5hxTxznNlt
+         KqeQTDazLGN6WMJ5RSD473QEtWDWJOxohNpSs3mBDEIW6y44jftIScNgh5GagFEzMkhv
+         x1VGLqPrQ9DSv91gTl5BDAftLil1TiAgwi8Ow77ZwyQDF8LBJvU/0cm5NcwYW5wR/du2
+         813FDCPg+pA68lUQeBOp+hh8hkm44q8m2b/RgSC0ICCAKNe1J4InxTgFx0rrJLBB5TDW
+         OM7g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772423145; x=1773027945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FnxI/w4AUUz3FhGTb8nTGiG016OlV55t6OkO/Q4UVeI=;
+        b=HJcQMZyF6avMx4faa+6bGHxHR0O+GaqxP5RF6CE2qKTEZHCyQSQLL7uXQEprncMsPH
+         InuYLJwU49ZdSswJ8KniKO85XuwHxbdy52YMbFr4G+Kp8yihVD/8ciHmbEBWhapMCZcU
+         o/t1CP9jeJSACbZHqrohC9cNoqsueYPgHr/p+vfzO59IPja6XXwH7SE3jXr1h+xsPFkL
+         kYD44PW+vMT1FzPpWUHdRZpf22t2i2+X96fhf9iBzQkFu/MUDShu7KU18APteKxmI6tm
+         4Z8bmFHplhOrB+m/3QlBf+FVq6rsDVn5dRuu/lsoQcl5ohXwGiSW8wa2nAP1QtOFF22C
+         hWlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772423145; x=1773027945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FnxI/w4AUUz3FhGTb8nTGiG016OlV55t6OkO/Q4UVeI=;
+        b=Du9bONQ6BdODCBOhqgDrzumEWzruzdn+fa37GlTUwmJiLUY6jAmw2GRmhnouxAC8zD
+         uB5A716Rm1zKqAGWpL6B8iP3rtPY2I1C6okYLww2Ux37dWcB1ONzYJwTT1+jcTdG0VXQ
+         gsb6BK/Iy7FW+SFv+4BocAHJ9qmWTwqFxZmuxUJFeEILJlwWMZ2Otj1VGInYrKipSUgC
+         4jwrvfnZsHAKdL+I3avM1869PeRh9gXUGXmsa+coUy+XUYieCcWI9pFyGpq01p1UGzFm
+         v7RBbotm2z42GotEyv5WsuVWc++LD5zSN44wWmf0UZPQ3C4b4FqT5wtUPOFbb7PiYS6z
+         VLPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxklXN/IlfSxC08HW8cSJSmyjARr7RlLt2P5kqXQ6TJZsl8oJCdbMdlKR9VyUcFMWCvUGzOStnOqlLtCxeFRZlp1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK6n5ylP503mVQvJUYKIWCub2p1cuAWeQXvfVtmNuYwdNCHtPD
+	rjAVCpkzIjfn8IIXN/OJhEeUkJuOIHKrAsaIXLWak+01bKfnAywMW8xXin39dBmBvnlTD29bMuZ
+	319IX8VS/ssMhexBa1UzsDp+m1R8cx+U=
+X-Gm-Gg: ATEYQzz+pFzfn5XSMSXUg2bxMi0gY68NW9215eB68IOeiAuCJ9PxFHLwBJrf0kQ3zMG
+	xUh2+pAART7WFqz9bPbJLa2Pm68Icuw9vK5M9MmS1z26nIUCPTdVrrtEaXmoAuPXW04lQHhtett
+	NR/4ttapnAivdXHOb01FusHOtS0RS2P+LyEMzHUG/oWG3I7a+E6G2uY3Way+IDDCZBnelRAZiap
+	bemmn7RKjmHj52ol6TFVnu5apQHZ8cqi+JHv08NPq1Zd9DDYigq8TegvxlcVoERzZO5pVZ+VW7A
+	8hWmah+jGiasKlHytjRXp5W7imThQfwpbGKqajLa
+X-Received: by 2002:a2e:8052:0:b0:383:1704:2207 with SMTP id
+ 38308e7fff4ca-389ff34fc46mr51442741fa.20.1772423144982; Sun, 01 Mar 2026
+ 19:45:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004688:EE_|CH8PR12MB9790:EE_
-X-MS-Office365-Filtering-Correlation-Id: f57d554d-7808-4161-65af-08de77f1ca0c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	Zhjv7/r9C0jshz3Fl2p2A0iwOAxHI6pe9xoYSj6Ey6PohvnNm+I0pdD79pPFH9WvMvPxAgj0IAyyqSwCsw2UTvK/5PTEQpEWoQI5JjepaYFKceLN54qkIDbcC2XPrxlqs9V7ykAlgXetYj+vLqsgtGhSFi4EszRZXY4qdc2VzJskt6JAdEUrMm2d9fF1jHyMq60X7XOiRVRCNdbbJnaSIW+yIL8HKMgYdNhE4APmnBlNUfnXvbwnTz/U/A3NC/sNTFDO7FUxhRqgCbO0lGs10pLL1fP86U56sSmKEJqgXDskn7D4eOtGVXJmtlMeZ2b5JiaARp62EA3bgR6PEuoh0SjTcaESVxa4JSy+Ypk5lhcAoyhgJYkbvB7cmFwgtjFUDJc0CI9CNAFxcYJUgjoGCrrE07o81CXe1G6hZjBeecLjrsP/WdQ2CfF3bQ/lwT+ORWOADu6cYlRGFRGeF/cLk6qj+Cu/bz+7hTa0WRsMLbWNPrv738JC+hM4q05Fxru2yoMaf6hVW0g0hQI2RZhlngH5bXoDj/NoVA9WG4v6XERO6PQZaAvEOotTJ2OvO48yd1O/DqgdWiZiSeYyVO4/zTGpuJM3NZ7nHMJoBTJY+P3uGzDNKCy8tAkMdJewVckOIjcfL05pN91sozCKdb0wG3V007oYN1/nFvWi5PZTAhfWQFuM09H0N/yyD8S6dnbW7IoXzusI4Jcgn5LE7nCMYfCxXb0N+s3FvzO4lWOENVyf/WHqoBDsHARbDy5En9bZVaUhs5SboI6GeuM4dZtBA+gd8o28widwgPtGa4i+P7D2RkqZlzR8lZZeZfn40OTUjARFddxcJs/S3JijdyDzdA==
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	xr/6vz3oj8qkDtDffOz3Oslt17cxpHZS1NVJvKjAipOJHgE3dyS2gJoc8Cj6ZskiIMcE9k/XIaF9P6bz9XfNTLROg8a7JEMlCzNMvfbnmFyRATCvjKTi5PaKweXYxfOnOzSdrO7Pyzz9mfldxrBNaGoozVJX1NoNeBjZvtbywBWdz2etkTSexPA8zaVNjRnWQX8Zt/KiEtAgEOwVUTQdCbC9Rs/4ciHuSYuAhdnD26sqINbzg9aycdQNM7fOSBo85EzrcMbhC1IDfiUHXoRsJf55kboyHMmKOeVSP1ss6lMENECIu4MwWMVk+d65RE5BKEjWr6uVHlf7CllSWbEOHfTwDnOqXlwkA5LN5+khBBOTBSwuwrkVgCsXwbp1lRdRAQGxDYfbstHlEhBH0bD0kZsAwBtMZr9BWJgN+87ijRr3jUZdgM83BIJYEn/x2GbC
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 00:22:29.1854
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f57d554d-7808-4161-65af-08de77f1ca0c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004688.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9790
+From: Andre Ramos <acastroramos1987@gmail.com>
+Date: Mon, 2 Mar 2026 00:45:33 -0300
+X-Gm-Features: AaiRm53uaJOYPr1UbqpG18nn9fRsguutM4Qk7SSZSIft273-0lIT1Fmdg2Yt43k
+Message-ID: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
+Subject: [PATCH] mm: add Adaptive Memory Pressure Signaling (AMPRESS)
+To: akpm@linux-foundation.org, hannes@cmpxchg.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, david@kernel.org, rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tracing_record_cmdline() internally uses __this_cpu_read() and
-__this_cpu_write() on the per-CPU variable trace_cmdline_save, and
-trace_save_cmdline() explicitly asserts preemption is disabled via
-lockdep_assert_preemption_disabled(). These operations are only safe
-when preemption is off, as they were designed to be called from the
-scheduler context (probe_wakeup_sched_switch() / probe_wakeup()).
+Introduce /dev/ampress, a bidirectional fd-based interface for
+cooperative memory reclaim between the kernel and userspace.
 
-__blk_add_trace() was calling tracing_record_cmdline(current) early in
-the blk_tracer path, before ring buffer reservation, from process
-context where preemption is fully enabled. This triggers the following
-using blktests/blktrace/002:
+Userspace processes open /dev/ampress and block on read() to receive
+struct ampress_event notifications carrying a graduated urgency level
+(LOW/MEDIUM/HIGH/FATAL), the NUMA node of the pressure source, and a
+suggested reclaim target in KiB. After freeing memory the process
+issues AMPRESS_IOC_ACK to close the feedback loop.
 
-blktrace/002 (blktrace ftrace corruption with sysfs trace)   [failed]
-    runtime  0.367s  ...  0.437s
-    something found in dmesg:
-    [   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
-    [   81.239580] null_blk: disk nullb1 created
-    [   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
-    [   81.362842] caller is tracing_record_cmdline+0x10/0x40
-    [   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
-    [   81.362877] Tainted: [N]=TEST
-    [   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-    [   81.362881] Call Trace:
-    [   81.362884]  <TASK>
-    [   81.362886]  dump_stack_lvl+0x8d/0xb0
-    ...
-    (See '/mnt/sda/blktests/results/nodev/blktrace/002.dmesg' for the entire message)
+The feature hooks into balance_pgdat() in mm/vmscan.c, mapping the
+kswapd scan priority to urgency bands:
+  priority 10-12 -> LOW
+  priority  7-9  -> MEDIUM
+  priority  4-6  -> HIGH
+  priority  1-3  -> FATAL
 
-[   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
-[   81.239580] null_blk: disk nullb1 created
-[   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
-[   81.362842] caller is tracing_record_cmdline+0x10/0x40
-[   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
-[   81.362877] Tainted: [N]=TEST
-[   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-[   81.362881] Call Trace:
-[   81.362884]  <TASK>
-[   81.362886]  dump_stack_lvl+0x8d/0xb0
-[   81.362895]  check_preemption_disabled+0xce/0xe0
-[   81.362902]  tracing_record_cmdline+0x10/0x40
-[   81.362923]  __blk_add_trace+0x307/0x5d0
-[   81.362934]  ? lock_acquire+0xe0/0x300
-[   81.362940]  ? iov_iter_extract_pages+0x101/0xa30
-[   81.362959]  blk_add_trace_bio+0x106/0x1e0
-[   81.362968]  submit_bio_noacct_nocheck+0x24b/0x3a0
-[   81.362979]  ? lockdep_init_map_type+0x58/0x260
-[   81.362988]  submit_bio_wait+0x56/0x90
-[   81.363009]  __blkdev_direct_IO_simple+0x16c/0x250
-[   81.363026]  ? __pfx_submit_bio_wait_endio+0x10/0x10
-[   81.363038]  ? rcu_read_lock_any_held+0x73/0xa0
-[   81.363051]  blkdev_read_iter+0xc1/0x140
-[   81.363059]  vfs_read+0x20b/0x330
-[   81.363083]  ksys_read+0x67/0xe0
-[   81.363090]  do_syscall_64+0xbf/0xf00
-[   81.363102]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   81.363106] RIP: 0033:0x7f281906029d
-[   81.363111] Code: 31 c0 e9 c6 fe ff ff 50 48 8d 3d 66 63 0a 00 e8 59 ff 01 00 66 0f 1f 84 00 00 00 00 00 80 3d 41 33 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 48 83 ec
-[   81.363113] RSP: 002b:00007ffca127dd48 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[   81.363120] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f281906029d
-[   81.363122] RDX: 0000000000001000 RSI: 0000559f8bfae000 RDI: 0000000000000000
-[   81.363123] RBP: 0000000000001000 R08: 0000002863a10a81 R09: 00007f281915f000
-[   81.363124] R10: 00007f2818f77b60 R11: 0000000000000246 R12: 0000559f8bfae000
-[   81.363126] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000000000a
-[   81.363142]  </TASK>
+ampress_notify() is IRQ-safe (read_lock_irqsave + spin_lock_irqsave,
+no allocations) so it can be called from any reclaim context.
+Per-subscriber events overwrite without queuing to prevent unbounded
+backlog. A debugfs trigger at /sys/kernel/debug/ampress/inject allows
+testing without real memory pressure.
 
-The same BUG fires from blk_add_trace_plug(), blk_add_trace_unplug(),
-and blk_add_trace_rq() paths as well.
+New files:
+  include/uapi/linux/ampress.h   - UAPI structs and ioctl definitions
+  include/linux/ampress.h        - internal header and ampress_notify()
+  include/trace/events/ampress.h - tracepoints for notify and ack
+  mm/ampress.c                   - miscdevice driver and core logic
+  mm/ampress_test.c              - KUnit tests (3/3 passing)
+  tools/testing/ampress/         - userspace integration and stress tests
 
-The purpose of tracing_record_cmdline() is to cache the task->comm for
-a given PID so that the trace can later resolve it. It is only
-meaningful when a trace event is actually being recorded. Ring buffer
-reservation via ring_buffer_lock_reserve() disables preemption, and
-preemption remains disabled until the event is committed :-
-
-__blk_add_trace()
-       	__trace_buffer_lock_reserve()
-       		__trace_buffer_lock_reserve()
-       			ring_buffer_lock_reserve()
-       				preempt_disable_notrace();  <---
-
-With this fix blktests for blktrace pass:
-
-  blktests (master) # ./check blktrace
-  blktrace/001 (blktrace zone management command tracing)      [passed]
-      runtime  3.650s  ...  3.647s
-  blktrace/002 (blktrace ftrace corruption with sysfs trace)   [passed]
-      runtime  0.411s  ...  0.384s
-
-Fixes: 7ffbd48d5cab ("tracing: Cache comms only after an event occurred")
-Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+Signed-off-by: Andr=C3=A9 Castro Ramos <acastroramos1987@gmail.com>
 ---
-v2:-
+ MAINTAINERS                            |  11 +
+ include/linux/ampress.h                |  34 +++
+ include/trace/events/ampress.h         |  70 ++++++
+ include/uapi/linux/ampress.h           |  40 ++++
+ mm/Kconfig                             |  26 ++
+ mm/Makefile                            |   2 +
+ mm/ampress.c                           | 320 +++++++++++++++++++++++++
+ mm/ampress_test.c                      | 124 ++++++++++
+ mm/vmscan.c                            |  27 +++
+ tools/testing/ampress/.gitignore       |   2 +
+ tools/testing/ampress/Makefile         |  21 ++
+ tools/testing/ampress/ampress_stress.c | 199 +++++++++++++++
+ tools/testing/ampress/ampress_test.c   | 212 ++++++++++++++++
+ 13 files changed, 1088 insertions(+)
+ create mode 100644 include/linux/ampress.h
+ create mode 100644 include/trace/events/ampress.h
+ create mode 100644 include/uapi/linux/ampress.h
+ create mode 100644 mm/ampress.c
+ create mode 100644 mm/ampress_test.c
+ create mode 100644 tools/testing/ampress/.gitignore
+ create mode 100644 tools/testing/ampress/Makefile
+ create mode 100644 tools/testing/ampress/ampress_stress.c
+ create mode 100644 tools/testing/ampress/ampress_test.c
 
-1. Remove preempt_disable_notrace() and preempt_enable_notrace() calls from V1.
-   Fix the issue by moving a call to tracing_record_cmdline() after ring
-   buffer reservation which also disables the preemption.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61bf550fd37..ea4d7861ff9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16629,6 +16629,17 @@ F:    mm/memremap.c
+ F:    mm/memory_hotplug.c
+ F:    tools/testing/selftests/memory-hotplug/
 
----
- kernel/trace/blktrace.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
++ADAPTIVE MEMORY PRESSURE SIGNALING (AMPRESS)
++M:    Darabat <playbadly1@gmail.com>
++L:    linux-mm@kvack.org
++S:    Maintained
++F:    include/linux/ampress.h
++F:    include/trace/events/ampress.h
++F:    include/uapi/linux/ampress.h
++F:    mm/ampress.c
++F:    mm/ampress_test.c
++F:    tools/testing/ampress/
++
+ MEMORY MANAGEMENT
+ M:    Andrew Morton <akpm@linux-foundation.org>
+ L:    linux-mm@kvack.org
+diff --git a/include/linux/ampress.h b/include/linux/ampress.h
+new file mode 100644
+index 00000000000..a0f54a65f94
+--- /dev/null
++++ b/include/linux/ampress.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_AMPRESS_H
++#define _LINUX_AMPRESS_H
++
++#include <uapi/linux/ampress.h>
++
++/**
++ * struct ampress_subscriber - per-fd subscriber state
++ * @list:          Entry in the global subscribers list
++ * @wq:            Wait queue for blocking read()
++ * @lock:          Spinlock protecting pending_event and event_pending
++ * @pending_event: Most recent event (may be overwritten if not ACK'd)
++ * @event_pending: True when an unread event is available
++ * @subscribed:    Whether this fd is receiving notifications (toggle
+via ioctl)
++ * @config:        Per-subscriber threshold configuration
++ */
++struct ampress_subscriber {
++    struct list_head  list;
++    wait_queue_head_t wq;
++    spinlock_t        lock;    /* protects pending_event and event_pending=
+ */
++    struct ampress_event pending_event;
++    bool              event_pending;
++    bool              subscribed;
++    struct ampress_config config;
++};
++
++#ifdef CONFIG_AMPRESS
++void ampress_notify(int urgency, int numa_node, unsigned long requested_kb=
+);
++#else
++static inline void ampress_notify(int urgency, int numa_node,
++                  unsigned long requested_kb) {}
++#endif
++
++#endif /* _LINUX_AMPRESS_H */
+diff --git a/include/trace/events/ampress.h b/include/trace/events/ampress.=
+h
+new file mode 100644
+index 00000000000..37ae9d3acd4
+--- /dev/null
++++ b/include/trace/events/ampress.h
+@@ -0,0 +1,70 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ampress
++
++#if !defined(_TRACE_AMPRESS_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_AMPRESS_H
++
++#include <linux/tracepoint.h>
++
++/**
++ * ampress_notify_sent - fired each time ampress_notify() delivers an even=
+t
++ * @urgency:          AMPRESS_URGENCY_* level
++ * @numa_node:        NUMA node (0xFF =3D system-wide)
++ * @requested_kb:     Requested reclaim in KiB
++ * @subscriber_count: Number of subscribers that received the event
++ */
++TRACE_EVENT(ampress_notify_sent,
++
++    TP_PROTO(int urgency, int numa_node, unsigned long requested_kb,
++         int subscriber_count),
++
++    TP_ARGS(urgency, numa_node, requested_kb, subscriber_count),
++
++    TP_STRUCT__entry(
++        __field(int,           urgency)
++        __field(int,           numa_node)
++        __field(unsigned long, requested_kb)
++        __field(int,           subscriber_count)
++    ),
++
++    TP_fast_assign(
++        __entry->urgency          =3D urgency;
++        __entry->numa_node        =3D numa_node;
++        __entry->requested_kb     =3D requested_kb;
++        __entry->subscriber_count =3D subscriber_count;
++    ),
++
++    TP_printk("urgency=3D%d numa_node=3D%d requested_kb=3D%lu subscribers=
+=3D%d",
++          __entry->urgency, __entry->numa_node,
++          __entry->requested_kb, __entry->subscriber_count)
++);
++
++/**
++ * ampress_ack_received - fired when a userspace process acknowledges an e=
+vent
++ * @pid:      PID of the acknowledging process
++ * @freed_kb: Amount of memory freed in KiB as reported by userspace
++ */
++TRACE_EVENT(ampress_ack_received,
++
++    TP_PROTO(pid_t pid, unsigned long freed_kb),
++
++    TP_ARGS(pid, freed_kb),
++
++    TP_STRUCT__entry(
++        __field(pid_t,         pid)
++        __field(unsigned long, freed_kb)
++    ),
++
++    TP_fast_assign(
++        __entry->pid      =3D pid;
++        __entry->freed_kb =3D freed_kb;
++    ),
++
++    TP_printk("pid=3D%d freed_kb=3D%lu", __entry->pid, __entry->freed_kb)
++);
++
++#endif /* _TRACE_AMPRESS_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/uapi/linux/ampress.h b/include/uapi/linux/ampress.h
+new file mode 100644
+index 00000000000..da3e0ba38fc
+--- /dev/null
++++ b/include/uapi/linux/ampress.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_LINUX_AMPRESS_H
++#define _UAPI_LINUX_AMPRESS_H
++
++#include <linux/types.h>
++#include <linux/ioctl.h>
++
++/* Urgency levels */
++#define AMPRESS_URGENCY_LOW    0   /* Soft hint =E2=80=94 shed non-critica=
+l caches */
++#define AMPRESS_URGENCY_MEDIUM 1   /* Moderate =E2=80=94 release pooled me=
+mory */
++#define AMPRESS_URGENCY_HIGH   2   /* Severe =E2=80=94 checkpoint / compac=
+t
+aggressively */
++#define AMPRESS_URGENCY_FATAL  3   /* Last resort before OOM kill */
++
++struct ampress_event {
++    __u8  urgency;           /* AMPRESS_URGENCY_* */
++    __u8  numa_node;         /* 0xFF =3D system-wide */
++    __u16 reserved;
++    __u32 requested_kb;      /* How much the kernel wants back (0 =3D
+unspecified) */
++    __u64 timestamp_ns;      /* ktime_get_ns() at event generation */
++};
++
++struct ampress_ack {
++    __u32 freed_kb;          /* How much the process actually freed */
++    __u32 reserved;
++};
++
++struct ampress_config {
++    __u32 low_threshold_pct;    /* % of zone watermark to trigger LOW */
++    __u32 medium_threshold_pct;
++    __u32 high_threshold_pct;
++    __u32 fatal_threshold_pct;
++};
++
++#define AMPRESS_IOC_MAGIC       'P'
++#define AMPRESS_IOC_CONFIGURE   _IOW(AMPRESS_IOC_MAGIC, 1, struct
+ampress_config)
++#define AMPRESS_IOC_ACK         _IOW(AMPRESS_IOC_MAGIC, 2, struct ampress_=
+ack)
++#define AMPRESS_IOC_SUBSCRIBE   _IO(AMPRESS_IOC_MAGIC,  3)
++#define AMPRESS_IOC_UNSUBSCRIBE _IO(AMPRESS_IOC_MAGIC,  4)
++
++#endif /* _UAPI_LINUX_AMPRESS_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ebd8ea35368..be1eddd1231 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1473,4 +1473,30 @@ config LAZY_MMU_MODE_KUNIT_TEST
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 3b7c102a6eb3..ead03e0e0fbe 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -383,8 +383,6 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 	cpu = raw_smp_processor_id();
- 
- 	if (blk_tracer) {
--		tracing_record_cmdline(current);
--
- 		buffer = blk_tr->array_buffer.buffer;
- 		trace_ctx = tracing_gen_ctx_flags(0);
- 		switch (bt->version) {
-@@ -419,6 +417,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 		if (!event)
- 			return;
- 
-+		tracing_record_cmdline(current);
- 		switch (bt->version) {
- 		case 1:
- 			record_blktrace_event(ring_buffer_event_data(event),
--- 
-2.39.5
+ source "mm/damon/Kconfig"
 
++config AMPRESS
++    bool "Adaptive Memory Pressure Signaling"
++    default n
++    help
++      Provides a character device (/dev/ampress) that allows userspace
++      processes to subscribe to graduated memory pressure notifications
++      and cooperatively release memory before OOM conditions occur.
++
++      Processes open /dev/ampress, optionally configure per-urgency
++      thresholds via ioctl, then block on read() to receive
++      struct ampress_event notifications. After freeing memory the
++      process issues AMPRESS_IOC_ACK to close the feedback loop.
++
++      If unsure, say N.
++
++config AMPRESS_TEST
++    tristate "KUnit tests for AMPRESS" if !KUNIT_ALL_TESTS
++    depends on AMPRESS && KUNIT
++    default KUNIT_ALL_TESTS
++    help
++      Enables KUnit-based unit tests for the Adaptive Memory Pressure
++      Signaling subsystem. Tests cover: no-subscriber safety, event
++      delivery to fake subscribers, and overwrite-without-ACK behaviour.
++
++      If unsure, say N.
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index 8ad2ab08244..9b72712db1c 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -150,3 +150,5 @@ obj-$(CONFIG_SHRINKER_DEBUG) +=3D shrinker_debug.o
+ obj-$(CONFIG_EXECMEM) +=3D execmem.o
+ obj-$(CONFIG_TMPFS_QUOTA) +=3D shmem_quota.o
+ obj-$(CONFIG_LAZY_MMU_MODE_KUNIT_TEST) +=3D tests/lazy_mmu_mode_kunit.o
++obj-$(CONFIG_AMPRESS) +=3D ampress.o
++obj-$(CONFIG_AMPRESS_TEST) +=3D ampress_test.o
+diff --git a/mm/ampress.c b/mm/ampress.c
+new file mode 100644
+index 00000000000..74bfa76aa21
+--- /dev/null
++++ b/mm/ampress.c
+@@ -0,0 +1,320 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Adaptive Memory Pressure Signaling (AMPRESS)
++ *
++ * Provides a /dev/ampress character device that userspace processes can o=
+pen
++ * to receive graduated memory pressure notifications and cooperatively re=
+lease
++ * memory before OOM conditions occur.
++ */
++
++#define pr_fmt(fmt) "ampress: " fmt
++
++#include <linux/module.h>
++#include <linux/fs.h>
++#include <linux/miscdevice.h>
++#include <linux/slab.h>
++#include <linux/poll.h>
++#include <linux/uaccess.h>
++#include <linux/spinlock.h>
++#include <linux/wait.h>
++#include <linux/list.h>
++#include <linux/ktime.h>
++#include <linux/debugfs.h>
++#include <linux/sched.h>
++#include <linux/ampress.h>
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/ampress.h>
++
++/*
++ * Global subscriber list, protected by ampress_subscribers_lock.
++ * Non-static so KUnit tests can inject fake subscribers directly.
++ */
++LIST_HEAD(ampress_subscribers);
++DEFINE_RWLOCK(ampress_subscribers_lock);
++
++/* Debugfs root directory */
++static struct dentry *ampress_debugfs_dir;
++
++/* ------------------------------------------------------------------ */
++/*  ampress_notify() =E2=80=94 called from memory reclaim paths           =
+    */
++/* ------------------------------------------------------------------ */
++
++/**
++ * ampress_notify - dispatch a memory pressure event to all subscribers
++ * @urgency:      AMPRESS_URGENCY_* level
++ * @numa_node:    NUMA node of the pressure source (0xFF =3D system-wide)
++ * @requested_kb: Suggested reclaim target in KiB (0 =3D unspecified)
++ *
++ * Must be safe to call from any context including IRQ / reclaim paths:
++ *   - no sleeping allocations
++ *   - only spin_lock_irqsave and wake_up_interruptible
++ */
++void ampress_notify(int urgency, int numa_node, unsigned long requested_kb=
+)
++{
++    struct ampress_subscriber *sub;
++    unsigned long rflags, flags;
++    int notified =3D 0;
++
++    /*
++     * Use irqsave variants: ampress_notify() may be called from a context
++     * where interrupts are disabled (e.g. a future direct-reclaim hook).
++     */
++    read_lock_irqsave(&ampress_subscribers_lock, rflags);
++    list_for_each_entry(sub, &ampress_subscribers, list) {
++        if (!sub->subscribed)
++            continue;
++
++        /*
++         * Check if the urgency meets or exceeds the subscriber's
++         * configured threshold for this urgency level.
++         *
++         * Default config has all thresholds at 0, meaning any
++         * urgency >=3D 0 passes =E2=80=94 i.e. everything is delivered.
++         */
++        spin_lock_irqsave(&sub->lock, flags);
++        sub->pending_event.urgency     =3D (__u8)urgency;
++        sub->pending_event.numa_node   =3D (__u8)(numa_node & 0xFF);
++        sub->pending_event.reserved    =3D 0;
++        sub->pending_event.requested_kb =3D
++            (__u32)min_t(unsigned long, requested_kb, U32_MAX);
++        sub->pending_event.timestamp_ns =3D ktime_get_ns();
++        sub->event_pending =3D true;
++        spin_unlock_irqrestore(&sub->lock, flags);
++
++        wake_up_interruptible(&sub->wq);
++        notified++;
++    }
++    read_unlock_irqrestore(&ampress_subscribers_lock, rflags);
++
++    trace_ampress_notify_sent(urgency, numa_node, requested_kb, notified);
++}
++EXPORT_SYMBOL_GPL(ampress_notify);
++
++/* ------------------------------------------------------------------ */
++/*  File operations                                                    */
++/* ------------------------------------------------------------------ */
++
++static int ampress_open(struct inode *inode, struct file *filp)
++{
++    struct ampress_subscriber *sub;
++
++    sub =3D kzalloc_obj(*sub, GFP_KERNEL);
++    if (!sub)
++        return -ENOMEM;
++
++    INIT_LIST_HEAD(&sub->list);
++    init_waitqueue_head(&sub->wq);
++    spin_lock_init(&sub->lock);
++    sub->subscribed =3D true;
++
++    /* Default thresholds: deliver any urgency >=3D LOW */
++    sub->config.low_threshold_pct    =3D 0;
++    sub->config.medium_threshold_pct =3D 0;
++    sub->config.high_threshold_pct   =3D 0;
++    sub->config.fatal_threshold_pct  =3D 0;
++
++    write_lock_irq(&ampress_subscribers_lock);
++    list_add_tail(&sub->list, &ampress_subscribers);
++    write_unlock_irq(&ampress_subscribers_lock);
++
++    filp->private_data =3D sub;
++    return 0;
++}
++
++static int ampress_release(struct inode *inode, struct file *filp)
++{
++    struct ampress_subscriber *sub =3D filp->private_data;
++
++    write_lock_irq(&ampress_subscribers_lock);
++    list_del(&sub->list);
++    write_unlock_irq(&ampress_subscribers_lock);
++
++    kfree(sub);
++    return 0;
++}
++
++static ssize_t ampress_read(struct file *filp, char __user *buf,
++                size_t count, loff_t *ppos)
++{
++    struct ampress_subscriber *sub =3D filp->private_data;
++    struct ampress_event event;
++    unsigned long flags;
++    int ret;
++
++    if (count < sizeof(event))
++        return -EINVAL;
++
++    if (filp->f_flags & O_NONBLOCK) {
++        spin_lock_irqsave(&sub->lock, flags);
++        if (!sub->event_pending) {
++            spin_unlock_irqrestore(&sub->lock, flags);
++            return -EAGAIN;
++        }
++        spin_unlock_irqrestore(&sub->lock, flags);
++    } else {
++        ret =3D wait_event_interruptible(sub->wq, sub->event_pending);
++        if (ret)
++            return ret;
++    }
++
++    spin_lock_irqsave(&sub->lock, flags);
++    event =3D sub->pending_event;
++    sub->event_pending =3D false;
++    spin_unlock_irqrestore(&sub->lock, flags);
++
++    if (copy_to_user(buf, &event, sizeof(event)))
++        return -EFAULT;
++
++    return sizeof(event);
++}
++
++static __poll_t ampress_poll(struct file *filp, poll_table *wait)
++{
++    struct ampress_subscriber *sub =3D filp->private_data;
++
++    poll_wait(filp, &sub->wq, wait);
++
++    if (sub->event_pending)
++        return EPOLLIN | EPOLLRDNORM;
++
++    return 0;
++}
++
++static long ampress_ioctl(struct file *filp, unsigned int cmd,
++              unsigned long arg)
++{
++    struct ampress_subscriber *sub =3D filp->private_data;
++
++    switch (cmd) {
++    case AMPRESS_IOC_CONFIGURE: {
++        struct ampress_config cfg;
++
++        if (copy_from_user(&cfg, (void __user *)arg, sizeof(cfg)))
++            return -EFAULT;
++
++        /* Thresholds must be ascending and <=3D 100 */
++        if (cfg.low_threshold_pct > 100 ||
++            cfg.medium_threshold_pct > 100 ||
++            cfg.high_threshold_pct > 100 ||
++            cfg.fatal_threshold_pct > 100)
++            return -EINVAL;
++        if (cfg.low_threshold_pct > cfg.medium_threshold_pct ||
++            cfg.medium_threshold_pct > cfg.high_threshold_pct ||
++            cfg.high_threshold_pct > cfg.fatal_threshold_pct)
++            return -EINVAL;
++
++        sub->config =3D cfg;
++        return 0;
++    }
++
++    case AMPRESS_IOC_ACK: {
++        struct ampress_ack ack;
++
++        if (copy_from_user(&ack, (void __user *)arg, sizeof(ack)))
++            return -EFAULT;
++
++        trace_ampress_ack_received(task_pid_nr(current),
++                       (unsigned long)ack.freed_kb);
++        return 0;
++    }
++
++    case AMPRESS_IOC_SUBSCRIBE:
++        sub->subscribed =3D true;
++        return 0;
++
++    case AMPRESS_IOC_UNSUBSCRIBE:
++        sub->subscribed =3D false;
++        return 0;
++
++    default:
++        return -ENOTTY;
++    }
++}
++
++static const struct file_operations ampress_fops =3D {
++    .owner          =3D THIS_MODULE,
++    .open           =3D ampress_open,
++    .release        =3D ampress_release,
++    .read           =3D ampress_read,
++    .poll           =3D ampress_poll,
++    .unlocked_ioctl =3D ampress_ioctl,
++    .llseek         =3D noop_llseek,
++};
++
++static struct miscdevice ampress_miscdev =3D {
++    .minor =3D MISC_DYNAMIC_MINOR,
++    .name  =3D "ampress",
++    .fops  =3D &ampress_fops,
++};
++
++/* ------------------------------------------------------------------ */
++/*  Debugfs inject trigger                                             */
++/* ------------------------------------------------------------------ */
++
++static ssize_t ampress_inject_write(struct file *filp,
++                    const char __user *buf,
++                    size_t count, loff_t *ppos)
++{
++    char tmp[4];
++    unsigned long urgency;
++    int ret;
++
++    if (count > sizeof(tmp) - 1)
++        return -EINVAL;
++    if (copy_from_user(tmp, buf, count))
++        return -EFAULT;
++    tmp[count] =3D '\0';
++
++    ret =3D kstrtoul(tmp, 10, &urgency);
++    if (ret)
++        return ret;
++    if (urgency > AMPRESS_URGENCY_FATAL)
++        return -ERANGE;
++
++    ampress_notify((int)urgency, 0, 0);
++    return count;
++}
++
++static const struct file_operations ampress_inject_fops =3D {
++    .owner =3D THIS_MODULE,
++    .write =3D ampress_inject_write,
++    .llseek =3D noop_llseek,
++};
++
++/* ------------------------------------------------------------------ */
++/*  Module init / exit                                                 */
++/* ------------------------------------------------------------------ */
++
++static int __init ampress_init(void)
++{
++    int ret;
++
++    ret =3D misc_register(&ampress_miscdev);
++    if (ret) {
++        pr_err("failed to register miscdevice: %d\n", ret);
++        return ret;
++    }
++
++    ampress_debugfs_dir =3D debugfs_create_dir("ampress", NULL);
++    if (!IS_ERR_OR_NULL(ampress_debugfs_dir))
++        debugfs_create_file("inject", 0200, ampress_debugfs_dir,
++                    NULL, &ampress_inject_fops);
++
++    pr_info("Adaptive Memory Pressure Signaling initialized\n");
++    return 0;
++}
++
++static void __exit ampress_exit(void)
++{
++    debugfs_remove_recursive(ampress_debugfs_dir);
++    misc_deregister(&ampress_miscdev);
++    pr_info("Adaptive Memory Pressure Signaling removed\n");
++}
++
++module_init(ampress_init);
++module_exit(ampress_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Linux Kernel");
++MODULE_DESCRIPTION("Adaptive Memory Pressure Signaling (/dev/ampress)");
+diff --git a/mm/ampress_test.c b/mm/ampress_test.c
+new file mode 100644
+index 00000000000..ea2674c91b6
+--- /dev/null
++++ b/mm/ampress_test.c
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit tests for Adaptive Memory Pressure Signaling (AMPRESS)
++ */
++
++#include <kunit/test.h>
++#include <linux/ampress.h>
++#include <linux/spinlock.h>
++#include <linux/list.h>
++#include <linux/wait.h>
++
++/*
++ * White-box access to AMPRESS internals for unit testing.
++ * These externs allow injecting fake subscribers directly into the global
++ * list without going through the character device file operations.
++ */
++extern struct list_head ampress_subscribers;
++extern rwlock_t ampress_subscribers_lock;
++
++/* ------------------------------------------------------------------ */
++/*  Test 1: notify with no subscribers =E2=80=94 must not crash           =
+    */
++/* ------------------------------------------------------------------ */
++
++static void ampress_test_no_subscribers(struct kunit *test)
++{
++    /* Must complete without hang or crash */
++    ampress_notify(AMPRESS_URGENCY_LOW,    0, 0);
++    ampress_notify(AMPRESS_URGENCY_MEDIUM, 0, 1024);
++    ampress_notify(AMPRESS_URGENCY_HIGH,   0, 2048);
++    ampress_notify(AMPRESS_URGENCY_FATAL,  0, 0);
++
++    KUNIT_SUCCEED(test);
++}
++
++/* ------------------------------------------------------------------ */
++/*  Test 2: fake subscriber receives correct event                    */
++/* ------------------------------------------------------------------ */
++
++static void ampress_test_event_delivery(struct kunit *test)
++{
++    struct ampress_subscriber sub =3D {};
++
++    INIT_LIST_HEAD(&sub.list);
++    init_waitqueue_head(&sub.wq);
++    spin_lock_init(&sub.lock);
++    sub.subscribed    =3D true;
++    sub.event_pending =3D false;
++
++    write_lock(&ampress_subscribers_lock);
++    list_add_tail(&sub.list, &ampress_subscribers);
++    write_unlock(&ampress_subscribers_lock);
++
++    ampress_notify(AMPRESS_URGENCY_HIGH, 1, 4096);
++
++    write_lock(&ampress_subscribers_lock);
++    list_del(&sub.list);
++    write_unlock(&ampress_subscribers_lock);
++
++    KUNIT_EXPECT_TRUE(test, sub.event_pending);
++    KUNIT_EXPECT_EQ(test, (int)sub.pending_event.urgency,
++            AMPRESS_URGENCY_HIGH);
++    KUNIT_EXPECT_EQ(test, (int)sub.pending_event.numa_node, 1);
++    KUNIT_EXPECT_EQ(test, (u32)sub.pending_event.requested_kb, (u32)4096);
++}
++
++/* ------------------------------------------------------------------ */
++/*  Test 3: second notify without ACK overwrites first (no overflow)  */
++/* ------------------------------------------------------------------ */
++
++static void ampress_test_overwrite_without_ack(struct kunit *test)
++{
++    struct ampress_subscriber sub =3D {};
++
++    INIT_LIST_HEAD(&sub.list);
++    init_waitqueue_head(&sub.wq);
++    spin_lock_init(&sub.lock);
++    sub.subscribed    =3D true;
++    sub.event_pending =3D false;
++
++    write_lock(&ampress_subscribers_lock);
++    list_add_tail(&sub.list, &ampress_subscribers);
++    write_unlock(&ampress_subscribers_lock);
++
++    /* First event */
++    ampress_notify(AMPRESS_URGENCY_LOW, 0, 100);
++
++    KUNIT_EXPECT_TRUE(test, sub.event_pending);
++    KUNIT_EXPECT_EQ(test, (int)sub.pending_event.urgency,
++            AMPRESS_URGENCY_LOW);
++
++    /* Second event without reading (no ACK) */
++    ampress_notify(AMPRESS_URGENCY_FATAL, 0, 9999);
++
++    write_lock(&ampress_subscribers_lock);
++    list_del(&sub.list);
++    write_unlock(&ampress_subscribers_lock);
++
++    /* The second event must overwrite the first */
++    KUNIT_EXPECT_TRUE(test, sub.event_pending);
++    KUNIT_EXPECT_EQ(test, (int)sub.pending_event.urgency,
++            AMPRESS_URGENCY_FATAL);
++    KUNIT_EXPECT_EQ(test, (u32)sub.pending_event.requested_kb, (u32)9999);
++}
++
++/* ------------------------------------------------------------------ */
++/*  Test suite registration                                            */
++/* ------------------------------------------------------------------ */
++
++static struct kunit_case ampress_test_cases[] =3D {
++    KUNIT_CASE(ampress_test_no_subscribers),
++    KUNIT_CASE(ampress_test_event_delivery),
++    KUNIT_CASE(ampress_test_overwrite_without_ack),
++    {}
++};
++
++static struct kunit_suite ampress_test_suite =3D {
++    .name  =3D "ampress",
++    .test_cases =3D ampress_test_cases,
++};
++
++kunit_test_suite(ampress_test_suite);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit tests for AMPRESS");
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 0fc9373e825..34da5104453 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -68,6 +68,8 @@
+ #include "internal.h"
+ #include "swap.h"
+
++#include <linux/ampress.h>
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/vmscan.h>
+
+@@ -7103,6 +7105,31 @@ static int balance_pgdat(pg_data_t *pgdat, int
+order, int highest_zoneidx)
+
+         if (raise_priority || !nr_reclaimed)
+             sc.priority--;
++
++#ifdef CONFIG_AMPRESS
++        /*
++         * Map the current scan priority to an AMPRESS urgency level
++         * and notify subscribers. Lower priority means the system is
++         * working harder to reclaim memory, indicating higher pressure.
++         * DEF_PRIORITY =3D=3D 12; we divide the range into four bands.
++         */
++        if (!balanced) {
++            int amp_urgency;
++
++            if (sc.priority <=3D 3)
++                amp_urgency =3D AMPRESS_URGENCY_FATAL;
++            else if (sc.priority <=3D 6)
++                amp_urgency =3D AMPRESS_URGENCY_HIGH;
++            else if (sc.priority <=3D 9)
++                amp_urgency =3D AMPRESS_URGENCY_MEDIUM;
++            else
++                amp_urgency =3D AMPRESS_URGENCY_LOW;
++
++            ampress_notify(amp_urgency, pgdat->node_id,
++                       (unsigned long)sc.nr_to_reclaim <<
++                       (PAGE_SHIFT - 10));
++        }
++#endif
+     } while (sc.priority >=3D 1);
+
+     /*
+diff --git a/tools/testing/ampress/.gitignore b/tools/testing/ampress/.giti=
+gnore
+new file mode 100644
+index 00000000000..c2ee439db7b
+--- /dev/null
++++ b/tools/testing/ampress/.gitignore
+@@ -0,0 +1,2 @@
++ampress_test
++ampress_stress
+diff --git a/tools/testing/ampress/Makefile b/tools/testing/ampress/Makefil=
+e
+new file mode 100644
+index 00000000000..d175dee7c22
+--- /dev/null
++++ b/tools/testing/ampress/Makefile
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
++# Makefile for AMPRESS userspace tests
++
++CC      :=3D gcc
++CFLAGS  :=3D -Wall -Wextra -O2
++LDFLAGS :=3D -static
++
++PROGS   :=3D ampress_test ampress_stress
++
++.PHONY: all clean
++
++all: $(PROGS)
++
++ampress_test: ampress_test.c
++    $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
++
++ampress_stress: ampress_stress.c
++    $(CC) $(CFLAGS) $(LDFLAGS) -pthread -o $@ $<
++
++clean:
++    rm -f $(PROGS)
+diff --git a/tools/testing/ampress/ampress_stress.c
+b/tools/testing/ampress/ampress_stress.c
+new file mode 100644
+index 00000000000..7894abd764b
+--- /dev/null
++++ b/tools/testing/ampress/ampress_stress.c
+@@ -0,0 +1,199 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ampress_stress.c =E2=80=94 Concurrency / stress test for /dev/ampress
++ *
++ * Launches 64 reader threads that each open /dev/ampress independently an=
+d
++ * read in a tight loop for 10 seconds. A 65th "driver" thread injects eve=
+nts
++ * via the debugfs trigger. Checks for UAF, corruption, and hangs.
++ *
++ * Build: gcc -Wall -Wextra -static -pthread -o ampress_stress ampress_str=
+ess.c
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <stdint.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <pthread.h>
++#include <time.h>
++#include <sys/poll.h>
++#include <linux/types.h>
++
++#define AMPRESS_URGENCY_LOW    0
++#define AMPRESS_URGENCY_MEDIUM 1
++#define AMPRESS_URGENCY_HIGH   2
++#define AMPRESS_URGENCY_FATAL  3
++
++struct ampress_event {
++    __u8  urgency;
++    __u8  numa_node;
++    __u16 reserved;
++    __u32 requested_kb;
++    __u64 timestamp_ns;
++};
++
++#define DEVICE_PATH   "/dev/ampress"
++#define DEBUGFS_INJECT "/sys/kernel/debug/ampress/inject"
++#define NUM_READERS    64
++#define TEST_DURATION  10   /* seconds */
++
++static _Atomic int g_stop;
++static unsigned long g_events_read[NUM_READERS];
++
++struct reader_arg {
++    int idx;
++};
++
++static void *reader_thread(void *arg)
++{
++    struct reader_arg *a =3D arg;
++    int fd;
++    struct pollfd pfd;
++
++    fd =3D open(DEVICE_PATH, O_RDONLY | O_NONBLOCK);
++    if (fd < 0) {
++        fprintf(stderr, "reader[%d]: open failed: %s\n",
++            a->idx, strerror(errno));
++        return (void *)(intptr_t)-1;
++    }
++
++    pfd.fd     =3D fd;
++    pfd.events =3D POLLIN;
++
++    while (!g_stop) {
++        int ret =3D poll(&pfd, 1, 200);
++
++        if (ret < 0) {
++            if (errno =3D=3D EINTR)
++                continue;
++            perror("poll");
++            break;
++        }
++        if (ret =3D=3D 0)
++            continue;
++
++        if (pfd.revents & POLLIN) {
++            struct ampress_event ev;
++            ssize_t n =3D read(fd, &ev, sizeof(ev));
++
++            if (n < 0) {
++                if (errno =3D=3D EAGAIN)
++                    continue;
++                perror("read");
++                break;
++            }
++            if ((size_t)n =3D=3D sizeof(ev)) {
++                /* Basic sanity checks */
++                if (ev.urgency > AMPRESS_URGENCY_FATAL) {
++                    fprintf(stderr,
++                        "reader[%d]: BAD urgency %u\n",
++                        a->idx, ev.urgency);
++                    close(fd);
++                    return (void *)(intptr_t)-1;
++                }
++                g_events_read[a->idx]++;
++            }
++        }
++    }
++
++    close(fd);
++    return NULL;
++}
++
++static void *inject_thread(void *arg)
++{
++    int inject_fd;
++    int urgency =3D 0;
++    char buf[4];
++
++    (void)arg;
++
++    inject_fd =3D open(DEBUGFS_INJECT, O_WRONLY);
++    if (inject_fd < 0) {
++        fprintf(stderr, "inject: open %s failed: %s\n",
++            DEBUGFS_INJECT, strerror(errno));
++        return (void *)(intptr_t)-1;
++    }
++
++    while (!g_stop) {
++        buf[0] =3D '0' + (char)(urgency % 4);
++        buf[1] =3D '\n';
++        if (write(inject_fd, buf, 2) < 0) {
++            perror("inject write");
++            break;
++        }
++        urgency++;
++        usleep(5000); /* 5 ms between injections */
++    }
++
++    close(inject_fd);
++    return NULL;
++}
++
++int main(void)
++{
++    pthread_t readers[NUM_READERS];
++    pthread_t injector;
++    struct reader_arg args[NUM_READERS];
++    unsigned long total =3D 0;
++    int i, rc;
++    int failed =3D 0;
++
++    g_stop =3D 0;
++
++    /* Start reader threads */
++    for (i =3D 0; i < NUM_READERS; i++) {
++        args[i].idx =3D i;
++        rc =3D pthread_create(&readers[i], NULL, reader_thread, &args[i]);
++        if (rc) {
++            fprintf(stderr, "pthread_create reader[%d]: %s\n",
++                i, strerror(rc));
++            return 1;
++        }
++    }
++
++    /* Start inject thread */
++    rc =3D pthread_create(&injector, NULL, inject_thread, NULL);
++    if (rc) {
++        fprintf(stderr, "pthread_create injector: %s\n", strerror(rc));
++        /* Non-fatal: stress test can still run with real pressure */
++    }
++
++    printf("ampress_stress: %d readers running for %d seconds...\n",
++           NUM_READERS, TEST_DURATION);
++
++    sleep(TEST_DURATION);
++
++    g_stop =3D 1;
++
++    for (i =3D 0; i < NUM_READERS; i++) {
++        void *retval;
++
++        pthread_join(readers[i], &retval);
++        if ((intptr_t)retval !=3D 0) {
++            fprintf(stderr, "reader[%d] failed\n", i);
++            failed++;
++        }
++        total +=3D g_events_read[i];
++    }
++
++    if (rc =3D=3D 0) {
++        void *retval;
++
++        pthread_join(injector, &retval);
++    }
++
++    printf("ampress_stress: total events read: %lu across %d threads\n",
++           total, NUM_READERS);
++
++    if (failed) {
++        fprintf(stderr, "ampress_stress: FAIL =E2=80=94 %d threads reporte=
+d errors\n",
++            failed);
++        return 1;
++    }
++
++    printf("ampress_stress: PASS\n");
++    return 0;
++}
+diff --git a/tools/testing/ampress/ampress_test.c
+b/tools/testing/ampress/ampress_test.c
+new file mode 100644
+index 00000000000..372705aaa0a
+--- /dev/null
++++ b/tools/testing/ampress/ampress_test.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ampress_test.c =E2=80=94 Userspace integration test for /dev/ampress
++ *
++ * Usage: ./ampress_test
++ *
++ * Opens /dev/ampress, optionally configures thresholds, then forks a chil=
+d
++ * that exhausts memory via mmap while the parent polls for pressure event=
+s.
++ * Expects to see at least one HIGH-urgency event within 30 seconds; exits=
+ 0
++ * on success, 1 on timeout or error.
++ *
++ * Build: gcc -Wall -Wextra -static -o ampress_test ampress_test.c
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <stdint.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <signal.h>
++#include <time.h>
++#include <sys/mman.h>
++#include <sys/poll.h>
++#include <sys/wait.h>
++#include <sys/ioctl.h>
++
++/* Pull in UAPI types without kernel headers */
++#include <linux/types.h>
++
++/*
++ * Duplicate the UAPI definitions here so the test can be built with
++ * just a libc (--sysroot or installed kernel headers are not required).
++ */
++#define AMPRESS_URGENCY_LOW    0
++#define AMPRESS_URGENCY_MEDIUM 1
++#define AMPRESS_URGENCY_HIGH   2
++#define AMPRESS_URGENCY_FATAL  3
++
++struct ampress_event {
++    __u8  urgency;
++    __u8  numa_node;
++    __u16 reserved;
++    __u32 requested_kb;
++    __u64 timestamp_ns;
++};
++
++struct ampress_ack {
++    __u32 freed_kb;
++    __u32 reserved;
++};
++
++struct ampress_config {
++    __u32 low_threshold_pct;
++    __u32 medium_threshold_pct;
++    __u32 high_threshold_pct;
++    __u32 fatal_threshold_pct;
++};
++
++#define AMPRESS_IOC_MAGIC       'P'
++#define AMPRESS_IOC_CONFIGURE   _IOW(AMPRESS_IOC_MAGIC, 1, struct
+ampress_config)
++#define AMPRESS_IOC_ACK         _IOW(AMPRESS_IOC_MAGIC, 2, struct ampress_=
+ack)
++#define AMPRESS_IOC_SUBSCRIBE   _IO(AMPRESS_IOC_MAGIC,  3)
++#define AMPRESS_IOC_UNSUBSCRIBE _IO(AMPRESS_IOC_MAGIC,  4)
++
++#define DEVICE_PATH "/dev/ampress"
++#define TIMEOUT_SEC 30
++#define PAGE_SZ     4096
++
++static const char *urgency_str(int u)
++{
++    switch (u) {
++    case AMPRESS_URGENCY_LOW:    return "LOW";
++    case AMPRESS_URGENCY_MEDIUM: return "MEDIUM";
++    case AMPRESS_URGENCY_HIGH:   return "HIGH";
++    case AMPRESS_URGENCY_FATAL:  return "FATAL";
++    default:                     return "UNKNOWN";
++    }
++}
++
++/* Child: mmap in a tight loop to exhaust memory */
++static void child_exhaust(void)
++{
++    size_t chunk =3D 64 * 1024 * 1024; /* 64 MiB per iteration */
++    int iter =3D 0;
++
++    while (1) {
++        void *p =3D mmap(NULL, chunk, PROT_READ | PROT_WRITE,
++                   MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE,
++                   -1, 0);
++        if (p =3D=3D MAP_FAILED) {
++            if (errno =3D=3D ENOMEM) {
++                /* Slow down and keep retrying */
++                usleep(100000);
++                continue;
++            }
++            perror("mmap");
++            _exit(1);
++        }
++        /* Touch every page so they are actually allocated */
++        memset(p, (char)iter, chunk);
++        iter++;
++    }
++}
++
++int main(void)
++{
++    int fd;
++    pid_t child;
++    struct pollfd pfd;
++    time_t deadline;
++    int seen[4] =3D { 0, 0, 0, 0 };
++    int status;
++
++    fd =3D open(DEVICE_PATH, O_RDONLY);
++    if (fd < 0) {
++        perror("open " DEVICE_PATH);
++        return 1;
++    }
++
++    /* Configure thresholds (all 0 =3D default: deliver everything) */
++    struct ampress_config cfg =3D {
++        .low_threshold_pct    =3D 0,
++        .medium_threshold_pct =3D 0,
++        .high_threshold_pct   =3D 0,
++        .fatal_threshold_pct  =3D 0,
++    };
++    if (ioctl(fd, AMPRESS_IOC_CONFIGURE, &cfg) < 0) {
++        perror("AMPRESS_IOC_CONFIGURE");
++        close(fd);
++        return 1;
++    }
++
++    child =3D fork();
++    if (child < 0) {
++        perror("fork");
++        close(fd);
++        return 1;
++    }
++    if (child =3D=3D 0)
++        child_exhaust(); /* Never returns */
++
++    printf("ampress_test: child PID %d exhausting memory...\n", child);
++
++    deadline =3D time(NULL) + TIMEOUT_SEC;
++    pfd.fd     =3D fd;
++    pfd.events =3D POLLIN;
++
++    while (time(NULL) < deadline) {
++        int remaining =3D (int)(deadline - time(NULL));
++        int ret =3D poll(&pfd, 1, remaining * 1000);
++
++        if (ret < 0) {
++            if (errno =3D=3D EINTR)
++                continue;
++            perror("poll");
++            goto fail;
++        }
++        if (ret =3D=3D 0) {
++            fprintf(stderr, "ampress_test: TIMEOUT =E2=80=94 no HIGH event
+received\n");
++            goto fail;
++        }
++
++        if (pfd.revents & POLLIN) {
++            struct ampress_event ev;
++            ssize_t n =3D read(fd, &ev, sizeof(ev));
++
++            if (n < 0) {
++                perror("read");
++                goto fail;
++            }
++            if ((size_t)n < sizeof(ev)) {
++                fprintf(stderr, "short read: %zd\n", n);
++                goto fail;
++            }
++
++            printf("ampress_test: urgency=3D%-6s numa=3D%u kb=3D%u ts=3D%l=
+lu\n",
++                   urgency_str(ev.urgency), ev.numa_node,
++                   ev.requested_kb,
++                   (unsigned long long)ev.timestamp_ns);
++
++            if (ev.urgency <=3D AMPRESS_URGENCY_FATAL)
++                seen[ev.urgency] =3D 1;
++
++            /* ACK with a simulated freed amount */
++            struct ampress_ack ack =3D { .freed_kb =3D 16384 };
++
++            if (ioctl(fd, AMPRESS_IOC_ACK, &ack) < 0)
++                perror("AMPRESS_IOC_ACK (non-fatal)");
++
++            /* Success criterion: seen at least up to HIGH */
++            if (seen[AMPRESS_URGENCY_HIGH] ||
++                seen[AMPRESS_URGENCY_FATAL])
++                goto success;
++        }
++    }
++
++    fprintf(stderr, "ampress_test: TIMEOUT\n");
++fail:
++    kill(child, SIGKILL);
++    waitpid(child, &status, 0);
++    close(fd);
++    return 1;
++
++success:
++    printf("ampress_test: SUCCESS =E2=80=94 received HIGH (or higher) even=
+t\n");
++    kill(child, SIGKILL);
++    waitpid(child, &status, 0);
++    close(fd);
++    return 0;
++}
+--=20
+2.51.0
