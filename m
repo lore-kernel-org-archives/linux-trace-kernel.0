@@ -1,158 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86F42F3C22;
-	Mon,  2 Mar 2026 17:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3A142882C;
+	Mon,  2 Mar 2026 17:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772470847; cv=none; b=nedVrJ1J+jCDi82IjsY7msmcO3ploxWSVOCLPkc5GMTxA3EOeO6q/JyAOYm4RjhQabXzYTFjw6wFK2mwAXIWftEdrlWvRORjGIOYKMOLxSUdNFS+ibQKCnhVgzadOR9ifM+RB5zCuDh4zW/TpPf3IUa4J0jA6jJI05/CpTMtqlk=
+	t=1772472961; cv=none; b=NiNtflJq2vzr3BLB6OOdDgpS3FLkYXmCRYUFlTB3j0zwi9DUNVeplTnmUEbFNh4/0uVAgb306U1dRTi5BT02tns5D5aOk0cUbls1U8YD830qRJLWBqdjsyWx/fToKKiHWOpA1JCepFfOB2wj8G3YrjA0C2+p+yf/5/17mI6QXsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772470847; c=relaxed/simple;
-	bh=QCdY811EmmsP3apQf8BEVmaMY6l4D1uOlOulXDgboHk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JsVekNtDKlTHsWhyLCZZ6xyKun3BTp8dTHwnvppDVQvwvVYxqB3+F5y3wyQ37i6p6DkRXG/eG9e4SBiSe4JcMNXLpCpnx8kg9ySS2n1AzBOJvvNtiqoJS6b1X07xFHt97TZIEeq782O6NfyNTT7ic94yC0+UPKMJWHU0O1xxVP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDoP0+CE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772472961; c=relaxed/simple;
+	bh=P/dTd64FXc2fB0WRood7NnEhtvEbC0Mx6CLUu3EWJDs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mKWOzyTIMglJ2V0TqwXFGMpJTkFDlCjnspgwU6RVG6e2qiKCyJzChNAa8vkCu2bLoFKTOSE+viKpZ8LVfWl9Gc0dacm0k6FYDAZGXNQWMnQqEpvnaMK2hrkWE0tftilqD6M2wnYpX9tmNEx9CtLqnXWe3Igz01g2qEMX8L07Brw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVLyVu/u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDoP0+CE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C15C19423;
-	Mon,  2 Mar 2026 17:00:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVLyVu/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1FF3C19425;
+	Mon,  2 Mar 2026 17:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772470847;
-	bh=QCdY811EmmsP3apQf8BEVmaMY6l4D1uOlOulXDgboHk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GDoP0+CEsRvUiXX65+UDGZjacGoq7XRserXFGYBVD0SKLI1UzT2hYV6cmxQdPmaZs
-	 uXtQuPs6NJcJIn9urMucWTGm6EsH9hbiSQFedGBhU8FoOyyrBH1HRbyI3EpjpLnqom
-	 F45tYCTEqsDUGeGeihKakRjzIs6FZAzR+o/00BGx5tRrUplhSFSq14E8EupW1nVAnt
-	 V/G/uVdB3CB5OWG/N09IRq4OaQS7jaUTkPMA8BbIMxvh716Yn/lPgKj1rTsKe+/6Pm
-	 kKstDrZf3EXqJne5LOuotzKT3Ah/CB8PYsGuWgGquht+DOaCTMbL4cgxWpltWYS3of
-	 CBFRkbABwWQbg==
-Message-ID: <05e134d8-f600-4ee6-9ce5-4b2ef199b075@kernel.org>
-Date: Mon, 2 Mar 2026 18:00:43 +0100
+	s=k20201202; t=1772472961;
+	bh=P/dTd64FXc2fB0WRood7NnEhtvEbC0Mx6CLUu3EWJDs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lVLyVu/ukjS8SHtacd/14F+WHpFwwp+8ER4+KonLH6We+Ql4g2OZ0pwZMoKMFfNwq
+	 R+bFB3yyu6caigSvQRxjYf47Ev4olHeXsT31a4QepCFp6+E72GooTDS9fdva+Y9tni
+	 vnZ0PLFFi+5ozcF5Rtkn4UT5oMvNkcbDam+5DYOhRYvOmkf6lokA79faXXhV5AsPdb
+	 OLKNvmrAyDJkwBUv86he+dIvOuhLxUiyaQkucYetnxESjqTc4oC3MbekO2S7PJ91V9
+	 m4lAVejDJaEGZkbV5BbiWHUfd+5TXRH0n/XFBnwgdoeehq9lBe3s4Iq1n1rTdUJ3QO
+	 lzfyLOACyiUsw==
+From: Sasha Levin <sashal@kernel.org>
+To: Zw Tang <shicenci@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [BUG] kprobes: WARNING in __arm_kprobe_ftrace when kprobe-ftrace arming fails with -ENOMEM under fault injection
+Date: Mon,  2 Mar 2026 12:35:49 -0500
+Message-ID: <20260302173551.2555701-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com>
+References: <CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: add Adaptive Memory Pressure Signaling (AMPRESS)
-To: Andre Ramos <acastroramos1987@gmail.com>, akpm@linux-foundation.org,
- hannes@cmpxchg.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org
-References: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-> +/**
-> + * ampress_notify - dispatch a memory pressure event to all subscribers
-> + * @urgency:      AMPRESS_URGENCY_* level
-> + * @numa_node:    NUMA node of the pressure source (0xFF = system-wide)
-> + * @requested_kb: Suggested reclaim target in KiB (0 = unspecified)
-> + *
-> + * Must be safe to call from any context including IRQ / reclaim paths:
-> + *   - no sleeping allocations
-> + *   - only spin_lock_irqsave and wake_up_interruptible
-> + */
-> +void ampress_notify(int urgency, int numa_node, unsigned long requested_kb)
-> +{
-> +    struct ampress_subscriber *sub;
-> +    unsigned long rflags, flags;
-> +    int notified = 0;
-> +
-> +    /*
-> +     * Use irqsave variants: ampress_notify() may be called from a context
-> +     * where interrupts are disabled (e.g. a future direct-reclaim hook).
-> +     */
-> +    read_lock_irqsave(&ampress_subscribers_lock, rflags);
-> +    list_for_each_entry(sub, &ampress_subscribers, list) {
-> +        if (!sub->subscribed)
-> +            continue;
-> +
-> +        /*
-> +         * Check if the urgency meets or exceeds the subscriber's
-> +         * configured threshold for this urgency level.
-> +         *
-> +         * Default config has all thresholds at 0, meaning any
-> +         * urgency >= 0 passes — i.e. everything is delivered.
-> +         */
-> +        spin_lock_irqsave(&sub->lock, flags);
-> +        sub->pending_event.urgency     = (__u8)urgency;
-> +        sub->pending_event.numa_node   = (__u8)(numa_node & 0xFF);
-> +        sub->pending_event.reserved    = 0;
-> +        sub->pending_event.requested_kb =
-> +            (__u32)min_t(unsigned long, requested_kb, U32_MAX);
+https://lore.kernel.org/all/CAPHJ_V+J6YDb_wX2nhXU6kh466Dt_nyDSas-1i_Y8s7tqY-Mzw@mail.gmail.com/
 
-I didn't take a detailed look, but this one confused me while skimming
-over some bits: Which value does exposing requested_kb really have if
-there are multiply subscribers to notify? Doesn't quite make sense to
-even expose that.
+## 1. Bug Summary
 
-Assume it's 2 MiB and you notify 1024 processes. Are you suddenly
-getting 2 GiB back?
+A WARNING is triggered in `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147` when fault injection causes `ftrace_set_filter_ip()` to return `-ENOMEM` during kprobe arming via `perf_event_open()`. This is a false-positive warning — the error path itself is correct and the error propagates cleanly to userspace, but the `WARN_ONCE()` macro fires a kernel warning splat that is inappropriate for a recoverable allocation failure. The affected subsystem is kprobes/ftrace. Severity: warning only (no crash, hang, or data corruption).
 
-On a bigger picture, I don't think the whole idea of having multiple
-subscribers is really thought through.
+## 2. Stack Trace Analysis
 
-What are some arbitrary processes supposed to do if the receive one of
-the notifications? How much memory are they supposed to reclaim (given
-that requested_kb is questionable)? How are they supposed to reclaim the
-memory (MADV_DONTNEED? MADV_PAGEOUT? or what else?). There is a lot of
-information missing from the patch description to understand the bigger
-picture.
+```
+WARNING: kernel/kprobes.c:1147 at arm_kprobe+0x563/0x620, CPU#0
+Call Trace:
+ <TASK>
+ enable_kprobe+0x1fc/0x2c0
+ enable_trace_kprobe+0x227/0x4b0
+ kprobe_register+0x84/0xc0
+ perf_trace_event_init+0x527/0xa20
+ perf_kprobe_init+0x156/0x200
+ perf_kprobe_event_init+0x101/0x1c0
+ perf_try_init_event+0x145/0xa10
+ perf_event_alloc+0x1f91/0x5390
+ __do_sys_perf_event_open+0x557/0x2d50
+ do_syscall_64+0x129/0x1160
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+ </TASK>
+```
 
-If apps have droppable caches, a better solution might be to use
-something like MAP_DROPPABLE where possible, still leaving the kernel in
-charge of when and how much memory to reclaim.
+The crash point is `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147`, inlined into `arm_kprobe()`. The calling chain is process context: `perf_event_open()` syscall -> `perf_kprobe_event_init()` -> `enable_trace_kprobe()` -> `enable_kprobe()` -> `arm_kprobe()` -> `__arm_kprobe_ftrace()`. R12 holds `0xfffffff4` which is `-12` (`-ENOMEM`), confirming the allocation failure injected by fault injection.
 
--- 
-Cheers,
+## 3. Root Cause Analysis
 
-David
+The root cause is an overly aggressive `WARN_ONCE()` in `__arm_kprobe_ftrace()` at `kernel/kprobes.c:1147`:
+
+```c
+ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
+if (WARN_ONCE(ret < 0, "Failed to arm kprobe-ftrace at %pS (error %d)\n", p->addr, ret))
+    return ret;
+```
+
+Prior to commit 9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes"), this was a simple `pr_debug()`. That commit promoted it to `WARN_ONCE()` as part of a treewide message cleanup, under the rationale that failures here indicate unexpected conditions. However, `ftrace_set_filter_ip()` calls into memory allocation paths (e.g., `ftrace_hash_move_and_update_ops()` -> `__ftrace_hash_update_ipmodify()` or `ftrace_hash` allocation), and those allocations can legitimately fail under memory pressure or fault injection.
+
+The error handling is actually correct — the `-ENOMEM` propagates back through `arm_kprobe()` -> `enable_kprobe()` and ultimately causes the `perf_event_open()` syscall to return an error to userspace. The only problem is the spurious `WARN_ONCE()` which triggers a kernel warning splat and stack trace for what is a recoverable, non-buggy situation.
+
+The same issue also applies to the `WARN()` on line 1152 for `register_ftrace_function()`, which can also fail with `-ENOMEM`.
+
+## 4. Affected Versions
+
+This issue was introduced by commit 9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes"), which first appeared in v5.16-rc1. All kernel versions from v5.16 onward are affected, including the reporter's v7.0.0-rc1.
+
+This is a regression from v5.15, where the same failure path used `pr_debug()` and did not emit any warning.
+
+## 5. Relevant Commits and Fixes
+
+Introducing commit:
+  9c89bb8e3272 ("kprobes: treewide: Cleanup the error messages for kprobes")
+  Author: Masami Hiramatsu <mhiramat@kernel.org>
+  Merged in v5.16-rc1
+
+This commit changed `pr_debug()` to `WARN_ONCE()` in `__arm_kprobe_ftrace()` for the `ftrace_set_filter_ip()` failure path, and changed a `pr_debug()` to `WARN()` for the `register_ftrace_function()` failure path.
+
+No fix for this issue exists in mainline or stable as of the reporter's kernel version.
+
+The suggested fix is to downgrade both `WARN_ONCE()` (line 1147) and `WARN()` (line 1152) in `__arm_kprobe_ftrace()` back to `pr_warn_once()` / `pr_warn()` respectively. This preserves the improved error messages from 9c89bb8e3272 while avoiding spurious warning splats on recoverable failures. The error code is already propagated correctly to the caller.
+
+## 6. Prior Discussions
+
+No prior reports of this specific issue were found on lore.kernel.org. No related mailing list discussions or proposed patches addressing the WARN severity in `__arm_kprobe_ftrace()` were found.
+
+## 7. Suggested Actions
+
+1. The fix is to downgrade the WARN_ONCE/WARN in __arm_kprobe_ftrace()
+   (kernel/kprobes.c lines 1147 and 1152) to pr_warn_once/pr_warn.
+   Specifically:
+
+   - Line 1147: Change WARN_ONCE(ret < 0, ...) to a simple
+     if (ret < 0) { pr_warn_once(...); return ret; }
+
+   - Line 1152: Change WARN(ret < 0, ...) to a simple
+     if (ret < 0) { pr_warn(...); goto err_ftrace; }
+
+2. This is a low-severity issue that only manifests with fault injection
+   enabled. No data corruption or crash occurs — the error is correctly
+   propagated to userspace. The warning is cosmetic but noisy and can
+   cause false-positive syzbot/syzkaller reports.
+
