@@ -1,78 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D8A4014A7;
-	Mon,  2 Mar 2026 15:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90571E5B88
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 15:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772464219; cv=none; b=aVD1/b7tR6YlvCcfZWm0EDyjXLrK3MxjcBsm2wGhuUSYYimuerAkbEsU0aYNpqMsfvNRVpGIHQm8SgilKpgmjgJyTnp9v6VIvu6d5YvuoRK9I9oUziEA8NQwtLaaz/4S5prhRyQaihW5m177vZHswMohE3UY/0SXgXkVlhgh4E0=
+	t=1772464292; cv=none; b=lD27YdDm7BxfyhWzqguBASTCe8Xt2NU7T9I0yOn7LMng5DccJsPf7Btt3CCK2hDXzm/YpUrfWgovebjZXabuq++g+CjkqK9q8wYKK5b5DxINzcH+8kgmaVPU9ZE26gQijmgdJAPGEXvvJ41ydjNp8z90rsseN7F5zrGjJt8rw+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772464219; c=relaxed/simple;
-	bh=Fo8AGgEEzophPRCLg2uWkd+i0mJGxmJxIyxa7Su84ho=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K/o3QT7ht/nBdNSYIKteEudc22MQiuzE1D9z7oHR01lXVHI0GjV8ROPM/qxiAFdrW05azLBC2e5gRiK6nELB6UwKX6hDFsQpdkyioBBo7xb1g+Uvy60bSfRAOx94ucTrekwRJaLpfF0Ubz6GKwSEtsR0IM0xTGXHMpZ3ZDazkwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tb2tDcol; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772464292; c=relaxed/simple;
+	bh=4hs5Cq4XX8VTuRDeJwyB/kAHYeKtChbZhOqVcXJD2s0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jrv1SWa4oh2bSdmxreweWiHqg1ecnMmRi7adxAaJxGDGBsT94Fk6cM8vV3h3x+9T+iA3V3odp6Cu8YGmoVt8rzEVVIuXE0j24lKYjXplFraaR1NT0/VQtMg1mZXuceu4VGosZihUOxMdFjrpIhETcwV2tZGCeplqQuwFt/xQeAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b=JTQy3lS/; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tb2tDcol"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8FC2C19423;
-	Mon,  2 Mar 2026 15:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772464219;
-	bh=Fo8AGgEEzophPRCLg2uWkd+i0mJGxmJxIyxa7Su84ho=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tb2tDcolb55tZqvQmfAaMmhbQ5a39mBkDUdVfODBy/jb7bN+6sJl3LoDenifihszL
-	 W9hYruogmc8ellq52FKqN9YJnozp2dPjI2kcZQ1I3AZMdK8h+XlHfwa7h0et7/PErd
-	 T4Jai7HRwUGSyNuu7raBEKQeCyxQ1X+8HVfvkV96pUAFpI2JxT3HFmqCX7H58C/3DV
-	 ZpBeJOQwBVbBjtmKsdQRnTTWAw+WUsdUURdGX4YnOTAL51kkIdqgyBimvZ1qMB2HSK
-	 ZrOmFE8qLDpy0ZWm1nekKktTUYeAk8ADwgPeP95GEENvd4hRnQJQPkcim8vJZk3bWt
-	 5gMXNzay92m4Q==
-Date: Mon, 2 Mar 2026 10:10:49 -0500
-From: Steven Rostedt <rostedt@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Ihor Solodrai <ihor.solodrai@linux.dev>, Florent Revest
- <revest@google.com>, Mark Rutland <mark.rutland@arm.com>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Menglong Dong
- <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>, Kumar Kartikeya
- Dwivedi <memxor@gmail.com>
-Subject: Re: [PATCHv6 bpf-next 9/9] bpf,x86: Use single ftrace_ops for
- direct calls
-Message-ID: <20260302101049.2614bca4@gandalf.local.home>
-In-Reply-To: <aaVFeafZb76l9L0m@krava>
-References: <20251230145010.103439-1-jolsa@kernel.org>
-	<20251230145010.103439-10-jolsa@kernel.org>
-	<1b58ffb2-92ae-433a-ba46-95294d6edea2@linux.dev>
-	<aaIAoBZGkP7RQrvc@krava>
-	<aaILlSuEgaYDq41r@krava>
-	<20260228153921.19cd42a6@fedora>
-	<aaVFeafZb76l9L0m@krava>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=cmpxchg.org header.i=@cmpxchg.org header.b="JTQy3lS/"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-899e87b04d8so32409796d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 07:11:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg.org; s=google; t=1772464289; x=1773069089; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e3BqwdRnHxc2GRaZzZyZvv1rY2lAxZpGHqgSHrtLwQ0=;
+        b=JTQy3lS/tyumEDiAeJk3KNW4EspLWYd5t/glEsJvak5/kIkE10VgoVhJlw1tejMGev
+         XOM0CQ0izCqoFTok+WA0ZP/kYTNLHkdiMCPdJhnQGaOd2vnSmPZt7uqTTwGaJQhNSI7l
+         W0+h6VUw5sYt2yy7KV2034bdoNNP5wSWn0vEI2AKaJs599BxH0JkFpliU4rWso4nPLwx
+         /GfK9+UI4iJE3gEe9FyzlW7LtkVAkfFm0laQ9KtXv6Q4aajmFjf4KOAN7+5Kk5O21/EE
+         V7NUKPgEgzrlyUi7C0fbxwDjTQ0InZPwkzcPpWnjW03Ep356UNvGPaVD6zMITzJTrQSC
+         pldA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772464289; x=1773069089;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e3BqwdRnHxc2GRaZzZyZvv1rY2lAxZpGHqgSHrtLwQ0=;
+        b=ZFEj5q22EWEzNNLHjRIbsL7CjtJGPEo5rG1hoRBFlTiqrJuaU52segYHfJgEdaTNBp
+         ULuSt810SkmWocfpNg0ZVk6Vb3uesXE7KJph7vjlFWtM8QrawblEpjLFToq40lJPWqoq
+         1BIZVCgCBeMz721m5GpPGNMP5UM6A4weojtAGepjAEvPcRFhP6S9Delnl37HzJSQ4UlI
+         hfh4r9ENbMQPPReft5UuYdU873pu2cEgKZbrgrkd2V3+O4b5R9hfFIaegT2KGkfyj1bo
+         7ZTBOd3DKyZovxYq1qkmz9zJYQhNZMqRZbx+yKNc/NuM2mBCCX01mcpFVpACcw0JE8ZB
+         BrYg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+hvVUhY+7iBm/Yeb0eGlHxGR85Fxt3Ew7DJFDdwndxBjAqoU7Ki83u1u70y0/LX5OE0LRwk01tM/u/vrLYJ7FAc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHRnWr9miSHmk/Z17asOT5esOW5qzhdP7eoP7Z36oUBzxUh4LW
+	w+LSRL1iSD7Rs/jQZb78+v/rxvyV8IexHKsfm17REwTB58zI5DoN/A8kt4l6BBjDKJU=
+X-Gm-Gg: ATEYQzzXSCCaSFuysvVHAvWvfbJbyhXAhrz5UsF6BNRhKxp96n823tXD+0uzrdq7/0l
+	0tnqMRkLteo91hIvlz373mp+7WPKf7SP4QcH/o1YO8jHA2O0L5973Y0UyZAve7PdVm5mO542uuU
+	ecJr4HPKqsj0zqNUERvBbluYFokhQAkNwBC8aqNXGWWMM+CDmLMObfcDhjbCV5TKaJ+QTq9JKlh
+	h8eKA8ZpjsCiyHZWAL8rNxdXI+vAM0qGNX1ggbL/8uwdRqFjdYyxf7zd75xgpy+XN8ri4NkyDHX
+	BJVqfwUeoxWssKSSP74CvRH2mlw1ZjpiIrYgmOf0tykz5J/1b31GGLUCo4sC0l6xvwhb5VYVbcA
+	iq4mCAVS+ySKKOLBeoYDYKZCXMm+InhuT6KqQmkO2X58gBbVq+NvO2vfeQ0a07GfNoCvQHfOBg7
+	zpmYtlOyFLotOpTjOZ0aJ0Hp2tzIvZkMfb
+X-Received: by 2002:ac8:58d6:0:b0:4ee:1b0e:861a with SMTP id d75a77b69052e-5075273917fmr173965691cf.13.1772464289546;
+        Mon, 02 Mar 2026 07:11:29 -0800 (PST)
+Received: from localhost ([2603:7000:c00:3a00:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-507449add38sm109824871cf.13.2026.03.02.07.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 07:11:28 -0800 (PST)
+Date: Mon, 2 Mar 2026 10:11:24 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Andre Ramos <acastroramos1987@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	david@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH] mm: add Adaptive Memory Pressure Signaling (AMPRESS)
+Message-ID: <aaWonCzCLayQDXOT@cmpxchg.org>
+References: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
 
-On Mon, 2 Mar 2026 09:08:25 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
-
-> > As there's nothing after the comment and before the end of the block.  
+On Mon, Mar 02, 2026 at 12:45:33AM -0300, Andre Ramos wrote:
+> Introduce /dev/ampress, a bidirectional fd-based interface for
+> cooperative memory reclaim between the kernel and userspace.
 > 
-> ok, will do.. the original changes:
+> Userspace processes open /dev/ampress and block on read() to receive
+> struct ampress_event notifications carrying a graduated urgency level
+> (LOW/MEDIUM/HIGH/FATAL), the NUMA node of the pressure source, and a
+> suggested reclaim target in KiB. After freeing memory the process
+> issues AMPRESS_IOC_ACK to close the feedback loop.
 > 
->   05dc5e9c1fe1 ("ftrace: Add update_ftrace_direct_add function")
->   8d2c1233f371 ("ftrace: Add update_ftrace_direct_del function")
-> 
-> went through bpf tree, so I'll send the fix the same way,
-> please let me know otherwise
+> The feature hooks into balance_pgdat() in mm/vmscan.c, mapping the
+> kswapd scan priority to urgency bands:
+>   priority 10-12 -> LOW
+>   priority  7-9  -> MEDIUM
+>   priority  4-6  -> HIGH
+>   priority  1-3  -> FATAL
 
-As long as I give a reviewed-by tag.
+The scan priority is not a good proxy for pressure. We actually export
+reclaim efficiency-based pressure levels like this in memory cgroups
+v1, but they're being deprecated[1] in favor of PSI [2].
 
-Thanks,
+What are you trying to accomplish?
 
--- Steve
+[1] 340afb8027fa ("memcg: initiate deprecation of pressure_level")
+[2] Documentation/accounting/psi.rst
