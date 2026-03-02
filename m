@@ -1,197 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895DE41B35F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 15:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772466682; cv=none; b=aMF9gw65qYzdNrjje326AB0eVu6IZYwdyvbsgMH1277l3dNvAQ+sT2oXpJH1KvX3QEnqRxcMQMgI/7E25y35ihJ7dn0HKYBB7CKVD+PH3PpltQ/Jgaq+thZnYE7aOrnShetCYRUxzBdzs+LJWc81vnvv9aaOXp2ZFO3QA1rwpEs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772466682; c=relaxed/simple;
-	bh=qD/0K0KIHkoyvSZL2Bcy5abPhianC/oTyoi8g+a0rc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=iv2jHuzCvTCNt0tcOSDylNCo9XPK1t/VT4JlNmGxFASDhZVyO0wLLSQfpZgY4c6RZd9YaW1K1KBJ6LSEhniSYWkUNLySZxFRTGfJ84w6RM568LUQoyTVYXAhWcBINbXZNBtINexTBwcz82nouYwJH1tYCK9m7OnOoaFl+t9+i7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CLJ3T471; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FBE3590A4
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 15:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772467105; cv=pass; b=RMmNOZseFlKipVtLT+/IXRxQJR/wix9xCvzyyIVgAG5hagqNcYh/QniM/ekOL5KePAsEe9avPxSkzXFnZP+e6QMhPUrcyogKhgA3SsO2A6ub3iS8Qzq3mBVYTCVfcC8SsFipE7Mz5lAYcF8L8VHhqmR2M0U8muxvtJGwAZpBMPQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772467105; c=relaxed/simple;
+	bh=/TPjtAXjXkz2ScoCpqpIUeYNfC8HDnwi7bbiTfsh7Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q8uKcOUxAoUmoOMxHRzS0kkMxPLohNfToPlrv6+6kJTmnbDa7Ps9940p5YnTN3sbR8Ssqn84WGAvCfoVr03fE2dHgbEg3AM6pcSQQlIahAP/QwAdL1wUQ0FJ/HQedRo2cVVVaHc/Glg1xqZIlMDTJf+HLVcum/ShSkgasmWzc34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UfuPH7t0; arc=pass smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CLJ3T471"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772466680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aoOQh5MyAu6nlDX9uknAUDa5fq51/hpe1dchrut35pc=;
-	b=CLJ3T471Pn73+EGWxc07ede9ue2vLgYG2NLUlHznyWJ2kTELSdaBgwxlrVUqoeWMF999dH
-	klLBmLN6t9WuzLMgVYJCLqAUqtpkq/PNEyCMrOL5Jzutx4roqHVUjNBfWlRQgRQN9vAgAX
-	ZkNVIT2T3vH5PriLvbkPxsjJO1/lz8c=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-bChCRA5HOGmgEsuoa4ORPQ-1; Mon,
- 02 Mar 2026 10:51:17 -0500
-X-MC-Unique: bChCRA5HOGmgEsuoa4ORPQ-1
-X-Mimecast-MFC-AGG-ID: bChCRA5HOGmgEsuoa4ORPQ_1772466676
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50FCA19560A7;
-	Mon,  2 Mar 2026 15:51:16 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.37])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F0DAD1800348;
-	Mon,  2 Mar 2026 15:51:13 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Mar 2026 16:51:15 +0100 (CET)
-Date: Mon, 2 Mar 2026 16:51:12 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 5.10.y] x86/uprobes: Fix XOL allocation failure for 32-bit
- tasks
-Message-ID: <aaWx8NWZ3Jm-5Z7g@redhat.com>
-References: <20260301020027.1726538-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfuPH7t0"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-439baf33150so668159f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 07:58:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772467102; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Z16XvvK3IPCu8ULfN68uMp8wdNFqzt3rLPeFCnX+ggVbI5liDcrlBvGC9TdSzGDWY2
+         NLtNDJTh3i2Dt4fa/Q2QbE4Z3mjUjccwBYWwItKQvX7lfPSkrs+dA+0YIzEa3YGfTNs5
+         ULRPjdKruRfjsDhwqBMcvwVmlNUnMdUdq1DwwaZjf80j4Aa8NvMNQgStM8g2i3XKoOj3
+         vtBHF59UvFc1TASKor3sAFsBYdTZeJzOulTc7UfuQRpLxZSudBy+lxpLZeWE0toRT8V5
+         ilrcr/hMMxxV9pu8DKxCCptVq0pzUItTCGqfHWnMThzRKXvXcuakDIVMgZ0mwHVzQmjF
+         X/gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/TPjtAXjXkz2ScoCpqpIUeYNfC8HDnwi7bbiTfsh7Uc=;
+        fh=4RZaT0rnIRGpzIWJ0wMmODpv7ZD17zyp6VsaoCAAN6Y=;
+        b=Z2T4FADYnIil11uy0L2jvshWzuBhqA07sXWb0+5wWwhwZXGmtXJcOPyiWYycJzwt2b
+         98bmeyLuVu9FbIZ2Fopas03CrDFdTrCrH+VFumDdxVQFGhAP3Zo5JZHmBRlpp9fUMlbx
+         u6M2BpuYEDMAVmEv6TeIuLb5c1Ct+2sriKTFk+MWW8R7jkg2BS220mM915czCdhtkK9p
+         Slo8Cu5O1CoSnHsDmkLFfove3ZfOJpIJquY49bpMJFC0c301UC5DKkzf7wKIuPfdaLpm
+         cz5DCDfrCQ3N8VTnNsZrIDeY5DMxUMj2szFkrLvVAcpguGh3NNw9dctngc14AmIOy1cG
+         y/hw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772467102; x=1773071902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/TPjtAXjXkz2ScoCpqpIUeYNfC8HDnwi7bbiTfsh7Uc=;
+        b=UfuPH7t0fBUoJU5kJwx/P8nMCN+9gGWkIdbsQDuXFVdN1K3pG88zzwz+9mtk69kUVn
+         3WcRJ2z6Dhlep+CH6JpCjGwGD5yW0HgfsSsLU3JktluhEo+XE8J8Ckm//B6iTdo465yr
+         u6J3l/HvP5ieEuovV3TNwb6893zFm1lXzL9GA+wLmlbToJs2wwm1SIGP+1hc8sH9F0Uw
+         aChdtDvhWCODglEd9nYI+EKaHkQU2foq60mW+ru2o9JHKkpskrwh1/+5wC2tPnXWADIo
+         e8xNComQwhKlX1WwD4Yz7KzkGMOfWY3lugL8YjU1bRsFBH13WlY3Uqq9NLoS+kFSnalb
+         RpXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772467102; x=1773071902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/TPjtAXjXkz2ScoCpqpIUeYNfC8HDnwi7bbiTfsh7Uc=;
+        b=fZjo/wK1hLrnjJd1AOuE2vYeEKxTS5Q0cy1x5d9H36ZzNQoDeCKInasuCuCiXl/q94
+         DV/TFicenDl8jxlO0ETEkBB3JyboTidVIVdyprgmgmCTGeaxVUB9RqahuhMwtsM6Bn2U
+         r9AXyLRppnkltVkWJ2H82M5fhiFGvXvzPR6UUuYTlYq0lJ7/GBQz+JvIifcWrXt7OGcP
+         /B/PrWl7Df4dgQKQuejO3kSKYxjSe36g2Y3CBAiZ996XcyZoGJQI9WUyUu1I0isW7zhp
+         Y/gpeiG9CZLN3hXBNQdvy0PSTY6ECgQcW4rqo01HKYDqCP6KdUfPf/B1aMn/EDTXxnQx
+         l1lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlkrmTj8tIwHiRoKVxAxHmL6nRrjRa9Fq6+pZR07NhAdmRws1Ftij4BhPPZAjDQrukR88GuOoCqer+WBR/sRyU8kA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu93WfOSF2vDfaAbxN+nyTpd1wglUmRZfETUR621qW2XMBBbKm
+	qzIT7EbkbOp+DVXiRhJCyMhYX931rObg9LfOcWvbZRJe4oEf/Wi2t1UbYPFVrAqDII6PE/7CYhl
+	qPbeXE8wyvbj8c6Nli92ZqetuznDQtnI=
+X-Gm-Gg: ATEYQzxxCE8+WrwRe/UYOdn3G42HRr//aHUmxB0UWYGpDKYpqPuTdeSx2oP+RCNqk6y
+	MEIT794ocOneqPN/LM5/DWeiPVVAqmTA0NVaeKNkWHB4k87lZ3qDpXsDqVpBEA5AXdG2ZFdc5Aq
+	sI+fOF8VldqxvrcH+mL88taTZVTpiZ69zOQkJsrYTDjlkYh1GFXwUWBOWgtVT8yLChl0/919myl
+	a/2aRxbtlChoq7QnUniAj4Ccy03ObVR7NbNnFrX1hcedoYfqurIv5gzsvWf4rK56gvVx9ZoIm+m
+	HTm1TZZ9TPiMiCWBr/T0oiBX2OHY/NOCqA9uUP2tkkcROFk10BAEFHvrFjWovUUWgnIonOPHHvQ
+	mhnVlMw==
+X-Received: by 2002:a05:6000:2411:b0:436:3761:583b with SMTP id
+ ffacd0b85a97d-43997204715mr29586238f8f.27.1772467102344; Mon, 02 Mar 2026
+ 07:58:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260301020027.1726538-1-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: FRORUUN0GvylJo5P6RZCRxExySgo8CJasDzI62cPRaU_1772466676
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260302081622.165713-1-jolsa@kernel.org>
+In-Reply-To: <20260302081622.165713-1-jolsa@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Mar 2026 07:58:11 -0800
+X-Gm-Features: AaiRm52_d2IDD4Or5e6YvBC9gr4AV-b3oFE-DpqVFN7rfeGBIt28no9bc-gd-cs
+Message-ID: <CAADnVQKBx71HOwVcRFj7ja+y_NL83rpKQ0BRcismOwdCNx6pbA@mail.gmail.com>
+Subject: Re: [PATCH bpf] ftrace: Add missing ftrace_lock to update_ftrace_direct_add/del
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[ Upstream commit d55c571e4333fac71826e8db3b9753fadfbead6a ]
+On Mon, Mar 2, 2026 at 12:16=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Ihor and Kumar reported splat from ftrace_get_addr_curr [1], which happen=
+ed
+> because of the missing ftrace_lock in update_ftrace_direct_add/del functi=
+ons
+> allowing concurrent access to ftrace internals.
+>
+> The ftrace_update_ops function must be guarded by ftrace_lock, adding tha=
+t.
+>
+> Fixes: 05dc5e9c1fe1 ("ftrace: Add update_ftrace_direct_add function")
+> Fixes: 8d2c1233f371 ("ftrace: Add update_ftrace_direct_del function")
+> Reported-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+> Reported-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> Closes: https://lore.kernel.org/bpf/1b58ffb2-92ae-433a-ba46-95294d6edea2@=
+linux.dev/
+> Tested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-This script
+lgtm.
 
-	#!/usr/bin/bash
-
-	echo 0 > /proc/sys/kernel/randomize_va_space
-
-	echo 'void main(void) {}' > TEST.c
-
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
-
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
----
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9f948b2d26f6..099ca674e3de 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1095,3 +1095,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
- 	else
- 		return regs->sp <= ret->stack;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f46e0ca0169c..3461199c4ec0 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -138,6 +138,7 @@ extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
- extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
- extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 					 void *src, unsigned long len);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4f2a9fab8ae8..f3bc64c4fa78 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1438,6 +1438,12 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
- 		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
- }
- 
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1453,9 +1459,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
--- 
-2.52.0
-
-
+Steven,
+should it land through ftrace tree?
