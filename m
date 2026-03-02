@@ -1,264 +1,234 @@
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011067.outbound.protection.outlook.com [40.93.194.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3719531D39A
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  1 Mar 2026 07:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.69
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772348848; cv=none; b=ZZqqePTEWjgDmYZ+953SV4kZxUQNlvPvKMWW86lbvrdgQBygHRzMsfmP7p9yQ8dPhz//1fQabQGAgsnBV1F5384TCGfDtPYUVlrz2E66AYerddCzsjzFQ/+2A9Q+I3blefDvz/5LH+7gABT3R+04/nuTxG6wqwkUrPpsTBTi5hM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772348848; c=relaxed/simple;
-	bh=rtiETl5j/tc4+eyiC7IBJZh3/9vuyR3g+HBQj64OwDM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=akrhJqc1hrSv5TKF4Ry0Iz8wEDdRnfBzSVTP90XQWtOxZ1BzDDxzwAkNy+n4ULRULMIIb72KC0XYXFZ8KGUAEghF3VqgtOy0SYD9ZdxKvjoPGlooVhqBAEMHwZ1mGfXz+1sQc5HCPiyjnwB5KUrF3IrAa1/UJPlchaWlKQZclFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-66b612efb4aso56138953eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Feb 2026 23:07:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772348845; x=1772953645;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CViUGzShKLBCRdFqM97ye0pCjuA4F/xHAJaymo5lCs8=;
-        b=Z6aVt8KSbsSYZxSTGSUIrWkcXqyYSmE+SJa8sAOFT9ivTEbnWp6/BGOCRzOSvXc91K
-         8XyVCRAQaIN0YHjPPTFWLXPoX3zopwxEfaufJiUGyzcyqAHI8SOzRr9FEbCRZL9RflWR
-         r80eLi6yTN1rNR0Y6XMaFD9N8GhPkjoe5Czx/4P/IeJGBiyhCNfAU6mfgC3ga6AzFWgC
-         3/XbJBX1nrUxElmFPSs+3oZFZiuECUXvOGyIjLSLFb62KUOHY3UtOzvQsBGwJBO3JgwB
-         ET3OoftqUgulwCbNGfQCxMtHfgQX1+m1wlwiLfdpfkSEjJP91zyjZEAeEDyYT3zX+BiM
-         EWZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUl18RSjBW3LqWqLKoj7ABTCv9507EGsv0g+EqFliMQy7Xnkj4Kcd6BlfytKe7QNKjUg/2NDlbIeVbCXn47LhGqPcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsZ960BW4BdcXyB3m9aqBvmLIoYwd5gKYTi9hiw//RuJ+Xg/eF
-	rwVcBxg3inF3Y2EysGs1G5PA6iY+SU/XrO+zHTdFYNUc20A+VuK5j3ROsbCR8sLn9oj+OrEfDms
-	6EvGnH8okJVlL6GlQdNxeiGRjDOdvXwSE0I4Lq5bBZoV7JVkJ/3mxjbmk2gI=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8CE430B85;
+	Mon,  2 Mar 2026 00:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772410955; cv=fail; b=UD/l/yNWbEisl1qrz09PEAxCVNM9/EjbSxtn13JL3mnt2jg/MR2WgXuiXiZvn5/P+rKkr7X5WXdh/xTVdtRdEsW/+8b9gzhWpwp9+3bIFYddjf1xPnv4E9aTABQo47rDvrBwYXh2vM59nQvRQ23TwRacmy/Bf82gHnS8DbROY7o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772410955; c=relaxed/simple;
+	bh=3tkq0dvtYacqOktXDK+sJ37izSWKyHWjchKxn9PefCQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DusFlprXvZzhnDOkxDMFXUuk/rTMRKbkmH2inAWc3HKpuUezFVwwinoqsST1jGoV8KXsuVBFmExaxQGUJ+tIeb3OEKGqgtmTOX/NI+czfd92M55cugwPNz6gM7WiqgOHGYIn7tbLMvo9uBUA2M76hdp8y4r3QHHMy6AvlHsqTiQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oERD3D6Q; arc=fail smtp.client-ip=40.93.194.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oERD3D6Q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u80WAO+TseLuveyAETHvb6Me/gKXSeEi0dQ7+RTzPkr1CwGVPCrG9RH8xug8xfnfsHxqPhk9CPEtx0LeZmBvZHToCssUYiUrZ5lerP2fN6j5wLh74Ogwozznhi4LpMjZD9PELXdYJkPBG4/LQKKBTPhIdaChsFzZERGdVgaPm0b+deFILH6maXuk+P3eCljt0tkmndGi0bZ/c38nZahKiZo/B8HwaZVCS3UnGtJyKcEaDG34fcDmqKJIQOjsHG5p7ZxiOvFUMCeWrR1qYtq0dujktnpy84VzIl65EhtHTnovh8I5WW/ChN/LclITC3+BEHqPdaTZtSeeuq4fEy39kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uY991wE8LibZu/ZtTLsnt+XmIPxjmbnxYbEYw1It0KY=;
+ b=GCkBHXKaV3Z8KK2RY9xSt8tZOxfW+sRyXgMtdeKhgoZ1dK+3Qq1ViAl6mboSQkGDSQEox86exe8tg6GZt+yctWiW4vPX0FMwX3OnAMHD9levV7Rq+rUlte82d3ec7aZtxeNOFUlCmma5bzveVNsps7hgNrMHdq34nuQIDbtN2wl0BW9uvarvYezXGtqbC0fOocm1nB4QI6ECIh3S4IAyzDmufvy9+DgZmo2s5K9PjgOZG0OTzmRTwiv5Q13i3pq8IImu3C8tlCFINlppec4Bj4zV8vZderRWY/YwBrYgERsqWKrEPwAuXrVRvoVN6ojn+dLUcHK22qsBRYiDZqHYng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.dk smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uY991wE8LibZu/ZtTLsnt+XmIPxjmbnxYbEYw1It0KY=;
+ b=oERD3D6QQccipG5QeQXsecUGL+bOo2iKYYvHVfdAQ9J4PdS6Jf95yGVoyBz4eTabOI/594yJehYTccvEMjbtLO75bd7k7MQucvKY1udyPG6h8zR8gQQSm9R1lzGjdHcej4qasfUfFojXdRZ84Ynp3zlmKWLKGsrwu2bAxP8bFHVr4vm17k0eEU5fCi2NQtnD1EG0fsan7WAwPCkkMlIFXuifiXFFi4uuvZ2FKj4xRMhIGyK2HCxhMhx6zgT9enKFWDLmM/tnNnQwgEjEWiH+1yEIHUBpj+JtHGXBFv36OQUIWaPUBVrOJ8/gN6rWwiyBhd0S8qxqyivGtx/jzChOvQ==
+Received: from BN9PR03CA0800.namprd03.prod.outlook.com (2603:10b6:408:13f::25)
+ by CH8PR12MB9790.namprd12.prod.outlook.com (2603:10b6:610:274::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
+ 2026 00:22:29 +0000
+Received: from BN1PEPF00004688.namprd05.prod.outlook.com
+ (2603:10b6:408:13f:cafe::17) by BN9PR03CA0800.outlook.office365.com
+ (2603:10b6:408:13f::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.19 via Frontend Transport; Mon,
+ 2 Mar 2026 00:22:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN1PEPF00004688.mail.protection.outlook.com (10.167.243.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9654.16 via Frontend Transport; Mon, 2 Mar 2026 00:22:29 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 1 Mar
+ 2026 16:22:14 -0800
+Received: from dev.nvidia.com (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 1 Mar
+ 2026 16:22:14 -0800
+From: Chaitanya Kulkarni <kch@nvidia.com>
+To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>
+CC: <shinichiro.kawasaki@wdc.com>, <linux-block@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, Chaitanya Kulkarni <kch@nvidia.com>
+Subject: [PATCH V2] blktrace: fix __this_cpu_read/write in preemptible context
+Date: Sun, 1 Mar 2026 16:22:07 -0800
+Message-ID: <20260302002207.12165-1-kch@nvidia.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:f04:b0:679:c7d0:d4fe with SMTP id
- 006d021491bc7-679f2335127mr7967355eaf.36.1772348845249; Sat, 28 Feb 2026
- 23:07:25 -0800 (PST)
-Date: Sat, 28 Feb 2026 23:07:25 -0800
-In-Reply-To: <69a0544c.050a0220.3a55be.0004.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69a3e5ad.050a0220.3a55be.0056.GAE@google.com>
-Subject: Re: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in
- bpf_trace_run3 (2)
-From: syzbot <syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	wangqing7171@gmail.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004688:EE_|CH8PR12MB9790:EE_
+X-MS-Office365-Filtering-Correlation-Id: f57d554d-7808-4161-65af-08de77f1ca0c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	Zhjv7/r9C0jshz3Fl2p2A0iwOAxHI6pe9xoYSj6Ey6PohvnNm+I0pdD79pPFH9WvMvPxAgj0IAyyqSwCsw2UTvK/5PTEQpEWoQI5JjepaYFKceLN54qkIDbcC2XPrxlqs9V7ykAlgXetYj+vLqsgtGhSFi4EszRZXY4qdc2VzJskt6JAdEUrMm2d9fF1jHyMq60X7XOiRVRCNdbbJnaSIW+yIL8HKMgYdNhE4APmnBlNUfnXvbwnTz/U/A3NC/sNTFDO7FUxhRqgCbO0lGs10pLL1fP86U56sSmKEJqgXDskn7D4eOtGVXJmtlMeZ2b5JiaARp62EA3bgR6PEuoh0SjTcaESVxa4JSy+Ypk5lhcAoyhgJYkbvB7cmFwgtjFUDJc0CI9CNAFxcYJUgjoGCrrE07o81CXe1G6hZjBeecLjrsP/WdQ2CfF3bQ/lwT+ORWOADu6cYlRGFRGeF/cLk6qj+Cu/bz+7hTa0WRsMLbWNPrv738JC+hM4q05Fxru2yoMaf6hVW0g0hQI2RZhlngH5bXoDj/NoVA9WG4v6XERO6PQZaAvEOotTJ2OvO48yd1O/DqgdWiZiSeYyVO4/zTGpuJM3NZ7nHMJoBTJY+P3uGzDNKCy8tAkMdJewVckOIjcfL05pN91sozCKdb0wG3V007oYN1/nFvWi5PZTAhfWQFuM09H0N/yyD8S6dnbW7IoXzusI4Jcgn5LE7nCMYfCxXb0N+s3FvzO4lWOENVyf/WHqoBDsHARbDy5En9bZVaUhs5SboI6GeuM4dZtBA+gd8o28widwgPtGa4i+P7D2RkqZlzR8lZZeZfn40OTUjARFddxcJs/S3JijdyDzdA==
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	xr/6vz3oj8qkDtDffOz3Oslt17cxpHZS1NVJvKjAipOJHgE3dyS2gJoc8Cj6ZskiIMcE9k/XIaF9P6bz9XfNTLROg8a7JEMlCzNMvfbnmFyRATCvjKTi5PaKweXYxfOnOzSdrO7Pyzz9mfldxrBNaGoozVJX1NoNeBjZvtbywBWdz2etkTSexPA8zaVNjRnWQX8Zt/KiEtAgEOwVUTQdCbC9Rs/4ciHuSYuAhdnD26sqINbzg9aycdQNM7fOSBo85EzrcMbhC1IDfiUHXoRsJf55kboyHMmKOeVSP1ss6lMENECIu4MwWMVk+d65RE5BKEjWr6uVHlf7CllSWbEOHfTwDnOqXlwkA5LN5+khBBOTBSwuwrkVgCsXwbp1lRdRAQGxDYfbstHlEhBH0bD0kZsAwBtMZr9BWJgN+87ijRr3jUZdgM83BIJYEn/x2GbC
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 00:22:29.1854
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f57d554d-7808-4161-65af-08de77f1ca0c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004688.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9790
 
-syzbot has found a reproducer for the following issue on:
+tracing_record_cmdline() internally uses __this_cpu_read() and
+__this_cpu_write() on the per-CPU variable trace_cmdline_save, and
+trace_save_cmdline() explicitly asserts preemption is disabled via
+lockdep_assert_preemption_disabled(). These operations are only safe
+when preemption is off, as they were designed to be called from the
+scheduler context (probe_wakeup_sched_switch() / probe_wakeup()).
 
-HEAD commit:    2f9339c052bd Merge tag 'spi-fix-v7.0-rc1' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1610e3e6580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=56150637ffd942dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=9ea7c90be2b24e189592
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b12d5a580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153ce006580000
+__blk_add_trace() was calling tracing_record_cmdline(current) early in
+the blk_tracer path, before ring buffer reservation, from process
+context where preemption is fully enabled. This triggers the following
+using blktests/blktrace/002:
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-2f9339c0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/03f5cd2356a3/vmlinux-2f9339c0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fd9f61ab139e/bzImage-2f9339c0.xz
+blktrace/002 (blktrace ftrace corruption with sysfs trace)   [failed]
+    runtime  0.367s  ...  0.437s
+    something found in dmesg:
+    [   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
+    [   81.239580] null_blk: disk nullb1 created
+    [   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
+    [   81.362842] caller is tracing_record_cmdline+0x10/0x40
+    [   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
+    [   81.362877] Tainted: [N]=TEST
+    [   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+    [   81.362881] Call Trace:
+    [   81.362884]  <TASK>
+    [   81.362886]  dump_stack_lvl+0x8d/0xb0
+    ...
+    (See '/mnt/sda/blktests/results/nodev/blktrace/002.dmesg' for the entire message)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9ea7c90be2b24e189592@syzkaller.appspotmail.com
+[   81.211018] run blktests blktrace/002 at 2026-02-25 22:24:33
+[   81.239580] null_blk: disk nullb1 created
+[   81.357294] BUG: using __this_cpu_read() in preemptible [00000000] code: dd/2516
+[   81.362842] caller is tracing_record_cmdline+0x10/0x40
+[   81.362872] CPU: 16 UID: 0 PID: 2516 Comm: dd Tainted: G                 N  7.0.0-rc1lblk+ #84 PREEMPT(full)
+[   81.362877] Tainted: [N]=TEST
+[   81.362878] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
+[   81.362881] Call Trace:
+[   81.362884]  <TASK>
+[   81.362886]  dump_stack_lvl+0x8d/0xb0
+[   81.362895]  check_preemption_disabled+0xce/0xe0
+[   81.362902]  tracing_record_cmdline+0x10/0x40
+[   81.362923]  __blk_add_trace+0x307/0x5d0
+[   81.362934]  ? lock_acquire+0xe0/0x300
+[   81.362940]  ? iov_iter_extract_pages+0x101/0xa30
+[   81.362959]  blk_add_trace_bio+0x106/0x1e0
+[   81.362968]  submit_bio_noacct_nocheck+0x24b/0x3a0
+[   81.362979]  ? lockdep_init_map_type+0x58/0x260
+[   81.362988]  submit_bio_wait+0x56/0x90
+[   81.363009]  __blkdev_direct_IO_simple+0x16c/0x250
+[   81.363026]  ? __pfx_submit_bio_wait_endio+0x10/0x10
+[   81.363038]  ? rcu_read_lock_any_held+0x73/0xa0
+[   81.363051]  blkdev_read_iter+0xc1/0x140
+[   81.363059]  vfs_read+0x20b/0x330
+[   81.363083]  ksys_read+0x67/0xe0
+[   81.363090]  do_syscall_64+0xbf/0xf00
+[   81.363102]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   81.363106] RIP: 0033:0x7f281906029d
+[   81.363111] Code: 31 c0 e9 c6 fe ff ff 50 48 8d 3d 66 63 0a 00 e8 59 ff 01 00 66 0f 1f 84 00 00 00 00 00 80 3d 41 33 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 5b c3 66 2e 0f 1f 84 00 00 00 00 00 48 83 ec
+[   81.363113] RSP: 002b:00007ffca127dd48 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[   81.363120] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f281906029d
+[   81.363122] RDX: 0000000000001000 RSI: 0000559f8bfae000 RDI: 0000000000000000
+[   81.363123] RBP: 0000000000001000 R08: 0000002863a10a81 R09: 00007f281915f000
+[   81.363124] R10: 00007f2818f77b60 R11: 0000000000000246 R12: 0000559f8bfae000
+[   81.363126] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000000000a
+[   81.363142]  </TASK>
 
-==================================================================
-BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
-BUG: KASAN: slab-use-after-free in bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
-Read of size 8 at addr ffff88803828ab18 by task dhcpcd-run-hook/5487
+The same BUG fires from blk_add_trace_plug(), blk_add_trace_unplug(),
+and blk_add_trace_rq() paths as well.
 
-CPU: 0 UID: 0 PID: 5487 Comm: dhcpcd-run-hook Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xba/0x230 mm/kasan/report.c:482
- kasan_report+0x117/0x150 mm/kasan/report.c:595
- __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
- bpf_trace_run3+0xdd/0x850 kernel/trace/bpf_trace.c:2130
- __traceiter_kmem_cache_free+0x38/0x60 include/trace/events/kmem.h:117
- __do_trace_kmem_cache_free include/trace/events/kmem.h:117 [inline]
- trace_kmem_cache_free include/trace/events/kmem.h:117 [inline]
- kmem_cache_free+0x5ac/0x630 mm/slub.c:6272
- anon_vma_chain_free mm/rmap.c:147 [inline]
- unlink_anon_vmas+0x69d/0x730 mm/rmap.c:532
- free_pgtables+0x836/0xb70 mm/memory.c:427
- exit_mmap+0x490/0xa10 mm/mmap.c:1314
- __mmput+0x118/0x430 kernel/fork.c:1174
- exec_mmap+0x3b4/0x440 fs/exec.c:893
- begin_new_exec+0x134a/0x24a0 fs/exec.c:1148
- load_elf_binary+0xa47/0x2980 fs/binfmt_elf.c:1010
- search_binary_handler fs/exec.c:1664 [inline]
- exec_binprm fs/exec.c:1696 [inline]
- bprm_execve+0x93d/0x1460 fs/exec.c:1748
- do_execveat_common+0x50d/0x690 fs/exec.c:1846
- __do_sys_execve fs/exec.c:1930 [inline]
- __se_sys_execve fs/exec.c:1924 [inline]
- __x64_sys_execve+0x97/0xc0 fs/exec.c:1924
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f4dd469a107
-Code: Unable to access opcode bytes at 0x7f4dd469a0dd.
-RSP: 002b:00007ffed1452c68 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
-RAX: ffffffffffffffda RBX: 000055b1f84170c8 RCX: 00007f4dd469a107
-RDX: 000055b1f84170e8 RSI: 000055b1f84170c8 RDI: 000055b1f8417170
-RBP: 000055b1f8417170 R08: 00007ffed1456ea4 R09: 0000000000000000
-R10: 0000000000000008 R11: 0000000000000246 R12: 000055b1f84170e8
-R13: 00007f4dd485fe8b R14: 000055b1f84170e8 R15: 0000000000000000
- </TASK>
+The purpose of tracing_record_cmdline() is to cache the task->comm for
+a given PID so that the trace can later resolve it. It is only
+meaningful when a trace event is actually being recorded. Ring buffer
+reservation via ring_buffer_lock_reserve() disables preemption, and
+preemption remains disabled until the event is committed :-
 
-Allocated by task 5486:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
- kasan_kmalloc include/linux/kasan.h:263 [inline]
- __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5358
- kmalloc_noprof include/linux/slab.h:950 [inline]
- kzalloc_noprof include/linux/slab.h:1188 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+__blk_add_trace()
+       	__trace_buffer_lock_reserve()
+       		__trace_buffer_lock_reserve()
+       			ring_buffer_lock_reserve()
+       				preempt_disable_notrace();  <---
 
-Freed by task 15:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
- poison_slab_object mm/kasan/common.c:253 [inline]
- __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
- kasan_slab_free include/linux/kasan.h:235 [inline]
- slab_free_hook mm/slub.c:2692 [inline]
- slab_free mm/slub.c:6143 [inline]
- kfree+0x1c1/0x630 mm/slub.c:6461
- rcu_do_batch kernel/rcu/tree.c:2617 [inline]
- rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
- handle_softirqs+0x22a/0x870 kernel/softirq.c:622
- run_ksoftirqd+0x36/0x60 kernel/softirq.c:1063
- smpboot_thread_fn+0x541/0xa50 kernel/smpboot.c:160
- kthread+0x388/0x470 kernel/kthread.c:467
- ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+With this fix blktests for blktrace pass:
 
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
- kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
- __call_rcu_common kernel/rcu/tree.c:3131 [inline]
- call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
- bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
- bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
- __fput+0x44f/0xa70 fs/file_table.c:469
- task_work_run+0x1d9/0x270 kernel/task_work.c:233
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x69b/0x2320 kernel/exit.c:971
- do_group_exit+0x21b/0x2d0 kernel/exit.c:1112
- __do_sys_exit_group kernel/exit.c:1123 [inline]
- __se_sys_exit_group kernel/exit.c:1121 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1121
- x64_sys_call+0x221a/0x2240 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  blktests (master) # ./check blktrace
+  blktrace/001 (blktrace zone management command tracing)      [passed]
+      runtime  3.650s  ...  3.647s
+  blktrace/002 (blktrace ftrace corruption with sysfs trace)   [passed]
+      runtime  0.411s  ...  0.384s
 
-The buggy address belongs to the object at ffff88803828ab00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 24 bytes inside of
- freed 192-byte region [ffff88803828ab00, ffff88803828abc0)
+Fixes: 7ffbd48d5cab ("tracing: Cache comms only after an event occurred")
+Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+---
+v2:-
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88803828a100 pfn:0x3828a
-flags: 0x4fff00000000200(workingset|node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000200 ffff88801ac413c0 ffff888030400288 ffffea0000e19390
-raw: ffff88803828a100 000000080010000e 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0xd2c00(GFP_NOIO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 22245651735, free_ts 22245107019
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
- prep_new_page mm/page_alloc.c:1897 [inline]
- get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
- __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
- alloc_slab_page mm/slub.c:3269 [inline]
- allocate_slab+0x77/0x660 mm/slub.c:3458
- new_slab mm/slub.c:3516 [inline]
- refill_objects+0x331/0x3c0 mm/slub.c:7153
- refill_sheaf mm/slub.c:2818 [inline]
- __pcs_replace_empty_main+0x2b9/0x620 mm/slub.c:4592
- alloc_from_pcs mm/slub.c:4695 [inline]
- slab_alloc_node mm/slub.c:4829 [inline]
- __do_kmalloc_node mm/slub.c:5237 [inline]
- __kmalloc_noprof+0x474/0x760 mm/slub.c:5250
- kmalloc_noprof include/linux/slab.h:954 [inline]
- usb_alloc_urb+0x46/0x150 drivers/usb/core/urb.c:75
- usb_internal_control_msg drivers/usb/core/message.c:96 [inline]
- usb_control_msg+0x118/0x3e0 drivers/usb/core/message.c:154
- usb_control_msg_send drivers/usb/core/message.c:214 [inline]
- usb_set_configuration+0x127a/0x2110 drivers/usb/core/message.c:2149
- usb_generic_driver_probe+0x8d/0x150 drivers/usb/core/generic.c:250
- usb_probe_device+0x1c4/0x3b0 drivers/usb/core/driver.c:291
- call_driver_probe drivers/base/dd.c:-1 [inline]
- really_probe+0x267/0xaf0 drivers/base/dd.c:661
- __driver_probe_device+0x18c/0x320 drivers/base/dd.c:803
- driver_probe_device+0x4f/0x240 drivers/base/dd.c:833
- __device_attach_driver+0x2d4/0x4c0 drivers/base/dd.c:961
-page last free pid 30 tgid 30 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1433 [inline]
- __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
- __kasan_populate_vmalloc_do mm/kasan/shadow.c:393 [inline]
- __kasan_populate_vmalloc+0x1b2/0x1d0 mm/kasan/shadow.c:424
- kasan_populate_vmalloc include/linux/kasan.h:580 [inline]
- alloc_vmap_area+0xd73/0x14b0 mm/vmalloc.c:2129
- __get_vm_area_node+0x1f8/0x300 mm/vmalloc.c:3232
- __vmalloc_node_range_noprof+0x372/0x1730 mm/vmalloc.c:4024
- __vmalloc_node_noprof+0xc2/0x100 mm/vmalloc.c:4124
- alloc_thread_stack_node kernel/fork.c:355 [inline]
- dup_task_struct+0x228/0x9a0 kernel/fork.c:924
- copy_process+0x508/0x3cf0 kernel/fork.c:2050
- kernel_clone+0x248/0x8e0 kernel/fork.c:2654
- user_mode_thread+0x110/0x180 kernel/fork.c:2730
- call_usermodehelper_exec_work+0x5c/0x230 kernel/umh.c:171
- process_one_work kernel/workqueue.c:3275 [inline]
- process_scheduled_works+0xb02/0x1830 kernel/workqueue.c:3358
- worker_thread+0xa50/0xfc0 kernel/workqueue.c:3439
- kthread+0x388/0x470 kernel/kthread.c:467
- ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Memory state around the buggy address:
- ffff88803828aa00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88803828aa80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->ffff88803828ab00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff88803828ab80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff88803828ac00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
+1. Remove preempt_disable_notrace() and preempt_enable_notrace() calls from V1.
+   Fix the issue by moving a call to tracing_record_cmdline() after ring
+   buffer reservation which also disables the preemption.
 
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ kernel/trace/blktrace.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 3b7c102a6eb3..ead03e0e0fbe 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -383,8 +383,6 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
+ 	cpu = raw_smp_processor_id();
+ 
+ 	if (blk_tracer) {
+-		tracing_record_cmdline(current);
+-
+ 		buffer = blk_tr->array_buffer.buffer;
+ 		trace_ctx = tracing_gen_ctx_flags(0);
+ 		switch (bt->version) {
+@@ -419,6 +417,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
+ 		if (!event)
+ 			return;
+ 
++		tracing_record_cmdline(current);
+ 		switch (bt->version) {
+ 		case 1:
+ 			record_blktrace_event(ring_buffer_event_data(event),
+-- 
+2.39.5
+
