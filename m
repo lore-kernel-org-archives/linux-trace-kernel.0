@@ -1,257 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AAF35AC2A
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 13:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278C03E8C65
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 13:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772457263; cv=none; b=ZLjD4QkyABsn1xIzoov+x6oEj97uMJ+UOc3e3bB9mCOC0QxV3b3oessc+2FwwuAKee+yMZYW0+OEM0xyxW4xvXWWbujN+7wYszedZN96saAkygM6UpnIZ6EFPnw3uA27cZhYoHODcTZZXXHIeH7jFJ3KvzacraZatU+1702c/TY=
+	t=1772457347; cv=none; b=OVjzWpv1YDBjvEG+mE1CC7fIAzTDU0tf/6XmVFIH6U9eHKA3cy+4szuo7Qoya+8UTQVW3yfTnFwCKJh8f/1IP2PNwc5FU+U9HmslnfcjqtiKOtX4kfVbqbGLwDULbn4OMtX07uJJUCoMlIb49hvaDenGngMMbZ7hdnecRt9JihQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772457263; c=relaxed/simple;
-	bh=kF4XVeoAfHxGJSSlsooJP7Uo7M06fSw89MuNkSE9u8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=qyvy64BWufvgvD1pEJu1pBLTsp2zW6s2tivC+P9xz0nbDF+eadFFqSep+TLyBeZKebLHifTgYS5vrmaCJWx/5ijoZUoOPRZqbgjmMVuBCFVFUN47nGNB6oFUNTScQoq2x2VxKahEG1StfKlzSj3rYiX2nuNrJ8NaMOo4Yd0xiIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hsXKEFYa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772457347; c=relaxed/simple;
+	bh=JV5gSZRhPiMnRwmWCCQiBvuE3NFV3+3iTTS8WPm+N7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mpd5GY+6Nc/o9uLOvwlchgXRmym4R9yPZAyO1BbtgzOoxPoER3mY7D8r04ScLu76OWdCt5EbFAc+IGQEAMaiuxZBsrTSPyREVGmq9AVQTwLpmeK04LTgUAe+YQBtZscH585K4Ymn/cJp7FYxFdeJR66gs6JMoUlgpeu2JbZLhAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=kP2OkOx1; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hsXKEFYa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772457260;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dMKdJ1my1tkMG8FcGXFi+jO4sAEDyDWkdYI16D2K2Ik=;
-	b=hsXKEFYaXdOLRGX50m55piEEC8lJwYxgy+MkXjoZAwi7H0HrEJ2ToFjRaTrbHAkz3eUsOX
-	raYuyMThFPMhGVB2Mng5wTDtP0WJKhnW/DoAh04ghpKKcylUnCQ2vkaPJh/J5usouxI6Ba
-	reU/QUEEVnCh9FeVZ6vZYdiLPYDfNgs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-547-8iN0qFF7N6aCdyTsyod0Gw-1; Mon,
- 02 Mar 2026 08:14:17 -0500
-X-MC-Unique: 8iN0qFF7N6aCdyTsyod0Gw-1
-X-Mimecast-MFC-AGG-ID: 8iN0qFF7N6aCdyTsyod0Gw_1772457256
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 44E5A195608F;
-	Mon,  2 Mar 2026 13:14:16 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.222])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3B2C030001B9;
-	Mon,  2 Mar 2026 13:14:11 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v2] tracing/osnoise: Add option to align tlat threads
-Date: Mon,  2 Mar 2026 14:13:16 +0100
-Message-ID: <20260302131316.385987-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="kP2OkOx1"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4836e3288cdso30836555e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 05:15:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1772457339; x=1773062139; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHkP/futS2zgWyQTyC5FXIesale6XSmEvAtzel8W+sM=;
+        b=kP2OkOx1OGk8QzCJ6cnKlczbiViedPD27Ke1MImKIvKEN29UhPXB6cIS7krZpIPTg7
+         UtmjFCmAQS32toy1Kky0VUYQ6nknRRVluwBbwXHw6cWEZNCVAgS5EELzDaqzeBLSo6Hl
+         6MBO8HVZMvyD6PlHRN33vJ1DlYOmwGHcGRfuGiwe7PpC+cjWOvs5SOS4yXY3lDq7hvss
+         zkaT8t/3Cam4w5r+FQXLTIz1sN4S7eEd1VX5QajWDFRjikohyMIelygNs2O2oH4ZYw0Z
+         AUAaYJJMMI4yT+7+5mF04/q4qHGd5KDFQKS/68y4IqW0DIWdfkKgJUsDRnvSUoosIJpM
+         kiiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772457339; x=1773062139;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DHkP/futS2zgWyQTyC5FXIesale6XSmEvAtzel8W+sM=;
+        b=kd3D185jXaqke8wHy0ceOwt/4COeBoZ13KwwmiD4JeBiMzyo5bRK8o2rcmIVHTTRbi
+         Aqr627IPiOUUH/j7bNxFGtHYWVpbI6zP+GN6/OsgymnGn0QYKDCagp1h+B8k+czrUv2Y
+         frH2lJkelazrrQumsB4VTQRXQ0LVHpCo0ZaiCv15y1wNiigxWgGj1oP/zgTOEkDae8Fu
+         sD8lm9ldI7QJWe2eAzk25bSSfHFjumwPzbidmAPSaV9cYmZ+OK/BiEx+Mwn245kfEoUk
+         +GxUaWc/pj0Ww37AXqLb6DRJDMbE/nx08Z7COpwKUD3Nnn+mu02RJH/6XWa6QsSeNAAi
+         hEQg==
+X-Forwarded-Encrypted: i=1; AJvYcCULwbFsUqq4dAOU4Mq4lQ++qSIVuHsW8cBOgIgq73COR7/WoaysT3pP+PDI85rjSIGC5CngZOrClUC0bHTJpoESWi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL/zRHa4nTld07gQU7NWmJTEf+97JkpDGzt0x3GTCfrNCiM4DD
+	zfU6FCOf91H150uuugoycoaTY1mVC3E7qB0EZx9/wRnSNHVN4fR/Inft/CYyqUwyBcg=
+X-Gm-Gg: ATEYQzzSPX94weCmWKZmuO9H5jnepzYWcPJO70+GV5MU2hiH8SJOOMcR/OBMU3bqGn2
+	0kBm0xY8Ay9sNyZ3yL4lfShQwArspnvU+A74hMK7fFz9aG/F7MCaSXZ3YPYg3D362pERWiOz/fu
+	GFKpqD2DTPdgcWL43qK5Xp0Ok2dwRVaxWGFMfqIWjDpcT2wqigK4itlDOE5w321s4kjwOGIXf4n
+	aClBHlV47Vfw4eSbtGFRy87p5/q/SDD4GoqgwhUn/2THjPQbVgxDe4zNPX5qgmyw2lBnbp+Chel
+	BsoJ4PB/sfU3MrkPwVtWdevW2zYXKsJdIgzSTLsIAeDNyaDwjy8KkpuEzzzGwylxs9IE8y9OVso
+	mebh3qAlJxchV5sShRpAHmcV2DqK+4KZYLSHazCa+9cSu2QwQIPNgNC79SXYxk62WmtpfJFpXdM
+	TLZR52TTHLmQ1Boji0cNa5SQBwMIvAkr6yOSidaQYjplY=
+X-Received: by 2002:a05:600c:a010:b0:480:4a90:1afd with SMTP id 5b1f17b1804b1-483c98dc373mr207220875e9.0.1772457339037;
+        Mon, 02 Mar 2026 05:15:39 -0800 (PST)
+Received: from FV6GYCPJ69 ([128.77.52.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b3d24dsm245616515e9.5.2026.03.02.05.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 05:15:37 -0800 (PST)
+Date: Mon, 2 Mar 2026 14:15:30 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com, horms@kernel.org, donald.hunter@gmail.com, corbet@lwn.net, 
+	skhan@linuxfoundation.org, saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
+	mbloch@nvidia.com, przemyslaw.kitszel@intel.com, mschmidt@redhat.com, 
+	andrew+netdev@lunn.ch, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, chuck.lever@oracle.com, matttbe@kernel.org, cjubran@nvidia.com, 
+	daniel.zahka@gmail.com, linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 07/10] devlink: allow devlink instance
+ allocation without a backing device
+Message-ID: <lkotihkrjr44jguht3cbj4kozxykqdzqedm7rm4cxuilsy76s5@mtuhatnluxgh>
+References: <20260225133422.290965-1-jiri@resnulli.us>
+ <20260225133422.290965-8-jiri@resnulli.us>
+ <20260228150138.14e35ee7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: p_wt8GmmUrcsrnw0hV9z1ybvIVodrQFQ0sA6Nyor9gQ_1772457256
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260228150138.14e35ee7@kernel.org>
 
-Add an option called TIMERLAT_ALIGN to osnoise/options, together with a
-corresponding setting osnoise/timerlat_align_us.
+Sun, Mar 01, 2026 at 12:01:38AM +0100, kuba@kernel.org wrote:
+>On Wed, 25 Feb 2026 14:34:19 +0100 Jiri Pirko wrote:
+>> -	dev_warn(port->devlink->dev, "Type was not set for devlink port.");
+>> +	if (port->devlink->dev)
+>> +		dev_warn(port->devlink->dev,
+>> +			 "Type was not set for devlink port.");
+>
+>since I'm already nit-picking - maybe we should have a helper for this
+>case an pr_warn() the message if dev is NULL?
 
-This option sets the alignment of wakeup times between different
-timerlat threads, similarly to cyclictest's -A/--aligned option. If
-TIMERLAT_ALIGN is set, the first thread that reaches the first cycle
-records its first wake-up time. Each following thread sets its first
-wake-up time to a fixed offset from the recorded time, and increments
-it by the same offset.
-
-Example:
-
-osnoise/timerlat_period is set to 1000, osnoise/timerlat_align_us is
-set to 20. There are four threads, on CPUs 1 to 4.
-
-- CPU 4 enters first cycle first. The current time is 20000us, so
-the wake-up of the first cycle is set to 21000us. This time is recorded.
-- CPU 2 enter first cycle next. It reads the recorded time, increments
-it to 21020us, and uses this value as its own wake-up time for the first
-cycle.
-- CPU 3 enters first cycle next. It reads the recorded time, increments
-it to 21040 us, and uses the value as its own wake-up time.
-- CPU 1 proceeds analogically.
-
-In each next cycle, the wake-up time (called "absolute period" in
-timerlat code) is incremented by the (relative) period of 1000us. Thus,
-the wake-ups in the following cycles (provided the times are reached and
-not in the past) will be as follows:
-
-CPU 1		CPU 2		CPU 3	 	CPU 4
-21080us		21020us		21040us		21000us
-22080us		22020us		22040us		22000us
-...		...		...		...
-
-Even if any cycle is skipped due to e.g. the first cycle calculation
-happening later, the alignment stays in place.
-
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
-v1 + discussion: https://lore.kernel.org/linux-trace-kernel/20260227150420.319528-1-tglozar@redhat.com/T/#u
-
-v2:
-- Make align_next global and reset it to 0 in osnoise_workload_start()
-so that it gets set by the first thread of each measurement and is not stuck
-on what is set by the first measurement until reboot.
-- Use atomic64_add_return_relaxed() in place of atomic64_fetch_add_relaxed()
-to make the code shorter and easier to read.
-- Add more detailed comments to the alignment synchronization logic.
-- Fix two typos in the commit message: 50 -> 20 in the example introduction,
-and incremenets -> increments.
-
-I tested v2 with the same command I used for v1. I also added debug printk()
-calls and verified that the logic is implemented correctly:
-
-[  120.273901] timerlat: thread 2 setting align_next to 119896370619
-[  120.273977] timerlat: aligning thread 1 to 119896370619
-[  120.274385] timerlat: aligning thread 3 to 119896370619
-[  120.274476] timerlat: aligning thread 4 to 119896370619
-[  142.457440] timerlat: thread 1 setting align_next to 142080851122
-[  142.457529] timerlat: aligning thread 2 to 142080871122
-[  142.457629] timerlat: aligning thread 3 to 142080891122
-[  142.458033] timerlat: aligning thread 4 to 142080911122
-
- kernel/trace/trace_osnoise.c | 52 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index dee610e465b9..1cde1da57f97 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -58,6 +58,7 @@ enum osnoise_options_index {
- 	OSN_PANIC_ON_STOP,
- 	OSN_PREEMPT_DISABLE,
- 	OSN_IRQ_DISABLE,
-+	OSN_TIMERLAT_ALIGN,
- 	OSN_MAX
- };
- 
-@@ -66,7 +67,8 @@ static const char * const osnoise_options_str[OSN_MAX] = {
- 							"OSNOISE_WORKLOAD",
- 							"PANIC_ON_STOP",
- 							"OSNOISE_PREEMPT_DISABLE",
--							"OSNOISE_IRQ_DISABLE" };
-+							"OSNOISE_IRQ_DISABLE",
-+							"TIMERLAT_ALIGN" };
- 
- #define OSN_DEFAULT_OPTIONS		0x2
- static unsigned long osnoise_options	= OSN_DEFAULT_OPTIONS;
-@@ -326,6 +328,7 @@ static struct osnoise_data {
- 	u64	stop_tracing_total;	/* stop trace in the final operation (report/thread) */
- #ifdef CONFIG_TIMERLAT_TRACER
- 	u64	timerlat_period;	/* timerlat period */
-+	u64	timerlat_align_us;	/* timerlat alignment */
- 	u64	print_stack;		/* print IRQ stack if total > */
- 	int	timerlat_tracer;	/* timerlat tracer */
- #endif
-@@ -338,6 +341,7 @@ static struct osnoise_data {
- #ifdef CONFIG_TIMERLAT_TRACER
- 	.print_stack			= 0,
- 	.timerlat_period		= DEFAULT_TIMERLAT_PERIOD,
-+	.timerlat_align_us		= 0,
- 	.timerlat_tracer		= 0,
- #endif
- };
-@@ -1813,6 +1817,11 @@ static enum hrtimer_restart timerlat_irq(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
-+/*
-+ * timerlat wake-up offset for next thread with TIMERLAT_ALIGN set.
-+ */
-+static atomic64_t align_next;
-+
- /*
-  * wait_next_period - Wait for the next period for timerlat
-  */
-@@ -1829,6 +1838,26 @@ static int wait_next_period(struct timerlat_variables *tlat)
- 	 */
- 	tlat->abs_period = (u64) ktime_to_ns(next_abs_period);
- 
-+	/*
-+	 * Align thread in the first cycle on each CPU to the set alignment
-+	 * if TIMERLAT_ALIGN is set.
-+	 *
-+	 * This is done by using an atomic64_t to store the next absolute period.
-+	 * The first thread that wakes up will set the atomic64_t to its
-+	 * absolute period, and the other threads will increment it by
-+	 * the alignment value.
-+	 */
-+	if (test_bit(OSN_TIMERLAT_ALIGN, &osnoise_options) && !tlat->count
-+	    && atomic64_cmpxchg_relaxed(&align_next, 0, tlat->abs_period)) {
-+		/*
-+		 * A thread has already set align_next, use it and increment it
-+		 * to be used by the next thread that wakes up after this one.
-+		 */
-+		tlat->abs_period = atomic64_add_return_relaxed(
-+			osnoise_data.timerlat_align_us * 1000, &align_next);
-+		next_abs_period = ns_to_ktime(tlat->abs_period);
-+	}
-+
- 	/*
- 	 * If the new abs_period is in the past, skip the activation.
- 	 */
-@@ -2650,6 +2679,17 @@ static struct trace_min_max_param timerlat_period = {
- 	.min	= &timerlat_min_period,
- };
- 
-+/*
-+ * osnoise/timerlat_align_us: align the first wakeup of all timerlat
-+ * threads to a common boundary (in us). 0 means disabled.
-+ */
-+static struct trace_min_max_param timerlat_align_us = {
-+	.lock	= &interface_lock,
-+	.val	= &osnoise_data.timerlat_align_us,
-+	.max	= NULL,
-+	.min	= NULL,
-+};
-+
- static const struct file_operations timerlat_fd_fops = {
- 	.open		= timerlat_fd_open,
- 	.read		= timerlat_fd_read,
-@@ -2746,6 +2786,11 @@ static int init_timerlat_tracefs(struct dentry *top_dir)
- 	if (!tmp)
- 		return -ENOMEM;
- 
-+	tmp = tracefs_create_file("timerlat_align_us", TRACE_MODE_WRITE, top_dir,
-+				  &timerlat_align_us, &trace_min_max_fops);
-+	if (!tmp)
-+		return -ENOMEM;
-+
- 	retval = osnoise_create_cpu_timerlat_fd(top_dir);
- 	if (retval)
- 		return retval;
-@@ -2877,6 +2922,11 @@ static int osnoise_workload_start(void)
- 		return 0;
- 
- 	osn_var_reset_all();
-+	/*
-+	 * Reset also align_next, to be filled by a new offset by the first timerlat
-+	 * thread that wakes up, if TIMERLAT_ALIGN is set.
-+	 */
-+	atomic64_set(&align_next, 0);
- 
- 	retval = osnoise_hook_events();
- 	if (retval)
--- 
-2.53.0
-
+Okay
