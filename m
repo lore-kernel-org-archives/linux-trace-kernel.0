@@ -1,197 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EA437AA73
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 09:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E85439B962
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 10:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772444781; cv=none; b=Yh591vmN1dMQKltsnXCh+I6OiX/W6s8wsqlo9rChHJhyYlor1TExn7/WFVnTLRTYmfWdDBwuTY2KwS+ck+D1fR5IBQvbxyZMH2qmjAbdBU5fPC7qTRaHBJUImQ8QkOVrTt/TcPdyfKGWzs+46eFuHX4omnwsb0SODVII2Pvm66I=
+	t=1772447004; cv=none; b=cHE2OvMhyAvkvm6Rf1RX1/IRvjHGR5b4S/+mnZ1Ofp62VqauuV9ePsJ2dc2rkW1Fhj+mgJPr/eky5Biud9z/HQjl0OR9o+eFevQMaveL6WL2erU43MiOO079flpj0vvpEp2l0DqCF5RvH7Sn1mwsy7WQGMnehZZoN0MLhqbFQPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772444781; c=relaxed/simple;
-	bh=AdN5BIKqvaD/m+CfD/B1gdDrBp6A2Pyn3P3Wg3pT75A=;
+	s=arc-20240116; t=1772447004; c=relaxed/simple;
+	bh=DxIjiuRLSsy1tFjfqwnUtZGdPPrFPa2emHdfIPwLGaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=LyDnZfTaEynsVCsCaRNhXOFUOuoXVBJGEvQCTJvcNue6/Z5agKLJYc6x2ZVv/mCvg34pRf4gH5aIBNw/sKt/SQY360KP34XHILytkerJQDDFBX4w1KTzRcxLMWhAdx80fCpkT1TISEmo0ambtK1CRnZMMBqzdIJc7Fjzkx3jlSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=clC6Va/I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKUq//8CLnOJLqR58SJB46LfXBNAzq9if6Lw/Fe5Ne6wHqiIMfzvxCe7OfZy5VQNPcNePq5tKgbZdp6cRlRzUqtgOw/W2jkfs3biJSjhc/14s3tT5Un8XADf74lsbyjpGuARjNi7TTmAS/Llj2TmDbdpTl2UIOReAc6xS1BYauE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=qejSHz/m; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clC6Va/I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772444779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BBWL7AkeE2fO9iOHWP24JjF/LvZ0Uocj4yyy3v7eU9Y=;
-	b=clC6Va/IKelsqpEdXh8KFiQ/haKMefrnE1Fx1ENpJv4L5AuuH32bhgCt4aIrFjmU1Z5tEm
-	tnTl0kc2dXKHceFwvuMfamYbl1DsT6E1hLgZ8/aMvARohoLhd7x475m3PbybBcLFb0oh+Q
-	uV+9rCylK4465obvxFWNsFy10TkeVvo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-L1Lm3fTLPG-he5WeyQJvPg-1; Mon,
- 02 Mar 2026 04:46:08 -0500
-X-MC-Unique: L1Lm3fTLPG-he5WeyQJvPg-1
-X-Mimecast-MFC-AGG-ID: L1Lm3fTLPG-he5WeyQJvPg_1772444767
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 567BE1956095;
-	Mon,  2 Mar 2026 09:46:07 +0000 (UTC)
-Received: from fedora (unknown [10.45.224.37])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0131A1956053;
-	Mon,  2 Mar 2026 09:46:04 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Mar 2026 10:46:06 +0100 (CET)
-Date: Mon, 2 Mar 2026 10:45:57 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, Paulo Andrade <pandrade@redhat.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6.18.y] x86/uprobes: Fix XOL allocation failure for 32-bit
- tasks
-Message-ID: <aaVcVXcLsEJ5gRhv@redhat.com>
-References: <20260301011537.1669125-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="qejSHz/m"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-439aa2f8ebaso998023f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 02:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1772447000; x=1773051800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xyf5aAwmciBE7QFfA+/PpQQaPUYccIgX3fQYsSxVl+U=;
+        b=qejSHz/mv7HaqVvybUq9mMdRh91/klcPbrp8m9TDyN6bXhHdCoYkRcI+r0+jbsLuON
+         7V780DKi5GhyAkBytjq2KpvODxTn0X03VlsAQQpYS6py12jJWPQrJU7/rm3LBHu7lD7i
+         UjCVZcSmmNp9mKBlkHOADSXgpl8s9AyI1yxAK1XFCzUbfbotkL1mOYOqvkD2AjRVQ+RF
+         53EouXoHMx31/vSAx9ke/y4E26GeiroFmRLRGzYCSy169dWOQmA9ViMFPosIwtLRY8kX
+         1mfWQ4UXY5lnssavO4yvfLH+vmR2Zt/3QzPiKwI8xtJiuEaxHRgMNv+JLyrRZdMDBTru
+         SN/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772447000; x=1773051800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xyf5aAwmciBE7QFfA+/PpQQaPUYccIgX3fQYsSxVl+U=;
+        b=s1UMMiryGJEDtSOi8mpQ3aHNdAeyOBZSuzAfFhFr6XxG7/RI6iMVsvTcuCmMnWYmSx
+         QUB6mvdx760xKGX4caofAAHQXOhlNYC1tJmcusdq156DTimV010oONxA6cxjkkNZTpp/
+         76ToSZ1R0LIbB4hLJVTGPYvx1gS0OJHU+nxv1KJEW11qf5y8sh7a9LcM0d7TgGzvz6Sx
+         ReBad7j7S8XUKSYxYsAtkYNC2V+wmW5iyeRT/VcMMGSP4zAznQgcT5O6ZLkY9GIsvqjS
+         x+LqxA8JBialxd5Vy8a3z7oxow1vjiGkTMHTZE2P2blxIsjxqGXd2GhfWhLgiJ4oBPPh
+         4Rfg==
+X-Forwarded-Encrypted: i=1; AJvYcCURbpM89mYQU0OSacnrz3Dd34M0KYrYN/jH+D1mcz3eR60+C1GokwewzTZiTyFf1tGoKEREjpZragnVDshUvlFtXcE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo50EXAVuZWM6OHfQofr2PkTPaNmqJ8QO0F4cTgapj9JYSaoW+
+	cgR8a1ziF/Q43eY4u14pjJn51lvmmX+ceGKr5GAnR1aBm1BdoO62RnMp4w5JzxdSa78=
+X-Gm-Gg: ATEYQzwtVR9dbevpcC3iEl1eZLfEKzSM0fZrN9qdZ3WLSiSGinZT5yuJoMmXgMzvc/L
+	obuJ30Ppn8WRe6xe5BwWn6YAvxn8drc+jUKViOwU/C5U0y3VSq1hVv18pzi/fp2H2933hl/py5K
+	BFsp53BhLwqAnQA2xY5bZHjINO+UigKowuDq5WQpy23MoVps8hZbEJOJ1LnirtTCddiS38I5Soh
+	fzmdjuCDGFQjyNqbGYSKlvVkbdrAvpFjuSQ7WkdtuIUCwEUNbH/SG7krrhzzG7nY65ARM/XyTM1
+	XoPL6ze/ig+W5vNQIhS7pq/7ydqeDME1aZjKNQIOul22FB+fH3uBT4XiQP729N+LC68mhgsfJQu
+	dZW/FSe4hgx7f11ZEwkkHLBCNb3iDvCljIETnfZ57iJahE17vaCvNzkBLboyGuzBs5YGSxQ2Ah0
+	0rMurXxg9/82bncHiy68FzFf4PEHGoRNA=
+X-Received: by 2002:a05:6000:186e:b0:439:b374:c6d3 with SMTP id ffacd0b85a97d-439b374c7b0mr7633629f8f.32.1772447000348;
+        Mon, 02 Mar 2026 02:23:20 -0800 (PST)
+Received: from FV6GYCPJ69 ([85.163.81.98])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b1116698sm12378754f8f.16.2026.03.02.02.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 02:23:19 -0800 (PST)
+Date: Mon, 2 Mar 2026 11:23:16 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com, horms@kernel.org, donald.hunter@gmail.com, corbet@lwn.net, 
+	skhan@linuxfoundation.org, saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
+	mbloch@nvidia.com, przemyslaw.kitszel@intel.com, mschmidt@redhat.com, 
+	andrew+netdev@lunn.ch, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, chuck.lever@oracle.com, matttbe@kernel.org, cjubran@nvidia.com, 
+	daniel.zahka@gmail.com, linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 04/10] devlink: allow to use devlink index as
+ a command handle
+Message-ID: <onwmw7ql5g2xqacrqnawcphdlzfu5v5ohgslsbvoeraszm7m4m@2ywv2ql37wu7>
+References: <20260225133422.290965-1-jiri@resnulli.us>
+ <20260225133422.290965-5-jiri@resnulli.us>
+ <20260228144846.40f5dfeb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260301011537.1669125-1-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: FNZ7rYjHfHhBBOhtoyi82ZZaq5NVuUm5P0b0pxQaBhQ_1772444767
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260228144846.40f5dfeb@kernel.org>
 
-[ Upstream commit d55c571e4333fac71826e8db3b9753fadfbead6a ]
+Sat, Feb 28, 2026 at 11:48:46PM +0100, kuba@kernel.org wrote:
+>On Wed, 25 Feb 2026 14:34:16 +0100 Jiri Pirko wrote:
+>> +	if (attrs[DEVLINK_ATTR_INDEX]) {
+>> +		index = nla_get_uint(attrs[DEVLINK_ATTR_INDEX]);
+>> +		devlink = devlinks_xa_lookup_get(net, index);
+>> +		if (!devlink)
+>> +			return ERR_PTR(-ENODEV);
+>> +		goto found;
+>> +	}
+>> +
+>>  	if (!attrs[DEVLINK_ATTR_BUS_NAME] || !attrs[DEVLINK_ATTR_DEV_NAME])
+>>  		return ERR_PTR(-EINVAL);
+>
+>If both INDEX and BUS_NAME + DEV_NAME are provided we should check
+>that they point to the same device? Or reject user space passing both?
 
-This script
-
-	#!/usr/bin/bash
-
-	echo 0 > /proc/sys/kernel/randomize_va_space
-
-	echo 'void main(void) {}' > TEST.c
-
-	# -fcf-protection to ensure that the 1st endbr32 insn can't be emulated
-	gcc -m32 -fcf-protection=branch TEST.c -o test
-
-	bpftrace -e 'uprobe:./test:main {}' -c ./test
-
-"hangs", the probed ./test task enters an endless loop.
-
-The problem is that with randomize_va_space == 0
-get_unmapped_area(TASK_SIZE - PAGE_SIZE) called by xol_add_vma() can not
-just return the "addr == TASK_SIZE - PAGE_SIZE" hint, this addr is used
-by the stack vma.
-
-arch_get_unmapped_area_topdown() doesn't take TIF_ADDR32 into account and
-in_32bit_syscall() is false, this leads to info.high_limit > TASK_SIZE.
-vm_unmapped_area() happily returns the high address > TASK_SIZE and then
-get_unmapped_area() returns -ENOMEM after the "if (addr > TASK_SIZE - len)"
-check.
-
-handle_swbp() doesn't report this failure (probably it should) and silently
-restarts the probed insn. Endless loop.
-
-I think that the right fix should change the x86 get_unmapped_area() paths
-to rely on TIF_ADDR32 rather than in_32bit_syscall(). Note also that if
-CONFIG_X86_X32_ABI=y, in_x32_syscall() falsely returns true in this case
-because ->orig_ax = -1.
-
-But we need a simple fix for -stable, so this patch just sets TS_COMPAT if
-the probed task is 32-bit to make in_ia32_syscall() true.
-
-Fixes: 1b028f784e8c ("x86/mm: Introduce mmap_compat_base() for 32-bit mmap()")
-Reported-by: Paulo Andrade <pandrade@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/aV5uldEvV7pb4RA8@redhat.com/
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/aWO7Fdxn39piQnxu@redhat.com
----
- arch/x86/kernel/uprobes.c | 24 ++++++++++++++++++++++++
- include/linux/uprobes.h   |  1 +
- kernel/events/uprobes.c   | 10 +++++++---
- 3 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 845aeaf36b8d..73be14736062 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1819,3 +1819,27 @@ bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check ctx,
- 	else
- 		return regs->sp <= ret->stack;
- }
-+
-+#ifdef CONFIG_IA32_EMULATION
-+unsigned long arch_uprobe_get_xol_area(void)
-+{
-+	struct thread_info *ti = current_thread_info();
-+	unsigned long vaddr;
-+
-+	/*
-+	 * HACK: we are not in a syscall, but x86 get_unmapped_area() paths
-+	 * ignore TIF_ADDR32 and rely on in_32bit_syscall() to calculate
-+	 * vm_unmapped_area_info.high_limit.
-+	 *
-+	 * The #ifdef above doesn't cover the CONFIG_X86_X32_ABI=y case,
-+	 * but in this case in_32bit_syscall() -> in_x32_syscall() always
-+	 * (falsely) returns true because ->orig_ax == -1.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		ti->status |= TS_COMPAT;
-+	vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+	ti->status &= ~TS_COMPAT;
-+
-+	return vaddr;
-+}
-+#endif
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index ee3d36eda45d..f548fea2adec 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -242,6 +242,7 @@ extern void arch_uprobe_clear_state(struct mm_struct *mm);
- extern void arch_uprobe_init_state(struct mm_struct *mm);
- extern void handle_syscall_uprobe(struct pt_regs *regs, unsigned long bp_vaddr);
- extern void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr);
-+extern unsigned long arch_uprobe_get_xol_area(void);
- #else /* !CONFIG_UPROBES */
- struct uprobes_state {
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index f11ceb8be8c4..4e45236064dc 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1694,6 +1694,12 @@ static const struct vm_special_mapping xol_mapping = {
- 	.mremap = xol_mremap,
- };
- 
-+unsigned long __weak arch_uprobe_get_xol_area(void)
-+{
-+	/* Try to map as high as possible, this is only a hint. */
-+	return get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE, PAGE_SIZE, 0, 0);
-+}
-+
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
-@@ -1709,9 +1715,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	}
- 
- 	if (!area->vaddr) {
--		/* Try to map as high as possible, this is only a hint. */
--		area->vaddr = get_unmapped_area(NULL, TASK_SIZE - PAGE_SIZE,
--						PAGE_SIZE, 0, 0);
-+		area->vaddr = arch_uprobe_get_xol_area();
- 		if (IS_ERR_VALUE(area->vaddr)) {
- 			ret = area->vaddr;
- 			goto fail;
--- 
-2.52.0
-
-
+I implemented reject. I don't see much of value of allowing both. The
+code that would do the checking is too much for this hypothetical case.
