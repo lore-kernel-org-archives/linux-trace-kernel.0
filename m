@@ -1,177 +1,291 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012055.outbound.protection.outlook.com [52.101.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE13212FAD;
-	Mon,  2 Mar 2026 08:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772440925; cv=fail; b=T+NmoWsYyMzYByPNZaxTA89nlTsw6n2PBxij0mk8+uwwK+Y9+cg7lwpqXNYlyTH9Yhl2J7kWY7268Lf8WrBlSYy+f/7Ih19NDQRUYjjubyZ3kFcVikVq6Qj9jRZpsF1aV/CCY1W4jMcPS/zI2TRGQXswEoG9RgCcOYue2GD9Crk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772440925; c=relaxed/simple;
-	bh=tTOYI9Vard7aA/LWIYgqL1ETu+a5nlV6xexTzZSSDXI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XJxouq/z9OCHNKSC7eVN28mc+pEsljQCZqMss9012gnr/cqGe9sWC41SuHyUbXwh7ye4mnDDz4KKHh7/yMRPavzJrOo+gJnd3Ab9koK9ZoxouqrZIUrH0NKY2Ql5Etz/+lZPXAgNDHc0xmx2NR2eywgQgDoii13ZM07LzxytsDU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nBqcXm3A; arc=fail smtp.client-ip=52.101.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC282F12A5
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 08:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772441333; cv=none; b=f5HPVIoJ7DzHP/PsJYRXYTlw13kzAoyKa3bCJQ3b7VWqDHoloJnmwo+fQRqFxWL/uYZA7JQCKXWOJJCIxfJOPp6eGypAQJVmBMouZyu38/8HuJR9c+0L72ygSx4cDTCbgpwMOzfpQO7UBNLlFqkLYnobnaZbJXsxT2G4OB9ZP/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772441333; c=relaxed/simple;
+	bh=mb97S8vbUfyGe64spQ4hrmYbJyDZwqJdm9CJa8a2J4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PNekaOnsyv8fbHjcwwZARkZ+LNBzzfnt+pb031XYTsRCWoCLvfrXctYGBQfaMn+JVAnVPQG1LABkotb9pUPxUCxG9A71a+C7qonhkj1qJXquLdOejBSYa+Un7LoghUmX/vqA3neg7iCNC1GbJixqGlUemqzQmu1UrtYmgZH/aGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UwsvukI9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nBqcXm3A"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M/yh+FDwSJOLbB/BuyGaX0kstUAv783ZsiQZ9hc8crzz2gk+wMGv8nmTVwMIuSa832NSPVoYSBt2blegEXITxOCF7nuGY5ciV4bcWn2uxJFWdPDD0KjwYHlC1DMYB2cDFo1soCoQeQ7jwaTrPk0PpuQiVK7VVmtYUyCcZHQ6GF/Uad+kOF9zVuNiDGdIg/i63LN8gexHCJPWo/oI7DIbLheuXr091hJaXN0jDlBsXGA8+44DQRL9Py66VdjISMK+LYhB9pb+m6kekhrINANY1XbF9l0b8oxzib+iuNLXoq5X/2CxwJssLpVkXOLySAuKoIL3gXs7NPT3CU7jhANZsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tTOYI9Vard7aA/LWIYgqL1ETu+a5nlV6xexTzZSSDXI=;
- b=L6yMMzx4lLClJNMTa/n/zwYoiHpUYUF2sGiL4tU9MatJWGZqT14gPqjnGJPdw0o/NvqO0SgtXp/QEs/uDfdpkjrTjNmMcpk4Hheu1cmwMW7OOt3mCpk0j7Jp5HqpEBe4SToBknscYJ+awLOt8GwXbGrPQKrBLjugp0Vlx17KlJxEiVJNQ3D9JFbu/hmeDe6AbIFIt8ioWZ8Wrb3xqUiOlE/h9fdCUpU3laZFfiyioSxekHnwEonldBsU4nS8Upw09W1JIg4qvlh98QZ6Pa9muj7ceJH+sHddHjeAJyPjMowYLhRIm6Y1vXnhrgm8XeoSWBttj8KiFHmX5pyQ6/XmgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tTOYI9Vard7aA/LWIYgqL1ETu+a5nlV6xexTzZSSDXI=;
- b=nBqcXm3Ap9aUlDHbhZsooA6KcnXhhTfV7DCQNjyB30LsA/ZOhh6bcgzzDZ+c2V1itrcOGONyp4CXcJjqXOx9vxfErPwt8f8TciGTlvo4mAI0aPCRTwyWgUlCJNWsOelVDmMVe7ZvmNyvnzpQTQEQQgZVToPEaRl4C00eD3EMFRkgztwniqBtJCfB4aWbLwrylBDemDZnIJQv9PUPjIblm+uFw0Wz546C/aw29l+Vtm8WJ4Hyyf6FMKVk46KwsiLC+7xQZJft705sa1XeAqqqClLs0vbm63bncPa5k78pCUYL7WrXaIDJHCKrpLlAo3M9EZDHcLpYFJWB1sA5d8y8xQ==
-Received: from LV3PR12MB9404.namprd12.prod.outlook.com (2603:10b6:408:219::9)
- by DS5PPF5C5D42165.namprd12.prod.outlook.com (2603:10b6:f:fc00::64f) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.17; Mon, 2 Mar
- 2026 08:41:59 +0000
-Received: from LV3PR12MB9404.namprd12.prod.outlook.com
- ([fe80::2109:679c:3b3e:b008]) by LV3PR12MB9404.namprd12.prod.outlook.com
- ([fe80::2109:679c:3b3e:b008%6]) with mapi id 15.20.9654.020; Mon, 2 Mar 2026
- 08:41:59 +0000
-From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To: Jens Axboe <axboe@kernel.dk>, "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC: "shinichiro.kawasaki@wdc.com" <shinichiro.kawasaki@wdc.com>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>, Chaitanya Kulkarni
-	<chaitanyak@nvidia.com>
-Subject: Re: [PATCH V2] blktrace: fix __this_cpu_read/write in preemptible
- context
-Thread-Topic: [PATCH V2] blktrace: fix __this_cpu_read/write in preemptible
- context
-Thread-Index: AQHcqdqrzEa0aI0kSkuxxWUm9NQAWbWawI8AgAAsmAA=
-Date: Mon, 2 Mar 2026 08:41:58 +0000
-Message-ID: <84f1e52c-7e70-4b98-8302-ca1f1e3db9fc@nvidia.com>
-References: <20260302002207.12165-1-kch@nvidia.com>
- <CAKb3OG_1yUUhLK8uHUxrYtnpph8jNr_j1kjivEWQ9VtkP-fRpQ@mail.gmail.com>
-In-Reply-To:
- <CAKb3OG_1yUUhLK8uHUxrYtnpph8jNr_j1kjivEWQ9VtkP-fRpQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV3PR12MB9404:EE_|DS5PPF5C5D42165:EE_
-x-ms-office365-filtering-correlation-id: 61b8cac6-247e-454a-d6da-08de78379148
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|10070799003|38070700021;
-x-microsoft-antispam-message-info:
- /IrVdN/EWdB0ci2GBiKNBY+Xc+mPkXU4+OHEozEzBRHje3o12vGi1bb3GWpdy0eju0k6sXHz69/cSOGvlcxPj34gNpfznwclTwWPmtV6KDKCVtjLtHauMBF++EHCqoh/ETOhKLIWJuLlknyzYasjA0/SJVFDUY4Ayk8aXp5y2OKOblxPLQB2/5DAzAkPYj1rVTaeCZ6RfRntHSTJGhomfGBbzl0LU3i967sSziDJDHEKsZCeQxZEVnuz1jQwfAAkTDidnUW78cbGVj5/nqUCMV5XeEFxDGyy+lcz1Sz4V8SY90Ndr45UrLRgRqo9KZNz8RiPvQ/qTxTCgTYI+bQ9JC0h3TT2CMMblbg4tfZMxfYYGi/947r59eTvThGHZmDC0E06ipi+iwNJmyoffh5XI7b/nODbcRc0pzI8EYTcsElMMa6Tf474fxBR+es6F2A9bsdsuFFw4yTKh9pVmOG6vz6u+5TqCVd19MyRiDQEzpQ8PXtxezPIoHd5dVnJPSoHDLBtPwh0VnjtPVfAwDUpvSZnSvAd6P1iFjt86/mFjE0m8GjrAy95TSTKWSBsq6M0h9Yi/Bf15g7c592kdG9jXwLXwZdz6jk/eV39I2gppZ33au68WtpqoRclkHoqCPWQLtz87JJMbA0PrDeyx3WMylBVYNRadaKDWZ4suTRPbD6NRzqyPQSrnWYWnahQ9RABNUT6Ew1+oz2n7ckrcloB8TjwcOYlkJ499hL3AI8frbHHI+yTKEKuPRVqRv3ZA5fId460R/+o7Lfyd3sTm7pBzFuaFJpk1Wkb6/BIraETM2E=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9404.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(10070799003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NXRIeG1rU3hxM1RtS3RqN0NGQTFLZVVpMzRTUjFMSXVWVkZaektRK2hLejh2?=
- =?utf-8?B?YU1tbjRjR29GaEl4d3kwNTl5emFaYkQ5bkthaTk3L1l5NFp4Y1hnZm9mMVRF?=
- =?utf-8?B?UlpFU25EanRjWTlMR2RDb0NtSHFMZHRHL3dIMENVNFNiNVl1RWhRaks0eDBR?=
- =?utf-8?B?RStKNGhDRlZZM0w5amxJOFNrbDdQWENXeEw4Tk5MeDlpSmlHcmlHejZqUTBh?=
- =?utf-8?B?Y25xdEhJa1M5MnEwM1dFUjBpZkR0R0E4UnZIQzI1MndpZlVPU2EweXBjVTRk?=
- =?utf-8?B?UkZ6ZmtTTlZ5YjFvUmxsNzExc2thWExnaTNFd3FKUlAxZk85UE9IdVN5UnN5?=
- =?utf-8?B?djI0TFI4ZFB2MDQ3Qi8zckdpZURpTVlJZExvS0YzR1VkeFBKbWgvRFVKNXFX?=
- =?utf-8?B?Y2g0VVRlbmVHV0JGVzNva3BnMUpnSEZQd0tWQ29DUGwrd3d1emZMTXJUWUI0?=
- =?utf-8?B?RWg3a0UrME8wUklBNWJDWjgyR1ZXM2hZOCtuZ3pEYW8vOEF4YUNwM0ptenEx?=
- =?utf-8?B?UXpSTFJzZjkxYVduT1FRaFlCOUJmMWJQbk1CSHp4MGxqUXBQalV4UC9SVXdw?=
- =?utf-8?B?ZmFLaG01anFocEd3bUVRMU8ydUtKNWFrTWxSc1RYeFRWNHJNLzBtNlhPTUg4?=
- =?utf-8?B?a2I3RzVBNnNxSmFlRXhuRjJqZXJGdmRLeXRvMlRWZk1VaTR3cEduTlZVNlMy?=
- =?utf-8?B?bmF4M2ZDeFZ3VG5yMzVubTlTTWpVNnF4dUd0NEc4UFlReWlwSThwYUtFMERz?=
- =?utf-8?B?Y28ySFZqMjJkWWg5R2xyZ0VsSkpENytFbFRoaUdWV3ZjQ3FMRXZrbHM2amxO?=
- =?utf-8?B?MHErM1YrYWRUdW5hTDR6dExBVW5XQmRBYWRUaGNXQ3lFMmtCRmNONUJFYTBv?=
- =?utf-8?B?QjN2Z3E4c09Yc1Y1UzJnd0R5VFZNL3hJQnFrRzlXUVNiMEZibDd5R1Z0K1RW?=
- =?utf-8?B?Vk9mSUgrcW1WK0toRGxINjhkbnF0NFZ4Y1ZCcnhxVUU4ME14dDE5K0FTU0Nt?=
- =?utf-8?B?OWkyTGFiMVp3MzU4OC9DdFFwbUJsNmZFNEtNKzRrTDFHdUNObXNvTnVYMlZt?=
- =?utf-8?B?TGZjS1N2aHQ3NDB5Q0ZwUTI2K3U5SkdxeS9zek1tblJSbXlKc0I3ZmRvNVVO?=
- =?utf-8?B?eXN4bUo0d3Bvdnd0TDZFWEV6M2FHY2hUcXUwdTJMV1psRjJ1UDlpRmxucXJG?=
- =?utf-8?B?dHRYZlR5YUxvSWtXa041Z2hKZDVZMGFQLytWcE5VM1MwSVZHeWFzYXBjNzU2?=
- =?utf-8?B?dWxDekxWeW1GVVViSStEd1ZxTnh5cXE5cUtnRlRkVVkyTXk1NDlXdUgySTd0?=
- =?utf-8?B?Mi9PdFRtM1RWeDFzQitJY09zNlo1bXBFT1VPWTdKZlNEdUtVU2JrWDVRMjNK?=
- =?utf-8?B?TnUvQ1JWSnVsbzJvS3g0eTd1bWRuRXRmb0k5SktnYXV3dzBtaGxzNVBQdHQ1?=
- =?utf-8?B?M0VDTmovaS9laEZKclJQZVdOenVmVmtpM2pXTjR2dFluWVBpZTNGWUdvdDRi?=
- =?utf-8?B?bkY0V3hJQjgvSHgzdFBkamNDZWQ1dTBWL1FvRlhFai82M0tKWjlieThHMndk?=
- =?utf-8?B?L3BubHB2YVc5RUtHTTBSbGlJVERHaTJxQTVCaXhMR1JHUVhpSi9VSGJ0YUxu?=
- =?utf-8?B?Tys1bDZ5UzZSU2tFTjBENUVKRWpOM1BkQlFlZTBCWXhVVUtRa2Y2VGJTMnBN?=
- =?utf-8?B?OW1udmJjSzd0b25CL2ZyZ0JIU3lsQXl2eGxDV0VHbW5WN0VhQVZZZGJwYmpk?=
- =?utf-8?B?V0JKRGF4Ym5KZjBKc0hzL0F3RmxteEs0eFBndkpmZEQ3djhCNnJSYzRSam5w?=
- =?utf-8?B?cE9EbXUxZXlhVXo5dTNKREtvWkptc2JUbmdoN2JyM3ltU0NhUDFjbzdyZDcy?=
- =?utf-8?B?NldncnQ3M0RtT3hIWHBLczljVzNZbllTbTZvZnJJZXhLU1BHV1NDeGdaSWEy?=
- =?utf-8?B?WWNDcU5NL3htQk1IRVZ6Y0VaZmo4Wk5YQzJaTVp3L3hGOXRzbURpSUZVV05y?=
- =?utf-8?B?eTExVUJsQ09uSzlYZXZOcWhQbXFUK0ZyYnFRYXRuQ3VicmZaMlhKaDYwSGds?=
- =?utf-8?B?RHg3blhJZ2FEamhNZVJyQWRTZXl4WTZDU0tEbzVIMDlHL2RoazlUTkhJR1Zt?=
- =?utf-8?B?UW5UVytlRHFMVXhhY01PMmtTYlFRS2VXb1ZwT283TUNXM2tsa0VrUWxVcUdQ?=
- =?utf-8?B?QkZRMlF1NHQ4KzhDakl3aDdBQjFKYW5CWnlPQXFjYlZRS3JzYXJXSzFLQVZU?=
- =?utf-8?B?QUgyeURLR0tIRjM1cFdXbERPaGhhUmFacHl3YWtYTVBVd1FzMXEwd3lwMkwr?=
- =?utf-8?B?RTFPdi9oeHBxWXdsWlV2alczakRpTHVhRmp2cmV4a3Q3Nmoxd1FFN1NYdit0?=
- =?utf-8?Q?aopUmDTgA3e+44JEwy4dnkl4Sh0ClIxFGxrbFiszcYsvh?=
-x-ms-exchange-antispam-messagedata-1: FyZ2EGsWun1G7A==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E7D0B1F3ADE08D42862C3B6E007A78BA@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwsvukI9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772441331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LPvtEutPRQlBoqGu2X1PSXf2Ft85vDt0RVFQtVCqGs0=;
+	b=UwsvukI9ku7t/v7lU4kBAIGJhxorA+xGaIB/XKL6DnU3q+sQC1MZHMPpxXcec3GLPuzld/
+	Twnsy2DiNIuLNSbEgyEpvOqqSsGjNNwOdHJCxSD8+dRpnpUJGqzygWbYP2CnyhOT3qjBeq
+	PfcWosegU3yOIDTplTjFaZHggrxEo5o=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-Gho6Ss9FPdWAdaKvTa5TVg-1; Mon, 02 Mar 2026 03:48:49 -0500
+X-MC-Unique: Gho6Ss9FPdWAdaKvTa5TVg-1
+X-Mimecast-MFC-AGG-ID: Gho6Ss9FPdWAdaKvTa5TVg_1772441329
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-b90484c398cso382403966b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 00:48:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772441329; x=1773046129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LPvtEutPRQlBoqGu2X1PSXf2Ft85vDt0RVFQtVCqGs0=;
+        b=pDelaepkYoVnKfil1la1K8QWVHYFUnDsnLh50R3pQWFFOhjGJOupS3UqZcrHZ6mr9H
+         7z1Pb6WxxnYPIkPkIfiWBCwOOeLCuFtRld3OvlKa2Vteo2AMesywHZBm6pqhxKzCPmq2
+         Jh1h4vQnDygZ1yoLbUEoZl0YnyikHCe3etCXI582HgDfgB8u2tudDUgoVIzjqv+NV098
+         8rwNZ1iZg7/qDNEc5mcljnQ6CNCNKPrZZjOroeA4ZMdOc3unRQ1tNYcNmlV6uUHf+B3V
+         +cTaXkPfM3YxRv6M2hJOwIgAufI0UrQrHZ3IC8qiItUlTr+v9nb3XabRjw1FmdSzLJ8r
+         Q93A==
+X-Forwarded-Encrypted: i=1; AJvYcCWllBpPCtCjrBu1hD5ZA9FZkWatfPpMd7lGs9yjpxu47nRX0rJlC0d8gE4F7xDdcmDiuyUHgVjuhUwRcmrgA231auk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn8VjDjfuYevmQPjx6nuJ6pW5WYcbTpS5S5gMRPJzF7aCGa5+7
+	FtAAGIO+FeGkXWUniqOvCgdisrHamKwXyHm+H+E4NYGyj+49wWwINUyQK634O1zlLkbe4bEw0nD
+	DX2gkzmNCg+4KiQCeCSdMj4HZcec4F5RgoeFOsQFredDuvF3jeuTH54QJQWynuH4gSm49vdGW5R
+	X+pydGtH30BETV3z5WBIIM/46dxc44RDzv3ZGFLgIH5smhWwRI
+X-Gm-Gg: ATEYQzytilfwBMiIfAFR190z9eFIK0T7KC4vnbmCcxP6oV/pFezJ+u6rTqLY7bwOUxv
+	Gwg/G1qHHPcgkgOk7wK7UQZwFpBwgNgmxTqwXKsAkewdgjd734g3YYw1m/A/Y8xmR1l/hQ1BAMc
+	SaqQaiad/Byl/DWxk3/lgmlQ7bp96pie1JH/3idru58NPOveAce/v4kKizesZKLNqK4GNI66xeF
+	295guYTr+AOfkWCxpXjrOWsS9Dh18W0gPu/
+X-Received: by 2002:a17:907:7f8a:b0:b8e:9d66:f5fb with SMTP id a640c23a62f3a-b937616f277mr641837966b.0.1772441328569;
+        Mon, 02 Mar 2026 00:48:48 -0800 (PST)
+X-Received: by 2002:a17:907:7f8a:b0:b8e:9d66:f5fb with SMTP id
+ a640c23a62f3a-b937616f277mr641835566b.0.1772441327945; Mon, 02 Mar 2026
+ 00:48:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9404.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61b8cac6-247e-454a-d6da-08de78379148
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2026 08:41:58.8572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FtQQtUUk5pSPEq28CCTKTHBYwUU6U+jM0TiJPTDg9Op22AstX7R7DyLIkjB8AM04dwegaVXg2+NrdmTGPF9Lzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF5C5D42165
+References: <20260227150420.319528-1-tglozar@redhat.com> <d7be6fcb6540b3734019fe82ff8e7f4ff49220c2.camel@redhat.com>
+In-Reply-To: <d7be6fcb6540b3734019fe82ff8e7f4ff49220c2.camel@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 2 Mar 2026 09:48:37 +0100
+X-Gm-Features: AaiRm51wi0nA0DaRT-PYQ1usAXorLLM4nsZxctC8aQRpwByyWlnPofjkjELdgLs
+Message-ID: <CAP4=nvQcQQCeyi00WchwhrecOQCxoN3gHiuZD63KZb-30JzTYw@mail.gmail.com>
+Subject: Re: [PATCH] tracing/osnoise: Add option to align tlat threads
+To: Crystal Wood <crwood@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: bWICQ8ZExM4zREs09Grjex54YxYPN44p5kIoDoxLFmQ_1772441329
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gMy8xLzI2IDIyOjAyLCBKZW5zIEF4Ym9lIHdyb3RlOg0KPiBPbiAzLzEvMjYgNToyMiBQTSwg
-Q2hhaXRhbnlhIEt1bGthcm5pIHdyb3RlOg0KPj4gRml4ZXM6IDdmZmJkNDhkNWNhYiAoInRyYWNp
-bmc6IENhY2hlIGNvbW1zIG9ubHkgYWZ0ZXIgYW4gZXZlbnQgb2NjdXJyZWQiKQ0KPiBJIGRvbid0
-IHVuZGVyc3RhbmQsIHRoaXMgZGF0ZXMgYmFjayB0byAyMDEyPw0KPg0KPiAtLQ0KPiBKZW5zIEF4
-Ym9lDQoNClRoZSBjb21taXQgYzcxYTg5NjE1NDExOSAoImJsa3RyYWNlOiBhZGQgZnRyYWNlIHBs
-dWdpbiIpIGFkZGVkDQp0cmFjaW5nX3JlY29yZF9jbWRsaW5lKCkgZGVmaW5pdGlvbiBmaXJzdC4N
-Cg0KVGhlbiBjb21taXQgN2ZmYmQ0OGQ1Y2FiICgidHJhY2luZzogQ2FjaGUgY29tbXMgb25seSBh
-ZnRlciBhbiBldmVudCBvY2N1cnJlZCIpDQp1cGRhdGVkIHRyYWNpbmdfcmVjb3JkX2NtZGxpbmUo
-KSBmdW5jdGlvbiB3aXRoICBfX3RyYWNlX2NwdV9yZWFkKCkgYW5kDQpfX3RyYWNlX2NwdV93cml0
-ZSgpLg0KDQpBYm92ZSBhZGRlZCBfX3RyYWNlX2NwdV9yZWFkKCkgd2hlbiB1c2VkIGluIHByb2Nl
-c3MgY29udGV4dCBpbiB0aGUgY2FsbA0KY2hhaW4gZnJvbSBzdGFydGluZyBibGtfYWRkX3RyYWNl
-KCkgaXMgcmVzdWx0aW5nIGluIHRoZSBzcGxhdCA6LQ0KDQpydW4gYmxrdGVzdHMgYmxrdHJhY2Uv
-MDAyIGF0IDIwMjYtMDItMjUgMjI6MjQ6MzMNCm51bGxfYmxrOiBkaXNrIG51bGxiMSBjcmVhdGVk
-DQoNCl9CVUc6IHVzaW5nIF9fdGhpc19jcHVfcmVhZCgpIGluIHByZWVtcHRpYmxlIFswMDAwMDAw
-MF0gY29kZTogZGQvMjUxNl8NCg0KY2FsbGVyIGlzIHRyYWNpbmdfcmVjb3JkX2NtZGxpbmUrMHgx
-MC8weDQwDQpDUFU6IDE2IFVJRDogMCBQSUQ6IDI1MTYgQ29tbTogZGQgVGFpbnRlZDogRyAgICAg
-ICAgICAgICAgICAgTiAgNy4wLjAtcmMxbGJsaysgIzg0IFBSRUVNUFQoZnVsbCkNClRhaW50ZWQ6
-IFtOXT1URVNUDQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlY
-LCAxOTk2KSwgQklPUyByZWwtMS4xNy4wLTAtZ2I1MmNhODZlMDk0ZC1wcmVidWlsdC5xZW11Lm9y
-ZyAwNC8wMS8yMDE0DQpDYWxsIFRyYWNlOg0KPFRBU0s+DQpkdW1wX3N0YWNrX2x2bCsweDhkLzB4
-YjANCmNoZWNrX3ByZWVtcHRpb25fZGlzYWJsZWQrMHhjZS8weGUwDQp0cmFjaW5nX3JlY29yZF9j
-bWRsaW5lKzB4MTAvMHg0MA0KICBfX2Jsa19hZGRfdHJhY2UrMHgzMDcvMHg1ZDANCj8gbG9ja19h
-Y3F1aXJlKzB4ZTAvMHgzMDANCj8gaW92X2l0ZXJfZXh0cmFjdF9wYWdlcysweDEwMS8weGEzMA0K
-YmxrX2FkZF90cmFjZV9iaW8rMHgxMDYvMHgNCg0KWy4uLl0NCg0KSGVuY2Ugd2hlbiBfX3RyYWNl
-X2NwdV9yZWFkKCkgaXMgYWRkZWQgaW4gdGhlIHBhdGggZnJvbSBibGtfYWRkX3RyYWNlKCkNCnRo
-aXMgYnVnIHdhcyBpbnRyb2R1Y2VkIDdmZmJkNDhkNWNhYiA/DQoNCkkgdG90YWxseSBmYWlsZWQg
-dG8gdW5kZXJzdGFuZCB3aHkgdGhpcyBidWcgaXMgYXBwZWFyaW5nIHJpZ2h0IG5vdw0KdGhhbiBi
-ZWZvcmUuDQoNCi1jaw0KDQpPdGhlciByZWZlcmVuY2UgY29tbWl0cyA6LQ0KDQpUaGUgY29tbWl0
-IDJjYzYyMWZkMmU5YjgNCigidHJhY2luZzogTW92ZSBzYXZlZF9jbWRsaW5lIGNvZGUgaW50byB0
-cmFjZV9zY2hlZF9zd2l0Y2guYyIpDQptb3ZlZCB0aGUgbG9ja2RlcCB0byBuZXcgZmlsZS4NCg0K
-VGhlIGNvbW1pdCBjMGE1ODFkNzEyNmMwDQooInRyYWNpbmc6IERpc2FibGUgaW50ZXJydXB0IG9y
-IHByZWVtcHRpb24gYmVmb3JlIGFjcXVpcmluZyBhcmNoX3NwaW5sb2NrX3QiKQ0KQWRkZWQgbG9j
-a2RlcF9hc3NlcnRfcHJlZW1wdGlvbl9kaXNhYmxlZCgpIGluIHRyYWNlX3NhdmVfY21kbGluZSgp
-Lg0KDQoNCg==
+so 28. 2. 2026 v 0:50 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> naps=
+al:
+> > Add an option called TIMERLAT_ALIGN to osnoise/options, together with a
+> > corresponding setting osnoise/timerlat_align_us.
+> >
+> > This option sets the alignment of wakeup times between different
+> > timerlat threads, similarly to cyclictest's -A/--aligned option. If
+> > TIMERLAT_ALIGN is set, the first thread that reaches the first cycle
+> > records its first wake-up time. Each following thread sets its first
+> > wake-up time to a fixed offset from the recorded time, and incremenets
+> > it by the same offset.
+>
+> Why not just set the initial timer expiration to be
+> "period + cpu * align_us"?  Then you wouldn't need any interaction
+> between CPUs.
+
+"period + cpu * align_us" wouldn't quite do it, for two reasons:
+
+1. The wake-up timers are set to absolute time, and are incremented by
+"period" (once or multiple times, if the timer is significantly
+delayed) each cycle. What can be done as an alternative to what v1
+does is this: record the current time when starting the timerlat
+tracer (I need to reset align_next to zero anyway even with the v1
+design, that is a bug in the patch), and increment from that.
+
+2. "cpu" makes a poor thread ID here. If my period is 1000us, and I
+run on CPUs 0 and 100 with alignment 10, suddenly, the space between
+the threads becomes 1000us, which is equivalent to 0us. I would need
+to go through the cpuset and assign numbers from 0 to n to each CPU.
+That would guarantee a fixed spacing of the threads independent of
+when the threads wake up in the first cycle (unlike the v1 design),
+but it would make the implementation more complex, since I would have
+to store the numbers.
+
+If I implemented both of those ideas, the interaction between the CPUs
+can indeed be gotten rid of. I'm not sure if it is a better solution,
+though. Another motivation of recording the first thread wake-up was
+that when using user threads, the first thread might be created some
+time after the tracer is enabled, and I did not want to have a large
+gap that would have to be corrected by the while loop at the end of
+wait_next_period().
+
+>
+> >  kernel/trace/trace_osnoise.c | 34 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 33 insertions(+), 1 deletion(-)
+>
+> Documentation needs to be updated as well.
+>
+> Should mention that updating align_us while the timer is running won't
+> take effect immediately (unlike period, which does).
+>
+
+Good idea, thanks! In general, I'm not expecting the user to change
+timerlat parameters during a measurement - but it is supported, and
+should be documented.
+
+> > diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.=
+c
+> > index dee610e465b9..df1d4529d226 100644
+> > --- a/kernel/trace/trace_osnoise.c
+> > +++ b/kernel/trace/trace_osnoise.c
+> > @@ -58,6 +58,7 @@ enum osnoise_options_index {
+> >       OSN_PANIC_ON_STOP,
+> >       OSN_PREEMPT_DISABLE,
+> >       OSN_IRQ_DISABLE,
+> > +     OSN_TIMERLAT_ALIGN,
+> >       OSN_MAX
+> >  };
+> >
+> > @@ -66,7 +67,8 @@ static const char * const osnoise_options_str[OSN_MAX=
+] =3D {
+> >                                                       "OSNOISE_WORKLOAD=
+",
+> >                                                       "PANIC_ON_STOP",
+> >                                                       "OSNOISE_PREEMPT_=
+DISABLE",
+> > -                                                     "OSNOISE_IRQ_DISA=
+BLE" };
+> > +                                                     "OSNOISE_IRQ_DISA=
+BLE",
+> > +                                                     "TIMERLAT_ALIGN" =
+};
+>
+> Do we really need a flag for this, or can we just interpret a non-zero
+> align_us value as enabling the feature?
+>
+
+Yes, we need a flag for this, because a zero alignment is a common use case=
+.
+
+I used it in cyclictest to measure the overhead of a large number of
+threads waking up at the same time. Similarly, a non-zero alignment
+will get rid of most of that overhead. Without alignment set, the
+thread wake-ups offsets are semi-random, depending on how the threads
+wake up, which might lead to inconsistent results where one run has
+good numbers and another run bad numbers, since the alignment is
+determined in the first cycle.
+
+For example, here are some bpftrace numbers (from the same command as
+in the original message) with wake-ups with timerlat_align_us =3D 0:
+
+@time[12]: 1
+@time[11]: 1
+@time[13]: 1
+@time[10]: 3
+@time[16]: 6
+@time[19]: 6
+@time[15]: 6
+@time[18]: 7
+@time[14]: 7
+@time[17]: 71
+@time[20]: 997
+
+> > @@ -1820,6 +1824,7 @@ static int wait_next_period(struct timerlat_varia=
+bles *tlat)
+> >  {
+> >       ktime_t next_abs_period, now;
+> >       u64 rel_period =3D osnoise_data.timerlat_period * 1000;
+> > +     static atomic64_t align_next;
+>
+> How will this get reset if the tracer is stopped and restarted?
+>
+
+It won't, I forgot to reset it. See my comment above in my reply to Steve,
+
+> >       now =3D hrtimer_cb_get_time(&tlat->timer);
+> >       next_abs_period =3D ns_to_ktime(tlat->abs_period + rel_period);
+> > @@ -1829,6 +1834,17 @@ static int wait_next_period(struct timerlat_vari=
+ables *tlat)
+> >        */
+> >       tlat->abs_period =3D (u64) ktime_to_ns(next_abs_period);
+> >
+> > +     if (test_bit(OSN_TIMERLAT_ALIGN, &osnoise_options) && !tlat->coun=
+t
+> > +         && atomic64_cmpxchg_relaxed(&align_next, 0, tlat->abs_period)=
+) {
+> > +             /*
+> > +              * Align thread in first cycle on each CPU to the set ali=
+gnment.
+> > +              */
+> > +             tlat->abs_period =3D atomic64_fetch_add_relaxed(osnoise_d=
+ata.timerlat_align_us * 1000,
+> > +                     &align_next);
+> > +             tlat->abs_period +=3D osnoise_data.timerlat_align_us * 10=
+00;
+> > +             next_abs_period =3D ns_to_ktime(tlat->abs_period);
+> > +     }
+>
+> I'm already unclear about the existing purpose of next_abs_period, but
+> if it has any use at all shouldn't it be to avoid writing intermediate
+> values like this back to tlat?
+>
+
+next_abs_period is basically just the ktime_t variant of
+tlat->abs_period for local calculations of the next period inside
+wait_next_period(). Its only purpose is the ktime_compare() call that
+increments tlat->abs_period by the period until it lands into the
+future, if it happens to be in the past. This is necessary to do for
+both a regular cycle (which might take long due to noise) and the
+first cycle with alignment (because the other thread's first wake up
+might be late), so it has to be set in the new code as well,
+otherwise, the while loop won't see the time is in the past.
+
+I agree that this part of the code is confusing. There is also a
+field, timerlat_variables.rel_period (tlat->rel_period), that is not
+used anywhere, since the relative period is pulled out of
+osnoise_variables. Something like this would be easier to read and
+comprehend, IMHO:
+
+/*
+ * wait_next_period - Wait for the next period for timerlat
+ */
+static int wait_next_period(struct timerlat_variables *tlat)
+{
+    ktime_t now;
+    u64 rel_period =3D osnoise_data.timerlat_period * 1000;
+
+    now =3D hrtimer_cb_get_time(&tlat->timer);
+
+    /*
+     * Set the next abs_period.
+     */
+    tlat->abs_period +=3D rel_period;
+
+    /*
+     * If the new abs_period is in the past, skip the activation.
+     */
+    while (ktime_compare(now, ns_to_ktime(tlat->abs_period) > 0) {
+        next_abs_period =3D ns_to_ktime(tlat->abs_period + rel_period);
+        tlat->abs_period =3D (u64) ktime_to_ns(next_abs_period);
+    }
+
+    set_current_state(TASK_INTERRUPTIBLE);
+
+    hrtimer_start(&tlat->timer, next_abs_period, HRTIMER_MODE_ABS_PINNED_HA=
+RD);
+    schedule();
+    return 1;
+}
+
+(Excluding the changes from this patch.) What do you think?
+
+Tomas
+
