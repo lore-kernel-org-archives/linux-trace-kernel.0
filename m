@@ -1,114 +1,172 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D1F30BBB8
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 17:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4655519ABD8
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 18:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=148.163.152.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772474008; cv=pass; b=BIYCtlEuwOj5I5X5XCNyiZaYUYhLCUZwD32bHQZTS1mvraJWmeyNwE+1bVVm92qhwdAJhA7Q+zAUvM/OyxAMm7q2s94akis57M6Bxu/3fWI/mS+icoYnyyb9cRubuUkdbAl0jYrFMF1PDPiw6IiFaSsUJB1AE31WUF9jicClU6o=
+	t=1772474430; cv=pass; b=s5SisJZyAlmURLZhIKM+w5A33tY2p6Y0Q7rQB3TsJe2mZO9S7/AaeEEIONi171BTzw0d+/++bCTnkvsJjghFTVQcCZJX8m9D3HXwVz2MA+2N0R+7yCKnTdKjRL+tFKWISHzsDcp0Ugw+c8w15GYoq6FFileXK6zJaB6KAFtxNNg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772474008; c=relaxed/simple;
-	bh=oynyw7lcIZ5xObe+aDx2HP+H0gU8ruT/dxDQxLDEOM0=;
+	s=arc-20240116; t=1772474430; c=relaxed/simple;
+	bh=Q/aQt5PVJHr++XQKsok9pL1AZHyD3x2U3ZlYZarAK30=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DMiXWvfgmhG/IaOf+m4T44ME4ip8voAROMuhJTxofN/c+dO1gmHXs9Tz+DK8+yiXbtZaPalY+eYIoUSwXcvoxUrrE7nhJkeXor9/5c6Qrxe9a1yb0uEXq9HIEwM0w9axm+hcieUeN6Z6liRcBKSJrDhLs8wW5tO1NdII9JII8nM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haeB1c6L; arc=pass smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=X5wOXVD2+VQB1Z0/I5w6eIGwRwPiXaPSetLdxTFJuAjmmK2ztX+uJPxhOCBD1xRIuqCf42+8lC8LSvGmM/QzOudIuiDAUWorI1nVTCIkbdMbmQEoP2fgmUJxVerU4ZJXnGomnn5r3ihAyICh3lq9uNNcZlx2fzGKsWbqQ98F5vw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=VwfWPS/0; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=mccwYJ5a; arc=pass smtp.client-ip=148.163.152.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haeB1c6L"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-439a90f194bso1636565f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 09:53:27 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772474006; cv=none;
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="VwfWPS/0";
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="mccwYJ5a"
+Received: from pps.filterd (m0354653.ppops.net [127.0.0.1])
+	by mx0b-00206402.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 622GcWqj3112676
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 2 Mar 2026 18:00:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	default; bh=Q/aQt5PVJHr++XQKsok9pL1AZHyD3x2U3ZlYZarAK30=; b=VwfW
+	PS/0n8BGR9928w6TadcX5yrXnmKeObeJQlvUW3GnP5LLIDREGe/iy16Y28tQweFT
+	//ziFlcQ2AkEJEvIS3Ax9qge0L86WqftTEXtnlSL51US1eIhDPs8gxcJIU7hLXLc
+	uHY5T5sEtQJQIDk5jUvtEUOCdP0kujkdYppeeksWuQg3fvViK6Y/rwNEjmAwExZz
+	ODXiBU2rI42zaS2/qEeMEYvwdm5WzknRNFXNgB/YxxABcpA6cekw6MQpoCVUhUEe
+	od8jq5v8le5HCtx8Ao8u+7ehJtN69puxLiSwjGSVCl0bsSAnEPGn0od0da0w7Xes
+	SEduEICCFvT7v2InqA==
+Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
+	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 4cmbahnh00-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 18:00:27 +0000 (GMT)
+Received: from 04WPEXCH010.crowdstrike.sys (10.100.11.80) by
+ 04WPEXCH015.crowdstrike.sys (10.100.11.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35; Mon, 2 Mar 2026 18:00:26 +0000
+Received: from mail-yw1-f199.google.com (10.100.11.78) by
+ 04WPEXCH010.crowdstrike.sys (10.100.11.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.35 via Frontend Transport; Mon, 2 Mar 2026 18:00:26 +0000
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7986f771f69so61933917b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 10:00:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772474426; cv=none;
         d=google.com; s=arc-20240605;
-        b=IbumPGLIAUnwbAjqyropp9miBCRT4pq0vueOjU/wUKpOmbgeC19JNfcP+GMA1w91rf
-         nlJOImicRefpJDt2lEnkjp9J7BaYjETtpgTdXBKpyEF/DvKrsNxu5Eht8/V3eOjbdIcf
-         cjk8aNfKL9a9/MO72A3dV8p4ERYPK5XfeAF7TYi5kTbgOZZYJifY0ZzYJU2W5XQFRl23
-         FuqEYso+wXfBR51H+Ce8gl4C4CDs7As5aINAf95dPf+TYZ/L/Ig0zrhoamhR8Spm3tpI
-         V3P6r4dgyfTbQ0ASBvMZGKo7wejhh6rSRI+N0HFxC6kuGOuitRPdprVxE9IdvRNZbZT0
-         EV9g==
+        b=fTtOjyw/t2oirvSYWOOdGSNdYrnptY21qQuBCqYbwaTVFH4NxOnSsX0h3qnyrdRUeH
+         CI7DBm/i16TXRe1LjpKXq7KcntotLRIt5gbq+EECcY4jMj4cdyai+JDlA0FyDJkoxzRA
+         OC6eJBeA82xVtVJnOnhsaGICB0cvyZ+F67d5ZgaNxC1ddYwTJtU7AWNoiRZ8lJEz0W4E
+         RHylgv8SOq3y/k7SMls6IQQwacFMGhtgSU5/22/U/LYI9v50gDxSC6grEuGCMxrXHerg
+         THKCSSXR7sOyRHd01pvHj6FSYCfcVmWQJAlIen2s+ZpTxLIzfecy3FanrOdm25YPcgDP
+         UnnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=oynyw7lcIZ5xObe+aDx2HP+H0gU8ruT/dxDQxLDEOM0=;
-        fh=FxTcJSY6LKPwWEyKfXeq5Vp3cAoB5dEyEuM1f/ekaMg=;
-        b=DzBsejC+PPBUkFJjhKTkKeSDJOjJsby3culYaMLnp2jJ7WqWFshOeTPic2dtPQFDep
-         roieN7n+L6kKdbYtYc2bCp77GHundBxGfp8KV2B/c7PUQr2dC0mi/3p3wZSEi88kfQBj
-         /ozOuYS0OJMOq1/YAOvVzVqKFnWucOjxHI40xh2hPg1pNiaRhTjRxxDOcqQZ0GsE4AwA
-         Kt3jm5gKrsuU3KELI8pz2E3Weh6H4ousBbGpQcgwn4ha7p7/OpjFJEk6LrKki7af9wfd
-         N303h3E9baqxMz4BdO/QnAormRdgkOPGnrAlN/+MC+KIKZmfvD8u5m/QNFPO4axqgWrA
-         zIDw==;
+        bh=Q/aQt5PVJHr++XQKsok9pL1AZHyD3x2U3ZlYZarAK30=;
+        fh=N3Q73IisF6znwRWwcjQMAFS6WaVBCV6pYBihktbQMMI=;
+        b=hS2z3e1Tiz/TxOzueDiOzXYCq3Sxo92Li5DDCdcskMnJiPqE0gaL1ZRDgslexlodU1
+         oGx8Hd1yyhjfHv9yLnGL3W/TivakbN2RfDTnbNrY9KzQrAnvAgfJju3iaV+9tsKAThmK
+         H5jwdGfqWZfYMCqgi0gbl4Ab8CIA9IvR0t9EkzC3WFQvJhIgiYA467ZzXArz9gBV1saP
+         qjSg6t/7bifAl/G6EAFvCDf9X/EBJjhE+zMDXlI/H5jOWpi1xT1ax5fDdhfFs1tV6cqE
+         q0Qngw3rNLYVTIVoP/KCc4uePV0CaM/Y7UIxKQreOhq+TnXZvMEiC4/CZDKvz4Bmf9uz
+         qf2g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772474006; x=1773078806; darn=vger.kernel.org;
+        d=crowdstrike.com; s=google; t=1772474426; x=1773079226; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oynyw7lcIZ5xObe+aDx2HP+H0gU8ruT/dxDQxLDEOM0=;
-        b=haeB1c6LWWur6RrHJmmWJnI1dtZ6X0l9Bu1tADV19MKat8QseAiRPl0KRFjAjbpQp4
-         m53g4GVx5MpRnZrJpN76xxfYuEePFhPR44wJKC/0HnbjZJJ5EeRAytvGGB0P3UYdp1Xz
-         RlM+C8+q+zugtTNCsW0lqiUxzJfYs7Ee8OnZNAOCQqiu7F/fdKFRpjMHzdw2XMvCz8oZ
-         Lxa429v19nDb/SmCQXI8kIegV16ObTwPGuO0LEhhv460GyG4/CssQXo0J8E9lGA9oObo
-         c2KbmZBgpA9ZNpa+c4OJaRWZZEv1IpE7Ry/IK9PUK+WQn3VvjxsyPPdqxJ9GQf+NFu0S
-         N0BQ==
+        bh=Q/aQt5PVJHr++XQKsok9pL1AZHyD3x2U3ZlYZarAK30=;
+        b=mccwYJ5a8VIL1Tt7mrSV5ggQ3WfvxxtTZ2Te3y2nw6y7MzXYwMpzB1E1cdQMWXF+rW
+         Ia31rEJny/eKyuf9c05H2Ex8rgusZiZmcZVXytL6S6rdjHg7otzvYv8AWrEX7czSnvuz
+         DVd/HeHuCFc1eB+1n7peR6+lIjT6KjtVFt2MkhKEERb0DjQEBtzSAnIOqxRmHFb6Pq0s
+         CRSuoOUsw7B9sj43uPD+I8hBdYgtLjlwIxULJfFBT7oBNrHXeX/5kS8o1jvZYUMwb3pn
+         EQnOl5fohulVwQC3mwaAF1VD4jf5O7T4MSnaGksNELBHXjRbTXohgCaJ4ihj+gwsHlh6
+         y8Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772474006; x=1773078806;
+        d=1e100.net; s=20230601; t=1772474426; x=1773079226;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oynyw7lcIZ5xObe+aDx2HP+H0gU8ruT/dxDQxLDEOM0=;
-        b=wITgJxi+VXcTTaCtjGskr3HIz7AIDeiDnN/fWG+Fa0rEKsnk3igHqKj5hIDjvDc8bE
-         haArCgEd2rR8uN+B+AEHmcQD+pnodhKHxCxKHpnkZwa0UCW5X2SabMvwmRDi3NrMmN8p
-         oZYF+dlhN25+LgYC4q0buPh7sYWm9wvLmaiJb9nCTwNZDK8Mhztu8y9d6G/aayvL9odT
-         nuz5t8PLZRs8H4xN1yEkn7UQjiQDGNS7FzMH2tDGe09Ku7E37FIqG5XWbsGbIOOc8Lmo
-         Y7gl3e2w3bYl+VyZb1/iarONlO/acivSCMLlSm7O73+M1Jlg0zBN7HwrcujIRf4MJu/c
-         eWmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuNdIjLsBIgYDcNyyV2bz2LnW01ogMK/h2X8ZsGOWJjoAnT7r761EYVOI4kLqhSNj6bf8ol+mlOEs80XDxqKbm0Bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxau6hcyVsEXhPoiacCAWITzlMXThGdL3MBx267wXtQDtQMoNpE
-	8V/pStXBdpzm/l15VqhIo0yRsOiXUjU9UAooM+mNumEUwuWkZE8H4HeXHp1hfh50YNiteMEX8XE
-	DJekX+RUXpmtPUVJzPbaQr6CFf8zVbDo=
-X-Gm-Gg: ATEYQzzm2JX2ZElWRbpp3zVDmVeXIqNGW55mtpEk5OCCIJ8nR9whx8JDIYYx8zGEroz
-	MdQpWUcaCEFiha7RdesrN7UVc0K385sAxU+MQhq6aHykr5BIZliEOcjluvraI/O3yEZa/Vgf8Fj
-	CujGX6E4dCEHyCSwJEo861/uzo/Ce0K8NHaKEAn/KN8ouM1E+uApBp46KF3+X66QbnjA2iyK6QM
-	CTH67yH/hxusBYYj45BP9okguaClX8sVkhZ6NopyVZUAOn9t7h15IdT4pfBLXaWZOJNLhVGYPtK
-	8bDmkZHhsUgzuZ4yf4ce4y/oZdhFITNLrH3kRF1slL/7r4Y4ehuto3kbZFmrvr83gaAs4XiY+fT
-	xGLs55g==
-X-Received: by 2002:a5d:440e:0:b0:439:ac98:7520 with SMTP id
- ffacd0b85a97d-439ac9875camr10630519f8f.37.1772474005867; Mon, 02 Mar 2026
- 09:53:25 -0800 (PST)
+        bh=Q/aQt5PVJHr++XQKsok9pL1AZHyD3x2U3ZlYZarAK30=;
+        b=ktP9O7hz9DmTKe0r5c9PjVhh4bVlU2lX78rxTWUCAUtMNnDSlcITK3nBGOy7zQ1dtN
+         WLn1l13thsvY+BDAoHbzBB7pnGRQUJ9gpx7q4CTgrROJbDZlkbmN+8FRYSEQ4IxDp9IP
+         k40fp4xSBWCXjbwrvI7rxgLyiyFMW+3q/nESC6hUsNyO7vt2mT1gc2CG29N4Fzi9W4dy
+         fDW9MiTp5FAjs3KPJeZOx0V7rT8CHU02RPJVd7ihPBIlE1VuffJEXsyFecXSYnYsMWmp
+         mkJzyE6dsPQQEVeKBtgQ6NTwIxiJzsbcIoTrGmrFgZydSFfDerNnNyyhzn49pFbzHgwV
+         H7AA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6E6zU6pAHpx/XcaLTl3XjyA2lj+U5lgfBd51ncGxLdCcz29u5vbwjqByRLyC6xFHyh4EcRLSI3egbvprxmSKerUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMkrZFs52RFQWMiXyGThHJTPhcANKCB/WxrFsL/tVfzlcxT4ol
+	4Lrpcc5YOY8oqAFWCXGLFWUn3h/3GHlfQbthQxiTnVseBq5ILYQ9cCZzIpu3oieo4PTeix0V6k9
+	I28f5RxrFocJZUKHYiK3Czee4QjYJEjYZMRF3OGoSdEPQnhLwaranDJReEIVhd/pgSxc6jH6922
+	ksEGs7GNZKYyjTeyq/Z0Jyji+XT72PNWLvryLK5D59FN5fKZ9Ea7Q+/hKDFXNVyIM=
+X-Gm-Gg: ATEYQzynzMmiO3oqOU6gBTyhpL6ddITjdbZ+7NCQ8t19gG1IfHccmJ8+5Ot0ybCSwVq
+	v8WmbEL2/vIh403oevB7FhtNCeNo2CUJdtinaZFPUdPYJwA07SkeATCH9sMti7wHhdSq7oIPoG4
+	NRGEVINwYid5P2XhPBEm6kOiIK8Lw2g2QqhEcyROaUeKWYPchZSSKYsckWCXZlex9aYFZRcYepW
+	6gz
+X-Received: by 2002:a53:8581:0:b0:64c:9ee6:1ff7 with SMTP id 956f58d0204a3-64cc2ec651fmr8267064d50.17.1772474425847;
+        Mon, 02 Mar 2026 10:00:25 -0800 (PST)
+X-Received: by 2002:a53:8581:0:b0:64c:9ee6:1ff7 with SMTP id
+ 956f58d0204a3-64cc2ec651fmr8267016d50.17.1772474425021; Mon, 02 Mar 2026
+ 10:00:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260302081622.165713-1-jolsa@kernel.org> <CAADnVQKBx71HOwVcRFj7ja+y_NL83rpKQ0BRcismOwdCNx6pbA@mail.gmail.com>
- <20260302124755.4ff16264@gandalf.local.home>
-In-Reply-To: <20260302124755.4ff16264@gandalf.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 2 Mar 2026 09:53:12 -0800
-X-Gm-Features: AaiRm50oFCeMqWDjRaaels5ZujM2CrG2K_lxFfYLspEAPuE4HMm6GAwzq8uSE-o
-Message-ID: <CAADnVQLXBfd-U5Teqv7vd+EFNX6cT4KxA-oiiCZx4aPNrme70g@mail.gmail.com>
-Subject: Re: [PATCH bpf] ftrace: Add missing ftrace_lock to update_ftrace_direct_add/del
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Menglong Dong <menglong8.dong@gmail.com>, Song Liu <song@kernel.org>
+References: <20260227204052.725813-1-andrey.grodzovsky@crowdstrike.com> <87o6l6e6td.fsf@cloudflare.com>
+In-Reply-To: <87o6l6e6td.fsf@cloudflare.com>
+From: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Date: Mon, 2 Mar 2026 13:00:13 -0500
+X-Gm-Features: AaiRm53JADr2PFbHAdzOiPHNYtrjmhka4oHQHSkhMU3e00CqwsJzEQjLMls36-M
+Message-ID: <CAOu3gNjBHokznoRKD1bY_zdV8KjHBJ0-tuLCtWLoKBy1N6vnpg@mail.gmail.com>
+Subject: Re: [External] Re: [RFC PATCH bpf-next v3 0/3] Optimize
+ kprobe.session attachment for exact function names
+To: Jakub Sitnicki <jakub@cloudflare.com>
+Cc: bpf@vger.kernel.org, linux-open-source@crowdstrike.com, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, jolsa@kernel.org,
+        rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+        kernel-team@cloudflare.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Disclaimer: USA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAyMDE0MyBTYWx0ZWRfX2tgvtdooIMfe
+ znZ3xdWJXeXias5Lxwu0iCBJuDXxnHUvkoeOe0lSkEyhfmG76S916JC9iQL3piEMaYAoagjTsPR
+ zLni/wCBYJG+m5/bTwb+BaCpPmvXgXQe9Tk5l6y/7L+MCclxASd7SoTxOXjbQ/EiEc5Uf/o28x7
+ XHaiVE+Xhq/CHs3+FhVBAVtvHny3kfCEb+9GNWoKMOIwuyAVxp94u8/xy2TxqLcemofoGRaSogM
+ uCTedJy4kM3L60DljrchFmJR8et2x7qpyQNZ1LR26T18T5r2yKqeZsGeUitB8hQAUgJT/HMpWhW
+ SoMI/ZPTknJZEYQ35GfgNxuaCP4UxR91/9y5H+3az8XjljSs9WInOnKWct74gJI3CGrZ1EX3MoQ
+ rgY173LAuJW/dJugq/byVPFzv/hm9m0ZFSXbMjH7plGw8pbzuB1ypLZcatHLb8oMlX7BZaR808o
+ mRBWZRmDZJoPRbQtVDg==
+X-Authority-Analysis: v=2.4 cv=UNbQ3Sfy c=1 sm=1 tr=0 ts=69a5d03c cx=c_pps
+ a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=KZhmPCYDdY0A:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=T2KQ53IYiC3MXPrxx8bB:22 a=GCXdLZfFv8EKBZhKOxZ5:22
+ a=VwQbUJbxAAAA:8 a=EG7W4yiQAAAA:8 a=eitxDzI_jGvlV6N2DNYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Yg--0P4D8Dy3BMtZQeyVYPHa-Dlb5nJC
+X-Proofpoint-ORIG-GUID: Yg--0P4D8Dy3BMtZQeyVYPHa-Dlb5nJC
+X-Proofpoint-Virus-Version: vendor=nai engine=6800 definitions=11717
+ signatures=596818
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603020143
 
-On Mon, Mar 2, 2026 at 9:47=E2=80=AFAM Steven Rostedt <rostedt@kernel.org> =
-wrote:
+On Mon, Mar 2, 2026 at 7:48=E2=80=AFAM Jakub Sitnicki <jakub@cloudflare.com=
+> wrote:
 >
-> On Mon, 2 Mar 2026 07:58:11 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> On Fri, Feb 27, 2026 at 03:40 PM -05, Andrey Grodzovsky wrote:
+> > - Patch 1: libbpf detects exact function names (no wildcards) in
+> > bpf_program__attach_kprobe_multi_opts() and bypasses kallsyms parsing,
+> > passing the symbol directly to the kernel via syms[] array.
+> > ESRCH is normalized to ENOENT for API consistency.
 >
-> > Steven,
-> > should it land through ftrace tree?
+> FWIW, Ivan was also trying to make it faster from the kernel side:
 >
-> I added my review by tag. It's small enough that you can take it through
-> your tree.
+> https://urldefense.com/v3/__https://lore.kernel.org/bpf/20260129-ivan-bpf=
+-ksym-cache-v1-1-ca503070dcc0@cloudflare.com/__;!!BmdzS3_lV9HdKG8!zla5HijIg=
+6Vbdu0M8yoWocdwUD_o1-XyD5HUD7ZHbjKt9D846oT35Srz6_uXjkfS4eSc_i-lOw6IllBHvfaZ=
+gPHdXrKp$
+>
+> But, IIUC, with this change we're not hitting get_ksymbol_bpf at all.
 
-Ok. Applied.
+Exactly. Also, note plz that patch [2/3] includes an extra
+optimisation in the kernel ftrace path too.
+
+Andrey
