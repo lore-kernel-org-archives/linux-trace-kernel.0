@@ -1,103 +1,122 @@
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7D37FF40
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 06:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772431362; cv=pass; b=GVDlOlQCzm57h6d43ajmFkvNs3tOvqsesVM1Bgde5v4ShIiEV4W2luequxKOeQtuuKWlvr2IBrT0K7UTFAlMzNYxsj14QZNY9VN5+2zhzeR9wdoptiKWdJ/tPn5NDyBKm4RAAFXqxOFDf6nXTnkCDtCyzcjd1RGyvhtlJ4o2saE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772431362; c=relaxed/simple;
-	bh=DnsZppuatu3gSfhyQneomEL62GRSWB4+vnT/LVj/eWU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EB8430BAC
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 07:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772435413; cv=none; b=r2Tueuf5xuVaCU7aLePDIeRKEk733WZMFVs1C1hUwOEWtZ2ySfydrecgjhoDCZYCTXZsmvXXPgwLxVLmN1HcGH1FR9g2EL6TNaXHIv7Mis8BZAuOEfJqtmyc3VBcWOwhFwIrZZ95JDiz6+x90GluykR+XZTjptVspD/KTKMizYw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772435413; c=relaxed/simple;
+	bh=rAv8x/Quxw6An78VFqe0xzDJu7gqUOMT6mqYbPE1pq8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HYldnEBIIWKEs0PnaIpNwHfpQoHazfKZXLK1J4ioxQfRsRTc+KEvzUC4kI6XfzIyLEekgifGLiFeoCLe8SsFWu/cOtNOaRmyRnYPqFAgWraTaS2IvxPRSSt74JQI3HBXSb6IA6zB7IMOU5oTC8oQtZgo74BkvJkzT3wAELkWNU4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=JNqmYRkE; arc=pass smtp.client-ip=74.125.82.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 To:Cc:Content-Type; b=tz/PCJmCXIUthxB/J6cIuW81Uep3LlMojgkqNJ5IhBCI/YNbsvlrOt4w5YHDHsJ4UgEeEnYIaGKWMIF0YCUnemEsDndLgcdDE4EKrUgEcPj8BKQD/JawG9F+Wn4l5SweOGhLm+HKEZQSeZ8q2fbSDepft0fCqRwNWauvOaj6bjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SPbAkAZ9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="JNqmYRkE"
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-2ba9c484e5eso3801509eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 01 Mar 2026 22:02:35 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772431354; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bQfoncFNbZgH7RSDucboEkASdvl2z05QcoFm+kM11R0ZRMO95iB0il1n1xsfsrVkqw
-         b4L2tIoG0z4yNruJteJ51Y3XSfVKMaRKc9FPzrYHGzn7LP1BKKN2cn5Nh82sp+Cib8lv
-         M33KNxZTE9b0+t6OXt4SeqZaHjnX2deg2r56DvuEtyBEozhNHq9TrQ2PUsQSPqyDQa4j
-         iU3OXhjc0ktae1Bwe+d4lBqgbiq7qr6CCp7veeTJQKomSNuQtsf0HBHQ5mPW+bPaWUpV
-         BhZsNkE4mnR8ijjiZ++SVLxSgCQ8CChLm8WJG7zCW59LQUrIUoql9qIzVr61v3HMQlPe
-         i4FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=DnsZppuatu3gSfhyQneomEL62GRSWB4+vnT/LVj/eWU=;
-        fh=9EiFDIlBGnkfg61RYbtEM55WsSGAJm8ZnXHPoOoLTWk=;
-        b=dU5wQqoxBmzPOraIIY2Qbx4EP03PKIkcqbTfdFiCZjorPHoSigtQNKV8Xhs27X1Zdk
-         8FexvjgfRsFr+ZgFfcKYsFEZm7vxdbAuTOJOQi35rAXl1iCR6NINHom7bwrkPdsvDjsm
-         sEokAlnTzNeEmi3esU6fwQQwHJElkIHqbnxMn6FwUWptGOTKHfZI0R87CH01fZMhD1yV
-         nC/RtmXmKGoGACc06+w1oWvpwWVo9so+KY2DU6lFrqsf4Dmt3LKiIATWkdTTbXO6bxqG
-         CPOiWrFxcpyXNQUTBwG6BBhTp7mSWDkSUhI5NTOsD9rWioslbF/+QayiYyGOcTzB5Gpm
-         IIBQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1772431354; x=1773036154; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DnsZppuatu3gSfhyQneomEL62GRSWB4+vnT/LVj/eWU=;
-        b=JNqmYRkEqX0bev5ZtyCq2ZhWTXrynvV9z1AhVO6s1tjrVZ1IVD+y8BKm1FoZlO9nb/
-         CkMJDUgHS+mUvMbZNR+bu3KqPQDc1ufJ5xWrDmVOG5S5JHwwMWgPFp4qPPY35jpSihdV
-         GsXPyQbQ/Mf2hlmjXCCF3VzZweTHLlX4h3Usqb0zZfSs1cHWPVWxVq9BY69NBJ6VYBp2
-         4SAKoaRkKtNZErTvgN/Dc8kojmpU8v9EGc7c8raqcopRQPSn3jagSHnxBFQ87MxeLxNt
-         Ol34550Yb8hhz8AIVH+rf9sWwd4Lm/FRnvEl+8bdeEJRaMQ/OtI/rP2+vKPwragU0zs/
-         PCQg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SPbAkAZ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772435411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rAv8x/Quxw6An78VFqe0xzDJu7gqUOMT6mqYbPE1pq8=;
+	b=SPbAkAZ9DWbyQsVc1dAg6HXonFDE/o/TV6aH799eg3pD8FPWRnfho49ZKr0ZA25pMsRqaN
+	4KdBVPQlkIWH9z9GD7182WIf/EGocv9vnV0S4kcK5Oq1TCNslRw4YMpBZgcYje+U3+U3pP
+	CpRbh10uLfhcXfWc6+xwi/afyl5ZLsg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-201-61fa2fpgPfGd_0-blaYIDQ-1; Mon, 02 Mar 2026 02:10:10 -0500
+X-MC-Unique: 61fa2fpgPfGd_0-blaYIDQ-1
+X-Mimecast-MFC-AGG-ID: 61fa2fpgPfGd_0-blaYIDQ_1772435409
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8fbe7a6f41so367096466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 01 Mar 2026 23:10:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772431354; x=1773036154;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DnsZppuatu3gSfhyQneomEL62GRSWB4+vnT/LVj/eWU=;
-        b=hFih2rd8UZJ7mhr4BdbVoDj6W9G2/3Sh9LV35E3Qo+XIjIxUoPetEH6f+jf1r7qvzl
-         L0043NlutFFEpncF+rUnNRinGrBc0zR5zRydMy/BevIzaCooUhkHOfleLEuH86lzREYS
-         ynDEX88L/M5xVYqvCP990WyJy1jLVSDAs1Lt+ftBMd5Zs9gZpOzv9MDgHRcHtULHglkD
-         gEv81y9q3eu+GOpc0y/O6vt3P6utI8BkxodXWSAtKn3TS2HU41pW/LONujicMc5FxXKP
-         K+NN2EgyTzgSrgDgnE8yw1s/ua0huFbfXueOI+2QJRKD5Gr61lXUvxL/KDdYz/u1jItr
-         gPAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7/YNbk/ayTiq4gpcLcCmiN+/x7ZfLcZU2/Xr3kpCQyRjz2ss0OJZ3CuhmsXS4NhVI3TZzmC1dCmZnQjX2dYH2oY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTEiou9YxHApS7BCm7p3xrbz1Lv+0O363fRyCeAir1upB/vwoK
-	Gcp+JlaeW5BKWJKXcNQDLSkOFcJ/RSHCPj6hrrdrZleArLV9h9SDkwsEVyZRO8wvBTThGL4qTxP
-	8RFxkp1fJg053Coqx9/KVvPXkqZ1XtBa8IaoqDv/wSw==
-X-Gm-Gg: ATEYQzyfrj8SsIVdlDLBhwQ6Ye21JEE+eBRO8hb3w6Cns5SwjzmvHBtrnPF8/Ay/P6C
-	Uv0ixWwtdlSn/zJTcmkURqSqFwLll4jZPiz8XX4P/YNDjArLBohwSku1YcUK9k3VGwReQ7DLlvB
-	8ROsumnvbLYClSrRNRE9vK7uK+jn1nTClfvB2d/BrgcQoMP8JdL5w9GGKeELq8lCQYiULaTg/Mz
-	u0NPr4iRCs2wh2okTTkwftknk2fhEj08YiYQG+pEOfoOAHki0cZwy9c4JCEJcf+WrRoJrj6G5/z
-	n7M2Kkiexnh4RHW/PfL9bfNJpJKnxLnEgBrf9A7iZ6Cn/b8d6zvq86WQjcPSOsGFXvc6rUhXlXp
-	t1A==
-X-Received: by 2002:a05:7300:214f:b0:2ba:7069:686c with SMTP id
- 5a478bee46e88-2bde1be2e31mr3755376eec.17.1772431354342; Sun, 01 Mar 2026
- 22:02:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772435408; x=1773040208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rAv8x/Quxw6An78VFqe0xzDJu7gqUOMT6mqYbPE1pq8=;
+        b=SVsQnF6Yixu2a2ZQilSoz2aehPk0mScX6QSBtFzPQHXxS5AQMqbkTuIwSBb0QpnauZ
+         3GJm6g57VsscsiIC066ThXfiupTYIUA4Yp+5IoN7k+Fis31hZXXLef1HIUbetA/ohh68
+         p+l2JLlvjj3sF0nABBWd3BGwnPTv2Yi0i1MeZingkHt7E/nS2yFx1NbhWFClJwhmb01H
+         AGrCXu1lSScpbuf2Wzn0kfW9iA/U1JUkkI09fr5CVkXJFrMYn1MbSajT60X7wRT65i1q
+         xCYN9zA8P7NGHqsLAFlwDObKEY56zlOkty4nXf8I+dguPWBmuDaKF+m0N7tBpCNgQ0LR
+         bOxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqPAFwefBNBrsRPu00YRSSeTGcGVIt2Cgqk/aFAI4/p0OaQOnbODgvj2OeuWoJ53f7uWBM3XZPwmq2Kp4jGLlvX8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeVLVj6EyA6G5PN9JfrS0VHw4VY5HzSDj/upU2oBdRyfwv+rCJ
+	L1zzNFefsgY74/hy/JrD28Eu9ascuFWFPVrEoFdzvDKowWF6r3Ua56UZeA4+9hVQM9vlSIFOJhq
+	2F+VJxy2w2vc83wE5O8oHtkfzdb5b00TWHKlr35P96GS9bfijAoQoSEvhq3md5dlIQDh+dmPLHp
+	N2yRqxrWPfkYIP7ebZR4T72kdNy9VloJkt8xpo6qVyM8CgYASE+pQZKEvr
+X-Gm-Gg: ATEYQzzb3CKFNMOkmMsQAsxsECzGBSAZ9P16yRrfc0dsGKCcFkW1mhLEIPFT73A4e5n
+	CsQLC9ppG1EoigbRpr7BTNnnNl6Q807akoMHOSZWHI1dT/+hGxRd3RQUU8FcByu6BE6YP+O8YzK
+	jk5oUedC0ZsWH0WBSDbgT9XXZ/WZKXIlQ/s7K53HjejHd0OAq19jD+c5PjeVfZ0BI/ygBEEsyvi
+	SDLvYEfjpvTvhZH+NDJ7AYNnWTE94p+7ZUq
+X-Received: by 2002:a17:906:9f92:b0:b93:a3db:a6a7 with SMTP id a640c23a62f3a-b93a3dbae83mr288266566b.29.1772435408297;
+        Sun, 01 Mar 2026 23:10:08 -0800 (PST)
+X-Received: by 2002:a17:906:9f92:b0:b93:a3db:a6a7 with SMTP id
+ a640c23a62f3a-b93a3dbae83mr288264766b.29.1772435407865; Sun, 01 Mar 2026
+ 23:10:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260302002207.12165-1-kch@nvidia.com>
-In-Reply-To: <20260302002207.12165-1-kch@nvidia.com>
-From: Jens Axboe <axboe@kernel.dk>
-Date: Sun, 1 Mar 2026 23:02:22 -0700
-X-Gm-Features: AaiRm52BMKBF_6fnIy2o9_Eq51EwXNhN6II0seQLIeXaZHlpvQk2HcLdy7tiHTQ
-Message-ID: <CAKb3OG_1yUUhLK8uHUxrYtnpph8jNr_j1kjivEWQ9VtkP-fRpQ@mail.gmail.com>
-Subject: Re: [PATCH V2] blktrace: fix __this_cpu_read/write in preemptible context
-To: Chaitanya Kulkarni <kch@nvidia.com>, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com
-Cc: shinichiro.kawasaki@wdc.com, linux-block@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <20260227150420.319528-1-tglozar@redhat.com> <20260227105207.01473471@gandalf.local.home>
+In-Reply-To: <20260227105207.01473471@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 2 Mar 2026 08:09:55 +0100
+X-Gm-Features: AaiRm50nZ-I9_lppRsu59mWwh2rp3CzvxOmA9qVmD3NsqSP00FrckZvPswb5CZg
+Message-ID: <CAP4=nvST48Z5npeCbitExWL0Cps+D-kzfRjWXUjg29o5BOPRAg@mail.gmail.com>
+Subject: Re: [PATCH] tracing/osnoise: Add option to align tlat threads
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Crystal Wood <crwood@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 0v-m-gzFYUd6h5-ikl6m_E_3Ofh2eP_NgGmbMeKuQuc_1772435409
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/1/26 5:22 PM, Chaitanya Kulkarni wrote:
-> Fixes: 7ffbd48d5cab ("tracing: Cache comms only after an event occurred")
+p=C3=A1 27. 2. 2026 v 16:51 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
+.org> napsal:
+> > Example:
+> >
+> > osnoise/timerlat_period is set to 1000, osnoise/timerlat_align_us is
+> > set to 50. There are four threads, on CPUs 1 to 4.
+>
+> Is it set to 50 or 20?
+>
 
-I don't understand, this dates back to 2012?
+That is a typo, good catch.
 
---
-Jens Axboe
+>
+> So the first one here sets 'align_next' and all others fall into this pat=
+h.
+>
+> As 'align_next' is a static variable for this function, what happens if y=
+ou
+> run timerlat a second time with different values?
+>
+
+That is an oversight. It worked during my testing, since timerlat took
+the align_next of the previous run, and since it was far in the past,
+it incremented it to be in the future, and everything worked. But that
+is not the intended behavior (and will be slow if a lot of time passes
+between the timerlat runs, since we increment it multiple times by the
+period)
+
+It should be a global variable reset with each run. I got too excited
+about the patch and forgot this is not RTLA where static variables get
+reset with each run (unless I want the user to reboot after each run).
+I will fix it.
+
+Tomas
+
