@@ -1,482 +1,297 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F018337BB5
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 11:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF2E1E1A33;
+	Mon,  2 Mar 2026 11:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772450822; cv=pass; b=i8fBqjQGtnMnA1ecdehzHhhFXg/xsez/bO1S9wW8yAY/9d+bNOgEPQuTbHapXP+q8dwA2ew9Y27keEZlwf2Uccdd/y+49DopaCUHjtAzvx63JecROpu7m0mB0i8lb6zygS6aN23E6Fg755xsE3HuM+uGqHEwf4op/jiq0wENBxw=
+	t=1772452136; cv=fail; b=mOuCLeelpeLahdBEOkQuNZNVJsVu5+3CB4FvIrO4djPFGULNH3p3jUcubmwlZn857jEfIEfaJg/0UQnbnB4DU6YzHdxc/iq6UPEwLZKq2moLwh/Ph7xMetPpMsBKjAQ56CUgc7KrcRzkxpXoqEPrrr0mG6zDbnKkj9W4rbmoiYo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772450822; c=relaxed/simple;
-	bh=K/WdmOb8LXQldUsW1E5BrJGuSzeKfcA5D71mrCT4lw0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=raF+lbkCGIbySaUWN6jDRrIF/O6oBRfD7udb/f5tEUAh2ia1Fr0gBEg0bJ53R1UtiqLdHjx2ds3cYWXsx5V9O18ZwYg/VLF1Cm/7pvH/c6Mhz/FmJA2oawAABOkboMa9HvNZ/e6oUBWaWRXW8VXvypaIQxDCIPMT/Yw0Yk9unmM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwMhoVAv; arc=pass smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772452136; c=relaxed/simple;
+	bh=sOWmV9M6hOGAf2UZ7bBl26IkOd/vQ02vydIQ7eZxwR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=p1PfBrHogiM/lHck3N5/3HsN/2UC5ZqavAMS1gNCrGAmzpaINtBW/KKj4TO960yThud8sZVmELNtON4zyDpxSQzIznNStf/s10gqxkJM9INKOfrGCWWF4LGyXt1Y4HZigE7IuWFVWs+FrUYBBcSDTyAGolGvcZJWkKzcsktN7k4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=OIj/jTD2; dkim=fail (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JbcpAvCH reason="signature verification failed"; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwMhoVAv"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c70f191313cso1688010a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 03:27:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772450820; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ZzjXoHmVmFayiSuFZUhGNb6exCehoBA5ktA7T2LYNYtt9rRzhuSLqH6MecFCiBCFt2
-         6OBzRI54QSY6TaIubRNN8UywlYEi+GBw9eatphImehAKXdFjKuu9EAfj/zJEiniSmL77
-         yiwTrooB8FISsRGGnNvp+fMbcce64WkOL01VdeLjuE4KYol6PzvUYblbec92Rd0TDmPx
-         DybFZ44E5nTJjC8jMsETnkqdd2K52lb5kym58goJgk9I6Qpv5pC9dXPNGTX0KVZSLQ13
-         KdcBTTMYYp8nqN/PkFyq7p3Rzflyv9I5Ic3b3no/4UdmtxerxqmFPnS0U7OIrm32thPV
-         75ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=6679ws7fjghLotVV7QhFwjhZxXC9+XMku516eeTHg74=;
-        fh=KdTBBhdSB1fWKgoMjfAmSkwASjpa7+sQtbqGaXKdnts=;
-        b=OhVXYuFSI3MJ086K8IbRpBeGuY8hMPi3qQfwCh0q5SUBIgza0S8s3oMPesM9r8n6rv
-         2bSkTIy0hk1W6aB6exGwnlPav5P6EqJX1FFfVEOYQAuC3Ojps4hhrq+uZAFmG9yZFj9q
-         Sd8LTGOunbAqEa/I9QbSpFq/sA/TpBmMTBWqC5vWr9k6xItqd8cQsXw5JTQfQh46W1Qh
-         y0cjnIiRNeIuesFTZqAxxqfknsnmOuuqviRNdKmURyZzvXepYgV0jLB2aT6iIgyN5C8q
-         63r8T5EnseXPjuenYaqXdGQ0X6JnKfrASCRw98xDea6ZouZXXJoAG6DNNwGV93kkrj5b
-         AUZQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OIj/jTD2";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JbcpAvCH"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 622B3ckr3252901;
+	Mon, 2 Mar 2026 11:48:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=1UYz+5bvjqRaQKNe7khyJ9jzop4hQzPyovSiycDYUyI=; b=
+	OIj/jTD2Tj002zmj/LT5X6UqY3ugVEDYbkNl9YaTfbVXXjPHGnz3MH6sU4UlkooP
+	kCope1JVE0uKqiV2cZ+FUJLVOb3Is6wlGvjRx6j0VTY526j5+CyfBPYP7mJwoP+F
+	JoBv+Ny6CtXmpNj6velvQ7jCx7BE9hZlXWtm6902ECpG6nryvHea9ZFMPp1Uia6D
+	PuMzEixDGt7ZC2yBUkNnLds7QDomQLeRCI1o7dFdQFM9xNNP8KWFSqBimVR7lfI4
+	c+m3EZU6i6UrneZUHAwFbUDuvHuErctaiBI3ERQRGJZSQDLQywdWd5yTuJOp1X/2
+	7N3npPuDvc5h7ZBufpzJMQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cn9bc0220-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 02 Mar 2026 11:48:44 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 622Bh8k5034783;
+	Mon, 2 Mar 2026 11:48:43 GMT
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazon11013067.outbound.protection.outlook.com [40.93.201.67])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4ckptcukyk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 02 Mar 2026 11:48:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vM1f6Z+AG/SqbcVp0EjnCY/Zxecy0teJWyzzyRLQIBsl99NUVc8SjDdyDSURfM8vu7ONYksHZlVMHau6YJn8ABXjRgKZ+wy1BSAxpovCYhgv8lTlHp1pkwYYudLguDcH84xfXbN7mHqmj11VXwbSu/9Y9GHruOvqYkVRyW8qMRFK1V+zHVAYcfSN+M89z94ztOKV3Y2Kol/6iwvUuV/chG75zMIurv7P2qmpzQrlMP6unHOywm8ubcbsEiH2Jx6y9MgVMaRQW1RLE4YFwyN49Qmg8uBRCqNdBhsboJccIPrLPZhjtAuDg0KXBvaTLC7W/UCAY8a2s0giY2JrxjY5/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qNE9mQnGeiDnMj0HGiikQvm/7dddNJFm+guNxC949e0=;
+ b=VpTT2GEQvrJbKXtFl0RfR7r1QCJGJphBtu1h6htaJkdk+QPZLghfjGQmgRCVHYGh4mOC9PH/Qw1bes3e41upEo/ct8RQD3jtHvh86GX/FbX3OZZT15KT1HaZ+RwdTau8kao2VflQj6CZwRWTneS0fWkBg/9PRNRdCk6zhAie9LNsn6KuT8FJb2wWmVh6V+qSzQZ7JRvgK7FY32AaWVI21FuXLwoEoBZVNKtnuzCBZbPByPRuGp8e0tJRmcJKK3pYcaqFJwnznkbLPgjlhPVfidRO00ggFhKSHA+GsUDJc1btMf6xY5yJI+VAkWmZz5wZghblfkRxoChHvCeyWpksDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772450820; x=1773055620; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6679ws7fjghLotVV7QhFwjhZxXC9+XMku516eeTHg74=;
-        b=NwMhoVAvAZrPMNXGrMjjG4TxWVUh+PvxQw0gVA1LB4+lFpQeuAHySHE04IEMhBGCu3
-         Vm7t2ALiPsjlMA0sffqRr1lqli2uwf4ofE441MxXLQ0m2t4yiA6sFJQarjymE2rgNCof
-         aEP2TSykNNXi8PJcgsy22FVhA90mBbDyJbeST+/1oqbP1QcsiIQRGCMId4xQDa/WAmWz
-         Q4kQGaIsWuB71A2wgSIS/R9ZolgTOQp4Zejn7EyZcuSGHKMoLF3eClZkcMCKMXkegAAb
-         W3n/Ixt5JuX1wezWB2EF7h9/MK3gWHMLxcsDovzNFHMkedxDpqvr1Mh9Wioh6jtV4rOx
-         vzyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772450820; x=1773055620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6679ws7fjghLotVV7QhFwjhZxXC9+XMku516eeTHg74=;
-        b=pzmeQBVLC4LIpKU608ej8RVd/ZfqRCZcayVLdC3ijSgAZZNS18OzVKW99F9IH89BOH
-         UUGI5ZdpOdeLScqaBcBFWPeRf19hqzjHUeGzcSpHab+zDNYKUiTvsMQ/ZoMZvi6Qv659
-         IYRlFr0BCDfFWV0SzVaIeIR9LBCQCrCgZW40lyyRS0Tmal5YJCTm17ermIyN9gco6D4T
-         wrBu+uf2dWhmLD89OZBjg2wCttLMdQQbhsZ6BzYrxWjz8m2sXOVh5NE4Iecl4FpbFHvD
-         B+kAln9Xaa175rMun9low2r8SYLcs4rEX4JrphzhkVECqiuK/xGJQtAT5jHCXZKCmdA0
-         /DYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWrBYUNoFgaCqF5bPaGE0g7nrQC6wuvhVtPK+BbKQM/NRXKzc0LqRy5Iegja2vfjH2PsDWVZVrxhcWBQVwG8bM4/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpLYb9QQzBEb1h5k2D32Uxu7cMSS5BpOWe7ka75oRJWzsGWX93
-	KLhwGYgaAPHcfNWiIANHXtQWipLlKtGC+QaWIl0z7aZ4wUJ6GFJq85KerzrMEvr5796Bwc+p3t1
-	kouJZZ2/VamUQekX+1a3E+sC+nsFWEDQ=
-X-Gm-Gg: ATEYQzwRA1rEaia6ygxTkVkgTAxEs0ZqWuDXPBUB50tPJLUKmnh2VpNkqiMAPXH59IU
-	8Qq1sHd+EhOhF4KuxjlKEIPBDesFFPHAwlzwBW3eIVbeWhHaiF0t5JYJxD9+ZHxaALbfB1purtd
-	wngTt3jMEDvSPuMMAw7DhatpWFszFAo7CHVXE2rDaRIb4lCVbB6HI80Mmfa4nIP4NbPPEU0Z8WN
-	bvl2OlgxI/Ddd/AmFWCry/GwgZ7SY9LstHNe2UsqDsCLGPj47n90d0Zb5E/uZG8QKWrRyJjAfKw
-	6Sz8YCqewOz2cxVGnQ==
-X-Received: by 2002:a17:90b:2f83:b0:359:84e1:ba2e with SMTP id
- 98e67ed59e1d1-35984e1bdc4mr4775927a91.18.1772450819569; Mon, 02 Mar 2026
- 03:26:59 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qNE9mQnGeiDnMj0HGiikQvm/7dddNJFm+guNxC949e0=;
+ b=JbcpAvCHOSCswe/4a09XryfQOy0+aZJag5u9OM3gQTBUB1/9pc3uzhdw+KcxliCyAipkU8H9G09+u92lxu8yJCITPX/eVW+S0cj0RYfaNcba1KFiyApg27X20QAstI3wYOSVTGA5R7Nv9qslUJ+ULF/njK3VqSqQEFpV3xqYenM=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by IA1PR10MB6218.namprd10.prod.outlook.com (2603:10b6:208:3a5::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.18; Mon, 2 Mar
+ 2026 11:48:38 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::f3ea:674e:7f2e:b711]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::f3ea:674e:7f2e:b711%4]) with mapi id 15.20.9632.010; Mon, 2 Mar 2026
+ 11:48:38 +0000
+Date: Mon, 2 Mar 2026 11:48:33 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andre Ramos <acastroramos1987@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        david@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH] mm: add Adaptive Memory Pressure Signaling (AMPRESS)
+Message-ID: <7d5da04f-600b-41c6-8316-e86b0c3d00cc@lucifer.local>
+References: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALXtAv3u1hgLkBEbEgR3=r_iz3=KrnHB8B-=tg8Q3CEOWAPFiA@mail.gmail.com>
+X-ClientProxiedBy: AS4P189CA0007.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d7::18) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Zw Tang <shicenci@gmail.com>
-Date: Mon, 2 Mar 2026 19:26:48 +0800
-X-Gm-Features: AaiRm533C-dgJQwMV9wJ4ExtuX_4f-VQzKwl1m8lwYeHNruIGuVT1r6C5H24QvM
-Message-ID: <CAPHJ_VLUpgBO7VfF4ih2oy2HDCxvxkHRkryFUjHAm8QTNdF6Sg@mail.gmail.com>
-Subject: [BUG] RCU stall / hung rcu_gp: process_srcu blocked in
- synchronize_rcu_normal triggered by perf trace teardown on 7.0.0-rc1
-To: paulmck@kernel.org, peterz@infradead.org, mhiramat@kernel.org
-Cc: jiangshanlai@gmail.com, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, rcu@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA1PR10MB6218:EE_
+X-MS-Office365-Filtering-Correlation-Id: df3bbbaf-a9ff-4317-222c-08de7851a444
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	cYgWhwW81QeVAZCdSBLxopUWIUSRMdR26wZwteBAnaOC0TFSKMf7q8cvpaa3RxPn48vIQ/ZbKP48cQ/np6HlzdU5J7gmxdfTjV8l6PTN9s9T7pK5ccB5Nb/oA0WFYLlhNumzlLK7/8gOf2NAyJBXqrPTmqcr6FEvwG6Hf/lzccBojCIeTtAYdtaN3DajMX3OedOifL1vIv472MzusGJRWlf4mhWNcnZUlwcKpbaAcREaojT0pNQcIl/NqpdXQ6AK5Utku4fhh4EEC20OQgTyc1EaU5RzNxhR5dcDZwdAe6A3Ue8R60qMM8kwey3Lru62muOdNSPVwxtCKOkA2XPpkcVVMBuKzAj3L99M4Ce/coZijPcgcOQnMSbd3BDBHZk8eJ9bjvy8B7AV6mKRb1d+D4+2XyxRnE9vhGxApOrTPayKCW3lWexrfwu5rcaImKttCtsY9jF6PPbWMsfblw5gPX8tQwOi86C3inSBSQPoi6XQGQWHtrJrEmH1Hy0PQAu8vnIfbdJZ0oC2isYYuMVa5CbCyI1lFKazzPj7CiCDB34jjAJ+J8ZfgRFvTW+DyRTrtc1yWeHldzkNd60NODY/szkMpXHb1y/dXYYf8MfMGkhiYwdPRAy3IoecxOg6Zjz9sLgSPWtwpSg3iFYLZMpXUrJT0Czk2kqPkEC8SqufKEzeF48r/w3oNTdp8YNzD5S5Jq9bbEacjEt3oruUqDr+CSgwnxuLc87NJptz3OFIltQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?Ls05IbWOvLyQdMUXfezSYFJ9+q6aKFuuoLrnH/cgiqoyZ+rdVVOAZuKOl8?=
+ =?iso-8859-1?Q?glk2kBJZ5wgV/AeTaIHY9abRKHn2uatsOZ0YdMSfw4wViFJYOMOlzpENUy?=
+ =?iso-8859-1?Q?Co8CK7HiEBqwBcHS73BbtwKyWdanZyTlvaDQaV4Xb3U62K92TG0jQjwQAj?=
+ =?iso-8859-1?Q?zi6NsRn661KHi30mlv5ENkhG7QhjcBvlCPkDgPn7kF3Zseu9P4VGcDZdvm?=
+ =?iso-8859-1?Q?5Xk1Sm145gsf6ZMfs0gK/GcxKVZ21Hz1vhxHuykIznLNhx8fOc9b+zZzMS?=
+ =?iso-8859-1?Q?a6gAnino+1+gNZvxujKOdPLWc+AH5UyF/xet8rQupjhfcMy3M90ZqqqB5N?=
+ =?iso-8859-1?Q?tGJYzsoSJShfq5E7bIicbkp9JAFDCYVzr/9keN9WaEPeYpz25vUOz4Txrk?=
+ =?iso-8859-1?Q?WjF1aibroPArcyLFDqI2R/Y1sa+W04EtSJPmYudA45l+j0MRmhpkXeIk1T?=
+ =?iso-8859-1?Q?XTYEx+6H9v9Pz3biZVgVy31MO582I2v0nnK51hSyknzgQQgNCfKCkd8r3t?=
+ =?iso-8859-1?Q?kFAMrZ2XWcYhLGh7da7idlBxY5mgpla6HmYq9eP1UYtbq3hmLSx9hkUNfh?=
+ =?iso-8859-1?Q?2kySjjgW5kPC+NoQ7sjR3zvG03SaTC/0sGZ5dOaBCd+okUex8BP6+/dltw?=
+ =?iso-8859-1?Q?iQ8YqX0b4tas/LvZGYBBmsbQAWz5dX61toqJyabU/TjLRxL5Kc0C+jPd9E?=
+ =?iso-8859-1?Q?4zlO7oyeXstiWV9OgVatydH6tz0Yli7fEPeE7yn73Kb5eTH+FuVj3fdeTX?=
+ =?iso-8859-1?Q?4USV+//fKmW6J3LdsWcCVfkVQUX1yPx90Hi5JfSvuttSn6xF0dKELOFF7h?=
+ =?iso-8859-1?Q?QOmfTC+PhfcQnq86Q67vk2vuYV84bJSB2Hxx7uPOEdEkgaC58xnqPFGaqG?=
+ =?iso-8859-1?Q?Th0v5iP0N2A2qokWbZlQymKeZpHAg+lI/ORTf067/sjGqTLO6Fzv2/Mtl2?=
+ =?iso-8859-1?Q?c7Ao0SVBBdX6GVBn/paAe2CncQ6ilygZCODRrgagExQjbTOkkxn1oa4ig6?=
+ =?iso-8859-1?Q?gCIWd6Syk6da+8d/d5096NGIO8E3WgL9ooijLjYUAdJSBJ3kdcGAYtsKIa?=
+ =?iso-8859-1?Q?iW+0Q0FFOKB/974RStIYUhChEyJrFJ9BXtPtpmG4AGgWp3SjBuc7nApoDb?=
+ =?iso-8859-1?Q?uRdc8LxiaCsmcJXUPgSd3r7u76ohQlOJARuo3WkYFDP9TlEJWd8JH/HD0+?=
+ =?iso-8859-1?Q?kwe36Lqs/OZGoe+Efw+w4REGhahxnlKzl7zHcysWRFox2qdDEtculjxc1V?=
+ =?iso-8859-1?Q?sqwWA/A1/EhO0pRe/pNrGDpRRYtzBWjrCq20Yzzd5Sj/Sh+ZsYF8QRRTpE?=
+ =?iso-8859-1?Q?944dmV8mDlOW7QD5JfaeHg/eO8C9u8q7Oo7twsYgZojEbv8/XHmojFt4xQ?=
+ =?iso-8859-1?Q?+ZjbAONpEEtTskojiLRrJ/lROmhacPBRLYuoUJ+5VW5gXWsrFi0mvYqYAA?=
+ =?iso-8859-1?Q?MhVTrWmBUT7F8u27TdRcM8H+w7hSxKxfn16x6brtKAF9J0YSqKXdlV3bck?=
+ =?iso-8859-1?Q?dFAgrVoxP/jl5r53w8UWPgLASnt5ztbjzdv7vvf9A77xEYMFBUrvVbtqkH?=
+ =?iso-8859-1?Q?tE5khT1+nPI3OPWM/CrorksQyg5rOpqkW8F6pR60Xn3eCuXmPaqaMu9dZD?=
+ =?iso-8859-1?Q?Ullj9yfpGf8DSipTkgT/3SvKYGd+wt6j+8sqX1RtAYtFSO5pezmotVsOhd?=
+ =?iso-8859-1?Q?fij99z0o1E+Pc8tdCue9AHPtTkDKO4+kPw0dhRysGRcNcDGJASkY0YCO91?=
+ =?iso-8859-1?Q?hP0yJnXo8sJYzkyaOCBVyhpdKjDHISg7M5D087jZg0nEBV/NFpm76ay4a1?=
+ =?iso-8859-1?Q?spF5eaKFQ1qAAln5O6Kwzy1c8ztDq0A=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Go3AuHXUzPD/bsOAAKffqyNI4rIGTu459ZiXpzZPOGUWNaY4MU2ahO4kkMCPBo0+HCMZyEP2tLH6St2RgNIXLJLXji5jnvoNRsB6LYoWVVjngrBaOFrhNKJV29PyUleU+MxmhJf7+78ez8QGUyP40vAMrLwqOPbKvh6qpYVDc3PzPyQHDBj/jdwg/QcvtVGpXVoONg7vrFDS1tJBp3+BB8WLd/XJarl1yyjcPNEhOkNHjjXHC5qu+FTH4Nqyw8CQ5RjS66fNGefnu+CxtTk5B/2T9eXhMnO2p00fjn945PB6iqXdr9UwVdF8G32PfGEAuHm96KgyCxt2Us4kP12t1rtE6p+qdw5/nQifAqzEwrnXSjm2EnXrGLx1rQdw817oXhO0zrQ72ykQW0NPgizFpsE0ruUoMSklhzjS4JJHDRG/HA81PsF+B7e00xUQ9YxVYzL6ez8nTT1IkVb6VcVZCj5c7QP1bK+ACB1QiEoVbPFfHy4Oji38vTrAplvlhJa9yABM6X0NTH9RHc0Z2TtDY6mKLvIBgf5P14R3McgQi6y0oODDGhqjK/TG5uka64oeQP1QXInyGs2c8ZbcGSY3jPNRycv6cU30Krw18wIpZq8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df3bbbaf-a9ff-4317-222c-08de7851a444
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 11:48:38.5914
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UcudPNrkPMIJqODS2Cy3oag3zJOesI7A9CI99KoqWgdLPLJWVyLepijaMfvQ4NMkgVawjFzLOsATq67HS4WBGhzDtoiBkdELmQUthKEtwwQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6218
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-02_03,2026-02-27_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2602130000 definitions=main-2603020098
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAyMDA5OCBTYWx0ZWRfX/eTn5GiA96LT
+ Y0ekd9XkcwJ30mFgAhC6ArE1n+HkF+hu906D63yhf+2CLo2TWX7TnbLi+pu70ocPyX3sDJlEpzB
+ 8/ZYl+0Plf4beC5T4R8eU3eKzILpeX376ncr5d69vkLIBANPqEEBDx5hA0cVseZPl+CamRmfkNr
+ 2Fn1E4IzdFgx9hM/hvKstrsftpKxHqqrsjEmvrYSFEZ/HEz1xEld+qJt2JpmKAsxaXaI02ru2Zo
+ AT7uUZLGysXTpAUrTXFutRjwwmb0r5LNT9Pz+ct/OxXDuZbljxBhs4tJAc6dzlQB/ww0baj7Gw+
+ sbdGU1XRoxOuezSksSEs5dixlA+SzJ7v1/mZhSnIBBVScj5LbBgl7B2VEtvr3xgNTlPZJ8+XgxM
+ C8u+Bl+YlwrL7ThZIgaOttHKoKlrWpFZ75J6H7N4xcyZQrd6rTC2xiZunp06HxjK4aEu1Spnomm
+ Haa/8ghalfUFueOvPSU+Jr8Ckz2BB12heC5lwgz8=
+X-Authority-Analysis: v=2.4 cv=bNQb4f+Z c=1 sm=1 tr=0 ts=69a5791c b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
+ a=Yq5XynenixoA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=jiCTI4zE5U7BLdzWsZGv:22 a=BqU2WV_vvsyTyxaotp0D:22 a=pGLkceISAAAA:8
+ a=37rDS-QxAAAA:8 a=Lkxvbzx2cOnklkAGRmkA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
+ a=k1Nq6YrhK2t884LQW06G:22 cc=ntf awl=host:12261
+X-Proofpoint-GUID: ehttaYZ5FU5eiyIulfEERdjbJ-TShLkd
+X-Proofpoint-ORIG-GUID: ehttaYZ5FU5eiyIulfEERdjbJ-TShLkd
 
-Hi,
+NAK.
 
-I am reporting an RCU stall / hung task issue triggered by a syzkaller
-reproducer on Linux 7.0.0-rc1.
+This is a super questionable conceptual idea that isn't appropriate to submit as
+a non-RFC patch.
 
-The system gets stuck with RCU stalls and multiple hung tasks. The
-rcu_gp workqueue shows in-flight =E2=80=9Cprocess_srcu=E2=80=9D, and kworke=
-rs running
-=E2=80=9Cprocess_srcu=E2=80=9D are blocked for >143s. At the same time, a r=
-epro task
-blocks during perf event teardown (close()), waiting on SRCU.
+I'm with David on this.
 
-Key log excerpts:
+On Mon, Mar 02, 2026 at 12:45:33AM -0300, Andre Ramos wrote:
+> Introduce /dev/ampress, a bidirectional fd-based interface for
+> cooperative memory reclaim between the kernel and userspace.
 
-=E2=80=9CShowing busy workqueues and worker pools: workqueue rcu_gp ...
-in-flight: process_srcu=E2=80=9D
+There's just absolutely no way we'd expose anything like this as a character
+device.
 
-=E2=80=9Crcu: INFO: rcu_preempt detected stalls on CPUs/tasks ... Tasks
-blocked on level-0 rcu_node ...=E2=80=9D
+>
+> Userspace processes open /dev/ampress and block on read() to receive
+> struct ampress_event notifications carrying a graduated urgency level
+> (LOW/MEDIUM/HIGH/FATAL), the NUMA node of the pressure source, and a
+> suggested reclaim target in KiB. After freeing memory the process
+> issues AMPRESS_IOC_ACK to close the feedback loop.
 
-hung tasks:
+This is really not how we want to expose kernel interfaces. This seems like a
+hack you'd implement internally rather than something we'd consider having in
+mainline.
 
-kworker/... Workqueue: rcu_gp process_srcu
-process_srcu -> try_check_zero -> synchronize_rcu_normal -> wait_for_comple=
-tion
+You're also inserting some new lock acquisitions and a linked list waking up
+some unlimited number of threads on a core reclaim path - no.
 
-repro2 task blocked in close():
-__x64_sys_close -> __fput -> perf_release -> perf_event_release_kernel
--> __free_event
--> perf_trace_destroy -> perf_trace_event_unreg -> __synchronize_srcu
--> wait_for_completion
+>
+> The feature hooks into balance_pgdat() in mm/vmscan.c, mapping the
+> kswapd scan priority to urgency bands:
+>   priority 10-12 -> LOW
+>   priority  7-9  -> MEDIUM
+>   priority  4-6  -> HIGH
+>   priority  1-3  -> FATAL
+>
+> ampress_notify() is IRQ-safe (read_lock_irqsave + spin_lock_irqsave,
+> no allocations) so it can be called from any reclaim context.
+> Per-subscriber events overwrite without queuing to prevent unbounded
+> backlog. A debugfs trigger at /sys/kernel/debug/ampress/inject allows
+> testing without real memory pressure.
 
-My understanding / suspected wait chain:
+This is far too little description, especially given you're submitting
+everything as one patch (which is not how kernel development is done).
 
-repro task closes a perf fd and enters perf trace teardown:
-perf_trace_event_unreg() waits for SRCU via __synchronize_srcu().
+The patch doesn't deal with MGLRU, and feels like a 'let's hook into one
+specific part of mm and just dump out information to a random place'.
 
-rcu_gp workers running process_srcu attempt to advance SRCU and end up call=
-ing
-synchronize_rcu_normal(), waiting for a normal RCU grace period to complete=
-.
+You could reasonably obtain the same information from BPF no?
 
-RCU grace period does not complete (RCU stall reported on CPUs/tasks), caus=
-ing:
-__synchronize_srcu() to wait indefinitely, process_srcu to remain
-blocked, and the system to stall.
+>
+> New files:
+>   include/uapi/linux/ampress.h   - UAPI structs and ioctl definitions
+>   include/linux/ampress.h        - internal header and ampress_notify()
+>   include/trace/events/ampress.h - tracepoints for notify and ack
+>   mm/ampress.c                   - miscdevice driver and core logic
+>   mm/ampress_test.c              - KUnit tests (3/3 passing)
+>   tools/testing/ampress/         - userspace integration and stress tests
 
-This looks like a circular wait involving perf trace teardown + SRCU +
-RCU GP progress (possibly aggravated by timing/RT scheduling).
+This doesn't belong in a commit message.
 
-Reproducer:
-C reproducer:  https://pastebin.com/raw/L9hDPCrP
-kernel config:  https://pastebin.com/raw/jCq8qdq7
-console output : https://pastebin.com/raw/D8XETkeH
+>
+> Signed-off-by: André Castro Ramos <acastroramos1987@gmail.com>
+> ---
+>  MAINTAINERS                            |  11 +
+>  include/linux/ampress.h                |  34 +++
+>  include/trace/events/ampress.h         |  70 ++++++
+>  include/uapi/linux/ampress.h           |  40 ++++
+>  mm/Kconfig                             |  26 ++
+>  mm/Makefile                            |   2 +
+>  mm/ampress.c                           | 320 +++++++++++++++++++++++++
+>  mm/ampress_test.c                      | 124 ++++++++++
+>  mm/vmscan.c                            |  27 +++
+>  tools/testing/ampress/.gitignore       |   2 +
+>  tools/testing/ampress/Makefile         |  21 ++
+>  tools/testing/ampress/ampress_stress.c | 199 +++++++++++++++
+>  tools/testing/ampress/ampress_test.c   | 212 ++++++++++++++++
+>  13 files changed, 1088 insertions(+)
 
-Kernel:
-git tree: torvalds/linux
-commit: 4d349ee5c7782f8b27f6cb550f112c5e26fff38d
-kernel version: 7.0.0-rc1
-hardware: QEMU Ubuntu 24.10
+This is not how you submit patches, this needed to be broken up into a series,
+submitting a single patch changing 13 files and adding 1,088 lines isn't how
+kernel development works.
 
+>  create mode 100644 include/linux/ampress.h
+>  create mode 100644 include/trace/events/ampress.h
+>  create mode 100644 include/uapi/linux/ampress.h
+>  create mode 100644 mm/ampress.c
+>  create mode 100644 mm/ampress_test.c
+>  create mode 100644 tools/testing/ampress/.gitignore
+>  create mode 100644 tools/testing/ampress/Makefile
+>  create mode 100644 tools/testing/ampress/ampress_stress.c
+>  create mode 100644 tools/testing/ampress/ampress_test.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 61bf550fd37..ea4d7861ff9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16629,6 +16629,17 @@ F:    mm/memremap.c
+>  F:    mm/memory_hotplug.c
+>  F:    tools/testing/selftests/memory-hotplug/
+>
+> +ADAPTIVE MEMORY PRESSURE SIGNALING (AMPRESS)
+> +M:    Darabat <playbadly1@gmail.com>
+> +L:    linux-mm@kvack.org
+> +S:    Maintained
+> +F:    include/linux/ampress.h
+> +F:    include/trace/events/ampress.h
+> +F:    include/uapi/linux/ampress.h
+> +F:    mm/ampress.c
+> +F:    mm/ampress_test.c
+> +F:    tools/testing/ampress/
 
-[  170.750583] Showing busy workqueues and worker pools:
-[  170.750595] workqueue rcu_gp: flags=3D0x108
-[  170.750609]   pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D2 r=
-efcnt=3D3
-[  170.750635]     in-flight: 9:process_srcu ,11:process_srcu
-[  170.750723] pool 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 hung=3D0s
-workers=3D4 idle: 220
-[  173.609623] perf: interrupt took too long (69138 > 69021), lowering
-kernel.pe0
-[  173.918434] perf: interrupt took too long (86584 > 86422), lowering
-kernel.pe0
-[  174.394436] perf: interrupt took too long (109613 > 108230),
-lowering kernel.0
-[  174.633565] perf: interrupt took too long (137226 > 137016),
-lowering kernel.0
-[  174.652442] perf: interrupt took too long (171805 > 171532),
-lowering kernel.0
-[  174.679472] perf: interrupt took too long (214868 > 214756),
-lowering kernel.0
-[  174.728383] perf: interrupt took too long (268722 > 268585),
-lowering kernel.0
-[  174.882802] perf: interrupt took too long (336002 > 335902),
-lowering kernel.0
-[  271.443907] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  271.443951] rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-1): P4093
-[  271.443972] rcu:     (detected by 1, t=3D105002 jiffies, g=3D33573,
-q=3D4342 ncpus=3D2)
-[  271.443986] task:repro2          state:R  running task
-stack:28792 pid:4093  tgid:4092  ppid:300    task_flags:0x400140
-flags:0x00080012
-[  271.444042] Call Trace:
-[  271.444051]  <IRQ>
-[  271.444058]  sched_show_task+0x3b5/0x650
-[  271.444088]  ? trace_event_raw_event_sched_pi_setprio+0x440/0x440
-[  271.444121]  ? rcu_dump_cpu_stacks+0x337/0x4b0
-[  271.444146]  ? write_comp_data+0x1f/0x70
-[  271.444164]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.444182]  ? wq_watchdog_touch+0xec/0x170
-[  271.444198]  rcu_sched_clock_irq+0x297b/0x31c0
-[  271.444221]  ? tmigr_requires_handle_remote_up+0x143/0x1c0
-[  271.444245]  ? rcu_momentary_eqs+0x40/0x40
-[  271.444261]  ? __tmigr_cpu_deactivate+0x1a0/0x1a0
-[  271.444283]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.444301]  ? tmigr_requires_handle_remote+0x1cd/0x2a0
-[  271.444324]  ? tmigr_handle_remote+0x320/0x320
-[  271.444348]  ? write_comp_data+0x1f/0x70
-[  271.444366]  ? write_comp_data+0x1f/0x70
-[  271.444383]  ? __cgroup_account_cputime_field+0xb9/0x160
-[  271.444406]  ? write_comp_data+0x1f/0x70
-[  271.444424]  ? hrtimer_run_queues+0x64/0x450
-[  271.444447]  update_process_times+0xfa/0x200
-[  271.444469]  tick_nohz_handler+0x504/0x720
-[  271.444487]  ? find_held_lock+0x2b/0x80
-[  271.444505]  ? tick_do_update_jiffies64+0x380/0x380
-[  271.444523]  ? lock_release+0xc9/0x2a0
-[  271.444548]  __hrtimer_run_queues+0x771/0xb20
-[  271.444568]  ? tick_do_update_jiffies64+0x380/0x380
-[  271.444589]  ? write_comp_data+0x1f/0x70
-[  271.444607]  ? enqueue_hrtimer+0x360/0x360
-[  271.444626]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.444649]  hrtimer_interrupt+0x36e/0x820
-[  271.444676]  __sysvec_apic_timer_interrupt+0xb5/0x3b0
-[  271.444695]  sysvec_apic_timer_interrupt+0x6b/0x80
-[  271.444720]  </IRQ>
-[  271.444724]  <TASK>
-[  271.444730]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
-[  271.444748] RIP: 0010:finish_task_switch+0x126/0x5c0
-[  271.444771] Code: f6 4d 8d 7d 48 e8 8a 45 0a 00 31 f6 4c 89 ef e8
-b0 fb ff ff 4c 89 ff e8 88 db b9 02 e8 93 c6 34 00 fb 65 4c 8b 3d 5a
-34 cb 04 <49> 8d bf c8 14 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa
-48 c1
-[  271.444786] RSP: 0018:ffff888009db79b0 EFLAGS: 00000202
-[  271.444798] RAX: 00000000001a071f RBX: ffff88800d6b4c80 RCX: 00000000000=
-00006
-[  271.444808] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff814=
-67bbd
-[  271.444817] RBP: ffff888009db79f8 R08: 0000000000000001 R09: 00000000000=
-00001
-[  271.444826] R10: fffffbfff0ae32ea R11: ffffffff85719757 R12: ffff8880073=
-f9a80
-[  271.444836] R13: ffff88806d338fc0 R14: 0000000000000001 R15: ffff888009d=
-19a80
-[  271.444852]  ? finish_task_switch+0x11d/0x5c0
-[  271.444876]  ? finish_task_switch+0xe0/0x5c0
-[  271.444897]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.444914]  ? __switch_to+0x854/0x1270
-[  271.444936]  __schedule+0x1198/0x4190
-[  271.444957]  ? io_schedule_timeout+0x80/0x80
-[  271.444974]  ? mark_held_locks+0x49/0x70
-[  271.444998]  preempt_schedule_irq+0x4e/0x90
-[  271.445015]  irqentry_exit+0x17b/0x6c0
-[  271.445037]  ? irqentry_enter+0x2a/0xd0
-[  271.445058]  ? trace_hardirqs_off_finish+0x12f/0x160
-[  271.445080]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
-[  271.445096] RIP: 0010:__sanitizer_cov_trace_pc+0xd/0x40
-[  271.445127] Code: 00 00 ff 00 09 c2 75 07 4c 8b 81 e0 14 00 00 4c
-89 c0 c3 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa bf 02 00 00 00 4c
-8b 0c 24 <65> 48 8b 35 9b a7 9e 04 e8 46 ff ff ff 84 c0 74 20 48 8b 96
-d0 14
-[  271.445141] RSP: 0018:ffff888009db7c28 EFLAGS: 00000246
-[  271.445152] RAX: dffffc0000000000 RBX: ffff88800df47b58 RCX: 00000000000=
-00000
-[  271.445161] RDX: 1ffff11001be8f71 RSI: ffff888009d19a80 RDI: 00000000000=
-00002
-[  271.445171] RBP: ffff888009d18000 R08: 0000000000000000 R09: ffffffff816=
-7adf7
-[  271.445180] R10: ffffed1001d87110 R11: ffff88800ec38883 R12: 00000000000=
-00001
-[  271.445190] R13: ffff888009db7cd0 R14: ffff888009d18028 R15: 00000000000=
-000ec
-[  271.445203]  ? __futex_wake_mark+0xb7/0xe0
-[  271.445222]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.445240]  __futex_wake_mark+0xb7/0xe0
-[  271.445255]  futex_wake_mark+0xa4/0x190
-[  271.445272]  futex_wake+0x441/0x540
-[  271.445289]  ? futex_wake_mark+0x190/0x190
-[  271.445306]  ? percpu_counter_add_batch+0x11b/0x260
-[  271.445329]  ? write_comp_data+0x1f/0x70
-[  271.445348]  do_futex+0x26b/0x360
-[  271.445363]  ? __ia32_sys_get_robust_list+0x140/0x140
-[  271.445380]  ? lock_is_held_type+0x9b/0x110
-[  271.445404]  __x64_sys_futex+0x1c9/0x480
-[  271.445420]  ? do_futex+0x360/0x360
-[  271.445433]  ? write_comp_data+0x1f/0x70
-[  271.445450]  ? fd_install+0x1ec/0x4e0
-[  271.445471]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  271.445488]  ? __sys_socket+0x4b/0x130
-[  271.445508]  do_syscall_64+0x115/0x690
-[  271.445529]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[  271.445544] RIP: 0033:0x7fdfffbe4fc9
-[  271.445568] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
-00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
-08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 97 8e 0d 00 f7 d8 64 89
-01 48
-[  271.445582] RSP: 002b:00007fdfffaebde8 EFLAGS: 00000246 ORIG_RAX:
-00000000000000ca
-[  271.445595] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fdfffb=
-e4fc9
-[  271.445605] RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 000055b24d1=
-850ec
-[  271.445614] RBP: 00007fdfffaebe00 R08: 0000000000000000 R09: 00000000000=
-00000
-[  271.445623] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffb7d=
-2901e
-[  271.445632] R13: 00007fffb7d2901f R14: 00007fdfffaebf00 R15: 00000000000=
-22000
-[  271.445650]  </TASK>
-[  318.431885] INFO: task kworker/0:0:9 blocked for more than 143 seconds.
-[  318.431913]       Not tainted 7.0.0-rc1-00301-g4d349ee5c778 #1
-[  318.431921] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  318.431928] task:kworker/0:0     state:D stack:27912 pid:9
-tgid:9     ppid:2      task_flags:0x4208060 flags:0x00080000
-[  318.431983] Workqueue: rcu_gp process_srcu
-[  318.432032] Call Trace:
-[  318.432038]  <TASK>
-[  318.432049]  __schedule+0x1190/0x4190
-[  318.432078]  ? io_schedule_timeout+0x80/0x80
-[  318.432095]  ? lock_release+0xc9/0x2a0
-[  318.432119]  schedule+0xd1/0x260
-[  318.432134]  schedule_timeout+0x240/0x280
-[  318.432157]  ? hrtimer_nanosleep_restart+0x340/0x340
-[  318.432182]  ? mark_held_locks+0x49/0x70
-[  318.432203]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-[  318.432224]  ? _raw_spin_unlock_irq+0x23/0x40
-[  318.432245]  ? trace_hardirqs_on+0x18/0x170
-[  318.432267]  wait_for_completion+0x169/0x320
-[  318.432286]  ? wait_for_completion_killable+0x410/0x410
-[  318.432304]  ? mark_held_locks+0x49/0x70
-[  318.432324]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-[  318.432348]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.432372]  ? trace_hardirqs_on+0x18/0x170
-[  318.432390]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.432414]  synchronize_rcu_normal+0x208/0x5f0
-[  318.432433]  ? start_poll_synchronize_rcu_full+0x90/0x90
-[  318.432453]  ? do_raw_spin_lock+0x123/0x290
-[  318.432481]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.432504]  ? rt_mutex_slowunlock+0x824/0xaf0
-[  318.432526]  ? lock_is_held_type+0x9b/0x110
-[  318.432555]  try_check_zero+0x429/0x630
-[  318.432583]  process_srcu+0x4c1/0x16c0
-[  318.432607]  ? lock_acquire+0x187/0x2e0
-[  318.432626]  ? process_scheduled_works+0x4ca/0x1ac0
-[  318.432650]  ? lock_release+0xc9/0x2a0
-[  318.432674]  process_scheduled_works+0x553/0x1ac0
-[  318.432704]  ? insert_work+0x190/0x190
-[  318.432723]  ? write_comp_data+0x1f/0x70
-[  318.432741]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.432761]  ? lock_is_held_type+0x9b/0x110
-[  318.432784]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.432805]  worker_thread+0x5a9/0xd10
-[  318.432830]  ? bh_worker+0x740/0x740
-[  318.435937]  kthread+0x3f9/0x530
-[  318.435991]  ? kthread_affine_node+0x2a0/0x2a0
-[  318.436060]  ret_from_fork+0x666/0xab0
-[  318.436098]  ? native_tss_update_io_bitmap+0x6c0/0x6c0
-[  318.436139]  ? write_comp_data+0x1f/0x70
-[  318.436175]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.436213]  ? __switch_to+0x854/0x1270
-[  318.436255]  ? kthread_affine_node+0x2a0/0x2a0
-[  318.436301]  ret_from_fork_asm+0x11/0x20
-[  318.436360]  </TASK>
-[  318.436373] INFO: task kworker/0:1:11 blocked for more than 143 seconds.
-[  318.436393]       Not tainted 7.0.0-rc1-00301-g4d349ee5c778 #1
-[  318.436411] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  318.436422] task:kworker/0:1     state:D stack:26592 pid:11
-tgid:11    ppid:2      task_flags:0x4208060 flags:0x00080000
-[  318.436528] Workqueue: rcu_gp process_srcu
-[  318.436571] Call Trace:
-[  318.436580]  <TASK>
-[  318.436595]  __schedule+0x1190/0x4190
-[  318.436639]  ? io_schedule_timeout+0x80/0x80
-[  318.436676]  ? lock_release+0xc9/0x2a0
-[  318.436726]  schedule+0xd1/0x260
-[  318.436759]  schedule_timeout+0x240/0x280
-[  318.436804]  ? hrtimer_nanosleep_restart+0x340/0x340
-[  318.522895]  ? mark_held_locks+0x49/0x70
-[  318.522930]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-[  318.522952]  ? _raw_spin_unlock_irq+0x23/0x40
-[  318.522977]  ? trace_hardirqs_on+0x18/0x170
-[  318.523008]  wait_for_completion+0x169/0x320
-[  318.523029]  ? wait_for_completion_killable+0x410/0x410
-[  318.523047]  ? mark_held_locks+0x49/0x70
-[  318.523068]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-[  318.523088]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.523110]  ? trace_hardirqs_on+0x18/0x170
-[  318.523128]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.523152]  synchronize_rcu_normal+0x208/0x5f0
-[  318.523171]  ? start_poll_synchronize_rcu_full+0x90/0x90
-[  318.523190]  ? do_raw_spin_lock+0x123/0x290
-[  318.523219]  ? _raw_spin_unlock_irqrestore+0x2c/0x50
-[  318.523242]  ? rt_mutex_slowunlock+0x824/0xaf0
-[  318.523264]  ? lock_is_held_type+0x9b/0x110
-[  318.523294]  try_check_zero+0x429/0x630
-[  318.523321]  process_srcu+0x4c1/0x16c0
-[  318.523346]  ? lock_acquire+0x187/0x2e0
-[  318.523365]  ? process_scheduled_works+0x4ca/0x1ac0
-[  318.523389]  ? lock_release+0xc9/0x2a0
-[  318.523412]  process_scheduled_works+0x553/0x1ac0
-[  318.523442]  ? insert_work+0x190/0x190
-[  318.523461]  ? write_comp_data+0x1f/0x70
-[  318.523478]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.523498]  ? lock_is_held_type+0x9b/0x110
-[  318.523521]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.523541]  worker_thread+0x5a9/0xd10
-[  318.523566]  ? bh_worker+0x740/0x740
-[  318.523587]  kthread+0x3f9/0x530
-[  318.523605]  ? kthread_affine_node+0x2a0/0x2a0
-[  318.523627]  ret_from_fork+0x666/0xab0
-[  318.523645]  ? native_tss_update_io_bitmap+0x6c0/0x6c0
-[  318.523664]  ? write_comp_data+0x1f/0x70
-[  318.523680]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.523698]  ? __switch_to+0x854/0x1270
-[  318.523717]  ? kthread_affine_node+0x2a0/0x2a0
-[  318.523738]  ret_from_fork_asm+0x11/0x20
-[  318.523764]  </TASK>
-[  318.526244] INFO: task repro2:4086 blocked for more than 143 seconds.
-[  318.526258]       Not tainted 7.0.0-rc1-00301-g4d349ee5c778 #1
-[  318.526267] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[  318.526273] task:repro2          state:D stack:25512 pid:4086
-tgid:4086  ppid:298    task_flags:0x400040 flags:0x00080002
-executing program[  318.526322] Call Trace:
-[  318.526327]  <TASK>
+As David said, it's really not proper to add yourself as a maintainer without a
+track record in the kernel and community trust.
 
-[  318.526334]  __schedule+0x1190/0x4190
-[  318.526356]  ? io_schedule_timeout+0x80/0x80
-[  318.526373]  ? lock_release+0xc9/0x2a0
-[  318.526396]  schedule+0xd1/0x260
-[  318.526411]  schedule_timeout+0x240/0x280
-[  318.526432]  ? hrtimer_nanosleep_restart+0x340/0x340
-[  318.526458]  ? mark_held_locks+0x49/0x70
-[  318.526478]  ? lockdep_hardirqs_on_prepare+0xd7/0x170
-[  318.526499]  ? _raw_spin_unlock_irq+0x23/0x40
-[  318.526520]  ? trace_hardirqs_on+0x18/0x170
-[  318.526539]  wait_for_completion+0x169/0x320
-[  318.526556]  ? __lock_acquire+0x55a/0x1ef0
-[  318.526577]  ? wait_for_completion_killable+0x410/0x410
-[  318.526597]  ? lockdep_init_map_type+0x4b/0x210
-[  318.526621]  __synchronize_srcu+0x143/0x230
-[  318.526643]  ? start_poll_synchronize_srcu+0x10/0x10
-[  318.526666]  ? rcu_tasks_pregp_step+0x10/0x10
-[  318.526687]  ? kvm_clock_read+0x3b/0x60
-[  318.526707]  ? write_comp_data+0x1f/0x70
-[  318.526723]  ? __sanitizer_cov_trace_pc+0x1a/0x40
-[  318.526741]  ? ktime_get_mono_fast_ns+0x19d/0x2b0
-[  318.526766]  ? synchronize_srcu+0x53/0x260
-[  318.526789]  perf_trace_event_unreg.isra.0+0xb8/0x1e0
-[  318.526807]  perf_trace_destroy+0xc3/0x1c0
-[  318.526822]  ? perf_tp_event_init+0x120/0x120
-[  318.529171]  __free_event+0x257/0xc10
-[  318.529200]  ? perf_event_release_kernel+0x460/0x460
-[  318.529215]  put_event+0x3c/0x90
-[  318.529230]  perf_event_release_kernel+0x357/0x460
-[  318.529248]  ? perf_event_release_kernel+0x460/0x460
-[  318.529263]  perf_release+0x37/0x50
-[  318.529277]  __fput+0x420/0xb80
-[  318.529303]  fput_close_sync+0x10f/0x230
-[  318.529325]  ? alloc_file_clone+0x110/0x110
-[  318.529345]  ? dnotify_flush+0x7f/0x4c0
-[  318.529372]  __x64_sys_close+0x8f/0x120
-[  318.529390]  do_syscall_64+0x115/0x690
-[  318.529410]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[  318.529425] RIP: 0033:0x7fdfffcd611b
-[  318.529436] RSP: 002b:00007fffb7d290d0 EFLAGS: 00000293 ORIG_RAX:
-0000000000000003
-[  318.529450] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fdfffc=
-d611b
-[  318.529460] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
-00005
-[  318.529469] RBP: 00007fffb7d29100 R08: 0000000000000000 R09: 00000000000=
-00032
-[  318.529478] R10: 0000000000000000 R11: 0000000000000293 R12: 000055b24d1=
-6e3f0
-[  318.529486] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
-00000
-[  318.529503]  </TASK>
+Maintainership is a serious responsibility and really requires that you have
+both demonstrated consistent technical understanding and an ability to work with
+the community.
 
+Obviously as a new contributor, neither have been demonstrated.
 
-Could you please advise whether this is a known issue/regression, and
-what additional debug data would be most helpful? I can rerun with
-extra debugging options if needed.
+Also there's an existing convention of 'MEMORY MANAGEMENT - xxx' for mm entries
+in MAINTAINERS.
 
-Thanks,
-Zw Tang
+Thanks, Lorenzo
