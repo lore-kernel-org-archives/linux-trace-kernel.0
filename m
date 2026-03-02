@@ -1,255 +1,91 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE36F366DB4;
-	Mon,  2 Mar 2026 12:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772453631; cv=fail; b=AwlXaPPSRNxpRv2RRpa4nFEGnlUfMc2n0qOqiB++MNr4SVgpzx0tDZES0Qf/Hid4AlJCIJo5IpSYaHFOB2laAHrXIx47JocC73FJVfWnvP7gPi4Tvy1F4XghdAVRJ794VrFp7Ka+qE2Gc06E3xrkh0pchiEne09z1b9MLPBYby8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772453631; c=relaxed/simple;
-	bh=IuURrY6fJs3ECbY9MFlsWAxL3+p/50kYvl511CaZs80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c+7j5nI7dkWvIZO/ubwyVrof4xCsmYh4Hap/LLGEE4KMutRe0Ud+Ob6E/ynGXi0DlZMCAF3PX88d2bu+7loOKA9BRCkZsL0mYE9ZQUyDiqBDrnzPbBE7+dF4ESBMdPxryoJcS0bN8g72EQSZfIv6ulYNWK0EjbI/IXkP5z4//gA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=sMc3fRQb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GMPepRK4; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037E636C584
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Mar 2026 12:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772455683; cv=none; b=JPwqvXGqn6rTl9iLqe3XLhTarsuut4HfgU0ExgjwtImRegGdDoI27dPOKB3lmMPIFcxICCuU51sbs3Lc11pm6ki2Lhy8eFjtkvQ/X1hdmUqDBfYHRWNU1OeM+G8vWgREfTy4+QXhePBnlXIPtqbjCtHI0oT95sQOkTgShsAA2c4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772455683; c=relaxed/simple;
+	bh=JL4hQqeLTFjzlqk852iwfOZherhFARRk8CEpPAk/9WQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PaJ/34EZjoccBhl/GZVYPR7PwIcXfsCdiclsdd/b6uhcPFYytrXHb/8N9x0b3KczNRaO/f/gQj+5Wddy3PquTJ8ZcPUe9ZAEdE0kSEudTlvROi09FkX2lYIIPI2tWYTEo77m5Yi1ezTYq3uAyHVN5S9jdbBs4kJ5nFBw6aLc3Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=VWfr3gcg; arc=none smtp.client-ip=209.85.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sMc3fRQb";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GMPepRK4"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 622Ax7oA879556;
-	Mon, 2 Mar 2026 12:13:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=2EdLkWSXQtPijztJWN
-	kt9oWcVarAvpvLutUhzl89OuU=; b=sMc3fRQboTwtvqbHwSp0a30bFKSNlIlMfB
-	dSYZpLH/uMwUAIVPCsls8CQSlaGE5QBE3wc91Fs7z45vvEviwhfn/PR/5Diy4WKS
-	MqfGocoCm5TZWWpbO2UnTHd/mIcgcswnjuazZCLxgqfGA0c5eDVvJXR8i91cmo5e
-	zvkxQxB9jwz8RD+in/MfmLFgrQR/CURexwA6fFE633BJsgB5om9b8fdtqw+1hiSi
-	BTtK2dJ9msLbq5T3kGhlg5CfOZNyU2hdLyd6vuWDPFUYHtmdwDKhVyB7rqi30VVq
-	pZjTqKSKggP6roLewK9LGmY6myGclVH5/oeD7XnlwlQ30R59jWZw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cn98v83f1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 02 Mar 2026 12:13:31 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 622BgtVX034769;
-	Mon, 2 Mar 2026 12:13:30 GMT
-Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010056.outbound.protection.outlook.com [52.101.193.56])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4ckptcvm9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 02 Mar 2026 12:13:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DHCM3H5/UtaToo7e01nBue4apbNIoNxyNc722R8eqGEC4K4x7aQtey3TW4tyLsbftka94/5uXwXavPe4nqFUNmWdcr9oTY37LhFDi/GWAQa0I/pp/g+NuQsvaL9pKc9dLtW4hEkvLcsxWAS9qhVCoy34DPQ2xlg5D1vg6zPuxiFMsA8ht3tr6rSqCBWYxDNa68whH5NWdq20uM8DNpSE736n8pB44d5JIqvmxXNVDlp60dzf5qUv0r+uWfpUNvJXCV1AGkXZ2V0YuBYvwNqFqDVrZtuyGXTPJQq2WKezX0f63j1MljxiC6BlorNJ/uPQTv1GRELwYe6nFsEnn03tpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2EdLkWSXQtPijztJWNkt9oWcVarAvpvLutUhzl89OuU=;
- b=nfrCVXORLWYnQn8tthIWos9wHZ1SrGy+QqrkFmlM5mBNQv+14Bow53YML5hkl2g7wCD5kQsicx7moArwRxJU8i6qQb3ousDrXUelslXDTG1x4GgHbllrxnNE3uOoEusxn7x4eQT5wQDuUt9KrNf2F57+fRH8FsGZ5X1EEqudmGD3zkyFEjafCs89XdLpxUR/fBmFdYBXrwDL21UszuiChAk8da4QhWBttMC1NECSTrGvn1qGc/PyUDlmKvcE/fmJ+f5GJDkl+ohjiGo9lsT98OspRvMBmojzCLuv83xz/vr209iXnBF9jDqx9NyHL49fh1mQj6s3x6hpJElLHwM9Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="VWfr3gcg"
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-65c187dfc82so6941053a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 04:48:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2EdLkWSXQtPijztJWNkt9oWcVarAvpvLutUhzl89OuU=;
- b=GMPepRK4LQxUjTGKmXerNzLEJBS2RxiGuuiKLU93Ir4sMwFmTu9lSLDr2/FqVI8XbN9MlEagQq2Jfr2Ma9t94GQNKmOcr3LGSAgQIgp2IDPf4HwrO5pRbWFQzJ+0s87hgwEGFlqUauXtOsQGFq6vKQ6NIM14cNMt6n4krfNzbDI=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS3PR10MB997701.namprd10.prod.outlook.com (2603:10b6:8:344::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Mon, 2 Mar
- 2026 12:13:28 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::f3ea:674e:7f2e:b711]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::f3ea:674e:7f2e:b711%4]) with mapi id 15.20.9632.010; Mon, 2 Mar 2026
- 12:13:28 +0000
-Date: Mon, 2 Mar 2026 12:13:24 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>,
-        Qing Wang <wangqing7171@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        syzbot+3b5dd2030fe08afdf65d@syzkaller.appspotmail.com,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@kernel.org>
-Subject: Re: [PATCH] tracing: Fix WARN_ON in tracing_buffers_mmap_close
-Message-ID: <e4deff21-2fb5-4f37-a7d3-ede5f69a4489@lucifer.local>
-References: <20260227025842.1085206-1-wangqing7171@gmail.com>
- <aaFrmHzIAkEe7ufy@google.com>
- <aaF0zS3xh5KgM_yy@google.com>
- <aaF-bhAIhCgusG9k@google.com>
- <20260227102038.0fef81e9@gandalf.local.home>
- <20260227155601.18ebd3ca@gandalf.local.home>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260227155601.18ebd3ca@gandalf.local.home>
-X-ClientProxiedBy: AM6P195CA0003.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:209:81::16) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=cloudflare.com; s=google09082023; t=1772455680; x=1773060480; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JL4hQqeLTFjzlqk852iwfOZherhFARRk8CEpPAk/9WQ=;
+        b=VWfr3gcg1h2P+grbhyickrNSxqWvlN2tcdp0qwI+150ew7nDPjkjOnxI+gbEv2omrJ
+         Oy55ayIezSYorbOiCPBCINQaRhiELC0SPZDAUidducKamVoehNdCXjM/gezD1I9vxq5b
+         xlfixf7iNrF9WQzFK4qrPM+sVbi8Bq56/VVcyjS77hBTHazSLIVQZVfZszyNGu1f8lzQ
+         pakL3/f2cYwejI3W+qVYr7g/TM/nJ611w0AmWXb7cjj1PlstJSBgGmYoJeHeBFqplxHL
+         eApAzzz1QIfrOL//pdeCKV9j8PQ7QCsgUUsyNLiPa8XRc283kmRtTDbWxuGLnSvhipZI
+         RM4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772455680; x=1773060480;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JL4hQqeLTFjzlqk852iwfOZherhFARRk8CEpPAk/9WQ=;
+        b=myDOZirg6sIF4SsVqaROGXBdjlghbIS9rf+7DphUkH30lJmsJvSA7tDZlVukSoJUMS
+         6gZnG6rWyVQGFg5jiJ5BKYr0PvTFBzD1OYgvMNT0ob+IMJol1NPJnj02/8FUFtjaEP+y
+         EVn6ZvAezvjUPvpPaWMAaF9ir528Zo9Qy8vmdcpR+5wg3hatNEQ0NdGk++lBVMoCNOmy
+         RxyuRngDTdTq7LQhxGySXi2cGGem/0hgDrXfDCq8Q3lNE+TXuhEFqnwxVrC+ezyn+kfp
+         cm+G3j6Ux7KridKnOzCwNukGboNHJBggIDjeMyuZpU8s++NUehyd8fWTMjALP8MHYTT3
+         dE/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUji5hD6vEDV2V4qhClBYyr+s8YrAl5fEcIsTJy04yrtxJYMif8B6elS5a6EvOYojxcdIaBA5dxAqrE4W5vIos2Sdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlXnL6L0TepMeRx4PUdJNYt0i7JLXgGA6+mcT25lDndWHvkVw5
+	2Rv5VA/c2qPpwMIfOCHzgVpjujyJrr3U97j8NUHlKaTZech+ZYYYZ3V53Iqbx98D41E=
+X-Gm-Gg: ATEYQzzoRIu/FMgKMBobd4XP4RwBXujHMNNxceaiwavju3/SQUyzmeMBXJWNnT3M3RJ
+	ujHAnRpmMwK/lAlGjCHK6c7Zd+ZZIA61+OofNiMq1wQ93APVSjd8cFDTR4vbJoBZtgT7xvS8LZ1
+	7iydwEOf6SKuGv+OgMf1ttO9GSkIJL+/G+jvGyhsFZIfVSRYLjcNb9l2uWOR2/pbuPhilOFM9Hu
+	hNfdEEwAewv3cSkGoUnMyG/M1fX3S0ZHtKFLekxBFZt8R0jDpU8E+FTMd+r7NL2G6fxNGBxpeNx
+	QYwR1vk6osLcaiFA7yocB2i7SP0hrypLPqci48ff8vwLzQrMzsXe62xumi7L0+lSy++/85U+pwm
+	sv9KZi5umQISCjJ5lZAagINeFqtlRYwmtlBy07hZs0VCCAUAlHV95dR6m1yqGXoSIsvUdoxUNV7
+	ceBK3qNiCvmhptg1HUx840aj0/kDQ6cGsov3gKHA==
+X-Received: by 2002:a05:6402:3508:b0:658:cb40:6701 with SMTP id 4fb4d7f45d1cf-65fdd6bdb3amr6897694a12.7.1772455680311;
+        Mon, 02 Mar 2026 04:48:00 -0800 (PST)
+Received: from cloudflare.com ([104.28.193.185])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65fac06e48asm3422175a12.29.2026.03.02.04.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 04:47:59 -0800 (PST)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
+Cc: <bpf@vger.kernel.org>,  <linux-open-source@crowdstrike.com>,
+  <ast@kernel.org>,  <daniel@iogearbox.net>,  <andrii@kernel.org>,
+  <jolsa@kernel.org>,  <rostedt@goodmis.org>,
+  <linux-trace-kernel@vger.kernel.org>, <kernel-team@cloudflare.com>
+Subject: Re: [RFC PATCH bpf-next v3 0/3] Optimize kprobe.session attachment
+ for exact function names
+In-Reply-To: <20260227204052.725813-1-andrey.grodzovsky@crowdstrike.com>
+	(Andrey Grodzovsky's message of "Fri, 27 Feb 2026 15:40:49 -0500")
+References: <20260227204052.725813-1-andrey.grodzovsky@crowdstrike.com>
+Date: Mon, 02 Mar 2026 13:47:58 +0100
+Message-ID: <87o6l6e6td.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS3PR10MB997701:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cbf0092-60d2-4199-b56f-08de78551c7b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	KVn49L/F4XlGK6RG5C1ZdRcVgIJplhLw3gp1Cj1jKcEPsE2GTBJcKDjom9IAFtYXStq1aEWtsMyFnvQ8sF20aHIhpfKs0DMUl6V/b6VUlRrehINJD5RCMTB5615Qm3VSBcyTbVfRacLa6uDquRswvlrZWCrKb4EY7ZDmzAXh4mHG5FLchS30CFIinNefSpL9pIx1h9gb3Wc2jWwR3YFUrto/V8oDilDVjUleE5vLVRRn7c9X1TOyvrA55FUbyDeMcZHAXgA/HVm5+QVdQcgRyvVCOuMvZrI8rKjkojG3w/nYi4IiSRT9s2gekAD2dFM4D8ebACBHlKkJtsTxlsE7/0H5PtKK0Fsr2o3LPwUiL2b8PVYe1dBYxovn5eFT0/TSqGszIEqu7BrfQnUcAPZYGj+cPxMMkffB4NZZsv/PHEQT6fHBoAPEFmdNFfQLDQFgzSpizCyJVlniS3P67zbMKe16FkXSlRhhXrPaaZamS0bGBfDyW2rKcTxiIC0CutwsTCtIt1VRpywkup/5RQwWmPZJBnNbOmUJwZT1WWXHmV7MxtzSrDj3992eWCWiA0HeK9MKHuMKE29x0X6ZLyH8+PmxS8Q/Ud+cLzCDBARt8iwhH23xBYaF97cZihE/HvIcURK6wFl1jBFXDv6jiNT0+vWvq6RjObDB1aT3PFu78lvGti/ASvi9fShuy4Qo2e1iQL386n/spThZa8/Sy1rOMGf/yPpra6Vh0WU28NBnpbM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?m0xvU/HAr4ClCOpR8aaaazee6pthSEe+8igFH7qSP/e9YtMDnyRKRRlEC6dw?=
- =?us-ascii?Q?dKeZpt30jyTT02EOrpM3+30a3mYESL9ee2QQYH9buNgw3y16P8jGOXaJv1mb?=
- =?us-ascii?Q?k7DlSMoplq+aJyyOM4W//IWDw3OtjxPYZ/FHBWJ/8IBoHoCNORVVar/+rt8w?=
- =?us-ascii?Q?6En+AliEilfdj+R1TTb8lsN86jkjOgbDLWbhdjw5pSGuM0PG5cgMyWX4JOEv?=
- =?us-ascii?Q?j4g8U5xgsJ4F0f7NvQuSzRf/gYCU7VTGDp2p7nCD4PzYqI5kWxDcrGlBGcZ3?=
- =?us-ascii?Q?cPFqWni9VlAPgnqr361v80ZF9cpAarxD+nnejz59VgqRXROU7ujrSJsokI9X?=
- =?us-ascii?Q?cBAJtYNQokQtes7+XIa5qDWA6n/NWlcVM8un2AduJrBSd4AQX1uUJYbr7eNX?=
- =?us-ascii?Q?q//uTV5FMsFeYd960ZPfvPbXIXwDoK4lNRyqB82eboZI9d+G3n59OStuHmUF?=
- =?us-ascii?Q?gQf4kuAwgf5ZOv8Tautnj/Ot9w7ciLa+j3ed+I7ZPL9LluKLnLr/D2KMStV8?=
- =?us-ascii?Q?3aeWhU3zoq8/TvgqNE/qa+P1qdhLLXcloHp8NskyGiitalT9eH/OHTyPUZRg?=
- =?us-ascii?Q?eV1i08DtdNLhUiVrQkbxM/G0AWprCKlAIsYURDOutMFwt02OIunbtKO4t7Di?=
- =?us-ascii?Q?Wqeoa47pL6TIEnEANCLmRX8MyMtfnOTvwLB61ayu85H+DQ8Kq5phjGZb8Ui3?=
- =?us-ascii?Q?OLJ/DpjX0jRDnuyaFyFtwwlIUKNm3klBIbZ2DHHrqDqaC6BEolEA3FBfZ1Ak?=
- =?us-ascii?Q?6jqLTu+RL1+xdo4sDjRyAUtkU7/UTZlkVpUEy7FdDDReP1t1D2pARgu1maNF?=
- =?us-ascii?Q?HzSuG2sCHQvqamD/7M+Dj0WiQif+YadKMxwORxKlUfUcEP5jQsXP5LMbzwTA?=
- =?us-ascii?Q?AfO/vi+w2xBx1TxBOIKWAvdVzvwf5SGiLV4mhegRTNG1aQyfOhItttDKj70n?=
- =?us-ascii?Q?eXOqHZCl6LsTYvEVzwfR2GvEY656X7BA1t7x66bhw7mx7IF2ci6+s+eCN+uO?=
- =?us-ascii?Q?4OeQqS+E8wZQldFkcyI/7Ai1slsweXQr1gvx2KrWIDWgiavlU3Y6Bg9T4HYG?=
- =?us-ascii?Q?WWoT8ruWI/CeN7WVgDkIKCml200/Rks1b8LNSFWKrnfZy1Gb1qqKTf+T2ksn?=
- =?us-ascii?Q?OBF9nXOFpkl8akGY61jXMk+R8HU+0npnNEx3j3hZKc+zvxspIpHfCGmKGu+/?=
- =?us-ascii?Q?Fe8t3GiJRuD+mL46Id/L5H2dZvsyOCa8NVouFkLS8yV2uBPkyh6DLB5XX8YA?=
- =?us-ascii?Q?lMH9XrWdyhnTUL2QxUZwcVwPEVNvnlcV3bEQRCAhWpBk1bE7gOi/3Gqy7CM3?=
- =?us-ascii?Q?uG2ORf6nuVcLe4b7+T16/R3MHiNiB7wR1VOyXC0uJGOiAR8Nq78EwEp2IDbB?=
- =?us-ascii?Q?+YPymOxQXOfcwLbMCBBU69uJFNElpUy7602atyUqjRAbIHwhZkSECA/vCVqb?=
- =?us-ascii?Q?Ba37VtmJJurgfrtSB9NGmnWIPGHCdf5Uocf46sd3+GMbIRYXdSaNixSqYAXM?=
- =?us-ascii?Q?7nK2XOXmKXhZPUcFeO0oUw55IAIPcwk3hNSUf9eRs/3kDX5DXpG1KyGoRI0O?=
- =?us-ascii?Q?uZtWHwz8RRUtJey5Z5djCDUEepvX8ecdkPq9iryXWs1absgSavddiBi39lkq?=
- =?us-ascii?Q?CCqaPiboBqvPxC0xtaOu79l222uCt/yPgHD7LIED5C40CMBrJLylSplNHO+b?=
- =?us-ascii?Q?RRuto6uBGZSwafNk+bkpTcRMlSm7AZWkoewAkMji4mtb9ulrGYXW4KpbOrMQ?=
- =?us-ascii?Q?goA9pWWqhQN2Bc0tDQgljYvkllKTtvs=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	+VwSUZ7fqnBtcBfwpYx4LXieZ01PpmdH/T+bZZ544KdoYkKf4Tulf5OY2WVHar3dlft7DEAmF63sRALzZeCxZQDzxtgX2bfhnpWcEBWErkFj1LFQ+tQ4oiKIx4s8jya3Teah4TQtMcIv2Dm7DI+1cYvOQDyOFib43CXXuBqldtEpUTxOZl6Gj1jjvrCPBG+Ym6/ZNmAzuM0uY2om8p+d0XkoptNnycJgnVEpwmuUA2IHZpQC1clasD/PuhoTcOxdP++HHCXuX1AU8z4Qhn5Bjp6sMNXCh1QiOKcxbYrEzhclfptQOERkgSp4XA9wOhUgo3uEE5uidkrh2BlSyk+UBoJ7ZONscpbjkx3DkYDC1SaB3RVrVf+E/xUJvZQcUV5fwJSzVHnCwmWTTEiCfkBJLlbFvDiFdo44KN8CIeByYKchOwdE0bFgVIeakpDXoY2UZiSNs4W1QAcaLhvZbIuuk686leBeNMaxaNdUdcuVdAbKkReifMUMvMi5wJllb/K2qkC/o90UoEiEP3m3ZMmJnQ2i/HPPfRxgl9xwI/HIQMQFiSatkupQZDQPpYv3bjshTo1VadynkXTfpfSmuDIbgdkquOOYKLalGRDHRZmI+zc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cbf0092-60d2-4199-b56f-08de78551c7b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 12:13:28.0552
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YdtAHwn/1gGm5syeeI1nkQeLjN/O1JNagQbvbgCQEzmzBtTgsctMUp1onAaTQ45B0R8xXpyycAmyh9wTJJ9plb/djaKRBQlccf2BbOm+0Z4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS3PR10MB997701
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-02_03,2026-02-27_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- malwarescore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2602130000 definitions=main-2603020102
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAyMDEwMSBTYWx0ZWRfX3+1bZIS/Xlas
- 8028t9qK6aTQ+e/mWLV6fu5MUgeT2SSgSNNe9acyRWPWeHotiyUNO4QYEhFXmfOzt1zfPR04EW4
- bcf0rQmHfDpw/BXc+V/l2gI+V62XeiPTkC9WwqnCylqIfPLxINO+4/8uVbNVTwvZEHM3Zb5Kp4l
- GQuIS968CJRYTm+OES6R3FjCK5rKcMffQx42JqnYkwtj8v4oOriHUDgrvjNPw/96Ne57Z0CXmMQ
- RqYLrHYFzY4eQsKv3XYGItnubYtPjCbt1FcFve0YkFVgqp4xj+AiThtsiaI4B4LKmwOe3K0yJg0
- fXy5I27HE4ytOPbjUozApITYMsjYpNZBFs9nADBMMZQFhheWetCU4lhwdVnRPunIwBEcydgv6Mq
- QkRhSwVtz9noTb1LBBNhDf9vbYvNFLpGvfvzIUUQ6W/QP4Mw+63h+dgBF62vIzeCig0J1waP2Ai
- iupFQYUqwCIxkDX9wr5j+4azU6Pb/DfzczI6oBXY=
-X-Authority-Analysis: v=2.4 cv=TY+bdBQh c=1 sm=1 tr=0 ts=69a57eeb b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Yq5XynenixoA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=jiCTI4zE5U7BLdzWsZGv:22 a=7Gl3-_t3PgB9XO-mQDs3:22 a=VwQbUJbxAAAA:8
- a=meVymXHHAAAA:8 a=1XWaLZrsAAAA:8 a=Hj78bRjHGalHXu-NYxMA:9 a=CjuIK1q_8ugA:10
- a=2JgSa4NbpEOStq-L5dxp:22 cc=ntf awl=host:12261
-X-Proofpoint-ORIG-GUID: aT4hfDIPdcYJFNNJBe74DLi3s6H5XJ3i
-X-Proofpoint-GUID: aT4hfDIPdcYJFNNJBe74DLi3s6H5XJ3i
+Content-Type: text/plain
 
-+cc David.
+On Fri, Feb 27, 2026 at 03:40 PM -05, Andrey Grodzovsky wrote:
+> - Patch 1: libbpf detects exact function names (no wildcards) in
+> bpf_program__attach_kprobe_multi_opts() and bypasses kallsyms parsing,
+> passing the symbol directly to the kernel via syms[] array.
+> ESRCH is normalized to ENOENT for API consistency.
 
-On Fri, Feb 27, 2026 at 03:56:01PM -0500, Steven Rostedt wrote:
-> On Fri, 27 Feb 2026 10:20:38 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Fri, 27 Feb 2026 11:22:22 +0000
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> >
-> > > > Ah right, Syzkaller is using madvise(MADVISE_DOFORK) which resets VM_DONTCOPY.
-> > >
-> > > As we are applying restrictive rules for this mapping, I believe setting VM_IO
-> > > might be a better fix.
-> >
-> > Agreed.
-> >
->
-> Adding MM folks so we do this right.
->
-> Dear MM folks,
->
-> Here's the issue. When the ftrace ring buffer is memory mapped to user
-> space, we do not want anything "special" done to it. One of those things we
-> did not want done was to have it copied on fork. To do that, we added
-> VM_DONTCOPY, but we didn't know that an madvise() could disable that. It
-> looks like VM_IO will prevent that from happening.
->
-> But looking at the various flags, I see there's a VM_SPECIAL. I'm wondering
-> if that is what we should use?
+FWIW, Ivan was also trying to make it faster from the kernel side:
 
-VM_SPECIAL is not a VMA flag, it's a bitmask of all the flags which cause us not
-to permit things like splitting/merging of VMAs (because we can't safely do
-them), i.e. that are one or more of:
+https://lore.kernel.org/bpf/20260129-ivan-bpf-ksym-cache-v1-1-ca503070dcc0@cloudflare.com/
 
-        VM_IO - Memory-mapped I/O range.
-
-    VM_PFNMAP - A mapping without struct folio's/page's backing them, e.g. perhaps a
-                raw kernel mapping.
-
-  VM_MIXEDMAP - A combination of page/folio-backed memory and/or PFN-backed memory.
-
-VM_DONTEXPAND - Disallow expansion of memory in mremap().
-
-You already set VM_DONTEXPAND so you get these semantics already.
-
-Setting VM_IO just to trigger a failure case in madvise() feels like a hack? I
-guess it'd do the trick though, but you're not going to be able to reclaim that
-memory, and you might get some unexpected behaviour in code paths that assume
-VM_IO means it's memory-mapped I/O... (for instance GUP will stop working, if
-you need that).
-
-I'd take a step back and wonder why you are wanting to not allow copying on
-fork? Is this kernel-allocated memory? In which case you should set VM_MIXEDMAP
-or VM_PFNMAP as appropriate... If not and it has a folio etc. then it seems like
-strange semantics.
-
-Are you really bothered also by users doing strange things? Maybe the solution
-is to tolerate a fork-copy even if it's broken? I presume somethings straight up
-breaks right now?
-
-Without more context that I don't really have much time to acquire it's hard to
-know what to advise.
-
->
-> The effected code is here:
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/ring_buffer.c#n7172
->
-> What's your thoughts?
->
-> Thanks,
->
-> -- Steve
-
-Cheers, Lorenzo
+But, IIUC, with this change we're not hitting get_ksymbol_bpf at all.
