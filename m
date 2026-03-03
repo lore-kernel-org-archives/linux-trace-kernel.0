@@ -1,226 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A669520A5C4;
-	Tue,  3 Mar 2026 04:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD00358365
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 06:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772511947; cv=none; b=GPcG6PhNkCkpbY+2r+EUc0EOQ3FaCEMOr1cYfOyLLIzW+KVUSIzpdn+Rh9xtLhkQOuvDFQL8o0sEEzMuOyZvg2n/P8avW7gxVHG+ubLuSDU31J4EYZmSCGxIzXv8rfLd0E+yRaTYkMhz49MLg+RgnS2ATMP3ycwhhvqgCE9RSYU=
+	t=1772518427; cv=none; b=VEX+uA7x1YlkGizKZZxVXlXP985I9UGY+oLjuuQ/TeqT5XfkZrpc4kZ9w4tj5hU4T5MX7F27juKG39EEVS7eKaz2Gsoi8KWOwrQ6CJUO0Q9B+CFCz2VoCUgYicEnJQGWMwdjmrHsYNf3d9Ty7G30fwRKapcdGZ+XBvPNTTQMGmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772511947; c=relaxed/simple;
-	bh=YZ/dFxr/gaxWgfEt0nAZiUh8L3hzuSp8PgioG8bdfOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sxm1OEmSD5TkLnoFufnPA9S8l8AXZMxBt9i8U7AigmYzo0E9se5HroODTdkbP/Gvm2mgFrT8ISJUZWYs3gQKb2ouzMreTtTaPB0lZ30hLyZ7n6n59+9Sy8e7RMlTs2nt4unqaar6uaE8DD8rETU9NyEHhnLuD2nD+PeTVpn3/7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVZLSXMX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772518427; c=relaxed/simple;
+	bh=wSdJCNEcRSpLA7NqxRp95eZD0EaV2U7w5ovgw1r/V+E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MTm7pc6M62966gRRhq1t2h71WHiSIojMCHGMh10d+Z/6iM8x9e89h47+HipKZlJKSwR2dD6PaWw8XEW9h6gJAOVLAZD+lJ7ygmXDsDH/IeL2/JG5NJ/AH1mDVERLWYfpUHrN/dTvSmaEPRyR0CBqgthm6QWok0agHHecV4TZNJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dihq27W7; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVZLSXMX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1C2C116C6;
-	Tue,  3 Mar 2026 04:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772511947;
-	bh=YZ/dFxr/gaxWgfEt0nAZiUh8L3hzuSp8PgioG8bdfOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VVZLSXMX/ADYwgzUdgl96oTTyoWKtSsqBFyZjRHPhr3+Le570J67X1VARch7tnhrc
-	 jLMxK9WyIuv5g2RTTf67P6eMJopf19ZEik5sLXK6jqbxU64ctIOV1XX4j6Kn+Q33Nu
-	 yQYGo2cQykg/FleyBJM4gSOzSojW07vqpkIpYgN8n19BYunsJ2Ud2G/HmvpxbPcrq4
-	 pzDmiTteXofRQDx0O66dq6F/dhJKF3yUgl8c6/qCtRRe/JhIVvnMyTg8YHSGrA3GHZ
-	 /1eA+v+KmU3ne6r8EbcoV1FFXQPxOQNpH/iFU+LVJ9yxO/ol1CYuEdDyLwooDdAzOZ
-	 srZwZE76Q+8tw==
-Date: Mon, 2 Mar 2026 20:25:46 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Theodore Tso <tytso@mit.edu>
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steve French <sfrench@samba.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	David Sterba <dsterba@suse.com>,
-	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
-	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
- format macro
-Message-ID: <20260303042546.GF13868@frogsfrogsfrogs>
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
- <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
- <20260303012556.GA6520@macsyma-wired.lan>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dihq27W7"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2ae5636ab04so16335295ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Mar 2026 22:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1772518425; x=1773123225; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VUnwHAHVUtkTlajQSql9yZcRD1MLD9k9rKTQHvdToZs=;
+        b=dihq27W7M+QYvEUMNaZAnfn8oi/CBE2ERA9Yg6VszunmTsEiG/h2f4tqLUOFANK/Wl
+         GVUlTR4wNwi3EBJx3Ixkv8Y2zyBuEvEBSOMDAKByWpvGAyXBVfoyNKWEyycOEgXDXQ5g
+         TKp+A8cDbyes9OZ0rrHrD6fwRuIk30oPQ8qCI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772518425; x=1773123225;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VUnwHAHVUtkTlajQSql9yZcRD1MLD9k9rKTQHvdToZs=;
+        b=U9ggYEaMZPiTCPIqR32yoayV7UaLangMWc2jWdp/dY+WU7XRk3uSf2B8hqSoNlG0Cs
+         kUWRzWBWQbAP4btmX3rgjQqOwH6IqiEdIUtHfxzzAuiso5TmQblvZH2CvtNTSG/CCWLA
+         4Idnz2x3Cj2Wi6uXCo8yCPEQ1EpjKtBeZlLM85yxCjQxyU1sSWcxhHpGwNNAcXf7xScc
+         r41QzmUU3rd9EmtNEVhqyT4FkBCwJRuxbspwaMvMlY1yqalZzPDAIVZuqXL4PaamXaEz
+         ce4NreY3KSi4YPPy3/oNA4eiACkgSrxmXvFPICXVItzl5QshcerbChtCkemdTS302jy9
+         NQ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXMGZF3B0fPETQ89SXooHMNnHjMcoOxN/HGbhnJoh2VwDByaSedJubGrmoNpDhqufuw+11+JRchOXJSGhCp2yLny3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAOHT20Dl4F4zot1qG+cZ0g8gQKXO+rY/7LQ2fjZHx/Wvq1hM9
+	ypZawA9AaBhuYf+2ezYuQC/XqdMzKXrWMuJQrPuvteAxCrPyH60onozDKVe3yjrnLA==
+X-Gm-Gg: ATEYQzzETxDU+dz+WCsbdIiIA4qu3c09TYiC+nvX4Ls6dPBwRKTWcg0HoSBN88KDPBo
+	CMctNKcACr6X+/HMF3pxLw5Gwn6UT/TgBb0vjxWPi271T+cGqFUVyl9oIJIOkmb6T6a6dNTubKE
+	2nzzXw5vHLgobbs+OFsx1VoSTYBNtHyl2ShOYy18h0Ub6vxN9VVTSyRroxss/IgO47aLUI4QNTx
+	JkWOrp1G4fRuzCpfoUEmNEW3m1bKIAyGnQ7676eU9Dm+oufblZt6i00wrMi6NLlHN69bvo41NMs
+	r0WCUCN8KSojV5rg/0tb4bSqJO+DKRq3jKLI/mbTAsqyKz/RPMLDcrMu32b0VKWhBEe61K88sc3
+	19z+ojyW6yIySGeH/VID6jyF43Tp740EPVn/GRHL/jPrQ7BxCtwudTzIUlbYfaEvaqo2DIotGst
+	LvdgmE7g1bmmRPTaq6rD79TN7XA9iQbxEaRH+F3bj2y23iItXawS6ptXPg0I76m48b1R4XVgp7E
+	Saw9NiKn0boUDlKSO9fMx5A3fSLQ8nYgw==
+X-Received: by 2002:a17:902:f70f:b0:2ae:5a21:f7ee with SMTP id d9443c01a7336-2ae5a21fa6fmr37483595ad.0.1772518425479;
+        Mon, 02 Mar 2026 22:13:45 -0800 (PST)
+Received: from jingyliang-input-linux.c.googlers.com (111.169.168.34.bc.googleusercontent.com. [34.168.169.111])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb6fe4f3sm152639735ad.91.2026.03.02.22.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 22:13:44 -0800 (PST)
+From: Jingyuan Liang <jingyliang@chromium.org>
+Subject: [PATCH 00/12] Add spi-hid transport driver
+Date: Tue, 03 Mar 2026 06:12:52 +0000
+Message-Id: <20260303-send-upstream-v1-0-1515ba218f3d@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260303012556.GA6520@macsyma-wired.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOR7pmkC/x3MQQ5AMBBG4avIrDWpSZC6iliI/mUWSjqIRNxdY
+ /kt3ntIkQRKXfFQwiUqW8yoyoKmZYwzjPhsYsuN5YqNInpz7nokjKtp69AE7+Adg3KzJwS5/18
+ /vO8H6J83h18AAAA=
+X-Change-ID: 20260212-send-upstream-75f6fd9ed92e
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ hbarnor@chromium.org, Jingyuan Liang <jingyliang@chromium.org>, 
+ Jarrett Schultz <jaschultz@microsoft.com>, 
+ Dmitry Antipov <dmanti@microsoft.com>, Angela Czubak <acz@semihalf.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772518424; l=2786;
+ i=jingyliang@chromium.org; s=20260213; h=from:subject:message-id;
+ bh=wSdJCNEcRSpLA7NqxRp95eZD0EaV2U7w5ovgw1r/V+E=;
+ b=ZiBezP9vXWQWUH4xJexyE2fSowbVOByYok8M/4ZB3IOWkh60Ktwg63v7/f43RkdINRwEM6e0Y
+ twvbFrczErzD1aGZ5lqUJLsWtx9uFpEEmLogAK8K6CvDRUR2TuWLffa
+X-Developer-Key: i=jingyliang@chromium.org; a=ed25519;
+ pk=VTYSdqslTtYOjWWoIGgYoWupGWqNSidrggReKMgfPo4=
 
-On Mon, Mar 02, 2026 at 08:25:56PM -0500, Theodore Tso wrote:
-> On Mon, Mar 02, 2026 at 03:23:45PM -0500, Jeff Layton wrote:
-> > The PRIino macro is a length modifier, not a complete format specifier.
-> > It is used as: "%" PRIino "u" for decimal, "%" PRIino "x" for hex, etc.
-> > This follows the pattern used by userspace PRIu64/PRIx64 macros.
-> 
-> For the record, I really hate the inttypes.h format specifiers, but I
-> agree that we should forward the example of the C99 spec, for better
-> or for worse.
-> 
-> That being said, the userspace PRIu64, et. al macros are complete
-> format specifiers, not just a length modifier.  And I think this
-> results in less ugly format specifiers in our kernel code.
+This series picks up the spi-hid driver work originally started by
+Microsoft. The patch breakdown has been modified and the implementation has
+been refactored to address upstream feedback and testing issues. We are
+submitting this as a new series while keeping the original sign-off
+chain to reflect the history.
 
-Yeah, I don't like "ino=%" PRIino "u, lolz\n" either.  I'd rather have
-the whole format in the PRIino definition -- it /is/ unsigned long
-after all.
+Same as the original series, there is a change to HID documentation, some
+HID core changes to support a SPI device, the SPI HID transport driver,
+and HID over SPI Device Tree binding. We have added the HID over SPI ACPI
+support, power management, panel follower, and quirks for Ilitek touch
+controllers.
 
---D
+Original authors: Jarrett Schultz <jaschultz@microsoft.com>,
+		  Dmitry Antipov <dmanti@microsoft.com>
+Link: https://lore.kernel.org/r/86b63b7b-afda-d7f4-7bfa-175085d5a8ef@gmail.com
 
-> ---- cut here ---
-> #!/bin/sh
-> cat <<EOF > /tmp/blah.c
-> #include <inttypes.h>
-> #include <stdio.h>
-> 
-> int main(int arg, char **argv)
-> {
->         printf("PRIu64 is %s\n", PRIu64);
->         printf("PRId64 is %s\n", PRId64);
->         printf("PRIx64 is %s\n", PRIx64);
->         return 0;
-> }
-> EOF
-> 
-> clang -m32 -o /tmp/blah /tmp/blah.c
-> /tmp/blah
-> ---- cut here ---
-> 
-> % /tmp/blah.sh
-> PRIu64 is llu
-> PRId64 is lld
-> PRIx64 is llx
-> 
-> Thanks!
-> 
-> 						- Ted
+Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
+---
+Angela Czubak (2):
+      HID: spi-hid: add transport driver skeleton for HID over SPI bus
+      HID: spi_hid: add ACPI support for SPI over HID
+
+Jarrett Schultz (3):
+      Documentation: Correction in HID output_report callback description.
+      HID: Add BUS_SPI support and define HID_SPI_DEVICE macro
+      HID: spi_hid: add device tree support for SPI over HID
+
+Jingyuan Liang (7):
+      HID: spi-hid: add spi-hid driver HID layer
+      HID: spi-hid: add HID SPI protocol implementation
+      HID: spi_hid: add spi_hid traces
+      dt-bindings: input: Document hid-over-spi DT schema
+      HID: spi-hid: add power management implementation
+      HID: spi-hid: add panel follower support
+      HID: spi-hid: add quirkis to support mode switch for Ilitek touch
+
+ .../devicetree/bindings/input/hid-over-spi.yaml    |  153 ++
+ Documentation/hid/hid-transport.rst                |    4 +-
+ drivers/hid/Kconfig                                |    2 +
+ drivers/hid/Makefile                               |    2 +
+ drivers/hid/hid-core.c                             |    3 +
+ drivers/hid/spi-hid/Kconfig                        |   45 +
+ drivers/hid/spi-hid/Makefile                       |   11 +
+ drivers/hid/spi-hid/spi-hid-acpi.c                 |  254 ++++
+ drivers/hid/spi-hid/spi-hid-core.c                 | 1493 ++++++++++++++++++++
+ drivers/hid/spi-hid/spi-hid-core.h                 |   94 ++
+ drivers/hid/spi-hid/spi-hid-of.c                   |  244 ++++
+ drivers/hid/spi-hid/spi-hid.h                      |   51 +
+ include/linux/hid.h                                |    2 +
+ include/trace/events/spi_hid.h                     |  156 ++
+ 14 files changed, 2512 insertions(+), 2 deletions(-)
+---
+base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
+change-id: 20260212-send-upstream-75f6fd9ed92e
+
+Best regards,
+-- 
+Jingyuan Liang <jingyliang@chromium.org>
+
