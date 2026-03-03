@@ -1,274 +1,249 @@
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA40F3D6CD5
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 18:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5819234C81E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 20:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772562287; cv=none; b=nSE1AEZntr1eoLg4iYrWakIyFRJnZKjcT3ImCd1KroRA/59ydGY47lT9ELK+mQyg9rF09fbsQje4Qpv+YrRkY3kSqYiQHrFFDaMBPq82FUUk9lDYSaQ/EemHMABDLgQpygvRPY94hNWpPHLNscNBeJRbHwz3eEAKhLBL8iE32h8=
+	t=1772570184; cv=none; b=eFQr9c3TVjWSEVukmlCQ9QJC6Or0i9wQnOcUJzdiDwZbomhvnj9pKdX+44eGmGJNk/z4J5+J5DlSAVxa3YihetWoH/JhUuDR8B56f1ziWUTOpRHskFLfOE9nFIAGFxPMu/+v89KQoT81AFYGuP4HOTXAkBrxOJ8c0mi1lvjxHxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772562287; c=relaxed/simple;
-	bh=Bk+EFBOiK5cN7R8c+5YaGrnXfC55w11L03MP6kMt704=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hMgl8QEtY7uSMjapgPgTpSsEgS1rwfSRJmghElo3YVWMn3y8OWgQxVbbOVF4AtCu3E07oRmbNQ0+AJuejdk5bDQokdgqk2GDkq2Z9CNu21E8IIs51bLY3iuDbmK6eDKFoUvLujC+QrVB4tSkR/GYh2ksjM7jx/VuPeb21LYoH+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-679c44ae7abso128283505eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 10:24:43 -0800 (PST)
+	s=arc-20240116; t=1772570184; c=relaxed/simple;
+	bh=0WXiDpchtAH8bVqvBLab1zkx9xLMSEgnhOTNf0nXPyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADzIJaaaxTmwI1tppUEOU/VIrtHAsYGSd9TVDUS0pwSKOKriu24SIMet96rLf6ZjAq0GUTbzQy8s+6dJaBKoV5KvFaZcdaLoZERdS/kCPhuthL41WTpeMG8lf3aewNuI137lQO4dEQ/7+po6/i6wiR3U50TGBDeHUY6n1fu2rcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jPoPJmvq; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jPoPJmvq"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8cb38e6d164so791824585a.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 12:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1772570182; x=1773174982; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
+        b=jPoPJmvq78g+dz55Aepd7ikVipZMlI0Osa0jjLmZQsj15+VwqhnnAUONGn6cG5gzTu
+         in0FpfpwHh+R+csZOndc80iKq0zo1NTn9NaX+MMzho/4eQVzKPUdvRHWC5jKYBd2CfHS
+         BI/fg5l1zHRzVwCUd1R5+taqm1bSHLUM6kmibt4G7VxLG1aEX6nXqIXrK2GRkx7n3d7Z
+         xu80v5DghZda3D9hSaRTm7hk6ieiZpshjkd22fpYTazE9xAzYVYtMgSVe+a1WXTLJBnq
+         XDzLBpxqyfwuoZkSzS1BU0dcUBNfDcgNi5IoblPgSy6WVFjPxnzwX4CmvtE1qk0xoYAj
+         27fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772562283; x=1773167083;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G3vJXOD9+xni157J6YAf4uty8XGc/q45kc+n8BtomcA=;
-        b=OH1f5R/XL5Je8M+YFLiAaHp8lEJOI8U0WRD+NsKAbhSvcMwQkbEFws9+9P4uMIrQO5
-         So+vM+M8JbgmcB1gfng4hgcTVvGJmSzrhvChvEGu/KYXDKoFIPiQ9yBtheLeOMB5Pms6
-         G7zh1nkcVxPOMfSRSZlBMoOS8pkEemdlybTyE/4B/V/aZdOjLQ6OYz8AJ4ELqmBmpnN2
-         hHdOhBlvBPz9bjrQuZOQALxs1yCvYgEwzFR9mm2ajxE7o3uktuFVVOPiiHhJyHGxjIob
-         zA4i+695oW37a+ks99cYQNpAegFdgotTLu2ltTmq9Rrv3sHwEwqYyG0O3TMilO8iIEmL
-         TpPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHOZoFuGSkg6jutFuKOpKLfxY7qeMjBEz/HOc6MbOCNylSrKGsldf6kLmhcVsJ6gAfysKeCKNqkV9+iX7CpU6CQkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhjt8/Zxr+Q2Tkd2PnULWld2GU7I/WDuOc7CHoAoAZhp7CbTut
-	0gN33GplgUlrl5Mf7WZjUKYa3uFRphNFpMYf+V9vpl9tWvmNANMnh9yZ+/Bxfv1i4v+ptx6HkLt
-	2lWhnM2QsQ2LkHtgTP3hpsoATWeFGArsqXEXzy6Z960jV5OWCyG70F+WHKZw=
+        d=1e100.net; s=20230601; t=1772570182; x=1773174982;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
+        b=NNYhZGOHc+i6BoT56XvbaLg38RyAzeskUeSmGuh5EOU/koCWBj4tgHyxPOnXXIx2rh
+         vjoLdeHRE5NDSgJ0D+vtDCr0gCgMTXeySfrNKArk3NZ5aa5ev6OWp1iZ9nptev0TuHwq
+         0DqfwvYCCVKQcGIq4X4OkVL8hpWGAJ3C4MbjWNEL1CJbG3laSVwEV+wjUr3T0GWxtiuA
+         mn+DITQxGvVEa4EWt7k6blzJg79h8pZ1h2Pe2YYW2Sp3em8A5pRCLvoe1cJpGq3SqO8Z
+         PJp64mJdS6o2y0K4eEVYqyZgpaIXa545tB+hrnI3nqFG3JOgXWN4yeY2VxjOxyby1m0r
+         cM0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVOvyWQ6E7W7edM2sv+K+m+OCrIMkDLEYMDXQn8/dzQuO70DEkhY1zSK24WOmLwW4QkRwID5+UebE442z/YQeGhkrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHARzMs6TZBrDyTXmvfUGNeE5nK11Wtr/UCSWx52Qy5A16PQVA
+	KW5coCUWsdB4GT+Y78Erd6fnH6mTQXPoJdwWpm/KG01pawHAkfPgtFuqmhTjMvMCJO0=
+X-Gm-Gg: ATEYQzzwHCcWZabppFJlHNtpBZ3lyNikr2vd3417vZiXfxcqfOGwp/Ibllv2xch9bp8
+	khAY2+xZ+ViFyea+0KOe4rlne+0Sk6lYOhxBTuPVtjXmJdZI1yQLfYsH2hmVEZ7dc7UjDc87QJC
+	daYiGmCV9vpULaMmJD13OUQAgutSkWWmHvpF7o7I5wMZ3Rh56PK/rGhNnWRO6BoVmydzZLXlnQG
+	Eb+WHIOedJ7O7HQi38ncgxNDJexxS01Q4hQ9I4knEeW8xJaElmay/vNSnAqZzhFe/vr9/dh81xE
+	GK6o4ACkXSxkJnw+vTzfzpvVoWy+dl8isRTagCceEJMTF7kvQ0vPfDb+tfDlIYGXM3cnEkiq9gS
+	uhyG2qDVip5NXERN95AD2jYTL7lgxwvUQZ7eSOvyp268I3Fgyd9Rgqvdq5Lq9FYQ80HOi6e0Jsw
+	nTt/3yzulHopAWy+XLRdeTyTcVftIO/ocagrEjDUHSIeH9v63rZIUoqttJUsdUvitpraahMcb58
+	YbVO5AaXA==
+X-Received: by 2002:a05:620a:4720:b0:8cb:5442:d539 with SMTP id af79cd13be357-8cbc8dc28b1mr2313709285a.2.1772570182058;
+        Tue, 03 Mar 2026 12:36:22 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899e89bf39bsm79243066d6.18.2026.03.03.12.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2026 12:36:20 -0800 (PST)
+Date: Tue, 3 Mar 2026 15:36:17 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aadGQXXpayvFOZpy@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
+ <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
+ <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:83c2:20b0:679:88d0:3e20 with SMTP id
- 006d021491bc7-67a1da0f01emr1311446eaf.9.1772562282672; Tue, 03 Mar 2026
- 10:24:42 -0800 (PST)
-Date: Tue, 03 Mar 2026 10:24:42 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <69a7276a.a70a0220.b118c.0011.GAE@google.com>
-Subject: [syzbot] [bpf?] [trace?] KASAN: slab-use-after-free Read in bpf_trace_run9
-From: syzbot <syzbot+b4c5ad098c821bf8d8bc@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
 
-Hello,
+On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
+> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
+> > 
+> > If your service only allocates movable pages - your ZONE_NORMAL is
+> > effectively ZONE_MOVABLE.  
+> 
+> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
+> bad abstraction and should be replaced with something else maybe some like this?
+> 
+> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
+> what we seem to have today for determing page types. It almost sounds like what
+> we want is just a bunch of hooks that can be associated with a range of pages,
+> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
+> for each page a driver manages. I have to think more about that though, this
+> is just what popped into my head when you start saying ZONE_MOVABLE could also
+> disappear :-)
+> 
+... snip ...
+> > 
+> > You don't have to squint because it was deliberate :]
+> 
+> Nice.
+> 
 
-syzbot found the following issue on:
+I've had some time to chew on this a bit more.
 
-HEAD commit:    a75cb869a8cc Merge tag 'v7.0-rc1-ksmbd-server-fixes' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17cb50ba580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=56150637ffd942dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=b4c5ad098c821bf8d8bc
-compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122c6006580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1429cd5a580000
+Adding a node-scope `struct dev_pagemap` produces some interesting
+(arguably useful / valuable) effects.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-a75cb869.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/dadc7741a2af/vmlinux-a75cb869.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7d84dbd51e35/bzImage-a75cb869.xz
+The invariant would be clamping the entire node to ZONE_DEVICE
+(more on this below).
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b4c5ad098c821bf8d8bc@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
-BUG: KASAN: slab-use-after-free in bpf_trace_run9+0x13b/0x8c0 kernel/trace/bpf_trace.c:2136
-Read of size 8 at addr ffff888039269618 by task syz.5.56/5665
-
-CPU: 0 UID: 0 PID: 5665 Comm: syz.5.56 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0xe8/0x150 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xba/0x230 mm/kasan/report.c:482
- kasan_report+0x117/0x150 mm/kasan/report.c:595
- __bpf_trace_run kernel/trace/bpf_trace.c:2075 [inline]
- bpf_trace_run9+0x13b/0x8c0 kernel/trace/bpf_trace.c:2136
- __bpf_trace_virtio_transport_alloc_pkt+0x3a5/0x410 include/trace/events/vsock_virtio_transport_common.h:39
- __traceiter_virtio_transport_alloc_pkt+0xc1/0x120 include/trace/events/vsock_virtio_transport_common.h:39
- __do_trace_virtio_transport_alloc_pkt include/trace/events/vsock_virtio_transport_common.h:39 [inline]
- trace_virtio_transport_alloc_pkt include/trace/events/vsock_virtio_transport_common.h:39 [inline]
- virtio_transport_alloc_skb+0x1108/0x1180 net/vmw_vsock/virtio_transport_common.c:312
- virtio_transport_send_pkt_info+0x570/0xff0 net/vmw_vsock/virtio_transport_common.c:391
- virtio_transport_connect+0xf5/0x150 net/vmw_vsock/virtio_transport_common.c:1080
- vsock_connect+0xaf5/0xd60 net/vmw_vsock/af_vsock.c:1716
- __sys_connect_file net/socket.c:2089 [inline]
- __sys_connect+0x312/0x450 net/socket.c:2108
- __do_sys_connect net/socket.c:2114 [inline]
- __se_sys_connect net/socket.c:2111 [inline]
- __x64_sys_connect+0x7a/0x90 net/socket.c:2111
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd65079c799
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd52be1438 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 00007fd650a15fa0 RCX: 00007fd65079c799
-RDX: 0000000000000010 RSI: 0000200000000080 RDI: 0000000000000003
-RBP: 00007fd650832bd9 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fd650a15fac R14: 00007fd650a15fa0 R15: 00007fd650a15fa0
- </TASK>
-
-Allocated by task 5664:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- poison_kmalloc_redzone mm/kasan/common.c:398 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:415
- kasan_kmalloc include/linux/kasan.h:263 [inline]
- __kmalloc_cache_noprof+0x31c/0x660 mm/slub.c:5339
- kmalloc_noprof include/linux/slab.h:962 [inline]
- kzalloc_noprof include/linux/slab.h:1200 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 5576:
- kasan_save_stack mm/kasan/common.c:57 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:78
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:584
- poison_slab_object mm/kasan/common.c:253 [inline]
- __kasan_slab_free+0x5c/0x80 mm/kasan/common.c:285
- kasan_slab_free include/linux/kasan.h:235 [inline]
- slab_free_hook mm/slub.c:2687 [inline]
- slab_free mm/slub.c:6124 [inline]
- kfree+0x1c1/0x630 mm/slub.c:6442
- rcu_do_batch kernel/rcu/tree.c:2617 [inline]
- rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
- handle_softirqs+0x22a/0x870 kernel/softirq.c:622
- do_softirq+0x76/0xd0 kernel/softirq.c:523
- __local_bh_enable_ip+0xf8/0x130 kernel/softirq.c:450
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- __alloc_skb+0x1aa/0x7d0 net/core/skbuff.c:697
- alloc_skb include/linux/skbuff.h:1383 [inline]
- mld_newpack+0x14c/0xc90 net/ipv6/mcast.c:1775
- add_grhead+0x5a/0x2a0 net/ipv6/mcast.c:1886
- add_grec+0x1452/0x1740 net/ipv6/mcast.c:2025
- mld_send_initial_cr+0x288/0x550 net/ipv6/mcast.c:2268
- mld_dad_work+0x45/0x5b0 net/ipv6/mcast.c:2294
- process_one_work kernel/workqueue.c:3275 [inline]
- process_scheduled_works+0xb02/0x1830 kernel/workqueue.c:3358
- worker_thread+0xa50/0xfc0 kernel/workqueue.c:3439
- kthread+0x388/0x470 kernel/kthread.c:467
- ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:57
- kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:556
- __call_rcu_common kernel/rcu/tree.c:3131 [inline]
- call_rcu+0xee/0x890 kernel/rcu/tree.c:3251
- bpf_link_put_direct kernel/bpf/syscall.c:3323 [inline]
- bpf_link_release+0x6b/0x80 kernel/bpf/syscall.c:3330
- __fput+0x44f/0xa70 fs/file_table.c:469
- task_work_run+0x1d9/0x270 kernel/task_work.c:233
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- __exit_to_user_mode_loop kernel/entry/common.c:67 [inline]
- exit_to_user_mode_loop+0xed/0x480 kernel/entry/common.c:98
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:226 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:256 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:325 [inline]
- do_syscall_64+0x32d/0xf80 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888039269600
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 24 bytes inside of
- freed 192-byte region [ffff888039269600, ffff8880392696c0)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888039269a00 pfn:0x39269
-flags: 0x4fff00000000200(workingset|node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000200 ffff88801ac413c0 ffffea0001646350 ffffea00015fe190
-raw: ffff888039269a00 000000000010000b 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x1d2cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5643, tgid 5643 (syz.5.37), ts 117716289519, free_ts 117714764185
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x231/0x280 mm/page_alloc.c:1889
- prep_new_page mm/page_alloc.c:1897 [inline]
- get_page_from_freelist+0x24dc/0x2580 mm/page_alloc.c:3962
- __alloc_frozen_pages_noprof+0x18d/0x380 mm/page_alloc.c:5250
- alloc_slab_page mm/slub.c:3255 [inline]
- allocate_slab+0x77/0x660 mm/slub.c:3444
- new_slab mm/slub.c:3502 [inline]
- refill_objects+0x331/0x3c0 mm/slub.c:7134
- refill_sheaf mm/slub.c:2804 [inline]
- __pcs_replace_empty_main+0x2b9/0x620 mm/slub.c:4578
- alloc_from_pcs mm/slub.c:4681 [inline]
- slab_alloc_node mm/slub.c:4815 [inline]
- __kmalloc_cache_noprof+0x392/0x660 mm/slub.c:5334
- kmalloc_noprof include/linux/slab.h:962 [inline]
- kzalloc_noprof include/linux/slab.h:1200 [inline]
- bpf_raw_tp_link_attach+0x278/0x700 kernel/bpf/syscall.c:4264
- bpf_raw_tracepoint_open+0x1b2/0x220 kernel/bpf/syscall.c:4312
- __sys_bpf+0x846/0x950 kernel/bpf/syscall.c:6270
- __do_sys_bpf kernel/bpf/syscall.c:6341 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6339 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6339
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0x14d/0xf80 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 15 tgid 15 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- __free_pages_prepare mm/page_alloc.c:1433 [inline]
- __free_frozen_pages+0xc2b/0xdb0 mm/page_alloc.c:2978
- __tlb_remove_table_free mm/mmu_gather.c:228 [inline]
- tlb_remove_table_rcu+0x85/0x100 mm/mmu_gather.c:291
- rcu_do_batch kernel/rcu/tree.c:2617 [inline]
- rcu_core+0x7cd/0x1070 kernel/rcu/tree.c:2869
- handle_softirqs+0x22a/0x870 kernel/softirq.c:622
- run_ksoftirqd+0x36/0x60 kernel/softirq.c:1063
- smpboot_thread_fn+0x541/0xa50 kernel/smpboot.c:160
- kthread+0x388/0x470 kernel/kthread.c:467
- ret_from_fork+0x51e/0xb90 arch/x86/kernel/process.c:158
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Memory state around the buggy address:
- ffff888039269500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888039269580: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888039269600: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff888039269680: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888039269700: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+So if we think about it this way - we could just view this whole thing
+as another variant of ZONE_DEVICE - but without needing the memremap
+infrastructure (you can use normal hotplug to achieve it).
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+0. pgdat->private becomes pgdat->dev_pagemap
+   N_MEMORY_PRIVATE -> N_MEMORY_DEVICE ?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+   As a start, do a direct conversion, and use the existing
+   infrastructure.   then expand hooks as needed (and as-is reasonable)
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+   Some of the `struct dev_pagemap {}` fields become dead at the node
+   scope, but this is a plumbing issue.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+   There's already an similar split between the dev_pagemap and the ops
+   structure, so it might map very cleanly.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
 
-If you want to undo deduplication, reply with:
-#syz undup
+1. "Clamping the entire node to ZONE_DEVICE"
+
+   When we do this, the *actual* ZONE becomes completely irrelevant.
+   The allocation path is entirely controlled, so you might actually end
+   up freeing up the folio flags that track the zone:
+
+   static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
+   {
+        ASSERT_EXCLUSIVE_BITS(flags.f, ZONES_MASK << ZONES_PGSHIFT);
+        return (flags.f >> ZONES_PGSHIFT) & ZONES_MASK;
+   }
+
+   becomes:
+
+   folio_is_zone_device(folio) {
+       return node_is_device_node(folio_nid(folio)) || 
+              memdesc_is_zone_device(folio->flags);
+   }
+
+   Kind of an interesting.  You still need these flags for traditional
+   ZONE_DEVICE, so you can't evict it completely, but you can start to
+   see a path here.
+
+
+2. One dev_pagemap per node or multiple w/ pagemap range searching
+
+   Checking membership is always cheap: 
+
+        node_is_device_node()
+
+   Getting ops can be cheap if 1:1 mappings exists:
+
+       pgdat->device_ops->callback()
+
+   Or may be expensive if range-based matching is required:
+
+      node_device_op(folio, ...) {
+         ops = node_ops_lookup(folio); /* pfn-range binary search */
+	 ops->callback(folio, ...)
+      }
+
+      pgmap already has an embedded range:
+
+      struct dev_pagemap {
+        ...
+        int nr_range;
+        union {
+            struct range range;
+            DECLARE_FLEX_ARRAY(struct range, ranges);
+        };
+      };
+
+   Example: Nouveau, registers hundreds of pgmap instances that it
+            uses to recover driver contexts for that specific folio.
+	    
+	    This would not scale well.
+
+	    But most other drivers register between 1-8.  That might.
+
+   That means this might actually be an effective way to evict pgmap
+   from struct folio / struct page.  (Not making this a requirement or
+   saying it's reasonable, just an interesting observation).
+
+
+3. Some existing drivers with 1 pgmap per driver instance instantly get
+   the folio->lru field back - even if they continue to use ZONE_DEVICE.
+
+   At least 3 drivers use page->zone_device_data as a page freelist
+   rather than actual per-page data.  Those drivers could just start
+   using folio/page->lru instead.
+
+   Some store actual per-page zone_device_data that would prevent this,
+   but from poking around it seems like it might be feasible.
+
+   Some use the pgmap as a container_of() argument to get driver
+   context, may or may not be supportable out of the box, but it seemed
+   like mild refactoring might get them back the use of folio->lru.
+
+   None of this is required, the goal is explicitly not disrupting any
+   current users of ZONE_DEVICE.
+
+
+Just some additional food for thought.
+
+As-designed now, this would only apply to NUMA systems, meaning you
+can't fully evict pgmap from struct page/folio --- but you could
+imagine a world where in non-numa mode we even register a separate
+pglist_data specifically for device memory even w/o NUMA.
+
+~Gregory 
