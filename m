@@ -1,108 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AFC43D4FF
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 14:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1D3AE1B3;
+	Tue,  3 Mar 2026 14:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772548722; cv=none; b=bJkvrLjbmPyJKOvvxduh4uL003Z0V/LxCXLt3zufuISsZusdL9ws/cnE6OJuakhSwQOkVdX4kqTJsW+z2EaPwh4+YuURUXzo++l9/02P+Yox1EPkzN1uaVB34AZwnux6RjEUFchgVdHrLXkyXcJAEUID5rIzIBoKpCyORPYYPK4=
+	t=1772548765; cv=none; b=chfZMsm0jo0U1H4Oda/LJpm03LAh5lxGNqPKPslk/UdBNqTcZmcJ9aMoHYMJS6wz4fGNamlRfSMwLy8y2Slpu+lwdYyqV/ySiVDWQxySuWYs420rcLVORC8tocf3fFUDdmG+lKair88JCr259rrqaxVKlX1b8re63gXyzcAdS7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772548722; c=relaxed/simple;
-	bh=eePFz1p6AQfK52Dfp6nhDG5PiFLOvEXjAnIw4amVPCQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lvPlrP81NFpLd9j+lEaERcqHUIj/lDzga+zeMDKstsDDAqNDK0rhgDVxrHJynD5F24DZRYNOtxEGFrD+3auikcCX1MfzW4DYFZOwLpW5GvGN9JXjodzI9UgrPiHZ4AhDTwUQnK4EU2ihiVc78vIZEVftWgm0zNLojKYkm8mD88U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f4P03egJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f4P03egJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772548716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uByqIUprBRkKO950etTatx08ahw/9qF0/t4J/O2bhx0=;
-	b=f4P03egJWsHCst/2UaMTJXF8I3kM0Xj3rTbTA+varKlydu3WkZB72aCkzJIUFb0rYmgfm9
-	8czbiUXegJ60zlUjlDg9BTVBsqSTgpgfWBp27uv5KLCXn5sbawnSN2eNfZCMArau71Mm6B
-	uLLr+tuaJrnt9SSx+shP30X2dfcyUNE=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-zbe4PLghOJyPGfvMxTRBCA-1; Tue, 03 Mar 2026 09:38:35 -0500
-X-MC-Unique: zbe4PLghOJyPGfvMxTRBCA-1
-X-Mimecast-MFC-AGG-ID: zbe4PLghOJyPGfvMxTRBCA_1772548714
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-b8704795d25so374747666b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 06:38:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772548714; x=1773153514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uByqIUprBRkKO950etTatx08ahw/9qF0/t4J/O2bhx0=;
-        b=SW9QLGRXeYdOfajNWvgTysvme1+dQdONQPeFH96DTlAdfgvK6/EIaIwFtZF36/Q1Uo
-         7BlDeoQr3Waof2Wm+WOk5bHV/gR15c5S7M2huGbYSFX2FImh20ifSDHZBvbefc3+zD8r
-         dSc5QMaw0aTHUfhPWN30IazWnVlfTHj9VCBE2VY/Lc/fz6lm+rOPxUIOBEmk2C3lAXy5
-         aIrQjg0ZHXInwJ+vXDgqY3P9rRc98joAHqrkyEra7n4COq+S448A7mPqTwOwsOjnZIrz
-         iKLJ46qWSpVh4zcZgVKntgWw34kyRYX2BJdDD6r7tjmowDZ8i/VnKoqlNWxNxct9n4te
-         WK7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWAZRwexHkwjxCWptmXNEMfzQXILZX/DLTKrgCgEQMIJxfJdShq/PB3znHUI7wU+/w3iD3/Q2zn+CIsrLchQb49GOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4jCRaU8A9RW2Z1wXZArA+3BaeFo7ZsixR/+Lg3eArDAlxhFgz
-	03aTUQ+AS0A3sjPO4s2fgCjGQFh8nvJpRQqMtzf1socgB6qpzDVqV52atY6nPzi4TpK3AU+FwrW
-	ru9HEkDOUhNJfG2zAL5c7DqO8d3IYMPBC4vKL0EqtoegUsQbJyNt2tPsgbgBPS87MeF9wyoHHub
-	0mOUiUX5tTmBAxDzIoOVc0iqqS8oMdOACuAFZiJKklfJwAhwSt
-X-Gm-Gg: ATEYQzx5snWBdS/bOINhxDQI8UOt2mv/2gMCc8E/tKowPzutlJa1+4bhGvQNy0u/gfA
-	PLQqzQKl8kMQEw5hmFl9PTSOhAzdkntd/w3lrGzslr13eZDuMHxTQ+Opv3YbKTCM0ZxtFMVmLRX
-	1syHJl+kHbYNsQrJ8GmovnNN9Bg7ejpdiBLmbtpW5MeWRPQVSrwqe2AGSJ80gik1FP88c4CVQMN
-	58GtA==
-X-Received: by 2002:a17:907:a49:b0:b87:2780:1b29 with SMTP id a640c23a62f3a-b93764c7e7emr902976166b.37.1772548714049;
-        Tue, 03 Mar 2026 06:38:34 -0800 (PST)
-X-Received: by 2002:a17:907:a49:b0:b87:2780:1b29 with SMTP id
- a640c23a62f3a-b93764c7e7emr902974266b.37.1772548713579; Tue, 03 Mar 2026
- 06:38:33 -0800 (PST)
+	s=arc-20240116; t=1772548765; c=relaxed/simple;
+	bh=XX/jeSAHW+x8CraKzwl1hAiIEVR6XQ0VdZ7DGmrbUm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JBnoc7LXd1k9lhEp7xWSetn36pBrxjmEw6Tz1ZihCLXMNDr/fG2a4ssw0vRL0NtkET6J/rVVSrz98PpNDlMqHucUPymZ0rTWw2J+3wIkCjrRUW41RQ/QiCccJfADZL4nHRv6szQtgVBR/IaLRF32g37YT2p/D+YkWT1TmRjbsQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 81076139CB2;
+	Tue,  3 Mar 2026 14:39:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id C84E31A;
+	Tue,  3 Mar 2026 14:39:15 +0000 (UTC)
+Date: Tue, 3 Mar 2026 09:39:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ftrace: Disable preemption in the tracepoint callbacks
+ handling filtered pids
+Message-ID: <20260303093949.4210e854@gandalf.local.home>
+In-Reply-To: <20260303131706.96057f61a48a34c43ce1e396@kernel.org>
+References: <20260302213546.156e3e4f@gandalf.local.home>
+	<20260303131706.96057f61a48a34c43ce1e396@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115163650.118910-1-wander@redhat.com> <20260115163650.118910-15-wander@redhat.com>
-In-Reply-To: <20260115163650.118910-15-wander@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 3 Mar 2026 15:38:21 +0100
-X-Gm-Features: AaiRm53Eu2RQAmILp0LANpphIwNNYI7ejb-zkRgheOkvXJcE58fh1F24u7Tb4FM
-Message-ID: <CAP4=nvSyD+hYdPkXQ9P0KPLw0rESh3A9Nr0su1fvkTAJfAOxzw@mail.gmail.com>
-Subject: Re: [PATCH v3 14/18] rtla/timerlat: Simplify RTLA_NO_BPF environment
- variable check
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
-	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Daniel Wagner <dwagner@suse.de>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Xk3HU4-shPEJYukvjNJUXSaFn2b8-8-uUuS1s_ukZjc_1772548714
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: C84E31A
+X-Stat-Signature: asqcdgd4b5jef4eunm1ao1ccjazab8rd
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1900ssTXeWjtDy6aCP6YXGn83v9cf9+x8I=
+X-HE-Tag: 1772548755-182353
+X-HE-Meta: U2FsdGVkX1/wakUKghtGO/+OILHD17KFVpd6L/kyt4C2ohJI5YejYthHK8bal8DUdWsJQZ14LI1zJQ9P5VgiQN2CXqDs1ISdKwZc4/wX+7ud2frtj63WEVDyzV6RBIwoWrHTTAroBVs/TGe2KF0pJzgLfbCuFbipBaPUmzZKOeU1SEnxjmnLFyRkyjwcyop7zHhmNuyFgZ42LWNDF4e7YpC8BZUnvw6I/tFzPYJkp/zxE0LDxlhXVMzBeTCycpHHW6N2CtOOc1xybL8m9UQTpjNb4ONtN1qM4PUIZvT5CAHg5Xdi2NvtSy4oHRHcN+V+SRbB9/f7sW46kGL2rlUiOKNpvQZhl4ND
 
-=C4=8Dt 15. 1. 2026 v 18:29 odes=C3=ADlatel Wander Lairson Costa
-<wander@redhat.com> napsal:
-> -       if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", =
-2) =3D=3D 0) {
-> +       if (rtla_no_bpf && strcmp(rtla_no_bpf, "1") =3D=3D 0) {
+On Tue, 3 Mar 2026 13:17:06 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Another use case for strncmp_static()?
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 9928da636c9d..3b3aaf4831e9 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -1039,6 +1039,7 @@ event_filter_pid_sched_process_exit(void *data, struct task_struct *task)
+>  	struct trace_pid_list *pid_list;
+>  	struct trace_array *tr = data;
+>  
+> +	guard(preempt)();
+>  	pid_list = rcu_dereference_raw(tr->filtered_pids);
+>  	trace_filter_add_remove_task(pid_list, NULL, task);
+>  
+> @@ -1054,6 +1055,7 @@ event_filter_pid_sched_process_fork(void *data,
+>  	struct trace_pid_list *pid_list;
+>  	struct trace_array *tr = data;
+>  
+> +	guard(preempt)();
+>  	pid_list = rcu_dereference_sched(tr->filtered_pids);
+>  	trace_filter_add_remove_task(pid_list, self, task);
+>  
 
->                 debug_msg("RTLA_NO_BPF set, disabling BPF\n");
->                 params->mode =3D TRACING_MODE_TRACEFS;
->         } else if (!tep_find_event_by_name(tool->trace.tep, "osnoise", "t=
-imerlat_sample")) {
-> --
-> 2.52.0
->
+Yep. I can make them two different patches. Do you want me to take this as
+your patch? I'll need a SoB from you then.
 
-Tomas
-
+-- Steve
