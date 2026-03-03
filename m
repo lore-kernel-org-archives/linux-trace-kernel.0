@@ -1,249 +1,450 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5819234C81E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 20:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0EF3D6CD0;
+	Tue,  3 Mar 2026 21:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772570184; cv=none; b=eFQr9c3TVjWSEVukmlCQ9QJC6Or0i9wQnOcUJzdiDwZbomhvnj9pKdX+44eGmGJNk/z4J5+J5DlSAVxa3YihetWoH/JhUuDR8B56f1ziWUTOpRHskFLfOE9nFIAGFxPMu/+v89KQoT81AFYGuP4HOTXAkBrxOJ8c0mi1lvjxHxA=
+	t=1772574548; cv=none; b=FRCE+ePlei0RW+SouUewIaVA85C2Ps2GtuoLVyY43xQmtOzR021dwqwC9DSkoL1G7mcEg2QzwYuDJbNQPXOOcZ+uBKd2VhEGcVSzUmc97OOMCCj2yKIFdS80KVNmLJW5ya3GNlgibTguEjmCuOXyv+TUuCRW9CFqhadEkV9ZcXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772570184; c=relaxed/simple;
-	bh=0WXiDpchtAH8bVqvBLab1zkx9xLMSEgnhOTNf0nXPyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADzIJaaaxTmwI1tppUEOU/VIrtHAsYGSd9TVDUS0pwSKOKriu24SIMet96rLf6ZjAq0GUTbzQy8s+6dJaBKoV5KvFaZcdaLoZERdS/kCPhuthL41WTpeMG8lf3aewNuI137lQO4dEQ/7+po6/i6wiR3U50TGBDeHUY6n1fu2rcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jPoPJmvq; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1772574548; c=relaxed/simple;
+	bh=2O18WCD7nVs8vUnPwUpgTth3IEgvnga+ovswvO2RXro=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=D37zTliGENTmbO+mrjn0eUmcU+Dxqv/Ptv/eaWMV4ipOFB+DiENCCA9LjoObUQKZOrSSIkId9v8enjtwFoxX7rrevGc33oMyR7U8JXuai0m/jPU+wbXaNrRc7aw8JRMazQd5SG93y6iLLlgF32ryo4qygTGkb9ZXjDSsVsujzQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJjojWng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jPoPJmvq"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8cb38e6d164so791824585a.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 12:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1772570182; x=1773174982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
-        b=jPoPJmvq78g+dz55Aepd7ikVipZMlI0Osa0jjLmZQsj15+VwqhnnAUONGn6cG5gzTu
-         in0FpfpwHh+R+csZOndc80iKq0zo1NTn9NaX+MMzho/4eQVzKPUdvRHWC5jKYBd2CfHS
-         BI/fg5l1zHRzVwCUd1R5+taqm1bSHLUM6kmibt4G7VxLG1aEX6nXqIXrK2GRkx7n3d7Z
-         xu80v5DghZda3D9hSaRTm7hk6ieiZpshjkd22fpYTazE9xAzYVYtMgSVe+a1WXTLJBnq
-         XDzLBpxqyfwuoZkSzS1BU0dcUBNfDcgNi5IoblPgSy6WVFjPxnzwX4CmvtE1qk0xoYAj
-         27fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772570182; x=1773174982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HSMo5+Ht+OJv6fxlprT7RhyGGgmGe3zydeGluTTF1Sk=;
-        b=NNYhZGOHc+i6BoT56XvbaLg38RyAzeskUeSmGuh5EOU/koCWBj4tgHyxPOnXXIx2rh
-         vjoLdeHRE5NDSgJ0D+vtDCr0gCgMTXeySfrNKArk3NZ5aa5ev6OWp1iZ9nptev0TuHwq
-         0DqfwvYCCVKQcGIq4X4OkVL8hpWGAJ3C4MbjWNEL1CJbG3laSVwEV+wjUr3T0GWxtiuA
-         mn+DITQxGvVEa4EWt7k6blzJg79h8pZ1h2Pe2YYW2Sp3em8A5pRCLvoe1cJpGq3SqO8Z
-         PJp64mJdS6o2y0K4eEVYqyZgpaIXa545tB+hrnI3nqFG3JOgXWN4yeY2VxjOxyby1m0r
-         cM0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVOvyWQ6E7W7edM2sv+K+m+OCrIMkDLEYMDXQn8/dzQuO70DEkhY1zSK24WOmLwW4QkRwID5+UebE442z/YQeGhkrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHARzMs6TZBrDyTXmvfUGNeE5nK11Wtr/UCSWx52Qy5A16PQVA
-	KW5coCUWsdB4GT+Y78Erd6fnH6mTQXPoJdwWpm/KG01pawHAkfPgtFuqmhTjMvMCJO0=
-X-Gm-Gg: ATEYQzzwHCcWZabppFJlHNtpBZ3lyNikr2vd3417vZiXfxcqfOGwp/Ibllv2xch9bp8
-	khAY2+xZ+ViFyea+0KOe4rlne+0Sk6lYOhxBTuPVtjXmJdZI1yQLfYsH2hmVEZ7dc7UjDc87QJC
-	daYiGmCV9vpULaMmJD13OUQAgutSkWWmHvpF7o7I5wMZ3Rh56PK/rGhNnWRO6BoVmydzZLXlnQG
-	Eb+WHIOedJ7O7HQi38ncgxNDJexxS01Q4hQ9I4knEeW8xJaElmay/vNSnAqZzhFe/vr9/dh81xE
-	GK6o4ACkXSxkJnw+vTzfzpvVoWy+dl8isRTagCceEJMTF7kvQ0vPfDb+tfDlIYGXM3cnEkiq9gS
-	uhyG2qDVip5NXERN95AD2jYTL7lgxwvUQZ7eSOvyp268I3Fgyd9Rgqvdq5Lq9FYQ80HOi6e0Jsw
-	nTt/3yzulHopAWy+XLRdeTyTcVftIO/ocagrEjDUHSIeH9v63rZIUoqttJUsdUvitpraahMcb58
-	YbVO5AaXA==
-X-Received: by 2002:a05:620a:4720:b0:8cb:5442:d539 with SMTP id af79cd13be357-8cbc8dc28b1mr2313709285a.2.1772570182058;
-        Tue, 03 Mar 2026 12:36:22 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-899e89bf39bsm79243066d6.18.2026.03.03.12.36.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2026 12:36:20 -0800 (PST)
-Date: Tue, 3 Mar 2026 15:36:17 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aadGQXXpayvFOZpy@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <fzy6f6dpv3oq3ksr2mkst7pz3daeb3buhuvdvcw4633pcl7h6u@mxjgiwpg5acv>
- <aZ3BEn_73Rk8Fn7L@gourry-fedora-PF4VCD3F>
- <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJjojWng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87645C19425;
+	Tue,  3 Mar 2026 21:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772574547;
+	bh=2O18WCD7nVs8vUnPwUpgTth3IEgvnga+ovswvO2RXro=;
+	h=Date:From:To:Cc:Subject:References:From;
+	b=AJjojWng1Td+NviD4/KI7t2XdIcBYtTkGF9TBU6hIjmpwxURIBS5p3X34y4kLKbxk
+	 WE2AOVIbpgc6sQJFXA9PrM4gZXvNt7di29OZmHOu92qgY+lpktdn9REL1K45+3/fW5
+	 mzj5z/MZhkBDR+uVkFDE7w9Wgv0itckwSVx+/MjsQtraVM795Ij6mJjwzI+IZixBIj
+	 MpS++vSCC1AOcqKZ03+JsntMfzv3y6y9EM+2uuvtQINRwPLxhtMndKEV8OwWI/dcVs
+	 4dZJhoA/WUhpIi5LrdkF37AffsFZknniy4l9wmRkvtZAJxqCcxkjfPo8OZGYqVFeNJ
+	 gwc996sk+iSAQ==
+Received: from rostedt by gandalf with local (Exim 4.99.1)
+	(envelope-from <rostedt@kernel.org>)
+	id 1vxXcc-00000002tlD-2OHc;
+	Tue, 03 Mar 2026 16:49:42 -0500
+Message-ID: <20260303214942.428502100@kernel.org>
+User-Agent: quilt/0.69
+Date: Tue, 03 Mar 2026 16:47:36 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Brian Geffon <bgeffon@google.com>,
+ John Stultz <jstultz@google.com>,
+ Ian Rogers <irogers@google.com>,
+ Suleiman Souhlal <suleiman@google.com>
+Subject: [PATCH 1/2] tracing: Have futex syscall trace event show specific user data
+References: <20260303214735.002154462@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6izpi2wlqro72erhbvxhlx2lwdnae7my3ghfs6t33ivtixo4h@bi2u4x6qv7ul>
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Feb 26, 2026 at 02:27:24PM +1100, Alistair Popple wrote:
-> On 2026-02-25 at 02:17 +1100, Gregory Price <gourry@gourry.net> wrote...
-> > 
-> > If your service only allocates movable pages - your ZONE_NORMAL is
-> > effectively ZONE_MOVABLE.  
-> 
-> This is interesting - it sounds like the conclusion of this is ZONE_* is just a
-> bad abstraction and should be replaced with something else maybe some like this?
-> 
-> And FWIW I'm not tied to the ZONE_DEVICE as being a good abstraction, it's just
-> what we seem to have today for determing page types. It almost sounds like what
-> we want is just a bunch of hooks that can be associated with a range of pages,
-> and then you just get rid of ZONE_DEVICE and instead install hooks appropriate
-> for each page a driver manages. I have to think more about that though, this
-> is just what popped into my head when you start saying ZONE_MOVABLE could also
-> disappear :-)
-> 
-... snip ...
-> > 
-> > You don't have to squint because it was deliberate :]
-> 
-> Nice.
-> 
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I've had some time to chew on this a bit more.
+Add specific reporting of the futex system call. This allows for debugging
+the futex code a bit easier. Instead of just showing the values passed
+into the futex system call, read the value of the user space memory
+pointed to by the addr parameter.
 
-Adding a node-scope `struct dev_pagemap` produces some interesting
-(arguably useful / valuable) effects.
+Also make the op parameter more readable by parsing the values to show
+what the command is:
 
-The invariant would be clamping the entire node to ZONE_DEVICE
-(more on this below).
+ futex_requeue_p-3251    [002] .....  2101.068479: sys_futex(uaddr: 0x55e79a4da834 (0x80000cb1), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
+ futex_requeue_p-3248    [001] .....  2101.068970: sys_futex(uaddr: 0x7f859072f990 (0xcb2), FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, val: 3250)
+ futex_requeue_p-3252    [005] .....  2101.069108: sys_futex(uaddr: 0x55e79a4da838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7ffe61076aa0, uaddr2: 0x55e79a4da834, uaddr2: 94453214586932, val3: 0)
+ futex_requeue_p-3252    [005] .....  2101.069410: sys_futex(uaddr: 0x55e79a4da834 (0x80000cb1), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
 
-So if we think about it this way - we could just view this whole thing
-as another variant of ZONE_DEVICE - but without needing the memremap
-infrastructure (you can use normal hotplug to achieve it).
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_syscalls.c | 266 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 263 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index e96d0063cbcf..bc60a0497bcc 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -11,6 +11,8 @@
+ #include <linux/xarray.h>
+ #include <asm/syscall.h>
+ 
++#include <uapi/linux/futex.h>
++
+ #include "trace_output.h"
+ #include "trace.h"
+ 
+@@ -237,6 +239,125 @@ sys_enter_openat_print(struct syscall_trace_enter *trace, struct syscall_metadat
+ 	return trace_handle_return(s);
+ }
+ 
++static const char * __futex_cmds[] =
++{
++	"FUTEX_WAIT", "FUTEX_WAKE", "FUTEX_FD", "FUTEX_REQUEUE",
++	"FUTEX_CMP_REQUEUE", "FUTEX_WAKE_OP", "FUTEX_LOCK_PI",
++	"FUTEX_UNLOCK_PI", "FUTEX_TRYLOCK_PI", "FUTEX_WAIT_BITSET",
++	"FUTEX_WAKE_BITSET", "FUTEX_WAIT_REQUEUE_PI", "FUTEX_CMP_REQUEUE_PI",
++	"FUTEX_LOCK_PI2", };
++
++/* From futex/syscalls.c */
++static __always_inline bool futex_cmd_has_timeout(u32 cmd)
++{
++	switch (cmd) {
++	case FUTEX_WAIT:
++	case FUTEX_LOCK_PI:
++	case FUTEX_LOCK_PI2:
++	case FUTEX_WAIT_BITSET:
++	case FUTEX_WAIT_REQUEUE_PI:
++		return true;
++	}
++	return false;
++}
++
++static __always_inline bool futex_cmd_has_addr2(u32 cmd)
++{
++	switch (cmd) {
++	case FUTEX_REQUEUE:
++	case FUTEX_CMP_REQUEUE:
++	case FUTEX_WAKE_OP:
++	case FUTEX_WAIT_REQUEUE_PI:
++		return true;
++	}
++	return false;
++}
++
++static enum print_line_t
++sys_enter_futex_print(struct syscall_trace_enter *trace, struct syscall_metadata *entry,
++		      struct trace_seq *s, struct trace_event *event, int ent_size)
++{
++	bool done = false;
++	unsigned int op, cmd;
++	void *end = (void *)trace + ent_size;
++	void *ptr;
++	int i;
++
++	/* Set ptr to the user space copied area */
++	ptr = (void *)trace->args + sizeof(unsigned long) * entry->nb_args;
++	if (ptr + 4 > end)
++		ptr = NULL;
++
++	trace_seq_printf(s, "%s(", entry->name);
++
++	for (i = 0; !done && i < entry->nb_args; i++) {
++
++		if (trace_seq_has_overflowed(s))
++			goto end;
++
++		switch (i) {
++		case 0:
++			trace_seq_printf(s, "uaddr: 0x%lx", trace->args[i]);
++			if (ptr) {
++				u32 val = *(u32 *)ptr;
++				if (val < 10)
++					trace_seq_printf(s, " (%u)", val);
++				else
++					trace_seq_printf(s, " (0x%x)", val);
++			}
++			continue;
++		case 1:
++			op = trace->args[i];
++			cmd = op & FUTEX_CMD_MASK;
++			if (cmd <= FUTEX_LOCK_PI2)
++				trace_seq_printf(s, ", %s", __futex_cmds[cmd]);
++			else
++				trace_seq_puts(s, ", UNKNOWN");
++
++			if (op & FUTEX_PRIVATE_FLAG)
++				trace_seq_puts(s, "|FUTEX_PRIVATE_FLAG");
++			if (op & FUTEX_CLOCK_REALTIME)
++				trace_seq_puts(s, "|FUTEX_CLOCK_REALTIME");
++			continue;
++		case 3:
++			if (!futex_cmd_has_timeout(cmd)) {
++
++				if (!futex_cmd_has_addr2(cmd)) {
++					done = true;
++					continue;
++				}
++
++				trace_seq_printf(s, ", val2: 0x%x",
++						 (u32)(long)trace->args[i]);
++				continue;
++			}
++
++			if (!trace->args[i])
++				continue;
++
++			trace_seq_printf(s, ", timespec: 0x%lx",
++					 trace->args[i]);
++
++			continue;
++
++		case 4:
++			if (!futex_cmd_has_addr2(cmd)) {
++				done = true;
++				continue;
++			}
++			trace_seq_printf(s, ", uaddr2: 0x%lx", trace->args[i]);
++		}
++
++		trace_seq_printf(s, ", %s: %lu", entry->args[i],
++				 trace->args[i]);
++	}
++	trace_seq_putc(s, ')');
++end:
++	trace_seq_putc(s, '\n');
++
++	return trace_handle_return(s);
++}
++
+ static enum print_line_t
+ print_syscall_enter(struct trace_iterator *iter, int flags,
+ 		    struct trace_event *event)
+@@ -267,6 +388,10 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
+ 		if (!tr || !(tr->trace_flags & TRACE_ITER(VERBOSE)))
+ 			return sys_enter_openat_print(trace, entry, s, event);
+ 		break;
++	case __NR_futex:
++		if (!tr || !(tr->trace_flags & TRACE_ITER(VERBOSE)))
++			return sys_enter_futex_print(trace, entry, s, event, iter->ent_size);
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -437,6 +562,69 @@ sys_enter_openat_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+ 	return pos;
+ }
+ 
++static int __init
++sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
++{
++	int pos = 0;
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"\"uaddr: 0x%%lx (0x%%lx) cmd=%%s%%s%%s");
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"  val: 0x%%x timeout/val2: 0x%%llx");
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" uaddr2: 0x%%lx val3: 0x%%x\", ");
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" REC->uaddr,");
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" REC->__value,");
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"  __print_symbolic(REC->op & 0x%x, ", FUTEX_CMD_MASK);
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAIT\"}, ", FUTEX_WAIT);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAKE\"}, ", FUTEX_WAKE);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_FD\"}, ", FUTEX_FD);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_REQUEUE\"}, ", FUTEX_REQUEUE);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_CMP_REQUEUE\"}, ", FUTEX_CMP_REQUEUE);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAKE_OP\"}, ", FUTEX_WAKE_OP);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_LOCK_PI\"}, ", FUTEX_LOCK_PI);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_UNLOCK_PI\"}, ", FUTEX_UNLOCK_PI);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_TRYLOCK_PI\"}, ", FUTEX_TRYLOCK_PI);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAIT_BITSET\"}, ", FUTEX_WAIT_BITSET);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAKE_BITSET\"}, ", FUTEX_WAKE_BITSET);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_WAIT_REQUEUE_PI\"}, ", FUTEX_WAIT_REQUEUE_PI);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_CMP_REQUEUE_PI\"}, ", FUTEX_CMP_REQUEUE_PI);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			"{%d, \"FUTEX_LOCK_PI2\"}),", FUTEX_LOCK_PI2);
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" (REC->op & %d) ? \"|FUTEX_PRIVATE_FLAG\" : \"\",",
++			FUTEX_PRIVATE_FLAG);
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" (REC->op & %d) ? \"|FUTEX_CLOCK_REALTIME\" : \"\",",
++			FUTEX_CLOCK_REALTIME);
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" REC->val, REC->utime,");
++
++	pos += snprintf(buf + pos, LEN_OR_ZERO,
++			" REC->uaddr, REC->val3");
++	return pos;
++}
++
+ static int __init
+ __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+ {
+@@ -447,6 +635,8 @@ __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+ 	switch (entry->syscall_nr) {
+ 	case __NR_openat:
+ 		return sys_enter_openat_print_fmt(entry, buf, len);
++	case __NR_futex:
++		return sys_enter_futex_print_fmt(entry, buf, len);
+ 	default:
+ 		break;
+ 	}
+@@ -523,6 +713,21 @@ static void __init free_syscall_print_fmt(struct trace_event_call *call)
+ 		kfree(call->print_fmt);
+ }
+ 
++static int __init futex_fields(struct trace_event_call *call, int offset)
++{
++	char *arg;
++	int ret;
++
++	arg = kstrdup("__value", GFP_KERNEL);
++	if (WARN_ON_ONCE(!arg))
++		return -ENOMEM;
++	ret = trace_define_field(call, "u32", arg, offset, sizeof(int), 0,
++				 FILTER_OTHER);
++	if (ret)
++		kfree(arg);
++	return ret;
++}
++
+ static int __init syscall_enter_define_fields(struct trace_event_call *call)
+ {
+ 	struct syscall_trace_enter trace;
+@@ -544,6 +749,9 @@ static int __init syscall_enter_define_fields(struct trace_event_call *call)
+ 		offset += sizeof(unsigned long);
+ 	}
+ 
++	if (!ret && meta->syscall_nr == __NR_futex)
++		return futex_fields(call, offset);
++
+ 	if (ret || !meta->user_mask)
+ 		return ret;
+ 
+@@ -689,6 +897,48 @@ static int syscall_copy_user_array(char *buf, const char __user *ptr,
+ 	return 0;
+ }
+ 
++static int
++syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
++{
++	struct syscall_user_buffer *sbuf;
++	const char __user *ptr;
++	char *buf;
++
++	/* buf_size of zero means user doesn't want user space read */
++	if (!buf_size)
++		return -1;
++
++	/* If the syscall_buffer is NULL, tracing is being shutdown */
++	sbuf = READ_ONCE(syscall_buffer);
++	if (!sbuf)
++		return -1;
++
++	ptr = (char __user *)args[0];
++
++	*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
++	if (!*buffer)
++		return -1;
++
++	/* Add room for the value */
++	*size += 4;
++
++	buf = *buffer;
++
++	return 0;
++}
++
++static void syscall_put_futex(struct syscall_metadata *sys_data,
++			      struct syscall_trace_enter *entry,
++			      char *buffer)
++{
++	u32 *ptr;
++
++	/* Place the futex key into the storage */
++	ptr = (void *)entry->args + sizeof(unsigned long) * sys_data->nb_args;
++
++	*ptr = *(u32 *)buffer;
++}
++
+ static char *sys_fault_user(unsigned int buf_size,
+ 			    struct syscall_metadata *sys_data,
+ 			    struct syscall_user_buffer *sbuf,
+@@ -905,6 +1155,9 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+ 		if (syscall_get_data(sys_data, args, &user_ptr,
+ 				     &size, user_sizes, &uargs, tr->syscall_buf_sz) < 0)
+ 			return;
++	} else if (syscall_nr == __NR_futex) {
++		if (syscall_get_futex(args, &user_ptr, &size, tr->syscall_buf_sz) < 0)
++			return;
+ 	}
+ 
+ 	size += sizeof(*entry) + sizeof(unsigned long) * sys_data->nb_args;
+@@ -921,6 +1174,9 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+ 	if (mayfault)
+ 		syscall_put_data(sys_data, entry, user_ptr, size, user_sizes, uargs);
+ 
++	else if (syscall_nr == __NR_futex)
++		syscall_put_futex(sys_data, entry, user_ptr);
++
+ 	trace_event_buffer_commit(&fbuffer);
+ }
+ 
+@@ -971,14 +1227,18 @@ static int reg_event_syscall_enter(struct trace_event_file *file,
+ {
+ 	struct syscall_metadata *sys_data = call->data;
+ 	struct trace_array *tr = file->tr;
++	bool enable_faults;
+ 	int ret = 0;
+ 	int num;
+ 
+ 	num = sys_data->syscall_nr;
+ 	if (WARN_ON_ONCE(num < 0 || num >= NR_syscalls))
+ 		return -ENOSYS;
++
++	enable_faults = sys_data->user_mask || num == __NR_futex;
++
+ 	guard(mutex)(&syscall_trace_lock);
+-	if (sys_data->user_mask) {
++	if (enable_faults) {
+ 		ret = syscall_fault_buffer_enable();
+ 		if (ret < 0)
+ 			return ret;
+@@ -986,7 +1246,7 @@ static int reg_event_syscall_enter(struct trace_event_file *file,
+ 	if (!tr->sys_refcount_enter) {
+ 		ret = register_trace_sys_enter(ftrace_syscall_enter, tr);
+ 		if (ret < 0) {
+-			if (sys_data->user_mask)
++			if (enable_faults)
+ 				syscall_fault_buffer_disable();
+ 			return ret;
+ 		}
+@@ -1011,7 +1271,7 @@ static void unreg_event_syscall_enter(struct trace_event_file *file,
+ 	WRITE_ONCE(tr->enter_syscall_files[num], NULL);
+ 	if (!tr->sys_refcount_enter)
+ 		unregister_trace_sys_enter(ftrace_syscall_enter, tr);
+-	if (sys_data->user_mask)
++	if (sys_data->user_mask || num == __NR_futex)
+ 		syscall_fault_buffer_disable();
+ }
+ 
+-- 
+2.51.0
 
 
-
-0. pgdat->private becomes pgdat->dev_pagemap
-   N_MEMORY_PRIVATE -> N_MEMORY_DEVICE ?
-
-   As a start, do a direct conversion, and use the existing
-   infrastructure.   then expand hooks as needed (and as-is reasonable)
-
-   Some of the `struct dev_pagemap {}` fields become dead at the node
-   scope, but this is a plumbing issue.
-
-   There's already an similar split between the dev_pagemap and the ops
-   structure, so it might map very cleanly.
-
-
-1. "Clamping the entire node to ZONE_DEVICE"
-
-   When we do this, the *actual* ZONE becomes completely irrelevant.
-   The allocation path is entirely controlled, so you might actually end
-   up freeing up the folio flags that track the zone:
-
-   static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
-   {
-        ASSERT_EXCLUSIVE_BITS(flags.f, ZONES_MASK << ZONES_PGSHIFT);
-        return (flags.f >> ZONES_PGSHIFT) & ZONES_MASK;
-   }
-
-   becomes:
-
-   folio_is_zone_device(folio) {
-       return node_is_device_node(folio_nid(folio)) || 
-              memdesc_is_zone_device(folio->flags);
-   }
-
-   Kind of an interesting.  You still need these flags for traditional
-   ZONE_DEVICE, so you can't evict it completely, but you can start to
-   see a path here.
-
-
-2. One dev_pagemap per node or multiple w/ pagemap range searching
-
-   Checking membership is always cheap: 
-
-        node_is_device_node()
-
-   Getting ops can be cheap if 1:1 mappings exists:
-
-       pgdat->device_ops->callback()
-
-   Or may be expensive if range-based matching is required:
-
-      node_device_op(folio, ...) {
-         ops = node_ops_lookup(folio); /* pfn-range binary search */
-	 ops->callback(folio, ...)
-      }
-
-      pgmap already has an embedded range:
-
-      struct dev_pagemap {
-        ...
-        int nr_range;
-        union {
-            struct range range;
-            DECLARE_FLEX_ARRAY(struct range, ranges);
-        };
-      };
-
-   Example: Nouveau, registers hundreds of pgmap instances that it
-            uses to recover driver contexts for that specific folio.
-	    
-	    This would not scale well.
-
-	    But most other drivers register between 1-8.  That might.
-
-   That means this might actually be an effective way to evict pgmap
-   from struct folio / struct page.  (Not making this a requirement or
-   saying it's reasonable, just an interesting observation).
-
-
-3. Some existing drivers with 1 pgmap per driver instance instantly get
-   the folio->lru field back - even if they continue to use ZONE_DEVICE.
-
-   At least 3 drivers use page->zone_device_data as a page freelist
-   rather than actual per-page data.  Those drivers could just start
-   using folio/page->lru instead.
-
-   Some store actual per-page zone_device_data that would prevent this,
-   but from poking around it seems like it might be feasible.
-
-   Some use the pgmap as a container_of() argument to get driver
-   context, may or may not be supportable out of the box, but it seemed
-   like mild refactoring might get them back the use of folio->lru.
-
-   None of this is required, the goal is explicitly not disrupting any
-   current users of ZONE_DEVICE.
-
-
-Just some additional food for thought.
-
-As-designed now, this would only apply to NUMA systems, meaning you
-can't fully evict pgmap from struct page/folio --- but you could
-imagine a world where in non-numa mode we even register a separate
-pglist_data specifically for device memory even w/o NUMA.
-
-~Gregory 
