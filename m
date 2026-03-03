@@ -1,167 +1,142 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2DD3822B7;
-	Tue,  3 Mar 2026 14:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0103E3ED5A7
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 14:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772547964; cv=none; b=WWjfgCJ7jjvbkaAibZCjbbd+H5vneIPugib43HLeaWyD4q9UmBdDp98pFQrX38lh+hFa7DN2AMPBHlzJyV46SNg14vwbjtmvx9iPkUwHCuiGqGhJEMfkFJancncMrFvZcOQX9teA2QdLfycYFQy9l3JGv6C/u/rXqxxLycbMXTw=
+	t=1772548073; cv=none; b=TPty2duJQiNyk/0I0clk7hY+HrLVLJ3iJdIM/JLXvA51pExH3j4P8duMzu6c8S1rvufeDW+eEE8O9WtrRLol0DGJIXIbL35QgCtAa+0gCB9SDDtAlvhR03BEAYsLws5cWjQn321mp724VeLsVx0a2nMt6NLSfaSpS5bqlSiPEAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772547964; c=relaxed/simple;
-	bh=qnDLvfOYAMIQg8avmH5Pha1NK4JIjQHZjXzlt3EZXyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VgaGrHkQQDpt/CN8zvNRSxYaTJD20IFk4+eJh7H4vX/fYFIlAwLi29wqUD3DVld14I7yh0HhRPP/YrYvOblkKS18q9+lx9Tj+lXhcGghMYWfRzjK3wnPJ0Epig8YIIRCAAuwN9Cn1mMxx21KHHUbVHTR+GTLYw8Ig1cDpBHtFYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=cR1o2MTN; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1772548073; c=relaxed/simple;
+	bh=egMEBqKWfAr8CtNnm+dE/tXlDActJ7B5VMObkcMEQkQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0DDNNMrOIiYUHJhQqGf9mirHVOXRWqktzw25MR/cDvaXro753RIuheokzp0yN5lkhc1b1jWSyLipAHie8vlsTR5QpRwPask5zUvt0rlPL0okwvY89xDQlLI/NaqW21GpXrxeYae/jEyHIqApkvS3LzBKowMbKdbWl7S7U/Im1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TIPuOudc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="cR1o2MTN"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id DDD3FB3100;
-	Tue, 03 Mar 2026 14:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1772547960;
-	bh=LNVFddGP/SQV1eCKP4+0NtVgj/0UkiifX6TCYuJFdss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cR1o2MTNmIgJM6CSLHyWv2tw4JfyPhDpRjgo6tiqz7f4s2IZ5YCSw5z6tNQXgor7/
-	 fhP27pb7RcpWqjF+WmGNTd/A4By/OK271NUgciUW8p2iipyod2Rkd4JS3l1K9JMASN
-	 /hTSH+NuohXjtj/oRcJWrcMcZsLRnqGsDfXUKBlg=
-Date: Tue, 3 Mar 2026 14:25:55 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
-Message-ID: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
-References: <cover.1772206930.git.d@ilvokhin.com>
- <d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com>
- <0f340324-502b-4719-b3e7-c7ccd4378385@kernel.org>
- <20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TIPuOudc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772548070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0pzsSwi5adWCRovilNghDM/wCo/ieqebuXIEWNF2uf4=;
+	b=TIPuOudcVBtsdt8Y4ckl4LP7TGfyV2bzYxKxTdSW2k0AJiyGPkz1NUSRcQImSaTT/L/B8u
+	ICupI4lZ9lRsM9gM7K0G85lkuGeJKR2RIjHfkIEEagjAHkFwNJWAUUbmXmh1kIbTBu0Stq
+	ZsbOF/5T5T8P+QaV5Bq+4WeLNVJJHDE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-408-rt82pWnINACRYa0BMCdIiQ-1; Tue, 03 Mar 2026 09:27:49 -0500
+X-MC-Unique: rt82pWnINACRYa0BMCdIiQ-1
+X-Mimecast-MFC-AGG-ID: rt82pWnINACRYa0BMCdIiQ_1772548068
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8fbf8701e3so572626466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 06:27:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772548067; x=1773152867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0pzsSwi5adWCRovilNghDM/wCo/ieqebuXIEWNF2uf4=;
+        b=hCM8+2jgbYygrMLXnJp1C6io06au+cfUQZv3yXr13O/CrxZX32GpSnz8+fnLpM8I0Y
+         bTfGUd3c6adTZ0V48NJy9e+GGYogHXrUNptIQWOijhz4CmZfpuurzSjlwx2AKHdXs62A
+         a1njIGJM7AWdLT5EQE2QmBJl+A/zf076lhfK1pVT0Ar1mMh9lvkTg3gutxdQz7sKvB8e
+         kWWfvDB6tHjyLwtfdKK+cpgIhBRweYnwNsnXcoQgZCysjtbr76T6dN/O32V9Fio2dzn8
+         076td1mKHIyotwAA3B5yVgwrhWccDTO5y+q3QEp3xr/VREkDLL8gpu+RLrdkSwzh0ihI
+         NvNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyUG7XDYAVWEBOCcn7s0XVNQpJo+2ZL4xFOqAsf+JXuirhZ0TjeNz0giJ6m5FxkwZuwdnmQLexUVx1htiXdK3rr2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysU84n4qNSu9BxzsezzqlGwC4nEzqUnrBwQc9pRnKRJvESS60o
+	vEt1dRk+w3rVWXJQeMBSWUdtwO/k18E69DYTq5P1ZOOG/43NZjkX2TSUFlYuhNwgSBx08bS5fmL
+	sgObZ9qPTURMa7Hd96nBl5Q9GX/fKRpaqLHfn1TFiI6skbvB2Xmru0lRYrU4sNTafV0tQnQaRZj
+	1QkL4pqlFQvM6y1fzqgUwhhxKq0+DQT2S8XT2Fgga8ZmOx7p8mnLRPABDMnyw=
+X-Gm-Gg: ATEYQzxQWTiPBZMmG2dF4yPsOmaRkr4MNNsRpAobfNKqzTUzSmb2D/fN+uVWte3l9Cu
+	Ri2+o4nWlrx+Vt32dKbgWRUY4Os9GD8UcVkNacwT5MJthm4xRj4ldBalFfwpEMvxMioZ/HjugB1
+	AAGbrHq+If/jKrXIHNQN6kSzESQyV1VKPAPvlHp2v8IIV8mC362TKQ21CPapt+8XR+gptvghtFm
+	wyt/w==
+X-Received: by 2002:a17:907:9288:b0:b8f:7c0a:f955 with SMTP id a640c23a62f3a-b93763b77d3mr1103359766b.21.1772548067529;
+        Tue, 03 Mar 2026 06:27:47 -0800 (PST)
+X-Received: by 2002:a17:907:9288:b0:b8f:7c0a:f955 with SMTP id
+ a640c23a62f3a-b93763b77d3mr1103358166b.21.1772548067100; Tue, 03 Mar 2026
+ 06:27:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org>
+References: <20260115163650.118910-1-wander@redhat.com> <20260115163650.118910-13-wander@redhat.com>
+In-Reply-To: <20260115163650.118910-13-wander@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 3 Mar 2026 15:27:35 +0100
+X-Gm-Features: AaiRm52--PTPvTJjr7o8z065WWcwDMjy1s-ZrskhLMDXhoPN5incdHmTOca6bdY
+Message-ID: <CAP4=nvQ6EeecMggeVciOaW_-=sa2QJ2r9DX0Xifzgsv5JBhAAg@mail.gmail.com>
+Subject: Re: [PATCH v3 12/18] rtla: Enforce exact match for time unit suffixes
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Daniel Wagner <dwagner@suse.de>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: twhmzbq_TlkRMioTOJGUbpAuqYBoL343ez5X212z01Q_1772548068
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
-> On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
-> 
-> > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
-> > > This intentionally breaks direct users of zone->lock at compile time so
-> > > all call sites are converted to the zone lock wrappers. Without the
-> > > rename, present and future out-of-tree code could continue using
-> > > spin_lock(&zone->lock) and bypass the wrappers and tracing
-> > > infrastructure.
-> > > 
-> > > No functional change intended.
-> > > 
-> > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > Acked-by: SeongJae Park <sj@kernel.org>
-> > 
-> > I see some more instances of 'zone->lock' in comments in
-> > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
-> > 
-> 
-> I fixed (most of) that in the previous version but my fix was lost.
+=C4=8Dt 15. 1. 2026 v 18:28 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+>
+> The parse_ns_duration() function currently uses prefix matching for
+> detecting time units. This approach is problematic as it silently
+> accepts malformed strings such as "100nsx" or "100us_invalid" by
+> ignoring the trailing characters, leading to potential configuration
+> errors.
+>
+> Switch to using strcmp() for suffix comparison to enforce exact matches.
+> This ensures that the parser strictly validates the time unit and
+> rejects any input containing invalid trailing characters, thereby
+> improving the robustness of the configuration parsing.
+>
 
-Thanks for the fixups, Andrew.
+Why not use your strncmp_static() helper to protect from overrun?
 
-I still see a few 'zone->lock' references in Documentation remain on
-mm-new. This patch cleans them up, as noted by Vlastimil.
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> ---
+>  tools/tracing/rtla/src/utils.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/util=
+s.c
+> index 486d96e8290fb..b029fe5970c31 100644
+> --- a/tools/tracing/rtla/src/utils.c
+> +++ b/tools/tracing/rtla/src/utils.c
+> @@ -211,15 +211,15 @@ long parse_ns_duration(char *val)
+>         t =3D strtol(val, &end, 10);
+>
+>         if (end) {
+> -               if (!strncmp(end, "ns", 2)) {
+> +               if (strcmp(end, "ns") =3D=3D 0) {
+>                         return t;
+> -               } else if (!strncmp(end, "us", 2)) {
+> +               } else if (strcmp(end, "us") =3D=3D 0) {
+>                         t *=3D 1000;
+>                         return t;
+> -               } else if (!strncmp(end, "ms", 2)) {
+> +               } else if (strcmp(end, "ms") =3D=3D 0) {
+>                         t *=3D 1000 * 1000;
+>                         return t;
+> -               } else if (!strncmp(end, "s", 1)) {
+> +               } else if (strcmp(end, "s") =3D=3D 0) {
+>                         t *=3D 1000 * 1000 * 1000;
+>                         return t;
+>                 }
+> --
+> 2.52.0
+>
 
-I'm happy to adjust this patch if anything else needs attention.
-
-From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-Date: Tue, 3 Mar 2026 06:13:13 -0800
-Subject: [PATCH] mm: fix remaining zone->lock references
-
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- Documentation/mm/physical_memory.rst | 4 ++--
- Documentation/trace/events-kmem.rst  | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
-index b76183545e5b..e344f93515b6 100644
---- a/Documentation/mm/physical_memory.rst
-+++ b/Documentation/mm/physical_memory.rst
-@@ -500,11 +500,11 @@ General
- ``nr_isolate_pageblock``
-   Number of isolated pageblocks. It is used to solve incorrect freepage counting
-   problem due to racy retrieving migratetype of pageblock. Protected by
--  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
-+  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
- 
- ``span_seqlock``
-   The seqlock to protect ``zone_start_pfn`` and ``spanned_pages``. It is a
--  seqlock because it has to be read outside of ``zone->lock``, and it is done in
-+  seqlock because it has to be read outside of ``zone_lock``, and it is done in
-   the main allocator path. However, the seqlock is written quite infrequently.
-   Defined only when ``CONFIG_MEMORY_HOTPLUG`` is enabled.
- 
-diff --git a/Documentation/trace/events-kmem.rst b/Documentation/trace/events-kmem.rst
-index 68fa75247488..3c20a972de27 100644
---- a/Documentation/trace/events-kmem.rst
-+++ b/Documentation/trace/events-kmem.rst
-@@ -57,7 +57,7 @@ the per-CPU allocator (high performance) or the buddy allocator.
- 
- If pages are allocated directly from the buddy allocator, the
- mm_page_alloc_zone_locked event is triggered. This event is important as high
--amounts of activity imply high activity on the zone->lock. Taking this lock
-+amounts of activity imply high activity on the zone_lock. Taking this lock
- impairs performance by disabling interrupts, dirtying cache lines between
- CPUs and serialising many CPUs.
- 
-@@ -79,11 +79,11 @@ contention on the lruvec->lru_lock.
-   mm_page_pcpu_drain		page=%p pfn=%lu order=%d cpu=%d migratetype=%d
- 
- In front of the page allocator is a per-cpu page allocator. It exists only
--for order-0 pages, reduces contention on the zone->lock and reduces the
-+for order-0 pages, reduces contention on the zone_lock and reduces the
- amount of writing on struct page.
- 
- When a per-CPU list is empty or pages of the wrong type are allocated,
--the zone->lock will be taken once and the per-CPU list refilled. The event
-+the zone_lock will be taken once and the per-CPU list refilled. The event
- triggered is mm_page_alloc_zone_locked for each page allocated with the
- event indicating whether it is for a percpu_refill or not.
- 
-@@ -92,7 +92,7 @@ which triggers a mm_page_pcpu_drain event.
- 
- The individual nature of the events is so that pages can be tracked
- between allocation and freeing. A number of drain or refill pages that occur
--consecutively imply the zone->lock being taken once. Large amounts of per-CPU
-+consecutively imply the zone_lock being taken once. Large amounts of per-CPU
- refills and drains could imply an imbalance between CPUs where too much work
- is being concentrated in one place. It could also indicate that the per-CPU
- lists should be a larger size. Finally, large amounts of refills on one CPU
--- 
-2.47.3
+Tomas
 
