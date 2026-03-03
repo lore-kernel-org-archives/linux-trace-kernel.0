@@ -1,114 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70E935DA70
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Mar 2026 12:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E7E27AC31;
+	Tue,  3 Mar 2026 13:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772541988; cv=none; b=ly4X4K5geng3fOk3L2jEKChS47SN4+AT6A0AnOeXXfuDYKs2y48et2lPKGW8uLx3NF9XgvevCkXhkV3+7XjmVdLgUamJPhzFqgkQ1wOrzHZagREW7rqz2fTN7F0CTrC4s+AGGrwBLmShD1l9uG8fowFTTDnMVkiZq/r7R1u7Ucc=
+	t=1772545086; cv=none; b=R8JbZxEpsZ7f87L+WSNb7mbFYLYPblcSvskCXGRDcXzwwEJYj/7YcN7Vu3EquTyuxHWHMXzFfAiJpguPj8AeO+d9ha51UTy9n3tZyq39JA35+bxW3muuKhjJP9qCE6XrfSCtG2EErjtUCPd/prhbeTOMPbz1YC2WlMzp0aVacoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772541988; c=relaxed/simple;
-	bh=JAD0GsAXzpcGD9pr5IR/zQJEInVPlw0Smf5HeV04xG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rdeo8m+g6G1tysFnwAGlKCigH/5ICYtq/7e29eqCT0bapeOs/zesUBa4SMKe1BSrBIfTQuSmTmfTFTKyXaFEOmTkzZPmiuqvXzlQ570oPLpRroRwWh3Y3MyTvXRW5KCHwT+yNbQIa20aMzuW9ZIOywQUeZlaJjUqVFIlbkVJhx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gv++NL91; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772545086; c=relaxed/simple;
+	bh=PUXhAzVyDg5opgkKNFU6JDJ0GnFs4fQn60ZJlvuuzq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iydiijkJmAjhNPWZGpQa+DIaaVStJuGbrS8VDEcZXOK67lymeuISDBmD01E/Uio+8xsFbGdLEGf8GZSbrzDKFg+fSrUcATNjzuUne2hLPK5wQ1rhQIymDe/SmgKcHqCTaWU02Rs2RRRP/d5aHV/GB4UN589UshE6LWmwJClVbXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C+NAzkUg; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gv++NL91"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772541984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j6CLwkPWRkbJiv91VgiORsF4nwrwJm40itZvKlHfTOw=;
-	b=gv++NL91MjpFsK27c2mgbgwrURXTjxzMUwHA78HLEBhIFzm7NQUcIwGz2U2KKvRBaE1/Dx
-	yv6c0uY2m+AfGJ1B+WmG+hs/P4Bj/VQQI9BUi0i25gcIHr4d41LTt7II5Ddy72WnjcAW7d
-	5IoNu/ER3IEkLjTeSy+EPr330WQoGY8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-492-m558i3rNP6eaXcYrOxGC-Q-1; Tue, 03 Mar 2026 07:46:23 -0500
-X-MC-Unique: m558i3rNP6eaXcYrOxGC-Q-1
-X-Mimecast-MFC-AGG-ID: m558i3rNP6eaXcYrOxGC-Q_1772541982
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b8f9599feb8so428488766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 04:46:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772541982; x=1773146782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=j6CLwkPWRkbJiv91VgiORsF4nwrwJm40itZvKlHfTOw=;
-        b=qssMFMTJeP15Zfg1cXEcau9YeMDQz0ujhXh7H5egltlRhLnxCp++/fkpsvyu5GuJkH
-         sb7P579WgQNJtBuvaAtyt6DlkyIcvNcvmkJlWMYuhYGWU6a2Pd44Bt5yYj60lYhMDa7t
-         hIHxZdajgROqXFfXesny2aG9x5sFWL2vciLw1qRV755mIP62PkQaI4Rlspj2mJTJ86lg
-         pvoVY/x2ZnAc7OZBhiFElKN9J3fzLOHC8iU4MEAUUGFjTHi0Te8nluZJmfLxoBBfEl7L
-         6IL93364qys8j4ibon8p37Y1Gd3UI4IHPU5LBMZL/9s+84EIitdKvhjMLqdybwIfJa3L
-         LGAA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMNtNMJUrTyDGHViyZ0rYlDTp9b+S7Wl8uY3dnQupz3Kww7d+za3omUfxnatCmaEORQZMDiYvxVq2fZIA64ngzOmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzN8jN1FBluUtnQ/2OKwGAkM4dL+gbddpnRDqpWWtUIyAwOM9t
-	gDR8hmfuuTQP808WQZprP6BtcATB8dnpOa92V4VtjkURrct0NBfD/umpq/NGjOmjie0UZ9wDp/i
-	TZGujZ6MKX1VksC/DjdlyH2b80B19bRuS2m+IXkf2OQKVSH+yaC+1BEcpxnalOZuOpFHjOkgSXG
-	OM3EIz+lg/tjoleiv4YPQDUkikCXMDwqjtCX0q0aiHjBPX1Gi0
-X-Gm-Gg: ATEYQzzpt5pn45/hyo8m7kGvxucpm1l6c7S9cvnl/dfZ0vjskdIZfOwKxJb5MOKVzvX
-	cJjBc1kfulzlJ1B8Mm4YRldgUp0Ad0xWFUlHdxgl7WxyrgRuvcDA6xByx3CS/g+zIxya608oeWf
-	Ni1sJ+mSd7V267HT/W0mn48zcunDG3PR3S4Y2knixGSPxZ3ZCR8ZwmMjx9SOAp1JxWpYMD0oy2Z
-	cKmvQ==
-X-Received: by 2002:a17:906:ca57:b0:b86:e937:d097 with SMTP id a640c23a62f3a-b9376514675mr729184966b.38.1772541982391;
-        Tue, 03 Mar 2026 04:46:22 -0800 (PST)
-X-Received: by 2002:a17:906:ca57:b0:b86:e937:d097 with SMTP id
- a640c23a62f3a-b9376514675mr729182066b.38.1772541981952; Tue, 03 Mar 2026
- 04:46:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C+NAzkUg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Tk3uESbdvJBK0ZQDjaLs3gOQpD471/ds7fVyav3aEqM=; b=C+NAzkUgUxjxJBynLnQ11RqjfR
+	zbYsG/zy2ofectzScTg6NHncmcu0JStQWd88qwniMwEHPUDMrzeu5AbPFjRTOGOusjBgApX2iupEQ
+	4TSFZW7l8R1upfRlXqKLi4RgyAdnukQQvbYPR1dAqrxxpUxnOkbsrwTNYlBbOrqkyVi4QvfAA8Hbw
+	HJt/UXrH+SdGFi54kJW0+OTTU2dVCgOBYq2an1JkF/fBKXqVFdbNMcBaFcL7O/j1sFF7d0sWaEROA
+	h3pRPEd5DrrHSXCFjh0Qfque8DSpJNMUn053UKYZ0bE9iWOzQNS+w/08ekbSH5pMrlzHr3N0R0CUZ
+	4DO7FRhQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxPvS-0000000FEic-3CMP;
+	Tue, 03 Mar 2026 13:36:38 +0000
+Date: Tue, 3 Mar 2026 05:36:38 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Theodore Tso <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	David Ahern <dsahern@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-mm@kvack.org, netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-x25@vger.kernel.org,
+	audit@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
+ format macro
+Message-ID: <aabj5o1x4T-bRmro@infradead.org>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+ <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
+ <20260303012556.GA6520@macsyma-wired.lan>
+ <20260303042546.GF13868@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115163650.118910-1-wander@redhat.com> <20260115163650.118910-6-wander@redhat.com>
-In-Reply-To: <20260115163650.118910-6-wander@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 3 Mar 2026 13:46:10 +0100
-X-Gm-Features: AaiRm52GZVPjzh-rd5h81XelxgZ2dXcPJjs53KKG-UzICR-7mah2HbQfJdFe3ZQ
-Message-ID: <CAP4=nvTqJhM+0KuDAOooOtgUEad4t-7oOM7pDKxiMzEz=Pb5Pw@mail.gmail.com>
-Subject: Re: [PATCH v3 05/18] rtla: Replace magic number with MAX_PATH
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ivan Pravdin <ipravdin.official@gmail.com>, 
-	Crystal Wood <crwood@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Daniel Wagner <dwagner@suse.de>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
-	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
-	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: aGlho-k11oO5jI0oxIGotAaSeOltE0ZeVfHEyOopBls_1772541982
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260303042546.GF13868@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-=C4=8Dt 15. 1. 2026 v 18:26 odes=C3=ADlatel Wander Lairson Costa
-<wander@redhat.com> napsal:
-> --- a/tools/tracing/rtla/src/osnoise.c
-> +++ b/tools/tracing/rtla/src/osnoise.c
-> @@ -52,7 +52,7 @@ char *osnoise_get_cpus(struct osnoise_context *context)
->  int osnoise_set_cpus(struct osnoise_context *context, char *cpus)
->  {
->         char *orig_cpus =3D osnoise_get_cpus(context);
-> -       char buffer[1024];
-> +       char buffer[MAX_PATH];
+On Mon, Mar 02, 2026 at 08:25:46PM -0800, Darrick J. Wong wrote:
+> > That being said, the userspace PRIu64, et. al macros are complete
+> > format specifiers, not just a length modifier.  And I think this
+> > results in less ugly format specifiers in our kernel code.
+> 
+> Yeah, I don't like "ino=%" PRIino "u, lolz\n" either.  I'd rather have
+> the whole format in the PRIino definition -- it /is/ unsigned long
+> after all.
 
-Shouldn't this rather be strlen(cpus), a new constant, something like
-CPU_STRING_MAX, or a value dynamically computed from nr_cpus? The
-buffer is used to store "cpus" concatenated with "\n" to be written to
-the osnoise/cpus file, it has nothing to do with MAX_PATH.
-
-The contents of osnoise/cpus can be arbitrarily long [1], if you
-specify more than 1040 CPUs - which is theoretically possible, as
-CONFIG_NR_CPUs on e.g. Fedora 43 is 8192, although rather unlikely -
-it will be truncated.
-
-[1] 17f89102fe23 ("tracing/osnoise: Allow arbitrarily long CPU string")
-
-Tomas
+Just drop the bloody macro and the pointless micro-splitting of the
+change.  After this the inode is always 64-bit and we can just use
+normal ll specifiers without messing things up.
 
