@@ -1,259 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F399426EDB;
-	Tue,  3 Mar 2026 14:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2DD3822B7;
+	Tue,  3 Mar 2026 14:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772547599; cv=none; b=uSzUchSTwfeU7avf0prl4edksHJ0vbZ+JUKSGprVJ9Bvp2PNkQD1w1JgW4MT5ZlPCFFOi52Cc2Da2casEl1W0zHPjcZsZDmtyHxbCJg7eR9QiC2jZCjxHbIXfzclGFF8pEMUnyt7ITxTVDXWeG5vxsSFqxpte3kgyH/Ar1agw2M=
+	t=1772547964; cv=none; b=WWjfgCJ7jjvbkaAibZCjbbd+H5vneIPugib43HLeaWyD4q9UmBdDp98pFQrX38lh+hFa7DN2AMPBHlzJyV46SNg14vwbjtmvx9iPkUwHCuiGqGhJEMfkFJancncMrFvZcOQX9teA2QdLfycYFQy9l3JGv6C/u/rXqxxLycbMXTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772547599; c=relaxed/simple;
-	bh=r4+DRcQ99XTa57GDm6UbVCDzMLKoJoJJpUK9XBCHN4w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jLwO8fidHN02IW5oDSoN6trRM08z8NMc782JPu+RHl1p6OGUckqCP2cZdjP8P86g+26f62oiRBuTJ4vnIT+O2IhamEMBDERKduiRvoGNtc5V4jzGf3DfmkAP2dnzQcy0JVRuA8bJi9HNNhhP+veQmm1cAByXxrH93GD/kIZt1pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvO/c2NM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772547964; c=relaxed/simple;
+	bh=qnDLvfOYAMIQg8avmH5Pha1NK4JIjQHZjXzlt3EZXyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VgaGrHkQQDpt/CN8zvNRSxYaTJD20IFk4+eJh7H4vX/fYFIlAwLi29wqUD3DVld14I7yh0HhRPP/YrYvOblkKS18q9+lx9Tj+lXhcGghMYWfRzjK3wnPJ0Epig8YIIRCAAuwN9Cn1mMxx21KHHUbVHTR+GTLYw8Ig1cDpBHtFYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=cR1o2MTN; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvO/c2NM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657B8C116C6;
-	Tue,  3 Mar 2026 14:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772547598;
-	bh=r4+DRcQ99XTa57GDm6UbVCDzMLKoJoJJpUK9XBCHN4w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=BvO/c2NMlj5cF4IFnh2cwEEwHPC+uRykDlbqHaFUHLuMKe+aON6CN2r16iQvqLhWB
-	 906pehNXfsGl1JmRRPrlIBHHRDcOAQNW0aOQGWct1LMs7SQN2HmJcc55RPuHY/rGjh
-	 EwpKCRaWtprBt9vQH1BmpE0VeViY92GN33Ndr3/7S+Lc6FcxOGEcvjksWWyqHcFE5v
-	 4VEoCLdST94/msh8cq0/EDIUvEs1WZw35JRiUu0s9v5VOwxof3mAF+ySjWpb/B1ui3
-	 TR43X87Xb8SjxGuP3BryHgDt856XgQ6qQkw9cIQzHSaP7W6/WXAN0k97k2OxpEqGyj
-	 cjcDBpZpSimXQ==
-Message-ID: <1310fc5c09cce52ec00344b936275fe584c88dea.camel@kernel.org>
-Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
- format macro
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Theodore Tso <tytso@mit.edu>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>,  Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers	 <mathieu.desnoyers@efficios.com>, Dan Williams
- <dan.j.williams@intel.com>,  Matthew Wilcox <willy@infradead.org>, Eric
- Biggers <ebiggers@kernel.org>, Muchun Song <muchun.song@linux.dev>,  Oscar
- Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, David
- Howells <dhowells@redhat.com>,  Paulo Alcantara	 <pc@manguebit.org>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara	 <jack@suse.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,  Trond
- Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck
- Lever <chuck.lever@oracle.com>,  NeilBrown <neil@brown.name>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom
- Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>,  Shyam Prasad N <sprasad@microsoft.com>,
- Bharath SM <bharathsm@microsoft.com>, Alexander Aring	
- <alex.aring@gmail.com>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Viacheslav Dubeyko	 <slava@dubeyko.com>, Eric Van Hensbergen
- <ericvh@kernel.org>, Latchesar Ionkov	 <lucho@ionkov.net>, Dominique
- Martinet <asmadeus@codewreck.org>, Christian Schoenebeck
- <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, Marc Dionne	
- <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, Luis de
- Bethencourt	 <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>,
- "Tigran A. Aivazian"	 <aivazian.tigran@gmail.com>, Ilya Dryomov
- <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Jan Harkes
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,  Nicolas Pitre <nico@fluxnic.net>,
- Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, John
- Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li
- <frank.li@vivo.com>, Mikulas Patocka	 <mikulas@artax.karlin.mff.cuni.cz>,
- David Woodhouse <dwmw2@infradead.org>,  Richard Weinberger	
- <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, Konstantin Komarov	
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Anders Larsen
- <al@alarsen.net>, Zhihao Cheng	 <chengzhihao1@huawei.com>, Damien Le Moal
- <dlemoal@kernel.org>, Naohiro Aota	 <naohiro.aota@wdc.com>, Johannes
- Thumshirn <jth@kernel.org>, John Johansen	 <john.johansen@canonical.com>,
- Paul Moore <paul@paul-moore.com>, James Morris	 <jmorris@namei.org>, "Serge
- E. Hallyn" <serge@hallyn.com>, Mimi Zohar	 <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu	 <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
- <casey@schaufler-ca.com>, Alex Deucher	 <alexander.deucher@amd.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter	 <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Eric Dumazet	 <edumazet@google.com>, Kuniyuki
- Iwashima <kuniyu@google.com>, Paolo Abeni	 <pabeni@redhat.com>, Willem de
- Bruijn <willemb@google.com>, "David S. Miller"	 <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman	 <horms@kernel.org>, Oleg
- Nesterov <oleg@redhat.com>, Peter Zijlstra	 <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland	 <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>,  James Clark <james.clark@linaro.org>, Martin
- Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>,  Joerg Reuter
- <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg	
- <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde
- <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>,  Neal Cardwell
- <ncardwell@google.com>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu	 <herbert@gondor.apana.org.au>, Remi Denis-Courmont
- <courmisch@gmail.com>,  Marcelo Ricardo Leitner
- <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Magnus
- Karlsson <magnus.karlsson@intel.com>,  Maciej Fijalkowski
- <maciej.fijalkowski@intel.com>, Stanislav Fomichev <sdf@fomichev.me>,
- Alexei Starovoitov	 <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
- Fastabend <john.fastabend@gmail.com>, 	linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, 	fsverity@lists.linux.dev, linux-mm@kvack.org,
- netfs@lists.linux.dev, 	linux-ext4@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, 	linux-nfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, 	samba-technical@lists.samba.org,
- linux-nilfs@vger.kernel.org, 	v9fs@lists.linux.dev,
- linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@telemann.coda.cs.cmu.edu, 
-	ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
-	linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
- linux-x25@vger.kernel.org, 	audit@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, 	linux-can@vger.kernel.org,
- linux-sctp@vger.kernel.org, bpf@vger.kernel.org
-Date: Tue, 03 Mar 2026 09:19:42 -0500
-In-Reply-To: <aabpPQxCTweoTp8Z@infradead.org>
-References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
-	 <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
-	 <20260303012556.GA6520@macsyma-wired.lan>
-	 <20260303042546.GF13868@frogsfrogsfrogs>
-	 <33228005140684201de2ca0c157441d3b6a06413.camel@kernel.org>
-	 <aabkBadGzo7IZpSU@infradead.org>
-	 <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
-	 <aabpPQxCTweoTp8Z@infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="cR1o2MTN"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id DDD3FB3100;
+	Tue, 03 Mar 2026 14:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1772547960;
+	bh=LNVFddGP/SQV1eCKP4+0NtVgj/0UkiifX6TCYuJFdss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=cR1o2MTNmIgJM6CSLHyWv2tw4JfyPhDpRjgo6tiqz7f4s2IZ5YCSw5z6tNQXgor7/
+	 fhP27pb7RcpWqjF+WmGNTd/A4By/OK271NUgciUW8p2iipyod2Rkd4JS3l1K9JMASN
+	 /hTSH+NuohXjtj/oRcJWrcMcZsLRnqGsDfXUKBlg=
+Date: Tue, 3 Mar 2026 14:25:55 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, SeongJae Park <sj@kernel.org>
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Message-ID: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
+References: <cover.1772206930.git.d@ilvokhin.com>
+ <d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com>
+ <0f340324-502b-4719-b3e7-c7ccd4378385@kernel.org>
+ <20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org>
 
-On Tue, 2026-03-03 at 05:59 -0800, Christoph Hellwig wrote:
-> On Tue, Mar 03, 2026 at 08:43:15AM -0500, Jeff Layton wrote:
-> > On Tue, 2026-03-03 at 05:37 -0800, Christoph Hellwig wrote:
-> > > On Tue, Mar 03, 2026 at 05:53:39AM -0500, Jeff Layton wrote:
-> > > > Like I said to Ted, this is just temporary scaffolding for the chan=
-ge.
-> > > > The PRIino macro is removed in the end. Given that, perhaps you can
-> > > > overlook the bikeshed's color in this instance?
-> > >=20
-> > > So why add it in the first place? =20
-> >=20
-> > Bisectability. The first version I did of this would have broken the
-> > ability to bisect properly across these changes. I don't love the
-> > "churn" here either, but this should be cleanly bisectable.
->=20
-> What do you need to bisect in format string changes?  Splitting
-> every variable type change outside of the main i_ino out - sure.
-> But bisecting that "change to u64 in ext4" really broke ext4 and
-> not "change to u64" is not very useful.  Commits should do one
-> well defined thing.  Adding a weird transition layer for a format
-> thing that just gets dropped is not one well defined thing.
+On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
+> On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
+> 
+> > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
+> > > This intentionally breaks direct users of zone->lock at compile time so
+> > > all call sites are converted to the zone lock wrappers. Without the
+> > > rename, present and future out-of-tree code could continue using
+> > > spin_lock(&zone->lock) and bypass the wrappers and tracing
+> > > infrastructure.
+> > > 
+> > > No functional change intended.
+> > > 
+> > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > > Acked-by: SeongJae Park <sj@kernel.org>
+> > 
+> > I see some more instances of 'zone->lock' in comments in
+> > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
+> > 
+> 
+> I fixed (most of) that in the previous version but my fix was lost.
 
-In the middle stages of the series, you will get warnings or errors on
-32-bit hosts when i_ino's type doesn't match what the format string
-expects.
+Thanks for the fixups, Andrew.
 
-There are really only three options here:
+I still see a few 'zone->lock' references in Documentation remain on
+mm-new. This patch cleans them up, as noted by Vlastimil.
 
-1/ Do (almost) all of the changes in one giant patch
+I'm happy to adjust this patch if anything else needs attention.
 
-2/ Accept that the build may break during the interim stages
+From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+Date: Tue, 3 Mar 2026 06:13:13 -0800
+Subject: [PATCH] mm: fix remaining zone->lock references
 
-3/ This series: using a typedef and macro to work around the breakage
-until the type can be changed, at the expense of some extra churn in
-the codebase
+Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+---
+ Documentation/mm/physical_memory.rst | 4 ++--
+ Documentation/trace/events-kmem.rst  | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-3 seems like the lesser evil.
---
-Jeff Layton <jlayton@kernel.org>
+diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
+index b76183545e5b..e344f93515b6 100644
+--- a/Documentation/mm/physical_memory.rst
++++ b/Documentation/mm/physical_memory.rst
+@@ -500,11 +500,11 @@ General
+ ``nr_isolate_pageblock``
+   Number of isolated pageblocks. It is used to solve incorrect freepage counting
+   problem due to racy retrieving migratetype of pageblock. Protected by
+-  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
++  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+ 
+ ``span_seqlock``
+   The seqlock to protect ``zone_start_pfn`` and ``spanned_pages``. It is a
+-  seqlock because it has to be read outside of ``zone->lock``, and it is done in
++  seqlock because it has to be read outside of ``zone_lock``, and it is done in
+   the main allocator path. However, the seqlock is written quite infrequently.
+   Defined only when ``CONFIG_MEMORY_HOTPLUG`` is enabled.
+ 
+diff --git a/Documentation/trace/events-kmem.rst b/Documentation/trace/events-kmem.rst
+index 68fa75247488..3c20a972de27 100644
+--- a/Documentation/trace/events-kmem.rst
++++ b/Documentation/trace/events-kmem.rst
+@@ -57,7 +57,7 @@ the per-CPU allocator (high performance) or the buddy allocator.
+ 
+ If pages are allocated directly from the buddy allocator, the
+ mm_page_alloc_zone_locked event is triggered. This event is important as high
+-amounts of activity imply high activity on the zone->lock. Taking this lock
++amounts of activity imply high activity on the zone_lock. Taking this lock
+ impairs performance by disabling interrupts, dirtying cache lines between
+ CPUs and serialising many CPUs.
+ 
+@@ -79,11 +79,11 @@ contention on the lruvec->lru_lock.
+   mm_page_pcpu_drain		page=%p pfn=%lu order=%d cpu=%d migratetype=%d
+ 
+ In front of the page allocator is a per-cpu page allocator. It exists only
+-for order-0 pages, reduces contention on the zone->lock and reduces the
++for order-0 pages, reduces contention on the zone_lock and reduces the
+ amount of writing on struct page.
+ 
+ When a per-CPU list is empty or pages of the wrong type are allocated,
+-the zone->lock will be taken once and the per-CPU list refilled. The event
++the zone_lock will be taken once and the per-CPU list refilled. The event
+ triggered is mm_page_alloc_zone_locked for each page allocated with the
+ event indicating whether it is for a percpu_refill or not.
+ 
+@@ -92,7 +92,7 @@ which triggers a mm_page_pcpu_drain event.
+ 
+ The individual nature of the events is so that pages can be tracked
+ between allocation and freeing. A number of drain or refill pages that occur
+-consecutively imply the zone->lock being taken once. Large amounts of per-CPU
++consecutively imply the zone_lock being taken once. Large amounts of per-CPU
+ refills and drains could imply an imbalance between CPUs where too much work
+ is being concentrated in one place. It could also indicate that the per-CPU
+ lists should be a larger size. Finally, large amounts of refills on one CPU
+-- 
+2.47.3
+
