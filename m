@@ -1,113 +1,139 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A13C37FF79;
-	Wed,  4 Mar 2026 10:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B133A256C
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 10:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772619082; cv=none; b=uGkjd7jzvNkPhl2gSvwo03/hPkORJAfqIlYa+SWHIk+YSIwQPJ8oPqmkIwAVLj5mhwGDokIDIY74ckRoHLLzOBQFsbg5AbwLFtn4y0/zcP72gDo2XMpftTxj7YVfovgO2ovF6DE+Pe/Y109wA7R5QZQGYW5f6WrlOUznXZj5ENw=
+	t=1772620229; cv=none; b=JxMHGR8l2oMI3daNHDwqq7g52mgYhuECckaBKe8yHRfBXoOiW3b31s/wsQ30dyDVFLWEygdfTvnPIwHHRCLEkYN5Y1U+UmC01yR3K9JE9dK22wGdo/QAe5L6Z9zhmNCX/mrhXpr3Uw8F6NnKsix3zZHp07bfl42hbPdgEEDSAXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772619082; c=relaxed/simple;
-	bh=JQb85VHaICruah/Qdpes4o76dLFKahkK2tO0kdC0Zes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWpgR5LFvxfvfmnMAWhjBFI/vDz5sp4sc5M6yilGiKEMbn3hhlrdmZBeL4xICgzROarQK4KKC/DGS1VjC+ZcAzSikfsFVDUymS71tgESFbfCkazp81GyRFg6f0yDw7bFRw6L/i+AkOtWiaRuSOzpMaqYshPCceR2u9jgFNELIjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rUeaCfku; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1772620229; c=relaxed/simple;
+	bh=uLpdqpGN99/E//Avoz4o9MseQ49WViflUkqW9bUCsnM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PWh8ctG3lGUe4VAaAGAWDDkPmI/z9scnDXoRpqKvCh415YroZbeD5aAJahXoozpL1dl41hbeFmdWmEVh7aa37rL4b4e2cY9leUJwfdLx5+37MeqsHIASL/3ZNV9i94N3LxqKEX2LICgJoSDl+bxPgyaR1XB+NQcn4YHHEAHahew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fH50IW89; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rUeaCfku"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=mJ2CiEyAFUElfaXb6N8aGN32kS3DPoLsnA9tyI9dOKo=; b=rUeaCfkud2aiYXkPwCcJPWE/Vk
-	5rCfxeOOOsPCyP3EiNQET/HAIoe2iR1s1jU/f3+3rmcBxFgQeCuM+8mqqL4lpJYZBtM3NNuAPSKB/
-	vNRHhOUBrOdImQklwGpT9k3IDJT+Hn8vTlUPHRGPbEJkEZhl6Adf8w7s3+ngy7jQVHyvLmCyVypPY
-	P5LMlC2b6bcihJ9xUsyrXcCCo1c+CaPfnMSHwSGTAo60oXhG3GBuFpiEzniCC+RNBDCYXZhBk0oOD
-	mXF9tVdAynM1BfrAUul741D8VdCKV0CTcq6+ghfHHR7tzLn8wXG3evoV7EsDr9LF4Ix/NYZ8lSXjm
-	tGKdG0LA==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxjCC-0000000D65V-0Ugp;
-	Wed, 04 Mar 2026 10:11:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5FFE1300B40; Wed, 04 Mar 2026 11:11:11 +0100 (CET)
-Date: Wed, 4 Mar 2026 11:11:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: mingo@redhat.com, will@kernel.org, boqun@kernel.org, longman@redhat.com,
-	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-Message-ID: <20260304101111.GQ606826@noisy.programming.kicks-ass.net>
-References: <20260304074650.58165-1-laoar.shao@gmail.com>
- <20260304074650.58165-2-laoar.shao@gmail.com>
- <20260304090249.GN606826@noisy.programming.kicks-ass.net>
- <CALOAHbC1AHc2eZrzafz7ynrW7NFPrVmervCY_jjWsRTo0gBwQQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fH50IW89"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772620227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=StCiTICbmC1xh/aY+h5apEqtcUPRVdpBQ7SveVbW1g4=;
+	b=fH50IW89MTmXW8rUusZWBQV8nL+Q6VWmwK0r/Mv2bPn6AKiWnERJdtKg+k6slcT1sQmN11
+	Eg04G6FlI3nJauFkItQInOVuOvilaBhte4PZlc4H4K1sbOwmUZRcKvC87TCi5+0ABlSkPj
+	tZwDznbIdkQpDEaQZt0O1HA98Q1qNsQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-245-Ax_ZtlfMPwaRkPQxwkuuEw-1; Wed, 04 Mar 2026 05:30:26 -0500
+X-MC-Unique: Ax_ZtlfMPwaRkPQxwkuuEw-1
+X-Mimecast-MFC-AGG-ID: Ax_ZtlfMPwaRkPQxwkuuEw_1772620225
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b933c3a6c64so621335666b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Mar 2026 02:30:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772620225; x=1773225025;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=StCiTICbmC1xh/aY+h5apEqtcUPRVdpBQ7SveVbW1g4=;
+        b=aLavKmYSZ+mQL5PtuLI7deOcTKlyDgy8S5yyt7VhCsEJ/f2GNpyaNeNQS0AXFkrNZI
+         kh8H8XDT+2m+Levwa013Vm/KGH0bLRTvhSsefsidruvRY2nk4Jvf4I1VAg1QiZNU8edi
+         wn0Dbe2Em3svRuGYCW5hX0nRcqQ3NmPg9HfPSu2kDZ1Y65JjfvvkPrYbvxPpIAuFuT+Z
+         YKdVJCR1UkGnwcEfHYSIX7ColhhIvXhgwYcSMnplDqaMIiAxC5yngtj3CBDpCXNeePtG
+         rHGTeMdskab2Qa8Zc5E4tNVTcK8bhdzWEhbKyxFPuT+3u+i/Ikh67SZUT++v96/qlRqs
+         TDXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVE62azOHFwgNziPfJfVSYkU386jhVt7Z/RNv6gp051HM9DNahFhD3f0ZGgu9Sjks4jqcE8ohneQRlxqOsRbh+9qy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Sypt4zqGbuinFRxi0xoRRfHFrEXVPID0OyUh3j38o72tXNaS
+	QKoLsLwkWqdye7HQdw0kqSHVjPDbkHAw7OJ7zoytfwDrbE4iZGnhsFbGiu5fA2kWuCtIfA0NHHt
+	Dytlz8evA0XD/B0wVin142L0uPCZIQXUwEkjtox+sx183acnaTidNSJJi9s/WepwfmDaROyM3bv
+	r12uAAULQgXJhA9Jk2xDgC2rKbNHnrJLIrR3t3a3pyB8IFGL77
+X-Gm-Gg: ATEYQzxbelug0camqEyHIMGTqyjciLyEAWUUr5fUwYjy5TqimdMj82OZf0Pn3dwpgGP
+	Wm+wg8GT3/Ej421F1ADEYYXgfiL4dYDs0uCXgdK7IoyUjKcfWjcu/w56+t/7eg2CVWRstUlR82j
+	IRQ289jJF0cmhxwzxZJZ3fP1FpgyRqMHVi9n0mLIIYW1ymL3SerklsASP4cVWelI8kNyLEEoXqB
+	cGSvQ==
+X-Received: by 2002:a17:907:6d15:b0:b8e:d1f3:4744 with SMTP id a640c23a62f3a-b93f1594108mr84213666b.55.1772620224915;
+        Wed, 04 Mar 2026 02:30:24 -0800 (PST)
+X-Received: by 2002:a17:907:6d15:b0:b8e:d1f3:4744 with SMTP id
+ a640c23a62f3a-b93f1594108mr84210866b.55.1772620224457; Wed, 04 Mar 2026
+ 02:30:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbC1AHc2eZrzafz7ynrW7NFPrVmervCY_jjWsRTo0gBwQQ@mail.gmail.com>
+References: <20260115163650.118910-1-wander@redhat.com> <20260115163650.118910-17-wander@redhat.com>
+In-Reply-To: <20260115163650.118910-17-wander@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 4 Mar 2026 11:30:13 +0100
+X-Gm-Features: AaiRm52jWeoiqQEahwH6YFi5tyb0O1VzmWB8Yo5YKKa3V6s8QIEV42RNHDw4RzU
+Message-ID: <CAP4=nvSBEgfJg8qFYakiSfhE-Cp3RF9OoT2NR2qO+oRk+1BGEg@mail.gmail.com>
+Subject: Re: [PATCH v3 16/18] rtla/trace: Fix I/O handling in save_trace_to_file()
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	Crystal Wood <crwood@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Haiyong Sun <sunhaiyong@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Daniel Wagner <dwagner@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: G5X8P2EAyi8jrhvVZ4imqPidaYAqLJYO-XoLzoPw2-U_1772620225
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 04, 2026 at 05:37:31PM +0800, Yafang Shao wrote:
-> On Wed, Mar 4, 2026 at 5:03 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Mar 04, 2026 at 03:46:49PM +0800, Yafang Shao wrote:
-> > > Introduce mutex_lock_nospin(), a helper that disables optimistic spinning
-> > > on the owner for specific heavy locks. This prevents long spinning times
-> > > that can lead to latency spikes for other tasks on the same runqueue.
-> >
-> > This makes no sense; spinning stops on need_resched().
-> 
-> Hello Peter,
-> 
-> The condition to stop spinning on need_resched() relies on the mutex
-> owner remaining unchanged. However, when multiple tasks contend for
-> the same lock, the owner can change frequently. This creates a
-> potential TOCTOU (Time of Check to Time of Use) issue.
-> 
->   mutex_optimistic_spin
->       owner = __mutex_trylock_or_owner(lock);
->       mutex_spin_on_owner
->           // the __mutex_owner(lock) might get a new owner.
->           while (__mutex_owner(lock) == owner)
-> 
+=C4=8Dt 15. 1. 2026 v 18:29 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+> diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trac=
+e.c
+> index fed3362527b08..8e93b48d33ef8 100644
+> --- a/tools/tracing/rtla/src/trace.c
+> +++ b/tools/tracing/rtla/src/trace.c
+> @@ -73,6 +73,7 @@ int save_trace_to_file(struct tracefs_instance *inst, c=
+onst char *filename)
+>         char buffer[4096];
+>         int out_fd, in_fd;
+>         int retval =3D -1;
+> +       ssize_t n_read;
+>
+>         if (!inst || !filename)
+>                 return 0;
+> @@ -90,15 +91,30 @@ int save_trace_to_file(struct tracefs_instance *inst,=
+ const char *filename)
+>                 goto out_close_in;
+>         }
+>
+> -       do {
+> -               retval =3D read(in_fd, buffer, sizeof(buffer));
+> -               if (retval <=3D 0)
+> +       for (;;) {
+> +               n_read =3D read(in_fd, buffer, sizeof(buffer));
+> +               if (n_read < 0) {
+> +                       if (errno =3D=3D EINTR)
+> +                               continue;
+> +                       err_msg("Error reading trace file: %s\n", strerro=
+r(errno));
+>                         goto out_close;
+> +               }
+> +               if (n_read =3D=3D 0)
+> +                       break;
+>
+> -               retval =3D write(out_fd, buffer, retval);
+> -               if (retval < 0)
+> -                       goto out_close;
+> -       } while (retval > 0);
+> +               ssize_t n_written =3D 0;
 
-How do these new owners become the owner? Are they succeeding the
-__mutex_trylock() that sits before mutex_optimistic_spin() and
-effectively starving the spinner?
+Why break the style of declaring all variables at the beginning of the
+function? n_read, added in the same commit, keeps the style.
 
-Something like the below would make a difference if that were so.
+This also applies to the previous patch.
 
----
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index c867f6c15530..0796e77a8c3b 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -521,7 +521,7 @@ static __always_inline bool
- mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
- 		      struct mutex_waiter *waiter)
- {
--	return false;
-+	return __mutex_trylock(lock);
- }
- #endif
- 
-@@ -614,8 +614,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	mutex_acquire_nest(&lock->dep_map, subclass, 0, nest_lock, ip);
- 
- 	trace_contention_begin(lock, LCB_F_MUTEX | LCB_F_SPIN);
--	if (__mutex_trylock(lock) ||
--	    mutex_optimistic_spin(lock, ww_ctx, NULL)) {
-+	if (mutex_optimistic_spin(lock, ww_ctx, NULL)) {
- 		/* got the lock, yay! */
- 		lock_acquired(&lock->dep_map, ip);
- 		if (ww_ctx)
+Tomas
 
