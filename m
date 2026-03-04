@@ -1,94 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCB623BD1B;
-	Wed,  4 Mar 2026 01:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7661D18A6DB;
+	Wed,  4 Mar 2026 01:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772588916; cv=none; b=VcVM6PH/9H5KxYtzxZp7ZOOV5AQwXVZnngOU62g1tIi6ehFFeapdsOuv2nNw5xYNVDoELrFz3k9tbWnoKHUoEp6Th5oJVaRPSk6ga/FGR3XtlwpzXu7SyIsHzdfarLBFT2NmVMQn2kykgjn0DPrYtrRuhFQMqeiVtr2kPNzR+G8=
+	t=1772589040; cv=none; b=KajSGo4FXYLHKDB3GMvzezQ/K5Ynb7ShcnS5EmmRUT5OeHncqr0KUnZ2xj9P3BckgM+232R0C/K9ok4a+YZtCAb2UTVlMV0eRqCGLlx7jfY3XwlkBCRkUuFBEqqX9prZtvYbxGvGUhoJRsZgXmngLTHfkXJCaYdoZutXjuUV0AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772588916; c=relaxed/simple;
-	bh=Fa9nLYOGHIHdefzwWFDP3AaDErCLowrkNcenetv9BXA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=InskvX8b0+yeNRuMTU87a02TMn8Zf38NOo2spxF7yj8iPZhRHygm0qz0lxBbW6OU4SQwU0zIlYQk/KKbYtE3Y+XT4dIWWRrTUniFlzvSs5tAIig0BckK/FrVPNPhEgSqs5M90Ims0a6o21LjSe4wcmn0luWUnZIZBWMveGAItPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ul6QKCwK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772589040; c=relaxed/simple;
+	bh=O1q5xmxh+8ddRQkx9dw/RmwoUPF0G+lCo8Vxz/LWoc8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bQssc2fJCeln9JtBEMhNELxgdwngkEfDeor5T2Yhhq8Zfu1Gqb3hB2UFZSgh3X/ej+vXeacZVvWvHoxK3EFvYjSBsWYqxdwsvZ8G2fMqnANOLubDhBWzik6atZGUHPkzcmYSlcLDwDnJkAfLpa9C7+tHxu8ZerpJIjGhM0dLpGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMf6wHgU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ul6QKCwK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B753C116C6;
-	Wed,  4 Mar 2026 01:48:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMf6wHgU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0B3C116C6;
+	Wed,  4 Mar 2026 01:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772588915;
-	bh=Fa9nLYOGHIHdefzwWFDP3AaDErCLowrkNcenetv9BXA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ul6QKCwK91bg0QFzXIybQTpXMCy+daPHWbucxDZ8U6cBI8003uei0PfqUZjxrbwpr
-	 h4ISCY5bSowbeNvsIeA75NRwY5gbKtCXGz5ob4eIY8QXS3j2u0ECwfnv59HXAqRsu7
-	 A0uW2eY2MwPbeR20MQ2IWP6KQsm+RoGdUrz7kQ13PImqS6MgogXoFpeE0WffleaFUZ
-	 aRlUXVK90xP0KgZZF3C7/bI4OTHo4YErekJTjNrIzYpmWlyuIPHxo+CFmgrzW/WWlb
-	 +D+PcltSc4al3z1VPsIxd4JfRb7/ciWogYG8f3gd9VJNKuc6XE/LLnwoOWSZRy574r
-	 qjUCEBwPmH5sg==
-Date: Wed, 4 Mar 2026 10:48:33 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ftrace: Disable preemption in the tracepoint callbacks
- handling filtered pids
-Message-Id: <20260304104833.7b157f3cd2ff911cbcf77660@kernel.org>
-In-Reply-To: <20260303093949.4210e854@gandalf.local.home>
-References: <20260302213546.156e3e4f@gandalf.local.home>
-	<20260303131706.96057f61a48a34c43ce1e396@kernel.org>
-	<20260303093949.4210e854@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1772589040;
+	bh=O1q5xmxh+8ddRQkx9dw/RmwoUPF0G+lCo8Vxz/LWoc8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NMf6wHgUjBtsficAhTrZpbDymeP1qrJm9gVBDymeA284t3/4xD/IUN4lsK8wjWy+0
+	 bt6Y0geh7b6+ibfslggbZaS+3PjKY4n9O7gpimLq9/ZpKkd7YK3id1SyXOZg5ouJUt
+	 uCo3eHNYq8lUU8smojeLkxDQFMVVIdERceZ9EsdlPydbI7Q2l/lMKn1kZcAQzyoIqC
+	 8kACgcsK3/8fyojRSMUBnfjlAfY7nOBxBH6s2TEmHbq7UnjMV4sa0IGNnhhOzVEle5
+	 lbqA+w5yQeiS1As+ECWzKZrk9mNG9pC+HMt4/sVmhuZobunJ7mNsMpM5MZ/oCu3HN9
+	 3+17MGIcWJ4hA==
+From: SeongJae Park <sj@kernel.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Date: Tue,  3 Mar 2026 17:50:34 -0800
+Message-ID: <20260304015035.84839-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 3 Mar 2026 09:39:49 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 
-> On Tue, 3 Mar 2026 13:17:06 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
+> > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
+> > 
+> > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
+> > > > This intentionally breaks direct users of zone->lock at compile time so
+> > > > all call sites are converted to the zone lock wrappers. Without the
+> > > > rename, present and future out-of-tree code could continue using
+> > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
+> > > > infrastructure.
+> > > > 
+> > > > No functional change intended.
+> > > > 
+> > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > > > Acked-by: SeongJae Park <sj@kernel.org>
+> > > 
+> > > I see some more instances of 'zone->lock' in comments in
+> > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
+> > > 
+> > 
+> > I fixed (most of) that in the previous version but my fix was lost.
 > 
-> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > index 9928da636c9d..3b3aaf4831e9 100644
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -1039,6 +1039,7 @@ event_filter_pid_sched_process_exit(void *data, struct task_struct *task)
-> >  	struct trace_pid_list *pid_list;
-> >  	struct trace_array *tr = data;
-> >  
-> > +	guard(preempt)();
-> >  	pid_list = rcu_dereference_raw(tr->filtered_pids);
-> >  	trace_filter_add_remove_task(pid_list, NULL, task);
-> >  
-> > @@ -1054,6 +1055,7 @@ event_filter_pid_sched_process_fork(void *data,
-> >  	struct trace_pid_list *pid_list;
-> >  	struct trace_array *tr = data;
-> >  
-> > +	guard(preempt)();
-> >  	pid_list = rcu_dereference_sched(tr->filtered_pids);
-> >  	trace_filter_add_remove_task(pid_list, self, task);
-> >  
+> Thanks for the fixups, Andrew.
 > 
-> Yep. I can make them two different patches. Do you want me to take this as
-> your patch? I'll need a SoB from you then.
-
-I think we can combine those since it fixes the same commit.
-(just for bisectability)
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
+> I still see a few 'zone->lock' references in Documentation remain on
+> mm-new. This patch cleans them up, as noted by Vlastimil.
 > 
-> -- Steve
+> I'm happy to adjust this patch if anything else needs attention.
+> 
+> From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
+> From: Dmitry Ilvokhin <d@ilvokhin.com>
+> Date: Tue, 3 Mar 2026 06:13:13 -0800
+> Subject: [PATCH] mm: fix remaining zone->lock references
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> ---
+>  Documentation/mm/physical_memory.rst | 4 ++--
+>  Documentation/trace/events-kmem.rst  | 8 ++++----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
+> index b76183545e5b..e344f93515b6 100644
+> --- a/Documentation/mm/physical_memory.rst
+> +++ b/Documentation/mm/physical_memory.rst
+> @@ -500,11 +500,11 @@ General
+>  ``nr_isolate_pageblock``
+>    Number of isolated pageblocks. It is used to solve incorrect freepage counting
+>    problem due to racy retrieving migratetype of pageblock. Protected by
+> -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+> +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+
+Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
+to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
+for the rest of this patch.
+
+I was initially thinking this is just a mistake, but I also found Andrew is
+doing same change [2], so I'm bit confused.  Is this an intentional change?
+
+[1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
+[2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+SJ
+
+[...]
