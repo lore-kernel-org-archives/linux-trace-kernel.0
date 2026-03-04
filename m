@@ -1,113 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCFC373C0B;
-	Wed,  4 Mar 2026 22:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0847733E7;
+	Wed,  4 Mar 2026 23:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772664955; cv=none; b=sqklPUvqOOevtBVrmjRxQxKbr5MOt5j2aWCDvP7JlDPV4F7Ny/KR+lUBRbOcCAIM9BwO9s8MUSjRjktdBaR0RAlgs0ldCE6KCAEsgNOthWfkAU/KZ6Zr2SYpaeweIshFEG7dIKdyY9FmK9TsYk3N698p9pNY6WoGKF23pQKqfaI=
+	t=1772665344; cv=none; b=A634Ls14drTUexrZpce5tlmE3oXN/RHQOliMiDi5tGohTDuQTot+DXqn2f6bknrLxc4yiIBkFeZbzOV2m+GcDCzz/kaOohH4mypbkoIZrMZaLVEVQ6KnUJSrReP4QC2pNB9ih08KFf7Yb3V96fsByTWGLa5dCJ8FcSrCk0uP9WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772664955; c=relaxed/simple;
-	bh=Th0k5BwLXjcKqKxNPyWtlPrNyyCtPIZvtetPczGQdsQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cnSgtw97hEZc8kdUZiaSOMKEDyvnOZ7gw2XkrtDldDGPkQMelRSr0shTr/Iutj1H9l0zK7ixzkWmMD8EhBsMwy2zLeTkvdox2FZX06Sk0Tv1GoIRnTVRE9EUHH5vIF4SkMKYrnuyek/EE6x1MHA0T40w5Tf02xFhLJlVZnFmi7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWhjr6g0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772665344; c=relaxed/simple;
+	bh=14w0H0D4IOL8C58C3D5YJEOdb4HSBovzHbsYWC0iLL4=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=Hmjg3RawwdaAX6AsdDnN58GAtemxDUkSphnnwUsgdjtpuRX+6IyyqDBvS0Q2O3ZgqfYPo5VlMBK/4ObeqZ34vy1FHH7X/2Pt8k2YW4InuCL3w7a90x71PiR8HH67JzZrsScYWMV+FOJA5RedRuXrUXE7ulogGZHS3yw2c1t+9Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsIYMIj2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWhjr6g0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96504C4CEF7;
-	Wed,  4 Mar 2026 22:55:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsIYMIj2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D0DC4CEF7;
+	Wed,  4 Mar 2026 23:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772664955;
-	bh=Th0k5BwLXjcKqKxNPyWtlPrNyyCtPIZvtetPczGQdsQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WWhjr6g0YC/LGPHBiN1pOKYTPC9D7XGrawhQ9VLi6aULm0neouoE2TgJ2spzkdHk5
-	 DdX/AlePnhz7ZyyXe3lq3uO+KAyX4vJv5uF3SVt6AowTxQBphvW2PsWjh+GAJ8bR1o
-	 bGnHKj/e1Dqj1+DLjbnMlJK4n4UefH5hrkG8fIFFctIXAkmU6EBSZV9BXd85uHX3sm
-	 U4Qsoxlfpmbl13fvlzO6KECwLGyZZbFyX4W4MOSoJEs5HCN4AUgJ+A3Vo81unCgIAt
-	 IFSk8a+CiWezGNMSHNTtRuqHQ741kixcB5IFYeigIrYXVJwcYLjzILj/mIRs0MnFWJ
-	 98Lj/W3RqnJbw==
-Date: Thu, 5 Mar 2026 07:55:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph
- Lameter <cl@gentwo.org>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon
- <will@kernel.org>, Boqun Feng <boqun@kernel.org>, Waiman Long
- <longman@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH RFC 1/3] locking: Add contended_release tracepoint
-Message-Id: <20260305075552.0840e6b107dd9560e09e4f86@kernel.org>
-In-Reply-To: <f8605471fd84ebff963c011aa98f79ed17f493c7.1772642407.git.d@ilvokhin.com>
-References: <cover.1772642407.git.d@ilvokhin.com>
-	<f8605471fd84ebff963c011aa98f79ed17f493c7.1772642407.git.d@ilvokhin.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1772665343;
+	bh=14w0H0D4IOL8C58C3D5YJEOdb4HSBovzHbsYWC0iLL4=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=UsIYMIj2bu5zJVXrvQF6+0gY3sQwYIqLQOBuctPFTJmcoxWl7v83KFWKIzbYlKjzg
+	 H2szivDI0B+ugh4eFHJDDCg0WoZjPusE16di65n/lTk4/w6GzE1E0vHbyl/qm3Mo9W
+	 51kS2EzU39mkk5R/tEiqo0KdkvA5ZMX228nYaBKDLKndnjwC0EixhFMd8VTxB/qtax
+	 4sHkRq++3y0p7bMhugtzZpH7HIK/IBsXnsbciugKXSxDto+g5SpWhyJWvXRd2rXO5O
+	 Qt3cigIY/wMgoI3jBqP9d4hH/MlfAxeAxiNJyetqja8zevudPm4wkULc26Vsu5Odo8
+	 kKDCtJiUlFJRQ==
+Content-Type: multipart/mixed; boundary="===============4579780349641946905=="
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Message-Id: <ac763f388094863ef5c4d3a60d5606ea40406f66c91006fc9dd0e47573154a72@mail.kernel.org>
+In-Reply-To: <20260304222141.497203-15-jolsa@kernel.org>
+References: <20260304222141.497203-15-jolsa@kernel.org>
+Subject: Re: [PATCHv2 bpf-next 14/23] libbpf: Add bpf_link_create support for tracing_multi link
+From: bot+bpf-ci@kernel.org
+To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
+Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Wed,  4 Mar 2026 23:02:23 +0000 (UTC)
+
+--===============4579780349641946905==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-On Wed,  4 Mar 2026 16:56:15 +0000
-Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> --- a/tools/lib/bpf/bpf.c
+> +++ b/tools/lib/bpf/bpf.c
 
-> Add the contended_release trace event. This tracepoint fires on the
-> holder side when a contended lock is released, complementing the
-> existing contention_begin/contention_end tracepoints which fire on the
-> waiter side.
-> 
-> This enables correlating lock hold time under contention with waiter
-> events by lock address. Subsequent patches wire this tracepoint into
-> the individual lock implementations.
-> 
+[ ... ]
 
-OK, but I don't recommend you to split the traceevent definition
-and its usage. Could you combine [1/3] and [3/3], so that we can
-understand why this event is introduced and where it is recorded
-by checking one commit?
+> +	case BPF_TRACE_FENTRY_MULTI:
+> +	case BPF_TRACE_FEXIT_MULTI:
+> +	case BPF_TRACE_FSESSION_MULTI:
+> +		attr.link_create.tracing_multi.ids = (__u64) OPTS_GET(opts, tracing_multi.ids, 0);
+> +		attr.link_create.tracing_multi.cookies = (__u64) OPTS_GET(opts, tracing_multi.cookies, 0);
 
-Thank you,
+Should these use ptr_to_u64() instead of a raw (__u64) cast?
+The ids and cookies fields are pointers (__u32 * and __u64 *
+respectively), and every other pointer-to-u64 conversion in
+bpf_link_create() goes through ptr_to_u64():
 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  include/trace/events/lock.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
-> index 8e89baa3775f..4f28e41977ec 100644
-> --- a/include/trace/events/lock.h
-> +++ b/include/trace/events/lock.h
-> @@ -138,6 +138,23 @@ TRACE_EVENT(contention_end,
->  	TP_printk("%p (ret=%d)", __entry->lock_addr, __entry->ret)
->  );
->  
-> +TRACE_EVENT(contended_release,
-> +
-> +	TP_PROTO(void *lock),
-> +
-> +	TP_ARGS(lock),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(void *, lock_addr)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->lock_addr = lock;
-> +	),
-> +
-> +	TP_printk("%p", __entry->lock_addr)
-> +);
-> +
->  #endif /* _TRACE_LOCK_H */
->  
->  /* This part must be outside protection */
-> -- 
-> 2.47.3
-> 
+    attr.link_create.kprobe_multi.syms = ptr_to_u64(OPTS_GET(...));
+    attr.link_create.kprobe_multi.addrs = ptr_to_u64(OPTS_GET(...));
+    attr.link_create.uprobe_multi.path = ptr_to_u64(OPTS_GET(...));
+
+The ptr_to_u64() helper casts through (unsigned long) first,
+which avoids implementation-defined behavior and compiler
+warnings on 32-bit builds.
+
+> +		attr.link_create.tracing_multi.cnt = OPTS_GET(opts, tracing_multi.cnt, 0);
+> +		if (!OPTS_ZEROED(opts, tracing_multi))
+> +			return libbpf_err(-EINVAL);
+> +		break;
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22692622038
+--===============4579780349641946905==--
