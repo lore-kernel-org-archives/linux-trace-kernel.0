@@ -1,63 +1,63 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D563386C02
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 07:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02DE386542
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 07:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772610452; cv=none; b=VKOseChJMlYvVlqNgrRkRQSGbgeobjhD3EnmbV9UA3uObGrmjx+Je3g2irXCBJoZoXtNmblIyZHAlxNTFJz55XuAlnslfTkKpeCVnS+sGvH+EG/j4Wv3inMF2v/QT8KBokW68FaZZ80DpRlkpNNShcERGaW1QmUtaRDPaDYUzvk=
+	t=1772610457; cv=none; b=T59IVL5A6/qeOUlPA6MJiiCv/h/lerDVpCUXcZW6FB6EhTv2RsUmeM+u3HYff2tLlCjvKJTN4UGw1vpbypknDW+dVFRFHahkqKL9A6FG1DDLOhDQX3fRmY/irp5w8h4TWV/uIv82tCAwRpXyxDrAhMjiDV76kuHvFeS36/1nhjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772610452; c=relaxed/simple;
-	bh=6RIg3+xlc56a9TiATGgbmkLKt/1FmZfcHuoKSyt/chw=;
+	s=arc-20240116; t=1772610457; c=relaxed/simple;
+	bh=xij/w7IGsHGa0OZ+mD8D9GCI3hfE/hii5pckeZ7EKcg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CW58I7+tmiXmAmPyNAcjAPe+JO3KcFx6Noiu8FdXZqkI6vuLeuu1dcdLLyqlBTpZFUZtikOIsnrQ4m1ZgYwTttowqNFfzuZW1JUxsTffwBUZPgB25/OY+zuR3P7NUEEV/IYOyFFJJ/WYW6MPcn3EUQj8EPywLICNGZHQuHV6ZbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNP3pDQl; arc=none smtp.client-ip=209.85.216.50
+	 MIME-Version; b=qiMMGJVTruZqrpsnxFfj+OXAopgzBqbd6OCB4Gt9HjbR8g+BPmHP3abiZ1lzOdeDGTIi2agqt824cz/c/FPuscP1pb6SY6fADrneqHhQNaAoI9mGRzu7rMhlgnbDq4gYvzKnys9hONCDqjPeeC280USPXiy9LYufUO6MCzqg/x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QH9TtQTB; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNP3pDQl"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3598e065d8dso1423530a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 23:47:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH9TtQTB"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-358e3cc5e7eso2890793a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Mar 2026 23:47:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772610446; x=1773215246; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772610450; x=1773215250; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7ugG+Q6CRrXfDVHr7sdXkPMCc63GqTD3eiVmBzfzheY=;
-        b=nNP3pDQlHa0AD2Z3QzLIf7NljbzABm10nlytc7vp9yxz53wgzeWTCV7GMyc0rfko9T
-         xk7Yk6wmIIP9qgDh7FRZASMGD+j979z8KxMtZS5JnOEIjwQDssr+ws5flZV+jkzUSWSf
-         t+Yiyf5FYZEwG7XtPxP9/YgBsEMxa9kypdMhM1N650hGKlQ/pFK1FUqjAINQIA1fa7rq
-         yN3evzG9uW0tdL5a18zNQx/VVKTwLHQlMlF6jv2vaKwo4CoQ/GA1ByXtNUUB8vJKYYhB
-         PZvdjkV6WMV/s7cD98bnkPKTpj+UP97jE9wY4vdmMlsVKYT9F0O00yE3fWzrKQ6pWXPC
-         8s5A==
+        bh=4RAdqO2lKtYGLna+N0CaieqoPJ8dofo0McAImpjYXR8=;
+        b=QH9TtQTBc7urRW59mULbeHi3KLE5EFNv1YX9TriWcYeHNJfGddaLGBT4UDTGL1VNdI
+         /aRPPZP54PgzdaFoEs9dXbexfOgctqotpnZzOD0Sa5iKs9wJ49oNnb6aFiaVTf2L+rBe
+         labLFM3yK+9ulTrwDE3fHvSxFHojth2ibpl9up5jQBXtSEGW5CbRFJaOad1Nan1pdygx
+         clXrzaOYkc7Ugb1tqCcSo4u9TQbdSl/c/uVeCuPExw2srqFUknLfTwFCRgNqpA0XTJ1+
+         57ywf6/wly7qSXauH95f6kf+u/nor4AYXAIvcDc67AvLKyyu7M3TwZVNSoCZx8aETRwm
+         2e0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772610446; x=1773215246;
+        d=1e100.net; s=20230601; t=1772610450; x=1773215250;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=7ugG+Q6CRrXfDVHr7sdXkPMCc63GqTD3eiVmBzfzheY=;
-        b=F5SgLHlCzMVwLYI9ZcMNqpzgfw0SiRVXg4vVHBKYyP3vXwFl3WloCGovOoHnjC+oPp
-         Fm+wpdEHGdhZZ4lY+rYCzPmhLYNF1yMazLci/RAAd36CZxbCTv9WYDk4S58MDeK5tXlw
-         yH6+GtaV+9bQkkqIvCr0n3TVfPfPFXj9i9ZAHNEWfDFqLvOFDLaClZs+67Bt2rRqw5o5
-         yTxNe1LKVikTCiklEqEaXa+eV9n+zvlqeNg68seiUGFeUEYMWO+4RSVkc3gYAoDzPKp4
-         HtG1cAlqodL2PeXfAniias8SoaB/3DRsNaTEOhjZ99IvRvd1fdXVPQ3l6psMhwJNEBXB
-         8uvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjGfay36jaI+iJg7N+r7ri9RoLqfpZiWeZMXWArnH9lGyZ6zCQT13WZC4GYMVoft6Y4ddDb5dlyLn7JrhmbJBYoew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIZfmKR0ynhtV0tFs3Htzxs1FIwNVaozVcrnmCs8hLvibO7MHO
-	voIBHPsz+w7jSaYRV7RgXlBNPEEHKSbo/5YKFXlesAlkIqjg5XUaY4TE
-X-Gm-Gg: ATEYQzx6xZVuxTdO5km7B07OKoVBnLmUq35dp7sXv22mXmeqm+mCWNAtUXDgt6ORHyd
-	e+5sbKx75KQNv3bA3MflVlRljcbLiivtEG9Gl21YGHfgWsoyU1pNmltMJXqSWkunin2I73wi/zQ
-	x/HjFSNMQQPfpxveRpik83+TJEHy7knk6BuvG5mogHZwrzYyYlIydndn0zwP2+30MyTeh2y0VOj
-	tTfVXao9Q2/nuLqMOLX64LupSjcdVbElQcbEfVvZHh3AH4oWU2jEjbzX7FlOm2K75s2zF4gFhan
-	1PLpMduYNymkazQIDlpJNqoGUofIhqYO7Wmb5yVCdUBAG42oPrinU7aMAEqjBKAMIaRym5IsWh+
-	BebgVc/gNk4Kcd5hxehGbOqI1AoBGsBRPbrFJzKOhJ/n7Z87D/lpq3cmEm15qr1LOAIGjU3iuHp
-	dV2CAY4wOi7Qrvheh2wmigejnPo4iPvcu0j8443k2ElJ621xbI/VBCoelsPZFRJQ==
-X-Received: by 2002:a17:90b:1a92:b0:356:7b41:d348 with SMTP id 98e67ed59e1d1-359a6a3d157mr1010057a91.20.1772610446311;
-        Tue, 03 Mar 2026 23:47:26 -0800 (PST)
+        bh=4RAdqO2lKtYGLna+N0CaieqoPJ8dofo0McAImpjYXR8=;
+        b=ID7h0aADl1xxJt9b7jw0l4SCeXqKecplsqGqyZKhV3oSrm/yKq2N9bRvM/8IHwFOP0
+         dC/8VsficiGHFxd0oJhqdz9zF8C8zxRKrErp5SK7Bh9gcUPYmYeR2InhHTAdkORTDc7Z
+         Y9WhbQN8P6Xcbk61EoepicQbbNqWGJWg65ngGbTzEmCn8gu3+3CmMrLD8WX54nZF2czV
+         yMneZ8hb0NnasxBNHFyPYDYrZAfqjMwP6SjfW/ugZPWocvVK/HJrCTLJho2oYCOESU/o
+         oc3vOW9gEZpQuFEtLYx41sUd9HnES5KsJwjbygXXapZr/afdXGcvEYpKtYcn5bu/YsW6
+         MilQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVy/kfU/ibzW5VJfq7Pi3H4DMNJYdmyH169LMHXrI3+PTztILayOVrwN2NLGXOYFd/SurIyx+4AqDmU7r+f4RkTVP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp91yOZzJEwND2SSisi8LWa3nZD4LNqrx7POfLPsmwL42gt8n2
+	8TjJWmuy0Rve5MmYkvEOisf25veLABL9DitAQaHEoEmLUdB8qe2gYjgbBD3WWIeaocUJVw==
+X-Gm-Gg: ATEYQzy6lHO55ew+/JV5u9utTKQ/mZGRVZ913tOX3TwEcf5Gfv7kRleudGlYNkWMGog
+	8wbpp1j0/L8tPrVhVniIs5hODVFt+BnjjjziGEJKnBayPstxlgVRzpkFq/WCXjLLum3KGhPvdOl
+	WlLJOfq+QIDJrvGEkzL+kJedwhyzm+yXw4xAVj2KsXNbSm8+x9zsfXZQiQFBMc4941ATaMufn2m
+	5Btt0usFqc3umBfqyHMuu8IL6JDBgcchYvDQpyaWteigUu1hRt4U+3xnrJbpRQF8ZczWEjljxLD
+	d16Co0WTIzw7VTbvXyzQW2DfVsKnJ3lJ5DB7i13BMkg49/nJgHexSsj73oDshQI7FzcWRFbO48+
+	4tRd/moyCPxYSBJNMBSDflDvnT6ohhhwll2M5CBT8d8R3SV+CJhF1nwDTyhP96RmOSfj9FVs+RJ
+	G/0XOZaFLMBe54DgP+Zyqc9o81cEScvHbq3VdJMVYHPjGz7+RxKQ3ekM/qPl8wIA==
+X-Received: by 2002:a17:90b:3c90:b0:359:8c89:96cd with SMTP id 98e67ed59e1d1-359a69dae40mr1105809a91.12.1772610449953;
+        Tue, 03 Mar 2026 23:47:29 -0800 (PST)
 Received: from localhost.localdomain ([2409:891f:1ba6:a29e:d73:6202:f71f:51b0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3599c39def7sm4352078a91.12.2026.03.03.23.47.22
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3599c39def7sm4352078a91.12.2026.03.03.23.47.26
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 03 Mar 2026 23:47:25 -0800 (PST)
+        Tue, 03 Mar 2026 23:47:29 -0800 (PST)
 From: Yafang Shao <laoar.shao@gmail.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Yafang Shao <laoar.shao@gmail.com>
-Subject: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-Date: Wed,  4 Mar 2026 15:46:49 +0800
-Message-ID: <20260304074650.58165-2-laoar.shao@gmail.com>
+Subject: [RFC PATCH 2/2] ftrace: disable optimistic spinning for ftrace_lock
+Date: Wed,  4 Mar 2026 15:46:50 +0800
+Message-ID: <20260304074650.58165-3-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260304074650.58165-1-laoar.shao@gmail.com>
 References: <20260304074650.58165-1-laoar.shao@gmail.com>
@@ -86,145 +86,252 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce mutex_lock_nospin(), a helper that disables optimistic spinning
-on the owner for specific heavy locks. This prevents long spinning times
-that can lead to latency spikes for other tasks on the same runqueue.
+mutex_lock_nospin() is used for ftrace_lock to selectively disable
+optimistic spinning.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- include/linux/mutex.h  |  3 +++
- kernel/locking/mutex.c | 39 ++++++++++++++++++++++++++++++++-------
- 2 files changed, 35 insertions(+), 7 deletions(-)
+ kernel/trace/ftrace.c | 52 +++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index ecaa0440f6ec..1e488bb24b57 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -189,11 +189,13 @@ extern int __must_check mutex_lock_interruptible_nested(struct mutex *lock,
- extern int __must_check _mutex_lock_killable(struct mutex *lock,
- 		unsigned int subclass, struct lockdep_map *nest_lock) __cond_acquires(0, lock);
- extern void mutex_lock_io_nested(struct mutex *lock, unsigned int subclass) __acquires(lock);
-+extern void mutex_lock_nospin_nested(struct mutex *lock, unsigned int subclass);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 827fb9a0bf0d..b8cca4f76118 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1284,7 +1284,7 @@ static void clear_ftrace_mod_list(struct list_head *head)
+ 	if (!head)
+ 		return;
  
- #define mutex_lock(lock) mutex_lock_nested(lock, 0)
- #define mutex_lock_interruptible(lock) mutex_lock_interruptible_nested(lock, 0)
- #define mutex_lock_killable(lock) _mutex_lock_killable(lock, 0, NULL)
- #define mutex_lock_io(lock) mutex_lock_io_nested(lock, 0)
-+#define mutex_lock_nospin(lock) mutex_lock_nospin_nested(lock, 0)
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	list_for_each_entry_safe(p, n, head, list)
+ 		free_ftrace_mod(p);
+ 	mutex_unlock(&ftrace_lock);
+@@ -4254,7 +4254,7 @@ static void *t_start(struct seq_file *m, loff_t *pos)
+ 	void *p = NULL;
+ 	loff_t l;
  
- #define mutex_lock_nest_lock(lock, nest_lock)				\
- do {									\
-@@ -215,6 +217,7 @@ extern void mutex_lock(struct mutex *lock) __acquires(lock);
- extern int __must_check mutex_lock_interruptible(struct mutex *lock) __cond_acquires(0, lock);
- extern int __must_check mutex_lock_killable(struct mutex *lock) __cond_acquires(0, lock);
- extern void mutex_lock_io(struct mutex *lock) __acquires(lock);
-+extern void mutex_lock_nospin(struct mutex *lock) __acquires(lock);
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
  
- # define mutex_lock_nested(lock, subclass) mutex_lock(lock)
- # define mutex_lock_interruptible_nested(lock, subclass) mutex_lock_interruptible(lock)
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 2a1d165b3167..03d3b0749882 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -290,6 +290,14 @@ void __sched mutex_lock(struct mutex *lock)
- 		__mutex_lock_slowpath(lock);
- }
- EXPORT_SYMBOL(mutex_lock);
-+
-+void __sched mutex_lock_nospin(struct mutex *lock)
-+{
-+	might_sleep();
-+
-+	if (!__mutex_trylock_fast(lock))
-+		__mutex_lock_nospin(lock);
-+}
- #endif
+ 	if (unlikely(ftrace_disabled))
+ 		return NULL;
+@@ -4362,7 +4362,7 @@ static __init void ftrace_check_work_func(struct work_struct *work)
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
  
- #include "ww_mutex.h"
-@@ -443,8 +451,11 @@ static inline int mutex_can_spin_on_owner(struct mutex *lock)
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	do_for_each_ftrace_rec(pg, rec) {
+ 		test_for_valid_rec(rec);
+ 	} while_for_each_ftrace_rec();
+@@ -5123,7 +5123,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 	if (!new_hash)
+ 		goto out; /* warn? */
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	list_for_each_entry_safe(ftrace_mod, n, head, list) {
+ 
+@@ -5159,7 +5159,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 	if (enable && list_empty(head))
+ 		new_hash->flags &= ~FTRACE_HASH_FL_MOD;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	ftrace_hash_move_and_update_ops(ops, orig_hash,
+ 					      new_hash, enable);
+@@ -5465,7 +5465,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 		return -EINVAL;
+ 
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	/* Check if the probe_ops is already registered */
+ 	list_for_each_entry(iter, &tr->func_probes, list) {
+ 		if (iter->probe_ops == probe_ops) {
+@@ -5540,7 +5540,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 		}
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	if (!count) {
+ 		/* Nothing was added? */
+@@ -5619,7 +5619,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 			return -EINVAL;
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	/* Check if the probe_ops is already registered */
+ 	list_for_each_entry(iter, &tr->func_probes, list) {
+ 		if (iter->probe_ops == probe_ops) {
+@@ -5679,7 +5679,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 		goto out_unlock;
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	WARN_ON(probe->ref < count);
+ 
+@@ -5943,7 +5943,7 @@ ftrace_set_hash(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 			goto out_regex_unlock;
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, hash, enable);
+ 	mutex_unlock(&ftrace_lock);
+ 
+@@ -6205,7 +6205,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 	 * Now the ftrace_ops_list_func() is called to do the direct callers.
+ 	 * We can safely change the direct functions attached to each entry.
+ 	 */
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+@@ -6625,7 +6625,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
+ 	 * Now the ftrace_ops_list_func() is called to do the direct callers.
+ 	 * We can safely change the direct functions attached to each entry.
+ 	 */
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+@@ -6980,7 +6980,7 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
+ 		} else
+ 			orig_hash = &iter->ops->func_hash->notrace_hash;
+ 
+-		mutex_lock(&ftrace_lock);
++		mutex_lock_nospin(&ftrace_lock);
+ 		ftrace_hash_move_and_update_ops(iter->ops, orig_hash,
+ 						      iter->hash, filter_hash);
+ 		mutex_unlock(&ftrace_lock);
+@@ -7464,7 +7464,7 @@ void ftrace_create_filter_files(struct ftrace_ops *ops,
   */
- static __always_inline bool
- mutex_optimistic_spin(struct mutex *lock, struct ww_acquire_ctx *ww_ctx,
--		      struct mutex_waiter *waiter)
-+		      struct mutex_waiter *waiter, const bool nospin)
+ void ftrace_destroy_filter_files(struct ftrace_ops *ops)
  {
-+	if (nospin)
-+		return false;
-+
- 	if (!waiter) {
- 		/*
- 		 * The purpose of the mutex_can_spin_on_owner() function is
-@@ -577,7 +588,8 @@ EXPORT_SYMBOL(ww_mutex_unlock);
- static __always_inline int __sched
- __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclass,
- 		    struct lockdep_map *nest_lock, unsigned long ip,
--		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx)
-+		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx,
-+		    const bool nospin)
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	if (ops->flags & FTRACE_OPS_FL_ENABLED)
+ 		ftrace_shutdown(ops, 0);
+ 	ops->flags |= FTRACE_OPS_FL_DELETED;
+@@ -7571,7 +7571,7 @@ static int ftrace_process_locs(struct module *mod,
+ 	if (!start_pg)
+ 		return -ENOMEM;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	/*
+ 	 * Core and each module needs their own pages, as
+@@ -7868,7 +7868,7 @@ void ftrace_release_mod(struct module *mod)
+ 	struct ftrace_page *tmp_page = NULL;
+ 	struct ftrace_page *pg;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	/*
+ 	 * To avoid the UAF problem after the module is unloaded, the
+@@ -7938,7 +7938,7 @@ void ftrace_module_enable(struct module *mod)
+ 	struct dyn_ftrace *rec;
+ 	struct ftrace_page *pg;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -8267,7 +8267,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 	key.ip = start;
+ 	key.flags = end;	/* overload flags, as it is unsigned long */
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	/*
+ 	 * If we are freeing module init memory, then check if
+@@ -8686,7 +8686,7 @@ static void clear_ftrace_pids(struct trace_array *tr, int type)
+ 
+ void ftrace_clear_pids(struct trace_array *tr)
  {
- 	DEFINE_WAKE_Q(wake_q);
- 	struct mutex_waiter waiter;
-@@ -615,7 +627,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
  
- 	trace_contention_begin(lock, LCB_F_MUTEX | LCB_F_SPIN);
- 	if (__mutex_trylock(lock) ||
--	    mutex_optimistic_spin(lock, ww_ctx, NULL)) {
-+	    mutex_optimistic_spin(lock, ww_ctx, NULL, nospin)) {
- 		/* got the lock, yay! */
- 		lock_acquired(&lock->dep_map, ip);
- 		if (ww_ctx)
-@@ -716,7 +728,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 			 * to run.
- 			 */
- 			clear_task_blocked_on(current, lock);
--			if (mutex_optimistic_spin(lock, ww_ctx, &waiter))
-+			if (mutex_optimistic_spin(lock, ww_ctx, &waiter, nospin))
- 				break;
- 			set_task_blocked_on(current, lock);
- 			trace_contention_begin(lock, LCB_F_MUTEX);
-@@ -773,14 +785,21 @@ static int __sched
- __mutex_lock(struct mutex *lock, unsigned int state, unsigned int subclass,
- 	     struct lockdep_map *nest_lock, unsigned long ip)
+ 	clear_ftrace_pids(tr, TRACE_PIDS | TRACE_NO_PIDS);
+ 
+@@ -8695,7 +8695,7 @@ void ftrace_clear_pids(struct trace_array *tr)
+ 
+ static void ftrace_pid_reset(struct trace_array *tr, int type)
  {
--	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false);
-+	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false, false);
-+}
-+
-+static int __sched
-+__mutex_lock_nospin(struct mutex *lock, unsigned int state, unsigned int subclass,
-+		    struct lockdep_map *nest_lock, unsigned long ip)
-+{
-+	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false, true);
- }
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	clear_ftrace_pids(tr, type);
  
- static int __sched
- __ww_mutex_lock(struct mutex *lock, unsigned int state, unsigned int subclass,
- 		unsigned long ip, struct ww_acquire_ctx *ww_ctx)
+ 	ftrace_update_pid_func();
+@@ -8713,7 +8713,7 @@ static void *fpid_start(struct seq_file *m, loff_t *pos)
+ 	struct trace_pid_list *pid_list;
+ 	struct trace_array *tr = m->private;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	rcu_read_lock_sched();
+ 
+ 	pid_list = rcu_dereference_sched(tr->function_pids);
+@@ -8766,7 +8766,7 @@ static void *fnpid_start(struct seq_file *m, loff_t *pos)
+ 	struct trace_pid_list *pid_list;
+ 	struct trace_array *tr = m->private;
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	rcu_read_lock_sched();
+ 
+ 	pid_list = rcu_dereference_sched(tr->function_no_pids);
+@@ -9057,7 +9057,7 @@ static int prepare_direct_functions_for_ipmodify(struct ftrace_ops *ops)
+ 			unsigned long ip = entry->ip;
+ 			bool found_op = false;
+ 
+-			mutex_lock(&ftrace_lock);
++			mutex_lock_nospin(&ftrace_lock);
+ 			do_for_each_ftrace_op(op, ftrace_ops_list) {
+ 				if (!(op->flags & FTRACE_OPS_FL_DIRECT))
+ 					continue;
+@@ -9106,7 +9106,7 @@ static void cleanup_direct_functions_after_ipmodify(struct ftrace_ops *ops)
+ 			unsigned long ip = entry->ip;
+ 			bool found_op = false;
+ 
+-			mutex_lock(&ftrace_lock);
++			mutex_lock_nospin(&ftrace_lock);
+ 			do_for_each_ftrace_op(op, ftrace_ops_list) {
+ 				if (!(op->flags & FTRACE_OPS_FL_DIRECT))
+ 					continue;
+@@ -9153,7 +9153,7 @@ static int register_ftrace_function_nolock(struct ftrace_ops *ops)
+ 
+ 	ftrace_ops_init(ops);
+ 
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 
+ 	ret = ftrace_startup(ops, 0);
+ 
+@@ -9200,7 +9200,7 @@ int unregister_ftrace_function(struct ftrace_ops *ops)
  {
--	return __mutex_lock_common(lock, state, subclass, NULL, ip, ww_ctx, true);
-+	return __mutex_lock_common(lock, state, subclass, NULL, ip, ww_ctx, true, false);
- }
+ 	int ret;
  
- /**
-@@ -861,11 +880,17 @@ mutex_lock_io_nested(struct mutex *lock, unsigned int subclass)
+-	mutex_lock(&ftrace_lock);
++	mutex_lock_nospin(&ftrace_lock);
+ 	ret = ftrace_shutdown(ops, 0);
+ 	mutex_unlock(&ftrace_lock);
  
- 	token = io_schedule_prepare();
- 	__mutex_lock_common(lock, TASK_UNINTERRUPTIBLE,
--			    subclass, NULL, _RET_IP_, NULL, 0);
-+			    subclass, NULL, _RET_IP_, NULL, 0, false);
- 	io_schedule_finish(token);
- }
- EXPORT_SYMBOL_GPL(mutex_lock_io_nested);
- 
-+void __sched
-+mutex_lock_nospin_nested(struct mutex *lock, unsigned int subclass)
-+{
-+	__mutex_lock_nospin(lock, TASK_UNINTERRUPTIBLE, subclass, NULL, _RET_IP_);
-+}
-+
- static inline int
- ww_mutex_deadlock_injection(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
- {
 -- 
 2.47.3
 
