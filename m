@@ -1,155 +1,137 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9C81DE8AE;
-	Wed,  4 Mar 2026 13:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993173176E4
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 13:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772629320; cv=none; b=SpxJXVm7Fkr/vc4ly7wfhr9R+OT7WKR2BYLDtEn9UWJua2ZXuoDSjjM9Rz+fnaZz6GbtKWqrqf3snnLnrOB1t1q18tBs4dJL5HL78WB4RhvwzHcKakPVSPhaz2Eo1hFEdzDeCjPcEr8idb0VTdEN6GxXQfjasX9VZUhaBkWhVPI=
+	t=1772632662; cv=none; b=MlsjIzCQzqHXP2vYyRpFZ4qy2GM0YjN8jVj+ryWBURohVCWHi7ix8nswtqsBy4Pl5S7kHjosj19qFUT/qQ39vAS8gFUW1wbx0Uv+r3D6iQyju4yrY+StnALJRvjjYVYZ9v6+yuaSAAQZNoBAbAbyCpWS2olxHwV/8W4qG5K30Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772629320; c=relaxed/simple;
-	bh=Kb3qzLz/b1BGRAyVf2N/dxJ8GTEZDpzuub4ZDwWzUNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWHXSpKfMBpK5/iScNnSeA2YXCObWiHAKnPaOPHhQlsOkqgebzcPSeckMoVqF8g+oVKhsltgFIEYgbnNW1bcuuKfulHW7kiYJpQDUvLusIVcD3JjzH4kB4R6DjrhxEIDDFcX3ss8FcKGHoaHybLkNqACpN+6FAmL5zv1Z6aDde4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=pFthcIOp; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1772632662; c=relaxed/simple;
+	bh=cYloBhpvurhtJuftD7mo7c+dIKZCjU4qg99tSf1La6M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N8/RD+QptjHjwsXA+cl+OQHv9u6YgYxJ87EYXLtnT3liN8BKHq9XG408Gl4GwTPDsPrdcTJvW0uabaxWJc37C6H8K1i2qCCn0afr/QX0z0LkR7AJ6hLQMgEhfAo2CFN8Htcas+W+ghvavs8qwrtDWTHtKga0Ketb17HsnuoZIAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VMDRqcqP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="pFthcIOp"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 87BDEB3180;
-	Wed, 04 Mar 2026 13:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1772629310;
-	bh=A9Z22CwhsOMBQOd91GzYVcy5QaFqoA5vc5xFlhCLB5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=pFthcIOpg6gMssYocf5aeRIIf77W9v5hZIKXBO7FBI43GEFsFtiRaFd/8KmWzEQbq
-	 r5Mij1YYDKyrPnmIdgwa/tHoTR+2WzWnTHVmDS1cW790Wkj+VNUORUSHNy9/MsuVMl
-	 j/JEInhSlK7v2JYG+6N18JlNqCd4oHXPL8TqT9y0=
-Date: Wed, 4 Mar 2026 13:01:45 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
-Message-ID: <aagtOctLQqpDcw_h@shell.ilvokhin.com>
-References: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
- <20260304015035.84839-1-sj@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VMDRqcqP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772632660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y1W/srayQRvqMo/yxxutNDTdINw68flwZKgc3vV8bRQ=;
+	b=VMDRqcqPwzjCHqx+R1OiVseZXv6E6pSkRZMEVIDsxaxPYcQ9CbIViQSdYEJHKKcPQVWocT
+	FkpIBcvACTnNeIbTVZJwSS/ro5CxmnkuuNDoFXzS/vl9o5O1UqLizetJew9YrUTufYYoev
+	+ExFgthoDqaKbE6eg1wSW+n+ApfjKUo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-404-k20Ws16AOamwTkD4_UorCQ-1; Wed, 04 Mar 2026 08:57:39 -0500
+X-MC-Unique: k20Ws16AOamwTkD4_UorCQ-1
+X-Mimecast-MFC-AGG-ID: k20Ws16AOamwTkD4_UorCQ_1772632659
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b8f5bce308dso627363866b.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Mar 2026 05:57:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772632658; x=1773237458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Y1W/srayQRvqMo/yxxutNDTdINw68flwZKgc3vV8bRQ=;
+        b=izVdCfC2tvNNa98lz7Ktmpzt3tymlb4ALVZmZykRN1GkMyd/0zjHqkRqGHlVy5mXep
+         diiLNtJiLKqhsyIoSqFeN49nHE6rG5adwoL+I7BxO0wjCD77HLC0JL4yxA7ZZXXGtisS
+         RzCBCC69c1GNQMgeVxbSh7xgD+TQig+FBKNQU0COMijWGOFesluzcAxofuk9QE88/shB
+         tADuR4NKPiFAG/AOLlmhYlgGp5E7XdBK8a8RqmjsdLOl51SyjUxWSs8YjPPAdOxpbcSu
+         JKajbUi3sKTaQy48ceQtGdPVL4riSYmBoi5mzfgg/fm8nkhZOAA7m6o7AuuLAieVxsY+
+         ElUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlqYVD7UtqVcF4Vl4mKjoc0yz/9uD4RAuzsP7BrCYm+bfovGCteUNda7Q0ZxoZrcl5/s0NqpNT/3quRiPRmIB/I+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycNujv3NsyPwcW8txt436FPso7qVsTZMym6WuZmgUrlfAOa+ld
+	59FMh0vxd61elIjP+ILTTVoOYJ9LuBSiSFNuADbuno/MtPXpwkGxmyhJUJf3kump8jCK4YomgzL
+	lq/DQ3xmgVpvj9FVy07N+UCG/UtX041ePW4B1KPoVSuthZzb2CHSzJ130mi/cwFrlogAR0lGgBH
+	Zr905xV8bMynXKrSifqAFrY3cKKSrydNBI3pTIdPtUyPcK+EJ3CzzcFzxWURAvBg==
+X-Gm-Gg: ATEYQzy/S1Xvdgv3jcoujwuhaYbEMPBfVex5/Kl9MOLE099hNqaLNLVyaAH/kriNjaM
+	tzpNO2bNYHhRkaywMZywlPM33gcDyEa7mg0fcCeHbiS50Re58uv9kL3X9uZiLZK7wMDVjmp/ZeI
+	huhBbGX/mVhaDnh42NBw9a8Q0EWZzxvwhM3jV/q9OavwvTduuaZ+7e8RT2YNmjALnwZjyfV2KH9
+	LkPkQ==
+X-Received: by 2002:a17:906:fe07:b0:b93:edc0:e2e8 with SMTP id a640c23a62f3a-b93f159439fmr145724166b.48.1772632658246;
+        Wed, 04 Mar 2026 05:57:38 -0800 (PST)
+X-Received: by 2002:a17:906:fe07:b0:b93:edc0:e2e8 with SMTP id
+ a640c23a62f3a-b93f159439fmr145721766b.48.1772632657806; Wed, 04 Mar 2026
+ 05:57:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304015035.84839-1-sj@kernel.org>
+References: <20260115163650.118910-1-wander@redhat.com> <20260115163650.118910-13-wander@redhat.com>
+In-Reply-To: <20260115163650.118910-13-wander@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 4 Mar 2026 14:57:26 +0100
+X-Gm-Features: AaiRm51TaSP-CtGOs_BAIrz9wnpPv_k_RqmwkVJkfgloDvwaLNludi8u4LP6WhM
+Message-ID: <CAP4=nvTZ-k0QGsr_oyGmsr+gy6vbjmKv6TDVnUzQw=Av8YkEUQ@mail.gmail.com>
+Subject: Re: [PATCH v3 12/18] rtla: Enforce exact match for time unit suffixes
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	Ivan Pravdin <ipravdin.official@gmail.com>, Costa Shulyupin <costa.shul@redhat.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Daniel Wagner <dwagner@suse.de>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-trace-kernel@vger.kernel.org>, 
+	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
+	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: VCnoeb4UfrT-cAI3Ha6zDQLB1UBOfAqFlp_zPqO30RE_1772632659
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 03, 2026 at 05:50:34PM -0800, SeongJae Park wrote:
-> On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
-> 
-> > On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
-> > > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
-> > > 
-> > > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
-> > > > > This intentionally breaks direct users of zone->lock at compile time so
-> > > > > all call sites are converted to the zone lock wrappers. Without the
-> > > > > rename, present and future out-of-tree code could continue using
-> > > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
-> > > > > infrastructure.
-> > > > > 
-> > > > > No functional change intended.
-> > > > > 
-> > > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > > > Acked-by: SeongJae Park <sj@kernel.org>
-> > > > 
-> > > > I see some more instances of 'zone->lock' in comments in
-> > > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
-> > > > 
-> > > 
-> > > I fixed (most of) that in the previous version but my fix was lost.
-> > 
-> > Thanks for the fixups, Andrew.
-> > 
-> > I still see a few 'zone->lock' references in Documentation remain on
-> > mm-new. This patch cleans them up, as noted by Vlastimil.
-> > 
-> > I'm happy to adjust this patch if anything else needs attention.
-> > 
-> > From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
-> > From: Dmitry Ilvokhin <d@ilvokhin.com>
-> > Date: Tue, 3 Mar 2026 06:13:13 -0800
-> > Subject: [PATCH] mm: fix remaining zone->lock references
-> > 
-> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > ---
-> >  Documentation/mm/physical_memory.rst | 4 ++--
-> >  Documentation/trace/events-kmem.rst  | 8 ++++----
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
-> > index b76183545e5b..e344f93515b6 100644
-> > --- a/Documentation/mm/physical_memory.rst
-> > +++ b/Documentation/mm/physical_memory.rst
-> > @@ -500,11 +500,11 @@ General
-> >  ``nr_isolate_pageblock``
-> >    Number of isolated pageblocks. It is used to solve incorrect freepage counting
-> >    problem due to racy retrieving migratetype of pageblock. Protected by
-> > -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
-> > +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
-> 
-> Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
-> to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
-> for the rest of this patch.
-> 
-> I was initially thinking this is just a mistake, but I also found Andrew is
-> doing same change [2], so I'm bit confused.  Is this an intentional change?
-> 
-> [1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
-> [2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
-> 
+=C4=8Dt 15. 1. 2026 v 18:28 odes=C3=ADlatel Wander Lairson Costa
+<wander@redhat.com> napsal:
+>
+> The parse_ns_duration() function currently uses prefix matching for
+> detecting time units. This approach is problematic as it silently
+> accepts malformed strings such as "100nsx" or "100us_invalid" by
+> ignoring the trailing characters, leading to potential configuration
+> errors.
+>
+> Switch to using strcmp() for suffix comparison to enforce exact matches.
+> This ensures that the parser strictly validates the time unit and
+> rejects any input containing invalid trailing characters, thereby
+> improving the robustness of the configuration parsing.
 
-Good catch, thanks for pointing this out, SJ.
+This solution is incorrect. We need to be able to parse deadline
+priority correctly, whose format includes two suffixes:
 
-Originally the mechanical rename was indeed zone->lock -> zone->_lock.
-However, in Documentation I intentionally switched references to
-zone_lock instead of zone->_lock. The reasoning is that _lock is now an
-internal implementation detail, and direct access is discouraged. The
-intended interface is via the zone_lock_*() / zone_unlock_*() wrappers,
-so referencing zone_lock in documentation felt more appropriate than
-mentioning the private struct field (zone->_lock).
+d:runtime[us|ms|s]:period[us|ms|s]
+(see manpages)
 
-That said, I agree this creates inconsistency with the mechanical
-rename, and I'm happy to adjust either way: either consistently refer
-to the wrapper API, or keep documentation aligned with zone->_lock.
+and is parsed like this:
 
-I slightly prefer referring to the wrapper API, but don't have a strong
-preference as long as we're consistent.
+int parse_prio(char *arg, struct sched_attr *sched_param)
+{
+...
+    switch (arg[0]) {
+    case 'd':
+    case 'D':
+        /* d:runtime:period */
+        if (strlen(arg) < 4)
+            return -1;
 
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+        runtime =3D get_long_ns_after_colon(arg);
+        if (runtime =3D=3D INVALID_VAL)
+            return -1;
+
+        period =3D get_long_ns_after_colon(&arg[2]);
+        if (period =3D=3D INVALID_VAL)
+            return -1;
+...
+
+Your commit breaks that:
+
+$ rtla timerlat -P d:10ms:100ms
+Invalid -P priority
+
+Tomas
+
