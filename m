@@ -1,213 +1,113 @@
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE41B35CB6F
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 14:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772634355; cv=pass; b=jL6hk5osSOP7mHtCF8uKc6i3cgGPvSuIBQ3mYfgVBc7o1ElRlpqTPyzQu9yKqyRF+GUxbmdEOBrP0Oyw/u9ASuqw1HXRVt1IZybzOlwAwVP2b0s/3bmqEgaw8+FoNjz/bw21UWxnM7GFxVgIiW8gjpkZYAa5HndXWhHLoJqkm6I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772634355; c=relaxed/simple;
-	bh=rJTYxgQC+lQ1uoeB2LriF+FOQyxEeURNnM/kGqfyi/Q=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4A63B582E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 14:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772636233; cv=none; b=YYg80dTMp/D522fP3At4COUaYG1ZbMbivEKhYPzlCn0DWW2WtWiM0k+yGSYou/ttXWckB3FB2koaPLOXVfuTb9i9zk8V7DvRByj2kBYK7HrxQZi4iYVa00zyk679QatgPmVl2WCN4L/r27m1+H0eqarMQN5zQEI7lW5+H5q2dmE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772636233; c=relaxed/simple;
+	bh=oHGf015O3HEFczpp/doR7GCeyn5AXcOYhDM9+nhRjvg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3uymR7Kiv8cDwavx/GVMqzhgPBXb0uVltoTnjYRZLfYF8nnWQPU9V+vuD+I7WF/+j/dKnxCBNwzV+qPbJ9DPWTAmqZnJa23cJaaRb6RmOmn3K0VhwfoS/S9TloSCdIQqQ0BGG2pMspnr7Bx1SAE4NjEbn/sqkIkcS2TgiJSgAw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=creBAhKy; arc=pass smtp.client-ip=74.125.224.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=VABzpZ6aE93E9gCmxRBrU+NIvLr9zic3qgBPukUjz6/Dr4n1QnkKlm/mkCt6nkofDTuMsOcO61gjSQL3R1TByGM7VJcxE/KPtB+lieG9P9ia8P/nNJQcmYhZEJM73yvD6XO/B76TVias64eYO2dIRFxioLiRZWoikKQz7pNaSD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gZ0vTi/c; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="creBAhKy"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64ca2b32f46so5142311d50.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Mar 2026 06:25:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772634353; cv=none;
-        d=google.com; s=arc-20240605;
-        b=EmU2eNuTpBel9f0jR7YvQ0d5rvrceb+WnlCvhYtmRl8AmttxA9wsNXvRgmOaYo/+4x
-         zENptz6M9p0KN4yT3Wtvk8v4YejBonb82LociCYTVgo7q44oF4uKXknGpemFxZIigPAM
-         97I9Uq9IIgQcku8JkzuyPll0G402WoFA2LKaApEvyys2hr/UurCMihdZUyzvaW3GykW1
-         /qbqTpYRzdmQOzUr0INvG+WYFp8LN4gtwVOTMGZtANZHnLptEa8anPpr/0/J+GHjIjKB
-         rorMmltrmzVzSaPBlmrhQc8+IZdeRw1g6FwB00EQng7GmFUgxgiuBKFfIftZEFbBWisl
-         krIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
-        fh=YUie9Rphe+VGV/PKgE42XbBhMfYhGUCBF/9GugmL4mA=;
-        b=aYQdReyVRATsKz5uGOL6+ZNpJjc+qiKs+S58drHvATidZZzKSWE0tmti1q/UqIBryA
-         b7jkCO1T4oGZNeE8kJrPqnT5yZw4hN6UNIxbTzoP80QnHkSjgfOexxRr34ts2nt2JnkA
-         aGMfXfTlk9zaQSICY3QD/7Spw9TxL7suZlOkmgSwTgMI+UxcF9dd01/SmOBmH8DyAEuh
-         aeIyrqthNW05at9//Yb79oFsXdYKKl/oZiIS/3OnG5xJ0G6HPuqUSFxhT3kJLdHVacpa
-         YqFyI+kahfzFQMOCfzR5IOJYe77f831sSUArIgMYdvY0fEi1H+xD9l0QU9Y/7RlXKxO9
-         GcCA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772634353; x=1773239153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
-        b=creBAhKyHkX3c0HDgjeKJzXTeGumZYv1sr4Ul9krpI0n9soGEnkWtSATyQk89b3RXH
-         3buzhG2FK7RD/gC0KmgyB3LxHxH6VY1z12jfqn5ne8wrIykqkuM+UFYfNcivSvkoJOS2
-         zGI7YQ4y9CwgK2kQgJIhq1CrxzCLp4u+V85h35KkyDoobfj0HOL8XAtHz7cv3lCtUmI6
-         5TLmp7veJTrKKwzE3v4BT4I+PvF3hUszjd1fP45ZHuiA0p7pClluvG4fXIYWQyAxD1xu
-         pGDIBq9Rt/yn8kzXsD7As14fNHsrtJ7RNKK0MNuyhX+Z7/24CLVvIGTLNZEXEHGKxuGH
-         vHcQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZ0vTi/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772636231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NxcuwNQEbPJtChtRmmX8bmzTS5j+ytdkrBn203bf/CM=;
+	b=gZ0vTi/cvWDc+O65/cI39IqNyvDoaTCKKPIcIRUqgH5JhTDmGftEGgUKDymZD8smDtAt1i
+	RdzCbl0DMtBednk3XPlAGV+lJSG7VSDjZaHNCYhRgQP1nZxoKYzEIYI9rndZdGM85Jyf/M
+	k/jrMj853L4zDO8MB2P3UFHHvbsl+SU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-556-ZcY8f-vAOpKJzxTxuO4apg-1; Wed, 04 Mar 2026 09:57:10 -0500
+X-MC-Unique: ZcY8f-vAOpKJzxTxuO4apg-1
+X-Mimecast-MFC-AGG-ID: ZcY8f-vAOpKJzxTxuO4apg_1772636229
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-b8f9599feb8so515479466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Mar 2026 06:57:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772634353; x=1773239153;
+        d=1e100.net; s=20230601; t=1772636229; x=1773241029;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
-        b=FS3QVpZ27eP/5bNfSTHgOA6xSeFKtvJWA3faNg3rOIeYiebdt+Bk28K0+unmFA9KQr
-         8NHfDx5XUDbs5e56S1RIHQ37eUyZaVf8zncX9xZQ7ObxMIN06zbw0A7cK+ZrJ/De8dx/
-         m8DEapFhm3UfrvXE9EOCAIaFGs45PxB/aWu4sv9jCayEwHOaODz9CKw6LbuU/wA2gAZW
-         RYMyF5Rh0+p9AF0fXlKLJroaaAshRbSypDUwRn4VSgKb2OV7gPO23OtIWvkwJNhUVcTs
-         ePE0WX/NEuO1mq5d8dZuHhSU99v3rcpLVFmP+QVigmN/7UC1SWWVlr/lCZiEfkFjWJHX
-         5HTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqNKYQMR87LN/bLjXyHjpdhv18cD2lw0nqTELcMKOLa7STkB9mba7JVjnG41SgSLcm/rRc5T37DsN0gH3cb/HjyW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBk28AWFhXs0Kg+Ky5qbvHmKCxDqP6v/XFg2zDKzCM0IBcQYNz
-	tcdqsI8+iGoyGG4sC5emJI0VXrxmhYBu3KJZQnBlIgKPaiqg7EJIjWRVql9dqjBuYk+IFwnRkDc
-	FCWnGmkH7fX1RhnDu8HTEH4+8zsJMupw=
-X-Gm-Gg: ATEYQzzj8ORy5WuWPvqbAFdhTScssH8XlE+DatSn5YuA6g225q81JfjV9k9RVySi8dK
-	1X7eQLbVwgQFdLSxnL/m+ELVgWaGhzDV3889lZNfbaJi+VkmBAxrlnktnKsIOF2A0PQ/b8g30Jq
-	/Zvw/bImmBOrvSEenqbH+d+nFvip0HRTGOK/yX0MRLWbRFnFyXbdjvaJTP6CuYEGBoE8XS948Ax
-	cpMRUb8smxxuUbBMZuO1ZezBzF9u68SzR3aDJGne4ebBLdDW/xLnq3jVl2T6nyEF+p3jBKsk3dB
-	IbHVfzPM
-X-Received: by 2002:a05:690e:1c1c:b0:64a:db50:faa6 with SMTP id
- 956f58d0204a3-64cfa08d5cemr1407571d50.87.1772634352811; Wed, 04 Mar 2026
- 06:25:52 -0800 (PST)
+        bh=NxcuwNQEbPJtChtRmmX8bmzTS5j+ytdkrBn203bf/CM=;
+        b=K1lmVQhv3vpFH0Uhus5rnDa57zpf9TEL5oftA2p2vDMu8m6j6qgW/QisYtFluVRPaX
+         QLtLLmo97vBIZSa8GSH7oHds33ueSvitheKJteWBXcY0Xtrb9/Ljiti3Mfp+3w/CXxkm
+         M24l8moIxcGLHG8eqSve4H5vA+NNjDGkwnJlGMjhi3MXjUswh8809iTZm+EkOG3Ac/fY
+         p7R/eO2IcM6fpwKO0cArhBc/+HeRuzCb7+rO7hX8IO7jscz6od1Edr7YOEFaFJtjlEp3
+         m4K5B3isx/X6GYKG6iZjouf/75IZ21PCg41Vq3nYThCx6L+LH0R5+evAFERCEUO1Ca8a
+         kgVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXr6WO8FsP9nVTMNFn5CuaB0uLbLtG4cP2WP9Yjj41fFs9OZ/YZ9rEZRsRj7wtOE8iFdGRz3JfBWJZPNa+IwHwJTPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl0nd5PHaFwLvqlqzCgvyrt+7jXF+MHWyVt8tjL2ZvgwJc2nhy
+	YGG7jifYBU7bJmBb//OYLF4X98S6uOeEWaAnbPhn6wvKTDWXeeR7sBRPsMI1ZPrELzsK1y0Y+Bn
+	36epxDVBUwkIMMlkdwZ8dFxXZVsbS7GG9uYglsPbwFt7bs7BOTUzI2taPMquk5w+eMHIInph8xo
+	YSp/4vOvPtYAC2juX46WbssSNHN/+lmvsZyTI0WZ4xuRITM4Lg
+X-Gm-Gg: ATEYQzx9yHtxZxjR8+DDW1dHSOTFgR3ohcKVbroQjWgCK7PaL3gkKBejj6XSWEFgGf1
+	9IGk5Z39sdoSOekzeRebYaXC+X0BECFhf84Bug3EHVOqNfcif9Y8aC/ul8E7IwCOkxuNXMmfXV5
+	hTMjTuPp/eXx54jMTqzc2FPME5khDU/4eo+unuPjwM/mIoamNzb2pk2JYJEF2bO/SxM8IM3TglI
+	Ce2ig==
+X-Received: by 2002:a17:907:d18:b0:b93:a3db:a6b9 with SMTP id a640c23a62f3a-b93f1584a51mr122661166b.53.1772636229398;
+        Wed, 04 Mar 2026 06:57:09 -0800 (PST)
+X-Received: by 2002:a17:907:d18:b0:b93:a3db:a6b9 with SMTP id
+ a640c23a62f3a-b93f1584a51mr122659466b.53.1772636228844; Wed, 04 Mar 2026
+ 06:57:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260304074650.58165-1-laoar.shao@gmail.com> <20260304074650.58165-2-laoar.shao@gmail.com>
- <20260304090249.GN606826@noisy.programming.kicks-ass.net> <CALOAHbC1AHc2eZrzafz7ynrW7NFPrVmervCY_jjWsRTo0gBwQQ@mail.gmail.com>
- <20260304101111.GQ606826@noisy.programming.kicks-ass.net> <CALOAHbDmmbcK-0mG=44rw3wbaTwS8drzYD-s2gg8g+rPQZNLCg@mail.gmail.com>
- <20260304124148.GA2277644@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260304124148.GA2277644@noisy.programming.kicks-ass.net>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 4 Mar 2026 22:25:16 +0800
-X-Gm-Features: AaiRm53hMCKvbvNXj58w9LyMkxop3_JEJwaG3KpE4kSPSeAFXGwBklmTAbdWw3Y
-Message-ID: <CALOAHbDQP9gyr0R5YO1nCxsbw2tLFKuc4xz4UbbTEy7TkzrMuA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, will@kernel.org, boqun@kernel.org, longman@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20260213115234.430232-1-costa.shul@redhat.com> <20260213115234.430232-6-costa.shul@redhat.com>
+In-Reply-To: <20260213115234.430232-6-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 4 Mar 2026 15:56:57 +0100
+X-Gm-Features: AaiRm53z50JmqmT1o6Ph_54puJ9QJQq9UavtQvA3Nx1tVw-urpPxa1yu1HVK3Tg
+Message-ID: <CAP4=nvQZT9GB85cHkkFBL+BRzsiU+15RG7a1aQ3jp4BPA+1Axg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] tools/rtla: Remove unneeded cpus parameter from
+ timerlat BPF functions
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
+	Wander Lairson Costa <wander@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	John Kacur <jkacur@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: BwO23dottEcytPTISrgTgQmObuz4NgwJmKaC7KjV8-k_1772636229
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 4, 2026 at 8:41=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
-> wrote:
+p=C3=A1 13. 2. 2026 v 12:53 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
 >
-> On Wed, Mar 04, 2026 at 07:52:06PM +0800, Yafang Shao wrote:
-> > On Wed, Mar 4, 2026 at 6:11=E2=80=AFPM Peter Zijlstra <peterz@infradead=
-.org> wrote:
-> > >
-> > > On Wed, Mar 04, 2026 at 05:37:31PM +0800, Yafang Shao wrote:
-> > > > On Wed, Mar 4, 2026 at 5:03=E2=80=AFPM Peter Zijlstra <peterz@infra=
-dead.org> wrote:
-> > > > >
-> > > > > On Wed, Mar 04, 2026 at 03:46:49PM +0800, Yafang Shao wrote:
-> > > > > > Introduce mutex_lock_nospin(), a helper that disables optimisti=
-c spinning
-> > > > > > on the owner for specific heavy locks. This prevents long spinn=
-ing times
-> > > > > > that can lead to latency spikes for other tasks on the same run=
-queue.
-> > > > >
-> > > > > This makes no sense; spinning stops on need_resched().
-> > > >
-> > > > Hello Peter,
-> > > >
-> > > > The condition to stop spinning on need_resched() relies on the mute=
-x
-> > > > owner remaining unchanged. However, when multiple tasks contend for
-> > > > the same lock, the owner can change frequently. This creates a
-> > > > potential TOCTOU (Time of Check to Time of Use) issue.
-> > > >
-> > > >   mutex_optimistic_spin
-> > > >       owner =3D __mutex_trylock_or_owner(lock);
-> > > >       mutex_spin_on_owner
-> > > >           // the __mutex_owner(lock) might get a new owner.
-> > > >           while (__mutex_owner(lock) =3D=3D owner)
-> > > >
-> > >
-> > > How do these new owners become the owner? Are they succeeding the
-> > > __mutex_trylock() that sits before mutex_optimistic_spin() and
-> > > effectively starving the spinner?
-> > >
-> > > Something like the below would make a difference if that were so.
-> >
-> > The following change made no difference; concurrent runs still result
-> > in prolonged system time.
-> >
-> > real 0m5.265s user 0m0.000s sys 0m4.921s
-> > real 0m5.295s user 0m0.002s sys 0m4.697s
-> > real 0m5.293s user 0m0.003s sys 0m4.844s
-> > real 0m5.303s user 0m0.001s sys 0m4.511s
-> > real 0m5.303s user 0m0.000s sys 0m4.694s
-> > real 0m5.302s user 0m0.002s sys 0m4.677s
-> > real 0m5.313s user 0m0.000s sys 0m4.837s
-> > real 0m5.327s user 0m0.000s sys 0m4.808s
-> > real 0m5.330s user 0m0.001s sys 0m4.893s
-> > real 0m5.358s user 0m0.005s sys 0m4.919s
-> >
-> > Our kernel is not built with CONFIG_PREEMPT enabled, so prolonged
-> > system time can lead to CPU pressure and potential latency spikes.
-> > Since we can reliably reproduce this unnecessary spinning, why not
-> > improve it to reduce the overhead?
+> nr_cpus is a global variable available throughout the codebase, so
+> passing it as a function parameter is unnecessary.
 >
-> If you cannot explain what the problem is (you haven't), there is
-> nothing to fix.
+> Remove the cpus parameter from timerlat_bpf_get_hist_value() and
+> get_value(), using the global nr_cpus directly.
 >
-> Also, current kernels cannot be build without PREEMPT; and if you care
-> about latency running a PREEMPT=3Dn kernel is daft. That said,
-> TIF_NEED_RESCHED should work irrespective of PREEMPT settings, the
-> PREEMPT settings just affect when and how you end up in schedule().
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+> ---
+>  tools/tracing/rtla/src/timerlat_bpf.c  | 16 +++++++---------
+>  tools/tracing/rtla/src/timerlat_bpf.h  |  6 ++----
+>  tools/tracing/rtla/src/timerlat_hist.c |  2 +-
+>  3 files changed, 10 insertions(+), 14 deletions(-)
 >
-> Even without PREEMPT, if there is a task waiting either the wakeup or
-> the tick will set TIF_NEED_RESCHED and it should stop spinning. If there
-> is no task waiting, there is no actual latency, just burning CPU time,
-> and that isn't a problem per-se.
->
-> What should happen is that the first spinner gets the lock next, the
-> next spinner is then promoted to first spinner and so on.
->
-> This chain continues, which means the lock owner is always
-> on-cpu and good progress is being made and there is no CPU contention,
-> or the spinner gets marked for preemption (as said, this does not
-> require PREEMPT=3Dy) and will stop spinning and go sleep, or the owner
-> goes to sleep and all the spinners stop and also go sleep.
->
-> Again, you have not said anything specific enough to figure out what
-> happens on your end. You said the owner changes, this means there is
-> progress made. What isn't clear is if any one particular spinner is
-> starved (that would be a problem)
 
-As far as I can tell, no spinner is starved. The spinner and the
-impacted task are interleaved, which is expected behavior.
+Is there a reason to have a separate commit for this? The change fits
+into the "tools/rtla: Remove unneeded nr_cpus arguments", which also
+touches some of the functions in timerlat_bpf.c. It feels strange to
+have some timerlat BPF functions cleaned up in that commit and some in
+this one.
 
-> or if this latency spike you observe
-> is worse than would be from running a while(1) loop, in which case,
-> that's just how it is.
+Tomas
 
-The latency spike occurs because the impacted task must wait for the
-spinner to voluntarily yield the CPU. In effect, the spinner behaves
-similarly to a while (1) {} loop.
-
-So the real problem here is that we should avoid unnecessary spinning.
-Is there any reason we have to spin to speed up the ftrace_lock? I
-believe not.
-
->
-> What is not sane, is marking random locks with random properties just
-> because random workload.
-
-
-
---=20
-Regards
-Yafang
