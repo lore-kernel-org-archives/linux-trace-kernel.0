@@ -1,143 +1,155 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EDC17B43F;
-	Wed,  4 Mar 2026 12:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9C81DE8AE;
+	Wed,  4 Mar 2026 13:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772628118; cv=none; b=erOd63ySroW2BKe8CtC3WHH+Fm48OxyrejZOcn6BHtt5AcPnt+UalsOl1zNAOujGg3ya08yuqw+k5Ym3wLhsNfspFkkmzr9sTiLbXV7uN2fgRnBnHaXmzzaYBLAArY60YSykZHPPAJFDKwxKdUmgiYKUxCygEc5LqrMd6mjp+90=
+	t=1772629320; cv=none; b=SpxJXVm7Fkr/vc4ly7wfhr9R+OT7WKR2BYLDtEn9UWJua2ZXuoDSjjM9Rz+fnaZz6GbtKWqrqf3snnLnrOB1t1q18tBs4dJL5HL78WB4RhvwzHcKakPVSPhaz2Eo1hFEdzDeCjPcEr8idb0VTdEN6GxXQfjasX9VZUhaBkWhVPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772628118; c=relaxed/simple;
-	bh=OpTnhPrIdc8xXxeDIfNqc4Sq56owvvf6f99Wphyqmq0=;
+	s=arc-20240116; t=1772629320; c=relaxed/simple;
+	bh=Kb3qzLz/b1BGRAyVf2N/dxJ8GTEZDpzuub4ZDwWzUNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBYxSUDTFdSHbF/wchY6xaTjnyrSJ3xIxUDHUH4CEXODgep36RKwm486sGydBUcZ2g0ZIFeSTsgxfuTe+aVowicGXKwFatWl5GnNsITbrdDxRQpJj9YZigqPTTzh6EXc7tF+a/L5azo5qGIsJ7Yq6Yl0aD0WOTc3L8oeYL6fHaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BDMcbJvb; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWHXSpKfMBpK5/iScNnSeA2YXCObWiHAKnPaOPHhQlsOkqgebzcPSeckMoVqF8g+oVKhsltgFIEYgbnNW1bcuuKfulHW7kiYJpQDUvLusIVcD3JjzH4kB4R6DjrhxEIDDFcX3ss8FcKGHoaHybLkNqACpN+6FAmL5zv1Z6aDde4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=pFthcIOp; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BDMcbJvb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=CcCwKTcMnUgLpwRIH8rS+OizEgnkuQcgCPu1pst7Rcw=; b=BDMcbJvbrY2dQssz2LJlf26Tnh
-	9TBnXOKDj8OyPB9cDh0O0MtamCrBiE5S8Oa2c4ex+saBAyOzwv3zU9K86DNAB215PJSxWoKCOBfDA
-	kAPoX8yls0/BqohrFqsVj0Ib2zWOa6yTIyZkiKdzPk16nME0YitTLwGWyL3CP6dOmcjJyWkWg+0hn
-	ymtlJ9Vcc2aw4rpkpz0CIYj/wVlEYAQQd/HT0JaRViqwVb+V6RREQw3wbZHL4r4XvpYP22nFKxEVQ
-	Cd6X/X0FR9pGz8nMxuv+L6sz/9DyibGoo9TbpvqPRsVCVNJbBQGdJe8jq0Uj6KeTPT4oEifupVhrU
-	gyGZaJqA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxlXx-00000004YYM-46yG;
-	Wed, 04 Mar 2026 12:41:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 93874300666; Wed, 04 Mar 2026 13:41:48 +0100 (CET)
-Date: Wed, 4 Mar 2026 13:41:48 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: mingo@redhat.com, will@kernel.org, boqun@kernel.org, longman@redhat.com,
-	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-Message-ID: <20260304124148.GA2277644@noisy.programming.kicks-ass.net>
-References: <20260304074650.58165-1-laoar.shao@gmail.com>
- <20260304074650.58165-2-laoar.shao@gmail.com>
- <20260304090249.GN606826@noisy.programming.kicks-ass.net>
- <CALOAHbC1AHc2eZrzafz7ynrW7NFPrVmervCY_jjWsRTo0gBwQQ@mail.gmail.com>
- <20260304101111.GQ606826@noisy.programming.kicks-ass.net>
- <CALOAHbDmmbcK-0mG=44rw3wbaTwS8drzYD-s2gg8g+rPQZNLCg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="pFthcIOp"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 87BDEB3180;
+	Wed, 04 Mar 2026 13:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1772629310;
+	bh=A9Z22CwhsOMBQOd91GzYVcy5QaFqoA5vc5xFlhCLB5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=pFthcIOpg6gMssYocf5aeRIIf77W9v5hZIKXBO7FBI43GEFsFtiRaFd/8KmWzEQbq
+	 r5Mij1YYDKyrPnmIdgwa/tHoTR+2WzWnTHVmDS1cW790Wkj+VNUORUSHNy9/MsuVMl
+	 j/JEInhSlK7v2JYG+6N18JlNqCd4oHXPL8TqT9y0=
+Date: Wed, 4 Mar 2026 13:01:45 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Message-ID: <aagtOctLQqpDcw_h@shell.ilvokhin.com>
+References: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
+ <20260304015035.84839-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbDmmbcK-0mG=44rw3wbaTwS8drzYD-s2gg8g+rPQZNLCg@mail.gmail.com>
+In-Reply-To: <20260304015035.84839-1-sj@kernel.org>
 
-On Wed, Mar 04, 2026 at 07:52:06PM +0800, Yafang Shao wrote:
-> On Wed, Mar 4, 2026 at 6:11 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Mar 04, 2026 at 05:37:31PM +0800, Yafang Shao wrote:
-> > > On Wed, Mar 4, 2026 at 5:03 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Wed, Mar 04, 2026 at 03:46:49PM +0800, Yafang Shao wrote:
-> > > > > Introduce mutex_lock_nospin(), a helper that disables optimistic spinning
-> > > > > on the owner for specific heavy locks. This prevents long spinning times
-> > > > > that can lead to latency spikes for other tasks on the same runqueue.
-> > > >
-> > > > This makes no sense; spinning stops on need_resched().
-> > >
-> > > Hello Peter,
-> > >
-> > > The condition to stop spinning on need_resched() relies on the mutex
-> > > owner remaining unchanged. However, when multiple tasks contend for
-> > > the same lock, the owner can change frequently. This creates a
-> > > potential TOCTOU (Time of Check to Time of Use) issue.
-> > >
-> > >   mutex_optimistic_spin
-> > >       owner = __mutex_trylock_or_owner(lock);
-> > >       mutex_spin_on_owner
-> > >           // the __mutex_owner(lock) might get a new owner.
-> > >           while (__mutex_owner(lock) == owner)
-> > >
-> >
-> > How do these new owners become the owner? Are they succeeding the
-> > __mutex_trylock() that sits before mutex_optimistic_spin() and
-> > effectively starving the spinner?
-> >
-> > Something like the below would make a difference if that were so.
+On Tue, Mar 03, 2026 at 05:50:34PM -0800, SeongJae Park wrote:
+> On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
 > 
-> The following change made no difference; concurrent runs still result
-> in prolonged system time.
+> > On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
+> > > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
+> > > 
+> > > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
+> > > > > This intentionally breaks direct users of zone->lock at compile time so
+> > > > > all call sites are converted to the zone lock wrappers. Without the
+> > > > > rename, present and future out-of-tree code could continue using
+> > > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
+> > > > > infrastructure.
+> > > > > 
+> > > > > No functional change intended.
+> > > > > 
+> > > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > > > > Acked-by: SeongJae Park <sj@kernel.org>
+> > > > 
+> > > > I see some more instances of 'zone->lock' in comments in
+> > > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
+> > > > 
+> > > 
+> > > I fixed (most of) that in the previous version but my fix was lost.
+> > 
+> > Thanks for the fixups, Andrew.
+> > 
+> > I still see a few 'zone->lock' references in Documentation remain on
+> > mm-new. This patch cleans them up, as noted by Vlastimil.
+> > 
+> > I'm happy to adjust this patch if anything else needs attention.
+> > 
+> > From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
+> > From: Dmitry Ilvokhin <d@ilvokhin.com>
+> > Date: Tue, 3 Mar 2026 06:13:13 -0800
+> > Subject: [PATCH] mm: fix remaining zone->lock references
+> > 
+> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > ---
+> >  Documentation/mm/physical_memory.rst | 4 ++--
+> >  Documentation/trace/events-kmem.rst  | 8 ++++----
+> >  2 files changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
+> > index b76183545e5b..e344f93515b6 100644
+> > --- a/Documentation/mm/physical_memory.rst
+> > +++ b/Documentation/mm/physical_memory.rst
+> > @@ -500,11 +500,11 @@ General
+> >  ``nr_isolate_pageblock``
+> >    Number of isolated pageblocks. It is used to solve incorrect freepage counting
+> >    problem due to racy retrieving migratetype of pageblock. Protected by
+> > -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+> > +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
 > 
-> real 0m5.265s user 0m0.000s sys 0m4.921s
-> real 0m5.295s user 0m0.002s sys 0m4.697s
-> real 0m5.293s user 0m0.003s sys 0m4.844s
-> real 0m5.303s user 0m0.001s sys 0m4.511s
-> real 0m5.303s user 0m0.000s sys 0m4.694s
-> real 0m5.302s user 0m0.002s sys 0m4.677s
-> real 0m5.313s user 0m0.000s sys 0m4.837s
-> real 0m5.327s user 0m0.000s sys 0m4.808s
-> real 0m5.330s user 0m0.001s sys 0m4.893s
-> real 0m5.358s user 0m0.005s sys 0m4.919s
+> Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
+> to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
+> for the rest of this patch.
 > 
-> Our kernel is not built with CONFIG_PREEMPT enabled, so prolonged
-> system time can lead to CPU pressure and potential latency spikes.
-> Since we can reliably reproduce this unnecessary spinning, why not
-> improve it to reduce the overhead?
+> I was initially thinking this is just a mistake, but I also found Andrew is
+> doing same change [2], so I'm bit confused.  Is this an intentional change?
+> 
+> [1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
+> [2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
+> 
 
-If you cannot explain what the problem is (you haven't), there is
-nothing to fix.
+Good catch, thanks for pointing this out, SJ.
 
-Also, current kernels cannot be build without PREEMPT; and if you care
-about latency running a PREEMPT=n kernel is daft. That said,
-TIF_NEED_RESCHED should work irrespective of PREEMPT settings, the
-PREEMPT settings just affect when and how you end up in schedule().
+Originally the mechanical rename was indeed zone->lock -> zone->_lock.
+However, in Documentation I intentionally switched references to
+zone_lock instead of zone->_lock. The reasoning is that _lock is now an
+internal implementation detail, and direct access is discouraged. The
+intended interface is via the zone_lock_*() / zone_unlock_*() wrappers,
+so referencing zone_lock in documentation felt more appropriate than
+mentioning the private struct field (zone->_lock).
 
-Even without PREEMPT, if there is a task waiting either the wakeup or
-the tick will set TIF_NEED_RESCHED and it should stop spinning. If there
-is no task waiting, there is no actual latency, just burning CPU time,
-and that isn't a problem per-se.
+That said, I agree this creates inconsistency with the mechanical
+rename, and I'm happy to adjust either way: either consistently refer
+to the wrapper API, or keep documentation aligned with zone->_lock.
 
-What should happen is that the first spinner gets the lock next, the
-next spinner is then promoted to first spinner and so on.
+I slightly prefer referring to the wrapper API, but don't have a strong
+preference as long as we're consistent.
 
-This chain continues, which means the lock owner is always
-on-cpu and good progress is being made and there is no CPU contention,
-or the spinner gets marked for preemption (as said, this does not
-require PREEMPT=y) and will stop spinning and go sleep, or the owner
-goes to sleep and all the spinners stop and also go sleep.
-
-Again, you have not said anything specific enough to figure out what
-happens on your end. You said the owner changes, this means there is
-progress made. What isn't clear is if any one particular spinner is
-starved (that would be a problem) or if this latency spike you observe
-is worse than would be from running a while(1) loop, in which case,
-that's just how it is.
-
-What is not sane, is marking random locks with random properties just
-because random workload.
+> 
+> Thanks,
+> SJ
+> 
+> [...]
