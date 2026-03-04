@@ -1,199 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24E53B5822;
-	Wed,  4 Mar 2026 14:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772633441; cv=none; b=mHGQ/udfHkxLShc095b2/VVSeTc/2X4T1F9n/8hQ0J6j2edAaVsCeoaLmKTBORILTkm5RHMQRHVL8txltE7YgmDIo2X9iI7m5yV+uXxC+O83Jnqk50EOk+RrliOw1Bu7w2Wyaiy+QNcFUO3E2hhG0xzQ0lU3C7pBzLXWVMfHrGo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772633441; c=relaxed/simple;
-	bh=Bku8AHYCvwFigaxdtJ0ELP83jX+2snVdp3SrZhQcXMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tmNU6mqBywqNMRy32hYSebiZt7xCsblSFGfiRkTlNc1jLMVdNDi7iWoVSBjWUvpjq0azYsI6Yb20A5vweTtD9wK+6qSJ/JyEERp101GeUYUUh8jUXotEVFkdqVAf7Y7VSbGAmJUwwJMUZergnQrhnueTZ5DpXAK8iYdapcExJv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAz02NRT; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE41B35CB6F
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Mar 2026 14:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772634355; cv=pass; b=jL6hk5osSOP7mHtCF8uKc6i3cgGPvSuIBQ3mYfgVBc7o1ElRlpqTPyzQu9yKqyRF+GUxbmdEOBrP0Oyw/u9ASuqw1HXRVt1IZybzOlwAwVP2b0s/3bmqEgaw8+FoNjz/bw21UWxnM7GFxVgIiW8gjpkZYAa5HndXWhHLoJqkm6I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772634355; c=relaxed/simple;
+	bh=rJTYxgQC+lQ1uoeB2LriF+FOQyxEeURNnM/kGqfyi/Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S3uymR7Kiv8cDwavx/GVMqzhgPBXb0uVltoTnjYRZLfYF8nnWQPU9V+vuD+I7WF/+j/dKnxCBNwzV+qPbJ9DPWTAmqZnJa23cJaaRb6RmOmn3K0VhwfoS/S9TloSCdIQqQ0BGG2pMspnr7Bx1SAE4NjEbn/sqkIkcS2TgiJSgAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=creBAhKy; arc=pass smtp.client-ip=74.125.224.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAz02NRT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DE7C4CEF7;
-	Wed,  4 Mar 2026 14:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772633441;
-	bh=Bku8AHYCvwFigaxdtJ0ELP83jX+2snVdp3SrZhQcXMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sAz02NRT42GUSH/XghziBQEfEYYLQ50Z6H4Fr0B2eA5Ig7mTdF9TqYffX1JwUH063
-	 6iPM05ojth9/rEwbEh7LlaKMnW/u/G/DBwkw1D4RYJpuNNZv9BhCLvT5PBe8IK+opn
-	 1prADkLNYfSK2LwBPPaKHTGvsA77KEstjjcpOVzMmR0TqLvIhVflYrknnXy1YVCUsF
-	 KNWXNBL4UGedCW/N+3VD8K8WE8OpUqMxkpT+k7q13zK536d/Te1lHCzdRyNNW/lFIe
-	 pg0r1tP0OVdv3K3K3qvZzr4Ne1W/IxrE/2XIks7z/Ez5vNzwXN9J6wfHu8zNwQlTwO
-	 dc6E9EejFM6tg==
-Date: Wed, 4 Mar 2026 15:10:03 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Theodore Tso <tytso@mit.edu>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Bharath SM <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	David Sterba <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Ian Kent <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
-	Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Nicolas Pitre <nico@fluxnic.net>, 
-	Tyler Hicks <code@tyhicks.com>, Amir Goldstein <amir73il@gmail.com>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li <frank.li@vivo.com>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Anders Larsen <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, 
-	Johannes Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Simon Horman <horms@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Martin Schiller <ms@dev.tdt.de>, Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, 
-	Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp <socketcan@hartkopp.net>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Remi Denis-Courmont <courmisch@gmail.com>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, nvdimm@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-mm@kvack.org, netfs@lists.linux.dev, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev, 
-	linux-afs@lists.infradead.org, autofs@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-fscrypt@vger.kernel.org, linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org, 
-	linux-x25@vger.kernel.org, audit@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-can@vger.kernel.org, linux-sctp@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 001/110] vfs: introduce kino_t typedef and PRIino
- format macro
-Message-ID: <20260304-gebadet-zufahrt-3dd11ba681d6@brauner>
-References: <20260302-iino-u64-v2-1-e5388800dae0@kernel.org>
- <20260303012556.GA6520@macsyma-wired.lan>
- <20260303042546.GF13868@frogsfrogsfrogs>
- <33228005140684201de2ca0c157441d3b6a06413.camel@kernel.org>
- <aabkBadGzo7IZpSU@infradead.org>
- <19e4e79a59dcfc4c61c8cf263af345d0d7026fc8.camel@kernel.org>
- <aabpPQxCTweoTp8Z@infradead.org>
- <1310fc5c09cce52ec00344b936275fe584c88dea.camel@kernel.org>
- <aabwflLfe2HcGv7X@infradead.org>
- <4d3b9b92da613ad329b822f3f6043fa08f534451.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="creBAhKy"
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64ca2b32f46so5142311d50.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Mar 2026 06:25:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772634353; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EmU2eNuTpBel9f0jR7YvQ0d5rvrceb+WnlCvhYtmRl8AmttxA9wsNXvRgmOaYo/+4x
+         zENptz6M9p0KN4yT3Wtvk8v4YejBonb82LociCYTVgo7q44oF4uKXknGpemFxZIigPAM
+         97I9Uq9IIgQcku8JkzuyPll0G402WoFA2LKaApEvyys2hr/UurCMihdZUyzvaW3GykW1
+         /qbqTpYRzdmQOzUr0INvG+WYFp8LN4gtwVOTMGZtANZHnLptEa8anPpr/0/J+GHjIjKB
+         rorMmltrmzVzSaPBlmrhQc8+IZdeRw1g6FwB00EQng7GmFUgxgiuBKFfIftZEFbBWisl
+         krIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
+        fh=YUie9Rphe+VGV/PKgE42XbBhMfYhGUCBF/9GugmL4mA=;
+        b=aYQdReyVRATsKz5uGOL6+ZNpJjc+qiKs+S58drHvATidZZzKSWE0tmti1q/UqIBryA
+         b7jkCO1T4oGZNeE8kJrPqnT5yZw4hN6UNIxbTzoP80QnHkSjgfOexxRr34ts2nt2JnkA
+         aGMfXfTlk9zaQSICY3QD/7Spw9TxL7suZlOkmgSwTgMI+UxcF9dd01/SmOBmH8DyAEuh
+         aeIyrqthNW05at9//Yb79oFsXdYKKl/oZiIS/3OnG5xJ0G6HPuqUSFxhT3kJLdHVacpa
+         YqFyI+kahfzFQMOCfzR5IOJYe77f831sSUArIgMYdvY0fEi1H+xD9l0QU9Y/7RlXKxO9
+         GcCA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772634353; x=1773239153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
+        b=creBAhKyHkX3c0HDgjeKJzXTeGumZYv1sr4Ul9krpI0n9soGEnkWtSATyQk89b3RXH
+         3buzhG2FK7RD/gC0KmgyB3LxHxH6VY1z12jfqn5ne8wrIykqkuM+UFYfNcivSvkoJOS2
+         zGI7YQ4y9CwgK2kQgJIhq1CrxzCLp4u+V85h35KkyDoobfj0HOL8XAtHz7cv3lCtUmI6
+         5TLmp7veJTrKKwzE3v4BT4I+PvF3hUszjd1fP45ZHuiA0p7pClluvG4fXIYWQyAxD1xu
+         pGDIBq9Rt/yn8kzXsD7As14fNHsrtJ7RNKK0MNuyhX+Z7/24CLVvIGTLNZEXEHGKxuGH
+         vHcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772634353; x=1773239153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Z0zm/zFxMTgcfX8pnQDebzIcNOSzxcI0PpL2GvEUjqU=;
+        b=FS3QVpZ27eP/5bNfSTHgOA6xSeFKtvJWA3faNg3rOIeYiebdt+Bk28K0+unmFA9KQr
+         8NHfDx5XUDbs5e56S1RIHQ37eUyZaVf8zncX9xZQ7ObxMIN06zbw0A7cK+ZrJ/De8dx/
+         m8DEapFhm3UfrvXE9EOCAIaFGs45PxB/aWu4sv9jCayEwHOaODz9CKw6LbuU/wA2gAZW
+         RYMyF5Rh0+p9AF0fXlKLJroaaAshRbSypDUwRn4VSgKb2OV7gPO23OtIWvkwJNhUVcTs
+         ePE0WX/NEuO1mq5d8dZuHhSU99v3rcpLVFmP+QVigmN/7UC1SWWVlr/lCZiEfkFjWJHX
+         5HTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqNKYQMR87LN/bLjXyHjpdhv18cD2lw0nqTELcMKOLa7STkB9mba7JVjnG41SgSLcm/rRc5T37DsN0gH3cb/HjyW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBk28AWFhXs0Kg+Ky5qbvHmKCxDqP6v/XFg2zDKzCM0IBcQYNz
+	tcdqsI8+iGoyGG4sC5emJI0VXrxmhYBu3KJZQnBlIgKPaiqg7EJIjWRVql9dqjBuYk+IFwnRkDc
+	FCWnGmkH7fX1RhnDu8HTEH4+8zsJMupw=
+X-Gm-Gg: ATEYQzzj8ORy5WuWPvqbAFdhTScssH8XlE+DatSn5YuA6g225q81JfjV9k9RVySi8dK
+	1X7eQLbVwgQFdLSxnL/m+ELVgWaGhzDV3889lZNfbaJi+VkmBAxrlnktnKsIOF2A0PQ/b8g30Jq
+	/Zvw/bImmBOrvSEenqbH+d+nFvip0HRTGOK/yX0MRLWbRFnFyXbdjvaJTP6CuYEGBoE8XS948Ax
+	cpMRUb8smxxuUbBMZuO1ZezBzF9u68SzR3aDJGne4ebBLdDW/xLnq3jVl2T6nyEF+p3jBKsk3dB
+	IbHVfzPM
+X-Received: by 2002:a05:690e:1c1c:b0:64a:db50:faa6 with SMTP id
+ 956f58d0204a3-64cfa08d5cemr1407571d50.87.1772634352811; Wed, 04 Mar 2026
+ 06:25:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4d3b9b92da613ad329b822f3f6043fa08f534451.camel@kernel.org>
+References: <20260304074650.58165-1-laoar.shao@gmail.com> <20260304074650.58165-2-laoar.shao@gmail.com>
+ <20260304090249.GN606826@noisy.programming.kicks-ass.net> <CALOAHbC1AHc2eZrzafz7ynrW7NFPrVmervCY_jjWsRTo0gBwQQ@mail.gmail.com>
+ <20260304101111.GQ606826@noisy.programming.kicks-ass.net> <CALOAHbDmmbcK-0mG=44rw3wbaTwS8drzYD-s2gg8g+rPQZNLCg@mail.gmail.com>
+ <20260304124148.GA2277644@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260304124148.GA2277644@noisy.programming.kicks-ass.net>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 4 Mar 2026 22:25:16 +0800
+X-Gm-Features: AaiRm53hMCKvbvNXj58w9LyMkxop3_JEJwaG3KpE4kSPSeAFXGwBklmTAbdWw3Y
+Message-ID: <CALOAHbDQP9gyr0R5YO1nCxsbw2tLFKuc4xz4UbbTEy7TkzrMuA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, will@kernel.org, boqun@kernel.org, longman@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 03, 2026 at 10:14:27AM -0500, Jeff Layton wrote:
-> On Tue, 2026-03-03 at 06:30 -0800, Christoph Hellwig wrote:
-> > On Tue, Mar 03, 2026 at 09:19:42AM -0500, Jeff Layton wrote:
-> > > On Tue, 2026-03-03 at 05:59 -0800, Christoph Hellwig wrote:
-> > > > On Tue, Mar 03, 2026 at 08:43:15AM -0500, Jeff Layton wrote:
-> > > > > On Tue, 2026-03-03 at 05:37 -0800, Christoph Hellwig wrote:
-> > > > > > On Tue, Mar 03, 2026 at 05:53:39AM -0500, Jeff Layton wrote:
-> > > > > > > Like I said to Ted, this is just temporary scaffolding for the change.
-> > > > > > > The PRIino macro is removed in the end. Given that, perhaps you can
-> > > > > > > overlook the bikeshed's color in this instance?
-> > > > > > 
-> > > > > > So why add it in the first place?  
-> > > > > 
-> > > > > Bisectability. The first version I did of this would have broken the
-> > > > > ability to bisect properly across these changes. I don't love the
-> > > > > "churn" here either, but this should be cleanly bisectable.
-> > > > 
-> > > > What do you need to bisect in format string changes?  Splitting
-> > > > every variable type change outside of the main i_ino out - sure.
-> > > > But bisecting that "change to u64 in ext4" really broke ext4 and
-> > > > not "change to u64" is not very useful.  Commits should do one
-> > > > well defined thing.  Adding a weird transition layer for a format
-> > > > thing that just gets dropped is not one well defined thing.
-> > > 
-> > > In the middle stages of the series, you will get warnings or errors on
-> > > 32-bit hosts when i_ino's type doesn't match what the format string
-> > > expects.
-> > > 
-> > > There are really only three options here:
-> > > 
-> > > 1/ Do (almost) all of the changes in one giant patch
-> > > 
-> > > 2/ Accept that the build may break during the interim stages
-> > > 
-> > > 3/ This series: using a typedef and macro to work around the breakage
-> > > until the type can be changed, at the expense of some extra churn in
-> > > the codebase
-> > > 
-> > > 3 seems like the lesser evil.
-> > 
-> > No, 1 is by far the least evil.  Note that it's not really almost all,
-> > as all the local variables can easily and sanely be split out.  It's
-> > all of the format strings, and that makes sense.  The only "regressions"
-> > there are incorrect format strings which have good warnings and can
-> > be fixed easily.
-> 
-> Well, I've done 2 and 3 already. Why not 1? :)
-> 
-> It's not so much the regressions that are a problem here, but the merge
-> conflicts for anyone wanting to backport later patches that are near
-> these format changes. Having that change broken up by subsystem makes
-> it easier to handle that piecemeal later.
-> 
-> I think we'll be looking at close to a 1000 line patch that touches
-> nearly 200 files if go that route. Roughly:
-> 
->  182 files changed, 910 insertions(+), 912 deletions(-)
-> 
-> There are some tracepoint changes in some of the per-subsystem patches
-> that will need to be split out, so the count isn't exact, but it'll be
-> fairly close.
-> 
-> Since Christian will probably end up taking this series, I'd like to
-> get his opinion before I respin anything.
+On Wed, Mar 4, 2026 at 8:41=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+> On Wed, Mar 04, 2026 at 07:52:06PM +0800, Yafang Shao wrote:
+> > On Wed, Mar 4, 2026 at 6:11=E2=80=AFPM Peter Zijlstra <peterz@infradead=
+.org> wrote:
+> > >
+> > > On Wed, Mar 04, 2026 at 05:37:31PM +0800, Yafang Shao wrote:
+> > > > On Wed, Mar 4, 2026 at 5:03=E2=80=AFPM Peter Zijlstra <peterz@infra=
+dead.org> wrote:
+> > > > >
+> > > > > On Wed, Mar 04, 2026 at 03:46:49PM +0800, Yafang Shao wrote:
+> > > > > > Introduce mutex_lock_nospin(), a helper that disables optimisti=
+c spinning
+> > > > > > on the owner for specific heavy locks. This prevents long spinn=
+ing times
+> > > > > > that can lead to latency spikes for other tasks on the same run=
+queue.
+> > > > >
+> > > > > This makes no sense; spinning stops on need_resched().
+> > > >
+> > > > Hello Peter,
+> > > >
+> > > > The condition to stop spinning on need_resched() relies on the mute=
+x
+> > > > owner remaining unchanged. However, when multiple tasks contend for
+> > > > the same lock, the owner can change frequently. This creates a
+> > > > potential TOCTOU (Time of Check to Time of Use) issue.
+> > > >
+> > > >   mutex_optimistic_spin
+> > > >       owner =3D __mutex_trylock_or_owner(lock);
+> > > >       mutex_spin_on_owner
+> > > >           // the __mutex_owner(lock) might get a new owner.
+> > > >           while (__mutex_owner(lock) =3D=3D owner)
+> > > >
+> > >
+> > > How do these new owners become the owner? Are they succeeding the
+> > > __mutex_trylock() that sits before mutex_optimistic_spin() and
+> > > effectively starving the spinner?
+> > >
+> > > Something like the below would make a difference if that were so.
+> >
+> > The following change made no difference; concurrent runs still result
+> > in prolonged system time.
+> >
+> > real 0m5.265s user 0m0.000s sys 0m4.921s
+> > real 0m5.295s user 0m0.002s sys 0m4.697s
+> > real 0m5.293s user 0m0.003s sys 0m4.844s
+> > real 0m5.303s user 0m0.001s sys 0m4.511s
+> > real 0m5.303s user 0m0.000s sys 0m4.694s
+> > real 0m5.302s user 0m0.002s sys 0m4.677s
+> > real 0m5.313s user 0m0.000s sys 0m4.837s
+> > real 0m5.327s user 0m0.000s sys 0m4.808s
+> > real 0m5.330s user 0m0.001s sys 0m4.893s
+> > real 0m5.358s user 0m0.005s sys 0m4.919s
+> >
+> > Our kernel is not built with CONFIG_PREEMPT enabled, so prolonged
+> > system time can lead to CPU pressure and potential latency spikes.
+> > Since we can reliably reproduce this unnecessary spinning, why not
+> > improve it to reduce the overhead?
+>
+> If you cannot explain what the problem is (you haven't), there is
+> nothing to fix.
+>
+> Also, current kernels cannot be build without PREEMPT; and if you care
+> about latency running a PREEMPT=3Dn kernel is daft. That said,
+> TIF_NEED_RESCHED should work irrespective of PREEMPT settings, the
+> PREEMPT settings just affect when and how you end up in schedule().
+>
+> Even without PREEMPT, if there is a task waiting either the wakeup or
+> the tick will set TIF_NEED_RESCHED and it should stop spinning. If there
+> is no task waiting, there is no actual latency, just burning CPU time,
+> and that isn't a problem per-se.
+>
+> What should happen is that the first spinner gets the lock next, the
+> next spinner is then promoted to first spinner and so on.
+>
+> This chain continues, which means the lock owner is always
+> on-cpu and good progress is being made and there is no CPU contention,
+> or the spinner gets marked for preemption (as said, this does not
+> require PREEMPT=3Dy) and will stop spinning and go sleep, or the owner
+> goes to sleep and all the spinners stop and also go sleep.
+>
+> Again, you have not said anything specific enough to figure out what
+> happens on your end. You said the owner changes, this means there is
+> progress made. What isn't clear is if any one particular spinner is
+> starved (that would be a problem)
 
-I'm kinda surprised that we suddenly started caring about the amount of
-individual patches. I personally don't care either way. Do it in one
-giant patch if this moves us forward. I've done 1 and 3 and what you
-did. And I'd be really annoyed if during a bisect I start to get
-pointless build failures because someone did 2.
+As far as I can tell, no spinner is starved. The spinner and the
+impacted task are interleaved, which is expected behavior.
+
+> or if this latency spike you observe
+> is worse than would be from running a while(1) loop, in which case,
+> that's just how it is.
+
+The latency spike occurs because the impacted task must wait for the
+spinner to voluntarily yield the CPU. In effect, the spinner behaves
+similarly to a while (1) {} loop.
+
+So the real problem here is that we should avoid unnecessary spinning.
+Is there any reason we have to spin to speed up the ftrace_lock? I
+believe not.
+
+>
+> What is not sane, is marking random locks with random properties just
+> because random workload.
+
+
+
+--=20
+Regards
+Yafang
