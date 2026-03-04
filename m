@@ -1,141 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7661D18A6DB;
-	Wed,  4 Mar 2026 01:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAF3225A38;
+	Wed,  4 Mar 2026 02:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772589040; cv=none; b=KajSGo4FXYLHKDB3GMvzezQ/K5Ynb7ShcnS5EmmRUT5OeHncqr0KUnZ2xj9P3BckgM+232R0C/K9ok4a+YZtCAb2UTVlMV0eRqCGLlx7jfY3XwlkBCRkUuFBEqqX9prZtvYbxGvGUhoJRsZgXmngLTHfkXJCaYdoZutXjuUV0AM=
+	t=1772589868; cv=none; b=SjgpWHOmMS2Db1Ay3AJyc7ooj2u2Ts4XBx5q0BAqhc92pfRXS57jins3urHfVcK5cIH4YNaTNov5vLvS2GDrRsuOiIkzZyZkx00bC7n+fbPz6sPbXYkaFZGgtJlNF+kP22eZbeNQgY8Dh6Kkkac/6QQeNPSTFO/B9DfJCqHwhlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772589040; c=relaxed/simple;
-	bh=O1q5xmxh+8ddRQkx9dw/RmwoUPF0G+lCo8Vxz/LWoc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bQssc2fJCeln9JtBEMhNELxgdwngkEfDeor5T2Yhhq8Zfu1Gqb3hB2UFZSgh3X/ej+vXeacZVvWvHoxK3EFvYjSBsWYqxdwsvZ8G2fMqnANOLubDhBWzik6atZGUHPkzcmYSlcLDwDnJkAfLpa9C7+tHxu8ZerpJIjGhM0dLpGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMf6wHgU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772589868; c=relaxed/simple;
+	bh=bu2JEb+Rf17VZQLWMg1vd3R4bY9db98CagjP+MKyUkU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Sv3RsNB1k9htpWpMrjyx4jf5LVA64MYH/AucAXCqd8bM7vTql4phW8GjAjmBRb4xcxYPsuhNiMKleg9ntnm/q4SnA0IiMEIVZoWlLc6UhKmw7JSM+V1rK22ayzCzLvjZdXEIz1hTXpeYfiNsi9A5lQjGnx7mK4Y0pVWIvSUYnqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qb634Cs5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMf6wHgU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0B3C116C6;
-	Wed,  4 Mar 2026 01:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qb634Cs5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E60D7C116C6;
+	Wed,  4 Mar 2026 02:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772589040;
-	bh=O1q5xmxh+8ddRQkx9dw/RmwoUPF0G+lCo8Vxz/LWoc8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NMf6wHgUjBtsficAhTrZpbDymeP1qrJm9gVBDymeA284t3/4xD/IUN4lsK8wjWy+0
-	 bt6Y0geh7b6+ibfslggbZaS+3PjKY4n9O7gpimLq9/ZpKkd7YK3id1SyXOZg5ouJUt
-	 uCo3eHNYq8lUU8smojeLkxDQFMVVIdERceZ9EsdlPydbI7Q2l/lMKn1kZcAQzyoIqC
-	 8kACgcsK3/8fyojRSMUBnfjlAfY7nOBxBH6s2TEmHbq7UnjMV4sa0IGNnhhOzVEle5
-	 lbqA+w5yQeiS1As+ECWzKZrk9mNG9pC+HMt4/sVmhuZobunJ7mNsMpM5MZ/oCu3HN9
-	 3+17MGIcWJ4hA==
-From: SeongJae Park <sj@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>,
-	Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
-Date: Tue,  3 Mar 2026 17:50:34 -0800
-Message-ID: <20260304015035.84839-1-sj@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <aabvc4Xhc9qBfaG7@shell.ilvokhin.com>
-References: 
+	s=k20201202; t=1772589868;
+	bh=bu2JEb+Rf17VZQLWMg1vd3R4bY9db98CagjP+MKyUkU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qb634Cs5jR/nwxMeNQPRySkN/aTYdTGhlE2xVrYaGkGus0CzscSrAgW8Rp8E2R3QW
+	 qBZKIOsEipVorMesgLqrUPlq4ScBa3Zphd8VcxjVtAizwwBPOtaaqLbPmVRHe1Bfim
+	 uBQsjcWSq0sOunAUBmR9xu2DX/krMMYuv4dozlTGj5IF+TNczAZBr+qaILiDZcEPcr
+	 9BCORRCbzAAr9XRyCdJJd3BjbdRzFVHeQEWTaIGrybM+jOak/yljDpcqnkd0/7sGqD
+	 XEnhDiJQpQ/VwypOEl4Iz39tT1nluDd8KQj8gjnkYV962iAzh2F/1fbkWs/fa+eJhL
+	 Q6ktR/0i84hiQ==
+Date: Wed, 4 Mar 2026 11:04:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Shuah Khan
+ <skhan@linuxfoundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ Gabriele Monaco <gmonaco@redhat.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/tracing: Fix to make --logdir option work
+ again
+Message-Id: <20260304110425.3858532b6ba092d84a31595a@kernel.org>
+In-Reply-To: <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
+References: <177071725191.2369897.14781037901532893911.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+Hi Shuah,
 
-> On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
-> > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
-> > 
-> > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
-> > > > This intentionally breaks direct users of zone->lock at compile time so
-> > > > all call sites are converted to the zone lock wrappers. Without the
-> > > > rename, present and future out-of-tree code could continue using
-> > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
-> > > > infrastructure.
-> > > > 
-> > > > No functional change intended.
-> > > > 
-> > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > > Acked-by: SeongJae Park <sj@kernel.org>
-> > > 
-> > > I see some more instances of 'zone->lock' in comments in
-> > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
-> > > 
-> > 
-> > I fixed (most of) that in the previous version but my fix was lost.
-> 
-> Thanks for the fixups, Andrew.
-> 
-> I still see a few 'zone->lock' references in Documentation remain on
-> mm-new. This patch cleans them up, as noted by Vlastimil.
-> 
-> I'm happy to adjust this patch if anything else needs attention.
-> 
-> From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
-> From: Dmitry Ilvokhin <d@ilvokhin.com>
-> Date: Tue, 3 Mar 2026 06:13:13 -0800
-> Subject: [PATCH] mm: fix remaining zone->lock references
-> 
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> ---
->  Documentation/mm/physical_memory.rst | 4 ++--
->  Documentation/trace/events-kmem.rst  | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
-> index b76183545e5b..e344f93515b6 100644
-> --- a/Documentation/mm/physical_memory.rst
-> +++ b/Documentation/mm/physical_memory.rst
-> @@ -500,11 +500,11 @@ General
->  ``nr_isolate_pageblock``
->    Number of isolated pageblocks. It is used to solve incorrect freepage counting
->    problem due to racy retrieving migratetype of pageblock. Protected by
-> -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
-> +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
-
-Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
-to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
-for the rest of this patch.
-
-I was initially thinking this is just a mistake, but I also found Andrew is
-doing same change [2], so I'm bit confused.  Is this an intentional change?
-
-[1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
-[2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
-
+Could you pick these 2 patches to the selftests tree or should I pick it?
 
 Thanks,
-SJ
 
-[...]
+On Tue, 10 Feb 2026 18:54:12 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since commit a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to
+> use with RV") moved the default LOG_DIR setting after --logdir option
+> parser, it overwrites the user given LOG_DIR.
+> This fixes it to check the --logdir option parameter when setting new
+> default LOG_DIR with a new TOP_DIR.
+> 
+> Fixes: a0aa283c53a7 ("selftest/ftrace: Generalise ftracetest to use with RV")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  tools/testing/selftests/ftrace/ftracetest |   18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index 3230bd54dba8..0a56bf209f6c 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -130,8 +130,7 @@ parse_opts() { # opts
+>        shift 1
+>      ;;
+>      --logdir|-l)
+> -      LOG_DIR=$2
+> -      LINK_PTR=
+> +      USER_LOG_DIR=$2
+>        shift 2
+>      ;;
+>      --rv)
+> @@ -199,6 +198,7 @@ fi
+>  TOP_DIR=`absdir $0`
+>  TEST_DIR=$TOP_DIR/test.d
+>  TEST_CASES=`find_testcases $TEST_DIR`
+> +USER_LOG_DIR=
+>  KEEP_LOG=0
+>  KTAP=0
+>  DEBUG=0
+> @@ -210,12 +210,18 @@ RV_TEST=0
+>  # Parse command-line options
+>  parse_opts $*
+>  
+> +[ $DEBUG -ne 0 ] && set -x
+> +
+> +# TOP_DIR can be changed for rv. Setting log directory.
+>  LOG_TOP_DIR=$TOP_DIR/logs
+>  LOG_DATE=`date +%Y%m%d-%H%M%S`
+> -LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
+> -LINK_PTR=$LOG_TOP_DIR/latest
+> -
+> -[ $DEBUG -ne 0 ] && set -x
+> +if [ -n "$USER_LOG_DIR" ]; then
+> +  LOG_DIR=$USER_LOG_DIR
+> +  LINK_PTR=
+> +else
+> +  LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
+> +  LINK_PTR=$LOG_TOP_DIR/latest
+> +fi
+>  
+>  if [ $RV_TEST -ne 0 ]; then
+>  	TRACING_DIR=$TRACING_DIR/rv
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
