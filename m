@@ -1,66 +1,75 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE173CE48F;
-	Thu,  5 Mar 2026 16:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39923CE4A0;
+	Thu,  5 Mar 2026 16:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772727161; cv=none; b=fhMVNfFkVlERCWJkdU82eqEWp9ndvz9q7rEqxeVcwDVa0hToFdA7rMt4IGjdobiJzF9ShH+TOJBMVhkgfKvhHQVYLsGy7BgeRKLt648343J1fiFzrF6FoFjqPcKlogGW/knAP6O33QI7m0Z0e5KZR7OoarQzGCMO6KlBfJt7yjE=
+	t=1772727392; cv=none; b=N2NRJUBQ7s4wtQhaEwDW6TgyD4MdhN0J8lVjSfPcBzyMZTZV9ySYkbpO4mNma6YvId6pmo/2Wjk/SWwLz8BWRtg5NEgbajsjVroxpkR9KHg4zIIs0UkQC/3xwehBiTaLsv1pqYxmYZc3JZFjGXLz/vZqjoN4zY2ZBdp2sZp/ozY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772727161; c=relaxed/simple;
-	bh=c6EKYDX5VRUP5zuUqQiObUXeJ4E2BosPNvpwZFkd9Vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qliedEvfHbDJTuKropTooeLkeJWu/+KvADusSgsJh4BBCj+SqDJYd8dbYwIAr4rhCjsnz54/G/hVZ4hnIGpsEwaeNbnfx1Dmc3irxcn7xRJz/nJaAzWUqnZ6A2DJ72d8LBdY0gU6NiTqVg3cze9y5wTFr6qd1Es9FxrixfU7sHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=rEj6T7J+; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="rEj6T7J+"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 09CEF40C6E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1772727158; bh=c6EKYDX5VRUP5zuUqQiObUXeJ4E2BosPNvpwZFkd9Vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=rEj6T7J+38xFJ3C7Xh/zUQzP6LW4F1V+ELrjmRtJq0iJuUhC+kUnk0FwbdLYoH8S2
-	 jw0TSMuMlM2YCYLsygVwsKL9HBktEFqj21YO+gSpm1V5NjqaitfO5B24JvVZvtqx7o
-	 k0NqoiI0AbefwtWGoK2IJjliwg1fNA9Mox7zx24nxdiQOezznEXmISya+MhqkjPXy4
-	 Mgf6fwsf1y9odB5W2JMKJuHu8IQDPyrjsKN9q5qmQDoCkr9WDAT+q+J/9+IO+jUJ8V
-	 FAs7hFCVFC5JwqDsE2c/EhTuRShWjj/84l0pnczqHgPifdq9TLKuYmauf+AvsaMWr/
-	 o8PcQVu3+Vn2w==
-Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 09CEF40C6E;
-	Thu,  5 Mar 2026 16:12:37 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Documentation: Update histogram-design.rst for
- fn() handling
-In-Reply-To: <20260305110347.31d6bae5@gandalf.local.home>
-References: <20260126181742.03e8f0d5@gandalf.local.home>
- <20260305110347.31d6bae5@gandalf.local.home>
-Date: Thu, 05 Mar 2026 09:12:37 -0700
-Message-ID: <87pl5i2r2i.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1772727392; c=relaxed/simple;
+	bh=REZCD/bjwXQD9ItoixE5zLBBAo2tTupKDiF2S6yhHPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PiOR0p1iEi0Paza10FeYY/yZIYwScJwRkECVuMrQzLKoSUUPivsJq5THMfbIUalRt5s8HV4BcI5cgUUFyhhB/brFcwZpbxk5eX9WvRYhhhAxHgFyTYPxa8InngHqEsWPMecfAdseioht3nQNrAeaL/4+tAqSdx74JJQt69YYtzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 7F1AFB6D06;
+	Thu,  5 Mar 2026 16:16:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 06AAC17;
+	Thu,  5 Mar 2026 16:16:24 +0000 (UTC)
+Date: Thu, 5 Mar 2026 11:17:03 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+ oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+ qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 00/30] Tracefs support for pKVM
+Message-ID: <20260305111703.6346b243@gandalf.local.home>
+In-Reply-To: <87cy20eeg6.wl-maz@kernel.org>
+References: <20260219150307.14538-1-vdonnefort@google.com>
+	<20260219130220.063c8db3@gandalf.local.home>
+	<87cy20eeg6.wl-maz@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: hjpmqngd9ddfjxdxzzo1w4jhxdng6wmr
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 06AAC17
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18CZlcLb/ptcfAuAKzvUKSGTao+9oqfTCI=
+X-HE-Tag: 1772727384-772492
+X-HE-Meta: U2FsdGVkX195vWpGBKWyqUWB3sgYzypwSlcv/h9gmg0TBmzfLJ+iJuAAW7JoYt01B0eByBfm80sD9DsxCpM5Ex95OHexPsc0qFg16Hge7QLPHlxS+CQvGowxN47UNGBfUGBYJAeypKYP61yfPCSTq57dgAktN2PQfGNpmNcjcxvNgvSLjaZSXDBiZXfmjSlbmObRDIyv7zNs6C/sXoU8ONKtSpvgWKfR9FBm6yGPlDmT0QM9iMzDIaOkSFBm0/8rPcd5RZ3lAfWOEw7woBi4TGjkhIBBHHU14acjwV/t5MLjLqx9u72DWZm7uc0EJZDjZkniDWeZDYruIAyHW8+voCjfsUJJEiDQ
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Thu, 19 Feb 2026 19:11:21 +0000
+Marc Zyngier <maz@kernel.org> wrote:
 
-> Hi Jon,
->
-> Can you take this through your tree?
+> > 
+> > Then the arm/kvm folks could start with that branch and add the arm/KVM
+> > portion of this series on top of it. This will prevent major merge
+> > conflicts in linux-next.
+> > 
+> > Does that sound OK?  
+> 
+> That works. Just send us a link to the branch after -rc2 and we'll get
+> that sorted.
 
-Sure, will do.
+Vincent,
+
+There's a few minor conflicts with this series and v7.0-rc2, can you rebase
+and send again?
 
 Thanks,
 
-jon
+-- Steve
