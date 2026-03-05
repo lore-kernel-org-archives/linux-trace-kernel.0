@@ -1,74 +1,75 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3911A27E05E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3530C25392A
 	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 14:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772719368; cv=none; b=RuK/MORYbehAYTaq0TUwIrWkotOp+qa5Qs19EUXmZPg0CtEWYUHnSn4xgCfCNbtG8L75BqYhtPj9wXU4i9dZymoBctjMzh1GSDaMJ0v2mQThFwXUhjOot+JNSzQeRAzHMUjlLndsfwMB1EVCf+KFJqqGZh0PGPekrZWwY0AQoRU=
+	t=1772719368; cv=none; b=Z0AY+HoaYIvXzvv3k8H/iYxSxeXMM850+UcKupaDfcBc5tQvdyA/w6CvDU1fEaxGo7EVvQ07sC8Q+kMaeHxv7dB/o31V9hUcUl0JQPC+D+1n+zoNcOvUZQKzU6FumFDfh8rew+s6iuexvbMAywEeLauQVxd5dacE7xqKF3O7FvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772719368; c=relaxed/simple;
-	bh=bgz9O3COzJWKZFYXwI62/DT5ZlfVX6Tgi6hBu0rXcrw=;
+	bh=Z34mdtr1b/ICs/c64EQSK4zTp2yDbOBYmoxjVqtaA8I=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aAodXLTEO7rnnC4AsWChRanKjH9CYT56dbvNi9AAwzS4TRIR5Ge75BkCdxU4CNMNAYioAhAOFgaHBQG+BCwYaM73BAMvsnoY2DV+6uBJVI45OQxDsVuWrhfExQxKHWTaXvEWxyFNTA4rB67X70KxRnZUkHysO/H8gCsPzAbg9ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncU++pEL; arc=none smtp.client-ip=209.85.208.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYApj1jTG3DC4uNDUivtetj8J6Fq0AnGfZPp2no48OBb/lKp0YOgwXIIubzASitz/0EISmkJlcsAoVwlVCRwVB4Yn77ZUNhupUCgvWhttAW3j0VmtyjmPE7KcOEGyiZoLi3z7nRydqcsyQweILKkB+YDCi/Lq8kUwVfk9HOzI80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gutkv2/o; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncU++pEL"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-660fb578f8eso3476595a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Mar 2026 06:02:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gutkv2/o"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-439b73f4ab4so4969689f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Mar 2026 06:02:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1772719365; x=1773324165; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5F2Z+dABDZHtAocG8UHmP/srpFxbX53GysJp892PCRw=;
-        b=ncU++pELtcJqxZ1GBX84i82Oiou/Rmw/xuN3dKUWGTE3gEYGihUADBw10nUwQHxoDB
-         qavPkNz71mZtfLFHpo021iIEJqLL6D78TkFEa5Z5qnnZcRKPKPvYyEt7kCBwPGJpgGAf
-         +F2eAE75qgenIj6ANj76aqZ7tvj+c/5QUimpjSCO8y8cWpIsbaCDUsyDmB2zYgWrjrvg
-         LQLqjEXhK8u3/Qa8CYHDhMAltQeHezoPc1u7mc9tNggEEMzbfj+V5ycCnkRkslMhBFBZ
-         /Y0kfyT2J+92lm7Y35nR3Ic9GzJF4dPj0ZixHZtYOYaZZhLKG3xaYMY5ltwX9gXHNZRw
-         bAPw==
+        bh=GKxSvraDpoad+84dRp1TpOG4toWpwmDod5+UGYBJ7P8=;
+        b=gutkv2/oaetcQvQMiO7Hgy8gZJQ43kXaIcRljvMYfkZcRn7DHOT0nYcaciVjcV/bh/
+         vFj6MzU5Jj0TCZ4/bVRCLbEV4lIe51nc5nRN2JCaAZwVWJwNH56R6cAiNiClAyMMbCf3
+         NLrsHbTaGYiiIFKiepAg1kzCtKURAm01QeA25O5pEMigd5WtdKQsIScvG9pIRyzA7r/n
+         aRZqVPyUsuVcma52fWYx01IwzSoAipoEzuv2/WS6tkw0lHQA5fcIwtqEc1Q0uW/RDhop
+         fW54rqAlXrfjfuCr4eg3nODTO4juKE/N4pDF0S/momvmsha2FJr/4vxjuMWF3ZtA5rSC
+         GwWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1772719365; x=1773324165;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5F2Z+dABDZHtAocG8UHmP/srpFxbX53GysJp892PCRw=;
-        b=EUTegK/yU8k7I0KkPXy2aFuHtZEFArHeS8z2qgrI6JC3J4PKlj543ajNbsWsxDqc//
-         NLIxC213ME6V3Ra3Zkg/fTX/XIsZWdQJ+RTF+7KmkjfPY5nRwhnwA6dgsd277VTz0My1
-         TriGpOo4klhKbDqUTDZJl2GPNjdVdWO78ESQbIGrg98BxgVXZkugynBZCK7yRYYkqBV+
-         owIDIzIcbRnBXnKPZkPoIm+JXqyPhekuvDz4dSdx3X6/B7n7hA0NBTQwdljfa1r6CbqX
-         1cy+m0zmIsMtTrdzkwOyR+0Xp+V5CH0hw3iqa6GTN3W3HwP41o5Acj+cilHuZJcyQvzm
-         +t0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXVOFq5Gl/OGJZMlMx0RO/7XSSRnje/+pRaMxzubrgwqhHrIbs9sIuEwYXffPzg3R2bEoi+TjhTPMpSjNAWsMHJUaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjIQcszLj/GpR4pgGZcAnonvwvCmRNTwnBDH0wrKox6Wb68wik
-	t12D9MYDbrUf9m+Wq/qIumk69PZFLc6NOCLHOCCDW23/DzaaHpQH/QiF
-X-Gm-Gg: ATEYQzwy1Fn57maJWUqJF7t4K4eB7pRTSGPcEOYB95YK+2h2FZsjICqQNFaJw+1P7My
-	6CK94Njx7z4soCSYS81MWSoSy7UUmnCXi/6MqhhK0F3Pg82RMbw0aJviyxU8WvYWvRZ+KtzO0uL
-	EkG8LB6LytaJwwSRC5qGS+y9ot0MPsgFE1QeFI63bCEvXzthceOiO8wiC5FdWpOm/EiEBrme7Qi
-	tF0Kix/0iRg3iH8hVA50Pn+ELau8w7He2WXT9w+17HFs9Z7Rklvj11fFeZXWNHUl4ocyy8A6a2B
-	OHnmMSk4CHQ3LhRhPQmGt9DK1p47Z9cNYkMMzx4lI/O6srXPN7D3lcUb1Q0LIa90aYJLpHu9kIC
-	j+CjLaoDkAxrnw8qC/0hAfN70b5wGn4iTtr09hyJhkC6QRSGWXXcTTHyUu+fz3vCrfr0C9JgY
-X-Received: by 2002:a17:907:e895:b0:b84:40e1:c1c8 with SMTP id a640c23a62f3a-b93f14dba47mr407420566b.33.1772719353405;
-        Thu, 05 Mar 2026 06:02:33 -0800 (PST)
+        bh=GKxSvraDpoad+84dRp1TpOG4toWpwmDod5+UGYBJ7P8=;
+        b=ri0zrgNfdwwGISGWUkDvxnQT3KSpfetjcsy9CS8oW+DxoT3qq1j1EGp5mWVX1KhcjC
+         RU+MaIp5eikeMRtV9fd/O9OUTZWu02SAH+fCZyD8C5TE+aq+Rjdo37ucBodA709bmA06
+         I/UcgZGZO2ucdNjJHLqtyaJoPqiAWXs9J7u18EqUBPjx3gtq0tY4rGtfXmqeRo63bN6Q
+         SJKb/Ot/woXjaiQjJxRlbP6WG0O5zAjrL38M79AhL2Mk6HKXguJ0we5MI0jAzS8or9lN
+         S4V+XoFS1l5rafbnQ+8/prekUeSkZ60cEAGxL13fKn07nes4enisICZAawhjUKCrVKqN
+         otxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqFHxKCB/IM9favuFCFMhexcvEYO8ECuwOdhKBGq0uC7CwZr79S1Mt8grsGx2Pv7O6XgNbxRQiQBKkSajCtBVrLzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRfWWKXvJ7TtX6FpMWl07uAcr2bRolpmRk42VbZTfX4qFxZa3l
+	F09hPpyZ09Q8fqRuf0VjVPTL3NnYbE0Qr1z82jjKcDtA9KD2pbnPcb4k
+X-Gm-Gg: ATEYQzzQKg/usx54NTNJpdYugC5d8whq/adJLPSjwg/8D4sBZK+CePGDzt4oHBITRq3
+	JkL1ati+f0YSFHR8S77GBPkG1xjqj0ssZTw5pHbQrYdiGJ/t8Za+5OdRTNs7SreWcCTVbIL8hzx
+	z7CFyik01GA2ib4k0EqoGHfdsI6+ux860jgDXisBM7bANkjE+nystKM9V5gsijrNf3lF9sF00mO
+	YMXo1roRhlUqIYparKTpBJfnvta3W/+F/AObicG3oeip4NPy8J0UxQjYqoj0Mq+MtSkMlIk9Mvq
+	2NNBI1sAfkJm4n2ukCdE+KOhzWcfBnN7EJf4RtkjJlYRtC+ZX80xZ84S0dkeFHjIKbxGTUKcTFE
+	DNPie+VVRHXzG8SSe6efmTkAWjfjIcgG0buYtZL8O2plFOYkEY78NTv+lN5lXgdAzdYvIGnvG
+X-Received: by 2002:a05:6000:1788:b0:439:af81:1b2f with SMTP id ffacd0b85a97d-439c80154b9mr10514645f8f.46.1772719365461;
+        Thu, 05 Mar 2026 06:02:45 -0800 (PST)
 Received: from krava ([2a02:8308:a00c:e200::d99c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b503424fsm35859009f8f.22.2026.03.05.06.02.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b34b6252sm34213852f8f.10.2026.03.05.06.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 06:02:33 -0800 (PST)
+        Thu, 05 Mar 2026 06:02:45 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 5 Mar 2026 15:02:31 +0100
+Date: Thu, 5 Mar 2026 15:02:43 +0100
 To: bot+bpf-ci@kernel.org
 Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
 	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
 	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
 	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCHv2 bpf-next 06/23] bpf: Add multi tracing attach types
-Message-ID: <aamM95ydg4RFY-MP@krava>
-References: <20260304222141.497203-7-jolsa@kernel.org>
- <90246a2d7a691e7374b18d699e0778f10b750b85fd0739d485c96960925a822b@mail.kernel.org>
+Subject: Re: [PATCHv2 bpf-next 15/23] libbpf: Add support to create tracing
+ multi link
+Message-ID: <aamNA4bW5on1jD2c@krava>
+References: <20260304222141.497203-16-jolsa@kernel.org>
+ <625b9bd61d08db7a0cdff51817fe64752c1901d360d73455b609516a0b611d3d@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,63 +78,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90246a2d7a691e7374b18d699e0778f10b750b85fd0739d485c96960925a822b@mail.kernel.org>
+In-Reply-To: <625b9bd61d08db7a0cdff51817fe64752c1901d360d73455b609516a0b611d3d@mail.kernel.org>
 
-On Wed, Mar 04, 2026 at 11:02:33PM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index d92cf2821657..832a87da5a86 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
+On Wed, Mar 04, 2026 at 11:02:25PM +0000, bot+bpf-ci@kernel.org wrote:
+> > The provided <pattern> is used as 'pattern' argument in
+> > bpf_program__attach_kprobe_multi_opts function.
+> 
+> The function referenced here should be
+> bpf_program__attach_tracing_multi, not
+> bpf_program__attach_kprobe_multi_opts. This was noted in v1
+> review.
+
+I'm refering to bpf_program__attach_kprobe_multi_opts intentionaly
+
+> 
+> > - bpf_program__attach_kprobe_multi_opts must either have
+> >   pattern with module spec or BTF ids from the module
+> 
+> Same here, should be bpf_program__attach_tracing_multi.
+
+yep, that's typo, thnx
+
+> 
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
 > 
 > [ ... ]
 > 
-> > @@ -25173,6 +25181,8 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
-> >  	case BPF_TRACE_FENTRY:
-> >  	case BPF_TRACE_FEXIT:
-> >  	case BPF_TRACE_FSESSION:
-> > +	case BPF_TRACE_FENTRY_MULTI:
-> > +	case BPF_TRACE_FEXIT_MULTI:
+> > +struct bpf_link *
+> > +bpf_program__attach_tracing_multi(const struct bpf_program *prog, const char *pattern,
+> > +				  const struct bpf_tracing_multi_opts *opts)
+> > +{
+> > +	LIBBPF_OPTS(bpf_link_create_opts, lopts);
+> > +	__u32 *ids, *free_ids = NULL;
+> > +	__u64 *cookies;
+> > +	int prog_fd, link_fd, err, cnt;
+> > +	struct bpf_link *link;
+> > +
+> > +	cnt = OPTS_GET(opts, cnt, 0);
+> > +	ids = OPTS_GET(opts, ids, NULL);
+> > +	cookies = OPTS_GET(opts, cookies, NULL);
 > 
-> The new multi types are added to this switch, but earlier in the same
-> function bpf_check_attach_target() there is a check that prevents
-> BPF_PROG_TYPE_EXT from targeting fentry/fexit/fsession programs:
+> Should this function validate opts with OPTS_VALID() before
+> calling OPTS_GET()? The comparable
+> bpf_program__attach_kprobe_multi_opts() does:
 > 
-> kernel/bpf/verifier.c:bpf_check_attach_target() {
->     ...
->     if (tgt_prog->type == BPF_PROG_TYPE_TRACING &&
->         prog_extension &&
->         (tgt_prog->expected_attach_type == BPF_TRACE_FENTRY ||
->          tgt_prog->expected_attach_type == BPF_TRACE_FEXIT ||
->          tgt_prog->expected_attach_type == BPF_TRACE_FSESSION)) {
->             bpf_log(log, "Cannot extend fentry/fexit/fsession\n");
->             return -EINVAL;
->     }
->     ...
-> }
+>     if (!OPTS_VALID(opts, bpf_kprobe_multi_opts))
+>         return libbpf_err_ptr(-EINVAL);
 > 
-> Should BPF_TRACE_FENTRY_MULTI and BPF_TRACE_FEXIT_MULTI be included
-> in that check as well? The comment above it explains that extending
-> fentry/fexit programs is blocked to prevent
-> fentry->extension->fentry->extension call chains. Multi programs map
-> to BPF_TRAMP_FENTRY/BPF_TRAMP_FEXIT in bpf_attach_type_to_tramp(),
-> so the same concern would apply.
+> Without OPTS_VALID(), a caller passing opts with sz=0 would have
+> ids, cookies and cnt silently ignored rather than getting -EINVAL
+> back.
 
-but multi programs would never have tgt_prog/prog->aux->dst_prog set,
-and that check above is under 'if (tgt_prog) {' check, so I think we
-are ok, but I will double check, thnx
+yep, should be there, will fix, thnx
 
 jirka
-
-
-> 
-> > @@ -25202,7 +25212,17 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
-> 
-> [ ... ]
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22692622038
-
