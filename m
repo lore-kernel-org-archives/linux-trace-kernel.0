@@ -1,75 +1,125 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39923CE4A0;
-	Thu,  5 Mar 2026 16:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A5A3A4F5B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 16:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772727392; cv=none; b=N2NRJUBQ7s4wtQhaEwDW6TgyD4MdhN0J8lVjSfPcBzyMZTZV9ySYkbpO4mNma6YvId6pmo/2Wjk/SWwLz8BWRtg5NEgbajsjVroxpkR9KHg4zIIs0UkQC/3xwehBiTaLsv1pqYxmYZc3JZFjGXLz/vZqjoN4zY2ZBdp2sZp/ozY=
+	t=1772728599; cv=none; b=KAgcExtLrpD09fGMjVsx1U9cl2uvmf5wokAKSEXSZw2UjUszhMrnDSirOmr1fYhPF2CPEaTb1+LH/eEMG8VesExm9pbuy0lMxPZQPW/a91j2Fba4IAC3It5pIpAXws13E5KGgFg8qnpQZTmf2eBc+bW88q6a/M0wcCJTvFzdd0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772727392; c=relaxed/simple;
-	bh=REZCD/bjwXQD9ItoixE5zLBBAo2tTupKDiF2S6yhHPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PiOR0p1iEi0Paza10FeYY/yZIYwScJwRkECVuMrQzLKoSUUPivsJq5THMfbIUalRt5s8HV4BcI5cgUUFyhhB/brFcwZpbxk5eX9WvRYhhhAxHgFyTYPxa8InngHqEsWPMecfAdseioht3nQNrAeaL/4+tAqSdx74JJQt69YYtzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 7F1AFB6D06;
-	Thu,  5 Mar 2026 16:16:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 06AAC17;
-	Thu,  5 Mar 2026 16:16:24 +0000 (UTC)
-Date: Thu, 5 Mar 2026 11:17:03 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, kvmarm@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, jstultz@google.com,
- qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org,
- kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/30] Tracefs support for pKVM
-Message-ID: <20260305111703.6346b243@gandalf.local.home>
-In-Reply-To: <87cy20eeg6.wl-maz@kernel.org>
-References: <20260219150307.14538-1-vdonnefort@google.com>
-	<20260219130220.063c8db3@gandalf.local.home>
-	<87cy20eeg6.wl-maz@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772728599; c=relaxed/simple;
+	bh=v118AX4HgprhO+qT/qoHmaGVhCeIdzF+22JtJi09CxY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YdxY76rogw6082fuuHXfV8mudwHzjj6OBb5FeXUnylDoU2rYdJXiciYmEotgU1ldNlbtVIeHOk+2yIQrLl5sD7PVxbqQcny3gGYp4yudJaD5iGqyFFeyb8fy4VWNODOb5O91Dv2cKp7ldKEFDS+8qYukL+U7rD3EjX/AWPnyaz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OE183bDJ; arc=none smtp.client-ip=74.125.82.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OE183bDJ"
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-2be27fa54feso4088124eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Mar 2026 08:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772728597; x=1773333397; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+qaTlCrAMtHhaECSWz0WgyhgJNAs6je+1lHpGDkkHuY=;
+        b=OE183bDJZ20bDKLvukZRLSuc/xq2ORZxvjYBP5d/k9IkXLxd/Tcb1l5v6LbVjODR4O
+         yp+nxEwgxdIrfZHWz4+D8i12xVnD6yzMQOAmfB8bsWanp8i/V8ISGguCaQZgKLQreWLO
+         b1TxantayTSdjwehSTfTk2mggYiq0Fy7Z+Cd7ivJN1EdHXoDpkeR0tIX9pU8VTgLBqAa
+         q5LLcLvYR0TX0EOxR7RM79pDKEwQGSRWn6GWjSoeNt0kubrSCUiI0X3nFWqjpmSXJZ+x
+         1nQ8GY66R/S4P17yj7O50I4KKHbbqEDwamFvl6XawOuJQQapU2RZYY1w5YR1IUtCfHm1
+         w0Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772728597; x=1773333397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+qaTlCrAMtHhaECSWz0WgyhgJNAs6je+1lHpGDkkHuY=;
+        b=gmPmGsveM3Pp1K84gHRLrutH7+RivVkU800jM6OQn+A1KhkbUF5a0NMi0E/wkO9AAH
+         bbpviHP3YLQOhjENSw/TKrCt4s6U6GvMv2TIJ9cAFNbOfxRn40hkFlCnQfB90k2MaRUS
+         WX5+NjJRHGP1SZHgJviYLWaDBLhHMTIsqJAizZYd2ufEt5u1e9t7nTBEx+cf/74C2woQ
+         RWcxFX3FtkdDiuLX/x1f6RxVvKDzuZBEbEfvadSNZuwIhU92HjB3LENpD86KMVqXuAfI
+         Nu0BkKAqCB3v/dVG+ryp28Y8qJvKK3bCSXCA4DAlXzfixHdFnagjEQj6CpYN+h8uC6o1
+         b5vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeyHEfbaTQJQtINgbASOdy6FAELVVbVtnaxpp8BT4Kp2ETu0KNw2yVXqj5YiV89xnddrccvLmaOzVqyjrk1R9N+Uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8lPPWVYK0dyfUEnePxHQiRGv4TD5eAUk3AwKGZWaJ7s5LBZ0F
+	GYCFPGnkvASvYYE2YMtW1hqa1gdsAoWrPsljkYCQq8seB4qGvN2X2l66
+X-Gm-Gg: ATEYQzxSqIv+EVEQBfVmFwn358M1ggDA2PX/ZcK9i1XcyNe7GtwD8N6q4iGntj8kp6/
+	1Oh4+oT7Dj0TjEsRulo3J3PpkqXl1kp8vu7ZmDTjAuLCEf9lNczMnPaxeumywlKczJE9afkRWZe
+	UHLMoSwFMboI83OHXZZK7pptOSgus8CU8mM5UoC14xzAOdNFFKdB8W+uJJoCJN6M9WtKfSNHCqc
+	S4KpAcU4n9cvq3QQ9qu6WxtW0KZBKf7k8hgBgal3kYnhd3yJbddkIACVjT8A+VE0iIuxVGcHBl6
+	TVnBIp4/0tTtdYTIC2MpYrum+OGFFQZLPlEQ4sk2pb5xHQzVxjr7eNPA/xCHUnUmovwWXsYdQoa
+	AE4FPutuxoQC9aNL+QYFtcHkS1D2A80Vfe0WOI7U0sEVAfKIKxXaHiUj6gGTlKGEPWyE1WtAYCx
+	NRpLRvOn3Xdg9fpdhTZN/mKzYWy6DK/YdxF56S
+X-Received: by 2002:a05:7300:4307:b0:2ba:6fbb:5e7f with SMTP id 5a478bee46e88-2be311d3f6fmr2401154eec.35.1772728596864;
+        Thu, 05 Mar 2026 08:36:36 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be220eb5e5sm5640736eec.17.2026.03.05.08.36.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 08:36:36 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miaoqian Lin <linmq006@gmail.com>
+Subject: [PATCH] tracing: Do not call trigger_data_free with NULL data pointer
+Date: Thu,  5 Mar 2026 08:36:33 -0800
+Message-ID: <20260305163633.2782210-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hjpmqngd9ddfjxdxzzo1w4jhxdng6wmr
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 06AAC17
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18CZlcLb/ptcfAuAKzvUKSGTao+9oqfTCI=
-X-HE-Tag: 1772727384-772492
-X-HE-Meta: U2FsdGVkX195vWpGBKWyqUWB3sgYzypwSlcv/h9gmg0TBmzfLJ+iJuAAW7JoYt01B0eByBfm80sD9DsxCpM5Ex95OHexPsc0qFg16Hge7QLPHlxS+CQvGowxN47UNGBfUGBYJAeypKYP61yfPCSTq57dgAktN2PQfGNpmNcjcxvNgvSLjaZSXDBiZXfmjSlbmObRDIyv7zNs6C/sXoU8ONKtSpvgWKfR9FBm6yGPlDmT0QM9iMzDIaOkSFBm0/8rPcd5RZ3lAfWOEw7woBi4TGjkhIBBHHU14acjwV/t5MLjLqx9u72DWZm7uc0EJZDjZkniDWeZDYruIAyHW8+voCjfsUJJEiDQ
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Feb 2026 19:11:21 +0000
-Marc Zyngier <maz@kernel.org> wrote:
+If trigger_data_alloc() fails and returns NULL, event_hist_trigger_parse()
+jumps to the out_free error path. While kfree() safely handles a NULL
+pointer, trigger_data_free() does not. This causes a NULL pointer
+dereference in trigger_data_free() when evaluating
+data->cmd_ops->set_filter.
 
-> > 
-> > Then the arm/kvm folks could start with that branch and add the arm/KVM
-> > portion of this series on top of it. This will prevent major merge
-> > conflicts in linux-next.
-> > 
-> > Does that sound OK?  
-> 
-> That works. Just send us a link to the branch after -rc2 and we'll get
-> that sorted.
+Fix the problem by adding a new goto label and jumping to it if
+trigger_data_alloc() returns NULL.
 
-Vincent,
+The problem was found by an experimental code review agent based on
+gemini-3.1-pro while reviewing backports into v6.18.y.
 
-There's a few minor conflicts with this series and v7.0-rc2, can you rebase
-and send again?
+Assisted-by: Gemini:gemini-3.1-pro
+Cc: Miaoqian Lin <linmq006@gmail.com>
+Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: 0550069cc25f ("tracing: Properly process error handling in event_hist_trigger_parse()")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ kernel/trace/trace_events_hist.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 73ea180cad55..a2abdfe19281 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6874,7 +6874,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	trigger_data = trigger_data_alloc(cmd_ops, cmd, param, hist_data);
+ 	if (!trigger_data) {
+ 		ret = -ENOMEM;
+-		goto out_free;
++		goto out_destroy;
+ 	}
+ 
+ 	ret = event_trigger_set_filter(cmd_ops, file, filter, trigger_data);
+@@ -6942,7 +6942,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	remove_hist_vars(hist_data);
+ 
+ 	trigger_data_free(trigger_data);
+-
++out_destroy:
+ 	destroy_hist_data(hist_data);
+ 	goto out;
+ }
+-- 
+2.45.2
 
--- Steve
