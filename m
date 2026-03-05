@@ -1,172 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21803064A9;
-	Thu,  5 Mar 2026 09:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25573377EDE
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 09:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772702835; cv=none; b=hYQ5F6q0n94QBNDACVM/r6qTdQsuRIZoxLk/VsDMsdkzvdkKwdOEIYlIztpr0zQzAzg1B2pdPkAAtw9YepcFW6PJ1l25jXFnQMBvlYX6+xtr0fDZKYeHLRXpsBWRNOBdc7QGLrImW9AocTVUI4bszFln1S7Du+FnkgZ8Qc6pU8g=
+	t=1772703088; cv=none; b=oHz8UP1frWQ3kQ/Gr7DG5yeTmxxWKIWtMROoyLmWBqjntE8E0SipV4PhaqW+CKLfCtwx8X5puzDBqDtTHmf+/2dZWQNSqWgBErmptscczfhc6icrXfFgXWD6zCrIO0S5CvKnbmKQyVPUVpOY+sVHh+BjgHZCLvi4Q2+TCdEazK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772702835; c=relaxed/simple;
-	bh=2PM4TCzaL7PIpbUAvBpvBfsaqfpwHgfynLyCMx106LY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lIVtQjnhXwA2OJapxhpd4C+wuSsWf/mLUnrL1Q1doEOpSEehyeLunBxRgYaqHRp/FwPqtP2ihlvmT5p5aMAFwRQoY0BP4CEKn/Teml3V+oKmsxEhMXCgloppBjwbWs3ETeT+rswecQNY4EXsnEXkjHe6dqSwgbyJYzhYnjynAKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SY8eFLte; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772703088; c=relaxed/simple;
+	bh=HsnH82U8MoHHwwnlKdRLZIiykCyrVjf5ZpUQvUSsi7w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=EPFAkniq5Ds5cNuti9sXpzdUZd0lJp19GKxJ5zKInGKEIh9FddhrEYY1FXVFjJPLDdW6B+sx8bOOKRMePotPAgAwcxvvDyEUkfrXCVDIgB+W5gXUpl/Q5SmwNLnmrEZkBElfGPbHYkZbhsn8ITz8mJ20UVX2FfDS8P8C1OXTqZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QecN59Ez; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SY8eFLte"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255C4C2BCAF;
-	Thu,  5 Mar 2026 09:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772702834;
-	bh=2PM4TCzaL7PIpbUAvBpvBfsaqfpwHgfynLyCMx106LY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SY8eFLtecDllvoK9zUMo9qn2jHOAd5sY4zp6ILJ66Tr4bib3tFLTEtqxACNUgf2y2
-	 sCF0z+E/B7kUMZf4O3fGNtuQ/24k78Eut7nDBiyY/DUio7LYHlDa4fJCI8+vngGo4t
-	 mcpN54APp4sE8UiwGy14kbUMLM9AYwa2N1MZY34ywwEZ2GTqrHnMyi+2TyTqr76X43
-	 siVYvzHvBqHZK3sjeZJr1IT43mBMhO04EGXLkzT0d7BcsKWku/qd++43Awvfl2u0U+
-	 +Q/jopx6C5PRPyDyZFEW27mfdvkbjRLyk1NnDVtAm295ARYETRb7NTRJhd893NOMHz
-	 qeuaSyL+N5G5w==
-Message-ID: <ebd994ca-eb04-4dff-a0a8-47aef0934c2c@kernel.org>
-Date: Thu, 5 Mar 2026 10:27:07 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QecN59Ez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772703086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GLSnB2QNLhEdpv4xnt2zl/CO6QBnADjFZsKO7EY9kJo=;
+	b=QecN59Ez/EyRirDMUnSXMeneLdV/MVASmj8mEMeTgU8mHm86Hdj7M7XwQYTXoiNsbpP/I0
+	4OyOoaBhUtwWDV+Ij6/bjB4/REGVebl2mohXVNmjCWjoKtXLQvxXH3phLX8YDTNI9YGBID
+	G1PjcxF1MmiHsD2cZ2JQbWVZTOLN4zw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-HmxIGhgfOgmxkzsQJtDO1w-1; Thu,
+ 05 Mar 2026 04:31:23 -0500
+X-MC-Unique: HmxIGhgfOgmxkzsQJtDO1w-1
+X-Mimecast-MFC-AGG-ID: HmxIGhgfOgmxkzsQJtDO1w_1772703082
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2443195DB8E;
+	Thu,  5 Mar 2026 09:31:21 +0000 (UTC)
+Received: from fedora (unknown [10.44.32.232])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AD7AA1800576;
+	Thu,  5 Mar 2026 09:31:18 +0000 (UTC)
+Received: by fedora (sSMTP sendmail emulation); Thu, 05 Mar 2026 10:31:17 +0100
+From: "Jerome Marchand" <jmarchan@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jerome Marchand <jmarchan@redhat.com>
+Subject: [PATCH] ftrace: Add MAINTAINERS entries for all ftrace headers
+Date: Thu,  5 Mar 2026 10:31:17 +0100
+Message-ID: <20260305093117.853700-1-jmarchan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
-Content-Language: en-US
-To: SeongJae Park <sj@kernel.org>, Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Len Brown <lenb@kernel.org>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Oscar Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20260304151335.172572-1-sj@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <20260304151335.172572-1-sj@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: BxKOtavP-NE8y9SO1lfCmTO0BDLNd3IwMCVUyOuWbH8_1772703082
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On 3/4/26 16:13, SeongJae Park wrote:
-> On Wed, 4 Mar 2026 13:01:45 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
-> 
->> On Tue, Mar 03, 2026 at 05:50:34PM -0800, SeongJae Park wrote:
->> > On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
->> > 
->> > > On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
->> > > > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
->> > > > 
->> > > > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
->> > > > > > This intentionally breaks direct users of zone->lock at compile time so
->> > > > > > all call sites are converted to the zone lock wrappers. Without the
->> > > > > > rename, present and future out-of-tree code could continue using
->> > > > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
->> > > > > > infrastructure.
->> > > > > > 
->> > > > > > No functional change intended.
->> > > > > > 
->> > > > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
->> > > > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
->> > > > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
->> > > > > > Acked-by: SeongJae Park <sj@kernel.org>
->> > > > > 
->> > > > > I see some more instances of 'zone->lock' in comments in
->> > > > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
->> > > > > 
->> > > > 
->> > > > I fixed (most of) that in the previous version but my fix was lost.
->> > > 
->> > > Thanks for the fixups, Andrew.
->> > > 
->> > > I still see a few 'zone->lock' references in Documentation remain on
->> > > mm-new. This patch cleans them up, as noted by Vlastimil.
->> > > 
->> > > I'm happy to adjust this patch if anything else needs attention.
->> > > 
->> > > From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
->> > > From: Dmitry Ilvokhin <d@ilvokhin.com>
->> > > Date: Tue, 3 Mar 2026 06:13:13 -0800
->> > > Subject: [PATCH] mm: fix remaining zone->lock references
->> > > 
->> > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
->> > > ---
->> > >  Documentation/mm/physical_memory.rst | 4 ++--
->> > >  Documentation/trace/events-kmem.rst  | 8 ++++----
->> > >  2 files changed, 6 insertions(+), 6 deletions(-)
->> > > 
->> > > diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
->> > > index b76183545e5b..e344f93515b6 100644
->> > > --- a/Documentation/mm/physical_memory.rst
->> > > +++ b/Documentation/mm/physical_memory.rst
->> > > @@ -500,11 +500,11 @@ General
->> > >  ``nr_isolate_pageblock``
->> > >    Number of isolated pageblocks. It is used to solve incorrect freepage counting
->> > >    problem due to racy retrieving migratetype of pageblock. Protected by
->> > > -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
->> > > +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
->> > 
->> > Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
->> > to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
->> > for the rest of this patch.
->> > 
->> > I was initially thinking this is just a mistake, but I also found Andrew is
->> > doing same change [2], so I'm bit confused.  Is this an intentional change?
->> > 
->> > [1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
->> > [2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
->> > 
->> 
->> Good catch, thanks for pointing this out, SJ.
->> 
->> Originally the mechanical rename was indeed zone->lock -> zone->_lock.
->> However, in Documentation I intentionally switched references to
->> zone_lock instead of zone->_lock. The reasoning is that _lock is now an
->> internal implementation detail, and direct access is discouraged. The
->> intended interface is via the zone_lock_*() / zone_unlock_*() wrappers,
->> so referencing zone_lock in documentation felt more appropriate than
->> mentioning the private struct field (zone->_lock).
-> 
-> Thank you for this nice and kind clarification, Dmitry!  I agree mentioning
-> zone_[un]lock_*() helpers instead of the hidden member (zone->_lock) can be
-> better.
-> 
-> But, I'm concerned if people like me might not aware the intention under
-> 'zone_lock'.  If there is a well-known convention that allows people to know it
-> is for 'zone_[un]lock_*()' helpers, making it more clear would be nice, in my
-> humble opinion.  If there is such a convention but I'm just missing it, please
-> ignore.  If I'm not, for eaxmaple,
-> 
-> "protected by ``zone->lock``" could be re-wrote to
-> "protected by ``zone_[un]lock_*()`` locking helpers" or,
-> "protected by zone lock helper functions (``zone_[un]lock_*()``)" ?
-> 
->> 
->> That said, I agree this creates inconsistency with the mechanical
->> rename, and I'm happy to adjust either way: either consistently refer
->> to the wrapper API, or keep documentation aligned with zone->_lock.
->> 
->> I slightly prefer referring to the wrapper API, but don't have a strong
->> preference as long as we're consistent.
-> 
-> I also think both approaches are good.  But for the wrapper approach, I think
-> giving more contexts rather than just ``zone_lock`` to readers would be nice.
+There is currently no entry for ftrace_irq.h and ftrace_regs.h. Add a
+generic entry for all *ftrace* headers to include them and prevent
+overlooking future ftrace headers.
 
-Grep tells me that we also have comments mentioning simply "zone lock", btw.
-And it's also a term used often in informal conversations. Maybe we could
-just standardize on that in comments/documentations as it's easier to read.
-Discovering that the field is called _lock and that wrappers should be used,
-is hopefully not that difficult.
+Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61bf550fd37c2..b8d1ad952827e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10484,7 +10484,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ F:	Documentation/trace/ftrace*
+ F:	arch/*/*/*/*ftrace*
+ F:	arch/*/*/*ftrace*
+-F:	include/*/ftrace.h
++F:	include/*/*ftrace*
+ F:	kernel/trace/fgraph.c
+ F:	kernel/trace/ftrace*
+ F:	samples/ftrace
+-- 
+2.53.0
+
