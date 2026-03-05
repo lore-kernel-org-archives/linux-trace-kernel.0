@@ -1,142 +1,99 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6755282F27;
-	Thu,  5 Mar 2026 16:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119C8379EC4;
+	Thu,  5 Mar 2026 16:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772726594; cv=none; b=XUp5H/Z+VGzDJ5K2zYq6lRsAnEozot6KQeOqWMnzDqPag/QpPVlVEECmvM/jrdDCUm0A1eDWayOo0njrk9Q4UjE2pyIR6QCC22UZRRNugM4L/jO/ARFFvX4lmIXgKP+klU4PjGgHfeqfGRLIH1kwj+XVzFVCy8Ltalszyjzfk0E=
+	t=1772726773; cv=none; b=XErk9SR0AqNw89OJxpNpe0TSgw+EuI8f7XwO89fdjXPb4rvHUA3EHQbXR/aDQ/5oQxRv7G/+f1kK6OWVSUPIaYQCjGcDPeI5OQRlMzYMA52hyzTZ80gZ4uZ8I8yck9QNk3ctQhOLQvkFOzIy4E2y3Xh1FubUnTjm/8g+N/ZqpWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772726594; c=relaxed/simple;
-	bh=kbCdHrPQfuik8kSiEUlPcr8xDBSE+5onkdlqnirYpD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RDqzG/926qVD1z516iKA3XdRixZZt9JiHuvrcn03vmAhou2XOBGmIc7awO1UiM8iBmROm0jxWulvtzCgZm8wuOK+ysgpW0SEPGLTP9VX92R+Izm0a6fVM7feh5WA9ikmA8aRvUDn7D8Aj9mzA4zAyzKXl8v1+ZHiO7gd9Eeii2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 104D4C0BE4;
-	Thu,  5 Mar 2026 16:03:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 222CB20029;
-	Thu,  5 Mar 2026 16:03:09 +0000 (UTC)
-Date: Thu, 5 Mar 2026 11:03:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Documentation: Update histogram-design.rst for
- fn() handling
-Message-ID: <20260305110347.31d6bae5@gandalf.local.home>
-In-Reply-To: <20260126181742.03e8f0d5@gandalf.local.home>
-References: <20260126181742.03e8f0d5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772726773; c=relaxed/simple;
+	bh=Z3x+Se9yIuwlUrw5IJht45f+3n/jmFguEMA2zfjsXPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cHv/uvrAMahLl4BYMAsep0hFpBuBzVcCIA0FQcsZs/kGp+SaiKDQUNa4Gg34j0yzP3Wf9/G+Vf0gChbQKLmWK+HZHcOaGIh2Cj4U/Wb7gxdM0pVmaltnYSzkQgvWjBMM9O7QBV57WDNMnF7W75FFYAT+dzkO7nfYxFxqYz5qwYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G48/mJtC; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G48/mJtC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yoXLVExaeD40rMm6BLEsNzbF/cVQ2Kh2LQ9L0d5YO00=; b=G48/mJtCY4pqf4sNMBVKTL4lmv
+	LbtVcnZiyUmaBFfgSm6dkg7BW7aG+WGFTW2qN2xc/0+Qch05f4jp/nzx+N8dKAM2Q56QErHm63Yym
+	jXoeQQu3Lx+HUMsyF/kknumyDtn3MaLldp1kF9wqQoB8SEzZeO8VtpzocDTC8f8JUPGc0zd9PQPFs
+	BTBPAk4HV3x7SEI+FRhEO7DJtEXVPr50Qdv7cx3S+TVPoXb7VO98ursViRK/1xiTfwDz3b2GFCaWl
+	8xwyr4LAmRRPc6u72ab28Ni5FJjOlhqeRd3BTZhNsbLAJiDeLm1ceXTDPHbaCwHI09XM2IcKuylBK
+	MpJNh4JA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vyBD5-00000007A4B-0rha;
+	Thu, 05 Mar 2026 16:05:59 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 97952300182; Thu, 05 Mar 2026 17:05:58 +0100 (CET)
+Date: Thu, 5 Mar 2026 17:05:58 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH RFC 2/3] locking/percpu-rwsem: Extract
+ __percpu_up_read_slowpath()
+Message-ID: <20260305160558.GD2277644@noisy.programming.kicks-ass.net>
+References: <cover.1772642407.git.d@ilvokhin.com>
+ <6b1f1521ca186d5c402a65619d8f30fe83b93bf6.1772642407.git.d@ilvokhin.com>
+ <20260304220223.GS606826@noisy.programming.kicks-ass.net>
+ <20260305104703.2a1e8151@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uoozexr41qgcctxprzbdjn7jkm5kuh7k
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 222CB20029
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/jJwSATMn83cMt9oeARCb76zNWrA+xnME=
-X-HE-Tag: 1772726589-685616
-X-HE-Meta: U2FsdGVkX1972E0Ssok5izdEAf7siT7PUdYoYldJnzC5jjW/ZXkGUqtti7XObvXqi550Z3CJt+CpYaPDGAjmPLcXCTaDd5jdg3x+R/74iH8VMHltzUB3LzfBXj8RG4l1UMg9gUwMPVMw9QbGDD89gcitZPRQvAREeoif/3hh+Tc74ctBpkcDf1CifFM8p1RwtwginjuYkTbXvhRcbIp5KScAmJXzZLo34tc1GyLS+1PzruVaW/E6vZwWRHiPWliMUG0gSWsvk4/XfeAT9KEcNk1GTxNBWCBxnaBvknAjxWHpm3M8D34E7wuPJ2ramACe+aehLLJdZY2kWSil9RotubcLI2RthkltFSgQ/FY23rX2DFBh+IUSBkpROC5owAdT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260305104703.2a1e8151@gandalf.local.home>
 
-
-Hi Jon,
-
-Can you take this through your tree?
-
-Thanks,
-
--- Steve
-
-
-On Mon, 26 Jan 2026 18:17:42 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Mar 05, 2026 at 10:47:03AM -0500, Steven Rostedt wrote:
+> On Wed, 4 Mar 2026 23:02:23 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> The histogram documentation describes the old method of the histogram
-> triggers using the fn() field of the histogram field structure to process
-> the field. But due to Spectre mitigation, the function pointer to handle
-> the fields at runtime caused a noticeable overhead. It was converted over
-> to a fn_num and hist_fn_call() is now used to call the specific functions
-> for the fields via a switch statement based on the field's fn_num value.
+> > > diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+> > > index c8cb010d655e..89506895365c 100644
+> > > --- a/include/linux/percpu-rwsem.h
+> > > +++ b/include/linux/percpu-rwsem.h
+> > > @@ -107,6 +107,8 @@ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +void __percpu_up_read_slowpath(struct percpu_rw_semaphore *sem);
+> > > +  
+> > 
+> > extern for consistency with all the other declarations in this header.
 > 
-> Update the documentation to reflect this change.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  Documentation/trace/histogram-design.rst | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
-> index ae71b5bf97c6..e92f56ebd0b5 100644
-> --- a/Documentation/trace/histogram-design.rst
-> +++ b/Documentation/trace/histogram-design.rst
-> @@ -69,7 +69,8 @@ So in this histogram, there's a separate bucket for each pid, and each
->  bucket contains a value for that bucket, counting the number of times
->  sched_waking was called for that pid.
->  
-> -Each histogram is represented by a hist_data struct.
-> +Each histogram is represented by a hist_data struct
-> +(struct hist_trigger_data).
->  
->  To keep track of each key and value field in the histogram, hist_data
->  keeps an array of these fields named fields[].  The fields[] array is
-> @@ -82,7 +83,7 @@ value or not, which the above histogram does not.
->  
->  Each struct hist_field contains a pointer to the ftrace_event_field
->  from the event's trace_event_file along with various bits related to
-> -that such as the size, offset, type, and a hist_field_fn_t function,
-> +that such as the size, offset, type, and a hist field function,
->  which is used to grab the field's data from the ftrace event buffer
->  (in most cases - some hist_fields such as hitcount don't directly map
->  to an event field in the trace buffer - in these cases the function
-> @@ -241,28 +242,33 @@ it, event_hist_trigger() is called.  event_hist_trigger() first deals
->  with the key: for each subkey in the key (in the above example, there
->  is just one subkey corresponding to pid), the hist_field that
->  represents that subkey is retrieved from hist_data.fields[] and the
-> -hist_field_fn_t fn() associated with that field, along with the
-> +hist field function associated with that field, along with the
->  field's size and offset, is used to grab that subkey's data from the
->  current trace record.
->  
-> +Note, the hist field function use to be a function pointer in the
-> +hist_field stucture. Due to spectre mitigation, it was converted into
-> +a fn_num and hist_fn_call() is used to call the associated hist field
-> +function that corresponds to the fn_num of the hist_field structure.
-> +
->  Once the complete key has been retrieved, it's used to look that key
->  up in the tracing_map.  If there's no tracing_map_elt associated with
->  that key, an empty one is claimed and inserted in the map for the new
->  key.  In either case, the tracing_map_elt associated with that key is
->  returned.
->  
-> -Once a tracing_map_elt available, hist_trigger_elt_update() is called.
-> +Once a tracing_map_elt is available, hist_trigger_elt_update() is called.
->  As the name implies, this updates the element, which basically means
->  updating the element's fields.  There's a tracing_map_field associated
->  with each key and value in the histogram, and each of these correspond
->  to the key and value hist_fields created when the histogram was
->  created.  hist_trigger_elt_update() goes through each value hist_field
-> -and, as for the keys, uses the hist_field's fn() and size and offset
-> +and, as for the keys, uses the hist_field's function and size and offset
->  to grab the field's value from the current trace record.  Once it has
->  that value, it simply adds that value to that field's
->  continually-updated tracing_map_field.sum member.  Some hist_field
-> -fn()s, such as for the hitcount, don't actually grab anything from the
-> -trace record (the hitcount fn() just increments the counter sum by 1),
-> +functions, such as for the hitcount, don't actually grab anything from the
-> +trace record (the hitcount function just increments the counter sum by 1),
->  but the idea is the same.
->  
->  Once all the values have been updated, hist_trigger_elt_update() is
+> I wonder if a cleanup patch should be added to remove the "extern" from the
+> other functions, as that tends to be the way things are going (hch just
+> recommended it elsewhere).
 
+Well, I rather like the extern. But yeah, I know hch does not agree.
+
+> > 
+> > s/_slowpath//, the corresponding down function also doesn't have
+> > _slowpath on.
+> > 
+> > >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
+> > >  {
+> > >  	rwsem_release(&sem->dep_map, _RET_IP_);  
+> 
+> And since "slowpath" is more descriptive (and used in the rtmutex code),
+> should that be added too?
+
+It already has __ prefix, no point in making the name even longer for no
+real benefit.
