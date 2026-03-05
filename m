@@ -1,98 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67ED1DFDA1;
-	Wed,  4 Mar 2026 23:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4603719E98D;
+	Thu,  5 Mar 2026 01:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772665353; cv=none; b=rAPg7jkHfpY5LV6bW01b/4NciL89gTtUQyqXw/qXnOLgQoMPovYWYla7jLP43LlQiMQw3SVd90tIZEwJCluLDD+CRolnWIHoYp+j2lx8xeNsW7dnJWFhZ5FuuIwJF6tHkRuJpH3AYfohlUJIvYvh4xuo1a8eBBXyWEXKCIQsYrA=
+	t=1772674675; cv=none; b=m6mk88jl4oFKbPQTXwXlk0RKGAMB5CxYPc5OEpyCed1aO/xtXPjlzLkdr5bKlhsz2N3slyQy1WETnVQ4PLHUjjpx7oj2aJ6k+Rte8exylvX8AICZBFOkLklIePZxmziyGNNFos4EsS8zdJeYaAgovY0ddrTAIysWBmr0d2GY+24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772665353; c=relaxed/simple;
-	bh=0EdNCJsDLDqBmyoHWtn8JAcs4nalnxJjBdbpLEQnZzM=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=hT+t0bNYUpGOHHRSBGCCewITJTOL7Fq3CLJbUbCvXO9pg/uEqOFdP6ZdVugjO2XT/GH79dD+IaETt+y8x7dCGNXIjtBe235HblpyEF1kP6d4dq+t9hBl+BRldHUlNCfjZMjbJUAMYRvFLoEdl08KSEBh8SAo8FoVRH+Ay9FnXtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otiJAT0U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772674675; c=relaxed/simple;
+	bh=kxTQsBwPgAtXjSA2KomBqcWSxnKdXwCBd1QQgZU92C0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KNcY0METhR1EAanhAn2Y2s92E4dsDXnZdKhQTeb21B8x4fJKDbgGiRuBu/TwjQ2y3g0meaqF3c28BlN8SVMcEpLTGK55q4husYd7y7/qfyqU7mabENMnqiUZvVRKtVGRf6i6a0nabaj5z117+oxjmLysMWpf3aWjiCLAqjhQU0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dv/AjJSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otiJAT0U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B174C4CEF7;
-	Wed,  4 Mar 2026 23:02:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dv/AjJSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F41AC4CEF7;
+	Thu,  5 Mar 2026 01:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772665353;
-	bh=0EdNCJsDLDqBmyoHWtn8JAcs4nalnxJjBdbpLEQnZzM=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=otiJAT0UhiPZpGkL4hVcY12esDpAm2+MK7jd+Gg/GsYRLZ/SpvkLy+HOyDKr+VlUG
-	 j/+jW3ps9mrpESdOwxhp3EO2L+b0mgvxm319wDq3lbWNdexTDgJPpk/7OV3du1dtET
-	 Sg1zTbBBT7wHQIbP1OcQBJcrPrKKj/7/3HTuw71KPHvfiDtA+y8ZW/dOeixeRCvZO/
-	 e7Ned9970qIMcyWwqZP40wCwvsYWUxK3WacXIC9tqyxevpocaxPtIDqrKKcnmU3N/q
-	 ofjKpF8/dSySgTCPFJoBiQ0rjg/O5FPzlfS5p3lC/eXg9HfY9KDmMe7OXnGdssxUJv
-	 BioERHsNdYGfw==
-Content-Type: multipart/mixed; boundary="===============0097848254027258512=="
+	s=k20201202; t=1772674674;
+	bh=kxTQsBwPgAtXjSA2KomBqcWSxnKdXwCBd1QQgZU92C0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dv/AjJSIepwd69SfU/w8BV9lIvttrbA5Yl8wujfuWoDwIGhWXbI7cDGUZNa8ov+iv
+	 zh/lct3TCsBvOesNkidaV4cpIzBsx9GTofAU4BzuDStJ11e6MDQdaECiHCqrxqAoFJ
+	 suP8nNIBEyd/rVDj8wgyNb1ITbnoRE2yUaS7sUvMVgoK0bOJCMPdA80h8F8pZa75kj
+	 7dXtz5Ih6biz9NBTHFeLr2AGMChloFxjvEeNNrpilqSvKaVBvYVQjvw/D+tGnVRijk
+	 ArJhlgyRKzz6Nk0wNACIgaPSWPLWS80TYKCxgfFQ+Jkbn065o4jc9dYuaCSv9t43ID
+	 bZJmpNP02vcjw==
+Date: Wed, 4 Mar 2026 20:37:44 -0500
+From: Steven Rostedt <rostedt@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Brian
+ Geffon <bgeffon@google.com>, John Stultz <jstultz@google.com>, Ian Rogers
+ <irogers@google.com>, Suleiman Souhlal <suleiman@google.com>
+Subject: Re: [PATCH 1/2] tracing: Have futex syscall trace event show
+ specific user data
+Message-ID: <20260304203744.02e76dff@fedora>
+In-Reply-To: <20260304090748.GO606826@noisy.programming.kicks-ass.net>
+References: <20260303214735.002154462@kernel.org>
+	<20260303214942.428502100@kernel.org>
+	<20260304090748.GO606826@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <90246a2d7a691e7374b18d699e0778f10b750b85fd0739d485c96960925a822b@mail.kernel.org>
-In-Reply-To: <20260304222141.497203-7-jolsa@kernel.org>
-References: <20260304222141.497203-7-jolsa@kernel.org>
-Subject: Re: [PATCHv2 bpf-next 06/23] bpf: Add multi tracing attach types
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
-Cc: bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kafai@fb.com,eddyz87@gmail.com,songliubraving@fb.com,yhs@fb.com,menglong8.dong@gmail.com,rostedt@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Wed,  4 Mar 2026 23:02:33 +0000 (UTC)
-
---===============0097848254027258512==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index d92cf2821657..832a87da5a86 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
+On Wed, 4 Mar 2026 10:07:48 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-[ ... ]
+> On Tue, Mar 03, 2026 at 04:47:36PM -0500, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > Add specific reporting of the futex system call. This allows for debugging
+> > the futex code a bit easier. Instead of just showing the values passed
+> > into the futex system call, read the value of the user space memory
+> > pointed to by the addr parameter.
+> > 
+> > Also make the op parameter more readable by parsing the values to show
+> > what the command is:
+> > 
+> >  futex_requeue_p-3251    [002] .....  2101.068479: sys_futex(uaddr: 0x55e79a4da834 (0x80000cb1), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
+> >  futex_requeue_p-3248    [001] .....  2101.068970: sys_futex(uaddr: 0x7f859072f990 (0xcb2), FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, val: 3250)
+> >  futex_requeue_p-3252    [005] .....  2101.069108: sys_futex(uaddr: 0x55e79a4da838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7ffe61076aa0, uaddr2: 0x55e79a4da834, uaddr2: 94453214586932, val3: 0)
+> >  futex_requeue_p-3252    [005] .....  2101.069410: sys_futex(uaddr: 0x55e79a4da834 (0x80000cb1), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> >  kernel/trace/trace_syscalls.c | 266 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 263 insertions(+), 3 deletions(-)  
+> 
+> Egads, I really dislike how all sorts of syscall crud is 'duplicated' in
+> this file, rather than near or in the actual syscall definition.
 
-> @@ -25173,6 +25181,8 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
->  	case BPF_TRACE_FENTRY:
->  	case BPF_TRACE_FEXIT:
->  	case BPF_TRACE_FSESSION:
-> +	case BPF_TRACE_FENTRY_MULTI:
-> +	case BPF_TRACE_FEXIT_MULTI:
+Now I did copy the futex_cmd_has_timeout() which I could just use the
+futex one by exporting it. But the rest is due to printing the content.
 
-The new multi types are added to this switch, but earlier in the same
-function bpf_check_attach_target() there is a check that prevents
-BPF_PROG_TYPE_EXT from targeting fentry/fexit/fsession programs:
+What exactly is "duplicated"? The code is mostly done to display the
+data, where as the futex syscall code is about implementing it.
 
-kernel/bpf/verifier.c:bpf_check_attach_target() {
-    ...
-    if (tgt_prog->type == BPF_PROG_TYPE_TRACING &&
-        prog_extension &&
-        (tgt_prog->expected_attach_type == BPF_TRACE_FENTRY ||
-         tgt_prog->expected_attach_type == BPF_TRACE_FEXIT ||
-         tgt_prog->expected_attach_type == BPF_TRACE_FSESSION)) {
-            bpf_log(log, "Cannot extend fentry/fexit/fsession\n");
-            return -EINVAL;
-    }
-    ...
-}
+What do you suggest in reuse? Or just move some of theses functions
+into kernel/futex/syscall.c?
 
-Should BPF_TRACE_FENTRY_MULTI and BPF_TRACE_FEXIT_MULTI be included
-in that check as well? The comment above it explains that extending
-fentry/fexit programs is blocked to prevent
-fentry->extension->fentry->extension call chains. Multi programs map
-to BPF_TRAMP_FENTRY/BPF_TRAMP_FEXIT in bpf_attach_type_to_tramp(),
-so the same concern would apply.
-
-> @@ -25202,7 +25212,17 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
-
-[ ... ]
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22692622038
---===============0097848254027258512==--
+-- Steve
