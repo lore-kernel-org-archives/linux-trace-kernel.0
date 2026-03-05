@@ -1,41 +1,41 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B15A29B20D
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 06:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD0929B233;
+	Thu,  5 Mar 2026 07:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772694001; cv=none; b=ZwpD25fbYsw8XwTCVtdQaB+QHxpwAEKi6CvXyhPaRySYzW4SZe9J8bm4s4/BAg9yf2JtvLAbRwdF2eIUhL59mwWxp5D19VRMAR7J3AAzTNFGg8SfEqvL9YEM755Fdf3SaBvtHKh5IP7XGrzpGXEitG4Pi7lPdWIh8yg/pFoskLw=
+	t=1772695813; cv=none; b=EP+uP7nfzdhyEVapxK1DPxJ1pHlwOTCjxz714U8y6pQnfEe111NWjihoYEl46ohvKVzZdFXHXMG1i0RhMa34obxSzK7/ydeDo5bNDc9AYyAKWLMjpTQF7S6ECeuS1AKmE9PQo64mQguin/MHfIz+9yheHod3thKsUdPhoeF/Piw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772694001; c=relaxed/simple;
-	bh=I7U/rIja0hkqLwde0y+xCfy9HDS+KsjUXWaIjEhHC4k=;
+	s=arc-20240116; t=1772695813; c=relaxed/simple;
+	bh=lTzC3DOe3FWjuf5axLH/2f9FZMU8FQpjojeYB+xavQA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bVPFOaRnVA8ct/a2Q4Bni5EvZMIYMhz0i6EiB/9TLXowSd183eS+SI5DXa9H0kulxFDXeDGDaUUONwLgO4gd/qdCJWminabQqO6Gigpua53NILaqBCTaIbElNA6ymKjK+ZPEUyYrEwCwxG6wHPVqVo2FzqTWDhDxiOzObTB7Jec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d+lAoFVb; arc=none smtp.client-ip=95.215.58.171
+	 In-Reply-To:Content-Type; b=X5KU7hCxfGcdqX1oxkb1tkkc39zDqBltYqFu6Q8j2oWVNjucBmhubzkrwJ1qYA324mW1kt26Y8kIzNBbMKoYcIvdrcRN8Dj9Iv+Ywh0abHGZGg1Cqn5BA2GBsETpVfs9LYl8AjHZN/bvLF8x/jdgx/+VnyEWwRhG5GVDW9+qNvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pHM8ePeM; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d+lAoFVb"
-Message-ID: <0f3ec422-4b98-4311-96de-ccfc86bb22ad@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pHM8ePeM"
+Message-ID: <30ebc83a-8f17-44fc-89a6-037e826f6c70@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772693996;
+	t=1772695809;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PKZjmBMs6uqPznaGXDzSJjOUHnipnd2ok2ANadgI9vQ=;
-	b=d+lAoFVbsuaB+CybiKDAzO2i5esmKLgwufdF+C5F76sc0uWwZg3kZY5/EGedhxIoQw8cYz
-	ZRa0oFWamJLBwkTW+Sn0LbEy/eztxvvHpJbHUIqM7usdiXMN2fAuP9QwHfJffg725RVPQB
-	OfaNwTcTKPH/OtyzEhFnJgnwzTJXEng=
-Date: Thu, 5 Mar 2026 14:59:48 +0800
+	bh=Zkrpq1MReRvWW8x3HssiZAsOMiRgFEXzVCzorhAJJaI=;
+	b=pHM8ePeMJgcZM1DJ2exaS0Qv+n3ixnbXF/93qDO5dpmKJYldHGKWCfFP9BV6+Dubqx0a5x
+	/4CNALdZmDXPAhrxbW/hOHU6v8mwSM7v8YjYIkAIS1/Pdw4TKy+O5Qw+puu2nlvr+yK8nG
+	ZBEXTzS18s3P0ioRo6u7y77YCACMR7o=
+Date: Thu, 5 Mar 2026 15:30:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCHv2 bpf-next 15/23] libbpf: Add support to create tracing
- multi link
+Subject: Re: [PATCHv2 bpf-next 22/23] selftests/bpf: Add tracing multi attach
+ benchmark test
 Content-Language: en-US
 To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
@@ -44,174 +44,93 @@ Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
  Menglong Dong <menglong8.dong@gmail.com>, Steven Rostedt <rostedt@kernel.org>
 References: <20260304222141.497203-1-jolsa@kernel.org>
- <20260304222141.497203-16-jolsa@kernel.org>
+ <20260304222141.497203-23-jolsa@kernel.org>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <20260304222141.497203-16-jolsa@kernel.org>
+In-Reply-To: <20260304222141.497203-23-jolsa@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 On 5/3/26 06:21, Jiri Olsa wrote:
-> Adding bpf_program__attach_tracing_multi function for attaching
-> tracing program to multiple functions.
+> Adding benchmark test that attaches to (almost) all allowed tracing
+> functions and display attach/detach times.
 > 
->   struct bpf_link *
->   bpf_program__attach_tracing_multi(const struct bpf_program *prog,
->                                     const char *pattern,
->                                     const struct bpf_tracing_multi_opts *opts);
-> 
-> User can specify functions to attach with 'pattern' argument that
-> allows wildcards (*?' supported) or provide BTF ids of functions
-> in array directly via opts argument. These options are mutually
-> exclusive.
-> 
-> When using BTF ids, user can also provide cookie value for each
-> provided id/function, that can be retrieved later in bpf program
-> with bpf_get_attach_cookie helper. Each cookie value is paired with
-> provided BTF id with the same array index.
-> 
-> Adding support to auto attach programs with following sections:
-> 
->   fsession.multi/<pattern>
->   fsession.multi.s/<pattern>
->   fentry.multi/<pattern>
->   fexit.multi/<pattern>
->   fentry.multi.s/<pattern>
->   fexit.multi.s/<pattern>
-> 
-> The provided <pattern> is used as 'pattern' argument in
-> bpf_program__attach_kprobe_multi_opts function.
-> 
-> The <pattern> allows to specify optional kernel module name with
-> following syntax:
-> 
->   <module>:<function_pattern>
-> 
-> In order to attach tracing_multi link to a module functions:
-> - program must be loaded with 'module' btf fd
->   (in attr::attach_btf_obj_fd)
-> - bpf_program__attach_kprobe_multi_opts must either have
->   pattern with module spec or BTF ids from the module
+>   # ./test_progs -t tracing_multi_bench_attach -v
+>   bpf_testmod.ko is already unloaded.
+>   Loading bpf_testmod.ko...
+>   Successfully loaded bpf_testmod.ko.
+>   serial_test_tracing_multi_bench_attach:PASS:btf__load_vmlinux_btf 0 nsec
+>   serial_test_tracing_multi_bench_attach:PASS:tracing_multi_bench__open_and_load 0 nsec
+>   serial_test_tracing_multi_bench_attach:PASS:get_syms 0 nsec
+>   serial_test_tracing_multi_bench_attach:PASS:bpf_program__attach_tracing_multi 0 nsec
+>   serial_test_tracing_multi_bench_attach: found 51186 functions
+>   serial_test_tracing_multi_bench_attach: attached in   1.295s
+>   serial_test_tracing_multi_bench_attach: detached in   0.243s
+>   #507     tracing_multi_bench_attach:OK
+>   Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+>   Successfully unloaded bpf_testmod.ko.
 > 
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/lib/bpf/libbpf.c   | 309 +++++++++++++++++++++++++++++++++++++++
->  tools/lib/bpf/libbpf.h   |  15 ++
->  tools/lib/bpf/libbpf.map |   1 +
->  3 files changed, 325 insertions(+)
+>  .../selftests/bpf/prog_tests/tracing_multi.c  | 178 ++++++++++++++++++
+>  .../selftests/bpf/progs/tracing_multi_bench.c |  13 ++
+>  2 files changed, 191 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/progs/tracing_multi_bench.c
 > 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 34987ce7cdc8..8842adcf8c8a 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -7716,6 +7716,52 @@ static int bpf_object__sanitize_prog(struct bpf_object *obj, struct bpf_program
->  static int libbpf_find_attach_btf_id(struct bpf_program *prog, const char *attach_name,
->  				     int *btf_obj_fd, int *btf_type_id);
+> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> index d64d90f4e086..585d6b646d20 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_multi.c
+> @@ -9,6 +9,7 @@
+>  #include "tracing_multi_intersect.skel.h"
+>  #include "tracing_multi_session.skel.h"
+>  #include "tracing_multi_fail.skel.h"
+> +#include "tracing_multi_bench.skel.h"
+>  #include "trace_helpers.h"
 >  
-> +static inline bool is_tracing_multi(enum bpf_attach_type type)
-> +{
-> +	return type == BPF_TRACE_FENTRY_MULTI || type == BPF_TRACE_FEXIT_MULTI ||
-> +	       type == BPF_TRACE_FSESSION_MULTI;
-> +}
-> +
-> +static int tracing_multi_mod_fd(struct bpf_program *prog, int *btf_obj_fd)
-> +{
-> +	const char *attach_name, *sep, *mod_name = NULL;
-> +	int i, err, mod_len = 0;
-> +
-> +	*btf_obj_fd = 0;
-> +	attach_name = strchr(prog->sec_name, '/');
-> +
-> +	/* Program with no details in spec, using kernel btf. */
-> +	if (!attach_name)
-> +		return 0;
-> +
-> +	attach_name++;
-> +	sep = strchr(attach_name, ':');
-> +	if (sep) {
-> +		mod_name = attach_name;
-> +		mod_len = sep - mod_name;
-> +	}
-> +
-> +	/* Program with no module section, using kernel btf. */
-> +	if (!mod_name)
-> +		return 0;
-> +
-> +	err = load_module_btfs(prog->obj);
-> +	if (err)
-> +		return err;
-> +
-> +	for (i = 0; i < prog->obj->btf_module_cnt; i++) {
-> +		const struct module_btf *mod = &prog->obj->btf_modules[i];
-> +
-> +		if (mod_name && strncmp(mod->name, mod_name, mod_len) == 0) {
-
-strncmp() is not enough to exactly compare two module names, as
-strncmp() only compares the first 'mod_len' bytes.
-
-So, mod_name "foo" could match mod "foobar", since 'obj->btf_modules'
-are not sorted by name after loading from kernel.
-
-To find the exact module via module name, "strncmp() == 0 &&
-mod->name[mod_len] == '\0'" would be better.
-
-> +			*btf_obj_fd = mod->fd;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	/* Specified module was not found, let's bail out. */
-> +	return -EINVAL;
-> +}
-> +
->  /* this is called as prog->sec_def->prog_prepare_load_fn for libbpf-supported sec_defs */
->  static int libbpf_prepare_prog_load(struct bpf_program *prog,
->  				    struct bpf_prog_load_opts *opts, long cookie)
-> @@ -7779,6 +7825,18 @@ static int libbpf_prepare_prog_load(struct bpf_program *prog,
->  		opts->attach_btf_obj_fd = btf_obj_fd;
->  		opts->attach_btf_id = btf_type_id;
->  	}
-> +
-> +	if (is_tracing_multi(prog->expected_attach_type)) {
-> +		int err, btf_obj_fd = 0;
-> +
-> +		err = tracing_multi_mod_fd(prog, &btf_obj_fd);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		prog->attach_btf_obj_fd = btf_obj_fd;
-> +		opts->attach_btf_obj_fd = btf_obj_fd;
-> +	}
-> +
->  	return 0;
+>  static __u64 bpf_fentry_test_cookies[] = {
+> @@ -543,6 +544,183 @@ static void test_attach_api_fails(void)
+>  	tracing_multi_fail__destroy(skel);
 >  }
 >  
-> @@ -9835,6 +9893,7 @@ static int attach_kprobe_session(const struct bpf_program *prog, long cookie, st
->  static int attach_uprobe_multi(const struct bpf_program *prog, long cookie, struct bpf_link **link);
->  static int attach_lsm(const struct bpf_program *prog, long cookie, struct bpf_link **link);
->  static int attach_iter(const struct bpf_program *prog, long cookie, struct bpf_link **link);
-> +static int attach_tracing_multi(const struct bpf_program *prog, long cookie, struct bpf_link **link);
->  
->  static const struct bpf_sec_def section_defs[] = {
->  	SEC_DEF("socket",		SOCKET_FILTER, 0, SEC_NONE),
-> @@ -9883,6 +9942,12 @@ static const struct bpf_sec_def section_defs[] = {
->  	SEC_DEF("fexit.s+",		TRACING, BPF_TRACE_FEXIT, SEC_ATTACH_BTF | SEC_SLEEPABLE, attach_trace),
->  	SEC_DEF("fsession+",		TRACING, BPF_TRACE_FSESSION, SEC_ATTACH_BTF, attach_trace),
->  	SEC_DEF("fsession.s+",		TRACING, BPF_TRACE_FSESSION, SEC_ATTACH_BTF | SEC_SLEEPABLE, attach_trace),
-> +	SEC_DEF("fsession.multi+",	TRACING, BPF_TRACE_FSESSION_MULTI, 0, attach_tracing_multi),
-> +	SEC_DEF("fsession.multi.s+",	TRACING, BPF_TRACE_FSESSION_MULTI, SEC_SLEEPABLE, attach_tracing_multi),
-> +	SEC_DEF("fentry.multi+",	TRACING, BPF_TRACE_FENTRY_MULTI, 0, attach_tracing_multi),
-> +	SEC_DEF("fexit.multi+",		TRACING, BPF_TRACE_FEXIT_MULTI, 0, attach_tracing_multi),
-> +	SEC_DEF("fentry.multi.s+",	TRACING, BPF_TRACE_FENTRY_MULTI, SEC_SLEEPABLE, attach_tracing_multi),
-> +	SEC_DEF("fexit.multi.s+",	TRACING, BPF_TRACE_FEXIT_MULTI, SEC_SLEEPABLE, attach_tracing_multi),
->  	SEC_DEF("freplace+",		EXT, 0, SEC_ATTACH_BTF, attach_trace),
->  	SEC_DEF("lsm+",			LSM, BPF_LSM_MAC, SEC_ATTACH_BTF, attach_lsm),
->  	SEC_DEF("lsm.s+",		LSM, BPF_LSM_MAC, SEC_ATTACH_BTF | SEC_SLEEPABLE, attach_lsm),
-> @@ -12258,6 +12323,250 @@ static int attach_uprobe_multi(const struct bpf_program *prog, long cookie, stru
->  	return ret;
->  }
->  
+> +/*
+> + * Skip several kernel symbols that might not be safe or could cause delays.
+> + */
+> +static bool skip_symbol(char *name)
+> +{
+> +	if (!strcmp(name, "arch_cpu_idle"))
+> +		return true;
+> +	if (!strcmp(name, "default_idle"))
+> +		return true;
+> +	if (!strncmp(name, "rcu_", 4))
+> +		return true;
+> +	if (!strcmp(name, "bpf_dispatcher_xdp_func"))
+> +		return true;
+> +	if (strstr(name, "rcu"))
+> +		return true;
+> +	if (strstr(name, "trace"))
+> +		return true;
+> +	if (strstr(name, "irq"))
+> +		return true;
+> +	if (strstr(name, "bpf_lsm_"))
+> +		return true;
+> +	if (!strcmp(name, "migrate_enable"))
+> +		return true;
+> +	if (!strcmp(name, "migrate_disable"))
+> +		return true;
+> +	if (!strcmp(name, "preempt_count_sub"))
+> +		return true;
+> +	if (!strcmp(name, "preempt_count_add"))
+> +		return true;
+> +	return false;
+> +}
+
+These names intersect with the list in trace_helpers.c::skip_entry().
+
+It would be better to move this list to trace_helpers.c.
+
+> +
 > +#define MAX_BPF_FUNC_ARGS 12
 > +
 > +static bool btf_type_is_modifier(const struct btf_type *t)
@@ -223,9 +142,8 @@ mod->name[mod_len] == '\0'" would be better.
 > +	case BTF_KIND_RESTRICT:
 > +	case BTF_KIND_TYPE_TAG:
 > +		return true;
-> +	default:
-> +		return false;
 > +	}
+> +	return false;
 > +}
 > +
 > +static bool is_allowed_func(const struct btf *btf, const struct btf_type *t)
@@ -244,7 +162,6 @@ mod->name[mod_len] == '\0'" would be better.
 > +	if (nargs > MAX_BPF_FUNC_ARGS)
 > +		return false;
 > +
-> +	/* No support for struct/union return argument type. */
 > +	t = btf__type_by_id(btf, proto->type);
 > +	while (t && btf_type_is_modifier(t))
 > +		t = btf__type_by_id(btf, t->type);
@@ -253,11 +170,11 @@ mod->name[mod_len] == '\0'" would be better.
 > +		return false;
 > +
 > +	for (i = 0; i < nargs; i++) {
-> +		/* No support for variable args. */
+> +		/* No support for variable args */
 > +		if (i == nargs - 1 && args[i].type == 0)
 > +			return false;
 > +
-> +		/* No support of struct argument size greater than 16 bytes. */
+> +		/* No support of struct argument size greater than 16 bytes */
 > +		ret = btf__resolve_size(btf, args[i].type);
 > +		if (ret < 0 || ret > 16)
 > +			return false;
@@ -265,72 +182,8 @@ mod->name[mod_len] == '\0'" would be better.
 > +
 > +	return true;
 > +}
-> +
-> +static int
-> +collect_btf_func_ids_by_glob(const struct btf *btf, const char *pattern, __u32 **ids)
-> +{
-> +	__u32 type_id, nr_types = btf__type_cnt(btf);
-> +	size_t cap = 0, cnt = 0;
-> +
-> +	if (!pattern)
-> +		return -EINVAL;
-> +
-> +	for (type_id = 1; type_id < nr_types; type_id++) {
-> +		const struct btf_type *t = btf__type_by_id(btf, type_id);
-> +		const char *name;
-> +		int err;
-> +
-> +		if (btf_kind(t) != BTF_KIND_FUNC)
-> +			continue;
-> +		name = btf__name_by_offset(btf, t->name_off);
-> +		if (!name)
-> +			continue;
-> +
-> +		if (!glob_match(name, pattern))
-> +			continue;
-> +		if (!is_allowed_func(btf, t))
-> +			continue;
-> +
-> +		err = libbpf_ensure_mem((void **) ids, &cap, sizeof(**ids), cnt + 1);
-> +		if (err) {
-> +			free(*ids);
-> +			return -ENOMEM;
-> +		}
-> +		(*ids)[cnt++] = type_id;
-> +	}
-> +
-> +	return cnt;
-> +}
-> +
-> +static int collect_func_ids_by_glob(struct bpf_object *obj, const char *pattern, __u32 **ids)
-> +{
-> +	const char *mod_name = NULL, *sep;
-> +	int i, err, mod_len = 0;
-> +	struct btf *btf = NULL;
-> +
-> +	err = bpf_object__load_vmlinux_btf(obj, true);
-> +	if (err)
-> +		return err;
-> +
-> +	/* In case we have module specified, we will find its btf and use that. */
-> +	sep = strchr(pattern, ':');
-> +	if (sep) {
-> +		mod_name = pattern;
-> +		mod_len = sep - pattern;
-> +		pattern = sep + 1;
-> +
-> +		err = load_module_btfs(obj);
-> +		if (err)
-> +			goto cleanup;
-> +
-> +		for (i = 0; i < obj->btf_module_cnt; i++) {
-> +			const struct module_btf *mod = &obj->btf_modules[i];
-> +
-> +			if (!strncmp(mod->name, mod_name, mod_len)) {
 
-Same concern here.
-
-Would it be better to factor out a helper to find module via name?
+NIT: can we avoid copy/pasting the code snippet from libbpf.c?
 
 Thanks,
 Leon
