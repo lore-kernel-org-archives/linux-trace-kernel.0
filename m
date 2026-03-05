@@ -1,39 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7790F33689C;
-	Thu,  5 Mar 2026 15:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6755282F27;
+	Thu,  5 Mar 2026 16:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772726331; cv=none; b=E+zRDYAOc/5q/+rSDnrD2BxbF/ZJ+H7WHEXJtoB28y0hdy1nnItavtNMscjJp6ddp5Z1CqlNUo4lgW69Q+B/6FKsS4Qexd2LVDjxze3w5UZHTbvd4X6g7Y5mQ/o2JoIOc+4SbupcgHAfCc+Y7ynZ6O3P8wlAKo/j9oopMjF785c=
+	t=1772726594; cv=none; b=XUp5H/Z+VGzDJ5K2zYq6lRsAnEozot6KQeOqWMnzDqPag/QpPVlVEECmvM/jrdDCUm0A1eDWayOo0njrk9Q4UjE2pyIR6QCC22UZRRNugM4L/jO/ARFFvX4lmIXgKP+klU4PjGgHfeqfGRLIH1kwj+XVzFVCy8Ltalszyjzfk0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772726331; c=relaxed/simple;
-	bh=2rbKRtvP/fO1tQTvYJnyVAD/pJAjh95vP/nbvilcgwQ=;
+	s=arc-20240116; t=1772726594; c=relaxed/simple;
+	bh=kbCdHrPQfuik8kSiEUlPcr8xDBSE+5onkdlqnirYpD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YonPGXpke3jCo7x/GnOpNJ82uWWcIgcb4p3mKdXPbRkX/EmLdiHDI9tzFWvbimMUP6Y9fu6QXcuo/w2dH0QxItS30rC8ucMM5xb5Ji1jXLXqhejt0xwIwnMX3+/g4O/v7Os46ukx8nNDN0aFLzItcKCHa8NhBBFoBUSaz0G7D6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=RDqzG/926qVD1z516iKA3XdRixZZt9JiHuvrcn03vmAhou2XOBGmIc7awO1UiM8iBmROm0jxWulvtzCgZm8wuOK+ysgpW0SEPGLTP9VX92R+Izm0a6fVM7feh5WA9ikmA8aRvUDn7D8Aj9mzA4zAyzKXl8v1+ZHiO7gd9Eeii2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 8FEE21A01EE;
-	Thu,  5 Mar 2026 15:58:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 80C301A;
-	Thu,  5 Mar 2026 15:58:45 +0000 (UTC)
-Date: Thu, 5 Mar 2026 10:59:24 -0500
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 104D4C0BE4;
+	Thu,  5 Mar 2026 16:03:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 222CB20029;
+	Thu,  5 Mar 2026 16:03:09 +0000 (UTC)
+Date: Thu, 5 Mar 2026 11:03:47 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph
- Lameter <cl@gentwo.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon
- <will@kernel.org>, Boqun Feng <boqun@kernel.org>, Waiman Long
- <longman@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH RFC 3/3] locking: Wire up contended_release tracepoint
-Message-ID: <20260305105924.7069eb23@gandalf.local.home>
-In-Reply-To: <8298e098d3418cb446ef396f119edac58a3414e9.1772642407.git.d@ilvokhin.com>
-References: <cover.1772642407.git.d@ilvokhin.com>
-	<8298e098d3418cb446ef396f119edac58a3414e9.1772642407.git.d@ilvokhin.com>
+To: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Documentation: Update histogram-design.rst for
+ fn() handling
+Message-ID: <20260305110347.31d6bae5@gandalf.local.home>
+In-Reply-To: <20260126181742.03e8f0d5@gandalf.local.home>
+References: <20260126181742.03e8f0d5@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,102 +40,103 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 80C301A
-X-Stat-Signature: wg8y4ji7phmjbi18xw7uwombfdkzuy1z
+X-Stat-Signature: uoozexr41qgcctxprzbdjn7jkm5kuh7k
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 222CB20029
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18MWtLS1l3pUKaex0nFw2Vfl7EBIcRPyp4=
-X-HE-Tag: 1772726325-806204
-X-HE-Meta: U2FsdGVkX1/IZPjkWRcCvIJ192zG9pkiKp9riLkJeEEB12m4PIrK+XsSVGFmyjEBtSKnYXGbmq4fmXU4d9HZMRfHJo+LIXYoI5bQpOxWtm5mYldXLedVkCnRMeKd2JKSibFruN/kJ11iQ0ereZziADPsiwEip059oSTmSJ2lIaiQiYQK6Zmq3gu23WJeiLOjE+ItRBr5udxCP7OYs7U9RIqDLuHIRwXi5niNS9dY8GbU41//fmJnT07YZBdy2hqEPhpIP9sDaPeSsUU9Ceuxkv5oxQ5BU4VS4Ml30I7B4YiOJD2HrZNdkgH7P7FQhLya7SPlJpGpELX/Kmp79ro1/l6DZwheeJOqGeuFzBG+i+cRqSQUA2V9IYK9m1k2MlzR
-
-On Wed,  4 Mar 2026 16:56:17 +0000
-Dmitry Ilvokhin <d@ilvokhin.com> wrote:
-
-> @@ -204,6 +206,8 @@ static inline void rwbase_write_unlock(struct rwbase_rt *rwb)
->  	unsigned long flags;
->  
->  	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
-> +	if (rt_mutex_has_waiters(rtm))
-> +		trace_contended_release(rwb);
-
-Hmm, if statements should never be used just for tracepoints without a
-static branch. The above should be:
-
-	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
-		trace_contended_release(rwb);
-
-The above "trace_contened_release_enabled()" is a static_branch where it
-turns the if statement into a nop when the tracepoint is not enabled, and a
-jmp when it is.
+X-Session-ID: U2FsdGVkX1/jJwSATMn83cMt9oeARCb76zNWrA+xnME=
+X-HE-Tag: 1772726589-685616
+X-HE-Meta: U2FsdGVkX1972E0Ssok5izdEAf7siT7PUdYoYldJnzC5jjW/ZXkGUqtti7XObvXqi550Z3CJt+CpYaPDGAjmPLcXCTaDd5jdg3x+R/74iH8VMHltzUB3LzfBXj8RG4l1UMg9gUwMPVMw9QbGDD89gcitZPRQvAREeoif/3hh+Tc74ctBpkcDf1CifFM8p1RwtwginjuYkTbXvhRcbIp5KScAmJXzZLo34tc1GyLS+1PzruVaW/E6vZwWRHiPWliMUG0gSWsvk4/XfeAT9KEcNk1GTxNBWCBxnaBvknAjxWHpm3M8D34E7wuPJ2ramACe+aehLLJdZY2kWSil9RotubcLI2RthkltFSgQ/FY23rX2DFBh+IUSBkpROC5owAdT
 
 
->  	__rwbase_write_unlock(rwb, WRITER_BIAS, flags);
->  }
->  
-> @@ -213,6 +217,8 @@ static inline void rwbase_write_downgrade(struct rwbase_rt *rwb)
->  	unsigned long flags;
->  
->  	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
-> +	if (rt_mutex_has_waiters(rtm))
-> +		trace_contended_release(rwb);
+Hi Jon,
 
-Same here.
+Can you take this through your tree?
+
+Thanks,
 
 -- Steve
 
->  	/* Release it and account current as reader */
->  	__rwbase_write_unlock(rwb, WRITER_BIAS - 1, flags);
->  }
-> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> index 24df4d98f7d2..4e61dc0bb045 100644
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -1360,6 +1360,7 @@ static inline void __up_read(struct rw_semaphore *sem)
->  	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
->  		      RWSEM_FLAG_WAITERS)) {
->  		clear_nonspinnable(sem);
-> +		trace_contended_release(sem);
->  		rwsem_wake(sem);
->  	}
->  	preempt_enable();
-> @@ -1383,8 +1384,10 @@ static inline void __up_write(struct rw_semaphore *sem)
->  	preempt_disable();
->  	rwsem_clear_owner(sem);
->  	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
-> -	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
-> +	if (unlikely(tmp & RWSEM_FLAG_WAITERS)) {
-> +		trace_contended_release(sem);
->  		rwsem_wake(sem);
-> +	}
->  	preempt_enable();
->  }
+
+On Mon, 26 Jan 2026 18:17:42 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The histogram documentation describes the old method of the histogram
+> triggers using the fn() field of the histogram field structure to process
+> the field. But due to Spectre mitigation, the function pointer to handle
+> the fields at runtime caused a noticeable overhead. It was converted over
+> to a fn_num and hist_fn_call() is now used to call the specific functions
+> for the fields via a switch statement based on the field's fn_num value.
+> 
+> Update the documentation to reflect this change.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  Documentation/trace/histogram-design.rst | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/trace/histogram-design.rst b/Documentation/trace/histogram-design.rst
+> index ae71b5bf97c6..e92f56ebd0b5 100644
+> --- a/Documentation/trace/histogram-design.rst
+> +++ b/Documentation/trace/histogram-design.rst
+> @@ -69,7 +69,8 @@ So in this histogram, there's a separate bucket for each pid, and each
+>  bucket contains a value for that bucket, counting the number of times
+>  sched_waking was called for that pid.
 >  
-> @@ -1407,8 +1410,10 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
->  	tmp = atomic_long_fetch_add_release(
->  		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
->  	rwsem_set_reader_owned(sem);
-> -	if (tmp & RWSEM_FLAG_WAITERS)
-> +	if (tmp & RWSEM_FLAG_WAITERS) {
-> +		trace_contended_release(sem);
->  		rwsem_downgrade_wake(sem);
-> +	}
->  	preempt_enable();
->  }
+> -Each histogram is represented by a hist_data struct.
+> +Each histogram is represented by a hist_data struct
+> +(struct hist_trigger_data).
 >  
-> diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-> index 3ef032e22f7e..3cef5ba88f7e 100644
-> --- a/kernel/locking/semaphore.c
-> +++ b/kernel/locking/semaphore.c
-> @@ -231,8 +231,10 @@ void __sched up(struct semaphore *sem)
->  	else
->  		__up(sem, &wake_q);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
-> -	if (!wake_q_empty(&wake_q))
-> +	if (!wake_q_empty(&wake_q)) {
-> +		trace_contended_release(sem);
->  		wake_up_q(&wake_q);
-> +	}
->  }
->  EXPORT_SYMBOL(up);
+>  To keep track of each key and value field in the histogram, hist_data
+>  keeps an array of these fields named fields[].  The fields[] array is
+> @@ -82,7 +83,7 @@ value or not, which the above histogram does not.
 >  
+>  Each struct hist_field contains a pointer to the ftrace_event_field
+>  from the event's trace_event_file along with various bits related to
+> -that such as the size, offset, type, and a hist_field_fn_t function,
+> +that such as the size, offset, type, and a hist field function,
+>  which is used to grab the field's data from the ftrace event buffer
+>  (in most cases - some hist_fields such as hitcount don't directly map
+>  to an event field in the trace buffer - in these cases the function
+> @@ -241,28 +242,33 @@ it, event_hist_trigger() is called.  event_hist_trigger() first deals
+>  with the key: for each subkey in the key (in the above example, there
+>  is just one subkey corresponding to pid), the hist_field that
+>  represents that subkey is retrieved from hist_data.fields[] and the
+> -hist_field_fn_t fn() associated with that field, along with the
+> +hist field function associated with that field, along with the
+>  field's size and offset, is used to grab that subkey's data from the
+>  current trace record.
+>  
+> +Note, the hist field function use to be a function pointer in the
+> +hist_field stucture. Due to spectre mitigation, it was converted into
+> +a fn_num and hist_fn_call() is used to call the associated hist field
+> +function that corresponds to the fn_num of the hist_field structure.
+> +
+>  Once the complete key has been retrieved, it's used to look that key
+>  up in the tracing_map.  If there's no tracing_map_elt associated with
+>  that key, an empty one is claimed and inserted in the map for the new
+>  key.  In either case, the tracing_map_elt associated with that key is
+>  returned.
+>  
+> -Once a tracing_map_elt available, hist_trigger_elt_update() is called.
+> +Once a tracing_map_elt is available, hist_trigger_elt_update() is called.
+>  As the name implies, this updates the element, which basically means
+>  updating the element's fields.  There's a tracing_map_field associated
+>  with each key and value in the histogram, and each of these correspond
+>  to the key and value hist_fields created when the histogram was
+>  created.  hist_trigger_elt_update() goes through each value hist_field
+> -and, as for the keys, uses the hist_field's fn() and size and offset
+> +and, as for the keys, uses the hist_field's function and size and offset
+>  to grab the field's value from the current trace record.  Once it has
+>  that value, it simply adds that value to that field's
+>  continually-updated tracing_map_field.sum member.  Some hist_field
+> -fn()s, such as for the hitcount, don't actually grab anything from the
+> -trace record (the hitcount fn() just increments the counter sum by 1),
+> +functions, such as for the hitcount, don't actually grab anything from the
+> +trace record (the hitcount function just increments the counter sum by 1),
+>  but the idea is the same.
+>  
+>  Once all the values have been updated, hist_trigger_elt_update() is
 
