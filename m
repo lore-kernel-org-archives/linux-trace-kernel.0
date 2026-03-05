@@ -1,87 +1,79 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75DE3CF69A;
-	Thu,  5 Mar 2026 17:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A09262FD0;
+	Thu,  5 Mar 2026 18:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772732563; cv=none; b=tdTdg5DVKvMx2J9kWUEVHfVxCgK1o1bL+rEn1jI88rwq5/efz2aSnxEEg3CAOjA7zK1thBxkx6lpoLsCORDKQbtUF97jHrREL4Cksxx40wAnVf1oG66PUrl3s7rt4GjgWdkJ7dn/HiNjMiLMmRdRYboOK5Gzj7Hp837BW4+KI7c=
+	t=1772733794; cv=none; b=MjV7Mb5impS/EN0TBX3E7uyp04cubqEGJ2P3xDhIRul2rRlAodS1TA1jV4TPBGOoCzpcT/Yt6YqmjE21A0rKkDyfk21jV3kcDZPHzV/U7SdY7M7e8aOiBguSo6eLByYeXsVZkugUqAghMLn4YwhYJo4zZWpBCP/MA/VQjG2PvjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772732563; c=relaxed/simple;
-	bh=GEDoOvOFWYc/+jec7Z+TyPOLdLoow46quoPv9ttnFZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrJ6qQ5pbMCaEhnpdvRR7440vntwNCLQlapY++Vsv/dvFDC0+6HjwQFhZgNCStjrOWeLQp7CwhG8P3j9Jkx7oZoKkjhmMoJN7T16zQSnbDrWP5pnmcc46R3Qw5wIwmtki8a5lMNsCORlz3bBhPGxcaYi5tSa0Q23WSVM0fLe4GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BLKLlUS+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BLKLlUS+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=v62qxDPGMf43nSWUVOFWJmlONh5WT3QlqDMXHIbC27Q=; b=BLKLlUS+FX6VcTXIcA8Sewn2I5
-	I6rmP+PRF0KJAe1hwJpoXo9F2rPDVKPI+B45TxuS3MdmPqiXge582xOQSbbqyGsBF3YHm/1Clsre4
-	yM5Fj8GbXNWNjGB5+0FiHMQlxO+4F4C70JdmOapv/Ezi9zDexCZDtv4mDKROdkSJaYpCBdEvpSoX2
-	fYnPMVw+nx8+7u/CVP+yBvcJy1Di0xChciiwZWgZ8kYIkjSwFQicJM7mzIg6BcFJfAXwRWHVIooqx
-	yIvhNH4GR6vYuBFDSwAzc90xg9GmsFhCdcz9bDIkXA6go5kHnr2aYmlHmPsZocrOl4468hm40wUyD
-	0Kkm+ZwA==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vyCiV-00000007Mnu-1Q8e;
-	Thu, 05 Mar 2026 17:42:31 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 25732300182; Thu, 05 Mar 2026 18:42:24 +0100 (CET)
-Date: Thu, 5 Mar 2026 18:42:23 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH RFC 3/3] locking: Wire up contended_release tracepoint
-Message-ID: <20260305174223.GA1442992@noisy.programming.kicks-ass.net>
-References: <cover.1772642407.git.d@ilvokhin.com>
- <8298e098d3418cb446ef396f119edac58a3414e9.1772642407.git.d@ilvokhin.com>
- <20260305105924.7069eb23@gandalf.local.home>
+	s=arc-20240116; t=1772733794; c=relaxed/simple;
+	bh=jjn/VGbqnRXLNSkyuImblNk8UtoEbzhKJbcw2t8Iank=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ri9VIGuTkk41C25hDdq9j5oS3YF0EBMn5sNQ2sHj1SKVViLIP8jjSDplyYZGaLj4rAqav2LRMCWUeSKaQxKT44NIKOXuEehBft4xy+cKBA+3gIDZHMJsDrw3rvVajFZW97ihPmPuLDpRdSLtkvf0Y/gl4TmKBIFHnXvLph/gLAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 72154C10E0;
+	Thu,  5 Mar 2026 18:03:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id BF21520024;
+	Thu,  5 Mar 2026 18:03:09 +0000 (UTC)
+Date: Thu, 5 Mar 2026 13:03:48 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] ring-buffer: Handle RB_MISSED_* flags on commit
+ field correctly
+Message-ID: <20260305130348.3266e4c9@gandalf.local.home>
+In-Reply-To: <177211312362.419230.15156461178245984273.stgit@mhiramat.tok.corp.google.com>
+References: <177211310553.419230.7846100548994399256.stgit@mhiramat.tok.corp.google.com>
+	<177211312362.419230.15156461178245984273.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260305105924.7069eb23@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: BF21520024
+X-Stat-Signature: 5c5zy8yhe15dskb9q668pcbxgiu1ie3w
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+LKmEKfq7NK/D4oRysx7lx+VlAYBVWM2c=
+X-HE-Tag: 1772733789-290496
+X-HE-Meta: U2FsdGVkX190OV0y8vsPRnn9XXLU6BZbAVjskIUmZ/qtqh1D6YStSLIlbP0z5eO9W9X48NKjVscRbn9mzdqasQWH1NXf7wWhbWcDHOJHCIBbsGs7UOjGMmQpSgdHe0K3UaKsfyfO6rI0giP4PAIARhPBMYRk3oJ5/hRyAU1O39wiJ1fljYPBvflZVXMfAMlS9DzOAZxWb4Dm73yU+u52ncsVAcOZWmtg8HM2KI+/wPHojXDdD40ACAv/ntbhX73fJ8PZy6mBR8zw4hmzkl0c5VSw5knxWeA3lUmZ30fnPGPf1gKuTydkS8WtSKSmX1ZmZS1sb7/yi+st7geeJltByx7HhE+prUnM
 
-On Thu, Mar 05, 2026 at 10:59:24AM -0500, Steven Rostedt wrote:
-> On Wed,  4 Mar 2026 16:56:17 +0000
-> Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+On Thu, 26 Feb 2026 22:38:43 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > @@ -204,6 +206,8 @@ static inline void rwbase_write_unlock(struct rwbase_rt *rwb)
-> >  	unsigned long flags;
-> >  
-> >  	raw_spin_lock_irqsave(&rtm->wait_lock, flags);
-> > +	if (rt_mutex_has_waiters(rtm))
-> > +		trace_contended_release(rwb);
+> Since the MSBs of rb_data_page::commit are used for storing
+> RB_MISSED_EVENTS and RB_MISSED_STORED, we need to mask out those bits
+> when it is used for finding the size of data pages.
 > 
-> Hmm, if statements should never be used just for tracepoints without a
-> static branch. The above should be:
-> 
-> 	if (trace_contended_release_enabled() && rt_mutex_has_waiters(rtm))
-> 		trace_contended_release(rwb);
-> 
+> Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+> Fixes: 5b7be9c709e1 ("ring-buffer: Add test to validate the time stamp deltas")
+> Cc: stable@vger.kernel.org
 
-I still wish you would accept:
+This is unneeded for the current way things work.
 
-	if (trace_foo_enabled() && foo)
-		__do_trace_foo();
+The missed events flags are added when a page is read, so the commits in
+the write buffer should never have those flags set. If they did, the ring
+buffer code itself would break.
 
-The compilers can't optimize the static branches and thus you'll get it
-twice for no reason.
+But as patch 3 is adding a flag, you should likely merge this and patch 3
+together, as the only way that flag would get set is if the validator set
+it on a previous boot. And then this would be needed for subsequent boots
+that did not reset the buffer.
 
-I really wish they would just accept __pure, but alas.
+Hmm, I don't think we even need to do that! Because if it is set, it would
+simply warn again that a page is invalid, and I think we *want* that! As it
+would preserve that pages were invalid and not be cleared with a simple
+reboot.
+
+-- Steve
