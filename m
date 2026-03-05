@@ -1,38 +1,41 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097063A4517;
-	Thu,  5 Mar 2026 15:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EE13B8D4A;
+	Thu,  5 Mar 2026 15:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772723276; cv=none; b=ctASKV/SQw7y8d+ENx2HA9ldPp6PSD1x8dOv+KKre8K4/tYp1qtVEBx6Jq5u0tmpYbizjolibtiNRtU1H5wBOnpqBcGBftnR8jKI2bLlQO1vvY5dco5Yy7btOx91W2+mbSP+wDZK9SXGMUUsDhOkBpcdTB20wkuURbLm/C/FL2k=
+	t=1772725591; cv=none; b=tcDk3xTVqCVu0ZJ4igCXXveCkQ2K3SBFo2xpAD3lwZi/K1XoptSu3nDfdjhvpKxLSpe/auNk15iNI7gg+bbpj+qMXPog7RutUwzrfXQN6j7PD9lEgTOsWMTs83XjC/e2h20L+vamHgtPAyo9wfMpO6elo6qkaimwsn5dbTJ/fP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772723276; c=relaxed/simple;
-	bh=uj0hf6+fr6DEOaLpxTg6qLjj2ccr9cMUFjrNTp6VOMU=;
+	s=arc-20240116; t=1772725591; c=relaxed/simple;
+	bh=mCZXEa6zlsJn111KrUykBgY88sLG5x451RjP6zlmprQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rp1cHoWaXGfvMv2i9TACI/BEz6Yy9EMCvSwf6Nk9Ej15z5lAn6D6QbUlASg7qoajLEcF5BObwVLSdmLuJUDgRJuNXGzJKo7zsaMscEfdb5bLxyF2MVzjYzoj6l1QibGlPz9MV+iFPtGqoplIz1TQVm4JCQC+F+GDLMP7KzxXXH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=HFOFoMPdAV7jFsbpqva4m0OtuLp3ZFKKqF7KoUd6b+U53CWVyn320qk5WCaaGt/ZRyAKlR9GjPANZVahdEzq5bivfLJ5uLJM8B8ottNyQF6SblHMQOcH/fkFPkzxGft08QNFWSNP15eYWqaocYDxQf3djpnM1lyaHg76pZIN+SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 1D38D1B6DD3;
-	Thu,  5 Mar 2026 15:07:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 436ED2002A;
-	Thu,  5 Mar 2026 15:07:44 +0000 (UTC)
-Date: Thu, 5 Mar 2026 10:08:22 -0500
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id A4AB9B5A3F;
+	Thu,  5 Mar 2026 15:46:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 5F5C918;
+	Thu,  5 Mar 2026 15:46:24 +0000 (UTC)
+Date: Thu, 5 Mar 2026 10:47:03 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <elver@google.com>, <kees@kernel.org>, <lorenzo.stoakes@oracle.com>,
- <brauner@kernel.org>, <schuster.simon@siemens-energy.com>,
- <david@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <guohua.yan@unisoc.com>,
- <ke.wang@unisoc.com>, <xuewen.yan94@gmail.com>
-Subject: Re: [RFC PATCH] tracing: Revert "tracing: Remove pid in task_rename
- tracing output"
-Message-ID: <20260305100822.142677b3@gandalf.local.home>
-In-Reply-To: <20260305080809.3245-1-xuewen.yan@unisoc.com>
-References: <20260305080809.3245-1-xuewen.yan@unisoc.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Dennis Zhou <dennis@kernel.org>, Tejun
+ Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Boqun Feng
+ <boqun@kernel.org>, Waiman Long <longman@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com, Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH RFC 2/3] locking/percpu-rwsem: Extract
+ __percpu_up_read_slowpath()
+Message-ID: <20260305104703.2a1e8151@gandalf.local.home>
+In-Reply-To: <20260304220223.GS606826@noisy.programming.kicks-ass.net>
+References: <cover.1772642407.git.d@ilvokhin.com>
+	<6b1f1521ca186d5c402a65619d8f30fe83b93bf6.1772642407.git.d@ilvokhin.com>
+	<20260304220223.GS606826@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,86 +45,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 436ED2002A
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 7yxrzi6kw5yiih74zsmqk74ekudxrpo5
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 5F5C918
+X-Stat-Signature: 4hnw4cfe9w88jmegwzf81bu64kp1gurp
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/OqfQv9JaufBXjaLb6Ch90N1QFVJyZII8=
-X-HE-Tag: 1772723264-596677
-X-HE-Meta: U2FsdGVkX1/I8bxCqBTVj9rBb2KMBlyRNWro/v5Ntmrndi0KyqbTEN1QgddNScqGqXZ060Ogl3Gqvh8PtarfC/nRqi19Czm41thbobnj6CGewDue0r6nPLXrFtFOSrSHEH4lg83gal52NSkzHSbNlcLvxF1X+1B6zBU230ABqRmcjrhUPlKtLUf9KXNMZYEps7w1d9F/6A2184fq4Z7tTQ3fvqp30MC09NlW6UPHZqyFT+wn96V2ONrWfo1Qe6VGLeuACxFNJgtzxKLHcroh/yl+OOuRmmFa2NrVDciLJrKMlxWjav57fek12dvEH5FD3y2BQvILbu7hvlVhW02Qwa6WeJo1TOV+Hp7vEz2olk8OLPaEubK2YjiTNzeugKseyf7yUVKIW/Ef9AVZAJReWmnStQcWFKA1+pW/btNGGnqCps/16CtVRdfS8CKwkkwR
+X-Session-ID: U2FsdGVkX1+HpKi6jg9NxZeYvZzvI5zrlCwxsTFUgfk=
+X-HE-Tag: 1772725584-160659
+X-HE-Meta: U2FsdGVkX1/vo6T3T+yuIek1bKKSMPqW9ClvKUbD/u9KLUN2zrHj7XRTbFeVkRtaSFZUOkw0539RDqNm6B207m1bk35iuxf4EGUTuw+XDhzWoTOU8tj3v9jYqdnTLTT7VTiqb4HXVp4wE7ZDusaVw70vI16AfZWUaKQPfB3VZF3sm0LMDmMBzHshvIh7eZRl9Sm5PXhFImNF/H+YoC2hp8sDcCRc4CkqevvjO+kSmbfHywomSMfO3lSy5PqSg6i7dSStj6O5q+He0it6WCjhMI/77NpkQXNdYrCifzUVrEknKsDZEaNkAo5avvJcKA85+SP9HlWuTo1GcfqwE6LBAXHndQewr22fChGGaLE8ghkvpTN+ymuojV3y960dI67n
 
-On Thu, 5 Mar 2026 16:08:09 +0800
-Xuewen Yan <xuewen.yan@unisoc.com> wrote:
+On Wed, 4 Mar 2026 23:02:23 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> This reverts commit e3f6a42272e028c46695acc83fc7d7c42f2750ad.
+> > diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+> > index c8cb010d655e..89506895365c 100644
+> > --- a/include/linux/percpu-rwsem.h
+> > +++ b/include/linux/percpu-rwsem.h
+> > @@ -107,6 +107,8 @@ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
+> >  	return ret;
+> >  }
+> >  
+> > +void __percpu_up_read_slowpath(struct percpu_rw_semaphore *sem);
+> > +  
 > 
-> The commit says that the tracepoint only deals with the current task,
-> however the following case is not current task:
+> extern for consistency with all the other declarations in this header.
+
+I wonder if a cleanup patch should be added to remove the "extern" from the
+other functions, as that tends to be the way things are going (hch just
+recommended it elsewhere).
+
 > 
-> comm_write
-> set_task_comm
-> __set_task_comm
-> trace_task_rename
+> s/_slowpath//, the corresponding down function also doesn't have
+> _slowpath on.
+> 
+> >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
+> >  {
+> >  	rwsem_release(&sem->dep_map, _RET_IP_);  
 
-I'm fine with the patch, but the change log can use a bit of work:
-
-  comm_write() {
-	p = get_proc_task(inode);
-	if (!p)
-		return -ESRCH;
-
-	if (same_thread_group(current, p)) {
-		set_task_comm(p, buffer);
-
-  where set_task_comm() calls __set_task_comm() which records the update of
-  p and not current.
-
-The above states exactly why current isn't the pid that should be recorded.
-
-Other than that.
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+And since "slowpath" is more descriptive (and used in the rtmutex code),
+should that be added too?
 
 -- Steve
-
-
-> 
-> So revert the patch to show pid.
-> 
-> Fixes: e3f6a42272e0 ("tracing: Remove pid in task_rename tracing output")
-> Reported-by: Guohua Yan <guohua.yan@unisoc.com>
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
->  include/trace/events/task.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-> index 4f0759634306..b9a129eb54d9 100644
-> --- a/include/trace/events/task.h
-> +++ b/include/trace/events/task.h
-> @@ -38,19 +38,22 @@ TRACE_EVENT(task_rename,
->  	TP_ARGS(task, comm),
->  
->  	TP_STRUCT__entry(
-> +		__field(	pid_t,	pid)
->  		__array(	char, oldcomm,  TASK_COMM_LEN)
->  		__array(	char, newcomm,  TASK_COMM_LEN)
->  		__field(	short,	oom_score_adj)
->  	),
->  
->  	TP_fast_assign(
-> +		__entry->pid = task->pid;
->  		memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
->  		strscpy(entry->newcomm, comm, TASK_COMM_LEN);
->  		__entry->oom_score_adj = task->signal->oom_score_adj;
->  	),
->  
-> -	TP_printk("oldcomm=%s newcomm=%s oom_score_adj=%hd",
-> -		  __entry->oldcomm, __entry->newcomm, __entry->oom_score_adj)
-> +	TP_printk("pid=%d oldcomm=%s newcomm=%s oom_score_adj=%hd",
-> +		__entry->pid, __entry->oldcomm,
-> +		__entry->newcomm, __entry->oom_score_adj)
->  );
->  
->  /**
-
