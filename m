@@ -1,35 +1,41 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A09262FD0;
-	Thu,  5 Mar 2026 18:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B218B3D902F;
+	Thu,  5 Mar 2026 18:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772733794; cv=none; b=MjV7Mb5impS/EN0TBX3E7uyp04cubqEGJ2P3xDhIRul2rRlAodS1TA1jV4TPBGOoCzpcT/Yt6YqmjE21A0rKkDyfk21jV3kcDZPHzV/U7SdY7M7e8aOiBguSo6eLByYeXsVZkugUqAghMLn4YwhYJo4zZWpBCP/MA/VQjG2PvjE=
+	t=1772733931; cv=none; b=QH4S1o9vDgClFRMBSD+Xknced0jim6meNrvdEVcjyelnKHx2EcdBnjC0Xpdv9Qee7sAtXK6naaw5MNviR6TxK9GMGd0Rsxp7RUpPUll8SkC030bXy6+3djYFikRWO1EBfYu22TQ5JpHNPuwzrIOwW8HmS/WHjjzGYAK/ldK7+SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772733794; c=relaxed/simple;
-	bh=jjn/VGbqnRXLNSkyuImblNk8UtoEbzhKJbcw2t8Iank=;
+	s=arc-20240116; t=1772733931; c=relaxed/simple;
+	bh=vU8WC2E3y4JSKjjc/LacAPhWsX82SYdBzV94iFaOGQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ri9VIGuTkk41C25hDdq9j5oS3YF0EBMn5sNQ2sHj1SKVViLIP8jjSDplyYZGaLj4rAqav2LRMCWUeSKaQxKT44NIKOXuEehBft4xy+cKBA+3gIDZHMJsDrw3rvVajFZW97ihPmPuLDpRdSLtkvf0Y/gl4TmKBIFHnXvLph/gLAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 MIME-Version:Content-Type; b=J04FnPLqzvnzt/KBbU7aohJ5ddXEFqVXa4r1SHHLb+6qPquUvut2Q0RbU9/OyfT/2LBE9wLHuIX7hXxDmChpMslvX/H+wX64MU1z1qRnM23MkzG/dVFclImkn5Yb/is1+2cwouFJ21/IEMf7xA7qDd3iWmEOGgsPhhjmAn+tY9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 72154C10E0;
-	Thu,  5 Mar 2026 18:03:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id BF21520024;
-	Thu,  5 Mar 2026 18:03:09 +0000 (UTC)
-Date: Thu, 5 Mar 2026 13:03:48 -0500
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 71FE6C124F;
+	Thu,  5 Mar 2026 18:05:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 8DC0520027;
+	Thu,  5 Mar 2026 18:05:25 +0000 (UTC)
+Date: Thu, 5 Mar 2026 13:06:04 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] ring-buffer: Handle RB_MISSED_* flags on commit
- field correctly
-Message-ID: <20260305130348.3266e4c9@gandalf.local.home>
-In-Reply-To: <177211312362.419230.15156461178245984273.stgit@mhiramat.tok.corp.google.com>
-References: <177211310553.419230.7846100548994399256.stgit@mhiramat.tok.corp.google.com>
-	<177211312362.419230.15156461178245984273.stgit@mhiramat.tok.corp.google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Dennis Zhou <dennis@kernel.org>, Tejun
+ Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Boqun Feng
+ <boqun@kernel.org>, Waiman Long <longman@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH RFC 3/3] locking: Wire up contended_release tracepoint
+Message-ID: <20260305130604.659cca36@gandalf.local.home>
+In-Reply-To: <20260305174223.GA1442992@noisy.programming.kicks-ass.net>
+References: <cover.1772642407.git.d@ilvokhin.com>
+	<8298e098d3418cb446ef396f119edac58a3414e9.1772642407.git.d@ilvokhin.com>
+	<20260305105924.7069eb23@gandalf.local.home>
+	<20260305174223.GA1442992@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,41 +45,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: BF21520024
-X-Stat-Signature: 5c5zy8yhe15dskb9q668pcbxgiu1ie3w
+X-Stat-Signature: 7e37yoxoqbfox1qt9hisz4ytcd6fx6fk
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 8DC0520027
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+LKmEKfq7NK/D4oRysx7lx+VlAYBVWM2c=
-X-HE-Tag: 1772733789-290496
-X-HE-Meta: U2FsdGVkX190OV0y8vsPRnn9XXLU6BZbAVjskIUmZ/qtqh1D6YStSLIlbP0z5eO9W9X48NKjVscRbn9mzdqasQWH1NXf7wWhbWcDHOJHCIBbsGs7UOjGMmQpSgdHe0K3UaKsfyfO6rI0giP4PAIARhPBMYRk3oJ5/hRyAU1O39wiJ1fljYPBvflZVXMfAMlS9DzOAZxWb4Dm73yU+u52ncsVAcOZWmtg8HM2KI+/wPHojXDdD40ACAv/ntbhX73fJ8PZy6mBR8zw4hmzkl0c5VSw5knxWeA3lUmZ30fnPGPf1gKuTydkS8WtSKSmX1ZmZS1sb7/yi+st7geeJltByx7HhE+prUnM
+X-Session-ID: U2FsdGVkX18NdASASaDUUqrewaKrX7VQ1YHMm7kOZy4=
+X-HE-Tag: 1772733925-773976
+X-HE-Meta: U2FsdGVkX18Cwu3Ie+Ud/EYZs/iZOO+gEKcsZJG5kc+m818AijzCNfTe15GqcbqPGu5UD5364uYz52fYMJsuYKSLuVZMWPUxjHJqTuXpjdqUpzOpgHs/C86AVdvo4JPtJZ8OVPP96+eGAUdAAuEuP3XTuWY8kLZfsaIeqUAJQoDBOJjigtMWDFuNTQr6KFNJdwWtXDCBEIk2yPzkqg/0AShIPEhsBJ4ry5eOCUClWeoRC0Orw1pS3fQA3oU7ihUUpk51cgBmHeIKw4U9PFk6KKWrdgiRwxVPnq+HHiPvjLfLPgH+tR9enQ0AyVzzyjQLyS7dE6UWok/Y7/CrwJRoRvmXZlqb/w4bRh4RZIjZuYl9Qu0jmiVUw+Z/sQk2bP2x
 
-On Thu, 26 Feb 2026 22:38:43 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, 5 Mar 2026 18:42:23 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I still wish you would accept:
 > 
-> Since the MSBs of rb_data_page::commit are used for storing
-> RB_MISSED_EVENTS and RB_MISSED_STORED, we need to mask out those bits
-> when it is used for finding the size of data pages.
+> 	if (trace_foo_enabled() && foo)
+> 		__do_trace_foo();
 > 
-> Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
-> Fixes: 5b7be9c709e1 ("ring-buffer: Add test to validate the time stamp deltas")
-> Cc: stable@vger.kernel.org
+> The compilers can't optimize the static branches and thus you'll get it
+> twice for no reason.
+> 
+> I really wish they would just accept __pure, but alas.
 
-This is unneeded for the current way things work.
-
-The missed events flags are added when a page is read, so the commits in
-the write buffer should never have those flags set. If they did, the ring
-buffer code itself would break.
-
-But as patch 3 is adding a flag, you should likely merge this and patch 3
-together, as the only way that flag would get set is if the validator set
-it on a previous boot. And then this would be needed for subsequent boots
-that did not reset the buffer.
-
-Hmm, I don't think we even need to do that! Because if it is set, it would
-simply warn again that a page is invalid, and I think we *want* that! As it
-would preserve that pages were invalid and not be cleared with a simple
-reboot.
+Makes sense, and that could probably be done. It shouldn't be too hard to
+do. If I find some time I could look at it, or perhaps someone lurking on
+this thread could possibly give it a try! (I may even Cc some people that
+want to learn this code).
 
 -- Steve
