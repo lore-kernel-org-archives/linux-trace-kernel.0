@@ -1,76 +1,75 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E811E1DFC
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 14:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406771E1DFC
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Mar 2026 14:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772719292; cv=none; b=edsMXORSaB01xr2AwWA2dpUpKvMy/hmUNsmatsiWs5Yag+R36l8LE+H3J+BgRRxpnnzjAAD7p0Nz3lVllU4zRmHkuy8oAo4fQGvZsi9/O/NCgoG+MRKhncwrH8lijvOfmdw9KcMMLfak1UdVpjWm+PTf+lWczt9oXbz9RBN+CAE=
+	t=1772719300; cv=none; b=LswQUIOhupLBJMhhljMpMx1EzGkT+Hi2gbiGbDXVV5Ap4dSdAEtP6YTQVBuCnhy3ypKPD1wxl2jgisWdWtcOEA8Glt0xm5bqa0gTcd5sx5IilAx2TjcSr0cBW/VUGvAm8IPOznVHRtnAlbbxkLYgkQb9riRRWvAcU5JwxP+ctFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772719292; c=relaxed/simple;
-	bh=uovAo/Gx0CWGIidfY8/WCaUzAkvury0l7kGquOAD9hw=;
+	s=arc-20240116; t=1772719300; c=relaxed/simple;
+	bh=+30yiLCRKCaT7AiCG1LUhJlbqL+3pTt+h7boXDH8K6I=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAGZy1XBz+8dDUB/tAb/eBE7+yTyNa0R0G/HcG+xgN9LMudPRaqQZH9SgYPI7BKzOeRU6Sme4ccPS4T1YZzue60MFABBHdCHXyKdZ2AGaNOnlFnicXpB1aGdM08b4Ier7RyB+wM3AymJakYaniIj7KwlpmC0XH5XqiZDTWomfEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TpeAp+py; arc=none smtp.client-ip=209.85.128.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=S6MyFM+OkqX6nCmTQxHcQshDC+QUH6YDPL/xR0YoHAA3LZLH/++H3egZuN/ykWYi1twSHRcNO14JsmBYm9mHg1zJ9T7H2gRq9wxT6ard3z5jeFd2+Q4Efx1hqQEUIdpG2kjGnMh6ATAnPc/zwlmpZBGRzcd1SDkro5CEwIwpKuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JsjBdErV; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpeAp+py"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4837634de51so34949575e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Mar 2026 06:01:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsjBdErV"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48371119eacso96273785e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Mar 2026 06:01:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772719289; x=1773324089; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772719298; x=1773324098; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ql55XKoX4MqofymlSVVMUy9DuAyuxTTa+E3Q1bwfRoo=;
-        b=TpeAp+py6h0Nou/ZjwqcKob+yMudLIZASLOpO9PYMDgAXI2im1axeDmWD0Y2frxads
-         jlCemdRiawfehWM+RM86tXDMM9FgP1Hx+CQl+wHUA7lt8DP0G/qQTwS4Lz86WCKFeKwy
-         B7DWR+NoqYja8b9F7RXNJ7Q2HuG+qd9ROeW+2W2F9htw0VV7ghWtv7WFqRmcMCEYtMLK
-         GlhFWsLrLhcuovrxiIYkS0oKE2lESx9pncRoreRXsS9qcB2WznzfsaHFqJRimaBEWGiX
-         iINAwjPU1tDb1/pyIcb3T9lTbg+tKOhYWrunKvMHV//WcMVE2HIAK+r9EwYwGFTIGZch
-         qvfA==
+        bh=URJ4mr13CHs0XGdHNp/cTfn6rBGk2NbDJqmtLd5hK2s=;
+        b=JsjBdErV/MbI/E/+d5+eI5Dt2wvma6U0zjwS9BL/wb/xCkIWNtzM9vLfpnhujKYcYM
+         K7O3QF9vpY63g1QuPjkcq+T2cNVaTGGVSJCoTBNM3Jm5f2dMJHPcpanJGdPNYXbn2u0X
+         MrqKjfvhkLTnKXZlsVx0cj0m7w7c7EEcajd2jiSks8J/5qROX1s3ZiEgB/sxzFt+i6s6
+         uMk99R3k4NeYKEH6fteA0lFQTWrs46InNgIOMqHUljsR1NYBfEnto8KFPUUI80NdscN2
+         xRalhlUJnaEP6JaIjIHeSFEwUIF1D1Mb/L6TiTWo5rDtFdkUTG0fqVoDY8y/AbEaDDXO
+         Dp3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772719289; x=1773324089;
+        d=1e100.net; s=20230601; t=1772719298; x=1773324098;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ql55XKoX4MqofymlSVVMUy9DuAyuxTTa+E3Q1bwfRoo=;
-        b=kB5n3ZYqwY1esvZ5/cpmfr2FcmcKKbvs/SDsVHv5396lvhD9AP8MB2L2TOnXBQxmCh
-         4MYNKqfbyJSWYdZ97Gd5iLM1s2oc6pZrwz+L5SlG23rYwQQFyC2ttVc8eT0jhW1yZxyb
-         SsiBBfjxU1odLvLuBPZOTq9g8TMhTsfNZQg4HEwW6MjX58aS5fZYlkeagbTr1UrviszA
-         JQug+quCrMFHez3rIFRcw7PQT8uncAJPHIWNqe5+VBpzsEkWwPg8uWAIbAesjrUEZg04
-         KoGcu+jyG/nrGMBMs49wgA4qT3gcBjyuAIkgL9+t8USOzE8kollwQU3Ye722ZnnAIvvK
-         M8Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfW/XVBJ5IXKN8E/y9f52fkHKId7Yyz4rOr/evju79L7knt7qyX3P3uKU7TGorhYnuSiMw6OCUUgOLKmGih2XwCSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzboW2O4QAhVXnMolTjfNkf+uaw/BaioWfQLojcRl3U7naHUutD
-	qGbugchNb6zMjzWDhaIwYKtAErzxCmMEKa9Kt1dlqZQARrXq/Ynqt6cO
-X-Gm-Gg: ATEYQzwk7Fp/1+iaU7eDN3b2r+ksD9jFiSkWLwbg0MzVM7FWezN3G+fsv5cc/W9wuCc
-	AweZGVzE6gqOl6XyKBPoZxBKxz8d9zAnq8JC9Mlclfdd+Qbm+CijzgdqTp5qmW5UWU6nQoZ6nsO
-	TXVaZBAmSWFNW6b/oxTseZbGuXWm56VO6V2gq45KsUKP6tL15fOh64Ka122PLUBcdcO9z9WRMB3
-	IAZrS6FOUPLkpXmslemtaj/hpI21DqMbflaNiq6gP+qzA/G6UmjfwHeKrCdTzIMn+XPrMx/RpXD
-	Tx3+HedQ/sk/gAaAHZGCWOdsWNxXXijBp9vaIet5OxVwRUzqIn8czBe1U1EltW46zoUgL0bQMTP
-	sY0qBTzMMrkT3WaHu5TCJAfGHlVuZnTZzODY4LRNf/U28/mW4uWIPyKnBk9NuAyPniGyjDNzTzM
-	NqBvck+fA=
-X-Received: by 2002:a05:600c:4e8b:b0:477:6d96:b3c8 with SMTP id 5b1f17b1804b1-48519896e5fmr107327715e9.23.1772719288459;
-        Thu, 05 Mar 2026 06:01:28 -0800 (PST)
+        bh=URJ4mr13CHs0XGdHNp/cTfn6rBGk2NbDJqmtLd5hK2s=;
+        b=petKBP5tQtTNIu1bAAEHlCPHA98VL8qocaLpBwOVNuYCXy3kvOElSGw0sxA7gquKY3
+         xkKDjatjoIqGLryv7Frw5pooz/zOhpaH7NEWTQBDafAVPVkJCXqUoXPg730QnlDFkjur
+         NIC8PN1pBePMBA88HdNhPs9tQ3cvL+03VYscRsZxQF53yPlSfppwh/2beKpFGjjfDP+0
+         TssoBIERdNW8Qklr5Xyc8R/tDyHMOby33ARtTrw+KaufbOYYDrXPyMCypCkVnrDpPpbR
+         kk3dYQk632aAN6AREJ4k1gf4v5T4IH5Vw0z3Uc/Ac4qG8vObXLuuCgXhrrG6S1d9YcD1
+         km7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWSVmwoa5MkQcfyctoINzZ1uzjINwXqV5qUfLOAP+tQjh0UFdnfn0W1JnwbG3n9yFgwUoHsYvWw1lX4Scfsum989No=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA//0CVnLCZ7Sy+7/wkE5kf7EdVV8w2NOUuVUrfswzf9QrAdIq
+	Oh7X9NJD0hZzURfxR1P6qMHhxfqlC18P41RyCIODqrpXpwVfJhgYpQwL
+X-Gm-Gg: ATEYQzw3rjgCzQfaiCa+WD12XSQDYm3S2FurbfT6dW27XNmO4+K+TPPMa0JSAtSct2t
+	H2XduD10wGZssLfJm6HC02DPD9di+E+8cryrY2Ch0aO/H11SIKm0P/W/m/lbh/BwctBUnTorsc3
+	kZexwmIm+XgM9B2y8pVAXLm6KcGAyffenB9+2IDEGWLjW5A6a9TH6hZ4YE/HcTuJJXP+IILfpeF
+	UmsShphrE1A1MVWLCvNWGakURUVE7vu7ST6TqhMbtjBV5KcDRjNfd3sAvdVJ5zr//6wFyLKBemx
+	RpTNgrpWkUZnuZKtBt4XV1V5eQ4hV9ucY83LQFV9Dpyre6BAU5ap6KS/rnN1Psx7myIKH2tZ+jl
+	LlJHSVynXmxITFCl8dVune0aD2WxMgk0Gp5dKF6XHzJlpO5vlVpMStz/vGLQo+dCABfMqJ+P2
+X-Received: by 2002:a05:600c:45c6:b0:483:c12b:fe4b with SMTP id 5b1f17b1804b1-4851984953emr97181465e9.9.1772719297394;
+        Thu, 05 Mar 2026 06:01:37 -0800 (PST)
 Received: from krava ([2a02:8308:a00c:e200::d99c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851a8955c1sm49467415e9.1.2026.03.05.06.01.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851ad2b26dsm43352905e9.31.2026.03.05.06.01.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 06:01:28 -0800 (PST)
+        Thu, 05 Mar 2026 06:01:37 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 5 Mar 2026 15:01:24 +0100
+Date: Thu, 5 Mar 2026 15:01:34 +0100
 To: bot+bpf-ci@kernel.org
 Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
 	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	kafai@fb.com, eddyz87@gmail.com, songliubraving@fb.com, yhs@fb.com,
 	menglong8.dong@gmail.com, rostedt@kernel.org, martin.lau@kernel.org,
 	yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-Subject: Re: [PATCHv2 bpf-next 14/23] libbpf: Add bpf_link_create support for
- tracing_multi link
-Message-ID: <aamMtNYtlW7H3ZN1@krava>
-References: <20260304222141.497203-15-jolsa@kernel.org>
- <ac763f388094863ef5c4d3a60d5606ea40406f66c91006fc9dd0e47573154a72@mail.kernel.org>
+Subject: Re: [PATCHv2 bpf-next 12/23] bpf: Add support for tracing_multi link
+ fdinfo
+Message-ID: <aamMvvzUJTl50J81@krava>
+References: <20260304222141.497203-13-jolsa@kernel.org>
+ <77554f42f56834088eca284c1a787f51e4402907c616f8194942c82530a9ce6b@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,43 +78,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ac763f388094863ef5c4d3a60d5606ea40406f66c91006fc9dd0e47573154a72@mail.kernel.org>
+In-Reply-To: <77554f42f56834088eca284c1a787f51e4402907c616f8194942c82530a9ce6b@mail.kernel.org>
 
-On Wed, Mar 04, 2026 at 11:02:23PM +0000, bot+bpf-ci@kernel.org wrote:
-> > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> > --- a/tools/lib/bpf/bpf.c
-> > +++ b/tools/lib/bpf/bpf.c
+On Wed, Mar 04, 2026 at 11:02:26PM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
 > 
 > [ ... ]
 > 
-> > +	case BPF_TRACE_FENTRY_MULTI:
-> > +	case BPF_TRACE_FEXIT_MULTI:
-> > +	case BPF_TRACE_FSESSION_MULTI:
-> > +		attr.link_create.tracing_multi.ids = (__u64) OPTS_GET(opts, tracing_multi.ids, 0);
-> > +		attr.link_create.tracing_multi.cookies = (__u64) OPTS_GET(opts, tracing_multi.cookies, 0);
+> > +	seq_printf(seq, "%18s %10s %s\n", "cookie", "BTF-id", "func");
+> > +	for (int i = 0; i < tr_link->nodes_cnt; i++) {
+> > +		struct bpf_tracing_multi_node *mnode = &tr_link->nodes[i];
+> > +		u32 btf_id;
+> > +
+> > +		bpf_trampoline_unpack_key(mnode->trampoline->key, NULL, &btf_id);
+> > +		seq_printf(seq, "%18llx %10u %pS\n",
+> > +			   has_cookies ? tr_link->cookies[i] : 0,
+> > +			   btf_id, (void *) mnode->trampoline->ip);
+>                           ^^^^
 > 
-> Should these use ptr_to_u64() instead of a raw (__u64) cast?
-> The ids and cookies fields are pointers (__u32 * and __u64 *
-> respectively), and every other pointer-to-u64 conversion in
-> bpf_link_create() goes through ptr_to_u64():
+> Should this be %18llu instead of %18llx?  Every other BPF link fdinfo
+> displays cookies as decimal:
 > 
->     attr.link_create.kprobe_multi.syms = ptr_to_u64(OPTS_GET(...));
->     attr.link_create.kprobe_multi.addrs = ptr_to_u64(OPTS_GET(...));
->     attr.link_create.uprobe_multi.path = ptr_to_u64(OPTS_GET(...));
+> bpf_kprobe_multi_show_fdinfo():
+>     seq_printf(seq, "%llu\t %pS\n",
+>                has_cookies ? kmulti_link->cookies[i] : 0, ...);
 > 
-> The ptr_to_u64() helper casts through (unsigned long) first,
-> which avoids implementation-defined behavior and compiler
-> warnings on 32-bit builds.
+> bpf_uprobe_multi_show_fdinfo():
+>     seq_printf(seq, "%llu\t %#llx\t %#lx\n",
+>                umulti_link->uprobes[i].cookie, ...);
+> 
+> bpf_tracing_link_show_fdinfo():
+>     seq_printf(seq, ... "cookie:\t%llu\n", ...);
+> 
+> With %llx, a cookie value like 255 would print as "ff" here but "255"
+> in every other BPF link fdinfo.  The hex output also lacks a 0x prefix,
+> making it ambiguous whether values like "10" are decimal or hex.
 
-yep, should be ptr_to_u64, will fix, thnx
+yep, should be consistent, will make it decimal, thnx
 
 jirka
 
 > 
-> > +		attr.link_create.tracing_multi.cnt = OPTS_GET(opts, tracing_multi.cnt, 0);
-> > +		if (!OPTS_ZEROED(opts, tracing_multi))
-> > +			return libbpf_err(-EINVAL);
-> > +		break;
+> > +	}
+> > +}
+> 
+> [ ... ]
 > 
 > 
 > ---
