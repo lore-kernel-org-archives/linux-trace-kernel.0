@@ -1,99 +1,66 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119C8379EC4;
-	Thu,  5 Mar 2026 16:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE173CE48F;
+	Thu,  5 Mar 2026 16:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772726773; cv=none; b=XErk9SR0AqNw89OJxpNpe0TSgw+EuI8f7XwO89fdjXPb4rvHUA3EHQbXR/aDQ/5oQxRv7G/+f1kK6OWVSUPIaYQCjGcDPeI5OQRlMzYMA52hyzTZ80gZ4uZ8I8yck9QNk3ctQhOLQvkFOzIy4E2y3Xh1FubUnTjm/8g+N/ZqpWU=
+	t=1772727161; cv=none; b=fhMVNfFkVlERCWJkdU82eqEWp9ndvz9q7rEqxeVcwDVa0hToFdA7rMt4IGjdobiJzF9ShH+TOJBMVhkgfKvhHQVYLsGy7BgeRKLt648343J1fiFzrF6FoFjqPcKlogGW/knAP6O33QI7m0Z0e5KZR7OoarQzGCMO6KlBfJt7yjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772726773; c=relaxed/simple;
-	bh=Z3x+Se9yIuwlUrw5IJht45f+3n/jmFguEMA2zfjsXPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cHv/uvrAMahLl4BYMAsep0hFpBuBzVcCIA0FQcsZs/kGp+SaiKDQUNa4Gg34j0yzP3Wf9/G+Vf0gChbQKLmWK+HZHcOaGIh2Cj4U/Wb7gxdM0pVmaltnYSzkQgvWjBMM9O7QBV57WDNMnF7W75FFYAT+dzkO7nfYxFxqYz5qwYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G48/mJtC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1772727161; c=relaxed/simple;
+	bh=c6EKYDX5VRUP5zuUqQiObUXeJ4E2BosPNvpwZFkd9Vk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qliedEvfHbDJTuKropTooeLkeJWu/+KvADusSgsJh4BBCj+SqDJYd8dbYwIAr4rhCjsnz54/G/hVZ4hnIGpsEwaeNbnfx1Dmc3irxcn7xRJz/nJaAzWUqnZ6A2DJ72d8LBdY0gU6NiTqVg3cze9y5wTFr6qd1Es9FxrixfU7sHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=rEj6T7J+; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G48/mJtC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yoXLVExaeD40rMm6BLEsNzbF/cVQ2Kh2LQ9L0d5YO00=; b=G48/mJtCY4pqf4sNMBVKTL4lmv
-	LbtVcnZiyUmaBFfgSm6dkg7BW7aG+WGFTW2qN2xc/0+Qch05f4jp/nzx+N8dKAM2Q56QErHm63Yym
-	jXoeQQu3Lx+HUMsyF/kknumyDtn3MaLldp1kF9wqQoB8SEzZeO8VtpzocDTC8f8JUPGc0zd9PQPFs
-	BTBPAk4HV3x7SEI+FRhEO7DJtEXVPr50Qdv7cx3S+TVPoXb7VO98ursViRK/1xiTfwDz3b2GFCaWl
-	8xwyr4LAmRRPc6u72ab28Ni5FJjOlhqeRd3BTZhNsbLAJiDeLm1ceXTDPHbaCwHI09XM2IcKuylBK
-	MpJNh4JA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vyBD5-00000007A4B-0rha;
-	Thu, 05 Mar 2026 16:05:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 97952300182; Thu, 05 Mar 2026 17:05:58 +0100 (CET)
-Date: Thu, 5 Mar 2026 17:05:58 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
-	Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH RFC 2/3] locking/percpu-rwsem: Extract
- __percpu_up_read_slowpath()
-Message-ID: <20260305160558.GD2277644@noisy.programming.kicks-ass.net>
-References: <cover.1772642407.git.d@ilvokhin.com>
- <6b1f1521ca186d5c402a65619d8f30fe83b93bf6.1772642407.git.d@ilvokhin.com>
- <20260304220223.GS606826@noisy.programming.kicks-ass.net>
- <20260305104703.2a1e8151@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="rEj6T7J+"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 09CEF40C6E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1772727158; bh=c6EKYDX5VRUP5zuUqQiObUXeJ4E2BosPNvpwZFkd9Vk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=rEj6T7J+38xFJ3C7Xh/zUQzP6LW4F1V+ELrjmRtJq0iJuUhC+kUnk0FwbdLYoH8S2
+	 jw0TSMuMlM2YCYLsygVwsKL9HBktEFqj21YO+gSpm1V5NjqaitfO5B24JvVZvtqx7o
+	 k0NqoiI0AbefwtWGoK2IJjliwg1fNA9Mox7zx24nxdiQOezznEXmISya+MhqkjPXy4
+	 Mgf6fwsf1y9odB5W2JMKJuHu8IQDPyrjsKN9q5qmQDoCkr9WDAT+q+J/9+IO+jUJ8V
+	 FAs7hFCVFC5JwqDsE2c/EhTuRShWjj/84l0pnczqHgPifdq9TLKuYmauf+AvsaMWr/
+	 o8PcQVu3+Vn2w==
+Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 09CEF40C6E;
+	Thu,  5 Mar 2026 16:12:37 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Documentation: Update histogram-design.rst for
+ fn() handling
+In-Reply-To: <20260305110347.31d6bae5@gandalf.local.home>
+References: <20260126181742.03e8f0d5@gandalf.local.home>
+ <20260305110347.31d6bae5@gandalf.local.home>
+Date: Thu, 05 Mar 2026 09:12:37 -0700
+Message-ID: <87pl5i2r2i.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260305104703.2a1e8151@gandalf.local.home>
+Content-Type: text/plain
 
-On Thu, Mar 05, 2026 at 10:47:03AM -0500, Steven Rostedt wrote:
-> On Wed, 4 Mar 2026 23:02:23 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-> > > index c8cb010d655e..89506895365c 100644
-> > > --- a/include/linux/percpu-rwsem.h
-> > > +++ b/include/linux/percpu-rwsem.h
-> > > @@ -107,6 +107,8 @@ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +void __percpu_up_read_slowpath(struct percpu_rw_semaphore *sem);
-> > > +  
-> > 
-> > extern for consistency with all the other declarations in this header.
-> 
-> I wonder if a cleanup patch should be added to remove the "extern" from the
-> other functions, as that tends to be the way things are going (hch just
-> recommended it elsewhere).
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-Well, I rather like the extern. But yeah, I know hch does not agree.
+> Hi Jon,
+>
+> Can you take this through your tree?
 
-> > 
-> > s/_slowpath//, the corresponding down function also doesn't have
-> > _slowpath on.
-> > 
-> > >  static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
-> > >  {
-> > >  	rwsem_release(&sem->dep_map, _RET_IP_);  
-> 
-> And since "slowpath" is more descriptive (and used in the rtmutex code),
-> should that be added too?
+Sure, will do.
 
-It already has __ prefix, no point in making the name even longer for no
-real benefit.
+Thanks,
+
+jon
