@@ -1,185 +1,200 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD767358396
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 10:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436B437B03C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 10:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772791253; cv=none; b=HDGTSnqfal/xYA+WwYy5Z58wvWJ53TzBxkhEDfF//+04RvmEDmbiMRjj1P9/ewhx45XhhqXZXVFXmHN8RsPGFo5If7dn0yc/uEI2ZEp0C673nnEOFZDWH0YrsjUu7eNNVOiS145SGFpBrYLHz6wGQ0JEjPqUB/fjprPZSUv9oPY=
+	t=1772793052; cv=none; b=r9JRKbEY8S+c0jRJuR7njXqTmV/ukqK7nZ4KYdBzbJIyDhVzpWIcK9PIVPj1s5E1525serWGKLanXwVbWWiZosPEtEI9EV1Fz+uJ/+Lb//aUHG1X+jy1F+gFH84vrNnB+e85mo9ZWFBKQmes4S0l7iim0kQf9QGvwmHQs1HrKbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772791253; c=relaxed/simple;
-	bh=Otf5TtKLt3P6lmlkJiFtklNIKvRQIvt73Bnw8pB5Lrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=szko8n0ajwZ/DUjmM4I8Wr2O0hm+shnf7d9SHH5sce0Y3dYK250yjuvGNqS+8Gk1QXPvJUDt4/+kyv98dZ9bcMq/MDTgUE0vui7gqRKzPoh4lORXiN93aPGBcYUy8spv7iEKc6QQXE35Nx2bJ5TalLyRG6aIn0Kh0VxRe60s1NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0+LLFH4; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772793052; c=relaxed/simple;
+	bh=QiSdDIOvoXERoUmCtI5O4kN9vMdE+uj5QAfoVBroZ5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWDjFeioglIrGgepfKbTZa0fZ2+f7H4ZMSyVBIaqV9aqdcpM9Py7kCIA/PwxwGKxYb00vT4HR9ObsNB6Lzyazw6y7uuff5ZAgRvO26tzgzJCGJJt8K/drxhV9ehT3YNZOiOejZpGEFb9Qrp1xzMtxZNnH/QUNFpjJNWj6F31UFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LftkTYlB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=632EUAM7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LftkTYlB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=632EUAM7; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0+LLFH4"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-439c5cce2c6so2931327f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 02:00:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772791250; x=1773396050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Si6gJZflbpg2/p8TcnKsUQK0gcIs9I1IuQBcaW/7KB4=;
-        b=O0+LLFH4CjESCtwLlLJeh9nqEj/q3N7wgtxn8/OZ0tEsbL8PkRD0V+ScJcLtea6TR7
-         fPYcwKKjK8he93seRQ+9b46fKlGGZnxe8DW075+l9AjWrSEmvMsk0Eddq81yvfk83CJ8
-         TcbGSDZP0Yf2FWlMtFHEYwb7GtKIIj2omC/gUR3rxF0m9VO/ruTgHy/o/obN9Z/vfDSc
-         Wv5ZSZgl60vQGChKb8CLNlVQ7zpG7HoYR8YpiKWqOlx8WnZCrNinL/S06S+J5LlCDgM0
-         c5Al6B2QoKPhXuwpsJqAP+9KtHejyVw641k7dd3zixpSENUCNJ+wNshac1k7FOqnAsHV
-         qBmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772791250; x=1773396050;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Si6gJZflbpg2/p8TcnKsUQK0gcIs9I1IuQBcaW/7KB4=;
-        b=L7zGqFSM7qgPsE3vQar1JYe3LuqT63bZQRAF3UYVAy/DGV2sz7jKieViko9MGLC1Rw
-         +iUSY6Vueta7nxqjELb7tr4nkcwz2eTXltFsfwC8gywfrg+lgHgW1AJ9qMt/rOqSiNnv
-         flpxY/r1tw6qiPvloANWjjRpd+Zl+8JKA41uLSC+B0BbilyEy+NZznNx3U/ZPml1tqwy
-         fjRehASJElMa8lzpwX84+7/HTMhvPjmKpXemgnqJLRXtomtymOSqe8xrovFzhBujiPru
-         2Dk813dROh/lWnl0hwlcblg6iL9u+Ht+tFiqUcPYX8TWOJICml3mdj9hF5vVm8nmtP7d
-         POOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEPuHKTtSrMKiZ452/dUV0KiJmzv5IoLnNwyXUGbtBNCSvTlLVWP2f6e2yMq92ekoQfr1lpUbdfgQUms98L8OysK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQNQLUv9oIZKvWyfeYtEMOOk44avhJcbRbJCQEPAGL0Thbg/Nv
-	n5nsmHMRThvi/h0qKyhOwr/s72hZQLkX5d8kqMDGE2ESG4ZiBdz2DBsX
-X-Gm-Gg: ATEYQzyx9nGcZd9rQlmzXIafFLgx5wA/aqLRXW3RcOSeFnLAQpw1p5jyxFyAb/IWYpv
-	LsDvtAS1CAEM4BV0Xm3rjlAA2pLPOiiQXdNxP/qgBnw/rdxHcfCXGafeBX5Ff0PR/zta74nxb8i
-	Xpr142Vr+d+yc1hwwfSbXMV2cpSdIHfCPVRcxFa77XO08lOVNpwkiT0VKJ0lRddq1FDdzK3qS1U
-	Q3FgvFqZGjb0jL5ZGK6i2o9OmyMrQrqzyXPt2nsmxQ64v6wt9K+h2EW5ewtYxTBM2U58EZNZ4Lk
-	qsC0LLY5Ir1rIUzFQ/WN9/y0jWM2LsluTnrfOYhur+3QhEQPNFHUNgjEcB7aH0g3fEwCWwKG2uk
-	rFA7CKp1OR5rVPTmNuMk6Ksw/+uTgHcumpoCOPrZXBfO4FIoJ6KYj21vTsoworwrVhw/u4REjc0
-	Mkj4wP2tWwFTzWRHAjxW//vfq16cKFqMLFIInJgbWa4bVwortv988JaYj/qP3PKBi9
-X-Received: by 2002:a05:600c:3b0c:b0:483:ad56:8d16 with SMTP id 5b1f17b1804b1-48526918944mr23274095e9.6.1772791249789;
-        Fri, 06 Mar 2026 02:00:49 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-485245e0f53sm13970035e9.13.2026.03.06.02.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 02:00:49 -0800 (PST)
-Date: Fri, 6 Mar 2026 10:00:47 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Waiman Long <longman@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, will@kernel.org,
- boqun@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-Message-ID: <20260306100047.7c4725de@pumpkin>
-In-Reply-To: <CALOAHbA9u2sHSYRF_kDKpf2d_UADQFu-1BMWFhBTo3mvgf6kFQ@mail.gmail.com>
-References: <20260304074650.58165-1-laoar.shao@gmail.com>
-	<20260304074650.58165-2-laoar.shao@gmail.com>
-	<20260304090249.GN606826@noisy.programming.kicks-ass.net>
-	<20260304095415.4d5f2528@pumpkin>
-	<20260304155742.7b4de2d1@gandalf.local.home>
-	<20260304214447.3e5817ea@pumpkin>
-	<CALOAHbCOynnRdc8JkNJHb-nyoerrz0K5GUhnD8OR2hv4x==5LA@mail.gmail.com>
-	<20260304212802.458b878e@fedora>
-	<CALOAHbBA643_QOsnTmrfjKE71hSa+v1cToiELvGk+vjtcgJsxg@mail.gmail.com>
-	<20260304220019.3efa12ab@robin>
-	<CALOAHbA4Dtc3cXs2JiQ=kxES3kT+Acb=amUxkOvQ22fns-Mqgw@mail.gmail.com>
-	<748e8e0d-5164-4c8a-9bb9-110874c5daa0@redhat.com>
-	<CALOAHbAsiVNC7COL7rCJBdaC-8oZQvg+pjudR4QexQQaYLBmgA@mail.gmail.com>
-	<20260305082125.35d8539c@gandalf.local.home>
-	<CALOAHbA9u2sHSYRF_kDKpf2d_UADQFu-1BMWFhBTo3mvgf6kFQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LftkTYlB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="632EUAM7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LftkTYlB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="632EUAM7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 875923FA7A;
+	Fri,  6 Mar 2026 10:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1772793042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAQr6SkqV3zjssVR9rZd0gIGba+OVvVWyTtFYxHG1Tw=;
+	b=LftkTYlB+zrmExZCM0xNBcZqm2VBg2WGKqZdbGMSrzXN1qHzs8jIT7z9P1neGQNTtOxaS3
+	49tsqrFGpbUs1Bkcp3+4aYxaZ/oFlZbu8N5kZJVAVVOKRJIbNWHOmefLgDzGEG5KtChk+i
+	udYkR76rHLSYTOgXKupZhCjazdHoYc8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1772793042;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAQr6SkqV3zjssVR9rZd0gIGba+OVvVWyTtFYxHG1Tw=;
+	b=632EUAM7/SbLKijbGlqOzTmYmkiz+gXT9KFcaSSq/c1yD7DQL4ilODdzxNyo+UYamNPbrK
+	aDxOVrBsk59Dp/Cg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LftkTYlB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=632EUAM7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1772793042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAQr6SkqV3zjssVR9rZd0gIGba+OVvVWyTtFYxHG1Tw=;
+	b=LftkTYlB+zrmExZCM0xNBcZqm2VBg2WGKqZdbGMSrzXN1qHzs8jIT7z9P1neGQNTtOxaS3
+	49tsqrFGpbUs1Bkcp3+4aYxaZ/oFlZbu8N5kZJVAVVOKRJIbNWHOmefLgDzGEG5KtChk+i
+	udYkR76rHLSYTOgXKupZhCjazdHoYc8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1772793042;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAQr6SkqV3zjssVR9rZd0gIGba+OVvVWyTtFYxHG1Tw=;
+	b=632EUAM7/SbLKijbGlqOzTmYmkiz+gXT9KFcaSSq/c1yD7DQL4ilODdzxNyo+UYamNPbrK
+	aDxOVrBsk59Dp/Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C4A063EA75;
+	Fri,  6 Mar 2026 10:30:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WNGxLNCsqmn+NQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 06 Mar 2026 10:30:40 +0000
+Date: Fri, 6 Mar 2026 10:30:39 +0000
+From: Pedro Falcato <pfalcato@suse.de>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Oscar Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org, SeongJae Park <sj@kernel.org>
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Message-ID: <nn6xirm5sa3mf63gcq5mlthk3nrrdig6zpv2mj4vqnsl27nsxe@2si2t2l6pgex>
+References: <cover.1772206930.git.d@ilvokhin.com>
+ <d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLe4qgoqxybjzr9nbxpji78h8g)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 875923FA7A
 
-On Fri, 6 Mar 2026 10:22:11 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
+On Fri, Feb 27, 2026 at 04:00:26PM +0000, Dmitry Ilvokhin wrote:
+> This intentionally breaks direct users of zone->lock at compile time so
+> all call sites are converted to the zone lock wrappers. Without the
+> rename, present and future out-of-tree code could continue using
+> spin_lock(&zone->lock) and bypass the wrappers and tracing
+> infrastructure.
+> 
+> No functional change intended.
+> 
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Acked-by: SeongJae Park <sj@kernel.org>
+> ---
+>  include/linux/mmzone.h      |  7 +++++--
+>  include/linux/mmzone_lock.h | 12 ++++++------
+>  mm/compaction.c             |  4 ++--
+>  mm/internal.h               |  2 +-
+>  mm/page_alloc.c             | 16 ++++++++--------
+>  mm/page_isolation.c         |  4 ++--
+>  mm/page_owner.c             |  2 +-
+>  7 files changed, 25 insertions(+), 22 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 3e51190a55e4..32bca655fce5 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1009,8 +1009,11 @@ struct zone {
+>  	/* zone flags, see below */
+>  	unsigned long		flags;
+>  
+> -	/* Primarily protects free_area */
+> -	spinlock_t		lock;
+> +	/*
+> +	 * Primarily protects free_area. Should be accessed via zone_lock_*
+> +	 * helpers.
+> +	 */
+> +	spinlock_t		_lock;
 
-> On Thu, Mar 5, 2026 at 9:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
-> >
-> > On Thu, 5 Mar 2026 13:40:27 +0800
-> > Yafang Shao <laoar.shao@gmail.com> wrote:
-> > =20
-> > > Exactly. ftrace is intended for debugging and should not significantly
-> > > impact real workloads. Therefore, it's reasonable to make it sleep if
-> > > it cannot acquire the lock immediately, rather than spinning and
-> > > consuming CPU cycles. =20
-> >
-> > Actually, ftrace is more than just debugging. It is the infrastructure =
-for
-> > live kernel patching as well. =20
->=20
-> good to know.
->=20
-> > =20
-> > > =20
-> > > >
-> > > > BTW, you should expand the commit log of patch 1 to include the
-> > > > rationale of why we should add this feature to mutex as the informa=
-tion
-> > > > in the cover letter won't get included in the git log if this patch
-> > > > series is merged. You should also elaborate in comment on under what
-> > > > conditions should this this new mutex API be used. =20
-> > >
-> > > Sure.  I will update it.
-> > >
-> > > BTW, these issues are notably hard to find. I suspect there are other
-> > > locks out there with the same problem. =20
-> >
-> > As I mentioned, I'm not against the change. I just want to make sure the
-> > rationale is strong enough to make the change.
-> >
-> > One thing that should be modified with your patch is the name. "nospin"
-> > references the implementation of the mutex. Instead it should be called
-> > something like: "noncritical" or "slowpath" stating that the grabbing of
-> > this mutex is not of a critical section.
-> >
-> > Maybe an entirely new interface should be defined:
-> >
-> >
-> > struct slow_mutex; =20
->=20
-> Is it necessary to define a new structure for this slow mutex? We
-> could simply reuse the existing struct mutex instead. Alternatively,
-> should we add some new flags to this slow_mutex for debugging
-> purposes?
->=20
-> >
-> > slow_mutex_lock()
-> > slow_mutex_unlock() =20
->=20
-> These two APIs appear sufficient to handle this use case.
+I really don't like this uglification.
+Suggestion:
+	spinlock_t __private	lock;
 
-Don't semaphores still exist?
-IIRC they always sleep.
+>  
+>  	/* Pages to be freed when next trylock succeeds */
+>  	struct llist_head	trylock_free_pages;
+> diff --git a/include/linux/mmzone_lock.h b/include/linux/mmzone_lock.h
+> index a1cfba8408d6..62e34d500078 100644
+> --- a/include/linux/mmzone_lock.h
+> +++ b/include/linux/mmzone_lock.h
+> @@ -7,32 +7,32 @@
+>  
+>  static inline void zone_lock_init(struct zone *zone)
+>  {
+> -	spin_lock_init(&zone->lock);
 
-Although I wonder if the mutex need to be held for as long at it is.
-ISTR one of the tracebacks was one the 'address to name' lookup,
-that code will be slow.
-Since the mutex can't be held across the multiple reads that are done
-to read the full list of tracepoints it must surely be possible to
-release it across the name lookup?
+and then ACCESS_PRIVATE() all over these helpers. This will not make a
+difference to the compiler, but it will work with sparse.
 
-	David
+It's not that I don't understand what you're doing, but we're going to need
+to look to this code and refer to this code 20 years from now, I would rather
+not refer to zone->_lock :)
 
->=20
-> >
-> > etc,
-> >
-> > that makes it obvious that this mutex may be held for long periods of t=
-ime.
-> > In fact, this would be useful for RT workloads, as these mutexes could =
-be
-> > flagged to warn RT critical tasks if those tasks were to take one of th=
-em.
-> >
-> > There has been some talk to mark paths in the kernel that RT tasks would
-> > get a SIGKILL if they were to hit a path that is known to be non
-> > deterministic. =20
->=20
-> Thanks for your information.
->=20
-
+-- 
+Pedro
