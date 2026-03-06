@@ -1,35 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD97367F37;
-	Thu,  5 Mar 2026 23:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D0013E02A;
+	Fri,  6 Mar 2026 01:20:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772753409; cv=none; b=cXm0RvnYpxVnzyB+PFqtV+F2B5UYW0CQq5TVFWZHKmLBGxc7AT6hc28CsA7WEPh774a7v8z7yjtiAkhRSQt15B/Jk2V7mmx+ZWfl3IlvPGnRQCZsiZcT5fEPb7oN+iDBTsIddgGJr3Hcf6T/PrDVGkvF9vSqGSZpbJIwY/OVrJw=
+	t=1772760053; cv=none; b=VMfqbkFO7zBhaEVC2hqXxKPOz1ok1bdwSjg7ApKyX5alX4PdrXbDI+KqO37KVeRakeMBCLiHv6WIZk6ULOJ4z8SKtPSPjQeFSde6zzpocHqLz4+ytK9EWwnmuUZJ40+6DZ5rbuEM6F+wNw2pw15RUstwSbHigZGPvuf9kvzgxU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772753409; c=relaxed/simple;
-	bh=5Kc270dFzQjR8Vm6+7T2HWXccxHdjgILIUdO6WaZwYU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=A5I5bpSnXATqg9QUWB3f9znCBp4DcJchpJC/Rgq4pnP9lLYeETT/XGCALSLDTe6B5bLAv6UwlDyklhFoJbwWYVLwUE9aLcxMVziYjM0ov9FLYtyA0LuOjokOxOPId3j0/NwVruOC4rYHZWKx9FBv/hDdJj3+38V+J5EwtqEF2iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNGzaTX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772760053; c=relaxed/simple;
+	bh=RQH4aynp6t0XOR5kWhYDbiHP8APh0RZqBBOKCMlxrrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kmznmXvwqToE7qHvaubf5nyIwsqDTWa0LncM7pbivH+wWlIMaz4SXMaJWhgryj45wQlYfD69OIPq7QhXPt0RBwFAWYYHqXPv6ai+NjF9aoR08vKVe31+My1rVsq3NYhW4k4/2MyptnDRtk6TiWtWMfORG2FE0AldvxD4Wp4XCXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToiP5bfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNGzaTX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE8E7C116C6;
-	Thu,  5 Mar 2026 23:30:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToiP5bfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F512C116C6;
+	Fri,  6 Mar 2026 01:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772753408;
-	bh=5Kc270dFzQjR8Vm6+7T2HWXccxHdjgILIUdO6WaZwYU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=dNGzaTX0v5iOpOlwKPkM+8oECnSbesuoaA89DWsjNOZ6udpDHCLAP3uXm2hclyW8/
-	 3HdbhGDjJOrQe4sglWNPJWSvInrQmzZUxBZDFdD4Kg3M5l5WDq7FfP5IlqGXc0P/RN
-	 fqmF0l7AqPhVa60PFVq97lmz3h9J/WtQRMm5ejsiMsRSLrxbhsP7HB/vHeE25ZHMI8
-	 sFXS2z4H8AQ4G+buseoRZl7l25/CB4XmeIH1/h9LA5Ux9B9vnVaOz6SLX6hCXeqJCp
-	 A/0K5OcoP5X0TXif7zlLKNiQ4W8Ga31Cp6AVF7f4grdF2FZk0L/Hz+EzjroI5ks2I6
-	 gM+WdS7oXLIow==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA0093808200;
-	Thu,  5 Mar 2026 23:30:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1772760052;
+	bh=RQH4aynp6t0XOR5kWhYDbiHP8APh0RZqBBOKCMlxrrg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ToiP5bfCUdGGuMpJmpHfySDRyKWwiPdbcfLQHICWLS5rdT0fMO962OGuF4rRL7jx8
+	 xN9TMqNmykeuvEKix5t8ErpDiqMzXV8CM3+PtkXGniU17OwfQbMmwbPcDqEKBEZ+Ud
+	 uzKB4x8jNtMvMrfzHos2KbQjw47nQkDnWFgFEfoM0iTf8Iy8pV0vfwHxnhX6CqrMD2
+	 fVqc6bAHXHPJ6jI6qBbKxUJOdURl4lo7s8/E4ty4G6pDYHHLHp9xANAgNodMDvwrZc
+	 voTSMzO2A+lZoNClFmI4Og92oweJlaYTevBxfXpQqkewyWLVs0xknPf3UyR8kTqsE8
+	 H/65P06zzGCPg==
+From: SeongJae Park <sj@kernel.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Date: Thu,  5 Mar 2026 17:20:42 -0800
+Message-ID: <20260306012043.90694-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <aanSnywUXTVPaYUj@shell.ilvokhin.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,47 +70,35 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 0/3] Optimize kprobe.session attachment for
- exact
- function names
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177275340855.3325345.9824882028753278157.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Mar 2026 23:30:08 +0000
-References: <20260302200837.317907-1-andrey.grodzovsky@crowdstrike.com>
-In-Reply-To: <20260302200837.317907-1-andrey.grodzovsky@crowdstrike.com>
-To: Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, jolsa@kernel.org,
- rostedt@goodmis.org, linux-open-source@crowdstrike.com
 
-Hello:
-
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Mon, 2 Mar 2026 15:08:34 -0500 you wrote:
-> When libbpf attaches kprobe.session programs with exact function names
-> (the common case: SEC("kprobe.session/vfs_read")), the current code path
-> has two independent performance bottlenecks:
+On Thu, 5 Mar 2026 18:59:43 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+[...]
+> Following the suggestion from SJ and Vlastimil, I prepared fixup to
+> standardize documentation and comments on the term "zone lock".
 > 
-> 1. Userspace (libbpf): attach_kprobe_session() always parses
-> /proc/kallsyms to resolve function names, even when the name is exact
-> (no wildcards).  This takes ~150ms per function.
+> The patch is based on top of the current mm-new.
 > 
-> [...]
+> Andrew, please let me know if you would prefer a respin of the series
+> instead.
+> 
+> From 267cda3e0e160f97b346009bc48819bfeed92e52 Mon Sep 17 00:00:00 2001
+> From: Dmitry Ilvokhin <d@ilvokhin.com>
+> Date: Thu, 5 Mar 2026 10:36:17 -0800
+> Subject: [PATCH] mm: documentation: standardize on "zone lock" terminology
+> 
+> During review of the zone lock tracing series it was suggested to
+> standardize documentation and comments on the term "zone lock"
+> instead of using zone_lock or referring to the internal field
+> zone->_lock.
+> 
+> Update references accordingly.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 
-Here is the summary with links:
-  - [bpf-next,v4,1/3] libbpf: Optimize kprobe.session attachment for exact function names
-    https://git.kernel.org/bpf/bpf-next/c/6afc431db1b4
-  - [bpf-next,v4,2/3] ftrace: Use kallsyms binary search for single-symbol lookup
-    (no matching commit)
-  - [bpf-next,v4,3/3] selftests/bpf: add tests for kprobe.session optimization
-    https://git.kernel.org/bpf/bpf-next/c/a28441dd2961
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Acked-by: SeongJae Park <sj@kernel.org>
 
 
+THanks,
+SJ
+
+[...]
