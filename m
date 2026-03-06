@@ -1,163 +1,185 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141BF34F27B
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 09:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD767358396
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 10:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772791041; cv=none; b=d3CJ92x+Jv3h9/ueEKO6c6jjDbhzzL4l+Qr2sE6CzgnbCEUOlsHJ+UiWyJLhxD/TASu4Ca2ztaGK31manlwGO5sYZbeyaa7P067giNAilmqY+k6K9aI7MXX1lpOIZHoq/ak0B0YoZzOYh7c6vOOOE/aSBthsJlP4yzXPv2Dbk2g=
+	t=1772791253; cv=none; b=HDGTSnqfal/xYA+WwYy5Z58wvWJ53TzBxkhEDfF//+04RvmEDmbiMRjj1P9/ewhx45XhhqXZXVFXmHN8RsPGFo5If7dn0yc/uEI2ZEp0C673nnEOFZDWH0YrsjUu7eNNVOiS145SGFpBrYLHz6wGQ0JEjPqUB/fjprPZSUv9oPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772791041; c=relaxed/simple;
-	bh=pEQzWCAb2iRAqiobf7jxVYCtdRuojtFnQZa3BQ+Dyyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRaLDAKiMrCSSSBtUOyvplBNsTDG/KrEnWxJUX1hQqm1yQz191Lfvoy8WdXHJqhGZdXnWcQ+nAE21ZiuDOSjLx/UTuPz1z6TAuoZ4Ve6tZs5SQQI6e4+LRbgQSOtzNRF2rDI8CHfRFpExO253ud+XBl2aYSYtRmYsfQ4/Rk0dV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EOsxzA63; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1772791253; c=relaxed/simple;
+	bh=Otf5TtKLt3P6lmlkJiFtklNIKvRQIvt73Bnw8pB5Lrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=szko8n0ajwZ/DUjmM4I8Wr2O0hm+shnf7d9SHH5sce0Y3dYK250yjuvGNqS+8Gk1QXPvJUDt4/+kyv98dZ9bcMq/MDTgUE0vui7gqRKzPoh4lORXiN93aPGBcYUy8spv7iEKc6QQXE35Nx2bJ5TalLyRG6aIn0Kh0VxRe60s1NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0+LLFH4; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EOsxzA63"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4836f4cbe0bso78164275e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 01:57:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0+LLFH4"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-439c5cce2c6so2931327f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 02:00:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1772791035; x=1773395835; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=O/K2aprkN4j5Qcb7Uph8KKaqrtRBJnLURcoh9D3mrUw=;
-        b=EOsxzA63XzaseIkVZ6IrLdWGyCJaNf3twu9123Mtl4OPI8F4HlgxpeTUDbG8KmhtST
-         F2YhOX4N///ZNqP/vH0J+ChwK7apappP2VS6FKF95kdzjFeb3eIg6Dc3uwe9cksVBblo
-         Bco2ntcM6lmH0lhej+mRCnQ/12+V4dVodu/YXpS2b0vxwPnRiLFocVbbTu8uGJMvmDPw
-         e28vjCtbCp5M9Y8N7t7s+ExpRU7tnImyBX0Mw8Ku3dvzWyypeRbVElXvm0gQ6IhzZrPC
-         NTI/wAx+pRjlOUAxYebVAFUUqqu9MijnltA7jcVtyLyJSsPPwt7sL3OFKHrbnVMBghqv
-         tO8Q==
+        d=gmail.com; s=20230601; t=1772791250; x=1773396050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Si6gJZflbpg2/p8TcnKsUQK0gcIs9I1IuQBcaW/7KB4=;
+        b=O0+LLFH4CjESCtwLlLJeh9nqEj/q3N7wgtxn8/OZ0tEsbL8PkRD0V+ScJcLtea6TR7
+         fPYcwKKjK8he93seRQ+9b46fKlGGZnxe8DW075+l9AjWrSEmvMsk0Eddq81yvfk83CJ8
+         TcbGSDZP0Yf2FWlMtFHEYwb7GtKIIj2omC/gUR3rxF0m9VO/ruTgHy/o/obN9Z/vfDSc
+         Wv5ZSZgl60vQGChKb8CLNlVQ7zpG7HoYR8YpiKWqOlx8WnZCrNinL/S06S+J5LlCDgM0
+         c5Al6B2QoKPhXuwpsJqAP+9KtHejyVw641k7dd3zixpSENUCNJ+wNshac1k7FOqnAsHV
+         qBmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772791035; x=1773395835;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/K2aprkN4j5Qcb7Uph8KKaqrtRBJnLURcoh9D3mrUw=;
-        b=O6SPYruyxGJ1MQSsgZT4c41zDWhceNRthmIb/i2qqUWXpKOqQavsXD+AQeKDmRPSfW
-         SZl+guNk8KpJuivxVbsTvX4qEg9XBvuLQ9nS/xO/kOHnbBq6Is/VPNYRwiz9O04gc55O
-         VaiTI/BeSoFnaj99IkY5ZYXXhPI6zqslYJn/V7eQVgMnmm6Q/RLK7WsOp0VqCoOp/E9Y
-         G5ZIwKBBIf7ZQ4qemnQNpgBXLGMto4XMWrlDm8Rza7tc6PA3TV5OcVHFDURtYrzrq6dI
-         CXuPTm2jolw+zHIX3ECu0X3Zrau7gpB6oQoXTwEW6Zm+AIpx0233jEo8rvgYlkhGZw20
-         d3DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZd6cyuAPJ285BZGWGIHD+SNHI9sUfKMz4/GIv3wQbHS/gmA2ZfwYBzOtioGrg/8nAVk3nsgy7/9JXRtFTw/xj0SI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuOpd4NnMS+eHur3NJrdHz1o3/7D44cKFNjEDTM2fhRT4L0KNH
-	JOUWJRlCKQojoHQ6qT8CIt4EDiIgm3d8tDFcD0Cx8QCiISMEdeEdokjGQcZTcI6nzE8=
-X-Gm-Gg: ATEYQzx3len7KWon46FGnfvBEW+5pvg6ZIHXLu0Nmu2VIbNJNXDDIXRHmZinaM7VqaU
-	T46UWr0o2TuR8yt6YZYY4l2rnhfJNHuSMNqaEYu4sSFyzkx7x8oW+Dm6YCN8oDlrk5laVgRYEAY
-	yv76AgGMqY8SanHYZCoyYWi7fm4JPqwCKbjDnyK739y5J95lqKmc2D6LisZlVYsU0XDWJiApz77
-	yB8LZ4CzvKPXbgRVhDUaW1d/KFj0HwMBbz06Ue+BhAvlnEbfUYNMFYC/QIpjROi8dS+17RtK/Gg
-	xHN31ErIrO8zUqN/OUiYoqcc20H4DWVizuL0kMPFLQelDTKQB76Af+2Atlxvylgul6MpHlP55Fo
-	xRhXeeVLaD4VqyQlGiCVRhqZtyPaJhLFptTn6Undr+XYNl1yND/s/6c+QycyU7qVQ0nXEQeJiLT
-	90iH6igv7hIRjGGH4iM/3R3/2oRg==
-X-Received: by 2002:a05:600c:4e89:b0:45d:d97c:236c with SMTP id 5b1f17b1804b1-48526951430mr23896805e9.21.1772791035167;
-        Fri, 06 Mar 2026 01:57:15 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-485256b1eacsm24251685e9.0.2026.03.06.01.57.14
+        d=1e100.net; s=20230601; t=1772791250; x=1773396050;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Si6gJZflbpg2/p8TcnKsUQK0gcIs9I1IuQBcaW/7KB4=;
+        b=L7zGqFSM7qgPsE3vQar1JYe3LuqT63bZQRAF3UYVAy/DGV2sz7jKieViko9MGLC1Rw
+         +iUSY6Vueta7nxqjELb7tr4nkcwz2eTXltFsfwC8gywfrg+lgHgW1AJ9qMt/rOqSiNnv
+         flpxY/r1tw6qiPvloANWjjRpd+Zl+8JKA41uLSC+B0BbilyEy+NZznNx3U/ZPml1tqwy
+         fjRehASJElMa8lzpwX84+7/HTMhvPjmKpXemgnqJLRXtomtymOSqe8xrovFzhBujiPru
+         2Dk813dROh/lWnl0hwlcblg6iL9u+Ht+tFiqUcPYX8TWOJICml3mdj9hF5vVm8nmtP7d
+         POOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEPuHKTtSrMKiZ452/dUV0KiJmzv5IoLnNwyXUGbtBNCSvTlLVWP2f6e2yMq92ekoQfr1lpUbdfgQUms98L8OysK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQNQLUv9oIZKvWyfeYtEMOOk44avhJcbRbJCQEPAGL0Thbg/Nv
+	n5nsmHMRThvi/h0qKyhOwr/s72hZQLkX5d8kqMDGE2ESG4ZiBdz2DBsX
+X-Gm-Gg: ATEYQzyx9nGcZd9rQlmzXIafFLgx5wA/aqLRXW3RcOSeFnLAQpw1p5jyxFyAb/IWYpv
+	LsDvtAS1CAEM4BV0Xm3rjlAA2pLPOiiQXdNxP/qgBnw/rdxHcfCXGafeBX5Ff0PR/zta74nxb8i
+	Xpr142Vr+d+yc1hwwfSbXMV2cpSdIHfCPVRcxFa77XO08lOVNpwkiT0VKJ0lRddq1FDdzK3qS1U
+	Q3FgvFqZGjb0jL5ZGK6i2o9OmyMrQrqzyXPt2nsmxQ64v6wt9K+h2EW5ewtYxTBM2U58EZNZ4Lk
+	qsC0LLY5Ir1rIUzFQ/WN9/y0jWM2LsluTnrfOYhur+3QhEQPNFHUNgjEcB7aH0g3fEwCWwKG2uk
+	rFA7CKp1OR5rVPTmNuMk6Ksw/+uTgHcumpoCOPrZXBfO4FIoJ6KYj21vTsoworwrVhw/u4REjc0
+	Mkj4wP2tWwFTzWRHAjxW//vfq16cKFqMLFIInJgbWa4bVwortv988JaYj/qP3PKBi9
+X-Received: by 2002:a05:600c:3b0c:b0:483:ad56:8d16 with SMTP id 5b1f17b1804b1-48526918944mr23274095e9.6.1772791249789;
+        Fri, 06 Mar 2026 02:00:49 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-485245e0f53sm13970035e9.13.2026.03.06.02.00.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 01:57:14 -0800 (PST)
-Date: Fri, 6 Mar 2026 10:57:12 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Song Chen <chensong_2000@189.cn>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Miroslav Benes <mbenes@suse.cz>,
-	mcgrof@kernel.org, petr.pavlu@suse.com, da.gomez@kernel.org,
-	samitolvanen@google.com, atomlin@atomlin.com, mhiramat@kernel.org,
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace/ftrace: introduce ftrace module notifier
-Message-ID: <aaqk-GrpCTqO36xj@pathway.suse.cz>
-References: <20260225054639.21637-1-chensong_2000@189.cn>
- <20260225192724.48ed165e@fedora>
- <e18ed5f4-3917-46e7-bca9-78063e6e4457@189.cn>
- <alpine.LSU.2.21.2602261147150.5739@pobox.suse.cz>
- <20260226123014.2197d9b7@gandalf.local.home>
- <321d4670-27cb-453f-a50d-426c83894074@189.cn>
+        Fri, 06 Mar 2026 02:00:49 -0800 (PST)
+Date: Fri, 6 Mar 2026 10:00:47 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Waiman Long <longman@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, will@kernel.org,
+ boqun@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
+Message-ID: <20260306100047.7c4725de@pumpkin>
+In-Reply-To: <CALOAHbA9u2sHSYRF_kDKpf2d_UADQFu-1BMWFhBTo3mvgf6kFQ@mail.gmail.com>
+References: <20260304074650.58165-1-laoar.shao@gmail.com>
+	<20260304074650.58165-2-laoar.shao@gmail.com>
+	<20260304090249.GN606826@noisy.programming.kicks-ass.net>
+	<20260304095415.4d5f2528@pumpkin>
+	<20260304155742.7b4de2d1@gandalf.local.home>
+	<20260304214447.3e5817ea@pumpkin>
+	<CALOAHbCOynnRdc8JkNJHb-nyoerrz0K5GUhnD8OR2hv4x==5LA@mail.gmail.com>
+	<20260304212802.458b878e@fedora>
+	<CALOAHbBA643_QOsnTmrfjKE71hSa+v1cToiELvGk+vjtcgJsxg@mail.gmail.com>
+	<20260304220019.3efa12ab@robin>
+	<CALOAHbA4Dtc3cXs2JiQ=kxES3kT+Acb=amUxkOvQ22fns-Mqgw@mail.gmail.com>
+	<748e8e0d-5164-4c8a-9bb9-110874c5daa0@redhat.com>
+	<CALOAHbAsiVNC7COL7rCJBdaC-8oZQvg+pjudR4QexQQaYLBmgA@mail.gmail.com>
+	<20260305082125.35d8539c@gandalf.local.home>
+	<CALOAHbA9u2sHSYRF_kDKpf2d_UADQFu-1BMWFhBTo3mvgf6kFQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <321d4670-27cb-453f-a50d-426c83894074@189.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 2026-02-27 09:34:59, Song Chen wrote:
-> Hi,
-> 
-> 在 2026/2/27 01:30, Steven Rostedt 写道:
-> > On Thu, 26 Feb 2026 11:51:53 +0100 (CET)
-> > Miroslav Benes <mbenes@suse.cz> wrote:
-> > 
-> > > > Let me see if there is any way to use notifier and remain below calling
-> > > > sequence:
-> > > > 
-> > > > ftrace_module_enable
-> > > > klp_module_coming
-> > > > blocking_notifier_call_chain_robust(MODULE_STATE_COMING)
-> > > > 
-> > > > blocking_notifier_call_chain(MODULE_STATE_GOING)
-> > > > klp_module_going
-> > > > ftrace_release_mod
-> > > 
-> > > Both klp and ftrace used module notifiers in the past. We abandoned that
-> > > and opted for direct calls due to issues with ordering at the time. I do
-> > > not have the list of problems at hand but I remember it was very fragile.
-> > > 
-> > > See commits 7dcd182bec27 ("ftrace/module: remove ftrace module
-> > > notifier"), 7e545d6eca20 ("livepatch/module: remove livepatch module
-> > > notifier") and their surroundings.
-> > > 
-> > > So unless there is a reason for the change (which should be then carefully
-> > > reviewed and properly tested), I would prefer to keep it as is. What is
-> > > the motivation? I am failing to find it in the commit log.
-> 
-> There is no special motivation, i just read btf initialization in module
-> loading and found direct calls of ftrace and klp, i thought they were just
-> forgotten to use notifier and i even didn't search git log to verify, sorry
-> about that.
-> 
-> > 
-> > Honestly, I do think just decoupling ftrace and live kernel patching from
-> > modules is rationale enough, as it makes the code a bit cleaner. But to do
-> > so, we really need to make sure there is absolutely no regressions.
-> > 
-> > Thus, to allow such a change, I would ask those that are proposing it, show
-> > a full work flow of how ftrace, live kernel patching, and modules work with
-> > each other and why those functions are currently injected in the module code.
-> > 
-> > As Miroslav stated, we tried to do it via notifiers in the past and it
-> > failed. I don't want to find out why they failed by just adding them back
-> > to notifiers again. Instead, the reasons must be fully understood and
-> > updates made to make sure they will not fail in the future.
-> 
-> Yes, you are right, i read commit msg of 7dcd182bec27, this patch just
-> reverses it simply and will introduce order issue back. I will try to find
-> out the problem in the past at first.
+On Fri, 6 Mar 2026 10:22:11 +0800
+Yafang Shao <laoar.shao@gmail.com> wrote:
 
-AFAIK, the root of the problem is that livepatch uses the ftrace
-framework. It means that:
+> On Thu, Mar 5, 2026 at 9:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+> >
+> > On Thu, 5 Mar 2026 13:40:27 +0800
+> > Yafang Shao <laoar.shao@gmail.com> wrote:
+> > =20
+> > > Exactly. ftrace is intended for debugging and should not significantly
+> > > impact real workloads. Therefore, it's reasonable to make it sleep if
+> > > it cannot acquire the lock immediately, rather than spinning and
+> > > consuming CPU cycles. =20
+> >
+> > Actually, ftrace is more than just debugging. It is the infrastructure =
+for
+> > live kernel patching as well. =20
+>=20
+> good to know.
+>=20
+> > =20
+> > > =20
+> > > >
+> > > > BTW, you should expand the commit log of patch 1 to include the
+> > > > rationale of why we should add this feature to mutex as the informa=
+tion
+> > > > in the cover letter won't get included in the git log if this patch
+> > > > series is merged. You should also elaborate in comment on under what
+> > > > conditions should this this new mutex API be used. =20
+> > >
+> > > Sure.  I will update it.
+> > >
+> > > BTW, these issues are notably hard to find. I suspect there are other
+> > > locks out there with the same problem. =20
+> >
+> > As I mentioned, I'm not against the change. I just want to make sure the
+> > rationale is strong enough to make the change.
+> >
+> > One thing that should be modified with your patch is the name. "nospin"
+> > references the implementation of the mutex. Instead it should be called
+> > something like: "noncritical" or "slowpath" stating that the grabbing of
+> > this mutex is not of a critical section.
+> >
+> > Maybe an entirely new interface should be defined:
+> >
+> >
+> > struct slow_mutex; =20
+>=20
+> Is it necessary to define a new structure for this slow mutex? We
+> could simply reuse the existing struct mutex instead. Alternatively,
+> should we add some new flags to this slow_mutex for debugging
+> purposes?
+>=20
+> >
+> > slow_mutex_lock()
+> > slow_mutex_unlock() =20
+>=20
+> These two APIs appear sufficient to handle this use case.
 
-   + ftrace must be initialized before livepatch gets enabled
-   + livepatch must be disabled before ftrace support gets removed
+Don't semaphores still exist?
+IIRC they always sleep.
 
-My understanding is that this can't be achieved by notifiers easily
-because they are always proceed in the same order.
+Although I wonder if the mutex need to be held for as long at it is.
+ISTR one of the tracebacks was one the 'address to name' lookup,
+that code will be slow.
+Since the mutex can't be held across the multiple reads that are done
+to read the full list of tracepoints it must surely be possible to
+release it across the name lookup?
 
-An elegant solution would be to introduce  notifier_reverse_call_chain()
-which would process the callbacks in the reverse order. But it might
-be non-trivial:
+	David
 
-  + We would need to make sure that it does not break some
-    existing "hidden" dependencies.
+>=20
+> >
+> > etc,
+> >
+> > that makes it obvious that this mutex may be held for long periods of t=
+ime.
+> > In fact, this would be useful for RT workloads, as these mutexes could =
+be
+> > flagged to warn RT critical tasks if those tasks were to take one of th=
+em.
+> >
+> > There has been some talk to mark paths in the kernel that RT tasks would
+> > get a SIGKILL if they were to hit a path that is known to be non
+> > deterministic. =20
+>=20
+> Thanks for your information.
+>=20
 
-  + notifier_call_chain() uses RCU to process the list of registered
-    callbacks. I am not sure how complicated would be to make it safe
-    in both directions.
-
-Best Regards,
-Petr
