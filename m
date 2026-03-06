@@ -1,218 +1,274 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2335B37269E
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 08:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD9A33B6CB;
+	Fri,  6 Mar 2026 09:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772787519; cv=none; b=XSxRd0qYoavFIBWFsUyodLRGOMNYCHqVoqwtUsXjyaPeS1I0PYQwYkiiL6UxNLBCnY/ASD3N9VLqYZVWmnTrX0kZGeA4KxETcj30yiridVsg7kThhFKsrgH2fTC04x0YgLwAx54V+EKJ2uDQFVrgBiJfLulurOglruiEw+Q6fSk=
+	t=1772788508; cv=none; b=e+8vKnSn84cLNLd4ZqnhbpZQ8kIURZi7XqPNUAdVTGF1vkwY96Wprk7pcQZqALiso2xj+M5ginnmVgyAJ/eu6l2y/nFH+GVemtYGsUX4wnV8uZpVUki+WoGqVbpm++w6Mtq9LozfiSAAp/feMTT1fvNbOojpBxMNczzpuS6lCwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772787519; c=relaxed/simple;
-	bh=vK8EujEDrexBUyE9onbr5QObsp5hmCBAQnIt5+CgiI8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DW+25IEw3Dad7I8XgDOrXCreHYXbTpj4snedR8ux0HGX0BUWs6GDUp4/E/iCKw1OeRw2kglVAe83Odx+LfBLwVX3XsTK4ZE9QNGa5YfQrv6Qu8eiuYaDp7lxIxhRqaNtLLm6no+mfvfen4YaVqEpx2tmgiX5berhmpMQ/ouHwCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bZPOUVtB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772788508; c=relaxed/simple;
+	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MhkrUNew/kVjjDX00OOp2HBs5hVrUxZeQ+VO91IGOaVaGPyrv/7spRARgvL4zQSEQEm5Soq62lHODY+P8EFU2BSfjsBxus5wxEs6wP6knTO423TDZzAZK0kJ8WCPPK06gaQ5BB7kgguVlb6DEYYVM5ZKe5J9x4Q4fnwuwp8KipI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyR366hp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bZPOUVtB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772787515;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vK8EujEDrexBUyE9onbr5QObsp5hmCBAQnIt5+CgiI8=;
-	b=bZPOUVtBHGeUi/+iWV3VKteHtlctYE0gsVXeO/87rdDS0s0QzBN6RuNGhvVY+11qERGJpc
-	tWf1P7Nb/Nz5kIyJ5/FkRjZANLAdogkZZ74tvivyDcmccOrnodPDbd4vMqg7aoeSa+BPP6
-	NvatOAoP6zMQ7KeCEhK++RgfeJEC0Lc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-aA2SOTLHPU63ClfqdO5rtA-1; Fri, 06 Mar 2026 03:58:33 -0500
-X-MC-Unique: aA2SOTLHPU63ClfqdO5rtA-1
-X-Mimecast-MFC-AGG-ID: aA2SOTLHPU63ClfqdO5rtA_1772787512
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-483a24db6ecso112739465e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 00:58:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772787512; x=1773392312;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TxrEfYB+045MQE9+euU6LuOafMviwFOmlDaX4FfzPLE=;
-        b=IOMAmt8BBGOrAmBB98VvOdcIU4qOR5FNTF44Kws4ChddKpKFIFHq1bx3TRsZNf2Zwe
-         gMyNP53aO0cn1kaNZnCQ3FKgAJ/bgUEG5D41fpj6PDsYFm/j0hzRWtHOlfS4pS6lfXoE
-         WXmPuow+aHIji5PUaZE2NAATbWMRDS2cWWv233X5iARxXzDIVUBE+eoO6XKVphi3YICP
-         Dm3IwJ2ZFc8ob7jgO7cpqinacy2lu520e/ErzfEjKvMOF2/ZKVm+5Bl1hArl3A/1FZGv
-         w0PtnH5xCMp0eNH3uDVFR0TNKExZXhd6udEImkuP+1IO8Y6SgwQMX5vrOwBeZyNSa4UI
-         FMIw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4O/P7JlYtghC0odu8TNWOKCPIX00cebyz41jEX2Up9SVcvrQ3CrVGF13+78jCOgbqPSoHatN1BBTrpVBh+SoUrFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKStY6hEnap2qJ7D68tzBeBpYSnGK2Cg2lfIYOJED4DTRdQiEd
-	g4p3JxHtgo9b4uCkHFBc6B+5lTez/eRFdhoNtWryKRK9yDPJh6wB6sDiCJuS9tF4wW/MX4SBmVq
-	+T8OS04z7gj1CWAyG7BnmgYBSfvtJCPJDTuK2Z5ceF3gG59VuT9703J4a7VeH9uD8GeDjl4eTLA
-	==
-X-Gm-Gg: ATEYQzwB8r6OV5pWHwtRRxXgGokyz88mrk5nk6bOkQOVN2RMZl6PuSJZzdpABsPw8yd
-	UUOqtgZMfld018HqVFLuEYZH0Rm+ywfa6dJzfHuFWFak025TLT30zfQLgMO+C4aw4c+ZtWex/oR
-	Ba18K6EWrNI5bSMj+1GplAXrssYapM2a8hv8y1PZX0YxBlWcFvYer0S3Zkn5EmJyTP3QclE5TKk
-	JWGZ7aN93rpYZydAHwbM5mlw6z/B1kV63kbyGl+ca59QqLa/HJOREbUuM5iKz0LURAxpxc5pS+x
-	20vcOXCR89nzB8CqGCMk6BUDJXA9cGnZF9itGvRTHmiU1DtwVrp0kL6HINXAcLNBMIOrQ5yOjSe
-	uOtbaeCOCGxMr075v9tsHEOw6Rr9Xd6RIprtZxG6bcfiSSzpLgO14q/Vgl6IzJs13ZlwwuSugo1
-	JOCr34RN4WFG+3PJ8=
-X-Received: by 2002:a05:600c:8b83:b0:477:fcb:2256 with SMTP id 5b1f17b1804b1-48526957be7mr22259855e9.17.1772787512146;
-        Fri, 06 Mar 2026 00:58:32 -0800 (PST)
-X-Received: by 2002:a05:600c:8b83:b0:477:fcb:2256 with SMTP id 5b1f17b1804b1-48526957be7mr22259435e9.17.1772787511731;
-        Fri, 06 Mar 2026 00:58:31 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb (212-8-243-115.hosted-by-worldstream.net. [212.8.243.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48527681e3fsm19678165e9.6.2026.03.06.00.58.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 00:58:31 -0800 (PST)
-Message-ID: <8eb489498632b4e73ce116b59ce7d649453620ef.camel@redhat.com>
-Subject: Re: [PATCH v6 08/16] sched: Add task enqueue/dequeue trace points
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Nam
- Cao	 <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>, Masami
- Hiramatsu	 <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, K Prateek
- Nayak	 <kprateek.nayak@amd.com>, linux-trace-kernel@vger.kernel.org
-Date: Fri, 06 Mar 2026 09:58:29 +0100
-In-Reply-To: <20260225095122.80683-9-gmonaco@redhat.com>
-References: <20260225095122.80683-1-gmonaco@redhat.com>
-	 <20260225095122.80683-9-gmonaco@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyR366hp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C425BC4CEF7;
+	Fri,  6 Mar 2026 09:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772788507;
+	bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TyR366hpH5SBgvb3stJOO+3+JgB4eyp8Ub6SIcEY5Wv5+DIXq3qwQ1akUuyGzm4GI
+	 oVWqv0SYGKFQk/aIJcLbDc3SkZdh03GwnjPJPfc8DHBxnnTk3pTwokbH2aquirHejB
+	 nz1gJxpKMhkWSd0cvlbIm12Yo0dUUSzlaMGnA70lo5LCfYmGHYkoB3BEoaWxEw9skO
+	 0XSBCv8+kTn/Gf5HrA+24udlPqxoLhC1731SEC00PUdG+t6hKArOjAPEtT/hHxR1LY
+	 s+VuE2scXcViJMBvNGcnMzw7bfK0RAeQxP1RLAMHfxMD+S62KQ5DOUo/0QF6h57vkJ
+	 rf8R3FiiVNktg==
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	fsverity@lists.linux.dev,
+	linux-mm@kvack.org,
+	netfs@lists.linux.dev,
+	linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-nfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-nilfs@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	autofs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu,
+	ecryptfs@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net,
+	ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	selinux@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	netdev@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-hams@vger.kernel.org,
+	linux-x25@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jan Kara <jack@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Steve French <sfrench@samba.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Ian Kent <raven@themaw.net>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	coda@cs.cmu.edu,
+	Nicolas Pitre <nico@fluxnic.net>,
+	Tyler Hicks <code@tyhicks.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Anders Larsen <al@alarsen.net>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Martin Schiller <ms@dev.tdt.de>,
+	Eric Paris <eparis@redhat.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	David Ahern <dsahern@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>
+Subject: Re: [PATCH v3 00/12] vfs: change inode->i_ino from unsigned long to u64
+Date: Fri,  6 Mar 2026 10:09:33 +0100
+Message-ID: <20260306-kennen-zubrot-2605fcfd6950@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
+References: <20260304-iino-u64-v3-0-2257ad83d372@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zGTU6S6oHIPZylrYLEtD3CveCANOEGIygUOEDg_4d_4_1772787512
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2708; i=brauner@kernel.org; h=from:subject:message-id; bh=7RvOdnrFs/iEe9G84pPe+q4PLv+gFd3Sa58Nl0eTC8M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSumvWu2uNxbBFXikaZQKrMtl0PLj1c+kZGWOrvZiHz/ W/CTGOed5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzk4A5GhimT869vPnNH4Vqj t6Tr0fqPLXs3v0g/qbXpwf6o52L5D7YyMnxU+idovG+O5JQe0WVOK45/sI9bw9AjJfah78/izrQ aXg4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Peter,
+On Wed, 04 Mar 2026 10:32:30 -0500, Jeff Layton wrote:
+> Christian said [1] to "just do it" when I proposed this, so here we are!
+> 
+> For historical reasons, the inode->i_ino field is an unsigned long,
+> which means that it's 32 bits on 32 bit architectures. This has caused a
+> number of filesystems to implement hacks to hash a 64-bit identifier
+> into a 32-bit field, and deprives us of a universal identifier field for
+> an inode.
+> 
+> [...]
 
-On Wed, 2026-02-25 at 10:51 +0100, Gabriele Monaco wrote:
-> From: Nam Cao <namcao@linutronix.de>
->=20
-> Add trace points into enqueue_task() and dequeue_task().
->=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> Co-developed-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+This series makes me happy. We've been talking about this conversion for
+a while and I'm thankful that you did this work. Without the automation
+available this probably wouldn't have happened as quickly as it did now.
+Let's see what bits and pieces it missed.
 
+---
 
-Could I get your Ack to this?
+Applied to the vfs-7.1.kino branch of the vfs/vfs.git tree.
+Patches in the vfs-7.1.kino branch should appear in linux-next soon.
 
-Thanks,
-Gabriele
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> ---
->=20
-> Notes:
-> =C2=A0=C2=A0=C2=A0 V5:
-> =C2=A0=C2=A0=C2=A0 * Do not fire enqueue tracepoint for delayed enqueues
->=20
-> =C2=A0include/trace/events/sched.h |=C2=A0 8 ++++++++
-> =C2=A0kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 12 +++++++++++-
-> =C2=A0kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 2 ++
-> =C2=A03 files changed, 21 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 7b2645b50e78..5844147ec5fd 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -896,6 +896,14 @@ DECLARE_TRACE(sched_set_need_resched,
-> =C2=A0=09TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-> =C2=A0=09TP_ARGS(tsk, cpu, tif));
-> =C2=A0
-> +DECLARE_TRACE(sched_enqueue,
-> +=09TP_PROTO(struct task_struct *tsk, int cpu),
-> +=09TP_ARGS(tsk, cpu));
-> +
-> +DECLARE_TRACE(sched_dequeue,
-> +=09TP_PROTO(struct task_struct *tsk, int cpu),
-> +=09TP_ARGS(tsk, cpu));
-> +
-> =C2=A0#endif /* _TRACE_SCHED_H */
-> =C2=A0
-> =C2=A0/* This part must be outside protection */
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 759777694c78..4ca79ff58fca 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -122,6 +122,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp)=
-;
-> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_entry_tp);
-> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_exit_tp);
-> =C2=A0EXPORT_TRACEPOINT_SYMBOL_GPL(sched_set_need_resched_tp);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_enqueue_tp);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_dequeue_tp);
-> =C2=A0
-> =C2=A0DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-> =C2=A0DEFINE_PER_CPU(struct rnd_state, sched_rnd_state);
-> @@ -2094,6 +2096,9 @@ unsigned long get_wchan(struct task_struct *p)
-> =C2=A0
-> =C2=A0void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
-> =C2=A0{
-> +=09if (trace_sched_enqueue_tp_enabled() && !(flags & ENQUEUE_DELAYED))
-> +=09=09trace_sched_enqueue_tp(p, rq->cpu);
-> +
-> =C2=A0=09if (!(flags & ENQUEUE_NOCLOCK))
-> =C2=A0=09=09update_rq_clock(rq);
-> =C2=A0
-> @@ -2120,6 +2125,8 @@ void enqueue_task(struct rq *rq, struct task_struct=
- *p,
-> int flags)
-> =C2=A0 */
-> =C2=A0inline bool dequeue_task(struct rq *rq, struct task_struct *p, int =
-flags)
-> =C2=A0{
-> +=09int ret;
-> +
-> =C2=A0=09if (sched_core_enabled(rq))
-> =C2=A0=09=09sched_core_dequeue(rq, p, flags);
-> =C2=A0
-> @@ -2136,7 +2143,10 @@ inline bool dequeue_task(struct rq *rq, struct
-> task_struct *p, int flags)
-> =C2=A0=09 * and mark the task ->sched_delayed.
-> =C2=A0=09 */
-> =C2=A0=09uclamp_rq_dec(rq, p);
-> -=09return p->sched_class->dequeue_task(rq, p, flags);
-> +=09ret =3D p->sched_class->dequeue_task(rq, p, flags);
-> +=09if (trace_sched_dequeue_tp_enabled() && !(flags & DEQUEUE_SLEEP))
-> +=09=09trace_sched_dequeue_tp(p, rq->cpu);
-> +=09return ret;
-> =C2=A0}
-> =C2=A0
-> =C2=A0void activate_task(struct rq *rq, struct task_struct *p, int flags)
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index b82fb70a9d54..a83177742603 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2944,6 +2944,8 @@ static inline void sub_nr_running(struct rq *rq,
-> unsigned count)
-> =C2=A0
-> =C2=A0static inline void __block_task(struct rq *rq, struct task_struct *=
-p)
-> =C2=A0{
-> +=09trace_sched_dequeue_tp(p, rq->cpu);
-> +
-> =C2=A0=09if (p->sched_contributes_to_load)
-> =C2=A0=09=09rq->nr_uninterruptible++;
-> =C2=A0
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-7.1.kino
+
+[01/12] vfs: widen inode hash/lookup functions to u64
+        https://git.kernel.org/vfs/vfs/c/2412a9fa518a
+[02/12] audit: widen ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/a5e863be4d02
+[03/12] net: change sock.sk_ino and sock_i_ino() to u64
+        https://git.kernel.org/vfs/vfs/c/c21144a0a33f
+[04/12] vfs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/5e5c380870b2
+[05/12] cachefiles: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/25291f67aad7
+[06/12] ext2: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/797d04a355e3
+[07/12] hugetlbfs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/3c976fb36a9a
+[08/12] zonefs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/988f68c01b3a
+[09/12] ext4: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/1c1427c79bc2
+[10/12] f2fs: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/6e62bf74bd8a
+[11/12] nilfs2: widen trace event i_ino fields to u64
+        https://git.kernel.org/vfs/vfs/c/6ce73711525a
+[12/12] treewide: change inode->i_ino from unsigned long to u64
+        https://git.kernel.org/vfs/vfs/c/af82d143e869
