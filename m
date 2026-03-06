@@ -1,54 +1,54 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5493A3BE17D
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 14:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672E134D90C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772807775; cv=none; b=AMLA3WaTtJEbSkdGCFnYQmaBRAqeAdSpb+jYdZ0Wu0zie3HMitjKcWYa5lEfGS6zqZ2FGr1DsnEUdlA7BbtziIEbORQUrjaW5dE/JKw4WaImZINHBCcDbD4XcYgLNG1HN3Gbyz4nIBOG5UhX3M3IrjNPbNrLRzSBDS4u4dznn4c=
+	t=1772807776; cv=none; b=CRHcaTv4+wsVw9dWV0GSJoD+vtMozoHiDOQoVn1lcmruXYcoGrP395/XEmMnBvlXRJujKhQJjc/OGVG7JG4UwpUUjtI4Jxkoz6whxDwgReCWksSBuwe4GfBb4wA3iTxaPul4yYaqSPSyJL+5KYPVRYksMSr7StgRhCQFKEq4p6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772807775; c=relaxed/simple;
-	bh=wFFwKKRSoeQ+hvE9YtKcm+s8Wq0rCUCB3HKs84iPvt0=;
+	s=arc-20240116; t=1772807776; c=relaxed/simple;
+	bh=h2rVCYiv2RErJ8J/DPs4R6liat0vq1OWoPSAfx6DS2s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g68VA2k6p197DxFhw4eVMszJ2pssaeKQ1AEciXzrwtAuwESCTyEeGqdolx7+U6PspvZ6A8c6NCEhZcg3L8vrmlCL952zZABzDK5w9Cda/OBlS+1qkLESvGLrb+byvdnlovRWCfGst/7BZNokmu+LQ6S313MctfA+QGvzsn5gMJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gcJz4L/L; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=Ec3ms5IkSvjrjUuF+u0pdqXBcuJkHOhmt9n9tz5mDMAxL9pBionX3qVXSjitme+ydy0R/pE37p6vP3UrgECm0Ak3fOIGSw9n6D/MFpg2z8FwZfC0nCDZsTGmcNxj3EAxv3RXWgJbs8Nv0iw8dd7Y4to9kzUCAgWrp+J6fRJ22kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BR06Cbc8; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gcJz4L/L"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-48378df3469so66699075e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 06:36:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BR06Cbc8"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-6613679e8cbso2978031a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 06:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772807772; x=1773412572; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1772807773; x=1773412573; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d8Z7WAdfX72ZQ1vrHpbOchqHWcE4sgC6MSulzPzgnyE=;
-        b=gcJz4L/L8lmO3cIZ7xP0qxAYg40aapgwHayJsqZyqOd7VesHuWBfd7gJLTh/swLZte
-         HT0LxLlWvwOlfAvlPacdl6VDvx7nUGv3cR5BoX8rDjw/FDs/exrUUDwp8yYyBzm1Gpmz
-         K8BNdHtYaIX7t/J7xaMzSlEr8h1FX+zlhodXe+9QCzuPcUDX5f8LFhWzDFSJlsRSQ+d0
-         3UX7R7vbh30ztsA47C9uq7/0tpvzi37SZU4oWL3SYOZ3ksoGyU7jKClSJ3K3iJbKiBNi
-         4QFCsGR9tSVjezKKTs8QzJk1VuiO5h3WJSzOuHXum5kPJwSUiIqMuS34TFRpzx9VqESY
-         lgrg==
+        bh=xnACahr8ULD6CcAQo9gjmAw66hUMbPmLgQ2wO/RqDz0=;
+        b=BR06Cbc8wg5UXrEC0B44krBF2jZP3WL6Jf2GYftbLNkeiZFDkj3QPrwjxPnF7nacvJ
+         hfu/plIGQC6fVjd75jUUeFc16IRPLZIPhJCvp2RsUuKHPR7tWPZmAdwPCuGBIMkNqMNi
+         5G5Lo2IClVSugXGMnLxxOXHGxN5ym5vgI2VC4TWe7T4ZvPdOq/wkybjSRvKX4EQcSkrs
+         650yUPiusXFyfT87/umttVDuDNwvCfQuuoH20gLC0xLHfbesVWUS+pQi82OXKzKFUX+3
+         khUsYNbY7bgpZaFhO1joR2vNM6ggHRGvboMOacxnrFfgeXjPitvw+M5dFnO8Frg6IuRh
+         oKrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772807772; x=1773412572;
+        d=1e100.net; s=20230601; t=1772807773; x=1773412573;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d8Z7WAdfX72ZQ1vrHpbOchqHWcE4sgC6MSulzPzgnyE=;
-        b=vJwUS8pf9PhpidBxuj68xDDprvDJtJFPsCHTE6vjOKlv/BQvTw4EiE+CR3baVx0Mdj
-         jZoYCDrn6tUqiRzLW+XeEybGGo0LdJ7tz92VS+h2JkMcW6K5v39DRVeRoGOu6wjisxrn
-         26rjGoQTV6eT5wVeZu7dVet4H6kN6t/4Scfvc4blQVO0o1x3AKVuHRDMF5ehraXg9TQ5
-         +TKcTyYS2iNSV3elR+7SXSWzidUXzCEilaE1G2HAem6MChXPyM4ttOf1biCosxxV/BP7
-         /aRhd3VmdOq8LpoMBAkcYZzlPgsrzMlN+sDu82Ue1XgV8S1RXVKU5jWApvS61g5TIPv0
-         h97A==
-X-Forwarded-Encrypted: i=1; AJvYcCVh89doOjr7e0o5LCOWxxhBn0QoUdHsZq1Q+6u0462Y6/2odGuGbwxP0ObtQFYzEmSd6EgzBJMS3PS3oIa/HL2H5jQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRlbYn+EUopGIspYrskuSgI/onaHh0+jNIaVrsr1m5CC1w6K1i
-	vezxk3NY3ZL9dmPLSFsO1Lzo0nemlraOA3SA59aZU+lVKtYqt2EKaEPD2ICilFXWqkcEvLUolB2
-	UXp6i3LmS45J6VX+Hs9/Fgw==
-X-Received: from wrbby19.prod.google.com ([2002:a05:6000:993:b0:439:c3d1:a394])
+        bh=xnACahr8ULD6CcAQo9gjmAw66hUMbPmLgQ2wO/RqDz0=;
+        b=Otkj+M6zTB3hTOWH2kwZFs/ntZTdHOcWQcj9mrLuZOJBZON1GMrWiWWPvPeh9gakRY
+         wn4eefhkrBsgxI9YtlJKklDTgQ/m8lfcGC0go8YnQ1OjOqSLW/2i31+ey+nkqsmE3P30
+         pZHtUbpM1TMwOwk1Tq5ukG7bAvDl1Q+vfwexmxiXIS87wflZyB57Ntn5JFfiGZlonM/O
+         wsTTSZnmInh9jdVunJJ9Tu4F+vOJ1qVe/u24XGSmaWKkCCxCZbsVcUa7mg1OTtInZyvo
+         RpOPePH06NnF/0c7jqMerlsJPlV2UcV/wz7FZiZ8miK61vWjkB8Qyqnuq6f8F/mIgSm4
+         +zQA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkhVz6rF2NWkNdWKt/fNB/qnBjF9IZSGSL3sVLQqjlsHdMlBpy004kOW0t6a7wEimXDNB7QqD7Iwb2y7qJPU356Yo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7A36V1zBf/nB59Sn49pgncw8HqDW5zfVwn5rPluBO3TuYop2B
+	mUpzrkXuql+mMHmpjbh6TWYMRPjFxl3792ITQNlwxDQyJc16xgkNsur9O2VUI4BeDmy52JmtHsR
+	FO1RDNOY94eOWcSAWFKnzLw==
+X-Received: from edrs15.prod.google.com ([2002:aa7:c54f:0:b0:660:a4e3:2ed2])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a7b:c7cd:0:b0:483:78e7:ce15 with SMTP id 5b1f17b1804b1-4851eea0e51mr82902955e9.13.1772807771399;
- Fri, 06 Mar 2026 06:36:11 -0800 (PST)
-Date: Fri,  6 Mar 2026 14:35:23 +0000
+ 2002:a05:6402:430c:b0:65a:2ec5:99c0 with SMTP id 4fb4d7f45d1cf-6619d4565b4mr1408474a12.3.1772807772463;
+ Fri, 06 Mar 2026 06:36:12 -0800 (PST)
+Date: Fri,  6 Mar 2026 14:35:24 +0000
 In-Reply-To: <20260306143536.339777-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260306143536.339777-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260306143536.339777-20-vdonnefort@google.com>
-Subject: [PATCH v13 19/32] KVM: arm64: Add PKVM_DISABLE_STAGE2_ON_PANIC
+Message-ID: <20260306143536.339777-21-vdonnefort@google.com>
+Subject: [PATCH v13 20/32] KVM: arm64: Add clock support to nVHE/pKVM hyp
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -67,188 +67,133 @@ To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
 Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
 	jstultz@google.com, qperret@google.com, will@kernel.org, 
 	aneesh.kumar@kernel.org, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On NVHE_EL2_DEBUG, when using pKVM, the host stage-2 is relaxed to grant
-the kernel access to the stacktrace, hypervisor bug table and text to
-symbolize addresses. This is unsafe for production. In preparation for
-adding more debug options to NVHE_EL2_DEBUG, decouple the stage-2
-relaxation into a separate option.
+In preparation for supporting tracing from the nVHE hyp, add support to
+generate timestamps with a clock fed by the CNTCVT counter. The clock
+can be kept in sync with the kernel's by updating the slope values. This
+will be done later.
 
-While at it, rename PROTECTED_NVHE_STACKTRACE into PKVM_STACKTRACE,
-following the same naming scheme as PKVM_DISABLE_STAGE2_ON_PANIC.
+As current we do only create a trace clock, make the whole support
+dependent on the upcoming CONFIG_NVHE_EL2_TRACING.
 
-Reviewed-by: Kalesh Singh <kaleshsingh@google.com>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 7d1f22fd490b..14b2d0b0b831 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -42,9 +42,27 @@ menuconfig KVM
- 
- 	  If unsure, say N.
- 
-+if KVM
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/clock.h b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+new file mode 100644
+index 000000000000..9f429f5c0664
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ARM64_KVM_HYP_NVHE_CLOCK_H
++#define __ARM64_KVM_HYP_NVHE_CLOCK_H
++#include <linux/types.h>
 +
-+config PTDUMP_STAGE2_DEBUGFS
-+	bool "Present the stage-2 pagetables to debugfs"
-+	depends on DEBUG_KERNEL
-+	depends on DEBUG_FS
-+	depends on ARCH_HAS_PTDUMP
-+	select PTDUMP
-+	default n
-+	help
-+	  Say Y here if you want to show the stage-2 kernel pagetables
-+	  layout in a debugfs file. This information is only useful for kernel developers
-+	  who are working in architecture specific areas of the kernel.
-+	  It is probably not a good idea to enable this feature in a production
-+	  kernel.
++#include <asm/kvm_hyp.h>
 +
-+	  If in doubt, say N.
++#ifdef CONFIG_NVHE_EL2_TRACING
++void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc);
++u64 trace_clock(void);
++#else
++static inline void
++trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc) { }
++static inline u64 trace_clock(void) { return 0; }
++#endif
++#endif
+diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+index a244ec25f8c5..8dc95257c291 100644
+--- a/arch/arm64/kvm/hyp/nvhe/Makefile
++++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+@@ -17,7 +17,7 @@ ccflags-y += -fno-stack-protector	\
+ hostprogs := gen-hyprel
+ HOST_EXTRACFLAGS += -I$(objtree)/include
+ 
+-lib-objs := clear_page.o copy_page.o memcpy.o memset.o
++lib-objs := clear_page.o copy_page.o memcpy.o memset.o tishift.o
+ lib-objs := $(addprefix ../../../lib/, $(lib-objs))
+ 
+ CFLAGS_switch.nvhe.o += -Wno-override-init
+@@ -29,6 +29,7 @@ hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
+ 	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
+ hyp-obj-y += ../../../kernel/smccc-call.o
+ hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
++hyp-obj-$(CONFIG_NVHE_EL2_TRACING) += clock.o
+ hyp-obj-y += $(lib-objs)
+ 
+ ##
+diff --git a/arch/arm64/kvm/hyp/nvhe/clock.c b/arch/arm64/kvm/hyp/nvhe/clock.c
+new file mode 100644
+index 000000000000..32fc4313fe43
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/nvhe/clock.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Google LLC
++ * Author: Vincent Donnefort <vdonnefort@google.com>
++ */
 +
- config NVHE_EL2_DEBUG
- 	bool "Debug mode for non-VHE EL2 object"
--	depends on KVM
-+	default n
- 	help
- 	  Say Y here to enable the debug mode for the non-VHE KVM EL2 object.
- 	  Failure reports will BUG() in the hypervisor. This is intended for
-@@ -52,10 +70,23 @@ config NVHE_EL2_DEBUG
- 
- 	  If unsure, say N.
- 
--config PROTECTED_NVHE_STACKTRACE
--	bool "Protected KVM hypervisor stacktraces"
--	depends on NVHE_EL2_DEBUG
-+if NVHE_EL2_DEBUG
++#include <nvhe/clock.h>
 +
-+config PKVM_DISABLE_STAGE2_ON_PANIC
-+	bool "Disable the host stage-2 on panic"
- 	default n
-+	help
-+	  Relax the host stage-2 on hypervisor panic to allow the kernel to
-+	  unwind and symbolize the hypervisor stacktrace. This however tampers
-+	  the system security. This is intended for local EL2 hypervisor
-+	  development.
++#include <asm/arch_timer.h>
++#include <asm/div64.h>
 +
-+	  If unsure, say N.
++static struct clock_data {
++	struct {
++		u32 mult;
++		u32 shift;
++		u64 epoch_ns;
++		u64 epoch_cyc;
++		u64 cyc_overflow64;
++	} data[2];
++	u64 cur;
++} trace_clock_data;
 +
-+config PKVM_STACKTRACE
-+	bool "Protected KVM hypervisor stacktraces"
-+	depends on PKVM_DISABLE_STAGE2_ON_PANIC
-+	default y
- 	help
- 	  Say Y here to enable pKVM hypervisor stacktraces on hyp_panic()
- 
-@@ -65,21 +96,6 @@ config PROTECTED_NVHE_STACKTRACE
- 
- 	  If unsure, or not using protected nVHE (pKVM), say N.
- 
--config PTDUMP_STAGE2_DEBUGFS
--	bool "Present the stage-2 pagetables to debugfs"
--	depends on KVM
--	depends on DEBUG_KERNEL
--	depends on DEBUG_FS
--	depends on ARCH_HAS_PTDUMP
--	select PTDUMP
--	default n
--	help
--	  Say Y here if you want to show the stage-2 kernel pagetables
--	  layout in a debugfs file. This information is only useful for kernel developers
--	  who are working in architecture specific areas of the kernel.
--	  It is probably not a good idea to enable this feature in a production
--	  kernel.
--
--	  If in doubt, say N.
--
-+endif # NVHE_EL2_DEBUG
-+endif # KVM
- endif # VIRTUALIZATION
-diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-index cc7d5d1709cb..54aedf93c78b 100644
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -539,7 +539,7 @@ void __noreturn __cold nvhe_hyp_panic_handler(u64 esr, u64 spsr,
- 
- 		/* All hyp bugs, including warnings, are treated as fatal. */
- 		if (!is_protected_kvm_enabled() ||
--		    IS_ENABLED(CONFIG_NVHE_EL2_DEBUG)) {
-+		    IS_ENABLED(CONFIG_PKVM_DISABLE_STAGE2_ON_PANIC)) {
- 			struct bug_entry *bug = find_bug(elr_in_kimg);
- 
- 			if (bug)
-diff --git a/arch/arm64/kvm/hyp/nvhe/host.S b/arch/arm64/kvm/hyp/nvhe/host.S
-index eef15b374abb..3092befcd97c 100644
---- a/arch/arm64/kvm/hyp/nvhe/host.S
-+++ b/arch/arm64/kvm/hyp/nvhe/host.S
-@@ -120,7 +120,7 @@ SYM_FUNC_START(__hyp_do_panic)
- 
- 	mov	x29, x0
- 
--#ifdef CONFIG_NVHE_EL2_DEBUG
-+#ifdef PKVM_DISABLE_STAGE2_ON_PANIC
- 	/* Ensure host stage-2 is disabled */
- 	mrs	x0, hcr_el2
- 	bic	x0, x0, #HCR_VM
-diff --git a/arch/arm64/kvm/hyp/nvhe/stacktrace.c b/arch/arm64/kvm/hyp/nvhe/stacktrace.c
-index 5b6eeab1a774..7c832d60d22b 100644
---- a/arch/arm64/kvm/hyp/nvhe/stacktrace.c
-+++ b/arch/arm64/kvm/hyp/nvhe/stacktrace.c
-@@ -34,7 +34,7 @@ static void hyp_prepare_backtrace(unsigned long fp, unsigned long pc)
- 	stacktrace_info->pc = pc;
- }
- 
--#ifdef CONFIG_PROTECTED_NVHE_STACKTRACE
-+#ifdef CONFIG_PKVM_STACKTRACE
- #include <asm/stacktrace/nvhe.h>
- 
- DEFINE_PER_CPU(unsigned long [NVHE_STACKTRACE_SIZE/sizeof(long)], pkvm_stacktrace);
-@@ -134,11 +134,11 @@ static void pkvm_save_backtrace(unsigned long fp, unsigned long pc)
- 
- 	unwind(&state, pkvm_save_backtrace_entry, &idx);
- }
--#else /* !CONFIG_PROTECTED_NVHE_STACKTRACE */
-+#else /* !CONFIG_PKVM_STACKTRACE */
- static void pkvm_save_backtrace(unsigned long fp, unsigned long pc)
- {
- }
--#endif /* CONFIG_PROTECTED_NVHE_STACKTRACE */
-+#endif /* CONFIG_PKVM_STACKTRACE */
- 
- /*
-  * kvm_nvhe_prepare_backtrace - prepare to dump the nVHE backtrace
-diff --git a/arch/arm64/kvm/stacktrace.c b/arch/arm64/kvm/stacktrace.c
-index af5eec681127..9724c320126b 100644
---- a/arch/arm64/kvm/stacktrace.c
-+++ b/arch/arm64/kvm/stacktrace.c
-@@ -197,7 +197,7 @@ static void hyp_dump_backtrace(unsigned long hyp_offset)
- 	kvm_nvhe_dump_backtrace_end();
- }
- 
--#ifdef CONFIG_PROTECTED_NVHE_STACKTRACE
-+#ifdef CONFIG_PKVM_STACKTRACE
- DECLARE_KVM_NVHE_PER_CPU(unsigned long [NVHE_STACKTRACE_SIZE/sizeof(long)],
- 			 pkvm_stacktrace);
- 
-@@ -225,12 +225,12 @@ static void pkvm_dump_backtrace(unsigned long hyp_offset)
- 		kvm_nvhe_dump_backtrace_entry((void *)hyp_offset, stacktrace[i]);
- 	kvm_nvhe_dump_backtrace_end();
- }
--#else	/* !CONFIG_PROTECTED_NVHE_STACKTRACE */
-+#else	/* !CONFIG_PKVM_STACKTRACE */
- static void pkvm_dump_backtrace(unsigned long hyp_offset)
- {
--	kvm_err("Cannot dump pKVM nVHE stacktrace: !CONFIG_PROTECTED_NVHE_STACKTRACE\n");
-+	kvm_err("Cannot dump pKVM nVHE stacktrace: !CONFIG_PKVM_STACKTRACE\n");
- }
--#endif /* CONFIG_PROTECTED_NVHE_STACKTRACE */
-+#endif /* CONFIG_PKVM_STACKTRACE */
- 
- /*
-  * kvm_nvhe_dump_backtrace - Dump KVM nVHE hypervisor backtrace.
++static u64 __clock_mult_uint128(u64 cyc, u32 mult, u32 shift)
++{
++	__uint128_t ns = (__uint128_t)cyc * mult;
++
++	ns >>= shift;
++
++	return (u64)ns;
++}
++
++/* Does not guarantee no reader on the modified bank. */
++void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
++{
++	struct clock_data *clock = &trace_clock_data;
++	u64 bank = clock->cur ^ 1;
++
++	clock->data[bank].mult			= mult;
++	clock->data[bank].shift			= shift;
++	clock->data[bank].epoch_ns		= epoch_ns;
++	clock->data[bank].epoch_cyc		= epoch_cyc;
++	clock->data[bank].cyc_overflow64	= ULONG_MAX / mult;
++
++	smp_store_release(&clock->cur, bank);
++}
++
++/* Use untrusted host data */
++u64 trace_clock(void)
++{
++	struct clock_data *clock = &trace_clock_data;
++	u64 bank = smp_load_acquire(&clock->cur);
++	u64 cyc, ns;
++
++	cyc = __arch_counter_get_cntvct() - clock->data[bank].epoch_cyc;
++
++	if (likely(cyc < clock->data[bank].cyc_overflow64)) {
++		ns = cyc * clock->data[bank].mult;
++		ns >>= clock->data[bank].shift;
++	} else {
++		ns = __clock_mult_uint128(cyc, clock->data[bank].mult,
++					  clock->data[bank].shift);
++	}
++
++	return (u64)ns + clock->data[bank].epoch_ns;
++}
 -- 
 2.53.0.473.g4a7958ca14-goog
 
