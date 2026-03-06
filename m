@@ -1,122 +1,208 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B9B1FC7FB
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 08:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7F2313558;
+	Fri,  6 Mar 2026 08:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772784114; cv=none; b=iVRY2Z2QaW7fqhvNCki0srOQp/WM5fFVllyI14mCmPhgQpevn8HOmggW1qV3XRKTAs1JV/n3Jv7Q9w5T9sMUCO8S+r3nUy4htc987AryKvAqEpx9EFXFo1ALs7DyHx1800ybf8+1oa9roQOdEwmEy0jcfjJYFpFnZQbqIbW40ks=
+	t=1772784362; cv=none; b=rH3skYcbp8pBkJv7ER5j96DHPMn/0OTa0g1gsD8yMEJDEaFOa1qyZ5EOI/dCUqLr+iloioCxoXof8gp7thoelSYe2Pes6P/tG8sQqgbz/4H2haX2Apqm898iK9qDKpVMIGFwC9OEDMDxz+ViOi2c2vZApNev/4pr6H3uVgkoNW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772784114; c=relaxed/simple;
-	bh=r86bYWmgJvYIJixbP6qjPCwoNkmdAiOFFtwK5AChiCY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yd15klKh6TcNi+cBsxbRfNzdM187diw0yegYjZOV7Do6/EhSKKPU7TBvaLCHiAld9ViBEiwIafrU0b2Jhq7okp9owjlIBLtSDsecxq7iyzZQlYD/cgX24X6pf3IT/A+Ggjg7Wjf05NCdnF16mz/8sHH9FYxYOCjpQcVTK/RioKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b=B8wtgnUU; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+	s=arc-20240116; t=1772784362; c=relaxed/simple;
+	bh=LBnLAIcGHsesTcn5+nCMswocvTfZ7iqXSC/2rWKf6mo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=l9r5ARc5PtedPIU9thEAk5GlOr3zWarbO/7JPgdbu6Xcx4EaJva7adES6YAgZjtLO88HIgZEt/FOijSygGw6IBQuFKha0XXvlgEPHeQjT7iHuD3YfpL6aGPQ4Eg/AZZOaMRuJ85tEW3PGSzcIAMcOV82PNEEPFwFxzKJ6z6JuxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7IawFCH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unisoc.com header.i=@unisoc.com header.b="B8wtgnUU"
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 62680Evf077596;
-	Fri, 6 Mar 2026 16:00:14 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (BJMBX01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4fRzM064CSz2NK5vR;
-	Fri,  6 Mar 2026 15:59:08 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Fri, 6 Mar 2026 16:00:11 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <elver@google.com>,
-        <kees@kernel.org>
-CC: <lorenzo.stoakes@oracle.com>, <brauner@kernel.org>,
-        <schuster.simon@siemens-energy.com>, <david@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <guohua.yan@unisoc.com>, <ke.wang@unisoc.com>,
-        <xuewen.yan94@gmail.com>, <jing.xia@unisoc.com>
-Subject: [PATCH V2] tracing: Revert "tracing: Remove pid in task_rename tracing output"
-Date: Fri, 6 Mar 2026 15:59:54 +0800
-Message-ID: <20260306075954.4533-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7IawFCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D07EEC4CEF7;
+	Fri,  6 Mar 2026 08:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772784362;
+	bh=LBnLAIcGHsesTcn5+nCMswocvTfZ7iqXSC/2rWKf6mo=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=e7IawFCHAhTtgO2GugIeECwEAMAUwS7CAhKdLOxCNwho2wzUPrFmxuX0/LHIKh4Kw
+	 qraeumJ9ZyUL57jNsPz2RIDPJu/e0skvhJsg7SPOAgHZWcL4wA41gYL6zd+LS3tapH
+	 b4Pd4tRflwrRsgHHdIQkUGAAYYcHq41rSp3OsLdy8ARqGbWLeGLMs999tv6BBhu+cy
+	 10G0W/9KMXIiaWZrXgag1vJzwIY6HCA+8DjBbKyU5wuZhatlvNDmiV4zOTYa6PxYIJ
+	 Ex+l2q4U7fRWA3kjpxzxDE2jrt1NzEyabYTyDqMGKONV5Peg3xCTHd/3B6baFYUWXF
+	 W6t1hx5WKLGqQ==
+Message-ID: <3b0b7f7f-c1b0-4f1c-bece-ce0cae130cb5@kernel.org>
+Date: Fri, 6 Mar 2026 09:05:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 62680Evf077596
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unisoc.com;
-	s=default; t=1772784041;
-	bh=GNpRpMauuj7gFsNQV7OtGtgexum9Eop40z9zrHZikbk=;
-	h=From:To:CC:Subject:Date;
-	b=B8wtgnUUP6i1nV5h/Nj+Xh0dwwq4OjaS59ApqA906N3mMwcY8xqjJzMkvVozVPocv
-	 UQdKZ0QO4nBOkT3+iRm64A4Ytenh40QpkMoOiuPwaykabo6k+wkB9OgQbCIWB74+a8
-	 o2LuNBZJzWF4lPU/VMK2oYsyAZ9R6LMG2zVM0GCOlQl4+/6BnY8KM+bEICo8ZBMqnL
-	 Y+ZMEHt4GnBtWMT7J6AwtmRZ090z1aszrwNV7Jk3Wexk8quFjc/me/aEys93iIscUW
-	 Kpxs/l4eEgoJEnRNHq00FGQ6eEvm3TJ9X7qJFqrDwuqF++l+rEHnpuLVwbo4Fj2qD5
-	 g0vTf08/JJZfA==
+User-Agent: Mozilla Thunderbird
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Subject: Re: [PATCH v4 4/5] mm: rename zone->lock to zone->_lock
+Content-Language: en-US
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Len Brown <lenb@kernel.org>, Brendan Jackman <jackmanb@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Oscar Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+References: <20260304151335.172572-1-sj@kernel.org>
+ <ebd994ca-eb04-4dff-a0a8-47aef0934c2c@kernel.org>
+ <aanIdk2i-Eo9M967@shell.ilvokhin.com> <aanSnywUXTVPaYUj@shell.ilvokhin.com>
+In-Reply-To: <aanSnywUXTVPaYUj@shell.ilvokhin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This reverts commit e3f6a42272e028c46695acc83fc7d7c42f2750ad.
+On 3/5/26 19:59, Dmitry Ilvokhin wrote:
+> On Thu, Mar 05, 2026 at 06:16:26PM +0000, Dmitry Ilvokhin wrote:
+>> On Thu, Mar 05, 2026 at 10:27:07AM +0100, Vlastimil Babka (SUSE) wrote:
+>> > On 3/4/26 16:13, SeongJae Park wrote:
+>> > > On Wed, 4 Mar 2026 13:01:45 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+>> > > 
+>> > >> On Tue, Mar 03, 2026 at 05:50:34PM -0800, SeongJae Park wrote:
+>> > >> > On Tue, 3 Mar 2026 14:25:55 +0000 Dmitry Ilvokhin <d@ilvokhin.com> wrote:
+>> > >> > 
+>> > >> > > On Mon, Mar 02, 2026 at 02:37:43PM -0800, Andrew Morton wrote:
+>> > >> > > > On Mon, 2 Mar 2026 15:10:03 +0100 "Vlastimil Babka (SUSE)" <vbabka@kernel.org> wrote:
+>> > >> > > > 
+>> > >> > > > > On 2/27/26 17:00, Dmitry Ilvokhin wrote:
+>> > >> > > > > > This intentionally breaks direct users of zone->lock at compile time so
+>> > >> > > > > > all call sites are converted to the zone lock wrappers. Without the
+>> > >> > > > > > rename, present and future out-of-tree code could continue using
+>> > >> > > > > > spin_lock(&zone->lock) and bypass the wrappers and tracing
+>> > >> > > > > > infrastructure.
+>> > >> > > > > > 
+>> > >> > > > > > No functional change intended.
+>> > >> > > > > > 
+>> > >> > > > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+>> > >> > > > > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+>> > >> > > > > > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+>> > >> > > > > > Acked-by: SeongJae Park <sj@kernel.org>
+>> > >> > > > > 
+>> > >> > > > > I see some more instances of 'zone->lock' in comments in
+>> > >> > > > > include/linux/mmzone.h and under Documentation/ but otherwise LGTM.
+>> > >> > > > > 
+>> > >> > > > 
+>> > >> > > > I fixed (most of) that in the previous version but my fix was lost.
+>> > >> > > 
+>> > >> > > Thanks for the fixups, Andrew.
+>> > >> > > 
+>> > >> > > I still see a few 'zone->lock' references in Documentation remain on
+>> > >> > > mm-new. This patch cleans them up, as noted by Vlastimil.
+>> > >> > > 
+>> > >> > > I'm happy to adjust this patch if anything else needs attention.
+>> > >> > > 
+>> > >> > > From 9142d5a8b60038fa424a6033253960682e5a51f4 Mon Sep 17 00:00:00 2001
+>> > >> > > From: Dmitry Ilvokhin <d@ilvokhin.com>
+>> > >> > > Date: Tue, 3 Mar 2026 06:13:13 -0800
+>> > >> > > Subject: [PATCH] mm: fix remaining zone->lock references
+>> > >> > > 
+>> > >> > > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+>> > >> > > ---
+>> > >> > >  Documentation/mm/physical_memory.rst | 4 ++--
+>> > >> > >  Documentation/trace/events-kmem.rst  | 8 ++++----
+>> > >> > >  2 files changed, 6 insertions(+), 6 deletions(-)
+>> > >> > > 
+>> > >> > > diff --git a/Documentation/mm/physical_memory.rst b/Documentation/mm/physical_memory.rst
+>> > >> > > index b76183545e5b..e344f93515b6 100644
+>> > >> > > --- a/Documentation/mm/physical_memory.rst
+>> > >> > > +++ b/Documentation/mm/physical_memory.rst
+>> > >> > > @@ -500,11 +500,11 @@ General
+>> > >> > >  ``nr_isolate_pageblock``
+>> > >> > >    Number of isolated pageblocks. It is used to solve incorrect freepage counting
+>> > >> > >    problem due to racy retrieving migratetype of pageblock. Protected by
+>> > >> > > -  ``zone->lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+>> > >> > > +  ``zone_lock``. Defined only when ``CONFIG_MEMORY_ISOLATION`` is enabled.
+>> > >> > 
+>> > >> > Dmitry's original patch [1] was doing 's/zone->lock/zone->_lock/', which aligns
+>> > >> > to my expectation.  But this patch is doing 's/zone->lock/zone_lock/'.  Same
+>> > >> > for the rest of this patch.
+>> > >> > 
+>> > >> > I was initially thinking this is just a mistake, but I also found Andrew is
+>> > >> > doing same change [2], so I'm bit confused.  Is this an intentional change?
+>> > >> > 
+>> > >> > [1] https://lore.kernel.org/d61500c5784c64e971f4d328c57639303c475f81.1772206930.git.d@ilvokhin.com
+>> > >> > [2] https://lore.kernel.org/20260302143743.220eed4feb36d7572fe726cc@linux-foundation.org
+>> > >> > 
+>> > >> 
+>> > >> Good catch, thanks for pointing this out, SJ.
+>> > >> 
+>> > >> Originally the mechanical rename was indeed zone->lock -> zone->_lock.
+>> > >> However, in Documentation I intentionally switched references to
+>> > >> zone_lock instead of zone->_lock. The reasoning is that _lock is now an
+>> > >> internal implementation detail, and direct access is discouraged. The
+>> > >> intended interface is via the zone_lock_*() / zone_unlock_*() wrappers,
+>> > >> so referencing zone_lock in documentation felt more appropriate than
+>> > >> mentioning the private struct field (zone->_lock).
+>> > > 
+>> > > Thank you for this nice and kind clarification, Dmitry!  I agree mentioning
+>> > > zone_[un]lock_*() helpers instead of the hidden member (zone->_lock) can be
+>> > > better.
+>> > > 
+>> > > But, I'm concerned if people like me might not aware the intention under
+>> > > 'zone_lock'.  If there is a well-known convention that allows people to know it
+>> > > is for 'zone_[un]lock_*()' helpers, making it more clear would be nice, in my
+>> > > humble opinion.  If there is such a convention but I'm just missing it, please
+>> > > ignore.  If I'm not, for eaxmaple,
+>> > > 
+>> > > "protected by ``zone->lock``" could be re-wrote to
+>> > > "protected by ``zone_[un]lock_*()`` locking helpers" or,
+>> > > "protected by zone lock helper functions (``zone_[un]lock_*()``)" ?
+>> > > 
+>> > >> 
+>> > >> That said, I agree this creates inconsistency with the mechanical
+>> > >> rename, and I'm happy to adjust either way: either consistently refer
+>> > >> to the wrapper API, or keep documentation aligned with zone->_lock.
+>> > >> 
+>> > >> I slightly prefer referring to the wrapper API, but don't have a strong
+>> > >> preference as long as we're consistent.
+>> > > 
+>> > > I also think both approaches are good.  But for the wrapper approach, I think
+>> > > giving more contexts rather than just ``zone_lock`` to readers would be nice.
+>> > 
+>> > Grep tells me that we also have comments mentioning simply "zone lock", btw.
+>> > And it's also a term used often in informal conversations. Maybe we could
+>> > just standardize on that in comments/documentations as it's easier to read.
+>> > Discovering that the field is called _lock and that wrappers should be used,
+>> > is hopefully not that difficult.
+>> 
+>> Thanks for the suggestion, Vlastimil. That sounds reasonable to me as
+>> well. I'll update the comments and documentation to consistently use
+>> "zone lock".
+> 
+> Following the suggestion from SJ and Vlastimil, I prepared fixup to
+> standardize documentation and comments on the term "zone lock".
+> 
+> The patch is based on top of the current mm-new.
+> 
+> Andrew, please let me know if you would prefer a respin of the series
+> instead.
+> 
+> From 267cda3e0e160f97b346009bc48819bfeed92e52 Mon Sep 17 00:00:00 2001
+> From: Dmitry Ilvokhin <d@ilvokhin.com>
+> Date: Thu, 5 Mar 2026 10:36:17 -0800
+> Subject: [PATCH] mm: documentation: standardize on "zone lock" terminology
+> 
+> During review of the zone lock tracing series it was suggested to
+> standardize documentation and comments on the term "zone lock"
+> instead of using zone_lock or referring to the internal field
+> zone->_lock.
+> 
+> Update references accordingly.
+> 
+> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
 
-The commit says that the tracepoint only deals with the current task,
-however the following case is not current task:
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-comm_write() {
-    p = get_proc_task(inode);
-    if (!p)
-        return -ESRCH;
-
-    if (same_thread_group(current, p))
-        set_task_comm(p, buffer);
-}
-where set_task_comm() calls __set_task_comm() which records
-the update of p and not current.
-
-So revert the patch to show pid.
-
-Fixes: e3f6a42272e0 ("tracing: Remove pid in task_rename tracing output")
-Reported-by: Guohua Yan <guohua.yan@unisoc.com>
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-v2:
-- update commit message (Steven)
----
- include/trace/events/task.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-index 4f0759634306..b9a129eb54d9 100644
---- a/include/trace/events/task.h
-+++ b/include/trace/events/task.h
-@@ -38,19 +38,22 @@ TRACE_EVENT(task_rename,
- 	TP_ARGS(task, comm),
- 
- 	TP_STRUCT__entry(
-+		__field(	pid_t,	pid)
- 		__array(	char, oldcomm,  TASK_COMM_LEN)
- 		__array(	char, newcomm,  TASK_COMM_LEN)
- 		__field(	short,	oom_score_adj)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->pid = task->pid;
- 		memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
- 		strscpy(entry->newcomm, comm, TASK_COMM_LEN);
- 		__entry->oom_score_adj = task->signal->oom_score_adj;
- 	),
- 
--	TP_printk("oldcomm=%s newcomm=%s oom_score_adj=%hd",
--		  __entry->oldcomm, __entry->newcomm, __entry->oom_score_adj)
-+	TP_printk("pid=%d oldcomm=%s newcomm=%s oom_score_adj=%hd",
-+		__entry->pid, __entry->oldcomm,
-+		__entry->newcomm, __entry->oom_score_adj)
- );
- 
- /**
--- 
-2.25.1
+Thanks!
 
