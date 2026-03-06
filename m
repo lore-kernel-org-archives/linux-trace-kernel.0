@@ -1,281 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45FF311958
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 15:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D773AEF37;
+	Fri,  6 Mar 2026 16:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772810163; cv=none; b=ufdxFsnmSC7nQE4K8wlCNviPM/YyvZwv+VmePLj+Z0idF1kh4ptMIFNWd8GLzdyIcieqgOgU06qb96sbbailf6orsYQOW9MKG2AdXBrJ8cUbrGi7y2Q2il7ZRET5xdiqptl9+d/b2KcgxJJmxCFrCIJotHI0tDJ4bsPkB5rnWbQ=
+	t=1772815090; cv=none; b=qhmPICB8IkVRSteUYsdUWxT2qLAy1HvkCmmJab2uIrEZ4D3+S33DRpxtxH/PSDi6zP3ravK1AQkuZAlgG87Vzm/XwInEH1M+eAdbacJDEHmDVy+D+u043CUApF9gAXgWVUlLFUOeId2eMmfxUG9H1ELVt0wfTEpeKio6CHZepwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772810163; c=relaxed/simple;
-	bh=+BvXWfAKQ9O663kwoZyZMyWhA/zunFdKvzi17BKmRJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DdcrFBKcqykQx18lffRWuu98u5MQmSOlNo+z+EcmDeyQw9k76NeDVC7gWaKgIKdJt2/DDYFcMgR9dKQmPG+UEezzs+vrzx34/a3tJth8rc5bPFW+0N2yykZsK4OHIQKdURxoHYfCtZ4OiPdKs1py+tvwQsA9NU/UkNeDfIf7kGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GEQDjRe8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1772815090; c=relaxed/simple;
+	bh=mGQAm165RgJQnpaCtmjRXUyFonFh4yiQd8/8lb1ELDI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Fv2QjZGEJbRzHBakLLtkLSr9gNY2LRsUGigyjCZq960DgAFXfxVSV4eF7H1HwaX2wpBYycP+GBQABojqR913QlxTvcUw9ztEQ/cInxbiD3VfqDsBdP5lV7We0RbN+YfVnEcS40VNVkYv5ecBAqCWfcTZ5JeU+wA+ufNFWdVM5f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Sleaeb31; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GEQDjRe8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1772810160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+DLJi0mGeilQ3CHI3Vep7lQkDSy0MxH2gEuKYbprlfw=;
-	b=GEQDjRe8YLDJRDfZr+c45xsGbApN56Uv3rBKyuXLPUI6ObJuWOJ8ATkNGJNizmL1dqFJnb
-	r+vkaFXVGkpAKYEzirk32BVTXlVRt7KsjYfvDypUnlH1T0Ijbo9BbN20onrr0jERmFnB+b
-	ddqhg1S4zN0+OzFoi9JyWgp/IOSxqN8=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-347-k5DE8abLNP6cs5dI73aVJw-1; Fri, 06 Mar 2026 10:15:59 -0500
-X-MC-Unique: k5DE8abLNP6cs5dI73aVJw-1
-X-Mimecast-MFC-AGG-ID: k5DE8abLNP6cs5dI73aVJw_1772810158
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5a137c599ccso533774e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 07:15:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772810158; x=1773414958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+DLJi0mGeilQ3CHI3Vep7lQkDSy0MxH2gEuKYbprlfw=;
-        b=qYpdiT6VEawx9QKsfa4jlYa5L6Jm6rzBos5sBJ/WqVmurL8s1te2zgvCRecmpYrowk
-         hwq3yXkAvTC8TLZ9OXbErD/gj0owuuif8ckCCjn2n/NL9NZ9gFR2j8SZryuoaIqGwcZB
-         sP6gL3FDaAMxZxT6hiMTwAVeGgf49La1qRWc9USoHLXmuEWWaZwOzQYXI/xTP/trlfZj
-         d9ytwBhjBuYHh5dlJf5N25BJwMq9fnIPbK993n/2ICjQOesacPhK/jFSySHX3FRYMgir
-         CLZcFerge3ePOki9dQ6e2IVJoyx37dZxkLdYi9k7cllYuhVEPJMn6X1pLAXjRlEqCTPB
-         4Duw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBrhb7xYNjB2MVf1FqNBIGd/AmAgV8TElc82UE5WgrvsYK5L+aMIcvNW4XY3PRCIXe6aBjJA2tQxXqb8chRQSOcIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaNYz4MivkwZZ2rOHZK2DiKiy25k7KzV8xLYM/9nOHOurW61Va
-	3GNqhbUs3vPwRxrsxqvJ/YOd/JB6fXr1zq+Y72C5sXcevGJ2mPKsB5oflIZ1NbAZS13c5Rh73MM
-	C26oLhXs8Vf9xUW8jHD4QAqjPsRTr4qbPnfpO+wepTmwXabqv9I0Fz0C/yAf4/+ZffssTqvRfX2
-	m9x37VC3JQ8sMmB7e5LFfj4ySsZhJVGqr064IAn++VimOlyJ1l
-X-Gm-Gg: ATEYQzxImO2vAxsixmlhvbBD1VEY4QdsnRIMM/XTlWQ/knlQqGgYTguDNesis5k1KUp
-	qR97BeVC9zs2f17I2lRSeXnHrtdWheflrtaxkHUkKh2KJOQPCmyxDccAltYw9wRgHjajoF1NkAU
-	WAaFguwQ4wMFgqkMkxvM+G2qZGJVa2W7HFi50xBID0p48Eor8mJHo/uVuFhEX2yrXt2gDv0P8G0
-	dlFzKcwRLnKhxiaOhEoDyEbmITHe25QYkCt
-X-Received: by 2002:a05:6512:286:b0:5a0:ff97:4374 with SMTP id 2adb3069b0e04-5a13cac11c3mr665195e87.7.1772810157812;
-        Fri, 06 Mar 2026 07:15:57 -0800 (PST)
-X-Received: by 2002:a05:6512:286:b0:5a0:ff97:4374 with SMTP id
- 2adb3069b0e04-5a13cac11c3mr665180e87.7.1772810157135; Fri, 06 Mar 2026
- 07:15:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Sleaeb31"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1772815061; x=1773419861; i=markus.elfring@web.de;
+	bh=TCfMqLlrkbRKYgYFYGoOVPOZ3mtq4LlpJAeymSRod98=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Sleaeb31xkUheefJ/t933ARsjiKjsbTwmSAYzI2NboDhCl7SFZN1blIgoF8JDyPK
+	 KAYBLazflj5kbUDkWuse/HUnOWrc1LAP5pdzUw2qdMGJPomCnUQQIUrcZw7fWHG/e
+	 gSglkP5c2tScGPeHZOhh0Y8iY0gvh09keE5bjJkj0zzH7HSx5xW0AYk5RAJskFRrL
+	 ALTdIK7nWCFDAt3gIJEATOnfG9tJNVJkIIF2b1KBM0DnjZ0ilt40kiDwaeRh2bhWG
+	 HJ8eoESw0Wgc1o+VupLSFSD1NpAsKP1+D3Aovd6L01WZAgXgAPccNpkcUJwtSnf4M
+	 y1mdZ9Mqws/mzVJPLA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8C09-1w28oQ2Yhn-000iAs; Fri, 06
+ Mar 2026 17:37:41 +0100
+Message-ID: <677c7ad6-6e67-4011-b2d0-03d0d58547ce@web.de>
+Date: Fri, 6 Mar 2026 17:37:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260227150420.319528-1-tglozar@redhat.com> <d7be6fcb6540b3734019fe82ff8e7f4ff49220c2.camel@redhat.com>
- <CAP4=nvQcQQCeyi00WchwhrecOQCxoN3gHiuZD63KZb-30JzTYw@mail.gmail.com> <238e4851e45a505d7974443c4fe703e61a0fbf55.camel@redhat.com>
-In-Reply-To: <238e4851e45a505d7974443c4fe703e61a0fbf55.camel@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 6 Mar 2026 16:15:43 +0100
-X-Gm-Features: AaiRm53309KqLhMKCT4skU4LFhURQl4DfFL6gvaNohos0jnWj-OjwJaF5gZxdYs
-Message-ID: <CAP4=nvSmbvz68H77T4Wohm7rT3Ojn_D_igBk8pvsvGurL05Kww@mail.gmail.com>
-Subject: Re: [PATCH] tracing/osnoise: Add option to align tlat threads
-To: Crystal Wood <crwood@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, John Kacur <jkacur@redhat.com>, 
-	Luis Goncalves <lgoncalv@redhat.com>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Wander Lairson Costa <wander@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: HPJYNBks2x43JVjsHCKDDOFfzuKQiWfebEoh2puoJgo_1772810158
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Vincent Donnefort <vdonnefort@google.com>,
+ linux-trace-kernel@vger.kernel.org, kernel-team@android.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Joey Gouly <joey.gouly@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Steven Rostedt <rostedt@goodmis.org>,
+ Suzuki Poulouse <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ John Stultz <jstultz@google.com>, Quentin Perret <qperret@google.com>,
+ Will Deacon <will@kernel.org>
+References: <20260306143536.339777-4-vdonnefort@google.com>
+Subject: Re: [PATCH v13 03/32] ring-buffer: Introduce ring-buffer remotes
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260306143536.339777-4-vdonnefort@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/7M96EMDdymY+btShE19XvuqDjcyQNoA88jOa7lXVK9lidCIu9B
+ 19mAqvnB/VTl3sYqz8/10ku0BD6XiZD3H6O2tHNK2GOIk/hDfrOjfS7GmXU69FMGL8Rr0oi
+ UzoMwPc095HwOs2OphD7g7r1mQNLXv/sOjaDiZZHtgYyXepez8oBU28OxnEikvG7l35P6Yi
+ 3oHtX+2xWUFPDZ3JfT1wQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:G6Dq01SMV3k=;waooZldAIodUPIcbwT2ijRSgjK/
+ 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
 
-=C3=BAt 3. 3. 2026 v 4:21 odes=C3=ADlatel Crystal Wood <crwood@redhat.com> =
-napsal:
-> > 1. The wake-up timers are set to absolute time, and are incremented by
-> > "period" (once or multiple times, if the timer is significantly
-> > delayed) each cycle. What can be done as an alternative to what v1
-> > does is this: record the current time when starting the timerlat
-> > tracer (I need to reset align_next to zero anyway even with the v1
-> > design, that is a bug in the patch), and increment from that.
->
-> I was only talking about doing this for the initial expiration, not on
-> increment.
->
+=E2=80=A6
+> It is expected from the remote to keep the meta-page updated.
 
-Ah, I misread "period" as "relative period", since the initial
-absolute period is determined from the current time in the first cycle
-of each thread.
+See also once more:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv7.0-rc2#n94
 
-> > 2. "cpu" makes a poor thread ID here. If my period is 1000us, and I
-> > run on CPUs 0 and 100 with alignment 10, suddenly, the space between
-> > the threads becomes 1000us, which is equivalent to 0us. I would need
-> > to go through the cpuset and assign numbers from 0 to n to each CPU.
-> > That would guarantee a fixed spacing of the threads independent of
-> > when the threads wake up in the first cycle (unlike the v1 design),
-> > but it would make the implementation more complex, since I would have
-> > to store the numbers.
->
-> Right, I was thinking of just a few CPUs missing not being a big deal,
-> but on big systems with only a few CPUs running the test it does
-> matter.
->
 
-My point is mostly that the spacing of the threads shouldn't depend on
-the CPU numbers. One has to make sure the alignment doesn't overflow
-the period anyway if they want to have completely time-isolated
-wake-ups.
+=E2=80=A6
+> +++ b/kernel/trace/ring_buffer.c
+=E2=80=A6
+> +int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
+> +{
+=E2=80=A6
+> +	cpus_read_lock();
+> +
+> +	/*
+> +	 * Make sure all the ring buffers are up to date before we start readi=
+ng
+> +	 * them.
+> +	 */
+> +	for_each_buffer_cpu(buffer, cpu) {
+=E2=80=A6
+> +	}
+> +
+> +	cpus_read_unlock();
+> +
+> +	return 0;
+> +}
+=E2=80=A6
 
-> Instead of assigning numbers, could you just loop over each CPU's
-> tlat->abs_period and set the initial expiration with appropriate
-> offset (prior to starting any of the threads)?  Then the thread would
-> not need to care about anything other than the usual increment.
->
-> > If I implemented both of those ideas, the interaction between the CPUs
-> > can indeed be gotten rid of. I'm not sure if it is a better solution,
-> > though. Another motivation of recording the first thread wake-up was
-> > that when using user threads, the first thread might be created some
-> > time after the tracer is enabled, and I did not want to have a large
-> > gap that would have to be corrected by the while loop at the end of
-> > wait_next_period().
->
-> What is the actual concerning impact here?
->
-> If we want to be really paranoid we could check for pending signals
-> during the loop, in case userspace delayed so long (with a very short
-> period) that the user has a hard time with ctrl+c and such... but that
-> could happen already if userspace does something silly (e.g. stopped
-> by a debugger?) between loops.
->
+How do you think about to use another lock guard here?
+https://elixir.bootlin.com/linux/v7.0-rc1/source/include/linux/cpuhplock.h=
+#L48
 
-The while loop is designed only to handle "small" time differences,
-with respect to the relative period. When using timerlat manually with
-a user workload, it might take the user a few seconds/seconds/hours
-before they start the user process (typing the command line, or if the
-user e.g. has a snack or coffee in between), which has to be corrected
-by the while loop. This does not interact well with a low period.
-Consider the following scenario, assuming the initial absolute period
-is set on timerlat tracer enablement:
-
-1. The user enables the timerlat tracer with NO_OSNOISE_WORKLOAD and
-100us period.
-2. The user steps away for 1 hour.
-3. After 10 seconds, tlat->abs_period is 3 600 000 000us in the past.
-The while loop starts incrementing tlat->abs_period by 100us, taking
-36 000 000 loops. If one iteration takes 10 CPU cycles on a 1GHz CPU,
-the while loop itself will take 360us (which is >100us).
-4. The timerlat thread never wakes up, since the wake-up time even
-after the correction is in the past.
-
-This is much more reasonable than the user stopping the thread inside
-the while loop. Actually, this scenario can already happen without
-alignment, since the scheduler might preempt the thread inside the
-while loop for more than the period - but that is a separate issue.
-
-Also, the current implementation is relatively simple (and hopefully
-also easy to understand with the comments in v2), so my idea is that
-we can use it for now, and if we want deterministing alignment in the
-future, we can always improve it.
-
-> > Good idea, thanks! In general, I'm not expecting the user to change
-> > timerlat parameters during a measurement - but it is supported, and
-> > should be documented.
->
-> Maybe better to phrase it as "not guaranteed to take effect
-> immediately" :-)
->
-
-I think we can afford to be less vague than that here :) something
-like, "setting the timerlat_align_us option will take affect upon next
-timerlat tracer start".
-
-> > I used it in cyclictest to measure the overhead of a large number of
-> > threads waking up at the same time. Similarly, a non-zero alignment
-> > will get rid of most of that overhead. Without alignment set, the
-> > thread wake-ups offsets are semi-random, depending on how the threads
-> > wake up, which might lead to inconsistent results where one run has
-> > good numbers and another run bad numbers, since the alignment is
-> > determined in the first cycle.
->
-> OK, I was viewing the staggering as the main point, but I see how the
-> alignment itself helps too.
->
-> Is there a use case for not always doing the alignment?
-> Other than people asking why their numbers suddenly got worse...
->
-
-Yes - to simulate the default behavior of cyclictest without
--A/--aligned, and of multi-thread cyclic workloads that do not align
-their threads respectively. Even if we wanted to always use the
-alignment, it should not default to 0 IMHO, so that users don't see a
-degradation like you mention.
-
-> > next_abs_period is basically just the ktime_t variant of
-> > tlat->abs_period for local calculations of the next period inside
-> > wait_next_period(). Its only purpose is the ktime_compare() call that
-> > increments tlat->abs_period by the period until it lands into the
-> > future, if it happens to be in the past. This is necessary to do for
-> > both a regular cycle (which might take long due to noise) and the
-> > first cycle with alignment (because the other thread's first wake up
-> > might be late), so it has to be set in the new code as well,
-> > otherwise, the while loop won't see the time is in the past.
->
-> Oh, I missed the unit difference (though it's basically just a typedef
-> at this point).
->
-> > I agree that this part of the code is confusing. There is also a
-> > field, timerlat_variables.rel_period (tlat->rel_period), that is not
-> > used anywhere, since the relative period is pulled out of
-> > osnoise_variables. Something like this would be easier to read and
-> > comprehend, IMHO:
->
-> Yeah, I noticed that as well... we should remove it if we're not going
-> to use it.
->
-
-Yeah.
-
-> > /*
-> >  * wait_next_period - Wait for the next period for timerlat
-> >  */
-> > static int wait_next_period(struct timerlat_variables *tlat)
-> > {
-> >     ktime_t now;
-> >     u64 rel_period =3D osnoise_data.timerlat_period * 1000;
-> >
-> >     now =3D hrtimer_cb_get_time(&tlat->timer);
-> >
-> >     /*
-> >      * Set the next abs_period.
-> >      */
-> >     tlat->abs_period +=3D rel_period;
-> >
-> >     /*
-> >      * If the new abs_period is in the past, skip the activation.
-> >      */
-> >     while (ktime_compare(now, ns_to_ktime(tlat->abs_period) > 0) {
-> >         next_abs_period =3D ns_to_ktime(tlat->abs_period + rel_period);
-> >         tlat->abs_period =3D (u64) ktime_to_ns(next_abs_period);
-> >     }
-> >
-> >     set_current_state(TASK_INTERRUPTIBLE);
-> >
-> >     hrtimer_start(&tlat->timer, next_abs_period, HRTIMER_MODE_ABS_PINNE=
-D_HARD);
-> >     schedule();
-> >     return 1;
-> > }
-> >
-> > (Excluding the changes from this patch.) What do you think?
->
-> Why can't we just make tlat->abs_period and every other time variable
-> in this file be ktime_t?  Other than atomic stuff if we do go that
-> route.
->
-> Not saying that that should hold up this patch,  just an idea to simplify=
- things.
->
-
-The reason for that is that the code does arithmetic directly on the
-ns unit form of the time, without the need to use ktime_add(). I don't
-see anything on top of that.  I see ktime_add(x, y) is just x + y
-nowadays, so that would work.
-
-Tomas
-
+Regards,
+Markus
