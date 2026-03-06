@@ -1,94 +1,121 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF913CE4BF
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 14:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1FA364936;
+	Fri,  6 Mar 2026 14:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772807788; cv=none; b=ABvCzlUgsvf1iQQ6yLwFGPReDWvEuBVlvH1b1GUDiyVmnlqUFNFnNw7Gqd7j92F11IkUhY401JV72Dw9K8f+J03qYORkKouoTkgiJVs4FlbXr8EUIoHU4PAaTvcHusF7XOECEmCU/5uFHIJYKYWk9+NkungpT34JT+L4Pa7HYYY=
+	t=1772809184; cv=none; b=pJSd0LzPtawkYExuy3DPDKUkeOA4r1azXtaEZFHuhfjhB6s/01Th5NE4n/eCdVba9FSqy2Nrrm8ZfNn04FFvIvr2O4fVTXz4l6L4MmARIGPjEWBGClY49Z2kg/2NhaLOm1KhRwHdtyoi1MfMFQl2XTXtrr9Y9ThN0kBuKHV51Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772807788; c=relaxed/simple;
-	bh=ObgOCDMC85s7Bm+uCQyKTE82mofMGHWimv4+K5Z7ga8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jp3CAzaltXfz3vmwObS+SkUs0gyfo+XqMhuCoaVnOUt+FTyQNBfB9IInKr/jr6DhOyGiVajWDXmSkbIqJWw+kllA17Vo5akG4iFp4gwh/jC6lOuJ+f9gAvf3dEg6+PCRjmgUoiaIUxPxppLIugwQfGWOSE9SlUTAOxLsT+W+ha8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LcJOzHvs; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LcJOzHvs"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4806cfffca6so95684205e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 06:36:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772807786; x=1773412586; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fixqNHIgRdsXrQKd6GcjLA4m1QZ0grB448V81HUxHL8=;
-        b=LcJOzHvsAtjvNSMufZ6xEQEuUJ7Ghzhq5v5NlbXaq6zoLAfiMcr3vagqp24OKokEZf
-         vSAzKu1pY7h87S9qtqtBfugZ6Qhi3500Qkz4TwxSnPZSgRa8u5tP9AvxXjqRvoeM/YrN
-         C40HFf0WP3ttrFudAIRYG1gV5de5AQ65UWFOa7NRi1GV60CSweABDDYxsZg1qMUgQr5q
-         HSuXRbrd8SWSeMnxIp3m93ISYSPbzrw6eOQC+jeGcwVev9dmOaX8SboOwjbcuWkk/wTX
-         jXP0Pc6qjexDLflmUSkPa9AtIoi69bgG0cwRmyOD+yUBA1wDuon4F9hDV8YJBWNEWxDT
-         ceew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772807786; x=1773412586;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fixqNHIgRdsXrQKd6GcjLA4m1QZ0grB448V81HUxHL8=;
-        b=wNUy4u1cjqfmA6FW/Dxutmcs+uq1kC1tUuuNWE7vQf9UiLLlSA/QUWw0e92YiCRZdj
-         aNrgK8h9b7VCmgcWf/3Av/tEKwwbcHOwYH3CXVW2Lv1SbRbN48au3ItzG+i9V2a2f95i
-         jMgsCKlY5Cx3FChNa27D9+W7OyycHEOKFa29WPeViGzIVA10oJ88h0mxEQFxB8xmzuZp
-         jFC4iN4qzhRdxcep6YFJClj0z/CKAdf6fKFNpu0ohkpw1sZuypN8nG3NwQA0EtbSqeb+
-         VCqs9usBrYOQprRi6zdWN2XS3HagOWqIdT3TX1wi4OdpS6H/ZA0EdWpOGloyr03G5nWh
-         fjng==
-X-Forwarded-Encrypted: i=1; AJvYcCXLciJuaYURcFznWKZV1NUPsDvGe4PqFXiTPnNwchipbKqVSbqnhfyuBMfM5HDQZKVS+jAQlsWJIO+Py829WDcj7yc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBWZh6vlycVUnxVjPClaozh+D8N1Bm/APwMCI+nhYsVCQ76D9e
-	ZS5TG3iykUqe2nVFRSJh24haaBV3SrVsQ2sr6ICPqerw9dl/dTQWZHV9f2HqNuPrVbPkZyiuGbg
-	XAt97xF0G6gVgCfv6Ny84KQ==
-X-Received: from wmet19.prod.google.com ([2002:a05:600c:2ad3:b0:47f:c96e:8381])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1551:b0:483:43d8:8d68 with SMTP id 5b1f17b1804b1-48526967b79mr40105665e9.28.1772807785798;
- Fri, 06 Mar 2026 06:36:25 -0800 (PST)
-Date: Fri,  6 Mar 2026 14:35:36 +0000
-In-Reply-To: <20260306143536.339777-1-vdonnefort@google.com>
+	s=arc-20240116; t=1772809184; c=relaxed/simple;
+	bh=XcB6rYuDR+ONszCxzHlLMBEXqz5B6dP7DS+uOKjsZkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y19B+GVZHDQMJssqPzXCfCJV27OruD3DWANBPVAqcFE7G3KwUjaBlHkx64F8aDNg41MP+08ENge8NJ6AhcAWGOAToFQksW8ZLYxPKp6CCOds5I0hkBtl/xFCyf9+bm1lxbNXpMKsdRxb9Is++6bT3Uyn2yuUkOl6U85YdnMR498=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 49AD0BA18B;
+	Fri,  6 Mar 2026 14:59:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 8E90020024;
+	Fri,  6 Mar 2026 14:59:34 +0000 (UTC)
+Date: Fri, 6 Mar 2026 09:59:35 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] ring-buffer: Handle RB_MISSED_* flags on commit
+ field correctly
+Message-ID: <20260306095935.5d155964@gandalf.local.home>
+In-Reply-To: <20260306174609.d387b67d04e05328ea262fba@kernel.org>
+References: <177211310553.419230.7846100548994399256.stgit@mhiramat.tok.corp.google.com>
+	<177211312362.419230.15156461178245984273.stgit@mhiramat.tok.corp.google.com>
+	<20260305130348.3266e4c9@gandalf.local.home>
+	<20260306174609.d387b67d04e05328ea262fba@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260306143536.339777-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260306143536.339777-33-vdonnefort@google.com>
-Subject: [PATCH v13 32/32] fixup! tracing: Add a trace remote module for testing
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	jstultz@google.com, qperret@google.com, will@kernel.org, 
-	aneesh.kumar@kernel.org, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nm6165c83bogod4uojtsgjb4uset7n1s
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 8E90020024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18gJ2roy9LWtd81D5tcX559Ex3xvMIfhSg=
+X-HE-Tag: 1772809174-3994
+X-HE-Meta: U2FsdGVkX18qti8jd/9766Z68AH4LLfjFNmlGAvJRrPg3zvCP9TvbNAWr4iCdG6gS7FfOUleassxMsUmuWJZkZzuX0b9LXFBL3Kk87iMm+JDUbQ84EF6/rbc/mnJ0rSDPEoDFDmGNs7WCjQJ2sCzWp32VnNtwWbMoGaoGudDB7PfR7o7vDcKJacoztclXpwuPqUbCN5kHJqBY/EIYpWoWRpCJNQxwAfzfmn5f97Jdy8t6uJTVzIxr/+//LfuZbG09Up85WO3x51yumAZRZ3AQDMwp7o/ObZmpRZNGUBNsxBQ4pMjt1RWoBllfB2NTu+ErGp1YPcUkJNJ1egjXUJx0KsSo4KWsHu7IYg+wm6NNT9iOjBbkoRphRVU2unfejuV16Pb+4ODLOFh7YNlHODPpA==
 
+On Fri, 6 Mar 2026 17:46:09 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-diff --git a/kernel/trace/remote_test.c b/kernel/trace/remote_test.c
-index 791128d7fd00..6c1b7701ddae 100644
---- a/kernel/trace/remote_test.c
-+++ b/kernel/trace/remote_test.c
-@@ -28,11 +28,11 @@ static int remote_test_load_simple_rb(int cpu, struct ring_buffer_desc *rb_desc)
- 	struct simple_buffer_page *bpages;
- 	int ret = -ENOMEM;
- 
--	cpu_buffer = kzalloc_obj(*cpu_buffer);
-+	cpu_buffer = kmalloc_obj(*cpu_buffer);
- 	if (!cpu_buffer)
- 		return ret;
- 
--	bpages = kmalloc_array(rb_desc->nr_page_va, sizeof(*bpages), GFP_KERNEL);
-+	bpages = kmalloc_objs(*bpages, rb_desc->nr_page_va);
- 	if (!bpages)
- 		goto err_free_cpu_buffer;
- 
--- 
-2.53.0.473.g4a7958ca14-goog
+> On Thu, 5 Mar 2026 13:03:48 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Thu, 26 Feb 2026 22:38:43 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> >   
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Since the MSBs of rb_data_page::commit are used for storing
+> > > RB_MISSED_EVENTS and RB_MISSED_STORED, we need to mask out those bits
+> > > when it is used for finding the size of data pages.
+> > > 
+> > > Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+> > > Fixes: 5b7be9c709e1 ("ring-buffer: Add test to validate the time stamp deltas")
+> > > Cc: stable@vger.kernel.org  
+> > 
+> > This is unneeded for the current way things work.
+> > 
+> > The missed events flags are added when a page is read, so the commits in
+> > the write buffer should never have those flags set. If they did, the ring
+> > buffer code itself would break.  
+> 
+> Hmm, but commit ca296d32ece3 ("tracing: ring_buffer: Rewind persistent 
+> ring buffer on reboot") may change it. Maybe we should treat it while
+> unwinding it?
 
+Might change what?
+
+> 
+> > 
+> > But as patch 3 is adding a flag, you should likely merge this and patch 3
+> > together, as the only way that flag would get set is if the validator set
+> > it on a previous boot. And then this would be needed for subsequent boots
+> > that did not reset the buffer.  
+> 
+> It is OK to combine these 2 patches. But my question is that when the flag
+> must be checked and when it must be ignored. Since the flags are encoded
+> to commit, if that is used for limiting or indexing inside the page,
+> we must mask the flag or check the max size to avoid accessing outside of
+> the subpage.
+> 
+> > 
+> > Hmm, I don't think we even need to do that! Because if it is set, it would
+> > simply warn again that a page is invalid, and I think we *want* that! As it
+> > would preserve that pages were invalid and not be cleared with a simple
+> > reboot.  
+> 
+> OK, then I don't mark it, but just invalidate the subpage.
+
+No, I mean you can mark it, but then just have the validator skip it.
+Something like:
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 156ed19fb569..c98ab86cf384 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1950,6 +1951,10 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	rb_dec_page(&head_page);
+ 	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
+ 
++		/* Skip if this buffer was flagged as bad before */
++		if (local_read(&head_page->page->commit) ==  RB_MISSED_EVENTS)
++			continue;
++
+ 		/* Rewind until tail (writer) page. */
+ 		if (head_page == cpu_buffer->tail_page)
+ 			break;
