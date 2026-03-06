@@ -1,154 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDDA371D13;
-	Fri,  6 Mar 2026 19:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9883330B09
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Mar 2026 19:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772824124; cv=none; b=brIGQXmHKEANqZk5lx+dfK+z8/zcHDXi9N68tav8dShx0V7S4i6HFHk1Tbq3F9n8TysTUNEdzN8/pdJXY050pc424wPaNSSjrSQczss11q0KKtHmBxOrbQZn5A8m8LFIYFp/+EcjpcoOOJJ4eVRytoyCRLJYQnQEyZ1nMWMDo9s=
+	t=1772826673; cv=none; b=sQvPgdbZJT6laSJYASWbCD1vMqBXjTXaz2TnT+gE0mrvJezcNOHDi+XTFlX91ltRwLhtL9fu1hJ8gGnKGfQS12wTy3HbpdmUQITdvgvf3D8FPOobmyKO9DsBaS9aIR3QhKoJJkiZnX5OdgYbhls5FYYy3r4kt8JzWnfdJUhV42g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772824124; c=relaxed/simple;
-	bh=G6sap95s+O3olN+hPIYXDMFfrHCfy4hXHRMB/RmkQTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ft0sLwmv4QPiUNFKm9FtuWB3A5E+RC7HXJdRCJDJON0yl/nOqaWoWdZ4Fquj4NWJnDn/u/3QFaNLGRy+Yv1ImA92i6I5fr4SO/yz4sr4Uxnl+AiACCsuu2Bx6d1gd6BARtdq2MvRypzoZH759JYUPhZXOj8fTqrOJCBbfTr3mGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BeK/hEaA; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772826673; c=relaxed/simple;
+	bh=26QaMlsBHZXBBsoWb+RFPRcsWBtokGFkKVFb+dwgdz0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=Z4I+3BvI8ZufgtpoLjmVbVXcBy4UzWbunlZvreGQG08BDfOTdTm6x++3tuV83fREsvTmd14a50u3lKqoDb4AXGHenFHiNe98hvHwkz1EkQLzVNQRQR6mtZrDq+vD12p+oSSvuu3a8qI1n550XKEbp5ih2vXh08U8U7ZeHGsIRFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i35pQwmQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BeK/hEaA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772824124; x=1804360124;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G6sap95s+O3olN+hPIYXDMFfrHCfy4hXHRMB/RmkQTU=;
-  b=BeK/hEaA8jOb07bFfLK1wLMFyM95nkgNac1mUT1wDAgNuLAIc8npZMqW
-   kSSGPr9SUn12OJ1JO+JMwSXJkFv8YzP2c68Jrkoh/1EBnWy6UctejOeLn
-   dd6QR68hUKjN0p9YXPg30qCewLSJgUaXZcx3Sm+WF8mj/Sn2p/m3HeX55
-   JVXHQ4zt1KLDmwd14zWmKvrD3gdMY64Kdb1UA0HGM665Z6R9KLBeuuLFe
-   ihNq77K1B25Er8hZdWIrRMvIhphczpIkKd3yqmGUmnPKq0dbxQHBDguQg
-   QtvTTCVE1tKfUUiWA9S4GXkpxJkgrbcVhhkxJm0JpV8Kl5jOU/p1+7KWT
-   w==;
-X-CSE-ConnectionGUID: 5supJlIqQwKPnY/NYWb+rQ==
-X-CSE-MsgGUID: yM5gUh3AToGoA8u5DqV4Tw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11721"; a="84265960"
-X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
-   d="scan'208";a="84265960"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 11:08:41 -0800
-X-CSE-ConnectionGUID: RrdBNMv9R16dlvy5i3wzrQ==
-X-CSE-MsgGUID: KCZ7O9OWQsGsDgpCm7LNeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
-   d="scan'208";a="215747407"
-Received: from lkp-server01.sh.intel.com (HELO 058beb05654c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 06 Mar 2026 11:08:39 -0800
-Received: from kbuild by 058beb05654c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vyaXM-000000001Hl-0xx4;
-	Fri, 06 Mar 2026 19:08:36 +0000
-Date: Sat, 7 Mar 2026 03:07:53 +0800
-From: kernel test robot <lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i35pQwmQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772826670;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lIsA0vBDr/Zf85MeCX2VIrGY0ZH9k8QbBxgGKGtnSCg=;
+	b=i35pQwmQlmyjFVhn3B4LnrDKj6jhmN9bcy9s/JVj9rhiP9m0lbsPgF7YeWizeA7FgZ51vz
+	shiPr3/GtlQzwhZ2ybYQZM+UAhdtzUB9fIr8XcKu0ME14qz6KD+f3Wh0r+sJ1uYGvfp2IJ
+	MpVUnf4ijHlEN0TiRL/miwFAbcvjoeQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-0D4_6-w-NKCBYjbptJZSSw-1; Fri, 06 Mar 2026 14:51:09 -0500
+X-MC-Unique: 0D4_6-w-NKCBYjbptJZSSw-1
+X-Mimecast-MFC-AGG-ID: 0D4_6-w-NKCBYjbptJZSSw_1772826668
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4836fbfa35cso53476715e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 11:51:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772826668; x=1773431468;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lIsA0vBDr/Zf85MeCX2VIrGY0ZH9k8QbBxgGKGtnSCg=;
+        b=Wk2Awuw7lfXi6dWALSdovm8lO5daBCpq9jGrr3xV+THCweTJxJUQcSxZDwNs1tMZeg
+         o2b3QblhN+Tq3H9I+Tu6Qw0p0EuV5rDM5HrSAxu5yMp/XWO4kNuOCCQW5LrBJOhFJb4j
+         35fEr7nf9BGikenYUY2rufFToVvWj/qKHu29tEb2dDu1hQIFaer8dnRfiQxxeDwiFHP8
+         gHOjTgLYIb8UjiWgd9g7H3MasgIH+EL5NP8DtPrp10KOU61tUPrsVG4bG6Msc0FPXEmT
+         mx5OcPV76RnZ0lw3eOVloGTepSsaaY5NNiHui5zh7mpYpuq9Iu7FzhxFosUgpghnGOvW
+         wYSw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/jmyDOtre91LscBtwjaCEM1Ge2MH/AFTEU+Z/8tTya6iwoLiNFwVQbXN4BwFN+xwUUPS5nj45mtSrd/t7v25f3Lg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk1cUEz4w8hZshF6ul1Yyd38qBWVlhysBeZrjMeVyR9H2T1lo2
+	EkgBWwtbdRGFvbYSZl92I/Dq15tKPvY7ep+bNQzENLy3O7+QJonIqWaKmu07IWvhTRs3MgFngtv
+	TChEEjD59QyVQra5dQlsjv0Dv9tPO64AR2dN76QZ3NRXEe7jzjVPjU0ML4s1PuTgUA7MegAwhrg
+	==
+X-Gm-Gg: ATEYQzxWA7eU7wIwS/I9GbAsMGJLAMSDPLRN8CWVoEWBQAiRzP/Ujdvqffl4UkIlfcy
+	LzrmAYucLuAhEFKf+gJljCRFXNeAFyljypP193KgPeaQs+cvHZ8ZMy4KldeRrBW07C9ITXorUtv
+	DeXMn2gObPQkwFXGXi/EwaCdV84j2Cr+rsV4g7sBvc9Uf4ixPB/pwIZHIr7tKKlyiFZPaL/4ilT
+	DmBjSLwSJzTSCfjzxPlbKDB6dviiOwQDnVCDe59gu7nYEe9Uia5/IIIgo+GOa3jH3xbRDkEi5Sw
+	Z0pNiNePfKUffJl2TGlYoxTwG2HNgmbXCANbe9ctyKVLhBZEf0XneyqUR3QSsnEIFXLTEmT3VHf
+	ZHGFBLUpdixoyDaD/65viEH0HRwY2jGH1xqmCIA==
+X-Received: by 2002:a05:600c:c0c3:20b0:485:2a85:e5ec with SMTP id 5b1f17b1804b1-4852a85e711mr21979725e9.2.1772826668394;
+        Fri, 06 Mar 2026 11:51:08 -0800 (PST)
+X-Received: by 2002:a05:600c:c0c3:20b0:485:2a85:e5ec with SMTP id 5b1f17b1804b1-4852a85e711mr21979485e9.2.1772826667946;
+        Fri, 06 Mar 2026 11:51:07 -0800 (PST)
+Received: from costa-tp.redhat.com ([2a00:a041:e223:1b00:fe51:8bb:7986:c897])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-485276b75eesm48596485e9.14.2026.03.06.11.51.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2026 11:51:07 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Move snapshot code out of trace.c and into
- trace_snapshot.c
-Message-ID: <202603070230.Zz4BBLtb-lkp@intel.com>
-References: <20260305211810.3f48aa07@robin>
+	Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v4 0/4] tools/rtla: Consolidate nr_cpus usage
+Date: Fri,  6 Mar 2026 21:49:48 +0200
+Message-ID: <20260306194953.2511960-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260305211810.3f48aa07@robin>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OvothC44O10-rbrarYc96LhETJxyRVkp9CwzoFdzazA_1772826668
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Steven,
+sysconf(_SC_NPROCESSORS_CONF) (via get_nprocs_conf) reflects
+cpu_possible_mask, which is fixed at boot time, so querying it
+repeatedly is unnecessary.
 
-kernel test robot noticed the following build warnings:
+Replace multiple calls to sysconf(_SC_NPROCESSORS_CONF) with a single
+global nr_cpus variable initialized once at startup.
 
-[auto build test WARNING on v7.0-rc2]
-[cannot apply to trace/for-next linus/master next-20260306]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v4:
+- Reorder change of BPF functions
+- Update unit test
+v3:
+- Remove unneeded cpus parameter from timerlat BPF functions as
+  requested by Wander Costa.
+v2:
+- Add `#pragma once` in timerlat_u.h to avoid redefinition errors with
+  pre-C23 compilers.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Move-snapshot-code-out-of-trace-c-and-into-trace_snapshot-c/20260306-102714
-base:   v7.0-rc2
-patch link:    https://lore.kernel.org/r/20260305211810.3f48aa07%40robin
-patch subject: [PATCH] tracing: Move snapshot code out of trace.c and into trace_snapshot.c
-config: sparc64-defconfig (https://download.01.org/0day-ci/archive/20260307/202603070230.Zz4BBLtb-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260307/202603070230.Zz4BBLtb-lkp@intel.com/reproduce)
+Costa Shulyupin (4):
+  tools/rtla: Consolidate nr_cpus usage across all tools
+  tools/rtla: Remove unneeded nr_cpus arguments
+  tools/rtla: Remove unneeded nr_cpus members
+  tools/rtla: Remove unneeded nr_cpus from for_each_monitored_cpu
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603070230.Zz4BBLtb-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/trace.c:820:5: warning: no previous prototype for function 'tracing_alloc_snapshot' [-Wmissing-prototypes]
-     820 | int tracing_alloc_snapshot(void)
-         |     ^
-   kernel/trace/trace.c:820:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     820 | int tracing_alloc_snapshot(void)
-         | ^
-         | static 
-   1 warning generated.
-
-
-vim +/tracing_alloc_snapshot +820 kernel/trace/trace.c
-
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  792) 
-93e31ffbf417a84 Tom Zanussi              2013-10-24  793  /**
-93e31ffbf417a84 Tom Zanussi              2013-10-24  794   * tracing_alloc_snapshot - allocate snapshot buffer.
-93e31ffbf417a84 Tom Zanussi              2013-10-24  795   *
-93e31ffbf417a84 Tom Zanussi              2013-10-24  796   * This only allocates the snapshot buffer if it isn't already
-93e31ffbf417a84 Tom Zanussi              2013-10-24  797   * allocated - it doesn't also take a snapshot.
-93e31ffbf417a84 Tom Zanussi              2013-10-24  798   *
-93e31ffbf417a84 Tom Zanussi              2013-10-24  799   * This is meant to be used in cases where the snapshot buffer needs
-93e31ffbf417a84 Tom Zanussi              2013-10-24  800   * to be set up for events that can't sleep but need to be able to
-93e31ffbf417a84 Tom Zanussi              2013-10-24  801   * trigger a snapshot.
-93e31ffbf417a84 Tom Zanussi              2013-10-24  802   */
-93e31ffbf417a84 Tom Zanussi              2013-10-24  803  int tracing_alloc_snapshot(void)
-93e31ffbf417a84 Tom Zanussi              2013-10-24  804  {
-93e31ffbf417a84 Tom Zanussi              2013-10-24  805  	struct trace_array *tr = &global_trace;
-93e31ffbf417a84 Tom Zanussi              2013-10-24  806  	int ret;
-93e31ffbf417a84 Tom Zanussi              2013-10-24  807  
-2824f5033248600 Steven Rostedt (VMware   2018-05-28  808) 	ret = tracing_alloc_snapshot_instance(tr);
-93e31ffbf417a84 Tom Zanussi              2013-10-24  809  	WARN_ON(ret < 0);
-93e31ffbf417a84 Tom Zanussi              2013-10-24  810  
-93e31ffbf417a84 Tom Zanussi              2013-10-24  811  	return ret;
-93e31ffbf417a84 Tom Zanussi              2013-10-24  812  }
-93e31ffbf417a84 Tom Zanussi              2013-10-24  813  EXPORT_SYMBOL_GPL(tracing_alloc_snapshot);
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  814) #else
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  815) void tracing_snapshot(void)
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  816) {
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  817) 	WARN_ONCE(1, "Snapshot feature not enabled, but internal snapshot used");
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  818) }
-1b22e382ab40b0e Steven Rostedt (Red Hat  2013-03-09  819) EXPORT_SYMBOL_GPL(tracing_snapshot);
-93e31ffbf417a84 Tom Zanussi              2013-10-24 @820  int tracing_alloc_snapshot(void)
-93e31ffbf417a84 Tom Zanussi              2013-10-24  821  {
-93e31ffbf417a84 Tom Zanussi              2013-10-24  822  	WARN_ONCE(1, "Snapshot feature not enabled, but snapshot allocation used");
-93e31ffbf417a84 Tom Zanussi              2013-10-24  823  	return -ENODEV;
-93e31ffbf417a84 Tom Zanussi              2013-10-24  824  }
-93e31ffbf417a84 Tom Zanussi              2013-10-24  825  EXPORT_SYMBOL_GPL(tracing_alloc_snapshot);
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  826) void tracing_snapshot_alloc(void)
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  827) {
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  828) 	/* Give warning */
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  829) 	tracing_snapshot();
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  830) }
-1b22e382ab40b0e Steven Rostedt (Red Hat  2013-03-09  831) EXPORT_SYMBOL_GPL(tracing_snapshot_alloc);
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  832) #endif /* CONFIG_TRACER_SNAPSHOT */
-ad909e21bbe69f1 Steven Rostedt (Red Hat  2013-03-06  833) 
+ tools/tracing/rtla/src/common.c            |  7 ++-
+ tools/tracing/rtla/src/common.h            |  4 +-
+ tools/tracing/rtla/src/osnoise_hist.c      | 26 ++++-----
+ tools/tracing/rtla/src/osnoise_top.c       | 16 ++----
+ tools/tracing/rtla/src/timerlat.c          |  9 ++--
+ tools/tracing/rtla/src/timerlat_aa.c       | 11 ++--
+ tools/tracing/rtla/src/timerlat_bpf.c      | 19 +++----
+ tools/tracing/rtla/src/timerlat_bpf.h      | 12 ++---
+ tools/tracing/rtla/src/timerlat_hist.c     | 62 +++++++++-------------
+ tools/tracing/rtla/src/timerlat_top.c      | 47 ++++++----------
+ tools/tracing/rtla/src/timerlat_u.c        |  9 ++--
+ tools/tracing/rtla/src/timerlat_u.h        |  1 +
+ tools/tracing/rtla/src/utils.c             | 10 +---
+ tools/tracing/rtla/tests/unit/unit_tests.c | 44 +++++++--------
+ 14 files changed, 108 insertions(+), 169 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.53.0
+
