@@ -1,71 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F25C2DD5F6;
-	Sat,  7 Mar 2026 03:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA85B640;
+	Sat,  7 Mar 2026 07:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772854376; cv=none; b=nEMmfeKP5df/6O//xhsIYQCRl5B8jvhVxL+lOv/5Kp4UkB5ghoq5iXYW+GoTEDOdMKbVgDG2WVHnHDZx5375qEjW57SO0cOVYMK1BDsDcmwbYumF+sphbe9kpBFOINzgomfuDstDvPTN8pfYPNUv9pbsK8+zK+6WbDFv2lp+NuU=
+	t=1772868358; cv=none; b=tASjG4FHVnFs9bwG/5JcuzGcoJCrm2JL/P8DPrBwJiwcwExXG7cK50WHB7dcjg2FYyHD4dJF5LC0vYPswZAfsY9+s0lSHkuhs5ng4Zywxos0/nPXGsDO+EJBSWa5y+3oO6ESd4TiKhXRNQYv4qtSYuX/XX6hsY49foB+sfm8OOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772854376; c=relaxed/simple;
-	bh=UB4aqVHBkq7Z6U0PCU86267heuJHua5cm31mgeVxY3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XeBiXyw78tiQFs5MfApf+8vdLMKGom0epL5lEQ4b4PfyANrSDfeDRvU+lI7eOqM4IH5APNidQNrgirQJ4TnLqMHgSr2ffJH9U+ZA7LcBj3eJBe6wKjA5vqRx1gs1S+niU04oj3qOag1MbvexUDhSfPDtO2+hOoTaeWvyZc/WlEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGyqRF/3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772868358; c=relaxed/simple;
+	bh=Mzr7y4QH1IzyO44ZlhNV88cM61KS6U7bP9zhV9sW7JY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OVyhFrMf2dbKBm2WSmenZBsFGb08xQ2Fbh+HSRtO2pscP9zKUkTjXo+rHiyeMgMDkiZzXIZ3oMgWsYPwFVv9J5q1sYs7WZbbWRZWNsNvX3UgLY5xe0GUqClEhbY5Um5aDkQo9GfKIaQMFAIm0tBg1Y/maG8ruDRqA/EABPHpNWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=F6Cmsd/B; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGyqRF/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69D9C19422;
-	Sat,  7 Mar 2026 03:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772854375;
-	bh=UB4aqVHBkq7Z6U0PCU86267heuJHua5cm31mgeVxY3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lGyqRF/3qzEa7lUUuOdYRlHTYZ8SUHXAAJTLsEiatdGzW/HtZ0lre9XP1JLBn9FT4
-	 FiB8d6JjDEBERM5v9dDKjL9ZRFWnIVKcKCTQRNG7/LAaP3Zzc6Lp3//EjpID8pnFBo
-	 5e4K9pd3jXePOLfbQ0bga42/+X20Gs37yz3iGKGwbReGfvo40vSYXrE1bB/+hs79JN
-	 MMDMX/wuV8tpMKLLtpSofe2S1yk+kr/shs1IGhF6wbU0DhCnRHIFxH+VE+EzBgOMHN
-	 OVIU0NfXL/Uspb2E4ksgXotAe2pnN7Dlf5zwCRTtf9Yu9yGKT//AWVXjEX4wsf421L
-	 i0ORcG8R3BMzA==
-Date: Fri, 6 Mar 2026 19:32:53 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, donald.hunter@gmail.com,
- corbet@lwn.net, skhan@linuxfoundation.org, saeedm@nvidia.com,
- leon@kernel.org, tariqt@nvidia.com, mbloch@nvidia.com,
- przemyslaw.kitszel@intel.com, mschmidt@redhat.com, andrew+netdev@lunn.ch,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- chuck.lever@oracle.com, matttbe@kernel.org, cjubran@nvidia.com,
- daniel.zahka@gmail.com, linux-doc@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 01/13] devlink: expose devlink instance
- index over netlink
-Message-ID: <20260306193253.6d7d2383@kernel.org>
-In-Reply-To: <20260304160022.6114-2-jiri@resnulli.us>
-References: <20260304160022.6114-1-jiri@resnulli.us>
-	<20260304160022.6114-2-jiri@resnulli.us>
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="F6Cmsd/B"
+Message-ID: <1cc6de61-8b56-492e-ab78-e3aa448f58ad@packett.cool>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1772868354;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2+6NWzTpol+frWt/3c7B3LJfpEfyNZMXCdsBfpvUEw=;
+	b=F6Cmsd/BYepDn38XmUEHEczMxHTa1zURkFgn8+XYAvwoAIo14tvO2fl9Fzi31PO3nOsU/L
+	d2hbN8PlvzxwKNerfH3vDN1Wv+JVYu3LF0gRjJQ3z8UVNDMiu8Zzpum79j+L1JrFR861Si
+	9j07WFQZ4qPZEd5be0waEn2QT1FT2nQuJea4kKu1UJZ1r8c/Gspbv86LUDLE0ejTPml2eo
+	aQEt/Thkha2LmzcANcfO9pUjNNZzqmuQ1gCQeVzpzvX832SUrTVKvNfbluVVFv8EZiaJ3h
+	x/lHgZbT8nap0ngrW02gfr1c2s/2WP1I0Ol0Q12hbf+lB9yW0sXdpmcWMHeBtA==
+Date: Sat, 7 Mar 2026 04:25:44 -0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 09/12] dt-bindings: input: Document hid-over-spi DT schema
+To: Jingyuan Liang <jingyliang@chromium.org>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ hbarnor@chromium.org, Dmitry Antipov <dmanti@microsoft.com>,
+ Jarrett Schultz <jaschultz@microsoft.com>
+References: <20260303-send-upstream-v1-0-1515ba218f3d@chromium.org>
+ <20260303-send-upstream-v1-9-1515ba218f3d@chromium.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Val Packett <val@packett.cool>
+In-Reply-To: <20260303-send-upstream-v1-9-1515ba218f3d@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed,  4 Mar 2026 17:00:10 +0100 Jiri Pirko wrote:
-> +      -
-> +        name: index
-> +        type: uint
-> +        doc: Unique devlink instance index.
 
-AI complains on patch 6 that the index is truncated because it's saved
-to a u32. Let's add:
+On 3/3/26 3:13 AM, Jingyuan Liang wrote:
+> Documentation describes the required and optional properties for
+> implementing Device Tree for a Microsoft G6 Touch Digitizer that
+> supports HID over SPI Protocol 1.0 specification.
+> […]
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - microsoft,g6-touch-digitizer
+> +          - const: hid-over-spi
+> +      - description: Just "hid-over-spi" alone is allowed, but not recommended.
+> […]
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reset-gpios
 
-        checks:
-           max: u32-max
+Why is reset required? Is it so implausible on some device implementing 
+the spec there wouldn't be a reset gpio?
 
-here and the policy will take care of the check, you can then remove
-the explicit checks too
--- 
-pw-bot: cr
+> +  - vdd-supply
+Linux makes up a dummy regulator if DT doesn't provide one, so can 
+regulators even be required?
+> […]
+> +        compatible = "hid-over-spi";
+Not following your own recommendation from above :)
+> +        reg = <0x0>;
+> +        interrupts-extended = <&gpio 42 IRQ_TYPE_EDGE_FALLING>;
+> +        reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+> +        vdd-supply = <&pm8350c_l3>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&ts_d6_reset_assert &ts_d6_int_bias>;
+
+Heh, "reset_assert" is a name implying it would actually set the value 
+from the pinctrl properties, which is what had to be done before 
+reset-gpios were supported. But now reset-gpios are supported.
+
+
+Thanks,
+~val
+
+
+P.S. happy to see work on this happen again!
+
