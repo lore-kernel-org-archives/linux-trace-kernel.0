@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DA026B764;
-	Sat,  7 Mar 2026 14:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7594A392C3E;
+	Sat,  7 Mar 2026 14:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772893593; cv=none; b=kz4dHfpQfzwf31BZZEiZ+HVmaVJZxZiLzjrQi2lM8P6SALXqS83n3YRc6kfXc1+uUrM3UcpdPcBydkUOJ2ykvWICLSwRoSyq00LqJra0FHxTb14yhxyEAf1RsgHLLqGsXHHNcKP/vfMJVej/SoVu5QZUZLy3FkgQEfM62VXOUHA=
+	t=1772893602; cv=none; b=fym1LcKC+NwV+Ke1ofkKvhP5gZUanasQwOFhKy2eP3kMHoCuozKgmWlRMuy/8m+FaEe4o9PPX1cmxDTsaE54v9VbpETUAownTHlci62GIunsZ42NQCG16LJzdf34mbOpOYT47M3/hvuVPH4hBYvh+MT9jWMn/MY241JEJ8m8rZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772893593; c=relaxed/simple;
-	bh=M1az3QXMLWgrtDJwC74p4p6tdmkG/ib+b/Gi5V26mvg=;
+	s=arc-20240116; t=1772893602; c=relaxed/simple;
+	bh=102Xuq/hE8JwZtM2Ay7bKp0Yq2/d7+YhGMylDwS6JDs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tG+dJvcBdxHQGroDko375bLlGOWFqhew/G6CZ6kco6gLkqiKMZWQ2pa9RaDvJwq/xFnfqGbVcpOYxL/1e4o6JRCxmwEDIESYcHEpV5X9C46cpLjwZH1Ho2Glz6M7bHVwjQxRuQ8hlO+EL8LXLIpLg2RBdw90KxoqPxFiByd57B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ubj5pYlp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=kR567JCWBMxkAFx4SxzU0jaUD5OtnWKBzFmLzBPT5SMwkAI/M9ShmiOGFs08q2MVXhUh22gKTe/FrOr1Xw26ZocxOnJ+x8Y68zm8WczalkHNBKBqhImN2TS+2QqbznkY5g3jmhddnv2Du3ZABYu3Tl5duAwyw7LXEBwU9R8JUMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/SaL4F+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ubj5pYlp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A46C19422;
-	Sat,  7 Mar 2026 14:26:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/SaL4F+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C68FAC19422;
+	Sat,  7 Mar 2026 14:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772893593;
-	bh=M1az3QXMLWgrtDJwC74p4p6tdmkG/ib+b/Gi5V26mvg=;
+	s=k20201202; t=1772893602;
+	bh=102Xuq/hE8JwZtM2Ay7bKp0Yq2/d7+YhGMylDwS6JDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ubj5pYlppzpheISh4cn34NoRwXAtTOjv6qRgBur+/FmWh5hMZgn6RElQlm1MWfOe3
-	 HxTPW90D0evc7cbN+7Gu6nrG8OnWvcG2JIUmDe0v6a6TylJLMJK/HBrfRae/DNnULS
-	 7qi0hxCFqUq+GWEejcqPuD8o1ieqsLEDYoRRXOQQSjbjEos3DWvV2/7NV8j+pp6x5p
-	 nxqdZMb2nC2+vnjkIFsdy/ZaRuqaIhcEOofPWNWr13nRZH9dVE5FZEVv9G1hRDdk7U
-	 IIO2YXaineMt7CxH2H3FQ4JTw2+cdC3eX3AqRtdvtALPIBpoe3xD0gPpKUPRjEZBOp
-	 t6jat23eVirTg==
+	b=b/SaL4F+EsYxZLsQfySYgZlebPgxJWIDdUuQ+FYYQsdeuQ+UaYI6MRgEVBAFZusPy
+	 ljJFeAIkT4LwwD4EjSF2pPinnVr6ve/iGyy2SEzzsXeXhFEq6Sv1be437FC+YsUpdJ
+	 TmLTzTarHQMRcF0GEKKTDvyi+9Y5i2sr1XORseNK3XA1qFFvZTxUkR3tvL0oNCbD1w
+	 7qokLws3NSTd6vvadspWatn1YBNIKkwTGmmRyyCiplzXRma5r0xp/NMLk6zJBHs9zv
+	 CuDDKJo05KmRPIw13cWi39Y4Fa62GfR40yXT+GA5K4i8QnAxigzzNImOEcdjPlIaYM
+	 2b+dHPOBRK2hA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 1/2] ring-buffer: Flush and stop persistent ring buffer on panic
-Date: Sat,  7 Mar 2026 23:26:30 +0900
-Message-ID: <177289358988.248514.6404820659978599337.stgit@devnote2>
+Subject: [PATCH v7 2/2] ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
+Date: Sat,  7 Mar 2026 23:26:38 +0900
+Message-ID: <177289359843.248514.164858607457269337.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <177289358078.248514.14947007976699929481.stgit@devnote2>
 References: <177289358078.248514.14947007976699929481.stgit@devnote2>
@@ -50,362 +50,181 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On real hardware, panic and machine reboot may not flush hardware cache
-to memory. This means the persistent ring buffer, which relies on a
-coherent state of memory, may not have its events written to the buffer
-and they may be lost. Moreover, there may be inconsistency with the
-counters which are used for validation of the integrity of the
-persistent ring buffer which may cause all data to be discarded.
+Skip invalid sub-buffers when validating the persistent ring buffer
+instead of discarding the entire ring buffer. Only skipped buffers
+are invalidated (cleared).
 
-To avoid this issue, stop recording of the ring buffer on panic and
-flush the cache of the ring buffer's memory.
+If the cache data in memory fails to be synchronized during a reboot,
+the persistent ring buffer may become partially corrupted, but other
+sub-buffers may still contain readable event data. Only discard the
+subbuffersa that ar found to be corrupted.
 
-Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
-Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/alpha/include/asm/Kbuild        |    1 +
- arch/arc/include/asm/Kbuild          |    1 +
- arch/arm/include/asm/Kbuild          |    1 +
- arch/arm64/include/asm/ring_buffer.h |   10 ++++++++++
- arch/csky/include/asm/Kbuild         |    1 +
- arch/hexagon/include/asm/Kbuild      |    1 +
- arch/loongarch/include/asm/Kbuild    |    1 +
- arch/m68k/include/asm/Kbuild         |    1 +
- arch/microblaze/include/asm/Kbuild   |    1 +
- arch/mips/include/asm/Kbuild         |    1 +
- arch/nios2/include/asm/Kbuild        |    1 +
- arch/openrisc/include/asm/Kbuild     |    1 +
- arch/parisc/include/asm/Kbuild       |    1 +
- arch/powerpc/include/asm/Kbuild      |    1 +
- arch/riscv/include/asm/Kbuild        |    1 +
- arch/s390/include/asm/Kbuild         |    1 +
- arch/sh/include/asm/Kbuild           |    1 +
- arch/sparc/include/asm/Kbuild        |    1 +
- arch/um/include/asm/Kbuild           |    1 +
- arch/x86/include/asm/Kbuild          |    1 +
- arch/xtensa/include/asm/Kbuild       |    1 +
- include/asm-generic/ring_buffer.h    |   13 +++++++++++++
- kernel/trace/ring_buffer.c           |   22 ++++++++++++++++++++++
- 23 files changed, 65 insertions(+)
- create mode 100644 arch/arm64/include/asm/ring_buffer.h
- create mode 100644 include/asm-generic/ring_buffer.h
+  Changes in v7:
+  - Combined with Handling RB_MISSED_* flags patch, focus on validation at boot.
+  - Remove checking subbuffer data when validating metadata, because it should be done
+    later.
+  - Do not mark the discarded sub buffer page but just reset it.
+  Changes in v6:
+  - Show invalid page detection message once per CPU.
+  Changes in v5:
+  - Instead of showing errors for each page, just show the number
+    of discarded pages at last.
+  Changes in v3:
+  - Record missed data event on commit.
+---
+ kernel/trace/ring_buffer.c |   63 +++++++++++++++++++++++---------------------
+ 1 file changed, 33 insertions(+), 30 deletions(-)
 
-diff --git a/arch/alpha/include/asm/Kbuild b/arch/alpha/include/asm/Kbuild
-index 483965c5a4de..b154b4e3dfa8 100644
---- a/arch/alpha/include/asm/Kbuild
-+++ b/arch/alpha/include/asm/Kbuild
-@@ -5,4 +5,5 @@ generic-y += agp.h
- generic-y += asm-offsets.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += text-patching.h
-diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-index 4c69522e0328..483caacc6988 100644
---- a/arch/arc/include/asm/Kbuild
-+++ b/arch/arc/include/asm/Kbuild
-@@ -5,5 +5,6 @@ generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += parport.h
-+generic-y += ring_buffer.h
- generic-y += user.h
- generic-y += text-patching.h
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index 03657ff8fbe3..decad5f2c826 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -3,6 +3,7 @@ generic-y += early_ioremap.h
- generic-y += extable.h
- generic-y += flat.h
- generic-y += parport.h
-+generic-y += ring_buffer.h
- 
- generated-y += mach-types.h
- generated-y += unistd-nr.h
-diff --git a/arch/arm64/include/asm/ring_buffer.h b/arch/arm64/include/asm/ring_buffer.h
-new file mode 100644
-index 000000000000..62316c406888
---- /dev/null
-+++ b/arch/arm64/include/asm/ring_buffer.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_ARM64_RING_BUFFER_H
-+#define _ASM_ARM64_RING_BUFFER_H
-+
-+#include <asm/cacheflush.h>
-+
-+/* Flush D-cache on persistent ring buffer */
-+#define arch_ring_buffer_flush_range(start, end)	dcache_clean_pop(start, end)
-+
-+#endif /* _ASM_ARM64_RING_BUFFER_H */
-diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-index 3a5c7f6e5aac..7dca0c6cdc84 100644
---- a/arch/csky/include/asm/Kbuild
-+++ b/arch/csky/include/asm/Kbuild
-@@ -9,6 +9,7 @@ generic-y += qrwlock.h
- generic-y += qrwlock_types.h
- generic-y += qspinlock.h
- generic-y += parport.h
-+generic-y += ring_buffer.h
- generic-y += user.h
- generic-y += vmlinux.lds.h
- generic-y += text-patching.h
-diff --git a/arch/hexagon/include/asm/Kbuild b/arch/hexagon/include/asm/Kbuild
-index 1efa1e993d4b..0f887d4238ed 100644
---- a/arch/hexagon/include/asm/Kbuild
-+++ b/arch/hexagon/include/asm/Kbuild
-@@ -5,4 +5,5 @@ generic-y += extable.h
- generic-y += iomap.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += text-patching.h
-diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
-index 9034b583a88a..7e92957baf6a 100644
---- a/arch/loongarch/include/asm/Kbuild
-+++ b/arch/loongarch/include/asm/Kbuild
-@@ -10,5 +10,6 @@ generic-y += qrwlock.h
- generic-y += user.h
- generic-y += ioctl.h
- generic-y += mmzone.h
-+generic-y += ring_buffer.h
- generic-y += statfs.h
- generic-y += text-patching.h
-diff --git a/arch/m68k/include/asm/Kbuild b/arch/m68k/include/asm/Kbuild
-index b282e0dd8dc1..62543bf305ff 100644
---- a/arch/m68k/include/asm/Kbuild
-+++ b/arch/m68k/include/asm/Kbuild
-@@ -3,5 +3,6 @@ generated-y += syscall_table.h
- generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += spinlock.h
- generic-y += text-patching.h
-diff --git a/arch/microblaze/include/asm/Kbuild b/arch/microblaze/include/asm/Kbuild
-index 7178f990e8b3..0030309b47ad 100644
---- a/arch/microblaze/include/asm/Kbuild
-+++ b/arch/microblaze/include/asm/Kbuild
-@@ -5,6 +5,7 @@ generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += parport.h
-+generic-y += ring_buffer.h
- generic-y += syscalls.h
- generic-y += tlb.h
- generic-y += user.h
-diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-index 684569b2ecd6..9771c3d85074 100644
---- a/arch/mips/include/asm/Kbuild
-+++ b/arch/mips/include/asm/Kbuild
-@@ -12,5 +12,6 @@ generic-y += mcs_spinlock.h
- generic-y += parport.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
-+generic-y += ring_buffer.h
- generic-y += user.h
- generic-y += text-patching.h
-diff --git a/arch/nios2/include/asm/Kbuild b/arch/nios2/include/asm/Kbuild
-index 28004301c236..0a2530964413 100644
---- a/arch/nios2/include/asm/Kbuild
-+++ b/arch/nios2/include/asm/Kbuild
-@@ -5,6 +5,7 @@ generic-y += cmpxchg.h
- generic-y += extable.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += spinlock.h
- generic-y += user.h
- generic-y += text-patching.h
-diff --git a/arch/openrisc/include/asm/Kbuild b/arch/openrisc/include/asm/Kbuild
-index cef49d60d74c..8aa34621702d 100644
---- a/arch/openrisc/include/asm/Kbuild
-+++ b/arch/openrisc/include/asm/Kbuild
-@@ -8,4 +8,5 @@ generic-y += spinlock_types.h
- generic-y += spinlock.h
- generic-y += qrwlock_types.h
- generic-y += qrwlock.h
-+generic-y += ring_buffer.h
- generic-y += user.h
-diff --git a/arch/parisc/include/asm/Kbuild b/arch/parisc/include/asm/Kbuild
-index 4fb596d94c89..d48d158f7241 100644
---- a/arch/parisc/include/asm/Kbuild
-+++ b/arch/parisc/include/asm/Kbuild
-@@ -4,4 +4,5 @@ generated-y += syscall_table_64.h
- generic-y += agp.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += user.h
-diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-index 2e23533b67e3..805b5aeebb6f 100644
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -5,4 +5,5 @@ generated-y += syscall_table_spu.h
- generic-y += agp.h
- generic-y += mcs_spinlock.h
- generic-y += qrwlock.h
-+generic-y += ring_buffer.h
- generic-y += early_ioremap.h
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index bd5fc9403295..7721b63642f4 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -14,5 +14,6 @@ generic-y += ticket_spinlock.h
- generic-y += qrwlock.h
- generic-y += qrwlock_types.h
- generic-y += qspinlock.h
-+generic-y += ring_buffer.h
- generic-y += user.h
- generic-y += vmlinux.lds.h
-diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-index 80bad7de7a04..0c1fc47c3ba0 100644
---- a/arch/s390/include/asm/Kbuild
-+++ b/arch/s390/include/asm/Kbuild
-@@ -7,3 +7,4 @@ generated-y += unistd_nr.h
- generic-y += asm-offsets.h
- generic-y += mcs_spinlock.h
- generic-y += mmzone.h
-+generic-y += ring_buffer.h
-diff --git a/arch/sh/include/asm/Kbuild b/arch/sh/include/asm/Kbuild
-index 4d3f10ed8275..f0403d3ee8ab 100644
---- a/arch/sh/include/asm/Kbuild
-+++ b/arch/sh/include/asm/Kbuild
-@@ -3,4 +3,5 @@ generated-y += syscall_table.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
- generic-y += parport.h
-+generic-y += ring_buffer.h
- generic-y += text-patching.h
-diff --git a/arch/sparc/include/asm/Kbuild b/arch/sparc/include/asm/Kbuild
-index 17ee8a273aa6..49c6bb326b75 100644
---- a/arch/sparc/include/asm/Kbuild
-+++ b/arch/sparc/include/asm/Kbuild
-@@ -4,4 +4,5 @@ generated-y += syscall_table_64.h
- generic-y += agp.h
- generic-y += kvm_para.h
- generic-y += mcs_spinlock.h
-+generic-y += ring_buffer.h
- generic-y += text-patching.h
-diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
-index 1b9b82bbe322..2a1629ba8140 100644
---- a/arch/um/include/asm/Kbuild
-+++ b/arch/um/include/asm/Kbuild
-@@ -17,6 +17,7 @@ generic-y += module.lds.h
- generic-y += parport.h
- generic-y += percpu.h
- generic-y += preempt.h
-+generic-y += ring_buffer.h
- generic-y += runtime-const.h
- generic-y += softirq_stack.h
- generic-y += switch_to.h
-diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-index 4566000e15c4..078fd2c0d69d 100644
---- a/arch/x86/include/asm/Kbuild
-+++ b/arch/x86/include/asm/Kbuild
-@@ -14,3 +14,4 @@ generic-y += early_ioremap.h
- generic-y += fprobe.h
- generic-y += mcs_spinlock.h
- generic-y += mmzone.h
-+generic-y += ring_buffer.h
-diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-index 13fe45dea296..e57af619263a 100644
---- a/arch/xtensa/include/asm/Kbuild
-+++ b/arch/xtensa/include/asm/Kbuild
-@@ -6,5 +6,6 @@ generic-y += mcs_spinlock.h
- generic-y += parport.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
-+generic-y += ring_buffer.h
- generic-y += user.h
- generic-y += text-patching.h
-diff --git a/include/asm-generic/ring_buffer.h b/include/asm-generic/ring_buffer.h
-new file mode 100644
-index 000000000000..dbe94f5785f9
---- /dev/null
-+++ b/include/asm-generic/ring_buffer.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Generiuc arch dependent ring_buffer macros.
-+ */
-+#ifndef __ASM_GENERIC_RING_BUFFER_H__
-+#define __ASM_GENERIC_RING_BUFFER_H__
-+
-+#include <linux/cacheflush.h>
-+
-+/* Flush cache on ring buffer range if needed */
-+#define arch_ring_buffer_flush_range(start, end)	flush_cache_vmap(start, end)
-+
-+#endif /* __ASM_GENERIC_RING_BUFFER_H__ */
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 17d0ea0cc3e6..b6f3ac99834f 100644
+index b6f3ac99834f..8599de5cf59b 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/sched/isolation.h>
- #include <linux/trace_recursion.h>
-+#include <linux/panic_notifier.h>
- #include <linux/trace_events.h>
- #include <linux/ring_buffer.h>
- #include <linux/trace_clock.h>
-@@ -30,6 +31,7 @@
- #include <linux/oom.h>
- #include <linux/mm.h>
- 
-+#include <asm/ring_buffer.h>
- #include <asm/local64.h>
- #include <asm/local.h>
- #include <asm/setup.h>
-@@ -589,6 +591,7 @@ struct trace_buffer {
- 
- 	unsigned long			range_addr_start;
- 	unsigned long			range_addr_end;
-+	struct notifier_block		flush_nb;
- 
- 	struct ring_buffer_meta		*meta;
- 
-@@ -2471,6 +2474,16 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	kfree(cpu_buffer);
+@@ -396,6 +396,12 @@ static __always_inline unsigned int rb_page_commit(struct buffer_page *bpage)
+ 	return local_read(&bpage->page->commit);
  }
  
-+/* Stop recording on a persistent buffer and flush cache if needed. */
-+static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
++/* Size is determined by what has been committed */
++static __always_inline unsigned int rb_page_size(struct buffer_page *bpage)
 +{
-+	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
-+
-+	ring_buffer_record_off(buffer);
-+	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
-+	return NOTIFY_DONE;
++	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
 +}
 +
- static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 int order, unsigned long start,
- 					 unsigned long end,
-@@ -2590,6 +2603,12 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 
- 	mutex_init(&buffer->mutex);
- 
-+	/* Persistent ring buffer needs to flush cache before reboot. */
-+	if (start & end) {
-+		buffer->flush_nb.notifier_call = rb_flush_buffer_cb;
-+		atomic_notifier_chain_register(&panic_notifier_list, &buffer->flush_nb);
-+	}
-+
- 	return_ptr(buffer);
- 
-  fail_free_buffers:
-@@ -2677,6 +2696,9 @@ ring_buffer_free(struct trace_buffer *buffer)
+ static void free_buffer_page(struct buffer_page *bpage)
  {
- 	int cpu;
+ 	/* Range pages are not to be freed */
+@@ -1819,7 +1825,7 @@ static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
  
-+	if (buffer->range_addr_start && buffer->range_addr_end)
-+		atomic_notifier_chain_unregister(&panic_notifier_list, &buffer->flush_nb);
-+
- 	cpuhp_state_remove_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
+ 	bitmap_clear(subbuf_mask, 0, meta->nr_subbufs);
  
- 	irq_work_sync(&buffer->irq_work.work);
+-	/* Is the meta buffers and the subbufs themselves have correct data? */
++	/* Is the meta buffers themselves have correct data? */
+ 	for (i = 0; i < meta->nr_subbufs; i++) {
+ 		if (meta->buffers[i] < 0 ||
+ 		    meta->buffers[i] >= meta->nr_subbufs) {
+@@ -1827,11 +1833,6 @@ static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
+ 			return false;
+ 		}
+ 
+-		if ((unsigned)local_read(&subbuf->commit) > subbuf_size) {
+-			pr_info("Ring buffer boot meta [%d] buffer invalid commit\n", cpu);
+-			return false;
+-		}
+-
+ 		if (test_bit(meta->buffers[i], subbuf_mask)) {
+ 			pr_info("Ring buffer boot meta [%d] array has duplicates\n", cpu);
+ 			return false;
+@@ -1902,13 +1903,16 @@ static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu
+ 	return events;
+ }
+ 
+-static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
++static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu,
++			      struct ring_buffer_cpu_meta *meta)
+ {
+ 	unsigned long long ts;
+ 	u64 delta;
+ 	int tail;
+ 
+ 	tail = local_read(&dpage->commit);
++	if (tail <= 0 || tail > meta->subbuf_size)
++		return -1;
+ 	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
+ }
+ 
+@@ -1919,6 +1923,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	struct buffer_page *head_page, *orig_head;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
++	int discarded = 0;
+ 	int ret;
+ 	u64 ts;
+ 	int i;
+@@ -1929,13 +1934,13 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	orig_head = head_page = cpu_buffer->head_page;
+ 
+ 	/* Do the reader page first */
+-	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
++	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu, meta);
+ 	if (ret < 0) {
+ 		pr_info("Ring buffer reader page is invalid\n");
+ 		goto invalid;
+ 	}
+ 	entries += ret;
+-	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
++	entry_bytes += rb_page_size(cpu_buffer->reader_page);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+ 	ts = head_page->page->time_stamp;
+@@ -1964,7 +1969,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 			break;
+ 
+ 		/* Stop rewind if the page is invalid. */
+-		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu, meta);
+ 		if (ret < 0)
+ 			break;
+ 
+@@ -2043,21 +2048,24 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 		if (head_page == cpu_buffer->reader_page)
+ 			continue;
+ 
+-		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu, meta);
+ 		if (ret < 0) {
+-			pr_info("Ring buffer meta [%d] invalid buffer page\n",
+-				cpu_buffer->cpu);
+-			goto invalid;
+-		}
+-
+-		/* If the buffer has content, update pages_touched */
+-		if (ret)
+-			local_inc(&cpu_buffer->pages_touched);
+-
+-		entries += ret;
+-		entry_bytes += local_read(&head_page->page->commit);
+-		local_set(&cpu_buffer->head_page->entries, ret);
++			if (!discarded)
++				pr_info("Ring buffer meta [%d] invalid buffer page detected\n",
++					cpu_buffer->cpu);
++			discarded++;
++			/* Instead of discard whole ring buffer, discard only this sub-buffer. */
++			local_set(&head_page->entries, 0);
++			local_set(&head_page->page->commit, RB_MISSED_EVENTS);
++		} else {
++			/* If the buffer has content, update pages_touched */
++			if (ret)
++				local_inc(&cpu_buffer->pages_touched);
+ 
++			entries += ret;
++			entry_bytes += rb_page_size(head_page);
++			local_set(&cpu_buffer->head_page->entries, ret);
++		}
+ 		if (head_page == cpu_buffer->commit_page)
+ 			break;
+ 	}
+@@ -2071,7 +2079,8 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	local_set(&cpu_buffer->entries, entries);
+ 	local_set(&cpu_buffer->entries_bytes, entry_bytes);
+ 
+-	pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
++	pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
++		cpu_buffer->cpu, discarded);
+ 	return;
+ 
+  invalid:
+@@ -3258,12 +3267,6 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ 	return NULL;
+ }
+ 
+-/* Size is determined by what has been committed */
+-static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
+-{
+-	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
+-}
+-
+ static __always_inline unsigned
+ rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
+ {
 
