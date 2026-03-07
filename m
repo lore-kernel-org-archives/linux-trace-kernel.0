@@ -1,135 +1,71 @@
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E72E2F7478
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Mar 2026 03:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F25C2DD5F6;
+	Sat,  7 Mar 2026 03:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772853576; cv=none; b=SN6HjRoU7CiBPx2KUlxZxbmx1QznKyJRYkE7gizZ10LjoxPm5ZUR3X1YIECqTCMFwAf4XVvVzi2Z4Hape3HJmX1pfjrtKufGxheQwo0Xccbr8fIW4nqca6BLaZIyV+MUdBYECVw7idOtwrMjpixOGfCVb7troZIVo3LO/+14XeQ=
+	t=1772854376; cv=none; b=nEMmfeKP5df/6O//xhsIYQCRl5B8jvhVxL+lOv/5Kp4UkB5ghoq5iXYW+GoTEDOdMKbVgDG2WVHnHDZx5375qEjW57SO0cOVYMK1BDsDcmwbYumF+sphbe9kpBFOINzgomfuDstDvPTN8pfYPNUv9pbsK8+zK+6WbDFv2lp+NuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772853576; c=relaxed/simple;
-	bh=9lkriiYVUgAJAV2ygYKzZB2R1bi3LRMIzoFL2qTmlco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LQGok6tQyqsLYWJQ5ABHEIDFGgdEpHe0mnwl4pNWRQ7gg2ID0+RzYRccYwB6xj+MMZpCr9d1K76X++FKRKfDZAzxKAoMEjdtgQn375IkF2fT9+VMeoQxigzb19WNZE+pr6snbt3Luhju1apQoF+HjGIeYbrekiibZ/B04nKE89o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=Vr4F1Esk; arc=none smtp.client-ip=74.125.82.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	s=arc-20240116; t=1772854376; c=relaxed/simple;
+	bh=UB4aqVHBkq7Z6U0PCU86267heuJHua5cm31mgeVxY3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XeBiXyw78tiQFs5MfApf+8vdLMKGom0epL5lEQ4b4PfyANrSDfeDRvU+lI7eOqM4IH5APNidQNrgirQJ4TnLqMHgSr2ffJH9U+ZA7LcBj3eJBe6wKjA5vqRx1gs1S+niU04oj3qOag1MbvexUDhSfPDtO2+hOoTaeWvyZc/WlEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGyqRF/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="Vr4F1Esk"
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1271257ae53so12002624c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Mar 2026 19:19:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1772853575; x=1773458375; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E6h1s9t7Yp+cySizwvrH6v9eju/k8G5b2pZCpKQCBAQ=;
-        b=Vr4F1EskDMopIjmYwE8hxEQcu1mR/eYPTszZJpYniivtLLsqECoAQyPWxjqnAKBFQ2
-         xRlNlnp+ovgLV2CZDmdmLYbf5fitvjqH4qqYV37RH59vry2nhAmkvX10ngF83ek/bNzS
-         dqpg1QeZfKqpLCd/JovpFKRo3GRnHSig/+hT0dMMKrkSBJGUI1sYG3lKE24cgip7IhDi
-         aIokSfBJDtfRh+3bITWit9xL5Ryu76UqJ4kS8cT/dymAyG+THc83sGLPIUBHwGtILxMC
-         K0i8e830xF/meYjdoaa33V2BXlKVT5L3LKhIZOBzXZ6FjKzE5+PpGRwmaWav0qi4D9w7
-         dH2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772853575; x=1773458375;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=E6h1s9t7Yp+cySizwvrH6v9eju/k8G5b2pZCpKQCBAQ=;
-        b=qMsE6rb6vn7TELf3i3yyrukPA6DPw9qU0B80UTpDJM9nwAWFrG2w2OaFk0zAZyZSrZ
-         wrSJp13SlUW3LcyH+OGbsr4xDwXSOdBm/Zvkd1UjapyZyFT6XsPFO4GJOWFMfjjLP0lV
-         y1MBgpLe1O3MUacKJDS/Y+fkNTSLqhb36dwa0r4R8jQj9Wa21qZLqhUfIm4X3AR5wmXl
-         XUfSUfPVIRYcc4UquQXDieS6lduZELQH6HsBGbV6yK0FmxoUtmSetuv2SQZSGBdZOHqz
-         kQ0fzJ8P41ZUZWuqUhcomB61Go28TAWecVZHhdGNnSw58PTue59c0erG1syWWwrD+mpP
-         Db9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+paR2oaNTP98bykBitcRENySYmdbJ//dHsUPAQ36l9c7yneJkBmzac9P+DpcFw5jZF9p8oBUOyNkCYXq8rNHIMuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP5NQfS8bDY3oCeYepBWNwfXpxrhCcpGgTp/Bopj9C79heFAoL
-	XAH4MrCNf3kOAXgM2uSKsznqvF1/Id1DDf5QoFaOxzedvgqJL8TZ1tbHa7i4egB0fqo=
-X-Gm-Gg: ATEYQzy1KypobM4SFjOqQa41I40QGi/nZZOd30kfcwJqcnBrPn6S4cpn3AxzLCIaXLQ
-	7+kONIUnOOZjID7wYFY1vZL+N0ItwUXhp8k2KalofFlrFtWwnZWUN78HB2gelF23eYPEg1e9Ei5
-	ulLRfYqM/vwmpgX3XmxFuqUMy+FruHcFFBlnvjb2QvkZWpuawAaQFNF+CgY18Lmc9Wet0qA8ITf
-	DjYcP/0lfYKFlvIffKE6HYnuWZCVARFseWOpoK5eiPlERaGBEeuBcz5Cnw4UXNijckty4tl5Xw4
-	vNB20X7hW47p/amIrpY/orGTtpDhNIdQfbUXsHgqmsg4Ux27byjmTTrU3/1S1wynETZf1fyhGwu
-	3jT5Hjgh3kLs05KODJxQxAr/o6LYS317nFjrQOgBbEL1Z4i/PhBBDdnV1a7nLA2SDG1QvDwdbxY
-	DMTmthlDBMtqcZOt43QH8ZKl6LrA==
-X-Received: by 2002:a05:7022:4399:b0:128:ce44:be90 with SMTP id a92af1059eb24-128ce44c056mr215530c88.28.1772853573760;
-        Fri, 06 Mar 2026 19:19:33 -0800 (PST)
-Received: from mozart.vkv.me ([2001:5a8:468b:d015:114e:d080:2a5d:de54])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-128c3d423c1sm2402779c88.1.2026.03.06.19.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 19:19:33 -0800 (PST)
-From: Calvin Owens <calvin@wbinvd.org>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Fix trace_buf_size= cmdline parameter with sizes >= 2G
-Date: Fri,  6 Mar 2026 19:19:25 -0800
-Message-ID: <bff42a4288aada08bdf74da3f5b67a2c28b761f8.1772852067.git.calvin@wbinvd.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260306213730.566b9511@robin>
-References: <20260306213730.566b9511@robin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGyqRF/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69D9C19422;
+	Sat,  7 Mar 2026 03:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772854375;
+	bh=UB4aqVHBkq7Z6U0PCU86267heuJHua5cm31mgeVxY3I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lGyqRF/3qzEa7lUUuOdYRlHTYZ8SUHXAAJTLsEiatdGzW/HtZ0lre9XP1JLBn9FT4
+	 FiB8d6JjDEBERM5v9dDKjL9ZRFWnIVKcKCTQRNG7/LAaP3Zzc6Lp3//EjpID8pnFBo
+	 5e4K9pd3jXePOLfbQ0bga42/+X20Gs37yz3iGKGwbReGfvo40vSYXrE1bB/+hs79JN
+	 MMDMX/wuV8tpMKLLtpSofe2S1yk+kr/shs1IGhF6wbU0DhCnRHIFxH+VE+EzBgOMHN
+	 OVIU0NfXL/Uspb2E4ksgXotAe2pnN7Dlf5zwCRTtf9Yu9yGKT//AWVXjEX4wsf421L
+	 i0ORcG8R3BMzA==
+Date: Fri, 6 Mar 2026 19:32:53 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, horms@kernel.org, donald.hunter@gmail.com,
+ corbet@lwn.net, skhan@linuxfoundation.org, saeedm@nvidia.com,
+ leon@kernel.org, tariqt@nvidia.com, mbloch@nvidia.com,
+ przemyslaw.kitszel@intel.com, mschmidt@redhat.com, andrew+netdev@lunn.ch,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ chuck.lever@oracle.com, matttbe@kernel.org, cjubran@nvidia.com,
+ daniel.zahka@gmail.com, linux-doc@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 01/13] devlink: expose devlink instance
+ index over netlink
+Message-ID: <20260306193253.6d7d2383@kernel.org>
+In-Reply-To: <20260304160022.6114-2-jiri@resnulli.us>
+References: <20260304160022.6114-1-jiri@resnulli.us>
+	<20260304160022.6114-2-jiri@resnulli.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Some of the sizing logic through tracer_alloc_buffers() uses int
-internally, causing unexpected behavior if the user passes a value that
-does not fit in an int (on my x86 machine, the result is uselessly tiny
-buffers).
+On Wed,  4 Mar 2026 17:00:10 +0100 Jiri Pirko wrote:
+> +      -
+> +        name: index
+> +        type: uint
+> +        doc: Unique devlink instance index.
 
-Fix by plumbing the parameter's real type (unsigned long) through to the
-ring buffer allocation functions, which already use unsigned long.
+AI complains on patch 6 that the index is truncated because it's saved
+to a u32. Let's add:
 
-It has always been possible to create larger ring buffers via the sysfs
-interface: this only affects the cmdline parameter.
+        checks:
+           max: u32-max
 
-Fixes: 73c5162aa362 ("tracing: keep ring buffer to minimum size till used")
-Signed-off-by: Calvin Owens <calvin@wbinvd.org>
----
-Changes in v2:
-* Leave scratch_size as an int in allocate_trace_buffer(), undo callee
-  changes required after making it unsigned long [Steven]
-
- kernel/trace/trace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1e7c032a72d2..ebd996f8710e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9350,7 +9350,7 @@ static void setup_trace_scratch(struct trace_array *tr,
- }
- 
- static int
--allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
-+allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, unsigned long size)
- {
- 	enum ring_buffer_flags rb_flags;
- 	struct trace_scratch *tscratch;
-@@ -9405,7 +9405,7 @@ static void free_trace_buffer(struct array_buffer *buf)
- 	}
- }
- 
--static int allocate_trace_buffers(struct trace_array *tr, int size)
-+static int allocate_trace_buffers(struct trace_array *tr, unsigned long size)
- {
- 	int ret;
- 
-@@ -10769,7 +10769,7 @@ __init static void enable_instances(void)
- 
- __init static int tracer_alloc_buffers(void)
- {
--	int ring_buf_size;
-+	unsigned long ring_buf_size;
- 	int ret = -ENOMEM;
- 
- 
+here and the policy will take care of the check, you can then remove
+the explicit checks too
 -- 
-2.47.3
-
+pw-bot: cr
