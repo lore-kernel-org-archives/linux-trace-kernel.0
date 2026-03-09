@@ -1,62 +1,65 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB15F39B490
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 16:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0773D7D74
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 16:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773073564; cv=none; b=ihYDjogJN6kSWomYzOQIhz2h1rCehcVnUdnsE54vEkJJ3YbKlka+GuFCziRdPcH0fJ7pX5J+L2418u0FYtLMuyJkMMvcZNpQCEb5maxDRTbl69jQLcy+EARjK/K/YZ0g3I6WDrz6T8EKfspEJYpD2zMc6CpJy/oaEH6hXMpXZqo=
+	t=1773073566; cv=none; b=EsO3wR+bcwITdu5kWeNAKqf+bxBT1VRkMsSe84ItlU+9lhMOyPXbv5R+dxvYptdByV1sNxWYM/c+nx2ruBDLTVW4MvkQGTQl5WAB+k2voQ2Br+B0CcHCfhcpunCmlCjqgxS3HCiCePsptFKnWh45n5gc8ouo76V2uoQ6MnhQN7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773073564; c=relaxed/simple;
-	bh=pyrRYVpqCvIcoW38BpXDXJjb9lSy4QplwciN1mDNPwo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nRWHEJUMISauJC352hUlIj5wMzXdZ5ccLztQjXh0WyCs+nEfCLtMaS6X3/6HsLZCGLYaP3sJy99nfrUP9+Oqm0oInO28LLFN01aqHwLPIRf7DBkVIXlamd4tFlsH7CIKptpRbuP6EwaX4jREnNc/VXfd0PZFZAjlIHE40wZv3Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cLH3VPJ8; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1773073566; c=relaxed/simple;
+	bh=xq5OrRPhHQiL8pLn6OQfbpras6MBA/YNtjsXU1Nqdco=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uNGwPiBJWVJggmrUMZ2Icpp6dptTOBwv24dRdWCkas5K2msnXFgbBJxe0IyjVr5LKLLDyxAXTs6Td1bpU/5zP2fLSvrXqZrh6X7Gip1chNhSc/fss80HhFKzSG/v1pwbuZ0fkqT4f4XhXZ9QQTakoJK6Ce5eulbCb0bGI0EHACw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZuRRz78e; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cLH3VPJ8"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4806cfffca6so129822995e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 09:26:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZuRRz78e"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-483786a09b1so5521645e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 09:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773073560; x=1773678360; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gq55acUbAP1XP0s/auV9OlD8eOcsFroYsWzxCbuySAs=;
-        b=cLH3VPJ8PVst8OdjW0RHqfK2PRpybbtxdfoYeXNRcgQcJS1YQILeNTGgXaA5gEx32B
-         3rm9kQ0IO7mgvI52UjatdCvd3Sz2IyQlgidGHpbZbNdthR9KDZfBtwgykjF7Lx2aFQfG
-         YG/z7SpFNIetlWhXWxO2/tE6n4j5JpnXbfnnvuve/gaMzIBSfh+PHm7+YXZnHIBEzCTq
-         2oaLipXghpIWJuq3suqLAHgpdPFpZDzfalGQy3ijVNghjaCN3lFm18RBPk9bIhu40HpA
-         GRt5MydDH1TkQ9gP7hUFBhDV9jLArcWdsC4qXj5p2Fjq5/Rlu7hCipc2s9TqOeFi7tGw
-         tZIg==
+        d=google.com; s=20230601; t=1773073563; x=1773678363; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UIAmVVv2A3LDKUFGtswIg5tSBiw6xfgb8ZrLFDafxOg=;
+        b=ZuRRz78e917964bxA9+1SdH1vyN92Loe3hZQsq2Ug5CVnD4d0RggQ9/HHru6mSM9M3
+         7fQ6nsk/wcLc4G1QWZSs6PpvuThsufSvPlTyfPzNkqzr1CRnQV8V0EqS8dAhHLEkKUeG
+         N/uiqgLmHvm/GSTOa/YCSpOEufUrARBEHnczRWHV+XUq2abB+tatsOLcQ7+XYAXvQu+j
+         ZzM3yNYYSInSmOYf8lap6+pQbsLkK/g/y4UmmFFgAVq1QLLvj7Jte9W2jw6qOpUxw3jl
+         jKQjeYy44l6z1jVef+dW56oMxB9MC5qv/pBagSsxTsDst3xuB1utcH821QzqN6jB9TFW
+         6GnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773073560; x=1773678360;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gq55acUbAP1XP0s/auV9OlD8eOcsFroYsWzxCbuySAs=;
-        b=a3jwEMUOoENZ14avMWXtbCWUCrNEOCf+73b/72ImDSRm+ikbXvDv3Im1TGpmZOU4P4
-         ha6ln6zlbP9/mCfrEWVId3NQN93fMRtaQOGP2ztN4xUIE7F+mrnqDGvLclxtmNdX8g+T
-         LIUcztcMY+rC1bxgHl1QrXEDtEi3bJgr6jac/CGAgECjAiBbgLr/ROF+u5FPnUnyb/yQ
-         gDWW7hnOgdTobN4EppaO1IVaw5tSqtT9uT3RP0B+WEVroVASReWbDpVf08rPipUWbTbh
-         VECOJd7MabLsFs9TvDu/33m2Kckg9ckiaLIF0pM6mk7NdhDnGIYRLqGsQ3oE790yDGGq
-         gIIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5drOw6E9EUfERi+IVRLMDhp6NwDKmXIaukOOyCNLurOkrpG9C0vinuxZgSNpmH00pJJVjUlqUK4JVA4M+jB1spJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIgX1vTa6SMkBkvLDzVGcUXHJFqPUMzcfDX+7z/TxrkrTKdWsm
-	1FDFWGIHB7E5hqkHPdOFiptEX6VbcvcxvQcn9UdQ9MGSyFFQV1XtZliEGdugt92xArupQ/ciH3H
-	lLkE+332H2BduFsVV2PnxsA==
-X-Received: from wmcu18.prod.google.com ([2002:a7b:c052:0:b0:485:29a1:bfbb])
+        d=1e100.net; s=20230601; t=1773073563; x=1773678363;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UIAmVVv2A3LDKUFGtswIg5tSBiw6xfgb8ZrLFDafxOg=;
+        b=FCLpuiVZcbIrj0ngcmknV+A668Ejlt6oo4hUjmklhUuU21jHIv3SdG/qUehAPkENwj
+         occWi6caWt9ZNTBKQjtKrOVMpBDOIVL+CoZN7sPcWYnK0VTQz4sJ0wZNgF1ixaVDIKtN
+         BWud0SChAHLzs7CkGF6Rso9oX1KpseJCPoiezQjly1epWtSH+2myhmAidGxVLWaXpzhF
+         rnD5LNFmSgIWnRufdZP64cAmPWSkygZ7QezArv7ZyL/I/hwdChc8CC8vPw40HGB4bfwR
+         4HBKZdtxMXgTLXe7BU892uB4R2y5oTIrsLWYoLIL9EUZoi+Laa9gdy9Vu//zh34jx3Id
+         QUVw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4B3Ajce6964RE8sc219cQQn2zCZlwfJFdPRxuUils8VzTsHvw4TcMBLdTZf+XWOwEEJhIO80ZeSWEE4OLzCLNNVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQPzRVB897if/R23+/jEq5A19+WRNNM60TODJJrGW/zSgHJnau
+	YmQe4IjeAcbxfiwImGRPGkaT/JSpBspPJsiHpx5B/K1FxLiA1Y11TZ9yjfEyKKchLFzBgjIwsdz
+	WnLglrw+0tmCSrHaJGqvtkA==
+X-Received: from wmv3.prod.google.com ([2002:a05:600c:26c3:b0:485:40d2:1ebf])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4751:b0:485:3ae3:b394 with SMTP id 5b1f17b1804b1-4853ae3b587mr75102495e9.31.1773073560024;
- Mon, 09 Mar 2026 09:26:00 -0700 (PDT)
-Date: Mon,  9 Mar 2026 16:24:46 +0000
+ 2002:a05:600c:4ecd:b0:485:3c2d:d02b with SMTP id 5b1f17b1804b1-4853c2dd2e5mr52980145e9.22.1773073562472;
+ Mon, 09 Mar 2026 09:26:02 -0700 (PDT)
+Date: Mon,  9 Mar 2026 16:24:48 +0000
+In-Reply-To: <20260309162516.2623589-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260309162516.2623589-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260309162516.2623589-1-vdonnefort@google.com>
-Subject: [PATCH v14 00/30] Tracefs support for pKVM
+Message-ID: <20260309162516.2623589-3-vdonnefort@google.com>
+Subject: [PATCH v14 02/30] ring-buffer: Store bpage pointers into subbuf_ids
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -67,393 +70,99 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The growing set of features supported by the hypervisor in protected
-mode necessitates debugging and profiling tools. Tracefs is the
-ideal candidate for this task:
+The subbuf_ids field allows to point to a specific page from the
+ring-buffer based on its ID. As a preparation or the upcoming
+ring-buffer remote support, point this array to the buffer_page instead
+of the buffer_data_page.
 
-  * It is simple to use and to script.
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-  * It is supported by various tools, from the trace-cmd CLI to the
-    Android web-based perfetto.
-
-  * The ring-buffer, where are stored trace events consists of linked
-    pages, making it an ideal structure for sharing between kernel and
-    hypervisor.
-
-This series first introduces a new generic way of creating remote events and
-remote buffers. Then it adds support to the pKVM hypervisor.
-
-1. ring-buffer
---------------
-
-To setup the per-cpu ring-buffers, a new interface is created:
-
-  ring_buffer_remote:	Describes what the kernel needs to know about the
-			remote writer, that is, the set of pages forming the
-			ring-buffer and a callback for the reader/head
-			swapping (enables consuming read)
-
-  ring_buffer_remote():	Creates a read-only ring-buffer from a
-			ring_buffer_remote.
-
-To keep the internals of `struct ring_buffer` in sync with the remote,
-the meta-page is used. It was originally introduced to enable user-space
-mapping of the ring-buffer [1]. In this case, the kernel is not the
-producer anymore but the reader. The function to read that meta-page is:
-
-  ring_buffer_poll_remote():
-			Update `struct ring_buffer` based on the remote
-			meta-page. Wake-up readers if necessary.
-
-The kernel has to poll the meta-page to be notified of newly written
-events.
-
-2. Tracefs
-----------
-
-This series introduce a new trace_remote that does the link between
-tracefs and the remote ring-buffer.
-
-The interface is found in the remotes/ directory at the root of the
-tracefs mount point. Each remote is like an instance and you'll find
-there a subset of the regular Tracefs user-space interface:
-
-   remotes/test
-	|-- buffer_size_kb
-	|-- events
-	|   |-- enable
-	|   |-- header_event
-	|   |-- header_page
-	|   `-- test
-	|       `-- selftest
-	|           |-- enable
-	|           |-- format
-	|           `-- id
-	|-- per_cpu
-	|   `-- cpu0
-	|       |-- trace
-	|       `-- trace_pipe
-	|-- trace
-	|-- trace_pipe
-	|-- tracing_on
-
-Behind the scenes, kernel/trace/trace_remote.c creates this tracefs
-hierarchy without relying on kernel/trace/trace.c. This is due to
-fundamental differences:
-
-  * Remote tracing doesn't support trace_array's system-specific
-    features (snapshots, tracers, etc.).
-
-  * Logged event formats differ (e.g., no PID for remote events).
-
-  * Buffer operations require specific remote interactions.
-
-3. Simple Ring-Buffer
----------------------
-
-As the current ring-buffer.c implementation has too many dependencies to
-be used directly by the pKVM hypervisor. A new simple implementation is
-created and can be found in kernel/trace/simple-ring-buffer.c.
-
-This implementation is write-only and is used by both the pKVM
-hypervisor and a trace_remote test module.
-
-4. Events
----------
-
-A new REMOTE_EVENT() macro is added to simplify the creation of events
-on the kernel side. As remote tracing buffer are read only, only the
-event structure and a way of printing must be declared. The prototype of
-the macro is very similar to the well-known TRACE_EVENT()
-
- REMOTE_EVENT(my_event, id,
-     RE_STRUCT(
-         re_field(u64, foobar)
-     ),
-     RE_PRINTK("foobar=%lld", __entry->foobar)
-     )
-  )
-
-5. pKVM
--------
-
-The pKVM support simply creates a "hypervisor" trace_remote on the
-kernel side and inherits from simple-ring-buffer.c on the hypervisor
-side.
-
-A new event macro is created HYP_EVENT() that is under the hood re-using
-REMOTE_EVENT() (defined in the previous paragaph) as well as generate
-hypervisor specific struct and trace_<event>() functions.
-
-5. Limitations:
----------------
-
-Non-consuming reading of the buffer isn't supported (i.e. cat trace ->
--EPERM) due to current the lack of support in the ring-buffer meta-page.
-
-[1] https://tracingsummit.org/ts/2022/hypervisortracing/
-[2] https://lore.kernel.org/all/20240510140435.3550353-1-vdonnefort@google.com/
-
-Changes since v13 (https://lore.kernel.org/all/20260306143536.339777-1-vdonnefort@google.com/)
-
-  - Rebase on v7.0-rc3
-  - Use guard(cpu_read_lock)() (Markus)
-
-Changes since v12 (https://lore.kernel.org/all/20260219150307.14538-1-vdonnefort@google.com/)
-
-  - Rebase on v7.0-rc2
-  - use kzalloc_obj() in trace_remote.c and remote_test.c
-
-changes since v11 (https://lore.kernel.org/all/20260131132848.254084-1-vdonnefort@google.com/)
-
-  - Fix kerneldoc (Steven)
-  - Remove useless ring_buffer_event_data type cast (Steven)
-  - Fix __free_ring_buffer_iter() (Steven)
-  - Move trace seq locking into start/stop (Steven)
-
-changes since v10 (https://lore.kernel.org/all/20260126104419.1649811-1-vdonnefort@google.com/)
-
-  - Move kerneldoc to .c files (Steven)
-  - Return EBUSY on buffer_size_kb write if buffer is loaded (Steven)
-  - Remove rb_iter/rb_iters union in trace_remote_iterator (Steven)
-  - Rename a refactor trace file seq_operations (Steven)
-  - Make trace_get_cpu() accessible to trace_remote.c (Steven)
-  - Remove unnecessary cpus_read_unlock() (Steven)
-  - !preempt on remote_test driver buffer writing (Steven)
-  - Do not fail selftest if cpu/online is unavailable (Steven)
-  - Add rational for trace_remote into documentation (Steven)
-
-changes since v9 (https://lore.kernel.org/all/20251202093623.2337860-1-vdonnefort@google.com/)
-
-  - Add vCPU PID to hyp_enter/hyp_exit (Marc)
-  - Remove useless X1 setting for tracing HVCs (Marc)
-  - Fix REMOTE_PRINTK_COUNT_ARGS()
-  - Rebase on 6.19-rc7
-
-Changes since v8 (https://lore.kernel.org/all/20251107093840.3779150-1-vdonnefort@google.com/)
-
-  - Do not enable tracing if unstable cnvct (Marc)
-  - Add support for nVHE (Marc)
-  - Add PKVM_DISABLE_STAGE2_ON_PANIC (Marc)
-  - NVHE_EL2_TRACING depends on NVHE_EL2_DEBUG (Marc)
-  - Add a reason for hyp_enter/hyp_exit events (Marc)
-  - Remove PKVM_SELFTESTS in favour of NVHE_EL2_DEBUG
-  - Add wrapper for arm_smccc_1_2, now used in nvhe/ffa.c
-
-Changes since v7 (https://lore.kernel.org/all/20251003133825.2068970-1-vdonnefort@google.com/)
-
-  - Add missing EXPORT_SYMBOL_GPL for remote_test.ko
-  - Rebase on 6.18-rc4
-
-Changes since v6 (https://lore.kernel.org/all/20250821081412.1008261-1-vdonnefort@google.com/)
-
-  - Add requires field to the selftest (Masami)
-  - Use guard() for ring_buffer_poll_remote (Steven)
-  - Rename ring_buffer_remote() to ring_buffer_alloc_remote() (Steven)
-  - kerneldoc for trace_buffer_remote and simple_ring_buffer (Steven)
-  - Validate trace_buffer_desc size in trace_remote_alloc_buffer
-    (Steven)
-  - Add non-consuming ring-buffer read (Steven)
-  - Add spinning failsafe in simple_ring_buffer (Steven)
-  - Range check for hyp_trace_desc::bpages_backing_* in hyp_trace_desc_validate()
-  - unsigned int cpu in hyp_trace_desc_validate()
-  - Fix event/format file
-  - Add tests with an offline CPU
-  - Add tests for non-consuming read
-  - Add documentation
-  - Rebase on 6.17
-
-Changes since v5 (https://lore.kernel.org/all/20250516134031.661124-1-vdonnefort@google.com/)
-
-  - Add tishift lib to the hyp (Aneesh)
-  - Rebase on 6.17-rc2
-
-Changes since v4 (https://lore.kernel.org/all/20250506164820.515876-1-vdonnefort@google.com/)
-
-  - Extend meta-page with pages_touched and pages_lost
-  - Create ring_buffer_types.h
-  - Fix simple_ring_buffer build for 32-bits arch and x86
-  - Try unload buffer on reset (+ test)
-  - Minor renaming and comments
-
-Changes since v3 (https://lore.kernel.org/all/20250224121353.98697-1-vdonnefort@google.com/)
-
-  - Move tracefs support from kvm/hyp_trace.c into a generic trace_remote.c.
-  - Move ring-buffer implementation from nvhe/trace.c into  a generic
-    simple-ring-buffer.c
-  - Rebase on 6.15-rc4.
-
-Changes since v2 (https://lore.kernel.org/all/20250108114536.627715-1-vdonnefort@google.com/)
-
-  - Fix ring-buffer remote reset
-  - Fix fast-forward in rb_page_desc()
-  - Refactor nvhe/trace.c
-  - struct hyp_buffer_page more compact
-  - Add a struct_len to trace_page_desc
-  - Extend reset testing
-  - Rebase on 6.14-rc3
-
-Changes since v1 (https://lore.kernel.org/all/20240911093029.3279154-1-vdonnefort@google.com/)
-
-  - Add 128-bits mult fallback in the unlikely event of an overflow. (John)
-  - Fix ELF section sort.
-  - __always_inline trace_* event macros.
-  - Fix events/<event>/enable permissions.
-  - Rename ring-buffer "writer" to "remote".
-  - Rename CONFIG_PROTECTED_NVHE_TESTING to PKVM_SELFTEST to align with
-    Quentin's upcoming selftest
-  - Rebase on 6.13-rc3.
-
-Changes since RFC (https://lore.kernel.org/all/20240805173234.3542917-1-vdonnefort@google.com/)
-
-  - hypervisor trace clock:
-     - mult/shift computed in hyp_trace.c. (John)
-     - Update clock when it deviates from kernel boot clock. (John)
-     - Add trace_clock file.
-     - Separate patch for better readability.
-  - Add a proper reset interface which does not need to teardown the
-    tracing buffers. (Steven)
-  - Return -EPERM on trace access. (Steven)
-  - Add per-cpu trace file.
-  - Automatically teardown and free the tracing buffer when it is empty,
-    without readers and not currently tracing.
-  - Show in buffer_size_kb if the buffer is loaded in the hypervisor or
-    not.
-  - Extend tests to cover reset and unload.
-  - CC timekeeping folks on relevant patches (Marc)
-
-Vincent Donnefort (30):
-  ring-buffer: Add page statistics to the meta-page
-  ring-buffer: Store bpage pointers into subbuf_ids
-  ring-buffer: Introduce ring-buffer remotes
-  ring-buffer: Add non-consuming read for ring-buffer remotes
-  tracing: Introduce trace remotes
-  tracing: Add reset to trace remotes
-  tracing: Add non-consuming read to trace remotes
-  tracing: Add init callback to trace remotes
-  tracing: Add events to trace remotes
-  tracing: Add events/ root files to trace remotes
-  tracing: Add helpers to create trace remote events
-  ring-buffer: Export buffer_data_page and macros
-  tracing: Introduce simple_ring_buffer
-  tracing: Add a trace remote module for testing
-  tracing: selftests: Add trace remote tests
-  Documentation: tracing: Add tracing remotes
-  tracing: load/unload page callbacks for simple_ring_buffer
-  tracing: Check for undefined symbols in simple_ring_buffer
-  KVM: arm64: Add PKVM_DISABLE_STAGE2_ON_PANIC
-  KVM: arm64: Add clock support to nVHE/pKVM hyp
-  KVM: arm64: Initialise hyp_nr_cpus for nVHE hyp
-  KVM: arm64: Support unaligned fixmap in the pKVM hyp
-  KVM: arm64: Add tracing capability for the nVHE/pKVM hyp
-  KVM: arm64: Add trace remote for the nVHE/pKVM hyp
-  KVM: arm64: Sync boot clock with the nVHE/pKVM hyp
-  KVM: arm64: Add trace reset to the nVHE/pKVM hyp
-  KVM: arm64: Add event support to the nVHE/pKVM hyp and trace remote
-  KVM: arm64: Add hyp_enter/hyp_exit events to nVHE/pKVM hyp
-  KVM: arm64: Add selftest event support to nVHE/pKVM hyp
-  tracing: selftests: Add hypervisor trace remote tests
-
- Documentation/trace/index.rst                 |   11 +
- Documentation/trace/remotes.rst               |   66 +
- arch/arm64/include/asm/kvm_asm.h              |    8 +
- arch/arm64/include/asm/kvm_define_hypevents.h |   16 +
- arch/arm64/include/asm/kvm_host.h             |    3 +
- arch/arm64/include/asm/kvm_hyp.h              |    4 +-
- arch/arm64/include/asm/kvm_hypevents.h        |   60 +
- arch/arm64/include/asm/kvm_hyptrace.h         |   26 +
- arch/arm64/kernel/image-vars.h                |    4 +
- arch/arm64/kernel/vmlinux.lds.S               |   18 +
- arch/arm64/kvm/Kconfig                        |   64 +-
- arch/arm64/kvm/Makefile                       |    2 +
- arch/arm64/kvm/arm.c                          |   12 +-
- arch/arm64/kvm/handle_exit.c                  |    2 +-
- arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h   |   23 +
- arch/arm64/kvm/hyp/include/nvhe/clock.h       |   16 +
- .../kvm/hyp/include/nvhe/define_events.h      |   14 +
- arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |    2 -
- arch/arm64/kvm/hyp/include/nvhe/trace.h       |   70 +
- arch/arm64/kvm/hyp/nvhe/Makefile              |    6 +-
- arch/arm64/kvm/hyp/nvhe/clock.c               |   65 +
- arch/arm64/kvm/hyp/nvhe/events.c              |   25 +
- arch/arm64/kvm/hyp/nvhe/ffa.c                 |   28 +-
- arch/arm64/kvm/hyp/nvhe/host.S                |    2 +-
- arch/arm64/kvm/hyp/nvhe/hyp-main.c            |   87 +-
- arch/arm64/kvm/hyp/nvhe/hyp.lds.S             |    6 +
- arch/arm64/kvm/hyp/nvhe/mm.c                  |    4 +-
- arch/arm64/kvm/hyp/nvhe/psci-relay.c          |    7 +-
- arch/arm64/kvm/hyp/nvhe/setup.c               |    4 +-
- arch/arm64/kvm/hyp/nvhe/stacktrace.c          |    6 +-
- arch/arm64/kvm/hyp/nvhe/switch.c              |    5 +-
- arch/arm64/kvm/hyp/nvhe/trace.c               |  306 ++++
- arch/arm64/kvm/hyp_trace.c                    |  443 ++++++
- arch/arm64/kvm/hyp_trace.h                    |   11 +
- arch/arm64/kvm/stacktrace.c                   |    8 +-
- fs/tracefs/inode.c                            |    1 +
- include/linux/ring_buffer.h                   |   58 +
- include/linux/ring_buffer_types.h             |   41 +
- include/linux/simple_ring_buffer.h            |   65 +
- include/linux/trace_remote.h                  |   48 +
- include/linux/trace_remote_event.h            |   33 +
- include/trace/define_remote_events.h          |   73 +
- include/uapi/linux/trace_mmap.h               |    8 +-
- kernel/trace/Kconfig                          |   14 +
- kernel/trace/Makefile                         |   20 +
- kernel/trace/remote_test.c                    |  261 ++++
- kernel/trace/remote_test_events.h             |   10 +
- kernel/trace/ring_buffer.c                    |  354 ++++-
- kernel/trace/simple_ring_buffer.c             |  517 +++++++
- kernel/trace/trace.c                          |    4 +-
- kernel/trace/trace.h                          |    7 +
- kernel/trace/trace_remote.c                   | 1368 +++++++++++++++++
- .../ftrace/test.d/remotes/buffer_size.tc      |   25 +
- .../selftests/ftrace/test.d/remotes/functions |   88 ++
- .../test.d/remotes/hypervisor/buffer_size.tc  |   11 +
- .../ftrace/test.d/remotes/hypervisor/reset.tc |   11 +
- .../ftrace/test.d/remotes/hypervisor/trace.tc |   11 +
- .../test.d/remotes/hypervisor/trace_pipe.tc   |   11 +
- .../test.d/remotes/hypervisor/unloading.tc    |   11 +
- .../selftests/ftrace/test.d/remotes/reset.tc  |   90 ++
- .../selftests/ftrace/test.d/remotes/trace.tc  |  127 ++
- .../ftrace/test.d/remotes/trace_pipe.tc       |  127 ++
- .../ftrace/test.d/remotes/unloading.tc        |   41 +
- 63 files changed, 4749 insertions(+), 120 deletions(-)
- create mode 100644 Documentation/trace/remotes.rst
- create mode 100644 arch/arm64/include/asm/kvm_define_hypevents.h
- create mode 100644 arch/arm64/include/asm/kvm_hypevents.h
- create mode 100644 arch/arm64/include/asm/kvm_hyptrace.h
- create mode 100644 arch/arm64/kvm/hyp/include/nvhe/arm-smccc.h
- create mode 100644 arch/arm64/kvm/hyp/include/nvhe/clock.h
- create mode 100644 arch/arm64/kvm/hyp/include/nvhe/define_events.h
- create mode 100644 arch/arm64/kvm/hyp/include/nvhe/trace.h
- create mode 100644 arch/arm64/kvm/hyp/nvhe/clock.c
- create mode 100644 arch/arm64/kvm/hyp/nvhe/events.c
- create mode 100644 arch/arm64/kvm/hyp/nvhe/trace.c
- create mode 100644 arch/arm64/kvm/hyp_trace.c
- create mode 100644 arch/arm64/kvm/hyp_trace.h
- create mode 100644 include/linux/ring_buffer_types.h
- create mode 100644 include/linux/simple_ring_buffer.h
- create mode 100644 include/linux/trace_remote.h
- create mode 100644 include/linux/trace_remote_event.h
- create mode 100644 include/trace/define_remote_events.h
- create mode 100644 kernel/trace/remote_test.c
- create mode 100644 kernel/trace/remote_test_events.h
- create mode 100644 kernel/trace/simple_ring_buffer.c
- create mode 100644 kernel/trace/trace_remote.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/buffer_size.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/functions
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/hypervisor/buffer_size.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/hypervisor/reset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/hypervisor/trace_pipe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/hypervisor/unloading.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/reset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/trace.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/trace_pipe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/unloading.tc
-
-
-base-commit: 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 82b4df579670..3d2804a7e8ab 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -555,7 +555,7 @@ struct ring_buffer_per_cpu {
+ 	unsigned int			mapped;
+ 	unsigned int			user_mapped;	/* user space mapping */
+ 	struct mutex			mapping_lock;
+-	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
++	struct buffer_page		**subbuf_ids;	/* ID to subbuf VA */
+ 	struct trace_buffer_meta	*meta_page;
+ 	struct ring_buffer_cpu_meta	*ring_meta;
+ 
+@@ -7036,7 +7036,7 @@ static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ }
+ 
+ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+-				   unsigned long *subbuf_ids)
++				   struct buffer_page **subbuf_ids)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+@@ -7045,7 +7045,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	int id = 0;
+ 
+ 	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
+-	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	subbuf_ids[id++] = cpu_buffer->reader_page;
+ 	cnt++;
+ 
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+@@ -7055,7 +7055,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+-		subbuf_ids[id] = (unsigned long)subbuf->page;
++		subbuf_ids[id] = subbuf;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
+@@ -7064,7 +7064,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	WARN_ON(cnt != nr_subbufs);
+ 
+-	/* install subbuf ID to kern VA translation */
++	/* install subbuf ID to bpage translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+ 	meta->meta_struct_len = sizeof(*meta);
+@@ -7220,13 +7220,15 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	}
+ 
+ 	while (p < nr_pages) {
++		struct buffer_page *subbuf;
+ 		struct page *page;
+ 		int off = 0;
+ 
+ 		if (WARN_ON_ONCE(s >= nr_subbufs))
+ 			return -EINVAL;
+ 
+-		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		subbuf = cpu_buffer->subbuf_ids[s];
++		page = virt_to_page((void *)subbuf->page);
+ 
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+@@ -7253,7 +7255,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		    struct vm_area_struct *vma)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	unsigned long flags, *subbuf_ids;
++	struct buffer_page **subbuf_ids;
++	unsigned long flags;
+ 	int err;
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+@@ -7277,7 +7280,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	if (err)
+ 		return err;
+ 
+-	/* subbuf_ids include the reader while nr_pages does not */
++	/* subbuf_ids includes the reader while nr_pages does not */
+ 	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
+ 	if (!subbuf_ids) {
+ 		rb_free_meta_page(cpu_buffer);
 -- 
 2.53.0.473.g4a7958ca14-goog
 
