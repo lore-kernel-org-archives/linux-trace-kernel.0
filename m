@@ -1,37 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86CCA59;
-	Mon,  9 Mar 2026 02:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A91EA59;
+	Mon,  9 Mar 2026 02:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773022747; cv=none; b=ozhQXuuUMCsOTguTpp/hCnU6eUBxdEi2j+1dFmsF4Is9UyXbbJpOezFKJ3UVgQfouLwqlO6Gg1DIgCBFrA6rv0aW3X2rKEvlDikl46grOITpBRO+cDpWX1AP7+FUdfktA1Rz/N0yXTtj6X+YWLb8qVjrVyvHZZtkG4KMHQDFgyg=
+	t=1773022764; cv=none; b=MOvxeegpERKjo5lfjIqc7HVJ+oT/loREGpT60slwmfx981VzqdA/auwbpxkI8hH/cni7QCV1q3DKdx3b5C4YWkaZEb5KlCfmoaJNRmeRkh2FAspXCL3xH45LF7M1MeuBc2LXdHWEun5v6SF/ODPmSQdShDoguSTdPTGy4GYSf00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773022747; c=relaxed/simple;
-	bh=JH9xVyqeJwsOvcWB8TpvQScl2dtERznHSOADe3PG56k=;
+	s=arc-20240116; t=1773022764; c=relaxed/simple;
+	bh=Z0idPxSWsp5YkYO2mb7Q/ZdUq7JoIzaOd55dIdEcPQk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dXNDTF9GmF0y6tHqkhq+cRogJkcRFS98qIGCmGonURyypcEeMP4Jru4UaxUkRs4lz7R9/o2FJ1shpoazWpqvNaIv7J0cxe259yAmKUTSePJqC8bOAi/USK/nAinXCzEq6Luzqp0FzKtFuew91g+ntfacy9WO13OKlUlmxuTSGa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=YwWfgqGLGtRTLjCuY+1/mLVfT24Z9/9Z+LelaECBkIz46SUcRXzAJzRKH54B3O+TcltVNaDHSHPq8j1pui5O6g522Ok6uqfuEJgIk5PSQZ7ugjJOpmgeb0kAjgRtSWLNCNFerPmQuOFLWStwOOhbU9S/hFIUSHeoj76WKspjBq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 83B0A13B870;
-	Mon,  9 Mar 2026 02:19:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id C3DDD2003D;
-	Mon,  9 Mar 2026 02:19:02 +0000 (UTC)
-Date: Sun, 8 Mar 2026 22:19:01 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 2AD53140C98;
+	Mon,  9 Mar 2026 02:19:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 732C380014;
+	Mon,  9 Mar 2026 02:19:20 +0000 (UTC)
+Date: Sun, 8 Mar 2026 22:19:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v7 2/2] ring-buffer: Skip invalid sub-buffers when
  validating persistent ring buffer
-Message-ID: <20260308221901.545e7b8b@robin>
-In-Reply-To: <20260309085317.6679cf91151767eff7130cc4@kernel.org>
+Message-ID: <20260308221919.0ca52de6@robin>
+In-Reply-To: <20260309095307.19a504c6880407bbf36b2cca@kernel.org>
 References: <177289358078.248514.14947007976699929481.stgit@devnote2>
 	<177289359843.248514.164858607457269337.stgit@devnote2>
 	<20260307102711.50932648@robin>
 	<20260309085317.6679cf91151767eff7130cc4@kernel.org>
+	<20260309095307.19a504c6880407bbf36b2cca@kernel.org>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,64 +42,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: c3rrp1gocho7r7y6xpqck5ag3xo58utk
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: C3DDD2003D
+X-Rspamd-Queue-Id: 732C380014
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: pqpxsx7n3mx9pmjiq9371qdoqztsuu4b
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX182cuaSJ54s19FP5m7PuIhHMOzjh1eN6HY=
-X-HE-Tag: 1773022742-167473
-X-HE-Meta: U2FsdGVkX1+GSpVT0bW6XFKyWEvQNtAPJdyApLMZLoI7crcsDXedzrjtkPBv0giEK6Dh8ccFLWWRFugvJUmaS1gVD2FpKBSphMNUQdTkkNKTqGijYiFTCVs4ttX/V5ersLXvIiergEHWzqd17rvOCWSiTffWEzSIGgVVWmc4FezV6HqB+Ic3Ty4gF1IleHQiZiZ54iotKGfjXXV5ItjrAlo8M7oM3smYUrXxpOPak1w6PP8nFnykK30V/roy5YZw5tnnP7b3DpaHkzrY9CFMMJDh8zIF211fAz+qdAuNkLX03kaSmnyrxHtEGqBrHjxblYK+2Cz91bwfKgmoCkITU9YNp8yQ08II
+X-Session-ID: U2FsdGVkX1+cDp4ioUlFkxnXOLEHJiMfqIiD09ztqm0=
+X-HE-Tag: 1773022760-381430
+X-HE-Meta: U2FsdGVkX1/0J4RJrFeS1hyHQGiscP6Z4mMMBFe/DrLH0bsdJynjxEt6LReaoCGnnCeLK0OE0yJZybyZ5S2AlaPCW9QrIql3pB2ETjXfSm453ReJeN5ohTRr5B2Rfos+WYx1SiuZzZwn50LIg+RKuGhIh8DHwEg14yUbwJDsl9lUUvUFRXR8kBxInxwNGL0lRMDmIFlQclGzNI/NpWDDWcvP98XjVcthGCbqotVR9V6kvj4ofN9WrIf1GCzRDnKqeW+VVTRXJBIewEE6k0P8Q7IJr2lW21FMVqcpH3aKKSN2XI3GXieojNvO7m6fsEKUzStOj39dg1pc0FsVXzAd1u1ZC2Ssi4KrXkakFuj+IrUMcPKaz+C5bw==
 
-On Mon, 9 Mar 2026 08:53:17 +0900
+On Mon, 9 Mar 2026 09:53:07 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > > @@ -1827,11 +1833,6 @@ static bool rb_cpu_meta_valid(struct ring_buffer_cpu_meta *meta, int cpu,
-> > >  			return false;
-> > >  		}
-> > >  
-> > > -		if ((unsigned)local_read(&subbuf->commit) > subbuf_size) {
-> > > -			pr_info("Ring buffer boot meta [%d] buffer invalid commit\n", cpu);
-> > > -			return false;
-> > > -		}  
+> > > 
+> > > I just realized that the origin didn't have correct grammar. But we
+> > > still check the subbufs, why remove that comment?
+> > > 
+> > > The original should have said:
+> > > 
+> > > 	/* Do the meta buffers and subbufs have correct data? */  
 > > 
-> > This should still be checked, although it doesn't need to fail the loop
-> > but instead continue to the next buffer.  
+> > I just removed the data check from this loop, so I think this should
+> > focus on checking metadata itself. The data is checked later.  
 > 
-> We already have another check of the data in the loop in
-> rb_meta_validate_events() so data corruption should be
-> handled there.
-
-Hmm, OK.
-
+> Other checks in the loop are;
 > 
-> > 
-> > Also, I mentioned that if the commit == RB_MISSED_EVENTS, then we know
-> > the sub buffer was corrupted and should be skipped.  
+> - the entries in meta::buffers[] are inside correct range.
+> - the duplicated entries in the meta::buffers[].
 > 
-> Yes, if RB_MISSED_EVENTS bit is set, the commit field is out of range.
-> That is checked in rb_validate_buffer().
+> So this only checks the meta::buffers[] (index array) now.
 > 
-> > 
-> > And honestly, the commit should never be greater than the subbuf_size,
-> > even if corrupted. As we are only worried about corruption due to cache
-> > not writing out. That should not corrupt the commit size (now we can
-> > ignore the flags and use page size instead).  
+> /*
+>  * Ensure the meta::buffers have correct data. The data in each subbufs are
+>  * checked later in rb_meta_validate_events().
+>  */
 > 
-> Hmm, but if the kernel crash and reboot when it sets RB_MISSED_EVENTS,
-> we will see the bit is set and commit size is different. 
+> This will be more clear.
 
-The RB_MISSED_EVENTS is only set on the reader page.
-
-If the kernel crashes no boot up while reading the validated buffer,
-then that's a bit more than what this is supposed to handle.
-
-> 
-> Note, I think the reader_page RB_MISSED_EVENTS flag is not cleared after
-> read. commit ca296d32ece3 ("tracing: ring_buffer: Rewind persistent
-> ring buffer on reboot") drops clearing commit field for unwinding the
-> buffer.
-
-But that should be fine, as it's only read only. Once tracing is
-started, it should be reset.
+Sure.
 
 -- Steve
