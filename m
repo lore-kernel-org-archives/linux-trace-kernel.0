@@ -1,213 +1,180 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBDD41324D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 19:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93BA413227
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 19:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773085978; cv=none; b=nnXTA9Ow7kdWJb//mJ5FiXA25J8J51Cm62Gl4RdJs5XbyDhF7cao5nq9Em7k6zce52oLgkPLw3yPxCJl5PyOxtU9eUzAZk7rCWWLi2KmPZRes9w5CuI6+U6G1kuZhaJhqhOD+n3F5Vixwa0nW6Bq7nA9u6xf/YWZlTuqqM1uiJk=
+	t=1773086119; cv=none; b=Mhg+m47A1M6cbaEfnJdGt45tqHn1VyNVhdFP0gMmKpIUMeBlTDO1n3RXfOpJezTXFoOXjE1sgiH+NqT2p0NYcBAGhBToZFGy1EW8wcLSq1JVIWMO4D4SEqhekgRnGTV8GOEb2M/kEXKqz8zfk8AS7l9Y3NaBbp01zzEbTlrvl54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773085978; c=relaxed/simple;
-	bh=uu1qF51OWMIrP9ZQLA0GZ8rgWwKJRSi10RAcYHwdCZU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mzQ4NjMVA761PnPpHVYaqFoor0g9MOK3KuFaj5QXbsEDPgRVjqOabcStkXloS915Sc6h4WPW6v9TMM06SToqvd62zyxSZ1fSXnsUsqRlZV/DJq1Gmo2Qs34xN5nQfu/CH4T3Xvp24NbNaz3T+637lR992nqre9J7z2ZdfjwNEY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALV3zpR0; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773086119; c=relaxed/simple;
+	bh=EJdVD1L6g203nYafJu+0ydmi7h/+sZQ+w2DkUuJU8NM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=eU8hThmhu8OAA0OFi7NGnTu3hLWBAdkHttKJgkGRWRz+2g2sU3Ovzmcj0+W1zt7nvoeb5etnLTftrXkUGcii6a9cscqtSDReckdIRsTws+1GyzFaACoD9+2KgBWRp6RYL9pp627Na/XNTfFbQPi1+mGrLcZ2U8rtP370qYLALv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZgcNlEz+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALV3zpR0"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-4170e916d77so593218fac.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 12:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773085976; x=1773690776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=umA2OwCk8CCR6ygWt/AhqprCfx79z1WR3ID3hcEWPqQ=;
-        b=ALV3zpR09J/TZRrtjK+1zve2eP/1pqw+G9MqjmTL0Sq13zHjYujvwdXmVCHm8FXgrs
-         eEORTU38+cQP/zwxfuZ6qIDhPyaGn4r1Z24PXijW76S+60/De3xZiLEVWRO+2F2v/PkV
-         VllkeucyTIMPk++D8qr6CKyxamKZS6b7iZVJ33/ldJ6+OuIGon0NTLLlLMlu1jQMiJ3H
-         e2qKptMiXwc66CMiWEbt2ttfdNGMFYTKSfr3XWRoCyfB+wQDRBeZUvk1L8RvwJg0LxQz
-         1a596LV7p/MaTMR6BNg0nyd+Jp5+xy18tt+otB9156sMBfitdsY1Ik89MI+M9lVM5ELO
-         mYvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773085976; x=1773690776;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=umA2OwCk8CCR6ygWt/AhqprCfx79z1WR3ID3hcEWPqQ=;
-        b=OPuDrewkQSzqehR6e5klDcioNR/Y9zF8rFpvu2xfuTST28FDK+zywPsNofb9KwBRhw
-         gHlzqRwpjPT+8mKN1SEXwYfO/Zy88JASlcodhTrNrqZOaAQEkRd8r2ioZm0sU11nltML
-         4Hbz+YTvs3cM8LOBKhtXORslY4TZO5O0kRceNxY4ActuB9uMnvAV7HKUYfHlhJva9tWT
-         vr5kHROlwFnPOVNlCBgWSDkivmjott+jAMSi6oNHH6vN3tXZuCAxzPIWpuRVO7IVtFVD
-         zFa0NhRDUwlpVNZZwMAMVPYHUyM7Lkkzwtu2JvRkP1ukDni1oQnp2/YWbqydAw4VC+P4
-         j3jw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6HcwvR4TREh54YMuJQU4aQ//pg+rtrtRMJsy2D8lNiTuWWYHtOPKEcGEVJ/v5QXvA80qzsT+mavJaX0DL6pFXCHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhK0ewKXH3r1MyXwtAN2cU6C6FLMFSdWPVhWzJKdLnbE0sqSzC
-	/tvb8kkyTzZSx6qEyoufcLxGsXClnWKRY/tcGlbYlZ39YyuJUTl2hQPi
-X-Gm-Gg: ATEYQzwVupWmWR8mazoMPJscJEsOx9REJ9Tjvggd3z8hLbcH2MJyztWAebx1xHyRcn7
-	r9DPBqYs9N+IKwDVBNVE0LZd/nCDK13oxb17hjzcuiGANksWK/9mYr1t2qw99BkcAuD6MZysw4L
-	+EURnaPdDbzYrOa6TdIDL2tpbQvybluXI3gfDXthYSoNpe46kbo855yeUVTHofrh1IaIOxzbbdc
-	AgYg2sy1hl18pCiu/zEiN4wixUAI4AxeKJzTzYkBWEmZSf5RB9WNjdOdfzmm3eR+mj2HTPP+Lwz
-	X32/C3n0xMnkxy6tyTZopD9M8bCzSj1ChvCz0gWNkTMVhPPg2H2WnXo82OzPb0aDf1TxGWMG8XX
-	d9u5mJsnNvqAU2ekYo5dAyoFtWolJGEXDLdtE9aBIb2s5r0V5jkF3bzR7dMaHheUvhkCpb3OF+G
-	rD8GhTnQCEXRwPZbRSxtgExehl9EBrDnK0gY56uFOMUB8NLq1oaIgzSzSEAhmgfDcg6IuAeh4mJ
-	0F0BMtZSNbpGR9i0I1uyPIlqQnQKreyjFcHvGU1LNn/YzRrOEd9mHeT7f4=
-X-Received: by 2002:a05:6871:378f:b0:3e9:7744:1d4b with SMTP id 586e51a60fabf-416e3f84fb3mr6800926fac.4.1773085975598;
-        Mon, 09 Mar 2026 12:52:55 -0700 (PDT)
-Received: from localhost.localdomain (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41756d4d342sm525308fac.12.2026.03.09.12.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 12:52:55 -0700 (PDT)
-From: Wesley Atwell <atwellwea@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Wesley Atwell <atwellwea@gmail.com>
-Subject: [PATCH 2/2] tracing: drain deferred trigger frees if kthread startup fails
-Date: Mon,  9 Mar 2026 13:52:20 -0600
-Message-Id: <20260309195220.2726094-2-atwellwea@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260309195220.2726094-1-atwellwea@gmail.com>
-References: <20260309195220.2726094-1-atwellwea@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgcNlEz+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773086116;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a04vp0f5nYbiJJbrU1fnZhtMYiLV2Gp1bYe9yuSAagQ=;
+	b=ZgcNlEz+NhYCqIMjT/2GrhRkKLvkirj2YmrYWJfGsQkFkbOjVoGoAzkIioXx5BKFTvaeBZ
+	OcTqihRbuEqoPLCepMwRt4unmUcfsc4DJbGMpxiZJmR7NzERyzyhxkBALdsLgafZDIyLqK
+	NMfePV+efMRIOEYoYd5LRt8ZJ5ZfhhQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-AuWqQx-pM12eQaf3Wi0aIg-1; Mon,
+ 09 Mar 2026 15:55:12 -0400
+X-MC-Unique: AuWqQx-pM12eQaf3Wi0aIg-1
+X-Mimecast-MFC-AGG-ID: AuWqQx-pM12eQaf3Wi0aIg_1773086111
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D3DEF1800616;
+	Mon,  9 Mar 2026 19:55:10 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.81.10])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8764430001A2;
+	Mon,  9 Mar 2026 19:55:05 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Ivan Pravdin <ipravdin.official@gmail.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>,
+	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
+	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
+	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
+Subject: [PATCH v4 00/18] rtla: Robustness and code quality improvements
+Date: Mon,  9 Mar 2026 16:46:13 -0300
+Message-ID: <20260309195040.1019085-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: Vu7jIKcNSnRPIp4HdEZoQDeGINTaxRhkH16u46ogYpc_1773086111
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Boot-time trigger registration can fail before the trigger-data cleanup
-kthread exists. Deferring those frees until late init is fine, but the
-post-boot fallback must still drain the deferred list if kthread
-creation never succeeds.
+This series addresses multiple issues in the rtla codebase related to
+error handling, string manipulation safety, and code maintainability.
+The changes improve the tool's reliability and bring the code more in
+line with kernel coding practices.
 
-Otherwise, boot-deferred nodes can accumulate on
-trigger_data_free_list, later frees fall back to synchronously freeing
-only the current object, and the older queued entries are leaked
-forever.
+The series can be broadly divided into three categories:
 
-Keep the deferred boot-time behavior, but when kthread creation fails,
-drain the whole queued list synchronously. Do the same in the late-init
-drain path so queued entries are not stranded there either.
+Bug fixes address several correctness issues: a resource leak where
+opendir() was not paired with closedir() on success paths, I/O loops
+that failed to handle EINTR and partial writes correctly, a missing
+bounds check when indexing the softirq_name array with kernel-provided
+data, improper handling of pthread_create() failures, and a loop
+condition that checked a pointer instead of the character it points to.
 
-Fixes: 61d445af0a7c ("tracing: Add bulk garbage collection of freeing event_trigger_data")
-Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
----
- kernel/trace/trace_events_trigger.c | 79 ++++++++++++++++++++++++-----
- 1 file changed, 65 insertions(+), 14 deletions(-)
+String handling improvements replace unsafe patterns throughout the
+codebase. The strncpy() function is replaced with a new strscpy()
+implementation that guarantees NUL-termination and provides truncation
+detection. A str_has_prefix() helper replaces verbose strncmp/strlen
+patterns for prefix matching. String comparisons are tightened to use
+exact matching where appropriate, preventing silent acceptance of
+malformed input like "100nsx" being parsed as "100ns".
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index d5230b759a2d..3b47a361b867 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -22,6 +22,39 @@ static struct task_struct *trigger_kthread;
- static struct llist_head trigger_data_free_list;
- static DEFINE_MUTEX(trigger_data_kthread_mutex);
- 
-+static int trigger_kthread_fn(void *ignore);
-+
-+static void trigger_start_kthread_locked(void)
-+{
-+	lockdep_assert_held(&trigger_data_kthread_mutex);
-+
-+	if (!trigger_kthread) {
-+		struct task_struct *kthread;
-+
-+		kthread = kthread_create(trigger_kthread_fn, NULL,
-+					 "trigger_data_free");
-+		if (!IS_ERR(kthread))
-+			WRITE_ONCE(trigger_kthread, kthread);
-+	}
-+}
-+
-+static void trigger_data_free_queued_locked(void)
-+{
-+	struct event_trigger_data *data, *tmp;
-+	struct llist_node *llnodes;
-+
-+	lockdep_assert_held(&trigger_data_kthread_mutex);
-+
-+	llnodes = llist_del_all(&trigger_data_free_list);
-+	if (!llnodes)
-+		return;
-+
-+	tracepoint_synchronize_unregister();
-+
-+	llist_for_each_entry_safe(data, tmp, llnodes, llist)
-+		kfree(data);
-+}
-+
- /* Bulk garbage collection of event_trigger_data elements */
- static int trigger_kthread_fn(void *ignore)
- {
-@@ -56,30 +89,48 @@ void trigger_data_free(struct event_trigger_data *data)
- 	if (data->cmd_ops->set_filter)
- 		data->cmd_ops->set_filter(NULL, data, NULL);
- 
-+	/*
-+	 * Boot-time trigger registration can fail before kthread creation
-+	 * works. Keep the deferred-free semantics during boot and let late
-+	 * init start the kthread to drain the list.
-+	 */
-+	if (system_state == SYSTEM_BOOTING && !trigger_kthread) {
-+		llist_add(&data->llist, &trigger_data_free_list);
-+		return;
-+	}
-+
- 	if (unlikely(!trigger_kthread)) {
- 		guard(mutex)(&trigger_data_kthread_mutex);
--		/* Check again after taking mutex */
--		if (!trigger_kthread) {
--			struct task_struct *kthread;
- 
--			kthread = kthread_create(trigger_kthread_fn, NULL,
--						 "trigger_data_free");
--			if (!IS_ERR(kthread))
--				WRITE_ONCE(trigger_kthread, kthread);
-+		trigger_start_kthread_locked();
-+		if (!trigger_kthread) {
-+			llist_add(&data->llist, &trigger_data_free_list);
-+			trigger_data_free_queued_locked();
-+			return;
- 		}
- 	}
- 
--	if (!trigger_kthread) {
--		/* Do it the slow way */
--		tracepoint_synchronize_unregister();
--		kfree(data);
--		return;
--	}
--
- 	llist_add(&data->llist, &trigger_data_free_list);
- 	wake_up_process(trigger_kthread);
- }
- 
-+static int __init trigger_data_free_init(void)
-+{
-+	guard(mutex)(&trigger_data_kthread_mutex);
-+
-+	if (llist_empty(&trigger_data_free_list))
-+		return 0;
-+
-+	trigger_start_kthread_locked();
-+	if (trigger_kthread)
-+		wake_up_process(trigger_kthread);
-+	else
-+		trigger_data_free_queued_locked();
-+
-+	return 0;
-+}
-+late_initcall(trigger_data_free_init);
-+
- static inline void data_ops_trigger(struct event_trigger_data *data,
- 				    struct trace_buffer *buffer,  void *rec,
- 				    struct ring_buffer_event *event)
+Code quality improvements reduce duplication and improve readability.
+A common_threshold_handler() consolidates repeated threshold action
+logic. The extract_arg() macro simplifies key=value parsing. Magic
+numbers are replaced with named constants (MAX_PATH, ARRAY_SIZE), and
+redundant strlen() calls are cached in local variables.
+
+All changes have been tested with the existing rtla test suite.
+
+v4:
+- Patch 3: Rename commit title from "rtla: Simplify argument parsing"
+  to "rtla/actions: Simplify argument parsing" to clarify scope. Remove
+  spurious whitespace change to container_of macro (Tomas Glozar).
+- Patch 12: Fix a regression where strcmp() broke SCHED_DEADLINE
+  priority parsing in "d:runtime:period" format (e.g., "d:10ms:100ms").
+  Introduce match_time_unit() helper that checks the suffix is followed
+  by end-of-string or ':' delimiter. Note that strncmp_static() was
+  also considered but would fail because ARRAY_SIZE() includes the NUL
+  terminator (Tomas Glozar).
+- Patch 15: Add Fixes tag for stable backport tracking (Tomas Glozar).
+
+v3:
+- Address v2 feedback:
+  - Rename common_restart() to common_threshold_handler() to better
+    reflect its purpose (Tomas Glozar).
+  - Implement a proper strscpy() for safer string handling instead of
+    manual buffer sizing (Steven Rostedt).
+  - Remove restart_result enum in favor of simpler, direct return
+    values (Tomas Glozar).
+- Add several new bug fixes, including a softirq vector bounds check,
+  pthread_create() failure handling, robust I/O handling for
+  EINTR/partial writes, and a resource leak fix.
+- Introduce str_has_prefix() helper to replace verbose strncmp/strlen
+  patterns.
+- Tighten string parsing to enforce exact matching and reject invalid
+  suffixes (e.g., "100nsx").
+- Drop patches already merged via RTLA v6.20 pull request.
+
+v2:
+- exit on memory allocation failure
+- remove redundant strlen() calls
+- fix possible race on condition on stop_tracing variable access
+- ensure null termination on read() calls
+- fix checkpatch reports
+- make extract_args() an inline function
+- add the usage of common_restart() in more places
+
+Wander Lairson Costa (18):
+  rtla: Exit on memory allocation failures during initialization
+  rtla: Use strdup() to simplify code
+  rtla/actions: Simplify argument parsing
+  rtla: Introduce common_threshold_handler() helper
+  rtla: Replace magic number with MAX_PATH
+  rtla: Simplify code by caching string lengths
+  rtla: Add strscpy() and replace strncpy() calls
+  rtla/timerlat: Add bounds check for softirq vector
+  rtla: Handle pthread_create() failure properly
+  rtla: Add str_has_prefix() helper function
+  rtla: Use str_has_prefix() for prefix checks
+  rtla: Enforce exact match for time unit suffixes
+  rtla: Use str_has_prefix() for option prefix check
+  rtla/timerlat: Simplify RTLA_NO_BPF environment variable check
+  rtla/trace: Fix write loop in trace_event_save_hist()
+  rtla/trace: Fix I/O handling in save_trace_to_file()
+  rtla/utils: Fix resource leak in set_comm_sched_attr()
+  rtla/utils: Fix loop condition in PID validation
+
+ tools/tracing/rtla/src/actions.c       | 103 ++++++++++++---------
+ tools/tracing/rtla/src/actions.h       |   8 +-
+ tools/tracing/rtla/src/common.c        |  65 ++++++++++----
+ tools/tracing/rtla/src/common.h        |  18 ++++
+ tools/tracing/rtla/src/osnoise.c       |  26 ++----
+ tools/tracing/rtla/src/osnoise_hist.c  |  22 ++---
+ tools/tracing/rtla/src/osnoise_top.c   |  22 ++---
+ tools/tracing/rtla/src/timerlat.c      |   5 +-
+ tools/tracing/rtla/src/timerlat_aa.c   |  10 +--
+ tools/tracing/rtla/src/timerlat_hist.c |  41 ++++-----
+ tools/tracing/rtla/src/timerlat_top.c  |  54 +++++------
+ tools/tracing/rtla/src/timerlat_u.c    |   4 +-
+ tools/tracing/rtla/src/trace.c         | 102 +++++++++++----------
+ tools/tracing/rtla/src/trace.h         |   4 +-
+ tools/tracing/rtla/src/utils.c         | 119 +++++++++++++++++++++----
+ tools/tracing/rtla/src/utils.h         |  29 +++++-
+ 16 files changed, 388 insertions(+), 244 deletions(-)
+
 -- 
-2.34.1
+2.53.0
 
