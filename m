@@ -1,128 +1,104 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1CB344DA6;
-	Mon,  9 Mar 2026 21:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD0A23BCEE
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 21:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773091029; cv=none; b=GSuEu7AC82IdHeIlDjYDKaLPiDvhJqG8lO+AfLyFNOBKKPlIjYreCKoAkSPubvfXgfGTNDldtwMVVpnQ5G24WkTHqSbps6afH1/DJvh3l4lkjrzo9qRbwGDmtD/1Iaq5evkHxTlUb1usRbpuDz97oPeCDBWYp4rtO+mhHWpbCrg=
+	t=1773091653; cv=none; b=NC5W7k5NALqqlle8eYhL6VR8FDJvAJQXhXmdpkqviIRmXCLB+49xV9Ns25LKSEazhDOR035JkyY8ZDQjJjsd+ohduOXQpqoLpHydc16uBriZAM31858IHD7fx6xjoZbJ2hQJFVIDaVItfrLnVAxLgSa/FNlPtf5jnI2/vaBFc4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773091029; c=relaxed/simple;
-	bh=bpoLnbYO8/rYrKVacGGqez+t0LmbQW6lVEhzCeRFbVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vB71WC3/3aaKgTPqXk8v9VbF76NM4UeBnjuFPLg90V7MROCqZI58KNiIJ+VBLzFRvni/Znau+1AA6yeDPd2W8J22RBmZeOTRWfgLOdsLwybZkIf5XZFTOZ0sGw1PjaxFFVgA4BSN36enP4LuorS/xsR46Zih/Duockicdx0tNIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 758CD13A869;
-	Mon,  9 Mar 2026 21:16:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id D268820023;
-	Mon,  9 Mar 2026 21:16:52 +0000 (UTC)
-Date: Mon, 9 Mar 2026 17:17:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Dmitry Ilvokhin <d@ilvokhin.com>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Lorenzo
- Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie
- <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Len Brown <lenb@kernel.org>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, Oscar
- Salvador <osalvador@suse.de>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
-Message-ID: <20260309171700.063318b5@gandalf.local.home>
-In-Reply-To: <aa8xawMxLeUjkyHx@casper.infradead.org>
-References: <cover.1772206930.git.d@ilvokhin.com>
-	<aa7G1nD7Rd9F4eBH@casper.infradead.org>
-	<aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
-	<aa7dgQDMEz34eadj@casper.infradead.org>
-	<20260309151317.7bba06dd@gandalf.local.home>
-	<aa8xawMxLeUjkyHx@casper.infradead.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1773091653; c=relaxed/simple;
+	bh=Ywv/x9EhLwlHPf9krwL6fJZT4wCkg8aoD3Bhobn0fAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d8RBF7KwSSOsIB/Ujy+k+u5cbe9nu40z9wsVSvs0QQktQ2BYYqLGRzpy7rzNoSYoq6xdSspvdrEiimxY1tq+MTcdOnKY5NvEXmkC8Gwxqt4uoB4PLYy2XXm0VDa6iLybpVv/nStoxOUzJzuWm3pRY/hhjN57fa8iNhTbyALRfJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxYhMajW; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxYhMajW"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-67bb39a1122so846152eaf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 14:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773091651; x=1773696451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FgH6nxj6mipRLEO/qlV2727swuhWygQwIW/mErrecfQ=;
+        b=bxYhMajWlTLTG9KZ4aUIuoryrQgKH0Znj55TvIgYHynlPrdHB07m6USnLQGqd6LzBk
+         fKQUcsFKb/aZJYKPOjVMk6MWM+OavB001UtVDWkrPyfJpldb9tc/upg2RO1mleODtTgN
+         8UmI4QfOiDdLq7E/fnHg316ofOEFZOamLM4roqp+lbj5Eay9GRvG5TlgFZZq11WCOlOS
+         8m5ef57EMe8T57w4q7LbHivL/7TSjlRvyNub8NlSWoMF4CjFCfqE4A8wkAAuarGrhQeF
+         9F5YOkDpCXq3c0Cep4Z1zKEnpDwowjMF/hvxshFVqHKqGQaIikvwEZvBJfwqB68Nk9Og
+         X1OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773091651; x=1773696451;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FgH6nxj6mipRLEO/qlV2727swuhWygQwIW/mErrecfQ=;
+        b=KeiQSQQA/E8N/Nb/TwVKrn3sRpph2yWIFs71hHXxMd8WQk6dqlJ7D8zs8jWaWvhbwZ
+         kSs6a/uR0opCnJoY71O+nImilmJSZ8zrfMje+hpsJWA+G+NbkGm5VFYF3dsl7+j52ZyZ
+         0KtxooKhPg9fcDzAJOzUHyd8x7haGrUUARZxlc/9Dh/0ywCDJl05sI5CmV6QL7ImrTkG
+         cj1766KNmLi1gqlStDHpbvIIvpDUovuaSisuUeY8OZZwoPnFPdMmFY7JVt4Rhyg6Yww7
+         bmDDQadOc9K7aJ/8KfvfwjEnJaV1KoFGFNI4k6soI3G5u16my96I/qCu63rPNmG8Fon+
+         tBsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXI5dZV6T+0fiBpzOBzKLj0QXUz7J3UWtSLBfuagIVG7W3Hyq3lzLCFjvXtI00cyJT5kdXnXrZMx7ATIV/m8LiBcwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiFz54rQpMb3LVJGe8/o45XaTTUnhSb85f7igjhIOvMj3GL441
+	cIbHUdTwwkoLPd+3mT/KRxrd4vBI5noy8G7Hk1T4bZDMzbEZDHm6DrIZECTVeR8/7KQ=
+X-Gm-Gg: ATEYQzxkA0unVxBG0g1mr3tMZcGLSCc4jRdk2nl9Nefp4lxNhsHuYnddqEzG0Lr0k9C
+	0wnKJavzp9q5090oNXKaTA3MM6Iu6sGc0UEgU6b0b4vupzNxA5umymdt4qgCNzt7X6JFNubsj2e
+	mY+vp/NbkBKncWi7gp42xC6j+fsmk+bBW3gPqpsbbZa7yI6Tg7fMx/PVfEVRSpK6i/nJ998iW3H
+	eXpWfqERXQ34S6rhUTaAHdClYTdBMvShNVPLdGcdS57JCrL2LFYFQkwRTmef63dc3eR2P1F7gi+
+	Dz94LwQuPWTutxvjcnji7o0QKQv9I6/3k84b0H2JhwGxlOUbWQpukjR8LWyU6Kgci5AIBJs7H2B
+	JAqT5lLu5pwbIpHrLUKcGK4TCmueRigsEngp2WV6Fdiczw364CV7VO/fqiRBl2u2exiMFfO4Tcq
+	jbh1JRvBblxhGmXnJ8bRbBRBNTXY28stRFyqYBnmT6WvoEZDjhrVSgTgeLY1427W0CpKYeG3eXQ
+	VFM99elQ92ezSqW8kqs2831e9p+EtQMfo3zqW/POqGwq5GC
+X-Received: by 2002:a4a:e842:0:b0:677:4fc0:a852 with SMTP id 006d021491bc7-67b9bcd4c6fmr8270896eaf.34.1773091651461;
+        Mon, 09 Mar 2026 14:27:31 -0700 (PDT)
+Received: from localhost.localdomain (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-67bb3bb67fbsm2639289eaf.15.2026.03.09.14.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2026 14:27:30 -0700 (PDT)
+From: Wesley Atwell <atwellwea@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Wesley Atwell <atwellwea@gmail.com>
+Subject: [PATCH v2 0/2] tracing: preserve repeated boot-time parameters and drain deferred trigger frees
+Date: Mon,  9 Mar 2026 15:27:00 -0600
+Message-Id: <20260309212702.13622-1-atwellwea@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: qdupw3qcx95kesicxk4ef3r4f7icbrgb
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: D268820023
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/XFN/gdyLIxDXgLJKAoUlEX1WfcjSP714=
-X-HE-Tag: 1773091012-906581
-X-HE-Meta: U2FsdGVkX1+E5+zEFu4ouTTuiZydJXGiJVkVKdHWUvbBjy0A4ia2YfSTyqoJGij9+DgAvjweOf+TnyK615f48JvD9s1RuHfJZado60mdmfqgJJ7byQ52vlgQ15huzT2Mhmb2QKsL/SDQw7IheFGj/3BTI6j5nd8jRE4Y8lrR3/zc3b4j9yCDC7Htw7SsvgBcV7RPqLl6gaQB1jtkSoY0hY8X3SVQW1sT3ljl0RQzi5RGmBTU7hvQjIApbEKCso7g+rYLK9oZIRwO9+pKEjTl8uXPyDtQl3PNrK+GDCI9ogqSJQBJEFVq8oyS2DAHL9y2gWhpp+Kix9+yY0dkIGhQETrhMy3kOgMQWYVF3PTc+zFIRt6a+DK9tE1nUM7iwCh8YJV42PxUfgL1xozBUsfgrJgf7BJXda1f
+Content-Transfer-Encoding: 8bit
 
-On Mon, 9 Mar 2026 20:45:31 +0000
-Matthew Wilcox <willy@infradead.org> wrote:
+Patch 1 preserves repeated tracing boot parameters across the affected
+early parsers.
 
-> On Mon, Mar 09, 2026 at 03:13:17PM -0400, Steven Rostedt wrote:
-> > The biggest issue with making a generic light weight LOCK_STAT is that
-> > locks are extremely optimized. Any addition of generic lock encoding will
-> > cause a noticeable overhead when compiled in, even when disabled.  
-> 
-> I'm not sure that's true.  Taking the current Debian kernel config
-> leads to a "call" instruction to acquire a spinlock:
-> 
-> void __insert_inode_hash(struct inode *inode, unsigned long hashval)
-> {
->         struct hlist_head *b = inode_hashtable + hash(inode->i_sb, hashval);
-> 
->         spin_lock(&inode_hash_lock);
->         spin_lock(&inode->i_lock);
->         hlist_add_head_rcu(&inode->i_hash, b);
->         spin_unlock(&inode->i_lock);
->         spin_unlock(&inode_hash_lock);
-> }
-> 
-> compiles to:
-> 
-> [...]
->      280:       23 35 00 00 00 00       and    0x0(%rip),%esi        # 286 <__insert_inode_hash+0x56>
->                         282: R_X86_64_PC32      .data..ro_after_init+0x10
->      286:       48 8d 2c f0             lea    (%rax,%rsi,8),%rbp
->      28a:       e8 00 00 00 00          call   28f <__insert_inode_hash+0x5f>
->                         28b: R_X86_64_PLT32     _raw_spin_lock-0x4
->      28f:       4c 89 e7                mov    %r12,%rdi
->      292:       e8 00 00 00 00          call   297 <__insert_inode_hash+0x67>
->                         293: R_X86_64_PLT32     _raw_spin_lock-0x4
-> [...]
+Patch 2 makes deferred trigger-data frees drain correctly if the cleanup
+kthread never starts, and restores the review-requested comment context
+around the post-mutex recheck and synchronous fallback path.
 
-Ah, you're correct. Looks like it's an arch specific thing. I was going
-back to my memory from around 2006, but it appears that only a few archs
-inline spinlocks anymore. Thomas made it a bit easier to see what does and
-does not do that (in 2009).
+v2:
+- Patch 1: no changes
+- Patch 2: restore the dropped mutex recheck comment and clarify the
+  synchronous fallback drain path
 
-  6beb000923882 ("locking: Make inlining decision Kconfig based")
+Wesley Atwell (2):
+  tracing: preserve repeated boot-time tracing parameters
+  tracing: drain deferred trigger frees if kthread startup fails
 
-So, perhaps adding code to the spinlocks will not be as much of a hit on I$.
+ kernel/trace/ftrace.c               | 29 +++++++++--
+ kernel/trace/trace.c                | 23 ++++++++-
+ kernel/trace/trace_events.c         | 23 +++++++--
+ kernel/trace/trace_events_trigger.c | 79 ++++++++++++++++++++++++-----
+ kernel/trace/trace_kprobe.c         | 23 ++++++++-
+ 5 files changed, 155 insertions(+), 22 deletions(-)
 
-> (The spinlock code is too complex for me to follow what config options
-> influence whether it's a function call; you probably have enough of it
-> in your head that you'd know)
-
-Yeah, I feel like I'm always relearning the code every time I have to jump
-in and understand it again.
-
-> 
-> > The other issue is the data we store for the lock. A lock is usually just a
-> > word (or long) in size, embedded in a structure. LOCKDEP and LOCK_STAT adds
-> > a key per lock. This increases the data size of the kernel.  
-> 
-> It does, but perhaps for a light weight lockstat, we could do better
-> than that.  For example it could use the return address to look up
-> which lock is being accessed rather than embedding a key in each lock.
-
-Right.
-
--- Steve
+-- 
+2.34.1
