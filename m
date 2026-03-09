@@ -1,199 +1,160 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10E625DD1E
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 02:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773023687; cv=pass; b=olihCaK8aFK3Mny4s8ji3cIdyE3R95pHNSXSfXOCDmj1Sh/IFORtTJGjs9EUZTf+S9xXxMtFjXxhcEv5dSM6j0+YngzyBBZn2xEqC/1aAerTYqLlw7wah14ipTf2hPe78+4q6YVNZBl+kzKTt6ltrN5DRHDt22AvVVJ/JxroW6U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773023687; c=relaxed/simple;
-	bh=ArRb5Li4I5zm9vW2pN6vXHvRZgL/NSLUxj38XACQLHI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YVQd9wxaWuXj7ne5isDiC/815HqyXfxPfv4jAibSJHb4VK1LhLty1N+i0kibgPJMczfg4RbMWHMV99GqsflRgc427m4Bc4bLbutTvB47lF4g6QSn6AdyFSLbFmWoTRnz44IF0KbGDfeWd3CLp51wOaeoxSw+HL3UAdcUasKzKoI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lApO2HjX; arc=pass smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lApO2HjX"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7986d231b3cso138856517b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Mar 2026 19:34:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773023684; cv=none;
-        d=google.com; s=arc-20240605;
-        b=B/Puvu69Ul21VBi62y3TNWdPrZcBDz2NbaK30qRLAPmKuUrjj03fwnlUI8Im3kj9cx
-         rQFOTkHqajuH53DRQ0K6OnXpB4M2pDofA6ovydZ3wzo09wtGW3DNzxQGk9FeJmzsZytY
-         1f26yeillBsro4lYGEvJN06/QYuFZx2p2wRwicN09+3T0LbHTJ6oZZVqmpEIR4K1MUx6
-         xhzM+Ji8UrCFxUOuQNhokfSofsltAJXvNgsa7jMJjeXufnJk98WpIgO9cCZ8oS1JQ+Ur
-         uUkwJF4HL0i5aiOrSG4jvqOUgyc8xhiBgf6O8vlcvM2BbRKqdHCChRanYNHP5yNMkL/9
-         Gupw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=QKAY8tUmGNwJhd/F7pnirLa9VDEJIqmLVmxW8N9odk8=;
-        fh=3yg+otbvxG0zpdE78yjhQJvTXHCn9x96Hzb+mqL5ib0=;
-        b=dnUpo8UHWESnnKdTYWUofkBNuZ+RocACrSuIdPxoKg4KKQJzT1MVgX9HpgYMrkBvOw
-         vZgj7/u0gaRoNFut+091ya5cx6M+0nMzX+8hMU5JHdrp8V7F+a/VjhpzUmc5L5aPYZQx
-         uXF745eNPSlCgGeq0Nh5xY5RuQOs0HsJtmuUcdLDzSv/p5XSWPZ+ga5OWY2c/Rl1A4Ca
-         BYs6H5zaRKHKHe3If+K2FGl/Ydnm6PP8Ad4f05wgKMXS3h/VEvzGkhGpTJwiXItrqELy
-         nGJ7X+33i0bed5UdbyYGskGnRcPRsa5ocrdxHKR/1i9ILn8I72ntzIPutSW0uScJuiJa
-         BgEw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773023684; x=1773628484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QKAY8tUmGNwJhd/F7pnirLa9VDEJIqmLVmxW8N9odk8=;
-        b=lApO2HjXee7b5Wl5995T/t8o+caEK/pESKhOMeWmoHnVz1LIZDPs3OAWRUwLZmry37
-         Za2NtP9dxxctaOVbAlgVPddRtLlvAFVmD/YA0zrJuGEfZ0BILV5YJVgPEf/I3f/XoahM
-         Hri3ho9u8jjxMI2+7SD1sQ+JoFeUXtU85WgwaM17AZEMpRdx43CiH3uAAgngSflGVWwx
-         tqOa2cHg81Ot03rraXlnwVucSWSXLKjlGV7oK/bRNWlVp4D6VWym8o4Ah9c98S1/WryT
-         zCQFO/D++A/KEFPN/n+nOAaKjFTZUPv4OlXFVS5nJYiPsUZmbEw3ZoUYZvp9eNmy5p9V
-         uygQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEF618DB37
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 03:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.70
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773026306; cv=none; b=LkjQu4MvQvEtS1DuQWZuNFFQ8ZZ4krgdst6xzUVtrdd5O5VBkbqwPQmhO+2s7TAQIMUpEQwcekIMiT8k0/uOFYay+T3/33GXIwRJ0ByTPYr9XP0VPwIMvV3xiHpo+ojWkz+SBrZI2AD/UWnLj1ZeLxnXGrFI7vc+lQK1JCneD44=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773026306; c=relaxed/simple;
+	bh=ZgUd83HYbXnzE4yuTbBpQMYTVblYpQTEFj/3IWHq7bM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tG9+umG/o3OWS9yGijKsSCxtSaqydMayCcYTLbogU4j3haKpy8x4YrKALnm3uM/sX5PExx8tY2WmuaWGxWlKAcMFR7moBO+ITreL0YWAJgxUgBvTlBqpC6a58YxIE+6/c04W9/EjdjsPoY2nQcr4W3VizXfoaI4V37zajNzayL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-67bb58103daso2728768eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Mar 2026 20:18:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773023684; x=1773628484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QKAY8tUmGNwJhd/F7pnirLa9VDEJIqmLVmxW8N9odk8=;
-        b=TePNzPQZSTNkqRG0AcLzgvn+GpxLwRrFBDHlh31o1I9o+PQyNxmYMBW1OwylYM39l0
-         jzo4jvvCR3oCXQSCGQhhWnJRrpEqD94jHceVNlx0jIXTIc2aYWpzQKdvg9UbVnc9LaCx
-         w+/C+apjx50LyeTZBJ+nApY8aHYHSEvhvTmWxxyuGKVKi8O9STNfeKG7ym9bd6mNh/HF
-         7xzIkKPHtyACZOsJuk1JmhHEuVnlPBiVZAc2ycEOdScdXvbFXGESGdq6i0Gu+Nfo1Dsp
-         QsTAHLmQKsRZzD8gMLlvM2MxN12vYEbwTFvnHJ8mkYWTVcRFj+7FqhHl2sKTawoHcL0c
-         /NMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZtI1kky9aamMSCJDChHH6rHrtXmufcW/y8lCj9igamBrbm5fiJqy853CqzCMLldRMngYQgsRl7Wvoa2whByZFjSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGRDGkj71KT/9ZHh1I5mZbFvrVmNnge60p3WKvlmXzfmqlAozJ
-	agFccK0JWMHWxcLHHZSUaPCInKzIlCwB8H30pDwmRdkg2OGjekN47BtgHPKAPNko/uY2a6HDyjV
-	kBBSlHDCBm1D5CfRGNpLWlxhrLJzWiew=
-X-Gm-Gg: ATEYQzzgBflFydBcAE3DFvzlGte+eXEYx6hF6uRFW2xk5R8dQGjM1ivVHgTb+sgwqlc
-	5iQtvC5oRjE4Zrc9JpwpdHfshHfrVXA5bUXvUW1b1SePSab7/w27PRqgmpWNdZ5rXNGrHhCcz59
-	Hux74cP1kaLulIgv8agMfpyxHacVvK6ghRRRd138I6TKkevAzfO65rXaarU4xeTei91N/3PuXcz
-	dWO7jEy/7j/ygd3xUd3jvQquREgKnLzz+yeut/NLEI1GuzRN12HsTg6YKUGDrFqpogEjxJscyzn
-	1zuMHbRL
-X-Received: by 2002:a05:690e:1208:b0:64c:fdb0:894d with SMTP id
- 956f58d0204a3-64d07185811mr11343304d50.42.1773023683806; Sun, 08 Mar 2026
- 19:34:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773026304; x=1773631104;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GD8bcTWofBjnYQ3aQVNTHpJCJ5pB4DTaYb3sbZFn2BU=;
+        b=b4dF2GIrZEi3a5Kk0u5CbM4P9evY2viyXCSZ1K4ZmRqhfAtH8Ha6uXkdxbaXrGRkeN
+         3A1D8X+7vhOSI+4wj99vLjPgcpyfZCJshbJqx09CVTha2hFS+QS5fK3XFTCuCg2b9XH6
+         jYM6jLBGP0eTM4uDuFc1gSY6D8vzqCVKVZwgeqOB6jSjOWeo4yrvdIb2AV/0mggbmE5W
+         XoOzG1yuvjZj1yNH+IoQq0+Vcnx62ymByTsv7NUgF3oDyv7FMbCLy/jifkWGgI8mGkl5
+         J8zucLghU0n7SWTbFyoET8SnTaK52vVaQU1ahcDr2rt5ugO617Ule+vSgXWps2U/nJRv
+         XWCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUdfR+66yX/dDjSKAG4ub7DyPVYJcHYEZmBtfSf4yrPOibXFw2cBlHex25Gk8BVHDDVgbnVlMd04HYzUz/h/ksHrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLnMNv2x0oUCrcqRNtOGNTIjirzxPh2Pyo5XTK3rUhfqZsEqdT
+	9wgyaFHEiEuXTtqc4aji1aw1Buv9mhUQlcKXVJV7VEUKpJWSTgYCXVV+UWKdP9ct5zxKt0dYkxY
+	VNfUnoXQjGnA6se/h/2H6McbzjTSQI0fEHv/HdvZOcB+NJZXo322vFk52s1c=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260304074650.58165-1-laoar.shao@gmail.com> <20260304074650.58165-2-laoar.shao@gmail.com>
- <20260304090249.GN606826@noisy.programming.kicks-ass.net> <20260304095415.4d5f2528@pumpkin>
- <20260304155742.7b4de2d1@gandalf.local.home> <20260304214447.3e5817ea@pumpkin>
- <CALOAHbCOynnRdc8JkNJHb-nyoerrz0K5GUhnD8OR2hv4x==5LA@mail.gmail.com>
- <20260304212802.458b878e@fedora> <CALOAHbBA643_QOsnTmrfjKE71hSa+v1cToiELvGk+vjtcgJsxg@mail.gmail.com>
- <20260304220019.3efa12ab@robin> <CALOAHbA4Dtc3cXs2JiQ=kxES3kT+Acb=amUxkOvQ22fns-Mqgw@mail.gmail.com>
- <748e8e0d-5164-4c8a-9bb9-110874c5daa0@redhat.com> <CALOAHbAsiVNC7COL7rCJBdaC-8oZQvg+pjudR4QexQQaYLBmgA@mail.gmail.com>
- <20260305082125.35d8539c@gandalf.local.home> <CALOAHbA9u2sHSYRF_kDKpf2d_UADQFu-1BMWFhBTo3mvgf6kFQ@mail.gmail.com>
- <20260306100047.7c4725de@pumpkin>
-In-Reply-To: <20260306100047.7c4725de@pumpkin>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 9 Mar 2026 10:34:07 +0800
-X-Gm-Features: AaiRm50iDdiXD-_RvD8Nn69yibWAI7Y35JFbuH0rnn-jz517KrJX-lOFc1fCffQ
-Message-ID: <CALOAHbBdetsUV76vnzOw60-48hkjVs2nJa8Nzxh-jNvtr4E5iQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] locking: add mutex_lock_nospin()
-To: David Laight <david.laight.linux@gmail.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Waiman Long <longman@redhat.com>, Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, 
-	will@kernel.org, boqun@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+X-Received: by 2002:a05:6820:f022:b0:67b:b77d:70aa with SMTP id
+ 006d021491bc7-67bb77d74ecmr178913eaf.15.1773026304519; Sun, 08 Mar 2026
+ 20:18:24 -0700 (PDT)
+Date: Sun, 08 Mar 2026 20:18:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69ae3c00.050a0220.310d8.0013.GAE@google.com>
+Subject: [syzbot] [trace?] WARNING in ring_buffer_nr_dirty_pages
+From: syzbot <syzbot+855a87cfc76c52ce7a59@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 6, 2026 at 6:00=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Fri, 6 Mar 2026 10:22:11 +0800
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> > On Thu, Mar 5, 2026 at 9:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
-> > >
-> > > On Thu, 5 Mar 2026 13:40:27 +0800
-> > > Yafang Shao <laoar.shao@gmail.com> wrote:
-> > >
-> > > > Exactly. ftrace is intended for debugging and should not significan=
-tly
-> > > > impact real workloads. Therefore, it's reasonable to make it sleep =
-if
-> > > > it cannot acquire the lock immediately, rather than spinning and
-> > > > consuming CPU cycles.
-> > >
-> > > Actually, ftrace is more than just debugging. It is the infrastructur=
-e for
-> > > live kernel patching as well.
-> >
-> > good to know.
-> >
-> > >
-> > > >
-> > > > >
-> > > > > BTW, you should expand the commit log of patch 1 to include the
-> > > > > rationale of why we should add this feature to mutex as the infor=
-mation
-> > > > > in the cover letter won't get included in the git log if this pat=
-ch
-> > > > > series is merged. You should also elaborate in comment on under w=
-hat
-> > > > > conditions should this this new mutex API be used.
-> > > >
-> > > > Sure.  I will update it.
-> > > >
-> > > > BTW, these issues are notably hard to find. I suspect there are oth=
-er
-> > > > locks out there with the same problem.
-> > >
-> > > As I mentioned, I'm not against the change. I just want to make sure =
-the
-> > > rationale is strong enough to make the change.
-> > >
-> > > One thing that should be modified with your patch is the name. "nospi=
-n"
-> > > references the implementation of the mutex. Instead it should be call=
-ed
-> > > something like: "noncritical" or "slowpath" stating that the grabbing=
- of
-> > > this mutex is not of a critical section.
-> > >
-> > > Maybe an entirely new interface should be defined:
-> > >
-> > >
-> > > struct slow_mutex;
-> >
-> > Is it necessary to define a new structure for this slow mutex? We
-> > could simply reuse the existing struct mutex instead. Alternatively,
-> > should we add some new flags to this slow_mutex for debugging
-> > purposes?
-> >
-> > >
-> > > slow_mutex_lock()
-> > > slow_mutex_unlock()
-> >
-> > These two APIs appear sufficient to handle this use case.
->
-> Don't semaphores still exist?
+Hello,
 
-While semaphores may present similar challenges, I'm not currently
-aware of specific instances that share this exact issue. Should we
-encounter any problematic semaphores in production workloads, we can
-address them at that time.
+syzbot found the following issue on:
 
-> IIRC they always sleep.
->
-> Although I wonder if the mutex need to be held for as long at it is.
-> ISTR one of the tracebacks was one the 'address to name' lookup,
-> that code will be slow.
-> Since the mutex can't be held across the multiple reads that are done
-> to read the full list of tracepoints it must surely be possible to
-> release it across the name lookup?
+HEAD commit:    ecc64d2dc9ff Merge tag 'sysctl-7.00-fixes-rc3' of git://gi.=
+.
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D109bf0ba580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D163cf0fb07ea84d=
+3
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D855a87cfc76c52ce7=
+a59
+compiler:       gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.44
 
-That's a great point, though I'm not entirely certain at the moment.
-Perhaps Steven can provide further insight.
+Unfortunately, I don't have any reproducer for this issue yet.
 
---=20
-Regards
-Yafang
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/23b82e01c157/disk-=
+ecc64d2d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e98b1b4abbdf/vmlinux-=
+ecc64d2d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/41e18c482bbb/bzI=
+mage-ecc64d2d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+855a87cfc76c52ce7a59@syzkaller.appspotmail.com
+
+Invalid ELF header magic: !=3D =7FELF
+------------[ cut here ]------------
+read > cnt + 1
+WARNING: kernel/trace/ring_buffer.c:788 at ring_buffer_nr_dirty_pages+0x207=
+/0x290 kernel/trace/ring_buffer.c:788, CPU#1: syz.1.4985/28848
+Modules linked in:
+CPU: 1 UID: 0 PID: 28848 Comm: syz.1.4985 Tainted: G     U       L      syz=
+kaller #0 PREEMPT(full)=20
+Tainted: [U]=3DUSER, [L]=3DSOFTLOCKUP
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 02/12/2026
+RIP: 0010:ring_buffer_nr_dirty_pages+0x207/0x290 kernel/trace/ring_buffer.c=
+:788
+Code: 83 c3 01 48 89 ee 48 89 df e8 95 24 fc ff 48 39 eb 72 11 31 db eb cc =
+e8 67 2a fc ff 90 0f 0b 90 31 db eb bf e8 5a 2a fc ff 90 <0f> 0b 90 31 db e=
+b b2 4c 89 e7 e8 4a af 67 00 e9 f8 fe ff ff 4c 89
+RSP: 0018:ffffc900052875c0 EFLAGS: 00010087
+RAX: 000000000000014d RBX: 0000000000000001 RCX: ffffc90007725000
+RDX: 0000000000080000 RSI: ffffffff820be6e6 RDI: ffff88805e5f0000
+RBP: 0000000000000002 R08: 0000000000000006 R09: 0000000000000001
+R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88813fea5000 R14: ffff88813fe5a4b0 R15: ffff88813fea5000
+FS:  00007f8292df66c0(0000) GS:ffff88812444e000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e2ebff8 CR3: 00000000621de000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ full_hit kernel/trace/ring_buffer.c:810 [inline]
+ rb_watermark_hit+0x1f5/0x300 kernel/trace/ring_buffer.c:907
+ ring_buffer_poll_wait+0x2b2/0x490 kernel/trace/ring_buffer.c:1064
+ trace_poll kernel/trace/trace.c:5895 [inline]
+ tracing_buffers_poll+0x1cf/0x250 kernel/trace/trace.c:7841
+ vfs_poll include/linux/poll.h:82 [inline]
+ select_poll_one fs/select.c:480 [inline]
+ do_select+0xd54/0x1850 fs/select.c:536
+ core_sys_select+0x55b/0xbb0 fs/select.c:677
+ kern_select+0x20c/0x270 fs/select.c:718
+ __do_sys_select fs/select.c:725 [inline]
+ __se_sys_select fs/select.c:722 [inline]
+ __x64_sys_select+0xbd/0x160 fs/select.c:722
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0x106/0xf80 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8294b9c799
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f8292df6028 EFLAGS: 00000246 ORIG_RAX: 0000000000000017
+RAX: ffffffffffffffda RBX: 00007f8294e15fa0 RCX: 00007f8294b9c799
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000000e
+RBP: 00007f8294c32bd9 R08: 0000000000000000 R09: 0000000000000000
+R10: 00002000000002c0 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f8294e16038 R14: 00007f8294e15fa0 R15: 00007ffe7dd14a88
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
