@@ -1,62 +1,64 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D650258ED4
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 19:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBDD41324D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 19:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773085973; cv=none; b=rBJw7WKZb3kZuw4Q32nsP1ZEBkxJjAeOGVRXWazyRtA50HMXqRbGjQrc7b8FXLbcP+ahtEyoFMuUszFWZz3dxR65IlLKtQqFKtwrTGy0kTQTX/kG+DbiAZibqeNdDZYMPhwkXj+FvrqUW7f+2l/fsX0MA23qDoUIdeeaIz+oxVA=
+	t=1773085978; cv=none; b=nnXTA9Ow7kdWJb//mJ5FiXA25J8J51Cm62Gl4RdJs5XbyDhF7cao5nq9Em7k6zce52oLgkPLw3yPxCJl5PyOxtU9eUzAZk7rCWWLi2KmPZRes9w5CuI6+U6G1kuZhaJhqhOD+n3F5Vixwa0nW6Bq7nA9u6xf/YWZlTuqqM1uiJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773085973; c=relaxed/simple;
-	bh=w/+pYun5GysAaWOOHq4gwRcOi4slps50EWq3vhGOfwU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rZXScCzK+gdb139YSIIvWEs9KTDI0yuIZUvsm2Fb+F30xsEP70IIKK/bG0wegRv2WAAU2J9gP/5DKjejxLf+bAOiBC4XaDgOI0qXfcGsBINTFL/N2RLWjQR1kIe2SjPWTSSyf52iR+oMVUAsnJJJx0eMRUuEkalO1Xwq5BswrJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hu/v1PKT; arc=none smtp.client-ip=209.85.160.43
+	s=arc-20240116; t=1773085978; c=relaxed/simple;
+	bh=uu1qF51OWMIrP9ZQLA0GZ8rgWwKJRSi10RAcYHwdCZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mzQ4NjMVA761PnPpHVYaqFoor0g9MOK3KuFaj5QXbsEDPgRVjqOabcStkXloS915Sc6h4WPW6v9TMM06SToqvd62zyxSZ1fSXnsUsqRlZV/DJq1Gmo2Qs34xN5nQfu/CH4T3Xvp24NbNaz3T+637lR992nqre9J7z2ZdfjwNEY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALV3zpR0; arc=none smtp.client-ip=209.85.160.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hu/v1PKT"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-41708e43f61so910552fac.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 12:52:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALV3zpR0"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-4170e916d77so593218fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 12:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773085971; x=1773690771; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xyENWBemTlgf42utf4z6UrQbN0qBAnJVayqo1XQ0AzU=;
-        b=hu/v1PKThHs0axuqdEAktPlb78ugIBT56p3YZW1JNYP4cXPVCFZ1ZJuLcHwsWZHaLt
-         2LPLKqYsixBoZ6CraheL+jxCu7dk+WdalxjgwEkUEnUvnFVjZUo9t6Nv+wE/4/SUBAB8
-         PBV19FK4B7tu4Y+vDXZynx406gfCP+tbGcjlLGRQvYjLki5nWNA4gy52tqLLG0BDnZyB
-         9FCVHX6Y+RW9gVCYFM3g/JW1UsuQp6Ud8q+3DZ+Jwlg+4rFmXPgq5SJySHWSMocBLCyK
-         TVHRSgY8tUhQimoX+W+ucrVEAsXrbLpKUlmuVxsEWjE/AEiEkj0hSs+1u/KcjJkWEpzb
-         5NPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773085971; x=1773690771;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773085976; x=1773690776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xyENWBemTlgf42utf4z6UrQbN0qBAnJVayqo1XQ0AzU=;
-        b=bpZ2HlkfGkIuJNli3MhZgdykmB05cAmGJ5yJY09XVINODqyZ+o1PnI0uvgNnACn5gG
-         r+CKO54LK16uLkj2cCMkKHB4tldgg3+zRg0K4ApqYSSOGsetNoAZPtFj/ZaElZQ0AhnN
-         MQ7a4+bQ/y9pjydI9kPqS1ADilYq3AYcJ+SMUdBt28+OqZJp7r2lEmPkhusRFQ9zKSwf
-         2Llxy3PA7DAh1sPnB4F8D4a/Mga4CwKEBvrcXCnaOFBr8TxPf4j5ugpjleiB0NfAWKEH
-         kXkTrK4Dq/QHNo1ci8dfkR9o3jG0QWSb+tQvRGSKqLTi+nMEDdaoRV60LMBHUKeKZOc+
-         mlZA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8QxgrvwTHfn2M4Isn+tCswYv53RC/tsDWWQcJKPcxg5Pk6iqfTRqaO0YzLoSfNYg80aYsJJPWZjZQG+X00AR6nek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhB5ct8chmR/vJbGEuHIJNHxDSEGPLaQ8keNJpdLhfaWu619wD
-	8f2Q+qjQ4r/hqHZlSTtcwbNGUidTO6sJkcmrnC2nqAH9gDOu4GeeX2TM
-X-Gm-Gg: ATEYQzyBukeQoB1ySlZc9xeADtD6TgHgh3OgoXu0oXlbH17eMKgAn8gzNdSJfusuV+p
-	qrTfdoGctmQdGoD5LRLhyWZw4Ihl5C5Dvv+LPP5LT5M2DdxD4FBS9Gk8yEIejoPdwN/ZmzCaJzB
-	NBZ3U2fgppg7+8jsrKWR3m+n0eI2wK65KiY8bCaFHnuVvEZxf+M2bnLCaEEOdMIhcO0KjmdnE1u
-	gofNaA0RswQQZ0NABcTM2Tnf6QoQdp5k5lmmzPHb+5h6oVH2/T32ypf3Fswddvbpf/TNk8thEUS
-	dTDQ66fhxTiZmHaXLTdNZtvTvYI6bgEX0adlU7Mgmm+dx/Nduxe/7OHEQvypZppSy7QTOxu+TmJ
-	R3co3N4C/lcPKHAE1bgzaMAdcwJUrNLw69kzbGXMXOj1fj4esNcEL7e15dw1iNVlNyy6y/vbEkN
-	u0TIKsfbDeUXYBiChDhH03ig5jx1lZggJOsIYFmlsgIjvtu8zQU9Pnu6l9IC8eIYRKmPymNwMc6
-	6JSnyGM5DtBJZ1nmOMHIRAktOMz37OHT+LtjjiqNyMiyzUT
-X-Received: by 2002:a05:6871:7c18:b0:417:4713:a0e7 with SMTP id 586e51a60fabf-4174713c260mr1342986fac.54.1773085970865;
-        Mon, 09 Mar 2026 12:52:50 -0700 (PDT)
+        bh=umA2OwCk8CCR6ygWt/AhqprCfx79z1WR3ID3hcEWPqQ=;
+        b=ALV3zpR09J/TZRrtjK+1zve2eP/1pqw+G9MqjmTL0Sq13zHjYujvwdXmVCHm8FXgrs
+         eEORTU38+cQP/zwxfuZ6qIDhPyaGn4r1Z24PXijW76S+60/De3xZiLEVWRO+2F2v/PkV
+         VllkeucyTIMPk++D8qr6CKyxamKZS6b7iZVJ33/ldJ6+OuIGon0NTLLlLMlu1jQMiJ3H
+         e2qKptMiXwc66CMiWEbt2ttfdNGMFYTKSfr3XWRoCyfB+wQDRBeZUvk1L8RvwJg0LxQz
+         1a596LV7p/MaTMR6BNg0nyd+Jp5+xy18tt+otB9156sMBfitdsY1Ik89MI+M9lVM5ELO
+         mYvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773085976; x=1773690776;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=umA2OwCk8CCR6ygWt/AhqprCfx79z1WR3ID3hcEWPqQ=;
+        b=OPuDrewkQSzqehR6e5klDcioNR/Y9zF8rFpvu2xfuTST28FDK+zywPsNofb9KwBRhw
+         gHlzqRwpjPT+8mKN1SEXwYfO/Zy88JASlcodhTrNrqZOaAQEkRd8r2ioZm0sU11nltML
+         4Hbz+YTvs3cM8LOBKhtXORslY4TZO5O0kRceNxY4ActuB9uMnvAV7HKUYfHlhJva9tWT
+         vr5kHROlwFnPOVNlCBgWSDkivmjott+jAMSi6oNHH6vN3tXZuCAxzPIWpuRVO7IVtFVD
+         zFa0NhRDUwlpVNZZwMAMVPYHUyM7Lkkzwtu2JvRkP1ukDni1oQnp2/YWbqydAw4VC+P4
+         j3jw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6HcwvR4TREh54YMuJQU4aQ//pg+rtrtRMJsy2D8lNiTuWWYHtOPKEcGEVJ/v5QXvA80qzsT+mavJaX0DL6pFXCHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhK0ewKXH3r1MyXwtAN2cU6C6FLMFSdWPVhWzJKdLnbE0sqSzC
+	/tvb8kkyTzZSx6qEyoufcLxGsXClnWKRY/tcGlbYlZ39YyuJUTl2hQPi
+X-Gm-Gg: ATEYQzwVupWmWR8mazoMPJscJEsOx9REJ9Tjvggd3z8hLbcH2MJyztWAebx1xHyRcn7
+	r9DPBqYs9N+IKwDVBNVE0LZd/nCDK13oxb17hjzcuiGANksWK/9mYr1t2qw99BkcAuD6MZysw4L
+	+EURnaPdDbzYrOa6TdIDL2tpbQvybluXI3gfDXthYSoNpe46kbo855yeUVTHofrh1IaIOxzbbdc
+	AgYg2sy1hl18pCiu/zEiN4wixUAI4AxeKJzTzYkBWEmZSf5RB9WNjdOdfzmm3eR+mj2HTPP+Lwz
+	X32/C3n0xMnkxy6tyTZopD9M8bCzSj1ChvCz0gWNkTMVhPPg2H2WnXo82OzPb0aDf1TxGWMG8XX
+	d9u5mJsnNvqAU2ekYo5dAyoFtWolJGEXDLdtE9aBIb2s5r0V5jkF3bzR7dMaHheUvhkCpb3OF+G
+	rD8GhTnQCEXRwPZbRSxtgExehl9EBrDnK0gY56uFOMUB8NLq1oaIgzSzSEAhmgfDcg6IuAeh4mJ
+	0F0BMtZSNbpGR9i0I1uyPIlqQnQKreyjFcHvGU1LNn/YzRrOEd9mHeT7f4=
+X-Received: by 2002:a05:6871:378f:b0:3e9:7744:1d4b with SMTP id 586e51a60fabf-416e3f84fb3mr6800926fac.4.1773085975598;
+        Mon, 09 Mar 2026 12:52:55 -0700 (PDT)
 Received: from localhost.localdomain (108-212-132-20.lightspeed.irvnca.sbcglobal.net. [108.212.132.20])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41756d4d342sm525308fac.12.2026.03.09.12.52.50
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41756d4d342sm525308fac.12.2026.03.09.12.52.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 12:52:50 -0700 (PDT)
+        Mon, 09 Mar 2026 12:52:55 -0700 (PDT)
 From: Wesley Atwell <atwellwea@gmail.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org
@@ -65,10 +67,12 @@ Cc: mark.rutland@arm.com,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Wesley Atwell <atwellwea@gmail.com>
-Subject: [PATCH 1/2] tracing: preserve repeated boot-time tracing parameters
-Date: Mon,  9 Mar 2026 13:52:19 -0600
-Message-Id: <20260309195220.2726094-1-atwellwea@gmail.com>
+Subject: [PATCH 2/2] tracing: drain deferred trigger frees if kthread startup fails
+Date: Mon,  9 Mar 2026 13:52:20 -0600
+Message-Id: <20260309195220.2726094-2-atwellwea@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260309195220.2726094-1-atwellwea@gmail.com>
+References: <20260309195220.2726094-1-atwellwea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,214 +81,133 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bootconfig expands arrays into repeated param=value entries, and the
-kernel command line can repeat the same tracing parameter as well.
-Several tracing __setup() handlers still overwrite their boot buffers,
-so only the last ftrace filter, graph filter, trace option, kprobe
-event, or trace trigger entry survives boot.
+Boot-time trigger registration can fail before the trigger-data cleanup
+kthread exists. Deferring those frees until late init is fine, but the
+post-boot fallback must still drain the deferred list if kthread
+creation never succeeds.
 
-Preserve repeated values in the format their existing parsers already
-consume: comma-delimited lists for ftrace filters and trace options,
-semicolon-delimited lists for kprobe events, and per-chunk parsing for
-trace_trigger=. The trace_trigger parser tokenizes its storage in
-place, so keep a running length and only parse the newly appended
-chunk into bootup_triggers[].
+Otherwise, boot-deferred nodes can accumulate on
+trigger_data_free_list, later frees fall back to synchronously freeing
+only the current object, and the older queued entries are leaked
+forever.
 
-Fixes: 2af15d6a44b8 ("ftrace: add kernel command line function filtering")
-Fixes: 7bcfaf54f591 ("tracing: Add trace_options kernel command line parameter")
-Fixes: a01fdc897fa5 ("tracing: Add trace_trigger kernel command line option")
-Fixes: 970988e19eb0 ("tracing/kprobe: Add kprobe_event= boot parameter")
+Keep the deferred boot-time behavior, but when kthread creation fails,
+drain the whole queued list synchronously. Do the same in the late-init
+drain path so queued entries are not stranded there either.
+
+Fixes: 61d445af0a7c ("tracing: Add bulk garbage collection of freeing event_trigger_data")
 Signed-off-by: Wesley Atwell <atwellwea@gmail.com>
 ---
- kernel/trace/ftrace.c       | 29 +++++++++++++++++++++++++----
- kernel/trace/trace.c        | 23 ++++++++++++++++++++++-
- kernel/trace/trace_events.c | 23 ++++++++++++++++++++---
- kernel/trace/trace_kprobe.c | 23 ++++++++++++++++++++++-
- 4 files changed, 89 insertions(+), 9 deletions(-)
+ kernel/trace/trace_events_trigger.c | 79 ++++++++++++++++++++++++-----
+ 1 file changed, 65 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 8df69e702706..cdd46f639333 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6835,13 +6835,34 @@ EXPORT_SYMBOL_GPL(ftrace_set_global_notrace);
- static char ftrace_notrace_buf[FTRACE_FILTER_SIZE] __initdata;
- static char ftrace_filter_buf[FTRACE_FILTER_SIZE] __initdata;
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index d5230b759a2d..3b47a361b867 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -22,6 +22,39 @@ static struct task_struct *trigger_kthread;
+ static struct llist_head trigger_data_free_list;
+ static DEFINE_MUTEX(trigger_data_kthread_mutex);
  
-+static void __init append_ftrace_boot_param(char *buf, const char *str,
-+					    char sep)
++static int trigger_kthread_fn(void *ignore);
++
++static void trigger_start_kthread_locked(void)
 +{
-+	size_t len, str_len;
++	lockdep_assert_held(&trigger_data_kthread_mutex);
 +
-+	if (buf[0] == '\0') {
-+		strscpy(buf, str, FTRACE_FILTER_SIZE);
-+		return;
++	if (!trigger_kthread) {
++		struct task_struct *kthread;
++
++		kthread = kthread_create(trigger_kthread_fn, NULL,
++					 "trigger_data_free");
++		if (!IS_ERR(kthread))
++			WRITE_ONCE(trigger_kthread, kthread);
 +	}
-+
-+	len = strlen(buf);
-+	str_len = strlen(str);
-+	if (!str_len)
-+		return;
-+	if (str_len >= FTRACE_FILTER_SIZE - len - 1)
-+		return;
-+
-+	buf[len] = sep;
-+	strscpy(buf + len + 1, str, FTRACE_FILTER_SIZE - len - 1);
 +}
 +
- /* Used by function selftest to not test if filter is set */
- bool ftrace_filter_param __initdata;
- 
- static int __init set_ftrace_notrace(char *str)
- {
- 	ftrace_filter_param = true;
--	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	append_ftrace_boot_param(ftrace_notrace_buf, str, ',');
- 	return 1;
- }
- __setup("ftrace_notrace=", set_ftrace_notrace);
-@@ -6849,7 +6870,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
- static int __init set_ftrace_filter(char *str)
- {
- 	ftrace_filter_param = true;
--	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
-+	append_ftrace_boot_param(ftrace_filter_buf, str, ',');
- 	return 1;
- }
- __setup("ftrace_filter=", set_ftrace_filter);
-@@ -6861,14 +6882,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
- 
- static int __init set_graph_function(char *str)
- {
--	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
-+	append_ftrace_boot_param(ftrace_graph_buf, str, ',');
- 	return 1;
- }
- __setup("ftrace_graph_filter=", set_graph_function);
- 
- static int __init set_graph_notrace_function(char *str)
- {
--	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	append_ftrace_boot_param(ftrace_graph_notrace_buf, str, ',');
- 	return 1;
- }
- __setup("ftrace_graph_notrace=", set_graph_notrace_function);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ebd996f8710e..42d03d36ae39 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -327,9 +327,30 @@ __setup("trace_instance=", boot_instance);
- 
- static char trace_boot_options_buf[MAX_TRACER_SIZE] __initdata;
- 
-+static void __init append_trace_boot_options(const char *str)
++static void trigger_data_free_queued_locked(void)
 +{
-+	size_t len, str_len;
++	struct event_trigger_data *data, *tmp;
++	struct llist_node *llnodes;
 +
-+	if (trace_boot_options_buf[0] == '\0') {
-+		strscpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
-+		return;
-+	}
++	lockdep_assert_held(&trigger_data_kthread_mutex);
 +
-+	len = strlen(trace_boot_options_buf);
-+	str_len = strlen(str);
-+	if (!str_len)
-+		return;
-+	if (str_len >= MAX_TRACER_SIZE - len - 1)
++	llnodes = llist_del_all(&trigger_data_free_list);
++	if (!llnodes)
 +		return;
 +
-+	trace_boot_options_buf[len] = ',';
-+	strscpy(trace_boot_options_buf + len + 1, str,
-+		MAX_TRACER_SIZE - len - 1);
++	tracepoint_synchronize_unregister();
++
++	llist_for_each_entry_safe(data, tmp, llnodes, llist)
++		kfree(data);
 +}
 +
- static int __init set_trace_boot_options(char *str)
+ /* Bulk garbage collection of event_trigger_data elements */
+ static int trigger_kthread_fn(void *ignore)
  {
--	strscpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
-+	append_trace_boot_options(str);
- 	return 1;
+@@ -56,30 +89,48 @@ void trigger_data_free(struct event_trigger_data *data)
+ 	if (data->cmd_ops->set_filter)
+ 		data->cmd_ops->set_filter(NULL, data, NULL);
+ 
++	/*
++	 * Boot-time trigger registration can fail before kthread creation
++	 * works. Keep the deferred-free semantics during boot and let late
++	 * init start the kthread to drain the list.
++	 */
++	if (system_state == SYSTEM_BOOTING && !trigger_kthread) {
++		llist_add(&data->llist, &trigger_data_free_list);
++		return;
++	}
++
+ 	if (unlikely(!trigger_kthread)) {
+ 		guard(mutex)(&trigger_data_kthread_mutex);
+-		/* Check again after taking mutex */
+-		if (!trigger_kthread) {
+-			struct task_struct *kthread;
+ 
+-			kthread = kthread_create(trigger_kthread_fn, NULL,
+-						 "trigger_data_free");
+-			if (!IS_ERR(kthread))
+-				WRITE_ONCE(trigger_kthread, kthread);
++		trigger_start_kthread_locked();
++		if (!trigger_kthread) {
++			llist_add(&data->llist, &trigger_data_free_list);
++			trigger_data_free_queued_locked();
++			return;
+ 		}
+ 	}
+ 
+-	if (!trigger_kthread) {
+-		/* Do it the slow way */
+-		tracepoint_synchronize_unregister();
+-		kfree(data);
+-		return;
+-	}
+-
+ 	llist_add(&data->llist, &trigger_data_free_list);
+ 	wake_up_process(trigger_kthread);
  }
- __setup("trace_options=", set_trace_boot_options);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 249d1cba72c0..c3981f62e4bc 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3679,20 +3679,37 @@ static struct boot_triggers {
- } bootup_triggers[MAX_BOOT_TRIGGERS];
  
- static char bootup_trigger_buf[COMMAND_LINE_SIZE];
-+static int bootup_trigger_buf_len;
- static int nr_boot_triggers;
- 
- static __init int setup_trace_triggers(char *str)
- {
- 	char *trigger;
- 	char *buf;
-+	ssize_t copied;
- 	int i;
-+	int start;
- 
--	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
-+	if (bootup_trigger_buf_len >= COMMAND_LINE_SIZE)
-+		return 1;
-+
-+	start = bootup_trigger_buf_len;
-+	if (start && !*str)
-+		return 1;
-+
-+	copied = strscpy(bootup_trigger_buf + start, str,
-+			 COMMAND_LINE_SIZE - start);
-+	if (copied < 0) {
-+		if (start)
-+			return 1;
-+		copied = strlen(bootup_trigger_buf + start);
-+	}
-+	bootup_trigger_buf_len += copied + 1;
- 	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event triggers");
- 
--	buf = bootup_trigger_buf;
--	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
-+	buf = bootup_trigger_buf + start;
-+	for (i = nr_boot_triggers; i < MAX_BOOT_TRIGGERS; i++) {
- 		trigger = strsep(&buf, ",");
- 		if (!trigger)
- 			break;
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index a5dbb72528e0..a63a56b55570 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -29,9 +29,30 @@
- /* Kprobe early definition from command line */
- static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
- 
-+static void __init append_kprobe_boot_event(const char *str)
++static int __init trigger_data_free_init(void)
 +{
-+	size_t len, str_len;
++	guard(mutex)(&trigger_data_kthread_mutex);
 +
-+	if (kprobe_boot_events_buf[0] == '\0') {
-+		strscpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
-+		return;
-+	}
++	if (llist_empty(&trigger_data_free_list))
++		return 0;
 +
-+	len = strlen(kprobe_boot_events_buf);
-+	str_len = strlen(str);
-+	if (!str_len)
-+		return;
-+	if (str_len >= COMMAND_LINE_SIZE - len - 1)
-+		return;
++	trigger_start_kthread_locked();
++	if (trigger_kthread)
++		wake_up_process(trigger_kthread);
++	else
++		trigger_data_free_queued_locked();
 +
-+	kprobe_boot_events_buf[len] = ';';
-+	strscpy(kprobe_boot_events_buf + len + 1, str,
-+		COMMAND_LINE_SIZE - len - 1);
++	return 0;
 +}
++late_initcall(trigger_data_free_init);
 +
- static int __init set_kprobe_boot_events(char *str)
- {
--	strscpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
-+	append_kprobe_boot_event(str);
- 	disable_tracing_selftest("running kprobe events");
- 
- 	return 1;
+ static inline void data_ops_trigger(struct event_trigger_data *data,
+ 				    struct trace_buffer *buffer,  void *rec,
+ 				    struct ring_buffer_event *event)
 -- 
 2.34.1
 
