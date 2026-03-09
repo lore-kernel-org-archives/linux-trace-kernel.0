@@ -1,104 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2503D348895;
-	Mon,  9 Mar 2026 13:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8AC39E176;
+	Mon,  9 Mar 2026 14:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773064396; cv=none; b=R5JqK0LSEi1clLLHyPKnxHoDAwEXGeJ0TckKyhPzsZ89ZynofbGuazFnjkf6naS8Pulmdpo8XJa7DdLW5VInc2QTBbVEWh/dgjIud+ZmVXpg4mQpPBCBjPmKBoRBIUkHX/KmMS96UDpWdsl6cj7aL75jn+Y8Ha+T29qfBrYlpFE=
+	t=1773066114; cv=none; b=MexLiNg3y8VsSn5gGSnuSxycgISmfNjT4DOtuFVRaLonZr7gHhC4LpmcsyX299JzH3lCeA8XcTJ21I1YELmK1acNSYfPt4CG1Cqv2TZixzT3nckz9ebsJCOLec/IQlBKhX7fj+JKNUhjT8tKlCV6MHeICulMxhUIRoOIvQRMZyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773064396; c=relaxed/simple;
-	bh=LxBBGtV8QwyUaJcnWJDnZOYpss/VKsaoWn6L8j22FrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HWJsDsnkSiEd2aXd15GLaNz3PstpJM+fp5Gl2jYgyJ1iCPNU5eqJ6xs5ouvOZnn97kWW+/K6HsU6j2dUTflefmhu/O+8uOuwtRNEt05bfvvyHEurf1CG38ynw9nXZLcETFg6P2Y/rguP22WYLgjAiuDc8FRb+kWQefxu5a1zp5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 2CE08136F48;
-	Mon,  9 Mar 2026 13:53:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 7728260013;
-	Mon,  9 Mar 2026 13:53:06 +0000 (UTC)
-Date: Mon, 9 Mar 2026 09:53:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] ring-buffer: Skip invalid sub-buffers when
- validating persistent ring buffer
-Message-ID: <20260309095313.340a15e0@gandalf.local.home>
-In-Reply-To: <20260309223244.3be47d8abbb91b87680da2a3@kernel.org>
-References: <177289358078.248514.14947007976699929481.stgit@devnote2>
-	<177289359843.248514.164858607457269337.stgit@devnote2>
-	<20260307102711.50932648@robin>
-	<20260309085317.6679cf91151767eff7130cc4@kernel.org>
-	<20260308221901.545e7b8b@robin>
-	<20260309223244.3be47d8abbb91b87680da2a3@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1773066114; c=relaxed/simple;
+	bh=ZzA6HzHga9tzIo7rugFYD6/RsDh4dugF1CPijud6ro8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCGPKnguvwu5VE5uc4Op+WVsSM80sNQRiharkYtfB1SuEj+WW3hfe7PuCT/9iY4j7NrpQwegLfqmlAC19SoQSnBN8Brk39h7dbJGLP9o3yNk6UMLjLt27eTenIMTP0fAxXqjLaUqM8m9f9kMUPA80MYni2vySrIAh8rv7boY7ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=pyKkhJWQ; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="pyKkhJWQ"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 9317AB36CF;
+	Mon, 09 Mar 2026 14:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1773066105;
+	bh=89Q59i3cmlvIuCaU6IMXcnS9oldz7qFt8v/vCBuKyH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=pyKkhJWQnjig5kCqeP6hPYZL4qkV2wpdupo53NVcZ3mea6inhIPXBmcwS67BHdur+
+	 nSuzcghck0UixFHftToE/hLhexverWNxCN53oAJfLOtGCAJR3ozlthcuBtJqj1LMx4
+	 cdrhLDyOjnTT0nroLki1F7MdfAr3DvANC4ja6Tfo=
+Date: Mon, 9 Mar 2026 14:21:42 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
+Message-ID: <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
+References: <cover.1772206930.git.d@ilvokhin.com>
+ <aa7G1nD7Rd9F4eBH@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: r91yfqhizz38m85pymgjkm9kp6e6ymik
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 7728260013
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Du6XPTi/O2JY3IPcckwIvOAMdxhGJgog=
-X-HE-Tag: 1773064386-466388
-X-HE-Meta: U2FsdGVkX1+ipNSsfyB9boEBRvJyjsRF6T8OePJL30eu1/GSXdJqjG5VoJGOr/cnbYpjjsS6HDgOShRlcPbT8g9ySOoyT64LKkXN+KfRWAY49tPkz5+swWZDq6oef8Gcsf73+NyYu9Utam2tnN1tqTgGSWHwwpxv1heFOJ1stqlTHAVzZgexPF9rPgiMPzNn7dTwvZNOKQM3a6IoVDQv6Pc3ysdLM99aUTeodUCSs76D3AZHnlVWX49X/xPRPGisf7i1+BQdqLhHiHfHNHWWzuOlKP+1OZYtlVJfK8wk9aToXQz717e4i6SJBRv+ruloQHTIFH3gQ9ynms4+iegx/1G2PLeK6gri
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa7G1nD7Rd9F4eBH@casper.infradead.org>
 
-On Mon, 9 Mar 2026 22:32:44 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> > > Hmm, but if the kernel crash and reboot when it sets RB_MISSED_EVENTS,
-> > > we will see the bit is set and commit size is different.   
+On Mon, Mar 09, 2026 at 01:10:46PM +0000, Matthew Wilcox wrote:
+> On Fri, Feb 27, 2026 at 04:00:22PM +0000, Dmitry Ilvokhin wrote:
+> > Zone lock contention can significantly impact allocation and
+> > reclaim latency, as it is a central synchronization point in
+> > the page allocator and reclaim paths. Improved visibility into
+> > its behavior is therefore important for diagnosing performance
+> > issues in memory-intensive workloads.
 > > 
-> > The RB_MISSED_EVENTS is only set on the reader page.  
-> 
-> When is it reset after read? I think I removed that with commit ca296d32ece3 ("tracing: ring_buffer: Rewind persistent ring buffer on reboot"). So the
-> flags will be remains until the page is reused (as a writer page).
-
-And that shouldn't be a problem.
-
-> 
+> > On some production workloads at Meta, we have observed noticeable
+> > zone lock contention. Deeper analysis of lock holders and waiters
+> > is currently difficult with existing instrumentation.
 > > 
-> > If the kernel crashes no boot up while reading the validated buffer,
-> > then that's a bit more than what this is supposed to handle.  
-> 
-> But the above commit recovers the subbufs which has been read in the
-> previous boot. This means commit field of those recovered subbufs
-> can have those flags.
-
-Yes, and since those flags are only set by the validator, if the validator
-sees them set, it should skip processing the subbuffer. It knows it was
-already flagged as corrupt.
-
-> 
-> >   
-> > > 
-> > > Note, I think the reader_page RB_MISSED_EVENTS flag is not cleared after
-> > > read. commit ca296d32ece3 ("tracing: ring_buffer: Rewind persistent
-> > > ring buffer on reboot") drops clearing commit field for unwinding the
-> > > buffer.  
+> > While generic lock contention_begin/contention_end tracepoints
+> > cover the slow path, they do not provide sufficient visibility
+> > into lock hold times. In particular, the lack of a release-side
+> > event makes it difficult to identify long lock holders and
+> > correlate them with waiters. As a result, distinguishing between
+> > short bursts of contention and pathological long hold times
+> > requires additional instrumentation.
 > > 
-> > But that should be fine, as it's only read only. Once tracing is
-> > started, it should be reset.  
+> > This patch series adds dedicated tracepoint instrumentation to
+> > zone lock, following the existing mmap_lock tracing model.
 > 
-> IIUC, RB_MISSED_* flags are using 30 and 31 th bits and committed
-> bytes counter is usually use 0-11 th bits. So other bits should be
-> cleared. 
-> 
-> So, if "commit & RB_MISSED_MASK" is under the subbuf_size, this
-> subbuf looks OK for checking its entries(timestamp data).
-> e.g.
+> I don't like this at all.  We have CONFIG_LOCK_STAT.  That should be
+> improved insted of coming up with one-offs for every single lock
+> that someone deems "special".
 
-But it shouldn't be.  The only way the RB_MISSED flag gets set in the
-writer portion is if on a previous boot the validator detected that the
-subbuffer was corrupted. If they are set for any other reason, the
-subbuffer should be considered corrupted anyway.
+Thanks for the feedback, Matthew.
 
--- Steve
+CONFIG_LOCK_STAT provides useful statistics, but it is primarily a
+debug facility and is generally too heavyweight for the production
+environments.
+
+The motivation for this series was to provide lightweight observability
+for the zone lock in production workloads.
+
+I agree that improving generic lock instrumentation would be preferable.
+I did consider whether something similar could be done generically for
+spinlocks, but the unlock path there is typically just a single atomic
+store, so adding generic lightweight instrumentation without affecting
+the fast path is difficult.
+
+In parallel, I've been experimenting with improving observability for
+sleepable locks by adding a contended_release tracepoint, which would
+allow correlating lock holders and waiters in a more generic way. I've
+posted an RFC here:
+
+https://lore.kernel.org/all/cover.1772642407.git.d@ilvokhin.com/
+
+I'd appreciate feedback on whether that direction makes sense for
+improving the generic lock tracing infrastructure.
