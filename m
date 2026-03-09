@@ -1,111 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80599368975
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 20:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD0A2EC553;
+	Mon,  9 Mar 2026 20:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773086443; cv=none; b=JcOs6zMZsnzhjlBe4ZBAeYAn3nCpm4w37eGaNx7doHKnIKp/xn6ZK4yVwnGgouKnYl43BEkc+PsbX7FRiUHV5pT+tg7dmSsc3jpWUqdXTXq25uofuAXuF0nFgsE/LIMy00h9H4h6ndY2zzO2b2a3bp09gqbL6EciibSkqCEl65Y=
+	t=1773086581; cv=none; b=V4Yq8zpOcu1TS8cff9lpQipZ9KmZa8dfHnNz1vGHQiwJZaSZHf0LJxgbWxRrSJrsRKZWamIxSXoKM2gRgv92fxgIsSP1oMC1UCVbuT1SdJTZ2AcX8m9ZOXVET9vNnnK7EPKq6pqEI33Db0yhiNmdxYHzf4yaFdHNGkLNcXwCmMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773086443; c=relaxed/simple;
-	bh=zBTs9brgISV8XgiqAinMb+sQTfubhTPVIw7CiF1kjcU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=L3n7MQsbVYqXHLrPq8yoPYAKeBeVT5n7kbyVwq3AKD6aNTZoZ6EG48n1Thyjq0ZbgTgooVDfqwuIKp03M7FzDdXI0M7c8Yc8cdCFF7pPkltcm+Ann+4S/e7eo8CRj/QYWlolcoPzqoeQnfuuFE+i/izzbtXFtnhF0YKwwa0WBWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IvoVJOHT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvoVJOHT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773086436;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/9V+YCrxPIg4vwIKqGn3LRnyND1/p3vLF+4oSDjIOXg=;
-	b=IvoVJOHTEW2nkWT4tMD9CHZQ8xg6e+1p5kZRUzh8ha/xElVxFWJOLfMXL1NBh/0zWWcXMb
-	UY+sAdGVNo1MA+obfcx/9+KPDeg95M/H6GvkaPf1xYRwCMxWrWkD6kjxqGQvKJMR9MToz8
-	Py+3Od7ih5pI0M0AyTk2APXKCvqkv8A=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-528-QyS64AaDMNyWJEaDzgUNPw-1; Mon,
- 09 Mar 2026 16:00:33 -0400
-X-MC-Unique: QyS64AaDMNyWJEaDzgUNPw-1
-X-Mimecast-MFC-AGG-ID: QyS64AaDMNyWJEaDzgUNPw_1773086430
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10E5718005BA;
-	Mon,  9 Mar 2026 20:00:30 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.81.10])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48B9A3000223;
-	Mon,  9 Mar 2026 20:00:25 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ivan Pravdin <ipravdin.official@gmail.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Daniel Wagner <dwagner@suse.de>,
-	linux-trace-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	linux-kernel@vger.kernel.org (open list:Real-time Linux Analysis (RTLA) tools),
-	bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-Subject: [PATCH v4 18/18] rtla/utils: Fix loop condition in PID validation
-Date: Mon,  9 Mar 2026 16:46:31 -0300
-Message-ID: <20260309195040.1019085-19-wander@redhat.com>
-In-Reply-To: <20260309195040.1019085-1-wander@redhat.com>
-References: <20260309195040.1019085-1-wander@redhat.com>
+	s=arc-20240116; t=1773086581; c=relaxed/simple;
+	bh=4QRGyVduG/Qaz1BCew/1ZmaegZ9qxUUkfCV8AiwOovM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Pgdas72iDTdhFdGbqPfahyA766LuYQXo1xWBe/u5woEKZMFZh/8eyh12CTk4PEx0auaMLyGep1VUaztoDNS3PaSwTpqcF+hrklFkg7H2xFHoTxheNotT2X26JBjUybrUCCd+k4754P7CF1Nt14LKbJB1+aUMEHwhua+4csrmOKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 1DED41B73DB;
+	Mon,  9 Mar 2026 20:02:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 3F85732;
+	Mon,  9 Mar 2026 20:02:51 +0000 (UTC)
+Date: Mon, 9 Mar 2026 16:02:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wesley Atwell <atwellwea@gmail.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] tracing: drain deferred trigger frees if kthread
+ startup fails
+Message-ID: <20260309160259.0c94958f@gandalf.local.home>
+In-Reply-To: <20260309195220.2726094-2-atwellwea@gmail.com>
+References: <20260309195220.2726094-1-atwellwea@gmail.com>
+	<20260309195220.2726094-2-atwellwea@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: glDPxEJwV4RBErgh8bzLhunZmd1ElDbs0mLUYHIT63w_1773086430
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: h4atcd7r5un6eu8imnkcypk9zif9nkky
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 3F85732
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+rLF9KddfVKdVBrlutGLRigU5G6F1DZ6A=
+X-HE-Tag: 1773086571-473091
+X-HE-Meta: U2FsdGVkX19RfQ+rFssaj0yqED4Bn6OGGqEZUxUvGSgZjcKt5lwxr+Iblrh8SV97gBUYDmtS7UkVcBBSxWwg0D8CqoT8488G7bnKgWmsXOkHsdAcpFHzDTc/wjEmnStf61TfjVVrZJ0Ks+t4Scbt+mviCy7/fSeqh50mJIsJXFXPjVoqA8+AJN2zVMW2o9dajwZnwCKil34QEisQIjex+y7qtGuqCybIvXuOp0kVxn/L4BKRJzx4k6pmhE5IVFmppyMsv32tgQzi1L1yySL4Fczk0CSOY6jQGYr+SdiJkShO/AjoQWdrmz2Ff9agQ6Iq28r4oN42+FQ7ybUsKnDkIkYEV7K68o+R
 
-The procfs_is_workload_pid() function iterates through a directory
-entry name to validate if it represents a process ID. The loop
-condition checks if the pointer t_name is non-NULL, but since
-incrementing a pointer never makes it NULL, this condition is always
-true within the loop's context. Although the inner isdigit() check
-catches the NUL terminator and breaks out of the loop, the condition
-is semantically misleading and not idiomatic for C string processing.
+On Mon,  9 Mar 2026 13:52:20 -0600
+Wesley Atwell <atwellwea@gmail.com> wrote:
 
-Correct the loop condition from checking the pointer (t_name) to
-checking the character it points to (*t_name). This ensures the loop
-terminates when the NUL terminator is reached, aligning with standard
-C string iteration practices. While the original code functioned
-correctly due to the existing character validation, this change
-improves code clarity and maintainability.
+> @@ -56,30 +89,48 @@ void trigger_data_free(struct event_trigger_data *data)
+>  	if (data->cmd_ops->set_filter)
+>  		data->cmd_ops->set_filter(NULL, data, NULL);
+>  
+> +	/*
+> +	 * Boot-time trigger registration can fail before kthread creation
+> +	 * works. Keep the deferred-free semantics during boot and let late
+> +	 * init start the kthread to drain the list.
+> +	 */
+> +	if (system_state == SYSTEM_BOOTING && !trigger_kthread) {
+> +		llist_add(&data->llist, &trigger_data_free_list);
+> +		return;
+> +	}
+> +
+>  	if (unlikely(!trigger_kthread)) {
+>  		guard(mutex)(&trigger_data_kthread_mutex);
+> -		/* Check again after taking mutex */
+> -		if (!trigger_kthread) {
+> -			struct task_struct *kthread;
+>  
+> -			kthread = kthread_create(trigger_kthread_fn, NULL,
+> -						 "trigger_data_free");
+> -			if (!IS_ERR(kthread))
+> -				WRITE_ONCE(trigger_kthread, kthread);
+> +		trigger_start_kthread_locked();
+> +		if (!trigger_kthread) {
+> +			llist_add(&data->llist, &trigger_data_free_list);
+> +			trigger_data_free_queued_locked();
+> +			return;
+>  		}
+>  	}
+>  
+> -	if (!trigger_kthread) {
+> -		/* Do it the slow way */
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
----
- tools/tracing/rtla/src/utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You removed the above comment. It's still relevant in the above if
+statement.
 
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index bcc5b5d383d8b..16aa59c90bdb2 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -311,7 +311,7 @@ static int procfs_is_workload_pid(const char *comm_prefix, struct dirent *proc_e
- 		return 0;
- 
- 	/* check if the string is a pid */
--	for (t_name = proc_entry->d_name; t_name; t_name++) {
-+	for (t_name = proc_entry->d_name; *t_name; t_name++) {
- 		if (!isdigit(*t_name))
- 			break;
- 	}
--- 
-2.53.0
+-- Steve
 
+> -		tracepoint_synchronize_unregister();
+> -		kfree(data);
+> -		return;
+> -	}
+> -
+>  	llist_add(&data->llis
