@@ -1,35 +1,37 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8AC39E176;
-	Mon,  9 Mar 2026 14:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6E345757;
+	Mon,  9 Mar 2026 14:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773066114; cv=none; b=MexLiNg3y8VsSn5gGSnuSxycgISmfNjT4DOtuFVRaLonZr7gHhC4LpmcsyX299JzH3lCeA8XcTJ21I1YELmK1acNSYfPt4CG1Cqv2TZixzT3nckz9ebsJCOLec/IQlBKhX7fj+JKNUhjT8tKlCV6MHeICulMxhUIRoOIvQRMZyY=
+	t=1773067670; cv=none; b=YfYY4fO6KGkOwr3ykIXfjJN9YJSahEUGbE3DtA/r5DyKxO2OT8mGV4OKNJLq82jau7vuvnEL4qixu0R1QalHoWTf5c++Y7J0Bm1akUz65RNvOG2lxSeK1lrqKfcIaFW0JoeBMTJ+Nl6B9EhaGnMyk/zkgZs6ENt/DB06Jz6asC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773066114; c=relaxed/simple;
-	bh=ZzA6HzHga9tzIo7rugFYD6/RsDh4dugF1CPijud6ro8=;
+	s=arc-20240116; t=1773067670; c=relaxed/simple;
+	bh=eXyRneHTsvpE0EveC8TOOVKjhFZ5Y6t4ydNgChoLuik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LCGPKnguvwu5VE5uc4Op+WVsSM80sNQRiharkYtfB1SuEj+WW3hfe7PuCT/9iY4j7NrpQwegLfqmlAC19SoQSnBN8Brk39h7dbJGLP9o3yNk6UMLjLt27eTenIMTP0fAxXqjLaUqM8m9f9kMUPA80MYni2vySrIAh8rv7boY7ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=pyKkhJWQ; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6WDNwMqoFTaFsf0nHiZcKaZZF+DKPIPAmcHJBsgzZfLQvrZQd69uhv8Js/GadxMIfNF2M02v+L0idAEh0ykmkEjQBds7zJNPXNo4JPV6Qcvmmxy23ieK5orOSMb9QhnCgmBj5dZKtHgjJ8H43eRJ1oAkK2NZqKaFoEh+lfQaNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lB/uQ5QS; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="pyKkhJWQ"
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 9317AB36CF;
-	Mon, 09 Mar 2026 14:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1773066105;
-	bh=89Q59i3cmlvIuCaU6IMXcnS9oldz7qFt8v/vCBuKyH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=pyKkhJWQnjig5kCqeP6hPYZL4qkV2wpdupo53NVcZ3mea6inhIPXBmcwS67BHdur+
-	 nSuzcghck0UixFHftToE/hLhexverWNxCN53oAJfLOtGCAJR3ozlthcuBtJqj1LMx4
-	 cdrhLDyOjnTT0nroLki1F7MdfAr3DvANC4ja6Tfo=
-Date: Mon, 9 Mar 2026 14:21:42 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Matthew Wilcox <willy@infradead.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lB/uQ5QS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Nnj4k+XehaMxifjpCjHJ3TnczqL5sK8JKePas2gKMrs=; b=lB/uQ5QSLsq6gH+kR+l86+yhw5
+	FbuQvAXOsHCyim+YF0hTYAJW0G999xN9zFVOfpoCYd9npU8AV4L+txlNyjDxtjir0wUVDz9TJVj/h
+	SLdO+/BelNCrkIxgc5/tKbKH7TvdKEZkthv/TljmV+H91v2wnZt6T0V0lYd9DdF9KvopEZIb0/2p9
+	jnI6nwp4w76mtod5tTZKWu03pCo3W9USscMLbZ9LGRGeb0hRaXEceePsbUInZHyMmJAT7DjHGE/2J
+	iw1Bq6KCXTRZyMkKs504FvSuHJQhsO4ev1bqdTIl+EMVppbjDl/ThQ6KNnuZiUIEU2RrG2f88TpwF
+	NZkyISzA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vzbtK-000000066Hk-0pLi;
+	Mon, 09 Mar 2026 14:47:30 +0000
+Date: Mon, 9 Mar 2026 14:47:29 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
@@ -52,9 +54,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org
 Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
-Message-ID: <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
+Message-ID: <aa7dgQDMEz34eadj@casper.infradead.org>
 References: <cover.1772206930.git.d@ilvokhin.com>
  <aa7G1nD7Rd9F4eBH@casper.infradead.org>
+ <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,56 +66,52 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa7G1nD7Rd9F4eBH@casper.infradead.org>
+In-Reply-To: <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
 
-On Mon, Mar 09, 2026 at 01:10:46PM +0000, Matthew Wilcox wrote:
-> On Fri, Feb 27, 2026 at 04:00:22PM +0000, Dmitry Ilvokhin wrote:
-> > Zone lock contention can significantly impact allocation and
-> > reclaim latency, as it is a central synchronization point in
-> > the page allocator and reclaim paths. Improved visibility into
-> > its behavior is therefore important for diagnosing performance
-> > issues in memory-intensive workloads.
+On Mon, Mar 09, 2026 at 02:21:42PM +0000, Dmitry Ilvokhin wrote:
+> On Mon, Mar 09, 2026 at 01:10:46PM +0000, Matthew Wilcox wrote:
+> > On Fri, Feb 27, 2026 at 04:00:22PM +0000, Dmitry Ilvokhin wrote:
+> > > This patch series adds dedicated tracepoint instrumentation to
+> > > zone lock, following the existing mmap_lock tracing model.
 > > 
-> > On some production workloads at Meta, we have observed noticeable
-> > zone lock contention. Deeper analysis of lock holders and waiters
-> > is currently difficult with existing instrumentation.
-> > 
-> > While generic lock contention_begin/contention_end tracepoints
-> > cover the slow path, they do not provide sufficient visibility
-> > into lock hold times. In particular, the lack of a release-side
-> > event makes it difficult to identify long lock holders and
-> > correlate them with waiters. As a result, distinguishing between
-> > short bursts of contention and pathological long hold times
-> > requires additional instrumentation.
-> > 
-> > This patch series adds dedicated tracepoint instrumentation to
-> > zone lock, following the existing mmap_lock tracing model.
+> > I don't like this at all.  We have CONFIG_LOCK_STAT.  That should be
+> > improved insted of coming up with one-offs for every single lock
+> > that someone deems "special".
 > 
-> I don't like this at all.  We have CONFIG_LOCK_STAT.  That should be
-> improved insted of coming up with one-offs for every single lock
-> that someone deems "special".
+> Thanks for the feedback, Matthew.
+> 
+> CONFIG_LOCK_STAT provides useful statistics, but it is primarily a
+> debug facility and is generally too heavyweight for the production
+> environments.
 
-Thanks for the feedback, Matthew.
+Yes, agreed.  I think that is what needs to change.
 
-CONFIG_LOCK_STAT provides useful statistics, but it is primarily a
-debug facility and is generally too heavyweight for the production
-environments.
+> The motivation for this series was to provide lightweight observability
+> for the zone lock in production workloads.
 
-The motivation for this series was to provide lightweight observability
-for the zone lock in production workloads.
+I read that.  But first it was the mmap lock.  Now it's the zone lock.
+Which lock will be next?  This is too heavyweight a procedure to
+follow for each lock of interest.
 
-I agree that improving generic lock instrumentation would be preferable.
-I did consider whether something similar could be done generically for
-spinlocks, but the unlock path there is typically just a single atomic
-store, so adding generic lightweight instrumentation without affecting
-the fast path is difficult.
+> I agree that improving generic lock instrumentation would be preferable.
+> I did consider whether something similar could be done generically for
+> spinlocks, but the unlock path there is typically just a single atomic
+> store, so adding generic lightweight instrumentation without affecting
+> the fast path is difficult.
 
-In parallel, I've been experimenting with improving observability for
-sleepable locks by adding a contended_release tracepoint, which would
-allow correlating lock holders and waiters in a more generic way. I've
-posted an RFC here:
+This is why we have tracepoint_enabled() and friends.  But ... LOCK_STAT
+doesn't affect the unlock path at all.  It only changes the acquire side
+to call lock_acquired() (and lock_contended() if the trylock failed).
 
-https://lore.kernel.org/all/cover.1772642407.git.d@ilvokhin.com/
+> In parallel, I've been experimenting with improving observability for
+> sleepable locks by adding a contended_release tracepoint, which would
+> allow correlating lock holders and waiters in a more generic way. I've
+> posted an RFC here:
+> 
+> https://lore.kernel.org/all/cover.1772642407.git.d@ilvokhin.com/
+> 
+> I'd appreciate feedback on whether that direction makes sense for
+> improving the generic lock tracing infrastructure.
 
-I'd appreciate feedback on whether that direction makes sense for
-improving the generic lock tracing infrastructure.
+It seems fine to me, but I don't have the depth in the locking code to
+give it the thorough review it deserves.
