@@ -1,117 +1,97 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6E345757;
-	Mon,  9 Mar 2026 14:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C333612ED;
+	Mon,  9 Mar 2026 15:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773067670; cv=none; b=YfYY4fO6KGkOwr3ykIXfjJN9YJSahEUGbE3DtA/r5DyKxO2OT8mGV4OKNJLq82jau7vuvnEL4qixu0R1QalHoWTf5c++Y7J0Bm1akUz65RNvOG2lxSeK1lrqKfcIaFW0JoeBMTJ+Nl6B9EhaGnMyk/zkgZs6ENt/DB06Jz6asC8=
+	t=1773071819; cv=none; b=lXV1o58nZrrND0Un+y65OXo1VT4/is8abt78oqzZOvMUXBhTid/t3lvmFwUuPedK8Kvate5au9jru+DbE2MtilJcUML1bf22Fm2PaIQPi5Oqn3xdHfIKgDKulIIJkVONmHtbXMoy+QlTiAdvOEB07hnndXbcfUL3gZNuQC9WcPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773067670; c=relaxed/simple;
-	bh=eXyRneHTsvpE0EveC8TOOVKjhFZ5Y6t4ydNgChoLuik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6WDNwMqoFTaFsf0nHiZcKaZZF+DKPIPAmcHJBsgzZfLQvrZQd69uhv8Js/GadxMIfNF2M02v+L0idAEh0ykmkEjQBds7zJNPXNo4JPV6Qcvmmxy23ieK5orOSMb9QhnCgmBj5dZKtHgjJ8H43eRJ1oAkK2NZqKaFoEh+lfQaNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lB/uQ5QS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1773071819; c=relaxed/simple;
+	bh=m19SiCca1ygFfZ957YWTHCYVip5bKWNpMLJ1zuuQIR4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L7stMfsq+rSMkMy200VdauIES7lD0945MxsFJP5oY8Qqf5eHVgNKmWAT0oWtePdHtmt3A/FEqvg7N3GU+uJTbOrTHFWB84xUleX1t51TXi+SHvfPR5AjUKHmHC4WBSv1s/gWOBQv6KniQMKOMDPc8RnZEXZkobh1V1IjjOd3lKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKoDxmXc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lB/uQ5QS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Nnj4k+XehaMxifjpCjHJ3TnczqL5sK8JKePas2gKMrs=; b=lB/uQ5QSLsq6gH+kR+l86+yhw5
-	FbuQvAXOsHCyim+YF0hTYAJW0G999xN9zFVOfpoCYd9npU8AV4L+txlNyjDxtjir0wUVDz9TJVj/h
-	SLdO+/BelNCrkIxgc5/tKbKH7TvdKEZkthv/TljmV+H91v2wnZt6T0V0lYd9DdF9KvopEZIb0/2p9
-	jnI6nwp4w76mtod5tTZKWu03pCo3W9USscMLbZ9LGRGeb0hRaXEceePsbUInZHyMmJAT7DjHGE/2J
-	iw1Bq6KCXTRZyMkKs504FvSuHJQhsO4ev1bqdTIl+EMVppbjDl/ThQ6KNnuZiUIEU2RrG2f88TpwF
-	NZkyISzA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzbtK-000000066Hk-0pLi;
-	Mon, 09 Mar 2026 14:47:30 +0000
-Date: Mon, 9 Mar 2026 14:47:29 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
-Message-ID: <aa7dgQDMEz34eadj@casper.infradead.org>
-References: <cover.1772206930.git.d@ilvokhin.com>
- <aa7G1nD7Rd9F4eBH@casper.infradead.org>
- <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKoDxmXc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE0DC4CEF7;
+	Mon,  9 Mar 2026 15:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773071819;
+	bh=m19SiCca1ygFfZ957YWTHCYVip5bKWNpMLJ1zuuQIR4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=XKoDxmXcOeaGl+ijYEK62FrOgoEZFz4sw4keIlhf1oQrfDElGDmodvy3HasZL2fkr
+	 v6yhfMRM81AhprduFxR2F1R7vbK5LQngKeYIvh39SYdoE2pPEQ1Xjsf0UixhlCBvwC
+	 cx3zBTOjec9Q6NiS9sXeF9DOlFgI+BB+s8PvCU3HXEHfYBcjIvpA5dbGo4OgkzREJZ
+	 jEAXTIZibZUUOVpYkI3vkASpR4+0w3KpLQTpZwzl/MYLOTbWH9ZQn0+LKlV0okooW6
+	 4mDEG8p7LT+5Jj7eS97nXxICwDvr6ufcGfX9k3oLk7Pm+FF6FlGrEWHPQHEyojjhfm
+	 CaonTNv3lXymA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/2] mptcp: autotune related improvement
+Date: Mon, 09 Mar 2026 16:56:44 +0100
+Message-Id: <20260309-net-next-mptcp-reduce-rbuf-v1-0-8f471206f9c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa7XdpIVtLFS3FIu@shell.ilvokhin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALztrmkC/zWMQQqDMBAAvyJ77kKiZQv9ivRg4qbdQ2PYRAmIf
+ zcIHuYwh5kdMqtwhne3g/ImWZbYxD468L8pfhllbg696ckMhjByadSC/1R8QuV59Yzq1oBPS+Q
+ mCu5FA7RBUg5Sr/kIdwef4zgByYRGPHYAAAA=
+X-Change-ID: 20260306-net-next-mptcp-reduce-rbuf-4166ba6fb763
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1489; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=m19SiCca1ygFfZ957YWTHCYVip5bKWNpMLJ1zuuQIR4=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDLXvT3u9bZsZ9OB/4cmTYjTXZoctEtnr9jt6U0yp28HZ
+ /Jo+HDqdpSyMIhxMciKKbJIt0Xmz3xexVvi5WcBM4eVCWQIAxenAEzE4TXD/6pEK1fB7D/ry7e7
+ mS4sst3onuLy5vX8AzG3vnE8epYuuZ+RYZW9x71vp5Zvneb0Np5H7Ob0aVtUC7Mat3kXGr5ctS4
+ vmRkA
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Mon, Mar 09, 2026 at 02:21:42PM +0000, Dmitry Ilvokhin wrote:
-> On Mon, Mar 09, 2026 at 01:10:46PM +0000, Matthew Wilcox wrote:
-> > On Fri, Feb 27, 2026 at 04:00:22PM +0000, Dmitry Ilvokhin wrote:
-> > > This patch series adds dedicated tracepoint instrumentation to
-> > > zone lock, following the existing mmap_lock tracing model.
-> > 
-> > I don't like this at all.  We have CONFIG_LOCK_STAT.  That should be
-> > improved insted of coming up with one-offs for every single lock
-> > that someone deems "special".
-> 
-> Thanks for the feedback, Matthew.
-> 
-> CONFIG_LOCK_STAT provides useful statistics, but it is primarily a
-> debug facility and is generally too heavyweight for the production
-> environments.
+Here are two patches from Paolo that have been crafted a couple of
+months ago, but needed more validation because they were indirectly
+causing instabilities in the sefltests. The root cause has been fixed in
+'net' recently in commit 8c09412e584d ("selftests: mptcp: more stable
+simult_flows tests").
 
-Yes, agreed.  I think that is what needs to change.
+These patches refactor the receive space and RTT estimator, overall
+making DRS more correct while avoiding receive buffer drifting to
+tcp_rmem[2], which in turn makes the throughput more stable and less
+bursty, especially with high bandwidth and low delay environments.
 
-> The motivation for this series was to provide lightweight observability
-> for the zone lock in production workloads.
+Note that the first patch addresses a very old issue. 'net-next' is
+targeted because the change is quite invasive and based on a recent
+backlog refactor. The 'Fixes' tag is then there more as a FYI, because
+backporting this patch will quickly be blocked due to large conflicts.
 
-I read that.  But first it was the mmap lock.  Now it's the zone lock.
-Which lock will be next?  This is too heavyweight a procedure to
-follow for each lock of interest.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Paolo Abeni (2):
+      mptcp: better mptcp-level RTT estimator
+      mptcp: add receive queue awareness in tcp_rcv_space_adjust()
 
-> I agree that improving generic lock instrumentation would be preferable.
-> I did consider whether something similar could be done generically for
-> spinlocks, but the unlock path there is typically just a single atomic
-> store, so adding generic lightweight instrumentation without affecting
-> the fast path is difficult.
+ include/trace/events/mptcp.h |  2 +-
+ net/mptcp/protocol.c         | 71 +++++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h         | 38 +++++++++++++++++++++++-
+ 3 files changed, 78 insertions(+), 33 deletions(-)
+---
+base-commit: 0bcac7b11262557c990da1ac564d45777eb6b005
+change-id: 20260306-net-next-mptcp-reduce-rbuf-4166ba6fb763
 
-This is why we have tracepoint_enabled() and friends.  But ... LOCK_STAT
-doesn't affect the unlock path at all.  It only changes the acquire side
-to call lock_acquired() (and lock_contended() if the trylock failed).
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> In parallel, I've been experimenting with improving observability for
-> sleepable locks by adding a contended_release tracepoint, which would
-> allow correlating lock holders and waiters in a more generic way. I've
-> posted an RFC here:
-> 
-> https://lore.kernel.org/all/cover.1772642407.git.d@ilvokhin.com/
-> 
-> I'd appreciate feedback on whether that direction makes sense for
-> improving the generic lock tracing infrastructure.
-
-It seems fine to me, but I don't have the depth in the locking code to
-give it the thorough review it deserves.
