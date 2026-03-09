@@ -1,54 +1,54 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37443ED5CF
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 16:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCB03EDAC9
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 16:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773073581; cv=none; b=e32mbEvs1jpZMhUg7Ks2bgZtj0sd7aW4rqa5lM8iKwSjUmMtok5TvLKhZg4JlDoT8bPjDvjnDJRa31fVUzF+X8R0rLw/DxUdaJM/HVTGpbv2vaiVxCmXNk7YagjI16+HD6z0G0F6FXOZQe07ekWrO7rKMIhcOkq3CLdm6ISD0Rc=
+	t=1773073582; cv=none; b=bV9nLcht5iSMwzKal5AlEEyvX7iFmIEZ6fJklaY6rInzJit/wqHpoXVCpRVMWzU8UJ4S3X9E+RvN2B3uRU8BMkV+KEcLU7uWP1XZiH+oE/n9OYQTOhgHCoR1zlvX28IYE52a1eZa6o2hY0idnMBLzG8ELg7rJMP+bI0+YIB4kDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773073581; c=relaxed/simple;
-	bh=Jp/JRHhovKqXYlmtWvfEyNpyPkJYjfLK/98vY6yVHro=;
+	s=arc-20240116; t=1773073582; c=relaxed/simple;
+	bh=nvJVMgivk0n7tnxwYIskJ85licES15A0ESfOQLBBACk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LIIOTKrTANm+qWpI+ZGP/7QrZuHCbsDtreTTD2oYqVhIeOkbXNtRIij87xNccIwrgfmNUL5U0ukfwsThkElcZzjwKuhK8E5/79eEWlVV/ZTz37fqTY+28xstmGQR27CsKejNR4dtkWLbs4bU3Xz9qqqrw4X1brv8Qei3czmSNMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KoUZAiu3; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=o/vQ9gh9elma3NPPi9Qn9VisHhjjDqcHsf0kECPRTjF7ujQIXV/pQFgoZ/I2L6mToxKREjWR2amne6CBjYkRHedSuP4xiSDBMbkq1WwLzcBP4bbr1N52c6g5WB+UnURWzPLHtZAwQBlriJ+/+c2+cXi9xi7/BOQZp4QtheTGyr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FlX26yLJ; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KoUZAiu3"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-b943a60ee02so290579966b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 09:26:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FlX26yLJ"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-485390246c8so15441515e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Mar 2026 09:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773073578; x=1773678378; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1773073579; x=1773678379; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYLWsoQ02WLCqnUt0cBCdmffcm851eUUlDHUboLm26o=;
-        b=KoUZAiu3cQXmKMN33DtNo3LR+GN0iLWELPesifpeTZdiQamUfdoIuDSKFk8nu7e55u
-         xphpKkkHKgwCMk8/x3mrSB8AWucL14X7OsGRdIZ2IUnB3FP57lyZoQjYynEtYUsk8dNq
-         8fT0UqlQbC6f0ptJ0dNtxRtZS6HqFyDd0xyvdk8o0CnKH2OSMMKS+WhTf1xModA0aT3U
-         EkKhMGCVkiNlRlRFkT1LW+07kNooa3QYSTN29/wuuol+/nYAaIT6NTuxih2dLCoeaoBK
-         xzWFPrpZOj1z18nPsK4YhDMhFasdLdtcmhSfm5fNfZwZKJemrhdvHXtfPPbtwvUcnwz1
-         X0VQ==
+        bh=ISTtnZxQZml/VUbaQMgN/rAKYfhBuJPSGaUgT7FyeoU=;
+        b=FlX26yLJ0I3amvwPOa1D0/hzax4bxkN8Uy8V97Vry+ndRA1jTwkbHzmMJviZnkvaKA
+         4X/NwgHNHi9Eou/YLLHHo5T5OOvNP/MqRya9OHR8yIZQJAE7GWirptalLPLIvEl6VTY0
+         JiG3RceZ2edy7CZ5D+WwQ7SzYN+sqUbiQFjnqOIfVEXN15HdsSphydHjlTDSASD+E+UQ
+         g7PaFb0+7pL41VaYu68/R/HTZa1Y4kW3OOf56/kZJ8kHOJocPELExQHdkbrMyDnsfsXa
+         +c1z7gsT8nZLZDVInWfsmUS0yzuGe9dGS+AVOobnW8c9TqP4rnsl99mK8mXDnyBjOjPy
+         8WIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773073578; x=1773678378;
+        d=1e100.net; s=20230601; t=1773073579; x=1773678379;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYLWsoQ02WLCqnUt0cBCdmffcm851eUUlDHUboLm26o=;
-        b=qaNxMx5liOXrlaQi1gHgZSOUPb8Cv5+MBCtnxRqnUT80WXnSk6OgdTO5Ig8y5Onguu
-         zQ8MdqpX+WJqiJ3jHYxAcUJqUJeu0dBOm0aCG8sbap1jeiQTg171olIW6NXwbiNCcz3R
-         80N+r197APRI46El66+V/FE0awCDxC8fF/lrhL5g0zBAX6oZP6C+WhfQhw5RGOGXQLlC
-         rr0eIk5LjgDh7/NwztNBprdPKqN//Bcq1QV6tW7svjMYk4P2nOXJGzzPomo0PYDck1Gx
-         B3fuoP7r3A+/bqdFM1e++mcM5GqON739uKfZckp+Ee6Q6QLBea9jEYyIdkoJ2gDNEMqH
-         xb+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXBA5apUqn1A39fDE3nsrxxjHyO9tsKLJq4THl7L1/R2q+kSodrjk4X1qQ6fR3jVDfnqLJF3Bvq6fSqZ5O5iJo+JBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmmcJGvOycQFbdX+1b/YpkHoly23DBNX/rFD45r3kB1A0OdzFC
-	9PhS4/ZkK4BGSwGd4idpciTDY5NaNGd4PsblIxByT7zxID5LzufZpPZOQFbQz+CBeRTdZfCBZkC
-	sJPW6qjPxHQPXGNXeKlzuHw==
-X-Received: from ejblr4.prod.google.com ([2002:a17:906:fb84:b0:b94:fb7:ac7c])
+        bh=ISTtnZxQZml/VUbaQMgN/rAKYfhBuJPSGaUgT7FyeoU=;
+        b=ZopWGPvP//gJlD78gkxuigzuBwEj/GU6WuBZp9FYMtXB6kGmSYZ5WTCyFz+lrozx1T
+         ImTH/NdGTejyTk/ufMO/ZWb6BvKMJ+mhtU4IFgBIu5KzcCvnWk43bo+MvC4CU9R2ZjE9
+         0HbilvEf2CfeOkmPrGf16nfNMxfozxe+D2aLjNZfZuqHvEpl0DJ/PuruKfy7gx3q0OVf
+         fhZTVudN5cWpRRoWIS+dJRJHMigtKxD95Sap0HjCclEYroG5OU7NuzgHOymuViEA9xqp
+         +HSt3TlqpKNAIjNLveJHdRjETq2tpUjVqCSALSS0rMmG1klRrGM9q5hjGNgcsJw0j5+H
+         UxFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdMFjZ/sjyF7BmztIePn8S8drOeUhFpoo/IvLIjGcradx/qQdwH2WCJz9YS4khkQxW0CvjLFgoOkhi4b/6rCwA7nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzzbr6bznuAwzYrckbaWir3YmCsgEh5AF4Tk0WlpYYXFiMFKCtP
+	sBdka0hP6WbrkyWu6wZwvmHCcxJP8YA/4t6fmcSZC9KUEhdSoHtuFIIcNt+OpviSdNBqlkqox3P
+	gkBTVPo5Zjof7ITgTPBBfIA==
+X-Received: from wmgb20.prod.google.com ([2002:a05:600c:1514:b0:485:2a9b:6c33])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:9707:b0:b8a:f3c0:c09 with SMTP id a640c23a62f3a-b942dfc710cmr667325566b.59.1773073577740;
- Mon, 09 Mar 2026 09:26:17 -0700 (PDT)
-Date: Mon,  9 Mar 2026 16:25:03 +0000
+ 2002:a05:600c:8b68:b0:485:3991:5d4 with SMTP id 5b1f17b1804b1-48539910730mr79369045e9.31.1773073579022;
+ Mon, 09 Mar 2026 09:26:19 -0700 (PDT)
+Date: Mon,  9 Mar 2026 16:25:04 +0000
 In-Reply-To: <20260309162516.2623589-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260309162516.2623589-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-Message-ID: <20260309162516.2623589-18-vdonnefort@google.com>
-Subject: [PATCH v14 17/30] tracing: load/unload page callbacks for simple_ring_buffer
+Message-ID: <20260309162516.2623589-19-vdonnefort@google.com>
+Subject: [PATCH v14 18/30] tracing: Check for undefined symbols in simple_ring_buffer
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -70,188 +70,38 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add load/unload callback used for each admitted page in the ring-buffer.
-This will be later useful for the pKVM hypervisor which uses a different
-VA space and need to dynamically map/unmap the ring-buffer pages.
+The simple_ring_buffer implementation must remain simple enough to be
+used by the pKVM hypervisor. Prevent the object build if unresolved
+symbols are found.
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/simple_ring_buffer.h b/include/linux/simple_ring_buffer.h
-index 2c4c0ae336bc..21aec556293e 100644
---- a/include/linux/simple_ring_buffer.h
-+++ b/include/linux/simple_ring_buffer.h
-@@ -54,4 +54,12 @@ int simple_ring_buffer_reset(struct simple_rb_per_cpu *cpu_buffer);
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index d106beca8d7f..3182e1bc1cf7 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -132,4 +132,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+ obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
+ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
  
- int simple_ring_buffer_swap_reader_page(struct simple_rb_per_cpu *cpu_buffer);
- 
-+int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
-+			       struct simple_buffer_page *bpages,
-+			       const struct ring_buffer_desc *desc,
-+			       void *(*load_page)(unsigned long va),
-+			       void (*unload_page)(void *va));
++#
++# simple_ring_buffer is used by the pKVM hypervisor which does not have access
++# to all kernel symbols. Fail the build if forbidden symbols are found.
++#
++UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
++UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
++UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
 +
-+void simple_ring_buffer_unload_mm(struct simple_rb_per_cpu *cpu_buffer,
-+				  void (*unload_page)(void *));
- #endif
-diff --git a/kernel/trace/simple_ring_buffer.c b/kernel/trace/simple_ring_buffer.c
-index 15df9781411b..02af2297ae5a 100644
---- a/kernel/trace/simple_ring_buffer.c
-+++ b/kernel/trace/simple_ring_buffer.c
-@@ -71,7 +71,7 @@ static void simple_bpage_reset(struct simple_buffer_page *bpage)
- 	local_set(&bpage->page->commit, 0);
- }
- 
--static void simple_bpage_init(struct simple_buffer_page *bpage, unsigned long page)
-+static void simple_bpage_init(struct simple_buffer_page *bpage, void *page)
- {
- 	INIT_LIST_HEAD(&bpage->link);
- 	bpage->page = (struct buffer_data_page *)page;
-@@ -372,18 +372,15 @@ int simple_ring_buffer_reset(struct simple_rb_per_cpu *cpu_buffer)
- }
- EXPORT_SYMBOL_GPL(simple_ring_buffer_reset);
- 
--/**
-- * simple_ring_buffer_init - Init @cpu_buffer based on @desc
-- * @cpu_buffer:	A simple_rb_per_cpu buffer to init, allocated by the caller.
-- * @bpages:	Array of simple_buffer_pages, with as many elements as @desc->nr_page_va
-- * @desc:	A ring_buffer_desc
-- *
-- * Returns 0 on success or -EINVAL if the content of @desc is invalid
-- */
--int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_buffer_page *bpages,
--			    const struct ring_buffer_desc *desc)
-+int simple_ring_buffer_init_mm(struct simple_rb_per_cpu *cpu_buffer,
-+			       struct simple_buffer_page *bpages,
-+			       const struct ring_buffer_desc *desc,
-+			       void *(*load_page)(unsigned long va),
-+			       void (*unload_page)(void *va))
- {
- 	struct simple_buffer_page *bpage = bpages;
-+	int ret = 0;
-+	void *page;
- 	int i;
- 
- 	/* At least 1 reader page and two pages in the ring-buffer */
-@@ -392,15 +389,22 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 
- 	memset(cpu_buffer, 0, sizeof(*cpu_buffer));
- 
--	cpu_buffer->bpages = bpages;
-+	cpu_buffer->meta = load_page(desc->meta_va);
-+	if (!cpu_buffer->meta)
-+		return -EINVAL;
- 
--	cpu_buffer->meta = (void *)desc->meta_va;
- 	memset(cpu_buffer->meta, 0, sizeof(*cpu_buffer->meta));
- 	cpu_buffer->meta->meta_page_size = PAGE_SIZE;
- 	cpu_buffer->meta->nr_subbufs = cpu_buffer->nr_pages;
- 
- 	/* The reader page is not part of the ring initially */
--	simple_bpage_init(bpage, desc->page_va[0]);
-+	page = load_page(desc->page_va[0]);
-+	if (!page) {
-+		unload_page(cpu_buffer->meta);
-+		return -EINVAL;
-+	}
++quiet_cmd_check_undefined = NM      $<
++      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
 +
-+	simple_bpage_init(bpage, page);
- 	bpage->id = 0;
- 
- 	cpu_buffer->nr_pages = 1;
-@@ -410,7 +414,13 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 	cpu_buffer->head_page = bpage + 1;
- 
- 	for (i = 1; i < desc->nr_page_va; i++) {
--		simple_bpage_init(++bpage, desc->page_va[i]);
-+		page = load_page(desc->page_va[i]);
-+		if (!page) {
-+			ret = -EINVAL;
-+			break;
-+		}
++$(obj)/%.o.checked: $(obj)/%.o FORCE
++	$(call if_changed,check_undefined)
 +
-+		simple_bpage_init(++bpage, page);
- 
- 		bpage->link.next = &(bpage + 1)->link;
- 		bpage->link.prev = &(bpage - 1)->link;
-@@ -419,6 +429,14 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 		cpu_buffer->nr_pages = i + 1;
- 	}
- 
-+	if (ret) {
-+		for (i--; i >= 0; i--)
-+			unload_page((void *)desc->page_va[i]);
-+		unload_page(cpu_buffer->meta);
++always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
 +
-+		return ret;
-+	}
-+
- 	/* Close the ring */
- 	bpage->link.next = &cpu_buffer->tail_page->link;
- 	cpu_buffer->tail_page->link.prev = &bpage->link;
-@@ -426,23 +444,58 @@ int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_
- 	/* The last init'ed page points to the head page */
- 	simple_bpage_set_head_link(bpage);
- 
-+	cpu_buffer->bpages = bpages;
-+
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(simple_ring_buffer_init);
-+
-+static void *__load_page(unsigned long page)
-+{
-+	return (void *)page;
-+}
-+
-+static void __unload_page(void *page) { }
- 
- /**
-- * simple_ring_buffer_unload - Prepare @cpu_buffer for deletion
-- * @cpu_buffer:	A simple_rb_per_cpu that will be deleted.
-+ * simple_ring_buffer_init - Init @cpu_buffer based on @desc
-+ * @cpu_buffer:	A simple_rb_per_cpu buffer to init, allocated by the caller.
-+ * @bpages:	Array of simple_buffer_pages, with as many elements as @desc->nr_page_va
-+ * @desc:	A ring_buffer_desc
-+ *
-+ * Returns 0 on success or -EINVAL if the content of @desc is invalid
-  */
--void simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer)
-+int simple_ring_buffer_init(struct simple_rb_per_cpu *cpu_buffer, struct simple_buffer_page *bpages,
-+			    const struct ring_buffer_desc *desc)
-+{
-+	return simple_ring_buffer_init_mm(cpu_buffer, bpages, desc, __load_page, __unload_page);
-+}
-+EXPORT_SYMBOL_GPL(simple_ring_buffer_init);
-+
-+void simple_ring_buffer_unload_mm(struct simple_rb_per_cpu *cpu_buffer,
-+				  void (*unload_page)(void *))
- {
-+	int p;
-+
- 	if (!simple_rb_loaded(cpu_buffer))
- 		return;
- 
- 	simple_rb_enable_tracing(cpu_buffer, false);
- 
-+	unload_page(cpu_buffer->meta);
-+	for (p = 0; p < cpu_buffer->nr_pages; p++)
-+		unload_page(cpu_buffer->bpages[p].page);
-+
- 	cpu_buffer->bpages = NULL;
- }
-+
-+/**
-+ * simple_ring_buffer_unload - Prepare @cpu_buffer for deletion
-+ * @cpu_buffer:	A simple_rb_per_cpu that will be deleted.
-+ */
-+void simple_ring_buffer_unload(struct simple_rb_per_cpu *cpu_buffer)
-+{
-+	return simple_ring_buffer_unload_mm(cpu_buffer, __unload_page);
-+}
- EXPORT_SYMBOL_GPL(simple_ring_buffer_unload);
- 
- /**
+ libftrace-y := ftrace.o
 -- 
 2.53.0.473.g4a7958ca14-goog
 
