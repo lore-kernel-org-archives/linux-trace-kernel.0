@@ -1,135 +1,93 @@
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7CD331A7B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 05:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E5A3A4F50;
+	Mon,  9 Mar 2026 13:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773035094; cv=none; b=QNA12u0SwMPRpafx8nZinImP2MRpIzR+arMalJ2NmFUkWqnPPHmkmzbk5U/wJE9XBdJfpX2ck0BFOoBSdcGYhlingqGjV9qmHy/mHNNB/krwGvF/z/GTYufAxg2oN8LybWqgJtHDsTp+ggytW01Jpl6TYysQJZhes1NCTf9GPMU=
+	t=1773061864; cv=none; b=pmsp1/zhZz88DueaUu0LH1SKLnE2rSefVf7cSI31yvt8lqwibvHJZ9ehu3895+m7aWoCpo9H2q74SYsbpN9n3Z4uDa0ApLoZcJ5WSMeW8gD9BlixU4RaesAujrXEZe+7pYhgFek/sWvu8LrusU/iF6LpKLEDHHJ/4axuE3bJVG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773035094; c=relaxed/simple;
-	bh=hqi/Df1JPDp/BlPm0GTdyjJF+qjIicQyIWh3azQlrf8=;
+	s=arc-20240116; t=1773061864; c=relaxed/simple;
+	bh=nZjfTx/ugxBGIyQ1QjlmjuU8PGWzUGRBnVWrjp+AVk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLu6UsuddlqucznDvXNzGNzzuPORlG43iKi94EhkuHLDDB6nZOruN2YgSrOUGHd6U9mbtOIIC9pR7K4PRhhF5cD+FelpNWmg1963miXfVjq875Qn+sruffACdHdfjRc/4sBcjuBiKoaTOWYZJjRsjHIaol51TCqOQW2dvM2U+Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PH9kTvFY; arc=none smtp.client-ip=74.125.82.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=m4Isk7xacjrNatoCnaWt8cbXKSKpWMKkCCyoVVw03rQDwsegr2rnkas3dHjqOp03/rRz8egwWrVLhWSSe7bqjGkTPUYwd5dQCvDiNrWXeVQXiTHpTjO7nLWPeRfLpJgowcNxSirVpryT43rht85SefEjAE0QuPyFiH2kzFIGVxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QXH3c3N2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PH9kTvFY"
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-12776bebe9fso4362591c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Mar 2026 22:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773035093; x=1773639893; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ug9w3Bfo3Ur8mbdFfczjnMxT2pbrXyiERJeMtAuIh8g=;
-        b=PH9kTvFYazGcAHB330To/OeFzVVVoAetzeAqLqtqgO8FTevOSlJFg0vBVgSis1D2qx
-         ei4tNvhFPmh9rlOXr2szTzSoqAD0b7HIcOIrEvL5+ngd6IVklpLZT6rHLnG7PimKZxJ9
-         WNgr1m+pUKPVhXczgU5mbe5tNGgj5xXXBCyEvkqnAFWkvr0DnL5lcVxj8bcLuaBKAWQj
-         nuRXFxAHJBYhnJ9oofghicqrvnLlnsy7xl+xR5W6CAGNw7Ab3S8+FdKBlMHTEgwLb98/
-         MWsGRvDGo8vDBF/Va9cyyNDPmbCaaATQfCaHXHHlieVPDqYlbgqs+bSBorjqAbNtezJr
-         wD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773035093; x=1773639893;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ug9w3Bfo3Ur8mbdFfczjnMxT2pbrXyiERJeMtAuIh8g=;
-        b=bcyAxX8MdEiuk/+5jg3+9nBfVa6jkt+6QXsaw1ZVX2Iw8Qbe1urAB28TmTceCQ8uom
-         Hz3Gn6XXKUWDh682FAkDWJ3LILOEmUO+IBUe++lnwepJ6QSJ63/Vb5VotCUd3sTGUkQ0
-         838UJ7HoNgj2Hw5yCkhuPPWPFAq1JV4+Zr9pKzyjlXrJ8lZBMlZspq/pcObwKU25UtOx
-         m2q42L+Y+u6yfgsY8BBa/SQOCPt7Pn5SNbNvVJXIQq87b89wp5cwd92x48vm4yrz2vpB
-         HB38hfGg0EZ0LZ2sbthgSBvvDc+Vajof4uPDoXjMp3v8/47NpyXdxk/13VsGqyw1BORP
-         xn1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVNFeM93K9ZqnrNbIpUUiHVzuHW4xQwz24LtH1p3LDzx8ubBlXCFtP56lVwvlCy+6/6UDPcC79ao/s9Ah9AY6NXszc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/5HZdbQI8nYg15n4kaQbcvLgZh/RlQhbVk8zOfiqjqVIJTzK0
-	d2BePhYNsB1FRGEGNfQNdyTFOn4kgGUUMXGakbd7bi1NbceQi7mbzj3r
-X-Gm-Gg: ATEYQzy6ZqOjvOD2w/Y9D5j9B1po9mlM4ehYrGoAbzbURQAKbUMaBFKa7FLU83Fc5mr
-	uNA+kuEDXV+eNDuBJ9JrjuHxJS9/wY0t9mw5WlG09lam+wSaP8X+ZY8df6ek7lAeaRPCugQdvAS
-	HcmF5wYKCEJl59q6Si78YzBkH4eOJGNS0C1HyL+YG16FTmgBta0SqetdumrXo18qrajMzsyHd4a
-	SasWmuxMMlcyzdut/KaRWzDI2LpahScG7dbpzmbg6VHgGDYTfsarxpHMZiJyXO5PFeZwK4P7esy
-	UzhPk4SLFQD9eXiCCtmE1YnLi5n9A656J7xKrHxgwIEis7id/sehOKAGDD+/QydV3i+UtyoD6q+
-	s65eTde5Yzi/ERJg9mDLhyL+xEFwnWuj3KyP1YUIF/bTZV/Vi6/1E+z2S8m4sQ/zDeXlXed8cJ1
-	T7RhhIv5Kn2Zhw4qrFQTnWx6t8yz+YD8Y=
-X-Received: by 2002:a05:7022:906:b0:127:5cfd:785 with SMTP id a92af1059eb24-128c2d8f553mr4232707c88.4.1773035092704;
-        Sun, 08 Mar 2026 22:44:52 -0700 (PDT)
-Received: from google.com ([2601:647:5e00:4acd:af9:a43b:9d9e:841c])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-128c3f43593sm8122381c88.9.2026.03.08.22.44.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 22:44:52 -0700 (PDT)
-Date: Mon, 9 Mar 2026 05:44:48 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Val Packett <val@packett.cool>
-Cc: Jingyuan Liang <jingyliang@chromium.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Mark Brown <broonie@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org, hbarnor@chromium.org, 
-	Dmitry Antipov <dmanti@microsoft.com>, Jarrett Schultz <jaschultz@microsoft.com>
-Subject: Re: [PATCH 09/12] dt-bindings: input: Document hid-over-spi DT schema
-Message-ID: <aa5cxFcZrI89g-8s@google.com>
-References: <20260303-send-upstream-v1-0-1515ba218f3d@chromium.org>
- <20260303-send-upstream-v1-9-1515ba218f3d@chromium.org>
- <1cc6de61-8b56-492e-ab78-e3aa448f58ad@packett.cool>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QXH3c3N2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MP91r6c+y7giftvLR1OcIBEAD8RMncykz3hjSEiLD3U=; b=QXH3c3N2WvdAVaSk98rBw2QTWS
+	hU5Khg29+699uZHVtoU0uZoe1D1JffMnyRcTC8uQ7cbi7MTdGwkhkTrFM4BxLE7mmonVLmntz5SAP
+	IictCbrRUlk+lXjcQDDSzGiCOkzLnQqIORtItpqOvW7X3s3kgk/cOE2ElyskYVfLRf6B9ynL23R4e
+	rK4ES1g8jxDUN5iuuqwgC19keOsLHKfFRHgg/jnWLnecoWDm4mQwnmV+S3bnIwP5npEOOGBJmsDeb
+	bKuls447s9ARbiGV44qcLe2izeke7FZkNGhnaK8b9FBRLdXrdUrvZp0LPwM3NlLPxUgj1t/dIwV/G
+	lBt5MxcA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vzaNj-00000005ZGM-0n5j;
+	Mon, 09 Mar 2026 13:10:47 +0000
+Date: Mon, 9 Mar 2026 13:10:46 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Len Brown <lenb@kernel.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] mm: zone lock tracepoint instrumentation
+Message-ID: <aa7G1nD7Rd9F4eBH@casper.infradead.org>
+References: <cover.1772206930.git.d@ilvokhin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1cc6de61-8b56-492e-ab78-e3aa448f58ad@packett.cool>
+In-Reply-To: <cover.1772206930.git.d@ilvokhin.com>
 
-On Sat, Mar 07, 2026 at 04:25:44AM -0300, Val Packett wrote:
+On Fri, Feb 27, 2026 at 04:00:22PM +0000, Dmitry Ilvokhin wrote:
+> Zone lock contention can significantly impact allocation and
+> reclaim latency, as it is a central synchronization point in
+> the page allocator and reclaim paths. Improved visibility into
+> its behavior is therefore important for diagnosing performance
+> issues in memory-intensive workloads.
 > 
-> On 3/3/26 3:13 AM, Jingyuan Liang wrote:
-> > Documentation describes the required and optional properties for
-> > implementing Device Tree for a Microsoft G6 Touch Digitizer that
-> > supports HID over SPI Protocol 1.0 specification.
-> > […]
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - microsoft,g6-touch-digitizer
-> > +          - const: hid-over-spi
-> > +      - description: Just "hid-over-spi" alone is allowed, but not recommended.
-> > […]
-> > +required:
-> > +  - compatible
-> > +  - interrupts
-> > +  - reset-gpios
+> On some production workloads at Meta, we have observed noticeable
+> zone lock contention. Deeper analysis of lock holders and waiters
+> is currently difficult with existing instrumentation.
 > 
-> Why is reset required? Is it so implausible on some device implementing the
-> spec there wouldn't be a reset gpio?
-
-No, because it is mandated by the spec:
-
-"HID SPI peripheral must provide a dedicated reset line, driven by the
-HOST, which, when toggled (pulled LOW for at least 10ms, normally HIGH),
-will have the effect of resetting the device. If a HID SPI peripheral is
-enumerated via ACPI, the device ASL configuration must expose an ACPI
-FLDR (_RST) method to control this line."
-
-The spec also states that the host must initiate reset during
-initialization of the device.
-
+> While generic lock contention_begin/contention_end tracepoints
+> cover the slow path, they do not provide sufficient visibility
+> into lock hold times. In particular, the lack of a release-side
+> event makes it difficult to identify long lock holders and
+> correlate them with waiters. As a result, distinguishing between
+> short bursts of contention and pathological long hold times
+> requires additional instrumentation.
 > 
-> > +  - vdd-supply
-> Linux makes up a dummy regulator if DT doesn't provide one, so can
-> regulators even be required?
+> This patch series adds dedicated tracepoint instrumentation to
+> zone lock, following the existing mmap_lock tracing model.
 
-There is still a supply line to the chip even if it is not exposed to
-the OS control. So as far as chip is concerned the supply is required.
-
-Thanks.
-
--- 
-Dmitry
+I don't like this at all.  We have CONFIG_LOCK_STAT.  That should be
+improved insted of coming up with one-offs for every single lock
+that someone deems "special".
