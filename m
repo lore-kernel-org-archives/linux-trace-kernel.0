@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730EC3ECBC5
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 17:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A802F3D7D6D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Mar 2026 17:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773076544; cv=none; b=eSYCWpJJ0iwQEOJM/Kf5qhKouKhsSbI7pvQ7sK1uwStjC4PW8g/kwoE3DeWIlz61wLLzfmwJ98NERaG0VxTPgPKv1YvtiKTQhYkuCmPq4omS0IgT0Q7/9GkJ6TaUh3KTX0opr2uPNNuBNid+d+ac7/AMJ26ac7BJKfvJADFYm4s=
+	t=1773076687; cv=none; b=ZPdzgzUCNI76wwJ6LDAmxPUWIu9zDqDVHX7xrsWb3LmuZ8X32yA54DUL7NEWn3vqUdFAhHrBTu03UD04rIaXpx8GXOl5H6LNB3nb7X3F5dvecXzgrsz6K21aU0SUXQji5u7ha8N1UX0HE+b7meHYX02mA6OIfq/MRHKI8VOHdj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773076544; c=relaxed/simple;
-	bh=PCNDBkuk47hWM1BU08okt9A/P3f7nbKjVUe+Ep8EK6I=;
+	s=arc-20240116; t=1773076687; c=relaxed/simple;
+	bh=9CCY4PzYOrzWqpPuXimhKXwck19MaZ0LfiRjaCIJIzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=gqA85vxumMzem3EZbUEuMmz5pFOuBbpnMmnWYLX+GUN99wjsLhuDSSZd51DJG2EL+NbWpkUH/CP8uq4q0BEc/OTJ/YIO5XB6dm7R7GXRBbrtvuWRMqHyP9TYtmzCGzh5P5jGywpb1yRy1kkWiaxwte3kyLPiRk6QbuTIFi6v9dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y+nHSkRO; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=fuOQFP+SR+E9Bj1ANkZwIEAikAUm74XQeIwJiv0XMAYaKtOJ1rgsJ8JvKdSWAMkA2Ht8chAHWVM/WXapdJPdqdzRZ/Y0kIdIvBR3w/KuBP+/7v1OM1HD1ckJPXJucYbd02mjjx1Dtb0Y0zqSWuPyc4GMZCO5N5YVCnBbX86IYr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCNpJaRB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+nHSkRO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCNpJaRB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773076542;
+	s=mimecast20190719; t=1773076685;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tIiC+2A1nmWiuz2kfPAvzA8yI3UW09Vvl9VLP0EuHYM=;
-	b=Y+nHSkRONQofKRTOYPn4IjPhc6UBEgg4ytIHr/pc0iXdyi4obYGSHSI1qlf037ysEqk2qc
-	5b/LF7xgNn7NAbYEnVK8jgLkC+7pWdzMESktWUpYLzHdavbm2lEosFXA3OeAKnNvj7R76y
-	SaZ54m39uqc+gqo8rcZ580NxhoYcBCI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=i2rJs6eN4RulDPNhq1NMUOOVSeUcobhvUEjspYXJuM4=;
+	b=gCNpJaRBpKcn/9DK6qB3168EIhHvQZSbLbpZFqayMauN3Gqi8TpQ8kCWCBmuhYj3E64fr/
+	HHpALPNe1FU64B28miVIaI/g4vchmqwFN+u09FRHJGWhKAZQgzWuV5OTPLth8upcTWCuAL
+	0H+pyb+3EdUQpcgXCdnVCZ/OO0cqYB4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-xPLDBa6yM9GShaFy1dHHNA-1; Mon,
- 09 Mar 2026 13:15:38 -0400
-X-MC-Unique: xPLDBa6yM9GShaFy1dHHNA-1
-X-Mimecast-MFC-AGG-ID: xPLDBa6yM9GShaFy1dHHNA_1773076536
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-155-_kpt2FzsOxSO-92QLnQ2BA-1; Mon,
+ 09 Mar 2026 13:18:02 -0400
+X-MC-Unique: _kpt2FzsOxSO-92QLnQ2BA-1
+X-Mimecast-MFC-AGG-ID: _kpt2FzsOxSO-92QLnQ2BA_1773076680
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 64AC51956050;
-	Mon,  9 Mar 2026 17:15:36 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 936EF1956054;
+	Mon,  9 Mar 2026 17:18:00 +0000 (UTC)
 Received: from fedora (unknown [10.22.81.10])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1DF041955F2D;
-	Mon,  9 Mar 2026 17:15:30 +0000 (UTC)
-Date: Mon, 9 Mar 2026 14:15:29 -0300
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2E4F2195411D;
+	Mon,  9 Mar 2026 17:17:54 +0000 (UTC)
+Date: Mon, 9 Mar 2026 14:17:53 -0300
 From: Wander Lairson Costa <wander@redhat.com>
 To: Tomas Glozar <tglozar@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>, 
@@ -53,25 +53,25 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Crystal Wood <crwood@redhat.com>,
 	"open list:Real-time Linux Analysis (RTLA) tools" <linux-kernel@vger.kernel.org>, 
 	"open list:BPF [MISC]:Keyword:(?:b|_)bpf(?:b|_)" <bpf@vger.kernel.org>
 Subject: Re: [PATCH v3 12/18] rtla: Enforce exact match for time unit suffixes
-Message-ID: <aa8ADHUJPyPqM2z2@fedora>
+Message-ID: <aa8AXqNzcGKffUWZ@fedora>
 References: <20260115163650.118910-1-wander@redhat.com>
  <20260115163650.118910-13-wander@redhat.com>
- <CAP4=nvTZ-k0QGsr_oyGmsr+gy6vbjmKv6TDVnUzQw=Av8YkEUQ@mail.gmail.com>
+ <CAP4=nvQ6EeecMggeVciOaW_-=sa2QJ2r9DX0Xifzgsv5JBhAAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAP4=nvTZ-k0QGsr_oyGmsr+gy6vbjmKv6TDVnUzQw=Av8YkEUQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: FAKFje9J71DQY9M_2e_ddTpHTsCPPzaPnkvl7qmhkvI_1773076536
+In-Reply-To: <CAP4=nvQ6EeecMggeVciOaW_-=sa2QJ2r9DX0Xifzgsv5JBhAAg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: yQvq18up2WM9ci1W1qsM1vbf6nsTC6j4-W4WqYDcqTw_1773076680
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 04, 2026 at 02:57:26PM +0100, Tomas Glozar wrote:
+On Tue, Mar 03, 2026 at 03:27:35PM +0100, Tomas Glozar wrote:
 > čt 15. 1. 2026 v 18:28 odesílatel Wander Lairson Costa
 > <wander@redhat.com> napsal:
 > >
@@ -85,41 +85,44 @@ On Wed, Mar 04, 2026 at 02:57:26PM +0100, Tomas Glozar wrote:
 > > This ensures that the parser strictly validates the time unit and
 > > rejects any input containing invalid trailing characters, thereby
 > > improving the robustness of the configuration parsing.
+> >
 > 
-> This solution is incorrect. We need to be able to parse deadline
-> priority correctly, whose format includes two suffixes:
-> 
-> d:runtime[us|ms|s]:period[us|ms|s]
-> (see manpages)
-> 
-> and is parsed like this:
-> 
-> int parse_prio(char *arg, struct sched_attr *sched_param)
-> {
-> ...
->     switch (arg[0]) {
->     case 'd':
->     case 'D':
->         /* d:runtime:period */
->         if (strlen(arg) < 4)
->             return -1;
-> 
->         runtime = get_long_ns_after_colon(arg);
->         if (runtime == INVALID_VAL)
->             return -1;
-> 
->         period = get_long_ns_after_colon(&arg[2]);
->         if (period == INVALID_VAL)
->             return -1;
-> ...
-> 
-> Your commit breaks that:
-> 
-> $ rtla timerlat -P d:10ms:100ms
-> Invalid -P priority
+> Why not use your strncmp_static() helper to protect from overrun?
 
-You're right, I will fix the bug.
-
+As I said before, sometime I fail to follow my own rules *facepalm*.
+> 
+> > Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> > ---
+> >  tools/tracing/rtla/src/utils.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+> > index 486d96e8290fb..b029fe5970c31 100644
+> > --- a/tools/tracing/rtla/src/utils.c
+> > +++ b/tools/tracing/rtla/src/utils.c
+> > @@ -211,15 +211,15 @@ long parse_ns_duration(char *val)
+> >         t = strtol(val, &end, 10);
+> >
+> >         if (end) {
+> > -               if (!strncmp(end, "ns", 2)) {
+> > +               if (strcmp(end, "ns") == 0) {
+> >                         return t;
+> > -               } else if (!strncmp(end, "us", 2)) {
+> > +               } else if (strcmp(end, "us") == 0) {
+> >                         t *= 1000;
+> >                         return t;
+> > -               } else if (!strncmp(end, "ms", 2)) {
+> > +               } else if (strcmp(end, "ms") == 0) {
+> >                         t *= 1000 * 1000;
+> >                         return t;
+> > -               } else if (!strncmp(end, "s", 1)) {
+> > +               } else if (strcmp(end, "s") == 0) {
+> >                         t *= 1000 * 1000 * 1000;
+> >                         return t;
+> >                 }
+> > --
+> > 2.52.0
+> >
 > 
 > Tomas
 > 
