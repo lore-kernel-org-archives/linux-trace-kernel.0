@@ -1,250 +1,76 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7C02D7DD4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Mar 2026 14:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACA627FB05;
+	Tue, 10 Mar 2026 14:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773152712; cv=none; b=kqyxjGyn00f/iMkoNDYzNMAzRQ3hWBVZeleZX3YhokmyCd7gnLtfoy67mnQajDC9xsLFW6vIfh+qT3p4Vy9xXdNP4lgjY+X8Iv8AnbhCVaZKtBjmUZO2VNF2PQ8gA/sliUpKfN1nhyGUe9R53Gv66A4yn/Ts3FCCWJ+raCvlvu8=
+	t=1773153778; cv=none; b=H6zsNYzaKCYbmNoAQ77awKF4Wf0+J+EdgIv3rgHyPAs3mVlTUkH6B6m6FuNoJJ5as5YxjAlTxaa3liDcpyPw+Ze7B4TwjB/ivgBjmEu9KuAJfcnYq0FPZejrwsECKRUOrr8Z09PRCEe0b02OW3NdfK6+3W96qDBMyLaiI3joric=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773152712; c=relaxed/simple;
-	bh=XwidptKIhvR+UF4aaOLrgKMULsgr14IRJkHhby+ViXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UeKCT7K440jJUqwm8LTxg5W+imDvriaMyUCkSueh0eYXkPMNoGMz5IQXsZC0J2ZQYRD6z7G8mL2T+ZQz+OIdjTnOWWyEpBkduRospg5OSfHU9hNIIBc4djKjPrCO9TDeozPdQaMesjpTj2NZB1E66vkzr0waUuo7O/s0y3QC0f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=F6C5rtqO; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="F6C5rtqO"
-Received: from macsyma.thunk.org (pool-173-48-117-133.bstnma.fios.verizon.net [173.48.117.133])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 62AENmx0023256
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Mar 2026 10:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1773152637; bh=4/p8AtxdJ3b4aYgpRIBgOOPVM9R5HZLzlaxPPsEZ2Q4=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=F6C5rtqODrQpEwdwVTgFCawAhLv3gwk1txjCpTf9qYEhws10oNToQIbXrBSiNnSGn
-	 HKzLPM0wlhbQz5hd3KNNbDsKNUIOcLP5D+4J1qJhv/m9AJCmBvmBntSwPXXBcrZ48c
-	 UG5I74ocwzVwmg9UHdT0hLejm00ahwJz4Tby2LgiJXvFIYDaYDAoayC1G2vaNRdttd
-	 dnaccWPVwGwuO0YYJTFV0/A1hSU2yI/onO0qlICZ11ISIKYrG0S38XY0XZ07wXHuQf
-	 SRLcsUXeYesD2NrtHf5Vg5nqM+e/voDzSfyx+6EAL02kYRxR5zwo7A3kwnstvVAN1a
-	 N4dmfF0o4YLWg==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 96A8A5C4FCED; Tue, 10 Mar 2026 10:23:48 -0400 (EDT)
-Date: Tue, 10 Mar 2026 10:23:48 -0400
-From: "Theodore Tso" <tytso@mit.edu>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-        bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-        dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mm@kvack.org,
-        linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-        sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Markuze <amarkuze@redhat.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-        Bharath SM <bharathsm@microsoft.com>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>, Kees Cook <kees@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Jan Kara <jack@suse.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-        Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
-        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-        Daniel Gomez <da.gomez@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Aaron Tomlin <atomlin@atomlin.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Max Filippov <jcmvbkbc@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Simon Horman <horms@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>, John Crispin <john@phrozen.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Zhenyu Wang <zhenyuw.linux@gmail.com>,
-        Zhi Wang <zhi.wang.linux@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Alex Williamson <alex@shazbot.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Lee Jones <lee@kernel.org>,
-        Pavel Machek <pavel@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
-        Georgi Djakov <djakov@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <20260310142348.GA41218@macsyma-wired.lan>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+	s=arc-20240116; t=1773153778; c=relaxed/simple;
+	bh=ew2Ld+USg/0akIWZd2Zhhd+hA5g25bVPfQ3z1Vk7d0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OztCQfxV9SxgiXnnfWY2IwA7Y5JGlM2Hc3Fn7zVz6x05d2a0U70sTIfzOqvPh5j3lHadPQev6LyJedfR1+KOsbD2TNBP/nkHZaS9RjMkTUp4Dg/YZmumCqNvmygWJ0OkCGK+uA5dYcfW4Iy6N/ftaww/rtgg1XZWqeD9uyC30to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 0E62B1B6C86;
+	Tue, 10 Mar 2026 14:42:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id B501E40;
+	Tue, 10 Mar 2026 14:42:51 +0000 (UTC)
+Date: Tue, 10 Mar 2026 10:43:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ aneesh.kumar@kernel.org, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v14 00/30] Tracefs support for pKVM
+Message-ID: <20260310104301.665bc684@gandalf.local.home>
+In-Reply-To: <20260309162516.2623589-1-vdonnefort@google.com>
+References: <20260309162516.2623589-1-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4dz8tkqbqdur7t1oxrqypc1fny4f8est
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: B501E40
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+DNCjV7dq3BIMgJPb6chTxzLYz8EtnyHM=
+X-HE-Tag: 1773153771-423745
+X-HE-Meta: U2FsdGVkX18n6LeKxHu/K8lrNosbg33R7MUM0BYl15C/a6ynYReUnFyq+jAHHl9dj4LFnQshyXL7OLItBj+Eouj8fvPWaNp+LBnrNYZf3jEjjzX+E9q+iYmzFNgGYC4oM2qcAfvLkzMgpczH6srVhwqHNl5YyzW763zKc+lvNjlXGgELd3NCBbMrEf0wcGQyDbN5iiU6Djv/+CTyk9l5zNAjc5aqNh0vIjGFmfr0g7FOAfXUk1swp0mgBxbCpDyO2NX3K6xUbTxq8kf1UPQ4lWjplk2N71zu7idjH6ZMuBi6XoGA/QJ1Vj612bYcVTPm/l0TqqB0xWcxDSOvK/OipdOWZhpsceIVikH36Jz2YobqoPOoKsqmGQ==
 
-On Tue, Mar 10, 2026 at 12:48:26PM +0100, Philipp Hahn wrote:
-> While doing some static code analysis I stumbled over a common pattern,
-> where IS_ERR() is combined with a NULL check. For that there is
-> IS_ERR_OR_NULL().
+On Mon,  9 Mar 2026 16:24:46 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+
+> 5. pKVM
+> -------
 > 
-> I've written a Coccinelle patch to find and patch those instances.
-> The patches follow grouped by subsystem.
+> The pKVM support simply creates a "hypervisor" trace_remote on the
+> kernel side and inherits from simple-ring-buffer.c on the hypervisor
+> side.
+> 
+> A new event macro is created HYP_EVENT() that is under the hood re-using
+> REMOTE_EVENT() (defined in the previous paragaph) as well as generate
+> hypervisor specific struct and trace_<event>() functions.
 
-I'm going to gently suggest that you *not* try to do this as a
-tree-wide change, since we don't need to change some interface
-requiring a global, flag day change.  This is instead a cleanup, which
-maybe makes the code slightly better, but which also has a the
-downside of breaking lots of inflight development patches by
-potentially causing merge or patch conflicts.
+I pulled in all the tracing related patches (1-18) and pushed it to my repo:
 
-So why don't you send it to each subsystem as a separate patch or
-small patch series, instead of spamming a dozen-plus mailing lists,
-are probably hundreds of developers, most of whom aren't going to
-care about changs in some far flung part of the kernel?
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git  ring-buffer/for-next
 
-Regards,
+It's based on top of v7.0-rc3. I'm not going to rebase that branch,
+although I may built on top of it, but for now, feel free to merge it into
+the arm tree and put the rest of the patches on top of it.
 
-						- Ted
+-- Steve
