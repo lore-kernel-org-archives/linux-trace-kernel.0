@@ -1,30 +1,39 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66A844D033;
-	Tue, 10 Mar 2026 11:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C55D45091D;
+	Tue, 10 Mar 2026 11:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773143742; cv=none; b=HjGTtsqaeYVureVb7KsvXb1YxODckUu/Sh5TnUO1pIOuI3M6jYPBAfAwu2PwXh0O1Cw3TOo5amPhd6BxPjuvzVIVE27/Pmkszmm89wsUxAQ2bsmYfEXgQFPY2vQolsCeHaKM/V+c5N2laX+xRTQiJrkoyTWtK2EThJOxilEFYLM=
+	t=1773143742; cv=none; b=b6N6u3yEr6T3dvwrA/djIrm9KTZPvNcnAs3lr54fmNsCONp0i51xfjN8tN9JrsPFIdc42ja6Js2oDi1rjw3fy1jr72kMTK4G4jMXdWTGzbWJV8zfo7/BEQeqEDQBaWKuNEJvNgv8l/LLsnyEUctIQh3qIel8ls8e+qsc2HJ0leA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773143742; c=relaxed/simple;
-	bh=OPqqHdKZkEBOTA9s0xCv07joTtAqSJfXU2nXlSYlnvo=;
+	bh=K9CWTyYKGB0w6Tk2xrcCabYj/9tltesZ0HvDiXE6CGA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U/HyIIfv6r6VdeyMUl+Ds+JFLyCoRoczM21EkxXITpmWRLvZ72YWh4FVJkdkkbMKkIVbn3BcjXp0vph0A4YaSMAy4vKEADTrvSGDndUU/qApLgJadfae0Ww0/0T4ztew0O4oqqhmg1H6AMmMRYs5iv4QnaI6GxSeimmfWMKPyXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.94
+	 In-Reply-To:To:Cc; b=fxZgyvqyWQNwmr1om/XETRtvuOohbOJ4daiNOdi82/mDlUsfaox0oWt9D9LN+Ydc0de89COAfB6nVUgZwQrluE2CyP2emjOn1A1AvtDV7k1HHehENXHhi9RJ9Al7OwSH/7Az9LQMpQ65EBEVA5ZSRreso3IP+mTaf9wTOIVJsRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=WaIP0aUV; arc=none smtp.client-ip=212.42.244.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="WaIP0aUV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
+	t=1773143724; bh=K9CWTyYKGB0w6Tk2xrcCabYj/9tltesZ0HvDiXE6CGA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=WaIP0aUVU+SD1IKfrLu9LNgJt9rCwL03fQd7xM36vLjrPxiahK+/ueIkD4aUkBjh0
+	 JoNjbHvh2YDsq++c9G4XD/IhDg+/duwEDJwDQgaO7gFHS4dvl+miZ/ZhI4geYd0rD/
+	 3rUAsw+TtsGrBZEoQBkvYIeLVH/qwdGsXwo8cROo=
 Received: from [212.42.244.71] (helo=mail.avm.de)
 	by mail.avm.de with ESMTP (eXpurgate 4.55.2)
 	(envelope-from <phahn-oss@avm.de>)
-	id 69b006ac-e21d-7f0000032729-7f000001d9be-1
+	id 69b006ac-b734-7f0000032729-7f000001c060-1
 	for <multiple-recipients>; Tue, 10 Mar 2026 12:55:24 +0100
 Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
 	by mail.avm.de (Postfix) with ESMTPS;
 	Tue, 10 Mar 2026 12:55:24 +0100 (CET)
 From: Philipp Hahn <phahn-oss@avm.de>
-Date: Tue, 10 Mar 2026 12:48:36 +0100
-Subject: [PATCH 10/61] gfs2: Prefer IS_ERR_OR_NULL over manual NULL check
+Date: Tue, 10 Mar 2026 12:48:54 +0100
+Subject: [PATCH 28/61] net/sched: Prefer IS_ERR_OR_NULL over manual NULL
+ check
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -33,7 +42,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-b4-is_err_or_null-v1-10-bd63b656022d@avm.de>
+Message-Id: <20260310-b4-is_err_or_null-v1-28-bd63b656022d@avm.de>
 References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
@@ -63,21 +72,24 @@ To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
  sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
  tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, 
  Philipp Hahn <phahn-oss@avm.de>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=893; i=phahn-oss@avm.de;
- h=from:subject:message-id; bh=OPqqHdKZkEBOTA9s0xCv07joTtAqSJfXU2nXlSYlnvo=;
- b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAX4/dv49K4j89zI86N9JpAw6t8eU0kmPVDxm
- PT/7+a10hGJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAF+AAKCRA0LQZT0ays
- 2zIKB/999m4RLBdXe9kckM0CjKr4GcE3BeYjqHOf9Mb/fXRspIYiRhfK/0d76B0wUZ9vMlV+kHN
- aPugbL3mxS3VAKy9S9eV+9mHhq2ovSgAXuPOSy8/qOTGHUqDaNzk/2uQki9ZfnbI3N1QVu0zj5x
- 8blYFqhhVL5JzTcz+RG+KziT6t1xXKbIKoya+t7T6UrNg4H5H2bWy4EaQ7+S0qT/OwwuCndJ5uT
- z17dIMTDIfQoeXt9rkvrr2Ft1Brl0Ry1Iiv5kD+CcJTipZJNdlQgICgttnzL/8iG0G6ksTSjehE
- 819EPypp6/ZxNz8oLOAo07gCKojS6jLLwc/BvUWqoKOgacEb
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1649; i=phahn-oss@avm.de;
+ h=from:subject:message-id; bh=K9CWTyYKGB0w6Tk2xrcCabYj/9tltesZ0HvDiXE6CGA=;
+ b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAY0Ab3VO2a9CLyi58wXwo/lqSwdB2G61GV4k
+ bTbJSvyEGOJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGNAAKCRA0LQZT0ays
+ 24mRB/9btDfW+RDwuaye8LPDtf1ZUJwDncM7Zgyp6SHFDbDBBUCY5jMLThJncFGvw3pVn6MHlrR
+ e+vSLwaJsDAVLn6K23Z4PPrutM/glgm9IAew2t89ZwRwFxQzfV+39rXZfBmOC/J16tW6tO1iy8k
+ 2C61WhK0hJtogp/FtZ3yHRbCwt8dKoLmF2qlw1QSQLKl8LOMWf3xw4Hzsu7PORnm8NiE+tP0SiT
+ 14xuZtoKpdLMjWGJyLVgKFIFQUVZBRep4Y+ogBPonV7uWFQl+T8Y21kTTXl++qp7tP7BH5AxDRw
+ qjRRlFGTUp8rPbK2m+WUcf3WaJPpbUCWbYm05Bbm4z30Dms3
 X-Developer-Key: i=phahn-oss@avm.de; a=openpgp;
  fpr=58AF7C2E007CDBE62C59E078F50EFDCF8AD04B1A
-X-purgate-ID: 149429::1773143724-363F1F2F-29C6BAA2/0/0
+X-purgate-ID: 149429::1773143724-DCDDCA3D-CAC12DB5/0/0
 X-purgate-type: clean
-X-purgate-size: 895
+X-purgate-size: 1651
 X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
 X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
 X-purgate: clean
@@ -87,27 +99,51 @@ check.
 
 Change generated with coccinelle.
 
-To: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: gfs2@lists.linux.dev
+To: Jamal Hadi Salim <jhs@mojatatu.com>
+To: Jiri Pirko <jiri@resnulli.us>
+To: "David S. Miller" <davem@davemloft.net>
+To: Eric Dumazet <edumazet@google.com>
+To: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 ---
- fs/gfs2/glock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/cls_api.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 2acbabccc8adf957e02845041193502a96370a6d..8ed6b4535a728e217e5cec7b64488583b5737c58 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -2013,7 +2013,7 @@ static void glock_hash_walk(glock_examiner examiner, const struct gfs2_sbd *sdp)
- 	do {
- 		rhashtable_walk_start(&iter);
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index 4829c27446e3369ad2ae9b3fcb285eca47d59933..4208225e7a4acaf0c331096ebf941f68cc2ed992 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -2444,7 +2444,7 @@ static int tc_new_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 		tcf_chain_tp_delete_empty(chain, tp, rtnl_held, NULL);
+ errout_tp:
+ 	if (chain) {
+-		if (tp && !IS_ERR(tp))
++		if (!IS_ERR_OR_NULL(tp))
+ 			tcf_proto_put(tp, rtnl_held, NULL);
+ 		if (!tp_created)
+ 			tcf_chain_put(chain);
+@@ -2612,7 +2612,7 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
  
--		while ((gl = rhashtable_walk_next(&iter)) && !IS_ERR(gl)) {
-+		while (!IS_ERR_OR_NULL((gl = rhashtable_walk_next(&iter)))) {
- 			if (glock_sbd(gl) == sdp)
- 				examiner(gl);
- 		}
+ errout:
+ 	if (chain) {
+-		if (tp && !IS_ERR(tp))
++		if (!IS_ERR_OR_NULL(tp))
+ 			tcf_proto_put(tp, rtnl_held, NULL);
+ 		tcf_chain_put(chain);
+ 	}
+@@ -2741,7 +2741,7 @@ static int tc_get_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 	tfilter_put(tp, fh);
+ errout:
+ 	if (chain) {
+-		if (tp && !IS_ERR(tp))
++		if (!IS_ERR_OR_NULL(tp))
+ 			tcf_proto_put(tp, rtnl_held, NULL);
+ 		tcf_chain_put(chain);
+ 	}
 
 -- 
 2.43.0
