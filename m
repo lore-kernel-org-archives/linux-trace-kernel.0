@@ -1,139 +1,101 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F343B3BFE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Mar 2026 18:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDAC3E8C7E;
+	Tue, 10 Mar 2026 20:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773168053; cv=none; b=bcVJx6rsiDrcLeC9OXFGr+fVHlPBhtmbueh8YHO9heV8NMeCDxgQBlTXb8aiSBl/15sAXf6olhuaTfb9DFOMwddewICzcL39umDPEvRz0uZFLOMcnlYPpyRLhCSEWPEbO5vxr90Lm5MxoHev4fdA+JlEHC9HsBBrJ+TVU9BuQUc=
+	t=1773173426; cv=none; b=b2JCO1oXFiWsZbdR77rEmZbAEqrkM/uJxJ958NpDD3RjJPjSCt6g1bMjbeMQPBBKfidB5QXHa7hJW/qFCVGRGbKZAbNZ2NORRSN4wtWRoUeugicIShbjPCjEga96ZYMryv1BwtrZsoFwVH8NqIlm+KhzJfezpEML45rF1nFV420=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773168053; c=relaxed/simple;
-	bh=67BO0RZg8rxb/E50RmGcBJlsPR5Ae9xmCy+Q7v8QtDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQ7Y+BJ75kE3PUrLK2xmGE2VzDjgbwgry3ij+eqYEa9KovwoTwnDZS6V00J4xiNnk+QK3bDwVdMZ9GzYx4uV//LKFjHJ/0OGhpp6n7Eyg/NwpkISRq/+/0MY4+2kvAW8VTR8kxPtgTZCM4t/AvVyoUe4cKqvg2vmD053hVE1IuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kH0xiiWz; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773173426; c=relaxed/simple;
+	bh=g3Qin43JOdng5JEhq1pTxOt5zCxSIkxPZc1syVcWxoU=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=mFWXUa8F6FxGKKL2d3QbD6a8JfO//xN7T9dApV2Eo3TTsZ6oG8EsPtFkhOXO7wbzNLTuG12ASq4/IE11U2VngnJiwO6vXF45tJLxfoDtFnpUf5eC45fbWDYYwmdjExSpTDKaXdeUtKrtflG2TlZZbmTrEhqa1zVq3OSw3BUb2B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6S227z/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kH0xiiWz"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c73bbdc01b7so772161a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Mar 2026 11:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773168050; x=1773772850; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bjFZ9oZWWc3RZ4UdO5rq+AZbr7uPDX73K58gh1+yuH0=;
-        b=kH0xiiWz4KeHg8qM+UQYFRGEoaB5YhGQ1/l342lI48vVjCWqHFWSBUDJtSv8g6YdEb
-         WUvbLXs80bxV+xnMTu2IxnxqQ1WawTtw06PwWKuvZNeHk5D3euuYdO1/s0++E4FpGP2z
-         +c3ttwFV6WwPOQpNHM7WUIHZNaqG5koiMMCxTax1rBk+j7pB0850FJbGseMzgmcav/Sc
-         D4sAVnEuBVkUt07E/ANMW8DM/NJ+n/hx2N6JUcXYsLZYrFMsnwCK7vKttbH8x8ketzgA
-         AEJgLDRmf5idGKEt1ix0VwO4x51qzzz9/bjh5SLZJM6RE+ISqePxLY2ZYvsw4O/i3F73
-         NyLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773168050; x=1773772850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bjFZ9oZWWc3RZ4UdO5rq+AZbr7uPDX73K58gh1+yuH0=;
-        b=BYAFKFRydveGhuHAGf86oa+DIqOpZ2pyyuNa2YwF0CziDmKDm4KKwlAO+5tnoYzRtG
-         iZgHnFVn3tBcQTW5a7I3kEBMmNPe5TbfsM556/WjxDdnGAkOE1FbHBmipsPwSr6CaX+A
-         zvu9bb7jP6Um97qtCqKMO2A3toZ1yKgB8lYMOg61cIN8w8FDkNAE53VH1lj/GNeohZzw
-         sX6dbToR9dC+uxbA2PNVqxERm3fqM8YyLBoidVfMqUHTmHWsf0OiazfhsC09W7tfAoRH
-         /K1cGXRO/4iN16heHPWFrxKUB78xvukUeBK2K75zT/zle+SrJbAzN1wNN2TOaUcnFAI1
-         Gw1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU019dMzR5UPNRI3y/Ffacjfn+U5NM+DBW6Gstu7CwITRZ4J7kUGHGx3jRw6WMZJg3PSn0xGI2LdXYeYp4G1FcFKas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvXzZpPeLBJce8OaYyCW++vpNshqeK9L0mbMdMnR20z327yxTU
-	PAFIBCY61xrtSiNcTBOL56JsaSu1N+P5ct/fQmYm3WgGe50ORSu6ISDW
-X-Gm-Gg: ATEYQzyEJvKSq3se2VLkLp4qOZWO3EsC+YHb0ZiZhrNFkJ1ghBMYxO98BGsOuaGySNo
-	KZxPtCjEcsyi+xtcQfcEc9ZNKNpi3cHgp+QCDpIO1JvBEJzSwugC0K9CC+giE5T3C+c+ymw/xB2
-	120PkN2Xr9XnGCv0/5kkABnHch3RBU0RU3ubtDa83qWHhuYrpU5Arf21IowxurfeLuokwdrjzHf
-	G4l7f3jMesqSkch6EtQZCzfD+YDXCqPBLGZ9ro9VfM6RbfaYQgOq8gg0xQIQKTSE33m82RdPJZi
-	RvlDulLj4J+zltxVIkAIPjBxksEU0IcokWQrI4+I5Vm4ZPWXa2fACM70U5/F8KjQuxQ1pmc9tx+
-	IvJiOaIJMowleoRDzgEKVkUYMAk3O6Yg6aglK1DPJWnehBiof0gBiSsI94ilYgXrZmAOo4kYn/Z
-	wrHQ0l/c0k4b2pGQ6em5cFZ7YkDTfx7vMgoiAecmNNVpv1Kw==
-X-Received: by 2002:a17:903:28c8:b0:2ae:5671:7071 with SMTP id d9443c01a7336-2ae8252cf0fmr96662285ad.43.1773168050081;
-        Tue, 10 Mar 2026 11:40:50 -0700 (PDT)
-Received: from google.com ([2402:7500:a44:85b:2953:97d3:b283:95c3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83e58592sm220535625ad.14.2026.03.10.11.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2026 11:40:49 -0700 (PDT)
-Date: Wed, 11 Mar 2026 02:40:36 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <abBlpGKO842B3yl9@google.com>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6S227z/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A5EC19423;
+	Tue, 10 Mar 2026 20:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773173426;
+	bh=g3Qin43JOdng5JEhq1pTxOt5zCxSIkxPZc1syVcWxoU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=p6S227z/mnvwydIeSDcnWj8DhbEHCz2EAyigp32c7ZqQ5nxIA91prUx/wWzubTl+o
+	 JFOk5cTZ6PZ7V1rs96JctIbA/N+rnk2SyLfQwkbgUigHMcFO+2Y/rc7osFKjqQod+H
+	 uOY/m7IugiuNhsFQvu3vG7egYDI1P47+N2It2Tz03Xc5nn+tdeq7aY+rBi7pejvSuI
+	 2VsWHN9JmAJcIaaEy7TvzvCx2+u5ahx1/A5JIChlTtSH7rgBTj9KZr1hlMdDi2oM03
+	 AGjzmeSboZOiKyH0D7nBjv6ssOKdSKRw4lIlkMYRqOv+W4jTQDcznwMwkr+daRNYWX
+	 WlNGd3AYP94lw==
+Received: from rostedt by gandalf with local (Exim 4.99.1)
+	(envelope-from <rostedt@kernel.org>)
+	id 1w03PY-00000002kqP-2Ak7;
+	Tue, 10 Mar 2026 16:10:36 -0400
+Message-ID: <20260310200954.285663884@kernel.org>
+User-Agent: quilt/0.69
+Date: Tue, 10 Mar 2026 16:09:54 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Brian Geffon <bgeffon@google.com>,
+ John Stultz <jstultz@google.com>,
+ Ian Rogers <irogers@google.com>,
+ Suleiman Souhlal <suleiman@google.com>
+Subject: [PATCH v2 0/3] tracing: Read user data from futex system call trace event
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 
-Hi Philipp,
 
-On Tue, Mar 10, 2026 at 12:48:26PM +0100, Philipp Hahn wrote:
-> While doing some static code analysis I stumbled over a common pattern,
-> where IS_ERR() is combined with a NULL check. For that there is
-> IS_ERR_OR_NULL().
-> 
-> I've written a Coccinelle patch to find and patch those instances.
-> The patches follow grouped by subsystem.
-> 
-> Patches 55-58 may be dropped as they have a (minor?) semantic change:
-> They use WARN_ON() or WARN_ON_ONCE(), but only in the IS_ERR() path, not
-> for the NULL check. Iff it is okay to print the warning also for NULL,
-> then the patches can be applied.
-> 
-> While generating the patch set `checkpatch` complained about mixing
-> [un]likely() with IS_ERR_OR_NULL(), which already uses likely()
-> internally. I found and fixed several locations, where that combination
-> has been used.
+We are looking at the performance of futexes and require a bit more
+information when tracing them.
 
-Thanks for the patchset. However, I think we need a explanation for why
-switching to IS_ERR_OR_NULL() is an improvement over the existing code.
+The two patches here extend the system call reading of user space to
+create specific handling of the futex system call. It now reads the
+user space relevant data (the addr, utime and addr2), as well as
+parses the flags. This adds a little smarts to the trace event as
+it only shows the parameters that are relevant, as well as parses
+utime as either a timespec or as val2 depending on the futex_op.
 
-IMHO, the necessity of IS_ERR_OR_NULL() often highlights a confusing or
-flawed API design. It usually implies that the caller is unsure whether
-a failure results in an error pointer or a NULL pointer. Rather than
-doing a treewide conversion of this pattern, I believe it would be much
-more meaningful to review these instances case-by-case and fix the
-underlying APIs or caller logic instead.
+Here's an example of the new output:
 
-Additionally, a treewide refactoring like this has the practical
-drawback of creating unnecessary merge conflicts when backporting to
-stable trees.
+ sys_futex(uaddr: 0x56196292e830 (0), FUTEX_WAKE|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e834 (0x4a7) tid: 1191, FUTEX_UNLOCK_PI|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e834 (0) tid: 0, FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e830 (0), FUTEX_WAIT|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, timespec: 0x7ffc1b91a9f0 (163.048528790), uaddr2: 0x56196292e834 (4aa), val3: 0)
+ sys_futex(uaddr: 0x56196292e834 (0x4aa) tid: 1194, FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, timespec: 0x7ffc1b91a9f0 (163.048528790), uaddr2: 0x56196292e834 (800004aa), val3: 0)
+ sys_futex(uaddr: 0x7f7ed6b29990 (0x4ab), FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME)
+ sys_futex(uaddr: 0x56196292e834 (0x800004aa) tid: 1194 (WAITERS), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG)
+ sys_futex(uaddr: 0x56196292e838 (0), FUTEX_WAIT_REQUEUE_PI|FUTEX_PRIVATE_FLAG, timespec: 0x7ffc1b91a9f0 (163.048528790), uaddr2: 0x56196292e834 (800004aa), val3: 0)
+ sys_futex(uaddr: 0x56196292e834 (0x800004aa) tid: 1194 (WAITERS), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG)
 
-Regards,
-Kuan-Wei
+
+Changes since v1: https://lore.kernel.org/all/20260303214735.002154462@kernel.org/
+
+- Moved the printing of the futex parameters to kernel/futex/syscall.c to
+  keep it closer to the actual system call.
+
+- Moved the always_inline functions: futex_cmd_has_timeout()
+  and futex_cmd_has_addr2() into include/linux/futex.h so that they
+  can be both used by the futex and tracing syscall code.
+
+
+Steven Rostedt (3):
+      tracing: Have futex syscall trace event show specific user data
+      tracing: Update futex syscall trace event to show more commands
+      tracing: Show TID and flags for PI futex system call trace event
+
+----
+ include/linux/futex.h         |  38 +++++-
+ kernel/futex/syscalls.c       | 129 ++++++++++++++++++---
+ kernel/trace/trace_syscalls.c | 261 +++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 411 insertions(+), 17 deletions(-)
+
