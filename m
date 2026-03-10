@@ -1,38 +1,38 @@
 Received: from mail.avm.de (mail.avm.de [212.42.244.120])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C56481665;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C96F481666;
 	Tue, 10 Mar 2026 11:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773143758; cv=none; b=rI0wD3EklJhQ4rfjfHia07UIv4F9VV7ooPWfyMdt8mEO5P5orxPozPJ3BzXfbUuAAF0/Iyeh/svWiSxC48ECCm/q3i7k/cBMjkd7H7+eYDpn1I/Vzm9TSuhNhCRpSy96fZTTZjaOpUIKGzNSCO52Bggg7zaQox1jf62yaupGZtY=
+	t=1773143759; cv=none; b=oK9yNb382uspJ4QUQ7pTPeI79tYINtVv7g0WxXkWfKXkkBnDWkC2Q0Z9e1BYQFkgrgqBgCQvgq5r0+2Nqf5Pj6DFIutSIDsEPCSf1DBwjV2b9Ehx1XEzhjCxAKqfcQ3Opz7OfM8z+RQPsTnvJMjjuv5hclibQIOsMxsfROg0mV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773143758; c=relaxed/simple;
-	bh=tuKkFaje3/67N7+EgH43toSki2nfSyvowNLdXGdESEg=;
+	s=arc-20240116; t=1773143759; c=relaxed/simple;
+	bh=u291MpoQyOoQ8laFPzXzGEOIKYw0K1QgWZAkzpMyO94=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UC64l9f5waf5N/2lAKOl5ArZ5z7pqaN8JSA7MICX9rlsYya8RksjYe/IHYTwS2/JPnZQIPtWik6yITdwZQuFoKfM4G2aXDDXUcZVk9wwLl1NPBCR/SGjrbeO0OOJmTQr7rx0oxRuKmFyAlZMfCUPdb4TFr5I9TMYAsxfzH4C1V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=xWG00Rbh; arc=none smtp.client-ip=212.42.244.120
+	 In-Reply-To:To:Cc; b=kZBffhccXZjDyCeztHhsCUjNGrXNiW70IRgIyKCqHOMQmqp0HrphnQnxDCF8bPlSXO7LzEJzoGG6rayOtwjeHeS8NjtUTMz86S/FBUkWLD0utA1gga7E+Narr4P1mQ76xBsxClyl+Nb9U1mTaP9g1yiYRS9l7pMvE9/5QyH/cZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=pfJbt85u; arc=none smtp.client-ip=212.42.244.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="xWG00Rbh"
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="pfJbt85u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1773143726; bh=tuKkFaje3/67N7+EgH43toSki2nfSyvowNLdXGdESEg=;
+	t=1773143726; bh=u291MpoQyOoQ8laFPzXzGEOIKYw0K1QgWZAkzpMyO94=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=xWG00RbhkPVAivb/2MQ+HedzSrU2CWNJAeI/UzhR3RS7rGvlyp2tVrkP1+D05Il0C
-	 OKZ8pla6i/ua4/eJIVpOlgEuxFD7EYd+gvm6LLI8LyHlokKMSlXVoXCq/qz1DK3TNl
-	 RMrSqwHC66OBqGDSa7z/4QwFD+CAXxdyYuFreDMQ=
-Received: from [2001:bf0:244:244::71] (helo=mail.avm.de)
+	b=pfJbt85uD4zLpj0lQeOLViL89C0RYRidKaNUSGC9C4bArigffG5cBpXBe8djbAWNm
+	 Ia5FOWiJQQrnKQdUoD/mDbTsHiTJQ9pvD5aeDw8DVgI8t70K9ZrXhUsjK11KkT+XqX
+	 NbWFpUGaREUVl40pOx82IEVDP7TyUdODT+R7wKg4=
+Received: from [212.42.244.71] (helo=mail.avm.de)
 	by mail.avm.de with ESMTP (eXpurgate 4.55.2)
 	(envelope-from <phahn-oss@avm.de>)
-	id 69b006ae-b734-7f0000032729-7f000001c09c-1
+	id 69b006ae-b734-7f0000032729-7f000001c0a8-1
 	for <multiple-recipients>; Tue, 10 Mar 2026 12:55:26 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [IPv6:2001:bf0:244:244::71])
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
 	by mail.avm.de (Postfix) with ESMTPS;
 	Tue, 10 Mar 2026 12:55:26 +0100 (CET)
 From: Philipp Hahn <phahn-oss@avm.de>
-Date: Tue, 10 Mar 2026 12:49:08 +0100
-Subject: [PATCH 42/61] pmdomain: Prefer IS_ERR_OR_NULL over manual NULL
+Date: Tue, 10 Mar 2026 12:49:11 +0100
+Subject: [PATCH 45/61] thermal: Prefer IS_ERR_OR_NULL over manual NULL
  check
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-b4-is_err_or_null-v1-42-bd63b656022d@avm.de>
+Message-Id: <20260310-b4-is_err_or_null-v1-45-bd63b656022d@avm.de>
 References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
@@ -72,21 +72,24 @@ To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
  sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
  tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, 
  Philipp Hahn <phahn-oss@avm.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1155; i=phahn-oss@avm.de;
- h=from:subject:message-id; bh=tuKkFaje3/67N7+EgH43toSki2nfSyvowNLdXGdESEg=;
- b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAZkDlGRZW4plkDdO/q/5zI0Z5Mh3aiEDX5Kr
- HkD8tDHTjSJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGZAAKCRA0LQZT0ays
- 22gFCACOZ3xbUn7DVys9f0zhKrFg1046b9jGtTeftFIaZ4sDTERX+NnuADwMWlcQi8MAEiX00cR
- w7aw6Pu5UwlIY4a//xAXQOD0Vq3vR2NLs/mYfOXBEyx8uBUm6hnHex2/TV3VaisJJ0c/nDfxiVS
- PU0p02U0cgmDRMbp/b1fSLFHzNrm+hO/7LNRD9bLaqTjGpZUScyufroKDOn5G4AkEBqNVNB17jO
- VAtR0IXhgFW2Uuc0XEKCg+KHshTFKSAPvKPonnlie/OWxc6MLfJtX+Szyr9D2UStWTYIluWdysV
- 1svYEoMi2X+1/dEnsAW5QR9/oHEWtkGT2aoEyJlhPvAZyp4m
+Cc: Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1238; i=phahn-oss@avm.de;
+ h=from:subject:message-id; bh=u291MpoQyOoQ8laFPzXzGEOIKYw0K1QgWZAkzpMyO94=;
+ b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAZv85jT8mK77P0DgzyoB3jbjqxnd52qin/43
+ 73TECCS4NSJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGbwAKCRA0LQZT0ays
+ 2zstCACwpYJlOocsZ3HBVMWCF0IhNq09wby5LkvAsENXavKVYKWH0lNK553mHyG2L0hqOjwgfmQ
+ 2R6ChfeUAdB1pLjTViMeeaIXq4AlyCRjEyAsVR/bQ5/US1JrFGhJzXarTPhODhjHiBoPAuzZhOB
+ 8fipmcjA1HLbJFaREcynXwQWmFtG9ouLXgkvipVtzsg9HQdQPWOUefHLkAAvMOKdk+hmDB4ECbB
+ NiykkLaAUziz7cfWSAQQRPcA1Gr6EaK8Vw6tF4Kl2S0zRlJlORdN+u8vB04XH9TW/DB1ISJvpll
+ cqhryBZ8g4FfGeREfmgUyiQqqlzXdeOdKWH1FU8uNB4YFH+q
 X-Developer-Key: i=phahn-oss@avm.de; a=openpgp;
  fpr=58AF7C2E007CDBE62C59E078F50EFDCF8AD04B1A
-X-purgate-ID: 149429::1773143726-D6DE0A3D-44DF03E3/0/0
+X-purgate-ID: 149429::1773143726-E65C1A3D-DC24C704/0/0
 X-purgate-type: clean
-X-purgate-size: 1157
+X-purgate-size: 1240
 X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
 X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
 X-purgate: clean
@@ -96,30 +99,33 @@ check.
 
 Change generated with coccinelle.
 
-To: Ulf Hansson <ulf.hansson@linaro.org>
-To: Heiko Stuebner <heiko@sntech.de>
+To: Eduardo Valentin <edubezval@gmail.com>
+To: Keerthy <j-keerthy@ti.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@kernel.org>
+To: Zhang Rui <rui.zhang@intel.com>
+To: Lukasz Luba <lukasz.luba@arm.com>
 Cc: linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
+Cc: linux-omap@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 ---
- drivers/pmdomain/rockchip/pm-domains.c | 2 +-
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
-index 44d34840ede7a8f483930044c96042dda9290809..4352aa40298a3bcfde90811258bac20a86068c10 100644
---- a/drivers/pmdomain/rockchip/pm-domains.c
-+++ b/drivers/pmdomain/rockchip/pm-domains.c
-@@ -746,7 +746,7 @@ static int rockchip_pd_attach_dev(struct generic_pm_domain *genpd,
- 	}
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 0cf0826b805a998abd0d4e2cfa6938de8a46c4f0..9218417e6d923ec370e032f5b91f9a839fd293f4 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -228,7 +228,7 @@ int ti_thermal_register_cpu_cooling(struct ti_bandgap *bgp, int id)
+ 		return 0;
  
- 	i = 0;
--	while ((clk = of_clk_get(dev->of_node, i++)) && !IS_ERR(clk)) {
-+	while (!IS_ERR_OR_NULL((clk = of_clk_get(dev->of_node, i++)))) {
- 		dev_dbg(dev, "adding clock '%pC' to list of PM clocks\n", clk);
- 		error = pm_clk_add_clk(dev, clk);
- 		if (error) {
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+-	if (!data || IS_ERR(data))
++	if (IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
+ 
+ 	if (!data)
 
 -- 
 2.43.0
