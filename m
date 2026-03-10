@@ -1,250 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8072A2C08A2;
-	Tue, 10 Mar 2026 15:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57F52FC01B;
+	Tue, 10 Mar 2026 15:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773155764; cv=none; b=b+u8/Dab4y8xggD6ILulpkkwRwV23tSmTx1kt1b502rgAJ/jBqt9mAoqLt1zBczwjeLIWuDX1o7yTdIR7m73geQPJpb8Z2w+DbfI4i6fBK+KtV39Nd/KTFXyupUiq3ulE1MJ8T9Kb95NDQj0H5UGHnsdQcBtqkM+peFk7NkEgfM=
+	t=1773156372; cv=none; b=k05nsBB1vUrFY/ebPvYPGIkl20ibt6z61vd1N9LMmX6e3plZvbqHgjxkEZpZXUXYS9A+eiaapewwsfvxOZZQVRORzlrD34GDjqaiZK3v7sUQtQ6E+eQelEEDF8dXDOyj23Udx74iqpu6dgqJK9midHejirPMmMtaW0PE5yLq/pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773155764; c=relaxed/simple;
-	bh=3wp9PMGvoyRbk44b2xe4M86WXb7gmjoTQL9NtmYJeOk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FCrzzzxRayNYaruqsp9Ipsv9UKDKIDGMy6AWDZRGalv+lg74iJsxnxQH+7utcIlzYPFInOhO8jRzjEH6RrI2I+0AOJbxvVp6nG1Q6pM47pABINxS4XZH9lBpLIthqnIQUBvRcgq7XBtSzGe1un8WxrCNfbjLav1feq1CZYio/UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FStcQ2Jy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773156372; c=relaxed/simple;
+	bh=AQENKe/3Bq7Nek5uNaczizBsMHDGl1pFNxQClZoiXQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhlMO5RhxRoWGoEzZrvBwkbnoVxUBw+FWMsC4Jtn1xnJbVN4h1cX9SGaNw7wZvctQtMvlA79YZRzzH6e6fh0LRmU3IoBGUS5k8qquhGzL3bs5M5z17NOw/yJlmpqstdCND4oWEvKfmIu4TXqlYG/qUvM6LkHSszDxH5xqsTmLfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=ycOW/lEt; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FStcQ2Jy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B068AC19423;
-	Tue, 10 Mar 2026 15:16:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773155764;
-	bh=3wp9PMGvoyRbk44b2xe4M86WXb7gmjoTQL9NtmYJeOk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FStcQ2JytvdA0546mqDXZQSIuOIWl567Jj9lBarDBPGeLckYJj8IZfhc04pLiIq17
-	 NOG3Hee3QcNzaogKIkBHXlJ2FrNBTiBt++/HkUy/YZOrCrFGkDoyUyeYsWIpI2Ulr2
-	 bjOFqyVevMJyOgVsUP+BUIxEGMTB/mHVv7aVy2fX5Kuw2ptaBWSfAHSId6+yR6rRkI
-	 iocGRzW8fER5/yqxa+I1eV/Q/4bowrXwRNcuxhvLVWuTKVn22EbOVG35S295S4RnCP
-	 n0Oj7I7pnqPXv2kU8cfpPe6LIHfPvhf7UmCDIj0ZAUaUptlfJ73S9r/WXkeZOKPFip
-	 xEfvPdAPPM7IA==
-Date: Wed, 11 Mar 2026 00:16:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Add persistent ring buffer selftest
-Message-Id: <20260311001600.c0edc3720c0bfd2a80a41975@kernel.org>
-In-Reply-To: <177313777313.3322014.12042708486605360066.stgit@mhiramat.tok.corp.google.com>
-References: <177303264034.767813.5345788067082238396.stgit@mhiramat.tok.corp.google.com>
-	<177313777313.3322014.12042708486605360066.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="ycOW/lEt"
+Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id 09486B37FF;
+	Tue, 10 Mar 2026 15:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1773156369;
+	bh=Pa74cTSbG0z2foj2y+9iiBszrUG7TFk6AQHAxUoXkgM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ycOW/lEtJ1S7Wio87A4CpZHQVlBIvlISLpJdNfmiLEcWnuK2JREX/B+/5EgwKgnJj
+	 YoUGqrnLdIPlWdcaMd8AQ+MSjd86QZ7N0TSTQK9I1trSEfX6Ce3SLiPjNiWN90yed3
+	 igvdkShdgulQvEsnl/p9Tsz7RFfimzeFeLHMLu1I=
+Date: Tue, 10 Mar 2026 15:26:07 +0000
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH RFC 2/3] locking/percpu-rwsem: Extract
+ __percpu_up_read_slowpath()
+Message-ID: <abA4DxpOmbQyl629@shell.ilvokhin.com>
+References: <cover.1772642407.git.d@ilvokhin.com>
+ <6b1f1521ca186d5c402a65619d8f30fe83b93bf6.1772642407.git.d@ilvokhin.com>
+ <20260304220223.GS606826@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260304220223.GS606826@noisy.programming.kicks-ass.net>
 
-Hi Steve,
+On Wed, Mar 04, 2026 at 11:02:23PM +0100, Peter Zijlstra wrote:
+> On Wed, Mar 04, 2026 at 04:56:16PM +0000, Dmitry Ilvokhin wrote:
+> > Move the percpu_up_read() slowpath out of the inline function into a new
+> > __percpu_up_read_slowpath() to avoid binary size increase from adding a
+> > tracepoint to an inlined function.
+> >
+> > Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
+> > ---
+> >  include/linux/percpu-rwsem.h  | 15 +++------------
+> >  kernel/locking/percpu-rwsem.c | 18 ++++++++++++++++++
+> >  2 files changed, 21 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+> > index c8cb010d655e..89506895365c 100644
+> > --- a/include/linux/percpu-rwsem.h
+> > +++ b/include/linux/percpu-rwsem.h
+> > @@ -107,6 +107,8 @@ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
+> >  	return ret;
+> >  }
+> >  
+> > +void __percpu_up_read_slowpath(struct percpu_rw_semaphore *sem);
+> > +
+> 
+> extern for consistency with all the other declarations in this header.
+> 
+> s/_slowpath//, the corresponding down function also doesn't have
+> _slowpath on.
 
-Here is a patch to add a selftest for the persistent ring buffer.
-I think we can extend this to add more test pattern, but maybe
-we can test one pattern at once.
-
-Thank you,
-
-On Tue, 10 Mar 2026 19:16:13 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Add a self-destractive test for the persistent ring buffer. This
-> will invalidate some sub-buffer pages in the persistent ring buffer
-> when kernel gets panic, and check whether the number of detected
-> invalid pages is the same as record after reboot.
-> 
-> This can ensure the kernel correctly recover partially corrupted
-> persistent ring buffer when boot.
-> 
-> The test only runs on the persistent ring buffer whose name is
-> "ptracingtest". And user has to fill it up with events before
-> kernel panics.
-> 
-> To run the test, enable CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-> and you have to setup the kernel cmdline;
-> 
->  reserve_mem=20M:2M:trace trace_instance=ptracingtest^traceoff@trace
->  panic=1
-> 
-> And run following commands after the 1st boot;
-> 
->  cd /sys/kernel/tracing/instances/ptracingtest
->  echo 1 > tracing_on
->  echo 1 > events/enable
->  sleep 3
->  echo c > /proc/sysrq-trigger
-> 
-> After panic message, the kernel will reboot and run the verification
-> on the persistent ring buffer, e.g.
-> 
->  Ring buffer meta [1] invalid buffer page detected
->  Ring buffer meta [1] is from previous boot! (318 pages discarded)
->  Ring buffer testing [1]: PASSED (318/318)
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  include/linux/ring_buffer.h |    1 +
->  kernel/trace/Kconfig        |   15 +++++++++++++
->  kernel/trace/ring_buffer.c  |   51 +++++++++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace.c        |    4 +++
->  4 files changed, 71 insertions(+)
-> 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index 876358cfe1b1..927b6e8587cb 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -238,6 +238,7 @@ int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
->  
->  enum ring_buffer_flags {
->  	RB_FL_OVERWRITE		= 1 << 0,
-> +	RB_FL_TESTING		= 1 << 1,
->  };
->  
->  #ifdef CONFIG_RING_BUFFER
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 49de13cae428..2e6f3b7c6a31 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -1202,6 +1202,21 @@ config RING_BUFFER_VALIDATE_TIME_DELTAS
->  	  Only say Y if you understand what this does, and you
->  	  still want it enabled. Otherwise say N
->  
-> +config RING_BUFFER_PERSISTENT_SELFTEST
-> +	bool "Enable persistent ring buffer selftest"
-> +	depends on RING_BUFFER
-> +	help
-> +	  Run a selftest on the persistent ring buffer which names
-> +	  "ptracingtest" (and its backup) when panic_on_reboot by
-> +	  invalidating ring buffer pages.
-> +	  Note that user has to enable events on the persistent ring
-> +	  buffer manually to fill up ring buffers before rebooting.
-> +	  Since this invalidates the data on test target ring buffer,
-> +	  "ptracingtest" persistent ring buffer must not be used for
-> +	  actual tracing, but only for testing.
-> +
-> +	  If unsure, say N
-> +
->  config MMIOTRACE_TEST
->  	tristate "Test module for mmiotrace"
->  	depends on MMIOTRACE && m
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index a86a036b4100..44268751a02c 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -63,6 +63,7 @@ struct ring_buffer_cpu_meta {
->  	unsigned long	commit_buffer;
->  	__u32		subbuf_size;
->  	__u32		nr_subbufs;
-> +	__u32		nr_invalid;
->  	int		buffers[];
->  };
->  
-> @@ -2086,6 +2087,11 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  
->  	pr_info("Ring buffer meta [%d] is from previous boot! (%d pages discarded)\n",
->  		cpu_buffer->cpu, discarded);
-> +	if (meta->nr_invalid)
-> +		pr_info("Ring buffer testing [%d]: %s (%d/%d)\n",
-> +			cpu_buffer->cpu,
-> +			(discarded == meta->nr_invalid) ? "PASSED" : "FAILED",
-> +			discarded, meta->nr_invalid);
->  	return;
->  
->   invalid:
-> @@ -2488,12 +2494,57 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->  	kfree(cpu_buffer);
->  }
->  
-> +#ifdef CONFIG_RING_BUFFER_PERSISTENT_SELFTEST
-> +static void rb_test_inject_invalid_pages(struct trace_buffer *buffer)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	struct ring_buffer_cpu_meta *meta;
-> +	struct buffer_data_page *dpage;
-> +	unsigned long ptr;
-> +	int subbuf_size;
-> +	int invalid = 0;
-> +	int cpu;
-> +	int i;
-> +
-> +	if (!(buffer->flags & RB_FL_TESTING))
-> +		return;
-> +
-> +	guard(preempt)();
-> +	cpu = smp_processor_id();
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +	meta = cpu_buffer->ring_meta;
-> +	ptr = (unsigned long)rb_subbufs_from_meta(meta);
-> +	subbuf_size = meta->subbuf_size;
-> +
-> +	/* Invalidate even pages. */
-> +	for (i = 0; i < meta->nr_subbufs; i += 2) {
-> +		int idx = meta->buffers[i];
-> +
-> +		dpage = (void *)(ptr + idx * subbuf_size);
-> +		/* Skip reader page and unused pages */
-> +		if (dpage == cpu_buffer->reader_page->page)
-> +			continue;
-> +		if (!local_read(&dpage->commit))
-> +			continue;
-> +		local_add(subbuf_size + 1, &dpage->commit);
-> +		invalid++;
-> +	}
-> +
-> +	pr_info("Inject invalidated %d pages on CPU%d\n", invalid, cpu);
-> +	meta->nr_invalid = invalid;
-> +}
-> +#else /* !CONFIG_RING_BUFFER_PERSISTENT_SELFTEST */
-> +#define rb_test_inject_invalid_pages(buffer)	do { } while (0)
-> +#endif
-> +
->  /* Stop recording on a persistent buffer and flush cache if needed. */
->  static int rb_flush_buffer_cb(struct notifier_block *nb, unsigned long event, void *data)
->  {
->  	struct trace_buffer *buffer = container_of(nb, struct trace_buffer, flush_nb);
->  
->  	ring_buffer_record_off(buffer);
-> +	rb_test_inject_invalid_pages(buffer);
->  	arch_ring_buffer_flush_range(buffer->range_addr_start, buffer->range_addr_end);
->  	return NOTIFY_DONE;
->  }
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 23de3719f495..eccc1ff22f71 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -9336,6 +9336,8 @@ static void setup_trace_scratch(struct trace_array *tr,
->  	memset(tscratch, 0, size);
->  }
->  
-> +#define TRACE_TEST_PTRACING_NAME	"ptracingtest"
-> +
->  static int
->  allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
->  {
-> @@ -9348,6 +9350,8 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
->  	buf->tr = tr;
->  
->  	if (tr->range_addr_start && tr->range_addr_size) {
-> +		if (!strcmp(tr->name, TRACE_TEST_PTRACING_NAME))
-> +			rb_flags |= RB_FL_TESTING;
->  		/* Add scratch buffer to handle 128 modules */
->  		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
->  						      tr->range_addr_start,
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks for the feedback, Peter. Applied both suggestions locally.
