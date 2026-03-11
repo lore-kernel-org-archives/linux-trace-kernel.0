@@ -1,197 +1,124 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF203563FA
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 02:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773194859; cv=pass; b=hD6FeQDHle1i0heCJMit9/qQ5le9gc0EMOpHpw6e911QC4buAyrj6nWrbvQOOmSHGIEDjgyguKPi1aBbIQR0BiV6TPW5eSIIXDrqg2DbwKkmtDnn86BVbUR6g5yZ6ngNj5uBVIItjF/ee5Y7BfSVTcMadDiDafpHv23O2HIhobU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773194859; c=relaxed/simple;
-	bh=8UJnLa/DDQ+b65RDSHa97nR/Rm6zetnRjswOkVb13wc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l2g2yzZ4Dybh6kuhvcBULVguDYhdrEOCm8tFVHG5HxZiMK4r1ieV3XC7DvFbBP/+LmMwsbfu65u9ArSpCtaVdbPZteok84/rVMReHCYXmpmbYEy9zrdrliUY8eD89Ecnaq3KiIRSp5NcaBqhT+HUD7Ww+h1VR8ou9i4C8J9QSO4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SqpOgAb4; arc=pass smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC637311968
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 02:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773195266; cv=none; b=fx6MkpsgUVih7PbIBmzKcz3dda/l+r0dtQ8qztwFQdxmeYXKdR8ulvE4XCTN/2kijaNvgOiYyvmu2B3nos79mYnHdLS1smSqLdyFrOu1v77k2k0KVs2cxm0FYxbqA+tu/5SZexVnToh0AnNEm3PsuhoFu8ZdtpxEkIiZgv9U8y4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773195266; c=relaxed/simple;
+	bh=AsjUqcz7QO2U+wwmYsDFh8QDOVWx42f0S+ffpBCbrXc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EHZKwbBZfTQkmlNejFGLCE8Ktomxl+e6ATRAUwsjHkGvb1nC9tDaXZ+vNqpIkyMsR4AZzoIBdhj/00usR9RTjh37R50LGyK8Xr2+WHDoghqfYMXZVpR+rWy3k1d/7DLHCc3mbXn79NqLq/uqRGA9elIf/rTCMNu9FirXyips07M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xc3Shm3u; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SqpOgAb4"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a0fc5e2c59so9992844e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Mar 2026 19:07:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773194852; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kBNvESQmiPEISas2OHMt7ocwOA26mAk6eOHbv7ezZI4Bev6DkY+5mmqyIvesOXe0qG
-         PVkWALDEebDGrOXbw9EpNmucGU62m8XsmOD7CB8isT5OscwHmMyoCWUby+fcwAGIvmvF
-         SRiom26rvJqVkpp+4LA/Fj6ozHB6mw1Yq+O+HVxCyfGWE72cfnTKIBx8/rhfr2wOgkvB
-         WYJN6Joo4U7/EPXMucOLJJLJo6NiXpHZgvFjfPPJK4igGuWdP4qcT7R+ZWMvhLcTa07M
-         sR4CBO7FeK5j8OLIcm5AzERLDP0XlWQcYHg7n2QxjVIw1hO1bY/SRy81NluQ/7Ow9bk2
-         2qSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        fh=AhSA3SkQppBnfJ9LTg5XbNG/vgScog9xKEIiJwkmAhQ=;
-        b=lEHgBHQidWwAL0k5jfRXvmDt3BfsiiWr1DnLGCCOC4vdIIpa4Xl2qZZsDrqfEECnRx
-         HjZ5YgUFQLlfyRn5UEbxYCWl7Q9mC8y7L5NACNnuWpGehzdwk0+akg6/rWliNjGyUq+t
-         HPAD4WHXtvlXQ0TaCuO0DkMiksW2mWw3kWYFtE5QTBKaxtdhtNkzPOPMMIlDWNuqcUMT
-         k6wzyW8HcY54B33dlDoJk9OvYTixpSo/JzV+nGQ9byBU05vRQyZXXV0xcIaDRKlmfyVm
-         Kf7BDpmZcmZz0jjtOcHM0AYUGh+bG6dKDQLfnyV9X1D3M6BYrnC9AuHTIG9VlluNg6HP
-         QkZQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1773194852; x=1773799652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        b=SqpOgAb4CQOCp6QT1IhDiJXNOENCCAthmmQiQ2Xm1LqdH6AuNnr9pWEOxoaM6J2EHp
-         TaZvrNsWvEAAdeAh3rGZCGLrxzU767HUy57VJt43+079ae3+2kuAr2+JBVbU8T9+l/BT
-         vjjO+GANIyds0bGFgUhdgNG0FnF3NJi/nWQH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773194852; x=1773799652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
-        b=cFh0oyPhUM6wEGqGvKFx0bO4pLfRGly6sp+tioeGR9QprP7J6m2vXMgAXyMYPnG7UI
-         NmryXC3U8i7a9QffvF0EAJI6clfM99dkManc5iYH2+OdRl225toswpXjQQh7XCY7nPEY
-         HXMs8bPY5SVuTxxLZaNyTJb0LnXF3HyOW/dIGTMeAk5tlBAfK2yqFu9a/S7FnasXkEb5
-         FmESWS9vgc8T3E6w/mmbldy8YNsuJ3lUErupGCBNwzqbRcsGgfYqeurDDqIQJDOgkOvn
-         izm+pIxNkGgoOJd4aFPxfkLkmEwqo656hwnXFFhIigufgTOI+S1SKKIM7J5146fniZ8E
-         0YuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHwkE8orL/vW+5kKxITuqbCEY84xaIrkjLs9qcGT2JRPR9OauWYoyy/E82uL0qcKS4axGxGuf3LPKiFMS65PoIJks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPdYz4qwQ7uiF8QlCtbkwDJlVBbufC956rSCtVPhL6EeKpPBHd
-	ouj5kZXvuop6l1lETlkywcdltJt02KPjvge37anPk6IhOtFPWtTeu8hpmdjW7+K+lJ8W4yakihG
-	5FFVcrmT2w20xrHT1IbXq0w1bgX+JZxocsLFdQXB8
-X-Gm-Gg: ATEYQzyN2js1sCLq7iVfE7mVS7mRSkGMYyrKITE7upk8pLUVZuj/cCR+SWryYzu6DI3
-	X//LkZId5IeZO3nwHewW37+f35S8/DAAGA8WR1jObbu2g/eqhjvfWIcCH4iBWCEBf4yqG6mg0i3
-	HSjVId5OXSCEHgzqyupJT2PGX232Hn0Jk1yIOrH+DRsRg/DUKKEHhKX3OtBVYnBHU6hwlcrq+jC
-	0eL5cXlv6Wqp0tiiyoFbyQKoUrsPYwuYUQOlEVyemRkEz1z1Spmv3ONAxjovnQtGq7VUsCywD/A
-	Y6IijcBQRg==
-X-Received: by 2002:ac2:4427:0:b0:5a1:3134:9bac with SMTP id
- 2adb3069b0e04-5a156cbd1bbmr169453e87.28.1773194852284; Tue, 10 Mar 2026
- 19:07:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xc3Shm3u"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62AMIKki1599036;
+	Wed, 11 Mar 2026 02:14:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/DIowe
+	8SXI1+ziISMRjbd8hUuaX5ZNyaAdENV5NgFmk=; b=Xc3Shm3u+DzHTqX5cyCCsb
+	R1xM9NA4Zu5FIPXi81OuqDj4L5hdy1OVSGivdwMyV5WreJqI5nk3H+lb5wtHiPO0
+	MWbwBSkhEIqCd2hMwVaqvrRoQWg5dthGnBf9vXuuFXrwuoGN+n7qcmm9z3KsUlh+
+	/cMZ6aGBM5t5Q5dL6b7ibY0iDVqOnMdo6HXu/wIt0mRc932Ch+R778OY8wlNG+pH
+	lGnTuv2YHIh+MZwQ2gSNQqr7hd1omARxlQeeScmJeFu+FkcznFK7p+/cVeMXNxiS
+	t1dB/Wiy1DLIOxW/jfI5Sj+AHFi6SqNCqyl/+lLvvOfW+jiFrTvWiKrZMhdvWA8Q
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcundbpd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Mar 2026 02:14:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62ALVegw015725;
+	Wed, 11 Mar 2026 02:14:05 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs1223d2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Mar 2026 02:14:05 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62B2E1tf50856378
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Mar 2026 02:14:01 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F37002006A;
+	Wed, 11 Mar 2026 02:14:00 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C81A220067;
+	Wed, 11 Mar 2026 02:13:57 +0000 (GMT)
+Received: from Linuxdev (unknown [9.43.124.195])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Mar 2026 02:13:57 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Cc: "Naveen N. Rao" <naveen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+        linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, llvm@lists.linux.dev,
+        Maryam Moghadas <maryammo@ca.ibm.com>,
+        Christophe Leroy <chleroy@kernel.org>
+Subject: Re: [PATCH v2 0/3] powerpc64/ftrace: fixes clang build issues
+Date: Wed, 11 Mar 2026 07:43:56 +0530
+Message-ID: <177319508343.269267.4001049522671602586.b4-ty@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260127084926.34497-1-hbathini@linux.ibm.com>
+References: <20260127084926.34497-1-hbathini@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 11 Mar 2026 11:07:21 +0900
-X-Gm-Features: AaiRm5028PWt8n-JnveiRgn8oYMksdR_-_nk4JOkvxMfplWs-GDr7RRk-OxICyw
-Message-ID: <CAGXv+5FQAVaJjqhv+Xq-ysOc4SHQn2mCNTgCAp8XocmWBWGGoA@mail.gmail.com>
-Subject: Re: [PATCH 56/61] clk: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
-	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	v9fs@lists.linux.dev, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sbayf3x52m2RQAwkCF4QDEt4Ou58cmT3
+X-Authority-Analysis: v=2.4 cv=Hp172kTS c=1 sm=1 tr=0 ts=69b0cfee cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=fQ7256D8lykKbodKd20A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDAxNiBTYWx0ZWRfX8oemS/MfSpB4
+ WDbCovCIK5cattu8qxZmm1Vf+u44TTS12ejMuG9r43iULaOj/Q64J13AxD22IPpKF51Sp0qlTMi
+ jpvMs7WGfsKcAJpOSQZhJvlP1AP5LawE4TPK0/i7FKGQA25+Dv4yr7tokw8LL610zzcKEqz7nmF
+ UNdT9twEpLeI2edbKgtnPjFO3hZVatJKOUMwfwAhw4TxW6hnttuUAEUSBYt0eMtFLluSkN0anyq
+ kIfifhaLkRN8Lwk2L8B6/5ijNNBEKWy5CzaNqZgL0I0BhF5f9EA38VU3bCEkB0kFgQ8r6+AgPwS
+ NQlb2DtJLhFgxxEOccdssSqqFPGyLggXEaWkXxByCHqAoIfkTEWuEMd2Nvpt5T9uwLrf6k+/1l6
+ Eeq9oN3ES3jeh1EBNCQ6xszCVsMJZxHGIO/cxBOt3X6UGgUp/l/b2dgRL//z9SGFF6i04nqsHab
+ WiEjcli7hV8Vb94VH9A==
+X-Proofpoint-ORIG-GUID: sbayf3x52m2RQAwkCF4QDEt4Ou58cmT3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-10_05,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ spamscore=0 phishscore=0 clxscore=1011 priorityscore=1501 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110016
 
-On Tue, Mar 10, 2026 at 9:57=E2=80=AFPM Philipp Hahn <phahn-oss@avm.de> wro=
-te:
->
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
->
-> Semantich change: Previously the code only printed the warning on error,
-> but not when the pointer was NULL. Now the warning is printed in both
-> cases!
->
-> Change found with coccinelle.
->
-> To: Michael Turquette <mturquette@baylibre.com>
-> To: Stephen Boyd <sboyd@kernel.org>
-> To: Daniel Lezcano <daniel.lezcano@kernel.org>
-> To: Thomas Gleixner <tglx@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> ---
->  drivers/clk/clk.c               | 4 ++--
->  drivers/clocksource/timer-pxa.c | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 47093cda9df32223c1120c3710261296027c4cd3..35146e3869a7dd93741d10b72=
-23d4488a9216ed1 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -4558,7 +4558,7 @@ void clk_unregister(struct clk *clk)
->         unsigned long flags;
->         const struct clk_ops *ops;
->
-> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
-> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
->                 return;
->
->         clk_debug_unregister(clk->core);
-> @@ -4744,7 +4744,7 @@ void __clk_put(struct clk *clk)
->  {
->         struct module *owner;
->
-> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
-> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
+On Tue, 27 Jan 2026 14:19:23 +0530, Hari Bathini wrote:
+> Support for -fpatchable-function-entry on ppc64le was added in Clang
+> with [1]. Faced a couple of issues while building the linux kernel
+> with Clang though. Patches 1 & 2 address those issues. The last patch
+> provides workaround to ensure, an open issue [2] in Clang with
+> -fpatchable-function-entry support, does not impact the linux
+> ftrace subsystem.
+> 
+> [...]
 
-clk_get_optional() returns NULL if the clk isn't present.
+Applied to powerpc/fixes.
 
-Drivers would just pass this to clk_put(). Your change here would cause
-this pattern to emit a very big warning.
+[1/3] powerpc64: make clang cross-build friendly
+      https://git.kernel.org/powerpc/c/73cdf24e81e4eba52a40a6b10c6cf285d0ac23fd
+[2/3] powerpc64/ftrace: fix OOL stub count with clang
+      https://git.kernel.org/powerpc/c/875612a7745013a43c67493cb0583ee3f7476344
+[3/3] powerpc64/ftrace: workaround clang recording GEP in __patchable_function_entries
+      https://git.kernel.org/powerpc/c/db54c28702f7270e74dce36c84cb0db4cec96389
 
-I don't think this change should be landed.
-
-
-ChenYu
-
->                 return;
->
->         clk_prepare_lock();
-> diff --git a/drivers/clocksource/timer-pxa.c b/drivers/clocksource/timer-=
-pxa.c
-> index 7ad0e5adb2ffac4125c34710fc67f4b45f30331d..f65fb0b7fc318b766227e5e7a=
-4c0fb08ba11c8f9 100644
-> --- a/drivers/clocksource/timer-pxa.c
-> +++ b/drivers/clocksource/timer-pxa.c
-> @@ -218,7 +218,7 @@ void __init pxa_timer_nodt_init(int irq, void __iomem=
- *base)
->
->         timer_base =3D base;
->         clk =3D clk_get(NULL, "OSTIMER0");
-> -       if (clk && !IS_ERR(clk)) {
-> +       if (!IS_ERR_OR_NULL(clk)) {
->                 clk_prepare_enable(clk);
->                 pxa_timer_common_init(irq, clk_get_rate(clk));
->         } else {
->
-> --
-> 2.43.0
->
->
+cheers
