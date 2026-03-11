@@ -1,77 +1,69 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7501F3112C0
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 05:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D35B375ABE;
+	Wed, 11 Mar 2026 07:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773206829; cv=none; b=W/3qdDrf6jOKllg4dpvx7QKIV6YR8Z+EIpmM+6c/4gwEAIPLMMoNbq0o2qUNBHYhVK8ifuHIXsmEJXUML5l+2S6zQ5lHy437Bddu3eW4ztpKdcSE/inPjJYXxhO2t7Fw4ACev5VZ1W4si3b9FNtbjrfxjTs5mpIffPjq/4kjW4I=
+	t=1773214922; cv=none; b=LMmj+p/ieOzvhEaD+FiTwIuqUlLlbnjMLo7m3PBPOtet/Rzq5enrqF6ZXcR+3vI/x+wl/4aO32a6QbuelE9tww8ZovovtXnqa2epjuyo4Wzm71JOkwsdmpyBPalIS8NDYwa9SK+r9rZRUyfYSN4Mmfp4so/oPhREHNPyx/Y33D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773206829; c=relaxed/simple;
-	bh=MVnGjBzMF0TA3dOemueqBJCvzQjgrFbKIZy5x+gfLBk=;
+	s=arc-20240116; t=1773214922; c=relaxed/simple;
+	bh=VOyzQxkiOrYyQ5++xZdWU53tYlT+cG5P+BjBAxzOJqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNbAKKIkFHo1Ff/LUQLtK1P/yLiPhBl/1EYQ7b8fVSrQ7VxLPgVOKVwiUyORX+1zhUZzuK5N4Ojzt1wHRLHsrAD0HUHduSGpY8IthV6Og6mTXoxT3izfEXz99ODq/NyVX4uMdlGAZMlV32//EnpMU31VKCR1Re93MNlPfjAeI0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AxsaBcka; arc=none smtp.client-ip=74.125.82.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=K501UXzwFhTAzTERAaaUDOf7Ttu9iBnngbkV07vkHe/N1lQmoig217KwfWRNcaaCTHdsDr7/e3bg97PD7aHzKg2miZg+xPYBHKIWB1/ejxc+zb/nklRPTmEOn72C1LaCX8RfH3Ru6A5zDdmYSCmzgMX0+UQmP56PABAOE5I+0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/g98Z3v; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxsaBcka"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2be19f05d7dso972483eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Mar 2026 22:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773206827; x=1773811627; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nDj66m7ySANpkWKJsIiXq2ioKjYAQ6NoS9GjGRtQ+q4=;
-        b=AxsaBckaTiWCrCxMFjSwvIhRi2w05M3RbRuIkynZz3HrlnR3p20HC+SY+TJjCiFapb
-         kvslLpxVXGFQc72oic1uEu4vGbKedDG/FCEKoedibWq85Rvtm9t6TSG/Qhiqwdpbx+hx
-         L0Mk8v1I/bY3o2ngQtJ6HWc7Jmkp0K+igjzRANnqlen0Futw/CtkR1U2GquUUEagek9c
-         vuBF2lkILJJISAF9IYWEAIw6mJbYu/WEiHU7dfXCFp70nvExVabYRrt+/54S6g2mNSRz
-         6yZRO8N5zZXdO6qEc2Ww/0FmCZhKFbfP2HKcCEdiDbPtAnBofifpUBFXTKIRw7Jr3aCn
-         Hr3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773206827; x=1773811627;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nDj66m7ySANpkWKJsIiXq2ioKjYAQ6NoS9GjGRtQ+q4=;
-        b=KNHhJ3IbqfOGxZi7CRBkHw730H4pBlzScBH6qkZK+zvPRB5KYV9Kl0pZyGJNte2zw3
-         m5gv5rV8l+HaJ9GWbpK/pRhZnnhP2YTNHnysOckWMv+AXoJZCIwMXfK1mo7LDM7dopI5
-         Fy+bSGLwzgP9SVx8ranCoxBA6OTZY0I2cz+vvf8prn4xruIdjei2L6DaVOdjzuj0QbW9
-         ORHl/2k9zIMF4Q20jLvtJ25HMxqcDcjB8sk797eGfrW370ozkTC+kIVF5k1Bp/9mqiDQ
-         dop9b6cRVkfDmiDU66WR7H/u0Kt2WOyzwe1lrf4+gYIJP6bVG3BeFprltPu2l2g4Pkh7
-         RBCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWg8cGW2r4eGPlWY6f2OzNzgXQQKZbnTziHM07oeAY1hnNAfjgT8alVYV+Dx4S21/kyEt6fVIl8fxTptxXR6dxjYWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdnZ80CXM77Dm+8AYsLwDmeUVS3/EtCQhRUVnYSk1hOTAw8Jdz
-	Znpb8Wb7kKnpu2BbgHDrlhfZWrGbPmNkh+OKAQngxAXdqTSJaxJMtTYO
-X-Gm-Gg: ATEYQzxUqqKcjMifehxntBwM1/wdAn9EBYKWJntYrYqX3R8ZvG6EhJXkPQuQW0TrzJL
-	ZeqQIn6HUeWMMw+/5IBAx3uRT5Q320Ie5I7UOou4dN40sMhw+gmHZ/UL47GeSz4qrkxfIFWaWmD
-	Us8oC4uXUBQyu81JaSZGwmJm2LwPE2qod36nnj1vzsh8koG5vzAc+gLA4FS8oBaOy61R0vdbNNP
-	gM16wq5q//hkxcULMl8AmrC9q/wrOJm1l5g/yrVznR/nin8YqzXLTogAJyTmH5RvbtzUYKgIwDf
-	cseggrMXS+1TAChs4SNoXKrkRJ1U1WXxfqZTmKrwIAUyH2pA3akvguqvSNLuelCaHz7b9e1WZYA
-	CXdFSDBrdZlHz+AKVjIZdhp0clEunZiKH5b+znoJBjnViF+G04u3WDAk/jscbyV7bmePA1ikc4k
-	KIeipTtCGkeJVmiTGXIZawRGhFvI8QCe2nzcXc9/A5YO//NbzRanPiMuInBbsJoAsR
-X-Received: by 2002:a05:7301:3f16:b0:2be:2cfe:68b7 with SMTP id 5a478bee46e88-2be8a23c5f2mr497116eec.11.1773206826486;
-        Tue, 10 Mar 2026 22:27:06 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:6e17:9d84:ffa0:986b])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be8a85ff37sm1158607eec.14.2026.03.10.22.27.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2026 22:27:06 -0700 (PDT)
-Date: Tue, 10 Mar 2026 22:27:03 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Jingyuan Liang <jingyliang@chromium.org>
-Cc: Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, hbarnor@chromium.org, Angela Czubak <acz@semihalf.com>
-Subject: Re: [PATCH 07/12] HID: spi_hid: add ACPI support for SPI over HID
-Message-ID: <abD6RJZa5D7LN3x0@google.com>
-References: <20260303-send-upstream-v1-0-1515ba218f3d@chromium.org>
- <20260303-send-upstream-v1-7-1515ba218f3d@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/g98Z3v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773214917; x=1804750917;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VOyzQxkiOrYyQ5++xZdWU53tYlT+cG5P+BjBAxzOJqE=;
+  b=i/g98Z3vlJUCba4TEfFE0CQ9+ibaatvxbeMrkE2JeMoxVjlpRMzTdSgv
+   MZ6FFOQ6S7ry2rfu0Vhb82yqXGCq7mbKZN1vvl4C7UTwvbutnep0QOw9l
+   rYfDI4HAcA2H7xTOJT9UA2jDfHOfqwpHX7Djm/QaPHVN5b/tmvhKb3Skp
+   cVSO4JJd256RyYpH9JB96yYq48OCSDDg36x1jMZ43MsZ9VIZtDpIOYttd
+   utVgOaOVaEo+Tkye334EjYQAoM8FyIJ5vXqCpUTeYhzITkF1JUZFlW4Dv
+   rvgtidV2qrGzhcEq54bA0YfR/5YjNJLaeWgEON1Bd3GYytzX+JcbIzTW8
+   w==;
+X-CSE-ConnectionGUID: l2XIoVuhQLqkK978cd4EmQ==
+X-CSE-MsgGUID: rZqaJT5AT429v1lqpXk+7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="74394421"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="74394421"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 00:41:55 -0700
+X-CSE-ConnectionGUID: /X5V1c6LS9+3qp302cC7lw==
+X-CSE-MsgGUID: l2aL8VOtTrCZh90fqg3DCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="243391357"
+Received: from igk-lkp-server01.igk.intel.com (HELO 9958d990ccf2) ([10.211.93.152])
+  by fmviesa002.fm.intel.com with ESMTP; 11 Mar 2026 00:41:51 -0700
+Received: from kbuild by 9958d990ccf2 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w0ECT-000000003HV-28cV;
+	Wed, 11 Mar 2026 07:41:49 +0000
+Date: Wed, 11 Mar 2026 08:41:35 +0100
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Brian Geffon <bgeffon@google.com>, John Stultz <jstultz@google.com>,
+	Ian Rogers <irogers@google.com>,
+	Suleiman Souhlal <suleiman@google.com>
+Subject: Re: [PATCH v2 1/3] tracing: Have futex syscall trace event show
+ specific user data
+Message-ID: <202603110841.Pxedg2y4-lkp@intel.com>
+References: <20260310201036.542627924@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,437 +72,73 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260303-send-upstream-v1-7-1515ba218f3d@chromium.org>
+In-Reply-To: <20260310201036.542627924@kernel.org>
 
-On Tue, Mar 03, 2026 at 06:12:59AM +0000, Jingyuan Liang wrote:
-> From: Angela Czubak <acz@semihalf.com>
-> 
-> Detect SPI HID devices described in ACPI.
-> 
-> Signed-off-by: Angela Czubak <acz@semihalf.com>
-> Signed-off-by: Jingyuan Liang <jingyliang@chromium.org>
-> ---
->  drivers/hid/spi-hid/Kconfig        |  15 +++
->  drivers/hid/spi-hid/Makefile       |   1 +
->  drivers/hid/spi-hid/spi-hid-acpi.c | 253 +++++++++++++++++++++++++++++++++++++
->  drivers/hid/spi-hid/spi-hid-core.c |  27 +---
->  drivers/hid/spi-hid/spi-hid.h      |  44 +++++++
->  5 files changed, 316 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/hid/spi-hid/Kconfig b/drivers/hid/spi-hid/Kconfig
-> index 836fdefe8345..114b1e00da39 100644
-> --- a/drivers/hid/spi-hid/Kconfig
-> +++ b/drivers/hid/spi-hid/Kconfig
-> @@ -10,6 +10,21 @@ menuconfig SPI_HID
->  
->  if SPI_HID
->  
-> +config SPI_HID_ACPI
-> +	tristate "HID over SPI transport layer ACPI driver"
-> +	depends on ACPI
-> +	select SPI_HID_CORE
-> +	help
-> +	  Say Y here if you use a keyboard, a touchpad, a touchscreen, or any
-> +	  other HID based devices which are connected to your computer via SPI.
-> +	  This driver supports ACPI-based systems.
-> +
-> +	  If unsure, say N.
-> +
-> +	  This support is also available as a module.  If so, the module
-> +	  will be called spi-hid-acpi. It will also build/depend on the
-> +	  module spi-hid.
-> +
->  config SPI_HID_CORE
->  	tristate
->  endif
-> diff --git a/drivers/hid/spi-hid/Makefile b/drivers/hid/spi-hid/Makefile
-> index 92e24cddbfc2..753c7b7a7844 100644
-> --- a/drivers/hid/spi-hid/Makefile
-> +++ b/drivers/hid/spi-hid/Makefile
-> @@ -7,3 +7,4 @@
->  
->  obj-$(CONFIG_SPI_HID_CORE)	+= spi-hid.o
->  spi-hid-objs 			= spi-hid-core.o
-> +obj-$(CONFIG_SPI_HID_ACPI)	+= spi-hid-acpi.o
-> diff --git a/drivers/hid/spi-hid/spi-hid-acpi.c b/drivers/hid/spi-hid/spi-hid-acpi.c
-> new file mode 100644
-> index 000000000000..612e74fe72f9
-> --- /dev/null
-> +++ b/drivers/hid/spi-hid/spi-hid-acpi.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * HID over SPI protocol, ACPI related code
-> + *
-> + * Copyright (c) 2021 Microsoft Corporation
-> + * Copyright (c) 2026 Google LLC
-> + *
-> + * This code was forked out of the HID over SPI core code, which is partially
-> + * based on "HID over I2C protocol implementation:
-> + *
-> + * Copyright (c) 2012 Benjamin Tissoires <benjamin.tissoires@gmail.com>
-> + * Copyright (c) 2012 Ecole Nationale de l'Aviation Civile, France
-> + * Copyright (c) 2012 Red Hat, Inc
-> + *
-> + * which in turn is partially based on "USB HID support for Linux":
-> + *
-> + * Copyright (c) 1999 Andreas Gal
-> + * Copyright (c) 2000-2005 Vojtech Pavlik <vojtech@suse.cz>
-> + * Copyright (c) 2005 Michael Haboustak <mike-@cinci.rr.com> for Concept2, Inc
-> + * Copyright (c) 2007-2008 Oliver Neukum
-> + * Copyright (c) 2006-2010 Jiri Kosina
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/reset.h>
-> +#include <linux/uuid.h>
-> +
-> +#include "spi-hid.h"
-> +
-> +/* Config structure is filled with data from ACPI */
-> +struct spi_hid_acpi_config {
-> +	struct spihid_ops ops;
-> +
-> +	struct spi_hid_conf property_conf;
-> +	u32 post_power_on_delay_ms;
-> +	u32 minimal_reset_delay_ms;
-> +	struct acpi_device *adev;
-> +};
-> +
-> +/* HID SPI Device: 6e2ac436-0fcf41af-a265-b32a220dcfab */
-> +static guid_t spi_hid_guid =
-> +	GUID_INIT(0x6E2AC436, 0x0FCF, 0x41AF,
-> +		  0xA2, 0x65, 0xB3, 0x2A, 0x22, 0x0D, 0xCF, 0xAB);
-> +
-> +static int spi_hid_acpi_populate_config(struct spi_hid_acpi_config *conf,
-> +					struct acpi_device *adev)
-> +{
-> +	acpi_handle handle = acpi_device_handle(adev);
-> +	union acpi_object *obj;
-> +
-> +	conf->adev = adev;
-> +
-> +	/* Revision 3 for HID over SPI V1, see specification. */
-> +	obj = acpi_evaluate_dsm_typed(handle, &spi_hid_guid, 3, 1, NULL,
-> +				      ACPI_TYPE_INTEGER);
-> +	if (!obj) {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID input report header address failed");
-> +		return -ENODEV;
-> +	}
-> +	conf->property_conf.input_report_header_address = obj->integer.value;
-> +	ACPI_FREE(obj);
-> +
-> +	obj = acpi_evaluate_dsm_typed(handle, &spi_hid_guid, 3, 2, NULL,
-> +				      ACPI_TYPE_INTEGER);
-> +	if (!obj) {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID input report body address failed");
-> +		return -ENODEV;
-> +	}
-> +	conf->property_conf.input_report_body_address = obj->integer.value;
-> +	ACPI_FREE(obj);
-> +
-> +	obj = acpi_evaluate_dsm_typed(handle, &spi_hid_guid, 3, 3, NULL,
-> +				      ACPI_TYPE_INTEGER);
-> +	if (!obj) {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID output report header address failed");
-> +		return -ENODEV;
-> +	}
-> +	conf->property_conf.output_report_address = obj->integer.value;
-> +	ACPI_FREE(obj);
-> +
-> +	obj = acpi_evaluate_dsm_typed(handle, &spi_hid_guid, 3, 4, NULL,
-> +				      ACPI_TYPE_BUFFER);
-> +	if (!obj) {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID read opcode failed");
-> +		return -ENODEV;
-> +	}
-> +	if (obj->buffer.length == 1) {
-> +		conf->property_conf.read_opcode = obj->buffer.pointer[0];
-> +	} else {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID read opcode, too long buffer");
-> +		ACPI_FREE(obj);
-> +		return -ENODEV;
-> +	}
-> +	ACPI_FREE(obj);
-> +
-> +	obj = acpi_evaluate_dsm_typed(handle, &spi_hid_guid, 3, 5, NULL,
-> +				      ACPI_TYPE_BUFFER);
-> +	if (!obj) {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID write opcode failed");
-> +		return -ENODEV;
-> +	}
-> +	if (obj->buffer.length == 1) {
-> +		conf->property_conf.write_opcode = obj->buffer.pointer[0];
-> +	} else {
-> +		acpi_handle_err(handle,
-> +				"Error _DSM call to get HID write opcode, too long buffer");
-> +		ACPI_FREE(obj);
-> +		return -ENODEV;
-> +	}
-> +	ACPI_FREE(obj);
-> +
-> +	/* Value not provided in ACPI,*/
-> +	conf->post_power_on_delay_ms = 5;
-> +	conf->minimal_reset_delay_ms = 150;
-> +
-> +	if (!acpi_has_method(handle, "_RST")) {
-> +		acpi_handle_err(handle, "No reset method for acpi handle");
-> +		return -ENODEV;
+Hi Steven,
 
-I would return -EINVAL as we have the device with right _DSM but without
-mandated by the spec _RST.
+kernel test robot noticed the following build warnings:
 
-> +	}
-> +
-> +	/* FIXME: not reading hid-over-spi-flags, multi-SPI not supported */
-> +
-> +	return 0;
-> +}
-> +
-> +static int spi_hid_acpi_power_none(struct spihid_ops *ops)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int spi_hid_acpi_power_down(struct spihid_ops *ops)
-> +{
-> +	struct spi_hid_acpi_config *conf = container_of(ops,
-> +							struct spi_hid_acpi_config,
-> +							ops);
-> +
-> +	return acpi_device_set_power(conf->adev, ACPI_STATE_D3);
-> +}
-> +
-> +static int spi_hid_acpi_power_up(struct spihid_ops *ops)
-> +{
-> +	struct spi_hid_acpi_config *conf = container_of(ops,
-> +							struct spi_hid_acpi_config,
-> +							ops);
-> +	int error;
-> +
-> +	error = acpi_device_set_power(conf->adev, ACPI_STATE_D0);
-> +	if (error) {
-> +		dev_err(&conf->adev->dev, "Error could not power up ACPI device: %d.", error);
-> +		return error;
-> +	}
-> +
-> +	if (conf->post_power_on_delay_ms)
-> +		msleep(conf->post_power_on_delay_ms);
-> +
-> +	return 0;
-> +}
-> +
-> +static int spi_hid_acpi_assert_reset(struct spihid_ops *ops)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int spi_hid_acpi_deassert_reset(struct spihid_ops *ops)
-> +{
-> +	struct spi_hid_acpi_config *conf = container_of(ops,
-> +							struct spi_hid_acpi_config,
-> +							ops);
-> +
-> +	return device_reset(&conf->adev->dev);
-> +}
-> +
-> +static void spi_hid_acpi_sleep_minimal_reset_delay(struct spihid_ops *ops)
-> +{
-> +	struct spi_hid_acpi_config *conf = container_of(ops,
-> +							struct spi_hid_acpi_config,
-> +							ops);
-> +	usleep_range(1000 * conf->minimal_reset_delay_ms,
-> +		     1000 * (conf->minimal_reset_delay_ms + 1));
+[auto build test WARNING on tip/locking/core]
+[also build test WARNING on trace/for-next akpm-mm/mm-everything linus/master v7.0-rc3 next-20260310]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I'd probably use "fsleep(conf->minimal_reset_delay_ms * 1000)".
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Have-futex-syscall-trace-event-show-specific-user-data/20260311-041422
+base:   tip/locking/core
+patch link:    https://lore.kernel.org/r/20260310201036.542627924%40kernel.org
+patch subject: [PATCH v2 1/3] tracing: Have futex syscall trace event show specific user data
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260311/202603110841.Pxedg2y4-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260311/202603110841.Pxedg2y4-lkp@intel.com/reproduce)
 
-> +}
-> +
-> +static int spi_hid_acpi_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct acpi_device *adev;
-> +	struct spi_hid_acpi_config *config;
-> +	int error;
-> +
-> +	adev = ACPI_COMPANION(dev);
-> +	if (!adev) {
-> +		dev_err(dev, "Error could not get ACPI device.");
-> +		return -ENODEV;
-> +	}
-> +
-> +	config = devm_kzalloc(dev, sizeof(struct spi_hid_acpi_config),
-> +			      GFP_KERNEL);
-> +	if (!config)
-> +		return -ENOMEM;
-> +
-> +	if (acpi_device_power_manageable(adev)) {
-> +		config->ops.power_up = spi_hid_acpi_power_up;
-> +		config->ops.power_down = spi_hid_acpi_power_down;
-> +	} else {
-> +		config->ops.power_up = spi_hid_acpi_power_none;
-> +		config->ops.power_down = spi_hid_acpi_power_none;
-> +	}
-> +	config->ops.assert_reset = spi_hid_acpi_assert_reset;
-> +	config->ops.deassert_reset = spi_hid_acpi_deassert_reset;
-> +	config->ops.sleep_minimal_reset_delay =
-> +		spi_hid_acpi_sleep_minimal_reset_delay;
-> +
-> +	error = spi_hid_acpi_populate_config(config, adev);
-> +	if (error) {
-> +		dev_err(dev, "%s: unable to populate config data.", __func__);
-> +		return error;
-> +	}
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603110841.Pxedg2y4-lkp@intel.com/
 
-I would add a blank line.
+All warnings (new ones prefixed by >>):
 
-> +	return spi_hid_core_probe(spi, &config->ops, &config->property_conf);
-> +}
-> +
-> +static const struct acpi_device_id spi_hid_acpi_match[] = {
-> +	{ "ACPI0C51", 0 },
-> +	{ "PNP0C51", 0 },
-> +	{ },
+   kernel/trace/trace_syscalls.c: In function 'syscall_get_futex':
+>> kernel/trace/trace_syscalls.c:807:15: warning: variable 'buf' set but not used [-Wunused-but-set-variable]
+     807 |         char *buf;
+         |               ^~~
 
-No comma on sentinels.
 
-> +};
-> +MODULE_DEVICE_TABLE(acpi, spi_hid_acpi_match);
-> +
-> +static struct spi_driver spi_hid_acpi_driver = {
-> +	.driver = {
-> +		.name	= "spi_hid_acpi",
-> +		.owner	= THIS_MODULE,
-> +		.acpi_match_table = ACPI_PTR(spi_hid_acpi_match),
+vim +/buf +807 kernel/trace/trace_syscalls.c
 
-This is dependent on ACPI, so no need to sue ACPI_PTR().
-
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +		.dev_groups = spi_hid_groups,
-> +	},
-> +	.probe		= spi_hid_acpi_probe,
-> +	.remove		= spi_hid_core_remove,
-> +};
-> +
-> +module_spi_driver(spi_hid_acpi_driver);
-> +
-> +MODULE_DESCRIPTION("HID over SPI ACPI transport driver");
-> +MODULE_AUTHOR("Angela Czubak <aczubak@google.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/spi-hid-core.c
-> index e3273846267e..02beb209a92d 100644
-> --- a/drivers/hid/spi-hid/spi-hid-core.c
-> +++ b/drivers/hid/spi-hid/spi-hid-core.c
-> @@ -43,6 +43,9 @@
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  
-> +#include "spi-hid.h"
-> +#include "spi-hid-core.h"
-> +
->  /* Protocol constants */
->  #define SPI_HID_READ_APPROVAL_CONSTANT		0xff
->  #define SPI_HID_INPUT_HEADER_SYNC_BYTE		0x5a
-> @@ -105,30 +108,6 @@ struct spi_hid_output_report {
->  	u8 *content;
->  };
->  
-> -/* struct spi_hid_conf - Conf provided to the core */
-> -struct spi_hid_conf {
-> -	u32 input_report_header_address;
-> -	u32 input_report_body_address;
-> -	u32 output_report_address;
-> -	u8 read_opcode;
-> -	u8 write_opcode;
-> -};
-> -
-> -/**
-> - * struct spihid_ops - Ops provided to the core
-> - * @power_up: do sequencing to power up the device
-> - * @power_down: do sequencing to power down the device
-> - * @assert_reset: do sequencing to assert the reset line
-> - * @deassert_reset: do sequencing to deassert the reset line
-> - */
-> -struct spihid_ops {
-> -	int (*power_up)(struct spihid_ops *ops);
-> -	int (*power_down)(struct spihid_ops *ops);
-> -	int (*assert_reset)(struct spihid_ops *ops);
-> -	int (*deassert_reset)(struct spihid_ops *ops);
-> -	void (*sleep_minimal_reset_delay)(struct spihid_ops *ops);
-> -};
-> -
->  static struct hid_ll_driver spi_hid_ll_driver;
->  
->  static void spi_hid_populate_read_approvals(const struct spi_hid_conf *conf,
-> diff --git a/drivers/hid/spi-hid/spi-hid.h b/drivers/hid/spi-hid/spi-hid.h
-> new file mode 100644
-> index 000000000000..1fdd45262647
-> --- /dev/null
-> +++ b/drivers/hid/spi-hid/spi-hid.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2021 Microsoft Corporation
-> + * Copyright (c) 2026 Google LLC
-> + */
-> +
-> +#ifndef SPI_HID_H
-> +#define SPI_HID_H
-> +
-> +#include <linux/spi/spi.h>
-> +#include <linux/sysfs.h>
-> +
-> +/* struct spi_hid_conf - Conf provided to the core */
-> +struct spi_hid_conf {
-> +	u32 input_report_header_address;
-> +	u32 input_report_body_address;
-> +	u32 output_report_address;
-> +	u8 read_opcode;
-> +	u8 write_opcode;
-> +};
-> +
-> +/**
-> + * struct spihid_ops - Ops provided to the core
-> + * @power_up: do sequencing to power up the device
-> + * @power_down: do sequencing to power down the device
-> + * @assert_reset: do sequencing to assert the reset line
-> + * @deassert_reset: do sequencing to deassert the reset line
-> + */
-> +struct spihid_ops {
-> +	int (*power_up)(struct spihid_ops *ops);
-> +	int (*power_down)(struct spihid_ops *ops);
-> +	int (*assert_reset)(struct spihid_ops *ops);
-> +	int (*deassert_reset)(struct spihid_ops *ops);
-> +	void (*sleep_minimal_reset_delay)(struct spihid_ops *ops);
-> +};
-> +
-> +int spi_hid_core_probe(struct spi_device *spi, struct spihid_ops *ops,
-> +		       struct spi_hid_conf *conf);
-> +
-> +void spi_hid_core_remove(struct spi_device *spi);
-> +
-> +extern const struct attribute_group *spi_hid_groups[];
-> +
-> +#endif /* SPI_HID_H */
-
-I am not sure if this belongs to this patch or if it should be better in
-the patch introducing the main driver from the beginning.
-
-For the ACPI part:
-
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Thanks.
+   801	
+   802	static int
+   803	syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
+   804	{
+   805		struct syscall_user_buffer *sbuf;
+   806		const char __user *ptr;
+ > 807		char *buf;
+   808	
+   809		/* buf_size of zero means user doesn't want user space read */
+   810		if (!buf_size)
+   811			return -1;
+   812	
+   813		/* If the syscall_buffer is NULL, tracing is being shutdown */
+   814		sbuf = READ_ONCE(syscall_buffer);
+   815		if (!sbuf)
+   816			return -1;
+   817	
+   818		ptr = (char __user *)args[0];
+   819	
+   820		*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
+   821		if (!*buffer)
+   822			return -1;
+   823	
+   824		/* Add room for the value */
+   825		*size += 4;
+   826	
+   827		buf = *buffer;
+   828	
+   829		return 0;
+   830	}
+   831	
 
 -- 
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
