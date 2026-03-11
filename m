@@ -1,121 +1,169 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED61E30594F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 13:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773234971; cv=none; b=aROYfejJUC2sJIymX4rAvAw8N/OuXpkw/ULqUG7J7b0xx6CjrN9pxf12O9D/XmcWpC2vkOVC12y9JMazk74JcOAYMCFkcjlARKfyb8ybFnD07FXRoUkLOHFjjj/vP08EMqTGemP+vipfF2yurRzKKFVl7VFDRHRt67NWt/cuyE8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773234971; c=relaxed/simple;
-	bh=bQRlE5OR+3/41N9B/xBGXfMeOTv3hgeQ2WrY6jcTpBY=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEF4258EC2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 13:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773236471; cv=pass; b=e3eKa3hPJ3qYARAgTx+1207uP/+qcvjKCMcaVSYzcIa9y1ps1m8TkO/WP1B7YYTByqonDbwcx46aI0Jp11BbVl3eaM8gfhLEEzEcrWpK09mh6UMnw+961KVMXwTdSayZ1FCQqsOWE5GSNeBz9T9JAdm7AMe0kDUfFjwGClQR17Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773236471; c=relaxed/simple;
+	bh=lSW5upmFprSKtGIOsNElfFyIV8vbtM7UayW6zlyxVqY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fjrC5WgzOX4Q1FQASlGYMYhwefWiV/1AzMpyO2xd8Z+QU9unll77tV2lXIt4l3hYmoJbeuAvwJ9kO4jU/mKPpfBYT1Q+dDgC2DyYyHD5H3zycdNgiurXd8yPauD/Cf4ab2HYjURDC6VXBM6OJH9AnbQIgSUvd5Gk7AcR2tnzdoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=sl0GOSvEYQAa1L+5vvw9HrcEKXh8qR0Q/8Ps1sfAM4y9XJjAcYHALtgt+agPID/I1gLJ1woCd3/QiwYmIx0HsF7vK62Sl/PtglqeDhYzhNUw8Xh8yf00uQauvoBOA/q9dcCZN+sLv6wRtA8xBgqGSCYLuSC/2I2wR8UFCJmjOeo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FANEOZvG; arc=pass smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-56b18f05f49so2419059e0c.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 06:16:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773234969; x=1773839769;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FANEOZvG"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-7947cf097c1so132614257b3.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 06:41:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773236469; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ACVsfj+VekGT4rOknvnuh276qWN9XjCiu8LlmP6MQ0IQB/SaFk8/ZNV1s53JE59sk4
+         yn5JUQpg9oGKTQxJVs6mJLk0CDZbHXPU3H2A3jmKkteMn9+jpDbn68oTLBMfruUDf2eC
+         I+FSvUoSGd/zs99cgJEqz0TIyhStdikHpHmJAC31bHfMFM6JJM5EbZpIidFnAKzKr7Dm
+         gdiICJQ64dM7AebXsbrvDs6AcDi9iI+zqbG94YR620ZiQnwhpJoZc3NuxiuRe2l5PEJ5
+         Jsi+4IoH84sCrO1UZbD/YS0Eh5huDr3v0IV8zbcMw+AIYkciXSJti+vmUK6q+X1wCF81
+         3+FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=omlHZauAtrTylwv8vq8w221VDC1uSPsCYyzOg6I1AeY=;
+        fh=acH+1CFZq4zaMXGCzte562NQjBcUCwm6+4fO5gG0Fkw=;
+        b=i5FrLkBn5i9HcuogzsasId3DBr1pT2bb+tBVKP7Ow5K9x5gT0fzf+dkaUgTFt5eJGq
+         JdC0CiBzfLYO2hHbujPPuvOYrCqO9QDt0mqWt92E8Pj8lgcVYatqvhWojPkVsnvZraf7
+         VSsLyhXmXsphv3NVQPJFvGykQZW7gqATiiW0+88szlbgCAC2dRgVDFoEH1KzcI05RfvM
+         xsrTJAX+kCvagbnf7vx65p80S0l1Py4/tIFZQgXODVT5wZWDon2aPv5bSCI9djCukaRo
+         p3W3eAt0hWfyXQAOkQWSUVLHTt54D91onIqLIg3qlrXu7m4a6oicte0KWX+z4B+7Rp3Z
+         vnqQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773236469; x=1773841269; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=34DR94e/1PAvLLEaib58vFA4GW0m5SGe6jvxchEhMek=;
-        b=sVt68R0U6ourYfrZdbCKpraMynSN7Thkrq+Xojjgg8CbUSk4LtHaY0xsQ7kDfRBMQv
-         bPzZue8YrbqWbnJb5V9bxkEKuPthfY26Gqk8b6Gpef1CZjYiGr+Nlh7ylr1BatHUIk/5
-         HL98z3wOKadpmDTIZcM9ohaz0LIMpOUbugZeQfBxNmFdJRmJN3oAr6ErxRBQ2g/5wM5x
-         8OYwcjO95KxBzBMvzkNz4H58iQbv2n6XjYli6EoDkmey/6I1yL7XEmXTQ9n5lI/k9VyL
-         iV5pfA4x5PpYv2xuOShjHqGv6CHRNF/99qnRZy4MPI1/8xsLRTApjOrB25Q4IJuED4G0
-         GuHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Fn31Ysx8XQCK1xAtr1pPiSKrUGgGUVAge5tGRKGxPQn6mjP3+ySvusslZAtkGyPRIFmVIivceRhmBp3aj9HSIPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeLA6YCeDzeVfRLRwCEZIsL9rqmhCsuaU/4qM/qm1Ts1l+QZfs
-	dWYnnryQmYK1ZlZvEyjxiyTgxAJx9HZJ2L/SNk/MpPW+MRZjF+8SgIxl1kI2dVxMmhI=
-X-Gm-Gg: ATEYQzzoPK8VJhrqA4ibFhK67kB8/ErEgCbP0jkJHcoaKbGLG1x4kfq+qNtUxonGuPR
-	CuoaOcDgZkaIUV6k1lZxYnwboGYs1aGQk8ArjzA/oa6knZwZijWN/cVwrdJIYjQvoSCMXmCZgmr
-	RuKYTgd+xjIE6EKICkIJ8mAyg1v5vcKRCDjWt1lhklxuJCz0Jba3M9NfM4duobIoajak/aTNmhq
-	flqQAF4twHCmJ/X6agKggt/LFr89k/qrZKXB3MgAMx24srbZW0FwF7NJbRNCsosJC3adF+Jr4VC
-	YdIa/Bh7pQIxo1TkkMK0Y4u4HLMvLI2LewlxCeQP8CB8pNR8r8OMOPSV622jrFagcSgIJSZ44VF
-	vPg65StHF5rlpf+6TqV5HZjRcSdiYhWixv8i9pFvapyW/Qg0DQgB4o2y1HMq9ED5bJ0okUMgdKs
-	IvLaVeo0ot4oDBm+2akFDD0RVG5PczOZU+09DCMecksZW9BdjVEjEg8vpQtCr6QYLF
-X-Received: by 2002:a05:6122:459b:b0:56a:f015:82c7 with SMTP id 71dfb90a1353d-56b4752d736mr943882e0c.9.1773234968880;
-        Wed, 11 Mar 2026 06:16:08 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56b4646bdfasm925679e0c.13.2026.03.11.06.16.07
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2026 06:16:07 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5675d609621so11786883e0c.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 06:16:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWZ81PjUGlVLZUGNW6YO/k1kVLjALqW2Gr1U3Wv0VA10bnJNavCR3cGQCB87uLFCUBEsfjv3PAtUnhsVqlq91GqwnA=@vger.kernel.org
-X-Received: by 2002:a05:6122:1d05:b0:55b:7494:177b with SMTP id
- 71dfb90a1353d-56b4752d806mr922396e0c.10.1773234967338; Wed, 11 Mar 2026
- 06:16:07 -0700 (PDT)
+        bh=omlHZauAtrTylwv8vq8w221VDC1uSPsCYyzOg6I1AeY=;
+        b=FANEOZvGDAnmaBImMeBhuEfrZWYLYLS9OUI+Xbs5e6dlI5Vr8igHqQ+AZXw9uBUh6Z
+         Mny17bOLwToL5Xg0R2MOzvVSM8b9tPRMZGzfluSMbkAUfVysfphC3T5nNGRpKbNg8gyR
+         eIXZvBW/rb8gdapyEdjcznglJipBhYlQiSFLTJJ5P8gIaJIHqKBZwtnixSU8c87BjkXH
+         V4gTYEvsgWVCCKvIf6B4ukm+Dk/fofIuJtGyuaVCnFqUdWw4/CL1D4u7+j/Dy8JoSJJK
+         WrdsZTXV1ik0upFu9D92r2hEDvp54odeauSYoWVIYr1NUcJAGMbh50ibql+avCpyT4PV
+         xFwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773236469; x=1773841269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=omlHZauAtrTylwv8vq8w221VDC1uSPsCYyzOg6I1AeY=;
+        b=wo7bWi3AOLemwKtvtmJJe2QlXAE2kPI9whPYcXcMmtrwC8NKtxzoaT5Q6r0dE/2ONG
+         KS+vjw70PgQNHDF9GXlXJWGE1N4BYYoQZ2pwZ5spvUqyUIlx/B2L7bEIv2FxnGkaqTo6
+         rMHFaEDJgT4CgxI6weTLLgYDW9JHVZKqdqbMu1Koyvs0QJLMLbd6wtps17paaTumfsJ5
+         UQt9nB84fNoDEP37CG2cRHfYxnd2lemQon8zUhEDUmzA3bs5o2Cxdtl0XHNvIPRSqhsO
+         xJ63r8/Rz4/uwihfqaWC0tk1GU7q1FGoftUJOY3espdgzzzoLji7qrTJzDPasWQgnYN1
+         u90w==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJkw2HLuxLaoQ/sd1RFxdfGFoKho64hxIXGGxTtRZ3xNNgcyWk1haBCpIchqBG+dQoGwriWG0CO93E1zf0miiKyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykM3Trl95FUgekyEM6bH0yBxESqgD4oj8tw68c1s7ZwUShzfW7
+	IinL1CE0FbO4Zi4C/ObKM4vxU/SAYcU3sVeel0yE/8Tqfn4FsRQteshNfRfn5iG45WTVPwPVhSc
+	MNFEAtlFLWLkdxN95FwznLOQRSIXekWI=
+X-Gm-Gg: ATEYQzy9FOQdi0tI80miwiTQqcctfvkVcX/tNEyqs0MR+4BSYhEuvcxdKYMFKr3UTpY
+	p43klxssWOdG8Kt3Qn6cVYSwBjHxi/iYnU7j+gXRmyGvm9FZ5sGJAsHfRlxSUsq7OGwfRqWrDSl
+	VdhyMV4DtKIdSegpfI9bN5ypmxin4RJgs3fEaDbUSatcr8Den6YL5fGi85jx9NuXEtFIpqiF7nS
+	SPWrrx6+A9KQKp+Pfl/ua2HFupdpW0wCrO0cPJOmWJy9k4xnNRC4KGrtMPWDjwynDSExtuYjJs8
+	tVlo/k3N
+X-Received: by 2002:a05:690c:698a:b0:799:1f23:6e42 with SMTP id
+ 00721157ae682-7991f2371e3mr7043337b3.9.1773236469270; Wed, 11 Mar 2026
+ 06:41:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-36-bd63b656022d@avm.de>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-36-bd63b656022d@avm.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 11 Mar 2026 14:15:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXQ8Q4jvkgFRJYhghz2BZRDC-9Mk6DbXxuaOc6C9DFHZQ@mail.gmail.com>
-X-Gm-Features: AaiRm52J84H77ROK64ZWWtJfaiCpnFeKyoSRmPbi-NC8CN6Ju1TJEFxJU9gZQQ8
-Message-ID: <CAMuHMdXQ8Q4jvkgFRJYhghz2BZRDC-9Mk6DbXxuaOc6C9DFHZQ@mail.gmail.com>
-Subject: Re: [PATCH 36/61] arch/sh: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
-	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	v9fs@lists.linux.dev, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+References: <20260311115250.78488-1-laoar.shao@gmail.com> <20260311115426.GN606826@noisy.programming.kicks-ass.net>
+ <20260311125350.1d89341f@pumpkin>
+In-Reply-To: <20260311125350.1d89341f@pumpkin>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 11 Mar 2026 21:40:32 +0800
+X-Gm-Features: AaiRm524erCYqACnVFe23j6m-ZVjclM-nSFR1JGtJBmkuYdF3boGoq6ggzv7XP0
+Message-ID: <CALOAHbDqYjJngQmmOaPRA=k4Bb8Or39YNp5R98f_op4dti2_TQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] disable optimistic spinning for ftrace_lock
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, will@kernel.org, 
+	boqun@kernel.org, longman@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Mar 2026 at 12:56, Philipp Hahn <phahn-oss@avm.de> wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
+On Wed, Mar 11, 2026 at 8:53=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
 >
-> Change generated with coccinelle.
+> On Wed, 11 Mar 2026 12:54:26 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> To: Yoshinori Sato <ysato@users.sourceforge.jp>
-> To: Rich Felker <dalias@libc.org>
-> To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Cc: linux-sh@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+> > On Wed, Mar 11, 2026 at 07:52:47PM +0800, Yafang Shao wrote:
+> > > Recently, we resolved a latency spike issue caused by concurrently ru=
+nning
+> > > bpftrace processes. The root cause was high contention on the ftrace_=
+lock
+> > > due to optimistic spinning. We can optimize this by disabling optimis=
+tic
+> > > spinning for ftrace_lock.
+> > >
+> > > While semaphores may present similar challenges, I'm not currently aw=
+are of
+> > > specific instances that exhibit this exact issue. Should we encounter
+> > > problematic semaphores in production workloads, we can address them a=
+t that
+> > > time.
+> > >
+> > > PATCH #1: introduce slow_mutex_[un]lock to disable optimistic spinnin=
+g
+> > > PATCH #2: add variant for rtmutex
+> > > PATCH #3: disable optimistic spinning for ftrace_lock
+> > >
+> >
+> > So I really utterly hate this.
+>
+> Yep...
+> Adding the extra parameter is likely to have a measurable impact
+> on everything else.
+>
+> The problematic path is obvious:        find_kallsyms_symbol+142
+>         module_address_lookup+104
+>         kallsyms_lookup_buildid+203
+>         kallsyms_lookup+20
+>         print_rec+64
+>         t_show+67
+>         seq_read_iter+709
+>         seq_read+165
+>         vfs_read+165
+>         ksys_read+103
+>         __x64_sys_read+25
+>         do_syscall_64+56
+>         entry_SYSCALL_64_after_hwframe+100
+>
+> The code needs to drop the ftrace_lock across t_show.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It's unclear whether we can safely release ftrace_lock within t_show =E2=80=
+=94
+doing so would probably necessitate a major redesign of the current
+implementation.
 
-Gr{oetje,eeting}s,
+>
+> Although there is a bigger issue of why on earth the code is reading the
+> list of filter functions at all - never mind all the time.
 
-                        Geert
+bpftrace reads the complete list of available functions into
+userspace, then performs matching against the target function to
+determine if it is traceable.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> I'll do it by hand when debugging, but I'd have though anything using bpf
+> will know exactly where to add its hooks.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+--=20
+Regards
+Yafang
