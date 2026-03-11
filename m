@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430611A6836;
-	Wed, 11 Mar 2026 01:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F10412B94;
+	Wed, 11 Mar 2026 01:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773192736; cv=none; b=D4wyY4+aOqOkSJkCC2slV7YUYmwvS5Q1X5UDWP0bDWZv8A+DAj8s1STU703oNf3/RJEL/nSF0F/8oeX76uIJcdTLULSijWD4zQJtnOVIVOAjt84DeLDwS4b0K2gfDxl+J1oioS0lCB1HpF0MKJYpbEuA3Tx5ekgurIyqTRg+WrI=
+	t=1773192744; cv=none; b=fhKMvvoSnsRIOIUnBP3F/MxO+YSrpNYbK8unR3BA+ShTSuc+9GCRXwcVZ6khYNNkWVKPQYV5FfJfEk96N67YkiUlGvjRFvOi6+a7HS4w5nravp3rMWXP7n10v3QA23bxQ2CvdFsHYubKjHQE9NLbs3yB1J0WOia60PjXKnM1IzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773192736; c=relaxed/simple;
-	bh=1HO/vY+1IeyQdn0pKUFlC/kVALrZUNVkiHrQBOURaJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WxVcX+9IRp1rYKOSR+f1xvh2KaWR0NMNISUzdu9z7Pq7CiUTzJ5ExfGjm/O1zseEvjTc0QY6gk3JbPVFJ2I7vxhyllUVcpsJVJ38KUUem50jaCUdANxshuClckyU9vCa4pk6WO0sy6FdRQFUU0k7UzJjH765vHwg1GZGEs4E7B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeYiNKtv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773192744; c=relaxed/simple;
+	bh=Z2G83oBH5vx8KCsX/GwG5z6coID67lhhovuf7Wvz6FM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JyOxdgCArKaioZsv5t9ceCPx6IaVbcC4Nn81K+sdjUpn+XnLqzA9Vy0cxUED6Xm4I5QSWUvGSrPjHENJJ9W/FHfFdXl2hBr55vPwtPgHIW6IJ1KYp/KhKYzQhpoTH4bAmtKvXCSzfzTgfRa5ORycw6FPqYg/1RUWoks5GtRfLiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hzj5RLK0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeYiNKtv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26ADAC2BC87;
-	Wed, 11 Mar 2026 01:32:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hzj5RLK0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC016C19423;
+	Wed, 11 Mar 2026 01:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773192736;
-	bh=1HO/vY+1IeyQdn0pKUFlC/kVALrZUNVkiHrQBOURaJ8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oeYiNKtvc9YLzuftEWpKgIKLrjDVgh0WFT9YdQhXHF8giW+Ehvq+q5Le6f0+pKzk4
-	 PjfFtw8eXn7MZYF+vvIgiVsCwTNILcYdyz+PClrFrqysg20ZsbUru3HvIc5/PxrABT
-	 CIenADs0B2rYFLJgoGbqc0jasUo5YQ35Ozief+baMv+qbssXuixOVj/6LXYfIes4X7
-	 /lzgcag1Rs/KkTTKGn7nk3Y0Bq2CDNCi7EtLELBffQ5XXrxx804Ya+qmXyfyIk8+6u
-	 EjJktvrkJ9cRGizboFLLnIQ7vC7EwBRdvI6hOrJcQoyjEUfi8mh7mygMKXfG9Fz2rU
-	 FDegAoxeTQJjA==
+	s=k20201202; t=1773192743;
+	bh=Z2G83oBH5vx8KCsX/GwG5z6coID67lhhovuf7Wvz6FM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Hzj5RLK0g6MoZ0Hn5PdtIZla5E5hHE2TCy/cvT1eUKj2qdqxBAYxDbLur5a8wN32d
+	 OnoiEEHhFmLi4OqzIYGQr5hextXlLPl1apKeMCSy36pWfJM8yL8VwybveXTZe4Xf06
+	 JDBmDbiPZ92sOSihwlrxdUJPRAnI/T2g7jqTyP1UH6DotXjZwUzcVXeQGo2faGgqJQ
+	 wAlNIqD8fJW21VjoOuN0JAuy2gQgMhyn73cvxSlJmQBxLa+3sdDdy2AvugEviXY8fK
+	 Xx8xQ+PK28MCRbbf3P89s8cKaJuNVCA+BpDx3B2lCvklbQTAH0z7YCLtQn/0ljGUFL
+	 9OLXdzcwxvyYQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -32,10 +33,12 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Ian Rogers <irogers@google.com>
-Subject: [PATCH v9 0/4] ring-buffer: Making persistent ring buffers robust
-Date: Wed, 11 Mar 2026 10:32:11 +0900
-Message-ID:  <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH v9 1/4] ring-buffer: Fix to update per-subbuf entries of persistent ring buffer
+Date: Wed, 11 Mar 2026 10:32:21 +0900
+Message-ID:  <177319274126.130641.15502329149412118852.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+In-Reply-To:  <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
+References:  <177319273059.130641.10882692460536780093.stgit@mhiramat.tok.corp.google.com>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,57 +49,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 9th version of improvement patches for making persistent
-ring buffers robust to failures.
-The previous version is here:
+Since the validation loop in rb_meta_validate_events() updates
+the same cpu_buffer->head_page->entries, the other subbuf entries
+are not updated.
+Fix to use head_page to update the entries field, since it is the
+cursor in this loop.
 
-https://lore.kernel.org/all/177303264034.767813.5345788067082238396.stgit@mhiramat.tok.corp.google.com/
-
-In this version, I fixed bugs/typos in [2/4][3/4] and add a bugfix patch
-[1/4] and a test[4/4]. Also, add a meta->subbuf_size validation[3/4].
-
-Thank you,
-
+Fixes: 5f3b6e839f3c ("ring-buffer: Validate boot range memory events")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ kernel/trace/ring_buffer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Masami Hiramatsu (Google) (4):
-      ring-buffer: Fix to update per-subbuf entries of persistent ring buffer
-      ring-buffer: Flush and stop persistent ring buffer on panic
-      ring-buffer: Skip invalid sub-buffers when validating persistent ring buffer
-      ring-buffer: Add persistent ring buffer selftest
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f16f053ef77d..353a5aa1b612 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2053,7 +2053,7 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ 		entries += ret;
+ 		entry_bytes += local_read(&head_page->page->commit);
+-		local_set(&cpu_buffer->head_page->entries, ret);
++		local_set(&head_page->entries, ret);
+ 
+ 		if (head_page == cpu_buffer->commit_page)
+ 			break;
 
-
- arch/alpha/include/asm/Kbuild        |    1 
- arch/arc/include/asm/Kbuild          |    1 
- arch/arm/include/asm/Kbuild          |    1 
- arch/arm64/include/asm/ring_buffer.h |   10 ++
- arch/csky/include/asm/Kbuild         |    1 
- arch/hexagon/include/asm/Kbuild      |    1 
- arch/loongarch/include/asm/Kbuild    |    1 
- arch/m68k/include/asm/Kbuild         |    1 
- arch/microblaze/include/asm/Kbuild   |    1 
- arch/mips/include/asm/Kbuild         |    1 
- arch/nios2/include/asm/Kbuild        |    1 
- arch/openrisc/include/asm/Kbuild     |    1 
- arch/parisc/include/asm/Kbuild       |    1 
- arch/powerpc/include/asm/Kbuild      |    1 
- arch/riscv/include/asm/Kbuild        |    1 
- arch/s390/include/asm/Kbuild         |    1 
- arch/sh/include/asm/Kbuild           |    1 
- arch/sparc/include/asm/Kbuild        |    1 
- arch/um/include/asm/Kbuild           |    1 
- arch/x86/include/asm/Kbuild          |    1 
- arch/xtensa/include/asm/Kbuild       |    1 
- include/asm-generic/ring_buffer.h    |   13 +++
- include/linux/ring_buffer.h          |    1 
- kernel/trace/Kconfig                 |   15 +++
- kernel/trace/ring_buffer.c           |  169 ++++++++++++++++++++++++++--------
- kernel/trace/trace.c                 |    4 +
- 26 files changed, 192 insertions(+), 40 deletions(-)
- create mode 100644 arch/arm64/include/asm/ring_buffer.h
- create mode 100644 include/asm-generic/ring_buffer.h
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
