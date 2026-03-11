@@ -1,63 +1,64 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C31D3DE423
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 11:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3B63DE445
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773229998; cv=none; b=uNIOHyWTjNAsYguIfMEFaGJxJaYZVCb3lP6BlZhwiVNI2Xfa+4V3tIdej0stecBP/H30hVI9CPPTr93JHByFDuYrv9DG//jNE7sMrqb0DLgCCLjEAmrzUVijjqgfzGPhE+jrVAZdWMYAXxP1i5xkUFZrSetQmod2kxxaps8j9MY=
+	t=1773230003; cv=none; b=U1RIJClOJ0Pgt75gI1zaKWabBpGpRvbD//O63hm/iv66M5FIGzQhxKRBYtwxYHUOsOhAU/9eSxCMs+hJxu2dKB17N1DE8DcY9zWltWJ4SjX/ewdG1Xyt//5uzd6lFBFg3ByEuT1XpD7rfy/b0/ouDHN5EWBV3M7xXTrblJP31Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773229998; c=relaxed/simple;
-	bh=0Ifq6XmVDs1fpC0j/ZIbpmcmAOkRHB7zh4IlFJ+hrPA=;
+	s=arc-20240116; t=1773230003; c=relaxed/simple;
+	bh=HhxX14UkA4Md0FHrn0YoGqjjtgcFeX0wk8i706bX378=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bwICWk17La6iqBRAXMjV7QMv79smIHC6drAH3D/+fzyYLazwUWHfsQ8jDRZK/0L4DS1FV2ZELJ8SOum7mhnR4O/A6MJgXhcu3hLsFKAeMQXskVXrCvEIOmmgl6baQoF+a74q9pCsPC+WQzOllqQpPV54jwPw6+45MFpT727Ol/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYer6CG2; arc=none smtp.client-ip=209.85.210.169
+	 MIME-Version; b=Ejh6bAvcNVDelLiuyyH1p/+JfxMA8qjTr+vpLfl+Hj3soe4rN5ynFaSdKTTckiU4Bnw/UzpMISeNHBkZHiYxZFDU+MMV57x3IlcR9yqNzyIAn6YD3UReppfYLwrwleBiAi82WybwMvBo37aWJ0xIvmWISNyBSuXhvbw1I/VSYzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbSOKF5M; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYer6CG2"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-829abaaa92bso2586955b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 04:53:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbSOKF5M"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-82980945556so2745341b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 04:53:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773229996; x=1773834796; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773230000; x=1773834800; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8J94ffxrGM62oAfDCHAJ0pM0R8c1cTRpTTHeUMpVEkI=;
-        b=UYer6CG2Qk+1RQ0sFdcJogoULr9wpNO4LFRhlyocSUTeRH0zC/WN5npgdGZpWteCn8
-         qWCaVSElzNrOP4fX1WLf4O3SH412LNz7cpCb9/G1btS4jckBqrFBZwv1hleXw6CshboL
-         MjMV1gVUfgVcsbCKKDvGldNt4WiVPag7YRHMAi9VRS/x3SMDHcfWSbk4v9smy2emHBYu
-         VitmMMj/JkdP9cxhOBdE2RR1ZQnotXJqgJdWf1SkNxO1Qs7oLmOz0KBNoiEGQsoXEt4X
-         gw/U720tNcH4HoypLTCI4VcjgTNE3eknMYHTU1uwy/k0Tc3d3qJWApVZhFz7DtxBYFVX
-         BmFg==
+        bh=5XUaqMDdHb6xWSLB7LHHRKEGcmYQutagR+4ik5kvWaI=;
+        b=CbSOKF5MrEPdoMCmt9kqnbnUc8KZEpXee2cAccJ/lcqSCwFkmY7+MFmyCFlxQo5QqT
+         2g/hBCKYUQogSpxrAQXLmUSJHMo9LitdSaQ3j7GfVKwc7ADNZAKpeVRqR9+uwVxhx5bk
+         o0GuMW/v7XfV+8suAiDPO83SpqYHiEpsUz17u2aLCNN+Xg8eRNT9CuQeQ44Upv2ZlAIO
+         uvknmxvqNeLsT8+S7UrUbGZW4xjiT1pKjYjca0xuBSovtFe27z8S+KFdby5/0RNcs5wW
+         3Z7KDMqB6fqwe1ViCtIDDLVi+NazBfY6GKccH180YxdSnswb1+3hNXgGVsANpD+UwlhZ
+         NReQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773229996; x=1773834796;
+        d=1e100.net; s=20230601; t=1773230000; x=1773834800;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8J94ffxrGM62oAfDCHAJ0pM0R8c1cTRpTTHeUMpVEkI=;
-        b=i0ylDSbtYO+PWWIBBwtqTu1b8HDwb7At8HdBYK0eR+0lkAt/kb8LCgyMJBTXFl/gPR
-         awTB/5Z3R7Ij7lvTpnOzCdAUPXLKjS6MNUy75Aym9cuuG0aa7vAGOUC6o8SN94msXGav
-         rVCPqFSmjsrvcN57QJU7boL3vO0pMvYJwl/drW9W0HD8yy6ujncpVNux1qqljRUsOtkk
-         4W+IAgPdr6FFSg7yIF47ZqXptuJ6fmnR0U5aYarSioZcpTSHo9IT8R2zaNXzSLkH8efa
-         HcDePiSq9j9I5Q0N7W4tXmGAIT3gyiu7XSO0jBs1FRXPVHMRu6Kt9cGVuWUuxZrszmzg
-         RZ8A==
-X-Forwarded-Encrypted: i=1; AJvYcCW/BgfB3uDA0bFDZoyzbxzwRiiywkypGIO/YRL3lwWmWTjqD6D76jyUlNY20O7wyscF7BilPs2fY4lJmFPs5uKVfNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyHFlLZi/DJnvn9RMBb6A5NSl6yzpP1j1rNGpUKf/mgQdVpnyF
-	ze7nL4SLSqHVjteYW4lgfpWH12rrecXtnLkHPBCRcbstNLC1Fwkdtfo6
-X-Gm-Gg: ATEYQzz/l1k0DBmc0OxBp+Cn49a6BtXFiQFvK+1G4E66GuXvO2DrCl++puMM1i3/8kB
-	Pox2m4tPpQGfdHzry177sHbVThlUv7Wug+q+12wSHC0PjWUoxfmD+8SCGgXB73clTKlR9f0SAdv
-	k7HOK9Xg0cy71W42JaXRpFDcGLn78Ev5XOhcQi9diuPLLrAAR8esGedfqusdx8DgbqAWgTrd5r9
-	GpLaakHZI6yA7lfd5EZaS0c9eKlYmjbsL0Qm3t5xWBKuLRyovPo7LpN6wCG1cwtf7wFCL3zbNBc
-	KVz77k9/eu4V9/1QlBS4ThJMursI2I6N8fO0My4cfE4GKplc9b+vQPZ1eM3zyzUwKO32SonU9D5
-	uGWKFL1CgyPObx96aDcYDCfoDYYmMP95QHev+HDc6GJr9eWC1VHXB+mturg4VIgJyiDDLEDcOuP
-	zNulZncadPZvDLq9CYMvqkfTWNNNRlq49mZfL1r1xkEkUVm7TpNJra25lkchTPChI=
-X-Received: by 2002:a05:6a00:44c5:b0:829:800b:9fe with SMTP id d2e1a72fcca58-829f706890cmr2213115b3a.39.1773229996428;
-        Wed, 11 Mar 2026 04:53:16 -0700 (PDT)
+        bh=5XUaqMDdHb6xWSLB7LHHRKEGcmYQutagR+4ik5kvWaI=;
+        b=U0wQwp+NnjWrHINmhCNLYFAtGC5q8lqFbAAp/Hha41wYFaIsRofsiNzqoIXK8p702s
+         +wwQDO8YmZyTUQHcS4XtPMJNXP/+PRlQrGBdgDrxtuoAkzUIpqnKtr6+W4sQ1TzoWoTR
+         /dgpWYJdDyhw9a7VOQ/YoHOxKEpgy0F1eYOqJbUDYO5kqA0xYOG9AzBJJdeA214EBdMV
+         slkpoadCJFWXVyrFNkLum8tAR2V0e6UxfEYrb2c9eH5Me/f/UtbUwMJ1Po/VvodmOSEL
+         8S4Ln906rf9SfXJEUYP+42GgAs1p5aRsBFZAGMaJ3q8sokJezSragc9cw5pbDDYLPDtI
+         Gw3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2y9n7gttwO9ttNMpkHVPdBrXCdMBAwnPJ2luGVDLiyLHxfsr6tstJ4JukholerMaBNV2c4FQRcXnely8h4X/ZC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7GNb+oXFtZAug9q8sezDwy2YRyi6VyqT+rzWUwWrgx0HOkKL2
+	jfqiQNwCb9mqJUxwgMRhCJ8Rluh9dzSllds2vLfF8sSFWl6rFXZlHA3V
+X-Gm-Gg: ATEYQzybxQLGwSRoES1zf/c2ERk/KOwQAW6Q2ncldRxSLKVMPChna8tksT649s5H6nf
+	G+ewkAJgm3ON79MXdJ6wPxtjrV5pT72k7vX80O/71/VoKJ5WOEO9gHNz0OxR3u5sz4pz+eaZrmC
+	o1EEQ8kOvhGC8bRK7wIWld3AGDsNnvHypCT3+7eoO/1vB0bh6Od5kF55GKOBSyz5zNMXBjnEHYK
+	1Z5v5duQmqWeO9/fexuYra10w1FuFxbNgrrV5+0W1cYO1olmypD57HoUB5vy7HuwXBmL/PPrdb0
+	MzY+iQVzGx/yXhBQAAVsKePiSBmaRPWOi81zKdtGc6dLLky4yxyj9Aews86mMJC6/DTjseTjsB3
+	3RK8rtohC0TXgz0Z2L+SKeR0UVhgQrZust8aPzU+yuNP8feMCNJIJSfrbsdvcTngbcKbkNNB2Zt
+	p0tT5rh/DWKlrew7yipNI5vhPdcq/o5caEYCcBjW2GQB2iolrgo+bHhuGG+ScadGAkLhry0rM5y
+	g==
+X-Received: by 2002:a05:6a00:ab89:b0:81e:d18a:489d with SMTP id d2e1a72fcca58-829f71da9e4mr2364945b3a.42.1773230000395;
+        Wed, 11 Mar 2026 04:53:20 -0700 (PDT)
 Received: from localhost.localdomain ([2409:891f:1b46:28af:1445:b4e2:b8bf:2d47])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829f6df3aedsm2500588b3a.18.2026.03.11.04.53.12
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829f6df3aedsm2500588b3a.18.2026.03.11.04.53.16
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 11 Mar 2026 04:53:16 -0700 (PDT)
+        Wed, 11 Mar 2026 04:53:19 -0700 (PDT)
 From: Yafang Shao <laoar.shao@gmail.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -72,9 +73,9 @@ To: peterz@infradead.org,
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Yafang Shao <laoar.shao@gmail.com>
-Subject: [RFC PATCH v2 2/3] locking/rtmutex: Add slow path variants for lock/unlock
-Date: Wed, 11 Mar 2026 19:52:49 +0800
-Message-ID: <20260311115250.78488-3-laoar.shao@gmail.com>
+Subject: [RFC PATCH v2 3/3] ftrace: Disable optimistic spinning for ftrace_lock
+Date: Wed, 11 Mar 2026 19:52:50 +0800
+Message-ID: <20260311115250.78488-4-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260311115250.78488-1-laoar.shao@gmail.com>
 References: <20260311115250.78488-1-laoar.shao@gmail.com>
@@ -86,303 +87,500 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add slow mutex APIs for rtmutex:
+The ftrace_lock may be held for a relatively long duration. For example,
+reading the available_filter_functions file takes considerable time:
 
- slow_rt_mutex_lock: lock a rtmutex without optimistic spinning
- slow_rt_mutex_unlock: unlock the slow rtmutex
+  $ time cat /sys/kernel/tracing/available_filter_functions &> /dev/null
+  real 0m0.457s user 0m0.001s sys 0m0.455s
+
+When the lock owner is continuously running, other tasks waiting for the
+lock will spin repeatedly until they hit a cond_resched() point, wasting
+CPU cycles.
+
+ftrace_lock is currently used in the following scenarios:
+- Debugging
+- Live patching
+
+Neither of these scenarios are in the application critical path.
+Therefore, it is reasonable to make tasks sleep when they cannot acquire
+the lock immediately, rather than spinning and consuming CPU resources.
+
+Performance Comparison
+======================
+
+- Before this change
+
+  - Single task reading available_filter_functions:
+
+    real 0m0.457s user 0m0.001s sys 0m0.455s
+
+  - Six concurrent processes:
+
+    real 0m2.666s user 0m0.001s sys 0m2.557s
+    real 0m2.718s user 0m0.000s sys 0m2.655s
+    real 0m2.718s user 0m0.001s sys 0m2.600s
+    real 0m2.733s user 0m0.001s sys 0m2.554s
+    real 0m2.735s user 0m0.000s sys 0m2.573s
+    real 0m2.738s user 0m0.000s sys 0m2.664s
+
+- After this change
+
+  - Single task:
+
+    real 0m0.454s user 0m0.002s sys 0m0.453s
+
+  - Six concurrent processes:
+
+    real 0m2.691s user 0m0.001s sys 0m0.458s
+    real 0m2.785s user 0m0.001s sys 0m0.467s
+    real 0m2.787s user 0m0.000s sys 0m0.469s
+    real 0m2.787s user 0m0.000s sys 0m0.466s
+    real 0m2.788s user 0m0.001s sys 0m0.468s
+    real 0m2.789s user 0m0.000s sys 0m0.471s
+
+The system time significantly decreases in the concurrent case, as tasks
+now sleep while waiting for the lock instead of busy-spinning.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- include/linux/rtmutex.h      |  3 +++
- kernel/locking/rtmutex.c     | 37 +++++++++++++++++-----------
- kernel/locking/rtmutex_api.c | 47 ++++++++++++++++++++++++++++++------
- 3 files changed, 66 insertions(+), 21 deletions(-)
+ kernel/trace/ftrace.c | 106 +++++++++++++++++++++---------------------
+ 1 file changed, 53 insertions(+), 53 deletions(-)
 
-diff --git a/include/linux/rtmutex.h b/include/linux/rtmutex.h
-index ede4c6bf6f22..22294a916ddc 100644
---- a/include/linux/rtmutex.h
-+++ b/include/linux/rtmutex.h
-@@ -109,6 +109,7 @@ extern void __rt_mutex_init(struct rt_mutex *lock, const char *name, struct lock
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 827fb9a0bf0d..00c195e280c5 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1284,10 +1284,10 @@ static void clear_ftrace_mod_list(struct list_head *head)
+ 	if (!head)
+ 		return;
  
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- extern void rt_mutex_lock_nested(struct rt_mutex *lock, unsigned int subclass);
-+extern void slow_rt_mutex_lock_nested(struct rt_mutex *lock, unsigned int subclass);
- extern void _rt_mutex_lock_nest_lock(struct rt_mutex *lock, struct lockdep_map *nest_lock);
- #define rt_mutex_lock(lock) rt_mutex_lock_nested(lock, 0)
- #define rt_mutex_lock_nest_lock(lock, nest_lock)			\
-@@ -116,9 +117,11 @@ extern void _rt_mutex_lock_nest_lock(struct rt_mutex *lock, struct lockdep_map *
- 		typecheck(struct lockdep_map *, &(nest_lock)->dep_map);	\
- 		_rt_mutex_lock_nest_lock(lock, &(nest_lock)->dep_map);	\
- 	} while (0)
-+#define slow_rt_mutex_lock(lock) slow_rt_mutex_lock_nested(lock, 0)
- 
- #else
- extern void rt_mutex_lock(struct rt_mutex *lock);
-+extern void slow_rt_mutex_lock(struct rt_mutex *lock);
- #define rt_mutex_lock_nested(lock, subclass) rt_mutex_lock(lock)
- #define rt_mutex_lock_nest_lock(lock, nest_lock) rt_mutex_lock(lock)
- #endif
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index c80902eacd79..663ff96cb1be 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1480,10 +1480,13 @@ static __always_inline void __rt_mutex_unlock(struct rt_mutex_base *lock)
- #ifdef CONFIG_SMP
- static bool rtmutex_spin_on_owner(struct rt_mutex_base *lock,
- 				  struct rt_mutex_waiter *waiter,
--				  struct task_struct *owner)
-+				  struct task_struct *owner,
-+				  const bool slow)
- {
- 	bool res = true;
- 
-+	if (slow)
-+		return false;
- 	rcu_read_lock();
- 	for (;;) {
- 		/* If owner changed, trylock again. */
-@@ -1517,7 +1520,8 @@ static bool rtmutex_spin_on_owner(struct rt_mutex_base *lock,
- #else
- static bool rtmutex_spin_on_owner(struct rt_mutex_base *lock,
- 				  struct rt_mutex_waiter *waiter,
--				  struct task_struct *owner)
-+				  struct task_struct *owner,
-+				  const bool slow)
- {
- 	return false;
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	list_for_each_entry_safe(p, n, head, list)
+ 		free_ftrace_mod(p);
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
  }
-@@ -1606,7 +1610,8 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
- 					   unsigned int state,
- 					   struct hrtimer_sleeper *timeout,
- 					   struct rt_mutex_waiter *waiter,
--					   struct wake_q_head *wake_q)
-+					   struct wake_q_head *wake_q,
-+					   const bool slow)
- 	__releases(&lock->wait_lock) __acquires(&lock->wait_lock)
- {
- 	struct rt_mutex *rtm = container_of(lock, struct rt_mutex, rtmutex);
-@@ -1642,7 +1647,7 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
- 			owner = NULL;
- 		raw_spin_unlock_irq_wake(&lock->wait_lock, wake_q);
  
--		if (!owner || !rtmutex_spin_on_owner(lock, waiter, owner)) {
-+		if (!owner || !rtmutex_spin_on_owner(lock, waiter, owner, slow)) {
- 			lockevent_inc(rtmutex_slow_sleep);
- 			rt_mutex_schedule();
+ void free_ftrace_hash(struct ftrace_hash *hash)
+@@ -4254,7 +4254,7 @@ static void *t_start(struct seq_file *m, loff_t *pos)
+ 	void *p = NULL;
+ 	loff_t l;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	if (unlikely(ftrace_disabled))
+ 		return NULL;
+@@ -4305,7 +4305,7 @@ static void *t_start(struct seq_file *m, loff_t *pos)
+ 
+ static void t_stop(struct seq_file *m, void *p)
+ {
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ void * __weak
+@@ -4362,11 +4362,11 @@ static __init void ftrace_check_work_func(struct work_struct *work)
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	do_for_each_ftrace_rec(pg, rec) {
+ 		test_for_valid_rec(rec);
+ 	} while_for_each_ftrace_rec();
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ static int __init ftrace_check_for_weak_functions(void)
+@@ -5123,7 +5123,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 	if (!new_hash)
+ 		goto out; /* warn? */
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	list_for_each_entry_safe(ftrace_mod, n, head, list) {
+ 
+@@ -5145,7 +5145,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 		ftrace_mod->func = func;
+ 	}
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	list_for_each_entry_safe(ftrace_mod, n, &process_mods, list) {
+ 
+@@ -5159,11 +5159,11 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 	if (enable && list_empty(head))
+ 		new_hash->flags &= ~FTRACE_HASH_FL_MOD;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	ftrace_hash_move_and_update_ops(ops, orig_hash,
+ 					      new_hash, enable);
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+  out:
+ 	mutex_unlock(&ops->func_hash->regex_lock);
+@@ -5465,7 +5465,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 		return -EINVAL;
+ 
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	/* Check if the probe_ops is already registered */
+ 	list_for_each_entry(iter, &tr->func_probes, list) {
+ 		if (iter->probe_ops == probe_ops) {
+@@ -5476,7 +5476,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 	if (!probe) {
+ 		probe = kzalloc_obj(*probe);
+ 		if (!probe) {
+-			mutex_unlock(&ftrace_lock);
++			slow_mutex_unlock(&ftrace_lock);
+ 			return -ENOMEM;
  		}
-@@ -1693,7 +1698,8 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
- 				       unsigned int state,
- 				       enum rtmutex_chainwalk chwalk,
- 				       struct rt_mutex_waiter *waiter,
--				       struct wake_q_head *wake_q)
-+				       struct wake_q_head *wake_q,
-+				       const bool slow)
- {
- 	struct rt_mutex *rtm = container_of(lock, struct rt_mutex, rtmutex);
- 	struct ww_mutex *ww = ww_container_of(rtm);
-@@ -1718,7 +1724,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
+ 		probe->probe_ops = probe_ops;
+@@ -5488,7 +5488,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
  
- 	ret = task_blocks_on_rt_mutex(lock, waiter, current, ww_ctx, chwalk, wake_q);
- 	if (likely(!ret))
--		ret = rt_mutex_slowlock_block(lock, ww_ctx, state, NULL, waiter, wake_q);
-+		ret = rt_mutex_slowlock_block(lock, ww_ctx, state, NULL, waiter, wake_q, slow);
+ 	acquire_probe_locked(probe);
  
- 	if (likely(!ret)) {
- 		/* acquired the lock */
-@@ -1749,7 +1755,8 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
- static inline int __rt_mutex_slowlock_locked(struct rt_mutex_base *lock,
- 					     struct ww_acquire_ctx *ww_ctx,
- 					     unsigned int state,
--					     struct wake_q_head *wake_q)
-+					     struct wake_q_head *wake_q,
-+					     const bool slow)
- {
- 	struct rt_mutex_waiter waiter;
- 	int ret;
-@@ -1758,7 +1765,7 @@ static inline int __rt_mutex_slowlock_locked(struct rt_mutex_base *lock,
- 	waiter.ww_ctx = ww_ctx;
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
  
- 	ret = __rt_mutex_slowlock(lock, ww_ctx, state, RT_MUTEX_MIN_CHAINWALK,
--				  &waiter, wake_q);
-+				  &waiter, wake_q, slow);
- 
- 	debug_rt_mutex_free_waiter(&waiter);
- 	lockevent_cond_inc(rtmutex_slow_wake, !wake_q_empty(wake_q));
-@@ -1773,7 +1780,8 @@ static inline int __rt_mutex_slowlock_locked(struct rt_mutex_base *lock,
-  */
- static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
- 				     struct ww_acquire_ctx *ww_ctx,
--				     unsigned int state)
-+				     unsigned int state,
-+				     const bool slow)
- {
- 	DEFINE_WAKE_Q(wake_q);
- 	unsigned long flags;
-@@ -1797,7 +1805,7 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
- 	 * irqsave/restore variants.
- 	 */
- 	raw_spin_lock_irqsave(&lock->wait_lock, flags);
--	ret = __rt_mutex_slowlock_locked(lock, ww_ctx, state, &wake_q);
-+	ret = __rt_mutex_slowlock_locked(lock, ww_ctx, state, &wake_q, slow);
- 	raw_spin_unlock_irqrestore_wake(&lock->wait_lock, flags, &wake_q);
- 	rt_mutex_post_schedule();
- 
-@@ -1805,14 +1813,14 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
- }
- 
- static __always_inline int __rt_mutex_lock(struct rt_mutex_base *lock,
--					   unsigned int state)
-+					   unsigned int state, const bool slow)
- {
- 	lockdep_assert(!current->pi_blocked_on);
- 
- 	if (likely(rt_mutex_try_acquire(lock)))
- 		return 0;
- 
--	return rt_mutex_slowlock(lock, NULL, state);
-+	return rt_mutex_slowlock(lock, NULL, state, slow);
- }
- #endif /* RT_MUTEX_BUILD_MUTEX */
- 
-@@ -1827,7 +1835,8 @@ static __always_inline int __rt_mutex_lock(struct rt_mutex_base *lock,
-  * @wake_q:	The wake_q to wake tasks after we release the wait_lock
-  */
- static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
--					   struct wake_q_head *wake_q)
-+					   struct wake_q_head *wake_q,
-+					   const bool slow)
- 	__releases(&lock->wait_lock) __acquires(&lock->wait_lock)
- {
- 	struct rt_mutex_waiter waiter;
-@@ -1863,7 +1872,7 @@ static void __sched rtlock_slowlock_locked(struct rt_mutex_base *lock,
- 			owner = NULL;
- 		raw_spin_unlock_irq_wake(&lock->wait_lock, wake_q);
- 
--		if (!owner || !rtmutex_spin_on_owner(lock, &waiter, owner)) {
-+		if (!owner || !rtmutex_spin_on_owner(lock, &waiter, owner, slow)) {
- 			lockevent_inc(rtlock_slow_sleep);
- 			schedule_rtlock();
- 		}
-diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
-index 59dbd29cb219..b196cdd35ff1 100644
---- a/kernel/locking/rtmutex_api.c
-+++ b/kernel/locking/rtmutex_api.c
-@@ -37,21 +37,29 @@ subsys_initcall(init_rtmutex_sysctl);
-  * The atomic acquire/release ops are compiled away, when either the
-  * architecture does not support cmpxchg or when debugging is enabled.
-  */
--static __always_inline int __rt_mutex_lock_common(struct rt_mutex *lock,
-+static __always_inline int ___rt_mutex_lock_common(struct rt_mutex *lock,
- 						  unsigned int state,
- 						  struct lockdep_map *nest_lock,
--						  unsigned int subclass)
-+						  unsigned int subclass,
-+						  const bool slow)
- {
- 	int ret;
- 
- 	might_sleep();
- 	mutex_acquire_nest(&lock->dep_map, subclass, 0, nest_lock, _RET_IP_);
--	ret = __rt_mutex_lock(&lock->rtmutex, state);
-+	ret = __rt_mutex_lock(&lock->rtmutex, state, slow);
- 	if (ret)
- 		mutex_release(&lock->dep_map, _RET_IP_);
- 	return ret;
- }
- 
-+static __always_inline int __rt_mutex_lock_common(struct rt_mutex *lock,
-+						  unsigned int state,
-+						  struct lockdep_map *nest_lock,
-+						  unsigned int subclass)
-+{
-+	return ___rt_mutex_lock_common(lock, state, nest_lock, subclass, false);
-+}
- void rt_mutex_base_init(struct rt_mutex_base *rtb)
- {
- 	__rt_mutex_base_init(rtb);
-@@ -77,6 +85,11 @@ void __sched _rt_mutex_lock_nest_lock(struct rt_mutex *lock, struct lockdep_map
- }
- EXPORT_SYMBOL_GPL(_rt_mutex_lock_nest_lock);
- 
-+void __sched slow_rt_mutex_lock_nested(struct rt_mutex *lock, unsigned int subclass)
-+{
-+	___rt_mutex_lock_common(lock, TASK_UNINTERRUPTIBLE, NULL, subclass, true);
-+}
-+
- #else /* !CONFIG_DEBUG_LOCK_ALLOC */
- 
- /**
-@@ -89,6 +102,11 @@ void __sched rt_mutex_lock(struct rt_mutex *lock)
- 	__rt_mutex_lock_common(lock, TASK_UNINTERRUPTIBLE, NULL, 0);
- }
- EXPORT_SYMBOL_GPL(rt_mutex_lock);
-+
-+void __sched slow_rt_mutex_lock(struct rt_mutex *lock)
-+{
-+	___rt_mutex_lock_common(lock, TASK_UNINTERRUPTIBLE, NULL, 0, true);
-+}
- #endif
- 
- /**
-@@ -401,7 +419,7 @@ int __sched rt_mutex_wait_proxy_lock(struct rt_mutex_base *lock,
- 	raw_spin_lock_irq(&lock->wait_lock);
- 	/* sleep on the mutex */
- 	set_current_state(TASK_INTERRUPTIBLE);
--	ret = rt_mutex_slowlock_block(lock, NULL, TASK_INTERRUPTIBLE, to, waiter, NULL);
-+	ret = rt_mutex_slowlock_block(lock, NULL, TASK_INTERRUPTIBLE, to, waiter, NULL, false);
  	/*
- 	 * try_to_take_rt_mutex() sets the waiter bit unconditionally. We might
- 	 * have to fix that up.
-@@ -521,17 +539,18 @@ static void __mutex_rt_init_generic(struct mutex *mutex)
- 	debug_check_no_locks_freed((void *)mutex, sizeof(*mutex));
- }
+ 	 * Note, there's a small window here that the func_hash->filter_hash
+@@ -5540,7 +5540,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 		}
+ 	}
  
--static __always_inline int __mutex_lock_common(struct mutex *lock,
-+static __always_inline int ___mutex_lock_common(struct mutex *lock,
- 					       unsigned int state,
- 					       unsigned int subclass,
- 					       struct lockdep_map *nest_lock,
--					       unsigned long ip)
-+					       unsigned long ip,
-+					       const bool slow)
- {
- 	int ret;
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
  
- 	might_sleep();
- 	mutex_acquire_nest(&lock->dep_map, subclass, 0, nest_lock, ip);
--	ret = __rt_mutex_lock(&lock->rtmutex, state);
-+	ret = __rt_mutex_lock(&lock->rtmutex, state, slow);
- 	if (ret)
- 		mutex_release(&lock->dep_map, ip);
- 	else
-@@ -539,6 +558,15 @@ static __always_inline int __mutex_lock_common(struct mutex *lock,
+ 	if (!count) {
+ 		/* Nothing was added? */
+@@ -5560,7 +5560,7 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
+ 		ret = ftrace_startup(&probe->ops, 0);
+ 
+  out_unlock:
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	if (!ret)
+ 		ret = count;
+@@ -5619,7 +5619,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 			return -EINVAL;
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	/* Check if the probe_ops is already registered */
+ 	list_for_each_entry(iter, &tr->func_probes, list) {
+ 		if (iter->probe_ops == probe_ops) {
+@@ -5636,7 +5636,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 
+ 	acquire_probe_locked(probe);
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	mutex_lock(&probe->ops.func_hash->regex_lock);
+ 
+@@ -5679,7 +5679,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 		goto out_unlock;
+ 	}
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	WARN_ON(probe->ref < count);
+ 
+@@ -5703,7 +5703,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 			probe_ops->free(probe_ops, tr, entry->ip, probe->data);
+ 		kfree(entry);
+ 	}
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+  out_unlock:
+ 	mutex_unlock(&probe->ops.func_hash->regex_lock);
+@@ -5714,7 +5714,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 	return ret;
+ 
+  err_unlock_ftrace:
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
  	return ret;
  }
  
-+static __always_inline int __mutex_lock_common(struct mutex *lock,
-+					       unsigned int state,
-+					       unsigned int subclass,
-+					       struct lockdep_map *nest_lock,
-+					       unsigned long ip)
-+{
-+	___mutex_lock_common(lock, state, subclass, nest_lock, ip, false);
-+}
-+
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- void mutex_rt_init_lockdep(struct mutex *mutex, const char *name, struct lock_class_key *key)
- {
-@@ -644,6 +672,11 @@ int __sched mutex_trylock(struct mutex *lock)
- 	return __rt_mutex_trylock(&lock->rtmutex);
- }
- EXPORT_SYMBOL(mutex_trylock);
-+
-+void __sched slow_mutex_lock(struct mutex *lock)
-+{
-+	___mutex_lock_common(lock, state, subclass, nest_lock, ip, true);
-+}
- #endif /* !CONFIG_DEBUG_LOCK_ALLOC */
+@@ -5943,9 +5943,9 @@ ftrace_set_hash(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 			goto out_regex_unlock;
+ 	}
  
- void __sched mutex_unlock(struct mutex *lock)
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, hash, enable);
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+  out_regex_unlock:
+ 	mutex_unlock(&ops->func_hash->regex_lock);
+@@ -6205,7 +6205,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 	 * Now the ftrace_ops_list_func() is called to do the direct callers.
+ 	 * We can safely change the direct functions attached to each entry.
+ 	 */
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+@@ -6219,7 +6219,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 	/* Prevent store tearing if a trampoline concurrently accesses the value */
+ 	WRITE_ONCE(ops->direct_call, addr);
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ out:
+ 	/* Removing the tmp_ops will add the updated direct callers to the functions */
+@@ -6625,7 +6625,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
+ 	 * Now the ftrace_ops_list_func() is called to do the direct callers.
+ 	 * We can safely change the direct functions attached to each entry.
+ 	 */
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+@@ -6637,7 +6637,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
+ 		}
+ 	}
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ out:
+ 	/* Removing the tmp_ops will add the updated direct callers to the functions */
+@@ -6980,10 +6980,10 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
+ 		} else
+ 			orig_hash = &iter->ops->func_hash->notrace_hash;
+ 
+-		mutex_lock(&ftrace_lock);
++		slow_mutex_lock(&ftrace_lock);
+ 		ftrace_hash_move_and_update_ops(iter->ops, orig_hash,
+ 						      iter->hash, filter_hash);
+-		mutex_unlock(&ftrace_lock);
++		slow_mutex_unlock(&ftrace_lock);
+ 	}
+ 
+ 	mutex_unlock(&iter->ops->func_hash->regex_lock);
+@@ -7464,12 +7464,12 @@ void ftrace_create_filter_files(struct ftrace_ops *ops,
+  */
+ void ftrace_destroy_filter_files(struct ftrace_ops *ops)
+ {
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	if (ops->flags & FTRACE_OPS_FL_ENABLED)
+ 		ftrace_shutdown(ops, 0);
+ 	ops->flags |= FTRACE_OPS_FL_DELETED;
+ 	ftrace_free_filter(ops);
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+@@ -7571,7 +7571,7 @@ static int ftrace_process_locs(struct module *mod,
+ 	if (!start_pg)
+ 		return -ENOMEM;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	/*
+ 	 * Core and each module needs their own pages, as
+@@ -7661,7 +7661,7 @@ static int ftrace_process_locs(struct module *mod,
+ 		local_irq_restore(flags);
+ 	ret = 0;
+  out:
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	/* We should have used all pages unless we skipped some */
+ 	if (pg_unuse) {
+@@ -7868,7 +7868,7 @@ void ftrace_release_mod(struct module *mod)
+ 	struct ftrace_page *tmp_page = NULL;
+ 	struct ftrace_page *pg;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	/*
+ 	 * To avoid the UAF problem after the module is unloaded, the
+@@ -7913,7 +7913,7 @@ void ftrace_release_mod(struct module *mod)
+ 			last_pg = &pg->next;
+ 	}
+  out_unlock:
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	/* Need to synchronize with ftrace_location_range() */
+ 	if (tmp_page)
+@@ -7938,7 +7938,7 @@ void ftrace_module_enable(struct module *mod)
+ 	struct dyn_ftrace *rec;
+ 	struct ftrace_page *pg;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -8008,7 +8008,7 @@ void ftrace_module_enable(struct module *mod)
+ 		ftrace_arch_code_modify_post_process();
+ 
+  out_unlock:
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	process_cached_mods(mod->name);
+ }
+@@ -8267,7 +8267,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 	key.ip = start;
+ 	key.flags = end;	/* overload flags, as it is unsigned long */
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	/*
+ 	 * If we are freeing module init memory, then check if
+@@ -8310,7 +8310,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 		/* More than one function may be in this block */
+ 		goto again;
+ 	}
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	list_for_each_entry_safe(func, func_next, &clear_hash, list) {
+ 		clear_func_from_hashes(func);
+@@ -8686,22 +8686,22 @@ static void clear_ftrace_pids(struct trace_array *tr, int type)
+ 
+ void ftrace_clear_pids(struct trace_array *tr)
+ {
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	clear_ftrace_pids(tr, TRACE_PIDS | TRACE_NO_PIDS);
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ static void ftrace_pid_reset(struct trace_array *tr, int type)
+ {
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	clear_ftrace_pids(tr, type);
+ 
+ 	ftrace_update_pid_func();
+ 	ftrace_startup_all(0);
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ /* Greater than any max PID */
+@@ -8713,7 +8713,7 @@ static void *fpid_start(struct seq_file *m, loff_t *pos)
+ 	struct trace_pid_list *pid_list;
+ 	struct trace_array *tr = m->private;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	rcu_read_lock_sched();
+ 
+ 	pid_list = rcu_dereference_sched(tr->function_pids);
+@@ -8740,7 +8740,7 @@ static void fpid_stop(struct seq_file *m, void *p)
+ 	__releases(RCU)
+ {
+ 	rcu_read_unlock_sched();
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ }
+ 
+ static int fpid_show(struct seq_file *m, void *v)
+@@ -8766,7 +8766,7 @@ static void *fnpid_start(struct seq_file *m, loff_t *pos)
+ 	struct trace_pid_list *pid_list;
+ 	struct trace_array *tr = m->private;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	rcu_read_lock_sched();
+ 
+ 	pid_list = rcu_dereference_sched(tr->function_no_pids);
+@@ -9057,7 +9057,7 @@ static int prepare_direct_functions_for_ipmodify(struct ftrace_ops *ops)
+ 			unsigned long ip = entry->ip;
+ 			bool found_op = false;
+ 
+-			mutex_lock(&ftrace_lock);
++			slow_mutex_lock(&ftrace_lock);
+ 			do_for_each_ftrace_op(op, ftrace_ops_list) {
+ 				if (!(op->flags & FTRACE_OPS_FL_DIRECT))
+ 					continue;
+@@ -9066,7 +9066,7 @@ static int prepare_direct_functions_for_ipmodify(struct ftrace_ops *ops)
+ 					break;
+ 				}
+ 			} while_for_each_ftrace_op(op);
+-			mutex_unlock(&ftrace_lock);
++			slow_mutex_unlock(&ftrace_lock);
+ 
+ 			if (found_op) {
+ 				if (!op->ops_func)
+@@ -9106,7 +9106,7 @@ static void cleanup_direct_functions_after_ipmodify(struct ftrace_ops *ops)
+ 			unsigned long ip = entry->ip;
+ 			bool found_op = false;
+ 
+-			mutex_lock(&ftrace_lock);
++			slow_mutex_lock(&ftrace_lock);
+ 			do_for_each_ftrace_op(op, ftrace_ops_list) {
+ 				if (!(op->flags & FTRACE_OPS_FL_DIRECT))
+ 					continue;
+@@ -9115,7 +9115,7 @@ static void cleanup_direct_functions_after_ipmodify(struct ftrace_ops *ops)
+ 					break;
+ 				}
+ 			} while_for_each_ftrace_op(op);
+-			mutex_unlock(&ftrace_lock);
++			slow_mutex_unlock(&ftrace_lock);
+ 
+ 			/* The cleanup is optional, ignore any errors */
+ 			if (found_op && op->ops_func)
+@@ -9153,11 +9153,11 @@ static int register_ftrace_function_nolock(struct ftrace_ops *ops)
+ 
+ 	ftrace_ops_init(ops);
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 
+ 	ret = ftrace_startup(ops, 0);
+ 
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	return ret;
+ }
+@@ -9200,9 +9200,9 @@ int unregister_ftrace_function(struct ftrace_ops *ops)
+ {
+ 	int ret;
+ 
+-	mutex_lock(&ftrace_lock);
++	slow_mutex_lock(&ftrace_lock);
+ 	ret = ftrace_shutdown(ops, 0);
+-	mutex_unlock(&ftrace_lock);
++	slow_mutex_unlock(&ftrace_lock);
+ 
+ 	cleanup_direct_functions_after_ipmodify(ops);
+ 	return ret;
 -- 
 2.47.3
 
