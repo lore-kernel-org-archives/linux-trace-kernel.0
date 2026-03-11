@@ -1,107 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C728422126C;
-	Wed, 11 Mar 2026 09:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6ED3BAD85;
+	Wed, 11 Mar 2026 09:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773219736; cv=none; b=o8/+7LZrLq01E8yYnkDkb2WsD2Pu6WcyCtWn96cwwLohYiFCLsKEdvcQQOpmEKCtbcflEpN6n1cjdHjGa7UfLcKwrRsuAcL1DcD/8NfGmj3FC53ymdLOUh2udmarCSjOL5eoGfejgIm81baibeL+VtNn9Au2/e14TlZacy/GDZQ=
+	t=1773219808; cv=none; b=eQFnDRvtS7RGYtV/QmDKcGV9xIh59mURVbx22+ipFRCK/R0L9dkvQS32XIZVgQWOzmf7sXN+VWR+Rxn26qxsBZikz1nEHbfn5hV6yWlrvWppsXSzHhCYY4Cy3r0Kr8ZHa3qfukY76JZN29iVvvy5QXkWLUHNqRdyZCx2DdE/RMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773219736; c=relaxed/simple;
-	bh=Qrm1Kiz5HWZak3PsHD74SSOh7XDraSGGUCTaqtCaa6s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYpCwXaLfJw69SEVgkBwtAlybVEjFrRvYOxTfBpt+XvEJAWl2CxOyB0IMaKRPqqKtEdyWwl4Y4nllaaHZ4c/6ZMFNfoP5/Vv60Hir0xAu+G3Cu85pQ4Ud22468mZRyUfxVMX0MzM5Ifi3bvqWq2iQkTDRQpfBoMLTGWDgLKCIu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7Mj8Vew; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773219808; c=relaxed/simple;
+	bh=+RKyKdTuHwRKQyTIDmzrXH46TV8cXn+0KYBzxfKPSb8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KimcNp0FHfdqqXRKhj00P64ssGIMKR/71KWpbKYr7xjiclr451C41fqBc6ZhQjXzPnzWEJq+GGf7ap3+uXRGB/sUIubZ90PigXk4TKAX45dZ86qzNcu+q82gGmnmNsRIgB+/LpCLcSgmWfIjNXtfrMNuPNbrmGy9aOmYfxB6j+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGXQKqmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7Mj8Vew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72022C2BCAF;
-	Wed, 11 Mar 2026 09:02:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGXQKqmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96FE6C4CEF7;
+	Wed, 11 Mar 2026 09:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773219736;
-	bh=Qrm1Kiz5HWZak3PsHD74SSOh7XDraSGGUCTaqtCaa6s=;
+	s=k20201202; t=1773219808;
+	bh=+RKyKdTuHwRKQyTIDmzrXH46TV8cXn+0KYBzxfKPSb8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=i7Mj8VewEbIa4Vcrcj0GGMlLlDS6QHzbE8eUiwFgfn2oYfmhYNOyEtRrjvSm27aju
-	 EPq9uDInnrI8iPxsSaLiTJ/ivdmGffyRmGNAGs+9ORsdqZDCOiaI8V9xbzu3vxoJx4
-	 F1nzGBGunBAaSl5Cor+yID2pLmt/x5jS1U7Ux/kYs0v+WI0Egrnq/jy7X/Fv+4gtkK
-	 bblxsuz9D5igfRvfWk4yeCpKQbN/p4CocSVHUQNZU+G8RT/5MW8t05d24y6A+29Rfk
-	 zpiqK6HvNQYElKVm87Kry+TGMxOhsOOps3c3qMe1ZpK6sXDtpjo4lY8rKus4IUpk/J
-	 31aINJuTraSjg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1w0FSI-00000000mTX-1OVO;
-	Wed, 11 Mar 2026 09:02:14 +0000
-Date: Wed, 11 Mar 2026 09:02:13 +0000
-Message-ID: <86a4we7n8q.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: 	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	jstultz@google.com,
-	qperret@google.com,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 00/30] Tracefs support for pKVM
-In-Reply-To: <20260310104301.665bc684@gandalf.local.home>
-References: <20260309162516.2623589-1-vdonnefort@google.com>
-	<20260310104301.665bc684@gandalf.local.home>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	b=DGXQKqmkaxAA7WwCzJxCe0KxNeNIMp3Og8bBfQwNDX2UYMjXXFJHkmjxAvt6MKnV5
+	 ntTRZzqx0Qc5Y2ekCEAFm1ZXEauXOtBoieGTk8d8gfpFmZFAj1ych4nAUkfiI5v8EI
+	 6nW6FvxMSzaISot/kMf97jSuDgkZiAqUEGjo1H74LAIedl9yT8EwkH8coDx6HYL8zi
+	 gdNSqfjX4yU7PVYlzwnU7dtwL63n+SrM6hKWq/C4nnohJaQT+4gDK9hpimV7A55BFI
+	 R3USMRyyWrymo91BrKqQY+0+EL3CITfhHXXu1EOticmFLQXNppdjaZ3lGpTf6WwU+H
+	 nlhOXnL9EiGkA==
+Date: Wed, 11 Mar 2026 18:03:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Peter
+ Zijlstra <peterz@infradead.org>, Brian Geffon <bgeffon@google.com>, John
+ Stultz <jstultz@google.com>, Ian Rogers <irogers@google.com>, Suleiman
+ Souhlal <suleiman@google.com>
+Subject: Re: [PATCH v2 1/3] tracing: Have futex syscall trace event show
+ specific user data
+Message-Id: <20260311180325.488f724d97204d1a3c66f071@kernel.org>
+In-Reply-To: <20260310201036.542627924@kernel.org>
+References: <20260310200954.285663884@kernel.org>
+	<20260310201036.542627924@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Mar 2026 14:43:01 +0000,
-Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> On Mon,  9 Mar 2026 16:24:46 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> 
-> > 5. pKVM
-> > -------
-> > 
-> > The pKVM support simply creates a "hypervisor" trace_remote on the
-> > kernel side and inherits from simple-ring-buffer.c on the hypervisor
-> > side.
-> > 
-> > A new event macro is created HYP_EVENT() that is under the hood re-using
-> > REMOTE_EVENT() (defined in the previous paragaph) as well as generate
-> > hypervisor specific struct and trace_<event>() functions.
-> 
-> I pulled in all the tracing related patches (1-18) and pushed it to my repo:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git  ring-buffer/for-next
-> 
-> It's based on top of v7.0-rc3. I'm not going to rebase that branch,
-> although I may built on top of it, but for now, feel free to merge it into
-> the arm tree and put the rest of the patches on top of it.
+On Tue, 10 Mar 2026 16:09:55 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-I've now picked up this branch (as of a717943d8ecc0) and stashed
-patches 19-30 on top. The result is pushed out in kvmarm/next.
+> +#ifdef CONFIG_FTRACE_SYSCALLS
+> +static const char * __futex_cmds[] =
+> +{
+> +	"FUTEX_WAIT", "FUTEX_WAKE", "FUTEX_FD", "FUTEX_REQUEUE",
+> +	"FUTEX_CMP_REQUEUE", "FUTEX_WAKE_OP", "FUTEX_LOCK_PI",
+> +	"FUTEX_UNLOCK_PI", "FUTEX_TRYLOCK_PI", "FUTEX_WAIT_BITSET",
+> +	"FUTEX_WAKE_BITSET", "FUTEX_WAIT_REQUEUE_PI", "FUTEX_CMP_REQUEUE_PI",
+> +	"FUTEX_LOCK_PI2",
+> +};
+> +
+[...]
+> @@ -437,6 +464,69 @@ sys_enter_openat_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+>  	return pos;
+>  }
+>  
+> +static int __init
+> +sys_enter_futex_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+> +{
+> +	int pos = 0;
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"\"uaddr: 0x%%lx (0x%%lx) cmd=%%s%%s%%s");
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"  val: 0x%%x timeout/val2: 0x%%llx");
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" uaddr2: 0x%%lx val3: 0x%%x\", ");
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" REC->uaddr,");
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" REC->__value,");
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"  __print_symbolic(REC->op & 0x%x, ", FUTEX_CMD_MASK);
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAIT\"}, ", FUTEX_WAIT);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAKE\"}, ", FUTEX_WAKE);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_FD\"}, ", FUTEX_FD);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_REQUEUE\"}, ", FUTEX_REQUEUE);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_CMP_REQUEUE\"}, ", FUTEX_CMP_REQUEUE);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAKE_OP\"}, ", FUTEX_WAKE_OP);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_LOCK_PI\"}, ", FUTEX_LOCK_PI);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_UNLOCK_PI\"}, ", FUTEX_UNLOCK_PI);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_TRYLOCK_PI\"}, ", FUTEX_TRYLOCK_PI);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAIT_BITSET\"}, ", FUTEX_WAIT_BITSET);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAKE_BITSET\"}, ", FUTEX_WAKE_BITSET);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_WAIT_REQUEUE_PI\"}, ", FUTEX_WAIT_REQUEUE_PI);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_CMP_REQUEUE_PI\"}, ", FUTEX_CMP_REQUEUE_PI);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			"{%d, \"FUTEX_LOCK_PI2\"}),", FUTEX_LOCK_PI2);
+
+Hmm can we share __futex_cmds[] with kernel/futex/syscalls.c?
+Then these could be
+
+for (i = 0; i <= FUTEX_LOCK_PI2; i++)
+	pos += snprintf(buf + pos, LEN_OR_ZERO,
+			"{%d, \"%s\"}%s", i, __futex_cmds[i],
+			i == FUTEX_LOCK_PI2 ? ")," : ", ");
+
+
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" (REC->op & %d) ? \"|FUTEX_PRIVATE_FLAG\" : \"\",",
+> +			FUTEX_PRIVATE_FLAG);
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" (REC->op & %d) ? \"|FUTEX_CLOCK_REALTIME\" : \"\",",
+> +			FUTEX_CLOCK_REALTIME);
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" REC->val, REC->utime,");
+> +
+> +	pos += snprintf(buf + pos, LEN_OR_ZERO,
+> +			" REC->uaddr, REC->val3");
+> +	return pos;
+> +}
+> +
+>  static int __init
+>  __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
+>  {
+[...]
+> @@ -689,6 +799,48 @@ static int syscall_copy_user_array(char *buf, const char __user *ptr,
+>  	return 0;
+>  }
+>  
+> +static int
+> +syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
+> +{
+> +	struct syscall_user_buffer *sbuf;
+> +	const char __user *ptr;
+> +	char *buf;
+> +
+> +	/* buf_size of zero means user doesn't want user space read */
+> +	if (!buf_size)
+> +		return -1;
+> +
+> +	/* If the syscall_buffer is NULL, tracing is being shutdown */
+> +	sbuf = READ_ONCE(syscall_buffer);
+> +	if (!sbuf)
+> +		return -1;
+> +
+> +	ptr = (char __user *)args[0];
+> +
+> +	*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
+> +	if (!*buffer)
+> +		return -1;
+> +
+> +	/* Add room for the value */
+> +	*size += 4;
+> +
+> +	buf = *buffer;
+
+As kernel test bot says, this does nothing. (*buffer is already assigned)
+
+> +
+> +	return 0;
+> +}
 
 Thanks,
 
-	M.
-
 -- 
-Without deviation from the norm, progress is not possible.
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
