@@ -1,116 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C643CF032;
-	Wed, 11 Mar 2026 19:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C952D2488;
+	Wed, 11 Mar 2026 19:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773256167; cv=none; b=HQj+w29171Ow5h7l8P4L6Vinb8c7wFkc7olWZYYidW8OfUAGSonlFHL3cY59g37sf3FwGJaO3LiO8L6cOTad3VmwAMSlWTO5R8yPcGwLy2DzCVnJcEj6AF3/eOJOAqFtRm9q39n1H+Jd0QNroe4av/ShUudwqhOAweNYH8LTzhQ=
+	t=1773258196; cv=none; b=QnvrFsR4ePU5GchaqwFUUpIomMsJfXt5z5bv9MUUkbCUlL9Gvlo5K99lraJXM/YbpCxnUF0OHnXMwUJIn4kQ4BIiGFpcMwXX/lT7sEFH6Y+6y5AxgGbvBRQRnvaXfuKY25a3Zgw8Nn1Vo+aGI0SHSj9PhHFBOGlxgjFbcRbTErA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773256167; c=relaxed/simple;
-	bh=8pwuaCiDUSCBcuJ0n9V3xnzMZmgOorpLbuob290/9q4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=puo1njSIq/6zKedsvaB/xzth4NRfb/WxHRy5OGZND7oJfgyR78VAgSsKoSqH/QB9IrWtYDrJK6xUMi4bPaa9xfdj9Q+fMCW3+56E2Y3EtaSJgzzUJjz/2HAXjHj7+jQ0z9ufHHGjY42r1mwbXYdNiLXol32NAMBc+rvjZ7Xu+Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHKnRO6y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773258196; c=relaxed/simple;
+	bh=tWuZWGWIIdy34/6ikze0VnjyJtcKHGPA9DsMtHRw6yA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CIrHz7wz4u9ex+U96wNExB0OQqfoffNUULcUlnhWrbCJImNCUYWp9S7o7U3NmpZ6E5Mmx1fzInDuuWpEaVU8hvcen6aMP4HkQ6jZScf2j3QqWqdEueM7FLfzDexK8Mh7ivfKn7rxhyG/QQIKxyAf/0mcItSYM77ZQ32a3e6ozsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eZ8Rkoe8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHKnRO6y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8658CC4CEF7;
-	Wed, 11 Mar 2026 19:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773256167;
-	bh=8pwuaCiDUSCBcuJ0n9V3xnzMZmgOorpLbuob290/9q4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fHKnRO6yqtY5rofM6SDr4DHDapAJhsI0XJQi4O9p65/khxIvwwDdKmxcfP8QYi6A2
-	 m104LZo+8JeIN3EoFgQM5Elab2cHsl5k8qdT1jPMH3o3Dzz6r5kBM+nkshU7bgmuWj
-	 iEcMBWWDHna5UV8c+CTUfuJ6W6gkfU1mWntrsCIn5VobxHkCLxQcD7/p0cM11R/5kr
-	 F2/iLjoVMLIfU9H6nkJoCL4rhAdIR+aXP4WOX2Dvv4Kv8MnhhPCcvvORJXpnDAduD5
-	 uVQcX6poI5WbBIl7IXu3Irg6tUKQGpfuh/AJs2iPba4QxwYO9dwxL3VAGMO2PcW34p
-	 Tzux8OKSdH0Mw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eZ8Rkoe8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jW30sOm34LIDik7ynHg5PrKBS5jGdsOHpTqCM6OkCP8=; b=eZ8Rkoe8Gn00yWfX+eALxQtgUF
+	xfuRAT4q6uwU0chblVRBL815Bugsy+Y2x5eeRXMHMnC0sX+LTllIzARHoYEo4y3cheoph6jEtBdxa
+	fYKtQtYmu3ckYV7evrwq/KGOIdb347kQi3aL7xyAmjLRMTNoqnn5w1CW9luSJQpzl30Z2JDVeC8XI
+	CwUE2Kv/Z7vvD0NlucztM+jxvC8hYzkxNvmU8E36LzT9ppM49OxpSR8krFwTMG3bAgvKhX/Y7uDp+
+	KJvknlHTER3oNXmA/iTTwTkBqraih3xhSk9/52vO5yZfpONqJTntvGlkij3jH2CRuOifRIUq3PqeL
+	6iSOODCQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w0PSU-0000000ACTu-2esQ;
+	Wed, 11 Mar 2026 19:43:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2E896303178; Wed, 11 Mar 2026 20:43:05 +0100 (CET)
+Date: Wed, 11 Mar 2026 20:43:05 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linux-rdma@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH v2 5/8] dma-direct: prevent SWIOTLB path when DMA_ATTR_REQUIRE_COHERENT is set
-Date: Wed, 11 Mar 2026 21:08:48 +0200
-Message-ID: <20260311-dma-debug-overlap-v2-5-e00bc2ca346d@nvidia.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260311-dma-debug-overlap-v2-0-e00bc2ca346d@nvidia.com>
-References: <20260311-dma-debug-overlap-v2-0-e00bc2ca346d@nvidia.com>
+	Andrew Morton <akpm@linux-foundation.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+	acme@kernel.org, williams@redhat.com, gmonaco@redhat.com
+Subject: Re: [PATCH v3 4/4] trace/preemptirq: Implement trace_irqflags hooks
+Message-ID: <20260311194305.GT606826@noisy.programming.kicks-ass.net>
+References: <20260311125021.197638-1-wander@redhat.com>
+ <20260311125021.197638-5-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-18f8f
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260311125021.197638-5-wander@redhat.com>
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, Mar 11, 2026 at 09:50:18AM -0300, Wander Lairson Costa wrote:
+> +#define local_irq_enable()				\
+> +	do {						\
+> +		if (tracepoint_enabled(irq_enable))	\
+> +			trace_local_irq_enable();	\
 
-DMA_ATTR_REQUIRE_COHERENT indicates that SWIOTLB must not be used.
-Ensure the SWIOTLB path is declined whenever the DMA direct path is
-selected.
+I'm thinking you didn't even look at the assembly generated :/
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- kernel/dma/direct.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Otherwise you would have written this like:
 
-diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-index e89f175e9c2d0..6184ff303f080 100644
---- a/kernel/dma/direct.h
-+++ b/kernel/dma/direct.h
-@@ -84,7 +84,7 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
- 	dma_addr_t dma_addr;
- 
- 	if (is_swiotlb_force_bounce(dev)) {
--		if (attrs & DMA_ATTR_MMIO)
-+		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
- 			return DMA_MAPPING_ERROR;
- 
- 		return swiotlb_map(dev, phys, size, dir, attrs);
-@@ -98,7 +98,8 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
- 		dma_addr = phys_to_dma(dev, phys);
- 		if (unlikely(!dma_capable(dev, dma_addr, size, true)) ||
- 		    dma_kmalloc_needs_bounce(dev, size, dir)) {
--			if (is_swiotlb_active(dev))
-+			if (is_swiotlb_active(dev) &&
-+			    !(attrs & DMA_ATTR_REQUIRE_COHERENT))
- 				return swiotlb_map(dev, phys, size, dir, attrs);
- 
- 			goto err_overflow;
-@@ -123,7 +124,7 @@ static inline void dma_direct_unmap_phys(struct device *dev, dma_addr_t addr,
- {
- 	phys_addr_t phys;
- 
--	if (attrs & DMA_ATTR_MMIO)
-+	if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
- 		/* nothing to do: uncached and no swiotlb */
- 		return;
- 
+		if (tracepoint_enabled(irq_enable))
+			__do_trace_local_irq_enable();
 
--- 
-2.53.0
+> +		raw_local_irq_enable();			\
+> +	} while (0)
 
+Again, this was one instruction, and you clearly didn't bother looking
+at the mess you've generated :/
