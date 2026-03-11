@@ -1,142 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EBE31AF14;
-	Wed, 11 Mar 2026 11:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CD13D6CC4
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 11:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773228273; cv=none; b=keiNhIE03q5t2J1bmlFYlJ/78iVNqi5WFd9R9xM9NNQTvDSxzRc7ZoWM24f4Mav4NNlvKg53vvKwN2uZEO7ehYd+TaOTIDJrXVBMhtrxfd45+p2bMA1tPfsyWY5Qbh5hx7VUjLcbKfMlEP836p8UwGDFH3b4OsHp96UXVsyvSHQ=
+	t=1773229989; cv=none; b=sK1XVFUzsboPFqnXLlE7cO2wlz0Soe4FpbZLfjbO6mFAl1TcmxJ6O++CdSuAwYeaQD/6Zq4BnznbdpHQjx3zsxY95l+qyWnTLaCeZV4IjeQreLSqOTBakqFixji50i/+bC9N1DaqZqztDSKJCZ4wCc9dVtiylj7q1g7beyNGRx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773228273; c=relaxed/simple;
-	bh=MrItGMIwck97yHNleIjnWht9bi1GncmtA9PeyGCwBMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmKNh90IABhcOhAPHUnUD4qtNfeszU4FQhcyEdSx6Lsm1DPzAj43zmHqB1uqaEPy5oPuEAtey7zY9Ea1lbEMCe4H8RBfpn6ISfsjUHjBc4HaM3ksAQnoDsMPYLRoDHCJYH8z1ccr2XVHVRsfnekKB/YdEyYT9uvrM6uEii1DRiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYq4aiiN; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773229989; c=relaxed/simple;
+	bh=SgzzhxCWuPKU87hF7zwmiXoVGYhYQd/RZUgCpsFS37A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EOgg8xxy7EuRC/4rzes4taky5ZCOCyxIO88hVuh7dnpXyWobQIDvomVOC2WmKwlYkbrBERqyn++hzNwlC4YOY5dFlrIu4Xabbyht7AOF4hy+Ine2PtWmepBhjPdTVSMWqPTjmp+a8p70BGkytxs8R35cd4Gib1kED6cUcf/ZOZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmZniczg; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYq4aiiN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773228270; x=1804764270;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MrItGMIwck97yHNleIjnWht9bi1GncmtA9PeyGCwBMs=;
-  b=MYq4aiiNcAj5ktb+64ocsttd3c4a6hVf+QJrbRnHp9WdCeu1rugE3NK/
-   7SMt82BAHNa5ILytFUEHU3Gp4s+SM5V0urn14EryCkXlXNthWR3CYrKEm
-   jbibDNdWW570xIPk/7Nu6uD+fcL8sYi3pAksecEF35gMfVnD5ryUp/r4Q
-   WzgOcfqu1NskvX3TIBnArsefiEnctznNtoymVl6b3ISvqMCVRf0XNOTWV
-   xGdPuvBI0NaVMGPJnuZSwd1Dzk3kQIlTszicBIt8in1nYEC3nN3b4L1/y
-   zHlOlpqggaV7uw7ipxat0I5t7fv7mIIyipwXK19SROWZ76Q1Kb79pBOkF
-   A==;
-X-CSE-ConnectionGUID: 5TMMtCu1SzSgsVMgQGuCoQ==
-X-CSE-MsgGUID: ye5+/K3VTqWal0jEAvfB9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="76903766"
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="76903766"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:24:29 -0700
-X-CSE-ConnectionGUID: fw1E74arR96VolAP3q/Egw==
-X-CSE-MsgGUID: gTH9KMjeTPWUWgVUI7QD2Q==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 418530b1a366) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 11 Mar 2026 04:24:25 -0700
-Received: from kbuild by 418530b1a366 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w0Hfr-0000000014P-0HV2;
-	Wed, 11 Mar 2026 11:24:23 +0000
-Date: Wed, 11 Mar 2026 19:23:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Brian Geffon <bgeffon@google.com>, John Stultz <jstultz@google.com>,
-	Ian Rogers <irogers@google.com>,
-	Suleiman Souhlal <suleiman@google.com>
-Subject: Re: [PATCH v2 1/3] tracing: Have futex syscall trace event show
- specific user data
-Message-ID: <202603111911.zAWpiGlz-lkp@intel.com>
-References: <20260310201036.542627924@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmZniczg"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-829781b2b01so4719408b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 04:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773229988; x=1773834788; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Tcuv/FKdpmW54ZWbVfc0fc5h5dY5q1jjZuFCsgdu2Q=;
+        b=bmZniczgU2Ju5l7eI+lyUeMEjSHBDh0rEMeqGGZjn8SdE5QSELzM6F1qyvuHRlS6Cf
+         rpfdULXtrxCzpuO5J8S+eehgInc7NrWju9anRqk9ofGDOmEYuS0I9MnSit4alhLFfHR/
+         cFSfTdpWDOZ1nj0r9veeXP23UFMKJzCrkUyB79WlRt270EOEuyn8UGwxJhWm2IqKrYep
+         HGI8b35ZBc4rqINSSwpbx0A7gpmJ/pBozjEjU2t6RKKaFfuUG9VH4FnTOq97w+/lA+2O
+         xQZg3WA0hld/jFA9a6O07sV5Q2VX+c2K32sybuF+E67+4XCveGmXKmLA8HQrxNus81gA
+         G/Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773229988; x=1773834788;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+Tcuv/FKdpmW54ZWbVfc0fc5h5dY5q1jjZuFCsgdu2Q=;
+        b=EQGa45ntdU4o//CEJ/neNHsHgwbsT2b1wzJSp4so5WrsevyvPn6muQwgmj2yicEj7l
+         j4S0YJv8EHZbFMHusCb3PhFKu12CAF8df5F7C7CcgnIIAsMoMGV0EjRL5D1l4THQQ6cx
+         zZINRZ4CHCoXnCvrG5fRog6Wca90UJRYn53UdBuwtDSIlIuXxlfWcGKLGc8HkaIkEJrs
+         /PpDQ5B16qC1KEsxTZkix3WONfTd5nmhO+9CauC2BtKuGquzZxV+HHgrBeZO945ipwun
+         pL38v6trooPgqdyoWABOu4NpGLMsnDy7fPeWp8q5NIvm3veA2ld3fGnUAEyzcDmCrVHB
+         qYwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVu43GCEqkD/ElYr6kfMLDBd11JXHBNfPJfXegb9Je0F8FH/Z9tL/BNG6XbVRH56I9InmwPStFbOikeq/d5QEBbM04=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDdT05sk/gPYuCSJ1c6ssMK3vtTYjQv8ERGzsaDxa+8KzGo/XS
+	WgvtOFc2LWkeNEbqYVXiVxxPxnN121G8c+9FWdZoMc8yAigWca0DI9p5
+X-Gm-Gg: ATEYQzzt5mG2haZKUwlzE7hOf1Ugt02UW5WaNjUBrPjnhia2+8OQnYDXeSbqORyS5MQ
+	9b5nWw7rYakYbq7VS++gA04b4qibTKtg5amvwa/CsYf7OuwJ+ez0r6haF+6dZ9GlNZLi4cDNmQF
+	npAdWYWwqXJRdb8L3ELnFKP3oz7MPYGzmJS6Zvqp2vfywfeiVvewuHP5y0mdMK0IgveyeHHnUdD
+	vmqP6+zdtE4Cc8GiGhg6qRt/9Lz2rG+BfjOeNfGmn5fYzTubKCTEB+1C1ZfBo6C+5JPh/jHrfWe
+	T4JAEj9/5QNXi+lkFzS0t/ABjazNFBpebmoDcEvZdAGRzKHB71RUKK0SjinRIfSu2Cj+0MPAaNG
+	9RPAw2XBKEKi81vzEy/sZ+CPOVn6cV4AtGb7TsFpu9tdCNSlfP8ITXuRV3ntzMXR/sGwAyyEiSR
+	ZoqI+lGMqoDJLCQLsS+MNBK9+Va79csp+JP2F4p3Y7FnsxomUSYSCPOORDf6Fb0RA=
+X-Received: by 2002:a05:6a00:1c9e:b0:829:88e7:c89e with SMTP id d2e1a72fcca58-829f6ee65abmr2514048b3a.9.1773229988180;
+        Wed, 11 Mar 2026 04:53:08 -0700 (PDT)
+Received: from localhost.localdomain ([2409:891f:1b46:28af:1445:b4e2:b8bf:2d47])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829f6df3aedsm2500588b3a.18.2026.03.11.04.53.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 11 Mar 2026 04:53:07 -0700 (PDT)
+From: Yafang Shao <laoar.shao@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun@kernel.org,
+	longman@redhat.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	david.laight.linux@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yafang Shao <laoar.shao@gmail.com>
+Subject: [RFC PATCH v2 0/3] disable optimistic spinning for ftrace_lock
+Date: Wed, 11 Mar 2026 19:52:47 +0800
+Message-ID: <20260311115250.78488-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310201036.542627924@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+Recently, we resolved a latency spike issue caused by concurrently running
+bpftrace processes. The root cause was high contention on the ftrace_lock
+due to optimistic spinning. We can optimize this by disabling optimistic
+spinning for ftrace_lock.
 
-kernel test robot noticed the following build warnings:
+While semaphores may present similar challenges, I'm not currently aware of
+specific instances that exhibit this exact issue. Should we encounter
+problematic semaphores in production workloads, we can address them at that
+time.
 
-[auto build test WARNING on tip/locking/core]
-[also build test WARNING on trace/for-next akpm-mm/mm-everything linus/master v7.0-rc3 next-20260310]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+PATCH #1: introduce slow_mutex_[un]lock to disable optimistic spinning
+PATCH #2: add variant for rtmutex
+PATCH #3: disable optimistic spinning for ftrace_lock
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Have-futex-syscall-trace-event-show-specific-user-data/20260311-041422
-base:   tip/locking/core
-patch link:    https://lore.kernel.org/r/20260310201036.542627924%40kernel.org
-patch subject: [PATCH v2 1/3] tracing: Have futex syscall trace event show specific user data
-config: arc-randconfig-001-20260311 (https://download.01.org/0day-ci/archive/20260311/202603111911.zAWpiGlz-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260311/202603111911.zAWpiGlz-lkp@intel.com/reproduce)
+v1->v2:
+- add slow_mutex_[un]lock (Steven)
+- add variant for rtmutex (Waiman)
+- revise commit log for clarity and accuracy (Waiman, Peter)
+- note that semaphores may present similar challenges (David)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603111911.zAWpiGlz-lkp@intel.com/
+RFC v1: https://lore.kernel.org/bpf/20260304074650.58165-1-laoar.shao@gmail.com/
 
-All warnings (new ones prefixed by >>):
+Yafang Shao (3):
+  locking/mutex: Add slow path variants for lock/unlock
+  locking/rtmutex: Add slow path variants for lock/unlock
+  ftrace: Disable optimistic spinning for ftrace_lock
 
-   kernel/trace/trace_syscalls.c: In function 'syscall_get_futex':
->> kernel/trace/trace_syscalls.c:807:15: warning: variable 'buf' set but not used [-Wunused-but-set-variable]
-     807 |         char *buf;
-         |               ^~~
-
-
-vim +/buf +807 kernel/trace/trace_syscalls.c
-
-   801	
-   802	static int
-   803	syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
-   804	{
-   805		struct syscall_user_buffer *sbuf;
-   806		const char __user *ptr;
- > 807		char *buf;
-   808	
-   809		/* buf_size of zero means user doesn't want user space read */
-   810		if (!buf_size)
-   811			return -1;
-   812	
-   813		/* If the syscall_buffer is NULL, tracing is being shutdown */
-   814		sbuf = READ_ONCE(syscall_buffer);
-   815		if (!sbuf)
-   816			return -1;
-   817	
-   818		ptr = (char __user *)args[0];
-   819	
-   820		*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
-   821		if (!*buffer)
-   822			return -1;
-   823	
-   824		/* Add room for the value */
-   825		*size += 4;
-   826	
-   827		buf = *buffer;
-   828	
-   829		return 0;
-   830	}
-   831	
+ include/linux/mutex.h        |   4 ++
+ include/linux/rtmutex.h      |   3 +
+ kernel/locking/mutex.c       |  41 +++++++++++---
+ kernel/locking/rtmutex.c     |  37 +++++++-----
+ kernel/locking/rtmutex_api.c |  47 +++++++++++++---
+ kernel/trace/ftrace.c        | 106 +++++++++++++++++------------------
+ 6 files changed, 157 insertions(+), 81 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.3
+
