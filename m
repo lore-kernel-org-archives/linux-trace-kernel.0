@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D523CAE6D;
-	Wed, 11 Mar 2026 10:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E973CBE8C;
+	Wed, 11 Mar 2026 10:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773224184; cv=none; b=S1OgTafq2rMNrKAkj1JGP/N0rAyA2z7UukX2E7cRJg3Fl8puKxBvom9MCiTGjTTXWEayiXgPvblGZo0xUZazXkUCUp/4hzxxxvIYWSoAG/DOcoRsDj040Zft1jJxT9wGq3AkPe7E3ZS0vdwTwhMXMYFV9ZuV4lh+aYeL1X2bN8o=
+	t=1773224185; cv=none; b=bFPiEa+6jR5fCc7wB6vqnwEgsHsofdHJj2eSqFkidiMEzP7ymz8LYwL7A5NxGKgSqp4/Xqt1buqlhuuqsNWiPzWPtTQiJ0IJVLWFy8ZcdWxAsvDRo/FOsyV+VUxyL/ekaHS3ApeHkHcrruJToxJ5wK0hD5ktH5KlR8YZMNnlFQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773224184; c=relaxed/simple;
-	bh=Rjblk5lG+/N1D4ncy0DNJlG86erv+vbGPCgFswiU2pw=;
+	s=arc-20240116; t=1773224185; c=relaxed/simple;
+	bh=1qtoqo5zEbz0ht2GwSDm3/A9ci+SOUFm+t1wY8L/jXI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cHw84MGXNpRYJ4tO85yI6KoynjFcEWqM/dEL7bvWO2+hbzoDU+lnfA4l0jTF5vHp1H9iJVQmpknfGNmyXuOieZFBGBn7QqYd7Bv1icLu+WjdNkoW87eo3EtTVVwsbNylIvPlkVsMjYWRcoG8I+k70w2KMq0ZEc/3w+lHNHmhW7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=08TITzKL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DRL3oMAQ; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=m8H/NlAMxIaG2/6X9v5ezSvE53nQAdVIhP0ITzyKIL8gyWHR1mrpfjMDfGr1XdMW3m0Kv48fAgZc91xO9lYZuyHrVSmXTEYt0bsHhxqxIcEFhsdxQp365Stuve39SGpH8o/oDq2wfHJ29r6dex6hIfr4AmVUq1VoNAYwIyLpRmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IRs4u4BX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+Q3zIioR; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="08TITzKL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DRL3oMAQ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IRs4u4BX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+Q3zIioR"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773224181;
+	s=2020; t=1773224182;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/3Pupjtyw5OaqO+yHKDzdUCtAMdrSUWA4bAtmedxIQ=;
-	b=08TITzKLZBDrJ4r5xRT2b4jzHSpyCmKeRdB8aVUhG8MkdmNJmUahT2KMMljO7uLLG1deBo
-	RfQpXJlbUquei+zbmDe1nfvloYac3XpxDeCMQovQncLdZFxIllRNU0d8v3L1QGX0vfjf6v
-	/OHuYd7YEUiN1qWO5ffEWAy318MO/TJnWB5tM4KG7SPwpd345on6OpRmekE+Ah7SEFDUS2
-	ZVLU9TwFS+6ZWTMad2tgl7xl9gjeGcpvXy2tqgQOa4haKBIlgdBaQzCK2ON+DFV2JDeRqj
-	TZT83PGX9sv15ZlS97uAU5I1APnCdZ/ltf9oLUZGWXFnCip7/WXgGgL0io3tmw==
+	bh=8YRmhI3LAEwurtSkmPWvRPwNYsqDJWBN45KTy2yCTjc=;
+	b=IRs4u4BXtCzaoSQS4mh4kxs1Lzzp/M5cqZ0FGD+ysqs6dOmXN3G1HozDmRVxb4gwxkVXYc
+	6UjlwbqOvrnxdBotp5eYBPiYKI+OdYyeM5BvNLLdk4hQP81s0OlUmMNbHr9iGdGfcal0Nf
+	PUX27xKYsKrHmZipkhMSPmGmko3EYZCDEl2MJBmICGCyoPXQIPOdqWedRgS0cNqjN8n7XX
+	XaydxXzW+NVOo6dTLNyOffDQtyYvViaJuzm5ZIYd4ljXy1TvCm/5ZE6SkG3TLQ8PuRkscC
+	cjAQiMxLTRbffpDA4mbgtKl8PmsvTnO/dIfbm42sCe5j2asVuV8KgHlqbphBcg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773224181;
+	s=2020e; t=1773224182;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/3Pupjtyw5OaqO+yHKDzdUCtAMdrSUWA4bAtmedxIQ=;
-	b=DRL3oMAQFu9vXwFv5F+aHnpuqhiVsP28UAfGWMtG+QBAKa3qHrspfZnndYuW1g50NCDpFn
-	IPHot5DYd1rG4sDA==
-Date: Wed, 11 Mar 2026 11:15:15 +0100
-Subject: [PATCH 06/12] hrtimer: Remove hrtimer_get_expires_ns()
+	bh=8YRmhI3LAEwurtSkmPWvRPwNYsqDJWBN45KTy2yCTjc=;
+	b=+Q3zIioR+ORPjeC9538kVIa40rxNk02Mh+9jePYlzSPyv/YjeTFLfouBaZ7VKMQoeCZwuy
+	7nvpusr+0CrA25Dw==
+Date: Wed, 11 Mar 2026 11:15:16 +0100
+Subject: [PATCH 07/12] hrtimer: Don't zero-initialize ret in
+ hrtimer_nanosleep()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260311-hrtimer-cleanups-v1-6-095357392669@linutronix.de>
+Message-Id: <20260311-hrtimer-cleanups-v1-7-095357392669@linutronix.de>
 References: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 In-Reply-To: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 To: Jan Kiszka <jan.kiszka@siemens.com>, 
@@ -62,37 +63,35 @@ To: Jan Kiszka <jan.kiszka@siemens.com>,
  Frederic Weisbecker <frederic@kernel.org>, Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=779;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=795;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=Rjblk5lG+/N1D4ncy0DNJlG86erv+vbGPCgFswiU2pw=;
- b=Igi+MVWq7Iz0MTkzlPnCEq0zLBKeq5bgTVOmA/xebuJzPNUIz6VIWX+KXKxIRrPo0lXGxbhwy
- j2LRLj5NM7AArcvXW9givvh3IVQTUnawoyxicGo5oqBDBn4gwyS4zEB
+ bh=1qtoqo5zEbz0ht2GwSDm3/A9ci+SOUFm+t1wY8L/jXI=;
+ b=8D4F5Z8NRArCmMy6UsNTwapseSXa+g/VM9E46O4O2XFZVwZFSrcCd775L7XFqk2BiOifqxHWx
+ 2wrUbdnXKD2BM/2MRbH6y+hSPX864Qu88r7I/xDhR0d1mEjo17n2y1b
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-There are no users left.
+The value will be assigned to before any usage.
+No other function in hrtimer.c does such a zero-initialization.
 
 Signed-off-by: Thomas Weißschuh (Schneider Electric) <thomas.weissschuh@linutronix.de>
 ---
- include/linux/hrtimer.h | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index c087b7142330..9ced498fefaa 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -116,11 +116,6 @@ static inline ktime_t hrtimer_get_softexpires(const struct hrtimer *timer)
- 	return timer->_softexpires;
- }
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index b94bd56b739f..226cac8c82cc 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -2328,7 +2328,7 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode, const clockid
+ {
+ 	struct restart_block *restart;
+ 	struct hrtimer_sleeper t;
+-	int ret = 0;
++	int ret;
  
--static inline s64 hrtimer_get_expires_ns(const struct hrtimer *timer)
--{
--	return ktime_to_ns(timer->node.expires);
--}
--
- ktime_t hrtimer_cb_get_time(const struct hrtimer *timer);
- 
- static inline ktime_t hrtimer_expires_remaining(const struct hrtimer *timer)
+ 	hrtimer_setup_sleeper_on_stack(&t, clockid, mode);
+ 	hrtimer_set_expires_range_ns(&t.timer, rqtp, current->timer_slack_ns);
 
 -- 
 2.53.0
