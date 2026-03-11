@@ -1,179 +1,117 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DAD3C1407
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 08:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773218091; cv=pass; b=qYmiBNEJxKawmmRmxDt7zE34DpR/XhQm9Rc1qiwEKQopGoQnrrySISA5B4jJ+oZCvVTsPxtkumZ4JhQdv4k2vGQSCdbgwi+S04TVM3jwdIhjogkjZXo3s33H6DzbYAE2z6XOLdJ0RCFi7GqrxhDRRr/ALYyU0XaU8nU0ljkT+EA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773218091; c=relaxed/simple;
-	bh=SsapxUY06a7cs9bBuRB3R8cKxgdqx7oMrI3eEaj8qe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TDPhjM3gHpwKeoOJeaADR2pROo2VvE1D69b771mGLOt7qdIKU/FrEDGH6I6vexA/4FoVZ4JdLdXMAWMBxr8awm+4cx9wOTc3udQ82Seo/whnr3FH9zZREONJVGmhfpYaOoTt4ey5ghx0JWIRYKGz1qKzWWFI8Iyz2Yw0o2GTVCg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hlk4Q8yu; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B34E3C4560;
+	Wed, 11 Mar 2026 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773219530; cv=none; b=KFL2Wd41RVp8EOydoMOhYU6L0OcnM4sUqQ+NTCKrJFSXTr9ImgzDhMa/ag6mdXnv7vN9hi99DxSwcQ4NoxFlAe4yztafxE86SAurfcGHIPiJbmhp9zN3sCIZQEvk1L0HPDK+sReRCIuwUY1Osw8vqdPJoI+DJBMcIGwRWk0Bke8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773219530; c=relaxed/simple;
+	bh=WO0BNQjNxV78n5IOyPU7x3leCM/hYOPwVQjiO409PJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KB+JxLfc0uq1TYPR1DpZWgz6/6Y9eCzuzHPNzKPtquyyFXXaPlKlOnmaA4UAgn20K/VOo9gAdesYyj7i1tccfiJAL7yeCQ84VxlvBEB0o9nxoaKGdXe9v8lAeP0xUlrZZZrKBaSPH0oSxMizZLAtP/803MUWQLxn2cg02GZjsqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRgaZoj0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hlk4Q8yu"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-509101189edso31582591cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 01:34:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773218084; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eU1pKTTRc/5KU8tsmGqde7AwnWhBId/ABRETxcir6Dl59qMCIBBL7xhOZRBjFuXRno
-         TesbubPPK81gkRwBl0MP11FLFXJ44cD9AmqJ93j3C5aqIFQImBnSlmES2Nbw5zwej6V2
-         cnI3n3tdh5FnQ93dQBFhmphdAXjKbbItrjgUeg3CtlEhRg4TUzAHKUsLh97v/i7crwnq
-         G1FbgEVPaYmXOn1UD9spNb9ZjVCnZUj3dpC9pv+yaQGhaPw7RcZfnExbSiHANbbAAk1G
-         lYZBXjB+3geN/DZxYeyXTGKZv7pJep7OhZVhuWc9UpDryCEK3+ZFty+VNDV77uA6vFwB
-         kmTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=infw2GOKBa/xQ0FaqhlrOevyT/EEGe52s1hqFD6TVIs=;
-        fh=d8r21KWkFMGz7/5uatQXnCxMHaVtPTzfq7obqya0mEA=;
-        b=BAHXKkDeCe2XlYg5rOo6cY3o39xzttsrGM/t2YIX5qBUkWRn1jlD0T11mkj43JVLbb
-         KdQmN8qewIgUtMeenQiX3We6nyLszftLxU8Ztrcwo/pEBkuULvKw3c/dIl6/LQuMK4G9
-         n3wwgZwTRm4pJpw8GNT+AbQvDJAJN4axImk/NRXtZvBeLgGqvh0jy6Ub1BaPFFKSJlB0
-         ViZxxferT0D2RJox5D7i5/Py7YsR0/z9aUMCUW1xTFey1QiQcmG5yRG0BpYdIVB8u94d
-         4veNxJqq1LysI5dKk+KCMbDGrEQ3XZdkniJm9Pcjdsx7aAzdUCIk5Jopeuapbsofgu+3
-         Dg7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773218084; x=1773822884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=infw2GOKBa/xQ0FaqhlrOevyT/EEGe52s1hqFD6TVIs=;
-        b=hlk4Q8yuViuaZ1defw2+7C1/3pvIVJguTIjEDJ+mqoYMaxn6LVrLcHXfndrlvY7qzu
-         rhrSJ8jHMNez9R37G8qhA868kTE64M7NLAFtnUWyJxkpUg+7VuKzbrlm8TbozbcriFdm
-         aTOoQJMBsDG6mZsab2j5c3+Up/oNto26+SNMFS+nh7j97f0rFlqEMLHwhrUzhPw2ouOx
-         k/H08RstCdFj5vaN3KiYkGmrMydgtowhs1KeWl/YrfsHewWHCtbc89umaMT92PSVKvSg
-         qcZBsClFH8t0EfRf4DIFzLXGU9mGpp+bIHiX7Yui7/SFApAe3RCMSdi2mkx28cO4GbMQ
-         FLNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773218084; x=1773822884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=infw2GOKBa/xQ0FaqhlrOevyT/EEGe52s1hqFD6TVIs=;
-        b=JmAyvUtBlZspPFwV3kLYytsLbcSmC9AkXJheEnjAs2zoPYZ9AMkZERcYS7NHPG0a9Z
-         FN+ZZ5mNVjDHWLu1z/SErZ+PkxJY0BiuEA16Nmt/P/MzqJmTKzbZAqzV6uMkZHBMOZ9o
-         oLUmK8T2x6im+oV0RqhUr6iWmi5l8M0teqD2E1Am3c1LJRBZgY6v1KGShsqyk1GuurS0
-         k85DIg7sFWWVLnTl/0Wb0v0s7tRPcEjs6lflXYNvZDveO//pDoQQyU2YAlQa3wqxyreS
-         iO2hQODlmgoC7MWsYrdDrhphRG+5XM+B/bu+e0RcpHdaNmJ9+gsFFfstJ6FioVFD0T46
-         gLjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLnVduS69FIW+9Vxn917/RhNyzr26w+tfDQXvrCId4ubFjkbeAUSiXYqivX+jPaYp2SVrRpi74jmA+ZuilcR1hOmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoSeuQnKcUvABO9ybTe21YtjB6MMeNwaptt+7TwWyFDlQn4PTO
-	X6Zelsgh1cVbXaC6pBa9HmJcN4p2qz72weP3HGVagOdySdoeQfUP4YABReYF26npXjyXxw0Yq1L
-	8C75yyKeR5jTqXgoltAyDfdIHUlk0E0oQM1iYXv0j
-X-Gm-Gg: ATEYQzwMjDVeC0JZ9Y3OeeSCR9IfaLfC7QOAcF++7T3JTpL2/lc6RFqsRATaSTSKU/1
-	vJNtZr5psbxhOZatkjGIQUiu/nvitUbQjXajYFL0xqyEO1YqizXZZP8pBc7Qv25MLHZKrABxh8o
-	QqgFkzILpvWgSEuAnorH5Lxrmeshdcjdw9DoanVP90d6B3GUVqkmnphkEXTGglgotBf+zWOBjbj
-	W487Tou1PYrizJFQhzDlqvnPRpKtIl8HBc1KIfZl1HNDZAJTs92DQMB7FYa69X7NPDc6BFZTMmn
-	l3a2vpfH
-X-Received: by 2002:ac8:5f89:0:b0:509:20de:4ada with SMTP id
- d75a77b69052e-5093a18950amr18737181cf.48.1773218083994; Wed, 11 Mar 2026
- 01:34:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRgaZoj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11627C4CEF7;
+	Wed, 11 Mar 2026 08:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773219530;
+	bh=WO0BNQjNxV78n5IOyPU7x3leCM/hYOPwVQjiO409PJc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uRgaZoj0FnzpUgGHuwMPA5AzG7DJ9T31YUKxsV5DFlbsT6HcCuMCpov9wGC9GdriK
+	 wmGucz1pqSSYZIwnAFkyRi6D0OkGVX45FShxzC3ewEbGyOVfqFXTFghap2XXM93NuY
+	 xu9hdfr3mDN+tzVpYyS8kduc3QeU3TLVfihS63TitOLlgYCDI3vDWsxY1DxFy8O24W
+	 R3+M8ejtK8Y5jCqFKV6n9eUyKa3Wo536wOG5N+f2M60C+84Tg7ncqkyaCEzSkJMVPl
+	 aYvZIq9qDnatDR7n1CcxV47Bjm+EPuYe7N44dcPeQoi0Vc9xoI17pV9IM8UA/79tj0
+	 /z1TqkYVOTDDA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1w0FOx-00000000mOj-2xfu;
+	Wed, 11 Mar 2026 08:58:47 +0000
+From: Marc Zyngier <maz@kernel.org>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	Oliver Upton <oupton@kernel.org>,
+	Vincent Donnefort <vdonnefort@google.com>
+Cc: kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com,
+	qperret@google.com,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v14 00/30] Tracefs support for pKVM
+Date: Wed, 11 Mar 2026 08:58:44 +0000
+Message-ID: <177321950220.58730.2900926663831637604.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260309162516.2623589-1-vdonnefort@google.com>
+References: <20260309162516.2623589-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311075600.948413-1-atwellwea@gmail.com>
-In-Reply-To: <20260311075600.948413-1-atwellwea@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 11 Mar 2026 09:34:32 +0100
-X-Gm-Features: AaiRm52wCKdcSWz9oNAzUWL_GQOag0jSamOEmON1h9c132p0nbosojJsMVy1eJA
-Message-ID: <CANn89i+dojcg=TDh6E1++g_TM7qdcpnyu47n2Q9DRW_w73TjzA@mail.gmail.com>
-Subject: Re: [PATCH net 0/7] tcp: preserve advertised rwnd accounting across
- receive-memory decisions
-To: Wesley Atwell <atwellwea@gmail.com>, Simon Baatz <gmbnomis@gmail.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	ncardwell@google.com, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	kuniyu@google.com, horms@kernel.org, geliang@kernel.org, corbet@lwn.net, 
-	skhan@linuxfoundation.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, 0x7f454c46@gmail.com, 
-	linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, oupton@kernel.org, vdonnefort@google.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, jstultz@google.com, qperret@google.com, will@kernel.org, aneesh.kumar@kernel.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Mar 11, 2026 at 8:56=E2=80=AFAM Wesley Atwell <atwellwea@gmail.com>=
- wrote:
->
-> This series keeps sender-visible TCP receive-window accounting tied to th=
-e
-> scaling basis that was in force when the window was advertised.
->
-> Problem
-> -------
->
-> `tp->rcv_wnd` is an advertised promise to the sender, but later
-> receive-memory admission and clamping could reconstruct that promise
-> through the mutable live `scaling_ratio`. After ratio drift, the stack
-> could retain or advertise a receive window that no longer matched the
-> local hard rmem budget.
->
-> Fix
-> ---
->
-> - store the advertise-time scaling basis alongside `tp->rcv_wnd`
-> - refresh that pair at the TCP and MPTCP receive-window write sites
-> - consume the snapshot in receive-memory admission, clamping, and the
->   scaled-window quantization path
-> - preserve the snapshot across `TCP_REPAIR_WINDOW` restore when userspace
->   provides it, and fall back safely when legacy userspace cannot
-> - expose the accounting in tracepoints and cover the ABI/runtime contract
->   in selftests
->
+On Mon, 09 Mar 2026 16:24:46 +0000, Vincent Donnefort wrote:
+> The growing set of features supported by the hypervisor in protected
+> mode necessitates debugging and profiling tools. Tracefs is the
+> ideal candidate for this task:
+> 
+>   * It is simple to use and to script.
+> 
+>   * It is supported by various tools, from the trace-cmd CLI to the
+>     Android web-based perfetto.
+> 
+> [...]
 
-Your series will heavily conflict with Simon's one
+Applied to next, thanks!
 
-https://patchwork.kernel.org/project/netdevbpf/list/?series=3D1063486&state=
-=3D%2A&archive=3Dboth
+[19/30] KVM: arm64: Add PKVM_DISABLE_STAGE2_ON_PANIC
+        commit: 9019e82c7e46c03c37e8b108473d02b543222d9f
+[20/30] KVM: arm64: Add clock support to nVHE/pKVM hyp
+        commit: 405df5b55748d93d44666fd6005c60981094a077
+[21/30] KVM: arm64: Initialise hyp_nr_cpus for nVHE hyp
+        commit: 8bbeb4d1698fb0945107c69019c15207bbe605c9
+[22/30] KVM: arm64: Support unaligned fixmap in the pKVM hyp
+        commit: 4cdf8dec8c115d9531f80519db69846c32c580a5
+[23/30] KVM: arm64: Add tracing capability for the nVHE/pKVM hyp
+        commit: 680a04c333fa29bf92007efe11431be005e8c4bb
+[24/30] KVM: arm64: Add trace remote for the nVHE/pKVM hyp
+        commit: 3aed038aac8d897016a2b6e1935f16c7640918d4
+[25/30] KVM: arm64: Sync boot clock with the nVHE/pKVM hyp
+        commit: b22888917fa411d100339ef9d418b4eb86aba962
+[26/30] KVM: arm64: Add trace reset to the nVHE/pKVM hyp
+        commit: 2194d317e07d169efc113344c531621ce31afe64
+[27/30] KVM: arm64: Add event support to the nVHE/pKVM hyp and trace remote
+        commit: 0a90fbc8a1709f682e0196c2632027cdedae5e94
+[28/30] KVM: arm64: Add hyp_enter/hyp_exit events to nVHE/pKVM hyp
+        commit: 696dfec22b8e4ac57cc90558af2b6be2b37f4b95
+[29/30] KVM: arm64: Add selftest event support to nVHE/pKVM hyp
+        commit: 5bbbed42f71f771a70e974e3726d283690ecd589
+[30/30] tracing: selftests: Add hypervisor trace remote tests
+        commit: 39d5ca62a3dab7d162d49eb60b14cdd46138590f
 
-I suggest you rebase/retest/resend after we merge it.
+Cheers,
 
-> Series layout
-> -------------
->
-> 1. track the receive-window snapshot state and helpers
-> 2. refresh the snapshot when TCP advertises or initializes windows
-> 3. use the snapshot in receive-memory admission and clamping
-> 4. extend `TCP_REPAIR_WINDOW` for exact restore plus legacy compatibility
-> 5. refresh the TCP shadow window snapshot in MPTCP
-> 6. expose rmem/backlog state in `rcvbuf_grow` tracepoints
-> 7. cover legacy and extended repair-window layouts in selftests
->
-> Testing
-> -------
->
-> - `git diff --check origin/main..HEAD`
-> - `scripts/checkpatch.pl --strict --show-types` on patches 1-7
-> - `make -j8 headers`
-> - `make -j8 net/ipv4/tcp_input.o net/ipv4/tcp_output.o net/ipv4/tcp_minis=
-ocks.o net/ipv4/tcp.o`
-> - `make -j8 C=3D1 CF=3D'-D__CHECK_ENDIAN__' W=3D1 net/ipv4/tcp_input.o ne=
-t/ipv4/tcp_output.o net/ipv4/tcp_minisocks.o net/ipv4/tcp.o`
-> - `make SPHINXDIRS=3D'networking/net_cachelines' htmldocs`
-> - `make -j8 vmlinux bzImage modules`
-> - `make -C tools/testing/selftests/net/tcp_ao -j8`
-> - `make -C tools/testing/selftests/net/mptcp -j8`
-> - `packetdrill --dry_run` for `tcp_rcv_toobig.pkt` and
->   `tcp_rcv_toobig_default.pkt`
-> - `virtme-run` guest pass for both packetdrill tests
-> - feature-enabled guest pass for `restore_ipv4`, `self-connect_ipv4`, and
->   `mptcp_sockopt.sh`
->
-> Thanks,
-> Wesley
->
-> ---
-> base-commit: 908c344d5cfa0ee6efb3226d22ea661e078ebfa0
-> --
-> 2.43.0
->
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
