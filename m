@@ -1,44 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB2A3C8720;
-	Wed, 11 Mar 2026 10:16:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1BA1A6815;
+	Wed, 11 Mar 2026 10:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773224180; cv=none; b=LBQw0949ZynPOyJpHTWy4xBZqOrZez1czArYaXDeY5QAvYuRWsAQ5B/XuLFqNJQj1JFzyTBS3hbi4Zt/AEBEG3vCiNSn3UkoSyJpj9qSH+lOV3tc+RECG21vArVcUsSMWSVgM83WzkG6fx1C0SACoY6V/cgZfOwOHR2nrPS77dY=
+	t=1773224181; cv=none; b=d/6CajVeVjY2tqdgr6uW/i959Yn6f5NQiluUlx1RDazNakMV0sb3jj1bJhyVtJDuGiqD5xWvxv24VxDRtHKihSqzFy8MSwAq/gxw4lwvds86fqVkKE9OXYNY0tYctw24hE8A1rryTL+0V31P/mcWqcwckvCMQR2FVzogZwkFzL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773224180; c=relaxed/simple;
-	bh=DwrCrIyc7liuv5KJBFDBcjXHm5zG0WcOKjJRPNV9OzY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LXSKq+M+YaxGGpVoPcgjQNsjyQyf/Rtfi3Mhox5vVgvF0q72XMy30jpYbbFbc4CH8VgWzJFUFJ0nSBaaBORkzWO+7Ri0YE3rxo4ibQIDc7hve2HH1eCvvNMDYaNqSaltW2Kh4LxH/iHPHsyQ4pMGG+6cTSJVZ0iKWFucsGP1+tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TytU7FTp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8siDL1+u; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1773224181; c=relaxed/simple;
+	bh=re8JDRCPYzgZOEMayn+dpu8izTgVZs4o4lu4tO+6g4c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mhDKcSfVIvF+ttniFHg/WUe0l+PkkZdbCBZl/ZH/2Jc6HnbnT4HWArjTcyKeyQAta8m5B0gE5GAL3RM4zM+aSjfBhAuLfOVwQkANJktVQLZQdjjcDHdKJBb9+5lXQi+TbBeOP4G6daGWa1H3fSp2twpWSkSwKf7GZbKvZXyE7VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B1F4q3Bb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mupnw1zo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TytU7FTp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8siDL1+u"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B1F4q3Bb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mupnw1zo"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773224176;
+	s=2020; t=1773224178;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OF5j2kUrLuhowFgD03T3ZNkdPhavHn6Uk9ZwgYWRMfA=;
-	b=TytU7FTp6SuniBrSxS/dWPkqdfJO5Rxn+BkrzLCbnTzGfilN9kQQ12IGOrhi4WkfjHr5Vv
-	ax0eGiODrp0SJEtxIyRSGsq6r7EAEKirhlF2oibohUDe/upPhNCG4J+hb49JAMpSPOJnad
-	n343B0DQquFthp1Q73OnV6DOWgy9pnS7Isr+lueyarVtua0NFk9Rd97BB+MCe35uKMgzY4
-	QhZHdqD6yZFfArw67Y21IQ2fnq9gjHhIXOi0OEL+FidsTvte2EOFXLlX+tY6w+GiVoflP6
-	V1h0SjaX7ws/8ZxA5ySxvCKHdEUx/KU0bZ4qcbRnFMLpmC6jVKY0zIYS1g5iZg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZM0DU4QRem/47Ih92uwxuhlHlKL6kjp0QYOR6qvTog=;
+	b=B1F4q3BbFrfG2r2JL5eCGaYbECu7Oyhu7I5AQPEafeb4aKy3FzelBUey5pW0hCVGTcDd2Q
+	OLDz1JtjnNPOXfORjhM+XaRGepJ2xZr1AMj/8MzpIRTNafNr62AZzSyvuMfkKa1shQmLA2
+	f5Js+gRH9+ngYmjZJE2rW9Jqdqw9tRUpCgBO/ETdHzGV1E7ThAzJn0Jurc7+6W4bDjgfFJ
+	QcAOpuSaPkeeMUw/ymajDl2YCF59JR3JhvJL7QQvX6QmHugSn+ZaIYtKGDRZ8iqkdwTsaY
+	KgIp2bbvoHruXqoVTtKOmsGUH83mx5I4KXJm04OKYtGE7QpGmzGO8yw3qrAuaQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773224176;
+	s=2020e; t=1773224178;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OF5j2kUrLuhowFgD03T3ZNkdPhavHn6Uk9ZwgYWRMfA=;
-	b=8siDL1+uzDZhHX0LyTX4B4ASPNTJlsTRpW8iePr4DtzP5YWpWoxUmj0pKaRAqQwwLOSP40
-	Jk9C2j0FyjLZmUCg==
-Subject: [PATCH 00/12] hrtimer, timekeeping, tracing: various cleanups
-Date: Wed, 11 Mar 2026 11:15:09 +0100
-Message-Id: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZM0DU4QRem/47Ih92uwxuhlHlKL6kjp0QYOR6qvTog=;
+	b=Mupnw1zoEJSLQQkDdaiFSPpEt8ghtFHBnO4jwVqZnl0mNpVCl+6h2F5/Tsap+9YeENUJqM
+	4dcfvxyt2QUByBCQ==
+Date: Wed, 11 Mar 2026 11:15:10 +0100
+Subject: [PATCH 01/12] scripts/gdb: timerlist: Adapt to move of tk_core
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,10 +49,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y3MUQqDMBCE4avIPjdgUhDbq0gfopnoQht1Y6Qg3
- t2gPn4D828UIYxI72IjwcqRx5ChHwV1gw09FLtsMqWpyqfWapCFfxDVfWFDmqLyzjjYtn4Z5yn
- fJoHn/5lsPpcFc8rl5R73/QDIeGNCdwAAAA==
-X-Change-ID: 20260311-hrtimer-cleanups-fd2deab892df
+Message-Id: <20260311-hrtimer-cleanups-v1-1-095357392669@linutronix.de>
+References: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
+In-Reply-To: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 To: Jan Kiszka <jan.kiszka@siemens.com>, 
  Kieran Bingham <kbingham@kernel.org>, John Stultz <jstultz@google.com>, 
  Thomas Gleixner <tglx@kernel.org>, 
@@ -61,55 +62,38 @@ To: Jan Kiszka <jan.kiszka@siemens.com>,
  Frederic Weisbecker <frederic@kernel.org>, Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=2083;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=1009;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=DwrCrIyc7liuv5KJBFDBcjXHm5zG0WcOKjJRPNV9OzY=;
- b=QaDWtb0ViznSrzlJB4hzlFqgojvvYw4ZCzyMkepU/i7P81JVHOCdEitu5D9tuwkG26BNFHu5f
- DGxVafrFDSbBi8JKzNCZn+C91BAM6xSWzgc/HMmrjb8JjzW0e+UbJyT
+ bh=re8JDRCPYzgZOEMayn+dpu8izTgVZs4o4lu4tO+6g4c=;
+ b=BmRh1fl3moNOUCIbPDcMqY1T+jEs2k4UqK400XIZDqrlHqh4EusxGbiB9DRHlbE+3AonII1+v
+ 8CbtdKUHYA+CZChpyYSDqxjFKZj4ecW7IXr42sTd/8pfeRex4XmLTZP
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Various, mostly trivial, cleanups and fixes to the timekeeping core and
-hrtimer subsystems. These are preparations for another upcoming series,
-so I'd like this to go together trough tip.
+tk_core is a macro today which can not be resolved by gdb.
 
-Tracing maintainers: Patch 2 touches the tracing core.
+Use the correct symbol expression to reference tk_core.
 
-Based on tip/sched/hrtick.
-
+Fixes: 22c62b9a84b8 ("timekeeping: Introduce auxiliary timekeepers")
+Signed-off-by: Thomas Weißschuh (Schneider Electric) <thomas.weissschuh@linutronix.de>
 ---
-Thomas Weißschuh (Schneider Electric) (12):
-      scripts/gdb: timerlist: Adapt to move of tk_core
-      tracing: Use explicit array size instead of sentinel elements in symbol printing
-      timer_list: Print offset as signed integer
-      timekeeping: auxclock: Consistently use raw timekeeper for tk_setup_internals()
-      timekeeping: Mark offsets array as const
-      hrtimer: Remove hrtimer_get_expires_ns()
-      hrtimer: Don't zero-initialize ret in hrtimer_nanosleep()
-      hrtimer: Drop spurious space in 'enum hrtimer_base_type'
-      hrtimer: Drop unnecessary pointer indirection in hrtimer_expire_entry event
-      hrtimer: Mark index and clockid of clock base as const
-      hrtimer: Remove trailing comma after HRTIMER_MAX_CLOCK_BASES
-      hrtimer: Add a helper to retrieve a hrtimer from its timerqueue node
+ scripts/gdb/linux/timerlist.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/linux/hrtimer.h                    |  5 ----
- include/linux/hrtimer_defs.h               |  8 +++---
- include/linux/trace_events.h               | 13 ++++++----
- include/trace/events/timer.h               |  7 +++---
- include/trace/stages/stage3_trace_output.h | 40 +++++++++++++++---------------
- kernel/time/hrtimer.c                      | 14 ++++++-----
- kernel/time/timekeeping.c                  | 12 +++++----
- kernel/time/timer_list.c                   |  4 +--
- kernel/trace/trace_events_synth.c          |  4 +--
- kernel/trace/trace_output.c                | 20 +++++++++------
- kernel/trace/trace_syscalls.c              |  3 +--
- scripts/gdb/linux/timerlist.py             |  2 +-
- 12 files changed, 68 insertions(+), 64 deletions(-)
----
-base-commit: eef9f648fb0e92618041f019d4bdcf7ae17cb743
-change-id: 20260311-hrtimer-cleanups-fd2deab892df
+diff --git a/scripts/gdb/linux/timerlist.py b/scripts/gdb/linux/timerlist.py
+index ccc24d30de80..9fb3436a217c 100644
+--- a/scripts/gdb/linux/timerlist.py
++++ b/scripts/gdb/linux/timerlist.py
+@@ -20,7 +20,7 @@ def ktime_get():
+     We can't read the hardware timer itself to add any nanoseconds
+     that need to be added since we last stored the time in the
+     timekeeper. But this is probably good enough for debug purposes."""
+-    tk_core = gdb.parse_and_eval("&tk_core")
++    tk_core = gdb.parse_and_eval("&timekeeper_data[TIMEKEEPER_CORE]")
+ 
+     return tk_core['timekeeper']['tkr_mono']['base']
+ 
 
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.53.0
 
