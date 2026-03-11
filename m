@@ -1,119 +1,142 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876423D300E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 10:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EBE31AF14;
+	Wed, 11 Mar 2026 11:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773226062; cv=none; b=Kj6/LWVi0HKyRADbOikBcY7owednZjWWCNIJ66Nq469mjMJlE3edY1exf2Jy1gavGv2QTYOUQ1lzXVJPsFKdoSczRxJSmZkD0+nlKzh8XKfTU0NAkucDmbsNSo0WQSftc20ZXlUEODYERpjOwQC9R+/1BMp+XWGxwmZBNY8A/SQ=
+	t=1773228273; cv=none; b=keiNhIE03q5t2J1bmlFYlJ/78iVNqi5WFd9R9xM9NNQTvDSxzRc7ZoWM24f4Mav4NNlvKg53vvKwN2uZEO7ehYd+TaOTIDJrXVBMhtrxfd45+p2bMA1tPfsyWY5Qbh5hx7VUjLcbKfMlEP836p8UwGDFH3b4OsHp96UXVsyvSHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773226062; c=relaxed/simple;
-	bh=zRCIOZXGAulewyBbqGE0TlQlTPqeFeIDTbPGyy24MV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/Kvey38hxllltljXfUMcc0Q0tWF+/5PyKrN9phktKQxGWnHkG3ATtbdm6KS0CpsAme7GrSDTLiT9fBCVdIL57ALELxUEsO1pj0IgxmWrCUGRlRMNdO7Et2C3DSFDYEl0Y2ARDIs2wdfyOtsmkSOaIdm1vxK5oWecDvWPZ648R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+NfnaGG; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773228273; c=relaxed/simple;
+	bh=MrItGMIwck97yHNleIjnWht9bi1GncmtA9PeyGCwBMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmKNh90IABhcOhAPHUnUD4qtNfeszU4FQhcyEdSx6Lsm1DPzAj43zmHqB1uqaEPy5oPuEAtey7zY9Ea1lbEMCe4H8RBfpn6ISfsjUHjBc4HaM3ksAQnoDsMPYLRoDHCJYH8z1ccr2XVHVRsfnekKB/YdEyYT9uvrM6uEii1DRiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYq4aiiN; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+NfnaGG"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-485345e1013so6526455e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 03:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773226059; x=1773830859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
-        b=l+NfnaGGhGE/Qag8NAZKtowOcVY2wLQCbEgf8MnpvieTQKfxTgLXG7gVpu41GQE3Cp
-         lhcuSJ3ojhuoA+XvMW4ZK8DqWwguSBIQJdzHM+m0gGn1i58Im+PG8aw4GSSmMwNkHayu
-         W9J2Et5BO3MOuAYEpSQbP4o8f9J9gsDj/OANzpqDRda1qkC6GXeo6tLR1/FbLVhhy7Cf
-         MUxhHc5jx0lvSaHnxQ6WahuluHX1XzGqARVN8PyVe1PrQbU+agAKtUfEmOiyxhtTA+gY
-         BR6kn5ugraDiB91Rov4L/mant481Z758KVbs1s66hkgz+KSI4U1uv3Da1yI4gGWMgZ4d
-         Uvjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773226059; x=1773830859;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
-        b=mGD8+NhlIwL69Q4S895XGVCtAjxS58LRAym9dws/45Z4tRyiC8+s3wX8niJIat+5mY
-         f+U80Z7zqqvUchEWQYEFzSMBCeJfX3bjTCSiIJJOuekjqreVmo0jqhYVh5DTa/K9vLPr
-         n0g4POoEYhyCqyagR/SnXLcwg/xBvl50EXviT0rjSA5cj3kyAyLDstADwDX2c8+/PyHt
-         ceebiObFRvPeNm8jkVVKk6NP77MykDLSNtRkeMonGPJTSLxAqWu9nM8U6kvIU58WRSNL
-         zxcYbaruNCx0WAZm16TgnLro+Rkwo1nQFLToSE3P8rC7QMjx7D6tgNuLLUk5P8fijGWg
-         9XlA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2kA9ookdl9Xg2O10a/IL5I1vpLA2DlZqefGf3+IApcFAJvrnlNjOAX6/pXHD1YUanuZ9oA/xrUSZCTJ/cVV9Js00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJc2tIXKn4Vi03vNEtswmCEwcVXG06bQyokC3q1AxMlAMSjdIU
-	ENu4Dou5WRfVRjjxa6UMdNxOsCOTx5gQ3zA8t3hFShmmiAFwybSy/Xzl
-X-Gm-Gg: ATEYQzzYiSExnmLPkCA0/Zoqp+hdDEVwiSUQpmznvochromQ5npIH0pQr+Hgg7h1/I5
-	vg3HgJhPI60Gkj2e7t4/m0mXRzbP0BWbOMK+bFNDbMjY1/NvwkL798wpgpvrZI0/tgvnS1knPrO
-	JEmVP0BIljlS4DamJx+I3SRMqEqlD68jpZv/wu1ra2TJ4yF5MzcpNt0x/gHxQ97W8KM3MtZKRmu
-	ocAMRPBa2IusnSzhuFqCORlQfpjudlw/Fw31K9HKRQybReBnR5BUwiouQ4fAgMMInnaNMGxQpkF
-	7Gvr2hL/mAPBf8WSlwPgGSZ1F6CzDn0qcqNNJmvTNShyUq+J+8uxZ67/dtmfIKHAIxAf9Z5QHDP
-	bDlnZPm4MqNKljRxAWlcmIQEw96tEDcS50XudsebpbJwkGR3cHCSQh2k0IVC+Guz0mKFZIY40ZJ
-	jNe4JnEjKFz0wNY+/9Uf8d/JqiXRbSsotKrLg30tGCS9wdZaL44QnX87KZ2dTu8c5P19Hbb25ap
-	+I=
-X-Received: by 2002:a05:600c:5298:b0:479:13e9:3d64 with SMTP id 5b1f17b1804b1-4854b291dc2mr30148705e9.15.1773226058755;
-        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f820a2f1sm5725154f8f.30.2026.03.11.03.47.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
-Date: Wed, 11 Mar 2026 10:47:36 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-nfs@vger.kernel.org, bpf@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- netfs@lists.linux.dev, io-uring@vger.kernel.org, audit@vger.kernel.org,
- rcu@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux.dev,
- netdev@vger.kernel.org, linux-mm@kvack.org,
- linux-security-module@vger.kernel.org, Christian Loehle
- <christian.loehle@arm.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] kthread: remove kthread_exit()
-Message-ID: <20260311104736.51b53405@pumpkin>
-In-Reply-To: <20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
-References: <20260310-work-kernel-exit-v2-0-30711759d87b@kernel.org>
-	<20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYq4aiiN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773228270; x=1804764270;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MrItGMIwck97yHNleIjnWht9bi1GncmtA9PeyGCwBMs=;
+  b=MYq4aiiNcAj5ktb+64ocsttd3c4a6hVf+QJrbRnHp9WdCeu1rugE3NK/
+   7SMt82BAHNa5ILytFUEHU3Gp4s+SM5V0urn14EryCkXlXNthWR3CYrKEm
+   jbibDNdWW570xIPk/7Nu6uD+fcL8sYi3pAksecEF35gMfVnD5ryUp/r4Q
+   WzgOcfqu1NskvX3TIBnArsefiEnctznNtoymVl6b3ISvqMCVRf0XNOTWV
+   xGdPuvBI0NaVMGPJnuZSwd1Dzk3kQIlTszicBIt8in1nYEC3nN3b4L1/y
+   zHlOlpqggaV7uw7ipxat0I5t7fv7mIIyipwXK19SROWZ76Q1Kb79pBOkF
+   A==;
+X-CSE-ConnectionGUID: 5TMMtCu1SzSgsVMgQGuCoQ==
+X-CSE-MsgGUID: ye5+/K3VTqWal0jEAvfB9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="76903766"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="76903766"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:24:29 -0700
+X-CSE-ConnectionGUID: fw1E74arR96VolAP3q/Egw==
+X-CSE-MsgGUID: gTH9KMjeTPWUWgVUI7QD2Q==
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO 418530b1a366) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 11 Mar 2026 04:24:25 -0700
+Received: from kbuild by 418530b1a366 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w0Hfr-0000000014P-0HV2;
+	Wed, 11 Mar 2026 11:24:23 +0000
+Date: Wed, 11 Mar 2026 19:23:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Brian Geffon <bgeffon@google.com>, John Stultz <jstultz@google.com>,
+	Ian Rogers <irogers@google.com>,
+	Suleiman Souhlal <suleiman@google.com>
+Subject: Re: [PATCH v2 1/3] tracing: Have futex syscall trace event show
+ specific user data
+Message-ID: <202603111911.zAWpiGlz-lkp@intel.com>
+References: <20260310201036.542627924@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260310201036.542627924@kernel.org>
 
-On Tue, 10 Mar 2026 15:56:09 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+Hi Steven,
 
-> In 28aaa9c39945 ("kthread: consolidate kthread exit paths to prevent use-after-free")
-> we folded kthread_exit() into do_exit() when we fixed a nasty UAF bug.
-> We left kthread_exit() around as an alias to do_exit(). Remove it
-> completely.
-...
-> -#define module_put_and_kthread_exit(code) kthread_exit(code)
-> +#define module_put_and_kthread_exit(code) do_exit(code)
+kernel test robot noticed the following build warnings:
 
-I'm intrigued...
-How does that actually know to do the module_put()?
-(I know it does one - otherwise my driver wouldn't unload.)
+[auto build test WARNING on tip/locking/core]
+[also build test WARNING on trace/for-next akpm-mm/mm-everything linus/master v7.0-rc3 next-20260310]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The corresponding try_module_get(THIS_MODULE) is done before the
-kthread_run() (and has to be 'put' if that fails).
-So there is an explicit 'get' but an implicit 'put'.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Have-futex-syscall-trace-event-show-specific-user-data/20260311-041422
+base:   tip/locking/core
+patch link:    https://lore.kernel.org/r/20260310201036.542627924%40kernel.org
+patch subject: [PATCH v2 1/3] tracing: Have futex syscall trace event show specific user data
+config: arc-randconfig-001-20260311 (https://download.01.org/0day-ci/archive/20260311/202603111911.zAWpiGlz-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260311/202603111911.zAWpiGlz-lkp@intel.com/reproduce)
 
-While a loadable module that creates a kthread usually needs to give
-the kthread a reference to its module and then have that reference
-released as the kthread exits, I can imagine cases where that isn't true.
-(Or broken code that just hopes the module won't be unloaded just
-as the kthread exits.)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603111911.zAWpiGlz-lkp@intel.com/
 
-It actually makes me think that module_put_and_exit() ought to have
-a 'module' parameter.
-Or, perhaps, kthread_create() should have the module parameter and
-hold a reference to that module until it exits.
+All warnings (new ones prefixed by >>):
 
-	David
+   kernel/trace/trace_syscalls.c: In function 'syscall_get_futex':
+>> kernel/trace/trace_syscalls.c:807:15: warning: variable 'buf' set but not used [-Wunused-but-set-variable]
+     807 |         char *buf;
+         |               ^~~
+
+
+vim +/buf +807 kernel/trace/trace_syscalls.c
+
+   801	
+   802	static int
+   803	syscall_get_futex(unsigned long *args, char **buffer, int *size, int buf_size)
+   804	{
+   805		struct syscall_user_buffer *sbuf;
+   806		const char __user *ptr;
+ > 807		char *buf;
+   808	
+   809		/* buf_size of zero means user doesn't want user space read */
+   810		if (!buf_size)
+   811			return -1;
+   812	
+   813		/* If the syscall_buffer is NULL, tracing is being shutdown */
+   814		sbuf = READ_ONCE(syscall_buffer);
+   815		if (!sbuf)
+   816			return -1;
+   817	
+   818		ptr = (char __user *)args[0];
+   819	
+   820		*buffer = trace_user_fault_read(&sbuf->buf, ptr, 4, NULL, NULL);
+   821		if (!*buffer)
+   822			return -1;
+   823	
+   824		/* Add room for the value */
+   825		*size += 4;
+   826	
+   827		buf = *buffer;
+   828	
+   829		return 0;
+   830	}
+   831	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
