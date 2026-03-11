@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A540DFD5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 13:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1371E13DDAA
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 13:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773234138; cv=none; b=aJnRldijz06DLCS44ldzZD1OdAoa4aEcqOKaSNMapqevoJtRRPZhGCY9OM85ZAr5fpYN+iPmmGvMkvIH/5HLBGz7hO+tHuuqVq45/lZvdEmGTlU5xii4hzAGjxlwFCQ9GGUSYmndssnf0aD0JnYdU1mTYXC0xJvTwAzIOJ4t5vY=
+	t=1773234149; cv=none; b=l3CVGMiksfR7LFP8wf1im1shlqW5I4dmok67Fh6L+W6qG64m0uElst2hn8Q2NkAmpqAz1JZU+ipep7dfMEUauxV2Ti7O54cLzo369CIHLgDGgGDfk4MVBmhi93444NUEuKiA7yrd1LEKGer9c0Md4X3nvmR9AQs5gUtffqguxWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773234138; c=relaxed/simple;
-	bh=8bxddo//bFeiWVZAjXE5G5A906QpfmTHXlOStuvysZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=bJraD/cy6YUCxdQXoY2l9ft6ZFFpm0ZdobZjpDyrcOj6pbU/wkZQTv2FmciIjyripHv4IRiGXU3ZPPWkNo3e3JHK7VXvVU1fM5R+QZxPPs8iGE+zhx45t7TKOVPP5j9tM2t7/J/W34cCakop41A1z10FKQaC4iQ6RCO6gC1j5ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H42/jk9B; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1773234149; c=relaxed/simple;
+	bh=alxhS5zNt5yhZDlpWUot0Dy3jmoiPvwWrfIvY63/tcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=IfUH51GWtDYPa1EZHhwbIb71PFYthXNmhCsi/2evkf4T/tg6+6QXw9UiVn4NVVvwyAYnTalFZ3Q9+3s5+zpaPKPaIMKHnhyq17T0/BY9VHU2QbYg7hwxXb7Lt32KVRdCP2D2/EEpLyQDENfcSoivSc7m3QuW6T1yO+1O2f2NUAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jgy74awE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H42/jk9B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jgy74awE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773234135;
+	s=mimecast20190719; t=1773234146;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=W95+Aag+pT4am7UJ7kn0ZYkNZAOsuR+Lm542dQtuy/8=;
-	b=H42/jk9BnK5zig4b15GT5k7BtUz7PbUdyHbfoNGStOSIJaxhxyPTu/zu2ipa1oFI0XoH3I
-	eJy/xnEytn+3P8iQKTR9mDa37o9GqV1uxlhR0WCYw2JuqibYWwisTBK2nGUBBuJemxClNa
-	8ZfPj80GSzfyYqRvcdhoR5zRjOXsub8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wDwbdAOWQrkyyH+jPzV483o27gJ9IQVrrz9O2kAMCZY=;
+	b=Jgy74awEHX3c5ZXzGgOIaB9c/oSzRBZDP2FwEVP3PysbYYO0BAvnADroL86WfnAA2XK9Sb
+	WF3KYaMrFf0I7wC928d47BC/TAhx1vzowuSnipd3gsumOyS0en8rta3KADWg47Yq2yCXk0
+	MoQAkUf5xBA/yZu7wDjX9RpVYOfAkd4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-368-vvQlvA_DOQmkgxuLkn0YWA-1; Wed,
- 11 Mar 2026 09:02:14 -0400
-X-MC-Unique: vvQlvA_DOQmkgxuLkn0YWA-1
-X-Mimecast-MFC-AGG-ID: vvQlvA_DOQmkgxuLkn0YWA_1773234132
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-pe716fNZPJqrBdtiFVtqJQ-1; Wed,
+ 11 Mar 2026 09:02:23 -0400
+X-MC-Unique: pe716fNZPJqrBdtiFVtqJQ-1
+X-Mimecast-MFC-AGG-ID: pe716fNZPJqrBdtiFVtqJQ_1773234140
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81DB518005B6;
-	Wed, 11 Mar 2026 13:02:11 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F26DA19560B5;
+	Wed, 11 Mar 2026 13:02:18 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.80.206])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F383730002D2;
-	Wed, 11 Mar 2026 13:02:03 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 63EFE3000223;
+	Wed, 11 Mar 2026 13:02:12 +0000 (UTC)
 From: Wander Lairson Costa <wander@redhat.com>
 To: Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -59,9 +61,11 @@ Cc: acme@kernel.org,
 	williams@redhat.com,
 	gmonaco@redhat.com,
 	Wander Lairson Costa <wander@redhat.com>
-Subject: [PATCH v3 0/4] tracing/preemptirq: Optimize disabled tracepoint overhead
-Date: Wed, 11 Mar 2026 09:50:14 -0300
-Message-ID: <20260311125021.197638-1-wander@redhat.com>
+Subject: [PATCH v3 1/4] tracing/preemptirq: Optimize preempt_disable/enable() tracepoint overhead
+Date: Wed, 11 Mar 2026 09:50:15 -0300
+Message-ID: <20260311125021.197638-2-wander@redhat.com>
+In-Reply-To: <20260311125021.197638-1-wander@redhat.com>
+References: <20260311125021.197638-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,127 +73,180 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: drb5HNu65XoaijmKnmhpqDBteSbrbI-zsWCoELHdDKA_1773234132
+X-Mimecast-MFC-PROC-ID: u3u5PiB5Mnof6J0Etk9h1UrKrspUezW4R1FUoMxVLTI_1773234140
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The preempt and IRQ tracepoints currently impose measurable overhead
-even when they are compiled in but not actively enabled. This overhead
-stems from external function calls and unconditional tracepoint checks
-in highly active code paths.
+When CONFIG_TRACE_PREEMPT_TOGGLE is enabled, preempt_count_add() and
+preempt_count_sub() become external function calls (defined in
+kernel/sched/core.c) rather than inlined operations. These functions
+also perform preempt_count() checks and call trace_preempt_on/off()
+unconditionally, even when no tracing consumer is active.
 
-The v2 series optimized within the existing CONFIG_TRACE_IRQFLAGS
-path, which still required the heavy lockdep and irqsoff
-infrastructure to be enabled. This v3 takes a different approach by
-providing independent, user-selectable configurations
-(CONFIG_TRACE_PREEMPT_TOGGLE and CONFIG_TRACE_IRQFLAGS_TOGGLE) that
-expose the tracepoints without pulling in the heavier infrastructure.
+Reduce this overhead by splitting the #if logic in preempt.h into
+three cases. When CONFIG_DEBUG_PREEMPT or CONFIG_PREEMPT_TRACER is
+set, keep external function calls because DEBUG_PREEMPT needs runtime
+validation checks, and PREEMPT_TRACER needs the preemptoff latency
+tracer hooks (tracer_preempt_on/off, called via trace_preempt_on/off).
+When CONFIG_TRACE_PREEMPT_TOGGLE alone is set, provide new inline
+versions of preempt_count_add/sub() that check the tracepoint static
+key via the __preempt_trace_enabled() macro before calling into the
+tracing path. The macro evaluates to true when the preempt_enable or
+preempt_disable tracepoint has subscribers AND the preempt count
+equals val (indicating the first preempt disable or last preempt
+enable), preserving the original preempt_latency_start/stop semantics.
+When none of the above are set, use pure inline macros with no tracing
+overhead.
 
-The preempt optimization uses inline static key checks, while the IRQ
-optimization employs lightweight wrapper functions that check raw
-hardware state. Making both configurations explicitly user-selectable
-addresses upstream feedback regarding the impact on code generation,
-ensuring that this optimization remains strictly opt-in.
+The preempt_count_dec_and_test() macro is refactored out of the
+three-way #if into a separate block shared by the first two cases,
+since both need it to call the (potentially inline)
+preempt_count_sub() before checking should_resched().
 
----
-Performance Measurements
+The inline path calls thin __trace_preempt_on/off() wrappers (added
+in trace_preemptirq.c) that invoke trace_preempt_on/off(), keeping
+the full tracepoint machinery out of the inline code.
 
-Measurements were taken using the tracer-benchmark kernel module [1].
-The module creates one kthread per online CPU. Each thread performs
-a configurable number of iterations of
-local_irq_disable()/local_irq_enable() and
-preempt_disable()/preempt_enable() pairs, timing each pair with
-ktime_get_ns(). All threads start simultaneously via a completion
-to maximize contention. Per-CPU results (average, median) are aggregated across
-CPUs. The 99th percentile is measured separately
-on a single pinned CPU. The kernel used was version 7.0.0. All
-values are in nanoseconds. Each run collected 10^7 samples.
+The #include <linux/tracepoint-defs.h> is placed inside the
+CONFIG_TRACE_PREEMPT_TOGGLE block rather than at the top of the file
+to avoid a circular include dependency on architectures where
+asm/irqflags.h includes linux/preempt.h (e.g. m68k):
 
-Configurations compared:
- - 7.0.0: stock kernel
- - irqsoff: stock kernel with CONFIG_IRQSOFF_TRACER=y and
-   CONFIG_PREEMPT_TRACER=y
- - preemptirq: patched kernel with CONFIG_TRACE_PREEMPT_TOGGLE=y
-   and CONFIG_TRACE_IRQFLAGS_TOGGLE=y
+  preempt.h -> tracepoint-defs.h -> static_key.h -> jump_label.h ->
+  atomic.h -> irqflags.h -> asm/irqflags.h -> preempt.h (guarded)
 
-The '+' suffix indicates the test ran with tracepoints enabled.
+If the include were at the top, this chain would be traversed before
+hardirq_count() is defined (at line 110), causing a build failure on
+m68k. Placing it inside the #elif block ensures it is only pulled in
+when CONFIG_TRACE_PREEMPT_TOGGLE is enabled and avoids the cycle for
+configurations that do not select it.
 
-IRQ Metrics
+In core.c, narrow the compilation guard for the external
+preempt_count_add/sub() from CONFIG_DEBUG_PREEMPT ||
+CONFIG_TRACE_PREEMPT_TOGGLE to CONFIG_DEBUG_PREEMPT ||
+CONFIG_PREEMPT_TRACER, since CONFIG_TRACE_PREEMPT_TOGGLE is now
+handled inline.
 
-          Metric          7.0.0  irqsoff  irqsoff+  preemptirq  preemptirq+
-          average            19       27       175          19          166
-          median             19       27       172          19          164
-          99 percentile      21       29       234          21          221
-
-Preempt Metrics
-
-          Metric          7.0.0  irqsoff  irqsoff+  preemptirq  preemptirq+
-          average            16       21       169          16          160
-          median             16       21       165          17          159
-          99 percentile      18       23       236          18          217
-
-The preemptirq configuration matches the stock kernel performance
-when tracepoints are disabled, while the irqsoff configuration adds
-~40% overhead even when inactive. When tracepoints are enabled,
-preemptirq is also slightly faster than irqsoff.
-
-Binary size impact (stripped vmlinux, defconfig):
-
-          7.0.0:       43404576 bytes
-          preemptirq:  43429152 bytes (+24576 bytes, +0.057%)
-
+Signed-off-by: Wander Lairson Costa <wander@redhat.com>
 Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-
 ---
-References:
-[1] https://github.com/walac/tracer-benchmark
+ include/linux/preempt.h         | 49 +++++++++++++++++++++++++++++++--
+ kernel/sched/core.c             |  2 +-
+ kernel/trace/trace_preemptirq.c | 19 +++++++++++++
+ 3 files changed, 66 insertions(+), 4 deletions(-)
 
-Changes in v3:
-- Reworked series from 2 to 4 patches
-- IRQ tracing rearchitected: instead of optimizing within
-  CONFIG_TRACE_IRQFLAGS, introduced independent
-  CONFIG_TRACE_IRQFLAGS_TOGGLE that provides irq_disable/irq_enable
-  tracepoints without pulling in lockdep or irqsoff infrastructure
-- Made TRACE_PREEMPT_TOGGLE user-selectable in Kconfig, addressing
-  upstream feedback about code generation impact
-- Preempt optimization now handles CONFIG_PREEMPT_TRACER alongside
-  CONFIG_DEBUG_PREEMPT in the three-way #if split
-- Fixed __preempt_trace_enabled() macro to accept val as parameter
-- Resolved circular header dependency on m68k by placing
-  tracepoint-defs.h include inside conditional blocks instead of
-  at the top of preempt.h and irqflags.h
-- Moved atomic.h include from tracepoint-defs.h to tracepoint.h
-  to break circular dependency chain on ARM32
-- Used EXPORT_TRACEPOINT_SYMBOL() instead of raw
-  EXPORT_SYMBOL(__tracepoint_*) for proper tracepoint registration
-- Narrowed core.c compilation guard to CONFIG_DEBUG_PREEMPT ||
-  CONFIG_PREEMPT_TRACER since TRACE_PREEMPT_TOGGLE is now handled
-  inline
-- Updated performance benchmarks on 7.0.0, including
-  tracepoint-enabled measurements and binary size impact
-
-Changes in v2:
-- Fixed build failure on arm32 (circular dependency:
-  atomic.h -> cmpxchg.h -> irqflags.h -> tracepoint.h -> atomic.h)
-
-Wander Lairson Costa (4):
-  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
-    overhead
-  trace/preemptirq: make TRACE_PREEMPT_TOGGLE user-selectable
-  trace/preemptirq: add TRACE_IRQFLAGS_TOGGLE
-  trace/preemptirq: Implement trace_irqflags hooks
-
- include/linux/irqflags.h          | 62 +++++++++++++++++++++++++++-
- include/linux/preempt.h           | 49 ++++++++++++++++++++--
- include/linux/tracepoint-defs.h   |  1 -
- include/linux/tracepoint.h        |  1 +
- include/trace/events/preemptirq.h |  2 +-
- kernel/sched/core.c               |  2 +-
- kernel/trace/Kconfig              | 19 +++++++--
- kernel/trace/trace_preemptirq.c   | 68 +++++++++++++++++++++++++++++++
- 8 files changed, 193 insertions(+), 11 deletions(-)
-
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index d964f965c8ffc..f59a92f930d81 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -189,17 +189,60 @@ static __always_inline unsigned char interrupt_context_level(void)
+  */
+ #define in_atomic_preempt_off() (preempt_count() != PREEMPT_DISABLE_OFFSET)
+ 
+-#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
++#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_PREEMPT_TRACER)
+ extern void preempt_count_add(int val);
+ extern void preempt_count_sub(int val);
+-#define preempt_count_dec_and_test() \
+-	({ preempt_count_sub(1); should_resched(0); })
++#elif defined(CONFIG_TRACE_PREEMPT_TOGGLE)
++/*
++ * Avoid the circular dependency on architectures where asm/irqflags.h
++ * includes linux/preempt.h (e.g. m68k):
++ *
++ * preempt.h <--------------------+
++ *  tracepoint-defs.h             |
++ *   static_key.h                 |
++ *    jump_label.h                |
++ *     atomic.h                   |
++ *      irqflags.h                |
++ *       asm/irqflags.h           |
++ *        preempt.h --------------+
++ */
++#include <linux/tracepoint-defs.h>
++
++extern void __trace_preempt_on(void);
++extern void __trace_preempt_off(void);
++
++DECLARE_TRACEPOINT(preempt_enable);
++DECLARE_TRACEPOINT(preempt_disable);
++
++#define __preempt_trace_enabled(type, val) \
++	(tracepoint_enabled(preempt_##type) && preempt_count() == (val))
++
++static __always_inline void preempt_count_add(int val)
++{
++	__preempt_count_add(val);
++
++	if (__preempt_trace_enabled(disable, val))
++		__trace_preempt_off();
++}
++
++static __always_inline void preempt_count_sub(int val)
++{
++	if (__preempt_trace_enabled(enable, val))
++		__trace_preempt_on();
++
++	__preempt_count_sub(val);
++}
+ #else
+ #define preempt_count_add(val)	__preempt_count_add(val)
+ #define preempt_count_sub(val)	__preempt_count_sub(val)
+ #define preempt_count_dec_and_test() __preempt_count_dec_and_test()
+ #endif
+ 
++#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
++#define preempt_count_dec_and_test() \
++	({ preempt_count_sub(1); should_resched(0); })
++#endif
++
+ #define __preempt_count_inc() __preempt_count_add(1)
+ #define __preempt_count_dec() __preempt_count_sub(1)
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index b7f77c165a6e0..125e5d71d1bd3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5733,7 +5733,7 @@ static inline void sched_tick_stop(int cpu) { }
+ #endif /* !CONFIG_NO_HZ_FULL */
+ 
+ #if defined(CONFIG_PREEMPTION) && (defined(CONFIG_DEBUG_PREEMPT) || \
+-				defined(CONFIG_TRACE_PREEMPT_TOGGLE))
++				   defined(CONFIG_PREEMPT_TRACER))
+ /*
+  * If the value passed in is equal to the current preempt count
+  * then we just disabled preemption. Start timing the latency.
+diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+index 0c42b15c38004..9f098fcb28012 100644
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -115,6 +115,25 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+ 
+ #ifdef CONFIG_TRACE_PREEMPT_TOGGLE
+ 
++#if !defined(CONFIG_DEBUG_PREEMPT) && !defined(CONFIG_PREEMPT_TRACER)
++EXPORT_TRACEPOINT_SYMBOL(preempt_disable);
++EXPORT_TRACEPOINT_SYMBOL(preempt_enable);
++
++void __trace_preempt_on(void)
++{
++	trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
++}
++EXPORT_SYMBOL(__trace_preempt_on);
++NOKPROBE_SYMBOL(__trace_preempt_on);
++
++void __trace_preempt_off(void)
++{
++	trace_preempt_off(CALLER_ADDR0, get_lock_parent_ip());
++}
++EXPORT_SYMBOL(__trace_preempt_off);
++NOKPROBE_SYMBOL(__trace_preempt_off);
++#endif /* !CONFIG_DEBUG_PREEMPT */
++
+ void trace_preempt_on(unsigned long a0, unsigned long a1)
+ {
+ 	trace(preempt_enable, TP_ARGS(a0, a1));
 -- 
 2.53.0
 
