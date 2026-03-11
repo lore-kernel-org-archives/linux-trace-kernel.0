@@ -1,128 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2A83CEBA0;
-	Wed, 11 Mar 2026 10:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876423D300E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 10:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773224187; cv=none; b=lSpVlt2OWXz/n0ngHfapxdame6SDskw4W4Eb2lQ2/RaSiqqQlMmb6B3QxRwb1gxivsjhO7nMi6N3zU+f6Gh3lUzuoPxd311Ps0kWww0JpIUDl2koidg2u4EmTVPiaCADR460jR9aoVDS8Wgu/Z3kOgo5OR4z13alEgNu/Hlc70E=
+	t=1773226062; cv=none; b=Kj6/LWVi0HKyRADbOikBcY7owednZjWWCNIJ66Nq469mjMJlE3edY1exf2Jy1gavGv2QTYOUQ1lzXVJPsFKdoSczRxJSmZkD0+nlKzh8XKfTU0NAkucDmbsNSo0WQSftc20ZXlUEODYERpjOwQC9R+/1BMp+XWGxwmZBNY8A/SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773224187; c=relaxed/simple;
-	bh=YvXyV7CVpcm/llatxBdUGnPwoonKvKmSxfG6LXdq7ZI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kfNiCTjErdnNrcv698FQ0Y42xRjOVrMGx88fkM7Cj9Z2Yw9NubH3efPEjsvnVwVi9yraP7E5Ue4YEyDgMRAC9/cbdGNsicx5GITvqp593VbPVlYOG3Isl/2twhwwu2DnClYkr40sdr/w5AW4vb9l62HFRggWzGIQWpaq/p2u+7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pt8ftYDb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6csCQMBI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1773226062; c=relaxed/simple;
+	bh=zRCIOZXGAulewyBbqGE0TlQlTPqeFeIDTbPGyy24MV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M/Kvey38hxllltljXfUMcc0Q0tWF+/5PyKrN9phktKQxGWnHkG3ATtbdm6KS0CpsAme7GrSDTLiT9fBCVdIL57ALELxUEsO1pj0IgxmWrCUGRlRMNdO7Et2C3DSFDYEl0Y2ARDIs2wdfyOtsmkSOaIdm1vxK5oWecDvWPZ648R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+NfnaGG; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pt8ftYDb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6csCQMBI"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773224185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a1lqbPdWo5M7xyMGcnFdCdyd/ndaVXfMuzeCyaV6maY=;
-	b=pt8ftYDbhWrhCXfKA4Oa/xg4dtora3Y0ynchr4jNqrUpr30g5GPdeQ/EPSFLdsgTlDBVYm
-	RwH4fISwPDwqHEBZeyZFkInPex6QqUWi1Pwetu8+DB+ob1U5q9oadS8zR8grY0Ns1nbsbR
-	NE5PKFtPfbF3a88/0bV0I1EHE+wKZ1bsqxDld+l9hBx+UrQr/xmAK9spv0a+S7HLD8wLUQ
-	N/pACctXVZUzVqquTGNDlQN4JmjM8TF4Fn8eleu5zIvgXlISDmrs7tSsHu6pIbpCOla4gZ
-	PRfH0f9/6F6RjG4iiXz4s4YwUqETZTnSzEUdgtbU46UXS+uYisVfzkwFRqGb3Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773224185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a1lqbPdWo5M7xyMGcnFdCdyd/ndaVXfMuzeCyaV6maY=;
-	b=6csCQMBIt93U9Or22QexmVXQUytv8Gj5Q7HnbDrHDliXDFwF6UJ1/tZd5aF8/m+6WC1IRK
-	1yWNdMLmGhXcXFCQ==
-Date: Wed, 11 Mar 2026 11:15:21 +0100
-Subject: [PATCH 12/12] hrtimer: Add a helper to retrieve a hrtimer from its
- timerqueue node
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+NfnaGG"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-485345e1013so6526455e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 03:47:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773226059; x=1773830859; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
+        b=l+NfnaGGhGE/Qag8NAZKtowOcVY2wLQCbEgf8MnpvieTQKfxTgLXG7gVpu41GQE3Cp
+         lhcuSJ3ojhuoA+XvMW4ZK8DqWwguSBIQJdzHM+m0gGn1i58Im+PG8aw4GSSmMwNkHayu
+         W9J2Et5BO3MOuAYEpSQbP4o8f9J9gsDj/OANzpqDRda1qkC6GXeo6tLR1/FbLVhhy7Cf
+         MUxhHc5jx0lvSaHnxQ6WahuluHX1XzGqARVN8PyVe1PrQbU+agAKtUfEmOiyxhtTA+gY
+         BR6kn5ugraDiB91Rov4L/mant481Z758KVbs1s66hkgz+KSI4U1uv3Da1yI4gGWMgZ4d
+         Uvjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773226059; x=1773830859;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=us9WYwCiTBLLsk5cVeG22xmuXfkRkjPu0Kbcd1njBZs=;
+        b=mGD8+NhlIwL69Q4S895XGVCtAjxS58LRAym9dws/45Z4tRyiC8+s3wX8niJIat+5mY
+         f+U80Z7zqqvUchEWQYEFzSMBCeJfX3bjTCSiIJJOuekjqreVmo0jqhYVh5DTa/K9vLPr
+         n0g4POoEYhyCqyagR/SnXLcwg/xBvl50EXviT0rjSA5cj3kyAyLDstADwDX2c8+/PyHt
+         ceebiObFRvPeNm8jkVVKk6NP77MykDLSNtRkeMonGPJTSLxAqWu9nM8U6kvIU58WRSNL
+         zxcYbaruNCx0WAZm16TgnLro+Rkwo1nQFLToSE3P8rC7QMjx7D6tgNuLLUk5P8fijGWg
+         9XlA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2kA9ookdl9Xg2O10a/IL5I1vpLA2DlZqefGf3+IApcFAJvrnlNjOAX6/pXHD1YUanuZ9oA/xrUSZCTJ/cVV9Js00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJc2tIXKn4Vi03vNEtswmCEwcVXG06bQyokC3q1AxMlAMSjdIU
+	ENu4Dou5WRfVRjjxa6UMdNxOsCOTx5gQ3zA8t3hFShmmiAFwybSy/Xzl
+X-Gm-Gg: ATEYQzzYiSExnmLPkCA0/Zoqp+hdDEVwiSUQpmznvochromQ5npIH0pQr+Hgg7h1/I5
+	vg3HgJhPI60Gkj2e7t4/m0mXRzbP0BWbOMK+bFNDbMjY1/NvwkL798wpgpvrZI0/tgvnS1knPrO
+	JEmVP0BIljlS4DamJx+I3SRMqEqlD68jpZv/wu1ra2TJ4yF5MzcpNt0x/gHxQ97W8KM3MtZKRmu
+	ocAMRPBa2IusnSzhuFqCORlQfpjudlw/Fw31K9HKRQybReBnR5BUwiouQ4fAgMMInnaNMGxQpkF
+	7Gvr2hL/mAPBf8WSlwPgGSZ1F6CzDn0qcqNNJmvTNShyUq+J+8uxZ67/dtmfIKHAIxAf9Z5QHDP
+	bDlnZPm4MqNKljRxAWlcmIQEw96tEDcS50XudsebpbJwkGR3cHCSQh2k0IVC+Guz0mKFZIY40ZJ
+	jNe4JnEjKFz0wNY+/9Uf8d/JqiXRbSsotKrLg30tGCS9wdZaL44QnX87KZ2dTu8c5P19Hbb25ap
+	+I=
+X-Received: by 2002:a05:600c:5298:b0:479:13e9:3d64 with SMTP id 5b1f17b1804b1-4854b291dc2mr30148705e9.15.1773226058755;
+        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f820a2f1sm5725154f8f.30.2026.03.11.03.47.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 03:47:38 -0700 (PDT)
+Date: Wed, 11 Mar 2026 10:47:36 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-nfs@vger.kernel.org, bpf@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netfs@lists.linux.dev, io-uring@vger.kernel.org, audit@vger.kernel.org,
+ rcu@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux.dev,
+ netdev@vger.kernel.org, linux-mm@kvack.org,
+ linux-security-module@vger.kernel.org, Christian Loehle
+ <christian.loehle@arm.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] kthread: remove kthread_exit()
+Message-ID: <20260311104736.51b53405@pumpkin>
+In-Reply-To: <20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
+References: <20260310-work-kernel-exit-v2-0-30711759d87b@kernel.org>
+	<20260310-work-kernel-exit-v2-1-30711759d87b@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260311-hrtimer-cleanups-v1-12-095357392669@linutronix.de>
-References: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
-In-Reply-To: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
-To: Jan Kiszka <jan.kiszka@siemens.com>, 
- Kieran Bingham <kbingham@kernel.org>, John Stultz <jstultz@google.com>, 
- Thomas Gleixner <tglx@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Frederic Weisbecker <frederic@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=2056;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=YvXyV7CVpcm/llatxBdUGnPwoonKvKmSxfG6LXdq7ZI=;
- b=7txLjQFs4i7aNne4I+4t3O4R9sFRfvSuT1zH4pQNorAGf5+/yedPlMont6LSa2uBEF4/JwSVM
- vhSApJt1MocBnvl9wgsX/FxKqcXLxkHjAwocVOEoDpQT5El8XeUDRwA
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The container_of() call is open-coded multiple times.
+On Tue, 10 Mar 2026 15:56:09 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-Add a helper macro.
+> In 28aaa9c39945 ("kthread: consolidate kthread exit paths to prevent use-after-free")
+> we folded kthread_exit() into do_exit() when we fixed a nasty UAF bug.
+> We left kthread_exit() around as an alias to do_exit(). Remove it
+> completely.
+...
+> -#define module_put_and_kthread_exit(code) kthread_exit(code)
+> +#define module_put_and_kthread_exit(code) do_exit(code)
 
-Use container_of_const() to preserve constness.
+I'm intrigued...
+How does that actually know to do the module_put()?
+(I know it does one - otherwise my driver wouldn't unload.)
 
-Signed-off-by: Thomas Weißschuh (Schneider Electric) <thomas.weissschuh@linutronix.de>
----
- kernel/time/hrtimer.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+The corresponding try_module_get(THIS_MODULE) is done before the
+kthread_run() (and has to be 'put' if that fails).
+So there is an explicit 'get' but an implicit 'put'.
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index d350bceb3c95..94955f967207 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -534,6 +534,8 @@ static inline void debug_activate(struct hrtimer *timer, enum hrtimer_mode mode,
- 		for (bool done = false; !done; active &= ~(1U << idx))			\
- 			for (base = &cpu_base->clock_base[idx]; !done; done = true)
- 
-+#define hrtimer_from_timerqueue_node(_n) container_of_const(_n, struct hrtimer, node)
-+
- #if defined(CONFIG_NO_HZ_COMMON)
- /*
-  * Same as hrtimer_bases_next_event() below, but skips the excluded timer and
-@@ -578,7 +580,7 @@ static __always_inline struct hrtimer *clock_base_next_timer(struct hrtimer_cloc
- {
- 	struct timerqueue_linked_node *next = timerqueue_linked_first(&base->active);
- 
--	return container_of(next, struct hrtimer, node);
-+	return hrtimer_from_timerqueue_node(next);
- }
- 
- /* Find the base with the earliest expiry */
-@@ -1960,7 +1962,7 @@ static __always_inline struct hrtimer *clock_base_next_timer_safe(struct hrtimer
- {
- 	struct timerqueue_linked_node *next = timerqueue_linked_first(&base->active);
- 
--	return next ? container_of(next, struct hrtimer, node) : NULL;
-+	return next ? hrtimer_from_timerqueue_node(next) : NULL;
- }
- 
- static void __hrtimer_run_queues(struct hrtimer_cpu_base *cpu_base, ktime_t now,
-@@ -2438,7 +2440,7 @@ static void migrate_hrtimer_list(struct hrtimer_clock_base *old_base,
- 	struct hrtimer *timer;
- 
- 	while ((node = timerqueue_linked_first(&old_base->active))) {
--		timer = container_of(node, struct hrtimer, node);
-+		timer = hrtimer_from_timerqueue_node(node);
- 		BUG_ON(hrtimer_callback_running(timer));
- 		debug_hrtimer_deactivate(timer);
- 
+While a loadable module that creates a kthread usually needs to give
+the kthread a reference to its module and then have that reference
+released as the kthread exits, I can imagine cases where that isn't true.
+(Or broken code that just hopes the module won't be unloaded just
+as the kthread exits.)
 
--- 
-2.53.0
+It actually makes me think that module_put_and_exit() ought to have
+a 'module' parameter.
+Or, perhaps, kthread_create() should have the module parameter and
+hold a reference to that module until it exits.
 
+	David
