@@ -1,97 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168583C9EF1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 09:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB2A3C8720;
+	Wed, 11 Mar 2026 10:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773221546; cv=none; b=kefWfG04ZEWLrFt355ty9msnULu6pVq0OFSgTQg/x4g/XgyHrldo/FLOHub6mEjHtSxSHKMUeCfIsZBq7iUiwfNbFTIei0JpPse34r8eYtsrSKZvhKjQIS6uDjGtKQM3Ib3xfKv8fXkFbvCO8raiEpUCW1hNJS4LzY1w/w/Ft/w=
+	t=1773224180; cv=none; b=LBQw0949ZynPOyJpHTWy4xBZqOrZez1czArYaXDeY5QAvYuRWsAQ5B/XuLFqNJQj1JFzyTBS3hbi4Zt/AEBEG3vCiNSn3UkoSyJpj9qSH+lOV3tc+RECG21vArVcUsSMWSVgM83WzkG6fx1C0SACoY6V/cgZfOwOHR2nrPS77dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773221546; c=relaxed/simple;
-	bh=JGYhPK256pxU9EiY8jbQSSjgozqR8V5kd9EUseD+GRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lDPbIJX30/OfdLsE2BHzTX7jbYMiPXOpA5j6nZZN0URtgNrQnRggRxPparRQodJln6PKo0iETdOrUjfDMLAU6+mt52wlIj51GDRWbeyEWHKG6nftPOXTd1tMgwd1Ubeyd3mhnJ+hfZD/E/jaONTblzUxAJdIQu923r0pSmwOvoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfVWEI4z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773224180; c=relaxed/simple;
+	bh=DwrCrIyc7liuv5KJBFDBcjXHm5zG0WcOKjJRPNV9OzY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LXSKq+M+YaxGGpVoPcgjQNsjyQyf/Rtfi3Mhox5vVgvF0q72XMy30jpYbbFbc4CH8VgWzJFUFJ0nSBaaBORkzWO+7Ri0YE3rxo4ibQIDc7hve2HH1eCvvNMDYaNqSaltW2Kh4LxH/iHPHsyQ4pMGG+6cTSJVZ0iKWFucsGP1+tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TytU7FTp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8siDL1+u; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfVWEI4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F443C2BCB8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 09:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773221545;
-	bh=JGYhPK256pxU9EiY8jbQSSjgozqR8V5kd9EUseD+GRo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JfVWEI4zDrh3iHX+1r4cle8Phcf0RBN0zERjJ8PQNA3EYWSATJ9h5lha/xBvVFGnI
-	 lElqdFOyu5rUcg336ldY8JBHZo/CNZ6A5HFkXurPLCqwCA7763w9Gzh1MrCiovz1O6
-	 4/dhditNlUPPz/o6nb1awN/pC+8W+SveVLbbW1M3XSJ0LknHbar0z1P9mnX5NF58yX
-	 1Uj5dsDyxTrkO1DJZv/qpV8j6iPNzVVJVRqNM1MXMlgjgqpNnn65QlcqD5KydSFEzI
-	 yLns3+tdmVfBsvgohk6ekX61JLdkJkatIbZorvb97Pbamw8/hcF79oQl43JkoSoDtA
-	 x5H4ornHcPhQg==
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-64ae222d87dso12762973d50.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Mar 2026 02:32:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXWN3oO7diECaMTqjahf1hTccAXRU4oxDf/U1PRDyIZuWkwaIQ210MV8g0Rw+T/KjBy99+g0HNyWgxjBezpi/Inf1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTP7RKLkhMNcRNBTwYIYUuMaj8LWuIPcGQly8k/CvCm6TZvUs7
-	YpafuYAk1os0K2ik1fKBk9bbzYefrHwS8r9GbReVqFO2Hsu2UaqKhVVd+4+gqWHR05i/76mtUEJ
-	H1okHUuHpjpHZo3RraGyoOPXyCkR25ao=
-X-Received: by 2002:a05:690e:144d:b0:64c:e890:fbb9 with SMTP id
- 956f58d0204a3-64d656f696dmr1649157d50.20.1773221544775; Wed, 11 Mar 2026
- 02:32:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TytU7FTp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8siDL1+u"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1773224176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OF5j2kUrLuhowFgD03T3ZNkdPhavHn6Uk9ZwgYWRMfA=;
+	b=TytU7FTp6SuniBrSxS/dWPkqdfJO5Rxn+BkrzLCbnTzGfilN9kQQ12IGOrhi4WkfjHr5Vv
+	ax0eGiODrp0SJEtxIyRSGsq6r7EAEKirhlF2oibohUDe/upPhNCG4J+hb49JAMpSPOJnad
+	n343B0DQquFthp1Q73OnV6DOWgy9pnS7Isr+lueyarVtua0NFk9Rd97BB+MCe35uKMgzY4
+	QhZHdqD6yZFfArw67Y21IQ2fnq9gjHhIXOi0OEL+FidsTvte2EOFXLlX+tY6w+GiVoflP6
+	V1h0SjaX7ws/8ZxA5ySxvCKHdEUx/KU0bZ4qcbRnFMLpmC6jVKY0zIYS1g5iZg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1773224176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OF5j2kUrLuhowFgD03T3ZNkdPhavHn6Uk9ZwgYWRMfA=;
+	b=8siDL1+uzDZhHX0LyTX4B4ASPNTJlsTRpW8iePr4DtzP5YWpWoxUmj0pKaRAqQwwLOSP40
+	Jk9C2j0FyjLZmUCg==
+Subject: [PATCH 00/12] hrtimer, timekeeping, tracing: various cleanups
+Date: Wed, 11 Mar 2026 11:15:09 +0100
+Message-Id: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-41-bd63b656022d@avm.de>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-41-bd63b656022d@avm.de>
-From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 11 Mar 2026 10:32:12 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnDv00ErgVdQ4EBpKH9KMWrPD8ODrQ6m846zyQ=wNzCzQ@mail.gmail.com>
-X-Gm-Features: AaiRm52aI8z_G2E4qYaKWPEA43RhLektjwMDQXSLwHd-Xy_BYcin-6heFFY4jM4
-Message-ID: <CAD++jLnDv00ErgVdQ4EBpKH9KMWrPD8ODrQ6m846zyQ=wNzCzQ@mail.gmail.com>
-Subject: Re: [PATCH 41/61] pinctrl: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
-	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/y3MUQqDMBCE4avIPjdgUhDbq0gfopnoQht1Y6Qg3
+ t2gPn4D828UIYxI72IjwcqRx5ChHwV1gw09FLtsMqWpyqfWapCFfxDVfWFDmqLyzjjYtn4Z5yn
+ fJoHn/5lsPpcFc8rl5R73/QDIeGNCdwAAAA==
+X-Change-ID: 20260311-hrtimer-cleanups-fd2deab892df
+To: Jan Kiszka <jan.kiszka@siemens.com>, 
+ Kieran Bingham <kbingham@kernel.org>, John Stultz <jstultz@google.com>, 
+ Thomas Gleixner <tglx@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Frederic Weisbecker <frederic@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=2083;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=DwrCrIyc7liuv5KJBFDBcjXHm5zG0WcOKjJRPNV9OzY=;
+ b=QaDWtb0ViznSrzlJB4hzlFqgojvvYw4ZCzyMkepU/i7P81JVHOCdEitu5D9tuwkG26BNFHu5f
+ DGxVafrFDSbBi8JKzNCZn+C91BAM6xSWzgc/HMmrjb8JjzW0e+UbJyT
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Tue, Mar 10, 2026 at 12:55=E2=80=AFPM Philipp Hahn <phahn-oss@avm.de> wr=
-ote:
+Various, mostly trivial, cleanups and fixes to the timekeeping core and
+hrtimer subsystems. These are preparations for another upcoming series,
+so I'd like this to go together trough tip.
 
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
->
-> Change generated with coccinelle.
->
-> To: Linus Walleij <linusw@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+Tracing maintainers: Patch 2 touches the tracing core.
 
-Patch applied to the pinctrl tree as obviously correct.
+Based on tip/sched/hrtick.
 
-Yours,
-Linus Walleij
+---
+Thomas Weißschuh (Schneider Electric) (12):
+      scripts/gdb: timerlist: Adapt to move of tk_core
+      tracing: Use explicit array size instead of sentinel elements in symbol printing
+      timer_list: Print offset as signed integer
+      timekeeping: auxclock: Consistently use raw timekeeper for tk_setup_internals()
+      timekeeping: Mark offsets array as const
+      hrtimer: Remove hrtimer_get_expires_ns()
+      hrtimer: Don't zero-initialize ret in hrtimer_nanosleep()
+      hrtimer: Drop spurious space in 'enum hrtimer_base_type'
+      hrtimer: Drop unnecessary pointer indirection in hrtimer_expire_entry event
+      hrtimer: Mark index and clockid of clock base as const
+      hrtimer: Remove trailing comma after HRTIMER_MAX_CLOCK_BASES
+      hrtimer: Add a helper to retrieve a hrtimer from its timerqueue node
+
+ include/linux/hrtimer.h                    |  5 ----
+ include/linux/hrtimer_defs.h               |  8 +++---
+ include/linux/trace_events.h               | 13 ++++++----
+ include/trace/events/timer.h               |  7 +++---
+ include/trace/stages/stage3_trace_output.h | 40 +++++++++++++++---------------
+ kernel/time/hrtimer.c                      | 14 ++++++-----
+ kernel/time/timekeeping.c                  | 12 +++++----
+ kernel/time/timer_list.c                   |  4 +--
+ kernel/trace/trace_events_synth.c          |  4 +--
+ kernel/trace/trace_output.c                | 20 +++++++++------
+ kernel/trace/trace_syscalls.c              |  3 +--
+ scripts/gdb/linux/timerlist.py             |  2 +-
+ 12 files changed, 68 insertions(+), 64 deletions(-)
+---
+base-commit: eef9f648fb0e92618041f019d4bdcf7ae17cb743
+change-id: 20260311-hrtimer-cleanups-fd2deab892df
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
