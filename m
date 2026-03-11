@@ -1,61 +1,47 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C5238DD3;
-	Wed, 11 Mar 2026 20:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9225F38F656;
+	Wed, 11 Mar 2026 22:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773261982; cv=none; b=os42F0jddyYkE94BbJVQKu9c+yLNdYqAh6DetCtjzqUjgI0SkXdxD2dGeG3o/2svayEyk40yUme3M5OZ609RHUykuu/yYym5vE/AudkvABd5MdNL9NuHTgsb1sktap47LfVEb3hkGJWTcIiDUKv16bX7XyQMEqSIDHT6izLxRx8=
+	t=1773267503; cv=none; b=WlZ7YScgKGl4ErutLt49psV+o1KhO+6ZKbR3/mIC5gH0UX572P1U4Ta2w0zlaj5tRGKfkTI7EAArzVvL+sk97YUc33QNHMoIJIO/hgSHfTBk5BEL8ol4g0qb2qp/Y6OctH//i0etOH0m2e6dyRpNnM2xpf4CtsgmsF8jPWfYsFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773261982; c=relaxed/simple;
-	bh=XO3nJXDLmPdJziK40A0EIpa5YxvGQHpw7+p2SjQZ0hE=;
+	s=arc-20240116; t=1773267503; c=relaxed/simple;
+	bh=UkcWuDDKFCtOzPMcaQPRi4iOunlDeFvQXT87qyfDCmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZzafHL0len42dvKur7UsEIdHTjgq/5F+Jw8K6mrcUY8qCfxbAiSU0+ofSLbiWVsxATRzkJ1aiRPfV4XVEkjOfNOKJ9UHeB/J7MIFVDOdOKPzAWv/o9vXVZfICyWfoMFdE/u4amE9lPGGc2RTViq2aa0bjMt359EMXaFWEGfMhFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VqQBUvXq; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=YUNPSnhOObjdoNf//tdmnYLXO8O/ik05STcVVtgL8omu7A7OfcM45NTJIilyebHnziCsBcyp93bITg9iQi2yc5ZGIGLxuIRfqsFIQmvJQKBFd7/r8hYwUrnqzVS/fAGyCX/PEm5CY8lOgp8izucTqAP+vITNO12WQe3CrRVgaG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9J3sgLA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VqQBUvXq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/qLvj6q7NkzGzj4h7z3VGCQ+W39uMOZd6RJ8cDnjTd4=; b=VqQBUvXqmmFL56xF8+1/eSJ5OJ
-	MPagWEktgA5MeeHvQJQwcj/hudbV26kPGWr4HKPPM3DM8yUqPm0iw4XNBNBFS9pFk8xq/j2mxqKX3
-	hEcqOUltouWFRuxzRse4bwGhA2GNY5eKNyk9qLyk8LDAVkHLfshDWmnxKGPGApLoyYlOwJMYhhzG/
-	1+mHtcpBr7BiztUhZyqVL3HByTMd/OsVPPllgcgMoPyBaCYU8sYRi+OajKPVc+Jcud9VPlYokm5Bu
-	LNKB+TcVjyWFQapCfZMJym5s4fLSVK/tJqPEA4LNEwMRPHrXapl+/gMT3pNf1kWnjDZ8JcuiLk7VQ
-	EHs4jG9g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0QRZ-0000000AI3j-2Yz7;
-	Wed, 11 Mar 2026 20:46:13 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0042F302EC2; Wed, 11 Mar 2026 21:46:07 +0100 (CET)
-Date: Wed, 11 Mar 2026 21:46:07 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Wander Lairson Costa <wander@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-	acme@kernel.org, williams@redhat.com, gmonaco@redhat.com,
-	Vineeth Pillai <vineethrp@google.com>
-Subject: Re: [PATCH v3 4/4] trace/preemptirq: Implement trace_irqflags hooks
-Message-ID: <20260311204607.GF2277644@noisy.programming.kicks-ass.net>
-References: <20260311125021.197638-1-wander@redhat.com>
- <20260311125021.197638-5-wander@redhat.com>
- <20260311194305.GT606826@noisy.programming.kicks-ass.net>
- <20260311154842.0823790f@gandalf.local.home>
- <20260311195310.GU606826@noisy.programming.kicks-ass.net>
- <20260311160714.1e6b7a37@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9J3sgLA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89708C4CEF7;
+	Wed, 11 Mar 2026 22:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773267502;
+	bh=UkcWuDDKFCtOzPMcaQPRi4iOunlDeFvQXT87qyfDCmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s9J3sgLA9S//wXI5sCKh7YLMqn41GDJmYfc598b7ndkFh8SDdWL+zRt5FfHTApL1t
+	 eFw4mxiTQ52uHOiZnwnfhQkLZZ69FGf+Omdav3EFSFZvGLzDVaBr6C3Rjwngxabxwz
+	 d+0JasLxpFrmuqlAqg/17icDaUayGe59gigm4h+zHWLCUCAAoz9z33wVCRN3oC28+B
+	 I4sw7mxR8qx/+1CrghYdwu7qyQ4Nhd5ot4eqj1gDAOhg3ejLRDXDKaDXhl85fG3i4o
+	 mrUjtO5XPJyLmYaTqf1esEqls3WQjEw/BgecuDmQ9+r0WBP4atyMefSKeR4bZ5orPU
+	 G2ybt0con6eMw==
+Date: Wed, 11 Mar 2026 15:18:16 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com, qperret@google.com, will@kernel.org,
+	aneesh.kumar@kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v14 18/30] tracing: Check for undefined symbols in
+ simple_ring_buffer
+Message-ID: <20260311221816.GA316631@ax162>
+References: <20260309162516.2623589-1-vdonnefort@google.com>
+ <20260309162516.2623589-19-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,57 +50,136 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260311160714.1e6b7a37@gandalf.local.home>
+In-Reply-To: <20260309162516.2623589-19-vdonnefort@google.com>
 
-On Wed, Mar 11, 2026 at 04:07:14PM -0400, Steven Rostedt wrote:
-> On Wed, 11 Mar 2026 20:53:10 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Vincent,
+
+On Mon, Mar 09, 2026 at 04:25:04PM +0000, Vincent Donnefort wrote:
+> The simple_ring_buffer implementation must remain simple enough to be
+> used by the pKVM hypervisor. Prevent the object build if unresolved
+> symbols are found.
 > 
-> > > Which basically is just __do_trace_<event>(), but as a wrapper that can
-> > > handle updates that may be needed, but supplies a proper API where thing
-> > > wont randomly break when __do_trace_<event>() changes.  
-> > 
-> > That's like a 3 line patch, hardly worth the effort. Its not like it'll
-> > be hard to find and fix any users if you do ever change that.
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> No, but I prefer clean code, and not hacks that use internal functions with
-> underscores in their names. Not to mention, it properly handles different
-> cases:
-> 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index 22ca1c8b54f3..07219316a8e1 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -294,6 +294,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  			WARN_ONCE(!rcu_is_watching(),			\
->  				  "RCU not watching for tracepoint");	\
->  		}							\
-> +	}								\
-> +	static inline void trace_invoke_##name(proto)			\
-> +	{								\
-> +		__do_trace_##name(args);				\
->  	}
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index d106beca8d7f..3182e1bc1cf7 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -132,4 +132,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+>  obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
+>  obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
 >  
->  #define __DECLARE_TRACE_SYSCALL(name, proto, args, data_proto)		\
-> @@ -313,6 +317,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  			WARN_ONCE(!rcu_is_watching(),			\
->  				  "RCU not watching for tracepoint");	\
->  		}							\
-> +	}								\
-> +	static inline void trace_invoke_##name(proto)			\
-> +	{								\
-> +		might_fault();						\
-> +		__do_trace_##name(args);				\
->  	}
-> 
-> 
-> Then it goes through and updates every location that has a:
-> 
-> 	if (trace_<event>_enabled()) {
-> 		[..]
-> 		trace_<event>();
-> 	}
+> +#
+> +# simple_ring_buffer is used by the pKVM hypervisor which does not have access
+> +# to all kernel symbols. Fail the build if forbidden symbols are found.
+> +#
+> +UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> +UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> +UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> +
+> +quiet_cmd_check_undefined = NM      $<
+> +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
 
-We have Cocinelle for that :-), and while I absolutely suck at writing
-Cocinelle, I had some limited success using Gemini to write some for me
-the other day.
+This check triggers when building allmodconfig targeting arm, arm64,
+powerpc, and x86_64 (at least, I did not test more at the moment) with
+clang. If this is a hard failure, this really needs to print something
+out to the developer/user to help them debug off the bat, versus having
+to manually dig the $(NM) command out from the .cmd file or V=1. I came
+up with
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 3182e1bc1cf7..c725b06876bc 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -141,7 +141,13 @@ UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sani
+ UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+ 
+ quiet_cmd_check_undefined = NM      $<
+-      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
++      cmd_check_undefined = \
++          undefsyms=$$($(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST) || true); \
++          if [ -n "$$undefsyms" ]; then \
++              echo "Unexpected symbols in $<:" >&2; \
++              echo "$$undefsyms" >&2; \
++              false; \
++          fi
+ 
+ $(obj)/%.o.checked: $(obj)/%.o FORCE
+ 	$(call if_changed,check_undefined)
+--
+
+which prints
+
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                   U llvm_gcda_emit_arcs
+                   U llvm_gcda_emit_function
+                   U llvm_gcda_end_file
+                   U llvm_gcda_start_file
+                   U llvm_gcda_summary_info
+                   U llvm_gcov_init
+
+for arm64, which makes sense since these are LLVM specific GCOV symbols,
+so they should probably get the same treatment as the other ones:
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index c725b06876bc..d464e3aa5bdd 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -136,8 +136,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+ # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+ # to all kernel symbols. Fail the build if forbidden symbols are found.
+ #
+-UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+-UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
++UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov llvm_gcda llvm_gcov
++UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+ UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+ 
+ quiet_cmd_check_undefined = NM      $<
+--
+
+For x86_64, I see
+
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                   U __clear_pages_unrolled
+                   U __memmove
+                   U copy_page
+
+which comes from the use of KCFI_ADDRESSABLE(), since allmodconfig has
+CONFIG_CFI=y.
+
+For powerpc (with both clang and GCC), I see
+
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                   U .TOC.
+
+For arm (with both clang and GCC), I see
+
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+           U __stack_chk_guard
+           U warn_slowpath_fmt
+
+Presumably adding all of those should be fine as well?
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index d464e3aa5bdd..4f120cb8c79c 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -137,7 +137,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+ # to all kernel symbols. Fail the build if forbidden symbols are found.
+ #
+ UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov llvm_gcda llvm_gcov
+-UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
++UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail __stack_chk_guard stackleak_track_stack __ref_stack __sanitizer
++UNDEFINED_ALLOWLIST += \.TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+ UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+ 
+ quiet_cmd_check_undefined = NM      $<
+--
+
+I don't mind sending a series for these, I just wanted to make sure I
+was reasoning about everything correctly.
+
+Cheers,
+Nathan
