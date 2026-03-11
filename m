@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3FC3CCFD1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2233C9437;
 	Wed, 11 Mar 2026 10:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773224186; cv=none; b=kd6KGtmOXuo5FfJTVPScqmbE/h+RhIrWUL8PMqG+QS6wj49sm6kATbGLdYlDSuJLf8WylIHLv0sC1PmvF/uKUD67MS+q7FP86j+0qKz8x1rSctrQ9RbyCbR8E8tSlBI7ywS6sABrhLAsyGnjkgL169r1tz8M/suwxz01pHEs0WI=
+	t=1773224186; cv=none; b=ehYoVbS/oYVHZxYj/WGS8BZ29rDSigvjeH4ou020y7RIXTAT+T2pd5p1zOqqd9/uakMDN7taL1FhTMMumuZ9eDXUGZpHB/Q+CBmfJRuslYDHWnyhAkD/PaGs9dfkUtUTaO3Xzt2aE5000+RELXxPqlJiYVhkrSKmeXKJl0QRPD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773224186; c=relaxed/simple;
-	bh=YJZ29MYyQzOXkBfE1tfhpcdex3lVyVZuxApJtV5ngBA=;
+	bh=k2XwGZqPcFVrZtTNRH+HpoPYodLcAgvbSVWzG5oK1II=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fjzAJy32BhSIBkCupDrqC9z7LLAyUlGrZXL6+TzBhDN6BYR3eN+fO4CIQuTN8ZKwXE5GqFhSX3MuNRGm/d+HkxiNnWdczb3VuieF8shPcL2KFTBFSEzOwIiYNUolbHf0Pfx2uoQYhLFauhLDMwfmOLTtu8qgBfOEh37LE5Z5M5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DMya3wPX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aHlf4RyF; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=HUQNIr6eYva24Wq3Hyc06/G3XmynC0YsdtgrG2x7OLTU86jVl0G9gAzaXG4QksBL5wdQF+9x/7DbOTUkBCKEeZ65bSMnck+Gmrh1RKJziOClTlnDIioTRO5+TGTqGfcoeXt4XzlEfLhXz+W9oDXpQcQVtcmvtnQajHHXDGZbAu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bte7dt1V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l+U6z/Nz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DMya3wPX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHlf4RyF"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bte7dt1V";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l+U6z/Nz"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1773224183;
+	s=2020; t=1773224184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q0sWT+/NCSlsPgVDIygbLH7QYDvLN5gFTeqUIZkXBbE=;
-	b=DMya3wPXYKWuXQWWLx/w1OV+Jv7sgDsGfHOlXszLFD3YPxQR9qmUpjCLjNIq8pBX0N9bgT
-	dXaegJfXoEZst5NLr3+NpepJm8zZqLEWmi2HLHLt/kDmELJSljxS/CXZNVz+GUjKl0HzIE
-	hWiws7U56Uq5n4gkoNLiPyand5XUeZZ3ZSU77V10IVhzedZg2gRbgpI13sah8HB3LEKRVL
-	BvRtm7X29Nuc6cm73hwv4dlfl8dFoPgZgSELxixyEOZraLvrMDYekAMVo3C/B7wRw9PZNw
-	2AN4pxBfC+EaTcOndrYSbW1Odn5KPvXTaqr2VEVpDsLMv0pu2do+ceIS2gWXmg==
+	bh=wJRuJckQ+ypso4OXrye4CavrmtHzMV0pbF16GSMCkSI=;
+	b=bte7dt1VD4M43iM8PHbg5cAxzsX+VT3cUXuHmSegfKPw+5mCEgcf5V5LyvHxkUlRdIfC3C
+	SW+SwGjfx32TLAEi27EUh3iY2t0B6xJD1hUSGUMdk/++kgvn6b6uccKwvPrnO2mMSH9Acy
+	guWUNjtsfqLygB8V8dlNugoL7e9RHIp43QlBeneCQPFibu2IJXPU1SQ5py1+8PaaEFaJoz
+	klk5ZLx9r/bn0kf4Nvin+VqIpLwhKB8At8ts5PFFNITxTfVRxxyvyJB1ruOIoxUzLiF1sv
+	R/eIw7j7n2bmPb2kvsmQjH+GJJ3j4q532Fk9F0TiRQ2nXaDuvWNJmac1H2Vm7w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1773224183;
+	s=2020e; t=1773224184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q0sWT+/NCSlsPgVDIygbLH7QYDvLN5gFTeqUIZkXBbE=;
-	b=aHlf4RyF4g3539XmFmlZqP0Z2hAlyW06ihpHlyZOT4po156GZeNaVSulAPSjt8wdI7OweY
-	5hbIeHE6UqXUVWBg==
-Date: Wed, 11 Mar 2026 11:15:18 +0100
-Subject: [PATCH 09/12] hrtimer: Drop unnecessary pointer indirection in
- hrtimer_expire_entry event
+	bh=wJRuJckQ+ypso4OXrye4CavrmtHzMV0pbF16GSMCkSI=;
+	b=l+U6z/Nz3Z4vWit8W2qAkRfSpeAhBL9+GjC9sx9Qlb8vWXAhPpNTYYkdBXEo5s9rvAQxKZ
+	D9fn7cTH4oGNdpAw==
+Date: Wed, 11 Mar 2026 11:15:19 +0100
+Subject: [PATCH 10/12] hrtimer: Mark index and clockid of clock base as
+ const
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260311-hrtimer-cleanups-v1-9-095357392669@linutronix.de>
+Message-Id: <20260311-hrtimer-cleanups-v1-10-095357392669@linutronix.de>
 References: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 In-Reply-To: <20260311-hrtimer-cleanups-v1-0-095357392669@linutronix.de>
 To: Jan Kiszka <jan.kiszka@siemens.com>, 
@@ -63,77 +63,38 @@ To: Jan Kiszka <jan.kiszka@siemens.com>,
  Frederic Weisbecker <frederic@kernel.org>, Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh_=28Schneider_Electric=29?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=2302;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773224171; l=798;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=YJZ29MYyQzOXkBfE1tfhpcdex3lVyVZuxApJtV5ngBA=;
- b=EHnK40lHZaBKI6F9QrN2/AdAvKdZ4xY+TZu4b4d5ZFXRRm2cIZvKV1JCm+kv+D0co+1o92qsu
- hchmesgzZugAoBZ/V7qghJh4qV+lKM91GDz+Pg+orgSKjwuUimkONKj
+ bh=k2XwGZqPcFVrZtTNRH+HpoPYodLcAgvbSVWzG5oK1II=;
+ b=gRGoaH/njoXsF22mq9SDR6cCKKbC9OIMEWmXBPwA1Fg4IwaKgZlNb1/pTcFTu+Pnm5ja7VJAy
+ QpPcGMUodXHCqfvh8CCSr8cmebl56qHNiXkEL7fWAQU5pT9hj3wByMq
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-This pointer indirection is a remnant from when ktime_t was a struct,
-today it is pointless.
+These fields are initialized once and are never supposed to change.
 
-Drop the pointer indirection.
+Mark them as const to make this explicit.
 
 Signed-off-by: Thomas Weißschuh (Schneider Electric) <thomas.weissschuh@linutronix.de>
 ---
- include/trace/events/timer.h | 7 +++----
- kernel/time/hrtimer.c        | 4 ++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ include/linux/hrtimer_defs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index a54613f59e55..07cbb9836b91 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -254,14 +254,13 @@ TRACE_EVENT(hrtimer_start,
- /**
-  * hrtimer_expire_entry - called immediately before the hrtimer callback
-  * @hrtimer:	pointer to struct hrtimer
-- * @now:	pointer to variable which contains current time of the
-- *		timers base.
-+ * @now:	variable which contains current time of the timers base.
-  *
-  * Allows to determine the timer latency.
+diff --git a/include/linux/hrtimer_defs.h b/include/linux/hrtimer_defs.h
+index e6d4dc1b61e0..a03240c0b14f 100644
+--- a/include/linux/hrtimer_defs.h
++++ b/include/linux/hrtimer_defs.h
+@@ -26,8 +26,8 @@
   */
- TRACE_EVENT(hrtimer_expire_entry,
- 
--	TP_PROTO(struct hrtimer *hrtimer, ktime_t *now),
-+	TP_PROTO(struct hrtimer *hrtimer, ktime_t now),
- 
- 	TP_ARGS(hrtimer, now),
- 
-@@ -273,7 +272,7 @@ TRACE_EVENT(hrtimer_expire_entry,
- 
- 	TP_fast_assign(
- 		__entry->hrtimer	= hrtimer;
--		__entry->now		= *now;
-+		__entry->now		= now;
- 		__entry->function	= ACCESS_PRIVATE(hrtimer, function);
- 	),
- 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 226cac8c82cc..d350bceb3c95 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1884,7 +1884,7 @@ EXPORT_SYMBOL_GPL(hrtimer_active);
-  * __run_hrtimer() invocations.
-  */
- static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base, struct hrtimer_clock_base *base,
--			  struct hrtimer *timer, ktime_t *now, unsigned long flags)
-+			  struct hrtimer *timer, ktime_t now, unsigned long flags)
- 	__must_hold(&cpu_base->lock)
- {
- 	enum hrtimer_restart (*fn)(struct hrtimer *);
-@@ -1989,7 +1989,7 @@ static void __hrtimer_run_queues(struct hrtimer_cpu_base *cpu_base, ktime_t now,
- 			if (basenow < hrtimer_get_softexpires(timer))
- 				break;
- 
--			__run_hrtimer(cpu_base, base, timer, &basenow, flags);
-+			__run_hrtimer(cpu_base, base, timer, basenow, flags);
- 			if (active_mask == HRTIMER_ACTIVE_SOFT)
- 				hrtimer_sync_wait_running(cpu_base, flags);
- 		}
+ struct hrtimer_clock_base {
+ 	struct hrtimer_cpu_base		*cpu_base;
+-	unsigned int			index;
+-	clockid_t			clockid;
++	const unsigned int		index;
++	const clockid_t			clockid;
+ 	seqcount_raw_spinlock_t		seq;
+ 	ktime_t				expires_next;
+ 	struct hrtimer			*running;
 
 -- 
 2.53.0
