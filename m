@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0101F346FB3;
-	Thu, 12 Mar 2026 20:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989D1346FB3;
+	Thu, 12 Mar 2026 20:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773347587; cv=none; b=qrujzdkDI5uWBP2XF880nSVJfT19fqLOtZOR4NNAibDG1mgnUEvdDqdLO3E/3DKwlJ8IKOI5ZC/p1pfo7t7E5XeW2rBcisXiAB3R1+eeYY6q+/hSBmY7ARpm7Rl4aS5UlFNFNUx7nVVD6Y6dKZdf2jEkKkKkJOln/faMVjUP7ow=
+	t=1773347832; cv=none; b=lUvFgQg4TH3QEEStfs69WNSQ7Dm/pK3dENJchW6t1+zUBmAW28NqvQDHVtcmtGr1EvqNyuuAUiXOR7PWQUrhiL9s0K42i7Cq06CPQs/U5eEp/ZW4tvtB7Y503tgRJ1/wIkxPAgp93QvO/ALl6b8mjW+ASCqF/juClB6o6QCdGQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773347587; c=relaxed/simple;
-	bh=2+L+ZS0AMTFpKwucUPi74qcF8QC5ORqWGhEsI3ZCutY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A2x6PNk6Tet2QI0u8HVsgmxyShSkbAIbcop7FNjFzCM4NRKEeVGLbiEaGyKuEdVw8kNauGerR/bixql1FPKuNRPLyZQtZKO5WP+YUdpSebtfvw5ZdEAL0HeF9XQuB+Md7y3Uls6srCSL+1ChhgprLOV6kIcEZ51kggq9HtvVL40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVZPbifh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773347832; c=relaxed/simple;
+	bh=LsutievMoOrqeZOADP/MLwr8hHh7mzdZPbDe4AQ82v4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n903BCoUnJJ3L19L8Uf0xW06MZWXZf+C2enYhtZQtxngnSZASU5OWNXfwzqpMOupDM/w4VdpTXR3yRVxmsC7yr/q1dvNZeGXr/wBji/PqhwyHv18c8kFdpLtSKjNTlm3EG3mn1NCN09AUWQRaF4+3y56VVCRNhZpJ4AQptUhMls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3e/St7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVZPbifh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09615C4CEF7;
-	Thu, 12 Mar 2026 20:32:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3e/St7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADDBC4CEF7;
+	Thu, 12 Mar 2026 20:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773347586;
-	bh=2+L+ZS0AMTFpKwucUPi74qcF8QC5ORqWGhEsI3ZCutY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hVZPbifhlSYK3PAbAHd3TVP//vQbkBtqOH9hLQsUhjNwKQfbiZRM9yOwLyJSB41eB
-	 HOxiTiZTnwNQqNNgvbaevJgElfxVnVqMVPErijY9k3BdEWWBMHLGjutXjn9bBmv8hH
-	 5Il9g+YJHQVc9lbjY+Etk5qy4hJI0eeDaQXqPs4UEi1JLdtPuEbcZhhlm4L5afh80A
-	 D+lPiM3+9qsEW30LcSsD8xoqvGa0uOO4exeLRAUW7Lf4+wg/l9cd5qrUkV+UtFYM4E
-	 772YxTEUn1R+wWbyliZZ9x6htmTIshibPlNaFOHBIx4XeuAgMUzUtAyG4O0p3Chz98
-	 pVIAf4ioHazGQ==
-Message-ID: <8a4568de-e0f9-471b-bc94-1062d4af3938@kernel.org>
-Date: Thu, 12 Mar 2026 21:32:50 +0100
+	s=k20201202; t=1773347832;
+	bh=LsutievMoOrqeZOADP/MLwr8hHh7mzdZPbDe4AQ82v4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=k3e/St7w+/LE7C6gR6OHeQh1yo5UhhCXmnQzILm4UU+zOTmvOu9OtnvecyAUEY8Mt
+	 hRch27enzckwDuf4QsRxhf82XhQrHoamoYpcuXdPWTVwsoU1rCMOO5/7Oo0/DmaSWt
+	 nY6DTUZHTS6dequcRL5sTJghE91bEL1S2nwuoMl+EY0CFnDhfyO0xoRJGZxLyHayPc
+	 ysIBZ1l10+6ffauxl2m7w1yCRwkqo4irHNutifmFzgcysAPmoEGw+Qhmb7UiJPpNWL
+	 DG90Nq7SHXKyqOnPKCRDjT34rPyrzKha0ItAc4EwIbxE0Im/sZtuHGnKcts1TH2waO
+	 g3kPn3VBA5Idw==
+Message-ID: <ee39e605-0d9f-433b-9dfa-f70fd92edfac@kernel.org>
+Date: Thu, 12 Mar 2026 21:36:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,6 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mm-unstable v15 03/13] mm/khugepaged: generalize
  __collapse_huge_page_* for mTHP support
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
@@ -60,7 +61,7 @@ Cc: aarcange@redhat.com, akpm@linux-foundation.org,
  ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
 References: <20260226031741.230674-1-npache@redhat.com>
  <20260226032347.232939-1-npache@redhat.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+ <8a4568de-e0f9-471b-bc94-1062d4af3938@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -106,276 +107,287 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260226032347.232939-1-npache@redhat.com>
+In-Reply-To: <8a4568de-e0f9-471b-bc94-1062d4af3938@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/26/26 04:23, Nico Pache wrote:
-> generalize the order of the __collapse_huge_page_* functions
-> to support future mTHP collapse.
+On 3/12/26 21:32, David Hildenbrand (Arm) wrote:
+> On 2/26/26 04:23, Nico Pache wrote:
+>> generalize the order of the __collapse_huge_page_* functions
+>> to support future mTHP collapse.
+>>
+>> mTHP collapse will not honor the khugepaged_max_ptes_shared or
+>> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
+>> shared or swapped entry.
+>>
+>> No functional changes in this patch.
+>>
+>> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+>> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Co-developed-by: Dev Jain <dev.jain@arm.com>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> Signed-off-by: Nico Pache <npache@redhat.com>
+>> ---
+>>  mm/khugepaged.c | 73 +++++++++++++++++++++++++++++++------------------
+>>  1 file changed, 47 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index a9b645402b7f..ecdbbf6a01a6 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -535,7 +535,7 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
+>>  
+>>  static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>>  		unsigned long start_addr, pte_t *pte, struct collapse_control *cc,
+>> -		struct list_head *compound_pagelist)
+>> +		unsigned int order, struct list_head *compound_pagelist)
+>>  {
+>>  	struct page *page = NULL;
+>>  	struct folio *folio = NULL;
+>> @@ -543,15 +543,17 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>>  	pte_t *_pte;
+>>  	int none_or_zero = 0, shared = 0, referenced = 0;
+>>  	enum scan_result result = SCAN_FAIL;
+>> +	const unsigned long nr_pages = 1UL << order;
+>> +	int max_ptes_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
 > 
-> mTHP collapse will not honor the khugepaged_max_ptes_shared or
-> khugepaged_max_ptes_swap parameters, and will fail if it encounters a
-> shared or swapped entry.
+> It might be a bit more readable to move "const unsigned long
+> nr_pages = 1UL << order;" all the way to the top.
 > 
-> No functional changes in this patch.
+> Then, have here
 > 
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 73 +++++++++++++++++++++++++++++++------------------
->  1 file changed, 47 insertions(+), 26 deletions(-)
+> 	int max_ptes_none = 0;
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index a9b645402b7f..ecdbbf6a01a6 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -535,7 +535,7 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
->  
->  static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  		unsigned long start_addr, pte_t *pte, struct collapse_control *cc,
-> -		struct list_head *compound_pagelist)
-> +		unsigned int order, struct list_head *compound_pagelist)
->  {
->  	struct page *page = NULL;
->  	struct folio *folio = NULL;
-> @@ -543,15 +543,17 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  	pte_t *_pte;
->  	int none_or_zero = 0, shared = 0, referenced = 0;
->  	enum scan_result result = SCAN_FAIL;
-> +	const unsigned long nr_pages = 1UL << order;
-> +	int max_ptes_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
+> and do at the beginning of the function:
+> 
+> 	/* For MADV_COLLAPSE, we always collapse ... */
+> 	if (!cc->is_khugepaged)
+> 		max_ptes_none = HPAGE_PMD_NR;
+> 	/*  ... except if userfaultf relies on MISSING faults. */
+> 	if (!userfaultfd_armed(vma))
+> 		max_ptes_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
+> 
+> (but see below regarding helper function)
+> 
+> then the code below becomes ...
+> 
+>>  
+>> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
+>> +	for (_pte = pte; _pte < pte + nr_pages;
+>>  	     _pte++, addr += PAGE_SIZE) {
+>>  		pte_t pteval = ptep_get(_pte);
+>>  		if (pte_none_or_zero(pteval)) {
+>>  			++none_or_zero;
+>>  			if (!userfaultfd_armed(vma) &&
+>>  			    (!cc->is_khugepaged ||
+>> -			     none_or_zero <= khugepaged_max_ptes_none)) {
+>> +			     none_or_zero <= max_ptes_none)) {
+> 
+> ...
+> 
+> 	if (none_or_zero <= max_ptes_none) {
+> 
+> 
+> I see that you do something like that (but slightly different) in the next
+> patch. You could easily extend the above by it.
+> 
+> Or go one step further and move all of that conditional into collapse_max_ptes_none(), whereby
+> you simply also pass the cc and the vma.
+> 
+> Then this all gets cleaned up and you'd end up above with
+> 
+> max_ptes_none = collapse_max_ptes_none(cc, vma, order);
+> if (max_ptes_none < 0)
+> 	return result;
+> 
+> I'd do all that in this patch here, getting rid of #4.
+> 
+> 
+>>  				continue;
+>>  			} else {
+>>  				result = SCAN_EXCEED_NONE_PTE;
+>> @@ -585,8 +587,14 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>>  		/* See collapse_scan_pmd(). */
+>>  		if (folio_maybe_mapped_shared(folio)) {
+>>  			++shared;
+>> -			if (cc->is_khugepaged &&
+>> -			    shared > khugepaged_max_ptes_shared) {
+>> +			/*
+>> +			 * TODO: Support shared pages without leading to further
+>> +			 * mTHP collapses. Currently bringing in new pages via
+>> +			 * shared may cause a future higher order collapse on a
+>> +			 * rescan of the same range.
+>> +			 */
+>> +			if (!is_pmd_order(order) || (cc->is_khugepaged &&
+>> +			    shared > khugepaged_max_ptes_shared)) {
+> 
+> That's not how we indent within a nested ().
+> 
+> To make this easier to read, what about similarly having at the beginning
+> of the function:
+> 
+> int max_ptes_shared = 0;
+> 
+> /* For MADV_COLLAPSE, we always collapse. */
+> if (cc->is_khugepaged)
+> 	max_ptes_none = HPAGE_PMD_NR;
+> /* TODO ... */
+> if (is_pmd_order(order))
+> 	max_ptes_none = khugepaged_max_ptes_shared;
+> 
+> to turn this code into a
+> 
+> 	if (shared > khugepaged_max_ptes_shared)
+> 
+> Also, here, might make sense to have a collapse_max_ptes_swap(cc, order)
+> to do that and clean it up.
+> 
+> 
+>>  				result = SCAN_EXCEED_SHARED_PTE;
+>>  				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
+>>  				goto out;
+>> @@ -679,18 +687,18 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>>  }
+>>  
+>>  static void __collapse_huge_page_copy_succeeded(pte_t *pte,
+>> -						struct vm_area_struct *vma,
+>> -						unsigned long address,
+>> -						spinlock_t *ptl,
+>> -						struct list_head *compound_pagelist)
+>> +		struct vm_area_struct *vma, unsigned long address,
+>> +		spinlock_t *ptl, unsigned int order,
+>> +		struct list_head *compound_pagelist)
+>>  {
+>> -	unsigned long end = address + HPAGE_PMD_SIZE;
+>> +	unsigned long end = address + (PAGE_SIZE << order);
+>>  	struct folio *src, *tmp;
+>>  	pte_t pteval;
+>>  	pte_t *_pte;
+>>  	unsigned int nr_ptes;
+>> +	const unsigned long nr_pages = 1UL << order;
+> 
+> Move it further to the top.
+> 
+>>  
+>> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR; _pte += nr_ptes,
+>> +	for (_pte = pte; _pte < pte + nr_pages; _pte += nr_ptes,
+>>  	     address += nr_ptes * PAGE_SIZE) {
+>>  		nr_ptes = 1;
+>>  		pteval = ptep_get(_pte);
+>> @@ -743,13 +751,11 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
+>>  }
+>>  
+>>  static void __collapse_huge_page_copy_failed(pte_t *pte,
+>> -					     pmd_t *pmd,
+>> -					     pmd_t orig_pmd,
+>> -					     struct vm_area_struct *vma,
+>> -					     struct list_head *compound_pagelist)
+>> +		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
+>> +		unsigned int order, struct list_head *compound_pagelist)
+>>  {
+>>  	spinlock_t *pmd_ptl;
+>> -
+>> +	const unsigned long nr_pages = 1UL << order;
+>>  	/*
+>>  	 * Re-establish the PMD to point to the original page table
+>>  	 * entry. Restoring PMD needs to be done prior to releasing
+>> @@ -763,7 +769,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
+>>  	 * Release both raw and compound pages isolated
+>>  	 * in __collapse_huge_page_isolate.
+>>  	 */
+>> -	release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
+>> +	release_pte_pages(pte, pte + nr_pages, compound_pagelist);
+>>  }
+>>  
+>>  /*
+>> @@ -783,16 +789,16 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
+>>   */
+>>  static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
+>>  		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
+>> -		unsigned long address, spinlock_t *ptl,
+>> +		unsigned long address, spinlock_t *ptl, unsigned int order,
+>>  		struct list_head *compound_pagelist)
+>>  {
+>>  	unsigned int i;
+>>  	enum scan_result result = SCAN_SUCCEED;
+>> -
+>> +	const unsigned long nr_pages = 1UL << order;
+> 
+> Same here, all the way to the top.
+> 
+>>  	/*
+>>  	 * Copying pages' contents is subject to memory poison at any iteration.
+>>  	 */
+>> -	for (i = 0; i < HPAGE_PMD_NR; i++) {
+>> +	for (i = 0; i < nr_pages; i++) {
+>>  		pte_t pteval = ptep_get(pte + i);
+>>  		struct page *page = folio_page(folio, i);
+>>  		unsigned long src_addr = address + i * PAGE_SIZE;
+>> @@ -811,10 +817,10 @@ static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *foli
+>>  
+>>  	if (likely(result == SCAN_SUCCEED))
+>>  		__collapse_huge_page_copy_succeeded(pte, vma, address, ptl,
+>> -						    compound_pagelist);
+>> +						    order, compound_pagelist);
+>>  	else
+>>  		__collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
+>> -						 compound_pagelist);
+>> +						 order, compound_pagelist);
+>>  
+>>  	return result;
+>>  }
+>> @@ -985,12 +991,12 @@ static enum scan_result check_pmd_still_valid(struct mm_struct *mm,
+>>   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
+>>   */
+>>  static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
+>> -		struct vm_area_struct *vma, unsigned long start_addr, pmd_t *pmd,
+>> -		int referenced)
+>> +		struct vm_area_struct *vma, unsigned long start_addr,
+>> +		pmd_t *pmd, int referenced, unsigned int order)
+>>  {
+>>  	int swapped_in = 0;
+>>  	vm_fault_t ret = 0;
+>> -	unsigned long addr, end = start_addr + (HPAGE_PMD_NR * PAGE_SIZE);
+>> +	unsigned long addr, end = start_addr + (PAGE_SIZE << order);
+>>  	enum scan_result result;
+>>  	pte_t *pte = NULL;
+>>  	spinlock_t *ptl;
+>> @@ -1022,6 +1028,19 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
+>>  		    pte_present(vmf.orig_pte))
+>>  			continue;
+>>  
+>> +		/*
+>> +		 * TODO: Support swapin without leading to further mTHP
+>> +		 * collapses. Currently bringing in new pages via swapin may
+>> +		 * cause a future higher order collapse on a rescan of the same
+>> +		 * range.
+>> +		 */
+>> +		if (!is_pmd_order(order)) {
+>> +			pte_unmap(pte);
+>> +			mmap_read_unlock(mm);
+>> +			result = SCAN_EXCEED_SWAP_PTE;
+>> +			goto out;
+>> +		}
+>> +
+> 
+> Interesting, we just swapin everything we find :)
+> 
+> But do we really need this check here? I mean, we just found it to be present.
+> 
+> In the rare event that there was a race, do we really care? It was just
+> present, now it's swapped. Bad luck. Just swap it in.
+> 
 
-It might be a bit more readable to move "const unsigned long
-nr_pages = 1UL << order;" all the way to the top.
+Okay, now I am confused. Why are you not taking care of
+collapse_scan_pmd() in the same context?
 
-Then, have here
+Because if you make sure that we properly check against a max_ptes_swap
+similar as in the style above, we'd rule out swapin right from the start?
 
-	int max_ptes_none = 0;
-
-and do at the beginning of the function:
-
-	/* For MADV_COLLAPSE, we always collapse ... */
-	if (!cc->is_khugepaged)
-		max_ptes_none = HPAGE_PMD_NR;
-	/*  ... except if userfaultf relies on MISSING faults. */
-	if (!userfaultfd_armed(vma))
-		max_ptes_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
-
-(but see below regarding helper function)
-
-then the code below becomes ...
-
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> +	for (_pte = pte; _pte < pte + nr_pages;
->  	     _pte++, addr += PAGE_SIZE) {
->  		pte_t pteval = ptep_get(_pte);
->  		if (pte_none_or_zero(pteval)) {
->  			++none_or_zero;
->  			if (!userfaultfd_armed(vma) &&
->  			    (!cc->is_khugepaged ||
-> -			     none_or_zero <= khugepaged_max_ptes_none)) {
-> +			     none_or_zero <= max_ptes_none)) {
-
-...
-
-	if (none_or_zero <= max_ptes_none) {
-
-
-I see that you do something like that (but slightly different) in the next
-patch. You could easily extend the above by it.
-
-Or go one step further and move all of that conditional into collapse_max_ptes_none(), whereby
-you simply also pass the cc and the vma.
-
-Then this all gets cleaned up and you'd end up above with
-
-max_ptes_none = collapse_max_ptes_none(cc, vma, order);
-if (max_ptes_none < 0)
-	return result;
-
-I'd do all that in this patch here, getting rid of #4.
-
-
->  				continue;
->  			} else {
->  				result = SCAN_EXCEED_NONE_PTE;
-> @@ -585,8 +587,14 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  		/* See collapse_scan_pmd(). */
->  		if (folio_maybe_mapped_shared(folio)) {
->  			++shared;
-> -			if (cc->is_khugepaged &&
-> -			    shared > khugepaged_max_ptes_shared) {
-> +			/*
-> +			 * TODO: Support shared pages without leading to further
-> +			 * mTHP collapses. Currently bringing in new pages via
-> +			 * shared may cause a future higher order collapse on a
-> +			 * rescan of the same range.
-> +			 */
-> +			if (!is_pmd_order(order) || (cc->is_khugepaged &&
-> +			    shared > khugepaged_max_ptes_shared)) {
-
-That's not how we indent within a nested ().
-
-To make this easier to read, what about similarly having at the beginning
-of the function:
-
-int max_ptes_shared = 0;
-
-/* For MADV_COLLAPSE, we always collapse. */
-if (cc->is_khugepaged)
-	max_ptes_none = HPAGE_PMD_NR;
-/* TODO ... */
-if (is_pmd_order(order))
-	max_ptes_none = khugepaged_max_ptes_shared;
-
-to turn this code into a
-
-	if (shared > khugepaged_max_ptes_shared)
-
-Also, here, might make sense to have a collapse_max_ptes_swap(cc, order)
-to do that and clean it up.
-
-
->  				result = SCAN_EXCEED_SHARED_PTE;
->  				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
->  				goto out;
-> @@ -679,18 +687,18 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  }
->  
->  static void __collapse_huge_page_copy_succeeded(pte_t *pte,
-> -						struct vm_area_struct *vma,
-> -						unsigned long address,
-> -						spinlock_t *ptl,
-> -						struct list_head *compound_pagelist)
-> +		struct vm_area_struct *vma, unsigned long address,
-> +		spinlock_t *ptl, unsigned int order,
-> +		struct list_head *compound_pagelist)
->  {
-> -	unsigned long end = address + HPAGE_PMD_SIZE;
-> +	unsigned long end = address + (PAGE_SIZE << order);
->  	struct folio *src, *tmp;
->  	pte_t pteval;
->  	pte_t *_pte;
->  	unsigned int nr_ptes;
-> +	const unsigned long nr_pages = 1UL << order;
-
-Move it further to the top.
-
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR; _pte += nr_ptes,
-> +	for (_pte = pte; _pte < pte + nr_pages; _pte += nr_ptes,
->  	     address += nr_ptes * PAGE_SIZE) {
->  		nr_ptes = 1;
->  		pteval = ptep_get(_pte);
-> @@ -743,13 +751,11 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->  }
->  
->  static void __collapse_huge_page_copy_failed(pte_t *pte,
-> -					     pmd_t *pmd,
-> -					     pmd_t orig_pmd,
-> -					     struct vm_area_struct *vma,
-> -					     struct list_head *compound_pagelist)
-> +		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> +		unsigned int order, struct list_head *compound_pagelist)
->  {
->  	spinlock_t *pmd_ptl;
-> -
-> +	const unsigned long nr_pages = 1UL << order;
->  	/*
->  	 * Re-establish the PMD to point to the original page table
->  	 * entry. Restoring PMD needs to be done prior to releasing
-> @@ -763,7 +769,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->  	 * Release both raw and compound pages isolated
->  	 * in __collapse_huge_page_isolate.
->  	 */
-> -	release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
-> +	release_pte_pages(pte, pte + nr_pages, compound_pagelist);
->  }
->  
->  /*
-> @@ -783,16 +789,16 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->   */
->  static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->  		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
-> -		unsigned long address, spinlock_t *ptl,
-> +		unsigned long address, spinlock_t *ptl, unsigned int order,
->  		struct list_head *compound_pagelist)
->  {
->  	unsigned int i;
->  	enum scan_result result = SCAN_SUCCEED;
-> -
-> +	const unsigned long nr_pages = 1UL << order;
-
-Same here, all the way to the top.
-
->  	/*
->  	 * Copying pages' contents is subject to memory poison at any iteration.
->  	 */
-> -	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> +	for (i = 0; i < nr_pages; i++) {
->  		pte_t pteval = ptep_get(pte + i);
->  		struct page *page = folio_page(folio, i);
->  		unsigned long src_addr = address + i * PAGE_SIZE;
-> @@ -811,10 +817,10 @@ static enum scan_result __collapse_huge_page_copy(pte_t *pte, struct folio *foli
->  
->  	if (likely(result == SCAN_SUCCEED))
->  		__collapse_huge_page_copy_succeeded(pte, vma, address, ptl,
-> -						    compound_pagelist);
-> +						    order, compound_pagelist);
->  	else
->  		__collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
-> -						 compound_pagelist);
-> +						 order, compound_pagelist);
->  
->  	return result;
->  }
-> @@ -985,12 +991,12 @@ static enum scan_result check_pmd_still_valid(struct mm_struct *mm,
->   * Returns result: if not SCAN_SUCCEED, mmap_lock has been released.
->   */
->  static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
-> -		struct vm_area_struct *vma, unsigned long start_addr, pmd_t *pmd,
-> -		int referenced)
-> +		struct vm_area_struct *vma, unsigned long start_addr,
-> +		pmd_t *pmd, int referenced, unsigned int order)
->  {
->  	int swapped_in = 0;
->  	vm_fault_t ret = 0;
-> -	unsigned long addr, end = start_addr + (HPAGE_PMD_NR * PAGE_SIZE);
-> +	unsigned long addr, end = start_addr + (PAGE_SIZE << order);
->  	enum scan_result result;
->  	pte_t *pte = NULL;
->  	spinlock_t *ptl;
-> @@ -1022,6 +1028,19 @@ static enum scan_result __collapse_huge_page_swapin(struct mm_struct *mm,
->  		    pte_present(vmf.orig_pte))
->  			continue;
->  
-> +		/*
-> +		 * TODO: Support swapin without leading to further mTHP
-> +		 * collapses. Currently bringing in new pages via swapin may
-> +		 * cause a future higher order collapse on a rescan of the same
-> +		 * range.
-> +		 */
-> +		if (!is_pmd_order(order)) {
-> +			pte_unmap(pte);
-> +			mmap_read_unlock(mm);
-> +			result = SCAN_EXCEED_SWAP_PTE;
-> +			goto out;
-> +		}
-> +
-
-Interesting, we just swapin everything we find :)
-
-But do we really need this check here? I mean, we just found it to be present.
-
-In the rare event that there was a race, do we really care? It was just
-present, now it's swapped. Bad luck. Just swap it in.
+Also, I would expect that all other parameters in there are similarly
+handled?
 
 -- 
 Cheers,
