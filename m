@@ -1,133 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701CE2C17A0;
-	Thu, 12 Mar 2026 20:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2EF401A2D;
+	Thu, 12 Mar 2026 20:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773345926; cv=none; b=alkyXav75r9eMd2gQ5hkU6QnYj8xV7T2vnZuPCovy8AUe97oJMHZqTPoEJL68JSbsFezSw+kCq5XBEQ/Lh06KnKlgEuolO3Sy+K0IBRT+vA0+yHBpKl1FLjZwO/40Bx6YrhJ2k5egxvAd299fUghQ8gDtSplf9MSgVRL4CtdMrA=
+	t=1773345937; cv=none; b=qkryiYqpuWDj7lNcf9SCWEvfB9laLdVn3UBzPOUYM87nqgHUCKDTiYdfk4ceQ2ceh15SNl5VvTUjCCrogAWtU/+CO/H3YckcPWniL5r58ASQ0FP43OjRqJHQvqyuO7ve71JWe6VPqEb6dn+vsG61TjTC3Ob2IHBUHTZws5CnFtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773345926; c=relaxed/simple;
-	bh=TKrYFGOjRsvMAxAukqQ/oXF7qrP1ca6vGO7fAHdp7ZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NYfGca8cvlY4U9pvQPqfzybaHdE5IEkmxoNLW6U/BXYjkmctgfuK/1CRWLeveUWdmxcToFWP3TloEII1vipdoFchVwB7DPl4r0wkqgvtHUnkSvbfxOrha1CTHsN3bTxnZlfHgaMX+3p9SihZcjzB9fiLTWGActRPEDcwkHLGjeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nE67XPBA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773345937; c=relaxed/simple;
+	bh=wnkRTWEnBAzzk2+VPy0CTM8BvRcwfTCdq5VfMNheyzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R59A0NA8ppybmp6ghjR9t3roHNj5I2y1WgcV7ZegCV9UFqKX/LwuXdCydX/jQ8TYaG+uFzUnxfHmAtpJdDsz1Vk85H47c0z2b0tJobNrnc8IG9kZVtH7Pb53zDnLSg3wi5e9aUz/OAf1Ztks9+F5tI8S5hjybyx3JZ5B0sTwzX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RklpB60U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nE67XPBA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C30CC4CEF7;
-	Thu, 12 Mar 2026 20:05:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RklpB60U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A262C4CEF7;
+	Thu, 12 Mar 2026 20:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773345926;
-	bh=TKrYFGOjRsvMAxAukqQ/oXF7qrP1ca6vGO7fAHdp7ZI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nE67XPBA7vjZW0whcqJr6w1GSmX9V6Ku9FUqgFH00BwXvNGmdQMnHvvoKpEh4r5r/
-	 X9hObAopEkZBinjHsbBEq0jcDIEpkQMRSapqZlUrgtrjBz0s8mqbqQSFdzlI91qp4/
-	 W7yxa2aQWPeUacEmmTgqKlUrnvK8mD7CkZoURXMymRGo90IKwD88CbbuzqFB2LYquY
-	 0a8c56YQKwT0iPEGFIqOEq/f0GwpzCNpIcIAEMHDjKzCgtMO3OliI56LI6o1Ynnqop
-	 8yjiBbnHCAEZ8VbWToSgcLqQ6KDvW0l0vQXWLSP3jDx9NH14XzHlBD91PobwzILqTi
-	 0v84HgsT52z0Q==
-Message-ID: <e4378d7d-2425-4cb9-b863-5a4cd1b85d83@kernel.org>
-Date: Thu, 12 Mar 2026 21:05:06 +0100
+	s=k20201202; t=1773345937;
+	bh=wnkRTWEnBAzzk2+VPy0CTM8BvRcwfTCdq5VfMNheyzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RklpB60U81FycY7QxevKmlKU/SlPLic7h8suueXh7WjaeyKIFAzg/vODCXmxCMkGh
+	 aM0WTAH5aF5P8k2FpEK2PDXF8uIB5S9rV7Z2dcxMbuz4/+MZHyjXDLx0T17Jac2XKm
+	 4NV7AbLXfKvWjWKZ2kMpxwS10CYycD+2e+VLNVRr2gC0LRQOcberzIyhwHB6aup18u
+	 8o7iXSV6z/Itfc/jHStozC8YPrQhhRQFwd56l5zA5/1GGOmsyD7mpT1DJp2FFu+rvo
+	 5U8h6H2OuuJjyxY6ux80GJsztcmZmzZ1SkdFZ0xM4aBuvUp3zbw7DVUfdgux7fTMlB
+	 dIkx/AjJ68Tgg==
+Date: Thu, 12 Mar 2026 20:05:32 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/15] spi: Use trace_invoke_##name() at guarded
+ tracepoint call sites
+Message-ID: <03705215-4036-4ca9-8ec5-b66c90043f7c@sirena.org.uk>
+References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
+ <20260312150523.2054552-14-vineeth@bitbyteword.org>
+ <5d057b07-be5a-4da6-86e3-87ef4319d4b2@sirena.org.uk>
+ <20260312114254.6467c03d@gandalf.local.home>
+ <06438818-2e3e-426f-aec5-ea6344e4b057@sirena.org.uk>
+ <20260312130022.669e7de4@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 02/13] mm/khugepaged: generalize
- alloc_charge_folio()
-To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-Cc: aarcange@redhat.com, akpm@linux-foundation.org,
- anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
- cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
- dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
- jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032326.232770-1-npache@redhat.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260226032326.232770-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6WuQWMgx1jjmEuSF"
+Content-Disposition: inline
+In-Reply-To: <20260312130022.669e7de4@gandalf.local.home>
+X-Cookie: I feel better about world problems now!
 
-On 2/26/26 04:23, Nico Pache wrote:
-> From: Dev Jain <dev.jain@arm.com>
-> 
-> Pass order to alloc_charge_folio() and update mTHP statistics.
-> 
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Co-developed-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+--6WuQWMgx1jjmEuSF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Cheers,
+On Thu, Mar 12, 2026 at 01:00:22PM -0400, Steven Rostedt wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
-David
+> > Possibly an _unchecked or something?  Honestly the suggestion someone
+> > had for _do seemed OK to me.  Part of it is that I wouldn't think of
+> > tracepoints as being something that I'd call.
+
+> The "__do_trace.." is an internal function I don't want to expose.
+
+> I'm thinking of: call_trace_foo(), as that should be pretty obvious to what
+> it is.
+
+Yeah, like I day it was the concept of there being a call in a
+tracepoint that was a bit of a surprise.  It was more a grumble than
+anything else, I did ack the change.
+
+--6WuQWMgx1jjmEuSF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmmzHIwACgkQJNaLcl1U
+h9BtyAf/c4ahysqs6LKWYZXWrL01Npo7WhCpl8GSshInmVbYwmxdGCJ7Ukr3OymH
+heRyM+ACIGpbdUCsFn9MP5qSc3jTUmcJMk1EHLPVXj4i2J3yZ3NIKXxXo2TiKMd3
+e/UXkQda1xeE3IYt7twpcg4hIVoVrdhpKzrTpBd4CXjrscrXOgKQAgVGHiKYBfcS
+bb8kGucX3i+WgxlPs9TQ6grLgDCyNFxJ+temowOPkh/PrYPCIWS6nO8wV7iJWKe5
+OehzXWHrcfjn0HQnJb+RUJbSgrdj0zXktocm/wkMpKoA7iNOba1CLbOzriLmtm8D
+yPx6k5hSneIO5p9gZWgZcwcO/nLUXg==
+=Z7CW
+-----END PGP SIGNATURE-----
+
+--6WuQWMgx1jjmEuSF--
