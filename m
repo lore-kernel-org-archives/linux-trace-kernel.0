@@ -1,115 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115E334C981
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 13:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9CF35A388
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 14:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773323751; cv=none; b=NA0+jHXN4tOVvD53DGrv8AMqK2yWv2sVaZcpQmnIpLksW0JrY6kck8xGS/br+nAGs6Xew0kw1qvpJGGJQO1fgOwKWtpr7QAiCS1cZCtXREl/g5L99zGHpDdy2saF4rP5L5A3H1/A44oGFIY3c3n6YFEK1AIlza85dhB3jdPUty0=
+	t=1773324476; cv=none; b=m9JR4ewt1eO8jrTRaQQYjnl+M3+aZih954XIvAJhbj1dKXuanpwsLkNloC000sq4pkMfDNeh4XqQRZ2s4ae6W4BWkNL8hAGuBQmclZfU06dqhiOpIKqVBbeC6OwFHWaAklnTcxgQpCTYoNbwQ7aqzhLpvfOG9iExtFyjRViS4TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773323751; c=relaxed/simple;
-	bh=dmWr5E91FshndRY5RZ2Md55bF+x5yW+C43tABssFijc=;
+	s=arc-20240116; t=1773324476; c=relaxed/simple;
+	bh=je2Su01mUc5JDXpVVT4CNHVYbw70OhSPnxJmGcuocjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=FLO5dsx+Dp3r/840d0MPsd8fyGeRoh8A+lOAAryOTHcNpjM4HBzZ7iGNiSQ0RiueFFjtMXyPeS4136aeBbgXv9U0iBEultZZTFYvM2t6XdHFTDytlH9dTO2Ck+BVXaSlM49uYj9BBKkkTvu/UBi+Vka5yQ/hAAMLfa0vhqIIGcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzRC+Qn9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gB714/ivP/eaHrOvRkVXmDzrYnlI579koUf29OU4lZCzfH7LaqSHzwLJeYxyHVA+E6Md7gJx6ku7vWfWIV1oXPHm8XapdKfM+Dg1MsWxMZgP5I5s8JKEjX8AI2qxdsJrDKFQbOBn4skRbNjkzrP/vjesXE+dun8phbuZ6XKrRvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sN1pHa05; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzRC+Qn9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773323749;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bEtHF9LXuLxS0ovXAZV4W8RauatzMwv6n2P0Ur61wyU=;
-	b=hzRC+Qn9/AH4LUgIOPr32tZuwTEuB33AXwkFsFQr3c2gR2eNSQS4ROkDPTOZ/CSUFxoIFu
-	OXYaY36Jv9LIidC0gzx/S+NEn/b0e/uBggEUV9nr0+FO07s1oA8ZMS8JZu+Bxsx57ODnIk
-	yaQvotzx5FGxjz24WuVELD0e1P4ygh4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-394-4h0zzqr8PLGbG3NCF5ZkLw-1; Thu, 12 Mar 2026 09:55:42 -0400
-X-MC-Unique: 4h0zzqr8PLGbG3NCF5ZkLw-1
-X-Mimecast-MFC-AGG-ID: 4h0zzqr8PLGbG3NCF5ZkLw_1773323740
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-485355493aeso7141455e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 06:55:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sN1pHa05"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-439ce3605ecso871454f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 07:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773324471; x=1773929271; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=viC1gPLlOGctSWu83HWjGEsXF70NJAe1D+sqpq58byY=;
+        b=sN1pHa05bancSNtzCRPbfa3qfyBL3zKcUSAefgMNrnrmrxpN980dACzQt9a2Ss4Ys5
+         ANMZzzllyr6V4EDXBP+OVZc75YbKo6d4J+Skl2tAD1hWYNswN+bYml/Nimyu7pC8NMdv
+         jtoIefLPQwLcYXbVvne2k91TI/oH1cv3oSW8SB1pXO0YqwEV+2XPpCmGi/Gof4m4n1ni
+         ucB5miiY6LWdOvF9oFFmiyiLVTzROJdFvsScfibdIyipVNufR54hnE+CdNA5ivf+KLX/
+         C/ECDrxxXP2mtdqaQ7KvwGe+kkYzBQ+0bNqBCfHoSwMar5uLb1rlMkJoiipJCPXrHals
+         g38w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773323740; x=1773928540;
+        d=1e100.net; s=20230601; t=1773324471; x=1773929271;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bEtHF9LXuLxS0ovXAZV4W8RauatzMwv6n2P0Ur61wyU=;
-        b=YMLRmDMYzKvaeen/dMdZt0juYxmrNilriiiNMQQPsD8glT5Ht7lfancF9sYxJ1BE5M
-         a+gKXqOAaQzyYw0/HSoYuLXox8ES2nY+TKo4IykiODpjZGOsipV6e20Vw5TfhqebpreY
-         SlSl5jQYEDGGM00WnJ2txEFcvbLmXezfzZX1DlCc9N/MgDjPC2Z68rB1aqRUP9he7eth
-         urK01MDk0amIgQxcA+ek3NHDm7e7JbNQComlB4Fnezcxp4JQDtToaBelprqNFNnJPMJs
-         xCSIqow+h+8gQ4IvWE2LnIlDEF2gNH19SDc8SnHn9cMcWlYpDTtkkl0obrK9Sb9tQm0K
-         ihaA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1OmUXSd+ZdDzLbmIIaUa7TS2TFlzssO1GAhNqaKLnhckl+1wKNApqjrHHPDrN/ov1Mig3VP/IIpybkEZHPDTuHWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX7GuO98wldwOlgJTx5v6WVKhHIGh8mfx5uYAFXJeMgS54ZoZ/
-	gdqqhuQQGfmA74leOirDYAnX72kyn5tVCTjhgz89OeWn6qw13tqh2i9keRHxJ3vQKaLf1h2fIQM
-	7k8wyBzz7cLmz4LaC5PpjMhjDTp5uXg6Sxx/Kw/N1xzF3iAD6UHNSsflb0vI/HbJhFwf6PDPQtw
-	==
-X-Gm-Gg: ATEYQzyC/h3Dmt0M7rULUKrRDeQxazBsYviE0dGrnoC6qKOFfDaQ7TG1OFuMbQULEx+
-	6per0hKaerYDlCeZGDqLI+eY2bmmRxfhwhs2mcbWV2fV0U5tVnQKWtwhWja5BXRBEgP69DZ4xLm
-	a19wR+oK15PQ94tMyAn3/H6r9x7PR6aIkR4kiztu+91H6mAVNDXTDto66yxjF005ljx/DVuPHMU
-	SWmAsOEAiHqXgdSK6hMNEQM0TeoljhqIAHBLKVq/dnyNj6WuN6Sy8RTKDxrXVYY/DWuIoqyjr2X
-	9+SVx5I0N4LTCAqAPuIrrZv/U4jtH8EigaQzGrRimrVGRKnvMziGMoNbL0ttvvsCIlZPmX0zo0r
-	4DmnoK6pnGPdzkRM5832NUc84NzrMbxArcfQ1VUnrUXwDq8Ux/5I=
-X-Received: by 2002:a05:600c:630d:b0:485:40fd:8390 with SMTP id 5b1f17b1804b1-4854b10cdb3mr105385115e9.26.1773323740364;
-        Thu, 12 Mar 2026 06:55:40 -0700 (PDT)
-X-Received: by 2002:a05:600c:630d:b0:485:40fd:8390 with SMTP id 5b1f17b1804b1-4854b10cdb3mr105384515e9.26.1773323739893;
-        Thu, 12 Mar 2026 06:55:39 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.82.96])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48541b7f3cdsm259618805e9.14.2026.03.12.06.55.38
+        bh=viC1gPLlOGctSWu83HWjGEsXF70NJAe1D+sqpq58byY=;
+        b=rMH3WT7Nh43bK015uqjmM4dv0sCWiWrFzYEULoVYedM5E1SSNPWmF8LEz4MGHsu65E
+         N8itTv78JliqFNVSJHdtNoyVLof/hIvqjlbyLBYMVRpBgCbsdw48oPwHM6ZRI1yFxcek
+         N6QQOf27ZenGqTCCpIW1D12uODMBxPa0jz/nA+F+7A5CRvwZyFGjWn9k/GDiHGLoDqDR
+         LS6BJGmw1IEYW9s4j3JjiQ82h/cUdSfqX1tnv1u59opDPwFpxg5UL8l4bcO3+LBEPZ9A
+         d9kcahwSINWoBxoUlJiKnWxV/qd/AVk76M9Iv1Xc95G/CEDTk5+BZYaHp9vIgIBe39ai
+         cQdw==
+X-Forwarded-Encrypted: i=1; AJvYcCW14lrnk03lPtLw9nVsTMjTfdP1OKPZoBSO1mEipfUV8OrxvTayCr9hZQCQH0DgzNLGgaLfvWj1zzmyx4MMgAvKKKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYKEQeMmK49NpUJZbFvznR+SQ5VAHzzSn6+psKGXCWwWWbdNkx
+	9RJ3oEpf73MGDkSSrpoYeu3FIzwDqE1r/gjLg8iecO3bhg7or/BQkag4HvLMlnMXGw==
+X-Gm-Gg: ATEYQzw7sGatizZ95FfelE1j1C2KqOYnGWGEj4zR7+Xo3F5toJ9H7b721kQWfhSckZ6
+	7GTYKVxtf+sI6NEJQUkVHeYNGweJty80oCL33AB7djoZ1MZ7YwVW0zbIJh4Gt3+B6wmwmJWyXv4
+	GX2lf6DrdhTcsX41wr+BglL9ciTEKWTZgdCOXdTmig30rLcMgu6QyTh1jBDhr7BKrxDwnLqdolE
+	5YlnVzNUj9ZiOf8ay9ATC5YjVaZjgZM2YpMbqhnP+QIqgbyrknwoKS7VHlH779grMxk+TdODWtJ
+	+Jo5Ipi+aFuVhddS87DLTjKEfEg2Z4kXcTRmP0446ZPNwaoHgAeQo7xPe40+PJXIvralFSIF8Pl
+	N+T90IrSYLrx1vAL2nJcCDZZR+esM1SNqqgcnVxj0bA05rlglBeMnZdmfe9TjD5o4grYtCj1khi
+	K+OYT/vdtSje09p7igo1OASKJHczUn92Riyf33FTR37mXoN7ewkmEcOz1bj2enlb1FmCbgPH0ER
+	6LhGA==
+X-Received: by 2002:a05:6000:2012:b0:439:cb20:f30c with SMTP id ffacd0b85a97d-439f81c77c9mr13119179f8f.23.1773324470601;
+        Thu, 12 Mar 2026 07:07:50 -0700 (PDT)
+Received: from google.com (198.115.140.34.bc.googleusercontent.com. [34.140.115.198])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe1a76e5sm8108613f8f.12.2026.03.12.07.07.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 06:55:39 -0700 (PDT)
-Date: Thu, 12 Mar 2026 14:55:37 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v7 15/15] rv: Add dl_server specific monitors
-Message-ID: <abLF2UPW9qb0m1sZ@jlelli-thinkpadt14gen4.remote.csb>
-References: <20260310105627.332044-1-gmonaco@redhat.com>
- <20260310105627.332044-16-gmonaco@redhat.com>
+        Thu, 12 Mar 2026 07:07:50 -0700 (PDT)
+Date: Thu, 12 Mar 2026 14:07:46 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	jstultz@google.com, qperret@google.com, will@kernel.org,
+	aneesh.kumar@kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v14 18/30] tracing: Check for undefined symbols in
+ simple_ring_buffer
+Message-ID: <abLIslqIcVscZRFg@google.com>
+References: <20260309162516.2623589-1-vdonnefort@google.com>
+ <20260309162516.2623589-19-vdonnefort@google.com>
+ <20260311221816.GA316631@ax162>
+ <abJ_cm_yM3Q-99GL@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260310105627.332044-16-gmonaco@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mdIuGJcmKBCIfBrPNHNdaZOia5R-lzmGsiTDL2l4K18_1773323740
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <abJ_cm_yM3Q-99GL@google.com>
 
-Hello,
-
-On 10/03/26 11:56, Gabriele Monaco wrote:
-> Add monitors to validate the behaviour of the deadline server.
+On Thu, Mar 12, 2026 at 08:55:14AM +0000, Vincent Donnefort wrote:
+> On Wed, Mar 11, 2026 at 03:18:16PM -0700, Nathan Chancellor wrote:
+> > Hi Vincent,
+> > 
+> > On Mon, Mar 09, 2026 at 04:25:04PM +0000, Vincent Donnefort wrote:
+> > > The simple_ring_buffer implementation must remain simple enough to be
+> > > used by the pKVM hypervisor. Prevent the object build if unresolved
+> > > symbols are found.
+> > > 
+> > > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > > 
+> > > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > > index d106beca8d7f..3182e1bc1cf7 100644
+> > > --- a/kernel/trace/Makefile
+> > > +++ b/kernel/trace/Makefile
+> > > @@ -132,4 +132,20 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+> > >  obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
+> > >  obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+> > >  
+> > > +#
+> > > +# simple_ring_buffer is used by the pKVM hypervisor which does not have access
+> > > +# to all kernel symbols. Fail the build if forbidden symbols are found.
+> > > +#
+> > > +UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> > > +UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> > > +UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> > > +
+> > > +quiet_cmd_check_undefined = NM      $<
+> > > +      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
+> > 
+> > This check triggers when building allmodconfig targeting arm, arm64,
+> > powerpc, and x86_64 (at least, I did not test more at the moment) with
+> > clang. If this is a hard failure, this really needs to print something
+> > out to the developer/user to help them debug off the bat, versus having
+> > to manually dig the $(NM) command out from the .cmd file or V=1. I came
+> > up with
+> > 
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index 3182e1bc1cf7..c725b06876bc 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -141,7 +141,13 @@ UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sani
+> >  UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> >  
+> >  quiet_cmd_check_undefined = NM      $<
+> > -      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
+> > +      cmd_check_undefined = \
+> > +          undefsyms=$$($(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST) || true); \
+> > +          if [ -n "$$undefsyms" ]; then \
+> > +              echo "Unexpected symbols in $<:" >&2; \
+> > +              echo "$$undefsyms" >&2; \
+> > +              false; \
+> > +          fi
+> >  
+> >  $(obj)/%.o.checked: $(obj)/%.o FORCE
+> >  	$(call if_changed,check_undefined)
+> > --
+> > 
+> > which prints
+> > 
+> >   Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+> >                    U llvm_gcda_emit_arcs
+> >                    U llvm_gcda_emit_function
+> >                    U llvm_gcda_end_file
+> >                    U llvm_gcda_start_file
+> >                    U llvm_gcda_summary_info
+> >                    U llvm_gcov_init
+> > 
+> > for arm64, which makes sense since these are LLVM specific GCOV symbols,
+> > so they should probably get the same treatment as the other ones:
+> > 
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index c725b06876bc..d464e3aa5bdd 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -136,8 +136,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+> >  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+> >  # to all kernel symbols. Fail the build if forbidden symbols are found.
+> >  #
+> > -UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> > -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> > +UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov llvm_gcda llvm_gcov
+> > +UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> >  UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> >  
+> >  quiet_cmd_check_undefined = NM      $<
+> > --
+> > 
+> > For x86_64, I see
+> > 
+> >   Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+> >                    U __clear_pages_unrolled
+> >                    U __memmove
+> >                    U copy_page
+> > 
+> > which comes from the use of KCFI_ADDRESSABLE(), since allmodconfig has
+> > CONFIG_CFI=y.
+> > 
+> > For powerpc (with both clang and GCC), I see
+> > 
+> >   Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+> >                    U .TOC.
+> > 
+> > For arm (with both clang and GCC), I see
+> > 
+> >   Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+> >            U __stack_chk_guard
+> >            U warn_slowpath_fmt
+> > 
+> > Presumably adding all of those should be fine as well?
+> > 
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index d464e3aa5bdd..4f120cb8c79c 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -137,7 +137,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+> >  # to all kernel symbols. Fail the build if forbidden symbols are found.
+> >  #
+> >  UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov llvm_gcda llvm_gcov
+> > -UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> > +UNDEFINED_ALLOWLIST += __aeabi_unwind __stack_chk_fail __stack_chk_guard stackleak_track_stack __ref_stack __sanitizer
+> > +UNDEFINED_ALLOWLIST += \.TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+> >  UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> >  
+> >  quiet_cmd_check_undefined = NM      $<
+> > --
+> > 
+> > I don't mind sending a series for these, I just wanted to make sure I
+> > was reasoning about everything correctly.
 > 
-> The currently implemented monitors are:
-> * boost
->     fair tasks run either independently or boosted
-> * laxity
->     deferrable servers wait for zero-laxity and run
+> Yes this is all fine. If you have something already, please send it. Meanwhile, I'll try
+> something a bit more durable. 
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Reviewed-by: Nam Cao <namcao@linutronix.de>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> Thanks,
+> Vincent
 
-Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
+In the end to unblock linux-next I have already sent an updated list of symbols.
+However feel free to send the logging bit, that is surely useful.
 
-Best,
-Juri
-
+> 
+> > 
+> > Cheers,
+> > Nathan
