@@ -1,137 +1,194 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9035D38B7CB
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 08:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773305917; cv=pass; b=sknBbMEg4EHFzqbP365w0WbhbaWacNfLpwCgDte+2ihW6B2bD/GiYDYyjDYxnj5pHMR8WoWxaeDianGncRmRigAmpRAHlihOG7NH8HM2ihjr0nkm7CjwHdaAwAq0xPm2317g8E74ibBV36rVlt5wqCBlz8mt48N/Ve9BCstpObI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773305917; c=relaxed/simple;
-	bh=lvKkcyZd8G7e8ZicmAHZx0gDBEp6+O25joc2hW20ZtM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TMK6ikwnp21OJs5gaXLz6NDbwzWJ+g++6xWAS2omc9hjMgkAO82rgjkLWDjHHRTkt33rTsS1HzqNjJxcU7Q4e9i6y8jhuaRkxfSsnDWJJfq8vslVG6nIlRRif2uOV+is/yDZjSOO4wQFkgqlNKGvtT3oijHXV5J+TDPUuhpqDfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMZxUd2o; arc=pass smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C84375AC6
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 10:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773309853; cv=none; b=tOhDaTX+94PIzjYVBdGo3VO3CzwfKkUsQ1a7S3ep51hjUUA52+viKaexNHVR5a1HFYLIXnXXWa6t4KJ1Zc3R8HS5iiTq25ayiZOAwN35szwcyb9+T0vncu0WKugn77ORvf1GlKJ7/B/3SAYOsFPz3aWQIvNmFZ/FMuUBFaq6ejE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773309853; c=relaxed/simple;
+	bh=6VISSpzlZznNj9au7o+yMu5s+elbPaZGvkqibf2jiuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k+j6sJFV5ZijsZMZHsvY9dHkgLTnxZ7i8JEHHXRTer3s/PmxEhZpm9pJ1HtQqeghS426bA/mHeap6IvC2dI0C8U0Z/g8GpQymCnApzXymyRIg7NtvVCoXx4cK+NrpBA3Ib8KGbotOq3wtfx8EIZBPAMdU6VJxaEZdg+aglhIfnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=GNOlJrt4; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMZxUd2o"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7985ce90542so7898907b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 01:58:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773305916; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NxDlZqcNz+H1Ob/+eCa6HV+y1hK2kFCL07fiwMo6pb5QSUugM0ljbHoTvqGjfqw+Dd
-         KCoxfEb3owALk8GYlC29fNhdZjoqpr6qXhtJhtVclNIvD+XU6ZXG0YuEFFHJwKD7oB5k
-         S2hGK36DEgfFHlqK2cldHSg/55+EFtnCPLayqFadHG0P9mD6CtJdaRrCvNJwp1WbTN93
-         Tr3SRrmHJtT/Inz0sytgIvM+hThV4Kp7TY+2aPShQao+klcoAuv8EJykyboAJ9iHhOyQ
-         Ego3oDT5CrLvL5iiQGMOS1Ng4ddHhuk6jrBWZ88SLu26dB50vZeg94k7NIlDv66oSPER
-         Fmjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=lvKkcyZd8G7e8ZicmAHZx0gDBEp6+O25joc2hW20ZtM=;
-        fh=qPBXhxXLha4BmGZ7zCiX/acnOuZFFOibO0oqlphkp4Y=;
-        b=YwDW8qevItVb+xDbgP3kx5OlNRNCopfGb/YI/b//0M/o63GNKNxfh/bnlbgLp00wbE
-         VbJNTcC+3KKHMKVh033xr740PYcpUFhRYFx9MuQF9WGmq9ivsdHHuHIKLLzm3++rDpkI
-         iy3D3EKY4ZVRFjkdCRi95YFIqa8ri2r7Lv48ukc83lVF3JvrN7R0yLGJ0VtcJzk4U0wK
-         h2SqVMup7kbcP6khzdVgE1syZc1aoKlwssrnbwz1azRQWbXynX+FP7JLHzsR5ujXjeYj
-         /lWf2ZRokxlsZxnBdrAcKxQVX/ISvhviV8Ync/R5n3UXj1YpXHp0xAbIU4K752GPW1m7
-         B4sg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="GNOlJrt4"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-483487335c2so6517715e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 03:04:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773305916; x=1773910716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lvKkcyZd8G7e8ZicmAHZx0gDBEp6+O25joc2hW20ZtM=;
-        b=dMZxUd2o16J0jCN44FrwpI1kMalVcJuXZKeVuEJA6yHxMlsLLEpKF7x8jBg4gZ/cli
-         3NWrm36Zgeap5hXy8RgsLH9E2L3cwU3WTE2MrZvgMb6/svbds/zpBr/ih+EdDUx+NNH5
-         FZ+xqXrYiyjnBy7+9ixHKyBI97aBV/cjN/WmT0OK93+hjNt/wHa7JaM3uUri0zCmgYEA
-         yiJAdlGduAYo0XdVJQeNgrSELXjWjZiRPm6NZdhRJ04sBEVAKY/4hckDXUzDZLd5scoM
-         UAw9QHRjeVoe6HmcKYd2cYhZixrng9qGL7sjkb8fmTPQ/EpAE2QRV591FwpMy2hdVa30
-         KjwQ==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1773309848; x=1773914648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XyRQtY5fUA7eA4hQxNQZFrII39g5Q1jSYxzqSfKvGA8=;
+        b=GNOlJrt47uGW7S28r6cV9gLG1PD6OhoDYrZMB02dqPGuXvVUjSJDTLA3pjnHz+kMdt
+         eXTz/9O9g5Gm975t/iye6AslQbT/ga/tkGY6FUDk2UY6y/lvD4ZFXHN+KsrAU7wUICyE
+         WmDPefMpZbE4i3wlhDeDDvPzLfkG1sC7Id+LQDwEK2eSOOIiGbrMmGT+bpJ6yraaKftL
+         DsX0UYXqPqHUV4jiW1E0yBOVlgn791GBd8ssoTFnnFtjUlRBw7+vfhiPcs3cEgXlcYgZ
+         /MJoDMMSXRyn89Gtnfyd2kpIOf5Ix2uKKV7mGrgKCrmXTsu4aG3zngfmtzFCEKgo4Lh8
+         9osw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773305916; x=1773910716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lvKkcyZd8G7e8ZicmAHZx0gDBEp6+O25joc2hW20ZtM=;
-        b=fYjJZcsZ/lSQ4ZUQDC8uLod7F2lRj/4b3HpW4cRR6zhK3HUZwyMfBtCmvSqjUdkpTP
-         qw1Wu64PYvNyCCMYkXcz4Y++IPXlvOSxSHmJc5ec29X79Fo1iPOiLZDHyhrIhJ8+mOm/
-         9IsqzA6t847LmCiIth/KaxsW72KdeqyCnng4F3WBFsYbeIIF4DSOeGwvl2wZL6eS4zTx
-         hbAlU0g/RR8xj3MDDZ83ZwgBpcXOeBMGEIqYqcsphUgIf7T2epkf753dGBf0XC7UvM+V
-         7uS15OVcvcE4LJtDkHriOgYGpP08LJ2kBczqSkbpxF99kVIJJIRS4ComKDOb3ncrjWxe
-         xjVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOk3AaAOrx5YTgot79iO+BnC6mKm8mQNqP6Gt9Yd84490ngjobS29S3IiOv3MC0wcoHMJCot++4Gpy3iokOzwsArw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHv2Npj0e2VQ6TmwS8tdERgfBJTnSc0XyrIJnNMajmfCgAj6YW
-	H/0G6JsIMQ1uWWqGnuxNbyuDIT0OxOFaODdLqZFINE2EI2vzhQ/P6wMllNyU616gUGCC3/zhqC5
-	csvzB8XiJeoqus+MnFFvv0uo9NDxjG/f7E1EcDv8=
-X-Gm-Gg: ATEYQzwaOM8k6eS6YHEiD1pe+CbNecIX3qKCDIvtLLDAF4jn2+G7TefFqJfrWgg5Psm
-	rNUN5F3j76YN0BTabkuTCCklquN3brvdv57cuNxb4MnmDU1/3HD2RVc3eyLQYycLSCE2lmrKHGo
-	VnqzktGUYGb0WnoVVLekzwpNb9HAT0zS4wf9d0YyWLEoFEIL2Aec8A2mfAvTNo49/BCvjI223r1
-	v+X5yR/S8RLj9vrvTMg7wEH6SgV5C9AdblRqapXYLdYNLiEVvKfMXw+0tvXAxrfS+EL/7k23DYd
-	fQikKMlkGEqxEV4DBBM=
-X-Received: by 2002:a05:690c:c4f9:b0:798:11ac:d0ac with SMTP id
- 00721157ae682-79917f83a15mr53833907b3.53.1773305915712; Thu, 12 Mar 2026
- 01:58:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773309848; x=1773914648;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XyRQtY5fUA7eA4hQxNQZFrII39g5Q1jSYxzqSfKvGA8=;
+        b=j0yBmXmHP/hECagwgDiKFi9dJPMoTZ2JTuFQLoPH4cN+dG3+DVAURO51Q0WJQ83l+u
+         ezDFiSjyTn4DjvCTUlmhhMPY1/2yRWRbqNvYVUE6+nzUxfE60ut9P69yF9ZvGHIpm8vX
+         /tDAyLCB6L/XI4gVPp1rd6shIIqceQneTac6xvdB0MB7hJ34UNDkDOSD+1RNnqcpJHbV
+         WJPwvvuqxx2IDFNbM2A2c7NYtkeLaJKp1BNbQaGnH7fDslqxQ0UjWBu45qX6UFbx8Rte
+         /QUbV0vjf+RbQv0A3349VpKgnoiQn2FJD7pOYkT+SH4Nl1bH1ZclybMhApWdYRKOJdkG
+         QooQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtcldlcAeLJjpyjdGBCp8VxQcHww/18enYYxEepdhaDFiBkLcSSzaDcIxdSzEsFD30GQlozqpTEieyqQ0d0Z8wqrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww/NMu0ACMBHkKfWgNYwhFZb67RPjGHZIju2W/qholMKGisCHR
+	tg1V/a0sN5Arfic3SzUgsHLyLdGhVVKu0V9L1YTYoveTdFPkfS/2jw4xBwAwlKabRDo=
+X-Gm-Gg: ATEYQzzpyFtfXoAuEE0rzrbt9xWYXqQNAZiX9ebDEv6yDtTm6E7U6wdXBA3PrvwGmKP
+	sZpOl2mRPHQviK/OBWrwesh+gm7gJwV34n633DlJWL+/o/fYPLJwBOzeGmHyrKiRimFTRc07QS9
+	p+mbGr3t5nExtbDdn+5Rqn3mt55I4aLsMdtkv+qaU4kSODL4pY9pQgPzdA34OUX6qfENGzA/RHV
+	j6jUK32fniRnfEaM9F2lhwuUzfq2AbtB8gbAgihoW+rx0GCDKWvDwA/Y0mknUQuxT0cd0/bLvbM
+	PVClEstSBfjAi3+TVdeLVMasrZDrLjsUHICpGPwt/9h0H+IqQRwUbwr776P7oKPz91FvwsmnEWi
+	RAR2fauts6SClnQvtShK+xi9bOTwiiRYoqAlIBKo9xfbbit/AJpc6UqXE+sYFn85i+Wx7E9qxgW
+	CSOZgihKLx1eIo8A==
+X-Received: by 2002:a05:600c:3103:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-4854b0acb1amr86891245e9.5.1773309848490;
+        Thu, 12 Mar 2026 03:04:08 -0700 (PDT)
+Received: from localhost ([85.163.81.98])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b5e92d5sm117363925e9.1.2026.03.12.03.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 03:04:08 -0700 (PDT)
+From: Jiri Pirko <jiri@resnulli.us>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	donald.hunter@gmail.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	mbloch@nvidia.com,
+	przemyslaw.kitszel@intel.com,
+	mschmidt@redhat.com,
+	andrew+netdev@lunn.ch,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	chuck.lever@oracle.com,
+	matttbe@kernel.org,
+	cjubran@nvidia.com,
+	daniel.zahka@gmail.com,
+	linux-doc@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 00/13] devlink: introduce shared devlink instance for PFs on same chip
+Date: Thu, 12 Mar 2026 11:03:54 +0100
+Message-ID: <20260312100407.551173-1-jiri@resnulli.us>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311115250.78488-1-laoar.shao@gmail.com> <20260311115426.GN606826@noisy.programming.kicks-ass.net>
- <20260311125350.1d89341f@pumpkin> <CALOAHbDqYjJngQmmOaPRA=k4Bb8Or39YNp5R98f_op4dti2_TQ@mail.gmail.com>
- <20260312170602.703df4c77dba2b558b4c08e1@kernel.org>
-In-Reply-To: <20260312170602.703df4c77dba2b558b4c08e1@kernel.org>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Thu, 12 Mar 2026 16:57:59 +0800
-X-Gm-Features: AaiRm51761gKsakuRzNvkMzhgNaZuKRxVLFwMcM47R00Afa4Z-NnoMViinzn7gE
-Message-ID: <CALOAHbDdkGAZySWMWvBv2_vZ+wVO-2ahtHwMtXf2f-X5UrwR8g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] disable optimistic spinning for ftrace_lock
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: David Laight <david.laight.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, 
-	will@kernel.org, boqun@kernel.org, longman@redhat.com, rostedt@goodmis.org, 
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 12, 2026 at 4:06=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> Hi,
->
-> On Wed, 11 Mar 2026 21:40:32 +0800
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> > > Although there is a bigger issue of why on earth the code is reading =
-the
-> > > list of filter functions at all - never mind all the time.
-> >
-> > bpftrace reads the complete list of available functions into
-> > userspace, then performs matching against the target function to
-> > determine if it is traceable.
->
-> What about changing bpftrace userspace tool to cache the list of availabl=
-e
-> functions? (or just add an option to pass available function list?)
-> Then, you can just copy the function list somewhere and uses it.
+From: Jiri Pirko <jiri@nvidia.com>
 
-Thanks for the suggestion.
-Steven also mentioned this optimization, and I believe it could indeed
-help address the performance issue.
+Multiple PFs on a network adapter often reside on the same physical
+chip, running a single firmware. Some resources and configurations
+are inherently shared among these PFs - PTP clocks, VF group rates,
+firmware parameters, and others. Today there is no good object in
+the devlink model to attach these chip-wide configuration knobs to.
+Drivers resort to workarounds like pinning shared state to PF0 or
+maintaining ad-hoc internal structures (e.g., ice_adapter) that are
+invisible to userspace.
 
->
-> Of course we can do the same thing in the kernel, but I don't think
-> there is any reason to do it in the kernel instead of user space.
+This problem was discussed extensively starting with Przemek Kitszel's
+"whole device devlink instance" RFC for the ice driver [1]. Several
+approaches for representing the parent instance were considered:
+using a partial PCI BDF as the dev_name (breaks when PFs have different
+BDFs in VMs), creating a per-driver bus, using auxiliary devices, or
+using faux devices. All of these required a backing struct device for
+the parent devlink instance, which does not naturally exist - there is
+no PCI device that represents the chip as a whole.
 
-Implementing this in the kernel provides a more generic solution.
-Instead of patching each tool individually (bpftrace, perf, trace-cmd,
-etc.).
+This patchset takes a different approach: allow devlink instances to
+exist without any backing struct device. The instance is identified
+purely by its internal index, exposed over devlin netlink. This avoids
+fabricating fake devices and keeps the devlink handle semantics clean.
 
+The first ten patches prepare the devlink core for device-less
+instances by decoupling the handle from the parent device. The last
+three introduce the shared devlink infrastructure and its first user
+in the mlx5 driver.
 
---
-Regards
-Yafang
+Example output showing the shared instance and nesting:
+
+  pci/0000:08:00.0: index 0
+    nested_devlink:
+      auxiliary/mlx5_core.eth.0
+  devlink_index/1: index 1
+    nested_devlink:
+      pci/0000:08:00.0
+      pci/0000:08:00.1
+  auxiliary/mlx5_core.eth.0: index 2
+  pci/0000:08:00.1: index 3
+    nested_devlink:
+      auxiliary/mlx5_core.eth.1
+  auxiliary/mlx5_core.eth.1: index 4
+
+[1] https://lore.kernel.org/netdev/20250219164410.35665-1-przemyslaw.kitszel@intel.com/
+
+---
+Decoupled from "devlink and mlx5: Support cross-function rate scheduling"
+patchset to maintain 15-patches limit.
+
+See individual patches for changelog.
+
+Jiri Pirko (13):
+  devlink: expose devlink instance index over netlink
+  devlink: add helpers to get bus_name/dev_name
+  devlink: avoid extra iterations when found devlink is not registered
+  devlink: allow to use devlink index as a command handle
+  devlink: support index-based lookup via bus_name/dev_name handle
+  devlink: support index-based notification filtering
+  devlink: introduce __devlink_alloc() with dev driver pointer
+  devlink: add devlink_dev_driver_name() helper and use it in trace
+    events
+  devlink: add devl_warn() helper and use it in port warnings
+  devlink: allow devlink instance allocation without a backing device
+  devlink: introduce shared devlink instance for PFs on same chip
+  documentation: networking: add shared devlink documentation
+  net/mlx5: Add a shared devlink instance for PFs on same chip
+
+ Documentation/netlink/specs/devlink.yaml      |  58 +++
+ .../networking/devlink/devlink-shared.rst     |  97 +++++
+ Documentation/networking/devlink/index.rst    |   1 +
+ .../net/ethernet/mellanox/mlx5/core/Makefile  |   5 +-
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  17 +
+ .../ethernet/mellanox/mlx5/core/sh_devlink.c  |  61 +++
+ .../ethernet/mellanox/mlx5/core/sh_devlink.h  |  12 +
+ include/linux/mlx5/driver.h                   |   1 +
+ include/net/devlink.h                         |  10 +
+ include/trace/events/devlink.h                |  36 +-
+ include/uapi/linux/devlink.h                  |   4 +
+ net/devlink/Makefile                          |   2 +-
+ net/devlink/core.c                            |  91 ++++-
+ net/devlink/dev.c                             |   8 +-
+ net/devlink/devl_internal.h                   |  34 +-
+ net/devlink/netlink.c                         |  52 ++-
+ net/devlink/netlink_gen.c                     | 355 +++++++++++-------
+ net/devlink/port.c                            |  19 +-
+ net/devlink/sh_dev.c                          | 161 ++++++++
+ 19 files changed, 815 insertions(+), 209 deletions(-)
+ create mode 100644 Documentation/networking/devlink/devlink-shared.rst
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/sh_devlink.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/sh_devlink.h
+ create mode 100644 net/devlink/sh_dev.c
+
+-- 
+2.51.1
+
