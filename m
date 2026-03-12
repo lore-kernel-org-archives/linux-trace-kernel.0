@@ -1,80 +1,80 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2FD3D7D9E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 16:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A143F65E6
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 16:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773331550; cv=pass; b=LbVBQXHSb+JD2/aojdAYkIYBAdvrTOvGQAFT3VYVWqVu4FIGuTXpACcvbsh1S2DVfPqlsbSkEbjiiRXTvuZkpMrZus2ral6c2qEYvypG4YL9qSB9uFVJzO+4q+4JXT9xhQkGknMMsCz0xNlvU2ASvMKbxjzXoOjfT3fdoflGbGs=
+	t=1773331744; cv=pass; b=mBTu7tEBA1BKuaZdG2WTmD0PBONnPCTnXE6ow+KQC1IZy2y5xodyIqC309cmjkhZytrPppKDydP7uTteLI3Vx6Dq39zMV8n3RypjObc67nXGvevgWUYkrvawUDF50OfNj4jvA0xhyZH5Oz2i0exibh2siLLUbSpJGNhB5IIt0EY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773331550; c=relaxed/simple;
-	bh=uXwIo7R/AWmUX8v9NfNe8o8eyYKkzsQlLFxRYRKmo54=;
+	s=arc-20240116; t=1773331744; c=relaxed/simple;
+	bh=/9ZhlXnE8IpHyY7rKGq8AMXoEoLmeVmAM+IAe1Oezhg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RM/bVwwtBicSPeYUXyy1BVl7kBm0K8phGDB00u6Q+UTC7et3jxkaveKGZPT+2pq1GgcMjOJGhmS4XlFYBSrps5t9IWp41f+cpTKlGd2iOKmnNdrhH7awiDtBoA218pLmLbkYctgKpZXuYz2I4AgLARTa2GvNbdBxypFYfxuKqYI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=ZV71t7Yr; arc=pass smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=rwVM9tV12CvDAX3YFseBfOV5085cJJjZh7PkY7UydIqkCdhODDtA0Gh4guCKa4LBfl5o0NSzhzliMD4MhE9gx3+JgMHxNOR93NFc+BUfV+aAtYDb7F4HIa/WbqDmyFXpVANyF84+oskUy2qr4bD2LDp5bBV6aYcZ1Uh6nLBy9lc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=m1ki3q6s; arc=pass smtp.client-ip=74.125.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="ZV71t7Yr"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-798374d0f44so35258557b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 09:05:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773331548; cv=none;
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="m1ki3q6s"
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64ca1ba0089so1201892d50.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 09:09:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773331741; cv=none;
         d=google.com; s=arc-20240605;
-        b=ANBktuMID9WRRrkpMwmzYpZSksddlWXG0S+Z89aCaxHZcW0cSnR3Ly6M6n/HkqMQ2i
-         nf4Lm8WPLesGODgDcUDc8RG7mExHBJEcNFUXuGFVRDHsxag5dok61qlKRAb9d1d4qdtq
-         0C5xNI/Wff9wrJHnbcD9S/Bj8YpQrk/e58HhcPmk3MDjTZhCYSD2uJxd+ZTdAudrsR13
-         j3Y53YK8W2Mq0steSjF7CBn4ik5FoQX9GtskZbuRi12Zg0iywJGlB5Pd0E5QCzW9pzYV
-         Eam+2djF5qPMRO4WRzbJ4CmgGOCnl5LE3fTvH8tV2bF6BigAtHfFEae2iqf6vUo2EeR7
-         vmrw==
+        b=aLk1vpVbzMw9Ri0y/dASDTYIgRco7hIG4reFC6rhuVr08ilMF1+pIV1SSmQuPIYwsr
+         Sx2n9n0w8shp1i1QgPAJ8fQJ5QOX3W+RlPkliOFb/XsDBfYtq4wuoSEqblkgZtFuYobO
+         YNKt4n2YkAN2XKelqzC+mTLrUkysrJYyG/99AH6htbLh+FeOcOIDCZQjvkf7gYnKjrIw
+         u0UHjL1JbQxbPLKQP0eYkiQy8EmBovkRwTcYq7TTc397SYvrysajaQ+8OZFE0nbukNuy
+         Ld6gOAK8SHlBn14C2cR3+16O2HxwU0QeRKZzIThjg54msM7334GPOSeG25n4CfX3qsjv
+         0MyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=JmKlkavBf/yAOF4s82cTsdoYBcDg+c1w7g0d5bSER7o=;
-        fh=nr3F3P3hXK7xV7lNE8YnHw7DOpH957w/mk6+aBsXZNw=;
-        b=fMBIyMSw7fYYH+tbreSUk4gx717HznUBBzsv9aWB59JsQfBVCL7uYwKiWr3xyarC5Z
-         S+vZiWpZX4LcmvuyCh1vJaLJtaIcDw8b5LYLV9NO98TlesT2e8zktd7xwaeoxo0o95Oc
-         ScmcAfesr2ypKUoJnZsBXJwgF0zEND2TYIJduDHx+KaZ0i6u2XA+KjWnePfA8cyBUuHM
-         5klgUGvjQDZR8XnPHKuOnFTgiUqFcu8Et4Xrzky988mjJ811xM3AeOQWSdveW11xWyoe
-         1VJekvILguTV08390kw2i5jqTGIEf5h+urPrlO5FinQdEkEvyQsg7I0jtj8YTzlRI6CK
-         XDKg==;
+        bh=kI5PTFr09piXXwe+dHgxbmefu5uh1N96l8rxcGpDT20=;
+        fh=TRQFOdaprmi5+JJCitwjtcHhT3JhDCuQSgf+f1wl6ts=;
+        b=Ac2TQXqFg0XkUaLTI/J3+ydmIu9idBgy2bBqkctg+e0sbGxZJtS6iHGmkKdDDDUiLs
+         24mEizTN6L4tEaLb5GcU1mja+C0uo2Q7neIy+MrsFfqx+dmpC1NCSh11c4mIOXF8y9EW
+         UFo0Aq8XsND+Owahaq9GDne2c6/N7o7W0RQTYMUlzzySyq4iMgz2BURNsL0Bra/BPm5h
+         HqdUpUVkQ6CdbAQxUCcBVKRE6IUBt405ED4gAcf5/uXTb5cr7T8/yhAK3TCrw7Xa2I3w
+         E2l0zqarFdYqxgzC+BL4iQ0vDHKvdqRZNE5YDFGEftAKTjZUIRw/306omMoAgk977bZl
+         4XCQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1773331548; x=1773936348; darn=vger.kernel.org;
+        d=bitbyteword.org; s=google; t=1773331741; x=1773936541; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JmKlkavBf/yAOF4s82cTsdoYBcDg+c1w7g0d5bSER7o=;
-        b=ZV71t7Yr1bKEaCrw5G92Jfwsdtqtd7yVBewYsWTdMu4hlPrngoMiOi9Tg98BUXGj7V
-         J8zfT8WZvuSQVQoHqLeSQshOj58obuQHxEJH3i8/pbu12eU6C7Ce24M/UJLLYQE6Gyj4
-         MBJKDgq3YAhHELLZd+5LiW+wYl057MgHnzcIvUsegkYPkvlEfdww7dLPjrHlDmsadUdM
-         wSRYkiv5Ntk9U+9jkH4To9xPIEAmJ9iWvbmxM8yMdXibURUG9CU4usIPwIAMNK/zJ+LU
-         w3EzMZjLrprjIUB0o8QsaOC68H8pgsKxw2R93SbRJDixW4oABx/etf2ISufqJ1uZrO5X
-         OKgQ==
+        bh=kI5PTFr09piXXwe+dHgxbmefu5uh1N96l8rxcGpDT20=;
+        b=m1ki3q6sM4E2UACesTTqdadtI+Q0abqlUwfIdHI+OjmsRX2whEFMpQZptypVWhQx7h
+         QD04yZlyfzP3xSivF9scjOrX5/FKYwiLrKA2X7JGefZSd1ksKzyMr15sFt8BUlBtCA1S
+         qJU7H/z8w1uO+F9Lf0dqC/P0kEVsXjabxHZfvBx9uTBgICn+qEBxH7rHMoE2jVFa285u
+         ZgHMmgqvOB2dgKagDrzwCVgXrpWT6UXW/+5qlE/3A3PliRynwsbURLgRm9zWpjrvx8vj
+         l50ZunSLyn6Bt2c18cyLVOhmld8Lw2f3Z/Tl83A9P3MTDzd0bDNTqIw9vU+Apak8seEn
+         KC5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773331548; x=1773936348;
+        d=1e100.net; s=20230601; t=1773331741; x=1773936541;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=JmKlkavBf/yAOF4s82cTsdoYBcDg+c1w7g0d5bSER7o=;
-        b=k5DjOU2JhrLp6fTPyKiovoiZgkJZ1MuLsnPgqPKfur/mM78IRbVhojZThxt2OVD3fM
-         lrIToDdn+dYD21eFWIDRohLXiGIM5owQWS9qFo1uoWxDKso7rGCU8Sf3TBvc5FE9LmmP
-         kTN1gFk/xiK8PU7y3PEpNndPHwWG4/oBe9O1Wg5jv4lJnEqJbT5Qr2wriu1zk7uRxL6N
-         9U24Hc1OpvByGJLB1Z+luJBmRZafZmTqTPUlyQOi+Cp5VAqHcw7e0OtDEKYcMDWP1xAT
-         c1YolxxzU/y4Re5aAR5bTEDo48rpafO0HplYD7kMVBCE9A3WcaevTeJUvnTquGSPefJ5
-         qREg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwQKMUSKvLJ06u8xZ6irV0sumioMPqdfPTiGbKIgCr75Lklmkrd9dTzg9RoKYAiKCcLng0skCxiDBoGBG4ehbaFNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUG2N1JWTp5HNUzOtPHy9qmJweh21mUUeazJaDtwyPUhp7uJBQ
-	lrIvCbA6h0VPTDruLssd6mtj8Fbsijzs68t4OS/R52tA72xrwrXGl+k2EXc2d12GgceK+6sBfly
-	PgFXKcVOW3yKsGtY9sbLX4gzLWrLh2zKkzwfveJyTSw==
-X-Gm-Gg: ATEYQzyvFNEVIfxAODcBXLZwZt6z1LEHvOBvJ+Il1mtU3hELSuClN2rwCBgWwWeCyyH
-	+vBjID0jkFCnSMAs3RtA/Zy0ZXiiAsQl/ZvC7exApBW80eQ6BP1M0BL2zsHai3wUyFTPGRNuIBw
-	WfI8NUBeTzG2JqQ5sjgdaPVspGHjinK0qC0JaMQ+i7CgiYg21gfN7bipE0yvSUysVPhbJh7tCZN
-	Mm5UjDk8yegGNrtFUFqvoAac4gGDwwwIjzpmTpCwuW4P+IyFyMRBFE7tG/YtwQZ2KL+DNP3uf59
-	cskA0aw=
-X-Received: by 2002:a53:df06:0:b0:646:9ddf:5f2 with SMTP id
- 956f58d0204a3-64e62869514mr137952d50.31.1773331547890; Thu, 12 Mar 2026
- 09:05:47 -0700 (PDT)
+        bh=kI5PTFr09piXXwe+dHgxbmefu5uh1N96l8rxcGpDT20=;
+        b=tQ6fgH0Q6/P5tt2rJwvTMMdMU2IDyJ4cSK3VPMHi9xAHzwx5ATahtENZIBlCh0i4cs
+         KQqg+KSXAtDMcq7IzESOZ8u5DNqXdpLzDB5FAYsjiq96WVyBHQY6r2Eyj7RULBpMueor
+         el0+S0o6NANBGx6kWevCMhGNk4cq60MD58fb5TNSYoiwdjy4QH+OLZfHBL8sm+WVc2Eu
+         q/YnfNlsYuDaXXMK6OnbGuwgqLmLXoQe+b5QWJ4iBwc4DP+C4JcCjZOfxm3NwrXPxIN6
+         niMw3q9r28PU7y5xdSRcjJx1kzFHDqxb/GXKlNFGs0oGs0Mb6kNj2HFMbnuMDUM1oOTr
+         DV2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhvrD3upcyMh9JHPgS19HDu0p2oQy4l9WcCQSpknC+fSLl3F4jzSDWk7pwvNhk9wyASDMW5BDePRDrI82UV+N0QPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBk7G1sr1AtNIe1CpwoXAF5ubXlnF8KJqZvSKK/S1Dr0BiN2kH
+	dMj7VHeozEDzpJgoQ+kxtSgNpO/y3HjXCRpBTQouIzPSGckX4pcHi1l2eXlzoCtRMJ1kHy7iTD8
+	TpZQ2ssxlw1kZNhxWSgvt6JdL9t0dF9JalKhlb07eNw==
+X-Gm-Gg: ATEYQzxY6Pfj/YkReLcMfWLXtZHaG/SM7iE1MoyDXhG/4q9xXzfcL7fmif4UpusGhTv
+	FoYfdSx6hFbLVtJTJ7+JzojYixdDggGR7O56Bj40KuQJialu2xzRmbszKAoY0I2a12Xuo6fY6Z9
+	33JVQ+LtSi+37SPTRoR/ZD7vDtyLm5R+GduJ0zQWuCwyOuvhxS6S1BidwmY+UFxin4Os2x0tIIO
+	/YAUlsXi/2NnAU+taCMRrXmQUl0XaR7S8vBRtSEoL28HO94AJx83/lo0NduQEVPpUBHFvS0dBkZ
+	C5/SpvA=
+X-Received: by 2002:a05:690e:448d:b0:64a:e799:1d9c with SMTP id
+ 956f58d0204a3-64e63079bb0mr62693d50.60.1773331741406; Thu, 12 Mar 2026
+ 09:09:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,18 +82,20 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
- <20260312150523.2054552-2-vineeth@bitbyteword.org> <20260312111255.7925b4e2@gandalf.local.home>
- <CAO7JXPhg-Etspj9YahZrq8cmZ2K6AGWDrMnHO+oD96P_SmOLBw@mail.gmail.com> <20260312155326.GB1282955@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260312155326.GB1282955@noisy.programming.kicks-ass.net>
+ <1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com> <20260312112354.3dd99e36@gandalf.local.home>
+ <219d015d-076b-4c80-8f63-88569115fdad@efficios.com> <20260312114041.5193c729@gandalf.local.home>
+ <1becdbce-2c01-468a-bbab-42b5dea9fdf8@efficios.com>
+In-Reply-To: <1becdbce-2c01-468a-bbab-42b5dea9fdf8@efficios.com>
 From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Thu, 12 Mar 2026 12:05:37 -0400
-X-Gm-Features: AaiRm52SVVT4jiV0FzOGXISct6FMh2E9oWpuKL1FA2qkv7l8yLE2a6rVIE8wyUY
-Message-ID: <CAO7JXPiu8-LE_gG001_GQLoGVYakPdzmH2SXLqfzJjEUxbn1Rw@mail.gmail.com>
-Subject: Re: [PATCH 01/15] tracepoint: Add trace_invoke_##name() API
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Dmitry Ilvokhin <d@ilvokhin.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, 
+Date: Thu, 12 Mar 2026 12:08:49 -0400
+X-Gm-Features: AaiRm50l09G2avZYKQas6kLTqrDst8ZjnHTnngudy3h6MyVa79lzABXaRh3Trz0
+Message-ID: <CAO7JXPjnnruhM5oC6xMgnYaQ9efzYFqMCFiJLNM3HCQ+ZeCiJw@mail.gmail.com>
+Subject: Re: [PATCH 00/15] tracepoint: Avoid double static_branch evaluation
+ at guarded call sites
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Dmitry Ilvokhin <d@ilvokhin.com>, Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
 	Daniel Borkmann <daniel@iogearbox.net>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
@@ -128,66 +130,59 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Dmitry Ilvokhin <d@ilvokhin.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 12, 2026 at 11:53=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+On Thu, Mar 12, 2026 at 11:49=E2=80=AFAM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
 >
-> On Thu, Mar 12, 2026 at 11:39:06AM -0400, Vineeth Remanan Pillai wrote:
-> > On Thu, Mar 12, 2026 at 11:13=E2=80=AFAM Steven Rostedt <rostedt@goodmi=
-s.org> wrote:
-> > >
-> > > On Thu, 12 Mar 2026 11:04:56 -0400
-> > > "Vineeth Pillai (Google)" <vineeth@bitbyteword.org> wrote:
-> > >
-> > > > Add trace_invoke_##name() as a companion to trace_##name().  When a
-> > > > caller already guards a tracepoint with an explicit enabled check:
-> > > >
-> > > >   if (trace_foo_enabled() && cond)
-> > > >       trace_foo(args);
-> > > >
-> > > > trace_foo() internally repeats the static_branch_unlikely() test, w=
-hich
-> > > > the compiler cannot fold since static branches are patched binary
-> > > > instructions.  This results in two static-branch evaluations for ev=
-ery
-> > > > guarded call site.
-> > > >
-> > > > trace_invoke_##name() calls __do_trace_##name() directly, skipping =
-the
-> > > > redundant static-branch re-check.  This avoids leaking the internal
-> > > > __do_trace_##name() symbol into call sites while still eliminating =
-the
-> > > > double evaluation:
-> > > >
-> > > >   if (trace_foo_enabled() && cond)
-> > > >       trace_invoke_foo(args);   /* calls __do_trace_foo() directly =
-*/
-> > > >
-> > > > Three locations are updated:
-> > > > - __DECLARE_TRACE: invoke form omits static_branch_unlikely, retain=
-s
-> > > >   the LOCKDEP RCU-watching assertion.
-> > > > - __DECLARE_TRACE_SYSCALL: same, plus retains might_fault().
-> > > > - !TRACEPOINTS_ENABLED stub: empty no-op so callers compile cleanly
-> > > >   when tracepoints are compiled out.
-> > > >
-> > > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > > > Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> > > > Assisted-by: Claude:claude-sonnet-4-6
-> > >
-> > > I'm guessing Claude helped with the other patches. Did it really help=
- with this one?
-> > >
+> On 2026-03-12 11:40, Steven Rostedt wrote:
+> > On Thu, 12 Mar 2026 11:28:07 -0400
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > >
-> > Claude wrote and build tested the whole series based on my guidance
-> > and prompt :-). I verified the series before sending it out, but
-> > claude did the initial work.
+> >>> Note, Vineeth came up with the naming. I would have done "do" but whe=
+n I
+> >>> saw "invoke" I thought it sounded better.
+> >>
+> >> It works as long as you don't have a tracing subsystem called
+> >> "invoke", then you get into identifier clash territory.
+> >
+> > True. Perhaps we should do the double underscore trick.
+> >
+> > Instead of:  trace_invoke_foo()
+> >
+> > use:  trace_invoke__foo()
+> >
+> >
+> > Which will make it more visible to what the trace event is.
+> >
+> > Hmm, we probably should have used: trace__foo() for all tracepoints, as
+> > there's still functions that are called trace_foo() that are not
+> > tracepoints :-p
 >
-> That seems like an unreasonable waste of energy. You could've had claude
-> write a Coccinelle script for you and saved a ton of tokens.
+> One certain way to eliminate identifier clash would be to go for a
+> prefix to "trace_", e.g.
+>
+> do_trace_foo()
+> call_trace_foo()
 
-Yeah true, Steve also mentioned this to me offline. Haven't used
-Coccinelle before, but now I know :-)
+This was the initial idea, but it had conflict in the existing source:
+call_trace_sched_update_nr_running. do_trace_##name also had
+collisions when I checked. So, went with trace_invoke_##name. Did not
+check rest of the suggestions here though.
 
 Thanks,
 Vineeth
+
+> emit_trace_foo()
+> __trace_foo()
+> invoke_trace_foo()
+> dispatch_trace_foo()
+>
+> Thanks,
+>
+> Mathieu
+>
+>
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
