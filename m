@@ -1,105 +1,62 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600A73218DD;
-	Thu, 12 Mar 2026 15:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4393D399013;
+	Thu, 12 Mar 2026 15:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773329053; cv=none; b=cb8qOq67rqiZQxV578I8pkQv7tZBnWuklLo5tEDEOcRnEUwJgf6/uQerlEFg2dKwsA23nxP2jhH0o/JWRMP1P+WsZawOjdXG2dt0lT2Bc04gTEAmj47LuOkpJLxWL1+Zy7XvD3k+BhtRqFmjrF75v+IXHpwBt6PUx4iirNwNov8=
+	t=1773329064; cv=none; b=EO5Wk2LTP7tONdPBzm3A98umGtDad2QbLjg8Qxml2OY5/cbY148BgkHF2eR4l6XJhgghcVNA24SVnUQhYcsRrm4/8A+AAfXHTe+oDlI8iFzO/dHBACo8gkyEoglMM9SKg1gREyMa1/jSY5FM1NNIT+gvk863gohk5avbA2BNJFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773329053; c=relaxed/simple;
-	bh=sytxWOkyDIIeHX5CMaw9a1LerCjjFeV5ZrZULOHHkHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eM1BHZwlq502mCNheCYMt1io97d/3/dKuHq3cMGA2MrcfkyQFTBCbreDEdyzXifHxLU4NJIYVQPFZN9x0AKM5PbSUJSomDrtQjEPU+8mU5G7nKVrtAq8gNBp9DitkYe3TNI5ikysoJmdpuj68NzV0sbY2wmFdGmsA/y6/eBRYBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 37E651A01EF;
-	Thu, 12 Mar 2026 15:24:06 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 087CE60010;
-	Thu, 12 Mar 2026 15:23:39 +0000 (UTC)
-Date: Thu, 12 Mar 2026 11:23:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Peter Zijlstra
- <peterz@infradead.org>, Dmitry Ilvokhin <d@ilvokhin.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jens Axboe
- <axboe@kernel.dk>, io-uring@vger.kernel.org, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Marcelo Ricardo
- Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Jon
- Maloy <jmaloy@redhat.com>, Aaron Conole <aconole@redhat.com>, Eelco
- Chaudron <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-sctp@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, dev@openvswitch.org, Oded Gabbay
- <ogabbay@kernel.org>, Koby Elbaz <koby.elbaz@intel.com>,
- dri-devel@lists.freedesktop.org, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, "Gautham R. Shenoy"
- <gautham.shenoy@amd.com>, Huang Rui <ray.huang@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Len Brown <lenb@kernel.org>, Srinivas
- Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-pm@vger.kernel.org,
- MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park
- <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Sumit Semwal
- <sumit.semwal@linaro.org>, linaro-mm-sig@lists.linaro.org, Eddie James
- <eajames@linux.ibm.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, Joel
- Stanley <joel@jms.id.au>, linux-fsi@lists.ozlabs.org, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Alex Deucher
- <alexander.deucher@amd.com>, Danilo Krummrich <dakr@kernel.org>, Matthew
- Brost <matthew.brost@intel.com>, Philipp Stanner <phasta@kernel.org>, Harry
- Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- amd-gfx@lists.freedesktop.org, Jiri Kosina <jikos@kernel.org>, Benjamin
- Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, Mark Brown
- <broonie@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K.
- Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Chris
- Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
- linux-btrfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] tracepoint: Avoid double static_branch evaluation
- at guarded call sites
-Message-ID: <20260312112354.3dd99e36@gandalf.local.home>
-In-Reply-To: <1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com>
+	s=arc-20240116; t=1773329064; c=relaxed/simple;
+	bh=cN0KMaLzaUcJbNNpmje9MQ0FALTu2rXzl0SOp/23i1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/P3q3rlD7Zna1NAvktT6M4VOg6e7gPEDsFkPFW/uLF5ssQHzsdl5Off++bthWUUmHv1df9bUc2u/dlCwLRQLN6OEUXIdsXdv+I2xLMZrwfSqsKIinZjMV/QORbmBTQnru81xuUaW5c0SeEt+sCZyqqtcMexQ5dogyT93qw9xMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVdn0v0z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVdn0v0z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67CCC4CEF7;
+	Thu, 12 Mar 2026 15:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773329064;
+	bh=cN0KMaLzaUcJbNNpmje9MQ0FALTu2rXzl0SOp/23i1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EVdn0v0z/kVnpPSRvBwBMLT/TyFi4iWnnCtXnS03ygImp276Okr6QIgFmbyh8YUuQ
+	 fRl5p6xDUo6dkMDRtf6BVK8HlilV2NbnI5mhT2UPI+dZ1pC8aLr3uZKVgsk4AhQMX4
+	 4pt3j/SbVUZkEr1rRXYBOB3MLB02fjh3RjtB1UtM0/bTcKLiyFzo2gZYPsvIvkuiFw
+	 jgCKZC4iBR3IhmflZQsPnAc1T/mtScrETJcX496IP7reRdtDUEhAZVcuQroEHZ6MzP
+	 fIIg4CN+V43IJcflWBCtidXBNE0bzCZi4utXQMgBG/O0vM35eDTGpPKmKn2a1qukeH
+	 PEWbRcdz+grdQ==
+Date: Thu, 12 Mar 2026 09:24:21 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/15] io_uring: Use trace_invoke_##name() at guarded
+ tracepoint call sites
+Message-ID: <abLapcC7YGYDyJ3L@kbusch-mbp>
 References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
-	<1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20260312150523.2054552-4-vineeth@bitbyteword.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: h3739pmr1eu9bg7iohjao1rrs3tokc6z
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 087CE60010
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18y4imWQ5s/jJLRD+ifAQxkW+/MJIrfF8g=
-X-HE-Tag: 1773329019-951038
-X-HE-Meta: U2FsdGVkX19VCvtnyeXLm8RYcE/0528Of+u4uh+xWXIoIUAMDgzoBtHgAKGT8nAF/MB27RV3F/HBU7N8Yq3nctz4CjyozsdN+JtQpjXgcPgQ91Udi/zn6KJIrxNJApkTGgQNfwjA1AIJPhvzXyH3aMyWbdyoGtBKFOnq4RRJYVOvsob0d/ffWToVP4J5RUsRMz0qpdmi3Iljf9FrVu7POde112UEVgFi8OQXvPdVYuTecw25DZQQ5ipeWXW6Kr0xXH7b2TXafPsVNaEyw+eNEKMINQbygT33slpoLqfF/VxxC3FTWBQ/CxruNZ4auDV5bvilUFV4TL+gv3A/9X1r2mUEs0jEp6JnA2gRI3WDauIvML8TIfmFKXYkIboJC7/W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260312150523.2054552-4-vineeth@bitbyteword.org>
 
-On Thu, 12 Mar 2026 11:12:41 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Thu, Mar 12, 2026 at 11:04:58AM -0400, Vineeth Pillai (Google) wrote:
+>  	if (trace_io_uring_complete_enabled())
+> -		trace_io_uring_complete(req->ctx, req, cqe);
+> +		trace_invoke_io_uring_complete(req->ctx, req, cqe);
 
-> >    if (trace_foo_enabled() && cond)
-> >        trace_invoke_foo(args);   /* calls __do_trace_foo() directly */  
-> 
-> FYI, we have a similar concept in LTTng-UST for userspace
-> instrumentation already:
-> 
-> if (lttng_ust_tracepoint_enabled(provider, name))
->          lttng_ust_do_tracepoint(provider, name, ...);
-> 
-> Perhaps it can provide some ideas about API naming.
-
-I find the word "invoke" sounding more official than "do" ;-)
-
-Note, Vineeth came up with the naming. I would have done "do" but when I
-saw "invoke" I thought it sounded better.
-
--- Steve
+Curious, this one doesn't follow that pattern of "if (enabed && cond)"
+that this cover letter said it was addressing, so why doesn't this call
+just drop the 'if' check and go straight to trace_io_uring_complete()? I
+followed this usage to commit a0730c738309a06, which says that the
+compiler was generating code to move args before checking if the trace
+was enabled. That commit was a while ago though, and suggests to remove
+the check if that problem is solved. Is it still a problem?
