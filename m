@@ -1,129 +1,124 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21953B3888
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 12:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC5A23BCED
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 13:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773320254; cv=none; b=mi2Thg0GGRRccmGE/tBfuyFldM0RPCqA6Cm0W8mh65C7g49MuR8UrsiS3MuQNVHkNvoSbBactnR8dABKRhVeZi8KA5KJrV01y6RyxHVJaUwL2ddWHgeDKeIaU0lFQEcv30k7GWo89Z/Y88IDqCtDfOl2hTfZIOioPXMlfiDaU9c=
+	t=1773320856; cv=none; b=Ag0ph3nSxbSaDXcsckUUq/LuV0h0HbbGNs+MrssFA4NeIIZBuzWCWsXqBZfK0lP42BOAc9F0iE+Jp9GliFa0wOFOR+hgayxHrZZd2Qx/dMkOQyyVAAqcB1vu2cRyyfLPfjngZPos8oxLCd1EvXhU/5tQZNMsxe40IOWZu1l0IM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773320254; c=relaxed/simple;
-	bh=Rr1jkAP22lZkLvo3o90a9fRSWh9+kilNKtAarSScWFY=;
+	s=arc-20240116; t=1773320856; c=relaxed/simple;
+	bh=GY5qGnINeDE7iRujzG5/erVJjPfRWP14BKwl2X5DNIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Saaewb2zUVyOAdtoims9JacBBeRTsQIqB96AjRPrL7XPLx6FQIlKmrGX+REFRf8P0c33G733IHprj4h+iwb4iE1WJABRkljSf5ln9vv6PKj+RwT22iUkU9IJZvyFbxTGyeBwexx+1uyECicAi8qHQX5tvxUQL1lLrGdRGIwcatM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fHqxjqGD; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 In-Reply-To:Content-Type:Content-Disposition; b=JB46I6lT/R6wp3/oFGwd/h3gxrm5ArH5H1aoVdTP0BFvnZkMyB7L/eSHq1x7iGVll1c9b2xU0RWFqaqd/W1TZgfGOw6Wk3fVKEeOYcT1Pb6Of1E96gYZuEUtjKDqswNL6sqv0cpR0RJz9v5Zu0GKrSniH6sr8pkkGPw72a2vQ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=agqF23CS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fHqxjqGD"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-5094b54a250so5475731cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 05:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1773320252; x=1773925052; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J1SF1XBHkHR0j7NZVucv0LxpGoGXl67PUefLsfwpAbo=;
-        b=fHqxjqGD7mReR8MT2yBowt9MuNKPAKQc++mWcb4ZOttX6YldICO+OnnxWIQjO0C8L5
-         wjOw0Gg7MqV4U+G9pES+s6h1NtZIjaKrBXMW81hrLyc8SxWYHtvQK3FlTjqiyroZskXE
-         jYj0kUENL7Yhu5zg+0UQ91XYlYYlozX9U8uAqBEFaih0fSnDo8kprjTDRYJ58gzKRExo
-         MSUW+Q+e0P2WpZGotx0DuVRaUqq4vGsUUSX1YbPnOxmRUKlXFY/aNRmXMXDbAEfx0Lnn
-         e41FpuPSZjTSuTkWfTMW8e1MvewVXC2p6zLd4GrSZjvSKS4Q06nDQYaSimUW3qR5RhoY
-         JV6A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="agqF23CS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773320853;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FStPFYH7sj7j7kmuKgyeO/ScaxttHGBKN1EeuB6hyOY=;
+	b=agqF23CSfpYojOuzfCceqpJ3sLgFNA7rb+M9PZ1fa3Dq+4jic6PRPGJ8tDAE69qbMeV3o4
+	uLacuHsuj1/bhp0XwWQZUCpeZ1x4edPKLHCyDQvPi02Nr6+LbN3/CsZilcDxDfQRscKM5G
+	JnweCt2tRfbObQp9iwbj0PomM3G7Krc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-685-A5dTyu4WO0CHaS96urTm4w-1; Thu, 12 Mar 2026 09:07:32 -0400
+X-MC-Unique: A5dTyu4WO0CHaS96urTm4w-1
+X-Mimecast-MFC-AGG-ID: A5dTyu4WO0CHaS96urTm4w_1773320851
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-439da07c5bfso712140f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 06:07:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773320252; x=1773925052;
+        d=1e100.net; s=20230601; t=1773320851; x=1773925651;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J1SF1XBHkHR0j7NZVucv0LxpGoGXl67PUefLsfwpAbo=;
-        b=u2UCT5Zc2R9aE92R6AZtKL7v2zwfKO5LBuGohaxFKEsd3Eb/6NHQMSbVRQgdNYf38S
-         /ojKhbIpD/uC4cf2oMcLil5SZez1Rl6v23tEqc6Its0g2/sTb/IsrEeCu4JeF7h/sFm4
-         rHuu7puZtB6nepyW3gNPImM9eIjBcxQY1n1JWq9jGlYV1czDwZyJOD4TKFZXhRuCm9A3
-         aKc8WMQ6043T7qydD3D7+spN0ym0+D1kE6uDMiz5BGuUYEBZe9zFAJPXBLIqy8BpfYa0
-         m37dYQ2Bxc7gz0sawdKME7Z9d1f3w+UK26BrXZFQF1DUIxwOUn/AswzfXzZh1Tmr9kCk
-         n9eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvn8UfnkX6HuF/G7ncZqmRYgExjhV1rLp7lsZSs2OZ0s3Ah0RM5aQhePd/PPgLjFMCQr2oNbdf7cVjT7e0YZ68KeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYxRHDD1JvtgRuIdS9LG+T8aDhqcJoTov93cmaskK2bTZV6ac9
-	etH3nKYFQvUNBXNr3kr0lYl7CEQuwr1M50TTP2YnltwVSQO0lM28qw82bJ8uiG+kHR8=
-X-Gm-Gg: ATEYQzw6eS/zf/CtdzAc6Cme1zv4XGQdfJ7NdUJ7I7mqahuP4O5IXhvWEsA9CzQJ6fX
-	29+SWNUQU2Y7Xkjq5Z1yMVpqgBM1XmuGk/g5FY5h7GNUXFR9AJ4N77Q8JLAfmoH2KuLaASSyVcV
-	qs1dtmivDR6J29OJki1981op9hgIndHiPlUpLIJicfTZatoVDdNlAyAr7qRIyzpsFbmcvS0XcTB
-	Ir8qI2NxRE7YHuNTp6aFhe7aOaA8Pa+hbh30lsLV6sSxOSEQ8lxjHA7EIjB3m12HIZlokcI9dxj
-	z9U5uLPmbxCYNH3lphYeBhVqeG8hEGOoJaE5IsGzK+iLXfwHjmUNDcuZX/TpjYtBMXFDBeCeMYL
-	BTxc1fqzSBKlbyzeImkp5FHN9CYG/xvKkStyLZ8C4nWt8l4OhtzN6qZnyga2iOzRG3llcVeJLxa
-	xY3EyiUYsiYyg8nfGa9XxmRYbqXJW+GeRkhLEs9fgvKJevgBYBHVLBcmNyAeSVbJgPGg//TLTJO
-	SPoQG8O
-X-Received: by 2002:ac8:5d4d:0:b0:509:cbc:127b with SMTP id d75a77b69052e-5093a1bd58fmr77950521cf.60.1773320251710;
-        Thu, 12 Mar 2026 05:57:31 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a65bd318fsm33341196d6.8.2026.03.12.05.57.30
+        bh=FStPFYH7sj7j7kmuKgyeO/ScaxttHGBKN1EeuB6hyOY=;
+        b=lBS2l7w6qLRua/rbsTkYUqwP4R6Pocd0hZHNormy0BwADlRbk9j/fpK0qsLI0DkPPq
+         jtlmrRv3okgHIe2t9/Kds4Pd0EhuJmcGm9RehyziA6xK/+mb882FOUSuWslYlneNiwSj
+         wCxsXiDg+EIrOGKp69UrV5Y71NL3PIilyAMc4YsS4WJpWwK3QWRUKwoCcCMG418ZcTcL
+         /k7GyFps0mxV63PFAScru53hLSavcX9JHZ20n2/LGGgDgn9hluACazpJSkQQB/eSk2zu
+         G1id4/IUf6goRSf6bP/69IGbzxq5A9nqjYzn02Opz/LSs82UfrSBBsvrG3eEzSjCw0N2
+         FJTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUL5DfuVhLoateXnKSoHsw/tjPbbsyBKn/fFSCUQbX9ITEhsm1mHK31plMBgHNHHst3wTjw5RWgjW9IkkMlIAd12TA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwewJtTOfVsnvhNlgCiLvbTkamMv+LRR5xuZcpTFWEP/NhLLBTd
+	gBxkxe+CH6MGkoChDV8wluT7jhRD3AsB/RC0SotNU9oxwnJpWnCgdgwcPBwTx3G0Gu0gc3oZoH1
+	3kiWeHvmF+yLLqLEUM4hPGQhBW/+gNzSOdo+GRaVijcHZiBdeH9SOgpYDJYbBni+pbbtUMJP3kw
+	==
+X-Gm-Gg: ATEYQzwsrRHFDCwSRXTx+0nKGDuvIsLYXRkuKM9yyXjTUFzpw0SYCG1IS+W6aC3DnUJ
+	l8wtoNsNX7n685RIXq5nlYW7NW+H8uSOEazWGdFcSu7Hd+jxejF6DPS92i4nRCgkbQjyndogh/3
+	Z9/b2LMg7Rpc9pW/awVvMuxj3PBbNxErBASM6FBGORp//QVReFMgnPRR83w1yjzsYIKhheYQjdr
+	bt+l377QZF5mRzXUAtJvtooMggVJ6RpitpfKmoh3uadBbmmUHY71alnAxaTCctmAvpoUXboxHhC
+	rAMYqI+ucw9lmAbmk9HYQLR2pfDqqR2jytMNHCumqWTOzO+XYVs3L+Zxc/wSmxVjv/Rsb/w07hU
+	JJ6O8bDyCsITWH9xARZRujbG/6upvK+RZCnhUwniEZff2HOGQmZE=
+X-Received: by 2002:a05:6000:2884:b0:439:cee7:7174 with SMTP id ffacd0b85a97d-439f84151a7mr11879708f8f.52.1773320850715;
+        Thu, 12 Mar 2026 06:07:30 -0700 (PDT)
+X-Received: by 2002:a05:6000:2884:b0:439:cee7:7174 with SMTP id ffacd0b85a97d-439f84151a7mr11879622f8f.52.1773320850188;
+        Thu, 12 Mar 2026 06:07:30 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.82.96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe2187aasm7448982f8f.30.2026.03.12.06.07.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 05:57:31 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1w0fbW-00000006fKD-1POa;
-	Thu, 12 Mar 2026 09:57:30 -0300
-Date: Thu, 12 Mar 2026 09:57:30 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
-	apparmor@lists.ubuntu.com, bpf@vger.kernel.org,
-	ceph-devel@vger.kernel.org, cocci@inria.fr,
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <20260312125730.GI1469476@ziepe.ca>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <abBlpGKO842B3yl9@google.com>
+        Thu, 12 Mar 2026 06:07:29 -0700 (PDT)
+Date: Thu, 12 Mar 2026 14:07:26 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Nam Cao <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org, Phil Auld <pauld@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v7 12/15] sched: Add deadline tracepoints
+Message-ID: <abK6jlVbeNtvG6n7@jlelli-thinkpadt14gen4.remote.csb>
+References: <20260310105627.332044-1-gmonaco@redhat.com>
+ <20260310105627.332044-13-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <20260310105627.332044-13-gmonaco@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 9BzPBAp9XUkrj3lwcXRnka8B8tSafxL1zojPr8QMpEQ_1773320851
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <abBlpGKO842B3yl9@google.com>
 
-On Wed, Mar 11, 2026 at 02:40:36AM +0800, Kuan-Wei Chiu wrote:
+Hello,
 
-> IMHO, the necessity of IS_ERR_OR_NULL() often highlights a confusing or
-> flawed API design. It usually implies that the caller is unsure whether
-> a failure results in an error pointer or a NULL pointer. 
+On 10/03/26 11:56, Gabriele Monaco wrote:
+> Add the following tracepoints:
+> 
+> * sched_dl_throttle(dl_se, cpu, type):
+>     Called when a deadline entity is throttled
+> * sched_dl_replenish(dl_se, cpu, type):
+>     Called when a deadline entity's runtime is replenished
+> * sched_dl_update(dl_se, cpu, type):
+>     Called when a deadline entity updates without throttle or replenish
+> * sched_dl_server_start(dl_se, cpu, type):
+>     Called when a deadline server is started
+> * sched_dl_server_stop(dl_se, cpu, type):
+>     Called when a deadline server is stopped
+> 
+> Those tracepoints can be useful to validate the deadline scheduler with
+> RV and are not exported to tracefs.
+> 
+> Reviewed-by: Phil Auld <pauld@redhat.com>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-+1
+Looks good to me.
 
-IS_ERR_OR_NULL() should always be looked on with suspicion. Very
-little should be returning some tri-state 'ERR' 'NULL' 'SUCCESS'
-pointer. What does the middle condition even mean? IS_ERR_OR_NULL()
-implies ERR and NULL are semanticly the same, so fix the things to
-always use ERR.
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
 
-If you want to improve things work to get rid of the NULL checks this
-script identifies. Remove ERR or NULL because only one can ever
-happen, or fix the source to consistently return ERR.
+Best,
+Juri
 
-Jason
