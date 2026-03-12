@@ -1,153 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE7734F481
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 17:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E720A358383
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 18:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773335970; cv=none; b=LItUj7R+gsd3vijLYABvyX3LOuEWz5Mrz85hOp77yBZXz+58hzMW+lHv58G1+PTF0xvtFHs0HFYQIwEV1PW5oi4SNCbIJsrxMys+deZhBGfPjXqjEHNeYYJDAdqj1X6Nfns+8REraRP5XBw9TrgvY85w2rfSuYg4ThaqTuAZz2g=
+	t=1773339628; cv=none; b=tt3S+GzheOzk9fYdzNeaMt2+eGBeKwA+lTXWccXTCvf2r/n+7GL6AXDXC67MuQSYSVYyC6gXDuf1H8zz184G9OOQX8ljBEGnAt06iCLZQdNBrlqypP6QneyUhgzJy+kloMhmUzokq6BFZcLVI5IGj9o9uxLGCvVl6bulamJZG08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773335970; c=relaxed/simple;
-	bh=0QaE6+eARLJliTc2HYtdCFEvfBfs4s8yC9Rpe6RkxzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=T9waL3pChRoqwADl95B5zZX2jn3sFzQ0eijPMAsjAP2SCjYjKAZe45oiwYri0drcLFBpp2A4PFh7YAGFNqtz4O6biJa3e0dHkIrsvDQ9YmzLhvMCytB26ZZOebcJEnG1DT0wQXX1Mpf7RWPMuJwIv9Wpxa3oPh07MzJvxffH3nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kaq1fkca; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1773339628; c=relaxed/simple;
+	bh=A+A+tratlevD3a3rMI2wmVXp/n07E7eNLHxYMsuqPio=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PtmZl+x7FvmLwtIb4mTrYGstXS69iX1qDTTlmlb7TW5Y/1RRGgVqNH3youQvWXAX902qpRCXsc/Jgzvyl0bU5iHaLbwYSLZtCFyrbfRVuZKjN/jSqgq88ydVnvMzRk03mE4O4aUXXa3stnaNqrAcEQfQwF7Kk1WwIyK5uOaiDOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ifNmJSim; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kaq1fkca"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773335968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rClnSez6Rd2Uvv6Rbu/vDMRHH/ocJVNEShhCFEl9Uew=;
-	b=Kaq1fkcamM+QywUVURiRVGqb81EkvtiQ7/uIHEWedYXWDkZDaEOgejNPmxPbK7DNUUWAdz
-	ntaQUrDuwUK+ChVei2B6jveLvhDMm7AGscvrYmFkaI+wg6p7u7wQE5gjUG+bkvcG+1EJod
-	C1eauvffeHMqqNZH5fM5LPY5La13zBc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-KL_PIp-gMo2IPduoGaW5og-1; Thu,
- 12 Mar 2026 13:19:25 -0400
-X-MC-Unique: KL_PIp-gMo2IPduoGaW5og-1
-X-Mimecast-MFC-AGG-ID: KL_PIp-gMo2IPduoGaW5og_1773335963
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ABF5E1800372;
-	Thu, 12 Mar 2026 17:19:22 +0000 (UTC)
-Received: from fedora (unknown [10.22.64.99])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2A09630002DA;
-	Thu, 12 Mar 2026 17:19:16 +0000 (UTC)
-Date: Thu, 12 Mar 2026 14:19:15 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>, "open list:TRACING" <linux-trace-kernel@vger.kernel.org>, 
-	acme@kernel.org, williams@redhat.com, gmonaco@redhat.com
-Subject: Re: [PATCH v3 1/4] tracing/preemptirq: Optimize
- preempt_disable/enable() tracepoint overhead
-Message-ID: <abLzS0T_wEt_SkL6@fedora>
-References: <20260311125021.197638-1-wander@redhat.com>
- <20260311125021.197638-2-wander@redhat.com>
- <20260311193503.GS606826@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ifNmJSim"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4852cf0318dso14173135e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 11:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773339623; x=1773944423; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dK9k5DTKgk7wxx2+4cg6YZWZrym/c7pdTbONfQY+9AY=;
+        b=ifNmJSimEe6j+RUMA9aOJsI+nsNfceRjlUCi13TX23Bh534+nRkC98dk5woVDms9qa
+         TqRo+KmojBZOjBgQl1SFfmd5MtT6cc/MjzLSH+cEVEKwtHhe5Ti1H3hPAYgt7WhE8Nav
+         Tkdi34Sr1U41nWaLcjG4RjfMpoK1QjMzbAAAR9ANSpO8ekAkVvohuM7sk6ulX2H07W43
+         aFRovYnfjipKQ6Ocw1L8t/vDzGeGYuQ8XsNm618qPAfZTyppryMooCRPl6j1JKrL0Xy3
+         LwLeI/FEq4Mzn2NXir5Wxa9ITKvnOklalKKlI9nUfXl/5jpf60xEPZQTMXaYazZ2J6qd
+         UdNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773339623; x=1773944423;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dK9k5DTKgk7wxx2+4cg6YZWZrym/c7pdTbONfQY+9AY=;
+        b=qKZZno4Nd2o+XmWIOJNf+0lWHWclNo5cGWuH5QxLjsUq7TY/1TBLQOGdY464UqPTK/
+         9UIG0EeK0G+fTpqqGI/r9Li0Lxx+BQnpfLSD0WQYgXYzEQ0n8TfTZzgKyGzVTD0P30R7
+         VAUhlkjdI8OM6xz1a2pCjAa6RLYbztPKXjtGOY6s1/x58QcS6Xe2VFMmpcHGTnx7N5dq
+         ehqYMAZNo6uRq7emf8agR1qz0z9ZiSptbfVzJ4Xmht41q6jiwq/bU8nLLZ2ZznJ1Na0X
+         1pL4cWLB74oxgLpIoJxlW5aorvmK9oezFDEnKjZPAksKFIdFU8r8x2Q9HvYnIILRdCQW
+         hs/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUazmy+6F4z80ZzjL3CL7WSlz4ejIzDSEnM6FKBOhwdOFWTRvF4yE6sU4pgQ8jBnjjctYDceinA01czKwEX7oxcEj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8fh0X0deX1VRfIoM4C7ZnMbbLWxgRrfjqS4jEfM2ShbMoCF8N
+	kfCw+QxWQbQrf6JozbXxU59nqnTnbuQ/EQihDgo96pxywxtvleIh7ilRNvi2K8j7fEcooIyCn3L
+	r7fndN73V9pUrPOOVScHfEw==
+X-Received: from wmcu23.prod.google.com ([2002:a7b:c057:0:b0:485:385e:a8c1])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600d:644a:20b0:485:3bb0:194 with SMTP id 5b1f17b1804b1-48556714b41mr3819805e9.35.1773339622932;
+ Thu, 12 Mar 2026 11:20:22 -0700 (PDT)
+Date: Thu, 12 Mar 2026 18:20:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20260311193503.GS606826@noisy.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: mvwIVsb00e4xPT_j7wiDAWkydssI3JChlkZvAp4KBlQ_1773335963
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
+Message-ID: <20260312182010.111013-1-vdonnefort@google.com>
+Subject: [PATCH] tracing: Generate undef symbols allowlist for simple_ring_buffer
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org
+Cc: rostedt@goodmis.org, arnd@arndb.de, nathan@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+	kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 11, 2026 at 08:35:03PM +0100, Peter Zijlstra wrote:
-> On Wed, Mar 11, 2026 at 09:50:15AM -0300, Wander Lairson Costa wrote:
-> 
-> > +extern void __trace_preempt_on(void);
-> > +extern void __trace_preempt_off(void);
-> > +
-> > +DECLARE_TRACEPOINT(preempt_enable);
-> > +DECLARE_TRACEPOINT(preempt_disable);
-> > +
-> > +#define __preempt_trace_enabled(type, val) \
-> > +	(tracepoint_enabled(preempt_##type) && preempt_count() == (val))
-> > +
-> > +static __always_inline void preempt_count_add(int val)
-> > +{
-> > +	__preempt_count_add(val);
-> > +
-> > +	if (__preempt_trace_enabled(disable, val))
-> > +		__trace_preempt_off();
-> > +}
-> > +
-> > +static __always_inline void preempt_count_sub(int val)
-> > +{
-> > +	if (__preempt_trace_enabled(enable, val))
-> > +		__trace_preempt_on();
-> > +
-> > +	__preempt_count_sub(val);
-> > +}
-> >  #else
-> >  #define preempt_count_add(val)	__preempt_count_add(val)
-> >  #define preempt_count_sub(val)	__preempt_count_sub(val)
-> >  #define preempt_count_dec_and_test() __preempt_count_dec_and_test()
-> >  #endif
-> >  
-> > +#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
-> > +#define preempt_count_dec_and_test() \
-> > +	({ preempt_count_sub(1); should_resched(0); })
-> > +#endif
-> 
-> Why!?!
-> 
-> Why can't you simply have:
-> 
-> static __always_inline bool preempt_count_dec_and_test(void)
-> {
-> 	if (__preempt_trace_enabled(enable, 1))
-> 		__trace_preempt_on();
-> 
-> 	return __preempt_count_dec_and_test();
-> }
+Compiler and tooling-generated symbols are difficult to maintain
+across all supported architectures. Make the allowlist more robust by
+replacing the harcoded list with a mechanism that automatically detects
+these symbols.
 
-Indeed it improved the generated code. Thanks a lot.
+This mechanism generates a C function designed to trigger common
+compiler-inserted symbols.
 
-> 
-> Also, given how !x86 architectures were just complaining about how
-> terrible their preempt_emable() is, I'm really not liking this much at
-> all.
-> 
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-I will look deeper in arm64 and riscv generated code. If there are other
-specific architectures that concerns you, please let me know.
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index beb15936829d..3b427b76434a 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -136,17 +136,37 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+ # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+ # to all kernel symbols. Fail the build if forbidden symbols are found.
+ #
+-UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+-UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
+-UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+-UNDEFINED_ALLOWLIST += ftrace_likely_update __hwasan_load __hwasan_store __hwasan_tag_memory
+-UNDEFINED_ALLOWLIST += warn_bogus_irq_restore __stack_chk_guard
+-UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
++# undefsyms_base generates a set of compiler and tooling-generated symbols that can
++# safely be ignored for simple_ring_buffer.
++#
++$(obj)/undefsyms_base.c: FORCE
++	$(Q)echo '#include <asm/page.h>' > $@
++	$(Q)echo '#include <asm/local.h>' >> $@
++	$(Q)echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);' >> $@
++	$(Q)echo 'void undefsyms_base(int n);' >> $@
++	$(Q)echo 'void undefsyms_base(int n) {' >> $@
++	$(Q)echo '	char buffer[256] = { 0 };' >> $@
++	$(Q)echo '	u32 u = 0;' >> $@
++	$(Q)echo '	memset((char * volatile)page, 8, PAGE_SIZE);' >> $@
++	$(Q)echo '	memset((char * volatile)buffer, 8, sizeof(buffer));' >> $@
++	$(Q)echo '	cmpxchg((u32 * volatile)&u, 0, 8);' >> $@
++	$(Q)echo '	WARN_ON(n == 0xdeadbeef);' >> $@
++	$(Q)echo '}' >> $@
++
++clean-files += undefsyms_base.c
++targets += undefsyms_base.c
++
++$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
++
++extra-y += undefsyms_base.o
++
++UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sanitizer __tsan __ubsan __x86_indirect_thunk \
++		       $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+ 
+ quiet_cmd_check_undefined = NM      $<
+-      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
++      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(addprefix -e ,$(UNDEFINED_ALLOWLIST))`"
+ 
+-$(obj)/%.o.checked: $(obj)/%.o FORCE
++$(obj)/%.o.checked: $(obj)/%.o $(obj)/undefsyms_base.o FORCE
+ 	$(call if_changed,check_undefined)
+ 
+ always-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o.checked
 
-> Currently the x86 preempt_disable() is _1_ instruction and
-> preempt_enable() is all of 3. Adding in these tracepoints will bloat
-> every single such site by at least another 4-5.
-> 
-
-Yes, there is a tradeoff. As I said before, I am looking at the hot path
-(tracepoint no activated). Furthermore, when CONFIG_TRACE_PREEMPT_TOGGLE
-and CONFIG_TRACE_IRQFLAGS_TOGGLE are off (default config), the code
-generated is the same, byte by byte, of the stock kernel.
-
-> That's significant bloat, for really very little gain. Realistically
-> nobody is going to need these.
-> 
-
-Of course, I can't speak for others, but more than once I debugged issues
-that those tracepoints had made my life far easier. Those cases convinced
-me that such a feature would be worth it. But if you don't see
-value and will reject the patches no matter what, nothing can be done,
-and I will have to accept defeat.
+base-commit: 33f2e266515717c4b2df585dadefa0525557726c
+-- 
+2.53.0.851.ga537e3e6e9-goog
 
