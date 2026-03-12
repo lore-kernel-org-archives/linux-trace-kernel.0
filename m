@@ -1,113 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C199A3FCB0C;
-	Thu, 12 Mar 2026 16:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B40838D690;
+	Thu, 12 Mar 2026 16:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773334242; cv=none; b=BW9HjGml4zmPstx44XU1zalKwHNSox7vryNonVfzW7FzOF7a7HKchXkduvzj1b3YN19TYsO9bX0Haq7cM6HFySfSaH4MCSYi6tZ8X8Yw2YMGq07MTtJK2qp9DaCAYai46WMUmU/YbPTM7PjLA7D5TuXgeyvKjZmmwajur3KCx5c=
+	t=1773334445; cv=none; b=szpi/XD+zef2mmKPIilGeB/Vf4eTZumB0RnLv64LZapuL6Z9BdJZc3oLJRRQ643C8e42I0/Dt/XMJjVb06ObTW6rzIiSWHz8XG9yoHF/eW5h0GdP3fEcCo4nUA0yaBAVjWbQgbeKazR4+wN6YdxOBGxMF0JJ7p3Hf/RpPe/fzK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773334242; c=relaxed/simple;
-	bh=I7ohnXz5SQWGkR4iqkJFGqlNZU7QTgaFdwYwVFc0xzE=;
+	s=arc-20240116; t=1773334445; c=relaxed/simple;
+	bh=kQIwU0xGOMg0VyvdqXQPa+t6rrBcO2v4iR9O/5na1Jc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrBxEy4YJXrlv4mJnK4/9dvxANnE/wa6QJAi9q4s3b/MQwjJzVSnbwgzCKjxtfvqgtL5Pa0NpBSxwepdxtpkDVC6jrzMnZzrVHpsW50n2PtW3DE9+s+aG28+syTOVE0HDuyTTIPMZdIExgfmEyh2nAJmIepSmSYcF3SFIKJl4kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/Ncuhpr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jH4lMxto9qXgXz5r1jANlI8mmB8ZVVU7FVwPmWQmozPgSpZS8Py+TsX2cuWJgvHUonFZrVuaUyQ8nVM1/CQ/LYkJjLX55ou1HaS6Wi8MHQAjdw2owQk5ihD1RyVMhHmoVHvx54UDej2vCDWcXxVfwa1OpdaeN77Ix4KwgSDBIkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQHEQG8f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/Ncuhpr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70359C2BC87;
-	Thu, 12 Mar 2026 16:50:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQHEQG8f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5735AC4CEF7;
+	Thu, 12 Mar 2026 16:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773334242;
-	bh=I7ohnXz5SQWGkR4iqkJFGqlNZU7QTgaFdwYwVFc0xzE=;
+	s=k20201202; t=1773334445;
+	bh=kQIwU0xGOMg0VyvdqXQPa+t6rrBcO2v4iR9O/5na1Jc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X/Ncuhprz30y2xAin6UFvnTvzocNQuIqes6ui7gpDr2Q7sh24Z5OkTNZJtridjidu
-	 qHJA5XMMmx34FwJfNQTd9eWNuC/TsCnuMW0QQw2WMFgajgUTOtCfMLOlkV7P3EYHhH
-	 Nx4YTBgI13YFouzZbuB9ZuPbGPAZ2nHx5tpawOo/y4xbwSwX4qBFaw+N1s+ukFqidC
-	 0py6Mr7JAg2AnYENLQ57jutZWMr2iGKWHhZqFgi67nenSrz73gVlv8Eod4sKTgKCrr
-	 cy/u7fNxZj8vYe+9tPI3ClTIVdvGPi/HMv2yRFXiddhyGIhxb0pVk4KDsI95EkyaWL
-	 rkkqouFhYoZ0w==
-Date: Thu, 12 Mar 2026 18:50:38 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 8/8] mm/hmm: Indicate that HMM requires DMA coherency
-Message-ID: <20260312165038.GB12611@unreal>
-References: <20260311-dma-debug-overlap-v2-0-e00bc2ca346d@nvidia.com>
- <20260311-dma-debug-overlap-v2-8-e00bc2ca346d@nvidia.com>
- <20260312122645.GG1469476@ziepe.ca>
+	b=qQHEQG8fu/7FiG+qTv9g/Bg5AKFFnFgYIawaAUHfGlY67YyxJOJXzl7ByzIp8BNs1
+	 MZg2g+bv3NCxeO3P7hb5f8BjYK4vhW54LFIG5Jb9Wc0IIw+/AGIhSVhrXhtsAVS2Z7
+	 5rRcl0ng99wsrmeVHMIsAmzj93URvL3Ni/nKjkxaFSrlXCXPVT4uIfmawWa2D21okb
+	 9s1NXxP5aFyTnBk+fVgknOy9gvtCxeig3erhE30+ve3VogSjzVAWCCXfghUHDGFSqN
+	 UezcWr+AeGC8BryFSIBBOxeEqSY11+92DBx0KdsrDoGminltftk8yeezn6WgitnobY
+	 E98EZoXd0BI4g==
+Date: Thu, 12 Mar 2026 16:54:00 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/15] spi: Use trace_invoke_##name() at guarded
+ tracepoint call sites
+Message-ID: <06438818-2e3e-426f-aec5-ea6344e4b057@sirena.org.uk>
+References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
+ <20260312150523.2054552-14-vineeth@bitbyteword.org>
+ <5d057b07-be5a-4da6-86e3-87ef4319d4b2@sirena.org.uk>
+ <20260312114254.6467c03d@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wM0qBj2BElCyqJPv"
+Content-Disposition: inline
+In-Reply-To: <20260312114254.6467c03d@gandalf.local.home>
+X-Cookie: I feel better about world problems now!
+
+
+--wM0qBj2BElCyqJPv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260312122645.GG1469476@ziepe.ca>
 
-On Thu, Mar 12, 2026 at 09:26:45AM -0300, Jason Gunthorpe wrote:
-> On Wed, Mar 11, 2026 at 09:08:51PM +0200, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > HMM mirroring can work on coherent systems without SWIOTLB path only.
-> > Until introduction of DMA_ATTR_REQUIRE_COHERENT, there was no reliable
-> > way to indicate that and various approximation was done:
-> 
-> HMM is fundamentally about allowing a sophisticated device to
-> independently DMA to a process's memory concurrently with the CPU
-> accessing the same memory. It is similar to SVA but does not rely on
-> IOMMU support. Since the entire use model is concurrent access to the
-> same memory it becomes fatally broken as a uAPI if SWIOTLB is
-> replacing the memory, or the CPU caches are incoherent with DMA.
-> 
-> Till now there was no reliable way to indicate that and various
-> approximation was done:
-> 
-> > int hmm_dma_map_alloc(struct device *dev, struct hmm_dma_map *map,
-> >                       size_t nr_entries, size_t dma_entry_size)
-> > {
-> > <...>
-> >         /*
-> >          * The HMM API violates our normal DMA buffer ownership rules and can't
-> >          * transfer buffer ownership.  The dma_addressing_limited() check is a
-> >          * best approximation to ensure no swiotlb buffering happens.
-> >          */
-> >         dma_need_sync = !dev->dma_skip_sync;
-> >         if (dma_need_sync || dma_addressing_limited(dev))
-> >                 return -EOPNOTSUPP;
-> 
-> Can it get dropped now then?
+On Thu, Mar 12, 2026 at 11:42:54AM -0400, Steven Rostedt wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
-Better not, it allows us to reject caller much earlier than DMA mapping
-flow. It is much saner to fail during UMEM ODP creation than start to
-fail for ODP pagefaults.
+> > though not loving the naming here, I'll have a hard time figuring out
+> > what the weird call is about next time I look at that code
 
-> 
-> > So let's mark mapped buffers with DMA_ATTR_REQUIRE_COHERENT attribute
-> > to prevent DMA debugging warnings for cache overlapped entries.
-> 
-> Well, that isn't the main motivation, this prevents silent data
-> corruption if someone tries to use hmm in a system with swiotlb or
-> incoherent DMA,
-> 
-> Looks OK otherwise
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> Jason
-> 
+> Would:
+
+> 	trace_call__foo()
+
+> Be better?
+
+> Or do you have another name we should use?
+
+Possibly an _unchecked or something?  Honestly the suggestion someone
+had for _do seemed OK to me.  Part of it is that I wouldn't think of
+tracepoints as being something that I'd call.
+
+--wM0qBj2BElCyqJPv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmmy76cACgkQJNaLcl1U
+h9DP9wf/bK6/IDwtMQblrcTIfF70GfHZ9wpy3+AJRCH98VbSYgIG08mrTuG5WZjG
+7WZ6XMedgcGux8cU1L1aX38BuljaO513iBa6fT4GObUmBT21VtgDEGFfZ/Nj3OuI
+sUZN7dacugzMKvd0NgMbHcbLIVjXKWUFaMUg2ATexn/oYiukM3Scq+D71/DnpoNQ
+FYPHvtNjNeUyUOcCGZILmsuhqsi6JLDf7wOVihbR7nKI9aIoSYdadSMQy6+CK/3Y
+KO5KwqpnyKDyXQEbT4xTJ8S0qLaEvVW1zt+rQ7NBfLnqsPGhhuLwKPojI7UiKJlh
+uCsT7ixclUu36z3qRPSvMxgDQKxxmw==
+=++4k
+-----END PGP SIGNATURE-----
+
+--wM0qBj2BElCyqJPv--
