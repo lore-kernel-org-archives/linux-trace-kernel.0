@@ -1,100 +1,252 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D043D0921;
-	Thu, 12 Mar 2026 23:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8413D9DAF;
+	Thu, 12 Mar 2026 23:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773358733; cv=none; b=gNc7QzVANDcghrzlXK9ogXcKcIQ4CL6h7lL1fp0b6P+dcjGMjADiI7+bw02kwq92U/AkKRPyEnI4UpvBO+z+SxSt78lul8514e8qJlo4fkaKvStQDIukEwckiRrBT5SuQmTAxG7XRL5oL0w/6h7m2iV9zXK2XuM1n9lV3/LwIVg=
+	t=1773359518; cv=none; b=fNk1DU3h9ZSUpFEgu4EgQaXIwht5hupHpqskzyjeN00MnCbgYHsjTqseHBsQMwpLLym2HEEo/zIhFORLD9MnNMwQftc3ZubXKXwlNZ4eUwTGAfotsRJW1gBZHISW22T+D8ZLrEnx0btLMLYVtC09QK15TzQns3CpAAwrzxxG6B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773358733; c=relaxed/simple;
-	bh=PjQnm7PdIi0z/ruBJQNhneZVuQrhBMEPnKL7b5RdF4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mHOn912MrD9Mv4A7skBR0PKUAd2YQONvoGuwmegZk+aLI9xDD64Nugvzp0iJt4bxlkIkoSwd5wWoP6lhbKURLpIEvFTAfF8iFVn0f6tUGppkidhOO0VZp2fruKxRiTKt/8m8dYiPUK2EujsuU6cB8wBkEbJ+7EAzu6l1zAKT4i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 75BA61A0463;
-	Thu, 12 Mar 2026 23:38:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 437DE20024;
-	Thu, 12 Mar 2026 23:38:32 +0000 (UTC)
-Date: Thu, 12 Mar 2026 19:38:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: NeilBrown <neilb@ownmail.net>
-Cc: NeilBrown <neil@brown.name>, Linus Torvalds
- <torvalds@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jeff
- Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Carlos Maiolino <cem@kernel.org>, Miklos
- Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Jan
- Harkes <jaharkes@cs.cmu.edu>, Hugh Dickins <hughd@google.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Steve French <sfrench@samba.org>, Namjae
- Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
- Yuezhang Mo <yuezhang.mo@sony.com>, Andreas Hindborg
- <a.hindborg@kernel.org>, Breno Leitao <leitao@debian.org>, "Theodore Ts'o"
- <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Masami
- Hiramatsu <mhiramat@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, Alex
- Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
- Tyler Hicks <code@tyhicks.com>, Andreas Gruenbacher <agruenba@redhat.com>,
- Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel
- <ardb@kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, coda@cs.cmu.edu, linux-mm@kvack.org,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
- ecryptfs@vger.kernel.org, gfs2@lists.linux.dev,
- linux-um@lists.infradead.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH RFC 00/53] lift lookup out of exclive lock for dir ops
-Message-ID: <20260312193847.28c32a2c@gandalf.local.home>
-In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
-References: <20260312214330.3885211-1-neilb@ownmail.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1773359518; c=relaxed/simple;
+	bh=qD/7CdUR0FWQsy1MPlTTxVBHiQ9FN1ndBxO1HK0Fr3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfcfSCj1UhOujdFWMiz4WxlK8uTa/cFmu39kBKV16EhdrhfTyM5b6v6hufoLxaPG5Z4+ZcJ+iPNaINn8CnGan9MPaXXV60zPPyZ/mxwPrefK6/gwpfkz5XvA0aAhhK76UsZgQByZN0tfztX+MZopv0FffVratixXAm7cVDm6DQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZNspkYo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZNspkYo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C61CC4CEF7;
+	Thu, 12 Mar 2026 23:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773359517;
+	bh=qD/7CdUR0FWQsy1MPlTTxVBHiQ9FN1ndBxO1HK0Fr3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UZNspkYoKLw42etkuga7S8rATF+lLguXC6ojsSBBDb7AiOYPywY2WrZZELLNLK3cR
+	 /h4I4hFjhAb/UxzqOG7/2xC7OQM6O59c3PyIEWUU2qvYpc5L8xWeTj/hiywgG9xISD
+	 /nqtFoA0no+2aN12rv+vIj3SneQQ7F159NWyl1dtdj1M/FdxUwQJOFFVJp22NV2Lxd
+	 r5BDMhsilc/woqZa02OEzGTEiuiGBfJFo9g1ha945FZwNKa1wWt2oTvYMefHI/kXNW
+	 8bQHdHrVdmEq2VzG2XpoMX2t8pEjzpx2Pt0geuU2ygArByrT1NSBlGWLk90diJCo5M
+	 mJqL7A9jzz3hw==
+Date: Thu, 12 Mar 2026 16:51:53 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, rostedt@goodmis.org, arnd@arndb.de,
+	linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	kernel-team@android.com
+Subject: Re: [PATCH] tracing: Generate undef symbols allowlist for
+ simple_ring_buffer
+Message-ID: <20260312235153.GA1147071@ax162>
+References: <20260312182010.111013-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uw6f48jbt5c7m69ogen7zm3qrgdgnged
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 437DE20024
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX188/YrC5TApof6JUD5+VNztl2shXsvgY5o=
-X-HE-Tag: 1773358712-902307
-X-HE-Meta: U2FsdGVkX1+OxQ2+Isx7vF4UixzzITSWoLGanhQdmOUQzHc1ErHaC2HhfFr20UjnVfuApzdY0CnNI9X2EzaFzoxWkp+inh8h89+ue9tsCje/WXI2p8TViZKD1rgZ9aRmWPzAaOFt9AR3SlccruGvmKX1nd3X2qcHF/Qj4v2Ic2F2kBtdL+HvK1KWscULRrzA7ZXclvIVR+DpEPprYwt/KKB72qtNEyxLFZN/ZdoFOmgI0OmUW9WSqFmPDtGp6NNUkGL68vmGr0d1dJsWkcANTfDGT58FCBs3Q3TWI/CNur9ihaDpBPfKeDQH86AL8k3ONIIfeCwhZyBEr7FfTAOuyi2fOWNNYZopJrxvZi0zu3x2dKf/Woo8mIogKoo/MSw6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260312182010.111013-1-vdonnefort@google.com>
 
-On Fri, 13 Mar 2026 08:11:47 +1100
-NeilBrown <neilb@ownmail.net> wrote:
+Hi Vincent,
 
-> *[PATCH 26/53] smb/client: don't unhashed and rehash to prevent new
-> *[PATCH 27/53] smb/client: use d_splice_alias() in atomic_open
->  [PATCH 28/53] smb/client: Use d_alloc_noblock() in
-> *[PATCH 29/53] exfat: simplify exfat_lookup()
-> *[PATCH 30/53] configfs: remove d_add() calls before
->  [PATCH 31/53] configfs: stop using d_add().
-> *[PATCH 32/53] ext4: move dcache modifying code out of __ext4_link()
-> *[PATCH 33/53] ext4: use on-stack dentries in
+On Thu, Mar 12, 2026 at 06:20:10PM +0000, Vincent Donnefort wrote:
+> Compiler and tooling-generated symbols are difficult to maintain
+> across all supported architectures. Make the allowlist more robust by
+> replacing the harcoded list with a mechanism that automatically detects
+> these symbols.
+> 
+> This mechanism generates a C function designed to trigger common
+> compiler-inserted symbols.
 
->  [PATCH 34/53] tracefs: stop using d_add().
+This certainly seems more robust.
 
-Hmm, another reason I hate being Cc'd on every patch of a patch bomb where
-I only need to look at one (and maybe the first) patch.
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index beb15936829d..3b427b76434a 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -136,17 +136,37 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+>  # simple_ring_buffer is used by the pKVM hypervisor which does not have access
+>  # to all kernel symbols. Fail the build if forbidden symbols are found.
+>  #
+> -UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
+> -UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+> -UNDEFINED_ALLOWLIST += ftrace_likely_update __hwasan_load __hwasan_store __hwasan_tag_memory
+> -UNDEFINED_ALLOWLIST += warn_bogus_irq_restore __stack_chk_guard
+> -UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+> +# undefsyms_base generates a set of compiler and tooling-generated symbols that can
+> +# safely be ignored for simple_ring_buffer.
+> +#
+> +$(obj)/undefsyms_base.c: FORCE
+> +	$(Q)echo '#include <asm/page.h>' > $@
+> +	$(Q)echo '#include <asm/local.h>' >> $@
+> +	$(Q)echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);' >> $@
+> +	$(Q)echo 'void undefsyms_base(int n);' >> $@
+> +	$(Q)echo 'void undefsyms_base(int n) {' >> $@
+> +	$(Q)echo '	char buffer[256] = { 0 };' >> $@
+> +	$(Q)echo '	u32 u = 0;' >> $@
+> +	$(Q)echo '	memset((char * volatile)page, 8, PAGE_SIZE);' >> $@
+> +	$(Q)echo '	memset((char * volatile)buffer, 8, sizeof(buffer));' >> $@
+> +	$(Q)echo '	cmpxchg((u32 * volatile)&u, 0, 8);' >> $@
+> +	$(Q)echo '	WARN_ON(n == 0xdeadbeef);' >> $@
+> +	$(Q)echo '}' >> $@
 
-For some reason, I'm missing several patches, and this is one of them :-p
+This should use filechk, otherwise undefsyms_base.c will be regenerated
+every build, resulting in undefsyms_base.o being rebuilt every time.
 
--- Steve
+  $ make -skj"$(nproc)" ARCH=x86_64 mrproper allmodconfig kernel/trace/
 
+  $ make -skj"$(nproc)" ARCH=x86_64 V=2 kernel/trace/
+  ...
+    CC      kernel/trace/undefsyms_base.o - due to: kernel/trace/undefsyms_base.c
+    NM      kernel/trace/simple_ring_buffer.o - due to target missing
 
->  [PATCH 35/53] cephfs: stop using d_add().
-> *[PATCH 36/53] cephfs: remove d_alloc from CEPH_MDS_OP_LOOKUPNAME
->  [PATCH 37/53] cephfs: Use d_alloc_noblock() in
->  [PATCH 38/53] cephfs: Don't d_drop() before d_splice_alias()
->  [PATCH 39/53] ecryptfs: stop using d_add().
->  [PATCH 40/53] gfs2: stop using d_add().
+filechk_undefsyms_base = {                                              \
+	echo '$(pound)include <asm/page.h>';                            \
+	echo '$(pound)include <asm/local.h>';                           \
+	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);';       \
+	echo 'void undefsyms_base(int n);';                             \
+	echo 'void undefsyms_base(int n) {';                            \
+	echo '	char buffer[256] = { 0 };';                             \
+	echo '	u32 u = 0;';                                            \
+	echo '	memset((char * volatile)page, 8, PAGE_SIZE);';          \
+	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));';   \
+	echo '	cmpxchg((u32 * volatile)&u, 0, 8);';                    \
+	echo '	WARN_ON(n == 0xdeadbeef);';                             \
+	echo '}';                                                       \
+	}
+
+$(obj)/undefsyms_base.c: FORCE
+	$(call filechk,undefsyms_base)
+
+  $ make -skj"$(nproc)" ARCH=x86_64 mrproper allmodconfig kernel/trace/
+
+  $ make -skj"$(nproc)" ARCH=x86_64 V=2 kernel/trace/
+    GEN     Makefile - due to target is PHONY
+    DESCEND objtool
+    CALL    scripts/checksyscalls.sh - due to target is PHONY
+    INSTALL libsubcmd_headers
+    NM      kernel/trace/simple_ring_buffer.o - due to target missing
+
+> +clean-files += undefsyms_base.c
+> +targets += undefsyms_base.c
+
+I don't think this targets addition is necessary.
+
+> +$(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+> +
+> +extra-y += undefsyms_base.o
+
+I think this should be
+
+  targets += undefsyms_base.o
+
+as extra-y is deprecated per Documentation/kbuild/makefiles.rst.
+
+> +UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sanitizer __tsan __ubsan __x86_indirect_thunk \
+> +		       $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+
+With an allmodconfig + ThinLTO build, I still see:
+
+  $ cat allmod.config
+  CONFIG_GCOV_KERNEL=n
+  CONFIG_KASAN=n
+  CONFIG_LTO_CLANG_THIN=y
+
+  $ make -skj"$(nproc)" ARCH=x86_64 KCONFIG_ALLCONFIG=1 LLVM=1 mrproper allmodconfig kernel/trace/
+  Unexpected symbols in kernel/trace/simple_ring_buffer.o:
+                   U __fortify_panic
+                   U __write_overflow_field
+                   U simple_ring_buffer_commit
+                   U simple_ring_buffer_enable_tracing
+                   U simple_ring_buffer_init
+                   U simple_ring_buffer_reserve
+                   U simple_ring_buffer_reset
+                   U simple_ring_buffer_swap_reader_page
+                   U simple_ring_buffer_unload
+
+Something like:
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 48c415a0c7e4..0f9a6ce9abd9 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -142,13 +142,15 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+ filechk_undefsyms_base = {                                              \
+ 	echo '$(pound)include <asm/page.h>';                            \
+ 	echo '$(pound)include <asm/local.h>';                           \
++	echo '$(pound)include <linux/string.h>';                        \
+ 	echo 'static char page[PAGE_SIZE] __aligned(PAGE_SIZE);';       \
+-	echo 'void undefsyms_base(int n);';                             \
+-	echo 'void undefsyms_base(int n) {';                            \
++	echo 'void undefsyms_base(int n, void *ptr);';                  \
++	echo 'void undefsyms_base(int n, void *ptr) {';                 \
+ 	echo '	char buffer[256] = { 0 };';                             \
+ 	echo '	u32 u = 0;';                                            \
+ 	echo '	memset((char * volatile)page, 8, PAGE_SIZE);';          \
+ 	echo '	memset((char * volatile)buffer, 8, sizeof(buffer));';   \
++	echo '	memcpy((void* volatile)ptr, buffer, sizeof(buffer));';  \
+ 	echo '	cmpxchg((u32 * volatile)&u, 0, 8);';                    \
+ 	echo '	WARN_ON(n == 0xdeadbeef);';                             \
+ 	echo '}';                                                       \
+--
+
+cures the first two. The simple_ring_buffer symbols are very odd...
+
+  $ llvm-nm kernel/trace/simple_ring_buffer.o | grep simple_ring_buffer
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_commit_845
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_enable_tracing_849
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_init_847
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_reserve_841
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_reset_846
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_swap_reader_page_837
+  ---------------- d __UNIQUE_ID_addressable_simple_ring_buffer_unload_848
+  ---------------- t __export_symbol_simple_ring_buffer_commit
+  ---------------- t __export_symbol_simple_ring_buffer_enable_tracing
+  ---------------- t __export_symbol_simple_ring_buffer_init
+  ---------------- t __export_symbol_simple_ring_buffer_reserve
+  ---------------- t __export_symbol_simple_ring_buffer_reset
+  ---------------- t __export_symbol_simple_ring_buffer_swap_reader_page
+  ---------------- t __export_symbol_simple_ring_buffer_unload
+  ---------------- T simple_ring_buffer_commit
+                   U simple_ring_buffer_commit
+  ---------------- T simple_ring_buffer_enable_tracing
+                   U simple_ring_buffer_enable_tracing
+                   U simple_ring_buffer_init
+  ---------------- T simple_ring_buffer_init
+  ---------------- T simple_ring_buffer_init_mm
+  ---------------- T simple_ring_buffer_reserve
+                   U simple_ring_buffer_reserve
+  ---------------- T simple_ring_buffer_reset
+                   U simple_ring_buffer_reset
+                   U simple_ring_buffer_swap_reader_page
+  ---------------- T simple_ring_buffer_swap_reader_page
+                   U simple_ring_buffer_unload
+  ---------------- T simple_ring_buffer_unload
+  ---------------- T simple_ring_buffer_unload_mm
+
+This is LLVM IR bitcode at this stage, which could be messing things up.
+
+  $ file kernel/trace/simple_ring_buffer.o
+  kernel/trace/simple_ring_buffer.o: LLVM IR bitcode
+
+Maybe not worth thinking about too much and just adding it to the
+allowlist manually?
+
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 0f9a6ce9abd9..cb1ec50a8386 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -166,6 +166,7 @@ $(obj)/undefsyms_base.o: $(obj)/undefsyms_base.c
+ targets += undefsyms_base.o
+ 
+ UNDEFINED_ALLOWLIST = __asan __gcov __kasan __kcsan __hwasan __sanitizer __tsan __ubsan __x86_indirect_thunk \
++		       simple_ring_buffer \
+ 		       $(shell $(NM) -u $(obj)/undefsyms_base.o 2>/dev/null | awk '{print $$2}')
+ 
+ quiet_cmd_check_undefined = NM      $<
+--
+
+Cheers,
+Nathan
