@@ -1,69 +1,68 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FACF1E8332
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 12:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6051DE2B4
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 12:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773318062; cv=none; b=UIwqSK6N0tgAC4i6+LwrIofpXSHPnsOQukrlOezZncBdgiDR1i7mh+nWilufoXUgSF3g6TdCocY7xOklU7+Oh+pZGazv3WwmWqur+cDwndaUhocukY8Kfk8BR0oF2T3wctsnDlm8btS/FDzAFk3iGBc6KyfmOfLAdtj/L2BcUfg=
+	t=1773318142; cv=none; b=R1Le7mmjAk7CGz1xAMfaR1KZuRGHrWdm5fjwAlw3r7Haavfa+eTSAwUhRSZr3xj9+UEJqQlLHffhpPq2aIDpwEhQFXhfuiQJtuvtUKl5Ik1Z6OkWFtWhKCRUm4P9Mz/RsA6QwgvToEdDK4WRP04Cy7sV0OPFXFQOcHAxVGTHkd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773318062; c=relaxed/simple;
-	bh=ykZqC/Mt6PvknDhYlKuIL2nlRrianZMm9PtDxixDlPU=;
+	s=arc-20240116; t=1773318142; c=relaxed/simple;
+	bh=CIqUqdezJUt7fx005uAPCwnbutghZRMPmBs/ZUdJIEQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MLbBKj4V3OtzpfhxTqChaBnPq+45JeR/o11acDnAHqsif5B+y+U6/xzd3B8kWgiZazp2mztS+MYbU2LyYRcbcipFOfoFru3SlH1iaX27XcBMZKqMhoyFqW+dRgISd/AUHmJgnFFWWCuNjfXmnMkAvawIpLIaPH4INCCj/Yc/8IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=lf57U9if; arc=none smtp.client-ip=209.85.160.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=XLGuBU7DF/C3bkI9fch/nkVGwpjT+LStKxvYLRRQDxWYWElwa1RyHUd/cF7EXqYkSQJSllrH/If4JkHJhMvttYDgBqz4gJ1w6zXhZWpOTlqEIpH4Y9q2rVIoxtDUmLe4SvM3/K8LkNn5TBQjjDLbAJbTMxFNSjHFBgKz6QwjZwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MwlYBpil; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lf57U9if"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-50905b779dfso10914241cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 05:21:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MwlYBpil"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-899fc265126so11256846d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 05:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1773318060; x=1773922860; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1773318140; x=1773922940; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y5rN+Dnt+nngZKc/HxpCY0GaFz9G0vHdC78c5bVshyI=;
-        b=lf57U9ifEBLyWexzvIhO+XWU98aspeK4epPDkVo+bdUc3uTnRHFJOzAQFqtZnirpvL
-         k8WeXlvvSI8u+12g+H+RomdTCxvAsh3kAn5N2BjPPi8vq94s6Oz20FKmexletPuH9CDd
-         kY6PAL0+tgqYeVJyO+vItC60qEHK3ThnYf/UD0MFEEj1sd/5cHAqC+CRrRhfsPUeevgk
-         NA9hIOWisR9ITVunmGpPNJjiTOXkD9H2lvwvenW8CHns6evMimwcZUGyabHMruJwxAaz
-         pcI1HmQBIrJQjeuMNGr7o3dWdYRxf7UmUrzRdYCqQcdIWMOebcd7mYF5Bal6OCbsQR4Y
-         5nHg==
+        bh=TimmS2+Pbosg7L15RHI5hJFu+i/J4kMKaqKEQ2F4CiA=;
+        b=MwlYBpilCBpxEAvq6qqNanb0ptmdzz/WPEGMB0vpfqBd97XzKUsrUnv6AYlPg547Eo
+         6wLkvsZx+gLApph423a9TXB/+qJj4L8RbgHwBsQ7ki3ySBoKisz+BfrSxlmyAhFxy1y7
+         MkoD3Zwq6jRtuC2LgwELoHu20730d8eIGQPPZBGtpJ11c9qVOkOPeNFUQSbo7Vwjp8uF
+         yCxSaiPoQH0VpSLcKwuYk4X3wC3c2l3S83qe1WRTb08h0Fcs4pkaV89NmNFgp5AeuIx2
+         YWXNeeCZbTNZgccWYyu+7hsdZ+UuxucjYfmgOLItAUYNww4ITvwix94L4gHlXgX7eYMj
+         bIHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773318060; x=1773922860;
+        d=1e100.net; s=20230601; t=1773318140; x=1773922940;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y5rN+Dnt+nngZKc/HxpCY0GaFz9G0vHdC78c5bVshyI=;
-        b=mCGJSAhzG0BeeU4Yxvl2aeATwTT0C88j/rNn6JjTilRCyl+hFULtk7ScP+TD8t014f
-         O779m05m2uia/Q1jJrKm9/grBL/Y8zz8TxVOrC2b/3AibyIGfoRZuCtcnqP6FWRb/XxQ
-         hEB8F4d1f5NGz1+0hlh5p8843+6PbK8+TXzlcpcYC9pbHIANTSTnQ3nq7lBWbGjANjAF
-         CU4AHc3JlwsFl88nC4+WyYxyyZGnIK8IN6ioKLn+b2AHzb5vpMcOVt0UEoruVu3N83oN
-         goxzK/umpQO2SoCk384Qh8kX42MfHwR99K610RUEofWFnOmUXp6qF4YqV3Y/iSFyyc3I
-         XEqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgpJgCRpWqLV9ladr9n65Bcouo4dMkySzBaZZPtchpnIn2d8v4eITRNIOMfocVp8deY30wnyA3izH3aHhOG1PF2FY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjIyYTtoSvzoQfCw2rwAJ9Gnq7pkfCAVskRLCLYvB79yfQbHty
-	CpZrCdwFSquxjEOSvwoTEvUvTNC0rAUHyKOtbJ/dfsTsprhatRl28BMVQFvgMoVu/tipEO12e9v
-	DQQCk
-X-Gm-Gg: ATEYQzz34OFDErdEn7cKO8MVjuVZLn1suyAULIwJGYCosi3K6ty3CRRtZJIOMVWSOiu
-	o6zMUquutSlSLOmobzYC3AA0k8ZkI2BXihi4JQo56Ufxf1sJlAkZjzgh7nuH1Ow9bTN/Yz34Fdr
-	bYjynQqB4WvSSaKAOQn2GhV3nwsc6DXOT3cvqRpeSbfo8o1AfosmlEtk7YJNt32s098ES/PAVs8
-	VTPE2nv8IMegFWwPIisZS38XFR2iv0p0rhCwIk2sPO++nFhXd5TPLe8JLTmhOiTMohNgBtK32rR
-	rsXJ1r93akvMuz2VpJhoF3KuWU0lLex9NeffYhxHpli98riEfd5/5o9ECOXrEJi/66PiWxzrx4p
-	OofxmB2o8BE5l1X/v6GvPjw6X3vSqJEMvWzJB47jDJY81zIhFHM1id+NzRDENlHfuv0JQ638w4u
-	1P118S/Dg21HPGUE2oBTQagkVdJwTOoI4V9DZDVTu6U5UyEna5251/fHbD0FQqjGaDWfgsujnHO
-	PF9CLLE0YqCHZ/i+44=
-X-Received: by 2002:a05:622a:11c1:b0:509:4410:4492 with SMTP id d75a77b69052e-50944104900mr62025551cf.22.1773318060513;
-        Thu, 12 Mar 2026 05:21:00 -0700 (PDT)
+        bh=TimmS2+Pbosg7L15RHI5hJFu+i/J4kMKaqKEQ2F4CiA=;
+        b=TxSTmOUuniIw1EQE1nZ59kE5xLiCheyYgGBKIt27RYo1s9C/FD4Hn/oPTJ0/UkI3oU
+         J7IZsMdwpYNrSFCN5/Fum0ExeXM5Ii8Xr8h7o29M8hMeIp0/7ADLZ9IJ5yOryLpulqUF
+         VILq5HQpecLtIlEfdAgLxG1ylYW6mmL9IbDs9tNg5lYJoFg4MU4oapBrL2x1fwx8XEK2
+         WT+ZBl1g13R6o7BiaPSthfSxqro0jRmicPihMTGoaqv5XkLv5ZgBJ3UAyUc1oQQ1z8GF
+         vYmi85IbjHgoYfwLQMAk0WOdYsF2cfQEFIzCoCvd6ccV189oS9m+E5Cq+dWFtURHY0Tp
+         uH3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgjKfoVHgEAR+N11Pkjs5cA+FyhfQK41UbGSr/8kGXZr2VPaRDQJMBf3hXHZOhu4ztF/zBEgTiNIcs5smL+fijIsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxTh9VPry1GM1JXocSH0LiZN38KXD624cTE7rCDnJKBHUQcJkm
+	79EECXs7N0eSF3g/3v4LYCipLz0m+mRfkBnA0WaJuo+DqKtwm1Kd8raD9NGPU0IEj+Q=
+X-Gm-Gg: ATEYQzyxSNGz1sq0t2XyJ+1tYFZ0FNTemEURx7RDCkrAy76773nFznYgcsD6+DsM3Hc
+	cg6s5Dod7OC6ma1dhjbAcymSyfFhw6Wj74dzzr4a0Uycxt80WGibIbAen/XSc/yhOqrjiJt0zdn
+	KDCEYW72CASrhvoRAtniuyVVGBBahsHVcNXl9rrHRVDYuNQvRA0naazftpk8SkO1REuKiOt3S2Y
+	wZrRqJNV46Gv2rytdljFkxxSF1mWhA//T5cNVzDOXyo6HH92alDl7E7+dtYvsTJLYyo5eX4Gr3V
+	TOlh8oH4/Pi+qp85PRz2X0YTdqeVQvgnF1e2KI3HARVr7onhPBNcSGtk6xxoM8Li1TRf8edZAt5
+	GttV9UVT7umGweVATh1SjW54wEsB+gnN0LYnc0HHn70ZO/jwAzmBEDy2vUaeAxH1ZHETXu/TVov
+	KBGV1OFpvYjwfz49b4BTgXzpwpKVj9xdRF9DscOJfEjAuH7SH/VHSqQBbMSqVtkCBwSurgO29wo
+	EOxyFvd
+X-Received: by 2002:ad4:5aeb:0:b0:89a:149:bef8 with SMTP id 6a1803df08f44-89a66ab8864mr83684736d6.47.1773318140521;
+        Thu, 12 Mar 2026 05:22:20 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50939ec5017sm30688511cf.8.2026.03.12.05.20.59
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a65cfd520sm33832386d6.36.2026.03.12.05.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 05:20:59 -0700 (PDT)
+        Thu, 12 Mar 2026 05:22:19 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1w0f2A-00000006et5-427z;
-	Thu, 12 Mar 2026 09:20:58 -0300
-Date: Thu, 12 Mar 2026 09:20:58 -0300
+	id 1w0f3S-00000006euK-0fs1;
+	Thu, 12 Mar 2026 09:22:18 -0300
+Date: Thu, 12 Mar 2026 09:22:18 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Leon Romanovsky <leon@kernel.org>
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
@@ -82,11 +81,11 @@ Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 5/8] dma-direct: prevent SWIOTLB path when
- DMA_ATTR_REQUIRE_COHERENT is set
-Message-ID: <20260312122058.GE1469476@ziepe.ca>
+Subject: Re: [PATCH v2 7/8] RDMA/umem: Tell DMA mapping that UMEM requires
+ coherency
+Message-ID: <20260312122218.GF1469476@ziepe.ca>
 References: <20260311-dma-debug-overlap-v2-0-e00bc2ca346d@nvidia.com>
- <20260311-dma-debug-overlap-v2-5-e00bc2ca346d@nvidia.com>
+ <20260311-dma-debug-overlap-v2-7-e00bc2ca346d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -95,34 +94,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260311-dma-debug-overlap-v2-5-e00bc2ca346d@nvidia.com>
+In-Reply-To: <20260311-dma-debug-overlap-v2-7-e00bc2ca346d@nvidia.com>
 
-On Wed, Mar 11, 2026 at 09:08:48PM +0200, Leon Romanovsky wrote:
+On Wed, Mar 11, 2026 at 09:08:50PM +0200, Leon Romanovsky wrote:
 > From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> DMA_ATTR_REQUIRE_COHERENT indicates that SWIOTLB must not be used.
-> Ensure the SWIOTLB path is declined whenever the DMA direct path is
-> selected.
+> The RDMA subsystem exposes DMA regions through the verbs interface, which
+> assumes a coherent system. Use the DMA_ATTR_REQUIRE_COHERENCE attribute to
+> ensure coherency and avoid taking the SWIOTLB path.
 > 
+> In addition, a given region may be exported multiple times, which will trigger
+> warnings about cacheline overlaps. These warnings are suppressed when using
+> the new attribute.
+ 
 > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > ---
->  kernel/dma/direct.h | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-> index e89f175e9c2d0..6184ff303f080 100644
-> --- a/kernel/dma/direct.h
-> +++ b/kernel/dma/direct.h
-> @@ -84,7 +84,7 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
->  	dma_addr_t dma_addr;
->  
->  	if (is_swiotlb_force_bounce(dev)) {
-> -		if (attrs & DMA_ATTR_MMIO)
-> +		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
->  			return DMA_MAPPING_ERROR;
->  
->  		return swiotlb_map(dev, phys, size, dir, attrs);
+>  drivers/infiniband/core/umem.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Oh here it is, still maybe it is better to put it in swiotlb_map() ?
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
 Jason
