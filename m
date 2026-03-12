@@ -1,79 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B951A9FA0;
-	Thu, 12 Mar 2026 12:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CAC30B53E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 12:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773318265; cv=none; b=oXCwf9BrCkF75cpJm4kkciSA1INF2BtLe4yW5kiM2b1NAdSpuhlDLsLfAb7LorQqmMNbfJUeCmrOK1wAovYCZpPQOcq1tKqQ1eOdfzdv6TC4kp3r/rZmH1u+PFtNWrpG0kobRQRptdKi6xhfnHK7HTVQdwt6NEVUtzdAImHd9Uo=
+	t=1773318420; cv=none; b=LPY7TVLSc+VMBBZyS7uZJTqJzcllnDoZaDLe+lRNUuiOXi4ZJifhrDWY05Pxvnsuu4lu6C/uLetuqs4xE4826+G4IFi5lWLUpoqdg/YVJpJ8LbOD5+EDRSGecsqPX5cR+lMOFRy/xd1li2x63xfr2oh2lkgaalO4PIB/QTBUqkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773318265; c=relaxed/simple;
-	bh=q1KUgPJEYeKAA8JfCgzmG89esT5vfxHS9kM5OHhn7bA=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=pv8rh/ddiCbjrnVsvQKVg5ISk+nux4D28bsy7ED5U0p5L/WGC+k1o9LgfXf/enJ++9aYGLIBg12z/ZnSIUvT6Eu8jVrXUbGRw08l5mB0OUi5PCGyFTT7cANRUqftD2L9yVFL2mhmdChMVoMR5UoaRVVyRaL66fxFaHQrqxyyg6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkVonRi+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773318420; c=relaxed/simple;
+	bh=kL0Vtw+iePKp4mxXk49bsuyKV2vV08txbV9fCNpa5ao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=euimheetz8yAqLD5OUrdWMUx8baBJY68Q+QrT7HCnbh3EnolwiSUozxcd71Rlzcp6xPD4qMlTc3eubUIwCJKljA03SDuEhSJCJShaTpf4WPtYojOFwWVEf/nDOd04PHbdGy6FgCcvebvkF2p0IH5BvGUHybLQ3+bvIQos7NHO38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=IA4RNZY5; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkVonRi+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D5DC4CEF7;
-	Thu, 12 Mar 2026 12:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773318265;
-	bh=q1KUgPJEYeKAA8JfCgzmG89esT5vfxHS9kM5OHhn7bA=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=KkVonRi+3ushxXeWb2KBnfBbggiJZ0swPa2cda2bGlkUPGbQTRKZHM3dbT9TilKC1
-	 Oll5sZ7wbinIA5HNZdcHceMJ7FcRYC7Qi1XiZzCcczYIJVzMoE8oJP8hOqNUB8o2YT
-	 SQSV275Wa5hMmKpRdSswJ158JXxMx3c9mVbGg5dyL8J7idsv+nju72v0R7Om2fZeLV
-	 7+kpEecZRZ10VHj0eFt0WSPs2ByUOdlqESBqvnJ4PMmYkiTwuoCJWk3JU8hXOSe5b5
-	 ZWW6+3zOxG5fgYs1G9jXTlWXL0ZnaK5iOzxWM9bW5x2RcR24+SkZk//SRhc9BR9SzD
-	 Bowj6nSf5ODJQ==
-Content-Type: multipart/mixed; boundary="===============5131685681796718081=="
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IA4RNZY5"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8cbc593a67aso89574685a.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 05:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1773318418; x=1773923218; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6bVLYsZeqdLLR0Cw+BVzWgzWP+lyAr3AqcCFZTxFfl4=;
+        b=IA4RNZY54MlZRH6gImDutdbmqWRi5s7Aq0rG19UOYiw/P/ndeNshlYrf9zUbaGIe/8
+         is5ZjhqWU35yFqgB50yrzrB3lGuzyyssyNXeGIoUiqCddW8B1VOE3zJ0b4QK1sfz6aQf
+         z1GGlY7AceS4ExYFXcnq8CCVd7jCS0RF0o373hRB0hNBRXgxou97eJIshDm0kZl0+deW
+         Vml5iVgIVGBi3mb3I3LM+JyP9bx4tVcP1nZ/5EDCklLHrUXs1m1w8wO9cC1HQJL39UKB
+         jCbkJPVpLUCVBqptxF/N+ANFSsg10lUTtIhtQHIDbEr6rix5Z0FfcPxTIjo0oYNAqOCv
+         rHCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773318418; x=1773923218;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6bVLYsZeqdLLR0Cw+BVzWgzWP+lyAr3AqcCFZTxFfl4=;
+        b=pO5FewNUydCOrtvFS87PS6Xa8rvNDwzdOiuRz9x76w3DrIdJYJYQTZHiS71HLzah1b
+         Hx97YWp74gP1xKUOXya4fIeaGX1HHDk+Iw2gDZpP9VlSqhkwcdAYowS4Vt1GF7EiyBIy
+         ej5RDf7z1brT1zALFgSsfwfLaAYtRIp4ZfM9+L9H4TUuFPUKmcyzReKczZ6Z3ZqBkMds
+         aFomQJns3ylQXhTc8s+kAvEmhykO1lDg1LVQIgTjKWuneAbs9MUIDLsAlLInj7ssTQgt
+         qlW3YBAIev0G9JoH+nwx2+cdU2taUD5eGm880mkKT484DxnztlHtAkps5dbhIkhv8/y2
+         USbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzZiYE4NnHChTJvCWlQy1Zn0qg62nwQK7Hl5ykioVnHEiA9+pKR/2jccxD+Y9P18tQv7KasWIhOVWgxXVm4zcKgoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7Ov+nisOWRc2in6jBxjuh0jFdYNv3jn9/cF2Wn3zkEOLxIfNc
+	1+GU/nbco5udES5jg7YqNudcqD86nPbReFQomNwCv0vLM2jTetFFHYKVn1jAhTpBY+U=
+X-Gm-Gg: ATEYQzyiLxDK+phMiWhkKK5Z0oADSssJYDEq7tkvRLlfd4I7yw0o/VpPHttPEGWmY2l
+	xRd9R5DaEz9uXpflEjEDWjdT5urvB3+J3qRKjc6U0cVU9adh1nFSyWF9MmE6BCjJCk2hmirhfDh
+	dod7b4YG4c0rKvUVo56vmhwfcOdkW98Fn/zgVN1xgv1UXT+mrAoLdk9CQIGvdK1vAdPhDXUIYLP
+	5UAdSgpuIAcdS9o9sPUJHhneKKkkTlaoYPU1ccT6l5CR1k36ykPOSTayv747IpNV2W1AOlc/7B/
+	ufizIfuwVQtYAt/vbEzYFmS/qEeHAHbDL4XyqtnK9mv3G064xNo/boC2ls9g0eHlzcfjWu/VJhM
+	i5Y8r/Ogj3CjtSAAFCdQFiLg1XJ+3Zk4hePteHjWpQ6n5jTS+59S98esBlrcWvyUAqR9az0wB4Z
+	dUBncqz5Ji+Qjr+O8nbZUwmCAOB4yQ/q6iP2K7HW+E67htg2xWmfxT6LgLhKdlTRHPTL21i5cbS
+	syPd/+j
+X-Received: by 2002:a05:620a:4692:b0:8cd:9322:7c55 with SMTP id af79cd13be357-8cda193043amr787228385a.17.1773318418176;
+        Thu, 12 Mar 2026 05:26:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cda1fddfe8sm328304485a.12.2026.03.12.05.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 05:26:46 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1w0f7l-00000006ewH-1owB;
+	Thu, 12 Mar 2026 09:26:45 -0300
+Date: Thu, 12 Mar 2026 09:26:45 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-rdma@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 8/8] mm/hmm: Indicate that HMM requires DMA coherency
+Message-ID: <20260312122645.GG1469476@ziepe.ca>
+References: <20260311-dma-debug-overlap-v2-0-e00bc2ca346d@nvidia.com>
+ <20260311-dma-debug-overlap-v2-8-e00bc2ca346d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ab12d6dc347ea5a2ffe8705e1538043beb0f497b4a906410a10fabeceeb10e70@mail.kernel.org>
-In-Reply-To: <20260312114746.122174-1-jolsa@kernel.org>
-References: <20260312114746.122174-1-jolsa@kernel.org>
-Subject: Re: [PATCH bpf-next] ftrace: Use hash argument for tmp_ops in update_ftrace_direct_mod
-From: bot+bpf-ci@kernel.org
-To: jolsa@kernel.org,rostedt@kernel.org,ast@kernel.org
-Cc: bpf@vger.kernel.org,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,daniel@iogearbox.net,andrii@kernel.org,menglong8.dong@gmail.com,song@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Thu, 12 Mar 2026 12:24:24 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260311-dma-debug-overlap-v2-8-e00bc2ca346d@nvidia.com>
 
---===============5131685681796718081==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Wed, Mar 11, 2026 at 09:08:51PM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> HMM mirroring can work on coherent systems without SWIOTLB path only.
+> Until introduction of DMA_ATTR_REQUIRE_COHERENT, there was no reliable
+> way to indicate that and various approximation was done:
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 8df69e702706..71dcbfeac86c 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6608,7 +6608,7 @@ int update_ftrace_direct_mod(struct ftrace_ops *ops, struct ftrace_hash *hash, b
->
->  	/* Enable the tmp_ops to have the same functions as the direct ops */
->  	ftrace_ops_init(&tmp_ops);
-> -	tmp_ops.func_hash = ops->func_hash;
-> +	tmp_ops.func_hash->filter_hash = hash;
+HMM is fundamentally about allowing a sophisticated device to
+independently DMA to a process's memory concurrently with the CPU
+accessing the same memory. It is similar to SVA but does not rely on
+IOMMU support. Since the entire use model is concurrent access to the
+same memory it becomes fatally broken as a uAPI if SWIOTLB is
+replacing the memory, or the CPU caches are incoherent with DMA.
 
-The comment above says "Enable the tmp_ops to have the same functions
-as the direct ops", but after this change tmp_ops only gets the
-modified subset via the hash argument, not all of the direct ops
-functions.  Should the comment be updated to reflect this?
+Till now there was no reliable way to indicate that and various
+approximation was done:
 
-Also, the commit message has a minor grammar issue:
+> int hmm_dma_map_alloc(struct device *dev, struct hmm_dma_map *map,
+>                       size_t nr_entries, size_t dma_entry_size)
+> {
+> <...>
+>         /*
+>          * The HMM API violates our normal DMA buffer ownership rules and can't
+>          * transfer buffer ownership.  The dma_addressing_limited() check is a
+>          * best approximation to ensure no swiotlb buffering happens.
+>          */
+>         dma_need_sync = !dev->dma_skip_sync;
+>         if (dma_need_sync || dma_addressing_limited(dev))
+>                 return -EOPNOTSUPP;
 
-> which contains only the modified sites is always a subset of the
-> ops->func_hash.
+Can it get dropped now then?
 
-Reads like it is missing an "and" between "sites" and "is".
+> So let's mark mapped buffers with DMA_ATTR_REQUIRE_COHERENT attribute
+> to prevent DMA debugging warnings for cache overlapped entries.
 
+Well, that isn't the main motivation, this prevents silent data
+corruption if someone tries to use hmm in a system with swiotlb or
+incoherent DMA,
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+Looks OK otherwise
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/23000924618
---===============5131685681796718081==--
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason
