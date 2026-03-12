@@ -1,41 +1,78 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FDF282F0D;
-	Thu, 12 Mar 2026 17:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC483CAE8E;
+	Thu, 12 Mar 2026 17:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773334820; cv=none; b=DQQtmKnSqa1LIkJbK2Iveb/XSgl+vKWM2uVJUyr0Pe02JEsz3FfFX8Y0pbGTsHmd6aLgvcfPrY8rRqQW/RaAV+cn7Fw6RbyaLpklBnLzBlLDL2xu7pa4za+P7769GId73CvqXeFkedfCcAokJn88WN9Tq/xH5i+M/m0Wn4K9oRI=
+	t=1773334994; cv=none; b=Z1Eq/3mfRpiSpvWNOYoUQ8ZKK1P8HvXTz2NtP+Xv1zsJkMcofw7flwCwoi0FM/kRyNsQfMU6wn9om8HDP6aC9z2wxkkQcsGJ2juDTjr+KWckbhLzGPcYZxvq3z2C7z1QqPtXwoVYUbQtphtxcrrz1cJa+8genGi/8y4RunMBzZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773334820; c=relaxed/simple;
-	bh=Vgn6UpaYUBx0O2rnYX40EpaPbW7xAEdaZewfD1mbCGY=;
+	s=arc-20240116; t=1773334994; c=relaxed/simple;
+	bh=gymGM9n7wddVYvwk2Iyj0H5MpRVhidPG4DavbVCxGds=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dpD38U8miEk1B8+wvMY5rdCIdiSqLzJ1eiCKRJPRbVQH9Hfl2qFlpEa/iKoReF+NQx+P92LTiYYnbYMjEoswvVcwZkj5v2YpDe2Oy5cZg0eCI/+dwOqqdRdVplODgvCUr5ZbE+XI7Aiqqpj6x8SZTEJFqt4jdMJGtaUbbH6ng+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=bG5ihaMsPFngmAGcyqHMa3B9ZoapeLoaVI2NFNAQrywHYRSIQxXK47QHdcQ7aNptbfaYdg3o3iPRxnbGyhW4Jtq3/QdpzYQLXJ3DmNV7BcMAx6gQ8z3wJv7sNV9ikDehbn+CiygWxQx652HzkVxH970Jv5kCIYI+467JO4fstnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 352DC1B7777;
-	Thu, 12 Mar 2026 17:00:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id F3C7020029;
-	Thu, 12 Mar 2026 17:00:07 +0000 (UTC)
-Date: Thu, 12 Mar 2026 13:00:22 -0400
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id B37CD8B479;
+	Thu, 12 Mar 2026 17:03:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 1BAFA6000C;
+	Thu, 12 Mar 2026 17:02:41 +0000 (UTC)
+Date: Thu, 12 Mar 2026 13:02:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Peter Zijlstra
- <peterz@infradead.org>, Michael Hennerich <michael.hennerich@analog.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, David Lechner
- <dlechner@baylibre.com>, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/15] spi: Use trace_invoke_##name() at guarded
- tracepoint call sites
-Message-ID: <20260312130022.669e7de4@gandalf.local.home>
-In-Reply-To: <06438818-2e3e-426f-aec5-ea6344e4b057@sirena.org.uk>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ Dmitry Ilvokhin <d@ilvokhin.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ io-uring@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Marcelo Ricardo Leitner
+ <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Jon Maloy
+ <jmaloy@redhat.com>, Aaron Conole <aconole@redhat.com>, Eelco Chaudron
+ <echaudro@redhat.com>, Ilya Maximets <i.maximets@ovn.org>,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-sctp@vger.kernel.org,
+ tipc-discussion@lists.sourceforge.net, dev@openvswitch.org, Oded Gabbay
+ <ogabbay@kernel.org>, Koby Elbaz <koby.elbaz@intel.com>,
+ dri-devel@lists.freedesktop.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, "Gautham R. Shenoy"
+ <gautham.shenoy@amd.com>, Huang Rui <ray.huang@amd.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Len Brown <lenb@kernel.org>, Srinivas
+ Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-pm@vger.kernel.org,
+ MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Sumit Semwal
+ <sumit.semwal@linaro.org>, linaro-mm-sig@lists.linaro.org, Eddie James
+ <eajames@linux.ibm.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, Joel
+ Stanley <joel@jms.id.au>, linux-fsi@lists.ozlabs.org, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Alex Deucher
+ <alexander.deucher@amd.com>, Danilo Krummrich <dakr@kernel.org>, Matthew
+ Brost <matthew.brost@intel.com>, Philipp Stanner <phasta@kernel.org>, Harry
+ Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ amd-gfx@lists.freedesktop.org, Jiri Kosina <jikos@kernel.org>, Benjamin
+ Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, Mark Brown
+ <broonie@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-spi@vger.kernel.org,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K.
+ Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, Chris
+ Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/15] tracepoint: Avoid double static_branch evaluation
+ at guarded call sites
+Message-ID: <20260312130255.6476e560@gandalf.local.home>
+In-Reply-To: <CAEf4BzbnfyhCqp0ne=2gRnVxp-mdGmuZwDeFRyhRYH+eDcz2-w@mail.gmail.com>
 References: <20260312150523.2054552-1-vineeth@bitbyteword.org>
-	<20260312150523.2054552-14-vineeth@bitbyteword.org>
-	<5d057b07-be5a-4da6-86e3-87ef4319d4b2@sirena.org.uk>
-	<20260312114254.6467c03d@gandalf.local.home>
-	<06438818-2e3e-426f-aec5-ea6344e4b057@sirena.org.uk>
+	<1e3c2830-765e-4271-89f7-0b6784b37597@efficios.com>
+	<20260312112354.3dd99e36@gandalf.local.home>
+	<219d015d-076b-4c80-8f63-88569115fdad@efficios.com>
+	<20260312114041.5193c729@gandalf.local.home>
+	<1becdbce-2c01-468a-bbab-42b5dea9fdf8@efficios.com>
+	<CAO7JXPjnnruhM5oC6xMgnYaQ9efzYFqMCFiJLNM3HCQ+ZeCiJw@mail.gmail.com>
+	<CAEf4BzbnfyhCqp0ne=2gRnVxp-mdGmuZwDeFRyhRYH+eDcz2-w@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,45 +82,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: F3C7020029
-X-Stat-Signature: gf9obfxre5ffay4dshebqzgsu9ekx3eu
+X-Rspamd-Queue-Id: 1BAFA6000C
+X-Stat-Signature: kfs6qijpbuferuuhtorb6b835ny66tin
+X-Rspamd-Server: rspamout03
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+g4lotslKuMjUGVYGeqaMsb2wFNEgD1mg=
-X-HE-Tag: 1773334807-77202
-X-HE-Meta: U2FsdGVkX1+EgPwuZ/3LJe+ZWj5snkoHf4Ns5V3n/QOffJxeZenIlzT0xPZ7RqOfNTBmja4mlyx7155oniBVQtSKsWVO2bDNd6puqYKJDeUMq03+B1VW5w42DmEHc4EOutoxhVYKBJb+bnJIgZmKzLshMKt9/U98CvDwGRcrRKKlXsGKLkKNQfu9aMCz0KPuzdlY9WvPpxpL1TPipnTcTMRI1DVC+ZPuGG4w+rp8eiCRXNKCxebLg6sahVWitctxNtIaGqVKoWt8SLqpExQN9BNbAceUxAlpLSDialptoxebHiezYZybpNRm0e1kHC61+WZsE2LMll/3qbY0Z3Dj/I5QgNvIZre2omPTqyIk+YpTd1IuNP1fig==
+X-Session-ID: U2FsdGVkX18gNtqVqUvpV9OuqznTYLgQxysBeUr1V4g=
+X-HE-Tag: 1773334961-101407
+X-HE-Meta: U2FsdGVkX18nBBc/wjwt+Uq/UDhPM+TvyqJ3PzJ7XTdg8zJwcAeVzhmYzxHLf7pqvroMwwz3w+ZMve24FXDlwN4Al9l18e+sIMsly59QHs1WIGUGFWD+n9vC0YFBju5YF4U2cW8usaKA9ACod/DJfkWwChqILC7YI5fjo0jn+MDRzWgSUtcRWc+1ACqufST8GE1+cVaguSIGVLtHO49AgMgvbvjSqwoHR4+HUaDb14GsztIWWkzSI6t3CvJZWLJ62JKH4l1NZ0cseEdgq33l48qG8hnnyAiEMhQWmONsALjOWujHAfplawqsGy97HetKzPQbnSWVIVPTZt4F/YmoVmEIzpjR6X9B
 
-On Thu, 12 Mar 2026 16:54:00 +0000
-Mark Brown <broonie@kernel.org> wrote:
+On Thu, 12 Mar 2026 09:54:29 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> Possibly an _unchecked or something?  Honestly the suggestion someone
-> had for _do seemed OK to me.  Part of it is that I wouldn't think of
-> tracepoints as being something that I'd call.
+> > > emit_trace_foo()
+> > > __trace_foo()  
+> 
+> this seems like the best approach, IMO. double-underscored variants
+> are usually used for some specialized/internal version of a function
+> when we know that some conditions are correct (e.g., lock is already
+> taken, or something like that). Which fits here: trace_xxx() will
+> check if tracepoint is enabled, while __trace_xxx() will not check and
+> just invoke the tracepoint? It's short, it's distinct, and it says "I
+> know what I am doing".
 
-The "__do_trace.." is an internal function I don't want to expose.
+Honestly, I consider double underscore as internal only and not something
+anyone but the subsystem maintainers use.
 
-I'm thinking of: call_trace_foo(), as that should be pretty obvious to what
-it is.
+This, is a normal function where it's just saying: If you have it already
+enabled, then you can use this. Thus, I don't think it qualifies as a "you
+know what you are doing".
 
-I want to avoid the do_trace_foo() because that's usually the name of the
-wrapper code that is done in header files. Where the header calls:
-
- do_trace_foo()
-
-and the C file has:
-
-void do_trace_foo(..)
-{
-	trace_foo(..);
-}
-
-Which could be:
-
-void do_trace_foo(..)
-{
-	call_trace(..);
-}
-
-And remove the static branch there.
+Perhaps: call_trace_foo() ?
 
 -- Steve
