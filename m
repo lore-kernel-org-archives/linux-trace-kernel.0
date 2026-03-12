@@ -1,124 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC5A23BCED
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 13:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9077340DFB3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 13:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773320856; cv=none; b=Ag0ph3nSxbSaDXcsckUUq/LuV0h0HbbGNs+MrssFA4NeIIZBuzWCWsXqBZfK0lP42BOAc9F0iE+Jp9GliFa0wOFOR+hgayxHrZZd2Qx/dMkOQyyVAAqcB1vu2cRyyfLPfjngZPos8oxLCd1EvXhU/5tQZNMsxe40IOWZu1l0IM0=
+	t=1773322382; cv=none; b=S0iJCzfj387AhWKr3XVYq0F9fHcOvho6fiEpsLWHvUdERrR5GMVQAvfP59y71+jGsVSWxl5mt9SS8bwaXralfBbfI6itq/Mh69aFUjIAvqb0G34jlSNjFwVU3yhXMPh+XGXVdFN0iPiB3k/iUaEga2x3F23kGB4YvoiGqW142Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773320856; c=relaxed/simple;
-	bh=GY5qGnINeDE7iRujzG5/erVJjPfRWP14BKwl2X5DNIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=JB46I6lT/R6wp3/oFGwd/h3gxrm5ArH5H1aoVdTP0BFvnZkMyB7L/eSHq1x7iGVll1c9b2xU0RWFqaqd/W1TZgfGOw6Wk3fVKEeOYcT1Pb6Of1E96gYZuEUtjKDqswNL6sqv0cpR0RJz9v5Zu0GKrSniH6sr8pkkGPw72a2vQ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=agqF23CS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="agqF23CS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773320853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FStPFYH7sj7j7kmuKgyeO/ScaxttHGBKN1EeuB6hyOY=;
-	b=agqF23CSfpYojOuzfCceqpJ3sLgFNA7rb+M9PZ1fa3Dq+4jic6PRPGJ8tDAE69qbMeV3o4
-	uLacuHsuj1/bhp0XwWQZUCpeZ1x4edPKLHCyDQvPi02Nr6+LbN3/CsZilcDxDfQRscKM5G
-	JnweCt2tRfbObQp9iwbj0PomM3G7Krc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-685-A5dTyu4WO0CHaS96urTm4w-1; Thu, 12 Mar 2026 09:07:32 -0400
-X-MC-Unique: A5dTyu4WO0CHaS96urTm4w-1
-X-Mimecast-MFC-AGG-ID: A5dTyu4WO0CHaS96urTm4w_1773320851
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-439da07c5bfso712140f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 06:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773320851; x=1773925651;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FStPFYH7sj7j7kmuKgyeO/ScaxttHGBKN1EeuB6hyOY=;
-        b=lBS2l7w6qLRua/rbsTkYUqwP4R6Pocd0hZHNormy0BwADlRbk9j/fpK0qsLI0DkPPq
-         jtlmrRv3okgHIe2t9/Kds4Pd0EhuJmcGm9RehyziA6xK/+mb882FOUSuWslYlneNiwSj
-         wCxsXiDg+EIrOGKp69UrV5Y71NL3PIilyAMc4YsS4WJpWwK3QWRUKwoCcCMG418ZcTcL
-         /k7GyFps0mxV63PFAScru53hLSavcX9JHZ20n2/LGGgDgn9hluACazpJSkQQB/eSk2zu
-         G1id4/IUf6goRSf6bP/69IGbzxq5A9nqjYzn02Opz/LSs82UfrSBBsvrG3eEzSjCw0N2
-         FJTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUL5DfuVhLoateXnKSoHsw/tjPbbsyBKn/fFSCUQbX9ITEhsm1mHK31plMBgHNHHst3wTjw5RWgjW9IkkMlIAd12TA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwewJtTOfVsnvhNlgCiLvbTkamMv+LRR5xuZcpTFWEP/NhLLBTd
-	gBxkxe+CH6MGkoChDV8wluT7jhRD3AsB/RC0SotNU9oxwnJpWnCgdgwcPBwTx3G0Gu0gc3oZoH1
-	3kiWeHvmF+yLLqLEUM4hPGQhBW/+gNzSOdo+GRaVijcHZiBdeH9SOgpYDJYbBni+pbbtUMJP3kw
-	==
-X-Gm-Gg: ATEYQzwsrRHFDCwSRXTx+0nKGDuvIsLYXRkuKM9yyXjTUFzpw0SYCG1IS+W6aC3DnUJ
-	l8wtoNsNX7n685RIXq5nlYW7NW+H8uSOEazWGdFcSu7Hd+jxejF6DPS92i4nRCgkbQjyndogh/3
-	Z9/b2LMg7Rpc9pW/awVvMuxj3PBbNxErBASM6FBGORp//QVReFMgnPRR83w1yjzsYIKhheYQjdr
-	bt+l377QZF5mRzXUAtJvtooMggVJ6RpitpfKmoh3uadBbmmUHY71alnAxaTCctmAvpoUXboxHhC
-	rAMYqI+ucw9lmAbmk9HYQLR2pfDqqR2jytMNHCumqWTOzO+XYVs3L+Zxc/wSmxVjv/Rsb/w07hU
-	JJ6O8bDyCsITWH9xARZRujbG/6upvK+RZCnhUwniEZff2HOGQmZE=
-X-Received: by 2002:a05:6000:2884:b0:439:cee7:7174 with SMTP id ffacd0b85a97d-439f84151a7mr11879708f8f.52.1773320850715;
-        Thu, 12 Mar 2026 06:07:30 -0700 (PDT)
-X-Received: by 2002:a05:6000:2884:b0:439:cee7:7174 with SMTP id ffacd0b85a97d-439f84151a7mr11879622f8f.52.1773320850188;
-        Thu, 12 Mar 2026 06:07:30 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.82.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe2187aasm7448982f8f.30.2026.03.12.06.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 06:07:29 -0700 (PDT)
-Date: Thu, 12 Mar 2026 14:07:26 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Nam Cao <namcao@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH v7 12/15] sched: Add deadline tracepoints
-Message-ID: <abK6jlVbeNtvG6n7@jlelli-thinkpadt14gen4.remote.csb>
-References: <20260310105627.332044-1-gmonaco@redhat.com>
- <20260310105627.332044-13-gmonaco@redhat.com>
+	s=arc-20240116; t=1773322382; c=relaxed/simple;
+	bh=Ejtdt2WhvS5pkZs+nVXs4lOvpVx8pa1hU96FEUE6FmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oZu2+TYdpoLqPIv9wK5+wHc55k8WIdA7fPW4ac35UmDcDMT50TfSC9UJUrIsmPqoKERWMC1lLFKN33aFQWDllEeyW0G4sy/uMjX70Eeslj8m1lH9uLjU1P6mGJkcyWKztqnIb0zlbDTePb7TxosDIwFH1cFs0caRVF6QfsWvB5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2AF601B71F7;
+	Thu, 12 Mar 2026 13:32:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 61A041D;
+	Thu, 12 Mar 2026 13:32:57 +0000 (UTC)
+Date: Thu, 12 Mar 2026 09:33:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, linux-trace-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, kernel-team@android.com, Nathan Chancellor
+ <nathan@kernel.org>
+Subject: Re: [PATCH] tracing: Update undefined symbols allow list for
+ simple_ring_buffer
+Message-ID: <20260312093311.1788707d@gandalf.local.home>
+In-Reply-To: <20260312113535.2213350-1-vdonnefort@google.com>
+References: <20260312113535.2213350-1-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260310105627.332044-13-gmonaco@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 9BzPBAp9XUkrj3lwcXRnka8B8tSafxL1zojPr8QMpEQ_1773320851
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zg1uw5onefppz7eyfx8fm9s13edw6yeg
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 61A041D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19chteRd5MMFXqJDmA8FERQdiN4XJ53LyI=
+X-HE-Tag: 1773322377-179899
+X-HE-Meta: U2FsdGVkX19i0DgKVzidNy09ZryUdGHug36GI9x8zIcRI3Rv7cFKtCKb5leS5p8CKq6I9WS6uwK26Snnf0BjYmvYXbfWjH7S2RSR3Gh8m2mpoyCdDnEPT0EKchfcSF1DzelGFM0yLU4dqhvuRwYJ9C9wTVqhiUWZ0zslyzxvVSUIACSM8lUTnkU3g5HcJ/SscZ1cNbbSXKYKtRA7DCeTBzpwVHHvHjQCNZ/I5SxLxtz0xjZ3GquNNOqtquCKRR4Ueh1fvYmsjw4XR8xOM3aMtPXnksEwpmJjOu0ZQQZoVGwFfXaA3XHfJdwYSWH4++r1qTskg0yHmN95AgdA7Er/wRxfgmDlh/DjFMFOZWrDUvTGv6mK/f01zVzUEZyuN+6i24EFmkXOPpK3KyeKX5seDkMIpnL217WvjvvCWXLI+9Y=
 
-Hello,
+On Thu, 12 Mar 2026 11:35:35 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-On 10/03/26 11:56, Gabriele Monaco wrote:
-> Add the following tracepoints:
+> Undefined symbols are not allowed for simple_ring_buffer.c. But some
+> compiler emitted symbols are missing in the allowlist. Update it.
 > 
-> * sched_dl_throttle(dl_se, cpu, type):
->     Called when a deadline entity is throttled
-> * sched_dl_replenish(dl_se, cpu, type):
->     Called when a deadline entity's runtime is replenished
-> * sched_dl_update(dl_se, cpu, type):
->     Called when a deadline entity updates without throttle or replenish
-> * sched_dl_server_start(dl_se, cpu, type):
->     Called when a deadline server is started
-> * sched_dl_server_stop(dl_se, cpu, type):
->     Called when a deadline server is stopped
+
+Should add:
+
+Fixes: a717943d8ecc ("tracing: Check for undefined symbols in simple_ring_buffer")
+Closes: https://lore.kernel.org/all/20260311221816.GA316631@ax162/
+
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+
+Should this go through the arm tree or mine?
+
+I'm fine with either, and in case the arm tree:
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+
 > 
-> Those tracepoints can be useful to validate the deadline scheduler with
-> RV and are not exported to tracefs.
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index 3182e1bc1cf7..3cc490aadc99 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -137,7 +137,8 @@ obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+>  # to all kernel symbols. Fail the build if forbidden symbols are found.
+>  #
+>  UNDEFINED_ALLOWLIST := memset alt_cb_patch_nops __x86 __ubsan __asan __kasan __gcov __aeabi_unwind
+> -UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer
+> +UNDEFINED_ALLOWLIST += __stack_chk_fail stackleak_track_stack __ref_stack __sanitizer llvm_gcda llvm_gcov
+> +UNDEFINED_ALLOWLIST += .TOC\. __clear_pages_unrolled __memmove copy_page warn_slowpath_fmt
+>  UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
+>  
+>  quiet_cmd_check_undefined = NM      $<
 > 
-> Reviewed-by: Phil Auld <pauld@redhat.com>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-
-Looks good to me.
-
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-
-Best,
-Juri
+> base-commit: 455baa581922086f1ad44c76d4a3b03c265ee950
 
