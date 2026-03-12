@@ -1,63 +1,63 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9694401486
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 19:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1802D401498
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 19:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773342709; cv=none; b=DAIcG4DlBIg9GiiAVGwCXCkywr3p1f8Q/IQ/NYtbMJu6mgVfe2FOXsD2GDRPJqnokLk9y80GWDCuS76M/6AlIxMZYLjd9FI7cmT2aINmFPKjogyv8l41d8PO4YL8xKIx8Oe195mztScE7fGxAahPf1Rl4qmTcEAEyh+SYsU1jo0=
+	t=1773342709; cv=none; b=S9onCrqrYp9TrLB+tigr3GcnQjPwe2BVRbfT44kbH5Ru+Ed08h5x+WxOrhtP3QG5gYch/yuzeU5t54EFOxDWswCAkRD0ZwUMCChAlX5Sr563x+qylKWYUQspJIHVlNHS0vDT3aCai4epw9V7Y8oLBRWrAhi6kyRX2+l328NMnNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773342709; c=relaxed/simple;
-	bh=K7t6TixnSC5amlbb+BTN1wgZlFUmLS7pMFxwMr59PtI=;
+	bh=8ozz4uX3VG7ubKIGiEygr7D5oPi9gmvKVCXRz56Np/4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bguO3a+l7eILjd9mzMJPnRJNzQ/bc96WVMSg48r4PuCALEqN9Gx0wyGp+6tt5d70r9OiggeA5Wm97zYGIIqnsu3US7EAHz0tdGVyIOo6fAGPr8A9h03jh6Re69LgaZjrsMfr0qwGu5aGN2JcBc9fCKZZtViTbM0CiOEwVmXLA/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYmO7q1s; arc=none smtp.client-ip=209.85.167.52
+	 MIME-Version; b=KGjNeSbF3BNJBFEjhZyYGadJatrtAeK9z87Iw3qr1pgAnUowtoS56MBGDVhC9H5LMt0MnFB6VqYnA6/vkNrEFAWcpZBa3wmVRQsBZ97SeaUDcKKPQm6agXA+AxrjXpD2f6AD0nSkYw56g+VAopcDwF64X0Ekqirq1hHisJTTZfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYPe+GOw; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYmO7q1s"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5a0ff30b240so1826518e87.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYPe+GOw"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a12cd0bd79so1709812e87.2
         for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 12:11:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1773342706; x=1773947506; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oSs15jicLNxatcInmbAogDjkpXKXGRLDfNz1kmJ6CQE=;
-        b=lYmO7q1sbbgbMiLOMOXLnU7e8gcWBcRgYanoKlaomR0/nGWcXNhNdr0DN0hSt84mTw
-         UOpPcuLW8uC69uj24xJCTacugzW+LDn9yEWLQX7RA0Vt9SBQRBffRp7PAhYBOTlJlYRN
-         fn5FpQN4MqO/FK9o6bFqud4a6Zeh5WLOYVvTx6ljlHk66Adr3Gkk0yHsXbEZ4yP3XhZl
-         J7dEAt59XExfvDw8nC9Lntvm0eyEqPw9JQDjw/sQmDSk5Xk9SzquSMD4bCRsBbYjVS8s
-         rxUzORJKWx7uot3LCqu0YpfEPXnramZ9RKhhU2NJozaiJg+0e5pnds6YMos61UdGxBLL
-         rcRg==
+        bh=+pyq/Z2cW6Oq5zvXs1uq6RW2e5g+Ci/r6rp/HxH6Mjk=;
+        b=DYPe+GOw+pzfT93KT5GOTQ6fnxFWSaum/ytTv6wNpBjKWizgSBBl49cNcUr/4bIK5K
+         Fbd6MBfuxHHPUhNQ4gdWNnzUPKemvxHMJYzmdNM+KjImSGPI9kPUal5KoviGQRoaQryQ
+         2g0RiNGHHAsisOeadbY3JbUIZR5V6olKijqhvtyGMqAhsDTAHV6wGXchK0rn2owxTRro
+         FoypZj8lD8LPQCT45suNU+bn5PLvFpdysM07AwBskHAWFH0vHMPJ19fxBX7V0Cj6hGVK
+         bgoPUYq4Z1ko1lvJORGdmG2pRk85zB1NjwZ1aPW7Aq6wPVVEukvt0Sj5LKuBZ99Z+PUA
+         sMLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1773342706; x=1773947506;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oSs15jicLNxatcInmbAogDjkpXKXGRLDfNz1kmJ6CQE=;
-        b=NcqncDtTGjzsEW++yzND3//tvQ/lWB4cuZnTFeTU1TOhfPLgAvDvjKTVRYGvhm6wiP
-         21kirw1d/eeqha1CpX8FDShgsXKF5IW4yY95OTDFxTevNHY5V9dMdAxWw6BVoDL2ytjD
-         +Du6ijq/sGxd2/AYf7COwYN72/7nqvoxt9Ch+Fnr3dqQcCygItBHOC6Bqr/DgYxoylXM
-         7y2fnJaLSt0r/ohZxvG81MjBqTWLhrRG2Gr3gZnGpV0AHUusni9cNEWhPJsc2LC5NJgL
-         NZK2MGyFQsJsU6JZ11lA8ZrCrknff7ZSiIXoXZCEKifudN0iKX+F7khFmczVk7GBWiU+
-         gN/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVGwEv52v/HT6AjRM/ymr3mqGEebrjYQQ/2kZQFAquLAsGjfx+wWNJjc5fSOjP3NA4CEH4SpgR0k9v/SkSIyMa0ZoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqfGvo86Lp3IWu8yh0MjvLSHd78EAIhOMTJ97Sd1VNWgkXyrNY
-	QZTzTy6v6YWEeTFhWR61jAJdE48t/lz2E4epxFt+ItsLfOHDAWCXrEAMoWWH8Lr1
-X-Gm-Gg: ATEYQzw9XVMgZGIi4Obj8BILpQ3XRav1WOGnJbiFhyRbcvrkbus6skH4WJ8cHj9xMtB
-	CMdZ4onVl1eHofjIdMxIfON4AjvLSJEJnnGLRsoHx9uegz7SqyVYHvdCOO7KT4SjupYzUpb0L71
-	cf2ncR2vfOTl0LCJcEXxqJpuwh9+sj8+WV+K84ftdqYAKI/TanKEnEm3MuLKNlmZ+4Mt12+ksM1
-	z/8hORnFzsICeZWx4ldETdT0uJQIFBIQgGFMBW90NiiaMY17UhnrtEPF2QvA+ab1jNj/q4u7Q+f
-	aaW5nYC0yG6N++Ds5YeKClbsgBFlfe1kd0tyxtY0GnBebAU/iFIfm/CME5s6F4t8iaxA3zB8pDS
-	nudG2wTLzChO9EtUx1dAW3MNyAztdEPXns0cDo0BWetLG3wUkv4xibJIchY3AYOpMcqgmLzyRBm
-	W39Rz8Zqned4g/etZt4haaDpdmpuGQKqiquCy+KSZ4JQxXlXLvZKMGNli0ps/q4Wv5+WVTC30=
-X-Received: by 2002:a05:6512:31c1:b0:5a1:43cc:9fbd with SMTP id 2adb3069b0e04-5a162b06cfamr197164e87.36.1773342705775;
-        Thu, 12 Mar 2026 12:11:45 -0700 (PDT)
+        bh=+pyq/Z2cW6Oq5zvXs1uq6RW2e5g+Ci/r6rp/HxH6Mjk=;
+        b=m+F1m7W9PsYmJ4BcDdsKVvA6ixvdj88416gga1AHId6yGkMc7HXrjD5ZIygA8rE/qC
+         ncLDySJmk6eua0ekvFObMth9rp1vJ2gMavHni5M7gl3ci4Tp/mE+5QKTuEQ5KNt9Y4mP
+         /aHNmr48q1tosueWwYcfVhPB2HaE2tjOJqjcCFhMhtZjFYaWBk3UKcsaGbzZBs3jOqoR
+         JxPbc/7MsqWNLpcug2AjQhQ8BJ+e6LALQJ7xpfdU1dK9cuReca0+gcqbNLFNfBwWrPkR
+         HG0t4ebAwWGSIceVs9doeJenvugV7Kaa1hwyxDkX6t45QuNNLR+E/utCTNNyHHD7DVrV
+         2vrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUC3Po7IvuG1Jf1+sYyKcMaB6W9BgUnmu06r9oNjTlGmJ5XNdok+AtKkdEv8blC+w+d4F1/ofFPGrgJB05qbTWFEL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHqsZbfLPhlOrqktV9pdYPXx3h6DQHPCGUMXCMStoOh3uHJvEa
+	eZz3L/bcmgf45XfJu2/i6i1YbU2/pxxRWxYRgiiYNSe3YQ9vM3ZGTte2
+X-Gm-Gg: ATEYQzyD1SJctyz6t3WlPV53+O9EEjhKeqGxG6hhelRHTLctTEcX20a6f+SbGsY+SNm
+	HUk5pTLJfh4sFXr0TXxMZgLJGYXW6Ve+N+CLBFLV/7sdDz2Wzd/B1elJH2C8ihQmtcOisYxtfYq
+	n5/rwXYO4yjgSvut+1HKV1wAEQhen9ljzm2VXLEQooH9FAtrvMxnwLOCzwzLPK1S/Csiaah0KMZ
+	0ao0LeSJs7bGacZ2okeZK3DaeM7DPsUnczjYs0PyetuS5qCa5w8aB6jcfzZMJT9ughpGPtFcZng
+	NhrhMx4XkFGyrXPCSAj4jlJ4E1mR5kv7vEQzbjD+BNAIVGImud99EDn4GtQ4YbdyNfFY/oRSivK
+	8Er2veKNNTE7H/oYfqbh5e4I0DwS+zHv+beW0/yR3vbbpdoulER2uKOe4mF6t6yRyvmbT6Wozls
+	RRCOVJg0tBYQ64eJyoGI7FhuoRa/kBg0I99I8YEh4hHtmjIsLuR+uAqrfHZIr2abP0sttjqXM=
+X-Received: by 2002:a05:6512:1413:b0:5a1:3561:de7d with SMTP id 2adb3069b0e04-5a162b39c97mr153329e87.41.1773342706113;
+        Thu, 12 Mar 2026 12:11:46 -0700 (PDT)
 Received: from ubuntu.. (static.159.107.27.37.clients.your-server.de. [37.27.107.159])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a156375198sm1112249e87.88.2026.03.12.12.11.44
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a156375198sm1112249e87.88.2026.03.12.12.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 12:11:44 -0700 (PDT)
+        Thu, 12 Mar 2026 12:11:45 -0700 (PDT)
 From: Josh Law <hlcj1234567@gmail.com>
 X-Google-Original-From: Josh Law <objecting@objecting.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -65,9 +65,9 @@ To: Masami Hiramatsu <mhiramat@kernel.org>,
 Cc: Josh Law <objecting@objecting.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] lib/bootconfig: check bounds before writing in __xbc_open_brace()
-Date: Thu, 12 Mar 2026 19:11:42 +0000
-Message-Id: <20260312191143.28719-3-objecting@objecting.org>
+Subject: [PATCH v2 3/3] lib/bootconfig: fix snprintf truncation check in xbc_node_compose_key_after()
+Date: Thu, 12 Mar 2026 19:11:43 +0000
+Message-Id: <20260312191143.28719-4-objecting@objecting.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260312191143.28719-1-objecting@objecting.org>
 References: <20260312191143.28719-1-objecting@objecting.org>
@@ -81,14 +81,14 @@ Content-Transfer-Encoding: 8bit
 
 From: Josh Law <objecting@objecting.org>
 
-The bounds check for brace_index happens after the array write.
-While the current call pattern prevents an actual out-of-bounds
-access (the previous call would have returned an error), the
-write-before-check pattern is fragile and would become a real
-out-of-bounds write if the error return were ever not propagated.
+snprintf() returns the number of characters that would have been
+written excluding the NUL terminator.  Output is truncated when the
+return value is >= the buffer size, not just > the buffer size.
 
-Move the bounds check before the array write so the function is
-self-contained and safe regardless of caller behavior.
+When ret == size, the current code takes the non-truncated path,
+advancing buf by ret and reducing size to 0.  This is wrong because
+the output was actually truncated (the last character was replaced by
+NUL).  Fix by using >= so the truncation path is taken correctly.
 
 Signed-off-by: Josh Law <objecting@objecting.org>
 ---
@@ -96,20 +96,18 @@ Signed-off-by: Josh Law <objecting@objecting.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index a1e6a2e14b01..62b4ed7a0ba6 100644
+index 62b4ed7a0ba6..b0ef1e74e98a 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -532,9 +532,9 @@ static char *skip_spaces_until_newline(char *p)
- static int __init __xbc_open_brace(char *p)
- {
- 	/* Push the last key as open brace */
--	open_brace[brace_index++] = xbc_node_index(last_parent);
- 	if (brace_index >= XBC_DEPTH_MAX)
- 		return xbc_parse_error("Exceed max depth of braces", p);
-+	open_brace[brace_index++] = xbc_node_index(last_parent);
- 
- 	return 0;
- }
+@@ -316,7 +316,7 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
+ 			       depth ? "." : "");
+ 		if (ret < 0)
+ 			return ret;
+-		if (ret > size) {
++		if (ret >= size) {
+ 			size = 0;
+ 		} else {
+ 			size -= ret;
 -- 
 2.34.1
 
