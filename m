@@ -1,267 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AFB2DC764;
-	Thu, 12 Mar 2026 21:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05B0385508
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 21:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773349414; cv=none; b=M9Un59RKzodnaOQBFFqCt7NbQ+xfkNboLWzVV5wPvpnWc+1TXUAxQY2b+bywJj0QrL7cmsqQyNI0xFAb+4aW9U1Lm2tROsZzRyJq4HIljjzXlnfKFFAUYYPg9evjAP/wCb5VTBYhNulN2Ft5OlK0WtX1tVvn+ou6IosEmEGZoIU=
+	t=1773349436; cv=none; b=KfjpZt041ZphE6dLp866xNSKiotvKMCQ4wEGZl5AugwNev44N5GbwpgJNBIDOa3AFI+v581i15sSlSCi4W1pTXxWaBMmoUKMfGBV++mYIcNW9tCbjLYwCevuFmaSYGXPFZlVZU8I56suqUnb0+IfU8dB+EHZXBgEE4xE0sR7cLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773349414; c=relaxed/simple;
-	bh=j67sQrV3ZgFn94Az8KNnZQbIoDiwcjX9ZhxAp6uitSk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2zqplY6mXI39HR3uC0a+FNkB8vBF1TljlV5ohivtzC2OxuGXbdTSn7QnYKQ8917Ddu3YYTdvozHHYxajFPEYO6uVW0JppWCvLtKYTsizV+ZIP3tKb8cqbe9xj91/J/b5Ai7eOhAlNcEDPqh7lP/FJp+J270CuK80xMGJlZVN7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ougADOEQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773349436; c=relaxed/simple;
+	bh=Ah4cAU/rsZ89pM1crolpyoa+Kaozqik3Sw2x/N9VOoc=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=OY8spWXXsZaFKQMIjae9SxfPGjzFV/Bk7Zn+sJOPqAtVo1lrWa0t/7D4dcII4OJx7WRk2MqBMg4wBJU9IqOky7OYbxlDdDzIb8ygpQloey/sf9RSK5lMU2eMJAXI4P7Cbccve42cCYrnwUtZuoB2bovTCMiPIEuQZ21Aq/UCM9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKOjBAmC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ougADOEQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81553C4CEF7;
-	Thu, 12 Mar 2026 21:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773349414;
-	bh=j67sQrV3ZgFn94Az8KNnZQbIoDiwcjX9ZhxAp6uitSk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ougADOEQUaC5Qw7JSDoIRTSR3iRdA62MZrPNp0p4ZNCoGjRn758QQprGJbok31CxP
-	 8YYIoffOLiWwOKlezeT/5ikXhTpapW4NjppnXTSCxqhLNSfJFfehX7iMXNTTq/fBQ5
-	 X1lS4QfqH50c2JI8Nkn9zpyATVeoa0g9tjRC6HHyLbFX/i66rQsIOA5eeWISKm3Aw6
-	 6FX/LSax1ODBp4DIC4yxQLQcwH41gr/vFR9c/qrPsPvyCiLgq9LmBgC0W1QFDaffy0
-	 bz3PsJgaapTbI4Q+r+MaGKFl2UDeUcAY36Ppgmlzw344HG6E2rbwH1HfNEJPthptXk
-	 eQNTkFJ0zyC6Q==
-Message-ID: <01d1a79c-236f-4968-817f-d89c039019b0@kernel.org>
-Date: Thu, 12 Mar 2026 22:03:15 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKOjBAmC"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4852a8482fcso11636585e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 14:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773349432; x=1773954232; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ah4cAU/rsZ89pM1crolpyoa+Kaozqik3Sw2x/N9VOoc=;
+        b=KKOjBAmCkfg1GWYM9WSqzUsvo24aSwt9DNSUtf4/upuJx1RrAV0z5VhiZVKaC4uXoA
+         zVSLIVQKqw16zInGyaEoOq5/25U6EjPSe2APUMpIfMU+wLAa+Cy1F21YmYppDl/1MVZt
+         Oi6I3Sad5kaACGVP1KLVHJnolZToAWrNNprVFx3mQA2Y3+YyojKrFcVMAjq/wsoDAOck
+         j0nuslLWEy7RfcC8m6P6tBePOW73Z6VOMM0aFrOkv2Ahb7RvUIJm++cwwVPyTqbhjmHa
+         /HuNmrvDEsuEmjFVFIPxMgJhJKGnuLNTv4gKb6+4ADMZ4hRjkd7n9PXa/Z4/omWhQmVh
+         y2+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773349432; x=1773954232;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ah4cAU/rsZ89pM1crolpyoa+Kaozqik3Sw2x/N9VOoc=;
+        b=FPshx1hIdOpu25umykw9IevWk8/y6H+Zmc8Ertan7HDN58DAHBzMzZ9O1J5ig/7/HY
+         Y/lyiETVpjpZ5PSHzxl9HENZWpjy4sdbc9m4EYhy7xopPbRV4HEBVjwSRmNbB69fiFAu
+         +H2pJ26kzP26Cfeyx6PynpYhbeks8uAcBD7XjFZmRvvHCS8oV0/fzPuLKw85c/Nvj/yi
+         LTYIb0X1agPQW4L1aR9IUsdZvIYSy6RWvWoppE97+/Yth0h7f0x10VEgk1eaFOhnr9OY
+         8cI1TCjoG6ERL1w43+K5Ims1PKfYFCu4zMmthn/VpzIHmEu8vKX0QzSWfI8OCNp6hn4Z
+         x72w==
+X-Forwarded-Encrypted: i=1; AJvYcCVLx4avQ7kilJC/9KOA1OhfZEb2b33s9bxluGPt0f+vIThZH1/d9BsvZljc6MahR/dZi2UytfMnWjiJ0Dof/lr7lH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2AWL3e65gvV71Et/HuRXYpnQZvnltLMX64WDnEpA5EWyRoNo3
+	s9CMNRfCu8a8QYXYDPzOSIEga2rG+F9eBXrlA4Va8PbxyA4u5u2PVAka
+X-Gm-Gg: ATEYQzze6RBXcCQBhUEU5WI2GAKsdperzknlwTaU625N1XF3w/qwhr4CxRR8AEmgFBW
+	l3QDbgCB1MKVuY4XCDWkoBDJhh1+b8oPf34PMqTrKZdKcIij0N6aJ2NYOkqAyaQPDk6no2bqBnP
+	PScW0wdbunOKYVLEBkTlrtAwBtMjjPHHpuI403JoMye64+s8PvLB6RKWAWJB6HH0XsGMvlyWhyB
+	HYUohQPRCEqRaxnVTZuYJWsm0zQeybnn/PMroaz4zDa9XJijelNRuuFpW8andQnhkdq3DVlGJ62
+	/WXZRF9T6hKFQz1p1cgCJXNXcN3N/uAm2mdAFwtlWdVqvqjiSDnhjvWueNhqIIgnzVIcUIGENMR
+	tvpdlgxpGLp8Hmhh7krjy7PPjdt+RZNeoiDmMGFsmjFbI/DVAHfdz3+NxLt8umviiR5n/6k0Nud
+	diHYjkUW+spGSVyNgz
+X-Received: by 2002:a05:600c:c4ac:b0:477:7b16:5f9f with SMTP id 5b1f17b1804b1-4855670e7c6mr11729765e9.31.1773349431770;
+        Thu, 12 Mar 2026 14:03:51 -0700 (PDT)
+Received: from [127.0.0.1] ([86.1.69.5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b66ffe2sm146061635e9.13.2026.03.12.14.03.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 14:03:51 -0700 (PDT)
+Date: Thu, 12 Mar 2026 21:03:52 +0000
+From: Josh Law <hlcj1234567@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Law <objecting@objecting.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Message-ID: <48aee348-5859-4d13-aa88-d0c21a4c0289@gmail.com>
+In-Reply-To: <20260312170303.61c1233c@gandalf.local.home>
+References: <20260312191143.28719-1-objecting@objecting.org> <20260312191143.28719-2-objecting@objecting.org> <20260312170303.61c1233c@gandalf.local.home>
+Subject: Re: [PATCH v2 1/3] lib/bootconfig: fix off-by-one in
+ xbc_verify_tree() unclosed brace error
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable v15 07/13] mm/khugepaged: add per-order mTHP
- collapse failure statistics
-To: Nico Pache <npache@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-Cc: aarcange@redhat.com, akpm@linux-foundation.org,
- anshuman.khandual@arm.com, apopple@nvidia.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, byungchul@sk.com, catalin.marinas@arm.com,
- cl@gentwo.org, corbet@lwn.net, dave.hansen@linux.intel.com,
- dev.jain@arm.com, gourry@gourry.net, hannes@cmpxchg.org, hughd@google.com,
- jack@suse.cz, jackmanb@google.com, jannh@google.com, jglisse@google.com,
- joshua.hahnjy@gmail.com, kas@kernel.org, lance.yang@linux.dev,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- mathieu.desnoyers@efficios.com, matthew.brost@intel.com,
- mhiramat@kernel.org, mhocko@suse.com, peterx@redhat.com, pfalcato@suse.de,
- rakie.kim@sk.com, raquini@redhat.com, rdunlap@infradead.org,
- richard.weiyang@gmail.com, rientjes@google.com, rostedt@goodmis.org,
- rppt@kernel.org, ryan.roberts@arm.com, shivankg@amd.com,
- sunnanyong@huawei.com, surenb@google.com, thomas.hellstrom@linux.intel.com,
- tiwai@suse.de, usamaarif642@gmail.com, vbabka@suse.cz,
- vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org,
- willy@infradead.org, yang@os.amperecomputing.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, zokeefe@google.com
-References: <20260226031741.230674-1-npache@redhat.com>
- <20260226032504.233594-1-npache@redhat.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260226032504.233594-1-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <48aee348-5859-4d13-aa88-d0c21a4c0289@gmail.com>
 
-On 2/26/26 04:25, Nico Pache wrote:
-> Add three new mTHP statistics to track collapse failures for different
-> orders when encountering swap PTEs, excessive none PTEs, and shared PTEs:
-> 
-> - collapse_exceed_swap_pte: Increment when mTHP collapse fails due to swap
-> 	PTEs
-> 
-> - collapse_exceed_none_pte: Counts when mTHP collapse fails due to
->   	exceeding the none PTE threshold for the given order
-> 
-> - collapse_exceed_shared_pte: Counts when mTHP collapse fails due to shared
->   	PTEs
-> 
-> These statistics complement the existing THP_SCAN_EXCEED_* events by
-> providing per-order granularity for mTHP collapse attempts. The stats are
-> exposed via sysfs under
-> `/sys/kernel/mm/transparent_hugepage/hugepages-*/stats/` for each
-> supported hugepage size.
-> 
-> As we currently dont support collapsing mTHPs that contain a swap or
-> shared entry, those statistics keep track of how often we are
-> encountering failed mTHP collapses due to these restrictions.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  Documentation/admin-guide/mm/transhuge.rst | 24 ++++++++++++++++++++++
->  include/linux/huge_mm.h                    |  3 +++
->  mm/huge_memory.c                           |  7 +++++++
->  mm/khugepaged.c                            | 16 ++++++++++++---
->  4 files changed, 47 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index c51932e6275d..eebb1f6bbc6c 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -714,6 +714,30 @@ nr_anon_partially_mapped
->         an anonymous THP as "partially mapped" and count it here, even though it
->         is not actually partially mapped anymore.
->  
-> +collapse_exceed_none_pte
-> +       The number of collapse attempts that failed due to exceeding the
-> +       max_ptes_none threshold. For mTHP collapse, Currently only max_ptes_none
-> +       values of 0 and (HPAGE_PMD_NR - 1) are supported. Any other value will
-> +       emit a warning and no mTHP collapse will be attempted. khugepaged will
-> +       try to collapse to the largest enabled (m)THP size; if it fails, it will
-> +       try the next lower enabled mTHP size. This counter records the number of
-> +       times a collapse attempt was skipped for exceeding the max_ptes_none
-> +       threshold, and khugepaged will move on to the next available mTHP size.
-> +
-> +collapse_exceed_swap_pte
-> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
-> +       to containing at least one swap PTE. Currently khugepaged does not
-> +       support collapsing mTHP regions that contain a swap PTE. This counter can
-> +       be used to monitor the number of khugepaged mTHP collapses that failed
-> +       due to the presence of a swap PTE.
-> +
-> +collapse_exceed_shared_pte
-> +       The number of anonymous mTHP PTE ranges which were unable to collapse due
-> +       to containing at least one shared PTE. Currently khugepaged does not
-> +       support collapsing mTHP PTE ranges that contain a shared PTE. This
-> +       counter can be used to monitor the number of khugepaged mTHP collapses
-> +       that failed due to the presence of a shared PTE.
-> +
->  As the system ages, allocating huge pages may be expensive as the
->  system uses memory compaction to copy data around memory to free a
->  huge page for use. There are some counters in ``/proc/vmstat`` to help
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 9941fc6d7bd8..e8777bb2347d 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -144,6 +144,9 @@ enum mthp_stat_item {
->  	MTHP_STAT_SPLIT_DEFERRED,
->  	MTHP_STAT_NR_ANON,
->  	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
-> +	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
-> +	MTHP_STAT_COLLAPSE_EXCEED_NONE,
-> +	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
->  	__MTHP_STAT_COUNT
->  };
->  
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 228f35e962b9..1049a207a257 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -642,6 +642,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
->  DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
->  DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
->  DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
-> +
->  
->  static struct attribute *anon_stats_attrs[] = {
->  	&anon_fault_alloc_attr.attr,
-> @@ -658,6 +662,9 @@ static struct attribute *anon_stats_attrs[] = {
->  	&split_deferred_attr.attr,
->  	&nr_anon_attr.attr,
->  	&nr_anon_partially_mapped_attr.attr,
-> +	&collapse_exceed_swap_pte_attr.attr,
-> +	&collapse_exceed_none_pte_attr.attr,
-> +	&collapse_exceed_shared_pte_attr.attr,
->  	NULL,
->  };
->  
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index c739f26dd61e..a6cf90e09e4a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -595,7 +595,9 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  				continue;
->  			} else {
->  				result = SCAN_EXCEED_NONE_PTE;
-> -				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
-> +				if (is_pmd_order(order))
-> +					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
-> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
->  				goto out;
->  			}
->  		}
-> @@ -631,10 +633,17 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  			 * shared may cause a future higher order collapse on a
->  			 * rescan of the same range.
->  			 */
-> -			if (!is_pmd_order(order) || (cc->is_khugepaged &&
-> -			    shared > khugepaged_max_ptes_shared)) {
-> +			if (!is_pmd_order(order)) {
-> +				result = SCAN_EXCEED_SHARED_PTE;
-> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
-> +				goto out;
-> +			}
-> +
-> +			if (cc->is_khugepaged &&
-> +			    shared > khugepaged_max_ptes_shared) {
->  				result = SCAN_EXCEED_SHARED_PTE;
->  				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
-> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
->  				goto out;
+12 Mar 2026 21:02:51 Steven Rostedt <rostedt@goodmis.org>:
 
-With the suggested earlier rework, this should hopefully become simply
+> On Thu, 12 Mar 2026 19:11:41 +0000
+> Josh Law <hlcj1234567@gmail.com> wrote:
+>
+>> From: Josh Law <objecting@objecting.org>
+>>
+>> __xbc_open_brace() pushes entries with post-increment
+>> (open_brace[brace_index++]), so brace_index always points one past
+>> the last valid entry.=C2=A0 xbc_verify_tree() reads open_brace[brace_ind=
+ex]
+>> to report which brace is unclosed, but this is one past the last
+>> pushed entry and contains stale/zero data, causing the error message
+>> to reference the wrong node.
+>>
+>> Use open_brace[brace_index - 1] to correctly identify the unclosed
+>> brace.=C2=A0 brace_index is known to be > 0 here since we are inside the
+>> if (brace_index) guard.
+>>
+>> Signed-off-by: Josh Law <objecting@objecting.org>
+>
+> Nice catch. May I ask how you found this.
+>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>
+> -- Steve
+>
+>> ---
+>> lib/bootconfig.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+>> index 2bcd5c2aa87e..a1e6a2e14b01 100644
+>> --- a/lib/bootconfig.c
+>> +++ b/lib/bootconfig.c
+>> @@ -802,7 +802,7 @@ static int __init xbc_verify_tree(void)
+>>
+>> =C2=A0=C2=A0=C2=A0 /* Brace closing */
+>> =C2=A0=C2=A0=C2=A0 if (brace_index) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 n =3D &xbc_nodes[open_brace[brace_=
+index]];
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 n =3D &xbc_nodes[open_brace[brace_=
+index - 1]];
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return xbc_parse_error("Brace=
+ is not closed",
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xbc_node_get_data(n));
+>> =C2=A0=C2=A0=C2=A0 }
 
-if (++shared > max_ptes_shared) {
-	result = SCAN_EXCEED_SHARED_PTE;
-	if (is_pmd_order(order))
-		count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
-	count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
-}
-
-With that (no code duplication) LGTM.
-
--- 
-Cheers,
-
-David
+Hi Steve,
+Thanks for the review!
+I found this while doing a manual audit of the bootconfig parser's error ha=
+ndling. I noticed that the post-increment in __xbc_open_brace() didn't seem=
+ to align with how xbc_verify_tree() was accessing the index. I verified it=
+ by intentionally passing a malformed config with an unclosed brace and saw=
+ it reporting a 'stale' or incorrect node location
