@@ -1,111 +1,185 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D113D891D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 18:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEE03FFAA2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 18:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773341124; cv=none; b=SEmHomuCzPN6FjYWtjYfcSqSMVBAJn/GDLNuhI3AqMZuOr/njRnq4yAI8g7A1RZgxXZVpNLnf9lkugSoimcS3E+zq2cmzGwS/XVZ9nBgd6cwGL6cyQcyBYfO5upZot1w3CN84gIG9sHuoy9kYzZuMyOcCNG9yWRL5ZgFzMCjpfo=
+	t=1773341900; cv=none; b=KUhiqzJslX768nK1BU0YtQ0WKWY/43F0cAJmsiVllB9FWDPUPmsQ4DNYFxXK55YouVkIxG9CP0GAeoAXIlqCuZZfb1BcDwYpzo5GMAcSOHduOtl/TFzC2oZ1KJ9lfH3B/wBMecDYYCWq3EN5xoVBMKycxKLhWUjalqHyzyUKkyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773341124; c=relaxed/simple;
-	bh=+kMlSxjMZoglOsCcAnI+So4oVKy/vFvPGKu4SmIoT/0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AyZwa02lh9jIGniwnN+FACEwAkfyweGrqWNYzPDSfSPoDB8/WmwIe/MiK5FbNVX4iytBar/rZNlm3q571buPBbAompRSdQMcWTS5/5H9p2d84tRace0HqKVLf6OOPPzuK9fQVkhHupi9NTvVZ+wdl2a5v5YpTL+PhuVFDoeniSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jACBKLYj; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773341900; c=relaxed/simple;
+	bh=Q8IVoWCsmkWJyLd6RKA73QX4Rhsp3c6MdOvH0moGQ6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U7XItcLXHT11HQST9AqgQe/eZtpN/aKpL3wGoAqx5mdAEC5hFAHl5JeARWN2o/mGEgjyDAvN7Gd+vCnt/S6mSPwel2njGRO+x6gEIrmIEyqrgFIK8n7GZc8YoijrMSLfI97Rtp2KqISFTBBkK01T4by6Ellta3sKJPlo8/QRY0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCtJUBxb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jACBKLYj"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-38a3f6da741so10237661fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 11:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773341122; x=1773945922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vuk/jw32c8PNpTwL/uN6PztjY6W4Zj8CeSCt8quW+80=;
-        b=jACBKLYjbuGswfE5RlLyN1mB5nKuMnnQzTgBQ7TzsEH+U+UyF71Q/YQl0gZUfjwcRx
-         3mOW+CEyp1wprGPSA80WhqxTu/sErRBVyhnhiigHUrwwdhqtyr9ghZeXKRa+McL8rwwz
-         IQzq1CbjBlstSrVaaifIyXLwl282/1FrzCRRysowYNcFzSHc+aIKuPcP69NJDnzNuzFD
-         ET00TK7CWCD8mpMIcYidBVg8ztVbLsE+BlPuGspQCHCwJ5th9UzNXZr4g+W18NhVojyg
-         3P5jnab2om+v+QGq0z9hOuUzmrl/SJLiqsiJSIwP4QwJpkrIqED7uhh298zewFps2xGn
-         IpDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773341122; x=1773945922;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Vuk/jw32c8PNpTwL/uN6PztjY6W4Zj8CeSCt8quW+80=;
-        b=sbOqGeYG4keIZOV+QubdZ0IEhUDtsd1fNFQ7tfHApGc9cEvlrZ5C0PIAFWLWaRoSk6
-         JL4oxkv6H4MpMKR8NJzGPOJftjtKi6GoqqMTd/S282YmQezZzrxWw1kSEHxIojoGDbkA
-         yuTluFXZ/trJNPU7o8S44gO3pDydq0IO8QhROttbAWNx0W6ddLPa30KLCX8qr6IDUlwS
-         Je2RB2R0HjTxnWo7yjnRZlS1Rg7cdm+dqjxPg4ZbH8JrzKwCZKVKj0qOzfLG2hcHMLJT
-         bkbOboIoam1jP2B2K6whCal0VhmnlWnMQsYQPqZQXVRBDcNvKI6guYg+77C1bH6vyVuG
-         2IxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXMi+bd6SzF8EXuIte6v2p9auw3fHf0ZCH9kq+jgyKWL0nKCl8AqUaTpdFrL3aUrWrq+86dM2WWR6i/8WJgq8XlSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf6141t7f9GuZGztY+FmsXComIOomNCh0/GjMX4yQPxtfsx6os
-	nxwn1r7g5zQWTvzHwDf3ZL9uBB/MozFVPXAPmlMDcXlQM1nGO4LsprVDFNavBkIq
-X-Gm-Gg: ATEYQzzhIUCwCAKY3ycj6bfWdN0fr9vd+n2NrpwmAFsN2kORcFFlQgxboobTSOqdwxO
-	YVdFGNONVTIrLJmAL3IuxNQuUyNd0zK4QWRpBZombQbYV8F/JQRdgvribFuH/0JoRkIqk16GSa9
-	3qRbuBxRSh+sSBp/B4KXnCapTsx2PvBPQRLiMZL+hy5AUvxegs6JH3TjjlN1Dv+t6sGH/OU74PW
-	ibtUpFun12gFAbyr7rIoaXqn+O/MFj7Ip9WyUfQsPBbdvayHgwi5VRB9SKE2hAexck4gneDXC5N
-	rhnmnlQIDdOlMNa2BB3tOIt0f0Fns6XRPlWqWnXHzyN34q5hr4Fy13vH+G4HiktJUSp1hTh9rBx
-	0jaKSBcLdHu1xZclNsvmK2W1st+KGXnzsHmpyKY3ws8kUVBr57qMWZu4POiOvHrNXeAm+eyoQyB
-	Nba0ER4KQeLLWXmbnzKm5fXpU6Hp/Ms1ihRoZWSZzdAO4WL5TZYXbh0dN9VZzuTLjLwNpCjsU=
-X-Received: by 2002:a05:651c:210e:b0:38a:27e:b904 with SMTP id 38308e7fff4ca-38a8965822cmr1225031fa.4.1773341121502;
-        Thu, 12 Mar 2026 11:45:21 -0700 (PDT)
-Received: from ubuntu.. (static.159.107.27.37.clients.your-server.de. [37.27.107.159])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38a67e7b64bsm10382991fa.43.2026.03.12.11.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 11:45:21 -0700 (PDT)
-From: Josh Law <hlcj1234567@gmail.com>
-X-Google-Original-From: Josh Law <objecting@objecting.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Josh Law <objecting@objecting.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/3] lib/bootconfig: fix snprintf truncation check in xbc_node_compose_key_after()
-Date: Thu, 12 Mar 2026 18:45:20 +0000
-Message-Id: <20260312184520.24399-3-objecting@objecting.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260312184520.24399-1-objecting@objecting.org>
-References: <20260312184520.24399-1-objecting@objecting.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCtJUBxb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350F9C4CEF7
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 18:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773341900;
+	bh=Q8IVoWCsmkWJyLd6RKA73QX4Rhsp3c6MdOvH0moGQ6c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sCtJUBxb3+9J3t9Iw+kTliggxtN54o/pmpFjUJlz5sLvROyyLvn2gtjXbisUKKmn4
+	 JdBvt2hswsaROuBh9bXye6cakfOIF/hr2NJJSiiAPKDzWX4pD67FJcXMk8b2+Nvad0
+	 NhubGvPxWuBGePduwZjC8VruXOXfbQtM60kD0qHLJQoRo2GDUdttBJKF1LXgYNHzD1
+	 zkqsIQMqBW0aN2hP5L4NO9iaX48RlGjmr8ZjJRmjBaZd/s2Gzi/ofgIsSjH6kYGKI4
+	 TvRhVfDoCIbM8VRM1l7h601LP5MbHlSWk99Ug/bCbhLUVT60MmWWV3iaEnwcWx3UiG
+	 kkufejGrRoE6Q==
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-67bac077116so747175eaf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 11:58:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVwsDwrcdhnEoipVs16Lm7g4AxUcMnODina26Huz8ZyI3kMIZpMSEZbRP5iedA5RfkBgBHE1p3mAjeK7agNG6jQoHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNzJ3YYNKNNq6gvDisB//R2tzdQUtFBa0wjfCWXhiMRNerMsDM
+	UyCJJgglNa+Nh8PndNlHW4S/0+V9WeJX0BMXk5WPbyyZzTdcMHUn16pEvVDdr9kO5D69IQSMTSF
+	af9Wz/rYZTV5ckiDs9FwPgbOfnmbJco0=
+X-Received: by 2002:a05:6820:2b12:b0:67b:db23:4f73 with SMTP id
+ 006d021491bc7-67bdb234fdemr109330eaf.51.1773341899301; Thu, 12 Mar 2026
+ 11:58:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260312150523.2054552-1-vineeth@bitbyteword.org> <20260312150523.2054552-7-vineeth@bitbyteword.org>
+In-Reply-To: <20260312150523.2054552-7-vineeth@bitbyteword.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 12 Mar 2026 19:58:06 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0huw1TabNsO30RRWMez1XM1NGXQ_zRhXV_psSWS+s2rRQ@mail.gmail.com>
+X-Gm-Features: AaiRm53ivx2mW0g_aq6AqhGUYmn4K1fNwjagiHIJ_z30Df6_oL0YOub2aqsehFw
+Message-ID: <CAJZ5v0huw1TabNsO30RRWMez1XM1NGXQ_zRhXV_psSWS+s2rRQ@mail.gmail.com>
+Subject: Re: [PATCH 06/15] cpufreq: Use trace_invoke_##name() at guarded
+ tracepoint call sites
+To: vineeth@bitbyteword.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-snprintf() returns the number of characters that would have been
-written excluding the NUL terminator.  Output is truncated when the
-return value is >= the buffer size, not just > the buffer size.
+On Thu, Mar 12, 2026 at 4:05=E2=80=AFPM Vineeth Pillai (Google)
+<vineeth@bitbyteword.org> wrote:
+>
+> Replace trace_foo() with the new trace_invoke_foo() at sites already
+> guarded by trace_foo_enabled(), avoiding a redundant
+> static_branch_unlikely() re-evaluation inside the tracepoint.
+> trace_invoke_foo() calls the tracepoint callbacks directly without
+> utilizing the static branch again.
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> Assisted-by: Claude:claude-sonnet-4-6
 
-When ret == size, the current code takes the non-truncated path,
-advancing buf by ret and reducing size to 0.  This is wrong because
-the output was actually truncated (the last character was replaced by
-NUL).  Fix by using >= so the truncation path is taken correctly.
+Fine with me, so
 
-Signed-off-by: Josh Law <objecting@objecting.org>
----
- lib/bootconfig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org> # cpufreq
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 62b4ed7a0ba6..b0ef1e74e98a 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -316,7 +316,7 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
- 			       depth ? "." : "");
- 		if (ret < 0)
- 			return ret;
--		if (ret > size) {
-+		if (ret >= size) {
- 			size = 0;
- 		} else {
- 			size -= ret;
--- 
-2.34.1
-
+> ---
+>  drivers/cpufreq/amd-pstate.c   | 10 +++++-----
+>  drivers/cpufreq/cpufreq.c      |  2 +-
+>  drivers/cpufreq/intel_pstate.c |  2 +-
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 5aa9fcd80cf51..3fa40a32ef6b5 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -247,7 +247,7 @@ static int msr_update_perf(struct cpufreq_policy *pol=
+icy, u8 min_perf,
+>         if (trace_amd_pstate_epp_perf_enabled()) {
+>                 union perf_cached perf =3D READ_ONCE(cpudata->perf);
+>
+> -               trace_amd_pstate_epp_perf(cpudata->cpu,
+> +               trace_invoke_amd_pstate_epp_perf(cpudata->cpu,
+>                                           perf.highest_perf,
+>                                           epp,
+>                                           min_perf,
+> @@ -298,7 +298,7 @@ static int msr_set_epp(struct cpufreq_policy *policy,=
+ u8 epp)
+>         if (trace_amd_pstate_epp_perf_enabled()) {
+>                 union perf_cached perf =3D cpudata->perf;
+>
+> -               trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf=
+,
+> +               trace_invoke_amd_pstate_epp_perf(cpudata->cpu, perf.highe=
+st_perf,
+>                                           epp,
+>                                           FIELD_GET(AMD_CPPC_MIN_PERF_MAS=
+K,
+>                                                     cpudata->cppc_req_cac=
+hed),
+> @@ -343,7 +343,7 @@ static int shmem_set_epp(struct cpufreq_policy *polic=
+y, u8 epp)
+>         if (trace_amd_pstate_epp_perf_enabled()) {
+>                 union perf_cached perf =3D cpudata->perf;
+>
+> -               trace_amd_pstate_epp_perf(cpudata->cpu, perf.highest_perf=
+,
+> +               trace_invoke_amd_pstate_epp_perf(cpudata->cpu, perf.highe=
+st_perf,
+>                                           epp,
+>                                           FIELD_GET(AMD_CPPC_MIN_PERF_MAS=
+K,
+>                                                     cpudata->cppc_req_cac=
+hed),
+> @@ -507,7 +507,7 @@ static int shmem_update_perf(struct cpufreq_policy *p=
+olicy, u8 min_perf,
+>         if (trace_amd_pstate_epp_perf_enabled()) {
+>                 union perf_cached perf =3D READ_ONCE(cpudata->perf);
+>
+> -               trace_amd_pstate_epp_perf(cpudata->cpu,
+> +               trace_invoke_amd_pstate_epp_perf(cpudata->cpu,
+>                                           perf.highest_perf,
+>                                           epp,
+>                                           min_perf,
+> @@ -588,7 +588,7 @@ static void amd_pstate_update(struct amd_cpudata *cpu=
+data, u8 min_perf,
+>         }
+>
+>         if (trace_amd_pstate_perf_enabled() && amd_pstate_sample(cpudata)=
+) {
+> -               trace_amd_pstate_perf(min_perf, des_perf, max_perf, cpuda=
+ta->freq,
+> +               trace_invoke_amd_pstate_perf(min_perf, des_perf, max_perf=
+, cpudata->freq,
+>                         cpudata->cur.mperf, cpudata->cur.aperf, cpudata->=
+cur.tsc,
+>                                 cpudata->cpu, fast_switch);
+>         }
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 277884d91913c..cf57aeb503790 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2222,7 +2222,7 @@ unsigned int cpufreq_driver_fast_switch(struct cpuf=
+req_policy *policy,
+>
+>         if (trace_cpu_frequency_enabled()) {
+>                 for_each_cpu(cpu, policy->cpus)
+> -                       trace_cpu_frequency(freq, cpu);
+> +                       trace_invoke_cpu_frequency(freq, cpu);
+>         }
+>
+>         return freq;
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstat=
+e.c
+> index 11c58af419006..a0da9b31c4ffe 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -3132,7 +3132,7 @@ static void intel_cpufreq_trace(struct cpudata *cpu=
+, unsigned int trace_type, in
+>                 return;
+>
+>         sample =3D &cpu->sample;
+> -       trace_pstate_sample(trace_type,
+> +       trace_invoke_pstate_sample(trace_type,
+>                 0,
+>                 old_pstate,
+>                 cpu->pstate.current_pstate,
+> --
+> 2.53.0
+>
