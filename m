@@ -1,132 +1,244 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F621C8634
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Mar 2026 00:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364832FAC14;
+	Fri, 13 Mar 2026 00:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773362197; cv=none; b=dscmxLGmKKw9wFL1pVrpdUeLNoox41tDEYdzaVECpe/Kaagt8XJXHmekmsxGB59wqYKPy/MMimm7POrcjV2EcDUVQTDmVMkzCKUJARYac4AbcH1lvDfncK5Rs2BfI7rDiqwpapLPTN/va5q+uPNGG8dJNCXcpxTAjw3Mjc7NBZ4=
+	t=1773362597; cv=none; b=PvaOmLI8BRbnyCx7ZfNvAF8Os1ShAyT3wYdX6XBchBiyRLa1V8L1C/FNP4WDqVRG6lkX76xIE2/qCWHBK+p6yzE1rPMatqTePDXRz6ebMojopR4/Jph/B5mtK5ml+mlTLpEj4kZeEt9rQQFuT+dJ6pNR4a+39Jctv3/uwEv947Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773362197; c=relaxed/simple;
-	bh=9oIvEgCdqEl+AGZYDSEAFBDA6RTB3elZif62x1BQroI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Noit4/C6EKC+RVoAqWrttf5mkOi1AMezLgHow6gNFpaXb1r5QmdR94WYKC0SjWmcj5El2iBkFgRJdM8kk/wC1QDkSA9TWVZq0usfJ/8i8n7HLYFD1tYsCIp6B9OTAFEQva7LqbwLhya0WS1jPBP4eoLefAwIMyy3Iyz1xlb41ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tbr6d3rA; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1773362597; c=relaxed/simple;
+	bh=V1LusLfhIYS279k6+gPTO3CAtyNEfgSX9UJqBDT2m6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q9Y+fhHPOc9+2oA1nUHi6kMTNCnLpKPy7BGdEMS4JuF3uzQgx6Q1Pf9m6FfMbj1OKYuuQmZtnGWW/6QOOE5vn867VNqd0x0sORkgXtTn6xErJ2TKyb0FA2HZ+/y3HiVnJmcfRYXq3tkYUCg6xZbi2W39HiH74yLbhyCzb5GfZs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=evZBO/FT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tlm7pJXg; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tbr6d3rA"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-35a0b51eb23so1053464a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Mar 2026 17:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773362195; x=1773966995; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=msDdWC7KsVzGR7+a7KYP2KJHZfc1KrX2g6o6c66TQ0I=;
-        b=Tbr6d3rA2menzviTRGUxxZ/si/4YqVxHLGAIIYU6rftjAVvS4DqBQFBP+SNle6fuGw
-         BH61TbGgpLa0hrFoPxm7W2WyN0FxrzKw5wj6dfMQ6molTQcALy10kT/SA2kdGdB487OM
-         8m7OKaFZjLA3qfFIr9iGtEhB1zTiFJOGY7lM8+lbg31xmTBOytAlDlV1uiFKnIz70yoO
-         ymOdFRtG1OnQYqpdEXjqrUdzwgSeY4IuS9YuG4qXBbv6KclUNvdx6yBQ3N65rfDmFUBL
-         xSd4h7fnjC7mYOcv61a9sHykaFyLshubWOaXp6RJ/WzVOFLy2EBwWmrMUFPW/ye2Groq
-         wY4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773362195; x=1773966995;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=msDdWC7KsVzGR7+a7KYP2KJHZfc1KrX2g6o6c66TQ0I=;
-        b=p/o/85WcdBYlU0mC+TedUbf2Nh466fMfdtQ8aFki0SlaT4XHWshDOtC5SUBjr8JJHm
-         hwQHk5/ANBUsbZYmC7m2l2rftISBa5BLRjuq7xYvatvnHtxDjcDheIqwgMOE6H35z+UL
-         4YNbm8DxQQEAHep0+aP2rg3YpRP0Yts1Mrji059f5sPQVDPwid6vbx2Xmcf+Wjr1OlNi
-         MhWYlED00zd3y8hBiEjs0xvCoyR+DQpjOdYzw4kxU6b//EbF1/TL1/dZTNWIRkacAXHl
-         NP+0D5hcwAxxUz1II1Z4YPK3a8KkdQxFg6+2xRrZMr046ulRt0IOt2bjTKWbmmTWs3UV
-         aFPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVGeIwIUTAR9Zp/GmYz9vKR/3z/tMebZ2ENlYDSsZ++s//gIE9NvsA69wQSWXhx+qmN55U8aBBKxdVEJGMSfJYqsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZbN3FF244noWDvBGSWpo2nXKbVA172usTTkRPLiJUR+0mFgDg
-	v+YUl+gv3gFnmYvY6qSK5BE/7HCRr1fllakBb7XGuYW24mP/eXuMMXaFFnZvH2HXu74FY8UClgC
-	t4jWIAA==
-X-Received: from pjdd8.prod.google.com ([2002:a17:90a:2c8:b0:359:8f01:6c5a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:28c4:b0:359:fcba:6517
- with SMTP id 98e67ed59e1d1-35a21fd7ab5mr1194105a91.19.1773362195351; Thu, 12
- Mar 2026 17:36:35 -0700 (PDT)
-Date: Thu, 12 Mar 2026 17:36:34 -0700
-In-Reply-To: <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="evZBO/FT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tlm7pJXg"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 1863C1301B1D;
+	Thu, 12 Mar 2026 20:43:10 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 12 Mar 2026 20:43:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773362590;
+	 x=1773369790; bh=mtJ/saZCLiCxFDNQljniHYoFSU4uzdwtWsgXO8zNDIk=; b=
+	evZBO/FT5uLkrmbp/p/bKHGn86ivpuWIB8uwzomHLGU6kH6lhmmlCRwiDJoWV39q
+	TXhehd3v184kz2tKDZFnYt3nMYpGYs0FHIDP5P1WpT7DuL/s4rQw/xsDTsgE9QLg
+	/164043xlTxtGbkRkgPLxopa5nRZXLGdKExiyrVeEWQB7Z6SjppifuMa+H+nAnt/
+	Y9UIllgVcpdMC3ryQir69hasMs4sAzed4op96lB/0i6WUn6Uhf0fVcGFEXiSJozk
+	InAA9BqTgm3htPeeddGMpXgGFTZior38m4S57df0DQ4nN26Wz6Bnup7omFSZuA/V
+	bXDsxk1oRwy+oBWG8yzDjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1773362590; x=1773369790; bh=m
+	tJ/saZCLiCxFDNQljniHYoFSU4uzdwtWsgXO8zNDIk=; b=tlm7pJXgvMRnwrzqw
+	361ob53tdiymOgQgABOTedImHhfzfyXrgBfCei5K7ic4kOntEU7/s+f5sGh5Urct
+	yi6RhxZa9AKNdjteFK4EVVHFzPhf0rBHY7+D36NQKzOYqyDZTXwjWo75g7RIoUOt
+	+1Y24Dtef108V7gC/hPAOKuoKHxLQb6ez/GO9OthDEETcJ7ke8mp144qJcMLu188
+	7QoX5KdxhtTAeNLGhB9EFu+7bHr1B8GbxO8xT5UwDkDbvUE6Kv/LXlywzoVIfx8H
+	5/sPhbm9H87cFjM4xoYFeNlJ51RwpxBUAAY7/b3qCojyfoXALXgP5SiZxeMBLz3U
+	TvcfA==
+X-ME-Sender: <xms:nV2zaf-NnCpb3HI-jpnIeaMEX78RNQjZehsLTDQASvyJLmVZkQdgfg>
+    <xme:nV2zafZJ7mvrmpO-gcToxfMKwcMc5Q_rFX10NZl8_LR-rje39CCVNCfpHij589i8x
+    F8Ot_R8pRFhAt1hFRsQ_wy6CVw51XS3cVTIlX1zcPm_ZZvJPw>
+X-ME-Received: <xmr:nV2zaYGPAoTTcGmEks6mZrihRO7DEzSJQTLVP_2o9xNxWYeVqZvQjDfXGA3yqw1n6XZ5fGvyGTUhxFiRqIqqc-pGG5s2HTIOOgdySI1Z0kbM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeekvdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
+    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
+    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
+    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohephedupdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:nV2zaY7faWbXQHLIpd0SYafA-iMAWHAFfnW2ShinVhLAUGrEfx07iA>
+    <xmx:nV2zaZvgDZlHyejqPasp60C6LyxeD80AFwab7f1aj4miUyVx-K4aCA>
+    <xmx:nV2zaaBryqgkdrCkCXjeDM2uqFf7SAUNres7R_12QlIkQ3RduF7YvQ>
+    <xmx:nV2zaZvraRlGVqoe9uMDqj0rk0wlwP-X2N2IrOVEi5yN04lSuh4s-Q>
+    <xmx:nl2zadJN25sW9Jik8_kJDmuvga-QlrXGx2xisz4qYzgk4C1wnxRkBwfU>
+Feedback-ID: i9d664b8f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Mar 2026 20:42:56 -0400 (EDT)
+From: NeilBrown <neilb@ownmail.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,	Jan Kara <jack@suse.cz>,
+	Jeff Layton <jlayton@kernel.org>,	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,	Carlos Maiolino <cem@kernel.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,	Amir Goldstein <amir73il@gmail.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,	Steve French <sfrench@samba.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Breno Leitao <leitao@debian.org>,	"Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,	Alex Markuze <amarkuze@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,	Tyler Hicks <code@tyhicks.com>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,	Jeremy Kerr <jk@ozlabs.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	coda@cs.cmu.edu,
+	linux-mm@kvack.org,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	ecryptfs@vger.kernel.org,
+	gfs2@lists.linux.dev,
+	linux-um@lists.infradead.org,
+	linux-efi@vger.kernel.org
+Subject: [PATCH 37/53] cephfs: Use d_alloc_noblock() in ceph_readdir_prepopulate()
+Date: Fri, 13 Mar 2026 08:12:24 +1100
+Message-ID: <20260312214330.3885211-38-neilb@ownmail.net>
+X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
+In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
+References: <20260312214330.3885211-1-neilb@ownmail.net>
+Reply-To: NeilBrown <neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1770071243.git.ackerleytng@google.com> <86ad28b767524e1e654b9c960e39ca8bfb24c114.1770071243.git.ackerleytng@google.com>
- <CAEvNRgFMNywpDRr+WeNsVj=MnsbhZp9H3j0QRDo_eOP+kGCNJw@mail.gmail.com>
- <CAEvNRgG-L+GBcm+u_thGvXAxV-Nqzu5VtgXy0PfND6SG0FiyVg@mail.gmail.com>
- <CA+EHjTy2urW2Tj5czQDKUHdri7FCLfw2mafTgmmtFs+-7ueoiw@mail.gmail.com>
- <abLfWHf89TxWqeGZ@google.com> <CAEvNRgFUc+9xCoN9Yo5NThHrvbccWAhPwp9nNM2fvx7QqrcJsg@mail.gmail.com>
-Message-ID: <abNcEkNseDEBIhop@google.com>
-Subject: Re: [RFC PATCH v2 09/37] KVM: guest_memfd: Add support for KVM_SET_MEMORY_ATTRIBUTES2
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Fuad Tabba <tabba@google.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, aik@amd.com, 
-	andrew.jones@linux.dev, binbin.wu@linux.intel.com, bp@alien8.de, 
-	brauner@kernel.org, chao.p.peng@intel.com, chao.p.peng@linux.intel.com, 
-	chenhuacai@kernel.org, corbet@lwn.net, dave.hansen@linux.intel.com, 
-	david@kernel.org, hpa@zytor.com, ira.weiny@intel.com, jgg@nvidia.com, 
-	jmattson@google.com, jroedel@suse.de, jthoughton@google.com, 
-	maobibo@loongson.cn, mathieu.desnoyers@efficios.com, maz@kernel.org, 
-	mhiramat@kernel.org, michael.roth@amd.com, mingo@redhat.com, 
-	mlevitsk@redhat.com, oupton@kernel.org, pankaj.gupta@amd.com, 
-	pbonzini@redhat.com, prsampat@amd.com, qperret@google.com, 
-	ricarkol@google.com, rick.p.edgecombe@intel.com, rientjes@google.com, 
-	rostedt@goodmis.org, shivankg@amd.com, shuah@kernel.org, steven.price@arm.com, 
-	tglx@linutronix.de, vannapurve@google.com, vbabka@suse.cz, 
-	willy@infradead.org, wyihan@google.com, yan.y.zhao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 12, 2026, Ackerley Tng wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Thu, Mar 12, 2026, Fuad Tabba wrote:
-> >> Hi Ackerley,
-> >>
-> >> Before getting into the UAPI semantics, thank you for all the heavy
-> >> lifting you've done here. Figuring out how to make it all work across
-> >> the different platforms is not easy :)
-> >>
-> >> <snip>
-> >>
-> >> > The policy definitions below provide more details:
-> >
-> > Please drop "CONTENT_POLICY" from the KVM documentation.  From KVM's perspective,
-> > these are not "policy", they are purely properties of the underlying memory.
-> > Userspace will likely use the attributes to implement policy of some kind, but
-> > KVM straight up doesn't care.
-> 
-> Policy might have been the wrong word. I think this is a property of the
-> conversion process/request, not a property of the memory like how
-> shared/private is a property of the memory?
-> 
-> I'll have to find another word to describe this enum of
+From: NeilBrown <neil@brown.name>
 
-Or just don't?  I'm 100% serious, because unless we carve out a field _just_ for
-these two flags, they're eventually going to get mixed with other stuff.  At that
-point, having a precisely named enum container just gets in the way.
+cephfs uses the results of readdir to prime the dcache.  Using d_alloc()
+is no longer safe, even with an exclusive lock on the parent, as
+d_alloc_parallel() will be allowed to run unlocked.  The safe interface
+is d_alloc_noblock().  In the rare case that this blocks because there
+is a concurrent lookup for the same name there is little cost in not
+completing the allocating in the directory code.
 
-> I see you dropped any documentation to do with testing.
+It it still possible to create an inode at this point so we do that even
+when there is no dentry.
 
-Yes.
+So change to use d_alloc_noblock() and handle -EWOULDBLOCK.  Also use
+QSTR_LEN() to initialise dname, and try_lookup_noperm instead of
+full_name_hash() and d_lookup().
 
-> I meant to document it (at least something about the unspecified case) so it
-> can be relied on in selftests, with the understanding (already specified
-> elsewhere in Documentation/virt/kvm/api.rst) that nothing about
-> KVM_X86_SW_PROTECTED_VM is to be relied on in production, and can be changed
-> anytime. What do you think?
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ fs/ceph/inode.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-KVM_X86_SW_PROTECTED_VM should self-report like all other VM types, and shouldn't
-support anything that isn't documented as possible.  I.e. we shouldn't allow
-ZERO on shared=>private "for testing".
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 0982fbda2a82..8557b207d337 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -2011,9 +2011,7 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 		struct ceph_mds_reply_dir_entry *rde = rinfo->dir_entries + i;
+ 		struct ceph_vino tvino;
+ 
+-		dname.name = rde->name;
+-		dname.len = rde->name_len;
+-		dname.hash = full_name_hash(parent, dname.name, dname.len);
++		dname = QSTR_LEN(rde->name, rde->name_len);
+ 
+ 		tvino.ino = le64_to_cpu(rde->inode.in->ino);
+ 		tvino.snap = le64_to_cpu(rde->inode.in->snapid);
+@@ -2029,20 +2027,24 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 		}
+ 
+ retry_lookup:
+-		dn = d_lookup(parent, &dname);
++		dn = try_lookup_noperm(&dname, parent);
+ 		doutc(cl, "d_lookup on parent=%p name=%.*s got %p\n",
+ 		      parent, dname.len, dname.name, dn);
+-
+-		if (!dn) {
+-			dn = d_alloc(parent, &dname);
+-			doutc(cl, "d_alloc %p '%.*s' = %p\n", parent,
++		if (IS_ERR(dn)) {
++			err = PTR_ERR(dn);
++			goto out;
++		} else if (!dn) {
++			dn = d_alloc_noblock(parent, &dname);
++			doutc(cl, "d_alloc_noblock %p '%.*s' = %p\n", parent,
+ 			      dname.len, dname.name, dn);
+-			if (!dn) {
+-				doutc(cl, "d_alloc badness\n");
+-				err = -ENOMEM;
++			if (dn == ERR_PTR(-EWOULDBLOCK)) {
++				/* Just handle the inode info */
++				dn = NULL;
++			} else if (IS_ERR(dn)) {
++				doutc(cl, "d_alloc_noblock badness\n");
++				err = PTR_ERR(dn);
+ 				goto out;
+-			}
+-			if (rde->is_nokey) {
++			} else if (rde->is_nokey) {
+ 				spin_lock(&dn->d_lock);
+ 				dn->d_flags |= DCACHE_NOKEY_NAME;
+ 				spin_unlock(&dn->d_lock);
+@@ -2069,7 +2071,7 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 		}
+ 
+ 		/* inode */
+-		if (d_really_is_positive(dn)) {
++		if (dn && d_really_is_positive(dn)) {
+ 			in = d_inode(dn);
+ 		} else {
+ 			in = ceph_get_inode(parent->d_sb, tvino, NULL);
+@@ -2087,21 +2089,22 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 		if (ret < 0) {
+ 			pr_err_client(cl, "badness on %p %llx.%llx\n", in,
+ 				      ceph_vinop(in));
+-			if (d_really_is_negative(dn)) {
++			if (!dn || d_really_is_negative(dn)) {
+ 				if (inode_state_read_once(in) & I_NEW) {
+ 					ihold(in);
+ 					discard_new_inode(in);
+ 				}
+ 				iput(in);
+ 			}
+-			d_drop(dn);
++			if (dn)
++				d_drop(dn);
+ 			err = ret;
+ 			goto next_item;
+ 		}
+ 		if (inode_state_read_once(in) & I_NEW)
+ 			unlock_new_inode(in);
+ 
+-		if (d_really_is_negative(dn)) {
++		if (d_in_lookup(dn) || d_really_is_negative(dn)) {
+ 			if (ceph_security_xattr_deadlock(in)) {
+ 				doutc(cl, " skip splicing dn %p to inode %p"
+ 				      " (security xattr deadlock)\n", dn, in);
+-- 
+2.50.0.107.gf914562f5916.dirty
 
-What I do think we should do is scribble memory on conversions without ZERO or
-PRIVATE, probably guarded by a Kconfig or maybe a module param, to do a best
-effort enforcement of the ABI, i.e. to try and prevent userspace from depending
-on uarch/vendor specific behavior.
