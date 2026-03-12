@@ -1,244 +1,92 @@
-Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D843A6B71;
-	Thu, 12 Mar 2026 21:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA69938AC71;
+	Thu, 12 Mar 2026 21:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773352010; cv=none; b=bP9XdeTTmTEhzcUGdR620A/EUOJAMsRlHqRpsSWtH+hHHft9rOyc1hyANSvo/wncFKGfhf1vvd8ucaabIylQT2bM3cZUprdEd3koXveoKb9lghe6tEfYjlWzbPxPL/CbUx+UR/iJ1ty9rVzYtRDhMaei+BNrDYv5ps9AGuQefFE=
+	t=1773352020; cv=none; b=lhVsoMoSruowKUnxw944M578CwhABRf5MUJYHLBjefdai5zkMhRx5fkZ2FPgUPunQIjCh/FtiGhwAKUcQa8RSeyUS3H7Dqds6XZTr/hewOH9u5uEiFy3g2inbSP7KR9D3dTAVVa5pLdvUghEfIjcJ4Mjo3jaPQ97F331YgTo7bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773352010; c=relaxed/simple;
-	bh=0UbS3rgmCbSshMD+eXPex41XbcsyIS8pZIzWXdA+Vn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LQ/97z4DEh07ycLodgrGcJZSgI09GJ3i2MwiR2bKpOfQj3RfzKcUXNFip2u8wEUfd/+ygl82okpe+sqAm8m79q6FveZK97i+73TLJXnjzT1OgdLdXIF0F9iLYHKRNOyVAsqXNefldliRIGEvuLfF2z3zZORwUGzBl9Y+EVFHHgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=SerCWqLI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bz1e/Oln; arc=none smtp.client-ip=202.12.124.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="SerCWqLI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bz1e/Oln"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 293E41300F6C;
-	Thu, 12 Mar 2026 17:46:44 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 12 Mar 2026 17:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to; s=fm1; t=1773352004;
-	 x=1773359204; bh=4WJg8BesAO2r3vZCyn8Qj6EvQOGiM+109I5YGqS1b9I=; b=
-	SerCWqLIgdWRLB6BFLBdqn2eI+vI5/t4G8+IU7QLeE8wYOrdHBw5HU694Zz4gf3W
-	M6tCB5+ksA0SG/bjn4x5w9+oyXipICRWoxM0ehBTavuD1xt02fz2Jdhcbs1AqGB1
-	xcXbISL1jLJEABmTYnW/lMs2oqr2ta/3BNNWvrocKOn9gK+6mf47WNMrpBl592kJ
-	FzscqO6u6qq4PnC9NiqFVwTPOrfVhOWBGK14bw6NESRrWKqV7Dl4Dco4/LE+hFbo
-	HixqPSoOkkx2VI5A/uT1KJd7g0Oc5t/uavVuNubv5KUOz1eH1PyEG3UIsGNvyorv
-	2b/dfxvPTHpC0RdBiGo00g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1773352004; x=1773359204; bh=4
-	WJg8BesAO2r3vZCyn8Qj6EvQOGiM+109I5YGqS1b9I=; b=bz1e/OlnsMyj6akRb
-	IxeYS9L2jvkQo8W89blCf+xp6yfqMO3SMeerllq7Ios+b+V5zIhfXemg6fgMmsA7
-	7ncn1BKA1nPjv9DXPEyTjhjjPbyzrQyvwa8Z4FIdur7w0pFW/P7SpKZQC1bNqVjG
-	SQJ0LVU3ABw9muOjKVl8UHKkptWCo66BsQtjh8/a3tjtMpHJh3m3w6A/vrLCKGHr
-	Jdm/2cEgZFqV81SboGMySRQNjqSXtpMWuMHpMv+gnZ+/tGg6J8nD3annX4j4KTaR
-	/8dnRk1YiNlPOc2j5fyVdgnPf2yKQJ48BLw6M2c1qifsRF7kXNb3OXfFmGkRd5M/
-	CdYig==
-X-ME-Sender: <xms:QzSzae-_RUJ_LKPLY7mTewAt03A9YptxJHuSuQh6s8V5C963Umhc5g>
-    <xme:QzSzaSYtFquQUsIXw34mTZMPK68O3unTDICtNAsOTtaTjgJBV9ne7dzdLLwm4iHMD
-    nAag40mLhUJDzkqTeSs1EbAWXE_Iv3YEgye_MqkYzeH_0JLyg>
-X-ME-Received: <xmr:QzSzafFqW05biJiriNkrPeJzdA72U4phWYPTkM_iqNiw4h1VTOa1Y7AJabIMIMN9QcRiToQNYKh0zkj3B26JHpQC8Pn8EAq1lCNUKFiRSzAG>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvkeejledtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epveevkeffudeuvefhieeghffgudektdelkeejiedtjedugfeukedvkeffvdefvddunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohephedupdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:QzSzaT7upc63WACrikUPcBWBCgsP_sRT-FWHYJea2_6zxpV1hC2ESA>
-    <xmx:QzSzaYtBEhpWJVTEZrCewe5RuYo_PChA-ijEHPGqS2typBwFVUlitQ>
-    <xmx:QzSzadBR_wPJIKcv4DNN4povDMSTO_zB-Bfw0w7J21L3Uqn7KDQY4w>
-    <xmx:QzSzaQsO_0k-M4QIiH9Pfs2OdTOZ-CXVfoXnRl2Bt2Pbkhmo6mzdxQ>
-    <xmx:RDSzaQgf2GkDuAkTHdg5V2lbXPP1GGvaWrpMh7oNhgYYYnYWDVESZTtS>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 12 Mar 2026 17:46:30 -0400 (EDT)
-From: NeilBrown <neilb@ownmail.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,	Carlos Maiolino <cem@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,	Amir Goldstein <amir73il@gmail.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>,	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,	Steve French <sfrench@samba.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Breno Leitao <leitao@debian.org>,	"Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,	Alex Markuze <amarkuze@redhat.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,	Tyler Hicks <code@tyhicks.com>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,	Jeremy Kerr <jk@ozlabs.org>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-unionfs@vger.kernel.org,
-	coda@cs.cmu.edu,
-	linux-mm@kvack.org,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	ecryptfs@vger.kernel.org,
-	gfs2@lists.linux.dev,
-	linux-um@lists.infradead.org,
-	linux-efi@vger.kernel.org
-Subject: [PATCH 08/53] VFS/xfs: drop parent lock across d_alloc_parallel() in d_add_ci()
-Date: Fri, 13 Mar 2026 08:11:55 +1100
-Message-ID: <20260312214330.3885211-9-neilb@ownmail.net>
-X-Mailer: git-send-email 2.50.0.107.gf914562f5916.dirty
-In-Reply-To: <20260312214330.3885211-1-neilb@ownmail.net>
-References: <20260312214330.3885211-1-neilb@ownmail.net>
-Reply-To: NeilBrown <neil@brown.name>
+	s=arc-20240116; t=1773352020; c=relaxed/simple;
+	bh=cCKAqv7NOI5zr34VoOUPzcEk48XcYp9FLpXQW+TuYGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KQ+LHomL3yPorA2vrv/lv6ghBqAlVd1holv0kAjEvU5r2rSOqx/NOgaqihRTCQAvUsj5H7Yq7wyLWLGu6HkGwV+3VwR/qx+WrmBypwBV+NimQBhz/wdwLHVS5sr1ddodFtizubu1FsRu7DKEbMA8MEdfmfkBNYSQVx7MGuRktXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 8C23CC19CF;
+	Thu, 12 Mar 2026 21:46:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 9829620024;
+	Thu, 12 Mar 2026 21:46:55 +0000 (UTC)
+Date: Thu, 12 Mar 2026 17:47:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Law <hlcj1234567@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Josh Law <objecting@objecting.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] lib/bootconfig: check bounds before writing in
+ __xbc_open_brace()
+Message-ID: <20260312174710.22557776@gandalf.local.home>
+In-Reply-To: <1bd0e36d-0ea0-4a79-bbee-e38de553f1ea@gmail.com>
+References: <20260312191143.28719-1-objecting@objecting.org>
+	<20260312191143.28719-3-objecting@objecting.org>
+	<20260312170643.4b0f926b@gandalf.local.home>
+	<143ca1aa-d053-4947-9817-72462876c224@gmail.com>
+	<4c426803-91f8-48fc-ae8e-20676479b370@gmail.com>
+	<20260312142809.cb92d6b5197e89645edab80b@linux-foundation.org>
+	<1bd0e36d-0ea0-4a79-bbee-e38de553f1ea@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 9829620024
+X-Stat-Signature: oyrcbejprmh3e7oywrugzigdgndx7dj5
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/JrVtdbFJSHWIwfhjkLpxZr24/iWGYD5k=
+X-HE-Tag: 1773352015-83925
+X-HE-Meta: U2FsdGVkX1+Gs32zyWgBl4z8e3eG/qoJMgQmeeWUY5DuzvXtqQ6rPBAwy2JU4t6aWt6DjhA8HIqEj9RakHsj2L2+5u7dLsRcTHh/IZXs/ntcKl6jRMQEZkKbGNUkjSy7CCxtUmZ5VZxkvAfOW3fI9rke6opjxsws9lEy5YFLjgBpFAHsWwH9YRjg3FAOywu7gYhUnQSqExwTAKGriqBCvwmdnZ/jujmyw9ZmINfss3eWyZwgA0GjJdOTCt1l7uaI64RY6dG/EFRjGCXorK1EaliDvKmK6ZVWVMh6kr1lOdX6psKPKMNQGwOXabS5JE5f3MkRnh2BR7dH7SK+RnWJQ7d9x3NpigjfhnwKwmRfPJYxo7IbaKh663QaYKqYQgqM2NSgAU57ewQYWUcPzuM9QQ==
 
-From: NeilBrown <neil@brown.name>
+On Thu, 12 Mar 2026 21:30:10 +0000
+Josh Law <hlcj1234567@gmail.com> wrote:
 
-A proposed change will invert the lock ordering between
-d_alloc_parallel() and inode_lock() on the parent.
-When that happens it will not be safe to call d_alloc_parallel() while
-holding the parent lock - even shared.
+> 12 Mar 2026 21:28:11 Andrew Morton <akpm@linux-foundation.org>:
+> 
+> > On Thu, 12 Mar 2026 21:09:52 +0000 Josh Law <hlcj1234567@gmail.com> wrote:
+> >  
+> >>> That's a fair point, Steve. Given that brace_index isn't touched
+> >>> elsewhere and the current check effectively prevents the overflow, I
+> >>> agree this isn't strictly necessary. I'll drop this patch and stick
+> >>> with the fix for the off-by-one reporting error instead. Thanks for
+> >>> the feedback!  
+> >>
+> >> Wait Steve,
+> >> Thanks for the look. I see your point that it's currently redundant
+> >> given the call patterns. It looks like Andrew has already merged this
+> >> into the -mm tree, likely as a 'belt-and-suspenders' safety measure.
+> >> I'll keep your feedback in mind for future cleanup, but I'm glad we
+> >> got the other off-by-one fix in as well!  
+> >
+> > Please wordwrap the emails.
+> >  
+> >> And in my opinion, merging it is a decent idea.  
+> >
+> > You've changed your position without explaining why?  
+> 
 
-We don't need to keep the parent lock held when d_add_ci() is run - the
-VFS doesn't need it as dentry is exclusively held due to
-DCACHE_PAR_LOOKUP and the filesystem has finished its work.
+/me wraps your email (claws-mail does that nicely ;-)
 
-So drop and reclaim the lock (shared or exclusive as determined by
-LOOKUP_SHARED) to avoid future deadlock.
+> Sorry, I think it should be merged because it's better to be safe than
+> sorry, I know there is different methods of implementation, but this one
+> still works... I know it's churn (and I'm sorry)
 
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/dcache.c            | 18 +++++++++++++++++-
- fs/xfs/xfs_iops.c      |  3 ++-
- include/linux/dcache.h |  3 ++-
- 3 files changed, 21 insertions(+), 3 deletions(-)
+It's not the only place that does that. And since the value is safe as is,
+I rather not touch it.
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index c12319097d6e..a1219b446b74 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -2225,6 +2225,7 @@ EXPORT_SYMBOL(d_obtain_root);
-  * @dentry: the negative dentry that was passed to the parent's lookup func
-  * @inode:  the inode case-insensitive lookup has found
-  * @name:   the case-exact name to be associated with the returned dentry
-+ * @bool:   %true if lookup was performed with LOOKUP_SHARED
-  *
-  * This is to avoid filling the dcache with case-insensitive names to the
-  * same inode, only the actual correct case is stored in the dcache for
-@@ -2237,7 +2238,7 @@ EXPORT_SYMBOL(d_obtain_root);
-  * the exact case, and return the spliced entry.
-  */
- struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
--			struct qstr *name)
-+			struct qstr *name, bool shared)
- {
- 	struct dentry *found, *res;
- 
-@@ -2250,6 +2251,17 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
- 		iput(inode);
- 		return found;
- 	}
-+	/*
-+	 * We are holding parent lock and so don't want to wait for a
-+	 * d_in_lookup() dentry.  We can safely drop the parent lock and
-+	 * reclaim it as we have exclusive access to dentry as it is
-+	 * d_in_lookup() (so ->d_parent is stable) and we are near the
-+	 * end ->lookup() and will shortly drop the lock anyway.
-+	 */
-+	if (shared)
-+		inode_unlock_shared(d_inode(dentry->d_parent));
-+	else
-+		inode_unlock(d_inode(dentry->d_parent));
- 	if (d_in_lookup(dentry)) {
- 		found = d_alloc_parallel(dentry->d_parent, name);
- 		if (IS_ERR(found) || !d_in_lookup(found)) {
-@@ -2263,6 +2275,10 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
- 			return ERR_PTR(-ENOMEM);
- 		}
- 	}
-+	if (shared)
-+		inode_lock_shared(d_inode(dentry->d_parent));
-+	else
-+		inode_lock_nested(d_inode(dentry->d_parent), I_MUTEX_PARENT);
- 	res = d_splice_alias(inode, found);
- 	if (res) {
- 		d_lookup_done(found);
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 208543e57eda..ec19d3ec7cf0 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -35,6 +35,7 @@
- #include <linux/security.h>
- #include <linux/iversion.h>
- #include <linux/fiemap.h>
-+#include <linux/namei.h> // for LOOKUP_SHARED
- 
- /*
-  * Directories have different lock order w.r.t. mmap_lock compared to regular
-@@ -369,7 +370,7 @@ xfs_vn_ci_lookup(
- 	/* else case-insensitive match... */
- 	dname.name = ci_name.name;
- 	dname.len = ci_name.len;
--	dentry = d_add_ci(dentry, VFS_I(ip), &dname);
-+	dentry = d_add_ci(dentry, VFS_I(ip), &dname, !!(flags & LOOKUP_SHARED));
- 	kfree(ci_name.name);
- 	return dentry;
- }
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 2a3ebd368ed9..a97eb151d9db 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -251,7 +251,8 @@ struct dentry *d_duplicate(struct dentry *dentry);
- /* weird procfs mess; *NOT* exported */
- extern struct dentry * d_splice_alias_ops(struct inode *, struct dentry *,
- 					  const struct dentry_operations *);
--extern struct dentry * d_add_ci(struct dentry *, struct inode *, struct qstr *);
-+extern struct dentry * d_add_ci(struct dentry *, struct inode *, struct qstr *,
-+				bool);
- extern bool d_same_name(const struct dentry *dentry, const struct dentry *parent,
- 			const struct qstr *name);
- extern struct dentry *d_find_any_alias(struct inode *inode);
--- 
-2.50.0.107.gf914562f5916.dirty
-
+-- Steve
