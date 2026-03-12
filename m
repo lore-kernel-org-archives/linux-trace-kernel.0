@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C282D8DDB;
-	Thu, 12 Mar 2026 08:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E8D2D7804;
+	Thu, 12 Mar 2026 08:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773302766; cv=none; b=aVlD+B1n+lD/OXd+u7ogF/JKNHmLSp2pubZooZpFNfPhqObN8MxRVU7ylWjCC2cm7urNyCiJvRHmrxN/Oo7jX2k1duBFqPERc4DOQzAv9W0jyYXYV0hBYeEdYwdrxzP6xSMn9+i/V4TevgqZhao0yVmrConHLd5GSf8F/vWXO2A=
+	t=1773303309; cv=none; b=kl5ULg5MPmaAByJn17g9RpxYhZPgd3/ZCzFAdYw3JOCygdqp7MC2H0lJjvNYHrOgRaHhZotQOCoDHMUIyuhcvE4T5N4cRiYPWeJGvAmcYDnhPJFXniPek3h/+1aeCYmaC4JRAYSilTc3YaR/h8YhiTLoht8tvvSwnjymeozyN2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773302766; c=relaxed/simple;
-	bh=8vMfBw1+j1+AlEMGodkzcoZiuF4bRylUsPikca4EklQ=;
+	s=arc-20240116; t=1773303309; c=relaxed/simple;
+	bh=D2VqqLzzQNOEjdSWnphzoUNSdnnSZO+F4wcQXWLpCmM=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=C+/mD79oNmhj3v3nBoG5p9FxqDX1kgnKeAyjTXV1GoNO3pM1JvQwjs4VZDQgoAfS4642CyRJWMCI6l/qLKS8XT/aPRHyOBHOr/lh91w925SzTwwAaYJGb/u+y140XzvXsAPcI+dfIL7qyIZDs/R1hJp2x+pQ42kbWwRx8+ff4nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3dq+NT2; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=KTQbb56ziiWNFCuZJJFpYfYDZ9that2YITejVgkUJC/pi2V56Y1aPrJlxGZBm62JXU22t8P68RUvG6ZWZAZcKvRjK4RuZqGMnE55ipkR2Inw4bqEHC4rcEFSImCz19UaFAw94tk6JBjrTXBqGJy73CbR2LEb3XAKdWotIWD8l9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBvFwZs8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3dq+NT2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B268C116C6;
-	Thu, 12 Mar 2026 08:06:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBvFwZs8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1C5C4CEF7;
+	Thu, 12 Mar 2026 08:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773302766;
-	bh=8vMfBw1+j1+AlEMGodkzcoZiuF4bRylUsPikca4EklQ=;
+	s=k20201202; t=1773303308;
+	bh=D2VqqLzzQNOEjdSWnphzoUNSdnnSZO+F4wcQXWLpCmM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e3dq+NT2E/AWNUZcuoSL8eVrSSMOMCwcH71SFgLnk3rCu5WTn2XcRHAHQZofxuK9A
-	 XESo51HpfmKkfLMM8mZWW1rdl8n3nJf7u49ZbbD6fFaIzWMCl1TwJZk6VUTFFsMcfr
-	 mpqKN5NDL6lkhPI3if2JZy6ZyRSAG+KC018Tv2tfKdXDOxjNRvMtH2hJsX8Gfa36G6
-	 Wp22BzH+puy7L+zT6mHEkkrULfWPJ4TUwKMDHGQQynmwCSHwlzgSRtwrWqXfcsoxB4
-	 x6j0dbRdNIk//XIbG2B7ITR29CTTD20N1lgnXmwnyMYT55jI6qHn10jlKAYH+QSDEN
-	 J/woVjaQ4C12w==
-Date: Thu, 12 Mar 2026 17:06:02 +0900
+	b=pBvFwZs8RddxqQ7hXJ9cQr1nOdGW33VCwVWzYucgwZcMptZihMNf+c+d34PRN2UzK
+	 bvyzuv1IDrjvboZUYAMhCrNBMundkx7IdqDe0pc+37BmcA0cxy+CMGsptZSH6/ZQXt
+	 RiCSS5dLy4+WY8mcpbSZ1OSgtuFCeYbc9flIihnUKTludMsS+ShwHMatBik7EHtF2X
+	 4qcOeNDSs9ZwOX5vv8j1p8X49z03iSRtv7DYcm0dWVzbrBIFKDxMjrqTI3CFubATaz
+	 fXcD/79fdNai7hewcBch+NWSjPuYYB0HifUnQOQawtvbDru0XVHQtjF5o4ihfdT5wS
+	 X0Jgiu38WRMug==
+Date: Thu, 12 Mar 2026 17:15:05 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: David Laight <david.laight.linux@gmail.com>, Peter Zijlstra
- <peterz@infradead.org>, mingo@redhat.com, will@kernel.org,
- boqun@kernel.org, longman@redhat.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/3] disable optimistic spinning for ftrace_lock
-Message-Id: <20260312170602.703df4c77dba2b558b4c08e1@kernel.org>
-In-Reply-To: <CALOAHbDqYjJngQmmOaPRA=k4Bb8Or39YNp5R98f_op4dti2_TQ@mail.gmail.com>
-References: <20260311115250.78488-1-laoar.shao@gmail.com>
-	<20260311115426.GN606826@noisy.programming.kicks-ass.net>
-	<20260311125350.1d89341f@pumpkin>
-	<CALOAHbDqYjJngQmmOaPRA=k4Bb8Or39YNp5R98f_op4dti2_TQ@mail.gmail.com>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Peter
+ Zijlstra <peterz@infradead.org>, Brian Geffon <bgeffon@google.com>, John
+ Stultz <jstultz@google.com>, Ian Rogers <irogers@google.com>, Suleiman
+ Souhlal <suleiman@google.com>
+Subject: Re: [PATCH v2 3/3] tracing: Show TID and flags for PI futex system
+ call trace event
+Message-Id: <20260312171505.bd5c45cb67d42c7ab3cfe1f9@kernel.org>
+In-Reply-To: <20260310201036.879130564@kernel.org>
+References: <20260310200954.285663884@kernel.org>
+	<20260310201036.879130564@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,35 +52,89 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, 10 Mar 2026 16:09:57 -0400
+Steven Rostedt <rostedt@kernel.org> wrote:
 
-On Wed, 11 Mar 2026 21:40:32 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
-
-> > Although there is a bigger issue of why on earth the code is reading the
-> > list of filter functions at all - never mind all the time.
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> bpftrace reads the complete list of available functions into
-> userspace, then performs matching against the target function to
-> determine if it is traceable.
-
-What about changing bpftrace userspace tool to cache the list of available
-functions? (or just add an option to pass available function list?)
-Then, you can just copy the function list somewhere and uses it.
-
-Of course we can do the same thing in the kernel, but I don't think
-there is any reason to do it in the kernel instead of user space.
-
-Thank you,
-
+> For the futex system call trace event for FUTEX_LOCK_PI and
+> FUTEX_UNLOCK_PI commands, show the TID from the value (which is usually in
+> hex) as well as translate the flags (DIED and WAITERS).
 > 
-> > I'll do it by hand when debugging, but I'd have though anything using bpf
-> > will know exactly where to add its hooks.
+>  pi_mutex_hammer-1098    [000] .....   121.876928: sys_futex(uaddr: 0x560f40cc8180 (0x450) tid: 1104, FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7f2f9d4b1e50 (0.000100000))
+>  pi_mutex_hammer-1128    [000] .....   121.877120: sys_futex(uaddr: 0x560f40cc8180 (0x8000042a) tid: 1066 (WAITERS), FUTEX_LOCK_PI|FUTEX_PRIVATE_FLAG, val: 0, timespec: 0x7f2f8e493e50 (0.000100000))
+>  pi_mutex_hammer-1106    [000] .....   121.877242: sys_futex(uaddr: 0x560f40cc8180 (0x80000452) tid: 1106 (WAITERS), FUTEX_UNLOCK_PI|FUTEX_PRIVATE_FLAG, val: 0)
 > 
+> This makes it easier to see the hand off of a mutex and who the owner was.
 > 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+
+> ---
+> Changes since v1: https://lore.kernel.org/all/20260303174442.548b6524@gandalf.local.home/
+> 
+> - Updated to have the print processing in kernel/futex/syscall.c
+> 
+>  kernel/futex/syscalls.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/futex/syscalls.c b/kernel/futex/syscalls.c
+> index a46706d6bc6c..24d912d9b20d 100644
+> --- a/kernel/futex/syscalls.c
+> +++ b/kernel/futex/syscalls.c
+> @@ -211,6 +211,9 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
+>  	unsigned int op, cmd;
+>  	bool done = false;
+>  
+> +	op = args[1];
+> +	cmd = op & FUTEX_CMD_MASK;
+> +
+>  	for (int i = 0; !done && i < nr_args; i++) {
+>  
+>  		if (seq_buf_has_overflowed(s))
+> @@ -225,11 +228,30 @@ void futex_print_syscall(struct seq_buf *s, int nr_args, unsigned long *args,
+>  					seq_buf_printf(s, " (%u)", val);
+>  				else
+>  					seq_buf_printf(s, " (0x%x)", val);
+> +
+> +				switch(cmd) {
+> +				case FUTEX_LOCK_PI:
+> +				case FUTEX_UNLOCK_PI:
+> +					seq_buf_printf(s, " tid: %d",
+> +						       val & FUTEX_TID_MASK);
+> +
+> +					if (!(val & (FUTEX_OWNER_DIED|FUTEX_WAITERS)))
+> +						break;
+> +
+> +					seq_buf_puts(s, " (");
+> +					if (val & FUTEX_WAITERS)
+> +						seq_buf_puts(s, "WAITERS");
+> +					if (val & FUTEX_OWNER_DIED) {
+> +						if (op & FUTEX_WAITERS)
+> +							seq_buf_putc(s, '|');
+> +						seq_buf_puts(s, "DIED");
+> +					}
+> +					seq_buf_putc(s, ')');
+> +					break;
+> +				}
+>  			}
+>  			continue;
+>  		case 1:
+> -			op = args[i];
+> -			cmd = op & FUTEX_CMD_MASK;
+>  			if (cmd <= FUTEX_LOCK_PI2)
+>  				seq_buf_printf(s, ", %s", __futex_cmds[cmd]);
+>  			else
 > -- 
-> Regards
-> Yafang
+> 2.51.0
+> 
+> 
 
 
 -- 
